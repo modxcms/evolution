@@ -62,8 +62,6 @@
 				<td valign="top">
 					<p class='title'>Welcome to the <?php echo $moduleName; ?> installation program.</p>
 					<p>This program will guide you throug the rest of the installation.</p>
-					<p><strong>IMPORTANT NOTE:</strong> If you are planning to perform an upgrade installation from the technology preview release of MODx, please backup all plugin work you've done (which is probably none) and delete the <em>prefix_</em>site_plugins table from your database. You've been warned! ;)</p>
-					<p>Please select 'Next' button to continue:</p>
 				</td>
 				</tr>
 				</table>
