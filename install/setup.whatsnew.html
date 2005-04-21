@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>What's New</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+        <style type="text/css">
+             @import url('./style.css');
+        </style>
+</head>
+
+<body>
+    <table width="100%"  border="0" cellspacing="1" cellpadding="10" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#FFFFFF">
+      <tr align="left" valign="top">
+        <td class="pad" id="content" width="100%">
+			<b><img border="0" src="img_banner.gif" width="264" height="45"><br>
+&nbsp;<br>
+&nbsp;</b><br>
+
+            <b><font size="2">Table Of Content</font></b><hr>
+            <ul>
+              <li>What is MODx</li>
+              <li>What was changed</li>
+              <li>New API functions<br>&nbsp;</li>
+            </ul>
+            <p>&nbsp;</p>
+			<p><b>What is MODx</b><br>
+            &nbsp;MODx (Modular Extension) is a open source Content Management 
+            System that is based on Etomite 0.6. MODx was written by Raymond 
+            Irving and was initially designed to be a module update for the open 
+            source Etomite Content Management System version 0.6 but will become 
+            a complete overhaul of Etomite. MODx is distributed under the GPL 
+            license and is now run by a professional team of developers from all 
+            over the world. Visit
+            <a target="_blank" href="http://www.vertexworks.com/forums">
+            http://www.vertexworks.com/forums</a> for more information. </p>
+            <p>&nbsp;The MODx Content Management System provides a powerful 
+            framework on which to deploy and secure your website and web 
+            applications. For example, it gives you a true system for registered 
+            web users and groups that is separate from the administration users. 
+            You can grant some web users access to one page and others access to 
+            another page. You also now easily duplicate documents, folders (and 
+            all their children!), chunks and snippets. Most significantly, 
+            though is MODx&#8217;s ability to empower you to quickly and easily create 
+            and maintain a rich and dynamic website like never before. Please
+            see the <i>Getting Started with MODx</i> tutorial
+            </p>
+            <p><br>
+<br>
+<br>
+            <b>What was changed</b><br>
+            --------------------------------<br>
+            <br>
+            * fix makeurl so that it will convert an id to an alias when 
+            friendly url is turned on<br>
+            * redesign the installer<br>
+            * remove module_management and exec_plugin files<br>
+            * rename file.static.action.php to file.dynamic.action.php and moved 
+            to dynamic<br>
+            * add system event listeners to plugins<br>
+            * add System Events to MODx2: invokeEvent(evtName,params), 
+            addEventListener(evtName,snippetId)<br>
+            * add isMemberOfWebGroup and getUserDocGroups<br>
+            <br>
+            * add stay options to data entry forms<br>
+            * modify htmlarea editor.js line 61 to use document.writeln()<br>
+            * add allowed ip and allowed days user settings<br>
+            * add field to user attributes dob, photo, gender, country, state, 
+            zip, phone, fax<br>
+            * add isBackend function<br>
+            * add isFrontend function<br>
+            * rename changePassword to changeWebUserPassword to aviod confusion<br>
+            * add getFullTableName function to parser<br>
+            * add regClientScript function to parser - these scripts are loaded 
+            at the end of the page<br>
+            * add regClientStartupScript function to parser - Registers Startup 
+            Client-side JavaScript - these scripts are loaded at inside the 
+            &lt;head&gt; tag<br>
+            * rename etomiteCache.idx to siteCache.idx <br>
+            * rename publishing files from etomitePublishing.idx to 
+            sitePublishing.idx<br>
+            * rename cache files from .etoCache to .pageCache<br>
+            * change IN_ETOMITE_SYSTEM to IN_MANAGER_MODE<br>
+            * change IN_ETOMITE_PARSER to IN_PARSER_MODE<br>
+            * add supportby.php file for developers to show and display their 
+            support website on the login page<br>
+            * modify addNotice Modified to add the Powered By MODx link to pages 
+            that include the &lt;div id=\&quot;poweredbymodx\&quot;&gt;&lt;/div&gt; tag<br>
+            <br>
+            * fix bug inside cache_sync_class.processor.php. line 66 change to $tmpPHP 
+            .= '$this-&gt;config[\''.$key.'\']'.&quot; = '&quot;.mysql_escape_string($value).&quot;';\n&quot;;<br>
+            * add new #declare syntax to weblogin template - this will allow you 
+            to declare your own section separators instead of &lt;!--tpl_separator--&gt;<br>
+            * important change: please update youy signup email to use the new 
+            placeholders. This version will still honor the %s codes but future 
+            versions might not.<br>
+            * add getWebUserInfo function<br>
+            * add getManagerUserInfo function<br>
+            * new weblogin template will standardize on the new placeholder 
+            variable format [+name+]<br>
+            * modified weblogin to support password reminder<br>
+            <br>
+            * MODx forced out of the Etomite Forums - March 19<br>
+            <br>
+            * fix bug when editing document with HTMLArea TableOperations and 
+            ContextMenu<br>
+            <br>
+            * fix import site from html bug<br>
+            * fix cache bug with alias that uses '<br>
+            * fix treeview to support safari<br>
+            * fixed: after entering your password, pressing the enter key will 
+            submit the form (IE,MOZ)<br>
+            * change: Turn off continue after editing by default. Check the 
+            checkbox to enable continue after editing (or sticky) mode<br>
+            * fix bug when moving documents<br>
+            * change: Import Site from HTML now requires the &quot;new document&quot; 
+            permission to be set. Changed from &quot;edit document&quot;<br>
+            * fix: all manager pages are now accessible UNLESS restricted to a 
+            admin group, just like web-user pages. <br>
+            * -- add rthrash's IE6 header fixes -- this fix causes problems with 
+            dynamic pages<br>
+            * fix runsnippet bug<br>
+            * fix snippet cache bug in etomite.class.inc.php in evalSnippets.<br>
+            * full support for MySQL 3.23<br>
+            <br>
+            <i><b>MODx2 RC2</b><br>
+            </i><br>
+            * update PageTrail snippet to support MODx2. Also added style and 
+            class property. See the properties tab<br>
+            * add new Transition property to Marquee Control<br>
+            * add new Transition property to Ticker Control<br>
+            * add getTemplateVars($idname=array(),$fields=&quot;*&quot;) and 
+            getTemplateVarOutput($idnames) api functions<br>
+            * Reduce Marquee Speed (1-20). Set Speed datatype to float. e.g. 1.5<br>
+            * fix bug with htmlarea TV not saving when content is changed during 
+            document edits<br>
+            * fix @ bindings for listbox and DropDown<br>
+            * updated tutorials<br>
+            * snippets tab in document edit only shows available snippet (in 
+            this release)<br>
+            <br>
+            * fix getTemplateVar() bug. This function will accept either a TV id 
+            or name as returns a record<br>
+            * fix url aliasing so that it now shows sub-folders with prefix and 
+            suffix added only to the document's alias. used Daath aliasing 
+            solution. (This feature is optional. See settings)<br>
+            * add support for nested bindings<br>
+            * set ViewPort's Width and Height property to string<br>
+            * increase TV name length to 50 chars. I don't think you should use 
+            TV names greater than 50 chars. ALTER TABLE `{PREFIX}site_tmplvars` 
+            MODIFY COLUMN `name` VARCHAR(50) NOT NULL;<br>
+            * check for numeric aliases before IDs<br>
+            <br>
+            * fix web user acess to admin bug<br>
+            * added navigator menu scrollbars<br>
+            <br>
+            * add All Documents (Public) checkbox to access permissions<br>
+            * add new words to language library<br>
+            * add duplicate feature to snippets, chunks, templates and template
+            variables<br>
+            * fix htmlsnippet action index 77 and 78 in
+            resources.dynamic.action.php,8.php, save_htmlsnippets.php.
+            actionlist.php listed action 78 as edit but 77 was actually used in
+            coding<br>
+            * strip unsed [*variables*] from document<br>
+            * add property feature to snippets : &amp;name=desc;data_type;default_value<br>
+            * fix parent-child assignment. Parent cannot become it's own child<br>
+            * add theme support to the manager - See Configuration -&gt;
+            Miscellaneous settings -&gt; Manager Theme<br>
+            * fix PHP5 open_basedir bug in imagemanger/classes by using
+            dirname(__FILE__)<br>
+            * add rad14701 db functions and new getDocuments limit param<br>
+            * Fix bug found in both web and manager user document access. A
+            document is flagged as private whenever the document group that i
+            belongs to is assigned or links to a user group. In other words if
+            the document is assigned to a document group that is not yet linked
+            to a user group then that document will be made public. Documents
+            that are private to the manager users will not be private to web
+            users if the document group is not assigned to a web user group and
+            visa versa.<br>
+            * fix treeview contextmenu in mozilla<br>
+            * add &quot;Import site from HTML&quot; feature - see
+            import_site.static.action.php<br>
+            * improve treeview parsing time by 30-40% - noticeable on large
+            sites &gt; 100 documents<br>
+            * add duplicate document feature - see &quot;Duplicate&quot; button in
+            document_data.static.php<br>
+            * fix bug when deleting web user with same id as logged in manager
+            user<br>
+            * modify tabpane.js to trigger external js functions when a tab is
+            clicked<br>
+            * add tabs to document editor. Page Settings and Preview Tabs with
+            save and refresh button<br>
+            * fix Page Title Ampersands bug - &amp;amp; &amp;trade; now works inside
+            pagetitle<br>
+            * update set_error_handler to support PHP 5<br>
+            * modify WebLogin Template designs due to some problems with
+            javascript's [] and the template engine. New template fields will be
+            formatted as [.name.]<br>
+            * add Placeholder Variables to etomite API. usage: [+name+]<br>
+            * add getTemplateVar() function to etomite.class.inc.php<br>
+            * add Template Variables (TV) - formerly called DocVars<br>
+            * fix bug with webuser reset failed element in FireFox<br>
+            * repair broken permissions issue with file manager at line 157 to
+            chmod 0777 - ryan<br>
+            * add a @ to line 3 of logout.processor.php to suppress &quot;Session
+            object destruction failed&quot; error on the first session_destroy(). To
+            reproduce this error login to the manager and click on the Site-&gt;
+            Launch Site menu. From the new window go to the manager. Go back to
+            the previous window and then click logout. This would then generate
+            a &quot;Session object destruction failed&quot;<br>
+            * add getSnippetId() function to etomite.class.inc.php<br>
+            * add Backup Manager - currently back ups selected db tables<br>
+            * fix bug in ImageEditor.php at line 422 when detecting Gif editing
+            functions <br>
+            * enhance image selection inside HTMLArea's ImageManger (images.php
+            file @ line 55)<br>
+            * modify Inbox welcome message to become more visible. <br>
+            * add db_admin, view_address, new_address, save_address,
+            delet_address to user roles.<br>
+            * fix security access bug found inside etomite file browser<br>
+            * modify etomite getDocument() function to look for published and
+            deleted documents. New function getDocument($id=0,$fields=&quot;*&quot;,$published=1,
+            $deleted=0)<br>
+            * add Delete folder option to File Browser<br>
+            * add row-highting to file browser color<br>
+            * add addslashes to cache_sync.class.processor.php line 52 to fix a
+            minor path bug found in the etomitecache.idx file<br>
+            * add unzip option to file manager to allow users to quickly unzip
+            files and folders. The php_zip.dll file is required<br>
+            * add max upload size to system settings<br>
+            * add phpmailer.inc.php to includes/controls folder <br>
+            * add datasetpager.php to includes/controls folder<br>
+            * add New Folder link to Filemanager - supports recursive folder
+            creation<br>
+            * add download file option to filemanager and fixed preview bug<br>
+            * Add user settings for backend users<br>
+            * modify mutate_settings.dynamic.php to use realpath when getting
+            path information <br>
+            * use mapPath($this-getCachePath()) instead of dirname(__FILE__) in
+            etomite class<br>
+            * add mapPath function to etomite api<br>
+            * add getManagerPath() to etomite api - this is useful if you need
+            access to the manager folder from either the front-end or the
+            backend.<br>
+            * add getCachePath() to etomite api - this is useful if you need
+            access to the cache foldder from either the front-end or the
+            backend. The etomite class also uses this file.<br>
+            * modify weblogin snippet<br>
+            * add login home page to web user settings<br>
+            * full support for Interactive Snippets - only admininstrator (RoleID
+            1) can interact with snippets at the moment<br>
+            * added fix for Manage Files - &quot;To Top Level&quot; Incorrect path<br>
+            * modified line 209:mutate_web_user.dynamic.action.php and line
+            233:mutate_user.dynamic.action.php to show select block checkbox if
+            blockuntil date is set.<br>
+            * fix javascript bug in logging.static.action.php. Something to do
+            with '&lt;i&gt;(not set)&lt;/i&gt;' being rendered as &gt;i&gt;(not set)&lt;/i&gt;'<br>
+            * added more sort options, Date created, Date Modified<br>
+            * added Jeroen's Treeview State saver<br>
+            * add paging to web users in user_management<br>
+            * added support for &lt;div id=&quot;etomitecredits&quot;&gt; and &lt;div id=&quot;poweredbyetomite&quot;&gt;
+            div tags to format output from the addNotice() API function<br>
+            * fix bug with duplicate page listings due to two or more access
+            groups<br>
+            * purge document_groups table when purging documents<br>
+            * adjust layout 2 left col to 250px in 1.php<br>
+            * add Unauthorized Page option to Site settings:Enter the ID of the
+            document you want to send users to if they request a secured or
+            unauthorized document. NOTE: make sure the ID you have enter belongs to
+            an existing document, and that it has been published and is publicly
+            accessible!<br>
+            * add reset template options in site settings<br>
+            * add Turn Preview Window On/Off in Config. - from SniperX<br>
+            <br>
+            <i><b>MODx1</b></i><br>
+            <br>
+            27-nov-2004 <br>
+            ---------------------<br>
+            + added changePassword, stripTags and getDocGroups funcions to eto
+            API<br>
+            + Check access permission error<br>
+            <br>
+            <br>
+            26-nov-2004<br>
+            ---------------------<br>
+            + modify welcome.static.action.php and sysinfo.static.action.php to
+            support active web users listing<br>
+            + fixed getParent to return correct parent of child document rather
+            than the document itself<br>
+            + modify login.processor.php to store user document groups (as an
+            array) inside $_SESSION['docgroups'] <br>
+            + modify actionlist.inc.php <br>
+            + modify style.css to work with interact_snippet.php<br>
+            + modify save_snippet_processor.php to allow snippet to install
+            other content<br>
+            Here we can use if($etomite-&gt;insideManager()=='install') to check if
+            the snippet is being added or updated<br>
+            + add getLoginUserID, getLoginUserName,insideManager and sendAlert
+            to Etmoite API<br>
+            + add menu to create folder<br>
+            + add &quot;create folder&quot; menu to files 8.php, 2.php and 3.php<br>
+<br>
+<br>
+            <b>New Etomite API functions<br>
+            </b>----------------------------------------------------<br>
+&nbsp;For newer APIs please see the &quot;API Quick Reference Guide&quot;<br>
+            <br>
+            * mapPath<br>
+            * getSnippetId<br>
+            * getTemplateVar<br>
+            * getTemplateVars<br>
+            * getTemplateVarOutput<br>
+            * getPlaceholder<br>
+            * setPlaceholder<br>
+            * getManagerPath<br>
+            * getCachePath<br>
+            * getLoginUserType - return web or manager<br>
+&nbsp;<br>
+            <b>rad14701 DB APIs</b><br>
+            * getIntTableRows<br>
+            * putIntTableRow<br>
+            * updIntTableRow<br>
+            * getExtTableRows<br>
+            * putExtTableRow<br>
+            * updExtTableRow<br>
+            * dbExtConnect<br>
+            * getFormVars<br>
+&nbsp;<br>
+            * changePassword<br>
+            * stripTags<br>
+            * getDocGroups<br>
+            * getLoginUserID<br>
+            * getLoginUserName<br>
+            * sendAlert<br>
+            * insideManager - return true,'install' or 'interact' when inside
+            manager</p>
+            <blockquote>
+			<p>Here we can use if($etomite-&gt;insideManager()=='install') to check
+            if the snippet is being added or updated<br>
+<br>
+            Or if($etomite-&gt;insideManager()=='interact') to check if the snippet
+            is being executed in interactive mode.<br>
+&nbsp;</p>
+            </blockquote>
+			<p>&nbsp;</p>
+</td>
+      </tr>
+    </table>
+</body>
+</html>
