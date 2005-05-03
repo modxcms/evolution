@@ -508,7 +508,7 @@ $_lang['refresh_published'] = "<b>%s</b> documents were published.";
 $_lang['refresh_unpublished'] = "<b>%s</b> documents were unpublished.";
 $_lang['refresh_cache'] = "Cache: Found <b>%s</b> files in cache directory and deleted <b>%d</b> cache files.<p>New cache files will be created when pages are requested."; // changed in 0.6
 $_lang['about_title'] = "About MODx";
-$_lang['about_msg'] = "MODx is based on Etomite 0.6. Etomite was written by Alex, and is licensed under <a href=\"../assets/docs/license.txt\">GPL</a>."; //changed 06 RC2
+$_lang['about_msg'] = "MODx is a fork Etomite 0.6, and is licensed under <a href=\"../assets/docs/license.txt\">GPL</a>."; //changed 06 RC2
 $_lang['credits_htmlarea'] = "HTMLArea was created by mishoo. Currently it's the only cross-browser compatible editor available, and it's free too!"; // obsolete
 $_lang['credits_adodb'] = "John Lim built this great database abstraction layer. Etomite uses only the MySQL bits, but it's lovely nonetheless!"; // obsolete
 $_lang['credits_php'] = "MODx is powered by PHP!"; // obsolete
@@ -518,19 +518,17 @@ $_lang['credits_phpBB'] = "The MODx forums are powered by phpBB!"; // obsolete
 $_lang['credits_webfx'] = "MODx uses a number of JavaScripts from Webfx. Great stuff!"; // obsolete
 $_lang['credits_dTree'] = "MODx uses the excellent dTree script from DestroyDrop.com!"; // obsolete
 $_lang['credits_jpgraph'] = "Etomite uses JpGraph to generate visitor statistics!"; // obsolete
-$_lang['credits_shouts_title'] = "<b>My thanks to:</b>"; // obsolete
+$_lang['credits_shouts_title'] = "<b>Additional thanks to:</b>"; // obsolete
 $_lang['credits_shouts_msg'] = "
-<ul><li><b>Jorg Diederen</b> - Dutch translation</li>
-<li><b>Anders Monrad</b> - Danish translation</li>
-<li><b>Evaldas Stulgaitis</b> - Lithuanian translation</li>
-<li><b>Luis Lacerda</b> - Portuguese translation</li>
-<li><b>Johnny Chadda</b> - Swedish translation</li>
-<li><b>Tobias Nix</b> - German translation</li>
-<li><b>Espen O. Pedersen</b> - Norwegian translation</li>
-<li><b>stevew</b> - code for rewriting IMG src's as relative paths</li>
-<li><b>Ron & Ivo</b> - testing</li>
-<li><b>Snuffkin</b> - finding bugs, forum moderation and administration, download mirroring, quality control, quality assurance, nitpicking, Good Idea Guy</li>
-<li>Everyone who has provided feedback on Etomite, or suggested new features, or who have donated money to thank me for my hard work. Thanks guys!</li></ul>"; // changed (this changes almost every release)  // obsolete
+<ul><li><b>mina</b> - French translation</li>
+<li><b>Travis Sitzlar</b> - Code Team</li>
+<li><b>Jason Coward</b> - Code Team</li>
+<li><b>Susan Ottwell</b> - Code Team</li>
+<li><b>Jason Vilsack</b> - Marketing &amp; Strategy Team</li>
+<li><b>Dave Denis</b> - Marketing &amp; Strategy Team</li>
+<li><b>Brian Oberkirch</b> - Marketing &amp; Strategy Team</li>
+<li><b>Ben Talplacido</b> - Design Team</li>
+</ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messages";
 $_lang['messages_inbox'] = "Inbox";
 $_lang['messages_read_message'] = "Read message";
