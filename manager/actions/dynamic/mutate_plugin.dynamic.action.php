@@ -313,7 +313,7 @@ function decode(s){
 							$sql = "
 								SELECT evtid, pluginid 
 								FROM $dbase.".$table_prefix."site_plugin_events 
-								WHERE pluginid='$id';
+								WHERE pluginid='$id'
 							";
 							$evts = array();
 							$rs = mysql_query($sql);

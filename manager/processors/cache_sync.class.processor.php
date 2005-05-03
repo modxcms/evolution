@@ -139,7 +139,7 @@ class synccache{
 			INNER JOIN $dbase.".$table_prefix."site_plugin_events pe ON pe.evtid = sysevt.id 
 			INNER JOIN $dbase.".$table_prefix."site_plugins plugs ON plugs.id = pe.pluginid 
 			WHERE plugs.disabled=0 
-			ORDER BY sysevt.name;
+			ORDER BY sysevt.name
 		";
 		$events = array();
 		$rs = mysql_query($sql);
