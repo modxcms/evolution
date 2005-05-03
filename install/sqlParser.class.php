@@ -6,9 +6,10 @@
 class SqlParser {
 	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
 	var $conn, $installFailed, $sitename, $adminname, $adminpass;
+	var $mode, $fileManagerPath, $imgPath, $imgUrl;
 	var $dbVersion;
 
-	function SqlParser($host, $user, $password, $db, $prefix='test_', $adminname, $adminpass) {
+	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminpass) {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -17,7 +18,6 @@ class SqlParser {
 		$this->adminpass = $adminpass;
 		$this->adminname = $adminname;
 		$this->ignoreDuplicateErrors = false;
-
 	}
 
 	function connect() {
@@ -51,12 +51,21 @@ class SqlParser {
 		$idata = str_replace("\r", '', $idata);
 
 		// check if in upgrade mode
-		if ($this->adminname=="" && $this->adminpass=="") {
+		if ($this->mode=="upd") {
 			// remove non-upgradeable parts
 			$s = strpos($idata,"non-upgrade-able[[");
 			$e = strpos($idata,"]]non-upgrade-able")+17;
 			$idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);  
 		}
+		
+		// replace {} tags
+		$idata = str_replace('{PREFIX}', $this->prefix, $idata);
+		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
+		$idata = str_replace('{ADMINPASS}', $this->adminpass, $idata);
+		$idata = str_replace('{IMAGEPATH}', $this->imagePath, $idata);
+		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
+		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
+		
 
 		$sql_array = split("\n\n", $idata);
 
@@ -64,9 +73,9 @@ class SqlParser {
 		$num = 0;
 		foreach($sql_array as $sql_entry) {
 			$sql_do = trim($sql_entry, "\r\n; ");
-			$sql_do = str_replace('{PREFIX}', $this->prefix, $sql_do);
-			$sql_do = str_replace('{ADMIN}', $this->adminname, $sql_do);
-			$sql_do = str_replace('{ADMINPASS}', $this->adminpass, $sql_do);
+			//$sql_do = str_replace('{PREFIX}', $this->prefix, $sql_do);
+			//$sql_do = str_replace('{ADMIN}', $this->adminname, $sql_do);
+			//$sql_do = str_replace('{ADMINPASS}', $this->adminpass, $sql_do);
 
 			if (ereg('^\#', $sql_do)) continue;
 			

@@ -286,7 +286,7 @@
 			echo "<span class='ok'>OK!</span></p>";
 		}
 		// cache files writable?
-		echo "<p>Checking if <span class='mono'>assets/cache/siteCahe.idx</span> file is writable: ";
+		echo "<p>Checking if <span class='mono'>assets/cache/siteCache.idx</span> file is writable: ";
 		if(!is_writable("../assets/cache/siteCache.idx")) {
 			echo "<span class='notok'>Failed!</span></p>";
 			$errors += 1;
@@ -630,6 +630,9 @@
 			<div id="navbar">
 				<?php if($isPostBack) { ?>
 					<input type='button' value='Close' name='cmdclose' style='float:right;width:100px;' onclick="closepage();" />
+					<?php if($errors==0) { ?>
+						<span id="removeinstall" style='float:left;color:#909090;line-height:18px;'>&bull; Please remember to remove the install folder from your website. </span>
+					<?php } ?>
 				<?php } else {?>
 					<input type='button' value='Next' name='cmdnext' style='float:right;width:100px;' onclick="changeScreen(1);" />
 					<span style="float:right">&nbsp;</span>

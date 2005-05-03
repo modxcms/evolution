@@ -58,8 +58,8 @@ getChildren($id);
 // invoke OnBeforeDocFormDelete event
 $modx->invokeEvent("OnBeforeDocFormDelete",
 						array(
-							"id"	=> $id,
-							"children" => $children
+							"id"=>$id,
+							"children"=>$children
 						));
 
 if(count($children)>0) {
@@ -87,8 +87,8 @@ if(!$rs) {
 	// invoke OnDocFormDelete event
 	$modx->invokeEvent("OnDocFormDelete",
 							array(
-								"id"	=> $id,
-								"children" => $children
+								"id"=>$id,
+								"children"=>$children
 							));
 
 	// empty cache

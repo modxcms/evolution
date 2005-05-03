@@ -7,7 +7,7 @@ $create = false;
 $errors = 0;
 
 // set timout limit
-set_time_limit(120); //?
+@set_time_limit(120); // used @ to prevent warning when using safe mode?
 
 echo "Setup will now attempt to setup the database:<br />";
 
@@ -25,7 +25,19 @@ else {
 	$table_prefix = $_POST['tableprefix'];
 	$adminname = $_POST['cmsadmin'];
 	$adminpass = $_POST['cmspassword'];
+	
 }
+
+// get base path and url
+$a = explode("install",str_replace("\\","/",dirname($_SERVER["PHP_SELF"])));
+if(count($a)>1) array_pop($a);
+$url = implode("install",$a); reset($a);
+$a = explode("install",str_replace("\\","/",dirname(__FILE__)));
+if(count($a)>1) array_pop($a);
+$pth = implode("install",$a); unset($a);
+$base_url = $url.(substr($url,-1)!="/"? "/":"");
+$base_path = $pth.(substr($pth,-1)!="/"? "/":"");
+
 
 // connect to the database
 echo "<p>Creating connection to the database: ";
@@ -41,7 +53,6 @@ else {
 echo "<p>Selecting database `".str_replace("`","",$dbase)."`: ";
 if(!@mysql_select_db(str_replace("`","",$dbase), $conn)) {
 	echo "<span class='notok' style='color:#707070'>Database selection failed...</span> The database does not exist. Setup will attempt to create it.</p>";
-	$errors += 1;
 	$create = true;
 } else {
 	echo "<span class='ok'>OK!</span></p>";
@@ -80,15 +91,20 @@ if($installMode==0) {
 // open db connection
 include "sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`","",$dbase), $table_prefix, $adminname, $adminpass);
+$sqlParser->mode = ($installMode==0) ? "new":"upd";
+$sqlParser->imageUrl = 'http://'.$_SERVER['SERVER_NAME'].$base_url."assets/images/";
+$sqlParser->imagePath = $base_path."assets/images/";
+$sqlParser->fileManagerPath = $base_path;
+$sqlParser->ignoreDuplicateErrors = true;
 $sqlParser->connect();
 
 // install/update database
 echo "<p>Creating database tables: ";
 if($moduleSQLBaseFile) {
-	$sqlParser->ignoreDuplicateErrors = true;
 	$sqlParser->process($moduleSQLBaseFile);
 	// display database results
 	if ($sqlParser->installFailed==true) {
+		$errors += 1;
 		echo "<span class='notok'><b>Database Alerts!</span></p>";
 		echo "<p>MODx setup couldn't install/alter some tables inside the selected database.</p>";
 		echo "<p>The last error to occur was <em>".$sqlParser->mysqlErrors[count($sqlParser->mysqlErrors)-1]["error"]."</em> during the execution of SQL statement <span class='mono'>".strip_tags($sqlParser->mysqlErrors[count($sqlParser->mysqlErrors)-1]["sql"])."</span>.</p>";
@@ -202,7 +218,7 @@ if(isset($_POST['snippet'])) {
 
 // Install Chunks
 if(isset($_POST['chunk'])) {				
-	echo "<p style='color:#707070'>Chunks</span>:</p> ";
+	echo "<p style='color:#707070'>Chunks:</p> ";
 	$selChunks = $_POST['chunk'];
 	foreach($selChunks as $si) {
 		$si = (int)trim($si);
@@ -217,13 +233,15 @@ if(isset($_POST['chunk'])) {
 			$rs = mysql_query("SELECT * FROM $dbase.`".$table_prefix."site_htmlsnippets` WHERE name='$name'",$sqlParser->conn);
 			if (mysql_num_rows($rs)) {
 				if(!@mysql_query("UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET snippet='$chunk' WHERE name='$name';",$sqlParser->conn)) {
+					$errors += 1;
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<br />&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span>";
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
 			}
 			else{
 				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name,description,snippet) VALUES('$name','$desc','$chunk');",$sqlParser->conn)) {
+					$errors += 1;
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
@@ -248,8 +266,9 @@ echo "<p>Installation was successful!</p>";
 echo "<p>To log into the Content Manager (manager/index.php) you can click on the 'Close' button or <a href='../manager/'>click here</a>.</p>";
 
 if($installMode==0) {
-	echo "<p><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.";
+	echo "<p><img src='img_info.gif' width='32' height='32' align='left' style='margin-right:10px;' /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
 }
+
 
 // close db connection
 $sqlParser->close();
