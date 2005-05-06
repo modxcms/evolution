@@ -1342,6 +1342,7 @@ class DocumentParser {
 			if ($result==false) return false;
 			else {
 				$curDoc = $docid==$this->documentIdentifier ? true:false;
+				$curDoc = false; // temporary hack to make it work ... Ryan Thrash
 				$baspath = $this->config["base_path"]."/manager/includes";
 				include_once $baspath."/tmplvars.format.inc.php";
 				include_once $baspath."/tmplvars.commands.inc.php";				
