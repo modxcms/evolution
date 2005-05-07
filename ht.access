@@ -1,32 +1,38 @@
+# MODx supports friendly URLs via this .htaccess file. In order to use it, you must change the 
+# file name from ht.access to .htaccess. If you don't want to use friendly URLs, you can comment 
+# the three Rewrite directives out with pound signs (like the beginning of this line).
 #
-# URL rewriting for Etomite CMS
-# Copyright AAB '04
+# Make sure RewriteBase points to the directory where you installed MODx.
+# E.g., "/" if your installation is in your root web documents directory (it comes this way by 
+# default) or "/MODx" if your installation is in a MODx subdirectory, per the comments below. You
+# must serve web pages via Apache with mod_rewrite to be able to use this functionality.
 #
-# To use friendly URLs for Etomite you need to uncomment the three Rewrite directives
-# Make sure RewriteBase points to the directory where you installed Etomite
-# e.g. / if your installation is in root
-# or /Etomite if your installation is in the Etomite subdirectory
-# 
+# The last two blocks of rules at the bottom of this .htaccess file address anamolies with IE 
+# for Windows PCs and the way in which it caches images, which causes a distracting flicker in 
+# background images when links are hovered on the page.
 #
-# You must be running on Apache with mod_rewrite to be able to use this functionality.
-#
+# The output compression directives immediately below serve to speed up delivery of web pages, 
+# and may also be optionally commented out.
 
 php_flag zlib.output_compression On
 php_value zlib.output_compression_level 5
 
-RewriteEngine On
+# Rewrite directives here for SEF (Search Engine Friendly) URLs
 
+RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# if Etomite is installed in a subdirectory, change the following line so the path
-# to the "root" of the site can be found, appropriately as follows:
+# If your MODx installation is in a subdirectory, change the following line to match the physical
+# path to the "root" of the site as follows:
 # RewriteRule ^(.*)$ /path/to/subdirectory/index.php?q=$1 [L,QSA]
 
 RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 
-# This following two sections stops screen flicker in IE on rollovers.
-# Comment it out if you don't need it.
+# This following two sections stops screen flicker in IE on rollovers (Bad IE Win, Bad!).
+# Comment it these sections out if you do not need them. They can result in having to force reload
+# pages when developing sites and changing images frequently to see your changes. 
+
 ExpiresActive On
 ExpiresByType image/gif A2592000
 ExpiresByType image/jpeg A2592000
