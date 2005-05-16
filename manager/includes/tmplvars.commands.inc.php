@@ -9,8 +9,8 @@ $BINDINGS = "FILE,CHUNK,DOCUMENT,SELECT,EVAL";
 
 function ProcessTVCommand($etomite,$value){
 	if(empty($etomite)) {
-		include_once dirname(__FILE__)."/parser.class.inc.php";
-		$etomite = new etomite;	// initiate a new document parser
+		include_once dirname(__FILE__)."/document.parser.class.inc.php";
+		$etomite = new DocumentParser;	// initiate a new document parser
 		$etomite->getSettings(); // load settings
 	}
 	$nvalue = trim($value);
