@@ -400,7 +400,7 @@ function sendMailMessage($email,$uid,$pwd,$ufn){
 	global $mailto;
 	global $websignupemail_message;
 	global $emailsubject, $emailsender;
-	global $site_name, $site_start;
+	global $site_name, $site_start, $site_url;
 	$message = sprintf($websignupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]",$uid,$message);
@@ -408,8 +408,8 @@ function sendMailMessage($email,$uid,$pwd,$ufn){
 	$message = str_replace("[+ufn+]",$ufn,$message);
 	$message = str_replace("[+sname+]",$site_name,$message);
 	$message = str_replace("[+semail+]",$emailsender,$message);
-	$message = str_replace("[+surl+]",dirname(PHP_SELF),$message);
-	if(!mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion())) {
+	$message = str_replace("[+surl+]",$site_url,$message);
+	if(!mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion(), "-f $emailsender")) {
 		jsAlert("Error while sending mail to $mailto",1);
 		exit;
 	}		

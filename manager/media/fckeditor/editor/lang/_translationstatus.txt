@@ -1,0 +1,59 @@
+/*
+ * FCKeditor - The text editor for internet
+ * Copyright (C) 2003-2005 Frederico Caldeira Knabben
+ * 
+ * Licensed under the terms of the GNU Lesser General Public License:
+ * 		http://www.opensource.org/licenses/lgpl-license.php
+ * 
+ * For further information visit:
+ * 		http://www.fckeditor.net/
+ * 
+ * File Name: _translationstatus.txt
+ * 	Translation Status.
+ * 
+ * File Authors:
+ * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
+ */
+
+PROCESSING: ar.js      Found: 354   Missing: 6
+PROCESSING: bg.js      Found: 354   Missing: 6
+PROCESSING: bs.js      Found: 233   Missing: 127
+PROCESSING: ca.js      Found: 360   Missing: 0
+PROCESSING: cs.js      Found: 354   Missing: 6
+PROCESSING: da.js      Found: 360   Missing: 0
+PROCESSING: de.js      Found: 360   Missing: 0
+PROCESSING: el.js      Found: 233   Missing: 127
+PROCESSING: en-au.js   Found: 223   Missing: 137
+PROCESSING: en-uk.js   Found: 223   Missing: 137
+PROCESSING: eo.js      Found: 354   Missing: 6
+PROCESSING: es.js      Found: 360   Missing: 0
+PROCESSING: et.js      Found: 233   Missing: 127
+PROCESSING: eu.js      Found: 360   Missing: 0
+PROCESSING: fa.js      Found: 360   Missing: 0
+PROCESSING: fi.js      Found: 360   Missing: 0
+PROCESSING: fr.js      Found: 360   Missing: 0
+PROCESSING: gl.js      Found: 360   Missing: 0
+PROCESSING: he.js      Found: 233   Missing: 127
+PROCESSING: hr.js      Found: 360   Missing: 0
+PROCESSING: hu.js      Found: 354   Missing: 6
+PROCESSING: it.js      Found: 360   Missing: 0
+PROCESSING: ja.js      Found: 354   Missing: 6
+PROCESSING: ko.js      Found: 360   Missing: 0
+PROCESSING: lt.js      Found: 354   Missing: 6
+PROCESSING: nl.js      Found: 360   Missing: 0
+PROCESSING: no.js      Found: 360   Missing: 0
+PROCESSING: pl.js      Found: 354   Missing: 6
+PROCESSING: pt-br.js   Found: 360   Missing: 0
+PROCESSING: pt.js      Found: 360   Missing: 0
+PROCESSING: ro.js      Found: 360   Missing: 0
+PROCESSING: ru.js      Found: 360   Missing: 0
+PROCESSING: sk.js      Found: 354   Missing: 6
+PROCESSING: sl.js      Found: 354   Missing: 6
+PROCESSING: sr-latn.js Found: 228   Missing: 132
+PROCESSING: sr.js      Found: 228   Missing: 132
+PROCESSING: sv.js      Found: 360   Missing: 0
+PROCESSING: th.js      Found: 354   Missing: 6
+PROCESSING: tr.js      Found: 353   Missing: 7
+PROCESSING: uk.js      Found: 360   Missing: 0
+PROCESSING: zh-cn.js   Found: 354   Missing: 6
+PROCESSING: zh.js      Found: 354   Missing: 6

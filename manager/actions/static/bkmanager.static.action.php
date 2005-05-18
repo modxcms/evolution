@@ -77,7 +77,7 @@ else {
 
 </script>
 		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
-		<span style='width:100%;'><a href='javascript:;' onclick=' return submitForm();'><img src='media/editor/images/ed_save.gif' border=0 align='absmiddle'>Click here</a> to backup & download the selected tables</span><br />&nbsp;&nbsp;&nbsp;
+		<span style='width:100%;'><a href='javascript:;' onclick=' return submitForm();'><img src='media/images/misc/ed_save.gif' border=0 align='absmiddle'>Click here</a> to backup & download the selected tables</span><br />&nbsp;&nbsp;&nbsp;
 		<input type='checkbox' name='droptables'> Generate DROP TABLE statements.<p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>

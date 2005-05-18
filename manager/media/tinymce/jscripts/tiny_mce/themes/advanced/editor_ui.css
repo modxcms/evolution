@@ -4,43 +4,38 @@
 }
 
 .mceButtonNormal {
-	border-top: 0px solid;
-	border-left: 0px solid;
-	border-bottom: 0px solid;
-	border-right: 0px solid;
+	border-top: 1px solid;
+	border-left: 1px solid;
+	border-bottom: 1px solid;
+	border-right: 1px solid;
 	border-color: #F0F0EE;
-	cursor: hand;
-	margin-top: 2px;
-	margin-left: 2px;
-	margin-right: 1px;
-	margin-bottom: 1px;	
+	cursor: arrow;
 }
 
 .mceButtonOver {
-	border-top: 1px solid buttonhighlight;
+/*	border-top: 1px solid buttonhighlight;
 	border-left: 1px solid buttonhighlight;
 	border-bottom: 1px solid buttonshadow;
-	border-right: 1px solid buttonshadow;
-	cursor: hand;
-	background-image: url("../../../../../images/misc/buttonbar_gs.gif");
+	border-right: 1px solid buttonshadow;*/
+	border: 1px solid #0A246A;
+	cursor: arrow;
+	background-color: #B6BDD2;
 }
 
 .mceButtonDown {
-	border-bottom: 1px solid buttonhighlight;
+/*	border-bottom: 1px solid buttonhighlight;
 	border-right: 1px solid buttonhighlight;
 	border-top: 1px solid buttonshadow;
-	border-left: 1px solid buttonshadow;
-	cursor: hand;
-	background-image: url("../../../../../images/misc/buttonbar_gs.gif");
+	border-left: 1px solid buttonshadow;*/
+	cursor: arrow;
+	border: 1px solid #0A246A;
+	background-color: #8592B5;
 }
 
 .mceButtonSelected {
-	border-bottom: 1px solid;
-	border-right: 1px solid;
-	border-top: 1px solid;
-	border-left: 1px solid;
+	border: 1px solid;
 	border-color: #C0C0BB;
-	cursor: hand
+	cursor: arrow;
 }
 
 .mceButtonDisabled {
@@ -52,29 +47,28 @@
 	border-bottom: 1px solid;
 	border-right: 1px solid;
 	border-color: #F0F0EE;
-	cursor: text
+	cursor: arrow;
 }
 
 .mceSeparator {
-	position: relative;
-	margin: 0px;
-	width: 4px;
-	height: 16px;
-	padding: 0px;
-	background-image: 				url("../../../../../images/misc/buttonbarseperator.gif");
-	background-position: 			top;
-	background-repeat: 				repeat-x;
+	border-top: 1px solid buttonhighlight;
+	border-left: 1px solid buttonhighlight;
+	border-bottom: 1px solid buttonshadow;
+	border-right: 1px solid buttonshadow;
+	margin-right: 2px;
+	margin-left: 2px;
 }
 
 .mceSeparatorLine {
-	position: relative;
-	margin: 0px;
-	width: 4px;
-	height: 16px;
-  	padding: 0px;
-  	background-image: 				url("../../../../../images/misc/buttonbarseperator.gif");
-	background-position: 			top;
-	background-repeat: 				repeat-x;
+	margin:2px;
+	margin-left: 4px;
+	background-color: #F0F0EE;
+	border-top: 1px solid buttonshadow;
+	border-left: 1px solid buttonshadow;
+	border-bottom: 1px solid buttonhighlight;
+	border-right: 1px solid buttonhighlight;
+	width: 0px;
+	height: 15px;
 }
 
 .mceSelectList {
@@ -104,7 +98,7 @@
 
 .mceEditor {
 	background: #F0F0EE;
-	border: 1px solid #003399;
+	border: 1px solid #cccccc;
 }
 
 .mceEditorArea {
@@ -112,8 +106,43 @@
 	background: #FFFFFF;
 }
 
-.mceToolbar {
+.mceToolbarTop, .mceToolbarBottom {
 	background: #F0F0EE;
-	background-image: url("../../../../../images/misc/toolbar_tiny.jpg");
+}
+
+.mceToolbarTop {
+	border-bottom: 1px solid #cccccc;
+}
+
+.mceToolbarBottom {
 	border-top: 1px solid #cccccc;
+}
+
+.mcePathTop, .mcePathBottom, .mcePath {
+	font-family: "MS Sans Serif";
+	font-size: 9pt;
+	padding: 2px;
+	height: 20px;
+}
+
+.mcePathTop {
+	border-bottom: 1px solid #cccccc;
+}
+
+.mcePathBottom {
+	border-top: 1px solid #cccccc;
+}
+
+.mcePathItem, .mcePathItem:link, .mcePathItem:visited, .mcePathItem:hover {
+	text-decoration: none;
+	font-family: "MS Sans Serif";
+	font-size: 9pt;
+}
+
+.mcePathItem:hover {
+	text-decoration: underline;
+}
+
+.mcePath {
+	border-bottom: 1px solid #cccccc;
 }

@@ -1,0 +1,10 @@
+TABLE.FCK__ShowTableBorders, TABLE.FCK__ShowTableBorders TD
+{
+	border: #d3d3d3 1px solid ;
+}
+
+FORM
+{
+	border: 1px dotted #FF0000;
+	padding: 2px ;
+}

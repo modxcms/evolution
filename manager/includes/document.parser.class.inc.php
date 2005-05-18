@@ -488,6 +488,8 @@ class DocumentParser {
 	
 	// mod by Raymond
 	function mergeDocumentContent($template) {
+		$replace_richtext = "";
+		$richtexteditor = "";
 		preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
 		$variableCount = count($matches[1]);
 		$basepath = $this->config["base_path"]."/manager/includes";
@@ -497,9 +499,41 @@ class DocumentParser {
 			if(is_array($value)) {
 				include_once $basepath."/tmplvars.format.inc.php";
 				include_once $basepath."/tmplvars.commands.inc.php";
-				$value = getTVDisplayFormat($this,$value[0],$value[1],$value[2],$value[3],$value[4]);
+				$value = getTVDisplayFormat($this,$value[0],$value[1],$value[2],$value[3],$value[4],&$replace_richtext,&$richtexteditor);
 			}
 			$replace[$i] = stripslashes($value);
+			if (!empty($replace_richtext) && !empty($richtexteditor)) {
+				if ($richtexteditor=="TinyMCE") {
+					$replace[$i] .= "\n<script type='text/javascript'>\n" .
+							"tinyMCE.init({\n" . 
+							"theme : 'advanced',\n" . 
+							"plugins : 'table,advhr,advimage,advlink',\n" . 
+							"theme_advanced_buttons1_add_before : 'save,separator',\n" . 
+							"theme_advanced_buttons1_add : 'fontselect,fontsizeselect',\n" . 
+							"theme_advanced_buttons2_add : 'separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor',\n" . 
+							"theme_advanced_buttons2_add_before: 'cut,copy,paste,separator,search,replace,separator',\n" . 
+							"theme_advanced_buttons3_add_before : 'tablecontrols,separator',\n" . 
+							"theme_advanced_buttons3_add : 'emotions,iespell,flash,advhr,separator,print',\n" . 
+							"theme_advanced_toolbar_location : 'top',\n" . 
+							"theme_advanced_toolbar_align : 'left',\n" . 
+							"theme_advanced_path_location : 'bottom',\n" . 
+							"plugin_insertdate_dateFormat : '%Y-%m-%d',\n" . 
+							"plugin_insertdate_timeFormat : '%H:%M:%S',\n" . 
+							"extended_valid_elements : 'a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]',\n" . 
+							"mode : 'exact',\n" . 
+							"elements : '$replace_richtext'\n" . 
+							"});\n" .
+							"</script>";
+				}
+				elseif ($richtexteditor=="FCKeditor") {
+					$replace[$i] .= "\n" .
+							"<script type='text/javascript'>\n" . 
+							"var oFCK$replace_richtext = new FCKeditor( '$replace_richtext' ) ;\n" . 
+							"oFCK$replace_richtext.BasePath = 'manager/media/fckeditor/' ;\n" . 
+							"oFCK$replace_richtext.ReplaceTextarea() ;\n" . 
+							"</script>\n";
+				}
+			}
 		}
 		$template = str_replace($matches[0], $replace, $template);
 		return $template;

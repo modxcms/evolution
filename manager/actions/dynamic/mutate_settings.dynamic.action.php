@@ -556,6 +556,7 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
           <tr> 
+          	<?php // TODO: add more options for TinyMCE and/or FCKEditor ?>
             <td nowrap class="warning"><b><?php echo $_lang["use_editor_title"]?></b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="checkIM(); showHide(/editorRow/, 1);"> 
               <?php echo $_lang["yes"]?><br /> 
@@ -574,7 +575,7 @@ function showHide(what, onoff){
             <td> 
 				<select name="which_editor">
 					<option value="1" <?php echo !isset($which_editor) || $which_editor==1 ? "selected='selected'" : "" ;?>>TinyMCE</option>
-					<option value="2" <?php echo $which_editor==2 ? "selected='selected'" : "" ;?>>HTMLArea</option>
+					<option value="2" <?php echo $which_editor==2 ? "selected='selected'" : "" ;?>>FCKeditor</option>
 				</select>
 			</td> 
           </tr> 
@@ -584,17 +585,6 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='editorRow10' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["use_strict_editor_title"]?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="1" <?php echo ($strict_editor=='1' || !isset($strict_editor)) ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["yes"]?><br /> 
-              <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="0" <?php echo $strict_editor=='0' ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["no"]?> </td> 
-          </tr> 		  
-          <tr id='editorRow11' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["use_strict_editor_message"]?></td> 
           </tr> 
           <tr id='editorRow12' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 

@@ -5,7 +5,7 @@
  */
 
 	// Added by Raymond 20-Jan-2005
-	function getTVDisplayFormat($etomite,$name,$value,$format,$paramstring="",$tvtype="") {
+	function getTVDisplayFormat($etomite,$name,$value,$format,$paramstring="",$tvtype="",$replace_richtext,$richtexteditor) {
 
 		global $modx;
 		global $base_path;
@@ -124,19 +124,17 @@
 				$value = parseInput($value);
 				$w = $params['w']? $params['w']:'100%';
 				$h = $params['h']? $params['h']:'400px';
+				$richtexteditor = $params['edt']? $params['edt']: "";
 				$modx->regClientStartupScript("manager/media/tvscripts/webelm.js");
-				$modx->regClientStartupScript("manager/media/tvscripts/richtext.js");
-				$modx->regClientStartupScript("manager/media/editor/editor.js");		
-				$o = '<style type="text/css">@import url(manager/media/editor/editor.css);</style>';
-				$o.= '<div style="position;relative;width:'.$w.'; height:'.$h.';"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
+				if ($richtexteditor=="TinyMCE")
+					$modx->regClientStartupScript("manager/media/tinymce/jscripts/tiny_mce/tiny_mce.js");		
+				if ($richtexteditor=="FCKeditor")
+					$modx->regClientStartupScript("manager/media/fckeditor/fckeditor.js");		
+				$o= '<div style="position;relative;width:'.$w.'; height:'.$h.';"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
 				$o.= htmlspecialchars($value);
 				$o.= '</textarea></div>';
-				$o.= "<script type=\"text/javascript\">";
-				$o.= "	HTMLArea.loadPlugin(\"ContextMenu\");";
-				$o.= "	HTMLArea.loadPlugin(\"EnterParagraphs\");";
-				$o.= "	HTMLArea.loadPlugin(\"ListType\");";
-				$o.= "	document.addEventListener('onload',function(){tvCreateRTB('$id','".strtolower($params['tbs'])."')});";
-				$o.= "</script>";
+//				$replace_richtext = strlen($replace_richtext) > 0 ? $replace_richtext."," : ""; 
+				$replace_richtext = $id;
 				break;
 				
 			case "viewport":

@@ -763,102 +763,58 @@ function decode(s){
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['document_content']; ?></div><div class="sectionBody">
 	<?php
 	if(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1) {
-	if($which_editor==2) {
-	?>
-	<script type="text/javascript">
-		_editor_lang = "en";
-		_editor_url = "media/editor/";
-	</script> 
-
-	<script type="text/javascript" src="media/editor/editor.js"></script>
-	<style type="text/css">@import url(media/editor/editor.css);</style>
-
-	<script type="text/javascript" >
-	// load up the plugins...
-	<?php if($im_plugin==1) { ?>
-		HTMLArea.loadPlugin("ImageManager"); 
-	<?php } ?>
-		HTMLArea.loadPlugin("EnterParagraphs");
-	<?php if($to_plugin==1) { ?>
-		HTMLArea.loadPlugin("TableOperations"); 
-	<?php } ?>
-	<?php if($cm_plugin==1) { ?>
-		HTMLArea.loadPlugin("ContextMenu"); 
-	<?php } ?>
-		HTMLArea.loadPlugin("ListType");
-	</script>
-
-	<textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php
-	if(! empty($content['content'])) {
-		if(substr($im_plugin_base_url, -1) != '/') {
-			$base_url = $im_plugin_base_url . '/';
-		} else {
-			$base_url = $im_plugin_base_url;
+		if($which_editor==2) {
+			?>
+			<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($content['content']); ?></textarea> </div>
+			<script language="javascript" type="text/javascript" src="<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>fckeditor.js"></script>
+			<script language="javascript" type="text/javascript">
+			function OnChangeCallback(edtInstance) {
+				taElement = (document.getElementById) ? document.getElementById(edtInstance):document.all[edtInstance];
+				if (taElement) taElement.onchange();
+			}
+			var oFCKeditor = new FCKeditor( 'ta' ) ;
+			oFCKeditor.BasePath = '<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>' ;
+			oFCKeditor.ReplaceTextarea() ;
+			oFCKeditor.AttachToOnSelectionChange(OnChangeCallback('ta')) ;
+			</script>
+			<?php
+		} elseif($which_editor==1) {
+			//TODO: add image manager and file manager functionality? 
+			?>
+			<!-- tinyMCE -->
+			<textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;">
+			<?php
+			if(! empty($content['content'])) {
+				if(substr($im_plugin_base_url, -1) != '/') {
+					$im_base_url = $im_plugin_base_url . '/';
+				} else {
+					$im_base_url = $im_plugin_base_url;
+				}
+				$elements = parse_url($im_base_url);
+				$image_path = $elements['path'];
+				// make sure image path ends with a /
+				if(substr($image_path, -1) != '/') {
+					$image_path .= '/';
+				}
+				$etomite_root = dirname(dirname($_SERVER['PHP_SELF']));
+				$image_prefix = substr($image_path, strlen($etomite_root));
+				if(substr($image_prefix, -1) != '/') {
+					$image_prefix .= '/';
+				}
+				// escape / in path
+				$image_prefix = str_replace('/', '\/', $image_prefix);
+				$newcontent = preg_replace("/(<img[^>]+src=['\"])($image_prefix)([^'\"]+['\"][^>]*>)/", "\${1}$im_base_url\${3}", $content['content']);
+				echo htmlspecialchars($newcontent);
+			}
+			?></textarea>
+			<!-- /tinyMCE -->
+			<?php
+			$replace_richtexteditor = array("ta");
 		}
-		$elements = parse_url($base_url);
-		$image_path = $elements['path'];
-		// make sure image path ends with a /
-		if(substr($image_path, -1) != '/') {
-			$image_path .= '/';
-		}
-		$etomite_root = dirname(dirname($_SERVER['PHP_SELF']));
-		$image_prefix = substr($image_path, strlen($etomite_root));
-		if(substr($image_prefix, -1) != '/') {
-			$image_prefix .= '/';
-		}
-		// escape / in path
-		$image_prefix = str_replace('/', '\/', $image_prefix);
-		$newcontent = preg_replace("/(<img[^>]+src=['\"])($image_prefix)([^'\"]+['\"][^>]*>)/", "\${1}$base_url\${3}", $content['content']);
-		echo htmlspecialchars($newcontent);
-	}
-	?></textarea>
-	
-	<?php
-	} elseif($which_editor==1) {
-	?>
-	<!-- tinyMCE -->
-	<textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php
-	if(! empty($content['content'])) {
-		if(substr($im_plugin_base_url, -1) != '/') {
-			$base_url = $im_plugin_base_url . '/';
-		} else {
-			$base_url = $im_plugin_base_url;
-		}
-		$elements = parse_url($base_url);
-		$image_path = $elements['path'];
-		// make sure image path ends with a /
-		if(substr($image_path, -1) != '/') {
-			$image_path .= '/';
-		}
-		$etomite_root = dirname(dirname($_SERVER['PHP_SELF']));
-		$image_prefix = substr($image_path, strlen($etomite_root));
-		if(substr($image_prefix, -1) != '/') {
-			$image_prefix .= '/';
-		}
-		// escape / in path
-		$image_prefix = str_replace('/', '\/', $image_prefix);
-		$newcontent = preg_replace("/(<img[^>]+src=['\"])($image_prefix)([^'\"]+['\"][^>]*>)/", "\${1}$base_url\${3}", $content['content']);
-		echo htmlspecialchars($newcontent);
-	}
-	?></textarea>
-	<script language="javascript" type="text/javascript" src="media/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script language="javascript" type="text/javascript">
-	   tinyMCE.init({
-			theme : "advanced",
-			mode : "exact",
-			elements : "ta",
-			<?php echo !empty($tiny_css_path) ? "content_css : '$tiny_css_path'," : "" ?>
-			<?php echo !empty($tiny_css_selectors) ? "theme_advanced_styles : '$tiny_css_selectors'," : "" ?>
-			debug : false
-	   });
-	</script>
-	<!-- /tinyMCE -->
-	<?php
-	}
 	} else {
-	?>
-	<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($content['content']); ?></textarea> </div>
-	<?php
+		?>
+		<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($content['content']); ?></textarea> </div>
+		<?php
 	}
 	?>
 </div>
@@ -898,10 +854,10 @@ function decode(s){
 				// go through and display all the document variables
 				$row = mysql_fetch_assoc($rs);
 				if($row['type']=='htmlarea'){
-					if (is_array($replace_htmlarea))
-						$replace_htmlarea = array_merge($replace_htmlarea,array($row['name']));
+					if (is_array($replace_richtexteditor))
+						$replace_richtexteditor = array_merge($replace_richtexteditor,array("tv".$row['name']));
 					else
-						$replace_htmlarea = array($row['name']);
+						$replace_richtexteditor = array("tv".$row['name']);
 				}
 				// splitter
 				if($i>0 && $i<$limit) echo '<tr><td colspan="2"><div class="split"></div></td></tr>';
@@ -911,7 +867,9 @@ function decode(s){
 					<span class='warning'><?php echo $row['caption']; ?></span><br /><span class='comment'><?php echo $row['description']; ?></span>
 				</td>
 				<td valign="top" style="position:relative">
-				<?php echo renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], $row['value'], ' style="width:300px;"'); ?>
+				<?php
+				echo renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], $row['value'], ' style="width:300px;"');
+				?>
 				</td>
 				</td>
 			  </tr>			  
@@ -1020,55 +978,50 @@ if($_GET['a']=='27') { // fetch permissions on the document from the database
 
 if($content['type']=="document" || $_REQUEST['a']==4) {
 	if(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1) {
-		if($which_editor==2) {
-	?>
-		<script type="text/javascript">
-		function initEditor() {
-
-			var config = new HTMLArea.Config();
-
-			<?php if($strict_editor==1) { ?>
-			config.toolbar = [
-					[ "formatblock", "space",
-					  "bold", "italic", "underline", "strikethrough", "separator",
-					  "subscript", "superscript", "separator",
-					  "copy", "cut", "paste", "space", "undo", "redo",
-					  "orderedlist", "unorderedlist", "separator",
-					  "inserthorizontalrule", "createlink", "insertimage", "inserttable", "htmlmode"]
-				];
-			<?php } ?>
-
-			  editor = new HTMLArea("ta",config);
-
-			<?php if($to_plugin==1) { ?>
-				editor.registerPlugin(TableOperations);
-			<?php } ?>
-				editor.registerPlugin(EnterParagraphs);
-			<?php if($cm_plugin==1) { ?>
-				editor.registerPlugin(ContextMenu);
-			<?php } ?>
-			<?php if($strict_editor!=1) { ?>
-				editor.registerPlugin(ListType);
-			<?php }?>
-				
-				// generate main htmlarea
-				editor.generate();
-
-			 //edited by Apodigm - Docvars
-			<?php 
-				if(is_array($replace_htmlarea)) {
-					foreach($replace_htmlarea as $tag_id){ 
-						echo 'HTMLArea.replace("tv'.$tag_id.'", config); ';
-					}
+		if(is_array($replace_richtexteditor)) {
+			$element_list .= implode(",", $replace_richtexteditor);
+			if($which_editor==1) {
+				?>
+				<script language="javascript" type="text/javascript" src="media/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+				<script language="javascript" type="text/javascript">
+	            tinyMCE.init({
+				      theme : "advanced",
+				      plugins : "table,advhr,advimage,advlink",
+				      theme_advanced_buttons1_add_before : "save,separator",
+				      theme_advanced_buttons1_add : "fontselect,fontsizeselect",
+				      theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor",
+				      theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator",
+				      theme_advanced_buttons3_add_before : "tablecontrols,separator",
+				      theme_advanced_buttons3_add : "emotions,iespell,flash,advhr,separator,print",
+				      theme_advanced_toolbar_location : "top",
+				      theme_advanced_toolbar_align : "left",
+				      theme_advanced_path_location : "bottom",
+						plugin_insertdate_dateFormat : "%Y-%m-%d",
+						plugin_insertdate_timeFormat : "%H:%M:%S",
+				      extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+				      mode : "exact",
+				      <?php echo !empty($element_list) ? "elements : '$element_list'" : "" ?>,
+				      onchange_callback : "tvOnchangeCallBack"
+				   });
+	            
+	            function tvOnchangeCallBack(i){
+	                  i.oldTargetElement.onchange();            
+	            }
+	         </script>
+			<?php }
+			elseif ($which_editor==2) {
+				foreach($replace_richtexteditor as $fckInstance) {
+					$fckInstanceObj = "oFCK" . $fckInstance;
+					?>
+					<script language="javascript" type="text/javascript">
+					var <?php echo $fckInstanceObj ?> = new FCKeditor( '<?php echo $fckInstance ?>' ) ;
+					<?php echo $fckInstanceObj ?>.BasePath = '<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>' ;
+					<?php echo $fckInstanceObj ?>.ReplaceTextarea() ;
+					<?php echo $fckInstanceObj ?>.AttachToOnSelectionChange(OnChangeCallback('<?php echo $fckInstance ?>')) ;
+					</script>
+					<?php
 				}
-			?>
-			 //end modification
-			  return false;
-		}
-		document.onload=initEditor();
-		storeCurTemplate();
-		</script>
-		<?
+			}
 		}
 	}
 }

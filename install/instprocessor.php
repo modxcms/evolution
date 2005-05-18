@@ -146,6 +146,10 @@ $configString = '<?php
 		$pth = implode("manager",$a); unset($a);
 		$base_url = $url.(substr($url,-1)!="/"? "/":"");
 		$base_path = $pth.(substr($pth,-1)!="/"? "/":"");
+		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? "http://" : "https://" ;
+	   $site_url .= $_SERVER[\'HTTP_HOST\'];
+	   $site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? "":":".$_SERVER[\'SERVER_PORT\'];
+	   $site_url .= $base_url;
 	}';
 $configString .= "\n?>";
 $filename = '../manager/includes/config.inc.php';

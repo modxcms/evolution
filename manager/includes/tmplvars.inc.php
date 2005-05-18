@@ -22,7 +22,7 @@
 				$field_html .=  '<input type="text" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%" />';
 				break;
 			case "textareamini": // handler for textarea mini boxes
-				$field_html .=  '<textarea id="tv'.$field_name.'" name="tv'.$field_name.'" cols="40" rows="5" onchange="documentDirty=true;;setVariableModified(\''.$field_name.'\');" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
+				$field_html .=  '<textarea id="tv'.$field_name.'" name="tv'.$field_name.'" cols="40" rows="5" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
 				break;
 			case "textarea": // handler for textarea boxes
 			case "htmlarea": // handler for textarea boxes
@@ -123,6 +123,7 @@
 				}
 				break;
 			case "image":	// handles image fields using htmlarea image manager
+				//TODO: change to use TinyMCE image manager plugin
 				global $_lang;
 				global $ImageOutParam;
 				global $ImageManagerLoaded;

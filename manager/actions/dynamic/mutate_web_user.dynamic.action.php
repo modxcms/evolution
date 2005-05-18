@@ -618,6 +618,7 @@ function deleteuser() {
 		</table>        
 	</div>	
 	<!-- Photo -->
+	<!-- TODO: change to use TinyMCE image manager plugin -->
     <div class="tab-page" id="tabPhoto"> 
     	<h2 class="tab"><?php echo $_lang["settings_photo"] ?></h2> 
     	<script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabPhoto" ) );</script> 
