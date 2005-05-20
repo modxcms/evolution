@@ -95,12 +95,12 @@
 				<div style="padding-right:10px;">
 				    <p class='title'><?php echo $moduleName; ?> License Agreement.</p>
 				    <hr style="text-align:left;height:1px;width:90%" />
-					<p><H4>You must agree to the License before continuing installation.</H4>
+					<p><h4>You must agree to the License before continuing installation.</h4>
 					Usage of this software is subject to the GPL license. To help you understand 
 					what the GPL licence is and how it affects your ability to use the software, we 
 					have provided the following summary:</p>
-					<H4>The GNU General Public License is a Free Software license.</H4>Like any Free 
-					Software license, it grants to you the four following freedoms: 
+					<h4>The GNU General Public License is a Free Software license.</h4>
+					<p>Like any Free Software license, it grants to you the four following freedoms:</p> 
 					<ul>
                         <li>The freedom to run the program for any purpose. </li>
                         <li>The freedom to study how the program works and adapt it to your needs. </li>
@@ -116,17 +116,21 @@
                         notices that refer to this License and to the absence of any warranty; and give 
                         any other recipients of the Program a copy of the GNU General Public License 
                         along with the Program. Any translation of the GNU General Public License must 
-                        be accompanied by the GNU General Public License. 
+                        be accompanied by the GNU General Public License.</li>
+
                         <li>If you modify your copy or copies of the program or any portion of it, or 
                         develop a program based upon it, you may distribute the resulting work provided 
                         you do so under the GNU General Public License. Any translation of the GNU 
-                        General Public License must be accompanied by the GNU General Public License. 
+                        General Public License must be accompanied by the GNU General Public License. </li>
+
                         <li>If you copy or distribute the program, you must accompany it with the 
                         complete corresponding machine-readable source code or with a written offer, 
                         valid for at least three years, to furnish the complete corresponding 
-                        machine-readable source code. 
+                        machine-readable source code.</li>
+
                         <li>Any of these conditions can be waived if you get permission from the 
-                        copyright holder. 
+                        copyright holder.</li>
+
                         <li>Your fair use and other rights are in no way affected by the above. 
                         </li>
                     </ul>
@@ -134,7 +138,7 @@
 					are agreeing to the GNU General Public Licence, not the above. The above is 
 					simply a summary of the GNU General Public Licence, and its accuracy is not 
 					guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>GNU General Public 
-					License</a> in full before proceeding, which can also be found in the liCENCE 
+					License</a> in full before proceeding, which can also be found in the license 
 					file distributed with this package.</p>
 				</div>
 			<?php
@@ -154,7 +158,7 @@
 			  <tr>
 				<td nowrap valign="top" width="37%">
 				<input type="radio" name="installmode" id="installmode1" value="new" onclick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? "checked='checked'":"" ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
-				<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please not that this option may overwrite any data inside your database. <strong>NOTE:</strong> For new Linux/Unix installations, you will need to create a new empty file named "config.inc.php" inside the /manager/includes directory with permissions set to 777.</td>
+				<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please note that this option may overwrite any data inside your database. <strong>NOTE:</strong> For new Linux/Unix installations, you will need to create a new empty file named <code>config.inc.php</code> inside the <code>/manager/includes</code> directory with permissions set to 777.</td>
 			  </tr>
 			  <tr>
 				<td nowrap valign="top" width="37%">&nbsp;</td>
@@ -163,8 +167,7 @@
 			  <tr>
 				<td nowrap valign="top" width="37%">
 				<input type="radio" name="installmode" id="installmode2" value="upd" onclick="setInstallMode(1);" <?php echo !$upgradeable ? "disabled='diabled'":"" ?> <?php echo $_POST['installmode']=='upd' ? "checked='checked'":"" ?> /><label for="installmode2" class="nofloat">Upgrade Installation</label></td>
-				<td width="61%">Select this option to upgrade your current files and 
-				database.</td>
+				<td width="61%">Select this option to upgrade your current files and database.</td>
 			  </tr>
 			</table>
 		<?php
@@ -179,32 +182,30 @@
 		?>
 			<p class="title">Connection Information</p>
 			<p>Database connection and login information</p>
-			<p>Please enter the name of the database you&#39;ve created for MODX. If you haven&#39;t 
-			created a database yet, we will attempt to do so for you, but this may fail depending on 
-			the MySQL setup your host uses.</p>
+			<p>Please enter the name of the database created for MODX. If you there is no database yet, the installer will attempt to create a database for you. This may fail depending on the MySQL configuration or the database user permissions for your domain/installation.</p>
 			<div class="labelHolder"><label for="databasename">Database name:</label>
-			<input id="databasename" style="WIDTH: 200px" value="<?php echo isset($_POST['databasename']) ? $_POST['databasename']:"modx" ?>" name="databasename"></div>
+			<input id="databasename" value="<?php echo isset($_POST['databasename']) ? $_POST['databasename']:"modx" ?>" name="databasename" /></div>
 			<div class="labelHolder"><label for="tableprefix">Table prefix:</label>
-			<input id="tableprefix" style="WIDTH: 200px" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']:"modx_" ?>" name="tableprefix"></div>
+			<input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']:"modx_" ?>" name="tableprefix" /></div>
 			<br />
 			<p>Now please enter the login data for your database.</p>
 			<br />
 			<div class="labelHolder"><label for="databasehost">Database host:</label>
-			<input id="databasehost" style="WIDTH: 200px" value="<?php echo isset($_POST['databasehost']) ? $_POST['databasehost']:"localhost" ?>" name="databasehost"></div>
+			<input id="databasehost" value="<?php echo isset($_POST['databasehost']) ? $_POST['databasehost']:"localhost" ?>" name="databasehost" /></div>
 			<div class="labelHolder"><label for="databaseloginname">Database login name:</label>
-			<input id="databaseloginname" style="WIDTH: 200px" name="databaseloginname" value="<?php echo isset($_POST['databaseloginname']) ? $_POST['databaseloginname']:"" ?>" /></div>
+			<input id="databaseloginname" name="databaseloginname" value="<?php echo isset($_POST['databaseloginname']) ? $_POST['databaseloginname']:"" ?>" /></div>
 			<div class="labelHolder"><label for="databaseloginpassword">Database password:</label>
-			<input id="databaseloginpassword" style="WIDTH: 200px" type="password" name="databaseloginpassword"  value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']:"" ?>" /></div>
-			<br />
+			<input id="databaseloginpassword" type="password" name="databaseloginpassword"  value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']:"" ?>" /></div>
+
 			<p>Now you&#39;ll need to enter some details for the main administrator account. You can fill in your own name here, and a password you&#39;re not likely to forget. You&#39;ll need these to log into Admin once setup is complete.</p>
-			<br />
+
 			<div class="labelHolder"><label for="cmsadmin">Administrator username:</label>
-			<input id="cmsadmin" style="WIDTH: 200px" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" /></div>
+			<input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" /></div>
 			<div class="labelHolder"><label for="cmspassword">Administrator password:</label>
-			<input id="cmspassword" style="WIDTH: 200px" type="password" name="cmspassword" value="<?php echo isset($_POST['cmspassword']) ? $_POST['cmspassword']:"" ?>" /></div>
+			<input id="cmspassword" type="password" name="cmspassword" value="<?php echo isset($_POST['cmspassword']) ? $_POST['cmspassword']:"" ?>" /></div>
 			<div class="labelHolder"><label for="cmspasswordconfirm">Confirm password:</label>
-			<input id="cmspasswordconfirm" style="WIDTH: 200px" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" /></div>
-			<br />
+			<input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" /></div>
+
 		<?php
 		$o = ob_get_contents();
 		ob_end_clean();
@@ -404,21 +405,7 @@
 	<title><?php echo $moduleName; ?> &raquo; Install</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
         <style type="text/css">
-             @import url('./style.css');
-             .comname {
-             	font-weight:bold;
-            	color:#808080;}
-            label { 
-                width: 200px;
-                float: left;
-                display: block; }
-            .nofloat {
-                display: inline;
-                float: none; }
-            .mono {
-                font-family: Courier, Monaco, monospace;
-                font-weight: normal;
-                color: #777; }
+             @import url(./style.css);
         </style>
 	<script type="text/javascript" language="JavaScript" src="webelm.js"></script>
     <script>
@@ -472,8 +459,8 @@
 
 			if(n==1) cursrc += 1;
 			else cursrc -= 1;
-			if(cursrc>7) cursrc = 7;
-			if(cursrc<1) cursrc = 1;
+			if(cursrc > 7) cursrc = 7;
+			if(cursrc < 1) cursrc = 1;
 			switch (cursrc) {
 				case 1:	// welcome
 					btnnext.disabled = "";
@@ -598,9 +585,7 @@
 <table border="0" cellpadding="0" cellspacing="0" class="mainTable" style="width:100%;">
 <tr>
     <td colspan="2">
-		<blockquote>
-		  <p><br /><b><img border="0" src="img_banner.gif"></p>
-		</blockquote>
+		  <img style="padding:12px" src="img_banner.gif">
     </td>
   </tr>
   <tr class="fancyRow2">
