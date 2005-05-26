@@ -576,6 +576,7 @@ function showHide(what, onoff){
 				<select name="which_editor">
 					<option value="1" <?php echo !isset($which_editor) || $which_editor==1 ? "selected='selected'" : "" ;?>>TinyMCE</option>
 					<option value="2" <?php echo $which_editor==2 ? "selected='selected'" : "" ;?>>FCKeditor</option>
+					//TODO: add Xihna option here as value=3
 				</select>
 			</td> 
           </tr> 
@@ -585,6 +586,17 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr id='editorRow10' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning"><b><?php echo $_lang["use_strict_editor_title"]?></b></td> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="1" <?php echo ($strict_editor=='1' || !isset($strict_editor)) ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["yes"]?><br /> 
+              <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="0" <?php echo $strict_editor=='0' ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["no"]?> </td> 
+          </tr> 		  
+          <tr id='editorRow11' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["use_strict_editor_message"]?></td> 
           </tr> 
           <tr id='editorRow12' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
@@ -625,7 +637,7 @@ function showHide(what, onoff){
             <td nowrap class="warning"><b><?php echo $_lang["im_plugin_base_url_title"]?></b></td> 
             <td> <?php
 				function getImageBaseUrl() {
-					return 'http://'.$_SERVER['SERVER_NAME'].str_replace("/manager/index.php", "/assets/images/", $_SERVER["PHP_SELF"]);
+					return $site_url . "/assets/images/";
 				}
 				?> 
               <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="im_plugin_base_url" value="<?php echo isset($im_plugin_base_url) ? $im_plugin_base_url : getImageBaseUrl() ; ?>"> 
@@ -663,6 +675,39 @@ function showHide(what, onoff){
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["to_plugin_message"]?></td> 
           </tr>
+		  <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr> 
+            <td nowrap class="warning"><b><?php echo $_lang["tiny_theme_title"]?></b></td> 
+            <td>
+            <select name="tiny_theme">
+					<option value="advanced" <?php echo !isset($tiny_theme) || $tiny_theme=='advanced' ? "selected='selected'" : "" ;?>>Advanced</option>
+					<option value="default" <?php echo $tiny_theme=='default' ? "selected='selected'" : "" ;?>>Default</option>
+					<option value="simple" <?php echo $tiny_theme=='simple' ? "selected='selected'" : "" ;?>>Simple</option>
+				</select>
+			</td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["tiny_theme_message"]?></td> 
+          </tr> 
+		  <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr> 
+            <td nowrap class="warning"><b><?php echo $_lang["fck_toolbar_title"]?></b></td> 
+            <td>
+            <select name="fck_toolbar">
+					<option value="Default" <?php echo !isset($fck_toolbar) || $fck_toolbar=='Default' ? "selected='selected'" : "" ;?>>Default</option>
+					<option value="Basic" <?php echo $fck_toolbar=='Basic' ? "selected='selected'" : "" ;?>>Basic</option>
+				</select>
+			</td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["fck_toolbar_message"]?></td> 
+          </tr> 
 		  <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 

@@ -138,14 +138,14 @@ $configString = '<?php
 
 	// automatically assign base_path and base_url
 	if($base_path==""||$base_url=="") {
-		$a = explode("manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
+		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
 		if(count($a)>1) array_pop($a);
 		$url = implode("manager",$a); reset($a);
 		$a = explode("manager",dirname(__FILE__));
 		if(count($a)>1) array_pop($a);
 		$pth = implode("manager",$a); unset($a);
 		$base_url = $url.(substr($url,-1)!="/"? "/":"");
-		$base_path = $pth.(substr($pth,-1)!="/"? "/":"");
+		$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
 		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? "http://" : "https://" ;
 	   $site_url .= $_SERVER[\'HTTP_HOST\'];
 	   $site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? "":":".$_SERVER[\'SERVER_PORT\'];

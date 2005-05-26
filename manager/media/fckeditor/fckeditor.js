@@ -29,6 +29,7 @@ var FCKeditor = function( instanceName, width, height, toolbarSet, value )
 	this.ToolbarSet		= toolbarSet	|| 'Default' ;
 	this.Value			= value			|| '' ;
 	this.BasePath		= 'media/fckeditor/' ;
+	this.ServerPath		= '/' ;
 	this.CheckBrowser	= true ;
 	this.DisplayErrors	= true ;
 

@@ -84,7 +84,7 @@ $command=(
 $type=(
 		((isset($_GET['Type']))&&($_GET['Type']!=""))?
 			$_GET['Type']:
-			"File"
+			"docs"
 		);
 		
 $cwd=str_replace("..","",

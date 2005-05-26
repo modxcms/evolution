@@ -130,7 +130,9 @@
 					$modx->regClientStartupScript("manager/media/tinymce/jscripts/tiny_mce/tiny_mce.js");		
 				if ($richtexteditor=="FCKeditor")
 					$modx->regClientStartupScript("manager/media/fckeditor/fckeditor.js");		
-				$o= '<div style="position;relative;width:'.$w.'; height:'.$h.';"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
+				if ($richtexteditor=="Xihna")
+					$modx->regClientStartupScript("manager/media/xihna/htmlarea.js");		
+				$o= '<div style="position:relative; width:'.$w.'; height:'.$h.';"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
 				$o.= htmlspecialchars($value);
 				$o.= '</textarea></div>';
 //				$replace_richtext = strlen($replace_richtext) > 0 ? $replace_richtext."," : ""; 

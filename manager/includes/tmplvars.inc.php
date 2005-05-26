@@ -128,12 +128,12 @@
 				global $ImageOutParam;
 				global $ImageManagerLoaded;
 				global $content,$use_editor,$which_editor;
-				if (!$ImageManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==2)){ 
+				if (!$ImageManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
 					$field_html .='<script type="text/javascript">';
 					$field_html .='	_editor_lang = "en";';
-					$field_html .='	_editor_url = "media/editor/";';
+					$field_html .='	_editor_url = "media/xihna/";';
 					$field_html .='</script> ';
-					$field_html .='<script type="text/javascript" src="media/editor/editor.js"></script>';
+					$field_html .='<script type="text/javascript" src="media/xihna/htmlarea.js"></script>';
 					$field_html .='<script type="text/javascript">';
 					$field_html .='	HTMLArea.loadPlugin("ImageManager"); ';
 					$field_html .='</script>';

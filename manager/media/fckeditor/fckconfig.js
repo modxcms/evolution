@@ -1,4 +1,4 @@
-﻿/*
+/*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
  * 
@@ -15,7 +15,6 @@
  * File Authors:
  * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
  */
-
 FCKConfig.CustomConfigurationsPath = '' ;
 
 FCKConfig.EditorAreaCSS = FCKConfig.BasePath + 'css/fck_editorarea.css' ;
@@ -33,6 +32,7 @@ FCKConfig.SkinPath = FCKConfig.BasePath + 'skins/default/' ;
 FCKConfig.PluginsPath = FCKConfig.BasePath + 'plugins/' ;
 
 // FCKConfig.Plugins.Add( 'placeholder', 'en,it' ) ;
+//FCKConfig.Plugins.Add( 'iBrowser') ;
 
 FCKConfig.AutoDetectLanguage	= true ;
 FCKConfig.DefaultLanguage		= 'en' ;
@@ -78,7 +78,7 @@ FCKConfig.ToolbarSets["Default"] = [
 ] ;
 
 FCKConfig.ToolbarSets["Basic"] = [
-	['Bold','Italic','-','OrderedList','UnorderedList','-','Link','Unlink','-','About']
+	['Bold','Italic','-','OrderedList','UnorderedList','-','Link','Unlink','Image','-','About']
 ] ;
 
 FCKConfig.ContextMenu = ['Generic','Link','Anchor','Image','Select','Textarea','Checkbox','Radio','TextField','HiddenField','ImageButton','Button','BulletedList','NumberedList','TableCell','Table','Form'] ;
@@ -109,8 +109,8 @@ FCKConfig.LinkBrowser = true ;
 // ASP.Net		// FCKConfig.LinkBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Connector=connectors/aspx/connector.aspx' ;
 // ColdFusion	// FCKConfig.LinkBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Connector=connectors/cfm/connector.cfm' ;
 // Perl			// FCKConfig.LinkBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Connector=connectors/perl/connector.cgi' ;
-// PHP			// FCKConfig.LinkBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Connector=connectors/php/connector.php' ;
-FCKConfig.LinkBrowserURL = FCKConfig.BasePath + 'filemanager/browser/mcpuk/browser.html?Connector=connectors/php/connector.php' ;
+//FCKConfig.LinkBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Connector=connectors/php/connector.php' ;
+FCKConfig.LinkBrowserURL = FCKConfig.BasePath + 'filemanager/browser/mcpuk/browser.html?Connector=connectors/php/connector.php&ServerPath='+FCKConfig.BaseHref ;
 FCKConfig.LinkBrowserWindowWidth	= screen.width * 0.7 ;	// 70%
 FCKConfig.LinkBrowserWindowHeight	= screen.height * 0.7 ;	// 70%
 
@@ -119,8 +119,8 @@ FCKConfig.ImageBrowser = true ;
 // ASP.Net		// FCKConfig.ImageBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Type=Image&Connector=connectors/aspx/connector.aspx' ;
 // ColdFusion	// FCKConfig.ImageBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Type=Image&Connector=connectors/cfm/connector.cfm' ;
 // Perl			// FCKConfig.ImageBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Type=Image&Connector=connectors/perl/connector.cgi' ;
-// PHP			// FCKConfig.ImageBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Type=Image&Connector=connectors/php/connector.php' ;
-FCKConfig.ImageBrowserURL = FCKConfig.BasePath + 'filemanager/browser/mcpuk/browser.html?Type=Image&Connector=connectors/php/connector.php' ;
+//FCKConfig.ImageBrowserURL = FCKConfig.BasePath + 'filemanager/browser/default/browser.html?Type=Image&Connector=connectors/php/connector.php' ;
+FCKConfig.ImageBrowserURL = FCKConfig.BasePath + 'filemanager/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath='+FCKConfig.BaseHref ;
 FCKConfig.ImageBrowserWindowWidth  = screen.width * 0.7 ;	// 70% ;
 FCKConfig.ImageBrowserWindowHeight = screen.height * 0.7 ;	// 70% ;
 

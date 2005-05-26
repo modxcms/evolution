@@ -19,7 +19,7 @@ global $Config ;
 
 // Path to user files relative to the document root.
 // SECURITY TIP: Uncomment the following line to set a fixed path.
-//$Config['UserFilesPath'] = '/UserFiles/' ;
+$Config['UserFilesPath'] = 'tattoo-jason/assets/' ;
 
 $Config['AllowedExtensions']['File']	= array() ;
 $Config['DeniedExtensions']['File']		= array('php','asp','aspx','ascx','jsp','cfm','cfc','pl','bat','exe','dll','reg') ;

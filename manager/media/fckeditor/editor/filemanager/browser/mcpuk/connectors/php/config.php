@@ -13,9 +13,8 @@
  * 
  * File Authors:
  * 		Grant French (grant@mcpuk.net)
- */
-session_start();
-
+ */session_start();//FOR MODxinclude("../../../../../../../../includes/config.inc.php");
+//END FOR MODx
 /*------------------------------------------------------------------------------*/
 /* HTTP over SSL Detection (shouldnt require changing)				*/
 /*------------------------------------------------------------------------------*/
@@ -28,30 +27,30 @@ $fckphp_config['prot'].="://";
 /*------------------------------------------------------------------------------*/
 /* The physical path to the document root, Set manually if not using apache	*/
 /*------------------------------------------------------------------------------*/
-//$fckphp_config['basedir']=$_SERVER['DOCUMENT_ROOT'];
-$fckphp_config['basedir'] = 'D:\Work\FCKEditor\www\FCKeditor.V2\editor\filemanager\browser\mcpuk' ;
+$fckphp_config['basedir']=substr($base_path, 0, strlen($base_path)-1);
+//$fckphp_config['basedir'] = $_SERVER['DOCUMENT_ROOT'] ;
 /*==============================================================================*/
-
 
 /*------------------------------------------------------------------------------*/
 /* Prefix added to image path before sending back to editor			*/
 /*------------------------------------------------------------------------------*/
-$fckphp_config['urlprefix']=$fckphp_config['prot'].$_SERVER['SERVER_NAME'];
+//$fckphp_config['urlprefix']=$fckphp_config['prot'].$_SERVER['SERVER_NAME'];
+$fckphp_config['urlprefix']=substr($site_url, 0, strlen($site_url)-1);
 /*==============================================================================*/
 
 
 /*------------------------------------------------------------------------------*/
 /* Path to user files relative to the document root (no trailing slash)		*/
 /*------------------------------------------------------------------------------*/
-$fckphp_config['UserFilesPath'] = "/UserFiles" ;
+$fckphp_config['UserFilesPath'] = "/assets" ;
 /*==============================================================================*/
 
 
 /*------------------------------------------------------------------------------*/
 /* Progressbar handler (script that monitors upload progress) (''=none)
 /*------------------------------------------------------------------------------*/
-// $fckphp_config['uploadProgressHandler']=''; //No upload progress handler
-$fckphp_config['uploadProgressHandler']=$fckphp_config['prot'].$_SERVER['SERVER_NAME']."/cgi-bin/progress.cgi"; //Perl upload progress handler
+$fckphp_config['uploadProgressHandler']=''; //No upload progress handler
+//$fckphp_config['uploadProgressHandler']=$fckphp_config['prot'].$_SERVER['SERVER_NAME']."/cgi-bin/progress.cgi"; //Perl upload progress handler
 /*==============================================================================*/
 
 
@@ -86,7 +85,7 @@ $fckphp_config['auth']['Handler']['SharedKey']="->Shared_K3y-F0R*5enD1NG^auth3nt
 //First area options are commented
 
 //File Area
-$fckphp_config['ResourceAreas']['File'] =array(
+$fckphp_config['ResourceAreas']['docs'] =array(
 	
 	//Files(identified by extension) that may be uploaded to this area
 	'AllowedExtensions'	=>	array("zip","doc","xls","pdf","rtf","csv","jpg","gif","jpeg","png","avi","mpg","mpeg","swf","fla"),
@@ -111,7 +110,7 @@ $fckphp_config['ResourceAreas']['File'] =array(
 	);
 
 //Image area
-$fckphp_config['ResourceAreas']['Image'] =array(
+$fckphp_config['ResourceAreas']['images'] =array(
 	'AllowedExtensions'	=>	array("jpg","gif","jpeg","png","tiff","tif",),
 	'AllowedMIME'		=>	array(),
 	'MaxSize'		=>	1024,
@@ -122,7 +121,7 @@ $fckphp_config['ResourceAreas']['Image'] =array(
 	);
 
 //Flash area
-$fckphp_config['ResourceAreas']['Flash'] =array(
+$fckphp_config['ResourceAreas']['flash'] =array(
 	'AllowedExtensions'	=>	array("swf","fla"),
 	'AllowedMIME'		=>	array(),
 	'MaxSize'		=>	1024,
@@ -133,7 +132,7 @@ $fckphp_config['ResourceAreas']['Flash'] =array(
 	);
 	
 //Media area
-$fckphp_config['ResourceAreas']['Media'] =array(
+$fckphp_config['ResourceAreas']['media'] =array(
 	'AllowedExtensions'	=>	array("swf","fla","jpg","gif","jpeg","png","avi","mpg","mpeg"),
 	'AllowedMIME'		=>	array(),
 	'MaxSize'		=>	5120,
@@ -189,7 +188,7 @@ array_push($fckphp_config['FileNameAllowedChars'],')','(','[',']','~');
 /*------------------------------------------------------------------------------*/
 
 $fckphp_config['Debug']=false;
-$fckphp_config['DebugOutput']="/var/www/fckeditor/htdocs/FCKeditor/data/fck_conn_dbg";
+$fckphp_config['DebugOutput']="fck_conn_dbg";
 
 #Log PHP errors
 $fckphp_config['Debug_Errors']=false;
@@ -212,7 +211,7 @@ $fckphp_config['Debug_Output']=false;
 /*	ResourceTypes :: Array of valid resource areas				*/
 /*	Commands :: Array of valid commands accepted by the connector		*/
 /*------------------------------------------------------------------------------*/
-$fckphp_config['ResourceTypes'] = array('File','Image','Flash','Media');
+$fckphp_config['ResourceTypes'] = array('docs','images','flash','media');
 $fckphp_config['Commands'] = array(
 				"CreateFolder",
 				"GetFolders",
