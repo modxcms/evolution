@@ -30,6 +30,16 @@ $messagesallowed = $_SESSION['permissions']['messages'];
 
 		var MODX_MEDIA_PATH = "media"; // set media path
 
+		function document_onload() {
+ 			stopWorker();
+ 			msgCount(); 
+ 			hideLoader();
+ 			<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>;  
+		};
+		function document_onunload() {
+ 			top.scripter.work();
+ 		};
+		
 		// set tree to default action.		
 		parent.menu.ca = "open";
 
@@ -125,6 +135,6 @@ if($_SESSION['browser']=='ie') {
 	}
 	</style>
 </head>
-<body ondragstart="return false" onLoad='stopWorker(); msgCount(); hideLoader();<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>'  onbeforeunload="checkDirt();" onUnload="top.scripter.work();">
+<body ondragstart="return false" onbeforeunload="checkDirt();">
 
 <div id="preLoader"><table width="100%" height="50%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>
