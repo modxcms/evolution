@@ -767,11 +767,11 @@ function decode(s){
 		?>
 		<script type="text/javascript">
 			_editor_lang = "en";
-			_editor_url = "media/xihna/";
+			_editor_url = "media/editor/";
 		</script> 
 	
-		<script type="text/javascript" src="media/xihna/htmlarea.js"></script>
-		<style type="text/css">@import url(media/xihna/htmlarea.css);</style>
+		<script type="text/javascript" src="media/editor/editor.js"></script>
+		<style type="text/css">@import url(media/editor/editor.css);</style>
 	
 		<script type="text/javascript" >
 		// load up the plugins...
@@ -826,6 +826,7 @@ function decode(s){
 			var oFCKeditor = new FCKeditor( 'ta' ) ;
 			oFCKeditor.BasePath = '<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>' ;
 			oFCKeditor.BaseHref = '<?php echo $site_url ?>';
+			oFCKeditor.ToolbarSet = '<?php echo $fck_toolbar ?>' ;
 			oFCKeditor.ReplaceTextarea() ;
 			oFCKeditor.AttachToOnSelectionChange(OnChangeCallback('ta')) ;
 			</script>
@@ -1087,7 +1088,7 @@ if($content['type']=="document" || $_REQUEST['a']==4) {
 				<script language="javascript" type="text/javascript" src="media/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 				<script language="javascript" type="text/javascript">
 	            tinyMCE.init({
-				      theme : "advanced",
+				      <?php echo !empty($tiny_theme) ? "theme : '$tiny_theme'," : "theme : 'advanced'," ?>
 				      plugins : "table,advhr,advimage,advlink",
 				      theme_advanced_buttons1_add_before : "save,separator",
 				      theme_advanced_buttons1_add : "fontselect,fontsizeselect",
@@ -1121,6 +1122,7 @@ if($content['type']=="document" || $_REQUEST['a']==4) {
 					var <?php echo $fckInstanceObj ?> = new FCKeditor( '<?php echo $fckInstance ?>' ) ;
 					<?php echo $fckInstanceObj ?>.BasePath = '<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>' ;
 					<?php echo $fckInstanceObj ?>.BaseHref = '<?php echo $site_url ?>' ;
+					<?php echo $fckInstanceObj ?>.ToolbarSet = '<?php echo $fck_toolbar ?>' ;
 					<?php echo $fckInstanceObj ?>.ReplaceTextarea() ;
 					<?php echo $fckInstanceObj ?>.AttachToOnSelectionChange(OnChangeCallback('<?php echo $fckInstance ?>')) ;
 					</script>
