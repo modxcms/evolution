@@ -556,7 +556,7 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
           <tr> 
-          	<?php // TODO: add more options for TinyMCE and/or FCKEditor ?>
+          	<?php // TODO: add more options for WYSIWYG Editors ?>
             <td nowrap class="warning"><b><?php echo $_lang["use_editor_title"]?></b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="checkIM(); showHide(/editorRow/, 1);"> 
               <?php echo $_lang["yes"]?><br /> 
@@ -576,7 +576,8 @@ function showHide(what, onoff){
 				<select name="which_editor">
 					<option value="1" <?php echo !isset($which_editor) || $which_editor==1 ? "selected='selected'" : "" ;?>>TinyMCE</option>
 					<option value="2" <?php echo $which_editor==2 ? "selected='selected'" : "" ;?>>FCKeditor</option>
-					//TODO: add Xihna option here as value=3
+					//TODO: add back legacy HTMLArea support where functional here
+					//TODO: add Xihna option here as value=4
 				</select>
 			</td> 
           </tr> 

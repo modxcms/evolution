@@ -488,6 +488,7 @@ class DocumentParser {
 	
 	// mod by Raymond
 	function mergeDocumentContent($template) {
+		global $site_url;
 		$replace_richtext = "";
 		$richtexteditor = "";
 		preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
@@ -499,14 +500,21 @@ class DocumentParser {
 			if(is_array($value)) {
 				include_once $basepath."/tmplvars.format.inc.php";
 				include_once $basepath."/tmplvars.commands.inc.php";
-				$value = getTVDisplayFormat($this,$value[0],$value[1],$value[2],$value[3],$value[4],&$replace_richtext,&$richtexteditor);
+				$w = "100%";
+				$h = "300";
+				$value = getTVDisplayFormat($this,$value[0],$value[1],$value[2],$value[3],$value[4],$replace_richtext,$richtexteditor,$w,$h);
 			}
 			$replace[$i] = stripslashes($value);
 			if (!empty($replace_richtext) && !empty($richtexteditor)) {
+				$w = stristr($w, '%')? $w: intval($w);
+				$h = stristr($h, '%')? $h: intval($h);
 				if ($richtexteditor=="TinyMCE") {
+					$tiny_theme = $this->config['tiny_theme'];
+					$tiny_css_path = $this->config['tiny_css_path'];
+					$tiny_css_selectors = $this->config['tiny_css_selectors'];
 					$replace[$i] .= "\n<script type='text/javascript'>\n" .
 							"tinyMCE.init({\n" . 
-							"theme : 'advanced',\n" . 
+							!empty($tiny_theme)? "theme : '$tiny_theme',\n": "theme : 'simple',\n" . 
 							"plugins : 'table,advhr,advimage,advlink',\n" . 
 							"theme_advanced_buttons1_add_before : 'save,separator',\n" . 
 							"theme_advanced_buttons1_add : 'fontselect,fontsizeselect',\n" . 
@@ -519,20 +527,31 @@ class DocumentParser {
 							"theme_advanced_path_location : 'bottom',\n" . 
 							"plugin_insertdate_dateFormat : '%Y-%m-%d',\n" . 
 							"plugin_insertdate_timeFormat : '%H:%M:%S',\n" . 
-							"extended_valid_elements : 'a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]',\n" . 
+							"extended_valid_elements : 'div[id|name|class|align],a[id|name|href|target|title|onclick|ref],img[id|name|class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]',\n" . 
 							"mode : 'exact',\n" . 
+							"width : '$w',\n" .
+							"height : '$h',\n" .
+							!empty($tiny_css_path) ? "content_css : '$tiny_css_path',\n" : "" .
+							!empty($tiny_css_selectors) ? "theme_advanced_styles : '$tiny_css_selectors'," : "" .
+							"document_base_href : '$site_url'\n" .
 							"elements : '$replace_richtext'\n" . 
 							"});\n" .
 							"</script>";
 				}
 				elseif ($richtexteditor=="FCKeditor") {
+					$fck_toolbar = $this->config['fck_toolbar'];
 					$replace[$i] .= "\n" .
 							"<script type='text/javascript'>\n" . 
 							"var oFCK$replace_richtext = new FCKeditor( '$replace_richtext' ) ;\n" . 
 							"oFCK$replace_richtext.BasePath = 'manager/media/fckeditor/' ;\n" . 
+							"oFCK$replace_richtext.BaseHref = '$site_url' ;\n" . 
+							"oFCK$replace_richtext.Height = '$h' ;\n" . 
+							"oFCK$replace_richtext.Width = '$w' ;\n" . 
+							"oFCK$replace_richtext.ToolbarSet = '$fck_toolbar' ;\n" . 
 							"oFCK$replace_richtext.ReplaceTextarea() ;\n" . 
 							"</script>\n";
 				}
+				
 			}
 		}
 		$template = str_replace($matches[0], $replace, $template);

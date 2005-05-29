@@ -5,7 +5,7 @@
  */
 
 	// Added by Raymond 20-Jan-2005
-	function getTVDisplayFormat($etomite,$name,$value,$format,$paramstring="",$tvtype="",$replace_richtext,$richtexteditor) {
+	function getTVDisplayFormat($etomite,$name,$value,$format,$paramstring="",$tvtype="",&$replace_richtext,&$richtexteditor,&$w,&$h) {
 
 		global $modx;
 		global $base_path;
@@ -130,6 +130,8 @@
 					$modx->regClientStartupScript("manager/media/tinymce/jscripts/tiny_mce/tiny_mce.js");		
 				if ($richtexteditor=="FCKeditor")
 					$modx->regClientStartupScript("manager/media/fckeditor/fckeditor.js");		
+				if ($richtexteditor=="HTMLArea")
+					$modx->regClientStartupScript("manager/media/editor/editor.js");		
 				if ($richtexteditor=="Xihna")
 					$modx->regClientStartupScript("manager/media/xihna/htmlarea.js");		
 				$o= '<div style="position:relative; width:'.$w.'; height:'.$h.';"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
