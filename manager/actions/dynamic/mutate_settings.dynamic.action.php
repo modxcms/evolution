@@ -558,9 +558,9 @@ function showHide(what, onoff){
           <tr> 
           	<?php // TODO: add more options for WYSIWYG Editors ?>
             <td nowrap class="warning"><b><?php echo $_lang["use_editor_title"]?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="checkIM(); showHide(/editorRow/, 1);"> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="checkIM(); showHide(/<?php echo $which_editor==1?"tiny":"fck"?>Row/, 1);"> 
               <?php echo $_lang["yes"]?><br /> 
-              <input onChange="documentDirty=true;" type="radio" name="use_editor" value="0" <?php echo $use_editor=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/imRow/, 0); showHide(/editorRow/, 0);"> 
+              <input onChange="documentDirty=true;" type="radio" name="use_editor" value="0" <?php echo $use_editor=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/imRow/, 0); showHide(/editorRow/, 0); showHide(/fckRow/, 0); showHide(/tinyRow/, 0);"> 
               <?php echo $_lang["no"]?> </td> 
           </tr> 
           <tr> 
@@ -573,9 +573,9 @@ function showHide(what, onoff){
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["which_editor_title"]?></b></td> 
             <td> 
-				<select name="which_editor">
-					<option value="1" <?php echo !isset($which_editor) || $which_editor==1 ? "selected='selected'" : "" ;?>>TinyMCE</option>
-					<option value="2" <?php echo $which_editor==2 ? "selected='selected'" : "" ;?>>FCKeditor</option>
+				<select name="which_editor" onChange="documentDirty=true;">
+					<option value="1" <?php echo !isset($which_editor) || $which_editor==1 ? "selected='selected'" : "" ;?> onclick="if (this.selected){showHide(/imRow/, 1); showHide(/editorRow/, 0); showHide(/tinyRow/, 1); showHide(/fckRow/, 0);}">TinyMCE</option>
+					<option value="2" <?php echo $which_editor==2 ? "selected='selected'" : "" ;?> onclick="if (this.selected){showHide(/imRow/, 1); showHide(/editorRow/, 0); showHide(/tinyRow/, 0); showHide(/fckRow/, 1);}">FCKeditor</option>
 					//TODO: add back legacy HTMLArea support where functional here
 					//TODO: add Xihna option here as value=4
 				</select>
@@ -588,32 +588,32 @@ function showHide(what, onoff){
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr id='editorRow10' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow0' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["use_strict_editor_title"]?></b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="1" <?php echo ($strict_editor=='1' || !isset($strict_editor)) ? 'checked="checked"' : "" ; ?>> 
               <?php echo $_lang["yes"]?><br /> 
               <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="0" <?php echo $strict_editor=='0' ? 'checked="checked"' : "" ; ?>> 
               <?php echo $_lang["no"]?> </td> 
           </tr> 		  
-          <tr id='editorRow11' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow1' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["use_strict_editor_message"]?></td> 
           </tr> 
-          <tr id='editorRow12' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow2' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr id='editorRow1' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='allRow1' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["im_plugin_title"]?></b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="im_plugin" value="1" <?php echo ($im_plugin=='1' || !isset($im_plugin)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/imRow/, 1);"> 
               <?php echo $_lang["yes"]?><br /> 
               <input onChange="documentDirty=true;" type="radio" name="im_plugin" value="0" <?php echo $im_plugin=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/imRow/, 0);"> 
               <?php echo $_lang["no"]?> </td> 
           </tr> 
-          <tr id='editorRow2' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='allRow2' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["im_plugin_message"]?></td> 
           </tr> 
-          <tr id='editorRow3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='allRow3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
           <tr id='imRow1' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
@@ -651,35 +651,35 @@ function showHide(what, onoff){
           <tr id='imRow6' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr id='editorRow4' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow4' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["cm_plugin_title"]?></b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="cm_plugin" value="1" <?php echo $cm_plugin=='1' ? 'checked="checked"' : "" ; ?>> 
               <?php echo $_lang["yes"]?><br /> 
               <input onChange="documentDirty=true;" type="radio" name="cm_plugin" value="0" <?php echo ($cm_plugin=='0' || !isset($cm_plugin)) ? 'checked="checked"' : "" ; ?>> 
               <?php echo $_lang["no"]?> </td> 
           </tr> 
-          <tr id='editorRow5' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow5' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["cm_plugin_message"]?></td> 
           </tr> 
-          <tr id='editorRow6' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow6' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr id='editorRow7' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow7' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["to_plugin_title"]?></b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="to_plugin" value="1" <?php echo $to_plugin=='1' ? 'checked="checked"' : "" ; ?>> 
               <?php echo $_lang["yes"]?><br /> 
               <input onChange="documentDirty=true;" type="radio" name="to_plugin" value="0" <?php echo ($to_plugin=='0' || !isset($to_plugin)) ? 'checked="checked"' : "" ; ?>> 
               <?php echo $_lang["no"]?> </td> 
           </tr> 
-          <tr id='editorRow8' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow8' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["to_plugin_message"]?></td> 
           </tr>
 		  <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr> 
+          <tr id='tinyRow1' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["tiny_theme_title"]?></b></td> 
             <td>
             <select name="tiny_theme">
@@ -689,14 +689,14 @@ function showHide(what, onoff){
 				</select>
 			</td> 
           </tr> 
-          <tr> 
+          <tr id='tinyRow2' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["tiny_theme_message"]?></td> 
           </tr> 
 		  <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr> 
+          <tr id='fckRow1' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==2 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["fck_toolbar_title"]?></b></td> 
             <td>
             <select name="fck_toolbar">
@@ -705,31 +705,31 @@ function showHide(what, onoff){
 				</select>
 			</td> 
           </tr> 
-          <tr> 
+          <tr id='fckRow1' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==2 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["fck_toolbar_message"]?></td> 
           </tr> 
 		  <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr> 
+          <tr id='tinyRow3' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["tiny_css_path_title"]?></b></td> 
             <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="tiny_css_path" value="<?php echo isset($tiny_css_path) ? $tiny_css_path : "" ; ?>"> 
 			</td> 
           </tr> 
-          <tr> 
+          <tr id='tinyRow4' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["tiny_css_path_message"]?></td> 
           </tr> 
 		  <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr> 
+          <tr id='tinyRow5' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["tiny_css_selectors_title"]?></b></td> 
             <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="tiny_css_selectors" value="<?php echo isset($tiny_css_selectors) ? $tiny_css_selectors : "" ; ?>"> 
 			</td> 
           </tr> 
-          <tr> 
+          <tr id='tinyRow6' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["tiny_css_selectors_message"]?></td> 
           </tr> 
