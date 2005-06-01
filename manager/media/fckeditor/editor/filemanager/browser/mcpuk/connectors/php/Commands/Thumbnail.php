@@ -219,6 +219,10 @@ class Thumbnail {
 		if ($n_height<96) $y=round((96-$n_height)/2);
 		
 		$thumb=imagecreatetruecolor(96,96);
+		if (!$thumb) {
+            $thumb=imagecreate(96,96);
+        }
+
 		
 		#Background colour fix by:
 		#Ben Lancaster (benlanc@ster.me.uk)
