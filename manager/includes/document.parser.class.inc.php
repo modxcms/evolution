@@ -1401,7 +1401,11 @@ class DocumentParser {
 				include_once $baspath."/tmplvars.commands.inc.php";				
 				for($i=0;$i<count($result);$i++) {
 					$row = $result[$i];
-					$output[$row['name']] = ($curDoc && $this->documentObject[$row['name']]) ? $this->documentObject[$row['name']] : getTVDisplayFormat($this,$row['name'],$row['value'],$row['display'],$row['display_params'],$row['type']);
+					$replace_richtext = "";
+					$richtexteditor = "";
+					$w = "100%";
+					$h = "300";
+					$output[$row['name']] = ($curDoc && $this->documentObject[$row['name']]) ? $this->documentObject[$row['name']] : getTVDisplayFormat($this,$row['name'],$row['value'],$row['display'],$row['display_params'],$row['type'], "", "", "", "");
 				}
 				return $output;
 			}
