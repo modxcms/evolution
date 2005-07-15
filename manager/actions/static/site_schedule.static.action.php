@@ -1,6 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-/* if($_SESSION['permissions']['edit_document']!=1 && $_REQUEST['a']==51) {	$e->setError(3);
+/* if(!$modx->hasPermission('edit_document') && $_REQUEST['a']==51) {
+	$e->setError(3);
 	$e->dumpError();	
 } */
 ?>

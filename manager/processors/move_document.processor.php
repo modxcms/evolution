@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_document']!=1 && $_REQUEST['a']==52) {	$e->setError(3);
+if(!$modx->hasPermission('edit_document') && $_REQUEST['a']==52) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -35,7 +36,7 @@ if(!$rs){
 	echo "An error occured while attempting to change the new parent to a folder.";
 }
 
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET parent=".$_REQUEST['new_parent'].", editedby=".$_SESSION['internalKey'].", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
+$sql = "UPDATE $dbase.".$table_prefix."site_content SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
 $rs = mysql_query($sql);
 if(!$rs){
 	echo "An error occured while attempting to move the document to the new parent.";

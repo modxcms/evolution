@@ -1,9 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_plugin']!=1 && $_REQUEST['a']==102) {	$e->setError(3);
+if(!$modx->hasPermission('edit_plugin') && $_REQUEST['a']==102) {
+	$e->setError(3);
 	$e->dumpError();	
 }
-if($_SESSION['permissions']['new_plugin']!=1 && $_REQUEST['a']==101) {	$e->setError(3);
+if(!$modx->hasPermission('new_plugin') && $_REQUEST['a']==101) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -36,8 +38,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing this snippet. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username'],"plugin");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -64,7 +66,7 @@ if(isset($_GET['id'])) {
 	}
 	$content = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$content['name'];
-	if($content['locked']==1 && $_SESSION['role']!=1) {
+	if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		$e->setError(3);
 		$e->dumpError();
 	}
@@ -210,7 +212,7 @@ function decode(s){
 <?php
 	// invoke OnPluginFormPrerender event
 	$evtOut = $modx->invokeEvent("OnPluginFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
@@ -260,7 +262,7 @@ function decode(s){
 		<table border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">[[</span><input name="name" type="text" maxlength="100" value="<?php echo $content['name'];?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">]]</span><span class="warning" id='savingMessage'>&nbsp;</span></td>
+			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="name" type="text" maxlength="100" value="<?php echo $content['name'];?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><span class="warning" id='savingMessage'>&nbsp;</span></td>
 		  </tr>
 		  <tr>
 			<td align="left"><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</td>
@@ -282,8 +284,31 @@ function decode(s){
     	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script> 
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
+			<td align="left"><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</td>
+			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="moduleguid" style="width:300px;" onChange='documentDirty=true;'>
+			<option>&nbsp;</option>
+			<?php
+				$sql =	"SELECT sm.id,sm.name,sm.guid " .
+						"FROM ".$modx->getFullTableName("site_modules")." sm ".
+						"INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id ".
+						"INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
+						"WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
+						"ORDER BY sm.name ";
+				$ds = $modx->dbQuery($sql);
+				if($ds) while($row = $modx->fetchRow($ds)){
+					echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
+				} 
+			?>
+			</select>
+			</td>
+		  </tr>
+		  <tr>
+			<td>&nbsp;</td>
+			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br /></td>
+		  </tr>
+		  <tr>
 			<td align="left" valign="top"><?php echo $_lang['plugin_config']; ?>:</td>
-			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="255" value="<?php echo $content['properties'];?>" class="inputBox" style="width:300px;" onChange='showParameters(this);documentDirty=true;'></td>
+			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties'];?>" class="inputBox" style="width:280px;" onChange='showParameters(this);documentDirty=true;' /><input type="button" value=".." style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']; ?>" /></td>
 		  </tr>
 		  <tr id="displayparamrow">
 			<td valign="top" align="left">&nbsp;</td>
@@ -333,17 +358,25 @@ function decode(s){
 								"Template Service Events",
 								"User Defined Events"
 							);
-		  					$sql = "SELECT * FROM $dbase.".$table_prefix."system_eventnames ";
+		  					$sql = "SELECT * FROM $dbase.".$table_prefix."system_eventnames ORDER BY service DESC, groupname, name";
 							$rs = mysql_query($sql);
 							$limit = mysql_num_rows($rs);
 							if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
 							else for ($i=0; $i<$limit; $i++) { 
 								$row = mysql_fetch_assoc($rs);
+								// display records
 								if($srv!=$row['service']){
 									$srv=$row['service'];
 									if(count($evtnames)>0) echoEventRows($evtnames);
-	          						echo "<tr><td colspan='2'><div class='split'></div></td></tr>";
+	          						echo "<tr><td colspan='2'><div class='split' style='margin-top:10px;'></div></td></tr>";
 									echo "<tr><td colspan='2'><b>".$services[$srv-1]."</b></td></tr>";
+								}
+								// display group name
+								if($grp!=$row['groupname']){
+									$grp=$row['groupname'];
+									if(count($evtnames)>0) echoEventRows($evtnames);
+									echo "<tr><td colspan='2'><hr size='1' style='color:#c0c0c0; border:1px dotted #e0e0e0;' /></td></tr>";
+									echo "<tr><td colspan='2'class='warning' style='color:#a0a0a0' align='left'><b>".$row['groupname']."</b></td></tr>";
 								}
 								$evtnames[] = '<input name="sysevents[]" type="checkbox"'.(in_array($row[id],$evts) ? " checked='checked' " : "").'class="inputBox" value="'.$row['id'].'" />'.$row['name'];
 								if(count($evtnames)==2) echoEventRows($evtnames);
@@ -370,7 +403,7 @@ function decode(s){
 <?php
 	// invoke OnPluginFormRender event
 	$evtOut = $modx->invokeEvent("OnPluginFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 <script>

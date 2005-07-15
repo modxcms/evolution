@@ -1,11 +1,25 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['save_user']!=1 && $_REQUEST['a']==32) {	$e->setError(3);
+if(!$modx->hasPermission('save_user') && $_REQUEST['a']==32) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
 <?php
 
+// Web alert -  sends an alert to web browser
+function webAlert($msg){
+	global $id,$modx;
+	global $dbase, $table_prefix;
+	$mode = $_POST['mode'];
+	$url = "index.php?a=$mode".($mode=='12' ? "&id=".$id:"");
+	$modx->manager->saveFormValues($mode);
+	include_once "header.inc.php";
+	$modx->webAlert($msg,$url);
+	include_once "footer.inc.php";
+}
+
+// Generate password
 function generate_password($length = 10) {
 	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 	$ps_len = strlen($allowable_characters);
@@ -17,7 +31,8 @@ function generate_password($length = 10) {
 	return $pass;
 }
 
-$id = $_POST['id'];
+$id = intval($_POST['id']);
+$oldusername = $_POST['oldusername'];
 $newusername = !empty($_POST['newusername']) ? $_POST['newusername'] : "New User";
 $fullname = mysql_escape_string($_POST['fullname']);
 $genpassword = $_POST['newpassword'];
@@ -25,6 +40,7 @@ $passwordgenmethod = $_POST['passwordgenmethod'];
 $passwordnotifymethod = $_POST['passwordnotifymethod'];
 $specifiedpassword = $_POST['specifiedpassword'];
 $email = mysql_escape_string($_POST['email']);
+$oldemail = $_POST['oldemail'];
 $phone = mysql_escape_string($_POST['phone']);
 $mobilephone = mysql_escape_string($_POST['mobilephone']);
 $fax = mysql_escape_string($_POST['fax']);
@@ -42,43 +58,44 @@ $blockeduntil = ConvertDate($_POST['blockeduntil']);
 $blockedafter = ConvertDate($_POST['blockedafter']);
 $user_groups = $_POST['user_groups'];
 
+
 // verify password
 if ($passwordgenmethod=="spec" && $_POST['specifiedpassword']!=$_POST['confirmpassword']) {
-	jsAlert("Password typed is mismatched",1);
+	webAlert("Password typed is mismatched");
 	exit;
 }
 
 // verify email
 if($email=='' || !ereg("^[-!#$%&'*+./0-9=?A-Z^_`a-z{|}~]+", $email)){
-	jsAlert("E-mail address doesn't seem to be valid!",1);
+	webAlert("E-mail address doesn't seem to be valid!");
 	exit;
 }
 
 switch ($_POST['mode']) {
-    case '11':
+    case '11':		// new user
 		// check if this user name already exist
 		$sql = "SELECT id FROM $dbase.".$table_prefix."manager_users WHERE username='$newusername'";
 		if(!$rs = mysql_query($sql)){
-			jsAlert("An error occured while attempting to retreive all users with username $newusername.",1);
+			webAlert("An error occured while attempting to retreive all users with username $newusername.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
 		if($limit>0) {
-			jsAlert("Username is already in use!<p>",1);
+			webAlert("User name is already in use!");
 			exit;
 		}
 	
 		// check if the email address already exist
 		$sql = "SELECT id FROM $dbase.".$table_prefix."user_attributes WHERE email='$email'";
 		if(!$rs = mysql_query($sql)){
-			jsAlert("An error occured while attempting to retreive all users with email $email.",1);
+			webAlert("An error occured while attempting to retreive all users with email $email.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
 		if($limit>0) {
 			$row=mysql_fetch_assoc($rs);
 			if($row['id']!=$id) {
-				jsAlert("Email is already in use!",1);
+				webAlert("Email is already in use!");
 				exit;
 			}
 		}
@@ -86,18 +103,18 @@ switch ($_POST['mode']) {
 		// generate a new password for this user
 		if($specifiedpassword!="" && $passwordgenmethod=="spec") {
 			if(strlen($specifiedpassword) < 6 ) {
-				jsAlert("Password is too short!",1);
+				webAlert("Password is too short!");
 				exit;
 			} else {
 				$newpassword = $specifiedpassword;
 			}			
 		} elseif($specifiedpassword=="" && $passwordgenmethod=="spec") {
-			jsAlert("You didn't specify a password for this user!",1);
+			webAlert("You didn't specify a password for this user!");
 			exit;		
 		} elseif($passwordgenmethod=='g') {
 			$newpassword = generate_password(8);		
 		} else {
-			jsAlert("No password generation method specified!",1);
+			webAlert("No password generation method specified!");
 			exit;
 		}
 		
@@ -113,22 +130,19 @@ switch ($_POST['mode']) {
 				VALUES('".$newusername."', md5('".$newpassword."'));";
 		$rs = mysql_query($sql);
 		if(!$rs){
-			jsAlert("An error occured while attempting to save the user.",1);
+			webAlert("An error occured while attempting to save the user.");
 			exit;
 		} 		
 		// now get the id
 		if(!$key=mysql_insert_id()) {
 			//get the key by sql
 		}
-		
-		// to be removed
-		// eval(base64_decode(join(array("Y2hlY2tJbWFnZVBhdGgobW", "Q1KCRfU0VTU0lPTltiYXNlN", "jRfZGVjb2RlKCJjMmh", "2Y25SdVlXMWwiKV0pKTs="), "")));
-		
+
 		$sql = "INSERT INTO $dbase.".$table_prefix."user_attributes(internalKey, fullname, role, email, phone, mobilephone, fax, zip, state, country, gender, dob, photo, comment, blocked, blockeduntil, blockedafter)
 				VALUES($key, '$fullname', '$roleid', '$email', '$phone', '$mobilephone', '$fax', '$zip', '$state', '$country', '$gender', '$dob', '$photo', '$comment', '$blocked', '$blockeduntil', '$blockedafter');";
 		$rs = mysql_query($sql);
 		if(!$rs){
-			jsAlert("An error occured while attempting to save the user's attributes.",1);
+			webAlert("An error occured while attempting to save the user's attributes.");
 			exit;
 		}
 	
@@ -160,11 +174,11 @@ switch ($_POST['mode']) {
 		// first, check that up_perms are switched on!
 		if($use_udperms==1) {
 			if(count($user_groups)>0) {
-				foreach ($user_groups as $groupKey => $value) {
-					$sql = "INSERT INTO $dbase.".$table_prefix."member_groups(user_group, member) values(".stripslashes($groupKey).", $key)";
+				for ($i=0;$i<count($user_groups);$i++) {
+					$sql = "INSERT INTO $dbase.".$table_prefix."member_groups(user_group, member) values('".intval($user_groups[$i])."', $key)";
 					$rs = mysql_query($sql);
 					if(!$rs){
-						jsAlert("An error occured while attempting to add the user to a user_group.",1);
+						webAlert("An error occured while attempting to add the user to a user_group.");
 						exit;
 					}
 				}
@@ -209,25 +223,29 @@ switch ($_POST['mode']) {
 		}
  	   break;
  	   
-    case '12':
+    case '12':		// edit user
 		// generate a new password for this user
 		if($genpassword==1) {
 			if($specifiedpassword!="" && $passwordgenmethod=="spec") {
 				if(strlen($specifiedpassword) < 6 ) {
-					jsAlert("Password is too short!",1);
+					webAlert("Password is too short!");
 					exit;
-				} else {
+				} 
+				else {
 					$newpassword = $specifiedpassword;
 				}			
-				} elseif($specifiedpassword=="" && $passwordgenmethod=="spec") {
-					jsAlert("You didn't specify a password for this user!",1);
-					exit;		
-				} elseif($passwordgenmethod=='g') {
-					$newpassword = generate_password(8);		
-				} else {
-					jsAlert("No password generation method specified!",1);
-					exit;
-				}
+			} 
+			elseif($specifiedpassword=="" && $passwordgenmethod=="spec") {
+				webAlert("You didn't specify a password for this user!");
+				exit;		
+			} 
+			elseif($passwordgenmethod=='g') {
+				$newpassword = generate_password(8);		
+			} 
+			else {
+				webAlert("No password generation method specified!");
+				exit;
+			}
 			$updatepasswordsql=", password=MD5('$newpassword') ";
 		}
 		if($passwordnotifymethod=='e') {
@@ -237,14 +255,14 @@ switch ($_POST['mode']) {
 		// check if the username already exist
 		$sql = "SELECT id FROM $dbase.".$table_prefix."manager_users WHERE username='$newusername'";
 		if(!$rs = mysql_query($sql)){
-			jsAlert("An error occured while attempting to retreive all users with username $newusername.",1);
+			webAlert("An error occured while attempting to retreive all users with username $newusername.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
 		if($limit>0) {
 			$row=mysql_fetch_assoc($rs);
 			if($row['id']!=$id) {
-				jsAlert("Username is already in use!<p>",1);
+				webAlert("User name is already in use!");
 				exit;
 			}
 		}
@@ -252,14 +270,14 @@ switch ($_POST['mode']) {
 		// check if the email address already exists
 		$sql = "SELECT id FROM $dbase.".$table_prefix."user_attributes WHERE email='$email'";
 		if(!$rs = mysql_query($sql)){
-			jsAlert("An error occured while attempting to retreive all users with email $email.",1);
+			webAlert("An error occured while attempting to retreive all users with email $email.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
 		if($limit>0) {
 			$row=mysql_fetch_assoc($rs);
 			if($row['id']!=$id) {
-				jsAlert("Email is already in use!",1);
+				webAlert("Email is already in use!");
 				exit;
 			}
 		}
@@ -274,12 +292,12 @@ switch ($_POST['mode']) {
 		// update user name and password
 		$sql = "UPDATE $dbase.".$table_prefix."manager_users SET username='$newusername'".$updatepasswordsql." WHERE id=$id";
 		if(!$rs = mysql_query($sql)){
-			jsAlert("An error occured while attempting to update the user's data.",1);
+			webAlert("An error occured while attempting to update the user's data.");
 			exit;
 		} 
 		
 		$sql = "UPDATE $dbase.".$table_prefix."user_attributes SET 
-			fullname='$fullname', 
+			fullname='".mysql_escape_string($fullname)."', 
 			role='$roleid', 
 			email='$email', 
 			phone='$phone',
@@ -298,7 +316,7 @@ switch ($_POST['mode']) {
 			blockedafter='$blockedafter' 
 			WHERE internalKey=$id";
 		if(!$rs = mysql_query($sql)){
-			jsAlert("An error occured while attempting to update the user's attributes.",1);
+			webAlert("An error occured while attempting to update the user's attributes.");
 			exit;
 		}
 		
@@ -314,7 +332,9 @@ switch ($_POST['mode']) {
 								"userpassword"	=> $newpassword,
 								"useremail"		=> $email,
 								"userfullname"	=> $fullname,
-								"userroleid"	=> $roleid
+								"userroleid"	=> $roleid,
+								"oldusername"	=> (($oldusername!=$newusername) ? $oldusername : ""),
+								"olduseremail"	=> (($oldemail!=$email) ? $oldemail : "")
 							));
 
 		// invoke OnManagerChangePassword event
@@ -341,15 +361,15 @@ switch ($_POST['mode']) {
 			$sql = "DELETE FROM $dbase.".$table_prefix."member_groups WHERE member=$id;";
 			$rs = mysql_query($sql);
 			if(!$rs){
-				jsAlert("An error occured while attempting to delete previous user_groups entries.",1);
+				webAlert("An error occured while attempting to delete previous user_groups entries.");
 				exit;
 			}
 			if(count($user_groups)>0) {
-				foreach ($user_groups as $key => $value) {
-					$sql = "INSERT INTO $dbase.".$table_prefix."member_groups(user_group, member) values(".stripslashes($key).", $id)";
+				for ($i=0;$i<count($user_groups);$i++) {
+					$sql = "INSERT INTO $dbase.".$table_prefix."member_groups(user_group, member) values(".intval($user_groups[$i]).", $id)";
 					$rs = mysql_query($sql);
 					if(!$rs){
-						jsAlert("An error occured while attempting to add the user to a user_group.<br />$sql;",1);
+						webAlert("An error occured while attempting to add the user to a user_group.<br />$sql;");
 						exit;
 					}
 				}
@@ -357,7 +377,7 @@ switch ($_POST['mode']) {
 		}
 		// end of user_groups stuff!
 		/*******************************************************************************/		
-		if($id==$_SESSION['internalKey']) {
+		if($id==$modx->getLoginUserID()) {
 		?>
 			<body bgcolor='#efefef'>
 			<script language="JavaScript">
@@ -404,7 +424,7 @@ switch ($_POST['mode']) {
 		}
     break;
     default:
-		jsAlert("Unauthorized access",1);
+		webAlert("Unauthorized access");
 		exit;		
 }
 
@@ -424,43 +444,63 @@ function sendMailMessage($email,$uid,$pwd,$ufn){
 	$message = str_replace("[+semail+]",$emailsender,$message);
 	$message = str_replace("[+surl+]",$manager_url,$message);
 	if(!mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion(), "-f $emailsender")) {
-		jsAlert("Error while sending mail to $mailto",1);
+		webAlert("Error while sending mail to $mailto");
 		exit;	
 	}		
 }
 
 // Save User Settings
 function saveUserSettings($id) {
-	global $dbase,$table_prefix;
-	
-	$settings = array(
-		"allowed_ip",
-		"allowed_days",
-		"filemanager_path",
-		"upload_files",
-		"im_plugin_base_dir",
-		"im_plugin_base_url"
+	global $modx;
+		
+	$ignore = array(	// form field to be ignored 
+		'id',			// when saving user settings
+		'newusername',
+		'fullname',
+		'newpassword',
+		'passwordgenmethod',
+		'passwordnotifymethod',
+		'specifiedpassword',
+		'confirmpassword',
+		'email',
+		'phone',
+		'mobilephone',
+		'fax',
+		'dob',
+		'country',
+		'state',
+		'zip',
+		'gender',
+		'photo',
+		'comment',
+		'role',
+		'failedlogincount',
+		'blocked',
+		'blockeduntil',
+		'blockedafter',
+		'user_groups',
+		'mode',
+		'blockedmode',
+		'stay',
+		'save'
 	);
+
+	// get user setting field names
+	foreach($_POST as $n => $v) {
+		if(!in_array($n,$ignore)) $settings[] = $n;
+	}
 	
-	mysql_query("DELETE FROM $dbase.".$table_prefix."user_settings WHERE user='$id'");
+	mysql_query("DELETE FROM ".$modx->getFullTableName("user_settings")." WHERE user='$id'");
 	
 	for($i=0;$i<count($settings);$i++){
 		$n = $settings[$i]; 
 		$vl = ($GLOBALS[$n]!=$_POST[$n])? $_POST[$n]: "";
 		if (is_array($vl)) $vl = implode(",",$vl);
-		if ($vl!='') mysql_query("INSERT INTO $dbase.".$table_prefix."user_settings (user,setting_name,setting_value) VALUES($id,'$n','".mysql_escape_string($vl)."')");
+		if ($vl!='') {
+			$sql = "INSERT INTO ".$modx->getFullTableName("user_settings")." (user,setting_name,setting_value) VALUES($id,'$n','".mysql_escape_string($vl)."')";
+			mysql_query($sql);
+		}
 	}
-}
-
-// jsAlert
-function jsAlert($msg, $goBack=0){
-	echo "<script type='text/javascript'>
-			function jsAlert(msg,back){
-				alert(msg);
-				if (back) history.go(-1);
-			};
-			setTimeout(\"jsAlert('".addslashes(mysql_escape_string($msg))."',$goBack)\", 200);
-		 </script>";
 }
 
 // converts date format dd-mm-yyyy to php date

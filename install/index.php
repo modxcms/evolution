@@ -1,17 +1,17 @@
 <?php
-#:: Module Installer 1.0 (Beta 2)
+#:: Module Installer 1.0 (Beta 3)
 #::	Written By Raymond Irving - Dec 2004
 #:::::::::::::::::::::::::::::::::::::::::
-#:: Installs Modules, Plugins, Snippets, Chunks, Templates and TVs
+#:: Installs Modules, Plugins, Snippets, Chunks
 
-
+	// start session
 	session_start();
 
 	// set error reporting
 	error_reporting(E_ALL ^ E_NOTICE);
 	
 	// session loop-back tester
-	if(!isset($_GET['s'])) {
+	if(!$_SESSION['session_test'] && $_GET['s']!='set') {
 		$_SESSION['session_test'] = 1;
 		// I had some problems with sessions when I used headers. This works ok
 		echo "<html><head><title>Loading...</title><script>window.location.href='".$_SERVER['PHP_SELF']."?s=set';</script></head><body></body></html>";
@@ -29,10 +29,10 @@
 	$moduleLicenseMessage= "";
 
 	$moduleChunks 	 	= array(); // chunks - array : name, description, type - 0:file or 1:content, file or content
-	$modulePlugins		= array(); // plugins - array : name, description, plugin - 0:disabled or 1:enabled, type - 0:file or 1:content, file or content,properties
-	$moduleSnippets 	= array(); // snippets - array : name, description, plugin - 0:disabled or 1:enabled, type - 0:file or 1:content, file or content,properties
-	$moduleTemplates 	= array(); // templates - array : name, description, plugin - 0:disabled or 1:enabled, type - 0:file or 1:content, file or content,properties
-	$moduleTVs		 	= array(); // template variables - array : name, description, plugin - 0:disabled or 1:enabled, type - 0:file or 1:content, file or content,properties
+	$moduleSnippets 	= array(); // snippets - array : name, description, type - 0:file or 1:content, file or content,properties
+	$modulePlugins		= array(); // plugins - array : name, description, type - 0:file or 1:content, file or content,properties
+	$moduleTemplates 	= array(); // templates - array : name, description, type - 0:file or 1:content, file or content,properties
+	$moduleTVs		 	= array(); // template variables - array : name, description, type - 0:file or 1:content, file or content,properties
 
 	# function to call after setup
 	$callBackFnc =""; 			
@@ -48,7 +48,41 @@
 	$installMode = !$upgradeable ? 0:-1;
 	if(count($_POST)) $installMode = $_POST['installmode']=='upd' ? 1:0;
 	
+	// get post back status
 	$isPostBack = (count($_POST) && !$syscheck);
+		
+	// Test db connecttion
+	if($isPostBack && isset($_POST["dbtest"])){
+		$color 	= '';
+		$uid	= $_POST["dbuid"];
+		$pwd	= $_POST["dbpwd"];
+		$host	= $_POST["dbhost"];
+		$dbase	= $_POST["dbase"];
+		$table_prefix = $_POST["tableprefix"];
+		// connect to the database
+		$status = ' Connection to host: ';
+		if(!@$conn=mysql_connect($host, $uid, $pwd)) {
+			$status .= "failed!";			
+			$color = '#ff0000';
+		}
+		else {
+			$status .= 'passed';
+			// select database
+			$status .= '...    Checking database: ';
+			if(!@mysql_select_db(str_replace("`","",$dbase), $conn)) $status .= "failed - $dbase does not exist!"; 
+			else {
+				if(@$rs=mysql_query("SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content")) $status .= "failed - table prefix already in use!";
+				else {
+					$status .= 'passed';
+					$color = '#007700';
+				}
+			}
+		}		 
+		echo "<script>parent.testResult('$status','$color');</script>";
+		exit;
+	} // end - Test db connecttion
+	
+	// start install process
 	if($isPostBack) {
 		ob_start();
 		include_once "$setupPath/instprocessor.php";
@@ -66,13 +100,15 @@
 			?>
 				<table width="100%">
 				<tr>
-				<td>
-					<img src="img_splash.gif" />
-				</td>
 				<td valign="top">
 					<p class='title'>Welcome to the <?php echo $moduleName; ?> installation program.</p>
-					<p>This program will guide you throug the rest of the installtion.</p>
+					<p>This program will guide you through the rest of the installtion.</p>
 					<p>Please select 'Next' button to continue:</p>
+					<br />
+					<center><img src="img_splash.gif" /></center>
+				</td>
+				<td align="center" width="280">
+					<img src="img_box.png" />&nbsp;
 				</td>
 				</tr>
 				</table>
@@ -179,7 +215,7 @@
 	// build Connection Screen
 	function buildConnectionScreen() {
 		ob_start();
-		?>
+		?>  
 			<p class="title">Connection Information</p>
 			<p>Database connection and login information</p>
 			<p>Please enter the name of the database created for MODX. If you there is no database yet, the installer will attempt to create a database for you. This may fail depending on the MySQL configuration or the database user permissions for your domain/installation.</p>
@@ -195,7 +231,10 @@
 			<div class="labelHolder"><label for="databaseloginname">Database login name:</label>
 			<input id="databaseloginname" name="databaseloginname" value="<?php echo isset($_POST['databaseloginname']) ? $_POST['databaseloginname']:"" ?>" /></div>
 			<div class="labelHolder"><label for="databaseloginpassword">Database password:</label>
-			<input id="databaseloginpassword" type="password" name="databaseloginpassword"  value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']:"" ?>" /></div>
+			<input id="databaseloginpassword" type="password" name="databaseloginpassword"  value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']:"" ?>" />&nbsp;
+			<input type="button" name="cmdtest" value="Test connection" style="width:130px" onclick="testConnection()" /><br />
+			<input id="testbox" name="testbox" value="" size="30" />
+  			</div>
 
 			<p>Now you&#39;ll need to enter some details for the main administrator account. You can fill in your own name here, and a password you&#39;re not likely to forget. You&#39;ll need these to log into Admin once setup is complete.</p>
 
@@ -205,6 +244,7 @@
 			<input id="cmspassword" type="password" name="cmspassword" value="<?php echo isset($_POST['cmspassword']) ? $_POST['cmspassword']:"" ?>" /></div>
 			<div class="labelHolder"><label for="cmspasswordconfirm">Confirm password:</label>
 			<input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" /></div>
+			<br />
 
 		<?php
 		$o = ob_get_contents();
@@ -214,7 +254,9 @@
 	
 	// build Options Screen
 	function buildOptionsScreen() {
-		global $moduleChunks,$moduleSnippets;
+		global $moduleChunks;
+		global $modulePlugins;
+		global $moduleSnippets;
 		ob_start();	
 		echo "<p class=\"title\">Optional Items</p><p>Please choose your installation options and click Install:</p>";
 		
@@ -227,6 +269,15 @@
 			echo "&nbsp;<input type='checkbox' name='chunk[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleChunks[$i][0]."</span> - ".$moduleChunks[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
 		}
 
+		// display plugins
+		$plugins = isset($_POST['plugin']) ? $_POST['plugin']:array();
+		$limit = count($modulePlugins);
+		if ($limit>0) echo "<h1>Plugins</h1>";
+		for ($i=0;$i<$limit;$i++) {
+			$chk = in_array($i,$plugins)||(!count($_POST)) ? "checked='checked'": "";
+			echo "&nbsp;<input type='checkbox' name='plugin[]' value='$i' $chk />Install/Update <span class='comname'>".$modulePlugins[$i][0]."</span> - ".$modulePlugins[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		}
+
 		// display snippets
 		$snippets = isset($_POST['snippet']) ? $_POST['snippet']:array();
 		$limit = count($moduleSnippets);
@@ -235,6 +286,7 @@
 			$chk = in_array($i,$snippets)||(!count($_POST)) ? "checked='checked'": "";
 			echo "&nbsp;<input type='checkbox' name='snippet[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleSnippets[$i][0]."</span> - ".$moduleSnippets[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
 		}
+
 		$o = ob_get_contents();
 		ob_end_clean();
 		return $o;
@@ -287,15 +339,15 @@
 			echo "<span class='ok'>OK!</span></p>";
 		}
 		// cache files writable?
-		echo "<p>Checking if <span class='mono'>assets/cache/siteCache.idx</span> file is writable: ";
-		if(!is_writable("../assets/cache/siteCache.idx")) {
+		echo "<p>Checking if <span class='mono'>assets/cache/siteCache.idx.php</span> file is writable: ";
+		if(!is_writable("../assets/cache/siteCache.idx.php")) {
 			echo "<span class='notok'>Failed!</span></p>";
 			$errors += 1;
 		} else {
 			echo "<span class='ok'>OK!</span></p>";
 		}
-		echo "<p>Checking if <span class='mono'>assets/cache/sitePublishing.idx</span> file is writable: ";
-		if(!is_writable("../assets/cache/sitePublishing.idx")) {
+		echo "<p>Checking if <span class='mono'>assets/cache/sitePublishing.idx.php</span> file is writable: ";
+		if(!is_writable("../assets/cache/sitePublishing.idx.php")) {
 			echo "<span class='notok'>Failed!</span></p>";
 			$errors += 1;
 		} else {
@@ -387,7 +439,7 @@
 		if($errors>0) {
 		?>
 			<p>
-			Unfortunately, Setup cannot continue at the moment, due to the above <?php echo $errors > 1 ? $errors." " : "" ; ?>error<?php echo $errors > 1 ? "s" : "" ; ?>. Please correct the error<?php echo $errors > 1 ? "s" : "" ; ?>, and try again. If you need help figuring out how to fix the problem<?php echo $errors > 1 ? "s" : "" ; ?>, visit the <a href="http://vertexworks.com/forums/" target="_blank">Operation MODx Forums</a>.
+			Unfortunately, Setup cannot continue at the moment, due to the above <?php echo $errors > 1 ? $errors." " : "" ; ?>error<?php echo $errors > 1 ? "s" : "" ; ?>. Please correct the error<?php echo $errors > 1 ? "s" : "" ; ?>, and try again. If you need help figuring out how to fix the problem<?php echo $errors > 1 ? "s" : "" ; ?>, visit the <a href="http://www.vertexworks.com/forums/" target="_blank">Operation MODx Forums</a>.
 			</p>
 		<?php
 		}
@@ -397,6 +449,7 @@
 		ob_end_clean();
 		return $o;		
 	}	
+
 ?>
 <!DOCTYPE html PUBliC "-//W3C//DTD XHTML 1.1//EN" 
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -408,7 +461,7 @@
              @import url(./style.css);
         </style>
 	<script type="text/javascript" language="JavaScript" src="webelm.js"></script>
-    <script>
+	<script language="JavaScript" type="text/javascript">
     	
     	var cursrc = 1;
 		var syscheck = <?php echo $syscheck ? "true":"false"; ?>;
@@ -429,7 +482,30 @@
 			installMode=n;
 			btnnext.disabled = "";			
 		}
-		
+
+		// test DB connection	
+		function testConnection(){
+			var f=document.testform;
+			f.target="testPort";
+			f.dbuid.value = document.install.databaseloginname.value;
+			f.dbpwd.value = document.install.databaseloginpassword.value;
+			f.dbase.value = document.install.databasename.value;
+			f.dbhost.value= document.install.databasehost.value;
+			f.tableprefix.value = document.install.tableprefix.value;
+			f.submit();
+			document.install.testbox.value="Testing connection...";
+			var tb = document.getElementById("testbox");
+			tb.style.display="block";
+			tb.style.color = "#000099";
+		}
+
+		// test DB result	
+		function testResult(msg,color){
+			var tb = document.install.testbox;
+			tb.value = msg;
+			if (color && tb.style) tb.style.color = color;
+		}
+
 		// jumpTo
 		function jumpTo(n) {
 			cursrc = n;
@@ -573,8 +649,20 @@
 			return true;
 		}
 		
-		function closepage(){			
-			window.location.href = "../manager/";
+		function rmInstallResult(msg){
+			if(msg) alert(msg);
+			gotoManager();
+		}
+		
+		function closepage(){
+			var chk = document.install.rminstaller;
+			if(chk && chk.checked) {
+				// remove install folder and files
+				window.location.href = "../manager/processors/remove_installer.processor.php?rminstall=1";
+			}
+			else { 
+				window.location.href = "../manager/";
+			}
 		}
 		
     </script>
@@ -616,17 +704,26 @@
 				<?php if($isPostBack) { ?>
 					<input type='button' value='Close' name='cmdclose' style='float:right;width:100px;' onclick="closepage();" />
 					<?php if($errors==0) { ?>
-						<span id="removeinstall" style='float:left;color:#909090;line-height:18px;'>&bull; Please remember to remove the install folder from your website. </span>
+						<span id="removeinstall" style='float:left;cursor:pointer;color:#505050;line-height:18px;' onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;"><input type="checkbox" name="rminstaller" onclick="event.cancelBubble=true;" <?php echo empty($errors) ? 'checked="checked"':''; ?> style="cursor:default;" />Remove the install folder and files from my website. </span>
 					<?php } ?>
 				<?php } else {?>
 					<input type='button' value='Next' name='cmdnext' style='float:right;width:100px;' onclick="changeScreen(1);" />
 					<span style="float:right">&nbsp;</span>
 					<input type='button' value='Back' name='cmdback' style='float:right;width:100px;' onclick="changeScreen(-1);" />
-					<span id="iagreebox" style='float:left;background-color:#eee;line-height:18px'><input type='checkbox' value='1' id='chkagree' name='chkagree' onclick="setIAgree()" <?php echo isset($_POST['chkagree']) ? "checked='checked'":""; ?> style='line-height:18px'/><label for='chkagree' style='display: inline;float:none;line-height:18px;'> I agree to the terms set out in this license. </label></span>
+					<span id="iagreebox" style='float:left;cursor:pointer;background-color:#eee;line-height:18px'><input type='checkbox' value='1' id='chkagree' name='chkagree' onclick="setIAgree()" <?php echo isset($_POST['chkagree']) ? "checked='checked'":""; ?> style='line-height:18px'/><label for='chkagree' style='display: inline;float:none;line-height:18px;'> I agree to the terms set out in this license. </label></span>
 				<?php } ?>
 			</div>
 			<input name="syscheck" type="hidden" value="<?php echo ($syscheck && $errors) ? "on":""; ?>" />
 			</form>
+			<form name="testform" method="post">
+				<input name="dbtest" type="hidden" />
+				<input name="dbuid" type="hidden" />
+				<input name="dbpwd" type="hidden" />
+				<input name="dbase" type="hidden" />
+				<input name="dbhost" type="hidden" />
+				<input name="tableprefix" type="hidden" />
+			</form>
+			<iframe name="testPort" width="1" height="1" style="visibility:hidden;'"></iframe>
             </td>
             </tr>
             </table>

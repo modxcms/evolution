@@ -1,6 +1,6 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['file_manager']!=1 && $_REQUEST['a']==31) {	$e->setError(3);
+if(!$modx->hasPermission('file_manager') && $_REQUEST['a']==31) {	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -358,6 +358,10 @@ function ls ($curpath) {
 	$dircounter = 0;
 	$filecounter = 0;
 
+	if (!is_dir($curpath)) {	
+		echo "Invalid path '$curpath'<br>";
+		return;
+	}
 	$dir = dir($curpath);
 
 	// first, get info
@@ -506,7 +510,7 @@ if($_REQUEST['mode']=="edit") {
 <table cellpadding="0" cellspacing="0">
 	<td id="Button1" onclick="document.editFile.submit();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang["save"]; ?></td>
 		<script>createButton(document.getElementById("Button1"));</script>
-	<td id="Button2" onclick="document.location.href='index.php?a=31';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></td>
+	<td id="Button2" onclick="document.location.href='index.php?a=31&path=<?php echo urlencode($_REQUEST['path']); ?>';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></td>
 		<script>createButton(document.getElementById("Button2"));</script>
 </table>
 <?php } ?>

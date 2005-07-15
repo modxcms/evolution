@@ -34,12 +34,15 @@ for($i=0;$i<count($warnings);$i++) {
 	switch ($warnings[$i][0]) {
 		case $_lang['configcheck_installer'] :
 			$warnings[$i][1] = $_lang['configcheck_installer_msg'];
+			if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_installer']);
 			break;
 		case $_lang['configcheck_cache'] :
 			$warnings[$i][1] = $_lang['configcheck_cache_msg'];
+			if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_cache']);
 			break;
 		case $_lang['configcheck_images'] :
 			$warnings[$i][1] = $_lang['configcheck_images_msg'];
+			if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_images']);
 			break;
 		case $_lang['configcheck_lang_difference'] :
 			$warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];
@@ -48,19 +51,20 @@ for($i=0;$i<count($warnings);$i++) {
 			$warnings[$i][1] = $_lang['configcheck_default_msg'];
 	}
 	
-	$admin_warning = $_SESSION['role']!=1 ? $_lang['configcheck_admin'] : "" ;
+	$admin_warning = $_SESSION['mgrRole']!=1 ? $_lang['configcheck_admin'] : "" ;
 	$config_check_results .= "
 			<div class='fakefieldset'>
 			<strong>".$_lang['configcheck_warning']."</strong> '".$warnings[$i][0]."'<br />
 			<br />
 			<em>".$_lang['configcheck_what']."</em><br />
-			".$warnings[$i][1]." ".$admin_warning."
+			".$warnings[$i][1]." ".$admin_warning."<br />
 			</div>
 	";
 		if($i!=count($warnings)-1) {
 			$config_check_results .= "<br />";
 		}
 	}
+	$_SESSION["mgrConfigCheck"]=true;
 } else {
 	$config_check_results = $_lang['configcheck_ok'];
 }

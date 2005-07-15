@@ -7,12 +7,11 @@
 global $BINDINGS; // list of supported bindings. must be upper case
 $BINDINGS = "FILE,CHUNK,DOCUMENT,SELECT,EVAL"; 
 
-function ProcessTVCommand($etomite,$value){
-	if(empty($etomite)) {
-		include_once dirname(__FILE__)."/document.parser.class.inc.php";
-		$etomite = new DocumentParser;	// initiate a new document parser
-		$etomite->getSettings(); // load settings
-	}
+function ProcessTVCommand($value){
+	global $modx;
+	
+	$etomite = &$modx;
+	
 	$nvalue = trim($value);
 	if (substr($nvalue,0,1)!='@') return $value;
 	else {
@@ -24,22 +23,23 @@ function ProcessTVCommand($etomite,$value){
 				break;
 
 			case "@CHUNK":		// retrieve a chunk and process it's content
-				$chunk = $etomite->getChunk($param);
+				$chunk = $modx->getChunk($param);
 				$output = $chunk;
 				break;
 
 			case "@DOCUMENT":	// retrieve a document and process it's content
-				$rs = $etomite->getDocument($param);
+				$rs = $modx->getDocument($param);
 				if (is_array($rs)) $output = $rs['content'];
 				else $output = "Unable to locate document $param";
 				break;
 
 			case "@SELECT":		// selects a record from the cms database
 				$rt = array();
-				$pre = $etomite->dbConfig['dbase'].".".$etomite->dbConfig['table_prefix'];
+				$pre = $modx->dbConfig['dbase'].".".$modx->dbConfig['table_prefix'];
+				$param = str_replace("{DBASE}",$modx->dbConfig['dbase'],$param);
 				$param = str_replace("{PREFIX}",$pre,$param);
-				mysql_select_db(str_replace("`","",$etomite->dbConfig['dbase'])); // select default database
-				$rs = $etomite->dbQuery("SELECT $param;");
+				mysql_select_db(str_replace("`","",$modx->dbConfig['dbase'])); // select default database
+				$rs = $modx->dbQuery("SELECT $param;");
 				$output = $rs;
 				break;
 				
@@ -53,7 +53,7 @@ function ProcessTVCommand($etomite,$value){
 
 		}
 		// support for nested bindings
-		return ($output!=$value) ? ProcessTVCommand($etomite,$output):$output;
+		return ($output!=$value) ? ProcessTVCommand($output):$output;
 	}
 }
 

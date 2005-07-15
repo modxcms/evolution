@@ -1,9 +1,9 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_snippet']!=1 && $_REQUEST['a']==22) {	$e->setError(3);
+if(!$modx->hasPermission('edit_snippet') && $_REQUEST['a']==22) {	$e->setError(3);
 	$e->dumpError();	
 }
-if($_SESSION['permissions']['new_snippet']!=1 && $_REQUEST['a']==23) {	$e->setError(3);
+if(!$modx->hasPermission('new_snippet') && $_REQUEST['a']==23) {	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -36,8 +36,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing this snippet. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username'],"snippet");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -64,7 +64,7 @@ if(isset($_GET['id'])) {
 	}
 	$content = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$content['name'];
-	if($content['locked']==1 && $_SESSION['role']!=1) {
+	if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		$e->setError(3);
 		$e->dumpError();
 	}
@@ -209,7 +209,7 @@ function decode(s){
 <?php
 	// invoke OnSnipFormPrerender event
 	$evtOut = $modx->invokeEvent("OnSnipFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
@@ -283,7 +283,7 @@ function decode(s){
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left" valign="top"><?php echo $_lang['snippet_properties']; ?>:</td>
-			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="255" value="<?php echo $content['properties'];?>" class="inputBox" style="width:300px;" onChange='showParameters(this);documentDirty=true;'></td>
+			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties'];?>" class="inputBox" style="width:300px;" onChange='showParameters(this);documentDirty=true;'></td>
 		  </tr>
 		  <tr id="displayparamrow">
 			<td valign="top" align="left">&nbsp;</td>
@@ -297,7 +297,7 @@ function decode(s){
 <?php
 	// invoke OnSnipFormRender event
 	$evtOut = $modx->invokeEvent("OnSnipFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 <script>

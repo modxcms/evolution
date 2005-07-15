@@ -1,6 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['messages']!=1 && $_REQUEST['a']==65) {
+if(!$modx->hasPermission('messages') && $_REQUEST['a']==65) {
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -16,7 +16,7 @@ if($limit!=1) {
 	exit;
 } else {
 	$message=mysql_fetch_assoc($rs);
-	if($message['recipient']!=$_SESSION['internalKey']) {
+	if($message['recipient']!=$modx->getLoginUserID()) {
 		echo "You are not allowed to delete this message!";
 		exit;
 	} else {

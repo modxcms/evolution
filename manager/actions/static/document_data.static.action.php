@@ -1,12 +1,10 @@
 <?php
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-	// Includes TreeView State Saver added by Jeroen:Modified by Raymond
-
-
-	$id = $_REQUEST['id'];
-
-	// Jeroen posts SESSION vars :Modified by Raymond
-	if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
+// Includes TreeView State Saver added by Jeroen:Modified by Raymond
+$id = $_REQUEST['id'];
+// Jeroen posts SESSION vars :Modified by Raymond
+if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
 	
 ?>
 <script language="JavaScript">
@@ -28,48 +26,39 @@ function movedocument() {
 }
 </script>
 
-<div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["doc_data_title"]; ?></span>
-
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button1" onclick="editdocument();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
-			<script>createButton(document.getElementById("Button1"));</script>
-		<td id="Button2" onclick="movedocument();"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
-			<script>createButton(document.getElementById("Button2"));</script>
-		<td id="Button4" onclick="duplicatedocument();"><img src="media/images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button4"));</script>
-		<td id="Button3" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
-			<script>createButton(document.getElementById("Button3"));</script>
-	</table>
-</div>
 
 <?php
-	$tblsc = $dbase.".".$table_prefix."site_content";
-	$tbldg = $dbase.".".$table_prefix."document_groups";
-	$tbldgn = $dbase.".".$table_prefix."documentgroup_names";
-	// get document groups for current user
-	if($_SESSION['docgroups']) $docgrp = implode(",",$_SESSION['docgroups']);
-	$sql = "SELECT DISTINCT sc.* 
-			FROM $tblsc sc 
-			LEFT JOIN $tbldg dg on dg.document = sc.id
-			LEFT JOIN $tbldgn dgn ON dgn.id = dg.document_group
-			WHERE sc.id = $id 
-			AND (1='".$_SESSION['role']."' OR NOT(dgn.private_memgroup<=>1)".(!$docgrp ? "":" OR dg.document_group IN ($docgrp)").");";
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
-	if($limit>1) {
-		echo " Internal System Error...<p>";
-		print "More results returned than expected. <p>Aborting.";
-		exit;
-	}
-	$content = mysql_fetch_assoc($rs);
+
+$tblsc = $dbase.".".$table_prefix."site_content";
+$tbldg = $dbase.".".$table_prefix."document_groups";
+// get document groups for current user
+if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
+$access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
+		  (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
+$sql = "SELECT DISTINCT sc.* 
+		FROM $tblsc sc 
+		LEFT JOIN $tbldg dg on dg.document = sc.id
+		WHERE sc.id = $id 
+		AND ($access);";
+$rs = mysql_query($sql);
+$limit = mysql_num_rows($rs);
+if($limit>1) {
+	echo " Internal System Error...<p>";
+	print "More results returned than expected. <p>Aborting.";
+	exit;
+}
+else if($limit==0){
+	$e->setError(15);
+	$e->dumpError();	
+}
+$content = mysql_fetch_assoc($rs);
 
 $createdby = $content['createdby'];
-$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=$createdby;"; 
+$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id='$createdby';"; 
 $rs = mysql_query($sql); 
 
-  $row=mysql_fetch_assoc($rs);
-  $createdbyname = $row['username'];
+$row=mysql_fetch_assoc($rs);
+$createdbyname = $row['username'];
 
 $editedby = $content['editedby'];
 $sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=$editedby;"; 
@@ -103,6 +92,21 @@ if($limit > 0) {
 // end keywords stuff
 
 ?>
+
+<div class="subTitle">
+	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["doc_data_title"]; ?></span>
+
+	<table cellpadding="0" cellspacing="0">
+		<td id="Button1" onclick="editdocument();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
+			<script>createButton(document.getElementById("Button1"));</script>
+		<td id="Button2" onclick="movedocument();"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
+			<script>createButton(document.getElementById("Button2"));</script>
+		<td id="Button4" onclick="duplicatedocument();"><img src="media/images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
+			<script>createButton(document.getElementById("Button4"));</script>
+		<td id="Button3" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
+			<script>createButton(document.getElementById("Button3"));</script>
+	</table>
+</div>
 
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;
 <?php echo $_lang["page_data_title"]; ?>
@@ -189,9 +193,21 @@ if($editedbyname!='') {
     <td><?php echo $_lang["page_data_searchable"]; ?>: </td>
 	<td><?php echo $content['searchable']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
   </tr>
-    <tr>
+  <tr>
     <td><?php echo $_lang['document_opt_menu_index']; ?>: </td>
 	<td><?php echo $content['menuindex']; ?></td>
+  </tr>
+  <tr>
+    <td><?php echo $_lang['document_opt_show_menu']; ?>: </td>
+	<td><?php echo $content['hidemenu']==1 ? $_lang['no'] : $_lang['yes']; ?></td>
+  </tr>
+  <tr>
+    <td><?php echo $_lang["page_data_web_access"]; ?>: </td>
+	<td><?php echo $content['privateweb']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
+  </tr>
+  <tr>
+    <td><?php echo $_lang["page_data_mgr_access"]; ?>: </td>
+	<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
   </tr>
   <tr>
     <td colspan="2">&nbsp;</td>
@@ -318,7 +334,7 @@ if ($show_preview==1) { ?>
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["page_data_source"]; ?></div><div class="sectionBody">   
 <?php
 $buffer = "";
-$filename = "../assets/cache/docid_".$id.".pageCache";
+$filename = "../assets/cache/docid_".$id.".pageCache.php";
 $handle = @fopen($filename, "r");
 if(!$handle) {
 	$buffer = $_lang['page_data_notcached'];

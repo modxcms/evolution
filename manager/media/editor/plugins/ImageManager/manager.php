@@ -8,7 +8,7 @@
 
 	require_once('config.inc.php');
 	require_once('Classes/ImageManager.php');
-	
+
 	$manager = new ImageManager($IMConfig);
 	$dirs = $manager->getDirs();
 
@@ -52,7 +52,7 @@
 	<a href="#" onclick="newFolder();" title="New Folder"><img src="img/btnFolderNew.gif" height="15" width="15" alt="New Folder" /></a>
 <?php } ?>
 	<div id="messages" style="display: none;"><span id="message"></span><img SRC="img/dots.gif" width="22" height="12" alt="..." /></div>
-	<iframe src="images.php" name="imgManager" id="imgManager" class="imageFrame" scrolling="auto" title="Image Selection" frameborder="0"></iframe>
+	<iframe src="images.php<?php echo $resourceType ? "?resource=$resourceType":"" ?>" name="imgManager" id="imgManager" class="imageFrame" scrolling="auto" title="Image Selection" frameborder="0"></iframe>
 </div>
 </fieldset>
 <!-- image properties -->

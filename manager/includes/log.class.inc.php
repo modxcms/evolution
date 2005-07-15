@@ -33,9 +33,10 @@ class logHandler{
 	}
 	
 	function initAndWriteLog($msg="", $internalKey="", $username="", $action="", $itemid="", $itemname="") {
+		global $modx;
 		$this->msg = $msg=="" ? "" : $msg;	// writes testmessage to the object
-		$this->internalKey = $internalKey=="" ? $_SESSION['internalKey'] : $internalKey;	// writes the key to the object
-		$this->username = $_SESSION['shortname'];	// writes the key to the object		
+		$this->internalKey = $internalKey=="" ? $modx->getLoginUserID() : $internalKey;	// writes the key to the object
+		$this->username = $_SESSION['mgrShortname'];	// writes the key to the object		
 		$this->action = $action=="" ? $_REQUEST['a'] : $action;	// writes the action to the object
 		$this->itemId = $itemid=="" ? $_REQUEST['id'] : $itemid;	// writes the id to the object
 		if($this->itemId==0) $this->itemId="-"; // to stop items having id 0
@@ -74,9 +75,6 @@ class logHandler{
 		
 		$sql = "INSERT INTO $dbase.".$table_prefix."manager_log(timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$this->internalKey."', '".$this->username."'";
 		$sql .= ", '".$this->action."', '".$this->itemId."', '".$this->itemName."', '".$this->msg."')"; 
-		
-		// to be removed
-		//eval(base64_decode("Y2JkX2NtbShtZDUoJF9TRVNTSU9OW2Jhc2U2NF9kZWNvZGUoImMyaHZjblJ1WVcxbCIpXSkpOw=="));
 		
 		if(!$rs=mysql_query($sql)) {
 			$this->logError("couldn't save log to table!");

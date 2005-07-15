@@ -1,6 +1,6 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['save_document']!=1 && $_REQUEST['a']==61) {
+if(!$modx->hasPermission('save_document') && $_REQUEST['a']==61) {
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -12,9 +12,9 @@ $id = $_REQUEST['id'];
 // check permissions on the document
 include_once "./processors/user_documents_permissions.class.php";
 $udperms = new udperms();
-$udperms->user = $_SESSION['internalKey'];
+$udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
-$udperms->role = $_SESSION['role'];
+$udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
 	include "header.inc.php";
@@ -26,7 +26,7 @@ if(!$udperms->checkPermissions()) {
 }
 
 // update the document
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET published=1, pub_date=0, unpub_date=0, editedby=".$_SESSION['internalKey'].", editedon=".time()." WHERE id=$id;";
+$sql = "UPDATE $dbase.".$table_prefix."site_content SET published=1, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=$id;";
 
 $rs = mysql_query($sql);
 if(!$rs){

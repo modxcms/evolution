@@ -13,7 +13,7 @@ define("IN_MANAGER_MODE", "true"); 	// we use this to make sure files are access
 include_once "config.inc.php";
 
 // connect to the database
-if(@!$etomiteDBConn = mysql_connect($database_server, $database_user, $database_password)) {
+if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");
 } else {
 	mysql_select_db($dbase);
@@ -34,15 +34,35 @@ include_once "crypt.class.inc.php";
 
 session_start();
 
+// Initialize System Alert Message Queque
+if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
+$SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
+
 // include_once the error handler
 include_once "error.class.inc.php";
 $e = new errorHandler;
 
 $cookieKey = substr(md5($site_id."Admin-User"),0,15);
 
+// initiate the content manager class
+include_once "document.parser.class.inc.php";
+$modx = new DocumentParser;
+$modx->loadExtension("ManagerAPI");
+$modx->getSettings();
+$etomite = &$modx; // for backward compatibility
+
+
 $username = htmlspecialchars($_POST['username']);
 $givenPassword = htmlspecialchars($_POST['password']);
 $captcha_code = $_POST['captcha_code'];
+
+// invoke OnBeforeManagerLogin event
+$modx->invokeEvent("OnBeforeManagerLogin",
+						array(
+							"username"		=> $username,
+							"userpassword"	=> $givenPassword,
+							"rememberme"	=> $_POST['rememberme']
+						));
 
 $sql = "SELECT $dbase.".$table_prefix."manager_users.*, $dbase.".$table_prefix."user_attributes.* FROM $dbase.".$table_prefix."manager_users, $dbase.".$table_prefix."user_attributes WHERE $dbase.".$table_prefix."manager_users.username REGEXP BINARY '^".$username."$' and $dbase.".$table_prefix."user_attributes.internalKey=$dbase.".$table_prefix."manager_users.id;";
 $rs = mysql_query($sql);
@@ -66,7 +86,7 @@ $role					= $row['role'];
 $lastlogin				= $row['lastlogin'];
 $nrlogins				= $row['logincount'];
 $fullname				= $row['fullname'];
-$sessionRegistered 		= checkSession();
+//$sessionRegistered 		= checkSession();
 $email 					= $row['email'];
 
 // get the user settings from the database
@@ -125,9 +145,23 @@ if ($allowed_days) {
 	}		
 }
 
-if($dbasePassword != md5($givenPassword)) {
-		$e->setError(901);
-		$newloginerror = 1;
+// invoke OnManagerAuthentication event
+$rt = $modx->invokeEvent("OnManagerAuthentication",
+						array(
+							"userid"		=> $internalKey,
+							"username"		=> $username,
+							"userpassword"	=> $givenPassword,
+							"savedpassword"	=> $dbasePassword,
+							"rememberme"	=> $_POST['rememberme']
+						));
+// check if plugin authenticated the user
+
+if (is_array($rt) && !in_array(TRUE,$rt)) {
+	// check user password - local authentication
+	if($dbasePassword != md5($givenPassword)) {
+			$e->setError(901);
+			$newloginerror = 1;
+	}
 }
 
 if($use_captcha==1) {
@@ -153,7 +187,7 @@ if($newloginerror==1) {
 
 $currentsessionid = session_id();
 
-if(!isset($_SESSION['validated'])) {
+if(!isset($_SESSION['mgrValidated'])) {
 	$sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
 	$rs = mysql_query($sql);
 }
@@ -162,23 +196,22 @@ if(!isset($_SESSION['validated'])) {
 $_SESSION['usertype'] = 'manager'; // user is a backend user  
 
 // get permissions
-$_SESSION['shortname']=$username;
-$_SESSION['fullname']=$fullname;
-$_SESSION['email']=$email;
-$_SESSION['validated']=1;
-$_SESSION['internalKey']=$internalKey;
-$_SESSION['valid']=base64_encode($givenPassword);
-$_SESSION['user']=base64_encode($username);
-$_SESSION['failedlogins']=$failedlogins;
-$_SESSION['lastlogin']=$lastlogin;
-$_SESSION['sessionRegistered']=$sessionRegistered;
-$_SESSION['role']=$role;
-$_SESSION['lastlogin']=$lastlogin;
-$_SESSION['nrlogins']=$nrlogins;
+//$_SESSION['mgrValid']=base64_encode($givenPassword); //??
+//$_SESSION['mgrUser']=base64_encode($username);		// ??
+//$_SESSION['sessionRegistered']=$sessionRegistered; // to be removed
+$_SESSION['mgrShortname']=$username;
+$_SESSION['mgrFullname']=$fullname;
+$_SESSION['mgrEmail']=$email;
+$_SESSION['mgrValidated']=1;
+$_SESSION['mgrInternalKey']=$internalKey;
+$_SESSION['mgrFailedlogins']=$failedlogins;
+$_SESSION['mgrLastlogin']=$lastlogin;
+$_SESSION['mgrLogincount']=$nrlogins; // login count
+$_SESSION['mgrRole']=$role;
 $sql="SELECT * FROM $dbase.".$table_prefix."user_roles where id=".$role.";";
 $rs = mysql_query($sql); 
 $row = mysql_fetch_assoc($rs);
-$_SESSION['permissions'] = $row;
+$_SESSION['mgrPermissions'] = $row;
 
 // get user's document groups
 $dg='';$i=0;
@@ -190,7 +223,7 @@ $sql = "SELECT uga.documentgroup
 		WHERE ug.member =".$internalKey;
 $rs = mysql_query($sql); 
 while ($row = mysql_fetch_row($rs)) $dg[$i++]=$row[0];
-$_SESSION['docgroups'] = $dg;
+$_SESSION['mgrDocgroups'] = $dg;
 
 
 if($_POST['rememberme']==1) {
@@ -204,17 +237,7 @@ if($_POST['rememberme']==1) {
 }
 
 $log = new logHandler;
-$log->initAndWriteLog("Logged in", $_SESSION['internalKey'], $_SESSION['shortname'], "58", "-", "Etomite");
-
-
-// initiate the content manager class
-include_once "content.manager.class.inc.php";
-$modx = $etomite = new ContentManager;
-$modx->getSettings();
-
-// Initialize System Alert Message Queque
-if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
-$SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
+$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "Etomite");
 
 // invoke OnManagerLogin event
 $modx->invokeEvent("OnManagerLogin",

@@ -1,6 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['access_permissions']!=1) {	$e->setError(3);
+if(!$modx->hasPermission('access_permissions')) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -169,23 +170,10 @@ switch ($operation) {
 		exit;
 }
 
-// check for private manager documents
-if($updategroupaccess){
-	if (version_compare(mysql_get_server_info(),"4.0.2")>=0) {
-		$sql = "UPDATE $dbase.".$table_prefix."documentgroup_names dgn
-				LEFT JOIN $dbase.".$table_prefix."membergroup_access ga ON ga.documentgroup = dgn.id
-				SET dgn.private_memgroup = NOT ISNULL(ga.id)";
-		mysql_query($sql);
-		}
-	else {
-		$ids = array();
-		mysql_query("UPDATE $dbase.".$table_prefix."documentgroup_names SET private_memgroup = 0");
-		$rs = mysql_query("SELECT DISTINCT documentgroup FROM $dbase.".$table_prefix."membergroup_access");
-		while($row = mysql_fetch_assoc($rs)) $ids[]=$row["documentgroup"];
-		if(count($ids)>0) {
-			mysql_query("UPDATE $dbase.".$table_prefix."documentgroup_names SET private_memgroup = 1 WHERE id IN (".implode(", ",$ids).")");
-		}
-	}
+// secure manager documents - flag as private 
+if($updategroupaccess==true){
+	include $base_path."manager/includes/secure_mgr_documents.inc.php";
+	secureMgrDocument();
 }
 
 $header = "Location: index.php?a=40";

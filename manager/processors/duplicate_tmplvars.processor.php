@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_template']!=1 && $_REQUEST['a']==301) {	$e->setError(3);
+if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==301) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
@@ -29,7 +30,7 @@ else {
 }
 if($rs) $newid = mysql_insert_id(); // get new id
 else {
-	echo "A database error occured while trying to duplicate variable: <br /><br />".mysql_error();
+	echo "A database error occured while trying to duplicate TV: <br /><br />".mysql_error();
 	exit;
 }
 
@@ -45,7 +46,7 @@ else {
 	$sql = "SELECT $newid as 'newid', templateid 
 			FROM $dbase.".$table_prefix."site_tmplvar_templates WHERE tmplvarid=$id;";
 	$ds = mysql_query($sql);
-	while($row = mysql_fetch_assoc($ds)) {
+	if($ds) while($row = mysql_fetch_assoc($ds)) {
 		$sql = "INSERT INTO $dbase.".$table_prefix."site_tmplvar_templates 
 				(tmplvarid, templateid) VALUES 
 				('".$row['newid']."', '".$row['templateid']."');";

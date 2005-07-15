@@ -3,7 +3,11 @@
 /**
  *	Developer Support Functions
  *	Customize these functions to add support for your clients
+ *	and save the customized file as overide.support.inc.php
  *	
+ *	The system will first look for the override.support.inc.php file.
+ *	If it's not found then it will use support.inc.php 
+ *
  */
 
 // Show support link on Manager Login page
@@ -11,7 +15,7 @@ function showSupportLink(){
 ?>
 	<!-- Here you can add your own support information and website -->
 	<div style="color:#808080">
-	<p>Support By:</p>
+	<p>Supported By:</p>
 	<p style="text-align:center"><a href="http://www.vertexworks.com/forums/" target="_blank"><strong>The MODx <br />Community</strong></a></p>
 	</div>
 <?php

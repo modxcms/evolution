@@ -120,13 +120,15 @@ if (!file_exists($config_filename)) {
 include_once "config.inc.php";
 
 // initiate the content manager class
-include_once "content.manager.class.inc.php";
-$modx = $etomite = new ContentManager;
+include_once "document.parser.class.inc.php";
+$modx = new DocumentParser;
+$modx->loadExtension("ManagerAPI");
 $modx->getSettings();
+$etomite = &$modx; // for backward compatibility
 
 // connect to the database
-if(@!$etomiteDBConn = mysql_connect($database_server, $database_user, $database_password)) {
-	die("Failed to create the database connection!");
+if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
+	die("<h2>Failed to create the database connection!</h2>. Please run the MODx <a href='../install'>install utility</a>");
 } else {
 	mysql_select_db($dbase);
 }
@@ -144,7 +146,7 @@ include_once "version.inc.php";
 include_once "accesscontrol.inc.php";
 
 // double check the session
-if(!isset($_SESSION['validated'])){
+if(!isset($_SESSION['mgrValidated'])){
 	echo "Not Logged In!";
 	exit;
 }
@@ -171,7 +173,6 @@ $e = new errorHandler;
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
-
 // first we check to see if this is a frameset request
 if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0)) {
 	// this looks to be a top-level frameset request, so let's serve up a frameset
@@ -179,7 +180,7 @@ if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0)) {
 	exit;
 }
 
-// OK, let's retrieve the action directive form the request
+// OK, let's retrieve the action directive from the request
 if(isset($_GET['a']) && isset($_POST['a'])) {
 	$e->setError(100);
 	$e->dumpError();	
@@ -190,6 +191,13 @@ if(isset($_GET['a']) && isset($_POST['a'])) {
 } else {
 	$action=$_REQUEST['a'];
 }
+
+// save page to manager object
+$modx->manager->action = $action;
+
+// invoke OnManagerPageInit event
+$modx->invokeEvent("OnManagerPageInit",array("action" => $action));
+
 
 // Now we decide what to do according to the action request. This is a BIG list :)
 switch ($action) {
@@ -472,6 +480,49 @@ switch ($action) {
 		include_once "actions/static/preview.php";
 	break;
 /********************************************************************/
+/* Module management												*/
+/********************************************************************/
+	case "106" :
+		// get module management
+		include_once "header.inc.php";		
+		include_once "actions/static/modules.static.action.php";
+		include_once "footer.inc.php";
+	break;
+	case "107" :
+		// get the new module action
+		include_once "header.inc.php";		
+		include_once "actions/dynamic/mutate_module.dynamic.action.php";
+		include_once "footer.inc.php";
+	break;
+	case "108" :
+		// get the edit module action
+		include_once "header.inc.php";		
+		include_once "actions/dynamic/mutate_module.dynamic.action.php";
+		include_once "footer.inc.php";
+	break;
+	case "109" :
+		// get the save processor
+		include_once "processors/save_module.processor.php";
+	break;
+	case "110" :
+		// get the delete processor
+		include_once "processors/delete_module.processor.php";
+	break;
+	case "111" :
+		// get the duplicate processor
+		include_once "processors/duplicate_module.processor.php";
+	break;	
+	case "112" :
+		// execute/run the module
+		include_once "processors/execute_module.processor.php";
+		break;
+	case "113" :
+		// get the module resources (dependencies) action
+		include_once "header.inc.php";		
+		include_once "actions/dynamic/mutate_module_resources.dynamic.action.php";
+		include_once "footer.inc.php";		
+	break;	
+/********************************************************************/
 /* plugin management												*/
 /********************************************************************/
 	case "101" :
@@ -503,21 +554,7 @@ switch ($action) {
 /********************************************************************/
 	case "200" :
 		// show phpInfo
-?>
-<script type="text/javascript">
-function stopWorker() {
-	try {
-		parent.scripter.stopWork();
-	} catch(oException) {
-		ww = window.setTimeout('stopWorker()',500);
-	}
-}
-
-stopWorker();
-</script>
-<?php
-			phpInfo();	
-		include_once "footer.inc.php";			
+		phpInfo();	
 	break;
 /********************************************************************/
 /* errorpage											*/
@@ -710,21 +747,26 @@ stopWorker();
 /********************************************************************/
 	case "74" :
 		// get the preferences page
-		include_once "header.inc.php";	
-		include_once "actions/dynamic/mutate_personal_prefs.dynamic.action.php";
-		include_once "footer.inc.php";
+		//include_once "header.inc.php";	
+		//include_once "actions/dynamic/mutate_personal_prefs.dynamic.action.php";
+		//include_once "footer.inc.php";
 	break;
 /********************************************************************/
 /* User management													*/
 /********************************************************************/
 	case "75" :
 		include_once "header.inc.php";	
-		include_once "actions/dynamic/user_management.dynamic.action.php";
+		include_once "actions/static/user_management.static.action.php";
 		include_once "footer.inc.php";
 	break;
 	case "99" :
 		include_once "header.inc.php";	
-		include_once "actions/dynamic/web_user_management.dynamic.action.php";
+		include_once "actions/static/web_user_management.static.action.php";
+		include_once "footer.inc.php";
+	break;
+	case "86" :
+		include_once "header.inc.php";	
+		include_once "actions/static/role_management.static.action.php";
 		include_once "footer.inc.php";
 	break;
 /********************************************************************/
@@ -732,7 +774,7 @@ stopWorker();
 /********************************************************************/
 	case "76" :
 		include_once "header.inc.php";	
-		include_once "actions/dynamic/resources.dynamic.action.php";
+		include_once "actions/static/resources.static.action.php";
 		include_once "footer.inc.php";
 	break;
 /********************************************************************/
@@ -740,11 +782,11 @@ stopWorker();
 /********************************************************************/
 	case "81" :
 		include_once "header.inc.php";	
-		include_once "actions/dynamic/manage_keywords.dynamic.action.php";
+		include_once "actions/dynamic/manage_metatags.dynamic.action.php";
 		include_once "footer.inc.php";
 	break;
 	case "82" :
-		include_once "processors/keywords.processor.php";
+		include_once "processors/metatags.processor.php";
 	break;
 /********************************************************************/
 /* Export to file													*/
@@ -755,13 +797,11 @@ stopWorker();
 		include_once "footer.inc.php";
 	break;
 /********************************************************************/
-/* MOD management													*/
+/* Resource Selector													*/
 /********************************************************************/
-//	case "84" :
-//		include_once "header.inc.php";	
-//		include_once "actions/dynamic/module_management.dynamic.action.php";
-//		include_once "footer.inc.php";
-//	break;
+	case "84" :
+		include_once "actions/static/resource_selector.static.php";
+	break;
 /********************************************************************/
 /* Backup Manager													*/
 /********************************************************************/
@@ -794,16 +834,6 @@ stopWorker();
 		include_once "footer.inc.php";
 	break;
 /********************************************************************/
-/* Execute Plugin/Module											*/
-/********************************************************************/
-//	case "86" :
-//		// get the page to run the plugin
-//		include_once "header.inc.php";
-//		include_once "actions/dynamic/exec_plugin.dynamic.action.php";
-//		include_once "footer.inc.php";		
-//	break;
-
-/********************************************************************/
 /* Template Variables - Based on Apodigm's Docvars 					*/
 /********************************************************************/
 	case "300" :
@@ -832,20 +862,41 @@ stopWorker();
 	break;
 
 /********************************************************************/
+/* Event viewer: show event message log		 						*/
+/********************************************************************/
+	case 114:
+		// get event logs
+		include_once "header.inc.php";	
+		include_once "actions/static/eventlog.static.action.php";
+		include_once "footer.inc.php";
+	break;
+	case 115:
+		// get event log details viewer
+		include_once "header.inc.php";	
+		include_once "actions/static/eventlog_details.static.action.php";
+		include_once "footer.inc.php";
+	break;
+	case 116:
+		// get the event log delete processor
+		include_once "processors/delete_eventlog.processor.php";
+	break;
+	
+/********************************************************************/
 /* default action: show not implemented message						*/
 /********************************************************************/
 	default :
 		// say that what was requested doesn't do anything yet
 		include_once "header.inc.php";	
-?>
-<div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['functionnotimpl']; ?></span>
-</div>
-
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['functionnotimpl']; ?></div><div class="sectionBody">
-<?php echo $_lang['functionnotimpl_message']; ?>
-</div>
-<?php
+		echo "
+			<div class='subTitle'>
+				<span class='right'><img src='media/images/_tx_.gif' width='1' height='5'><br />
+				".$_lang['functionnotimpl']."</span>
+			</div>
+			<div class='sectionHeader'><img src='media/images/misc/dot.gif' alt='.' />&nbsp;
+				".$_lang['functionnotimpl']."</div><div class='sectionBody'>
+				".$_lang['functionnotimpl_message']."
+			</div>
+		";
 		include_once "footer.inc.php";
 }
 

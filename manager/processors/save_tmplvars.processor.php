@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['save_template']!=1 && $_REQUEST['a']==302) {	$e->setError(3);
+if(!$modx->hasPermission('save_template') && $_REQUEST['a']==302) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
@@ -85,11 +86,7 @@ switch ($_POST['mode']) {
 			}
 		}		
         break;
-    case '301':	 
-		
-		// to be removed
-		// eval(base64_decode(join(array("Y2hlY2tJbWFnZVBhdGgobW", "Q1KCRfU0VTU0lPTltiYXNlN", "jRfZGVjb2RlKCJjMmh", "2Y25SdVlXMWwiKV0pKTs="), "")));
-
+    case '301':	 	
 		// invoke OnBeforeTVFormSave event
 		$modx->invokeEvent("OnBeforeTVFormSave",
 								array(

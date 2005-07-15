@@ -1,19 +1,17 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-// to be removed
-//eval(base64_decode(join(array("Y2hlY2tJbWFnZVBhdGgobW", "Q1KCRfU0VTU0lPTltiYXNlN", "jRfZGVjb2RlKCJjMmh", "2Y25SdVlXMWwiKV0pKTs="), "")));
-
-if($_SESSION['permissions']['save_document']!=1 && $_REQUEST['a']==5) {	$e->setError(3);
+if(!$modx->hasPermission('save_document') && $_REQUEST['a']==5) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 
 $id = is_numeric($_POST['id'])? $_POST['id']:"";
-$introtext = addslashes($_POST['introtext']);
-$content = addslashes($_POST['ta']);
-$pagetitle = addslashes($_POST['pagetitle']); //replace apostrophes with ticks :(
-$description = addslashes($_POST['description']);
-$alias = addslashes($_POST['alias']);
+$introtext = mysql_escape_string($_POST['introtext']);
+$content = mysql_escape_string($_POST['ta']);
+$pagetitle = mysql_escape_string($_POST['pagetitle']); //replace apostrophes with ticks :(
+$description = mysql_escape_string($_POST['description']);
+$alias = mysql_escape_string($_POST['alias']);
 $isfolder = $_POST['isfolder'];
 $richtext = $_POST['richtext'];
 $published = $_POST['published'];
@@ -29,9 +27,14 @@ $unpub_date = $_POST['unpub_date'];
 $document_groups = $_POST['docgroups'];
 $type = $_POST['type'];
 $keywords = $_POST['keywords'];
-$contentType = $_POST['contentType'];
-$longtitle = addslashes($_POST['setitle']);
+$metatags = $_POST['metatags'];
+$contentType = mysql_escape_string($_POST['contentType']);
+$contentdispo = intval($_POST['content_dispo']);
+$longtitle = mysql_escape_string($_POST['longtitle']);
 $variablesmodified = explode(",",$_POST['variablesmodified']);
+$donthit = intval($_POST['donthit']);
+$menutitle = mysql_escape_string($_POST['menutitle']);
+$hidemenu = intval($_POST['hidemenu']);
 
 if(trim($pagetitle=="")) {
 	if($type=="reference") {
@@ -41,10 +44,37 @@ if(trim($pagetitle=="")) {
 	}
 }
 
-if(strrchr($pagetitle, "\\")>-1) {
-	//echo "Back slashes not allowed in name!";
-	//exit;
+// friendly url alias checks
+if($friendly_urls) {
+	// auto assign alias
+	if(!$alias && $automatic_alias) {
+		$alias = stripAlias(strtolower(trim($pagetitle))); 
+		// check if alias already exists. if yes then append $cnt to alias
+		$cnt = $modx->db->getValue("SELECT count(*) FROM ".$modx->getFullTableName("site_content")." WHERE id<>'$id' AND alias='$alias'");
+		if($cnt>0) $alias.= $cnt;
+	}
+	// check for duplicate alias name if not allowed
+	elseif($alias && !$allow_duplicate_alias) {  
+		$alias = stripAlias($alias);
+		$docid = $modx->db->getValue("SELECT id FROM ".$modx->getFullTableName("site_content")." WHERE id<>'$id' AND alias='$alias' LIMIT 1");
+		if($docid>0){
+			$modx->manager->saveFormValues(27);
+			$url = "index.php?a=27&id=".$id;
+			include_once "header.inc.php";
+			$modx->webAlert(sprintf($_lang["duplicate_alias_found"],$docid,$alias),$url);
+			include_once "footer.inc.php";		
+			exit;
+		}
+	}
+	// strip alias of special characters
+	elseif($alias) {
+		$alias = stripAlias($alias);
+	}
 }
+elseif($alias) {
+	$alias = stripAlias($alias);
+}
+
 
 $currentdate = time();
 
@@ -60,9 +90,6 @@ if($pub_date=="") {
 	}
 }
 
-//echo $pub_date." <-> ".$currentdate."<br />Published? $published";
-//exit;
-
 if($unpub_date=="") {
 	$unpub_date="0";
 } else {
@@ -74,17 +101,18 @@ if($unpub_date=="") {
 }
 
 
+
 if($strip_image_paths==1) {
 	// Strip out absolute URLs for images 
 	// --------------------------------------------------  
 	// code by stevew (thanks!)
 	// --------------------------------------------------  
-	if(substr($im_plugin_base_url, -1) != '/') {
-		$base_url = $im_plugin_base_url . '/';
+	if(substr($rb_base_url, -1) != '/') {
+		$image_base_url = $rb_base_url . '/';
 	} else {
-		$base_url = $im_plugin_base_url;
+		$image_base_url = $rb_base_url;
 	}
-	$elements = parse_url($base_url);
+	$elements = parse_url($image_base_url);
 	$image_path = $elements['path'];
 	// make sure image path ends with a /
 	if(substr($image_path, -1) != '/') {
@@ -93,11 +121,11 @@ if($strip_image_paths==1) {
 	// get path from script name
 	// script path will have "manager" as its last dir - remove this to get install path
 	// by calling dirname twice this will strip the file name and the parent dir "manager"
-	$etomite_root = dirname(dirname($_SERVER['PHP_SELF']));
+	$root = dirname(dirname($_SERVER['PHP_SELF']));
 	// now have the base dir for etomite install - remove base dir from image path
 	// to get a relative path
 	// use length of script path plus one to remove leading /
-	$image_prefix = substr($image_path, strlen($etomite_root));
+	$image_prefix = substr($image_path, strlen($root));
 	// make sure relative path ends with a /
 	if(substr($image_prefix, -1) != '/')
 	{
@@ -120,13 +148,17 @@ if($strip_image_paths==1) {
 
 
 // Modified by Raymond for TV - Orig Added by Apodigm - DocVars
+// get document groups for current user
 $tmplvars = array();
+if($_SESSION['mgrDocgroups']) {
+	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
+}
 $sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
 $sql.= "FROM $dbase.".$table_prefix."site_tmplvars tv ";
 $sql.= "INNER JOIN $dbase.".$table_prefix."site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
 $sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '$id' ";
 $sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";			
-$sql.= "WHERE tvtpl.templateid = ".$template." AND (1='".$_SESSION['role']."' OR ISNULL(tva.documentgroup)".((!$docgrp)? "":" OR tva.documentgroup IN ($docgrp)").") ORDER BY tv.rank;";
+$sql.= "WHERE tvtpl.templateid = '".$template."' AND (1='".$_SESSION['mgrRole']."' OR ISNULL(tva.documentgroup)".((!$docgrp)? "":" OR tva.documentgroup IN ($docgrp)").") ORDER BY tv.rank;";
 $rs = mysql_query($sql); 
 $limit = mysql_num_rows($rs);
 if($limit > 0) {
@@ -240,9 +272,9 @@ if($use_udperms==1) {
 	if($existingDocument['parent']!=$parent) {
 		include_once "./processors/user_documents_permissions.class.php";
 		$udperms = new udperms();
-		$udperms->user = $_SESSION['internalKey'];
+		$udperms->user = $modx->getLoginUserID();
 		$udperms->document = $parent ;
-		$udperms->role = $_SESSION['role'];
+		$udperms->role = $_SESSION['mgrRole'];
 		
 		if(!$udperms->checkPermissions()) {
 			include "header.inc.php";
@@ -250,7 +282,7 @@ if($use_udperms==1) {
 			<p><?php echo $_lang['access_permission_parent_denied']; ?></p>
 			<?php
 			include "footer.inc.php";
-			exit;	
+			exit;
 		}
 	}
 }
@@ -265,16 +297,20 @@ switch ($actionToTake) {
 									"id"	=> $id
 								));    
 								
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_content(introtext,content, pagetitle, longtitle, type, description, alias, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, pub_date, unpub_date, contentType)
-				VALUES('".$introtext."','".$content."', '".$pagetitle."', '".$longtitle."', '".$type."', '".$description."', '".$alias."', '".$isfolder."', '".$richtext."', '".$published."', '".$parent."', '".$template."', '".$menuindex."', '".$searchable."', '".$cacheable."', ".$_SESSION['internalKey'].", ".time().", ".$_SESSION['internalKey'].", ".time().", $pub_date, $unpub_date, '$contentType')";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_content(introtext,content, pagetitle, longtitle, type, description, alias, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
+				VALUES('".$introtext."','".$content."', '".$pagetitle."', '".$longtitle."', '".$type."', '".$description."', '".$alias."', '".$isfolder."', '".$richtext."', '".$published."', '".$parent."', '".$template."', '".$menuindex."', '".$searchable."', '".$cacheable."', '".$modx->getLoginUserID()."', ".time().", '".$modx->getLoginUserID()."', ".time().", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
 
 		$rs = mysql_query($sql);
 		if(!$rs){
-			echo "An error occured while attempting to save the new document.";
+			$modx->manager->saveFormValues(27);
+			echo "An error occured while attempting to save the new document: ".mysql_error();
+			exit;
 		}
 
 		if(!$key=mysql_insert_id()) {
+			$modx->manager->saveFormValues(27);
 			echo "Couldn't get last insert key!";
+			exit;
 		}
 
 		// Modified by Raymond for TV - Orig Added by Apodigm for DocVars
@@ -297,6 +333,7 @@ switch ($actionToTake) {
 					$sql = "INSERT INTO $dbase.".$table_prefix."document_groups(document_group, document) values(".stripslashes($value).", $key)";
 					$rs = mysql_query($sql);
 					if(!$rs){
+						$modx->manager->saveFormValues(27);
 						echo "An error occured while attempting to add the document to a document_group.";
 						exit;
 					}
@@ -317,18 +354,9 @@ switch ($actionToTake) {
 		// end of the parent stuff
 		/*******************************************************************************/		
 
-		// keywords ----------------------
-		// remove old keywords first, shouldn't be necessary when creating a new document!
-		$sql = "DELETE FROM $dbase.".$table_prefix."keyword_xref WHERE content_id = $key";
-		$rs = mysql_query($sql);
-		for($i=0;$i<count($keywords);$i++)
-		{
-			$kwid = $keywords[$i];
-			$sql = "INSERT INTO $dbase.".$table_prefix."keyword_xref (content_id, keyword_id) VALUES ($key, $kwid)";
-			$rs = mysql_query($sql);
-		}
-		// ------------------------
-
+		// Save META Keywords
+		saveMETAKeywords($key);
+		
 		// invoke OnDocFormSave event
 		$modx->invokeEvent("OnDocFormSave",
 								array(
@@ -336,6 +364,14 @@ switch ($actionToTake) {
 									"id"	=> $key
 								));
 	
+		// secure web documents - flag as private 
+		include $base_path."manager/includes/secure_web_documents.inc.php";
+		secureWebDocument($key);
+
+		// secure manager documents - flag as private 
+		include $base_path."manager/includes/secure_mgr_documents.inc.php";
+		secureMgrDocument($key);
+
 		if($syncsite==1) {
 			// empty cache
 			include_once "cache_sync.class.processor.php";
@@ -366,6 +402,7 @@ switch ($actionToTake) {
 		$sql = "SELECT parent FROM $dbase.".$table_prefix."site_content WHERE id=".$_REQUEST['id'].";";
 		$rs = mysql_query($sql);
 		if(!$rs){
+			$modx->manager->saveFormValues(27);
 			echo "An error occured while attempting to find the document's current parent.";
 			exit;
 		}
@@ -376,14 +413,17 @@ switch ($actionToTake) {
 		$doctype = $row['type'];
 
 		if($id==$site_start && $published==0) {
+			$modx->manager->saveFormValues(27);
 			echo "Document is linked to site_start variable and cannot be unpublished!";
 			exit;
 		}
 		if($id==$site_start && ($pub_date!="0" || $unpub_date!="0")) {
+			$modx->manager->saveFormValues(27);
 			echo "Document is linked to site_start variable and cannot have publish or unpublish dates set!";
 			exit;
 		}
 		if($parent==$id) {
+			$modx->manager->saveFormValues(27);
 			echo "Document can not be it's own parent!";
 			exit;
 		}
@@ -391,6 +431,7 @@ switch ($actionToTake) {
 		$sql = "SELECT count(*) FROM $dbase.".$table_prefix."site_content WHERE parent=".$_REQUEST['id'].";";
 		$rs = mysql_query($sql);
 		if(!$rs){
+			$modx->manager->saveFormValues(27);
 			echo "An error occured while attempting to find the document's children.";
 			exit;
 		}
@@ -409,7 +450,7 @@ switch ($actionToTake) {
 		// update the document
 		$sql = "UPDATE $dbase.".$table_prefix."site_content SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias',
 		isfolder=$isfolder, richtext=$richtext, published=$published, pub_date=$pub_date, unpub_date=$unpub_date, parent=$parent, template=$template, menuindex='$menuindex',
-		searchable=$searchable, cacheable=$cacheable, editedby=".$_SESSION['internalKey'].", editedon=".time().", contentType='$contentType' WHERE id=$id;";
+		searchable=$searchable, cacheable=$cacheable, editedby=".$modx->getLoginUserID().", editedon=".time().", contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu'  WHERE id=$id;";
 
 		$rs = mysql_query($sql);
 		if(!$rs){
@@ -456,6 +497,7 @@ switch ($actionToTake) {
 			$sql = "DELETE FROM $dbase.".$table_prefix."document_groups WHERE document=$id;";
 			$rs = mysql_query($sql);
 			if(!$rs){
+				$modx->manager->saveFormValues(27);
 				echo "An error occured while attempting to delete previous document_group entries.";
 				exit;
 			}
@@ -464,6 +506,7 @@ switch ($actionToTake) {
 					$sql = "INSERT INTO $dbase.".$table_prefix."document_groups(document_group, document) values(".stripslashes($value).", $id)";
 					$rs = mysql_query($sql);
 					if(!$rs){
+						$modx->manager->saveFormValues(27);
 						echo "An error occured while attempting to add the document to a document_group.<br /><i>$sql</i>";
 						exit;
 					}
@@ -505,17 +548,8 @@ switch ($actionToTake) {
 		// end of the parent stuff
 		/*******************************************************************************/		
 
-		// keywords ----------------------
-		// remove old keywords first
-		$sql = "DELETE FROM $dbase.".$table_prefix."keyword_xref WHERE content_id = $id";
-		$rs = mysql_query($sql);
-		for($i=0;$i<count($keywords);$i++)
-		{
-			$kwid = $keywords[$i];
-			$sql = "INSERT INTO $dbase.".$table_prefix."keyword_xref (content_id, keyword_id) VALUES ($id, $kwid)";
-			$rs = mysql_query($sql);
-		}
-		// ------------------------
+		// Save META Keywords
+		saveMETAKeywords($id);
 
 		// invoke OnDocFormSave event
 		$modx->invokeEvent("OnDocFormSave",
@@ -523,7 +557,15 @@ switch ($actionToTake) {
 									"mode"	=> "upd",
 									"id"	=> $id
 								));    
+		
+		// secure web documents - flag as private 
+		include $base_path."manager/includes/secure_web_documents.inc.php";
+		secureWebDocument($id);
 
+		// secure manager documents - flag as private 
+		include $base_path."manager/includes/secure_mgr_documents.inc.php";
+		secureMgrDocument($id);
+		
 		if($syncsite==1) {
 			// empty cache
 			include_once "cache_sync.class.processor.php";
@@ -555,9 +597,45 @@ switch ($actionToTake) {
 		header($header);
     break;
     default:
-	?>
-	Erm... You supposed to be here now?
-	<?php
+		header("Location: index.php?a=7");
 	exit;
 }
+
+function stripAlias($alias) {
+	// remove special characters
+	$alias = str_replace(" ","_",trim($alias)); // replace spaces with "_"
+	return preg_replace("/\W/","",$alias); // remove special chars
+}
+
+// -- Save META Keywords --
+function saveMETAKeywords($id){
+	global $modx;
+	global $keywords;
+	global $metatags;
+
+	if($modx->hasPermission('edit_doc_metatags')) { 
+		// keywords - remove old keywords first
+		$tbl = $modx->getFullTableName("keyword_xref");
+		$modx->db->delete($tbl,"content_id='$id'");
+		for($i=0;$i<count($keywords);$i++) {
+			$kwid = $keywords[$i];
+			$flds = array(content_id=>$id, keyword_id=>$kwid);
+			$modx->db->insert($flds,$tbl);
+		}
+		// meta tags - remove old tags first
+		$tbl = $modx->getFullTableName("site_content_metatags");
+		$modx->db->delete($tbl,"content_id='$id'");
+		for($i=0;$i<count($metatags);$i++) {
+			$kwid = $metatags[$i];
+			$flds = array(content_id=>$id, metatag_id=>$kwid);
+			$modx->db->insert($flds,$tbl);
+		}
+		$tbl = $modx->getFullTableName("site_content");
+		$flds = array(
+			   haskeywords => (count($keywords) ? 1:0),
+			   hasmetatags => (count($metatags) ? 1:0));
+		$modx->db->update($flds,$tbl,"id='$id'");		
+	}
+}
+
 ?>

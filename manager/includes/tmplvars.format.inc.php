@@ -5,7 +5,7 @@
  */
 
 	// Added by Raymond 20-Jan-2005
-	function getTVDisplayFormat($etomite,$name,$value,$format,$paramstring="",$tvtype="",&$replace_richtext,&$richtexteditor,&$w,&$h) {
+	function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="") {
 
 		global $modx;
 		global $base_path;
@@ -14,7 +14,7 @@
 		$modx->regClientStartupScript('<script type="text/javascript">var MODX_MEDIA_PATH = "'.(IN_MANAGER_MODE ? 'media':'manager/media').'";</script>');
 
 		// process any TV commands in value
-		$value = ProcessTVCommand($etomite,$value);
+		$value = ProcessTVCommand($value);
 		
 		$param = array();
 		if($paramstring){
@@ -26,14 +26,19 @@
 			}
 		}
 		
-		// setup image type
-		if($tvtype=='image') {
-			$value = parseInput($value); 
-			$value = "<img src='$value' />";
-		}
-		
 		$id = "tv$name";
 		switch($format){
+
+			case "image":
+				$value = parseInput($value,"||","array");
+				for($i = 0;$i<count($value); $i++){
+					list($name,$image) = is_array($value[$i]) ? $value[$i]: explode("==",$value[$i]);
+					if(!$image) $image = $name;
+					if($o) $o.='<br />';
+					$o.= "<img src='$name'"." alt='".mysql_escape_string($params["alttext"])."'".($params["name"] ? " name='".$params["name"]."'":"").($params["hspace"] ? " hspace='".$params["hspace"]."'":"").($params["vspace"] ? " vspace='".$params["vspace"]."'":"").($params["borsize"] ? " border='".$params["borsize"]."'":"").(($params["align"] != "none") && ($params["align"] != "undefined") && ($params["align"] != "") ? " align='".$params["align"]."'":"").($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["id"] ? " id='".$params["id"]."'":"").($params["attrib"] ? $params["attrib"]:"")."/>";
+				}
+				break;
+		
 			case "delim":	// display as delimitted list
 				$value = parseInput($value,"||"); 
 				$p = $params['format'] ? $params['format']:",";
@@ -61,7 +66,7 @@
 				$value = parseInput($value," ");
 				$modx->regClientStartupScript("manager/media/scripts/webelm.js");
 				$o = "<script>";
-				$o.= "	document.setIncludePath('manager/media/tvscripts/');";					
+				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('floater');});";
 				$o.= "	document.addEventListener('onload',function(){var o = new Floater('$id','".addslashes(mysql_escape_string($value))."','".$params['x']."','".$params['y']."','".$params['pos']."','".$params['gs']."');});";
 				$o.= "</script>";
@@ -71,9 +76,9 @@
 			case "marquee":
 				$transfx = ($params['tfx']=='Horizontal') ? 2:1;
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/tvscripts/webelm.js");
+				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
 				$o = "<script>";
-				$o.= "	document.setIncludePath('manager/media/tvscripts/');";					
+				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('marquee');});";
 				$o.= "	document.addEventListener('onload',function(){var o = new Marquee('$id','".addslashes(mysql_escape_string($value))."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); o.start()});";
 				$o.= "</script>";
@@ -85,9 +90,9 @@
 				$delim = ($params['delim'])? $params['delim']:"||";
 				if ($delim=="\\n") $delim = "\n";
 				$value = parseInput($value,$delim,"array");
-				$modx->regClientStartupScript("manager/media/tvscripts/webelm.js");
+				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
 				$o = "<script>";
-				$o.= "	document.setIncludePath('manager/media/tvscripts/');";
+				$o.= "	document.setIncludePath('manager/media/script/bin/');";
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('ticker');});";
 				$o.= "	document.addEventListener('onload',function(){";
 				$o.= "	var o = new Ticker('$id','".$params['delay']."','".$transfx."'); ";
@@ -98,16 +103,16 @@
 				$o.= "</script>";
 				$o.= "<script>Ticker.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;
-
+				
 			case "hyperlink":
 				$value = parseInput($value,"||","array");
 				for($i = 0;$i<count($value); $i++){
 					list($name,$url) = is_array($value[$i]) ? $value[$i]: explode("==",$value[$i]);
 					if(!$url) $url = $name;
 					if($o) $o.='<br />';
-					$o.= "<a href='$url' title='".mysql_escape_string($params["title"])."' ".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["target"] ? " target='".$params["target"]."'":"").">".$name."</a>";
+					$o.= "<a href='$url'"." title='".($params["title"] ? mysql_escape_string($params["title"]):$name)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["target"] ? " target='".$params["target"]."'":"").($params["attrib"] ? " ".mysql_escape_string($params["attrib"]) : "").">".($params["text"] ? mysql_escape_string($params["text"]) : $name)."</a>";
 				}
-				break;
+				break;				
 				
 			case "htmltag":
 				$value = parseInput($value,"||","array");
@@ -125,20 +130,22 @@
 				$w = $params['w']? $params['w']:'100%';
 				$h = $params['h']? $params['h']:'400px';
 				$richtexteditor = $params['edt']? $params['edt']: "";
-				$modx->regClientStartupScript("manager/media/tvscripts/webelm.js");
-				if ($richtexteditor=="TinyMCE")
-					$modx->regClientStartupScript("manager/media/tinymce/jscripts/tiny_mce/tiny_mce.js");		
-				if ($richtexteditor=="FCKeditor")
-					$modx->regClientStartupScript("manager/media/fckeditor/fckeditor.js");		
-				if ($richtexteditor=="HTMLArea")
-					$modx->regClientStartupScript("manager/media/editor/editor.js");		
-				if ($richtexteditor=="Xihna")
-					$modx->regClientStartupScript("manager/media/xihna/htmlarea.js");		
-				$o= '<div style="position:relative; width:'.$w.'; height:'.$h.';"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
+				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
+				$o = '<div style="position:relative; width:'.$w.'; height:'.$h.';"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
 				$o.= htmlspecialchars($value);
 				$o.= '</textarea></div>';
-//				$replace_richtext = strlen($replace_richtext) > 0 ? $replace_richtext."," : ""; 
-				$replace_richtext = $id;
+				$replace_richtext = array($id);
+				// setup editors
+				if (!empty($replace_richtext) && !empty($richtexteditor)) {
+					// invoke OnRichTextEditorInit event
+					$evtOut = $modx->invokeEvent("OnRichTextEditorInit",
+													array(
+														editor 		=> $richtexteditor,
+														elements	=> $replace_richtext,
+														forfrontend => 1
+													));
+					if(is_array($evtOut)) $o.= implode("",$evtOut);
+				}
 				break;
 				
 			case "viewport":
@@ -168,7 +175,7 @@
 					$autoMode = "2";	//height only
 				}
 
-				$modx->regClientStartupScript("manager/media/tvscripts/viewport.js");
+				$modx->regClientStartupScript("manager/media/script/bin/viewport.js");
 				$o =  $sTag." id='".$params['vpid']."' name='".$params['vpid']."' ";
 				if ($params['class']) $o.= " class='".$params['class']."' ";
 				if ($params['style']) $o.= " style='".$params['style']."' ";
@@ -181,8 +188,10 @@
 				break;
 
 			case "datagrid":
-				include_once $base_path."/manager/includes/controls/datagrid.class.php";	
+				include_once $base_path."/manager/includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$value);
+
+				$grd->noRecordMsg		=$params['nrmsg'];
 
 				$grd->columnHeaderClass	=$params['chdrc'];
 				$grd->tableClass		=$params['tblc'];

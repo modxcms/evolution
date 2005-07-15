@@ -1,6 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['delete_role']!=1 && $_REQUEST['a']==37) {	$e->setError(3);
+if(!$modx->hasPermission('delete_role') && $_REQUEST['a']==37) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
@@ -33,7 +34,7 @@ if(!$rs) {
 	echo "Something went wrong while trying to delete the role...";
 	exit;
 } else {		
-	$header="Location: index.php?a=75";
+	$header="Location: index.php?a=86";
 	header($header);
 }
 

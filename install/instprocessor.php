@@ -1,4 +1,3 @@
-
 <?php
 
 error_reporting(E_ALL ^ E_NOTICE);
@@ -107,7 +106,11 @@ if($moduleSQLBaseFile) {
 		$errors += 1;
 		echo "<span class='notok'><b>Database Alerts!</span></p>";
 		echo "<p>MODx setup couldn't install/alter some tables inside the selected database.</p>";
-		echo "<p>The last error to occur was <em>".$sqlParser->mysqlErrors[count($sqlParser->mysqlErrors)-1]["error"]."</em> during the execution of SQL statement <span class='mono'>".strip_tags($sqlParser->mysqlErrors[count($sqlParser->mysqlErrors)-1]["sql"])."</span>.</p>";
+		echo "<p>The following errors had occured during installation<br /><br />";
+		for($i=0;$i<count($sqlParser->mysqlErrors);$i++) {
+			echo "<em>".$sqlParser->mysqlErrors[$i]["error"]."</em> during the execution of SQL statement <span class='mono'>".strip_tags($sqlParser->mysqlErrors[$i]["sql"])."</span>.<hr />";
+		}
+		echo "</p>";
 		echo "<p>Some table were not updated. This might be due to previous modifications.</p>";
 		return;
 	}
@@ -141,15 +144,15 @@ $configString = '<?php
 		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
 		if(count($a)>1) array_pop($a);
 		$url = implode("manager",$a); reset($a);
-		$a = explode("manager",dirname(__FILE__));
+		$a = explode("manager",str_replace("\\\\","/",dirname(__FILE__)));
 		if(count($a)>1) array_pop($a);
 		$pth = implode("manager",$a); unset($a);
 		$base_url = $url.(substr($url,-1)!="/"? "/":"");
 		$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
 		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? "http://" : "https://" ;
-	   $site_url .= $_SERVER[\'HTTP_HOST\'];
-	   $site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? "":":".$_SERVER[\'SERVER_PORT\'];
-	   $site_url .= $base_url;
+	    $site_url .= $_SERVER[\'HTTP_HOST\'];
+	    $site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? "":":".$_SERVER[\'SERVER_PORT\'];
+	    $site_url .= $base_url;
 	}';
 $configString .= "\n?>";
 $filename = '../manager/includes/config.inc.php';
@@ -184,40 +187,6 @@ else {
 if($installMode==0) {
 	$siteid = uniqid("");
 	mysql_query("REPLACE INTO $dbase.`".$table_prefix."system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODx')",$sqlParser->conn);
-}
-
-// Install Snippet
-if(isset($_POST['snippet'])) {				
-	echo "<p style='color:#707070'>Snippets:</p> ";
-	$selSnips = $_POST['snippet'];
-	foreach($selSnips as $si) {
-		$si = (int)trim($si);
-		$name		= mysql_escape_string($moduleSnippets[$si][0]);
-		$desc 		= mysql_escape_string($moduleSnippets[$si][1]);
-		$type		= $moduleSnippets[$si][2]; // 0:file, 1:content
-		$filecontent= $moduleSnippets[$si][3];
-		$properties	= $moduleSnippets[$si][4];
-		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install snippet. File '$filecontent' not found.</span></p>";
-		else{
-			$snippet = ($type==1)? $filecontent:implode ('', file($filecontent));
-			$snippet = mysql_escape_string($snippet);			
-			$rs = mysql_query("SELECT * FROM $dbase.`".$table_prefix."site_snippets` WHERE name='$name'",$sqlParser->conn);
-			if (mysql_num_rows($rs)) {
-				if(!@mysql_query("UPDATE $dbase.`".$table_prefix."site_snippets` SET snippet='$snippet',properties='$properties' WHERE name='$name';",$sqlParser->conn)) {
-					echo "<p>".mysql_error()."</p>";
-					return;
-				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
-			}
-			else{					
-				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_snippets` (name,description,snippet,properties) VALUES('$name','$desc','$snippet','$properties');",$sqlParser->conn)) {
-					echo "<p>".mysql_error()."</p>";
-					return;
-				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
-			}
-		}
-	}
 }
 
 // Install Chunks
@@ -255,6 +224,124 @@ if(isset($_POST['chunk'])) {
 	}
 }
 
+// Install module
+if(isset($_POST['module'])) {				
+	echo "<p style='color:#707070'>Module:</p> ";
+	$selPlugs = $_POST['plugin'];
+	foreach($selPlugs as $si) {
+		$si 		= (int)trim($si);
+		$name		= mysql_escape_string($moduleModules[$si][0]);
+		$desc 		= mysql_escape_string($moduleModules[$si][1]);
+		$type		= $moduleModules[$si][2]; // 0:file, 1:content
+		$filecontent= $moduleModules[$si][3];
+		$properties	= mysql_escape_string($moduleModules[$si][4]);
+		$guid		= mysql_escape_string($moduleModules[$si][5]);
+		$shared		= mysql_escape_string($moduleModules[$si][6]);
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install module. File '$filecontent' not found.</span></p>";
+		else{
+			$module = ($type==1)? $filecontent:implode ('', file($filecontent));
+			$module = mysql_escape_string($module);			
+			$rs = mysql_query("SELECT * FROM $dbase.`".$table_prefix."site_modules` WHERE name='$name'",$sqlParser->conn);
+			if (mysql_num_rows($rs)) {
+				if(!@mysql_query("UPDATE $dbase.`".$table_prefix."site_modules` SET modulecode='$module' WHERE name='$name';",$sqlParser->conn)) {
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+			}
+			else{					
+				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_modules` (name,description,modulecode,properties,guid,enable_sharedparams) VALUES('$name','$desc','$module','$properties','$guid','$shared');",$sqlParser->conn)) {
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+			}
+		}
+	}
+}
+
+
+// Install plugins
+if(isset($_POST['plugin'])) {				
+	echo "<p style='color:#707070'>Plugin:</p> ";
+	$selPlugs = $_POST['plugin'];
+	foreach($selPlugs as $si) {
+		$si 		= (int)trim($si);
+		$name		= mysql_escape_string($modulePlugins[$si][0]);
+		$desc 		= mysql_escape_string($modulePlugins[$si][1]);
+		$type		= $modulePlugins[$si][2]; // 0:file, 1:content
+		$filecontent= $modulePlugins[$si][3];
+		$properties	= mysql_escape_string($modulePlugins[$si][4]);
+		$events		= explode(",",$modulePlugins[$si][5]);
+		$guid		= mysql_escape_string($modulePlugins[$si][6]);
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install plugin. File '$filecontent' not found.</span></p>";
+		else{
+			$plugin = ($type==1)? $filecontent:implode ('', file($filecontent));
+			$plugin = mysql_escape_string($plugin);			
+			$rs = mysql_query("SELECT * FROM $dbase.`".$table_prefix."site_plugins` WHERE name='$name'",$sqlParser->conn);
+			if (mysql_num_rows($rs)) {
+				if(!@mysql_query("UPDATE $dbase.`".$table_prefix."site_plugins` SET plugincode='$plugin' WHERE name='$name';",$sqlParser->conn)) {
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+			}
+			else{					
+				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid) VALUES('$name','$desc','$plugin','$properties','$guid');",$sqlParser->conn)) {
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+			}
+			//add system events
+			if(count($events)>0) {
+				$ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_plugins` WHERE name='$name';",$sqlParser->conn); 
+				if($ds) {
+					$row = mysql_fetch_assoc($ds);
+					$id = $row["id"];
+					mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`".$table_prefix."system_eventnames` se WHERE name IN ('".implode("','",$events)."')");
+				}
+			}
+		}
+	}
+}
+
+// Install Snippet
+if(isset($_POST['snippet'])) {				
+	echo "<p style='color:#707070'>Snippets:</p> ";
+	$selSnips = $_POST['snippet'];
+	foreach($selSnips as $si) {
+		$si = (int)trim($si);
+		$name		= mysql_escape_string($moduleSnippets[$si][0]);
+		$desc 		= mysql_escape_string($moduleSnippets[$si][1]);
+		$type		= $moduleSnippets[$si][2]; // 0:file, 1:content
+		$filecontent= $moduleSnippets[$si][3];
+		$properties	= mysql_escape_string($moduleSnippets[$si][4]);
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install snippet. File '$filecontent' not found.</span></p>";
+		else{
+			$snippet = ($type==1)? $filecontent:implode ('', file($filecontent));
+			$snippet = mysql_escape_string($snippet);			
+			$rs = mysql_query("SELECT * FROM $dbase.`".$table_prefix."site_snippets` WHERE name='$name'",$sqlParser->conn);
+			if (mysql_num_rows($rs)) {
+				if(!@mysql_query("UPDATE $dbase.`".$table_prefix."site_snippets` SET snippet='$snippet' WHERE name='$name';",$sqlParser->conn)) {
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+			}
+			else{					
+				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_snippets` (name,description,snippet,properties) VALUES('$name','$desc','$snippet','$properties');",$sqlParser->conn)) {
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+			}
+		}
+	}
+}
+
+
+
 // call back function
 if ($callBackFnc!="") $callBackFnc($sqlParser);
 
@@ -265,16 +352,18 @@ $sync->setCachepath("../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache
 
-// setup completed!
-echo "<p>Installation was successful!</p>";
-echo "<p>To log into the Content Manager (manager/index.php) you can click on the 'Close' button or <a href='../manager/'>click here</a>.</p>";
-
-if($installMode==0) {
-	echo "<p><img src='img_info.gif' width='32' height='32' align='left' style='margin-right:10px;' /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
-}
-
-
 // close db connection
 $sqlParser->close();
+
+// setup completed!
+echo  "<p><b>Installation was successful!</b></p>";
+echo  "<p>To log into the Content Manager (manager/index.php) you can click on the 'Close' button.</p>";
+if($installMode==0) {
+	echo  "<p><img src='img_info.gif' width='32' height='32' align='left' style='margin-right:10px;' /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
+}
+else {
+	echo "<p><img src='img_info.gif' width='32' height='32' align='left' style='margin-right:10px;' /><strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.</p><br />&nbsp;";
+}
+
 	
 ?>

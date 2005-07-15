@@ -75,8 +75,8 @@ class udperms{
 		}*/
 
 		// get document groups for current user
-		if($_SESSION['docgroups']) {
-			$docgrp = implode(",",$_SESSION['docgroups']);
+		if($_SESSION['mgrDocgroups']) {
+			$docgrp = implode(",",$_SESSION['mgrDocgroups']);
 		}
 
 		/* Note:

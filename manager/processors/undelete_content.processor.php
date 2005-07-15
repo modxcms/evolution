@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['delete_document']!=1 && $_REQUEST['a']==63) {	$e->setError(3);
+if(!$modx->hasPermission('delete_document') && $_REQUEST['a']==63) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -9,9 +10,9 @@ $id=$_REQUEST['id'];
 // check permissions on the document
 include_once "./processors/user_documents_permissions.class.php";
 $udperms = new udperms();
-$udperms->user = $_SESSION['internalKey'];
+$udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
-$udperms->role = $_SESSION['role'];
+$udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
 	include "header.inc.php";

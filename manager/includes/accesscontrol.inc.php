@@ -1,11 +1,11 @@
 <?php
 session_start();
-if (isset($_SESSION['validated']) && $_SESSION['usertype']!='manager'){
-	unset($_SESSION['validated']);
+if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
+	unset($_SESSION['mgrValidated']);
 	session_destroy();	
 	session_start();
 }
-if(!isset($_SESSION['validated'])){
+if(!isset($_SESSION['mgrValidated'])){
 	include_once("browsercheck.inc.php");
 
 	if(isset($manager_language)) {
@@ -37,8 +37,12 @@ if(!isset($_SESSION['validated'])){
 <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 <script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
 <script type="text/javascript" language="JavaScript">
-	document.setIncludePath("media/tvscripts/");
+
+	document.setIncludePath("media/script/bin/");
+
 	document.addEventListener("oninit",function() { 
+		document.include("cookie");
+		document.include("animate");
 		document.include("dynelement");
 	})
 </script>
@@ -53,11 +57,6 @@ body {
 	background-position: 		top; 
 	background-color:			#5377A7;
 	background-repeat: 			repeat-x; 
-}
-.login2Bg{
-	background-image: 			url('media/images/bg/login_mod2.gif'); 
-	background-position: 		center 85px; 
-	background-repeat: 			no-repeat; 
 }
 .loginTbl {
 	background-color:			white; 
@@ -101,19 +100,19 @@ body {
 </style>
 <script language="JavaScript">
 
-	function document_onload() {
+	/*function document_onload() {
 		var c = document.getCookie("MODxLoginSpash");
 		if(c!="on") setTimeout("tvOpen('splash','splashend')",1000);
 		else {
 			var o = document.getElementById("splash");
 			if(o) o.style.visibility = "visible";
 		}
-	}
+	}*/
 	
-	function splashend() {
+	/*function splashend() {
 		<?php echo !empty($uid) ? "document.loginfrm.password.focus();" : "document.loginfrm.username.focus();" ?>	
 		document.setCookie("MODxLoginSpash","on",0);
-	}
+	}*/
 	
 	function checkRemember () {
 		if(document.loginfrm.rememberme.value==1) {
@@ -151,18 +150,19 @@ body {
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td align="center" valign="middle" class="login2Bg" width="100%" height="100%">
+    <td align="center" valign="middle" width="100%" height="100%">
 	<!-- intro text, logo and login box -->
-		<div id="splash" style="visibility:<?php if (isset($_COOKIE["MODxLoginSpash"])) echo $_COOKIE["MODxLoginSpash"]=='on' ? "visible":"hidden"; else echo 'hidden'; ?>;width:600px">
+		<div id="splash" style="width:600px">
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginTbl">
 		  <tr>
 			<td rowspan="2"><img src='media/images/misc/logo.png' alt='<?php echo $_lang["logo_slogan"]; ?>'><p />
-			<?php 
-				$file = dirname(__FILE__)."/support.inc.php";
-				if(file_exists($file)) {
-					include_once $file;
-					showSupportLink();
-				}
+			<?php 				
+				$pth = dirname(__FILE__);
+				$file = "$pth/support.inc.php";
+				$ov_file = "$pth/override.support.inc.php";	// detect override file
+				if(file_exists($ov_file)) $inc = include_once($ov_file);
+				else if(file_exists($file)) $inc = include_once($file);
+				if($inc)showSupportLink();
 			?></td>
 			<td><?php echo "<p  align='right'><span class='siteName'>".$site_name."</span></p>"; echo $_lang["login_message"]; echo $use_captcha==1 ? "<p />".$_lang["login_captcha_message"] : "" ; ?></td>
 		  </tr>
@@ -248,7 +248,7 @@ body {
 if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
 $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "" ;
 if($a!=1) {
-	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(".$_SESSION['internalKey'].", '".$_SESSION['shortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values('".$modx->getLoginUserID()."', '".$_SESSION['mgrShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
 	if(!$rs = mysql_query($sql)) {
 		echo "error replacing into active users! SQL: ".$sql;
 		exit;

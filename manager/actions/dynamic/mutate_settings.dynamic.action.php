@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['settings']!=1 && $_REQUEST['a']==17) {	$e->setError(3);
+if(!$modx->hasPermission('settings') && $_REQUEST['a']==17) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -11,8 +12,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing these settings. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_settings_msg"],$lock['username']);
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -20,7 +21,17 @@ if($limit>1) {
 } 
 // end check for lock
 
+// reload system settings from the database.
+// this will prevent user-defined settings from being saved as system setting
+$settings = array();
+$sql = "SELECT setting_name, setting_value FROM $dbase.".$table_prefix."system_settings";
+$rs = mysql_query($sql);
+$number_of_settings = mysql_num_rows($rs);
+while ($row = mysql_fetch_assoc($rs)) $settings[$row['setting_name']] = $row['setting_value'];
+extract($settings, EXTR_OVERWRITE);
+
 $displayStyle = $_SESSION['browser']=='mz' ? "table-row" : "block" ;
+
 ?>
 
 <script type="text/javascript">
@@ -29,7 +40,13 @@ function checkIM() {
 	if(im_on==true) {
 		showHide(/imRow/, 1);
 	}
-}
+};
+
+function checkCustomIcons() {
+	if(document.settings.editor_toolbar.selectedIndex!=3) {
+		showHide(/custom/,0);
+	}
+};
 
 function showHide(what, onoff){
 
@@ -52,7 +69,49 @@ function showHide(what, onoff){
 			el.style.display = stylevar;
 		}
 	}
+};
+
+function addContentType(){
+	var i,o,exists=false;
+	var txt = document.settings.txt_custom_contenttype;
+	var lst = document.settings.lst_custom_contenttype;
+	for(i=0;i<lst.options.length;i++) if(lst.options[i].value==txt.value) exists=true;
+	if (!exists) {
+		o = new Option(txt.value,txt.value);
+		lst.add(o);
+		updateContentType();
+	}
+	txt.value='';
 }
+function removeContentType(){
+	var i;
+	var lst = document.settings.lst_custom_contenttype;
+	for(i=0;i<lst.options.length;i++) {
+		if(lst.options[i].selected) {
+			lst.remove(i);
+			break;
+		}
+	}
+	updateContentType();
+}
+function updateContentType(){
+	var i,o,ol=[];
+	var lst = document.settings.lst_custom_contenttype;
+	var ct = document.settings.custom_contenttype;
+	while(lst.options.length) {
+		ol[ol.length] = lst.options[0].value;
+		lst.remove(0);
+	}	
+	if(ol.sort) ol.sort();
+	ct.value = ol.join(",");
+	for(i=0;i<ol.length;i++) {
+		o = new Option(ol[i],ol[i]);
+		lst.add(o);
+	}
+	documentDirty = true;
+}
+
+
 </script>
 <div class="subTitle"> 
 	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['settings_title']; ?></span>
@@ -80,6 +139,8 @@ function showHide(what, onoff){
       <script type="text/javascript">
 		tpSettings = new WebFXTabPane( document.getElementById( "settingsPane" ) );
 	</script> 
+	
+	<!-- Sit Settings -->
       <div class="tab-page" id="tabPage2"> 
         <h2 class="tab"><?php echo $_lang["settings_site"] ?></h2> 
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage2" ) );</script> 
@@ -148,10 +209,8 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["charset_title"]?></b></td> 
-            <td> <select name="etomite_charset" size="1" class="inputBox" onChange="documentDirty=true;"> 
-                <?php
-	include "charsets.php";
-?> 
+            <td> <select name="etomite_charset" size="1" class="inputBox" style="width:250px;" onChange="documentDirty=true;"> 
+                <?php include "charsets.php"; ?> 
               </select> </td> 
           </tr> 
           <tr> 
@@ -163,7 +222,7 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td> 
-            <td ><input onChange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>"></td> 
+            <td ><input onChange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -220,6 +279,17 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
           <tr> 
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["siteunavailable_page_title"] ?></b></td> 
+            <td> <input onChange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo isset($site_unavailable_page) ? $site_unavailable_page : "" ; ?>" /></td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["siteunavailable_page_message"] ?></td> 
+          </tr> 
+          <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>           
+          <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["siteunavailable_title"] ?></b></td> 
             <td> <textarea name="site_unavailable_message" style="width:100%; height: 120px;"><?php echo isset($site_unavailable_message) ? $site_unavailable_message : "The site is currently unavailable" ; ?></textarea> </td> 
           </tr> 
@@ -230,6 +300,7 @@ function showHide(what, onoff){
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
+          
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["track_visitors_title"] ?></b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="track_visitors" value="1" <?php echo ($track_visitors=='1' || !isset($track_visitors)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/logRow/, 1);'> 
@@ -343,9 +414,47 @@ function showHide(what, onoff){
           <tr> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["defaultsearch_message"] ?></td> 
-          </tr> 		
+          </tr> 	
+          <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>           
+          <tr> 
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["custom_contenttype_title"] ?></b></td> 
+            <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /> <input type="button" value="Add" style="width:60px" onclick='addContentType()' /><br />
+            <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
+            <select name="lst_custom_contenttype" style="width:200px;" size="5">
+            <?php
+	            $custom_contenttype = (isset($custom_contenttype) ? $custom_contenttype : "text/css,text/html,text/javascript,text/plain,text/xml"); 
+            	$ct = explode(",",$custom_contenttype);
+            	for($i=0;$i<count($ct);$i++) {
+            		echo "<option value=\"".$ct[$i]."\">".$ct[$i]."</option>";
+            	}
+            ?>
+            </select>
+            <input name="custom_contenttype" type="hidden" value="<?php echo $custom_contenttype; ?>" />
+            </td><td valign="top">&nbsp;<input name="removecontenttype" type="button" value="Remove" style="width:60px" onclick='removeContentType()' /></td></tr></table>
+            </td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["custom_contenttype_message"] ?></td> 
+          </tr> 
+          <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>           
+		  <tr class='row1'> 
+            <td colspan="2">
+		        <?php
+					// invoke OnSiteSettingsRender event
+					$evtOut = $modx->invokeEvent("OnSiteSettingsRender");
+					if(is_array($evtOut)) echo implode("",$evtOut);
+		        ?>         
+            </td> 
+          </tr> 
         </table> 
       </div> 
+      
+      <!-- Friendly URL settings  -->
       <div class="tab-page" id="tabPage3"> 
         <h2 class="tab"><?php echo $_lang["settings_furls"] ?></h2> 
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage3" ) );</script> 
@@ -397,7 +506,6 @@ function showHide(what, onoff){
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["friendly_alias_message"] ?></td> 
           </tr> 
-
           <tr id='furlRow9' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
@@ -412,8 +520,50 @@ function showHide(what, onoff){
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["use_alias_path_message"] ?></td> 
           </tr> 
+          <tr id='furlRow12' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr id='furlRow16' class='row2' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["duplicate_alias_title"] ?></b></td> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="1" <?php echo $allow_duplicate_alias=='1' ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["yes"]?><br /> 
+              <input onChange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="0" <?php echo ($allow_duplicate_alias=='0' || !isset($allow_duplicate_alias)) ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["no"]?> </td> 
+          </tr> 
+          <tr id='furlRow17' class='row2' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["duplicate_alias_message"] ?></td> 
+          </tr> 
+          <tr id='furlRow18' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr id='furlRow13' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["automatic_alias_title"] ?></b></td> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="automatic_alias" value="1" <?php echo $automatic_alias=='1' ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["yes"]?><br /> 
+              <input onChange="documentDirty=true;" type="radio" name="automatic_alias" value="0" <?php echo ($automatic_alias=='0' || !isset($automatic_alias)) ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["no"]?> </td> 
+          </tr> 
+          <tr id='furlRow14' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["automatic_alias_message"] ?></td> 
+          </tr> 
+          <tr id='furlRow15' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+		  <tr class='row1'> 
+            <td colspan="2">
+		        <?php
+					// invoke OnFriendlyURLSettingsRender event
+					$evtOut = $modx->invokeEvent("OnFriendlyURLSettingsRender");
+					if(is_array($evtOut)) echo implode("",$evtOut);
+		        ?>         
+            </td> 
+          </tr> 
         </table> 
       </div> 
+      
+      <!-- User settings -->
       <div class="tab-page" id="tabPage4"> 
         <h2 class="tab"><?php echo $_lang["settings_users"] ?></h2> 
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage4" ) );</script> 
@@ -462,7 +612,7 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["captcha_words_title"] ?></b></td> 
-            <td><input name="captcha_words" style="width:400px" value="<?php echo isset($captcha_words) ? $captcha_words : "Alex,BitCode,Chunk,Design,Extreme,FinalFantasy,Gerry,Holiday,Join(),Kakogenic,Lightning,Maaike,Marit,Niche,Oscilloscope,Phusion,Query,Retail,Snippet,Template,USSEnterprise,Verily,Website,Ypsilon,Zebra" ; ?>" /></td> 
+            <td><input name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : "Alex,BitCode,Chunk,Design,Extreme,FinalFantasy,Gerry,Holiday,Join(),Kakogenic,Lightning,Maaike,Marit,Niche,Oscilloscope,Phusion,Query,Retail,Snippet,Template,USSEnterprise,Verily,Website,Ypsilon,Zebra" ; ?>" /></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -473,7 +623,7 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["emailsender_title"] ?></b></td> 
-            <td ><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@yourdomain.com" ; ?>"></td> 
+            <td ><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@yourdomain.com" ; ?>"></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -484,7 +634,7 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["emailsubject_title"] ?></b></td> 
-            <td ><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="emailsubject" value="<?php echo isset($emailsubject) ? $emailsubject : "Your login details" ; ?>"></td> 
+            <td ><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsubject" value="<?php echo isset($emailsubject) ? $emailsubject : "Your login details" ; ?>"></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -523,8 +673,19 @@ function showHide(what, onoff){
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["webpwdreminder_message"] ?></td> 
           </tr> 
+		  <tr class='row1'> 
+            <td colspan="2">
+		        <?php
+					// invoke OnUserSettingsRender event
+					$evtOut = $modx->invokeEvent("OnUserSettingsRender");
+					if(is_array($evtOut)) echo implode("",$evtOut);
+		        ?>         
+            </td> 
+          </tr> 
         </table> 
-      </div> 
+      </div>
+       
+      <!-- Interface & editor settings -->
       <div class="tab-page" id="tabPage5"> 
         <h2 class="tab"><?php echo $_lang["settings_ui"] ?></h2> 
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage5" ) );</script> 
@@ -547,20 +708,77 @@ function showHide(what, onoff){
           <tr> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["nomessages_message"]?></td> 
+          </tr>
+          <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>            
+          <tr> 
+            <td nowrap class="warning"><b><?php echo $_lang["noresults_title"]?></b></td> 
+            <td><input onChange="documentDirty=true;" type='text' maxlength='50' size="5" name="number_of_results" value="<?php echo isset($number_of_results) ? $number_of_results : 30 ; ?>"></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["treetype_message"]?></td> 
+            <td class='comment'><?php echo $_lang["noresults_message"]?></td> 
           </tr> 
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
+          </tr>            
+          <tr> 
+            <td nowrap class="warning"><b><?php echo $_lang["rb_title"]?></b></td> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="use_browser" value="1" <?php echo ($use_browser=='1' || !isset($use_browser)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 1);" /> 
+              <?php echo $_lang["yes"]?><br /> 
+              <input onChange="documentDirty=true;" type="radio" name="use_browser" value="0" <?php echo $use_browser=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 0);"> 
+              <?php echo $_lang["no"]?> </td> 
           </tr> 
           <tr> 
-          	<?php // TODO: add more options for WYSIWYG Editors ?>
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["rb_message"]?></td> 
+          </tr> 
+          <?php if(!isset($use_browser)) $use_browser=1; ?>
+          <tr id='allRow3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr id='rbRow1' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td> 
+            <td> <?php
+				function getResourceBaseDir() {
+					global $base_path;
+					return $base_path."assets/";
+				}
+				?> 
+              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" value="<?php echo isset($rb_base_dir) ? $rb_base_dir : getResourceBaseDir() ; ?>" /> 
+              </td> 
+          </tr> 
+          <tr id='rbRow2' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["rb_base_dir_message"]?></td> 
+          </tr> 
+          <tr id='rbRow3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr id='rbRow4' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning"><b><?php echo $_lang["rb_base_url_title"]?></b></td> 
+            <td> <?php
+				function getResourceBaseUrl() {
+					global $site_url;
+					return $site_url . "assets/";
+				}
+				?> 
+              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_url" value="<?php echo isset($rb_base_url) ? $rb_base_url : getResourceBaseUrl() ; ?>" /> 
+              </td> 
+          </tr> 
+          <tr id='rbRow5' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["rb_base_url_message"]?></td> 
+          </tr> 
+          <tr id='rbRow6' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["use_editor_title"]?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="checkIM(); showHide(/<?php echo $which_editor==1?"tiny":"fck"?>Row/, 1);"> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 1); checkCustomIcons();"> 
               <?php echo $_lang["yes"]?><br /> 
-              <input onChange="documentDirty=true;" type="radio" name="use_editor" value="0" <?php echo $use_editor=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/imRow/, 0); showHide(/editorRow/, 0); showHide(/fckRow/, 0); showHide(/tinyRow/, 0);"> 
+              <input onChange="documentDirty=true;" type="radio" name="use_editor" value="0" <?php echo $use_editor=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 0);"> 
               <?php echo $_lang["no"]?> </td> 
           </tr> 
           <tr> 
@@ -570,171 +788,53 @@ function showHide(what, onoff){
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr> 
+          <tr id='editorRow0' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td nowrap class="warning"><b><?php echo $_lang["which_editor_title"]?></b></td> 
             <td> 
 				<select name="which_editor" onChange="documentDirty=true;">
-					<option value="1" <?php echo !isset($which_editor) || $which_editor==1 ? "selected='selected'" : "" ;?> onclick="if (this.selected){showHide(/imRow/, 1); showHide(/editorRow/, 0); showHide(/tinyRow/, 1); showHide(/fckRow/, 0);}">TinyMCE</option>
-					<option value="2" <?php echo $which_editor==2 ? "selected='selected'" : "" ;?> onclick="if (this.selected){showHide(/imRow/, 1); showHide(/editorRow/, 0); showHide(/tinyRow/, 0); showHide(/fckRow/, 1);}">FCKeditor</option>
-					//TODO: add back legacy HTMLArea support where functional here
-					//TODO: add Xihna option here as value=4
+					<?php
+						// invoke OnRichTextEditorRegister event
+						$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+						if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
+							$editor = $evtOut[$i];
+							echo "<option value='$editor'".($which_editor==$editor ? " selected='selected'" : "").">$editor</option>\n";
+						}						 
+					?>
 				</select>
 			</td> 
           </tr> 
-          <tr> 
+          <tr id='editorRow1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["which_editor_message"]?></td> 
           </tr> 
-          <tr> 
+          <tr id='editorRow2' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='editorRow0' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["use_strict_editor_title"]?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="1" <?php echo ($strict_editor=='1' || !isset($strict_editor)) ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["yes"]?><br /> 
-              <input onChange="documentDirty=true;" type="radio" name="strict_editor" value="0" <?php echo $strict_editor=='0' ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["no"]?> </td> 
-          </tr> 		  
-          <tr id='editorRow1' class='row1' style="display: <?php echo ($use_editor==1 && $which_editor==3) ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["use_strict_editor_message"]?></td> 
-          </tr> 
-          <tr id='editorRow2' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='allRow1' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["im_plugin_title"]?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="im_plugin" value="1" <?php echo ($im_plugin=='1' || !isset($im_plugin)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/imRow/, 1);"> 
-              <?php echo $_lang["yes"]?><br /> 
-              <input onChange="documentDirty=true;" type="radio" name="im_plugin" value="0" <?php echo $im_plugin=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/imRow/, 0);"> 
-              <?php echo $_lang["no"]?> </td> 
-          </tr> 
-          <tr id='allRow2' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["im_plugin_message"]?></td> 
-          </tr> 
-          <tr id='allRow3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='imRow1' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["im_plugin_base_dir_title"]?></b></td> 
-            <td> <?php
-            	// Raymond: modified to use realpath()
-				function getImageBaseDir() {
-					return realpath(str_replace("\\","/",dirname(__FILE__))."/../../../assets/images/");
-				}
-				?> 
-              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="im_plugin_base_dir" value="<?php echo isset($im_plugin_base_dir) ? $im_plugin_base_dir : getImageBaseDir() ; ?>"> 
-              <br /> </td> 
-          </tr> 
-          <tr id='imRow2' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["im_plugin_base_dir_message"]?></td> 
-          </tr> 
-          <tr id='imRow3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='imRow4' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["im_plugin_base_url_title"]?></b></td> 
-            <td> <?php
-				function getImageBaseUrl() {
-					return $site_url . "/assets/images/";
-				}
-				?> 
-              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="im_plugin_base_url" value="<?php echo isset($im_plugin_base_url) ? $im_plugin_base_url : getImageBaseUrl() ; ?>"> 
-              <br /> </td> 
-          </tr> 
-          <tr id='imRow5' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["im_plugin_base_url_message"]?></td> 
-          </tr> 
-          <tr id='imRow6' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='editorRow4' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["cm_plugin_title"]?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="cm_plugin" value="1" <?php echo $cm_plugin=='1' ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["yes"]?><br /> 
-              <input onChange="documentDirty=true;" type="radio" name="cm_plugin" value="0" <?php echo ($cm_plugin=='0' || !isset($cm_plugin)) ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["no"]?> </td> 
-          </tr> 
-          <tr id='editorRow5' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["cm_plugin_message"]?></td> 
-          </tr> 
-          <tr id='editorRow6' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='editorRow7' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["to_plugin_title"]?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="to_plugin" value="1" <?php echo $to_plugin=='1' ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["yes"]?><br /> 
-              <input onChange="documentDirty=true;" type="radio" name="to_plugin" value="0" <?php echo ($to_plugin=='0' || !isset($to_plugin)) ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["no"]?> </td> 
-          </tr> 
-          <tr id='editorRow8' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==3 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["to_plugin_message"]?></td> 
           </tr>
-		  <tr> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='tinyRow1' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["tiny_theme_title"]?></b></td> 
-            <td>
-            <select name="tiny_theme">
-					<option value="advanced" <?php echo !isset($tiny_theme) || $tiny_theme=='advanced' ? "selected='selected'" : "" ;?>>Advanced</option>
-					<option value="default" <?php echo $tiny_theme=='default' ? "selected='selected'" : "" ;?>>Default</option>
-					<option value="simple" <?php echo $tiny_theme=='simple' ? "selected='selected'" : "" ;?>>Simple</option>
-				</select>
+          <tr id='editorRow14' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning"><b><?php echo $_lang["editor_css_path_title"]?></b></td> 
+            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="editor_css_path" value="<?php echo isset($editor_css_path) ? $editor_css_path : "" ; ?>"> 
 			</td> 
           </tr> 
-          <tr id='tinyRow2' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
+          <tr id='editorRow15' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["tiny_theme_message"]?></td> 
+            <td class='comment'><?php echo $_lang["editor_css_path_message"]?></td> 
           </tr> 
-		  <tr> 
+		  <tr id='editorRow16' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr id='fckRow1' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==2 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["fck_toolbar_title"]?></b></td> 
-            <td>
-            <select name="fck_toolbar">
-					<option value="Default" <?php echo !isset($fck_toolbar) || $fck_toolbar=='Default' ? "selected='selected'" : "" ;?>>Default</option>
-					<option value="Basic" <?php echo $fck_toolbar=='Basic' ? "selected='selected'" : "" ;?>>Basic</option>
-				</select>
-			</td> 
+		  <tr class='row1'> 
+            <td colspan="2">
+		        <?php
+					// invoke OnInterfaceSettingsRender event
+					$evtOut = $modx->invokeEvent("OnInterfaceSettingsRender");
+					if(is_array($evtOut)) echo implode("",$evtOut);
+		        ?> 
+            </td> 
           </tr> 
-          <tr id='fckRow1' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==2 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["fck_toolbar_message"]?></td> 
-          </tr> 
-		  <tr> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='tinyRow3' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["tiny_css_path_title"]?></b></td> 
-            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="tiny_css_path" value="<?php echo isset($tiny_css_path) ? $tiny_css_path : "" ; ?>"> 
-			</td> 
-          </tr> 
-          <tr id='tinyRow4' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["tiny_css_path_message"]?></td> 
-          </tr> 
-		  <tr> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='tinyRow5' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["tiny_css_selectors_title"]?></b></td> 
-            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="tiny_css_selectors" value="<?php echo isset($tiny_css_selectors) ? $tiny_css_selectors : "" ; ?>"> 
-			</td> 
-          </tr> 
-          <tr id='tinyRow6' class='row1' style="display: <?php echo $use_editor==1 && $which_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["tiny_css_selectors_message"]?></td> 
-          </tr> 
-        </table> 
+        </table>
       </div> 
+      
+      <!-- Miscellaneous settings -->
       <div class="tab-page" id="tabPage7"> 
         <h2 class="tab"><?php echo $_lang["settings_misc"] ?></h2> 
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage7" ) );</script> 
@@ -755,7 +855,7 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["filemanager_path_title"]?></b></td> 
-            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>"> 
+            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>"> 
               <br /> </td> 
           </tr> 
           <tr> 
@@ -768,7 +868,7 @@ function showHide(what, onoff){
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td> 
             <td>
-              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_files" value="<?php echo isset($upload_files) ? $upload_files : "jpg,gif,png,ico,txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,bmp,mp3,wav,au,wmv,avi,mpg,mpeg,pdf,psd" ; ?>"> 
+              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_files" value="<?php echo isset($upload_files) ? $upload_files : "jpg,gif,png,ico,txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,bmp,mp3,wav,au,wmv,avi,mpg,mpeg,pdf,psd" ; ?>"> 
             </td> 
           </tr> 
           <tr> 
@@ -781,7 +881,7 @@ function showHide(what, onoff){
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["upload_maxsize_title"]?></b></td> 
             <td>
-              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_maxsize" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : "1048576" ; ?>"> 
+              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_maxsize" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : "1048576" ; ?>"> 
             </td> 
           </tr> 
           <tr> 
@@ -791,7 +891,6 @@ function showHide(what, onoff){
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>          
-	   <!--BEGIN SHOW PREVIEW MOD-->
 			 <tr> 
 			   <td nowrap class="warning"><b><?php echo $_lang["show_preview"] ?></b></td> 
 			   <td> <input onChange="documentDirty=true;" type="radio" name="show_preview" value="1" <?php echo ($show_preview=='1' || !isset($show_preview)) ? 'checked="checked"' : ""; ?>> 
@@ -802,8 +901,6 @@ function showHide(what, onoff){
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>
-	   <!--END SHOW PREVIEW MOD-->
-		<!-- START THEME MOD -->
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td> 
             <td> <select name="manager_theme" size="1" class="inputBox" onChange="documentDirty=true;document.forms['settings'].theme_refresher.value = Date.parse(new Date())">
@@ -828,17 +925,23 @@ function showHide(what, onoff){
 		  <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-		<!-- END THEME MOD -->
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["layout_title"]?></b></td> 
-            <td><input onChange="documentDirty=true;" type="radio" name="manager_layout" value="1" <?php echo ($manager_layout=='1' || !isset($manager_layout)) ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["layout_settings_1"]?><br /><br /> 
+            <td>
+              <!-- layout 0 -->	
 	          <?php if($_SESSION['browser']=='ie') { ?> 
-	              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="0" <?php echo $manager_layout=='0' ? 'checked="checked"' : "" ; ?>> 
+	              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="0" <?php echo $manager_layout=='0' ? 'checked="checked"' : "" ; ?> /> 
 	              <?php echo $_lang["layout_settings_2"]?><br /><br /> 
 	          <?php } ?> 
-              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="2" <?php echo $manager_layout=='2' ? 'checked="checked"' : "" ; ?>> 
+              <!-- layout 1 -->	
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="1" <?php echo ($manager_layout=='1' || !isset($manager_layout)) ? 'checked="checked"' : "" ; ?> /> 
+              <?php echo $_lang["layout_settings_1"]?><br /><br /> 
+              <!-- layout 2 -->	
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="2" <?php echo $manager_layout=='2' ? 'checked="checked"' : "" ; ?> /> 
               <?php echo $_lang["layout_settings_3"]?><br /><br />
+              <!-- layout 3 -->	
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="3" <?php echo $manager_layout=='3' ? 'checked="checked"' : "" ; ?> /> 
+              <?php echo $_lang["layout_settings_4"]?><br /><br /> 
              </td> 
           </tr> 
           <tr> 
@@ -848,6 +951,15 @@ function showHide(what, onoff){
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>  
+		  <tr class='row1'> 
+            <td colspan="2">
+		        <?php
+					// invoke OnMiscSettingsRender event
+					$evtOut = $modx->invokeEvent("OnMiscSettingsRender");
+					if(is_array($evtOut)) echo implode("",$evtOut);
+		        ?>         
+            </td> 
+          </tr> 
         </table> 
       </div> 
     </div> 

@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['bk_manager']!=1 && $_REQUEST['a']==93) {	$e->setError(3);
+if(!$modx->hasPermission('bk_manager') && $_REQUEST['a']==93) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -8,7 +9,7 @@ if($_SESSION['permissions']['bk_manager']!=1 && $_REQUEST['a']==93) {	$e->setErr
 
 $mode = isset($_POST['mode'])? $_POST['mode']:"";
 
-function callBack($dumpstring){
+function callBack(&$dumpstring){
 	if(!headers_sent()) {
 		header("Content-type: application/octet-stream xyz");
 		header("Content-Disposition: attachment; filename=\"database_backup.sql\"");
@@ -292,7 +293,7 @@ class Mysqldumper {
 			}
 			// invoke callback -- raymond
 			if ($callBack) {
-				if (!$callBack(&$output)) break;
+				if (!$callBack($output)) break;
 				$output = "";
 			}
 		}

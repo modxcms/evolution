@@ -3,7 +3,7 @@
 #:::::::::::::::::::::::::::::::::::::::::
 
 	$moduleName = "MODx";
-	$moduleVersion = "2.0 RC3";
+	$moduleVersion = "2 TP3";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleWhatsNewFile = "setup.whatsnew.html";
@@ -29,42 +29,55 @@
 	$ms[] = array("WebChangePwd","Web User Change Password Snippet",0,"$setupPath/snippet.webchangepwd.tpl","&tpl=Template;string;");
 	$ms[] = array("WebSignup","Web User Signup Snippet",0,"$setupPath/snippet.websignup.tpl","&tpl=Template;string;");
 
+	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
+	$mp = &$modulePlugins;
+	$mp[] = array("FCKEditor","RichText Editor Plugin",0,"$setupPath/plugin.fckeditor.tpl","&webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+
 	# setup callback function
 	$callBackFnc = "clean_up";
 	
 	function clean_up($sqlParser) {
+		$ids = array();
 		$mysqlVerOk = -1;
 
 		if(function_exists("mysql_get_server_info")) {
 			$mysqlVerOk = (version_compare(mysql_get_server_info(),"4.0.2")>=0);
 		}	
 		
-		// update private_memgroup and private_webgroup
-		if($mysqlVerOk){ // for mysql 4.0.2 and higher
-			mysql_query("UPDATE `".$sqlParser->prefix."documentgroup_names` dgn
-				LEFT JOIN `".$sqlParser->prefix."membergroup_access` ga ON ga.documentgroup = dgn.id
-				SET dgn.private_memgroup = NOT ISNULL(ga.id)");
-
-			mysql_query("UPDATE `".$sqlParser->prefix."documentgroup_names` dgn
-				LEFT JOIN `".$sqlParser->prefix."webgroup_access` ga ON ga.documentgroup = dgn.id
-				SET dgn.private_webgroup = NOT ISNULL(ga.id)");
+		// secure web documents - privateweb 
+		mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privateweb = 0 WHERE privateweb = 1");
+		$sql =  "SELECT DISTINCT sc.id 
+				 FROM ".$sqlParser->prefix."site_content sc
+				 LEFT JOIN ".$sqlParser->prefix."document_groups dg ON dg.document = sc.id
+				 LEFT JOIN ".$sqlParser->prefix."webgroup_access wga ON wga.documentgroup = dg.document_group
+				 WHERE wga.id>0";
+		$ds= mysql_query($sql);
+		if(!$ds) {
+			echo "An error occured while executing a query: ".mysql_error();
 		}
-		else {	// for mysql 3.23 and older
-			$ids = array();
-			mysql_query("UPDATE `".$sqlParser->prefix."documentgroup_names` SET private_memgroup = 0");
-			$rs = mysql_query("SELECT DISTINCT documentgroup FROM `".$sqlParser->prefix."membergroup_access`");
-			while($row = mysql_fetch_assoc($rs)) $ids[]=$row["documentgroup"];
+		else {
+			while($r = mysql_fetch_row($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
-				mysql_query("UPDATE `".$sqlParser->prefix."documentgroup_names` SET private_memgroup = 1 WHERE id IN (".implode(", ",$ids).")");
+				mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");	
 			}
-
-			$ids = array();
-			mysql_query("UPDATE `".$sqlParser->prefix."documentgroup_names` SET private_webgroup = 0");
-			$rs = mysql_query("SELECT DISTINCT documentgroup FROM `".$sqlParser->prefix."webgroup_access`");
-			while($row = mysql_fetch_assoc($rs)) $ids[]=$row["documentgroup"];
+		}
+		
+		// secure manager documents privatemgr
+		mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privatemgr = 0 WHERE privatemgr = 1");
+		$sql =  "SELECT DISTINCT sc.id 
+				 FROM ".$sqlParser->prefix."site_content sc
+				 LEFT JOIN ".$sqlParser->prefix."document_groups dg ON dg.document = sc.id
+				 LEFT JOIN ".$sqlParser->prefix."membergroup_access mga ON mga.documentgroup = dg.document_group
+				 WHERE mga.id>0";
+		$ds = mysql_query($sql);
+		if(!$ds) {
+			echo "An error occured while executing a query: ".mysql_error();
+		}
+		else {
+			while($r = mysql_fetch_row($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
-				mysql_query("UPDATE `".$sqlParser->prefix."documentgroup_names` SET private_webgroup = 1 WHERE id IN (".implode(", ",$ids).")");
-			}
+				mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
+			}		
 		}
 	}
 ?>

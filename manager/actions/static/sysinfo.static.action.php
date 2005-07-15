@@ -5,70 +5,19 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["view_sysinfo"]; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
-		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
-			<thead>
-			<tr>
-				<td><b><?php echo $_lang['id']; ?></b></td>
-				<td><b><?php echo $_lang['document_title']; ?></b></td>
-				<td><b><?php echo $_lang["sysinfo_userid"]; ?></b></td>
-				<td><b><?php echo $_lang['datechanged']; ?></b></td>
-			</tr>
-			</thead>
-			<tbody>
-		<?php
-		$sql = "SELECT id, pagetitle, editedby, editedon FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.deleted=0 ORDER BY editedon DESC LIMIT 20";
-		$rs = mysql_query($sql);
-		$limit = mysql_num_rows($rs);
-		if($limit<1) {
-			echo "No edits or creates found.<p />";
-		} else {
-			for ($i = 0; $i < $limit; $i++) { 
-				$content = mysql_fetch_assoc($rs);
-				$sql = "select username from $dbase.".$table_prefix."manager_users WHERE id=".$content['editedby']; 
-				$rs2 = mysql_query($sql);
-				$limit2 = mysql_num_rows($rs2);
-				if($limit2!=1){
-					echo "Incorrect number of users returned while trying to retrieve user's name!";
-					include_once "footer.inc.php";
-					exit;
-				}
-				$user = mysql_fetch_assoc($rs2);
-				$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user['username']."</td><td>".strftime('%d-%m-%Y, %H:%M:%S', $content['editedon']+$server_offset_time)."</td></tr>";
-			}
-		}
-		?>
-		</tbody>
-         </table>
-   </div>
+<script>
+	function viewPHPInfo() {
+		dontShowWorker = true; // prevent worker from being displayed
+		window.location.href="index.php?a=200";
+	};	
+</script>
 
+<!-- server -->
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Server</div><div class="sectionBody" id="lyr2">
 		<P>
 		This page shows some general information about the MODx installation.<p>
 		
 		<table border="0" cellspacing="2" cellpadding="2">
-		<?php
-		// to be removed
-		// Version stuff...
-		/*if(@$handle = fopen("http://www.etomite.org/status/status.php", "r")) {
-			$newversion = fgets($handle, 4096);
-			fclose($handle);
-			if($version == trim($newversion)) {
-				$newversiontext = " <small>[Your Etomite installation is up-to-date]</small>";
-			}
-			if($version < trim($newversion)) {
-				$newversiontext = " <small>[Version <b>$newversion</b> is available for <a href='http://www.cookiebean.com/index.php?id=4' target='_blank'>download</a>]</small>";
-			}
-			if($version > trim($newversion)) {
-				$newversiontext = " <small>[Your Etomite installation is up-to-date]</small>";
-			}
-		} else {
-			$newversiontext = " <small>[Couldn't contact Etomite server to check for updates]</small>";
-		}
-		*/
-		?>
 		  <tr>
 			<td width="150">MODx version</td>
 			<td width="20">&nbsp;</td>
@@ -82,7 +31,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		  <tr>
 			<td>phpInfo()</td>
 			<td>&nbsp;</td>
-			<td><b><a href="index.php?a=200">View</a></b></td>
+			<td><b><a href="javascript:;" onclick="viewPHPInfo();return false;">View</a></b></td>
 		  </tr>
 		  <tr>
 			<td>Access permissions</td>
@@ -124,6 +73,48 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
    </div>
 
 
+<!-- recent documents -->
+<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
+		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
+		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+			<thead>
+			<tr>
+				<td><b><?php echo $_lang['id']; ?></b></td>
+				<td><b><?php echo $_lang['document_title']; ?></b></td>
+				<td><b><?php echo $_lang["sysinfo_userid"]; ?></b></td>
+				<td><b><?php echo $_lang['datechanged']; ?></b></td>
+			</tr>
+			</thead>
+			<tbody>
+		<?php
+		$sql = "SELECT id, pagetitle, editedby, editedon FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.deleted=0 ORDER BY editedon DESC LIMIT 20";
+		$rs = mysql_query($sql);
+		$limit = mysql_num_rows($rs);
+		if($limit<1) {
+			echo "No edits or creates found.<p />";
+		} else {
+			for ($i = 0; $i < $limit; $i++) { 
+				$content = mysql_fetch_assoc($rs);
+				$sql = "select username from $dbase.".$table_prefix."manager_users WHERE id=".$content['editedby']; 
+				$rs2 = mysql_query($sql);
+				$limit2 = mysql_num_rows($rs2);
+				if($limit2!=1){
+					echo "Incorrect number of users returned while trying to retrieve user's name!";
+					include_once "footer.inc.php";
+					exit;
+				}
+				$user = mysql_fetch_assoc($rs2);
+				$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
+				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user['username']."</td><td>".strftime('%d-%m-%Y, %H:%M:%S', $content['editedon']+$server_offset_time)."</td></tr>";
+			}
+		}
+		?>
+		</tbody>
+         </table>
+   </div>
+
+
+<!-- database -->
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Database tables</div><div class="sectionBody" id="lyr4">
 		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
@@ -193,6 +184,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 </form>
 </div>
 
+<!-- online users -->
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Online users</div><div class="sectionBody" id="lyr5">
 		This list shows users online within the last 20 minutes.<br />
 		Current time: <b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b><p>

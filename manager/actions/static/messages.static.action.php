@@ -1,6 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['messages']!=1 && $_REQUEST['a']==10) {
+if(!$modx->hasPermission('messages') && $_REQUEST['a']==10) {
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -19,7 +19,7 @@ if($limit!=1) {
 	echo "Wrong number of messages returned!";
 } else {
 	$message=mysql_fetch_assoc($rs);
-	if($message['recipient']!=$_SESSION['internalKey']) {
+	if($message['recipient']!=$modx->getLoginUserID()) {
 		echo $_lang['messages_not_allowed_to_read'];
 	} else {
 		// output message!
@@ -99,7 +99,7 @@ if($limit!=1) {
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
 <?php
 // Get  number of rows
-$sql = "SELECT count(id) FROM $dbase.".$table_prefix."user_messages WHERE recipient=".$_SESSION['internalKey']."";
+$sql = "SELECT count(id) FROM $dbase.".$table_prefix."user_messages WHERE recipient=".$modx->getLoginUserID()."";
 $rs=mysql_query($sql);
 $countrows = mysql_fetch_assoc($rs);
 $num_rows = $countrows['count(id)'];
@@ -146,7 +146,7 @@ $pager .=  $array_paging['next_link'] .">></a>";
 // Of course you can now play with array_row_paging in order to print
 // only the results you would like...
 
-$sql = "SELECT * FROM $dbase.".$table_prefix."user_messages WHERE $dbase.".$table_prefix."user_messages.recipient=".$_SESSION['internalKey']." ORDER BY postdate DESC LIMIT ".$int_cur_position.", ".$int_num_result;
+$sql = "SELECT * FROM $dbase.".$table_prefix."user_messages WHERE $dbase.".$table_prefix."user_messages.recipient=".$modx->getLoginUserID()." ORDER BY postdate DESC LIMIT ".$int_cur_position.", ".$int_num_result;
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1) {
@@ -249,7 +249,7 @@ if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
 		echo "Wrong number of messages returned!";
 	} else {
 		$message=mysql_fetch_assoc($rs);
-		if($message['recipient']!=$_SESSION['internalKey']) {
+		if($message['recipient']!=$modx->getLoginUserID()) {
 			echo $_lang['messages_not_allowed_to_read'];
 		} else {
 			// output message!
@@ -375,20 +375,20 @@ function hideSpans(showSpan) {
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
-$sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$_SESSION['internalKey']." and messageread=0;";
+$sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()." and messageread=0;";
 $rs = mysql_query($sql); 
 $row = mysql_fetch_assoc($rs);
 $_SESSION['nrnewmessages'] = $row['count(*)'];
-$sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$_SESSION['internalKey']."";
+$sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()."";
 $rs = mysql_query($sql); 
 $row = mysql_fetch_assoc($rs);
 $_SESSION['nrtotalmessages'] = $row['count(*)'];
-$messagesallowed = $_SESSION['permissions']['messages'];
+$messagesallowed = $modx->hasPermission('messages');
 ?>
 <script type="text/javascript">
 function msgCountAgain() {
 	try {
-		top.scripter.startmsgcount(<?php echo $_SESSION['nrnewmessages'] ; ?>,<?php echo $_SESSION['nrtotalmessages'] ; ?>,<?php echo $messagesallowed ; ?>);
+		top.scripter.startmsgcount(<?php echo $_SESSION['nrnewmessages'] ; ?>,<?php echo $_SESSION['nrtotalmessages'] ; ?>,<?php echo $messagesallowed ? 1:0 ; ?>);
 	} catch(oException) {
 		vv = window.setTimeout('msgCountAgain()',1500);
 	}

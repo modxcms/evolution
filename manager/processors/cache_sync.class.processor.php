@@ -14,6 +14,18 @@ class synccache{
 		$this->showReport = $bool;
 	}
 	
+	function escapeDoubleQuotes($s) {
+		$q1 = array("\\","\"","\r","\n","\$");
+		$q2 = array("\\\\","\\\"","\\r","\\n","\\$");
+		return str_replace($q1,$q2,$s);
+	}	
+
+	function escapeSingleQuotes($s) {
+		$q1 = array("'");
+		$q2 = array("\\'");
+		return str_replace($q1,$q2,$s);
+	}	
+
 	function getParents($id, $path = '') { // modx:returns child's parent
 		global $dbase, $table_prefix;
 		$sql = "SELECT id, alias, parent FROM $dbase.".$table_prefix."site_content WHERE id = '$id'";
@@ -65,14 +77,17 @@ class synccache{
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$config = array();
+		$tmpPHP .= '$c=&$this->config;'."\n";
 		while(list($key,$value) = mysql_fetch_row($rs)) {
-			$tmpPHP .= '$this->config[\''.$key.'\']'.' = "'.mysql_escape_string($value).'"'.";\n";
+			$tmpPHP .= '$c[\''.$key.'\']'.' = "'.$this->escapeDoubleQuotes($value).'"'.";\n";
 			$config[$key] = $value;
 		}
 
 		// get aliases modx: support for alias path
 		$tmpPath = '';
 		$tmpPHP .= '$this->aliasListing = array();' . "\n";
+		$tmpPHP .= '$a = &$this->aliasListing;' . "\n";
+		$tmpPHP .= '$d = &$this->documentListing;' . "\n";
 		$sql = "SELECT alias, id, contentType, parent FROM $dbase.".$table_prefix."site_content WHERE alias IS NOT NULL AND alias <> ''"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
@@ -81,12 +96,12 @@ class synccache{
 			if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
 				$tmpPath = $this->getParents($tmp1['parent']);
 				$alias = (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$tmp1[alias];
-				$tmpPHP .= '$this->documentListing[\''.mysql_escape_string($alias).'\']'." = ".$tmp1['id'].";\n";
+				$tmpPHP .= '$d[\''.mysql_escape_string($alias).'\']'." = ".$tmp1['id'].";\n";
 			}
 			else {
-				$tmpPHP .= '$this->documentListing[\''.mysql_escape_string($tmp1['alias']).'\']'." = ".$tmp1['id'].";\n";
+				$tmpPHP .= '$d[\''.mysql_escape_string($tmp1['alias']).'\']'." = ".$tmp1['id'].";\n";
 			}
-			$tmpPHP .= '$this->aliasListing[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".mysql_escape_string($tmp1['alias'])."', 'path' => '" . mysql_escape_string($tmpPath). "');\n";
+			$tmpPHP .= '$a[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".mysql_escape_string($tmp1['alias'])."', 'path' => '" . mysql_escape_string($tmpPath). "');\n";
 		}
 		
 				
@@ -94,41 +109,49 @@ class synccache{
 		$sql = "SELECT id, contentType FROM $dbase.".$table_prefix."site_content"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
+		$tmpPHP .= '$c = &$this->contentTypes;' . "\n";
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
 		   $tmp1 = mysql_fetch_assoc($rs); 
-		   $tmpPHP .= '$this->contentTypes['.$tmp1['id'].']'." = '".$tmp1['contentType']."';\n";
+		   $tmpPHP .= '$c['.$tmp1['id'].']'." = '".$tmp1['contentType']."';\n";
 		}
 
 		// WRITE Chunks to cache file
 		$sql = "SELECT * FROM $dbase.".$table_prefix."site_htmlsnippets"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
+		$tmpPHP .= '$c = &$this->chunkCache;' . "\n";
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
 		   $tmp1 = mysql_fetch_assoc($rs); 
-		   $tmpPHP .= '$this->chunkCache[\''.mysql_escape_string($tmp1['name']).'\']'." = '".base64_encode($tmp1['snippet'])."';\n";
+		   $tmpPHP .= '$c[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['snippet'])."';\n";
 		}
 
 		// WRITE snippets to cache file
-		$sql = "SELECT * FROM $dbase.".$table_prefix."site_snippets"; 
+		$sql = "SELECT ss.*,sm.properties as 'sharedproperties' ".
+				"FROM $dbase.".$table_prefix."site_snippets ss ". 
+				"LEFT JOIN $dbase.".$table_prefix."site_modules sm on sm.guid=ss.moduleguid "; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
+		$tmpPHP .= '$s = &$this->snippetCache;' . "\n";
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
 		   $tmp1 = mysql_fetch_assoc($rs); 
-		   $tmpPHP .= '$this->snippetCache[\''.mysql_escape_string($tmp1['name']).'\']'." = '".base64_encode($tmp1['snippet'])."';\n";
-		   // Raymond: save snippet propeties to cache
-		   if ($tmp1['properties']!="") $tmpPHP .= '$this->snippetCache[\''.$tmp1['name'].'Props\']'." = '".base64_encode($tmp1['properties'])."';\n";
+		   $tmpPHP .= '$s[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['snippet'])."';\n";
+		   // Raymond: save snippet properties to cache
+		   if ($tmp1['properties']!=""||$tmp1['sharedproperties']!="") $tmpPHP .= '$s[\''.$tmp1['name'].'Props\']'." = '".$this->escapeSingleQuotes($tmp1['properties']." ".$tmp1['sharedproperties'])."';\n";
 		   // End mod
 		}
 		
-
 		// WRITE plugins to cache file
-		$sql = "SELECT * FROM $dbase.".$table_prefix."site_plugins WHERE disabled=0"; 
+		$sql = "SELECT sp.*,sm.properties as 'sharedproperties' ".
+				"FROM $dbase.".$table_prefix."site_plugins sp " .
+				"LEFT JOIN $dbase.".$table_prefix."site_modules sm on sm.guid=sp.moduleguid " .
+				"WHERE sp.disabled=0"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
+		$tmpPHP .= '$p = &$this->pluginCache;' . "\n";
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
 		   $tmp1 = mysql_fetch_assoc($rs); 
-		   $tmpPHP .= '$this->pluginCache[\''.mysql_escape_string($tmp1['name']).'\']'." = '".base64_encode($tmp1['plugincode'])."';\n";
-		   if ($tmp1['properties']!="") $tmpPHP .= '$this->pluginCache[\''.$tmp1['name'].'Props\']'." = '".base64_encode($tmp1['properties'])."';\n";
+		   $tmpPHP .= '$p[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['plugincode'])."';\n";
+		   if ($tmp1['properties']!=""||$tmp1['sharedproperties']!="") $tmpPHP .= '$p[\''.$tmp1['name'].'Props\']'." = '".$this->escapeSingleQuotes($tmp1['properties']." ".$tmp1['sharedproperties'])."';\n";
 		}
 
 
@@ -139,23 +162,24 @@ class synccache{
 			INNER JOIN $dbase.".$table_prefix."site_plugin_events pe ON pe.evtid = sysevt.id 
 			INNER JOIN $dbase.".$table_prefix."site_plugins plugs ON plugs.id = pe.pluginid 
 			WHERE plugs.disabled=0 
-			ORDER BY sysevt.name
+			ORDER BY sysevt.name,pe.pluginid
 		";
 		$events = array();
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
+		$tmpPHP .= '$e = &$this->pluginEvent;' . "\n";
 		for ($i=0; $i<$limit_tmp; $i++) { 
 			$evt = mysql_fetch_assoc($rs); 
 			if(!$events[$evt['evtname']]) $events[$evt['evtname']] = array();
 			$events[$evt['evtname']][] = $evt['name'];
 		}
 		foreach($events as $evtname => $pluginnames) {
-			$tmpPHP .= '$this->pluginEvent[\''.$evtname.'\'] = array(\''.implode("','",$pluginnames)."');\n";
+			$tmpPHP .= '$e[\''.$evtname.'\'] = array(\''.implode("','",$pluginnames)."');\n";
 		}
 		
 		// close and write the file
 		$tmpPHP .= "?>";		
-		$filename = '../assets/cache/siteCache.idx';
+		$filename = '../assets/cache/siteCache.idx.php';
 		$somecontent = $tmpPHP;
 		
 		// invoke OnBeforeCacheUpdate event
@@ -168,7 +192,7 @@ class synccache{
 		
 		// Write $somecontent to our opened file.
 		if (fwrite($handle, $somecontent) === FALSE) {
-		   echo "Cannot write main Etomite cache file! Make sure the assets/cache directory is writable!";
+		   echo "Cannot write main MODx cache file! Make sure the assets/cache directory is writable!";
 		   exit;
 		}
 		fclose($handle);
@@ -211,7 +235,7 @@ class synccache{
 		}
 		
 		// write the file
-		$filename = '../assets/cache/sitePublishing.idx';
+		$filename = '../assets/cache/sitePublishing.idx.php';
 		$somecontent = "<?php \$cacheRefreshTime=$nextevent; ?>";
 		
 		if (!$handle = fopen($filename, 'w')) {

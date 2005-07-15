@@ -2,13 +2,13 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 // check for edit permissions
-if($_SESSION['permissions']['edit_document']!=1 && $_REQUEST['a']==27) {	
+if(!$modx->hasPermission('edit_document') && $_REQUEST['a']==27) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
 
 // check for create permissions
-if($_SESSION['permissions']['new_document']!=1 && ($_REQUEST['a']==85 || $_REQUEST['a']==4 || $_REQUEST['a']==72)) {	
+if(!$modx->hasPermission('new_document') && ($_REQUEST['a']==85 || $_REQUEST['a']==4 || $_REQUEST['a']==72)) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -30,7 +30,7 @@ function isNumber($var)
 if(!isset($_REQUEST['id'])) {
 	$id=0;
 } else {
-	$id = $_REQUEST['id'];
+	$id = !empty($_REQUEST['id']) ? $_REQUEST['id']:0;
 }
 
 // make sure the id's a number
@@ -39,14 +39,14 @@ if(!isNumber($id)) {
 	$e->dumpError();
 }
 
-if($action==27 ) { //editing an existing document
-
+if($action==27 ) {
+	//editing an existing document
 	// check permissions on the document
 	include_once "./processors/user_documents_permissions.class.php";
 	$udperms = new udperms();
-	$udperms->user = $_SESSION['internalKey'];
+	$udperms->user = $modx->getLoginUserID();
 	$udperms->document = $id;
-	$udperms->role = $_SESSION['role'];
+	$udperms->role = $_SESSION['mgrRole'];
 
 	if(!$udperms->checkPermissions()) {
 		?><br /><br /><div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
@@ -56,13 +56,15 @@ if($action==27 ) { //editing an existing document
 		exit;	
 	}
 
-} else { // new document, check the user is allowed to create a document here
+}
+else {
+	// new document, check the user is allowed to create a document here
 	// check permissions on the parent of this document
 	include_once "./processors/user_documents_permissions.class.php";
 	$udperms = new udperms();
-	$udperms->user = $_SESSION['internalKey'];
+	$udperms->user = $modx->getLoginUserID();
 	$udperms->document = isset($_REQUEST['pid']) ? $_REQUEST['pid'] : 0 ;
-	$udperms->role = $_SESSION['role'];
+	$udperms->role = $_SESSION['mgrRole'];
 	
 	if(!$udperms->checkPermissions()) {
 		?><br /><br /><div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
@@ -80,8 +82,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = "The document is currently being edited by ".$lock['username']." and cannot be opened.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username'],"document");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -91,20 +93,20 @@ if($limit>1) {
 
 
 // get document groups for current user
-if($_SESSION['docgroups']) {
-	$docgrp = implode(",",$_SESSION['docgroups']);
+if($_SESSION['mgrDocgroups']) {
+	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
 }
 
-if(isset($_GET['id'])) {
+if(!empty($id)) {
 	$tblsc = $dbase.".".$table_prefix."site_content";
 	$tbldg = $dbase.".".$table_prefix."document_groups";
-	$tbldgn = $dbase.".".$table_prefix."documentgroup_names";
+	$access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
+			  (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
 	$sql = "SELECT DISTINCT sc.* 
 			FROM $tblsc sc 
 			LEFT JOIN $tbldg dg on dg.document = sc.id
-			LEFT JOIN $tbldgn dgn ON dgn.id = dg.document_group
 			WHERE sc.id = $id 
-			AND (1='".$_SESSION['role']."' OR NOT(dgn.private_memgroup<=>1)".(!$docgrp ? "":" OR dg.document_group IN ($docgrp)").");";
+			AND ($access);";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {
@@ -116,38 +118,33 @@ if(isset($_GET['id'])) {
 			$e->dumpError();
 	}
 	$content = mysql_fetch_assoc($rs);
-} else {
+}
+else {
 	$content = array();
 }
 
-// get list of site keywords, code by stevew!
-$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
-if($limit > 0) {
-	for($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
-		$keywords[$row['id']] = $row['keyword'];
-	}
-} else {
-	$keywords = array();
+// restore saved form
+$formRestored = false;
+if($modx->manager->hasFormValues()) {
+	$modx->manager->loadFormValues();
+	$formRestored = true;
 }
 
-if(isset($content['id']) && count($keywords) > 0) {
-	// get id of documents selected keywords
-	$sql = "SELECT keyword_id FROM $dbase.".$table_prefix."keyword_xref WHERE content_id = ".$content['id'];
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
-	//echo "\n<!-- sql: $sql -->\n";
-	//$limit = 0;
-	if($limit > 0) 	{
-		for($i=0;$i<$limit;$i++) {
-			$row = mysql_fetch_assoc($rs);
-			$keywords_selected[$row['keyword_id']] = "selected";
-		}
-	} else {
-		$keywords_selected = array();
-	}
+// retain form values if template was changed
+if($formRestored==true||isset($_REQUEST['newtemplate'])) {
+	$content = array_merge($content,$_POST);
+	$content["content"]=$_POST["ta"];
+	if(empty($content["pub_date"])) unset($content["pub_date"]);
+	if(empty($content["unpub_date"])) unset($content["unpub_date"]);
+}
+
+
+// increase menu index if this is a new document
+if(!isset($_REQUEST["id"])) {
+	$pid = intval($_REQUEST["pid"]);
+	$tbl = $modx->getFullTableName("site_content");
+	$sql = "SELECT count(*) as 'cnt' FROM $tbl WHERE parent='$pid'";
+	$content["menuindex"] = $modx->db->getValue($sql);
 }
 
 ?>
@@ -158,34 +155,15 @@ body {
 </style>
 <script language="JavaScript" src="media/script/datefunctions.js"></script>
 <script language="JavaScript">
-function winOpen(url,width,height)
-{
-	var ManualWindow;
-	if (!ManualWindow || ManualWindow.closed)
-	{
-		ManualWindow = window.open(url,'ManualWindow',"toolbar=1,location=1,directories=1,status=1," +
-		 "menubar=1,scrollbars=1,resizable=yes,width=" + width + ",height=" + height + 
-		 ",screenX=200,screenY=200");
-		
-		if (!ManualWindow.opener)
-		{
-			ManualWindow.opener = window
-		}
-	}
-	else
-	{
-		ManualWindow.location.href = url;
-		self.ManualWindow.focus();
-	}
-}
 
 function changestate(element) {
-	currval = eval(element).value;
+	currval = eval(element).value;	
 	if(currval==1) {
 		eval(element).value=0;
 	} else {
 		eval(element).value=1;
 	}
+	documentDirty=true;
 }
 
 function deletedocument() {
@@ -195,11 +173,6 @@ function deletedocument() {
 }
 
 function previewdocument() {
-	// Modified by Raymond
-	/*if(confirm("<?php echo $_lang['confirm_preview']; ?>")==true) {
-		winOpen("../index.php?id=" + document.mutate.id.value + "&manprev=z", 900, 700);		
-	}	
-	*/	
 	var win = window.frames['preview'];
 	url = "../index.php?id=" + document.mutate.id.value + "&manprev=z";
 	nQ = "id=" + document.mutate.id.value + "&manprev=z"; // new querysting
@@ -236,6 +209,7 @@ function saveRefreshPreview(){
 }
 // end modifications
 
+var allowParentSelection = false;
 parent.menu.ca = "parent";
 
 try {
@@ -244,10 +218,31 @@ try {
 	xyy=window.setTimeout("loadagain(<?php echo $id; ?>)", 1000);
 }
 
+function enableParentSelection(b){
+	var closed = "media/images/tree/folder.gif";
+	var opened = "media/images/tree/folderopen.gif";
+	if(b) {
+		document.images["plock"].src = opened;
+		allowParentSelection = true;
+	}
+	else {
+		document.images["plock"].src = closed;
+		allowParentSelection = false;
+	}
+}
+
 function setParent(pId, pName) {
-	if(pId==0 || checkParentChildRelation(pId, pName)){
-		document.mutate.parent.value=pId;
-		document.getElementById('parentName').innerHTML = pId + " (" + pName + ")";
+	if (!allowParentSelection) {
+		window.location.href="index.php?a=3&id="+pId;
+		return;
+	}
+	else {	
+		if(pId==0 || checkParentChildRelation(pId, pName)){
+			documentDirty=true;
+			document.mutate.parent.value=pId;
+			var elm = new DynElement('parentName')
+			if(elm) elm.setInnerHTML(pId + " (" + pName + ")");
+		}
 	}
 }
 
@@ -275,15 +270,22 @@ function checkParentChildRelation(pId, pName) {
 	return true;
 }
 
-function clearSelection() {
+function clearKeywordSelection() {
 	var opt = document.mutate.elements["keywords[]"].options;
 	for(i = 0; i < opt.length; i++) {
 		opt[i].selected = false;
 	}
 }
 
+function clearMetatagSelection() {
+	var opt = document.mutate.elements["metatags[]"].options;
+	for(i = 0; i < opt.length; i++) {
+		opt[i].selected = false;
+	}
+}
+
 // ADDED BY S BRENNAN
-var curTemplate = 0;
+var curTemplate = -1;
 var curTemplateIndex = 0;
 function storeCurTemplate(){
 	var dropTemplate = document.getElementById('template');
@@ -299,17 +301,16 @@ function templateWarning(){
 	if (dropTemplate) for (var i=0; i<dropTemplate.length; i++){
 		if (dropTemplate[i].selected){
 			newTemplate = dropTemplate[i].value;
+			break;
 		}
 	}
 	if (curTemplate == newTemplate){return;}
 	
 	if (confirm('<?=$_lang['tmplvar_change_template_msg']?>')){
-		var redirectURL = "index.php?newtemplate=" + newTemplate + "&a=<?php echo $action; ?>";
-		if (<?php echo $action; ?> == 27){
-			redirectURL += "&id=<?php echo $id; ?>";
-		}
 		documentDirty=false;
-		location.href=redirectURL;
+		document.mutate.a.value = <?php echo $action; ?>;
+		document.mutate.newtemplate.value = newTemplate;
+		document.mutate.submit();
 	}
 	else{
 		dropTemplate[curTemplateIndex].selected = true;
@@ -448,14 +449,15 @@ function decode(s){
 <?php
 	// invoke OnDocFormPrerender event
 	$evtOut = $modx->invokeEvent("OnDocFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="a" value="5">
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
+<input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>">
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576; ?>">
 <input type="hidden" name="refresh_preview" value="0">
 <input type="hidden" name="variablesmodified" value="">
+<input type="hidden" name="newtemplate" value="">
 
 <div class="subTitle">
 	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['edit_document_title']; ?></span>
@@ -466,11 +468,7 @@ function decode(s){
 				<script>createButton(document.getElementById("Button1"));</script>
 			<td id="Button2" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 				<script>createButton(document.getElementById("Button2"));</script>
-	<?php if($_GET['a']=='4' || $_GET['a']==72) { ?><script>document.getElementById("Button2").setEnabled(false);</script><?php } ?>
-<!--			<td id="Button3" onclick="previewdocument();"><img src="media/images/icons/preview.gif" align="absmiddle"> <?php echo $_lang['preview']; ?></span></td>
-				<script>createButton(document.getElementById("Button3"));</script>
-	<?php if($_GET['a']=='4' || $_GET['a']==72) { ?><script>document.getElementById("Button3").setEnabled(false);</script><?php } ?>
--->	
+				<?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?><script>document.getElementById("Button2").setEnabled(false);</script><?php } ?>
 			<td id="Button5" onclick="<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&id=$id';"; ?>"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
 				<script>createButton(document.getElementById("Button5"));</script>
 		</tr>
@@ -479,9 +477,9 @@ function decode(s){
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
 		<td><span class="comment">&nbsp;After saving:</span></td>
-		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td> 
-		<td><input name="stay" type="radio" class="inputBox" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
-		<td><input name="stay" type="radio" class="inputBox" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
+		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_REQUEST['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td> 
+		<td><input name="stay" type="radio" class="inputBox" value="2"  <?php echo $_REQUEST['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
+		<td><input name="stay" type="radio" class="inputBox" value=""  <?php echo $_REQUEST['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
 	</tr>
 	</table>
 	</div>
@@ -509,7 +507,7 @@ function decode(s){
 			  </tr>
 			  <tr style="height: 24px;"> 
 				<td width='100px' align="left"><span class='warning'><?php echo $_lang['long_title']; ?></span></span></td> 
-				<td ><input name="setitle" type="text" maxlength="120" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td> 
+				<td ><input name="longtitle" type="text" maxlength="120" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td> 
 			  </tr>   
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['document_description']; ?></span></td>
@@ -538,10 +536,11 @@ function decode(s){
 				$rs = mysql_query($sql); 
 			?>
 			<select id="template" name="template" class="inputBox" onChange='templateWarning();' style="width:300px">
+				<option value="0">(blank)</option>
 			<?php
 			while ($row = mysql_fetch_assoc($rs)) {
-				if(isset($_GET['newtemplate'])){
-					$selectedtext = $row['id']==$_GET['newtemplate'] ? "selected='selected'" : "" ;
+				if(isset($_REQUEST['newtemplate'])){
+					$selectedtext = $row['id']==$_REQUEST['newtemplate'] ? "selected='selected'" : "" ;
 				}
 				else if(isset($content['template'])) {
 					$selectedtext = $row['id']==$content['template'] ? "selected='selected'" : "" ;
@@ -558,13 +557,26 @@ function decode(s){
 				</td>
 			  </tr>
 			  <tr style="height: 24px;">
-				<td align="left" style="width:100px;"><span class='warning'><?php echo $_lang['document_opt_menu_index']; ?></span></td>
-				<td ><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex'];?>" class="inputBox" style="width:20px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_index_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td align="left" style="width:100px;"><span class='warning'><?php echo $_lang['document_opt_menu_title']; ?></span></td>
+				<td><input name="menutitle" type="text" maxlength="30" value="<?php echo $content['menutitle'];?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_title_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			  <tr style="height: 24px;">
-				<td ><span class='warning'><?php echo $_lang['document_parent']; ?></span></td>
+				<td align="left" style="width:100px;"><span class='warning'><?php echo $_lang['document_opt_menu_index']; ?></span></td>
+				<td>
+				<table border="0" cellspacing="0" cellpadding="0" style="width:325px;"><tr>
+				<td><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex'];?>" class="inputBox" style="width:30px;" onChange="documentDirty=true;"><input type="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_index_help']; ?>" onClick="alert(this.alt);" style="cursor:help;" /></td>
+				<td align="right"><span class='warning'><?php echo $_lang['document_opt_show_menu']; ?></span>&nbsp;<input name="hidemenucheck" type="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''; ?> onClick="changestate(document.mutate.hidemenu);"><input type="hidden" name="hidemenu" value="<?php echo ($content['hidemenu']==1) ? 1 : 0 ;?>" />&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_show_menu_help']; ?>" onClick="alert(this.alt);" style="cursor:help;" /></td>
+				</tr>
+				</table>
+				</td>
+			  </tr>
+			  <tr>
+			  	<td colspan="2"><div class="split"></div></td>
+			  </tr>
+			  <tr style="height: 24px;">
+				<td valign="top"><span class='warning'><?php echo $_lang['document_parent']; ?></span></td>
 				<td valign="top"><?php
-			if(isset($_GET['id'])) {
+			if(isset($_REQUEST['id'])) {
 				if($content['parent']==0) {
 					$parentname = $site_name;	
 				} else {
@@ -578,11 +590,11 @@ function decode(s){
 					$parentrs = mysql_fetch_assoc($rs);
 					$parentname = $parentrs['pagetitle'];
 				}
-			} else if(isset($_GET['pid'])) {
-				if($_GET['pid']==0) {
+			} else if(isset($_REQUEST['pid'])) {
+				if($_REQUEST['pid']==0) {
 					$parentname = $site_name;	
 				} else {
-					$sql = "SELECT pagetitle FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.id = ".$_GET['pid'].";";
+					$sql = "SELECT pagetitle FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.id = ".$_REQUEST['pid'].";";
 					$rs = mysql_query($sql);
 					$limit = mysql_num_rows($rs);
 					if($limit!=1) {
@@ -596,7 +608,8 @@ function decode(s){
 					$parentname = $site_name;	
 					$content['parent']=0;
 			}
-			?>&nbsp;&nbsp;<b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?> (<?php echo $parentname; ?>)</span></b>&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_parent_help']; ?>" onClick="alert(this.alt);" style="cursor:help;">
+			?>&nbsp;<img name="plock" src="media/images/tree/folder.gif" width="18" height="18" align="absmiddle" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /><b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?> (<?php echo $parentname; ?>)</span></b><br />
+			<span class="comment" style="width:300px;"><?php echo $_lang['document_parent_help'];?></span>
 			<input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?>" onChange="documentDirty=true;" />
 				</td>
 			  </tr>
@@ -607,32 +620,19 @@ function decode(s){
 		<div class="tab-page" id="tabSettings"> 
 			<h2 class="tab"><?php echo $_lang["settings_page_settings"] ?></h2> 
 			<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabSettings" ) );</script> 
-			<table width="600" border="0" cellspacing="0" cellpadding="0">
+			<table width="450" border="0" cellspacing="0" cellpadding="0">
 			  <tr style="height: 24px;">
 				<td width="150"><span class='warning'><?php echo $_lang['document_opt_folder']; ?></span></td>
 				<td ><input name="isfoldercheck" type="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : "" ;?> onClick="changestate(document.mutate.isfolder);"><input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_folder_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
-				<td rowspan="10" width="150" align="center" valign='top'><span class='warning'><?php echo $_lang['keywords']; ?></span>&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_keywords_help']; ?>" onClick="alert(this.alt);" style="cursor:help;" align="absmiddle">
-				<select multiple name="keywords[]" size="16" class="inputBox" style="width: 140px;" onChange="documentDirty=true;">
-					<?php
-					$keys = array_keys($keywords);
-					for($i=0;$i<count($keys);$i++) {
-						$key = $keys[$i];
-						$value = $keywords[$key];
-						$selected = $keywords_selected[$key];
-						echo "<option $selected value=\"$key\">$value\n";
-					}
-					?>
-				</select>
-				<br /><br />
-				<input type="button" value="<?php echo $_lang['deselect_keywords']; ?>" onClick="clearSelection();">
-
-				</td>
-
 			  </tr>
 			<?php if($content['type']!="reference" && $_REQUEST['a']!=72) { ?>  
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['document_opt_richtext']; ?></span></td>
 				<td ><input name="richtextcheck" type="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? "" : "checked" ;?> onClick="changestate(document.mutate.richtext);"><input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_richtext_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+			  </tr>
+			  <tr style="height: 24px;">
+				<td width="150"><span class='warning'><?php echo $_lang['track_visitors_title']; ?></span></td>
+				<td ><input name="donthitcheck" type="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : "" ;?> onClick="changestate(document.mutate.donthit);"><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_trackvisit_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			<?php } ?>  
 			  <tr style="height: 24px;">
@@ -682,18 +682,29 @@ function decode(s){
 				<td ><span class='warning'><?php echo $_lang['document_opt_emptycache']; ?></span></td>
 				<td ><input name="syncsitecheck" type="checkbox" checked onClick="changestate(document.mutate.syncsite);"><input type="hidden" name="syncsite" value="1">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_emptycache_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
-			<?php if($_SESSION['role']==1) { ?>   
+			<?php if($_SESSION['mgrRole']==1) { ?>   
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['page_data_contentType']; ?></span></td>
 				<td >
-						<select name="contentType" class="inputBox" onChange='documentDirty=true;' style="width:150px">
-							<option value="text/html" <?php echo $content['contentType']=="text/html" ? "selected='selected'" : "" ;?>>text/html</option>
-							<option value="text/plain" <?php echo $content['contentType']=="text/plain" ? "selected='selected'" : "" ;?>>text/plain</option>
-							<option value="text/xml" <?php echo $content['contentType']=="text/xml" ? "selected='selected'" : "" ;?>>text/xml</option>
-						</select>
-				&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_contentType_help']; ?>" onClick="alert(this.alt);" style="cursor:help;">
+					<select name="contentType" class="inputBox" onChange='documentDirty=true;' style="width:200px">
+					<?php
+						if(!$content['contentType']) $content['contentType'] = 'text/html';
+						$custom_contenttype = (isset($custom_contenttype) ? $custom_contenttype : "text/html,text/plain,text/xml"); 
+						$ct = explode(",",$custom_contenttype);
+						for($i=0;$i<count($ct);$i++) {
+							echo "<option value=\"".$ct[$i]."\"".($content['contentType']==$ct[$i] ? "selected='selected'" : "").">".$ct[$i]."</option>";
+						}
+					?>
+					</select>&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_contentType_help']; ?>" onClick="alert(this.alt);" style="cursor:help;">
 				</td>
 			  </tr>  
+			  <tr style="height: 24px;">
+				<td ><span class='warning'><?php echo $_lang['document_opt_contentdispo']; ?></span></td>
+				<td ><select name="content_dispo" size="1" onchange="documentDirty=true;" style="width:200px">
+				<option value="0"<?php echo !$content["content_dispo"] ? ' selected="selected"':''; ?>><?php echo $_lang['inline']; ?></option>
+				<option value="1"<?php echo $content["content_dispo"]==1 ? ' selected="selected"':''; ?>><?php echo $_lang['attachment']; ?></option>
+				</select>&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_contentdispo_help']; ?>" onClick="alert(this.alt);" style="cursor:help;" /></td>
+			  </tr>
 			<?php } else { ?>  
 			<input type="hidden" name="contentType" value="<?php echo isset($content['contentType']) ? $content['contentType'] : "text/html"; ?>" />
 			<?php } ?>  
@@ -709,6 +720,108 @@ function decode(s){
 			</table>
 		</div>	
 
+<?php if($modx->hasPermission('edit_doc_metatags') && ($content['type']!="reference" && $_REQUEST['a']!=72)) { ?>
+		<!-- META Keywords -->
+<?php
+	// get list of site keywords - code by stevew! modified by Raymond
+	$keywords = array();
+	$tbl = $modx->getFullTableName("site_keywords");
+	$ds = $modx->db->select("*",$tbl);
+	$limit = $modx->db->getRecordCount($ds);
+	if($limit > 0) {
+		for($i=0;$i<$limit;$i++) {
+			$row = $modx->db->getRow($ds);
+			$keywords[$row['id']] = $row['keyword'];
+		}
+	} 
+	// get selected keywords using document's id
+	if(isset($content['id']) && count($keywords) > 0) {		
+		$keywords_selected = array();
+		$tbl = $modx->getFullTableName("keyword_xref");
+		$ds = $modx->db->select("keyword_id",$tbl,"content_id='".$content['id']."'");
+		$limit = $modx->db->getRecordCount($ds);
+		if($limit > 0) 	{
+			for($i=0;$i<$limit;$i++) {
+				$row = $modx->db->getRow($ds);
+				$keywords_selected[$row['keyword_id']] = " selected=\"selected\"";
+			}
+		}
+	}
+
+	// get list of site META tags 
+	$metatags = array();
+	$tbl = $modx->getFullTableName("site_metatags");
+	$ds = $modx->db->select("*",$tbl);
+	$limit = $modx->db->getRecordCount($ds);
+	if($limit > 0) {
+		for($i=0;$i<$limit;$i++) {
+			$row = $modx->db->getRow($ds);
+			$metatags[$row['id']] = $row['name'];
+		}
+	} 
+	// get selected META tags using document's id
+	if(isset($content['id']) && count($keywords) > 0) {
+		$metatags_selected = array();
+		$tbl = $modx->getFullTableName("site_content_metatags");
+		$ds = $modx->db->select("metatag_id",$tbl,"content_id='".$content['id']."'");
+		$limit = $modx->db->getRecordCount($ds);
+		if($limit > 0) 	{
+			for($i=0;$i<$limit;$i++) {
+				$row = $modx->db->getRow($ds);
+				$metatags_selected[$row['metatag_id']] = " selected=\"selected\"";
+			}
+		}
+	}	
+?>
+		<div class="tab-page" id="tabMeta"> 
+			<h2 class="tab"><?php echo $_lang["meta_keywords"]; ?></h2> 
+			<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabMeta" ) );</script> 
+			<table width="450" border="0" cellspacing="0" cellpadding="0">
+			  <tr style="height: 24px;">
+				<td>
+				<?php echo $_lang['document_metatag_help']; ?><br /><br />
+				<table border="0" style="width:inherit;">
+				<tr>
+				<td>
+					<span class='warning'><?php echo $_lang['keywords']; ?></span><br />
+					<select name="keywords[]" multiple="multiple"  size="16" class="inputBox" style="width: 200px;" onChange="documentDirty=true;">
+						<?php
+						$keys = array_keys($keywords);
+						for($i=0;$i<count($keys);$i++) {
+							$key = $keys[$i];
+							$value = $keywords[$key];
+							$selected = $keywords_selected[$key];							
+							echo "<option value=\"$key\"$selected>$value\n";
+						}
+						?>
+					</select>&nbsp;&nbsp;
+					<br />
+					<input type="button" value="<?php echo $_lang['deselect_keywords']; ?>" onClick="clearKeywordSelection();" />
+				</td>
+				<td>
+					<span class='warning'><?php echo $_lang['metatags']; ?></span><br />
+					<select name="metatags[]" multiple="multiple" size="16" class="inputBox" style="width: 220px;" onChange="documentDirty=true;">
+						<?php
+						$keys = array_keys($metatags);
+						for($i=0;$i<count($keys);$i++) {
+							$key = $keys[$i];
+							$value = $metatags[$key];
+							$selected = $metatags_selected[$key];
+							echo "<option value=\"$key\"$selected>$value\n";
+						}
+						?>
+					</select>
+					<br />
+					<input type="button" value="<?php echo $_lang['deselect_metatags']; ?>" onClick="clearMetatagSelection();" />
+				</td>
+				</table>
+				</td>
+			  </tr>
+			 </table> 
+		</div>
+<?php } ?>
+		
+<?php if($content['type']!="reference" && $_REQUEST['a']!=72) { ?>
 		<!-- Snippets -->
 		<div class="tab-page" id="tabSnippets"> 
 			<h2 class="tab"><?php echo $_lang["settings_snippets"] ?></h2> 
@@ -741,9 +854,9 @@ function decode(s){
 			  </tr>
 			</table>
 		</div>		
-		
+<?php } ?>		
 
-	<?php if($_GET['a']!='4' && $_GET['a']!=72) { ?>
+	<?php if($_REQUEST['a']!='4' && $_REQUEST['a']!=72) { ?>
 		<!-- Preview -->
 		<div class="tab-page" id="tabPreview"> 
 			<h2 class="tab"><img src="media/images/icons/preview.gif" align="absmiddle" height="12"> <?php echo $_lang['preview']; ?></h2> 
@@ -762,107 +875,35 @@ function decode(s){
 <?php if($content['type']=="document" || $_REQUEST['a']==4) { ?>
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['document_content']; ?></div><div class="sectionBody">
 	<?php
-	if(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1) {
-		if($which_editor==3) {
-		?>
-		<script type="text/javascript">
-			_editor_lang = "en";
-			_editor_url = "media/editor/";
-		</script> 
-	
-		<script type="text/javascript" src="media/editor/editor.js"></script>
-		<style type="text/css">@import url(media/editor/editor.css);</style>
-	
-		<script type="text/javascript" >
-		// load up the plugins...
-		<?php if($im_plugin==1) { ?>
-			HTMLArea.loadPlugin("ImageManager"); 
-		<?php } ?>
-			HTMLArea.loadPlugin("EnterParagraphs");
-		<?php if($to_plugin==1) { ?>
-			HTMLArea.loadPlugin("TableOperations"); 
-		<?php } ?>
-		<?php if($cm_plugin==1) { ?>
-			HTMLArea.loadPlugin("ContextMenu"); 
-		<?php } ?>
-			HTMLArea.loadPlugin("ListType");
-		</script>
-	
-		<textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;">
-		<?php
-			if(! empty($content['content'])) {
-				if(substr($im_plugin_base_url, -1) != '/') {
-					$im_base_url = $im_plugin_base_url . '/';
-				} else {
-					$im_base_url = $im_plugin_base_url;
-				}
-				$elements = parse_url($im_base_url);
-				$image_path = $elements['path'];
-				// make sure image path ends with a /
-				if(substr($image_path, -1) != '/') {
-					$image_path .= '/';
-				}
-				$modx_root = dirname(dirname($_SERVER['PHP_SELF']));
-				$image_prefix = substr($image_path, strlen($modx_root));
-				if(substr($image_prefix, -1) != '/') {
-					$image_prefix .= '/';
-				}
-				// escape / in path
-				$image_prefix = str_replace('/', '\/', $image_prefix);
-				$newcontent = preg_replace("/(<img[^>]+src=['\"])($image_prefix)([^'\"]+['\"][^>]*>)/", "\${1}$im_base_url\${3}", $content['content']);
-				echo htmlspecialchars($newcontent);
+	if(($content['richtext']==1 || $_REQUEST['a']==4) && $use_editor==1) {
+		// replace image path
+		$htmlContent = $content['content'];
+		if(!empty($htmlContent)) {
+			if(substr($im_plugin_base_url, -1) != '/') {
+				$im_base_url = $im_plugin_base_url . '/';
+			} else {
+				$im_base_url = $im_plugin_base_url;
 			}
-			?></textarea>
-			<?php
-		} elseif($which_editor==2) {
-			?>
-			<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($content['content']); ?></textarea> </div>
-			<script language="javascript" type="text/javascript" src="<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>fckeditor.js"></script>
-			<script language="javascript" type="text/javascript">
-			function OnChangeCallback(edtInstance) {
-				taElement = (document.getElementById) ? document.getElementById(edtInstance):document.all[edtInstance];
-				if (taElement) taElement.onchange();
+			$elements = parse_url($im_base_url);
+			$image_path = $elements['path'];
+			// make sure image path ends with a /
+			if(substr($image_path, -1) != '/') {
+				$image_path .= '/';
 			}
-			var oFCKeditor = new FCKeditor( 'ta' ) ;
-			oFCKeditor.BasePath = '<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>' ;
-			oFCKeditor.BaseHref = '<?php echo $site_url ?>';
-			oFCKeditor.ToolbarSet = '<?php echo $fck_toolbar ?>' ;
-			oFCKeditor.ReplaceTextarea() ;
-			oFCKeditor.AttachToOnSelectionChange(OnChangeCallback('ta')) ;
-			</script>
-			<?php
-		} elseif($which_editor==1) {
-			?>
-			<!-- tinyMCE -->
-			<textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;">
-			<?php
-			if(! empty($content['content'])) {
-				if(substr($im_plugin_base_url, -1) != '/') {
-					$im_base_url = $im_plugin_base_url . '/';
-				} else {
-					$im_base_url = $im_plugin_base_url;
-				}
-				$elements = parse_url($im_base_url);
-				$image_path = $elements['path'];
-				// make sure image path ends with a /
-				if(substr($image_path, -1) != '/') {
-					$image_path .= '/';
-				}
-				$modx_root = dirname(dirname($_SERVER['PHP_SELF']));
-				$image_prefix = substr($image_path, strlen($modx_root));
-				if(substr($image_prefix, -1) != '/') {
-					$image_prefix .= '/';
-				}
-				// escape / in path
-				$image_prefix = str_replace('/', '\/', $image_prefix);
-				$newcontent = preg_replace("/(<img[^>]+src=['\"])($image_prefix)([^'\"]+['\"][^>]*>)/", "\${1}$im_base_url\${3}", $content['content']);
-				echo htmlspecialchars($newcontent);
+			$modx_root = dirname(dirname($_SERVER['PHP_SELF']));
+			$image_prefix = substr($image_path, strlen($modx_root));
+			if(substr($image_prefix, -1) != '/') {
+				$image_prefix .= '/';
 			}
-			?></textarea>
-			<!-- /tinyMCE -->
-			<?php
-			$replace_richtexteditor = array("ta");
+			// escape / in path
+			$image_prefix = str_replace('/', '\/', $image_prefix);
+			$newcontent = preg_replace("/(<img[^>]+src=['\"])($image_prefix)([^'\"]+['\"][^>]*>)/", "\${1}$im_base_url\${3}", $content['content']);
+			$htmlContent = $newcontent;
 		}
+		?>
+		<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($htmlContent); ?></textarea> </div>
+		<?php
+		$replace_richtexteditor = array("ta");
 	} else {
 		?>
 		<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($content['content']); ?></textarea> </div>
@@ -881,8 +922,8 @@ function decode(s){
 <?php
 		// MODIFIED BY S.BRENNAN
 		$template = $default_template;
-		if(isset($_GET['newtemplate'])){
-			$template = $_GET['newtemplate'];
+		if(isset($_REQUEST['newtemplate'])){
+			$template = $_REQUEST['newtemplate'];
 		}
 		else{
 			if(isset($content['template'])) {
@@ -895,7 +936,7 @@ function decode(s){
 		$sql.= "INNER JOIN $dbase.".$table_prefix."site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
 		$sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = $id ";
 		$sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";			
-		$sql.= "WHERE tvtpl.templateid = ".$template." AND (1='".$_SESSION['role']."' OR ISNULL(tva.documentgroup)".((!$docgrp)? "":" OR tva.documentgroup IN ($docgrp)").") ORDER BY tv.rank;";
+		$sql.= "WHERE tvtpl.templateid = ".$template." AND (1='".$_SESSION['mgrRole']."' OR ISNULL(tva.documentgroup)".((!$docgrp)? "":" OR tva.documentgroup IN ($docgrp)").") ORDER BY tv.rank;";
 		$rs = mysql_query($sql); 
 		$limit = mysql_num_rows($rs);
 		if($limit>0){
@@ -905,7 +946,7 @@ function decode(s){
 			for ($i=0; $i<$limit; $i++) {
 				// go through and display all the document variables
 				$row = mysql_fetch_assoc($rs);
-				if($row['type']=='htmlarea'){
+				if($row['type']=='richtext'||$row['type']=='htmlarea'){ // htmlarea for backward compatibility
 					if (is_array($replace_richtexteditor))
 						$replace_richtexteditor = array_merge($replace_richtexteditor,array("tv".$row['name']));
 					else
@@ -920,9 +961,9 @@ function decode(s){
 				</td>
 				<td valign="top" style="position:relative">
 				<?php
-				echo renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], $row['value'], ' style="width:300px;"');
+					$tvPBV = $_POST['tv'.$row['name']]; // post back value
+					echo renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], ($tvPBV ? $tvPBV:$row['value']), ' style="width:300px;"');
 				?>
-				</td>
 				</td>
 			  </tr>			  
 		<?php
@@ -947,7 +988,7 @@ function decode(s){
 if($use_udperms==1) {
 $groupsarray = array();
 
-if($_GET['a']=='27') { // fetch permissions on the document from the database
+if($_REQUEST['a']=='27') { // fetch permissions on the document from the database
 	$sql = "SELECT * FROM $dbase.".$table_prefix."document_groups where document=".$id;
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -956,7 +997,7 @@ if($_GET['a']=='27') { // fetch permissions on the document from the database
 		$groupsarray[$i] = $currentgroup['document_group'];
 	}
 } else { // set permissions on the document based on the permissions of the parent document
-	if(!empty($_REQUEST['pid'])) {
+	if(!empty($_REQUEST['pid'])) {		
 		$sql = "SELECT * FROM $dbase.".$table_prefix."document_groups where document=".$_REQUEST['pid'];
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
@@ -966,10 +1007,16 @@ if($_GET['a']=='27') { // fetch permissions on the document from the database
 		}
 	}
 }
+
+// retain selected doc groups between post
+if(isset($_POST['docgroups'])) {
+	$groupsarray = array_merge($groupsarray,$_POST['docgroups']);
+}
+
 ?>	
 
 <!-- Access Permissions -->
-<?php if($_SESSION['permissions']['access_permissions']==1) { ?>
+<?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <script>
 	function makePublic(b){
@@ -998,14 +1045,14 @@ if($_GET['a']=='27') { // fetch permissions on the document from the database
 	for($i=0; $i<$limit; $i++) {
 		$row=mysql_fetch_assoc($rs);
 		$checked = in_array($row['id'], $groupsarray);
-		if($_SESSION['permissions']['access_permissions']==1) {
+		if($modx->hasPermission('access_permissions')) {
 			if($checked) $notPublic = true;
 			$chks .= "<input type='checkbox' name='docgroups[]' value='".$row['id']."' ".($checked ? "checked='checked'" : '')." onclick=\"makePublic(false)\" />".$row['name']."<br />";
 		} else {
 			if($checked) echo "<input type='hidden' name='docgroups[]'  value='".$row['id']."' />";
 		}
 	}
-	if($_SESSION['permissions']['access_permissions']==1) {
+	if($modx->hasPermission('access_permissions')) {
 		$chks = "<input type='checkbox' name='chkalldocs' ".(!$notPublic ? "checked='checked'" : '')." onclick=\"makePublic(true)\" /><span class='warning'>".$_lang['all_doc_groups']."</span><br />".$chks;
 	}
 	echo $chks;
@@ -1019,120 +1066,31 @@ if($_GET['a']=='27') { // fetch permissions on the document from the database
 <?php
 	// invoke OnDocFormRender event
 	$evtOut = $modx->invokeEvent("OnDocFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 <script>//setTimeout('showParameters()',10);</script>
 
 <?php 
 
-// MODIFIED BY S.BRENNAN
-
+/**
+ *	Initialize RichText Editor 
+ *  orig MODIFIED BY S.BRENNAN for DocVars
+ * 
+ */ 
 if($content['type']=="document" || $_REQUEST['a']==4) {
-	if(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1) {
+	if(($content['richtext']==1 || $_REQUEST['a']==4) && $use_editor==1) {
 		if(is_array($replace_richtexteditor)) {
-			$element_list .= implode(",", $replace_richtexteditor);
-			if($which_editor==3) {
-			?>
-			<script type="text/javascript">
-			function initEditor() {
-	
-				var config = new HTMLArea.Config();
-	
-				<?php if($strict_editor==1) { ?>
-				config.toolbar = [
-						[ "formatblock", "space",
-						  "bold", "italic", "underline", "strikethrough", "separator",
-						  "subscript", "superscript", "separator",
-						  "copy", "cut", "paste", "space", "undo", "redo",
-						  "orderedlist", "unorderedlist", "separator",
-						  "inserthorizontalrule", "createlink", "insertimage", "inserttable", "htmlmode"]
-					];
-				<?php } ?>
-	
-				  editor = new HTMLArea("ta",config);
-				<?php if($im_plugin==1) { ?>
-					editor.registerPlugin("ImageManager"); 
-				<?php } ?>
-				<?php if($to_plugin==1) { ?>
-					editor.registerPlugin(TableOperations);
-				<?php } ?>
-					editor.registerPlugin(EnterParagraphs);
-				<?php if($cm_plugin==1) { ?>
-					editor.registerPlugin(ContextMenu);
-				<?php } ?>
-				<?php if($strict_editor!=1) { ?>
-					editor.registerPlugin(ListType);
-				<?php }?>
-					
-					// generate main htmlarea
-					editor.generate();
-	
-				 //edited by Apodigm - Docvars
-				<?php 
-					if(is_array($replace_richtexteditor)) {
-						foreach($replace_richtexteditor as $tag_id){ 
-							echo 'HTMLArea.replace("'.$tag_id.'", config); ';
-						}
-					}
-				?>
-					return false;
-				}
-				document.onload=initEditor();
-				storeCurTemplate();
-			</script>
-			<?php
-			}
-			elseif($which_editor==1) {
-			?>
-				<script language="javascript" type="text/javascript" src="media/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-				<script language="javascript" type="text/javascript">
-	            tinyMCE.init({
-				      <?php echo !empty($tiny_theme) ? "theme : '$tiny_theme'," : "theme : 'advanced'," ?>
-				      plugins : "table,advhr,advimage,advlink",
-				      theme_advanced_buttons1_add_before : "save,separator",
-				      theme_advanced_buttons1_add : "fontselect,fontsizeselect",
-				      theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor",
-				      theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator",
-				      theme_advanced_buttons3_add_before : "tablecontrols,separator",
-				      theme_advanced_buttons3_add : "emotions,iespell,flash,advhr,separator,print",
-				      theme_advanced_toolbar_location : "top",
-				      theme_advanced_toolbar_align : "left",
-				      theme_advanced_path_location : "bottom",
-						plugin_insertdate_dateFormat : "%Y-%m-%d",
-						plugin_insertdate_timeFormat : "%H:%M:%S",
-				      extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
-				      mode : "exact",
-				      <?php echo !empty($tiny_css_path) ? "content_css : '$tiny_css_path'," : "" ?>
-						<?php echo !empty($tiny_css_selectors) ? "theme_advanced_styles : '$tiny_css_selectors'," : "" ?>
-				      <?php echo !empty($element_list) ? "elements : '$element_list'" : "" ?>,
-				      onchange_callback : "tvOnchangeCallBack"
-				   });
-	            
-	            function tvOnchangeCallBack(i){
-	                  i.oldTargetElement.onchange();            
-	            }
-	         </script>
-			<?php }
-			elseif ($which_editor==2) {
-				foreach($replace_richtexteditor as $fckInstance) {
-					$fckInstanceObj = "oFCK" . $fckInstance;
-					?>
-					<script language="javascript" type="text/javascript">
-					var <?php echo $fckInstanceObj ?> = new FCKeditor( '<?php echo $fckInstance ?>' ) ;
-					<?php echo $fckInstanceObj ?>.BasePath = '<?php echo $modx->getManagerPath() . "media/fckeditor/" ?>' ;
-					<?php echo $fckInstanceObj ?>.BaseHref = '<?php echo $site_url ?>' ;
-					<?php echo $fckInstanceObj ?>.ToolbarSet = '<?php echo $fck_toolbar ?>' ;
-					<?php echo $fckInstanceObj ?>.ReplaceTextarea() ;
-					<?php echo $fckInstanceObj ?>.AttachToOnSelectionChange(OnChangeCallback('<?php echo $fckInstance ?>')) ;
-					</script>
-					<?php
-				}
-			}
+			// invoke OnRichTextEditorInit event
+			$evtOut = $modx->invokeEvent("OnRichTextEditorInit",
+											array(
+												editor 		=> $which_editor,
+												elements	=> $replace_richtexteditor													
+											));
+			if(is_array($evtOut)) echo implode("",$evtOut);				
 		}
 	}
 }
-// END MODIFIED BY S.BRENNAN
 ?>
 
 <script type="text/javascript">

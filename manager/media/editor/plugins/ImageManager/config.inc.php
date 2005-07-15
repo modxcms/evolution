@@ -1,7 +1,9 @@
 <?php
+
+session_start();
 include "../../../../includes/config.inc.php";
 // connect to the database
-if(@!$etomiteDBConn = mysql_connect($database_server, $database_user, $database_password)) {
+if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");
 } else {
 	mysql_select_db($dbase);
@@ -10,8 +12,13 @@ if(@!$etomiteDBConn = mysql_connect($database_server, $database_user, $database_
 // get the settings from the database
 include "../../../../includes/settings.inc.php";
 
-
-
+// security check user MUST be logged into manager 
+// before being able to run this script
+session_start();  
+if(!isset($_SESSION['mgrValidated'])) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+}
+	
 /**
  * Image Manager configuration file.
  * @author $Author: Wei Zhuo $
@@ -29,7 +36,7 @@ include "../../../../includes/settings.inc.php";
 	   Able to create directories is nice, but not necessary.
 */
 $IMConfig['base_dir'] = $im_plugin_base_dir;
-//echo $IMConfig['base_dir']."<br />";
+
 
 /*
  The URL to the above path, the web browser needs to be able to see it.

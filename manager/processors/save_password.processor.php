@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['save_password']!=1 && $_REQUEST['a']==34) {	$e->setError(3);
+if(!$modx->hasPermission('save_password') && $_REQUEST['a']==34) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
@@ -20,7 +21,7 @@ if(strlen($pass1)<6){
 	exit;
 }
 
-$sql = "UPDATE $dbase.".$table_prefix."manager_users SET password=md5('".$pass1."') where id=".$_SESSION['internalKey'].";";
+$sql = "UPDATE $dbase.".$table_prefix."manager_users SET password=md5('".$pass1."') where id=".$modx->getLoginUserID().";";
 $rs = mysql_query($sql);
 if(!$rs){
 	echo "An error occured while attempting to save the new password.";

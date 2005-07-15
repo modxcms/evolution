@@ -114,8 +114,8 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 # process logout
 	if ($isLogOut==1){
-		$internalKey = $_SESSION['internalKey'];
-		$username = $_SESSION['shortname'];
+		$internalKey = $_SESSION['webInternalKey'];
+		$username = $_SESSION['webShortname'];
 
 		// invoke OnBeforeWebLogout event
 		$modx->invokeEvent("OnBeforeWebLogout",
@@ -124,11 +124,28 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 									"username"		=> $username
 								));
 
-		session_destroy();
-		$sessionID = md5(date('d-m-Y H:i:s'));
-		session_id($sessionID);
-		session_start();
-		session_destroy();
+		// if we were launched from the manager 
+		// do NOT destroy session
+		if(isset($_SESSION['mgrValidated'])) {
+			unset($_SESSION['webShortname']);
+			unset($_SESSION['webFullname']);
+			unset($_SESSION['webEmail']);
+			unset($_SESSION['webValidated']);
+			unset($_SESSION['webInternalKey']);
+			unset($_SESSION['webValid']);
+			unset($_SESSION['webUser']);
+			unset($_SESSION['webFailedlogins']);
+			unset($_SESSION['webLastlogin']);
+			unset($_SESSION['webnrlogins']);
+			unset($_SESSION['webUsrConfigSet']);
+		}
+		else {
+			session_destroy();
+			$sessionID = md5(date('d-m-Y H:i:s'));
+			session_id($sessionID);
+			session_start();
+			session_destroy();
+		}
 
 		// invoke OnWebLogout event
 		$modx->invokeEvent("OnWebLogout",
@@ -150,6 +167,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	$username = htmlspecialchars($_POST['username']);
 	$givenPassword = htmlspecialchars($_POST['password']);
 	$captcha_code = $_POST['captcha_code'];
+
+	// invoke OnBeforeWebLogin event
+	$modx->invokeEvent("OnBeforeWebLogin",
+							array(
+								"username"		=> $username,
+								"userpassword"	=> $givenPassword,
+								"rememberme"	=> $_POST['rememberme']
+							));
 
 	$sql = "SELECT $dbase.".$table_prefix."web_users.*, $dbase.".$table_prefix."web_user_attributes.* FROM $dbase.".$table_prefix."web_users, $dbase.".$table_prefix."web_user_attributes WHERE $dbase.".$table_prefix."web_users.username REGEXP BINARY '^".$username."$' and $dbase.".$table_prefix."web_user_attributes.internalKey=$dbase.".$table_prefix."web_users.id;";
 	$ds = $modx->dbQuery($sql);
@@ -173,7 +198,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	$lastlogin				= $row['lastlogin'];
 	$nrlogins				= $row['logincount'];
 	$fullname				= $row['fullname'];
-	$sessionRegistered 		= checkSession();
+	//$sessionRegistered 		= checkSession();
 	$email 					= $row['email'];
 
 	// load user settings
@@ -234,10 +259,23 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			return;
 		}		
 	}
-	
-	if($dbasePassword != md5($givenPassword)) {
-		$output = webLoginAlert("Incorrect username or password entered!");
-		$newloginerror = 1;
+
+	// invoke OnWebAuthentication event
+	$rt = $modx->invokeEvent("OnWebAuthentication",
+							array(
+								"userid"		=> $internalKey,
+								"username"		=> $username,
+								"userpassword"	=> $givenPassword,
+								"savedpassword"	=> $dbasePassword,
+								"rememberme"	=> $_POST['rememberme']
+							));
+	// check if plugin authenticated the user
+	if (is_array($rt) && !in_array(TRUE,$rt)) {
+		// check user password - local authentication
+		if($dbasePassword != md5($givenPassword)) {
+			$output = webLoginAlert("Incorrect username or password entered!");
+			$newloginerror = 1;
+		}
 	}
 
 	if($use_captcha==1) {
@@ -263,29 +301,22 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 	$currentsessionid = session_id();
 
-	if(!isset($_SESSION['validated'])) {
+	if(!isset($_SESSION['webValidated'])) {
 		$sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
 		$ds = $modx->dbQuery($sql);
 	}
 
-	// set user type
-	$_SESSION['usertype'] = 'web'; // user is a web (frontend) user  
-
-	$_SESSION['shortname']=$username; 
-	$_SESSION['fullname']=$fullname; 
-	$_SESSION['email']=$email; 
-	$_SESSION['validated']=1; 
-	$_SESSION['internalKey']=$internalKey; 
-	$_SESSION['valid']=base64_encode($givenPassword); 
-	$_SESSION['user']=base64_encode($username); 
-	$_SESSION['failedlogins']=$failedlogins; 
-	$_SESSION['lastlogin']=$lastlogin; 
-	$_SESSION['sessionRegistered']=$sessionRegistered; 
-	$_SESSION['role']=$role; 
-	$_SESSION['lastlogin']=$lastlogin; 
-	$_SESSION['nrlogins']=$nrlogins;
-	// web user does not use roles
-	$_SESSION['permissions'] = '';
+	$_SESSION['webShortname']=$username; 
+	$_SESSION['webFullname']=$fullname; 
+	$_SESSION['webEmail']=$email; 
+	$_SESSION['webValidated']=1; 
+	$_SESSION['webInternalKey']=$internalKey; 
+	$_SESSION['webValid']=base64_encode($givenPassword); 
+	$_SESSION['webUser']=base64_encode($username); 
+	$_SESSION['webFailedlogins']=$failedlogins; 
+	$_SESSION['webLastlogin']=$lastlogin; 
+	$_SESSION['webnrlogins']=$nrlogins;
+	//$_SESSION['sessionRegistered']=$sessionRegistered; 
 
 	// get user's document groups
 	$dg='';$i=0;
@@ -297,7 +328,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			WHERE ug.webuser =".$internalKey;
 	$ds = $modx->dbQuery($sql); 
 	while ($row = mysql_fetch_row($ds)) $dg[$i++]=$row[0];
-	$_SESSION['docgroups'] = $dg;
+	$_SESSION['webDocgroups'] = $dg;
 
 	if($_POST['rememberme']==1) {
 		$username = $_POST['username'];
@@ -310,7 +341,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	}
 
 	$log = new logHandler;
-	$log->initAndWriteLog("Logged in", $_SESSION['internalKey'], $_SESSION['shortname'], "58", "-", "WebLogin");
+	$log->initAndWriteLog("Logged in", $_SESSION['webInternalKey'], $_SESSION['webShortname'], "58", "-", "WebLogin");
 								
 	// get login home page
 	$ok=false;
@@ -318,6 +349,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		if ($modx->getPageInfo($id)) $ok = true;
 	}
 	if (!$ok) {
+		// check if a login home id page was set
 		foreach($liHomeId as $id) {
 			$id = trim($id);
 			if ($modx->getPageInfo($id)) {$ok=true; break;}
@@ -330,7 +362,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
 		if($a!=1) {
 			// web users are stored with negative id
-			$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['internalKey'].", '".$_SESSION['shortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+			$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
 			if(!$ds = $modx->dbQuery($sql)) {
 				$output = "error replacing into active users! SQL: ".$sql;
 				return;
@@ -347,10 +379,18 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 								"rememberme"	=> $_POST['rememberme']
 							));
 
-	// redirect to login home page
-	$url = $modx->makeURL($id);
-	$modx->sendRedirect($url);
+	// redirect 
+	if($_REQUEST["refurl"]) {
+		// last accessed page
+		$url = $_REQUEST["refurl"];		
+		$modx->sendRedirect($url,0,REDIRECT_REFRESH);
+	}
+	else {
+		// login home page
+		$url = $modx->makeURL($id);
+		$modx->sendRedirect($url);
+	}
+	
 	return;
-
 
 ?>

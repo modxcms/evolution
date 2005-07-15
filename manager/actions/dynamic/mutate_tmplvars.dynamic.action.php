@@ -1,9 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_template']!=1 && $_REQUEST['a']==301) {	$e->setError(3);
+if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==301) {
+	$e->setError(3);
 	$e->dumpError();	
 }
-if($_SESSION['permissions']['new_template']!=1 && $_REQUEST['a']==300) {	$e->setError(3);
+if(!$modx->hasPermission('new_template') && $_REQUEST['a']==300) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -36,8 +38,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing this Template Variable. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username']," template variable");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -65,13 +67,19 @@ if(isset($_GET['id'])) {
 	}
 	$content = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$content['caption'];
-	if($content['locked']==1 && $_SESSION['role']!=1) {
+	if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		$e->setError(3);
 		$e->dumpError();
 	}
 } else {
 	$_SESSION['itemname']="New Template Variable";
 }
+
+// get available RichText Editors
+$RTEditors = "";
+$evtOut = $modx->invokeEvent("OnRichTextEditorRegister",array(forfrontend => 1));
+if(is_array($evtOut)) $RTEditors = implode(",",$evtOut);
+
 ?>
 <script language="JavaScript">
 
@@ -89,20 +97,21 @@ function deletedocument() {
 	}
 }
 
-// Display Format/Container Parameters
-var displayParams = [];			// name = description;datatype;default or list values - datatype: int, string, list : separated by comma (,)
-	displayParams['marquee']	= '&width=Width;string;100% &height=Height;string;100px &speed=Speed (1-20);float;3; &pause=Mouse Pause;list;Yes,No;Yes &tfx=Transition;list;Vertical,Horizontal &class=Class;string; &style=Style;string;';
-	displayParams['ticker'] 	= '&width=Width;string;100% &height=Height;string;50px &delay=Delay (ms);int;3000 &delim=Message Delimiter;string;|| &tfx=Transition;list;Normal,Fader &class=Class;string; &style=Style;string;';
-	displayParams['date'] 		= '&format=Date Format;string;%A %d, %B %Y';
-	displayParams['string'] 	= '&format=String Format;list;Upper Case,Lower Case,Sentence Case,Capitalize';
-	displayParams['delim'] 		= '&format=Delimiter;string;,';
-	displayParams['hyperlink'] 	= '&title=Title;string &class=Class;string &style=Style;string &target=Target;string';
-	displayParams['htmltag'] 	= '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
-	displayParams['viewport'] 	= '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
-	displayParams['floater'] 	= '&x=Offset X;int &y=Offset Y;int &width=Width;string;200px &height=Height;string;30px &pos=Position;list;top-right,top-left,bottom-left,bottom-right &gs=Glide Speed;int;6 &class=Class;string &style=Style;string ';
-	displayParams['datagrid'] 	= '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string';	
-	displayParams['richtext'] 	= '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;TinyMCE,FCKeditor ';	
-
+// Widget Parameters
+var widgetParams = [];			// name = description;datatype;default or list values - datatype: int, string, list : separated by comma (,)
+	widgetParams['marquee']		= '&width=Width;string;100% &height=Height;string;100px &speed=Speed (1-20);float;3; &pause=Mouse Pause;list;Yes,No;Yes &tfx=Transition;list;Vertical,Horizontal &class=Class;string; &style=Style;string;';
+	widgetParams['ticker'] 		= '&width=Width;string;100% &height=Height;string;50px &delay=Delay (ms);int;3000 &delim=Message Delimiter;string;|| &tfx=Transition;list;Normal,Fader &class=Class;string; &style=Style;string;';
+	widgetParams['date'] 		= '&format=Date Format;string;%A %d, %B %Y';
+	widgetParams['string'] 		= '&format=String Format;list;Upper Case,Lower Case,Sentence Case,Capitalize';
+	widgetParams['delim'] 		= '&format=Delimiter;string;,';
+	widgetParams['hyperlink'] 	= '&text=Display Text;string; &title=Title;string; &class=Class;string &style=Style;string &target=Target;string &attrib=Attributes;string';
+	widgetParams['htmltag'] 	= '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
+	widgetParams['viewport'] 	= '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
+	widgetParams['floater'] 	= '&x=Offset X;int &y=Offset Y;int &width=Width;string;200px &height=Height;string;30px &pos=Position;list;top-right,top-left,bottom-left,bottom-right &gs=Glide Speed;int;6 &class=Class;string &style=Style;string ';
+	widgetParams['datagrid'] 	= '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';	
+	widgetParams['richtext'] 	= '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?php echo $RTEditors; ?>';	
+	widgetParams['image'] 		= '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
+	
 // Current Params
 var currentParams = [];
 var lastdf, lastmod = [];
@@ -134,7 +143,7 @@ function showParameters(ctrl) {
 
 	// setup parameters
 	tr = (document.getElementById) ? document.getElementById('displayparamrow'):document.all['displayparamrow'];
-	dp = (displayParams[df]) ? displayParams[df].split("&"):"";
+	dp = (widgetParams[df]) ? widgetParams[df].split("&"):"";
 	if(!dp) tr.style.display='none';
 	else {
 		t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
@@ -157,7 +166,9 @@ function showParameters(ctrl) {
 					case 'list':
 						c = '<select name="prop_'+key+'" height="1" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
 						ls = (ar[2]+'').split(",");
-						if(!currentParams[key]) currentParams[key] = ls[0]; // use first list item as default
+						if(!currentParams[key]||currentParams[key]=='undefined') {
+							currentParams[key] = ls[0]; // use first list item as default
+						}
 						for(i=0;i<ls.length;i++){						
 							c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
 						}
@@ -240,7 +251,7 @@ function decode(s){
 <?php
 	// invoke OnTVFormPrerender event
 	$evtOut = $modx->invokeEvent("OnTVFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
@@ -295,7 +306,7 @@ function decode(s){
 			<option value="text" <?php		echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
 			<option value="textarea" <?php	echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
 			<option value="textareamini" <?php	echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
-			<option value="htmlarea" <?php	echo ($content['type']=='htmlarea')? "selected='selected'":""; ?>>HTMLarea</option>
+			<option value="richtext" <?php	echo ($content['display']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
 			<option value="dropdown" <?php	echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
 			<option value="listbox" <?php	echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
 			<option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
@@ -312,20 +323,20 @@ function decode(s){
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_elements']; ?>:&nbsp;&nbsp;</td>
-    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="elements" type="text" maxlength="200" value="<?php echo htmlspecialchars($content['elements']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'><img src="media/images/icons/bkmanager.gif" width="17" height="18" align="absmiddle" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand"/></td>
+    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="elements" type="text" maxlength="65535" value="<?php echo htmlspecialchars($content['elements']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'><img src="media/images/icons/bkmanager.gif" width="17" height="18" align="absmiddle" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand"/></td>
   </tr>
   <tr>
     <td align="left" valign="top"><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</td>
     <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="media/images/icons/bkmanager.gif" width="17" height="18" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand" /></td>
   </tr>
   <tr>
-    <td align="left"><?php echo $_lang['tmplvars_display']; ?>:&nbsp;&nbsp;</td>
+    <td align="left"><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="display" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;showParameters(this);'>
 			<option value="" <?php echo ($content['display']=='')? "selected='selected'":""; ?>>&nbsp;</option>
 			<option value="datagrid" <?php echo ($content['display']=='datagrid')? "selected='selected'":""; ?>>DataGrid</option>
 			<option value="floater" <?php echo ($content['display']=='floater')? "selected='selected'":""; ?>>Floater</option>
 			<option value="marquee" <?php echo ($content['display']=='marquee')? "selected='selected'":""; ?>>Marquee</option>
-			<option value="richtext" <?php echo ($content['display']=='richtext')? "selected='selected'":""; ?>>Rich Text Box</option>
+			<option value="richtext" <?php echo ($content['display']=='richtext')? "selected='selected'":""; ?>>RichText</option>
 			<option value="ticker" <?php echo ($content['display']=='ticker')? "selected='selected'":""; ?>>Ticker</option>
 			<option value="viewport" <?php echo ($content['display']=='viewport')? "selected='selected'":""; ?>>View Port</option>
 			<option value="">----------------------------------------------------------------</option>
@@ -333,18 +344,19 @@ function decode(s){
 			<option value="delim" <?php echo ($content['display']=='delim')? "selected='selected'":""; ?>>Delimited List</option>
 			<option value="htmltag" <?php echo ($content['display']=='htmltag')? "selected='selected'":""; ?>>HTML Generic Tag</option>
 			<option value="hyperlink" <?php echo ($content['display']=='hyperlink')? "selected='selected'":""; ?>>Hyperlink</option>
+			<option value="image" <?php	echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
 			<option value="string" <?php echo ($content['display']=='string')? "selected='selected'":""; ?>>String Formatter</option>
 		</select>
 	</td>
   </tr>
   <tr id="displayparamrow">
-  	<td valign="top" align="left"><?php echo $_lang['tmplvars_display_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="media/images/icons/refresh.gif" width="16" height="16" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></td>
+  	<td valign="top" align="left"><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="media/images/icons/refresh.gif" width="16" height="16" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></td>
   	<td align="left" id="displayparams">&nbsp;</td>
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_rank']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="rank" type="text" maxlength="4" value="<?php echo $content['rank'];?>" class="inputBox" style="width:50px;" onChange='documentDirty=true;'></td>
-  </tr>
+    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="rank" type="text" maxlength="4" value="<?php echo $content['rank'];?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+  </tr> 
   <tr>
     <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
@@ -375,6 +387,7 @@ function decode(s){
 </div>
 
 <?php 
+if($use_udperms==1) {
 	$groupsarray = array();
 
 	// fetch permissions for the variable
@@ -389,7 +402,7 @@ function decode(s){
 ?>	
 
 <!-- Access Permissions -->
-<?php if($_SESSION['permissions']['access_permissions']==1) { ?>
+<?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <script>
 	function makePublic(b){
@@ -419,7 +432,7 @@ function decode(s){
 	for($i=0; $i<$limit; $i++) {
 		$row=mysql_fetch_assoc($rs);
 		$checked = in_array($row['id'], $groupsarray);
-		if($_SESSION['permissions']['access_permissions']==1) {
+		if($modx->hasPermission('access_permissions')) {
 			if($checked) $notPublic = true;
 			$chks.= "<input type='checkbox' name='docgroups[]' value='".$row['id']."' ".($checked ? "checked='checked'" : '')." onclick=\"makePublic(false)\" />".$row['name']."<br />";
 		}
@@ -427,17 +440,18 @@ function decode(s){
 			if($checked) echo "<input type='hidden' name='docgroups[]'  value='".$row['id']."' />";
 		}
 	}
-	if($_SESSION['permissions']['access_permissions']==1) {
+	if($modx->hasPermission('access_permissions')) {
 		$chks = "<input type='checkbox' name='chkalldocs' ".(!$notPublic ? "checked='checked'" : '')." onclick=\"makePublic(true)\" /><span class='warning'>".$_lang['all_doc_groups']."</span><br />".$chks;
 	}
 	echo $chks;
 ?>
-<input type="submit" name="save" style="display:none">
 </div>
+<?php }?>
+<input type="submit" name="save" style="display:none">
 <?php
 	// invoke OnTVFormRender event
 	$evtOut = $modx->invokeEvent("OnTVFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 <script>setTimeout('showParameters()',10);</script>

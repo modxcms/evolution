@@ -1,6 +1,6 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['messages']!=1 && $_REQUEST['a']==66) {
+if(!$modx->hasPermission('messages') && $_REQUEST['a']==66) {
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -23,7 +23,7 @@ if($sendto=='u') {
 		$e->dumpError();
 	}
 	$sql = "INSERT INTO $dbase.".$table_prefix."user_messages(recipient, sender, subject, message, postdate, type, private)
-			values($userid, ".$_SESSION['internalKey'].", '$subject', '$message', $postdate, 'Message', 1);";
+			values($userid, ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 1);";
 	$rs = mysql_query($sql);
 }
 
@@ -37,9 +37,9 @@ if($sendto=='g') {
 	$limit = mysql_num_rows($rs);
 	for( $i=0; $i<$limit; $i++ ){
 		$row=mysql_fetch_assoc($rs);
-		if($row['internalKey']!=$_SESSION['internalKey']) {
+		if($row['internalKey']!=$modx->getLoginUserID()) {
 			$sql2 = "INSERT INTO $dbase.".$table_prefix."user_messages(recipient, sender, subject, message, postdate, type, private)
-					values(".$row['internalKey'].", ".$_SESSION['internalKey'].", '$subject', '$message', $postdate, 'Message', 0);";
+					values(".$row['internalKey'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
 			$rs2 = $db->Execute($sql2);
 		}
 	}	
@@ -52,9 +52,9 @@ if($sendto=='a') {
 	$limit = mysql_num_rows($rs);
 	for( $i=0; $i<$limit; $i++ ){
 		$row=mysql_fetch_assoc($rs);
-		if($row['id']!=$_SESSION['internalKey']) {
+		if($row['id']!=$modx->getLoginUserID()) {
 			$sql2 = "INSERT INTO $dbase.".$table_prefix."user_messages(recipient, sender, subject, message, postdate, type, private)
-					values(".$row['id'].", ".$_SESSION['internalKey'].", '$subject', '$message', $postdate, 'Message', 0);";
+					values(".$row['id'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
 			$rs2 = $db->Execute($sql2);
 		}
 	}	

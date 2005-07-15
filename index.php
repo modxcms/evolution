@@ -36,6 +36,12 @@
 **************************************************************************
 */	
 
+
+/**
+ * Initialize Document Parsing
+ * -----------------------------
+ */
+ 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 
@@ -83,12 +89,15 @@ $modx = $etomite = new DocumentParser;
 
 
 // set some parser options
-$modx->snippetParsePasses = 3;
-$modx->nonCachedSnippetParsePasses = 2;
+$modx->minParserPasses = 1;		// min number of parser recursive loops or passes
+$modx->maxParserPasses = 10;	// max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false;
 $modx->tstart = $tstart;	// feed the parser the execution 
 							// start time
+
+// invoke OnWebPageInit event
+$modx->invokeEvent("OnWebPageInit");
 
 // execute the parser
 $modx->executeParser();

@@ -90,9 +90,10 @@ class SqlParser {
 			$num = $num + 1;
 			if ($sql_do) mysql_query($sql_do, $this->conn);
 			if(mysql_error()) {
-				// Ignore duplicate errors - Raymond 
+				// Ignore duplicate and drop errors - Raymond 
 				if ($this->ignoreDuplicateErrors){
 					if (eregi('^duplicate key', mysql_error()) || (eregi('^alter', $sql_do) && eregi('^duplicate', mysql_error()))) continue;
+					if (eregi('^can\'t drop', mysql_error()) || (eregi('^alter', $sql_do) && eregi('^can\'t drop', mysql_error()))) continue;
 				}
 				// End Ignore duplicate
 				$this->mysqlErrors[] = array("error" => mysql_error(), "sql" => $sql_do);

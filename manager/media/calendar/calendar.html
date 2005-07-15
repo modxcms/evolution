@@ -39,7 +39,7 @@ if (obj_caller && obj_caller.year_scroll) {
 	dt_prev_year.setFullYear(dt_prev_year.getFullYear() - 1);
 	if (dt_prev_year.getDate() != dt_current.getDate())
 		dt_prev_year.setDate(0);
-	
+
 	// get same date in the next year
 	var dt_next_year = new Date(dt_current);
 	dt_next_year.setFullYear(dt_next_year.getFullYear() + 1);
@@ -75,6 +75,8 @@ function set_datetime(n_datetime, b_close) {
 
 	if (!dt_datetime) return;
 	if (b_close) {
+		if(obj_caller.target.onchange) obj_caller.target.onchange();
+		if(obj_caller.target.onblur) obj_caller.target.onblur();
 		window.close();
 		obj_caller.target.value = (document.cal
 			? obj_caller.gen_tsmp(dt_datetime)
@@ -136,10 +138,10 @@ while (dt_current_day.getMonth() == dt_current.getMonth() ||
 		if (dt_current_day.getMonth() == this.dt_current.getMonth())
 			// print days of current month
 			document.write('<font color="#000000">');
-		else 
+		else
 			// print days of other months
 			document.write('<font color="#606060">');
-			
+
 		document.write(dt_current_day.getDate()+'</font></a></td>');
 		dt_current_day.setDate(dt_current_day.getDate()+1);
 	}

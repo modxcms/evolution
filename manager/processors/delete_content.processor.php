@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['delete_document']!=1 && $_REQUEST['a']==6) {	$e->setError(3);
+if(!$modx->hasPermission('delete_document') && $_REQUEST['a']==6) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
@@ -13,9 +14,9 @@ $children = array();
 // check permissions on the document
 include_once "./processors/user_documents_permissions.class.php";
 $udperms = new udperms();
-$udperms->user = $_SESSION['internalKey'];
+$udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
-$udperms->role = $_SESSION['role'];
+$udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
 	include "header.inc.php";
@@ -32,6 +33,7 @@ function getChildren($parent) {
 	global $table_prefix;
 	global $children;
 	global $site_start;
+	global $site_unavailable_page;
 	
 	$db->debug = true;
 	
@@ -43,7 +45,11 @@ function getChildren($parent) {
 		for($i=0;$i<$limit;$i++) {
 		$row=mysql_fetch_assoc($rs);
 			if($row['id']==$site_start) {
-				echo "The document you are trying to delete is a folder containing document ".$row['id'].". This document is registered as site_start, and cannot be deleted. Please assign another document as site_start and try again.";
+				echo "The document you are trying to delete is a folder containing document ".$row['id'].". This document is registered as the 'Site start' document, and cannot be deleted. Please assign another document as your 'Site start' document and try again.";
+				exit;
+			}
+			if($row['id']==$site_unavailable_page) {
+				echo "The document you are trying to delete is a folder containing document ".$row['id'].". This document is registered as the 'Site unavailable page' document, and cannot be deleted. Please assign another document as your 'Site unavailable page' document and try again.";
 				exit;
 			}
 			$children[] = $row['id'];
@@ -64,7 +70,7 @@ $modx->invokeEvent("OnBeforeDocFormDelete",
 
 if(count($children)>0) {
 	$docs_to_delete = implode(" ,", $children);
-	$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=1, deletedby=".$_SESSION['internalKey'].", deletedon=$deltime WHERE id IN($docs_to_delete);";
+	$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id IN($docs_to_delete);";
 	$rs = @mysql_query($sql);
 	if(!$rs) {
 		echo "Something went wrong while trying to set the document's children to deleted status...";
@@ -73,12 +79,17 @@ if(count($children)>0) {
 }
 
 if($site_start==$id){
-	echo "Document is site_start and cannot be deleted!";
+	echo "Document is 'Site start' and cannot be deleted!";
+	exit;
+}
+
+if($site_unavailable_page==$id){
+	echo "Document is used as the 'Site unavailable page' and cannot be deleted!";
 	exit;
 }
 
 //ok, 'delete' the document.
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=1, deletedby=".$_SESSION['internalKey'].", deletedon=$deltime WHERE id=$id;";
+$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id=$id;";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to set the document to deleted status...";

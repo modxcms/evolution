@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['delete_user']!=1 && $_REQUEST['a']==90) {	$e->setError(3);
+if(!$modx->hasPermission('delete_web_user') && $_REQUEST['a']==90) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
@@ -12,7 +13,7 @@ $id=intval($_GET['id']);
 $sql = "SELECT * FROM $dbase.".$table_prefix."web_users WHERE $dbase.".$table_prefix."web_users.id='".$id."' LIMIT 1;";
 $rs = mysql_query($sql);
 if($rs) {
-	$row = mysql_fetch_row($rs);
+	$row = mysql_fetch_assoc($rs);
 	$username = $row['username'];
 }
 

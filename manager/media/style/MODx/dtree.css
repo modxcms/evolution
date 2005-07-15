@@ -47,13 +47,6 @@
 	border: 0px;
 }
 
-
-
-
-
-
-
-
 .subTitle {
 	width:							100%;
 	height:							24px !important;
@@ -61,55 +54,6 @@
 	text-align:						right;
 	margin-bottom:					10px;
 }
-
-/* start etomiteButton markup */
-ul#navlist {
-	list-style: 					none;
-	padding: 						0;
-	margin: 						0 0;
-}
-
-ul#navlist li {
-	display: 						block;
-	float: 							left;
-	margin: 						0;
-	padding: 						0;
-}
-
-.etomiteButton, .etomiteButtonHover, .etomiteButtonPressed {
-	display: 						block;
-	font: 							Icon;
-	font-weight: 					normal;
-	padding:						4px 7px 4px 7px;
-	cursor:							pointer;
-	color:							#000080;
-	text-decoration:				none;
-}
-
-.etomiteButton img {
-	filter:							gray();
-}
-
-.etomiteButtonHover {
-	border: 						1px solid #000080;
-	background: 					#FFD38E;
-	padding:						3px 6px 3px 6px;
-	background-image: 				url("../../images/misc/buttonbarhover.gif");
-	background-color: 				#fff;
-	background-position: 			top;
-	background-repeat: 				repeat-x;	
-	
-}
-
-.etomiteButtonPressed {
-	border: 						1px solid #000080;
-	background-color:				#E98813;						
-	padding:						4px 4px 2px 8px;
-	background-image: 				url("../../images/misc/buttonbaractive.gif");
-	background-position: 			top;
-	background-repeat: 				repeat-x;	
-}
-/* end etomiteButtons */
 
 .right {
 	font-family:					Verdana, Helvetica, Sans-Serif;

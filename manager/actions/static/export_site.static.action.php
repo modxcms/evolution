@@ -1,6 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_document']!=1) {	
+if(!$modx->hasPermission('edit_document')) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -19,10 +19,10 @@ function reloadTree() {
 </script>
 
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['export_site']; ?></span>
+<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['export_site_html']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['export_site']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['export_site_html']; ?></div><div class="sectionBody">
 <?php 
 
 if(!isset($_POST['export'])) {
@@ -74,7 +74,7 @@ echo $_lang['export_site_message'];
 		$maxtime = 30;
 	}
 	
-	set_time_limit($maxtime);
+	@set_time_limit($maxtime);
 	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $exportstart = $mtime; 
 	
 	$filepath = "../assets/export/";

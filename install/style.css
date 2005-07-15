@@ -100,3 +100,12 @@ label {
 
 div.labelHolder input {
     width: 200px; }
+
+#testbox {
+	width:				100%; 
+	margin-top:			2px; 
+	display:			none; 
+	border:				0px; 
+	border-top:			1px solid silver; 
+	background-color:	#eeeeee; 
+	font-weight:		bold;   }

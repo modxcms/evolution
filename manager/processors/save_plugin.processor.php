@@ -1,7 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if($_SESSION['permissions']['save_plugin']!=1 && $_REQUEST['a']==103) {	
+if(!$modx->hasPermission('save_plugin') && $_REQUEST['a']==103) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -25,6 +25,7 @@ $locked = $_POST['locked']=='on' ? 1 : 0 ;
 $plugincode = mysql_escape_string($_POST['post']);
 $properties = mysql_escape_string($_POST['properties']);
 $disabled = $_POST['disabled']=="on" ? 1 : 0;
+$moduleguid = mysql_escape_string($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
 
 if($name=="") $name = "Untitled plugin";
@@ -40,7 +41,7 @@ switch ($_POST['mode']) {
 								));
     
 		//do stuff to save the new plugin
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_plugins (name, description, plugincode, disabled, locked, properties) VALUES('".$name."', '".$description."', '".$plugincode."', '".$disabled."', '".$locked."', '".$properties."');";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_plugins (name, description, plugincode, disabled, moduleguid, locked, properties) VALUES('".$name."', '".$description."', '".$plugincode."', '".$disabled."', '".$moduleguid."', '".$locked."', '".$properties."');";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New plugin not saved!";
@@ -88,7 +89,7 @@ switch ($_POST['mode']) {
 								));
      
 		//do stuff to save the edited plugin	
-		$sql = "UPDATE $dbase.".$table_prefix."site_plugins SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', locked='".$locked."', properties='".$properties."'  WHERE id='".$id."';";
+		$sql = "UPDATE $dbase.".$table_prefix."site_plugins SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."'  WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited plugin not saved!";

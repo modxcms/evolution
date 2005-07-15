@@ -1,3 +1,4 @@
+<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly."); ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
@@ -6,12 +7,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>coolButtons2.css<?php echo "?$theme_refresher";?>" />
-<script type="text/javascript" language="JavaScript" src="media/tvscripts/webelm.js"></script>
+<script type="text/javascript" language="JavaScript" src="media/script/bin/webelm.js"></script>
 <script type="text/javascript" src="media/script/cb2.js"></script>
 <script language="JavaScript">
 /* including (for the really important bits) code devised and written yb patv */
 
-	document.setIncludePath("media/tvscripts/");
+	document.setIncludePath("media/script/bin/");
 
 	function document_oninit(){
 		document.include("dynelement");
@@ -118,7 +119,7 @@
 				//Jeroen set opened
 				openedArray[parent] = 1 ;
 				//Raymond:added getFolderState()
-				frames['rpcFrame'].location.href ='index.php?a=1&f=10&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+getFolderState();
+				frames['rpcFrame'].location.href ='index.php?a=1&f=3ldr&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+getFolderState();
 				rpcNode.setInnerHTML("<span class='emptyNode' style='white-space:nowrap;'>"+spacer+"&nbsp;&nbsp;&nbsp;"+loadText+"...</span>");
 			} else {
 				rpcNode.style.display = 'block';
@@ -152,14 +153,14 @@
 	{
 		//rpcNode = document.getElementById('treeRoot');
 		rpcNode = new DynElement('treeRoot'); //modx
-		frames['rpcFrame'].location.href ='index.php?a=1&f=10&indent=1&parent=0&expandAll=1';
+		frames['rpcFrame'].location.href ='index.php?a=1&f=3ldr&indent=1&parent=0&expandAll=1';
 	}
 
 	function collapseTree()
 	{
 		//rpcNode = document.getElementById('treeRoot');
 		rpcNode = new DynElement('treeRoot'); //modx
-		frames['rpcFrame'].location.href ='index.php?a=1&f=10&indent=1&parent=0&expandAll=0';
+		frames['rpcFrame'].location.href ='index.php?a=1&f=3ldr&indent=1&parent=0&expandAll=0';
 	}
 
 	//
@@ -169,7 +170,7 @@
 	{
 			//rpcNode = document.getElementById('treeRoot');
 			rpcNode = new DynElement('treeRoot'); // modx
-			frames['rpcFrame'].location.href ='index.php?a=1&f=10&indent=1&parent=0&expandAll=2';
+			frames['rpcFrame'].location.href ='index.php?a=1&f=3ldr&indent=1&parent=0&expandAll=2';
 	}
 	//
 	// Jeroen end
@@ -283,22 +284,9 @@
 		return oarray;
 	}
 	function saveFolderState() {
-		frames['rpcFrame'].location.href ='index.php?a=1&f=10&savestateonly=1'+getFolderState();
+		frames['rpcFrame'].location.href ='index.php?a=1&f=3ldr&savestateonly=1'+getFolderState();
 	}
 	//Raymond:added getFolderState,saveFolderState
-
-
-	//Raymond: Snippet Interface action
-/*	function snippetAction(id, name) {
-		if(ca=="open" || ca=="") {
-			if(id==0) {
-				parent.main.location.href="index.php?a=2";
-			} else {
-				parent.main.location.href="index.php?a=86&id=" + id;
-			}
-		}
-	}*/
-	//Raymond: Snippet Interface action
 
 </script>
 <?php
@@ -454,7 +442,7 @@ function menuHandler(action) {
 <?php if($_SESSION['browser']=='ie') { 
 	// MSIE context menu
 	function constructLink($action, $img, $text, $allowed) {
-		if($allowed==1) {
+		if($allowed) {
 			$tempvar = "html += '<div class=\"menuLink\" onmouseover=\"this.className=\'menuLinkOver\';\" onmouseout=\"this.className=\'menuLink\';\" onclick=\"this.className=\'menuLink\'; parent.menuHandler(".$action."); parent.hideMenu();\"><img src=\'media/images/icons/".$img.".gif\' align=absmiddle>".addslashes($text)."</div>';\n";
 		} else {
 			$tempvar = "html += '<div class=\"menuLinkDisabled\"><img src=\'media/images/icons/".$img.".gif\' align=absmiddle>".addslashes($text)."</div>';\n";
@@ -471,18 +459,18 @@ function menuHandler(action) {
 	//html += '<div id="menuContainer" style="position:absolute; left:2px; top:2px; width:100%; height:100%;">';
 	html += '<div id="nameHolder"></div>';
 	<?php echo constructLink(1, "context_view", str_replace(" ", "&nbsp;", $_lang["view_document"]), 1); ?>
-	<?php echo constructLink(2, "save", str_replace(" ", "&nbsp;", $_lang["edit_document"]), $_SESSION['permissions']['edit_document']); ?>
-	<?php echo constructLink(5, "cancel", str_replace(" ", "&nbsp;", $_lang["move_document"]), $_SESSION['permissions']['edit_document']); ?>
+	<?php echo constructLink(2, "save", str_replace(" ", "&nbsp;", $_lang["edit_document"]), $modx->hasPermission('edit_document')); ?>
+	<?php echo constructLink(5, "cancel", str_replace(" ", "&nbsp;", $_lang["move_document"]), $modx->hasPermission('edit_document')); ?>
 	//Raymond:Create Folder
-	<?php echo constructLink(11, "folder", str_replace(" ", "&nbsp;", $_lang["create_folder_here"]), $_SESSION['permissions']['new_document']); ?>
-	<?php echo constructLink(3, "newdoc", str_replace(" ", "&nbsp;", $_lang["create_document_here"]), $_SESSION['permissions']['new_document']); ?>
-	<?php echo constructLink(6, "weblink", str_replace(" ", "&nbsp;", $_lang["create_weblink_here"]), $_SESSION['permissions']['new_document']); ?>
+	<?php echo constructLink(11, "folder", str_replace(" ", "&nbsp;", $_lang["create_folder_here"]), $modx->hasPermission('new_document')); ?>
+	<?php echo constructLink(3, "newdoc", str_replace(" ", "&nbsp;", $_lang["create_document_here"]), $modx->hasPermission('new_document')); ?>
+	<?php echo constructLink(6, "weblink", str_replace(" ", "&nbsp;", $_lang["create_weblink_here"]), $modx->hasPermission('new_document')); ?>
 	html += '<div class="seperator"></div>';
-	<?php echo constructLink(4, "delete", str_replace(" ", "&nbsp;", $_lang["delete_document"]), $_SESSION['permissions']['delete_document']); ?>
-	<?php echo constructLink(8, "b092", str_replace(" ", "&nbsp;", $_lang["undelete_document"]), $_SESSION['permissions']['delete_document']); ?>
+	<?php echo constructLink(4, "delete", str_replace(" ", "&nbsp;", $_lang["delete_document"]), $modx->hasPermission('delete_document')); ?>
+	<?php echo constructLink(8, "b092", str_replace(" ", "&nbsp;", $_lang["undelete_document"]), $modx->hasPermission('delete_document')); ?>
 	html += '<div class="seperator"></div>';
-	<?php echo constructLink(9, "date", str_replace(" ", "&nbsp;", $_lang["publish_document"]), $_SESSION['permissions']['edit_document']); ?>
-	<?php echo constructLink(10, "date", str_replace(" ", "&nbsp;", $_lang["unpublish_document"]), $_SESSION['permissions']['edit_document']); ?>
+	<?php echo constructLink(9, "date", str_replace(" ", "&nbsp;", $_lang["publish_document"]), $modx->hasPermission('edit_document')); ?>
+	<?php echo constructLink(10, "date", str_replace(" ", "&nbsp;", $_lang["unpublish_document"]), $modx->hasPermission('edit_document')); ?>
 	html += '</body></html>';
 
 	var PopWindow = window.createPopup();
@@ -494,7 +482,7 @@ function menuHandler(action) {
 			selectedObjectName = selectedObjectName.substr(0, 20) + "...";
 		}
 		PopWindow.document.getElementById('nameHolder').innerHTML=selectedObjectName;
-		PopWindow.show(x, y, 160, 260, document.body); // Raymond: adjust pop window height to 260
+		PopWindow.show(x, y, 170, 260, document.body); // Raymond: adjust pop window height to 260
 	}
 
 	function hideMenu() {
@@ -532,10 +520,8 @@ function menuHandler(action) {
 	}
 	
 </script>
-<!--<div id='contextMenu' style="position: absolute; right: 20px; left:-400; top: 20px; z-index:10000; width: 170px; visibility: hidden; background-color:yellow">
-	<iframe name='oPopup' width="170" height="100%" frameborder="0" src="index.php?a=1&f=6"></iframe> -->
 <div id="contextMenu" style="position: absolute; right: 20px; top: 20px; z-index:10000; width: 170px; height: auto;visibility: hidden;">
-	<iframe name="oPopup" style="width:170px;height:100%" frameborder="0" src="index.php?a=1&f=6"></iframe>
+	<iframe name="oPopup" style="width:170px;height:100%" frameborder="0" src="index.php?a=1&f=3c"></iframe>
 </div>
 <?php } ?>
 <!-- ************************************************************************ -->

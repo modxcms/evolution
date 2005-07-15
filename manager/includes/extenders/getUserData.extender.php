@@ -1,6 +1,6 @@
 <?php
 
-	if(IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
+	if(IN_MANAGER_MODE!=true && IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
 
 		require_once "sniff/phpSniff.class.php";
 		$GET_VARS = isset($_GET) ? $_GET : $HTTP_GET_VARS; 

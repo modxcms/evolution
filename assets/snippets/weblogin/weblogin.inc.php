@@ -12,7 +12,7 @@ if(!$tpl) $tpl = getWebLogintpl();
 $declare = webLoginExtractDeclarations($tpl);
 $tpls = explode((isset($declare["separator"]) ? $declare["separator"]:"<!--tpl_separator-->"),$tpl);
 
-if(!isset($_SESSION['validated'])){
+if(!isset($_SESSION['webValidated'])){
 	ob_start();
 	if(isset($_COOKIE[$cookieKey])) {
 		$cookieSet = 1;
@@ -58,7 +58,7 @@ if(!isset($_SESSION['validated'])){
 		}
 		function webLoginEnter(nextfield) {
 			if(window.event && window.event.keyCode == 13) {
-				if(nextfield.id=='cmdweblogin') {
+				if(nextfield.name=='cmdweblogin') {
 					document.loginfrm.submit();
 					return false; 
 				}
@@ -74,9 +74,10 @@ if(!isset($_SESSION['validated'])){
 	<?php
 		
 		// display login
+		$ref = $_REQUEST["refurl"] ? "&refurl=".urlencode($_REQUEST["refurl"]):"";
 		$tpl = "<div id='WebLoginLayer0' style='position:relative'>".$tpls[0]."</div>";
 		$tpl.= "<div id='WebLoginLayer2' style='position:relative;display:none'>".$tpls[2]."</div>";
-		$tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier),$tpl);
+		$tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier,"",$ref),$tpl);
 		$tpl = str_replace("[+rememberme+]",(isset($cookieSet) ? 1 : 0),$tpl);	
 		$tpl = str_replace("[+username+]",$uid,$tpl);	
 		$tpl = str_replace("[+checkbox+]",(isset($cookieSet) ? "checked" : ""),$tpl);
@@ -95,7 +96,7 @@ if(!isset($_SESSION['validated'])){
 	if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
 	$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
 	if($a!=1) {
-		$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['internalKey'].", '".$_SESSION['shortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+		$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
 		if(!$rs = $modx->dbQuery($sql)) {
 			$output = "error replacing into active users! SQL: ".$sql;
 			return;

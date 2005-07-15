@@ -5,11 +5,11 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 // first, publish document waiting to be published
 $sql = "UPDATE $dbase.".$table_prefix."site_content SET published=1 WHERE $dbase.".$table_prefix."site_content.pub_date < ".time()." AND $dbase.".$table_prefix."site_content.pub_date!=0";
 $rs = mysql_query($sql);
-$num_rows_pub = mysql_affected_rows($etomiteDBConn);
+$num_rows_pub = mysql_affected_rows($modxDBConn);
 
 $sql = "UPDATE $dbase.".$table_prefix."site_content SET published=0 WHERE $dbase.".$table_prefix."site_content.unpub_date < ".time()." AND $dbase.".$table_prefix."site_content.unpub_date!=0";
 $rs = mysql_query($sql);
-$num_rows_unpub = mysql_affected_rows($etomiteDBConn);
+$num_rows_unpub = mysql_affected_rows($modxDBConn);
 
 ?>
 

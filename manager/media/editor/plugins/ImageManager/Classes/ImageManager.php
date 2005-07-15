@@ -40,7 +40,7 @@ class ImageManager
 	 */
 	function getBaseDir() 
 	{
-		Return $this->config['base_dir'];
+		return $this->config['base_dir'];
 	}
 
 	/**
@@ -49,7 +49,7 @@ class ImageManager
 	 */
 	function getBaseURL() 
 	{
-		Return $this->config['base_url'];
+		return $this->config['base_url'];
 	}
 
 	function isValidBase()
@@ -102,7 +102,6 @@ class ImageManager
 			return $dirs;
 
 		$d = @dir($base);
-		
 		while (false !== ($entry = $d->read())) 
 		{
 			//If it is a directory, and it doesn't start with
@@ -118,7 +117,6 @@ class ImageManager
 			}
 		}
 		$d->close();
-
 		Return $dirs;
 	}
 

@@ -1,6 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['access_permissions']!=1) {	
+if(!$modx->hasPermission('access_permissions')) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -23,10 +23,10 @@ if($limit<1) {
 
 ?>
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['access_permissions'] ;?></span>
+	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['mgr_access_permissions'] ;?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions'] ;?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['mgr_access_permissions'] ;?></div><div class="sectionBody">
 <?php echo $_lang['access_permissions_introtext'];?> <?php echo $use_udperms!=1 ? "<p />".$_lang['access_permissions_off'] : "" ;?><p />
 
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" /> 
@@ -285,7 +285,7 @@ if($limit<1) {
 									<input type="hidden" name="a" value="41" />
 									<input type="hidden" name="coupling" value="<?php echo $row2['id'];?>" />
 									<input type="hidden" name="operation" value="remove_document_group_from_user_group" />
-									<input type=submit value='<?php echo $_lang['remove'];?>'>
+									<input type=submit value='<?php echo $_lang['remove'];?> ->'>
 								</form>
 							</td>
 							<td>

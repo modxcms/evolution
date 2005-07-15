@@ -19,6 +19,7 @@ var $errors = array(
 	12	=>	"The document must have a title!",
 	13	=>	"No user selected as recipient of this message!",
 	14	=>	"No group selected as recipient of this message!",
+	15	=>	"The document was not found!",
 		
 	
 	
@@ -50,12 +51,14 @@ var $errors = array(
 ?>
 	<html>
 	<head>
-	<title>Etomite :: Error</title>
+	<title>MODx :: Error</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
 	<script>
-	alert("<?php echo $this->errormessage; ?>");
-	history.back(-1);
-
+		function showError(){
+			alert("<?php echo $this->errormessage; ?>");
+			history.back(-1);
+		}
+		setTimeout("showError()",10);
 	</script>
 	</head>
 	<body>

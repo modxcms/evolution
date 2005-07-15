@@ -35,17 +35,20 @@ class DataGrid {
 	var $colAligns;
 	var $colWraps;
 	var $colColors;
-	var $colTypes;
-
+	var $colTypes;			// coltype1, coltype2, etc or coltype1:format1, e.g. date:%Y %m
+							// data type: integer,float,currency,date
+							
 	var $header;
 	var $footer;
 	var $cellPadding;
 	var $cellSpacing;
 
+	var $rowAlign;			// vertical alignment: top, middle, bottom
 	var $rowIdField;
+	
+	var $noRecordMsg = "No records found.";
 
-	function DataGrid($id,$ds,$pageSize=20,$pageNumber=1) {		
-
+	function DataGrid($id,$ds,$pageSize=20,$pageNumber=-1) {		
 		global $__DataGridCnt;
 		
 		// set id
@@ -57,7 +60,7 @@ class DataGrid {
 		
 		// set pager
 		$this->pageSize = $pageSize;
-		$this->$pageNumber = $pageNumber;
+		$this->pageNumber = $pageNumber; // by setting pager to -1 will cause pager to load it's last page number 
 		$this->pagerLocation = 'top-right';
 	}
 
@@ -79,29 +82,50 @@ class DataGrid {
 			$nowrap=$this->_colwraps[$c];
 			$value = $row[($this->_isDataset && $fld ? $fld:$c)];
 			if($color && $Style) $colStyle = substr($colStyle,0,-1).";background-color:$color;'";
-			$value = $this->formatRowValue($value,$type,$align);
+			$value = $this->formatColumnValue($row,$value,$type,$align);
 			$o.="<td $colStyle $Class".($align? " align='$align'":"").($color? " bgcolor='$color'":"").($nowrap? " nowrap='$nowrap'":"").($width? " width='$width'":"").">$value</td>";
 		}
 		$o.="</tr>\n";
 		return $o;
 	}
 	
-	function formatRowValue($value,$type,&$align){
+	// format column values
+	function formatColumnValue($row,$value,$type,&$align){
+		if(strpos($type,":")!==false) list($type,$type_format) = explode(":",$type,2);
 		switch (strtolower($type)) {
 			case "integer":
 				if($align=="") $align="right";
 				$value = number_format($value);
-				break;				
+				break;
 
 			case "float":
 				if($align=="") $align="right";
-				$value = number_format($value,2);
-				break;				
+				if(!$type_format) $type_format = 2;
+				$value = number_format($value,$type_format);
+				break;
 
 			case "currency":
 				if($align=="") $align="right";
-				$value = "$".number_format($value,2);
-				break;				
+				if(!$type_format) $type_format = 2;
+				$value = "$".number_format($value,$type_format);
+				break;
+				
+			case "date":
+				if($align=="") $align="right";			
+				if(!is_numeric($value)) $value = strtotime($value);
+				if(!$type_format) $type_format = "%A %d, %B %Y";
+				$value = strftime($type_format,$value);
+				break;
+
+			case "template":
+				// replace [+value+] first
+				$value = str_replace("[+value+]",$value,$type_format); 
+				// replace other [+fields+]
+				if(strpos($value,"[+")!==false) foreach($row as $k=>$v){
+					$value = str_replace("[+$k+]",$v,$value);
+				}
+				break;
+				
 		}
 		return $value;
 	}
@@ -142,12 +166,12 @@ class DataGrid {
 		$tblEnd		= "</table>";
 		
 		// build column header
-		$this->_colnames = explode(",",$this->columns);
-		$this->_colwidths = explode(",",$this->colWidths);
-		$this->_colaligns = explode(",",$this->colAligns);
-		$this->_colwraps = explode(",",$this->colWraps);
-		$this->_colcolors = explode(",",$this->colColors);
-		$this->_coltypes = explode(",",$this->colTypes);
+		$this->_colnames = explode((strstr($this->columns,"||")!==false ? "||":","),$this->columns);
+		$this->_colwidths = explode((strstr($this->colWidths,"||")!==false ? "||":","),$this->colWidths);
+		$this->_colaligns = explode((strstr($this->colAligns,"||")!==false ? "||":","),$this->colAligns);
+		$this->_colwraps = explode((strstr($this->colWraps,"||")!==false ? "||":","),$this->colWraps);
+		$this->_colcolors = explode((strstr($this->colColors,"||")!==false ? "||":","),$this->colColors);
+		$this->_coltypes = explode((strstr($this->colTypes,"||")!==false ? "||":","),$this->colTypes);
 		$this->_colcount = count($this->_colnames);
 		$tblColHdr ="<tr>";
 		for($c=0;$c<$this->_colcount;$c++){
@@ -160,7 +184,7 @@ class DataGrid {
 		// build rows 
 		$rowcount = $this->_isDataset ? mysql_num_rows($this->ds):count($this->ds);
 		$this->_fieldnames = explode(",",$this->fields);
-		if($rowcount==0) $tblRows.= "<tr><td ".$this->_itemStyle." ".$this->_itemClass." colspan='".$this->_colcount."'>No records found.</td></tr>\n";
+		if($rowcount==0) $tblRows.= "<tr><td ".$this->_itemStyle." ".$this->_itemClass." colspan='".$this->_colcount."'>".$this->noRecordMsg."</td></tr>\n";
 		else {
 			// render grid items
 			if($this->pageSize<=0) {
@@ -173,7 +197,7 @@ class DataGrid {
 				if(!$this->pager) {
 					include_once dirname(__FILE__)."/datasetpager.class.php";
 					$this->pager = new DataSetPager($this->id,$this->ds,$this->pageSize,$this->pageNumber);
-					$this->pager->setRenderRowFnc(&$this); // pass this object
+					$this->pager->setRenderRowFnc($this); // pass this object
 					$this->pager->cssStyle = $pagerStyle;
 					$this->pager->cssClass = $pagerClass;
 				}

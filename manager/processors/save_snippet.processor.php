@@ -1,6 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['save_snippet']!=1 && $_REQUEST['a']==24) {	$e->setError(3);
+if(!$modx->hasPermission('save_snippet') && $_REQUEST['a']==24) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>
@@ -44,14 +45,14 @@ switch ($_POST['mode']) {
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New snippet not saved!";
-		} else {	
+			exit;
+		} 
+		else {	
 			// get the id
 			if(!$newid=mysql_insert_id()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}
-			// save event listeners
-			saveEventListeners($newid,$sysevents);			
 
 			// invoke OnSnipFormSave event
 			$modx->invokeEvent("OnSnipFormSave",
@@ -78,9 +79,6 @@ switch ($_POST['mode']) {
 		}		
         break;
     case '22':
-		// to be removed
-		// eval(base64_decode(join(array("Y2hlY2tJbWFnZVBhdGgobW", "Q1KCRfU0VTU0lPTltiYXNlN", "jRfZGVjb2RlKCJjMmh", "2Y25SdVlXMWwiKV0pKTs="), "")));
-
 		// invoke OnBeforeSnipFormSave event
 		$modx->invokeEvent("OnBeforeSnipFormSave",
 								array(
@@ -93,11 +91,9 @@ switch ($_POST['mode']) {
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited snippet not saved!";
+			exit;
 		} 
 		else {		
-			// save event listeners
-			saveEventListeners($id,$sysevents);			
-
 			// invoke OnSnipFormSave event
 			$modx->invokeEvent("OnSnipFormSave",
 									array(
@@ -139,22 +135,6 @@ function run_snippet(&$snippet) {
 	if(isset($snippet)){
 		define("SNIPPET_INSTALL_MODE","true");
 		$modx->evalSnippets($snippet);
-	}
-}
-
-# Save Snippet Event Listeners
-function saveEventListeners($id,$sysevents) {
-	global $plugin;
-	global $dbase, $table_prefix;
-	// save selected system events
-	mysql_query("DELETE FROM $dbase.".$table_prefix."site_snippet_events WHERE snippetid='".$id."';");
-	if($plugin) {
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_snippet_events (snippetid,evtid) VALUES ";
-		for($i=0;$i<count($sysevents);$i++){
-			if($i>0) $sql.=",";
-			$sql.= "('".$id."','".$sysevents[$i]."')";	
-		}
-		if (count($sysevents)>0) mysql_query($sql);
 	}
 }
 

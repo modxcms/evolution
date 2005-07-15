@@ -1,11 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if($_SESSION['permissions']['edit_snippet']!=1 && $_REQUEST['a']==78) {	
+if(!$modx->hasPermission('edit_snippet') && $_REQUEST['a']==78) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
-if($_SESSION['permissions']['new_snippet']!=1 && $_REQUEST['a']==77) {	
+if(!$modx->hasPermission('new_snippet') && $_REQUEST['a']==77) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -23,8 +23,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing this snippet. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username'],"chunk");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -52,7 +52,7 @@ if(isset($_GET['id'])) {
 	}
 	$content = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$content['name'];
-	if($content['locked']==1 && $_SESSION['role']!=1) {
+	if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		$e->setError(3);
 		$e->dumpError();
 	}
@@ -82,7 +82,7 @@ function deletedocument() {
 <?php
 	// invoke OnChunkFormPrerender event
 	$evtOut = $modx->invokeEvent("OnChunkFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
@@ -136,6 +136,6 @@ function deletedocument() {
 <?php
 	// invoke OnChunkFormRender event
 	$evtOut = $modx->invokeEvent("OnChunkFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>

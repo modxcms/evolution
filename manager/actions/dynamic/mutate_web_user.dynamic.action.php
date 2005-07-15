@@ -1,9 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_user']!=1 && $_REQUEST['a']==88) {	$e->setError(3);
+if(!$modx->hasPermission('edit_web_user') && $_REQUEST['a']==88) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
-if($_SESSION['permissions']['new_user']!=1 && $_REQUEST['a']==87) {	$e->setError(3);
+if(!$modx->hasPermission('new_web_user') && $_REQUEST['a']==87) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -17,8 +19,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing this user. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username'],"web user");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -46,6 +48,7 @@ if($_REQUEST['a']==88) {
 	$rs = mysql_query($sql);
 	$usersettings = array();
 	while($row=mysql_fetch_assoc($rs)) $usersettings[$row['setting_name']]=$row['setting_value'];
+	extract($usersettings, EXTR_OVERWRITE);
 	
 	// get user name
 	$sql = "SELECT * FROM $dbase.".$table_prefix."web_users WHERE $dbase.".$table_prefix."web_users.id = ".$user.";";
@@ -66,6 +69,30 @@ if($_REQUEST['a']==88) {
 	$usersettings = 0;
 	$usernamedata = 0;
 	$_SESSION['itemname']="New web user";	
+}
+
+// restore saved form
+$formRestored = false;
+if($modx->manager->hasFormValues()) {
+	if($userdata==0) $userdata = array();
+	if($usernamedata==0) $usernamedata = array();	
+	$modx->manager->loadFormValues();
+	// restore post values 
+	$userdata = array_merge($userdata,$_POST);
+	$userdata['dob'] = ConvertDate($userdata['dob']);
+	$usernamedata['username'] = $userdata['newusername'];	
+	$usernamedata['oldusername'] = $_POST['oldusername'];
+	$usersettings = array_merge($usersettings,$userdata);
+	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",",$_POST['allowed_days']):"";
+	extract($usersettings, EXTR_OVERWRITE);
+}
+
+// converts date format dd-mm-yyyy to php date
+function ConvertDate($date){
+	if($date=="") return "0";
+	list($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
+	if (!$H && !$M && !$S) return strtotime("$m/$d/$Y");
+	else return strtotime("$m/$d/$Y $H:$M:$S");
 }
 
 ?>
@@ -126,6 +153,41 @@ function deleteuser() {
 		document.location.href="index.php?id=" + document.userform.id.value + "&a=90";
 	}
 }
+
+// change name
+function changeName(){
+	if(confirm("<?php echo $_lang['confirm_name_change']; ?>")==true) {			
+		var e1 = document.getElementById("showname");
+		var e2 = document.getElementById("editname");
+		e1.style.display = "none";
+		e2.style.display = "<?php echo $displayStyle; ?>";
+	}
+};
+
+
+// showHide - used by custom settings
+function showHide(what, onoff){
+	var all = document.getElementsByTagName( "*" );
+	var l = all.length;
+	var buttonRe = what;
+	var id, el, stylevar;
+	
+	if(onoff==1) {
+		stylevar = "<?php echo $displayStyle; ?>";
+	} else {
+		stylevar = "none";
+	}
+	
+	for ( var i = 0; i < l; i++ ) {
+		el = all[i]
+		id = el.id;
+		if ( id == "" ) continue;
+		if (buttonRe.test(id)) {
+			el.style.display = stylevar;
+		}
+	}
+};
+
 </script>
 
 
@@ -133,7 +195,7 @@ function deleteuser() {
 <?php
 	// invoke OnWUsrFormPrerender event
 	$evtOut = $modx->invokeEvent("OnWUsrFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>" />
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>" />
@@ -185,10 +247,19 @@ function deleteuser() {
 				<span id="blocked" class="warning"><?php if($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) { ?><b><?php echo $_lang['user_is_blocked']; ?></b><?php } ?></span><br />
 			</td>
 		  </tr>
-		  <tr>
+		  <?php if(!empty($userdata['id'])) { ?>
+		  <tr id="showname" style="display: <?php echo ($_GET['a']=='88' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
+			<td colspan="3">
+				<img src="media/images/icons/user.gif" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="javascript:;" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
+				<input type="hidden" name="oldusername" value="<?php echo htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
+				<hr />
+			</td>
+		  </tr>
+		  <? } ?>
+		  <tr id="editname" style="display:<?php echo $_GET['a']=='87'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']; ?>" onChange='documentDirty=true;' maxlength="15"></td>
+			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onChange='documentDirty=true;' maxlength="15" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='87' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
@@ -219,12 +290,15 @@ function deleteuser() {
 		  <tr>
 			<td><?php echo $_lang['user_full_name']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fullname" class="inputBox" style="width:300px" value="<?php echo isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="fullname" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_email']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="email" class="inputBox" style="width:300px" value="<?php echo  isset($_POST['email']) ? $_POST['email'] : $userdata['email']; ?>" onChange='documentDirty=true;'></td>
+			<td>
+			<input type="text" name="email" class="inputBox" style="width:300px" value="<?php echo  isset($_POST['email']) ? $_POST['email'] : $userdata['email']; ?>" onChange='documentDirty=true;'>
+			<input type="hidden" name="oldemail" value="<?php echo htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email']); ?>" />
+			</td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_phone']; ?>:</td>
@@ -618,37 +692,36 @@ function deleteuser() {
 		</table>        
 	</div>	
 	<!-- Photo -->
-	<!-- TODO: change to use TinyMCE image manager plugin -->
     <div class="tab-page" id="tabPhoto"> 
     	<h2 class="tab"><?php echo $_lang["settings_photo"] ?></h2> 
     	<script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabPhoto" ) );</script> 
-    	<?php
-			$field_html  ='<script type="text/javascript">';
-			$field_html .='	_editor_lang = "en";';
-			$field_html .='	_editor_url = "media/editor/";';
-			$field_html .='</script> ';
-			$field_html .='<script type="text/javascript" src="media/editor/editor.js"></script>';
-			$field_html .='<script type="text/javascript">';
-			$field_html .='   HTMLArea.loadPlugin("ImageManager");';
-			$field_html .='</script>';
-			$field_html .='<script type="text/javascript">';
-			$field_html .='var ImageOutParam = {';
-			$field_html .='	f_url    : "",';
-			$field_html .='	f_alt    : "",';
-			$field_html .='	f_border : "",';
-			$field_html .='	f_align  : "",';
-			$field_html .='	f_vert   : "",';
-			$field_html .='	f_horiz  : "",';
-			$field_html .='	f_width  : "",';
-			$field_html .='	f_height : ""';
-			$field_html .='};';
-			$field_html .='</script>	';
-			$field_html .='<input type="button" value="'.$_lang['insert'].'" onclick="ImageOutParam.f_url=document.userform[\'photo\'].value;Dialog(_editor_url + \'plugins/ImageManager/manager.php\', function(p){document.userform[\'photo\'].value=p.f_url;document.images[\'iphoto\'].src=p.f_url;},ImageOutParam)" />';				
-    	?>
+    	<script type="text/javascript">
+			function OpenServerBrowser(url, width, height ) {
+				var iLeft = (screen.width  - width) / 2 ;
+				var iTop  = (screen.height - height) / 2 ;
+
+				var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
+				sOptions += ",width=" + width ;
+				sOptions += ",height=" + height ;
+				sOptions += ",left=" + iLeft ;
+				sOptions += ",top=" + iTop ;
+
+				var oWindow = window.open( url, "FCKBrowseWindow", sOptions ) ;
+			}			
+			function BrowseServer() {
+				var w = screen.width * 0.7;
+				var h = screen.height * 0.7;
+				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=", w, h);
+			}
+			function SetUrl(url, width, height, alt){
+				document.userform.photo.value = url;
+				document.images['iphoto'].src = url;
+			}
+		</script>		
         <table border="0" cellspacing="0" cellpadding="3"> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["user_photo"] ?></b></td> 
-            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" /> <?php echo $field_html;?></td> 
+            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" /> <input type="button" value="<?php echo $_lang['insert']; ?>" onclick="BrowseServer();" /></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -679,20 +752,24 @@ if($_GET['a']=='88') { // only do this bit if the user is being edited
 		$groupsarray[$i] = $currentgroup['webgroup'];
 	}
 }
+
+// retain selected user groups between post
+if(is_array($_POST['user_groups'])) {
+	foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
+}
+
 ?>	
 
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_access_permissions']; ?></div><div class="sectionBody">
-	<?php echo $_lang['access_permissions_user_message']; ?><p />
-		<?php
-		$sql = "SELECT name, id FROM $dbase.".$table_prefix."webgroup_names"; 
-		$rs = mysql_query($sql); 
-		$limit = mysql_num_rows($rs);
-		for($i=0; $i<$limit; $i++) {
-			$row=mysql_fetch_assoc($rs);
-?>
-			<input type="checkbox" name="user_groups['<?php echo $row['id']; ?>']" <?php echo in_array($row['id'], $groupsarray) ? "checked='checked'" : "" ; ?>><?php echo $row['name']; ?><br />
-<?php			
-		}
+<?php 
+	echo $_lang['access_permissions_user_message']."<p />";
+	$sql = "SELECT name, id FROM $dbase.".$table_prefix."webgroup_names"; 
+	$rs = mysql_query($sql); 
+	$limit = mysql_num_rows($rs);
+	for($i=0; $i<$limit; $i++) {
+		$row=mysql_fetch_assoc($rs);
+		echo "<input type='checkbox' name='user_groups[]' value='".$row['id']."'".(in_array($row['id'], $groupsarray) ? " checked='checked'" : "")." />".$row['name']."<br />";	
+	}
 ?>
 </div>
 <?php
@@ -702,7 +779,7 @@ if($_GET['a']=='88') { // only do this bit if the user is being edited
 <?php
 	// invoke OnWUsrFormRender event
 	$evtOut = $modx->invokeEvent("OnWUsrFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 <script language="JavaScript" src="media/script/datefunctions.js"></script>

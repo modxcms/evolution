@@ -1,6 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['new_document']!=1) {	
+if(!$modx->hasPermission('new_document')) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -22,10 +22,10 @@ $allowedfiles = array('html','htm','xml');
 	}
 </script>
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['import_site']; ?></span>
+<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['import_site_html']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['import_site']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
 <?php 
 
 if(!isset($_POST['import'])) {
@@ -68,8 +68,8 @@ if(!isset($_POST['import'])) {
 		$maxtime = 30;
 	}
 	
-	set_time_limit($maxtime);
-	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $exportstart = $mtime; 
+	@set_time_limit($maxtime);
+	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importstart = $mtime; 
 	
 	$parent = $_POST['parent'];
 	$filepath = "../assets/import/";
@@ -85,8 +85,8 @@ if(!isset($_POST['import'])) {
 		importFiles($parent,$filepath,$files);
 	}
 
-	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $exportend = $mtime; 
-	$totaltime = ($exportend - $exportstart);
+	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importend = $mtime; 
+	$totaltime = ($importend - $importstart);
 	printf ("<p />".$_lang['import_site_time'], round($totaltime, 3));
 ?>
 <p />
@@ -102,13 +102,14 @@ if(!isset($_POST['import'])) {
 
 function importFiles($parent,$filepath,$files) {
 
+	global $modx;
 	global $_lang, $allowedfiles;
 	global $dbase, $table_prefix;
 	global $default_template, $search_default, $cache_default;
 
 	
 	$createdon = time();
-	$createdby = $_SESSION['internalKey'];
+	$createdby = $modx->getLoginUserID();
 	if (!is_array($files)) return;
 	foreach($files as $id => $value){
 		if(is_array($value)) {
@@ -149,10 +150,10 @@ function importFiles($parent,$filepath,$files) {
 					   ('document', 'text/html', '".mysql_escape_string($pagetitle)."', '".mysql_escape_string($value)."', 1, '$parent', 0, '".mysql_escape_string($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
 				$rs = mysql_query($sql);
 				if(!$rs) {
-					echo $_lang['export_site_failed']."A database error occured while trying to clone document: <br /><br />".mysql_error();
+					echo $_lang['import_site_failed']."A database error occured while trying to clone document: <br /><br />".mysql_error();
 					exit;
 				}
-				echo $_lang['export_site_success']."<br />";
+				echo $_lang['import_site_success']."<br />";
 			}
 		}
 	}
@@ -168,12 +169,12 @@ function getFiles($directory,$listing = array(), $count = 0){
 			else if ($h = @opendir($directory.$file."/")) {
 				closedir($h);
 				$count = -1;
-				$listing["$file"] = array(); 
-				getFiles($directory.$file."/",&$listing["$file"], $count + 1); 
+				$listing["$file"] = getFiles($directory.$file."/",array(), $count + 1); 
 			}
-			else {  $listing[$dummy] = $file;
-				 $dummy = $dummy + 1;
-				 $filesfound++;
+			else {  
+				$listing[$dummy] = $file;
+				$dummy = $dummy + 1;
+				$filesfound++;
 			}
 		}
 	}

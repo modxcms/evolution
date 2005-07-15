@@ -1,17 +1,17 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['settings']!=1 && $_REQUEST['a']==30) {	$e->setError(3);
+if(!$modx->hasPermission('settings') && $_REQUEST['a']==30) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 foreach ($_POST as $k => $v) {
-	$sql = "REPLACE INTO $dbase.".$table_prefix."system_settings(setting_name, setting_value) VALUES('".addslashes($k)."', '".mysql_escape_string($v)."')";
+	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('".mysql_escape_string($k)."', '".mysql_escape_string($v)."')";
 	
 	if(!@$rs = mysql_query($sql)) {
 		echo "Failed to update setting value!";
 		exit;
 	}
 }
-
 
 // Reset Template Pages - by Raymond
 if (isset($_POST['reset_template'])) {

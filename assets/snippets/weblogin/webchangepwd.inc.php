@@ -12,7 +12,7 @@ if(!$tpl) $tpl = getWebChangePwdtpl();
 $declare = webLoginExtractDeclarations($tpl);
 $tpls = explode((isset($declare["separator"]) ? $declare["separator"]:"<!--tpl_separator-->"),$tpl);
 
-if(!$isPostBack && isset($_SESSION['validated'])){
+if(!$isPostBack && isset($_SESSION['webValidated'])){
 	// display password screen
 	$tpl = $tpls[0];
 	$tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier),$tpl);
@@ -21,7 +21,7 @@ if(!$isPostBack && isset($_SESSION['validated'])){
 		</script>";
 	$output .= $tpl;
 } 
-else if ($isPostBack && isset($_SESSION['validated'])){
+else if ($isPostBack && isset($_SESSION['webValidated'])){
 	$oldpassword = $_POST['oldpassword'];
 	$genpassword = $_POST['newpassword'];
 	$passwordgenmethod = $_POST['passwordgenmethod'];

@@ -9,6 +9,7 @@
 	// DISPLAY FORM ELEMENTS
 
 	function renderFormElement($field_type, $field_name, $default_text, $field_elements, $field_value, $field_style='') {
+		global $base_url;
 		global $settings;
 
 		$field_html ='';
@@ -25,14 +26,15 @@
 				$field_html .=  '<textarea id="tv'.$field_name.'" name="tv'.$field_name.'" cols="40" rows="5" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
 				break;
 			case "textarea": // handler for textarea boxes
-			case "htmlarea": // handler for textarea boxes
+			case "htmlarea": // handler for textarea boxes (deprecated)
+			case "richtext": // handler for textarea boxes
 				$field_html .=  '<textarea id="tv'.$field_name.'" name="tv'.$field_name.'" cols="40" rows="15" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%;">' . htmlspecialchars($field_value) .'</textarea>';
 				break;
 			case "date":
                 if($field_value=='') $field_value=0;
                 $cal = 'cal' . $field_name;
 
-				$field_html .=  '<input name="tv'.$field_name.'" type="hidden" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onBlur="documentDirty=true;setVariableModified(\''.$field_name.'\');">';
+				$field_html .=  '<input name="tv'.$field_name.'" type="hidden" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;setVariableModified(\''.$field_name.'\');">';
 
 				$field_html .=  '	<table width="250" border="0" cellspacing="0" cellpadding="0">';
 				$field_html .=  '	  <tr>';
@@ -40,7 +42,7 @@
 
 				$field_html .=  '		<td>&nbsp;';
 				$field_html .=  '			<a onClick="documentDirty=false; '.$cal.'.popup();" onMouseover="window.status=\'Select a date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/images/icons/cal.gif" width="16" height="16" border="0"></a>';
-				$field_html .=  '			<a onClick="document.getElementById(\'tv'.$field_name.'_show\').innerHTML=\'(not set)\'; return true;" onMouseover="window.status=\'clear the date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
+				$field_html .=  '			<a onClick="document.forms[\'mutate\'].elements[\'tv'.$field_name.'\'].value=\'\';document.forms[\'mutate\'].elements[\'tv'.$field_name.'\'].onblur();document.getElementById(\'tv'.$field_name.'_show\').innerHTML=\'(not set)\'; return true;" onMouseover="window.status=\'clear the date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>';
 
 				$field_html .=  '		</td>';
 				$field_html .=  '	  </tr>';
@@ -123,38 +125,41 @@
 				}
 				break;
 			case "image":	// handles image fields using htmlarea image manager
-				//TODO: change to use TinyMCE image manager plugin
 				global $_lang;
-				global $ImageOutParam;
 				global $ImageManagerLoaded;
 				global $content,$use_editor,$which_editor;
 				if (!$ImageManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
-					$field_html .='<script type="text/javascript">';
-					$field_html .='	_editor_lang = "en";';
-					$field_html .='	_editor_url = "media/editor/";';
-					$field_html .='</script> ';
-					$field_html .='<script type="text/javascript" src="media/editor/editor.js"></script>';
-					$field_html .='<script type="text/javascript">';
-					$field_html .='	HTMLArea.loadPlugin("ImageManager"); ';
-					$field_html .='</script>';
+					$field_html .="
+					<script type='text/javascript'>
+							var lastImageCtrl;
+							function OpenServerBrowser(url, width, height ) {
+								var iLeft = (screen.width  - width) / 2 ;
+								var iTop  = (screen.height - height) / 2 ;
+
+								var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes' ;
+								sOptions += ',width=' + width ;
+								sOptions += ',height=' + height ;
+								sOptions += ',left=' + iLeft ;
+								sOptions += ',top=' + iTop ;
+
+								var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
+							}			
+							function BrowseServer(ctrl) {
+								lastImageCtrl = ctrl;
+								var w = screen.width * 0.7;
+								var h = screen.height * 0.7;
+								OpenServerBrowser('".$base_url."manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=', w, h);
+							}
+							function SetUrl(url, width, height, alt){
+								if(!lastImageCtrl) return;
+								var c = document.mutate[lastImageCtrl];
+								if(c) c.value = url;
+								lastImageCtrl = '';
+							}
+					</script>";
 					$ImageManagerLoaded  = true;					
 				} 
-				if(!$ImageOutParam) {
-					$field_html .='<script type="text/javascript">';
-					$field_html .='var ImageOutParam = {';
-					$field_html .='	f_url    : "",';
-					$field_html .='	f_alt    : "",';
-					$field_html .='	f_border : "",';
-					$field_html .='	f_align  : "",';
-					$field_html .='	f_vert   : "",';
-					$field_html .='	f_horiz  : "",';
-					$field_html .='	f_width  : "",';
-					$field_html .='	f_height : ""';
-					$field_html .='};';
-					$field_html .='</script>	';
-					$ImageOutParam = true;
-				}
-				$field_html .='<input type="text" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="setVariableModified(\''.$field_name.'\');ImageOutParam.f_url=document.mutate[\'tv'.$field_name.'\'].value;Dialog(_editor_url + \'plugins/ImageManager/manager.php\', function(p){document.mutate[\'tv'.$field_name.'\'].value=p.f_url},ImageOutParam)" />';
+				$field_html .='<input type="text" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="setVariableModified(\''.$field_name.'\');BrowseServer(\'tv'.$field_name.'\')" />';
 				break;
 			case "file": // handles the input of file uploads
 				$field_html .=  '<input type="file" name="tv'.$field_name.'"  '.$field_style.' onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><br>';

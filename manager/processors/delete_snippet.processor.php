@@ -1,6 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['delete_snippet']!=1 && $_REQUEST['a']==25) {	$e->setError(3);
+if(!$modx->hasPermission('delete_snippet') && $_REQUEST['a']==25) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 ?>

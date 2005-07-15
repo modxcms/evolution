@@ -1,9 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_user']!=1 && $_REQUEST['a']==12) {	$e->setError(3);
+if(!$modx->hasPermission('edit_user') && $_REQUEST['a']==12) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
-if($_SESSION['permissions']['new_user']!=1 && $_REQUEST['a']==11) {	$e->setError(3);
+if(!$modx->hasPermission('new_user') && $_REQUEST['a']==11) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -17,8 +19,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing this user. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username'],"user");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -46,7 +48,8 @@ if($_REQUEST['a']==12) {
 	$rs = mysql_query($sql);
 	$usersettings = array();
 	while($row=mysql_fetch_assoc($rs)) $usersettings[$row['setting_name']]=$row['setting_value'];
-
+	extract($usersettings, EXTR_OVERWRITE);
+	
 	// get user name	
 	$sql = "SELECT * FROM $dbase.".$table_prefix."manager_users WHERE $dbase.".$table_prefix."manager_users.id = ".$user.";";
 	$rs = mysql_query($sql);
@@ -66,6 +69,32 @@ if($_REQUEST['a']==12) {
 	$usernamedata = 0;
 	$_SESSION['itemname']="New user";	
 }
+
+// restore saved form
+$formRestored = false;
+if($modx->manager->hasFormValues()) {
+	if($userdata==0) $userdata = array();
+	if($usernamedata==0) $usernamedata = array();	
+	$modx->manager->loadFormValues();
+	// restore post values 
+	$userdata = array_merge($userdata,$_POST);
+	$userdata['dob'] = ConvertDate($userdata['dob']);
+	$usernamedata['username'] = $userdata['newusername'];	
+	$usernamedata['oldusername'] = $_POST['oldusername'];
+	$usersettings = array_merge($usersettings,$userdata);
+	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",",$_POST['allowed_days']):"";
+	extract($usersettings, EXTR_OVERWRITE);
+}
+
+// converts date format dd-mm-yyyy to php date
+function ConvertDate($date){
+	if($date=="") return "0";
+	list($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
+	if (!$H && !$M && !$S) return strtotime("$m/$d/$Y");
+	else return strtotime("$m/$d/$Y $H:$M:$S");
+}
+
+$displayStyle = $_SESSION['browser']=='mz' ? "table-row" : "block" ;
 
 ?>
 <script language="JavaScript">
@@ -121,7 +150,7 @@ function resetFailed() {
 }
 
 function deleteuser() {
-<?php if($_GET['id']==$_SESSION['internalKey']) { ?>
+<?php if($_GET['id']==$modx->getLoginUserID()) { ?>
 	alert("<?php echo $_lang['alert_delete_self']; ?>");
 <?php } else { ?>
 	if(confirm("<?php echo $_lang['confirm_delete_user']; ?>")==true) {
@@ -129,6 +158,40 @@ function deleteuser() {
 	}
 <?php } ?>
 }
+
+// change name
+function changeName(){
+	if(confirm("<?php echo $_lang['confirm_name_change']; ?>")==true) {			
+		var e1 = document.getElementById("showname");
+		var e2 = document.getElementById("editname");
+		e1.style.display = "none";
+		e2.style.display = "<?php echo $displayStyle; ?>";
+	}
+};
+
+// showHide - used by custom settings
+function showHide(what, onoff){
+	var all = document.getElementsByTagName( "*" );
+	var l = all.length;
+	var buttonRe = what;
+	var id, el, stylevar;
+	
+	if(onoff==1) {
+		stylevar = "<?php echo $displayStyle; ?>";
+	} else {
+		stylevar = "none";
+	}
+	
+	for ( var i = 0; i < l; i++ ) {
+		el = all[i]
+		id = el.id;
+		if ( id == "" ) continue;
+		if (buttonRe.test(id)) {
+			el.style.display = stylevar;
+		}
+	}
+};
+
 </script>
 
 
@@ -136,7 +199,7 @@ function deleteuser() {
 <?php
 	// invoke OnUserFormPrerender event
 	$evtOut = $modx->invokeEvent("OnUserFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>">
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
@@ -188,10 +251,19 @@ function deleteuser() {
 				<span id="blocked" class="warning"><?php if($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0) || $userdata['failedlogins']>3) { ?><b><?php echo $_lang['user_is_blocked']; ?></b><?php } ?></span><br />
 			</td>
 		  </tr>
-		  <tr>
+		  <?php if(!empty($userdata['id'])) { ?>
+		  <tr id="showname" style="display: <?php echo ($_GET['a']=='12' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
+			<td colspan="3">
+				<img src="media/images/icons/user.gif" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="javascript:;" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
+				<input type="hidden" name="oldusername" value="<?php echo htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
+				<hr />
+			</td>
+		  </tr>
+		  <? } ?>
+		  <tr id="editname" style="display:<?php echo $_GET['a']=='11'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo $usernamedata['username']; ?>" onChange='documentDirty=true;' maxlength="15"></td>
+			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($usernamedata['username']); ?>" onChange='documentDirty=true;' maxlength="15" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='11' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
@@ -222,22 +294,25 @@ function deleteuser() {
 		  <tr>
 			<td><?php echo $_lang['user_full_name']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fullname" class="inputBox" style="width:300px" value="<?php echo $userdata['fullname']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="fullname" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['fullname']); ?>" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_email']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="email" class="inputBox" style="width:300px" value="<?php echo $userdata['email']; ?>" onChange='documentDirty=true;'></td>
+			<td>
+			<input type="text" name="email" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['email']); ?>" onChange='documentDirty=true;'>
+			<input type="hidden" name="oldemail" value="<?php echo htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email']); ?>" />
+			</td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_phone']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="phone" class="inputBox" style="width:300px" value="<?php echo $userdata['phone']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="phone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['phone']); ?>" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_mobile']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="mobilephone" class="inputBox" style="width:300px" value="<?php echo $userdata['mobilephone']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="mobilephone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['mobilephone']); ?>" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_role']; ?>:</td>
@@ -262,17 +337,17 @@ function deleteuser() {
 		  <tr>
 			<td><?php echo $_lang['user_fax']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fax" class="inputBox" style="width:300px" value="<?php echo isset($_POST['fax']) ? $_POST['fax'] : $userdata['fax']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="fax" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['fax']); ?>" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_state']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="state" class="inputBox" style="width:300px" value="<?php echo isset($_POST['state']) ? $_POST['state'] : $userdata['state']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="state" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['state']); ?>" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_zip']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="zip" class="inputBox" style="width:300px" value="<?php echo isset($_POST['zip']) ? $_POST['zip'] : $userdata['zip']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="zip" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['zip']); ?>" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_country']; ?>:</td>
@@ -526,7 +601,7 @@ function deleteuser() {
 			<td><?php echo $_lang['user_dob']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="dob" class="inputBox" style="width:260px" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" name="dob" class="inputBox" style="width:260px" value="<?php echo ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="documentDirty=false; calDOB.popup();" onMouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>"></a>
 				<a onClick="document.userform.dob.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
 			</td>
@@ -536,8 +611,8 @@ function deleteuser() {
 			<td>&nbsp;</td>			
 			<td><select name="gender" style="width:300px" onChange='documentDirty=true;'>
 				<option value=""></option>
-				<option value="1" <?php echo ($_POST['gender']=='1'||$userdata['gender']=='1')? "selected='selected'":""; ?>><?php echo $_lang['user_male']; ?></option>
-				<option value="2" <?php echo ($_POST['gender']=='2'||$userdata['gender']=='2')? "selected='selected'":""; ?>><?php echo $_lang['user_female']; ?></option>
+				<option value="1" <?php echo ($userdata['gender']=='1')? "selected='selected'":""; ?>><?php echo $_lang['user_male']; ?></option>
+				<option value="2" <?php echo ($userdata['gender']=='2')? "selected='selected'":""; ?>><?php echo $_lang['user_female']; ?></option>
 				</select>
 			</td>
 		  </tr>
@@ -545,7 +620,7 @@ function deleteuser() {
 			<td valign="top"><?php echo $_lang['comment']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<textarea type="text" name="comment" class="inputBox"  rows="5" style="width:300px" onchange='documentDirty=true;'><?php echo htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea>
+				<textarea type="text" name="comment" class="inputBox"  rows="5" style="width:300px" onchange='documentDirty=true;'><?php echo htmlspecialchars($userdata['comment']); ?></textarea>
 			</td>
 		  </tr>
 		<?php if($_GET['a']=='12') { ?>
@@ -573,7 +648,7 @@ function deleteuser() {
 			<td><?php echo $_lang['user_blockeduntil']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="blockeduntil" class="inputBox" style="width:260px" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" name="blockeduntil" class="inputBox" style="width:260px" value="<?php echo ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="documentDirty=false; calBUntil.popup();" onMouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>" /></a>
 				<a onClick="document.userform.blockeduntil.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
@@ -582,7 +657,7 @@ function deleteuser() {
 			<td><?php echo $_lang['user_blockedafter']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="blockedafter" class="inputBox" style="width:260px" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" name="blockedafter" class="inputBox" style="width:260px" value="<?php echo ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="documentDirty=false; calBAfter.popup();" onMouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>" /></a>
 				<a onClick="document.userform.blockedafter.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
@@ -591,7 +666,7 @@ function deleteuser() {
 		} 
 		?>
 		</table>
-		<?php if($_GET['id']==$_SESSION['internalKey']) { ?><b><?php echo $_lang['user_edit_self_msg']; ?><br><?php } ?>
+		<?php if($_GET['id']==$modx->getLoginUserID()) { ?><b><?php echo $_lang['user_edit_self_msg']; ?><br><?php } ?>
 	</div>
 	<!-- Settings -->	
     <div class="tab-page" id="tabSettings"> 
@@ -600,7 +675,7 @@ function deleteuser() {
         <table border="0" cellspacing="0" cellpadding="3"> 
           <tr> 
             <td nowrap class="warning"valign="top"><b><?php echo $_lang["login_allowed_ip"] ?></b></td> 
-            <td ><input onChange="documentDirty=true;"  type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($_POST['allowed_ip']) ? $_POST['allowed_ip'] : $usersettings['allowed_ip']; ?>" /></td> 
+            <td ><input onChange="documentDirty=true;"  type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo $usersettings['allowed_ip']; ?>" /></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -628,11 +703,53 @@ function deleteuser() {
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
+          <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td> 
+            <td> <select name="manager_theme" size="1" class="inputBox" onChange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date())">
+            <option value="">Default</option>
+             <?php
+				$dir = dir("media/style/");
+				while ($file = $dir->read()) {
+					if($file!="." && $file!=".." && is_dir("media/style/$file")) {
+						$themename = $file;
+						$selectedtext = $themename==$manager_theme ? "selected='selected'" : "" ;
+		            	echo "<option value='$themename' $selectedtext>".ucwords(str_replace("_", " ", $themename))."</option>";
+					}
+				}
+				$dir->close();
+			 ?> 
+             </select><input type="hidden" name="theme_refresher" value=""></td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["manager_theme_message"]?></td> 
+          </tr>
+		  <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr> 
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["layout_title"]?></b></td> 
+            <td><input onChange="documentDirty=true;" type="radio" name="manager_layout" value="1" <?php echo ($manager_layout=='1' || !isset($manager_layout)) ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["layout_settings_1"]?><br /><br /> 
+	          <?php if($_SESSION['browser']=='ie') { ?> 
+	              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="0" <?php echo $manager_layout=='0' ? 'checked="checked"' : "" ; ?>> 
+	              <?php echo $_lang["layout_settings_2"]?><br /><br /> 
+	          <?php } ?> 
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="2" <?php echo $manager_layout=='2' ? 'checked="checked"' : "" ; ?>> 
+              <?php echo $_lang["layout_settings_3"]?><br /><br />
+             </td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["layout_message"]?></td> 
+          </tr> 
+          <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>  
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["filemanager_path_title"]?></b></td> 
             <td>
-              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo isset($usersettings['filemanager_path']) ? $usersettings['filemanager_path']:$filemanager_path; ?>"> 
-              <br /> </td> 
+              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo htmlspecialchars(isset($usersettings['filemanager_path']) ? $usersettings['filemanager_path']:$filemanager_path); ?>"> 
+              </td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -641,92 +758,121 @@ function deleteuser() {
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
-          <tr> 
+          <tr class='row2'> 
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td> 
             <td>
               <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files']:$upload_files; ?>"> 
             </td> 
           </tr> 
-          <tr> 
+          <tr class='row2'> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["uploadable_files_message"]?></td> 
           </tr>          
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>
-          <tr id='imRow1' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["im_plugin_base_dir_title"]?></b></td> 
-            <td> 
-              <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="im_plugin_base_dir" value="<?php echo isset($usersettings['im_plugin_base_dir']) ? $usersettings['im_plugin_base_dir']:$im_plugin_base_dir; ?>"> 
-              <br /> </td> 
-          </tr> 
-          <tr id='imRow2' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["im_plugin_base_dir_message"]?></td> 
-          </tr> 
-          <tr id='imRow3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-          <tr id='imRow4' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td nowrap class="warning"><b><?php echo $_lang["im_plugin_base_url_title"]?></b></td> 
-            <td>
-            	<input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="im_plugin_base_url" value="<?php echo isset($usersettings['im_plugin_base_url']) ? $usersettings['im_plugin_base_url']:$im_plugin_base_url; ?>"> 
-              <br /> </td> 
-          </tr> 
-          <tr id='imRow5' class='row3' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td width="200">&nbsp;</td> 
-            <td class='comment'><?php echo $_lang["im_plugin_base_url_message"]?></td> 
-          </tr> 
-          <tr id='imRow6' style="display: <?php echo $im_plugin==1 && $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr>
-          <tr> 
+          <tr class='row2'> 
             <td nowrap class="warning"><b><?php echo $_lang["upload_maxsize_title"]?></b></td> 
             <td>
               <input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_maxsize" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : "1048576" ; ?>"> 
             </td> 
           </tr> 
-          <tr> 
+          <tr class='row2'> 
             <td width="200">&nbsp;</td> 
             <td class='comment'><?php echo $_lang["upload_maxsize_message"]?></td> 
           </tr>      
           <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>          
+          <tr id='editorRow0' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning"><b><?php echo $_lang["which_editor_title"]?></b></td> 
+            <td> 
+				<select name="which_editor" onChange="documentDirty=true;">
+					<?php
+						$edt = isset($usersettings["which_editor"]) ?$usersettings["which_editor"]:$which_editor;
+						// invoke OnRichTextEditorRegister event
+						$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+						if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
+							$editor = $evtOut[$i];
+							echo "<option value='$editor'".($edt==$editor ? " selected='selected'" : "").">$editor</option>\n";
+						}						 
+					?>
+				</select>
+			</td> 
+          </tr> 
+          <tr id='editorRow1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["which_editor_message"]?></td> 
+          </tr> 
+          <tr id='editorRow2' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>
+          <tr id='rbRow1' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td> 
+            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_dir" value="<?php echo isset($usersettings["rb_base_dir"]) ? $usersettings["rb_base_dir"]:$rb_base_dir; ?>" /> 
+              </td> 
+          </tr> 
+          <tr id='rbRow2' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["rb_base_dir_message"]?></td> 
+          </tr> 
+          <tr id='rbRow3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          <tr id='rbRow4' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td nowrap class="warning"><b><?php echo $_lang["rb_base_url_title"]?></b></td> 
+            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_url" value="<?php echo isset($usersettings["rb_base_url"]) ? $usersettings["rb_base_url"]:$rb_base_url; ?>" /> 
+              </td> 
+          </tr> 
+          <tr id='rbRow5' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["rb_base_url_message"]?></td> 
+          </tr> 
+          <tr id='rbRow6' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>          
+		  <tr class='row1'> 
+            <td colspan="2">
+		        <?php
+					// invoke OnInterfaceSettingsRender event
+					$evtOut = $modx->invokeEvent("OnInterfaceSettingsRender");
+					if(is_array($evtOut)) echo implode("",$evtOut);
+		        ?> 
+            </td> 
+          </tr> 
 		</table>        
 	</div>
 	<!-- Photo -->
-	<!-- TODO: change to use TinyMCE image manager plugin -->
     <div class="tab-page" id="tabPhoto"> 
     	<h2 class="tab"><?php echo $_lang["settings_photo"] ?></h2> 
     	<script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabPhoto" ) );</script> 
-    	<?php
-			$field_html  ='<script type="text/javascript">';
-			$field_html .='	_editor_lang = "en";';
-			$field_html .='	_editor_url = "media/editor/";';
-			$field_html .='</script> ';
-			$field_html .='<script type="text/javascript" src="media/editor/editor.js"></script>';
-			$field_html .='<script type="text/javascript">';
-			$field_html .='   HTMLArea.loadPlugin("ImageManager");';
-			$field_html .='</script>';
-			$field_html .='<script type="text/javascript">';
-			$field_html .='var ImageOutParam = {';
-			$field_html .='	f_url    : "",';
-			$field_html .='	f_alt    : "",';
-			$field_html .='	f_border : "",';
-			$field_html .='	f_align  : "",';
-			$field_html .='	f_vert   : "",';
-			$field_html .='	f_horiz  : "",';
-			$field_html .='	f_width  : "",';
-			$field_html .='	f_height : ""';
-			$field_html .='};';
-			$field_html .='</script>	';
-			$field_html .='<input type="button" value="'.$_lang['insert'].'" onclick="ImageOutParam.f_url=document.userform[\'photo\'].value;Dialog(_editor_url + \'plugins/ImageManager/manager.php\', function(p){document.userform[\'photo\'].value=p.f_url;document.images[\'iphoto\'].src=p.f_url;},ImageOutParam)" />';				
-    	?>
+    	<script type="text/javascript">
+			function OpenServerBrowser(url, width, height ) {
+				var iLeft = (screen.width  - width) / 2 ;
+				var iTop  = (screen.height - height) / 2 ;
+
+				var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
+				sOptions += ",width=" + width ;
+				sOptions += ",height=" + height ;
+				sOptions += ",left=" + iLeft ;
+				sOptions += ",top=" + iTop ;
+
+				var oWindow = window.open( url, "FCKBrowseWindow", sOptions ) ;
+			}			
+			function BrowseServer() {
+				var w = screen.width * 0.7;
+				var h = screen.height * 0.7;
+				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=", w, h);
+			}
+			function SetUrl(url, width, height, alt){
+				document.userform.photo.value = url;
+				document.images['iphoto'].src = url;
+			}
+		</script>		
         <table border="0" cellspacing="0" cellpadding="3"> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["user_photo"] ?></b></td> 
-            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" /> <?php echo $field_html;?></td> 
+            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo htmlspecialchars($userdata['photo']); ?>" /> <input type="button" value="<?php echo $_lang['insert']; ?>" onclick="BrowseServer();" /></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -736,7 +882,7 @@ function deleteuser() {
             <td colspan="2"><div class='split'></div></td> 
           </tr> 
           <tr> 
-            <td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo'] ? $userdata['photo']: "media/images/_tx_.gif"; ?>" /></td> 
+            <td colspan="2" align="center"><img name="iphoto" src="<?php echo $userdata['photo'] ? $userdata['photo']: "media/images/_tx_.gif"; ?>" /></td> 
           </tr> 
 		</table>        
 	</div>		
@@ -756,20 +902,24 @@ if($_GET['a']=='12') { // only do this bit if the user is being edited
 		$groupsarray[$i] = $currentgroup['user_group'];
 	}
 }
+
+// retain selected doc groups between post
+if(is_array($_POST['user_groups'])) {
+	foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
+}
+
 ?>	
 
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-	<?php echo $_lang['access_permissions_user_message']; ?><p />
-		<?php
-		$sql = "SELECT name, id FROM $dbase.".$table_prefix."membergroup_names"; 
-		$rs = mysql_query($sql); 
-		$limit = mysql_num_rows($rs);
-		for($i=0; $i<$limit; $i++) {
-			$row=mysql_fetch_assoc($rs);
-?>
-<input type="checkbox" name="user_groups['<?php echo $row['id']; ?>']" <?php echo in_array($row['id'], $groupsarray) ? "checked='checked'" : "" ; ?>><?php echo $row['name']; ?><br />
-<?php			
-		}
+<?php 
+	echo $_lang['access_permissions_user_message']."<p />";
+	$sql = "SELECT name, id FROM $dbase.".$table_prefix."membergroup_names"; 
+	$rs = mysql_query($sql); 
+	$limit = mysql_num_rows($rs);
+	for($i=0; $i<$limit; $i++) {
+		$row=mysql_fetch_assoc($rs);
+		echo "<input type='checkbox' name='user_groups[]' value='".$row['id']."'".(in_array($row['id'], $groupsarray) ? " checked='checked'" : "")." />".$row['name']."<br />";	
+	}
 ?>
 </div>
 <?php
@@ -779,13 +929,13 @@ if($_GET['a']=='12') { // only do this bit if the user is being edited
 <?php
 	// invoke OnUserFormRender event
 	$evtOut = $modx->invokeEvent("OnUserFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 <script language="JavaScript" src="media/script/datefunctions.js"></script>
 <script language="javascript" type="text/javascript"> 
 	var f = document.userform;
-	var i = parseInt('<?php echo isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>');	
+	var i = parseInt('<?php echo $userdata['country']; ?>');	
 	if (!isNaN(i)) f.country.options[i].selected = true;
 
 	// dob

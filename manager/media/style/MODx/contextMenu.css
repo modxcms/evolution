@@ -14,14 +14,16 @@ body {
 	color: #222;
 	padding: 3px 16px 3px 2px; }
 
-.menuLinkOver,
-.menuLinkDisabled {
-	cursor: pointer;
-	background: #fff url(../../images/misc/buttonbar_gs.gif) repeat-x bottom left;
-	padding: 2px 15px 2px 1px;
+.menuLinkOver {
+	background: #fff url(../../images/misc/buttonbar_gs.gif) repeat-x bottom left; 
 	border: 1px solid #fdfdfd;
 	border-right-color:	#dcdcdc;
 	border-bottom-color: #dcdcdc; }
+
+.menuLinkOver,
+.menuLinkDisabled {
+	cursor: pointer;
+	padding: 2px 15px 2px 1px;}
 
 .menuLinkDisabled {
 	cursor:	default;

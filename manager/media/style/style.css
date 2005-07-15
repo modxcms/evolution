@@ -327,3 +327,56 @@ a img {
 	color:							#888;
 	cursor:							default;
 }
+
+.notInMenuNode {
+	color:							#FF8800;
+}
+
+
+/* grid style*/
+.gridRowIcon:hover {
+		background-color:beige;}
+
+
+
+/* search bar */
+.searchbar {
+	width:							100%;
+	border:							1px solid silver;
+	background-image:				url('images/srch_bg.gif');
+	background-color:				beige; }
+
+.searchtext {
+	height:							18px;
+	padding:						2px;
+	font-family:					Verdana, Arial, Helvetica, sans-serif;
+	font-size:						11px;
+	border:							1px solid silver; }
+
+.searchbutton {
+	width:							22px;
+	height:							18px;
+	padding:						2px;
+	text-decoration:				none;
+	border:							1px solid #e0e0e0; }
+	
+.searchbutton:hover {
+	text-decoration:				none;
+	background-image:				url('images/button_dn.gif');}
+
+.searchtoolbarbtn {
+	height:							24px;
+	padding-left:					2px;
+	padding-top:					3px;
+	padding-right:					2px;
+	text-decoration:				none;
+	font-family:					Verdana, Arial, Helvetica, sans-serif;
+	font-size:						11px;
+	background-image:				url('images/srch_bg.gif');
+	border:							1px solid #e0e0e0; }
+
+.searchtoolbarbtn:hover {
+	text-decoration:				none;
+	background-image:				url('images/button_dn.gif');
+	border:							1px solid green; }
+

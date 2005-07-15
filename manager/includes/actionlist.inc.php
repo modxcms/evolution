@@ -77,7 +77,7 @@ function getAction($lastaction, $itemid='') {
 				case "71" : return "Searching"; break;
 				case "72" : return "Adding a weblink"; break;	
 				case "73" : return "Editing a weblink"; break;	
-				case "74" : return "Changing personal preferences"; break;	
+				//case "74" : return "Changing personal preferences"; break;	
 				case "75" : return "User/ role management"; break;
 				case "76" : return "Reource management"; break;
 				case "77" : return "Creating a new Chunk (HTML Snippet)"; break;
@@ -87,9 +87,9 @@ function getAction($lastaction, $itemid='') {
 				case "81" : return "Managing keywords"; break;
 				case "81" : return "Managing keywords"; break;
 				case "83" : return "Exporting a document to HTML"; break;
-				//case "84" : return "Managing MODs"; break;
+				case "84" : return "Load Resource Selector"; break;
 				case "85" : return "Create Folder"; break;
-				//case "86" : return "Execute Plugin"; break;
+				case "86" : return "Role management"; break;
 				case "87" : return "Create new web user"; break;
 				case "88" : return "Editing web user $itemid"; break;			
 				case "89" : return "Saving web user $itemid"; break;			
@@ -109,6 +109,17 @@ function getAction($lastaction, $itemid='') {
 				case "103" : return "Saving plugin $id"; break;	
 				case "104" : return "Delete plugin $id"; break;	
 				case "105" : return "Duplicate plugin $id"; break;
+				case "106" : return "Viewing Modules $id"; break;	
+				case "107" : return "Create new module $id"; break;	
+				case "108" : return "Edit module $id"; break;	
+				case "109" : return "Saving module $id"; break;	
+				case "110" : return "Delete module $id"; break;	
+				case "111" : return "Duplicate module $id"; break;
+				case "112" : return "Execute module $id"; break;
+				case "113" : return "Manage module dependencies $id"; break;
+				case "114" : return "View event log"; break;
+				case "115" : return "View event log details $id"; break;
+				case "116" : return "Delete event log $id"; break;
 
 				case "300" : return "Create Template Variable"; break;
 				case "301" : return "Edit Template Variable"; break;

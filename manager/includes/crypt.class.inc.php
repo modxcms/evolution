@@ -64,8 +64,8 @@ class rc4crypt {
 }
 
 // to be removed : note bGljZW5zZU9L decodes to licenseOK
-function checkSession() {
+/*function checkSession() {
 	return true;//!empty($_POST[base64_decode("bGljZW5zZU9L")]) && $_POST[base64_decode("bGljZW5zZU9L")]=="on" ? base64_encode(md5($_POST['username'])) : false; 
-}
+}*/
 
 ?>

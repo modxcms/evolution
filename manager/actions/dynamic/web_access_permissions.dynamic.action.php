@@ -1,6 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['access_permissions']!=1) {	
+if(!$modx->hasPermission('web_access_permissions')) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -285,7 +285,7 @@ if($limit<1) {
 									<input type="hidden" name="a" value="92" />
 									<input type="hidden" name="coupling" value="<?php echo $row2['id'];?>" />
 									<input type="hidden" name="operation" value="remove_document_group_from_user_group" />
-									<input type=submit value='<?php echo $_lang['remove'];?>'>
+									<input type=submit value='<?php echo $_lang['remove'];?> ->'>
 								</form>
 							</td>
 							<td>

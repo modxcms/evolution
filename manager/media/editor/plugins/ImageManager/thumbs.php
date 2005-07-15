@@ -16,7 +16,6 @@ require_once('Classes/Thumbnail.php');
 if(!isset($_GET['img']))
 	exit();
 
-
 $manager = new ImageManager($IMConfig);
 
 //get the image and the full path to the image

@@ -1,9 +1,10 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if($_SESSION['permissions']['edit_template']!=1 && $_REQUEST['a']==16) {	$e->setError(3);
+if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==16) {	$e->setError(3);
 	$e->dumpError();	
 }
-if($_SESSION['permissions']['new_template']!=1 && $_REQUEST['a']==19) {	$e->setError(3);
+if(!$modx->hasPermission('new_template') && $_REQUEST['a']==19) {
+	$e->setError(3);
 	$e->dumpError();	
 }
 
@@ -34,8 +35,8 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$_SESSION['internalKey']) {		
-			$msg = $lock['username']." is currently editing this template. Please wait until the other user has finished and try again.";
+		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+			$msg = sprintf($_lang["lock_msg"],$lock['username'],"template");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -62,7 +63,7 @@ if(isset($_GET['id'])) {
 	}
 	$content = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$content['templatename'];
-	if($content['locked']==1 && $_SESSION['role']!=1) {
+	if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		$e->setError(3);
 		$e->dumpError();
 	}
@@ -94,7 +95,7 @@ function deletedocument() {
 <?php
 	// invoke OnTempFormPrerender event
 	$evtOut = $modx->invokeEvent("OnTempFormPrerender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
@@ -150,6 +151,6 @@ function deletedocument() {
 <?php
 	// invoke OnTempFormRender event
 	$evtOut = $modx->invokeEvent("OnTempFormRender",array("id" => $id));
-	echo implode("",$evtOut);
+	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
