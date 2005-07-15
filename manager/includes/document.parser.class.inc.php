@@ -396,7 +396,7 @@ class DocumentParser {
 			$type = !empty($this->contentTypes[$this->documentIdentifier]) ? $this->contentTypes[$this->documentIdentifier] : "text/html";
 			$header = 'Content-Type: '.$type.'; charset='.$this->config['etomite_charset'];
 			header($header);
-			if($this->documentObject['content_dispo']==1) {
+			if(!$this->checkPreview() && $this->documentObject['content_dispo']==1) {
 				$name = $this->documentObject['alias'] ? $this->documentObject['alias']:preg_replace("\W","",$this->documentObject['pagetitle']);
 				$header = 'Content-Disposition: attachment; filename='.$name;
 				header($header);
