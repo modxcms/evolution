@@ -25,21 +25,21 @@
             </ul>
             <p>&nbsp;</p>
 			<p><b>What is MODx</b><br>
-            MODx is a open source Content Management 
-            System and Application Framework. Initially inspired by Etomite 0.6., MODx is an ongoing project written by Raymond 
-            Irving and a core team of contributors at the MODx Project. MODx is distributed under the GPL 
-            license and is now run by a professional team of developers from all 
+            MODx is a open source Content Management
+            System and Application Framework. Initially inspired by Etomite 0.6., MODx is an ongoing project written by Raymond
+            Irving and a core team of contributors at the MODx Project. MODx is distributed under the GPL
+            license and is now run by a professional team of developers from all
             over the world. Visit
             <a target="_blank" href="http://www.vertexworks.com/forums">
             http://www.vertexworks.com/forums</a> for more information. </p>
-            <p>MODx provides a powerful 
-            framework on which to deploy and secure your website and web 
-            applications. For example, it gives you a true system for registered 
-            web users and groups that is separate from the administration users. 
-            You can grant some web users access to one page and others access to 
-            another page. For content management, you can easily duplicate documents, folders (and 
-            all their children!), chunks and snippets. Most significantly, 
-            though is MODx's ability to empower you to quickly and easily create 
+            <p>MODx provides a powerful
+            framework on which to deploy and secure your website and web
+            applications. For example, it gives you a true system for registered
+            web users and groups that is separate from the administration users.
+            You can grant some web users access to one page and others access to
+            another page. For content management, you can easily duplicate documents, folders (and
+            all their children!), chunks and snippets. Most significantly,
+            though is MODx's ability to empower you to quickly and easily create
             and maintain a rich and dynamic website like never before. Please
             see the <em>Getting Started with MODx</em> tutorial.
             </p>
@@ -48,74 +48,203 @@
 <br>
             <b>What was changed</b><br>
             --------------------------------<br>
+            <br><i><b>MODx TP3</b></i><br>
+			* add notInMenuNode class to style.css and MODx/style.css<br>
+			* update MenuBuilder to support hidden items. Also supports &normclass and &selclass<br>
+			* add "show in menu" option to documents<br>
+			* add view state support to ManagerAPI. e.g $modx->manager->initPageViewState(); $_PAGE['vs']['name'] = 'MODx';<br>
+			* remove content manager parser. Use $modx->loadExtension("ManagerAPI");<br>
+			* add gui enhancements to user listing.<br>
+			* fix bug in template switch<br>
+			* add module support to installer<br>
+			* add zi's layout and add modify home page to use icons<br>
+			* add custom content types to system setting. This will allow the use to add or remove content types from the system settings screen<br>
+			* remove manager/dynamic/mutate_personal_prefs.dynamic.action.php<br>
+			* add recursive parsing using $minParserPasses and $maxParserPasses options. Defaults to 10 passes<br>
+			* enable cached documents to support web user security.<br>
+			* modify parser to recreate the documentObject for cached documents.<br>
+			* change variable $snippetParsePasses to $minParserPasses, $maxParserPasses and remove $nonCachedSnippetParsePasses from documentparser class.<br>
+			* rename mergeHTMLSnippetsContent to mergeChunkContent<br>
+			* retain modified values during postbacks for documents, users and web users<br>
+			* remove 11.php and 4.php<br>
+			* rename frame 5.php to scripter.php ans 12.php to topbar.php<br>
+			* rename frames 8.php, 2.php and f3nav.php to l0mnu.php, l1mnu.php and l2mnu.php respectively - this is to make it easier to locate menus frames<br>
+			* move user_management.dynamic.action.php and web_user_management.dynamic.action.php to static folder<br>
+			* prevent users from changing user id when editing a manager or web user<br>
+			* add OnManagerPageInit,OnWebPageInit event<br>
+			* add content disposition to documents<br>
+			* add custom content-types<br>
+			* add blank template feature to document<br>
+			* add site unavailable (offline) page<br>
+			* remove manager/media/fckeditor (TP2 only)<br>
+			* remove manager/media/tinymce<br>
+			* fix friendly aliases and url with prefixs<br>
+			* strip aliases of special characters (e.g. % ' $ * & !, etc)<br>
+			* automatically check for duplicate document aliases<br>
+			* have menu indexes at the same level increment automatically.<br>
+			* add support "override" file feature. This will allow developers to override the support.inc.php by adding an override.support.inc.php file inside the manager/includes folder<br>
+			* fix call-time pass-by-reference in datagrid.class.php<br>
+			* move warnings to top section of welcome screen<br>
+			* add option to installer to remove install folder using remove_installer.processor.php<br>
+			* add Test connection to installer<br>
+			* add menu title to document. this is a short title that can be used when building menus.<br>
+			* add built-in META tag feature to insert meta tags if available<br>
+			* add built-in keyword feature to document to insert keywords if available. Not longer need the GetKeywords snippet<br>
+			* add built-in Track visits feature to document. This can be used to turn on or off page hits. Not longer need the DontLogPageHit snippet<br>
+			* add new roles<br>
+			<blockquote>
+				new_plugin<br>
+				edit_plugin<br>
+				save_plugin<br>
+				delete_plugin<br>
+				new_module<br>
+				edit_module<br>
+				save_module<br>
+				delete_module<br>
+				exec_module<br>
+				view_eventlog<br>
+				delete_eventlog<br>
+				manage_metatags<br>
+				edit_doc_metatags<br>
+				new_web_user<br>
+				edit_web_user<br>
+				save_web_user<br>
+				delete_web_user<br>
+				</blockquote>
+			* fix security bug when one a document is assigned to two doc groups but only one of those doc groups is flagged as private<br>
+			* added menutitle,privateweb,privatemgr and donthit fields to site_content. The private fields will be used to mark the document as private<br>
+			* add grid and search features to user screens<br>
+			* fix template warning bug<br>
+			* change siteCache.idx to siteCache.idx.php<br>
+			* add Manager session variables to separate web sessions variables from manager<br>
+			<blockquote>
+				mgrConfigCheck<br>
+				mgrShortname<br>
+				mgrFullname<br>
+				mgrEmail<br>
+				mgrValidated<br>
+				mgrInternalKey<br>
+				mgrFailedlogins<br>
+				mgrLastlogin<br>
+				mgrLogincount<br>
+				mgrRole<br>
+			</blockquote>
+			* enable custom toolbar set for FCKEditor<br>
+			* convert TinyMCE and FCKEditor plugins. FCKEditor be the default editor<br>
+			* add new events OnSiteSettingsRender, OnFriendlyURLSettingsRender, OnUserSettingsRender, OnInterfaceSettingsRender, OnMiscSettingsRender, OnRichtextEditorRegister, OnRichtextEditorInit<br>
+			* change TV Display type to widget<br>
+			* allow installer to create a separate site id for new installations<br>
+			* add OnPageUnauthorized and OnPageNotFound events<br>
+			* add ini_set("track_errors","1") inside DocumentParser to tracks errors - e.g evalPlugin<br>
+			* fix call-time pass-by-reference in bkmanager.static.action.php on line 295 and import_site.static.action.php on line 172<br>
+			* add feature to snippets to allow the echo command to return data from the snippet<br>
+			* remove my_phase.gif and logo.gif from media/images/icons<br>
+			* remove site_addressbook table and associated roles - such features can now be implemented as a plugin<br>
+			* add event viewer<br>
+			* add OnBeforWebLogin, OnWebAuthentication, OnBeforeManagerLogin, OnManagerAuthentication<br>
+			* allow datagrid column parameters (such as column names, column types, etc) to use the "||" separator when separating values. The "," separator is still supported.<br>
+			* move tvscripts to script/bin<br>
+			* add shared property feature to modules. this will allow a module to share or make public it's configuration settings to plugins and snippets. Plugins or Snippets can only connect to a module's shared property if it's assigned to the module.<br>
+			* update weblogin to return to the url found in the &refurl agrument if it was called from an unauthorized page<br>
+			* add &refurl agrument to url when calling the error and unauthorized pages. The &refurl agrument will contain the url of the page that was last access.<br>
+			* add resource selector<br>
+			* add module support with denpendency screens<br>
+			* move actions/dynamic/resources.dynamic.action.php to actions/static/resources.static.action.php<br>
+			* add OnBeforeModFormSave, OnModFormSave events<br>
+			* add OnBeforeModFormDelete,OnModFormDelete events<br>
+			* add OnModFormPrerender,OnModFormRender,<br>
+			* add {DBASE} tag to @SELECT bindings<br>
+			* fix security bug in Image Manager<br>
+			* add check for $_SESSION["ImgMngrPathMode"] variable to image manager. This will allow the image manager to override the default IM setting to use the meadia/resicons/ folder when working with resource icons<br>
+			* fix bug in header.inc.php and system alerts<br>
+			* added new session variables. these will separate manager from web login<br>
+				<blockquote>
+				webValidated<br>
+				webInternalKey<br>
+				webShortname<br>
+				webFullname<br>
+				webEmail<br>
+				webValid<br>
+				webUser<br>
+				webFailedlogins<br>
+				webLastlogin<br>
+				webnrlogins<br>
+				webDocgroups<br>
+				</blockquote>
+			* fix bug in tree when using non html characters such as (")<br>
+			* suppress set_time_limit errors when using safemode<br>
+			* fix installer owverwrite bug.
             <br>
-            * fix makeurl so that it will convert an id to an alias when 
+			* remove ieemu.js and mozillainnerhtml.js<br>
+			* added support for Safari,Opera 7+, and fix bug in FireFox 1.0.3<br>
+            <br>
+            * fix makeurl so that it will convert an id to an alias when
             friendly url is turned on<br>
             * redesign the installer<br>
             * remove module_management and exec_plugin files<br>
-            * rename file.static.action.php to file.dynamic.action.php and moved 
+            * rename file.static.action.php to file.dynamic.action.php and moved
             to dynamic<br>
             * add system event listeners to plugins<br>
-            * add System Events to MODx2: invokeEvent(evtName,params), 
+            * add System Events to MODx2: invokeEvent(evtName,params),
             addEventListener(evtName,snippetId)<br>
             * add isMemberOfWebGroup and getUserDocGroups<br>
             <br>
             * add stay options to data entry forms<br>
             * modify htmlarea editor.js line 61 to use document.writeln()<br>
             * add allowed ip and allowed days user settings<br>
-            * add field to user attributes dob, photo, gender, country, state, 
+            * add field to user attributes dob, photo, gender, country, state,
             zip, phone, fax<br>
             * add isBackend function<br>
             * add isFrontend function<br>
             * rename changePassword to changeWebUserPassword to aviod confusion<br>
             * add getFullTableName function to parser<br>
-            * add regClientScript function to parser - these scripts are loaded 
+            * add regClientScript function to parser - these scripts are loaded
             at the end of the page<br>
-            * add regClientStartupScript function to parser - Registers Startup 
-            Client-side JavaScript - these scripts are loaded at inside the 
+            * add regClientStartupScript function to parser - Registers Startup
+            Client-side JavaScript - these scripts are loaded at inside the
             &lt;head&gt; tag<br>
             * rename etomiteCache.idx to siteCache.idx <br>
-            * rename publishing files from etomitePublishing.idx to 
+            * rename publishing files from etomitePublishing.idx to
             sitePublishing.idx<br>
             * rename cache files from .etoCache to .pageCache<br>
             * change IN_ETOMITE_SYSTEM to IN_MANAGER_MODE<br>
             * change IN_ETOMITE_PARSER to IN_PARSER_MODE<br>
-            * add supportby.php file for developers to show and display their 
+            * add supportby.php file for developers to show and display their
             support website on the login page<br>
-            * modify addNotice Modified to add the Powered By MODx link to pages 
+            * modify addNotice Modified to add the Powered By MODx link to pages
             that include the &lt;div id=\&quot;poweredbymodx\&quot;&gt;&lt;/div&gt; tag<br>
             <br>
-            * fix bug inside cache_sync_class.processor.php. line 66 change to $tmpPHP 
+            * fix bug inside cache_sync_class.processor.php. line 66 change to $tmpPHP
             .= '$this-&gt;config[\''.$key.'\']'.&quot; = '&quot;.mysql_escape_string($value).&quot;';\n&quot;;<br>
-            * add new #declare syntax to weblogin template - this will allow you 
+            * add new #declare syntax to weblogin template - this will allow you
             to declare your own section separators instead of &lt;!--tpl_separator--&gt;<br>
-            * important change: please update youy signup email to use the new 
-            placeholders. This version will still honor the %s codes but future 
+            * important change: please update youy signup email to use the new
+            placeholders. This version will still honor the %s codes but future
             versions might not.<br>
             * add getWebUserInfo function<br>
             * add getManagerUserInfo function<br>
-            * new weblogin template will standardize on the new placeholder 
+            * new weblogin template will standardize on the new placeholder
             variable format [+name+]<br>
             * modified weblogin to support password reminder<br>
             <br>
             * MODx forced out of the Etomite Forums - March 19<br>
             <br>
-            * fix bug when editing document with HTMLArea TableOperations and 
+            * fix bug when editing document with HTMLArea TableOperations and
             ContextMenu<br>
             <br>
             * fix import site from html bug<br>
             * fix cache bug with alias that uses '<br>
             * fix treeview to support safari<br>
-            * fixed: after entering your password, pressing the enter key will 
+            * fixed: after entering your password, pressing the enter key will
             submit the form (IE,MOZ)<br>
-            * change: Turn off continue after editing by default. Check the 
+            * change: Turn off continue after editing by default. Check the
             checkbox to enable continue after editing (or sticky) mode<br>
             * fix bug when moving documents<br>
-            * change: Import Site from HTML now requires the &quot;new document&quot; 
+            * change: Import Site from HTML now requires the &quot;new document&quot;
             permission to be set. Changed from &quot;edit document&quot;<br>
-            * fix: all manager pages are now accessible UNLESS restricted to a 
+            * fix: all manager pages are now accessible UNLESS restricted to a
             admin group, just like web-user pages. <br>
-            * -- add rthrash's IE6 header fixes -- this fix causes problems with 
+            * -- add rthrash's IE6 header fixes -- this fix causes problems with
             dynamic pages<br>
             * fix runsnippet bug<br>
             * fix snippet cache bug in etomite.class.inc.php in evalSnippets.<br>
@@ -123,29 +252,29 @@
             <br>
             <i><b>MODx2 RC2</b><br>
             </i><br>
-            * update PageTrail snippet to support MODx2. Also added style and 
+            * update PageTrail snippet to support MODx2. Also added style and
             class property. See the properties tab<br>
             * add new Transition property to Marquee Control<br>
             * add new Transition property to Ticker Control<br>
-            * add getTemplateVars($idname=array(),$fields=&quot;*&quot;) and 
+            * add getTemplateVars($idname=array(),$fields=&quot;*&quot;) and
             getTemplateVarOutput($idnames) api functions<br>
             * Reduce Marquee Speed (1-20). Set Speed datatype to float. e.g. 1.5<br>
-            * fix bug with htmlarea TV not saving when content is changed during 
+            * fix bug with htmlarea TV not saving when content is changed during
             document edits<br>
             * fix @ bindings for listbox and DropDown<br>
             * updated tutorials<br>
-            * snippets tab in document edit only shows available snippet (in 
+            * snippets tab in document edit only shows available snippet (in
             this release)<br>
             <br>
-            * fix getTemplateVar() bug. This function will accept either a TV id 
+            * fix getTemplateVar() bug. This function will accept either a TV id
             or name as returns a record<br>
-            * fix url aliasing so that it now shows sub-folders with prefix and 
-            suffix added only to the document's alias. used Daath aliasing 
+            * fix url aliasing so that it now shows sub-folders with prefix and
+            suffix added only to the document's alias. used Daath aliasing
             solution. (This feature is optional. See settings)<br>
             * add support for nested bindings<br>
             * set ViewPort's Width and Height property to string<br>
-            * increase TV name length to 50 chars. I don't think you should use 
-            TV names greater than 50 chars. ALTER TABLE `{PREFIX}site_tmplvars` 
+            * increase TV name length to 50 chars. I don't think you should use
+            TV names greater than 50 chars. ALTER TABLE `{PREFIX}site_tmplvars`
             MODIFY COLUMN `name` VARCHAR(50) NOT NULL;<br>
             * check for numeric aliases before IDs<br>
             <br>

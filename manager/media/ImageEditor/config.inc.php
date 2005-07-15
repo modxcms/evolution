@@ -1,7 +1,14 @@
 <?php
 
-session_start();
-include "../../../../includes/config.inc.php";
+// security check user MUST be logged into manager 
+// before being able to run this script
+session_start();  
+if(!isset($_SESSION['mgrValidated'])) {
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+}
+
+
+include "../../includes/config.inc.php";
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");
@@ -10,14 +17,7 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 }
 
 // get the settings from the database
-include "../../../../includes/settings.inc.php";
-
-// security check user MUST be logged into manager 
-// before being able to run this script
-session_start();  
-if(!isset($_SESSION['mgrValidated'])) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-}
+include "../../includes/settings.inc.php";
 	
 /**
  * Image Manager configuration file.
@@ -35,7 +35,7 @@ if(!isset($_SESSION['mgrValidated'])) {
        PHP must be able to create files in this directory.
 	   Able to create directories is nice, but not necessary.
 */
-$IMConfig['base_dir'] = $im_plugin_base_dir;
+$IMConfig['base_dir'] = $rb_base_dir;
 
 
 /*
@@ -46,7 +46,7 @@ $IMConfig['base_dir'] = $im_plugin_base_dir;
  for this directory (i.e. disable PHP, Perl, CGI). We only want to store assets
  in this directory and its subdirectories.
 */
-$IMConfig['base_url'] = $im_plugin_base_url;
+$IMConfig['base_url'] = $rb_base_url;
 //echo $IMConfig['base_url']."<br />";
 
 /*

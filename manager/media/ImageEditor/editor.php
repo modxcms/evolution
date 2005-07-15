@@ -18,7 +18,7 @@ $editor = new ImageEditor($manager);
 
 <html>
 <head>
-	<title></title>
+	<title>Image Editor - <?php echo $_GET['img']; ?></title>
 	<link href="assets/editor.css" rel="stylesheet" type="text/css" />	
 <script type="text/javascript" src="assets/slider.js"></script>
 <script type="text/javascript" src="assets/popup.js"></script>

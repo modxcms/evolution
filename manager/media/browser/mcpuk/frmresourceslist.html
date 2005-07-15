@@ -1,16 +1,16 @@
 <!--
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
- * 
+ *
  * Licensed under the terms of the GNU Lesser General Public License:
  * 		http://www.opensource.org/licenses/lgpl-license.php
- * 
+ *
  * For further information visit:
  * 		http://www.fckeditor.net/
- * 
+ *
  * File Name: frmresourceslist.html
  * 	This page shows all resources available in a folder in the File Browser.
- * 
+ *
  * File Authors:
  * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
  * 		Grant French (grant@mcpuk.net)
@@ -43,15 +43,15 @@ oListManager.AddFolder = function( folderName, folderPath )
 	if (docWidth==null) docWidth=document.body.scrollWidth;
 	var maxCols=docWidth/120;
 	maxCols--;
-	
+
 	var rows=this.Table.getElementsByTagName('tr');
-	
-	
+
+
 	if (rows.length!=0) {
 		var lastRow = rows[(rows.length-1)];
 		var cells = lastRow.getElementsByTagName('td');
 		var lastRow_Cols = cells.length;
-		
+
 		if (lastRow_Cols>=maxCols) {
 			lastRow = this.Table.insertRow(-1);
 			lastRow.className="Frame_tb";
@@ -60,12 +60,12 @@ oListManager.AddFolder = function( folderName, folderPath )
 		var lastRow = this.Table.insertRow(-1);
 		lastRow.className="Frame_tb";
 	}
-	
+
 	// Build the link to view the folder.
 	var sLink = '<a href="#" onclick="OpenFolder(\'' + escape(folderPath) + '\');return false;">' ;
 	var dLink = '<a href="#" onclick="DeleteFolder(\'' + escape(folderName) + '\');return false;">' ;
 	var rLink = '<a href="#" onclick="RenameFolder(\'' + escape(folderName) + '\');return false;">' ;
-	
+
 	// Add the file icon cell.
 	var oCell = lastRow.insertCell(-1) ;
 	oCell.vAlign="top";
@@ -75,7 +75,7 @@ oListManager.AddFolder = function( folderName, folderPath )
 	oCell.innerHTML += rLink + '<img border="0" src="images/edit.gif" width="16" height="16" alt="Rename Folder" title="Rename Folder"></a>' ;
 	oCell.noWrap = true ;
 	oCell.align = 'center' ;
-	
+
 }
 
 oListManager.AddFile = function ( fileName, fileUrl, fileSize, imageEditable )
@@ -84,15 +84,15 @@ oListManager.AddFile = function ( fileName, fileUrl, fileSize, imageEditable )
 	if (docWidth==null) docWidth=document.body.scrollWidth;
 	var maxCols=docWidth/120;
 	maxCols--;
-	
+
 	var rows=this.Table.getElementsByTagName('tr');
-	
-	
+
+
 	if (rows.length!=0) {
 		var lastRow = rows[(rows.length-1)];
 		var cells = lastRow.getElementsByTagName('td');
 		var lastRow_Cols = cells.length;
-		
+
 		if (lastRow_Cols>=maxCols) {
 			var lastRow = this.Table.insertRow(-1);
 			lastRow.className="Frame_tb";
@@ -101,38 +101,50 @@ oListManager.AddFile = function ( fileName, fileUrl, fileSize, imageEditable )
 		var lastRow = this.Table.insertRow(-1);
 		lastRow.className="Frame_tb";
 	}
-	
+
 	// Build the link to view the file.
 	var sLink = '<a href="#" title="Size: ' + fileSize + 'kb" onclick="OpenFile(\'' + escape(fileUrl) + '\');return false;">' ;
 	var dLink = '<a href="#" title="Delete file" onclick="DeleteFile(\'' + escape(fileName) + '\');return false;">' ;
 	var eLink = '<a href="#" title="Rename file" onclick="RenameFile(\'' + escape(fileName) + '\');return false;">' ;
 	var eImageLink = '<a href="#" title="Edit Image" onclick="EditImage(\'' + escape(fileName) + '\',\'' + escape(fileUrl) + '\');return false;">' ;
-	
+
 	// Add the file icon cell.
 	var oCell = lastRow.insertCell(-1) ;
 	oCell.vAlign="top";
 	oCell.width = 96 ;
-	
-	oCell.innerHTML = sLink + 
-		'<img alt="' + fileName + '" src="' + 
-					oConnector.ConnectorUrl + 
-					'?Command=Thumbnail&Type=' + 
-					oConnector.ResourceType + 
-					'&CurrentFolder=' + 
-					oConnector.CurrentFolder + 
-					'&FileName=' + escape(fileName) + 
+
+	oCell.innerHTML = sLink +
+		'<img alt="' + fileName + '" src="' +
+					oConnector.ConnectorUrl +
+					'?Command=Thumbnail&Type=' +
+					oConnector.ResourceType +
+					'&CurrentFolder=' +
+					oConnector.CurrentFolder +
+					'&FileName=' + escape(fileName) +
 					'&ExtraParams=' + oConnector.ExtraParams +
-					'" width="96" height="96" border="0"><br />' + 
+					'" width="96" height="96" border="0"><br />' +
 		fileName + '</a><br />';
 	oCell.innerHTML += dLink + '<img border="0" src="images/delete.gif" width="16" height="16" alt="Delete File" title="Delete File"></a>&nbsp;';
 	oCell.innerHTML += eLink + '<img border="0" src="images/edit.gif" width="16" height="16" alt="Edit/Rename File" title="Rename File"></a>' ;
-	if (imageEditable==1) { 
+/**
+ * MODx temporary image editor
+ *
+ */
+
+	if(imageEditable==1 && oConnector.ResourceType.toLowerCase()=="images") {
+		oCell.innerHTML = oCell.innerHTML + '<a href="#" onclick="javascript:window.open(\'../../ImageEditor/editor.php?img=/images' + oConnector.CurrentFolder + fileName + '\',\'win\',\'status=0,toolbar=0\');"><img alt="Edit image" border="0" src="images/editImage.gif" /></a>' ;
+	}
+
+ /*
+	if (imageEditable==1) {
 		oCell.innerHTML += eImageLink + '<img border="0" src="images/editImage.gif" width="16" height="16" alt="Edit Image" title="Edit Image"></a>' ;
 	}
-		
+ *
+ */
+
 	oCell.noWrap = true ;
 	oCell.align = 'center' ;
-	
+
 }
 
 oListManager.PackRow = function ()
@@ -141,15 +153,15 @@ oListManager.PackRow = function ()
 	if (docWidth==null) docWidth=document.body.scrollWidth;
 	var maxCols=docWidth/120;
 	maxCols--;
-	
+
 	var rows=this.Table.getElementsByTagName('tr');
-	
-	
+
+
 	if (rows.length!=0) {
 		var lastRow = rows[(rows.length-1)];
 		var cells = lastRow.getElementsByTagName('td');
 		var lastRow_Cols = cells.length;
-		
+
 		if (lastRow_Cols<maxCols) {
 			for (i=lastRow_Cols;i<maxCols;i++) {
 				var oCell = lastRow.insertCell(-1);
@@ -160,7 +172,7 @@ oListManager.PackRow = function ()
 			}
 		}
 	}
-	
+
 }
 
 function OpenFolder( folderPath )
@@ -195,7 +207,7 @@ function RenameFile( fileName, fileUrl )
 {
 	var promptMsg='Please enter the new name for ' + unescape(fileName) + ':';
 	var newName=prompt(promptMsg,unescape(fileName));
-	
+
 	if ((newName!=null)&&(newName!='')&&(newName!=fileName)) {
 		oConnector.SendCommand( 'RenameFile', "FileName=" + fileName + "&NewName=" + escape( newName ), RenameFileCallBack ) ;
 	}
@@ -204,19 +216,19 @@ function RenameFile( fileName, fileUrl )
 function EditImage( fileName, fileUrl )
 {
 
-	window.location.href="frmimageeditor.html?Connector=" + oConnector.ConnectorUrl + 
-				"&Type=" + oConnector.ResourceType + 
-				"&CurrentFolder=" + oConnector.CurrentFolder + 
-				"&FileName=" + fileName + 
+	window.location.href="frmimageeditor.html?Connector=" + oConnector.ConnectorUrl +
+				"&Type=" + oConnector.ResourceType +
+				"&CurrentFolder=" + oConnector.CurrentFolder +
+				"&FileName=" + fileName +
 				"&FileURL=" + fileUrl;
-				
+
 }
 
 function RenameFolder( folderName )
 {
 	var promptMsg='Please enter the new name for ' + unescape(folderName) + ':';
 	var newName=prompt(promptMsg,unescape(folderName));
-	
+
 	if ((newName!=null)&&(newName!='')&&(newName!=unescape(folderName))) {
 		oConnector.SendCommand( 'RenameFolder', "FolderName=" + folderName + "&NewName=" + escape ( newName ), RenameFolderCallBack ) ;
 	}
@@ -242,9 +254,9 @@ function GetFoldersAndFilesCallBack( fckXml )
 	var sCurrentFolderPath	= oNode.attributes.getNamedItem('path').value ;
 	var sCurrentFolderUrl	= oNode.attributes.getNamedItem('url').value ;
 
-	// Add the Folders.	
+	// Add the Folders.
 	var oNodes = fckXml.SelectNodes( 'Connector/Folders/Folder' ) ;
-	
+
 	if (oNodes!=null) {
 		for ( var i = 0 ; i < oNodes.length ; i++ )
 		{
@@ -252,8 +264,8 @@ function GetFoldersAndFilesCallBack( fckXml )
 			oListManager.AddFolder( sFolderName, sCurrentFolderPath + sFolderName + "/" ) ;
 		}
 	}
-	
-	// Add the Files.	
+
+	// Add the Files.
 	var oNodes = fckXml.SelectNodes( 'Connector/Files/File' ) ;
 	if (oNodes!=null) {
 		for ( var i = 0 ; i < oNodes.length ; i++ )
@@ -262,15 +274,15 @@ function GetFoldersAndFilesCallBack( fckXml )
 			var sFileSize = oNodes[i].attributes.getNamedItem('size').value ;
 			var iEditable = oNodes[i].attributes.getNamedItem('editable') ;
 			if (iEditable!=null) {
-				iEditable = iEditable.value;	
+				iEditable = iEditable.value;
 			} else {
 				iEditable = 0;
 			}
-			
+
 			oListManager.AddFile( sFileName, sCurrentFolderUrl + sFileName, sFileSize, iEditable ) ;
 		}
 	}
-	
+
 	oListManager.PackRow();
 }
 
@@ -279,15 +291,15 @@ function DeleteFileCallBack ( fckXml )
 	var oNodes = fckXml.SelectNodes( 'Connector/Error' );
 	if (oNodes!=null && oNodes.length>0) {
 		var errNo = parseInt(oNodes[0].attributes.getNamedItem('number').value) ;
-		
+
 		switch (errNo) {
 			case 0 :
-				break;	
-			
+				break;
+
 			case 302 :
 				alert('Failed to delete file.');
 				break;
-			
+
 			default:
 				alert('DFi: Invalid XML response from connector..');
 		}
@@ -303,15 +315,15 @@ function DeleteFolderCallBack ( fckXml )
 	var oNodes = fckXml.SelectNodes( 'Connector/Error' );
 	if (oNodes!=null && oNodes.length>0) {
 		var errNo = parseInt(oNodes[0].attributes.getNamedItem('number').value) ;
-		
+
 		switch (errNo) {
 			case 0 :
-				break;	
-			
+				break;
+
 			case 402 :
 				alert('Failed to delete folder.');
 				break;
-			
+
 			default:
 				alert('DFo: Invalid XML response from connector..');
 		}
@@ -326,15 +338,15 @@ function RenameFileCallBack ( fckXml )
 	var oNodes = fckXml.SelectNodes( 'Connector/Error' );
 	if (oNodes!=null && oNodes.length>0) {
 		var errNo = parseInt(oNodes[0].attributes.getNamedItem('number').value) ;
-		
+
 		switch (errNo) {
 			case 0 :
-				break;	
-			
+				break;
+
 			case 502 :
 				alert('Failed to rename file.');
 				break;
-			
+
 			default:
 				alert('RFi: Invalid XML response from connector..');
 		}
@@ -350,15 +362,15 @@ function RenameFolderCallBack ( fckXml )
 	var oNodes = fckXml.SelectNodes( 'Connector/Error' );
 	if (oNodes!=null && oNodes.length>0) {
 		var errNo = parseInt(oNodes[0].attributes.getNamedItem('number').value) ;
-		
+
 		switch (errNo) {
 			case 0 :
-				break;	
-			
+				break;
+
 			case 602 :
 				alert('Failed to rename folder.');
 				break;
-			
+
 			default:
 				alert('RFo: Invalid XML response from connector..');
 		}
