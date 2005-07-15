@@ -75,10 +75,16 @@ function addContentType(){
 	var i,o,exists=false;
 	var txt = document.settings.txt_custom_contenttype;
 	var lst = document.settings.lst_custom_contenttype;
-	for(i=0;i<lst.options.length;i++) if(lst.options[i].value==txt.value) exists=true;
+	for(i=0;i<lst.options.length;i++) 
+	{
+		if(lst.options[i].value==txt.value) {
+			exists=true;
+			break;
+		}
+	}
 	if (!exists) {
 		o = new Option(txt.value,txt.value);
-		lst.add(o);
+		lst.options[lst.options.length]= o;
 		updateContentType();
 	}
 	txt.value='';
@@ -100,17 +106,16 @@ function updateContentType(){
 	var ct = document.settings.custom_contenttype;
 	while(lst.options.length) {
 		ol[ol.length] = lst.options[0].value;
-		lst.remove(0);
+		lst.options[0]= null;
 	}	
 	if(ol.sort) ol.sort();
 	ct.value = ol.join(",");
 	for(i=0;i<ol.length;i++) {
 		o = new Option(ol[i],ol[i]);
-		lst.add(o);
+		lst.options[lst.options.length]= o;
 	}
 	documentDirty = true;
 }
-
 
 </script>
 <div class="subTitle"> 
