@@ -602,9 +602,14 @@ switch ($actionToTake) {
 }
 
 function stripAlias($alias) {
-	// remove special characters
-	$alias = str_replace(" ","_",trim($alias)); // replace spaces with "_"
-	return preg_replace("/\W/","",$alias); // remove special chars
+	$alias = strip_tags($alias);
+	$alias = strtolower($alias);
+	$alias = preg_replace('/&.+?;/', '', $alias); // kill entities
+	$alias = preg_replace('/[^\.%a-z0-9 _-]/', '', $alias);
+	$alias = preg_replace('/\s+/', '-', $alias);
+	$alias = preg_replace('|-+|', '-', $alias);
+	$alias = trim($alias, '-');
+	return $alias;
 }
 
 // -- Save META Keywords --
