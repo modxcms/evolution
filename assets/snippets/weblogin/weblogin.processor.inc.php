@@ -140,6 +140,12 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			unset($_SESSION['webUsrConfigSet']);
 		}
 		else {
+			// Unset all of the session variables.
+			$_SESSION = array();
+			// destroy session cookie
+			if (isset($_COOKIE[session_name()])) {
+				setcookie(session_name(), '', time()-42000, '/');
+			}
 			session_destroy();
 			$sessionID = md5(date('d-m-Y H:i:s'));
 			session_id($sessionID);
@@ -270,7 +276,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 								"rememberme"	=> $_POST['rememberme']
 							));
 	// check if plugin authenticated the user
-	if (is_array($rt) && !in_array(TRUE,$rt)) {
+	if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
 		// check user password - local authentication
 		if($dbasePassword != md5($givenPassword)) {
 			$output = webLoginAlert("Incorrect username or password entered!");

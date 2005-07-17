@@ -4,6 +4,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 $internalKey = $modx->getLoginUserID();
 $username = $_SESSION['mgrShortname'];
 
+
 // invoke OnBeforeManagerLogout event
 $modx->invokeEvent("OnBeforeManagerLogout",
 						array(
@@ -11,7 +12,14 @@ $modx->invokeEvent("OnBeforeManagerLogout",
 							"username"		=> $username
 						));
 
-@session_destroy(); // Raymond:suppress error generation on first destroy
+// Unset all of the session variables.
+$_SESSION = array();
+// destroy session cookie
+if (isset($_COOKIE[session_name()])) {
+    setcookie(session_name(), '', time()-42000, '/');
+}
+// now destroy the session
+@session_destroy(); // this sometimes generate an error in iis
 $sessionID = md5(date('d-m-Y H:i:s'));
 session_id($sessionID);
 session_start();
