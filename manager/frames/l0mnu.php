@@ -339,7 +339,7 @@ mb.add( tmp = new MenuButton( "<?php echo $_lang['users'];?>", usersMenu ) );
 
 var resourcesMenu = new Menu();
 
-resourcesMenu.add( tmp = new MenuItem( "<?php echo $_lang['module_management']; ?>", "index.php?a=19", "media/images/icons/template16.gif") );
+resourcesMenu.add( tmp = new MenuItem( "<?php echo $_lang['module_management']; ?>", "index.php?a=106", "media/images/icons/template16.gif") );
 	tmp.target="main";
 <?php echo !$modx->hasPermission('new_module') && !$modx->hasPermission('edit_module') && !$modx->hasPermission('exec_module') ? "\ttmp.disabled=true;" : "" ; ?> 
 
