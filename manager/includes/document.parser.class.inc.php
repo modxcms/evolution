@@ -397,7 +397,18 @@ class DocumentParser {
 			$header = 'Content-Type: '.$type.'; charset='.$this->config['etomite_charset'];
 			header($header);
 			if(!$this->checkPreview() && $this->documentObject['content_dispo']==1) {
-				$name = $this->documentObject['alias'] ? $this->documentObject['alias']:preg_replace("\W","",$this->documentObject['pagetitle']);
+				if($this->documentObject['alias']) $name = $this->documentObject['alias'];
+				else {
+					// strip title of special characters
+					$name = $this->documentObject['pagetitle'];
+					$name = strip_tags($name);
+					$name = strtolower($name);
+					$name = preg_replace('/&.+?;/', '', $name); // kill entities
+					$name = preg_replace('/[^\.%a-z0-9 _-]/', '', $name);
+					$name = preg_replace('/\s+/', '-', $name);
+					$name = preg_replace('|-+|', '-', $name);
+					$name = trim($name, '-');					
+				}
 				$header = 'Content-Disposition: attachment; filename='.$name;
 				header($header);
 			}

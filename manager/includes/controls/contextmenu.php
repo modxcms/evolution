@@ -62,12 +62,9 @@ $ContextMenuScript = <<<BLOCK
 </script>
 <style>
 .contextMenu {
-	background-image: 			url("media/images/bg/context.gif");
-	background-color: 			#fff;
-	background-position: 		top left;
-	background-repeat: 			repeat-y;
-	margin:						0px;
-	padding:					0px;
+	background: #fff url(media/images/bg/context.gif) repeat-y top left;
+	margin:						0;
+	padding:					0;
 	border: 					1px solid #003399;
 	border-left-color:			#eaeaea;
 	border-top-color:			#eaeaea;
@@ -77,29 +74,24 @@ $ContextMenuScript = <<<BLOCK
 	z-index:					10000; }
 
 .cntxMnuItem {
-	background-image:			url('media/images/_tx_.gif');
+	background-image:			url(media/images/_tx_.gif);
 	cursor:						pointer;
-	font:						menu;
-	color:						MenuText;
+	color:						#000;
 	padding: 					3px 16px 3px 2px; }
 
 .cntxMnuItemOver {
 	cursor:						pointer;
-	color: 						#000000;
-	background-color: 			#FFCC00;	
-	background-position: 		bottom left;
-	background-repeat: 			repeat-x;	
-	background-image: 			url("media/images/misc/buttonbar_gs.gif");
-	font:						menu;
+	color: 						#000;
+	background: #fc0 url(media/images/misc/buttonbar_gs.gif) repeat-x bottom left;	
 	padding: 					2px 15px 2px 1px;
-	border: 					1px solid  #FFAA00; /*#003399;*/
+	border: 					1px solid #fa0; /*#003399;*/
 }
 
 .cntxMnuItemDisabled {
 	cursor:						default;
 	font: 						menu;
 	padding: 					3px 16px 3px 2px;
-	color:						graytext;
+	color:						#111;
 }
 .cntxMnuItem IMG, .cntxMnuItemOver IMG, .cntxMnuItemDisabled IMG {
 	margin-right:				8px;
@@ -110,7 +102,7 @@ $ContextMenuScript = <<<BLOCK
 }
 
 .cntxMnuSeparator {
-	font-size:      			0pt;
+	font-size:      			0;
 	height:         			1px;
 	background-color: 			#6A8CCB;
 	overflow:       			hidden;
