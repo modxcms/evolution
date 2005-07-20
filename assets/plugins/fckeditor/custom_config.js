@@ -2,6 +2,14 @@
  * Custom Configuration file 
  * 
  */
+
+/* *
+ * Language settings
+ *
+ */
+FCKConfig.AutoDetectLanguage	= false ;
+FCKConfig.DefaultLanguage		= 'en' ;
+
 
 /* *
  * setup toolbar sets 

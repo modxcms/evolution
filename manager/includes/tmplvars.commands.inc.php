@@ -8,8 +8,7 @@ global $BINDINGS; // list of supported bindings. must be upper case
 $BINDINGS = "FILE,CHUNK,DOCUMENT,SELECT,EVAL"; 
 
 function ProcessTVCommand($value){
-	global $modx;
-	
+	global $modx;	
 	$etomite = &$modx;
 	
 	$nvalue = trim($value);

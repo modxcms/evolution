@@ -21,8 +21,8 @@ class synccache{
 	}	
 
 	function escapeSingleQuotes($s) {
-		$q1 = array("'");
-		$q2 = array("\\'");
+		$q1 = array("\\","'");
+		$q2 = array("\\\\","\\'");
 		return str_replace($q1,$q2,$s);
 	}	
 

@@ -299,6 +299,9 @@ if(isset($_POST['plugin'])) {
 				if($ds) {
 					$row = mysql_fetch_assoc($ds);
 					$id = $row["id"];
+					// remove existing events
+					mysql_query('DELETE FROM '.$dbase.'.`'.$table_prefix.'site_plugin_events` WHERE pluginid = \''.$id.'\'');
+					// add new events
 					mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugin_events` (pluginid, evtid) SELECT '$id' as 'pluginid',se.id as 'evtid' FROM $dbase.`".$table_prefix."system_eventnames` se WHERE name IN ('".implode("','",$events)."')");
 				}
 			}

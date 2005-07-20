@@ -22,7 +22,7 @@ class DocumentParser {
 
 	// constructor
 	function DocumentParser() {
-		$this->loadExtension("DBAPI"); // load DBAPI class		
+		$this->loadExtension('DBAPI'); // load DBAPI class		
 		$this->dbConfig = &$this->db->config; // alias for backward compatibility
 		$this->jscripts = array();
 		$this->sjscripts = array();
@@ -39,12 +39,12 @@ class DocumentParser {
 	function loadExtension($extname){
 		global $base_path;
 		global $database_type;
-		if($extname=="DBAPI"){
-			include_once $base_path."/manager/includes/extenders/dbapi.".$database_type.".class.inc.php";
+		if($extname=='DBAPI'){
+			include_once $base_path.'/manager/includes/extenders/dbapi.'.$database_type.'.class.inc.php';
 			$this->db = new DBAPI;
 		}
-		if($extname=="ManagerAPI"){
-			include_once $base_path."/manager/includes/extenders/manager.api.class.inc.php";
+		if($extname=='ManagerAPI'){
+			include_once $base_path.'/manager/includes/extenders/manager.api.class.inc.php';
 			$this->manager = new ManagerAPI;
 		}		
 	}
@@ -76,7 +76,7 @@ class DocumentParser {
 
 
 	function getMicroTime() {
-	   list($usec, $sec) = explode(" ", microtime());
+	   list($usec, $sec) = explode(' ', microtime());
 	   return ((float)$usec + (float)$sec);
 	}
 
@@ -88,7 +88,7 @@ class DocumentParser {
 				// append the redirect count string to the url
 				$currentNumberOfRedirects = isset($_REQUEST['err']) ? $_REQUEST['err'] : 0 ;
 				if($currentNumberOfRedirects>3) {
-					$this->messageQuit("Redirection attempt failed - please ensure the document you're trying to redirect to exists. <p>Redirection URL: <i>$url</i></p>");
+					$this->messageQuit('Redirection attempt failed - please ensure the document you\'re trying to redirect to exists. <p>Redirection URL: <i>'.$url.'</i></p>');
 				} else {
 					$currentNumberOfRedirects += 1;
 					if(strpos($url, "?")>0) {
@@ -99,13 +99,13 @@ class DocumentParser {
 				}
 			}
 			if($type==REDIRECT_REFRESH) {
-				$header = "Refresh: 0;URL=".$url;
+				$header = 'Refresh: 0;URL='.$url;
 			} elseif($type==REDIRECT_META) {
-				$header = "<META HTTP-EQUIV=Refresh CONTENT='0; URL=".$url."' />";
+				$header = '<META HTTP-EQUIV="Refresh" CONTENT="0; URL='.$url.'" />';
 				echo $header;
 				exit;
 			} elseif($type==REDIRECT_HEADER || empty($type)) {
-				$header = "Location: $url";
+				$header = 'Location: '.$url;
 			}
 			header($header);
 			$this->postProcess();
@@ -114,14 +114,14 @@ class DocumentParser {
 
 	function sendErrorPage() {
 		// invoke OnPageNotFound event
-		$this->invokeEvent("OnPageNotFound");
-		$this->sendRedirect($this->makeUrl($this->config['error_page'],"","&refurl=".urlencode($_SERVER["PHP_SELF"]."?".$_SERVER["QUERY_STRING"])), 1);
+		$this->invokeEvent('OnPageNotFound');
+		$this->sendRedirect($this->makeUrl($this->config['error_page'],'','&refurl='.urlencode($_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'])), 1);
 	}
 
 	function sendUnauthorizedPage() {
 		// invoke OnPageUnauthorized event
-		$this->invokeEvent("OnPageUnauthorized");
-		$this->sendRedirect($this->makeUrl($this->config['unauthorized_page'],"","&refurl=".urlencode($_SERVER["PHP_SELF"]."?".$_SERVER["QUERY_STRING"])),1);
+		$this->invokeEvent('OnPageUnauthorized');
+		$this->sendRedirect($this->makeUrl($this->config['unauthorized_page'],'','&refurl='.urlencode($_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'])),1);
 	}
 
 	// function to connect to the database
@@ -165,33 +165,33 @@ class DocumentParser {
 
 	function getSettings() {
 		global $base_url, $base_path;
-		if(file_exists($base_path."/assets/cache/siteCache.idx.php")) {
-			include_once $base_path."/assets/cache/siteCache.idx.php";
+		if(file_exists($base_path.'/assets/cache/siteCache.idx.php')) {
+			include_once $base_path.'/assets/cache/siteCache.idx.php';
 		} else {
-			$result = $this->dbQuery("SELECT setting_name, setting_value FROM ".$this->getFullTableName("system_settings"));
+			$result = $this->dbQuery('SELECT setting_name, setting_value FROM '.$this->getFullTableName('system_settings'));
 			while ($row = $this->fetchRow($result, 'both')) {
 				$this->config[$row[0]] = $row[1];
 			}
 		}
 
 		// store base_url and base_path inside config array
-		$this->config["base_url"] = $base_url;
-		$this->config["base_path"] = $base_path;
+		$this->config['base_url'] = $base_url;
+		$this->config['base_path'] = $base_path;
 
 		// load user setting if user is logged in
 		if($id=$this->getLoginUserID()){
 			$usrType = $this->getLoginUserType();
-			if (isset($usrType) && $usrType!="web") $usrType = "mgr";
-			if(isset($_SESSION[$usrType."UsrConfigSet"])) {
-				$usrSettings = &$_SESSION[$usrType."UsrConfigSet"];
+			if (isset($usrType) && $usrType!='web') $usrType = 'mgr';
+			if(isset($_SESSION[$usrType.'UsrConfigSet'])) {
+				$usrSettings = &$_SESSION[$usrType.'UsrConfigSet'];
 			}
 			else {
 				$usrSettings = array();
-				if ($usrType=='web') $query = $this->getFullTableName("web_user_settings")." WHERE webuser='$id'";
-				else $query = $this->getFullTableName("user_settings")." WHERE user='$id'";
-				$result = $this->dbQuery("SELECT setting_name, setting_value FROM $query");
+				if ($usrType=='web') $query = $this->getFullTableName('web_user_settings').' WHERE webuser=\''.$id.'\'';
+				else $query = $this->getFullTableName('user_settings').' WHERE user=\''.$id.'\'';
+				$result = $this->dbQuery('SELECT setting_name, setting_value FROM '.$query);
 				while ($row = $this->fetchRow($result, 'both')) $usrSettings[$row[0]] = $row[1];
-				if(isset($usrType)) $_SESSION[$usrType."UsrConfigSet"] = $usrSettings; // store user settings in session
+				if(isset($usrType)) $_SESSION[$usrType.'UsrConfigSet'] = $usrSettings; // store user settings in session
 			}			
 			$this->config = array_merge($this->config,$usrSettings);
 		}
@@ -1256,18 +1256,31 @@ class DocumentParser {
 
 	function makeUrl($id, $alias='', $args='') {
 		if(!is_numeric($id)) {
-			$this->messageQuit("`$id` is not numeric and may not be passed to makeUrl()");
+			$this->messageQuit('`'.$id.'` is not numeric and may not be passed to makeUrl()');
+		}
+		if($args!='' && $this->config['friendly_urls']==1) {
+			// add ? to $args if missing
+			$c = substr($args,0,1);
+			if ($c=='&') $args = '?'.substr($args,1);
+			elseif ($c!='?') $args = '?'.$args; 
+		}
+		else {
+			// add & to $args if missing
+			$c = substr($args,0,1);
+			if ($c=='?') $args = '&'.substr($args,1);
+			elseif ($c!='&') $args = '&'.$args; 
 		}
 		if($this->config['friendly_urls']==1 && $alias!='') {
 			return $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
 		} elseif($this->config['friendly_urls']==1 && $alias=='') {
+			if($args!='') $args = (substr($args,0,1))=='?' ?  $args: '?'.$args; // add ? to $args if missing
 			$alias = $id;
 			$al = $this->aliasListing[$id];
 			if($al && $al['alias']) $alias = $al['alias'];
 			$alias = $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'];
 			return $alias.$args;
 		} else {
-			return "index.php?id=$id$args";
+			return 'index.php?id='.$id.$args;
 		}
 	}
 

@@ -60,7 +60,7 @@
 				break;
 			case "dropdown": // handler for select boxes
 				$field_html .=  '<select name="tv'.$field_name.'" size="1" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');">';
-				$index_list = ParseIntputOptions(ProcessTVCommand("",$field_elements));
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -71,7 +71,7 @@
 				break;
 			case "listbox": // handler for select boxes
 				$field_html .=  '<select name="tv'.$field_name.'" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" size="8">';	
-				$index_list = ParseIntputOptions(ProcessTVCommand("",$field_elements));
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -83,7 +83,7 @@
 			case "listbox-multiple": // handler for select boxes where you can choose multiple items
 				$field_value = explode("||",$field_value);
 				$field_html .=  '<select name="tv'.$field_name.'[]" multiple="multiple" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" size="8">';
-				$index_list = ParseIntputOptions(ProcessTVCommand("",$field_elements));
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -107,7 +107,7 @@
 				break;
 			case "checkbox": // handles check boxes
 				$field_value = explode("||",$field_value);
-				$index_list = ParseIntputOptions(ProcessTVCommand("",$field_elements));
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -116,7 +116,7 @@
 				}
 				break;
 			case "option": // handles radio buttons
-				$index_list = ParseIntputOptions(ProcessTVCommand("",$field_elements));
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);

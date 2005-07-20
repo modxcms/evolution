@@ -306,7 +306,7 @@ function decode(s){
 			<option value="text" <?php		echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
 			<option value="textarea" <?php	echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
 			<option value="textareamini" <?php	echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
-			<option value="richtext" <?php	echo ($content['display']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
+			<option value="richtext" <?php	echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
 			<option value="dropdown" <?php	echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
 			<option value="listbox" <?php	echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
 			<option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
