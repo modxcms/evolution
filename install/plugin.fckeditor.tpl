@@ -24,6 +24,7 @@ if (!function_exists('getFCKEditorSettings')) {
 		global $fck_editor_style;
 		global $fck_editor_toolbar;
 		global $fck_editor_toolbar_customset;
+		global $fck_editor_autolang;
 
 		// language settings
 		$_lang['FCKEditor_settings'] = "FCKEditor Settings";
@@ -33,6 +34,8 @@ if (!function_exists('getFCKEditorSettings')) {
 		$_lang['fck_editor_toolbar_message'] = "Here you can select which toolbar set to use with FCKEditor.  Choose Basic for limited options, Standard for more options,  Advance for all the available options or Custom to customize your toolbar.";
 		$_lang['fck_editor_custom_toolbar'] = "Custom toolbar:";
 		$_lang['fck_editor_custom_message'] = "Use this option to customize the toolbar set for the FCKEditor. Here you should enter the javascript syntax supported by the editor. For Example, use ['Bold','Italic','-','Link'] to display the Bold, Italic and Link icons . Each icon must be separated by a comma (,) and grouped using the [] bracket.";
+		$_lang['fck_editor_autolang_title'] = "Auto Language:";
+		$_lang['fck_editor_autolang_message'] = "Select the 'Yes' option to have the FCKEditor automatically detect the language used by the browser and load the appropriate language files. FCKEditor language files must be added to the 'assets/plugins/fckeditor/editor/lang' folder";
 
 		$display = $use_editor==1 ? $displayStyle : 'none';
 		$cusDisplay = $use_editor==1 && $fck_editor_toolbar=='custom' ? $displayStyle : 'none';
@@ -43,12 +46,31 @@ if (!function_exists('getFCKEditorSettings')) {
 		$cusTool = $fck_editor_toolbar=='custom' ? "selected='selected'" : "";
 		$tbCustomset = isset($fck_editor_toolbar_customset) ? htmlspecialchars($fck_editor_toolbar_customset) : "['Bold','Italic','Underline','-','Link','Unlink']";
 		$xmlStyle = isset($fck_editor_style) ? htmlspecialchars($fck_editor_style) : "";
+		$autoLang = isset($fck_editor_autolang) ? $fck_editor_autolang : 0;
+		$autoNo = ($fck_editor_autolang=='0' || !isset($fck_editor_autolang)) ? 'checked="checked"' : '';
+		$autoYes = $fck_editor_autolang=='1' ? 'checked="checked"' : '';
 
 		return <<<FCKEditor_HTML_Settings
-		<table id='editorRow_FCKEditor' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 
+		<table id='editorRow_FCKEditor' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 		  
 		  <tr class='row1' style="display: $display;"> 
             <td colspan="2" class="warning" style="color:#707070; background-color:#eeeeee"><h4>{$_lang["FCKEditor_settings"]}<h4></td> 
           </tr> 
+
+          <tr class='row1' style="display: $display"> 
+            <td nowrap class="warning"><b>{$_lang["fck_editor_autolang_title"]}</b></td> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="fck_editor_autolang" value="1" $autoYes /> 
+              {$_lang['yes']}<br /> 
+              <input onChange="documentDirty=true;" type="radio" name="fck_editor_autolang" value="0" $autoNo /> 
+              {$_lang['no']} </td> 
+          </tr> 
+          <tr class='row1' style="display: $display"> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'>{$_lang["fck_editor_autolang_message"]}</td> 
+          </tr> 
+		  <tr class='row1' style="display: $display"> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          
           <tr class='row1' style="display: $display"> 
             <td nowrap class="warning"><b>{$_lang["fck_editor_style_title"]}</b></td> 
             <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="fck_editor_style" value="$xmlStyle" /> 
@@ -107,9 +129,11 @@ if (!function_exists('getFCKEditorScript')) {
 		global $editor_css_path;
 		global $fck_editor_toolbar;
 		global $fck_editor_toolbar_customset;
+		global $fck_editor_autolang;
 		
 		$toolbar = $tbCustomSet ? "custom": $fck_editor_toolbar;
 		$tbCustomSet = "[ ".($tbCustomSet ? $tbCustomSet:$fck_editor_toolbar_customset)." ]"; // remember [[snippets]] detection :)
+		$autoLang = $fck_editor_autolang ? 'true': 'false';
 		
 		// build fck instances
 		foreach($elmList as $fckInstance) {
@@ -133,6 +157,7 @@ if (!function_exists('getFCKEditorScript')) {
 			var FCKImageBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=';
 			var FCKLinkBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Connector=connectors/php/connector.php&ServerPath=';
 			var FCKCustomToolbarSet = {$tbCustomSet};
+			var FCKAutoLanguage = {$autoLang};
 			
 			function FCKeditor_OnComplete(edtInstance) {
 				if (edtInstance){ // to-do: add better listener

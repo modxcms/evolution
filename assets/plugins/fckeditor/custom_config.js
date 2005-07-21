@@ -7,7 +7,7 @@
  * Language settings
  *
  */
-FCKConfig.AutoDetectLanguage	= false ;
+FCKConfig.AutoDetectLanguage	= parent.FCKAutoLanguage;
 FCKConfig.DefaultLanguage		= 'en' ;
 
 

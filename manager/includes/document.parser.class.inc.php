@@ -164,7 +164,7 @@ class DocumentParser {
 	}
 
 	function getSettings() {
-		global $base_url, $base_path;
+		global $base_url, $base_path, $site_url;
 		if(file_exists($base_path.'/assets/cache/siteCache.idx.php')) {
 			include_once $base_path.'/assets/cache/siteCache.idx.php';
 		} else {
@@ -177,6 +177,7 @@ class DocumentParser {
 		// store base_url and base_path inside config array
 		$this->config['base_url'] = $base_url;
 		$this->config['base_path'] = $base_path;
+		$this->config['site_url'] = $site_url;
 
 		// load user setting if user is logged in
 		if($id=$this->getLoginUserID()){
@@ -986,6 +987,11 @@ class DocumentParser {
 			
 			// Parse document source
 			$documentSource = $this->parseDocumentSource($documentSource);
+
+			// setup <base> tag for friendly urls
+			if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
+				$this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
+			}			
 			
 			// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
 			if ($js = $this->getRegisteredClientStartupScripts()){
@@ -1846,27 +1852,34 @@ class DocumentParser {
 	}
 
 	# Registers Startup Client-side JavaScript - these scripts are loaded at inside the <head> tag
-	function regClientStartupScript($src){
+	function regClientStartupScript($src, $plaintext=false){
 		if ($this->loadedjscripts[$src]) return '';
 		$this->loadedjscripts[$src] = true;
-		if (strpos(strtolower($src),"<script")!==false) $this->sjscripts[count($sjscripts)] = $src;
+		if ($plaintext==true) $this->sjscripts[count($sjscripts)] = $src;
+		elseif (strpos(strtolower($src),"<script")!==false) $this->sjscripts[count($sjscripts)] = $src;
 		else $this->sjscripts[count($this->sjscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
 	}
 
 	# Registers Client-side JavaScript 	- these scripts are loaded at the end of the page
-	function regClientScript($src){
+	function regClientScript($src, $plaintext=false){
 		if ($this->loadedjscripts[$src]) return '';
 		$this->loadedjscripts[$src] = true;
-		if (strpos(strtolower(src),"<script")===0) $this->jscripts[count($jscripts)] = src;
+		if ($plaintext==true) $this->jscripts[count($jscripts)] = src;
+		elseif (strpos(strtolower(src),"<script")===0) $this->jscripts[count($jscripts)] = src;
 		else $this->jscripts[count($this->jscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
+	}
+
+	# Registers Client-side Startup HTML block
+	function regClientStartupHTMLBlock($html){
+		$this->regClientStartupScript($html,true);
 	}
 
 	# Registers Client-side HTML block
 	function regClientHTMLBlock($html){
-		if ($this->loadedjscripts[$src]) return '';
-		$this->loadedjscripts[$src] = true;
-		$this->jscripts[count($jscripts)] = src;
+		$this->regClientScript($html,true);
 	}
+
+
 
 	# Remove unwanted html tags and snippet, settings and tags
 	function stripTags($html,$allowed="") {

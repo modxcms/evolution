@@ -107,9 +107,9 @@ class DBAPI {
 		else {
 			$table = $from;
 			$where = ($where != "") ? "WHERE $where" : "";
-			$orderby = ($orderby != "") ? "ORDER BY $sort $dir" : "";
+			$orderby = ($orderby != "") ? "ORDER BY $orderby " : "";
 			$limit = ($limit != "") ? "LIMIT $limit" : "";
-			return $this->query("SELECT $fields FROM $table $where $sort $limit;");	
+			return $this->query("SELECT $fields FROM $table $where $orderby $limit;");	
 		}
 	}
 
