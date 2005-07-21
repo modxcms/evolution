@@ -22,7 +22,7 @@ class ManagerAPI {
 		$vsid = isset($_SESSION["mgrPageViewSID"]) ? $_SESSION["mgrPageViewSID"] : '';
 		if($vsid!=$this->action) {
 			$_SESSION["mgrPageViewSDATA"] = array(); // new view state
-			$_SESSION["mgrPageViewSID"] = $id>0 ? $action:$this->action; // set id
+			$_SESSION["mgrPageViewSID"] = $id>0 ? $id:$this->action; // set id
 		}
 		$_PAGE['vs'] = &$_SESSION["mgrPageViewSDATA"]; // restore viewstate
 	}
@@ -30,7 +30,7 @@ class ManagerAPI {
 	// save page view state - not really necessary,
 	function savePageViewState($id=0){
 		$_SESSION["mgrPageViewSDATA"] = $_PAGE['vs'];
-		$_SESSION["mgrPageViewSID"] = $id>0 ? $action:$this->action;
+		$_SESSION["mgrPageViewSID"] = $id>0 ? $id:$this->action;
 	}
 	
 	// check for saved form
@@ -47,7 +47,7 @@ class ManagerAPI {
 	// saved form post from $_POST
 	function saveFormValues($id=0){
 		$_SESSION["mgrFormValues"] = $_POST;
-		$_SESSION["mgrFormValueId"] = $id>0 ? $action:$this->action;
+		$_SESSION["mgrFormValueId"] = $id>0 ? $id:$this->action;
 	}		
 	// load saved form values into $_POST
 	function loadFormValues(){

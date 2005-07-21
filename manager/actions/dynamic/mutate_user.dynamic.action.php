@@ -65,16 +65,15 @@ if($_REQUEST['a']==12) {
 	$usernamedata = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$usernamedata['username'];
 } else {
-	$userdata = 0;
-	$usernamedata = 0;
+	$userdata = array();
+	$usersettings = array();
+	$usernamedata = array();
 	$_SESSION['itemname']="New user";	
 }
 
 // restore saved form
 $formRestored = false;
 if($modx->manager->hasFormValues()) {
-	if($userdata==0) $userdata = array();
-	if($usernamedata==0) $usernamedata = array();	
 	$modx->manager->loadFormValues();
 	// restore post values 
 	$userdata = array_merge($userdata,$_POST);
