@@ -637,8 +637,10 @@ ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `menutitle` VARCHAR(30) NOT NULL 
 , ADD COLUMN `haskeywords` TINYINT(1) NOT NULL default '0' COMMENT 'has links to keywords' AFTER `donthit`
 , ADD COLUMN `hasmetatags` TINYINT(1) NOT NULL default '0' COMMENT 'has links to meta tags' AFTER `haskeywords`
 , ADD COLUMN `privateweb` TINYINT(1) NOT NULL default '0' COMMENT 'Private web document' AFTER `hasmetatags`
-, ADD COLUMN `privatemgr` TINYINT(1) NOT NULL default '0' COMMENT 'Private manager document' AFTER `privateweb`
-, ADD COLUMN `content_dispo` TINYINT(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment' AFTER `privatemgr`;
+, ADD COLUMN `privatemgr` TINYINT(1) NOT NULL default '0' COMMENT 'Private manager document' AFTER `privateweb`;
+
+
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `content_dispo` TINYINT(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment' AFTER `privatemgr`;
 
 
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `hidemenu` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Hide document from menu' AFTER `content_dispo`;
