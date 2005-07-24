@@ -184,14 +184,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 	$sql = "SELECT $dbase.".$table_prefix."web_users.*, $dbase.".$table_prefix."web_user_attributes.* FROM $dbase.".$table_prefix."web_users, $dbase.".$table_prefix."web_user_attributes WHERE $dbase.".$table_prefix."web_users.username REGEXP BINARY '^".$username."$' and $dbase.".$table_prefix."web_user_attributes.internalKey=$dbase.".$table_prefix."web_users.id;";
 	$ds = $modx->dbQuery($sql);
-	$limit = mysql_num_rows($ds);
+	$limit = $modx->db->getRecordCount($ds);
 
 	if($limit==0 || $limit>1) {
 		$output = webLoginAlert("Incorrect username or password entered!");
 		return;
 	}	
 
-	$row = mysql_fetch_assoc($ds);
+	$row = $modx->db->getRow($ds);
 
 	$internalKey 			= $row['internalKey'];
 	$dbasePassword 			= $row['password'];
@@ -332,8 +332,8 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			FROM $tblug ug
 			INNER JOIN $tbluga uga ON uga.webgroup=ug.webgroup
 			WHERE ug.webuser =".$internalKey;
-	$ds = $modx->dbQuery($sql); 
-	while ($row = mysql_fetch_row($ds)) $dg[$i++]=$row[0];
+	$ds = $modx->db->query($sql); 
+	while ($row = $modx->db->getRow($ds)) $dg[$i++]=$row[0];
 	$_SESSION['webDocgroups'] = $dg;
 
 	if($_POST['rememberme']==1) {

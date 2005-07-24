@@ -50,11 +50,11 @@ else if ($isPostBack){
 	}
 	else {
 		$sql = "SELECT id FROM ".$modx->getFullTableName("web_users")." WHERE username='$username'";
-		if(!$rs = mysql_query($sql)){
+		if(!$rs = $modx->db->query($sql)){
 			$output = webLoginAlert("An error occured while attempting to retreive all users with username $username.").$tpl;
 			return;
 		} 
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if($limit>0) {
 			$output = webLoginAlert("Username is already in use!").$tpl;
 			return;
@@ -74,13 +74,13 @@ else if ($isPostBack){
 
 	// check for duplicate email address
 	$sql = "SELECT id FROM ".$modx->getFullTableName("web_user_attributes")." WHERE email='$email'";
-	if(!$rs = mysql_query($sql)){
+	if(!$rs = $modx->db->query($sql)){
 		$output = webLoginAlert("An error occured while attempting to retreive all users with email $email.").$tpl;
 		return;
 	} 
-	$limit = mysql_num_rows($rs);
+	$limit = $modx->db->getRecordCount($rs);
 	if($limit>0) {
-		$row=mysql_fetch_assoc($rs);
+		$row=$modx->db->getRow($rs);
 		if($row['id']!=$id) {
 			$output = webLoginAlert("Email is already in use!").$tpl;
 			return;
@@ -106,18 +106,18 @@ else if ($isPostBack){
 	// create the user account
 	$sql = "INSERT INTO ".$modx->getFullTableName("web_users")." (username, password) 
 			VALUES('".$username."', md5('".$password."'));";
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	if(!$rs){
 		$output = webLoginAlert("An error occured while attempting to save the user.").$tpl;
 		return;
 	} 		
 	// now get the id
-	$key=mysql_insert_id();
+	$key=$modx->db->getInsertId();
 
 	// save user attributes
 	$sql = "INSERT INTO ".$modx->getFullTableName("web_user_attributes")." (internalKey, fullname, email, zip, state, country) 
 			VALUES($key, '$fullname', '$email', '$zip', '$state', '$country');";
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	if(!$rs){
 		$output = webLoginAlert("An error occured while attempting to save the user's attributes.").$tpl;
 		return;
