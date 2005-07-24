@@ -91,8 +91,8 @@ if($installMode==0) {
 include "sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`","",$dbase), $table_prefix, $adminname, $adminpass);
 $sqlParser->mode = ($installMode==0) ? "new":"upd";
-$sqlParser->imageUrl = 'http://'.$_SERVER['SERVER_NAME'].$base_url."assets/images/";
-$sqlParser->imagePath = $base_path."assets/images/";
+$sqlParser->imageUrl = 'http://'.$_SERVER['SERVER_NAME'].$base_url."assets/";
+$sqlParser->imagePath = $base_path."assets/";
 $sqlParser->fileManagerPath = $base_path;
 $sqlParser->ignoreDuplicateErrors = true;
 $sqlParser->connect();
