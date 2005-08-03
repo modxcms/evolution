@@ -333,7 +333,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			INNER JOIN $tbluga uga ON uga.webgroup=ug.webgroup
 			WHERE ug.webuser =".$internalKey;
 	$ds = $modx->db->query($sql); 
-	while ($row = $modx->db->getRow($ds)) $dg[$i++]=$row[0];
+	while ($row = $modx->db->getRow($ds,"num")) $dg[$i++]=$row[0];
 	$_SESSION['webDocgroups'] = $dg;
 
 	if($_POST['rememberme']==1) {
