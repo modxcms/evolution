@@ -51,8 +51,6 @@ $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
 ob_start();
 error_reporting(E_ALL);
-session_start();
-
 
 /**
  *	Filename: index.php
@@ -83,6 +81,9 @@ if($database_user=="") {
 	}
 }
 
+// start session 
+startCMSSession();
+
 // initiate a new document parser
 include_once $base_path."/manager/includes/document.parser.class.inc.php";
 $modx = $etomite = new DocumentParser;
@@ -95,10 +96,7 @@ $modx->dumpSQL = false;
 $modx->dumpSnippets = false;
 $modx->tstart = $tstart;	// feed the parser the execution 
 							// start time
-
-// invoke OnWebPageInit event
-$modx->invokeEvent("OnWebPageInit");
-
+						
 // execute the parser
 $modx->executeParser();
 
