@@ -1,3 +1,8 @@
+<?php
+
+$id = (!empty($_REQUEST["id"])) ? (int)$_REQUEST["id"] : "[QuickEditModuleId]";
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -112,7 +117,6 @@ margin-left:30px;
 font-family:cursive;
 font-size:14pt;
 }
-
 </style>
 
 </head>
@@ -202,11 +206,15 @@ font-size:14pt;
 <p>To use the custom links method just insert normal links anywhere in your template. Two example links are provided for you below. If you use this method you must realize that the links are like any other link and will be visible to any user or visitor.</p>
 
 <p>
-Javascript (recommended): <code>window.open('index.php?a=112&amp;id=[QuickEditModuleId]&amp;doc=[*id*]&amp;var=content', 'QuickEditor', 'width=525, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1');</code><br />
-Link Tag: <code>&lt; href="index.php?a=112&amp;id=[QuickEditModuleId]&amp;doc=[*id*]&amp;var=content" target="_blank"&gt;Edit&lt;/a&gt;</code>
+Javascript (recommended): <code>window.open('index.php?a=112&amp;id=<?php echo $id; ?>&amp;doc=[*id*]&amp;var=content', 'QuickEditor', 'width=525, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1');</code><br />
+Link Tag: <code>&lt; href="index.php?a=112&amp;id=<?php echo $id; ?>&amp;doc=[*id*]&amp;var=content" target="_blank"&gt;Edit&lt;/a&gt;</code>
 </p>
 
-<p>Make sure to replace <code>[QuickEditModuleId]</code> with the id of your QuickEdit module.</p>
+<?php
+if (! is_integer($id)) { 
+	echo "<p>Make sure to replace <code>[QuickEditModuleId]</code> with the id of your QuickEdit module.</p>";	
+};
+?>
 </div>
 
 <div class="qe_level_1">

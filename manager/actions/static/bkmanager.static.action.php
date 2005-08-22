@@ -126,7 +126,7 @@ else {
 	// enable record deletion for certain tables
 	// sottwell@sottwell.com
 	// 08-2005
-	if($db_status['Name'] == $table_prefix."event_log" || $db_status['Name'] == $table_prefix."log_access" || $db_status['Name'] == $table_prefix."log_hosts" || $db_status['Name'] == $table_prefix."log_visitors" || $db_status['Name'] == $table_prefix."manager_log") { 
+	if($modx->hasPermission('settings') && ($db_status['Name'] == $table_prefix."event_log" || $db_status['Name'] == $table_prefix."log_access" || $db_status['Name'] == $table_prefix."log_hosts" || $db_status['Name'] == $table_prefix."log_visitors" || $db_status['Name'] == $table_prefix."manager_log")) { 
 		echo "<td align='right'>";
 		echo "<a href='index.php?a=54&mode=$action&u=".$db_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($db_status['Data_length']+$db_status['Data_free'])."</a>";
 		echo "</td>";
@@ -134,9 +134,14 @@ else {
 	else { 
 		echo "<td align='right'>".nicesize($db_status['Data_length']+$db_status['Data_free'])."</td>";
 	} 
-	// end record deletion mod
+	
+	if($modx->hasPermission('settings')) {
+		echo  "<td align='right'>".($db_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$db_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($db_status['Data_free'])."</a>" : "-")."</td>";
+	}
+	else {
+		echo  "<td align='right'>".($db_status['Data_free']>0 ? nicesize($db_status['Data_free']) : "-")."</td>";
+	}
 ?>						
-			<td align="right"><?php echo $db_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$db_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($db_status['Data_free'])."</a>" : "-" ; ?></td>
 			<td align="right"><?php echo nicesize($db_status['Data_length']-$db_status['Data_free']); ?></td>
 			<td align="right"><?php echo nicesize($db_status['Index_length']); ?></td>
 			<td align="right"><?php echo nicesize($db_status['Index_length']+$db_status['Data_length']+$db_status['Data_free']); ?></td>

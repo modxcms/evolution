@@ -1,5 +1,9 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {	
+	$e->setError(3);
+	$e->dumpError();	
+}
 ?>
 <div class="subTitle">
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["view_sysinfo"]; ?></span>
@@ -161,7 +165,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// enable record deletion for certain tables
 	// sottwell@sottwell.com
 	// 08-2005
-	if($log_status['Name'] == $table_prefix."event_log" || $log_status['Name'] == $table_prefix."log_access" || $log_status['Name'] == $table_prefix."log_hosts" || $log_status['Name'] == $table_prefix."log_visitors" || $log_status['Name'] == $table_prefix."manager_log") { 
+	if($modx->hasPermission('settings') && ($log_status['Name'] == $table_prefix."event_log" || $log_status['Name'] == $table_prefix."log_access" || $log_status['Name'] == $table_prefix."log_hosts" || $log_status['Name'] == $table_prefix."log_visitors" || $log_status['Name'] == $table_prefix."manager_log")) { 
 		echo "<td align='right'>";
 		echo "<a href='index.php?a=54&mode=$action&u=".$log_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</a>";
 		echo "</td>";
@@ -169,13 +173,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	else { 
 		echo "<td align='right'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</td>";
 	} 
-	// end record deletion mod
+
+	if($modx->hasPermission('settings')) {
+		echo  "<td align='right'>".($log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$log_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($log_status['Data_free'])."</a>" : "-")."</td>";
+	}
+	else {
+		echo  "<td align='right'>".($log_status['Data_free']>0 ? nicesize($log_status['Data_free']) : "-")."</td>";
+	}
 ?>						
-			<td align="right"><?php echo $log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$log_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($log_status['Data_free'])."</a>" : "-" ; ?></td>
-			
-<!--			<td align="right"><?php echo nicesize($log_status['Data_length']+$log_status['Data_free']); ?></td>
-			<td align="right"><?php echo $log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=53&t=".$log_status['Name']."'>".nicesize($log_status['Data_free'])."</a>" : "-" ; ?></td>
--->			
 			<td align="right"><?php echo nicesize($log_status['Data_length']-$log_status['Data_free']); ?></td>
 			<td align="right"><?php echo nicesize($log_status['Index_length']); ?></td>
 			<td align="right"><?php echo nicesize($log_status['Index_length']+$log_status['Data_length']+$log_status['Data_free']); ?></td>
