@@ -32,6 +32,7 @@ var FCKeditor = function( instanceName, width, height, toolbarSet, value )
 	this.ServerPath		= '/' ;
 	this.CheckBrowser	= true ;
 	this.DisplayErrors	= true ;
+	this.EnableSafari	= false ;		// This is a temporary property, while Safari support is under development.
 
 	this.Config			= new Object() ;
 
@@ -133,6 +134,9 @@ FCKeditor.prototype._IsCompatibleBrowser = function()
 	// Gecko
 	else if ( navigator.product == "Gecko" && navigator.productSub >= 20030210 )
 		return true ;
+	// Safari
+	else if ( this.EnableSafari && sAgent.indexOf( 'safari' ) != -1 )
+		return ( sAgent.match( /safari\/(\d+)/ )[1] >= 312 ) ;	// Build must be at least 312 (1.3)
 	else
 		return false ;
 }

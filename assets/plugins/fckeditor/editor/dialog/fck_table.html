@@ -126,10 +126,13 @@ function Ok()
 			for ( var c = 0 ; c < iCols ; c++ )
 			{
 				var oCell = oRow.insertCell(-1) ;
-				oCell.innerHTML = "&nbsp;" ;
+				if ( oEditor.FCKBrowserInfo.IsGecko )
+					oCell.innerHTML = '<br _moz_editor_bogus_node="TRUE">' ;
+				//oCell.innerHTML = "&nbsp;" ;
 			}
 		}
 		
+		oEditor.FCKUndo.SaveUndoStep() ;
 		oEditor.FCK.InsertElement( table ) ;
 	}
 	

@@ -38,7 +38,7 @@ window.onload = function()
 	if ( oActiveEl && oActiveEl.tagName.toUpperCase() == 'INPUT' && oActiveEl.type == 'radio' )
 	{
 		GetE('txtName').value		= oActiveEl.name ;
-		GetE('txtValue').value		= GetAttribute( oActiveEl, 'value' ) ;
+		GetE('txtValue').value		= oActiveEl.value ;
 		GetE('txtSelected').checked	= oActiveEl.checked ;
 	}
 	else

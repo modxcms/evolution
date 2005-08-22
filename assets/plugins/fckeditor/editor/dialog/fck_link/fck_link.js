@@ -28,8 +28,8 @@ window.parent.AddTab( 'Info', FCKLang.DlgLnkInfoTab ) ;
 if ( !FCKConfig.LinkDlgHideTarget )
 	window.parent.AddTab( 'Target', FCKLang.DlgLnkTargetTab, true ) ;
 
-// TODO : Enable File Upload (1/3).
-//window.parent.AddTab( 'Upload', 'Upload', true ) ;
+if ( FCKConfig.LinkUpload )
+	window.parent.AddTab( 'Upload', FCKLang.DlgLnkUpload, true ) ;
 
 if ( !FCKConfig.LinkDlgHideAdvanced )
 	window.parent.AddTab( 'Advanced', FCKLang.DlgAdvancedTag ) ;
@@ -39,7 +39,7 @@ function OnDialogTabChange( tabCode )
 {
 	ShowE('divInfo'		, ( tabCode == 'Info' ) ) ;
 	ShowE('divTarget'	, ( tabCode == 'Target' ) ) ;
-//	ShowE('divUpload'	, ( tabCode == 'Upload' ) ) ;	// TODO : Enable File Upload (2/3).
+	ShowE('divUpload'	, ( tabCode == 'Upload' ) ) ;
 	ShowE('divAttribs'	, ( tabCode == 'Advanced' ) ) ;
 }
 
@@ -140,6 +140,10 @@ window.onload = function()
 
 	// Show the initial dialog content.
 	GetE('divInfo').style.display = '' ;
+
+	// Set the actual uploader URL.
+	if ( FCKConfig.LinkUpload )
+		GetE('frmUpload').action = FCKConfig.LinkUploadURL ;
 
 	// Activate the "OK" button.
 	window.parent.SetOkButton( true ) ;
@@ -286,8 +290,8 @@ function SetLinkType( linkType )
 	if ( !FCKConfig.LinkDlgHideTarget )
 		window.parent.SetTabVisibility( 'Target'	, (linkType == 'url') ) ;
 
-// TODO : Enable File Upload (3/3).
-//	window.parent.SetTabVisibility( 'Upload'	, (linkType == 'url') ) ;
+	if ( FCKConfig.LinkUpload )
+		window.parent.SetTabVisibility( 'Upload'	, (linkType == 'url') ) ;
 
 	if ( !FCKConfig.LinkDlgHideAdvanced )
 		window.parent.SetTabVisibility( 'Advanced'	, (linkType != 'anchor' || bHasAnchors) ) ;
@@ -518,4 +522,59 @@ function SetUrl( url )
 {
 	document.getElementById('txtUrl').value = url ;
 	OnUrlChange() ;
+	window.parent.SetSelectedTab( 'Info' ) ;
+}
+
+function OnUploadCompleted( errorNumber, fileUrl, fileName, customMsg )
+{
+	switch ( errorNumber )
+	{
+		case 0 :	// No errors
+			alert( 'Your file has been successfully uploaded' ) ;
+			break ;
+		case 1 :	// Custom error
+			alert( customMsg ) ;
+			return ;
+		case 101 :	// Custom warning
+			alert( customMsg ) ;
+			break ;
+		case 201 :
+			alert( 'A file with the same name is already available. The uploaded file has been renamed to "' + fileName + '"' ) ;
+			break ;
+		case 202 :
+			alert( 'Invalid file type' ) ;
+			return ;
+		case 203 :
+			alert( "Security error. You probably don't have enough permissions to upload. Please check your server." ) ;
+			return ;
+		default :
+			alert( 'Error on file upload. Error number: ' + errorNumber ) ;
+			return ;
+	}
+
+	SetUrl( fileUrl ) ;
+	GetE('frmUpload').reset() ;
+}
+
+var oUploadAllowedExtRegex	= new RegExp( FCKConfig.LinkUploadAllowedExtensions, 'i' ) ;
+var oUploadDeniedExtRegex	= new RegExp( FCKConfig.LinkUploadDeniedExtensions, 'i' ) ;
+
+function CheckUpload()
+{
+	var sFile = GetE('txtUploadFile').value ;
+	
+	if ( sFile.length == 0 )
+	{
+		alert( 'Please select a file to upload' ) ;
+		return false ;
+	}
+	
+	if ( ( FCKConfig.LinkUploadAllowedExtensions.length > 0 && !oUploadAllowedExtRegex.test( sFile ) ) ||
+		( FCKConfig.LinkUploadDeniedExtensions.length > 0 && oUploadDeniedExtRegex.test( sFile ) ) )
+	{
+		OnUploadCompleted( 202 ) ;
+		return false ;
+	}
+	
+	return true ;
 }

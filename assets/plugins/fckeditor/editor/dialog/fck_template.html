@@ -33,8 +33,6 @@
 				margin: 5px;
 				padding: 7px;
 				border: #eeeeee 1px solid;
-				behavior: url(fck_template/fck_templateitem.htc);
-				-moz-binding:url(fck_template/fck_template_moz-bindings.xml#templateitem);
 			}
 
 			.TplItem TABLE
@@ -151,8 +149,27 @@ function LoadTemplatesXml()
 			sInner += '</td></tr></table>' ;
 
 			oItemDiv.innerHTML = sInner ;
+			
+			oItemDiv.onmouseover = ItemDiv_OnMouseOver ;
+			oItemDiv.onmouseout = ItemDiv_OnMouseOut ;
+			oItemDiv.onclick = ItemDiv_OnClick ;
 		}
 	}
+}
+
+function ItemDiv_OnMouseOver()
+{
+	this.className += ' PopupSelectionBox' ;
+}
+
+function ItemDiv_OnMouseOut()
+{
+	this.className = this.className.replace( /\s*PopupSelectionBox\s*/, '' ) ;
+}
+
+function ItemDiv_OnClick()
+{
+	SelectTemplate( this.TplIndex ) ;
 }
 
 function SelectTemplate( index )

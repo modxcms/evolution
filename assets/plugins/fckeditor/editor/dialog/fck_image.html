@@ -148,6 +148,15 @@
 				</tr>
 			</table>
 		</div>
+		<div id="divUpload" style="DISPLAY: none">
+			<form id="frmUpload" method="post" target="UploadWindow" enctype="multipart/form-data" action="" onsubmit="return CheckUpload();">
+				<span fckLang="DlgLnkUpload">Upload</span><br />
+				<input id="txtUploadFile" style="WIDTH: 100%" type="file" size="40" name="NewFile" /><br />
+				<br />
+				<input id="btnUpload" type="submit" value="Send it to the Server" fckLang="DlgLnkBtnUpload" />
+				<iframe name="UploadWindow" style="DISPLAY: none"></iframe>
+			</form>
+		</div>
 		<div id="divLink" style="DISPLAY: none">
 			<table cellspacing="1" cellpadding="1" border="0" width="100%">
 				<tr>

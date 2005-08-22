@@ -138,6 +138,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			unset($_SESSION['webLastlogin']);
 			unset($_SESSION['webnrlogins']);
 			unset($_SESSION['webUsrConfigSet']);
+			unset($_SESSION['webUserGroupNames']);
 		}
 		else {
 			// Unset all of the session variables.
@@ -149,7 +150,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			session_destroy();
 			$sessionID = md5(date('d-m-Y H:i:s'));
 			session_id($sessionID);
-			session_start();
+			startCMSSession();
 			session_destroy();
 		}
 
@@ -322,7 +323,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	$_SESSION['webFailedlogins']=$failedlogins; 
 	$_SESSION['webLastlogin']=$lastlogin; 
 	$_SESSION['webnrlogins']=$nrlogins;
-	//$_SESSION['sessionRegistered']=$sessionRegistered; 
+	$_SESSION['webUserGroupNames'] = ''; // reset user group names
 
 	// get user's document groups
 	$dg='';$i=0;
@@ -333,7 +334,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			INNER JOIN $tbluga uga ON uga.webgroup=ug.webgroup
 			WHERE ug.webuser =".$internalKey;
 	$ds = $modx->db->query($sql); 
-	while ($row = $modx->db->getRow($ds,"num")) $dg[$i++]=$row[0];
+	while ($row = $modx->db->getRow($ds,'num')) $dg[$i++]=$row[0];
 	$_SESSION['webDocgroups'] = $dg;
 
 	if($_POST['rememberme']==1) {

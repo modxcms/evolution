@@ -10,7 +10,6 @@
 FCKConfig.AutoDetectLanguage	= parent.FCKAutoLanguage;
 FCKConfig.DefaultLanguage		= 'en' ;
 
-
 /* *
  * setup toolbar sets 
  *
@@ -28,7 +27,7 @@ FCKConfig.ToolbarSets["standard"] = [
 	['OrderedList','UnorderedList','-','Outdent','Indent'],
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
 	['Link','Anchor'],
-	['Image','Table','Rule','SpecialChar'],
+	['Image','Flash','Table','Rule','SpecialChar'],
 	['Style'],['FontFormat'],['FontName'],['FontSize'],
 	['TextColor','BGColor']
 ];
@@ -41,7 +40,7 @@ FCKConfig.ToolbarSets["advanced"] = [
 	['OrderedList','UnorderedList','-','Outdent','Indent'],
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
 	['Link','Unlink','Anchor'],
-	['Image','Table','Rule','Smiley','SpecialChar','UniversalKey'],
+	['Image','Flash','Table','Rule','Smiley','SpecialChar','UniversalKey'],
 	['Form','Checkbox','Radio','TextField','Textarea','Select','Button','ImageButton','HiddenField'],
 	'/',
 	['Style','FontFormat','FontName','FontSize'],

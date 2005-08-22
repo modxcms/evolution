@@ -8,8 +8,8 @@ my $spellercss = '../spellerStyle.css';							# by FredCK
 # my $wordWindowSrc = '/speller/wordWindow.js';					# by FredCK
 my $wordWindowSrc = '../wordWindow.js';							# by FredCK
 my @textinputs = param( 'textinputs[]' ); # array
-# my $aspell_cmd = 'aspell';									# by FredCK (for Linux)
-my $aspell_cmd = '"C:\Program Files\Aspell\bin\aspell.exe"';	# by FredCK (for Windows)
+my $aspell_cmd = 'aspell';									# by FredCK (for Linux)
+# my $aspell_cmd = '"C:\Program Files\Aspell\bin\aspell.exe"';	# by FredCK (for Windows)
 my $lang = 'en_US';
 # my $aspell_opts = "-a --lang=$lang --encoding=utf-8";			# by FredCK
 my $aspell_opts = "-a --lang=$lang --encoding=utf-8 -H";		# by FredCK

@@ -6,8 +6,8 @@ $spellercss = '../spellerStyle.css';			// by FredCK
 //$word_win_src = '/speller/wordWindow.js';		// by FredCK
 $word_win_src = '../wordWindow.js';				// by FredCK
 $textinputs = $_POST['textinputs']; # array
-//$aspell_prog = 'aspell';									// by FredCK (for Linux)
-$aspell_prog = '"C:\Program Files\Aspell\bin\aspell.exe"';	// by FredCK (for Windows)
+$aspell_prog = 'aspell';									// by FredCK (for Linux)
+//$aspell_prog = '"C:\Program Files\Aspell\bin\aspell.exe"';	// by FredCK (for Windows)
 $lang = 'en_US';
 //$aspell_opts = "-a --lang=$lang --encoding=utf-8";	// by FredCK
 $aspell_opts = "-a --lang=$lang --encoding=utf-8 -H";	// by FredCK

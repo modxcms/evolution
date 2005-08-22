@@ -41,6 +41,8 @@ RemoveLink			: "Remove Link",
 Anchor				: "Insert/Edit Anchor",
 InsertImageLbl		: "Image",
 InsertImage			: "Insert/Edit Image",
+InsertFlashLbl		: "Flash",
+InsertFlash			: "Insert/Edit Flash",
 InsertTableLbl		: "Table",
 InsertTable			: "Insert/Edit Table",
 InsertLineLbl		: "Line",
@@ -105,6 +107,7 @@ SplitCell			: "Split Cell",
 CellProperties		: "Cell Properties",
 TableProperties		: "Table Properties",
 ImageProperties		: "Image Properties",
+FlashProperties		: "Flash Properties",
 
 AnchorProp			: "Anchor Properties",
 ButtonProp			: "Button Properties",
@@ -136,6 +139,8 @@ DlgBtnClose			: "Close",
 DlgBtnBrowseServer	: "Browse Server",
 DlgAdvancedTag		: "Advanced",
 DlgOpOther			: "&lt;Other&gt;",
+DlgInfoTab			: "Info",
+DlgAlertUrl			: "Please insert the URL",
 
 // General Dialogs Labels
 DlgGenNotSet		: "&lt;not set&gt;",
@@ -181,6 +186,16 @@ DlgImgAlignTop		: "Top",
 DlgImgPreview		: "Preview",
 DlgImgAlertUrl		: "Please type the image URL",
 DlgImgLinkTab		: "Link",
+
+// Flash Dialog
+DlgFlashTitle		: "Flash Properties",
+DlgFlashChkPlay		: "Auto Play",
+DlgFlashChkLoop		: "Loop",
+DlgFlashChkMenu		: "Enable Flash Menu",
+DlgFlashScale		: "Scale",
+DlgFlashScaleAll	: "Show all",
+DlgFlashScaleNoBorder	: "No Border",
+DlgFlashScaleFit	: "Exact Fit",
 
 // Link Dialog
 DlgLnkWindowTitle	: "Link",
@@ -310,7 +325,11 @@ PasteErrorCopy	: "Your browser security settings don't permit the editor to auto
 PasteAsText		: "Paste as Plain Text",
 PasteFromWord	: "Paste from Word",
 
-DlgPasteMsg		: "The editor was not able to automatically execute pasting because of the <STRONG>security settings</STRONG> of your browser.<BR>Please paste inside the following box using the keyboard (<STRONG>Ctrl+V</STRONG>) and hit <STRONG>OK</STRONG>.",
+DlgPasteMsg2	: "Please paste inside the following box using the keyboard (<STRONG>Ctrl+V</STRONG>) and hit <STRONG>OK</STRONG>.",
+DlgPasteIgnoreFont		: "Ignore Font Face definitions",
+DlgPasteRemoveStyles	: "Remove Styles definitions",
+DlgPasteCleanBox		: "Clean Up Box",
+
 
 // Color Picker
 ColorAutomatic	: "Automatic",

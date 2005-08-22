@@ -43,7 +43,10 @@ function GetAttribute( element, attName, valueIfNull )
 	if ( oAtt == null || !oAtt.specified )
 		return valueIfNull ? valueIfNull : '' ;
 
-	var oValue = element.getAttribute( attName, 2 ) ;
+	var oValue ;
+	
+	if ( !( oValue = element.getAttribute( attName, 2 ) ) )
+		oValue = oAtt.nodeValue ;
 
 	return ( oValue == null ? valueIfNull : oValue ) ;
 }
