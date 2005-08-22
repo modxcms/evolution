@@ -20,20 +20,20 @@ function createGUID(){
 
 // duplicate module
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {	
-	$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, category, wrap, icon, enable_source, sourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode) 
-			SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, category, wrap, icon, enable_source, sourcefile, createdon, editedon, '".createGUID()."' as 'guid', enable_sharedparams, properties, modulecode 
+	$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode) 
+			SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, '".createGUID()."' as 'guid', enable_sharedparams, properties, modulecode 
 			FROM ".$modx->getFullTableName("site_modules")." WHERE id=$id;";
 	$rs = mysql_query($sql);
 }
 else {
-	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, category, wrap, icon, enable_source, sourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode 
+	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode 
 			FROM ".$modx->getFullTableName("site_modules")." WHERE id=$id;";
 	$rs = mysql_query($sql);
 	if($rs) {
 		$row = mysql_fetch_assoc($rs);
 		$sql ="INSERT INTO ".$modx->getFullTableName("site_modules")." 
-				(name, description, disabled, category, wrap, icon, enable_source, sourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode) VALUES 
-				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', ".$row['disabled'].", '".$row['category']."', '".$row['wrap']."', '".mysql_escape_string($row['icon'])."', '".mysql_escape_string($row['enable_source'])."', '".mysql_escape_string($row['sourcefile'])."', '".$row['createdon']."', '".$row['editedon']."', '".createGuid()."', '".mysql_escape_string($row['enable_sharedparams'])."', '".mysql_escape_string($row['properties'])."', '".mysql_escape_string($row['modulecode'])."');";
+				(name, description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode) VALUES 
+				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', ".$row['disabled'].", '".$row['category']."', '".$row['wrap']."', '".mysql_escape_string($row['icon'])."', '".mysql_escape_string($row['enable_resource'])."', '".mysql_escape_string($row['resourcefile'])."', '".$row['createdon']."', '".$row['editedon']."', '".createGuid()."', '".mysql_escape_string($row['enable_sharedparams'])."', '".mysql_escape_string($row['properties'])."', '".mysql_escape_string($row['modulecode'])."');";
 		$rs = mysql_query($sql);
 	}	
 }

@@ -1,17 +1,17 @@
 <!--
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
- * 
+ *
  * Licensed under the terms of the GNU Lesser General Public License:
  * 		http://www.opensource.org/licenses/lgpl-license.php
- * 
+ *
  * For further information visit:
  * 		http://www.fckeditor.net/
- * 
+ *
  * File Name: frmfolders.html
- * 	This page shows the list of folders available in the parent folder 
+ * 	This page shows the list of folders available in the parent folder
  * 	of the current folder.
- * 
+ *
  * File Authors:
  * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
 -->
@@ -35,7 +35,7 @@ oListManager.Init = function()
 	this.Table = document.getElementById('tableFiles') ;
 	this.UpRow = document.getElementById('trUp') ;
 
-	this.TableRows = new Object() ;	
+	this.TableRows = new Object() ;
 }
 
 oListManager.Clear = function()
@@ -66,14 +66,14 @@ oListManager.AddItem = function( folderName, folderPath )
 	oCell = oRow.insertCell(-1) ;
 	oCell.noWrap = true ;
 	oCell.innerHTML = '&nbsp;' + sLink + folderName + '</a>' ;
-	
+
 	this.TableRows[ folderPath ] = oRow ;
 }
 
 oListManager.ShowUpFolder = function( upFolderPath )
 {
 	this.UpRow.style.display = ( upFolderPath != null ? '' : 'none' ) ;
-	
+
 	if ( upFolderPath != null )
 	{
 		document.getElementById('linkUpIcon').onclick = document.getElementById('linkUp').onclick = function()
@@ -86,8 +86,8 @@ oListManager.ShowUpFolder = function( upFolderPath )
 
 function CheckLoaded()
 {
-	if ( window.top.IsLoadedActualFolder 
-		&& window.top.IsLoadedCreateFolder 
+	if ( window.top.IsLoadedActualFolder
+		&& window.top.IsLoadedCreateFolder
 		&& window.top.IsLoadedUpload
 		&& window.top.IsLoadedResourcesList )
 	{
@@ -111,7 +111,7 @@ function OpenFolder( folderPath )
 	// Change the style for the select row (to show the opened folder).
 	for ( var sFolderPath in oListManager.TableRows )
 	{
-		oListManager.TableRows[ sFolderPath ].className = 
+		oListManager.TableRows[ sFolderPath ].className =
 			( sFolderPath == folderPath ? 'FolderListCurrentFolder' : 'FolderListFolder' ) ;
 	}
 
@@ -119,7 +119,7 @@ function OpenFolder( folderPath )
 	window.parent.frames['frmActualFolder'].SetCurrentFolder( oConnector.ResourceType, folderPath ) ;
 	window.parent.frames['frmCreateFolder'].SetCurrentFolder( oConnector.ResourceType, folderPath ) ;
 	window.parent.frames['frmUpload'].SetCurrentFolder( oConnector.ResourceType, folderPath ) ;
-	
+
 	// Load the resources list for this folder.
 	window.parent.frames['frmResourcesList'].LoadResources( oConnector.ResourceType, folderPath ) ;
 }
@@ -136,20 +136,20 @@ function LoadFolders( folderPath )
 
 	// Show/Hide the Up Folder.
 	oListManager.ShowUpFolder( sParentFolderPath ) ;
-	
+
 	if ( folderPath != '/' )
 	{
 		sActiveFolder = folderPath ;
 		oConnector.CurrentFolder = sParentFolderPath
 		oConnector.SendCommand( 'GetFolders', null, GetFoldersCallBack ) ;
 	}
-	else 
+	else
 	{
 		oListManager.ShowUpFolder( '/' ) ;
 		sActiveFolder = folderPath ;
-		oConnector.SendCommand( 'GetFolders', null, GetFoldersCallBack ) ;	
+		oConnector.SendCommand( 'GetFolders', null, GetFoldersCallBack ) ;
 	}
-		
+
 }
 
 function GetFoldersCallBack( fckXml )
@@ -157,15 +157,15 @@ function GetFoldersCallBack( fckXml )
 	// Get the current folder path.
 	var oNode = fckXml.SelectSingleNode( 'Connector/CurrentFolder' ) ;
 	var sCurrentFolderPath = oNode.attributes.getNamedItem('path').value ;
-	
+
 	var oNodes = fckXml.SelectNodes( 'Connector/Folders/Folder' ) ;
-	
+
 	for ( var i = 0 ; i < oNodes.length ; i++ )
 	{
 		var sFolderName = oNodes[i].attributes.getNamedItem('name').value ;
 		oListManager.AddItem( sFolderName, sCurrentFolderPath + sFolderName + "/" ) ;
 	}
-	
+
 	OpenFolder( sActiveFolder ) ;
 }
 
@@ -178,9 +178,9 @@ function SetResourceType( type )
 window.onload = function()
 {
 	oListManager.Init() ;
-	
-	if ( oConnector.ResourceType.length = 0 )
-		SetResourceType( 'File' ) ;
+
+	if ( oConnector.ResourceType.length == 0 )
+		SetResourceType( 'files' ) ;
 	else
 		LoadFolders( '/' ) ;
 }

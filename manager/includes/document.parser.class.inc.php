@@ -18,7 +18,7 @@ class DocumentParser {
 		$stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName,
 		$aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache,
 		$snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir,
-		$sjscripts,$jscripts,$loadedjscripts;
+		$placeholders,$sjscripts,$jscripts,$loadedjscripts;
 
 	// constructor
 	function DocumentParser() {
@@ -355,10 +355,10 @@ class DocumentParser {
 		*/
 		$notice	  = "\n<!--\n\n".
 					"MODx Content Manager is based on Etomite 0.6\n".
-		 			"\tEtomite is Copyright 2004 and Trademark of the Etomite Project at http://www.etomite.org \n\n".
+		 			"\tEtomite is Copyright 2004 and Trademark of the Etomite Project\n\n".
 					"-->\n\n";
 		if($type=="text/html") {
-			$poweredby ="Powered By <a href='http://www.vertexworks.com/EtomiteRefugee' title='Content managed by the MODx Content Manager System'>MODx</a>.";
+			$poweredby ="Powered By <a href='http://www.modxcms.com/' title='Content managed by the MODx Content Manager System'>MODx</a>.";
 		}
 		// insert the message into the document
 		if(strpos($content, "<div id=\"poweredbymodx\">")>0) {
@@ -369,19 +369,25 @@ class DocumentParser {
 
 	function outputContent($noEvent=false) {
 
-		$output = $this->documentContent;
+		$this->documentOutput = $this->documentContent;
 
 		// check for non-cached snippet output
-		if(strpos($output, '[!')>-1) {
-			$output = str_replace('[!', '[[', $output);
-			$output = str_replace('!]', ']]', $output);
+		if(strpos($this->documentOutput, '[!')>-1) {
+			$this->documentOutput = str_replace('[!', '[[', $this->documentOutput);
+			$this->documentOutput = str_replace('!]', ']]', $this->documentOutput);
 
 			// Parse document source
-			$output = $this->parseDocumentSource($output);
+			$this->documentOutput = $this->parseDocumentSource($this->documentOutput);
 		}
 
-		$output = $this->rewriteUrls($output);
+		// remove all unused placeholders
+		if(strpos($this->documentOutput, '[+')>-1) {
+			preg_match_all('~\[\+(.*?)\+\]~', $this->documentOutput, $matches);
+			if($matches[0]) $this->documentOutput = str_replace($matches[0],'',$this->documentOutput);
+		}
 
+		$this->documentOutput = $this->rewriteUrls($this->documentOutput);
+		
 		$totalTime = ($this->getMicroTime() - $this->tstart);
 		$queryTime = $this->queryTime;
 		$phpTime = $totalTime-$queryTime;
@@ -415,25 +421,22 @@ class DocumentParser {
 			}
 		}
 
-		$documentOutput = $this->addNotice($output, $type);
+		$out = $this->addNotice($this->documentOutput, $type);
 		if($this->dumpSQL) {
-			$documentOutput .= $this->queryCode;
+			$out .= $this->queryCode;
 		}
-		$documentOutput = str_replace("[^q^]", $queries, $documentOutput);
-		$documentOutput = str_replace("[^qt^]", $queryTime, $documentOutput);
-		$documentOutput = str_replace("[^p^]", $phpTime, $documentOutput);
-		$documentOutput = str_replace("[^t^]", $totalTime, $documentOutput);
-		$documentOutput = str_replace("[^s^]", $source, $documentOutput);
-
-		// assign document output to object
-		// so plugins can work on it
-		$this->documentOutput = $documentOutput;
+		$out = str_replace("[^q^]", $queries, $out);
+		$out = str_replace("[^qt^]", $queryTime, $out);
+		$out = str_replace("[^p^]", $phpTime, $out);
+		$out = str_replace("[^t^]", $totalTime, $out);
+		$out = str_replace("[^s^]", $source, $out);
+		$this->documentOutput = $out;
 
 		// invoke OnWebPagePrerender event
 		if(!$noEvent) {
 			$this->invokeEvent("OnWebPagePrerender");
 		}
-
+	
 		echo $this->documentOutput;
 
 		ob_end_flush();
@@ -568,6 +571,7 @@ class DocumentParser {
 		$basepath = $this->config["base_path"]."/manager/includes";
 		for($i=0; $i<$variableCount; $i++) {
 			$key = $matches[1][$i];
+			$key = substr($key,0,1)=='#' ? substr($key,1):$key; // remove # for QuickEdit format
 			$value = $this->documentObject[$key];
 			if(is_array($value)) {
 				include_once $basepath."/tmplvars.format.inc.php";
@@ -621,7 +625,9 @@ class DocumentParser {
 		preg_match_all('~\[\+(.*?)\+\]~', $content, $matches);
 		$cnt = count($matches[1]);
 		for($i=0; $i<$cnt; $i++) {
-			$replace[$i] = $this->placeholders[$matches[1][$i]];
+			$v = $this->placeholders[$matches[1][$i]];
+			if(!isset($v)) unset($matches[0][$i]); // here we'll leave empty placeholders for last.
+			else $replace[$i] = $v;
 		}
 		$content = str_replace($matches[0], $replace, $content);
 		return $content;
@@ -848,6 +854,12 @@ class DocumentParser {
 			if($this->dumpSnippets==1) {
 				echo "<fieldset><legend><b style='color: #821517;'>PARSE PASS ".($i+1)."</b></legend>The following snippets (if any) were parsed during this pass.<div style='width:100%' align='center'>";
 			}
+
+			// invoke OnParseDocument event
+			$this->documentOutput = $source; 		// store source code so plugins can 			
+			$this->invokeEvent("OnParseDocument");	// work on it via $modx->documentOutput
+			$source = $this->documentOutput;
+			
 			// combine template and document variables
 			$source = $this->mergeDocumentContent($source);
 			// replace settings referenced in document
@@ -881,6 +893,24 @@ class DocumentParser {
 		// get the settings
 		if(empty($this->config)) {
 			$this->getSettings();
+		}
+
+		// IIS friendly url fix 
+		if($this->config['friendly_urls']==1 && strpos($_SERVER['SERVER_SOFTWARE'],'Microsoft-IIS')!==false) {
+			$url = $_SERVER['QUERY_STRING'];
+			$err = substr($url,0,3);
+			if($err=='404'||$err=='405') {
+				$k = array_keys($_GET);
+				unset($_GET[$k[0]]); unset($_REQUEST[$k[0]]); // remove 404,405 entry
+				$_SERVER['QUERY_STRING']=$qp['query'];
+				$qp = parse_url(str_replace($this->config['site_url'],'',substr($url,4)));
+				if(!empty($qp['query'])) {
+					parse_str($qp['query'],$qv);
+					foreach($qv as $n=>$v) $_REQUEST[$n]=$_GET[$n]=$v;
+				}
+				$_SERVER['PHP_SELF'] = $this->config['base_url'].$qp['path'];
+				$_REQUEST['q'] = $_GET['q'] = $qp['path'];
+			}
 		}
 
 		// check site settings
@@ -930,6 +960,9 @@ class DocumentParser {
 			$this->documentMethod = 'id';
 		}
 
+		// invoke OnWebPageInit event
+		$this->invokeEvent("OnWebPageInit");
+
 		// we now know the method and identifier, let's check the cache
 		$this->documentContent = $this->checkCache($this->documentIdentifier);
 		if($this->documentContent!="") {
@@ -965,7 +998,7 @@ class DocumentParser {
 			}
 
 			// get the template and start parsing!
-			if(!$this->documentObject['template']) $documentSource = "[*content*]"; // use blank template
+			if(!$this->documentObject['template']) $this->documentContent = "[*content*]"; // use blank template
 			else {
 				$sql = "SELECT * FROM ".$this->getFullTableName("site_templates")." WHERE ".$this->getFullTableName("site_templates").".id = '".$this->documentObject['template']."';";
 				$result = $this->dbQuery($sql);
@@ -975,18 +1008,21 @@ class DocumentParser {
 				}
 				elseif($rowCount==1) {
 					$row = $this->fetchRow($result);
-					$documentSource = $row['content'];
+					$this->documentContent = $row['content'];
 				}
 			}
+					
+			// invoke OnLoadWebDocument event
+			$this->invokeEvent("OnLoadWebDocument");
 				
 			// Insert META tags & keywords - template must have a <head> tag
 			// note: we do it here so we can process things like [*TVs*] and [+placeholders+] from inside META tags
 			if($this->documentObject['hasmetatags']==1||$this->documentObject['haskeywords']==1) {
-				$documentSource = $this->mergeDocumentMETATags($documentSource);
+				$this->documentContent = $this->mergeDocumentMETATags($this->documentContent);
 			}
 			
 			// Parse document source
-			$documentSource = $this->parseDocumentSource($documentSource);
+			$this->documentContent = $this->parseDocumentSource($this->documentContent);
 
 			// setup <base> tag for friendly urls
 			if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
@@ -995,15 +1031,14 @@ class DocumentParser {
 			
 			// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
 			if ($js = $this->getRegisteredClientStartupScripts()){
-				$documentSource = preg_replace("/(<head>)/i", "\\1\n".$js, $documentSource);
+				$this->documentContent = preg_replace("/(<head>)/i", "\\1\n".$js, $this->documentContent);
 			}
 
 			// Insert jscripts & html block into template - template must have a </body> tag
 			if ($js = $this->getRegisteredClientScripts()){
-				$documentSource = preg_replace("/(<\/body>)/i", $js."\n\\1", $documentSource);
+				$this->documentContent = preg_replace("/(<\/body>)/i", $js."\n\\1", $this->documentContent);
 			}
 
-			$this->documentContent = $documentSource;
 		}
 		register_shutdown_function(array(&$this,"postProcess")); // tell PHP to call postProcess when it shuts down
 		$this->outputContent();
@@ -1020,15 +1055,12 @@ class DocumentParser {
 		$msg = addslashes(mysql_escape_string($msg));
 		if(substr(strtolower($url),0,11)=="javascript:") {
 			$act = "__WebAlert();";
-			$fnc = "function __WebAlert(){".substr($url,11)."}";
+			$fnc = "function __WebAlert(){".substr($url,11)."};";
 		}
 		else {
 			$act = ($url ? "window.location.href='".addslashes($url)."';":"");
 		}
-		echo "<script>
-				$fnc;
-				window.setTimeout(\"alert('$msg');$act\",100);
-			  </script>";
+		$this->regClientScript("<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>");
 	}
 
 
@@ -1122,7 +1154,7 @@ class DocumentParser {
 		// modify field names to use sc. table reference
 		$fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));
 		$sort = ($sort=="") ? "":'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
-		if ($where!='') $where += 'AND '.$where;
+		if ($where!='') $where .= 'AND '.$where;
 		// get document groups for current user
 		if($docgrp = $this->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 		// build query
@@ -1152,7 +1184,7 @@ class DocumentParser {
 			// modify field names to use sc. table reference
 			$fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));
 			$sort = ($sort=="") ? "":'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
-			if ($where!='') $where += 'AND '.$where;
+			if ($where!='') $where .= 'AND '.$where;
 			// get document groups for current user
 			if($docgrp = $this->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 			$access = ($this->isFrontend() ? "sc.privateweb=0":"1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").
@@ -1270,7 +1302,7 @@ class DocumentParser {
 			if ($c=='&') $args = '?'.substr($args,1);
 			elseif ($c!='?') $args = '?'.$args; 
 		}
-		else {
+		elseif($args!='') {
 			// add & to $args if missing
 			$c = substr($args,0,1);
 			if ($c=='?') $args = '&'.substr($args,1);
@@ -1279,7 +1311,6 @@ class DocumentParser {
 		if($this->config['friendly_urls']==1 && $alias!='') {
 			return $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
 		} elseif($this->config['friendly_urls']==1 && $alias=='') {
-			if($args!='') $args = (substr($args,0,1))=='?' ?  $args: '?'.$args; // add ? to $args if missing
 			$alias = $id;
 			$al = $this->aliasListing[$id];
 			if($al && $al['alias']) $alias = $al['alias'];
@@ -1594,7 +1625,7 @@ class DocumentParser {
 					$richtexteditor = "";
 					$w = "100%";
 					$h = "300";
-					$output[$row['name']] = getTVDisplayFormat($row['name'],$row['value'],$row['display'],$row['display_params'],$row['type'], "", "", "", "");
+					$output[$row['name']] = getTVDisplayFormat($row['name'],$row['value'],$row['display'],$row['display_params'],$row['type']);
 				}
 				return $output;
 			}
@@ -1835,7 +1866,7 @@ class DocumentParser {
 			$_SESSION['webUserGroupNames'] = $grpNames;
 		}
 		foreach($groupNames as $k=>$v)
-			if(in_array($v,$grpNames)) return true;
+			if(in_array(trim($v),$grpNames)) return true;
 		return false;
 	}
 
@@ -1864,8 +1895,8 @@ class DocumentParser {
 	function regClientScript($src, $plaintext=false){
 		if ($this->loadedjscripts[$src]) return '';
 		$this->loadedjscripts[$src] = true;
-		if ($plaintext==true) $this->jscripts[count($jscripts)] = src;
-		elseif (strpos(strtolower(src),"<script")===0) $this->jscripts[count($jscripts)] = src;
+		if ($plaintext==true) $this->jscripts[count($jscripts)] = $src;
+		elseif (strpos(strtolower($src),"<script")!==false) $this->jscripts[count($jscripts)] = $src;
 		else $this->jscripts[count($this->jscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
 	}
 
@@ -1884,6 +1915,7 @@ class DocumentParser {
 	# Remove unwanted html tags and snippet, settings and tags
 	function stripTags($html,$allowed="") {
 		$t = strip_tags($html,$allowed);
+		$t = preg_replace('~\[\*(.*?)\*\]~',"",$t);	//tv
 		$t = preg_replace('~\[\[(.*?)\]\]~',"",$t);	//snippet
 		$t = preg_replace('~\[\!(.*?)\!\]~',"",$t);	//snippet
 		$t = preg_replace('~\[\((.*?)\)\]~',"",$t);	//settings

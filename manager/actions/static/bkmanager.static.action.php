@@ -11,10 +11,10 @@ $mode = isset($_POST['mode'])? $_POST['mode']:"";
 
 function callBack(&$dumpstring){
 	if(!headers_sent()) {
-		header("Content-type: application/octet-stream xyz");
-		header("Content-Disposition: attachment; filename=\"database_backup.sql\"");
+		header('Content-type: application/download');
+		header('Content-Disposition: attachment; filename=database_backup.sql');
 	}
-	echo "$dumpstring";
+	echo $dumpstring;
 	return true;
 }
 
@@ -33,8 +33,9 @@ if ($mode=='backup') {
 	 * Code taken from Ralph A. Dahlgren MySQLdumper Snippet - Etomite 0.6 - 2004-09-27
 	 * Modified by Raymond 3-Jan-2005
 	 * Perform MySQLdumper data dump
-	*/
-	set_time_limit(120); // set timeout limit to 2 minutes
+	 */
+	
+	@set_time_limit(120); // set timeout limit to 2 minutes
 	$dbname = str_replace("`","",$dbase);
 	$dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbname); # Variables have replaced original hard-coded values
 	$dumper->setDBtables($tables);
@@ -59,8 +60,8 @@ else {
 </div>
 
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Database Tables</div><div class="sectionBody" id="lyr4">
-<form name='frmdb' method='post' target="downloader">
-<input type='hidden' name='mode' value=''>
+<form name='frmdb' method='post'>
+<input type='hidden' name='mode' value='' />
 <script language='javascript'>
 	function selectAll(){
 		var f = document.forms['frmdb'];
@@ -72,13 +73,14 @@ else {
 	function submitForm(){
 		var f = document.forms['frmdb'];	
 		f.mode.value='backup';
+		f.target='fileDownloader';
 		f.submit();
 		return false;
 	}
 
 </script>
 		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
-		<span style='width:100%;'><a href='javascript:;' onclick=' return submitForm();'><img src='media/images/misc/ed_save.gif' border=0 align='absmiddle'>Click here</a> to backup & download the selected tables</span><br />&nbsp;&nbsp;&nbsp;
+		<span style='width:100%;'><a href='javascript:;' onclick='submitForm();return false;'><img src='media/images/misc/ed_save.gif' border=0 align='absmiddle'>Click here</a> to backup & download the selected tables</span><br />&nbsp;&nbsp;&nbsp;
 		<input type='checkbox' name='droptables'> Generate DROP TABLE statements.<p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>
@@ -120,8 +122,21 @@ else {
 		  <tr bgcolor="<?php echo $bgcolor; ?>" title="<?php echo $db_status['Comment']; ?>" style="cursor:default">
 			<td><input type=checkbox name='chk[]' value='<?php echo $db_status['Name']; ?>' <?php if(isset($tables)) echo strstr(implode(",",$tables),$db_status['Name'])===false ? "":" checked='checked'";?>><b style="color:#009933"><?php echo $db_status['Name']; ?></b></td>
 			<td align="right"><?php echo $db_status['Rows']; ?></td>
-			<td align="right"><?php echo nicesize($db_status['Data_length']+$db_status['Data_free']); ?></td>
-			<td align="right"><?php echo $db_status['Data_free']>0 ? "<a href='index.php?a=93&t=".$db_status['Name']."'>".nicesize($db_status['Data_free'])."</a>" : "-" ; ?></td>
+<?php
+	// enable record deletion for certain tables
+	// sottwell@sottwell.com
+	// 08-2005
+	if($db_status['Name'] == $table_prefix."event_log" || $db_status['Name'] == $table_prefix."log_access" || $db_status['Name'] == $table_prefix."log_hosts" || $db_status['Name'] == $table_prefix."log_visitors" || $db_status['Name'] == $table_prefix."manager_log") { 
+		echo "<td align='right'>";
+		echo "<a href='index.php?a=54&mode=$action&u=".$db_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($db_status['Data_length']+$db_status['Data_free'])."</a>";
+		echo "</td>";
+	}
+	else { 
+		echo "<td align='right'>".nicesize($db_status['Data_length']+$db_status['Data_free'])."</td>";
+	} 
+	// end record deletion mod
+?>						
+			<td align="right"><?php echo $db_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$db_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($db_status['Data_free'])."</a>" : "-" ; ?></td>
 			<td align="right"><?php echo nicesize($db_status['Data_length']-$db_status['Data_free']); ?></td>
 			<td align="right"><?php echo nicesize($db_status['Index_length']); ?></td>
 			<td align="right"><?php echo nicesize($db_status['Index_length']+$db_status['Data_length']+$db_status['Data_free']); ?></td>
@@ -147,7 +162,7 @@ else {
 </form>
 </div>
 <!-- This iframe is used when downloading file backup file -->
-<iframe name="downloader" width="1" height="1" style="display:none; width:1px; height:1px;"></iframe>
+<iframe name="fileDownloader" width="1" height="1" style="display:none; width:1px; height:1px;"></iframe>
 
 <?php include_once "footer.inc.php"; // send footer ?>
 

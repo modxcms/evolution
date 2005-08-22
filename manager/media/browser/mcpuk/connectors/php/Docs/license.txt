@@ -1,4 +1,4 @@
-This connector is supplied under the same license as FCKEditor, 
+This connector is supplied under the same license as FCKeditor, 
 The Lesser GPL License (LGPL)-
 
 

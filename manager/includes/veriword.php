@@ -1,5 +1,7 @@
 <?php
 
+
+include_once("config.inc.php");
 include("captchaClass.php");
 
 $vword = new VeriWord(148,60);

@@ -1,19 +1,22 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('settings') && $_REQUEST['a']==54) {	
+if(!$modx->hasPermission('settings')) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
 
-if($_REQUEST['t']=="" || !isset($_REQUEST['t'])) {
+if(($_REQUEST['t']=="" || !isset($_REQUEST['t'])) && ($_REQUEST['u']=="" || !isset($_REQUEST['u']))) {
 		$e->setError(10);
 		$e->dumpError();
 }
 
-$sql = "OPTIMIZE TABLE $dbase.".$_REQUEST['t'].";";
-$rs = @mysql_query($sql);
+if (isset($_REQUEST['t'])) $sql = "OPTIMIZE TABLE $dbase.".$_REQUEST['t'].";";
+elseif (isset($_REQUEST['u'])) $sql = "TRUNCATE TABLE $dbase.".$_REQUEST['u'].";";
 
-$header="Location: index.php?a=53&s=4";
+if($sql) $rs = @mysql_query($sql);
+
+$mode = intval($_REQUEST['mode']);
+$header="Location: index.php?a=".$mode."&s=4";
 header($header);
 
 ?>

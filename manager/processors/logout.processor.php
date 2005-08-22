@@ -22,7 +22,7 @@ if (isset($_COOKIE[session_name()])) {
 @session_destroy(); // this sometimes generate an error in iis
 $sessionID = md5(date('d-m-Y H:i:s'));
 session_id($sessionID);
-session_start();
+startCMSSession();
 session_destroy();
 
 // invoke OnManagerLogout event

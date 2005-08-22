@@ -1,14 +1,19 @@
 <?php
 
-// security check user MUST be logged into manager 
-// before being able to run this script
-session_start();  
+// ** START FOR MODx
+
+// load configuration file
+include "../../includes/config.inc.php";
+
+/** 
+ * Security check user MUST be logged into manager 
+ * before being able to run this script
+ */
+startCMSSession();  
 if(!isset($_SESSION['mgrValidated'])) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
 
-
-include "../../includes/config.inc.php";
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");
@@ -18,6 +23,8 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 
 // get the settings from the database
 include "../../includes/settings.inc.php";
+
+// ** END FOR MODx
 	
 /**
  * Image Manager configuration file.

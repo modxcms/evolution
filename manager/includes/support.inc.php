@@ -16,7 +16,7 @@ function showSupportLink(){
 	<!-- Here you can add your own support information and website -->
 	<div style="color:#808080">
 	<p>Supported By:</p>
-	<p style="text-align:center"><a href="http://www.vertexworks.com/forums/" target="_blank"><strong>The MODx <br />Community</strong></a></p>
+	<p style="text-align:center"><a href="http://www.modxcms.com/forums/" target="_blank"><strong>The MODx <br />Community</strong></a></p>
 	</div>
 <?php
 }

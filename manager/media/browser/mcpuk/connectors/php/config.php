@@ -13,11 +13,17 @@
  * 
  * File Authors:
  * 		Grant French (grant@mcpuk.net)
- *///FOR MODx
-session_start();if(!isset($_SESSION['mgrValidated'])) {
+ */
+// ** START FOR MODx
+
+// load configuration file
+include("../../../../../includes/config.inc.php");
+/** 
+ * Security check user MUST be logged into manager 
+ * before being able to run this script
+ */startCMSSession(); if(!isset($_SESSION['mgrValidated'])) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
-include("../../../../../includes/config.inc.php");
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");
@@ -25,7 +31,8 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 	mysql_select_db($dbase);
 }
 include("../../../../../includes/settings.inc.php");
-//END FOR MODx
+// ** END FOR MODx
+
 /*------------------------------------------------------------------------------*/
 /* HTTP over SSL Detection (shouldnt require changing)				*/
 /*------------------------------------------------------------------------------*/
@@ -98,10 +105,10 @@ $fckphp_config['auth']['Handler']['SharedKey']="->Shared_K3y-F0R*5enD1NG^auth3nt
 //First area options are commented
 
 //File Area
-$fckphp_config['ResourceAreas']['docs'] =array(
+$fckphp_config['ResourceAreas']['files'] =array(
 	
 	//Files(identified by extension) that may be uploaded to this area
-	'AllowedExtensions'	=>	array("zip","doc","xls","pdf","rtf","csv","jpg","gif","jpeg","png","avi","mpg","mpeg","swf","fla"),
+	'AllowedExtensions'	=>	array("zip","doc","xls","pdf","rtf","csv","jpg","gif","jpeg","png","avi","mpg","mpeg","swf","fla","txt","xml","css"),
 	
 	//Not implemented yet
 	'AllowedMIME'		=>	array(),
@@ -146,7 +153,7 @@ $fckphp_config['ResourceAreas']['flash'] =array(
 	
 //Media area
 $fckphp_config['ResourceAreas']['media'] =array(
-	'AllowedExtensions'	=>	array("swf","fla","jpg","gif","jpeg","png","avi","mpg","mpeg"),
+	'AllowedExtensions'	=>	array("swf","fla","jpg","gif","jpeg","png","avi","mpg","mpeg","midi","mid"),
 	'AllowedMIME'		=>	array(),
 	'MaxSize'		=>	$upload_maxsize,
 	'DiskQuota'		=>	-1,
@@ -224,7 +231,7 @@ $fckphp_config['Debug_Output']=false;
 /*	ResourceTypes :: Array of valid resource areas				*/
 /*	Commands :: Array of valid commands accepted by the connector		*/
 /*------------------------------------------------------------------------------*/
-$fckphp_config['ResourceTypes'] = array('docs','images','flash','media');
+$fckphp_config['ResourceTypes'] = array('files','images','flash','media');
 $fckphp_config['Commands'] = array(
 				"CreateFolder",
 				"GetFolders",

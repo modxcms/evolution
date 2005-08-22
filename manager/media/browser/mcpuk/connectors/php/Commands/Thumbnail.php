@@ -1,4 +1,5 @@
-<?php /*
+<?php 
+/*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
  * 
@@ -100,15 +101,14 @@ class Thumbnail {
 	}
 	
 	function getMIME($file) {
-		$mime="text/plain";
 		
 		//If mime magic is installed
 		if (function_exists("mime_content_type")) {
 			$mime=mime_content_type($file);
 		} else {
 			$mime=$this->image2MIME($file);
-		}
-		
+			if($mime==false) $mime="text/plain";
+		}	
 		return strtolower($mime);
 	}
 	
@@ -219,10 +219,6 @@ class Thumbnail {
 		if ($n_height<96) $y=round((96-$n_height)/2);
 		
 		$thumb=imagecreatetruecolor(96,96);
-		if (!$thumb) {
-            $thumb=imagecreate(96,96);
-        }
-
 		
 		#Background colour fix by:
 		#Ben Lancaster (benlanc@ster.me.uk)

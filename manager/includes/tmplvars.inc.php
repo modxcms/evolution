@@ -10,7 +10,7 @@
 
 	function renderFormElement($field_type, $field_name, $default_text, $field_elements, $field_value, $field_style='') {
 		global $base_url;
-		global $settings;
+		global $rb_base_url;
 
 		$field_html ='';
 		$field_value = ($field_value!="" ? $field_value : $default_text);
@@ -163,7 +163,7 @@
 				break;
 			case "file": // handles the input of file uploads
 				$field_html .=  '<input type="file" name="tv'.$field_name.'"  '.$field_style.' onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><br>';
-                if($field_value!='') $field_html .=  '&nbsp;Current File: <a href="'.$settings['im_plugin_base_url'].$field_value.'" target="_new">'. $field_value . '</a><input type="hidden" name="tv'.$field_name.'_previous" value="'.$field_value.'" /><br /><input type="checkbox" name="tv'.$field_name.'_clear" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Clear link to doc &nbsp;&nbsp;<input type="checkbox" name="tv'.$field_name.'_delete" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Delete File'; 
+                if($field_value!='') $field_html .=  '&nbsp;Current File: <a href="'.$field_value.'" target="_new">'. basename($field_value). '</a><input type="hidden" name="tv'.$field_name.'_previous" value="'.$field_value.'" /><br /><input type="checkbox" name="tv'.$field_name.'_clear" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Clear link to doc &nbsp;&nbsp;<input type="checkbox" name="tv'.$field_name.'_delete" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Delete File'; 
 				break;
 			default: // the default handler -- for errors, mostly
 				$field_html .=  '<input type="text" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />';

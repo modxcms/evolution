@@ -1,4 +1,5 @@
-<?php /*
+<?php 
+/*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
  * 
@@ -76,11 +77,16 @@ function iconLookup($mime,$ext) {
 			"txt"=>"document2.jpg"
 			);
 
-	if ($mime!="text/plain") {
+
+	// MODx - get base path	
+	global $base_path;
+	$icon_basedir = $base_path.'manager/media/browser/mcpuk/connectors/php/images/';
+
+	if ($mime!="text/plain") {	
 		//Check specific cases
 		$mimes=array_keys($mimeIcons);
 		if (in_array($mime,$mimes)) {
-			return $_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/images/".$mimeIcons[$mime];
+			return $icon_basedir.$mimeIcons[$mime];
 		} else {
 			//Check for the generic mime type
 			$mimePrefix="text";
@@ -88,21 +94,21 @@ function iconLookup($mime,$ext) {
 			if ($firstSlash!==false) $mimePrefix=substr($mime,0,$firstSlash);
 			
 			if (in_array($mimePrefix,$mimes)) {
-				return $_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/images/".$mimeIcons[$mimePrefix];
+				return $icon_basedir.$mimeIcons[$mimePrefix];
 			} else {
-				return $_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/images/empty.jpg";	
+				return $icon_basedir."empty.jpg";	
 			}
 		}
 	} else {
 		$extensions=array_keys($extIcons);
 		if (in_array($ext,$extensions)) {
-			return $_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/images/".$extIcons[$ext];
+			return $icon_basedir.$extIcons[$ext];
 		} else {
-			return $_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/images/empty.jpg";
+			return $icon_basedir."empty.jpg";
 		}
 	}
 
-	return $_SERVER['DOCUMENT_ROOT'].dirname($_SERVER['PHP_SELF'])."/images/empty.jpg";
+	return $icon_basedir."empty.jpg";
 }
 
 ?>

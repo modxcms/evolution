@@ -623,7 +623,7 @@ switch ($action) {
 /* optimise table												*/
 /********************************************************************/
 	case "54" :
-		// get the settings editor
+		// get the table optimizer/truncate processor
 		include_once "processors/optimize_table.processor.php";
 	break;
 /********************************************************************/
@@ -867,13 +867,13 @@ switch ($action) {
 	case 114:
 		// get event logs
 		include_once "header.inc.php";	
-		include_once "actions/static/eventlog.static.action.php";
+		include_once "actions/dynamic/eventlog.dynamic.action.php";
 		include_once "footer.inc.php";
 	break;
 	case 115:
 		// get event log details viewer
 		include_once "header.inc.php";	
-		include_once "actions/static/eventlog_details.static.action.php";
+		include_once "actions/dynamic/eventlog_details.dynamic.action.php";
 		include_once "footer.inc.php";
 	break;
 	case 116:

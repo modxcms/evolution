@@ -727,14 +727,21 @@ function showHide(what, onoff){
           </tr> 
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["layout_title"]?></b></td> 
-            <td><input onChange="documentDirty=true;" type="radio" name="manager_layout" value="1" <?php echo ($manager_layout=='1' || !isset($manager_layout)) ? 'checked="checked"' : "" ; ?>> 
-              <?php echo $_lang["layout_settings_1"]?><br /><br /> 
+            <td>
+              <!-- layout 0 -->	
 	          <?php if($_SESSION['browser']=='ie') { ?> 
-	              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="0" <?php echo $manager_layout=='0' ? 'checked="checked"' : "" ; ?>> 
+	              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="0" <?php echo $manager_layout=='0' ? 'checked="checked"' : "" ; ?> /> 
 	              <?php echo $_lang["layout_settings_2"]?><br /><br /> 
 	          <?php } ?> 
-              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="2" <?php echo $manager_layout=='2' ? 'checked="checked"' : "" ; ?>> 
+              <!-- layout 1 -->	
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="1" <?php echo ($manager_layout=='1' || !isset($manager_layout)) ? 'checked="checked"' : "" ; ?> /> 
+              <?php echo $_lang["layout_settings_1"]?><br /><br /> 
+              <!-- layout 2 -->	
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="2" <?php echo $manager_layout=='2' ? 'checked="checked"' : "" ; ?> /> 
               <?php echo $_lang["layout_settings_3"]?><br /><br />
+              <!-- layout 3 -->	
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="3" <?php echo $manager_layout=='3' ? 'checked="checked"' : "" ; ?> /> 
+              <?php echo $_lang["layout_settings_4"]?><br /><br /> 
              </td> 
           </tr> 
           <tr> 

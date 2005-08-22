@@ -5,7 +5,7 @@ BODY {
 }
 .menuHeader {
 	font-family:			Tahoma, Arial, Helvetica, sans-serif;
-	color:				#000000;
+	color:				#003399;
 	font-size: 			11px;
 	font-weight:			bold;
 	text-align:			left;
@@ -33,7 +33,7 @@ BODY {
 	}
 
 .buttonoc a:hover{
-	background: 		url("../images/misc/buttonbar_gs.gif");
+	background: 			url("../images/misc/buttonbar_gs.gif");
 	color:				#000000;
 	}
 

@@ -173,12 +173,15 @@ if($limit > 0) {
             }
         }
         else if($row['type']=='file'){
+			$fileurl = (substr($rb_base_url,-1)!="/" ? $rb_base_url.'/':$rb_base_url).'files/';
+			$filepth = (substr($rb_base_dir,-1)!="/" ? $rb_base_dir.'/':$rb_base_dir).'files/';
+
             if($_POST["tv".$row['name'].'_clear']=='on'){
                 //first clear the existing link
                 $realname = $row['value'] = "";
             } 
             if($_POST["tv".$row['name'].'_delete']=='on'){
-                unlink($im_plugin_base_dir."/".$_POST["tv".$row['name'].'_previous']);
+                @unlink($filepth.basename($_POST["tv".$row['name'].'_previous']));
                 $realname = $row['value'] = "";
             } 
 
@@ -208,19 +211,17 @@ if($limit > 0) {
 
 			    if ($pass_the_upload == "true") {
 				    // the upload has passed the tests!
-				    move_uploaded_file($_FILES["tv".$row['name']]['tmp_name'],"$im_plugin_base_dir/$realname");
-				    chmod("$im_plugin_base_dir/$realname",0777);
+				    move_uploaded_file($_FILES["tv".$row['name']]['tmp_name'],$filepth.$realname);
+				    @chmod($filepth.$realname,0777);
+				    $tmplvar = $fileurl.$realname;
                 } else {
-                    $realname = "";
+                    $tmplvar = "";
                 }
             } 
             else {
             	//there was no new uploaded file use last save file
-	        	$realname = $row['value'];
+	        	$tmplvar = $row['value'];
             }
-
-            $tmplvar = $realname; 
-
 		}
 		else{
             if(is_array($_POST["tv".$row['name']])) {

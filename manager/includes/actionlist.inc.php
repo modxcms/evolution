@@ -11,7 +11,7 @@ function getAction($lastaction, $itemid='') {
 				case "4" : return "Creating a document"; break;			
 				case "5" : return "Saving document $itemid"; break;			
 				case "6" : return "Deleting document $itemid"; break;			
-				case "7" : return "Waiting while Etomite cleans up"; break;			
+				case "7" : return "Waiting while MODx cleans up"; break;			
 				case "8" : return "Logged out"; break;			
 				case "9" : return "Viewing help"; break;			
 				case "10" : return "Viewing/ composing messages"; break;			

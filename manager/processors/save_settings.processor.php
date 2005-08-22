@@ -5,6 +5,7 @@ if(!$modx->hasPermission('settings') && $_REQUEST['a']==30) {
 	$e->dumpError();	
 }
 foreach ($_POST as $k => $v) {
+	$v = is_array($v) ? implode(",", $v) : $v;
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('".mysql_escape_string($k)."', '".mysql_escape_string($v)."')";
 	
 	if(!@$rs = mysql_query($sql)) {

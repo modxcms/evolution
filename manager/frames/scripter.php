@@ -92,6 +92,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	function reloadtree() {
 		var elm = new DynElement('buildText@topFrame');
 		if (elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b02.gif' align='absmiddle' width='16' height='16'>&nbsp;<?php echo $_lang['loading_doc_tree']; ?>");
+		parent.menu.saveFolderState(); // save folder state
 		parent.menu.location.reload();
 	}
 	

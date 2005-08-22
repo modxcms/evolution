@@ -763,7 +763,7 @@ $_lang['import_site_maxtime'] = "Max import time:";
 $_lang['import_site_maxtime_message'] = "Here you can specify the number of seconds the Content Manager can take to import the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.";
 $_lang["duplicate"] = "Duplicate";
 $_lang["confirm_duplicate_record"] = "Are you sure you want to duplicate this record?";
-$_lang["confirm_duplicate_document"] = "Are you sure you want to duplicate this document/folder?\\nSub folders and documents will also be duplicated.\\n\\n Note:External data (e.g. keywords, customized template variables, etc) will not be duplicated.";
+$_lang["confirm_duplicate_document"] = "Are you sure you want to duplicate this document/folder?\\nSub folders and documents will also be duplicated.";
 $_lang['tmplvar_inuse'] = "The following document(s) are currently using this Template Variable. To continue with the delete operation click the Delete button otherwise click the Cancel button.";
 $_lang['tmplvar_change_template_msg'] = "Changing this template will cause the page to reload the Template Variables. All unsaved changes will be lost.\\n\\n Are you sure you want to change this template?";
 $_lang['tmplvar_access_msg'] = "Select the document groups that are allowed to modify the content or value of this variable";
@@ -938,7 +938,7 @@ $_lang['editor_css_path_message'] = "Enter the path to your CSS file that you wi
 $_lang['rb_title'] = "Enable Resource Browser:";
 $_lang['rb_message'] = "Select yes to enable the resource browser. This will allow your users to browse and upload resources such as images, flash and media files on the server."; 
 $_lang['rb_base_dir_title'] = "Resource path:";
-$_lang['rb_base_dir_message'] = "Enter the physical path to the resource directory. This setting is usually automatically generated. If you're using IIS, however, MODx may not be able to work the path out on it's own, causing the Resource Browser to show an error. In that case, you can enter the path to the images directory here (the path as you'd see it in Windows Explorer). <b>NOTE:</b> The resource directory must contain the subfolders images, docs, flash and media in order for the resource browser to function correctly."; 
+$_lang['rb_base_dir_message'] = "Enter the physical path to the resource directory. This setting is usually automatically generated. If you're using IIS, however, MODx may not be able to work the path out on it's own, causing the Resource Browser to show an error. In that case, you can enter the path to the images directory here (the path as you'd see it in Windows Explorer). <b>NOTE:</b> The resource directory must contain the subfolders images, files, flash and media in order for the resource browser to function correctly."; 
 $_lang['rb_base_url_title'] = "Resource URL:";
 $_lang['rb_base_url_message'] = "Enter the virtual path to resource directory. This setting is usually automatically generated. If you're using IIS, however, MODx may not be able to work the URL out on it's own, causing the Resource Browser to show an error. In that case, you can enter the URL to the images directory here (the URL as you'd enter it on Internet Explorer).";
 
@@ -1022,5 +1022,10 @@ $_lang['modules']="Modules";
 $_lang['layout_settings_4'] = "Collapsible top bar layout<br /><span class='comment'>Collapsible navigation bar to the top the document tree and main window.</span>";
 $_lang['document_opt_show_menu'] = "Show in menu";
 $_lang['document_opt_show_menu_help'] = "Select this option to show document inside a web menu. Please note that some Menu Builders might choose to ignore this option.";
+$_lang['months'] = array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+$_lang['days'] = array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+
+$_lang['optimize_table'] = 'Click here to optimize this table';
+$_lang['truncate_table'] = 'Click here to truncate this table';
 
 ?>

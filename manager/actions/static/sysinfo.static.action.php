@@ -95,17 +95,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		} else {
 			for ($i = 0; $i < $limit; $i++) { 
 				$content = mysql_fetch_assoc($rs);
-				$sql = "select username from $dbase.".$table_prefix."manager_users WHERE id=".$content['editedby']; 
+				$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=".$content['editedby']; 
 				$rs2 = mysql_query($sql);
 				$limit2 = mysql_num_rows($rs2);
-				if($limit2!=1){
-					echo "Incorrect number of users returned while trying to retrieve user's name!";
-					include_once "footer.inc.php";
-					exit;
+				if($limit2==0) $user = '-';
+				else {
+					$r = mysql_fetch_assoc($rs2);
+					$user = $r['username'];
 				}
-				$user = mysql_fetch_assoc($rs2);
 				$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user['username']."</td><td>".strftime('%d-%m-%Y, %H:%M:%S', $content['editedon']+$server_offset_time)."</td></tr>";
+				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".strftime('%d-%m-%Y, %H:%M:%S', $content['editedon']+$server_offset_time)."</td></tr>";
 			}
 		}
 		?>
@@ -157,8 +156,26 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		  <tr bgcolor="<?php echo $bgcolor; ?>" title="<?php echo $log_status['Comment']; ?>" style="cursor:default">
 			<td><b style="color:#009933"><?php echo $log_status['Name']; ?></b></td>
 			<td align="right"><?php echo $log_status['Rows']; ?></td>
-			<td align="right"><?php echo nicesize($log_status['Data_length']+$log_status['Data_free']); ?></td>
-			<td align="right"><?php echo $log_status['Data_free']>0 ? "<a href='index.php?a=54&t=".$log_status['Name']."'>".nicesize($log_status['Data_free'])."</a>" : "-" ; ?></td>
+
+<?php
+	// enable record deletion for certain tables
+	// sottwell@sottwell.com
+	// 08-2005
+	if($log_status['Name'] == $table_prefix."event_log" || $log_status['Name'] == $table_prefix."log_access" || $log_status['Name'] == $table_prefix."log_hosts" || $log_status['Name'] == $table_prefix."log_visitors" || $log_status['Name'] == $table_prefix."manager_log") { 
+		echo "<td align='right'>";
+		echo "<a href='index.php?a=54&mode=$action&u=".$log_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</a>";
+		echo "</td>";
+	}
+	else { 
+		echo "<td align='right'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</td>";
+	} 
+	// end record deletion mod
+?>						
+			<td align="right"><?php echo $log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$log_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($log_status['Data_free'])."</a>" : "-" ; ?></td>
+			
+<!--			<td align="right"><?php echo nicesize($log_status['Data_length']+$log_status['Data_free']); ?></td>
+			<td align="right"><?php echo $log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=53&t=".$log_status['Name']."'>".nicesize($log_status['Data_free'])."</a>" : "-" ; ?></td>
+-->			
 			<td align="right"><?php echo nicesize($log_status['Data_length']-$log_status['Data_free']); ?></td>
 			<td align="right"><?php echo nicesize($log_status['Index_length']); ?></td>
 			<td align="right"><?php echo nicesize($log_status['Index_length']+$log_status['Data_length']+$log_status['Data_free']); ?></td>

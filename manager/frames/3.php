@@ -297,7 +297,7 @@ $count = $row[0];
 
 ?>
 <!-- Raymond: add onbeforeunload -->
-<body onclick="hideMenu();" onbeforeunload="saveFolderState()">
+<body onclick="hideMenu();">
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td>

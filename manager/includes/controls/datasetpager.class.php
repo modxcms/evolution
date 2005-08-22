@@ -97,7 +97,7 @@ class DataSetPager {
 			$fnc = $this->renderRowFnc;
 			$args = $this->renderRowFncArgs;
 			if (isset($fnc)) {
-				if($args!="") $this->rows .= $fnc(0,null,$args); // if agrs was specified then we wil page three params
+				if($args!="") $this->rows .= $fnc(0,null,$args); // if agrs was specified then we will pass three params
 				else $this->rows .= $fnc(0,null);				 // otherwise two will be passed
 			}
 			return;
@@ -146,11 +146,11 @@ class DataSetPager {
 			while ($i<=$maxitems && ($row = ($isDataset)? mysql_fetch_assoc($this->ds):$this->ds[$i-1])) {
 				if ($i>=$minitems && $i<=$maxitems){
 					if($fncObject) {
-						if($args=="") $this->rows .= $fnc->RenderRowFnc($i,$row,$args);
+						if($args!="") $this->rows .= $fnc->RenderRowFnc($i,$row,$args);
 						else $this->rows .= $fnc->RenderRowFnc($i,$row);
 					}
 					else  {
-						if($args!="") $this->rows .= $fnc($i,$row,$args); // if agrs was specified then we wil page three params
+						if($args!="") $this->rows .= $fnc($i,$row,$args); // if agrs was specified then we wil pass three params
 						else $this->rows .= $fnc($i,$row);	 			 // otherwise two will be passed
 					}
 

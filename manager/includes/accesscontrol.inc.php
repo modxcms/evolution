@@ -1,9 +1,12 @@
 <?php
-session_start();
+
+// start session 
+startCMSSession();					
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 	unset($_SESSION['mgrValidated']);
-	session_destroy();	
-	session_start();
+	session_destroy();
+	// start session 
+	startCMSSession();
 }
 if(!isset($_SESSION['mgrValidated'])){
 	include_once("browsercheck.inc.php");
@@ -99,20 +102,6 @@ body {
 	
 </style>
 <script language="JavaScript">
-
-	/*function document_onload() {
-		var c = document.getCookie("MODxLoginSpash");
-		if(c!="on") setTimeout("tvOpen('splash','splashend')",1000);
-		else {
-			var o = document.getElementById("splash");
-			if(o) o.style.visibility = "visible";
-		}
-	}*/
-	
-	/*function splashend() {
-		<?php echo !empty($uid) ? "document.loginfrm.password.focus();" : "document.loginfrm.username.focus();" ?>	
-		document.setCookie("MODxLoginSpash","on",0);
-	}*/
 	
 	function checkRemember () {
 		if(document.loginfrm.rememberme.value==1) {

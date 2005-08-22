@@ -130,9 +130,8 @@ oListManager.AddFile = function ( fileName, fileUrl, fileSize, imageEditable )
  * MODx temporary image editor
  *
  */
-
 	if(imageEditable==1 && oConnector.ResourceType.toLowerCase()=="images") {
-		oCell.innerHTML = oCell.innerHTML + '<a href="#" onclick="javascript:window.open(\'../../ImageEditor/editor.php?img=/images' + oConnector.CurrentFolder + fileName + '\',\'win\',\'status=0,toolbar=0\');"><img alt="Edit image" border="0" src="images/editImage.gif" /></a>' ;
+		oCell.innerHTML = oCell.innerHTML + '<a href="#" onclick="javascript:window.open(\'' + oConnector.ServerPath + 'manager/media/ImageEditor/editor.php?img=/images' + oConnector.CurrentFolder + fileName + '\',\'win\',\'status=0,toolbar=0\');"><img alt="Edit image" border="0" src="images/editImage.gif" /></a>' ;
 	}
 
  /*

@@ -109,7 +109,7 @@ else if ($manager_layout==3) {
 	<title><?php echo $site_name." - (MODx Content Manager)"; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
 	</head>
-	<frameset rows="0,20,150,*" frameborder="0" border="0">
+	<frameset rows="0,20,135,*" frameborder="0" border="0">
 		<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
 		<frame src="index.php?a=1&f=topbar" name="topFrame" scrolling="no" noresize>
 		<frame name="mainMenu" src="index.php?a=1&f=l3mnu" scrolling="no" noresize>

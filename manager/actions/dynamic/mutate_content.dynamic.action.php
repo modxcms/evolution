@@ -156,6 +156,9 @@ body {
 <script language="JavaScript" src="media/script/datefunctions.js"></script>
 <script language="JavaScript">
 
+// save tree folder state
+parent.menu.saveFolderState(); 
+
 function changestate(element) {
 	currval = eval(element).value;	
 	if(currval==1) {
@@ -879,10 +882,10 @@ function decode(s){
 		// replace image path
 		$htmlContent = $content['content'];
 		if(!empty($htmlContent)) {
-			if(substr($im_plugin_base_url, -1) != '/') {
-				$im_base_url = $im_plugin_base_url . '/';
+			if(substr($rb_base_url, -1) != '/') {
+				$im_base_url = $rb_base_url . '/';
 			} else {
-				$im_base_url = $im_plugin_base_url;
+				$im_base_url = $rb_base_url;
 			}
 			$elements = parse_url($im_base_url);
 			$image_path = $elements['path'];

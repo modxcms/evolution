@@ -26,18 +26,22 @@ class DBAPI {
 	 *	@name:	connect
 	 *	 
 	 */
-	function connect($host='',$dbase='', $uid='',$pwd=''){
+	function connect($host='',$dbase='', $uid='',$pwd='',$persist=0){
 		global $modx;
-		$uid = $uid ? $host:$this->config['user'];
-		$pwd = $pwd ? $host:$this->config['pass'];
+		$uid = $uid ? $uid:$this->config['user'];
+		$pwd = $pwd ? $pwd:$this->config['pass'];
 		$host = $host ? $host:$this->config['host'];
-		$dbase = $host ? $host:$this->config['dbase'];
+		$dbase = $dbase ? $dbase:$this->config['dbase'];
 		$tstart = $modx->getMicroTime(); 
-		if(@!$this->conn = mysql_connect($host, $uid, $pwd)) {
+		if(@!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd):mysql_connect($host, $uid, $pwd))) {
 			$modx->messageQuit("Failed to create the database connection!");
 			exit;
 		} else {
-			mysql_select_db($dbase);
+			$dbase = str_replace('`','',$dbase); // remove the `` chars
+			if(!@mysql_select_db($dbase)) {
+				$modx->messageQuit("Failed to select the database '".$dbase."'!");
+				exit;
+			}
 			$tend = $modx->getMicroTime(); 
 			$totaltime = $tend-$tstart;
 			if($modx->dumpSQL) {
@@ -57,6 +61,9 @@ class DBAPI {
 		@mysql_close($this->conn);
 	}
 	
+	function escape($s){
+		return mysql_escape_string($s);
+	}
 
 	/**
 	 *	@name:	query
