@@ -30,7 +30,8 @@
 
 	$moduleChunks 	 	= array(); // chunks - array : name, description, type - 0:file or 1:content, file or content
 	$moduleSnippets 	= array(); // snippets - array : name, description, type - 0:file or 1:content, file or content,properties
-	$modulePlugins		= array(); // plugins - array : name, description, type - 0:file or 1:content, file or content,properties
+	$modulePlugins		= array(); // plugins - array : name, description, type - 0:file or 1:content, file or content,properties, events,guid
+	$moduleModules		= array(); // modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid
 	$moduleTemplates 	= array(); // templates - array : name, description, type - 0:file or 1:content, file or content,properties
 	$moduleTVs		 	= array(); // template variables - array : name, description, type - 0:file or 1:content, file or content,properties
 
@@ -40,7 +41,7 @@
 	# load setup information file
 	$setupPath = dirname(__FILE__);
 	include_once "$setupPath/setup.info.php";
-	
+
 	$errors = 0;
 	$syscheck = ($_POST['syscheck']=="on") ? true:false;
 	$upgradeable = file_exists("../manager/includes/config.inc.php") ? 1:0;
@@ -102,7 +103,7 @@
 				<tr>
 				<td valign="top">
 					<p class='title'>Welcome to the <?php echo $moduleName; ?> installation program.</p>
-					<p>This program will guide you through the rest of the installtion.</p>
+					<p>This program will guide you through the rest of the installation.</p>
 					<p>Please select 'Next' button to continue:</p>
 					<br />
 					<center><img src="img_splash.gif" /></center>
@@ -255,6 +256,7 @@
 	// build Options Screen
 	function buildOptionsScreen() {
 		global $moduleChunks;
+		global $moduleModules;
 		global $modulePlugins;
 		global $moduleSnippets;
 		ob_start();	
@@ -269,6 +271,15 @@
 			echo "&nbsp;<input type='checkbox' name='chunk[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleChunks[$i][0]."</span> - ".$moduleChunks[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
 		}
 
+		// display modules
+		$modules = isset($_POST['module']) ? $_POST['module']:array();
+		$limit = count($moduleModules);
+		if ($limit>0) echo "<h1>Modules</h1>";
+		for ($i=0;$i<$limit;$i++) {
+			$chk = in_array($i,$modules)||(!count($_POST)) ? "checked='checked'": "";
+			echo "&nbsp;<input type='checkbox' name='module[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleModules[$i][0]."</span> - ".$moduleModules[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		}
+			
 		// display plugins
 		$plugins = isset($_POST['plugin']) ? $_POST['plugin']:array();
 		$limit = count($modulePlugins);
@@ -439,7 +450,7 @@
 		if($errors>0) {
 		?>
 			<p>
-			Unfortunately, Setup cannot continue at the moment, due to the above <?php echo $errors > 1 ? $errors." " : "" ; ?>error<?php echo $errors > 1 ? "s" : "" ; ?>. Please correct the error<?php echo $errors > 1 ? "s" : "" ; ?>, and try again. If you need help figuring out how to fix the problem<?php echo $errors > 1 ? "s" : "" ; ?>, visit the <a href="http://www.vertexworks.com/forums/" target="_blank">Operation MODx Forums</a>.
+			Unfortunately, Setup cannot continue at the moment, due to the above <?php echo $errors > 1 ? $errors." " : "" ; ?>error<?php echo $errors > 1 ? "s" : "" ; ?>. Please correct the error<?php echo $errors > 1 ? "s" : "" ; ?>, and try again. If you need help figuring out how to fix the problem<?php echo $errors > 1 ? "s" : "" ; ?>, visit the <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.
 			</p>
 		<?php
 		}

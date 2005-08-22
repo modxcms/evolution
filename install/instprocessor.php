@@ -24,7 +24,11 @@ else {
 	$table_prefix = $_POST['tableprefix'];
 	$adminname = $_POST['cmsadmin'];
 	$adminpass = $_POST['cmspassword'];
-	
+}
+
+// set session name variable
+if(!isset($site_sessionname)) {
+	$site_sessionname = 'SN'.uniqid('');
 }
 
 // get base path and url
@@ -139,6 +143,8 @@ $configString = '<?php
 	$table_prefix = "'.$table_prefix.'";		
 	error_reporting(E_ALL ^ E_NOTICE);
 
+	$site_sessionname = "'.$site_sessionname.'";
+	
 	// automatically assign base_path and base_url
 	if($base_path==""||$base_url=="") {
 		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
@@ -149,10 +155,20 @@ $configString = '<?php
 		$pth = implode("manager",$a); unset($a);
 		$base_url = $url.(substr($url,-1)!="/"? "/":"");
 		$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
-		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? "http://" : "https://" ;
-	    $site_url .= $_SERVER[\'HTTP_HOST\'];
-	    $site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? "":":".$_SERVER[\'SERVER_PORT\'];
-	    $site_url .= $base_url;
+		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? \'http://\' : \'https://\';
+		$site_url .= $_SERVER[\'HTTP_HOST\'];
+		if($_SERVER[\'SERVER_PORT\']!=80) $site_url = str_replace(\':\'.$_SERVER[\'SERVER_PORT\'],\'\',$site_url); // remove port from HTTP_HOST 
+		$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
+		$site_url .= $base_url;
+	}
+
+	// start cms session
+	if(!function_exists(\'startCMSSession\')) {
+		function startCMSSession(){
+			global $site_sessionname;
+			session_name($site_sessionname);	
+			session_start();
+		}
 	}';
 $configString .= "\n?>";
 $filename = '../manager/includes/config.inc.php';
@@ -183,10 +199,22 @@ else {
 }
 
 
-// generate new site id number and set the manager theme to MODx 
+// generate new site_id and set manager theme to MODx 
 if($installMode==0) {
-	$siteid = uniqid("");
+	$siteid = uniqid('');
 	mysql_query("REPLACE INTO $dbase.`".$table_prefix."system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODx')",$sqlParser->conn);
+}
+else {
+	// update site_id if missing
+	$ds = mysql_query("SELECT setting_name,setting_value FROM $dbase.`".$table_prefix."system_settings` WHERE setting_name='site_id'",$sqlParser->conn);
+	if($ds) {
+		$r = mysql_fetch_assoc($ds);
+		$siteid = $r['setting_value'];
+		if($siteid==''|| $siteid='MzGeQ2faT4Dw06+U49x3') {
+			$siteid = uniqid('');
+			mysql_query("REPLACE INTO $dbase.`".$table_prefix."system_settings` (setting_name,setting_value) VALUES('site_id','$siteid')",$sqlParser->conn);
+		}
+	}
 }
 
 // Install Chunks
@@ -227,7 +255,7 @@ if(isset($_POST['chunk'])) {
 // Install module
 if(isset($_POST['module'])) {				
 	echo "<p style='color:#707070'>Module:</p> ";
-	$selPlugs = $_POST['plugin'];
+	$selPlugs = $_POST['module'];
 	foreach($selPlugs as $si) {
 		$si 		= (int)trim($si);
 		$name		= mysql_escape_string($moduleModules[$si][0]);

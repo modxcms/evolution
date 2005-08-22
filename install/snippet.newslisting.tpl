@@ -24,30 +24,39 @@ if($limit<1) {
 } 
 $nrblogs = $nrblogs<$limit ? $nrblogs : $limit; 
 if($limit>0) { 
-   for ($x = 0; $x < $nrblogs; $x++) { 
-	  $tbl = $this->dbConfig['dbase'].".".$this->dbConfig['table_prefix']."manager_users";
-      $sql = "SELECT username FROM $tbl WHERE $tbl.id = ".$resource[$x]['createdby']; 
-      $rs2 = $modx->dbQuery($sql);
-      $limit2 = $modx->recordCount($rs2); 
-      if($limit2<1) { 
-		$username .= "anonymous"; 
-      } else { 
-        $resourceuser = $modx->fetchRow($rs2); 
-        $username = $resourceuser['username']; 
+	for ($x = 0; $x < $nrblogs; $x++) { 
+		if ($resource[$x]['createdby']<0) {
+			// get web user name
+			$tbl = $modx->getFullTableName("web_users");
+			$sql = "SELECT username FROM $tbl WHERE $tbl.id = '".abs($resource[$x]['createdby'])."'"; 
+		}
+		else {
+			// get manager user name
+			$tbl = $modx->getFullTableName("manager_users");
+			$sql = "SELECT username FROM $tbl WHERE $tbl.id = '".$resource[$x]['createdby']."'"; 
+		}
+		$rs2 = $modx->dbQuery($sql);
+		$limit2 = $modx->recordCount($rs2); 
+		if($limit2<1) { 
+			$username = "anonymous"; 
+		}
+		else { 
+			$resourceuser = $modx->fetchRow($rs2); 
+			$username = $resourceuser['username']; 
+		} 
 		// show summary
 		if(strlen($resource[$x]['introtext'])>0) {
-            $rest = $resource[$x]['introtext'];
+			$rest = $resource[$x]['introtext'];
 			if(strlen($resource[$x]['content'])>0) $rest .= "...<br />&nbsp;&nbsp;&nbsp;&nbsp;<a href='[~".$resource[$x]['id']."~]'>More on this story ></a>"; 
 		} else if(strlen($resource[$x]['content'])>$lentoshow) { 
 			// strip the content 
-            $rest = substr($resource[$x]['content'], 0, $lentoshow); 
-            $rest .= "...<br />&nbsp;&nbsp;&nbsp;&nbsp;<a href='[~".$resource[$x]['id']."~]'>More on this story ></a>"; 
-        } else { 
-            $rest = $resource[$x]['content']; 
-        }  
-        $output .= "<fieldset><legend>".$resource[$x]['pagetitle']."</legend>".$rest."<br /><div style='text-align:right;'>Author: <b>".$username."</b> on ".strftime("%d-%m-%y %H:%M:%S", $resource[$x]['createdon'])."</div></fieldset>"; 
-      } 
-   } 
+			$rest = substr($resource[$x]['content'], 0, $lentoshow); 
+			$rest .= "...<br />&nbsp;&nbsp;&nbsp;&nbsp;<a href='[~".$resource[$x]['id']."~]'>More on this story ></a>"; 
+		} else { 
+			$rest = $resource[$x]['content']; 
+		}  
+		$output .= "<fieldset><legend>".$resource[$x]['pagetitle']."</legend>".$rest."<br /><div style='text-align:right;'>Author: <b>".$username."</b> on ".strftime("%d-%b-%y %H:%M:%S", $resource[$x]['createdon'])."</div></fieldset>"; 
+	} 
 } 
 
 if($limit>$nrblogs) { 

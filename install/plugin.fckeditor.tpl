@@ -1,13 +1,15 @@
 /**
  * FCKEditor - RichText Editor Plugin
  * Written By Raymond Irving - June 22, 2005
+ * Modified By Jeff Whitfield - August 8, 2005
  *
  * Both frontend and backend interface provided
  *
  * Configuration:
  * &webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']
  *
- * Version 1.0
+ * Version 1.1
+ * FCKeditor v2.0 Final
  *
  */
 
@@ -51,11 +53,10 @@ if (!function_exists('getFCKEditorSettings')) {
 		$autoYes = $fck_editor_autolang=='1' ? 'checked="checked"' : '';
 
 		return <<<FCKEditor_HTML_Settings
-		<table id='editorRow_FCKEditor' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 		  
+		<table id='editorRow_FCKEditor' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 
 		  <tr class='row1' style="display: $display;"> 
             <td colspan="2" class="warning" style="color:#707070; background-color:#eeeeee"><h4>{$_lang["FCKEditor_settings"]}<h4></td> 
           </tr> 
-
           <tr class='row1' style="display: $display"> 
             <td nowrap class="warning"><b>{$_lang["fck_editor_autolang_title"]}</b></td> 
             <td> <input onChange="documentDirty=true;" type="radio" name="fck_editor_autolang" value="1" $autoYes /> 
@@ -146,6 +147,9 @@ if (!function_exists('getFCKEditorScript')) {
 					"$fckInstanceObj.Config['ImageBrowserURL'] = FCKImageBrowserURL;".
 					"$fckInstanceObj.Config['LinkBrowser'] = ".($use_browser==1 ? "true":"false").";".
 					"$fckInstanceObj.Config['LinkBrowserURL'] = FCKLinkBrowserURL;".
+					"$fckInstanceObj.Config['FlashBrowser'] = ".($use_browser==1 ? "true":"false").";".
+					"$fckInstanceObj.Config['FlashBrowserURL'] = FCKFlashBrowserURL;".
+					"$fckInstanceObj.Config['SpellChecker'] = 'SpellerPages';".
 					"$fckInstanceObj.Config['CustomConfigurationsPath'] = '".$base_url."assets/plugins/fckeditor/custom_config.js';".
 					"$fckInstanceObj.ToolbarSet = '".$toolbar."';".
 					"$fckInstanceObj.ReplaceTextarea();".
@@ -154,8 +158,9 @@ if (!function_exists('getFCKEditorScript')) {
 		return <<<FCKEditor_SCRIPT
 		<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/fckeditor/fckeditor.js"></script>
 		<script language="javascript" type="text/javascript">
-			var FCKImageBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=';
-			var FCKLinkBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Connector=connectors/php/connector.php&ServerPath=';
+			var FCKImageBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+			var FCKLinkBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+			var FCKFlashBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
 			var FCKCustomToolbarSet = {$tbCustomSet};
 			var FCKAutoLanguage = {$autoLang};
 			

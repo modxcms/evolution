@@ -32,6 +32,11 @@
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
 	$mp[] = array("FCKEditor","RichText Editor Plugin",0,"$setupPath/plugin.fckeditor.tpl","&webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+	$mp[] = array("QuickEdit","Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
+
+	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
+	$mm = &$moduleModules;
+	$mm[] = array("QuickEdit","Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit","f888bac76e1537ca8e0cbec772b4624a",1);
 
 	# setup callback function
 	$callBackFnc = "clean_up";
@@ -45,20 +50,21 @@
 		}	
 		
 		// secure web documents - privateweb 
-		mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privateweb = 0 WHERE privateweb = 1");
+		mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privateweb = 0 WHERE privateweb = 1",$sqlParser->conn);
 		$sql =  "SELECT DISTINCT sc.id 
 				 FROM ".$sqlParser->prefix."site_content sc
 				 LEFT JOIN ".$sqlParser->prefix."document_groups dg ON dg.document = sc.id
 				 LEFT JOIN ".$sqlParser->prefix."webgroup_access wga ON wga.documentgroup = dg.document_group
 				 WHERE wga.id>0";
-		$ds= mysql_query($sql);
+		$ds = mysql_query($sql,$sqlParser->conn);
 		if(!$ds) {
 			echo "An error occured while executing a query: ".mysql_error();
 		}
 		else {
-			while($r = mysql_fetch_row($ds)) $ids[]=$r["id"];
+			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
 				mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");	
+				unset($ids);
 			}
 		}
 		
@@ -74,10 +80,35 @@
 			echo "An error occured while executing a query: ".mysql_error();
 		}
 		else {
-			while($r = mysql_fetch_row($ds)) $ids[]=$r["id"];
+			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
 				mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
+				unset($ids);
 			}		
 		}
+
+		// get quick edit module id
+		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_modules WHERE name='QuickEdit'");
+		if(!$ds) {
+			echo "An error occured while executing a query: ".mysql_error();
+		}
+		else {
+			$row = mysql_fetch_assoc($ds);
+			$moduleid=$row["id"];
+		}		
+
+		// get quick edit plugin id
+		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_plugins WHERE name='QuickEdit'");
+		if(!$ds) {
+			echo "An error occured while executing a query: ".mysql_error();
+		}
+		else {
+			$row = mysql_fetch_assoc($ds);
+			$pluginid=$row["id"];
+		}
+		
+		// setup quick edit plugin as module dependency
+		mysql_query("INSERT INTO ".$sqlParser->prefix."site_module_depobj (module, resource, type) VALUES('$moduleid','$pluginid',30)");
+
 	}
 ?>

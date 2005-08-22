@@ -760,7 +760,7 @@ ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL 
 
 REPLACE INTO `{PREFIX}site_templates` 
 (id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES 
-(1, 'Built-in Template', 'Default template, designed by Helder :)', 0, 0, '', 0, '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" \r\n  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\r\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\r\n<head>\r\n<title>[(site_name)] &raquo; [*pagetitle*]</title>\r\n<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\r\n[[GetKeywords]]\r\n        <style type="text/css">\r\n             @import url(\'assets/site/style.css\');\r\n        </style>\r\n</head>\r\n\r\n<body>\r\n<table border="0" cellpadding="0" cellspacing="0" class="mainTable">\r\n  <tr class="fancyRow">\r\n    <td><span class="headers">&nbsp;<img src="manager/media/images/misc/dot.gif" alt="" style="margin-top: 1px;" />&nbsp;<a href="[~[(site_start)]~]">[(site_name)]</a></span></td>\r\n    <td align="right"><span class="headers">[[PageTrail]]</span></td>\r\n  </tr>\r\n  <tr class="fancyRow2">\r\n    <td colspan="2" class="border-top-bottom smallText" align="right">[[PoweredBy]]</td>\r\n  </tr>\r\n  <tr align="left" valign="top">\r\n    <td colspan="2"><table width="100%"  border="0" cellspacing="0" cellpadding="1">\r\n      <tr align="left" valign="top">\r\n        <td class="w22"><table width="100%" border="0" cellpadding="0" cellspacing="0">\r\n          <tr>\r\n            <td align="center" valign="middle" class="logoBox"><a href="[~[(site_start)]~]"><img src="assets/images/logo.png" alt="" /></a></td>\r\n          </tr>\r\n          <tr>\r\n            <td align="left" valign="top"><img src="manager/media/images/_tx_.gif" alt="" height="4" /></td>\r\n          </tr>\r\n          <tr class="fancyRow2">\r\n            <td align="left" valign="top" class="navigationHead">Navigation</td>\r\n          </tr>\r\n          <tr style="padding: 0px; margin: 0px;">\r\n            <td align="left" valign="top" class="navigation" style="padding: 0px; margin: 0px;"><img src="manager/media/images/_tx_.gif" alt="" height="4" /><br />[[MenuBuilder?id=0]]<img src="manager/media/images/_tx_.gif" height="4" alt="" /></td>\r\n          </tr>\r\n        </table></td>\r\n        <td class="pad" id="content"><h1>[*longtitle*]</h1>[*content*]</td>\r\n      </tr>\r\n    </table></td>\r\n  </tr>\r\n  <tr class="fancyRow2">\r\n    <td class="border-top-bottom smallText">&nbsp;</td>\r\n    <td class="border-top-bottom smallText" align="right">MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved from [^s^].</td>\r\n  </tr>\r\n</table>\r\n</body>\r\n</html>', 0);
+(1, 'Built-in Template', 'Default template, designed by Helder :)', 0, 0, '', 0, '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" \r\n  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\r\n<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">\r\n<head>\r\n<title>[(site_name)] &raquo; [*pagetitle*]</title>\r\n<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\r\n[[GetKeywords]]\r\n        <style type="text/css">\r\n             @import url(\'assets/site/style.css\');\r\n        </style>\r\n</head>\r\n\r\n<body>\r\n<table border="0" cellpadding="0" cellspacing="0" class="mainTable">\r\n  <tr class="fancyRow">\r\n    <td><span class="headers">&nbsp;<img src="manager/media/images/misc/dot.gif" alt="" style="margin-top: 1px;" />&nbsp;<a href="[~[(site_start)]~]">[(site_name)]</a></span></td>\r\n    <td align="right"><span class="headers">[[PageTrail]]</span></td>\r\n  </tr>\r\n  <tr class="fancyRow2">\r\n    <td colspan="2" class="border-top-bottom smallText" align="right">[[PoweredBy]]</td>\r\n  </tr>\r\n  <tr align="left" valign="top">\r\n    <td colspan="2"><table width="100%"  border="0" cellspacing="0" cellpadding="1">\r\n      <tr align="left" valign="top">\r\n        <td class="w22"><table width="100%" border="0" cellpadding="0" cellspacing="0">\r\n          <tr>\r\n            <td align="center" valign="middle" class="logoBox"><a href="[~[(site_start)]~]"><img src="assets/images/logo.png" alt="" /></a></td>\r\n          </tr>\r\n          <tr>\r\n            <td align="left" valign="top"><img src="manager/media/images/_tx_.gif" alt="" height="4" /></td>\r\n          </tr>\r\n          <tr class="fancyRow2">\r\n            <td align="left" valign="top" class="navigationHead">Navigation</td>\r\n          </tr>\r\n          <tr style="padding: 0px; margin: 0px;">\r\n            <td align="left" valign="top" class="navigation" style="padding: 0px; margin: 0px;"><img src="manager/media/images/_tx_.gif" alt="" height="4" /><br />[[MenuBuilder?id=0]]<img src="manager/media/images/_tx_.gif" height="4" alt="" /></td>\r\n          </tr>\r\n        </table></td>\r\n        <td class="pad" id="content"><h1>[*#longtitle*]</h1><div>[*#content*]</div></td>\r\n      </tr>\r\n    </table></td>\r\n  </tr>\r\n  <tr class="fancyRow2">\r\n    <td class="border-top-bottom smallText">&nbsp;</td>\r\n    <td class="border-top-bottom smallText" align="right">MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved from [^s^].</td>\r\n  </tr>\r\n</table>\r\n</body>\r\n</html>', 0);
 
 
 # Default Site Documents
@@ -768,7 +768,7 @@ REPLACE INTO `{PREFIX}site_templates`
 
 REPLACE INTO `{PREFIX}site_content` 
 (id, type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle) VALUES 
-(1, 'document', 'text/html', 'Home', 'Welcome to MODx', 'Introduction to MODx', 'home', 1, 0, 0, 0, 0,'Create and do amazing things with MODx', '<p><strong><font size="5">Welcome to MODx!</font><font size="6"><br></font></strong><font size="2" color="#808080">This is the default installation site. </font></p><p><font size="2"><font color="#666666"><b>Install Successful!</b></font><br>If you are reading this message then it means you have successfully installed and configured the MODx Content Manager software. </font></p><p><font size="2"><font color="#666666"><b>Getting started</b></font><br>To get started with your new Content Manager all you need to do is to add your content, design a unique template for your site, perhaps write some snippets and Template Variables (TV) which will make your site stand out (don\'t forget to share them at the <a href="www.vertextworks.com/forums">forums</a>), and, most of all, enjoy using your new MODx enabled website!</font></p><p><font size="2">To learn more about the MODx Content Manager, see the &quot;Getting Started Tutorial.&quot;</font></p><p><font size="2">To log into the manager, point your browser to <a href="manager">[(site_url)]manager/</a>.</font></p>', 1, 1, 1, 1, 1, 1, 1087155171, 1, 1091397434, 0, 0, 0,'Home');
+(1, 'document', 'text/html', 'Home', 'Welcome to MODx', 'Introduction to MODx', 'home', 1, 0, 0, 0, 0,'Create and do amazing things with MODx', '<p><strong><font size="5">Welcome to MODx!</font><font size="6"><br></font></strong><font size="2" color="#808080">This is the default installation site. </font></p><p><font size="2"><font color="#666666"><b>Install Successful!</b></font><br>If you are reading this message then it means you have successfully installed and configured the MODx Content Manager software. </font></p><p><font size="2"><font color="#666666"><b>Getting started</b></font><br>To get started with your new Content Manager all you need to do is to add your content, design a unique template for your site, perhaps write some snippets and Template Variables (TV) which will make your site stand out (don\'t forget to share them at the <a href="http://www.modxcms.com/forums">forums</a>), and, most of all, enjoy using your new MODx enabled website!</font></p><p><font size="2">To learn more about the MODx Content Manager, see the &quot;Getting Started Tutorial.&quot;</font></p><p><font size="2">To log into the manager, point your browser to <a href="manager">[(site_url)]manager/</a>.</font></p>', 1, 1, 1, 1, 1, 1, 1087155171, 1, 1091397434, 0, 0, 0,'Home');
 
 
 REPLACE INTO `{PREFIX}site_content` 
@@ -829,10 +829,12 @@ REPLACE INTO `{PREFIX}system_settings`
 ('number_of_messages','30'),
 ('number_of_results','20'),
 ('use_editor','1'),
+('use_browser','1'),
 ('rb_base_dir','{IMAGEPATH}'),
 ('rb_base_url','{IMAGEURL}'),
 ('which_editor','FCKEditor'),
 ('fck_editor_toolbar','standard'),
+('fck_editor_autolang','0'),
 ('editor_css_path',''),
 ('editor_css_selectors',''),
 ('strip_image_paths','0'),
@@ -877,7 +879,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('17','OnManagerCreateGroup','2',''),
 ('18','OnBeforeCacheUpdate','4',''),
 ('19','OnCacheUpdate','4',''),
-('20','OnLoadWebPageCache ','4',''),
+('20','OnLoadWebPageCache','4',''),
 ('21','OnBeforeSaveWebPageCache','4',''),
 ('22','OnChunkFormPrerender','1','Chunks'),
 ('23','OnChunkFormRender','1','Chunks'),
@@ -947,7 +949,9 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('87','OnRichTextEditorRegister','1','RichText Editor'),
 ('88','OnRichTextEditorInit','1','RichText Editor'),
 ('89','OnManagerPageInit','2',''),
-('90','OnWebPageInit','3',''),
+('90','OnWebPageInit','5',''),
+('91','OnLoadWebDocument','5',''),
+('92','OnParseDocument','5',''),
 ('200','OnCreateDocGroup','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');
