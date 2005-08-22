@@ -82,7 +82,7 @@ if($database_user=="") {
 }
 
 // start session 
-session_start();
+startCMSSession();
 
 // initiate a new document parser
 include_once $base_path."/manager/includes/document.parser.class.inc.php";
