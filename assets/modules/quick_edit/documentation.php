@@ -1,5 +1,6 @@
 <?php
 
+// Automatically get the module ID (thanks Travis)
 $id = (!empty($_REQUEST["id"])) ? (int)$_REQUEST["id"] : "[QuickEditModuleId]";
 
 ?>
@@ -211,8 +212,8 @@ Link Tag: <code>&lt; href="index.php?a=112&amp;id=<?php echo $id; ?>&amp;doc=[*i
 </p>
 
 <?php
-if (! is_integer($id)) { 
-	echo "<p>Make sure to replace <code>[QuickEditModuleId]</code> with the id of your QuickEdit module.</p>";	
+if (! is_integer($id)) {
+	echo "<p>Make sure to replace <code>[QuickEditModuleId]</code> with the id of your QuickEdit module.</p>";
 };
 ?>
 </div>
