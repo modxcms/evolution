@@ -130,7 +130,7 @@ EOD;
 
      // Set the HTML for the link
 $link = <<<EOD
-<a onclick="javascript: openEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: highlightContent(this);" onmouseout="javascript: unhighlightContent(this);" title="Click to edit the content of {$cv->name}" class="QuickEditLink">&laquo; edit {$cv->name}</a>
+<a onclick="javascript: openEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: highlightContent(this);" onmouseout="javascript: unhighlightContent(this);" title="Edit {$cv->description}" class="QuickEditLink">&laquo; edit {$cv->name}</a>
 EOD;
 
     }

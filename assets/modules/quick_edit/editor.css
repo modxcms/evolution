@@ -17,6 +17,10 @@ width:100%;
 margin:0;
 padding:0;
 overflow:hidden;
+font-size:10pt;
+background-image:url(../../../manager/media/images/bg/section.jpg);
+background-position:top right;
+background-repeat:no-repeat;
 }
 
 #tv_container{
@@ -49,7 +53,6 @@ margin:0;
 padding:5px 10px 5px 30px;
 vertical-align:middle;
 color:#000000;
-font-size:14px;
 text-decoration:none;
 border-width:1px;
 border-color:#006400;
@@ -69,4 +72,9 @@ top:50%;
 margin-top:-8px;
 margin-left:-20px;
 border-style:none;
+}
+
+#description{
+margin-top:10px;
+text-align:center;
 }

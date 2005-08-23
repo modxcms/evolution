@@ -157,9 +157,11 @@ $html = <<<EOD
 
 </div>
 
+<div id="description">Edit {$cv->description}</div>
+
 <div id="tv_container">
 
-$tv_html
+{$tv_html}
 
 </div>
 
