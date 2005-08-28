@@ -1,4 +1,4 @@
-# WebSignup 1.0
+# WebSignup 1.1
 # Created By Raymond Irving April, 2005
 #::::::::::::::::::::::::::::::::::::::::
 # Usage: 	
@@ -8,8 +8,8 @@
 #
 # Params:	
 #
-#	&tpl			- (Optional)
-#		Chunk name or document id to use as a template
+#	&tpl		- (Optional) Chunk name or document id to use as a template
+#	&groups		- Web users groups to be assigned to users
 #				  
 #	Note: Templats design:
 #			section 1: signup template
@@ -17,7 +17,7 @@
 #
 # Examples:
 #
-#	[[WebSignup? &tpl=`SignupForm`]] 
+#	[[WebSignup? &tpl=`SignupForm` &groups=`NewsReaders,WebUsers`]] 
 
 # Set Snippet Paths 
 $snipPath  = (($modx->insideManager())? "../":"");
@@ -30,7 +30,11 @@ if ($m = $modx->insideManager()) {
 
 
 # Snippet customize settings
-$tpl		= isset($tpl)? $tpl:"";
+$tpl = isset($tpl)? $tpl:"";
+
+# setup web groups
+$groups = isset($groups) ? explode(',',$groups):array();
+for($i=0;$i<count($groups);$i++) $groups[$i] = trim($groups[$i]);
 
 # System settings
 $isPostBack		= count($_POST) && isset($_POST['cmdwebsignup']);

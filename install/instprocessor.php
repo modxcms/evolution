@@ -321,7 +321,7 @@ if(isset($_POST['plugin'])) {
 				}
 				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
 			}
-			//add system events
+			// add system events
 			if(count($events)>0) {
 				$ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_plugins` WHERE name='$name';",$sqlParser->conn); 
 				if($ds) {

@@ -91,6 +91,7 @@
 			}		
 		}
 
+		/**** Add Quick Plugin to Module ***/
 		// get quick edit module id
 		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_modules WHERE name='QuickEdit'");
 		if(!$ds) {
@@ -100,8 +101,7 @@
 			$row = mysql_fetch_assoc($ds);
 			$moduleid=$row["id"];
 		}		
-
-		// get quick edit plugin id
+		// get plugin id
 		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_plugins WHERE name='QuickEdit'");
 		if(!$ds) {
 			echo "An error occured while executing a query: ".mysql_error();
@@ -109,10 +109,11 @@
 		else {
 			$row = mysql_fetch_assoc($ds);
 			$pluginid=$row["id"];
+		}		
+		// setup plugin as module dependency
+		$ds = mysql_query("SELETC module ".$sqlParser->prefix."site_module_depobj WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
+		if (mysql_num_rows($ds)==0){
+			mysql_query("INSERT INTO ".$sqlParser->prefix."site_module_depobj (module, resource, type) VALUES('$moduleid','$pluginid',30)");
 		}
-		
-		// setup quick edit plugin as module dependency
-		mysql_query("INSERT INTO ".$sqlParser->prefix."site_module_depobj (module, resource, type) VALUES('$moduleid','$pluginid',30)");
-
 	}
 ?>
