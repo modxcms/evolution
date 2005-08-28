@@ -7,6 +7,10 @@
  */
 
 a.QuickEditLink{
+cursor:pointer;
+}
+
+a.QuickEditLink{
 float:right;
 clear:right;
 display:block;

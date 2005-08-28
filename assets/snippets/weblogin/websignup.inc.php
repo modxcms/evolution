@@ -123,6 +123,18 @@ else if ($isPostBack){
 		return;
 	}
 
+	// add user to web groups
+	if(count($groups)>0) {
+		$ds = $modx->dbQuery("SELECT id FROM ".$modx->getFullTableName("webgroup_names")." WHERE name IN ('".implode("','",$groups)."')");
+		if(!$ds) return $modx->webAlert('An error occured while attempting to update user\'s web groups');
+		else {
+			while ($row = $modx->fetchRow($ds)) {
+				$wg = $row["id"];
+				$modx->dbQuery("REPLACE INTO ".$modx->getFullTableName("web_groups")." (webgroup,webuser) VALUES('$wg','$key')");
+			}
+		}
+	}
+			
 	// invoke OnWebSaveUser event
 	$modx->invokeEvent("OnWebSaveUser",
 						array(

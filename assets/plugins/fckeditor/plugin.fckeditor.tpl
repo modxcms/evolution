@@ -1,14 +1,14 @@
 /**
  * FCKEditor - RichText Editor Plugin
  * Written By Raymond Irving - June 22, 2005
- * Modified By Jeff Whitfield - August 8, 2005
+ * Modified By Jeff Whitfield - August 24, 2005
  *
  * Both frontend and backend interface provided
  *
  * Configuration:
  * &webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']
  *
- * Version 1.1
+ * Version 1.2
  * FCKeditor v2.0 Final
  *
  */
@@ -135,6 +135,7 @@ if (!function_exists('getFCKEditorScript')) {
 		$toolbar = $tbCustomSet ? "custom": $fck_editor_toolbar;
 		$tbCustomSet = "[ ".($tbCustomSet ? $tbCustomSet:$fck_editor_toolbar_customset)." ]"; // remember [[snippets]] detection :)
 		$autoLang = $fck_editor_autolang ? 'true': 'false';
+		$editor_css_path = !empty($editor_css_path) ? $editor_css_path : $base_url."assets/plugins/fckeditor/editor/css/fck_editorarea.css";
 		
 		// build fck instances
 		foreach($elmList as $fckInstance) {
@@ -152,6 +153,7 @@ if (!function_exists('getFCKEditorScript')) {
 					"$fckInstanceObj.Config['SpellChecker'] = 'SpellerPages';".
 					"$fckInstanceObj.Config['CustomConfigurationsPath'] = '".$base_url."assets/plugins/fckeditor/custom_config.js';".
 					"$fckInstanceObj.ToolbarSet = '".$toolbar."';".
+					"$fckInstanceObj.Config['EditorAreaCSS'] = FCKEditorAreaCSS;".
 					"$fckInstanceObj.ReplaceTextarea();".
 					"</script>\n";
 		}
@@ -163,7 +165,7 @@ if (!function_exists('getFCKEditorScript')) {
 			var FCKFlashBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
 			var FCKCustomToolbarSet = {$tbCustomSet};
 			var FCKAutoLanguage = {$autoLang};
-			
+			var FCKEditorAreaCSS = '{$editor_css_path}';
 			function FCKeditor_OnComplete(edtInstance) {
 				if (edtInstance){ // to-do: add better listener
 					edtInstance.AttachToOnSelectionChange(tvOnFCKChangeCallback);

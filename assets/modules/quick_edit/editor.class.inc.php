@@ -220,9 +220,12 @@ EOD;
    foreach($_POST as $postKey=>$postValue) {
     if(substr($postKey, 0, 2) == 'tv') {
      $value = $postValue;
-     $value_prep = $modx->db->escape($value);
+     $content = $modx->db->escape($value);
     }
    }
+
+	 // invoke OnBeforeDocFormSave event
+	 $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$docId));
 
    if(is_numeric($cv->id)) {
 
@@ -235,21 +238,21 @@ EOD;
     if($modx->db->getRecordCount($result)) {
 
      $sql = "UPDATE {$db}.`{$pre}site_tmplvar_contentvalues`
-             SET `value` = '{$value_prep}'
+             SET `value` = '{$content}'
              WHERE `tmplvarid` = '{$cv->id}'
              AND `contentid` = '{$docId}';";
 
     } else {
 
      $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues`(tmplvarid, contentid, value)
-             VALUES('{$cv->id}', '{$docId}', '{$value_prep}');";
+             VALUES('{$cv->id}', '{$docId}', '{$content}');";
 
     }
 
    } elseif(in_array($cv->id,array('pagetitle', 'longtitle', 'description', 'content'))) {
 
     $sql = "UPDATE {$db}.`{$pre}site_content`
-            SET `{$cv->id}` = '{$value_prep}'
+            SET `{$cv->id}` = '{$content}'
             WHERE `id` = '{$docId}';";
 
    }
@@ -261,6 +264,9 @@ EOD;
     $modx->logEvent(0, 0, "<p>Save failed!</p><strong>SQL:</strong><pre>$sql</pre>", 'QuickEditor');
 
    } else {
+
+		// invoke OnDocFormSave event
+		$modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$docId));
 
     // empty cache
     include_once('../manager/processors/cache_sync.class.processor.php');

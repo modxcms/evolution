@@ -43,7 +43,7 @@ FCKConfig.ToolbarSets["advanced"] = [
 	['Image','Flash','Table','Rule','Smiley','SpecialChar','UniversalKey'],
 	['Form','Checkbox','Radio','TextField','Textarea','Select','Button','ImageButton','HiddenField'],
 	'/',
-	['Style','FontFormat','FontName','FontSize'],
+	['Style'],['FontFormat'],['FontName'],['FontSize'],
 	['TextColor','BGColor']
 ];
 // custom
