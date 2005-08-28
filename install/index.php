@@ -29,6 +29,7 @@
 	$moduleLicenseMessage= "";
 
 	$moduleChunks 	 	= array(); // chunks - array : name, description, type - 0:file or 1:content, file or content
+	$moduleTemplates 	= array(); // templates - array : name, description, type - 0:file or 1:content, file or content
 	$moduleSnippets 	= array(); // snippets - array : name, description, type - 0:file or 1:content, file or content,properties
 	$modulePlugins		= array(); // plugins - array : name, description, type - 0:file or 1:content, file or content,properties, events,guid
 	$moduleModules		= array(); // modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid
@@ -261,6 +262,15 @@
 		global $moduleSnippets;
 		ob_start();	
 		echo "<p class=\"title\">Optional Items</p><p>Please choose your installation options and click Install:</p>";
+		
+		// display templates
+		$templates = isset($_POST['template']) ? $_POST['template']:array();
+		$limit = count($moduleTemplates);
+		if ($limit>0) echo "<h1>Templates</h1>";
+		for ($i=0;$i<$limit;$i++) {
+			$chk = in_array($i,$templates)||(!count($_POST)) ? "checked='checked'": "";
+			echo "&nbsp;<input type='checkbox' name='template[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleTemplates[$i][0]."</span> - ".$moduleTemplates[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		}
 		
 		// display chunks
 		$chunks = isset($_POST['chunk']) ? $_POST['chunk']:array();

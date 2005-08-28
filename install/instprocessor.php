@@ -217,6 +217,41 @@ else {
 	}
 }
 
+// Install Templates
+if(isset($_POST['template'])) {				
+	echo "<p style='color:#707070'>Templates:</p> ";
+	$selTemplates = $_POST['template'];
+	foreach($selTemplates as $si) {
+		$si = 		(int)trim($si);
+		$name		= mysql_escape_string($moduleTemplates[$si][0]);
+		$desc 		= mysql_escape_string($moduleTemplates[$si][1]);
+		$type		= $moduleTemplates[$si][2]; // 0:file, 1:content
+		$filecontent= $moduleTemplates[$si][3];
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install template. File '$filecontent' not found.</span></p>";
+		else {
+			$template = ($type==1)? $filecontent:implode ('', file($filecontent));
+			$template = mysql_escape_string($template);			
+			$rs = mysql_query("SELECT * FROM $dbase.`".$table_prefix."site_templates` WHERE templatename='$name'",$sqlParser->conn);
+			if (mysql_num_rows($rs)) {
+				if(!@mysql_query("UPDATE $dbase.`".$table_prefix."site_templates` SET content='$template' WHERE templatename='$name';",$sqlParser->conn)) {
+					$errors += 1;
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+			}
+			else{
+				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename,description,content) VALUES('$name','$desc','$template');",$sqlParser->conn)) {
+					$errors += 1;
+					echo "<p>".mysql_error()."</p>";
+					return;
+				}
+				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+			}
+		}
+	}
+}
+
 // Install Chunks
 if(isset($_POST['chunk'])) {				
 	echo "<p style='color:#707070'>Chunks:</p> ";
