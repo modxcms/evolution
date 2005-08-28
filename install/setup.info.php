@@ -112,7 +112,10 @@
 		}		
 		// setup plugin as module dependency
 		$ds = mysql_query("SELECT module ".$sqlParser->prefix."site_module_depobj WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
-		if (mysql_num_rows($ds)==0){
+		if(!$ds) {
+			echo "An error occured while executing a query: ".mysql_error();
+		}
+		elseif (mysql_num_rows($ds)==0){
 			mysql_query("INSERT INTO ".$sqlParser->prefix."site_module_depobj (module, resource, type) VALUES('$moduleid','$pluginid',30)");
 		}
 	}
