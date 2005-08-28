@@ -648,7 +648,7 @@ function showHide(what, onoff){
         <table border="0" cellspacing="0" cellpadding="3"> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["login_homepage"] ?></b></td> 
-            <td ><input onChange="documentDirty=true;" type='text' maxlength='50' style="width: 300px;" name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : $usersettings['login_home']; ?>"></td> 
+            <td ><input onChange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : $usersettings['login_home']; ?>"></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -709,7 +709,7 @@ function showHide(what, onoff){
 			function BrowseServer() {
 				var w = screen.width * 0.7;
 				var h = screen.height * 0.7;
-				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=", w, h);
+				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo $base_url; ?>manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url; ?>", w, h);
 			}
 			function SetUrl(url, width, height, alt){
 				document.userform.photo.value = url;

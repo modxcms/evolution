@@ -672,6 +672,34 @@ function showHide(what, onoff){
     	<h2 class="tab"><?php echo $_lang["settings_users"] ?></h2> 
     	<script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabSettings" ) );</script> 
         <table border="0" cellspacing="0" cellpadding="3"> 
+
+          <tr> 
+            <td class="warning"><b><?php echo $_lang["mgr_login_start"] ?></b></td> 
+            <td ><input onChange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : $usersettings['manager_login_startup']; ?>"></td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["mgr_login_start_message"] ?></td> 
+          </tr> 
+          <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+
+          <tr> 
+            <td class="warning"valign="top"><b><?php echo $_lang["allow_mgr_access"] ?></b></td> 
+            <td>
+            	<input onChange="documentDirty=true;"  type="radio" name="allow_manager_access" value="1" <?php echo !isset($usersettings['allow_manager_access'])||$usersettings['allow_manager_access']==1 ? ' checked="checked"':'' ; ?> /> <?php echo $_lang['yes']; ?> <br />
+            	<input onChange="documentDirty=true;"  type="radio" name="allow_manager_access" value="0" <?php echo isset($usersettings['allow_manager_access']) && $usersettings['allow_manager_access']==0 ? ' checked="checked"':'' ; ?> /> <?php echo $_lang['no']; ?> 
+            </td> 
+          </tr> 
+          <tr> 
+            <td width="200">&nbsp;</td> 
+            <td class='comment'><?php echo $_lang["allow_mgr_access_message"] ?></td> 
+          </tr> 
+          <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr> 
+          
           <tr> 
             <td nowrap class="warning"valign="top"><b><?php echo $_lang["login_allowed_ip"] ?></b></td> 
             <td ><input onChange="documentDirty=true;"  type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo $usersettings['allowed_ip']; ?>" /></td> 
@@ -868,7 +896,7 @@ function showHide(what, onoff){
 			function BrowseServer() {
 				var w = screen.width * 0.7;
 				var h = screen.height * 0.7;
-				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=", w, h);
+				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo $base_url; ?>manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url; ?>", w, h);
 			}
 			function SetUrl(url, width, height, alt){
 				document.userform.photo.value = url;

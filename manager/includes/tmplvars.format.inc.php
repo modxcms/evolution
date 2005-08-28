@@ -231,6 +231,10 @@
 				
 			default:
 				$value = parseInput($value);
+				if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
+					// remove delimiter from checkbox and listbox-multiple TVs
+					$value = str_replace('||','',$value);
+				}
 				$o = $value;
 				break;
 		}

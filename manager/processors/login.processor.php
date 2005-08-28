@@ -208,7 +208,7 @@ $_SESSION['mgrFailedlogins']=$failedlogins;
 $_SESSION['mgrLastlogin']=$lastlogin;
 $_SESSION['mgrLogincount']=$nrlogins; // login count
 $_SESSION['mgrRole']=$role;
-$sql="SELECT * FROM $dbase.".$table_prefix."user_roles where id=".$role.";";
+$sql="SELECT * FROM $dbase.".$table_prefix."user_roles WHERE id=".$role.";";
 $rs = mysql_query($sql); 
 $row = mysql_fetch_assoc($rs);
 $_SESSION['mgrPermissions'] = $row;
@@ -248,7 +248,16 @@ $modx->invokeEvent("OnManagerLogin",
 							"rememberme"	=> $_POST['rememberme']
 						));
 
-header("Location: ../");
+// check if we should redirect user to a web page
+$tbl = $modx->getFullTableName("user_settings");
+$id = $modx->db->getValue("SELECT setting_value FROM $tbl WHERE user='$internalKey' AND setting_name='manager_login_startup'");
+if(isset($id) && $id>0) {
+	$url = $modx->makeUrl($id);
+	header('Location: ../../'.$url);
+}
+else {
+	header('Location: ../');
+}
 
 // show javascript alert	
 function jsAlert($msg){

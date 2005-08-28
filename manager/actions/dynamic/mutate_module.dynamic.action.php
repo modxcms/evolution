@@ -244,7 +244,7 @@ function OpenServerBrowser(url, width, height ) {
 function BrowseServer() {
 	var w = screen.width * 0.7;
 	var h = screen.height * 0.7;
-	OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=connectors/php/connector.php&ServerPath=", w, h);
+	OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo $base_url; ?>manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url; ?>", w, h);
 }
 function SetUrl(url, width, height, alt){
 	document.mutate.icon.value = url;

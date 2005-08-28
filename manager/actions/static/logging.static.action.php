@@ -29,7 +29,7 @@ Message and action are usually the same. If you're searching for a specific mess
 $sql = "SELECT DISTINCT(username) AS name, internalKey FROM $dbase.".$table_prefix."manager_log";
 $rs = mysql_query($sql); 
 ?>
-		<select name="user" class="inputBox" style="width:240px">
+		<select name="searchuser" class="inputBox" style="width:240px">
 		<option value="0">Any/ All</option>
 		<?php
 		while ($row = mysql_fetch_assoc($rs)) {
@@ -53,7 +53,8 @@ for($i = 1; $i < 1000; $i++) {
 	$actionname = getAction($i);
 	if($actionname!="Idle") {
 		$actions[$i] = $actionname;
-		echo "\t\t\t<option value='$i'>$i - $actionname</option>/n";
+		$selectedtext = $i==$_REQUEST['action'] ? "selected='selected'" : "" ;
+		echo "\t\t\t<option value='$i' $selectedtext>$i - $actionname</option>/n";
 	}
 }
 ?> 
@@ -64,7 +65,7 @@ for($i = 1; $i < 1000; $i++) {
     <td><b>Item id</b></td> 
     <td align="right"> 
       <?php
-// get all users currently in logging
+// get all itemid currently in logging
 $sql = "SELECT DISTINCT(itemid) AS item, itemid FROM $dbase.".$table_prefix."manager_log";
 $rs = mysql_query($sql); 
 ?> 
@@ -85,7 +86,7 @@ $rs = mysql_query($sql);
     <td><b>Item name</b></td> 
     <td align="right"> 
       <?php
-// get all users currently in logging
+// get all itemname currently in logging
 $sql = "SELECT DISTINCT(itemname), itemname FROM $dbase.".$table_prefix."manager_log";
 $rs = mysql_query($sql); 
 ?> 
@@ -197,11 +198,11 @@ function isNumber($var)
 
 // get the selections the user made.
 $sqladd ="";
-if($_REQUEST['searchuser']!=0) $sqladd .= " AND internalKey=".$_REQUEST['searchuser'];
-if($_REQUEST['action']!=0) $sqladd .= " AND action=".$_REQUEST['action'];
+if($_REQUEST['searchuser']!=0) $sqladd .= " AND internalKey='".intval($_REQUEST['searchuser'])."'";
+if($_REQUEST['action']!=0) $sqladd .= " AND action=".intval($_REQUEST['action']);
 if($_REQUEST['itemid']!=0 || $_REQUEST['itemid']=="-") $sqladd .= " AND itemid='".$_REQUEST['itemid']."'";
-if($_REQUEST['itemname']!="" && $_REQUEST['itemname']!=0) $sqladd .= " AND itemname='".$_REQUEST['itemname']."'";  // hier
-if($_REQUEST['message']!="") $sqladd .= " AND message LIKE '%".$_REQUEST['message']."%'";
+if($_REQUEST['itemname']!='0') $sqladd .= " AND itemname='".mysql_escape_string($_REQUEST['itemname'])."'";  // hier
+if($_REQUEST['message']!="") $sqladd .= " AND message LIKE '%".mysql_escape_string($_REQUEST['message'])."%'";
 // date stuff
 if($_REQUEST['datefrom']!="") $sqladd .= " AND timestamp>".convertdate($_REQUEST['datefrom']);
 if($_REQUEST['dateto']!="") $sqladd .= " AND timestamp<".convertdate($_REQUEST['dateto']);
@@ -232,7 +233,7 @@ $int_num_result = isNumber($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $n
 
 
 $extargv = 	"&a=13&searchuser=".$_REQUEST['searchuser']."&action=".$_REQUEST['action'].
-			"&itemid=".$_REQUEST['itemid']."&itemname".$_REQUEST['itemname']."&message=".
+			"&itemid=".$_REQUEST['itemid']."&itemname=".$_REQUEST['itemname']."&message=".
 			$_REQUEST['message']."&dateto=".$_REQUEST['dateto']."&datefrom=".
 			$_REQUEST['datefrom']."&nrresults=".$int_num_result."&log_submit=".$_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 

@@ -1028,4 +1028,10 @@ $_lang['days'] = array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
 $_lang['optimize_table'] = 'Click here to optimize this table';
 $_lang['truncate_table'] = 'Click here to truncate this table';
 
+$_lang['mgr_login_start'] = 'Manager Login Startup';
+$_lang["mgr_login_start_message"] = "Enter the ID of the document you want to send the user to after he/she has logged into the manager. <b>NOTE: make sure the ID you've enter belongs to an existing document, and that it has been published and is accessible by this user!</b>";
+$_lang['allow_mgr_access'] = 'Manager Interface Access';
+$_lang['allow_mgr_access_message'] = 'Select this option to enable or disable access to the manager interface. <b>NOTE: If this option is set to no then the user will be redirected the the Manager Login Startup or Site Start web page.</b>';
+$_lang['logout_message'] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
+
 ?>

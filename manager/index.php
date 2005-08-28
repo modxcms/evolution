@@ -164,6 +164,11 @@ if($manager_language!="english") {
 // get the user settings from the database
 include_once "user_settings.inc.php";
 
+// check if user is allowed to access manager interface
+if(isset($allow_manager_access) && $allow_manager_access==0) {
+	include_once "interfacecontrol.inc.php";
+}
+
 
 // include_once the error handler
 include_once "error.class.inc.php";
