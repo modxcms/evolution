@@ -30,15 +30,15 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 
 # This following two sections stops screen flicker in IE on rollovers (Bad IE Win, Bad!).
-# Comment it these sections out if you do not need them. They can result in having to force reload
+# Comment these sections out if you do not need them. They can result in having to force reload
 # pages when developing sites and changing images frequently to see your changes. 
 
-ExpiresActive On
-ExpiresByType image/gif A2592000
-ExpiresByType image/jpeg A2592000
-ExpiresByType image/png A2592000
+#ExpiresActive On
+#ExpiresByType image/gif A2592000
+#ExpiresByType image/jpeg A2592000
+#ExpiresByType image/png A2592000
 
-BrowserMatch "MSIE" brokenvary=1
-BrowserMatch "Mozilla/4.[0-9]{2}" brokenvary=1
-BrowserMatch "Opera" !brokenvary
-SetEnvIf brokenvary 1 force-no-vary
+#BrowserMatch "MSIE" brokenvary=1
+#BrowserMatch "Mozilla/4.[0-9]{2}" brokenvary=1
+#BrowserMatch "Opera" !brokenvary
+#SetEnvIf brokenvary 1 force-no-vary
