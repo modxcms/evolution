@@ -78,3 +78,8 @@ border-style:none;
 margin-top:10px;
 text-align:center;
 }
+
+/* --- TV TYPE STYLES --- */
+.richtext{
+width:625px;
+}

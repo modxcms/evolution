@@ -117,6 +117,11 @@ class QuickEditor {
 
    $tv_html = renderFormElement($cv->type, $cv->name, $cv->default_text, $cv->elements, $cv->content);
 
+   // Get the name of the TV
+   if(!($tv_desc = $cv->description)) {
+   } elseif(!($tv_desc = $cv->caption)) {
+   } else {	$tv_desc = $cv->name; }
+
    // HTML
 $html = <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -140,7 +145,7 @@ $html = <<<EOD
 </head>
 <body>
 
-<form id="tv_form" name="mutate" method="post" enctype="multipart/form-data" action="index.php">
+<form id="tv_form" class="{$cv->type}" name="mutate" method="post" enctype="multipart/form-data" action="index.php">
 <input type="hidden" name="save" value="1" />
 <input type="hidden" name="a" value="{$module_exec_action}" />
 <input type="hidden" name="id" value="{$modId}" />
@@ -157,7 +162,7 @@ $html = <<<EOD
 
 </div>
 
-<div id="description">Edit {$cv->description}</div>
+<div id="description">Edit {$tv_desc}</div>
 
 <div id="tv_container">
 
@@ -220,14 +225,21 @@ EOD;
    foreach($_POST as $postKey=>$postValue) {
     if(substr($postKey, 0, 2) == 'tv') {
      $value = $postValue;
-     $content = $modx->db->escape($value);
     }
    }
 
-	 // invoke OnBeforeDocFormSave event
-	 $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$docId));
+   if(is_array($value)) {
+    $value = implode('||', $value);
+   }
+
+   $value_prep = $modx->db->escape($value);
 
    if(is_numeric($cv->id)) {
+
+    // Define the tmplvars vairable by reference for plugin support
+    $tmplvars[$cv->id] = &$value_prep;
+    // invoke OnBeforeDocFormSave event
+    $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$docId));
 
     $sql = "SELECT id
             FROM {$db}.`{$pre}site_tmplvar_contentvalues`
@@ -238,21 +250,27 @@ EOD;
     if($modx->db->getRecordCount($result)) {
 
      $sql = "UPDATE {$db}.`{$pre}site_tmplvar_contentvalues`
-             SET `value` = '{$content}'
+             SET `value` = '{$value_prep}'
              WHERE `tmplvarid` = '{$cv->id}'
              AND `contentid` = '{$docId}';";
 
     } else {
 
      $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues`(tmplvarid, contentid, value)
-             VALUES('{$cv->id}', '{$docId}', '{$content}');";
+             VALUES('{$cv->id}', '{$docId}', '{$value_prep}');";
 
     }
 
    } elseif(in_array($cv->id,array('pagetitle', 'longtitle', 'description', 'content'))) {
 
+    // Define vairable with the content id as it's name by reference for plugin support
+    $cv_id = $cv->id;
+    $$cv_id = &$value_prep;
+    // invoke OnBeforeDocFormSave event
+    $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$docId));
+
     $sql = "UPDATE {$db}.`{$pre}site_content`
-            SET `{$cv->id}` = '{$content}'
+            SET `{$cv->id}` = '{$value_prep}'
             WHERE `id` = '{$docId}';";
 
    }
@@ -265,8 +283,8 @@ EOD;
 
    } else {
 
-		// invoke OnDocFormSave event
-		$modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$docId));
+    // invoke OnDocFormSave event
+    $modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$docId));
 
     // empty cache
     include_once('../manager/processors/cache_sync.class.processor.php');
@@ -310,7 +328,7 @@ reloadAndClose();
 </html>
 EOD;
 
-echo($html);
+  echo($html);
 
  }
 

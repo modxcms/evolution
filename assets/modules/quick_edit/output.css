@@ -7,46 +7,42 @@
  */
 
 a.QuickEditLink{
-cursor:pointer;
-}
-
-a.QuickEditLink{
 float:right;
 clear:right;
 display:block;
 margin:0;
-padding:1px 5px;
+padding:0 5px;
 whitespace:nowrap;
-color:#000000;
-background-color:#fae096;
 font-size:7pt;
 font-weight:bold;
 text-decoration:none;
+line-height:15px;
 border-style:solid;
 border-width:1px;
-border-color:#003399;
-}
-
-a.QuickEditLink:hover {
-color:#003399;
-border-style:none;
-text-decoration:none;
+border-color:#afafaf;
+background-image:url(link_bg.png);
+background-repeat:repeat-x;
+background-position:top;
+background-color:#ffffff;
 cursor:pointer;
 }
 
-.QuickEditParent{
-color:#000000;
-border-width:1px;
-border-color:#003388;
-border-style:solid;
-background-color:#fae096;
+a.QuickEditLink:hover{
+text-decoration:none;
+border-style:none;
 background-image:none;
+background-color:transparent;
+}
+
+.QuickEditParent{
+background-image:url(parent_bg.gif);
+background-repeat:repeat;
 }
 
 @media print{
 
- a.QuickEditLink {
+ a.QuickEditLink{
  display:none;
  }
- 
+
 }
