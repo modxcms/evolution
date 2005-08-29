@@ -3,7 +3,7 @@
 #:::::::::::::::::::::::::::::::::::::::::
 
 	$moduleName = "MODx";
-	$moduleVersion = " TP3.2";
+	$moduleVersion = " TP3.3";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleWhatsNewFile = "setup.whatsnew.html";
@@ -111,7 +111,7 @@
 			$pluginid=$row["id"];
 		}		
 		// setup plugin as module dependency
-		$ds = mysql_query("SELECT module ".$sqlParser->prefix."site_module_depobj WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
+		$ds = mysql_query("SELECT module FROM ".$sqlParser->prefix."site_module_depobj WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
 		if(!$ds) {
 			echo "An error occured while executing a query: ".mysql_error();
 		}

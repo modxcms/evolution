@@ -2,6 +2,17 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+
+MODx2 TP3.3
+==================
+* fix TV checkbox delimiter bug
+* add &groups parameter to WebSignup Snippet
+* add Manager Interface Access to to manager user settings
+* add Manager Login Startup to manager user settings
+* update quickedit module
+* update fckeditor
+
+
 MODx2 TP3.2
 ==================
 * add new snippets FileCabinet, NewsFeed, NewsPublisher and UserComments
