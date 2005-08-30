@@ -139,6 +139,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			unset($_SESSION['webnrlogins']);
 			unset($_SESSION['webUsrConfigSet']);
 			unset($_SESSION['webUserGroupNames']);
+			unset($_SESSION['webDocgroups']);			
 		}
 		else {
 			// Unset all of the session variables.
