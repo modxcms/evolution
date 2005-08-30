@@ -1790,11 +1790,11 @@ class DocumentParser {
 	# This function will first return the web user doc groups when running from frontend otherwise it will return manager user's docgroup
 	# Set $resolveIds to true to return the document group names
 	function getUserDocGroups($resolveIds = false){
-		if($this->isFrontend() && isset($_SESSION['webDocgroups'])) {
+		if($this->isFrontend() && isset($_SESSION['webDocgroups']) && isset($_SESSION['webValidated'])) {
 			$dg = $_SESSION['webDocgroups'];
 			$dgn = $_SESSION['webDocgrpNames'];
 		}
-		else if($this->isBackend() && isset($_SESSION['mgrDocgroups'])) {
+		else if($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
 			$dg = $_SESSION['mgrDocgroups'];
 			$dgn = $_SESSION['mgrDocgrpNames'];
 		}
