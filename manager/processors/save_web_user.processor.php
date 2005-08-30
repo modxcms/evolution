@@ -265,7 +265,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-		$sql = "SELECT id FROM $dbase.".$table_prefix."web_user_attributes WHERE email='$email'";
+		$sql = "SELECT internalKey FROM $dbase.".$table_prefix."web_user_attributes WHERE email='$email'";
 		if(!$rs = mysql_query($sql)){
 			webAlert("An error occured while attempting to retreive all users with email $email.");
 			exit;
@@ -273,7 +273,7 @@ switch ($_POST['mode']) {
 		$limit = mysql_num_rows($rs);
 		if($limit>0) {
 			$row=mysql_fetch_assoc($rs);
-			if($row['id']!=$id) {
+			if($row['internalKey']!=$id) {
 				webAlert("Email is already in use!");
 				exit;
 			}
