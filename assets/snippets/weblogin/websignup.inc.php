@@ -73,7 +73,7 @@ else if ($isPostBack){
 	}
 
 	// check for duplicate email address
-	$sql = "SELECT id FROM ".$modx->getFullTableName("web_user_attributes")." WHERE email='$email'";
+	$sql = "SELECT internalKey FROM ".$modx->getFullTableName("web_user_attributes")." WHERE email='$email'";
 	if(!$rs = $modx->db->query($sql)){
 		$output = webLoginAlert("An error occured while attempting to retreive all users with email $email.").$tpl;
 		return;
@@ -81,7 +81,7 @@ else if ($isPostBack){
 	$limit = $modx->db->getRecordCount($rs);
 	if($limit>0) {
 		$row=$modx->db->getRow($rs);
-		if($row['id']!=$id) {
+		if($row['internalKey']!=$id) {
 			$output = webLoginAlert("Email is already in use!").$tpl;
 			return;
 		}
