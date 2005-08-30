@@ -1060,9 +1060,12 @@ class DocumentParser {
 		else {
 			$act = ($url ? "window.location.href='".addslashes($url)."';":"");
 		}
-		$this->regClientScript("<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>");
+		$html = "<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>";
+		if($this->isFrontend($html)) $this->regClientScript($html);
+		else {
+			echo $html;
+		}
 	}
-
 
 	# Returns true if user has the currect permission
 	function hasPermission($pm) {
