@@ -88,6 +88,16 @@ class VeriWord {
 
 	function draw_text() {
 
+		// dynamically load GD2 lib
+		if (!extension_loaded('gd2')) { 
+		   if (strtoupper(substr(PHP_OS, 0,3) == 'WIN')) { 
+				@dl('php_gd2.dll');
+		   }
+		   else { 
+				@dl('gd2.so');
+		   } 
+		} 		
+		
 		/* pick one font type randomly from font directory */
 		//$text_font 	= $this->dir_font."".rand(1,3).".ttf";
 			// added by Alex - read ttf dir

@@ -1088,7 +1088,7 @@ if($content['type']=="document" || $_REQUEST['a']==4) {
 			$evtOut = $modx->invokeEvent("OnRichTextEditorInit",
 											array(
 												editor 		=> $which_editor,
-												elements	=> $replace_richtexteditor													
+												elements	=> $replace_richtexteditor
 											));
 			if(is_array($evtOut)) echo implode("",$evtOut);				
 		}

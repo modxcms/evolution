@@ -344,7 +344,7 @@ function decode(s){
 			<option value="delim" <?php echo ($content['display']=='delim')? "selected='selected'":""; ?>>Delimited List</option>
 			<option value="htmltag" <?php echo ($content['display']=='htmltag')? "selected='selected'":""; ?>>HTML Generic Tag</option>
 			<option value="hyperlink" <?php echo ($content['display']=='hyperlink')? "selected='selected'":""; ?>>Hyperlink</option>
-			<option value="image" <?php	echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
+			<option value="image" <?php	echo ($content['display']=='image')? "selected='selected'":""; ?>>Image</option>
 			<option value="string" <?php echo ($content['display']=='string')? "selected='selected'":""; ?>>String Formatter</option>
 		</select>
 	</td>

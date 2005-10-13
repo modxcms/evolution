@@ -282,6 +282,29 @@ function decode(s){
     	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script> 
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
+			<td align="left"><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</td>
+			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="moduleguid" style="width:300px;" onChange='documentDirty=true;'>
+			<option>&nbsp;</option>
+			<?php
+				$sql =	"SELECT sm.id,sm.name,sm.guid " .
+						"FROM ".$modx->getFullTableName("site_modules")." sm ".
+						"INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=40 ".
+						"INNER JOIN ".$modx->getFullTableName("site_snippets")." ss ON ss.id=smd.resource ".
+						"WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
+						"ORDER BY sm.name ";
+				$ds = $modx->dbQuery($sql);
+				if($ds) while($row = $modx->fetchRow($ds)){
+					echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
+				} 
+			?>
+			</select>
+			</td>
+		  </tr>
+		  <tr>
+			<td>&nbsp;</td>
+			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br /></td>
+		  </tr>
+		  <tr>
 			<td align="left" valign="top"><?php echo $_lang['snippet_properties']; ?>:</td>
 			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties'];?>" class="inputBox" style="width:300px;" onChange='showParameters(this);documentDirty=true;'></td>
 		  </tr>

@@ -290,7 +290,7 @@ function decode(s){
 			<?php
 				$sql =	"SELECT sm.id,sm.name,sm.guid " .
 						"FROM ".$modx->getFullTableName("site_modules")." sm ".
-						"INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id ".
+						"INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30 ".
 						"INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
 						"WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
 						"ORDER BY sm.name ";

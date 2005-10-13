@@ -7,6 +7,8 @@
  * 
  * For further information visit:
  * 		http://www.fckeditor.net/
+ *
+ * "Support Open Source software. What about a donation today?"
  * 
  * File Name: config.php
  * 	Configuration file
@@ -23,7 +25,7 @@ include("../../../../../includes/config.inc.php");
  * before being able to run this script
  */startCMSSession(); if(!isset($_SESSION['mgrValidated'])) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-}
+}
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");

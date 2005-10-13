@@ -1315,8 +1315,10 @@ class DocumentParser {
 			return $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
 		} elseif($this->config['friendly_urls']==1 && $alias=='') {
 			$alias = $id;
-			$al = $this->aliasListing[$id];
-			if($al && $al['alias']) $alias = $al['alias'];
+			if($this->config['friendly_alias_urls']==1) {
+				$al = $this->aliasListing[$id];
+				if($al && $al['alias']) $alias = $al['alias'];
+			}
 			$alias = $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'];
 			return $alias.$args;
 		} else {

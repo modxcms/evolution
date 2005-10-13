@@ -26,7 +26,7 @@ $editor = new ImageEditor($manager);
 /*<![CDATA[*/
 	window.resizeTo(673, 531);
 	if(window.opener)
-		I18N = window.opener.I18N;
+		I18N = window.opener.I18N ? window.opener.I18N:{};
 /*]]>*/
 </script>
 <script type="text/javascript" src="assets/editor.js"></script>

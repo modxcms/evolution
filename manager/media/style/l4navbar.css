@@ -1,0 +1,11 @@
+body {
+    margin:0;
+    padding:0;
+	background: #ecf2ff url(../../images/misc/buttonbar.gif) repeat-x top left;
+    font-size:12px;
+    } 
+#divNav {    margin: 0;
+    margin-top:-4px;    padding: 0;    height: 80px;    width: 100%;
+}#nav {    position: relative;    height: 50px;    width: 100%;
+}#nav li ul {    margin: 0;    padding: 0;}#nav a {    text-decoration: none;}#nav li { /*float the main list items*/    margin: 0;    float: left;    display: block;    margin-left: 15px;}#nav li ul {    display: none;    position: absolute;    top: 12px;    left: 0;
+    padding-top: 8px;    height: 25px;    width: 100%;    margin-right: 10px;}#nav li:hover ul, #nav li.over ul { /*for ie*/}#nav li a {    color: #224d6f;    font-weight: bold;    display: block;    width: 93px;    padding: 0;}#nav li ul a {    border: 0;    float: left; /*ie doesn't inherit the float*/    color: #910000;    width: auto;    margin-right: 8px;}#nav li:hover ul a, #nav li.over ul li a { /*for ie - the specificity is necessary*/}#nav li:hover ul, #nav li.over ul {    display: block;    z-index: 6000;}

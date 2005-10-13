@@ -947,6 +947,9 @@ function updateContentType(){
               <!-- layout 3 -->	
               <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="3" <?php echo $manager_layout=='3' ? 'checked="checked"' : "" ; ?> /> 
               <?php echo $_lang["layout_settings_4"]?><br /><br /> 
+              <!-- layout 4 -->	
+              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="4" <?php echo $manager_layout=='4' ? 'checked="checked"' : "" ; ?> /> 
+              <?php echo $_lang["layout_settings_5"]?><br /><br /> 
              </td> 
           </tr> 
           <tr> 

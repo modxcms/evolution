@@ -4,9 +4,25 @@
 // Contributors:
 //  Richard Livsey
 //  Rahul Bhargava
-//  Rob Wills
 // 
-// See scriptaculous.js for full license.
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Autocompleter.Base handles all the autocompletion functionality 
 // that's independent of the data source for autocompletion. This
@@ -60,7 +76,7 @@ Autocompleter.Base.prototype = {
         update.style.position = 'absolute';
         Position.clone(element, update, {setHeight: false, offsetTop: element.offsetHeight});
       }
-      Effect.Appear(update,{duration:0.15});
+      new Effect.Appear(update,{duration:0.15});
     };
     this.options.onHide = this.options.onHide || 
     function(element, update){ new Effect.Fade(update,{duration:0.15}) };
@@ -87,18 +103,15 @@ Autocompleter.Base.prototype = {
        'src="javascript:false;" frameborder="0" scrolling="no"></iframe>');
       this.iefix = $(this.update.id+'_iefix');
     }
-    if(this.iefix) setTimeout(this.fixIEOverlapping.bind(this), 50);
-  },
-  
-  fixIEOverlapping: function() {
-    Position.clone(this.update, this.iefix);
-    this.iefix.style.zIndex = 1;
-    this.update.style.zIndex = 2;
-    Element.show(this.iefix);
+    if(this.iefix) {
+      Position.clone(this.update, this.iefix);
+      this.iefix.style.zIndex = 1;
+      this.update.style.zIndex = 2;
+      Element.show(this.iefix);
+    }
   },
 
   hide: function() {
-    this.stopIndicator();
     if(Element.getStyle(this.update, 'display')!='none') this.options.onHide(this.element, this.update);
     if(this.iefix) Element.hide(this.iefix);
   },
@@ -189,7 +202,7 @@ Autocompleter.Base.prototype = {
   
   markPrevious: function() {
     if(this.index > 0) this.index--
-      else this.index = this.entryCount-1;
+      else this.index = this.entryCcount-1;
   },
   
   markNext: function() {
@@ -227,10 +240,7 @@ Autocompleter.Base.prototype = {
     } else {
       this.element.value = value;
     }
-    this.element.focus();
-    
-    if (this.options.afterUpdateElement)
-      this.options.afterUpdateElement(this.element, selectedElement);
+    this.element.focus(); 
   },
 
   updateChoices: function(choices) {
@@ -423,7 +433,20 @@ Autocompleter.Local.prototype = Object.extend(new Autocompleter.Base(), {
 
 // AJAX in-place editor
 //
-// see documentation on http://wiki.script.aculo.us/scriptaculous/show/Ajax.InPlaceEditor
+// The constructor takes three parameters. The first is the element
+// that should support in-place editing. The second is the url to submit
+// the changed value to. The server should respond with the updated
+// value (the server might have post-processed it or validation might
+// have prevented it from changing). The third is a hash of options.
+//
+// Supported options are (all are optional and have sensible defaults):
+// - okText - The text of the submit button that submits the changed value
+//            to the server (default: "ok")
+// - cancelText - The text of the link that cancels editing (default: "cancel")
+// - savingText - The text being displayed as the AJAX engine communicates
+//                with the server (default: "Saving...")
+// - formId - The id given to the <form> element
+//            (default: the id of the element to edit plus '-inplaceeditor')
 
 Ajax.InPlaceEditor = Class.create();
 Ajax.InPlaceEditor.defaultHighlightColor = "#FFFF99";
@@ -448,10 +471,8 @@ Ajax.InPlaceEditor.prototype = {
       callback: function(form) {
         return Form.serialize(form);
       },
-      handleLineBreaks: true,
       loadingText: 'Loading...',
       savingClassName: 'inplaceeditor-saving',
-      loadingClassName: 'inplaceeditor-loading',
       formClassName: 'inplaceeditor-form',
       highlightcolor: Ajax.InPlaceEditor.defaultHighlightColor,
       highlightendcolor: "#FFFFFF",
@@ -499,96 +520,77 @@ Ajax.InPlaceEditor.prototype = {
       Element.hide(this.options.externalControl);
     }
     Element.hide(this.element);
-    this.createForm();
+    this.form = this.getForm();
     this.element.parentNode.insertBefore(this.form, this.element);
-    Field.focus(this.editField);
-    // stop the event to avoid a page refresh in Safari
-    if (arguments.length > 1) {
-      Event.stop(arguments[0]);
-    }
   },
-  createForm: function() {
-    this.form = document.createElement("form");
-    this.form.id = this.options.formId;
-    Element.addClassName(this.form, this.options.formClassName)
-    this.form.onsubmit = this.onSubmit.bind(this);
+  getForm: function() {
+    form = document.createElement("form");
+    form.id = this.options.formId;
+    Element.addClassName(form, this.options.formClassName)
+    form.onsubmit = this.onSubmit.bind(this);
 
-    this.createEditField();
+    this.createEditField(form);
 
     if (this.options.textarea) {
       var br = document.createElement("br");
-      this.form.appendChild(br);
+      form.appendChild(br);
     }
 
     okButton = document.createElement("input");
     okButton.type = "submit";
     okButton.value = this.options.okText;
-    this.form.appendChild(okButton);
+    form.appendChild(okButton);
 
     cancelLink = document.createElement("a");
     cancelLink.href = "#";
     cancelLink.appendChild(document.createTextNode(this.options.cancelText));
     cancelLink.onclick = this.onclickCancel.bind(this);
-    this.form.appendChild(cancelLink);
+    form.appendChild(cancelLink);
+    return form;
   },
-  hasHTMLLineBreaks: function(string) {
-    if (!this.options.handleLineBreaks) return false;
-    return string.match(/<br/i) || string.match(/<p>/i);
-  },
-  convertHTMLLineBreaks: function(string) {
-    return string.replace(/<br>/gi, "\n").replace(/<br\/>/gi, "\n").replace(/<\/p>/gi, "\n").replace(/<p>/gi, "");
-  },
-  createEditField: function() {
-    var text;
-    if(this.options.loadTextURL) {
-      text = this.options.loadingText;
-    } else {
-      text = this.getText();
-    }
-    
-    if (this.options.rows == 1 && !this.hasHTMLLineBreaks(text)) {
+  createEditField: function(form) {
+    if (this.options.rows == 1) {
       this.options.textarea = false;
       var textField = document.createElement("input");
       textField.type = "text";
       textField.name = "value";
-      textField.value = text;
+      textField.value = this.getText();
       textField.style.backgroundColor = this.options.highlightcolor;
       var size = this.options.size || this.options.cols || 0;
-      if (size != 0) textField.size = size;
+      if (size != 0)
+        textField.size = size;
+      form.appendChild(textField);
       this.editField = textField;
     } else {
       this.options.textarea = true;
       var textArea = document.createElement("textarea");
       textArea.name = "value";
-      textArea.value = this.convertHTMLLineBreaks(text);
+      textArea.value = this.getText();
       textArea.rows = this.options.rows;
       textArea.cols = this.options.cols || 40;
+      form.appendChild(textArea);
       this.editField = textArea;
     }
-    
-    if(this.options.loadTextURL) {
-      this.loadExternalText();
-    }
-    this.form.appendChild(this.editField);
   },
   getText: function() {
-    return this.element.innerHTML;
+    if (this.options.loadTextURL) {
+      this.loadExternalText();
+      return this.options.loadingText;
+    } else {
+      return this.element.innerHTML;
+    }
   },
   loadExternalText: function() {
-    Element.addClassName(this.form, this.options.loadingClassName);
-    this.editField.disabled = true;
     new Ajax.Request(
       this.options.loadTextURL,
-      Object.extend({
+      {
         asynchronous: true,
         onComplete: this.onLoadedExternalText.bind(this)
-      }, this.options.ajaxOptions)
+      }
     );
   },
   onLoadedExternalText: function(transport) {
-    Element.removeClassName(this.form, this.options.loadingClassName);
-    this.editField.disabled = false;
-    this.editField.value = transport.responseText.stripTags();
+    this.form.value.value = transport.responseText.stripTags();
   },
   onclickCancel: function() {
     this.onComplete();
@@ -604,15 +606,7 @@ Ajax.InPlaceEditor.prototype = {
     return false;
   },
   onSubmit: function() {
-    // onLoading resets these so we need to save them away for the Ajax call
-    var form = this.form;
-    var value = this.editField.value;
-    
-    // do this first, sometimes the ajax call returns before we get a chance to switch on Saving...
-    // which means this will actually switch on Saving... *after* we've left edit mode causing Saving...
-    // to be displayed indefinitely
-    this.onLoading();
-    
+    this.saving = true;
     new Ajax.Updater(
       { 
         success: this.element,
@@ -621,15 +615,12 @@ Ajax.InPlaceEditor.prototype = {
       },
       this.url,
       Object.extend({
-        parameters: this.options.callback(form, value),
+        parameters: this.options.callback(this.form, this.editField.value),
         onComplete: this.onComplete.bind(this),
         onFailure: this.onFailure.bind(this)
       }, this.options.ajaxOptions)
     );
-    // stop the event to avoid a page refresh in Safari
-    if (arguments.length > 1) {
-      Event.stop(arguments[0]);
-    }
+    this.onLoading();
     return false;
   },
   onLoading: function() {
@@ -647,7 +638,7 @@ Ajax.InPlaceEditor.prototype = {
   },
   removeForm: function() {
     if(this.form) {
-      if (this.form.parentNode) Element.remove(this.form);
+      Element.remove(this.form);
       this.form = null;
     }
   },

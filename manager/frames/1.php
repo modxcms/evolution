@@ -122,6 +122,27 @@ else if ($manager_layout==3) {
 	</html>
 <?php
 }
+else if ($manager_layout==4) {
+// Snap in top menu -- layout 4
+?>
+	<!-- Added by Susan -->
+	<head>
+	<title><?php echo $site_name." - (MODx Content Manager)"; ?></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+	</head>
+	<frameset rows="0,20,45,*" frameborder="0" border="0">
+		<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
+		<frame src="index.php?a=1&f=topbar" name="topFrame" scrolling="no" noresize>
+		<frame name="mainMenu" src="index.php?a=1&f=l4mnu" scrolling="no" noresize>
+		<frameset cols="280,*" border="<?php echo !($browser=='ie') ? 6 : 0 ;?>" frameborder="yes" FRAMESPACING="<?php echo !($browser=='ie') ? 1 : 6 ;?>"  resize>
+			<frame src="index.php?a=1&f=3" name="menu" FRAMEBORDER="no" BORDER="0" bordercolor="#4791C5" scrolling="AUTO">
+			<frame src="index.php?a=2" name="main" scrolling="auto" FRAMEBORDER="no" BORDER="0" BORDERCOLOR="#4791C5">
+		</frameset>
+	</frameset>
+	<noframes>This software requires a browser with support for frames.</noframes>
+	</html>
+<?php
+}
 else {
 // IE Top Menu Layout - 0
 ?>

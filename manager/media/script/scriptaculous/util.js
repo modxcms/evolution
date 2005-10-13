@@ -1,9 +1,7 @@
-// Copyright (c) 2005 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
-//
-// See scriptaculous.js for full license.
+// small but works-for-me stuff for testing javascripts
+// not ready for "production" use
 
-
-Object.debug = function(obj) {
+Object.inspect = function(obj) {
   var info = [];
   
   if(typeof obj in ["string","number"]) {
@@ -21,81 +19,58 @@ Object.debug = function(obj) {
     ": {" + info.join(", ") + "}");
 }
 
+// borrowed from http://www.schuerig.de/michael/javascript/stdext.js
+// Copyright (c) 2005, Michael Schuerig, michael@schuerig.de
 
-String.prototype.toArray = function() {
-  var results = [];
-  for (var i = 0; i < this.length; i++)
-    results.push(this.charAt(i));
-  return results;
+Array.flatten = function(array, excludeUndefined) {
+  if (excludeUndefined === undefined) {
+    excludeUndefined = false;
+  }
+  var result = [];
+  var len = array.length;
+  for (var i = 0; i < len; i++) {
+    var el = array[i];
+    if (el instanceof Array) {
+      var flat = el.flatten(excludeUndefined);
+      result = result.concat(flat);
+    } else if (!excludeUndefined || el != undefined) {
+      result.push(el);
+    }
+  }
+  return result;
+};
+
+if (!Array.prototype.flatten) {
+  Array.prototype.flatten = function(excludeUndefined) {
+    return Array.flatten(this, excludeUndefined);
+  }
 }
 
 /*--------------------------------------------------------------------------*/
 
 var Builder = {
-  NODEMAP: {
-    AREA: 'map',
-    CAPTION: 'table',
-    COL: 'table',
-    COLGROUP: 'table',
-    LEGEND: 'fieldset',
-    OPTGROUP: 'select',
-    OPTION: 'select',
-    PARAM: 'object',
-    TBODY: 'table',
-    TD: 'table',
-    TFOOT: 'table',
-    TH: 'table',
-    THEAD: 'table',
-    TR: 'table'
-  },
-  // note: For Firefox < 1.5, OPTION and OPTGROUP tags are currently broken,
-  //       due to a Firefox bug
   node: function(elementName) {
-    elementName = elementName.toUpperCase();
-    
-    // try innerHTML approach
-    var parentTag = this.NODEMAP[elementName] || 'div';
-    var parentElement = document.createElement(parentTag);
-    parentElement.innerHTML = "<" + elementName + "></" + elementName + ">";
-    var element = parentElement.firstChild || null;
-      
-    // see if browser added wrapping tags
-    if(element && (element.tagName != elementName))
-      element = element.getElementsByTagName(elementName)[0];
-    
-    // fallback to createElement approach
-    if(!element) element = document.createElement(elementName);
-    
-    // abort if nothing could be created
-    if(!element) return;
+    var element = document.createElement('div');
+    element.innerHTML = 
+      "<" + elementName + "></" + elementName + ">";
 
     // attributes (or text)
     if(arguments[1])
       if(this._isStringOrNumber(arguments[1]) ||
         (arguments[1] instanceof Array)) {
-          this._children(element, arguments[1]);
+          this._children(element.firstChild, arguments[1]);
         } else {
           var attrs = this._attributes(arguments[1]);
-          if(attrs.length) {
-            parentElement.innerHTML = "<" +elementName + " " +
+          if(attrs.length) 
+            element.innerHTML = "<" +elementName + " " +
               attrs + "></" + elementName + ">";
-            element = parentElement.firstChild || null;
-            // workaround firefox 1.0.X bug
-            if(!element) {
-              element = document.createElement(elementName);
-              for(attr in arguments[1]) 
-                element[attr == 'class' ? 'className' : attr] = arguments[1][attr];
-            }
-            if(element.tagName != elementName)
-              element = parentElement.getElementsByTagName(elementName)[0];
-            }
         } 
 
     // text, or array of children
     if(arguments[2])
-      this._children(element, arguments[2]);
+      this._children(element.firstChild, arguments[2]);
 
-     return element;
+     return element.firstChild;
   },
   _text: function(text) {
      return document.createTextNode(text);
@@ -109,16 +84,16 @@ var Builder = {
   },
   _children: function(element, children) {
     if(typeof children=='object') { // array can hold nodes and text
-      children.flatten().each( function(e) {
-        if(typeof e=='object')
-          element.appendChild(e)
+      children = children.flatten();
+      for(var i = 0; i<children.length; i++)
+        if(typeof children[i]=='object')
+          element.appendChild(children[i]);
         else
-          if(Builder._isStringOrNumber(e))
-            element.appendChild(Builder._text(e));
-      });
+          if(this._isStringOrNumber(children[i]))
+            element.appendChild(this._text(children[i]));
     } else
-      if(Builder._isStringOrNumber(children)) 
-         element.appendChild(Builder._text(children));
+      if(this._isStringOrNumber(children)) 
+         element.appendChild(this._text(children));
   },
   _isStringOrNumber: function(param) {
     return(typeof param=='string' || typeof param=='number');
@@ -152,74 +127,27 @@ Element.getStyle = function(element, style) {
       var css = document.defaultView.getComputedStyle(element, null);
       value = (css!=null) ? css.getPropertyValue(style) : null;
     } else if(element.currentStyle) {
-      value = element.currentStyle[style.camelize()];
+      value = element.currentStyle[style.camelize()];  
     }
-  
-  // If top, left, bottom, or right values have been queried, return "auto" for consistency resaons 
-  // if position is "static", as Opera (and others?) returns the pixel values relative to root element 
-  // (or positioning context?)
-  if (window.opera && (style == "left" || style == "top" || style == "right" || style == "bottom"))
-    if (Element.getStyle(element, "position") == "static") value = "auto";
-    
   if(value=='auto') value = null;
   return value;
 }
 
-// converts rgb() and #xxx to #xxxxxx format,
-// returns self (or first argument) if not convertable
-String.prototype.parseColor = function() {
-  color = "#";
-  if(this.slice(0,4) == "rgb(") {
-    var cols = this.slice(4,this.length-1).split(',');
-    var i=0; do { color += parseInt(cols[i]).toColorPart() } while (++i<3);
-  } else {
-    if(this.slice(0,1) == '#') {
-      if(this.length==4) for(var i=1;i<4;i++) color += (this.charAt(i) + this.charAt(i)).toLowerCase();
-      if(this.length==7) color = this.toLowerCase();
-    }
-  }
-  return(color.length==7 ? color : (arguments[0] || this));
-}
-
 Element.makePositioned = function(element) {
   element = $(element);
-  var pos = Element.getStyle(element, 'position');
-  if(pos =='static' || !pos) {
-    element._madePositioned = true;
+  if(Element.getStyle(element, 'position')=='static')
     element.style.position = "relative";
-    // Opera returns the offset relative to the positioning context, when an element is position relative 
-    // but top and left have not been defined
-    if (window.opera){
-      element.style.top = 0;
-      element.style.left = 0;
-    }  
-  }
-}
-  
-Element.undoPositioned = function(element) {
-  element = $(element);
-  if(typeof element._madePositioned != "undefined"){
-    element._madePositioned = undefined;
-    element.style.position = "";
-    element.style.top = "";
-    element.style.left = "";
-    element.style.bottom = "";
-    element.style.right = "";	  
-  }
 }
 
 Element.makeClipping = function(element) {
   element = $(element);
-  if (typeof element._overflow != 'undefined') return;
-  element._overflow = element.style.overflow;
-  if((Element.getStyle(element, 'overflow') || 'visible') != 'hidden') element.style.overflow = 'hidden';
+  element._overflow = Element.getStyle(element, 'overflow') || 'visible';
+  if(element._overflow!='hidden') element.style.overflow = 'hidden';
 }
 
 Element.undoClipping = function(element) {
   element = $(element);
-  if (typeof element._overflow == 'undefined') return;
-  element.style.overflow = element._overflow;
-  element._overflow = undefined;
+  if(element._overflow!='hidden') element.style.overflow = element._overflow;
 }
 
 Element.collectTextNodesIgnoreClass = function(element, ignoreclass) {
@@ -239,73 +167,6 @@ Element.collectTextNodesIgnoreClass = function(element, ignoreclass) {
   return text;
 }
 
-Element.setContentZoom = function(element, percent) {
-  element = $(element);
-  element.style.fontSize = (percent/100) + "em";  
-  if(navigator.appVersion.indexOf('AppleWebKit')>0) window.scrollBy(0,0);
-}
-
-Element.getOpacity = function(element){
-  var opacity;
-  if (opacity = Element.getStyle(element, "opacity"))
-    return parseFloat(opacity);
-  if (opacity = (Element.getStyle(element, "filter") || '').match(/alpha\(opacity=(.*)\)/))
-    if(opacity[1]) return parseFloat(opacity[1]) / 100;
-  return 1.0;
-}
-
-Element.setOpacity = function(element, value){
-  element= $(element);
-  var els = element.style;
-  if (value == 1){
-    els.opacity = '0.999999';
-    if(/MSIE/.test(navigator.userAgent))
-      els.filter = Element.getStyle(element,'filter').replace(/alpha\([^\)]*\)/gi,'');
-  } else {
-    if(value < 0.00001) value = 0;
-    els.opacity = value;
-    if(/MSIE/.test(navigator.userAgent))
-      els.filter = Element.getStyle(element,'filter').replace(/alpha\([^\)]*\)/gi,'') + 
-        "alpha(opacity="+value*100+")";
-  }  
-}
-
-Element.getInlineOpacity = function(element){
-  element= $(element);
-  var op;
-  op = element.style.opacity;
-  if (typeof op != "undefined" && op != "") return op;
-  return "";
-}
-
-Element.setInlineOpacity = function(element, value){
-  element= $(element);
-  var els = element.style;
-  els.opacity = value;
-}
-
-Element.getDimensions = function(element){
-  element = $(element);
-  // All *Width and *Height properties give 0 on elements with display "none", 
-  // so enable the element temporarily
-  if (Element.getStyle(element,'display') == "none"){
-    var els = element.style;
-    var originalVisibility = els.visibility;
-    var originalPosition = els.position;
-    els.visibility = "hidden";
-    els.position = "absolute";
-    els.display = "";
-    var originalWidth = element.clientWidth;
-    var originalHeight = element.clientHeight;
-    els.display = "none";
-    els.position = originalPosition;
-    els.visibility = originalVisibility;
-    return {width: originalWidth, height: originalHeight};    
-  }
-  
-  return {width: element.offsetWidth, height: element.offsetHeight};
-} 
-
 /*--------------------------------------------------------------------------*/
 
 Position.positionedOffset = function(element) {
@@ -323,7 +184,7 @@ Position.positionedOffset = function(element) {
 }
 
 // Safari returns margins on body which is incorrect if the child is absolutely positioned.
-// for performance reasons, we create a specialized version of Position.cumulativeOffset for
+// for performance reasons, we create a specialized version of Position.positionedOffset for
 // KHTML/WebKit only
 
 if(/Konqueror|Safari|KHTML/.test(navigator.userAgent)) {
@@ -343,6 +204,7 @@ if(/Konqueror|Safari|KHTML/.test(navigator.userAgent)) {
 }
 
 Position.page = function(forElement) {
+  if(element == document.body) return [0, 0];
   var valueT = 0, valueL = 0;
 
   var element = forElement;
@@ -472,18 +334,18 @@ Element.Class = {
 
     // gets space-delimited classnames of an element as an array
     get: function(element) {
-      return $(element).className.split(' ');
+      element = $(element);
+      return element.className.split(' ');
     },
 
     // functions adapted from original functions by Gavin Kistner
     remove: function(element) {
       element = $(element);
-      var removeClasses = arguments;
-      $R(1,arguments.length-1).each( function(index) {
-        element.className = 
-          element.className.split(' ').reject( 
-            function(klass) { return (klass == removeClasses[index]) } ).join(' ');
-      });
+      var regEx;
+      for(var i = 1; i < arguments.length; i++) {
+        regEx = new RegExp("(^|\\s)" + arguments[i] + "(\\s|$)", 'g');
+        element.className = element.className.replace(regEx, '')
+      }
     },
 
     add: function(element) {
@@ -539,10 +401,29 @@ Element.Class = {
       var children = $(element).getElementsByTagName('*');
       var elements = new Array();
 
-      for (var i = 0; i < children.length; i++)
-        if (Element.Class.has(children[i], className))
+      for (var i = 0; i < children.length; i++) {
+        if (Element.Class.has(children[i], className)) {
           elements.push(children[i]);
+          break;
+        }
+      }
 
       return elements;
     }
+}
+
+/*--------------------------------------------------------------------------*/
+
+String.prototype.parseQuery = function() {
+  var str = this;
+  if(str.substring(0,1) == '?') {
+    str = this.substring(1);
+  }
+  var result = {};
+  var pairs = str.split('&');
+  for(var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i].split('=');
+    result[pair[0]] = pair[1];
+  }
+  return result;
 }

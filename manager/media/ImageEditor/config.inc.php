@@ -13,14 +13,12 @@ startCMSSession();
 if(!isset($_SESSION['mgrValidated'])) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
-
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");
 } else {
 	mysql_select_db($dbase);
 }
-
 // get the settings from the database
 include "../../includes/settings.inc.php";
 
@@ -76,7 +74,6 @@ $IMConfig['safe_mode'] = false;
  your choice is 'GD' only. Other packages require Safe Mode to be off.
 */
 define('IMAGE_CLASS', 'GD');
-
 
 /*
  After defining which library to use, if it is NetPBM or IM, you need to

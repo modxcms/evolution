@@ -72,7 +72,7 @@
 
 			case "floater":
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/scripts/webelm.js");
+				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
 				$o = "<script>";
 				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('floater');});";

@@ -179,7 +179,7 @@ class synccache{
 		
 		// close and write the file
 		$tmpPHP .= "?>";		
-		$filename = '../assets/cache/siteCache.idx.php';
+		$filename = $this->cachePath.'/siteCache.idx.php';
 		$somecontent = $tmpPHP;
 		
 		// invoke OnBeforeCacheUpdate event
@@ -235,7 +235,7 @@ class synccache{
 		}
 		
 		// write the file
-		$filename = '../assets/cache/sitePublishing.idx.php';
+		$filename = $this->cachePath.'/sitePublishing.idx.php';
 		$somecontent = "<?php \$cacheRefreshTime=$nextevent; ?>";
 		
 		if (!$handle = fopen($filename, 'w')) {

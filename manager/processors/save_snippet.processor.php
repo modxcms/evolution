@@ -26,6 +26,7 @@ $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 $snippet = mysql_escape_string($_POST['post']);
 $properties = mysql_escape_string($_POST['properties']);
+$moduleguid = mysql_escape_string($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
 
 if($name=="") $name = "Untitled snippet";
@@ -41,7 +42,7 @@ switch ($_POST['mode']) {
 								));
 								
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_snippets(name, description, snippet, locked, properties) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."','".$properties."');";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_snippets(name, description, snippet, moduleguid, locked, properties) VALUES('".$name."', '".$description."', '".$snippet."', '".$moduleguid."', '".$locked."','".$properties."');";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New snippet not saved!";
@@ -87,7 +88,7 @@ switch ($_POST['mode']) {
 								));	
 								
 		//do stuff to save the edited doc	
-		$sql = "UPDATE $dbase.".$table_prefix."site_snippets SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', properties='".$properties."'  WHERE id='".$id."';";
+		$sql = "UPDATE $dbase.".$table_prefix."site_snippets SET name='".$name."', description='".$description."', snippet='".$snippet."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."'  WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited snippet not saved!";

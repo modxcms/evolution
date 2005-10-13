@@ -25,7 +25,7 @@ $imageInfo = $editor->processImage();
 <script type="text/javascript" src="assets/EditorContent.js"></script>
 <script type="text/javascript">
 if(window.top)
-	I18N = window.top.I18N;
+	I18N = window.top.I18N ? window.top.I18N:{};
 
 function i18n(str) {
 	if(I18N)

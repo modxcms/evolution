@@ -1034,4 +1034,5 @@ $_lang['allow_mgr_access'] = 'Manager Interface Access';
 $_lang['allow_mgr_access_message'] = 'Select this option to enable or disable access to the manager interface. <b>NOTE: If this option is set to no then the user will be redirected the the Manager Login Startup or Site Start web page.</b>';
 $_lang['logout_message'] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
 
+$_lang['layout_settings_5'] = "Snap in top menubar layout<br /><span class='comment'>Pops open navigation bar to the top the document tree and main window.</span>";
 ?>
