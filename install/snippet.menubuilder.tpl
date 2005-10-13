@@ -5,8 +5,9 @@
  *	Modified by Raymond Irving July, 2005 
  *	- now supports menutitle and hidmenu
  *	
- *	Params:	&normclass	-  normal item class (mouseout) 
- *			&selclass	-  selected item class (active)
+ *	Params:	&normclass	- normal item class (mouseout) 
+ *			&selclass	- selected item class (active)
+ *			&nosub		- no sublevel items
  *
  */
  
@@ -14,6 +15,8 @@
 if(!isset($id)) {
     $id = $modx->documentIdentifier; //current document
 }
+
+$nosub = isset($nosub) ? 1:0;
 
 $indentString="";
 
@@ -48,7 +51,7 @@ for($x=0; $x<$childrenCount; $x++) {
 		// use either menu or page title
 		$mnuTitle = $children[$x]['menutitle'] ? $children[$x]['menutitle']:$children[$x]['pagetitle'];
 		if($children[$x]['id']==$modx->documentIdentifier || $children[$x]['id']==$modx->documentObject['parent']) {
-			$menu .= "<a ".$active." href='[~".$children[$x]['id']."~]'>$indentString".$mnuTitle."</a>[[MenuBuilder?id=".$children[$x]['id']."&indent=2]]";	
+			$menu .= "<a ".$active." href='[~".$children[$x]['id']."~]'>$indentString".$mnuTitle."</a>".($nosub ? "":"[[MenuBuilder?id=".$children[$x]['id']."&indent=2]]");
 		}
 		else {
 			$menu .= "<a href='[~".$children[$x]['id']."~]'>$indentString".$mnuTitle."</a>";

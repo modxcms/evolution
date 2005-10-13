@@ -18,14 +18,22 @@
  *		&rtcontent		- name of a richtext content form field 
  *		&rtsummary		- name of a richtext summary form field 
  *		&showinmenu		- sets the flag to true or false (1|0) as to whether or not it shows in the menu. defaults to false (0)
+ * 		&aliastitle		- set to 1 to use page title as alias suffix. Defaults to 0 - date created.
+ *		&clearcache		- when set to 1 the system will automatically clear the site cache after publishing an article.
  *
- *	Version 1.0 Beta
+ *	Version 1.1 Beta
  *
  */
  
 // get user groups that can post articles
 $postgrp = isset($canpost) ? explode(",",$canpost):array();
 $allowAnyPost = count($postgrp)==0 ? true : false;
+
+// get clear cache
+$clearcache	 = isset($clearcache) ? 1:0;
+
+// get alias title
+$aliastitle	 = isset($aliastitle) ? 1:0;
 
 // get folder id where we should store articles
 // else store in current document
@@ -105,8 +113,18 @@ switch ($isPostBack) {
 			$createdon = time();
 
 			// set alias name of document used to store articles
-			$alias = 'article-'.$createdon;
-
+			if(!$aliastitle) $alias = 'article-'.$createdon;
+			else {
+				$alias = $modx->stripTags($_POST['pagetitle']);
+				$alias = strtolower($alias);
+				$alias = preg_replace('/&.+?;/', '', $alias); // kill entities
+				$alias = preg_replace('/[^\.%a-z0-9 _-]/', '', $alias);
+				$alias = preg_replace('/\s+/', '-', $alias);
+				$alias = preg_replace('|-+|', '-', $alias);
+				$alias = trim($alias, '-');			
+				$alias = 'article-'.$modx->db->escape($alias);
+			}
+			
 			$user = $modx->getLoginUserName();
 			$userid = $modx->getLoginUserID();
 			if(!$user && $allowAnyPost) $user = 'anonymous';
@@ -190,6 +208,15 @@ switch ($isPostBack) {
 			if(!empty($makefolder)) {
 				// convert parent into folder
 				$modx->db->update(array('isfolder'=>'1'),$modx->getFullTableName('site_content'),'id=\''.$folder.'\'');
+			}
+
+			// empty cache
+			if($clearcache==1){
+				include_once $modx->config['base_path']."manager/processors/cache_sync.class.processor.php";
+				$sync = new synccache();
+				$sync->setCachepath("assets/cache/");
+				$sync->setReport(false);
+				$sync->emptyCache(); // first empty the cache		
 			}
 			
 			// redirect to postid
