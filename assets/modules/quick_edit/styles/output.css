@@ -1,0 +1,117 @@
+/*
+ *  Written by: Adam Crownoble
+ *  Contact: adam@obledesign.com
+ *  Created: 8/14/2005
+ *  For: MODx cms (modxcms.com)
+ *  Description: Styles for QuickEdit links
+ */
+
+#QE_Toolbar h1, #QE_Toolbar a, a.QE_Link, #QE_Toolbar a:hover, a.QE_Link:hover {
+    font-family: Arial, Helvetica, sans-serif !important;
+    text-decoration: none !important;
+}
+
+#QE_Toolbar, #QE_Toolbar div, #QE_Toolbar h1, #QE_Toolbar a {
+    border-width: 1px;
+    border-color: #afafaf;
+}
+
+#QE_Collapse_Wrapper {
+    position: absolute !important;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    width: 155px;
+}
+
+#QE_Expand_Wrapper{
+    position: relative;
+    padding: 15px 25px 35px;
+}
+
+#QE_Toolbar {
+    padding: 0;
+    text-align: left;
+    border-style: solid;
+    background-color: #fff;
+}
+
+#QE_Toolbar div{
+    position: relative;
+    font-size: 10px;
+    border-top-style: solid;
+}
+
+#QE_Toolbar div.collapsed{
+    display: none;
+}
+
+#QE_Toolbar div.expanded{
+    display: block;
+}
+
+h1#QE_Title, h1#QE_Title:hover {
+    cursor: move !important;
+}
+
+#QE_Toolbar h1{
+    margin: 0;
+    text-align: center;
+    background: #fff url(../images/link_bg.png) repeat-x top;
+}
+
+#QE_Toolbar h1, #QE_Toolbar a {
+    display: block;
+    position: relative;
+    width: auto;
+    padding: 0 10px;
+    font-size: 10px;
+    color: #000;
+    line-height: 15px;
+    margin: 0;
+    cursor: pointer;
+}
+
+#QE_Toolbar a:hover, #QE_menu_2 a:hover, a.QE_Edit_Link:hover {
+    color: #444;
+    text-decoration: none;
+    background-image: url(../images/menu_button_bg.png) !important;
+}
+
+a.QE_Link {
+    float: right;
+    clear: right;
+    display: block;
+    margin: 0;
+    padding: 0 5px;
+    white-space: nowrap;
+    color: #000;
+    font-size: 7pt;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 15px;
+    height: 15px;
+    border: 1px solid #afafaf;
+    background: #fff url(../images/link_bg.png) repeat-x top left;
+    cursor: pointer;
+}
+
+a.QE_Link:hover {
+    border-color: transparent;
+    background-image: none;
+    background-color: transparent;
+}
+
+.QE_Parent {
+    background-image: url(../images/parent_bg.gif);
+    background-repeat: repeat;
+}
+
+a.QE_TV {
+    background-color: #efefef;
+}
+
+@media print{
+    #QE_Toolbar, a.QE_Link { display:none; }
+}
