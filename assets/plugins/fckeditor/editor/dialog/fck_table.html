@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_table.html
  * 	Table dialog window.
  * 
@@ -75,7 +77,7 @@ window.onload = function()
 		document.getElementById('txtCellSpacing').value	= table.cellSpacing	;
 //		document.getElementById('cmbFontStyle').value	= table.className ;
 
-		if (table.caption) document.getElementById('txtCaption').value = table.caption.innerText ;		
+		if (table.caption) document.getElementById('txtCaption').value = table.caption.innerHTML ;
 		
 		document.getElementById('txtRows').disabled    = true ;
 		document.getElementById('txtColumns').disabled = true ;
@@ -110,10 +112,15 @@ function Ok()
 	if ( document.getElementById('txtCaption').value != '')
 	{
 		if (! table.caption) table.createCaption() ;
-		table.caption.innerText = document.getElementById('txtCaption').value ;
+		table.caption.innerHTML = document.getElementById('txtCaption').value ;
 	}
-//	else if ( bExists && table.caption )
-//		table.deleteCaption() ;		// TODO: It causes an IE internal error.
+	else if ( bExists && table.caption )
+	{
+		if ( document.all )
+			table.caption.innerHTML = '' ;	// TODO: It causes an IE internal error if using removeChild.
+		else
+			table.caption.parentNode.removeChild( table.caption ) ;
+	}
 		
 	if (! bExists)
 	{
@@ -133,7 +140,17 @@ function Ok()
 		}
 		
 		oEditor.FCKUndo.SaveUndoStep() ;
-		oEditor.FCK.InsertElement( table ) ;
+		
+		// START iCM MODIFICATIONS	
+		// Amended to ensure that newly inserted tables are not incorrectly nested in P tags, etc
+		// We insert the table first and then rectify any nestings afterwards so we can re-use the
+		// FCKTablesProcessor function that corrects tables on SetHTML()
+		table = oEditor.FCK.InsertElementAndGetIt( table ) ;
+		if ( !oEditor.FCKConfig.UseBROnCarriageReturn )
+		{
+			oEditor.FCKTablesProcessor.CheckTableNesting( table ) ;
+		}
+		// END iCM MODIFICATIONS	
 	}
 	
 	return true ;

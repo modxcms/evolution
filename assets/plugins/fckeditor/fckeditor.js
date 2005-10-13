@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fckeditor.js
  * 	This is the integration file for JavaScript.
  * 
@@ -25,11 +27,10 @@ var FCKeditor = function( instanceName, width, height, toolbarSet, value )
 	// Properties
 	this.InstanceName	= instanceName ;
 	this.Width			= width			|| '100%' ;
-	this.Height			= height		|| '400' ;
+	this.Height			= height		|| '200' ;
 	this.ToolbarSet		= toolbarSet	|| 'Default' ;
 	this.Value			= value			|| '' ;
-	this.BasePath		= 'media/fckeditor/' ;
-	this.ServerPath		= '/' ;
+	this.BasePath		= '/fckeditor/' ;
 	this.CheckBrowser	= true ;
 	this.DisplayErrors	= true ;
 	this.EnableSafari	= false ;		// This is a temporary property, while Safari support is under development.
@@ -115,7 +116,9 @@ FCKeditor.prototype._GetConfigHtml = function()
 
 FCKeditor.prototype._GetIFrameHtml = function()
 {
-	var sLink = this.BasePath + 'editor/fckeditor.html?InstanceName=' + this.InstanceName ;
+	var sFile = (/fcksource=true/i).test( window.top.location.search ) ? 'fckeditor.original.html' : 'fckeditor.html' ;
+
+	var sLink = this.BasePath + 'editor/' + sFile + '?InstanceName=' + this.InstanceName ;
 	if (this.ToolbarSet) sLink += '&Toolbar=' + this.ToolbarSet ;
 
 	return '<iframe id="' + this.InstanceName + '___Frame" src="' + sLink + '" width="' + this.Width + '" height="' + this.Height + '" frameborder="no" scrolling="no"></iframe>' ;

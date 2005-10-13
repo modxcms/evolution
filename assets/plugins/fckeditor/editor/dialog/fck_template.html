@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_template.html
  * 	Template selection dialog window.
  * 
@@ -139,14 +141,14 @@ function LoadTemplatesXml()
 			var sInner = '<table><tr>' ;
 
 			if ( oTemplate.Image )
-				sInner += '<td valign="top"><img src="' + oTemplate.Image + '"></td>' ;
+				sInner += '<td valign="top"><img src="' + oTemplate.Image + '"><\/td>' ;
 
-			sInner += '<td valign="top"><div class="TplTitle">' + oTemplate.Title + '</div>' ;
+			sInner += '<td valign="top"><div class="TplTitle">' + oTemplate.Title + '<\/div>' ;
 
 			if ( oTemplate.Description )
-				sInner += '<div>' + oTemplate.Description + '</div>' ;
+				sInner += '<div>' + oTemplate.Description + '<\/div>' ;
 
-			sInner += '</td></tr></table>' ;
+			sInner += '<\/td><\/tr><\/table>' ;
 
 			oItemDiv.innerHTML = sInner ;
 			

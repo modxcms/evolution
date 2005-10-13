@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: multihexa.js
  * 	Scripts for the fck_universalkey.html page.
  * 	Definition des 104 caracteres en hexa unicode.
@@ -223,23 +225,29 @@ function setCk(inval){
 		document.cookie=escape("langue")+"="+escape(inval)+"; "+"expires="+exp.toGMTString()
 	}
 }
+
 // Arabic Keystroke Translator
-function arkey(a) {
-		if ((document.layers)|(navigator.userAgent.indexOf("MSIE 4")>-1)|(langue!="Arabic")) return true;
-		keyCode=event.keyCode;
-		entry=true;
-		cont=event.srcElement ;
+function arkey(e) {
+	if ((document.layers)|(navigator.userAgent.indexOf("MSIE 4")>-1)|(langue!="Arabic")) return true;
+
+	if (!e) var e = window.event;
+	if (e.keyCode) keyCode = e.keyCode;
+	else if (e.which) keyCode = e.which;
+	var character = String.fromCharCode(keyCode);
+
+		entry = true;
+		cont=e.srcElement || e.currentTarget || e.target;
 		if (keyCode>64 && keyCode<91) {
 			entry=false;
 			source='ش لاؤ ي ث ب ل ا ه ت ن م ة ى خ ح ض ق س ف ع ر ص ء غ ئ ';
 			shsource='ِ لآ} ] ُ [ لأأ ÷ ـ ، /   آ × ؛ َ ٌ ٍ لإ  { ً ْ إ ~'; 
 
-			if (event.shiftKey) cont.value += shsource.substr((keyCode-64)*2-2,2);
+			if (e.shiftKey) cont.value += shsource.substr((keyCode-64)*2-2,2);
 			else
 				cont.value += source.substr((keyCode-64)*2-2,2);
 			if (cont.value.substr(cont.value.length-1,1)==' ') cont.value=cont.value.substr(0,cont.value.length-1);
 		}
-		if (event.shiftKey) {
+		if (e.shiftKey) {
 			if (keyCode==186) {cont.value += ':';entry=false;}
 			if (keyCode==188) {cont.value += ',';entry=false;}
 			if (keyCode==190) {cont.value += '.';entry=false;}
@@ -248,7 +256,7 @@ function arkey(a) {
 			if (keyCode==219) {cont.value += '<';entry=false;}
 			if (keyCode==221) {cont.value += '>';entry=false;}
 		} else {
-			if (keyCode==186) {cont.value += 'ك';entry=false;}
+			if (keyCode==186||keyCode==59) {cont.value += 'ك';entry=false;}
 			if (keyCode==188) {cont.value += 'و';entry=false;}
 			if (keyCode==190) {cont.value += 'ز';entry=false;}
 			if (keyCode==191) {cont.value += 'ظ';entry=false;}
@@ -257,10 +265,45 @@ function arkey(a) {
 			if (keyCode==221) {cont.value += 'د';entry=false;}
 			if (keyCode==222) {cont.value += 'ط';entry=false;}
 		}
+	return entry;
+}
+function hold_it(e){
+	if ((document.layers)|(navigator.userAgent.indexOf("MSIE 4")>-1)|(langue!="Arabic")) return true;
 
-
-		return entry;
+	var keyCode;
+	if (!e) var e = window.event;
+	if (e.keyCode) keyCode = e.keyCode;
+	else if (e.which) keyCode = e.which;
+	var character = String.fromCharCode(keyCode);
+	switch(keyCode){
+		case 186:
+		case 188:
+		case 190:
+		case 191:
+		case 192:
+		case 219:
+		case 221:
+		case 222:
+		case 116:
+		case 59:
+		case 47:
+		case 46:
+		case 44:
+		case 39:
+			return false;
+		case 92:
+			return true;
 	}
+		if (keyCode<63) return true;
+		return false;
+	}
+
 var obj = document.getElementById( 'uni_area' );
-if ( obj )
-	obj.onkeydown = arkey
+if ( obj && langue=="Arabic"){
+	with (navigator) {
+		if (appName=="Netscape")
+			obj.onkeypress = hold_it;
+	}
+	obj.onkeydown = arkey;
+}
+// Arabic Keystroke Translator End

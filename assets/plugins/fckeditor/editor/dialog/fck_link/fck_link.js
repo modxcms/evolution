@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_link.js
  * 	Scripts related to the Link dialog window (see fck_link.html).
  * 
@@ -53,7 +55,8 @@ oRegex.UrlOnChangeProtocol = new RegExp('') ;
 oRegex.UrlOnChangeProtocol.compile( '^(http|https|ftp|news)://(?=.)', 'gi' ) ;
 
 oRegex.UrlOnChangeTestOther = new RegExp('') ;
-oRegex.UrlOnChangeTestOther.compile( '^(javascript:|#|/)', 'gi' ) ;
+//oRegex.UrlOnChangeTestOther.compile( '^(javascript:|#|/)', 'gi' ) ;
+oRegex.UrlOnChangeTestOther.compile( '^((javascript:)|[#/\.])', 'gi' ) ; 
 
 oRegex.ReserveTarget = new RegExp('') ;
 oRegex.ReserveTarget.compile( '^_(blank|self|top|parent)$', 'i' ) ;
@@ -153,8 +156,18 @@ var bHasAnchors ;
 
 function LoadAnchorNamesAndIds()
 {
-	var aAnchors	= oEditor.FCK.EditorDocument.anchors ;
-	var aIds		= oEditor.FCKTools.GetAllChildrenIds( oEditor.FCK.EditorDocument.body ) ;
+	// Since version 2.0, the anchors are replaced in the DOM by IMGs so the user see the icon 
+	// to edit them. So, we must look for that images now.
+	var aAnchors = new Array() ;
+	
+	var oImages = oEditor.FCK.EditorDocument.getElementsByTagName( 'IMG' ) ;
+	for( var i = 0 ; i < oImages.length ; i++ )
+	{
+		if ( oImages[i].getAttribute('_fckanchor') )
+			aAnchors[ aAnchors.length ] = oEditor.FCK.GetRealElement( oImages[i] ) ;
+	}
+	
+	var aIds = oEditor.FCKTools.GetAllChildrenIds( oEditor.FCK.EditorDocument.body ) ;
 
 	bHasAnchors = ( aAnchors.length > 0 || aIds.length > 0 ) ;
 
@@ -505,8 +518,8 @@ function BrowseServer()
 	var iWidth	= FCKConfig.LinkBrowserWindowWidth ;
 	var iHeight	= FCKConfig.LinkBrowserWindowHeight ;
 
-	var iLeft = (screen.width  - iWidth) / 2 ;
-	var iTop  = (screen.height - iHeight) / 2 ;
+	var iLeft = (FCKConfig.ScreenWidth  - iWidth) / 2 ;
+	var iTop  = (FCKConfig.ScreenHeight - iHeight) / 2 ;
 
 	var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
 	sOptions += ",width=" + iWidth ;
@@ -514,8 +527,17 @@ function BrowseServer()
 	sOptions += ",left=" + iLeft ;
 	sOptions += ",top=" + iTop ;
 
-	// Open the browser window.
-	var oWindow = window.open( FCKConfig.LinkBrowserURL, "FCKBrowseWindow", sOptions ) ;
+	if ( oEditor.FCKBrowserInfo.IsIE )
+	{
+		// The following change has been made otherwise IE will open the file 
+		// browser on a different server session (on some cases):
+		// http://support.microsoft.com/default.aspx?scid=kb;en-us;831678
+		// by Simone Chiaretta.
+		var oWindow = oEditor.window.open( FCKConfig.LinkBrowserURL, "FCKBrowseWindow", sOptions ) ;
+		oWindow.opener = window ;
+    }
+    else
+		window.open( FCKConfig.LinkBrowserURL, "FCKBrowseWindow", sOptions ) ;
 }
 
 function SetUrl( url )

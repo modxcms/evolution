@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fckdebug.html
  * 	This is the Debug window.
  * 	It automatically popups if the Debug = true in the configuration file.
@@ -32,7 +34,7 @@ function Initialize()
 {
 	oWindow = window.frames[ 'eOutput' ]
 	oWindow.document.open() ;
-	oWindow.document.write( '<div id="divMsg"></div>' ) ;
+	oWindow.document.write( '<div id="divMsg"><\/div>' ) ;
 	oWindow.document.close() ;
 	oDiv	= oWindow.document.getElementById('divMsg') ;
 }
@@ -40,7 +42,7 @@ function Initialize()
 function Output( message, color )
 {
 	if ( color )
-		message = '<font color="' + color + '">' + message + '</font>' ;
+		message = '<font color="' + color + '">' + message + '<\/font>' ;
 		
 	window.FCKMessages[ window.FCKMessages.length ] = message ;
 	StartTimer() ;
@@ -72,7 +74,7 @@ function CheckMessages()
 			( d.getMilliseconds() + 1000 + '' ).substr( 1,3 ) ;
 
 		var oMsgDiv = oWindow.document.createElement( 'div' ) ;
-		oMsgDiv.innerHTML = sTime + ': <b>' + sMessage + '</b>' ;
+		oMsgDiv.innerHTML = sTime + ': <b>' + sMessage + '<\/b>' ;
 		oDiv.appendChild( oMsgDiv ) ;
 		oMsgDiv.scrollIntoView() ;
 	}

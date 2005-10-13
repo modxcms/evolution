@@ -20,7 +20,7 @@ function spellChecker( textObject ) {
 	this.popUpProps = null ;																	// by FredCK
 //	this.spellCheckScript = '/speller/server-scripts/spellchecker.php';		// by FredCK
 	this.spellCheckScript = 'server-scripts/spellchecker.php';				// by FredCK
-//	this.spellCheckScript = '/cgi-bin/spellchecker.pl';
+	//this.spellCheckScript = '/cgi-bin/spellchecker.pl';
 
 	// values used to keep track of what happened to a word
 	this.replWordFlag = "R";	// single replace

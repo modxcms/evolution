@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: data.js
  * 	Scripts for the fck_universalkey.html page.
  * 	Definition des 104 caracteres en hexa unicode.

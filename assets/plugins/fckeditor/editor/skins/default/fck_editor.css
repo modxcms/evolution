@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_editor.css
  * 	Styles used by the editor IFRAME and Toolbar.
  * 
@@ -67,6 +69,11 @@ body
 {
 	border-top: #efefde 1px outset;
 	border-bottom: #efefde 1px outset;
+}
+
+.TB_SideBorder
+{
+	background-color: #696969;
 }
 
 .TB_ToolbarSet, .TB_ToolbarSet *

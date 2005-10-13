@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fckdialog.html
  * 	This page is used by all dialog box as the container.
  * 
@@ -23,17 +25,17 @@
 
 // On some Gecko browsers (probably over slow connections) the
 // "dialogArguments" are not set so we must get it from the opener window.
-if ( !dialogArguments )
-	dialogArguments = window.opener.FCKLastDialogInfo ;
+if ( !window.dialogArguments )
+	window.dialogArguments = window.opener.FCKLastDialogInfo ;
 
 // Sets the Skin CSS
-document.write( '<link href="' + dialogArguments.Editor.FCKConfig.SkinPath + 'fck_dialog.css" type="text/css" rel="stylesheet">' ) ;
+document.write( '<link href="' + window.dialogArguments.Editor.FCKConfig.SkinPath + 'fck_dialog.css" type="text/css" rel="stylesheet">' ) ;
 
 // Sets the language direction.
-window.document.dir = dialogArguments.Editor.FCKLang.Dir ;
+window.document.dir = window.dialogArguments.Editor.FCKLang.Dir ;
 
-var sTitle = dialogArguments.Title ;
-document.write( '<title>' + sTitle + '</title>' ) ;
+var sTitle = window.dialogArguments.Title ;
+document.write( '<title>' + sTitle + '<\/title>' ) ;
 
 function LoadInnerDialog()
 {
@@ -41,9 +43,9 @@ function LoadInnerDialog()
 		window.onresize() ;
 
 	// First of all, translate the dialog box contents.
-	dialogArguments.Editor.FCKLanguageManager.TranslatePage( document ) ;
+	window.dialogArguments.Editor.FCKLanguageManager.TranslatePage( document ) ;
 
-	window.frames["frmMain"].document.location.href = dialogArguments.Page ;
+	window.frames["frmMain"].document.location.href = window.dialogArguments.Page ;
 }
 
 function InnerDialogLoaded()
@@ -51,15 +53,15 @@ function InnerDialogLoaded()
 	var oInnerDoc = document.getElementById('frmMain').contentWindow.document ;
 
 	// Set the language direction.
-	oInnerDoc.dir = dialogArguments.Editor.FCKLang.Dir ;
+	oInnerDoc.dir = window.dialogArguments.Editor.FCKLang.Dir ;
 
 	// Sets the Skin CSS.
-	oInnerDoc.write( '<link href="' + dialogArguments.Editor.FCKConfig.SkinPath + 'fck_dialog.css" type="text/css" rel="stylesheet">' ) ;
+	oInnerDoc.write( '<link href="' + window.dialogArguments.Editor.FCKConfig.SkinPath + 'fck_dialog.css" type="text/css" rel="stylesheet">' ) ;
 
 	SetOnKeyDown( oInnerDoc ) ;
 	DisableContextMenu( oInnerDoc ) ;
 
-	return dialogArguments.Editor ;
+	return window.dialogArguments.Editor ;
 }
 
 function SetOkButton( showIt )
@@ -81,12 +83,13 @@ function RefreshSize()
 	{
 		var oInnerDoc = document.getElementById('frmMain').contentWindow.document ;
 
+		var iFrameHeight ;
 		if ( document.all )
-			var iFrameHeight	= oInnerDoc.body.offsetHeight ;
+			iFrameHeight = oInnerDoc.body.offsetHeight ;
 		else
-			var iFrameHeight	= document.getElementById('frmMain').contentWindow.innerHeight ;
+			iFrameHeight = document.getElementById('frmMain').contentWindow.innerHeight ;
 
-		var iInnerHeight	= oInnerDoc.body.scrollHeight ;
+		var iInnerHeight = oInnerDoc.body.scrollHeight ;
 
 		var iDiff = iInnerHeight - iFrameHeight ;
 
@@ -138,7 +141,7 @@ function AddTab( tabCode, tabText, startHidden )
 	if ( startHidden )
 		oDiv.style.display = 'none' ;
 
-	var eTabsRow = document.getElementById( 'TabsRow' ) ;
+	eTabsRow = document.getElementById( 'TabsRow' ) ;
 
 	oCell.appendChild( oDiv ) ;
 
@@ -150,7 +153,7 @@ function AddTab( tabCode, tabText, startHidden )
 		oDiv.className = 'PopupTabSelected' ;
 		eTabsRow.style.display = '' ;
 
-		if ( ! dialogArguments.Editor.FCKBrowserInfo.IsIE )
+		if ( ! window.dialogArguments.Editor.FCKBrowserInfo.IsIE )
 			window.onresize() ;
 	}
 
@@ -194,7 +197,7 @@ function SetOnKeyDown( targetDocument )
 {
 	targetDocument.onkeydown = function ( e )
 	{
-		var e = e || event || this.parentWindow.event ;
+		e = e || event || this.parentWindow.event ;
 		switch ( e.keyCode )
 		{
 			case 13 :		// ENTER
@@ -207,13 +210,14 @@ function SetOnKeyDown( targetDocument )
 				return false ;
 				break ;
 		}
+		return true ;
 	}
 }
 SetOnKeyDown( document ) ;
 
 function DisableContextMenu( targetDocument )
 {
-	if ( dialogArguments.Editor.FCKBrowserInfo.IsIE ) return ;
+	if ( window.dialogArguments.Editor.FCKBrowserInfo.IsIE ) return ;
 
 	// Disable Right-Click
 	var oOnContextMenu = function( e )
@@ -226,7 +230,7 @@ function DisableContextMenu( targetDocument )
 }
 DisableContextMenu( document ) ;
 
-if ( ! dialogArguments.Editor.FCKBrowserInfo.IsIE )
+if ( ! window.dialogArguments.Editor.FCKBrowserInfo.IsIE )
 {
 	window.onresize = function()
 	{
@@ -249,14 +253,14 @@ window.onfocus = function()
 	document.getElementById('frmMain').contentWindow.focus() ;
 }
 
-if ( dialogArguments.Editor.FCKBrowserInfo.IsIE )
+if ( window.dialogArguments.Editor.FCKBrowserInfo.IsIE )
 {
 	function Window_OnBeforeUnload()
 	{
 		for ( var t in oTabs )
 			oTabs[t] = null ;
 
-		dialogArguments.Editor = null ;
+		window.dialogArguments.Editor = null ;
 	}
 	window.attachEvent( "onbeforeunload", Window_OnBeforeUnload ) ;
 }

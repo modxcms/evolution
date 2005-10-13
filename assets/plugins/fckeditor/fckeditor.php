@@ -9,6 +9,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fckeditor.php
  * 	This is the integration file for PHP.
  * 	
@@ -33,9 +35,9 @@ class FCKeditor
 	function __construct( $instanceName )
  	{
 		$this->InstanceName	= $instanceName ;
-		$this->BasePath		= 'media/fckeditor/' ;
+		$this->BasePath		= '/FCKeditor/' ;
 		$this->Width		= '100%' ;
-		$this->Height		= '400' ;
+		$this->Height		= '200' ;
 		$this->ToolbarSet	= 'Default' ;
 		$this->Value		= '' ;
 
@@ -61,7 +63,12 @@ class FCKeditor
 		
 		if ( $this->IsCompatible() )
 		{
-			$Link = "{$this->BasePath}editor/fckeditor.html?InstanceName={$this->InstanceName}" ;
+			if ( isset( $_GET['fcksource'] ) && $_GET['fcksource'] == "true" )
+				$File = 'fckeditor.original.html' ;
+			else
+				$File = 'fckeditor.html' ;
+
+			$Link = "{$this->BasePath}editor/{$File}?InstanceName={$this->InstanceName}" ;
 			
 			if ( $this->ToolbarSet != '' )
 				$Link .= "&amp;Toolbar={$this->ToolbarSet}" ;

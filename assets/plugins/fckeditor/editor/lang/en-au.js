@@ -10,11 +10,12 @@
  * 
  * "Support Open Source software. What about a donation today?"
  * 
- * File Name: en.js
- * 	English language file.
+ * File Name: en-au.js
+ * 	English (Australia) language file.
  * 
  * File Authors:
  * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
+ * 		Christopher Dawes (fckeditor@dawes.id.au)
  */
 
 var FCKLang =
@@ -133,7 +134,7 @@ UnknownToolbarItem	: "Unknown toolbar item \"%1\"",
 UnknownCommand		: "Unknown command name \"%1\"",
 NotImplemented		: "Command not implemented",
 UnknownToolbarSet	: "Toolbar set \"%1\" doesn't exist",
-NoActiveX			: "You browser's security settings could limit some features of the editor. You must enable the option \"Run ActiveX controls and plug-ins\". You may experience errors and notice missing features.",
+NoActiveX			: "You browser's security settings could limit some features of the editor. You must enable the option \"Run ActiveX controls and plug-ins\". You may experience errors and notice missing features.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "OK",
@@ -269,7 +270,7 @@ DlgTableBorder		: "Border size",
 DlgTableAlign		: "Alignment",
 DlgTableAlignNotSet	: "<Not set>",
 DlgTableAlignLeft	: "Left",
-DlgTableAlignCenter	: "Center",
+DlgTableAlignCenter	: "Centre",
 DlgTableAlignRight	: "Right",
 DlgTableWidth		: "Width",
 DlgTableWidthPx		: "pixels",
@@ -292,7 +293,7 @@ DlgCellWordWrapNo	: "No",
 DlgCellHorAlign		: "Horizontal Alignment",
 DlgCellHorAlignNotSet	: "&lt;Not set&gt;",
 DlgCellHorAlignLeft	: "Left",
-DlgCellHorAlignCenter	: "Center",
+DlgCellHorAlignCenter	: "Centre",
 DlgCellHorAlignRight: "Right",
 DlgCellVerAlign		: "Vertical Alignment",
 DlgCellVerAlignNotSet	: "&lt;Not set&gt;",
@@ -321,9 +322,9 @@ DlgReplaceReplAllBtn	: "Replace All",
 DlgReplaceWordChk		: "Match whole word",
 
 // Paste Operations / Dialog
-PasteErrorPaste	: "Your browser security settings don't permit the editor to automatically execute pasting operations. Please use the keyboard for that (Ctrl+V).",
-PasteErrorCut	: "Your browser security settings don't permit the editor to automatically execute cutting operations. Please use the keyboard for that (Ctrl+X).",
-PasteErrorCopy	: "Your browser security settings don't permit the editor to automatically execute copying operations. Please use the keyboard for that (Ctrl+C).",
+PasteErrorPaste	: "Your browser security settings don't permit the editor to automaticaly execute pasting operations. Please use the keyboard for that (Ctrl+V).",
+PasteErrorCut	: "Your browser security settings don't permit the editor to automaticaly execute cutting operations. Please use the keyboard for that (Ctrl+X).",
+PasteErrorCopy	: "Your browser security settings don't permit the editor to automaticaly execute copying operations. Please use the keyboard for that (Ctrl+C).",
 
 PasteAsText		: "Paste as Plain Text",
 PasteFromWord	: "Paste from Word",
@@ -416,7 +417,7 @@ BulletedListProp	: "Bulleted List Properties",
 NumberedListProp	: "Numbered List Properties",
 DlgLstType			: "Type",
 DlgLstTypeCircle	: "Circle",
-DlgLstTypeDisc		: "Disc",
+DlgLstTypeDisc		: "Disc",	//MISSING
 DlgLstTypeSquare	: "Square",
 DlgLstTypeNumbers	: "Numbers (1, 2, 3)",
 DlgLstTypeLCase		: "Lowercase Letters (a, b, c)",

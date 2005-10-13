@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_image.js
  * 	Scripts related to the Image dialog window (see fck_image.html).
  * 
@@ -91,7 +93,7 @@ window.onload = function()
 
 	// Set the actual uploader URL.
 	if ( FCKConfig.ImageUpload )
-		GetE('frmUpload').action = FCKConfig.ImageUploadURL + '&uploadpath=' + FCKConfig.ImageUploadPath;
+		GetE('frmUpload').action = FCKConfig.ImageUploadURL ;
 
 	window.parent.SetAutoSize( true ) ;
 
@@ -337,8 +339,8 @@ function OpenServerBrowser( type, url, width, height )
 {
 	sActualBrowser = type ;
 
-	var iLeft = (screen.width  - width) / 2 ;
-	var iTop  = (screen.height - height) / 2 ;
+	var iLeft = (FCKConfig.ScreenWidth  - width) / 2 ;
+	var iTop  = (FCKConfig.ScreenHeight - height) / 2 ;
 
 	var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
 	sOptions += ",width=" + width ;
@@ -346,7 +348,17 @@ function OpenServerBrowser( type, url, width, height )
 	sOptions += ",left=" + iLeft ;
 	sOptions += ",top=" + iTop ;
 
-	var oWindow = window.open( url, "FCKBrowseWindow", sOptions ) ;
+	if ( oEditor.FCKBrowserInfo.IsIE )
+	{
+		// The following change has been made otherwise IE will open the file 
+		// browser on a different server session (on some cases):
+		// http://support.microsoft.com/default.aspx?scid=kb;en-us;831678
+		// by Simone Chiaretta.
+		var oWindow = oEditor.window.open( url, "FCKBrowseWindow", sOptions ) ;
+		oWindow.opener = window ;
+    }
+    else
+		window.open( url, "FCKBrowseWindow", sOptions ) ;
 }
 
 var sActualBrowser ;

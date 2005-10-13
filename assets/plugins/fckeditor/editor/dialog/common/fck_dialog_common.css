@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_dialog_common.css
  * 	This is the CSS file used for interface details in some dialog
  * 	windows.
@@ -74,5 +76,5 @@
 
 .FCK__FieldNumeric
 {
-	behavior: url(fcknumericfield.htc) ;
+	behavior: url(common/fcknumericfield.htc) ;
 }

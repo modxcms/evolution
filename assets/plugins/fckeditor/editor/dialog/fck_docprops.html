@@ -9,6 +9,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_docprops.html
  * 	Link dialog window.
  * 
@@ -370,8 +372,8 @@ function SelectColor( wich )
 
 function BrowseServerBack()
 {
-	var iLeft = (screen.width  - FCKConfig.ImageBrowserWindowWidth) / 2 ;
-	var iTop  = (screen.height - FCKConfig.ImageBrowserWindowHeight) / 2 ;
+	var iLeft = (FCKConfig.ScreenWidth  - FCKConfig.ImageBrowserWindowWidth) / 2 ;
+	var iTop  = (FCKConfig.ScreenHeight - FCKConfig.ImageBrowserWindowHeight) / 2 ;
 
 	var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
 	sOptions += ",width=" + FCKConfig.LinkBrowserWindowWidth ;
@@ -379,7 +381,17 @@ function BrowseServerBack()
 	sOptions += ",left=" + iLeft ;
 	sOptions += ",top=" + iTop ;
 
-	var oWindow = window.open( FCKConfig.ImageBrowserURL, "FCKBrowseWindow", sOptions ) ;
+	if ( oEditor.FCKBrowserInfo.IsIE )
+	{
+		// The following change has been made otherwise IE will open the file 
+		// browser on a different server session (on some cases):
+		// http://support.microsoft.com/default.aspx?scid=kb;en-us;831678
+		// by Simone Chiaretta.
+		var oWindow = oEditor.window.open( FCKConfig.ImageBrowserURL, "FCKBrowseWindow", sOptions ) ;
+		oWindow.opener = window ;
+    }
+    else
+		window.open( FCKConfig.ImageBrowserURL, "FCKBrowseWindow", sOptions ) ;
 }
 
 function SetUrl( url )

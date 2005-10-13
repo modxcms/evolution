@@ -8,52 +8,60 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: _translationstatus.txt
  * 	Translation Status.
+ * 	A useful site with languages information:
+ * 	http://www.omniglot.com/
  * 
  * File Authors:
  * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
  */
 
-PROCESSING: ar.js      Found: 376   Missing: 0
-PROCESSING: bg.js      Found: 376   Missing: 0
-PROCESSING: bs.js      Found: 232   Missing: 144
-PROCESSING: ca.js      Found: 376   Missing: 0
-PROCESSING: cs.js      Found: 353   Missing: 23
-PROCESSING: da.js      Found: 376   Missing: 0
-PROCESSING: de.js      Found: 376   Missing: 0
-PROCESSING: el.js      Found: 232   Missing: 144
-PROCESSING: en-au.js   Found: 376   Missing: 0
-PROCESSING: en-uk.js   Found: 376   Missing: 0
-PROCESSING: eo.js      Found: 353   Missing: 23
-PROCESSING: es.js      Found: 376   Missing: 0
-PROCESSING: et.js      Found: 232   Missing: 144
-PROCESSING: eu.js      Found: 376   Missing: 0
-PROCESSING: fa.js      Found: 359   Missing: 17
-PROCESSING: fi.js      Found: 376   Missing: 0
-PROCESSING: fr.js      Found: 376   Missing: 0
-PROCESSING: gl.js      Found: 376   Missing: 0
-PROCESSING: he.js      Found: 232   Missing: 144
-PROCESSING: hr.js      Found: 376   Missing: 0
-PROCESSING: hu.js      Found: 353   Missing: 23
-PROCESSING: it.js      Found: 376   Missing: 0
-PROCESSING: ja.js      Found: 376   Missing: 0
-PROCESSING: ko.js      Found: 359   Missing: 17
-PROCESSING: lt.js      Found: 376   Missing: 0
-PROCESSING: nl.js      Found: 376   Missing: 0
-PROCESSING: no.js      Found: 376   Missing: 0
-PROCESSING: pl.js      Found: 353   Missing: 23
-PROCESSING: pt-br.js   Found: 359   Missing: 17
-PROCESSING: pt.js      Found: 359   Missing: 17
-PROCESSING: ro.js      Found: 376   Missing: 0
-PROCESSING: ru.js      Found: 376   Missing: 0
-PROCESSING: sk.js      Found: 376   Missing: 0
-PROCESSING: sl.js      Found: 376   Missing: 0
-PROCESSING: sr-latn.js Found: 376   Missing: 0
-PROCESSING: sr.js      Found: 376   Missing: 0
-PROCESSING: sv.js      Found: 376   Missing: 0
-PROCESSING: th.js      Found: 353   Missing: 23
-PROCESSING: tr.js      Found: 352   Missing: 24
-PROCESSING: uk.js      Found: 376   Missing: 0
-PROCESSING: zh-cn.js   Found: 376   Missing: 0
-PROCESSING: zh.js      Found: 376   Missing: 0
+PROCESSING: ar.js      Found: 375   Missing: 2
+PROCESSING: bg.js      Found: 375   Missing: 2
+PROCESSING: bs.js      Found: 232   Missing: 145
+PROCESSING: ca.js      Found: 375   Missing: 2
+PROCESSING: cs.js      Found: 352   Missing: 25
+PROCESSING: da.js      Found: 375   Missing: 2
+PROCESSING: de.js      Found: 375   Missing: 2
+PROCESSING: el.js      Found: 232   Missing: 145
+PROCESSING: en-au.js   Found: 375   Missing: 2
+PROCESSING: en-uk.js   Found: 375   Missing: 2
+PROCESSING: eo.js      Found: 352   Missing: 25
+PROCESSING: es.js      Found: 375   Missing: 2
+PROCESSING: et.js      Found: 232   Missing: 145
+PROCESSING: eu.js      Found: 375   Missing: 2
+PROCESSING: fa.js      Found: 358   Missing: 19
+PROCESSING: fi.js      Found: 375   Missing: 2
+PROCESSING: fo.js      Found: 358   Missing: 19
+PROCESSING: fr.js      Found: 375   Missing: 2
+PROCESSING: gl.js      Found: 375   Missing: 2
+PROCESSING: he.js      Found: 375   Missing: 2
+PROCESSING: hr.js      Found: 375   Missing: 2
+PROCESSING: hu.js      Found: 377   Missing: 0
+PROCESSING: it.js      Found: 375   Missing: 2
+PROCESSING: ja.js      Found: 375   Missing: 2
+PROCESSING: ko.js      Found: 375   Missing: 2
+PROCESSING: lt.js      Found: 375   Missing: 2
+PROCESSING: mn.js      Found: 232   Missing: 145
+PROCESSING: ms.js      Found: 358   Missing: 19
+PROCESSING: nl.js      Found: 375   Missing: 2
+PROCESSING: no.js      Found: 375   Missing: 2
+PROCESSING: pl.js      Found: 352   Missing: 25
+PROCESSING: pt-br.js   Found: 375   Missing: 2
+PROCESSING: pt.js      Found: 375   Missing: 2
+PROCESSING: ro.js      Found: 375   Missing: 2
+PROCESSING: ru.js      Found: 375   Missing: 2
+PROCESSING: sk.js      Found: 375   Missing: 2
+PROCESSING: sl.js      Found: 375   Missing: 2
+PROCESSING: sr-latn.js Found: 375   Missing: 2
+PROCESSING: sr.js      Found: 375   Missing: 2
+PROCESSING: sv.js      Found: 375   Missing: 2
+PROCESSING: th.js      Found: 352   Missing: 25
+PROCESSING: tr.js      Found: 374   Missing: 3
+PROCESSING: uk.js      Found: 375   Missing: 2
+PROCESSING: vi.js      Found: 374   Missing: 3
+PROCESSING: zh-cn.js   Found: 375   Missing: 2
+PROCESSING: zh.js      Found: 375   Missing: 2

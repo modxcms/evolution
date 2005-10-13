@@ -8,8 +8,8 @@
  * Configuration:
  * &webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']
  *
- * Version 1.2
- * FCKeditor v2.0 Final
+ * Version 2.1
+ * FCKeditor v2.1
  *
  */
 
@@ -142,6 +142,7 @@ if (!function_exists('getFCKEditorScript')) {
 			$fckInstanceObj = "oFCK" . $fckInstance;
 			$fckInstances .= "<script language='javascript' type='text/javascript'>".
 					"var $fckInstanceObj = new FCKeditor('$fckInstance');".
+					"$fckInstanceObj.Height = '400';".
 					"$fckInstanceObj.BaseHref = '".$site_url."';".
 					"$fckInstanceObj.BasePath = '".$base_url."assets/plugins/fckeditor/';".
 					"$fckInstanceObj.Config['ImageBrowser'] = ".($use_browser==1 ? "true":"false").";".

@@ -9,6 +9,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: fck_about.html
  * 	"About" dialog window.
  * 
@@ -26,12 +28,14 @@ var oEditor = window.parent.InnerDialogLoaded() ;
 var FCKLang	= oEditor.FCKLang ;
 
 window.parent.AddTab( 'About', FCKLang.DlgAboutAboutTab ) ;
+window.parent.AddTab( 'License', 'License' ) ;
 window.parent.AddTab( 'BrowserInfo', FCKLang.DlgAboutBrowserInfoTab ) ;
 
 // Function called when a dialog tag is selected.
 function OnDialogTabChange( tabCode )
 {
 	ShowE('divAbout', ( tabCode == 'About' ) ) ;
+	ShowE('divLicense', ( tabCode == 'License' ) ) ;
 	ShowE('divInfo'	, ( tabCode == 'BrowserInfo' ) ) ;
 }
 
@@ -68,30 +72,46 @@ window.onload = function()
 								<td align="center" style="BORDER-RIGHT: #000000 1px solid; BORDER-TOP: #000000 1px solid; BORDER-LEFT: #000000 1px solid; BORDER-BOTTOM: #000000 1px solid">
 									<span fckLang="DlgAboutVersion">version</span>
 									<br>
-									<b>2.0</b></td>
+									<b>2.1</b></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 				<tr height="100%">
 					<td align="center">
-						Copyright &copy; 2003-2005 <a href="#" onclick="SendEMail();">Frederico Caldeira 
-							Knabben</a>
-						<br>
-						<br>
-						<span fckLang="DlgAboutLicense">Licensed under the terms of the GNU Lesser General 
-							Public License</span>
-						<br>
-						<a href="http://www.opensource.org/licenses/lgpl-license.php" target="_blank">http://www.opensource.org/licenses/lgpl-license.php</a>
-						<br>
-						<br>
+						&nbsp;<br>
+						<span style="FONT-SIZE: 14px" dir="ltr">Support <b>Open Source</b> software.<br>
+							<b><a href="http://www.fckeditor.net/donate/?about" target="_blank" title="Click to go to the donation page">
+									What about a donation today?</a></b> </span>
+						<br><br><br>
 						<span fckLang="DlgAboutInfo">For further information go to</span> <a href="http://www.fckeditor.net/" target="_blank">
 							http://www.fckeditor.net/</a>.
+						<br>
+						Copyright &copy; 2003-2005 <a href="#" onclick="SendEMail();">Frederico Caldeira 
+							Knabben</a>
 					</td>
 				</tr>
 				<tr>
 					<td align="center">
 						<img alt="" src="fck_about/logo_fredck.gif" width="87" height="36">
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="divLicense" style="DISPLAY: none">
+			<table height="100%" width="100%">
+				<tr>
+					<td>
+						<span fckLang="DlgAboutLicense">Licensed under the terms of the GNU Lesser General 
+							Public License</span>
+						<br>
+						<a href="http://www.opensource.org/licenses/lgpl-license.php" target="_blank">http://www.opensource.org/licenses/lgpl-license.php</a>
+						<br>
+					</td>
+				</tr>
+				<tr>
+					<td height="100%">
+						<iframe height="100%" width="100%" src="fck_about/lgpl.html"></iframe>
 					</td>
 				</tr>
 			</table>
@@ -102,9 +122,9 @@ window.onload = function()
 					<td>
 						<script language="javascript">
 <!--
-document.write( '<b>User Agent</b><br>' + window.navigator.userAgent + '<br><br>' ) ;
-document.write( '<b>Browser</b><br>' + window.navigator.appName + ' ' + window.navigator.appVersion + '<br><br>' ) ;
-document.write( '<b>Platform</b><br>' + window.navigator.platform + '<br><br>' ) ;
+document.write( '<b>User Agent<\/b><br>' + window.navigator.userAgent + '<br><br>' ) ;
+document.write( '<b>Browser<\/b><br>' + window.navigator.appName + ' ' + window.navigator.appVersion + '<br><br>' ) ;
+document.write( '<b>Platform<\/b><br>' + window.navigator.platform + '<br><br>' ) ;
 
 var sUserLang = '?' ;
 
@@ -113,7 +133,7 @@ if ( window.navigator.language )
 else if ( window.navigator.userLanguage )
 	sUserLang = window.navigator.userLanguage.toLowerCase() ;
 
-document.write( '<b>User Language</b><br>' + sUserLang ) ;
+document.write( '<b>User Language<\/b><br>' + sUserLang ) ;
 //-->
 						</script>
 					</td>

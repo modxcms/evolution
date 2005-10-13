@@ -8,6 +8,8 @@
  * For further information visit:
  * 		http://www.fckeditor.net/
  * 
+ * "Support Open Source software. What about a donation today?"
+ * 
  * File Name: en-uk.js
  * 	English (United Kingdom) language file.
  * 
@@ -132,6 +134,7 @@ UnknownToolbarItem	: "Unknown toolbar item \"%1\"",
 UnknownCommand		: "Unknown command name \"%1\"",
 NotImplemented		: "Command not implemented",
 UnknownToolbarSet	: "Toolbar set \"%1\" doesn't exist",
+NoActiveX			: "You browser's security settings could limit some features of the editor. You must enable the option \"Run ActiveX controls and plug-ins\". You may experience errors and notice missing features.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "OK",
@@ -414,7 +417,7 @@ BulletedListProp	: "Bulleted List Properties",
 NumberedListProp	: "Numbered List Properties",
 DlgLstType			: "Type",
 DlgLstTypeCircle	: "Circle",
-DlgLstTypeDisk		: "Disk",
+DlgLstTypeDisc		: "Disc",	//MISSING
 DlgLstTypeSquare	: "Square",
 DlgLstTypeNumbers	: "Numbers (1, 2, 3)",
 DlgLstTypeLCase		: "Lowercase Letters (a, b, c)",

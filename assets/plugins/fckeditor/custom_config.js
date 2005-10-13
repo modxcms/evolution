@@ -3,6 +3,10 @@
  * 
  */
 
+
+// Allow QuickEdit style tags <quickedit:name />
+FCKConfig.ProtectedSource.Add( /(<quickedit:[^\>]+>[\s|\S]*?<\/quickedit:[^\>]+>)|(<quickedit:[^\>]+\/>)/gi ); 	
+
 /* *
  * Language settings
  *
