@@ -90,6 +90,10 @@ function deletedocument() {
 	}
 }
 
+function setTextWrap(ctrl,b){
+	if(!ctrl) return;
+	ctrl.wrap = (b)? "soft":"off";
+}
 
 // Current Params/Configurations
 var currentParams = [];
@@ -275,7 +279,15 @@ function decode(s){
 			<td align="left" valign="top" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
 		  </tr>
 		</table>
-		<textarea name="post" style="width:100%; height:370px;" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
+		<!-- PHP text editor start -->
+		<div style="width:100%;position:relative">
+		    <div style="padding:1px; width:100%; height:16px;background-color:#eeeeee; border-top:1px solid #e0e0e0;margin-top:5px">
+		    	<span style="float:left;color:#707070;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['plugin_code']; ?></span>
+		    	<span style="float:right;color:#707070;"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+		   	</div>
+			<textarea name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
+		</div>
+		<!-- PHP text editor end -->		
 	</div>
 	
 	<!-- Configuration/Properties -->

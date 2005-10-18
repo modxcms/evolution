@@ -59,8 +59,48 @@ if(isset($_GET['id'])) {
 } else {
 	$_SESSION['itemname']="New Chunk";
 }
+
+// Print RTE Javascript function
+$use_rb = ($use_browser==1 ? "true":"false");
+$autoLang = isset($fck_editor_autolang) ? $fck_editor_autolang : 0;
+echo <<<RTE_SCRIPT
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/fckeditor/fckeditor.js"></script>
+<script language="javascript" type="text/javascript">
+	function setRichText(){
+
+		var elm = document.getElementById('switcher');
+		if(elm) elm.style.display='none';
+
+		var rte = new FCKeditor('post') ;
+		var FCKImageBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+		var FCKLinkBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+		var FCKFlashBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+		var FCKAutoLanguage = {$autoLang};
+		var FCKEditorAreaCSS = '{$editor_css_path}';
+				
+		rte.Height = '400';
+		rte.BaseHref = '{$site_url}';
+		rte.BasePath = '{$base_url}assets/plugins/fckeditor/';
+		rte.Config['ImageBrowser'] = {$use_rb};
+		rte.Config['ImageBrowserURL'] = FCKImageBrowserURL;
+		rte.Config['LinkBrowser'] = {$use_rb};
+		rte.Config['LinkBrowserURL'] = FCKLinkBrowserURL;
+		rte.Config['FlashBrowser'] = {$use_rb};
+		rte.Config['FlashBrowserURL'] = FCKFlashBrowserURL;
+		rte.Config['SpellChecker'] = 'SpellerPages';
+		rte.Config['CustomConfigurationsPath'] = '{$base_url}assets/plugins/fckeditor/custom_config.js';
+		rte.ToolbarSet = 'standard';
+		rte.Config['EditorAreaCSS'] = FCKEditorAreaCSS;
+		
+		rte.Config['FullPage'] = false ;
+		rte.ReplaceTextarea();
+	}
+</script>
+RTE_SCRIPT;
 ?>
+
 <script language="JavaScript">
+
 
 function duplicaterecord(){
 	if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
@@ -130,7 +170,15 @@ function deletedocument() {
     <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_htmlsnippet']; ?> <span class="comment"><?php echo $_lang['lock_snippet_msg']; ?></span></td>
   </tr>
 </table>
-<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['snippet']); ?></textarea>
+	<!-- HTML text editor start -->
+	<div style="width:100%;position:relative">
+	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
+	    	<span style="float:left;color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['chunk_code']; ?></span>
+	    	<a id="switcher" style="float:right;color:#707070;padding:3px;cursor:pointer" onclick="setRichText()"><?php echo $_lang['switch_to_rte']; ?> &gt;&gt;</a>
+	   	</div>
+		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['snippet']); ?></textarea>
+	</div>
+	<!-- HTML text editor end -->
 <input type="submit" name="save" style="display:none">
 </div>
 <?php

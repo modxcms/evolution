@@ -1,6 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==16) {	$e->setError(3);
+if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==16) {	
+	$e->setError(3);
 	$e->dumpError();	
 }
 if(!$modx->hasPermission('new_template') && $_REQUEST['a']==19) {
@@ -70,9 +71,47 @@ if(isset($_GET['id'])) {
 } else {
 	$_SESSION['itemname']="New template";
 }
-?>
-<script language="JavaScript">
 
+// Print RTE Javascript function
+$use_rb = ($use_browser==1 ? "true":"false");
+$autoLang = isset($fck_editor_autolang) ? $fck_editor_autolang : 0;
+echo <<<RTE_SCRIPT
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/fckeditor/fckeditor.js"></script>
+<script language="javascript" type="text/javascript">
+	function setRichText(){
+
+		var elm = document.getElementById('switcher');
+		if(elm) elm.style.display='none';
+
+		var rte = new FCKeditor('post') ;
+		var FCKImageBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+		var FCKLinkBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+		var FCKFlashBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
+		var FCKAutoLanguage = {$autoLang};
+		var FCKEditorAreaCSS = '{$editor_css_path}';
+				
+		rte.Height = '400';
+		rte.BaseHref = '{$site_url}';
+		rte.BasePath = '{$base_url}assets/plugins/fckeditor/';
+		rte.Config['ImageBrowser'] = {$use_rb};
+		rte.Config['ImageBrowserURL'] = FCKImageBrowserURL;
+		rte.Config['LinkBrowser'] = {$use_rb};
+		rte.Config['LinkBrowserURL'] = FCKLinkBrowserURL;
+		rte.Config['FlashBrowser'] = {$use_rb};
+		rte.Config['FlashBrowserURL'] = FCKFlashBrowserURL;
+		rte.Config['SpellChecker'] = 'SpellerPages';
+		rte.Config['CustomConfigurationsPath'] = '{$base_url}assets/plugins/fckeditor/custom_config.js';
+		rte.ToolbarSet = 'advanced';
+		rte.Config['EditorAreaCSS'] = FCKEditorAreaCSS;
+		
+		rte.Config['FullPage'] = true ;
+		rte.ReplaceTextarea();
+	}
+</script>
+RTE_SCRIPT;
+?>
+
+<script language="javascript" type="text/javascript">
 function duplicaterecord(){
 	if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
 		documentDirty=false;
@@ -126,27 +165,36 @@ function deletedocument() {
 	</div>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['template_title']; ?></div><div class="sectionBody">
-<?php echo $_lang['template_msg']; ?><p />
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td align="left"><img src="media/images/_tx_.gif" width="100" height="1"></td>
-    <td align="left">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="left"><?php echo $_lang['template_name']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><input name="templatename" type="text" maxlength="100" value="<?php echo html_entity_decode($content['templatename']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'></span></td>
-  </tr>
-    <tr>
-    <td align="left"><?php echo $_lang['template_desc']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo html_entity_decode($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-  </tr>
-  <tr>
-    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
-  </tr>
-</table>
-<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['content']); ?></textarea>
-<input type="submit" name="save" style="display:none">
+<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['template_title']; ?></div>
+<div class="sectionBody">
+	<?php echo $_lang['template_msg']; ?><p />
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	  <tr>
+	    <td align="left"><img src="media/images/_tx_.gif" width="100" height="1"></td>
+	    <td align="left">&nbsp;</td>
+	  </tr>
+	  <tr>
+	    <td align="left"><?php echo $_lang['template_name']; ?>:&nbsp;&nbsp;</td>
+	    <td align="left"><input name="templatename" type="text" maxlength="100" value="<?php echo html_entity_decode($content['templatename']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'></span></td>
+	  </tr>
+	    <tr>
+	    <td align="left"><?php echo $_lang['template_desc']; ?>:&nbsp;&nbsp;</td>
+	    <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo html_entity_decode($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+	  </tr>
+	  <tr>
+	    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
+	  </tr>
+	</table>
+	<!-- HTML text editor start -->
+	<div style="width:100%;position:relative">
+	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
+	    	<span style="float:left;color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['template_code']; ?></span>
+	    	<a id="switcher" style="float:right;color:#707070;padding:3px;cursor:pointer" onclick="setRichText()"><?php echo $_lang['switch_to_rte']; ?> &gt;&gt;</a>
+	   	</div>
+		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['content']); ?></textarea>
+	</div>
+	<!-- HTML text editor end -->	
+	<input type="submit" name="save" style="display:none">
 </div>
 <?php
 	// invoke OnTempFormRender event
