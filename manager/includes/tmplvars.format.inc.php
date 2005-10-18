@@ -150,7 +150,9 @@
 													array(
 														editor 		=> $richtexteditor,
 														elements	=> $replace_richtext,
-														forfrontend => 1
+														forfrontend => 1,
+														width 		=> $w,
+														height		=> $h
 													));
 					if(is_array($evtOut)) $o.= implode("",$evtOut);
 				}

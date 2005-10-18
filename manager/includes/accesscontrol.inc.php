@@ -161,7 +161,7 @@ body {
 				  <tr>
 					<?php if($use_captcha==1) { ?>
 					<td>
-						<a href="<?php echo $_SERVER['PHP_SELF'];?>"><img src="includes/veriword.php" width="148" height="60" alt="<?php echo $_lang["login_captcha_message"]; ?>" style="border: 1px solid #003399"></a>
+						<a href="<?php echo $_SERVER['PHP_SELF'];?>"><img src="includes/veriword.php?rand=<? echo rand(); ?>" width="148" height="60" alt="<?php echo $_lang["login_captcha_message"]; ?>" style="border: 1px solid #003399"></a>
 					</td>
 					<td>&nbsp;&nbsp;&nbsp;</td>	
 					<?php } ?>
