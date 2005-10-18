@@ -86,7 +86,8 @@ startCMSSession();
 
 // initiate a new document parser
 include_once $base_path."/manager/includes/document.parser.class.inc.php";
-$modx = $etomite = new DocumentParser;
+$modx = new DocumentParser;
+$etomite = &$modx; // for backward compatibility
 
 
 // set some parser options
