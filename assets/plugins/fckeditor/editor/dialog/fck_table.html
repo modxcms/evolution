@@ -145,12 +145,16 @@ function Ok()
 		// Amended to ensure that newly inserted tables are not incorrectly nested in P tags, etc
 		// We insert the table first and then rectify any nestings afterwards so we can re-use the
 		// FCKTablesProcessor function that corrects tables on SetHTML()
+		/*
 		table = oEditor.FCK.InsertElementAndGetIt( table ) ;
 		if ( !oEditor.FCKConfig.UseBROnCarriageReturn )
 		{
 			oEditor.FCKTablesProcessor.CheckTableNesting( table ) ;
 		}
+		*/
 		// END iCM MODIFICATIONS	
+		
+		oEditor.FCK.InsertElement( table ) ;
 	}
 	
 	return true ;

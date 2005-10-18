@@ -1,15 +1,15 @@
 /**
  * FCKEditor - RichText Editor Plugin
  * Written By Raymond Irving - June 22, 2005
- * Modified By Jeff Whitfield - August 24, 2005
+ * Modified By Jeff Whitfield - October 13, 2005
  *
  * Both frontend and backend interface provided
  *
  * Configuration:
  * &webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']
  *
- * Version 2.1
- * FCKeditor v2.1
+ * Version 2.1.1
+ * FCKeditor v2.1.1
  *
  */
 
@@ -123,7 +123,7 @@ FCKEditor_HTML_Settings;
 
 // getFCKEditorScript function
 if (!function_exists('getFCKEditorScript')) {
-	function getFCKEditorScript($elmList,$tbCustomSet='') {
+	function getFCKEditorScript($elmList,$tbCustomSet='',$width='100%',$height='400') {
 		global $base_url;
 		global $site_url;
 		global $use_browser;
@@ -137,12 +137,16 @@ if (!function_exists('getFCKEditorScript')) {
 		$autoLang = $fck_editor_autolang ? 'true': 'false';
 		$editor_css_path = !empty($editor_css_path) ? $editor_css_path : $base_url."assets/plugins/fckeditor/editor/css/fck_editorarea.css";
 		
+		$width = str_replace("px","",$width);
+		$height = str_replace("px","",$height);
+		
 		// build fck instances
 		foreach($elmList as $fckInstance) {
 			$fckInstanceObj = "oFCK" . $fckInstance;
 			$fckInstances .= "<script language='javascript' type='text/javascript'>".
 					"var $fckInstanceObj = new FCKeditor('$fckInstance');".
-					"$fckInstanceObj.Height = '400';".
+					"$fckInstanceObj.Width = '".$width."';".
+					"$fckInstanceObj.Height = '".$height."';".
 					"$fckInstanceObj.BaseHref = '".$site_url."';".
 					"$fckInstanceObj.BasePath = '".$base_url."assets/plugins/fckeditor/';".
 					"$fckInstanceObj.Config['ImageBrowser'] = ".($use_browser==1 ? "true":"false").";".
@@ -196,7 +200,7 @@ switch ($e->name) {
 
 	case "OnRichTextEditorInit":
 		if($editor=="FCKEditor") {
-			if(isset($forfrontend)||$modx->isFrontend()) $html = getFCKEditorScript($elements,$webToolbarSet);
+			if(isset($forfrontend)||$modx->isFrontend()) $html = getFCKEditorScript($elements,$webToolbarSet,$width,$height);
 			else $html = getFCKEditorScript($elements);
 			$e->output($html);
 		}		

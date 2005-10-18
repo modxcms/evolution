@@ -46,3 +46,19 @@ FORM
 	width: 16px ;
 	height: 15px ;
 }
+
+.FCK__PageBreak
+{
+	background-position: center center;
+	background-image: url(images/fck_pagebreak.gif);
+	background-repeat: no-repeat;
+	clear: both;
+	display: block;
+	float: none;
+	width: 100%;
+	border-top: #999999 1px dotted;
+	border-bottom: #999999 1px dotted;
+	border-right:0px;
+	border-left:0px;
+	height: 5px;
+}

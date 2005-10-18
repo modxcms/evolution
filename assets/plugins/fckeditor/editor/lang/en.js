@@ -85,6 +85,8 @@ Find				: "Find",
 Replace				: "Replace",
 SpellCheck			: "Check Spell",
 UniversalKeyboard	: "Universal Keyboard",
+PageBreakLbl		: "Page Break",
+PageBreak			: "Insert Page Break",
 
 Form			: "Form",
 Checkbox		: "Checkbox",
