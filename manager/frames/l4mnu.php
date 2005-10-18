@@ -16,12 +16,26 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 function showWin() {
 	window.open('../');
 }
-startList = function() {	if (document.all && document.getElementById) {		navRoot = document.getElementById("nav");		for (i=0; i<navRoot.childNodes.length; i++) {			node = navRoot.childNodes[i];			if (node.nodeName=="li") {				node.onmouseover=function()  {					this.className+=" over";				}				node.onmouseout=function() {					this.className=this.className.replace(" over", "");				}			}		}	}}
+startList = function() {
+    if (document.all && document.getElementById) {
+		navRoot = document.getElementById("nav");
+		for (i=0; i<navRoot.childNodes.length; i++) {  
+			node = navRoot.childNodes[i];  
+			if (node.nodeName=="li") { 
+				node.onmouseover=function() {  
+					this.className+=" over";    
+				}  
+				node.onmouseout=function() {
+					this.className=this.className.replace (/ over/, '');   
+				}
+			}
+		} 
+	}
+}  
 
 function stopIt() {
 	top.scripter.stopWork();
 }
-
 window.onload=startList;
 </script>
 </head>
