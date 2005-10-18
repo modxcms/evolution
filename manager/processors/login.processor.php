@@ -100,7 +100,7 @@ if($failedlogins>=3 && $blockeduntildate>time()) {	// blocked due to number of l
 }
 
 if($failedlogins>=3 && $blockeduntildate<time()) {	// blocked due to number of login errors, but get to try again
-	$sql = "UDPATE $dbase.".$table_prefix."user_attributes SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
+	$sql = "UPDATE $dbase.".$table_prefix."user_attributes SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
 	$rs = mysql_query($sql);
 }
 
