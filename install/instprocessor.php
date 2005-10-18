@@ -11,7 +11,7 @@ $errors = 0;
 echo "Setup will now attempt to setup the database:<br />";
 
 $installMode = $_POST['installmode']=='upd' ? 1:0;
-$installSample = intval($_POST['installsample']);
+$installData = intval($_POST['installdata']);
 if($installMode==1) {
 	include "../manager/includes/config.inc.php";
 }
@@ -123,9 +123,26 @@ if($moduleSQLBaseFile) {
 	}
 }
 
-// install sample data
-if(installSample && $moduleSQLDataFile) {
+// install data
+if(installData && $moduleSQLDataFile) {
+	echo "<p>Installing demo site: ";
 	$sqlParser->process($moduleSQLDataFile);
+	// display database results
+	if ($sqlParser->installFailed==true) {
+		$errors += 1;
+		echo "<span class='notok'><b>Database Alerts!</span></p>";
+		echo "<p>MODx setup couldn't install/alter some tables inside the selected database.</p>";
+		echo "<p>The following errors had occured during installation<br /><br />";
+		for($i=0;$i<count($sqlParser->mysqlErrors);$i++) {
+			echo "<em>".$sqlParser->mysqlErrors[$i]["error"]."</em> during the execution of SQL statement <span class='mono'>".strip_tags($sqlParser->mysqlErrors[$i]["sql"])."</span>.<hr />";
+		}
+		echo "</p>";
+		echo "<p>Some table were not updated. This might be due to previous modifications.</p>";
+		return;
+	}
+	else {
+		echo "<span class='ok'>OK!</span></p>";
+	}
 }
 
 // write the config.inc.php file if new installation

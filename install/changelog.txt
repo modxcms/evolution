@@ -5,6 +5,10 @@ development release, and is only shown to give an idea of what's currently in th
 
 MODx2 TP3.3
 ==================
+* update snippet and plugin to use word wraping on textarea
+* update chunks, template to use FCK's RTE
+* BUG #84 - Fixed login captcha bypass (Mark)
+* NewsFeed now defaults to &makerss=1
 * update NewsListing with news features (Ryan & Greg)
 * #msg6246 - update NewsFeed to support valid RSS2.0 tags (Mark)
 * add &linktext support to NewsListing snippet

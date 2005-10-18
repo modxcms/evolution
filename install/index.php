@@ -191,10 +191,12 @@
 		global $upgradeable;
 		global $moduleName;
 		ob_start();
+		echo "<p class=\"title\">Installation Mode</p>";
 		?>
 			<table border="0" width="100%">
 			  <tr>
 				<td nowrap valign="top" width="37%">
+				<img src="im_new_inst.gif" align="left" width="32" height="32" hspace="5" />
 				<input type="radio" name="installmode" id="installmode1" value="new" onclick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? "checked='checked'":"" ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
 				<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please note that this option may overwrite any data inside your database. <strong>NOTE:</strong> For new Linux/Unix installations, you will need to create a new empty file named <code>config.inc.php</code> inside the <code>/manager/includes</code> directory with permissions set to 777.</td>
 			  </tr>
@@ -204,6 +206,7 @@
 			  </tr>
 			  <tr>
 				<td nowrap valign="top" width="37%">
+				<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
 				<input type="radio" name="installmode" id="installmode2" value="upd" onclick="setInstallMode(1);" <?php echo !$upgradeable ? "disabled='diabled'":"" ?> <?php echo $_POST['installmode']=='upd' ? "checked='checked'":"" ?> /><label for="installmode2" class="nofloat">Upgrade Installation</label></td>
 				<td width="61%">Select this option to upgrade your current files and database.</td>
 			  </tr>
@@ -263,51 +266,70 @@
 		ob_start();	
 		echo "<p class=\"title\">Optional Items</p><p>Please choose your installation options and click Install:</p>";
 		
+		echo '<img src="im_demo.gif" align="left" width="32" height="32" hspace="5" />';
+		echo "<h1>Demo Site</h1><br/>";
+		echo "&nbsp;<input type='checkbox' name='installdata' value='1' />Install Demo Site</span> - Please note that this will overwrite existing documents and resources.<hr size='1' style='border:1px dotted silver;' />";
+		
 		// display templates
 		$templates = isset($_POST['template']) ? $_POST['template']:array();
 		$limit = count($moduleTemplates);
-		if ($limit>0) echo "<h1>Templates</h1>";
-		for ($i=0;$i<$limit;$i++) {
-			$chk = in_array($i,$templates)||(!count($_POST)) ? "checked='checked'": "";
-			echo "&nbsp;<input type='checkbox' name='template[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleTemplates[$i][0]."</span> - ".$moduleTemplates[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		if ($limit>0) {	
+			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
+			echo "<h1>Templates</h1><br/>";
+			for ($i=0;$i<$limit;$i++) {
+				$chk = in_array($i,$templates)||(!count($_POST)) ? "checked='checked'": "";
+				echo "&nbsp;<input type='checkbox' name='template[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleTemplates[$i][0]."</span> - ".$moduleTemplates[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+			}
 		}
 		
 		// display chunks
 		$chunks = isset($_POST['chunk']) ? $_POST['chunk']:array();
 		$limit = count($moduleChunks);
-		if ($limit>0) echo "<h1>Chunks</h1>";
-		for ($i=0;$i<$limit;$i++) {
-			$chk = in_array($i,$chunks)||(!count($_POST)) ? "checked='checked'": "";
-			echo "&nbsp;<input type='checkbox' name='chunk[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleChunks[$i][0]."</span> - ".$moduleChunks[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		if ($limit>0) {
+			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
+			echo "<h1>Chunks</h1><br/>";
+			for ($i=0;$i<$limit;$i++) {
+				$chk = in_array($i,$chunks)||(!count($_POST)) ? "checked='checked'": "";
+				echo "&nbsp;<input type='checkbox' name='chunk[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleChunks[$i][0]."</span> - ".$moduleChunks[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+			}
 		}
-
+		
 		// display modules
 		$modules = isset($_POST['module']) ? $_POST['module']:array();
 		$limit = count($moduleModules);
-		if ($limit>0) echo "<h1>Modules</h1>";
-		for ($i=0;$i<$limit;$i++) {
-			$chk = in_array($i,$modules)||(!count($_POST)) ? "checked='checked'": "";
-			echo "&nbsp;<input type='checkbox' name='module[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleModules[$i][0]."</span> - ".$moduleModules[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		if ($limit>0) {
+			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
+			echo "<h1>Modules</h1><br/>";
+			for ($i=0;$i<$limit;$i++) {
+				$chk = in_array($i,$modules)||(!count($_POST)) ? "checked='checked'": "";
+				echo "&nbsp;<input type='checkbox' name='module[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleModules[$i][0]."</span> - ".$moduleModules[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+			}
 		}
-			
+		
 		// display plugins
 		$plugins = isset($_POST['plugin']) ? $_POST['plugin']:array();
 		$limit = count($modulePlugins);
-		if ($limit>0) echo "<h1>Plugins</h1>";
-		for ($i=0;$i<$limit;$i++) {
-			$chk = in_array($i,$plugins)||(!count($_POST)) ? "checked='checked'": "";
-			echo "&nbsp;<input type='checkbox' name='plugin[]' value='$i' $chk />Install/Update <span class='comname'>".$modulePlugins[$i][0]."</span> - ".$modulePlugins[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		if ($limit>0) {
+			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
+			echo "<h1>Plugins</h1><br/>";
+			for ($i=0;$i<$limit;$i++) {
+				$chk = in_array($i,$plugins)||(!count($_POST)) ? "checked='checked'": "";
+				echo "&nbsp;<input type='checkbox' name='plugin[]' value='$i' $chk />Install/Update <span class='comname'>".$modulePlugins[$i][0]."</span> - ".$modulePlugins[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+			}
 		}
-
+		
 		// display snippets
 		$snippets = isset($_POST['snippet']) ? $_POST['snippet']:array();
 		$limit = count($moduleSnippets);
-		if ($limit>0) echo "<h1>Snippets</h1>";
-		for ($i=0;$i<$limit;$i++) {
-			$chk = in_array($i,$snippets)||(!count($_POST)) ? "checked='checked'": "";
-			echo "&nbsp;<input type='checkbox' name='snippet[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleSnippets[$i][0]."</span> - ".$moduleSnippets[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+		if ($limit>0) {
+			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
+			echo "<h1>Snippets</h1><br/>";
+			for ($i=0;$i<$limit;$i++) {
+				$chk = in_array($i,$snippets)||(!count($_POST)) ? "checked='checked'": "";
+				echo "&nbsp;<input type='checkbox' name='snippet[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleSnippets[$i][0]."</span> - ".$moduleSnippets[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+			}
 		}
-
+		
 		$o = ob_get_contents();
 		ob_end_clean();
 		return $o;
@@ -725,7 +747,7 @@
 				<?php if($isPostBack) { ?>
 					<input type='button' value='Close' name='cmdclose' style='float:right;width:100px;' onclick="closepage();" />
 					<?php if($errors==0) { ?>
-						<span id="removeinstall" style='float:left;cursor:pointer;color:#505050;line-height:18px;' onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;"><input type="checkbox" name="rminstaller" onclick="event.cancelBubble=true;" <?php echo empty($errors) ? 'checked="checked"':''; ?> style="cursor:default;" />Remove the install folder and files from my website. </span>
+						<span id="removeinstall" style='float:left;cursor:pointer;color:#505050;line-height:18px;' onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;"><input type="checkbox" name="rminstaller" onclick="event.cancelBubble=true;" <?php echo empty($errors) ? 'checked="checked"':''; ?> style="cursor:default;" />Remove the install folder and files from my website <br />&nbsp;(This operation requires delete permission to the granted to the install folder). </span>
 					<?php } ?>
 				<?php } else {?>
 					<input type='button' value='Next' name='cmdnext' style='float:right;width:100px;' onclick="changeScreen(1);" />
@@ -736,7 +758,7 @@
 			</div>
 			<input name="syscheck" type="hidden" value="<?php echo ($syscheck && $errors) ? "on":""; ?>" />
 			</form>
-			<form name="testform" method="post">
+			<form action="index.php" name="testform" method="post">
 				<input name="dbtest" type="hidden" />
 				<input name="dbuid" type="hidden" />
 				<input name="dbpwd" type="hidden" />
@@ -744,7 +766,7 @@
 				<input name="dbhost" type="hidden" />
 				<input name="tableprefix" type="hidden" />
 			</form>
-			<iframe name="testPort" width="1" height="1" style="visibility:hidden;'"></iframe>
+			<iframe name="testPort" width="1" height="1" style="visibility:hidden" ></iframe>
             </td>
             </tr>
             </table>

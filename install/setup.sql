@@ -1,6 +1,4 @@
 # MODx Database Script for New/Upgrade Installations
-# Based on Etmoite 0.6  - www.etomite.org
-#
 # MODx was created By Raymond Irving - Nov 2004 
 #
 # Each sql command is separated by double lines \n\n 

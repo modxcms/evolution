@@ -55,7 +55,7 @@ class SqlParser {
 			// remove non-upgradeable parts
 			$s = strpos($idata,"non-upgrade-able[[");
 			$e = strpos($idata,"]]non-upgrade-able")+17;
-			$idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);  
+			if($s && $e) $idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);  
 		}
 		
 		// replace {} tags
