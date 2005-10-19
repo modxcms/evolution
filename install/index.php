@@ -750,10 +750,10 @@
 						if($errors==0) { 
 							// check if install folder is removeable
 							if(!is_writable("../install")) {
-								echo '<span id="removeinstall" style='float:left;cursor:pointer;color:#505050;line-height:18px;' onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;"><input type="checkbox" name="rminstaller" onclick="event.cancelBubble=true;" <?php echo empty($errors) ? 'checked="checked"':''; ?> style="cursor:default;" />Remove the install folder and files from my website <br />&nbsp;(This operation requires delete permission to the granted to the install folder). </span>';
+								echo '<span id="removeinstall" style="float:left;cursor:pointer;color:#505050;line-height:18px;" onclick="var chk=document.install.rminstaller; if(chk) chk.checked=!chk.checked;"><input type="checkbox" name="rminstaller" onclick="event.cancelBubble=true;" '.(empty($errors) ? 'checked="checked"':'').' style="cursor:default;" />Remove the install folder and files from my website <br />&nbsp;(This operation requires delete permission to the granted to the install folder). </span>';
 							}
 							else {
-								echo '<span id="removeinstall" style='float:left;cursor:pointer;color:#505050;line-height:18px;'>Please remember to remove the &quot;<b>install</b>&quot; folder before login into the Content Manager.</span>';
+								echo '<span id="removeinstall" style="float:left;cursor:pointer;color:#505050;line-height:18px;">Please remember to remove the &quot;<b>install</b>&quot; folder before login into the Content Manager.</span>';
 							}					
 						} ?>
 				<?php } else {?>
