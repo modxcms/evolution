@@ -617,7 +617,7 @@ function updateContentType(){
           </tr> 
           <tr> 
             <td nowrap class="warning"><b><?php echo $_lang["captcha_words_title"] ?></b></td> 
-            <td><input name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : "Alex,BitCode,Chunk,Design,Extreme,FinalFantasy,Gerry,Holiday,Join(),Kakogenic,Lightning,Maaike,Marit,Niche,Oscilloscope,Phusion,Query,Retail,Snippet,Template,USSEnterprise,Verily,Website,Ypsilon,Zebra" ; ?>" /></td> 
+            <td><input name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : "MODx,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote" ; ?>" /></td> 
           </tr> 
           <tr> 
             <td width="200">&nbsp;</td> 

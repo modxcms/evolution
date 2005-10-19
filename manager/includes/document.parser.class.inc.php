@@ -1031,7 +1031,7 @@ class DocumentParser {
 			
 			// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
 			if ($js = $this->getRegisteredClientStartupScripts()){
-				$this->documentContent = preg_replace("/(<head>)/i", "\\1\n".$js, $this->documentContent);
+				$this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
 			}
 
 			// Insert jscripts & html block into template - template must have a </body> tag

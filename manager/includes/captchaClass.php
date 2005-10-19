@@ -65,7 +65,7 @@ class VeriWord {
 
 	function pick_word() {
 		// set default words
-		$words="Alex,Access,Better,BitCode,Chunk,Cache,Description,Design,Excellent,Enjoyable,FriendlyURLs,FinalFantasy,Gerald,Griff,Humphrey,Holiday,Intelligence,Integration,Joystick,Join(),Kaleidoscope,Kakogenic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
+		$words="MODx,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
 
 		include "config.inc.php";
 		// connect to the database
@@ -89,7 +89,7 @@ class VeriWord {
 	function draw_text() {
 
 		// dynamically load GD2 lib
-		if (!extension_loaded('gd2')) { 
+		if (!extension_loaded('gd')) { 
 		   if (strtoupper(substr(PHP_OS, 0,3) == 'WIN')) { 
 				@dl('php_gd2.dll');
 		   }
