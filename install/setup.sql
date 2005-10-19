@@ -817,7 +817,7 @@ REPLACE INTO `{PREFIX}system_settings`
 ('use_udperms','0'),
 ('udperms_allowroot','0'),
 ('use_captcha','0'),
-('captcha_words','Alex,BitCode,Chunk,Design,Extreme,FinalFantasy,Gerry,Holiday,Join(),Kakogenic,Lightning,Maaike,Marit,Niche,Oscilloscope,Phusion,Query,Retail,Snippet,Template,USSEnterprise,Verily,Website,Ypsilon,Zebra'),
+('captcha_words','MODx,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
 ('emailsender','you@yourdomain.com'),
 ('emailsubject','Your login details'),
 ('signupemail_message','Hello [+uid+] \r\n\r\nHere are your login details for [+sname+] Content Manager:\r\n\r\nUsername: [+uid+]\r\nPassword: [+pwd+]\r\n\r\nOnce you log into the Content Manager, you can change your password.\r\n\r\nRegards,\r\nSite Administrator'),

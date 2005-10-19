@@ -179,6 +179,17 @@ REPLACE INTO `{PREFIX}site_templates` VALUES ('1','Default Template','Default te
 
 
 #
+# Dumping data for table `site_tmplvars`
+#
+
+
+REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('3','text','loginName','loginName','Conditional name for the Login menu item','0','0','0','','0','','','@EVAL if ($modx->getLoginUserID()) return \'Logout\'; else return \'Login\';');
+
+
+REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','richtext','blogContent','blogContent','RTE for the new blog entries','0','0','0','','0','richtext','&w=450px&h=450px&edt=FCKEditor','');
+
+
+#
 # Dumping data for table `site_tmplvar_templates`
 #
 
@@ -217,7 +228,7 @@ REPLACE INTO `{PREFIX}web_groups` VALUES ('13','2','6');
 #
 
 
-REPLACE INTO `{PREFIX}web_user_attributes` VALUES ('1','1','Site Admin','0','ryan@vertexworks.com','','','0','0','0','25','1129049624','1129063123','0','f426f3209310abfddf2ee00e929774b4','0','0','','','','','','');
+REPLACE INTO `{PREFIX}web_user_attributes` VALUES ('1','1','Site Admin','0','you@yourdomain.com','','','0','0','0','25','1129049624','1129063123','0','f426f3209310abfddf2ee00e929774b4','0','0','','','','','','');
 
 
 #
@@ -225,7 +236,7 @@ REPLACE INTO `{PREFIX}web_user_attributes` VALUES ('1','1','Site Admin','0','rya
 #
 
 
-REPLACE INTO `{PREFIX}web_users` VALUES ('1','siteadmin','e10adc3949ba59abbe56e057f20f883e','');
+REPLACE INTO `{PREFIX}web_users` VALUES ('1','siteadmin','5f4dcc3b5aa765d61d8327deb882cf99','');
 
 
 #
