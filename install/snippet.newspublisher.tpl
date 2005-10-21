@@ -2,13 +2,14 @@
  *
  *	NewsPublisher for MODx 
  *	Created by Raymond Irving, August 2005
+ *  Patch for 's and redirect to new post by Mark Kaplan, October 2005
  *
  *	Publish news articles directly from the web
  *
  *	Parameters:
  *		&folder			- folder id where comments are stored
  *		&makefolder		- set to 1 to automatically convert the parent document to a folder. Defaults to 0
- *		&postid			- document id to load after posting news item. Defaults to current document
+ *		&postid			- document id to load after posting news item. Defaults to the page created
  *		&canpost		- comma delimitted web groups that can post comments. leave blank for public posting
  *		&badwords		- comma delimited list of words not allowed in post
  *		&template		- name of template to use for news post
@@ -21,7 +22,7 @@
  * 		&aliastitle		- set to 1 to use page title as alias suffix. Defaults to 0 - date created.
  *		&clearcache		- when set to 1 the system will automatically clear the site cache after publishing an article.
  *
- *	Version 1.1 Beta
+ *	Version 1.2 Beta
  *
  */
  
@@ -38,9 +39,6 @@ $aliastitle	 = isset($aliastitle) ? 1:0;
 // get folder id where we should store articles
 // else store in current document
 $folder = isset($folder) ? intval($folder):$modx->documentIdentifier;
-
-// get postid
-$postid = isset($postid) ? $postid:$modx->documentIdentifier;
 
 // set rich text content field
 $rtcontent = isset($rtcontent) ? $rtcontent:'content';
@@ -106,6 +104,10 @@ if(empty($formTpl)) $formTpl = '<form name="NewsPublisher" method="post">
 // switch block
 switch ($isPostBack) {
 	case true:	// process post back
+		// remove magic quotes from POST
+		if(get_magic_quotes_gpc()){
+			$_POST = array_map("stripslashes", $_POST);
+		}	
 		if(trim($_POST['pagetitle'])=='') $modx->webAlert('Missing page title.');
 		elseif($_POST[$rtcontent]=='') $modx->webAlert('Missing news content.');
 		else {
@@ -204,7 +206,7 @@ switch ($isPostBack) {
 				'template' 	=> $template,
 				'content' 	=> mysql_escape_string($header.$content.$footer)
 			);
-			$modx->db->insert($flds,$modx->getFullTableName('site_content'));
+			$redirectid = $modx->db->insert($flds,$modx->getFullTableName('site_content'));
 			if(!empty($makefolder)) {
 				// convert parent into folder
 				$modx->db->update(array('isfolder'=>'1'),$modx->getFullTableName('site_content'),'id=\''.$folder.'\'');
@@ -218,8 +220,12 @@ switch ($isPostBack) {
 				$sync->setReport(false);
 				$sync->emptyCache(); // first empty the cache		
 			}
+
+			// get redirect/post id
+			$redirectid = $modx->db->getValue('SELECT id as \'redirectid\' FROM '.$modx->getFullTableName('site_content').' WHERE createdon=\''.$createdon.'\'');
+			$postid = isset($postid) ? $postid:$redirectid;
 			
-			// redirect to postid
+			// redirect to post id
 			$modx->sendRedirect($modx->makeUrl($postid));
 		}
 	
