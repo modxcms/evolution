@@ -59,7 +59,7 @@
 				 WHERE wga.id>0";
 		$ds = mysql_query($sql,$sqlParser->conn);
 		if(!$ds) {
-			echo "An error occured while executing a query: ".mysql_error();
+			echo "An error occurred while executing a query: ".mysql_error();
 		}
 		else {
 			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
@@ -78,7 +78,7 @@
 				 WHERE mga.id>0";
 		$ds = mysql_query($sql);
 		if(!$ds) {
-			echo "An error occured while executing a query: ".mysql_error();
+			echo "An error occurred while executing a query: ".mysql_error();
 		}
 		else {
 			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
@@ -92,7 +92,7 @@
 		// get quick edit module id
 		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_modules WHERE name='QuickEdit'");
 		if(!$ds) {
-			echo "An error occured while executing a query: ".mysql_error();
+			echo "An error occurred while executing a query: ".mysql_error();
 		}
 		else {
 			$row = mysql_fetch_assoc($ds);
@@ -101,7 +101,7 @@
 		// get plugin id
 		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_plugins WHERE name='QuickEdit'");
 		if(!$ds) {
-			echo "An error occured while executing a query: ".mysql_error();
+			echo "An error occurred while executing a query: ".mysql_error();
 		}
 		else {
 			$row = mysql_fetch_assoc($ds);
@@ -110,7 +110,7 @@
 		// setup plugin as module dependency
 		$ds = mysql_query("SELECT module FROM ".$sqlParser->prefix."site_module_depobj WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
 		if(!$ds) {
-			echo "An error occured while executing a query: ".mysql_error();
+			echo "An error occurred while executing a query: ".mysql_error();
 		}
 		elseif (mysql_num_rows($ds)==0){
 			mysql_query("INSERT INTO ".$sqlParser->prefix."site_module_depobj (module, resource, type) VALUES('$moduleid','$pluginid',30)");
