@@ -590,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
   `id` int(10) NOT NULL auto_increment,
-  `username` varchar(15) NOT NULL default '',
+  `username` varchar(100) NOT NULL default '',
   `password` varchar(100) NOT NULL default '',
   `cachepwd` VARCHAR(100) NOT NULL COMMENT 'Store new unconfirmed password',
   PRIMARY KEY  (`id`),
@@ -733,6 +733,9 @@ ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFA
 , ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`
 , ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`
 , ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
+
+
+ALTER TABLE `{PREFIX}web_users` MODIFY COLUMN `username` VARCHAR(100) NOT NULL;
 
 
 ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`
