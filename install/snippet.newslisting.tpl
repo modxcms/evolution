@@ -1,9 +1,10 @@
-/*
- *	PostListing 
- *	Displays posts of articles, blogs, news items and so on.
+/**
+ *	NewsListing 
+ *	Displays posts (articles, blogs, news items and so on).
  *
- *  Modified by Raymond Irving, Greg Matthews and Ryan Thrash:
- * 	    12-Oct-2005 malformed tag-closing mojo and more cleanups
+ *  Modified by Raymond Irving, Greg Matthews Mark Kaplan and Ryan Thrash:
+ *      21-Oct-2005 footer/header removed from summaries
+ *      12-Oct-2005 malformed tag-closing mojo and more cleanups
  *      11-Oct-2005 many updates inc. showPublishedOnly, summary splitter, configs and default template format
  *      22-Sept-2005 add &linktext support
  *      22-Sept-2005 add template support. Fields - [+title+],[+summary+],[+author+],[+date+],[+linkurl+]
@@ -21,7 +22,7 @@
  *
  *  Credits:
  *      tag-closing mojo by Greg Matthews
- *      enhancements LePrince, mrruben5, lloyd_barrett
+ *      enhancements Raymond Irving, Mark Kaplan, Ryan Thrash, LePrince, mrruben5, lloyd_barrett
  *      original code Alex
  *
  *  Snippet parameters [default] :
@@ -110,6 +111,12 @@ $date = isset($dateformat)? $dateformat :"%d-%b-%y %H:%M";
 $archtxt = isset($archivetext)? $archivetext :"Older Items";
     // text to use for the Post Archives listing
 
+$commentschunk = isset($commentschunk)? '{{'.$commentschunk.'}}' : '';
+    // if you're using comments, the name of the chunk used to format them
+
+$debug = false;
+    // for testing only
+
 $output = '';
     // initialize the blog variable 
 
@@ -133,13 +140,13 @@ function closeTags($text) {
     $endClosePattern = "/<(\/.*?[^>])$/"; 
     $endTags=''; 
      
-    //$text=preg_replace($endOpenPattern,'',$text); 
-    //$text=preg_replace($endClosePattern,'',$text); 
     preg_match_all($openPattern,$text,$openTags); 
     preg_match_all($closePattern,$text,$closeTags); 
     
-    //print_r($openTags); 
-    //print_r($closeTags); 
+    if ($debug) {
+        print_r($openTags); 
+        print_r($closeTags); 
+    }
     
     $c=0; 
     $loopCounter = count($closeTags[1]);  //used to prevent an infinite loop if the html is malformed 
@@ -152,7 +159,7 @@ function closeTags($text) {
             if(strstr($tag,' ')) { 
                 $tag = substr($tag,0,strpos($tag,' '));    
             } 
-            //echo $tag.'=='.$closeTags[1][$c]."\n"; 
+            if ($debug) { echo $tag.'=='.$closeTags[1][$c]."\n"; } 
             if($tag==$closeTags[1][$c]) { 
                 $openTags[1][$i]=''; 
                 $c++; 
@@ -234,12 +241,13 @@ if ($nrposts > 0) {
 		// so it's not a good idea. If you must have this, then uncomment
 		// } else if(strlen($resource[$x]['content']) > $lentoshow) { 
 		// 	$summary = substr($resource[$x]['content'], 0, $lentoshow).'...'; 
-		//
 		
 		// and back to where we started if all else fails (short post)
 		} else { 
 			$summary = $resource[$x]['content']; 
 		}  
+
+		$summary = str_replace($commentschunk,'',$summary); 
 
         // add the link to the full post (permalink)
         $link = '<a href="[~'.$resource[$x]['id'].'~]">'.$linktext.'</a>';

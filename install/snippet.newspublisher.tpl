@@ -2,7 +2,7 @@
  *
  *	NewsPublisher for MODx 
  *	Created by Raymond Irving, August 2005
- *  Patch for 's and redirect to new post by Mark Kaplan, October 2005
+ *	Patch for 's and redirect to new post by Mark Kaplan, October 2005
  *
  *	Publish news articles directly from the web
  *
@@ -47,10 +47,10 @@ $rtcontent = isset($rtcontent) ? $rtcontent:'content';
 $rtsummary = isset($rtsummary) ? $rtsummary:'introtext';
 
 // get header
-$header = isset($headertpl) ? $modx->getChunk($headertpl):'';
+$header = isset($headertpl) ? "{{".$headertpl."}}":'';
 
 // get footer
-$footer = isset($footertpl) ? $modx->getChunk($footertpl):'';
+$footer = isset($footertpl) ? "{{".$footertpl."}}":'';
 
 // get postback status
 $isPostBack = isset($_POST['NewsPublisherForm']) ? true:false;

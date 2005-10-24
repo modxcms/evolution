@@ -2,27 +2,33 @@
  *
  *	UserComments for MODx
  *	Created by Raymond Irving, July 2005
+ *	Updated October 4, 2005
  *
  *	Add user comments to documents
  *
  *	Parameters:
+ *		&displaytpl		- display template (chunk name)
+ *		&formtpl		- form template (chunk name)
+ *
  *		&canpost		- comma delimitted web groups that can post comments. leave blank for public posting
  *		&canview		- comma delimitted web groups that can view comments. leave blank for public viewing
  *		&badwords		- comma delimited list of words not allowed in post
  *		&makefolder		- set to 1 to automatically convert the parent document to a folder. Defaults to 0
  *		&folder			- folder id where comments are stored
- *		&displaytpl		- display template (chunk name)
- *		&formtpl		- form template (chunk name)
  *		&tagid			- a unique id used to identify or tag user comments on a page where multiple comments are required. 
  *		&freeform		- set this option to 1 to use the [+UserComments.Form+] placholder to relocate the comment form. 
+ *
+ *		&postcss		- sets the css class used to format the comment block DIV
+ *		&titlecss		- sets the css class used to format the comment title DIV
  *		&codecss		- sets the css class used to format code tags
+ *		&numbecss		- sets the css class used to format the comment number DIV
  *		&authorcss		- sets the css class used identify author's comments
  *		&ownercss		- sets the css class used identify the owner's comments
  *		&altrowcss		- sets the css class used identify author's comments
- *		&dateformat		- sets php date format for new comments
+ * 
+ *		&dateformat		- sets php date format for new comments (see http://php.net/strftime for formatting options)
  *		&sortorder		- sort the comments in either ascending order (when set to 0) or descending order (when set to 1). Defaults to descending (1)
  *		&recentposts	- set the number of recent posts to be displayed. set to 0 to show all post. Defaults to 0
- 
  *
  *	Version 1.0 Beta
  *
@@ -36,18 +42,18 @@ if(isset($hostid)) {
 	exit;
 }
 
-// get user groups that can post comments
+// get user groups that can post & view comments
 $postgrp = isset($canpost) ? explode(",",$canpost):array();
 $viewgrp = isset($canview) ? explode(",",$canview):array();
 $allowAnyPost = count($postgrp)==0 ? true : false;
 $allowAnyView = count($viewgrp)==0 ? true : false;
 
-// get folder id where we should store comments 
-// else store in current document
-$folder = isset($folder) ? intval($folder):$modx->documentIdentifier;
-
 // get current document id
 $docid = $modx->documentIdentifier;
+
+// get folder id where we should store comments 
+// else store in current document
+$folder = isset($folder) ? intval($folder):$docid;
 
 // get free form option
 $freeform = isset($freeform) && $freeform==1 ? 1:0;
@@ -61,24 +67,32 @@ $alias = 'usrcmt-'.$docid.($tagid ? '-'.$tagid:'');
 // get sort order
 $sortorder = isset($sortorder) ? $sortorder : 1;
 
+// get comment block style/class
+$postcss = isset($postcss) ? ' class="'.$postcss.'[+altrowclass+][+authorclass+]"' : ' style="font-size:11px;line-height: 17px;white-space:normal;width:100%;background-color:#eee;color: #111;padding:5px;margin-bottom:10px;" class="[+altrowclass+][+authorclass+]"';
+
+// get post title class
+$titlecss = isset($titlecss) ? ' class="'.$titlecss.'"' : ' style="width:100%;background-color:#c0c0c0;padding:2px;margin-bottom:5px;"';
+
+// get post number class
+$numbercss = isset($numbercss) ? ' class="'.$numbercss.'"' : ' style="float:right; padding: 0 0 20px 20px;font-size:24px;color:#ccc;font-weight:bold;"';
+
 // get code style/class
-$codecss = isset($codecss) ? ' class="'.$codecss.'"' : ' style="background-color:#eeeeee;border-top:2px solid #e0e0e0;margin:0px;"';
+$codecss = isset($codecss) ? ' class="'.$codecss.'"' : ' style="background-color:#eee;border-top:2px solid #e0e0e0;margin:0;"';
 
 // get author class
-$authorcss = isset($authorcss) ? $authorcss : '';
+$authorcss = isset($authorcss) ? ' '.$authorcss : '';
 
 // get owner's class
-$ownercss = isset($ownercss) ? $ownercss : '';
+$ownercss = isset($ownercss) ? ' '.$ownercss : '';
 
 // get alt row style/class
-$altrowcss = isset($altrowcss) ? $altrowcss : '';
+$altrowcss = isset($altrowcss) ? ' '.$altrowcss : '';
 
 // get date format
-$dateformat = isset($dateformat) ? $dateformat : '%d-%b-%Y %H:%M';
+$dateformat = isset($dateformat) ? $dateformat : '%e%b%Y %I:%M%p';
 
 // set recent post value
 $recentposts = isset($recentposts) ? $recentposts : 0;
-
 
 // get badwords
 if(isset($badwords)) {
@@ -94,24 +108,31 @@ $isPostBack = isset($_POST['UserCommentForm'.$tagid]) ? true:false;
 
 // get display template
 if(isset($displaytpl)) $displayTpl = $modx->getChunk($displaytpl);
-if(empty($displaytpl)) $displayTpl = '[+UID:[+uid+]+]<div style="font-size:11px;line-height: 17px;white-space:normal;width:100%;background-color:#eee;color: #111;padding:5px;margin-bottom:10px;" class="[+authorclass+] [+altrowclass+]">
-	<div style="width:100%;background-color:#c0c0c0;padding:2px;margin-bottom:5px">
-     <strong>[+subject+]</strong> by [+user+] @ [+createdon+]
-   </div>
-   <div style="float:right; padding: 0 0 20px 20px;font-size:24px;color:#ccc;font-weight:bold">
+if(empty($displaytpl)) $displayTpl = '
+[+UID:[+uid+]+]<div[+postclass+]>
+   <div[+numberclass+]>
      [+postnumber+]
    </div>
-	[+comment+]
-</div>';
+	<div[+titleclass+]>
+		<strong>[+subject+]</strong><span>[+user+] [+createdon+]</span>
+	</div>
+	<div class="content">
+		[+comment+]
+	</div>
+
+</div>
+';
 
 // get form template
 if(isset($formtpl)) $formTpl = $modx->getChunk($formtpl);
-if(empty($formTpl)) $formTpl = '<form method="post">
+if(empty($formTpl)) $formTpl = '
+<form method="post" action="[~[*id*]~]">
 	<input name="[+tagname+]" type="hidden" value="on" />
 	Subject:<br /><input name="subject" type="text" size="40" value="" /><br />
 	Comment:<br /><textarea name="comment" cols="50" rows="8"></textarea><br />
 	<input name="send" type="submit" value="Submit" />
-</form>';
+</form>
+';
 
 
 // switch block
@@ -131,14 +152,19 @@ switch ($isPostBack) {
 
 			$createdon = time();
 
-			// format comment
+// format comment title, classes and/or styles
 			$comment = str_replace('[+user+]',$user,$displayTpl);
 			$comment = str_replace('[+uid+]',$uid,$comment);
-			$comment = str_replace('[+createdon+]',strftime($dateformat,$createdon),$comment);
+			$comment = str_replace('[+postclass+]',$postcss,$comment);
+			$comment = str_replace('[+titleclass+]',$titlecss,$comment);
+			$comment = str_replace('[+numberclass+]',$numbercss,$comment);
+			$comment = str_replace('[+createdon+]',strftime($dateformat,$createdon),$comment);			
 			// check for author's comments
 			if($uid && ($uid*-1)==$modx->documentObject['createdby']) {
 				$comment = str_replace('[+authorclass+]',$authorcss,$comment);
 			}
+            
+            // deal with code tags and bad words
 			foreach($_POST as $n=>$v) {
 				if(!empty($badwords)) $v = preg_replace($badwords,'[Filtered]',$v); // remove badwords
 				$v = $modx->stripTags(htmlspecialchars($v));
@@ -155,6 +181,7 @@ switch ($isPostBack) {
 				$v = str_replace("\n",'<br />',$v);
 				$comment = str_replace('[+'.$n.'+]',$v,$comment);
 			}
+
 			$comment = str_replace($splitter,'',$comment); // remove splitter from comment
 
 			// save comment
