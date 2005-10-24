@@ -257,7 +257,7 @@ function showHide(what, onoff){
 		  <tr id="editname" style="display:<?php echo $_GET['a']=='87'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onChange='documentDirty=true;' maxlength="15" /></td>
+			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onChange='documentDirty=true;' maxlength="100" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='87' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
