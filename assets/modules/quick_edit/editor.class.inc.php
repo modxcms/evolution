@@ -4,6 +4,7 @@
  *  Written by: Adam Crownoble
  *  Contact: adam@obledesign.com
  *  Created: 8/14/2005
+ *  Modified: 10/24/2005 - Removed links hrefs
  *  For: MODx cms (modxcms.com)
  *  Description: Class for the QuickEditor
  */
