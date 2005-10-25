@@ -14,21 +14,22 @@
 *
 *		&makerss	- set to 0 to generate a link to the feed. Defaults to 1
 *		
-*	(available when &makerss=1)
-*		&newsfolder	- Folder id where news items are to be stored. Example &newsfolder=`2`. If &newsfolder is missing the current document id will be used.
+*		(available when &makerss=1)
+*		&newsfolder	- Folder id where news items are to be stored. Example &newsfolder=`2`. If &newsfolder is missing the current document id will 	be used.
 *		&topitems	- set the top number of items to be listed in news feed. [20]
 *		&copyright	- set copyright information
 * 		&ttl		- set how often should feed readers check for new material (in seconds) -- mostly ignored by readers.
-*      &trunc         - truncate to summary posts? if set to false, shows entire post [true]
-*      &truncSplit    - use the special "splitter" format to truncate for summary posts [true]
-*      &truncAt       - the split-point splitter itself [<!-- splitter -->]
-*      &truncLen      - if you don't have a splitter or you turn that off explicitly, the number 
-*                       of characters of the blog to show for summary if not using splitter [450] 
-*                       However, if you have a summary of the post, it will use that instead. 
-*      &pubOnly    - display published documents [true]
-*	(available when &makerss=0)
+*		&trunc         - truncate to summary posts? if set to false, shows entire post [true]
+*		&truncSplit    - use the special "splitter" format to truncate for summary posts [true]
+*		&truncAt       - the split-point splitter itself [<!-- splitter -->]
+*		&truncLen      - if you don't have a splitter or you turn that off explicitly, the number 
+*                        of characters of the blog to show for summary if not using splitter [450] 
+*                        However, if you have a summary of the post, it will use that instead. 
+*		&pubOnly    - display published documents [true]
+*		(available when &makerss=0)
 *		&showlink	- set to 1 to show feed link. Defaults to 1 
 *		&linkid		- set the document id for the rss new feed. (available when &makerss=0)
+*		&commentschunk - if you're using comments, the name of the chunk used to format them
 */
 
 
@@ -71,7 +72,9 @@ $splitter = isset($trucAt) ? $truncAt : "<!-- splitter -->";
 $showPublishedOnly = isset($pubOnly) ? $pubOnly : true;
     // allows you to show unpublished docs if needed for some reason...
 
-
+$commentschunk = isset($commentschunk)? '{{'.$commentschunk.'}}' : '';
+    // if you're using comments, the name of the chunk used to format them
+	
 // functions start here
 function closeTags($text) { 
     $openPattern = "/<([^\/].*?)>/";   
@@ -217,17 +220,13 @@ if ((strstr($ds[$i]['content'], $splitter)) && $truncsplit) {
 	    }
 				
 				
-				$allowedTags = '<p><br><i><em><b><strong><pre><table><th><td><tr><img><span><div><h1><h2><h3><h4><h5><font><ul><ol><li><dl><dt><dd>';
-	
-				// format content
-				$strippedsummary = $modx->stripTags($summary,$allowedTags);
-				$strippedsummary = str_replace('{{FormBlogComments}}','',$strippedsummary);
+				$strippedsummary = str_replace($commentschunk,'',$summary); 
 
 				$link = $modx->config['site_url'].$modx->makeUrl($ds[$i]['id']);
 				$output .= '		<item>'."\n".
 				'			<title>'.$ds[$i]['pagetitle'].'</title>'."\n".
 				'			<link>'.$link.'</link>'."\n".
-				'			<description>'.htmlspecialchars($strippedsummary).'</description>'."\n".
+				'			<description><![CDATA['.$strippedsummary.']]></description>'."\n".
 				'			<pubDate>'.date("r", $ds[$i]['createdon']).'</pubDate>'."\n".
 				'			<guid>'.$link.'</guid>'."\n".
 				'			<author>'.htmlspecialchars($username).'</author>'."\n".

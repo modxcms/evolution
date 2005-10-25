@@ -8,7 +8,8 @@ MODx2 TP3.3 (October 25, 2005)
 * additional minor bug fixes, tweaks and updates
 * preliminary testing works in MySQL 5.0
 * new French translation file
-* allow mixed case Friendly URL aliases
+* new French translation file
+* NewsFeed RSS2.0 snippet allows functional HTML and links, closes open tags on summaries and validates
 * update the DIV class name surrounding RTEs in front end
 * new DropMenu menu builder snippet
 * new demo Site Content option in the installer
