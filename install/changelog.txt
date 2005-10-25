@@ -3,8 +3,26 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx2 TP3.3
+MODx2 TP3.3 (October 25, 2005)
 ==================
+* additional minor bug fixes, tweaks and updates
+* preliminary testing works in MySQL 5.0
+* new French translation file
+* allow mixed case Friendly URL aliases
+* update the DIV class name surrounding RTEs in front end
+* new DropMenu menu builder snippet
+* new demo Site Content option in the installer
+* updated capabilities in NewsListing, UserComments and NewsFeed snippets
+* new Contact email form snippet
+* update to QuickEdit module functionality and features
+* update fckeditor 2.1.1 release
+* web user error fixes
+* added script.aculo.us and Win IE webstandards compatibility code
+* fix webuser name length limitation (Bug #59)
+* fix RTE sizing bug that caused RTE to overlap Submit buttons in Firefox
+* Another experimental menu layout in Manager
+* fixed bug in login prcoessor
+* update language, tv, accesscontrol.inc.php
 * update snippet and plugin to use word wraping on textarea
 * update chunks, template to use FCK's RTE
 * BUG #84 - Fixed login captcha bypass (Mark)
@@ -25,10 +43,9 @@ MODx2 TP3.3
 * add Manager Interface Access to to manager user settings
 * add Manager Login Startup to manager user settings
 * update quickedit module
-* update fckeditor
 
 
-MODx2 TP3.2
+MODx2 TP3.2 (August 22, 2005)
 ==================
 * add new snippets FileCabinet, NewsFeed, NewsPublisher and UserComments
 * fix module access bug
@@ -88,7 +105,7 @@ MODx2 RC3
 * new weblogin template will standardize on the new placeholder variable format [+name+]
 * modified weblogin to support password reminder
 
-* MODx forced out of the Etomite Forums - March 19
+* MODx forced out of the Etomite Forums - March 19, 2005
 
 * fix bug when editing document with HTMLArea TableOperations and ContextMenu
 * fix import site from html bug
