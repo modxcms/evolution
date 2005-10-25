@@ -121,7 +121,7 @@ $SendMail .=<<<EOD
 
 
 
-    <form method="post" name="EmailForm" id="EmailForm" action="[*id*]" >
+    <form method="post" name="EmailForm" id="EmailForm" action="[~[*id*]~]" >
         <fieldset>
             <h3>[(sitename)] Contact Form</h3>
             <input type="hidden" name="send" value="true" />
