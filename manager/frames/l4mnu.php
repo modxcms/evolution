@@ -16,24 +16,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 function showWin() {
 	window.open('../');
 }
-startList = function() {
-    if (document.all && document.getElementById) {
-		navRoot = document.getElementById("nav");
-		for (i=0; i<navRoot.childNodes.length; i++) {  
-			node = navRoot.childNodes[i];  
-			if (node.nodeName=="li") { 
-				node.onmouseover=function() {  
-					this.className+=" over";    
-				}  
-				node.onmouseout=function() {
-					this.className=this.className.replace (/ over/, '');   
-				}
-			}
-		} 
-	}
-}  
-
-function stopIt() {
+startList = function() }if (document.all && document.getElementById) }navRoot = document.getElementById("nav");for (i=0; i<navRoot.childNodes.length; i++) {  node = navRoot.childNodes[i];  if (node.nodeName=="li") }  node.onmouseover=function() }  this.className+=" over";    }  node.onmouseout=function() }  this.className=this.className.replace      (" over", "");   }   }  } }}
+function stopIt() }
 	top.scripter.stopWork();
 }
 window.onload=startList;
@@ -43,6 +27,62 @@ window.onload=startList;
 <form name="menuForm">
 <div id="divNav">
 <ul id="nav">
+
+<!-- Settings -->
+    <?php if($modx->hasPermission('settings') || $modx->hasPermission('edit_parser') || $modx->hasPermission('logs') || $modx->hasPermission('file_manager')) { ?>		
+    <li id="liAdmin"><li><a href="#"><?php echo $_lang["administration"]; ?></a>
+        <ul>
+            <?php 	if($modx->hasPermission('settings')) { ?>		
+            <li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
+            <li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
+            <li><a onclick="this.blur();" href="javascript:top.scripter.removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
+            <?php 	} ?>
+            <?php 	if($modx->hasPermission('view_eventlog')) { ?>		
+            <li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
+            <?php 	} ?>
+            <?php 	if($modx->hasPermission('logs')) { ?>		
+            <li><a onclick="this.blur();" href="index.php?a=13" target="main"><?php echo $_lang["view_logging"]; ?></a></li>
+            <?php 	} ?>
+            <?php 	if($modx->hasPermission('file_manager')) { ?>		
+            <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
+            <?php 	} ?>
+            <?php 	if($modx->hasPermission('bk_manager')) { ?>		
+            <li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
+            <?php 	} ?>
+            <?php } ?>
+            <?php if($modx->hasPermission('edit_document')) { ?>
+			<li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>			
+            <?php } ?>
+            <?php if($modx->hasPermission('new_document')) { ?>
+			<li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>
+            <?php } ?>
+        </ul>
+    </li>
+
+<!-- Users -->
+<?php $hasAccess = $modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions'); if($hasAccess) { ?>		
+    <li id="liUsers"><li><a href="#"><?php echo $_lang["users"]; ?></a>
+        <ul>
+            <?php if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { ?>					
+            <li><a onclick="this.blur();" href="index.php?a=75" target="main"><?php echo $_lang["user_management_title"]; ?></a></li>
+            <?php 	} ?>
+            <?php 	if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) { ?>		
+            <li><a onclick="this.blur();" href="index.php?a=99" target="main"><?php echo $_lang["web_user_management_title"]; ?></a></li>
+            <?php 	} ?>
+            <?php 	if($modx->hasPermission('new_role')||$modx->hasPermission('edit_user')) { ?>					
+            <li><a onclick="this.blur();" href="index.php?a=86" target="main"><?php echo $_lang["role_management_title"]; ?></a></li>
+            <?php 	} ?>
+            <?php if($modx->hasPermission('access_permissions')) { ?>					
+            <li><a onclick="this.blur();" href="index.php?a=40" target="main"><?php echo $_lang["manager_permissions"]; ?></a></li>
+            <?php 	} ?>
+            <?php if($modx->hasPermission('web_access_permissions')) { ?>					
+            <li><a onclick="this.blur();" href="index.php?a=91" target="main"><?php echo $_lang["web_permissions"]; ?></a></li>
+            <?php 	} ?>
+            <?php } ?>
+        </ul>
+    </li>
+    
+<!-- Site -->
     <li id="liSite"><a href="#"><?php echo $_lang["site"]; ?></a>
         <ul>
 			<li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
@@ -75,27 +115,6 @@ window.onload=startList;
             <?php } ?>
         </ul>
     </li>
-<?php $hasAccess = $modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions'); if($hasAccess) { ?>		
-    <li id="liUsers"><li><a href="#"><?php echo $_lang["users"]; ?></a>
-        <ul>
-            <?php if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { ?>					
-            <li><a onclick="this.blur();" href="index.php?a=75" target="main"><?php echo $_lang["user_management_title"]; ?></a></li>
-            <?php 	} ?>
-            <?php 	if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) { ?>		
-            <li><a onclick="this.blur();" href="index.php?a=99" target="main"><?php echo $_lang["web_user_management_title"]; ?></a></li>
-            <?php 	} ?>
-            <?php 	if($modx->hasPermission('new_role')||$modx->hasPermission('edit_user')) { ?>					
-            <li><a onclick="this.blur();" href="index.php?a=86" target="main"><?php echo $_lang["role_management_title"]; ?></a></li>
-            <?php 	} ?>
-            <?php if($modx->hasPermission('access_permissions')) { ?>					
-            <li><a onclick="this.blur();" href="index.php?a=40" target="main"><?php echo $_lang["manager_permissions"]; ?></a></li>
-            <?php 	} ?>
-            <?php if($modx->hasPermission('web_access_permissions')) { ?>					
-            <li><a onclick="this.blur();" href="index.php?a=91" target="main"><?php echo $_lang["web_permissions"]; ?></a></li>
-            <?php 	} ?>
-            <?php } ?>
-        </ul>
-    </li>
 <?php $hasAccess = $modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags');
 	  if($hasAccess || $modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module')) { ?>		
     <li id="liResources"><li><a href="#"><?php echo $_lang["resources"]; ?></a>
@@ -109,35 +128,6 @@ window.onload=startList;
             <?php } ?>
         </ul>
     </li>
-    <?php if($modx->hasPermission('settings') || $modx->hasPermission('edit_parser') || $modx->hasPermission('logs') || $modx->hasPermission('file_manager')) { ?>		
-    <li id="liAdmin"><li><a href="#"><?php echo $_lang["administration"]; ?></a>
-        <ul>
-            <?php 	if($modx->hasPermission('settings')) { ?>		
-            <li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
-            <li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
-            <li><a onclick="this.blur();" href="javascript:top.scripter.removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
-            <?php 	} ?>
-            <?php 	if($modx->hasPermission('view_eventlog')) { ?>		
-            <li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
-            <?php 	} ?>
-            <?php 	if($modx->hasPermission('logs')) { ?>		
-            <li><a onclick="this.blur();" href="index.php?a=13" target="main"><?php echo $_lang["view_logging"]; ?></a></li>
-            <?php 	} ?>
-            <?php 	if($modx->hasPermission('file_manager')) { ?>		
-            <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
-            <?php 	} ?>
-            <?php 	if($modx->hasPermission('bk_manager')) { ?>		
-            <li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
-            <?php 	} ?>
-            <?php } ?>
-            <?php if($modx->hasPermission('edit_document')) { ?>
-			<li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>			
-            <?php } ?>
-            <?php if($modx->hasPermission('new_document')) { ?>
-			<li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>
-            <?php } ?>
-        </ul>
-    </li>
     <?php if($modx->hasPermission('help')) { ?>		
     <li id="liHelp"><li><a href="#"><?php echo $_lang["help"]; ?></a>
         <ul>
@@ -147,7 +137,9 @@ window.onload=startList;
         </ul>
     </li>
     <?php } ?>
-    <li id="liLogout"><a onclick="this.blur();" href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a></li>
+    
+        <li id="liLogout"><a onclick="this.blur();" href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a></li>
+        
 </ul>
 </div>
 </form>

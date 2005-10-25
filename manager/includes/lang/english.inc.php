@@ -678,7 +678,7 @@ $_lang['sort_dir'] = "Sort&nbsp;direction:";
 // new to modx tech preview
 /***************************************************************************/
 
-$_lang["my_account"] = "My Account";
+$_lang["my_account"] = "My&nbsp;Account";
 $_lang['logo_slogan'] = "Create and do more with less - \nMODx Content Manager";
 
 $_lang['sys_alert'] = "System Alert";

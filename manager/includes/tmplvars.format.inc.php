@@ -139,7 +139,7 @@
 				$h = $params['h']? $params['h']:'400px';
 				$richtexteditor = $params['edt']? $params['edt']: "";
 				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
-				$o = '<div class="MODXrte"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
+				$o = '<div class="MODX_RichTextWidget"><textarea id="'.$id.'" name="'.$id.'" style="width:'.$w.'; height:'.$h.';">';
 				$o.= htmlspecialchars($value);
 				$o.= '</textarea></div>';
 				$replace_richtext = array($id);
