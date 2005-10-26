@@ -444,7 +444,7 @@ class DocumentParser {
 
 
 	function checkPublishStatus(){
-		include $this->config["base_path"]."/assets/cache/sitePublishing.idx.php";
+		include $this->config["base_path"]."assets/cache/sitePublishing.idx.php";
 		$timeNow = time()+$this->config['server_offset_time'];
 		if($cacheRefreshTime<=$timeNow && $cacheRefreshTime!=0) {
 			// now, check for documents that need publishing
@@ -460,7 +460,7 @@ class DocumentParser {
 			}
 
 			// clear the cache
-			$basepath = $this->config["base_path"]."/assets/cache/";
+			$basepath = $this->config["base_path"]."assets/cache/";
 			if ($handle = opendir($basepath)) {
 				$filesincache = 0;
 				$deletedfilesincache = 0;
@@ -504,7 +504,7 @@ class DocumentParser {
 				$nextevent = 0;
 			}
 
-			$basepath = $this->config["base_path"]."/assets/cache";
+			$basepath = $this->config["base_path"]."assets/cache";
 			$fp = @fopen($basepath."/sitePublishing.idx.php","wb");
 			if($fp) {
 				@flock($fp, LOCK_EX);
@@ -520,7 +520,7 @@ class DocumentParser {
 
 		// if the current document was generated, cache it!
 		if($this->documentGenerated==1 && $this->documentObject['cacheable']==1 && $this->documentObject['type']=='document') {
-			$basepath = $this->config["base_path"]."/assets/cache";
+			$basepath = $this->config["base_path"]."assets/cache";
 			// invoke OnBeforeSaveWebPageCache event
 			$this->invokeEvent("OnBeforeSaveWebPageCache");
 			if($fp = @fopen($basepath."/docid_".$this->documentIdentifier.".pageCache.php","w")){
@@ -568,7 +568,7 @@ class DocumentParser {
 		$richtexteditor = "";
 		preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
 		$variableCount = count($matches[1]);
-		$basepath = $this->config["base_path"]."/manager/includes";
+		$basepath = $this->config["base_path"]."manager/includes";
 		for($i=0; $i<$variableCount; $i++) {
 			$key = $matches[1][$i];
 			$key = substr($key,0,1)=='#' ? substr($key,1):$key; // remove # for QuickEdit format
@@ -1275,7 +1275,7 @@ class DocumentParser {
 	}
 
 	function clearCache() {
-		$basepath = $this->config["base_path"]."/assets/cache";
+		$basepath = $this->config["base_path"]."assets/cache";
 		if (@$handle = opendir($basepath)) {
 			$filesincache = 0;
 			$deletedfilesincache = 0;
@@ -1335,7 +1335,7 @@ class DocumentParser {
 	}
 
 	function getVersionData() {
-		include $this->config["base_path"]."/manager/includes/version.inc.php";
+		include $this->config["base_path"]."manager/includes/version.inc.php";
 		$v = array();
 		$v['code_name'] = $code_name;
 		$v['version'] = $version;
@@ -1479,7 +1479,7 @@ class DocumentParser {
 	}
 
 	function getUserData() {
-		include_once $this->config["base_path"]."/manager/includes/extenders/getuserdata.extender.php";
+		include_once $this->config["base_path"]."manager/includes/extenders/getuserdata.extender.php";
 		return $tmpArray;
 	}
 
@@ -1620,7 +1620,7 @@ class DocumentParser {
 			$result = $this->getTemplateVars(($idnames=='*' || is_array($idnames)) ? $idnames:array($idnames),"*",$docid,$published,"",""); // remove sort for speed
 			if ($result==false) return false;
 			else {
-				$baspath = $this->config["base_path"]."/manager/includes";
+				$baspath = $this->config["base_path"]."manager/includes";
 				include_once $baspath."/tmplvars.format.inc.php";
 				include_once $baspath."/tmplvars.commands.inc.php";
 				for($i=0;$i<count($result);$i++) {

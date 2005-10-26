@@ -7,7 +7,7 @@ MODx2 TP3.3 (October 25, 2005)
 ==================
 * additional minor bug fixes, tweaks and updates
 * preliminary testing works in MySQL 5.0
-* new French translation file
+* fix config["base_path"] formatting (8x) with double-slashes in main document.parser.class.inc.php
 * new French translation file
 * NewsFeed RSS2.0 snippet allows functional HTML and links, closes open tags on summaries and validates
 * update the DIV class name surrounding RTEs in front end
