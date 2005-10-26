@@ -13,14 +13,30 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>l4navbar.css<?php echo "?$theme_refresher";?>" />
 <script language="JavaScript" type="text/javascript">
-function showWin() {
-	window.open('../');
-}
-startList = function() }if (document.all && document.getElementById) }navRoot = document.getElementById("nav");for (i=0; i<navRoot.childNodes.length; i++) {  node = navRoot.childNodes[i];  if (node.nodeName=="li") }  node.onmouseover=function() }  this.className+=" over";    }  node.onmouseout=function() }  this.className=this.className.replace      (" over", "");   }   }  } }}
-function stopIt() }
-	top.scripter.stopWork();
-}
-window.onload=startList;
+    function showWin() {
+    	window.open('../');
+    }
+    startList = function() {
+        if (document.all && document.getElementById) {
+    		navRoot = document.getElementById("nav");
+    		for (i=0; i<navRoot.childNodes.length; i++) {  
+    			node = navRoot.childNodes[i];  
+    			if (node.nodeName=="li") { 
+    				node.onmouseover=function() {  
+    					this.className+=" over";    
+    				}  
+    				node.onmouseout=function() {
+    					this.className=this.className.replace (/ over/, '');   
+    				}
+    			}
+    		} 
+    	}
+    }  
+
+    function stopIt() {
+    	top.scripter.stopWork();
+    }
+    window.onload=startList;
 </script>
 </head>
 <body>
