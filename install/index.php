@@ -266,16 +266,17 @@
 		ob_start();	
 		echo "<p class=\"title\">Optional Items</p><p>Please choose your installation options and click Install:</p>";
 		
-		echo '<img src="im_demo.gif" align="left" width="32" height="32" hspace="5" />';
-		echo "<h1>Demo Site</h1><br/>";
-		echo "&nbsp;<input type='checkbox' name='installdata' value='1' />Install Demo Site</span> - Please note that this will overwrite existing documents and resources.<hr size='1' style='border:1px dotted silver;' />";
+		$chk = isset($_POST['installdata']) ? "checked='checked'":"";
+		echo '<img src="im_sample.gif" align="left" width="45" height="48" hspace="5" hspace="10" />';
+		echo "<h1>&nbsp;Sample Web Site</h1>";
+		echo "&nbsp;<input type='checkbox' name='installdata' value='1' $chk />Install/Overwrite <span class='comname'>Sample Web Site</span> <br /><span><i>&nbsp;Please note that this will <b style='color:#CC0000'>overwrite</b> existing documents and resources.</i></span><hr size='1' style='border:1px dotted silver;' />";
 		
 		// display templates
 		$templates = isset($_POST['template']) ? $_POST['template']:array();
 		$limit = count($moduleTemplates);
 		if ($limit>0) {	
-			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
-			echo "<h1>Templates</h1><br/>";
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo "<h1>Templates</h1><br />";
 			for ($i=0;$i<$limit;$i++) {
 				$chk = in_array($i,$templates)||(!count($_POST)) ? "checked='checked'": "";
 				echo "&nbsp;<input type='checkbox' name='template[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleTemplates[$i][0]."</span> - ".$moduleTemplates[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
@@ -286,8 +287,8 @@
 		$chunks = isset($_POST['chunk']) ? $_POST['chunk']:array();
 		$limit = count($moduleChunks);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
-			echo "<h1>Chunks</h1><br/>";
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo "<h1>Chunks</h1>";
 			for ($i=0;$i<$limit;$i++) {
 				$chk = in_array($i,$chunks)||(!count($_POST)) ? "checked='checked'": "";
 				echo "&nbsp;<input type='checkbox' name='chunk[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleChunks[$i][0]."</span> - ".$moduleChunks[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
@@ -298,8 +299,8 @@
 		$modules = isset($_POST['module']) ? $_POST['module']:array();
 		$limit = count($moduleModules);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
-			echo "<h1>Modules</h1><br/>";
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo "<h1>Modules</h1>";
 			for ($i=0;$i<$limit;$i++) {
 				$chk = in_array($i,$modules)||(!count($_POST)) ? "checked='checked'": "";
 				echo "&nbsp;<input type='checkbox' name='module[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleModules[$i][0]."</span> - ".$moduleModules[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
@@ -310,8 +311,8 @@
 		$plugins = isset($_POST['plugin']) ? $_POST['plugin']:array();
 		$limit = count($modulePlugins);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
-			echo "<h1>Plugins</h1><br/>";
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo "<h1>Plugins</h1>";
 			for ($i=0;$i<$limit;$i++) {
 				$chk = in_array($i,$plugins)||(!count($_POST)) ? "checked='checked'": "";
 				echo "&nbsp;<input type='checkbox' name='plugin[]' value='$i' $chk />Install/Update <span class='comname'>".$modulePlugins[$i][0]."</span> - ".$modulePlugins[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
@@ -322,8 +323,8 @@
 		$snippets = isset($_POST['snippet']) ? $_POST['snippet']:array();
 		$limit = count($moduleSnippets);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="32" height="32" hspace="5" />';
-			echo "<h1>Snippets</h1><br/>";
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo "<h1>Snippets</h1>";
 			for ($i=0;$i<$limit;$i++) {
 				$chk = in_array($i,$snippets)||(!count($_POST)) ? "checked='checked'": "";
 				echo "&nbsp;<input type='checkbox' name='snippet[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleSnippets[$i][0]."</span> - ".$moduleSnippets[$i][1]."<hr size='1' style='border:1px dotted silver;' />";

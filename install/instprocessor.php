@@ -11,7 +11,8 @@ $errors = 0;
 echo "Setup will now attempt to setup the database:<br />";
 
 $installMode = $_POST['installmode']=='upd' ? 1:0;
-$installData = intval($_POST['installdata']);
+$installData = $_POST['installdata'] ? 1:0;
+
 if($installMode==1) {
 	include "../manager/includes/config.inc.php";
 }
