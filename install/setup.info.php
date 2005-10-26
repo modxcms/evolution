@@ -23,7 +23,7 @@
 	$ms[] = array("NewsFeed","Enable RSS2 news feed from your website.",0,"$setupPath/snippet.newsfeed.tpl","");
 	$ms[] = array("NewsListing","Displays news.",0,"$setupPath/snippet.newslisting.tpl","");
 	$ms[] = array("NewsPublisher","Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
-	$ms[] = array("NewsUserComments","Add user comments to documents.",0,"$setupPath/snippet.newsusercomments.tpl","");
+	$ms[] = array("UserComments","Add user comments to documents.",0,"$setupPath/snippet.usercomments.tpl","");
 	$ms[] = array("PoweredBy","A little link to MODx",0,"$setupPath/snippet.poweredby.tpl","");
 	$ms[] = array("PageTrail","Outputs the page trail, based on Bill Wilson's script",0,"$setupPath/snippet.pagetrail.tpl","&sep=Separator;string; &style=Style;string; &class=Class;string;");
 	$ms[] = array("WebLogin","Web User Login Snippet",0,"$setupPath/snippet.weblogin.tpl","&loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;");
