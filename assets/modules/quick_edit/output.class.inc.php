@@ -133,7 +133,7 @@ foreach($cvs as $content) {
  if($cv_obj->id && $cv_obj->checkPermissions()) {
   $class_name = 'QE_'.(is_numeric($cv_obj->id) ? 'TV' : 'BuiltIn');
 $toolbr_cv_html .= <<<EOD
-<a id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" href="{$pageUrl}#" onclick="javascript: new Effect.Pulsate(this.id); QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="Edit {$cv_obj->description}">{$cv_obj->caption}</a>
+<li><a id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="Edit {$cv_obj->description}">{$cv_obj->caption}</a></li>
 
 EOD;
  }
@@ -148,14 +148,18 @@ $html_top = <<<EOD
  <div id="QE_Toolbar">
   <h1 id="QE_Title">QuickEdit</h1>
   <div id="QE_menu_1" class="collapsed">
-   <a id="QE_ShowHide" href="{$pageUrl}#" onclick="new Effect.Pulsate(this.id); QE_ShowHideLinks(true);" title="Show and hide the QuickEdit links">Show/Hide Links</a>
-   <a id="QE_Manager" href="{$managerPath}" onclick="new Effect.Pulsate(this.id);" title="Go to the MODx manager">Manager</a>
-   <a id="QE_Logout" href="{$logoutUrl}" onclick="new Effect.Pulsate(this.id);" title="Logout of your manager acount">Logout</a>
-   <a id="QE_Help" href="http://modxcms.com/quickedit.html" onclick="new Effect.Pulsate(this.id);" title="QuickEdit documentation on modxcms.com">Help</a>
+   <ul>
+    <li><a id="QE_ShowHide" onclick="QE_ShowHideLinks(true);" title="Show and hide the QuickEdit links">Show/Hide Links</a></li>
+    <li><a id="QE_Manager" href="{$managerPath}" title="Go to the MODx manager">Manager</a></li>
+    <li><a id="QE_Logout" href="{$logoutUrl}" title="Logout of your manager acount">Logout</a></li>
+    <li><a id="QE_Help" href="http://www.modxcms.com/quickedit.html" title="QuickEdit documentation on modxcms.com">Help</a></li>
+    </ul>
    <h1 onmouseover="QE_Expand(document.getElementById('QE_menu_2'))">Edit...</h1>
   </div>
   <div id="QE_menu_2" class="collapsed">
+   <ul>
    {$toolbr_cv_html}
+   </ul>
   </div>
  </div>
 </div>
@@ -186,7 +190,7 @@ EOD;
 
      // Set the HTML for the link
 $link = <<<EOD
-<a onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; edit {$cv->name}</a>
+<a onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" title="Edit {$cv->description}" class="QE_Link">&laquo; edit {$cv->name}</a>
 EOD;
 
     }
