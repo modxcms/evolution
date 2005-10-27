@@ -56,8 +56,8 @@ if(!isset($_SESSION['webValidated'])){
 				document.loginfrm.rememberme.value=1;
 			}
 		}
-		function webLoginEnter(nextfield) {
-			if(window.event && window.event.keyCode == 13) {
+		function webLoginEnter(nextfield,event) {
+			if(event && event.keyCode == 13) {
 				if(nextfield.name=='cmdweblogin') {
 					document.loginfrm.submit();
 					return false; 

@@ -3,10 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx2 TP3.3 (October 25, 2005)
+MOD 0.9.0 (x9 - October 28, 2005)
 ==================
 * additional minor bug fixes, tweaks and updates
 * preliminary testing works in MySQL 5.0
+* added .doc, .xls, .mp4 and .txt files to list of allowable upload file types for the file manager
+* restore enter key for login via webuser logins
 * remove redundant language file entries in english.inc.php
 * fix config["base_path"] formatting (8x) with double-slashes in main document.parser.class.inc.php
 * new French translation file
