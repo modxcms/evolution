@@ -785,7 +785,7 @@ REPLACE INTO `{PREFIX}user_attributes`
 REPLACE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODx'),
-('settings_version','TP3.3'),
+('settings_version','0.9.0'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','english'),
@@ -817,7 +817,7 @@ REPLACE INTO `{PREFIX}system_settings`
 ('emailsubject','Your login details'),
 ('signupemail_message','Hello [+uid+] \r\n\r\nHere are your login details for [+sname+] Content Manager:\r\n\r\nUsername: [+uid+]\r\nPassword: [+pwd+]\r\n\r\nOnce you log into the Content Manager, you can change your password.\r\n\r\nRegards,\r\nSite Administrator'),
 ('websignupemail_message','Hello [+uid+] \r\n\r\nHere are your login details for [+sname+]:\r\n\r\nUsername: [+uid+]\r\nPassword: [+pwd+]\r\n\r\nOnce you log into [+sname+], you can change your password.\r\n\r\nRegards,\r\nSite Administrator'),
-('webpwdreminder_message','Hello [+uid+]\r\n\r\nTo active you new password click the following link:\r\n\r\n[+surl+]\r\n\r\nIf successful you can use the following password to login:\r\n\r\nPassword:[+pwd+]\r\n\r\nIf you did not request this email then please ignore it.\r\n\r\nRegrads,\r\nSite Administrator'),
+('webpwdreminder_message','Hello [+uid+]\r\n\r\nTo active you new password click the following link:\r\n\r\n[+surl+]\r\n\r\nIf successful you can use the following password to login:\r\n\r\nPassword:[+pwd+]\r\n\r\nIf you did not request this email then please ignore it.\r\n\r\nRegards,\r\nSite Administrator'),
 ('number_of_logs','100'),
 ('number_of_messages','30'),
 ('number_of_results','20'),
@@ -831,7 +831,7 @@ REPLACE INTO `{PREFIX}system_settings`
 ('editor_css_path',''),
 ('editor_css_selectors',''),
 ('strip_image_paths','0'),
-('upload_files','jpg,gif,png,ico,txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,bmp,mp3,wav,au,wmv,avi,mpg,mpeg,pdf,psd'),
+('upload_files','jpg,gif,png,ico,txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,bmp,mp3,mp4,aac,wav,au,wmv,avi,mpg,mpeg,pdf,psd,doc,xls,txt'),
 ('upload_maxsize','1048576'),
 ('show_preview','1'),
 ('filemanager_path','{FILEMANAGERPATH}'),
