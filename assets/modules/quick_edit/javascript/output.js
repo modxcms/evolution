@@ -10,7 +10,7 @@ var QE_ParentClassName = 'QE_Parent';
 
 // Opens the frontend editor pop-up window
 function QE_OpenEditor(pageId, contentId) {
- var settings = 'width=400, height=200, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1, resizable=1';
+ var settings = 'width=400, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1, resizable=1';
  var url = managerPath+'index.php?a=112&id='+modId+'&doc='+pageId+'&var='+contentId;
  var name = 'QuickEditor';
  window.open(url, name, settings);

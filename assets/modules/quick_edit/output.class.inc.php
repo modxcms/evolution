@@ -133,8 +133,8 @@ foreach($cvs as $content) {
  if($cv_obj->id && $cv_obj->checkPermissions()) {
   $class_name = 'QE_'.(is_numeric($cv_obj->id) ? 'TV' : 'BuiltIn');
 $toolbr_cv_html .= <<<EOD
-<li><a id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="Edit {$cv_obj->description}">{$cv_obj->caption}</a></li>
-
+<li><a href="#" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="Edit {$cv_obj->description}">{$cv_obj->caption}</a></li
+>
 EOD;
  }
  
@@ -143,25 +143,31 @@ EOD;
 $html_top = <<<EOD
 <!-- Start QuickEdit toolbar -->
 
-<div id="QE_Collapse_Wrapper" onmouseover="QE_Collapse(event);" onmouseup="QE_SetPosition(this);">
-<div id="QE_Expand_Wrapper" onmouseover="QE_Expand(document.getElementById('QE_menu_1'))">
- <div id="QE_Toolbar">
-  <h1 id="QE_Title">QuickEdit</h1>
-  <div id="QE_menu_1" class="collapsed">
-   <ul>
-    <li><a id="QE_ShowHide" onclick="QE_ShowHideLinks(true);" title="Show and hide the QuickEdit links">Show/Hide Links</a></li>
-    <li><a id="QE_Manager" href="{$managerPath}" title="Go to the MODx manager">Manager</a></li>
-    <li><a id="QE_Logout" href="{$logoutUrl}" title="Logout of your manager acount">Logout</a></li>
-    <li><a id="QE_Help" href="http://www.modxcms.com/quickedit.html" title="QuickEdit documentation on modxcms.com">Help</a></li>
-    </ul>
-   <h1 onmouseover="QE_Expand(document.getElementById('QE_menu_2'))">Edit...</h1>
-  </div>
-  <div id="QE_menu_2" class="collapsed">
-   <ul>
-   {$toolbr_cv_html}
-   </ul>
-  </div>
- </div>
+<div id="QE_Collapse_Wrapper" onmouseover="QE_Collapse(event);" onmouseout="QE_Collapse(event);" onmouseup="QE_SetPosition(this);">
+<div id="QE_Expand_Wrapper" onmouseover="QE_Expand(document.getElementById('QE_menu_1'));QE_Expand(document.getElementById('QE_EditTitle'))">
+
+<div id="QE_Toolbar">
+    
+    <h1 id="QE_Title">QuickEdit</h1>
+    
+    <div id="QE_menu_1" class="collapsed">
+        <ul>
+            <li><a href="#" id="QE_ShowHide" onclick="QE_ShowHideLinks(true);" title="Show and hide the QuickEdit links">Show/Hide Links</a></li
+            ><li><a href="#" id="QE_Manager" href="{$managerPath}" title="Go to the MODx manager">Manager</a></li
+            ><li><a href="#" id="QE_Logout" href="{$logoutUrl}" title="Logout of your manager acount">Logout</a></li
+            ><li><a href="#" id="QE_Help" href="http://www.modxcms.com/quickedit.html" title="QuickEdit documentation on modxcms.com">Help</a></li
+        ></ul>
+    </div>
+    <div id="QE_EditTitle" onmouseover="QE_Expand(document.getElementById('QE_menu_2'));" class="collapsed">
+        <h1>Edit...</h1>
+    </div>
+    <div id="QE_menu_2" class="collapsed">
+        <ul>
+            {$toolbr_cv_html}</ul>
+    </div>
+
+</div>
+ 
 </div>
 </div>
 <!-- End QuickEdit toolbar -->
@@ -190,7 +196,7 @@ EOD;
 
      // Set the HTML for the link
 $link = <<<EOD
-<a onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" title="Edit {$cv->description}" class="QE_Link">&laquo; edit {$cv->name}</a>
+<a href="#" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; edit {$cv->name}</a>
 EOD;
 
     }
