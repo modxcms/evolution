@@ -32,7 +32,8 @@ $sync = new synccache();
 $sync->setCachepath("../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache		
-$header="Location: index.php?a=7&r=10";
+//$header="Location: index.php?a=7&r=10";   // use the new following code to fix the infinite refresh!
+$header="Location: index.php?a=7";
 header($header);
 
 
