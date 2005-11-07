@@ -153,9 +153,9 @@ $html_top = <<<EOD
     <div id="QE_menu_1" class="collapsed">
         <ul>
             <li><a href="#" id="QE_ShowHide" onclick="QE_ShowHideLinks(true);" title="Show and hide the QuickEdit links">Show/Hide Links</a></li
-            ><li><a href="#" id="QE_Manager" href="{$managerPath}" title="Go to the MODx manager">Manager</a></li
-            ><li><a href="#" id="QE_Logout" href="{$logoutUrl}" title="Logout of your manager acount">Logout</a></li
-            ><li><a href="#" id="QE_Help" href="http://www.modxcms.com/quickedit.html" title="QuickEdit documentation on modxcms.com">Help</a></li
+            ><li><a id="QE_Manager" href="{$managerPath}" title="Go to the MODx manager">Manager</a></li
+            ><li><a id="QE_Logout" href="{$logoutUrl}" title="Logout of your manager acount">Logout</a></li
+            ><li><a id="QE_Help" href="http://www.modxcms.com/quickedit.html" title="QuickEdit documentation on modxcms.com">Help</a></li
         ></ul>
     </div>
     <div id="QE_EditTitle" onmouseover="QE_Expand(document.getElementById('QE_menu_2'));" class="collapsed">
