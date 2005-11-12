@@ -729,7 +729,7 @@ function decode(s){
 	// get list of site keywords - code by stevew! modified by Raymond
 	$keywords = array();
 	$tbl = $modx->getFullTableName("site_keywords");
-	$ds = $modx->db->select("*",$tbl);
+	$ds = $modx->db->select("*",$tbl,"","keyword ASC");
 	$limit = $modx->db->getRecordCount($ds);
 	if($limit > 0) {
 		for($i=0;$i<$limit;$i++) {
