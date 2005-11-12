@@ -21,7 +21,7 @@ else {
 	$database_server = $_POST['databasehost'];
 	$database_user = $_POST['databaseloginname'];
 	$database_password = $_POST['databaseloginpassword'];
-	$dbase = $_POST['databasename'];
+	$dbase = "`".$_POST['databasename']."`";
 	$table_prefix = $_POST['tableprefix'];
 	$adminname = $_POST['cmsadmin'];
 	$adminpass = $_POST['cmspassword'];
