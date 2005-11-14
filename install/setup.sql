@@ -689,6 +689,9 @@ ALTER TABLE `{PREFIX}document_groups` ADD INDEX `document_group` (document_group
 ALTER TABLE `{PREFIX}system_settings` MODIFY COLUMN `setting_value` TEXT NOT NULL;
 
 
+ALTER TABLE `{PREFIX}site_plugins` MODIFY COLUMN `properties` TEXT;
+
+
 ALTER TABLE `{PREFIX}system_eventnames` ADD COLUMN `groupname` VARCHAR(20) NOT NULL AFTER `service`;
 
 
