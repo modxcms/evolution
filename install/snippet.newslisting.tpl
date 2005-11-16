@@ -51,8 +51,9 @@
  *      
  */
  
-$resourceparent = isset($startID) ? $startID : $modx->documentIdentifier;
-    // the folder that contains post entries 
+$resourceparent = isset($newsid) ? $newsid : $modx->documentIdentifier;
+$resourceparent = isset($startID) ? $startID : $resourceparent;
+    // the folder that contains post entries (includes legacy compatibility)
 
 $nrposts = isset($summarize) ? $summarize : 3;
     // number of posts of which to show a summary 
