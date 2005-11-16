@@ -6,7 +6,7 @@
  * Author:         Nicolas Martignoni
  * Date:           2005/10/25, 08:54 UTC
  * Version:        1.1
- * ModX version:   TP3.3
+ * MODx version:   0.9.0
 **/
 
 include "lang/english.inc.php"; // for the defaults
@@ -104,7 +104,6 @@ $_lang["loading_doc_tree"] = "Chargement de l'arbre...";
 $_lang["loading_menu"] = "Chargement du menu...";
 $_lang["loading_menu_tree"] = "Chargement du menu et de l'arbre...";
 $_lang["working"] = "Patience...";
-$_lang["show_tree"] = "Afficher l'arbre";
 $_lang["confirm_remove_locks"] = "Les utilisateurs ferment parfois leur navigateur alors qu'ils modifient des documents, modèle, snippets ou analyseurs. Ils laissent ainsi parfois verrouillé l'élément en cours d'édition. En cliquant sur OK vous pouvez enlever TOUS les verrous actuellement en place.\\n\\nVoulez-vous vraiment continuer ?";
 $_lang["welcome_title"] = "Bienvenue à votre gestionnaire de contenu ModX";
 $_lang["welcome_messages"] = "Votre boîte contient <b>%d</b> message(s), dont <b>%s</b> non lu(s).";
@@ -782,7 +781,7 @@ $_lang['tmplvars_elements'] = "Valeurs optionnelles d'entrée";
 $_lang['tmplvars_rank'] = "Ordre de tri";
 $_lang['tmplvars_default'] = "Valeur par défaut";
 $_lang['tmplvars_widget'] = "Widget";  // à mieux adapter
-$_lang['tmplvars_display_prop'] = "Propriétés du widget";  // à mieux adapter
+$_lang['tmplvars_widget_prop'] = "Propriétés du widget";  // à mieux adapter
 $_lang['lock_tmplvars'] = "Verrouiller la variable";
 $_lang['lock_tmplvars_msg'] = "Seuls les administrateurs peuvent modifier cette variable.";
 $_lang['tmplvars_locked_message'] = "Cette variable est verrouillée.";

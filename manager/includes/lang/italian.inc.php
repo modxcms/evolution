@@ -6,7 +6,7 @@
  * Author:         Nicola Lambathakis
  * Date:           2005/11/14
  * Version:        1.0
- * ModX version:   0.9.0
+ * MODx version:   0.9.0
 **/
 
 include "lang/english.inc.php"; // for the defaults
@@ -357,13 +357,8 @@ $_lang['credits_dTree'] = "MODx utilizza l'eccellente script per l'alberatura di
 $_lang['credits_shouts_title'] = "<b>Particolari ringraziamenti a:</b>"; // obsolete
 $_lang['credits_shouts_msg'] = "
 <ul><li><b>mina</b> - Traduzione francese</li>
-<li><b>Travis Sitzlar</b> - Code Team</li>
-<li><b>Jason Coward</b> - Code Team</li>
-<li><b>Susan Ottwell</b> - Code Team</li>
-<li><b>Jason Vilsack</b> - Marketing &amp; Strategy Team</li>
-<li><b>Dave Denis</b> - Marketing &amp; Strategy Team</li>
-<li><b>Brian Oberkirch</b> - Marketing &amp; Strategy Team</li>
-<li><b>Ben Talplacido</b> - Design Team</li>
+<li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
+<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messaggi";
 $_lang['messages_inbox'] = "Inbox";

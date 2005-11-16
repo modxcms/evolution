@@ -1,9 +1,12 @@
 <?php
 /**
- *	Filename:	includes/lang/english.inc.php
- *	Function:	Default English language file.
- *	Author:		The MODx Project Team (originally by Alex Butter)
- * Date:		2005/10/25
+ * Filename:       includes/lang/english.inc.php
+ * Function:       Default English language file.
+ * Encoding:       ISO-Latin-1
+ * Author:         The MODx Project Team (originally by Alex Butter)
+ * Date:           2005/10/25
+ * Version:        1.5
+ * MODx version:   0.9.0
 */
 
 // NOTE: New language keys should added at the bottom of this page
