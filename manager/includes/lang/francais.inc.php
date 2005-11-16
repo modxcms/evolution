@@ -11,7 +11,7 @@
 
 include "lang/english.inc.php"; // for the defaults
 
-$_lang["login_message"] = "Veuillez vous identifier afin d'accéder à votre gestionnaire de site. Votre login et votre mot de passe sont sensibles à la casse. Tapez-les donc avec soin !"; // changed 06 RC2
+$_lang["login_message"] = "Veuillez vous identifier afin d'accéder à votre gestionnaire de site. Votre login et votre mot de passe sont sensibles à la casse. Tapez-les donc avec soin !"; 
 $_lang["username"] = "Votre nom d'utilisateur ";
 $_lang["password"] = "Votre mot de passe ";
 $_lang["remember_username"] = "Enregistrer mon nom d'utilisateur";
@@ -26,7 +26,6 @@ $_lang["content"] = "Contenu";
 $_lang["add_document"] = "Nouveau document";
 $_lang["add_weblink"] = "Nouveau lien";
 $_lang["site_schedule"] = "Programme du site";
-$_lang["search"] = "Recherche";
 $_lang["visitor_stats"] = "Statistiques visiteurs";
 $_lang["messages"] = "Messages";
 $_lang["users"] = "Utilisateurs";
@@ -184,8 +183,6 @@ $_lang["nologentries_title"] = "Nombre d'entrées de l'historique :";
 $_lang["nologentries_message"] = "Spécifiez le nombre d'entrées de l'historique affichées par page lors de l'affichage de l'historique.";
 $_lang["nomessages_title"] = "Nombre de messages :";
 $_lang["nomessages_message"] = "Spécifiez le nombre de messages à afficher dans la boîte lors de l'affichage des messages.";
-//$_lang["treetype_title"] = "Type d'arbre :";
-//$_lang["treetype_message"] = "Si l'affichage de l'arbre est «&nbsp;Avancé&nbsp;», des informations sur le statut du document seront affichées dans la liste. Le choix «&nbsp;Normal&nbsp;» affichera l'arbre sans ces informations.";
 $_lang["language_title"] = "Langue :";
 $_lang["language_message"] = "Choisissez la langue du gestionnaire ModX.";
 $_lang["graphtype_title"] = "Type de graphique :";
@@ -261,8 +258,6 @@ $_lang['edit_parser_warning'] = "<b style='color:#821517'>La modification de ce 
 $_lang['change_password_message'] = "Veuillez taper votre nouveau mot de passe, puis le retaper pour confirmation.<br />Votre mot de passe doit contenir entre 6 et 15 caractères.";
 $_lang['change_password_new'] = "Nouveau mot de passe ";
 $_lang['change_password_confirm'] = "Retaper le mot de passe ";
-//$_lang['personal_prefs_title'] = "Préférences";
-//$_lang['personal_prefs_message'] = "Aucune préférence ne peut actullement être modifiée par les utilisateurs. Cette section contiendra ultérieurement des options permettant de régler la langue, etc. Pour modifier les réglages, veuillez utiliser l'interface configuration de ModX.";
 $_lang['confirm_delete_role'] = "Voulez-vous vraiment supprimer ce rôle ?";
 $_lang['role_title'] = "Créer/modifier un rôle";
 $_lang['role_name'] = "Nom du rôle ";
@@ -320,7 +315,6 @@ $_lang['confirm_delete_user'] = "Voulez-vous vraiment supprimer cet utilisateur 
 $_lang['alert_delete_self'] = "Vous ne pouvez pas supprimer votre propre compte !";
 $_lang['user_title'] = "Créer/modifier un utilisateur";
 $_lang['user_is_blocked'] = "Cet utilisateur est bloqué !";
-$_lang['password'] = "Mot de passe ";
 $_lang['password_gen_method'] = "Comment créer le mot de passe de cet utilisateur ?";
 $_lang['password_gen_gen'] = "Laisser ModX générer le mot de passe.";
 $_lang['password_gen_specify'] = "Me laisser spécifier le mot de passe :";
@@ -358,22 +352,14 @@ $_lang['credits_htmlarea'] = "HTMLArea a été créé par Mishoo. C'est un éditeur W
 $_lang['credits_adodb'] = "John Lim a écrit le code de la remarquable couche d'abstraction de base de données. ModX n'en utilise que les parties MySQL, mais elle est vraiment superbe !";
 $_lang['credits_php'] = "ModX fonctionne grâce à PHP !"; // obsolete
 $_lang['credits_mysql'] = "ModX fonctionne avec MySQL !"; // obsolete
-//$_lang['credits_vorx'] = "Vorx accueille le domaine etomite.org, domicile d'Etomite !"; // obsolete
-//$_lang['credits_phpBB'] = "Les forums de ModX fonctionnent grâce au moteur phpBB !"; // obsolete
 $_lang['credits_webfx'] = "ModX utilise un certain nombre de JavaScript de Webfx. Superbes programmes !"; // obsolete
 $_lang['credits_dTree'] = "ModX utilise l'excellent script dTree de DestroyDrop.com !"; // obsolete
-//$_lang['credits_jpgraph'] = "ModX utilise JpGraph pour produire les graphiques des statistiques des visiteurs !"; // obsolete
 $_lang['credits_shouts_title'] = "<b>Remerciements également à :</b>"; // obsolete
 $_lang['credits_shouts_msg'] = "
 <ul>
-<li><b>Travis Sitzlar</b> - Code Team</li>
-<li><b>Jason Coward</b> - Code Team</li>
-<li><b>Susan Ottwell</b> - Code Team</li>
-<li><b>Jason Vilsack</b> - Marketing &amp; Strategy Team</li>
-<li><b>Dave Denis</b> - Marketing &amp; Strategy Team</li>
-<li><b>Brian Oberkirch</b> - Marketing &amp; Strategy Team</li>
-<li><b>Ben Talplacido</b> - Design Team</li>
-<li><b>Nicolas Martignoni et Lorenzo</b> - Traduction française</li>
+<li><b>Raymond Irving, Ryan Thrash</b> &ndash; Project Founders</li>
+<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> &ndash; Core Architecture &amp; Design</li>
+<li><b>Nicolas Martignoni et Lorenzo</b> &ndash; Traduction française</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messages";
 $_lang['messages_inbox'] = "Boîte de messages";
@@ -471,12 +457,6 @@ $_lang['server_protocol_title'] = "Type de serveur :";
 $_lang['server_protocol_message'] = "Si votre site est sur un serveur sécurisé (HTTPS), veuillez l'indiquez ici.";
 $_lang['server_protocol_http'] = "http";
 $_lang['server_protocol_https'] = "https";
-//$_lang['to_plugin_title'] = "Fonctions de tableaux :";
-//$_lang['to_plugin_message'] = "[Seulement pour HTMLArea] - Souhaitez-vous activer les fonctions étendues sur les tableaux dans l'éditeur WYSIWYG ?"; // changed 06 RC2
-//$_lang['im_plugin_title'] = "Gestion des images :";
-//$_lang['im_plugin_message'] = "[Seulement pour HTMLArea] - Souhaitez-vous activer le gestionnaire d'images dans l'éditeur WYSIWYG ? Cette option permettra à vos utilisateurs de télécharger et de modifier les images sur le serveur."; // changed 06 RC2
-//$_lang['cm_plugin_title'] = "Menu contextuel :";
-//$_lang['cm_plugin_message'] = "[Seulement pour HTMLArea] - Souhaitez-vous activer le menu contextuel dans l'éditeur WYSIWYG ?"; // changed 06 RC2
 $_lang['settings_server'] = "Réglages serveur"; // deprecated
 $_lang['settings_site'] = "Réglages site";
 $_lang['settings_furls'] = "Réglages URLs simples";
@@ -486,7 +466,6 @@ $_lang['settings_reports'] = "Réglages rapports"; // deprecated
 $_lang['settings_editor'] = "Réglages éditeur"; // deprecated
 $_lang['use_editor_title'] = "Activer l'éditeur :";
 $_lang['use_editor_message'] = "Voulez-vous activer l'éditeur WYSIWYG ? Si vous êtes plus à l'aise avec le code HTML, ce réglage vous permet de désactiver l'éditeur. Ce réglage s'applique à tous les documents et à tous les utilisateurs !";
-// spyware joke removed, translation was removed too.
 
 /***************************************************************************/
 // new in 0.5.3
@@ -498,10 +477,6 @@ $_lang['emailsender_title'] = "Adresse courriel :";
 $_lang['emailsender_message'] = "Vous pouvez indiquer l'adresse de courriel à utiliser pour envoyer aux nouveaux utilisateurs leur login et mot de passe.";
 $_lang['emailsubject_title'] = "Sujet du message :";
 $_lang['emailsubject_message'] = "Vous pouvez taper ici le sujet du message envoyé par courriel aux nouveaux utilisateurs.";
-//$_lang['im_plugin_base_dir_title'] = "Chemin d'accès au répertoire des images :";
-//$_lang['im_plugin_base_dir_message'] = "[HTMLArea only] - Ce réglage est habituellement généré automatiquement. Cependant, si vous utilisez IIS, il peut arriver que ModX ne trouve pas le chemin. Le gestionnaire d'image affiche alors une erreur. Dans ce cas, vous pouvez taper le chemin du répertoire d'images ici (le chemin tel que vous le verriez dans l'explorateur de Windows)."; // changed 0.6 RC2
-//$_lang['im_plugin_base_url_title'] = "URL du répertoire des images :";
-//$_lang['im_plugin_base_url_message'] = "[HTMLArea only] - Ce réglage est habituellement généré automatiquement. Cependant, si vous utilisez IIS, il peut arriver que ModX ne trouve pas l'URL. Le gestionnaire d'image affiche alors une erreur. Dans ce cas, vous pouvez taper l'URL du répertoire d'images ici (l'URL que vous taperiez dans le navigateur Internet)."; // changed 0.6 RC2
 $_lang['stay'] = "Continuer l'édition";
 $_lang['saving'] = "En cours d'enregistrement, veuillez patienter...";
 $_lang['charset_title'] = "Encodage des caractères :";
@@ -554,8 +529,6 @@ $_lang['stats_title'] = "Statistiques des visiteurs du site «&nbsp;%s&nbsp;», du
 $_lang['stats_monthly_breakup'] = "Statistiques mensuelles";
 $_lang['stats_daily_breakup'] = "Statistiques journalières";
 $_lang['stats_hourly_breakup'] = "Statistiques horaires";
-//$_lang['months'] = array("Jan", "Fev", "Mar", "Avr", "Mai", "Jun", "Jul", "Aut", "Sep", "Oct", "Nov", "Dec");
-//$_lang['days'] = array("Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam");
 $_lang['top_howmany_title'] = "Lignes à afficher :";
 $_lang['top_howmany_message'] = "Lors de l'affichage des statistiques, combien d'éléments avec les plus hautes statistiques doivent être affichés dans les listes ?";
 $_lang['stats_top_pages'] = "Les %s documents les plus demandés";
@@ -604,8 +577,6 @@ $_lang['htmlsnippet_desc'] = "Description du chunk";
 $_lang['lock_htmlsnippet'] = "Verrouiller ce chunk";
 $_lang['lock_htmlsnippet_msg'] = "Seuls les administrateurs peuvent modifier ce chunk.";
 $_lang['htmlsnippet_locked_message'] = "Ce chunk est verrouillé.";
-//$_lang['use_strict_editor_title'] = "Éditeur en mode strict :";
-//$_lang['use_strict_editor_message'] = "[HTMLArea only] - Ce réglage permet de désactiver certaines fonctions de HTMLArea pouvant produire un code non conforme à la norme XHTML.";
 $_lang['access_permissions_user_groups'] = "Groupes d'utilisateurs";
 $_lang['access_permissions_document_groups'] = "Groupes de documents";
 $_lang["access_permissions_links"] = "Liens groupes d'utilisateurs/de documents ";
@@ -634,11 +605,6 @@ $_lang["uploadable_files_title"] = "Types de fichier téléchargeables :";
 $_lang["uploadable_files_message"] = "Vous pouvez taper ici une liste de types de fichiers peuvant être téléchargés avec le gestionnaire de fichiers. Veuillez taper les extensions correspondant aux types de fichiers, séparées par des virgules.";
 $_lang["keywords"] = "Mots clés";
 $_lang["keyword"] = "Mot clé";
-//$_lang["manage_keywords"] = "Gestion des mots clés";
-//$_lang["document_keywords_help"] = "Choisissez les mots clés que vous souhaitez assigner à ce document. Appuyer sur la touche CTRL ou commande pour sélectionner plusieurs mots clés.";
-//$_lang["keywords_message"] = " Cette section vous permet de gérer les mots clés de votre site.";
-//$_lang["keywords_intro"] = "Sur cette page, vous pouvez supprimer, créer ou modifier les mots clés. Pour assigner les mots clés à un document, modifier le document en question, et choisissez les mots clés désirés dans la liste. Pour modifier un mot clé, saisissez simplement le nouveau mot clé dans le champ à côté de celui que vous souhaitez changer. Pour supprimer un mot clé, cocher la case «Supprimer» correspondante. Si vous cocher la case «Supprimer» et écrivez un nouveau nom pour un mot clé, le mot clé sera supprimé et le renommage du mot clé n'aura pas lieu !";
-//$_lang["keywords_no_keywords"] = "Il n'y a actuellement aucun mot clé.";
 $_lang["save_all_changes"] = "Enregistrer tous les changements";
 $_lang["new_keyword"] = "Ajouter un nouveau mot clé :";
 $_lang["confirm_delete_keywords"] = "Voulez-vous vraiment supprimer ces mots clés ?";
@@ -686,10 +652,6 @@ $_lang["defaultsearch_title"] = "Rechercheable par défaut :";
 $_lang["defaultsearch_message"] = "Choisissez «&nbsp;Oui&nbsp;» pour rendre tous les nouveaux documents rechercheables par défaut.";
 $_lang["which_editor_title"] = "Éditeur WYSIWYG à utiliser :";
 $_lang["which_editor_message"] = "Vous pouvez choisir ici l'éditeur WYSIWYG que vous souhaitez utiliser. D'autres éditeurs WYSIWYG à installer sont disponibles sur la page de téléchargement de ModX.";
-//$_lang["tiny_css_path_title"] = "Chemin du fichier CSS :";
-//$_lang["tiny_css_path_message"] = "[Seulement pour TinyMCE] - Tapez le chemin d'accès du fichier CSS que vous souhaitez utiliser dans le l'éditeur TinyMCE. La meilleure manière de saisir le chemin est de le taper à partir de la racine de votre serveur, par exemple : «/assets/site/style.css». Si vous ne souhaitez pas charger une feuille de style dans l'éditeur, laissez ce champ vide.";
-//$_lang["tiny_css_selectors_title"] = "Sélecteurs CSS :";
-//$_lang["tiny_css_selectors_message"] = "[Seulement pour TinyMCE] - Vous pouvez donner ici une liste de sélecteurs qui devraient être disponibles dans l'éditeur. Entrez-les comme suit :<br />'displayName=selectorName;displayName2=selectorName2'<br />Par exemple, si vous avez les sélecteurs <b>.mono</b> et <b>.smallText</b> dans votre CSS, vous pourriez les ajouter ici de la façon suivante&nbsp;:<br />Texte monospace=mono;Texte petit=smallText<br />Il ne faut pas mettre de point-virgule après la dernière entrée.";
 $_lang["manage_modules"] = "Gestion des modules";
 $_lang["modules_already_installed"] = "Modules installés";
 $_lang["modules_install_new"] = "Installer un nouveau module";
@@ -811,7 +773,6 @@ $_lang['tmplvars_binding_msg'] ='Ce champ supporte les liens à une source de don
 $_lang['new_tmplvars'] = "Nouvelle variable de modèle";
 $_lang['edit_tmplvars'] = "Modifier variable de modèle";
 $_lang['confirm_delete_tmplvars'] = "Voulez-vous vraiment supprimer cette variable et tous ses valeurs enregistrées&nbsp;?";
-$_lang['tmplvars_locked_message'] = "Cette variable est vérouillée.";
 $_lang['tmplvars_msg'] = "Cette section vous permet d'ajouter/de modifier les variables de modèle. Les variables de modèle doivent être activées pour certains modèles afin qu'elles puissent être utilisées à partir de snippets et de documents comme n'importe quelle autre variable de contenu.";
 $_lang['tmplvars_caption'] = "Légende";
 $_lang['tmplvars_name'] = "Nom de variable";
@@ -862,7 +823,6 @@ $_lang['web_access_permissions_user_groups'] = "Groupes d'utilisateurs web :";
 $_lang['web_access_permissions'] = "Autorisations d'accès web";
 $_lang['web_user_title'] = "Créer/modifier utilisateur web";
 $_lang["snippet_properties"] = "Propriétés par défaut";
-//$_lang["empty_plugins_folder"] = "Aucun plugin trouvé";
 
 $_lang["add_folder"] = "Nouveau dossier";
 $_lang["new_web_user"] = "Nouvel utilisateur web";
@@ -981,10 +941,9 @@ $_lang['noresults_message'] = "Tapez ici le nombre des résultats à afficher dans
 $_lang['default'] = "Par défaut";
 $_lang['basic'] = "Simple";
 $_lang['standard'] = "Standard";
-$_lang['advanced'] = "Avancé";
+// $_lang['advanced'] = "Avancé"; // see line 150
 $_lang['custom'] = "Personnalisé";
 $_lang['you_got_mail'] = "Vous avez un message"; 
-$_lang['yes'] = "Oui"; 
 $_lang['email'] = "Courriel"; 
 $_lang['click_to_edit_title'] = "Gliquez ici pour afficher cet enregistrement";
 $_lang['manager_permissions'] = "Autorisations du gestionnaire";

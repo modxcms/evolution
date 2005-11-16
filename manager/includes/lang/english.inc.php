@@ -1,14 +1,14 @@
 <?php
 /**
  *	Filename:	includes/lang/english.inc.php
- *	Function:	English language file.
- *	Author:		Alex Butter (Etomite Author)
- *
- */
+ *	Function:	Default English language file.
+ *	Author:		The MODx Project Team (originally by Alex Butter)
+ * Date:		2005/10/25
+*/
 
 // NOTE: New language keys should added at the bottom of this page
 
-$_lang["login_message"] = "Please enter your login credentials to start your Manager session. Your username and password are case-sensitive, so please enter them carefully!"; // changed 06 RC2
+$_lang["login_message"] = "Please enter your login credentials to start your Manager session. Your username and password are case-sensitive, so please enter them carefully!";
 $_lang["username"] = "Username";
 $_lang["password"] = "Password";
 $_lang["remember_username"] = "Remember me";
@@ -352,14 +352,9 @@ $_lang['credits_webfx'] = "MODx uses a number of JavaScripts from Webfx. Great s
 $_lang['credits_dTree'] = "MODx uses the excellent dTree script from DestroyDrop.com!"; // obsolete
 $_lang['credits_shouts_title'] = "<b>Additional thanks to:</b>"; // obsolete
 $_lang['credits_shouts_msg'] = "
-<ul><li><b>mina</b> - French translation</li>
-<li><b>Travis Sitzlar</b> - Code Team</li>
-<li><b>Jason Coward</b> - Code Team</li>
-<li><b>Susan Ottwell</b> - Code Team</li>
-<li><b>Jason Vilsack</b> - Marketing &amp; Strategy Team</li>
-<li><b>Dave Denis</b> - Marketing &amp; Strategy Team</li>
-<li><b>Brian Oberkirch</b> - Marketing &amp; Strategy Team</li>
-<li><b>Ben Talplacido</b> - Design Team</li>
+<ul>
+<li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
+<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messages";
 $_lang['messages_inbox'] = "Inbox";
@@ -466,7 +461,6 @@ $_lang['settings_reports'] = "Reports settings"; // deprecated
 $_lang['settings_editor'] = "Editor settings"; // deprecated
 $_lang['use_editor_title'] = "Enable editor:";
 $_lang['use_editor_message'] = "Do you want to enable the rich text editor? If you're more comfortable writing HTML, then you can turn the editor off using this setting. Note that this setting applies to all documents and all users!";
-// spyware joke removed, translation can be removed too.
 
 /***************************************************************************/
 // new in 0.5.3
