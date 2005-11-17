@@ -346,7 +346,7 @@ $_lang['refresh_published'] = "<b>%s</b> documents were published.";
 $_lang['refresh_unpublished'] = "<b>%s</b> documents were unpublished.";
 $_lang['refresh_cache'] = "Cache: Found <b>%s</b> files in cache directory and deleted <b>%d</b> cache files.<p>New cache files will be created when pages are requested."; // changed in 0.6
 $_lang['about_title'] = "About MODx";
-$_lang['about_msg'] = "MODx is a fork Etomite 0.6, and is licensed under <a href=\"../assets/docs/license.txt\">GPL</a>.";
+$_lang['about_msg'] = "MODx is a PHP Application Framework licensed under <a href=\"../assets/docs/license.txt\">GPL</a>.";
 $_lang['credits_htmlarea'] = "HTMLArea was created by mishoo. Currently it's the only cross-browser compatible editor available, and it's free too!"; // obsolete
 $_lang['credits_adodb'] = "John Lim built this great database abstraction layer. Etomite uses only the MySQL bits, but it's lovely nonetheless!"; // obsolete
 $_lang['credits_php'] = "MODx is powered by PHP!"; // obsolete
@@ -1032,5 +1032,12 @@ $_lang['module_code'] = 'Module code (php)';
 $_lang['chunk_code'] = 'Chunk code (html)';
 $_lang['template_code'] = 'Template code (html)';
 $_lang['switch_to_rte'] = 'Switch To RichText';
+
+/***************************************************************************/
+// new in 0.9.1
+/***************************************************************************/
+$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
+$_lang['QE_show_links'] = 'Show links';
+$_lang['QE_hide_links'] = 'Hide links';
 
 ?>
