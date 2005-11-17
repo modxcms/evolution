@@ -24,7 +24,7 @@ if($sendto=='u') {
 	}
 	$sql = "INSERT INTO $dbase.".$table_prefix."user_messages(recipient, sender, subject, message, postdate, type, private)
 			values($userid, ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 1);";
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 }
 
 if($sendto=='g') {
@@ -40,7 +40,7 @@ if($sendto=='g') {
 		if($row['internalKey']!=$modx->getLoginUserID()) {
 			$sql2 = "INSERT INTO $dbase.".$table_prefix."user_messages(recipient, sender, subject, message, postdate, type, private)
 					values(".$row['internalKey'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
-			$rs2 = $db->Execute($sql2);
+			$rs2 = $modx->db->query($sql2);
 		}
 	}	
 }
@@ -55,7 +55,7 @@ if($sendto=='a') {
 		if($row['id']!=$modx->getLoginUserID()) {
 			$sql2 = "INSERT INTO $dbase.".$table_prefix."user_messages(recipient, sender, subject, message, postdate, type, private)
 					values(".$row['id'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
-			$rs2 = $db->Execute($sql2);
+			$rs2 = $modx->db->query($sql2);
 		}
 	}	
 }
