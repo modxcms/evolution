@@ -5,8 +5,8 @@
  * Encoding:       ISO-Latin-1
  * Author:         Nicola Lambathakis
  * Date:           2005/11/14
- * Version:        1.0
- * MODx version:   0.9.0
+ * Version:        1.1
+ * ModX version:   0.9.1
 **/
 
 include "lang/english.inc.php"; // for the defaults
@@ -351,14 +351,20 @@ $_lang['about_msg'] = "MODx è un fork di Etomite 0.6, ed è in licenza sotto la <
 $_lang['credits_htmlarea'] = "HTMLArea è stato creato da mishoo. Attualmente è l'unico editor compatibile su tutti i browser "; // obsolete
 $_lang['credits_adodb'] = "John Lim costruì questo grande parte di estrazione del database. MODx usa solamente pezzi di MySQL, ma è nondimeno bello!"; // obsolete
 $_lang['credits_php'] = "MODx utilizza PHP!"; // obsolete
-$_lang['credits_mysql'] = "MODx is powered by MySQL!"; // obsolete
+$_lang['credits_mysql'] = "MODx utilizza MySQL!"; // obsolete
 $_lang['credits_webfx'] = "MODx usa diversi JavaScripts di Webfx. Grande gruppo!!"; // obsolete
-$_lang['credits_dTree'] = "MODx utilizza l'eccellente script per l'alberatura di  DestroyDrop.com!"; // obsolete
+$_lang['credits_dTree'] = "MODx utilizza l'eccellente script per l'alberatura di DestroyDrop.com!"; // obsolete
 $_lang['credits_shouts_title'] = "<b>Particolari ringraziamenti a:</b>"; // obsolete
 $_lang['credits_shouts_msg'] = "
 <ul><li><b>mina</b> - Traduzione francese</li>
-<li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
-<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
+<li><b>Nicola Lambathakis</b> - Traduzione Italiana</li>
+<li><b>Travis Sitzlar</b> - Programmazione</li>
+<li><b>Jason Coward</b> - Programmazione</li>
+<li><b>Susan Ottwell</b> - Programmazione</li>
+<li><b>Jason Vilsack</b> - Marketing e Strategia</li>
+<li><b>Dave Denis</b> - Marketing e Strategia</li>
+<li><b>Brian Oberkirch</b> - Marketing e Strategia</li>
+<li><b>Ben Talplacido</b> - Design</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messaggi";
 $_lang['messages_inbox'] = "Inbox";
@@ -961,7 +967,7 @@ $_lang['keywords_intro'] = "Per modificare una parola chiave, semplicemente digi
 $_lang['manage_metatags'] = "Gestisci META tags e parole chiave";
 $_lang['metatag_message'] = "In questa pagina puoi gestire i META tags e le parole chiave (keywords) del sito. ";
 $_lang['tag'] = "Tag";
-$_lang['require_tagname'] = "Nu nome del tag e richiesto";
+$_lang['require_tagname'] = "Un nome del tag e richiesto";
 $_lang['require_tagvalue'] = "UN valore del tag e richiesto";
 $_lang['confirm_delete_tags'] = "Sicuro di voler cancellare questo META tag?";
 $_lang['no_keywords_found'] = "Non ci sono parole chiave";
@@ -1036,5 +1042,12 @@ $_lang['module_code'] = 'Codice Modulo (php)';
 $_lang['chunk_code'] = 'Codice Chunk (html)';
 $_lang['template_code'] = 'Codice Template (html)';
 $_lang['switch_to_rte'] = 'Passa al RichText';
+
+/***************************************************************************/
+// new in 0.9.1
+/***************************************************************************/
+$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
+$_lang['QE_show_links'] = 'Mostra links';
+$_lang['QE_hide_links'] = 'Nascondi links';
 
 ?>
