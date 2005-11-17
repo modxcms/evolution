@@ -1296,6 +1296,7 @@ class DocumentParser {
 	}
 
 	function makeUrl($id, $alias='', $args='') {
+		$url= '';
 		if(!is_numeric($id)) {
 			$this->messageQuit('`'.$id.'` is not numeric and may not be passed to makeUrl()');
 		}
@@ -1312,7 +1313,7 @@ class DocumentParser {
 			elseif ($c!='&') $args = '&'.$args; 
 		}
 		if($this->config['friendly_urls']==1 && $alias!='') {
-			return $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
+			$url= $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
 		} elseif($this->config['friendly_urls']==1 && $alias=='') {
 			$alias = $id;
 			if($this->config['friendly_alias_urls']==1) {
@@ -1320,10 +1321,11 @@ class DocumentParser {
 				if($al && $al['alias']) $alias = $al['alias'];
 			}
 			$alias = $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'];
-			return $alias.$args;
+			$url= $alias.$args;
 		} else {
-			return 'index.php?id='.$id.$args;
+			$url= 'index.php?id='.$id.$args;
 		}
+		return $this->config['base_url'] . $url;
 	}
 
 	function getConfig($name='') {
