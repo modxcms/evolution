@@ -237,7 +237,7 @@ if($_POST['rememberme']==1) {
 }
 
 $log = new logHandler;
-$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "Etomite");
+$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "MODx");
 
 // invoke OnManagerLogin event
 $modx->invokeEvent("OnManagerLogin",
