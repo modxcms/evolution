@@ -280,7 +280,7 @@ $validSearch = ($searchString != '')? true : false ;
 $offset = (isset($_GET['FSF_offset']))? $_GET['FSF_offset'] : 0;
 
 // initialize output
-$searchForm = '';
+$SearchForm = '';
 
 // establish form
 if (($validSearch && ($showSearchWithResults)) || $showSearchWithResults){

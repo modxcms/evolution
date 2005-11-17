@@ -1,3 +1,4 @@
+<?
 // ###########################################
 // DropMenu                                  #
 // ###########################################
@@ -178,6 +179,9 @@ $MakeMap = "";
 $siteMapRoot = (isset($startDoc)) ? $startDoc : $siteMapRoot;
 $maxLevels = (isset($levelLimit)) ? $levelLimit : $maxLevels;
 $ie = ($removeNewLines) ? '' : "\n";
+//Added by Remon: (undefined variables php notice)
+$activeLinkIDs = array();
+$subnavClass = '';
 
 // Overcome single use limitation on functions
 global $MakeMap_Defined;
@@ -190,6 +194,8 @@ if (!isset ($MakeMap_Defined)) {
 	    return (!empty($var));
 	}
 	function MakeMap($modx, $listParent, $listLevel, $description, $titleOfLinks, $maxLevels, $inside, $pre, $post, $selfAsLink, $ie, $activeLinkIDs, $topdiv, $topdivClass, $topnavClass, $subdiv, $subdivClass, $subnavClass, $hereClass, $useCategoryFolders, $categoryClass, $showDescription, $descriptionField, $textOfLinks, $orderBy, $orderDesc, $debugMode) {
+		// Added by Remon. Define this variable _here_ ;-)
+		$output = '';
 
 		$children = $modx->getActiveChildren($listParent, $orderBy, (!$orderDesc) ? 'ASC' : 'DESC', 'id, pagetitle, description, isfolder, parent, alias, longtitle, menutitle, hidemenu, introtext, content_dispo, contentType, type, template');
 		// filter out the content that is set to be hidden from menu snippets
@@ -219,7 +225,7 @@ if (!isset ($MakeMap_Defined)) {
 				$itm = "";
 
                 // if menutitle is blank fall back to pagetitle for menu link
-                $textOfLinks = (empty($child[menutitle])) ? 'pagetitle' : "$textOfLinks"; 
+                $textOfLinks = (empty($child['menutitle'])) ? 'pagetitle' : "$textOfLinks"; 
 
 			    // If at the top level
 				if (!$inside) 
@@ -256,6 +262,9 @@ if (!isset ($MakeMap_Defined)) {
 					$output .= "    <li class=\"$hereClass". ($numChildren == 0 ? ' last' : '')."\">$itm</li>$ie";
 				}
 				elseif ($itm) {
+					// Added by Remon
+					// define it here:
+					$class = '';
 					if ($numChildren == 0) {
 						$class = 'last';
 					}
