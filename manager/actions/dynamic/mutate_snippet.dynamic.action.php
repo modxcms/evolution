@@ -132,15 +132,49 @@ function showParameters(ctrl) {
 				case 'int':
 					c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
 					break;
-				case 'list':
+				case 'menu':
 					value = ar[3];
-					c = '<select name="prop_'+key+'" height="1" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+					c = '<select name="prop_'+key+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
 					ls = (ar[2]+'').split(",");
 					if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
 					for(i=0;i<ls.length;i++){						
 						c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
 					}
 					c += '</select>';
+					break;
+				case 'list':
+					value = ar[3];
+					ls = (ar[2]+'').split(",");
+					if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
+					c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+					for(i=0;i<ls.length;i++){						
+						c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
+					}
+					c += '</select>';
+					break;
+				case 'list-multi':
+					value = (ar[3]+'').replace(/^\s|\s$/,"");
+					arrValue = value.split(",")
+					ls = (ar[2]+'').split(",");
+					if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
+					c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
+					for(i=0;i<ls.length;i++){						
+						if(arrValue.length){
+							for(j=0;j<arrValue.length;j++){
+								if(ls[i]==arrValue[j]){
+									c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
+								}else{
+									c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';									
+								}
+							}
+						}else{
+							c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
+						}
+					}
+					c += '</select>';
+					break;
+				case 'textarea':
+					c = '<textarea name="prop_'+key+'" cols="50" rows="4" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">'+value+'</textarea>';
 					break;
 				default:  // string
 					c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
@@ -167,9 +201,26 @@ function setParameter(key,dt,ctrl) {
 			if(isNaN(ctrl.value)) ctrl.value = 0;
 			v = ctrl.value;
 			break;
+		case 'menu':
+			v = ctrl.options[ctrl.selectedIndex].value;
+			currentParams[key][3] = v;
+			implodeParameters();
+			return;
+			break;
 		case 'list':
 			v = ctrl.options[ctrl.selectedIndex].value;
 			currentParams[key][3] = v;
+			implodeParameters();
+			return;
+			break;
+		case 'list-multi':		
+			var arrValues = new Array;
+			for(var i=0; i < ctrl.options.length; i++){
+				if(ctrl.options[i].selected){
+					arrValues.push(ctrl.options[i].value);
+				}
+			}
+			currentParams[key][3] = arrValues.toString();
 			implodeParameters();
 			return;
 			break;

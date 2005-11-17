@@ -8,14 +8,15 @@
  * Configuration:
  * &webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']
  *
- * Version 2.1.1
+ * Version 2.1.1rev1
  * FCKeditor v2.1.1
  *
  */
 
 // When used from the web front-end 
-// FCK will display the following buttons
-$webToolbarSet = isset($webset) ? $webset:"[['Bold','Italic','Underline','-','Link','Unlink']]";
+// FCK will display the selected toolbar or custom buttons
+$webToolbarSet = isset($webset) ? $webset:"basic";
+$webCustomToolbar = isset($webcustom) && ($webset == "custom") ? $webcustom:"";
 
 // getFCKEditorSettings function
 if (!function_exists('getFCKEditorSettings')) {
@@ -123,7 +124,7 @@ FCKEditor_HTML_Settings;
 
 // getFCKEditorScript function
 if (!function_exists('getFCKEditorScript')) {
-	function getFCKEditorScript($elmList,$tbCustomSet='',$width='100%',$height='400') {
+	function getFCKEditorScript($elmList,$tbWebSet='',$tbCustomSet='',$width='100%',$height='400') {
 		global $base_url;
 		global $site_url;
 		global $use_browser;
@@ -132,7 +133,7 @@ if (!function_exists('getFCKEditorScript')) {
 		global $fck_editor_toolbar_customset;
 		global $fck_editor_autolang;
 		
-		$toolbar = $tbCustomSet ? "custom": $fck_editor_toolbar;
+		$toolbar = $tbCustomSet ? "custom" : ($tbWebSet ? $tbWebSet : $fck_editor_toolbar);
 		$tbCustomSet = "[ ".($tbCustomSet ? $tbCustomSet:$fck_editor_toolbar_customset)." ]"; // remember [[snippets]] detection :)
 		$autoLang = $fck_editor_autolang ? 'true': 'false';
 		$editor_css_path = !empty($editor_css_path) ? $editor_css_path : $base_url."assets/plugins/fckeditor/editor/css/fck_editorarea.css";
@@ -200,7 +201,7 @@ switch ($e->name) {
 
 	case "OnRichTextEditorInit":
 		if($editor=="FCKEditor") {
-			if(isset($forfrontend)||$modx->isFrontend()) $html = getFCKEditorScript($elements,$webToolbarSet,$width,$height);
+			if(isset($forfrontend)||$modx->isFrontend()) $html = getFCKEditorScript($elements,$webToolbarSet,$webCustomToolbar,$width,$height);
 			else $html = getFCKEditorScript($elements);
 			$e->output($html);
 		}		

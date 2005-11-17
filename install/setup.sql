@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
   `cache_type` TINYINT(1) NOT NULL default '0' COMMENT 'Cache option',
   `plugincode` mediumtext NOT NULL,
   `locked` tinyint(4) NOT NULL default '0',
-  `properties` VARCHAR(255) NOT NULL COMMENT 'Default Properties',  
+  `properties` TEXT NOT NULL COMMENT 'Default Properties',  
   `disabled` TINYINT NOT NULL DEFAULT 0 COMMENT 'Disables the plugin',
   `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared paramaters',
   PRIMARY KEY  (`id`)

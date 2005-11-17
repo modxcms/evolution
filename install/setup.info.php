@@ -32,7 +32,7 @@
 
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
-	$mp[] = array("FCKEditor","RichText Editor Plugin",0,"$setupPath/plugin.fckeditor.tpl","&webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+	$mp[] = array("FCKEditor","RichText Editor Plugin",0,"$setupPath/plugin.fckeditor.tpl","&webset=Web Toolbar Set;list;basic,standard,advanced,custom;custom &webcustom=Custom Web Toolbar;textarea;['Bold','Italic','Underline','-','Link','Unlink']","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
 	$mp[] = array("QuickEdit","Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
