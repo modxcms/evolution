@@ -33,7 +33,7 @@ class DBAPI {
 		$host = $host ? $host:$this->config['host'];
 		$dbase = $dbase ? $dbase:$this->config['dbase'];
 		$tstart = $modx->getMicroTime(); 
-		if(@!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd):mysql_connect($host, $uid, $pwd))) {
+		if(!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd):mysql_connect($host, $uid, $pwd))) {
 			$modx->messageQuit("Failed to create the database connection!");
 			exit;
 		} else {
@@ -48,7 +48,9 @@ class DBAPI {
 				$modx->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>".sprintf("Database connection was created in %2.4f s", $totaltime)."</fieldset><br />";
 			}
 			$this->isConnected = true;
-			$this->queryTime = $this->queryTime+$totaltime;
+// FIXME (Fixed by line below):
+// 			this->queryTime = this->queryTime + $totaltime;
+			$modx->queryTime += $totaltime;
 		}	
 	}
 

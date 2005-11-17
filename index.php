@@ -1,4 +1,6 @@
 <?php
+
+
 /*
 *************************************************************************
 	MODx Content Manager 
@@ -61,6 +63,10 @@ error_reporting(E_ALL);
 define("IN_ETOMITE_PARSER", "true"); // for backward compatibility with etomite .6
 define("IN_PARSER_MODE", "true");
 
+// Added by Remon
+define("IN_MANAGER_MODE", "false");
+
+
 // set these values here for a small speed increase! :)
 $database_type = "";
 $database_server = "";
@@ -95,10 +101,14 @@ $modx->minParserPasses = 1;		// min number of parser recursive loops or passes
 $modx->maxParserPasses = 10;	// max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false;
-$modx->tstart = $tstart;	// feed the parser the execution 
-							// start time
+$modx->tstart = $tstart;	// feed the parser the execution start time
+
+// Added by Remon
+// Debugging mode:
+$modx->stopOnNotice = false;
 						
 // execute the parser
 $modx->executeParser();
+
 
 ?>

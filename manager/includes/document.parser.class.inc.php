@@ -1,5 +1,4 @@
 <?php
-
 /**
  *	MODx Document Parser
  *	Function: This class contains the main document parsing functions
@@ -438,8 +437,7 @@ class DocumentParser {
 		}
 	
 		echo $this->documentOutput;
-
-		ob_end_flush();
+ 		ob_end_flush();
 	}
 
 
@@ -563,9 +561,7 @@ class DocumentParser {
 
 	// mod by Raymond
 	function mergeDocumentContent($template) {
-		global $site_url;
-		$replace_richtext = "";
-		$richtexteditor = "";
+		$replace = array();
 		preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
 		$variableCount = count($matches[1]);
 		$basepath = $this->config["base_path"]."manager/includes";
@@ -583,20 +579,25 @@ class DocumentParser {
 			$replace[$i] = stripslashes($value);
 		}
 		$template = str_replace($matches[0], $replace, $template);
+
 		return $template;
 	}
 
 	function mergeSettingsContent($template) {
+		$replace = array();
 		preg_match_all('~\[\((.*?)\)\]~', $template, $matches);
 		$settingsCount = count($matches[1]);
 		for($i=0; $i<$settingsCount; $i++) {
 			$replace[$i] = $this->config[$matches[1][$i]];
 		}
+
 		$template = str_replace($matches[0], $replace, $template);
+
 		return $template;
 	}
 
 	function mergeChunkContent($content) {
+		$replace = array();
 		preg_match_all('~{{(.*?)}}~', $content, $matches);
 		$settingsCount = count($matches[1]);
 		for($i=0; $i<$settingsCount; $i++) {
@@ -622,6 +623,7 @@ class DocumentParser {
 
 	// Added by Raymond
 	function mergePlaceholderContent($content) {
+		$replace = array();
 		preg_match_all('~\[\+(.*?)\+\]~', $content, $matches);
 		$cnt = count($matches[1]);
 		for($i=0; $i<$cnt; $i++) {
@@ -643,8 +645,8 @@ class DocumentParser {
 		ob_start();
 			eval($pluginCode);
 			$msg = ob_get_contents();
-		ob_end_clean();
-		if ($msg && $php_errormsg) {
+ 		ob_end_clean();
+		if ($msg/* $php_errormsg is not defined!!!! && $php_errormsg */) {
 			if(!strpos($php_errormsg,'Deprecated')) { // ignore php5 strict errors
 				// log error
 				$this->logEvent(1,3,"<b>$php_errormsg</b><br /><br /> $msg",$this->Event->activePlugin." - Plugin");
@@ -659,6 +661,7 @@ class DocumentParser {
 
 	function evalSnippet($snippet, $params) {
 		$etomite = $modx = &$this;
+
 		$modx->event->params = &$params; // store params inside event object
 		if(is_array($params)) {
 			extract($params, EXTR_SKIP);
@@ -699,6 +702,7 @@ class DocumentParser {
 			if(isset($this->snippetCache[$matches[1][$i]])) {
 				$snippets[$i]['name'] = $matches[1][$i];
 				$snippets[$i]['snippet'] = $this->snippetCache[$matches[1][$i]];
+//FIXME Undefined index: FlexSearchFormProps
 				$snippets[$i]['properties'] = $this->snippetCache[$matches[1][$i]."Props"];
 			} else {
 				// get from db and store a copy inside cache
@@ -720,9 +724,11 @@ class DocumentParser {
 		for($i=0; $i<$nrSnippetsToGet; $i++) {
 			$parameter = array();
 			$snippetName = $this->currentSnippet = $snippets[$i]['name'];
-			$snippetProperties = $snippets[$i]['properties'];
+// FIXME Undefined index: properties
+ 			$snippetProperties = $snippets[$i]['properties'];
 			// load default params/properties - Raymond
-			$parameter = $this->parseProperties($snippetProperties);
+// FIXME Undefined variable: snippetProperties
+ 			$parameter = $this->parseProperties($snippetProperties);
 			// current params
 			$currentSnippetParams = $snippetParams[$i];
 			if(!empty($currentSnippetParams)) {
@@ -730,13 +736,17 @@ class DocumentParser {
 				$splitter = "&";
 				if (strpos($tempSnippetParams, "&amp;")>0) $tempSnippetParams = str_replace("&amp;","&",$tempSnippetParams);
 				$tempSnippetParams = split($splitter, $tempSnippetParams);
-				for($x=0; $x<count($tempSnippetParams); $x++) {
-					$parameterTemp = explode("=", $tempSnippetParams[$x]);
-					$fp = strPos($parameterTemp[1],'`');
-					$lp = strrPos($parameterTemp[1],'`');
-					if(!($fp===false && $lp===false)) $parameterTemp[1] = substr($parameterTemp[1],$fp+1,$lp-1);
-					$parameter[$parameterTemp[0]] = $parameterTemp[1];
-				}
+				$snippetParamCount = count($tempSnippetParams);
+				for($x=0; $x<$snippetParamCount; $x++) {
+					if (strpos($tempSnippetParams[$x], '=', 0)) {
+						$parameterTemp = explode("=", $tempSnippetParams[$x]);
+						$fp = strpos($parameterTemp[1],'`');
+						$lp = strrpos($parameterTemp[1],'`');
+						if(!($fp===false && $lp===false)) 
+							$parameterTemp[1] = substr($parameterTemp[1],$fp+1,$lp-1);
+						$parameter[$parameterTemp[0]] = $parameterTemp[1];
+					}
+				} 
 			}
 			$executedSnippets[$i] = $this->evalSnippet($snippets[$i]['snippet'], $parameter);
 			if($this->dumpSnippets==1) {
@@ -1128,7 +1138,7 @@ class DocumentParser {
 	function getActiveChildren($id=0, $sort='menuindex', $dir='ASC', $fields='id, pagetitle, description, parent, alias, menutitle') {
 		$tblsc = $this->getFullTableName("site_content");
 		$tbldg = $this->getFullTableName("document_groups");
-		$sql = "SELECT $fields FROM $tbl WHERE $tbl.parent=$id AND $tbl.published=1 AND $tbl.deleted=0 ORDER BY $sort $dir;";
+
 		// modify field names to use sc. table reference
 		$fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));
 		$sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
@@ -1891,10 +1901,13 @@ class DocumentParser {
 
 	# Registers Startup Client-side JavaScript - these scripts are loaded at inside the <head> tag
 	function regClientStartupScript($src, $plaintext=false){
-		if ($this->loadedjscripts[$src]) return '';
+		// FIXME Undefined index:
+		if ($this->loadedjscripts[$src]) 
+			return '';
+
 		$this->loadedjscripts[$src] = true;
-		if ($plaintext==true) $this->sjscripts[count($sjscripts)] = $src;
-		elseif (strpos(strtolower($src),"<script")!==false) $this->sjscripts[count($sjscripts)] = $src;
+		if ($plaintext==true) $this->sjscripts[count($this->sjscripts)] = $src;
+		elseif (strpos(strtolower($src),"<script")!==false) $this->sjscripts[count($this->sjscripts)] = $src;
 		else $this->sjscripts[count($this->sjscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
 	}
 
@@ -1902,8 +1915,8 @@ class DocumentParser {
 	function regClientScript($src, $plaintext=false){
 		if ($this->loadedjscripts[$src]) return '';
 		$this->loadedjscripts[$src] = true;
-		if ($plaintext==true) $this->jscripts[count($jscripts)] = $src;
-		elseif (strpos(strtolower($src),"<script")!==false) $this->jscripts[count($jscripts)] = $src;
+		if ($plaintext==true) $this->jscripts[count($this->jscripts)] = $src;
+		elseif (strpos(strtolower($src),"<script")!==false) $this->jscripts[count($this->jscripts)] = $src;
 		else $this->jscripts[count($this->jscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
 	}
 
@@ -1956,7 +1969,9 @@ class DocumentParser {
 		if(!isset($this->pluginEvent[$evtName])) return false;
 		$el = $this->pluginEvent[$evtName];
 		$results = array();
-		if(count($el)>0) for ($i=0;$i<count($el);$i++) { // start for loop
+		$numEvents = count($el);
+		if($numEvents > 0) 
+		for ($i=0; $i<$numEvents;$i++) { // start for loop
 			$pluginName = $el[$i];
 			// reset event object
 			$e = &$this->Event;
@@ -2000,10 +2015,12 @@ class DocumentParser {
 		if(!empty($propertyString)) {
 			$tmpParams = explode("&",$propertyString);
 			for($x=0; $x<count($tmpParams); $x++) {
-				$pTmp = explode("=", $tmpParams[$x]);
-				$pvTmp = explode(";", trim($pTmp[1]));
-				if ($pvTmp[1]=='list' && $pvTmp[3]!="") $parameter[trim($pTmp[0])] = $pvTmp[3]; //list default
-				else if($pvTmp[1]!='list' && $pvTmp[2]!="") $parameter[trim($pTmp[0])] = $pvTmp[2];
+				if (strpos($tmpParams[$x], '=', 0)) {
+					$pTmp = explode("=", $tmpParams[$x]);
+					$pvTmp = explode(";", trim($pTmp[1]));
+					if ($pvTmp[1]=='list' && $pvTmp[3]!="") $parameter[trim($pTmp[0])] = $pvTmp[3]; //list default
+					else if($pvTmp[1]!='list' && $pvTmp[2]!="") $parameter[trim($pTmp[0])] = $pvTmp[2];
+				}
 			}
 		}
 		return $parameter;
@@ -2183,7 +2200,7 @@ class DocumentParser {
 	########################################
 
 /***************************************************************************************/
-/* End of API functions																/
+/* End of API functions								       */
 /***************************************************************************************/
 
 	function phpError($nr, $text, $file, $line) {
