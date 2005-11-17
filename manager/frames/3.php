@@ -36,7 +36,7 @@
 	i = new Image(18,18);
 	i.src="media/images/tree/folderopen.gif";
 	i = new Image(18,18);
-	i.src="media/images/tree/folderclose.gif";
+	i.src="media/images/tree/folder.gif";
 
 
 	var rpcNode = null;
