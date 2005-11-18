@@ -9,6 +9,7 @@
 	function webLoginExtractDeclarations(&$html){
 		$declare  = array();
 		if(strpos($html,"<!-- #declare:")===false) return $declare;
+		$matches= array();
 		if (preg_match_all("/<\!-- \#declare\:(.*)[^-->]?-->/i",$html,$matches)) {	
 			for($i=0;$i<count($matches[1]);$i++) {
 				$tag = explode(" ",$matches[1][$i]);

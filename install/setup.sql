@@ -661,6 +661,7 @@ ALTER TABLE `{PREFIX}site_htmlsnippets` ADD COLUMN `editor_type` INTEGER NOT NUL
 
 
 ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`
+ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`
 , ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`
 , ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
 

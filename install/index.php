@@ -263,6 +263,7 @@
 		global $moduleModules;
 		global $modulePlugins;
 		global $moduleSnippets;
+		global $moduleTemplates;
 		ob_start();	
 		echo "<p class=\"title\">Optional Items</p><p>Please choose your installation options and click Install:</p>";
 		

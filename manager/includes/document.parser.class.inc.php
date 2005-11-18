@@ -97,13 +97,13 @@ class DocumentParser {
 					}
 				}
 			}
-			if($type==REDIRECT_REFRESH) {
+			if($type=='REDIRECT_REFRESH') {
 				$header = 'Refresh: 0;URL='.$url;
-			} elseif($type==REDIRECT_META) {
+			} elseif($type=='REDIRECT_META') {
 				$header = '<META HTTP-EQUIV="Refresh" CONTENT="0; URL='.$url.'" />';
 				echo $header;
 				exit;
-			} elseif($type==REDIRECT_HEADER || empty($type)) {
+			} elseif($type=='REDIRECT_HEADER' || empty($type)) {
 				$header = 'Location: '.$url;
 			}
 			header($header);
@@ -210,19 +210,18 @@ class DocumentParser {
 
 	function getDocumentIdentifier($method) {
 	// function to test the query and find the retrieval method
+		$docIdentifier= $this->config['site_start'];
 		switch($method) {
 			case "alias" :
-				return $_REQUEST['q'];
+				$docIdentifier= $_REQUEST['q'];
 				break;
 			case "id" :
-				return $_REQUEST['id'];
-				break;
-			case "none" :
-				return $this->config['site_start'];
+				$docIdentifier= $_REQUEST['id'];
 				break;
 			default :
-				return $this->config['site_start'];
+				break;
 		}
+		return $docIdentifier;
 	}
 
 	// check for manager login session
@@ -381,6 +380,7 @@ class DocumentParser {
 
 		// remove all unused placeholders
 		if(strpos($this->documentOutput, '[+')>-1) {
+			$matches= array();
 			preg_match_all('~\[\+(.*?)\+\]~', $this->documentOutput, $matches);
 			if($matches[0]) $this->documentOutput = str_replace($matches[0],'',$this->documentOutput);
 		}
@@ -624,14 +624,18 @@ class DocumentParser {
 	// Added by Raymond
 	function mergePlaceholderContent($content) {
 		$replace = array();
-		preg_match_all('~\[\+(.*?)\+\]~', $content, $matches);
-		$cnt = count($matches[1]);
-		for($i=0; $i<$cnt; $i++) {
-			$v = $this->placeholders[$matches[1][$i]];
-			if(!isset($v)) unset($matches[0][$i]); // here we'll leave empty placeholders for last.
-			else $replace[$i] = $v;
+		$matches = array();
+		if (preg_match_all('~\[\+(.*?)\+\]~', $content, $matches)) {
+			$cnt = count($matches[1]);
+			for($i=0; $i<$cnt; $i++) {
+				$key= $matches[1][$i];
+				if (array_key_exists($key, $this->placeholders))
+					$v = $this->placeholders[$matches[1][$i]];
+				if(!isset($v)) unset($matches[0][$i]); // here we'll leave empty placeholders for last.
+				else $replace[$i] = $v;
+			}
+			$content = str_replace($matches[0], $replace, $content);
 		}
-		$content = str_replace($matches[0], $replace, $content);
 		return $content;
 	}
 
@@ -686,73 +690,78 @@ class DocumentParser {
 
 		$etomite = &$this;
 
-		$matchCount=count($matches[1]);
-		for($i=0; $i<$matchCount; $i++) {
-			$spos = strpos($matches[1][$i], '?', 0);
-			if($spos!==false) {
-				$params = substr($matches[1][$i], $spos, strlen($matches[1][$i]));
-			} else {
-				$params = '';
-			}
-			$matches[1][$i] = str_replace($params, '', $matches[1][$i]);
-			$snippetParams[$i] = $params;
-		}
-		$nrSnippetsToGet = count($matches[1]);
-		for($i=0;$i<$nrSnippetsToGet;$i++) {	// Raymond: Mod for Snippet props
-			if(isset($this->snippetCache[$matches[1][$i]])) {
-				$snippets[$i]['name'] = $matches[1][$i];
-				$snippets[$i]['snippet'] = $this->snippetCache[$matches[1][$i]];
-//FIXME Undefined index: FlexSearchFormProps
-				$snippets[$i]['properties'] = $this->snippetCache[$matches[1][$i]."Props"];
-			} else {
-				// get from db and store a copy inside cache
-				$sql = "SELECT * FROM ".$this->getFullTableName("site_snippets")." WHERE ".$this->getFullTableName("site_snippets").".name='".mysql_escape_string($matches[1][$i])."';";
-				$result = $this->dbQuery($sql);
-				if($this->recordCount($result)==1) {
-					$row = $this->fetchRow($result);
-					$snippets[$i]['name'] = $row['name'];
-					$snippets[$i]['snippet'] = $this->snippetCache[$row['name']] = $row['snippet'];
-					$snippets[$i]['properties'] = $this->snippetCache[$row['name']."Props"] = $row['properties'];
+		if ($matchCount=count($matches[1])) {
+			for($i=0; $i<$matchCount; $i++) {
+				$spos = strpos($matches[1][$i], '?', 0);
+				if($spos!==false) {
+					$params = substr($matches[1][$i], $spos, strlen($matches[1][$i]));
 				} else {
+					$params = '';
+				}
+				$matches[1][$i] = str_replace($params, '', $matches[1][$i]);
+				$snippetParams[$i] = $params;
+			}
+			$nrSnippetsToGet = $matchCount;
+			for($i=0;$i<$nrSnippetsToGet;$i++) {	// Raymond: Mod for Snippet props
+				if(isset($this->snippetCache[$matches[1][$i]])) {
 					$snippets[$i]['name'] = $matches[1][$i];
-					$snippets[$i]['snippet'] = $this->snippetCache[$matches[1][$i]] = "return false;";
-					$snippets[$i]['properties'] = '';
+					$snippets[$i]['snippet'] = $this->snippetCache[$matches[1][$i]];
+					if (array_key_exists($matches[1][$i]."Props", $this->snippetCache))
+						$snippets[$i]['properties'] = $this->snippetCache[$matches[1][$i]."Props"];
+				} else {
+					// get from db and store a copy inside cache
+					$sql = "SELECT * FROM ".$this->getFullTableName("site_snippets")." WHERE ".$this->getFullTableName("site_snippets").".name='".mysql_escape_string($matches[1][$i])."';";
+					$result = $this->dbQuery($sql);
+					if($this->recordCount($result)==1) {
+						$row = $this->fetchRow($result);
+						$snippets[$i]['name'] = $row['name'];
+						$snippets[$i]['snippet'] = $this->snippetCache[$row['name']] = $row['snippet'];
+						$snippets[$i]['properties'] = $this->snippetCache[$row['name']."Props"] = $row['properties'];
+					} else {
+						$snippets[$i]['name'] = $matches[1][$i];
+						$snippets[$i]['snippet'] = $this->snippetCache[$matches[1][$i]] = "return false;";
+						$snippets[$i]['properties'] = '';
+					}
 				}
 			}
-		}
-
-		for($i=0; $i<$nrSnippetsToGet; $i++) {
-			$parameter = array();
-			$snippetName = $this->currentSnippet = $snippets[$i]['name'];
-// FIXME Undefined index: properties
- 			$snippetProperties = $snippets[$i]['properties'];
-			// load default params/properties - Raymond
-// FIXME Undefined variable: snippetProperties
- 			$parameter = $this->parseProperties($snippetProperties);
-			// current params
-			$currentSnippetParams = $snippetParams[$i];
-			if(!empty($currentSnippetParams)) {
-				$tempSnippetParams = str_replace("?", "", $currentSnippetParams);
-				$splitter = "&";
-				if (strpos($tempSnippetParams, "&amp;")>0) $tempSnippetParams = str_replace("&amp;","&",$tempSnippetParams);
-				$tempSnippetParams = split($splitter, $tempSnippetParams);
-				$snippetParamCount = count($tempSnippetParams);
-				for($x=0; $x<$snippetParamCount; $x++) {
-					if (strpos($tempSnippetParams[$x], '=', 0)) {
-						$parameterTemp = explode("=", $tempSnippetParams[$x]);
-						$fp = strpos($parameterTemp[1],'`');
-						$lp = strrpos($parameterTemp[1],'`');
-						if(!($fp===false && $lp===false)) 
-							$parameterTemp[1] = substr($parameterTemp[1],$fp+1,$lp-1);
-						$parameter[$parameterTemp[0]] = $parameterTemp[1];
-					}
-				} 
+	
+			for($i=0; $i<$nrSnippetsToGet; $i++) {
+				$parameter = array();
+				$snippetName = $this->currentSnippet = $snippets[$i]['name'];
+	// FIXME Undefined index: properties
+	 			if (array_key_exists('properties', $snippets[$i])) {
+	 				$snippetProperties = $snippets[$i]['properties'];
+	 			} else {
+	 				$snippetProperties = '';
+	 			}
+				// load default params/properties - Raymond
+	// FIXME Undefined variable: snippetProperties
+	 			$parameter = $this->parseProperties($snippetProperties);
+				// current params
+				$currentSnippetParams = $snippetParams[$i];
+				if(!empty($currentSnippetParams)) {
+					$tempSnippetParams = str_replace("?", "", $currentSnippetParams);
+					$splitter = "&";
+					if (strpos($tempSnippetParams, "&amp;")>0) $tempSnippetParams = str_replace("&amp;","&",$tempSnippetParams);
+					$tempSnippetParams = split($splitter, $tempSnippetParams);
+					$snippetParamCount = count($tempSnippetParams);
+					for($x=0; $x<$snippetParamCount; $x++) {
+						if (strpos($tempSnippetParams[$x], '=', 0)) {
+							$parameterTemp = explode("=", $tempSnippetParams[$x]);
+							$fp = strpos($parameterTemp[1],'`');
+							$lp = strrpos($parameterTemp[1],'`');
+							if(!($fp===false && $lp===false)) 
+								$parameterTemp[1] = substr($parameterTemp[1],$fp+1,$lp-1);
+							$parameter[$parameterTemp[0]] = $parameterTemp[1];
+						}
+					} 
+				}
+				$executedSnippets[$i] = $this->evalSnippet($snippets[$i]['snippet'], $parameter);
+				if($this->dumpSnippets==1) {
+					echo "<fieldset><legend><b>$snippetName</b></legend><textarea style='width:60%; height:200px'>".htmlentities($executedSnippets[$i])."</textarea></fieldset><br />";
+				}
+				$documentSource = str_replace("[[".$snippetName.$currentSnippetParams."]]", $executedSnippets[$i], $documentSource);
 			}
-			$executedSnippets[$i] = $this->evalSnippet($snippets[$i]['snippet'], $parameter);
-			if($this->dumpSnippets==1) {
-				echo "<fieldset><legend><b>$snippetName</b></legend><textarea style='width:60%; height:200px'>".htmlentities($executedSnippets[$i])."</textarea></fieldset><br />";
-			}
-			$documentSource = str_replace("[[".$snippetName.$currentSnippetParams."]]", $executedSnippets[$i], $documentSource);
 		}
 		return $documentSource;
 	}
@@ -962,7 +971,9 @@ class DocumentParser {
 			// Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
 			if ($this->config['use_alias_path'] == 1) {
 				$alias = (strlen($this->virtualDir) > 0 ? $this->virtualDir.'/' : '').$this->documentIdentifier;
-				$this->documentIdentifier = $this->documentListing[$alias];
+				if (array_key_exists($alias, $this->documentListing))
+					$this->documentIdentifier = $this->documentListing[$alias];
+
 			}
 			else {
 				$this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
@@ -1571,7 +1582,7 @@ class DocumentParser {
 			return false;
 		}
 		else {
-			$result = $this->getTemplateVars(array($idname),$field,$docid,$published,"",""); //remove sorting for speed
+			$result = $this->getTemplateVars(array($idname),$fields,$docid,$published,"",""); //remove sorting for speed
 			return ($result!=false) ? $result[0]:false;
 		}
 	}
@@ -1901,14 +1912,15 @@ class DocumentParser {
 
 	# Registers Startup Client-side JavaScript - these scripts are loaded at inside the <head> tag
 	function regClientStartupScript($src, $plaintext=false){
-		// FIXME Undefined index:
-		if ($this->loadedjscripts[$src]) 
-			return '';
-
-		$this->loadedjscripts[$src] = true;
-		if ($plaintext==true) $this->sjscripts[count($this->sjscripts)] = $src;
-		elseif (strpos(strtolower($src),"<script")!==false) $this->sjscripts[count($this->sjscripts)] = $src;
-		else $this->sjscripts[count($this->sjscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
+		if (!empty($src) && array_key_exists($src, $this->loadedjscripts)) {
+			if ($this->loadedjscripts[$src]) 
+				return '';
+	
+			$this->loadedjscripts[$src] = true;
+			if ($plaintext==true) $this->sjscripts[count($this->sjscripts)] = $src;
+			elseif (strpos(strtolower($src),"<script")!==false) $this->sjscripts[count($this->sjscripts)] = $src;
+			else $this->sjscripts[count($this->sjscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
+		}
 	}
 
 	# Registers Client-side JavaScript 	- these scripts are loaded at the end of the page
@@ -2408,12 +2420,12 @@ class DocumentParser {
 		$host = crc32($hostname);
 
 		// work out the referer
-		$referer = urldecode($_SERVER['HTTP_REFERER']);
+		$referer = isset($_SERVER['HTTP_REFERER'])? urldecode($_SERVER['HTTP_REFERER']): '';
 		if(empty($referer)) {
 			$referer = "Unknown";
 		} else {
 			$pieces = parse_url($referer);
-		    $referer = $pieces[scheme]."://".$pieces[host].$pieces[path];
+			$referer = $pieces['scheme']."://".$pieces['host'].$pieces['path'];
 		}
 		if(strpos($referer, $_SERVER['SERVER_NAME'])>0) {
 			$referer = "Internal";

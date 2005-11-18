@@ -132,7 +132,7 @@ foreach($cvs as $content) {
  
  if($cv_obj->id && $cv_obj->checkPermissions()) {
   $class_name = 'QE_'.(is_numeric($cv_obj->id) ? 'TV' : 'BuiltIn');
-$toolbr_cv_html .= <<<EOD
+$toolbr_cv_html = <<<EOD
 <li><a href="#" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="Edit {$cv_obj->description}">{$cv_obj->caption}</a></li
 >
 EOD;
@@ -182,27 +182,30 @@ new Draggable('QE_Collapse_Wrapper', {handle:'QE_Title'});
 EOD;
 
    // Get an array of the content variable names
+   $matches= array();
    preg_match_all('~<quickedit:(.*?)\s*\/>~', $output, $matches);
 
    // Loop through every TV we found
-   for($i=0; $i<count($matches[1]); $i++) {
-
-    $contentVarName = $matches[1][$i];
-    $cv->set($contentVarName, $pageId);
-    $link = '';
-
-    // Check that we have permission to edit this content
-    if($cv->id && $cv->checkPermissions()) {
-
+   if ($matchCount= count($matches[1])) {
+	   for($i=0; $i<$matchCount; $i++) {
+	
+	    $contentVarName = $matches[1][$i];
+	    $cv->set($contentVarName, $pageId);
+	    $link = '';
+	
+	    // Check that we have permission to edit this content
+	    if($cv->id && $cv->checkPermissions()) {
+	
      // Set the HTML for the link
 $link = <<<EOD
 <a href="#" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; edit {$cv->name}</a>
 EOD;
 
-    }
-
-    $replacements[$i] = $link;
-
+	    }
+	
+	    $replacements[$i] = $link;
+	
+	   }
    }
 
    // Merge the links with the content

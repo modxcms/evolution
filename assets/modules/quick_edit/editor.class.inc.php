@@ -218,8 +218,8 @@ EOD;
 
   if($modx->hasPermission('save_document') && $cv->checkPermissions()) {
 
-   if($caption =="") {
-    $caption  = $name ? $name:"Untitled Variable";
+   if($cv->caption =="") {
+    $caption  = $cv->name ? $cv->name:"Untitled Variable";
    }
 
    // Get the template variable value
@@ -288,7 +288,7 @@ EOD;
     $modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$docId));
 
     // empty cache
-    include_once('../manager/processors/cache_sync.class.processor.php');
+    include_once($modx->config['base_path'] . 'manager/processors/cache_sync.class.processor.php');
     $sync = new synccache();
     $sync->setCachepath("../assets/cache/");
     $sync->setReport(false);
