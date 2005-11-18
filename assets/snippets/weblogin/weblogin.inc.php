@@ -74,7 +74,7 @@ if(!isset($_SESSION['webValidated'])){
 	<?php
 		
 		// display login
-		$ref = $_REQUEST["refurl"] ? "&refurl=".urlencode($_REQUEST["refurl"]):"";
+		$ref = isset($_REQUEST["refurl"]) ? "&refurl=".urlencode($_REQUEST["refurl"]):"";
 		$tpl = "<div id='WebLoginLayer0' style='position:relative'>".$tpls[0]."</div>";
 		$tpl.= "<div id='WebLoginLayer2' style='position:relative;display:none'>".$tpls[2]."</div>";
 		$tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier,"",$ref),$tpl);
@@ -88,7 +88,7 @@ if(!isset($_SESSION['webValidated'])){
 		if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
 	</script>
 	<?php
-	$output .= ob_get_contents();
+	$output = ob_get_contents();
 	ob_end_clean();
 } else {
 	$dbase = $modx->dbConfig['dbase'];

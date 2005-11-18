@@ -585,39 +585,43 @@ class DocumentParser {
 
 	function mergeSettingsContent($template) {
 		$replace = array();
-		preg_match_all('~\[\((.*?)\)\]~', $template, $matches);
-		$settingsCount = count($matches[1]);
-		for($i=0; $i<$settingsCount; $i++) {
-			$replace[$i] = $this->config[$matches[1][$i]];
+		$matches = array();
+		if (preg_match_all('~\[\((.*?)\)\]~', $template, $matches)) {
+			$settingsCount = count($matches[1]);
+			for($i=0; $i<$settingsCount; $i++) {
+				if (array_key_exists($matches[1][$i], $this->config))
+					$replace[$i] = $this->config[$matches[1][$i]];
+			}
+	
+			$template = str_replace($matches[0], $replace, $template);
 		}
-
-		$template = str_replace($matches[0], $replace, $template);
-
 		return $template;
 	}
 
 	function mergeChunkContent($content) {
 		$replace = array();
-		preg_match_all('~{{(.*?)}}~', $content, $matches);
-		$settingsCount = count($matches[1]);
-		for($i=0; $i<$settingsCount; $i++) {
-			if(isset($this->chunkCache[$matches[1][$i]])) {
-				$replace[$i] = $this->chunkCache[$matches[1][$i]];
-			} else {
-				$sql = "SELECT * FROM ".$this->getFullTableName("site_htmlsnippets")." WHERE ".$this->getFullTableName("site_htmlsnippets").".name='".mysql_escape_string($matches[1][$i])."';";
-				$result = $this->dbQuery($sql);
-				$limit=$this->recordCount($result);
-				if($limit<1) {
-					$this->chunkCache[$matches[1][$i]] = "";
-					$replace[$i] = "";
+		$matches = array();
+		if (preg_match_all('~{{(.*?)}}~', $content, $matches)) {
+			$settingsCount = count($matches[1]);
+			for($i=0; $i<$settingsCount; $i++) {
+				if(isset($this->chunkCache[$matches[1][$i]])) {
+					$replace[$i] = $this->chunkCache[$matches[1][$i]];
 				} else {
-					$row=$this->fetchRow($result);
-					$this->chunkCache[$matches[1][$i]] = $row['snippet'];
-					$replace[$i] = $row['snippet'];
+					$sql = "SELECT * FROM ".$this->getFullTableName("site_htmlsnippets")." WHERE ".$this->getFullTableName("site_htmlsnippets").".name='".mysql_escape_string($matches[1][$i])."';";
+					$result = $this->dbQuery($sql);
+					$limit=$this->recordCount($result);
+					if($limit<1) {
+						$this->chunkCache[$matches[1][$i]] = "";
+						$replace[$i] = "";
+					} else {
+						$row=$this->fetchRow($result);
+						$this->chunkCache[$matches[1][$i]] = $row['snippet'];
+						$replace[$i] = $row['snippet'];
+					}
 				}
 			}
+			$content = str_replace($matches[0], $replace, $content);
 		}
-		$content = str_replace($matches[0], $replace, $content);
 		return $content;
 	}
 
@@ -629,7 +633,7 @@ class DocumentParser {
 			$cnt = count($matches[1]);
 			for($i=0; $i<$cnt; $i++) {
 				$key= $matches[1][$i];
-				if (array_key_exists($key, $this->placeholders))
+				if (is_array($this->placeholders) && array_key_exists($key, $this->placeholders))
 					$v = $this->placeholders[$matches[1][$i]];
 				if(!isset($v)) unset($matches[0][$i]); // here we'll leave empty placeholders for last.
 				else $replace[$i] = $v;
@@ -1882,7 +1886,7 @@ class DocumentParser {
 	function isMemberOfWebGroup($groupNames=array()){
 		if(!is_array($groupNames)) return false;
 		// check cache
-		$grpNames = $_SESSION['webUserGroupNames'];
+		$grpNames = isset($_SESSION['webUserGroupNames'])?$_SESSION['webUserGroupNames']:false;
 		if(!is_array($grpNames)) {
 			$tbl = $this->getFullTableName("webgroup_names");
 			$tbl2 = $this->getFullTableName("web_groups");

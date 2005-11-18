@@ -67,22 +67,28 @@ $emptyFields = "One of the fields was left blank. Please put something in all fi
 $generalFail = "Sorry, there was an error! Please try again later.";
 
 // Bad email failure message
-$emailFail = "The email address you supplied ({$_POST['email']}) does not appear to be valid. Please try again.";
+$failedEmail= (isset($_POST['email']))? $_POST['email']: '';
+$emailFail = "The email address you supplied ({}) does not appear to be valid. Please try again.";
 
 // Debug mode for testing
 $debug = false;
 
 //  <-----  END CONFIG  ----->
 ///////////////////////////////////
-
+$SendMail = '';
 if ($debug && $_POST) {
 	$SendMail .= "POST variables from Document ID [*id*]:\n";
 	foreach ($_POST as $key => $value) {
 		$SendMail .= "\t$key => $value\n";
 	}
-} 
+}
 
-if ($_POST['send'] == 'true') { 
+$from= '';
+$from_email= '';
+$message= '';
+
+$postSend= isset($_POST['send'])? $_POST['send']: 'false';
+if ($postSend == 'true') { 
     $to = ($recipient_type=="static") ? $static_recipient : $_POST['to'];
     $from = $_POST['name'];
     $from_email = $_POST['email'];
@@ -115,7 +121,6 @@ if ($_POST['send'] == 'true') {
 } else {
     $SendMail .= "<p>$instructions</p>";
 }
-
 $SendMail .=<<<EOD
 <div class="emailform">
 

@@ -20,8 +20,7 @@
 #	[[WebSignup? &tpl=`SignupForm` &groups=`NewsReaders,WebUsers`]] 
 
 # Set Snippet Paths 
-$snipPath  = (($modx->insideManager())? "../":"");
-$snipPath .= "assets/snippets/";
+$snipPath = $modx->config['base_path'] . "assets/snippets/";
 
 # check if inside manager
 if ($m = $modx->insideManager()) {
@@ -38,6 +37,8 @@ for($i=0;$i<count($groups);$i++) $groups[$i] = trim($groups[$i]);
 
 # System settings
 $isPostBack		= count($_POST) && isset($_POST['cmdwebsignup']);
+
+$output = '';
 
 # Start processing
 include_once $snipPath."weblogin/weblogin.common.inc.php";

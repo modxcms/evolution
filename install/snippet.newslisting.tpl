@@ -51,9 +51,8 @@
  *      
  */
  
-$resourceparent = isset($newsid) ? $newsid : $modx->documentIdentifier;
-$resourceparent = isset($startID) ? $startID : $resourceparent;
-    // the folder that contains post entries (includes legacy compatibility)
+$resourceparent = isset($startID) ? $startID : $modx->documentIdentifier;
+    // the folder that contains post entries 
 
 $nrposts = isset($summarize) ? $summarize : 3;
     // number of posts of which to show a summary 
@@ -134,7 +133,8 @@ $limit = min( $limit, $nrtotal );
 // function used to clean all the open HTML tags inside summary posts
 // useful so it won't break layouts due to there being open tags like 
 // OL, UL, DIV, H1 or maybe even A tags for example
-function closeTags($text) { 
+function closeTags($text) {
+	global $debug; 
     $openPattern = "/<([^\/].*?)>/";   
     $closePattern = "/<\/(.*?)>/"; 
     $endOpenPattern = "/<([^\/].*?)$/"; 
