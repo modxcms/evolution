@@ -1039,11 +1039,14 @@ $_lang['switch_to_rte'] = 'Switch To RichText';
 $_lang['QE_lang'] = 'en';
 $_lang['QE_xml_lang'] = 'en';
 $_lang['QE_charset'] = 'iso-8859-1';
-$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
-$_lang['QE_show_links'] = 'Show links';
+$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
+$_lang['QE_show_links'] = 'Show links';
 $_lang['QE_hide_links'] = 'Hide links';
 $_lang['QE_someone_editing'] = 'Someone else is editing this document';
 $_lang['QE_cant_find_content'] = 'Could not find content to edit';
 $_lang['QE_description'] = 'Edit pages from the frontend of the site';
 
+$_lang['system_email_signup'] = "Hello [+uid+] \n\nHere are your login details for [+sname+] Content Manager:\n\nUsername: [+uid+]\nPassword: [+pwd+]\n\nOnce you log into the Content Manager, you can change your password.\n\nRegards,\nSite Administrator" ;
+$_lang['system_email_websignup'] = "Hello [+uid+] \n\nHere are your login details for [+sname+]:\n\nUsername: [+uid+]\nPassword: [+pwd+]\n\nOnce you log into [+sname+], you can change your password.\n\nRegards,\nSite Administrator" ;
+$_lang['system_email_webreminder'] = "Hello [+uid+]\n\nTo active you new password click the following link:\n\n[+surl+]\n\nIf successful you can use the following password to login:\n\nPassword:[+pwd+]\n\nIf you did not request this email then please ignore it.\n\nRegrads,\nSite Administrator" ;
 ?>
