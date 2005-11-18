@@ -1,43 +1,44 @@
 <?php
-
-
 /*
 *************************************************************************
-	MODx Content Manager 
-	A forked Version of Etomite 0.6 as of March 19, 2005
-	Managed and maintained by Raymond Irving, Ryan Thrash and the MODx community
+	MODx Content Management System and PHP Application Framework 
+	Managed and maintained by Raymond Irving, Ryan Thrash and the
+	MODx community
 *************************************************************************
-	MODx was the first major module (created by Raymond Irving Nov, 2004) to 
-	work with Etomite 0.6 but will become a major overhaul of the 
-	CMS-formerly-known-as-Etomite.
+	MODx is an opensource PHP/MySQL content management system and content
+	management framework that is flexible, adaptable, supports XHTML/CSS
+	layouts, and works with most web browsers, including Safari.
 
-	MODx Content Manager is distributed under the GNU General Public License	
+	MODx is distributed under the GNU General Public License	
 *************************************************************************
 
-	Etomite Content Management System
-	Copyright 2003, 2004 Alexander Andrew Butter
+	MODx CMS and Application Framework ("MODx")
+	Copyright 2005 and forever thereafter by Raymond Irving & Ryan Thrash.
+	All rights reserved.
 
-	This file and all dependant and otherwise related files are part of Etomite.
+	This file and all related or dependant files distributed with this filie
+	are considered as a whole to make up MODx.
 
-	Etomite is free software; you can redistribute it and/or modify
+	MODx is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; either version 2 of the License, or
 	(at your option) any later version.
 
-	Etomite is distributed in the hope that it will be useful,
+	MODx is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
-	along with Etomite; if not, write to the Free Software
+	along with MODx (located in "/assets/docs/"); if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-	For more information on Etomite please go to www.etomite.org
+	For more information on MODx please visit http://modxcms.com/
 	
 **************************************************************************
+    Originall based on Etomite by Alex Butter
+**************************************************************************
 */	
-
 
 /**
  * Initialize Document Parsing
@@ -65,7 +66,6 @@ define("IN_PARSER_MODE", "true");
 
 // Added by Remon
 define("IN_MANAGER_MODE", "false");
-
 
 // set these values here for a small speed increase! :)
 $database_type = "";
