@@ -22,9 +22,10 @@ function constructLink($action, $img, $text, $allowed) {
 <head>
 <title>ContextMenu</title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>contextMenu.css<?php echo "?$theme_refresher";?>" />
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 </head>
 <body onselectstart="return false;" onblur="parent.hideMenu();">
+<div id="context_menu_holder">
 <div id="nameHolder"></div>
 <?php
 constructLink(1, "context_view", $_lang["view_document"], 1);
@@ -45,5 +46,6 @@ constructLink(8, "b092", $_lang["undelete_document"], $modx->hasPermission('dele
 constructLink(9, "date", $_lang["publish_document"], $modx->hasPermission('edit_document'));
 constructLink(10, "date", $_lang["unpublish_document"], $modx->hasPermission('edit_document'));
 ?>
+</div>
 </body>
 </html>

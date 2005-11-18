@@ -1,382 +1,735 @@
-BODY {
-	margin:							0px 0px 0px 0px;
-	padding:						0px 0px 0px 0px;
-	background-image: 				url("../../media/images/bg/body.jpg");
-	background-color: 				#fff;
-	background-position: 			top;
-	background-repeat: 				repeat-x;
+body {
+    margin: 0;
+    padding: 0;
+    background: #fff url(../../media/images/bg/body.jpg) repeat-x top left;
+    font: normal 11px/1.5em Verdana, Arial, Helvetica, sans-serif;
 }
 
-.warning{
-	color:							#821517;
-	font-weight:					bold;
+.warning, .success {
+    color: #821517;
+    font-weight: bold;
 }
 
-.success{
-	color:							#009900;
-	font-weight:					bold;
+.success {
+    color: #009900;
 }
 
 
-BUTTON {
-	color:							#821517;
-	font-weight:					bold;
-	font-family:					Verdana, Arial, Helvetica, sans-serif;
-	font-size:						11px;
-	width:							112px;
-	margin-right:					5px;
-	cursor:							pointer;
+button {
+    color: #821517;
+    font-weight: bold;
+    width: 112px;
+    margin-right: 5px;
+    cursor: pointer;
 }
 
-BODY, TD, P {
-	color:							#003399;
-	font-family:					Verdana, Geneva, Arial, Helvetica, sans-serif;
-	font-size:						9pt;
-	font-weight:					normal;
+body, td, p {
+    color: #003399;
+    font-size: 9pt;
 }
-	
-A, A:ACTIVE, A:VISITED, A:LINK {
-	font-family:					Verdana, Geneva, Arial, Helvetica, sans-serif;
-	font-size:						9pt;
-	color:							#821517;
-	text-decoration:				None;
+    
+a, a:active, a:visited, a:link {
+    font-size: 9pt;
+    color: #821517;
+    text-decoration: none;
 }
 
-A:HOVER {
-	text-decoration:				underline;
-	color:							#003399;
+a:hover {
+    text-decoration: underline;
+    color: #003399;
 }
 
-INPUT, .inputBox {
-	font-family:					Verdana, Geneva, Arial, Helvetica, sans-serif;
-	font-size:						10px;
+input, .inputBox {
+    font-size: 10px;
 }
 
-HR {
-	color: #821517;
-	background-color: #821517;
-	height: 1px;
+hr {
+    color: #821517;
+    background-color: #821517;
+    height: 1px;
 }
 
 .split {
-	background: #821517 url("../../media/images/misc/line.gif") repeat-x;
-	height: 1px;
-	font-size: 0;
-	clear: both;
-	margin: 0;
-	padding: 0;
+    background: #821517 url(../../media/images/misc/line.gif) repeat-x;
+    height: 1px;
+    font-size: 0;
+    clear: both;
+    margin: 0;
+    padding: 0;
 }
 
-
 .stay {
-	margin-left:10px;}
-	
-	
+    margin-left: 10px;
+}
+
 .messageRead {
-	color:							Black;
+    color: #000;
 }
 
 .messageUnread {
-	color: 							#4791C5;
-	font-weight:					bold;
+    color: #4791C5;
+    font-weight: bold;
 }
 
 .subTitle {
-	width:							100%;
-	height:							44px !important;
-	padding:						0px;
-	margin-bottom:					10px;
-	margin-right:					10px;
-	background-image: 				url("../../media/images/misc/buttonbar.gif");
-	background-position: 			top;
-	background-repeat: 				repeat-x;		
+    width: 100%;
+    height: 44px !important;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    background: url(../../media/images/misc/buttonbar.gif) repeat-x top left;
 }
 
 .right {
-	font-family:					Verdana, Helvetica, Sans-Serif;
-	font-size:						11px;
-	font-weight: 					bold;
-	color: 							#003399;
-	float: 							right;
-	padding:						0px 10px 0px 0xp;
+    font-size: 11px;
+    font-weight: bold;
+    color: #003399;
+    float: right;
+    padding: 0 10px 0 0xp;
 }
 
 .fakefieldset {
-	border:							1px solid rgb(120,172,255);
-	background: 					white;
-	font-size: 						12px;
-	padding: 						10px;
-	background-image: 				url("../images/bg/section.jpg");
-	background-position: 			top right;
-	background-repeat: 				no-repeat;	
+    border: 1px solid rgb(120,172,255);
+    background: #fff;
+    font-size: 12px;
+    padding: 10px;
+    background: url(../images/bg/section.jpg) no-repeat top left;
 }
 
 .fakefieldset strong, .fakefieldsettitle {
-	color:							#990033;
-	font-weight:					bold;
+    color: #990033;
+    font-weight: bold;
 }
 
 .sectionHeader, .showHideVisible {
-	margin:							0px 25px 4px 10px;
-	padding:						5px 3px 5px 3px;
-	font-weight:					bold;
-	background-position: 			top left;
-	background-repeat: 				repeat-x;	
-	background:						#F0A62F;
-	border:							1px solid #003399;
-	background-image: 				url("../images/misc/buttonbar_gs.gif");
+    margin: 0 25px 4px 10px;
+    padding: 5px 3px 5px 3px;
+    font-weight: bold;
+    background: #F0A62F url(../images/misc/buttonbar_gs.gif) repeat-x top left;
+    border: 1px solid #003399;
 }
 
 .sectionBody, .layerVisible {
-	position:						relative;
-	top:							-5px;
-	display:						none;
-	background:						white;
-	border:							1px solid #003399;
-	margin:							0px 10px 20px 25px;
-	padding:						10px;
-	background-image: 				url("../images/bg/section.jpg");
-	background-position: 			top right;
-	background-repeat: 				no-repeat;		
-	display:						block;
+    position: relative;
+    top: -5px;
+    display: none;
+    border: 1px solid #003399;
+    margin: 0 10px 20px 25px;
+    padding: 10px;
+    background-image: #fff url(../images/bg/section.jpg) no-repeat top right;
+    display: block;
 }
 
 .showHideVisible, .layerVisible {
-	margin:							0px 10px 4px 10px;
+    margin: 0 10px 4px 10px;
 }
 
 .comment {
-	font-size:						9px;
-	color:							#777;
+    font-size: 9px;
+    color: #777;
 }
 
 thead, .fancyrow {
-	height:							18px !important;
-	background-image: 				url("../images/misc/buttonbar_gs.gif");
-	background-color: 				#F0A62F;
-	background-position: 			top;
-	background-repeat: 				repeat-x;
-	border-bottom: 					1px solid rgb(120,172,255);
+    height: 18px !important;
+    background: #F0A62F url(../images/misc/buttonbar_gs.gif) repeat-x top left;
+    border-bottom: 1px solid rgb(120,172,255);
 }
 
 .fancyrow2 {
-	height:							18px !important;
-	background-image: 				url("../images/misc/buttonbar.gif");
-	background-color: 				#F0A62F;
-	background-position: 			top;
-	background-repeat: 				repeat-x;
-	border-bottom: 					1px solid rgb(120,172,255);
+    height: 18px !important;
+    background: #F0A62F url(../images/misc/buttonbar.gif) repeat-x top left;
+    border-bottom: 1px solid rgb(120,172,255);
 }
 
 li {
-	padding: 						0px;
-	margin: 						0px 0px 0px 15px;
-	list-style: 					disc outside url("../images/misc/li.gif");
+    padding: 0;
+    margin: 0 0 0 15px;
+    list-style: disc outside url(../images/misc/li.gif);
 }
 
 ul {
-	margin: 						0px 0px 0px 20px;
+    margin: 0 0 0 20px;
 }
 
 .screen {
-	border: 						1px solid #ddd;
-	text-align: 					center;
+    border: 1px solid #ddd;
+    text-align: center;
 }
 
 a img {
-	border: 						0px;
+    border: none;
 }
 
 .sort-table {
-	font:		Icon;
-	border:		0px Solid ThreeDShadow;
-	color:		WindowText;
+    font: Icon;
+    border: 0 Solid ThreeDShadow;
+    color: WindowText;
 }
 
 .sort-table thead {
-	height:				18px !important;
-	background-image: 				url("../images/misc/thead.gif");
-	background-color: 				#fff;
-	background-position: 			top;
-	background-repeat: 				repeat-x;
-	
+    height: 18px !important;
+    background-color: #fff url(../images/misc/thead.gif) repeat-x top left;
 }
 
 .sort-table td {
-	padding:	2px 5px;
+    padding: 2px 5px;
 }
 
 .sort-table thead td {
-	cursor:			pointer;
+    cursor: pointer;
 }
 
 .sort-table thead td:active {
-	border-color:	ButtonShadow ButtonHighlight 
-					ButtonHighlight ButtonShadow;
-	padding:		3px 4px 1px 6px;
+    border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
+    padding: 3px 4px 1px 6px;
 }
 
 .sort-arrow {
-	width:					11px;
-	height:					11px;
-	background-position:	center center;
-	background-repeat:		no-repeat;
-	margin:					0 2px;
+    width: 11px;
+    height: 11px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin: 0 2px;
 }
 
 .sort-arrow.descending {
-	background-image:		url("../images/icons/downsimple.png");
-	
+    background-image: url(../images/icons/downsimple.png);
+    
 }
 
 .sort-arrow.ascending {
-	background-image:		url("../images/icons/upsimple.png");
+    background-image: url(../images/icons/upsimple.png);
 }
 
 .even {
-	background:	#DAEAFD;
+    background: #DAEAFD;
 }
 
 .odd {
-	background: ;
+    background: ;
 }
 
-/*	end sortable table */
+/*    end sortable table */
 
 .disabledImage {
-	width: 20px;
-	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+    width: 20px;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 }
 
 .disabledImage img{
-	filter:							gray();
+    filter: gray();
 }
 
 .editorCell {
-	border-top: 					1px solid #808080;
-	text-align:						left;
-	vertical-align:					baseline;
+    border-top: 1px solid #808080;
+    text-align: left;
+    vertical-align: baseline;
 }
 
-.row1	{ background-color: #EEF5FD; }
-.row2	{ background-color: #E5F0FD; }
-.row3	{ background-color: #C6E0FE; }
+.row1    { background-color: #EEF5FD; }
+.row2    { background-color: #E5F0FD; }
+.row3    { background-color: #C6E0FE; }
 
 
 #treeHolder {
-	padding: 5px 10px 0px 10px;
+    padding: 5px 10px 0 10px;
 }
 
 #floater {
-	display:						none;
-	position:						absolute;
-	width:							200px; 
-	height:							44px;
-	top:							28px;
-	left:							4px;
-	margin:							0px; 
-	padding:						0px;
-	background-image: 				url("../images/bg/section.jpg");
-	background-color: 				#fff;
-	background-position: 			top;
-	background-repeat: 				repeat-x;
-	border: 						1px solid #003399;
-	border-left-color:				ButtonHighlight;
-	border-right-color:				ButtonShadow;
-	border-top-color:				ButtonHighlight;
-	border-bottom-color:			ButtonShadow;
-	z-index:						500;
+    display: none;
+    position: absolute;
+    width: 200px; 
+    height: 44px;
+    top: 28px;
+    left: 4px;
+    margin: 0; 
+    padding: 0;
+    background: #fff url(../images/bg/section.jpg) repeat-x top right;
+    border: 1px solid #003399;
+    border-color: ButtonHighlight ButtonShadow ButtonShadow Button Highlight;
+    z-index: 500;
 }
 
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode {
-	font:							icon;
-	font-size:						11px;
-	color:							#333;
-	padding:						2px 2px 2px 2px;
-	margin:							0px 0px 0px 0px;
-	cursor:							pointer;
-	width: auto;
+    font: icon;
+    font-size: 11px;
+    color: #333;
+    padding: 2px;
+    margin: 0;
+    cursor: pointer;
+    width: auto;
 }
 
 .treeNodeHover {
-	background-color:				#CCC;
-	border:							1px solid #777;
-	padding:						1px 1px 1px 1px;
+    background-color: #CCC;
+    border: 1px solid #777;
+    padding: 1px;
 }
 
 .treeNodeSelected {
-	background-color:				#eee;
-	border:							1px solid #777;
-	padding:						1px 1px 1px 1px;
+    background-color: #eee;
+    border: 1px solid #777;
+    padding: 1px;
 }
 
 .deletedNode {
-	text-decoration: 				line-through;
-	color:							#333;
+    text-decoration: line-through;
+    color: #333;
 }
 
 .unpublishedNode {
-	color:							#880000;
+    color: #880000;
 }
 
 .publishedNode {
-	color:							#008800;
+    color: #008800;
 }
 
 .emptyNode {
-	color:							#888;
-	cursor:							default;
+    color: #888;
+    cursor: default;
 }
 
 .notInMenuNode {
-	color:							#FF8800;
+    color: #FF8800;
 }
 
 
 /* grid style*/
 .gridRowIcon:hover {
-		background-color:beige;}
+    background-color: beige;}
 
 
 
 /* search bar */
 .searchbar {
-	width:							100%;
-	border:							1px solid silver;
-	background-image:				url('images/srch_bg.gif');
-	background-color:				beige; }
+    width: 100%;
+    border: 1px solid silver;
+    background: beige url(images/srch_bg.gif);
+}
 
 .searchtext {
-	height:							18px;
-	padding:						2px;
-	font-family:					Verdana, Arial, Helvetica, sans-serif;
-	font-size:						11px;
-	border:							1px solid silver; }
+    height: 18px;
+    padding: 2px;
+    border: 1px solid silver; }
 
 .searchbutton {
-	width:							22px;
-	height:							18px;
-	padding:						2px;
-	text-decoration:				none;
-	border:							1px solid #e0e0e0; }
-	
+    width: 22px;
+    height: 18px;
+    padding: 2px;
+    text-decoration: none;
+    border: 1px solid #e0e0e0; }
+    
 .searchbutton:hover {
-	text-decoration:				none;
-	background-image:				url('images/button_dn.gif');}
+    text-decoration: none;
+    background-image: url(images/button_dn.gif);}
 
 .searchtoolbarbtn {
-	height:							24px;
-	padding-left:					2px;
-	padding-top:					3px;
-	padding-right:					2px;
-	text-decoration:				none;
-	font-family:					Verdana, Arial, Helvetica, sans-serif;
-	font-size:						11px;
-	background-image:				url('images/srch_bg.gif');
-	border:							1px solid #e0e0e0; }
+    height: 24px;
+    padding: 3px 2px 0;
+    text-decoration: none;
+    background-image: url(images/srch_bg.gif);
+    border: 1px solid #e0e0e0; }
 
 .searchtoolbarbtn:hover {
-	text-decoration:				none;
-	background-image:				url('images/button_dn.gif');
-	border:							1px solid green; }
+    text-decoration: none;
+    background-image: url(images/button_dn.gif);
+    border: 1px solid green; }
 
+/* Coolbuttons2.css
+------------------------------------------------------- */
+.coolButton,
+.coolButtonHover,
+.coolButtonActiveHover,
+.coolButtonActive,
+.coolButtonActiveDisabled,
+.coolButtonDisabled,
+.coolButtonUpDisabled {
+    cursor: default;
+    font: icon;
+    color: black;
+    border: 0;
+    padding: 4px 5px 4px 5px;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-image: url(../images/misc/buttonbar.gif);
+}
+
+.coolButton img {
+    filter: gray();
+}
+
+.coolButtonHover {
+    border: 1px solid black;
+    border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+    padding: 3px 4px 3px 4px;    
+    background-image: url(../images/misc/buttonbar_gs.gif);
+}
+
+.coolButtonActiveHover {
+    border: 1px solid black;
+    border-left-color: ButtonShadow;
+    border-right-color: ButtonHighlight;
+    border-top-color: ButtonShadow;
+    border-bottom-color:ButtonHighlight;
+    padding: 4px 3px 2px 5px;    
+    background-image: url("../images/misc/buttonbaractive.gif");
+}
+
+.coolButtonActive {
+    border: 1px solid black;
+    border-left-color: ButtonShadow;
+    border-right-color: ButtonHighlight;
+    border-top-color: ButtonShadow;
+    border-bottom-color:ButtonHighlight;
+    padding: 4px 3px 2px 5px;    
+    background-image: url("../images/misc/buttonbaractive.gif");
+}
+
+.coolButtonUpDisabled,
+.coolButtonActiveDisabled,
+.coolButtonDisabled {
+    border: 1px solid #003399;
+    padding: 3px 4px 3px 4px;
+    color: GrayText;
+    border-width: 0;
+}
+
+.coolButtonActiveDisabled {
+    border: 1px solid #003399;
+    padding: 3px 4px 3px 4px;
+}
+
+.coolButtonUpDisabled {
+
+}
+
+/* My latest build of mozilla crashed with the opacity */
+.coolButtonUpDisabled img,
+.coolButtonActiveDisabled img,
+.coolButtonDisabled img {
+    -moz-opacity: 0.5;
+}
+
+/* IE specific
+ * When the button becomes disbabled the innerHTML is enclosed by two spans
+ * This is done so that the image will look disabled using filters
+ */
+.coolButtonUpDisabled .coolButtonDisabledContainer,
+.coolButtonActiveDisabled .coolButtonDisabledContainer,
+.coolButtonDisabled .coolButtonDisabledContainer {
+    display: block;
+    background: GrayText;
+    filter: chroma(color=#010101) dropshadow(color=ButtonHighlight, offx=1, offy=1);
+    width: 100%;
+    height: 100%;
+}
+
+.coolButtonUpDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer,
+.coolButtonActiveDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer,
+.coolButtonDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer {
+    background: Transparent;
+    filter: gray()
+    /* Remove all bright shades of gray */
+    chroma(color=#ffffff) chroma(color=#fefefe) chroma(color=#fdfdfd)
+    chroma(color=#fcfcfc) chroma(color=#fbfbfb) chroma(color=#fafafa)
+    chroma(color=#f9f9f9) chroma(color=#f8f8f8) chroma(color=#f7f7f7)
+    chroma(color=#f6f6f6) chroma(color=#f5f5f5) chroma(color=#f4f4f4)
+    chroma(color=#f3f3f3) 
+    mask(color=#010101);
+}
+
+/* end IE specific */
+
+/* contextMenu.css
+------------------------------------------------------- */
+
+#context_menu_holder {
+	background-image: 				url("../images/bg/context.gif");
+	background-color: 				#fff;
+	background-position: 			top left;
+	background-repeat: 				repeat-y;
+	margin:							0px;
+	padding:						2px;
+	border: 						1px solid #003399;
+	border-left-color:	ButtonHighlight;
+	border-right-color:	ButtonShadow;
+	border-top-color:	ButtonHighlight;
+	border-bottom-color:ButtonShadow;
+	overflow:						hidden;
+}
+
+.menuLink {
+	cursor:							pointer;
+	font:							menu;
+	color:							MenuText;
+
+	padding: 						3px 16px 3px 2px;
+}
+
+.menuLinkOver {
+	cursor:							pointer;
+	background-position: 			bottom left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	background-image: 				url("../images/misc/buttonbar_gs.gif");
+	font:							menu;
+
+	padding: 						2px 15px 2px 1px;
+	border: 						1px solid #003399;
+	border-left-color:	ButtonHighlight;
+	border-right-color:	ButtonShadow;
+	border-top-color:	ButtonHighlight;
+	border-bottom-color:ButtonShadow;	
+}
+
+.menuLinkDisabled {
+	cursor:							default;
+	font: 							menu;
+
+	padding: 						3px 16px 3px 2px;
+	color:							graytext;
+}
+
+.menuLink img, .menuLinkOver img, .menuLinkDisabled img {
+	margin-right:					8px;
+}
+
+.menuLink img, .menuLinkDisabled img {
+	filter:							gray();
+}
+
+.menuLinkOver img {
+
+}
+
+#nameHolder {
+	text-align:						right;
+	cursor:							default;
+	font-family: 					Tahoma, Helvetica, sans-serif;
+	font-weight:					bold;
+	font-size:						11px;
+	padding: 						2px 2px 2px 2px;
+	margin-bottom:					2px;
+	border: 						1px solid #003399;
+	border-left-color:	ButtonHighlight;
+	border-right-color:	ButtonShadow;
+	border-top-color:	 ButtonHighlight;
+	border-bottom-color: ButtonShadow;	
+	background-position: 			bottom left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	background-image: 				url("../images/misc/buttonbar.gif");
+}
+
+.seperator {
+	font-size: 				0pt;
+	height: 				1px;
+	background-color: 				#6A8CCB;
+	overflow: 				hidden;
+	margin:							3px 1px 3px 28px;
+}
+
+/* topbar frame css
+------------------------------------------------------- */
+table.topbar {
+	
+}
+table.topbar td {
+	padding-top: 4px;
+	font-size:11px;
+	color: #fff;
+}
+
+table.topbar span {
+	font-size: 10px;
+	color: #fff;
+}
+table.topbar a {
+	font-size:10px;
+	color: #fff;
+	text-decoration:none;
+}
+
+
+/* dtree.css
+------------------------------------------------------- */
+.dtree {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color : Black;
+	white-space: nowrap;
+	padding: 5px;
+
+}
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+}
+.dtree a.node, .dtree a.nodeSel, .dtree a.nodeUnpublished, .dtree a.nodeDeleted {
+	white-space: nowrap;
+	padding: 2px 2px 2px 2px;
+}
+.dtree a.nodeUnpublished {
+	color: #f00;
+	text-decoration: none;
+}
+.dtree a.nodeDeleted {
+	color: #999999;
+}
+.dtree a.node:hover, a.nodeSel:hover, a.nodeUnpublished:hover, a.nodeDeleted:hover {
+	padding: 1px 1px 1px 1px;
+	border: 1px solid #999;
+	background-color: #cccccc;	
+}
+.dtree a.nodeSel {
+	padding: 1px;
+	border: 1px solid #999;
+	background-color: #efefef;
+}
+.dtree .clip {
+	
+}
+.dtree a.unSelectedNode {
+	border: 0;
+}
+
+.dtree .subTitle {
+	width:							100%;
+	height:							24px !important;
+	padding:						0px;
+	text-align:						right;
+	margin-bottom:					10px;
+}
+
+/* start etomiteButton markup */
+ul#navlist {
+	list-style: 					none;
+	padding: 						0;
+	margin: 						0 0;
+}
+
+ul#navlist li {
+	display: 						block;
+	float: 							left;
+	margin: 						0;
+	padding: 						0;
+}
+
+.etomiteButton, .etomiteButtonHover, .etomiteButtonPressed {
+	display: 						block;
+	font: 							Icon;
+	font-weight: 					normal;
+	padding:						4px 7px;
+	cursor:							pointer;
+	color:							#000080;
+	text-decoration:				none;
+}
+
+.etomiteButton img {
+	filter:							gray();
+}
+
+.etomiteButtonHover {
+	border: 						1px solid #000080;
+	background: 					#FFD38E;
+	padding:						3px 6px;
+	background-image: 				url("../../media/images/misc/buttonbarhover.gif");
+	background-color: 				#fff;
+	background-position: 			top;
+	background-repeat: 				repeat-x;	
+	
+}
+
+.etomiteButtonPressed {
+	border: 						1px solid #000080;
+	background-color:				#E98813;						
+	padding:						4px 4px 2px 8px;
+	background-image: 				url("../../media/images/misc/buttonbaractive.gif");
+	background-position: 			top;
+	background-repeat: 				repeat-x;	
+}
+/* end etomiteButtons */
+
+.dtree .right {
+	font-weight: 					bold;
+	color: 							#003399;
+	float: 							right;
+	padding:						0 10px 0 0;
+}
+
+
+
+/* tabs.css
+------------------------------------------------------- */
+.dynamic-tab-pane-control.tab-pane {
+	position:	relative;
+	width:		100%;
+}
+
+.dynamic-tab-pane-control .tab-row .tab {
+	font:							Tahoma;
+	font-size:						11px;
+	cursor:							pointer;
+	display:						inline;
+	margin:							1px -3px 1px 2px;
+	float:							left;
+	padding:						2px 15px 3px 15px;
+	z-index:						1;
+	position:						relative;
+	top:							0;
+	background-position: 			top left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	border:							1px solid #003399;
+	border-bottom:					0;
+	background-image: 				url(../images/misc/buttonbar.gif);
+}
+
+.dynamic-tab-pane-control .tab-row .tab.hover {
+	background-position: 			top left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	border:							1px solid #003399;
+	border-bottom:					0;
+	background-image: 				url(../images/misc/buttonbar_gs.gif);
+}
+
+.dynamic-tab-pane-control .tab-row .tab.selected {
+	border-bottom:	0;
+	z-index:		3;
+	padding:		2px 6px 5px 7px;
+	margin:			1px -3px -2px 0px;
+	top:			-2px;
+	background:						white;
+	border:							1px solid #003399;
+	border-bottom:					0;
+}
+
+.dynamic-tab-pane-control .tab-row .tab span {
+	font:							Tahoma;
+	font-size:						11px;
+	color:							#003399;
+	font-weight:					normal;
+	text-decoration:				none;
+}
+
+.dynamic-tab-pane-control .tab-page {
+	clear:			both;
+	background:		white;
+	border:			1px solid #003399;
+	z-index:		2;
+	position:		relative;
+	top:			-2px;
+	font:			Message-Box;
+	padding:		10px;
+}
+
+.dynamic-tab-pane-control .tab-row {
+	z-index:		1;
+	white-space:	nowrap;
+}

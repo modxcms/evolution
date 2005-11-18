@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset;?>" />
 
 <link type="text/css" rel="StyleSheet" href="media/script/iemenu/officexp/officexp.css" />
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>coolButtons2.css<?php echo "?$theme_refresher";?>" />
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" language="JavaScript" src="media/script/ieemu.js"></script>
 <script type="text/javascript" language="JavaScript" src="media/script/bin/webelm.js"></script>
 <script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>
