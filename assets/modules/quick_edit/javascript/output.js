@@ -43,9 +43,9 @@ function QE_ShowHideLinks(change) {
  setCookie('QuickEditHideLinks', hideLinks);
 
  if(hideLinks == '1') {
-  document.getElementById('QE_ShowHide').innerHTML = 'Show links';
+  document.getElementById('QE_ShowHide').innerHTML = QE_show_links;
  } else {
-  document.getElementById('QE_ShowHide').innerHTML = 'Hide links';
+  document.getElementById('QE_ShowHide').innerHTML = QE_hide_links;
  }
 
  for(var i=0; i<links.length; i++) {

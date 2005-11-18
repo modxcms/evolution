@@ -32,10 +32,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+$_lang = array();
+
 class QuickEditor {
 
  function QuickEditor() {
+
   include_once('contentVariable.class.inc.php');
+
+  global $modx;
+  global $base_path;
+  global $_lang;
+
+  $this->output = '';
+  $lang = $modx->config['manager_language'];
+  $lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
+  include_once($lang_path);
+
  }
 
  function renderEditorHTML($docId, $varId, $modId) {
@@ -49,6 +62,7 @@ class QuickEditor {
    */
 
   global $modx;
+  global $_lang;
 
   $basePath = $modx->config['base_path'];
   $modPath = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
@@ -127,19 +141,15 @@ class QuickEditor {
 $html = <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-
 <meta name="description" content="Edit pages from the frontend of the site" />
 
 <title>Quick Edit</title>
 
 <link type="text/css" rel="stylesheet" href="../{$modPath}/styles/editor.css" />
-
 <script language="JavaScript" src="media/script/datefunctions.js"></script>
 <script language="JavaScript" src="../{$modPath}/javascript/editor.js"></script>
 
@@ -156,14 +166,14 @@ $html = <<<EOD
 
 <div id="toolbar">
 
-<h1>Edit {$cv->name}</h1>
+<h1>{$_lang[edit]} {$cv->name}</h1>
 
-<a href="javascript: save();"><img src="media/images/icons/save.gif" alt="Save" /> Save</a>
-<a href="javascript: cancel();"><img src="media/images/icons/cancel.gif" alt="Cancel" /> Cancel</a>
+<a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang[save]}" /> {$_lang[save]}</a>
+<a href="javascript: cancel();"><img src="media/images/icons/cancel.gif" alt="{$_lang[cancel]}" /> {$_lang[cancel]}</a>
 
 </div>
 
-<div id="description">Edit {$tv_desc}</div>
+<div id="description">{$_lang[edit]} {$tv_desc}</div>
 
 <div id="tv_container">
 
@@ -218,8 +228,8 @@ EOD;
 
   if($modx->hasPermission('save_document') && $cv->checkPermissions()) {
 
-   if($cv->caption =="") {
-    $caption  = $cv->name ? $cv->name:"Untitled Variable";
+   if($caption =="") {
+    $caption  = $name ? $name:"Untitled Variable";
    }
 
    // Get the template variable value
@@ -288,7 +298,7 @@ EOD;
     $modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$docId));
 
     // empty cache
-    include_once($modx->config['base_path'] . 'manager/processors/cache_sync.class.processor.php');
+    include_once('../manager/processors/cache_sync.class.processor.php');
     $sync = new synccache();
     $sync->setCachepath("../assets/cache/");
     $sync->setReport(false);

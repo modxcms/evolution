@@ -5,6 +5,7 @@
  *  Contact: adam@obledesign.com
  *  Created: 8/14/2005
  *  Updated: 10/7/05 - Added editable description
+ *  Updated: 11/17/05 - Fixed href="#" and uppercase </HEAD>
  *  For: MODx cms (modxcms.com)
  *  Description: Class for outputing QuickEdit links
  */
@@ -32,10 +33,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+$_lang = array();
+
 class Output {
 
  function Output() {
+
+  global $modx;
+  global $base_path;
+  global $_lang;
+
   $this->output = '';
+  $lang = $modx->config['manager_language'];
+  $lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
+  include_once($lang_path);
+
  }
 
  function mergeTags() {
@@ -62,6 +74,7 @@ class Output {
    */
 
   global $modx;
+  global $_lang;
 
   $allowed = true;
   $basePath = $modx->config['base_path'];
@@ -110,6 +123,8 @@ $head = <<<EOD
 <script type="text/javascript">
  var modId = '{$moduleId}';
  var managerPath = '{$managerPath}';
+ var QE_show_links = '{$_lang[QE_show_links]}';
+ var QE_hide_links = '{$_lang[QE_hide_links]}';
 </script>
 <script src="{$modPath}/javascript/cookies.js" type="text/javascript"></script>
 <script src="{$modPath}/javascript/output.js" type="text/javascript"></script>
@@ -132,8 +147,8 @@ foreach($cvs as $content) {
  
  if($cv_obj->id && $cv_obj->checkPermissions()) {
   $class_name = 'QE_'.(is_numeric($cv_obj->id) ? 'TV' : 'BuiltIn');
-$toolbr_cv_html = <<<EOD
-<li><a href="#" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="Edit {$cv_obj->description}">{$cv_obj->caption}</a></li
+$toolbr_cv_html .= <<<EOD
+<li><a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="{$_lang[edit]} {$cv_obj->description}">{$cv_obj->caption}</a></li
 >
 EOD;
  }
@@ -148,18 +163,18 @@ $html_top = <<<EOD
 
 <div id="QE_Toolbar">
     
-    <h1 id="QE_Title">QuickEdit</h1>
+    <h1 id="QE_Title">{$_lang[QE_title]}</h1>
     
     <div id="QE_menu_1" class="collapsed">
         <ul>
-            <li><a href="#" id="QE_ShowHide" onclick="QE_ShowHideLinks(true);" title="Show and hide the QuickEdit links">Show/Hide Links</a></li
-            ><li><a id="QE_Manager" href="{$managerPath}" title="Go to the MODx manager">Manager</a></li
-            ><li><a id="QE_Logout" href="{$logoutUrl}" title="Logout of your manager acount">Logout</a></li
-            ><li><a id="QE_Help" href="http://www.modxcms.com/quickedit.html" title="QuickEdit documentation on modxcms.com">Help</a></li
+            <li><a href="javascript:;" id="QE_ShowHide" onclick="QE_ShowHideLinks(true);"></a></li
+            ><li><a id="QE_Manager" href="{$managerPath}">{$_lang[manager]}</a></li
+            ><li><a id="QE_Logout" href="{$logoutUrl}">$_lang[logout]</a></li
+            ><li><a id="QE_Help" href="http://www.modxcms.com/quickedit.html">$_lang[help]</a></li
         ></ul>
     </div>
     <div id="QE_EditTitle" onmouseover="QE_Expand(document.getElementById('QE_menu_2'));" class="collapsed">
-        <h1>Edit...</h1>
+        <h1>{$_lang[edit]}...</h1>
     </div>
     <div id="QE_menu_2" class="collapsed">
         <ul>
@@ -182,30 +197,27 @@ new Draggable('QE_Collapse_Wrapper', {handle:'QE_Title'});
 EOD;
 
    // Get an array of the content variable names
-   $matches= array();
    preg_match_all('~<quickedit:(.*?)\s*\/>~', $output, $matches);
 
    // Loop through every TV we found
-   if ($matchCount= count($matches[1])) {
-	   for($i=0; $i<$matchCount; $i++) {
-	
-	    $contentVarName = $matches[1][$i];
-	    $cv->set($contentVarName, $pageId);
-	    $link = '';
-	
-	    // Check that we have permission to edit this content
-	    if($cv->id && $cv->checkPermissions()) {
-	
+   for($i=0; $i<count($matches[1]); $i++) {
+
+    $contentVarName = $matches[1][$i];
+    $cv->set($contentVarName, $pageId);
+    $link = '';
+
+    // Check that we have permission to edit this content
+    if($cv->id && $cv->checkPermissions()) {
+
      // Set the HTML for the link
 $link = <<<EOD
-<a href="#" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; edit {$cv->name}</a>
+<a href="javascript:;" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; {$_lang[edit]} {$cv->name}</a>
 EOD;
 
-	    }
-	
-	    $replacements[$i] = $link;
-	
-	   }
+    }
+
+    $replacements[$i] = $link;
+
    }
 
    // Merge the links with the content
@@ -213,17 +225,17 @@ EOD;
 
    // If the javascript hasn't already been added to the page, do it now
    if(strpos($output, $head) === false) {
-    $output = str_replace('</head>',$head.'</head>',$output);
+    $output = str_ireplace('</head>',$head.'</head>',$output);
    }
    
    // If the top html hasn't already been added to the page, do it now
    if(strpos($output, $html_top) === false) {
-    $output = ereg_replace('(<body[^>]*>)', '\1'.$html_top, $output);
+    $output = preg_replace('/(<body[^>]*>)/i', '\1'.$html_top, $output);
    }
 
    // If the bottom html hasn't already been added to the page, do it now
    if(strpos($output, $html_bottom) === false) {
-    $output = str_replace('</body>',$html_bottom.'</body>',$output);
+    $output = str_ireplace('</body>',$html_bottom.'</body>',$output);
    }
 
   }
