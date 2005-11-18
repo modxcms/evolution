@@ -32,9 +32,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+if(!isset($_lang)) { $_lang = array(); }
+
 class ContentVariable {
 
  function contentVariable() {
+
   $this->id = 0;
   $this->pageId = 0;
   $this->type = '';
@@ -44,13 +47,28 @@ class ContentVariable {
   $this->elements = '';
   $this->default_text = '';
   $this->content = '';
-  
+
+  global $modx;
+  global $base_path;
+  global $_lang;
+
+  if(!$_lang) {
+   $modPath = $GLOBALS['quick_edit_path'];
+   $lang = $modx->config['manager_language'];
+   $qe_lang_path = $mod_path.'/lang/'.$lang.'.inc.php';
+   $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
+   include_once($modPath.'/lang/english.inc.php');
+   if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
+   include_once($manager_lang_path);
+  }
+
  }
 
  // Gets a content variables paramaters
  function set($var,$pageId=0) {
 
   global $modx;
+  global $_lang;
   
   $id = 0;
   $name = '';
@@ -80,20 +98,20 @@ class ContentVariable {
 
      case 'pagetitle':
       $type = 'text';
-      $caption = 'Page Title';
-      $description = 'Standard short page title';
+      $caption = $_lang['pagetitle'];
+      $description = $_lang['pagetitle'];
       break;
 
      case 'longtitle':
       $type = 'text';
-      $caption = 'Long Title';
-      $description = 'Standard long page title';
+      $caption = $_lang['long_title'];
+      $description = $_lang['long_title'];
       break;
 
      case 'description':
       $type = 'textarea';
-      $caption = 'Description';
-      $description = 'Standard page description';
+      $caption = $_lang['description'];
+      $description = $_lang['description'];
       break;
 
      case 'content':
@@ -104,32 +122,32 @@ class ContentVariable {
        $inputType = 'textarea';
       }
       $type = $inputType;
-      $caption = 'Content';
-      $description = 'Standard page content';
+      $caption = $_lang['document_content'];
+      $description = $_lang['document_content'];
       break;
       
      case 'alias':
       $type = 'text';
-      $caption = 'Alias';
-      $description = 'Alias name';
+      $caption = $_lang['document_alias'];
+      $description = $_lang['document_alias'];
       break;
      
      case 'published':
       $type = 'checkbox';
-      $caption = 'Published';
-      $description = 'Publish page';
+      $caption = $_lang['publish_document'];
+      $description = $_lang['publish_document'];
       break;
      
      case 'introtext':
       $type = 'textarea';
-      $caption = 'Intro Text';
-      $description = 'Introductory text';
+      $caption = $_lang['document_summary'];
+      $description = $_lang['document_summary'];
       break;
 
      case 'menutitle':
       $type = 'text';
-      $caption = 'Menu Title';
-      $description = 'Short menu title';
+      $caption = $_lang['document_opt_menu_title'];
+      $description = $_lang['document_opt_menu_title'];
       break;
      
      default:

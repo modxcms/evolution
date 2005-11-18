@@ -33,8 +33,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+<<<<<<< .mine
+if(!isset($_lang)) { $_lang = array(); }
+
+=======
 $_lang = array();
 
+>>>>>>> .r491
 class Output {
 
  function Output() {
@@ -44,10 +49,24 @@ class Output {
   global $_lang;
 
   $this->output = '';
+<<<<<<< .mine
+
+  if(!$_lang) {
+   $modPath = $GLOBALS['quick_edit_path'];
+   $lang = $modx->config['manager_language'];
+   $qe_lang_path = $mod_path.'/lang/'.$lang.'.inc.php';
+   $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
+   include_once($modPath.'/lang/english.inc.php');
+   if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
+   include_once($manager_lang_path);
+  }
+
+=======
   $lang = $modx->config['manager_language'];
   $lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
   include_once($lang_path);
 
+>>>>>>> .r491
  }
 
  function mergeTags() {

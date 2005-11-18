@@ -357,7 +357,7 @@ $_lang['credits_shouts_title'] = "<b>Additional thanks to:</b>"; // obsolete
 $_lang['credits_shouts_msg'] = "
 <ul>
 <li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
-<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
+<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messages";
 $_lang['messages_inbox'] = "Inbox";
@@ -1036,8 +1036,14 @@ $_lang['switch_to_rte'] = 'Switch To RichText';
 /***************************************************************************/
 // new in 0.9.1
 /***************************************************************************/
-$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
-$_lang['QE_show_links'] = 'Show links';
+$_lang['QE_lang'] = 'en';
+$_lang['QE_xml_lang'] = 'en';
+$_lang['QE_charset'] = 'iso-8859-1';
+$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
+$_lang['QE_show_links'] = 'Show links';
 $_lang['QE_hide_links'] = 'Hide links';
+$_lang['QE_someone_editing'] = 'Someone else is editing this document';
+$_lang['QE_cant_find_content'] = 'Could not find content to edit';
+$_lang['QE_description'] = 'Edit pages from the frontend of the site';
 
 ?>

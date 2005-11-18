@@ -32,13 +32,37 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+<<<<<<< .mine
+if(!isset($_lang)) { $_lang = array(); }
+
+=======
 $_lang = array();
 
+>>>>>>> .r491
 class QuickEditor {
 
  function QuickEditor() {
 
   include_once('contentVariable.class.inc.php');
+<<<<<<< .mine
+
+  global $modx;
+  global $base_path;
+  global $_lang;
+
+  $this->output = '';
+
+  if(!$_lang) {
+   $modPath = $GLOBALS['quick_edit_path'];
+   $lang = $modx->config['manager_language'];
+   $qe_lang_path = $mod_path.'/lang/'.$lang.'.inc.php';
+   $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
+   include_once($modPath.'/lang/english.inc.php');
+   if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
+   include_once($manager_lang_path);
+  }
+
+=======
 
   global $modx;
   global $base_path;
@@ -49,6 +73,7 @@ class QuickEditor {
   $lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
   include_once($lang_path);
 
+>>>>>>> .r491
  }
 
  function renderEditorHTML($docId, $varId, $modId) {
@@ -84,30 +109,30 @@ class QuickEditor {
 
   if(!$modx->hasPermission('edit_document')) {
 
-   $modx->event->alert('No document edit rights');
+   $modx->event->alert($_lang['access_permission_denied']);
    $allowed = false;
    
   } elseif(!$cv->checkPermissions()) {
    
-   $modx->event->alert('Permission denied');
+   $modx->event->alert($_lang['access_permission_denied']);
    $allowed = false;
    
   } elseif(!$cv->id) {
 
    // Mage sure the the content variable exists
-   $modx->event->alert('Could not find content');
+   $modx->event->alert($_lang['QE_cant_find_content']);
    $allowed = false;
 
   } elseif(!$cv->checkPermissions()) {
 
    // Make sure we have permission to edit it
-   $modx->event->alert('Permission denied');
+   $modx->event->alert($_lang['access_permission_denied']);
    $allowed = false;
 
   } elseif($cv->locked()) {
 
    // Make sure the document isn't locked
-   $modx->event->alert('Somebody else is editing this document');
+   $modx->event->alert($_lang['QE_someone_editing']);
    $allowed = false;
    
   }
@@ -141,13 +166,16 @@ class QuickEditor {
 $html = <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<<<<<<< .mine
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{$_lang[QE_lang]}" xml:lang="{$_lang[QE_xml_lang]}">
+=======
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+>>>>>>> .r491
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<meta name="description" content="Edit pages from the frontend of the site" />
-
-<title>Quick Edit</title>
+<meta http-equiv="Content-Type" content="text/html; charset={$_lang[QE_charset]}" />
+<meta name="description" content="{$_lang[QE_description]}" />
+<title>{$_lang[QE_title]}</title>
 
 <link type="text/css" rel="stylesheet" href="../{$modPath}/styles/editor.css" />
 <script language="JavaScript" src="media/script/datefunctions.js"></script>
@@ -166,14 +194,22 @@ $html = <<<EOD
 
 <div id="toolbar">
 
+<<<<<<< .mine
+<h1>{$_lang[edit]} {$cv->caption}</h1>
+=======
 <h1>{$_lang[edit]} {$cv->name}</h1>
+>>>>>>> .r491
 
 <a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang[save]}" /> {$_lang[save]}</a>
 <a href="javascript: cancel();"><img src="media/images/icons/cancel.gif" alt="{$_lang[cancel]}" /> {$_lang[cancel]}</a>
 
 </div>
 
+<<<<<<< .mine
+<div id="description">{$_lang[edit]} {$cv->description}</div>
+=======
 <div id="description">{$_lang[edit]} {$tv_desc}</div>
+>>>>>>> .r491
 
 <div id="tv_container">
 
@@ -319,7 +355,7 @@ $html = <<<EOD
 
 <head>
 
-<title>Click to close</title>
+<title>{$_lang[close]}</title>
 
 <script language="JavaScript" src="../{$modPath}/javascript/editor.js"></script>
 <script type="text/javascript">
@@ -332,7 +368,7 @@ reloadAndClose();
 
 <body>
 
-<p style="text-align:center;"><a href="javascript: postSave();">Close window</a></p>
+<p style="text-align:center;"><a href="javascript: postSave();">{$_lang[close]}</a></p>
 
 </body>
 

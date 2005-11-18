@@ -26,7 +26,7 @@
     text-decoration: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    list-style: none;
+    list-style: none !important;
 }
 #QE_Toolbar ul { position: relative; z-index: 10000000 }
 #QE_Toolbar, #QE_Toolbar h1, #QE_Toolbar a {
@@ -44,7 +44,7 @@
     height: auto !important;
     height: 1%;
     color: #333;
-    position: relative;
+    position: relative !important;
 }
 * html #QE_EditTitle h1 {
     background-image: none;
@@ -58,9 +58,10 @@
 #QE_Toolbar a {
     height: auto !important;
     height: 1%;
-    display: block;
-    padding: 0 10px;
-    color: #444;
+    display: block !important;
+    padding: 0 10px !important;
+    color: #444 !important;
+    text-decoration:none !important;
 }
 
 #QE_Toolbar div { 
@@ -79,14 +80,14 @@
 }
 
 a.QE_Link {
-    float: right;
-    clear: right;
+    float: right !important;
+    clear: right !important;
     padding: 0 5px;
     white-space: nowrap;
-    color: #000;
+    color: #000 !important;
     font-size: 7pt;
     font-weight: normal;
-    text-decoration: none;
+    text-decoration: none !important;
     line-height: 15px;
     height: 15px;
     border: 1px solid #afafaf;

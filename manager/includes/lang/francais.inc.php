@@ -3,13 +3,17 @@
  * Filename:       includes/lang/francais.inc.php
  * Function:       French language file for ModX
  * Encoding:       ISO-Latin-1
- * Author:         Nicolas Martignoni
+ * Author:         Nicolas Martignoni (modx@martignoni.net)
  * Date:           2005/10/25, 08:54 UTC
  * Version:        1.1
  * MODx version:   0.9.0
 **/
 
+<<<<<<< .mine
+include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults
+=======
 include_once(dirname(__FILE__).'/english.inc.php'); // for the defaults
+>>>>>>> .r491
 
 $_lang["login_message"] = "Veuillez vous identifier afin d'accéder à votre gestionnaire de site. Votre login et votre mot de passe sont sensibles à la casse. Tapez-les donc avec soin !"; 
 $_lang["username"] = "Votre nom d'utilisateur ";
@@ -357,7 +361,7 @@ $_lang['credits_shouts_title'] = "<b>Remerciements également à :</b>"; // obsole
 $_lang['credits_shouts_msg'] = "
 <ul>
 <li><b>Raymond Irving, Ryan Thrash</b> &ndash; Project Founders</li>
-<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> &ndash; Core Architecture &amp; Design</li>
+<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> &ndash; Core Architecture &amp; Design</li>
 <li><b>Nicolas Martignoni et Lorenzo</b> &ndash; Traduction française</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messages";

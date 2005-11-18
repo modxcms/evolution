@@ -3,13 +3,13 @@
  * Filename:       includes/lang/italian.inc.php
  * Function:       Italian language file for ModX
  * Encoding:       ISO-Latin-1
- * Author:         Nicola Lambathakis
+ * Author:         Nicola Lambathakis (nlambat@tiscali.it)
  * Date:           2005/11/14
  * Version:        1.1
  * ModX version:   0.9.1
 **/
 
-include "lang/english.inc.php"; // for the defaults
+include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults
 
 $_lang["login_message"] = "Inserisci le tue credenziali di login per iniziare la sessione del Content Manager. Username e password sono case-sensitive, quindi scrivili con attenzione!"; // changed 06 RC2
 $_lang["username"] = "Username";
@@ -356,15 +356,9 @@ $_lang['credits_webfx'] = "MODx usa diversi JavaScripts di Webfx. Grande gruppo!
 $_lang['credits_dTree'] = "MODx utilizza l'eccellente script per l'alberatura di DestroyDrop.com!"; // obsolete
 $_lang['credits_shouts_title'] = "<b>Particolari ringraziamenti a:</b>"; // obsolete
 $_lang['credits_shouts_msg'] = "
-<ul><li><b>mina</b> - Traduzione francese</li>
-<li><b>Nicola Lambathakis</b> - Traduzione Italiana</li>
-<li><b>Travis Sitzlar</b> - Programmazione</li>
-<li><b>Jason Coward</b> - Programmazione</li>
-<li><b>Susan Ottwell</b> - Programmazione</li>
-<li><b>Jason Vilsack</b> - Marketing e Strategia</li>
-<li><b>Dave Denis</b> - Marketing e Strategia</li>
-<li><b>Brian Oberkirch</b> - Marketing e Strategia</li>
-<li><b>Ben Talplacido</b> - Design</li>
+<ul>
+<li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
+<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messaggi";
 $_lang['messages_inbox'] = "Inbox";
