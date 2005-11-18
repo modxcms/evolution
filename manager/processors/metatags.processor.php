@@ -52,7 +52,7 @@ else {
 	// do any renaming that has to be done
 	foreach($orig_keywords as $key => $value) {
 		if($rename_keywords[$key]!=$value) {
-			$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords WHERE keyword='".addslashes($rename_keywords[$key])."'";
+			$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords WHERE BINARY keyword='".addslashes($rename_keywords[$key])."'";
 			$rs = mysql_query($sql);
 			$limit = mysql_num_rows($rs);
 			if($limit > 0) {
