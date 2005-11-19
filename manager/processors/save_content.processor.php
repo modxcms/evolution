@@ -233,7 +233,11 @@ if($limit > 0) {
 				$tmplvar = implode("||",$feature_insert);
              }
              else {
-      	  	    $tmplvar = $_POST["tv".$row['name']];
+      	  	    if($row['type']=='text' || $row['type']=='textarea' || $row['type']=='textareamini'){
+      	  	    	$tmplvar = htmlentities($_POST["tv".$row['name']]);
+      	  	    } else {
+      	  	    	$tmplvar = $_POST["tv".$row['name']];
+      	  	    }
              }             
 		}       
 		// save value if it was mopdified
