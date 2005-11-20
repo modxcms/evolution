@@ -172,7 +172,7 @@ switch ($_POST['mode']) {
 		if($use_udperms==1) {
 			if(count($user_groups)>0) {
 				for ($i=0;$i<count($user_groups);$i++) {
-					$sql = "INSERT INTO $dbase.".$table_prefix."web_groups(webgroup, webuser) values('".intval($user_group[$i])."', '$key')";
+					$sql = "INSERT INTO $dbase.".$table_prefix."web_groups(webgroup, webuser) values('".intval($user_groups[$i])."', '".$key."')";
 					$rs = mysql_query($sql);
 					if(!$rs){
 						webAlert("An error occured while attempting to add the user to a web group.");
