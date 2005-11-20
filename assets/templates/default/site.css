@@ -578,3 +578,13 @@ img.alignleft {
 	margin: 0 7px 2px 0;
 	display: inline;
 }
+
+/* Fixes for RichText widgets
+------------------------------------------------------------------------------- */
+.MODX_RichTextWidget {
+	float: left;
+}
+
+.MODX_RichTextWidget a {
+	border: 0px;
+}
