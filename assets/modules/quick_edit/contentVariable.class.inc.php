@@ -71,7 +71,6 @@ class ContentVariable {
   global $_lang;
   
   $id = 0;
-  $name = '';
   $type = '';
   $caption = '';
   $description = '';
@@ -89,7 +88,7 @@ class ContentVariable {
    extract($tv, EXTR_OVERWRITE);
 
    // This is built-in content
-   if(!array_key_exists('id', $tv) && $name) {
+   if((!isset($tv['id']) || !$tv['id']) && $name) {
 
     // Since built in content don't have ID's we'll use the name
     $id = $name;

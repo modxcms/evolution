@@ -33,13 +33,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
-<<<<<<< .mine
 if(!isset($_lang)) { $_lang = array(); }
 
-=======
-$_lang = array();
-
->>>>>>> .r491
 class Output {
 
  function Output() {
@@ -49,24 +44,17 @@ class Output {
   global $_lang;
 
   $this->output = '';
-<<<<<<< .mine
 
   if(!$_lang) {
-   $modPath = $GLOBALS['quick_edit_path'];
+   $mod_path = $GLOBALS['quick_edit_path'];
    $lang = $modx->config['manager_language'];
    $qe_lang_path = $mod_path.'/lang/'.$lang.'.inc.php';
    $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
-   include_once($modPath.'/lang/english.inc.php');
+   include_once($mod_path.'/lang/english.inc.php');
    if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
    include_once($manager_lang_path);
   }
 
-=======
-  $lang = $modx->config['manager_language'];
-  $lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
-  include_once($lang_path);
-
->>>>>>> .r491
  }
 
  function mergeTags() {
@@ -83,7 +71,7 @@ class Output {
 
  }
 
- function mergeLinks($moduleId) {
+ function mergeLinks($module_id) {
 
   /*
    *  If you are logged in this function will find the <quickedit:... />
@@ -96,14 +84,15 @@ class Output {
   global $_lang;
 
   $allowed = true;
-  $basePath = $modx->config['base_path'];
-  $modPath = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+  $toolbr_cv_html = '';
+  $base_path = $modx->config['base_path'];
+  $mod_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $output = $this->output;
 
-  include_once($basePath.$modPath.'/module.class.inc.php');
+  include_once($base_path.$mod_path.'/module.class.inc.php');
   
   $module = new Module;
-  $module->id = $moduleId;
+  $module->id = $module_id;
 
   // If we are logged in and have edit permissions...
   if(!isset($_SESSION['mgrValidated'])) {
@@ -126,13 +115,12 @@ class Output {
 
   if($allowed) {
 
-   include_once($basePath.$modPath.'/contentVariable.class.inc.php');
+   include_once($base_path.$mod_path.'/contentVariable.class.inc.php');
 
    $cv = new ContentVariable;
-   $managerPath = $modx->getManagerPath();
-   $pageId = $modx->documentIdentifier;
-   $pageUrl = $modx->makeUrl($pageId);
-   $logoutUrl = $modx->makeURL($pageId, '', 'QuickEdit_logout=logout');
+   $manager_path = $modx->getManagerPath();
+   $page_id = $modx->documentIdentifier;
+   $logout_url = $modx->makeURL($page_id, '', 'QuickEdit_logout=logout');
    $replacements = array();
    $link = '';
 
@@ -140,16 +128,16 @@ class Output {
 $head = <<<EOD
 <!-- Start QuickEdit headers -->
 <script type="text/javascript">
- var modId = '{$moduleId}';
- var managerPath = '{$managerPath}';
- var QE_show_links = '{$_lang[QE_show_links]}';
- var QE_hide_links = '{$_lang[QE_hide_links]}';
+ var modId = '{$module_id}';
+ var managerPath = '{$manager_path}';
+ var QE_show_links = '{$_lang['QE_show_links']}';
+ var QE_hide_links = '{$_lang['QE_hide_links']}';
 </script>
-<script src="{$modPath}/javascript/cookies.js" type="text/javascript"></script>
-<script src="{$modPath}/javascript/output.js" type="text/javascript"></script>
+<script src="{$mod_path}/javascript/cookies.js" type="text/javascript"></script>
+<script src="{$mod_path}/javascript/output.js" type="text/javascript"></script>
 <script type="text/javascript" src="manager/media/script/scriptaculous/prototype.js"></script>
 <script type="text/javascript" src="manager/media/script/scriptaculous/scriptaculous.js"></script>
-<link type="text/css" rel="stylesheet" href="{$modPath}/styles/output.css" />
+<link type="text/css" rel="stylesheet" href="{$mod_path}/styles/output.css" />
 <!-- End QuickEdit headers -->
 EOD;
 
@@ -167,7 +155,7 @@ foreach($cvs as $content) {
  if($cv_obj->id && $cv_obj->checkPermissions()) {
   $class_name = 'QE_'.(is_numeric($cv_obj->id) ? 'TV' : 'BuiltIn');
 $toolbr_cv_html .= <<<EOD
-<li><a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv_obj->id}', {$moduleId});" title="{$_lang[edit]} {$cv_obj->description}">{$cv_obj->caption}</a></li
+<li><a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: QE_OpenEditor({$page_id}, '{$cv_obj->id}', {$module_id});" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a></li
 >
 EOD;
  }
@@ -182,18 +170,18 @@ $html_top = <<<EOD
 
 <div id="QE_Toolbar">
     
-    <h1 id="QE_Title">{$_lang[QE_title]}</h1>
+    <h1 id="QE_Title">{$_lang['QE_title']}</h1>
     
     <div id="QE_menu_1" class="collapsed">
         <ul>
             <li><a href="javascript:;" id="QE_ShowHide" onclick="QE_ShowHideLinks(true);"></a></li
-            ><li><a id="QE_Manager" href="{$managerPath}">{$_lang[manager]}</a></li
-            ><li><a id="QE_Logout" href="{$logoutUrl}">$_lang[logout]</a></li
+            ><li><a id="QE_Manager" href="{$manager_path}">{$_lang['manager']}</a></li
+            ><li><a id="QE_Logout" href="{$logout_url}">{$_lang['logout']}</a></li
             ><li><a id="QE_Help" href="http://www.modxcms.com/quickedit.html">$_lang[help]</a></li
         ></ul>
     </div>
     <div id="QE_EditTitle" onmouseover="QE_Expand(document.getElementById('QE_menu_2'));" class="collapsed">
-        <h1>{$_lang[edit]}...</h1>
+        <h1>{$_lang['edit']}...</h1>
     </div>
     <div id="QE_menu_2" class="collapsed">
         <ul>
@@ -216,13 +204,14 @@ new Draggable('QE_Collapse_Wrapper', {handle:'QE_Title'});
 EOD;
 
    // Get an array of the content variable names
+   $matches= array();
    preg_match_all('~<quickedit:(.*?)\s*\/>~', $output, $matches);
 
    // Loop through every TV we found
    for($i=0; $i<count($matches[1]); $i++) {
 
     $contentVarName = $matches[1][$i];
-    $cv->set($contentVarName, $pageId);
+    $cv->set($contentVarName, $page_id);
     $link = '';
 
     // Check that we have permission to edit this content
@@ -230,7 +219,7 @@ EOD;
 
      // Set the HTML for the link
 $link = <<<EOD
-<a href="javascript:;" onclick="javascript: QE_OpenEditor({$pageId}, '{$cv->id}', {$moduleId});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; {$_lang[edit]} {$cv->name}</a>
+<a href="javascript:;" onclick="javascript: QE_OpenEditor({$page_id}, '{$cv->id}', {$module_id});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; {$_lang['edit']} {$cv->name}</a>
 EOD;
 
     }
