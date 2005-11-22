@@ -4,8 +4,8 @@
  * Function:       Italian language file for ModX
  * Encoding:       ISO-Latin-1
  * Author:         Nicola Lambathakis (nlambat@tiscali.it)
- * Date:           2005/11/14
- * Version:        1.1
+ * Date:           2005/11/19
+ * Version:        1.2
  * ModX version:   0.9.1
 **/
 
@@ -1040,8 +1040,14 @@ $_lang['switch_to_rte'] = 'Passa al RichText';
 /***************************************************************************/
 // new in 0.9.1
 /***************************************************************************/
+$_lang['QE_lang'] = 'it';
+$_lang['QE_xml_lang'] = 'it';
+$_lang['QE_charset'] = 'iso-8859-1';
 $_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
 $_lang['QE_show_links'] = 'Mostra links';
 $_lang['QE_hide_links'] = 'Nascondi links';
+$_lang['QE_someone_editing'] = 'Un altro utente stà editando questo documento';
+$_lang['QE_cant_find_content'] = 'Non trovo il contenuto da editare';
+$_lang['QE_description'] = 'Edita le pagine dal frontend del sito';
 
 ?>
