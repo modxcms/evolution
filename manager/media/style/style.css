@@ -93,7 +93,7 @@ hr {
     background: #fff;
     font-size: 12px;
     padding: 10px;
-    background: url(../images/bg/section.jpg) no-repeat top left;
+    background: url(../images/bg/section.jpg) no-repeat top right;
 }
 
 .fakefieldset strong, .fakefieldsettitle {
