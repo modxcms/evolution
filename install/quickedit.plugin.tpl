@@ -85,7 +85,7 @@ if(!file_exists($mod_path)) {
  $modx->documentOutput = $outputObject->output;
 
  // Logout ?
- $qe_logout= (isset($_GET['QuickEdit_logout'])? $_GET['QuickEdit_logout']: '';
+ $qe_logout= (isset($_GET['QuickEdit_logout'])? $_GET['QuickEdit_logout']: '');
  if($qe_logout == 'logout') {
   $_SESSION = array();
  }
