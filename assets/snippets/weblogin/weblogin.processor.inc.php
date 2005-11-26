@@ -174,7 +174,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 	$username = htmlspecialchars($_POST['username']);
 	$givenPassword = htmlspecialchars($_POST['password']);
-	$captcha_code = $_POST['captcha_code'];
+	$captcha_code = isset($_POST['captcha_code'])? $_POST['captcha_code']: '';
 
 	// invoke OnBeforeWebLogin event
 	$modx->invokeEvent("OnBeforeWebLogin",
@@ -251,7 +251,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	}
 
 	// allowed ip
-	if ($modx->config['allowed_ip']) {
+	if (isset($modx->config['allowed_ip'])) {
 		if (strpos($modx->config['allowed_ip'],$_SERVER['REMOTE_ADDR'])===false) {
 			$output = webLoginAlert("You are not allowed to login from this location.");
 			return;
@@ -259,7 +259,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	}
 
 	// allowed days
-	if ($modx->config['allowed_days']) {
+	if (isset($modx->config['allowed_days'])) {
 		$date = getdate();
 		$day = $date['wday']+1;
 		if (strpos($modx->config['allowed_days'],"$day")===false) {
@@ -286,14 +286,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		}
 	}
 
-	if($use_captcha==1) {
+	if(isset($use_captcha) && $use_captcha==1) {
 		if($_SESSION['veriword']!=$captcha_code) {
 			$output = webLoginAlert("The security code you entered didn't validate! Please try to login again!");
 			$newloginerror = 1;
 		}
 	}
 
-	if($newloginerror==1) {
+	if(isset($newloginerror) && $newloginerror==1) {
 		$failedlogins += $newloginerror;
 		if($failedlogins>=3) { //increment the failed login counter, and block!
 			$sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount='$failedlogins', blockeduntil='".(time()+(1*60*60))."' where internalKey=$internalKey";
@@ -353,7 +353,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 								
 	// get login home page
 	$ok=false;
-	if($id=$modx->config['login_home']) {
+	if(isset($modx->config['login_home']) && $id=$modx->config['login_home']) {
 		if ($modx->getPageInfo($id)) $ok = true;
 	}
 	if (!$ok) {
@@ -388,14 +388,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 							));
 
 	// redirect 
-	if($_REQUEST["refurl"]) {
+	if(isset($_REQUEST['refurl']) && !empty($_REQUEST['refurl'])) {
 		// last accessed page
 		$url = $_REQUEST["refurl"];		
 		$modx->sendRedirect($url,0,REDIRECT_REFRESH);
 	}
 	else {
 		// login home page
-		$url = $modx->makeURL($id);
+		$url = $modx->makeUrl($id);
 		$modx->sendRedirect($url);
 	}
 	

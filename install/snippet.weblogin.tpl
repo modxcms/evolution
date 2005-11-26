@@ -70,7 +70,8 @@ $webLoginMode = isset($_REQUEST['webloginmode'])? $_REQUEST['webloginmode']: '';
 $isLogOut		= $webLoginMode=='lo' ? 1:0;
 $isPWDActivate	= $webLoginMode=='actp' ? 1:0;
 $isPostBack		= count($_POST) && isset($_POST['cmdweblogin']);
-$isPWDReminder	= $isPostBack && $_REQUEST['txtpwdrem']=='1' ? 1:0;
+$txtPwdRem 		= isset($_REQUEST['txtpwdrem'])? $_REQUEST['txtpwdrem']: 0;
+$isPWDReminder	= $isPostBack && $txtPwdRem=='1' ? 1:0;
 
 $site_id = isset($site_id)? $site_id: '';
 $cookieKey = substr(md5($site_id."Web-User"),0,15);

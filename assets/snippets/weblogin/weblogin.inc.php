@@ -77,7 +77,7 @@ if(!isset($_SESSION['webValidated'])){
 		$ref = isset($_REQUEST["refurl"]) ? "&refurl=".urlencode($_REQUEST["refurl"]):"";
 		$tpl = "<div id='WebLoginLayer0' style='position:relative'>".$tpls[0]."</div>";
 		$tpl.= "<div id='WebLoginLayer2' style='position:relative;display:none'>".$tpls[2]."</div>";
-		$tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier,"",$ref),$tpl);
+		$tpl = str_replace("[+action+]",$modx->makeUrl($modx->documentIdentifier,"",$ref),$tpl);
 		$tpl = str_replace("[+rememberme+]",(isset($cookieSet) ? 1 : 0),$tpl);	
 		$tpl = str_replace("[+username+]",$uid,$tpl);	
 		$tpl = str_replace("[+checkbox+]",(isset($cookieSet) ? "checked" : ""),$tpl);
@@ -91,6 +91,7 @@ if(!isset($_SESSION['webValidated'])){
 	$output = ob_get_contents();
 	ob_end_clean();
 } else {
+	$output= '';
 	$dbase = $modx->dbConfig['dbase'];
 	$table_prefix = $modx->dbConfig['table_prefix'];
 	if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
@@ -105,7 +106,7 @@ if(!isset($_SESSION['webValidated'])){
 	
 	// display logout
 	$tpl = $tpls[1];
-	$url = $modx->makeURL($modx->documentIdentifier);
+	$url = $modx->makeUrl($modx->documentIdentifier);
 	$url = $url.((strpos($url,"?")===false) ? "?":"&")."webloginmode=lo";
 	$tpl = str_replace("[+action+]",$url,$tpl);	
 	$tpl = str_replace("[+logouttext+]",$logoutText,$tpl);	

@@ -15,7 +15,7 @@ $tpls = explode((isset($declare["separator"]) ? $declare["separator"]:"<!--tpl_s
 if(!$isPostBack && isset($_SESSION['webValidated'])){
 	// display password screen
 	$tpl = $tpls[0];
-	$tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier),$tpl);
+	$tpl = str_replace("[+action+]",$modx->makeUrl($modx->documentIdentifier),$tpl);
 	$tpl.="<script type='text/javascript'>
 		if (document.changepwdfrm) document.changepwdfrm.oldpassword.focus();
 		</script>";
@@ -33,7 +33,7 @@ else if ($isPostBack && isset($_SESSION['webValidated'])){
 
 	// load template
 	$tpl = $tpls[0];
-	$tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier),$tpl);
+	$tpl = str_replace("[+action+]",$modx->makeUrl($modx->documentIdentifier),$tpl);
 	$tpl.="<script type='text/javascript'>if (document.changepwdfrm) document.changepwdfrm.oldpassword.focus();</script>";
 
 	// get user record
