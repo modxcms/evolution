@@ -19,7 +19,19 @@ class DBAPI {
 		$this->config['dbase'] = $GLOBALS['dbase'];
 		$this->config['user'] = $GLOBALS['database_user'];
 		$this->config['pass'] = $GLOBALS['database_password'];
-		$this->config['table_prefix'] = $GLOBALS['table_prefix'];		
+		$this->config['table_prefix'] = $GLOBALS['table_prefix'];
+		$this->initDataTypes();		
+	}
+
+	/**
+	 * @name:	initDataTypes
+	 * @desc:	called in the constructor to set up arrays containing the types 
+	 * 			of	database fields that can be used with specific PHP types 
+	 */
+	function initDataTypes() {
+		$this->dataTypes['numeric']= array('INT','INTEGER','TINYINT','BOOLEAN','DECIMAL','DEC','NUMERIC','FLOAT','DOUBLE PRECISION','REAL','SMALLINT','MEDIUMINT','BIGINT','BIT');
+		$this->dataTypes['string']= array('CHAR','VARCHAR','BINARY','VARBINARY','TINYBLOB','BLOB','MEDIUMBLOB','LONGBLOB','TINYTEXT','TEXT','MEDIUMTEXT','LONGTEXT','ENUM','SET');
+		$this->dataTypes['date']= array('DATE','DATETIME','TIMESTAMP','TIME','YEAR');
 	}
 
 	/**
@@ -132,8 +144,9 @@ class DBAPI {
 		else {
 			if(!is_array($fields)) $flds = $fields;
 			else {
+				$flds= '';
 				foreach($fields as $key=>$value) {
-					if($flds) $flds .=",";
+					if(!empty($flds)) $flds .=",";
 					$flds .= $key."=";
 					$flds .= "'".$value."'";
 				}
@@ -204,7 +217,7 @@ class DBAPI {
 	 *	 
 	 */
 	function getRecordCount($ds) {
-		return mysql_num_rows($ds);
+		return (is_resource($ds))? mysql_num_rows($ds): 0;
 	}
 	
 
@@ -262,7 +275,7 @@ class DBAPI {
 			for($i=0;$i<$limit;$i++) {
 				$names[] = mysql_field_name($dsq, $i);
 			}
-			return $col;
+			return $names;
 		}	
 	}
 
@@ -301,6 +314,57 @@ class DBAPI {
 		return $xmldata;
 	}
 
+	/**
+	 * @name:	getTableMetaData
+	 * @desc:	returns an array of MySQL structure detail for each column of a 
+	 * 			table
+	 * @param:	$table: the full name of the database table
+	 */
+	function getTableMetaData($table) {
+		$metadata= false;
+		if (!empty($table)) {
+			$sql= "SHOW FIELDS FROM $table";
+			if ($ds= $this->query($sql)) {
+				while ($row= $this->getRow($ds)) {
+					$fieldName= $row['Field'];
+					$metadata[$fieldName]= $row;
+				}
+			}
+		}
+		return $metadata;
+	}
+	
+		
+	/**
+	 * @name:	prepareDate
+	 * @desc		prepares a date in the proper format for specific database types
+	 * 			given a UNIX timestamp
+	 * @param:	$timestamp: a UNIX timestamp
+	 * @param: $fieldType: the type of field to format the date for
+	 * 			(in MySQL, you have DATE, TIME, YEAR, and DATETIME)
+	 */
+	function prepareDate($timestamp, $fieldType='DATETIME') {
+		$date= '';
+		if (!$timestamp===false && $timestamp > 0) {
+			switch ($fieldType) {
+				case 'DATE':
+					$date= date('Y-m-d', $timestamp);
+					break;
+				case 'TIME':
+					$date= date('H:i:s', $timestamp);
+					break;
+				case 'YEAR':
+					$date= date('Y', $timestamp);
+					break;
+				default:
+					$date= date('Y-m-d H:i:s', $timestamp);
+					break;
+			}
+		}
+		return $date;
+	}
+	
+	
 	/**
 	 *	@name:	getHTMLGrid
 	 *	@param:	$params: Data grid parameters 
