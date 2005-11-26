@@ -37,7 +37,7 @@ function getMonth($tracking_start_date = ''){
 	}
 	$startdate = convertdate($tracking_start_date);
 	$datetemp = getdate($startdate); 
-	$diff = ($datetemp['mday']-1)*$oneday;
+	$diff = ($datetemp['mday']-1)*$GLOBALS['oneday'];
 	$startdate = $startdate-$diff;
 	$enddate = $startdate+(daysInMonth($datetemp['mon'], $datetemp['year'])*$GLOBALS['oneday']);
 	return array('startdate' => $startdate, 'enddate' => $enddate);

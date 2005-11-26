@@ -1821,7 +1821,7 @@ class DocumentParser {
 	function getUserDocGroups($resolveIds = false){
 		if($this->isFrontend() && isset($_SESSION['webDocgroups']) && isset($_SESSION['webValidated'])) {
 			$dg = $_SESSION['webDocgroups'];
-			$dgn = $_SESSION['webDocgrpNames'];
+			$dgn = isset($_SESSION['webDocgrpNames'])? $_SESSION['webDocgrpNames']: false;
 		}
 		else if($this->isBackend() && isset($_SESSION['mgrDocgroups']) && isset($_SESSION['mgrValidated'])) {
 			$dg = $_SESSION['mgrDocgroups'];

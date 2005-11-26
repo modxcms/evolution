@@ -22,7 +22,9 @@
 			foreach($cp as $p => $v){
 				$v = trim($v); // trim
 				$ar = split("=",$v);
-				$params[$ar[0]] = decodeParamValue($ar[1]);
+				if (is_array($ar) && count($ar)==2) {
+					$params[$ar[0]] = decodeParamValue($ar[1]);
+				}
 			}
 		}
 		
@@ -31,10 +33,11 @@
 
 			case "image":
 				$value = parseInput($value,"||","array");
+				$o = '';
 				for($i = 0;$i<count($value); $i++){
 					list($name,$image) = is_array($value[$i]) ? $value[$i]: explode("==",$value[$i]);
 					if(!$image) $image = $name;
-					if($o) $o.='<br />';
+					if(!empty($o)) $o.='<br />';
 					$o.= "<img src='$name'"." alt='".mysql_escape_string($params["alttext"])."'".($params["name"] ? " name='".$params["name"]."'":"").($params["hspace"] ? " hspace='".$params["hspace"]."'":"").($params["vspace"] ? " vspace='".$params["vspace"]."'":"").($params["borsize"] ? " border='".$params["borsize"]."'":"").(($params["align"] != "none") && ($params["align"] != "undefined") && ($params["align"] != "") ? " align='".$params["align"]."'":"").($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["id"] ? " id='".$params["id"]."'":"").($params["attrib"] ? $params["attrib"]:"")."/>";
 				}
 				break;
@@ -60,6 +63,7 @@
 				$value = parseInput($value);  
 				// Check for MySQL style date - Adam Crownoble 8/3/2005
 				$date_match = '^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$';
+				$matches= array();
 				if(strpos($value,'-')!==false && ereg($date_match, $value, $matches)) {
 					$timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[1], $matches[3]);
 				}
@@ -148,11 +152,11 @@
 					// invoke OnRichTextEditorInit event
 					$evtOut = $modx->invokeEvent("OnRichTextEditorInit",
 													array(
-														editor 		=> $richtexteditor,
-														elements	=> $replace_richtext,
-														forfrontend => 1,
-														width 		=> $w,
-														height		=> $h
+														'editor'		=> $richtexteditor,
+														'elements'		=> $replace_richtext,
+														'forfrontend'=> 1,
+														'width'			=> $w,
+														'height'		=> $h
 													));
 					if(is_array($evtOut)) $o.= implode("",$evtOut);
 				}

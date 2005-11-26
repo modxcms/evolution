@@ -9,11 +9,7 @@
  * MODx version:   0.9.0
 **/
 
-<<<<<<< .mine
 include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults
-=======
-include_once(dirname(__FILE__).'/english.inc.php'); // for the defaults
->>>>>>> .r491
 
 $_lang["login_message"] = "Veuillez vous identifier afin d'accéder à votre gestionnaire de site. Votre login et votre mot de passe sont sensibles à la casse. Tapez-les donc avec soin !"; 
 $_lang["username"] = "Votre nom d'utilisateur ";

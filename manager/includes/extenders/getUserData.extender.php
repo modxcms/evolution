@@ -2,7 +2,7 @@
 
 	if(IN_MANAGER_MODE!=true && IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
 
-		require_once "sniff/phpSniff.class.php";
+		require_once $modx->getManagerPath() . "includes/sniff/phpSniff.class.php";
 		$GET_VARS = isset($_GET) ? $_GET : $HTTP_GET_VARS; 
 		$POST_VARS = isset($_POST) ? $_GET : $HTTP_POST_VARS; 
 		if(!isset($GET_VARS['UA'])) $GET_VARS['UA'] = ''; 

@@ -67,6 +67,8 @@ $hidemenu = isset($showinmenu) && $showinmenu==1 ? 0 : 1;
 // get template
 $template = isset($template) ? $modx->db->getValue('SELECT id FROM '.$modx->getFullTableName('site_templates').' WHERE templatename=\''.mysql_escape_string($template).'\''):$modx->config['default_template'];
 
+$message = '';
+
 // get form template
 if(isset($formtpl)) $formTpl = $modx->getChunk($formtpl);
 if(empty($formTpl)) $formTpl = '<form name="NewsPublisher" method="post">

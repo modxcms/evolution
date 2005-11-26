@@ -32,19 +32,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
-<<<<<<< .mine
 if(!isset($_lang)) { $_lang = array(); }
 
-=======
-$_lang = array();
-
->>>>>>> .r491
 class QuickEditor {
 
  function QuickEditor() {
 
   include_once('contentVariable.class.inc.php');
-<<<<<<< .mine
 
   global $modx;
   global $base_path;
@@ -55,25 +49,13 @@ class QuickEditor {
   if(!$_lang) {
    $modPath = $GLOBALS['quick_edit_path'];
    $lang = $modx->config['manager_language'];
-   $qe_lang_path = $mod_path.'/lang/'.$lang.'.inc.php';
+   $qe_lang_path = $modPath.'/lang/'.$lang.'.inc.php';
    $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
    include_once($modPath.'/lang/english.inc.php');
    if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
    include_once($manager_lang_path);
   }
 
-=======
-
-  global $modx;
-  global $base_path;
-  global $_lang;
-
-  $this->output = '';
-  $lang = $modx->config['manager_language'];
-  $lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
-  include_once($lang_path);
-
->>>>>>> .r491
  }
 
  function renderEditorHTML($docId, $varId, $modId) {
@@ -96,7 +78,6 @@ class QuickEditor {
   include_once($basePath.'manager/includes/tmplvars.commands.inc.php');
   include_once($basePath.'manager/includes/tmplvars.format.inc.php');
 
-  $modPath = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $cv = new ContentVariable;
   $cv->set($varId, $docId);
 
@@ -166,15 +147,12 @@ class QuickEditor {
 $html = <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<<<<<<< .mine
 <html xmlns="http://www.w3.org/1999/xhtml" lang="{$_lang[QE_lang]}" xml:lang="{$_lang[QE_xml_lang]}">
-=======
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
->>>>>>> .r491
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset={$_lang[QE_charset]}" />
 <meta name="description" content="{$_lang[QE_description]}" />
+
 <title>{$_lang[QE_title]}</title>
 
 <link type="text/css" rel="stylesheet" href="../{$modPath}/styles/editor.css" />
@@ -194,22 +172,14 @@ $html = <<<EOD
 
 <div id="toolbar">
 
-<<<<<<< .mine
 <h1>{$_lang[edit]} {$cv->caption}</h1>
-=======
-<h1>{$_lang[edit]} {$cv->name}</h1>
->>>>>>> .r491
 
 <a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang[save]}" /> {$_lang[save]}</a>
 <a href="javascript: cancel();"><img src="media/images/icons/cancel.gif" alt="{$_lang[cancel]}" /> {$_lang[cancel]}</a>
 
 </div>
 
-<<<<<<< .mine
 <div id="description">{$_lang[edit]} {$cv->description}</div>
-=======
-<div id="description">{$_lang[edit]} {$tv_desc}</div>
->>>>>>> .r491
 
 <div id="tv_container">
 
@@ -264,8 +234,8 @@ EOD;
 
   if($modx->hasPermission('save_document') && $cv->checkPermissions()) {
 
-   if($caption =="") {
-    $caption  = $name ? $name:"Untitled Variable";
+   if(!isset($caption) || $caption =="") {
+    $caption  = (isset($name) && !empty($name)) ? $name:"Untitled Variable";
    }
 
    // Get the template variable value
@@ -334,7 +304,7 @@ EOD;
     $modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$docId));
 
     // empty cache
-    include_once('../manager/processors/cache_sync.class.processor.php');
+    include_once($modx->config['base_path'] . '/manager/processors/cache_sync.class.processor.php');
     $sync = new synccache();
     $sync->setCachepath("../assets/cache/");
     $sync->setReport(false);
