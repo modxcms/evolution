@@ -34,11 +34,15 @@ function ProcessTVCommand($value){
 
 			case "@SELECT":		// selects a record from the cms database
 				$rt = array();
-				$pre = $modx->dbConfig['dbase'].".".$modx->dbConfig['table_prefix'];
-				$param = str_replace("{DBASE}",$modx->dbConfig['dbase'],$param);
-				$param = str_replace("{PREFIX}",$pre,$param);
-				mysql_select_db(str_replace("`","",$modx->dbConfig['dbase'])); // select default database
-				$rs = $modx->dbQuery("SELECT $param;");
+				$replacementVars= array(
+					'DBASE'=> $modx->db->config['dbase'],
+					'PREFIX'=> $modx->db->config['table_prefix']
+				);
+				foreach($replacementVars as $key=> $value) {
+					$modx->setPlaceholder($key, $value);
+				}
+				$param = $modx->mergePlaceholderContent($param); 
+				$rs = $modx->db->query("SELECT $param;");
 				$output = $rs;
 				break;
 				

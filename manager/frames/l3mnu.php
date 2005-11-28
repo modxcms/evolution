@@ -25,8 +25,9 @@ function stopIt() {
 
 <style>
 body {
-	margin : 0;
-	background: #fff url(media/images/bg/treeback.jpg) no-repeat top right;
+	margin : 0px 0px 0px 0px;
+	background: #fff	url("media/images/bg/treeback.jpg");
+	background-position: top right;	
 }
 </style>
 </head>

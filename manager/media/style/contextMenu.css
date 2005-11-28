@@ -1,0 +1,85 @@
+BODY {
+	background-image: 				url("../images/bg/context.gif");
+	background-color: 				#fff;
+	background-position: 			top left;
+	background-repeat: 				repeat-y;
+	margin:							0px;
+	padding:						2px;
+	border: 						1px solid #003399;
+	border-left-color:	ButtonHighlight;
+	border-right-color:	ButtonShadow;
+	border-top-color:	ButtonHighlight;
+	border-bottom-color:ButtonShadow;
+	overflow:						hidden;
+}
+
+.menuLink {
+	cursor:							pointer;
+	font:							menu;
+	color:							MenuText;
+
+	padding: 						3px 16px 3px 2px;
+}
+
+.menuLinkOver {
+	cursor:							pointer;
+	background-position: 			bottom left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	background-image: 				url("../images/misc/buttonbar_gs.gif");
+	font:							menu;
+
+	padding: 						2px 15px 2px 1px;
+	border: 						1px solid #003399;
+	border-left-color:	ButtonHighlight;
+	border-right-color:	ButtonShadow;
+	border-top-color:	ButtonHighlight;
+	border-bottom-color:ButtonShadow;	
+}
+
+.menuLinkDisabled {
+	cursor:							default;
+	font: 							menu;
+
+	padding: 						3px 16px 3px 2px;
+	color:							graytext;
+}
+
+.menuLink IMG, .menuLinkOver IMG, .menuLinkDisabled IMG {
+	margin-right:					8px;
+}
+
+.menuLink IMG, .menuLinkDisabled IMG {
+	filter:							gray();
+}
+
+.menuLinkOver IMG {
+
+}
+
+#nameHolder {
+	text-align:						right;
+	cursor:							default;
+	font-family: 					Tahoma, Helvetica, sans-serif;
+	font-weight:					bold;
+	font-size:						11px;
+	padding: 						2px 2px 2px 2px;
+	margin-bottom:					2px;
+	border: 						1px solid #003399;
+	border-left-color:	ButtonHighlight;
+	border-right-color:	ButtonShadow;
+	border-top-color:	ButtonHighlight;
+	border-bottom-color:ButtonShadow;	
+	background-position: 			bottom left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	background-image: 				url("../images/misc/buttonbar.gif");
+}
+
+.seperator {
+	font-size:      				0pt;
+	height:         				1px;
+	background-color: 				#6A8CCB;
+	overflow:       				hidden;
+	margin:							3px 1px 3px 28px;
+}

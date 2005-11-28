@@ -13,10 +13,33 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <head>
 <title>Top bar</title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
+<style>
+body {
+	margin : 0px 0px 0px 0px;
+	background: #4791C5;
+}
+
+SPAN, TD {
+	font-family:Verdana, Arial, Helvetica, sans-serif; 
+	color: White;
+}
+TD {
+	padding-top: 4px;
+	font-size:11px;
+}
+SPAN {
+	font-size:10px;
+}
+a, a:hover, a:visited, a:active {
+	font-family:Verdana, Arial, Helvetica, sans-serif; 
+	font-size:10px;
+	color: White;
+	text-decoration:none;
+}
+</style>
 </head>
-<body style="background: #4791C5">
-<table width="100%"  border="0" cellspacing="0" cellpadding="0" style="height:20px;" class="topbar">
+<body>
+<table width="100%"  border="0" cellspacing="0" cellpadding="0" style="height:20px;">
   <tr>
     <td width="10">&nbsp;</td>
     <td valign="middle">

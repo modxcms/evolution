@@ -650,7 +650,7 @@ function updateContentType(){
           </tr> 
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["signupemail_title"] ?></b></td> 
-            <td> <textarea name="signupemail_message" style="width:100%; height: 120px;"><?php echo isset($signupemail_message) ? $signupemail_message : <?php echo $_lang["system_email_signup"] ?></textarea> </td> 
+            <td> <textarea name="signupemail_message" style="width:100%; height: 120px;"><?php echo isset($signupemail_message) ? $signupemail_message : $_lang["system_email_signup"] ?></textarea> </td> 
           </tr>
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -661,7 +661,7 @@ function updateContentType(){
           </tr> 
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["websignupemail_title"] ?></b></td> 
-            <td> <textarea name="websignupemail_message" style="width:100%; height: 120px;"><?php echo isset($websignupemail_message) ? $websignupemail_message : <?php echo $_lang["system_email_websignup"] ?></textarea> </td> 
+            <td> <textarea name="websignupemail_message" style="width:100%; height: 120px;"><?php echo isset($websignupemail_message) ? $websignupemail_message : $_lang["system_email_websignup"] ?></textarea> </td> 
           </tr>
           <tr> 
             <td width="200">&nbsp;</td> 
@@ -672,7 +672,7 @@ function updateContentType(){
           </tr> 
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["webpwdreminder_title"] ?></b></td> 
-            <td> <textarea name="webpwdreminder_message" style="width:100%; height: 120px;"><?php echo isset($webpwdreminder_message) ? $webpwdreminder_message : <?php echo $_lang["system_email_webreminder"] ?></textarea> </td> 
+            <td> <textarea name="webpwdreminder_message" style="width:100%; height: 120px;"><?php echo isset($webpwdreminder_message) ? $webpwdreminder_message : $_lang["system_email_webreminder"] ?></textarea> </td> 
           </tr>
           <tr> 
             <td width="200">&nbsp;</td> 
