@@ -790,7 +790,7 @@ REPLACE INTO `{PREFIX}user_attributes`
 REPLACE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODx'),
-('settings_version','0.9.0'),
+('settings_version','0.9.1'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','english'),

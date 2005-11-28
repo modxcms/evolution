@@ -3,6 +3,50 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
+MOD 0.9.1 (rev 528 - November 28, 2005)
+==================
+* fix do not allow moving of document to it's own descendents [bug 135]
+* fix web user change password [bug 131]
+* fix document duplication issues [bug 133]
+* NewsListing snippet updated to v2.0
+* QuickEdit: Added new permission and ability to view unpublished documents in the frontend
+* New features for QuickEdit module including in-toolbar checking for or single checkbox TVs and Apply and Revert functionality.
+* @SELECT binding now processes placeholders before executing the SQL SELECT; note change of syntax for existing variables {PREFIX} --> [+PREFIX+] and {DBASE} --> [+DBASE+]
+* Added German file.
+* New DBAPI methods, getTableMetaData() - returns detailed structure information about a specific database table; prepareDate() - which converts a UNIX timestamp into the proper format for the specified database table type; and initDataTypes() - initializes arrays of database column types associated with each PHP primitive type (numeric, string, or date)
+* DBAPI: getRecordCount() now returns 0 instead of throwing an error if passed an invalid SQL result set resource
+* WebLogin: fixed various warnings, $modx->getURL() calls refactored to $modx->getUrl()
+* Updated Italian language to version  1.2.
+* QuickEdit: Fixed a missing ")" that was causing a syntax error
+* Small fix to default content CSS for front-end RTE's other than FCKEditor (TinyMCE and Xinha).
+* Fix for web user permissions not being saved right for new web users [bug 123]
+* Modified template variable values to use the htmlentities function upon saving text, textarea, and textareamini variable types [bug 85]
+* Fixed case-sensitivity problem with renaming meta keywords [bug 87]
+* Hard coded email messages in config settings [bug 120]
+* QuickEdit: hardcoded languages [bug 118]
+* Added Japanese translation
+* QuickEdit: Added multi-lingual support
+* Changed English language file include path from relative to absolute to support usage from frontend
+* Updated Italian language file
+* Various parser refactorings to improve speed and 
+* Modified FCKEditor configuration parameters to allow selection of existing toolbars via a dropdown menu
+* Added the language files back into FCKEditor for future use.  Might try adding language selection as part of the plugin in later builds.
+* Changed properties field in site_modules table from VARCHAR to TEXT.
+* Modified showParameters and setParameter scripts for snippets, modules, and plugins by renaming list datatype to menu and added new list and list-multi datatypes.
+* Added index.html files to asset folders.
+* Can now send messages to multiple recipients in manager [bug 115]
+* fix for bugs 108 and 109
+* Alias original NewsListing snippet call to new startID [bug 113]
+* Add Italian as another language option.
+* Partial fix: long plugin configs fail due to column type being varchar(255) [bug 117]
+* Applied ascending sort order to keyword list
+* Install fix so the database creating routine includes ` around the database name in case it includes reserved words or non-alphanumeric characters
+* Removed a large number of redundant English language definitions
+* Fixed endless loop when saving settings (affects FF and Safari) [bug 111]
+
+
+
+
 MOD 0.9.0 (x9 - October 28, 2005)
 ==================
 * additional minor bug fixes, tweaks and updates
