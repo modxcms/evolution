@@ -1,15 +1,15 @@
 <?php
 /**
- * Filename:       includes/lang/japanese-utf8.inc.php
- * Function:       Optional Japanese language file.
- * Encoding:       utf8
- * Author:         eastbind (hide-i@peace.ocn.ne.jp)
- * Date:           2005/11/19
- * Version:        1.5-J1
- * MODx version:   0.9.0
+ * Filename:       includes/lang/filename_here.inc.php
+ * Function:       Default English language file.
+ * Encoding:       UTF-8
+ * Author:         by eastbind (eastbind@bodenplatte.jp)
+ * Date:           2005/11/28
+ * Version:        1.x
+ * MODx version:   0.9.1
 */
 
-include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults
+include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
 
 $_lang["login_message"] = "MODxセッションを開始するために、あなたのログイン情報を入力してください。ユーザ名とパスワードは大文字小文字の区別をしますので、慎重に入力してください!"; // changed 06 RC2
 $_lang["username"] = "ユーザ名";
@@ -542,7 +542,7 @@ $_lang['visitors_used_this'] = "訪問者はこれを使用しています。";
 $_lang['visitors_came_from_here'] = "訪問者はここから訪れています。";
 $_lang['no_results'] = "結果がありません。";
 $_lang['no_online_users'] = "現在サイトを見ている訪問者はいません。";
-$_lang['stats_top_hosts'] = "トップ %s ホスト";
+$_lang['stats_top_hosts'] = "トップ %位 ホスト";
 $_lang['hostname'] = "ホスト名";
 $_lang['unknown_referer'] = "不明/ 直接か ブックマークから?";
 $_lang['internal_referer'] = "サイト内部の参照元";
@@ -579,7 +579,7 @@ $_lang['access_permissions_user_groups'] = "ユーザグループ";
 $_lang['access_permissions_document_groups'] = "ドキュメントグループ";
 $_lang["access_permissions_links"] = "ユーザ/ドキュメントグループリンク";
 $_lang['rename'] = "リネーム";
-$_lang['remove'] = "削除 ->";
+$_lang['remove'] = "削除 ";
 $_lang['add'] = "グループの追加";
 $_lang['access_permissions_introtext'] = "ここでは、アクセスパーミッションのための、ユーザグループとドキュメントグループを管理することができます。ユーザをグループに追加するには、ユーザ編集の画面でメンバーとして追加するグループを選択してください。ドキュメントをユーザグループに追加するには、ドキュメント編集の画面で属させたいドキュメントグループを選択してください。";
 $_lang["access_permissions_add_user_group"] = "ユーザグループの作成";
@@ -726,7 +726,7 @@ $_lang['webpwdreminder_message'] = "ウェブユーザからメールで新パ�
 
 $_lang['click_to_context']="クリックするとコンテキストメニュー";
 $_lang['snippet_execonsave']="保存後にスニペットを実行";
-$_lang['snippets_availabe'] = "あなたのページで利用可能なスニペット";
+$_lang['snippets_availabe'] = "ページで利用可能なスニペット";
 $_lang['use_alias_path_title'] = "エイリアスパスを使用:"; 
 $_lang['use_alias_path_message'] = "このオプションを「Yes」に設定すると、ドキュメントのエイリアスがパスとして表示されます。例えば、「child」というエイリアスを持ったドキュメント「parent」というエイリアスのフォルダの下に配置されていると、エイリアスパスは「/parent/child.html」になります。<br /><strong>注意:</strong> このオプションが「Yes」にするとき、即ちエイリアスパスを使用するときは、ドキュメントから参照するものは全て（画像とかCSSとかJavaScriptなど）絶対パスで指定する必要があります。例えば、assets/imagesに対しては/assets/imagesと指定しなければなりません。そうしないとエイリアスパスからの相対パスとなり、あなたが期待した参照にはなりません。"; 
 $_lang['scroll_up'] = "上へスクロール";
@@ -1036,8 +1036,14 @@ $_lang['switch_to_rte'] = 'リッチテキストエディタへ切換';
 /***************************************************************************/
 // new in 0.9.1
 /***************************************************************************/
+$_lang['QE_lang'] = 'ja';
+$_lang['QE_xml_lang'] = 'ja';
+$_lang['QE_charset'] = 'utf-8';
 $_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
 $_lang['QE_show_links'] = 'リンクを表示';
 $_lang['QE_hide_links'] = 'リンクを隠す';
+$_lang['QE_someone_editing'] = '他の誰かがこのドキュメントを編集中です';
+$_lang['QE_cant_find_content'] = '編集対象の中身がありません';
+$_lang['QE_description'] = 'サイトの前面からページを編集します';
 
 ?>
