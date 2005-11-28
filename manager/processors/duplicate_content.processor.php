@@ -52,25 +52,27 @@ function duplicateDocument($parent,$docid,$children,$_toplevel=0){
 
 	global $mysqlVerOk;
 	global $dbase, $table_prefix;
+	global $modx;
 	
 	$myChildren = array();
+	$userID = $modx->getLoginUserID();
 	
 	// duplicate document
 	if($mysqlVerOk) {
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_content (type, contentType, pagetitle, longtitle, description, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr) 
-				SELECT type, contentType, ".($_toplevel==0 ? "CONCAT('Duplicate of ',pagetitle) AS 'pagetitle'":"pagetitle").", longtitle, description, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr  
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_content (type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu) 
+				SELECT type, contentType, ".($_toplevel==0 ? "CONCAT('Duplicate of ',pagetitle) AS 'pagetitle'":"pagetitle").", longtitle, description, NULL AS alias, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, $userID as createdby, UNIX_TIMESTAMP(), 0, 0, 0, 0, 0, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu  
 				FROM $dbase.".$table_prefix."site_content WHERE id=$docid;";
 		$rs = mysql_query($sql);
 	}
 	else{
-		$sql = "SELECT type, contentType, ".($_toplevel==0 ? "CONCAT('Duplicate of ',pagetitle) AS 'pagetitle'":"pagetitle").", longtitle, description, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr 
+		$sql = "SELECT type, contentType, ".($_toplevel==0 ? "CONCAT('Duplicate of ',pagetitle) AS 'pagetitle'":"pagetitle").", longtitle, description, alias, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu 
 				FROM $dbase.".$table_prefix."site_content WHERE id=$docid;";
 		$rs = mysql_query($sql);		
 		if($rs) {
 			$row = mysql_fetch_assoc($rs);	
 			$sql = "INSERT INTO $dbase.".$table_prefix."site_content 
-					(type, contentType, pagetitle, longtitle, description, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr) VALUES
-					('".$row['type']."', '".$row['contentType']."', '".mysql_escape_string($row['pagetitle'])."', '".mysql_escape_string($row['longtitle'])."', '".mysql_escape_string($row['description'])."', '".$row['published']."', '".$row['pub_date']."', '".$row['unpub_date']."', '".$row['parent']."', '".$row['isfolder']."', '".mysql_escape_string($row['introtext'])."', '".mysql_escape_string($row['content'])."', '".$row['richtext']."', '".$row['template']."', '".$row['menuindex']."', '".$row['searchable']."', '".$row['cacheable']."', '".$row['createdby']."', '".$row['createdon']."', '".$row['editedby']."', '".$row['editedon']."', '".$row['deleted']."', '".$row['deletedon']."', '".$row['deletedby']."', '".$row['menutitle']."', '".$row['donthit']."', '".$row['privateweb']."', '".$row['privatemgr']."');";
+					(type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu) VALUES
+					('".$row['type']."', '".$row['contentType']."', '".mysql_escape_string($row['pagetitle'])."', '".mysql_escape_string($row['longtitle'])."', '".mysql_escape_string($row['description'])."', NULL, '".$row['published']."', '".$row['pub_date']."', '".$row['unpub_date']."', '".$row['parent']."', '".$row['isfolder']."', '".mysql_escape_string($row['introtext'])."', '".mysql_escape_string($row['content'])."', '".$row['richtext']."', '".$row['template']."', '".$row['menuindex']."', '".$row['searchable']."', '".$row['cacheable']."', $userID, UNIX_TIMESTAMP(), 0, 0, 0, 0, 0, '".mysql_escape_string($row['menutitle'])."', '".$row['donthit']."', '".$row['privateweb']."', '".$row['privatemgr']."', ".$row['content_dispo'].", ".$row['hidemenu'].");";
 			$rs = mysql_query($sql);		
 		}
 	}
@@ -100,8 +102,8 @@ function duplicateDocument($parent,$docid,$children,$_toplevel=0){
 		if(count($myChildren)>0) {
 			$docs_to_duplicated = implode(" ,", $myChildren);
 			if($mysqlVerOk) {
-				$sql = "INSERT INTO $dbase.".$table_prefix."site_content (type, contentType, pagetitle, longtitle, description, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby) 
-						SELECT type, contentType, pagetitle, longtitle, description, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby 
+				$sql = "INSERT INTO $dbase.".$table_prefix."site_content (type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu) 
+						SELECT type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, $userID, UNIX_TIMESTAMP(), 0, 0, 0, 0, 0, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu 
 						FROM $dbase.".$table_prefix."site_content WHERE id IN ($docs_to_duplicated);";
 				$rs = @mysql_query($sql);
 				$affected = mysql_affected_rows();
@@ -109,13 +111,13 @@ function duplicateDocument($parent,$docid,$children,$_toplevel=0){
 			}
 			else {
 				$affected = 0;
-				$sql = "SELECT type, contentType, pagetitle, longtitle, description, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby 
+				$sql = "SELECT type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu 
 						FROM $dbase.".$table_prefix."site_content WHERE id IN ($docs_to_duplicated);";
 				$ds = @mysql_query($sql);
 				while($row = mysql_fetch_assoc($ds)) {
 					$sql = "INSERT INTO $dbase.".$table_prefix."site_content 
-							(type, contentType, pagetitle, longtitle, description, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby) VALUES
-							('".$row['type']."', '".$row['contentType']."', '".mysql_escape_string($row['pagetitle'])."', '".mysql_escape_string($row['longtitle'])."', '".mysql_escape_string($row['description'])."', '".$row['published']."', '".$row['pub_date']."', '".$row['unpub_date']."', '".$row['parent']."', '".$row['isfolder']."', '".mysql_escape_string($row['introtext'])."', '".mysql_escape_string($row['content'])."', '".$row['richtext']."', '".$row['template']."', '".$row['menuindex']."', '".$row['searchable']."', '".$row['cacheable']."', '".$row['createdby']."', '".$row['createdon']."', '".$row['editedby']."', '".$row['editedon']."', '".$row['deleted']."', '".$row['deletedon']."', '".$row['deletedby']."');";
+							(type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu) VALUES
+							('".$row['type']."', '".$row['contentType']."', '".mysql_escape_string($row['pagetitle'])."', '".mysql_escape_string($row['longtitle'])."', '".mysql_escape_string($row['description'])."', NULL, '".$row['published']."', '".$row['pub_date']."', '".$row['unpub_date']."', '".$row['parent']."', '".$row['isfolder']."', '".mysql_escape_string($row['introtext'])."', '".mysql_escape_string($row['content'])."', '".$row['richtext']."', '".$row['template']."', '".$row['menuindex']."', '".$row['searchable']."', '".$row['cacheable']."', $userID, UNIX_TIMESTAMP(), 0, 0, 0, 0, 0, '".mysql_escape_string($row['menutitle'])."', '".$row['donthit']."', '".$row['privateweb']."', '".$row['privatemgr']."', '".$row['content_dispo']."', '".$row['hidemenu']."');";
 					$rs = mysql_query($sql);
 					$affected++; 
 					if ($affected==1) $newid = mysql_insert_id(); // get first inserted id
