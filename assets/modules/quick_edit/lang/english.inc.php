@@ -40,5 +40,9 @@ $_lang['QE_hide_links'] = 'Hide links';
 $_lang['QE_someone_editing'] = 'Someone else is editing this document';
 $_lang['QE_cant_find_content'] = 'Could not find content to edit';
 $_lang['QE_description'] = 'Edit pages from the frontend of the site';
+$_lang['document_opt_hide_menu'] = 'Hide in menu';
+$_lang['revert'] = 'Revert';
+$_lang['apply'] = 'Apply';
+$_lang['revert_prompt'] = 'Undo ALL of your edits?';
 
 ?>

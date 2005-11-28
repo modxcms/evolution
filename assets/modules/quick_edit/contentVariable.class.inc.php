@@ -52,15 +52,16 @@ class ContentVariable {
   global $base_path;
   global $_lang;
 
-  if(!$_lang) {
-   $modPath = $GLOBALS['quick_edit_path'];
-   $lang = $modx->config['manager_language'];
-   $qe_lang_path = $mod_path.'/lang/'.$lang.'.inc.php';
-   $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
-   include_once($modPath.'/lang/english.inc.php');
-   if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
-   include_once($manager_lang_path);
-  }
+  // Combine QE language files with manager language files (manager should override QE)
+  $lang = $modx->config['manager_language'];
+  $qe_path = $base_path.'/'.$GLOBALS['quick_edit_path'];
+  $qe_eng_path = $qe_path.'/lang/'.$lang.'.inc.php';
+  $qe_lang_path = $qe_path.'/lang/'.$lang.'.inc.php';
+  $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
+  $lang_set = isset($_lang);
+  include_once($qe_eng_path);
+  if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
+  if(!$lang_set) { include_once($manager_lang_path); }
 
  }
 
@@ -135,6 +136,7 @@ class ContentVariable {
       $type = 'checkbox';
       $caption = $_lang['publish_document'];
       $description = $_lang['publish_document'];
+      $elements = "{$_lang['publish_document']}==1";
       break;
      
      case 'introtext':
@@ -147,6 +149,13 @@ class ContentVariable {
       $type = 'text';
       $caption = $_lang['document_opt_menu_title'];
       $description = $_lang['document_opt_menu_title'];
+      break;
+
+     case 'hidemenu':
+      $type = 'checkbox';
+      $caption = $_lang['document_opt_hide_menu'];
+      $description = $_lang['document_opt_hide_menu'];
+      $elements = "{$_lang['document_opt_hide_menu']}==1";
       break;
      
      default:

@@ -42,23 +42,25 @@ class QuickEditor {
 
   global $modx;
   global $base_path;
+  global $qe_path;
   global $_lang;
 
   $this->output = '';
 
-  if(!$_lang) {
-   $modPath = $GLOBALS['quick_edit_path'];
-   $lang = $modx->config['manager_language'];
-   $qe_lang_path = $modPath.'/lang/'.$lang.'.inc.php';
-   $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
-   include_once($modPath.'/lang/english.inc.php');
-   if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
-   include_once($manager_lang_path);
-  }
+  // Combine QE language files with manager language files (manager should override QE)
+  $lang = $modx->config['manager_language'];
+  $qe_path = $base_path.'/'.$GLOBALS['quick_edit_path'];
+  $qe_eng_path = $qe_path.'/lang/'.$lang.'.inc.php';
+  $qe_lang_path = $qe_path.'/lang/'.$lang.'.inc.php';
+  $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
+  $lang_set = isset($_lang);
+  include_once($qe_eng_path);
+  if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
+  if(!$lang_set) { include_once($manager_lang_path); }
 
  }
 
- function renderEditorHTML($docId, $varId, $modId) {
+ function renderEditorHTML($doc_id, $var_id, $mod_id) {
 
   /*
    *  This code generates a page meant for editing a single template
@@ -71,21 +73,22 @@ class QuickEditor {
   global $modx;
   global $_lang;
 
-  $basePath = $modx->config['base_path'];
-  $modPath = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+  $base_path = $modx->config['base_path'];
+  $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+  $snapshot_compatible_editors = array('fckeditor'); // Rich Text Editors that are supported by apply/revert code (lower-case)
 
-  include_once($basePath.'manager/includes/tmplvars.inc.php');
-  include_once($basePath.'manager/includes/tmplvars.commands.inc.php');
-  include_once($basePath.'manager/includes/tmplvars.format.inc.php');
+  include_once($base_path.'manager/includes/tmplvars.inc.php');
+  include_once($base_path.'manager/includes/tmplvars.commands.inc.php');
+  include_once($base_path.'manager/includes/tmplvars.format.inc.php');
 
+  $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $cv = new ContentVariable;
-  $cv->set($varId, $docId);
+  $cv->set($var_id, $doc_id);
 
   // PSUEDO CONSTANTS
   $module_exec_action = 112;
 
   $editor_html = '';
-  $varContent = '';
   $allowed = true;
 
   if(!$modx->hasPermission('edit_document')) {
@@ -138,6 +141,20 @@ class QuickEditor {
 
    $tv_html = renderFormElement($cv->type, $cv->name, $cv->default_text, $cv->elements, $cv->content);
 
+   // Set the buttons for this TV
+$buttons = <<<EOD
+<a id="close" href="javascript: close();"><img src="media/images/icons/close.gif" alt="{$_lang['close']}" /> </a>
+
+<a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang['save']}" /> {$_lang['save']}</a>
+EOD;
+
+   if($cv->type != 'richtext' || in_array(strtolower($modx->config['which_editor']), $snapshot_compatible_editors)) {
+$buttons .= <<<EOD
+<a href="javascript: applyChanges($('tv_form'));"><img src="media/images/icons/save.gif" alt="{$_lang['apply']}" /> {$_lang['apply']}</a>
+<a href="javascript: if(confirm('{$_lang['revert_prompt']}')) { saveSnapshot(); }"><img src="media/images/icons/refresh.gif" alt="{$_lang['revert']}" /> {$_lang['revert']}</a>
+EOD;
+   }
+
    // Get the name of the TV
    if(!($tv_desc = $cv->description)) {
    } elseif(!($tv_desc = $cv->caption)) {
@@ -147,39 +164,43 @@ class QuickEditor {
 $html = <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="{$_lang[QE_lang]}" xml:lang="{$_lang[QE_xml_lang]}">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{$_lang['QE_lang']}" xml:lang="{$_lang['QE_xml_lang']}">
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset={$_lang[QE_charset]}" />
-<meta name="description" content="{$_lang[QE_description]}" />
+<meta http-equiv="Content-Type" content="text/html; charset={$_lang['QE_charset']}" />
+<meta name="description" content="{$_lang['QE_description']}" />
 
-<title>{$_lang[QE_title]}</title>
+<title>{$_lang['QE_title']}</title>
 
-<link type="text/css" rel="stylesheet" href="../{$modPath}/styles/editor.css" />
-<script language="JavaScript" src="media/script/datefunctions.js"></script>
-<script language="JavaScript" src="../{$modPath}/javascript/editor.js"></script>
+<link type="text/css" rel="stylesheet" href="../{$qe_path}/styles/editor.css" />
+<script type="text/javascript">
+var QE_ModuleActionId = '{$module_exec_action}';
+var QE_ModuleId = '{$mod_id}';
+var QE_FormSnapshot = '';
+</script>
+<script type="text/javascript" src="media/script/scriptaculous/prototype.js"></script>
+<script type="text/javascript" src="media/script/scriptaculous/scriptaculous.js"></script>
+<script type="text/javascript" src="media/script/datefunctions.js"></script>
+<script type="text/javascript" src="../{$qe_path}/javascript/editor.js"></script>
 
 </head>
-<body>
+<body onload="takeSnapshot($('tv_form'));">
 
 <form id="tv_form" class="{$cv->type}" name="mutate" method="post" enctype="multipart/form-data" action="index.php">
-<input type="hidden" name="save" value="1" />
+<input id="save" type="hidden" name="save" value="1" />
 <input type="hidden" name="a" value="{$module_exec_action}" />
-<input type="hidden" name="id" value="{$modId}" />
-<input type="hidden" name="doc" value="{$docId}" />
-<input type="hidden" name="var" value="{$varId}" />
+<input type="hidden" name="id" value="{$mod_id}" />
+<input id="doc" type="hidden" name="doc" value="{$doc_id}" />
+<input id="var" type="hidden" name="var" value="{$var_id}" />
 <input type="hidden" name="variablesmodified" value="">
 
 <div id="toolbar">
 
-<h1>{$_lang[edit]} {$cv->caption}</h1>
-
-<a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang[save]}" /> {$_lang[save]}</a>
-<a href="javascript: cancel();"><img src="media/images/icons/cancel.gif" alt="{$_lang[cancel]}" /> {$_lang[cancel]}</a>
+{$buttons}
 
 </div>
 
-<div id="description">{$_lang[edit]} {$cv->description}</div>
+<div id="description">{$_lang['edit']} {$cv->description}</div>
 
 <div id="tv_container">
 
@@ -187,7 +208,7 @@ $html = <<<EOD
 
 </div>
 
-<input type="submit" name="save" style="display:none;" />
+<button type="submit" style="display:none;"></button>
 
 </form>
 
@@ -197,6 +218,7 @@ $editor_html
 
  // Resize the window to fit the TV
  fitWindow();
+ var QE_ContentVariableID = 'tv{$cv->name}';
 
 </script>
 
@@ -210,7 +232,7 @@ EOD;
 
  }
 
- function save($docId, $varId) {
+ function save($doc_id, $var_id) {
 
  /*
   *  Written by Adam Crownoble (adam@obledesign.com) 7/30/2005
@@ -222,7 +244,7 @@ EOD;
 
   global $modx;
 
-  $modPath = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+  $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $db = $modx->db->config['dbase'];
   $pre = $modx->db->config['table_prefix'];
   $html = '';
@@ -230,7 +252,7 @@ EOD;
   $allowed = false;
 
   $cv = new ContentVariable;
-  $cv->set($varId, $docId);
+  $cv->set($var_id, $doc_id);
 
   if($modx->hasPermission('save_document') && $cv->checkPermissions()) {
 
@@ -239,9 +261,9 @@ EOD;
    }
 
    // Get the template variable value
-   foreach($_POST as $postKey=>$postValue) {
-    if(substr($postKey, 0, 2) == 'tv') {
-     $value = $postValue;
+   foreach($_POST as $post_key=>$post_value) {
+    if(substr($post_key, 0, 2) == 'tv') {
+     $value = $post_value;
     }
    }
 
@@ -256,12 +278,12 @@ EOD;
     // Define the tmplvars vairable by reference for plugin support
     $tmplvars[$cv->id] = &$value_prep;
     // invoke OnBeforeDocFormSave event
-    $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$docId));
+    $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$doc_id));
 
     $sql = "SELECT id
             FROM {$db}.`{$pre}site_tmplvar_contentvalues`
-            WHERE `tmplvarid` = '$cv->id'
-            AND `contentid` = '$docId';";
+            WHERE `tmplvarid` = '{$cv->id}'
+            AND `contentid` = '{$doc_id}';";
     $result = $modx->db->query($sql);
 
     if($modx->db->getRecordCount($result)) {
@@ -269,26 +291,26 @@ EOD;
      $sql = "UPDATE {$db}.`{$pre}site_tmplvar_contentvalues`
              SET `value` = '{$value_prep}'
              WHERE `tmplvarid` = '{$cv->id}'
-             AND `contentid` = '{$docId}';";
+             AND `contentid` = '{$doc_id}';";
 
     } else {
 
      $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues`(tmplvarid, contentid, value)
-             VALUES('{$cv->id}', '{$docId}', '{$value_prep}');";
+             VALUES('{$cv->id}', '{$doc_id}', '{$value_prep}');";
              
     }
 
-   } elseif(in_array($cv->id,array('pagetitle', 'longtitle', 'description', 'content', 'alias', 'introtext', 'menutitle'))) {
+   } elseif(in_array($cv->id,array('pagetitle', 'longtitle', 'description', 'content', 'alias', 'introtext', 'menutitle', 'published', 'hidemenu'))) {
 
     // Define vairable with the content id as it's name by reference for plugin support
     $cv_id = $cv->id;
     $$cv_id = &$value_prep;
     // invoke OnBeforeDocFormSave event
-    $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$docId));
+    $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$doc_id));
 
     $sql = "UPDATE {$db}.`{$pre}site_content`
             SET `{$cv->id}` = '{$value_prep}'
-            WHERE `id` = '{$docId}';";
+            WHERE `id` = '{$doc_id}';";
 
    }
 
@@ -296,12 +318,12 @@ EOD;
 
    if(!$result){
 
-    $modx->logEvent(0, 0, "<p>Save failed!</p><strong>SQL:</strong><pre>$sql</pre>", 'QuickEditor');
+    $modx->logEvent(0, 0, "<p>Save failed!</p><strong>SQL:</strong><pre>{$sql}</pre>", 'QuickEditor');
 
    } else {
 
     // invoke OnDocFormSave event
-    $modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$docId));
+    $modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$doc_id));
 
     // empty cache
     include_once($modx->config['base_path'] . '/manager/processors/cache_sync.class.processor.php');
@@ -318,16 +340,16 @@ EOD;
 
  function renderSaveAndCloseHTML() {
 
-  $modPath = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+  $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
 
 $html = <<<EOD
 <html>
 
 <head>
 
-<title>{$_lang[close]}</title>
+<title>{$_lang['close']}</title>
 
-<script language="JavaScript" src="../{$modPath}/javascript/editor.js"></script>
+<script language="JavaScript" src="../{$qe_path}/javascript/editor.js"></script>
 <script type="text/javascript">
 
 reloadAndClose();
@@ -338,7 +360,7 @@ reloadAndClose();
 
 <body>
 
-<p style="text-align:center;"><a href="javascript: postSave();">{$_lang[close]}</a></p>
+<p style="text-align:center;"><a href="javascript: postSave();">{$_lang['close']}</a></p>
 
 </body>
 
