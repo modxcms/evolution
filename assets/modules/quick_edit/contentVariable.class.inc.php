@@ -73,15 +73,18 @@ class ContentVariable {
   
   $id = 0;
   $type = '';
+  $name = '';
   $caption = '';
   $description = '';
   $elements = '';
   $default_text = '';
   $value = '';
+  $page_published = 0;
 
   if(!$pageId) { $pageId = $modx->documentIdentifier; }
 
-  $tv = $modx->getTemplateVar($var, 'id, name, type, caption, description, elements, default_text', $pageId);
+  $page = $modx->getDocument($pageId, 'published', 1); // We're only getting published pages so we can use it to check publish status below
+  $tv = $modx->getTemplateVar($var, 'id, name, type, caption, description, elements, default_text', $pageId, ($page ? 1 : 0));
 
   // Create variables from the array
   if($tv) {

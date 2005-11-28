@@ -76,7 +76,8 @@ $fields = array (
 	edit_web_user =>	 $edit_web_user, 
 	save_web_user =>	 $save_web_user,
 	delete_web_user =>	 $delete_web_user,
-	web_access_permissions=>$web_access_permissions
+	web_access_permissions=>$web_access_permissions,
+  view_unpublished=>$view_unpublished
 );
 
 switch ($_POST['mode']) {

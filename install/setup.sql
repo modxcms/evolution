@@ -522,6 +522,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `save_web_user` int(1) NOT NULL default '0',
   `delete_web_user` int(1) NOT NULL default '0',
   `web_access_permissions` int(1) NOT NULL default '0',
+  `view_unpublished` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM COMMENT='Contains information describing the user roles.'
 
@@ -707,7 +708,8 @@ ALTER TABLE `{PREFIX}user_roles`
  ADD COLUMN `new_plugin` int(1) NOT NULL DEFAULT '0',
  ADD COLUMN `edit_plugin` int(1) NOT NULL DEFAULT '0',
  ADD COLUMN `save_plugin` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `delete_plugin` int(1) NOT NULL DEFAULT '0';
+ ADD COLUMN `delete_plugin` int(1) NOT NULL DEFAULT '0',
+ ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0';
 
 
 ALTER TABLE `{PREFIX}user_roles` 
@@ -847,8 +849,8 @@ REPLACE INTO `{PREFIX}system_settings`
 
 
 REPLACE INTO `{PREFIX}user_roles` 
-(id, name, description, frames, home, view_document, new_document, save_document, delete_document, action_ok, logout, help, messages, new_user, edit_user, logs, edit_parser, save_parser, edit_template, settings, credits, new_template, save_template, delete_template, edit_snippet, new_snippet, save_snippet, delete_snippet, empty_cache, edit_document, change_password, error_dialog, about, file_manager, save_user, delete_user, save_password, edit_role, save_role, delete_role, new_role, access_permissions, bk_manager, new_plugin, edit_plugin, save_plugin, delete_plugin, new_module, edit_module, save_module, exec_module, delete_module, view_eventlog, delete_eventlog, manage_metatags, edit_doc_metatags, new_web_user, edit_web_user, save_web_user, delete_web_user, web_access_permissions)VALUES 
-(1, 'Administrator', 'Site administrators have full access to all functions', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1);
+(id, name, description, frames, home, view_document, new_document, save_document, delete_document, action_ok, logout, help, messages, new_user, edit_user, logs, edit_parser, save_parser, edit_template, settings, credits, new_template, save_template, delete_template, edit_snippet, new_snippet, save_snippet, delete_snippet, empty_cache, edit_document, change_password, error_dialog, about, file_manager, save_user, delete_user, save_password, edit_role, save_role, delete_role, new_role, access_permissions, bk_manager, new_plugin, edit_plugin, save_plugin, delete_plugin, new_module, edit_module, save_module, exec_module, delete_module, view_eventlog, delete_eventlog, manage_metatags, edit_doc_metatags, new_web_user, edit_web_user, save_web_user, delete_web_user, web_access_permissions, view_unpublished)VALUES 
+(1, 'Administrator', 'Site administrators have full access to all functions', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 
 # 1 - "Parser Service Events", 2 -  "Manager Access Events", 3 - "Web Access Service Events", 4 - "Cache Service Events", 5 - "Template Service Events", 6 - Custom Events
