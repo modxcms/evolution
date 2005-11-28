@@ -29,44 +29,70 @@ if(!$rs){
 
 $row = mysql_fetch_assoc($rs);
 $oldparent = $row['parent'];
+$newParentID = $_REQUEST['new_parent'];
 
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=1 WHERE id=".$_REQUEST['new_parent'].";";
-$rs = mysql_query($sql);
-if(!$rs){
-	echo "An error occured while attempting to change the new parent to a folder.";
+function allChildren($currDocID) {
+	global $modx;
+	$children= array();
+	$sql = "SELECT id FROM ".$modx->getFullTableName('site_content')." WHERE parent = $currDocID;";
+	if(!$rs = $modx->db->query($sql)) {
+		echo "An error occured while attempting to find all of the document's children.";
+	} else {
+		if ($numChildren= $modx->db->getRecordCount($rs)) {
+			while ($child= $modx->db->getRow($rs)) {
+				$children[]= $child['id'];
+				$nextgen= array();
+				$nextgen= allChildren($child['id']);
+				$children= array_merge($children, $nextgen);
+			}
+		}
+	}
+	return $children;
 }
 
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
-$rs = mysql_query($sql);
-if(!$rs){
-	echo "An error occured while attempting to move the document to the new parent.";
-}
+$children= allChildren($_REQUEST['id']);
 
-// finished moving the document, now check to see if the old_parent should no longer be a folder.
-$sql = "SELECT count(*) FROM $dbase.".$table_prefix."site_content WHERE parent=$oldparent;";
-$rs = mysql_query($sql);
-if(!$rs){
-	echo "An error occured while attempting to find the old parents' children.";
-}
-$row = mysql_fetch_assoc($rs);
-$limit = $row['count(*)'];
+if (!array_search($newParentID, $children)) {
 
-if(!$limit>0) {
-	$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=0 WHERE id=$oldparent;";
+	$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=1 WHERE id=".$_REQUEST['new_parent'].";";
 	$rs = mysql_query($sql);
 	if(!$rs){
-		echo "An error occured while attempting to change the old parent to a regular document.";
+		echo "An error occured while attempting to change the new parent to a folder.";
 	}
+	
+	$sql = "UPDATE $dbase.".$table_prefix."site_content SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
+	$rs = mysql_query($sql);
+	if(!$rs){
+		echo "An error occured while attempting to move the document to the new parent.";
+	}
+	
+	// finished moving the document, now check to see if the old_parent should no longer be a folder.
+	$sql = "SELECT count(*) FROM $dbase.".$table_prefix."site_content WHERE parent=$oldparent;";
+	$rs = mysql_query($sql);
+	if(!$rs){
+		echo "An error occured while attempting to find the old parents' children.";
+	}
+	$row = mysql_fetch_assoc($rs);
+	$limit = $row['count(*)'];
+	
+	if(!$limit>0) {
+		$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=0 WHERE id=$oldparent;";
+		$rs = mysql_query($sql);
+		if(!$rs){
+			echo "An error occured while attempting to change the old parent to a regular document.";
+		}
+	}
+	
+	// empty cache & sync site
+	include_once "cache_sync.class.processor.php";
+	$sync = new synccache();
+	$sync->setCachepath("../assets/cache/");
+	$sync->setReport(false);
+	$sync->emptyCache(); // first empty the cache		
+	$header="Location: index.php?r=1&id=$id&a=7";
+	header($header);
+} else {
+	echo "You cannot move a document to a child document!";
 }
-
-
-// empty cache & sync site
-include_once "cache_sync.class.processor.php";
-$sync = new synccache();
-$sync->setCachepath("../assets/cache/");
-$sync->setReport(false);
-$sync->emptyCache(); // first empty the cache		
-$header="Location: index.php?r=1&id=$id&a=7";
-header($header);
 
 ?>
