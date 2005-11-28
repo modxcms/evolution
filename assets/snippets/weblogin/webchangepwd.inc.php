@@ -69,7 +69,7 @@ else if ($isPostBack && isset($_SESSION['webValidated'])){
 
 		// handle notification
 		if($passwordnotifymethod=='e') {
-			$rt = sendNewPassword($ds["email"],$ds["username"],$newpassword,$ds["fullname"]);
+			$rt = webLoginSendNewPassword($ds["email"],$ds["username"],$newpassword,$ds["fullname"]);
 			if($rt!==true) { // an error occured
 				$output = $rt.$tpl;
 				return;
