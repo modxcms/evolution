@@ -1,4 +1,4 @@
-﻿/*
+/*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
  * 
@@ -54,7 +54,7 @@ FCKConfig.IncludeGreekEntities	= true ;
 
 FCKConfig.FillEmptyBlocks	= true ;
 
-FCKConfig.FormatSource		= true ;
+FCKConfig.FormatSource		= false ;
 FCKConfig.FormatOutput		= true ;
 FCKConfig.FormatIndentator	= '    ' ;
 
