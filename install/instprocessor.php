@@ -65,7 +65,8 @@ if(!@mysql_select_db(str_replace("`","",$dbase), $conn)) {
 // try to create the database
 if($create) {
 	echo "<p>Creating database `".str_replace("`","",$dbase)."`: ";
-	if(!@mysql_create_db(str_replace("`","",$dbase), $conn)) {
+//	if(!@mysql_create_db(str_replace("`","",$dbase), $conn)) {
+	if(!@mysql_query("CREATE DATABASE $dbase")) {
 		echo "<span class='notok'>Database creation failed!</span> - Setup could not create the database!</p>";
 		$errors += 1;
 ?>
