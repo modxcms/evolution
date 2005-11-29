@@ -156,15 +156,16 @@ EOD;
 
 $cvs = $modx->getTemplateVars('*','id, name', '', 1, 'name');
 $editable = array('pagetitle', 'longtitle', 'description', 'content', 'alias', 'introtext', 'menutitle', 'published', 'hidemenu');
+
 foreach($cvs as $content) {
- 
+
  $cv_obj = new ContentVariable;
  if(isset($content['id'])) {
   $cv_obj->set($content['id']);	
  } else if(in_array($content['name'], $editable)) {
   $cv_obj->set($content['name']);
  }
- 
+
  if($cv_obj->id && $cv_obj->checkPermissions()) {
 
   $class_name = 'QE_'.(is_numeric($cv_obj->id) ? 'TV' : 'BuiltIn');
@@ -228,7 +229,7 @@ $html_top = <<<EOD
 <!-- End QuickEdit toolbar -->
 EOD;
 
-$html_bottom = <<<EOD
+$html_bottom .= <<<EOD
 <script type="text/javascript">
 QE_PositionToolbar(document.getElementById('QE_Collapse_Wrapper'));
 QE_ShowHideLinks();
@@ -266,17 +267,17 @@ EOD;
 
    // If the javascript hasn't already been added to the page, do it now
    if(strpos($output, $head) === false) {
-    $output = str_ireplace('</head>',$head.'</head>',$output);
+    $output = preg_replace('~(</head>)~i', $head.'\1', $output);
    }
    
    // If the top html hasn't already been added to the page, do it now
    if(strpos($output, $html_top) === false) {
-    $output = preg_replace('/(<body[^>]*>)/i', '\1'.$html_top, $output);
+    $output = preg_replace('~(<body[^>]*>)~i', '\1'.$html_top, $output);
    }
 
    // If the bottom html hasn't already been added to the page, do it now
    if(strpos($output, $html_bottom) === false) {
-    $output = str_ireplace('</body>',$html_bottom.'</body>',$output);
+    $output = preg_replace('~(</body>)~i',$html_bottom.'\1',$output);
    }
 
   }
