@@ -1000,7 +1000,6 @@ $_lang['custom_contenttype_message'] = "Quì puoi impostare il formato del conten
 $_lang['inline'] = "In linea";
 $_lang['attachment'] = "Allegato";
 $_lang['add'] = 'Aggiungi';
-$_lang['remove'] = 'Rimuovi';
 $_lang['change_name'] = 'Cambia nome';
 $_lang['confirm_name_change'] = "Cambiare nome può avere effetto su altre applicazioni collegate al Content Manager. \\n\\n Sicuro di voler cambiare il nome utente?";
 

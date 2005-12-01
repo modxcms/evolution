@@ -430,7 +430,7 @@ $_lang['search_results_returned_desc'] = "Description";
 $_lang['search_view_docdata'] = "Afficher cet élément";
 $_lang['search_item_deleted'] = "Cet élément a été supprimé";
 $_lang['help_title'] = "Aide";
-$_lang['help_msg'] = "Si vous avez besoin d'aide sur ModX, le mieux est de faire une visite aux <a href='http://www.vertexworks.com/forums' target='_blank'>Forums de ModX</a>. En outre, les tutoriels de ModX contiennent de la documentation sur l'utilisation de ModX et son installation. Les réponses que vous attendez s'y trouvent peut-être. Dans le cas contraire, posez votre question dans les forums, et nous y répondrons aussi vite que possible.";
+$_lang['help_msg'] = "Si vous avez besoin d'aide sur ModX, le mieux est de faire une visite aux <a href='http://modxcms.com/forums' target='_blank'>Forums de ModX</a>. En outre, les tutoriels de ModX contiennent de la documentation sur l'utilisation de ModX et son installation. Les réponses que vous attendez s'y trouvent peut-être. Dans le cas contraire, posez votre question dans les forums, et nous y répondrons aussi vite que possible.";
 
 /***************************************************************************/
 // new in 0.5.2
@@ -997,7 +997,6 @@ $_lang['custom_contenttype_message'] = "Vous pouvez ajouter ici des types de con
 $_lang['inline'] = "Inline"; // À adapter
 $_lang['attachment'] = "Annexe";
 $_lang['add'] = 'Ajouter';
-$_lang['remove'] = 'Retirer';
 $_lang['change_name'] = 'Modifier le nom';
 $_lang['confirm_name_change'] = "La modification du nom d'un utilisateur peut influencer d'autres applications liées au gestionnaire de contenu. \\n\\n Voulez-vous vraiment modifier le nom de cet utilisateur ?";
 

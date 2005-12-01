@@ -429,7 +429,7 @@ $_lang['search_results_returned_desc'] = "Beschreibung";
 $_lang['search_view_docdata'] = "Dieses Dokument anzeigen";
 $_lang['search_item_deleted'] = "Dieses Dokument wurde gel&ouml;scht";
 $_lang['help_title'] = "Hilfe";
-$_lang['help_msg'] = "Wenn Sie Hilfe bei der Nutzung von MODx ben&ouml;tigen besuchen Sie am besten das <a href='http://www.vertexworks.com/forums' target='_blank'>MODx Forum</a>. Falls Sie dort keine L&ouml;sung zu Ihrem Problem oder Ihrer Frage finden, stellen Sie Ihre Frage in dem entsprechendem Unterforum. Das Team wird versuchen Ihre Frage so schnell wie m&ouml;glich zu beantworten.";
+$_lang['help_msg'] = "Wenn Sie Hilfe bei der Nutzung von MODx ben&ouml;tigen besuchen Sie am besten das <a href='http://modxcms.com/forums' target='_blank'>MODx Forum</a>. Falls Sie dort keine L&ouml;sung zu Ihrem Problem oder Ihrer Frage finden, stellen Sie Ihre Frage in dem entsprechendem Unterforum. Das Team wird versuchen Ihre Frage so schnell wie m&ouml;glich zu beantworten.";
 
 /***************************************************************************/
 // new in 0.5.2
@@ -997,7 +997,6 @@ $_lang['custom_contenttype_message'] = "Hier k&ouml;nnen Sie eigene Content-Type
 $_lang['inline'] = "Browserfenster";
 $_lang['attachment'] = "Download/Anhang";
 $_lang['add'] = 'Hinzuf&uuml;gen';
-$_lang['remove'] = 'Entfernen';
 $_lang['change_name'] = 'Name &auml;ndern';
 $_lang['confirm_name_change'] = "Eine &Auml;nderung des Benutzernamens kann m&ouml;glicherweise Auswirkungen auf die Funktion von Applikationen dritter haben, die Daten von MODx verwenden.\\n\\nSind Sie sicher, dass der Name des Benutzerkontos ge&auml;ndert werden soll?";
 

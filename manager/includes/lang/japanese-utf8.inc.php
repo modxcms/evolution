@@ -429,7 +429,7 @@ $_lang['search_results_returned_desc'] = "説明";
 $_lang['search_view_docdata'] = "このアイテムを表示する";
 $_lang['search_item_deleted'] = "このアイテムは削除されています。";
 $_lang['help_title'] = "ヘルプ";
-$_lang['help_msg'] = "MODxを使っていて助けが要るときは、<a href='http://www.vertexworks.com/forums' target='_blank'>MODx フォーラム</a>を訪れてください。MODxの設定方法や使用にあたってのテュートリアルなどがあります。お探しの答えが見つかるかも知れません。答えが見つからないときはフォーラムで質問してみてください。私たちができるだけサポートします。";
+$_lang['help_msg'] = "MODxを使っていて助けが要るときは、<a href='http://modxcms.com/forums' target='_blank'>MODx フォーラム</a>を訪れてください。MODxの設定方法や使用にあたってのテュートリアルなどがあります。お探しの答えが見つかるかも知れません。答えが見つからないときはフォーラムで質問してみてください。私たちができるだけサポートします。";
 
 /***************************************************************************/
 // new in 0.5.2
@@ -996,7 +996,6 @@ $_lang['custom_contenttype_message'] = "ここではドキュメントが使用�
 $_lang['inline'] = "Inline";
 $_lang['attachment'] = "Attachment";
 $_lang['add'] = '追加';
-$_lang['remove'] = '削除';
 $_lang['change_name'] = '名前の変更';
 $_lang['confirm_name_change'] = "ユーザ名を変更するとMODxにリンクする他のアプリケーションに影響が及ぶ場合があります。 \\n\\n ほんとうにユーザ名を変更してよろしいですか?";
 
