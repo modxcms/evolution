@@ -91,13 +91,13 @@ if(empty($formTpl)) $formTpl = '<form name="NewsPublisher" method="post">
 		var elm_txt = {}; // dummy
 		var pub = document.forms["NewsPublisher"].elements["pub_date"];
 		var nwpub_cal1 = new calendar1(pub,elm_txt);
-		nwpub_cal1.path="manager/media/";
+		nwpub_cal1.path="[(base_url)]manager/media/";
 		nwpub_cal1.year_scroll = true;
 		nwpub_cal1.time_comp = true;	
 
 		var unpub = document.forms["NewsPublisher"].elements["unpub_date"];
 		var nwpub_cal2 = new calendar1(unpub,elm_txt);
-		nwpub_cal2.path="manager/media/";
+		nwpub_cal2.path="[(base_url)]manager/media/";
 		nwpub_cal2.year_scroll = true;
 		nwpub_cal2.time_comp = true;	
 </script>';
