@@ -94,7 +94,7 @@ class Output {
   $manager_link = '';
   $help_link = '';
   $allowed = true;
-  $toolbr_cv_html = '';
+  $toolbar_cv_html = '';
   $base_path = $modx->config['base_path'];
   $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $output = $this->output;
@@ -179,13 +179,17 @@ foreach($cvs as $content) {
    $on_click = "QE_OpenEditor({$doc_id}, '{$cv_obj->id}');";
   }
 
-$toolbr_cv_html .= <<<EOD
+$toolbar_cv_html .= <<<EOD
 <li><a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: {$on_click};" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a></li
 >
 EOD;
 
  }
  
+}
+
+if(!$toolbar_cv_html) {
+ $toolbar_cv_html = "<li style=\"text-align:center;\"><a><em>{$_lang['QE_no_edit_rights']}</em></a></li>";	
 }
 
 if($show_manager_link) {
@@ -219,7 +223,7 @@ $html_top = <<<EOD
     </div>
     <div id="QE_menu_2" class="collapsed">
         <ul>
-            {$toolbr_cv_html}</ul>
+            {$toolbar_cv_html}</ul>
     </div>
 
 </div>
