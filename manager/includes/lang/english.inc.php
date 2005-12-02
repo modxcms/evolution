@@ -1050,4 +1050,5 @@ $_lang['system_email_websignup'] = "Hello [+uid+] \n\nHere are your login detail
 $_lang['system_email_webreminder'] = "Hello [+uid+]\n\nTo active you new password click the following link:\n\n[+surl+]\n\nIf successful you can use the following password to login:\n\nPassword:[+pwd+]\n\nIf you did not request this email then please ignore it.\n\nRegrads,\nSite Administrator" ;
 
 $_lang['role_view_unpublished'] = "View Unpublished Documents";
+$_lang['duplicate_document'] = "Duplicate Document";
 ?>

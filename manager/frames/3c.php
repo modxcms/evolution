@@ -30,6 +30,8 @@ function constructLink($action, $img, $text, $allowed) {
 constructLink(1, "context_view", $_lang["view_document"], 1);
 constructLink(2, "save", $_lang["edit_document"], $modx->hasPermission('edit_document'));
 constructLink(5, "cancel", $_lang["move_document"], $modx->hasPermission('edit_document'));
+// Ryan: Duplicate Document
+constructLink(7, "copy", $_lang["duplicate_document"], $modx->hasPermission('new_document'));
 //Raymond:Create Folder
 constructLink(11, "folder", $_lang["create_folder_here"], $modx->hasPermission('new_document'));
 constructLink(3, "newdoc", $_lang["create_document_here"], $modx->hasPermission('new_document'));

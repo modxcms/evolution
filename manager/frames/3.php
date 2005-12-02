@@ -409,6 +409,11 @@ function menuHandler(action) {
 		case 6 :
 			top.main.document.location.href="index.php?a=72&pid=" + itemToChange;
 			break
+		case 7 : // Ryan: duplicate document
+            if(confirm("<?php echo $_lang['confirm_duplicate_document'] ?>")==true) {
+                   top.main.document.location.href="index.php?a=94&id=" + itemToChange;
+               }
+			break
 		case 8 :
 			if(selectedObjectDeleted==0) {
 				alert("'" + selectedObjectName + "' <?php echo $_lang['not_deleted']; ?>");
