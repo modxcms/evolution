@@ -15,6 +15,7 @@ if (!isset($manager_layout) || $manager_layout==1 || ($manager_layout==0 && $bro
 	<head>
 	<title><?php echo $site_name." - (MODx Content Manager)"; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+	<script language="JavaScript" src="../media/script/session.js"></script>
 	</head>
 	<frameset rows="0,24,*" frameborder="no" border="0">
 		<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
@@ -39,6 +40,7 @@ else if ($manager_layout==2) {
 	<head>
 	<title><?php echo $site_name." - (MODx Content Manager)"; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+	<script language="JavaScript" src="../media/script/session.js"></script>
 	</head>
 	<frameset rows="0,24,*" frameborder="no" border="0">
 		<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
@@ -108,6 +110,7 @@ else if ($manager_layout==3) {
 	<head>
 	<title><?php echo $site_name." - (MODx Content Manager)"; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+	<script language="JavaScript" src="../media/script/session.js"></script>
 	</head>
 	<frameset rows="0,20,150,*" frameborder="0" border="0">
 		<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
@@ -129,6 +132,7 @@ else if ($manager_layout==4) {
 	<head>
 	<title><?php echo $site_name." - (MODx Content Manager)"; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+	<script language="JavaScript" src="../media/script/session.js"></script>
 	</head>
 	<frameset rows="0,20,45,*" frameborder="0" border="0">
 		<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
@@ -151,6 +155,7 @@ else {
 	<head>
 	<title><?php echo $site_name." - (MODx Content Manager)"; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+	<script language="JavaScript" src="../media/script/session.js"></script>
 	</head>
 	<frameset rows="0,21,24,*" frameborder="no" border="0">
 		<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
