@@ -4,10 +4,11 @@
  *  Created: 8/14/2005
  *  Updated: 8/20/2005 - Added documentation page support
  *  Updated: 11/27/2005 - Added show Manager & Help link options and apply (AJAX saving)
+ *  Updated: 12/05/2005 - Added editable fields as configuration option
  *  For: MODx cms (modxcms.com)
  *  Name: QuickEdit
  *  Description: Edit pages from the frontend of the site
- *  Parameters: &mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1
+ *  Parameters: &mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu
  *  Parameter sharing: enabled
  *  Dependencies: QuickEdit plugin
  */
@@ -47,6 +48,7 @@ if(!file_exists($basePath.$mod_path)) {
 
 } else {
 
+ $GLOBALS['qe_editable'] = $editable;
  $GLOBALS['quick_edit_path'] = $mod_path;
  include($basePath.$mod_path.'/editor.class.inc.php');
 

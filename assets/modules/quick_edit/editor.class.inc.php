@@ -143,9 +143,9 @@ class QuickEditor {
 
    // Set the buttons for this TV
 $buttons = <<<EOD
-<a id="close" href="javascript: close();"><img src="media/images/icons/close.gif" alt="{$_lang['close']}" /> </a>
+<a id="close" href="javascript: close();"><img src="media/images/icons/close.gif" alt="{$_lang['close']}" /> {$_lang['close']}</a>
 
-<a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang['save']}" /> {$_lang['save']}</a>
+<a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang['ok']}" /> {$_lang['ok']}</a>
 EOD;
 
    if($cv->type != 'richtext' || in_array(strtolower($modx->config['which_editor']), $snapshot_compatible_editors)) {
@@ -245,6 +245,7 @@ EOD;
   global $modx;
 
   $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+  $editable = explode(',',$GLOBALS['qe_editable']);
   $db = $modx->db->config['dbase'];
   $pre = $modx->db->config['table_prefix'];
   $html = '';
@@ -300,7 +301,7 @@ EOD;
              
     }
 
-   } elseif(in_array($cv->id,array('pagetitle', 'longtitle', 'description', 'content', 'alias', 'introtext', 'menutitle', 'published', 'hidemenu'))) {
+   } elseif(in_array($cv->id, $editable)) {
 
     // Define vairable with the content id as it's name by reference for plugin support
     $cv_id = $cv->id;

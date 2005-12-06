@@ -3,6 +3,7 @@
  *  Contact: adam@obledesign.com
  *  Created: 8/14/2005
  *  Updated: 11/27/2005 - Added support for show Manager & Help links option
+ *  Updated: 12/05/2005 - Added support for editable fields as a module configuration option
  *  For: MODx cms (modxcms.com)
  *  Name: QuickEdit
  *  Description: Renders QuickEdit links in the frontend
@@ -53,6 +54,7 @@ if(!file_exists($mod_path)) {
  // Set globals from QE Module's shared paramaters so we can get them from the frontend
  $GLOBALS['qe_show_manager_link'] = $show_manager_link;
  $GLOBALS['qe_show_help_link'] = $show_help_link;
+ $GLOBALS['qe_editable'] = $editable;
 
  // Set the mod_path as a global variable
  $GLOBALS['quick_edit_path'] = $mod_path;

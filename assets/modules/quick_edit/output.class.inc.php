@@ -91,6 +91,7 @@ class Output {
 
   $show_manager_link = $GLOBALS['qe_show_manager_link'];
   $show_help_link = $GLOBALS['qe_show_help_link'];
+  $editable = explode(',',$GLOBALS['qe_editable']);
   $manager_link = '';
   $help_link = '';
   $allowed = true;
@@ -155,7 +156,6 @@ $head = <<<EOD
 EOD;
 
 $cvs = $modx->getTemplateVars('*','id, name', '', 1, 'name');
-$editable = array('pagetitle', 'longtitle', 'description', 'content', 'alias', 'introtext', 'menutitle', 'published', 'hidemenu');
 
 foreach($cvs as $content) {
 
