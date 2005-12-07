@@ -5,15 +5,16 @@
  */
 
 global $BINDINGS; // list of supported bindings. must be upper case
-$BINDINGS = "FILE,CHUNK,DOCUMENT,SELECT,EVAL"; 
+$BINDINGS = "FILE,CHUNK,DOCUMENT,SELECT,EVAL,INHERIT"; 
 
-function ProcessTVCommand($value){
+function ProcessTVCommand($value, $name=''){
 	global $modx;	
 	$etomite = &$modx;
 	
 	$nvalue = trim($value);
 	if (substr($nvalue,0,1)!='@') return $value;
 	else {
+
 		list($cmd,$param) = ParseCommand($nvalue);
 		$cmd = trim($cmd);
 		switch (strtoupper($cmd)) {
@@ -48,6 +49,33 @@ function ProcessTVCommand($value){
 				
 			case "@EVAL":		// evaluates text as php codes return the results
 				$output = eval($param);
+				break;
+
+			case "@INHERIT":
+			
+				$output = $param; // Default to param value if no content from parents
+				$doc = $modx->getDocument($modx->documentIdentifier,'id,parent');
+				
+				while($doc['parent'] != 0) {
+					
+					$parent_id = $doc['parent'];
+					
+					if($doc = $modx->getDocument($parent_id, 'id,parent')) {
+						
+						$tv = $modx->getTemplateVar($name, '*', $doc['id']);
+						if($tv['value'] && substr($tv['value'],0,1) != '@') {
+							$output = $tv['value'];
+							break 2;
+						}
+						
+					} else {
+			
+						// Get unpublished document
+						$doc = $modx->getDocument($parent_id, 'id,parent',0);
+						
+					}
+					
+				}
 				break;
 
 			default:

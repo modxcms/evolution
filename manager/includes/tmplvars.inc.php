@@ -20,7 +20,7 @@
 			case "text": // handler for regular text boxes
 			case "email": // handles email input fields
 			case "number": // handles the input of numbers
-				$field_html .=  '<input type="text" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%" />';
+				$field_html .=  '<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%" />';
 				break;
 			case "textareamini": // handler for textarea mini boxes
 				$field_html .=  '<textarea id="tv'.$field_name.'" name="tv'.$field_name.'" cols="40" rows="5" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
@@ -34,7 +34,7 @@
                 if($field_value=='') $field_value=0;
                 $cal = 'cal' . $field_name;
 
-				$field_html .=  '<input name="tv'.$field_name.'" type="hidden" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;setVariableModified(\''.$field_name.'\');">';
+				$field_html .=  '<input id="tv'.$field_name.'" name="tv'.$field_name.'" type="hidden" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;setVariableModified(\''.$field_name.'\');">';
 
 				$field_html .=  '	<table width="250" border="0" cellspacing="0" cellpadding="0">';
 				$field_html .=  '	  <tr>';
@@ -59,8 +59,8 @@
 
 				break;
 			case "dropdown": // handler for select boxes
-				$field_html .=  '<select name="tv'.$field_name.'" size="1" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');">';
-				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
+				$field_html .=  '<select id="tv'.$field_name.'" name="tv'.$field_name.'" size="1" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');">';
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_name));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -70,8 +70,8 @@
 				$field_html .=  "</select>";
 				break;
 			case "listbox": // handler for select boxes
-				$field_html .=  '<select name="tv'.$field_name.'" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" size="8">';	
-				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
+				$field_html .=  '<select id="tv'.$field_name.'" name="tv'.$field_name.'" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" size="8">';	
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_name));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -82,8 +82,8 @@
 				break;
 			case "listbox-multiple": // handler for select boxes where you can choose multiple items
 				$field_value = explode("||",$field_value);
-				$field_html .=  '<select name="tv'.$field_name.'[]" multiple="multiple" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" size="8">';
-				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
+				$field_html .=  '<select id="tv'.$field_name.'[]" name="tv'.$field_name.'[]" multiple="multiple" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" size="8">';
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_name));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -94,29 +94,29 @@
 				break;
 			case "url": // handles url input fields
 				$urls= array("--","http://","ftp://");
-				$field_html ="<table border='0' cellspacing='0' cellpadding='0'><tr><td><select name='tv".$field_name."_prefix' onchange='documentDirty=true;setVariableModified(\"".$field_name."\");'>";
+				$field_html ='<table border="0" cellspacing="0" cellpadding="0"><tr><td><select id="tv'.$field_name.'_prefix" name="tv'.$field_name.'_prefix" onchange="documentDirty=true; setVariableModified(\''.$field_name.'\');">';
 				foreach($urls as $k => $v){
-					if(strpos($field_value,$v)===false) $field_html.="<option value='$v'>$v</option>";
+					if(strpos($field_value,$v)===false) $field_html.='<option value="'.$v.'">'.$v.'</option>';
 					else{
 						$field_value = str_replace($v,"",$field_value);
-						$field_html.="<option value='$v' selected='selected'>$v</option>";
+						$field_html.='<option value="$v" selected="selected">'.$v.'</option>';
 					}
 				}
-				$field_html .="</select></td><td>";
-				$field_html .=  '<input type="text" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" width="100" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" /></td></tr></table>';
+				$field_html .='</select></td><td>';
+				$field_html .=  '<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" width="100" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" /></td></tr></table>';
 				break;
 			case "checkbox": // handles check boxes
 				$field_value = explode("||",$field_value);
-				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_name));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 					if (strlen($itemvalue)==0) $itemvalue = $item;
-					$field_html .=  '<input type="checkbox" value="'.htmlspecialchars($itemvalue).'" name="tv'.$field_name.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />'.$item.'<br />';
+					$field_html .=  '<input type="checkbox" value="'.htmlspecialchars($itemvalue).'" id="tv'.$field_name.'-'.$itemvalue.'" name="tv'.$field_name.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><label for="tv'.$field_name.'-'.$itemvalue.'">'.$item.'</label><br />';
 				}
 				break;
 			case "option": // handles radio buttons
-				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements));
+				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_name));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
@@ -130,7 +130,7 @@
 				global $content,$use_editor,$which_editor;
 				if (!$ImageManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
 					$field_html .="
-					<script type='text/javascript'>
+					<script type=\"text/javascript\">
 							var lastImageCtrl;
 							function OpenServerBrowser(url, width, height ) {
 								var iLeft = (screen.width  - width) / 2 ;
@@ -159,14 +159,14 @@
 					</script>";
 					$ImageManagerLoaded  = true;					
 				} 
-				$field_html .='<input type="text" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="setVariableModified(\''.$field_name.'\');BrowseServer(\'tv'.$field_name.'\')" />';
+				$field_html .='<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="setVariableModified(\''.$field_name.'\');BrowseServer(\'tv'.$field_name.'\')" />';
 				break;
 			case "file": // handles the input of file uploads
-				$field_html .=  '<input type="file" name="tv'.$field_name.'"  '.$field_style.' onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><br>';
+				$field_html .=  '<input type="file" id="tv'.$field_name.'" name="tv'.$field_name.'" '.$field_style.' onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><br>';
                 if($field_value!='') $field_html .=  '&nbsp;Current File: <a href="'.$field_value.'" target="_new">'. basename($field_value). '</a><input type="hidden" name="tv'.$field_name.'_previous" value="'.$field_value.'" /><br /><input type="checkbox" name="tv'.$field_name.'_clear" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Clear link to doc &nbsp;&nbsp;<input type="checkbox" name="tv'.$field_name.'_delete" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Delete File'; 
 				break;
 			default: // the default handler -- for errors, mostly
-				$field_html .=  '<input type="text" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />';
+				$field_html .=  '<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />';
 
 		} // end switch statement
 		return $field_html;

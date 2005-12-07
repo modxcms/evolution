@@ -14,7 +14,7 @@
 		$modx->regClientStartupScript('<script type="text/javascript">var MODX_MEDIA_PATH = "'.(IN_MANAGER_MODE ? 'media':'manager/media').'";</script>');
 
 		// process any TV commands in value
-		$value = ProcessTVCommand($value);
+		$value = ProcessTVCommand($value, $name);
 		
 		$param = array();
 		if($paramstring){
