@@ -751,12 +751,13 @@ class DocumentParser {
 					$snippetParamCount = count($tempSnippetParams);
 					for($x=0; $x<$snippetParamCount; $x++) {
 						if (strpos($tempSnippetParams[$x], '=', 0)) {
-							$parameterTemp = explode("=", $tempSnippetParams[$x]);
-							$fp = strpos($parameterTemp[1],'`');
-							$lp = strrpos($parameterTemp[1],'`');
-							if(!($fp===false && $lp===false)) 
-								$parameterTemp[1] = substr($parameterTemp[1],$fp+1,$lp-1);
-							$parameter[$parameterTemp[0]] = $parameterTemp[1];
+							if ($parameterTemp = explode("=", $tempSnippetParams[$x])) {
+								$fp = strpos($parameterTemp[1],'`');
+								$lp = strrpos($parameterTemp[1],'`');
+								if(!($fp===false && $lp===false)) 
+									$parameterTemp[1] = substr($parameterTemp[1],$fp+1,$lp-1);
+								$parameter[$parameterTemp[0]] = $parameterTemp[1];
+							}
 						}
 					} 
 				}
