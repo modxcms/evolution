@@ -393,8 +393,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
 	`tmplvarid` int(10) NOT NULL COMMENT 'Template Variable id',
 	`templateid` int(11) NOT NULL default '0',
-	KEY idx_tmplvarid (tmplvarid),
-	KEY idx_templateid (templateid)
+	PRIMARY KEY (`tmplvarid`, `templateid`)
 ) TYPE=MyISAM COMMENT='Site Template Variables Templates Link Table';
 
 
@@ -755,6 +754,10 @@ ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL 
 
 
 ALTER TABLE `{PREFIX}user_roles` ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`
+, DROP INDEX `idx_templateid`
+, ADD PRIMARY KEY ( `tmplvarid` , `templateid` )
 
 
 # Insert / Replace system records

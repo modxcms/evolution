@@ -220,6 +220,17 @@ REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','1');
 
 
 #
+# Dumping data for table `system_settings`
+#
+
+
+REPLACE INTO `{PREFIX}system_settings` VALUES('error_page', '7');
+
+
+REPLACE INTO `{PREFIX}system_settings` VALUES('unauthorized_page', '4');
+
+
+#
 # Dumping data for table `web_groups`
 #
 
