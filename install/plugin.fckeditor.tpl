@@ -8,7 +8,7 @@
  * Configuration:
  * &webset=Web Toolbars;string;['Bold','Italic','Underline','-','Link','Unlink']
  *
- * Version 2.1.1rev1
+ * Version 2.1.2
  * FCKeditor v2.1.1
  *
  */

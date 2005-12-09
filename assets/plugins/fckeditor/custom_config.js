@@ -6,6 +6,9 @@
 
 // Allow QuickEdit style tags <quickedit:name />
 FCKConfig.ProtectedSource.Add( /(<quickedit:[^\>]+>[\s|\S]*?<\/quickedit:[^\>]+>)|(<quickedit:[^\>]+\/>)/gi ); 	
+// For snippet calls
+FCKConfig.ProtectedSource.Add( /\[\[[\s\S]*?\]\]/gi );
+FCKConfig.ProtectedSource.Add( /\[\![\s\S]*?\!\]/gi );
 
 /* *
  * Language settings
