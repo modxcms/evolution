@@ -34,6 +34,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+// Set configuration variables if not already set
+if(!isset($mod_path)) { $mod_path = 'assets/modules/quick_edit'; }
+if(!isset($show_manager_link)) { $show_manager_link = 1; }
+if(!isset($show_help_link)) { $show_help_link = 1; }
+if(!isset($editable)) { $editable = 'pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu'; }
+
 // If we can't find the module files...
 if(!file_exists($mod_path)) {
 
