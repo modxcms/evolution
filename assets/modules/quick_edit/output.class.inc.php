@@ -173,10 +173,10 @@ foreach($cvs as $content) {
   if($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements,'||')) {
    $type_image = ($cv_obj->content ? $this->checked_image : $this->unchecked_image);
    $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
-   $on_click = "QE_SendAjax('doc={$doc_id}&var={$cv_obj->id}&save=1&tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } );";
+   $on_click = "QE_SendAjax('doc={$doc_id}&var={$cv_obj->id}&save=1&tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } )";
   } else {
    $type_image = '';
-   $on_click = "QE_OpenEditor({$doc_id}, '{$cv_obj->id}');";
+   $on_click = "QE_OpenEditor({$doc_id}, '{$cv_obj->id}')";
   }
 
 $toolbar_cv_html .= <<<EOD
