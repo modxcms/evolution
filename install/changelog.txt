@@ -3,8 +3,22 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.1 (rev 528 - November 28, 2005)
+MOD 0.9.1 (rev 570 - December 8, 2005)
 ==================
+* Added preliminary Spanish Translation.
+* Massive feature updates to Newslisting.
+* Added new role and ability to preview unpublished docs in QE and in the manager.
+* Added ability to UserComments snippet to specify doc to read comments from.
+* New @INHERIT @binding.
+* Prevent manager from timing out and loosing work during long editing sessions [bug 146].
+* Added Duplicate command to contextual menu [request 5].
+* Add ability to limit editing and return to manager rights in QE.
+* Fix duplicate language definitions and boatloads of typos [bug 141]
+* Updated help and about pages [to dos 96 and 97]
+* Fix popup calendar navigation [bug 134]
+* Major fixes to installer in non-US-English instances [bug 139].
+* Fix PHP4 compatibility with updated QuickEdit (and additional QuickEdit updates)
+* Updated and/or new Japanese, Italian and German tranlations.
 * fix do not allow moving of document to it's own descendents [bug 135]
 * fix web user change password [bug 131]
 * fix document duplication issues [bug 133]
