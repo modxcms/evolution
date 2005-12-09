@@ -7,13 +7,19 @@
  */
 
 var QE_ParentClassName = 'QE_Parent';
+var QE_ModuleActionId = 112;
 
 // Opens the frontend editor pop-up window
 function QE_OpenEditor(pageId, contentId) {
  var settings = 'width=400, height=300, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1, resizable=1';
- var url = managerPath+'index.php?a=112&id='+modId+'&doc='+pageId+'&var='+contentId;
+ var url = managerPath+'index.php?a='+QE_ModuleActionId+'&id='+modId+'&doc='+pageId+'&var='+contentId;
  var name = 'QuickEditor';
  window.open(url, name, settings);
+}
+
+// Sends an AJAX request to the QE module
+function QE_SendAjax(vars, successHandler, errorHandler) {
+new Ajax.Request(managerPath+'index.php?a='+QE_ModuleActionId+'&id='+modId+'&ajax=1', {method:'post', postBody:vars, onSuccess:successHandler, onFailure:errorHandler} );
 }
 
 // Assign a new class to the parent

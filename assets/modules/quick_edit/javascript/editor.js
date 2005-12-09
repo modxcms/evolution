@@ -6,6 +6,23 @@
  *  Description: Javascript for the QuickEditor
  */
 
+/* --------- SNAPSHOT CODE -------------- */
+
+var snapshot = '';
+
+function takeSnapshot(formElement) {
+snapshot = Form.serialize(formElement);
+}
+
+function saveSnapshot() {
+QE_SendAjax(snapshot, function() { window.location.reload(); opener.location.reload(); } );
+}
+
+// Sends an AJAX request to the QE module
+function QE_SendAjax(vars, successHandler, errorHandler) {
+new Ajax.Request('index.php', {method:'post', postBody:vars, onSuccess:successHandler, onFailure:errorHandler} );
+}
+
 function fitWindow() {
  var heightMargin = 50;
  var myForm = document.getElementById('tv_form');
@@ -19,8 +36,19 @@ function save() {
  form.submit();
 }
 
-function cancel() {
- window.self.close();
+function applyChanges(formElement) {
+
+// Update RTE linked fields
+
+// FCKeditor
+if(typeof(FCKeditorAPI) != 'undefined') {
+var oEditor = FCKeditorAPI.GetInstance(QE_ContentVariableID);
+oEditor.UpdateLinkedField();
+}
+
+var serializedForm = Form.serialize(formElement);
+QE_SendAjax(serializedForm, function() { opener.window.location.reload(); } );
+
 }
 
 function reloadAndClose() {
@@ -31,7 +59,9 @@ function reloadAndClose() {
 
 var modVariables = [];
 function setVariableModified(fieldName){
- var i, isDirty, mv = modVariables;
+ var i;
+ var isDirty
+ var mv = modVariables;
  for(i=0;i<mv.length;i++){
   if (mv[i]==fieldName) {
    isDirty=true;

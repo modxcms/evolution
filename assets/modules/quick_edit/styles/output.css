@@ -6,110 +6,133 @@
  *  Description: Styles for QuickEdit links
  */
 
- #QE_Collapse_Wrapper {
-     position: absolute !important;
-     z-index: 1000000;
-     top: 0;
-     left: 0;
-     padding: 10px;
-     width: 160px;
- }
+#QE_Collapse_Wrapper {
+position: absolute !important;
+z-index: 1000000 !important;
+top: 0;
+left: 0;
+padding: 10px;
+width: 175px;
+}
 
- #QE_Expand_Wrapper {
-     padding: 15px 25px 35px;
- }
+#QE_Expand_Wrapper {
+z-index: 1000001 !important;
+padding: 15px 25px 35px;
+}
 
+#QE_Toolbar{
+z-index: 1000002 !important;
+}
 
 #QE_Toolbar, #QE_Toolbar div, #QE_Toolbar h1, #QE_Toolbar ul, #QE_Toolbar li {
-    font: 10px/15px Arial, Helvetica, sans-serif;
-    text-align: left;
-    text-decoration: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
+font: 10px/15px Arial, Helvetica, sans-serif;
+text-align: left;
+text-decoration: none !important;
+margin: 0 !important;
+padding: 0 !important;
+list-style: none !important;
 }
-#QE_Toolbar ul { position: relative; z-index: 10000000 }
+
+#QE_Toolbar ul {
+position: relative;
+z-index: 1000003 !important;
+}
+
 #QE_Toolbar, #QE_Toolbar h1, #QE_Toolbar a {
-    font-size: 10px;
-    border: 1px solid #afafaf;
-    border-width: 1px 1px 0 1px;
+font-size: 10px;
+border: 1px solid #afafaf;
+border-width: 1px 1px 0 1px;
 }
 #QE_Toolbar h1, #QE_Toolbar a {
-    border-width: 0 0 1px 0;
+border-width: 0 0 1px 0;
 }
 #QE_Toolbar h1 {
-    background: #fff url(../images/link_bg.png) repeat-x 0 0;
-    font-weight: bold;
-    text-align: center;
-    height: auto !important;
-    height: 1%;
-    color: #333;
-    position: relative !important;
+background: #fff url(../images/link_bg.png) repeat-x 0 0;
+font-weight: bold;
+text-align: center;
+height: auto !important;
+height: 1%;
+color: #333;
+position: relative !important;
 }
 * html #QE_EditTitle h1 {
-    background-image: none;
-    background-color: #dfdfdf;
+background-image: none;
+background-color: #dfdfdf;
 }
 #QE_Toolbar li {
-    background-color: #fff;
-    height: auto !important;
-    height: 1%;
+background-color: #fff;
+height: auto !important;
+height: 1%;
 }
 #QE_Toolbar a {
-    height: auto !important;
-    height: 1%;
-    display: block !important;
-    padding: 0 10px !important;
-    color: #444 !important;
-    text-decoration:none !important;
+height: auto !important;
+height: 1%;
+display: block !important;
+padding: 0 10px !important;
+color: #444 !important;
+text-decoration:none !important;
 }
 
 #QE_Toolbar div { 
-    position: relative;
+position: relative;
 }
-#QE_Toolbar .collapsed { display: none; }
-#QE_Toolbar .expanded { display: block; }
+
+#QE_Toolbar .collapsed {
+display: none;
+}
+
+#QE_Toolbar .expanded {
+display: block;
+}
 
 #QE_Title {
-    cursor: move !important;
+cursor: move !important;
 }
 
 #QE_Toolbar a:hover {
-    color: #000;
-    background-color: #bbb;
+color: #000;
+background-color: #bbb;
+}
+
+#QE_Toolbar img{
+border-style:none !important;
 }
 
 a.QE_Link {
-    float: right !important;
-    clear: right !important;
-    padding: 0 5px;
-    white-space: nowrap;
-    color: #000 !important;
-    font-size: 7pt;
-    font-weight: normal;
-    text-decoration: none !important;
-    line-height: 15px;
-    height: 15px;
-    border: 1px solid #afafaf;
-    background: #fff url(../images/link_bg.png) repeat-x top left;
-    cursor: pointer;
+float: right !important;
+clear: right !important;
+padding: 0 5px;
+white-space: nowrap;
+color: #000 !important;
+font-size: 7pt;
+font-weight: normal;
+text-decoration: none !important;
+line-height: 15px;
+height: 15px;
+border: 1px solid #afafaf;
+background: #fff url(../images/link_bg.png) repeat-x top left;
+cursor: pointer;
 }
 
 a.QE_Link:hover {
-    border-color: transparent;
-    background-image: none;
-    background-color: transparent;
+border-color: transparent;
+background-image: none;
+background-color: transparent;
 }
 
 .QE_Parent {
-    background-image: url(../images/parent_bg.gif);
-    background-repeat: repeat;
+background-image: url(../images/parent_bg.gif);
+background-repeat: repeat;
 }
 
 a.QE_TV {
-    background-color: #efefef;
+background-color: #efefef;
 }
 
 @media print {
-    #QE_Toolbar, a.QE_Link { display:none; }
+
+#QE_Toolbar, a.QE_Link {
+display:none;
+}
+
 }

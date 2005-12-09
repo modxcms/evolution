@@ -71,6 +71,10 @@ margin-left:-20px;
 border-style:none;
 }
 
+#close{
+float:right !important;
+}
+
 #description{
 margin-top:10px;
 text-align:center;

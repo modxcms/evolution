@@ -2,6 +2,8 @@
  *  Written by: Adam Crownoble
  *  Contact: adam@obledesign.com
  *  Created: 8/14/2005
+ *  Updated: 11/27/2005 - Added support for show Manager & Help links option
+ *  Updated: 12/05/2005 - Added support for editable fields as a module configuration option
  *  For: MODx cms (modxcms.com)
  *  Name: QuickEdit
  *  Description: Renders QuickEdit links in the frontend
@@ -32,6 +34,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
+// Set configuration variables if not already set
+if(!isset($mod_path)) { $mod_path = 'assets/modules/quick_edit'; }
+if(!isset($show_manager_link)) { $show_manager_link = 1; }
+if(!isset($show_help_link)) { $show_help_link = 1; }
+if(!isset($editable)) { $editable = 'pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu'; }
+
 // If we can't find the module files...
 if(!file_exists($mod_path)) {
 
@@ -48,6 +56,11 @@ if(!file_exists($mod_path)) {
  }
 
 } else {
+
+ // Set globals from QE Module's shared paramaters so we can get them from the frontend
+ $GLOBALS['qe_show_manager_link'] = $show_manager_link;
+ $GLOBALS['qe_show_help_link'] = $show_help_link;
+ $GLOBALS['qe_editable'] = $editable;
 
  // Set the mod_path as a global variable
  $GLOBALS['quick_edit_path'] = $mod_path;
@@ -85,7 +98,8 @@ if(!file_exists($mod_path)) {
  $modx->documentOutput = $outputObject->output;
 
  // Logout ?
- if(@$_GET['QuickEdit_logout'] == 'logout') {
+ $qe_logout= (isset($_GET['QuickEdit_logout'])? $_GET['QuickEdit_logout']: '');
+ if($qe_logout == 'logout') {
   $_SESSION = array();
  }
 
