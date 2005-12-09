@@ -3,8 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.1 (rev 573 - December 8, 2005)
+MOD 0.9.1 (rev 575 - December 8, 2005)
 ==================
+* New basic personalization snippet: Personalize.
+* New conditional display snippet based on logged in user's group membership: MemberCheck.
 * Added proper primary key index to site_tmplvar_templates table to prevent duplicate entries from upgrade script.
 * Added preliminary Spanish Translation.
 * Massive feature updates to Newslisting.

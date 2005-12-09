@@ -15,15 +15,17 @@
 
 	# setup snippets template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$ms = &$moduleSnippets;
+	$ms[] = array("Personalize","<strong>NEW!</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
+	$ms[] = array("MemberCheck","<strong>NEW!</strong> Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
 	$ms[] = array("DateTime","Outputs the current date and time to the page.",0,"$setupPath/snippet.datetime.tpl","");
 	$ms[] = array("GetStats","Fetches the visitor statistics totals from the database",0,"$setupPath/snippet.getstats.tpl","");
 	$ms[] = array("ContactForm","Simple, configurable XHTML-validating contact form for delivery to email accounts.",0,"$setupPath/snippet.contactform.tpl","");
 	$ms[] = array("DropMenu","Robust and configurable XHTML-validating menu and site map builder. Output an unordered list.",0,"$setupPath/snippet.dropmenu.tpl","");
 	$ms[] = array("FlexSearchForm","Robust site search with like and partial matching.",0,"$setupPath/snippet.flexsearchform.tpl","");
 	$ms[] = array("NewsFeed","Enable RSS2 news feed from your website.",0,"$setupPath/snippet.newsfeed.tpl","");
-	$ms[] = array("NewsListing","Displays news.",0,"$setupPath/snippet.newslisting.tpl","");
+	$ms[] = array("NewsListing","<strong>Updated:</strong> Versatile news/article display system.",0,"$setupPath/snippet.newslisting.tpl","");
 	$ms[] = array("NewsPublisher","Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
-	$ms[] = array("UserComments","Add user comments to documents.",0,"$setupPath/snippet.usercomments.tpl","");
+	$ms[] = array("UserComments","<strong>Updated:</strong> Add user comments to any document.",0,"$setupPath/snippet.usercomments.tpl","");
 	$ms[] = array("PoweredBy","A little link to MODx",0,"$setupPath/snippet.poweredby.tpl","");
 	$ms[] = array("PageTrail","Outputs the page trail, based on Bill Wilson's script",0,"$setupPath/snippet.pagetrail.tpl","&sep=Separator;string; &style=Style;string; &class=Class;string;");
 	$ms[] = array("WebLogin","Web User Login Snippet",0,"$setupPath/snippet.weblogin.tpl","&loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;");
@@ -32,12 +34,12 @@
 
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
-	$mp[] = array("FCKEditor","RichText Editor Plugin",0,"$setupPath/plugin.fckeditor.tpl","&webset=Web Toolbar Set;list;basic,standard,advanced,custom;custom &webcustom=Custom Web Toolbar;textarea;['Bold','Italic','Underline','-','Link','Unlink']","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
-	$mp[] = array("QuickEdit","Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
+	$mp[] = array("FCKEditor","<strong>Updated:</strong> RichText Editor Plugin",0,"$setupPath/plugin.fckeditor.tpl","&webset=Web Toolbar Set;list;basic,standard,advanced,custom;custom &webcustom=Custom Web Toolbar;textarea;['Bold','Italic','Underline','-','Link','Unlink']","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+	$mp[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
 	$mm = &$moduleModules;
-	$mm[] = array("QuickEdit","Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu","f888bac76e1537ca8e0cbec772b4624a",1);
+	$mm[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu","f888bac76e1537ca8e0cbec772b4624a",1);
 
 	# setup callback function
 	$callBackFnc = "clean_up";
