@@ -1,10 +1,14 @@
 /**
  *
- *	UserComments for MODx
+ *	Name: UserComments
+ *	Desc: Append User Comments to any Document
  *	Created by Raymond Irving, July 2005
- *	Updated October 4, 2005
  *
- *	Add user comments to documents
+ *	Version: 1.1
+ *	Updated: December 8, 2005
+ *	
+ *	Changes:
+ *	Dec 8, 05 - Fixed ability to specify the comments to display (remote show via passing in &docid) by modx@vertexworks.com
  *
  *	Parameters:
  *		&displaytpl		- display template (chunk name)
@@ -15,6 +19,7 @@
  *		&badwords		- comma delimited list of words not allowed in post
  *		&makefolder		- set to 1 to automatically convert the parent document to a folder. Defaults to 0
  *		&folder			- folder id where comments are stored
+ *		&docid			- document id to use where comments are stored ... use for "remote comment displays"
  *		&tagid			- a unique id used to identify or tag user comments on a page where multiple comments are required. 
  *		&freeform		- set this option to 1 to use the [+UserComments.Form+] placholder to relocate the comment form. 
  *
@@ -30,8 +35,6 @@
  *		&sortorder		- sort the comments in either ascending order (when set to 0) or descending order (when set to 1). Defaults to descending (1)
  *		&recentposts	- set the number of recent posts to be displayed. set to 0 to show all post. Defaults to 0
  *
- *	Version 1.0 Beta
- *
  */
  
 // redirect to host document if an attempt was 
@@ -42,14 +45,17 @@ if(isset($hostid)) {
 	exit;
 }
 
+// set to true to echo out variables before the comment block for troubleshooting
+$debug = false;
+
 // get user groups that can post & view comments
 $postgrp = isset($canpost) ? explode(",",$canpost):array();
 $viewgrp = isset($canview) ? explode(",",$canview):array();
 $allowAnyPost = count($postgrp)==0 ? true : false;
 $allowAnyView = count($viewgrp)==0 ? true : false;
 
-// get current document id
-$docid = $modx->documentIdentifier;
+// get current document id (if set, show-only mode)
+$docid = isset($docid) ? intval($docid):$modx->documentIdentifier;
 
 // get folder id where we should store comments 
 // else store in current document
@@ -271,7 +277,9 @@ switch ($isPostBack) {
 			$formTpl = str_replace('[+tagname+]','UserCommentForm'.$tagid,$formTpl);
 		}
 
+		$troubleshooting = ($debug)? "alias: $alias - folder: $folder - docid: $docid - tag: $tagid":'';
+
 		// return comments along with form
-		return $comments.($freeform ? $modx->setPlaceholder('UserComments.Form',$formTpl):$formTpl);
+		return $troubleshooting.$comments.($freeform ? $modx->setPlaceholder('UserComments.Form',$formTpl):$formTpl);
 		break;
 }
