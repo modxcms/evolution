@@ -1010,7 +1010,24 @@ class DocumentParser {
 			}
 											//  && !$this->checkPreview()
 			if($this->documentObject['published']==0) {
-				$this->sendErrorPage();
+	
+				// Can't view unpublished pages
+				if(!$this->hasPermission('view_unpublished')) {
+					$this->sendErrorPage();
+				} else {
+					// Inculde the necessary files to check document permissions
+					include_once($this->config['base_path'].'/manager/processors/user_documents_permissions.class.php');
+					$udperms = new udperms();
+					$udperms->user = $this->getLoginUserID();
+					$udperms->document = $this->documentIdentifier;
+					$udperms->role = $_SESSION['mgrRole'];
+					// Doesn't have access to this document
+					if(!$udperms->checkPermissions()) {
+						$this->sendErrorPage();
+					}
+
+				}
+
 			}
 
 			// check whether it's a reference
