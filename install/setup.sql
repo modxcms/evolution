@@ -987,6 +987,7 @@ UPDATE `{PREFIX}user_roles` SET
 	edit_web_user = 1,
 	save_web_user = 1,
 	delete_web_user = 1,
-	web_access_permissions = 1
+	web_access_permissions = 1,
+	view_unpublished = 1
 	WHERE  id=1;
 
