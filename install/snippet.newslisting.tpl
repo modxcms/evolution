@@ -1,6 +1,10 @@
 /**
- * NewsListing v 4.3 Beta
- * Displays posts with full support for pagination (paging of content in increments)
+ * Snippet Name: NewsListing
+ * Short Desc: Displays News Articles and Blog Posts
+ * Created By: The MODx Project
+ * Version: 4.4
+ * 
+ * Displays posts with full support for pagination (paging of content in increments) and Template Variables
  *
  * Important Notes
  *	When in pagination mode (&paginate = 1) always call the snippet uncached in the [!NewsListing!] format
@@ -47,6 +51,8 @@
  *      &truncSplit    - use the special "splitter" format to truncate for summary posts [true]
  *      &truncAt       - the split-point splitter itself [<!-- splitter -->]
  *      &truncText     - text for the summary "show more" link
+ *      &truncLen      - number of characters to show in the doc summary [300]
+ *      &truncOffset   - negative offset to use to fall back when splitting mid-open tag [30]
  *                     
  *      &comments      - whether or not the posts have comments [false]  
  *      &commText      - comments link text ["Read Comments"]  
@@ -65,6 +71,7 @@
  *      &debug	       - enables debug output [0]
  * 
  *  Modified by Mark Kaplan, Susan Ottwell, Raymond Irving, Greg Matthews and Ryan Thrash:
+ *	10-Dec-2005 restored ability to split after N charcacters without splitting inside an open tag (such as img, a href, etc.)
  *	06-Dec-2005 added xhtml strict month based archives, added nl_ prefix to all styles, minor fixes and documentation cleanup
  *	05-Dec-2005 added support for pages and TVs!
  *	03-Dec-2005 added pagination from NewsArchive (Mark)
@@ -84,13 +91,13 @@
  *
  *  To Do: 
  *      comment counts where applicable
- *      restore splitting at specified length, but not in the middle of an Anchor or Image or other tag
  *      evaluate date formats/server offsets
  *      query optimizations
  *      show in menu if needed ?
  *
  *  Credits:
- *      Now "Goes to Eleven" thanks to Mark Kaplan 
+ *      Now "goes to eleven" thanks to Mark Kaplan 
+ *      Month archives based on code from the "event-list" snippet by kastor
  *      Enhancements by Raymond Irving, Ryan Thrash and tag-closing mojo by Greg Matthews 
  *      Original code by Alex with improvements by LePrince, mrruben5, lloyd_barrett
  */
@@ -117,10 +124,11 @@ $truncsplit = isset($truncSplit) ? $truncSplit : true;
 $splitter = isset($truncAt) ? $truncAt : "<!-- splitter -->";
     // where to split the text 
 
-//$lentoshow = isset($truncLen) ? $truncLen : 450;
+$lentoshow = isset($truncLen) ? $truncLen : 300;
     // how many characters to show of blogs 
-    // DEPRECATED: too easy to split in middle of an A tag, use splitter, above
-    // but left here to uncomment if you feel so inclined
+
+$lenoffset = isset($truncOffest) ? $truncOffset : 30;
+    // how many characters to show of blogs 
 
 $tpl = isset($tpl) ? $modx->getChunk($tpl):'
     <div class="nl_summaryPost">
@@ -167,16 +175,11 @@ $commentschunk = isset($commentschunk)? '{{'.$commentschunk.'}}' : '';
 $sortdir = isset($sortdir) ? strtoupper($sortdir) : 'DESC';
     // get sort dir
 
-if ($sortby == "createdon" || $sortby == "editedon" || $sortby == "pub_date" || $sortby == "unpub_date" || $sortby =="deletedon") 
-{
+if ($sortby == "createdon" || $sortby == "editedon" || $sortby == "pub_date" || $sortby == "unpub_date" || $sortby =="deletedon") {
 	$dt = $sortby;
-}
-else if (isset($datetype))
-{
+} else if (isset($datetype)) {
 	$dt = $datetype;
-}
-else
-{
+} else {
 	$dt = "createdon";
 }
 
@@ -228,7 +231,7 @@ if ($sortby != 	"pub_date" && $sortby != "unpub_date" && $sortby != "editedon" &
 	$callby = ($showPublishedOnly)? 'getActiveChildren' : 'getAllChildren';
 	$resource = $modx->$callby($resourceparent, $sortby, $sortdir, $fields='*');
 	
-}else{
+} else {
 
 // SQL Method (alows for all possibilites but is slower)
 	$debugtext = "Using the SQL Method (alows for all possibilites but is slower) <br />";
@@ -255,7 +258,7 @@ $limit = min( $recordcount, $nrtotal );
 if ($recordcount < $nrposts)
 {
 	$stop = $recordcount;
-}else {
+} else {
 	$stop = $nrposts;
 }
 
@@ -269,119 +272,186 @@ if ($debug == 1) {
 // function used to clean all the open HTML tags inside summary posts
 // useful so it won't break layouts due to there being open tags like 
 // OL, UL, DIV, H1 or maybe even A tags for example
-if(!function_exists(closeTags)) {
-function closeTags($text) { 
-    $openPattern = "/<([^\/].*?)>/";   
-    $closePattern = "/<\/(.*?)>/"; 
-    $endOpenPattern = "/<([^\/].*?)$/"; 
-    $endClosePattern = "/<(\/.*?[^>])$/"; 
-    $endTags=''; 
-     
-    preg_match_all($openPattern,$text,$openTags); 
-    preg_match_all($closePattern,$text,$closeTags); 
-    
-    if ($debug == 1) {
-        print_r($openTags); 
-        print_r($closeTags); 
-    }
-    
-    $c=0; 
-    $loopCounter = count($closeTags[1]);  //used to prevent an infinite loop if the html is malformed 
-    while($c<count($closeTags[1]) && $loopCounter) { 
-        $i=0; 
-        while($i<count($openTags[1])) { 
-             
-            $tag = trim($openTags[1][$i]); 
-             
-            if(strstr($tag,' ')) { 
-                $tag = substr($tag,0,strpos($tag,' '));    
-            } 
-            if ($debug == 1) { echo $tag.'=='.$closeTags[1][$c]."\n"; } 
-            if($tag==$closeTags[1][$c]) { 
-                $openTags[1][$i]=''; 
-                $c++; 
-                break; 
-            }    
-            $i++; 
-        } 
-        $loopCounter--; 
-    } 
-     
-    $results = $openTags[1]; 
-     
-    if(is_array($results)) {  
-    $results = array_reverse($results); 
-         
-        foreach($results as $tag) { 
-    
-            $tag = trim($tag); 
-             
-            if(strstr($tag,' ')) { 
-                $tag = substr($tag,0,strpos($tag,' '));    
-            }    
-            if(!stristr($tag,'br') && !stristr($tag,'img') && !empty($tag)) { 
-                $endTags.= '</'.$tag.'>'; 
-            } 
-        }    
-    } 
-    return $text.$endTags; 
+if(!function_exists(html_substr)) {
+
+	function html_substr($posttext, $minimum_length, $length_offset) {
+	   // The approximate length you want the concatenated text to be
+	   // $minimum_length = 200;
+	   // The variation in how long the text can be
+	   // in this example text length will be between 200-20=180 characters
+	   // and the character where the last tag ends
+	   // $length_offset = 20;
+	   // Reset tag counter & quote checker
+	   $tag_counter = 0;
+	   $quotes_on = FALSE;
+	   // Check if the text is too long
+	   if (strlen($posttext) > $minimum_length) {
+	       // Reset the tag_counter and pass through (part of) the entire text
+	       for ($i = 0; $i < strlen($posttext); $i++) {
+	           // Load the current character and the next one
+	           // if the string has not arrived at the last character
+	           $current_char = substr($posttext,$i,1);
+	           if ($i < strlen($posttext) - 1) {
+	               $next_char = substr($posttext,$i + 1,1);
+	           }
+	           else {
+	               $next_char = "";
+	           }
+	           // First check if quotes are on
+	           if (!$quotes_on) {
+	               // Check if it's a tag
+	               // On a "<" add 3 if it's an opening tag (like <a href...)
+	               // or add only 1 if it's an ending tag (like </a>)
+	               if ($current_char == "<") {
+	                   if ($next_char == "/") {
+	                                       $tag_counter++;
+	                   }
+	                   else {
+	                       $tag_counter = $tag_counter + 3;
+	                   }
+	               }
+	               // Slash signifies an ending (like </a> or ... />)
+	               // substract 2
+	               if ($current_char == "/") $tag_counter = $tag_counter - 2;
+	               // On a ">" substract 1
+	               if ($current_char == ">") $tag_counter--;
+	               // If quotes are encountered, start ignoring the tags
+	               // (for directory slashes)
+	               if ($current_char == "\"") $quotes_on = TRUE;
+	           }
+	           else {
+	               // IF quotes are encountered again, turn it back off
+	               if ($current_char == "\"") $quotes_on = FALSE;
+	           }
+
+	           // Check if the counter has reached the minimum length yet,
+	           // then wait for the tag_counter to become 0, and chop the string there
+	           if ($i > $minimum_length - $length_offset && $tag_counter == 0) {
+	               $posttext = substr($posttext,0,$i + 1) . "...";
+	               return $posttext;
+	           }
+	       }
+	   }
+	             return $posttext;
+	}
+
+
 }
+// function used to clean all the open HTML tags inside summary posts
+// useful so it won't break layouts due to there being open tags like 
+// OL, UL, DIV, H1 or maybe even A tags for example
+if(!function_exists(closeTags)) {
+	function closeTags($text) { 
+	    $openPattern = "/<([^\/].*?)>/";   
+	    $closePattern = "/<\/(.*?)>/"; 
+	    $endOpenPattern = "/<([^\/].*?)$/"; 
+	    $endClosePattern = "/<(\/.*?[^>])$/"; 
+	    $endTags=''; 
+     
+	    preg_match_all($openPattern,$text,$openTags); 
+	    preg_match_all($closePattern,$text,$closeTags); 
+    
+	    if ($debug == 1) {
+	        print_r($openTags); 
+	        print_r($closeTags); 
+	    }
+    
+	    $c=0; 
+	    $loopCounter = count($closeTags[1]);  //used to prevent an infinite loop if the html is malformed 
+	    while($c<count($closeTags[1]) && $loopCounter) { 
+	        $i=0; 
+	        while($i<count($openTags[1])) { 
+	            $tag = trim($openTags[1][$i]); 
+             
+	            if(strstr($tag,' ')) { 
+	                $tag = substr($tag,0,strpos($tag,' '));    
+	            } 
+	            if ($debug == 1) { echo $tag.'=='.$closeTags[1][$c]."\n"; } 
+	            if($tag==$closeTags[1][$c]) { 
+	                $openTags[1][$i]=''; 
+	                $c++; 
+	                break; 
+	            }    
+	            $i++; 
+	        } 
+	        $loopCounter--; 
+	    } 
+     
+	    $results = $openTags[1]; 
+     
+	    if(is_array($results)) {  
+	    $results = array_reverse($results); 
+         
+	        foreach($results as $tag) { 
+	            $tag = trim($tag); 
+             
+	            if(strstr($tag,' ')) { 
+	                $tag = substr($tag,0,strpos($tag,' '));    
+	            }    
+	            if(!stristr($tag,'br') && !stristr($tag,'img') && !empty($tag)) { 
+	                $endTags.= '</'.$tag.'>'; 
+	            } 
+	        }    
+	    } 
+	    return $text.$endTags; 
+	}
 } // end if function exists
+
 if ($nrposts > 0) { 
 
 	// Start Pagination
-if ($paginate == 1){
-	if ($furls == 0){
-		$char = "&";
-	}else if($furls == 1){
-		$char = "?";
-	}
-	$currentpageid = $modx->documentObject['id'];
-	$next = $start + $nrposts;
+	if ($paginate == 1) {
+		if ($furls == 0) {
+			$char = "&";
+		} else if($furls == 1) {
+			$char = "?";
+		}
+		$currentpageid = $modx->documentObject['id'];
+		$next = $start + $nrposts;
 
-	$nextlink = "<a href='[~$currentpageid~]".$char."start=$next'>".$nxt."</a>";
-	$previous = $start - $nrposts;
-	$previouslink = "<a href='[~$currentpageid~]".$char."start=$previous'>".$prv."</a>";
-	$limten = $nrposts + $start;
-	if ($alwaysshow == 1)
-	{
-		$previousplaceholder = "<span class='nl_off'>".$prv."</span>";
-		$nextplaceholder = "<span class='nl_off'>".$nxt."</span>";
-	} 
-	else 
-	{
-		$previousplaceholder = "";
-		$nextplaceholder = "";
+		$nextlink = "<a href='[~$currentpageid~]".$char."start=$next'>".$nxt."</a>";
+		$previous = $start - $nrposts;
+		$previouslink = "<a href='[~$currentpageid~]".$char."start=$previous'>".$prv."</a>";
+		$limten = $nrposts + $start;
+		if ($alwaysshow == 1) {
+			$previousplaceholder = "<span class='nl_off'>".$prv."</span>";
+			$nextplaceholder = "<span class='nl_off'>".$nxt."</span>";
+		} else {
+			$previousplaceholder = "";
+			$nextplaceholder = "";
+		}
+		$split = "";
+		if ($previous > -1 && $next < $nrtotal) $split = $prevnextsplitter;
+		if ($previous > -1) $previousplaceholder = $previouslink;
+		if ($next < $nrtotal) $nextplaceholder = $nextlink;
+		if ($start < $nrtotal) $stop = $limten;
+		if ($limten > $nrtotal){$limiter = $nrtotal;} else {$limiter = $limten;}
+	
+		$totalpages=ceil($nrtotal/$nrposts);
+	
+		for ($x=0; $x<=$totalpages-1; $x++) {
+			$inc = $x * $nrposts;
+			$display = $x+1;
+			if($inc != $start) {
+				$pages .= "<a class=\"nl_page\" href='[~$currentpageid~]".$char."start=$inc'>$display</a>";
+			} else {
+				$pages .= "<span id=\"nl_currentpage\">$display</span>";
+			}	
+		}
+
+		$modx->setPlaceholder('next',$nextplaceholder);
+		$modx->setPlaceholder('previous',$previousplaceholder);
+		$modx->setPlaceholder('prevnextsplitter',$split);
+		$modx->setPlaceholder('start',$start+1);
+		$modx->setPlaceholder('stop',$limiter);
+		$modx->setPlaceholder('total',$nrtotal);
+		$modx->setPlaceholder('pages',$pages);
+		$modx->setPlaceholder('totalpages',$totalpages);	
+
+		if ($start < $nrtotal) $stop = $limten;
 	}
-	$split = "";
-	if ($previous > -1 && $next < $nrtotal) $split = $prevnextsplitter;
-	if ($previous > -1) $previousplaceholder = $previouslink;
-	if ($next < $nrtotal) $nextplaceholder = $nextlink;
-	if ($start < $nrtotal) $stop = $limten;
-	if ($limten > $nrtotal){$limiter = $nrtotal;} else {$limiter = $limten;}
-	
-	$totalpages=ceil($nrtotal/$nrposts);
-	
-	for($x=0; $x<=$totalpages-1; $x++) {
-		$inc = $x * $nrposts;
-		$display = $x+1;
-		if($inc != $start) {$pages .= "<a class=\"nl_page\" href='[~$currentpageid~]".$char."start=$inc'>$display</a>";}else{$pages .= "<span id=\"nl_currentpage\">$display</span>";}	
-	}
-	
-	$modx->setPlaceholder('next',$nextplaceholder);
-	$modx->setPlaceholder('previous',$previousplaceholder);
-	$modx->setPlaceholder('prevnextsplitter',$split);
-	$modx->setPlaceholder('start',$start+1);
-	$modx->setPlaceholder('stop',$limiter);
-	$modx->setPlaceholder('total',$nrtotal);
-	$modx->setPlaceholder('pages',$pages);
-	$modx->setPlaceholder('totalpages',$totalpages);	
-	
-	if ($start < $nrtotal) {
-			$stop = $limten;
-	}
-}
 	// End Pagination
+	
 	if ($debug == 1) $output .= "Start at $start and stop at $stop (stop)/$nrtotal (total)";
 	for ($x = $start; $x < $stop; $x++) { 
 		if ($x <= $nrtotal && $x <= $nrtotal-1) {
@@ -401,8 +471,7 @@ if ($paginate == 1){
 		$limit2 = $modx->recordCount($rs2); 
 		if($limit2<1) { 
 			$username = "anonymous"; 
-		}
-		else { 
+		} else { 
 			$resourceuser = $modx->fetchRow($rs2); 
 			$username = $resourceuser['username']; 
 		} 
@@ -423,25 +492,30 @@ if ($paginate == 1){
             $summary = explode($splitter,$summary['0']); 
 
             $summary = $summary['0'];
-            $summary = closeTags($summary);
-            $link = '<a href="[~'.$resource[$x]['id'].'~]">'.$linktext.'</a>';
+            // $link = '<a href="[~'.$resource[$x]['id'].'~]">'.$linktext.'</a>';
+
         // fall back to the summary text    
 		} else if (strlen($resource[$x]['introtext'])>0) {
 			$summary = $resource[$x]['introtext'];
-			$link = '<a href="[~'.$resource[$x]['id'].'~]">'.$linktext.'</a>';
+			// $link = '<a href="[~'.$resource[$x]['id'].'~]">'.$linktext.'</a>';
 			
-		// fall back to the summary text count	
-		// skipping this because of ease of breaking in the middle of an A tag... 
-		// so it's not a good idea. If you must have this, then uncomment
-		// } else if(strlen($resource[$x]['content']) > $lentoshow) { 
-		// 	$summary = substr($resource[$x]['content'], 0, $lentoshow).'...'; 
+		// fall back to the summary text count of characters	
+		} else if(strlen($resource[$x]['content']) > $lentoshow) { 
+		 	$summary = substr($resource[$x]['content'], 0, $lentoshow).' ...'; 
 		
 		// and back to where we started if all else fails (short post)
 		} else { 
 			$summary = $resource[$x]['content']; 
 		}  
-
+		
+		// Post-processing to clean up summaries
+		$summary = html_substr($summary,$lentoshow,$lenoffset);
+		$summary = closeTags($summary);
 		$summary = str_replace($commentschunk,'',$summary); 
+		
+		// Build the "show more" link
+		$link = '<a href="[~'.$resource[$x]['id'].'~]">'.$linktext.'</a>';
+        
 
     // Output debug info
 	if ($debug == 1) $output .= '<p><strong>Document Data for "'.$resource[$x]['pagetitle'].'"</strong></p><textarea name="Document Data" rows="5" readonly>';
@@ -451,8 +525,8 @@ if ($paginate == 1){
 			
 			if ($debug == 1 && $docVar != "content"){			
 			$output .= $docVar." = ".htmlspecialchars($docVarValue)." \n";
-			}
-			}
+		}
+	}
 			  
 	if ($debug == 1) $output .= '</textarea>';
 	

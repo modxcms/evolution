@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.1 (rev 579 - December 8, 2005)
+MOD 0.9.1 (rev 580+ - December 10, 2005)
 ==================
+* Restored ability to truncate after N-characters in Newslisting Snippet without being in the middle of an open tag
 * Fix empty variable induced parse error [bugs 127 and 144]
 * New basic personalization snippet: Personalize.
 * New conditional display snippet based on logged in user's group membership: MemberCheck.
