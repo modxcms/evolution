@@ -1124,7 +1124,7 @@ class DocumentParser {
 		$msg = mysql_escape_string($msg);
 		$source = mysql_escape_string($source);
 		$evtid = intval($evtid);
-		if ($type<1) $type = 1; else if($type>3) $type = 3;
+		if ($type<1) $type = 1; else if($type>3) $type = 3; // Types: 1 = information, 2 = warning, 3 = error
 		$sql = "INSERT INTO ".$this->getFullTableName("event_log")."(eventid,type,createdon,source,description,user) ".
 				"VALUES($evtid,$type,".time().",'$source','$msg','".$this->getLoginUserID()."')";
 		$ds = $this->dbQuery($sql);
