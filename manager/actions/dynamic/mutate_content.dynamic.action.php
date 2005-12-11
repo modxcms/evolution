@@ -626,52 +626,46 @@ function decode(s){
 			<table width="450" border="0" cellspacing="0" cellpadding="0">
 			  <tr style="height: 24px;">
 				<td width="150"><span class='warning'><?php echo $_lang['document_opt_folder']; ?></span></td>
-				<td ><input name="isfoldercheck" type="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : "" ;?> onClick="changestate(document.mutate.isfolder);"><input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_folder_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td><input name="isfoldercheck" type="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : "" ;?> onClick="changestate(document.mutate.isfolder);"><input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_folder_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			<?php if($content['type']!="reference" && $_REQUEST['a']!=72) { ?>  
 			  <tr style="height: 24px;">
-				<td ><span class='warning'><?php echo $_lang['document_opt_richtext']; ?></span></td>
-				<td ><input name="richtextcheck" type="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? "" : "checked" ;?> onClick="changestate(document.mutate.richtext);"><input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_richtext_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td><span class='warning'><?php echo $_lang['document_opt_richtext']; ?></span></td>
+				<td><input name="richtextcheck" type="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? "" : "checked" ;?> onClick="changestate(document.mutate.richtext);"><input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_richtext_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			  <tr style="height: 24px;">
 				<td width="150"><span class='warning'><?php echo $_lang['track_visitors_title']; ?></span></td>
-				<td ><input name="donthitcheck" type="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : "" ;?> onClick="changestate(document.mutate.donthit);"><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_trackvisit_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td><input name="donthitcheck" type="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : "" ;?> onClick="changestate(document.mutate.donthit);"><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_trackvisit_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			<?php } ?>  
 			  <tr style="height: 24px;">
-				<td ><span class='warning'><?php echo $_lang['document_opt_published']; ?></span></td>
-				<td ><input name="publishedcheck" type="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : "" ;?> onClick="changestate(document.mutate.published);"><input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0 ;?>">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_published_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td><span class='warning'><?php echo $_lang['document_opt_published']; ?></span></td>
+				<td><input name="publishedcheck" type="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : "" ;?> onClick="changestate(document.mutate.published);"><input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0 ;?>">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_published_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['page_data_publishdate']; ?></span></td>
-				<td ><input name="pub_date" type="hidden" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']);?>" onBlur="documentDirty=true;">
-				<table width="250" border="0" cellspacing="0" cellpadding="0">
-				  <tr>
-					<td width="160" style="border: 1px solid #808080;"><span id="pub_date_show" class="inputBox"><?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? "<i>(not set)</i>" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']);?></span> </td>
-					<td>&nbsp;
+				<td ><input name="pub_date" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']);?>" onBlur="documentDirty=true;">
 						<a onClick="documentDirty=false; cal1.popup();" onMouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>"></a>
 						<a onClick="document.mutate.pub_date.value=''; document.getElementById('pub_date_show').innerHTML='(<?php echo $_lang['not_set']?>)'; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
 						&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_publishdate_help']; ?>" onClick="alert(this.alt);" style="cursor:help;">
-					</td>
-				  </tr>
-				</table>
-
+				</td>
 			  </tr>
+			  <tr>
+			      <td></td>
+			      <td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td>
+              </tr>
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['page_data_unpublishdate']; ?></span></td>
-				<td ><input name="unpub_date" type="hidden" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']); ?>" onBlur="documentDirty=true;"> 
-				<table width="250" border="0" cellspacing="0" cellpadding="0">
-				  <tr>
-					<td width="160" style="border: 1px solid #808080;"><span id="unpub_date_show" class="inputBox"><?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? "<i>(not set)</i>" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']);?></span> </td>
-					<td>&nbsp;
+				<td ><input name="unpub_date" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']); ?>" onBlur="documentDirty=true;"> 
 						<a onClick="documentDirty=false; cal2.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/images/icons/cal.gif" width="16" height="16" border="0"></a> 
 						<a onClick="document.mutate.unpub_date.value=''; document.getElementById('unpub_date_show').innerHTML = '(not set)'; return true;" onMouseover="window.status='Don\'t set an unpublish date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
 						&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_unpublishdate_help']; ?>" onClick="alert(this.alt);" style="cursor:help;">
-					</td>
-				  </tr>
-				</table>
-			   </td>
+				</td>
 			  </tr>
+			  <tr>
+			      <td></td>
+			      <td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td>
+              </tr>
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['page_data_searchable']; ?></span></td>
 				<td ><input name="searchablecheck" type="checkbox" <?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? "checked" : "" ;?> onClick="changestate(document.mutate.searchable);"><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? 1 : 0 ;?>" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/images/icons/b02_trans.gif" onMouseover="this.src='media/images/icons/b02.gif';" onMouseout="this.src='media/images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_searchable_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>

@@ -5,8 +5,8 @@
  * Encoding:       ISO-Latin-1
  * Author:         The MODx Project Team (originally by Alex Butter)
  * Date:           2005/10/25
- * Version:        1.5
- * MODx version:   0.9.0
+ * Version:        1.6
+ * MODx version:   0.9.1
 */
 
 // NOTE: New language keys should added at the bottom of this page
