@@ -25,7 +25,7 @@ if(!isset($_SESSION['webValidated'])){
 		$uid = isset($_POST['username'])? $_POST['username']:'';
 	}
 	?>
-	<script language="JavaScript">
+	<script type="text/JavaScript">
 
 		function getElementById(id){
 			var o, d=document;
@@ -107,7 +107,7 @@ if(!isset($_SESSION['webValidated'])){
 	// display logout
 	$tpl = $tpls[1];
 	$url = $modx->makeUrl($modx->documentIdentifier);
-	$url = $url.((strpos($url,"?")===false) ? "?":"&")."webloginmode=lo";
+	$url = $url.((strpos($url,"?")===false) ? "?":"&amp;")."webloginmode=lo";
 	$tpl = str_replace("[+action+]",$url,$tpl);	
 	$tpl = str_replace("[+logouttext+]",$logoutText,$tpl);	
 	$output .= $tpl;
