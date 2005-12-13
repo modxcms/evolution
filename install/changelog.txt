@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.1 (rev 592 - December 10, 2005)
+MOD 0.9.1 (rev 595 - December 13, 2005)
 ==================
+* Fix #166 manager menu3 and menu4 updates.
+* Fixed obscure bug with PHP ini check on File Manager and some versions of PHP.
+* Fix #165: Parent Docgroups were not being inherrited in NewsPublisher as expected.
 * Implement #44: Make publish/unpublish dates editable by hand (don't force repeated clicks with the date picker)
 * Clarified document editing form Summary line (changed to "Summary (introtext)") to clear up DB confusion for devs
 * Fix placeholder behavior for unrecognized placeholder and for those that could be viewed as false (e.g., "0")

@@ -48,7 +48,7 @@ body {
 	<td class="menuHeader"><?php echo $_lang["my_account"]; ?></td>
     <?php } ?>
 	
-	<?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')) { ?>
+	<?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user')) { ?>
 	<td class="menuHeader"><?php echo $_lang["users"]; ?></td>
     <?php } ?>
 	
@@ -96,7 +96,7 @@ body {
 	</td>
  <?php } ?>			
    
-<?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')) { ?>
+<?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions') || $modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions')) { ?>
 	<td valign="top">
 <?php 	if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { ?>
 	<a href="index.php?a=75" target="main"><img src='media/images/misc/menu_dot.gif' alt="dot!"/><?php echo $_lang["user_management_title"]; ?></a>
