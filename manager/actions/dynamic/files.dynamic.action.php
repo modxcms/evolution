@@ -456,7 +456,7 @@ echo "<div style='position: relative; float: left; width: 140px;'>".$_lang['file
 </div>
 <hr>
 <?php
-if (((@ini_set("file_uploads", 1) === true) || get_cfg_var("file_uploads") == 1) && is_writable($startpath)) {
+if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && is_writable($startpath)) {
 	@ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
 ?>
 <form enctype="multipart/form-data" action="index.php?a=31" method="post">
