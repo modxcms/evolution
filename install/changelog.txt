@@ -5,6 +5,8 @@ development release, and is only shown to give an idea of what's currently in th
 
 MOD 0.9.1 (rev 596+ - December 13, 2005)
 ==================
+* Update to scriptaculous 1.5 / prototype 1.4 official release versions.
+* Fix regClientCSS to insert CSS immedeately prior to the closing </head> instead of just after the opening one.
 * Fix #124 regClientStartupScript and regClientScript don't work in uncached snippets.
 * Fix #166 manager menu3 and menu4 updates.
 * Fixed obscure bug with PHP ini check on File Manager and some versions of PHP.
