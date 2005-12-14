@@ -2,13 +2,13 @@
  * Custom Configuration file 
  * 
  */
-
+
 
 // Allow QuickEdit style tags <quickedit:name />
 FCKConfig.ProtectedSource.Add( /(<quickedit:[^\>]+>[\s|\S]*?<\/quickedit:[^\>]+>)|(<quickedit:[^\>]+\/>)/gi ); 	
-// For snippet calls
-FCKConfig.ProtectedSource.Add( /\[\[[\s\S]*?\]\]/gi );
-FCKConfig.ProtectedSource.Add( /\[\![\s\S]*?\!\]/gi );
+// For snippet calls, uncomment the next two lines if you wish to hide snippet calls from FCK visual editing mode (only show in source mode)
+// FCKConfig.ProtectedSource.Add( /\[\[[\s\S]*?\]\]/gi );
+// FCKConfig.ProtectedSource.Add( /\[\![\s\S]*?\!\]/gi );
 
 /* *
  * Language settings
