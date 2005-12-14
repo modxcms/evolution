@@ -4,25 +4,9 @@
 // Contributors:
 //  Richard Livsey
 //  Rahul Bhargava
+//  Rob Wills
 // 
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// See scriptaculous.js for full license.
 
 // Autocompleter.Base handles all the autocompletion functionality 
 // that's independent of the data source for autocompletion. This
@@ -76,7 +60,7 @@ Autocompleter.Base.prototype = {
         update.style.position = 'absolute';
         Position.clone(element, update, {setHeight: false, offsetTop: element.offsetHeight});
       }
-      new Effect.Appear(update,{duration:0.15});
+      Effect.Appear(update,{duration:0.15});
     };
     this.options.onHide = this.options.onHide || 
     function(element, update){ new Effect.Fade(update,{duration:0.15}) };
@@ -96,22 +80,28 @@ Autocompleter.Base.prototype = {
 
   show: function() {
     if(Element.getStyle(this.update, 'display')=='none') this.options.onShow(this.element, this.update);
-    if(!this.iefix && (navigator.appVersion.indexOf('MSIE')>0) && (Element.getStyle(this.update, 'position')=='absolute')) {
+    if(!this.iefix && 
+      (navigator.appVersion.indexOf('MSIE')>0) &&
+      (navigator.userAgent.indexOf('Opera')<0) &&
+      (Element.getStyle(this.update, 'position')=='absolute')) {
       new Insertion.After(this.update, 
        '<iframe id="' + this.update.id + '_iefix" '+
        'style="display:none;position:absolute;filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);" ' +
        'src="javascript:false;" frameborder="0" scrolling="no"></iframe>');
       this.iefix = $(this.update.id+'_iefix');
     }
-    if(this.iefix) {
-      Position.clone(this.update, this.iefix);
-      this.iefix.style.zIndex = 1;
-      this.update.style.zIndex = 2;
-      Element.show(this.iefix);
-    }
+    if(this.iefix) setTimeout(this.fixIEOverlapping.bind(this), 50);
+  },
+  
+  fixIEOverlapping: function() {
+    Position.clone(this.update, this.iefix);
+    this.iefix.style.zIndex = 1;
+    this.update.style.zIndex = 2;
+    Element.show(this.iefix);
   },
 
   hide: function() {
+    this.stopIndicator();
     if(Element.getStyle(this.update, 'display')!='none') this.options.onHide(this.element, this.update);
     if(this.iefix) Element.hide(this.iefix);
   },
@@ -197,12 +187,15 @@ Autocompleter.Base.prototype = {
         this.show();
         this.active = true;
       }
-    } else this.hide();
+    } else {
+      this.active = false;
+      this.hide();
+    }
   },
   
   markPrevious: function() {
     if(this.index > 0) this.index--
-      else this.index = this.entryCcount-1;
+      else this.index = this.entryCount-1;
   },
   
   markNext: function() {
@@ -240,7 +233,10 @@ Autocompleter.Base.prototype = {
     } else {
       this.element.value = value;
     }
-    this.element.focus(); 
+    this.element.focus();
+    
+    if (this.options.afterUpdateElement)
+      this.options.afterUpdateElement(this.element, selectedElement);
   },
 
   updateChoices: function(choices) {
@@ -433,20 +429,16 @@ Autocompleter.Local.prototype = Object.extend(new Autocompleter.Base(), {
 
 // AJAX in-place editor
 //
-// The constructor takes three parameters. The first is the element
-// that should support in-place editing. The second is the url to submit
-// the changed value to. The server should respond with the updated
-// value (the server might have post-processed it or validation might
-// have prevented it from changing). The third is a hash of options.
-//
-// Supported options are (all are optional and have sensible defaults):
-// - okText - The text of the submit button that submits the changed value
-//            to the server (default: "ok")
-// - cancelText - The text of the link that cancels editing (default: "cancel")
-// - savingText - The text being displayed as the AJAX engine communicates
-//                with the server (default: "Saving...")
-// - formId - The id given to the <form> element
-//            (default: the id of the element to edit plus '-inplaceeditor')
+// see documentation on http://wiki.script.aculo.us/scriptaculous/show/Ajax.InPlaceEditor
+
+// Use this if you notice weird scrolling problems on some browsers,
+// the DOM might be a bit confused when this gets called so do this
+// waits 1 ms (with setTimeout) until it does the activation
+Field.scrollFreeActivate = function(field) {
+  setTimeout(function() {
+    Field.activate(field);
+  }, 1);
+}
 
 Ajax.InPlaceEditor = Class.create();
 Ajax.InPlaceEditor.defaultHighlightColor = "#FFFF99";
@@ -471,8 +463,10 @@ Ajax.InPlaceEditor.prototype = {
       callback: function(form) {
         return Form.serialize(form);
       },
+      handleLineBreaks: true,
       loadingText: 'Loading...',
       savingClassName: 'inplaceeditor-saving',
+      loadingClassName: 'inplaceeditor-loading',
       formClassName: 'inplaceeditor-form',
       highlightcolor: Ajax.InPlaceEditor.defaultHighlightColor,
       highlightendcolor: "#FFFFFF",
@@ -511,7 +505,7 @@ Ajax.InPlaceEditor.prototype = {
       Event.observe(this.options.externalControl, 'mouseout', this.mouseoutListener);
     }
   },
-  enterEditMode: function() {
+  enterEditMode: function(evt) {
     if (this.saving) return;
     if (this.editing) return;
     this.editing = true;
@@ -520,77 +514,97 @@ Ajax.InPlaceEditor.prototype = {
       Element.hide(this.options.externalControl);
     }
     Element.hide(this.element);
-    this.form = this.getForm();
+    this.createForm();
     this.element.parentNode.insertBefore(this.form, this.element);
+    Field.scrollFreeActivate(this.editField);
+    // stop the event to avoid a page refresh in Safari
+    if (evt) {
+      Event.stop(evt);
+    }
+    return false;
   },
-  getForm: function() {
-    form = document.createElement("form");
-    form.id = this.options.formId;
-    Element.addClassName(form, this.options.formClassName)
-    form.onsubmit = this.onSubmit.bind(this);
+  createForm: function() {
+    this.form = document.createElement("form");
+    this.form.id = this.options.formId;
+    Element.addClassName(this.form, this.options.formClassName)
+    this.form.onsubmit = this.onSubmit.bind(this);
 
-    this.createEditField(form);
+    this.createEditField();
 
     if (this.options.textarea) {
       var br = document.createElement("br");
-      form.appendChild(br);
+      this.form.appendChild(br);
     }
 
     okButton = document.createElement("input");
     okButton.type = "submit";
     okButton.value = this.options.okText;
-    form.appendChild(okButton);
+    this.form.appendChild(okButton);
 
     cancelLink = document.createElement("a");
     cancelLink.href = "#";
     cancelLink.appendChild(document.createTextNode(this.options.cancelText));
     cancelLink.onclick = this.onclickCancel.bind(this);
-    form.appendChild(cancelLink);
-    return form;
+    this.form.appendChild(cancelLink);
   },
-  createEditField: function(form) {
-    if (this.options.rows == 1) {
+  hasHTMLLineBreaks: function(string) {
+    if (!this.options.handleLineBreaks) return false;
+    return string.match(/<br/i) || string.match(/<p>/i);
+  },
+  convertHTMLLineBreaks: function(string) {
+    return string.replace(/<br>/gi, "\n").replace(/<br\/>/gi, "\n").replace(/<\/p>/gi, "\n").replace(/<p>/gi, "");
+  },
+  createEditField: function() {
+    var text;
+    if(this.options.loadTextURL) {
+      text = this.options.loadingText;
+    } else {
+      text = this.getText();
+    }
+    
+    if (this.options.rows == 1 && !this.hasHTMLLineBreaks(text)) {
       this.options.textarea = false;
       var textField = document.createElement("input");
       textField.type = "text";
       textField.name = "value";
-      textField.value = this.getText();
+      textField.value = text;
       textField.style.backgroundColor = this.options.highlightcolor;
       var size = this.options.size || this.options.cols || 0;
-      if (size != 0)
-        textField.size = size;
-      form.appendChild(textField);
+      if (size != 0) textField.size = size;
       this.editField = textField;
     } else {
       this.options.textarea = true;
       var textArea = document.createElement("textarea");
       textArea.name = "value";
-      textArea.value = this.getText();
+      textArea.value = this.convertHTMLLineBreaks(text);
       textArea.rows = this.options.rows;
       textArea.cols = this.options.cols || 40;
-      form.appendChild(textArea);
       this.editField = textArea;
     }
+    
+    if(this.options.loadTextURL) {
+      this.loadExternalText();
+    }
+    this.form.appendChild(this.editField);
   },
   getText: function() {
-    if (this.options.loadTextURL) {
-      this.loadExternalText();
-      return this.options.loadingText;
-    } else {
-      return this.element.innerHTML;
-    }
+    return this.element.innerHTML;
   },
   loadExternalText: function() {
+    Element.addClassName(this.form, this.options.loadingClassName);
+    this.editField.disabled = true;
     new Ajax.Request(
       this.options.loadTextURL,
-      {
+      Object.extend({
         asynchronous: true,
         onComplete: this.onLoadedExternalText.bind(this)
-      }
+      }, this.options.ajaxOptions)
     );
   },
   onLoadedExternalText: function(transport) {
-    this.form.value.value = transport.responseText.stripTags();
+    Element.removeClassName(this.form, this.options.loadingClassName);
+    this.editField.disabled = false;
+    this.editField.value = transport.responseText.stripTags();
   },
   onclickCancel: function() {
     this.onComplete();
@@ -606,7 +620,15 @@ Ajax.InPlaceEditor.prototype = {
     return false;
   },
   onSubmit: function() {
-    this.saving = true;
+    // onLoading resets these so we need to save them away for the Ajax call
+    var form = this.form;
+    var value = this.editField.value;
+    
+    // do this first, sometimes the ajax call returns before we get a chance to switch on Saving...
+    // which means this will actually switch on Saving... *after* we've left edit mode causing Saving...
+    // to be displayed indefinitely
+    this.onLoading();
+    
     new Ajax.Updater(
       { 
         success: this.element,
@@ -615,12 +637,15 @@ Ajax.InPlaceEditor.prototype = {
       },
       this.url,
       Object.extend({
-        parameters: this.options.callback(this.form, this.editField.value),
+        parameters: this.options.callback(form, value),
         onComplete: this.onComplete.bind(this),
         onFailure: this.onFailure.bind(this)
       }, this.options.ajaxOptions)
     );
-    this.onLoading();
+    // stop the event to avoid a page refresh in Safari
+    if (arguments.length > 1) {
+      Event.stop(arguments[0]);
+    }
     return false;
   },
   onLoading: function() {
@@ -638,7 +663,7 @@ Ajax.InPlaceEditor.prototype = {
   },
   removeForm: function() {
     if(this.form) {
-      Element.remove(this.form);
+      if (this.form.parentNode) Element.remove(this.form);
       this.form = null;
     }
   },
@@ -695,5 +720,31 @@ Ajax.InPlaceEditor.prototype = {
       Event.stopObserving(this.options.externalControl, 'mouseover', this.mouseoverListener);
       Event.stopObserving(this.options.externalControl, 'mouseout', this.mouseoutListener);
     }
+  }
+};
+
+// Delayed observer, like Form.Element.Observer, 
+// but waits for delay after last key input
+// Ideal for live-search fields
+
+Form.Element.DelayedObserver = Class.create();
+Form.Element.DelayedObserver.prototype = {
+  initialize: function(element, delay, callback) {
+    this.delay     = delay || 0.5;
+    this.element   = $(element);
+    this.callback  = callback;
+    this.timer     = null;
+    this.lastValue = $F(this.element); 
+    Event.observe(this.element,'keyup',this.delayedListener.bindAsEventListener(this));
+  },
+  delayedListener: function(event) {
+    if(this.lastValue == $F(this.element)) return;
+    if(this.timer) clearTimeout(this.timer);
+    this.timer = setTimeout(this.onTimerEvent.bind(this), this.delay * 1000);
+    this.lastValue = $F(this.element);
+  },
+  onTimerEvent: function() {
+    this.timer = null;
+    this.callback(this.element, $F(this.element));
   }
 };
