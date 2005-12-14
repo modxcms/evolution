@@ -527,7 +527,7 @@ class DocumentParser {
 	function postProcess() {
 
 		// if the current document was generated, cache it!
-		if($this->documentGenerated==1 && $this->documentObject['cacheable']==1 && $this->documentObject['type']=='document') {
+		if($this->documentGenerated==1 && $this->documentObject['cacheable']==1 && $this->documentObject['type']=='document' && $this->documentObject['published']==1) {
 			$basepath = $this->config["base_path"]."assets/cache";
 			// invoke OnBeforeSaveWebPageCache event
 			$this->invokeEvent("OnBeforeSaveWebPageCache");
