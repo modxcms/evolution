@@ -324,7 +324,7 @@ EOD;
    } else {
 
     // invoke OnDocFormSave event
-    $modx->invokeEvent('OnDocFormSave', array('mode'=>'new', 'id'=>$doc_id));
+    $modx->invokeEvent('OnDocFormSave', array('mode'=>'upd', 'id'=>$doc_id));
 
     // empty cache
     include_once($modx->config['base_path'] . '/manager/processors/cache_sync.class.processor.php');

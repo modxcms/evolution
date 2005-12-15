@@ -99,6 +99,7 @@ class Output {
   $base_path = $modx->config['base_path'];
   $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $output = $this->output;
+  $settings_cvs = array('published', 'menuhide', 'alias');
 
   include_once($base_path.$qe_path.'/module.class.inc.php');
   
@@ -137,22 +138,26 @@ class Output {
    $type_image = '';
    $on_click = '';
    $change_value = '';
+   $menus = array('content'=>array(), 'settings'=>array(), 'go'=>array());
 
-  // Define the CSS and Javascript that we will add to the header of the page
-$head = <<<EOD
-<!-- Start QuickEdit headers -->
-<script type="text/javascript">
- var modId = '{$module_id}';
- var managerPath = '{$manager_path}';
- var QE_show_links = '{$_lang['QE_show_links']}';
- var QE_hide_links = '{$_lang['QE_hide_links']}';
-</script>
-<script src="{$qe_path}/javascript/cookies.js" type="text/javascript"></script>
-<script src="{$qe_path}/javascript/output.js" type="text/javascript"></script>
-<script type="text/javascript" src="manager/media/script/scriptaculous/prototype.js"></script>
-<script type="text/javascript" src="manager/media/script/scriptaculous/scriptaculous.js"></script>
-<link type="text/css" rel="stylesheet" href="{$qe_path}/styles/output.css" />
-<!-- End QuickEdit headers -->
+$menus['settings'][] = <<<EOD
+<a href="javascript:;" id="QE_ShowLinks" onclick="QE_ToggleLinks(true);"><img id="QE_ShowLinks_check" src="{$GLOBALS['quick_edit_path']}/images/checked.gif" alt="checked" style="float:left; margin-right:3px;" />{$_lang['QE_show_links']}</a>
+EOD;
+
+if($show_manager_link) {
+$menus['go'][] = <<<EOD
+<a id="QE_Manager" href="{$manager_path}">{$_lang['manager']}</a>
+EOD;
+}
+
+if($show_help_link) {
+$menus['go'][] = <<<EOD
+<a id="QE_Help" href="http://www.modxcms.com/quickedit.html">{$_lang['help']}</a>
+EOD;
+}
+
+$menus['go'][] = <<<EOD
+<a id="QE_Logout" href="{$logout_url}">{$_lang['logout']}</a>
 EOD;
 
 $cvs = $modx->getTemplateVars('*','id, name', '', 1, 'name');
@@ -168,76 +173,90 @@ foreach($cvs as $content) {
 
  if($cv_obj->id && $cv_obj->checkPermissions()) {
 
-  $class_name = 'QE_'.(is_numeric($cv_obj->id) ? 'TV' : 'BuiltIn');
+  // Get the menu
+  if(in_array($cv_obj->name, $settings_cvs)) {
+   $menu = 'settings';
+  } else {
+   $menu = 'content';
+  }
 
+  // Check for special CV types //
+
+  // One checkbox
   if($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements,'||')) {
    $type_image = ($cv_obj->content ? $this->checked_image : $this->unchecked_image);
    $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
-   $on_click = "QE_SendAjax('doc={$doc_id}&var={$cv_obj->id}&save=1&tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } )";
-  } else {
-   $type_image = '';
-   $on_click = "QE_OpenEditor({$doc_id}, '{$cv_obj->id}')";
-  }
-
-$toolbar_cv_html .= <<<EOD
-<li><a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" class="{$class_name}" onclick="javascript: {$on_click};" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a></li
->
+$menus[$menu][] .= <<<EOD
+<a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_SendAjax('doc={$doc_id}&var={$cv_obj->id}&save=1&tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } );" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a>
 EOD;
+
+  // Everything else
+  } else {
+$menus[$menu][] .= <<<EOD
+<a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_OpenEditor({$doc_id}, '{$cv_obj->id}');" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
+EOD;
+
+  }
 
  }
  
 }
 
-if(!$toolbar_cv_html) {
- $toolbar_cv_html = "<li style=\"text-align:center;\"><a><em>{$_lang['QE_no_edit_rights']}</em></a></li>";	
+foreach($menus as $menu_name=>$links) {
+
+ $links_html = '';
+
+ foreach($links as $link) {
+  $links_html .= "<li>{$link}</li>";
+ }
+
+$buttons_html .= <<<EOD
+<a id="QE_Button_{$menu_name}" class="QE_Button" href="javascript:;" onclick="javascript: QE_ToggleMenu('{$menu_name}');">{$menu_name}</a>
+EOD;
+
+$menus_html .= <<<EOD
+<div id="QE_Menu_{$menu_name}" class="QE_Menu" style="display:none;">
+ <ul>
+  {$links_html}
+ </ul>
+</div>
+EOD;
+
 }
 
-if($show_manager_link) {
-$manager_link = <<<EOD
-<li><a id="QE_Manager" href="{$manager_path}">{$_lang['manager']}</a></li>
+  // Define the CSS and Javascript that we will add to the header of the page
+$head = <<<EOD
+<!-- Start QuickEdit headers -->
+<script type="text/javascript">
+ var modId = '{$module_id}';
+ var managerPath = '{$manager_path}';
+ var modPath = '{$qe_path}';
+</script>
+<script src="{$qe_path}/javascript/cookies.js" type="text/javascript"></script>
+<script src="{$qe_path}/javascript/output.js" type="text/javascript"></script>
+<script type="text/javascript" src="manager/media/script/scriptaculous/prototype.js"></script>
+<script type="text/javascript" src="manager/media/script/scriptaculous/scriptaculous.js"></script>
+<link type="text/css" rel="stylesheet" href="{$qe_path}/styles/output.css" />
+<!-- End QuickEdit headers -->
 EOD;
-}
-
-if($show_help_link) {
-$help_link = <<<EOD
-<li><a id="QE_Help" href="http://www.modxcms.com/quickedit.html">{$_lang['help']}</a></li>
-EOD;
-}
 
 $html_top = <<<EOD
 <!-- Start QuickEdit toolbar -->
-
-<div id="QE_Collapse_Wrapper" onmouseover="QE_Collapse(event);" onmouseout="QE_Collapse(event);" onmouseup="QE_SetPosition(this);">
-<div id="QE_Expand_Wrapper" onmouseover="QE_Expand(document.getElementById('QE_menu_1'));QE_Expand(document.getElementById('QE_EditTitle'))">
-
-<div id="QE_Toolbar">
-    
-    <h1 id="QE_Title">{$_lang['QE_title']}</h1>
-    
-    <div id="QE_menu_1" class="collapsed">
-        <ul>
-        <ul><li><a href="javascript:;" id="QE_ShowHide" onclick="QE_ShowHideLinks(true);"></a></li>{$manager_link}<li><a id="QE_Logout" href="{$logout_url}">{$_lang['logout']}</a></li>{$help_link}</ul>
-    </div>
-    <div id="QE_EditTitle" onmouseover="QE_Expand(document.getElementById('QE_menu_2'));" class="collapsed">
-        <h1>{$_lang['edit']}...</h1>
-    </div>
-    <div id="QE_menu_2" class="collapsed">
-        <ul>
-            {$toolbar_cv_html}</ul>
-    </div>
-
-</div>
- 
-</div>
+<div id="QE_Toolbar" onmouseup="QE_SetPosition(this);" style="display:none;">
+ <div id="QE_Toolbar_Header">
+  <h1 id="QE_Title">{$_lang['QE_title']}</h1>
+  {$buttons_html}
+ </div> 
+ {$menus_html}
 </div>
 <!-- End QuickEdit toolbar -->
 EOD;
 
 $html_bottom .= <<<EOD
 <script type="text/javascript">
-QE_PositionToolbar(document.getElementById('QE_Collapse_Wrapper'));
-QE_ShowHideLinks();
-new Draggable('QE_Collapse_Wrapper', {handle:'QE_Title'});
+QE_PositionToolbar($('QE_Toolbar'));
+QE_ToggleLinks();
+new Draggable('QE_Toolbar', {handle:'QE_Title'});
 </script>
 EOD;
 
@@ -257,7 +276,7 @@ EOD;
 
      // Set the HTML for the link
 $link = <<<EOD
-<a href="javascript:;" onclick="javascript: QE_OpenEditor({$doc_id}, '{$cv->id}', {$module_id});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link">&laquo; {$_lang['edit']} {$cv->name}</a>
+<a href="javascript:;" onclick="javascript: QE_OpenEditor({$doc_id}, '{$cv->id}', {$module_id});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link" style="display:none;">&laquo; {$_lang['edit']} {$cv->name}</a>
 EOD;
 
     }
