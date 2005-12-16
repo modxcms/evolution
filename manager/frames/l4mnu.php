@@ -4,7 +4,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// close the session as it is not used here
 	// this should speed up frame loading, does it?
 	// session_write_close();
-
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -12,49 +11,53 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <title>nav</title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>l4navbar.css<?php echo "?$theme_refresher";?>" />
-<!--[if IE]>
-<style type="text/css" media="screen, tv, projection">
-body { behavior: url(../assets/js/csshover.htc); }
-#divNav{margin-top:3px;}
-#divNav li ul li a{margin:4px 0 0 0;padding:4px 5px 2px 5px;font-weight:bold;}
-</style>
-<![endif]-->
+<script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
+<script src="media/script/scriptaculous/scriptaculous.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
     function showWin() {
     	window.open('../');
     }
-    startList = function() {
-        if (document.all && document.getElementById) {
-    		navRoot = document.getElementById("nav");
-    		for (i=0; i<navRoot.childNodes.length; i++) {  
-    			node = navRoot.childNodes[i];  
-    			if (node.nodeName=="li") { 
-    				node.onmouseover=function() {  
-    					this.className+=" over";    
-    				}  
-    				node.onmouseout=function() {
-    					this.className=this.className.replace (/ over/, '');   
-    				}
-    			}
-    		} 
-    	}
-    }  
 
     function stopIt() {
     	top.scripter.stopWork();
     }
-    window.onload=startList;
+
+	NavToggle = function(element) {
+		// This gives the active tab its look
+		var navid = document.getElementById('nav');
+		var navs = navid.getElementsByTagName('li');
+		var navsCount = navs.length;
+		for(j = 0; j < navsCount; j++) {
+			active = (navs[j].id == element.parentNode.id) ? "active" : "off";
+			navs[j].className = active; 
+		}
+		
+		// Don't use effect if Opera detected
+		if(navigator.userAgent.indexOf("Opera")==-1){
+			//Hide all content containers
+			contents = document.getElementsByClassName('subnav');
+			contentsCount = contents.length;
+			for(var i = 0; i < contentsCount; i++) {
+				contents[i].style.display = 'none';
+			}
+			
+			//Extract content container id from href
+			ele = element.getAttribute('href').replace(/^.*\#/,'');
+			
+			//Magic Happens
+			new Effect.Appear(ele,{duration:0.4});
+		}
+	}
 </script>
 </head>
 <body>
 <form name="menuForm">
 <div id="divNav">
 <ul id="nav">
-
-<!-- Settings -->
 <?php if($modx->hasPermission('settings') || $modx->hasPermission('edit_parser') || $modx->hasPermission('logs') || $modx->hasPermission('file_manager')) { ?>		
-    <li id="liAdmin"><li><a href="#"><?php echo $_lang["administration"]; ?></a>
-        <ul>
+<!-- Settings -->
+    <li id="limenu1"><a href="#menu1" onclick="new NavToggle(this); return false;"><?php echo $_lang["administration"]; ?></a>
+        <ul class="subnav" id="menu1" name="menu1">
             <?php 	if($modx->hasPermission('settings')) { ?>		
             <li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
             <li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
@@ -81,10 +84,10 @@ body { behavior: url(../assets/js/csshover.htc); }
         </ul>
     </li>
 <?php } ?>
-<!-- Users -->
 <?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions')) { ?>		
-    <li id="liUsers"><li><a href="#"><?php echo $_lang["users"]; ?></a>
-        <ul>
+<!-- Users -->
+    <li id="limenu2"><a href="#menu2" onclick="new NavToggle(this); return false;"><?php echo $_lang["users"]; ?></a>
+        <ul class="subnav" id="menu2" name="menu2">
             <?php if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { ?>					
             <li><a onclick="this.blur();" href="index.php?a=75" target="main"><?php echo $_lang["user_management_title"]; ?></a></li>
             <?php } ?>
@@ -104,8 +107,8 @@ body { behavior: url(../assets/js/csshover.htc); }
     </li>
 <?php } ?>
 <!-- Site -->
-    <li id="liSite"><a href="#"><?php echo $_lang["site"]; ?></a>
-        <ul>
+    <li id="limenu3"><a href="#menu3" onclick="new NavToggle(this); return false;"><?php echo $_lang["site"]; ?></a>
+        <ul class="subnav" id="menu3" name="menu3">
 			<li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
 			<li><a onclick="this.blur();" href="javascript:showWin();"><?php echo $_lang["launch_site"]; ?></a></li>
 			<li><a onclick="this.blur();" href="index.php?a=26" target="main"><?php echo $_lang["refresh_site"]; ?></a></li>
@@ -116,8 +119,9 @@ body { behavior: url(../assets/js/csshover.htc); }
     </li>			
 
 <?php  if($modx->hasPermission('new_document')) { ?>
-    <li id="liContent"><li><a href="#"><?php echo $_lang["content"]; ?></a>
-        <ul>
+<!-- Content -->
+    <li id="limenu4"><a href="#menu4" onclick="new NavToggle(this); return false;"><?php echo $_lang["content"]; ?></a>
+        <ul class="subnav" id="menu4" name="menu4">
 			<li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
 			<li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
 			<li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
@@ -126,8 +130,9 @@ body { behavior: url(../assets/js/csshover.htc); }
 <?php } ?>
 
 <?php if($modx->hasPermission('messages') || $modx->hasPermission('change_password')) { ?>
-    <li id="liAccount"><li><a href="#"><?php echo $_lang["my_account"]; ?></a>
-        <ul>
+<!-- Account -->
+    <li id="limenu5"><a href="#menu5" onclick="new NavToggle(this); return false;"><?php echo $_lang["my_account"]; ?></a>
+        <ul class="subnav" id="menu5" name="menu5">
             <?php if($modx->hasPermission('messages')) { ?>
             <li><a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang["messages"]; ?> <span id="msgCounter">(? / ? )</span></a></li>
             <?php } ?>
@@ -137,29 +142,31 @@ body { behavior: url(../assets/js/csshover.htc); }
         </ul>
     </li>
 <?php } ?>
-<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags') || $modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module')) { ?>		
-    <li id="liResources"><li><a href="#"><?php echo $_lang["resources"]; ?></a>
-        <ul>
+<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags') || $modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module')) { ; ?>		
+<!-- Resources -->
+    <li id="limenu6"><a href="#menu6" onclick="new NavToggle(this); return false;"><?php echo $_lang["resources"]; ?></a>
+        <ul class="subnav" id="menu6" name="menu6">
             <?php if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module')) { ?>
             <li><a onclick="this.blur();" href="index.php?a=106" target="main"><?php echo $_lang["module_management"]; ?></a></li>
             <?php } ?>
-            <?php if($hasAccess) { ?>					
+            <?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>					
             <li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resource_management"]; ?></a></li>
             <?php } ?>
         </ul>
     </li>
 <?php } ?>
 <?php if($modx->hasPermission('help')) { ?>		
-    <li id="liHelp"><li><a href="#"><?php echo $_lang["help"]; ?></a>
-        <ul>
+<!-- Help -->
+    <li id="limenu7"><a href="#menu7" onclick="new NavToggle(this); return false;"><?php echo $_lang["help"]; ?></a>
+        <ul class="subnav" id="menu7" name="menu7">
             <li><a href="javascript:openCredits();"><?php echo $_lang["credits"]; ?></a></li>
             <li><a href="index.php?a=9" target="main"><?php echo $_lang["help"]; ?></a>	</li>			
             <li><a href="index.php?a=59" target="main"><?php echo $_lang["about"]; ?></a></li>
         </ul>
     </li>
-<?php } ?>
-    
-    <li id="liLogout"><a onclick="this.blur();" href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a></li>
+<?php } ?>   
+<!-- Logout -->
+    <li id="limenu8"><a onclick="this.blur();" href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a></li>
         
 </ul>
 </div>

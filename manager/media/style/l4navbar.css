@@ -1,62 +1,109 @@
 body {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
-	margin: 0;
-	padding: 0;
+    margin:0;
+    padding:0;
 	background: #ecf2ff url(../images/misc/buttonbar.gif) repeat-x top left;
-} 
-#divNav {   	
-	margin: -6px 0 0;
-	padding: 0;
-	height: 80px;
-	width: 100%;
-}
-#nav {    
-	position: relative;
-	height: 50px;
-	width: 100%;
-}
-#nav li ul {
+    } 
+#divNav {
 	margin: 0;
-	padding: 0;
-}
-#nav a {
-	text-decoration: none;
-}
-#nav li { /*float the main list items*/
-	margin: 0;
-	float: left;
-	display: block;
-}
-#nav li ul {
-	display: none;
-	position: absolute;
-	top: 12px;
-	padding-top: 6px;
-	height: 25px;
-	width: 100%;
+    padding: 0;
+    height: 100px;
+    width: 100%;
 }
 
-#nav li a {
+#nav {
+	height: 50px;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	top: 0px;
+	left: 0px;
+	position: absolute;
+}
+
+
+#nav li, #nav li.active { 
+	margin: 0;
+	list-style-type: none;
+	padding: 0px;
+	display: block;
+	float: left;
+	width: auto;
+}
+
+#nav li a, #nav li.off a {
 	color: #224d6f;
 	font-weight: bold;
+	text-decoration: none;
+	height: 15px;
+	margin: 0px;
+	padding-top: 5px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	padding-left: 10px;
 	display: block;
-	margin-right: 10px;
-	padding: 0 5px 3px 5px;
-	color: #003399;
+	float: left;
+	width: auto;
 }
-#nav li ul a {
-	border: 0;    
-	float: left; /*ie doesn't inherit the float*/    
+
+#nav li.active a {
+	color: #FFFFFF;
+	background-color: #224d6f;
+	font-weight: bold;
+	text-decoration: none;
+	height: 15px;
+	margin: 0px;
+	padding-top: 5px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	display: block;
+	float: left;
+}
+
+#nav li a:hover {
+	color: #FFFFFF;
+	background-color: #224d6f;
+}
+
+#nav li.active ul.subnav {
+    display: block;
+}
+
+#nav ul.subnav {
+	margin: 0px;
+	padding: 0px;
+	display: none;
+	position: absolute;
+	top: 25px;
+	height: 25px;
+	width: 1000px;
+	left: 0px;
+}
+
+#nav ul.subnav li { 
+	margin: 0;
+	list-style-type: none;
+	padding: 0px;
+}
+
+#nav ul.subnav a {
+	border: 0;
+	float: left;
+	display: block;
 	color: #000;
-	padding: 3px 5px;
 	font-weight: normal;
-	margin: 0 20px 0 -20px;
+	margin: 0px;
+	height: 15px;
+	padding-top: 5px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	background-color: #ecf2ff;
 }
-#nav li ul li a: hover { /*for ie - the specificity is necessary*/
-	background: #b0ccf1 url(../images/misc/buttonbar.gif) top left repeat-x;
-}
-#nav li: hover ul {
-	display: block;
-	z-index: 6000;
+
+#nav ul.subnav a:hover { 
+	background: #b0ccf1 url(../images/misc/buttonbar.gif) repeat-x top left;
+	color: #000;
 }
