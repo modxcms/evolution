@@ -22,7 +22,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     	top.scripter.stopWork();
     }
 
-	NavToggle = function(element) {
+	function NavToggle(element) {
 		// This gives the active tab its look
 		var navid = document.getElementById('nav');
 		var navs = navid.getElementsByTagName('li');
@@ -33,7 +33,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		}
 		
 		// Don't use effect if Opera detected
-		if(navigator.userAgent.indexOf("Opera")==-1){
+		if(navigator.userAgent.toLowerCase().indexOf("opera")==-1){
 			//Hide all content containers
 			contents = document.getElementsByClassName('subnav');
 			contentsCount = contents.length;
