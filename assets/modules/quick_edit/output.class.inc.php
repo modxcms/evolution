@@ -99,7 +99,6 @@ class Output {
   $base_path = $modx->config['base_path'];
   $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $output = $this->output;
-  $settings_cvs = array('published', 'menuhide', 'alias');
 
   include_once($base_path.$qe_path.'/module.class.inc.php');
   
@@ -138,9 +137,9 @@ class Output {
    $type_image = '';
    $on_click = '';
    $change_value = '';
-   $menus = array('content'=>array(), 'settings'=>array(), 'go'=>array());
+   $menus = array('content'=>array(), 'setting'=>array(), 'go'=>array());
 
-$menus['settings'][] = <<<EOD
+$menus['setting'][] = <<<EOD
 <a href="javascript:;" id="QE_ShowLinks" onclick="QE_ToggleLinks(true);"><img id="QE_ShowLinks_check" src="{$GLOBALS['quick_edit_path']}/images/checked.gif" alt="checked" style="float:left; margin-right:3px;" />{$_lang['QE_show_links']}</a>
 EOD;
 
@@ -174,11 +173,7 @@ foreach($cvs as $content) {
  if($cv_obj->id && $cv_obj->checkPermissions()) {
 
   // Get the menu
-  if(in_array($cv_obj->name, $settings_cvs)) {
-   $menu = 'settings';
-  } else {
-   $menu = 'content';
-  }
+  $menu = $cv_obj->group;
 
   // Check for special CV types //
 
@@ -211,7 +206,7 @@ foreach($menus as $menu_name=>$links) {
  }
 
 $buttons_html .= <<<EOD
-<a id="QE_Button_{$menu_name}" class="QE_Button" href="javascript:;" onclick="javascript: QE_ToggleMenu('{$menu_name}');">{$menu_name}</a>
+<a id="QE_Button_{$menu_name}" class="QE_Button" href="javascript:;" onclick="javascript: QE_ToggleMenu('{$menu_name}');">{$_lang[$menu_name]}</a>
 EOD;
 
 $menus_html .= <<<EOD

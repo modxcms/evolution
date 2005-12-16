@@ -7,7 +7,8 @@
  */
 
 *{
-font-family:arial, helvetica sans-serif;
+font-family:arial, helvetica, sans-serif;
+border-width:1px;
 }
 
 body{
@@ -31,14 +32,10 @@ padding:10px;
 
 #toolbar{
 height:25px;
-}
-
-#toolbar h1{
-float:right;
-margin:5px 20px 0 0;
-padding:0;
-color:#003399;
-font-size:10pt;
+border-bottom-style:solid;
+border-color:#aeaeae;
+background-image:url(../images/menu_button_hover_bg.png);
+background-repeat:repeat-x;
 }
 
 #toolbar a{
@@ -51,23 +48,21 @@ padding:5px 10px 5px 30px;
 vertical-align:middle;
 color:#000000;
 text-decoration:none;
-border-width:1px;
-border-color:#006400;
+border-style:none solid;
+border-left-color:#d2d2d2;
+border-right-color:#aeaeae;
+background-repeat:repeat-x;
 }
 
 #toolbar a:hover{
-padding:4px 9px 4px 29px;
-border-style:solid;
-background-image:url(../images/button_dn.gif);
-background-repeat:repeat-x;
-background-position:bottom;
+background-image:url(../images/link_bg.png);
+background-color:#fff;
 }
 
 #toolbar a img{
 position:absolute;
-top:50%;
-margin-top:-8px;
-margin-left:-20px;
+left:4px;
+top:0;
 border-style:none;
 }
 
@@ -75,9 +70,34 @@ border-style:none;
 float:right !important;
 }
 
-#description{
-margin-top:10px;
+#info{
+position:relative;
+margin:0;
+background-color:#f6f6f6;
+cursor:help;
+}
+
+#info h1{
+margin:0;
+padding:2px 0;
 text-align:center;
+font-size:8pt;
+font-weight:bold;
+}
+
+#description{position:absolute;
+z-index:1000;
+margin:0;
+padding:0;
+width:100%;
+font-size:8pt;
+font-weight:normal;
+text-align:left;
+background-color:#f6f6f6;
+}
+
+#description div{
+margin:10px;
 }
 
 /* --- TV TYPE STYLES --- */

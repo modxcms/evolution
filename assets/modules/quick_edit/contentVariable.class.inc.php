@@ -47,6 +47,7 @@ class ContentVariable {
   $this->elements = '';
   $this->default_text = '';
   $this->content = '';
+  $this->group = '';
 
   global $modx;
   global $base_path;
@@ -89,6 +90,7 @@ class ContentVariable {
   // Create variables from the array
   if($tv) {
 
+   $group = 'content'; // Default to group=content
    extract($tv, EXTR_OVERWRITE);
 
    // This is built-in content
@@ -101,20 +103,23 @@ class ContentVariable {
 
      case 'pagetitle':
       $type = 'text';
-      $caption = $_lang['pagetitle'];
-      $description = $_lang['pagetitle'];
+      $caption = $_lang['document_title'];
+      $description = $_lang['document_title_help'];
+      $group = 'content';
       break;
 
      case 'longtitle':
       $type = 'text';
       $caption = $_lang['long_title'];
-      $description = $_lang['long_title'];
+      $description = $_lang['document_long_title_help'];
+      $group = 'content';
       break;
 
      case 'description':
       $type = 'textarea';
-      $caption = $_lang['description'];
-      $description = $_lang['description'];
+      $caption = $_lang['document_description'];
+      $description = $_lang['document_description_help'];
+      $group = 'content';
       break;
 
      case 'content':
@@ -127,44 +132,74 @@ class ContentVariable {
       $type = $inputType;
       $caption = $_lang['document_content'];
       $description = $_lang['document_content'];
+      $group = 'content';
       break;
       
      case 'alias':
       $type = 'text';
       $caption = $_lang['document_alias'];
-      $description = $_lang['document_alias'];
+      $description = $_lang['document_alias_help'];
+      $group = 'setting';
       break;
      
      case 'published':
       $type = 'checkbox';
       $caption = $_lang['publish_document'];
-      $description = $_lang['publish_document'];
+      $description = $_lang['publish_document_help'];
       $elements = "{$_lang['publish_document']}==1";
+      $group = 'setting';
       break;
      
      case 'introtext':
       $type = 'textarea';
       $caption = $_lang['document_summary'];
-      $description = $_lang['document_summary'];
+      $description = $_lang['document_summary_help'];
+      $group = 'content';
       break;
 
      case 'menutitle':
       $type = 'text';
       $caption = $_lang['document_opt_menu_title'];
-      $description = $_lang['document_opt_menu_title'];
+      $description = $_lang['document_opt_menu_title_help'];
+      $group = 'setting';
       break;
 
      case 'hidemenu':
       $type = 'checkbox';
       $caption = $_lang['document_opt_hide_menu'];
-      $description = $_lang['document_opt_hide_menu'];
+      $description = $_lang['document_opt_hide_menu_help'];
       $elements = "{$_lang['document_opt_hide_menu']}==1";
+      $group = 'setting';
       break;
      
+     case 'menuindex':
+      $type = 'text';
+      $caption = $_lang['document_opt_menu_index'];
+      $description = $_lang['document_opt_menu_index_help'];
+      $group = 'setting';
+      break;
+
+     case 'searchable':
+      $type = 'checkbox';
+      $caption = $_lang['page_data_searchable'];
+      $description = $_lang['page_data_searchable_help'];
+      $elements = "{$_lang['page_data_searchable']}==1";
+      $group = 'setting';
+      break;
+
+     case 'cacheable':
+      $type = 'checkbox';
+      $caption = $_lang['page_data_cacheable'];
+      $description = $_lang['page_data_cacheable_help'];
+      $elements = "{$_lang['page_data_cacheable']}==1";
+      $group = 'setting';
+      break;
+
      default:
       $type = 'text';
       $caption = $name;
       $description = $name;
+      $group = 'content';
 
     }
 
@@ -181,6 +216,7 @@ class ContentVariable {
   $this->elements = $elements;
   $this->default_text = $default_text;
   $this->content = $value;
+  $this->group = $group;
 
  }
 

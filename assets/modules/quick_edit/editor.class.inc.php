@@ -143,15 +143,15 @@ class QuickEditor {
 
    // Set the buttons for this TV
 $buttons = <<<EOD
-<a id="close" href="javascript: close();"><img src="media/images/icons/close.gif" alt="{$_lang['close']}" /> {$_lang['close']}</a>
+<a id="close" href="javascript: close();"><img src="../{$qe_path}/images/close.gif" alt="{$_lang['close']}" /> {$_lang['close']}</a>
 
-<a href="javascript: save();"><img src="media/images/icons/save.gif" alt="{$_lang['ok']}" /> {$_lang['ok']}</a>
+<a href="javascript: applyChanges($('tv_form'), true);"><img src="../{$qe_path}/images/ok.gif" alt="{$_lang['ok']}" /> {$_lang['ok']}</a>
 EOD;
 
    if($cv->type != 'richtext' || in_array(strtolower($modx->config['which_editor']), $snapshot_compatible_editors)) {
 $buttons .= <<<EOD
-<a href="javascript: applyChanges($('tv_form'));"><img src="media/images/icons/save.gif" alt="{$_lang['apply']}" /> {$_lang['apply']}</a>
-<a href="javascript: if(confirm('{$_lang['revert_prompt']}')) { saveSnapshot(); }"><img src="media/images/icons/refresh.gif" alt="{$_lang['revert']}" /> {$_lang['revert']}</a>
+<a href="javascript: applyChanges($('tv_form'));"><img src="../{$qe_path}/images/apply.gif" alt="{$_lang['apply']}" /> {$_lang['apply']}</a>
+<a href="javascript: if(confirm('{$_lang['revert_prompt']}')) { saveSnapshot(); }"><img src="../{$qe_path}/images/revert.gif" alt="{$_lang['revert']}" /> {$_lang['revert']}</a>
 EOD;
    }
 
@@ -200,7 +200,10 @@ var QE_FormSnapshot = '';
 
 </div>
 
-<div id="description">{$_lang['edit']} {$cv->description}</div>
+<div id="info">
+ <h1 onclick="javascript: Element.toggle($('description'));">{$cv->caption}</h1>
+ <div id="description" onclick="javascript: Element.toggle($('description'));" style="display:none;"><div>{$cv->description}</div></div>
+</div>
 
 <div id="tv_container">
 
@@ -336,39 +339,6 @@ EOD;
    }
 
   }
-
- }
-
- function renderSaveAndCloseHTML() {
-
-  $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
-
-$html = <<<EOD
-<html>
-
-<head>
-
-<title>{$_lang['close']}</title>
-
-<script language="JavaScript" src="../{$qe_path}/javascript/editor.js"></script>
-<script type="text/javascript">
-
-reloadAndClose();
-
-</script>
-
-</head>
-
-<body>
-
-<p style="text-align:center;"><a href="javascript: postSave();">{$_lang['close']}</a></p>
-
-</body>
-
-</html>
-EOD;
-
-  echo($html);
 
  }
 

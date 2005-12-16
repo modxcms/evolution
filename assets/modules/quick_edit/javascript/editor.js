@@ -31,12 +31,7 @@ function fitWindow() {
  top.resizeTo(w, h+heightMargin);
 }
 
-function save() {
- var form = document.getElementById('tv_form');
- form.submit();
-}
-
-function applyChanges(formElement) {
+function applyChanges(formElement, closeEditor) {
 
 // Update RTE linked fields
 
@@ -47,14 +42,12 @@ oEditor.UpdateLinkedField();
 }
 
 var serializedForm = Form.serialize(formElement);
-QE_SendAjax(serializedForm, function() { opener.window.location.reload(); } );
-
+if(closeEditor == true) {
+ QE_SendAjax(serializedForm, function() { opener.window.location.reload(); self.close(); } );
+} else {
+ QE_SendAjax(serializedForm, function() { opener.window.location.reload(); } );
 }
 
-function reloadAndClose() {
- opener.window.location.reload();
- self.close();
- return false;
 }
 
 var modVariables = [];
