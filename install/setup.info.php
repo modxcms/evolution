@@ -39,7 +39,7 @@
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
 	$mm = &$moduleModules;
-	$mm[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu","f888bac76e1537ca8e0cbec772b4624a",1);
+	$mm[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable","f888bac76e1537ca8e0cbec772b4624a",1);
 
 	# setup callback function
 	$callBackFnc = "clean_up";

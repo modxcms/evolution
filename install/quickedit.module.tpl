@@ -8,7 +8,7 @@
  *  For: MODx cms (modxcms.com)
  *  Name: QuickEdit
  *  Description: Edit pages from the frontend of the site
- *  Parameters: &mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu
+ *  Parameters: &mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable
  *  Parameter sharing: enabled
  *  Dependencies: QuickEdit plugin
  */
@@ -40,7 +40,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 if(!isset($mod_path)) { $mod_path = 'assets/modules/quick_edit'; }
 if(!isset($show_manager_link)) { $show_manager_link = 1; }
 if(!isset($show_help_link)) { $show_help_link = 1; }
-if(!isset($editable)) { $editable = 'pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu'; }
+if(!isset($editable)) { $editable = 'pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable'; }
 
 $basePath = $modx->config['base_path'];
 
@@ -80,7 +80,7 @@ if(!file_exists($basePath.$mod_path)) {
  } elseif($doc_id && $var_id && $save) {
 
   $qe->save($doc_id, $var_id);
-  $qe->renderSaveAndCloseHTML();
+//  $qe->renderSaveAndCloseHTML();
 
  } elseif($doc_id && $var_id) {
 
