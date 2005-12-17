@@ -1,10 +1,10 @@
 <?php
 /**
- * Filename:       includes/lang/filename_here.inc.php
- * Function:       Default English language file.
+ * Filename:       includes/lang/japanese-utf8.inc.php
+ * Function:      japanese language file.
  * Encoding:       UTF-8
  * Author:         by eastbind (eastbind@bodenplatte.jp)
- * Date:           2005/11/28
+ * Date:           11-Dec-2005
  * Version:        1.x
  * MODx version:   0.9.1
 */
@@ -235,7 +235,7 @@ $_lang['document_opt_published'] = "公開?";
 $_lang['document_opt_menu_index'] = "メニューインデックス";
 $_lang['document_opt_emptycache'] = "キャッシュのクリア?";
 $_lang['document_opt_folder_help'] = "ドキュメントをフォルダとしても扱いたい場合にチェックしてください。MODxがフォルダ設定を自動的に行いますので、あまり心配する必要はありません。";
-$_lang['document_opt_richtext_help'] = "ドキュメントの編集にリッチテキストエディタを使用する場合は、チェックしたままにしてください。ドキュメントがJavaスクリプトとフォームを含んでいる場合は、エディタがドキュメントを壊さないようにチェックを外して、HTMLモードによる編集を行ってください。";
+$_lang['document_opt_richtext_help'] = "ドキュメントの編集にリッチテキストエディタを使用する場合は、チェックしたままにしてください。ドキュメントがJavaスクリプトやフォームを含んでいる場合は、エディタがドキュメントを壊さないように、チェックを外してHTMLモードによる編集を行ってください。";
 $_lang['document_opt_published_help'] = "保存後、すぐにドキュメントを公開する場合はチェックしてください。";
 $_lang['page_data_publishdate_help'] = "公開日時を設定した場合、ドキュメントは公開日時の到来と共に公開されます。カレンダーアイコンをクリックして公開日時を選択するか、カレンダーアイコンの隣のアイコンをクリックして公開日時を削除してください。公開日時を削除すると、ドキュメントは自動的に公開されません。";
 $_lang['page_data_unpublishdate_help'] = "公開取消し日時を設定した場合、公開取消し日時の到来と共にドキュメントの公開が取り消されます。カレンダーアイコンをクリックして公開取消し日時を選択するか、カレンダーアイコンの隣のアイコンをクリックして公開取消し日時を削除してください。公開取消し日時を削除すると、ドキュメントの公開取消しは自動的に行われません。";
@@ -253,7 +253,7 @@ $_lang['document_to_be_moved'] = "移動対象ドキュメント";
 $_lang['move_document_new_parent'] = "新しい親ドキュメントのIDを入力してください"; // changed in 0.6.1
 $_lang['new_parent'] = "新しい親ドキュメント";
 $_lang['edit_parser_title'] = "パーサの編集";
-$_lang['edit_parser_warning'] = "<b style='color:#821517'>このファイルを編集することで、あなたのサイトに重大な障害が発生する場合があります!</b><br>現在、あなたはPHPファイルを直接編集しています。保存する前にこの内容をバックアップ(ノートパッドまたは他のものに)してください!";
+$_lang['edit_parser_warning'] = "<b style='color:#821517'>このファイルを編集することで、あなたのサイトに重大な障害が発生する場合があります!</b><br />現在、あなたはPHPファイルを直接編集しています。保存する前にこの内容をバックアップ(ノートパッドまたは他のものに)してください!";
 $_lang['change_password_message'] = "新しいパスワードを入力して、確認のためのパスワードをもう一度入力してください。パスワードの長さは6～15文字の間にしてください。";
 $_lang['change_password_new'] = "新しいパスワード";
 $_lang['change_password_confirm'] = "パスワードをもう一度";
@@ -346,7 +346,7 @@ $_lang['refresh_published'] = "<b>%s</b>件のドキュメントが公開され�
 $_lang['refresh_unpublished'] = "<b>%s</b>件のドキュメントの公開が取り消されました。";
 $_lang['refresh_cache'] = "キャッシュ: キャシュディレクトリに <b>%s</b>個のキャッシュファイルが見つかりました。<b>%d</b>個のキャッシュファイルが削除されました。<p>ページがリクエストされた時点で、新しいキャッシュファイルが生成されます。"; // changed in 0.6
 $_lang['about_title'] = "MODx について";
-$_lang['about_msg'] = "MODx は PHP アプリケーションフレームワークです。<a href=\"../assets/docs/license.txt\">GPL</a>に基づいて使用を許諾しています。";
+$_lang['about_msg'] = "MODx は <a href='http://modxcms.com/what-is-modx.html' target='_blank'>PHP アプリケーションであるコンテント管理システム</a>です。<a href=\"../assets/docs/license.txt\">GNU GPL</a>に基づいて使用を許諾しています。";
 $_lang['credits_htmlarea'] = "HTMLArea was created by mishoo. Currently it's the only cross-browser compatible editor available, and it's free too!"; // obsolete
 $_lang['credits_adodb'] = "John Lim built this great database abstraction layer. Etomite uses only the MySQL bits, but it's lovely nonetheless!"; // obsolete
 $_lang['credits_php'] = "MODx is powered by PHP!"; // obsolete
@@ -429,14 +429,14 @@ $_lang['search_results_returned_desc'] = "説明";
 $_lang['search_view_docdata'] = "このアイテムを表示する";
 $_lang['search_item_deleted'] = "このアイテムは削除されています。";
 $_lang['help_title'] = "ヘルプ";
-$_lang['help_msg'] = "MODxを使っていて助けが要るときは、<a href='http://modxcms.com/forums' target='_blank'>MODx フォーラム</a>を訪れてください。MODxの設定方法や使用にあたってのテュートリアルなどがあります。お探しの答えが見つかるかも知れません。答えが見つからないときはフォーラムで質問してみてください。私たちができるだけサポートします。";
+$_lang['help_msg'] = "<p><a href='http://modxcms.com/forums' target='_blank'>MODx フォーラム</a>を訪れる事で、気軽にコミュニティからサポートを得られるでしょう。そこには、ますます成長しつつある<a href='http://modxcms.com/documentation' target='_blank'>MODx ドキュメント</a>があり、MODxのほとんどあらゆる面について記されています。</p><p>また、MODxの有償サポートサービスの提供が計画されています。興味がおありの方は<a href='mailto:modx@vertexworks.com?subject=MODx Commercial Support Inquiry'>eメール</a>にてお問い合わせください。";
 
 /***************************************************************************/
 // new in 0.5.2
 /***************************************************************************/
 
 $_lang['configcheck_images'] = "イメージディレクトリに書き込みができません";
-$_lang['configcheck_images_msg'] = "イメージディレクトリに書き込み可能でないか、またはイメージディレクトリが存在していません。エディタのイメージマネージャ機能が動作しません!";
+$_lang['configcheck_images_msg'] = "イメージディレクトリが書き込み可能でないか、またはイメージディレクトリが存在していません。エディタのイメージマネージャ機能が動作しません!";
 $_lang['php_version_check'] = "MODxはPHPバージョン4.0.3またはそれ以上で動作します。インストールしてあるPHPをアップグレードしてください!";
 $_lang['document_alias'] = "ドキュメントエイリアス";
 $_lang['document_alias_help'] = "このドキュメントのエイリアスを指定することができます。次のようにドキュメントにアクセスすることができます:\n\nhttp://yourserver/エイリアス\n\nエイリアスはフレンドリーURLを使用する場合のみ動作します。";
@@ -740,7 +740,7 @@ $_lang['illegal_parent_child'] = "親の指定:\\n\\nドキュメントは選択
 $_lang['illegal_parent_self'] = "親の指定:\\n\\n自分自身を親に割り当てる事はできません";
 $_lang['manager_theme'] ='マネージャのテーマ:';
 $_lang['manager_theme_message'] ='マネージャが使用するテーマを選択してください';
-$_lang['document_summary'] ='要約';
+$_lang['document_summary'] ='要約（序説）';
 $_lang['document_summary_help'] ='ドキュメントの要約を簡潔に入力してください';
 $_lang['close'] = "閉じる";
 $_lang['import_site_html'] = "HTMLからサイトにインポート";
@@ -1024,7 +1024,7 @@ $_lang["mgr_login_start_message"] = "ユーザがマネージャにログイン�
 $_lang['allow_mgr_access'] = 'マネージャへのアクセス';
 $_lang['allow_mgr_access_message'] = 'このオプションはマネージャへのアクセスをユーザに許すか、拒否するかを選択するものです。<b>注意: このオプションを「No」に設定すると、ユーザは上記の「マネージャログイン開始ページ」か、空白ならサイトスタートのページへリダイレクトされます。</b>';
 $_lang['logout_message'] = '今、MODxマネージャにログインしています。ログインセッションを閉じたいときは、「ログアウト」ボタンをクリックしてください。<p />開始ページやホームページに戻りたいときは「ホーム」ボタンをクリックしてください。';
-$_lang['layout_settings_5'] = "Snap in top menubar layout<br /><span class='comment'>主画面やドキュメントツリーのトップにポップアップして開くナビゲーションバーがあります。</span>";
+$_lang['layout_settings_5'] = "Snap in top menu bar layout<br /><span class='comment'>主画面やドキュメントツリーのトップにポップアップして開くナビゲーションバーがあります。</span>";
 $_lang['snippet_code'] = 'スニペット コード (php)';
 $_lang['plugin_code'] = 'プラグイン コード (php)';
 $_lang['module_code'] = 'モジュール コード (php)';
@@ -1045,4 +1045,10 @@ $_lang['QE_someone_editing'] = '他の誰かがこのドキュメントを編集
 $_lang['QE_cant_find_content'] = '編集対象の中身がありません';
 $_lang['QE_description'] = 'サイトの前面からページを編集します';
 
+$_lang['system_email_signup'] = "こんにちわ [+uid+] さん\n\「[+sname+]」のコンテント管理システムへのあなたのログイン情報について下記のとおりお知らせします。\n\nログインユーザ名: [+uid+]\nパスワード: [+pwd+]\n\nコンテント管理システムへログインすれば、自分のパスワードは自由に変更できます。\n\n以上、よろしくお願いします。\nサイト管理者より" ;
+$_lang['system_email_websignup'] = "こんにちわ [+uid+] さん\n\n「[+sname+]」へのあなたのログイン情報について下記のとおりお知らせします。\n\nログインユーザ名: [+uid+]\nパスワード: [+pwd+]\n\n [+sname+]へログインすれば、自分のパスワードは自由に変更できます。\n\n以上、よろしくお願いします。\nサイト管理者より" ;
+$_lang['system_email_webreminder'] = "こんにちわ [+uid+] さん\n\n新しいパスワードを有効にするためには、下記のリンクをクリックしてください。\n\n[+surl+]\n\nうまくいけば、下記のパスワードをログインに使用できるようになります。\n\nパスワード:[+pwd+]\n\nもしも、あなたがこのメールに覚えが無いときは、ただ単に無視してこのメールを破棄して下さい。\n\n以上、よろしくお願いします。\nサイト管理者より" ;
+
+$_lang['role_view_unpublished'] = "未公開のドキュメントの閲覧";
+$_lang['duplicate_document'] = "ドキュメントの複製";
 ?>

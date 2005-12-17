@@ -3,8 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.1 (rev 596+ - December 13, 2005)
+MOD 0.9.1 (rev 609 - December 17, 2005)
 ==================
+* Overhauld QuickEdit toolbar with added capabilities.
+* New manager default layout to maximize space(Menu 4 layout).
+* Added Swedish language files for manager.
+* Updated language files.
+* Updated Demo site content settings configuration to reflect the custom 404/unauthorized pages.
 * Update to scriptaculous 1.5 / prototype 1.4 official release versions.
 * Fix regClientCSS to insert CSS immedeately prior to the closing </head> instead of just after the opening one.
 * Fix #124 regClientStartupScript and regClientScript don't work in uncached snippets.
