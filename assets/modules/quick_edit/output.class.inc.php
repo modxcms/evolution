@@ -131,7 +131,7 @@ class Output {
    $cv = new ContentVariable;
    $manager_path = $modx->getManagerPath();
    $doc_id = $modx->documentIdentifier;
-   $logout_url = $modx->makeURL($doc_id, '', 'QuickEdit_logout=logout');
+   $logout_url = "index.php?id={$doc_id}&amp;QuickEdit_logout=logout"; // $modx->makeURL($doc_id, '', 'QuickEdit_logout=logout'); // Would like to use makeURL but doesn't produce XHTML valid code
    $replacements = array();
    $link = '';
    $type_image = '';
@@ -182,7 +182,7 @@ foreach($cvs as $content) {
    $type_image = ($cv_obj->content ? $this->checked_image : $this->unchecked_image);
    $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
 $menus[$menu][] .= <<<EOD
-<a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_SendAjax('doc={$doc_id}&var={$cv_obj->id}&save=1&tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } );" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a>
+<a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_SendAjax('doc={$doc_id}&amp;var={$cv_obj->id}&amp;save=1&amp;tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } );" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a>
 EOD;
 
   // Everything else

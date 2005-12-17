@@ -7,11 +7,11 @@
  */
 
 #QE_Toolbar, #QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img{
+font-family:sans-serif !important;
 color:#000 !important;
 text-decoration:none !important;
 border-width:1px !important;
 border-color:#afafaf !important;
-background-color:#fff !important;
 }
 
 #QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img{
@@ -54,12 +54,17 @@ border-bottom-style:none !important;
 
 div.QE_Menu{
 z-index:10001 !important;
+background-image:url(../images/body_bg.png) !important;
+background-position:bottom !important;
+background-repeat:repeat-x !important;
+background-color:#fff !important;
 }
 
 #QE_Toolbar ul{
 z-index:10002 !important;
 margin:0 !important;
 padding:0 !important;
+list-style-type:none;
 }
 
 #QE_Toolbar li{

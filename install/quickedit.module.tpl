@@ -80,7 +80,7 @@ if(!file_exists($basePath.$mod_path)) {
  } elseif($doc_id && $var_id && $save) {
 
   $qe->save($doc_id, $var_id);
-//  $qe->renderSaveAndCloseHTML();
+  $qe->renderSaveAndCloseHTML();
 
  } elseif($doc_id && $var_id) {
 

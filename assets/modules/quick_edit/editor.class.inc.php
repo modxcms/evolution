@@ -145,7 +145,7 @@ class QuickEditor {
 $buttons = <<<EOD
 <a id="close" href="javascript: close();"><img src="../{$qe_path}/images/close.gif" alt="{$_lang['close']}" /> {$_lang['close']}</a>
 
-<a href="javascript: applyChanges($('tv_form'), true);"><img src="../{$qe_path}/images/ok.gif" alt="{$_lang['ok']}" /> {$_lang['ok']}</a>
+<a href="javascript: $('tv_form').submit();"><img src="../{$qe_path}/images/ok.gif" alt="{$_lang['ok']}" /> {$_lang['ok']}</a>
 EOD;
 
    if($cv->type != 'richtext' || in_array(strtolower($modx->config['which_editor']), $snapshot_compatible_editors)) {
@@ -187,11 +187,11 @@ var QE_FormSnapshot = '';
 <body onload="takeSnapshot($('tv_form'));">
 
 <form id="tv_form" class="{$cv->type}" name="mutate" method="post" enctype="multipart/form-data" action="index.php">
-<input id="save" type="hidden" name="save" value="1" />
 <input type="hidden" name="a" value="{$module_exec_action}" />
 <input type="hidden" name="id" value="{$mod_id}" />
-<input id="doc" type="hidden" name="doc" value="{$doc_id}" />
-<input id="var" type="hidden" name="var" value="{$var_id}" />
+<input type="hidden" name="doc" value="{$doc_id}" />
+<input type="hidden" name="var" value="{$var_id}" />
+<input id="save" type="hidden" name="save" value="1" />
 <input type="hidden" name="variablesmodified" value="">
 
 <div id="toolbar">
@@ -200,9 +200,9 @@ var QE_FormSnapshot = '';
 
 </div>
 
-<div id="info">
- <h1 onclick="javascript: Element.toggle($('description'));">{$cv->caption}</h1>
- <div id="description" onclick="javascript: Element.toggle($('description'));" style="display:none;"><div>{$cv->description}</div></div>
+<div id="info" onclick="javascript: showDescription()">
+ <h1>{$cv->caption}</h1>
+ <div id="tv_description" style="display:none;"><div id="tv_description_text">{$cv->description}</div></div>
 </div>
 
 <div id="tv_container">
@@ -339,6 +339,35 @@ EOD;
    }
 
   }
+
+ }
+
+ // After submitting this will generate a page that will
+ function renderSaveAndCloseHTML() {
+
+  $modPath = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+
+$html = <<<EOD
+<html>
+<head>
+
+<title>Click to close</title>
+
+<script language="JavaScript" src="../{$modPath}/javascript/editor.js"></script>
+<script type="text/javascript">
+ reloadAndClose();
+</script>
+
+</head>
+<body>
+
+<p style="margin-top:20px; text-align:center;"><a href="javascript: postSave();">Close window</a></p>
+
+</body>
+</html>
+EOD;
+
+  echo($html);
 
  }
 

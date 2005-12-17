@@ -19,9 +19,7 @@ margin:0;
 padding:0;
 overflow:hidden;
 font-size:10pt;
-background-image:url(../images/body.jpg);
-background-position:top;
-background-repeat:repeat-x;
+background-color:#fff;
 }
 
 #tv_container{
@@ -73,7 +71,8 @@ float:right !important;
 #info{
 position:relative;
 margin:0;
-background-color:#f6f6f6;
+height:18px;
+background-color:#f0f0f0;
 cursor:help;
 }
 
@@ -85,7 +84,7 @@ font-size:8pt;
 font-weight:bold;
 }
 
-#description{position:absolute;
+#tv_description{position:absolute;
 z-index:1000;
 margin:0;
 padding:0;
@@ -93,10 +92,12 @@ width:100%;
 font-size:8pt;
 font-weight:normal;
 text-align:left;
-background-color:#f6f6f6;
+background-color:#f0f0f0;
 }
 
-#description div{
+#tv_description div{
+position:relative;
+z-index:1001;
 margin:10px;
 }
 

@@ -31,22 +31,18 @@ function fitWindow() {
  top.resizeTo(w, h+heightMargin);
 }
 
-function applyChanges(formElement, closeEditor) {
+function applyChanges(formElement) {
 
-// Update RTE linked fields
+ // Update RTE linked fields
 
-// FCKeditor
-if(typeof(FCKeditorAPI) != 'undefined') {
-var oEditor = FCKeditorAPI.GetInstance(QE_ContentVariableID);
-oEditor.UpdateLinkedField();
-}
+ // FCKeditor
+ if(typeof(FCKeditorAPI) != 'undefined') {
+  var oEditor = FCKeditorAPI.GetInstance(QE_ContentVariableID);
+  oEditor.UpdateLinkedField();
+ }
 
-var serializedForm = Form.serialize(formElement);
-if(closeEditor == true) {
- QE_SendAjax(serializedForm, function() { opener.window.location.reload(); self.close(); } );
-} else {
+ var serializedForm = Form.serialize(formElement);
  QE_SendAjax(serializedForm, function() { opener.window.location.reload(); } );
-}
 
 }
 
@@ -65,4 +61,30 @@ function setVariableModified(fieldName){
   var f = document.forms['mutate'];
   f.variablesmodified.value=mv.join(",");
  }
+}
+
+function reloadAndClose() {
+ opener.window.location.reload();
+ self.close();
+ return false;
+}
+
+function showDescription() {
+
+// IE doesn't seem to wat to show things above form inputs
+
+/*@cc_on
+ /*@if (@_win32)
+
+  // For IE
+  alert($('tv_description_text').innerHTML);
+
+ @else @*/
+
+  // For everybody else
+  Element.toggle($('tv_description'));
+
+ /*@end
+@*/
+
 }
