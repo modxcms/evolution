@@ -1,109 +1,107 @@
 body {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
     margin:0;
     padding:0;
-	background: #ecf2ff url(../images/misc/buttonbar.gif) repeat-x top left;
-    } 
-#divNav {
-	margin: 0;
+    background: #ecf2ff url(../images/misc/buttonbar.gif) repeat-x top left;
+} 
+body * {
+    margin: 0;
     padding: 0;
-    height: 100px;
+}
+
+#divNav {
+    height: 50px;
     width: 100%;
+    background: transparent url(../images/misc/buttonbar_flip.gif) repeat-x 0 25px;
 }
 
-#nav {
-	height: 50px;
-	width: 100%;
-	margin: 0px;
-	padding: 0px;
-	top: 0px;
-	left: 0px;
-	position: absolute;
+ul#nav {
+    height: 25px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    border-bottom: 1px solid darkblue;
+    overflow: visible !important
+}
+#nav ul {
+    display: none;
+    height: 25px;
+    position: relative;
+    z-index: 500;
 }
 
-
-#nav li, #nav li.active { 
-	margin: 0;
-	list-style-type: none;
-	padding: 0px;
-	display: block;
-	float: left;
-	width: auto;
+#nav li { 
+    list-style-type: none;
+    display: block;
+    float: left;
+    width: auto;
 }
 
-#nav li a, #nav li.off a {
-	color: #224d6f;
-	font-weight: bold;
-	text-decoration: none;
-	height: 15px;
-	margin: 0px;
-	padding-top: 5px;
-	padding-right: 10px;
-	padding-bottom: 5px;
-	padding-left: 10px;
-	display: block;
-	float: left;
-	width: auto;
+#nav a {
+    color: #224d6f;
+    font-weight: bold;
+    text-decoration: none;
+    height: 15px;
+    padding: 5px 10px;
+    display: block;
+    float: left;
+    width: auto;
+    white-space: nowrap;
+    cursor: default;
 }
-
+#nav a:hover {
+    background: transparent url(../images/misc/button_dn.gif) repeat-x 0 1px !important;
+    border: 1px solid darkgreen !important;
+    border-bottom-width: 0 !important;
+    padding: 4px 9px 5px;
+}
+#nav a:active {
+    padding: 5px 8px 4px 10px;
+    color: #000;
+}
 #nav li.active a {
-	color: #FFFFFF;
-	background-color: #224d6f;
-	font-weight: bold;
-	text-decoration: none;
-	height: 15px;
-	margin: 0px;
-	padding-top: 5px;
-	padding-right: 10px;
-	padding-bottom: 5px;
-	padding-left: 10px;
-	display: block;
-	float: left;
+    background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x top left;
+    font-weight: bold;
+    text-decoration: none;
+    height: 16px;
+    border: 1px solid darkblue;
+    border-bottom-width: 0;
+    margin-bottom: -1px;
+    padding: 4px 9px 5px;
+    display: block;
+    float: left;
+    position: relative;
+    z-index: 999;
 }
-
-#nav li a:hover {
-	color: #FFFFFF;
-	background-color: #224d6f;
+#nav li.active a:hover {
+    background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x top left !important;
+    border-bottom-width: 0 !important;
 }
 
 #nav li.active ul.subnav {
     display: block;
+    position: absolute;
+    top: 25px;
+    width: 100%;
+    left: 0;
+    border-top: 1px solid darkblue;
 }
 
-#nav ul.subnav {
-	margin: 0px;
-	padding: 0px;
-	display: none;
-	position: absolute;
-	top: 25px;
-	height: 25px;
-	width: 1000px;
-	left: 0px;
+#nav li.active ul.subnav a {
+    color: #000;
+    font-weight: normal;
+    background: transparent url(../images/misc/buttonbar_flip.gif) repeat-x top left;
+    border: none;
+    padding: 5px 10px;
 }
 
-#nav ul.subnav li { 
-	margin: 0;
-	list-style-type: none;
-	padding: 0px;
-}
-
-#nav ul.subnav a {
-	border: 0;
-	float: left;
-	display: block;
-	color: #000;
-	font-weight: normal;
-	margin: 0px;
-	height: 15px;
-	padding-top: 5px;
-	padding-right: 10px;
-	padding-bottom: 5px;
-	padding-left: 10px;
-	background-color: #ecf2ff;
-}
-
-#nav ul.subnav a:hover { 
-	background: #b0ccf1 url(../images/misc/buttonbar.gif) repeat-x top left;
-	color: #000;
+#nav li.active ul.subnav a:hover { 
+    color: #000;
+    background: transparent url(../images/misc/button_dn.gif) repeat-x top left !important;
+    font-weight: normal;
+    border-top-width: 0 !important;
+    border-bottom-width: 0 !important;
+    padding: 5px 9px;
 }

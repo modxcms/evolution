@@ -3,10 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.1 (rev 609 - December 17, 2005)
+    MOD 0.9.1 (rev 615 - December 21, 2005)
 ==================
-* Overhauld QuickEdit toolbar with added capabilities.
-* New manager default layout to maximize space(Menu 4 layout).
+* Fixed minor bug with credits page disply in new Menu 4.
+* Fix file upload detection method [bug 169].
+* Overhauled QuickEdit toolbar with added capabilities.
+* New manager default layout to maximize space (Menu 4 layout).
 * Added Swedish language files for manager.
 * Updated language files.
 * Updated Demo site content settings configuration to reflect the custom 404/unauthorized pages.
