@@ -34,73 +34,78 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
-// Set configuration variables if not already set
-if(!isset($mod_path)) { $mod_path = 'assets/modules/quick_edit'; }
-if(!isset($show_manager_link)) { $show_manager_link = 1; }
-if(!isset($show_help_link)) { $show_help_link = 1; }
-if(!isset($editable)) { $editable = 'pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable'; }
+// Don't do anything if we aren't logged in
+if(!isset($_SESSION['mrgValidated'])) {
 
-// If we can't find the module files...
-if(!file_exists($mod_path)) {
+ // Set configuration variables if not already set
+ if(!isset($mod_path)) { $mod_path = 'assets/modules/quick_edit'; }
+ if(!isset($show_manager_link)) { $show_manager_link = 1; }
+ if(!isset($show_help_link)) { $show_help_link = 1; }
+ if(!isset($editable)) { $editable = 'pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable'; }
 
- // Only log the error if we haven't already logged it...
- if(!isset($GLOBALS['quick_edit_not_found_sent'])) {
+ // If we can't find the module files...
+ if(!file_exists($mod_path)) {
 
-  // Set a global variable so that we can only log this once
-  $GLOBALS['quick_edit_not_found_sent'] = true;
+  // Only log the error if we haven't already logged it...
+  if(!isset($GLOBALS['quick_edit_not_found_sent'])) {
 
-  // Log an error
-  $error_message = '<strong>QuickEdit module not found!</strong></p><p>Edit the QuickEdit module, click the Configuration tab and change the Module Path to point to the module.</p>';
-  $modx->logEvent(0, 3, $error_message, 'QuickEditor');
+   // Set a global variable so that we can only log this once
+   $GLOBALS['quick_edit_not_found_sent'] = true;
 
- }
+   // Log an error
+   $error_message = '<strong>QuickEdit module not found!</strong></p><p>Edit the QuickEdit module, click the Configuration tab and change the Module Path to point to the module.</p>';
+   $modx->logEvent(0, 3, $error_message, 'QuickEditor');
 
-} else {
+  }
 
- // Set globals from QE Module's shared paramaters so we can get them from the frontend
- $GLOBALS['qe_show_manager_link'] = $show_manager_link;
- $GLOBALS['qe_show_help_link'] = $show_help_link;
- $GLOBALS['qe_editable'] = $editable;
+ } else {
 
- // Set the mod_path as a global variable
- $GLOBALS['quick_edit_path'] = $mod_path;
- include_once($mod_path.'/output.class.inc.php');
+  // Set globals from QE Module's shared paramaters so we can get them from the frontend
+  $GLOBALS['qe_show_manager_link'] = $show_manager_link;
+  $GLOBALS['qe_show_help_link'] = $show_help_link;
+  $GLOBALS['qe_editable'] = $editable;
 
- $outputObject = new Output;
+  // Set the mod_path as a global variable
+  $GLOBALS['quick_edit_path'] = $mod_path;
+  include_once($mod_path.'/output.class.inc.php');
 
- switch($modx->Event->name) {
+  $outputObject = new Output;
 
-  case 'OnParseDocument' :
+  switch($modx->Event->name) {
 
-   $outputObject->output = $modx->documentOutput;
+   case 'OnParseDocument' :
 
-   // Merge QuickEdit comment into the output
-   $outputObject->mergeTags();
+    $outputObject->output = $modx->documentOutput;
 
-   break;
+    // Merge QuickEdit comment into the output
+    $outputObject->mergeTags();
 
-  case 'OnWebPagePrerender' :
+    break;
 
-   $outputObject->output = &$modx->documentOutput;
+   case 'OnWebPagePrerender' :
 
-   include_once($mod_path.'/module.class.inc.php');
-   $module = new Module;
-   $module->getIdFromDependentPluginName($modx->Event->activePlugin);
+    $outputObject->output = &$modx->documentOutput;
 
-   // Replace QuickEdit comments with QuickEdit links
-   $outputObject->mergeLinks($module->id);
+    include_once($mod_path.'/module.class.inc.php');
+    $module = new Module;
+    $module->getIdFromDependentPluginName($modx->Event->activePlugin);
 
-   break;
+    // Replace QuickEdit comments with QuickEdit links
+    $outputObject->mergeLinks($module->id);
 
- }
+    break;
 
- // Set the event output
- $modx->documentOutput = $outputObject->output;
+  }
 
- // Logout ?
- $qe_logout= (isset($_GET['QuickEdit_logout'])? $_GET['QuickEdit_logout']: '');
- if($qe_logout == 'logout') {
-  $_SESSION = array();
+  // Set the event output
+  $modx->documentOutput = $outputObject->output;
+
+  // Logout ?
+  $qe_logout= (isset($_GET['QuickEdit_logout'])? $_GET['QuickEdit_logout']: '');
+  if($qe_logout == 'logout') {
+   $_SESSION = array();
+  }
+
  }
 
 }
