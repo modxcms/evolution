@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-    MOD 0.9.1 (rev 620 - December 22, 2005)
+    MOD 0.9.1 (rev 621 - December 22, 2005)
 ==================
 * Fixed separate resource folders for manager users.
 * Fixed defect with where clause of getDocumentChildren and getDocuments methods [bug 168].

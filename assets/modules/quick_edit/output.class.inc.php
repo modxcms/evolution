@@ -95,7 +95,10 @@ class Output {
   $manager_link = '';
   $help_link = '';
   $allowed = true;
+  $buttons_html = '';
+  $menus_html = '';
   $toolbar_cv_html = '';
+  $html_bottom = '';
   $base_path = $modx->config['base_path'];
   $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
   $output = $this->output;

@@ -144,8 +144,8 @@ class ContentVariable {
      
      case 'published':
       $type = 'checkbox';
-      $caption = $_lang['publish_document'];
-      $description = $_lang['publish_document_help'];
+      $caption = $_lang['document_opt_published'];
+      $description = $_lang['document_opt_published_help'];
       $elements = "{$_lang['publish_document']}==1";
       $group = 'setting';
       break;
@@ -167,7 +167,7 @@ class ContentVariable {
      case 'hidemenu':
       $type = 'checkbox';
       $caption = $_lang['document_opt_hide_menu'];
-      $description = $_lang['document_opt_hide_menu_help'];
+      $description = $_lang['document_opt_show_menu_help'];
       $elements = "{$_lang['document_opt_hide_menu']}==1";
       $group = 'setting';
       break;
