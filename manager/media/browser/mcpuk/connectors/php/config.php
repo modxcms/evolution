@@ -33,6 +33,11 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 	mysql_select_db($dbase);
 }
 include("../../../../../includes/settings.inc.php");
+
+// Override system settings with user settings
+define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
+include("../../../../../includes/user_settings.inc.php");
+
 // ** END FOR MODx
 
 /*------------------------------------------------------------------------------*/
