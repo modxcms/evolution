@@ -78,7 +78,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			$_SESSION['tree_sortby'] = 'isfolder';
 			$_SESSION['tree_sortdir'] = 'DESC';
 		}
-		if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", pagetitle";
+        if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 		//Raymond: end
 
 
