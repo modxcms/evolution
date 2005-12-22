@@ -1215,7 +1215,7 @@ class DocumentParser {
 		// modify field names to use sc. table reference
 		$fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));
 		$sort = ($sort=="") ? "":'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
-		if ($where!='') $where .= 'AND '.$where;
+		if ($where!='') $where = 'AND '.$where;
 		// get document groups for current user
 		if($docgrp = $this->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 		// build query
@@ -1245,7 +1245,7 @@ class DocumentParser {
 			// modify field names to use sc. table reference
 			$fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));
 			$sort = ($sort=="") ? "":'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
-			if ($where!='') $where .= 'AND '.$where;
+			if ($where!='') $where = 'AND '.$where;
 			// get document groups for current user
 			if($docgrp = $this->getUserDocGroups()) $docgrp = implode(",",$docgrp);
 			$access = ($this->isFrontend() ? "sc.privateweb=0":"1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").
