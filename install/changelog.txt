@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-    MOD 0.9.1 (rev 615 - December 21, 2005)
+    MOD 0.9.1 (rev 619 - December 22, 2005)
 ==================
+* Fixed defect with where clause of getDocumentChildren and getDocuments methods [bug 168].
 * Fixed minor bug with credits page disply in new Menu 4.
 * Fix file upload detection method [bug 169].
 * Overhauled QuickEdit toolbar with added capabilities.
