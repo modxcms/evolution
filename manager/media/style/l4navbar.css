@@ -13,7 +13,7 @@ body * {
 #divNav {
     height: 50px;
     width: 100%;
-    background: transparent url(../images/misc/buttonbar_flip.gif) repeat-x 0 25px;
+    background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x 0 25px;
 }
 
 ul#nav {
@@ -22,7 +22,6 @@ ul#nav {
     top: 0;
     left: 0;
     position: absolute;
-    border-bottom: 1px solid darkblue;
     overflow: visible !important
 }
 #nav ul {
@@ -40,44 +39,48 @@ ul#nav {
 }
 
 #nav a {
-    color: #224d6f;
-    font-weight: bold;
-    text-decoration: none;
-    height: 15px;
-    padding: 5px 10px;
-    display: block;
-    float: left;
-    width: auto;
-    white-space: nowrap;
-    cursor: default;
+	color: #224d6f;
+	font-weight: bold;
+	text-decoration: none;
+	height: 15px;
+	display: block;
+	float: left;
+	width: auto;
+	white-space: nowrap;
+	cursor: default;
+	padding: 5px 10px 4px;
 }
 #nav a:hover {
-    background: transparent url(../images/misc/button_dn.gif) repeat-x 0 1px !important;
-    border: 1px solid darkgreen !important;
-    border-bottom-width: 0 !important;
-    padding: 4px 9px 5px;
+	color: #fff;
+	border: 1px solid #224d6f !important;
+	border-bottom-width: 0 !important;
+	padding: 4px 9px 5px;
+	background: #224d6f;
 }
 #nav a:active {
     padding: 5px 8px 4px 10px;
     color: #000;
 }
 #nav li.active a {
-    background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x top left;
-    font-weight: bold;
-    text-decoration: none;
-    height: 16px;
-    border: 1px solid darkblue;
-    border-bottom-width: 0;
-    margin-bottom: -1px;
-    padding: 4px 9px 5px;
-    display: block;
-    float: left;
-    position: relative;
-    z-index: 999;
+	color: #224d6f;
+	background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x left top;
+	font-weight: bold;
+	text-decoration: none;
+	height: 16px;
+	display: block;
+	float: left;
+	position: relative;
+	z-index: 999;
+	padding: 4px 9px 5px;
+	border-top: 1px solid darkblue;
+	border-right: 1px solid darkblue;
+	border-bottom: 0 solid darkblue;
+	border-left: 1px solid darkblue;
 }
 #nav li.active a:hover {
-    background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x top left !important;
     border-bottom-width: 0 !important;
+	color: #224d6f;
+	background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x left top;
 }
 
 #nav li.active ul.subnav {
@@ -90,18 +93,19 @@ ul#nav {
 }
 
 #nav li.active ul.subnav a {
-    color: #000;
-    font-weight: normal;
-    background: transparent url(../images/misc/buttonbar_flip.gif) repeat-x top left;
-    border: none;
-    padding: 5px 10px;
+	color: #000;
+	font-weight: normal;
+	border: none;
+	height: 15px;
+	padding: 4px 10px 5px;
 }
 
-#nav li.active ul.subnav a:hover { 
-    color: #000;
-    background: transparent url(../images/misc/button_dn.gif) repeat-x top left !important;
-    font-weight: normal;
-    border-top-width: 0 !important;
-    border-bottom-width: 0 !important;
-    padding: 5px 9px;
+#nav li.active ul.subnav a:hover {
+	color: #fff;
+	background: #224d6f;
+	font-weight: normal;
+	border-top-width: 0 !important;
+	border-bottom-width: 0 !important;
+	height: 15px;
+	padding: 4px 9px 5px;
 }

@@ -3,13 +3,13 @@
  * Filename:       includes/lang/francais.inc.php
  * Function:       French language file for ModX
  * Encoding:       ISO-Latin-1
- * Author:         Nicolas Martignoni (modx@martignoni.net)
- * Date:           2005/10/25, 08:54 UTC
- * Version:        1.1
- * MODx version:   0.9.0
+ * Author:         Nicolas Martignoni
+ * Date:           2005/12/21, 08:54 UTC
+ * Version:        1.3
+ * MODx version:   0.9.1
 **/
 
-include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults
+include "lang/english.inc.php"; // for the defaults
 
 $_lang["login_message"] = "Veuillez vous identifier afin d'accéder à votre gestionnaire de site. Votre login et votre mot de passe sont sensibles à la casse. Tapez-les donc avec soin !"; 
 $_lang["username"] = "Votre nom d'utilisateur ";
@@ -357,7 +357,7 @@ $_lang['credits_shouts_title'] = "<b>Remerciements également à :</b>"; // obsole
 $_lang['credits_shouts_msg'] = "
 <ul>
 <li><b>Raymond Irving, Ryan Thrash</b> &ndash; Project Founders</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> &ndash; Core Architecture &amp; Design</li>
+<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> &ndash; Core Architecture &amp; Design</li>
 <li><b>Nicolas Martignoni et Lorenzo</b> &ndash; Traduction française</li>
 </ul>"; // changed (this changes almost every release)  // obsolete
 $_lang['messages_title'] = "Messages";
@@ -430,7 +430,7 @@ $_lang['search_results_returned_desc'] = "Description";
 $_lang['search_view_docdata'] = "Afficher cet élément";
 $_lang['search_item_deleted'] = "Cet élément a été supprimé";
 $_lang['help_title'] = "Aide";
-$_lang['help_msg'] = "Si vous avez besoin d'aide sur ModX, le mieux est de faire une visite aux <a href='http://modxcms.com/forums' target='_blank'>Forums de ModX</a>. En outre, les tutoriels de ModX contiennent de la documentation sur l'utilisation de ModX et son installation. Les réponses que vous attendez s'y trouvent peut-être. Dans le cas contraire, posez votre question dans les forums, et nous y répondrons aussi vite que possible.";
+$_lang['help_msg'] = "Si vous avez besoin d'aide sur ModX, le mieux est de faire une visite aux <a href='http://www.vertexworks.com/forums' target='_blank'>Forums de ModX</a>. En outre, les tutoriels de ModX contiennent de la documentation sur l'utilisation de ModX et son installation. Les réponses que vous attendez s'y trouvent peut-être. Dans le cas contraire, posez votre question dans les forums, et nous y répondrons aussi vite que possible.";
 
 /***************************************************************************/
 // new in 0.5.2
@@ -741,7 +741,7 @@ $_lang['illegal_parent_child'] = "Choix du parent&nbsp;:\\n\\nle document est un
 $_lang['illegal_parent_self'] = "Choix du parent&nbsp;:\\n\\nle document sélectionné ne peut pas être son propre parent.";
 $_lang['manager_theme'] ='Thème du gestionnaire&nbsp;:';
 $_lang['manager_theme_message'] ='Choisir un thème pour le gestionnaire de contenu.';
-$_lang['document_summary'] ='Résumé (introtext)';
+$_lang['document_summary'] ='Résumé';
 $_lang['document_summary_help'] ='Taper un bref résumé du document';
 $_lang['close'] = "Fermer";
 $_lang['import_site_html'] = "Importer un site en HTML";
@@ -997,6 +997,7 @@ $_lang['custom_contenttype_message'] = "Vous pouvez ajouter ici des types de con
 $_lang['inline'] = "Inline"; // À adapter
 $_lang['attachment'] = "Annexe";
 $_lang['add'] = 'Ajouter';
+$_lang['remove'] = 'Retirer';
 $_lang['change_name'] = 'Modifier le nom';
 $_lang['confirm_name_change'] = "La modification du nom d'un utilisateur peut influencer d'autres applications liées au gestionnaire de contenu. \\n\\n Voulez-vous vraiment modifier le nom de cet utilisateur ?";
 
@@ -1033,4 +1034,33 @@ $_lang['chunk_code'] = 'Code source du chunk (html)';
 $_lang['template_code'] = 'Code source du modèle (html)';
 $_lang['switch_to_rte'] = 'Passer à l\'éditeur WYSIWYG';
 
+/***************************************************************************/
+// new in 0.9.1
+/***************************************************************************/
+$_lang['QE_lang'] = 'fr';
+$_lang['QE_xml_lang'] = 'fr'; 
+$_lang['QE_charset'] = 'iso-8859-1';
+$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local
+trademarks
+$_lang['QE_show_links'] = 'Afficher les liens';
+$_lang['QE_hide_links'] = 'Masquer les liens'; 
+$_lang['QE_someone_editing'] = 'Une autre personne modifie actuellement ce document';
+$_lang['QE_cant_find_content'] = 'Ne trouve pas de contenu à modifier';
+$_lang['QE_description'] = 'Modifier les pages à partir de la partie publique du site'; 
+
+$_lang['system_email_signup'] = "Bonjour [+uid+] \n\nVoici vos paramètres de connexion
+pour le gestionnaire de contenu de [+sname+] :\n\nNom d'utilisateur: [+uid+]\nMot de passe:
+[+pwd+]\n\nUne fois connecté au gestionnaire de contenu, vous pourrez changer votre 
+mot de passe.\n\nSalutations,\nL'administrateur du site" ;
+$_lang['system_email_websignup'] = "Bonjour [+uid+] \n\nVoici vos paramètres de connexion
+pour [+sname+]:\n\nNom d'utilisateur: [+uid+]\nMot de passe: [+pwd+]\n\nUne fois connecté 
+à [+sname+], vous pourrez changer votre mot de passe.\n\nSalutations,\nL'administrateur
+du site" ;
+$_lang['system_email_webreminder'] = "Bonjour [+uid+]\n\nPour activer votre nouveau
+mot de passe, cliquez sur le lien suivant:\n\n[+surl+]\n\nSi tout se passe normalement vous pourrez utiliser 
+le mot de passe suivant pour vous identifier:\n\nMot de passe:[+pwd+]\n\nSi vous n'aviez pas
+demandé ce courriel, alors n'en tenez pas compte.\n\nSalutations,\nL'administrateur du site" ;
+
+$_lang['role_view_unpublished'] = "Visualiser les documents non publiés"; 
+$_lang['duplicate_document'] = "Dupliquer un document";
 ?>
