@@ -207,7 +207,7 @@ body {
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginLicense">
 		  <tr>
 			<td>
-				<b>MODx</b> is a modified version of Etomite 0.6 and is licensed under the GPL license. Etomite is © and ™ of the Etomite project (<a href="http://www.etomite.org" target="_blank">www.etomite.org</a>).<br/><br/><center><span class="notice">The removal of this notice is a breach of the terms and 
+				<b>MODx</b> is a modified version of Etomite 0.6 and is licensed under the GPL license. Etomite is ï¿½ and ï¿½ of the Etomite project (<a href="http://www.etomite.org" target="_blank">www.etomite.org</a>).<br/><br/><center><span class="notice">The removal of this notice is a breach of the terms and 
 				conditions of this software.</span></center><p />
 				<table width="100%"  border="0" cellspacing="0" cellpadding="0">
 				  <!--<tr>
@@ -235,9 +235,9 @@ body {
 
 // log user action
 if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
-$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "" ;
+$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : NULL ;$lasthittime = time();$a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "" ;
 if($a!=1) {
-	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values('".$modx->getLoginUserID()."', '".$_SESSION['mgrShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values('".$modx->getLoginUserID()."', '".$_SESSION['mgrShortname']."', '".$lasthittime."', '".$a."', ".($itemid==null?"'$itemid'":"NULL").", '$ip')";
 	if(!$rs = mysql_query($sql)) {
 		echo "error replacing into active users! SQL: ".$sql;
 		exit;

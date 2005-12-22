@@ -432,8 +432,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
   `thislogin` int(11) NOT NULL default '0',
   `failedlogincount` int(10) NOT NULL default '0',
   `sessionid` varchar(100) NOT NULL default '',
-  `dob` int(10) NOT NULL DEFAULT 0,
-  `gender` int(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female',
+  `dob` int(10) NOT NULL DEFAULT '0',
+  `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
   `country` varchar(5) NOT NULL,
   `state` varchar(5) NOT NULL,
   `zip` varchar(5) NOT NULL,
@@ -729,12 +729,12 @@ ALTER TABLE `{PREFIX}user_roles`
 
 
 ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`
-, ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`
+, ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`
 , ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`
 , ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`
 , ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`
 , ADD COLUMN `fax` VARCHAR(100) NOT NULL AFTER `zip`
-, ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT '0' AFTER `blockeduntil`
+, ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`
 , ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`
 , ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
 
@@ -743,7 +743,7 @@ ALTER TABLE `{PREFIX}web_users` MODIFY COLUMN `username` VARCHAR(100) NOT NULL;
 
 
 ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`
-, ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`
+, ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`
 , ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`
 , ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`
 , ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`
@@ -787,7 +787,7 @@ REPLACE INTO `{PREFIX}manager_users`
 
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Built-in Administration account', 1, 'Your email goes here', '0', '0', 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', '', '', '');
+(1, 1, 'Built-in Administration account', 1, 'Your email goes here', '0', '0', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
 
 
 # Default Site Settings
