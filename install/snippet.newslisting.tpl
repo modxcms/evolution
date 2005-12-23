@@ -175,7 +175,7 @@ $commentschunk = isset($commentschunk)? '{{'.$commentschunk.'}}' : '';
 $sortdir = isset($sortdir) ? strtoupper($sortdir) : 'DESC';
     // get sort dir
 
-if ($sortby == "createdon" || $sortby == "editedon" || $sortby == "pub_date" || $sortby == "unpub_date" || $sortby =="deletedon") {
+if (isset($sortby) && ($sortby == "createdon" || $sortby == "editedon" || $sortby == "pub_date" || $sortby == "unpub_date" || $sortby =="deletedon")) {
 	$dt = $sortby;
 } else if (isset($datetype)) {
 	$dt = $datetype;
@@ -186,7 +186,7 @@ if ($sortby == "createdon" || $sortby == "editedon" || $sortby == "pub_date" || 
 $datetype = $dt;
 	// date type to display (values can be createdon, pub_date, editedon)	
 	
-$start= $_GET['start']? $_GET['start']: 0;
+$start= isset($_GET['start'])? $_GET['start']: 0;
 	// get post # to start at
 
 $debug = isset($debug)? $debug : 0;
@@ -272,7 +272,7 @@ if ($debug == 1) {
 // function used to clean all the open HTML tags inside summary posts
 // useful so it won't break layouts due to there being open tags like 
 // OL, UL, DIV, H1 or maybe even A tags for example
-if(!function_exists(html_substr)) {
+if(!function_exists('html_substr')) {
 
 	function html_substr($posttext, $minimum_length, $length_offset) {
 	   // The approximate length you want the concatenated text to be
@@ -340,8 +340,9 @@ if(!function_exists(html_substr)) {
 // function used to clean all the open HTML tags inside summary posts
 // useful so it won't break layouts due to there being open tags like 
 // OL, UL, DIV, H1 or maybe even A tags for example
-if(!function_exists(closeTags)) {
-	function closeTags($text) { 
+if(!function_exists('closeTags')) {
+	function closeTags($text) {
+		global $debug;
 	    $openPattern = "/<([^\/].*?)>/";   
 	    $closePattern = "/<\/(.*?)>/"; 
 	    $endOpenPattern = "/<([^\/].*?)$/"; 
