@@ -207,14 +207,7 @@ body {
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginLicense">
 		  <tr>
 			<td>
-				<b>MODx</b> is a modified version of Etomite 0.6 and is licensed under the GPL license. Etomite is � and � of the Etomite project (<a href="http://www.etomite.org" target="_blank">www.etomite.org</a>).<br/><br/><center><span class="notice">The removal of this notice is a breach of the terms and 
-				conditions of this software.</span></center><p />
-				<table width="100%"  border="0" cellspacing="0" cellpadding="0">
-				  <!--<tr>
-					<td><input type="checkbox" id="licenseOK" name="licenseOK" checked='checked' tabindex="6" /></td>
-					<td><label for='licenseOK'><i>"I agree to any limitations or freedoms imposed upon me by this license."</i></label></td>
-				  </tr>-->
-				</table>
+				<b>MODx</b>&trade; is licensed under the GPL license. &copy; 2005 by the <a href="http://modxcms.com/" target="_blank">MODx Team</a>.
 			</td>
 		  </tr>
 		</table>

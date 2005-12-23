@@ -161,7 +161,7 @@ body {
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginLicense">
 		  <tr>
 			<td>
-				<b>MODx</b> is licensed under the GPL license, and is &copy; and &trade; the MODx project (<a href="http://www.modxcms.com" target="_blank">MODxcms.com</a>).<br/><br/><center><span class="notice">The removal of this notice is a breach of the terms and conditions of this software.</span></center><p />
+				<b>MODx</b>&trade; is licensed under the GPL license. &copy; 2005 by the <a href="http://modxcms.com/" target="_blank">MODx Team</a>.
 			</td>
 		  </tr>
 		</table>

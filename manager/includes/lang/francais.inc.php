@@ -1040,8 +1040,7 @@ $_lang['switch_to_rte'] = 'Passer à l\'éditeur WYSIWYG';
 $_lang['QE_lang'] = 'fr';
 $_lang['QE_xml_lang'] = 'fr'; 
 $_lang['QE_charset'] = 'iso-8859-1';
-$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local
-trademarks
+$_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
 $_lang['QE_show_links'] = 'Afficher les liens';
 $_lang['QE_hide_links'] = 'Masquer les liens'; 
 $_lang['QE_someone_editing'] = 'Une autre personne modifie actuellement ce document';
