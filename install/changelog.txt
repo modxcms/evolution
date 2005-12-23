@@ -3,8 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-    MOD 0.9.1 (rev 637 - December 23, 2005)
+    MOD 0.9.1 (rev 646 - December 23, 2005)
 ==================
+* Updated default/demo templates to support Friendly Alias Paths.
+* Fixed Friendly URLs to work in ALL situations ... finally! [bug 136]
+* Removed duplicate copy of plugin.fckeditor.tpl -- master copy in /install/ folder.
+* Removed unnecessary snippet sql insertions already performed by the main installation.
 * Fixed [+surl+] link to remove double-slash and add ending slash for manager user messages.
 * Added [+surl+] to account creation messages.
 * Updated default install state.
@@ -24,10 +28,10 @@ development release, and is only shown to give an idea of what's currently in th
 * Updated Demo site content settings configuration to reflect the custom 404/unauthorized pages.
 * Update to scriptaculous 1.5 / prototype 1.4 official release versions.
 * Fix regClientCSS to insert CSS immedeately prior to the closing </head> instead of just after the opening one.
-* Fix #124 regClientStartupScript and regClientScript don't work in uncached snippets.
-* Fix #166 manager menu3 and menu4 updates.
+* Fixed regClientStartupScript and regClientScript don't work in uncached snippets [bug 124].
+* Updated manager menu3 and menu4 [166]
 * Fixed obscure bug with PHP ini check on File Manager and some versions of PHP.
-* Fix #165: Parent Docgroups were not being inherrited in NewsPublisher as expected.
+* Fix for Parent Docgroups were not being inherrited in NewsPublisher as expected [bug 165].
 * Implement #44: Make publish/unpublish dates editable by hand (don't force repeated clicks with the date picker)
 * Clarified document editing form Summary line (changed to "Summary (introtext)") to clear up DB confusion for devs
 * Fix placeholder behavior for unrecognized placeholder and for those that could be viewed as false (e.g., "0")

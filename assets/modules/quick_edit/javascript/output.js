@@ -107,7 +107,7 @@ function QE_ToggleMenu(menu_name) {
   // Optional effects (only uncomment one)
   // new Effect.SlideUp(menu, {duration:0.5}); // Best effect - IE doesn't like it much though
   // Element.hide(menu) // Fastest, most reliable
-  new Effect.Fade(menu, {duration:0.5}); // Best compromise of reliability and effect
+  new Effect.Fade(menu, {duration:0.25}); // Best compromise of reliability and effect
 
  } else {
 
@@ -117,7 +117,7 @@ function QE_ToggleMenu(menu_name) {
   // Optional effects (only uncomment one)
   // new Effect.SlideDown(menu, {duration:0.5}); // Best effect - IE doesn't like it much though
   // Element.show(menu);                         // Fastest, most reliable
-  new Effect.Appear(menu, {duration:0.5});        // Best compromise of reliability and effect
+  new Effect.Appear(menu, {duration:0.25});        // Best compromise of reliability and effect
 
  }
 
