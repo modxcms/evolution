@@ -1048,12 +1048,12 @@ $_lang['QE_cant_find_content'] = 'Ne trouve pas de contenu à modifier';
 $_lang['QE_description'] = 'Modifier les pages à partir de la partie publique du site'; 
 
 $_lang['system_email_signup'] = "Bonjour [+uid+] \n\nVoici vos paramètres de connexion
-pour le gestionnaire de contenu de [+sname+] :\n\nNom d'utilisateur: [+uid+]\nMot de passe:
+pour le gestionnaire de contenu de [+sname+] ([+surl+]):\n\nNom d'utilisateur: [+uid+]\nMot de passe:
 [+pwd+]\n\nUne fois connecté au gestionnaire de contenu, vous pourrez changer votre 
 mot de passe.\n\nSalutations,\nL'administrateur du site" ;
 $_lang['system_email_websignup'] = "Bonjour [+uid+] \n\nVoici vos paramètres de connexion
 pour [+sname+]:\n\nNom d'utilisateur: [+uid+]\nMot de passe: [+pwd+]\n\nUne fois connecté 
-à [+sname+], vous pourrez changer votre mot de passe.\n\nSalutations,\nL'administrateur
+à [+sname+] ([+surl+]), vous pourrez changer votre mot de passe.\n\nSalutations,\nL'administrateur
 du site" ;
 $_lang['system_email_webreminder'] = "Bonjour [+uid+]\n\nPour activer votre nouveau
 mot de passe, cliquez sur le lien suivant:\n\n[+surl+]\n\nSi tout se passe normalement vous pourrez utiliser 

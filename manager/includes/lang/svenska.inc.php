@@ -1045,8 +1045,8 @@ $_lang['QE_someone_editing'] = 'Någon annan redigerar det här dokumentet';
 $_lang['QE_cant_find_content'] = 'Kunde inte hitta något innehåll att redigera';
 $_lang['QE_description'] = 'Redigera sidor direkt från webbplatsen';
 
-$_lang['system_email_signup'] = "Hej [+uid+] \n\nHär kommer dina inloggningsuppgifter för [+sname+] innehållshanterare:\n\nAnvändarnamn: [+uid+]\nLösenord: [+pwd+]\n\nDu kan ändra ditt lösenord när du loggat in i innehålshanteraren.\n\nVänliga hälsningar\nWebmastern" ;
-$_lang['system_email_websignup'] = "Hej [+uid+] \n\nHär kommer dina inloggningsuppgifter för [+sname+]:\n\nAnvändarnamn: [+uid+]\nLösenord: [+pwd+]\n\nDu kan ändra ditt lösenord när du loggat in i [+sname+].\n\nVänliga hälsningar\nWebmastern" ;
+$_lang['system_email_signup'] = "Hej [+uid+] \n\nHär kommer dina inloggningsuppgifter för [+sname+] ([+surl+]) innehållshanterare:\n\nAnvändarnamn: [+uid+]\nLösenord: [+pwd+]\n\nDu kan ändra ditt lösenord när du loggat in i innehålshanteraren.\n\nVänliga hälsningar\nWebmastern" ;
+$_lang['system_email_websignup'] = "Hej [+uid+] \n\nHär kommer dina inloggningsuppgifter för [+sname+] ([+surl+]):\n\nAnvändarnamn: [+uid+]\nLösenord: [+pwd+]\n\nDu kan ändra ditt lösenord när du loggat in i [+sname+].\n\nVänliga hälsningar\nWebmastern" ;
 $_lang['system_email_webreminder'] = "Hej [+uid+]\n\nKlicka på följande länk för att aktivera ditt nya lösenord:\n\n[+surl+]\n\nOm allt går bra använder du följande lösenord för att logga in:\n\nLösenord:[+pwd+]\n\nOm du inte har bett om det här brevet så kan du strunta i det.\n\nVänliga hälsningar\nWebmastern" ;
 
 $_lang['role_view_unpublished'] = "Visa opublicerade dokument";

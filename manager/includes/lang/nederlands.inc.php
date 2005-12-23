@@ -1059,8 +1059,8 @@ $_lang['QE_someone_editing'] = 'Iemand anders bewerkt dit document';
 $_lang['QE_cant_find_content'] = 'Geen inhoud gevonden om te bewerken';
 $_lang['QE_description'] = "Bewerk pagina's direct vanuit de webpagina's zelf";
 
-$_lang['system_email_signup'] = "Hallo [+uid+] \n\nHier zijn uw login gegevens voor [+sname+] Content Manager:\n\nGebruikersnaam: [+uid+]\nWachtwoord: [+pwd+]\n\nNa dat u ingelogd bent in de Manager, kunt u uw wachtwoord wijzigen.\n\nMet vriendelijke groet,\nUw Site Beheerder" ;
-$_lang['system_email_websignup'] = "Hallo [+uid+] \n\nHier zijn uw login gegevens voor [+sname+]:\n\nGebruikersnaam: [+uid+]\nWachtwoord: [+pwd+]\n\nNa dat u ingelogd bent in [+sname+], kunt u uw wachtwoord wijzigen.\n\nMet vriendelijke groet,\nUw Site Beheerder" ;
+$_lang['system_email_signup'] = "Hallo [+uid+] \n\nHier zijn uw login gegevens voor [+sname+] Content Manager ([+surl+]):\n\nGebruikersnaam: [+uid+]\nWachtwoord: [+pwd+]\n\nNa dat u ingelogd bent in de Manager, kunt u uw wachtwoord wijzigen.\n\nMet vriendelijke groet,\nUw Site Beheerder" ;
+$_lang['system_email_websignup'] = "Hallo [+uid+] \n\nHier zijn uw login gegevens voor [+sname+] ([+surl+]):\n\nGebruikersnaam: [+uid+]\nWachtwoord: [+pwd+]\n\nNa dat u ingelogd bent in [+sname+], kunt u uw wachtwoord wijzigen.\n\nMet vriendelijke groet,\nUw Site Beheerder" ;
 $_lang['system_email_webreminder'] = "Hallo [+uid+]\n\nOm uw wachtwoord te activeren klikt u op de volgende link:\n\n[+surl+]\n\nWaneer dit succesvol is kunt u met het volgende wachtwoord inloggen:\n\nWachtwoord:[+pwd+]\n\nWaneer u niet om deze mail gevraagd heeft kunt u deze mail verwijderen zonder aktie te ondernemen.\n\nMet vriendelijke groet,\nUw Site Beheerder";
 
 $_lang['role_view_unpublished'] = "Bekijk niet gepubliceerde documenten";
