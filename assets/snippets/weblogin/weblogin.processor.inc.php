@@ -390,8 +390,19 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	// redirect 
 	if(isset($_REQUEST['refurl']) && !empty($_REQUEST['refurl'])) {
 		// last accessed page
-		$url = $_REQUEST["refurl"];		
-		$modx->sendRedirect($url,0,REDIRECT_REFRESH);
+		$targetPageId= html_entity_decode($_REQUEST['refurl']);
+		if (strpos($targetPageId, 'q=') !== false) {
+			$urlPos = strpos($targetPageId, 'q=')+2;
+			$alias = substr($targetPageId, $urlPos);
+			$aliasLength = (strpos($alias, '&'))? strpos($alias, '&'): strlen($alias); 
+			$alias = substr($alias, 0, $aliasLength);
+			$url = $modx->config['base_url'] . $alias;
+		} elseif ($targetPageId= array_search($targetPageId, $modx->documentListing)) {
+			$url = $modx->makeUrl($targetPageId);
+		} else {
+			$url = $_REQUEST['refurl'];
+		}
+		$modx->sendRedirect($url,0,'REDIRECT_REFRESH');
 	}
 	else {
 		// login home page
