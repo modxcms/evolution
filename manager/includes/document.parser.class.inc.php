@@ -1081,9 +1081,9 @@ class DocumentParser {
 			$this->documentContent = $this->parseDocumentSource($this->documentContent);
 
 			// setup <base> tag for friendly urls
-			if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
-				$this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
-			}			
+//			if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
+//				$this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
+//			}			
 			
 			// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
 			if ($js = $this->getRegisteredClientStartupScripts()){
@@ -1355,6 +1355,7 @@ class DocumentParser {
 
 	function makeUrl($id, $alias='', $args='') {
 		$url= '';
+		$virtualDir= '';
 		if(!is_numeric($id)) {
 			$this->messageQuit('`'.$id.'` is not numeric and may not be passed to makeUrl()');
 		}
@@ -1375,15 +1376,17 @@ class DocumentParser {
 		} elseif($this->config['friendly_urls']==1 && $alias=='') {
 			$alias = $id;
 			if($this->config['friendly_alias_urls']==1) {
+//				$this->messageQuit('debug', '', false, '', '', '', print_r($this->aliasListing));
 				$al = $this->aliasListing[$id];
+				$alPath = !empty($al['path'])? $al['path'] . '/': '';
 				if($al && $al['alias']) $alias = $al['alias'];
 			}
-			$alias = $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'];
+			$alias = $alPath . $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'];
 			$url= $alias.$args;
 		} else {
 			$url= 'index.php?id='.$id.$args;
 		}
-		return $this->config['base_url'] . $url;
+		return $this->config['base_url'] . $virtualDir . $url;
 	}
 
 	function getConfig($name='') {
@@ -2266,8 +2269,10 @@ class DocumentParser {
 	}
 
 	function messageQuit($msg='unspecified error', $query='', $is_error=true, $nr='', $file='', $source='', $text='', $line='') {
+		$version= isset($GLOBALS['version'])? $GLOBALS['version']: '';
+		$code_name= isset($GLOBALS['code_name'])? $GLOBALS['code_name']: '';
 				$parsedMessageString = "
-		<html><head><title>MODx Content Manager ".$GLOBALS['version']." &raquo; ".$GLOBALS['code_name']."</title>
+		<html><head><title>MODx Content Manager $version &raquo; $code_name</title>
 		<style>TD, BODY { font-size: 11px; font-family:verdana; }</style>
 		<script type='text/javascript'>
 			function copyToClip()
