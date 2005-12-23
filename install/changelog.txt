@@ -3,8 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-    MOD 0.9.1 (rev 631 - December 23, 2005)
+    MOD 0.9.1 (rev 637 - December 23, 2005)
 ==================
+* Fixed [+surl+] link to remove double-slash and add ending slash for manager user messages.
+* Added [+surl+] to account creation messages.
+* Updated default install state.
+* Focus on username when loading manager login page.
 * Fixed installation script problems and active users insertion in accesscontrol.inc.php [bug 167]
 * QuickEdit non-English language fixes.
 * Added Dutch language, and made English fallback consistent across languages.
