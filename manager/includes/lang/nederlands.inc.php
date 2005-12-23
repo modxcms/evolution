@@ -15,7 +15,7 @@
  * - versie 1.3 - aangepast voor MODx 0.9.1 door Theo Ketsinga
  */
 
- include "lang/english.inc.php"; // for the defaults
+include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
 
 $_lang["login_message"] = "Om MODx te gebruiken dient u eerst zich aan te melden. Let op: hierbij wordt onderscheid gemaakt tussen hoofd- en kleine letters!";
 $_lang["username"] = "Gebruikersnaam";
