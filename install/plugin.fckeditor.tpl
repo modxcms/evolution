@@ -142,6 +142,7 @@ if (!function_exists('getFCKEditorScript')) {
 		$height = str_replace("px","",$height);
 		
 		// build fck instances
+		$fckInstances= '';
 		foreach($elmList as $fckInstance) {
 			$fckInstanceObj = "oFCK" . $fckInstance;
 			$fckInstances .= "<script language='javascript' type='text/javascript'>".
