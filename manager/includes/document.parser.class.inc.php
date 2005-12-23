@@ -691,7 +691,7 @@ class DocumentParser {
 			$snip = eval($snippet);
 			$msg = ob_get_contents();
 		ob_end_clean();
-		if ($msg && $php_errormsg) {
+		if ($msg && isset($php_errormsg)) {
 			if(!strpos($php_errormsg,'Deprecated')) { // ignore php5 strict errors
 				// log error
 				$this->logEvent(1,3,"<b>$php_errormsg</b><br /><br /> $msg",$this->currentSnippet." - Snippet");
