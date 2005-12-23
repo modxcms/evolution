@@ -107,7 +107,7 @@ body {
 	}
 </script>
 </head>
-<body>
+<body onLoad="javascript:document.loginfrm.username.focus();">
 <form method="post" name="loginfrm" action="processors/login.processor.php" style="margin: 0px; padding: 0px;"> 
 <table class="loginBg" width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
