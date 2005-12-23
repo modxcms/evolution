@@ -3,8 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-    MOD 0.9.1 (rev 621 - December 22, 2005)
+    MOD 0.9.1 (rev 631 - December 23, 2005)
 ==================
+* Fixed installation script problems and active users insertion in accesscontrol.inc.php [bug 167]
+* QuickEdit non-English language fixes.
+* Added Dutch language, and made English fallback consistent across languages.
+* Improved consistency on document tree sorting.
 * Fixed separate resource folders for manager users.
 * Fixed defect with where clause of getDocumentChildren and getDocuments methods [bug 168].
 * Fixed minor bug with credits page disply in new Menu 4.
