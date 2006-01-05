@@ -17,7 +17,7 @@ class DocumentParser {
 		$stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName,
 		$aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache,
 		$snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir,
-		$placeholders,$sjscripts,$jscripts,$loadedjscripts;
+		$placeholders,$sjscripts,$jscripts,$loadedjscripts,$documentMap;
 
 	// constructor
 	function DocumentParser() {
@@ -1107,6 +1107,46 @@ class DocumentParser {
 /***************************************************************************************/
 /* API functions																/
 /***************************************************************************************/
+
+	function getParentIds($id, $parents= array()) {
+		foreach ($this->documentMap as $mapEntry) {
+			$parentId= array_search($id, $mapEntry);
+			if ($parentId) {
+				$parentKey= array_search($parentId, $this->documentListing);
+				if (!$parentKey) {
+					$parentKey= "$parentId";
+				}
+				$parents[$parentKey]= $parentId;
+				break;
+			}
+		}
+		if ($parentId) { $parents= $parents + $this->getParentIds($parentId, $parents); }
+		return $parents;
+	}
+	
+	function getChildIds($id, $children= array()) {
+		foreach ($this->documentMap as $mapEntry) {
+			if (isset ($mapEntry[$id])) {
+				$childId= $mapEntry[$id];
+				$childKey= array_search($childId, $this->documentListing);
+				if (!$childKey) {
+					$childKey= "$childId";
+				}
+				$c[$childKey]= $childId;
+			}
+		}
+		if (is_array($c)) {
+			if (is_array($children)) {
+				$children= $children + $c;
+			} else {
+				$children= $c;
+			}
+			foreach ($c as $child) {
+				$children= $children + $this->getChildIds($child, $children);
+			}
+		}
+		return $children;
+	}
 
 	# Displays a javascript alert message in the web browser
 	function webAlert($msg,$url=""){

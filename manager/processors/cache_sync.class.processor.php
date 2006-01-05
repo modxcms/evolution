@@ -88,20 +88,23 @@ class synccache{
 		$tmpPHP .= '$this->aliasListing = array();' . "\n";
 		$tmpPHP .= '$a = &$this->aliasListing;' . "\n";
 		$tmpPHP .= '$d = &$this->documentListing;' . "\n";
-		$sql = "SELECT alias, id, contentType, parent FROM $dbase.".$table_prefix."site_content WHERE alias IS NOT NULL AND alias <> ''"; 
+		$tmpPHP .= '$m = &$this->documentMap;' . "\n";
+		$sql = "SELECT IF(alias='', id, alias) AS alias, id, contentType, parent FROM $dbase.".$table_prefix."site_content ORDER BY parent, menuindex";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
-			$tmp1 = mysql_fetch_assoc($rs); 
+			$tmp1 = mysql_fetch_assoc($rs);
 			if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
 				$tmpPath = $this->getParents($tmp1['parent']);
-				$alias = (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$tmp1[alias];
-				$tmpPHP .= '$d[\''.mysql_escape_string($alias).'\']'." = ".$tmp1['id'].";\n";
+				$alias= (strlen($tmpPath) > 0 ? "$tmpPath/" : '').$tmp1['alias'];
+				$alias= mysql_escape_string($alias);
+				$tmpPHP .= '$d[\''.$alias.'\']'." = ".$tmp1['id'].";\n";
 			}
 			else {
 				$tmpPHP .= '$d[\''.mysql_escape_string($tmp1['alias']).'\']'." = ".$tmp1['id'].";\n";
 			}
 			$tmpPHP .= '$a[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".mysql_escape_string($tmp1['alias'])."', 'path' => '" . mysql_escape_string($tmpPath). "');\n";
+			$tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');\n";
 		}
 		
 				
