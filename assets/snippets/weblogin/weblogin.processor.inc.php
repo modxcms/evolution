@@ -370,7 +370,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
 		if($a!=1) {
 			// web users are stored with negative id
-			$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+			$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
 			if(!$ds = $modx->dbQuery($sql)) {
 				$output = "error replacing into active users! SQL: ".$sql;
 				return;
