@@ -6,160 +6,159 @@
  *  Description: Styles for QuickEdit links
  */
 
-#QE_Toolbar, #QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img{
-margin:0;
-padding:0;
-font-family:sans-serif !important;
-color:#000 !important;
-text-decoration:none !important;
-border-width:1px !important;
-border-color:#afafaf !important;
+#QE_Toolbar, #QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif !important;
+    color: #000 !important;
+    text-decoration: none !important;
+    border-width: 1px !important;
+    border-color: #afafaf !important;
 }
 
-#QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img{
-position:relative !important;
+#QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img {
+    position: relative !important;
 }
 
-#QE_Toolbar{
-position:absolute !important;
-z-index:10000 !important;
-width:200px !important;
-font-size:10px !important;
-border-style:solid !important;
+#QE_Toolbar {
+    position: absolute !important;
+    z-index: 10000 !important;
+    width: 200px !important;
+    font-size: 10px !important;
+    border-style: solid !important;
 }
 
 /* Use position fixed for more modern browsers */
-body > #QE_Toolbar{
-position: fixed !important;
+body > #QE_Toolbar {
+    position: fixed !important;
 }
 
-#QE_Title{
-float:left !important;
-font-size:10px !important;
-line-height:14px !important;
-margin:0 0 0 5px !important;
-cursor: move !important;
+#QE_Toolbar_Header {
+    height: 14px;
+    line-height: 14px;
+    padding: 0;
+    margin: 0;
+    background: #fff url(../images/link_bg.png) repeat-x 0 0 !important;
+    text-align: right !important;
 }
 
-#QE_Toolbar_Header{
-height:14px !important;
-background: #fff url(../images/link_bg.png) repeat-x 0 0 !important;
-text-align:right !important;
+h1#QE_Title {
+    float: left !important;
+    font-size: 10px !important;
+    line-height : 14px !important;
+    margin: 0 !important;
+    padding: 0 20px 0 5px !important;
+    background: none !important;
+    cursor: move !important;
+    border: 0 !important;
 }
 
-#QE_Toolbar a{
-font-size:10px !important;
-color:#000 !important;
-text-decoration:none !important;
-border-bottom-style:none !important;
+#QE_Toolbar a {
+    font-size: 10px !important;
+    color: #000 !important;
+    text-decoration: none !important;
+    border-bottom-style: none !important;
 }
 
-div.QE_Menu{
-z-index:10001 !important;
-background-image:url(../images/body_bg.png) !important;
-background-position:bottom !important;
-background-repeat:repeat-x !important;
-background-color:#fff !important;
+div.QE_Menu {
+    z-index: 10001 !important;
+    background: #fff url(../images/body_bg.png) repeat-x bottom left !important;
 }
 
-#QE_Toolbar ul{
-z-index:10002 !important;
-margin:0 !important;
-padding:0 !important;
-list-style-type:none;
+#QE_Toolbar ul {
+    z-index: 10002 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style-type: none;
 }
 
-#QE_Toolbar li{
-z-index:10003 !important;
-height:15px !important;
-margin:0 !important;
-padding:0 !important;
-text-align:left !important;
+#QE_Toolbar li {
+    z-index: 10003 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
 }
 
-#QE_Toolbar li a{
-z-index:10004;
-height:15px;
-display:block;
-padding:2px 0 2px 10px;
-vertical-align:top !important;
+#QE_Toolbar li a {
+    z-index: 10004;
+    line-height: 15px;
+    display: block;
+    padding: 2px 0 2px 10px;
 }
 
-#QE_Toolbar li a:hover{
-background-color:#dfdfdf !important;
+#QE_Toolbar li a:hover {
+    background-color: #dfdfdf !important;
 }
 
-a.QE_Button{
-position:relative !important;
-height:100% !important;
-padding:0 3px !important;
-text-transform:lowercase;
-border-left-style:solid !important;
-background-image:url(../images/menu_button_bg.png) !important;
-background-color:#d5d5d5 !important;
+#QE_Toolbar a.QE_Button {
+    position: relative !important;
+    height: 100% !important;
+    padding: 0 3px !important;
+    margin: 0 !important;
+    text-transform: lowercase;
+    border-left-style: solid !important;
+    background: #d5d5d5 url(../images/menu_button_bg.png) repeat-x !important;
 }
 
-a.QE_Button_Opened, a.QE_Button_Opened:hover{
-z-index:10002 !important;
-padding-bottom:2px !important;
-background-image:none !important;
-background-color:#fff !important;
+#QE_Toolbar a.QE_Button_Opened, #QE_Toolbar a.QE_Button_Opened:hover {
+    z-index: 10002 !important;
+    padding-bottom: 2px !important;
+    background-image: none !important;
+    background-color: #fff !important;
 }
 
-a.QE_Button:hover{
-background-color:#fff !important;
+#QE_Toolbar a.QE_Button:hover {
+    background-color: #fff !important;
 }
 
-div.QE_Menu{
-border-top-style:solid !important;
-border-width:1px !important;
-padding:0 0 10px 0 !important;
+div.QE_Menu {
+    border-top-style: solid !important;
+    border-width: 1px !important;
+    padding: 0 0 10px 0 !important;
 }
 
-#QE_Toolbar img{
-float:none !important;
-vertical-align:top !important;
-margin:0 !important;
-padding:0 !important;
-border-style:none !important;
-background-color:transparent !important;
+#QE_Toolbar img {
+    float: none !important;
+    vertical-align: top !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-style: none !important;
+    background-color: transparent !important;
 }
 
-a.QE_Link {
-float: right !important;
-clear: right !important;
-padding: 0 5px !important;
-white-space: nowrap !important;
-color: #000 !important;
-font-size: 7pt !important;
-font-weight: normal !important;
-text-decoration: none !important;
-line-height: 15px !important;
-height: 15px !important;
-border: 1px solid #afafaf !important;
-background: #fff url(../images/link_bg.png) repeat-x top left !important;
-cursor: pointer !important;
+#QE_Toolbar a.QE_Link {
+    float: right !important;
+    clear: right !important;
+    padding: 0 5px !important;
+    white-space: nowrap !important;
+    color: #000 !important;
+    font-size: 7pt !important;
+    font-weight: normal !important;
+    text-decoration: none !important;
+    line-height: 15px !important;
+    height: 15px !important;
+    border: 1px solid #afafaf !important;
+    background: #fff url(../images/link_bg.png) repeat-x top left !important;
+    cursor: pointer !important;
 }
 
-a.QE_Link:hover {
-border-color: transparent !important;
-background-image: none !important;
-background-color: transparent !important;
+#QE_Toolbar a.QE_Link:hover {
+    border-color: transparent !important;
+    background-image: none !important;
+    background-color: transparent !important;
 }
 
 .QE_Parent {
-background-image: url(../images/parent_bg.gif) !important;
-background-repeat: repeat !important;
+    background-image: url(../images/parent_bg.gif) !important;
+    background-repeat: repeat !important;
 }
 
-a.QE_TV {
-background-color: #efefef !important;
+#QE_Toolbar a.QE_TV {
+    background-color: #efefef !important;
 }
 
 @media print {
-
-#QE_Toolbar, a.QE_Link {
-display:none !important;
-}
-
+    #QE_Toolbar, a.QE_Link {
+        display:none !important;
+    }
 }
