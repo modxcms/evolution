@@ -230,7 +230,7 @@ body {
 if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
 $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : NULL ;$lasthittime = time();$a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "" ;
 if($a!=1) {
-	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values('".$modx->getLoginUserID()."', '".$_SESSION['mgrShortname']."', '".$lasthittime."', '".$a."', ".($itemid==null?"'$itemid'":"NULL").", '$ip')";
+	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values('".$modx->getLoginUserID()."', '".$_SESSION['mgrShortname']."', '".$lasthittime."', '".$a."', ".($itemid!=null?"'$itemid'":"NULL").", '$ip')";
 	if(!$rs = mysql_query($sql)) {
 		echo "error replacing into active users! SQL: ".$sql;
 		exit;
