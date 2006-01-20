@@ -1983,10 +1983,10 @@ class DocumentParser {
 		if ($this->loadedjscripts[$src]) return '';
 		$this->loadedjscripts[$src] = true;
 		if (strpos(strtolower($src),"<style")!==false||strpos(strtolower($src),"<link")!==false) {
-			$this->sjscripts[count($sjscripts)] = $src;
+			$this->sjscripts[count($this->sjscripts)] = $src;
 		}
 		else {
-			$this->sjscripts[count($this->sjscripts)] = "<style type='text/css'>@import:url($src)</style>";
+			$this->sjscripts[count($this->sjscripts)] = "<style type='text/css'>@import url($src)</style>";
 		}
 	}
 
