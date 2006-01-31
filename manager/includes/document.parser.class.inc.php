@@ -1992,7 +1992,7 @@ class DocumentParser {
 
 	# Registers Startup Client-side JavaScript - these scripts are loaded at inside the <head> tag
 	function regClientStartupScript($src, $plaintext=false){
-		if (!empty($src) && array_key_exists($src, $this->loadedjscripts)) {
+		if (!empty($src) && !array_key_exists($src, $this->loadedjscripts)) {
 			if ($this->loadedjscripts[$src]) 
 				return '';
 	
