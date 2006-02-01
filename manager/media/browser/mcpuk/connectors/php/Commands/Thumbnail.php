@@ -20,7 +20,8 @@
  * File Authors:
  * 		Grant French (grant@mcpuk.net)
  */
-include "helpers/iconlookup.php";
+global $base_path;
+include  $base_path."manager/media/browser/mcpuk/connectors/php/Commands/helpers/iconlookup.php";
 
 class Thumbnail {
 	var $fckphp_config;
