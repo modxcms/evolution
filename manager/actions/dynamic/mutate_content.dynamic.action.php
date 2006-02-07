@@ -147,6 +147,9 @@ if(!isset($_REQUEST["id"])) {
 	$content["menuindex"] = $modx->db->getValue($sql);
 }
 
+if(isset($_POST['which_editor'])){
+	$which_editor = $_POST['which_editor'];
+}
 ?>
 <style>
 body {
@@ -320,6 +323,30 @@ function templateWarning(){
 	}
 }
 // END ADDED BY S BRENNAN
+
+// Added for RTE selection
+function changeRTE(){
+	var whichEditor = document.getElementById('which_editor');
+	if (whichEditor) for (var i=0; i<whichEditor.length; i++){
+		if (whichEditor[i].selected){
+			newEditor = whichEditor[i].value;
+			break;
+		}
+	}
+	var dropTemplate = document.getElementById('template');
+	if (dropTemplate) for (var i=0; i<dropTemplate.length; i++){
+		if (dropTemplate[i].selected){
+			newTemplate = dropTemplate[i].value;
+			break;
+		}
+	}
+
+	documentDirty=false;
+	document.mutate.a.value = <?php echo $action; ?>;
+	document.mutate.newtemplate.value = newTemplate;
+	document.mutate.which_editor.value = newEditor;
+	document.mutate.submit();
+}
 
 /** 
  * Snippet properties 
@@ -898,7 +925,21 @@ function decode(s){
 			$htmlContent = $newcontent;
 		}
 		?>
-		<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($htmlContent); ?></textarea> </div>
+		<div style="width:100%">
+			<textarea id="ta" name="ta" style="width:100%; height: 400px;" onChange="documentDirty=true;"><?php	echo htmlspecialchars($htmlContent); ?></textarea> 
+			<span class='warning'><?php echo $_lang["which_editor_title"]?></span>
+			<select id="which_editor" name="which_editor" onChange="changeRTE();">
+				<?php
+					// invoke OnRichTextEditorRegister event
+					$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+					echo "<option value='none'".($which_editor=='none' ? " selected='selected'" : "").">None</option>\n";
+					if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
+						$editor = $evtOut[$i];
+						echo "<option value='$editor'".($which_editor==$editor ? " selected='selected'" : "").">$editor</option>\n";
+					}						 
+				?>
+			</select>
+		</div>
 		<?php
 		$replace_richtexteditor = array("ta");
 	} else {

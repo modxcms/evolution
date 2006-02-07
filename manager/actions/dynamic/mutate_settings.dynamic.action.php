@@ -800,6 +800,7 @@ function updateContentType(){
 					<?php
 						// invoke OnRichTextEditorRegister event
 						$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+						echo "<option value='none'".($which_editor=='none' ? " selected='selected'" : "").">None</option>\n";
 						if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
 							$editor = $evtOut[$i];
 							echo "<option value='$editor'".($which_editor==$editor ? " selected='selected'" : "").">$editor</option>\n";

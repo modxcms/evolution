@@ -826,6 +826,7 @@ function showHide(what, onoff){
 						$edt = isset($usersettings["which_editor"]) ?$usersettings["which_editor"]:$which_editor;
 						// invoke OnRichTextEditorRegister event
 						$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+						echo "<option value='none'".($edt=='none' ? " selected='selected'" : "").">None</option>\n";
 						if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
 							$editor = $evtOut[$i];
 							echo "<option value='$editor'".($edt==$editor ? " selected='selected'" : "").">$editor</option>\n";
