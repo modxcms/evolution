@@ -47,7 +47,6 @@ if($enable_debug==true) {
 		</table>
 	</div>
 <?php
-} else {
-	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tend = $mtime; $totaltime = ($tend - $tstart); printf ("\n\n\n<!--\nPage generated in %f seconds by MODx runtime parser -->", $totaltime);
 }
+
 ?>
