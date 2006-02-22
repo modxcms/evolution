@@ -31,8 +31,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 				  WHERE id=".$row['id'];
 			$ds = $modx->dbQuery($sql);
 
+			// unblock user by resetting "blockeduntil"
+			$sql="UPDATE $dbase.".$table_prefix."web_user_attributes 
+				  SET blockeduntil = '0' 
+				  WHERE id=".$row['id'];
+			$ds2 = $modx->dbQuery($sql);
+
 			// invoke OnWebChangePassword event
-			if(!$ds) 
+			if(!$ds || !$ds2) 
 				$modx->invokeEvent("OnWebChangePassword",
 								array(
 									"userid"		=> $id,
@@ -40,7 +46,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 									"userpassword"	=> $newpwd
 								));
 			
-			if(!$ds) $output = webLoginAlert("Error while activating password.");
+			if(!$ds || !$ds2) $output = webLoginAlert("Error while activating password.");
 			else if(!$pwdActId) $output = webLoginAlert("Your new password was successfully activated.");
 			else {
 				// redirect to password activation notification page
