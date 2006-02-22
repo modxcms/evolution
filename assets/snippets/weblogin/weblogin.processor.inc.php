@@ -45,7 +45,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			else {
 				// redirect to password activation notification page
 				$url = $modx->makeURL($pwdActId);
-				$modx->sendRedirect($url);
+				$modx->sendRedirect($url,0,'REDIRECT_REFRESH');
 			}
 		}
 		else {
@@ -100,7 +100,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			else {
 				// redirect to password request notification page
 				$url = $modx->makeURL($pwdReqId);
-				$modx->sendRedirect($url);
+				$modx->sendRedirect($url,0,'REDIRECT_REFRESH');
 			}
 		}
 		else {
@@ -162,9 +162,9 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 									"username"		=> $username
 								));
 
-		// redirect to first authorized login page
+		// redirect to first authorized logout page
 		$url = $modx->makeURL($loHomeId);
-		$modx->sendRedirect($url);
+		$modx->sendRedirect($url,0,'REDIRECT_REFRESH');
 		return;
 
 	}
@@ -370,7 +370,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
 		if($a!=1) {
 			// web users are stored with negative id
-			$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+			$sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
 			if(!$ds = $modx->dbQuery($sql)) {
 				$output = "error replacing into active users! SQL: ".$sql;
 				return;
@@ -407,7 +407,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	else {
 		// login home page
 		$url = $modx->makeUrl($id);
-		$modx->sendRedirect($url);
+		$modx->sendRedirect($url,0,'REDIRECT_REFRESH');
 	}
 	
 	return;

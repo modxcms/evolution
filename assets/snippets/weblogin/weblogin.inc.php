@@ -88,14 +88,20 @@ if(!isset($_SESSION['webValidated'])){
 		if (document.loginfrm) <?php echo !empty($uid) ? "document.loginfrm.password.focus()" : "document.loginfrm.username.focus()" ?>;
 	</script>
 	<?php
-	$output = ob_get_contents();
+	$output .= ob_get_contents();
 	ob_end_clean();
 } else {
 	$output= '';
 	$dbase = $modx->dbConfig['dbase'];
 	$table_prefix = $modx->dbConfig['table_prefix'];
-	if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
+	
+	if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");
+	else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");
+	else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");
+	else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
+	
 	$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
+	
 	if($a!=1) {
 		$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
 		if(!$rs = $modx->dbQuery($sql)) {
