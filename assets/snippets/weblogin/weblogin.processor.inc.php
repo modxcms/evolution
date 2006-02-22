@@ -28,7 +28,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			$newpwd = md5($newpwd);
 			$sql="UPDATE $dbase.".$table_prefix."web_users 
 				  SET password = '".$newpwd."', cachepwd='' 
-				  WHERE id=".$row['id'];
+				  WHERE internalKey=".$row['id'];
 			$ds = $modx->dbQuery($sql);
 
 			// unblock user by resetting "blockeduntil"
