@@ -3,9 +3,9 @@
  * Filename:       includes/lang/italian.inc.php
  * Function:       Italian language file for ModX
  * Encoding:       ISO-Latin-1
- * Author:         Nicola Lambathakis (nlambat@tiscali.it)
- * Date:           2005/11/19
- * Version:        1.2
+ * Author:         MODx Italian Community (http://modxcms.com/forums/index.php/board,34.0.html)
+ * Date:           2005/02/02
+ * Version:        1.4
  * ModX version:   0.9.1
 **/
 
@@ -18,8 +18,8 @@ $_lang["remember_username"] = "Ricordami";
 $_lang["login_button"] = "Login";
 $_lang["home"] = "Home";
 
-$_lang["my_preferences"] = "Prefereze";
-$_lang["site"] = "Site";
+$_lang["my_preferences"] = "Preferenze";
+$_lang["site"] = "Sito";
 $_lang["launch_site"] = "Lancia sito";
 $_lang["refresh_site"] = "Aggiorna sito";
 $_lang["content"] = "Contenuto";
@@ -38,7 +38,7 @@ $_lang["access_permissions"] = "Permessi di accesso";
 $_lang["administration"] = "Amministrazione";
 $_lang["edit_settings"] = "Impostazioni MODx";
 $_lang["view_sysinfo"] = "Informazioni sistema";
-$_lang["edit_parser"] = "Edita parsers";
+$_lang["edit_parser"] = "Edita parser";
 $_lang["site_parser"] = "Parser sito";
 $_lang["action_parser"] = "Azione parser";
 $_lang["view_logging"] = "Cronistorie";
@@ -66,12 +66,12 @@ $_lang["manager"] = "Manager";
 $_lang["test_page"] = "Pagina di test";
 $_lang["logout"] = "Logout";
 $_lang["nojava"] = "Java sembra essere disabilitata. Clicca <a href='index.php?a=1&f=9&javaDis=1'>qui</a> per caricare il menu non-java.";
-$_lang["confirm_empty_trash"] = "Vuoi rimuovere permanentemente TUTTI i documenti eliminati?\\n\\nProcedere?"; // changed 06 RC2
+$_lang["confirm_empty_trash"] = "Vuoi rimuovere permanentemente tutti i documenti eliminati?\\n\\nProcedere?"; // changed 06 RC2
 $_lang["unable_set_parent"] = "Impossibile impostare un nuovo documento genitore!";
-$_lang["confirm_delete_document"] = "Sei sicuro di voler eliminare questo documento?\\nSaranno eliminati anche tutti i documenti figlio.";
+$_lang["confirm_delete_document"] = "Sei sicuro di voler eliminare questo documento?\\nSaranno eliminati anche tutti i documenti contenuti.";
 $_lang["already_deleted"] = "è stato già eliminato.";
 $_lang["not_deleted"] = "has not been deleted.";
-$_lang["confirm_undelete"] = "\\n\\nTutti i documenti figlio eliminati insieme al documento genitore potranno essere recuperati, ma quelli eliminati in precedenza appariranno ancora come eliminati.";
+$_lang["confirm_undelete"] = "\\n\\nTutti i documenti eliminati insieme al documento genitore potranno essere recuperati, ma non quelli eliminati in precedenza.";
 $_lang["confirm_publish"] = "\\n\\nPubblicando il documento ora rimuoverai ogni data di pubblicazione o ritiro che potresti aver impostato. Se invece vuoi cambiare o mantenere le date di pubblicazione/ritiro, allora scegli la 'modifica' del documento.\\n\\nProcedere?";
 $_lang["confirm_unpublish"] = "\\n\\nRitirando il documento ora rimuoverai ogni data di pubblicazione o ritiro che potresti aver impostato. Se invece vuoi cambiare o mantenere le date di pubblicazione/ritiro, allora scegli la 'modifica' del documento.\\n\\nProcedere?";
 $_lang["view_document"] = "Visualizza documento";
@@ -107,7 +107,7 @@ $_lang["working"] = "Sto elaborando...";
 $_lang["confirm_remove_locks"] = "Gli utenti a volte chiudono il browser mentre stanno modificando documenti, template, snippet o parser, lasciando con ogni probabilità tali oggetti in stato di blocco. Premendo OK puoi rimuovere TUTTI i blocchi attualmente in corso.\\n\\nProcedere?";
 $_lang["welcome_title"] = "Benvenuto in MODx Content Manager";
 $_lang["welcome_messages"] = "La tua inbox contiene <b>%d</b> messaggi(o), di cui <b>%s</b> non letto/i.";
-$_lang["activity_title"] = "Documenti modificati/ creati recentemente";
+$_lang["activity_title"] = "Documenti modificati o creati recentemente";
 $_lang["activity_message"] = "Questa lista mostra gli ultimi documenti che hai creato o modificato:";
 $_lang["no_activity_message"] = "Non hai ancora creato o modificato alcun documento.";
 $_lang["yourinfo_title"] = "Le tue informazioni";
@@ -161,25 +161,25 @@ $_lang["serveroffset_message"] = "Seleziona il numero di ore di differenza tra i
 $_lang["sitename_title"] = "Nome sito:";
 $_lang["sitename_message"] = "Inserisci qui il nome del sito.";
 $_lang["sitestart_title"] = "Il sito inizia:";
-$_lang["sitestart_message"] = "Inserisci l'ID del documento che vuoi usare come homepage. <b>NOTA: assicurati che l'ID inserito appartenga a un documento esistente e che sia stato pubblicato!</b>";
+$_lang["sitestart_message"] = "Inserisci l'ID del documento che vuoi usare come Homepage. <b>NOTA: assicurati che l'ID inserito appartenga a un documento esistente e che sia stato pubblicato!</b>";
 $_lang["errorpage_title"] = "Pagina di errore:";
 $_lang["errorpage_message"] = "Inserisci l'ID del documento da mostrare agli utenti che hanno richiesto un documento che attualmente potrebbe non esistere. <b>NOTA: assicurati che l'ID inserito appartenga a un documento esistente e che sia stato pubblicato!</b>";
 $_lang["sitestatus_title"] = "Stato del sito:";
 $_lang["sitestatus_message"] = "Seleziona 'Online' per pubblicare il sito sul web. Se selezioni 'Offline', i visitatori vedranno il 'Messaggio sito non disponibile' e saranno impossibilitati ad usarlo.";
 $_lang["siteunavailable_title"] = "Messaggio sito non disponibile:";
 $_lang["siteunavailable_message"] = "Messaggio da visualizzare quando il sito è offline o si è verificato un errore.";
-$_lang["friendlyurls_title"] = "Usa i friendly URL:";
-$_lang["friendlyurls_message"] = "L'opzione permette di usare i friendly URL dei motori di ricerca con MODx. Per favore, nota che l'opzione funziona solo per le installazioni di MODx su Apache, e che hai anche bisogno di scrivere un file .htaccess perché operi. Per maggiori informazioni, guarda il file .htaccess incluso nella distribuzione.";
-$_lang["friendlyurlsprefix_title"] = "Prefisso per i friendly URL:";
-$_lang["friendlyurlsprefix_message"] = "Qui puoi specificare il prefisso da usare per i friendly URL. Ad esempio, un prefisso impostato su 'page' trasformerà l'URL /index.php?id=2 nel friendly URL /page2.html (assumendo che il suffisso sia impostato su .html). In questo modo puoi specificare cosa gli utenti (e i motori di ricerca) vedranno come collegamenti nel sito."; // updated 0.6 - removed htaccess warning
-$_lang["friendlyurlsuffix_title"] = "Suffisso per i friendly URL:";
-$_lang["friendlyurlsuffix_message"] = "Qui puoi specificare il suffisso per i Friendly URL. Specificando '.html' sarà aggiunto .html a tutti i friendly URL."; // updated 0.6 - removed htaccess warning
+$_lang["friendlyurls_title"] = "Usa URL semplici:";
+$_lang["friendlyurls_message"] = "L'opzione permette di usare le URL semplici per i motori di ricerca con MODx. Per favore, nota che l'opzione funziona solo per le installazioni di MODx su Apache, e che hai anche bisogno di scrivere un file .htaccess perché operi. Per maggiori informazioni, guarda il file .htaccess incluso nella distribuzione.";
+$_lang["friendlyurlsprefix_title"] = "Prefisso per le URL semplici:";
+$_lang["friendlyurlsprefix_message"] = "Qui puoi specificare il prefisso da usare con le URL semplici. Ad esempio, un prefisso impostato su 'pagina' trasformerà l'URL /index.php?id=2 nell'URL semplice /pagina2.html (assumendo che il suffisso sia impostato su .html). In questo modo puoi specificare cosa gli utenti (e i motori di ricerca) vedranno come collegamenti nel sito."; // updated 0.6 - removed htaccess warning
+$_lang["friendlyurlsuffix_title"] = "Suffisso per le URL semplici:";
+$_lang["friendlyurlsuffix_message"] = "Qui puoi specificare il suffisso delle URL semplici. Specificando '.html' sarà aggiunto .html a tutti le URL semplici."; // updated 0.6 - removed htaccess warning
 $_lang["udperms_title"] = "Usa i permessi di accesso:";
 $_lang["udperms_message"] = "I permessi di accesso ti consentono di specificare quali pagine possono modificare gli utenti. Hai bisogno di assegnare gli utenti ai gruppi utente, i documenti ai gruppi documento, ed infine dovrai specificare quali gruppi utente hanno accesso a quali gruppi documento. Appena attivi i permessi, solo gli amministratori potranno modificare qualsiasi documento."; // updated 0.6
 $_lang["menutype_title"] = "Tipo menu:";
 $_lang["menutype_message"] = "Scegli se vuoi usare il menu avanzato Java o il normale menu plain text. [Attualmente non puoi fare nessuna scelta in quanto devo riscrivere il menu non-java, mi dispiace!]";
 $_lang["nologentries_title"] = "Numero di voci di log:";
-$_lang["nologentries_message"] = "Inserisci il numero di voci di log da visualizzare per pagina quando utilizzi Audit trail.";
+$_lang["nologentries_message"] = "Inserisci il numero di voci di log da visualizzare per pagina quando utilizzi Cronistorie.";
 $_lang["nomessages_title"] = "Numero di messaggi:";
 $_lang["nomessages_message"] = "Inserisci il numero di messaggi da visualizzare nella inbox quando vedi i messaggi.";
 $_lang["language_title"] = "Lingua:";
@@ -440,7 +440,7 @@ $_lang['configcheck_images'] = "Cartella immagini non scrivibile";
 $_lang['configcheck_images_msg'] = "La cartella immagini non è scrivibile o non esiste. Questo significa che l'Image Manager dell'editor non funzionerà!";
 $_lang['php_version_check'] = "MODx è compatibile con PHP versione 4.0.3 o superiore. Si prega di aggiornare l'installazione di PHP!";
 $_lang['document_alias'] = "Alias documento";
-$_lang['document_alias_help'] = "Qui puoi inserire un alias per il documento. Questo renderà il documento accessibile usando:\n\nhttp://yourserver/alias\n\nFunziona solo se stai usando i friendly URL.";
+$_lang['document_alias_help'] = "Qui puoi inserire un alias per il documento. Questo renderà il documento accessibile usando:\n\nhttp://yourserver/alias\n\nFunziona solo se stai usando le URL semplici.";
 
 $_lang['user_management_title'] = "Gestione utenti";
 $_lang['user_management_msg'] = "Qui puoi scegliere l'utente da modificare.";
@@ -458,7 +458,7 @@ $_lang['server_protocol_http'] = "http";
 $_lang['server_protocol_https'] = "https";
 $_lang['settings_server'] = "Impostazioni server"; // deprecated
 $_lang['settings_site'] = "Impostazioni sito";
-$_lang['settings_furls'] = "Impostazioni Friendly URL";
+$_lang['settings_furls'] = "Impostazioni URL semplici";
 $_lang['settings_users'] = "Impostazioni utente"; //changed 0.6 - shortened
 $_lang['settings_ui'] = "Impostazioni editor & interfaccia"; //changed 0.6 - added editor
 $_lang['settings_reports'] = "Impostazioni report"; // deprecated
@@ -512,8 +512,8 @@ $_lang['administrator_role_message'] = "Questo ruolo non può essere modificato o
 $_lang['visitor_stats_online'] = "Visitatori attuali";
 $_lang['track_visitors_title'] = "Registra visite";
 $_lang['track_visitors_message'] = "La registrazione delle visite ti permette di vedere le statistiche sull'utilizzo del sito, tuttavia, la registrazione rallenta un po' il parser del sito. Se non vuoi essere assillato dalle statistiche sui visitatori, puoi tranquillamente disattivarle e goderti l'aumento di velocità.";
-$_lang['friendly_alias_title'] = "Friendly aliases";
-$_lang['friendly_alias_message'] = "Se stai usando i friendly URL, e il documento ha un alias, quest'ultimo avrà sempre precedenza sul friendly URL. Impostando questa opzione su 'Sì', il prefisso e il suffisso del friendly URL saranno anche applicati all'alias. Per esempio, se il documento con l'ID 1 ha per alias `introduction`, e tu hai impostato un prefisso come `` e un suffisso come `.html`, settando questa opzione su `sì` sarà generato `introduction.html`. Se non ci sono alias, MODx genererà `1.html` come link.";
+$_lang['friendly_alias_title'] = "Alias semplice";
+$_lang['friendly_alias_message'] = "Se stai usando le URL semplici, e il documento ha un alias, quest'ultimo avrà sempre precedenza sul URL semplice. Impostando questa opzione su 'Sì', il prefisso e il suffisso del friendly URL saranno anche applicati all'alias. Per esempio, se il documento con l'ID 1 ha per alias `introduction`, e tu hai impostato un prefisso come `` e un suffisso come `.html`, settando questa opzione su `sì` sarà generato `introduction.html`. Se non ci sono alias, MODx genererà `1.html` come link.";
 $_lang['no_stats_message'] = "Questa sezione di solito mostra alcune statistiche sui visitatori del sito, ma nella configurazione di MODx l'opzione 'Registra visite' è impostata su 'No', così non viene raccolta nessuna informazione.";
 $_lang['welcome_visitor_stats'] = "Questa tabella mostra alcune statistiche sui visitatori del sito. Per informazioni più dettagliate, visualizza la pagina 'Statistiche visitatori'.<br /><br />";
 $_lang['page_impressions'] = "Contatti pagina";
@@ -723,13 +723,13 @@ $_lang['reload_title'] = "Ricarica pagina";
 
 $_lang['websignupemail_title'] = "Registrazione e-mail:";
 $_lang['websignupemail_message'] = "Qui puoi impostare il messaggio da inviare agli utenti quando crei loro un account e vuoi che MODx gli invii una e-mail contenente username e password. <br /><b>Note:</b> The following placeholders are replaced by the Content Manager when the message is sent: <br /><br />[+sname+] - Name of your web site, <br />[+saddr+] - Your web site email address, <br />[+surl+] - Your site url, <br />[+uid+] - User's Login name or id, <br />[+pwd+] - User's password, <br />[+ufn+] - User's full name. <br /><br /><b>Leave the [+uid+] and [+pwd+] in the e-mail, or else the username and password won't be sent in the mail and your users won't know their username or password!</b>";
-$_lang['webpwdreminder_title'] = "Web Reminder Email:";
+$_lang['webpwdreminder_title'] = " Email Ricorda credenziali:";
 $_lang['webpwdreminder_message'] = "Inserisci il messaggio da inviare in mail, quando gli utenti chiedono una nuova password via email. IL Content Manager invierà loro una e-mail contenente la nuova password e le informazioni di attivazione. <br /><b>Nota:</b> I seguenti placeholders saranno sostituiti dal Content Manager quando invierà il messaggio: <br /><br />[+sname+] - Nome del tuo sito, <br />[+saddr+] - Indirizzo email del sito, <br />[+surl+] - Url del sito, <br />[+uid+] - Login o id dell'utente, <br />[+pwd+] - Password utente, <br />[+ufn+] - Nome completo dell'utente. <br /><br /><b>Lascia [+uid+] e [+pwd+] nella e-mail, altrimenti non verranno inviati utente e password all'utente!<</b>";
 
 $_lang['click_to_context']="Clicca per accedere al menu contestuale";
-$_lang['snippet_execonsave']="Esegui lo snippet dopo il salvataggiog.";
-$_lang['snippets_availabe'] = "Snippet disponibili da includera nella pagina";
-$_lang['use_alias_path_title'] = "Use friendly alias path:";
+$_lang['snippet_execonsave']="Esegui lo snippet dopo il salvataggio.";
+$_lang['snippets_availabe'] = "Snippet disponibili da includere nella pagina";
+$_lang['use_alias_path_title'] = "Usa i percorsi semplici dell'alias:";
 $_lang['use_alias_path_message'] = "Impostare a 'SI' mostrerà il percorso completo al documento, se il documento ha un alias. Ad esempio, se un documento con un alias 'figlio' si trova nella cartella con alias 'genitore', il percorso dell'alias sarà '/genitore/figlio.html'.<br /><b>NOTA: Impostando questa opzione in 'Yes' (attivando l'alias path), devi far riferimento a file (come immagini, css, javascript, etc) usando il percorso assoluto:  e.g., '/assets/images' anzichè 'assets/images'. In questo modo impedirete al browser (o web server) di collegare il percorso relativo al percorso dell'alias.</b>";
 $_lang['scroll_up'] = "Scrolla su";
 $_lang['scroll_dn'] = "Scrolla giù";
@@ -850,14 +850,14 @@ $_lang['module_management'] = "Gestisci Moduli";
 $_lang['confirm_delete_module'] = "Sicuro di voler cancellare il modulo?";
 $_lang['settings_dependencies'] = "Dependencies";
 $_lang['module_title'] = "Crea/ edita Moduli";
-$_lang['module_msg'] = "Quì puoi creare/editare Moduli. Un Modulo è un insieme di risorse  (es. plugins, snippets, ecc).";
+$_lang['module_msg'] = "Quì puoi creare o modificare i Moduli. Un Modulo è un insieme di risorse che interagiscono (es. plugins, snippets, ecc).";
 $_lang['module_name'] = "Nome modulo";
 $_lang['module_disabled'] = "Modulo disabilitato";
 $_lang['module_desc'] = "Descrizione";
 $_lang['module_config'] = "Module configurazione";
 $_lang['lock_module'] = "Blocca il modulo da modifiche";
 $_lang['lock_module_msg'] = "Solo il Super-amministratore (Ruolo ID 1) può editare questo modulo.";
-$_lang['module_management_msg'] = "Qui  puoi scegliere il modulo che desideri eseguire o cambiare. Fai clic sull'icona del modulo  nella griglia. Per modificare il modulo fai click sul nome del modulo.";
+$_lang['module_management_msg'] = "Qui  puoi scegliere il modulo che desideri eseguire o modificare. Per eseguire il modulo, fai clic sull'icona del modulo per accedere al menu contestuale. Per modificare il modulo fai click sul nome del modulo.";
 $_lang['new_module'] = "Nuovo Modulo";
 $_lang['edit_module'] = "Edita Modulo";
 $_lang['module_viewdepend_msg'] = "Qui puoi vedere le risorse assegnate dalle quali dipende il modulo . Clicca sul 'il bottone di Configurazione Dipendenze per cambiare le dipendenze";
@@ -954,25 +954,25 @@ $_lang['export_site'] = "Esporta sito";
 $_lang['import_site'] = "Importa sito";
 $_lang['mgr_access_permissions'] = "Gestione permessi di accesso";
 $_lang['metatags'] = "META tags";
-$_lang['meta_keywords'] = "META Keywords";
-$_lang['metatags_and_keywords'] = "META tags e Keywords";
-$_lang['metatag_intro'] = "In questa pagina puoi eliminare, creare o modificare le parole chiave. Per collegare le parole chiave ai documenti, modifica il documento in questione e seleziona le parole chiave desiderate dalla lista. Per aggiungere una parola chiave digita la nuova parola e poi clicca 'aggiungi'.";
+$_lang['meta_keywords'] = "META e parole chiave";
+$_lang['metatags_and_keywords'] = "META tags e parole chiave";
+$_lang['metatag_intro'] = "In questa pagina puoi eliminare, creare o modificare i META tags e le parole chiave. Per collegare le parole chiave ai documenti, modifica il documento in questione e seleziona le parole chiave desiderate dalla lista. Per aggiungere una parola chiave digita la nuova parola e poi clicca 'aggiungi'.";
 $_lang['keywords_intro'] = "Per modificare una parola chiave, semplicemente digita la nuova parola nel campo di testo a fianco di quella che vuoi cambiare. Per eliminare una parola chiave, spunta il box 'Elimina' per quella parola. Se imposti l'eliminazione di una parola chiave e allo stesso tempo ne modifichi il nome, essa verrà eliminata vanificando l'operazione di rinomina!";
 $_lang['manage_metatags'] = "Gestisci META tags e parole chiave";
-$_lang['metatag_message'] = "In questa pagina puoi gestire i META tags e le parole chiave (keywords) del sito. ";
+$_lang['metatag_message'] = "In questa pagina puoi gestire i META tags e le parole chiave del sito. ";
 $_lang['tag'] = "Tag";
 $_lang['require_tagname'] = "Un nome del tag e richiesto";
-$_lang['require_tagvalue'] = "UN valore del tag e richiesto";
+$_lang['require_tagvalue'] = "Un valore del tag e richiesto";
 $_lang['confirm_delete_tags'] = "Sicuro di voler cancellare questo META tag?";
 $_lang['no_keywords_found'] = "Non ci sono parole chiave";
 $_lang['add_tag'] = "Aggiungi tag";
 $_lang['save_tag'] = "Salva tag";
 $_lang['delete_tags'] = "Cancella tag";
-$_lang['document_metatag_help'] = "Seleziona i META tags e keywords che vuoi assegnare al documento. Tieni premuto control per selezionare più tag o parole.";
+$_lang['document_metatag_help'] = "Seleziona i META tags e parole chiave che vuoi assegnare al documento. Tieni premuto il tasto control per selezionare più tag o parole.";
 $_lang["deselect_metatags"] = "Cancella META tags";
 $_lang['no_records_found'] = "Nessun record.";
-$_lang['role_edit_doc_metatags'] = "Edita META tags e keywords del documento";
-$_lang['role_manage_metatags'] = "Gestisci META tags e keywords";
+$_lang['role_edit_doc_metatags'] = "Edita META tags e parole chiave del documento";
+$_lang['role_manage_metatags'] = "Gestisci META tags e parole chiave";
 $_lang['role_web_user_management'] = "Gestione utente web";
 $_lang['role_new_web_user'] = "Crea nuovo utete web";
 $_lang['role_edit_web_user'] = "Edita utente web";
@@ -1049,4 +1049,10 @@ $_lang['QE_someone_editing'] = 'Un altro utente stà editando questo documento';
 $_lang['QE_cant_find_content'] = 'Non trovo il contenuto da editare';
 $_lang['QE_description'] = 'Edita le pagine dal frontend del sito';
 
+$_lang['system_email_signup'] = "Salve [+uid+] \n\nqui ci sono le credenziali di login per il Content Manager di [+sname+]:\n\nNome utente: [+uid+]\nPassword: [+pwd+]\n\nQuando avrai fatto login nel Manager ([+surl+]), potreai cambiare la tua password.\n\nCordiali Saluti,l'amministratore del \nSito" ;
+$_lang['system_email_websignup'] = "Salve [+uid+] \n\nqui ci sono le credenziali di login per [+sname+]:\n\nUsername: [+uid+]\nPassword: [+pwd+]\n\nQuando avrai fatto login in [+sname+] ([+surl+]), potreai cambiare la tua password.\n\\nCordiali Saluti,l'amministratore del \nSito" ;
+$_lang['system_email_webreminder'] = "Salve [+uid+]\n\nPer attivare la tua password clicca sul link sottostante:\n\n[+surl+]\n\nIn seguito potrai usare la seguente password per accedere:\n\nPassword:[+pwd+]\n\nSe non hai richiesto questa mail, ignarala.\n\nCordiali Saluti,l'amministratore del \nSito" ;
+
+$_lang['role_view_unpublished'] = "Vedi i documenti non pubblicati";
+$_lang['duplicate_document'] = "Duplica Documento";
 ?>
