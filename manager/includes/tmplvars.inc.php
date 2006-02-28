@@ -93,13 +93,13 @@
 				$field_html .=  "</select>";
 				break;
 			case "url": // handles url input fields
-				$urls= array("--","http://","ftp://");
+				$urls= array(''=>'--', 'http://'=>'http://', 'https://'=>'https://', 'ftp://'=>'ftp://', 'mailto:'=>'mailto:');
 				$field_html ='<table border="0" cellspacing="0" cellpadding="0"><tr><td><select id="tv'.$field_name.'_prefix" name="tv'.$field_name.'_prefix" onchange="documentDirty=true; setVariableModified(\''.$field_name.'\');">';
 				foreach($urls as $k => $v){
-					if(strpos($field_value,$v)===false) $field_html.='<option value="'.$v.'">'.$v.'</option>';
+					if(strpos($field_value,$v)===false) $field_html.='<option value="'.$v.'">'.$k.'</option>';
 					else{
 						$field_value = str_replace($v,"",$field_value);
-						$field_html.='<option value="$v" selected="selected">'.$v.'</option>';
+						$field_html.='<option value="$v" selected="selected">'.$k.'</option>';
 					}
 				}
 				$field_html .='</select></td><td>';
