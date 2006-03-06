@@ -3,7 +3,44 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-    MOD 0.9.1 (rev 646 - December 23, 2005)
+MOD 0.9.2 (rev 7xx - March XX, 2006)
+====================================
+
+* [FS 282] Added link to the actual document from the site schedule page listing (708)
+* [FS 241] Remove hard-code modx_ database prefix from NewsPublisher snippet (706)
+* [FS 242] Relax email validation on contact form (705)
+* [FS 219] Prevent possible JS/HTML injection from built-in stats (704)
+* HTML Area reference removed from manager credits and webfx graphic added back (701, 702, 703)
+* [FS 153] Date now part of database backup name (700)
+* [FS 212] Manager access permissions now sorted by name (699)
+* Updated TinyMCE to v2.0.4 (693)
+* Added https and mailto and relabled the cryptic "--" option to "" for Template Variables (692)
+* Weblogin now unblock webuser account when a password is successfully reset by setting blocked until to 0. (686, 687)
+* Weblogin updates from Adam and Raymond to fix missing notifications on failed attempts. (685)
+* Updated Italian translation (684)
+* Added Norsk and Finnish languages (683)
+* Broken links now generate 404 errors and display the proper error document if one is set (676)
+* Getting rid of the render time comment at the bottom of every page even if debug mode is turned off. (671)
+* New Feature: Ability to switch between different RTE's from a content edit page. (670)
+* New Feature: Added the option of 'none' for RTE selection to force a plain textarea for times when a user doesn't want to use an RTE. (670)
+* Updated editor to TinyMCE 2.0.2. (668)
+* New version adds a new cleanup routine that out performs the previous one in both performance and flexibility. (668)
+* Fixed a path issue in the resource browser that caused thumbnails not to appear on some servers. (659)
+* Added negator to regClientStarup script. Wasn't working before. (658)
+* fixed regClientCSS by removing : between @import and url and changing count(sjscripts) to count($this->sjscripts) (657)
+* Fixed bug with active_users not setting the id of the document on which actions are being taken in the manager, which broke the locking mechanism, allowing multiple users to edit a document simultaneously (http://modxcms.com/bugs/task/222) (656)
+* Fix minor rendering bugs and initial cleanup of QE toolbar. Should prevent the headline from taking on base styles of the site now. (655)
+* Updated editor to FCKEditor v2.2 Final. (654)
+* Interim release for MODx v0.9.1.  Will need to be added to trunk for next release. (654)
+* Updated editor to TinyMCE 2.0.1 final. (653)
+* Changed versioning to reflect the version of the editor. (653)
+* Updated REPLACE INTO active_users statement by adding space between table name and the opening ( of the field list; some versions of MySQL do not like this syntax (652)
+* Added $modx->documentMap and two API functions, getParentIds($id) and getChildIds($id) to allow getting the geneology of any document with no database queries required. (651) 
+* Modified $modx->aliasListing and $modx->documentListing to return the id of a given document as the alias, if an alias is not provided (651) 
+
+
+
+MOD 0.9.1 (rev 646 - December 23, 2005)
 ==================
 * Updated default/demo templates to support Friendly Alias Paths.
 * Fixed Friendly URLs to work in ALL situations ... finally! [bug 136]
