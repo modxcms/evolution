@@ -258,7 +258,7 @@ function showHide(what, onoff){
 				<hr />
 			</td>
 		  </tr>
-		  <? } ?>
+		  <?php } ?>
 		  <tr id="editname" style="display:<?php echo $_GET['a']=='11'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
