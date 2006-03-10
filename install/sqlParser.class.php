@@ -92,8 +92,7 @@ class SqlParser {
 			if(mysql_error()) {
 				// Ignore duplicate and drop errors - Raymond 
 				if ($this->ignoreDuplicateErrors){
-					if (eregi('^duplicate key', mysql_error()) || (eregi('^alter', $sql_do) && eregi('^duplicate', mysql_error()))) continue;
-					if (eregi('^can\'t drop', mysql_error()) || (eregi('^alter', $sql_do) && eregi('^can\'t drop', mysql_error()))) continue;
+					if (mysql_errno() == 1060 || mysql_errno() == 1061 || mysql_errno() == 1091) continue;
 				}
 				// End Ignore duplicate
 				$this->mysqlErrors[] = array("error" => mysql_error(), "sql" => $sql_do);
