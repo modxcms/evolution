@@ -607,6 +607,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
 ) Type=MyISAM COMMENT='Contains web user settings.';
 
 
+# upgrade-able[[ - This block of code will be executed during upgrades
+
 # For backward compatibilty with early versions
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -614,8 +616,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
 ALTER TABLE `{PREFIX}web_users` ADD COLUMN `cachepwd` VARCHAR(100) NOT NULL COMMENT 'Store new unconfirmed password' AFTER `password`;
 
 
-ALTER TABLE `{PREFIX}site_tmplvars` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`
-, ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`;
+ALTER TABLE `{PREFIX}site_tmplvars` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`;
 
 
 ALTER TABLE `{PREFIX}site_tmplvars` MODIFY COLUMN `name` VARCHAR(50) NOT NULL;
@@ -630,12 +632,12 @@ ALTER TABLE `{PREFIX}site_content` ADD INDEX `aliasidx` (alias);
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `introtext` TEXT NOT NULL COMMENT 'Used to provide quick summary of the document' AFTER `isfolder`;
 
 
-ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `menutitle` VARCHAR(30) NOT NULL COMMENT 'Menu title' AFTER `deletedby`
-, ADD COLUMN `donthit` TINYINT(1) NOT NULL default '0' COMMENT 'Disable page hit count' AFTER `menutitle`
-, ADD COLUMN `haskeywords` TINYINT(1) NOT NULL default '0' COMMENT 'has links to keywords' AFTER `donthit`
-, ADD COLUMN `hasmetatags` TINYINT(1) NOT NULL default '0' COMMENT 'has links to meta tags' AFTER `haskeywords`
-, ADD COLUMN `privateweb` TINYINT(1) NOT NULL default '0' COMMENT 'Private web document' AFTER `hasmetatags`
-, ADD COLUMN `privatemgr` TINYINT(1) NOT NULL default '0' COMMENT 'Private manager document' AFTER `privateweb`;
+ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `menutitle` VARCHAR(30) NOT NULL COMMENT 'Menu title' AFTER `deletedby`,
+ ADD COLUMN `donthit` TINYINT(1) NOT NULL default '0' COMMENT 'Disable page hit count' AFTER `menutitle`,
+ ADD COLUMN `haskeywords` TINYINT(1) NOT NULL default '0' COMMENT 'has links to keywords' AFTER `donthit`,
+ ADD COLUMN `hasmetatags` TINYINT(1) NOT NULL default '0' COMMENT 'has links to meta tags' AFTER `haskeywords`,
+ ADD COLUMN `privateweb` TINYINT(1) NOT NULL default '0' COMMENT 'Private web document' AFTER `hasmetatags`,
+ ADD COLUMN `privatemgr` TINYINT(1) NOT NULL default '0' COMMENT 'Private manager document' AFTER `privateweb`;
 
 
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `content_dispo` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0-inline, 1-attachment' AFTER `privatemgr`;
@@ -644,9 +646,9 @@ ALTER TABLE `{PREFIX}site_content` ADD COLUMN `content_dispo` TINYINT(1) NOT NUL
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `hidemenu` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu' AFTER `content_dispo`;
 
 
-ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`
-, ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`
-, ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
+ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
 
 
 ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `disabled` TINYINT NOT NULL COMMENT 'Disables the plugin' AFTER `properties`;
@@ -655,26 +657,26 @@ ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `disabled` TINYINT NOT NULL COMMEN
 ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters' AFTER `disabled`;
 
 
-ALTER TABLE `{PREFIX}site_htmlsnippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`
-, ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`
-, ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
+ALTER TABLE `{PREFIX}site_htmlsnippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
 
 
-ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`
-, ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`
-, ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
+ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
 
 
 ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `properties` VARCHAR(255) NOT NULL COMMENT 'Default Properties' AFTER `locked`;
 
 
-ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters' AFTER `properties`
+ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters' AFTER `properties`;
 
 
-ALTER TABLE `{PREFIX}site_templates` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`
-, ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`
-, ADD COLUMN `icon` VARCHAR(255) NOT NULL COMMENT 'url to icon file' AFTER `category`
-, ADD COLUMN `template_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-page,1-content' AFTER `icon`;
+ALTER TABLE `{PREFIX}site_templates` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `icon` VARCHAR(255) NOT NULL COMMENT 'url to icon file' AFTER `category`,
+ ADD COLUMN `template_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-page,1-content' AFTER `icon`;
 
 
 ALTER TABLE `{PREFIX}document_groups` DROP INDEX `indx_doc_groups`;
@@ -700,64 +702,77 @@ ALTER TABLE `{PREFIX}documentgroup_names`
  ADD COLUMN `private_webgroup` TINYINT DEFAULT '0' COMMENT 'determines whether the document is private to web users' AFTER `private_memgroup`;
 
 
-ALTER TABLE `{PREFIX}user_roles` ADD COLUMN `bk_manager` int(1) NOT NULL DEFAULT '0' AFTER `access_permissions`;
+ALTER TABLE `{PREFIX}user_roles`
+ ADD COLUMN `bk_manager` int(1) NOT NULL DEFAULT '0' AFTER `access_permissions`;
+
+
+ALTER TABLE `{PREFIX}user_roles`
+ ADD COLUMN `new_plugin` int(1) NOT NULL DEFAULT '0' AFTER `bk_manager`,
+ ADD COLUMN `edit_plugin` int(1) NOT NULL DEFAULT '0' AFTER `new_plugin`,
+ ADD COLUMN `save_plugin` int(1) NOT NULL DEFAULT '0' AFTER `edit_plugin`,
+ ADD COLUMN `delete_plugin` int(1) NOT NULL DEFAULT '0' AFTER `save_plugin`;
 
 
 ALTER TABLE `{PREFIX}user_roles` 
- ADD COLUMN `new_plugin` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `edit_plugin` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `save_plugin` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `delete_plugin` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0';
+ ADD COLUMN `new_module` int(1) NOT NULL DEFAULT '0' AFTER `delete_plugin`,
+ ADD COLUMN `edit_module` int(1) NOT NULL DEFAULT '0' AFTER `new_module`,
+ ADD COLUMN `save_module` int(1) NOT NULL DEFAULT '0' AFTER `edit_module`,
+ ADD COLUMN `delete_module` int(1) NOT NULL DEFAULT '0' AFTER `save_module`,
+ ADD COLUMN `exec_module` int(1) NOT NULL DEFAULT '0' AFTER `delete_module`;
 
 
 ALTER TABLE `{PREFIX}user_roles` 
- ADD COLUMN `new_module` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `edit_module` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `save_module` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `exec_module` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `delete_module` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `view_eventlog` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `delete_eventlog` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `manage_metatags` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `edit_doc_metatags` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `new_web_user` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `edit_web_user` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `save_web_user` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `delete_web_user` int(1) NOT NULL DEFAULT '0',
- ADD COLUMN `web_access_permissions` int(1) NOT NULL DEFAULT '0';
+ ADD COLUMN `view_eventlog` int(1) NOT NULL DEFAULT '0' AFTER `exec_module`,
+ ADD COLUMN `delete_eventlog` int(1) NOT NULL DEFAULT '0' AFTER `view_eventlog`,
+ ADD COLUMN `manage_metatags` int(1) NOT NULL DEFAULT '0' AFTER `delete_eventlog`,
+ ADD COLUMN `edit_doc_metatags` int(1) NOT NULL DEFAULT '0' AFTER `manage_metatags`;
 
 
-ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`
-, ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`
-, ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`
-, ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`
-, ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`
-, ADD COLUMN `fax` VARCHAR(100) NOT NULL AFTER `zip`
-, ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`
-, ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`
-, ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
+ALTER TABLE `{PREFIX}user_roles` 
+ ADD COLUMN `new_web_user` int(1) NOT NULL DEFAULT '0' AFTER `edit_doc_metatags`,
+ ADD COLUMN `edit_web_user` int(1) NOT NULL DEFAULT '0' AFTER `new_web_user`,
+ ADD COLUMN `save_web_user` int(1) NOT NULL DEFAULT '0' AFTER `edit_web_user`,
+ ADD COLUMN `delete_web_user` int(1) NOT NULL DEFAULT '0' AFTER `save_web_user`;
+
+
+ALTER TABLE `{PREFIX}user_roles` 
+ ADD COLUMN `web_access_permissions` int(1) NOT NULL DEFAULT '0' AFTER `delete_web_user`;
+ ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0'AFTER `web_access_permissions`;
+
+
+ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
+ ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
+ ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`,
+ ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`,
+ ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`,
+ ADD COLUMN `fax` VARCHAR(100) NOT NULL AFTER `zip`,
+ ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`,
+ ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`,
+ ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
 
 
 ALTER TABLE `{PREFIX}web_users` MODIFY COLUMN `username` VARCHAR(100) NOT NULL;
 
 
 ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`
-, ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`
-, ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`
-, ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`
-, ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`
-, ADD COLUMN `fax` VARCHAR(100) NOT NULL AFTER `zip`
-, ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`
-, ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`
-, ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
+ ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
+ ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`,
+ ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`,
+ ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`,
+ ADD COLUMN `fax` VARCHAR(100) NOT NULL AFTER `zip`,
+ ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`,
+ ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`,
+ ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
 
 
 ALTER TABLE `{PREFIX}user_roles` ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
 
-ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`
-, DROP INDEX `idx_templateid`
-, ADD PRIMARY KEY ( `tmplvarid` , `templateid` )
+ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`,
+ DROP INDEX `idx_templateid`,
+ ADD PRIMARY KEY ( `tmplvarid` , `templateid` );
+
+
+# ]]upgrade-able
 
 
 # Insert / Replace system records
