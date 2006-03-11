@@ -736,7 +736,7 @@ ALTER TABLE `{PREFIX}user_roles`
 
 
 ALTER TABLE `{PREFIX}user_roles` 
- ADD COLUMN `web_access_permissions` int(1) NOT NULL DEFAULT '0' AFTER `delete_web_user`;
+ ADD COLUMN `web_access_permissions` int(1) NOT NULL DEFAULT '0' AFTER `delete_web_user`,
  ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0'AFTER `web_access_permissions`;
 
 
@@ -754,7 +754,7 @@ ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFA
 ALTER TABLE `{PREFIX}web_users` MODIFY COLUMN `username` VARCHAR(100) NOT NULL;
 
 
-ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`
+ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
  ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
  ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`,
  ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`,
