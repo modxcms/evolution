@@ -104,6 +104,12 @@ class DocumentParser {
         echo $header;
         exit;
       } elseif($type=='REDIRECT_HEADER' || empty($type)) {
+         // check if url has /$base_url 
+         global $base_url,$site_url;
+         if (substr($url,0,strlen($base_url))==$base_url) {
+         	// append $site_url to make it work with Location:
+         	$url = $site_url.substr($url,strlen($base_url));
+         }
         $header = 'Location: '.$url;
       }
       header($header);
