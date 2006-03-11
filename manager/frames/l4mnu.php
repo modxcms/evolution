@@ -82,7 +82,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     </li>
 <?php } ?>
 
-<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags') || $modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module') || $modx->hasPermission('file_manager')) { ?>
+<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags') || $modx->hasPermission('file_manager')) { ?>
 <!-- Resources -->
     <li id="limenu6"><a href="#menu6" onclick="new NavToggle(this); return false;"><?php echo $_lang["resources"]; ?></a>
         <ul class="subnav" id="menu6">
@@ -92,13 +92,32 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php 	if($modx->hasPermission('file_manager')) { ?>
                 <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
             <?php } ?>
-            <?php if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=106" target="main"><?php echo $_lang["module_management"]; ?></a></li>
-            <?php } ?>
             
         </ul>
     </li>
 <?php } ?>
+
+<!-- Modules -->
+<?php  if($modx->hasPermission('exec_module')) { ?>
+    <li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;"><?php echo $_lang["modules"]; ?></a>
+        <ul class="subnav" id="menu9">
+    <?php
+      $list = '';  // initialize list variable 
+      $rs = $modx->db->select('*',$modx->getFullTableName('site_modules'));  // get modules
+      while($content = $modx->db->getRow($rs)) {
+        $list .= '<li><a onclick="this.blur();" href="index.php?a=112&id='.$content['id'].'" target="main">'.$content['name'].'</a></li>';
+    	}
+    	echo $list;
+    ?>
+
+    <?php if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) { ?>
+        <li><a onclick="this.blur();" href="index.php?a=106" target="main"><?php echo $_lang["module_management"]; ?></a></li>
+    <?php } ?>
+
+        </ul>
+    </li>
+<?php } ?>
+
 
 <?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions')) { ?>
 <!-- Users -->
