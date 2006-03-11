@@ -6,6 +6,12 @@ development release, and is only shown to give an idea of what's currently in th
 MOD 0.9.2 (rev 7xx - March XX, 2006)
 ====================================
 
+* New plugin: Auto-inherrit parent folder template when creating new documents see http://modxcms.com/forums/index.php/topic,1092.0.html (725)
+* List all modules in the menu thanks to Susan Ottwell see http://modxcms.com/forums/index.php/topic,3279.msg23388.html (724)
+* Fix redirect to return full URL for header redirects. See http://modxcms.com/forums/index.php/topic,2054.msg14406.html (723)
+* International install fixes (720, 721)
+* [FS 202] ALTER statement corrections for installation on WAMP (fix submitted by Michel <mvt91@free.fr>) (717)
+* Fix errant short oppening <? tag which resolves problem reported in forums: http://modxcms.com/forums/index.php/topic,3214.msg23349.html#msg23349 (715)
 * [FS 282] Added link to the actual document from the site schedule page listing (708)
 * [FS 241] Remove hard-code modx_ database prefix from NewsPublisher snippet (706)
 * [FS 242] Relax email validation on contact form (705)
