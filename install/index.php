@@ -198,7 +198,7 @@
 				<td nowrap valign="top" width="37%">
 				<img src="im_new_inst.gif" align="left" width="32" height="32" hspace="5" />
 				<input type="radio" name="installmode" id="installmode1" value="new" onclick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? "checked='checked'":"" ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
-				<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please note that this option may overwrite any data inside your database. <strong>NOTE:</strong> For new Linux/Unix installations, you will need to create a new empty file named <code>config.inc.php</code> inside the <code>/manager/includes</code> directory with permissions set to 777.</td>
+				<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please note that this option may overwrite any data inside your database. </td>
 			  </tr>
 			  <tr>
 				<td nowrap valign="top" width="37%">&nbsp;</td>
