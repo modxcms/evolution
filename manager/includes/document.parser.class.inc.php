@@ -570,7 +570,7 @@ class DocumentParser {
       foreach ($tags as $n=>$col) {
         $tag = strtolower($col['tag']);
         $tagvalue = $col['tagvalue'];
-        $tagstyle = $col['http_equiv'] ? 'http_equiv':'name';
+        $tagstyle = $col['http_equiv'] ? 'http-equiv':'name';
         $metas.= "\t<meta $tagstyle=\"$tag\" content=\"$tagvalue\" />\n";
       }
     }
@@ -1059,11 +1059,8 @@ class DocumentParser {
 
       }
 
-      // check whether it's a reference
-      if($this->documentObject['type']=="reference") {
-        $this->sendRedirect($this->documentObject['content']);
-      }
-
+      // check whether it's a reference      if($this->documentObject['type']=="reference") {          // if it's an internal docid tag, process it          if(strpos($this->documentObject['content'],'[~') !== false) {              // generate a url              $this->documentObject['content'] = $this->rewriteUrls($this->documentObject['content']);          }          $this->sendRedirect($this->documentObject['content']);      }
+      
       // check if we should not hit this document
       if($this->documentObject['donthit']==1) {
         $this->config['track_visitors']=0;

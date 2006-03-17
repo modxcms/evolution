@@ -98,6 +98,9 @@ echo $cm->render();
 	document.addEventListener("onclick",function(){
 		contextm.setVisible(false);
 	})	
+	
+top.mainMenu.location.reload();
+
 </script> 
 <form name="resource" method="post">
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
