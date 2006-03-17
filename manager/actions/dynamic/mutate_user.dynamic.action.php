@@ -948,7 +948,7 @@ if(is_array($_POST['user_groups'])) {
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <?php 
 	echo $_lang['access_permissions_user_message']."<p />";
-	$sql = "SELECT name, id FROM $dbase.".$table_prefix."membergroup_names"; 
+	$sql = "SELECT name, id FROM $dbase.".$table_prefix."membergroup_names ORDER BY name"; 
 	$rs = mysql_query($sql); 
 	$limit = mysql_num_rows($rs);
 	for($i=0; $i<$limit; $i++) {
