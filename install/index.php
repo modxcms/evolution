@@ -13,8 +13,11 @@
 	// session loop-back tester
 	if(!$_SESSION['session_test'] && $_GET['s']!='set') {
 		$_SESSION['session_test'] = 1;
-		// I had some problems with sessions when I used headers. This works ok
-		echo "<html><head><title>Loading...</title><script>window.location.href='".$_SERVER['PHP_SELF']."?s=set';</script></head><body></body></html>";
+		$installBaseUrl= (!isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on')? 'http://' : 'https://';
+      $installBaseUrl.= $_SERVER['HTTP_HOST'];
+      if ($_SERVER['SERVER_PORT']!=80) $installBaseUrl = str_replace(':'.$_SERVER['SERVER_PORT'],'',$installBaseUrl); // remove port from HTTP_HOST
+      $installBaseUrl.= ($_SERVER['SERVER_PORT']==80 || isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS'])=='on')? '':':'.$_SERVER['SERVER_PORT'];
+		echo "<html><head><title>Loading...</title><script>window.location.href='{$installBaseUrl}{$_SERVER['PHP_SELF']}?s=set';</script></head><body></body></html>";
 		exit;
 	}
 
