@@ -105,11 +105,46 @@ $base_path = "";
 if($database_user=="") {
 	$rt = @include_once "manager/includes/config.inc.php";
 	if(!$rt) {
-		echo "<h3>Unable to load configuration settings</h3>";
-		echo "Please run the MODx <a href='install'>install utility</a>";
+	echo "
+		<style type=\"text/css\">
+		* {margin: 0px; padding: 0}
+		body {
+			margin: 50px;
+			background: #eee;
+			}
+		.install {
+			padding: 10px;
+			border-top: 10px solid #f22;
+			border-bottom: 5px solid #f22;
+			background: #f99;
+			margin: 0 auto;
+			font: 120%/1em Georgia, Arial, Helvetica, sans-serif;
+			text-align: center;
+			}
+		p {
+			margin: 20px 0 20px 0;
+			}
+		.link a:link, .link a:visited{
+			font-size: 200%;
+			color: #f22;
+			text-decoration: underline;
+			margin-top: 30px;
+			padding: 5px;
+			}
+		.link a:hover {
+			background: #f22;
+			color: #fff;
+			}
+		</style>
+				<div class=\"install\">
+					  <p>It seems MODx is not currently installed, or the configuration file cannot be found.</p>
+					  <p class=\"link\"><a href=\"install/index.php\">Install Now!</a></p>
+				</div> ";
 		exit;
 	}
 }
+
+
 
 // start session 
 startCMSSession();
