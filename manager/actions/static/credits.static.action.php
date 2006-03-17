@@ -8,10 +8,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['credits']; ?></div><div class="sectionBody">
 <table width="500"  border="0" cellspacing="0" cellpadding="0">
   <tr height="70">
-    <td width="120" align="center"><a href="http://www.interactivetools.com/products/htmlarea/" target="_blank"><img src="media/images/credits/area.gif" border="0"></a></td>
-    <td align="left"><?php echo $_lang['credits_htmlarea']; ?></td>
-  </tr>
-  <tr height="70">
     <td align="center"><a href="http://www.php.net" target="_blank"><img src="media/images/credits/php.gif" border="0"></a></td>
     <td align="left"><?php echo $_lang['credits_php']; ?></td>
   </tr>
@@ -39,4 +35,5 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	<td align="left"><?php echo $_lang['credits_shouts_msg']; ?></td>
   </tr>
 </table>
+
 </div>

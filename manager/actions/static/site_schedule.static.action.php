@@ -37,7 +37,7 @@ if($limit<1) {
 		$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 ?> 
     <tr <?php echo $classname; ?>> 
-      <td class="cell"><?php echo $row['pagetitle'] ;?></td> 
+      <td class="cell"><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td> 
 	  <td class="cell"><?php echo $row['id'] ;?></td> 
       <td class="cell"><?php echo strftime("%d-%m-%y %H:%M:%S", $row['pub_date']+$server_offset_time) ;?></td> 
     </tr> 
@@ -117,7 +117,7 @@ if($limit<1) {
 		$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 ?> 
     <tr <?php echo $classname; ?>> 
-      <td class="cell"><?php echo $row['pagetitle'] ;?></td> 
+      <td class="cell"><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td> 
 	  <td class="cell"><?php echo $row['id'] ;?></td> 
       <td class="cell"><?php echo strftime("%d-%m-%y %H:%M:%S", $row['unpub_date']+$server_offset_time) ;?></td> 
     </tr> 
@@ -197,7 +197,7 @@ if($limit<1) {
 		$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 ?> 
     <tr <?php echo $classname; ?>> 
-      <td class="cell"><?php echo $row['pagetitle'] ;?></td> 
+      <td class="cell"><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td> 
 	  <td class="cell"><?php echo $row['id'] ;?></td> 
       <td class="cell"><?php echo $row['pub_date']==0 ? "" : strftime("%d-%m-%y %H:%M:%S", $row['pub_date']+$server_offset_time) ;?></td>
       <td class="cell"><?php echo $row['unpub_date']==0 ? "" : strftime("%d-%m-%y %H:%M:%S", $row['unpub_date']+$server_offset_time) ;?></td>

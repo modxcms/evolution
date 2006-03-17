@@ -4,10 +4,11 @@
 #  Short Desc: Create articles directly from front end (news, blogs, PR, etc.)
 #  Created By: Raymond Irving (xwisdom@yahoo.com), August 2005
 #
-#  Version: 1.3
+#  Version: 1.4
 #  Modified: December 13, 2005
 #
 #  Changelog: 
+#	 Mar 05, 06 -- modx_ prefix removed [Mark]
 #    Dec 13, 05 -- Now inherrits web/manager docgroups thanks to Jared Carlow
 #
 #::::::::::::::::::::::::::::::::::::::::
@@ -253,12 +254,12 @@ switch ($isPostBack) {
             // Handle privateweb
             $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privateweb = 0 WHERE id='$lastInsertId';");
             $privatewebSql =    "
-                SELECT DISTINCT modx_document_groups.document_group 
-                FROM modx_document_groups, modx_webgroup_access 
+                SELECT DISTINCT ".$modx->getFullTableName('document_groups').".document_group 
+                FROM ".$modx->getFullTableName('document_groups').", ".$modx->getFullTableName('webgroup_access')." 
                 WHERE 
-                modx_document_groups.document_group = modx_webgroup_access.documentgroup 
+                ".$modx->getFullTableName('document_groups').".document_group = ".$modx->getFullTableName('webgroup_access').".documentgroup 
                 AND 
-                modx_document_groups.document = $lastInsertId;";
+                ".$modx->getFullTableName('document_groups').".document = $lastInsertId;";
                 $privatewebIds = $modx->db->getColumn("document_group",$privatewebSql);
                 if(count($privatewebIds)>0) {
                     $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privateweb = 1 WHERE id = $lastInsertId;");	
@@ -267,12 +268,12 @@ switch ($isPostBack) {
                 // And privatemgr
                 $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 0 WHERE id='$lastInsertId';");
                 $privatemgrSql =    "
-                    SELECT DISTINCT modx_document_groups.document_group 
-                    FROM modx_document_groups, modx_membergroup_access 
+                    SELECT DISTINCT ".$modx->getFullTableName('document_groups').".document_group 
+                    FROM ".$modx->getFullTableName('document_groups').", ".$modx->getFullTableName('membergroup_access')." 
                     WHERE 
-                    modx_document_groups.document_group = modx_membergroup_access.documentgroup 
+                    ".$modx->getFullTableName('document_groups').".document_group = ".$modx->getFullTableName('membergroup_access')." .documentgroup 
                     AND 
-                    modx_document_groups.document = $lastInsertId;";
+                    ".$modx->getFullTableName('document_groups').".document = $lastInsertId;";
                     $privatemgrIds = $modx->db->getColumn("document_group",$privatemgrSql);
                     if(count($privatemgrIds)>0) {
                         $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 1 WHERE id = $lastInsertId;");	

@@ -96,7 +96,7 @@ if ($postSend == 'true') {
     $message = $_POST['message'];
     if ( ($from == '')||($from_email == '')||($message == '') ) {
         $SendMail .= "<p class=\"$failClass\">$emptyFields</p>";
-    } elseif (eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $from_email)) {
+    } elseif (eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$", $from_email)) {
         $subject = $the_subject;
         $headers = "From: $from <$from_email>\r\n";
         

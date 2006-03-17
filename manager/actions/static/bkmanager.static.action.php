@@ -10,9 +10,11 @@ if(!$modx->hasPermission('bk_manager') && $_REQUEST['a']==93) {
 $mode = isset($_POST['mode'])? $_POST['mode']:"";
 
 function callBack(&$dumpstring){
+	$today = date("d_M_y");
+	$today = strtolower($today);
 	if(!headers_sent()) {
 		header('Content-type: application/download');
-		header('Content-Disposition: attachment; filename=database_backup.sql');
+		header('Content-Disposition: attachment; filename='.$today.'_database_backup.sql');
 	}
 	echo $dumpstring;
 	return true;

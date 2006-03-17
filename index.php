@@ -48,6 +48,30 @@
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 
+// secure variables from outside
+// added 03-05-06
+foreach(array('HTTP_REFERER','HTTP_USER_AGENT') as $outside) {
+  $_SERVER[$outside] = preg_replace("/[^A-Za-z0-9_\-\,\.\/\s]/", "", $_SERVER[$outside]);
+  if(strlen($_SERVER[$outside])>255) $_SERVER[$outside] = substr(0,255,$_SERVER[$outside]);
+}
+if(isset($_GET['q'])) $_GET['q'] = preg_replace("/[^A-Za-z0-9_\-\.\/]/", "", $_GET['q']);
+
+// Never allow request via get and post contain snippets, javascript or php
+$modxtags = array('@<script[^>]*?>.*?</script>@si',
+                  '@&#(\d+);@e',
+                  '@\[\[(.*?)\]\]@si',
+                  '@\[!(.*?)!\]@si',
+                  '@\[\~(.*?)\~\]@si',
+                  '@\[\((.*?)\)\]@si',
+                  '@{{(.*?)}}@si',
+                  '@\[\*(.*?)\*\]@si');
+foreach($_POST as $key => $value) {
+  $_POST[$key] = preg_replace($modxtags,"", $value);
+}
+foreach($_GET as $key => $value) {
+  $_GET[$key] = preg_replace($modxtags,"", $value);
+}
+
 // first, set some settings, and do some stuff
 @ini_set('session.use_trans_sid', false);
 @ini_set("url_rewriter.tags","");
