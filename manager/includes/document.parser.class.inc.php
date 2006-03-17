@@ -803,18 +803,17 @@ class DocumentParser {
       foreach ( $this->aliasListing as $item ) {
         $aliases[$item['id']] = ( strlen( $item['path'] ) > 0 ? $item['path'] . '/' : '' ) . $item['alias'];
       }
-      $in = '!\[\~(.*?)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
+      $in = '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
       $isfriendly = ( $this->config['friendly_alias_urls'] == 1 ? 1 : 0 );
       $pref = $this->config['friendly_url_prefix'];
       $suff = $this->config['friendly_url_suffix'];
       $thealias = '$aliases[\\1]';
       $found_friendlyurl = "\$this->makeFriendlyURL('$pref','$suff',$thealias)";
       $not_found_friendlyurl = "\$this->makeFriendlyURL('$pref','$suff','".'\\1'."')";
-      $out = '('.$isfriendly.' ? (isset('.$thealias.') ? ' . $found_friendlyurl . ' : '.$not_found_friendlyurl.') : ' . $not_found_friendlyurl . ')';
+      $out = "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
       $documentSource = preg_replace($in, $out, $documentSource);
-    }
-    else {
-      $in = '!\[\~(.*?)\~\]!is';
+    } else {
+      $in = '!\[\~([0-9]+)\~\]!is';
       $out = "index.php?id=".'\1';
       $documentSource = preg_replace($in, $out, $documentSource);
     }
@@ -1410,7 +1409,8 @@ class DocumentParser {
     }
   }
 
-  function makeUrl($id, $alias='', $args='') {
+  function makeUrl($id, $alias='', $args='', $https=-1) {
+    $host= '';
     $url= '';
     $virtualDir= '';
     if(!is_numeric($id)) {
@@ -1420,20 +1420,20 @@ class DocumentParser {
       // add ? to $args if missing
       $c = substr($args,0,1);
       if ($c=='&') $args = '?'.substr($args,1);
-      elseif ($c!='?') $args = '?'.$args; 
+      elseif ($c!='?') $args = '?'.$args;
     }
     elseif($args!='') {
       // add & to $args if missing
       $c = substr($args,0,1);
       if ($c=='?') $args = '&'.substr($args,1);
-      elseif ($c!='&') $args = '&'.$args; 
+      elseif ($c!='&') $args = '&'.$args;
     }
     if($this->config['friendly_urls']==1 && $alias!='') {
       $url= $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
     } elseif($this->config['friendly_urls']==1 && $alias=='') {
       $alias = $id;
       if($this->config['friendly_alias_urls']==1) {
-        //				$this->messageQuit('debug', '', false, '', '', '', print_r($this->aliasListing));
+//      $this->messageQuit('debug', '', false, '', '', '', print_r($this->aliasListing));
         $al = $this->aliasListing[$id];
         $alPath = !empty($al['path'])? $al['path'] . '/': '';
         if($al && $al['alias']) $alias = $al['alias'];
@@ -1443,7 +1443,12 @@ class DocumentParser {
     } else {
       $url= 'index.php?id='.$id.$args;
     }
-    return $this->config['base_url'] . $virtualDir . $url;
+    // If https argument has been set and the desired scheme is different than the current scheme
+    if( ($https!=-1) && ($https != ($_SERVER['HTTPS'])) ) {
+      $scheme = ($_SERVER['HTTPS'] ? 'http' : 'https');
+      $host = "{$scheme}://{$_SERVER['HTTP_HOST']}";
+    }
+    return $host . $this->config['base_url'] . $virtualDir . $url;
   }
 
   function getConfig($name='') {
