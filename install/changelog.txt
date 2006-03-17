@@ -6,6 +6,7 @@ development release, and is only shown to give an idea of what's currently in th
 MOD 0.9.2 (rev 7xx - March XX, 2006)
 ====================================
 
+* [FS 297] Fixed opening PHP short tag in mutate_web_user.dynamic.action.php. Also fixed additional opening PHP short tags in other files. (757)
 * Better unistalled message/design from Zi. (755)
 * captchaClass.php merged into veriword.php (which was only 5 lines). (753,754)
 * Fixed styling for QuickEdit content editing link (752)
