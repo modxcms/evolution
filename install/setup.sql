@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `category` VARCHAR(45) NOT NULL,
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `category` varchar(45) NOT NULL,
   PRIMARY KEY(`id`)
 ) Type=MyISAM COMMENT='Categories to be used snippets,tv,chunks, etc';
 
@@ -35,22 +35,22 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
   `id` int(10) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `private_memgroup` TINYINT DEFAULT 0 COMMENT 'determine whether the document group is private to manager users',
-  `private_webgroup` TINYINT DEFAULT 0 COMMENT 'determines whether the document is private to web users',
+  `private_memgroup` tinyint DEFAULT 0 COMMENT 'determine whether the document group is private to manager users',
+  `private_webgroup` tinyint DEFAULT 0 COMMENT 'determines whether the document is private to web users',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `eventid` INTEGER DEFAULT 0,
-  `createdon` INTEGER NOT NULL DEFAULT 0,
-  `type` TINYINT NOT NULL DEFAULT 1 COMMENT '1- information, 2 - warning, 3- error',
-  `user` INTEGER NOT NULL DEFAULT 0 COMMENT 'link to user table',
-  `usertype` TINYINT NOT NULL DEFAULT 0 COMMENT '0 - manager, 1 - web',
-  `source` VARCHAR(50) NOT NULL,
-  `description` TEXT NOT NULL,
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `eventid` integer DEFAULT 0,
+  `createdon` integer NOT NULL DEFAULT 0,
+  `type` tinyint NOT NULL DEFAULT 1 COMMENT '1- information, 2 - warning, 3- error',
+  `user` integer NOT NULL DEFAULT 0 COMMENT 'link to user table',
+  `usertype` tinyint NOT NULL DEFAULT 0 COMMENT '0 - manager, 1 - web',
+  `source` varchar(50) NOT NULL,
+  `description` text NOT NULL,
   PRIMARY KEY(`id`),
   KEY `user`(`user`)
 ) TYPE=MYISAM COMMENT='Stores event and error logs';
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `unpub_date` int(20) NOT NULL default '0',
   `parent` int(10) NOT NULL default '0',
   `isfolder` int(1) NOT NULL default '0',
-  `introtext` TEXT NOT NULL COMMENT 'Used to provide quick summary of the document',  
+  `introtext` text NOT NULL COMMENT 'Used to provide quick summary of the document',  
   `content` mediumtext NOT NULL,
   `richtext` tinyint(1) NOT NULL default '1',
   `template` int(10) NOT NULL default '1',
@@ -210,14 +210,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `deleted` int(1) NOT NULL default '0',
   `deletedon` int(20) NOT NULL default '0',
   `deletedby` int(10) NOT NULL default '0',
-  `menutitle` VARCHAR(30) NOT NULL COMMENT 'Menu title',
-  `donthit` TINYINT(1) NOT NULL default '0' COMMENT 'Disable page hit count',
-  `haskeywords` TINYINT(1) NOT NULL default '0' COMMENT 'has links to keywords',
-  `hasmetatags` TINYINT(1) NOT NULL default '0' COMMENT 'has links to meta tags',
-  `privateweb` TINYINT(1) NOT NULL default '0' COMMENT 'Private web document',
-  `privatemgr` TINYINT(1) NOT NULL default '0' COMMENT 'Private manager document',
-  `content_dispo` TINYINT(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment',
-  `hidemenu` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu',
+  `menutitle` varchar(30) NOT NULL COMMENT 'Menu title',
+  `donthit` tinyint(1) NOT NULL default '0' COMMENT 'Disable page hit count',
+  `haskeywords` tinyint(1) NOT NULL default '0' COMMENT 'has links to keywords',
+  `hasmetatags` tinyint(1) NOT NULL default '0' COMMENT 'has links to meta tags',
+  `privateweb` tinyint(1) NOT NULL default '0' COMMENT 'Private web document',
+  `privatemgr` tinyint(1) NOT NULL default '0' COMMENT 'Private manager document',
+  `content_dispo` tinyint(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment',
+  `hidemenu` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu',
   PRIMARY KEY  (`id`),
   KEY `id` (`id`),
   KEY `parent` (`parent`),
@@ -238,9 +238,9 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `id` int(10) NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Chunk',
-  `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
-  `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id',
-  `cache_type`	TINYINT(1) NOT NULL default '0' COMMENT 'Cache option',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `cache_type`	tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
   `snippet` mediumtext NOT NULL,
   `locked` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -256,50 +256,50 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_keywords` (
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_metatags` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(20) NOT NULL,
-  `tag` VARCHAR(20) NOT NULL COMMENT 'tag name',
-  `tagvalue` VARCHAR(100) NOT NULL,
-  `http_equiv` TINYINT NOT NULL DEFAULT 0 COMMENT '1 - use http_equiv tag style, 0 - use name',
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `tag` varchar(20) NOT NULL COMMENT 'tag name',
+  `tagvalue` varchar(100) NOT NULL,
+  `http_equiv` tinyint NOT NULL DEFAULT 0 COMMENT '1 - use http_equiv tag style, 0 - use name',
   PRIMARY KEY(`id`)
 ) TYPE=MYISAM COMMENT='Site meta tags';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(255) NOT NULL DEFAULT '0',
-  `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
-  `disabled` TINYINT NOT NULL,
-  `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id',
-  `wrap` TINYINT NOT NULL DEFAULT '0',
-  `locked` TINYINT NOT NULL default '0',
-  `icon` VARCHAR(255) NOT NULL COMMENT 'url to module icon',
-  `enable_resource` TINYINT NOT NULL DEFAULT '0' COMMENT 'enables the resource file feature',
-  `resourcefile` VARCHAR(255) NOT NULL COMMENT 'a physical link to a resource file',
-  `createdon` INTEGER NOT NULL,  
-  `editedon` INTEGER NOT NULL,
-  `guid` VARCHAR(32) NOT NULL COMMENT 'globally unique identifier',
-  `enable_sharedparams` TINYINT NOT NULL DEFAULT '0',
-  `properties` TEXT NOT NULL,
-  `modulecode` MEDIUMTEXT NOT NULL COMMENT 'module boot up code',
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(255) NOT NULL DEFAULT '0',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `disabled` tinyint NOT NULL,
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `wrap` tinyint NOT NULL DEFAULT '0',
+  `locked` tinyint NOT NULL default '0',
+  `icon` varchar(255) NOT NULL COMMENT 'url to module icon',
+  `enable_resource` tinyint NOT NULL DEFAULT '0' COMMENT 'enables the resource file feature',
+  `resourcefile` varchar(255) NOT NULL COMMENT 'a physical link to a resource file',
+  `createdon` integer NOT NULL,  
+  `editedon` integer NOT NULL,
+  `guid` varchar(32) NOT NULL COMMENT 'globally unique identifier',
+  `enable_sharedparams` tinyint NOT NULL DEFAULT '0',
+  `properties` text NOT NULL,
+  `modulecode` mediumtext NOT NULL COMMENT 'module boot up code',
   PRIMARY KEY(`id`)
 ) TYPE=MyISAM COMMENT='Site Modules';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_depobj` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT,
-  `module` INTEGER NOT NULL,
-  `resource` INTEGER NOT NULL,
-  `type` INTEGER(2) NOT NULL DEFAULT 0 COMMENT '10-chunks, 20-docs, 30-plugins, 40-snips, 50-tpls, 60-tvs',
+  `id` integer NOT NULL AUTO_INCREMENT,
+  `module` integer NOT NULL,
+  `resource` integer NOT NULL,
+  `type` integer(2) NOT NULL DEFAULT 0 COMMENT '10-chunks, 20-docs, 30-plugins, 40-snips, 50-tpls, 60-tvs',
   PRIMARY KEY(`id`)
 ) TYPE=MYISAM COMMENT='Module Dependencies';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_access` (
-  `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  `module` INTEGER NOT NULL,
-  `usergroup` INTEGER NOT NULL,
+  `id` integer UNSIGNED NOT NULL AUTO_INCREMENT,
+  `module` integer NOT NULL,
+  `usergroup` integer NOT NULL,
   PRIMARY KEY(`id`)
 ) TYPE=MYISAM COMMENT='Module users group access permission';
 
@@ -308,14 +308,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
   `id` int(10) NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Plugin',
-  `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
-  `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id',
-  `cache_type` TINYINT(1) NOT NULL default '0' COMMENT 'Cache option',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `cache_type` tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
   `plugincode` mediumtext NOT NULL,
   `locked` tinyint(4) NOT NULL default '0',
-  `properties` TEXT NOT NULL COMMENT 'Default Properties',  
-  `disabled` TINYINT NOT NULL DEFAULT 0 COMMENT 'Disables the plugin',
-  `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters',
+  `properties` text NOT NULL COMMENT 'Default Properties',  
+  `disabled` tinyint NOT NULL DEFAULT 0 COMMENT 'Disables the plugin',
+  `moduleguid` varchar(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM COMMENT='Contains the site plugins.';
 
@@ -330,13 +330,13 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
   `id` int(10) NOT NULL auto_increment,
   `name` varchar(50) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Snippet',
-  `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
-  `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id',
-  `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Cache option',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `cache_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Cache option',
   `snippet` mediumtext NOT NULL,
   `locked` tinyint(4) NOT NULL default '0',
-  `properties` VARCHAR(255) NOT NULL COMMENT 'Default Properties',  
-  `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters',
+  `properties` text NOT NULL COMMENT 'Default Properties',  
+  `moduleguid` varchar(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM COMMENT='Contains the site snippets.';
 
@@ -345,10 +345,10 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `id` int(10) NOT NULL auto_increment,
   `templatename` varchar(50) NOT NULL default '',
   `description` varchar(255) NOT NULL default 'Template',
-  `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
-  `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id',
-  `icon` VARCHAR(255) NOT NULL COMMENT 'url to icon file',
-  `template_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-page,1-content',
+  `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+  `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+  `icon` varchar(255) NOT NULL COMMENT 'url to icon file',
+  `template_type` integer NOT NULL DEFAULT '0' COMMENT '0-page,1-content',
   `content` mediumtext NOT NULL,
   `locked` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -357,16 +357,16 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}system_eventnames` (
   `id` INT(10) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  `service` TINYINT NOT NULL COMMENT 'System Service number',
-  `groupname` VARCHAR(20) NOT NULL default '',
+  `name` varchar(50) NOT NULL,
+  `service` tinyint NOT NULL COMMENT 'System Service number',
+  `groupname` varchar(20) NOT NULL default '',
   PRIMARY KEY(`id`)
 ) TYPE=MYISAM COMMENT='System Event Names. Service = 1 - Kernel, 2 - Manager Access, 3 - Web Access, 4 - Cache, 5 - Template System ';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}system_settings` (
-  `setting_name` VARCHAR(50) NOT NULL default '',
-  `setting_value` TEXT NOT NULL default '',
+  `setting_name` varchar(50) NOT NULL default '',
+  `setting_value` text NOT NULL default '',
   UNIQUE KEY `setting_name` (`setting_name`)
 ) TYPE=MyISAM COMMENT='Contains Content Manager settings.';
 
@@ -399,18 +399,18 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
 	`id` INT(11) NOT NULL auto_increment,
-	`type` VARCHAR(20) NOT NULL default '',
-	`name` VARCHAR(50) NOT NULL default '',
-	`caption` VARCHAR(80) NOT NULL default '',
-	`description` VARCHAR(255) NOT NULL default '',
-	`editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
-	`category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id',
-	`locked` TINYINT(4) NOT NULL default '0',
-	`elements` TEXT NOT NULL,
+	`type` varchar(20) NOT NULL default '',
+	`name` varchar(50) NOT NULL default '',
+	`caption` varchar(80) NOT NULL default '',
+	`description` varchar(255) NOT NULL default '',
+	`editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
+	`category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
+	`locked` tinyint(4) NOT NULL default '0',
+	`elements` text NOT NULL,
 	`rank` int(11) NOT NULL NOT NULL default '0',
-	`display` VARCHAR(20) NOT NULL COMMENT 'Display Control',
-	`display_params` TEXT NOT NULL COMMENT 'Display Control Properties',
-	`default_text` TEXT NOT NULL,
+	`display` varchar(20) NOT NULL COMMENT 'Display Control',
+	`display_params` text NOT NULL COMMENT 'Display Control Properties',
+	`default_text` text NOT NULL,
 	PRIMARY KEY  (id),
 	KEY `indx_rank`(`rank`)	
 ) TYPE=MyISAM COMMENT='Site Template Variables';
@@ -527,7 +527,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
-  `user` INTEGER NOT NULL,
+  `user` integer NOT NULL,
   `setting_name` varchar(50) NOT NULL default '',
   `setting_value` varchar(255) NOT NULL default '',
   KEY `setting_name` (`setting_name`),
@@ -592,14 +592,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
   `id` int(10) NOT NULL auto_increment,
   `username` varchar(100) NOT NULL default '',
   `password` varchar(100) NOT NULL default '',
-  `cachepwd` VARCHAR(100) NOT NULL COMMENT 'Store new unconfirmed password',
+  `cachepwd` varchar(100) NOT NULL COMMENT 'Store new unconfirmed password',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
 ) Type=MyISAM;
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
-  `webuser` INTEGER NOT NULL,
+  `webuser` integer NOT NULL,
   `setting_name` varchar(50) NOT NULL default '',
   `setting_value` varchar(255) NOT NULL default '',
   KEY `setting_name` (`setting_name`),
@@ -613,14 +613,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 
-ALTER TABLE `{PREFIX}web_users` ADD COLUMN `cachepwd` VARCHAR(100) NOT NULL COMMENT 'Store new unconfirmed password' AFTER `password`;
+ALTER TABLE `{PREFIX}web_users` ADD COLUMN `cachepwd` varchar(100) NOT NULL COMMENT 'Store new unconfirmed password' AFTER `password`;
 
 
-ALTER TABLE `{PREFIX}site_tmplvars` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
- ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`;
+ALTER TABLE `{PREFIX}site_tmplvars` ADD COLUMN `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` integer NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`;
 
 
-ALTER TABLE `{PREFIX}site_tmplvars` MODIFY COLUMN `name` VARCHAR(50) NOT NULL;
+ALTER TABLE `{PREFIX}site_tmplvars` MODIFY COLUMN `name` varchar(50) NOT NULL;
 
 
 ALTER TABLE `{PREFIX}site_tmplvars` ADD INDEX `indx_rank`(`rank`);
@@ -629,54 +629,54 @@ ALTER TABLE `{PREFIX}site_tmplvars` ADD INDEX `indx_rank`(`rank`);
 ALTER TABLE `{PREFIX}site_content` ADD INDEX `aliasidx` (alias);
 
 
-ALTER TABLE `{PREFIX}site_content` ADD COLUMN `introtext` TEXT NOT NULL COMMENT 'Used to provide quick summary of the document' AFTER `isfolder`;
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `introtext` text NOT NULL COMMENT 'Used to provide quick summary of the document' AFTER `isfolder`;
 
 
-ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `menutitle` VARCHAR(30) NOT NULL COMMENT 'Menu title' AFTER `deletedby`,
- ADD COLUMN `donthit` TINYINT(1) NOT NULL default '0' COMMENT 'Disable page hit count' AFTER `menutitle`,
- ADD COLUMN `haskeywords` TINYINT(1) NOT NULL default '0' COMMENT 'has links to keywords' AFTER `donthit`,
- ADD COLUMN `hasmetatags` TINYINT(1) NOT NULL default '0' COMMENT 'has links to meta tags' AFTER `haskeywords`,
- ADD COLUMN `privateweb` TINYINT(1) NOT NULL default '0' COMMENT 'Private web document' AFTER `hasmetatags`,
- ADD COLUMN `privatemgr` TINYINT(1) NOT NULL default '0' COMMENT 'Private manager document' AFTER `privateweb`;
+ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `menutitle` varchar(30) NOT NULL COMMENT 'Menu title' AFTER `deletedby`,
+ ADD COLUMN `donthit` tinyint(1) NOT NULL default '0' COMMENT 'Disable page hit count' AFTER `menutitle`,
+ ADD COLUMN `haskeywords` tinyint(1) NOT NULL default '0' COMMENT 'has links to keywords' AFTER `donthit`,
+ ADD COLUMN `hasmetatags` tinyint(1) NOT NULL default '0' COMMENT 'has links to meta tags' AFTER `haskeywords`,
+ ADD COLUMN `privateweb` tinyint(1) NOT NULL default '0' COMMENT 'Private web document' AFTER `hasmetatags`,
+ ADD COLUMN `privatemgr` tinyint(1) NOT NULL default '0' COMMENT 'Private manager document' AFTER `privateweb`;
 
 
-ALTER TABLE `{PREFIX}site_content` ADD COLUMN `content_dispo` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '0-inline, 1-attachment' AFTER `privatemgr`;
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `content_dispo` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0-inline, 1-attachment' AFTER `privatemgr`;
 
 
-ALTER TABLE `{PREFIX}site_content` ADD COLUMN `hidemenu` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu' AFTER `content_dispo`;
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `hidemenu` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu' AFTER `content_dispo`;
 
 
-ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
- ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
- ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
+ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` integer NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `cache_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
 
 
-ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `disabled` TINYINT NOT NULL COMMENT 'Disables the plugin' AFTER `properties`;
+ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `disabled` tinyint NOT NULL COMMENT 'Disables the plugin' AFTER `properties`;
 
 
-ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters' AFTER `disabled`;
+ALTER TABLE `{PREFIX}site_plugins` ADD COLUMN `moduleguid` varchar(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters' AFTER `disabled`;
 
 
-ALTER TABLE `{PREFIX}site_htmlsnippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
- ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
- ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
+ALTER TABLE `{PREFIX}site_htmlsnippets` ADD COLUMN `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` integer NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `cache_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
 
 
-ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
- ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
- ADD COLUMN `cache_type` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
+ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` integer NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `cache_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'cache option' AFTER `category`;
 
 
-ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `properties` VARCHAR(255) NOT NULL COMMENT 'Default Properties' AFTER `locked`;
+ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `properties` varchar(255) NOT NULL COMMENT 'Default Properties' AFTER `locked`;
 
 
-ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `moduleguid` VARCHAR(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters' AFTER `properties`;
+ALTER TABLE `{PREFIX}site_snippets` ADD COLUMN `moduleguid` varchar(32) NOT NULL COMMENT 'GUID of module from which to import shared parameters' AFTER `properties`;
 
 
-ALTER TABLE `{PREFIX}site_templates` ADD COLUMN `editor_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
- ADD COLUMN `category` INTEGER NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
- ADD COLUMN `icon` VARCHAR(255) NOT NULL COMMENT 'url to icon file' AFTER `category`,
- ADD COLUMN `template_type` INTEGER NOT NULL DEFAULT '0' COMMENT '0-page,1-content' AFTER `icon`;
+ALTER TABLE `{PREFIX}site_templates` ADD COLUMN `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor' AFTER `description`,
+ ADD COLUMN `category` integer NOT NULL DEFAULT '0' COMMENT 'category id' AFTER `editor_type`,
+ ADD COLUMN `icon` varchar(255) NOT NULL COMMENT 'url to icon file' AFTER `category`,
+ ADD COLUMN `template_type` integer NOT NULL DEFAULT '0' COMMENT '0-page,1-content' AFTER `icon`;
 
 
 ALTER TABLE `{PREFIX}document_groups` DROP INDEX `indx_doc_groups`;
@@ -688,18 +688,21 @@ ALTER TABLE `{PREFIX}document_groups` ADD INDEX `document` (`document`);
 ALTER TABLE `{PREFIX}document_groups` ADD INDEX `document_group` (`document_group`);
 
 
-ALTER TABLE `{PREFIX}system_settings` MODIFY COLUMN `setting_value` TEXT NOT NULL;
+ALTER TABLE `{PREFIX}system_settings` MODIFY COLUMN `setting_value` text NOT NULL;
 
 
-ALTER TABLE `{PREFIX}site_plugins` MODIFY COLUMN `properties` TEXT;
+ALTER TABLE `{PREFIX}site_plugins` MODIFY COLUMN `properties` text;
 
 
-ALTER TABLE `{PREFIX}system_eventnames` ADD COLUMN `groupname` VARCHAR(20) NOT NULL AFTER `service`;
+ALTER TABLE `{PREFIX}site_snippets` MODIFY COLUMN `properties` text;
+
+
+ALTER TABLE `{PREFIX}system_eventnames` ADD COLUMN `groupname` varchar(20) NOT NULL AFTER `service`;
 
 
 ALTER TABLE `{PREFIX}documentgroup_names` 
- ADD COLUMN `private_memgroup` TINYINT DEFAULT '0' COMMENT 'determine whether the document group is private to manager users' AFTER `name`,
- ADD COLUMN `private_webgroup` TINYINT DEFAULT '0' COMMENT 'determines whether the document is private to web users' AFTER `private_memgroup`;
+ ADD COLUMN `private_memgroup` tinyint DEFAULT '0' COMMENT 'determine whether the document group is private to manager users' AFTER `name`,
+ ADD COLUMN `private_webgroup` tinyint DEFAULT '0' COMMENT 'determines whether the document is private to web users' AFTER `private_memgroup`;
 
 
 ALTER TABLE `{PREFIX}user_roles`
@@ -740,29 +743,29 @@ ALTER TABLE `{PREFIX}user_roles`
  ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0'AFTER `web_access_permissions`;
 
 
-ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
- ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
- ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`,
- ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`,
- ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`,
- ADD COLUMN `fax` VARCHAR(100) NOT NULL AFTER `zip`,
- ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`,
- ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`,
- ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
+ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` integer(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
+ ADD COLUMN `gender` integer(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
+ ADD COLUMN `country` varchar(5) NOT NULL AFTER `gender`,
+ ADD COLUMN `state` varchar(5) NOT NULL AFTER `country`,
+ ADD COLUMN `zip` varchar(5) NOT NULL AFTER `state`,
+ ADD COLUMN `fax` varchar(100) NOT NULL AFTER `zip`,
+ ADD COLUMN `blockedafter` integer(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`,
+ ADD COLUMN `photo` varchar(255) NOT NULL COMMENT 'link to photo' AFTER `fax`,
+ ADD COLUMN `comment` varchar(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
 
 
-ALTER TABLE `{PREFIX}web_users` MODIFY COLUMN `username` VARCHAR(100) NOT NULL;
+ALTER TABLE `{PREFIX}web_users` MODIFY COLUMN `username` varchar(100) NOT NULL;
 
 
-ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` INTEGER(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
- ADD COLUMN `gender` INTEGER(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
- ADD COLUMN `country` VARCHAR(5) NOT NULL AFTER `gender`,
- ADD COLUMN `state` VARCHAR(5) NOT NULL AFTER `country`,
- ADD COLUMN `zip` VARCHAR(5) NOT NULL AFTER `state`,
- ADD COLUMN `fax` VARCHAR(100) NOT NULL AFTER `zip`,
- ADD COLUMN `blockedafter` INTEGER(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`,
- ADD COLUMN `photo` VARCHAR(255) NOT NULL COMMENT 'link to photo' AFTER `fax`,
- ADD COLUMN `comment` VARCHAR(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
+ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` integer(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
+ ADD COLUMN `gender` integer(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
+ ADD COLUMN `country` varchar(5) NOT NULL AFTER `gender`,
+ ADD COLUMN `state` varchar(5) NOT NULL AFTER `country`,
+ ADD COLUMN `zip` varchar(5) NOT NULL AFTER `state`,
+ ADD COLUMN `fax` varchar(100) NOT NULL AFTER `zip`,
+ ADD COLUMN `blockedafter` integer(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`,
+ ADD COLUMN `photo` varchar(255) NOT NULL COMMENT 'link to photo' AFTER `fax`,
+ ADD COLUMN `comment` varchar(255) NOT NULL COMMENT 'short comment' AFTER `photo`;
 
 
 ALTER TABLE `{PREFIX}user_roles` ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
