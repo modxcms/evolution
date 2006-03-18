@@ -4,7 +4,7 @@ BODY {
 	width:					100%; 
 	height:					100%; 
 	margin: 				0px 0px 0px 0px;
-	background-image: 		url("images/body.jpg");
+	background-image: 		url("images/bg/body.jpg");
 	background-color: 		#fff;
 	background-position: 	top;
 	background-repeat: 		repeat-x;
@@ -55,6 +55,6 @@ a img {
 	font-size: 				5px;
 	text-align:				center;
 	background-color:		#EEEEEE;
-	background-image: 		url("images/misc/buttonbar.gif");
+	background-image: 		url("images/bg/buttonbar.gif");
 	border:1px solid 		#9ABBE5;
 }

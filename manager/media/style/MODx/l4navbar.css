@@ -3,7 +3,7 @@ body {
     font-size: 11px;
     margin:0;
     padding:0;
-    background: #ecf2ff url(images/buttonbar.gif) repeat-x top left;
+    background: #ecf2ff url(images/bg/buttonbar.gif) repeat-x top left;
 } 
 body * {
     margin: 0;
@@ -13,7 +13,7 @@ body * {
 #divNav {
     height: 50px;
     width: 100%;
-    background: transparent url(images/buttonbar_gs.gif) repeat-x 0 25px;
+    background: transparent url(images/bg/buttonbar_gs.gif) repeat-x 0 25px;
 }
 
 ul#nav {
@@ -54,14 +54,14 @@ ul#nav {
 	border: 1px solid darkgreen !important;
 	border-bottom-width: 0 !important;
 	padding: 4px 9px 5px;
-	background: transparent url(images/button_dn.gif) repeat-x 0px 0px;
+	background: transparent url(images/bg/button_dn.gif) repeat-x 0px 0px;
 }
 #nav a:active {
     padding: 5px 8px 4px 10px;
     color: #000;
 }
 #nav li.active a {
-	background: transparent url(images/misc/buttonbar_gs.gif) repeat-x left top;
+	background: transparent url(images/bg/buttonbar_gs.gif) repeat-x left top;
 	font-weight: bold;
 	text-decoration: none;
 	height: 16px;
@@ -76,7 +76,7 @@ ul#nav {
 	border-left: 1px solid darkblue;
 }
 #nav li.active a:hover {
-    background: transparent url(images/misc/buttonbar_gs.gif) repeat-x top left !important;
+    background: transparent url(images/bg/buttonbar_gs.gif) repeat-x top left !important;
     border-bottom-width: 0 !important;
 }
 
@@ -94,13 +94,13 @@ ul#nav {
 	font-weight: normal;
 	border: none;
 	height: 15px;
-	background: transparent url(images/buttonbar_gs.gif) repeat-x left -1px;
+	background: transparent url(images/bg/buttonbar_gs.gif) repeat-x left -1px;
 	padding: 4px 10px 5px;
 }
 
 #nav li.active ul.subnav a:hover {
 	color: #000;
-	background: transparent url(images/button_dn.gif) repeat-x top left !important;
+	background: transparent url(images/bg/button_dn.gif) repeat-x top left !important;
 	font-weight: normal;
 	border-top-width: 0 !important;
 	border-bottom-width: 0 !important;

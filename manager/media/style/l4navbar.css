@@ -3,7 +3,7 @@ body {
     font-size: 11px;
     margin:0;
     padding:0;
-    background: #ecf2ff url(../images/misc/buttonbar.gif) repeat-x top left;
+    background: #ecf2ff url(MODx/images/bg/buttonbar.gif) repeat-x top left;
 } 
 body * {
     margin: 0;
@@ -13,7 +13,7 @@ body * {
 #divNav {
     height: 50px;
     width: 100%;
-    background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x 0 25px;
+    background: transparent url(MODx/images/bg/buttonbar_gs.gif) repeat-x 0 25px;
 }
 
 ul#nav {
@@ -51,19 +51,17 @@ ul#nav {
 	padding: 5px 10px 4px;
 }
 #nav a:hover {
-	color: #fff;
-	border: 1px solid #224d6f !important;
+	border: 1px solid darkgreen !important;
 	border-bottom-width: 0 !important;
 	padding: 4px 9px 5px;
-	background: #224d6f;
+	background: transparent url(MODx/images/bg/button_dn.gif) repeat-x 0px 0px;
 }
 #nav a:active {
     padding: 5px 8px 4px 10px;
     color: #000;
 }
 #nav li.active a {
-	color: #224d6f;
-	background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x left top;
+	background: transparent url(MODx/images/bg/buttonbar_gs.gif) repeat-x left top;
 	font-weight: bold;
 	text-decoration: none;
 	height: 16px;
@@ -78,9 +76,8 @@ ul#nav {
 	border-left: 1px solid darkblue;
 }
 #nav li.active a:hover {
+    background: transparent url(MODx/images/bg/buttonbar_gs.gif) repeat-x top left !important;
     border-bottom-width: 0 !important;
-	color: #224d6f;
-	background: transparent url(../images/misc/buttonbar_gs.gif) repeat-x left top;
 }
 
 #nav li.active ul.subnav {
@@ -97,12 +94,13 @@ ul#nav {
 	font-weight: normal;
 	border: none;
 	height: 15px;
+	background: transparent url(MODx/images/bg/buttonbar_gs.gif) repeat-x left -1px;
 	padding: 4px 10px 5px;
 }
 
 #nav li.active ul.subnav a:hover {
-	color: #fff;
-	background: #224d6f;
+	color: #000;
+	background: transparent url(MODx/images/bg/button_dn.gif) repeat-x top left !important;
 	font-weight: normal;
 	border-top-width: 0 !important;
 	border-bottom-width: 0 !important;

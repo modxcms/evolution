@@ -1,7 +1,7 @@
 BODY {
 	margin:							0px 0px 0px 0px;
 	padding:						0px 0px 0px 0px;
-	background-image: 				url("../../media/images/bg/body.jpg");
+	background-image: 				url("MODx/images/bg/body.jpg");
 	background-color: 				#fff;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -59,7 +59,7 @@ HR {
 }
 
 .split {
-	background: #821517 url("../../media/images/misc/line.gif") repeat-x;
+	background: #821517 url("MODx/images/bg/line.gif") repeat-x;
 	height: 1px;
 	font-size: 0;
 	clear: both;
@@ -69,9 +69,10 @@ HR {
 
 
 .stay {
-	margin-left:10px;}
+	border-bottom:					1px solid #D0E2F8;
+	margin-left:					0px }
 	
-	
+
 .messageRead {
 	color:							Black;
 }
@@ -87,7 +88,7 @@ HR {
 	padding:						0px;
 	margin-bottom:					10px;
 	margin-right:					10px;
-	background-image: 				url("../../media/images/misc/buttonbar.gif");
+	background-image: 				url("MODx/images/bg/buttonbar.gif");
 	background-position: 			top;
 	background-repeat: 				repeat-x;		
 }
@@ -106,7 +107,7 @@ HR {
 	background: 					white;
 	font-size: 						12px;
 	padding: 						10px;
-	background-image: 				url("../images/bg/section.jpg");
+	background-image: 				url("MODx/images/bg/section.jpg");
 	background-position: 			top right;
 	background-repeat: 				no-repeat;	
 }
@@ -117,14 +118,14 @@ HR {
 }
 
 .sectionHeader, .showHideVisible {
-	margin:							0px 25px 4px 10px;
+	margin:							0px 10px 4px 10px;
 	padding:						5px 3px 5px 3px;
 	font-weight:					bold;
 	background-position: 			top left;
 	background-repeat: 				repeat-x;	
 	background:						#F0A62F;
 	border:							1px solid #003399;
-	background-image: 				url("../images/misc/buttonbar_gs.gif");
+	background-image: 				url("MODx/images/bg/buttonbar_gs.gif");
 }
 
 .sectionBody, .layerVisible {
@@ -133,9 +134,9 @@ HR {
 	display:						none;
 	background:						white;
 	border:							1px solid #003399;
-	margin:							0px 10px 20px 25px;
+	margin:							0px 10px 20px 10px;
 	padding:						10px;
-	background-image: 				url("../images/bg/section.jpg");
+	background-image: 				url("MODx/images/bg/section.jpg");
 	background-position: 			top right;
 	background-repeat: 				no-repeat;		
 	display:						block;
@@ -152,26 +153,31 @@ HR {
 
 thead, .fancyrow {
 	height:							18px !important;
-	background-image: 				url("../images/misc/buttonbar_gs.gif");
-	background-color: 				#F0A62F;
+	background-color: 				#4791C5;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
 	border-bottom: 					1px solid rgb(120,172,255);
 }
 
+thead td {
+	color:white;
+	border-top:1px solid #58B1F5;
+}
+
 .fancyrow2 {
 	height:							18px !important;
-	background-image: 				url("../images/misc/buttonbar.gif");
+	background-image: 				url("MODx/images/bg/buttonbar.gif");
 	background-color: 				#F0A62F;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
 	border-bottom: 					1px solid rgb(120,172,255);
+	color:							white;
 }
 
 li {
 	padding: 						0px;
 	margin: 						0px 0px 0px 15px;
-	list-style: 					disc outside url("../images/misc/li.gif");
+	list-style: 					disc outside url("MODx/images/misc/li.gif");
 }
 
 ul {
@@ -195,8 +201,8 @@ a img {
 
 .sort-table thead {
 	height:				18px !important;
-	background-image: 				url("../images/misc/thead.gif");
-	background-color: 				#fff;
+	background-image: 				url("MODx/images/bg/thead.gif");
+	background-color: 				#4791C5;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
 	
@@ -204,10 +210,12 @@ a img {
 
 .sort-table td {
 	padding:	2px 5px;
+	border:;
 }
 
 .sort-table thead td {
 	cursor:			pointer;
+	color:			#000000;
 }
 
 .sort-table thead td:active {
@@ -225,12 +233,12 @@ a img {
 }
 
 .sort-arrow.descending {
-	background-image:		url("../images/icons/downsimple.png");
+	background-image:		url("MODx/images/icons/downsimple.png");
 	
 }
 
 .sort-arrow.ascending {
-	background-image:		url("../images/icons/upsimple.png");
+	background-image:		url("MODx/images/icons/upsimple.png");
 }
 
 .even {
@@ -238,7 +246,7 @@ a img {
 }
 
 .odd {
-	background: ;
+	background: #FFFFFF;
 }
 
 /*	end sortable table */
@@ -258,9 +266,9 @@ a img {
 	vertical-align:					baseline;
 }
 
-.row1	{ background-color: #EEF5FD; }
-.row2	{ background-color: #E5F0FD; }
-.row3	{ background-color: #C6E0FE; }
+.row1	{ background-color: #EEF5FD; color: #000000;}
+.row2	{ background-color: #E5F0FD; color: #000000;}
+.row3	{ background-color: #C6E0FE; color: #000000;}
 
 
 #treeHolder {
@@ -276,7 +284,7 @@ a img {
 	left:							4px;
 	margin:							0px; 
 	padding:						0px;
-	background-image: 				url("../images/bg/section.jpg");
+	background-image: 				url("MODx/images/bg/section.jpg");
 	background-color: 				#fff;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -329,21 +337,44 @@ a img {
 }
 
 .notInMenuNode {
-	color:							#FF8800;
+	color:							#DD8800;
 }
 
 
-/* grid style*/
+/* grid style */
+.grid {
+	width:							100%;
+	background-color:				#FFFFFF;
+	font-family:					verdana,arial; 
+	font-size:						11px;
+	border:							1px solid silver;}
+	
+.gridHeader {
+	color:							white; 
+	font-weight:					bold;
+	background-image:				url('MODx/images/bg/grid_hdr.gif');
+	background-color:				#4791C5;
+	height:							25px;
+	border:							1px solid #4791C5; }
+	
+.gridItem {
+	background-color:				white;
+	padding:						3px; }
+	
+.gridAltItem {
+	background-color:				#eeeeee;
+	padding:						3px; }
+
 .gridRowIcon:hover {
 		background-color:beige;}
 
 
-
+	
 /* search bar */
 .searchbar {
 	width:							100%;
 	border:							1px solid silver;
-	background-image:				url('images/srch_bg.gif');
+	background-image:				url('MODx/images/bg/srch_bg.gif');
 	background-color:				beige; }
 
 .searchtext {
@@ -362,7 +393,7 @@ a img {
 	
 .searchbutton:hover {
 	text-decoration:				none;
-	background-image:				url('images/button_dn.gif');}
+	background-image:				url('MODx/images/bg/button_dn.gif');}
 
 .searchtoolbarbtn {
 	height:							24px;
@@ -372,11 +403,85 @@ a img {
 	text-decoration:				none;
 	font-family:					Verdana, Arial, Helvetica, sans-serif;
 	font-size:						11px;
-	background-image:				url('images/srch_bg.gif');
+	background-image:				url('MODx/images/bg/srch_bg.gif');
 	border:							1px solid #e0e0e0; }
 
 .searchtoolbarbtn:hover {
 	text-decoration:				none;
-	background-image:				url('images/button_dn.gif');
+	background-image:				url('MODx/images/button_dn.gif');
 	border:							1px solid green; }
 
+/* home page main links */
+A.hometblink, A.hometblink:ACTIVE, A.hometblink:VISITED, A.hometblink:LINK
+.hometblink {
+	text-decoration:				none;
+	color:							#000080; }
+	
+A.hometblink:hover {
+	text-decoration:				none;
+	color:							#EE0000;}
+	/* accesscontrol style*/ 
+	.loginBg {
+	background-image: 			url('MODx/images/bg/login_bg.jpg');
+	background-position: 		top;
+	background-color:			#5377A7;
+	background-repeat: 			repeat-x;
+}
+.loginTbl {
+	background-color:			white;
+	border:						1px solid #5377A7; /*#003399; */
+	background-image: 			url('MODx/images/bg/section.jpg');
+	background-position: 		top right;
+	background-repeat: 			no-repeat;
+	padding: 					10px;
+	text-align: 				justify;
+	color:                  #5377A7;
+}
+.loginLicense {
+	background-color:			White;
+	border-right:				1px solid #5377A7;
+	border-bottom:				1px solid #5377A7;
+	border-left:				1px solid #5377A7;
+	background-image: 			url('MODx/images/bg/login_footer_bg.gif');
+	background-position: 		bottom;
+	background-repeat: 			repeat-x;
+	padding: 					10px;
+	text-align: 				justify;
+	color:                  #5377A7;
+}
+.loginLicense td{
+	color:#5377A7;
+}
+
+.notice {
+	width:100%;
+	padding:5px;
+	border:1px solid #eeeeee;
+	background-color:#F4F4F4;
+	font-size:10px;
+	color:#707070;}
+
+.siteName {
+	font-weight:bold;
+	font-family:verdana, arial;
+	font-size:18px;
+	color:#5377A7;
+	}
+	
+	
+/*end access control style*/
+
+/*topbar.php styles*/
+	
+	#topbar {
+	font-size: 10px
+	color: White;
+	margin : 0px 0px 0px 0px;
+	background: #4791C5;
+	
+}
+#topbar TD {
+	padding-top: 4px;
+	color: White;
+
+}

@@ -12,7 +12,7 @@
 	padding:			4px 5px 4px 5px;
 	white-space:		nowrap;
 	vertical-align:		middle;
-	background-image:	url("../images/misc/buttonbar.gif");
+	background-image:	url("MODx/images/bg/button_up.gif");
 }
 
 .coolButton img {
@@ -20,13 +20,9 @@
 }
 
 .coolButtonHover {
-	border:		1px solid black;
-	border-left-color:	ButtonHighlight;
-	border-right-color:	ButtonShadow;
-	border-top-color:	ButtonHighlight;
-	border-bottom-color:ButtonShadow;	
+	border:		1px solid darkgreen;
 	padding:			3px 4px 3px 4px;		
-	background-image:	url("../images/misc/buttonbar_gs.gif");
+	background-image:	url("MODx/images/bg/button_dn.gif");
 }
 
 .coolButtonActiveHover {
@@ -36,7 +32,7 @@
 	border-top-color:	ButtonShadow;
 	border-bottom-color:ButtonHighlight;
 	padding:			4px 3px 2px 5px;		
-	background-image:	url("../images/misc/buttonbaractive.gif");
+	background-image:	url("MODx/images/bg/buttonbaractive.gif");
 }
 
 .coolButtonActive {
@@ -46,7 +42,7 @@
 	border-top-color:	ButtonShadow;
 	border-bottom-color:ButtonHighlight;
 	padding:			4px 3px 2px 5px;		
-	background-image:	url("../images/misc/buttonbaractive.gif");
+	background-image:	url("MODx/images/bg/buttonbaractive.gif");
 }
 
 .coolButtonUpDisabled,

@@ -12,7 +12,7 @@
 	padding:			4px 5px 4px 5px;
 	white-space:		nowrap;
 	vertical-align:		middle;
-	background-image:	url("images/button_up.gif");
+	background-image:	url("images/bg/button_up.gif");
 }
 
 .coolButton img {
@@ -22,7 +22,7 @@
 .coolButtonHover {
 	border:		1px solid darkgreen;
 	padding:			3px 4px 3px 4px;		
-	background-image:	url("images/button_dn.gif");
+	background-image:	url("images/bg/button_dn.gif");
 }
 
 .coolButtonActiveHover {

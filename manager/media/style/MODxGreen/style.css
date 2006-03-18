@@ -1,7 +1,7 @@
 BODY {
 	margin:							0px 0px 0px 0px;
 	padding:						0px 0px 0px 0px;
-	background-image: 				url("images/body.jpg");
+	background-image: 				url("images/bg/body.jpg");
 	background-color: 				#F4F4F4;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -60,7 +60,7 @@ HR {
 }
 
 .split {
-	background: #821517 url("images/line.gif") repeat-x;
+	background: #821517 url("images/misc/line.gif") repeat-x;
 	height: 1px;
 	font-size: 0;
 	clear: both;
@@ -89,7 +89,7 @@ HR {
 	padding:						0px;
 	margin-bottom:					10px;
 	margin-right:					10px;
-	background-image: 				url("images/button_up.gif");
+	background-image: 				url("images/bg/button_up.gif");
 	background-position: 			top;
 	background-repeat: 				repeat-x;		
 }
@@ -126,7 +126,7 @@ HR {
 	background-repeat: 				repeat-x;	
 	background:						#9EBD5A;
 	border:							1px solid #000000;
-	background-image: 				url("images/button_dn.gif");
+	background-image: 				url("images/bg/button_dn.gif");
 }
 
 .sectionBody, .layerVisible {
@@ -165,7 +165,7 @@ thead td {
 
 .fancyrow2 {
 	height:							18px !important;
-	background-image: 				url("images/buttonbar.gif");
+	background-image: 				url("images/bg/buttonbar.gif");
 	background-color: 				#F0A62F;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -176,7 +176,7 @@ thead td {
 li {
 	padding: 						0px;
 	margin: 						0px 0px 0px 15px;
-	list-style: 					disc outside url("images/li.gif");
+	list-style: 					disc outside url("images/misc/li.gif");
 }
 
 ul {
@@ -200,7 +200,7 @@ a img {
 
 .sort-table thead {
 	height:				18px !important;
-	background-image: 				url("images/button_dn.gif");
+	background-image: 				url("images/bg/button_dn.gif");
 	background-color: 				#97B553;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -232,12 +232,12 @@ a img {
 }
 
 .sort-arrow.descending {
-	background-image:		url("images/downsimple.png");
+	background-image:		url("images/misc/downsimple.png");
 	
 }
 
 .sort-arrow.ascending {
-	background-image:		url("images/upsimple.png");
+	background-image:		url("images/misc/upsimple.png");
 }
 
 .even {
@@ -352,7 +352,7 @@ a img {
 .gridHeader {
 	color:							white; 
 	font-weight:					bold;
-	background-image:				url('images/button_dn.gif');
+	background-image:				url('images/bg/button_dn.gif');
 	background-color:				Black;
 	height:							25px;
 	border:							1px solid #4791C5; }
@@ -374,7 +374,7 @@ a img {
 .searchbar {
 	width:							100%;
 	border:							1px solid silver;
-	background-image:				url('images/srch_bg.gif');
+	background-image:				url('images/bg/srch_bg.gif');
 	background-color:				beige; }
 
 .searchtext {
@@ -393,7 +393,7 @@ a img {
 	
 .searchbutton:hover {
 	text-decoration:				none;
-	background-image:				url('images/button_dn.gif');}
+	background-image:				url('images/bg/button_dn.gif');}
 
 .searchtoolbarbtn {
 	height:							24px;
@@ -408,7 +408,7 @@ a img {
 
 .searchtoolbarbtn:hover {
 	text-decoration:				none;
-	background-image:				url('images/button_dn.gif');
+	background-image:				url('images/bg/button_dn.gif');
 	border:							1px solid green; }
 
 /* home page main links */

@@ -22,7 +22,7 @@
 	border: 1px solid #fff;
 	border-right:							1px solid #E4E4E4;
 	border-bottom:							1px solid #E4E4E4;
-	background: #fff url(images/tab-bg.png) repeat-x top left;
+	background: #fff url(images/bg/tab-bg.png) repeat-x top left;
    }
 
 .dynamic-tab-pane-control .tab-row .tab.hover {

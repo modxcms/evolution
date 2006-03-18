@@ -25,7 +25,7 @@ BODY {
 }	
 .buttonoc a, .buttonoc a:visited{
 	font-family:			tahoma, Arial, Helvetica, sans-serif;
-	background:			url("../images/misc/buttonbar.gif");
+	background:			url("MODx/images/bg/buttonbar.gif");
 	font-size: 			11px;
 	padding: 			0px 2px 0px 2px;
 	text-decoration:		none;
@@ -33,7 +33,7 @@ BODY {
 	}
 
 .buttonoc a:hover{
-	background: 			url("../images/misc/buttonbar_gs.gif");
+	background: 			url("MODx/images/bg/buttonbar_gs.gif");
 	color:				#000000;
 	}
 

@@ -1,85 +1,56 @@
-BODY {
-	background-image: 				url("../images/bg/context.gif");
-	background-color: 				#fff;
-	background-position: 			top left;
-	background-repeat: 				repeat-y;
-	margin:							0px;
-	padding:						2px;
-	border: 						1px solid #003399;
-	border-left-color:	ButtonHighlight;
-	border-right-color:	ButtonShadow;
-	border-top-color:	ButtonHighlight;
-	border-bottom-color:ButtonShadow;
-	overflow:						hidden;
-}
+body {
+	background: #fff url(MODx/images/bg/context.gif) repeat-y top left;
+	margin:	0;
+	padding: 2px;
+	border: 1px solid #fdfdfd;
+	border-right-color:	#dcdcdc;
+	border-bottom-color: #dcdcdc;
+	overflow: hidden;
+	font: normal 11px/11px Verdana, Arial, sans-serif; }
 
 .menuLink {
-	cursor:							pointer;
-	font:							menu;
-	color:							MenuText;
-
-	padding: 						3px 16px 3px 2px;
-}
+	cursor: pointer;
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	color: #222;
+	padding: 3px 16px 3px 2px; }
 
 .menuLinkOver {
-	cursor:							pointer;
-	background-position: 			bottom left;
-	background-repeat: 				repeat-x;	
-	background:						white;
-	background-image: 				url("../images/misc/buttonbar_gs.gif");
-	font:							menu;
+	background: #fff url(MODx/images/bg/buttonbar_gs.gif) repeat-x bottom left; 
+	border: 1px solid #fdfdfd;
+	border-right-color:	#dcdcdc;
+	border-bottom-color: #dcdcdc; }
 
-	padding: 						2px 15px 2px 1px;
-	border: 						1px solid #003399;
-	border-left-color:	ButtonHighlight;
-	border-right-color:	ButtonShadow;
-	border-top-color:	ButtonHighlight;
-	border-bottom-color:ButtonShadow;	
-}
+.menuLinkOver,
+.menuLinkDisabled {
+	cursor: pointer;
+	padding: 2px 15px 2px 1px;}
 
 .menuLinkDisabled {
-	cursor:							default;
-	font: 							menu;
+	cursor:	default;
+	color: #787878; }
 
-	padding: 						3px 16px 3px 2px;
-	color:							graytext;
-}
+.menuLink img, .menuLinkOver img, .menuLinkDisabled img {
+	margin-right: 8px; }
 
-.menuLink IMG, .menuLinkOver IMG, .menuLinkDisabled IMG {
-	margin-right:					8px;
-}
+.menuLink img, .menuLinkDisabled img {
+	filter:	gray(); }
 
-.menuLink IMG, .menuLinkDisabled IMG {
-	filter:							gray();
-}
-
-.menuLinkOver IMG {
-
-}
+.menuLinkOver img { }
 
 #nameHolder {
-	text-align:						right;
-	cursor:							default;
-	font-family: 					Tahoma, Helvetica, sans-serif;
-	font-weight:					bold;
-	font-size:						11px;
-	padding: 						2px 2px 2px 2px;
-	margin-bottom:					2px;
-	border: 						1px solid #003399;
-	border-left-color:	ButtonHighlight;
-	border-right-color:	ButtonShadow;
-	border-top-color:	ButtonHighlight;
-	border-bottom-color:ButtonShadow;	
-	background-position: 			bottom left;
-	background-repeat: 				repeat-x;	
-	background:						white;
-	background-image: 				url("../images/misc/buttonbar.gif");
-}
+	text-align: right;
+	cursor: default;
+	font-weight: bold; 	
+	padding: 2px;
+	margin-bottom: 2px;
+	border: 1px solid #fdfdfd;
+	border-right-color:	#dcdcdc;
+	border-bottom-color: #dcdcdc;	
+	background: #fff url(MODx/images/bg/buttonbar.gif) repeat-x bottom left; }
 
 .seperator {
-	font-size:      				0pt;
-	height:         				1px;
-	background-color: 				#6A8CCB;
-	overflow:       				hidden;
-	margin:							3px 1px 3px 28px;
-}
+	font-size: 0;
+	height: 1px;
+	background-color: #6A8CCB;
+	overflow: hidden;
+	margin: 3px 1px 3px 28px; }

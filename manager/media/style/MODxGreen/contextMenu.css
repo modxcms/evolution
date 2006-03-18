@@ -1,5 +1,5 @@
 body {
-	background: #fff url(images/context.gif) repeat-y top left;
+	background: #fff url(images/bg/context.gif) repeat-y top left;
 	margin:	0;
 	padding: 2px;
 	border: 1px solid #fdfdfd;
@@ -15,7 +15,7 @@ body {
 	padding: 3px 16px 3px 2px; }
 
 .menuLinkOver {
-	background: #fff url(images/buttonbar_gs.gif) repeat-x bottom left; 
+	background: #fff url(images/bg/buttonbar_gs.gif) repeat-x bottom left; 
 	border: 1px solid #fdfdfd;
 	border-right-color:	#dcdcdc;
 	border-bottom-color: #dcdcdc; }
@@ -47,7 +47,7 @@ body {
 	border: 1px solid #fdfdfd;
 	border-right-color:	#dcdcdc;
 	border-bottom-color: #dcdcdc;	
-	background: #fff url(images/buttonbar_gs.gif) repeat-x top left;; }
+	background: #fff url(images/bg/buttonbar_gs.gif) repeat-x top left;; }
 
 .seperator {
 	font-size: 0;

@@ -1,7 +1,7 @@
 BODY {
 	margin:							0px 0px 0px 0px;
 	padding:						0px 0px 0px 0px;
-	background-image: 				url("images/body.jpg");
+	background-image: 				url("images/bg/body.jpg");
 	background-color: 				#fff;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -59,7 +59,7 @@ HR {
 }
 
 .split {
-	background: #821517 url("images/misc/line.gif") repeat-x;
+	background: #821517 url("images/bg/line.gif") repeat-x;
 	height: 1px;
 	font-size: 0;
 	clear: both;
@@ -88,7 +88,7 @@ HR {
 	padding:						0px;
 	margin-bottom:					10px;
 	margin-right:					10px;
-	background-image: 				url("images/buttonbar.gif");
+	background-image: 				url("images/bg/buttonbar.gif");
 	background-position: 			top;
 	background-repeat: 				repeat-x;		
 }
@@ -125,7 +125,7 @@ HR {
 	background-repeat: 				repeat-x;	
 	background:						#F0A62F;
 	border:							1px solid #003399;
-	background-image: 				url("images/misc/buttonbar_gs.gif");
+	background-image: 				url("images/bg/buttonbar_gs.gif");
 }
 
 .sectionBody, .layerVisible {
@@ -166,7 +166,7 @@ thead td {
 
 .fancyrow2 {
 	height:							18px !important;
-	background-image: 				url("images/buttonbar.gif");
+	background-image: 				url("images/bg/buttonbar.gif");
 	background-color: 				#F0A62F;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -201,7 +201,7 @@ a img {
 
 .sort-table thead {
 	height:				18px !important;
-	background-image: 				url("images/misc/thead.gif");
+	background-image: 				url("images/bg/thead.gif");
 	background-color: 				#4791C5;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -352,7 +352,7 @@ a img {
 .gridHeader {
 	color:							white; 
 	font-weight:					bold;
-	background-image:				url('images/grid_hdr.gif');
+	background-image:				url('images/bg/grid_hdr.gif');
 	background-color:				#4791C5;
 	height:							25px;
 	border:							1px solid #4791C5; }
@@ -374,7 +374,7 @@ a img {
 .searchbar {
 	width:							100%;
 	border:							1px solid silver;
-	background-image:				url('images/srch_bg.gif');
+	background-image:				url('images/bg/srch_bg.gif');
 	background-color:				beige; }
 
 .searchtext {
@@ -393,7 +393,7 @@ a img {
 	
 .searchbutton:hover {
 	text-decoration:				none;
-	background-image:				url('images/button_dn.gif');}
+	background-image:				url('images/bg/button_dn.gif');}
 
 .searchtoolbarbtn {
 	height:							24px;
@@ -403,7 +403,7 @@ a img {
 	text-decoration:				none;
 	font-family:					Verdana, Arial, Helvetica, sans-serif;
 	font-size:						11px;
-	background-image:				url('images/srch_bg.gif');
+	background-image:				url('images/bg/srch_bg.gif');
 	border:							1px solid #e0e0e0; }
 
 .searchtoolbarbtn:hover {
@@ -422,7 +422,7 @@ A.hometblink:hover {
 	color:							#EE0000;}
 	/* accesscontrol style*/ 
 	.loginBg {
-	background-image: 			url('images/login_bg.jpg');
+	background-image: 			url('images/bg/login_bg.jpg');
 	background-position: 		top;
 	background-color:			#5377A7;
 	background-repeat: 			repeat-x;
@@ -430,7 +430,7 @@ A.hometblink:hover {
 .loginTbl {
 	background-color:			white;
 	border:						1px solid #5377A7; /*#003399; */
-	background-image: 			url('images/section.jpg');
+	background-image: 			url('images/bg/section.jpg');
 	background-position: 		top right;
 	background-repeat: 			no-repeat;
 	padding: 					10px;
@@ -442,7 +442,7 @@ A.hometblink:hover {
 	border-right:				1px solid #5377A7;
 	border-bottom:				1px solid #5377A7;
 	border-left:				1px solid #5377A7;
-	background-image: 			url('images/login_footer_bg.gif');
+	background-image: 			url('images/bg/login_footer_bg.gif');
 	background-position: 		bottom;
 	background-repeat: 			repeat-x;
 	padding: 					10px;
