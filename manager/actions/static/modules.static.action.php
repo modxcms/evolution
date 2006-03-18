@@ -1,9 +1,9 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!($modx->hasPermission('new_module')||$modx->hasPermission('edit_module')||$modx->hasPermission('exec_module')) && $_REQUEST['a']==106) {	
+if(!($modx->hasPermission('new_module')||$modx->hasPermission('edit_module')||$modx->hasPermission('exec_module')) && $_REQUEST['a']==106) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // initialize page view state - the $_PAGE object
@@ -13,7 +13,7 @@ $modx->manager->initPageViewState();
 if($_REQUEST['op']=='reset') {
 	$query = '';
 	$_PAGE['vs']['search']='';
-} 
+}
 else {
 	$query = isset($_REQUEST['search'])? $_REQUEST['search']:$_PAGE['vs']['search'];
 	$sqlQuery = mysql_escape_string($query);
@@ -22,7 +22,7 @@ else {
 
 // get & save listmode
 $listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode']:$_PAGE['vs']['lm'];
-$_PAGE['vs']['lm'] = $listmode;   
+$_PAGE['vs']['lm'] = $listmode;
 
 
 // context menu
@@ -45,7 +45,7 @@ echo $cm->render();
 		document.resource.op.value="srch";
 		document.resource.submit();
 	};
-	
+
 	function resetSearch(){
 		document.resource.search.value = ''
 		document.resource.op.value="reset";
@@ -58,7 +58,7 @@ echo $cm->render();
 		else document.resource.listmode.value=1;
 		document.resource.submit();
 	};
-	
+
 	var selectedItem;
 	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
 	function showContentMenu(id,e){
@@ -78,20 +78,20 @@ echo $cm->render();
 			case 1:		// run module
 				dontShowWorker = true; // prevent worker from being displayed
 				window.location.href='index.php?a=112&id='+id;
-				break;			
+				break;
 			case 2:		// edit
 				window.location.href='index.php?a=108&id='+id;
-				break;			
+				break;
 			case 3:		// duplicate
 				if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
 					window.location.href='index.php?a=111&id='+id;
 				}
-				break;			
+				break;
 			case 4:		// delete
-				if(confirm("<?php echo $_lang['confirm_delete_module']; ?>")==true) {			
+				if(confirm("<?php echo $_lang['confirm_delete_module']; ?>")==true) {
 					window.location.href='index.php?a=110&id='+id;
 				}
-				break;			
+				break;
 		}
 	}
 
@@ -108,7 +108,7 @@ top.mainMenu.location.reload();
 <input type="hidden" name="op" value="" />
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['module_management']; ?></div><div class="sectionBody">
 	<!-- load modules -->
-	<p><img src='media/images/icons/modules.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['module_management_msg']; ?></p>		
+	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['module_management_msg']; ?></p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">
 			<tr>
@@ -123,32 +123,32 @@ top.mainMenu.location.reload();
 			</td>
 			</tr>
 		</table>
-	</div>	
+	</div>
 	<br />
 	<div>
 	<?php
 
 	$sql = "SELECT id,name,description,IF(locked,'Yes','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'media/images/icons/module.gif') as'icon' " .
 			"FROM ".$modx->getFullTableName("site_modules")." ".
-			(!empty($sqlQuery) ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".			
-			"ORDER BY name"; 
-	$ds = mysql_query($sql); 
+			(!empty($sqlQuery) ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
+			"ORDER BY name";
+	$ds = mysql_query($sql);
 	include_once $base_path."manager/includes/controls/datagrid.class.php";
-	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items	
+	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];
 	$grd->cssClass="grid";
 	$grd->columnHeaderClass="gridHeader";
-	$grd->itemClass="gridItem"; 
+	$grd->itemClass="gridItem";
 	$grd->altItemClass="gridAltItem";
-	$grd->fields="icon,name,description,locked,disabled"; 
-	$grd->columns=$_lang["icon"]." ,".$_lang["name"]." ,".$_lang["description"]." ,".$_lang["locked"]." ,".$_lang["disabled"];					
-	$grd->colWidths="34,,,60,60";					
+	$grd->fields="icon,name,description,locked,disabled";
+	$grd->columns=$_lang["icon"]." ,".$_lang["name"]." ,".$_lang["description"]." ,".$_lang["locked"]." ,".$_lang["disabled"];
+	$grd->colWidths="34,,,60,60";
 	$grd->colAligns="center,,,center,center";
-	$grd->colTypes="template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='".$_lang["click_to_context"]."'><img src='[+value+]' width='32' height='32' /></a>||template:<a href='index.php?a=112&id=[+id+]' title='".$_lang["run_module"]."'>[+value+]</a>";
+	$grd->colTypes="template:<a class='gridRowIcon' href='javascript:;' onclick='return showContentMenu([+id+],event);' title='".$_lang["click_to_context"]."'><img src='[+value+]' width='32' height='32' /></a>||template:<a href='index.php?a=108&id=[+id+]' title='".$_lang["module_edit_click_title"]."'>[+value+]</a>";
 	if($listmode=='1') $grd->pageSize=0;
 	if($_REQUEST['op']=='reset') $grd->pageNumber = 1;
 	// render grid
-	echo $grd->render();						
+	echo $grd->render();
 	?>
 	</div>
 </div>

@@ -1,10 +1,10 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_snippet') && $_REQUEST['a']==22) {	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 if(!$modx->hasPermission('new_snippet') && $_REQUEST['a']==23) {	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 
@@ -36,13 +36,13 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_msg"],$lock['username'],"snippet");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
 	}
-} 
+}
 // end check for lock
 
 // make sure the id's a number
@@ -99,7 +99,7 @@ var currentParams = [];
 function showParameters(ctrl) {
 	var c,p,df,cp;
 	var ar,desc,value,key,dt;
-	
+
 	currentParams = []; // reset;
 
 	if (ctrl) f = ctrl.form;
@@ -120,13 +120,13 @@ function showParameters(ctrl) {
 			key = ar[0]		// param
 			ar = (ar[1]+'').split(";");
 			desc = ar[0];	// description
-			dt = ar[1];		// data type	
+			dt = ar[1];		// data type
 			value = decode((ar[2])? ar[2]:'');
-			
+
 			// store values for later retrieval
-			if (key && dt=='list') currentParams[key] = [desc,dt,value,ar[3]]; 
+			if (key && dt=='list') currentParams[key] = [desc,dt,value,ar[3]];
 			else if (key) currentParams[key] = [desc,dt,value];
-			
+
 			if (dt) {
 				switch(dt) {
 				case 'int':
@@ -137,7 +137,7 @@ function showParameters(ctrl) {
 					c = '<select name="prop_'+key+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
 					ls = (ar[2]+'').split(",");
 					if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
-					for(i=0;i<ls.length;i++){						
+					for(i=0;i<ls.length;i++){
 						c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
 					}
 					c += '</select>';
@@ -147,7 +147,7 @@ function showParameters(ctrl) {
 					ls = (ar[2]+'').split(",");
 					if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
 					c = '<select name="prop_'+key+'" size="'+ls.length+'" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-					for(i=0;i<ls.length;i++){						
+					for(i=0;i<ls.length;i++){
 						c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
 					}
 					c += '</select>';
@@ -158,13 +158,13 @@ function showParameters(ctrl) {
 					ls = (ar[2]+'').split(",");
 					if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
 					c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
-					for(i=0;i<ls.length;i++){						
+					for(i=0;i<ls.length;i++){
 						if(arrValue.length){
 							for(j=0;j<arrValue.length;j++){
 								if(ls[i]==arrValue[j]){
 									c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
 								}else{
-									c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';									
+									c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
 								}
 							}
 						}else{
@@ -185,7 +185,7 @@ function showParameters(ctrl) {
 			};
 		}
 		t+='</table>';
-		td = (document.getElementById) ? document.getElementById('displayparams'):document.all['displayparams'];	
+		td = (document.getElementById) ? document.getElementById('displayparams'):document.all['displayparams'];
 		td.innerHTML = t;
 		tr.style.display='';
 	}
@@ -193,7 +193,7 @@ function showParameters(ctrl) {
 }
 
 function setParameter(key,dt,ctrl) {
-	var v;	
+	var v;
 	if(!ctrl) return null;
 	switch (dt) {
 		case 'int':
@@ -213,7 +213,7 @@ function setParameter(key,dt,ctrl) {
 			implodeParameters();
 			return;
 			break;
-		case 'list-multi':		
+		case 'list-multi':
 			var arrValues = new Array;
 			for(var i=0; i < ctrl.options.length; i++){
 				if(ctrl.options[i].selected){
@@ -234,7 +234,7 @@ function setParameter(key,dt,ctrl) {
 
 // implode parameters
 function implodeParameters(){
-	var v, p, s='';	
+	var v, p, s='';
 	for(p in currentParams){
 		if(currentParams[p]) {
 			v = currentParams[p].join(";");
@@ -271,25 +271,25 @@ function decode(s){
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['snippet_title']; ?></span>
+	<span class="right"><img src="media/style/images/<?php echo $manager_theme ? "$manager_theme/":""; ?>_tx_.gif" width="1" height="5"><br /><?php echo $_lang['snippet_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
-		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
+		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script>createButton(document.getElementById("Button1"));</script>
 <?php if($_GET['a']=='22') { ?>
-		<td id="Button2" onclick="duplicaterecord();"><img src="media/images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
+		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script>createButton(document.getElementById("Button2"));</script>
-		<td id="Button3" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
+		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 			<script>createButton(document.getElementById("Button3"));</script>
 <?php } ?>
-		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
+		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
 			<script>createButton(document.getElementById("Button4"));</script>
 	</table>
-	<div class="stay">   
+	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
 		<td><span class="comment">&nbsp;After saving:</span></td>
-		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td> 
+		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
 	</tr>
@@ -299,19 +299,19 @@ function decode(s){
 
 
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['snippet_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/images/<?php echo $manager_theme ? "$manager_theme/":""; ?>misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['snippet_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['snippet_msg']; ?><p />
-<link type="text/css" rel="stylesheet" href="media/style/tabs.css" /> 
-<script type="text/javascript" src="media/script/tabpane.js"></script> 
-<div class="tab-pane" id="snipetPane"> 
+<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />
+<script type="text/javascript" src="media/script/tabpane.js"></script>
+<div class="tab-pane" id="snipetPane">
 	<script type="text/javascript">
 		tpSnippet = new WebFXTabPane( document.getElementById( "snipetPane"),false);
-	</script> 
+	</script>
 
 	<!-- General -->
-    <div class="tab-page" id="tabSnippet"> 
-    	<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2> 
-    	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script> 
+    <div class="tab-page" id="tabSnippet">
+    	<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
+    	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script>
 		<table border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left"><?php echo $_lang['snippet_name']; ?>:</td>
@@ -323,7 +323,7 @@ function decode(s){
 		  </tr>
 		  <tr>
 			<td align="left" colspan="2"><input name="runsnippet" type="checkbox" class="inputBox" /> <?php echo $_lang['snippet_execonsave']; ?></td>
-		  </tr>		  
+		  </tr>
 		  <tr>
 			<td align="left" valign="top" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_snippet']; ?> <span class="comment"><?php echo $_lang['lock_snippet_msg']; ?></span></td>
 			</td>
@@ -337,13 +337,13 @@ function decode(s){
 		   	</div>
 			<textarea name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['snippet']); ?></textarea>
 		</div>
-		<!-- PHP text editor end -->			
+		<!-- PHP text editor end -->
 	</div>
-	
+
 	<!-- Properties -->
-    <div class="tab-page" id="tabProps"> 
-    	<h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2> 
-    	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script> 
+    <div class="tab-page" id="tabProps">
+    	<h2 class="tab"><?php echo $_lang["settings_properties"] ?></h2>
+    	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left"><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</td>
@@ -359,7 +359,7 @@ function decode(s){
 				$ds = $modx->dbQuery($sql);
 				if($ds) while($row = $modx->fetchRow($ds)){
 					echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
-				} 
+				}
 			?>
 			</select>
 			</td>
@@ -377,7 +377,7 @@ function decode(s){
 			<td align="left" id="displayparams">&nbsp;</td>
 		  </tr>
 		</table>
-	</div>	
+	</div>
 </div>
 <input type="submit" name="save" style="display:none">
 </div>

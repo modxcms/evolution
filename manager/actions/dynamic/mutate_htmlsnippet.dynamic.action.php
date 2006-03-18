@@ -1,13 +1,13 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!$modx->hasPermission('edit_snippet') && $_REQUEST['a']==78) {	
+if(!$modx->hasPermission('edit_snippet') && $_REQUEST['a']==78) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
-if(!$modx->hasPermission('new_snippet') && $_REQUEST['a']==77) {	
+if(!$modx->hasPermission('new_snippet') && $_REQUEST['a']==77) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 if(isset($_REQUEST['id'])) {
@@ -23,13 +23,13 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_msg"],$lock['username'],"chunk");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
 	}
-} 
+}
 // end check for lock
 
 // make sure the id's a number
@@ -77,7 +77,7 @@ echo <<<RTE_SCRIPT
 		var FCKFlashBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
 		var FCKAutoLanguage = {$autoLang};
 		var FCKEditorAreaCSS = '{$editor_css_path}';
-				
+
 		rte.Height = '400';
 		rte.BaseHref = '{$site_url}';
 		rte.BasePath = '{$base_url}assets/plugins/fckeditor/';
@@ -91,7 +91,7 @@ echo <<<RTE_SCRIPT
 		rte.Config['CustomConfigurationsPath'] = '{$base_url}assets/plugins/fckeditor/custom_config.js';
 		rte.ToolbarSet = 'standard';
 		rte.Config['EditorAreaCSS'] = FCKEditorAreaCSS;
-		
+
 		rte.Config['FullPage'] = false ;
 		rte.ReplaceTextarea();
 	}
@@ -128,25 +128,25 @@ function deletedocument() {
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['htmlsnippet_title']; ?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['htmlsnippet_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
-		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
+		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script>createButton(document.getElementById("Button1"));</script>
 <?php if($_GET['a']=='78') { ?>
-		<td id="Button2" onclick="duplicaterecord();"><img src="media/images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
+		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script>createButton(document.getElementById("Button2"));</script>
-		<td id="Button3" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
+		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 			<script>createButton(document.getElementById("Button3"));</script>
 <?php } ?>
-		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
+		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
 			<script>createButton(document.getElementById("Button4"));</script>
 	</table>
-	<div class="stay">   
+	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
 		<td><span class="comment">&nbsp;After saving:</span></td>
-		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td> 
+		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
 	</tr>
@@ -155,7 +155,7 @@ function deletedocument() {
 </div>
 
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['htmlsnippet_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['htmlsnippet_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['htmlsnippet_msg']; ?><p />
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>

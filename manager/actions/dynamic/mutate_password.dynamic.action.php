@@ -2,21 +2,21 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('change_password') && $_REQUEST['a']==28) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['change_password']; ?></span>
+<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['change_password']; ?></span>
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td id="Button1" onclick="documentDirty=false; document.userform.save.click();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
+			<td id="Button1" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 				<script>createButton(document.getElementById("Button1"));</script>
 		</tr>
 	</table>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['change_password']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['change_password']; ?></div><div class="sectionBody">
 <form action="index.php?a=34" method="post" name="userform">
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
 
@@ -33,7 +33,7 @@ if(!$modx->hasPermission('change_password') && $_REQUEST['a']==28) {
     <td>&nbsp;</td>
     <td><input type="password" name="pass2" class="inputBox" style="width:150px" value=""></td>
   </tr>
-</table> 
+</table>
 
 <input type="submit" name="save" style="display:none">
 </form>

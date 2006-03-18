@@ -1,8 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('access_permissions')) {	
+if(!$modx->hasPermission('access_permissions')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 
@@ -23,21 +23,21 @@ if($limit<1) {
 
 ?>
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['mgr_access_permissions'] ;?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['mgr_access_permissions'] ;?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['mgr_access_permissions'] ;?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['mgr_access_permissions'] ;?></div><div class="sectionBody">
 <?php echo $_lang['access_permissions_introtext'];?> <?php echo $use_udperms!=1 ? "<p />".$_lang['access_permissions_off'] : "" ;?><p />
 
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" /> 
-<script type="text/javascript" src="media/script/tabpane.js"></script> 
-<div class="tab-pane" id="tabPane1"> 
+<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />
+<script type="text/javascript" src="media/script/tabpane.js"></script>
+<div class="tab-pane" id="tabPane1">
   <script type="text/javascript">
 	tp1 = new WebFXTabPane( document.getElementById( "tabPane1" ) );
-</script> 
+</script>
 
-  <div class="tab-page" id="tabPage1"> 
-	<h2 class="tab"><?php echo $_lang["access_permissions_user_groups"] ?></h2> 
+  <div class="tab-page" id="tabPage1">
+	<h2 class="tab"><?php echo $_lang["access_permissions_user_groups"] ?></h2>
 	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage1" ) );</script>
 	<?php echo $_lang['access_permissions_users_tab']; ?> <p />
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
@@ -105,7 +105,7 @@ if($limit<1) {
 					<span style='font-size: 9px'>
 					<?php echo $_lang['access_permissions_users_in_group']; ?>
 					<?php
-					$sql = "SELECT tbl1.username AS user, tbl1.id AS internalKey FROM 
+					$sql = "SELECT tbl1.username AS user, tbl1.id AS internalKey FROM
 					$dbase.".$table_prefix."manager_users AS tbl1,
 					$dbase.".$table_prefix."member_groups AS tbl2
 					WHERE tbl2.user_group=".$row['id']." AND
@@ -122,7 +122,7 @@ if($limit<1) {
 							$users[] = "<a href='index.php?id=".$row2['internalKey']."&a=12' style='font-size: 9px'>".$row2['user']."</a>";
 						}
 						echo join($users, ", ");
-					}				
+					}
 					?>
 					</span>
 				</td>
@@ -130,16 +130,16 @@ if($limit<1) {
 <?php
 			}
 		}
-?>		
+?>
 	</table>
-	
-	
+
+
 </div>
 
 
-  <div class="tab-page" id="tabPage2"> 
-	<h2 class="tab"><?php echo $_lang["access_permissions_document_groups"] ?></h2> 
-	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage2" ) );</script> 
+  <div class="tab-page" id="tabPage2">
+	<h2 class="tab"><?php echo $_lang["access_permissions_document_groups"] ?></h2>
+	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage2" ) );</script>
 	<?php echo $_lang['access_permissions_documents_tab']; ?> <p />
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 		<thead>
@@ -200,13 +200,13 @@ if($limit<1) {
 						<input type='submit' value='<?php echo $_lang['rename']; ?>'>
 					</form>
 				</td>
-			</tr>		
+			</tr>
 			<tr>
 				<td class='row2' colspan="3">&nbsp;&raquo;&nbsp;
 					<span style='font-size: 9px'>
 					<?php echo $_lang['access_permissions_documents_in_group']; ?>
 					<?php
-					$sql = "SELECT tbl1.pagetitle AS document, tbl1.id AS id FROM 
+					$sql = "SELECT tbl1.pagetitle AS document, tbl1.id AS id FROM
 					$dbase.".$table_prefix."site_content AS tbl1,
 					$dbase.".$table_prefix."document_groups AS tbl2
 					WHERE tbl2.document_group=".$row['id']." AND
@@ -223,11 +223,11 @@ if($limit<1) {
 							$users[] = "<a href='index.php?id=".$row2['id']."&a=3' style='font-size: 9px' title='".$row2['document']."'> ".$row2['id']."</a>";
 						}
 						echo join($users, ", ");
-					}				
+					}
 					?>
 					</span>
 				</td>
-			</tr>	
+			</tr>
 <?php
 			}
 		}
@@ -238,9 +238,9 @@ if($limit<1) {
 
 
 
-<div class="tab-page" id="tabPage3"> 
-<h2 class="tab"><?php echo $_lang["access_permissions_links"] ?></h2> 
-<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage3" ) );</script> 
+<div class="tab-page" id="tabPage3">
+<h2 class="tab"><?php echo $_lang["access_permissions_links"] ?></h2>
+<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage3" ) );</script>
 	<?php echo $_lang['access_permissions_links_tab']; ?> <p />
 <?php
 		$sql = "SELECT * FROM $dbase.".$table_prefix."membergroup_names ORDER BY name";
@@ -251,7 +251,7 @@ if($limit<1) {
 		} else {
 			?>
 			<table width="95%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
-			<thead><tr><td><b><?php echo $_lang["access_permissions_user_group"]; ?></b></td><td><b><?php echo $_lang["access_permissions_user_group_access"]; ?></b></td></tr></thead>			
+			<thead><tr><td><b><?php echo $_lang["access_permissions_user_group"]; ?></b></td><td><b><?php echo $_lang["access_permissions_user_group_access"]; ?></b></td></tr></thead>
 			<?php
 			for($i=0; $i<$limit; $i++) {
 			$row = mysql_fetch_assoc($rs);
@@ -262,10 +262,10 @@ if($limit<1) {
 			</tr>
 			<?php
 				$sql = "
-				SELECT * FROM 
-				$dbase.".$table_prefix."documentgroup_names AS tbl1, 
-				$dbase.".$table_prefix."membergroup_access AS tbl2 
-				WHERE tbl2.membergroup = ".$row['id']." AND 
+				SELECT * FROM
+				$dbase.".$table_prefix."documentgroup_names AS tbl1,
+				$dbase.".$table_prefix."membergroup_access AS tbl2
+				WHERE tbl2.membergroup = ".$row['id']." AND
 				tbl1.id = tbl2.documentgroup
 				ORDER BY tbl1.name ASC
 				";
@@ -305,7 +305,7 @@ if($limit<1) {
 						<?php echo $docgroupselector; ?>&nbsp;
 						<input type=submit value='<?php echo $_lang['add'];?>'>
 				</form>
-				</td></tr>	
+				</td></tr>
 				<?php
 			}
 			?>
@@ -314,4 +314,3 @@ if($limit<1) {
 		}
 ?>
 </div>
-	

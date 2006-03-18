@@ -1,10 +1,10 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_role') && $_REQUEST['a']==35) {	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 if(!$modx->hasPermission('new_role') && $_REQUEST['a']==38) {	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 $role = $_REQUEST['id'];
@@ -17,13 +17,13 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_msg"],$lock['username'],"role");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
 	}
-} 
+}
 // end check for lock
 
 
@@ -73,23 +73,23 @@ function deletedocument() {
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
 
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['role_title']; ?></span>
+<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['role_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td id="Button1" onclick="documentDirty=false; document.userform.save.click();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
+			<td id="Button1" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 				<script>createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
+			<td id="Button2" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 				<script>createButton(document.getElementById("Button2"));</script>
 <?php if($_GET['a']=='38') { ?>					<script>document.getElementById("Button2").setEnabled(false);</script><?php } ?>
-			<td id="Button3" onclick="document.location.href='index.php?a=86';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+			<td id="Button3" onclick="document.location.href='index.php?a=86';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
 				<script>createButton(document.getElementById("Button3"));</script>
 		</tr>
 	</table>
 </div>
 
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['role_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['role_title']; ?></div><div class="sectionBody">
 <div class='fakefieldset'>
 <table border="0" cellspacing="0" cellpadding="4">
   <tr>
