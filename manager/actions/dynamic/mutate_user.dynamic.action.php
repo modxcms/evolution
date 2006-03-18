@@ -917,7 +917,7 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td colspan="2" align="center"><img name="iphoto" src="<?php echo $userdata['photo'] ? $userdata['photo']: "media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif"; ?>" /></td>
+              <td colspan="2" align="center"><img name="iphoto" src="<?php echo $userdata['photo'] ? $userdata['photo']: "media/style/"?><?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif"; ?>" /></td>
           </tr>
 		</table>
 	</div>
