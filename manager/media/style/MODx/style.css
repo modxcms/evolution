@@ -59,7 +59,7 @@ HR {
 }
 
 .split {
-	background: #821517 url("../../images/misc/line.gif") repeat-x;
+	background: #821517 url("images/misc/line.gif") repeat-x;
 	height: 1px;
 	font-size: 0;
 	clear: both;
@@ -107,7 +107,7 @@ HR {
 	background: 					white;
 	font-size: 						12px;
 	padding: 						10px;
-	background-image: 				url("../../images/bg/section.jpg");
+	background-image: 				url("images/bg/section.jpg");
 	background-position: 			top right;
 	background-repeat: 				no-repeat;	
 }
@@ -125,7 +125,7 @@ HR {
 	background-repeat: 				repeat-x;	
 	background:						#F0A62F;
 	border:							1px solid #003399;
-	background-image: 				url("../../images/misc/buttonbar_gs.gif");
+	background-image: 				url("images/misc/buttonbar_gs.gif");
 }
 
 .sectionBody, .layerVisible {
@@ -136,7 +136,7 @@ HR {
 	border:							1px solid #003399;
 	margin:							0px 10px 20px 10px;
 	padding:						10px;
-	background-image: 				url("../../images/bg/section.jpg");
+	background-image: 				url("images/bg/section.jpg");
 	background-position: 			top right;
 	background-repeat: 				no-repeat;		
 	display:						block;
@@ -177,7 +177,7 @@ thead td {
 li {
 	padding: 						0px;
 	margin: 						0px 0px 0px 15px;
-	list-style: 					disc outside url("../../images/misc/li.gif");
+	list-style: 					disc outside url("images/misc/li.gif");
 }
 
 ul {
@@ -201,7 +201,7 @@ a img {
 
 .sort-table thead {
 	height:				18px !important;
-	background-image: 				url("../../images/misc/thead.gif");
+	background-image: 				url("images/misc/thead.gif");
 	background-color: 				#4791C5;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -233,12 +233,12 @@ a img {
 }
 
 .sort-arrow.descending {
-	background-image:		url("../../images/icons/downsimple.png");
+	background-image:		url("images/icons/downsimple.png");
 	
 }
 
 .sort-arrow.ascending {
-	background-image:		url("../../images/icons/upsimple.png");
+	background-image:		url("images/icons/upsimple.png");
 }
 
 .even {
@@ -284,7 +284,7 @@ a img {
 	left:							4px;
 	margin:							0px; 
 	padding:						0px;
-	background-image: 				url("../../images/bg/section.jpg");
+	background-image: 				url("images/bg/section.jpg");
 	background-color: 				#fff;
 	background-position: 			top;
 	background-repeat: 				repeat-x;
@@ -420,3 +420,68 @@ A.hometblink, A.hometblink:ACTIVE, A.hometblink:VISITED, A.hometblink:LINK
 A.hometblink:hover {
 	text-decoration:				none;
 	color:							#EE0000;}
+	/* accesscontrol style*/ 
+	.loginBg {
+	background-image: 			url('images/login_bg.jpg');
+	background-position: 		top;
+	background-color:			#5377A7;
+	background-repeat: 			repeat-x;
+}
+.loginTbl {
+	background-color:			white;
+	border:						1px solid #5377A7; /*#003399; */
+	background-image: 			url('images/section.jpg');
+	background-position: 		top right;
+	background-repeat: 			no-repeat;
+	padding: 					10px;
+	text-align: 				justify;
+	color:                  #5377A7;
+}
+.loginLicense {
+	background-color:			White;
+	border-right:				1px solid #5377A7;
+	border-bottom:				1px solid #5377A7;
+	border-left:				1px solid #5377A7;
+	background-image: 			url('images/login_footer_bg.gif');
+	background-position: 		bottom;
+	background-repeat: 			repeat-x;
+	padding: 					10px;
+	text-align: 				justify;
+	color:                  #5377A7;
+}
+.loginLicense td{
+	color:#5377A7;
+}
+
+.notice {
+	width:100%;
+	padding:5px;
+	border:1px solid #eeeeee;
+	background-color:#F4F4F4;
+	font-size:10px;
+	color:#707070;}
+
+.siteName {
+	font-weight:bold;
+	font-family:verdana, arial;
+	font-size:18px;
+	color:#5377A7;
+	}
+	
+	
+/*end access control style*/
+
+/*topbar.php styles*/
+	
+	#topbar {
+	font-size: 10px
+	color: White;
+	margin : 0px 0px 0px 0px;
+	background: #4791C5;
+	
+}
+#topbar TD {
+	padding-top: 4px;
+	color: White;
+
+}

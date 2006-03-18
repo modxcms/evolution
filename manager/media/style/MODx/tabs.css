@@ -19,7 +19,7 @@
 	background:						white;
 	border:							1px solid #003399;
 	border-bottom:					0;
-	background-image: 				url("../../images/misc/buttonbar.gif");
+	background-image: 				url("images/misc/buttonbar.gif");
 }
 
 .dynamic-tab-pane-control .tab-row .tab.hover {
@@ -28,7 +28,7 @@
 	background:						white;
 	border:							1px solid #003399;
 	border-bottom:					0;
-	background-image: 				url("../../images/misc/buttonbar_gs.gif");
+	background-image: 				url("images/misc/buttonbar_gs.gif");
 }
 
 .dynamic-tab-pane-control .tab-row .tab.selected {

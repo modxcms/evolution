@@ -1,16 +1,17 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 function constructLink($action, $img, $text, $allowed) {
 	if($allowed==1) {
 ?>
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>contextMenu.css<?php echo "?$theme_refresher";?>" />
 <div class="menuLink" onmouseover="this.className='menuLinkOver';" onmouseout="this.className='menuLink';" onclick="this.className='menuLink'; parent.menuHandler(<?php echo $action ; ?>); parent.hideMenu();">
-	<img src='media/images/icons/<?php echo $img; ?>.gif' align=absmiddle><?php echo $text; ?>
+	<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/<?php echo $img; ?>.gif' align=absmiddle><?php echo $text; ?>
 </div>
-<?php 
+<?php
 	} else {
 ?>
 <div class="menuLinkDisabled">
-	<img src='media/images/icons/<?php echo $img; ?>.gif' align=absmiddle><?php echo $text; ?>
+	<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/<?php echo $img; ?>.gif' align=absmiddle><?php echo $text; ?>
 </div>
 <?php
 	}

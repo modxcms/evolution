@@ -16,8 +16,8 @@
 
 	function document_oninit(){
 		document.include("dynelement");
-	}	
-	
+	}
+
 	function document_onload(){
 		restoreTree();
 	}
@@ -26,17 +26,17 @@
 		hideMenu();
 	})
 
-	// preload images		
+	// preload images
 	var i = new Image(18,18);
-	i.src="media/images/tree/page.gif";
+	i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/page.gif";
 	i = new Image(18,18);
-	i.src="media/images/tree/minusnode.gif";
+	i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif";
 	i = new Image(18,18);
-	i.src="media/images/tree/plusnode.gif";
+	i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif";
 	i = new Image(18,18);
-	i.src="media/images/tree/folderopen.gif";
+	i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folderopen.gif";
 	i = new Image(18,18);
-	i.src="media/images/tree/folder.gif";
+	i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif";
 
 
 	var rpcNode = null;
@@ -44,12 +44,12 @@
 	var	selectedObject = 0;
 	var selectedObjectDeleted = 0;
 	var	selectedObjectName = "";
-	
+
 <?php
 	//
 	// Jeroen adds an array
 	//
-	echo  "var openedArray = new Array();\n";	
+	echo  "var openedArray = new Array();\n";
 	if (isset($_SESSION['openedArray'])) {
 			$opened = explode("|", $_SESSION['openedArray']);
 
@@ -92,30 +92,30 @@
 	};
 
 	function toggleNode(node,indent,parent,expandAll) {
-	
+
 		rpcNode = new DynElement(node.parentNode.lastChild);
 
 		var rpcNodeText;
 		var loadText = "<?php echo $_lang['loading_doc_tree'];?>";
-		
+
 		var signImg = document.getElementById("s"+parent);
 		var folderImg = document.getElementById("f"+parent);
 
 		if (rpcNode.style.display != 'block') {
 			// expand
-			if(signImg && signImg.src.indexOf('media/images/tree/plusnode.gif')>-1) {
-				signImg.src = 'media/images/tree/minusnode.gif';
-				folderImg.src = 'media/images/tree/folderopen.gif';
+			if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif')>-1) {
+				signImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif';
+				folderImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folderopen.gif';
 			}
 			// Raymond: snippet interface
-			if (node && node.src.indexOf('media/images/tree/snippetfolder.gif')>-1) {node.src = 'media/images/tree/snippetfolderopen.gif'}
-			
+			if (node && node.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolder.gif')>-1) {node.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolderopen.gif'}
+
 			rpcNodeText = rpcNode.getInnerHTML();
-			
+
 			if (rpcNodeText=="" || rpcNodeText.indexOf(loadText)>0) {
 				var i, spacer='';
 				for(i=0;i<=indent+1;i++) spacer+='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-				rpcNode.style.display = 'block';			
+				rpcNode.style.display = 'block';
 				//Jeroen set opened
 				openedArray[parent] = 1 ;
 				//Raymond:added getFolderState()
@@ -125,16 +125,16 @@
 				rpcNode.style.display = 'block';
 				//Jeroen set opened
 				openedArray[parent] = 1 ;
-			}			
+			}
 		}
 		else {
 			// collapse
-			if(signImg && signImg.src.indexOf('media/images/tree/minusnode.gif')>-1) {
-				signImg.src = 'media/images/tree/plusnode.gif';
-				folderImg.src = 'media/images/tree/folder.gif';
+			if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif')>-1) {
+				signImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif';
+				folderImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif';
 			}
 			//Raymond: snippet interface
-			if (node.src.indexOf('media/images/tree/snippetfolderopen.gif')>-1) {node.src = 'media/images/tree/snippetfolder.gif'}		
+			if (node.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolderopen.gif')>-1) {node.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolder.gif'}
 			//rpcNode.innerHTML = '';
 			rpcNode.style.display = 'none';
 			//Jeroen set closed
@@ -196,7 +196,7 @@
 			if(dir==1) {
 				el.className="treeNodeHover";
 			} else {
-				el.className="treeNode";		
+				el.className="treeNode";
 			}
 		}
 	};
@@ -209,7 +209,7 @@
 			n.style.backgroundColor="";
 		}
 	};
-	
+
 	function updateTree() {
 		treeUrl = 'index.php?a=1&f=3&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value;
 		document.location.href=treeUrl;
@@ -302,28 +302,28 @@ $count = $row[0];
   <tr>
     <td>
 		<table cellpadding="0" cellspacing="0">
-			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><img src="media/images/icons/down.gif" align="absmiddle"></td>
+			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/down.gif' align="absmiddle"></td>
 				<script>createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><img src="media/images/icons/up.gif" align="absmiddle"></td>
+			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/up.gif' align="absmiddle"></td>
 				<script>createButton(document.getElementById("Button2"));</script>
-			<td id="Button3" onclick="top.main.document.location.href='index.php?a=71';" title="<?php echo $_lang['search']; ?>"><img src="media/images/icons/tree_search.gif" align="absmiddle"></td>
+			<td id="Button3" onclick="top.main.document.location.href='index.php?a=71';" title="<?php echo $_lang['search']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/tree_search.gif' align="absmiddle"></td>
 				<script>createButton(document.getElementById("Button3"));</script>
-			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><img src="media/images/icons/refresh.gif" align="absmiddle"></td>
+			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif' align="absmiddle"></td>
 				<script>createButton(document.getElementById("Button4"));</script>
-			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><img src="media/images/icons/sort.gif" align="absmiddle"></td>
+			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/sort.gif' align="absmiddle"></td>
 				<script>createButton(document.getElementById("Button5"));</script>
-			<td id="Button10" onclick="emptyTrash();" title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><img src="media/images/tree/trash<?php echo $count>0 ? "_full" : ""; ?>.gif" align="absmiddle"></td>
+			<td id="Button10" onclick="emptyTrash();" title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/trash<?php echo $count>0 ? "_full" : ""; ?>.gif' align="absmiddle"></td>
 				<script>createButton(document.getElementById("Button10"));</script>
 			<?php if($count==0) { ?><script>document.getElementById("Button10").setEnabled(false);</script><?php } ?>
 		</table>
 	</td>
     <td width="23" align="right">
 		<table cellpadding="0" cellspacing="0">
-			<td id="Button6" onclick="top.scripter.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><img src="media/images/icons/close.gif" align="absmiddle"></td>
+			<td id="Button6" onclick="top.scripter.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/close.gif' align="absmiddle"></td>
 				<script>createButton(document.getElementById("Button6"));</script>
 		</table>
 	</td>
-    <td width="16" align="right">&nbsp;</td>	
+    <td width="16" align="right">&nbsp;</td>
   </tr>
 </table>
 
@@ -331,11 +331,11 @@ $count = $row[0];
 <?php
 if(isset($_REQUEST['tree_sortby'])) {
 	$_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
-} 
+}
 
 if(isset($_REQUEST['tree_sortdir'])) {
 	$_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
-} 
+}
 ?>
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -360,16 +360,16 @@ if(isset($_REQUEST['tree_sortdir'])) {
 		<input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>'>
 	</form>
 	</td>
-    <td width="1%" id="button7" align="right" onclick="updateTree();" title="<?php echo $_lang['sort_tree']; ?>"><img src="media/images/icons/sort.gif">
-			<script>createButton(document.getElementById("Button7"));</script>	
+    <td width="1%" id="button7" align="right" onclick="updateTree();" title="<?php echo $_lang['sort_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/sort.gif'>
+			<script>createButton(document.getElementById("Button7"));</script>
 	</td>
   </tr>
 </table>
 </div>
 
 <div id="treeHolder">
-	
-	<div><img src="media/images/tree/globe.gif" align="absmiddle" width="19" height="18">&nbsp;<span class="rootNode" onclick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+
+	<div><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/globe.gif' align="absmiddle" width="19" height="18">&nbsp;<span class="rootNode" onclick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
 	<div><iframe src="about:blank" id="rpcFrame" name="rpcFrame" style="width: 1px; height: 1px; visibility: hidden;"></iframe></div>
 
 </div>
@@ -382,7 +382,7 @@ try {
 } catch(oException) { }
 
 
-// Context menu stuff	
+// Context menu stuff
 function menuHandler(action) {
 	switch (action) {
 		case 1 :
@@ -419,7 +419,7 @@ function menuHandler(action) {
 				alert("'" + selectedObjectName + "' <?php echo $_lang['not_deleted']; ?>");
 			} else {
 				if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_undelete']; ?>")==true) {
-					top.main.document.location.href="index.php?a=63&id=" + itemToChange;				
+					top.main.document.location.href="index.php?a=63&id=" + itemToChange;
 				}
 			}
 			break
@@ -427,7 +427,7 @@ function menuHandler(action) {
 			if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_publish']; ?>")==true) {
 				top.main.document.location.href="index.php?a=61&id=" + itemToChange;
 			}
-			break			
+			break
 		case 10 :
 			if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
 			top.main.document.location.href="index.php?a=62&id=" + itemToChange;
@@ -444,7 +444,7 @@ function menuHandler(action) {
 </script>
 
 <!-- ************************************************************************ -->
-<?php if($_SESSION['browser']=='ie') { 
+<?php if($_SESSION['browser']=='ie') {
 	// MSIE context menu
 	function constructLink($action, $img, $text, $allowed) {
 		if($allowed) {
@@ -495,9 +495,9 @@ function menuHandler(action) {
 	}
 
 </script>
-<?php } 
-	  else { 
-	  // Mozilla context menu 
+<?php }
+	  else {
+	  // Mozilla context menu
 ?>
 <script type="text/javascript">
 
@@ -510,10 +510,10 @@ function menuHandler(action) {
 		context.style.top = y+"px";
 		var elm = new DynElement("nameHolder@oPopup");
 		elm.setInnerHTML(selectedObjectName);
-		
+
 		context.style.visibility = 'visible';
 		context.style.display = 'block';
-		
+
 		// adjust context menu height
 		frames['oPopup'].document.body.style.height='auto';
 		h = frames['oPopup'].document.body.offsetHeight;
@@ -523,7 +523,7 @@ function menuHandler(action) {
 	function hideMenu() {
 		document.getElementById('contextMenu').style.display = 'none';
 	}
-	
+
 </script>
 <div id="contextMenu" style="position: absolute; right: 20px; top: 20px; z-index:10000; width: 170px; height: auto;visibility: hidden;">
 	<iframe name="oPopup" style="width:170px;height:100%" frameborder="0" src="index.php?a=1&f=3c"></iframe>

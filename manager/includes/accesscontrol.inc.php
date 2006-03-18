@@ -1,11 +1,11 @@
 <?php
 
-// start session 
-startCMSSession();					
+// start session
+startCMSSession();
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 	unset($_SESSION['mgrValidated']);
 	session_destroy();
-	// start session 
+	// start session
 	startCMSSession();
 }
 if(!isset($_SESSION['mgrValidated'])){
@@ -13,11 +13,11 @@ if(!isset($_SESSION['mgrValidated'])){
 
 	if(isset($manager_language)) {
 		include_once "lang/".$manager_language.".inc.php";
-	} 
+	}
 	else {
 		include_once "lang/english.inc.php";
 	}
-	
+
 	$cookieKey = substr(md5($site_id."Admin-User"),0,15);
 
 	include_once ("crypt.class.inc.php");
@@ -43,87 +43,37 @@ if(!isset($_SESSION['mgrValidated'])){
 
 	document.setIncludePath("media/script/bin/");
 
-	document.addEventListener("oninit",function() { 
+	document.addEventListener("oninit",function() {
 		document.include("cookie");
 		document.include("animate");
 		document.include("dynelement");
 	})
 </script>
 <script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>
-<style>
 
-body {
-	background-color:			#5377A7;}
-	
-.loginBg {
-	background-image: 			url('media/images/bg/login_bg.jpg'); 
-	background-position: 		top; 
-	background-color:			#5377A7;
-	background-repeat: 			repeat-x; 
-}
-.loginTbl {
-	background-color:			white; 
-	border:						1px solid #5377A7; /*#003399; */
-	background-image: 			url('media/images/bg/section.jpg'); 
-	background-position: 		top right; 
-	background-repeat: 			no-repeat; 
-	padding: 					10px; 
-	text-align: 				justify;
-}
-.loginLicense {
-	background-color:			White; 
-	border-right:				1px solid #5377A7; 
-	border-bottom:				1px solid #5377A7;
-	border-left:				1px solid #5377A7;
-	background-image: 			url('media/images/bg/login_footer_bg.gif');
-	background-position: 		bottom; 
-	background-repeat: 			repeat-x; 
-	padding: 					10px; 
-	text-align: 				justify;
-	color:white;
-}
-.loginLicense td{
-	color:navy
-}
-
-.notice {
-	width:100%;
-	padding:5px;
-	border:1px solid #eeeeee;
-	background-color:#F4F4F4;
-	font-size:10px;
-	color:#707070;}
-	
-.siteName {
-	font-weight:bold;
-	font-family:verdana, arial;
-	font-size:18px;
-	color:#5377A7;}
-	
-</style>
 <script language="JavaScript">
-	
+
 	function checkRemember () {
 		if(document.loginfrm.rememberme.value==1) {
-			document.loginfrm.rememberme.value=0;	
+			document.loginfrm.rememberme.value=0;
 		} else {
 			document.loginfrm.rememberme.value=1;
 		}
 	}
-	
+
 	if (top.frames.length!=0) {
 		top.location=self.document.location;
 	}
-	
+
 	function enter(nextfield,event) {
 		if(event && event.keyCode == 13) {
 			if(nextfield.id=='Button1') {
 				document.loginfrm.submit();
-				return false; 
+				return false;
 			}
 			else {
 				nextfield.focus();
-				return false; 
+				return false;
 			}
 		} else {
 			return true;
@@ -132,8 +82,8 @@ body {
 </script>
 </head>
 <body onLoad="javascript:document.loginfrm.username.focus();">
-<form method="post" name="loginfrm" action="processors/login.processor.php" style="margin: 0px; padding: 0px;"> 
-<input type="hidden" value="<?php echo isset($cookieSet) ? 1 : 0; ?>" name="rememberme"> 
+<form method="post" name="loginfrm" action="processors/login.processor.php" style="margin: 0px; padding: 0px;">
+<input type="hidden" value="<?php echo isset($cookieSet) ? 1 : 0; ?>" name="rememberme">
 <table class="loginBg" width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td>&nbsp;</td>
@@ -144,16 +94,16 @@ body {
 		<div id="splash" style="width:600px">
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginTbl">
 		  <tr>
-			<td rowspan="2"><img src='media/images/misc/logo.png' alt='<?php echo $_lang["logo_slogan"]; ?>'><p />
-			<?php 				
+			<td rowspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>'>
+			  <p />
+			  <?php
 				$pth = dirname(__FILE__);
 				$file = "$pth/support.inc.php";
 				$ov_file = "$pth/override.support.inc.php";	// detect override file
 				if(file_exists($ov_file)) $inc = include_once($ov_file);
 				else if(file_exists($file)) $inc = include_once($file);
 				if($inc)showSupportLink();
-			?></td>
-			<td><?php echo "<p  align='right'><span class='siteName'>".$site_name."</span></p>"; echo $_lang["login_message"]; echo $use_captcha==1 ? "<p />".$_lang["login_captcha_message"] : "" ; ?></td>
+			?></td><td><?php echo "<p  align='right'><span class='siteName'>".$site_name."</span></p>"; echo $_lang["login_message"]; echo $use_captcha==1 ? "<p />".$_lang["login_captcha_message"] : "" ; ?></td>
 		  </tr>
 		  <tr>
 		  	<td style="padding-left:50px;">
@@ -161,24 +111,24 @@ body {
 				  <tr>
 					<?php if($use_captcha==1) { ?>
 					<td>
-						<a href="<?php echo $_SERVER['PHP_SELF'];?>"><img src="includes/veriword.php?rand=<?php echo rand(); ?>" width="148" height="60" alt="<?php echo $_lang["login_captcha_message"]; ?>" style="border: 1px solid #003399"></a>
+						<a href="<?php echo $_SERVER['PHP_SELF'];?>"><img src="includes/veriword.php?rand=<? echo rand(); ?>" width="148" height="60" alt="<?php echo $_lang["login_captcha_message"]; ?>" style="border: 1px solid #003399"></a>
 					</td>
-					<td>&nbsp;&nbsp;&nbsp;</td>	
+					<td>&nbsp;&nbsp;&nbsp;</td>
 					<?php } ?>
 					<td>
 						<table border="0" cellspacing="0" cellpadding="0">
 						  <tr>
 							<td><b><?php echo $_lang["username"]; ?>:</b></td>
-							<td><input type="text" name="username" tabindex="1" onkeypress="return enter(document.loginfrm.password,event);" size="8" style="width: 150px;" value="<?php echo $uid ?>" /></td>
+							<td><input type="text" name="username" tabindex="1" onKeyPress="return enter(document.loginfrm.password,event);" size="8" style="width: 150px;" value="<?php echo $uid ?>" /></td>
 						  </tr>
 						  <tr>
 							<td><b><?php echo $_lang["password"]; ?>:</b></td>
-							<td><input type="password" name="password" tabindex="2" onkeypress="return enter(<?php echo $use_captcha==1 ? "document.loginfrm.captcha_code" : "document.getElementById('Button1')" ;?>,event);" style="width: 150px;" value="" /></td>
+							<td><input type="password" name="password" tabindex="2" onKeyPress="return enter(<?php echo $use_captcha==1 ? "document.loginfrm.captcha_code" : "document.getElementById('Button1')" ;?>,event);" style="width: 150px;" value="" /></td>
 						  </tr>
 						  <?php if($use_captcha==1) { ?>
 						  <tr>
 							<td><b><?php echo $_lang["captcha_code"]; ?>:</b></td>
-							<td><input type="text" name="captcha_code" tabindex="3" style="width: 150px;" onkeypress="return enter(document.getElementById('Button1'),event);" value="" /></td>
+							<td><input type="text" name="captcha_code" tabindex="3" style="width: 150px;" onKeyPress="return enter(document.getElementById('Button1'),event);" value="" /></td>
 						  </tr>
 						  <?php } ?>
 						  <tr>
@@ -187,10 +137,10 @@ body {
 								<table width="100%"  border="0" cellspacing="0" cellpadding="0">
 								  <tr>
 									<td valign="top"><input type="checkbox" id="thing" name="thing" tabindex="4" SIZE="1" value="" <?php echo isset($cookieSet) ? "checked" : ""; ?> onClick="checkRemember()"></td>
-									<td align="right">						
+									<td align="right">
 											<div id="Button1" tabindex="5" style="width:60px; text-align: center;border:1px solid black;border-left-color:ButtonHighlight;
-											border-right-color:ButtonShadow;border-top-color:ButtonHighlight;border-bottom-color:ButtonShadow;padding:3px 4px 3px 4px;" onclick="document.loginfrm.submit();">
-											<img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang["login_button"]; ?></div>
+											border-right-color:ButtonShadow;border-top-color:ButtonHighlight;border-bottom-color:ButtonShadow;padding:3px 4px 3px 4px;" onClick="document.loginfrm.submit();">
+											<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["login_button"]; ?></div>
 											<script>createButton(document.getElementById("Button1"));</script>
 									</td>
 								  </tr>
@@ -216,7 +166,7 @@ body {
 	</td>
   </tr>
   <tr>
-    <td>&nbsp;</td>				
+    <td>&nbsp;</td>
   </tr>
 </table>
 </form>
@@ -230,7 +180,7 @@ body {
 if (getenv("HTTP_CLIENT_IP")) $ip = getenv("HTTP_CLIENT_IP");else if(getenv("HTTP_X_FORWARDED_FOR")) $ip = getenv("HTTP_X_FORWARDED_FOR");else if(getenv("REMOTE_ADDR")) $ip = getenv("REMOTE_ADDR");else $ip = "UNKNOWN";$_SESSION['ip'] = $ip;
 $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : NULL ;$lasthittime = time();$a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "" ;
 if($a!=1) {
-	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values('".$modx->getLoginUserID()."', '".$_SESSION['mgrShortname']."', '".$lasthittime."', '".$a."', ".($itemid!=null?"'$itemid'":"NULL").", '$ip')";
+	$sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values('".$modx->getLoginUserID()."', '".$_SESSION['mgrShortname']."', '".$lasthittime."', '".$a."', ".($itemid==null?"'$itemid'":"NULL").", '$ip')";
 	if(!$rs = mysql_query($sql)) {
 		echo "error replacing into active users! SQL: ".$sql;
 		exit;

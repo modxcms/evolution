@@ -32,7 +32,7 @@
 	border-top-color:	ButtonShadow;
 	border-bottom-color:ButtonHighlight;
 	padding:			4px 3px 2px 5px;		
-	background-image:	url("../../images/misc/buttonbaractive.gif");
+	background-image:	url("images/misc/buttonbaractive.gif");
 }
 
 .coolButtonActive {
@@ -42,7 +42,7 @@
 	border-top-color:	ButtonShadow;
 	border-bottom-color:ButtonHighlight;
 	padding:			4px 3px 2px 5px;		
-	background-image:	url("../../images/misc/buttonbaractive.gif");
+	background-image:	url("images/misc/buttonbaractive.gif");
 }
 
 .coolButtonUpDisabled,

@@ -61,7 +61,7 @@ ul#nav {
     color: #000;
 }
 #nav li.active a {
-	background: transparent url(../../images/misc/buttonbar_gs.gif) repeat-x left top;
+	background: transparent url(images/misc/buttonbar_gs.gif) repeat-x left top;
 	font-weight: bold;
 	text-decoration: none;
 	height: 16px;
@@ -76,7 +76,7 @@ ul#nav {
 	border-left: 1px solid darkblue;
 }
 #nav li.active a:hover {
-    background: transparent url(../../images/misc/buttonbar_gs.gif) repeat-x top left !important;
+    background: transparent url(images/misc/buttonbar_gs.gif) repeat-x top left !important;
     border-bottom-width: 0 !important;
 }
 
