@@ -1074,14 +1074,11 @@ if(isset($_POST['docgroups'])) {
 		}
 	}
 </script>
-<?php echo $_lang['access_permissions_docs_message']; ?><p />
+<p><?php echo $_lang['access_permissions_docs_message']; ?></p>
 <?php
 	}
 	$sql = "SELECT name, id FROM $dbase.".$table_prefix."documentgroup_names ORDER BY name";
-	$rs = mysql_query($sql);
-	}
-	$sql = "SELECT name, id FROM $dbase.".$table_prefix."documentgroup_names";
-	$rs = mysql_query($sql);
+	$rs = mysql_query($sql); 
 	$limit = mysql_num_rows($rs);
 	for($i=0; $i<$limit; $i++) {
 		$row=mysql_fetch_assoc($rs);
