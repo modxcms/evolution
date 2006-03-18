@@ -20,6 +20,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
    	$parent    = $_GET['parent'];
 	$expandAll = $_GET['expandAll'];
 	$output    = "";
+    $theme = $manager_theme ? "$manager_theme/":"";
 
 	// icons by content type
 	$icons = array(
@@ -56,9 +57,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	//echo $output;
 
 
-	function makeHTML($indent,$parent,$expandAll)
+	function makeHTML($indent,$parent,$expandAll,$theme)
 	{
-		global $icons;
+		global $icons, $theme;
 		global $modxDBConn, $output, $dbase, $table_prefix, $_lang, $opened, $opened2, $closed2; //added global vars
 
 		$pad = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -97,7 +98,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 				ORDER BY $orderby";
 		$result = mysql_query($sql, $modxDBConn);
 		if(mysql_num_rows($result)==0) {
-			$output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="media/images/tree/deletedpage.gif" width="18" height="18">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
+			$output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="media/style/'.$theme.'images/tree/deletedpage.gif" width="18" height="18">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
 		}
 
 		while(list($id,$pagetitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr) = mysql_fetch_row($result))
@@ -105,7 +106,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			$pagetitle = htmlspecialchars($pagetitle);
 			$pagetitleDisplay = $published==0 ? "<span class='unpublishedNode'>$pagetitle</span>" : ($hidemenu==1 ? "<span class='notInMenuNode'>$pagetitle</span>":"<span class='publishedNode'>$pagetitle</span>");
 			$pagetitleDisplay = $deleted==1 ? "<span class='deletedNode'>$pagetitle</span>" : $pagetitleDisplay;
-			$weblinkDisplay = $type=="reference" ? '&nbsp;<img align="absmiddle" src="media/images/tree/web.gif">' : '' ;
+			$weblinkDisplay = $type=="reference" ? '&nbsp;<img align="absmiddle" src="media/style/'.$theme.'images/tree/web.gif">' : '' ;
 
 
 			$alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";
@@ -118,7 +119,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 				$icon='page';
 				if($privateweb||$privatemgr) $icon='page-secure';
 				else if(isset($icons[$contenttype])) $icon = $icons[$contenttype];
-				$output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="media/images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
+				$output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
 				$output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>('.$id.')</small></div>';
 			}
 			else {
@@ -131,14 +132,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 					   array_push($opened2, $id);
 					}
 					$icon='folderopen';
-					$output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="media/images/tree/minusnode.gif" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="media/images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
+					$output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="media/style/'.$theme.'images/tree/minusnode.gif" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
 					$output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>('.$id.')</small><div style="display:block">';
-					makeHTML($indent+1,$id,$expandAll);
+					makeHTML($indent+1,$id,$expandAll,$theme);
 					$output .= '</div></div>';
 				}
 				else {
 					$icon='folder';
-					$output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="media/images/tree/plusnode.gif" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer" src="media/images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
+					$output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="media/style/'.$theme.'images/tree/plusnode.gif" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
 					$output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>('.$id.')</small><div style="display:none"></div></div>';
 					array_push($closed2, $id);
 				}
