@@ -466,6 +466,8 @@ function menuHandler(action) {
 	<?php echo constructLink(1, "context_view", str_replace(" ", "&nbsp;", $_lang["view_document"]), 1); ?>
 	<?php echo constructLink(2, "save", str_replace(" ", "&nbsp;", $_lang["edit_document"]), $modx->hasPermission('edit_document')); ?>
 	<?php echo constructLink(5, "cancel", str_replace(" ", "&nbsp;", $_lang["move_document"]), $modx->hasPermission('edit_document')); ?>
+	// Ryan: Duplicate Document
+	<?php echo constructLink(7, "copy", $_lang["duplicate_document"], $modx->hasPermission('new_document'));
 	//Raymond:Create Folder
 	<?php echo constructLink(11, "folder", str_replace(" ", "&nbsp;", $_lang["create_folder_here"]), $modx->hasPermission('new_document')); ?>
 	<?php echo constructLink(3, "newdoc", str_replace(" ", "&nbsp;", $_lang["create_document_here"]), $modx->hasPermission('new_document')); ?>
