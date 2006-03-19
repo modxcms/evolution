@@ -254,6 +254,8 @@ EOD;
   $html = '';
   $result = null;
   $allowed = false;
+  $time = time();
+  $user = $modx->getLoginUserID();
 
   $cv = new ContentVariable;
   $cv->set($var_id, $doc_id);
@@ -304,6 +306,8 @@ EOD;
              
     }
 
+    $modx->db->update(array('editedon'=>$now, 'editedby'=>$time), "{$pre}", "id = '{$doc_id}'");
+
    } elseif(in_array($cv->id, $editable)) {
 
     // Define vairable with the content id as it's name by reference for plugin support
@@ -312,8 +316,19 @@ EOD;
     // invoke OnBeforeDocFormSave event
     $modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$doc_id));
 
+    if($cv->id == 'published') {
+     if($value_prep) {
+      $publishing = ", publishedon={$time}, publishedby={$user} "; 
+     } else {
+      $publishing = ", publishedon=0, publishedby=0 ";
+     }
+    }
+
     $sql = "UPDATE {$db}.`{$pre}site_content`
-            SET `{$cv->id}` = '{$value_prep}'
+            SET `{$cv->id}` = '{$value_prep}',
+            `editedon` = '{$time}',
+            `editedby` = '{$user}'
+            {$publishing}
             WHERE `id` = '{$doc_id}';";
 
    }

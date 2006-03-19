@@ -4,8 +4,6 @@ if(!$modx->hasPermission('save_document') && $_REQUEST['a']==62) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-?>
-<?php
 
 $id = $_REQUEST['id'];
 
@@ -26,7 +24,7 @@ if(!$udperms->checkPermissions()) {
 }
 
 // update the document
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET published=0, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=$id;";
+$sql = "UPDATE $dbase.".$table_prefix."site_content SET published=0, pub_date=0, unpub_date=0, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedby=0, publishedon=0 WHERE id=$id;";
 
 $rs = mysql_query($sql);
 if(!$rs){
