@@ -119,6 +119,8 @@ class DocumentParser {
 
   function sendErrorPage() {
     // invoke OnPageNotFound event
+    global $redirect_error;
+    $redirect_error=1;
     $this->invokeEvent('OnPageNotFound');
     $this->sendRedirect($this->makeUrl($this->config['error_page'],'','&refurl='.urlencode($_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'])), 1);
   }
@@ -419,7 +421,7 @@ class DocumentParser {
     if(IN_PARSER_MODE=="true") {
       $type = !empty($this->contentTypes[$this->documentIdentifier]) ? $this->contentTypes[$this->documentIdentifier] : "text/html";
       $header = 'Content-Type: '.$type.'; charset='.$this->config['etomite_charset'];
-      $header = ($this->documentIdentifier == $this->config['error_page']) ? "HTTP/1.0 404 Not Found\n".$header : $header;
+      $header = (($this->documentIdentifier == $this->config['error_page']) && $redirect_error) ? "HTTP/1.0 404 Not Found\n".$header : $header;
       header($header);
       if(!$this->checkPreview() && $this->documentObject['content_dispo']==1) {
         if($this->documentObject['alias']) $name = $this->documentObject['alias'];
