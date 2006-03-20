@@ -18,7 +18,7 @@ function RenderRow($i,$row){
 	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['resource_management']; ?></span>
 </div>
 
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" /> 
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" /> 
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['resource_management']; ?></div><div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">

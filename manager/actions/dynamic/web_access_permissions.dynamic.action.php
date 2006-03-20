@@ -29,7 +29,7 @@ if($limit<1) {
 <div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_access_permissions'] ;?></div><div class="sectionBody">
 <?php echo $_lang['access_permissions_introtext'];?> <?php echo $use_udperms!=1 ? "<p />".$_lang['access_permissions_off'] : "" ;?><p />
 
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />
+<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="tabPane1">
   <script type="text/javascript">

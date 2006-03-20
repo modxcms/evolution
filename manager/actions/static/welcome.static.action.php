@@ -59,7 +59,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 </table>
 </div>
 <div class="sectionBody" style="border:0px; padding:0px;">
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />
+<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="welcomePane" style="border:0px">
 	<script type="text/javascript">

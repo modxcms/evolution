@@ -346,7 +346,7 @@ function SetUrl(url, width, height, alt){
 <div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['module_title']; ?></div><div class="sectionBody">
 <p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['module_msg']; ?></p>
 <br />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />    
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />    
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="modulePane">
 	<script type="text/javascript">

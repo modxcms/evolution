@@ -138,7 +138,7 @@ function updateContentType(){
     <?php if(!isset($settings_version) || $settings_version!=$version) { ?>
     <div class='sectionBody' style='margin-left: 0px; margin-right: 0px;'><?php echo $_lang['settings_after_install']; ?></div>
     <?php } ?>
-    <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />
+    <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <div class="tab-pane" id="settingsPane">
       <script type="text/javascript">
