@@ -7,7 +7,6 @@ $theme = $manager_theme ? "$manager_theme/":"";
 function constructLink($action, $img, $text, $allowed, $theme) {
 	if($allowed==1) {
 ?>
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>contextMenu.css<?php echo "?$theme_refresher";?>" />
 <div class="menuLink" onmouseover="this.className='menuLinkOver';" onmouseout="this.className='menuLink';" onclick="this.className='menuLink'; parent.menuHandler(<?php echo $action ; ?>); parent.hideMenu();">
 	<img src='media/style/<?php echo $theme; ?>images/icons/<?php echo $img; ?>.gif' align="absmiddle" ><?php echo $text; ?>
 </div>
@@ -27,10 +26,11 @@ function constructLink($action, $img, $text, $allowed, $theme) {
 <head>
 <title>ContextMenu</title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>contextMenu.css<?php echo "?$theme_refresher";?>" />
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>style.css<?php echo "?$theme_refresher";?>" />
 </head>
 <body onselectstart="return false;" onblur="parent.hideMenu();">
-<div id="nameHolder"></div>
+<div id="mx_contextmenu">
+<div id="nameHolder"> </div>
 <?php
 constructLink(1, "context_view", $_lang["view_document"], 1,$theme);
 constructLink(2, "save", $_lang["edit_document"], $modx->hasPermission('edit_document'),$theme);
@@ -52,5 +52,6 @@ constructLink(8, "b092", $_lang["undelete_document"], $modx->hasPermission('dele
 constructLink(9, "date", $_lang["publish_document"], $modx->hasPermission('edit_document'),$theme);
 constructLink(10, "date", $_lang["unpublish_document"], $modx->hasPermission('edit_document'),$theme);
 ?>
+</div>
 </body>
 </html>

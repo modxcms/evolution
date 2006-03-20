@@ -485,3 +485,67 @@ A.hometblink:hover {
 	color: White;
 
 }
+
+
+
+/* Contextual Menu used in the Tree Menu
+---------------------------------------------------------- */
+#mx_contextmenu {
+	background: #fff url(images/bg/context.gif) repeat-y top left;
+	margin:	0;
+	padding: 2px;
+	border: 1px solid #fdfdfd;
+	border-right-color:	#dcdcdc;
+	border-bottom-color: #dcdcdc;
+	overflow: hidden;
+	font: normal 11px/11px Verdana, Arial, sans-serif; }
+
+#mx_contextmenu .menuLink {
+	cursor: pointer;
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	color: #222;
+	padding: 3px 16px 3px 2px; }
+
+#mx_contextmenu .menuLinkOver {
+	background: #fff url(images/bg/buttonbar_gs.gif) repeat-x bottom left; 
+	border: 1px solid #fdfdfd;
+	border-right-color:	#dcdcdc;
+	border-bottom-color: #dcdcdc; }
+
+#mx_contextmenu .menuLinkOver,
+#mx_contextmenu .menuLinkDisabled {
+	cursor: pointer;
+	padding: 2px 15px 2px 1px;}
+
+#mx_contextmenu .menuLinkDisabled {
+	cursor:	default;
+	color: #787878; }
+
+#mx_contextmenu .menuLink img, 
+#mx_contextmenu .menuLinkOver img, 
+#mx_contextmenu .menuLinkDisabled img {
+	margin-right: 8px; }
+
+#mx_contextmenu .menuLink img, 
+#mx_contextmenu .menuLinkDisabled img {
+	filter:	gray(); }
+
+#mx_contextmenu .menuLinkOver img { }
+
+#mx_contextmenu #nameHolder {
+	text-align: right;
+	cursor: default;
+	font-weight: bold; 	
+	padding: 2px;
+	margin-bottom: 2px;
+	border: 1px solid #fdfdfd;
+	border-right-color:	#dcdcdc;
+	border-bottom-color: #dcdcdc;	
+	background: #fff url(images/bg/buttonbar.gif) repeat-x bottom left; }
+
+#mx_contextmenu .seperator {
+	font-size: 0;
+	height: 1px;
+	background-color: #6A8CCB;
+	overflow: hidden;
+	margin: 3px 1px 3px 28px; }
