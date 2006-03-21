@@ -5,7 +5,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 $id = $_REQUEST['id'];
 // Jeroen posts SESSION vars :Modified by Raymond
 if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
-	
+
 ?>
 <script language="JavaScript">
 function duplicatedocument(){
@@ -28,17 +28,16 @@ function movedocument() {
 
 
 <?php
-
 $tblsc = $dbase.".".$table_prefix."site_content";
 $tbldg = $dbase.".".$table_prefix."document_groups";
 // get document groups for current user
 if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
 $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
 		  (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
-$sql = "SELECT DISTINCT sc.* 
-		FROM $tblsc sc 
+$sql = "SELECT DISTINCT sc.*
+		FROM $tblsc sc
 		LEFT JOIN $tbldg dg on dg.document = sc.id
-		WHERE sc.id = $id 
+		WHERE sc.id = $id
 		AND ($access);";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
@@ -49,32 +48,32 @@ if($limit>1) {
 }
 else if($limit==0){
 	$e->setError(15);
-	$e->dumpError();	
+	$e->dumpError();
 }
 $content = mysql_fetch_assoc($rs);
 
 $createdby = $content['createdby'];
-$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id='$createdby';"; 
-$rs = mysql_query($sql); 
+$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id='$createdby';";
+$rs = mysql_query($sql);
 
 $row=mysql_fetch_assoc($rs);
 $createdbyname = $row['username'];
 
 $editedby = $content['editedby'];
-$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=$editedby;"; 
-$rs = mysql_query($sql); 
- 
+$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=$editedby;";
+$rs = mysql_query($sql);
+
   $row=mysql_fetch_assoc($rs);
   $editedbyname = $row['username'];
- 
+
 $templateid = $content['template'];
-$sql = "SELECT templatename FROM $dbase.".$table_prefix."site_templates WHERE id=$templateid;"; 
-$rs = mysql_query($sql); 
- 
+$sql = "SELECT templatename FROM $dbase.".$table_prefix."site_templates WHERE id=$templateid;";
+$rs = mysql_query($sql);
+
   $row=mysql_fetch_assoc($rs);
   $templatename = $row['templatename'];
-  
-  
+
+
    $_SESSION['itemname']=$content['pagetitle'];
 
 // keywords stuff, by stevew (thanks Steve!)
@@ -94,21 +93,21 @@ if($limit > 0) {
 ?>
 
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["doc_data_title"]; ?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["doc_data_title"]; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
-		<td id="Button1" onclick="editdocument();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
+		<td id="Button1" onclick="editdocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
 			<script>createButton(document.getElementById("Button1"));</script>
-		<td id="Button2" onclick="movedocument();"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
+		<td id="Button2" onclick="movedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
 			<script>createButton(document.getElementById("Button2"));</script>
-		<td id="Button4" onclick="duplicatedocument();"><img src="media/images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
+		<td id="Button4" onclick="duplicatedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script>createButton(document.getElementById("Button4"));</script>
-		<td id="Button3" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
+		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
 			<script>createButton(document.getElementById("Button3"));</script>
 	</table>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;
 <?php echo $_lang["page_data_title"]; ?>
 </div>
 <div class="sectionBody" id="lyr1">
@@ -121,10 +120,10 @@ if($limit > 0) {
     <td width="200" valign="top"><?php echo $_lang["document_title"]; ?>: </td>
     <td><b><?php echo $content['pagetitle']; ?></b></td>
   </tr>
-  <tr> 
-    <td width="200" valign="top"><?php echo $_lang["long_title"]; ?>: </td> 
+  <tr>
+    <td width="200" valign="top"><?php echo $_lang["long_title"]; ?>: </td>
     <td><small><?php echo $content['longtitle']!='' ? $content['longtitle'] : "(<i>".$_lang["notset"]."</i>)" ; ?></small></td>
-  </tr>   
+  </tr>
   <tr>
     <td valign="top"><?php echo $_lang["document_description"]; ?>: </td>
     <td><?php echo $content['description']!='' ? $content['description'] : "(<i>".$_lang["notset"]."</i>)" ; ?></td>
@@ -331,7 +330,7 @@ if ($show_preview==1) { ?>
 <?php } ?>
 <!--END SHOW HIDE PREVIEW WINDOW MOD-->
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["page_data_source"]; ?></div><div class="sectionBody">   
+<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["page_data_source"]; ?></div><div class="sectionBody">
 <?php
 $buffer = "";
 $filename = "../assets/cache/docid_".$id.".pageCache.php";
@@ -346,7 +345,7 @@ if(!$handle) {
 	$buffer=$_lang['page_data_cached']."<p><textarea style='width: 100%; height: 400px; border: 3px solid #4791C5;'>".htmlspecialchars($buffer)."</textarea>";
 }
 
-echo $buffer; 
+echo $buffer;
 ?>
 </div>
 

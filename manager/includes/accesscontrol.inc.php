@@ -94,7 +94,7 @@ if(!isset($_SESSION['mgrValidated'])){
 		<div id="splash" style="width:600px">
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginTbl">
 		  <tr>
-			<td rowspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>'>
+			<td rowspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>'>
 			  <p />
 			  <?php
 				$pth = dirname(__FILE__);

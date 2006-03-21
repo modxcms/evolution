@@ -1,8 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('new_document')) {	
+if(!$modx->hasPermission('new_document')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // Files to upload
@@ -22,14 +22,14 @@ $allowedfiles = array('html','htm','xml');
 	}
 </script>
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['import_site_html']; ?></span>
+<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['import_site_html']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
-<?php 
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
+<?php
 
 if(!isset($_POST['import'])) {
-	echo $_lang['import_site_message']; 
+	echo $_lang['import_site_message'];
 ?>
 <p />
 <fieldset style="padding:10px"><legend><?php echo $_lang['import_site']; ?></legend>
@@ -54,7 +54,7 @@ if(!isset($_POST['import'])) {
 </table>
 <p />
 <table cellpadding="0" cellspacing="0">
-	<td id="Button1" onclick="document.importFrm.submit();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang["import_site_start"]; ?></td>
+	<td id="Button1" onclick="document.importFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["import_site_start"]; ?></td>
 		<script>createButton(document.getElementById("Button1"));</script>
 </table>
 </form>
@@ -67,31 +67,31 @@ if(!isset($_POST['import'])) {
 	if(!is_numeric($maxtime)) {
 		$maxtime = 30;
 	}
-	
+
 	@set_time_limit($maxtime);
-	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importstart = $mtime; 
-	
+	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importstart = $mtime;
+
 	$parent = $_POST['parent'];
 	$filepath = "../assets/import/";
 	$filesfound = 0;
 
 	$files = getFiles($filepath);
-	
+
 	// no. of files to import
 	printf($_lang['import_files_found'], $filesfound);
-	
+
 	// import files
 	if(count($files)>0) {
 		importFiles($parent,$filepath,$files);
 	}
 
-	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importend = $mtime; 
+	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importend = $mtime;
 	$totaltime = ($importend - $importstart);
 	printf ("<p />".$_lang['import_site_time'], round($totaltime, 3));
 ?>
 <p />
 <table cellpadding="0" cellspacing="0">
-	<td id="Button2" onclick="reloadTree();"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></td>
+	<td id="Button2" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></td>
 		<script>createButton(document.getElementById("Button2"));</script>
 </table>
 <script>
@@ -107,7 +107,7 @@ function importFiles($parent,$filepath,$files) {
 	global $dbase, $table_prefix;
 	global $default_template, $search_default, $cache_default;
 
-	
+
 	$createdon = time();
 	$createdby = $modx->getLoginUserID();
 	if (!is_array($files)) return;
@@ -117,7 +117,7 @@ function importFiles($parent,$filepath,$files) {
 			$alias = !isset($modx->documentListing[$id]) ? $id:$id.'-'.substr(uniqid(''),-3);
 			$modx->documentListing[$alias] = true;
 			printf($_lang['import_site_importing_document'], $id);
-			$sql = "INSERT INTO $dbase.".$table_prefix."site_content 
+			$sql = "INSERT INTO $dbase.".$table_prefix."site_content
 				   (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
 				   ('document', 'text/html', '".mysql_escape_string($id)."', '".stripAlias($alias)."', 1, '$parent', 1, '', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
 			$rs = mysql_query($sql);
@@ -126,7 +126,7 @@ function importFiles($parent,$filepath,$files) {
 				echo "A database error occured while trying to clone document: <br /><br />".mysql_error();
 				exit;
 			}
-			echo $_lang['import_site_success']."<br />";	
+			echo $_lang['import_site_success']."<br />";
 			importFiles($new_parent,$filepath."/$id/",$value);
 		}
 		else {
@@ -147,9 +147,9 @@ function importFiles($parent,$filepath,$files) {
 				if(!$pagetitle) $pagetitle = $value;
 				if (preg_match("/<body[^>]*>(.*)[^<]+<\/body>/is",$file,$matches)) {
 					$content = $matches[1];
-					
+
 				} else $content = $file;
-				$sql = "INSERT INTO $dbase.".$table_prefix."site_content 
+				$sql = "INSERT INTO $dbase.".$table_prefix."site_content
 					   (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
 					   ('document', 'text/html', '".mysql_escape_string($pagetitle)."', '".stripAlias($alias)."', 1, '$parent', 0, '".mysql_escape_string($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
 				$rs = mysql_query($sql);
@@ -169,13 +169,13 @@ function getFiles($directory,$listing = array(), $count = 0){
 	$dummy = $count;
 	if (@$handle = opendir($directory)) {
 		while ($file = readdir($handle)) {
-			if ($file=='.' || $file=='..') continue; 
+			if ($file=='.' || $file=='..') continue;
 			else if ($h = @opendir($directory.$file."/")) {
 				closedir($h);
 				$count = -1;
-				$listing["$file"] = getFiles($directory.$file."/",array(), $count + 1); 
+				$listing["$file"] = getFiles($directory.$file."/",array(), $count + 1);
 			}
-			else {  
+			else {
 				$listing[$dummy] = $file;
 				$dummy = $dummy + 1;
 				$filesfound++;

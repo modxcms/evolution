@@ -63,7 +63,7 @@ ul#nav {
     color: #000;
 }
 #nav li.active a {
-	background: transparent url(images/bg/buttonbar_dn.gif) repeat-x left top;
+	background: transparent url(images/bg/button_dn.gif) repeat-x left top;
 	font-weight: bold;
 	text-decoration: none;
 	height: 16px;

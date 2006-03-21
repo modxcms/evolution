@@ -1,3 +1,5 @@
+/* MODx Green Manager template */
+
 body {
 	margin:							0;
 	padding:						0;
@@ -635,7 +637,7 @@ A.hometblink:hover {
 }
 
 .coolButton img {
-	filter:				gray();
+	filter:				green();
 }
 
 .coolButtonHover {
@@ -707,7 +709,7 @@ A.hometblink:hover {
 .coolButtonActiveDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer,
 .coolButtonDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer {
 	background:			Transparent;
-	filter:				#8FBC8F()
+	filter:				gray()
 						/* Remove all bright shades of gray */
 						chroma(color=#ffffff) chroma(color=#fefefe) chroma(color=#fdfdfd)
 						chroma(color=#fcfcfc) chroma(color=#fbfbfb) chroma(color=#fafafa)
@@ -715,6 +717,6 @@ A.hometblink:hover {
 						chroma(color=#f6f6f6) chroma(color=#f5f5f5) chroma(color=#f4f4f4)
 						chroma(color=#f3f3f3) 
 						mask(color=#010101);
-}
+						}
 
 /* end IE specific */

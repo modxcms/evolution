@@ -1,26 +1,26 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {	
+if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["view_sysinfo"]; ?></span>
+<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["view_sysinfo"]; ?></span>
 </div>
 
 <script>
 	function viewPHPInfo() {
 		dontShowWorker = true; // prevent worker from being displayed
 		window.location.href="index.php?a=200";
-	};	
+	};
 </script>
 
 <!-- server -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Server</div><div class="sectionBody" id="lyr2">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Server</div><div class="sectionBody" id="lyr2">
 		<P>
 		This page shows some general information about the MODx installation.<p>
-		
+
 		<table border="0" cellspacing="2" cellpadding="2">
 		  <tr>
 			<td width="150">MODx version</td>
@@ -56,7 +56,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 			<td>Server Offset</td>
 			<td>&nbsp;</td>
 			<td><b><?php echo $server_offset_time/(60*60) ?></b> hours (server time - offset time should give your local time)</td>
-		  </tr>	  
+		  </tr>
 		  <tr>
 			<td>Database name</td>
 			<td>&nbsp;</td>
@@ -73,12 +73,12 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 			<td><b><?php echo $table_prefix ?></b></td>
 		  </tr>
 		</table>
-            
+
    </div>
 
 
 <!-- recent documents -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
 		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 			<thead>
@@ -97,9 +97,9 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 		if($limit<1) {
 			echo "No edits or creates found.<p />";
 		} else {
-			for ($i = 0; $i < $limit; $i++) { 
+			for ($i = 0; $i < $limit; $i++) {
 				$content = mysql_fetch_assoc($rs);
-				$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=".$content['editedby']; 
+				$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=".$content['editedby'];
 				$rs2 = mysql_query($sql);
 				$limit2 = mysql_num_rows($rs2);
 				if($limit2==0) $user = '-';
@@ -118,7 +118,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 
 
 <!-- database -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Database tables</div><div class="sectionBody" id="lyr4">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Database tables</div><div class="sectionBody" id="lyr4">
 		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>
@@ -165,14 +165,14 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 	// enable record deletion for certain tables
 	// sottwell@sottwell.com
 	// 08-2005
-	if($modx->hasPermission('settings') && ($log_status['Name'] == $table_prefix."event_log" || $log_status['Name'] == $table_prefix."log_access" || $log_status['Name'] == $table_prefix."log_hosts" || $log_status['Name'] == $table_prefix."log_visitors" || $log_status['Name'] == $table_prefix."manager_log")) { 
+	if($modx->hasPermission('settings') && ($log_status['Name'] == $table_prefix."event_log" || $log_status['Name'] == $table_prefix."log_access" || $log_status['Name'] == $table_prefix."log_hosts" || $log_status['Name'] == $table_prefix."log_visitors" || $log_status['Name'] == $table_prefix."manager_log")) {
 		echo "<td align='right'>";
 		echo "<a href='index.php?a=54&mode=$action&u=".$log_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</a>";
 		echo "</td>";
 	}
-	else { 
+	else {
 		echo "<td align='right'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</td>";
-	} 
+	}
 
 	if($modx->hasPermission('settings')) {
 		echo  "<td align='right'>".($log_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$log_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($log_status['Data_free'])."</a>" : "-")."</td>";
@@ -180,7 +180,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 	else {
 		echo  "<td align='right'>".($log_status['Data_free']>0 ? nicesize($log_status['Data_free']) : "-")."</td>";
 	}
-?>						
+?>
 			<td align="right"><?php echo nicesize($log_status['Data_length']-$log_status['Data_free']); ?></td>
 			<td align="right"><?php echo nicesize($log_status['Index_length']); ?></td>
 			<td align="right"><?php echo nicesize($log_status['Index_length']+$log_status['Data_length']+$log_status['Data_free']); ?></td>
@@ -207,7 +207,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 </div>
 
 <!-- online users -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Online users</div><div class="sectionBody" id="lyr5">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Online users</div><div class="sectionBody" id="lyr5">
 		This list shows users online within the last 20 minutes.<br />
 		Current time: <b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b><p>
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
@@ -224,23 +224,23 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 		  <tbody>
 		<?php
 		$timetocheck = (time()-(60*20));
-		
+
 		include_once "actionlist.inc.php";
-		
+
 		$sql = "SELECT * FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.lasthit>$timetocheck ORDER BY username ASC";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
 			echo "No active users found.<p />";
 		} else {
-			for ($i = 0; $i < $limit; $i++) { 
+			for ($i = 0; $i < $limit; $i++) {
 				$activeusers = mysql_fetch_assoc($rs);
 				$currentaction = getAction($activeusers['action'], $activeusers['id']);
 				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='media/images/tree/web.gif' alt='Web user'>":"";
 				echo "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td></b>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
 			}
 		}
-		?>    
+		?>
 		</tbody>
 		</table>
 </div>

@@ -1,33 +1,33 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('logs') && $_REQUEST['a']==55) {	
+if(!$modx->hasPermission('logs') && $_REQUEST['a']==55) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }?>
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br />View manager logs</span>
+<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />View manager logs</span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Query logging</div><div class="sectionBody" id="lyr1">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Query logging</div><div class="sectionBody" id="lyr1">
 Please make a selection for viewing the logs. You can select log entries by date, but be aware that the dates you enter are not inclusive - to select every log entry for 01-01-2004, set 'date from'to 01-01-2004 and 'date to' to 02-01-2004.
-Message and action are usually the same. If you're searching for a specific message, it's best to set action to 'Any/All'. 
-<p>  
-<form action='index.php?a=13' name="logging" method='POST'> 
-<table border=0 cellpadding=2 cellspacing=0> 
+Message and action are usually the same. If you're searching for a specific message, it's best to set action to 'Any/All'.
+<p>
+<form action='index.php?a=13' name="logging" method='POST'>
+<table border=0 cellpadding=2 cellspacing=0>
  <thead>
-  <tr> 
-    <td width="200"><b>Field</b></td> 
-    <td align="right"><b>Value</b></td> 
-  </tr> 
+  <tr>
+    <td width="200"><b>Field</b></td>
+    <td align="right"><b>Value</b></td>
+  </tr>
  </thead>
  </tbody>
-  <tr> 
-    <td><b>User</b></td> 
-    <td align="right"> 
+  <tr>
+    <td><b>User</b></td>
+    <td align="right">
       <?php
 // get all users currently in logging
 $sql = "SELECT DISTINCT(username) AS name, internalKey FROM $dbase.".$table_prefix."manager_log";
-$rs = mysql_query($sql); 
+$rs = mysql_query($sql);
 ?>
 		<select name="searchuser" class="inputBox" style="width:240px">
 		<option value="0">Any/ All</option>
@@ -36,20 +36,20 @@ $rs = mysql_query($sql);
 			$selectedtext = $row['internalKey']==$_REQUEST['searchuser'] ? "selected='selected'" : "" ;
 			?>
 				<option value="<?php echo $row['internalKey']; ?>" <?php echo $selectedtext; ?>><?php echo $row['name']; ?></option>
-			<?php					
+			<?php
 		}
-		?>		
+		?>
 		</select>
-    </td> 
-  </tr> 
-  <tr bgcolor='#eeeeee'> 
-    <td><b>Action</b></td> 
-    <td align="right"> 
-      <select name="action" class='inputBox' style='width:240px;'> 
-        <option value="0">Any/ All</option> 
+    </td>
+  </tr>
+  <tr bgcolor='#eeeeee'>
+    <td><b>Action</b></td>
+    <td align="right">
+      <select name="action" class='inputBox' style='width:240px;'>
+        <option value="0">Any/ All</option>
         <?php
 include_once "actionlist.inc.php";
-for($i = 1; $i < 1000; $i++) { 
+for($i = 1; $i < 1000; $i++) {
 	$actionname = getAction($i);
 	if($actionname!="Idle") {
 		$actions[$i] = $actionname;
@@ -57,18 +57,18 @@ for($i = 1; $i < 1000; $i++) {
 		echo "\t\t\t<option value='$i' $selectedtext>$i - $actionname</option>/n";
 	}
 }
-?> 
-      </select> 
-    </td> 
-  </tr> 
-  <tr bgcolor='#ffffff'> 
-    <td><b>Item id</b></td> 
-    <td align="right"> 
+?>
+      </select>
+    </td>
+  </tr>
+  <tr bgcolor='#ffffff'>
+    <td><b>Item id</b></td>
+    <td align="right">
       <?php
 // get all itemid currently in logging
 $sql = "SELECT DISTINCT(itemid) AS item, itemid FROM $dbase.".$table_prefix."manager_log";
-$rs = mysql_query($sql); 
-?> 
+$rs = mysql_query($sql);
+?>
 		<select name="itemid" class="inputBox" style="width:240px">
 		<option value="0">Any/ All</option>
 		<?php
@@ -76,20 +76,20 @@ $rs = mysql_query($sql);
 			$selectedtext = $row['itemid']==$_REQUEST['itemid'] ? "selected='selected'" : "" ;
 			?>
 				<option value="<?php echo $row['itemid']; ?>" <?php echo $selectedtext; ?>><?php echo $row['item']; ?></option>
-			<?php					
+			<?php
 		}
-		?>		
+		?>
 		</select>
-    </td> 
-  </tr> 
-  <tr bgcolor='#eeeeee'> 
-    <td><b>Item name</b></td> 
-    <td align="right"> 
+    </td>
+  </tr>
+  <tr bgcolor='#eeeeee'>
+    <td><b>Item name</b></td>
+    <td align="right">
       <?php
 // get all itemname currently in logging
 $sql = "SELECT DISTINCT(itemname), itemname FROM $dbase.".$table_prefix."manager_log";
-$rs = mysql_query($sql); 
-?> 
+$rs = mysql_query($sql);
+?>
 		<select name="itemname" class="inputBox" style="width:240px">
 		<option value="0">Any/ All</option>
 		<?php
@@ -97,60 +97,60 @@ $rs = mysql_query($sql);
 			$selectedtext = $row['itemname']==$_REQUEST['itemname'] ? "selected='selected'" : "" ;
 			?>
 				<option value="<?php echo $row['itemname']; ?>" <?php echo $selectedtext; ?>><?php echo $row['itemname']; ?></option>
-			<?php					
+			<?php
 		}
-		?>		
+		?>
 		</select>
-    </td> 
-  </tr> 
-  <tr bgcolor='#ffffff'> 
-    <td><b>Message</b></td> 
-    <td align="right"> 
-      <input type=text name='message' class="inputbox" style="width:240px" value="<?php echo $_REQUEST['message']; ?>"> 
-    </td> 
-  </tr> 
-  <script language="JavaScript" src="media/script/datefunctions.js"></script> 
-  <tr bgcolor='#eeeeee'> 
-    <td><b>Date from</b></td> 
-        <td align="right"><input type=hidden name='datefrom' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>"> 
-          <span id="datefrom_show" style="font-weight: bold;"><?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "<i>(not set)</i>" ; ?></span>
-		  <a href="javascript:cal1.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
-		  <a onClick="document.logging.datefrom.value=''; document.getElementById('datefrom_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>		  
-	  </td>
-  </tr> 
-  <tr bgcolor='#ffffff'> 
-    <td><b>Date to</b></td> 
-    <td align="right"> 
-		  <input type=hidden name='dateto' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>"> 
-          <span id="dateto_show" style="font-weight: bold;"><?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "<i>(not set)</i>" ; ?></span>
-		  <a href="javascript:cal2.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
-		  <a onClick="document.logging.dateto.value=''; document.getElementById('dateto_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>		  
-		 </td> 
-      </tr> 
-  </tr> 
-  <tr bgcolor='#eeeeee'> 
-    <td><b>Nr. of results</b></td> 
-    <td align="right"> 
-      <input type=text name='nrresults' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>"><img src="media/images/_tx_.gif" width="18" height="16" border="0">
     </td>
-  </tr> 
-  <tr bgcolor='#FFFFFF'> 
+  </tr>
+  <tr bgcolor='#ffffff'>
+    <td><b>Message</b></td>
+    <td align="right">
+      <input type=text name='message' class="inputbox" style="width:240px" value="<?php echo $_REQUEST['message']; ?>">
+    </td>
+  </tr>
+  <script language="JavaScript" src="media/script/datefunctions.js"></script>
+  <tr bgcolor='#eeeeee'>
+    <td><b>Date from</b></td>
+        <td align="right"><input type=hidden name='datefrom' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>">
+          <span id="datefrom_show" style="font-weight: bold;"><?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "<i>(not set)</i>" ; ?></span>
+		  <a href="javascript:cal1.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
+		  <a onClick="document.logging.datefrom.value=''; document.getElementById('datefrom_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
+	  </td>
+  </tr>
+  <tr bgcolor='#ffffff'>
+    <td><b>Date to</b></td>
+    <td align="right">
+		  <input type=hidden name='dateto' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>">
+          <span id="dateto_show" style="font-weight: bold;"><?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "<i>(not set)</i>" ; ?></span>
+		  <a href="javascript:cal2.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
+		  <a onClick="document.logging.dateto.value=''; document.getElementById('dateto_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
+		 </td>
+      </tr>
+  </tr>
+  <tr bgcolor='#eeeeee'>
+    <td><b>Nr. of results</b></td>
+    <td align="right">
+      <input type=text name='nrresults' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="18" height="16" border="0">
+    </td>
+  </tr>
+  <tr bgcolor='#FFFFFF'>
     <td colspan="2">
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td id="Button1" onclick="document.logging.log_submit.click();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></td>
+			<td id="Button1" onclick="document.logging.log_submit.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></td>
 				<script>createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="document.location.href='index.php?a=13';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+			<td id="Button2" onclick="document.location.href='index.php?a=13';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
 				<script>createButton(document.getElementById("Button2"));</script>
 		</tr>
 	</table>
-      <input type='submit' name='log_submit' value='Search logs' style="display:none"> 
-    </td> 
-  </tr> 
+      <input type='submit' name='log_submit' value='Search logs' style="display:none">
+    </td>
+  </tr>
   </tbody>
-</table> 
+</table>
 </form>
-</div> 
+</div>
  <script type="text/javascript">
  	var cal1 = new calendar1(document.forms['logging'].elements['datefrom'], document.getElementById("datefrom_show"));
 	cal1.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
@@ -161,7 +161,7 @@ $rs = mysql_query($sql);
 	cal2.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
 	cal1.year_scroll = true;
 	cal1.time_comp = false;
- </script> 
+ </script>
 <div class="sectionHeader">Query results</div><div class="sectionBody" id="lyr2">
 <?php
 if(isset($_REQUEST['log_submit'])){
@@ -252,11 +252,11 @@ $sql .= " LIMIT ".$int_cur_position.", ".$int_num_result;
 			</div></div>";
 			exit;
 		} else {
-?> 
+?>
   You can sort the table by clicking on the column headers. If the logs <br>
   are becoming too large, you can <a href="index.php?a=55">empty</a> the logs. This will remove<br>
-  all log entries up to now, and cannot be undone! 
-  <p> 
+  all log entries up to now, and cannot be undone!
+  <p>
 <?php
 
 include_once "paginate.inc.php";
@@ -293,37 +293,37 @@ print $array_paging['last_link'] ."[last]</a>";
 ?>
 <P>
 	<script type="text/javascript" src="media/script/sortabletable.js"></script>
-  <table border=0 cellpadding="2" cellspacing="1" bgcolor="#707070" class="sort-table" id="table-1" width="95%"> 
-    <thead> 
-      <tr> 
-        <td><b>UserName</b></td> 
-        <td><b>ActionID</b></td> 
-        <td><b>ItemID</b></td> 
-        <td><b>ItemName</b></td> 
-        <td><b>Message</b></td> 
-        <td><b>Time</b></td> 
-      </tr> 
-    </thead> 
-    <tbody> 
+  <table border=0 cellpadding="2" cellspacing="1" bgcolor="#707070" class="sort-table" id="table-1" width="95%">
+    <thead>
+      <tr>
+        <td><b>UserName</b></td>
+        <td><b>ActionID</b></td>
+        <td><b>ItemID</b></td>
+        <td><b>ItemName</b></td>
+        <td><b>Message</b></td>
+        <td><b>Time</b></td>
+      </tr>
+    </thead>
+    <tbody>
      <?php
-			for ($i = 0; $i < $limit; $i++) { 
+			for ($i = 0; $i < $limit; $i++) {
 				$logentry = mysql_fetch_assoc($rs);
 				$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
-?> 
-    <tr <?php echo $classname; ?>> 
-      <td class="cell"><?php echo ucfirst($logentry['username'])." (".$logentry['internalKey'].")"; ?></td> 
-	  <td class="cell"><?php echo $logentry['action']; ?></td> 
-      <td class="cell"><?php echo $logentry['itemid']=="-" ? "" : $logentry['itemid'] ; ?></td> 
-      <td class="cell"><?php echo $logentry['itemname']; ?></td> 
-      <td class="cell"><?php echo $logentry['message']; ?></td> 
-      <td class="cell"><?php echo strftime('%d-%m-%y, %H:%M:%S', $logentry['timestamp']+$server_offset_time); ?></td> 
-    </tr> 
+?>
+    <tr <?php echo $classname; ?>>
+      <td class="cell"><?php echo ucfirst($logentry['username'])." (".$logentry['internalKey'].")"; ?></td>
+	  <td class="cell"><?php echo $logentry['action']; ?></td>
+      <td class="cell"><?php echo $logentry['itemid']=="-" ? "" : $logentry['itemid'] ; ?></td>
+      <td class="cell"><?php echo $logentry['itemname']; ?></td>
+      <td class="cell"><?php echo $logentry['message']; ?></td>
+      <td class="cell"><?php echo strftime('%d-%m-%y, %H:%M:%S', $logentry['timestamp']+$server_offset_time); ?></td>
+    </tr>
     <?php
 			}
-		}		
-?> 
-    </tbody> 
-     </table> 
+		}
+?>
+    </tbody>
+     </table>
 <script type="text/javascript">
 
 var st1 = new SortableTable(document.getElementById("table-1"),
@@ -339,7 +339,7 @@ function addClassName(el, sClassName) {
 	}
 	p[p.length] = sClassName;
 	el.className = p.join(" ");
-			
+
 }
 
 function removeClassName(el, sClassName) {
@@ -364,15 +364,15 @@ st1.onsort = function () {
 	}
 };
 </script>
-	 
-</div> 
+
+</div>
 <?php
 } else {
-?> 
+?>
 No search query entered yet.
 <?php
 }
 ?>
-</div> 
+</div>
 
 </div>

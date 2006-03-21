@@ -15,7 +15,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <title>Top bar</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
-    <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>  
+    <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 
 </head>
 <body>
@@ -31,7 +31,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <td id="topbar" align='right' nowrap="nowrap">
     	<b><?php echo $site_name ;?></b> - <b><?php echo $full_appname; ?> | <img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/user.gif' align='absmiddle' width='16' height='16'> &nbsp;<?php echo $modx->getLoginUserName();?></b>
     	<?php if($modx->hasPermission('messages')) { ?>
-    		<span id="newMail" style="display:none;font-size:11px;"> <b>|</b> <a href="index.php?a=10" title="<?php echo $_lang["you_got_mail"]; ?>" target="main"><img src="media/images/icons/mailalert.gif" align='absmiddle' border="0" width='16' height='16' /></a></span>
+    		<span id="newMail" style="display:none;font-size:11px;"> <b>|</b> <a href="index.php?a=10" title="<?php echo $_lang["you_got_mail"]; ?>" target="main"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/mailalert.gif" align='absmiddle' border="0" width='16' height='16' /></a></span>
     	<?php } ?>    </td>
     <td width="20">&nbsp;</td>
   </tr>

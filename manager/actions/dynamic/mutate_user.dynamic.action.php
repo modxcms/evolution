@@ -917,7 +917,7 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-              <td colspan="2" align="center"><img name="iphoto" src="<?php echo $userdata['photo'] ? $userdata['photo']: "media/style/"?><?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif"; ?>" /></td>
+              <td colspan="2" align="center"><img name="iphoto" src="<?php echo $userdata['photo'] ? $userdata['photo']: "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
           </tr>
 		</table>
 	</div>
@@ -948,8 +948,8 @@ if(is_array($_POST['user_groups'])) {
 <div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <?php
 	echo $_lang['access_permissions_user_message']."<p />";
-	$sql = "SELECT name, id FROM $dbase.".$table_prefix."membergroup_names ORDER BY name"; 
-	$rs = mysql_query($sql); 
+	$sql = "SELECT name, id FROM $dbase.".$table_prefix."membergroup_names ORDER BY name";
+	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for($i=0; $i<$limit; $i++) {
 		$row=mysql_fetch_assoc($rs);

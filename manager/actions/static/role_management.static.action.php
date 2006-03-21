@@ -1,9 +1,9 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!$modx->hasPermission('edit_user') && $_REQUEST['a']==75) {	
+if(!$modx->hasPermission('edit_user') && $_REQUEST['a']==75) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // get search string
@@ -24,7 +24,7 @@ echo $cm->render();
 </div>
 
 <!-- User Roles -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['role_management_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['role_management_title']; ?></div><div class="sectionBody">
 <p><?php echo $_lang['role_management_msg']; ?></p>
 
 <ul>
@@ -34,13 +34,13 @@ echo $cm->render();
 <ul>
 <?php
 
-$sql = "select name, id, description from $dbase.".$table_prefix."user_roles order by name"; 
-$rs = mysql_query($sql); 
+$sql = "select name, id, description from $dbase.".$table_prefix."user_roles order by name";
+$rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1){
 	echo "The request returned no roles!</div>";
 	exit;
-	include_once "footer.inc.php";			
+	include_once "footer.inc.php";
 }
 for($i=0; $i<$limit; $i++) {
 	$row = mysql_fetch_assoc($rs);

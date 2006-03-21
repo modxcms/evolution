@@ -1,8 +1,8 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('bk_manager') && $_REQUEST['a']==93) {	
+if(!$modx->hasPermission('bk_manager') && $_REQUEST['a']==93) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // Backup Manager by Raymond:
@@ -30,13 +30,13 @@ if ($mode=='backup') {
 		echo "</html>";
 		exit;
 	}
-	
+
 	/*
 	 * Code taken from Ralph A. Dahlgren MySQLdumper Snippet - Etomite 0.6 - 2004-09-27
 	 * Modified by Raymond 3-Jan-2005
 	 * Perform MySQLdumper data dump
 	 */
-	
+
 	@set_time_limit(120); // set timeout limit to 2 minutes
 	$dbname = str_replace("`","",$dbase);
 	$dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbname); # Variables have replaced original hard-coded values
@@ -49,7 +49,7 @@ if ($mode=='backup') {
 		$e->dumpError();
 		exit;
 	}
-	
+
 	// MySQLdumper class can be found below
 }
 else {
@@ -61,7 +61,7 @@ else {
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["bk_manager"]; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;Database Tables</div><div class="sectionBody" id="lyr4">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Database Tables</div><div class="sectionBody" id="lyr4">
 <form name='frmdb' method='post'>
 <input type='hidden' name='mode' value='' />
 <script language='javascript'>
@@ -73,7 +73,7 @@ else {
 		}
 	}
 	function submitForm(){
-		var f = document.forms['frmdb'];	
+		var f = document.forms['frmdb'];
 		f.mode.value='backup';
 		f.target='fileDownloader';
 		f.submit();
@@ -82,7 +82,7 @@ else {
 
 </script>
 		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
-		<span style='width:100%;'><a href='javascript:;' onclick='submitForm();return false;'><img src='media/images/misc/ed_save.gif' border=0 align='absmiddle'>Click here</a> to backup & download the selected tables</span><br />&nbsp;&nbsp;&nbsp;
+		<span style='width:100%;'><a href='javascript:;' onclick='submitForm();return false;'><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/ed_save.gif' border=0 align='absmiddle'>Click here</a> to backup & download the selected tables</span><br />&nbsp;&nbsp;&nbsp;
 		<input type='checkbox' name='droptables'> Generate DROP TABLE statements.<p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>
@@ -128,22 +128,22 @@ else {
 	// enable record deletion for certain tables
 	// sottwell@sottwell.com
 	// 08-2005
-	if($modx->hasPermission('settings') && ($db_status['Name'] == $table_prefix."event_log" || $db_status['Name'] == $table_prefix."log_access" || $db_status['Name'] == $table_prefix."log_hosts" || $db_status['Name'] == $table_prefix."log_visitors" || $db_status['Name'] == $table_prefix."manager_log")) { 
+	if($modx->hasPermission('settings') && ($db_status['Name'] == $table_prefix."event_log" || $db_status['Name'] == $table_prefix."log_access" || $db_status['Name'] == $table_prefix."log_hosts" || $db_status['Name'] == $table_prefix."log_visitors" || $db_status['Name'] == $table_prefix."manager_log")) {
 		echo "<td align='right'>";
 		echo "<a href='index.php?a=54&mode=$action&u=".$db_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($db_status['Data_length']+$db_status['Data_free'])."</a>";
 		echo "</td>";
 	}
-	else { 
+	else {
 		echo "<td align='right'>".nicesize($db_status['Data_length']+$db_status['Data_free'])."</td>";
-	} 
-	
+	}
+
 	if($modx->hasPermission('settings')) {
 		echo  "<td align='right'>".($db_status['Data_free']>0 ? "<a href='index.php?a=54&mode=$action&t=".$db_status['Name']."' title='".$_lang['optimize_table']."' >".nicesize($db_status['Data_free'])."</a>" : "-")."</td>";
 	}
 	else {
 		echo  "<td align='right'>".($db_status['Data_free']>0 ? nicesize($db_status['Data_free']) : "-")."</td>";
 	}
-?>						
+?>
 			<td align="right"><?php echo nicesize($db_status['Data_length']-$db_status['Data_free']); ?></td>
 			<td align="right"><?php echo nicesize($db_status['Index_length']); ?></td>
 			<td align="right"><?php echo nicesize($db_status['Index_length']+$db_status['Data_length']+$db_status['Data_free']); ?></td>
@@ -193,7 +193,7 @@ class Mysqldumper {
 	var $_dbname;
 	var $_dbtables;
 	var $_isDroptables;
-	
+
 	function Mysqldumper($host = "localhost", $dbuser = "", $dbpassword = "", $dbname = "") {
 		$this->setHost($host);
 		$this->setDBuser($dbuser);
@@ -202,35 +202,35 @@ class Mysqldumper {
 		// Don't drop tables by default.
 		$this->setDroptables(false);
 	}
-	
+
 	function setHost($host) {
 		$this->_host = $host;
 	}
-	
+
 	function getHost() {
 		return $this->_host;
 	}
-	
+
 	function setDBname($dbname) {
 		$this->_dbname = $dbname;
 	}
-	
+
 	function getDBname() {
 		return $this->_dbname;
 	}
-	
+
 	function getDBuser() {
 		return $this->_dbuser;
 	}
-	
+
 	function setDBpassword($dbpassword) {
 		$this->_dbpassword = $dbpassword;
 	}
-	
+
 	function getDBpassword() {
 		return $this->_dbpassword;
 	}
-	
+
 	function setDBuser($dbuser) {
 		$this->_dbuser = $dbuser;
 	}
@@ -238,25 +238,25 @@ class Mysqldumper {
 	function setDBtables($dbtables) {
 		$this->_dbtables = $dbtables;
 	}
-	
+
 	// If set to true, it will generate 'DROP TABLE IF EXISTS'-statements for each table.
 	function setDroptables($state) {
 		$this->_isDroptables = $state;
 	}
-	
+
 	function isDroptables() {
 		return $this->_isDroptables;
 	}
-	
+
 	function createDump($callBack) {
-		
+
 		global $site_name,$full_appname;
-		
+
 		// Set line feed
 		$lf = "\n";
-		
+
 		$resource = mysql_connect($this->getHost(), $this->getDBuser(), $this->getDBpassword());
-		mysql_select_db($this->getDbname(), $resource);		
+		mysql_select_db($this->getDbname(), $resource);
 		$result = mysql_query("SHOW TABLES",$resource);
 		$tables = $this->result2Array(0, $result);
 		foreach ($tables as $tblval) {
@@ -277,7 +277,7 @@ class Mysqldumper {
 
 		// Generate dumptext for the tables.
 		if (isset($this->_dbtables) && count($this->_dbtables)) {
-			$this->_dbtables = implode(",",$this->_dbtables);			
+			$this->_dbtables = implode(",",$this->_dbtables);
 		}
 		else {
 			unset($this->_dbtables);

@@ -2,15 +2,15 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('messages') && $_REQUEST['a']==10) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['messages_title']; ?></span>
+<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['messages_title']; ?></span>
 </div>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
 <?php
 $sql = "SELECT * FROM $dbase.".$table_prefix."user_messages WHERE $dbase.".$table_prefix."user_messages.id=".$_REQUEST['id'];
 $rs = mysql_query($sql);
@@ -23,7 +23,7 @@ if($limit!=1) {
 		echo $_lang['messages_not_allowed_to_read'];
 	} else {
 		// output message!
-		// get the name of the sender		
+		// get the name of the sender
 		$sender = $message['sender'];
 		if($sender==0) {
 			$sendername = $_lang['messages_system_user'];
@@ -73,7 +73,7 @@ if($limit!=1) {
 	<?php
 	// format the message :)
 	$message = str_replace ("\n", "<br>", $message['message']);
-	$dashcount = substr_count($message, "-----"); 
+	$dashcount = substr_count($message, "-----");
 	$message = str_replace ("-----", "<i style='color:#666;'>", $message);
 	for( $i=0; $i<$dashcount; $i++ ){
 	$message .= "</i>";
@@ -92,11 +92,11 @@ if($limit!=1) {
 	}
 }
 ?>
-	</div> 
-<?php } ?>			
+	</div>
+<?php } ?>
 
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
 <?php
 // Get  number of rows
 $sql = "SELECT count(id) FROM $dbase.".$table_prefix."user_messages WHERE recipient=".$modx->getLoginUserID()."";
@@ -156,19 +156,19 @@ echo $pager;
 $dotablestuff = 1;
 ?>
 <script type="text/javascript" src="media/script/sortabletable.js"></script>
-  <table border=0 cellpadding=0 cellspacing=0  class="sort-table" id="table-1" width='100%'> 
-    <thead> 
-      <tr bgcolor='#CCCCCC'> 
-        <td width="12"></td> 
-        <td width="60%"><b><?php echo $_lang['messages_subject']; ?></b></td> 
-        <td><b><?php echo $_lang['messages_from']; ?></b></td> 
-        <td><b><?php echo $_lang['messages_private']; ?></b></td> 
+  <table border=0 cellpadding=0 cellspacing=0  class="sort-table" id="table-1" width='100%'>
+    <thead>
+      <tr bgcolor='#CCCCCC'>
+        <td width="12"></td>
+        <td width="60%"><b><?php echo $_lang['messages_subject']; ?></b></td>
+        <td><b><?php echo $_lang['messages_from']; ?></b></td>
+        <td><b><?php echo $_lang['messages_private']; ?></b></td>
 		<td width="20%"><b><?php echo $_lang['messages_sent']; ?></b></td>
-      </tr> 
-    </thead> 
-    <tbody> 
-<?php	
-		for ($i = 0; $i < $limit; $i++) { 
+      </tr>
+    </thead>
+    <tbody>
+<?php
+		for ($i = 0; $i < $limit; $i++) {
 			$message = mysql_fetch_assoc($rs);
 			$sender = $message['sender'];
 			if($sender==0) {
@@ -181,14 +181,14 @@ $dotablestuff = 1;
 			}
 			$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 			$messagestyle = $message['messageread']==0 ? "messageUnread" : "messageRead";
-?> 
-    <tr <?php echo $classname; ?>> 
-	  <td ><?php echo $message['messageread']==0 ? "<img src='media/images/icons/new1-09.gif'>" : ""; ?></td> 
-      <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td> 
-	  <td ><?php echo $sendername; ?></td> 
-	  <td ><?php echo $message['private']==0 ? "No" : "Yes"; ?></td> 
-      <td ><?php echo strftime('%d-%m-%y, %H:%M:%S', $message['postdate']+$server_offset_time); ?></td> 
-    </tr> 
+?>
+    <tr <?php echo $classname; ?>>
+	  <td ><?php echo $message['messageread']==0 ? "<img src='media/images/icons/new1-09.gif'>" : ""; ?></td>
+      <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td>
+	  <td ><?php echo $sendername; ?></td>
+	  <td ><?php echo $message['private']==0 ? "No" : "Yes"; ?></td>
+      <td ><?php echo strftime('%d-%m-%y, %H:%M:%S', $message['postdate']+$server_offset_time); ?></td>
+    </tr>
     <?php
 			}
 	}
@@ -211,7 +211,7 @@ function addClassName(el, sClassName) {
 	}
 	p[p.length] = sClassName;
 	el.className = p.join(" ");
-			
+
 }
 
 function removeClassName(el, sClassName) {
@@ -237,9 +237,9 @@ st1.onsort = function () {
 };
 </script>
 <?php } ?>
-	</div> 
+	</div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_compose']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_compose']; ?></div><div class="sectionBody">
 <?php
 if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
 	$sql = "SELECT * FROM $dbase.".$table_prefix."user_messages WHERE $dbase.".$table_prefix."user_messages.id=".$_REQUEST['id'];
@@ -253,7 +253,7 @@ if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
 			echo $_lang['messages_not_allowed_to_read'];
 		} else {
 			// output message!
-			// get the name of the sender		
+			// get the name of the sender
 			$sender = $message['sender'];
 			if($sender==0) {
 				$sendername = "[System]";
@@ -268,8 +268,8 @@ if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
 			$messagetext = "\n\n\n-----\n".$_lang['messages_from'].": $sendername\n".$_lang['messages_sent'].": ".strftime('%d-%m-%y, %H:%M:%S', $message['postdate']+$server_offset_time)."\n".$_lang['messages_subject'].": ".$message['subject']."\n\n".$message['message'];
 			if($_REQUEST['m']=='rp') {
 				$recipientindex = $message['sender'];
-			}			
-		}		
+			}
+		}
 	}
 }
 
@@ -306,14 +306,14 @@ function hideSpans(showSpan) {
 	<?php
 	// get all usernames
 	$sql = "SELECT username, id FROM $dbase.".$table_prefix."manager_users";
-	$rs = mysql_query($sql); 
+	$rs = mysql_query($sql);
 	?>
 	<select name="user" class="inputBox" style="width:150px">
 	<?php
 		while ($row = mysql_fetch_assoc($rs)) {
 			?>
 			<option value="<?php echo $row['id']; ?>" ><?php echo $row['username']; ?></option>
-			<?php					
+			<?php
 		}
 	?>
 	</select>
@@ -322,14 +322,14 @@ function hideSpans(showSpan) {
 	<?php
 	// get all usernames
 	$sql = "SELECT name, id FROM $dbase.".$table_prefix."user_roles";
-	$rs = mysql_query($sql); 
+	$rs = mysql_query($sql);
 	?>
 	<select name="group" class="inputBox" style="width:150px">
 	<?php
 	while ($row = mysql_fetch_assoc($rs)) {
 		?>
 		<option value="<?php echo $row['id']; ?>" ><?php echo $row['name']; ?></option>
-		<?php					
+		<?php
 	}
 	?>
 </select>
@@ -339,7 +339,7 @@ function hideSpans(showSpan) {
 	</td>
   </tr>
 </table>
-</fieldset>	
+</fieldset>
 
 <p>
 
@@ -362,25 +362,25 @@ function hideSpans(showSpan) {
 <p>
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td id="Button1" onclick="documentDirty=false; document.messagefrm.submit();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></td>
+			<td id="Button1" onclick="documentDirty=false; document.messagefrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></td>
 				<script>createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="document.location.href='index.php?a=10&t=c';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+			<td id="Button2" onclick="document.location.href='index.php?a=10&t=c';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
 				<script>createButton(document.getElementById("Button2"));</script>
 		</tr>
 	</table>
 </p>
 </fieldset>
 </form>
-</div> 
+</div>
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
 $sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()." and messageread=0;";
-$rs = mysql_query($sql); 
+$rs = mysql_query($sql);
 $row = mysql_fetch_assoc($rs);
 $_SESSION['nrnewmessages'] = $row['count(*)'];
 $sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()."";
-$rs = mysql_query($sql); 
+$rs = mysql_query($sql);
 $row = mysql_fetch_assoc($rs);
 $_SESSION['nrtotalmessages'] = $row['count(*)'];
 $messagesallowed = $modx->hasPermission('messages');

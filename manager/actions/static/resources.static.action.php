@@ -11,16 +11,17 @@ function RenderRow($i,$row){
 		return "<li><span style='width: 200px'><a href='index.php?id=".$row['id']."&a=301'>".$row['caption']."</a></span>".($row['description']!='' ? ' - '.$row['description'] : "" ).($row['locked']==1 ? " <i><small>(".$_lang['tmplvars_locked_message'].")</small></i>" : "")."</li>";
 	}
 }
+$theme = $manager_theme ? "$manager_theme/":"";
 
 ?>
 
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['resource_management']; ?></span>
+	<span class="right"><img src="media/style/.$theme./images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['resource_management']; ?></span>
 </div>
 
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" /> 
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['resource_management']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['resource_management']; ?></div><div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
 	<script type="text/javascript">
 		tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ) );
