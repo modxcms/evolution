@@ -3,13 +3,17 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.2 (rev 7xx - March XX, 2006)
+MOD 0.9.2 (rev 8xx - March XX, 2006)
 ====================================
 
-* New manager themeing system.
-* Added simplified Chinese translation.
+* New manager themeing system -- now you can completely skin the manager easily (various between 762-804).
+* Raymond's Fix for undefined HTTP_REFERER on Windows servers in index.php for Raymond (791)
+* Changed the 404 header logic so it wouldn't be inadvertently triggered by people who use their index page as their error page (778)
+* Adding publishedon and publishedby and adding support for editedon and editedby to QuickEdit (777)
+* Added duplicate context menu item back for IE (769)
+* Added simplified Chinese translation (761).
 * Removing old version numbers from installer images.
-* Added full URL with scheme, host name and port to the session test redirect. It seemed to cause periodic, inconsisten problems without the full URL in local testing environments.
+* Added full URL with scheme, host name and port to the session test redirect. It seemed to cause periodic, inconsisten problems without the full URL in local testing environments (758).
 * [FS 297] Fixed opening PHP short tag in mutate_web_user.dynamic.action.php. Also fixed additional opening PHP short tags in other files. (757)
 * Better unistalled message/design from Zi. (755)
 * captchaClass.php merged into veriword.php (which was only 5 lines). (753,754)
