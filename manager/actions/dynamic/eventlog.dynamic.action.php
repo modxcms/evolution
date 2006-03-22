@@ -129,7 +129,7 @@ echo $cm->render();
 	$grd->columns=$_lang["type"]." ,".$_lang["source"]." ,".$_lang["date"]." ,".$_lang["event_id"]." ,".$_lang["sysinfo_userid"];
 	$grd->colWidths="34,,150,60";
 	$grd->colAligns="center,,,center,center";
-	$grd->colTypes="template:<a class='gridRowIcon' href='#' onclick='return showContentMenu([+id+],event);' title='".$_lang["click_to_context"]."'><img src='media/images/icons/event[+type+].gif' width='16' height='16' /></a>||template:<a href='index.php?a=115&id=[+id+]' title='".$_lang["click_to_view_details"]."'>[+source+]</a>||date: %d-%b-%Y %I:%M %p";
+	$grd->colTypes="template:<a class='gridRowIcon' href='#' onclick='return showContentMenu([+id+],event);' title='".$_lang["click_to_context"]."'><img src='media/style/$manager_theme/images/icons/event[+type+].gif' width='16' height='16' /></a>||template:<a href='index.php?a=115&id=[+id+]' title='".$_lang["click_to_view_details"]."'>[+source+]</a>||date: %d-%b-%Y %I:%M %p";
 	if($listmode=='1') $grd->pageSize=0;
 	if($_REQUEST['op']=='reset') $grd->pageNumber = 1;
 	// render grid
