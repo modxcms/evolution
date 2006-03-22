@@ -25,7 +25,7 @@ class logHandler{
 
 
 	function logError($msg) {
-		include_once "error.class.inc.php";
+		include_once dirname(__FILE__)."/error.class.inc.php";
 		$e = new errorHandler;
 		$e->setError(9, "Logging error: ".$msg);
 		$e->dumpError();
@@ -36,7 +36,7 @@ class logHandler{
 		global $modx;
 		$this->msg = $msg=="" ? "" : $msg;	// writes testmessage to the object
 		$this->internalKey = $internalKey=="" ? $modx->getLoginUserID() : $internalKey;	// writes the key to the object
-		$this->username = $_SESSION['mgrShortname'];	// writes the key to the object		
+		$this->username = $username=="" ? $modx->getLoginUserName() : $username;	// writes the key to the object		
 		$this->action = $action=="" ? $_REQUEST['a'] : $action;	// writes the action to the object
 		$this->itemId = $itemid=="" ? $_REQUEST['id'] : $itemid;	// writes the id to the object
 		if($this->itemId==0) $this->itemId="-"; // to stop items having id 0
@@ -53,6 +53,7 @@ class logHandler{
 	// writes it to the logging table 
 	function writeToLog() {
 
+		global $modx;
 		global $table_prefix;
 		global $dbase;
 
@@ -76,8 +77,8 @@ class logHandler{
 		$sql = "INSERT INTO $dbase.".$table_prefix."manager_log(timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$this->internalKey."', '".$this->username."'";
 		$sql .= ", '".$this->action."', '".$this->itemId."', '".$this->itemName."', '".$this->msg."')"; 
 		
-		if(!$rs=mysql_query($sql)) {
-			$this->logError("couldn't save log to table!");
+		if(!$rs=$modx->db->query($sql)) {
+			$this->logError("Couldn't save log to table! ".mysql_error());
 			return true;		
 		}
 	}
