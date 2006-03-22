@@ -782,6 +782,8 @@ ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`,
  DROP INDEX `idx_templateid`,
  ADD PRIMARY KEY ( `tmplvarid` , `templateid` );
 
+# ryan alter menutitle from 30 characters to 100 characters
+ALTER TABLE `{PREFIX}site_content` MODIFY COLUMN `menutitle` varchar(100);
 
 # ]]upgrade-able
 
