@@ -537,7 +537,7 @@ function decode(s){
 			  </tr>
 			  <tr style="height: 24px;">
 				<td width='100px' align="left"><span class='warning'><?php echo $_lang['long_title']; ?></span></span></td>
-				<td ><input name="longtitle" type="text" maxlength="120" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onMouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onMouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td ><input name="longtitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onMouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onMouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['document_description']; ?></span></td>
