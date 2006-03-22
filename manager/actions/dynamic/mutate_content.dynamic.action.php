@@ -312,7 +312,7 @@ function templateWarning(){
 	}
 	if (curTemplate == newTemplate){return;}
 
-	if (confirm('<?=$_lang['tmplvar_change_template_msg']?>')){
+	if (confirm('<? echo $_lang['tmplvar_change_template_msg']?>')){
 		documentDirty=false;
 		document.mutate.a.value = <?php echo $action; ?>;
 		document.mutate.newtemplate.value = newTemplate;
