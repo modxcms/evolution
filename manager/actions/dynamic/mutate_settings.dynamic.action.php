@@ -227,7 +227,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td>
-            <td ><input onChange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
+            <td ><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
