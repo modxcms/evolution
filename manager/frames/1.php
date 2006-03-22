@@ -5,7 +5,7 @@ $browser = $client->property('browser');
 $_SESSION['browser']=$browser;
 $version = $client->property('version');
 $_SESSION['browser_version']=$version;
-
+?>
 <head>
 <title><?php echo $site_name." - (MODx CMS Manager)"; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
