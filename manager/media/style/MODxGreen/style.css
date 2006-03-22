@@ -3,11 +3,12 @@
 body {
 	margin:							0;
 	padding:						0;
-	background-image: 				url(images/bg/body.jpg);
-	background-color: 				#F4F4F4;
-	background-position: 			top;
-	background-repeat: 				repeat-x;
+	background:						#F4F4F4 url(images/bg/body.jpg) repeat-x top left;
 	border-color: #8CAC45;
+}
+body * { 
+	margin: 0; 
+	padding: 0 
 }
 
 .warning{
@@ -66,7 +67,8 @@ hr {
 	height: 1px;
 	font-size: 0;
 	clear: both;
-	margin: 0;
+	margin-top: 5px;
+	margin-bottom: 5px; 
 	padding: 0;
 }
 
@@ -425,7 +427,8 @@ A.hometblink:hover {
 	text-decoration:				underline;
 	color:							#9BB957;}
 	
-	/*accesscontrol */
+	/*accesscontrol - manager login page */
+	
 	body {
 	background-color:			#F4F4F4;}
 
@@ -477,11 +480,182 @@ A.hometblink:hover {
 	
 	/*end accecontrol styles*/
 	
-#topbar {
-	margin : 0;
-	background: #000000;
-	color: White;
+	/*contextmenu in editing modules*/
+	.contextMenu {
+	background: #fff url(images/bg/context.gif) repeat-y top left;
+	margin:						0;
+	padding:					0;
+	border: 					1px solid #003399;
+	border-left-color:			#eaeaea;
+	border-top-color:			#eaeaea;
+	border-right-color:			#909090;
+	border-bottom-color:		#707070;
+	position:					absolute;
+	z-index:					10000; }
+
+.cntxMnuItem {
+	background-image:			url(images/_tx_.gif);
+	cursor:						pointer;
+	color:						#000;
+	padding: 					3px 16px 3px 2px; }
+
+.cntxMnuItemOver {
+	cursor:						pointer;
+	color: 						#000;
+	background: #C6D9A2 url(images/misc/buttonbar_gs.gif) repeat-x bottom left;
+	padding: 					2px 15px 2px 1px;
+	border: 					1px solid #fa0; /*#003399;*/
 }
+
+.cntxMnuItemDisabled {
+	cursor:						default;
+	font: 						menu;
+	padding: 					3px 16px 3px 2px;
+	color:						#111;
+}
+.cntxMnuItem IMG, .cntxMnuItemOver IMG, .cntxMnuItemDisabled IMG {
+	margin-right:				8px;
+}
+
+.cntxMnuItem IMG, .cntxMnuItemDisabled IMG {
+	filter:						gray();
+}
+
+.cntxMnuSeparator {
+	font-size:      			0;
+	height:         			1px;
+	background-color: 			#6A8CCB;
+	overflow:       			hidden;
+	margin:						3px 1px 3px 28px; }
+/*end context*/
+
+/*The topbar of manager with the admin icon*/	
+
+#topbar {
+	margin: 0;
+	background: #000;
+	color: #fff;
+}
+
+/* Top Navbar of snap in top menu bar layout*/
+#Navcontainer {
+	width: 100%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #fff;
+	background: #686868 url(images/bg/buttonbar.gif) repeat-x top left;*
+
+} 
+
+#divNav {
+    height: 50px;
+    width: 100%;
+    background: transparent url(images/bg/buttonbar_gs.gif) repeat-x 0 25px;
+}
+
+ul#nav {
+    height: 25px;
+    width: 100%;
+    position: absolute;
+    overflow: visible !important
+}
+#nav ul {
+    display: none;
+    height: 25px;
+    position: relative;
+    z-index: 500;
+	 margin: 						0px 0px 0px 0px;
+}
+
+#nav li { 
+    list-style-type: none;
+    display: block;
+    float: left;
+    width: auto;
+	 margin: 						0px 0px 0px 0px;
+}
+
+#nav a {
+	color: White;
+	font-weight: bold;
+	font-size: 11px;
+	text-decoration: none;
+	height: 15px;
+	display: block;
+	float: left;
+	width: auto;
+	white-space: nowrap;
+	cursor: default;
+	padding: 5px 10px 4px;
+	
+}
+#nav a:hover {
+	border: 1px solid darkgreen !important;
+	border-bottom-width: 0 !important;
+	padding: 4px 9px 5px;
+	background: transparent url(images/bg/button_dn.gif) repeat-x 0px 0px;
+}
+#nav a:active {
+   padding: 5px 8px 4px 10px;
+    color: #000;
+}
+#nav li.active a {
+	background: transparent url(images/bg/button_dn.gif) repeat-x left top;
+	font-weight: bold;
+	text-decoration: none;
+	height: 16px;
+	display: block;
+	float: left;
+	position: relative;
+	z-index: 999;
+	padding: 4px 9px 5px;
+	border-top: 1px solid darkblue;
+	border-right: 1px solid darkblue;
+	border-bottom: 0 solid darkblue;
+	border-left: 1px solid darkblue;
+}
+#nav li.active a:hover {
+    background: transparent url(images/bg/buttonbar_gs.gif) repeat-x top left !important;
+    border-bottom-width: 0 !important;
+}
+
+#nav li.active ul.subnav {
+    display: block;
+    position: absolute;
+    top: 25px;
+    width: 100%;
+    left: 0;
+    border-top: 1px solid darkblue;
+}
+
+#nav li.active ul.subnav a {
+	color: White;
+	font-weight: normal;
+	border: none;
+	height: 15px;
+	background: transparent url(images/bg/buttonbar_gs.gif) repeat-x left -1px;
+	padding: 4px 10px 5px;
+}
+
+#nav li.active ul.subnav a:hover {
+	color: White;
+	background: transparent url(images/bg/button_dn.gif) repeat-x top left !important;
+	font-weight: normal;
+	border-top-width: 0 !important;
+	border-bottom-width: 0 !important;
+	height: 15px;
+	padding: 4px 9px 5px;
+}
+#nav li.active ul.subnav a:active {
+	color: White;
+	background: transparent url(images/bg/button_dn.gif) repeat-x top left !important;
+	font-weight: normal;
+	border-top-width: 0 !important;
+	border-bottom-width: 0 !important;
+	height: 15px;
+	padding: 4px 9px 5px;
+}
+/* end top menu navbar */
+
 
 
 /* Contextual Menu used in the Tree Menu
@@ -597,7 +771,8 @@ A.hometblink:hover {
 	font-size: 11px;
 	color: #4B4B4B;
 	font-weight: normal;
-	text-decoration: none; }
+	text-decoration: none;
+	}
 
 .dynamic-tab-pane-control .tab-page {
 	clear:			both;
@@ -615,7 +790,9 @@ A.hometblink:hover {
 	z-index:		1;
 	white-space:	nowrap;
 }
-
+.dynamic-tab-pane-control li {
+	margin-left: 10px;
+}
 
 /* WebFX cool buttons... must also remove these...
 ---------------------------------------------------------- */
@@ -627,8 +804,7 @@ A.hometblink:hover {
 .coolButtonDisabled,
 .coolButtonUpDisabled {
 	cursor: 			default;
-	font: 				icon;
-	color:				White;
+	color:				#fff;
 	border:				0px;
 	padding:			4px 5px 4px 5px;
 	white-space:		nowrap;
@@ -720,3 +896,4 @@ A.hometblink:hover {
 						}
 
 /* end IE specific */
+

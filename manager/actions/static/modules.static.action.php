@@ -31,15 +31,15 @@ include_once $base_path."manager/includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
 $cm->addItem($_lang["run_module"],"js:menuAction(1)","media/style/$manager_theme/images/icons/save.gif",(!$modx->hasPermission('exec_module') ? 1:0));
 $cm->addSeparator();
-$cm->addItem($_lang["edit"],"js:menuAction(2)","media/images/icons/logging.gif",(!$modx->hasPermission('edit_module') ? 1:0));
-$cm->addItem($_lang["duplicate"],"js:menuAction(3)","media/images/icons/newdoc.gif",(!$modx->hasPermission('new_module') ? 1:0));
-$cm->addItem($_lang["delete"], "js:menuAction(4)","media/images/icons/delete.gif",(!$modx->hasPermission('delete_module') ? 1:0));
+$cm->addItem($_lang["edit"],"js:menuAction(2)","media/style/$manager_theme/images/icons/logging.gif",(!$modx->hasPermission('edit_module') ? 1:0));
+$cm->addItem($_lang["duplicate"],"js:menuAction(3)","media/style/$manager_theme/images/icons/newdoc.gif",(!$modx->hasPermission('new_module') ? 1:0));
+$cm->addItem($_lang["delete"], "js:menuAction(4)","media/style/$manager_theme/images/icons/delete.gif",(!$modx->hasPermission('delete_module') ? 1:0));
 echo $cm->render();
 
 ?>
 
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['module_management']; ?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['module_management']; ?></span>
 </div>
 <script language="JavaScript" type="text/javascript">
   	function searchResource(){
@@ -107,14 +107,16 @@ top.mainMenu.location.reload();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['module_management']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['module_management']; ?>
+</div><div class="sectionBody">
 	<!-- load modules -->
-	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['module_management_msg']; ?></p>
+	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" hspace="15" vspace="15" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
+	<p>&nbsp;</p> 
 	<div class="searchbar">
 		<table border="0" style="width:100%">
 			<tr>
-			<td><a class="searchtoolbarbtn" href="index.php?a=107"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif"  align="absmiddle" /> <?php echo $_lang['new_module']; ?></a></td>
-			<td nowrap="nowrap">
+			<td width="18%"><a class="searchtoolbarbtn" href="index.php?a=107"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif"  align="absmiddle" /> <?php echo $_lang['new_module']; ?></a></td>
+			<td width="82%" nowrap="nowrap">
 				<table border="0" style="float:right"><tr><td>Search </td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;">Go</a></td>
 				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
