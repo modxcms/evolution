@@ -1061,7 +1061,15 @@ class DocumentParser {
 
       }
 
-      // check whether it's a reference      if($this->documentObject['type']=="reference") {          // if it's an internal docid tag, process it          if(strpos($this->documentObject['content'],'[~') !== false) {              // generate a url              $this->documentObject['content'] = $this->rewriteUrls($this->documentObject['content']);          }          $this->sendRedirect($this->documentObject['content']);      }
+      // check whether it's a reference
+      if($this->documentObject['type']=="reference") {
+         // if it's an internal docid tag, process it
+         if(strpos($this->documentObject['content'],'[~') !== false) { 
+            // generate a url
+            $this->documentObject['content'] = $this->rewriteUrls($this->documentObject['content']);
+         }
+         $this->sendRedirect($this->documentObject['content']);
+      }
       
       // check if we should not hit this document
       if($this->documentObject['donthit']==1) {
