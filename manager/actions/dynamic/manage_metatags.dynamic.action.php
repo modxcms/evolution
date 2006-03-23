@@ -10,7 +10,7 @@ $modx->manager->initPageViewState();
 
 ?>
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['metatags_and_keywords'] ;?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['metatags_and_keywords'] ;?></span>
 </div>
 
 <script type="text/javascript">
@@ -100,7 +100,7 @@ $modx->manager->initPageViewState();
 <input type="hidden" name="op" value="82" />
 <input type="hidden" name="id" value="" />
 <!-- META tags -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['metatags'] ;?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['metatags'] ;?></div><div class="sectionBody">
 	<?php echo $_lang['metatag_intro'] ;?><br /><br />
 	<div class="searchbara">
 	<table border="0" width="100%" cellspacing="1">
@@ -176,7 +176,7 @@ $modx->manager->initPageViewState();
 </div>
 
 <!-- keywords -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['keywords'] ;?></div><div class="sectionBody">
+<div class="sectionHeader"><img src="media/style/".<?php echo $manager_theme ? "$manager_theme/":""; ?>."images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['keywords'] ;?></div><div class="sectionBody">
 <?php echo $_lang['keywords_intro'] ;?><br /><br />
 <?php
 	$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords ORDER BY keyword ASC";
