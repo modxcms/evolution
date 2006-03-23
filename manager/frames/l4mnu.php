@@ -1,4 +1,4 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 	// close the session as it is not used here
@@ -10,7 +10,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <head>
 <title>nav</title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>l4navbar.css<?php echo "?$theme_refresher";?>" />
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
 <script src="media/script/scriptaculous/scriptaculous.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
@@ -34,9 +34,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		var navsCount = navs.length;
 		for(j = 0; j < navsCount; j++) {
 			active = (navs[j].id == element.parentNode.id) ? "active" : "";
-			navs[j].className = active; 
+			navs[j].className = active;
 		}
-		
+
 		// Don't use effect if Opera detected
 		if(navigator.userAgent.toLowerCase().indexOf("opera")==-1){
 			//Hide all content containers
@@ -45,10 +45,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			for(var i = 0; i < contentsCount; i++) {
 				contents[i].style.display = 'none';
 			}
-			
+
 			//Extract content container id from href
 			ele = element.getAttribute('href').replace(/^.*\#/,'');
-			
+
 			//Magic Happens
 			new Effect.Appear(ele,{duration:0.2});
 		}
@@ -57,6 +57,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 </head>
 <body>
 <form name="menuForm">
+<div id="Navcontainer">
 <div id="divNav">
 <ul id="nav">
 <!-- Site -->
@@ -69,7 +70,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			<li><a onclick="this.blur();" href="index.php?a=68" target="main"><?php echo $_lang["visitor_stats"]; ?></a></li>
 			<li><a onclick="this.blur();" href="index.php?a=69" target="main"><?php echo $_lang["visitor_stats_online"]; ?></a></li>
         </ul>
-    </li>	
+    </li>
 
 <?php  if($modx->hasPermission('new_document')) { ?>
 <!-- Content -->
@@ -92,7 +93,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php 	if($modx->hasPermission('file_manager')) { ?>
                 <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
             <?php } ?>
-            
+
         </ul>
     </li>
 <?php } ?>
@@ -102,7 +103,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;"><?php echo $_lang["modules"]; ?></a>
         <ul class="subnav" id="menu9">
     <?php
-      $list = '';  // initialize list variable 
+      $list = '';  // initialize list variable
       $rs = $modx->db->select('*',$modx->getFullTableName('site_modules'));  // get modules
       while($content = $modx->db->getRow($rs)) {
         $list .= '<li><a onclick="this.blur();" href="index.php?a=112&id='.$content['id'].'" target="main">'.$content['name'].'</a></li>';
@@ -184,7 +185,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     </li>
 <?php } ?>
 
-<?php if($modx->hasPermission('help')) { ?>		
+<?php if($modx->hasPermission('help')) { ?>
 <!-- Help -->
     <li id="limenu7"><a href="#menu7" onclick="new NavToggle(this); return false;"><?php echo $_lang["help"]; ?></a>
         <ul class="subnav" id="menu7">
@@ -199,7 +200,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <li id="limenu8"><a onclick="this.blur();" href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a></li>
 
 </ul>
-</div>
+</div></div>
 </form>
 </body>
 </html>
