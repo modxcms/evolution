@@ -108,11 +108,13 @@
 			case "checkbox": // handles check boxes
 				$field_value = explode("||",$field_value);
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_name));
+				$i=0;
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
 					if (strlen($itemvalue)==0) $itemvalue = $item;
-					$field_html .=  '<input type="checkbox" value="'.htmlspecialchars($itemvalue).'" id="tv'.$field_name.'-'.$itemvalue.'" name="tv'.$field_name.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><label for="tv'.$field_name.'-'.$itemvalue.'">'.$item.'</label><br />';
+					$field_html .=  '<input type="checkbox" value="'.htmlspecialchars($itemvalue).'" id="tv_'.$i.'" name="tv'.$field_name.'[]" '. (in_array($itemvalue,$field_value)?" checked='checked'":"").' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><label for="tv_'.$i.'">'.$item.'</label><br />';
+					$i++;
 				}
 				break;
 			case "option": // handles radio buttons
