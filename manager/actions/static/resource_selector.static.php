@@ -12,7 +12,6 @@ if(!$modx->hasPermission('edit_module') && $_REQUEST['a']==84) {
 	<title><?php echo $content["name"]." ".$_lang['resource_selector_title']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>>" />
 	<script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 	<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
 	<script type="text/javascript" language="JavaScript">
