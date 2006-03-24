@@ -2,11 +2,11 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==301) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 if(!$modx->hasPermission('new_template') && $_REQUEST['a']==300) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 
@@ -38,13 +38,13 @@ $limit = mysql_num_rows($rs);
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {		
+		if($lock['internalKey']!=$modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_msg"],$lock['username']," template variable");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
 	}
-} 
+}
 // end check for lock
 
 
@@ -108,10 +108,10 @@ var widgetParams = [];			// name = description;datatype;default or list values -
 	widgetParams['htmltag'] 	= '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
 	widgetParams['viewport'] 	= '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
 	widgetParams['floater'] 	= '&x=Offset X;int &y=Offset Y;int &width=Width;string;200px &height=Height;string;30px &pos=Position;list;top-right,top-left,bottom-left,bottom-right &gs=Glide Speed;int;6 &class=Class;string &style=Style;string ';
-	widgetParams['datagrid'] 	= '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';	
-	widgetParams['richtext'] 	= '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?php echo $RTEditors; ?>';	
+	widgetParams['datagrid'] 	= '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
+	widgetParams['richtext'] 	= '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?php echo $RTEditors; ?>';
 	widgetParams['image'] 		= '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
-	
+
 // Current Params
 var currentParams = [];
 var lastdf, lastmod = [];
@@ -119,7 +119,7 @@ var lastdf, lastmod = [];
 function showParameters(ctrl) {
 	var c,p,df,cp;
 	var ar,desc,value,key,dt;
-	
+
 	currentParams = []; // reset;
 
 	if (ctrl) f = ctrl.form;
@@ -131,7 +131,7 @@ function showParameters(ctrl) {
 	}
 
 	// get display format
-	df = lastdf = ctrl.options[ctrl.selectedIndex].value; 
+	df = lastdf = ctrl.options[ctrl.selectedIndex].value;
 
 	// load last modified param values
 	if (lastmod[df]) cp = lastmod[df].split("&");
@@ -153,8 +153,8 @@ function showParameters(ctrl) {
 			key = ar[0]		// param
 			ar = (ar[1]+'').split(";");
 			desc = ar[0];	// description
-			dt = ar[1];		// data type	
-			value = decode((currentParams[key]) ? currentParams[key]:(dt=='list') ? ar[3] : (ar[2])? ar[2]:'');			
+			dt = ar[1];		// data type
+			value = decode((currentParams[key]) ? currentParams[key]:(dt=='list') ? ar[3] : (ar[2])? ar[2]:'');
 			if (value!=currentParams[key]) currentParams[key] = value;
 			value = (value+'').replace(/^\s|\s$/,""); // trim
 			if (dt) {
@@ -169,7 +169,7 @@ function showParameters(ctrl) {
 						if(!currentParams[key]||currentParams[key]=='undefined') {
 							currentParams[key] = ls[0]; // use first list item as default
 						}
-						for(i=0;i<ls.length;i++){						
+						for(i=0;i<ls.length;i++){
 							c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
 						}
 						c += '</select>';
@@ -183,7 +183,7 @@ function showParameters(ctrl) {
 			};
 		}
 		t+='</table>';
-		td = (document.getElementById) ? document.getElementById('displayparams'):document.all['displayparams'];	
+		td = (document.getElementById) ? document.getElementById('displayparams'):document.all['displayparams'];
 		td.innerHTML = t;
 		tr.style.display='';
 	}
@@ -191,7 +191,7 @@ function showParameters(ctrl) {
 }
 
 function setParameter(key,dt,ctrl) {
-	var v;	
+	var v;
 	if(!ctrl) return null;
 	switch (dt) {
 		case 'int':
@@ -218,11 +218,11 @@ function setParameter(key,dt,ctrl) {
 function resetParameters() {
  	document.mutate.params.value = "";
  	lastmod[lastdf]="";
- 	showParameters(); 	
+ 	showParameters();
 }
 // implode parameters
 function implodeParameters(){
-	var v, p, s='';	
+	var v, p, s='';
 	for(p in currentParams){
 		v = currentParams[p];
 		if(v) s += '&'+p+'='+ encode(v);
@@ -257,25 +257,25 @@ function decode(s){
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo htmlspecialchars($content['display_params']);?>">
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['tmplvars']; ?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['tmplvars']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
-		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
+		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script>createButton(document.getElementById("Button1"));</script>
 <?php if($_GET['a']=='301') { ?>
-		<td id="Button2" onclick="duplicaterecord();"><img src="media/images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
+		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script>createButton(document.getElementById("Button2"));</script>
-		<td id="Button3" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
+		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 			<script>createButton(document.getElementById("Button3"));</script>
 <?php } ?>
-		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
+		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
 			<script>createButton(document.getElementById("Button4"));</script>
 	</table>
-	<div class="stay">   
+	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
 		<td><span class="comment">&nbsp;After saving:</span></td>
-		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td> 
+		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
 	</tr>
@@ -283,7 +283,7 @@ function decode(s){
 	</div>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">
 <?php echo $_lang['tmplvars_msg']; ?><p />
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
@@ -299,7 +299,7 @@ function decode(s){
     <td align="left"><?php echo $_lang['tmplvars_description']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
   </tr>
-  
+
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="type" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;'>
@@ -323,11 +323,11 @@ function decode(s){
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_elements']; ?>:&nbsp;&nbsp;</td>
-    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="elements" type="text" maxlength="65535" value="<?php echo htmlspecialchars($content['elements']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'><img src="media/images/icons/bkmanager.gif" width="17" height="18" align="absmiddle" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand"/></td>
+    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="elements" type="text" maxlength="65535" value="<?php echo htmlspecialchars($content['elements']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/bkmanager.gif" width="17" height="18" align="absmiddle" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand"/></td>
   </tr>
   <tr>
     <td align="left" valign="top"><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</td>
-    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="media/images/icons/bkmanager.gif" width="17" height="18" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand" /></td>
+    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/bkmanager.gif" width="17" height="18" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand" /></td>
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</td>
@@ -350,13 +350,13 @@ function decode(s){
 	</td>
   </tr>
   <tr id="displayparamrow">
-  	<td valign="top" align="left"><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="media/images/icons/refresh.gif" width="16" height="16" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></td>
+  	<td valign="top" align="left"><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></td>
   	<td align="left" id="displayparams">&nbsp;</td>
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_rank']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="rank" type="text" maxlength="4" value="<?php echo $content['rank'];?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-  </tr> 
+  </tr>
   <tr>
     <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
@@ -364,14 +364,14 @@ function decode(s){
 </div>
 
 <!-- Template Permission -->
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvar_tmpl_access']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvar_tmpl_access']; ?></div><div class="sectionBody">
 <?php echo $_lang['tmplvar_tmpl_access_msg']; ?><p />
 <table width="100%" cellspacing="0" cellpadding="0">
 <?php
 	// Added by Raymond - based on S.BRENNAN modifications
 	$tbl = $dbase.".".$table_prefix."site_templates" ;
 	$tblsel = $dbase.".".$table_prefix."site_tmplvar_templates" ;
-  	$sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id"; 
+  	$sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id";
  	$rs = mysql_query($sql);
 ?>
   <tr>
@@ -380,13 +380,13 @@ function decode(s){
 	while ($row = mysql_fetch_assoc($rs)) {
 		echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($row['tmplvarid']? "checked='checked'":'')." />".$row['templatename']."<br />";
 	}
-?>		
+?>
 	</td>
   </tr>
 </table>
 </div>
 
-<?php 
+<?php
 if($use_udperms==1) {
 	$groupsarray = array();
 
@@ -394,16 +394,16 @@ if($use_udperms==1) {
 	$sql = "SELECT * FROM $dbase.".$table_prefix."site_tmplvar_access where tmplvarid=".$id;
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
-	for ($i = 0; $i < $limit; $i++) { 
+	for ($i = 0; $i < $limit; $i++) {
 		$currentgroup=mysql_fetch_assoc($rs);
 		$groupsarray[$i] = $currentgroup['documentgroup'];
 	}
 
-?>	
+?>
 
 <!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <script>
 	function makePublic(b){
 		var notPublic=false;
@@ -418,16 +418,16 @@ if($use_udperms==1) {
 		else {
 			if(!chks.length) chks.checked = (b)? false:chks.checked;
 			else for(i=0;i<chks.length;i++) if (b) chks[i].checked=false;
-			chkpub.checked=true;			
+			chkpub.checked=true;
 		}
 	}
 </script>
 <?php echo $_lang['tmplvar_access_msg']; ?><p />
 <?php
-	}	
+	}
 	$chk ='';
-	$sql = "SELECT name, id FROM $dbase.".$table_prefix."documentgroup_names"; 
-	$rs = mysql_query($sql); 
+	$sql = "SELECT name, id FROM $dbase.".$table_prefix."documentgroup_names";
+	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for($i=0; $i<$limit; $i++) {
 		$row=mysql_fetch_assoc($rs);

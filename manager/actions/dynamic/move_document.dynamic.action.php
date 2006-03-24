@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_document') && $_REQUEST['a']==51) {	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 
@@ -23,7 +23,7 @@ if(isset($_REQUEST['id'])) {
 	$id = $_REQUEST['id'];
 } else {
 	$e->setError(2);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // check permissions on the document
@@ -34,11 +34,11 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	?><br /><br /><div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+	?><br /><br /><div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 	<p><?php echo $_lang['access_permission_denied']; ?></p>
 	<?php
 	include("footer.inc.php");
-	exit;	
+	exit;
 }
 ?>
 
@@ -84,22 +84,22 @@ function checkParentChildRelation(pId, pName) {
 
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td id="Button1" onclick="document.newdocumentparent.submit();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
+			<td id="Button1" onclick="document.newdocumentparent.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 				<script>createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="document.location.href='index.php?a=2';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+			<td id="Button2" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
 				<script>createButton(document.getElementById("Button2"));</script>
 		</tr>
 	</table>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['move_document_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['move_document_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['move_document_message']; ?><p />
 <form method="post" action="index.php" name='newdocumentparent'>
 <input type="hidden" name="a" value="52">
 <input type="hidden" name="id" value="<?php echo $id; ?>">
 <input type="hidden" name="idshow" value="<?php echo $id; ?>"><?php echo $_lang['document_to_be_moved']; ?>: <b><?php echo $id; ?></b><br />
 <span id="parentName" class="warning"><?php echo $_lang['move_document_new_parent']; ?></span><br>
-<input type="hidden" name="new_parent" value="" class="inputBox"> 
+<input type="hidden" name="new_parent" value="" class="inputBox">
 <br />
 <input type='save' value="Move" style="display:none">
 </form>
