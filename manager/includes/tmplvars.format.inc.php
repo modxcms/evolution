@@ -31,16 +31,33 @@
 		$id = "tv$name";
 		switch($format){
 
-			case "image":
-				$value = parseInput($value,"||","array");
+			case 'image':
+
+				$images = parseInput($value, '||', 'array');
 				$o = '';
-				for($i = 0;$i<count($value); $i++){
-					list($name,$image) = is_array($value[$i]) ? $value[$i]: explode("==",$value[$i]);
-					if(!$image) $image = $name;
-					if(!empty($o)) $o.='<br />';
-					$o.= "<img src='$name'"." alt='".mysql_escape_string($params["alttext"])."'".($params["name"] ? " name='".$params["name"]."'":"").($params["hspace"] ? " hspace='".$params["hspace"]."'":"").($params["vspace"] ? " vspace='".$params["vspace"]."'":"").($params["borsize"] ? " border='".$params["borsize"]."'":"").(($params["align"] != "none") && ($params["align"] != "undefined") && ($params["align"] != "") ? " align='".$params["align"]."'":"").($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["id"] ? " id='".$params["id"]."'":"").($params["attrib"] ? $params["attrib"]:"")."/>";
+
+				foreach($images as $image){
+
+					if(!is_array($image)) { $image = explode('==',$image); }
+					$src = $image[0];
+
+					if($src) {
+
+						$id = ($params['id'] ? 'id="'.$params['id'].'"' : '');
+						$alt = htmlspecialchars($params['alttext']);
+						$class = $params['class'];
+						$style = $params['style'];
+						$attributes = $params['attrib'];
+
+$o .= <<<EOD
+<img {$id} src="{$src}" alt="{$alt}" class="{$class}" style="{$style}" {$attributes} />
+EOD;
+
+					}
+
 				}
-				break;
+				
+			break;
 		
 			case "delim":	// display as delimitted list
 				$value = parseInput($value,"||"); 
