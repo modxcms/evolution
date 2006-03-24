@@ -346,33 +346,6 @@ class DocumentParser {
     }
   }
 
-  function addNotice($content, $type="text/html") {
-    /*
-       PLEASE READ!
-
-       Leaving this message and the link intact will show your appreciation of the time spent
-       building the system and providing support to it's users, and the hours that will
-       be spending on it in future.
-
-       To add the a this link to your website simply add the following html code
-
-       <div id=\"poweredbymodx\"></div>
-
-     */
-    $notice	  = "\n<!--\n\n".
-      "MODx Content Manager is based on Etomite 0.6\n".
-      "\tEtomite is Copyright 2004 and Trademark of the Etomite Project\n\n".
-      "-->\n\n";
-    if($type=="text/html") {
-      $poweredby ="Powered By <a href='http://www.modxcms.com/' title='Content managed by the MODx Content Manager System'>MODx</a>.";
-    }
-    // insert the message into the document
-    if(strpos($content, "<div id=\"poweredbymodx\">")>0) {
-      $content = str_replace("<div id=\"poweredbymodx\">", "<div id=\"poweredbymodx\">".$poweredby.$notice, $content);
-    }
-    return $content;
-  }
-
   function outputContent($noEvent=false) {
 
     $this->documentOutput = $this->documentContent;
@@ -441,7 +414,7 @@ class DocumentParser {
       }
     }
 
-    $out = $this->addNotice($this->documentOutput, $type);
+    $out = "";
     if($this->dumpSQL) {
       $out .= $this->queryCode;
     }
