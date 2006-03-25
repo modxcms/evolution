@@ -414,7 +414,7 @@ class DocumentParser {
       }
     }
 
-    $out = "";
+    $out = $this->documentOutput;
     if($this->dumpSQL) {
       $out .= $this->queryCode;
     }
