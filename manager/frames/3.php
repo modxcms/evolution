@@ -446,9 +446,10 @@ function menuHandler(action) {
 <!-- ************************************************************************ -->
 <?php if($_SESSION['browser']=='ie') {
 	// MSIE context menu
+        $theme = $manager_theme ? "$manager_theme/":"";
 	function constructLink($action, $img, $text, $allowed) {
 		if($allowed) {
-			$tempvar = "html += '<div class=\"menuLink\" onmouseover=\"this.className=\'menuLinkOver\';\" onmouseout=\"this.className=\'menuLink\';\" onclick=\"this.className=\'menuLink\'; parent.menuHandler(".$action."); parent.hideMenu();\"><img src=\'media/images/icons/".$img.".gif\' align=absmiddle>".addslashes($text)."</div>';\n";
+			$tempvar = "html += '<div class=\"menuLink\" onmouseover=\"this.className=\'menuLinkOver\';\" onmouseout=\"this.className=\'menuLink\';\" onclick=\"this.className=\'menuLink\'; parent.menuHandler(".$action."); parent.hideMenu();\"><img src=\'media/style/'.$theme.'/images/icons/".$img.".gif\' align=absmiddle>".addslashes($text)."</div>';\n";
 		} else {
 			$tempvar = "html += '<div class=\"menuLinkDisabled\"><img src=\'media/images/icons/".$img.".gif\' align=absmiddle>".addslashes($text)."</div>';\n";
 		}
@@ -459,7 +460,7 @@ function menuHandler(action) {
 
 	html = '';
 
-	html += '<html><head><title>ContextMenu</title><meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>"><link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>contextMenu.css<?php echo "?$theme_refresher";?>" />'
+	html += '<html><head><title>ContextMenu</title><meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>"><link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>style.css" />'
 	html += '</head><body onselectstart="return false;" onblur="parent.hideMenu();" topmargin="0" leftmargin="0">';
 	//html += '<div id="menuContainer" style="position:absolute; left:2px; top:2px; width:100%; height:100%;">';
 	html += '<div id="nameHolder"></div>';
