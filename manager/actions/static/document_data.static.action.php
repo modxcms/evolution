@@ -323,14 +323,14 @@ echo $_lang['no_stats_message'];
 <?php
 if ($show_preview==1) { ?>
 <div class="sectionHeader">
-  <img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["preview"]; ?></div><div class="sectionBody" id="lyr2">
+  <img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["preview"]; ?></div><div class="sectionBody" id="lyr2">
   <iframe src="../index.php?id=<?php echo $id; ?>&z=manprev" frameborder=0 border=0 style="width: 100%; height: 400px; border: 3px solid #4791C5;">
   </iframe>
 </div>
 <?php } ?>
 <!--END SHOW HIDE PREVIEW WINDOW MOD-->
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["page_data_source"]; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["page_data_source"]; ?></div><div class="sectionBody">
 <?php
 $buffer = "";
 $filename = "../assets/cache/docid_".$id.".pageCache.php";

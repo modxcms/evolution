@@ -376,7 +376,7 @@ function ls ($curpath) {
 				$dirs_array[$dircounter]['dir'] = $newpath;
 				$dirs_array[$dircounter]['stats'] = lstat($newpath);
 				$dirs_array[$dircounter]['text'] = "<img src='media/style/".$theme."/images/tree/folder.gif' border=0 align='absmiddle'> <a href='index.php?a=31&mode=drill&path=$newpath'><b style=''>$file</b></a>";
-				$dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript:confirmDeleteFolder("'.addslashes("index.php?a=31&mode=deletefolder&path=$curpath&folderpath=$newpath").'");"><img src="media/'.$theme.'/images/icons/delete.gif" alt="Delete Folder"></a></span>' : '';
+				$dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript:confirmDeleteFolder("'.addslashes("index.php?a=31&mode=deletefolder&path=$curpath&folderpath=$newpath").'");"><img src="media/style/'.$theme.'/images/icons/delete.gif" alt="Delete Folder"></a></span>' : '';
 
 				// increment the counter
 				$dircounter++;
@@ -385,7 +385,7 @@ function ls ($curpath) {
 				$files_array[$filecounter]['file'] = $newpath;
 				$files_array[$filecounter]['stats'] = lstat($newpath);
 				$files_array[$filecounter]['text'] = "<img src='media/style/".$theme."images/tree/page-html.gif' /> $file";
-				$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles)) ? 
+				$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles)) ?
 				"<span style='cursor:pointer; width:20px;' onClick='viewfile(\"$webstart_path".substr($newpath, $len, strlen($newpath))."\");'><img src='media/style/".$theme."/images/icons/context_view.gif' /></span>" : (($enablefiledownload && in_array($type, $uploadablefiles))? "<a href='$webstart_path".substr($newpath, $len, strlen($newpath))."' style='cursor:pointer; width:20px;'><img src='media/style/$theme/images/misc/ed_save.gif' title='".$_lang["file_download_file"]."' border=0 align='absmiddle'></a>":"<span class='disabledImage'><img src='media/images/icons/context_view.gif' border=0 align='absmiddle'></span>");
 				$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? "<span style='width:20px;'><a href='index.php?a=31&mode=view&path=$newpath'><img src='media/style/".$theme."images/icons/context_view.gif' border=0 align='absmiddle'></a></span>" : $files_array[$filecounter]['view'] ;
 				$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? "<span style='width:20px;'><a href='index.php?a=31&mode=unzip&path=$curpath&file=$file' onclick='return confirmUnzip();'><img src='media/style/".$theme."images/icons/unzip.gif' title='".$_lang["file_download_unzip"]."'></a></span>" : "" ;
@@ -449,7 +449,7 @@ if($folders==0 && $files==0) {
 	echo "<img src='media/style/".$theme."/images/tree/deletedfolder.gif' border=0 align='absmiddle'><span style='color:#888;cursor:default;'> This directory is empty.</span><br />\n";
 }
 
-echo "<br />";    
+echo "<br />";
 echo "<div style='float: left; width: 140px;'>".$_lang['files_directories'].":</div><b>$folders</b><br />";
 echo "<div style='float: left; width: 140px;'>".$_lang['files_files'].":</div><b>$files</b><br />";
 echo "<div style='float: left; width: 140px;'>".$_lang['files_data'].":</div><b>".ufilesize($filesizes)."</b><br />";
