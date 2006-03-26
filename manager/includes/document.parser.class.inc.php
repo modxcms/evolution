@@ -11,10 +11,13 @@ class DocumentParser {
 
   var $pluginEvent;
 
+  var $executedQueries = 0;
+  var $queryTime = 0;
+
   var $rs, $result, $sql, $table_prefix, $config, $debug,
       $documentIdentifier, $documentMethod, $documentGenerated, $documentContent, $tstart,
       $minParserPasses, $maxParserPasses, $documentObject, $templateObject, $snippetObjects,
-      $stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName,
+      $stopOnNotice, $currentSnippet, $documentName,
       $aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache,
       $snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir,
       $placeholders,$sjscripts,$jscripts,$loadedjscripts,$documentMap;
