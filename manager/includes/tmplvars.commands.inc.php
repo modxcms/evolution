@@ -4,8 +4,8 @@
  * Created by Raymond Irving Feb, 2005
  */
 
-global $BINDINGS; // list of supported bindings. must be upper case
-$BINDINGS = "FILE,CHUNK,DOCUMENT,SELECT,EVAL,INHERIT"; 
+global $BINDINGS; // Array of supported bindings. must be upper case
+$BINDINGS = array('FILE','CHUNK','DOCUMENT','SELECT','EVAL','INHERIT'); 
 
 function ProcessTVCommand($value, $name=''){
 	global $modx;	
@@ -15,25 +15,24 @@ function ProcessTVCommand($value, $name=''){
 	if (substr($nvalue,0,1)!='@') return $value;
 	else {
 
-		list($cmd,$param) = ParseCommand($nvalue);
-		$cmd = trim($cmd);
-		switch (strtoupper($cmd)) {
-			case "@FILE":
+		list($cmd,$param) = ParseCommand($nvalue);		
+		switch ($cmd) {
+			case "FILE":
 				$output = ProcessFile($param);
 				break;
 
-			case "@CHUNK":		// retrieve a chunk and process it's content
+			case "CHUNK":		// retrieve a chunk and process it's content
 				$chunk = $modx->getChunk($param);
 				$output = $chunk;
 				break;
 
-			case "@DOCUMENT":	// retrieve a document and process it's content
+			case "DOCUMENT":	// retrieve a document and process it's content
 				$rs = $modx->getDocument($param);
 				if (is_array($rs)) $output = $rs['content'];
 				else $output = "Unable to locate document $param";
 				break;
 
-			case "@SELECT":		// selects a record from the cms database
+			case "SELECT":		// selects a record from the cms database
 				$rt = array();
 				$replacementVars= array(
 					'DBASE'=> $modx->db->config['dbase'],
@@ -47,12 +46,11 @@ function ProcessTVCommand($value, $name=''){
 				$output = $rs;
 				break;
 				
-			case "@EVAL":		// evaluates text as php codes return the results
+			case "EVAL":		// evaluates text as php codes return the results
 				$output = eval($param);
 				break;
 
-			case "@INHERIT":
-			
+			case "INHERIT":		
 				$output = $param; // Default to param value if no content from parents
 				$doc = $modx->getDocument($modx->documentIdentifier,'id,parent');
 				
@@ -104,11 +102,22 @@ function ProcessFile($file){
 }
 
 // ParseCommand - separate @ cmd from params
-function ParseCommand($nvalue){	
+function ParseCommand($binding_string) {
+
 	global $BINDINGS;
-	$a = split(" ",$nvalue,2); // try splitting by space ( )	
-	if (strpos($BINDINGS,trim(strtoupper(substr($a[0],1,10))))===false) $a = split("\n",$nvalue,2); // try splitting by \n	
-	return $a;
+	$match = array();
+  $binding_string = trim($binding_string);
+	$regexp = '/@('.implode('|',$BINDINGS).')\n*(.*)/i'; // Split binding on whitespace
+	
+	if(preg_match($regexp, $binding_string, $match)) {
+	
+	 // We can't return the match array directly because the first element is the whole string
+	 $binding_array = array(strtoupper($match[1]), $match[2]); // Make command uppercase
+	 
+	 return $binding_array;
+	 
+	}
+	
 }
 
 ?>
