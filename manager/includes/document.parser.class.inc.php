@@ -1982,7 +1982,7 @@ class DocumentParser {
 
 # Registers Client-side CSS scripts - these scripts are loaded at inside the <head> tag
   function regClientCSS($src){
-    if ($this->loadedjscripts[$src]) return '';
+    if (isset($this->loadedjscripts[$src]) && $this->loadedjscripts[$src]) return '';
     $this->loadedjscripts[$src] = true;
     if (strpos(strtolower($src),"<style")!==false||strpos(strtolower($src),"<link")!==false) {
       $this->sjscripts[count($this->sjscripts)] = $src;
