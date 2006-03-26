@@ -443,65 +443,7 @@ function menuHandler(action) {
 
 </script>
 
-<!-- ************************************************************************ -->
-<?php if($_SESSION['browser']=='ie') {
-	// MSIE context menu
-        $theme = $manager_theme ? "$manager_theme/":"";
-	function constructLink($action, $img, $text, $allowed) {
-		if($allowed) {
-			$tempvar = "html += '<div class=\"menuLink\" onmouseover=\"this.className=\'menuLinkOver\';\" onmouseout=\"this.className=\'menuLink\';\" onclick=\"this.className=\'menuLink\'; parent.menuHandler(".$action."); parent.hideMenu();\"><img src=\'media/style/'.$theme.'/images/icons/".$img.".gif\' align=absmiddle>".addslashes($text)."</div>';\n";
-		} else {
-			$tempvar = "html += '<div class=\"menuLinkDisabled\"><img src=\'media/images/icons/".$img.".gif\' align=absmiddle>".addslashes($text)."</div>';\n";
-		}
-		return $tempvar;
-	}
-?>
-<script language="javascript">
-
-	html = '';
-
-	html += '<html><head><title>ContextMenu</title><meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>"><link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>style.css" />'
-	html += '</head><body onselectstart="return false;" onblur="parent.hideMenu();" topmargin="0" leftmargin="0">';
-	//html += '<div id="menuContainer" style="position:absolute; left:2px; top:2px; width:100%; height:100%;">';
-	html += '<div id="nameHolder"></div>';
-	<?php echo constructLink(1, "context_view", str_replace(" ", "&nbsp;", $_lang["view_document"]), 1); ?>
-	<?php echo constructLink(2, "save", str_replace(" ", "&nbsp;", $_lang["edit_document"]), $modx->hasPermission('edit_document')); ?>
-	<?php echo constructLink(5, "cancel", str_replace(" ", "&nbsp;", $_lang["move_document"]), $modx->hasPermission('edit_document')); ?>
-	// Ryan: Duplicate Document
-	<?php echo constructLink(7, "copy", $_lang["duplicate_document"], $modx->hasPermission('new_document')); ?>
-	//Raymond:Create Folder
-	<?php echo constructLink(11, "folder", str_replace(" ", "&nbsp;", $_lang["create_folder_here"]), $modx->hasPermission('new_document')); ?>
-	<?php echo constructLink(3, "newdoc", str_replace(" ", "&nbsp;", $_lang["create_document_here"]), $modx->hasPermission('new_document')); ?>
-	<?php echo constructLink(6, "weblink", str_replace(" ", "&nbsp;", $_lang["create_weblink_here"]), $modx->hasPermission('new_document')); ?>
-	html += '<div class="seperator"></div>';
-	<?php echo constructLink(4, "delete", str_replace(" ", "&nbsp;", $_lang["delete_document"]), $modx->hasPermission('delete_document')); ?>
-	<?php echo constructLink(8, "b092", str_replace(" ", "&nbsp;", $_lang["undelete_document"]), $modx->hasPermission('delete_document')); ?>
-	html += '<div class="seperator"></div>';
-	<?php echo constructLink(9, "date", str_replace(" ", "&nbsp;", $_lang["publish_document"]), $modx->hasPermission('edit_document')); ?>
-	<?php echo constructLink(10, "date", str_replace(" ", "&nbsp;", $_lang["unpublish_document"]), $modx->hasPermission('edit_document')); ?>
-	html += '</body></html>';
-
-	var PopWindow = window.createPopup();
-	PopWindow.document.write(html);
-
-	function dopopup(x,y) {
-		var PopupHTML = PopWindow.document.body;
-		if(selectedObjectName.length>20) {
-			selectedObjectName = selectedObjectName.substr(0, 20) + "...";
-		}
-		PopWindow.document.getElementById('nameHolder').innerHTML=selectedObjectName;
-		PopWindow.show(x, y, 170, 260, document.body); // Raymond: adjust pop window height to 260
-	}
-
-	function hideMenu() {
-		PopWindow.hide();
-	}
-
-</script>
-<?php }
-	  else {
-	  // Mozilla context menu
-?>
+<!-- Mozilla context menu ... IE removed -->
 <script type="text/javascript">
 
 	function dopopup(x,y) {
@@ -531,8 +473,6 @@ function menuHandler(action) {
 <div id="contextMenu" style="position: absolute; right: 20px; top: 20px; z-index:10000; width: 170px; height: auto;visibility: hidden;">
 	<iframe name="oPopup" style="width:170px;height:100%" frameborder="0" src="index.php?a=1&f=3c"></iframe>
 </div>
-<?php } ?>
-<!-- ************************************************************************ -->
 
 </body>
 </html>
