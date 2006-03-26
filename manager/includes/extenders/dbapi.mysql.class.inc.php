@@ -76,7 +76,14 @@ class DBAPI {
 	}
 	
 	function escape($s){
-		return mysql_escape_string($s);
+	  
+	  if(function_exists('mysql_real_escape_string')) {
+	   $s = mysql_real_escape_string($s);
+	  } else {
+	   $s = mysql_escape_string($s);
+	  }
+	  
+		return $s;
 	}
 
 	/**
