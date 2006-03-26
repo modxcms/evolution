@@ -4,27 +4,20 @@ body {
 	margin: 0;
 	padding: 0;
 	background: #F4F4F4 url(images/bg/body.jpg) repeat-x top left;
-	border-color: #8CAC45;
 	font: normal 11px/15px Verdana, Arial, Helvetica, sans-serif;
 	color: #000;
-}
-body, td, p {
-	font-size: 9pt;
-}
-	
+}	
 body * { 
-	margin: 0; 
-	padding: 0 
+	margin: 0;
+	padding: 0;
 }
 
-.warning{
+.warning, .success {
 	color: #821517;
 	font-weight: bold;
 }
-
-.success{
+.success {
 	color: #090;
-	font-weight: bold;
 }
 
 
@@ -38,13 +31,12 @@ button {
 
 a, a:active, a:visited, a:link {
 	font-size: 9pt;
-	color: Teal;
+	color: #1a32c7;
 	text-decoration: underline;
 }
 
 a:hover {
-	text-decoration: underline;
-	color: #528C07;
+	color: #0f1e76;
 }
 
 input, .inputBox {
@@ -62,68 +54,58 @@ hr {
 	height: 1px;
 	font-size: 0;
 	clear: both;
-	margin-top: 5px;
-	margin-bottom: 5px; 
-	padding: 0;
+	margin: 5px 0;
 }
 
 
 .stay {
 	border-bottom: 1px solid #D0E2F8;
-	margin-left: 0px }
+	margin-left: 0;
+}
 	
 
 .messageRead {
-	color: Black;
+	color: #000;
 }
 
 .messageUnread {
-	color: 	#4791C5;
+	color: #4791C5;
 	font-weight: bold;
 }
 
 .subTitle {
 	width: 100%;
 	height: 44px !important;
-	padding: 0px;
-	margin-bottom: 10px;
-	margin-right: 10px;
-	background-image: 	url(images/bg/button_up.gif);
-	background-position: 	top;
-	background-repeat: 	repeat-x;	
+	margin: 0 10px 10px 0;
+	background: transparent url(images/bg/button_up.gif) repeat-x top left;
 }
 
 .right {
-	font-weight: 	bold;
-	color: 	#fff;
-	float: 	right;
+	font-weight: bold;
+	color: #fff;
+	float: right;
 	padding: 0 20px 0 0;
 }
 
 .fakefieldset {
 	border: 1px solid #fff;
-	background: 	#fff;
-	font-size: 	12px;
-	padding: 	10px;
-	background-position: 	top right;
-	background-repeat: 	no-repeat;	
+	background: #fff;
+	font-size: 12px;
+	padding: 10px;
 }
 
 .fakefieldset strong, .fakefieldsettitle {
-	color: #990033;
+	color: #903;
 	font-weight: bold;
 }
 
 .sectionHeader, .showHideVisible {
-	margin: 0 10px 4px 10px;
-	padding: 5px 3px 5px 3px;
+	margin: 0 10px 4px;
+	padding: 5px 3px;
 	font-weight: bold;
-	color:                     #fff;
-	background-position: 	top left;
-	background-repeat: 	repeat-x;	
-	background: #9EBD5A;
-	border: 1px solid #000000;
-	background-image: 	url(images/bg/button_dn.gif);
+	color: #fff;
+	background: #9EBD5A url(images/bg/button_dn.gif) repeat-x top left;
+	border: 1px solid #000;
 }
 
 .sectionBody, .layerVisible {
@@ -134,74 +116,62 @@ hr {
 	border: 1px solid #E2E2E2;
 	margin: 0 10px 20px;
 	padding: 10px;
-	background-position: 	top right;
-	background-repeat: 	no-repeat;	
 	display: block;
 }
 
-.showHideVisible, .layerVisible {
-	margin: 0 10px 4px 10px;
+.layerVisible {
+	margin: 0 10px 4px;
 }
 
 .comment {
 	font-size: 9px;
-	color: Black;
+	color: #000;
 }
 
 thead, .fancyrow {
-   color: #fff;
+	color: #fff;
 	height: 18px !important;
-	background-color: 	#60605F;
-
+	background-color: #60605F;
 }
 
 thead td {
-	color:#fff;
-	border-top:1px solid #fff;
+	color: #fff;
+	border-top: 1px solid #fff;
 }
 
 .fancyrow2 {
 	height: 18px !important;
-	background-image: 	url(images/bg/buttonbar.gif);
-	background-color: 	#F0A62F;
-	background-position: 	top;
-	background-repeat: 	repeat-x;
-	border-bottom: 	1px solid #fff;
+	background: #F0A62F url(images/bg/buttonbar.gif) repeat-x top;
+	border-bottom: 1px solid #fff;
 	color: #fff;
 }
 
-li {
-	padding: 	0;
-	margin: 	0 0 0 15px;
-	list-style: 	disc outside url(images/misc/li.gif);
-}
 
 ul {
-	margin: 	0 0 0 20px;
+	margin: 0 0 0 20px;
+}
+li {
+	margin: 0 0 0 15px;
+	list-style: disc outside url(images/misc/li.gif);
 }
 
 .screen {
-	border: 	1px solid #ddd;
-	text-align: 	center;
+	border: 1px solid #ddd;
+	text-align: center;
 }
 
 a img {
-	border: 	0;
+	border: 0;
 }
 
 .sort-table {
-	font: Icon;
-	border: 0px Solid ThreeDShadow;
-	color: WindowText;
+	border: 0 solid #222;
+	color: #000;
 }
 
 .sort-table thead {
 	height: 18px !important;
-	background-image: 	url(images/bg/button_dn.gif);
-	background-color: 	#97B553;
-	background-position: 	top;
-	background-repeat: 	repeat-x;
-	
+	background: #97B553 url(images/bg/button_dn.gif) repeat-x top;
 }
 
 .sort-table td {
@@ -210,26 +180,22 @@ a img {
 
 .sort-table thead td {
 	cursor: pointer;
-	color: #000000;
+	color: #000;
 }
 
 .sort-table thead td:active {
-	border-color: ButtonShadow ButtonHighlight 
-	ButtonHighlight ButtonShadow;
+	border-color: #333 #999 #999 #333;
 	padding: 3px 4px 1px 6px;
 }
 
 .sort-arrow {
 	width: 11px;
 	height: 11px;
-	background-position: center center;
-	background-repeat: no-repeat;
 	margin: 0 2px;
 }
 
 .sort-arrow.descending {
 	background-image: url(images/misc/downsimple.png);
-	
 }
 
 .sort-arrow.ascending {
@@ -241,7 +207,7 @@ a img {
 }
 
 .odd {
-	background: #FFFFFF;
+	background: #FFF;
 }
 
 /*	end sortable table */
@@ -253,71 +219,54 @@ a img {
 	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 }
 
-.disabledImage img {
-	filter: gray();
-}
-
 .editorCell {
 	border-top: 1px solid #808080;
 	text-align: left;
 	vertical-align: baseline;
 }
 
-.row1	{ background-color: #fff; color: #000000;}
-.row2	{ background-color: #C8DAA2; color: #000000;}
-.row3	{ background-color: #DADDAD; color: #000000;}
-
+.row1, .row2, .row3 { color: #000; }
+.row1	{ background-color: #fff; }
+.row2	{ background-color: #C8DAA2; }
+.row3	{ background-color: #DADDAD; }
 
 #treeHolder {
-	padding: 5px 10px 0px 10px;
-	
+	padding: 5px 10px 0;
 }
 
 #floater {
 	display: none;
 	position: absolute;
-	width: 200px; 
+	width: 200px;
 	height: 44px;
 	top: 28px;
 	left: 4px;
-	margin: 0px; 
-	padding: 0px;
-	background-color: 	#fff;
-	background-position: 	top;
-	background-repeat: 	repeat-x;
-	border: 	1px solid #fff;
-	border-left-color: ButtonHighlight;
-	border-right-color: ButtonShadow;
-	border-top-color: ButtonHighlight;
-	border-bottom-color: ButtonShadow;
+	background: #fff none repeat-x top;
+	border: 1px solid #fff;
+	border-color: #999 #333 #333 #999;
 	z-index: 500;
 }
 
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode {
-	font: icon;
-	font-size: 11px;
-	color: Black;
-	padding: 2px 2px 2px 2px;
-	margin: 0;
+	padding: 2px;
 	cursor: pointer;
 	width: auto;
 }
 
 .treeNodeHover {
 	background-color: #DCDCDC;
-	border: 1px solid #777777;
-	padding: 1px 1px 1px 1px;
+	border: 1px solid #777;
+	padding: 1px;
 }
 
 .treeNodeSelected {
 	background-color: #D4E0B1;
-	color: 	Black;
 	border: 1px solid #777;
-	padding: 1px 1px 1px 1px;
+	padding: 1px;
 }
 
 .deletedNode {
-	text-decoration: 	line-through;
+	text-decoration: line-through;
 	color: #333;
 }
 
@@ -330,7 +279,7 @@ a img {
 }
 
 .emptyNode {
-	color: #AAAAAA;
+	color: #AAA;
 	cursor: default;
 }
 
@@ -342,209 +291,182 @@ a img {
 /* grid style */
 .grid {
 	width: 100%;
-	background-color: #FFFFFF;
-	font-family: verdana,arial; 
+	background-color: #FFF;
 	font-size: 11px;
-	border: 1px solid silver;}
+	border: 1px solid #bbb;
+}
 	
 .gridHeader {
-	color: #fff; 
+	color: #fff;
 	font-weight: bold;
-	background-image: url('images/bg/button_dn.gif');
-	background-color: Black;
+	background: #000 url(images/bg/button_dn.gif);
 	height: 25px;
-	border: 1px solid #4791C5; }
+	border: 1px solid #4791C5;
+}
 	
 .gridItem {
 	background-color: #fff;
-	padding: 3px; }
+	padding: 3px;
+}
 	
 .gridAltItem {
-	background-color: #eeeeee;
-	padding: 3px; }
+	background-color: #eee;
+	padding: 3px;
+}
 
 .gridRowIcon:hover {
-	background-color:beige;}
-
+	background-color: #9ab1fd;
+}
 
 	
 /* search bar */
 .searchbar {
 	width: 100%;
-	border: 1px solid silver;
-	background-image: url('images/bg/srch_bg.gif');
-	background-color: beige; }
+	border: 1px solid #bbb;
+	background: #9ab1fd  url(images/bg/srch_bg.gif);
+}
 
 .searchtext {
 	height: 18px;
 	padding: 2px;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	border: 1px solid silver; }
+	border: 1px solid #bbb;}
 
 .searchbutton {
 	width: 22px;
 	height: 18px;
 	padding: 2px;
 	text-decoration: none;
-	border: 1px solid #e0e0e0; }
+	border: 1px solid #e0e0e0;}
 	
 .searchbutton:hover {
-	text-decoration: none;
-	background-image: url('images/bg/button_dn.gif');}
+	background-image: url(images/bg/button_dn.gif);}
 
 .searchtoolbarbtn {
 	height: 24px;
-	padding-left: 2px;
-	padding-top: 3px;
-	padding-right: 2px;
+	padding: 3px 2px 0;
 	text-decoration: none;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	background-image: url('images/srch_bg.gif');
-	border: 1px solid #e0e0e0; }
+	background-image: url(images/srch_bg.gif);
+	border: 1px solid #e0e0e0;}
 
 .searchtoolbarbtn:hover {
-	text-decoration: none;
-	background-image: url('images/bg/button_dn.gif');
-	border: 1px solid green; }
+	background-image: url(images/bg/button_dn.gif);
+	border: 1px solid green;}
 
 /* home page main links */
-A.hometblink, A.hometblink:ACTIVE, A.hometblink:VISITED, A.hometblink:LINK
-.hometblink {
+a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hometblink {
 	text-decoration: underline;
-	color: #929292; 
- font-weight: bold; 
-	}
+	color: #929292;
+    font-weight: bold;
+}
 	
-A.hometblink:hover {
-	text-decoration: underline;
+a.hometblink:hover {
 	color: #9BB957;}
 	
-	/*accesscontrol - manager login page */
-	
-	body {
-	background-color: #F4F4F4;}
+/* accesscontrol - manager login page 
+-----------------------------------------------------*/
 
 .loginBg {
-	background-position: 	top;
-	background-color: #F4F4F4;
-	background-repeat: 	repeat-x;
-	border-top-style: none;
-	border-right-style: none;
-	border-bottom-style: none;
-	border-left-style: none;
+	background-position: top;
+	background: #F4F4F4;
+	border: 0;
 }
 .loginTbl {
 	background-color: #94B451;
 	border: 1px solid #60605F;
-	background-position: 	top right;
-	background-repeat: 	no-repeat;
-	padding: 	10px;
-	text-align: 	justify;
+	padding: 10px;
+	text-align: justify;
 }
 .loginLicense {
 	background-color: #60605F;
-	background-position: 	bottom;
-	background-repeat: 	repeat-x;
-	padding: 	10px;
-	text-align: 	justify;
-	color:#fff;
+	padding: 10px;
+	text-align: justify;
+	color: #fff;
 	border: 1px solid #60605F;
 }
-.loginLicense td{
-	color:#FFFFFF}
+.loginLicense td {
+	color: #FFF
+}
 
 .notice {
-	width:100%;
-	padding:5px;
-	border:1px solid #eeeeee;
-	background-color:#F4F4F4;
-	font-size:10px;
-	color:#707070;}
+	width: 100%;
+	padding: 5px;
+	border: 1px solid #eee;
+	background-color: #F4F4F4;
+	font-size: 10px;
+	color: #707070;}
 
 .siteName {
-	font-weight:bold;
-	font-family:verdana, arial;
-	font-size:18px;
-	color:#FFFFFF;}
+	font-weight: bold;
+	font-size: 18px;
+	color: #fff;
+}
 
 .loginLicense a {
-	color:#94B451}
+	color: #94B451
+}
 	
-	/*end accecontrol styles*/
-	
-	/*contextmenu in editing modules*/
-	.contextMenu {
+
+/*contextmenu in editing modules
+-----------------------------------------------------*/
+.contextMenu {
 	background: #fff url(images/bg/context.gif) repeat-y top left;
-	margin: 0;
-	padding: 0;
-	border: 	1px solid #003399;
-	border-left-color: #eaeaea;
-	border-top-color: #eaeaea;
-	border-right-color: #909090;
-	border-bottom-color: #707070;
+	border: 1px solid #039;
+	border-color: #eaeaea #909090 #707070 #eaeaea;
 	position: absolute;
-	z-index: 10000; }
+	z-index: 10000;
+}
 
 .cntxMnuItem {
 	background-image: url(images/_tx_.gif);
 	cursor: pointer;
 	color: #000;
-	padding: 	3px 16px 3px 2px; }
+	padding: 3px 16px 3px 2px;
+}
 
 .cntxMnuItemOver {
 	cursor: pointer;
-	color: 	#000;
+	color: #000;
 	background: #C6D9A2 url(images/misc/buttonbar_gs.gif) repeat-x bottom left;
-	padding: 	2px 15px 2px 1px;
-	border: 	1px solid #fa0; /*#003399;*/
+	padding: 2px 15px 2px 1px;
+	border: 1px solid #fa0;
 }
 
 .cntxMnuItemDisabled {
 	cursor: default;
-	font: 	menu;
-	padding: 	3px 16px 3px 2px;
+	padding: 3px 16px 3px 2px;
 	color: #111;
 }
-.cntxMnuItem IMG, .cntxMnuItemOver IMG, .cntxMnuItemDisabled IMG {
+.cntxMnuItem img, .cntxMnuItemOver img, .cntxMnuItemDisabled img {
 	margin-right: 8px;
 }
 
-.cntxMnuItem IMG, .cntxMnuItemDisabled IMG {
-	filter: gray();
+.cntxMnuSeparator {
+	font-size: 0;
+	height: 1px;
+	background-color: #6A8CCB;
+	overflow: hidden;
+	margin: 3px 1px 3px 28px;
 }
 
-.cntxMnuSeparator {
-	font-size:      	0;
-	height:         	1px;
-	background-color: 	#6A8CCB;
-	overflow:       	hidden;
-	margin: 3px 1px 3px 28px; }
-/*end context*/
-
-/*The topbar of manager with the admin icon*/	
-
+/*The topbar of manager with the admin icon
+-----------------------------------------------------*/
 #topbar {
-	margin: 0;
 	background: #000;
 	color: #fff;
 }
 
-/* Top Navbar of snap in top menu bar layout*/
+/* Navigation menu
+-----------------------------------------------------*/
 #Navcontainer {
 	width: 100%;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
 	color: #fff;
 	background: #686868 url(images/bg/buttonbar.gif) repeat-x top left;
 } 
-
 #divNav {
     height: 50px;
     width: 100%;
     background: transparent url(images/bg/buttonbar_gs.gif) repeat-x 0 25px;
 }
-
 ul#nav {
     height: 25px;
     width: 100%;
@@ -558,7 +480,6 @@ ul#nav {
     z-index: 500;
     margin: 0;
 }
-
 #nav li { 
     list-style-type: none;
     display: block;
@@ -566,26 +487,23 @@ ul#nav {
     width: auto;
     margin: 0;
 }
-
 #nav a {
 	color: #fff;
 	font-weight: bold;
-	font-size: 11px;
 	text-decoration: none;
-	height: 15px;
+	line-height: 15px;
 	display: block;
 	float: left;
 	width: auto;
 	white-space: nowrap;
 	cursor: default;
-	padding: 5px 10px 4px;
-	
+	padding: 5px 10px 4px;	
 }
 #nav a:hover {
 	border: 1px solid darkgreen !important;
-	border-bottom-width: 0 !important;
+	border-bottom: 0 !important;
 	padding: 4px 9px 5px;
-	background: transparent url(images/bg/button_dn.gif) repeat-x 0px 0px;
+	background: transparent url(images/bg/button_dn.gif) repeat-x 0 0;
 }
 #nav a:active {
    padding: 5px 8px 4px 10px;
@@ -595,7 +513,7 @@ ul#nav {
 	background: transparent url(images/bg/button_dn.gif) repeat-x left top;
 	font-weight: bold;
 	text-decoration: none;
-	height: 16px;
+	line-height: 16px;
 	display: block;
 	float: left;
 	position: relative;
@@ -652,64 +570,56 @@ ul#nav {
 ---------------------------------------------------------- */
 #mx_contextmenu {
 	background: #fff url(images/bg/context.gif) repeat-y top left;
-	margin: 0;
 	padding: 2px;
 	border: 1px solid #fdfdfd;
 	border-right-color: #dcdcdc;
 	border-bottom-color: #dcdcdc;
 	overflow: hidden;
-	font: normal 11px/11px Verdana, Arial, sans-serif; }
-
+	line-height: 11px;
+}
 #mx_contextmenu .menuLink {
 	cursor: pointer;
-	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
 	color: #222;
-	padding: 3px 16px 3px 2px; }
-
+	padding: 3px 16px 3px 2px;
+}
 #mx_contextmenu .menuLinkOver {
-	background: #fff url(images/bg/buttonbar_gs.gif) repeat-x bottom left; 
+	background: #fff url(images/bg/buttonbar_gs.gif) repeat-x bottom left;
 	border: 1px solid #fdfdfd;
 	border-right-color: #dcdcdc;
-	border-bottom-color: #dcdcdc; }
-
+	border-bottom-color: #dcdcdc;
+}
 #mx_contextmenu .menuLinkOver,
 #mx_contextmenu .menuLinkDisabled {
 	cursor: pointer;
-	padding: 2px 15px 2px 1px;}
-
+	padding: 2px 15px 2px 1px;
+}
 #mx_contextmenu .menuLinkDisabled {
 	cursor: default;
-	color: #787878; }
-
+	color: #787878;
+}
 #mx_contextmenu .menuLink img, 
 #mx_contextmenu .menuLinkOver img, 
 #mx_contextmenu .menuLinkDisabled img {
-	margin-right: 8px; }
-
-#mx_contextmenu .menuLink img, 
-#mx_contextmenu .menuLinkDisabled img {
-	filter: gray(); }
-
-#mx_contextmenu .menuLinkOver img { }
-
+	margin-right: 8px;
+}
 #mx_contextmenu #nameHolder {
    color: #fff;
 	text-align: right;
 	cursor: default;
-	font-weight: bold; 	
+	font-weight: bold;	
 	padding: 2px;
 	margin-bottom: 2px;
 	border: 1px solid #fdfdfd;
 	border-right-color: #dcdcdc;
 	border-bottom-color: #dcdcdc;	
-	background: #fff url(images/bg/buttonbar_gs.gif) repeat-x top left;; }
-
+	background: #fff url(images/bg/buttonbar_gs.gif) repeat-x top left;
+}
 #mx_contextmenu .seperator {
 	font-size: 0;
 	height: 1px;
 	background-color: #6A8CCB;
 	overflow: hidden;
-	margin: 3px 1px 3px 28px; }
+	margin: 3px 1px 3px 28px;}
 	
 
 /* WebFX tabs... must remove these...
@@ -718,12 +628,9 @@ ul#nav {
 	position: relative;
 	width: 100%;
 }
-
 .dynamic-tab-pane-control .tab-row .tab {
-	font-family: Tahoma;
 	color: #313131;
 	font-weight: bold;
-	font-size: 11px;
 	cursor: pointer;
 	display: inline;
 	margin: 3px -3px 1px 5px;
@@ -732,20 +639,16 @@ ul#nav {
 	z-index: 1;
 	position: relative;
 	top: 0;
-	background-position: 	top left;
-	background-repeat: 	repeat-x;	
-	background: #F5F5F5;
 	border: 1px solid #fff;
-	border-right: 1px solid #E4E4E4;
-	border-bottom: 1px solid #E4E4E4;
+	border-right-color: #E4E4E4;
+	border-bottom-color: #E4E4E4;
 	background: #fff url(images/bg/tab-bg.png) repeat-x top left;
-   }
-
+}
 .dynamic-tab-pane-control .tab-row .tab.hover {
-   color: #222;
-	background: #fff;
-	text-decoration: none; }
-
+    color: #222;
+    background: #fff;
+    text-decoration: none;
+}
 .dynamic-tab-pane-control .tab-row .tab.selected {
 	color: #000;
 	z-index: 3;
@@ -753,26 +656,23 @@ ul#nav {
 	background: #fff;
 	border: 1px solid #e4e4e4;
 	border-right-color: #c0c0c0;
-	border-bottom-color: #c0c0c0; }
+	border-bottom-color: #c0c0c0;}
 
 .dynamic-tab-pane-control .tab-row .tab span {
-	font-family: Tahoma;
 	font-weight: bold;
 	font-size: 11px;
 	color: #4B4B4B;
 	font-weight: normal;
 	text-decoration: none;
-	}
+}
 
 .dynamic-tab-pane-control .tab-page {
 	clear: both;
 	background: #fff;
-	border-top: 1px solid #F5F5F5;
 	border: 1px solid #fff;
 	z-index: 2;
 	position: relative;
 	top: -2px;
-	font: Message-Box;
 	padding: 10px;
 }
 
@@ -793,64 +693,42 @@ ul#nav {
 .coolButtonActiveDisabled,
 .coolButtonDisabled,
 .coolButtonUpDisabled {
-	cursor: 	default;
+	cursor: default;
 	color: #fff;
 	border: 0px;
-	padding: 4px 5px 4px 5px;
+	padding: 4px 5px;
 	white-space: nowrap;
 	vertical-align: middle;
 	background-image: url(images/bg/button_up.gif);
 }
-
-.coolButton img {
-	filter: green();
-}
-
 .coolButtonHover {
 	border: 1px solid darkgreen;
-	padding: 3px 4px 3px 4px;	
+	padding: 3px 4px;	
 	background-image: url(images/bg/button_dn.gif);
 }
-
-.coolButtonActiveHover {
-	border: 1px solid black;
-	border-left-color: ButtonShadow;
-	border-right-color: ButtonHighlight;
-	border-top-color: ButtonShadow;
-	border-bottom-color:ButtonHighlight;
+.coolButtonActive, .coolButtonActiveHover {
+	border: 1px solid #000;
+	border-color: #333 #999 #999 #333;
 	padding: 4px 3px 2px 5px;	
 	
 }
-
-.coolButtonActive {
-	border: 1px solid black;
-	border-left-color: ButtonShadow;
-	border-right-color: ButtonHighlight;
-	border-top-color: ButtonShadow;
-	border-bottom-color: ButtonHighlight;
-	padding: 4px 3px 2px 5px;	
-	
-}
-
 .coolButtonUpDisabled,
 .coolButtonActiveDisabled,
 .coolButtonDisabled {
-	border: 1px solid #003399;
-	padding: 3px 4px 3px 4px;
+	border: 1px solid #039;
+	padding: 3px 4px;
 	color: #777;
-	border-width: 	0px;
+	border-width: 0;
 }
 
-.coolButtonActiveDisabled {
-	border: 1px solid #003399;
-	padding: 3px 4px 3px 4px;
+.coolButtonUpDisabled .coolButtonDisabledContainer,
+.coolButtonActiveDisabled .coolButtonDisabledContainer,
+.coolButtonDisabled .coolButtonDisabledContainer {
+	display: block;
+	background: #555;
+	width: 100%;
+	height: 100%;
 }
-
-.coolButtonUpDisabled {
-
-}
-
-/* My latest build of mozilla crashed with the opacity */
 .coolButtonUpDisabled img,
 .coolButtonActiveDisabled img,
 .coolButtonDisabled img {
@@ -858,33 +736,11 @@ ul#nav {
 	-moz-opacity: 0.5;
 	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 }
-
-/* IE specific
- * When the button becomes disbabled the innerHTML is enclosed by two spans
- * This is done so that the image will look disabled using filters
- */
-.coolButtonUpDisabled .coolButtonDisabledContainer,
-.coolButtonActiveDisabled .coolButtonDisabledContainer,
-.coolButtonDisabled .coolButtonDisabledContainer {
-	display: block;
-	background: GrayText;
-	filter: chroma(color=#8FBC8F) dropshadow(color=ButtonHighlight, offx=1, offy=1);
-	width: 100%;
-	height: 100%;
-}
-
 .coolButtonUpDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer,
 .coolButtonActiveDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer,
 .coolButtonDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer {
 	background: transparent;
-	filter: gray()
-	/* Remove all bright shades of gray */
-	chroma(color=#ffffff) chroma(color=#fefefe) chroma(color=#fdfdfd)
-	chroma(color=#fcfcfc) chroma(color=#fbfbfb) chroma(color=#fafafa)
-	chroma(color=#f9f9f9) chroma(color=#f8f8f8) chroma(color=#f7f7f7)
-	chroma(color=#f6f6f6) chroma(color=#f5f5f5) chroma(color=#f4f4f4)
-	chroma(color=#f3f3f3) 
-	mask(color=#010101);
-	}
-
-/* end IE specific */
+    opacity: 0.5;
+	-moz-opacity: 0.5;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+}
