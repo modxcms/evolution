@@ -949,6 +949,8 @@ class DocumentParser {
     else
       set_error_handler(array(&$this,"phpError"));
 
+    $this->db->connect();
+
     // get the settings
     if(empty($this->config)) {
       $this->getSettings();
