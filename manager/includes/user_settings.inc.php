@@ -14,7 +14,7 @@ if(isset($modx)) {
 $sql = "SELECT setting_name, setting_value FROM $dbase.".$table_prefix."user_settings WHERE user='".$user_id."' AND setting_value!=''";
 $rs = mysql_query($sql);
 $number_of_settings = mysql_num_rows($rs);
-$settings = array();
+
 while ($row = mysql_fetch_assoc($rs)) {
 	$settings[$row['setting_name']] = $row['setting_value'];
 }

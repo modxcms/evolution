@@ -88,8 +88,11 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 				  WHERE id=".$row['id'];
 			$modx->dbQuery($sql);
 			// built activation url
-			$url = "http://".$_SERVER["SERVER_NAME"].$_SERVER["PHP_SELF"].(strlen($_SERVER["QUERY_STRING"])>0 ? "?".$_SERVER["QUERY_STRING"]:"");
-			$url.= (strpos($url,"?")===false ? "?":"&")."webloginmode=actp&wli=".$row['id']."&wlk=".$newpwdkey;
+			if($_SERVER['SERVER_PORT']!='80') {
+			  $url = $modx->config['server_protocol'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$modx->makeURL($modx->documentIdentifier,'',"webloginmode=actp&wli=".$row['id']."&wlk=".$newpwdkey);
+			} else {
+			  $url = $modx->config['server_protocol'].'://'.$_SERVER['SERVER_NAME'].$modx->makeURL($modx->documentIdentifier,'',"webloginmode=actp&wli=".$row['id']."&wlk=".$newpwdkey);
+			}
 			// replace placeholders and send email
 			$message = str_replace("[+uid+]",$row['username'],$webpwdreminder_message);
 			$message = str_replace("[+pwd+]",$newpwd,$message);
@@ -97,6 +100,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			$message = str_replace("[+sname+]",$site_name,$message);
 			$message = str_replace("[+semail+]",$emailsender,$message);
 			$message = str_replace("[+surl+]",$url,$message);
+			
 			if(!mail($email, "New Password Activation for $site_name", $message, "From: ".$emailsender."\r\n"."X-Mailer: MODx Content Manager - PHP/".phpversion())) {
 				// error 
 				$output =  webLoginAlert("Error while sending mail to $email. Please contact the Site Administrator");
@@ -178,8 +182,8 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 # process login
 
-	$username = htmlspecialchars($_POST['username']);
-	$givenPassword = htmlspecialchars($_POST['password']);
+	$username = $modx->db->escape($_POST['username']);
+	$givenPassword = $modx->db->escape($_POST['password']);
 	$captcha_code = isset($_POST['captcha_code'])? $_POST['captcha_code']: '';
 
 	// invoke OnBeforeWebLogin event
@@ -190,7 +194,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 								"rememberme"	=> $_POST['rememberme']
 							));
 
-	$sql = "SELECT $dbase.".$table_prefix."web_users.*, $dbase.".$table_prefix."web_user_attributes.* FROM $dbase.".$table_prefix."web_users, $dbase.".$table_prefix."web_user_attributes WHERE $dbase.".$table_prefix."web_users.username REGEXP BINARY '^".$username."$' and $dbase.".$table_prefix."web_user_attributes.internalKey=$dbase.".$table_prefix."web_users.id;";
+	$sql = "SELECT $dbase.".$table_prefix."web_users.*, $dbase.".$table_prefix."web_user_attributes.* FROM $dbase.".$table_prefix."web_users, $dbase.".$table_prefix."web_user_attributes WHERE BINARY $dbase.".$table_prefix."web_users.username = '".$username."' and $dbase.".$table_prefix."web_user_attributes.internalKey=$dbase.".$table_prefix."web_users.id;";
 	$ds = $modx->dbQuery($sql);
 	$limit = $modx->db->getRecordCount($ds);
 

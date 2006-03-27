@@ -164,8 +164,44 @@
 				$field_html .='<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="setVariableModified(\''.$field_name.'\');BrowseServer(\'tv'.$field_name.'\')" />';
 				break;
 			case "file": // handles the input of file uploads
-				$field_html .=  '<input type="file" id="tv'.$field_name.'" name="tv'.$field_name.'" '.$field_style.' onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /><br>';
-                if($field_value!='') $field_html .=  '&nbsp;Current File: <a href="'.$field_value.'" target="_new">'. basename($field_value). '</a><input type="hidden" name="tv'.$field_name.'_previous" value="'.$field_value.'" /><br /><input type="checkbox" name="tv'.$field_name.'_clear" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Clear link to doc &nbsp;&nbsp;<input type="checkbox" name="tv'.$field_name.'_delete" onclick="documentDirty=true;setVariableModified(\''.$field_name.'\');" /> Delete File'; 
+			/* Modified by Timon for use with resource browser */
+                		global $_lang;
+				global $ImageManagerLoaded;
+				global $content,$use_editor,$which_editor;
+				if (!$ImageManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
+				/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
+					$field_html .="
+					<script type=\"text/javascript\">
+							var lastFileCtrl;
+							function OpenServerBrowser(url, width, height ) {
+								var iLeft = (screen.width  - width) / 2 ;
+								var iTop  = (screen.height - height) / 2 ;
+
+								var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes' ;
+								sOptions += ',width=' + width ;
+								sOptions += ',height=' + height ;
+								sOptions += ',left=' + iLeft ;
+								sOptions += ',top=' + iTop ;
+
+								var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
+							}			
+							function BrowseServer(ctrl) {
+								lastFileCtrl = ctrl;
+								var w = screen.width * 0.7;
+								var h = screen.height * 0.7;
+								OpenServerBrowser('".$base_url."manager/media/browser/mcpuk/browser.html?Type=files&Connector=".$base_url."manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=".$base_url."', w, h);
+							}
+							function SetUrl(url, width, height, alt){
+								if(!lastFileCtrl) return;
+								var c = document.mutate[lastFileCtrl];
+								if(c) c.value = url;
+								lastFileCtrl = '';
+							}
+					</script>";
+					$ImageManagerLoaded  = true;					
+				} 
+				$field_html .='<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="setVariableModified(\''.$field_name.'\');BrowseServer(\'tv'.$field_name.'\')" />';
+                
 				break;
 			default: // the default handler -- for errors, mostly
 				$field_html .=  '<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" />';

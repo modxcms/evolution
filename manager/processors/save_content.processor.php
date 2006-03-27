@@ -173,57 +173,10 @@ if($limit > 0) {
             }
         }
         else if($row['type']=='file'){
-			$fileurl = (substr($rb_base_url,-1)!="/" ? $rb_base_url.'/':$rb_base_url).'files/';
-			$filepth = (substr($rb_base_dir,-1)!="/" ? $rb_base_dir.'/':$rb_base_dir).'files/';
-
-            if($_POST["tv".$row['name'].'_clear']=='on'){
-                //first clear the existing link
-                $realname = $row['value'] = "";
-            } 
-            if($_POST["tv".$row['name'].'_delete']=='on'){
-                @unlink($filepth.basename($_POST["tv".$row['name'].'_previous']));
-                $realname = $row['value'] = "";
-            } 
-
-            if (is_uploaded_file($_FILES["tv".$row['name']]['tmp_name'])) {
-		    	$realname = strtolower($_FILES["tv".$row['name']]['name']);
-			    $filename = $_FILES["tv".$row['name']]['tmp_name'];
-
-			    $pass_the_upload = "true";						    
-
-			    // check size
-			    $filesize=$_FILES["tv".$row['name']]['size'];
-			    if ($filesize>$upload_maxsize){
-			    	$pass_the_upload = "File Uploaded is too large.";
-			    }
-
-			    // check file extensions
-			    $extension = substr(strrchr($realname,"."),1);
-			    // invalid extension
-			    if (!in_array($extension,explode(",",$upload_files))){
-				    $pass_the_upload = "Invalid Filetype ($extension).";
-			    }
-
-			    //security error
-			    if (strstr($_FILES["tv".$row['name']]['name'],"..")!=""){
-				    $pass_the_upload = "Error with upload file path!";
-			    }
-
-			    if ($pass_the_upload == "true") {
-				    // the upload has passed the tests!
-				    move_uploaded_file($_FILES["tv".$row['name']]['tmp_name'],$filepth.$realname);
-				    @chmod($filepth.$realname,0777);
-				    $tmplvar = $fileurl.$realname;
-                } else {
-                    $tmplvar = "";
-                }
-            } 
-            else {
-            	//there was no new uploaded file use last save file
-	        	$tmplvar = $row['value'];
-            }
-		}
-		else{
+        /* Modified by Timon for use with resource browser */
+	       $tmplvar = $_POST["tv".$row['name']];
+	}
+	else{
             if(is_array($_POST["tv".$row['name']])) {
 				// handles checkboxes & multiple selects elements
 				$feature_insert = array();
@@ -620,14 +573,19 @@ switch ($actionToTake) {
 }
 
 function stripAlias($alias) {
-	$alias = strip_tags($alias);
-	//$alias = strtolower($alias);
-	$alias = preg_replace('/&.+?;/', '', $alias); // kill entities
-	$alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias);
-	$alias = preg_replace('/\s+/', '-', $alias);
-	$alias = preg_replace('|-+|', '-', $alias);
-	$alias = trim($alias, '-');
-	return $alias;
+    global $modx;
+
+    if(strtoupper($modx->config['etomite_charset'])=='UTF-8') $alias = utf8_decode($alias);
+    $alias = strtr($alias, array(chr(196) => 'Ae', chr(214) => 'Oe', chr(220) => 'Ue', chr(228) => 'ae', chr(246) => 'oe', chr(252) => 'ue', chr(223) => 'ss'));
+
+    $alias = strip_tags($alias); 
+    //$alias = strtolower($alias); 
+    $alias = preg_replace('/&.+?;/', '', $alias); // kill entities 
+    $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); 
+    $alias = preg_replace('/\s+/', '_', $alias); 
+    $alias = preg_replace('|-+|', '-', $alias); 
+    $alias = trim($alias, '-'); 
+    return $alias;
 }
 
 // -- Save META Keywords --

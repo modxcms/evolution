@@ -11,13 +11,10 @@ class DocumentParser {
 
   var $pluginEvent;
 
-  var $executedQueries = 0;
-  var $queryTime = 0;
-
   var $rs, $result, $sql, $table_prefix, $config, $debug,
       $documentIdentifier, $documentMethod, $documentGenerated, $documentContent, $tstart,
       $minParserPasses, $maxParserPasses, $documentObject, $templateObject, $snippetObjects,
-      $stopOnNotice, $currentSnippet, $documentName,
+      $stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName,
       $aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache,
       $snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir,
       $placeholders,$sjscripts,$jscripts,$loadedjscripts,$documentMap;
@@ -224,10 +221,14 @@ class DocumentParser {
     $docIdentifier= $this->config['site_start'];
     switch($method) {
       case "alias" :
-        $docIdentifier= $_REQUEST['q'];
+        $docIdentifier= $this->db->escape($_REQUEST['q']);
       break;
       case "id" :
-        $docIdentifier= $_REQUEST['id'];
+        if(!is_numeric($_REQUEST['id'])) {
+          $this->messageQuit("ID passed in request is NaN!");
+        } else {
+          $docIdentifier= intval($_REQUEST['id']);
+        }
       break;
       default :
       break;
@@ -349,6 +350,33 @@ class DocumentParser {
     }
   }
 
+  function addNotice($content, $type="text/html") {
+    /*
+       PLEASE READ!
+
+       Leaving this message and the link intact will show your appreciation of the time spent
+       building the system and providing support to it's users, and the hours that will
+       be spending on it in future.
+
+       To add the a this link to your website simply add the following html code
+
+       <div id=\"poweredbymodx\"></div>
+
+     */
+    $notice	  = "\n<!--\n\n".
+      "MODx Content Manager is based on Etomite 0.6\n".
+      "\tEtomite is Copyright 2004 and Trademark of the Etomite Project\n\n".
+      "-->\n\n";
+    if($type=="text/html") {
+      $poweredby ="Powered By <a href='http://www.modxcms.com/' title='Content managed by the MODx Content Manager System'>MODx</a>.";
+    }
+    // insert the message into the document
+    if(strpos($content, "<div id=\"poweredbymodx\">")>0) {
+      $content = str_replace("<div id=\"poweredbymodx\">", "<div id=\"poweredbymodx\">".$poweredby.$notice, $content);
+    }
+    return $content;
+  }
+
   function outputContent($noEvent=false) {
 
     $this->documentOutput = $this->documentContent;
@@ -417,7 +445,7 @@ class DocumentParser {
       }
     }
 
-    $out = $this->documentOutput;
+    $out = $this->addNotice($this->documentOutput, $type);
     if($this->dumpSQL) {
       $out .= $this->queryCode;
     }
@@ -540,7 +568,7 @@ class DocumentParser {
     if($this->documentObject['haskeywords']==1) {
       // insert keywords
       $keywords = implode(", ",$this->getKeywords());
-      $metas = "\t<meta name=\"keywords\" content=\"$keywords\" />\n";
+      $metas = "\t<meta http-equiv=\"keywords\" content=\"$keywords\" />\n";
     }
     if($this->documentObject['hasmetatags']==1){
       // insert meta tags
@@ -1037,15 +1065,7 @@ class DocumentParser {
 
       }
 
-      // check whether it's a reference
-      if($this->documentObject['type']=="reference") {
-         // if it's an internal docid tag, process it
-         if(strpos($this->documentObject['content'],'[~') !== false) { 
-            // generate a url
-            $this->documentObject['content'] = $this->rewriteUrls($this->documentObject['content']);
-         }
-         $this->sendRedirect($this->documentObject['content']);
-      }
+      // check whether it's a reference      if($this->documentObject['type']=="reference") {          // if it's an internal docid tag, process it          if(strpos($this->documentObject['content'],'[~') !== false) {              // generate a url              $this->documentObject['content'] = $this->rewriteUrls($this->documentObject['content']);          }          $this->sendRedirect($this->documentObject['content']);      }
       
       // check if we should not hit this document
       if($this->documentObject['donthit']==1) {
@@ -1985,7 +2005,7 @@ class DocumentParser {
 
 # Registers Client-side CSS scripts - these scripts are loaded at inside the <head> tag
   function regClientCSS($src){
-    if (isset($this->loadedjscripts[$src]) && $this->loadedjscripts[$src]) return '';
+    if ($this->loadedjscripts[$src]) return '';
     $this->loadedjscripts[$src] = true;
     if (strpos(strtolower($src),"<style")!==false||strpos(strtolower($src),"<link")!==false) {
       $this->sjscripts[count($this->sjscripts)] = $src;

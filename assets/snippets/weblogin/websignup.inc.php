@@ -23,9 +23,9 @@ if(!$isPostBack){
 } 
 else if ($isPostBack){
 
-	$username = $_POST['username'];
-	$fullname = mysql_escape_string($_POST['fullname']);
-	$email = mysql_escape_string($_POST['email']);
+	$username = $modx->db->escape($_POST['username']);
+	$fullname = $modx->db->escape($_POST['fullname']);
+	$email = $modx->db->escape($_POST['email']);
 	$password = $_POST['password'];
 	$country = $_POST['country'];
 	$state = $_POST['state'];

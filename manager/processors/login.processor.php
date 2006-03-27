@@ -52,8 +52,8 @@ $modx->getSettings();
 $etomite = &$modx; // for backward compatibility
 
 
-$username = htmlspecialchars($_POST['username']);
-$givenPassword = htmlspecialchars($_POST['password']);
+$username = $modx->db->escape($_POST['username']);
+$givenPassword = $modx->db->escape($_POST['password']);
 $captcha_code = $_POST['captcha_code'];
 
 // invoke OnBeforeManagerLogin event
@@ -64,7 +64,7 @@ $modx->invokeEvent("OnBeforeManagerLogin",
 							"rememberme"	=> $_POST['rememberme']
 						));
 
-$sql = "SELECT $dbase.".$table_prefix."manager_users.*, $dbase.".$table_prefix."user_attributes.* FROM $dbase.".$table_prefix."manager_users, $dbase.".$table_prefix."user_attributes WHERE $dbase.".$table_prefix."manager_users.username REGEXP BINARY '^".$username."$' and $dbase.".$table_prefix."user_attributes.internalKey=$dbase.".$table_prefix."manager_users.id;";
+$sql = "SELECT $dbase.".$table_prefix."manager_users.*, $dbase.".$table_prefix."user_attributes.* FROM $dbase.".$table_prefix."manager_users, $dbase.".$table_prefix."user_attributes WHERE BINARY $dbase.".$table_prefix."manager_users.username = '".$username."' and $dbase.".$table_prefix."user_attributes.internalKey=$dbase.".$table_prefix."manager_users.id;";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 
@@ -90,7 +90,13 @@ $fullname				= $row['fullname'];
 $email 					= $row['email'];
 
 // get the user settings from the database
-include_once "user_settings.inc.php";
+// require_once "user_settings.inc.php"; <<< This doesn't work, because $modx is set and $modx->getLoginUserID() returns NULL
+// netnoise:
+$sql = "SELECT setting_name, setting_value FROM $dbase.".$table_prefix."user_settings WHERE user='".$internalKey."' AND setting_value!=''";
+$rs = mysql_query($sql);
+while ($row = mysql_fetch_assoc($rs)) {
+	${$row['setting_name']} = $row['setting_value'];
+}
 
 if($failedlogins>=3 && $blockeduntildate>time()) {	// blocked due to number of login errors.
 		session_destroy();
@@ -129,10 +135,17 @@ if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block a
 
 // allowed ip
 if ($allowed_ip) {
-	if (strpos($allowed_ip,$_SERVER['REMOTE_ADDR'])===false) {
-		$output = jsAlert("You are not allowed to login from this location.");
-		return;
-	}
+        if(($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
+          if(gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
+            $output = jsAlert("Your hostname doesn't point back to your IP!");
+	    return;
+          }
+        }
+
+        if(!in_array($_SERVER['REMOTE_ADDR'], explode(',',str_replace(' ','',$allowed_ip)))) {
+          $output = jsAlert("You are not allowed to login from this location.");
+          return;
+        }
 }
 
 // allowed days
