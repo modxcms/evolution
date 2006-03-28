@@ -257,7 +257,13 @@ EOD;
 				if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
 					// remove delimiter from checkbox and listbox-multiple TVs
 					$value = str_replace('||','',$value);
-				}
+					
+                // fix FS 307 to preserve html entities in text/textarea input fields
+                } elseif($tvtype=='text'||$tvtype=='textarea'||$tvtype=='textareamini') {
+                    $value = htmlentities($value);
+                }
+                // end FS 307 fix
+                
 				$o = $value;
 				break;
 		}
