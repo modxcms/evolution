@@ -230,22 +230,18 @@ class DBAPI {
     *	@name:	getInsertId
     *	 
     */
-   function getInsertId($conn = '') {
-      if ($conn)
-         return mysql_insert_id($conn);
-      else
-         return mysql_insert_id($this->conn);
+   function getInsertId($conn=NULL) {
+      if(!is_resource($conn)) { $conn = $this->conn; }
+      return mysql_insert_id($conn);
    }
 
    /**
     *	@name:	getAffectedRows
     *	 
     */
-   function getAffectedRows($conn) {
-      if ($conn)
-         return mysql_affected_rows($conn);
-      else
-         return mysql_affected_rows($this->conn);
+   function getAffectedRows($conn=NULL) {
+      if(!is_resource($conn)) { $conn = $this->conn; }
+      return mysql_affected_rows($conn);
    }
 
    /**
