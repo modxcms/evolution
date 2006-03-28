@@ -297,7 +297,7 @@ $count = $row[0];
 
 ?>
 <!-- Raymond: add onbeforeunload -->
-<body onclick="hideMenu();">
+<body onclick="hideMenu();" class="treeframebody">
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td>

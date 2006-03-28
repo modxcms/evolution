@@ -26,13 +26,13 @@ if(!$modx->hasPermission('delete_template') && $_REQUEST['a']==303) {
 			<div class="subTitle">
 			<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['tmplvars']; ?></span>
 				<table cellpadding="0" cellspacing="0">
-					<td id="cmdDelete" onclick="deletedocument();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
+					<td id="cmdDelete" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
 						<script>createButton(document.getElementById("cmdDelete"));</script>
-					<td id="cmdCancel" onclick="document.location.href='index.php?a=301&id=<?php echo $id;?>';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></td>
+					<td id="cmdCancel" onclick="document.location.href='index.php?a=301&id=<?php echo $id;?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></td>
 						<script>createButton(document.getElementById("cmdCancel"));</script>
 				</table>
 			</div>
-			<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">
+			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">
 		<?php
 			echo "<p>".$_lang['tmplvar_inuse']."</p>";
 			echo "<ul>";

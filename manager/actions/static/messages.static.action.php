@@ -39,12 +39,12 @@ if($limit!=1) {
     <td colspan="2">
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td id="Button11" onclick="document.location.href='index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>';"><img src="media/images/icons/reply.gif" align="absmiddle"> <?php echo $_lang['messages_reply']; ?></td>
+			<td id="Button11" onclick="document.location.href='index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/reply.gif" align="absmiddle"> <?php echo $_lang['messages_reply']; ?></td>
 				<script>createButton(document.getElementById("Button11"));</script>
 <?php if($message['sender']==0) { ?>				<script>document.getElementById("Button11").setEnabled(false);</script><?php } ?>
-			<td id="Button21" onclick="document.location.href='index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>';"><img src="media/images/icons/forward.gif" align="absmiddle"> <?php echo $_lang['messages_forward']; ?></span></td>
+			<td id="Button21" onclick="document.location.href='index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/forward.gif" align="absmiddle"> <?php echo $_lang['messages_forward']; ?></span></td>
 				<script>createButton(document.getElementById("Button21"));</script>
-			<td id="Button31" onclick="document.location.href='index.php?a=65&id=<?php echo $message['id']; ?>';"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
+			<td id="Button31" onclick="document.location.href='index.php?a=65&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 				<script>createButton(document.getElementById("Button31"));</script>
 		</tr>
 	</table>

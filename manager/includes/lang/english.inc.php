@@ -1051,4 +1051,9 @@ $_lang['system_email_webreminder'] = "Hello [+uid+]\n\nTo active you new passwor
 
 $_lang['role_view_unpublished'] = "View Unpublished Documents";
 $_lang['duplicate_document'] = "Duplicate Document";
+
+$_lang["after_saving"]="After saving";
+
+$_lang["none"]="None";
+
 ?>

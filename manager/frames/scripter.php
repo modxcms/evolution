@@ -72,7 +72,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		messagestr = "(" + nrmessages +"/ " + nrtotalmessages +")";
 		try {
 			var elm = new DynElement('msgCounter@mainMenu');
-			elm.setInnerHTML(messagestr);
+			/* message count disabled in opera, let's solve it when Opera 9.0 final will be released */
+      if(navigator.userAgent.toLowerCase().indexOf("opera")==-1) elm.setInnerHTML(messagestr);
 			elm = new DynElement('newMail@topFrame');
 			if (elm) elm.style.display = (nrnewmessages>0) ? "inline":"none";
 		} 
@@ -123,7 +124,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// These functions are used for showing the user the system is working
 	function work() {
 		var elm = new DynElement('workText@topFrame');
-		if (elm) elm.setInnerHTML("&nbsp;<img src='media/images/icons/delete.gif' align='absmiddle' width='16' height='16'>&nbsp;<b><?php echo $_lang['working']; ?></b>");
+		if (elm) elm.setInnerHTML("&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif' align='absmiddle' width='16' height='16'>&nbsp;<b><?php echo $_lang['working']; ?></b>");
 		else w=window.setTimeout('work()', 50);
 	}
 	

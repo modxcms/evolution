@@ -93,7 +93,7 @@ function ConvertDate($date){
 	else return strtotime("$m/$d/$Y $H:$M:$S");
 }
 
-$displayStyle = $_SESSION['browser']=='mz' ? "table-row" : "block" ;
+$displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') ) ? "table-row" : "block" ;
 
 ?>
 <script language="JavaScript">
@@ -224,7 +224,7 @@ function showHide(what, onoff){
 	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
-		<td><span class="comment">&nbsp;After saving:</span></td>
+		<td><span class="comment">&nbsp;<?=$_lang["after_saving"];?>:</span></td>
 		<td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
 		<td><input name="stay" type="radio" class="inputBox" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
@@ -826,7 +826,7 @@ function showHide(what, onoff){
 						$edt = isset($usersettings["which_editor"]) ?$usersettings["which_editor"]:$which_editor;
 						// invoke OnRichTextEditorRegister event
 						$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-						echo "<option value='none'".($edt=='none' ? " selected='selected'" : "").">None</option>\n";
+						echo "<option value='none'".($edt=='none' ? " selected='selected'" : "").">".$_lang["none"]."</option>\n";
 						if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
 							$editor = $evtOut[$i];
 							echo "<option value='$editor'".($edt==$editor ? " selected='selected'" : "").">$editor</option>\n";

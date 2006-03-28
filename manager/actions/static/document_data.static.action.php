@@ -314,7 +314,7 @@ if($track_visitors==1) {
 
 <?php
 } else {
-echo $_lang['no_stats_message'];
+echo "<p class=\"comment\">".$_lang['no_stats_message']."</p>";
 }
 ?>
 </div>

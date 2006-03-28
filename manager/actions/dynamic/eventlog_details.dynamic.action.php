@@ -53,10 +53,10 @@ else{
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
-		<td id="Button3" onclick="deletelog();"><img src="media/images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
+		<td id="Button3" onclick="deletelog();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 			<script>createButton(document.getElementById("Button3"));</script>
 <?php } ?>
-		<td id="Button4" onclick="document.location.href='index.php?a=114';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
+		<td id="Button4" onclick="document.location.href='index.php?a=114';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
 			<script>createButton(document.getElementById("Button4"));</script>
 		</tr>
 	</table>
@@ -73,7 +73,7 @@ else{
 <input type="hidden" name="a" value="<?php echo $_REQUEST['a']; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $_REQUEST['listmode']; ?>" />
 <input type="hidden" name="op" value="" />
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $content['source']." - ".$_lang['eventlog_viewer']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $content['source']." - ".$_lang['eventlog_viewer']; ?></div><div class="sectionBody">
 <?php
 $date = strftime("%d-%b-%Y %I:%M %p",$content["createdon"]);
 if($content["type"]==1) $msgtype = $_lang["information"];

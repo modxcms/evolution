@@ -8,7 +8,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	$track_period = time()-(20*60)+$server_offset_time;
 ?>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["visitor_online"]; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["visitor_online"]; ?></div><div class="sectionBody">
 <?php printf($_lang["visitor_online_message"], strftime("%H:%M:%S", $track_period)); ?>
 <p />
 

@@ -36,7 +36,7 @@ $rs = mysql_query($sql);
 $count = mysql_num_rows($rs);
 if($count==0) {
 ?>
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["visitor_stats"]; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["visitor_stats"]; ?></div><div class="sectionBody">
 	<?php echo $_lang['no_logging_found']; ?>	
 </div>
 <?php
@@ -53,7 +53,7 @@ td {
 	color: black;
 }
 </style>
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["visitor_stats"]; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["visitor_stats"]; ?></div><div class="sectionBody">
 
 <?php
 	// get page impressions for all time
@@ -77,7 +77,7 @@ td {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="2"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_title'], $site_name, strftime('%d-%m-%y', $startdate), strftime('%d-%m-%y', $enddate)); ?></b></td>
+			<td colspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_title'], $site_name, strftime('%d-%m-%y', $startdate), strftime('%d-%m-%y', $enddate)); ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -106,7 +106,7 @@ switch($scope) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="7"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php echo $_lang['stats_monthly_breakup']; ?></b></td>
+			<td colspan="7"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php echo $_lang['stats_monthly_breakup']; ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -172,7 +172,7 @@ for($i=0; $i<(12*$years); $i++) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="7"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php echo $_lang['stats_daily_breakup']; ?></b></td>
+			<td colspan="7"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php echo $_lang['stats_daily_breakup']; ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -226,7 +226,7 @@ for($i=0; $i<$days; $i++) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="7"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php echo $_lang['stats_hourly_breakup']; ?></b></td>
+			<td colspan="7"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php echo $_lang['stats_hourly_breakup']; ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -286,7 +286,7 @@ $toplimit = !isset($top_howmany) || !is_numeric($top_howmany) ? 10 : $top_howman
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="4"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_pages'], $toplimit); ?></b></td>
+			<td colspan="4"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_pages'], $toplimit); ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -334,7 +334,7 @@ if($actualRows==0) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="4"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_entrypages'], $toplimit); ?></b></td>
+			<td colspan="4"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_entrypages'], $toplimit); ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -374,7 +374,7 @@ if($actualRows==0) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="4"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_referrers'], $toplimit); ?></b></td>
+			<td colspan="4"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_referrers'], $toplimit); ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -416,7 +416,7 @@ if($actualRows==0) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="4"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_ua'], $toplimit); ?></b></td>
+			<td colspan="4"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_ua'], $toplimit); ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -456,7 +456,7 @@ if($actualRows==0) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="4"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_os'], $toplimit); ?></b></td>
+			<td colspan="4"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_os'], $toplimit); ?></b></td>
 		</tr>
 	</thead>
 	<tbody>
@@ -496,7 +496,7 @@ if($actualRows==0) {
 <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 	<thead>
 		<tr>
-			<td colspan="4"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_hosts'], $toplimit); ?></b></td>
+			<td colspan="4"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<b><?php printf($_lang['stats_top_hosts'], $toplimit); ?></b></td>
 		</tr>
 	</thead>
 	<tbody>

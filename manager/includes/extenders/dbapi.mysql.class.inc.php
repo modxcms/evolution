@@ -117,7 +117,6 @@ class DBAPI {
       } else {
          $s = mysql_escape_string($s);
       }
-
       return $s;
    }
 

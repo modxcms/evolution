@@ -454,7 +454,7 @@ echo "<div style='float: left; width: 140px;'>".$_lang['files_directories'].":</
 echo "<div style='float: left; width: 140px;'>".$_lang['files_files'].":</div><b>$files</b><br />";
 echo "<div style='float: left; width: 140px;'>".$_lang['files_data'].":</div><b>".ufilesize($filesizes)."</b><br />";
 ?>
-<span style='position: relative; float: left; width: 140px;'><?php echo $_lang['files_dirwritable']; ?></span><b><?php echo is_writable($startpath)==1 ? "Yes." : "No."; ?></b><br />
+<span style='position: relative; float: left; width: 140px;'><?php echo $_lang['files_dirwritable']; ?></span><b><?php echo is_writable($startpath)==1 ? $_lang["yes"]."." : $_lang["no"]."."; ?></b><br />
 <div align="center">
 <img src="media/style/<?php echo $theme; ?>images/icons/_tx_.gif" id='imageviewer'>
 </div>

@@ -30,7 +30,7 @@ $number_of_settings = mysql_num_rows($rs);
 while ($row = mysql_fetch_assoc($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 extract($settings, EXTR_OVERWRITE);
 
-$displayStyle = $_SESSION['browser']=='mz' ? "table-row" : "block" ;
+$displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') ) ? "table-row" : "block" ;
 
 ?>
 
@@ -800,7 +800,7 @@ function updateContentType(){
 					<?php
 						// invoke OnRichTextEditorRegister event
 						$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-						echo "<option value='none'".($which_editor=='none' ? " selected='selected'" : "").">None</option>\n";
+						echo "<option value='none'".($which_editor=='none' ? " selected='selected'" : "").">".$_lang["none"]."</option>\n";
 						if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
 							$editor = $evtOut[$i];
 							echo "<option value='$editor'".($which_editor==$editor ? " selected='selected'" : "").">$editor</option>\n";

@@ -208,7 +208,7 @@ switch ($_POST['mode']) {
 				</tr>
 			</table>
 			</div>
-			<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
+			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 			<p /><br />
@@ -387,7 +387,7 @@ switch ($_POST['mode']) {
 				</tr>
 			</table>
 			</div>
-			<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
+			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 			<p /><br />

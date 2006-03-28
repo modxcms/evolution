@@ -160,9 +160,9 @@ if($_SESSION['browser']=='ie') {
 <input type="hidden" name="rt" value="<?php echo $rt; ?>" />
 <input type="hidden" name="sm" value="<?php echo $sm; ?>" />
 <input type="hidden" name="cb" value="<?php echo $cb; ?>" />
-<div class="sectionHeader" style="margin:0px"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $title." - ".$_lang['resource_selector_title']; ?></div>
+<div class="sectionHeader" style="margin:0px"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $title." - ".$_lang['resource_selector_title']; ?></div>
 <div class="sectionBody" style="margin-top:5px;margin-right:0px;margin-left:0px;border:0px;">
-<p><img src='media/images/icons/circlerightarrow.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['resource_selector_msg']; ?></p>
+<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/circlerightarrow.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['resource_selector_msg']; ?></p>
 <br />
 <!-- resources -->
 	 <table width="100%" border="0" cellspacing="1" cellpadding="2">
@@ -174,14 +174,14 @@ if($_SESSION['browser']=='ie') {
 			<td nowrap="nowrap">
 				<table border="0"><tr><td>Search </td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;">Go</a></td>
-				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/images/icons/refresh.gif" width="16" height="16"/></a></td>
-				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/images/icons/table.gif" width="16" height="16"/></a></td>
+				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
+				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/table.gif" width="16" height="16"/></a></td>
 				</tr>
 				</table>
 			</td>
 			<td width="200">
-				<a href="javascript:;" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a>
-				<a href="javascript:;" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['insert']; ?></a>				
+				<a href="javascript:;" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a>
+				<a href="javascript:;" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['insert']; ?></a>				
 			</td>
 			</tr>
 		</table>

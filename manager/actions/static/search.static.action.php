@@ -7,7 +7,7 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['search']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['search_criteria']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['search_criteria']; ?></div><div class="sectionBody">
 <form action="index.php?a=71" method="post" name="searchform">
 <table width="100%" border="0">
   <tr>
@@ -37,10 +37,10 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
   <tr>
   	<td colspan="4">
 		<table cellpadding="0" cellspacing="0" border="0">
-		    <td id="Button1" align="right" onclick="document.searchform.submitok.click();"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?>
+		    <td id="Button1" align="right" onclick="document.searchform.submitok.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?>
 				<script>createButton(document.getElementById("Button1"));</script>	
 			</td>
-		    <td id="Button2" align="right" onclick="document.location.href='index.php?a=2';"><img src="media/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?>
+		    <td id="Button2" align="right" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?>
 				<script>createButton(document.getElementById("Button2"));</script>	
 			</td>
 		</table>
@@ -70,7 +70,7 @@ $sql = "SELECT id, pagetitle, description, deleted, published, isfolder, type FR
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 ?>
-<div class="sectionHeader"><img src='media/images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['search_results']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['search_results']; ?></div><div class="sectionBody">
 <?php
 if($limit<1) {
 	echo $_lang['search_empty'];
@@ -112,12 +112,12 @@ if($limit<1) {
 ?> 
     <tr <?php echo $classname; ?>> 
 	  <td class="cell" align="center">&nbsp;</td> 
-      <td class="cell" align="center"><a href="index.php?a=3&id=<?php echo $logentry['id']; ?>"onMouseover="status='<?php echo $_lang['search_view_docdata']; ?>';return true;" onmouseout="status='';return true;" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="media/images/icons/context_view.gif" border=0></a></td> 
+      <td class="cell" align="center"><a href="index.php?a=3&id=<?php echo $logentry['id']; ?>"onMouseover="status='<?php echo $_lang['search_view_docdata']; ?>';return true;" onmouseout="status='';return true;" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/context_view.gif" border=0></a></td> 
       <td class="cell"><?php echo $logentry['id']; ?></td> 
 	  <td class="cell"><?php echo strlen($logentry['pagetitle'])>20 ? substr($logentry['pagetitle'], 0, 20)."..." : $logentry['pagetitle'] ; ?></td> 
       <td class="cell"><?php echo strlen($logentry['description'])>35 ? substr($logentry['description'], 0, 35)."..." : $logentry['description'] ;  ?></td>
       <td class="cell" align="center"><?php echo $logentry['deleted']==1 ? "<img align='absmiddle' src='media/images/tree/trash.gif' alt='".$_lang['search_item_deleted']."'>" : ""; ?></td>
-      <td class="cell" align="center"><img align='absmiddle' src='media/images/tree/<?php echo $icon; ?>.gif'></td>	  
+      <td class="cell" align="center"><img align='absmiddle' src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/<?php echo $icon; ?>.gif'></td>	  
     </tr> 
     <?php
 			}
