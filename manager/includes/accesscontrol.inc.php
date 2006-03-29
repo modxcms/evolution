@@ -30,12 +30,13 @@ if(!isset($_SESSION['mgrValidated'])){
 	$thestring = $rc4->endecrypt($thepasswd,$username,'de');
 	$uid = $thestring;
 ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><html>
 <head>
-<title>MODx Login</title>
+<title>MODx CMF Manager Login</title>
 <meta http-equiv="content-type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
 <meta name="robots" content="noindex, nofollow" />
-<link type="text/css" rel="StyleSheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 <script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
