@@ -30,18 +30,20 @@ if(!isset($_SESSION['mgrValidated'])){
 	$thestring = $rc4->endecrypt($thepasswd,$username,'de');
 	$uid = $thestring;
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>MODx CMF Manager Login</title>
 <meta http-equiv="content-type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
 <meta name="robots" content="noindex, nofollow" />
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
-<script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
-<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
-<script type="text/javascript" language="JavaScript">
 
+<script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
+
+<script type="text/javascript" src="media/script/modx.js"></script>
+
+<script type="text/javascript">
+<![CDATA[
 	document.setIncludePath("media/script/bin/");
 
 	document.addEventListener("oninit",function() {
@@ -49,10 +51,6 @@ if(!isset($_SESSION['mgrValidated'])){
 		document.include("animate");
 		document.include("dynelement");
 	})
-</script>
-<script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>
-
-<script language="JavaScript">
 
 	function checkRemember () {
 		if(document.loginfrm.rememberme.value==1) {
@@ -80,21 +78,21 @@ if(!isset($_SESSION['mgrValidated'])){
 			return true;
 		}
 	}
+]]>
 </script>
 </head>
-<body onLoad="javascript:document.loginfrm.username.focus();">
-<form method="post" name="loginfrm" action="processors/login.processor.php" style="margin: 0px; padding: 0px;">
+<body onload="javascript:document.loginfrm.username.focus();" style="background: #eee">
+<form method="post" name="loginfrm" action="processors/login.processor.php">
 
-<input type="hidden" value="<?php echo isset($cookieSet) ? 1 : 0; ?>" name="rememberme">
-<table class="loginBg" width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
+<input type="hidden" value="<?php echo isset($cookieSet) ? 1 : 0; ?>" name="rememberme" />
+
+<table class="loginBg" width="100%" border="0" cellspacing="0" cellpadding="0">
+
   <tr>
     <td align="center" valign="middle" width="100%" height="100%">
 	<!-- intro text, logo and login box -->
 		<div id="splash" style="width:600px">
-		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginTbl">
+		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginTbl" style="margin:50px auto 15px;border:1px solid #bbb;background: #fff;padding: 30px;">
       <tr>
         <td colspan="2">
 <?php
@@ -105,7 +103,7 @@ if(!isset($_SESSION['mgrValidated'])){
         </td>
       </tr>
 		  <tr>
-			<td rowspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>'>
+			<td rowspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>' />
 			  <p />
 			  <?php
 				$pth = dirname(__FILE__);
@@ -122,7 +120,7 @@ if(!isset($_SESSION['mgrValidated'])){
 				  <tr>
 					<?php if($use_captcha==1) { ?>
 					<td>
-						<a href="<?php echo $_SERVER['PHP_SELF'];?>"><img src="includes/veriword.php?rand=<?php echo rand(); ?>" width="148" height="60" alt="<?php echo $_lang["login_captcha_message"]; ?>" style="border: 1px solid #003399"></a>
+						<a href="<?php echo $_SERVER['PHP_SELF'];?>"><img src="includes/veriword.php?rand=<?php echo rand(); ?>" width="148" height="60" alt="<?php echo $_lang["login_captcha_message"]; ?>" style="border: 1px solid #003399" /></a>
 					</td>
 					<td>&nbsp;&nbsp;&nbsp;</td>
 					<?php } ?>
@@ -130,32 +128,23 @@ if(!isset($_SESSION['mgrValidated'])){
 						<table border="0" cellspacing="0" cellpadding="0">
 						  <tr>
 							<td><b><?php echo $_lang["username"]; ?>:</b></td>
-							<td><input type="text" name="username" tabindex="1" onKeyPress="return enter(document.loginfrm.password,event);" size="8" style="width: 150px;" value="<?php echo $uid ?>" /></td>
+							<td><input type="text" name="username" tabindex="1" onkeypress="return enter(document.loginfrm.password,event);" size="8" style="width: 150px;" value="<?php echo $uid ?>" /></td>
 						  </tr>
 						  <tr>
 							<td><b><?php echo $_lang["password"]; ?>:</b></td>
-							<td><input type="password" name="password" tabindex="2" onKeyPress="return enter(<?php echo $use_captcha==1 ? "document.loginfrm.captcha_code" : "document.getElementById('Button1')" ;?>,event);" style="width: 150px;" value="" /></td>
+							<td><input type="password" name="password" tabindex="2" onkeypress="return enter(<?php echo $use_captcha==1 ? "document.loginfrm.captcha_code" : "document.getElementById('Button1')" ;?>,event);" style="width: 150px;" value="" /></td>
 						  </tr>
 						  <?php if($use_captcha==1) { ?>
 						  <tr>
 							<td><b><?php echo $_lang["captcha_code"]; ?>:</b></td>
-							<td><input type="text" name="captcha_code" tabindex="3" style="width: 150px;" onKeyPress="return enter(document.getElementById('Button1'),event);" value="" /></td>
+							<td><input type="text" name="captcha_code" tabindex="3" style="width: 150px;" onkeypress="return enter(document.getElementById('Button1'),event);" value="" /></td>
 						  </tr>
 						  <?php } ?>
 						  <tr>
 							<td><label for="thing" style="cursor:pointer"><?php echo $_lang["remember_username"]; ?>:&nbsp; </label></td>
 							<td>
-								<table width="100%"  border="0" cellspacing="0" cellpadding="0">
-								  <tr>
-									<td valign="top"><input type="checkbox" id="thing" name="thing" tabindex="4" SIZE="1" value="" <?php echo isset($cookieSet) ? "checked" : ""; ?> onClick="checkRemember()"></td>
-									<td align="right">
-											<div id="Button1" tabindex="5" style="width:60px; text-align: center;border:1px solid black;border-left-color:ButtonHighlight;
-											border-right-color:ButtonShadow;border-top-color:ButtonHighlight;border-bottom-color:ButtonShadow;padding:3px 4px 3px 4px;" onClick="document.loginfrm.submit();">
-											<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["login_button"]; ?></div>
-											<script>createButton(document.getElementById("Button1"));</script>
-									</td>
-								  </tr>
-								</table>
+								<input type="checkbox" id="thing" name="thing" tabindex="4" size="1" value="" <?php echo isset($cookieSet) ? "checked" : ""; ?> onclick="checkRemember()" />
+								<input type="submit" value="<?php echo $_lang["login_button"]; ?>" onclick="document.loginfrm.submit();" />
 							</td>
 						  </tr>
 						</table>
@@ -178,7 +167,7 @@ if(!isset($_SESSION['mgrValidated'])){
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginLicense">
 		  <tr>
 			<td>
-				<b>MODx</b>&trade; is licensed under the GPL license. &copy; 2005 by the <a href="http://modxcms.com/" target="_blank">MODx Team</a>.
+				<b>MODx</b>&trade; is licensed under the GPL license. &copy; 2005 by the <a href="http://modxcms.com/" target="_blank">MODx CMF Team</a>.
 			</td>
 		  </tr>
 		</table>
