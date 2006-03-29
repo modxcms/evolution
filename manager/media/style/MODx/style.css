@@ -154,7 +154,7 @@ hr {
 }
 
 .comment {
-	font-size:						9px;
+	font-size:						11px;
 	color:							#777;
 }
 
@@ -545,7 +545,7 @@ A.hometblink:hover {
 	
 #topbar {
 	margin: 						0px 0px 0px 0px;
-	background: #000000;
+	background: #4791C5;
 	color: White;
 }
 
@@ -569,9 +569,9 @@ A.hometblink:hover {
 }
 
 ul#nav {
+	 margin: 0;
     height: 25px;
     width: 100%;
-    margin: 						0px 0px 0px 0px;
     position: absolute;
     overflow: visible !important
 }
@@ -580,7 +580,7 @@ ul#nav {
     height: 25px;
     position: relative;
     z-index: 500;
-	 margin: 						0px 0px 0px 0px;
+	 margin: 0;
 }
 
 #nav li { 
@@ -588,6 +588,7 @@ ul#nav {
     display: block;
     float: left;
     width: auto;
+	 margin: 0;
 }
 
 #nav a {
