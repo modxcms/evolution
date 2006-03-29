@@ -35,6 +35,7 @@
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
 	$mp[] = array("FCKEditor","<strong>Updated:</strong> RichText Editor Plugin",0,"$setupPath/plugin.fckeditor.tpl","&webset=Web Toolbar Set;list;basic,standard,advanced,custom;custom &webcustom=Custom Web Toolbar;textarea;['Bold','Italic','Underline','-','Link','Unlink']","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+	$mp[] = array("Forgot Manager Login","<strong>NEW:</strong> Resets your manager login when you forget your password. ",0,"$setupPath/plugin.ForgotManagerPassword.tpl","","OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender");
 	$mp[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
 	$mp[] = array("Inherit Parent Template","<strong>New:</strong> New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
 	$mp[] = array("Bottom Button Bar","<strong>New:</strong> Adds a set of buttons to the bottom of all manager pages",0,"$setupPath/plugin.bottombuttonbar.tpl","","OnChunkFormRender, OnDocFormRender, OnModFormRender, OnPluginFormRender, OnSnipFormRender, OnTVFormRender, OnTempFormRender, OnUserFormRender, OnWUsrFormRender");
