@@ -984,6 +984,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('90','OnWebPageInit','5',''),
 ('91','OnLoadWebDocument','5',''),
 ('92','OnParseDocument','5',''),
+('93','OnManagerLoginFormRender','2',''),
 ('200','OnCreateDocGroup','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');

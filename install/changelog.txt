@@ -7,7 +7,7 @@ MOD 0.9.5 (rev 9xx - March XX, 2006)
 ====================================
 
 * New manager themeing system -- now you can completely skin the manager easily (various starting at 762)
-* New password resetting system for manager logins. (904)
+* New forgotten password auto login feature for manager users. (904 et al)
 * Adding OnManagerLoginFormPrerender and OnManagerLoginFormRender plugin events to the login form and using $_REQUEST instead of $_POST in login.processor.php to support the new forgot password plugin. (902)
 * [FS 322] Site export now supports Alias Paths. (thanks to Eastbind) (899)
 * [FS 307] In text or textarea TVs, preserve non-English special characters by  displaying the output as HTML Entities via the htmlentities() PHP function. (thanks to Konrad) (893)
