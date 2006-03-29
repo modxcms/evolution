@@ -3,10 +3,24 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.2 (rev 8xx - March XX, 2006)
+MOD 0.9.5 (rev 9xx - March XX, 2006)
 ====================================
 
 * New manager themeing system -- now you can completely skin the manager easily (various starting at 762)
+* New password resetting system for manager logins. (904)
+* Adding OnManagerLoginFormPrerender and OnManagerLoginFormRender plugin events to the login form and using $_REQUEST instead of $_POST in login.processor.php to support the new forgot password plugin. (902)
+* [FS 322] Site export now supports Alias Paths. (thanks to Eastbind) (899)
+* [FS 307] In text or textarea TVs, preserve non-English special characters by  displaying the output as HTML Entities via the htmlentities() PHP function. (thanks to Konrad) (893)
+* Another modification to dbapi->escape() so that it will fall back to old method if there is no active connection to the DB. (892)
+* Improving the logic on getAffectedRows and getInsertID.(891)
+* Added explicit call to $this->db->connect() in executeParser() function so when using mysql_real_escape_string() before any call to $this->db->query(), you would not get an error from the mysql_real_escape_sting function because no connection was available (888)
+* Removing IE-specific contextual pop-up menu... now they all get the "Mozilla one" (881)
+* [FS 195] Fixed a couple of warning notices. (879)
+* Added support for mysql_real_escape_string for better multi-lingual support as per this request http://modxcms.com/forums/index.php/topic,3368.0.html, less the magic quotes fix because it might break things. (878)
+* Fixed notice from http://modxcms.com/forums/index.php/topic,2577.msg17693.html#msg17693 (877)
+* [FS 234] Fixed undefined index issue and made other improvements to ParseCommand. (876)
+* Fixed image widget rendering empty images and removed depricated img attributes. (869)
+* Removed legacy AddNotice nonsense from the parser (866)
 * Fixed Checkbox TV editor id attributes to prevent problems with invalid characters (847)
 * [FS 174] Add a set of buttons to the bottom of manager pages via plugin (844)
 * [FS 292] meta keywords format update (841)
