@@ -52,16 +52,16 @@ $modx->getSettings();
 $etomite = &$modx; // for backward compatibility
 
 
-$username = $modx->db->escape($_POST['username']);
-$givenPassword = $modx->db->escape($_POST['password']);
-$captcha_code = $_POST['captcha_code'];
+$username = $modx->db->escape($_REQUEST['username']);
+$givenPassword = $modx->db->escape($_REQUEST['password']);
+$captcha_code = $_REQUEST['captcha_code'];
 
 // invoke OnBeforeManagerLogin event
 $modx->invokeEvent("OnBeforeManagerLogin",
 						array(
 							"username"		=> $username,
 							"userpassword"	=> $givenPassword,
-							"rememberme"	=> $_POST['rememberme']
+							"rememberme"	=> $_REQUEST['rememberme']
 						));
 
 $sql = "SELECT $dbase.".$table_prefix."manager_users.*, $dbase.".$table_prefix."user_attributes.* FROM $dbase.".$table_prefix."manager_users, $dbase.".$table_prefix."user_attributes WHERE BINARY $dbase.".$table_prefix."manager_users.username = '".$username."' and $dbase.".$table_prefix."user_attributes.internalKey=$dbase.".$table_prefix."manager_users.id;";
@@ -165,7 +165,7 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
 							"username"		=> $username,
 							"userpassword"	=> $givenPassword,
 							"savedpassword"	=> $dbasePassword,
-							"rememberme"	=> $_POST['rememberme']
+							"rememberme"	=> $_REQUEST['rememberme']
 						));
 // check if plugin authenticated the user
 

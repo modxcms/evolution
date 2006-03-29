@@ -83,6 +83,7 @@ if(!isset($_SESSION['mgrValidated'])){
 </head>
 <body onLoad="javascript:document.loginfrm.username.focus();">
 <form method="post" name="loginfrm" action="processors/login.processor.php" style="margin: 0px; padding: 0px;">
+
 <input type="hidden" value="<?php echo isset($cookieSet) ? 1 : 0; ?>" name="rememberme">
 <table class="loginBg" width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -93,6 +94,15 @@ if(!isset($_SESSION['mgrValidated'])){
 	<!-- intro text, logo and login box -->
 		<div id="splash" style="width:600px">
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginTbl">
+      <tr>
+        <td colspan="2">
+<?php
+	// invoke OnManagerLoginFormPrerender event
+	$evtOut = $modx->invokeEvent('OnManagerLoginFormPrerender');
+	if(is_array($evtOut)) echo implode('',$evtOut);
+?>
+        </td>
+      </tr>
 		  <tr>
 			<td rowspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>'>
 			  <p />
@@ -153,6 +163,16 @@ if(!isset($_SESSION['mgrValidated'])){
 				</table>
 			</td>
 		  </tr>
+      <tr>
+        <td colspan="2">
+<?php
+	// invoke OnManagerLoginFormRender event
+	$evtOut = $modx->invokeEvent('OnManagerLoginFormRender');
+	if(is_array($evtOut)) echo implode('',$evtOut);
+?>
+   
+        </td>
+      </tr>
 		</table>
 		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginLicense">
 		  <tr>
@@ -169,6 +189,7 @@ if(!isset($_SESSION['mgrValidated'])){
     <td>&nbsp;</td>
   </tr>
 </table>
+
 </form>
 </body>
 </html>
