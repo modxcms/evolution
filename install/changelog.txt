@@ -6,6 +6,7 @@ development release, and is only shown to give an idea of what's currently in th
 MOD 0.9.5 (rev 9xx - March XX, 2006)
 ====================================
 
+* [FS 275] Every call to DBAPI->connect() will now create a new link, to avoid errors when connecting to multiple databases with multiple instances of DBAPI.
 * New manager themeing system -- now you can completely skin the manager easily (various starting at 762)
 * Added bulk Document Tree Manager to the core Modules installed. (909)
 * New forgotten password auto login feature for manager users. (904 et al)

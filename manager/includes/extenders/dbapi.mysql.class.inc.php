@@ -82,7 +82,7 @@ class DBAPI {
       $host = $host ? $host : $this->config['host'];
       $dbase = $dbase ? $dbase : $this->config['dbase'];
       $tstart = $modx->getMicroTime();
-      if (!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd) : mysql_connect($host, $uid, $pwd))) {
+      if (!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd) : mysql_connect($host, $uid, $pwd, true))) {
          $modx->messageQuit("Failed to create the database connection!");
          exit;
       } else {
