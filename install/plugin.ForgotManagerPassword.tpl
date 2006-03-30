@@ -1,4 +1,3 @@
-// TODO Add translation support
 
 if(!class_exists('ForgotManagerPassword')) {
 class ForgotManagerPassword{
@@ -13,8 +12,10 @@ class ForgotManagerPassword{
 
  function getLink() {
  
+  global $_lang;
+ 
 $link = <<<EOD
-<a href="index.php?action=show_form">Forgot your password?</a>
+<a id="ForgotManagerPassword-show_form" href="index.php?action=show_form">{$_lang['forgot_your_password']}</a>
 EOD;
 
   return $link;
@@ -23,10 +24,12 @@ EOD;
 
  function getForm() {
 
+  global $_lang;
+
 $form = <<<EOD
-<label for="email">Account email:</label>
-<input id="email" type="text" />
-<button type="button" onclick="window.location = 'index.php?action=send_email&email='+document.getElementById('email').value;">Send</button>
+<label id="FMP-email_label" for="FMP_email">{$_lang['account_email']}:</label>
+<input id="FMP-email" type="text" />
+<button id="FMP-email_button" type="button" onclick="window.location = 'index.php?action=send_email&email='+document.getElementById('FMP-email').value;">{$_lang['send']}</button>
 EOD;
 
   return $form;
@@ -36,7 +39,7 @@ EOD;
  // Get user info including a hash unique to this user, password, and day
  function getUser($user_id=0, $username='', $email='', $hash='') {
 
-  global $modx;
+  global $modx, $_lang;
  
   $user_id = $modx->db->escape($user_id);
   $username = $modx->db->escape($username);
@@ -71,7 +74,7 @@ EOD;
    
   }
   
-  if(!$user['id']) { $this->errors[] = 'Could not find user'; }
+  if(!$user['id']) { $this->errors[] = $_lang['could_not_find_user']; }
 
   return $user;
 
@@ -80,26 +83,30 @@ EOD;
  // Send an email with a link to login
  function sendEmail($to) {
 
-  global $modx;
+  global $modx, $_lang;
 
-  $subject = 'Password reset request';
-  $headers = '';
+  $subject = $_lang['password_change_request'];
+  $headers  = "MIME-Version: 1.0\n".
+              "Content-type: text/html; charset=iso-8859-1\n".
+              "From: MODx\n".
+              "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\n".
+              "X-Mailer: PHP/".phpversion();
   
   $user = $this->getUser(0, '', $to);
 
   if($user['username']) {
 
 $body = <<<EOD
-A request has been made to reset the password on your account. To complete the process go to {$modx->config['site_url']}manager/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}
+<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_url']}manager/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}">{$_lang['forgot_password_email_link']}</a></p>
 
-From there you will be able to change your password from the My Account menu.
+<p>{$_lang['forgot_password_email_instructions']}</p>
 
-* The URL above will expire once you change your password or after today.
+<p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
 
    $mail = mail($to, $subject, $body, $headers);
  
-   if(!$mail) { $this->errors[] = 'Error sending email'; }
+   if(!$mail) { $this->errors[] = $_lang['error_sending_email']; }
  
    return $mail;
    
@@ -109,19 +116,39 @@ EOD;
  
  function unblockUser($user_id) {
   
-  global $modx;
+  global $modx, $_lang;
   $pre = $modx->db->config['table_prefix'];
   
   $modx->db->update(array('blocked'=>'', 'blockeduntil'=>''), "{$pre}user_attributes", "internalKey = '{$user_id}'");
   
-  if(!$modx->db->getAffectedRows()) { $this->errors[] = 'User does not exist'; return; }
+  if(!$modx->db->getAffectedRows()) { $this->errors[] = $_lang['user_doesnt_exist']; return; }
   
   return true;
   
  }
  
  function checkLang() {
-  // TODO handle missing language elements
+  
+  global $_lang;
+  $eng = array();
+  
+  $eng['forgot_your_password'] = 'Forgot your password?';
+  $eng['account_email'] = 'Account email';
+  $eng['send'] = 'Send';
+  $eng['password_change_request'] = 'Password change request';
+  $eng['forgot_password_email_intro'] = 'A request has been made to change the password on your account.';
+  $eng['forgot_password_email_link'] = 'Click here to complete the process.';
+  $eng['forgot_password_email_instructions'] = 'From there you will be able to change your password from the My Account menu.';
+  $eng['forgot_password_email_fine_print'] = '* The URL above will expire once you change your password or after today.';
+  $eng['error_sending_email'] = 'Error sending email';
+  $eng['could_not_find_user'] = 'Could not find user';
+  $eng['user_doesnt_exist'] = 'User does not exist';
+  $eng['email_sent'] = 'Email sent';
+  
+  foreach($eng as $key=>$value) {
+   if(empty($_lang[$key])) { $_lang[$key] = $value; }
+  }
+  
  }
  
  function getErrorOutput() {
@@ -138,6 +165,8 @@ EOD;
  
 }
 }
+
+global $_lang;
 
 $output = '';
 $event_name = $modx->Event->name;
@@ -156,7 +185,7 @@ if($event_name == 'OnManagerLoginFormRender') {
    break;
   
   case 'send_email':
-   if($forgot->sendEmail($to)) { $output = 'Email sent'; }
+   if($forgot->sendEmail($to)) { $output = $_lang['email_sent']; }
    break;
   
   default:
@@ -164,7 +193,7 @@ if($event_name == 'OnManagerLoginFormRender') {
 
  }
  
- if($forgot->errors) { $output = $forgot->getErrorOutput(); }
+ if($forgot->errors) { $output = $forgot->getErrorOutput() . $forgot->getLink(); }
  
 }
 
