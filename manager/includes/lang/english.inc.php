@@ -1056,4 +1056,18 @@ $_lang["after_saving"]="After saving";
 
 $_lang["none"]="None";
 
+// ForgotManagerPassword Plugin translatons //
+$_lang['forgot_your_password'] = 'Forgot your password?';
+$_lang['account_email'] = 'Account email';
+$_lang['send'] = 'Send';
+$_lang['password_change_request'] = 'Password change request';
+$_lang['forgot_password_email_intro'] = 'A request has been made to change the password on your account.';
+$_lang['forgot_password_email_link'] = 'Click here to complete the process.';
+$_lang['forgot_password_email_instructions'] = 'From there you will be able to change your password from the My Account menu.';
+$_lang['forgot_password_email_fine_print'] = '* The URL above will expire once you change your password or after today.';
+$_lang['error_sending_email'] = 'Error sending email';
+$_lang['could_not_find_user'] = 'Could not find user';
+$_lang['user_doesnt_exist'] = 'User does not exist';
+$_lang['email_sent'] = 'Email sent';
+
 ?>
