@@ -48,7 +48,6 @@ if(!isset($_SESSION['mgrValidated'])){
 
 	document.addEventListener("oninit",function() {
 		document.include("cookie");
-		document.include("animate");
 		document.include("dynelement");
 	})
 
@@ -63,124 +62,89 @@ if(!isset($_SESSION['mgrValidated'])){
 	if (top.frames.length!=0) {
 		top.location=self.document.location;
 	}
-
-	function enter(nextfield,event) {
-		if(event && event.keyCode == 13) {
-			if(nextfield.id=='Button1') {
-				document.loginfrm.submit();
-				return false;
-			}
-			else {
-				nextfield.focus();
-				return false;
-			}
-		} else {
-			return true;
-		}
-	}
 ]]>
 </script>
 </head>
-<body onload="javascript:document.loginfrm.username.focus();" style="background: #eee">
-<form method="post" name="loginfrm" action="processors/login.processor.php">
+<body onload="javascript:document.loginfrm.username.focus();" id="login">
 
 <input type="hidden" value="<?php echo isset($cookieSet) ? 1 : 0; ?>" name="rememberme" />
 
-<table class="loginBg" width="100%" border="0" cellspacing="0" cellpadding="0">
+<!-- start the login box -->
+<div id="mx_loginbox">
+    
+<form method="post" name="loginfrm" id="loginfrm" action="processors/login.processor.php">
 
-  <tr>
-    <td align="center" valign="middle" width="100%" height="100%">
-	<!-- intro text, logo and login box -->
-		<div id="splash" style="width:600px">
-		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginTbl" style="margin:50px auto 15px;border:1px solid #bbb;background: #fff;padding: 30px;">
-      <tr>
-        <td colspan="2">
-<?php
-	// invoke OnManagerLoginFormPrerender event
-	$evtOut = $modx->invokeEvent('OnManagerLoginFormPrerender');
-	if(is_array($evtOut)) echo implode('',$evtOut);
-?>
-        </td>
-      </tr>
-		  <tr>
-			<td rowspan="2"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>' />
-			  <p />
-			  <?php
-				$pth = dirname(__FILE__);
-				$file = "$pth/support.inc.php";
-				$ov_file = "$pth/override.support.inc.php";	// detect override file
-				if(file_exists($ov_file)) $inc = include_once($ov_file);
-				else if(file_exists($file)) $inc = include_once($file);
-				if($inc)showSupportLink();
-			?></td><td><?php echo "<p  align='right'><span class='siteName'>".$site_name."</span></p>"; echo $_lang["login_message"]; echo $use_captcha==1 ? "<p />".$_lang["login_captcha_message"] : "" ; ?></td>
-		  </tr>
-		  <tr>
-		  	<td style="padding-left:50px;">
-				<table border="0" cellspacing="0" cellpadding="0">
-				  <tr>
-					<?php if($use_captcha==1) { ?>
-					<td>
-						<a href="<?php echo $_SERVER['PHP_SELF'];?>"><img src="includes/veriword.php?rand=<?php echo rand(); ?>" width="148" height="60" alt="<?php echo $_lang["login_captcha_message"]; ?>" style="border: 1px solid #003399" /></a>
-					</td>
-					<td>&nbsp;&nbsp;&nbsp;</td>
-					<?php } ?>
-					<td>
-						<table border="0" cellspacing="0" cellpadding="0">
-						  <tr>
-							<td><b><?php echo $_lang["username"]; ?>:</b></td>
-							<td><input type="text" name="username" tabindex="1" onkeypress="return enter(document.loginfrm.password,event);" size="8" style="width: 150px;" value="<?php echo $uid ?>" /></td>
-						  </tr>
-						  <tr>
-							<td><b><?php echo $_lang["password"]; ?>:</b></td>
-							<td><input type="password" name="password" tabindex="2" onkeypress="return enter(<?php echo $use_captcha==1 ? "document.loginfrm.captcha_code" : "document.getElementById('Button1')" ;?>,event);" style="width: 150px;" value="" /></td>
-						  </tr>
-						  <?php if($use_captcha==1) { ?>
-						  <tr>
-							<td><b><?php echo $_lang["captcha_code"]; ?>:</b></td>
-							<td><input type="text" name="captcha_code" tabindex="3" style="width: 150px;" onkeypress="return enter(document.getElementById('Button1'),event);" value="" /></td>
-						  </tr>
-						  <?php } ?>
-						  <tr>
-							<td><label for="thing" style="cursor:pointer"><?php echo $_lang["remember_username"]; ?>:&nbsp; </label></td>
-							<td>
-								<input type="checkbox" id="thing" name="thing" tabindex="4" size="1" value="" <?php echo isset($cookieSet) ? "checked" : ""; ?> onclick="checkRemember()" />
-								<input type="submit" value="<?php echo $_lang["login_button"]; ?>" onclick="document.loginfrm.submit();" />
-							</td>
-						  </tr>
-						</table>
-					  </td>
-				  </tr>
-				</table>
-			</td>
-		  </tr>
-      <tr>
-        <td colspan="2">
-<?php
-	// invoke OnManagerLoginFormRender event
-	$evtOut = $modx->invokeEvent('OnManagerLoginFormRender');
-	if(is_array($evtOut)) echo implode('',$evtOut);
-?>
-   
-        </td>
-      </tr>
-		</table>
-		<table border="0" width="600" cellspacing="0" cellpadding="10" class="loginLicense">
-		  <tr>
-			<td>
-				<b>MODx</b>&trade; is licensed under the GPL license. &copy; 2005 by the <a href="http://modxcms.com/" target="_blank">MODx CMF Team</a>.
-			</td>
-		  </tr>
-		</table>
-		</div>
-		<!-- end of intro text and login box -->
-	</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-  </tr>
-</table>
+    <!-- anything to output before the login box via a plugin? -->
+    <?php
+        // invoke OnManagerLoginFormPrerender event
+        $evtOut = $modx->invokeEvent('OnManagerLoginFormPrerender');
+        if(is_array($evtOut)) echo implode('',$evtOut);
+    ?>
+
+    <!-- the logo -->
+    <div id="mx_logobox">
+        <img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logoaccess.jpg' alt='<?php echo $_lang["logo_slogan"]; ?>' />
+
+        <!-- override support link here -->
+        <?php
+            $pth = dirname(__FILE__);
+            $file = "$pth/support.inc.php";
+            $ov_file = "$pth/override.support.inc.php";	// detect override file
+            if(file_exists($ov_file)) $inc = include_once($ov_file);
+            else if(file_exists($file)) $inc = include_once($file);
+            if($inc)showSupportLink();
+        ?>
+    </div>
+    <!-- end #mx_logobox -->
+
+    <div id="mx_loginArea">
+        <h1 class="siteName"><?php echo $site_name; ?></h1>
+
+        <div class="loginMessage"><?php echo $_lang["login_message"]; echo $use_captcha==1 ? "<p>".$_lang["login_captcha_message"]."</p>" : "" ; ?></div>
+
+        <?php if($use_captcha==1) { ?>
+            <a href="<?php echo $_SERVER['PHP_SELF'];?>" class="loginCaptcha"><img src="includes/veriword.php?rand=<?php echo rand(); ?>" alt="<?php echo $_lang["login_captcha_message"]; ?>" /></a>
+        <?php } ?>
+
+        <label><?php echo $_lang["username"]; ?> </label>
+        <input type="text" class="text" name="username" id="username" tabindex="1" onkeypress="return enter(document.loginfrm.password,event);" value="<?php echo $uid ?>" /></td>
+
+        <label><?php echo $_lang["password"]; ?> </label>
+        <input type="password" class="text" name="password" id="password" tabindex="2" onkeypress="return enter(<?php echo $use_captcha==1 ? "document.loginfrm.captcha_code" : "document.getElementById('Button1')" ;?>,event);" value="" />
+
+        <?php if($use_captcha==1) { ?>
+        <label><?php echo $_lang["captcha_code"]; ?></label>
+        <input type="text" name="captcha_code" tabindex="3" onkeypress="return enter(document.getElementById('Button1'),event);" value="" />
+        <?php } ?>
+
+        <input type="checkbox" id="rmcb" tabindex="4" value="" class="checkbox" <?php echo isset($cookieSet) ? "checked=\"checked\"" : ""; ?> onclick="checkRemember()" /><label for="rmcb" style="cursor:pointer"><?php echo $_lang["remember_username"]; ?><input type="submit" class="login" id="submitButton" value="<?php echo $_lang["login_button"]; ?>" onclick="document.loginfrm.submit();" />
+        </label>
+        
+
+        <!-- anything to output before the login box via a plugin ... like the forgot password link? -->
+        <?php
+            // invoke OnManagerLoginFormRender event
+            $evtOut = $modx->invokeEvent('OnManagerLoginFormRender');
+            if(is_array($evtOut)) echo '<div id="onManagerLoginFormRender">'.implode('',$evtOut).'</div>';
+        ?>
+
+    </div>
+
+    
+    <br style="clear:both;height: 1px"/>
 
 </form>
+</div>
+<!-- close #mx_loginbox -->
+
+
+<!-- convert this to a language include -->
+<p class="loginLicense">
+	<strong>MODx</strong>&trade; is licensed under the GPL license. &copy; 2005-2006 by the <a href="http://modxcms.com/" target="_blank">MODx CMF Team</a>.
+</p>
+
+
+
 </body>
 </html>
 <?php

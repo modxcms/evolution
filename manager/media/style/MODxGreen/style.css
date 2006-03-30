@@ -5,8 +5,9 @@ body {
 	padding: 0;
 	background: #F4F4F4 url(images/bg/body.jpg) repeat-x top left;
 	border-color: #8CAC45;
-	font: normal 11px/15px Verdana, Arial, Helvetica, sans-serif;
-	color: #000;
+	font: normal 11px/15px Arial, Helvetica, sans-serif;
+	_font-family: Arial, sans-serif;
+	color: #111;
 }	
 body, td, p {
 	font-size: 9pt;
@@ -46,7 +47,7 @@ a:hover {
 }
 
 input, .inputBox {
-	font-size: 10px;
+	font-size: 100%;
 }
 
 hr {
@@ -233,7 +234,7 @@ a img {
 
 .disabledImage {
 	width: 20px;
-	opactiy: 0.5;
+	opacity: 0.5;
 	-moz-opacity: 0.5;
 	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 }
@@ -387,29 +388,80 @@ a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hom
 a.hometblink:hover {
 	color: #9BB957;}
 	
-/* accesscontrol - manager login page 
-	
+/* accesscontrol.inc.php - manager login page 
+-----------------------------------------------------*/
+body#login {
+    background: #f4f4f4;
+    background-image: none;
+}	
 
-.loginBg {
-	background-position: top;
-	background: #F4F4F4;
-	border: 0;
-}
-.loginTbl {
+#mx_loginbox,
+.loginLicense {
+    width: 450px;
+    margin: 70px auto 0;
+    border: 5px solid #999;
+    padding: 20px;
 	background-color: #94B451;
-	border: 1px solid #60605F;
-	padding: 10px;
-	text-align: justify;
+}
+
+#mx_logobox {
+    float: left;
+    margin-right: 15px;
+}
+
+#mx_loginArea {
+    float: right;
+    width: 325px;
+}
+
+h1.siteName {
+	font-weight: bold;
+	font-size: 18px;
+	margin: 0 0 .5em;
+	color: #fff;
+	text-align: right;
+}
+.loginMessage {
+    font-size: 100%;
+    line-height: 1.4;
+    margin-bottom: 1em;
+}
+
+img.loginCaptcha {
+    border: 1px solid #039;
+    width: 148px;
+    height: 60px; 
+}
+
+#mx_loginbox label {
+    display: block;
+    font-weight: bold;
+}
+#mx_loginbox input {
+    margin: 0 0 10px 0;
+}
+#mx_loginbox input.checkbox {
+    float: left;
+    clear: left;
+    margin-right: 3px;
+}
+#mx_loginbox input.text {
+    width: 300px;
+}
+#mx_loginbox input.login {
+    float: right;
+    clear: right;
+    margin-right: 25px;
 }
 .loginLicense {
 	background-color: #60605F;
-	padding: 10px;
-	text-align: justify;
+	padding: 10px 20px;
 	color: #fff;
 	border: 1px solid #60605F;
+	margin: 20px auto;
 }
-.loginLicense td {
-	color: #FFF
+.loginLicense a {
+	color: #94B451
 }
 
 .notice {
@@ -420,16 +472,6 @@ a.hometblink:hover {
 	font-size: 10px;
 	color: #707070;}
 
-.siteName {
-	font-weight: bold;
-	font-size: 18px;
-	color: #fff;
-}
-
-.loginLicense a {
-	color: #94B451
-}
-	
 
 /*contextmenu in editing modules
 -----------------------------------------------------*/
