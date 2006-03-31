@@ -10,23 +10,21 @@ Description: This code is from the FlexSearchForm Snippet
 
 // The connection settings must be set for the ajax call
 function connectForAjax() {
-    include_once '../../manager/includes/config.inc.php';
-    
-    //$database = '';
-    //$tblPrefix = '';
-    //$dbuser = '';
-    //$dbpass = '';
-    //$dbhost = 'localhost';
-    //$db = mysql_connect($dbhost,$dbuser,$dbpass) or die("cannot connect to database");
-    $db = mysql_connect($database_server,$database_user,$database_password) or die("cannot connect to database");
-    $selected = @mysql_select_db($dbase, $db) or die ("cannot select database");
+    global $database_server;
+    global $database_user;
+    global $database_password;
+    global $dbase;
+    global $table_prefix;      
+    $database = str_replace("`","",$dbase);
+    $db = mysql_connect($database_server, $database_user, $database_password, true) or die("Cannot connect to database (connectForAjax)");
+    $selected = mysql_select_db($database, $db) or die ("Cannot select database (connectForAjax)");
     return $table_prefix;
 }
 
 
 function initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$useAllWords,$searchStyle,$minChars,$ajaxSearch) {
   if ($ajaxSearch) {
-    $table_prefix = connectForAjax();
+    $tblPrefix = connectForAjax();
   } else {
     global $modx;
   }
@@ -71,7 +69,7 @@ function initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$us
     if ($ajaxSearch) {
         $tbl = $tblPrefix . "site_snippets";
         $snippetSql = "SELECT $tbl.name FROM $tbl;";
-        $snippetRs = mysql_query($snippetSql) or die ("Cannot query the database1");
+        $snippetRs = mysql_query($snippetSql) or die ("Cannot query the database (initSearchString)");
     } else {
         $tbl = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_snippets";
         $snippetSql = "SELECT $tbl.name FROM $tbl;";
@@ -151,7 +149,7 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch) {
     }
 
     if ($ajaxSearch) {
-        $rs = mysql_query($sql) or die ("Cannot query the database");
+        $rs = mysql_query($sql) or die ("Cannot query the database (doSearch)");
     } else {
         $rs = $modx->dbQuery($sql);
     }

@@ -58,7 +58,7 @@ function doSearch() {
     pars = 'search=' + escape(s) + '&maxResults=' + maxResults + '&stripHtml=' + stripHtml + '&stripSnip=' + stripSnip + '&stripSnippets=' + stripSnippets + '&useAllWords=' + useAllWords + '&searchStyle=' + searchStyle + '&minChars=' + minChars + '&showMoreResults=' + showMoreResults + '&moreResultsPage=' + moreResultsPage + '&moreResultsText=' + escape(moreResultsText) + '&resultsIntroFailure=' + escape(resultsIntroFailure);
     
     //Make sure this points to the correct location.
-    var myAjax = new Ajax.Request('assets/snippets/flexsearchform-ajax/ajaxSearch.php',
+    var myAjax = new Ajax.Request('index-ajax.php?q=assets/snippets/flexsearchform-ajax/ajaxSearch.php',
           {method: 'get', parameters: pars, onComplete:doSearchResponse});
 }
 
