@@ -145,7 +145,7 @@ function updateContentType(){
 		tpSettings = new WebFXTabPane( document.getElementById( "settingsPane" ) );
 	</script>
 
-	<!-- Sit Settings -->
+	<!-- Site Settings -->
       <div class="tab-page" id="tabPage2">
         <h2 class="tab"><?php echo $_lang["settings_site"] ?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage2" ) );</script>
@@ -466,14 +466,14 @@ function updateContentType(){
         <table border="0" cellspacing="0" cellpadding="3">
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendlyurls_title"] ?></b></td>
-            <td> <input onChange="documentDirty=true;" type="radio" name="friendly_urls" value="1" <?php echo $friendly_urls=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 1);'>
+            <td> <input onChange="documentDirty=true;" type="radio" name="friendly_urls" value="1" <?php echo $friendly_urls=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 1);' />
               <?php echo $_lang["yes"]?><br />
               <input onChange="documentDirty=true;" type="radio" name="friendly_urls" value="0" <?php echo ($friendly_urls=='0' || !isset($friendly_urls)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 0);'>
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["friendlyurls_message"] ?></td>
+            <td class='comment' width="300"><?php echo $_lang["friendlyurls_message"] ?></td>
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
@@ -617,7 +617,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["captcha_words_title"] ?></b></td>
-            <td><input name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : "MODx,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote" ; ?>" /></td>
+            <td><input name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : "MODx,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -929,35 +929,6 @@ function updateContentType(){
             <td class='comment'><?php echo $_lang["manager_theme_message"]?></td>
           </tr>
 		  <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning" valign="top"><b><?php echo $_lang["layout_title"]?></b></td>
-            <td>
-              <!-- layout 0 -->
-	          <?php if($_SESSION['browser']=='ie') { ?>
-	              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="0" <?php echo $manager_layout=='0' ? 'checked="checked"' : "" ; ?> />
-	              <?php echo $_lang["layout_settings_2"]?><br /><br />
-	          <?php } ?>
-              <!-- layout 1 -->
-              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="1" <?php echo ($manager_layout=='1' || !isset($manager_layout)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["layout_settings_1"]?><br /><br />
-              <!-- layout 2 -->
-              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="2" <?php echo $manager_layout=='2' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["layout_settings_3"]?><br /><br />
-              <!-- layout 3 -->
-              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="3" <?php echo $manager_layout=='3' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["layout_settings_4"]?><br /><br />
-              <!-- layout 4 -->
-              <input onChange="documentDirty=true;" type="radio" name="manager_layout" value="4" <?php echo $manager_layout=='4' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["layout_settings_5"]?><br /><br />
-             </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["layout_message"]?></td>
-          </tr>
-          <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
 		  <tr class='row1'>
