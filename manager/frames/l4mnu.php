@@ -59,16 +59,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <form name="menuForm">
 <div id="Navcontainer">
 <div id="divNav">
+
 <ul id="nav">
 <!-- Site -->
     <li id="limenu3" class="active"><a href="#menu3" onclick="new NavToggle(this); return false;"><?php echo $_lang["site"]; ?></a>
         <ul class="subnav" id="menu3">
-			<li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
-			<li><a onclick="this.blur();" href="javascript:showWin();"><?php echo $_lang["launch_site"]; ?></a></li>
-			<li><a onclick="this.blur();" href="index.php?a=26" target="main"><?php echo $_lang["refresh_site"]; ?></a></li>
-			<li><a onclick="this.blur();" href="index.php?a=70" target="main"><?php echo $_lang["site_schedule"]; ?></a></li>
-			<li><a onclick="this.blur();" href="index.php?a=68" target="main"><?php echo $_lang["visitor_stats"]; ?></a></li>
-			<li><a onclick="this.blur();" href="index.php?a=69" target="main"><?php echo $_lang["visitor_stats_online"]; ?></a></li>
+            <li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
+            <li><a onclick="this.blur();" href="javascript:showWin();"><?php echo $_lang["launch_site"]; ?></a></li>
+        <?php if($modx->hasPermission('settings')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
+        <?php } ?>
         </ul>
     </li>
 
@@ -76,26 +76,22 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <!-- Content -->
     <li id="limenu4"><a href="#menu4" onclick="new NavToggle(this); return false;"><?php echo $_lang["content"]; ?></a>
         <ul class="subnav" id="menu4">
-			<li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
-			<li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
-			<li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
+            <li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
+            <li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
+            <li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
+        <?php 	if($modx->hasPermission('file_manager')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
+        <?php } ?>
+        <?php if($modx->hasPermission('new_document')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>
+        <?php } ?>
         </ul>
     </li>
 <?php } ?>
 
-<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags') || $modx->hasPermission('file_manager')) { ?>
+<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>
 <!-- Resources -->
-    <li id="limenu6"><a href="#menu6" onclick="new NavToggle(this); return false;"><?php echo $_lang["resources"]; ?></a>
-        <ul class="subnav" id="menu6">
-            <?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resource_management"]; ?></a></li>
-            <?php } ?>
-            <?php 	if($modx->hasPermission('file_manager')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
-            <?php } ?>
-
-        </ul>
-    </li>
+    <li id="limenu6"><a onclick="new NavToggle(this); this.blur(); return false;" href="index.php?a=76" target="main"><?php echo $_lang["resources"]; ?></a></li>
 <?php } ?>
 
 <!-- Modules -->
@@ -119,6 +115,42 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     </li>
 <?php } ?>
 
+<!-- Tools -->
+<?php if($modx->hasPermission('bk_manager') || $modx->hasPermission('edit_parser')) { ?>
+    <li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;"><?php echo $_lang["tools"]; ?></a>
+        <ul class="subnav" id="menu1-1">
+        <?php if($modx->hasPermission('bk_manager')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
+        <?php } ?>
+        <?php if($modx->hasPermission('edit_document')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>
+        <?php } ?>
+            <li><a onclick="this.blur();" href="index.php?a=26" target="main"><?php echo $_lang["refresh_site"]; ?></a></li>
+        <?php 	if($modx->hasPermission('settings')) { ?>
+            <li><a onclick="this.blur();" href="javascript:top.scripter.removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
+        <?php } ?>
+        </ul>
+    </li>
+<?php } ?>
+
+<!-- Reports -->
+    <li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;"><?php echo $_lang["reports"]; ?></a>
+        <ul class="subnav" id="menu1-2">
+            <li><a onclick="this.blur();" href="index.php?a=69" target="main"><?php echo $_lang["visitor_stats_online"]; ?></a></li>
+            <li><a onclick="this.blur();" href="index.php?a=68" target="main"><?php echo $_lang["visitor_stats"]; ?></a></li>
+            <li><a onclick="this.blur();" href="index.php?a=70" target="main"><?php echo $_lang["site_schedule"]; ?></a></li>
+        <?php if($modx->hasPermission('view_eventlog')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
+        <?php } ?>
+        <?php if($modx->hasPermission('logs')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=13" target="main"><?php echo $_lang["view_logging"]; ?></a></li>
+        <?php } ?>
+        <?php if($modx->hasPermission('settings')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
+        <?php } ?>
+        </ul>
+    </li>
+
 
 <?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions')) { ?>
 <!-- Users -->
@@ -127,10 +159,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { ?>
                 <li><a onclick="this.blur();" href="index.php?a=75" target="main"><?php echo $_lang["user_management_title"]; ?></a></li>
             <?php } ?>
-            <?php 	if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) { ?>
+            <?php if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) { ?>
                 <li><a onclick="this.blur();" href="index.php?a=99" target="main"><?php echo $_lang["web_user_management_title"]; ?></a></li>
             <?php } ?>
-            <?php 	if($modx->hasPermission('new_role')||$modx->hasPermission('edit_user')) { ?>
+            <?php if($modx->hasPermission('new_role')||$modx->hasPermission('edit_user')) { ?>
                 <li><a onclick="this.blur();" href="index.php?a=86" target="main"><?php echo $_lang["role_management_title"]; ?></a></li>
             <?php } ?>
             <?php if($modx->hasPermission('access_permissions')) { ?>
@@ -138,34 +170,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             <?php } ?>
             <?php if($modx->hasPermission('web_access_permissions')) { ?>
                 <li><a onclick="this.blur();" href="index.php?a=91" target="main"><?php echo $_lang["web_permissions"]; ?></a></li>
-            <?php } ?>
-        </ul>
-    </li>
-<?php } ?>
-
-<?php if($modx->hasPermission('settings') || $modx->hasPermission('edit_parser') || $modx->hasPermission('logs')) { ?>
-<!-- Settings -->
-    <li id="limenu1"><a href="#menu1" onclick="new NavToggle(this); return false;"><?php echo $_lang["administration"]; ?></a>
-        <ul class="subnav" id="menu1">
-            <?php 	if($modx->hasPermission('settings')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
-                <li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
-                <li><a onclick="this.blur();" href="javascript:top.scripter.removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
-            <?php } ?>
-            <?php 	if($modx->hasPermission('view_eventlog')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
-            <?php } ?>
-            <?php 	if($modx->hasPermission('logs')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=13" target="main"><?php echo $_lang["view_logging"]; ?></a></li>
-            <?php } ?>
-            <?php 	if($modx->hasPermission('bk_manager')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
-            <?php } ?>
-            <?php if($modx->hasPermission('edit_document')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>
-            <?php } ?>
-            <?php if($modx->hasPermission('new_document')) { ?>
-                <li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>
             <?php } ?>
         </ul>
     </li>
@@ -200,6 +204,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <li id="limenu8"><a onclick="this.blur();" href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a></li>
 
 </ul>
+
 </div></div>
 </form>
 </body>

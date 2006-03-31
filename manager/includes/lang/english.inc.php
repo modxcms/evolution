@@ -1070,4 +1070,11 @@ $_lang['could_not_find_user'] = 'Could not find user';
 $_lang['user_doesnt_exist'] = 'User does not exist';
 $_lang['email_sent'] = 'Email sent';
 
+/***************************************************************************/
+// new in 0.9.5
+/***************************************************************************/
+$_lang['tools'] = 'Tools';
+$_lang['reports'] = 'Reports';
+
+
 ?>
