@@ -823,12 +823,12 @@ REPLACE INTO `{PREFIX}user_attributes`
 
 REPLACE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme',''),
-('settings_version','0.9.1'),
+('manager_theme','MODxGreen'),
+('settings_version','0.9.2'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','english'),
-('etomite_charset','iso-8859-1'),
+('etomite_charset','utf-8'),
 ('site_name','My MODx Site'),
 ('site_start','1'),
 ('error_page','1'),
