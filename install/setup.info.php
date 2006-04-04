@@ -21,7 +21,7 @@
 	$ms[] = array("GetStats","Fetches the visitor statistics totals from the database",0,"$setupPath/snippet.getstats.tpl","");
 	$ms[] = array("ContactForm","Simple, configurable XHTML-validating contact form for delivery to email accounts.",0,"$setupPath/snippet.contactform.tpl","");
 	$ms[] = array("DropMenu","Robust and configurable XHTML-validating menu and site map builder. Output an unordered list.",0,"$setupPath/snippet.dropmenu.tpl","");
-	$ms[] = array("FlexSearchAjax","<strong>NEW:</strong> Ajax enabled search form based on FlexSearchForm.",0,"$setupPath/snippet.flexsearch-ajax.tpl","");
+	$ms[] = array("AjaxSearch","<strong>NEW:</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
 	$ms[] = array("FlexSearchForm","Robust site search with like and partial matching.",0,"$setupPath/snippet.flexsearchform.tpl","");
 	$ms[] = array("NewsFeed","Enable RSS2 news feed from your website.",0,"$setupPath/snippet.newsfeed.tpl","");
 	$ms[] = array("NewsListing","<strong>Updated:</strong> Versatile news/article display system.",0,"$setupPath/snippet.newslisting.tpl","");
