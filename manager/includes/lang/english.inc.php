@@ -5,10 +5,9 @@
  * Encoding:       ISO-Latin-1
  * Author:         The MODx Project Team (originally by Alex Butter)
  * Date:           2005/10/25
- * Version:        1.6
+ * Version:        1.7
  * MODx version:   0.9.1
 */
-
 // NOTE: New language keys should added at the bottom of this page
 
 $_lang["login_message"] = "Please enter your login credentials to start your Manager session. Your username and password are case-sensitive, so please enter them carefully!";
@@ -20,7 +19,7 @@ $_lang["home"] = "Home";
 
 $_lang["my_preferences"] = "Preferences";
 $_lang["site"] = "Site";
-$_lang["launch_site"] = "Launch site";
+$_lang["launch_site"] = "View site";
 $_lang["refresh_site"] = "Refresh site";
 $_lang["content"] = "Content";
 $_lang["add_document"] = "New document";

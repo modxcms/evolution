@@ -98,19 +98,17 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <?php  if($modx->hasPermission('exec_module')) { ?>
     <li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;"><?php echo $_lang["modules"]; ?></a>
         <ul class="subnav" id="menu9">
-    <?php
-      $list = '';  // initialize list variable
-      $rs = $modx->db->select('*',$modx->getFullTableName('site_modules'));  // get modules
-      while($content = $modx->db->getRow($rs)) {
-        $list .= '<li><a onclick="this.blur();" href="index.php?a=112&id='.$content['id'].'" target="main">'.$content['name'].'</a></li>';
-    	}
-    	echo $list;
-    ?>
-
-    <?php if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) { ?>
-        <li><a onclick="this.blur();" href="index.php?a=106" target="main"><?php echo $_lang["module_management"]; ?></a></li>
-    <?php } ?>
-
+            <?php if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) { ?>
+                <li><a onclick="this.blur();" href="index.php?a=106" target="main"><?php echo $_lang["module_management"]; ?></a></li>
+            <?php } ?>
+        <?php
+          $list = '';  // initialize list variable
+          $rs = $modx->db->select('*',$modx->getFullTableName('site_modules'));  // get modules
+          while($content = $modx->db->getRow($rs)) {
+            $list .= '<li><a onclick="this.blur();" href="index.php?a=112&id='.$content['id'].'" target="main">'.$content['name'].'</a></li>';
+        	}
+        	echo $list;
+        ?>
         </ul>
     </li>
 <?php } ?>
