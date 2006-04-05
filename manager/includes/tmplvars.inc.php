@@ -18,6 +18,7 @@
 		switch ($field_type) {
 
 			case "text": // handler for regular text boxes
+			case "rawtext"; // non-htmlentity converted text boxes
 			case "email": // handles email input fields
 			case "number": // handles the input of numbers
 				$field_html .=  '<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%" />';
@@ -26,6 +27,7 @@
 				$field_html .=  '<textarea id="tv'.$field_name.'" name="tv'.$field_name.'" cols="40" rows="5" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
 				break;
 			case "textarea": // handler for textarea boxes
+			case "rawtextarea": // non-htmlentity convertex textarea boxes
 			case "htmlarea": // handler for textarea boxes (deprecated)
 			case "richtext": // handler for textarea boxes
 				$field_html .=  '<textarea id="tv'.$field_name.'" name="tv'.$field_name.'" cols="40" rows="15" onchange="documentDirty=true;setVariableModified(\''.$field_name.'\');" style="width:100%;">' . htmlspecialchars($field_value) .'</textarea>';

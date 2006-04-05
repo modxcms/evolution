@@ -259,6 +259,8 @@ EOD;
 					$value = str_replace('||','',$value);
 					
                 // fix FS 307 to preserve html entities in text/textarea input fields
+                } elseif($tvtype=='rawtext'||$tvtype=='rawtextarea') {
+                    $value = $value;
                 } elseif($tvtype=='text'||$tvtype=='textarea'||$tvtype=='textareamini') {
                     $value = htmlentities($value);
                 }

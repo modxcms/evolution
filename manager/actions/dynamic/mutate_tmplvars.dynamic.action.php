@@ -303,8 +303,10 @@ function decode(s){
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="type" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;'>
-			<option value="text" <?php		echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
+    		<option value="text" <?php		echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
+    		<option value="rawtext" <?php		echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text</option>
 			<option value="textarea" <?php	echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
+			<option value="rawtextarea" <?php	echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea</option>
 			<option value="textareamini" <?php	echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
 			<option value="richtext" <?php	echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
 			<option value="dropdown" <?php	echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
