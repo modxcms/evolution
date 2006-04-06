@@ -65,7 +65,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <li id="limenu3" class="active"><a href="#menu3" onclick="new NavToggle(this); return false;"><?php echo $_lang["site"]; ?></a>
         <ul class="subnav" id="menu3">
             <li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
-            <li><a onclick="this.blur();" href="javascript:showWin();"><?php echo $_lang["launch_site"]; ?></a></li>
+            <li><a onclick="this.blur();" href="../" target="_blank"><?php echo $_lang["launch_site"]; ?></a></li>
         <?php if($modx->hasPermission('settings')) { ?>
             <li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
         <?php } ?>
