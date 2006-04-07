@@ -123,7 +123,7 @@ class ContentVariable {
       break;
 
      case 'content':
-      $page = $modx->getDocument($pageId,'richtext');
+      $page = $modx->getPageInfo($pageId, 0, 'richtext');
       if($page['richtext']) {
        $inputType = 'richtext';
       } else {
@@ -133,6 +133,19 @@ class ContentVariable {
       $caption = $_lang['document_content'];
       $description = $_lang['document_content'];
       $group = 'content';
+      break;
+      
+     case 'template':
+      $type = 'dropdown';
+      $caption = $_lang['template'];
+      $description = $_lang['page_data_template_help'];
+      $templates = $modx->db->select('templatename,id', $modx->db->config['table_prefix'].'site_templates');
+      $template_strings[] = '(blank)==0';
+      while($template = $modx->db->getRow($templates)) {
+       $template_strings[] = $template['templatename'].'=='.$template['id'];
+      }
+      $elements = implode('||', $template_strings);
+      $group = 'setting';
       break;
       
      case 'alias':
@@ -196,10 +209,9 @@ class ContentVariable {
       break;
 
      default:
-      $type = 'text';
-      $caption = $name;
-      $description = $name;
-      $group = 'content';
+      $id = '';
+      $pageId = '';
+      $name = '';
 
     }
 
@@ -282,9 +294,9 @@ class ContentVariable {
    }
 
    // if this is really a content variable ID...
-   if(ereg('^[0-9]$',$varId)) {
+   if(ereg('^[0-9]+$',$varId)) {
 
-    // Check permissions on the template variable
+    // Check permissions on the content variable
     $sql = "SELECT {$siteTmplVarAccessTable}.`id`
             FROM {$memberGroupsTable}
             INNER JOIN {$memberGroupAccessTable} ON `user_group` = `membergroup`

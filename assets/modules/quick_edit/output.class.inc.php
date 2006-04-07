@@ -104,32 +104,32 @@ class Output {
   $output = $this->output;
 
   include_once($base_path.$qe_path.'/module.class.inc.php');
-  
   $module = new Module;
   $module->id = $module_id;
+  
+  // Set any built-in content variable to check document permissions
+  include_once($base_path.$qe_path.'/contentVariable.class.inc.php');
+  $cv_obj = new ContentVariable;
+  $cv_obj->set('pagetitle');
 
   // If we are logged in and have edit permissions...
   if(!isset($_SESSION['mgrValidated'])) {
-
    $allowed = false;
 
   } elseif(!$modx->hasPermission('edit_document')) {
-
    $allowed = false;
 
   } elseif(!$modx->hasPermission('exec_module')) {
-
    $allowed = false;
 
   } elseif(!$module->checkPermissions()) {
-
    $allowed = false;
 
+  } else if(!$cv_obj->checkPermissions()) {
+   $allowed = false;
   }
 
   if($allowed) {
-
-   include_once($base_path.$qe_path.'/contentVariable.class.inc.php');
 
    $cv = new ContentVariable;
    $manager_path = $modx->getManagerPath();
@@ -166,36 +166,40 @@ $cvs = $modx->getTemplateVars('*','id, name', '', 1, 'name');
 
 foreach($cvs as $content) {
 
- $cv_obj = new ContentVariable;
- if(isset($content['id'])) {
-  $cv_obj->set($content['id']);	
- } else if(in_array($content['name'], $editable)) {
-  $cv_obj->set($content['name']);
- }
+ if(isset($content['id']) || in_array($content['name'], $editable)) {
 
- if($cv_obj->id && $cv_obj->checkPermissions()) {
+  if(isset($content['id'])) {
+   $cv_obj->set($content['id']);	
+  } else {
+   $cv_obj->set($content['name']);
+  }
 
-  // Get the menu
-  $menu = $cv_obj->group;
+  if($cv_obj && $cv_obj->checkPermissions()) {
 
-  // Check for special CV types //
+   // Get the menu
+   $menu = $cv_obj->group;
 
-  // One checkbox
-  if($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements,'||')) {
-   $type_image = ($cv_obj->content ? $this->checked_image : $this->unchecked_image);
-   $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
+   // Check for special CV types //
+
+   // One checkbox and not a binding
+   if($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements,'||') && substr($cv_obj->elements,0,1)!='@') {
+    $type_image = ($cv_obj->content ? $this->checked_image : $this->unchecked_image);
+    $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
 $menus[$menu][] .= <<<EOD
 <a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_SendAjax('doc={$doc_id}&amp;var={$cv_obj->id}&amp;save=1&amp;tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } );" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a>
 EOD;
 
-  // Everything else
-  } else {
+   // Everything else
+   } else {
+  
 $menus[$menu][] .= <<<EOD
 <a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_OpenEditor({$doc_id}, '{$cv_obj->id}');" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
 EOD;
 
-  }
+   }
 
+  }
+ 
  }
  
 }
@@ -230,17 +234,19 @@ $head = <<<EOD
  var managerPath = '{$manager_path}';
  var modPath = '{$qe_path}';
 </script>
-<script src="{$qe_path}/javascript/cookies.js" type="text/javascript"></script>
-<script src="{$qe_path}/javascript/output.js" type="text/javascript"></script>
-<script type="text/javascript" src="manager/media/script/scriptaculous/prototype.js"></script>
-<script type="text/javascript" src="manager/media/script/scriptaculous/scriptaculous.js"></script>
+<script type="text/javascript" src="{$manager_path}media/script/scriptaculous/prototype.js"></script>
+<script type="text/javascript" src="{$qe_path}/javascript/Cookie.js"></script>
+<script type="text/javascript" src="{$qe_path}/javascript/Drag.js"></script>
+<script type="text/javascript" src="{$qe_path}/javascript/moo.fx.js"></script>
+<script type="text/javascript" src="{$qe_path}/javascript/QuickEdit.js"></script>
 <link type="text/css" rel="stylesheet" href="{$qe_path}/styles/output.css" />
 <!-- End QuickEdit headers -->
 EOD;
 
 $html_top = <<<EOD
+
 <!-- Start QuickEdit toolbar -->
-<div id="QE_Toolbar" onmouseup="QE_SetPosition(this);" style="display:none;">
+<div id="QE_Toolbar" style="display:none;">
  <div id="QE_Toolbar_Header">
   <h1 id="QE_Title">{$_lang['QE_title']}</h1>
   {$buttons_html}
@@ -248,14 +254,18 @@ $html_top = <<<EOD
  {$menus_html}
 </div>
 <!-- End QuickEdit toolbar -->
+
 EOD;
 
 $html_bottom .= <<<EOD
+
 <script type="text/javascript">
 QE_PositionToolbar($('QE_Toolbar'));
 QE_ToggleLinks();
-new Draggable('QE_Toolbar', {handle:'QE_Title'});
+Drag.init($('QE_Title'),$('QE_Toolbar'));
+$('QE_Toolbar').onDragEnd = QE_SetPosition;
 </script>
+
 EOD;
 
    // Get an array of the content variable names

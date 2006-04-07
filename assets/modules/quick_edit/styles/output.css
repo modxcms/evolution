@@ -9,42 +9,43 @@
 #QE_Toolbar, #QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img{
 margin:0;
 padding:0;
-font-family:sans-serif !important;
-color:#000 !important;
-text-decoration:none !important;
-border-width:1px !important;
-border-color:#afafaf !important;
+font-family:sans-serif;
+color:#000;
+text-decoration:none;
+border-width:1px;
+border-color:#afafaf;
 }
 
 #QE_Toolbar div, #QE_Toolbar ul, #QE_Toolbar li, #QE_Toolbar a, #QE_Toolbar img{
-position:relative !important;
+position:relative;
 }
 
 #QE_Toolbar{
-position:absolute !important;
-z-index:10000 !important;
-width:200px !important;
-font-size:10px !important;
-border-style:solid !important;
+position:absolute;
+z-index:10000;
+width:200px;
+font-size:10px;
+border-style:none;
 }
 
 /* Use position fixed for more modern browsers */
 body > #QE_Toolbar{
-position: fixed !important;
+position: fixed;
 }
 
 #QE_Title{
-float:left !important;
-font-size:10px !important;
-line-height:14px !important;
-margin:0 0 0 5px !important;
-cursor: move !important;
+float:left;
+font-size:10px;
+color:#000;
+line-height:14px;
+margin:0 0 0 5px;
+cursor: move;
 }
 
 #QE_Toolbar_Header{
-height:14px !important;
-background: #fff url(../images/link_bg.png) repeat-x 0 0 !important;
-text-align:right !important;
+height:14px;
+background: #fff url(../images/link_bg.png) repeat-x 0 0;
+text-align:right;
 }
 
 #QE_Toolbar a{
