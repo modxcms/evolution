@@ -5,7 +5,7 @@
  */
 
 global $BINDINGS; // Array of supported bindings. must be upper case
-$BINDINGS = array('FILE','CHUNK','DOCUMENT','SELECT','EVAL','INHERIT'); 
+$BINDINGS = array('FILE','CHUNK','DOCUMENT','SELECT','EVAL','INHERIT','DIRECTORY');
 
 function ProcessTVCommand($value, $name=''){
 	global $modx;	
@@ -76,6 +76,22 @@ function ProcessTVCommand($value, $name=''){
 				}
 				break;
 
+                        case 'DIRECTORY':
+                                $files = array();
+                                $path = $modx->config['base_path'].$param;
+                                if(substr($path,-1,1)!='/') { $path.='/'; }
+                                if(!is_dir($path)) { die($path); break;}
+                                $dir = dir($path);
+                                while(($file = $dir->read())!==false) {
+                                        if(substr($file,0,1)!='.') {
+                                                $files[] = "{$file}=={$param}{$file}";
+                                        }
+                                }
+                                asort($files);
+                                $output = implode('||',$files);
+                                break;
+
+
 			default:
 				$output = $value;
 				break;
@@ -107,7 +123,7 @@ function ParseCommand($binding_string) {
 	global $BINDINGS;
 	$match = array();
   $binding_string = trim($binding_string);
-	$regexp = '/@('.implode('|',$BINDINGS).')\n*(.*)/i'; // Split binding on whitespace
+	$regexp = '/@('.implode('|',$BINDINGS).')\s*(.*)/i'; // Split binding on whitespace
 	
 	if(preg_match($regexp, $binding_string, $match)) {
 	
