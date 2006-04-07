@@ -1994,7 +1994,7 @@ class DocumentParser {
       $this->sjscripts[count($this->sjscripts)] = $src;
     }
     else {
-      $this->sjscripts[count($this->sjscripts)] = "<style type='text/css'>@import url($src)</style>";
+      $this->sjscripts[count($this->sjscripts)] = '<!-- MODx registered -->'."\n".'  <link rel="stylesheet" href="'.$src.' />';
     }
   }
 
@@ -2007,7 +2007,7 @@ class DocumentParser {
       $this->loadedjscripts[$src] = true;
       if ($plaintext==true) $this->sjscripts[count($this->sjscripts)] = $src;
       elseif (strpos(strtolower($src),"<script")!==false) $this->sjscripts[count($this->sjscripts)] = $src;
-      else $this->sjscripts[count($this->sjscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
+      else $this->sjscripts[count($this->sjscripts)] = '<!-- MODx registered -->'."\n".'  <script type="text/javascript" src="'.$src.'></script>';
     }
   }
 
@@ -2017,7 +2017,7 @@ class DocumentParser {
     $this->loadedjscripts[$src] = true;
     if ($plaintext==true) $this->jscripts[count($this->jscripts)] = $src;
     elseif (strpos(strtolower($src),"<script")!==false) $this->jscripts[count($this->jscripts)] = $src;
-    else $this->jscripts[count($this->jscripts)] = "<script type='text/javascript' language='JavaScript' src='$src'></script>";
+    else $this->jscripts[count($this->jscripts)] = '<!-- MODx registered -->'."\n".'  <script type="text/javascript" src="'.$src.'></script>';
   }
 
 # Registers Client-side Startup HTML block
