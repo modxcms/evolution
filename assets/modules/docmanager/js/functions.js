@@ -68,9 +68,9 @@ function getSelectedRadioValue(buttonGroup) {
 // handles most of the form processing 
 function postForm(opcode) {
 	tabActiveID = getCookie("webfxtab_docManagerPane");
-
-if (tabActiveID == 0) { //Template tab
+if (tabActiveID == '0') { //Template tab
 	if (opcode=='tree') { 
+		
 		document.module.opcode.value=opcode; 	
 		document.module.tabAction.value='change_template';
         document.module.newvalue.value=getSelectedRadioValue(document.template.id); 
@@ -81,7 +81,7 @@ if (tabActiveID == 0) { //Template tab
 		document.range.newvalue.value=getSelectedRadioValue(document.template.id); 
 		document.range.submit(); 
 	} 
-} else if (tabActiveID == 1) { // Document tab
+} else if (tabActiveID == '1') { // Document tab
 	if (opcode=='tree') { 
 		document.module.opcode.value=opcode;
 		if (getSelectedRadioValue(document.docgroups.tabAction)=='pushDocGroup' ) {
@@ -102,9 +102,9 @@ if (tabActiveID == 0) { //Template tab
 		document.range.newvalue.value=getSelectedRadioValue(document.docgroups.docgroupid); 
 		document.range.submit(); 
 	} 
-} else if (tabActiveID == 2) { // Sort Menu tab
+} else if (tabActiveID == '2') { // Sort Menu tab
 		// handled separately using save() function
-} else if (tabActiveID == 3) { // other options
+} else if (tabActiveID == '3') { // other options
 		if (opcode=='tree') {
 		document.module.opcode.value=opcode;
 		document.module.tabAction.value='changeOther';

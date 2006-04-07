@@ -94,6 +94,7 @@ $output .= '
 		<script type="text/javascript" src="media/script/tabpane.js"></script>  
         <script type="text/javascript" src="../assets/modules/docmanager/js/functions.js"></script>
         <script language="JavaScript" src="media/script/datefunctions.js"></script>
+        <script type="text/javascript">var MODX_MEDIA_PATH = "media";</script>  
         <script type="text/javascript">
         function save()
 		{
