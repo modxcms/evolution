@@ -50,7 +50,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			ele = element.getAttribute('href').replace(/^.*\#/,'');
 
 			//Magic Happens
-			new Effect.Appear(ele,{duration:0.2});
+			new Effect.Appear(ele,{duration:0.15});
 		}
 	}
 </script>
@@ -72,21 +72,22 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         </ul>
     </li>
 
-<?php  if($modx->hasPermission('new_document')) { ?>
 <!-- Content -->
+<?php  if($modx->hasPermission('new_document')) { ?>
     <li id="limenu4"><a href="#menu4" onclick="new NavToggle(this); return false;"><?php echo $_lang["content"]; ?></a>
         <ul class="subnav" id="menu4">
+        <?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resources"]; ?></a></li>
+        <?php } ?>
+        <?php 	if($modx->hasPermission('file_manager')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
+        <?php } ?>        
+        <?php 	if($modx->hasPermission('file_manager')) { ?>
+            <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
+        <?php } ?>        
             <li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
             <li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
             <li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
-        <?php 	if($modx->hasPermission('file_manager')) { ?>
-            <li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
-        <?php } ?>
-        <?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>
-        <!-- Resources -->
-            <li id="limenu6"><a onclick="new NavToggle(this); this.blur(); return false;" href="index.php?a=76" target="main"><?php echo $_lang["resources"]; ?></a></li>
-        <?php } ?>
-        
         </ul>
     </li>
 <?php } ?>
@@ -148,8 +149,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     </li>
 
 
-<?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions')) { ?>
 <!-- Users -->
+<?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions')) { ?>
     <li id="limenu2"><a href="#menu2" onclick="new NavToggle(this); return false;"><?php echo $_lang["users"]; ?></a>
         <ul class="subnav" id="menu2">
             <?php if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { ?>
@@ -171,8 +172,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     </li>
 <?php } ?>
 
-<?php if($modx->hasPermission('messages') || $modx->hasPermission('change_password')) { ?>
 <!-- Account -->
+<?php if($modx->hasPermission('messages') || $modx->hasPermission('change_password')) { ?>
     <li id="limenu5"><a href="#menu5" onclick="new NavToggle(this); return false;"><?php echo $_lang["my_account"]; ?></a>
         <ul class="subnav" id="menu5">
             <?php if($modx->hasPermission('messages')) { ?>
@@ -185,8 +186,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     </li>
 <?php } ?>
 
-<?php if($modx->hasPermission('help')) { ?>
 <!-- Help -->
+<?php if($modx->hasPermission('help')) { ?>
     <li id="limenu7"><a href="#menu7" onclick="new NavToggle(this); return false;"><?php echo $_lang["help"]; ?></a>
         <ul class="subnav" id="menu7">
             <li><a href="javascript:openCredits();"><?php echo $_lang["credits"]; ?></a></li>
