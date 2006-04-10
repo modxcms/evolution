@@ -813,6 +813,33 @@ function updateContentType(){
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["which_editor_message"]?></td>
           </tr>
+          <tr id='editorRow3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='editorRow4' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><b><?php echo $_lang["fe_editor_lang_title"]?></b></td>
+            <td> <select name="fe_editor_lang" size="1" class="inputBox" onChange="documentDirty=true;">
+                <?php
+	$dir = dir("includes/lang");
+
+	while ($file = $dir->read()) {
+		if(strpos($file, ".inc.php")>0) {
+			$endpos = strpos ($file, ".");
+			$languagename = substr($file, 0, $endpos);
+			$selectedtext = $languagename==$fe_editor_lang ? "selected='selected'" : "" ;
+?>
+                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
+                <?php
+		}
+	}
+	$dir->close();
+?>
+              </select> </td>
+          </tr>
+          <tr id='editorRow5' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["fe_editor_lang_message"]?></td>
+          </tr>
           <tr id='editorRow2' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
