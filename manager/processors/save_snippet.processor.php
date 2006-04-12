@@ -25,6 +25,12 @@ $name = mysql_escape_string($_POST['name']);
 $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 $snippet = trim(mysql_escape_string($_POST['post']));
+// strip out PHP tags from snippets
+if ( strncmp($snippet, "<?", 2) == 0 ) {
+    $snippet = substr($snippet, 2);
+    if ( strncmp( $snippet, "php", 3 ) == 0 ) $snippet = substr($snippet, 3);
+    if ( substr($snippet, -2, 2) == '?>' ) $snippet = substr($snippet, 0, -2);
+}
 $properties = mysql_escape_string($_POST['properties']);
 $moduleguid = mysql_escape_string($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
