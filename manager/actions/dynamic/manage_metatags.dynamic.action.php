@@ -128,7 +128,7 @@ $modx->manager->initPageViewState();
 			<option value="Refresh;1">Refresh</option>
 			<option value="Reply-to;1">Reply-to</option>
 			<option value="Revist-after;0">Revist-after</option>
-			<option value="Robot;0">Robot</option>
+			<option value="Robots;0">Robots</option>
 			<option value="Set-Cookie;1">Set-Cookie</option>
 			<option value="Subject;0">Subject</option>
 			<option value="Title;0">Title</option>			
