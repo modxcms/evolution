@@ -24,7 +24,7 @@ $id = intval($_POST['id']);
 $name = mysql_escape_string($_POST['name']);
 $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
-$snippet = mysql_escape_string($_POST['post']);
+$snippet = trim(mysql_escape_string($_POST['post']));
 $properties = mysql_escape_string($_POST['properties']);
 $moduleguid = mysql_escape_string($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
