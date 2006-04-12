@@ -163,7 +163,7 @@ REPLACE INTO `{PREFIX}site_templates` VALUES ('1','Default Template','Default te
 REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('3','text','loginName','loginName','Conditional name for the Login menu item','0','0','0','','0','','','@EVAL if ($modx->getLoginUserID()) return \'Logout\'; else return \'Login\';');
                                      
 
-REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','richtext','blogContent','blogContent','RTE for the new blog entries','0','0','0','','0','richtext','&w=383px&h=450px&edt=FCKEditor','');
+REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','richtext','blogContent','blogContent','RTE for the new blog entries','0','0','0','','0','richtext','&w=383px&h=450px&edt=TinyMCE','');
                                      
 
 #

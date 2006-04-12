@@ -42,8 +42,9 @@ $c['use_browser'] = "1";
 $c['rb_base_dir'] = "C:/dev/xampp/htdocs/modx/assets/";
 $c['rb_base_url'] = "http://localhost/modx/assets/";
 $c['which_editor'] = "none";
-$c['fck_editor_toolbar'] = "standard";
-$c['fck_editor_autolang'] = "0";
+$c['tinymce_editor_theme'] = "full";
+$c['tinymce_css_selectors'] = "";
+$c['fe_editor_lang'] = "english";
 $c['editor_css_path'] = "";
 $c['editor_css_selectors'] = "";
 $c['strip_image_paths'] = "0";
@@ -59,8 +60,6 @@ $c['site_unavailable_page'] = "";
 $c['txt_custom_contenttype'] = "";
 $c['allow_duplicate_alias'] = "0";
 $c['automatic_alias'] = "0";
-$c['fck_editor_style'] = "";
-$c['fck_editor_toolbar_customset'] = "['Bold','Italic','Underline','-','Link','Unlink']";
 $this->aliasListing = array();
 $a = &$this->aliasListing;
 $d = &$this->documentListing;
@@ -4231,218 +4230,251 @@ if (!isset ($phMode) || !$phMode) {
 }
 return $output;';
 $p = &$this->pluginCache;
-$p['FCKEditor'] = '/**
- * FCKEditor - RichText Editor Plugin
- * Written By Raymond Irving - June 22, 2005
- * Modified By Jeff Whitfield - October 13, 2005
+$p['TinyMCE'] = '/**
+ * TinyMCE RichText Editor Plugin 
+ * Written By Raymond Irving - June 20, 2005
+ * Modified By Jeff Whitfield - September 9, 2005
  *
- * Both frontend and backend interface provided
+ * Version 2.0.5.1
  *
- * Configuration:
- * &webset=Web Toolbars;string;[\'Bold\',\'Italic\',\'Underline\',\'-\',\'Link\',\'Unlink\']
- *
- * Version 2.1.2
- * FCKeditor v2.1.1
+ * Events: OnRichTextEditorInit, OnRichTextEditorRegister, OnInterfaceSettingsRender
  *
  */
 
 // When used from the web front-end 
-// FCK will display the selected toolbar or custom buttons
-$webToolbarSet = isset($webset) ? $webset:"basic";
-$webCustomToolbar = isset($webcustom) && ($webset == "custom") ? $webcustom:"";
+// TinyMCE will use the following theme
+$webTinyMCETheme = isset($webtheme) ? $webtheme:"simple";
 
-// getFCKEditorSettings function
-if (!function_exists(\'getFCKEditorSettings\')) {
-	function getFCKEditorSettings() {
+// Set path variable
+if(!isset($tinymce_path)) { 
+	global $tinymce_path;
+	$tinymce_path = $modx->config[\'base_path\'].\'assets/plugins/tinymce\'; 
+}
+
+// Language Settings and Functions
+global $manager_language;
+global $frontend_language;
+$manager_language = $modx->config[\'manager_language\'];
+$frontend_language = $modx->config[\'fe_editor_lang\'];
+
+if (!function_exists(\'getTinyMCELang\')) {
+	function getTinyMCELang($lang){
+		switch($lang){
+			case "english":
+			$returnlang = "en";
+			break;
+			
+			case "finnish":
+			$returnlang = "fi";
+			break;
+	
+			case "francais":
+			$returnlang = "fr";
+			break;
+			
+			case "german":
+			$returnlang = "de";
+			break;
+			
+			case "italian":
+			$returnlang = "it";
+			break;
+			
+			case "japanese-utf8":
+			$returnlang = "ja";
+			break;
+			
+			case "nederlands":
+			$returnlang = "nl";
+			break;
+	
+			case "norsk":
+			$returnlang = "nn";
+			break;
+	
+			case "simple_chinese-gb2312":
+			$returnlang = "zh_cn";
+			break;
+			
+			case "spanish":
+			$returnlang = "es";
+			break;
+			
+			case "svenska":
+			$returnlang = "sv";
+			break;
+			
+			default:
+			$returnlang = "en";
+		}
+		return $returnlang;
+	}
+}
+
+// getTinyMCESettings function
+if (!function_exists(\'getTinyMCESettings\')) {
+	function getTinyMCESettings() {
 		global $_lang;
 		global $use_editor;
+		global $tinymce_editor_theme;
+		global $tinymce_css_selectors;
 		global $displayStyle;
-		global $fck_editor_style;
-		global $fck_editor_toolbar;
-		global $fck_editor_toolbar_customset;
-		global $fck_editor_autolang;
+		global $tinymce_path;
+		global $manager_language;
 
 		// language settings
-		$_lang[\'FCKEditor_settings\'] = "FCKEditor Settings";
-		$_lang[\'fck_editor_style_title\'] = "XML Style:";
-		$_lang["fck_editor_style_message"] = "Enter the path and file name to the FCKEditor xml style selector file.The best way to enter the path is to enter the path from the root of your server, for example: /assets/plugins/fckeditor/fckstyles.xml. If you do not wish to load a stylesheet into the editor, leave this field blank.";
-		$_lang[\'fck_editor_toolbar_title\'] = "Toolbar set:";
-		$_lang[\'fck_editor_toolbar_message\'] = "Here you can select which toolbar set to use with FCKEditor.  Choose Basic for limited options, Standard for more options,  Advance for all the available options or Custom to customize your toolbar.";
-		$_lang[\'fck_editor_custom_toolbar\'] = "Custom toolbar:";
-		$_lang[\'fck_editor_custom_message\'] = "Use this option to customize the toolbar set for the FCKEditor. Here you should enter the javascript syntax supported by the editor. For Example, use [\'Bold\',\'Italic\',\'-\',\'Link\'] to display the Bold, Italic and Link icons . Each icon must be separated by a comma (,) and grouped using the [] bracket.";
-		$_lang[\'fck_editor_autolang_title\'] = "Auto Language:";
-		$_lang[\'fck_editor_autolang_message\'] = "Select the \'Yes\' option to have the FCKEditor automatically detect the language used by the browser and load the appropriate language files. FCKEditor language files must be added to the \'assets/plugins/fckeditor/editor/lang\' folder";
-
-		$display = $use_editor==1 ? $displayStyle : \'none\';
-		$cusDisplay = $use_editor==1 && $fck_editor_toolbar==\'custom\' ? $displayStyle : \'none\';
+		include_once($tinymce_path.\'/lang/\'.$manager_language.\'.inc.php\');
 		
-		$basTool = !isset($fck_editor_toolbar) || $fck_editor_toolbar==\'default\' ? "selected=\'selected\'" : "";
-		$stnTool = $fck_editor_toolbar==\'standard\' ? "selected=\'selected\'" : "";
-		$advTool = $fck_editor_toolbar==\'advanced\' ? "selected=\'selected\'" : "";
-		$cusTool = $fck_editor_toolbar==\'custom\' ? "selected=\'selected\'" : "";
-		$tbCustomset = isset($fck_editor_toolbar_customset) ? htmlspecialchars($fck_editor_toolbar_customset) : "[\'Bold\',\'Italic\',\'Underline\',\'-\',\'Link\',\'Unlink\']";
-		$xmlStyle = isset($fck_editor_style) ? htmlspecialchars($fck_editor_style) : "";
-		$autoLang = isset($fck_editor_autolang) ? $fck_editor_autolang : 0;
-		$autoNo = ($fck_editor_autolang==\'0\' || !isset($fck_editor_autolang)) ? \'checked="checked"\' : \'\';
-		$autoYes = $fck_editor_autolang==\'1\' ? \'checked="checked"\' : \'\';
-
-		return <<<FCKEditor_HTML_Settings
-		<table id=\'editorRow_FCKEditor\' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 
+		$simpleTheme = $tinymce_editor_theme==\'simple\' ? "selected=\'selected\'" : "" ;
+		$advTheme = $tinymce_editor_theme==\'advanced\' ? " selected=\'selected\'" : "";
+		$fullTheme = !isset($tinymce_editor_theme) || $tinymce_editor_theme==\'full\' ? " selected=\'selected\'" : "";
+		$display = $use_editor==1 ? $displayStyle : \'none\';
+		$cssSelectors = isset($tinymce_css_selectors) ? htmlspecialchars($tinymce_css_selectors) : "";
+		
+		return <<<TinyMCE_HTML_Settings
+		<table id=\'editorRow_TinyMCE\' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 
 		  <tr class=\'row1\' style="display: $display;"> 
-            <td colspan="2" class="warning" style="color:#707070; background-color:#eeeeee"><h4>{$_lang["FCKEditor_settings"]}<h4></td> 
+            <td colspan="2" class="warning" style="color:#707070; background-color:#eeeeee"><h4>{$_lang["tinymce_settings"]}<h4></td> 
           </tr> 
           <tr class=\'row1\' style="display: $display"> 
-            <td nowrap class="warning"><b>{$_lang["fck_editor_autolang_title"]}</b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="fck_editor_autolang" value="1" $autoYes /> 
-              {$_lang[\'yes\']}<br /> 
-              <input onChange="documentDirty=true;" type="radio" name="fck_editor_autolang" value="0" $autoNo /> 
-              {$_lang[\'no\']} </td> 
-          </tr> 
-          <tr class=\'row1\' style="display: $display"> 
-            <td width="200">&nbsp;</td> 
-            <td class=\'comment\'>{$_lang["fck_editor_autolang_message"]}</td> 
-          </tr> 
-		  <tr class=\'row1\' style="display: $display"> 
-            <td colspan="2"><div class=\'split\'></div></td> 
-          </tr> 
-          
-          <tr class=\'row1\' style="display: $display"> 
-            <td nowrap class="warning"><b>{$_lang["fck_editor_style_title"]}</b></td> 
-            <td><input onChange="documentDirty=true;" type=\'text\' maxlength=\'255\' style="width: 300px;" name="fck_editor_style" value="$xmlStyle" /> 
-			</td> 
-          </tr> 
-          <tr class=\'row1\' style="display: $display"> 
-            <td width="200">&nbsp;</td> 
-            <td class=\'comment\'>{$_lang["fck_editor_style_message"]}</td> 
-          </tr> 
-		  <tr class=\'row1\' style="display: $display"> 
-            <td colspan="2"><div class=\'split\'></div></td> 
-          </tr> 
-          <tr class=\'row1\' style="display: $display"> 
-            <td nowrap class="warning"><b>{$_lang["fck_editor_toolbar_title"]}</b></td> 
+            <td nowrap class="warning"><b>{$_lang["tinymce_editor_theme_title"]}</b></td> 
             <td>
-            <select name="fck_editor_toolbar" onChange="documentDirty=true;if(this.selectedIndex==3) showHide(/fck_customset/,1); else showHide(/fck_customset/,0);">
-					<option value="basic" $basTool>{$_lang["basic"]}</option>
-					<option value="standard" $stnTool>{$_lang["standard"]}</option>
-					<option value="advanced" $advTool>{$_lang["advanced"]}</option>
-					<option value="custom" $cusTool>{$_lang["custom"]}</option>
+            <select name="tinymce_editor_theme">
+					<option value="simple" $simpleTheme>Simple</option>
+					<option value="advanced" $advTheme>Advanced</option>
+					<option value="full" $fullTheme>Full Featured</option>
 				</select>
 			</td> 
           </tr> 
           <tr class=\'row1\' style="display: $display"> 
             <td width="200">&nbsp;</td> 
-            <td class=\'comment\'>{$_lang["fck_editor_toolbar_message"]}</td> 
+            <td class=\'comment\'>{$_lang["tinymce_editor_theme_message"]}</td> 
           </tr> 
 		  <tr class=\'row1\' style="display: $display"> 
             <td colspan="2"><div class=\'split\'></div></td> 
           </tr> 
-          <tr id=\'fck_customset1\' class=\'row3\' style="display: $cusDisplay"> 
-            <td nowrap class="warning"><b>{$_lang["fck_editor_custom_toolbar"]}</b></td> 
-            <td>
-            <input name="fck_editor_toolbar_customset" type="text" style="width:300px;" maxlength=\'65000\' onChange="documentDirty=true;" value="$tbCustomset" />
+		  <tr class=\'row1\' style="display:$display;"> 
+			<td nowrap class="warning"><b>{$_lang["tinymce_editor_css_selectors_title"]}</b></td> 
+			<td><input onChange="documentDirty=true;" type=\'text\' maxlength=\'65000\' style="width: 300px;" name="tinymce_css_selectors" value="$cssSelectors" /> 
 			</td> 
-          </tr> 
-          <tr id=\'fck_customset2\' class=\'row3\' style="display: $cusDisplay"> 
-            <td width="200">&nbsp;</td> 
-            <td class=\'comment\'>{$_lang["fck_editor_custom_message"]}</td> 
-          </tr> 
-		  <tr id=\'fck_customset3\' class=\'row3\' style="display: $cusDisplay"> 
-            <td colspan="2"><div class=\'split\'></div></td> 
-          </tr> 
+		  </tr> 
+		  <tr class=\'row1\' style="display: $display;"> 
+			<td width="200">&nbsp;</td> 
+			<td class=\'comment\'>{$_lang["tinymce_editor_css_selectors_message"]}</td> 
+		  </tr> 
+		  <tr class=\'row1\' style="display: $display;"> 
+			<td colspan="2"><div class=\'split\'></div></td> 
+		  </tr> 
 		</table>
-FCKEditor_HTML_Settings;
+TinyMCE_HTML_Settings;
 	}
 }
 
 
-// getFCKEditorScript function
-if (!function_exists(\'getFCKEditorScript\')) {
-	function getFCKEditorScript($elmList,$tbWebSet=\'\',$tbCustomSet=\'\',$width=\'100%\',$height=\'400\') {
+// getTinyMCEScript function
+if (!function_exists(\'getTinyMCEScript\')) {
+	function getTinyMCEScript($elmList,$webTheme=\'\',$width=\'\',$height=\'\',$lang=\'\') {
 		global $base_url;
-		global $site_url;
 		global $use_browser;
 		global $editor_css_path;
-		global $fck_editor_toolbar;
-		global $fck_editor_toolbar_customset;
-		global $fck_editor_autolang;
+		global $tinymce_editor_theme;
+		global $tinymce_css_selectors;
+		global $manager_language;
 		
-		$toolbar = $tbCustomSet ? "custom" : ($tbWebSet ? $tbWebSet : $fck_editor_toolbar);
-		$tbCustomSet = "[ ".($tbCustomSet ? $tbCustomSet:$fck_editor_toolbar_customset)." ]"; // remember [[snippets]] detection :)
-		$autoLang = $fck_editor_autolang ? \'true\': \'false\';
-		$editor_css_path = !empty($editor_css_path) ? $editor_css_path : $base_url."assets/plugins/fckeditor/editor/css/fck_editorarea.css";
-		
-		$width = str_replace("px","",$width);
-		$height = str_replace("px","",$height);
-		
-		// build fck instances
-		$fckInstances= \'\';
-		foreach($elmList as $fckInstance) {
-			$fckInstanceObj = "oFCK" . $fckInstance;
-			$fckInstances .= "<script language=\'javascript\' type=\'text/javascript\'>".
-					"var $fckInstanceObj = new FCKeditor(\'$fckInstance\');".
-					"$fckInstanceObj.Width = \'".$width."\';".
-					"$fckInstanceObj.Height = \'".$height."\';".
-					"$fckInstanceObj.BaseHref = \'".$site_url."\';".
-					"$fckInstanceObj.BasePath = \'".$base_url."assets/plugins/fckeditor/\';".
-					"$fckInstanceObj.Config[\'ImageBrowser\'] = ".($use_browser==1 ? "true":"false").";".
-					"$fckInstanceObj.Config[\'ImageBrowserURL\'] = FCKImageBrowserURL;".
-					"$fckInstanceObj.Config[\'LinkBrowser\'] = ".($use_browser==1 ? "true":"false").";".
-					"$fckInstanceObj.Config[\'LinkBrowserURL\'] = FCKLinkBrowserURL;".
-					"$fckInstanceObj.Config[\'FlashBrowser\'] = ".($use_browser==1 ? "true":"false").";".
-					"$fckInstanceObj.Config[\'FlashBrowserURL\'] = FCKFlashBrowserURL;".
-					"$fckInstanceObj.Config[\'SpellChecker\'] = \'SpellerPages\';".
-					"$fckInstanceObj.Config[\'CustomConfigurationsPath\'] = \'".$base_url."assets/plugins/fckeditor/custom_config.js\';".
-					"$fckInstanceObj.ToolbarSet = \'".$toolbar."\';".
-					"$fckInstanceObj.Config[\'EditorAreaCSS\'] = FCKEditorAreaCSS;".
-					"$fckInstanceObj.ReplaceTextarea();".
-					"</script>\\n";
-		}
-		return <<<FCKEditor_SCRIPT
-		<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/fckeditor/fckeditor.js"></script>
-		<script language="javascript" type="text/javascript">
-			var FCKImageBrowserURL = \'{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}\';
-			var FCKLinkBrowserURL = \'{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}\';
-			var FCKFlashBrowserURL = \'{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}\';
-			var FCKCustomToolbarSet = {$tbCustomSet};
-			var FCKAutoLanguage = {$autoLang};
-			var FCKEditorAreaCSS = \'{$editor_css_path}\';
-			function FCKeditor_OnComplete(edtInstance) {
-				if (edtInstance){ // to-do: add better listener
-					edtInstance.AttachToOnSelectionChange(tvOnFCKChangeCallback);
-				}
-			};
-			
-			function tvOnFCKChangeCallback(edtInstance) {
-				if (edtInstance) {
-					elm = edtInstance.LinkedField;
-					if(elm && elm.onchange) elm.onchange();
-				}
-			}
-		</script>
-		$fckInstances
-FCKEditor_SCRIPT;
+		$tinymce_editor_theme = $webTheme ? $webTheme : $tinymce_editor_theme;
+		$theme = !empty($tinymce_editor_theme) ? "theme : \\"$tinymce_editor_theme\\"," : "theme : \\"simple\\",";
+		$cssPath = !empty($editor_css_path) ? "content_css : \\"$editor_css_path\\"," : "";
+		$cssSelector = !empty($tinymce_css_selectors) ? "theme_advanced_styles : \\"$tinymce_css_selectors\\"," : "";
+		$elmList = !empty($elmList) ? "elements : \\"$elmList\\"," : "";
+		$fileBrowserCallback = ($use_browser==1 ? "file_browser_callback : \\"fileBrowserCallBack\\"":"");
+		$webWidth = $width ? "width : \\"$width\\"," : "";
+		$webHeight = $height ? "height : \\"$height\\"," : "";
+		$tinymce_language = !empty($lang) ? getTinyMCELang($lang) : getTinyMCELang($manager_language);
+
+		$fullScript = <<<FULL_SCRIPT
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		  theme : "advanced",
+		  mode : "exact",
+		  relative_urls : false,
+		  language : "{$tinymce_language}",
+		  $elmList
+		  $webWidth
+		  $webHeight
+		  plugins : "table,advhr,advimage,advlink,emotions,insertdatetime,preview,flash,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable",
+		  theme_advanced_buttons1_add_before : "save,newdocument,separator",
+		  theme_advanced_buttons1_add : "fontselect,fontsizeselect",
+		  theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
+		  theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator,pastetext,pasteword,selectall,separator",
+		  theme_advanced_buttons3_add_before: "tablecontrols,separator",
+		  theme_advanced_buttons3_add : "emotions,flash,advhr,separator,print,separator,ltr,rtl,separator,fullscreen",
+		  theme_advanced_toolbar_location : "top",
+		  theme_advanced_toolbar_align : "left",
+		  theme_advanced_path_location : "bottom",
+		  plugin_insertdate_dateFormat : "%Y-%m-%d",
+		  plugin_insertdate_timeFormat : "%H:%M:%S",
+		  extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		  $cssPath
+		  $cssSelector
+		  cleanup_indent : true,
+		  onchange_callback : "tvOnTinyMCEChangeCallBack",
+		  resource_browser_path : "{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}",
+		  $fileBrowserCallback
+	   });
+	
+	function fileBrowserCallBack(field_name, url, type, win) {
+		// This is where you insert your custom filebrowser logic
+		var win=tinyMCE.getWindowArg("window");
+		win.BrowseServer(field_name);
+	}
+
+	function tvOnTinyMCEChangeCallBack(i){
+		  i.oldTargetElement.onchange();            
+	}
+</script>
+FULL_SCRIPT;
+
+		$stdScript = <<<STD_SCRIPT
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		  $theme
+		  mode : "exact",
+		  language : "{$tinymce_language}",
+		  $elmList
+		  relative_urls : false
+	   });
+</script>
+STD_SCRIPT;
+
+		$tinymceScript = !empty($tinymce_editor_theme)?($tinymce_editor_theme == \'full\' ? $fullScript : $stdScript):$fullScript;
+		return $tinymceScript;
 	}
 }
-
 
 // Handle event
 
 $e = &$modx->Event; 
 switch ($e->name) { 
-	case "OnRichTextEditorRegister":
-		$e->output("FCKEditor");
+	case "OnRichTextEditorRegister": // register only for backend
+		$e->output("TinyMCE");
 		break;
 
-	case "OnRichTextEditorInit":
-		if($editor=="FCKEditor") {
-			if(isset($forfrontend)||$modx->isFrontend()) $html = getFCKEditorScript($elements,$webToolbarSet,$webCustomToolbar,$width,$height);
-			else $html = getFCKEditorScript($elements);
+	case "OnRichTextEditorInit": 
+		if($editor=="TinyMCE") {
+			$elementList = implode(",", $elements);
+			if(isset($forfrontend)||$modx->isFrontend()){
+				$html = getTinyMCEScript($elementList,$webTinyMCETheme,$width,$height,$frontend_language);
+			} else {
+				$html = getTinyMCEScript($elementList);
+			}
 			$e->output($html);
 		}		
 		break;
 
 	case "OnInterfaceSettingsRender":
-		$html = getFCKEditorSettings();
+		$html = getTinyMCESettings();
 		$e->output($html);
 		break;
 
@@ -4450,7 +4482,7 @@ switch ($e->name) {
       return; // stop here - this is very important. 
       break; 
 }';
-$p['FCKEditorProps'] = '&webset=Web Toolbar Set;list;basic,standard,advanced,custom;custom &webcustom=Custom Web Toolbar;textarea;[\'Bold\',\'Italic\',\'Underline\',\'-\',\'Link\',\'Unlink\'] ';
+$p['TinyMCEProps'] = '&webtheme=Web Theme;list;simple,advanced,full;simple ';
 $p['QuickEdit'] = '/*
  *  Written by: Adam Crownoble
  *  Contact: adam@obledesign.com
@@ -5161,12 +5193,12 @@ $e = &$this->pluginEvent;
 $e['OnChunkFormRender'] = array('BottomButtonBar','Bottom Button Bar');
 $e['OnDocFormPrerender'] = array('Inherit Parent Template');
 $e['OnDocFormRender'] = array('BottomButtonBar');
-$e['OnInterfaceSettingsRender'] = array('FCKEditor');
+$e['OnInterfaceSettingsRender'] = array('TinyMCE');
 $e['OnModFormRender'] = array('BottomButtonBar');
 $e['OnParseDocument'] = array('QuickEdit');
 $e['OnPluginFormRender'] = array('BottomButtonBar');
-$e['OnRichTextEditorInit'] = array('FCKEditor');
-$e['OnRichTextEditorRegister'] = array('FCKEditor');
+$e['OnRichTextEditorInit'] = array('TinyMCE');
+$e['OnRichTextEditorRegister'] = array('TinyMCE');
 $e['OnSnipFormRender'] = array('BottomButtonBar');
 $e['OnTempFormRender'] = array('BottomButtonBar');
 $e['OnTVFormRender'] = array('BottomButtonBar');
