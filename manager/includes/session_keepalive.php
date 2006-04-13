@@ -8,6 +8,6 @@
 	// Keep it alive
 	session_start();
 
-	header('Location: ../media/images/_session.gif?rnd='. $_REQUEST['rnd']);
+	header('Location: ../media/script/_session.gif?rnd='. $_REQUEST['rnd']);
 	die();
 ?>
