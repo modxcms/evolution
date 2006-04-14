@@ -143,7 +143,7 @@ class Output {
    $menus = array('content'=>array(), 'setting'=>array(), 'go'=>array());
 
 $menus['setting'][] = <<<EOD
-<a href="javascript:;" id="QE_ShowLinks" onclick="QE_ToggleLinks(true);"><img id="QE_ShowLinks_check" src="{$GLOBALS['quick_edit_path']}/images/checked.gif" alt="checked" style="float:left; margin-right:3px;" />{$_lang['QE_show_links']}</a>
+<a href="javascript:;" id="QE_ShowLinks" onclick="qe.toggleLinks();"><img id="QE_ShowLinks_check" src="{$GLOBALS['quick_edit_path']}/images/checked.gif" alt="checked" style="float:left; margin-right:3px;" />{$_lang['QE_show_links']}</a>
 EOD;
 
 if($show_manager_link) {
@@ -186,14 +186,14 @@ foreach($cvs as $content) {
     $type_image = ($cv_obj->content ? $this->checked_image : $this->unchecked_image);
     $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
 $menus[$menu][] .= <<<EOD
-<a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_SendAjax('doc={$doc_id}&amp;var={$cv_obj->id}&amp;save=1&amp;tv{$cv_obj->name}={$change_value}', function() { window.location.reload() } );" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a>
+<a href="javascript: qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a>
 EOD;
 
    // Everything else
    } else {
   
 $menus[$menu][] .= <<<EOD
-<a href="javascript:;" id="QE_Toolbar_{$cv_obj->id}" onclick="javascript: QE_OpenEditor({$doc_id}, '{$cv_obj->id}');" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
+<a href="javascript: qe.open('{$cv_obj->id}');" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
 EOD;
 
    }
@@ -212,46 +212,39 @@ foreach($menus as $menu_name=>$links) {
   $links_html .= "<li>{$link}</li>";
  }
 
-$buttons_html .= <<<EOD
-<a id="QE_Button_{$menu_name}" class="QE_Button" href="javascript:;" onclick="javascript: QE_ToggleMenu('{$menu_name}');">{$_lang[$menu_name]}</a>
-EOD;
-
 $menus_html .= <<<EOD
-<div id="QE_Menu_{$menu_name}" class="QE_Menu" style="display:none;">
- <ul>
-  {$links_html}
- </ul>
-</div>
+ <li><a href="javascript:;">{$_lang[$menu_name]}</a>
+  <ul>
+   {$links_html}
+  </ul>
+ </li>
 EOD;
 
 }
 
   // Define the CSS and Javascript that we will add to the header of the page
 $head = <<<EOD
+
 <!-- Start QuickEdit headers -->
-<script type="text/javascript">
- var modId = '{$module_id}';
- var managerPath = '{$manager_path}';
- var modPath = '{$qe_path}';
-</script>
 <script type="text/javascript" src="{$manager_path}media/script/scriptaculous/prototype.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/Cookie.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/Drag.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/moo.fx.js"></script>
+<script type="text/javascript" src="{$qe_path}/javascript/drop_down_menu.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/QuickEdit.js"></script>
-<link type="text/css" rel="stylesheet" href="{$qe_path}/styles/output.css" />
+<link type="text/css" rel="stylesheet" href="{$qe_path}/styles/toolbar.css" />
 <!-- End QuickEdit headers -->
+
 EOD;
 
 $html_top = <<<EOD
 
 <!-- Start QuickEdit toolbar -->
-<div id="QE_Toolbar" style="display:none;">
- <div id="QE_Toolbar_Header">
-  <h1 id="QE_Title">{$_lang['QE_title']}</h1>
-  {$buttons_html}
- </div> 
- {$menus_html}
+<div id="QE_Toolbar">
+ <h1>{$_lang['QE_title']}</h1>
+ <ul>
+{$menus_html}
+ </ul>
 </div>
 <!-- End QuickEdit toolbar -->
 
@@ -260,10 +253,7 @@ EOD;
 $html_bottom .= <<<EOD
 
 <script type="text/javascript">
-QE_PositionToolbar($('QE_Toolbar'));
-QE_ToggleLinks();
-Drag.init($('QE_Title'),$('QE_Toolbar'));
-$('QE_Toolbar').onDragEnd = QE_SetPosition;
+ var qe = new QuickEdit({$module_id},{$doc_id},'{$manager_path}','{$qe_path}',$('QE_Toolbar'));
 </script>
 
 EOD;
@@ -284,7 +274,7 @@ EOD;
 
      // Set the HTML for the link
 $link = <<<EOD
-<a href="javascript:;" onclick="javascript: QE_OpenEditor({$doc_id}, '{$cv->id}', {$module_id});" onmouseover="javascript: QE_HighlightContent(this);" onmouseout="javascript: QE_UnhighlightContent(this);" title="Edit {$cv->description}" class="QE_Link" style="display:none;">&laquo; {$_lang['edit']} {$cv->name}</a>
+<a href="javascript:;" onclick="javascript: qe.open('{$cv->id}');" title="Edit {$cv->description}" class="QE_Link" style="display:none;">&laquo; {$_lang['edit']} {$cv->name}</a>
 EOD;
 
     }
