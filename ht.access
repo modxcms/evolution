@@ -12,10 +12,11 @@
 # background images when links are hovered on the page.
 #
 # The output compression directives immediately below serve to speed up delivery of web pages, 
-# and may also be optionally commented out.
+# and may also be optionally commented out. You really should uncomment this for performance
+# reasons if your host supports it.
 
-php_flag zlib.output_compression On
-php_value zlib.output_compression_level 5
+# php_flag zlib.output_compression On
+# php_value zlib.output_compression_level 5
 
 # Rewrite directives here for SEF (Search Engine Friendly) URLs
 
