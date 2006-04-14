@@ -26,7 +26,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # If your MODx installation is in a subdirectory, change the following line to match the physical
 # path to the "root" of the site as follows:
-# RewriteRule ^(.*)$ /path/to/subdirectory/index.php?q=$1 [L,QSA]
+# RewriteRule ^(.*)$ /path/to/subdirectory/index.php?q=$1 [L,QSA,NC]
 
 RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 
