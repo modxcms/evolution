@@ -1,0 +1,42 @@
+SlimView Changelog
+==================
+
+SlimView 0.5
+11th April 2006
+---------------
+Added function to extract '.module h3' background colour from CSS file (functions.php & index.php).
+Updated code to allow for 1, 2 or 3 data sets - thank you Martin (slimview.png.php & svconfig.php).
+Added legend for the chart colours - thank you Marc (index.php & legend.png.php).
+Added text output option ('&output=text') for bug-finding (index.php).
+Moved colour calculations so they're only run once (index.php).
+
+SlimView 0.4
+10th April 2006
+---------------
+Chart not displayed if there is no data (index.php).
+'Division by zero' error fixed - thank you Ingo/sagariha (slimview.png.php).
+Ensured maximum y value is a factor of 4 to avoid non-integer y values (slimview.png.php).
+Limited x values to 3 characters in length (slimview.png.php).
+Does not show all x labels if there are more than 10 (slimview.png.php).
+Added (very) short upgrade, uninstall and troubleshooting info (install.txt).
+
+SlimView 0.3
+27th March 2006
+---------------
+Added time labels on each chart's x-axis.
+The maximum y value is more dynamically rounded.
+A little bit of code tidying up.
+
+SlimView 0.2
+17th March 2006
+---------------
+'global $_filters;' added to hour_table and date_table in index.php (thank you Stephen).
+Added GPL license to scripts (thanks again Stephen).
+RGB values are calculated from hex codes in svconfig.php.
+The direction of the charts is now correct!
+
+SlimView 0.1
+15th March 2006
+---------------
+The first incarnation.
+Basic charts for hours, days, weeks and years.

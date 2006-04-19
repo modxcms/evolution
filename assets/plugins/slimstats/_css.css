@@ -1,0 +1,274 @@
+
+/*
+ * SlimStat: a simple web stats analyser based on ShortStat.
+ * Copyright (C) 2006 Stephen Wettone
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+/* position, margins, padding */
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	margin: 0 0 16px;
+	padding: 0.5em 1.2em;
+}
+h2 {
+	margin: 16px 1.4em;
+}
+p, pre {
+	margin: 16px 2em;
+}
+
+h2 span {
+	clear: both;
+	display: block;
+}
+
+a {
+	text-decoration: none;
+}
+
+img {
+	border: none;
+}
+
+.column {
+	float: left;
+	overflow: hidden;
+}
+
+ul#menu {
+	display: block;
+	height: 22px;
+	list-style: none;
+	margin: 0 2em 16px;
+	padding-left: 12px;
+}
+	ul#menu li {
+		float: left;
+		height: 22px;
+		line-height: 22px;
+		margin-right: 0.5em;
+		padding: 0 0.5em;
+	}
+
+ul#filters {
+	list-style: none;
+	padding-left: 2em;
+}
+	ul#filters li {
+		float: left;
+		margin-bottom: 12px;
+		margin-right: 2em;
+	}
+	ul#filters li span {
+		padding: 4px;
+		display: block;
+	}
+	ul#filters li a {
+		padding: 2px;
+		display: block;
+	}
+	ul#filters li span a {
+		padding: 0;
+		display: inline;
+	}
+
+.module {
+	float: left;
+	margin-bottom: 2em;
+	margin-left: 2em;
+	width: 22.5em;
+}
+	.module h3 {
+		padding: 4px;
+		position: relative;
+	}
+	.module h3 span {
+		position: absolute;
+		right: 4px;
+	}
+	.module div {
+		height: 15.2em;
+		overflow: auto;
+		width: 100%;
+	}
+	.module div table {
+		border-collapse: collapse;
+	}
+	.module div table th {
+		padding: 0.2em 3px;
+		text-align: left;
+		white-space: nowrap;
+		width: 100%;
+	}
+	.module div table td {
+		overflow: hidden;
+		padding: 0.2em 3px;
+		vertical-align: top;
+		white-space: nowrap;
+	}
+
+.mediummodule {
+	width: 47em !important;
+}
+.largemodule {
+	width: 71.5em !important;
+}
+.largemodule div {
+	height: 45.6em !important;
+}
+
+pre {
+	padding: 1em;
+}
+
+.last {
+	margin-bottom: 0;
+	margin-right: 0;
+	text-align: right !important;
+	width: auto !important;
+}
+
+#donotremove {
+	padding: 1em 2em;
+}
+
+
+/* colours, backgrounds, borders */
+
+
+body {
+	background-color: #fff;
+	color: #333;
+}
+a {
+	color: #369; /*#00c;*/
+}
+a.external:visited {
+	color: #69c; /*#609;*/
+}
+h1,
+#donotremove {
+	background-color: #369;
+	color: #fff;
+}
+h2 span {
+	color: #666;
+}
+.positive {
+	color: #090;
+}
+.negative {
+	color: #900;
+}
+pre {
+	background-color: #eee;
+	border: 1px solid #369;
+}
+ul#menu {
+	border-bottom: 1px solid #369;
+}
+	ul#menu li {
+		color: #fff;
+	}
+	ul#menu li.selected {
+		background-color: #369;
+		border-bottom: none;
+		color: #fff;
+	}
+ul#filters li a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	text-shadow: none;
+}
+	ul#filters li span a {
+		background-color: inherit;
+		border-bottom: none;
+	}
+
+.module h3,
+ul#filters li span {
+	background-color: #69c;
+	border-bottom: 1px solid #369;
+	color: #fff;
+	text-shadow: 2px 2px #369;
+}
+.module h3 span a {
+	color: #fff;
+	text-shadow: 2px 2px #369;
+}
+.module div {
+	border-bottom: 1px solid #369;
+}
+	.module div table th {
+		background-color: #ccc;
+		border-bottom: 1px solid #aaa;
+		color: #333;
+	}
+	.module div table td.accent {
+		background-color: #eee;
+		border-bottom: 1px solid #ccc;
+		color: #999;
+	}
+	.module div table td {
+		border-bottom: 1px dotted #ccc;
+	}
+#donotremove a {
+	color: #9cf;
+}
+
+
+/* fonts */
+
+
+body,
+td,
+th,
+input,
+select {
+	font: normal 10px/14px "Lucida Grande", "Lucida Sans Unicode", Lucida, Helvetica, Arial, sans-serif;
+}
+ul#menu li.selected {
+	font-weight: bold;
+}
+h1, h2, h3, th, ul#filters li span {
+	font-weight: bold;
+}
+h1 {
+	font-size: 18px;
+}
+h2 {
+	font-size: 15px;
+}
+h3,
+ul#filters li span {
+	font-size: 12px;
+}
+h2 span {
+	font-size: 10px;
+	font-weight: normal;
+}
+.module h3 span a {
+	font-size: 9px;
+}
+.very {
+	font-weight: bold;
+}

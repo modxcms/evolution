@@ -1021,3 +1021,58 @@ UPDATE `{PREFIX}user_roles` SET
 	view_unpublished = 1
 	WHERE  id=1;
 
+
+# Create New Tables for SlimStats
+#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+CREATE TABLE IF NOT EXISTS `slimstat` (
+    `id` int(11) unsigned NOT NULL auto_increment,
+    `remote_ip` varchar(15) NOT NULL default '',
+    `remote_addr` varchar(255) NOT NULL default '',
+    `country` varchar(50) NOT NULL default '',
+    `language` varchar(255) NOT NULL default '',
+    `domain` varchar(255) NOT NULL default '',
+    `referer` varchar(255) NOT NULL default '',
+    `searchterms` varchar(255) NOT NULL default '',
+    `resource` varchar(255) NOT NULL default '',
+    `user_agent` varchar(255) NOT NULL default '',
+    `platform` varchar(50) NOT NULL default '',
+    `browser` varchar(50) NOT NULL default '',
+    `version` varchar(15) NOT NULL default '',
+    `visit` int(10) unsigned NOT NULL default '0',
+    `dt` int(10) unsigned NOT NULL default '0',
+    UNIQUE KEY `id` (`id`),
+    KEY `referer_idx` (`referer`),
+    KEY `user_agent_idx` (`user_agent`),
+    KEY `version_idx` (`version`),
+    KEY `remote_ip_remote_addr_idx` (`remote_ip`,`remote_addr`),
+    KEY `resource_total_uniques_idx` (`resource`,`id`,`visit`,`remote_ip`),
+    KEY `searchterms_total_uniques_idx` (`searchterms`,`id`,`visit`,`remote_ip`),
+    KEY `domain_total_uniques_idx` (`domain`,`id`,`visit`,`remote_ip`),
+    KEY `platform_total_uniques_idx` (`platform`,`id`,`visit`,`remote_ip`),
+    KEY `browser_version_total_uniques_idx` (`browser`,`version`,`id`,`visit`,`remote_ip`),
+    KEY `country_total_uniques_idx` (`country`,`id`,`visit`,`remote_ip`),
+    KEY `language_total_uniques_idx` (`language`,`id`,`visit`,`remote_ip`),
+    KEY `dt_total_uniques_idx` (`dt`,`id`,`visit`,`remote_ip`),
+    KEY `visit_total_uniques_idx` (`visit`,`id`,`remote_ip`)
+) Type=MyISAM COMMENT='Contains SlimStats data.';
+
+
+CREATE TABLE IF NOT EXISTS `slimstat_dt` (
+    `dt_start` int(10) unsigned NOT NULL default '0',
+    `dt_end` int(10) unsigned NOT NULL default '0',
+    `hits` int(10) unsigned NOT NULL default '0',
+    `visits` int(10) unsigned NOT NULL default '0',
+    `uniques` int(10) unsigned NOT NULL default '0'
+) Type=MyISAM COMMENT='Contains SlimStats summary data.';
+
+
+CREATE TABLE IF NOT EXISTS `slimstat_iptocountry` (
+    ip_from double NOT NULL default '0',
+    ip_to double NOT NULL default '0',
+    country_code2 char(2) NOT NULL default '',
+    country_code3 char(3) NOT NULL default '',
+    country_name varchar(50) NOT NULL default '',
+    KEY `ip_from_to_idx` (`ip_from`,`ip_to`)
+) Type=MyISAM COMMENT='Contains SlimStats summary data.';
