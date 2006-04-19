@@ -114,7 +114,7 @@ if ( empty( $filters ) && !isset( $_GET["show"] ) ) {
 	?><li class="selected"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></li><?php
 	$included_file = "_summary.php";
 } else {
-	?><li><a href="./"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></a></li><?php
+	?><li><a href="index.php?a=68"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></a></li><?php
 }
 if ( empty( $filters ) && isset( $_GET["show"] ) && $_GET["show"] == "details" ) {
 	?><li class="selected"><?php print ucfirst( $config->i18n->titles["details"] ); ?></li><?php
