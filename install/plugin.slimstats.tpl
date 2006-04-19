@@ -30,4 +30,4 @@
 
  */
 
-@include_once( $_SERVER["DOCUMENT_ROOT"]."/assets/plugins/slimstats/inc.stats.php" );
+@include_once( $modx->config['base_path']."/assets/plugins/slimstats/inc.stats.php" );
