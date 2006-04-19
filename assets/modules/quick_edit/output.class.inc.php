@@ -47,8 +47,6 @@ class Output {
   $qe_path = $base_path.'/'.$GLOBALS['quick_edit_path'];
 
   $this->output = '';
-  $this->checked_image = "<img src=\"{$GLOBALS['quick_edit_path']}/images/checked.gif\" alt=\"checked\" style=\"float:left; margin-right:3px;\" />";
-  $this->unchecked_image = "<img src=\"{$GLOBALS['quick_edit_path']}/images/unchecked.gif\" alt=\"checked\" style=\"float:left; margin-right:3px;\" />";
 
   // Combine QE language files with manager language files (manager should override QE)
   $qe_eng_path = $qe_path.'/lang/english.inc.php';
@@ -137,13 +135,12 @@ class Output {
    $logout_url = "index.php?id={$doc_id}&amp;QuickEdit_logout=logout"; // $modx->makeURL($doc_id, '', 'QuickEdit_logout=logout'); // Would like to use makeURL but doesn't produce XHTML valid code
    $replacements = array();
    $link = '';
-   $type_image = '';
    $on_click = '';
    $change_value = '';
    $menus = array('content'=>array(), 'setting'=>array(), 'go'=>array());
 
 $menus['setting'][] = <<<EOD
-<a href="javascript:;" id="QE_ShowLinks" onclick="qe.toggleLinks();"><img id="QE_ShowLinks_check" src="{$GLOBALS['quick_edit_path']}/images/checked.gif" alt="checked" style="float:left; margin-right:3px;" />{$_lang['QE_show_links']}</a>
+<a id="QE_ShowLinks" class="checked" href="javascript:qe.toggleLinks();">{$_lang['QE_show_links']}</a>
 EOD;
 
 if($show_manager_link) {
@@ -183,10 +180,10 @@ foreach($cvs as $content) {
 
    // One checkbox and not a binding
    if($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements,'||') && substr($cv_obj->elements,0,1)!='@') {
-    $type_image = ($cv_obj->content ? $this->checked_image : $this->unchecked_image);
+    $class = ($cv_obj->content ? 'checked' : 'unchecked');
     $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
 $menus[$menu][] .= <<<EOD
-<a href="javascript: qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');" title="{$_lang['edit']} {$cv_obj->description}">{$type_image}{$cv_obj->caption}</a>
+<a class="{$class}" href="javascript: qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
 EOD;
 
    // Everything else
@@ -213,7 +210,7 @@ foreach($menus as $menu_name=>$links) {
  }
 
 $menus_html .= <<<EOD
- <li><a href="javascript:;">{$_lang[$menu_name]}</a>
+ <li>{$_lang[$menu_name]}
   <ul>
    {$links_html}
   </ul>
@@ -230,7 +227,6 @@ $head = <<<EOD
 <script type="text/javascript" src="{$qe_path}/javascript/Cookie.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/Drag.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/moo.fx.js"></script>
-<script type="text/javascript" src="{$qe_path}/javascript/drop_down_menu.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/QuickEdit.js"></script>
 <link type="text/css" rel="stylesheet" href="{$qe_path}/styles/toolbar.css" />
 <!-- End QuickEdit headers -->
@@ -274,7 +270,7 @@ EOD;
 
      // Set the HTML for the link
 $link = <<<EOD
-<a href="javascript:;" onclick="javascript: qe.open('{$cv->id}');" title="Edit {$cv->description}" class="QE_Link" style="display:none;">&laquo; {$_lang['edit']} {$cv->name}</a>
+<a href="javascript:;" onclick="javascript: qe.open('{$cv->id}');" title="Edit {$cv->description}" class="QE_Link">&laquo; {$_lang['edit']} {$cv->name}</a>
 EOD;
 
     }

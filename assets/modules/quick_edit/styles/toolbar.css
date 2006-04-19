@@ -1,0 +1,155 @@
+/*
+ *  Written by: Adam Crownoble
+ *  Contact: adam@obledesign.com
+ *  Created: 8/14/2005
+ *  For: MODx cms (modxcms.com)
+ *  Description: Styles for QuickEdit links
+ */
+
+#QE_Toolbar, #QE_Toolbar *{
+margin:0;
+padding:0;
+font-family:sans-serif;
+font-size:10px;
+color:#000;
+text-decoration:none;
+border-width:1px;
+border-color:#afafaf;
+}
+
+#QE_Toolbar{
+position:absolute;
+z-index:10000;
+width:200px;
+border-style:solid;
+background: #fff url(../images/link_bg.png) repeat-x 0 0;
+}
+
+/* Use position fixed for more modern browsers */
+body > #QE_Toolbar{
+position: fixed;
+}
+
+#QE_Toolbar h1{
+float:left;
+line-height:14px;
+margin:0 0 0 5px;
+cursor: move;
+}
+
+#QE_Toolbar a{
+padding:0 3px;
+color:#000;
+text-decoration:none;
+border-style:none;
+}
+
+#QE_Toolbar ul{
+float:right;
+margin:0;
+padding:0;
+list-style-type:none;
+cursor:pointer;
+}
+
+#QE_Toolbar ul li{
+float:left;
+height:15px;
+padding:0 3px;
+}
+
+#QE_Toolbar ul ul{
+position:absolute;
+z-index:10001;
+top:15px;
+left:-1px;
+width:200px;
+text-align:left;
+border-style:none solid solid solid;
+background-image:url(../images/body_bg.png);
+background-position:bottom;
+background-repeat:repeat-x;
+background-color:#fff;
+}
+
+#QE_Toolbar ul ul li{
+float:none;
+}
+
+#QE_Toolbar ul ul li a{
+z-index:10004;
+display:block;
+padding:2px 0 2px 10px;
+}
+
+
+
+#QE_Toolbar a.checked,#QE_Toolbar a.unchecked{
+padding-left:25px;
+background-repeat:no-repeat;
+background-position:10px;
+}
+
+#QE_Toolbar a.checked{
+background-image:url(../images/checked.gif);
+}
+
+#QE_Toolbar a.unchecked{
+background-image:url(../images/unchecked.gif);
+}
+
+#QE_Toolbar li a:hover{
+background-color:#dfdfdf;
+}
+
+a.QE_Button{
+position:relative;
+height:100%;
+padding:0 3px;
+text-transform:lowercase;
+border-left-style:solid;
+background-image:url(../images/menu_button_bg.png);
+background-color:#d5d5d5;
+}
+
+#QE_Toolbar img{
+float:none;
+vertical-align:top;
+border-style:none;
+background-color:transparent;
+}
+
+a.QE_Link {
+float: right;
+clear: right;
+padding: 0 5px;
+white-space: nowrap;
+color: #000;
+font-size: 7pt;
+font-weight: normal;
+text-decoration: none;
+line-height: 15px;
+height: 15px;
+border: 1px solid #afafaf;
+background: #fff url(../images/link_bg.png) repeat-x top left;
+cursor: pointer;
+}
+
+a.QE_Link:hover {
+border-color: transparent;
+background-image: none;
+background-color: transparent;
+}
+
+.QE_Parent {
+background-image: url(../images/parent_bg.gif);
+background-repeat: repeat;
+}
+
+@media print {
+
+#QE_Toolbar, a.QE_Link {
+display:none;
+}
+
+}
