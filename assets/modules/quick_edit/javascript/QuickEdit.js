@@ -57,7 +57,7 @@ QuickEdit.prototype = {
    }
   )
 
-  if(!this.linksShown) { this.showLinks(0); }
+  this.showLinks(this.linksShown);
   
   // Toolbar menus
   this.menus.each(
@@ -121,16 +121,19 @@ QuickEdit.prototype = {
  },
 
  toggleLinks: function() {
-  this.linksShown = (!this.linksShown);
-  this.showLinks(this.linksShown); 
+  this.showLinks((!this.linksShown)); 
  },
 
  showLinks: function(show) {
-  Cookie.set('QE_linksShown', show);
-  Element.removeClassName('QE_ShowLinks',(show ? 'unchecked' : 'checked'));
-  Element.addClassName('QE_ShowLinks',(show ? 'checked' : 'unchecked'));
+ 
+  this.linksShown = (show ? 1 : 0);
+  Cookie.set('QE_linksShown', this.linksShown, this.cookieExpiration);
+  
+  Element.removeClassName('QE_ShowLinks',(this.linksShown ? 'unchecked' : 'checked'));
+  Element.addClassName('QE_ShowLinks',(this.linksShown ? 'checked' : 'unchecked'));
+  
   this.links.each(
-   function(link) { Element[show ? 'show' : 'hide'](link); }
+   function(link) { Element[this.linksShown ? 'show' : 'hide'](link); }.bind(this)
   );
   
  },

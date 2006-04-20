@@ -23,6 +23,15 @@ z-index:10000;
 width:200px;
 border-style:solid;
 background: #fff url(../images/link_bg.png) repeat-x 0 0;
+-moz-opacity:0.5;
+opacity:0.5;
+filter: alpha(opacity=80);
+}
+
+#QE_Toolbar:hover{
+-moz-opacity:1;
+opacity:1;
+filter: alpha(opacity=100);
 }
 
 /* Use position fixed for more modern browsers */
@@ -56,6 +65,10 @@ cursor:pointer;
 float:left;
 height:15px;
 padding:0 3px;
+text-transform:lowercase;
+border-left-style:solid;
+background-image:url(../images/menu_button_bg.png);
+background-color:#d5d5d5;
 }
 
 #QE_Toolbar ul ul{
@@ -74,6 +87,10 @@ background-color:#fff;
 
 #QE_Toolbar ul ul li{
 float:none;
+text-transform:none;
+border-left-style:none;
+background-image:none;
+background-color:transparent;
 }
 
 #QE_Toolbar ul ul li a{
@@ -102,16 +119,6 @@ background-image:url(../images/unchecked.gif);
 background-color:#dfdfdf;
 }
 
-a.QE_Button{
-position:relative;
-height:100%;
-padding:0 3px;
-text-transform:lowercase;
-border-left-style:solid;
-background-image:url(../images/menu_button_bg.png);
-background-color:#d5d5d5;
-}
-
 #QE_Toolbar img{
 float:none;
 vertical-align:top;
@@ -133,12 +140,18 @@ height: 15px;
 border: 1px solid #afafaf;
 background: #fff url(../images/link_bg.png) repeat-x top left;
 cursor: pointer;
+-moz-opacity:0.5;
+opacity:0.5;
+filter: alpha(opacity=80);
 }
 
 a.QE_Link:hover {
 border-color: transparent;
 background-image: none;
 background-color: transparent;
+-moz-opacity:1;
+opacity:1;
+filter: alpha(opacity=100);
 }
 
 .QE_Parent {
