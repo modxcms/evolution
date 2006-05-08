@@ -1,0 +1,280 @@
+/* commented backslash hides from ie5mac \*/ 
+html{
+	height:100%;
+	margin:0;
+	padding:0
+} 
+/* end hack */ 
+html,body {
+	padding:0;
+	margin:0;
+	background-color: #333333;
+	font-size: 11px;
+	font-family: "Trebuchet MS", verdana, sans-serif;
+
+}
+body{	
+	text-align:left;
+	min-width:776px;/* for mozilla*/
+	background-color: #333333;
+	height:100%;
+	background:  url(images/bg_4x818.jpg) repeat-x left top;
+}
+#wrapper {
+	background:  url(images/foot_4x82.jpg) repeat-x left bottom;
+	_height: 82px;
+}
+
+#outer{
+	height:99.9%;
+	min-height:100%;
+	width:776px;
+	text-align:left;
+	margin:auto;
+	position:relative;
+	overflow:visible;
+	background:  url(images/inner_776x1.jpg) repeat-y left top;
+}
+
+/* mac hide \*/
+* html #outer{
+	width:776px
+}
+/* end hide*/
+
+html>body #outer{
+	height:auto;
+} /*for mozilla as IE treats height as min-height anyway*/
+
+#inner{
+	width:100%;
+	padding-top:143px;/*needed to make room for header*/
+} 
+
+#header{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:776px;
+	height:93px;
+	z-index:74;
+	background:  url(images/top-header_776x93_2.jpg) no-repeat left top;
+
+}
+
+#ajaxmenu{
+	position:absolute;
+	top:93px;
+	left:0px;
+	width:776px;
+	height:43px;
+	z-index:65;
+	background:  url(images/header_776x43.jpg) no-repeat left top;
+}
+#logo {
+	position:absolute;
+	top:26px;
+	left:10px;
+	width:237px;
+	height:63px;
+	text-indent: -5000px;
+	z-index:300;
+	background:  url(images/logo_237x63.gif) no-repeat left top;
+}
+/* mac hide \*/
+* html #outer, * html #header {width:780px}
+/* end hide*/
+#footer {
+	color: #ffffff;
+	width:776px;
+	clear:both;
+	height:82px;
+	text-align:left;
+	left:0px;
+	bottom:0px;
+	position: absolute;
+	background:  url(images/foot_776x82_2.jpg) no-repeat left top;
+
+}
+#footer p {
+	margin-top: 10px;
+}
+#footer p a {
+	text-decoration: none;
+	color: #ffffff;
+}
+* html #footer{
+	margin-bottom:-1px
+}/* ie rounding bug*/
+
+/* mac hide \*/
+* html #footer {
+	/*only ie gets this style*/
+	height:82px;
+	/* for ie*/
+}
+/* end hide*/
+
+div,p  {
+	margin-top:0px;
+}/*clear top margin for mozilla*/
+
+#right {
+	width:206px;
+	float:right;
+	z-index: 55;
+}
+#right-inner {
+	width: 178px;
+	padding-left: 9px;
+	text-align: left;
+}
+#right-inner h2 {
+	font-size: 15px;
+}
+#left {
+	position:relative;/*ie needs this to show float */
+	width:563px;
+	float:left;
+	padding-left: 7px;
+	z-index: 56;
+}
+#left-inner {
+	padding-left: 9px;
+	padding-right: 9px;
+	text-align: left;
+}
+#clearfooter {
+	width:100%;
+	height:82px;
+	clear:both;
+} /* to clear footer */
+
+html>body #minHeight{
+	float:left;
+	width:0px;
+	height:100%;
+	margin-bottom:-82px;
+} /*safari wrapper */
+#content {
+	z-index: 300;
+	padding-bottom: 7px;
+}
+
+
+
+
+#content h2 {
+	font-size: 15px;
+	color: #618200;
+	background:  url(images/bullet_17x21.gif) no-repeat left top;
+	padding-left: 19px;
+	line-height: 24px;
+	position: relative;
+	z-index: 999;
+}
+
+h3#post-  {
+	font-size: 12px;
+	color: #618200;
+	background:  url() no-repeat left top;
+	padding-left: 0px;
+}
+
+#content p {
+	font-size: 12px;
+	color: #444444;
+	line-height: 18px;
+	_line-height: 16px;
+}
+
+#content p a {
+	color: #618200;
+}
+
+#content p a:hover {
+	background-color: #618200;
+	color: #ffffff;
+}
+
+
+#footer p {
+	padding: 8px;
+}
+
+
+
+
+
+.FSF_searchResults {
+	font-size: 12px;
+	color: #444444;
+	line-height: 18px;
+	_line-height: 16px;
+}
+
+
+.FSF_extract {
+	font-size: 12px;
+	color: #444444;
+	line-height: 18px;
+	_line-height: 16px;
+}
+
+
+.FSF_resultLink {
+	color: #618200;
+}
+
+.FSF_extract {
+	font-size: 12px;
+	color: #444444;
+	line-height: 18px;
+	_line-height: 16px;
+}
+
+.highlight {
+	font-size: 12px;
+	background-color: #f2f2f2;
+	color: #618200;
+	font-weight: bold;
+	line-height: 18px;
+	_line-height: 16px;
+
+}
+
+img {
+	border: dotted 1px #444444;
+}
+
+#content ul li{
+	list-style-image: url(images/bullet_11x8.gif);
+	margin-bottom: 0.5em;
+	font-size: 110%;
+}
+
+.LIn_shortMode {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+
+}
+
+.LIn_desc {
+	display: none;
+}
+.LIn_date {
+	font-style: italic;
+	margin-left: 5px;
+}
+
+#content a, #sidebar a
+{
+    color: rgb(97, 130, 0);
+}
+
+#content a:hover, #sidebar a:hover
+{
+    background-color: rgb(97, 130, 0);
+    color: rgb(255, 255, 255);
+}

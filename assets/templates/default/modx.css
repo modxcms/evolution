@@ -1,0 +1,475 @@
+/* MODx Styles */
+
+/* Code
+------------------------------------------------------------------------- */    
+
+code {
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+	padding: 10px;
+	display: block;
+}
+
+/* UserComments 
+------------------------------------------------------------------------- */                        
+.comment {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    padding: 10px;
+    overflow: hidden;
+}
+.commentAlt {
+    background-color: #f4f4f4;
+}
+.commentAuthor {
+    background-color: #ffc;    
+}
+.commentMe {
+    background-color: #ccf !important;
+    padding-top: 5px;
+}
+.commentNum {
+    font-family: Arial, sans-serif;
+    font-size: 50px;
+    line-height: 30px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #f2f2f2;
+    font-weight: bold;
+    letter-spacing: -4px;
+    z-index: 1;
+}
+.commentAlt .commentNum {
+    color: #eaeaea;
+}
+.commentMe .commentNum {
+    color: #b0b0ff;
+}
+.commentAuthor .commentNum {
+    color: #f3f3bb;
+}
+.commentTitle {
+    position: relative;
+    z-index: 10;
+    color: #999;
+}
+.commentTitle span {
+    text-transform: uppercase;
+    font-size: 86%;
+}
+.commentTitle strong {
+    color: #693;
+    font-size: 110%;
+    text-transform: none;
+    font-weight: normal;
+    margin-right: 6px;
+}
+.comment .content {
+    position: relative;
+    z-index: 10;
+}
+
+/* EmailForm 
+------------------------------------------------------------------------------- */
+#EmailForm {
+	width: 360px;
+	text-align: left;
+	padding-bottom: 20px;
+	border: none;
+}
+#EmailForm.full { width: 100%; }
+
+
+fieldset {
+    border: none;
+}
+
+legend {
+	display: none;
+}
+#EmailForm h3 {
+	clear: both;
+	padding: 15px 0 5px;
+	font-size: 14px;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #000;
+	font-weight: bold;
+}
+
+#EmailForm label,
+#EmailForm p {
+	display: block;
+	clear: both;
+	width: 310px;
+	font-size: 1em;
+	line-height: 1.5em;
+	padding: 0 0 9px;
+}
+
+#EmailForm input {
+	display: block;
+	margin-top: 3px;
+}
+
+#EmailForm select {
+	float: left;
+	display: block;
+}
+
+#EmailForm label.first,
+#EmailForm label.city {
+    clear: left;
+    margin-right: 10px;
+    width: 150px;
+}
+
+#EmailForm label.second,
+#EmailForm label.state {
+	float: left;
+	clear: none;
+	margin: 0 10px 0 0;
+	width: 150px;
+}
+#EmailForm label.state { width: 60px; }
+
+#EmailForm label.first input,
+#EmailForm label.city input,
+#EmailForm label.second input {
+	float: left;
+	width: 150px;
+	padding: 0;
+}
+
+#EmailForm label.state select {
+	width: 60px;
+	float: left;
+	margin-top: 3px;
+}
+
+#EmailForm label.zip,
+#EmailForm label.zip input {
+	float: left;
+	width: 80px;
+}
+#EmailForm label.zip { clear: none; }
+
+#EmailForm label {
+	float: left;
+	clear: left;
+	width: 310px;
+	margin: 0;
+	line-height: 1.5em;
+}
+
+#EmailForm label input {
+	float: left;
+	width: 310px;
+	padding: 0;
+}
+
+#EmailForm input.radio,
+#EmailForm input#radiobutton_1,
+#EmailForm input#radiobutton_2,
+#EmailForm input#radiobutton_3,
+#EmailForm input#radiobutton_4 {
+	clear: left;
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+#EmailForm label.radio,
+#EmailForm label.radioitem {
+	clear: none;
+	margin: 0 0 0 25px;
+	padding: 0 0 15px;
+}
+
+#EmailForm input.checkbox,
+#EmailForm input#checkbox_1,
+#EmailForm input#checkbox_2,
+#EmailForm input#checkbox_3,
+#EmailForm input#checkbox_4 {
+	clear: both;
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+#EmailForm label.checkbox {
+	clear: none;
+	margin: 0 0 0 25px;
+	padding: 0 0 15px;
+}
+/* style the #EmailForm elements to look similar across browsers ... emulates Safari */
+#EmailForm label input,
+#EmailForm textarea {
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    padding: 0 2px;
+    height: 18px;
+    line-height: 20px;
+    background: #fff url(images/input-bg.gif) repeat-x top left;
+}
+#EmailForm input.checkbox,
+#EmailForm select {
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    background-color: #fff;    
+}
+#EmailForm textarea {
+	margin-top: 3px;
+	width: 383px;
+	height: auto;
+	display: block;
+}
+
+#EmailForm label input.calc {
+    text-align: right;
+    width: 100px;
+    clear: left;
+    padding: 0;
+}
+#EmailForm input.button {
+    clear: left;
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+	background-color: #EBE9ED;
+}
+
+
+/* Fixes for RichText widgets
+------------------------------------------------------------------------------- */
+.MODX_RichTextWidget {
+	float: left;
+}
+
+.MODX_RichTextWidget a {
+	border: 0px;
+}
+
+/* NL Stuff
+------------------------------------------------------------------------------- */
+.nl_summaryPost h3 {
+border-bottom: 1px solid #CCCCCC;
+margin: 0px !important;
+padding: 5px !important;
+color: black;
+}
+
+ .nl_summaryPost .nl_info {
+background-color: #F8F8F8;
+padding: 5px !important;
+font-size: 0.8em;
+color: black;
+}
+
+
+.nl_link {
+font-size: 76%;
+text-align: right;
+}
+
+
+.nl_paging {
+    border-top: 1px solid #ccc;
+    padding: 10px; 
+    font-size: 86%;
+    color: #618100;
+}
+#nl_pages #nl_currentpage {
+    border: 1px solid #618100;
+    padding: 1px 5px 2px; 
+    margin-right: 1px;
+    background-color: #9c0; 
+    color: #fff;
+} 
+#nl_pages .nl_off {
+    border: 1px solid #ccc;
+    padding: 1px 5px 2px; 
+    margin-right: 1px;
+    color: #ccc;
+}
+#nl_pages a, #nl_pages a:link, #nl_pages a:visited {
+    border: 1px solid #9c0; 
+    padding: 1px 5px 2px; 
+    margin-right: 1px; 
+    text-decoration: none !important; 
+    color: #618100;
+} 
+#nl_pages a:hover {
+    background-color: #fff;
+    color: #000;
+}
+#nl_archivelist ul {
+    list-style-type: none; 
+    margin-left: 15px; 
+    padding-left: 0;
+}
+#nl_archivelist ul ul{
+    list-style-type: square;
+    margin-left: 35px;
+} 
+#nl_archivelist .nl_month {
+    font-weight: bold;
+}
+
+/* MODx Icons
+------------------------------------------------------------------------------- */
+
+ #modxicon { 
+height: 32px; 
+width: 34px; 
+margin: 0 auto; 
+text-align: center; 
+float: right; 
+margin-top: -2em;
+
+}
+
+#modxicon a#modxicon32 {
+    margin: 0 auto;
+    width: 34px;
+    height: 32px;
+    display: block; 
+text-indent: -2000px; 
+text-align: center; 
+overflow: hidden;
+    background: transparent url(../../images/modx-icon.png) no-repeat 0 0;
+	
+
+}
+
+ #modxicon a#modxicon32:hover {
+    background: transparent url(../../images/modx-icon.png) no-repeat 0 -32px;
+    color: #111;
+}
+
+#modxicon a, #modxicon a:visited, #modxicon a:hover { 
+background: transparent; 
+border: 0;
+
+text-decoration: none; 
+}
+/* END */
+
+.stylebox {background-color: #F7F7F7; border: 1px solid #A0A0A0; padding: 5px;}
+.hide {display: none;}
+
+
+/* AJAX Search */
+
+
+        #ajaxSearch_form {
+            color: #444;
+            width: auto;
+        }
+        #ajaxSearch_input {
+            width: 70%;
+            display: inline;
+            height: 17px;
+            border: 1px solid #ddd;
+            border-left-color: #c3c3c3;
+            border-top-color: #7c7c7c;
+            margin: 0 6px 0 0;
+            padding: 3px;
+            vertical-align: top;
+			float: left;
+        }
+        #ajaxSearch_submit {
+            float: left;
+			background: url(../../snippets/AjaxSearch/search.gif) no-repeat center center;
+			text-indent: -9999px;
+			width: 25px;
+			height: 25px;
+			border: 0;
+			margin: 0;
+			padding: 0;
+        }
+        #ajaxSearch_output {
+            border: 1px solid #444;
+            padding: 10px;
+            background: #fff;
+            display: block;
+            height: auto;
+            vertical-align: top;
+        }
+        .ajaxSearch_paging {
+    
+        }
+        .AS_ajax_result {
+            color: #444;
+            margin-bottom: 3px;
+        }
+        .AS_resultLink {
+            text-decoration: underline;
+        }
+        .AS_resultDescription{
+            color: #555;
+        }
+        .AS_ajax_more {
+            color: #555;
+        }
+		#ajaxSearch_form img {
+			float: left;
+			border: 0;
+			margin: 0;
+			padding: 0;
+		}
+		.AS_intro {
+			clear: left;
+			visibility: hidden;
+			height: 0;
+			overflow: hidden;
+		}
+		
+/* END AJAX Search */
+
+
+#search fieldset, #sidebarlogin fieldset{
+	border: none;
+	margin: 0px;
+	padding: 0px;
+}
+#search form, #sidebarlogin form {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+#search label, #sidebarlogin label {
+color: #444444;
+}
+
+
+#search input, #sidebarlogin input {
+	border-top: 1px solid #75767B;
+	border-left: 1px solid #75767B;
+	border-bottom: 1px solid #B6B9C0;
+	border-right: 1px solid #B6B9C0;
+	height: 19px;
+}
+#sidebarlogin label {
+display: block;
+margin-top: 5px !important;
+}
+
+#sidebarlogin input {
+	width: 100%;
+}
+#sidebarlogin #checkbox_1 {	width: auto; float: right;}
+#sidebarlogin h3 {
+display: none;
+}
+.button {width: auto !important; height: auto !important; padding: 2px !important; margin-top: 5px !important; margin-bottom: 5px !important;}
+
+#sidebarlogin #forgotpsswd {
+	display: block;
+	font-size: 70% !important;
+}

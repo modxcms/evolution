@@ -1,0 +1,205 @@
+/* zi-modx-1 - An open source xhtml/css website template by Zaigham Rana - site: http://ziworks.com , blog: http://zidesigns.com. Free to use in any way and for any purpose as long as the proper credits are given to the original designer. */
+
+
+/* HTML & Body
+------------------------------------------------ */
+* { margin: 0; padding: 0 }
+
+html {
+	height: 95%;
+	margin-bottom: 1px;
+	font-size: 100%;
+	}
+
+body {
+	font: 76%/1.5em Verdana, Arial, Helvetica, sans-serif;
+	color: #333;
+	background:#fcfdf9 url(images/bodybg.jpg) top center repeat-y;
+	cursor: default;
+	margin-top: 10px;
+	}
+
+/* Headers and Paragraphs:
+------------------------------------------------ */
+#wrap h1, h2, h3, h4, h5, h6 {
+	font-family:  Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    line-height: 1.1em;
+    color: #444;
+    padding-bottom: 3px;
+    border-bottom: 2px solid #DCEDA9;
+	margin: 10px 0 5px 0;
+}
+h4, h5, h6 {
+    line-height: 1.3em;
+    border: 0;
+	margin: 5px 0 3px 0;
+}
+
+#wrap h1 { font-size: 218%; }
+h2 { font-size: 164%; }
+h3 { font-size: 145%; border-width: 1px }
+h4 { font-size: 118%; }
+h5 { font-size: 100%; font-weight: bold; }
+h6 { font-size: 86%; font-weight: bold; }
+p { margin: 10px 0 10px 0; }
+
+/* Layout
+------------------------------------------------ */
+#wrap {
+	width: 750px;
+	margin: 0 auto;
+	}
+
+#header {
+	background: transparent url(images/header-bg.png) no-repeat;
+	height: 106px;
+	margin: 0;
+	padding: 0;
+	}
+
+#contentwide, #contentfull {
+	padding: 10px 5px 10px 10px;
+	width: 490px;
+	float: right;
+	}
+
+#leftside {
+	width: 220px;
+	float: right;
+	padding: 10px 5px 30px 15px;
+	}
+
+#footer {
+	clear: both;
+	padding: 2px 10px 2px 10px;
+	background: #F7F7F7;
+	border-top: 2px solid #DCEDA9;
+	}
+	
+#footer #andreas {display: none;}
+#footer #zi {display: inline !important;}
+
+/* Content styling
+------------------------------------------------ */
+#contentwide ul, #contentwide li, #contentfull ul, #contentfull li {
+	margin-left: 15px;
+	}
+	
+#contentwide li, #contentfull li {
+       padding-top: 3px;
+       padding-bottom: 3px;
+}	
+
+a:link, a:visited {
+	color: #333;
+	background: #DCEDA9;
+	border-bottom: 1px solid #666;
+	text-decoration: none;
+	}
+
+a:hover {
+	color: #fff;
+	background: #555;
+	text-decoration: none;
+	}
+
+
+
+.nl_summaryPost h3 a:link, .nl_summaryPost h3 a:visited, .nl_info a:link, .nl_info a:visited{
+	color: black;
+	background: none;
+	border-bottom: none;
+	}
+
+.nl_summaryPost h3 a:hover, .nl_info a:hover {
+	color: black;
+	background: none;
+	border-bottom: none;
+
+	}
+	
+.nl_summaryPost .nl_info {
+	background-color: #eee;
+	}
+	
+
+
+/* Header 
+------------------------------------------------ */
+#header h1 {
+	text-align: center;
+	font-size: 300%;
+	margin: 0;
+	padding: 25px 0 0 0;
+	border: 0;
+	}
+
+#header a, #header a:link, #header a:visited {
+	color: #333;
+	background: transparent;
+	border: 0;
+	text-decoration: none;
+	}
+
+#header a:hover {
+	color: #111;
+	}
+#header h2, #header #mainmenu {display:none;}
+#slogan {
+	text-align: center;
+	margin: -3px 0 0 0;
+	text-transform: uppercase;
+	padding:0 ;
+	}
+
+/* leftside 
+------------------------------------------------ */
+#lmenu {display: block !important;}
+
+#leftside h1, #leftside h2, #leftside h3 {
+	background: #eee;
+	padding-left: 3px;
+	}
+
+#leftside #lmenu li {
+	list-style: none;
+	padding-left: 5px;
+	text-indent: 3px;
+	}
+
+#leftside #lmenu li a:link, #leftside #lmenu li a:visited {
+	display: block;
+	height: 1%;
+	background: #F7F7F7;
+	border-bottom: 1px solid #bbb;
+	}
+
+#leftside #lmenu li a:hover {
+	background: #DCEDA9;
+	color: #333;
+	}
+	
+#leftside #lmenu li ul {
+	display: none;
+	}
+
+#leftside .links li {
+	list-style: none;
+	}
+	
+/* Misc.
+------------------------------------------------ */
+
+abbr, acronym {
+	cursor: help;
+	border-bottom: 1px solid #666;
+	}
+
+.about {
+	font-size: 80%;
+	}
+
+#modxicon { 
+	margin-top: -3.5em !important;
+}

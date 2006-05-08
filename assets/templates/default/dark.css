@@ -1,0 +1,532 @@
+/* Fashion MODx - Designed by Andreas Viklund - http://andreasviklund.com - for MODxCMS */
+
+* {margin:0; padding:0;}
+
+/******** General tags ********/
+body {
+font:76% Verdana,Tahoma,Arial,sans-serif;
+background:#000000 url(images/sitebg.jpg) top left repeat-y;
+color:#f0f0f0;
+line-height:1.25em;
+margin:0 auto;
+padding:0;
+}
+
+a {
+text-decoration:none;
+color:#99cc00;
+font-weight:bold;
+}
+
+a img {border:0;}
+p {font-size:0.9em; margin:0 0 14px 5px;}
+ul,ol,dl {font-size:0.9em; margin:2px 0 16px 35px;}
+ul ul {margin:4px 0 4px 30px;}
+
+h2 {
+font-size:1.4em;
+text-transform:uppercase;
+border-bottom:2px solid #77aa00;
+margin:15px 5px 10px 0;
+padding:1px 2px 3px 1px;
+}
+
+h3 {
+font-size:1.2em;
+margin:10px 0 8px 0;
+padding:0;
+}
+
+blockquote{
+font-size:0.9em;
+background-color:#303030;
+border:1px solid #a0a0a0;
+margin:20px 10px;
+padding:8px;
+}
+
+blockquote p {margin:0;}
+
+/******** Main wrap ********/
+#wrap {
+color:#f0f0f0;
+width:760px;
+margin:0 0 0 17px;
+}
+
+/******** Header ********/
+#header {
+clear:both;
+background:#48571d url(images/header.jpg) top left no-repeat;
+border-bottom:1px solid #a0a0a0;
+}
+
+#title{
+float:left;
+width:450px;
+text-align:center;
+}
+
+#title h1 {
+font-size:3.8em;
+letter-spacing:-4px;
+color:#f0f0f0;
+padding:65px 0 20px 5px;
+}
+
+#title h1 a {color:#f0f0f0; text-decoration:none;}
+#title h1 a:hover {color:#99cc00;}
+
+#slogan {
+color:#f0f0f0;
+font-size:1.6em;
+letter-spacing:-1px;
+margin:0 0 10px 5px;
+}
+
+#mainmenu {
+width:300px;
+float:right;
+color:#ffffff;
+font-size:1.1em;
+text-transform:uppercase;
+border-left:1px solid #a0a0a0;
+margin:0;
+padding:1px 1px 0 1px;
+}
+
+#mainmenu ul{
+list-style:none;
+margin:0;
+padding:0;
+}
+
+#mainmenu li {
+list-style:none;
+border-bottom:1px solid #000000;
+}
+
+#mainmenu li a {
+font-weight:bold;
+text-decoration:none;
+color:#f0f0f0;
+background:url(images/mainmenubg.jpg) top left repeat-y;
+display:block;
+height:1.1em;
+padding:5px 0 5px 16px;
+}
+
+#mainmenu li a:hover {
+color:#ffffff;
+background:url(images/mainmenubg-hover.jpg) top left repeat-y;
+text-decoration:none;
+}
+
+#mainmenu .current {
+color:#303030;
+background:url(images/mainmenubg-current.jpg) top left repeat-y;
+}
+
+#mainmenu li .current:hover {
+color:#f0f0f0;
+background:url(images/mainmenubg-current.jpg) top left repeat-y;
+}
+
+/******** leftside, left sidebar ********/
+#leftside {
+clear:both;
+float:left;
+width:120px;
+background:url(images/leftsidebg.jpg) top right repeat-y;
+border-bottom:1px solid #a0a0a0;
+border-right:1px solid #a0a0a0;
+margin:0;
+padding:1px 10px 5px 10px;
+}
+
+#leftside h2{
+margin:15px 0 10px 0;
+font-size:1.1em;
+}
+
+#leftside ul{
+list-style:none;
+margin:0;
+padding:0 0 0 5px;;
+}
+
+#leftside li{
+list-style:none;
+margin:0 0 6px 0;
+padding:0;
+}
+
+#leftside li a{
+padding:3px;
+color:#f0f0f0;
+}
+
+#leftside li a:hover{
+padding:2px;
+text-decoration:none;
+border:1px solid #99cc00;
+}
+
+#leftside ul ul{
+margin:5px 0 5px 10px;
+line-height:1.2em;
+padding:0;
+}
+
+#leftside ul ul li a{
+font-weight:normal;
+}
+
+/******** Content variations ********/
+#contentwide {
+line-height:1.4em;
+text-align:left;
+margin:0 15px 0 155px;
+padding:0;
+}
+
+#contentfull {
+line-height:1.4em;
+text-align:left;
+margin:0 15px;
+padding:0;
+}
+
+#contentwide h2,#contentfull h2 {
+font-size:1.6em;
+margin:20px 0 10px;
+}
+
+#contentwide h3,#contentfull h3 {
+font-size:1.3em;
+margin:10px 0 8px;
+}
+
+/******** Footer ********/
+#footer {
+clear:both;
+width:760px;
+text-align:left;
+background-color:#303030;
+color:#f0f0f0;
+font-size:0.9em;
+border-top:1px solid #a0a0a0;
+border-bottom:1px solid #a0a0a0;
+margin:25px auto 0 auto;
+padding:4px 0;
+}
+
+#footer p {margin:3px 3px 3px 10px;}
+#footer a {color:#99cc00; text-decoration:none;}
+#footer a:hover, a:hover {color:#99cc00; text-decoration:underline;}
+
+/******** Various classes ********/
+.splitcontentleft {float:left; width:48%;}
+.splitcontentright {float:right; width:46%;}
+
+.important {
+background:#303030;
+text-align:center;
+color:#f0f0f0;
+border:1px solid #77aa00;
+padding:2px;
+}
+
+.infobox{
+width:240px;
+float:right;
+font-size:0.9em;
+background-color:#303030;
+border:1px solid #a0a0a0;
+margin:0 0 5px 20px;
+padding:5px;
+}
+
+.infobox p {margin:0;}
+.infobox ul{margin:0 0 0 25px;}
+.links a {font-weight:normal;}
+.links li {line-height:1.1em;}
+.left {float:left; margin:0 15px 4px 0;}
+.right {float:right; margin:0 0 4px 15px;}
+.textright {text-align:right;}
+.readmore {text-align:right; margin:-10px 10px 18px 0;}
+.center {text-align:center;}
+.green {color:#99cc00;}
+.big {font-size:1.3em;}
+.small {font-size:0.8em;}
+.bold {font-weight:bold;}
+.clear {clear:both;}
+.hide {display:none;}
+
+.photo {
+border:1px solid #a0a0a0;
+padding:2px;
+background-color:#303030;
+margin:6px 18px 2px 5px;
+}
+
+
+/* MODx Styles */
+
+/* UserComments 
+------------------------------------------------------------------------- */                        
+.comment {
+	color: black !important;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    padding: 10px;
+    overflow: hidden;
+}
+.commentAlt {
+    background-color: #f4f4f4;
+}
+.commentAuthor {
+    background-color: #ffc;    
+}
+.commentMe {
+    background-color: #ccf !important;
+    padding-top: 5px;
+}
+.commentNum {
+    font-family: Arial, sans-serif;
+    font-size: 50px;
+    line-height: 30px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #f2f2f2;
+    font-weight: bold;
+    letter-spacing: -4px;
+    z-index: 1;
+}
+.commentAlt .commentNum {
+    color: #eaeaea;
+}
+.commentMe .commentNum {
+    color: #b0b0ff;
+}
+.commentAuthor .commentNum {
+    color: #f3f3bb;
+}
+.commentTitle {
+    position: relative;
+    z-index: 10;
+    color: #999;
+}
+.commentTitle span {
+    text-transform: uppercase;
+    font-size: 86%;
+}
+.commentTitle strong {
+    color: #693;
+    font-size: 110%;
+    text-transform: none;
+    font-weight: normal;
+    margin-right: 6px;
+}
+.comment .content {
+    position: relative;
+    z-index: 10;
+}
+
+/* Forms 
+------------------------------------------------------------------------------- */
+form {
+	width: 360px;
+	text-align: left;
+	clear: both;
+	padding-bottom: 20px;
+	border: none;
+}
+form.full { width: 100%; }
+
+
+fieldset {
+    border: none;
+}
+
+legend {
+	display: none;
+}
+form h3 {
+	clear: both;
+	padding: 15px 0 5px;
+	font-size: 14px;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #000;
+	font-weight: bold;
+}
+
+form label,
+form p {
+	display: block;
+	clear: both;
+	width: 310px;
+	font-size: 1em;
+	line-height: 1.5em;
+	padding: 0 0 9px;
+}
+
+form input {
+	display: block;
+	margin-top: 3px;
+}
+
+form select {
+	float: left;
+	display: block;
+}
+
+form label.first,
+form label.city {
+    clear: left;
+    margin-right: 10px;
+    width: 150px;
+}
+
+form label.second,
+form label.state {
+	float: left;
+	clear: none;
+	margin: 0 10px 0 0;
+	width: 150px;
+}
+form label.state { width: 60px; }
+
+form label.first input,
+form label.city input,
+form label.second input {
+	float: left;
+	width: 150px;
+	padding: 0;
+}
+
+form label.state select {
+	width: 60px;
+	float: left;
+	margin-top: 3px;
+}
+
+form label.zip,
+form label.zip input {
+	float: left;
+	width: 80px;
+}
+form label.zip { clear: none; }
+
+form label {
+	float: left;
+	clear: left;
+	width: 310px;
+	margin: 0;
+	line-height: 1.5em;
+}
+
+form label input {
+	float: left;
+	width: 310px;
+	padding: 0;
+}
+
+form input.radio,
+form input#radiobutton_1,
+form input#radiobutton_2,
+form input#radiobutton_3,
+form input#radiobutton_4 {
+	clear: left;
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+form label.radio,
+form label.radioitem {
+	clear: none;
+	margin: 0 0 0 25px;
+	padding: 0 0 15px;
+}
+
+form input.checkbox,
+form input#checkbox_1,
+form input#checkbox_2,
+form input#checkbox_3,
+form input#checkbox_4 {
+	clear: both;
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+form label.checkbox {
+	clear: none;
+	margin: 0 0 0 25px;
+	padding: 0 0 15px;
+}
+/* style the form elements to look similar across browsers ... emulates Safari */
+form label input,
+form textarea {
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    padding: 0 2px;
+    height: 18px;
+    line-height: 20px;
+    background: #fff url(images/input-bg.gif) repeat-x top left;
+}
+form input.checkbox,
+form select {
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    background-color: #fff;    
+}
+form textarea {
+	margin-top: 3px;
+	width: 383px;
+	height: auto;
+	display: block;
+}
+
+form label input.calc {
+    text-align: right;
+    width: 100px;
+    clear: left;
+    padding: 0;
+}
+form input.button {
+    clear: left;
+}
+
+
+/* Fixes for RichText widgets
+------------------------------------------------------------------------------- */
+.MODX_RichTextWidget {
+	float: left;
+}
+
+.MODX_RichTextWidget a {
+	border: 0px;
+}
+
+#sidebarlogin {width:110px !important;}
+#sidebarlogin input {display: none !important; color: black !important;}
+#sidebarlogin fieldset input{width: 110px !important; display: block !important;}
+#sidebarlogin label{width: 110px !important; display:block !important; float: left;}
+
+#sidebarlogin #checkbox_1 {	width: auto !important; display: inline !important; position: relative; float: none !important; border: 0 !important; 	margin: 25px !important;}
+#sidebarlogin h3 {
+display: none; height: 0 !important; width: 0 !important;
+}
+.button {width: auto !important; height: auto !important; padding: 2px !important; margin-top: 5px !important; margin-bottom: 5px !important;}
+#sidebarlogin #forgotpsswd {
+	font-size: 70%;
+	display: block;
+	float: none !important;
+	margin: 0 !important;
+}

@@ -1,0 +1,18 @@
+#header, #leftside {
+	display: none !important;
+ 	clear: none !important;
+	float: none !important;
+	}
+
+#contentwide, #contentfull{
+	text-align:left !important;
+	margin:0 !important;
+	padding:0 !important;
+	clear: none !important;
+	float: none !important;
+	}
+
+* {
+	color: black !important;
+	background-color: white !important;
+	}

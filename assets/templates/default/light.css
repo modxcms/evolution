@@ -1,0 +1,269 @@
+/* Fashion Light - An open source xhtml/css website template by Andreas Viklund - http://andreasviklund.com . Free to use in any way and for any purpose as long as the proper credits are given to the original designer.
+
+Version: 1.0, February 27, 2006 */
+
+* {margin:0; padding:0;}
+
+/******** General tags ********/
+body {
+font:76% Verdana,Tahoma,Arial,sans-serif;
+background:#ebebeb url(images/sitebg_green.jpg) top left repeat-y;
+color:#505050;
+line-height:1.25em;
+margin:0 auto;
+padding:0;
+}
+
+a {
+text-decoration:none;
+color:#669900;
+font-weight:bold;
+}
+
+a img {border:0;}
+p {font-size:0.9em; margin:0 0 14px 5px;}
+ul,ol,dl {font-size:0.9em; margin:2px 0 16px 35px;}
+ul ul {margin:4px 0 4px 30px;}
+
+h2 {
+font-size:1.4em;
+text-transform:uppercase;
+border-bottom:2px solid #669900;
+margin:15px 5px 10px 0;
+padding:1px 2px 3px 1px;
+}
+
+h3 {
+font-size:1.2em;
+margin:10px 0 8px 0;
+padding:0;
+}
+
+blockquote{
+font-size:0.9em;
+background-color:#f0f0f0;
+border:1px solid #bababa;
+margin:20px 10px;
+padding:8px;
+}
+
+blockquote p {margin:0;}
+
+/******** Main wrap ********/
+#wrap {
+color:#505050;
+width:760px;
+margin:0 0 0 17px;
+}
+
+/******** Header ********/
+#header {
+clear:both;
+background:#e0e0e0 url(light_images/header.jpg) top left repeat-x;
+border-bottom:1px solid #bababa;
+}
+
+#title{
+float:left;
+width:450px;
+text-align:center;
+}
+
+#title h1 {
+font-size:3.8em;
+letter-spacing:-4px;
+color:#606060;
+padding:65px 0 20px 5px;
+}
+
+#title h1 a {color: #37421A; text-decoration:none;}
+#title h1 a:hover {color:#37421A;}
+
+#slogan {
+color:#808080;
+font-size:1.6em;
+letter-spacing:-1px;
+margin:0 0 10px 5px;
+}
+
+#mainmenu {
+width:300px;
+float:right;
+color:#f0f0f0;
+font-size:1.1em;
+text-transform:uppercase;
+margin:0;
+padding:1px 1px 0 1px;
+}
+
+#mainmenu ul{
+list-style:none;
+margin:0;
+padding:0;
+}
+
+#mainmenu li {
+list-style:none;
+border-top:1px solid #bababa;
+}
+
+#mainmenu li a {
+font-weight:bold;
+text-decoration:none;
+color:#808080;
+display:block;
+height:1.1em;
+padding:5px 0 5px 12px;
+}
+
+#mainmenu li a:hover {
+color:#505050;
+background:url(light_images/menuarrow.gif) center left no-repeat;
+text-decoration:none;
+}
+
+#mainmenu li .current {
+color:#505050;
+background: url(light_images/menuarrow.gif) center left no-repeat;
+}
+
+#mainmenu li .current:hover {
+color:#505050;
+background: url(light_images/menuarrow.gif) center left no-repeat;
+}
+
+/******** leftside, left sidebar ********/
+#leftside {
+clear:both;
+float:left;
+width:120px;
+background: url(light_images/leftsidebg.jpg) top right repeat-y;
+border-bottom:1px solid #bababa;
+border-right:1px solid #bababa;
+margin:0;
+padding:1px 10px 5px 10px;
+}
+
+#leftside h2{
+margin:15px 0 10px 0;
+font-size:1.1em;
+}
+
+#leftside ul{
+list-style:none;
+margin:0;
+padding:0 0 0 5px;;
+}
+
+#leftside li{
+list-style:none;
+margin:0 0 4px 0;
+padding:0;
+}
+
+#leftside li a{
+padding:2px;
+}
+
+#leftside li a:hover{
+}
+
+#leftside ul ul{
+margin:3px 0 3px 10px;
+line-height:1.2em;
+padding:0;
+}
+
+#leftside ul ul li a{
+font-weight:normal;
+}
+
+/******** Content variations ********/
+#contentwide {
+background-color: white;
+line-height:1.4em;
+text-align:left;
+margin:0 15px 0 155px;
+padding:0;
+}
+
+#contentfull {
+background-color: white;
+line-height:1.4em;
+text-align:left;
+margin:0 15px;
+padding:0;
+}
+
+#contentwide h2,#contentfull h2 {
+font-size:1.6em;
+margin:20px 0 10px;
+}
+
+#contentwide h3,#contentfull h3 {
+font-size:1.3em;
+margin:10px 0 8px;
+}
+
+/******** Footer ********/
+#footer {
+clear:both;
+width:760px;
+text-align:left;
+background-color:#f8f8f8;
+color:#808080;
+font-size:0.9em;
+border-top:1px solid #bababa;
+border-bottom:1px solid #bababa;
+margin:25px auto 0 auto;
+padding:4px 0;
+}
+
+#footer p {margin:3px 3px 3px 10px;}
+#footer a {color:#505050; text-decoration:none;}
+#footer a:hover, a:hover {text-decoration:underline;}
+
+/******** Various classes ********/
+.splitcontentleft {float:left; width:48%;}
+.splitcontentright {float:right; width:46%;}
+
+.important {
+background:#f8f8f8;
+text-align:center;
+color:#505050;
+border:1px solid #bababa;
+padding:2px;
+}
+
+.infobox{
+width:240px;
+float:right;
+font-size:0.9em;
+background-color:#f8f8f8;
+border:1px solid #bababa;
+margin:0 0 5px 20px;
+padding:5px;
+}
+
+.infobox p {margin:0;}
+.infobox ul{margin:0 0 0 25px;}
+.links a {font-weight:normal;}
+.links li {line-height:1.1em;}
+.left {float:left; margin:0 15px 4px 0;}
+.right {float:right; margin:0 0 4px 15px;}
+.textright {text-align:right;}
+.readmore {text-align:right; margin:-10px 10px 18px 0;}
+.center {text-align:center;}
+.blue {color:#4088b8;}
+.big {font-size:1.2em;}
+.small {font-size:0.8em;}
+.bold {font-weight:bold;}
+.clear {clear:both;}
+.hide {display:none;}
+
+.photo {
+border:1px solid #bababa;
+padding:2px;
+background-color:#ffffff;
+margin:6px 18px 2px 5px;
+}
