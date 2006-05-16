@@ -9,7 +9,7 @@ $_SESSION['browser_version']=$version;
 <head>
 <title><?php echo $site_name." - (MODx CMS Manager)"; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
-<script language="JavaScript" src="../media/script/session.js"></script>
+<script language="JavaScript" src="media/script/session.js"></script>
 </head>
 <frameset rows="0,20,50,*" frameborder="0" border="0">
 	<frame src="index.php?a=1&f=scripter" name="scripter" scrolling="no" noresize>
