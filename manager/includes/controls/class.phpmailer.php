@@ -125,7 +125,7 @@ class PHPMailer
      *  Holds PHPMailer version.
      *  @var string
      */
-    var $Version           = "1.72";
+    var $Version           = "1.73";
 
     /**
      * Sets the email address that a reading confirmation will be sent.
@@ -220,9 +220,9 @@ class PHPMailer
     var $boundary        = array();
     var $language        = array();
     var $error_count     = 0;
-    var $LE              = "\r\n";
+    var $LE              = "\n";
     /**#@-*/
-	
+    
     /////////////////////////////////////////////////
     // VARIABLE METHODS
     /////////////////////////////////////////////////
@@ -743,7 +743,7 @@ class PHPMailer
         {
            case "alt":
               // fall through
-           case "alt_attachment":
+           case "alt_attachments":
               $this->AltBody = $this->WrapText($this->AltBody, $this->WordWrap);
               break;
            default:
@@ -950,7 +950,7 @@ class PHPMailer
      * @access private
      * @return void
      */
-    function SetMessageType() {        
+    function SetMessageType() {
         if(count($this->attachment) < 1 && strlen($this->AltBody) < 1)
             $this->message_type = "plain";
         else
@@ -1090,9 +1090,12 @@ class PHPMailer
             $this->SetError($this->Lang("file_open") . $path);
             return "";
         }
+        $magic_quotes = get_magic_quotes_runtime();
+        set_magic_quotes_runtime(0);
         $file_buffer = fread($fd, filesize($path));
         $file_buffer = $this->EncodeString($file_buffer, $encoding);
         fclose($fd);
+        set_magic_quotes_runtime($magic_quotes);
 
         return $file_buffer;
     }
@@ -1458,7 +1461,7 @@ class PHPMailer
      * @return string
      */
     function Lang($key) {
-        if(count($this->language) < 1) 
+        if(count($this->language) < 1)
             $this->SetLanguage("en"); // set the default language
     
         if(isset($this->language[$key]))
