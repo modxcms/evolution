@@ -175,7 +175,7 @@ function saveDocumentAccessPermissons(){
 		$sql = "DELETE FROM $dbase.".$table_prefix."site_tmplvar_access WHERE tmplvarid=$id;";
 		$rs = mysql_query($sql);
 		if(!$rs){
-			echo "An error occured while attempting to delete previous temlate variable access permission entries.";
+			echo "An error occurred while attempting to delete previous template variable access permission entries.";
 			exit;
 		}	
 		if(is_array($docgroups)) {
