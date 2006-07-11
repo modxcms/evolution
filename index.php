@@ -51,7 +51,7 @@ $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[
 // secure variables from outside
 // added 03-05-06
 foreach(array('HTTP_REFERER','HTTP_USER_AGENT') as $outside) {
-  $_SERVER[$outside] = isset($_SERVER[$outside]) ? preg_replace("/[^A-Za-z0-9_\-\,\.\/\s]/", "", $_SERVER[$outside]): '';
+  $_SERVER[$outside] = isset($_SERVER[$outside]) ? preg_replace("/[^A-Za-z0-9_\-\,\.\:\/\s]/", "", $_SERVER[$outside]): '';
   if(strlen($_SERVER[$outside])>255) $_SERVER[$outside] = substr(0,255,$_SERVER[$outside]);
 }
 if(isset($_GET['q'])) $_GET['q'] = preg_replace("/[^A-Za-z0-9_\-\.\/]/", "", $_GET['q']);
