@@ -94,24 +94,24 @@ EOD;
 			case "floater":
 				$value = parseInput($value," ");
 				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
-				$o = "<script>";
+				$o = "<script type=\"text/javascript\">";
 				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('floater');});";
 				$o.= "	document.addEventListener('onload',function(){var o = new Floater('$id','".addslashes(mysql_escape_string($value))."','".$params['x']."','".$params['y']."','".$params['pos']."','".$params['gs']."');});";
 				$o.= "</script>";
-				$o.= "<script>Floater.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";				
+				$o.= "<script type=\"text/javascript\">Floater.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";				
 				break;
 								
 			case "marquee":
 				$transfx = ($params['tfx']=='Horizontal') ? 2:1;
 				$value = parseInput($value," ");
 				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
-				$o = "<script>";
+				$o = "<script type=\"text/javascript\">";
 				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('marquee');});";
 				$o.= "	document.addEventListener('onload',function(){var o = new Marquee('$id','".addslashes(mysql_escape_string($value))."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); o.start()});";
 				$o.= "</script>";
-				$o.= "<script>Marquee.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
+				$o.= "<script type=\"text/javascript\">Marquee.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;
 
 			case "ticker":
@@ -120,7 +120,7 @@ EOD;
 				if ($delim=="\\n") $delim = "\n";
 				$value = parseInput($value,$delim,"array");
 				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
-				$o = "<script>";
+				$o = '<script type="text/javascript">';
 				$o.= "	document.setIncludePath('manager/media/script/bin/');";
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('ticker');});";
 				$o.= "	document.addEventListener('onload',function(){";
@@ -130,7 +130,7 @@ EOD;
 				}
 				$o.= "	});";
 				$o.= "</script>";
-				$o.= "<script>Ticker.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
+				$o.= "<script type=\"text/javascript\">Ticker.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;
 				
 			case "hyperlink":
