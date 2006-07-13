@@ -255,7 +255,7 @@ switch ($actionToTake) {
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 								
 		$sql = "INSERT INTO $dbase.".$table_prefix."site_content(introtext,content, pagetitle, longtitle, type, description, alias, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
-				VALUES('".$introtext."','".$content."', '".$pagetitle."', '".$longtitle."', '".$type."', '".$description."', '".$alias."', '".$isfolder."', '".$richtext."', '".$published."', '".$parent."', '".$template."', '".$menuindex."', '".$searchable."', '".$cacheable."', '".$modx->getLoginUserID()."', ".time().", '".$modx->getLoginUserID()."', ".time().", ".$publishedon.", ".$publishedby.", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
+				VALUES('".$introtext."','".$content."', '".$pagetitle."', '".$longtitle."', '".$type."', '".$description."', '".$alias."', '".$isfolder."', '".$richtext."', '".$published."', '".$parent."', '".$template."', '".$menuindex."', '".$searchable."', '".$cacheable."', '".$modx->getLoginUserID()."', ".time().", '".$modx->getLoginUserID()."', ".time().", ".$publishedby.", ".$publishedon.", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
 
 		$rs = mysql_query($sql);
 		if(!$rs){
