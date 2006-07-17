@@ -22,28 +22,21 @@
 class SlimStatConfig {
 	/** Whether SlimStat is enabled */
 	var $enabled = true;
-
-/***** start manual config area required *****/
-
-	/** Database connection -- pull these from your manager/includes config.inc.php file */
+	
+	/** Database connection */
 	var $server = "localhost"; // Leave as localhost unless you know otherwise
 	var $username = ""; // The username used to access your database
 	var $password = ""; // The password used to access your database
 	var $database = ""; // The database containing the stats table
-
-	/** The full name of your site -- copy from your site config */
-	var $sitename = "";
-
-	/** Maximum amount of time to keep data, in days */
-	var $max_data_age_days = 92;
-
-/***** end manual config area required *****/
-
+	
 	/** Database tables */
 	var $stats = "slimstat"; // Primary stats table
 	var $dt_table = "slimstat_dt"; // Date/time totals table
 	var $countries = "slimstat_iptocountry"; // IP-to-country lookup table
-		
+	
+	/** The full name of your site */
+	var $sitename = "";
+	
 	/** Whether to use gzip handler in the buffer */
 	var $use_gzip = false;
 
@@ -51,17 +44,17 @@ class SlimStatConfig {
 	var $show_visits = true;
 	
 	/** Whether to display number of unique IP addresses */
-	var $show_uniques = true;
+	var $show_uniques = false;
 	
 	/** Whether to display hits from crawlers */
-	var $show_crawlers = true;
+	var $show_crawlers = false;
 	
 	/** Whether to log hits from crawlers. The database will be smaller if
 	this is disabled */
-	var $log_crawlers = true;
+	var $log_crawlers = false;
 	
 	/** Whether to look up and show hostnames (nice, but possibly slow) */
-	var $show_hostnames = true;
+	var $show_hostnames = false;
 	
 	/** Maximum number of rows displayed in each table */
 	var $rows = 50;
@@ -73,7 +66,7 @@ class SlimStatConfig {
 	var $truncate_medium = 55;
 	
 	/** Don't log hits from these IP ranges */
-	var $ignored_ips = array( "192.168.", "10.", "127." );
+	var $ignored_ips = array( "10." );
 	
 	/** Whether to record user-agent strings in the database. The database
 	will be smaller if this is disabled */
@@ -81,7 +74,7 @@ class SlimStatConfig {
 	
 	/** Show data in this order. One of "hits", "visits" or "uniques". Note
 	the last two only work if $show_visits or $show_uniques is enabled */
-	var $order_by = "uniques";
+	var $order_by = "visits";
 	
 	/** How many hours your local time is ahead of server time */
 	var $dt_offset_hrs = 0;
@@ -95,6 +88,9 @@ class SlimStatConfig {
 	
 	/** Which day of the week to start on. 0=Sunday, 1=Monday, etc. */
 	var $week_start_day = 0;
+	
+	/** Maximum amount of time to keep data, in days */
+	var $max_data_age_days = 365;
 	
 	/** Don't log hits from referring domains containing these words */
 	var $spam_words = array(
@@ -213,8 +209,9 @@ class SlimStatConfig {
 		"125" => 0.61, "126" => 1.07
 	);
 	
-	function SlimStatConfig() {
-		$this->hour = 60 * 60;
+    function SlimStatConfig() {
+		global $modx;
+        $this->hour = 60 * 60;
 		$this->day = $this->hour * 24;
 		$this->week = $this->day * 7;
 		$this->visit_length = $this->hour / 2;
@@ -222,12 +219,12 @@ class SlimStatConfig {
 		
 		$this->dt_offset_secs = $this->dt_offset_hrs * $this->hour;
 		
-		if ( file_exists( realpath( dirname( __FILE__ ) )."/i18n/".preg_replace( "[^A-Za-z\-]", "", $this->language )."/index.php" ) ) {
-			include_once( realpath( dirname( __FILE__ ) )."/i18n/".preg_replace( "[^A-Za-z\-]", "", $this->language )."/index.php" );
+		if ( file_exists( $modx->config['base_path'] . "assets/plugins/slimstats/i18n/".preg_replace( "[^A-Za-z\-]", "", $this->language )."/index.php" ) ) {
+			include_once( $modx->config['base_path'] . "assets/plugins/slimstats/i18n/".preg_replace( "[^A-Za-z\-]", "", $this->language )."/index.php" );
 			$this->i18n = new SlimStatI18n( $this );
 		} else { // fall back on en-gb
 			$this->language = "en-gb";
-			include_once( realpath( dirname( __FILE__ ) )."/i18n/en-gb/index.php" );
+			include_once( $modx->config['base_path'] . "assets/plugins/slimstats/i18n/en-gb/index.php" );
 			$this->i18n = new SlimStatI18n( $this );
 		}
 		
@@ -237,7 +234,7 @@ class SlimStatConfig {
 			setlocale( LC_ALL, substr( $this->language, 0, 2 )."_".strtoupper( substr( $this->language, 0, 2 ) ) );
 		}
 	}
-	
+    	
 	function ems( $_ord ) {
 		if ( array_key_exists( strval( $_ord ), $this->ems_values ) ) {
 			return $this->ems_values[strval( $_ord )];
@@ -247,9 +244,15 @@ class SlimStatConfig {
 	}
 	
 	function &get_instance() {
-		static $instance = array();
+		global $modx;
+        static $instance = array();
 		if ( empty( $instance ) ) {
 			$instance[] =& new SlimStatConfig();
+            $instance[0]->server= $modx->db->config['host'];
+            $instance[0]->username= $modx->db->config['user'];
+            $instance[0]->password= $modx->db->config['pass'];
+            $instance[0]->database= str_replace('`', '', $modx->db->config['dbase']);
+            $instance[0]->sitename= $modx->config['site_name'];
 		}
 		return $instance[0];
 	}

@@ -48,32 +48,6 @@ class DocumentParser {
     }		
   }
 
-  function checkCookie() {
-    $cookieKey = 'MODxLoggingCookie';
-    if(isset($_COOKIE[$cookieKey])) {
-      $this->visitor = $_COOKIE[$cookieKey];
-      if(isset($_SESSION['_logging_first_hit'])) {
-        $this->entrypage = 0;
-      }
-      else {
-        $this->entrypage = 1;
-        $_SESSION['_logging_first_hit'] = 1;
-      }
-    }
-    else {
-      if (function_exists('posix_getpid')) {
-        $visitor = crc32(microtime().posix_getpid());
-      }
-      else {
-        $visitor = crc32(microtime().session_id());
-      }
-      $this->visitor = $visitor;
-      $this->entrypage = 1;
-      setcookie($cookieKey, $visitor, time()+(365*24*60*60), '/', '');
-    }
-  }
-
-
   function getMicroTime() {
     list($usec, $sec) = explode(' ', microtime());
     return ((float)$usec + (float)$sec);
@@ -967,7 +941,7 @@ class DocumentParser {
 
       // check the logging cookie
       if($this->config['track_visitors']==1 && !isset($_REQUEST['z'])) {
-        $this->checkCookie();
+//        $this->checkCookie(); //TODO: replace this with proper call to a qualified logging tool
       }
 
       // find out which document we need to display
@@ -1110,7 +1084,8 @@ class DocumentParser {
   /* API functions																/
   /***************************************************************************************/
 
-  function getParentIds($id, $parents= array()) {
+  function getParentIds($id, $height= 10, $parents= array()) {
+    $parentId= 0;
     foreach ($this->documentMap as $mapEntry) {
       $parentId= array_search($id, $mapEntry);
       if ($parentId) {
@@ -1122,11 +1097,13 @@ class DocumentParser {
         break;
       }
     }
-    if ($parentId) { $parents= $parents + $this->getParentIds($parentId, $parents); }
+    $height--;
+    if ($parentId && $height) { $parents= $parents + $this->getParentIds($parentId, $height, $parents); }
     return $parents;
   }
 
-  function getChildIds($id, $children= array()) {
+  function getChildIds($id, $depth= 10, $children= array()) {
+    $c= null;
     foreach ($this->documentMap as $mapEntry) {
       if (isset ($mapEntry[$id])) {
         $childId= $mapEntry[$id];
@@ -1137,14 +1114,17 @@ class DocumentParser {
         $c[$childKey]= $childId;
       }
     }
+    $depth--;
     if (is_array($c)) {
       if (is_array($children)) {
         $children= $children + $c;
       } else {
         $children= $c;
       }
-      foreach ($c as $child) {
-        $children= $children + $this->getChildIds($child, $children);
+      if ($depth) {
+          foreach ($c as $child) {
+            $children= $children + $this->getChildIds($child, $depth, $children);
+          }
       }
     }
     return $children;
@@ -2410,325 +2390,6 @@ See documentation for usage details
     $this->outputContent(true); // generate output without events
 
     exit;
-  }
-
-
-  // Parsing functions used in this class are based on/ inspired by code by Sebastian Bergmann.
-  // The regular expressions used in this class are taken from the ModLogAn (http://jan.kneschke.de/projects/modlogan/) project.
-  function log() {
-    $user_agents = array();
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \(compatible; iCab ([^;]); ([^;]); [NUI]; ([^;])\)#', 'string' => 'iCab $1');
-    $user_agents[] = array('pattern' => '#^Opera/(\d+\.\d+) \(([^;]+); [^)]+\)#', 'string' => 'Opera $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \(compatible; MSIE [^;]+; ([^)]+)\) Opera (\d+\.\d+)#', 'string' => 'Opera $2');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \(([^;]+); [^)]+\) Opera (\d+\.\d+)#', 'string' => 'Opera $2');
-    $user_agents[] = array('pattern' => '#^Mozilla/[1-9]\.0 ?\(compatible; MSIE ([1-9]\.[0-9b]+);(?: ?[^;]+;)*? (Mac_[^;)]+|Windows [^;)]+)(?:; [^;]+)*\)#', 'string' => 'Internet Explorer $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \([^;]+; [NIU]; ([^;]+); [^;]+; Galeon\) Gecko/\d{8}$#', 'string' => 'Galeon');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \([^;]+; [NIU]; Galeon; [^;]+; ([^;)]+)\)$#', 'string' => 'Galeon $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ Galeon/([0-9.]+) \(([^;)]+)\) Gecko/\d{8}$#', 'string' => 'Galeon $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \([^;]+; [NIU]; ([^;]+); [^;]+; rv:[^;]+(?:; [^;]+)*\) Gecko/\d{8} ([a-zA-Z ]+/[0-9.b]+)#', 'string' => '$2');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \([^;]+; [NIU]; ([^;]+); [^;]+; rv:([^;]+)(?:; [^;]+)*\) Gecko/\d{8}$#', 'string' => 'Mozilla $2');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \([^;]+; [NIU]; ([^;]+); [^;]+; (m\d+)(?:; [^;]+)*\) Gecko/\d{8}$#', 'string' => 'Mozilla $2');
-    $user_agents[] = array('pattern' => '#^Mozilla/\d+\.\d+ \([^;]+; [NIU]; ([^;]+)(?:; [^;]+)*\) Mozilla/(.+)$#', 'string' => 'Mozilla $2');
-    $user_agents[] = array('pattern' => '#^Mozilla/4\.(\d+)[^(]+\(X11; [NIU] ?; ([^;]+)(?:; [^;]+)*\)#', 'string' => 'Netscape 4.$1');
-        $user_agents[] = array('pattern' => '#^Mozilla/4\.(\d+)[^(]+\((OS/2|Linux|Macintosh|Win[^;]*)[;,] [NUI] ?[^)]*\)#', 'string' => 'Netscape 4.$1');
-        $user_agents[] = array('pattern' => '#^Mozilla/3\.(\d+)\S*[^(]+\(X11; [NIU] ?; ([^;]+)(?:; [^;)]+)*\)#', 'string' => 'Netscape 3.$1');
-        $user_agents[] = array('pattern' => '#^Mozilla/3\.(\d+)\S*[^(]+\(([^;]+); [NIU] ?(?:; [^;)]+)*\)#', 'string' => 'Netscape 3.$1');
-        $user_agents[] = array('pattern' => '#^Mozilla/2\.(\d+)\S*[^(]+\(([^;]+); [NIU] ?(?:; [^;)]+)*\)#', 'string' => 'Netscape 2.$1');
-        $user_agents[] = array('pattern' => '#^Mozilla \(X11; [NIU] ?; ([^;)]+)\)#', 'string' => 'Netscape');
-    $user_agents[] = array('pattern' => '#^Mozilla/3.0 \(compatible; StarOffice/(\d+)\.\d+; ([^)]+)\)$#', 'string' => 'StarOffice $1');
-    $user_agents[] = array('pattern' => '#^ELinks \((.+); (.+); .+\)$#', 'string' => 'ELinks $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/3\.0 \(compatible; NetPositive/([0-9.]+); BeOS\)$#', 'string' => 'NetPositive $1');
-    $user_agents[] = array('pattern' => '#^Konqueror/(\S+)$#', 'string' => 'Konqueror $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/5\.0 \(compatible; Konqueror/([^;]); ([^)]+)\).*$#', 'string' => 'Konqueror $1');
-    $user_agents[] = array('pattern' => '#^Lynx/(\S+)#', 'string' => 'Lynx/$1');
-    $user_agents[] = array('pattern' => '#^Mozilla/4.0 WebTV/(\d+\.\d+) \(compatible; MSIE 4.0\)$#', 'string' => 'WebTV $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/4.0 \(compatible; MSIE 5.0; (Win98 A); (ATHMWWW1.1); MSOCD;\)$#', 'string' => '$2');
-    $user_agents[] = array('pattern' => '#^(RMA/1.0) \(compatible; RealMedia\)$#', 'string' => '$1');
-    $user_agents[] = array('pattern' => '#^antibot\D+([0-9.]+)/(\S+)#', 'string' => 'antibot $1');
-    $user_agents[] = array('pattern' => '#^Mozilla/[1-9]\.\d+ \(compatible; ([^;]+); ([^)]+)\)$#', 'string' => '$1');
-    $user_agents[] = array('pattern' => '#^Mozilla/([1-9]\.\d+)#', 'string' => 'compatible Mozilla/$1');
-    $user_agents[] = array('pattern' => '#^([^;]+)$#', 'string' => '$1');
-    $GLOBALS['user_agents'] = $user_agents;
-
-    $operating_systems = array();
-    $operating_systems[] = array('pattern' => '#Win.*NT 5.0#', 'string' => 'Windows 2000');
-    $operating_systems[] = array('pattern' => '#Win.*NT 5.1#', 'string' => 'Windows XP');
-    $operating_systems[] = array('pattern' => '#Win.*(XP|2000|ME|NT|9.?)#', 'string' => 'Windows $1');
-    $operating_systems[] = array('pattern' => '#Windows .*(3\.11|NT)#', 'string' => 'Windows $1');
-    $operating_systems[] = array('pattern' => '#Win32#', 'string' => 'Windows [unknown version)');
-    $operating_systems[] = array('pattern' => '#Linux 2\.(.?)\.#', 'string' => 'Linux 2.$1.x');
-    $operating_systems[] = array('pattern' => '#Linux#', 'string' => 'Linux (unknown version)');
-    $operating_systems[] = array('pattern' => '#FreeBSD .*-CURRENT$#', 'string' => 'FreeBSD Current');
-    $operating_systems[] = array('pattern' => '#FreeBSD (.?)\.#', 'string' => 'FreeBSD $1.x');
-    $operating_systems[] = array('pattern' => '#NetBSD 1\.(.?)\.#', 'string' => 'NetBSD 1.$1.x');
-    $operating_systems[] = array('pattern' => '#(Free|Net|Open)BSD#', 'string' => '$1BSD [unknown version]');
-    $operating_systems[] = array('pattern' => '#HP-UX B\.(10|11)\.#', 'string' => 'HP-UX B.$1.xP');
-    $operating_systems[] = array('pattern' => '#IRIX(64)? 6\.#', 'string' => 'IRIX 6.x');
-    $operating_systems[] = array('pattern' => '#SunOS 4\.1#', 'string' => 'SunOS 4.1.x');
-    $operating_systems[] = array('pattern' => '#SunOS 5\.([4-6])#', 'string' => 'Solaris 2.$1.x');
-    $operating_systems[] = array('pattern' => '#SunOS 5\.([78])#', 'string' => 'Solaris $1.x');
-    $operating_systems[] = array('pattern' => '#Mac_PowerPC#', 'string' => 'Mac OS [PowerPC]');
-    $operating_systems[] = array('pattern' => '#Mac#', 'string' => 'Mac OS');
-    $operating_systems[] = array('pattern' => '#X11#', 'string' => 'UNIX [unknown version]');
-    $operating_systems[] = array('pattern' => '#Unix#', 'string' => 'UNIX [unknown version]');
-    $operating_systems[] = array('pattern' => '#BeOS#', 'string' => 'BeOS [unknown version]');
-    $operating_systems[] = array('pattern' => '#QNX#', 'string' => 'QNX [unknown version]');
-    $GLOBALS['operating_systems'] = $operating_systems;
-
-    // fix for stupid browser shells sending lots of requests
-    if(strpos($_SERVER['HTTP_USER_AGENT'], "http://www.avantbrowser.com") > -1) {
-      exit;
-    }
-
-    if(strpos($_SERVER['HTTP_USER_AGENT'], "WebDAV") > -1) {
-      exit;
-    }
-
-    //work out browser and operating system
-    $user_agent = $this->useragent($_SERVER['HTTP_USER_AGENT']);
-    $os = crc32($user_agent['operating_system']);
-    $ua = crc32($user_agent['user_agent']);
-
-    //work out access time data
-    $accesstime = getdate();
-    $hour = $accesstime['hours'];
-    $weekday = $accesstime['wday'];
-
-    // work out the host
-    if (isset($_SERVER['REMOTE_ADDR'])) {
-      $hostname = $_SERVER['REMOTE_ADDR'];
-      if (isset($_SERVER['REMOTE_HOST'])) {
-        $hostname = $_SERVER['REMOTE_HOST'];
-      } else {
-        if ($this->config['resolve_hostnames']==1) {
-          $hostname = gethostbyaddr($hostname); // should be an IP address
-        }
-      }
-    } else {
-      $hostname = 'Unknown';
-    }
-    $host = crc32($hostname);
-
-    // work out the referer
-    $referer = isset($_SERVER['HTTP_REFERER'])? urldecode($_SERVER['HTTP_REFERER']): '';
-    if(empty($referer)) {
-      $referer = "Unknown";
-    } else {
-      $pieces = parse_url($referer);
-      $referer = $pieces['scheme']."://".$pieces['host'].$pieces['path'];
-    }
-    if(strpos($referer, $_SERVER['SERVER_NAME'])>0) {
-      $referer = "Internal";
-    }
-    $ref = crc32($referer);
-
-    if($this->documentIdentifier==0) {
-      $docid=$this->config['error_page'];
-    } else {
-      $docid=$this->documentIdentifier;
-    }
-
-    if($docid==$this->config['error_page']) {
-      exit; //stop logging 404's
-    }
-
-    // log the access hit
-    $tbl = $this->getFullTableName("log_access");
-    $sql = "INSERT INTO $tbl(visitor, document, timestamp, hour, weekday, referer, entry) VALUES('".$this->visitor."', '".$docid."', '".(time()+$this->config['server_offset_time'])."', '".$hour."', '".$weekday."', '".$ref."', '".$this->entrypage."')";
-    $result = $this->dbQuery($sql);
-
-    // check if the visitor exists in the database
-    if(!isset($_SESSION['visitorLogged'])) {
-      $tbl = $this->getFullTableName("log_visitors");
-      $sql = "SELECT COUNT(*) FROM $tbl WHERE id='".$this->visitor."'";
-      $result = $this->dbQuery($sql);
-      $tmp = $this->fetchRow($result);
-      $_SESSION['visitorLogged'] = $tmp['COUNT(*)'];
-    } else {
-      $_SESSION['visitorLogged'] = 1;
-    }
-
-    // log the visitor
-    if($_SESSION['visitorLogged']==0) {
-      $tbl = $this->getFullTableName("log_visitors");
-      $sql = "INSERT INTO $tbl(id, os_id, ua_id, host_id) VALUES('".$this->visitor."', '".crc32($user_agent['operating_system'])."', '".$ua."', '".$host."')";
-      $result = $this->dbQuery($sql);
-      $_SESSION['visitorLogged'] = 1;
-    }
-
-    // check if the user_agent exists in the database
-    if(!isset($_SESSION['userAgentLogged'])) {
-      $tbl = $this->getFullTableName("log_user_agents");
-      $sql = "SELECT COUNT(*) FROM $tbl WHERE id='".$ua."'";
-      $result = $this->dbQuery($sql);
-      $tmp = $this->fetchRow($result);
-      $_SESSION['userAgentLogged'] = $tmp['COUNT(*)'];
-    } else {
-      $_SESSION['userAgentLogged'] = 1;
-    }
-
-    // log the user_agent
-    if($_SESSION['userAgentLogged']==0) {
-      $tbl = $this->getFullTableName("log_user_agents");
-      $sql = "INSERT INTO $tbl(id, data) VALUES('".$ua."', '".$user_agent['user_agent']."')";
-      $result = $this->dbQuery($sql);
-      $_SESSION['userAgentLogged'] = 1;
-    }
-
-    // check if the os exists in the database
-    if(!isset($_SESSION['operatingSystemLogged'])) {
-      $tbl = $this->getFullTableName("log_operating_systems");
-      $sql = "SELECT COUNT(*) FROM $tbl WHERE id='".$os."'";
-      $result = $this->dbQuery($sql);
-      $tmp = $this->fetchRow($result);
-      $_SESSION['operatingSystemLogged'] = $tmp['COUNT(*)'];
-    } else {
-      $_SESSION['operatingSystemLogged'] = 1;
-    }
-
-    // log the os
-    if($_SESSION['operatingSystemLogged']==0) {
-      $tbl = $this->getFullTableName("log_operating_systems");
-      $sql = "INSERT INTO $tbl(id, data) VALUES('".$os."', '".$user_agent['operating_system']."')";
-      $result = $this->dbQuery($sql);
-      $_SESSION['operatingSystemLogged'] = 1;
-    }
-
-    // check if the hostname exists in the database
-    if(!isset($_SESSION['hostNameLogged'])) {
-      $tbl = $this->getFullTableName("log_hosts");
-      $sql = "SELECT COUNT(*) FROM $tbl WHERE id='".$host."'";
-      $result = $this->dbQuery($sql);
-      $tmp = $this->fetchRow($result);
-      $_SESSION['hostNameLogged'] = $tmp['COUNT(*)'];
-    } else {
-      $_SESSION['hostNameLogged'] = 1;
-    }
-
-    // log the hostname
-    if($_SESSION['hostNameLogged']==0) {
-      $tbl = $this->getFullTableName("log_hosts");
-      $sql = "INSERT INTO $tbl(id, data) VALUES('".$host."', '".$hostname."')";
-      $result = $this->dbQuery($sql);
-      $_SESSION['hostNameLogged'] = 1;
-    }
-
-    // log the referrer
-    $tbl = $this->getFullTableName("log_referers");
-    $sql = "REPLACE INTO $tbl(id, data) VALUES('".$ref."', '".$referer."')";
-    $result = $this->dbQuery($sql);
-
-    /*************************************************************************************/
-    // update the logging cache
-    $tbl = $this->getFullTableName("log_totals");
-    $realMonth = strftime("%m");
-    $realToday = strftime("%Y-%m-%d");
-
-    // find out if we're on a new day
-    $sql = "SELECT today, month FROM $tbl LIMIT 1";
-    $result = $this->dbQuery($sql);
-    $rowCount = $this->recordCount($result);
-    if($rowCount<1) {
-      $sql = "INSERT $tbl(today, month) VALUES('$realToday', '$realMonth')";
-      $tmpresult = $this->dbQuery($sql);
-      $sql = "SELECT today, month FROM $tbl LIMIT 1";
-      $result = $this->dbQuery($sql);
-    }
-    $tmpRow = $this->fetchRow($result);
-    $dbMonth = $tmpRow['month'];
-    $dbToday = $tmpRow['today'];
-
-    if($dbToday!=$realToday) {
-      $sql = "UPDATE $tbl SET today='$realToday', piDay=0, viDay=0, visDay=0";
-      $result = $this->dbQuery($sql);
-    }
-
-    if($dbMonth!=$realMonth) {
-      $sql = "UPDATE $tbl SET month='$realMonth', piMonth=0, viMonth=0, visMonth=0";
-      $result = $this->dbQuery($sql);
-    }
-
-    // update the table for page impressions
-    $sql = "UPDATE $tbl SET piDay=piDay+1, piMonth=piMonth+1, piAll=piAll+1";
-    $result = $this->dbQuery($sql);
-
-    // update the table for visits
-    if($this->entrypage==1) {
-      $sql = "UPDATE $tbl SET viDay=viDay+1, viMonth=viMonth+1, viAll=viAll+1";
-      $result = $this->dbQuery($sql);
-    }
-
-    // get visitor counts from the logging tables
-    $day      = date('j');
-    $month    = date('n');
-    $year     = date('Y');
-
-    $monthStart = mktime(0,   0,  0, $month, 1, $year);
-    $dayStart = mktime(0,   0,  0, $month, $day, $year);
-    $dayEnd   = mktime(23, 59, 59, $month, $day, $year);
-
-    $tmptbl = $this->getFullTableName("log_access");
-
-    $sql = "SELECT COUNT(DISTINCT(visitor)) FROM $tmptbl WHERE timestamp > '".$dayStart."' AND timestamp < '".$dayEnd."'";
-    $rs = $this->dbQuery($sql);
-    $tmp = $this->fetchRow($rs);
-    $visDay = $tmp['COUNT(DISTINCT(visitor))'];
-
-    $sql = "SELECT COUNT(DISTINCT(visitor)) FROM $tmptbl WHERE timestamp > '".$monthStart."' AND timestamp < '".$dayEnd."'";
-    $rs = $this->dbQuery($sql);
-    $tmp = $this->fetchRow($rs);
-    $visMonth = $tmp['COUNT(DISTINCT(visitor))'];
-
-    $sql = "SELECT COUNT(DISTINCT(visitor)) FROM $tmptbl";
-    $rs = $this->dbQuery($sql);
-    $tmp = $this->fetchRow($rs);
-    $visAll = $tmp['COUNT(DISTINCT(visitor))'];
-
-    // update the table for visitors
-    $sql = "UPDATE $tbl SET visDay=$visDay, visMonth=$visMonth, visAll=$visAll";
-    $result = $this->dbQuery($sql);
-    /*************************************************************************************/
-
-  }
-
-
-  function match($elements, $rules) {
-    if (!is_array($elements)) {
-      $noMatch  = $elements;
-      $elements = array($elements);
-    } else {
-      $noMatch = 'Not identified';
-    }
-    foreach ($rules as $rule) {
-      if (!isset($result)) {
-        foreach ($elements as $element) {
-          $element = trim($element);
-          $pattern = trim($rule['pattern']);
-          if (preg_match($pattern, $element, $tmp)) {
-            $result = str_replace(array('$1', '$2', '$3'), array(isset($tmp[1]) ? $tmp[1] : '', isset($tmp[2]) ? $tmp[2] : '', isset($tmp[3]) ? $tmp[3] : '' ), trim($rule['string']));
-            break;
-          }
-        }
-      } else {
-        break;
-      }
-    }
-    return isset($result) ? $result : $noMatch;
-  }
-
-  function userAgent($string) {
-    if (preg_match('#\((.*?)\)#', $string, $tmp)) {
-      $elements   = explode(';', $tmp[1]);
-      $elements[] = $string;
-    } else {
-      $elements = array($string);
-    }
-    if ($elements[0] != 'compatible') {
-      $elements[] = substr($string, 0, strpos($string, '('));
-    }
-    $result['operating_system'] = $this->match($elements,$GLOBALS['operating_systems']);
-    $result['user_agent'] = $this->match($elements,$GLOBALS['user_agents']);
-    return $result;
   }
 
   function getRegisteredClientScripts(){

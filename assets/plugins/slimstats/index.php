@@ -19,9 +19,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+if ( file_exists( $modx->config['base_path'] . "assets/plugins/slimstats/setup.php" ) ) {
+	$modx->sendRedirect("assets/plugins/slimstats/setup.php");
+	exit;
+}
 
-//require_once( realpath( dirname( __FILE__ ) )."/_functions.php" );
-if(IN_MANAGER_MODE!="true") die("Can't access the file directly");
+ob_start();
+
+if ( get_magic_quotes_gpc() ) {
+	foreach ( array_keys( $_GET ) as $key ) {
+		$_GET[$key] = stripslashes( $_GET[$key] );
+	}
+	foreach ( array_keys( $_POST ) as $key ) {
+		$_POST[$key] = stripslashes( $_POST[$key] );
+	}
+	foreach ( array_keys( $_COOKIE ) as $key ) {
+		$_COOKIE[$key] = stripslashes( $_COOKIE[$key] );
+	}
+	foreach ( array_keys( $_REQUEST ) as $key ) {
+		$_REQUEST[$key] = stripslashes( $_REQUEST[$key] );
+	}
+}
+
+require_once( $modx->config['base_path'] . "assets/plugins/slimstats/_functions.php" );
 
 $start_time = SlimStat::getmicrotime();
 
@@ -93,15 +113,7 @@ if ( isset( $filters["filter_dt_start"] ) && isset( $filters["filter_dt_end"] ) 
 	$hours_spanned = ceil( ( $filters["filter_dt_end"] - $filters["filter_dt_start"] ) / $config->hour );
 }
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $config->language; ?>" xml:lang="<?php print $config->language; ?>">
-<head>
-<title><?php print $config->i18n->app_title; ?></title>
-	<link rel="stylesheet" type="text/css" media="all" href="_css.css" />
-	<meta name="robots" content="noindex,nofollow" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
-</head>
-<body>
+?>
 <div id="body">
 <h1><?php print $config->i18n->app_title; ?></h1>
 
@@ -114,12 +126,12 @@ if ( empty( $filters ) && !isset( $_GET["show"] ) ) {
 	?><li class="selected"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></li><?php
 	$included_file = "_summary.php";
 } else {
-	?><li><a href="index.php?a=68"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></a></li><?php
+	?><li><a href="./"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></a></li><?php
 }
 if ( empty( $filters ) && isset( $_GET["show"] ) && $_GET["show"] == "details" ) {
 	?><li class="selected"><?php print ucfirst( $config->i18n->titles["details"] ); ?></li><?php
 } else {
-	?><li><a href="?a=68&show=details"><?php print ucfirst( $config->i18n->titles["details"] ); ?></a></li><?php
+	?><li><a href="?show=details"><?php print ucfirst( $config->i18n->titles["details"] ); ?></a></li><?php
 }
 $menu_options = array(
 	"today" => ucfirst( $config->i18n->date_periods["today"] ),
@@ -130,22 +142,21 @@ foreach ( array_keys( $menu_options ) as $menu_option ) {
 	if ( isset( $_GET["show"] ) && $_GET["show"] == $menu_option && sizeof( $filters ) == 2 ) {
 		?><li class="selected"><?php print $menu_options[$menu_option]; ?></li><?php
 	} else {
-		?><li><a href="?a=68&show=<?php print $menu_option; ?>"><?php print $menu_options[$menu_option]; ?></a></li><?php
+		?><li><a href="?show=<?php print $menu_option; ?>"><?php print $menu_options[$menu_option]; ?></a></li><?php
 	}
 }
 if ( !empty( $filters ) && !isset( $_GET["show"] ) ) {
 	?><li class="selected"><?php print ucfirst( $config->i18n->titles["details_filtered"] ); ?></li><?php
 }
-$plugins_location =  realpath( dirname( __FILE__ ) )."/plugins";
-if ( is_dir( $plugins_location ) ) {
-	$plugins_dh = opendir( $plugins_location );
+if ( is_dir( $modx->config['base_path'] . "assets/plugins/slimstats/plugins" ) ) {
+	$plugins_dh = opendir( $modx->config['base_path'] . "assets/plugins/slimstats/plugins" );
 	while ( ( $plugin_dir = readdir( $plugins_dh ) ) !== false ) {
-		if ( $plugin_dir{0} != '.' && is_dir( $plugins_location."/".$plugin_dir ) && file_exists( $plugins_location."/".$plugin_dir."/index.php" ) ) {
+		if ( $plugin_dir{0} != '.' && is_dir( $modx->config['base_path'] . "assets/plugins/slimstats/plugins/".$plugin_dir ) && file_exists( $modx->config['base_path'] . "assets/plugins/slimstats/plugins/".$plugin_dir."/index.php" ) ) {
 			if ( isset( $_GET["show"] ) && strtolower( $_GET["show"] ) == strtolower( $plugin_dir ) ) {
 				?><li class="selected"><?php print ucfirst( $plugin_dir ); ?></li><?php
-				$included_file = $plugins_location."/".$plugin_dir."/index.php";
+				$included_file = "plugins/".$plugin_dir."/index.php";
 			} else {
-				?><li><a href="?a=68&show=<?php print strtolower( $plugin_dir ); ?><?php print ( !empty( $filters ) ) ? '&amp;'.SlimStat::implode_assoc( '=', '&amp;', $filters ) : ''; ?>"><?php print ucfirst( $plugin_dir ); ?></a></li><?php
+				?><li><a href="?show=<?php print strtolower( $plugin_dir ); ?><?php print ( !empty( $filters ) ) ? '&amp;'.SlimStat::implode_assoc( '=', '&amp;', $filters ) : ''; ?>"><?php print ucfirst( $plugin_dir ); ?></a></li><?php
 			}
 		}
 	}
@@ -157,7 +168,7 @@ if ( is_dir( $plugins_location ) ) {
 <div style="clear:both;"></div>
 <?php
 
-include( $included_file );
+include( $modx->config['base_path'] . "assets/plugins/slimstats/" . $included_file );
 
 ?>
 <div style="clear:both"></div>

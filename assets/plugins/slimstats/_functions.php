@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-include_once( realpath( dirname( __FILE__ ) )."/_config.php" );
+include_once( $modx->config['base_path'] . "assets/plugins/slimstats/_config.php" );
 
 class SlimStat {
 	/**

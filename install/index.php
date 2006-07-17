@@ -17,7 +17,7 @@
       $installBaseUrl.= $_SERVER['HTTP_HOST'];
       if ($_SERVER['SERVER_PORT']!=80) $installBaseUrl = str_replace(':'.$_SERVER['SERVER_PORT'],'',$installBaseUrl); // remove port from HTTP_HOST
       $installBaseUrl.= ($_SERVER['SERVER_PORT']==80 || isset($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS'])=='on')? '':':'.$_SERVER['SERVER_PORT'];
-		echo "<html><head><title>Loading...</title><script>window.location.href='{$installBaseUrl}{$_SERVER['PHP_SELF']}?s=set';</script></head><body></body></html>";
+		echo "<html><head><title>Loading...</title><script>window.location.href='" . $installBaseUrl . $_SERVER['PHP_SELF'] . "?s=set';</script></head><body></body></html>";
 		exit;
 	}
 
