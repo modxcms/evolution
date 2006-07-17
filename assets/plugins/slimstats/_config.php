@@ -253,6 +253,7 @@ class SlimStatConfig {
             $instance[0]->password= $modx->db->config['pass'];
             $instance[0]->database= str_replace('`', '', $modx->db->config['dbase']);
             $instance[0]->sitename= $modx->config['site_name'];
+            $instance[0]->show_hostnames= (boolean) $modx->config['resolve_hostnames'];
 		}
 		return $instance[0];
 	}
