@@ -3,7 +3,9 @@
  * Written By Ryan Thrash - 18 Apr 2006
  * Version 1.0
  *
- * Adds SlimStats tracking to your site. Disable plugin to disable stats. 
+ * Adds SlimStats tracking to your site. Disable plugin to disable stats, or use MODx log_visits 
+ * configuration and individual page dont_hit values to determine what should be or should not be
+ * tracked.
  *
  * Configuration:
  * check the OnWebPagePrerender event
@@ -30,4 +32,6 @@
 
  */
 
-@include_once( $modx->config['base_path']."/assets/plugins/slimstats/inc.stats.php" );
+if ($modx->config['log_visitors'] && $modx->documentObject['donthit'] == 0) {
+    @include_once( $modx->config['base_path']."/assets/plugins/slimstats/inc.stats.php" );
+}
