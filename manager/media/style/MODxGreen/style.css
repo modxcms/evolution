@@ -836,3 +836,257 @@ ul#nav {
 	-moz-opacity: 0.5;
 	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 }
+
+
+/*
+ * SlimStat: a simple web stats analyser based on ShortStat.
+ * Copyright (C) 2006 Stephen Wettone
+ */
+
+/* position, margins, padding */
+
+#sitestats h1 {
+	margin: 0 0 16px;
+	padding: 0.5em 1.2em;
+}
+#sitestats h2 {
+	margin: 16px 1.4em;
+}
+#sitestats p, #sitestats pre {
+	margin: 16px 2em;
+}
+
+#sitestats h2 span {
+	clear: both;
+	display: block;
+}
+
+#sitestats a {
+	text-decoration: none;
+}
+
+#sitestats .column {
+	float: left;
+	overflow: hidden;
+}
+
+ul#menu {
+	display: block;
+	height: 22px;
+	list-style: none;
+	margin: 0 2em 16px;
+	padding-left: 12px;
+}
+	ul#menu li {
+		float: left;
+		height: 22px;
+		line-height: 22px;
+		margin-right: 0.5em;
+		padding: 0 0.5em;
+	}
+
+ul#filters {
+	list-style: none;
+	padding-left: 2em;
+}
+	ul#filters li {
+		float: left;
+		margin-bottom: 12px;
+		margin-right: 2em;
+	}
+	ul#filters li span {
+		padding: 4px;
+		display: block;
+	}
+	ul#filters li a {
+		padding: 2px;
+		display: block;
+	}
+	ul#filters li span a {
+		padding: 0;
+		display: inline;
+	}
+
+.module {
+	float: left;
+	margin-bottom: 2em;
+	margin-left: 2em;
+	width: 22.5em;
+}
+	.module h3 {
+		padding: 4px;
+		position: relative;
+	}
+	.module h3 span {
+		position: absolute;
+		right: 4px;
+	}
+	.module div {
+		height: 15.2em;
+		overflow: auto;
+		width: 100%;
+	}
+	.module div table {
+		border-collapse: collapse;
+	}
+	.module div table th {
+		padding: 0.2em 3px;
+		text-align: left;
+		white-space: nowrap;
+		width: 100%;
+	}
+	.module div table td {
+		overflow: hidden;
+		padding: 0.2em 3px;
+		vertical-align: top;
+		white-space: nowrap;
+	}
+
+.mediummodule {
+	width: 47em !important;
+}
+.largemodule {
+	width: 71.5em !important;
+}
+.largemodule div {
+	height: 45.6em !important;
+}
+
+#sitestats pre {
+	padding: 1em;
+}
+
+#sitestats .last {
+	margin-bottom: 0;
+	margin-right: 0;
+	text-align: right !important;
+	width: auto !important;
+}
+
+#donotremove {
+	padding: 1em 2em;
+}
+
+
+/* colours, backgrounds, borders */
+
+
+/*
+body {
+	background-color: #fff;
+	color: #333;
+}
+*/
+#sitestats a {
+	color: #369; /*#00c;*/
+}
+#sitestats a.external:visited {
+	color: #69c; /*#609;*/
+}
+#sitestats h1,
+#sitestats #donotremove {
+	background-color: #369;
+	color: #fff;
+}
+#sitestats h2 span {
+	color: #666;
+}
+#sitestats .positive {
+	color: #090;
+}
+#sitestats .negative {
+	color: #900;
+}
+#sitestats pre {
+	background-color: #eee;
+	border: 1px solid #369;
+}
+#sitestats ul#menu {
+	border-bottom: 1px solid #369;
+}
+	#sitestats ul#menu li {
+		color: #fff;
+	}
+	#sitestats ul#menu li.selected {
+		background-color: #369;
+		border-bottom: none;
+		color: #fff;
+	}
+#sitestats ul#filters li a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	text-shadow: none;
+}
+	ul#filters li span a {
+		background-color: inherit;
+		border-bottom: none;
+	}
+
+#sitestats .module h3,
+#sitestats ul#filters li span {
+	background-color: #69c;
+	border-bottom: 1px solid #369;
+	color: #fff;
+	text-shadow: 2px 2px #369;
+}
+#sitestats .module h3 span a {
+	color: #fff !important;
+	text-shadow: 2px 2px #369;
+}
+#sitestats .module div {
+	border-bottom: 1px solid #369;
+}
+	#sitestats .module div table th {
+		background-color: #ccc;
+		border-bottom: 1px solid #aaa;
+		color: #333;
+	}
+	#sitestats .module div table td.accent {
+		background-color: #eee;
+		border-bottom: 1px solid #ccc;
+		color: #999;
+	}
+	#sitestats .module div table td {
+		border-bottom: 1px dotted #ccc;
+	}
+#sitestats #donotremove a {
+	color: #9cf;
+}
+
+
+/* fonts */
+
+
+#sitestats body,
+#sitestats td,
+#sitestats th,
+#sitestats input,
+#sitestats select {
+	font: normal 10px/14px "Lucida Grande", "Lucida Sans Unicode", Lucida, Helvetica, Arial, sans-serif;
+} 
+#sitestats ul#menu li.selected {
+	font-weight: bold;
+}
+#sitestats h1, #sitestats h2, #sitestats h3, #sitestats th, #sitestats ul#filters li span {
+	font-weight: bold;
+}
+#sitestats h1 {
+	font-size: 18px;
+}
+#sitestats h2 {
+	font-size: 15px;
+}
+#sitestats h3,
+#sitestats ul#filters li span {
+	font-size: 12px;
+}
+#sitestats h2 span {
+	font-size: 10px;
+	font-weight: normal;
+}
+#sitestats .module h3 span a {
+	font-size: 9px;
+}
+#sitestats .very {
+	font-weight: bold;
+}
