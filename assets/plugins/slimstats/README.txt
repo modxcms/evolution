@@ -3,7 +3,7 @@
 SlimStat: a simple web stats analyser based on ShortStat.
 Copyright (C) 2006 Stephen Wettone
 
-Version 0.9.1, 13 February 2006
+Version 0.9.4, 19 April 2006
 
 This application uses the IP-to-Country Database provided by webhosting.info:
 http://ip-to-country.webhosting.info/

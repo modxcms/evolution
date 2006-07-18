@@ -65,16 +65,19 @@ function show_paths() {
 		$str .= "<th>".$config->i18n->fields["platform"]."</th>";
 		$str .= "<th>".$config->i18n->fields["country"]."</th></tr>\n";
 		
+		$usr_today = SlimStat::to_user_time( time() );
+		$svr_today = SlimStat::to_server_time( mktime( 0, 0, 0, date( "n", $usr_today ), date( "d", $usr_today ), date( "Y", $usr_today ) ) );
+		
 		foreach ( $visits as $visit ) {
-			$is_today = ( $visit[0]["dt"] >= strtotime( date( "j F Y" ) ) );
-			$mindt = SlimStat::time_label( $visit[0]["dt"] + $config->dt_offset_secs );
-			$maxdt = SlimStat::time_label( $visit[ sizeof( $visit )-1 ]["dt"] + $config->dt_offset_secs );
+			$is_today = ( $visit[0]["dt"] >= $svr_today );
+			$mindt = SlimStat::time_label( $visit[0]["dt"] );
+			$maxdt = SlimStat::time_label( $visit[ sizeof( $visit )-1 ]["dt"] );
 			$str .= "<tr><td class=\"accent\">".htmlentities( SlimStat::get_domain( $visit[0]["remote_ip"] ) )."</td>";
 			$str .= "<td class=\"accent\">";
 			if ( $is_today ) {
 				$str .= ( ( $mindt == $maxdt ) ? $mindt : $mindt."-".$maxdt );
 			} else {
-				$str .= SlimStat::time_label( $visit[0]["dt"] + $config->dt_offset_secs, time() );
+				$str .= SlimStat::time_label( $visit[0]["dt"], time() );
 			}
 			$str .= "</td>";
 			$str .= "<td class=\"accent\">".htmlentities( $visit[0]["browser"] );
@@ -98,7 +101,7 @@ function show_paths() {
 					$str .= SlimStat::truncate( $hit["resource"], 53 );
 				}
 				$str .= "</a></td>";
-				$dt_label = SlimStat::time_label( $hit["dt"] + $config->dt_offset_secs );
+				$dt_label = SlimStat::time_label( $hit["dt"] );
 				if ( ( !$is_today && $prev_dt == "" ) || ( $mindt != $maxdt && $dt_label != $prev_dt ) ) {
 					$str .= "<td>".$dt_label."</td>";
 				} else {

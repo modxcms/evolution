@@ -42,20 +42,28 @@ class SlimStatRecord {
 			$url = parse_url( $stat["referer"] );
 			$stat["domain"]      = SlimStat::my_esc( ( isset( $url["host"] ) ) ? eregi_replace( "^www.", "", $url["host"] ) : "" );
 			$stat["searchterms"] = SlimStat::my_esc( $this->_determine_searchterms( $url ) );
+			
 			if ( isset( $_SERVER["REQUEST_URI"] ) ) {
-				$stat["resource"]    = SlimStat::my_esc( $_SERVER["REQUEST_URI"] );
+				$stat["resource"] = SlimStat::my_esc( $_SERVER["REQUEST_URI"] );
+			} elseif ( isset( $_SERVER["SCRIPT_NAME"] ) && isset( $_SERVER["QUERY_STRING"] ) ) {
+				$stat["resource"] = SlimStat::my_esc( $_SERVER["SCRIPT_NAME"]."?".$_SERVER["QUERY_STRING"] );
 			} elseif ( isset( $_SERVER["SCRIPT_NAME"] ) ) {
-				$stat["resource"]    = SlimStat::my_esc( ( isset( $_SERVER["QUERY_STRING"] ) ) ? $_SERVER["SCRIPT_NAME"]."?".$_SERVER["QUERY_STRING"] : $_SERVER["SCRIPT_NAME"] );
+				$stat["resource"] = SlimStat::my_esc( $_SERVER["SCRIPT_NAME"] );
+			} elseif ( isset( $_SERVER["PHP_SELF"] ) && isset( $_SERVER["QUERY_STRING"] ) ) {
+				$stat["resource"] = SlimStat::my_esc( $_SERVER["PHP_SELF"]."?".$_SERVER["QUERY_STRING"] );
 			} elseif ( isset( $_SERVER["PHP_SELF"] ) ) {
-				$stat["resource"]    = SlimStat::my_esc( ( isset( $_SERVER["QUERY_STRING"] ) ) ? $_SERVER["PHP_SELF"]."?".$_SERVER["QUERY_STRING"] : $_SERVER["PHP_SELF"] );
+				$stat["resource"] = SlimStat::my_esc( $_SERVER["PHP_SELF"] );
 			}
+			
 			if ( $this->config->log_user_agents == true ) {
-				$stat["user_agent"]  = SlimStat::my_esc( $_SERVER["HTTP_USER_AGENT"] );
+				$stat["user_agent"] = SlimStat::my_esc( $_SERVER["HTTP_USER_AGENT"] );
 			}
+			
 			$browser = $this->_parse_user_agent( $_SERVER["HTTP_USER_AGENT"] );
 			$stat["browser"]     = SlimStat::my_esc( $browser["browser"] );
 			$stat["version"]     = SlimStat::my_esc( $browser["version"] );
 			$stat["platform"]    = SlimStat::my_esc( $browser["platform"] );
+			
 			$stat["visit"]       = SlimStat::my_esc( $this->_determine_visit( $stat["remote_ip"], $browser["browser"], $browser["version"], $browser["platform"], $_SERVER["HTTP_USER_AGENT"] ) );
 			$stat["dt"]          = SlimStat::my_esc( time() );
 			
@@ -67,7 +75,8 @@ class SlimStatRecord {
 					break;
 				}
 			}
-			if ( $this->config->log_crawlers == false && $stat["browser"] == $this->config->i18n->crawler ) {
+			if ( $this->config->log_crawlers == false &&
+			     $stat["browser"] == $this->config->i18n->crawler ) {
 				$is_ignored = true;
 			}
 			
@@ -85,7 +94,9 @@ class SlimStatRecord {
 				$is_spam = true;
 			}
 			
-			if ( strlen( $stat["domain"] ) >= 25 ) {
+			if ( strlen( $stat["domain"] ) >= 25 &&
+			     ( !isset( $_SERVER["SERVER_NAME"] ) ||
+			       $stat["domain"] != eregi_replace( "^www.", "", $_SERVER["SERVER_NAME"] ) ) ) {
 				$is_spam = true;
 			}
 			
@@ -95,7 +106,7 @@ class SlimStatRecord {
 			} elseif ( $is_spam ) {
 				// do nothing
 			} else {
-				$query = "INSERT INTO `".SlimStat::my_esc( $this->config->database )."`.`".SlimStat::my_esc( $this->config->stats )."` (`";
+				$query = "INSERT INTO `".SlimStat::my_esc( $this->config->database )."`.`".SlimStat::my_esc( $this->config->stats )."` ( `";
 				$query .= implode( "`, `", array_keys( $stat ) );
 				$query .= "` ) VALUES ( \"";
 				$query .= implode( "\", \"", array_values( $stat ) );

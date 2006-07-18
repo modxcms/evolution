@@ -239,7 +239,8 @@ if ( $config->show_modules["domain"] && !isset( $filters["filter_domain"] ) ) {
 if ( $config->show_modules["referer"] && isset( $filters["filter_domain"] ) && !isset( $filters["filter_referer"] ) ) {
 	print SlimStat::render_module(
 		$config->i18n->module_titles["referer"],
-		total_table( "referer", $config->truncate, "", $filters )
+		total_table( "referer", $config->truncate_medium, "", $filters ),
+		"mediummodule"
 	);
 }
 
@@ -459,13 +460,13 @@ function total_table( $_col, $_truncate, $_where_clause="", $_filters ) {
 	
 	$results = SlimStat::_get_table_data( $_col, $_where_clause, ( is_array( $_col ) ) ? implode( ", ", $_col ) : $_col, isset( $_filters["filter_visit"] ) ? "hits" : $config->order_by, $_filters );
 	
-	if ( $config->show_uniques ) {
-		$thead["last"][] = $config->i18n->uniques;
-		$_truncate -= strlen( $config->i18n->uniques );
-	}
 	if ( $config->show_visits && !isset( $_filters["filter_visit"] ) ) {
 		$thead["last"][] = $config->i18n->visits;
 		$_truncate -= strlen( $config->i18n->visits );
+	}
+	if ( $config->show_uniques ) {
+		$thead["last"][] = $config->i18n->uniques;
+		$_truncate -= strlen( $config->i18n->uniques );
 	}
 	
 	foreach ( $results as $result ) {

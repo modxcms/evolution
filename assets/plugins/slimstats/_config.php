@@ -37,9 +37,6 @@ class SlimStatConfig {
 	/** The full name of your site */
 	var $sitename = "";
 	
-	/** Whether to use gzip handler in the buffer */
-	var $use_gzip = false;
-
 	/** Whether to display number of visits */
 	var $show_visits = true;
 	
@@ -63,10 +60,10 @@ class SlimStatConfig {
 	var $truncate = 25;
 	
 	/** Maximum number of characters shown shown in medium-size modules */
-	var $truncate_medium = 55;
+	var $truncate_medium = 65;
 	
 	/** Don't log hits from these IP ranges */
-	var $ignored_ips = array( "10." );
+	var $ignored_ips = array( "192.168.", "10.", "127." );
 	
 	/** Whether to record user-agent strings in the database. The database
 	will be smaller if this is disabled */
@@ -134,7 +131,7 @@ class SlimStatConfig {
 	);
 	
 	/** SlimStat version */
-	var $version = "0.9.3";
+	var $version = "0.9.4";
 	
 	////////////////////////////////////////////////////////////////////////////
 	// Don't change anything below this line
@@ -209,9 +206,9 @@ class SlimStatConfig {
 		"125" => 0.61, "126" => 1.07
 	);
 	
-    function SlimStatConfig() {
+	function SlimStatConfig() {
 		global $modx;
-        $this->hour = 60 * 60;
+		$this->hour = 60 * 60;
 		$this->day = $this->hour * 24;
 		$this->week = $this->day * 7;
 		$this->visit_length = $this->hour / 2;
@@ -234,7 +231,7 @@ class SlimStatConfig {
 			setlocale( LC_ALL, substr( $this->language, 0, 2 )."_".strtoupper( substr( $this->language, 0, 2 ) ) );
 		}
 	}
-    	
+	
 	function ems( $_ord ) {
 		if ( array_key_exists( strval( $_ord ), $this->ems_values ) ) {
 			return $this->ems_values[strval( $_ord )];
@@ -245,7 +242,7 @@ class SlimStatConfig {
 	
 	function &get_instance() {
 		global $modx;
-        static $instance = array();
+		static $instance = array();
 		if ( empty( $instance ) ) {
 			$instance[] =& new SlimStatConfig();
             $instance[0]->server= $modx->db->config['host'];
