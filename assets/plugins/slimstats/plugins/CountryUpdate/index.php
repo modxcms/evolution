@@ -19,10 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+
 $ip_to_country_file = "ip-to-country.csv";		// name of ip-to-country file
 $ip_to_country_zip = "ip-to-country.csv.zip";	// name of ip-to-country archive file
 $size_bytes = "5000000";						// max file size for $ip_to_country_file;
-$uploaddir = "countrydb/";						// ensure directory name ends with trailing slash
+$uploaddir = $modx->config['base_path'] . "assets/plugins/slimstats/countrydb/"; // ensure directory name ends with trailing slash
 $ip_to_country_remotefile = "http://ip-to-country.webhosting.info/downloads/ip-to-country.csv.zip";	// Full URL to zip file on webhosting.info
 
 /* NO MORE EDITING BELOW THIS LINE NECESSARY UNLESS YOU WISH TO TINKER */

@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-ob_start();
+ob_start( "ob_gzhandler" );
 
 include_once( realpath( dirname( __FILE__ ) )."/_config.php" );
 include_once( realpath( dirname( __FILE__ ) )."/_functions.php" );

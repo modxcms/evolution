@@ -19,12 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-if ( file_exists( $modx->config['base_path'] . "assets/plugins/slimstats/setup.php" ) ) {
-	$modx->sendRedirect("assets/plugins/slimstats/setup.php");
-	exit;
-}
+//if ( file_exists( $modx->config['base_path'] . "assets/plugins/slimstats/setup.php" ) ) {
+//	$modx->sendRedirect("assets/plugins/slimstats/setup.php");
+//	exit;
+//}
 
-ob_start();
+ob_start( "ob_gzhandler" );
 
 if ( get_magic_quotes_gpc() ) {
 	foreach ( array_keys( $_GET ) as $key ) {

@@ -19,8 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-include($plugins_location.'/SlimView/functions.php'); // Need this for HSV <=> RGB and HEX <=> RGB conversions
-include($plugins_location.'/SlimView/svconfig.php');
+include($modx->config['base_path'] . 'assets/plugins/slimstats/plugins/SlimView/functions.php'); // Need this for HSV <=> RGB and HEX <=> RGB conversions
+include($modx->config['base_path'] . 'assets/plugins/slimstats/plugins/SlimView/svconfig.php');
 
 $num_stats = 1;
 $statcode = 'h';
@@ -35,7 +35,7 @@ if ( $config->show_uniques ) {
 
 // Set the colours
 // Try getting background-color from _css.css (h1 or .module h3) and picking the two triadic colours.
-$css = file( realpath(dirname(__FILE__)).'../../../_css.css');
+$css = file( $modx->config['base_path'] . 'assets/plugins/slimstats/_css.css');
 $mod_colour = module_color(".module h3,", "background-color", $css);
 $text_colour = (empty($text_colour)) ? hex2rgb($mod_colour) : hex2rgb($text_colour);
 if(empty($data_colour1) || empty($data_colour2) || empty($data_colour3)) {
