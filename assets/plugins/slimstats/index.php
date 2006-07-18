@@ -126,12 +126,12 @@ if ( empty( $filters ) && !isset( $_GET["show"] ) ) {
 	?><li class="selected"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></li><?php
 	$included_file = "_summary.php";
 } else {
-	?><li><a href="./"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></a></li><?php
+	?><li><a href="index.php?a=68"><?php print ucfirst( $config->i18n->titles["summary"] ); ?></a></li><?php
 }
 if ( empty( $filters ) && isset( $_GET["show"] ) && $_GET["show"] == "details" ) {
 	?><li class="selected"><?php print ucfirst( $config->i18n->titles["details"] ); ?></li><?php
 } else {
-	?><li><a href="?show=details"><?php print ucfirst( $config->i18n->titles["details"] ); ?></a></li><?php
+	?><li><a href="?a=68&show=details"><?php print ucfirst( $config->i18n->titles["details"] ); ?></a></li><?php
 }
 $menu_options = array(
 	"today" => ucfirst( $config->i18n->date_periods["today"] ),
@@ -142,7 +142,7 @@ foreach ( array_keys( $menu_options ) as $menu_option ) {
 	if ( isset( $_GET["show"] ) && $_GET["show"] == $menu_option && sizeof( $filters ) == 2 ) {
 		?><li class="selected"><?php print $menu_options[$menu_option]; ?></li><?php
 	} else {
-		?><li><a href="?show=<?php print $menu_option; ?>"><?php print $menu_options[$menu_option]; ?></a></li><?php
+		?><li><a href="?a=68&show=<?php print $menu_option; ?>"><?php print $menu_options[$menu_option]; ?></a></li><?php
 	}
 }
 if ( !empty( $filters ) && !isset( $_GET["show"] ) ) {
@@ -156,7 +156,7 @@ if ( is_dir( $modx->config['base_path'] . "assets/plugins/slimstats/plugins" ) )
 				?><li class="selected"><?php print ucfirst( $plugin_dir ); ?></li><?php
 				$included_file = "plugins/".$plugin_dir."/index.php";
 			} else {
-				?><li><a href="?show=<?php print strtolower( $plugin_dir ); ?><?php print ( !empty( $filters ) ) ? '&amp;'.SlimStat::implode_assoc( '=', '&amp;', $filters ) : ''; ?>"><?php print ucfirst( $plugin_dir ); ?></a></li><?php
+				?><li><a href="?a=68&show=<?php print strtolower( $plugin_dir ); ?><?php print ( !empty( $filters ) ) ? '&amp;'.SlimStat::implode_assoc( '=', '&amp;', $filters ) : ''; ?>"><?php print ucfirst( $plugin_dir ); ?></a></li><?php
 			}
 		}
 	}
