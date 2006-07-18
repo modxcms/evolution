@@ -32,6 +32,6 @@
 
  */
 
-if ($modx->config['log_visitors'] && $modx->documentObject['donthit'] == 0) {
+if ($modx->isFrontend() && $modx->config['track_visitors'] && $modx->documentObject['donthit'] == 0) {
     @include_once( $modx->config['base_path']."/assets/plugins/slimstats/inc.stats.php" );
 }
