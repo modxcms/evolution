@@ -55,5 +55,5 @@ function fnFixPng(img) {
 	img.style.width = img.width + "px";
 	img.style.height = img.height + "px";
 	img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='scale')"
-	img.src = "x.gif";
+	img.src = "assets/js/x.gif";
 }
