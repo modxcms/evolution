@@ -150,45 +150,91 @@ if($installData && $moduleSQLDataFile) {
 // write the config.inc.php file if new installation
 echo "<p>Writing configuration file: ";
 $configString = '<?php
-	/**
-	 *	MODx Configuration file
-	 *
-	 */
-	$database_type = "mysql";
-	$database_server = "'.$database_server.'";
-	$database_user = "'.$database_user.'";
-	$database_password = "'.$database_password.'";
-	$dbase = "`'.str_replace("`","",$dbase).'`";
-	$table_prefix = "'.$table_prefix.'";		
-	error_reporting(E_ALL ^ E_NOTICE);
+/**
+ *	MODx Configuration file
+ *
+ */
+$database_type = "mysql";
+$database_server = "'.$database_server.'";
+$database_user = "'.$database_user.'";
+$database_password = "'.$database_password.'";
+$dbase = "`'.str_replace("`","",$dbase).'`";
+$table_prefix = "'.$table_prefix.'";		
+error_reporting(E_ALL ^ E_NOTICE);
 
-	$site_sessionname = "'.$site_sessionname.'";
-	
-	// automatically assign base_path and base_url
-	if($base_path==""||$base_url=="") {
-		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
-		if(count($a)>1) array_pop($a);
-		$url = implode("manager",$a); reset($a);
-		$a = explode("manager",str_replace("\\\\","/",dirname(__FILE__)));
-		if(count($a)>1) array_pop($a);
-		$pth = implode("manager",$a); unset($a);
-		$base_url = $url.(substr($url,-1)!="/"? "/":"");
-		$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
-		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? \'http://\' : \'https://\';
-		$site_url .= $_SERVER[\'HTTP_HOST\'];
-		if($_SERVER[\'SERVER_PORT\']!=80) $site_url = str_replace(\':\'.$_SERVER[\'SERVER_PORT\'],\'\',$site_url); // remove port from HTTP_HOST 
-		$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
-		$site_url .= $base_url;
-	}
+$site_sessionname = "'.$site_sessionname.'";
 
-	// start cms session
-	if(!function_exists(\'startCMSSession\')) {
-		function startCMSSession(){
-			global $site_sessionname;
-			session_name($site_sessionname);	
-			session_start();
-		}
-	}';
+// automatically assign base_path and base_url
+if($base_path==""||$base_url=="") {
+	$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
+	if(count($a)>1) array_pop($a);
+	$url = implode("manager",$a); reset($a);
+	$a = explode("manager",str_replace("\\\\","/",dirname(__FILE__)));
+	if(count($a)>1) array_pop($a);
+	$pth = implode("manager",$a); unset($a);
+	$base_url = $url.(substr($url,-1)!="/"? "/":"");
+	$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
+	$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? \'http://\' : \'https://\';
+	$site_url .= $_SERVER[\'HTTP_HOST\'];
+	if($_SERVER[\'SERVER_PORT\']!=80) $site_url = str_replace(\':\'.$_SERVER[\'SERVER_PORT\'],\'\',$site_url); // remove port from HTTP_HOST 
+	$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
+	$site_url .= $base_url;
+}
+
+$modx_session_handler= \'\';
+//$modx_session_handler= \'modx095.modSessionHandler\';
+if (!defined(\'MODX_SESSION_GC_MAXLIFETIME\')) {
+    // modify this define to change the session garbarge collection maxlifetime
+    // ex. 60*60*24*7 = 7 days
+    define(\'MODX_SESSION_GC_MAXLIFETIME\', 60*60*24*14);
+    // some settings I used for testing in a short time frame
+//    define(\'MODX_SESSION_GC_MAXLIFETIME\', 30);
+//    ini_set(\'session.gc_probability\', 100);
+//    ini_set(\'session.gc_divisor\', 100);
+}
+if (!defined(\'MODX_SESSION_COOKIE_LIFETIME\')) {
+    // modify this to change the length of time the cookie can access existing session data
+    // 0 = cookie is cleared when browser is closed
+    // 60*60*24*7 = 7 days
+    // 60*60*24*30 = 30 days
+    define(\'MODX_SESSION_COOKIE_LIFETIME\', 60*60*24*7);
+//    define(\'MODX_SESSION_COOKIE_LIFETIME\', 0);
+}
+
+if (!function_exists(\'startCMSSession\')) {
+    function startCMSSession($xpdo= null) {
+        global $base_path, $site_sessionname, $modx_session_handler;
+        if ($modx_session_handler) {
+            if ($xpdo === null) {
+                if (@include_once ($base_path . \'xpdo/xpdo.class.php\')) {
+                    global $database_type, $database_server, $dbase, $database_user, 
+                           $database_password, $table_prefix;
+                    $xpdo= new xPDO($database_type . \':host=\' . $database_server . \';dbname=\' . str_replace(\'`\', \'\', $dbase), $database_user, $database_password, $table_prefix);
+                    $xpdo->setPackage(\'modx095\');
+                    $xpdo->setLogLevel(XPDO_LOG_LEVEL_ERROR);
+                    $xpdo->setLogTarget(\'HTML\');
+                }
+            }
+            if ($xpdo !== null && $shClass= $xpdo->loadClass($modx_session_handler, \'\', true, true)) {
+                if ($sh= new $shClass ($xpdo)) {
+                    session_set_save_handler(
+                        array (& $sh, \'open\'), 
+                        array (& $sh, \'close\'),
+                        array (& $sh, \'read\'),
+                        array (& $sh, \'write\'),
+                        array (& $sh, \'destroy\'),
+                        array (& $sh, \'gc\')
+                    );
+                }
+            }
+        } else {
+            @ini_set(\'session.gc_maxlifetime\', MODX_SESSION_GC_MAXLIFETIME);
+        }
+        session_set_cookie_params(MODX_SESSION_COOKIE_LIFETIME, \'/\');
+        session_name($site_sessionname);
+        session_start();
+    }
+}';
 $configString .= "\n?>";
 $filename = '../manager/includes/config.inc.php';
 $configFileFailed = false;

@@ -1,13 +1,5 @@
 <?php
 
-// start session
-startCMSSession();
-if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
-	unset($_SESSION['mgrValidated']);
-	session_destroy();
-	// start session
-	startCMSSession();
-}
 if(!isset($_SESSION['mgrValidated'])){
 	include_once("browsercheck.inc.php");
 
@@ -18,17 +10,17 @@ if(!isset($_SESSION['mgrValidated'])){
 		include_once "lang/english.inc.php";
 	}
 
-	$cookieKey = substr(md5($site_id."Admin-User"),0,15);
-
-	include_once ("crypt.class.inc.php");
-	if(isset($_COOKIE[$cookieKey])) {
-		$cookieSet = 1;
-		$username = $_COOKIE[$cookieKey];
-	}
-	$thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
-	$rc4 = new rc4crypt;
-	$thestring = $rc4->endecrypt($thepasswd,$username,'de');
-	$uid = $thestring;
+//	$cookieKey = substr(md5($site_id."Admin-User"),0,15);
+//
+//	include_once ("crypt.class.inc.php");
+//	if(isset($_COOKIE[$cookieKey])) {
+//		$cookieSet = 1;
+//		$username = $_COOKIE[$cookieKey];
+//	}
+//	$thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
+//	$rc4 = new rc4crypt;
+//	$thestring = $rc4->endecrypt($thepasswd,$username,'de');
+//	$uid = $thestring;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
