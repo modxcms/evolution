@@ -434,7 +434,7 @@ class DocumentParser {
       }
 
       // now, check for documents that need un-publishing
-      $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=0, publishedon=0, publihsedby=0 WHERE ".$this->getFullTableName("site_content").".unpub_date < $timeNow AND ".$this->getFullTableName("site_content").".unpub_date!=0";
+      $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=0, publishedon=0, publishedby=0 WHERE ".$this->getFullTableName("site_content").".unpub_date < $timeNow AND ".$this->getFullTableName("site_content").".unpub_date!=0";
       if(@!$result = $this->dbQuery($sql)) {
         $this->messageQuit("Execution of a query to the database failed", $sql);
       }
