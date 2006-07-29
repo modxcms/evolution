@@ -582,7 +582,7 @@ function stripAlias($alias) {
     //$alias = strtolower($alias); 
     $alias = preg_replace('/&.+?;/', '', $alias); // kill entities 
     $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); 
-    $alias = preg_replace('/\s+/', '_', $alias); 
+    $alias = preg_replace('/\s+/', '-', $alias); 
     $alias = preg_replace('|-+|', '-', $alias); 
     $alias = trim($alias, '-'); 
     return $alias;
