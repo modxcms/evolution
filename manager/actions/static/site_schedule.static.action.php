@@ -8,10 +8,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 
 <div class="subTitle">
-<span class="right"><img src="media/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?=$_lang["site_schedule"];?></span>
+<span class="right"><img src="media/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["site_schedule"];?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?=$_lang["publish_events"];?></div><div class="sectionBody" id="lyr1">
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["publish_events"];?></div><div class="sectionBody" id="lyr1">
 <?php
 //$db->debug = true;
 $sql = "SELECT id, pagetitle, pub_date FROM $dbase.".$table_prefix."site_content WHERE pub_date > ".time()." ORDER BY pub_date ASC";
@@ -25,9 +25,9 @@ if($limit<1) {
   <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-1" width="100%">
     <thead>
       <tr bgcolor='#CCCCCC'>
-        <td><b><?=$_lang['document'];?></b></td> 
-        <td><b><?=$_lang['id'];?></b></td> 
-        <td><b><?=$_lang['publish_date'];?></b></td>
+        <td><b><?php echo $_lang['document'];?></b></td> 
+        <td><b><?php echo $_lang['id'];?></b></td> 
+        <td><b><?php echo $_lang['publish_date'];?></b></td>
       </tr>
     </thead>
     <tbody>
@@ -93,7 +93,7 @@ st1.onsort = function () {
 </div>
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?=$_lang["unpublish_events"];?></div><div class="sectionBody" id="lyr2"><?php
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["unpublish_events"];?></div><div class="sectionBody" id="lyr2"><?php
 //$db->debug = true;
 $sql = "SELECT id, pagetitle, unpub_date FROM $dbase.".$table_prefix."site_content WHERE unpub_date > ".time()." ORDER BY unpub_date ASC";
 $rs = mysql_query($sql);
@@ -105,9 +105,9 @@ if($limit<1) {
   <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-2" width="100%">
     <thead>
       <tr bgcolor='#CCCCCC'>
-        <td><b><?=$_lang['document'];?></b></td> 
-        <td><b><?=$_lang['id'];?></b></td> 
-        <td><b><?=$_lang['unpublish_date'];?></b></td>
+        <td><b><?php echo $_lang['document'];?></b></td> 
+        <td><b><?php echo $_lang['id'];?></b></td> 
+        <td><b><?php echo $_lang['unpublish_date'];?></b></td>
       </tr>
     </thead>
     <tbody>
@@ -173,7 +173,7 @@ st2.onsort = function () {
 </div>
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?=$_lang["all_events"];?></div><div class="sectionBody"><?php
+<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["all_events"];?></div><div class="sectionBody"><?php
 $sql = "SELECT id, pagetitle, pub_date, unpub_date FROM $dbase.".$table_prefix."site_content WHERE pub_date > 0 OR unpub_date > 0 ORDER BY id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
@@ -184,10 +184,10 @@ if($limit<1) {
   <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-3" width="100%">
     <thead>
       <tr bgcolor='#CCCCCC'>
-        <td><b><?=$_lang['document'];?></b></td> 
-        <td><b><?=$_lang['id'];?></b></td> 
-        <td><b><?=$_lang['publish_date'];?></b></td>
-        <td><b><?=$_lang['unpublish_date'];?></b></td>
+        <td><b><?php echo $_lang['document'];?></b></td> 
+        <td><b><?php echo $_lang['id'];?></b></td> 
+        <td><b><?php echo $_lang['publish_date'];?></b></td>
+        <td><b><?php echo $_lang['unpublish_date'];?></b></td>
       </tr>
     </thead>
     <tbody>
