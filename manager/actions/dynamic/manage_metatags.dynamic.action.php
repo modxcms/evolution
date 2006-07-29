@@ -112,32 +112,46 @@ $modx->manager->initPageViewState();
 			<input type="text" name="tagname" size="15"></td>
 			<td valign="bottom">Tag:<br>
 			<select size="1" name="tag">
-			<option value="Abstract;0">Abstract</option>
-			<option value="Author;0">Author</option>
-			<option value="Classification;0">Classification</option>
-			<option value="Content-Type;1">Content-Type</option>
-			<option value="Copyright;0">Copyright</option>
-			<option value="Description;0">Description</option>
-			<option value="Designer;0">Designer</option>
-			<option value="Distribution;0">Distribution</option>			
-			<option value="Expires;1">Expires</option>
-			<option value="Generator;0">Generator</option>
-			<option value="Language;1">Language</option>
-			<option value="PICS-Label;1">PICS-Label</option>
-			<option value="Pragma;1">Pragma</option>
-			<option value="Refresh;1">Refresh</option>
-			<option value="Reply-to;1">Reply-to</option>
-			<option value="Revist-after;0">Revist-after</option>
-			<option value="Robots;0">Robots</option>
-			<option value="Set-Cookie;1">Set-Cookie</option>
-			<option value="Subject;0">Subject</option>
-			<option value="Title;0">Title</option>			
+        		<optgroup label="Named Meta Content">
+        			<option value="abstract;0">abstract</option>
+        			<option value="author;0">author</option>
+        			<option value="classification;0">classification</option>
+        			<option value="copyright;0">copyright</option>
+        			<option value="description;0">description</option>
+        			<option value="designer;0">designer</option>
+        			<option value="distribution;0">distribution</option>
+        			<option value="expires;1">expires</option>
+        			<option value="generator;0">generator</option>
+        			<option value="googlebot;0">googlebot</option>
+        			<option value="MSSmartTagsPreventParsing;0">MSSmartTagsPreventParsing</option>
+        			<option value="owner;0">owner</option>
+        			<option value="rating;0">rating</option>
+        			<option value="refresh;0">refresh</option>
+        			<option value="reply-to;0">reply-to</option>
+        			<option value="revist-after;0">revist-after</option>
+        			<option value="robots;0">robots</option>
+        			<option value="subject;0">subject</option>
+        			<option value="title;0">title</option>
+                </optgroup>
+			    <optgroup label="HTTP-Header Equivalents">
+        			<option value="content-language;1">content-language</option>
+        			<option value="content-type;1">content-type</option>
+        			<option value="expires;1">expires</option>
+        			<option value="imagetoolbar;1">imagetoolbar</option>
+        			<option value="pics-label;1">pics-label</option>
+        			<option value="pragma;1">pragma</option>
+        			<option value="refresh;1">refresh</option>
+        			<option value="set-cookie;1">set-cookie</option>
+        		</optgroup>
 			</select></td>
 			<td valign="bottom">Value:<br>
 			<input type="text" name="tagvalue" size="20"></td>
 			<td nowrap="nowrap"><br>
 			<input type="button" value="<?php echo $_lang["add_tag"];?>" name="cmdsavetag" onclick="addTag()" /> <input style="visibility:hidden" type="button" value="<?php echo $_lang["cancel"];?>" name="cmdcanceltag" onclick="cancelTag()" /></td>
 		  </tr>
+		  <tr>
+		      <td colspan="4"><p>You may wish to reference the <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Refernce Guide</a> site for more information. This is not a complete list of possible Meta Tags</p></td>
+	      </tr>
 		</table><img src="media/images/_tx_.gif" width="1" height="5" /></td>
 	  </tr>
 	</table>
