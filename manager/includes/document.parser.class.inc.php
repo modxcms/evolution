@@ -515,9 +515,6 @@ class DocumentParser {
       }
     }
 
-    if($this->config['track_visitors']==1 && !isset($_REQUEST['z'])) {
-      $this->log();
-    }
     // end post processing
   }
 
