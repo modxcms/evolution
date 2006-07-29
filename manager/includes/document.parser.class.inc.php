@@ -39,7 +39,6 @@ class DocumentParser {
     if (class_exists('xPDO', false) || @include_once ($base_path . 'xpdo/xpdo.class.php')) {
       $this->xpdo= new xPDO($database_type . ':host=' . $database_server . ';dbname=' . str_replace('`', '', $dbase), $database_user, $database_password, $table_prefix);
       $this->xpdo->setPackage('modx095');
-      $this->xpdo->setLogLevel(XPDO_LOG_LEVEL_ERROR);
       $this->xpdo->setLogTarget('HTML');
     }
   }

@@ -211,7 +211,6 @@ if (!function_exists(\'startCMSSession\')) {
                            $database_password, $table_prefix;
                     $xpdo= new xPDO($database_type . \':host=\' . $database_server . \';dbname=\' . str_replace(\'`\', \'\', $dbase), $database_user, $database_password, $table_prefix);
                     $xpdo->setPackage(\'modx095\');
-                    $xpdo->setLogLevel(XPDO_LOG_LEVEL_ERROR);
                     $xpdo->setLogTarget(\'HTML\');
                 }
             }
