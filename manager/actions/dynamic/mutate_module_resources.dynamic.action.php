@@ -60,7 +60,7 @@ switch ($_REQUEST['op']) {
 			$modx->dbQuery("DELETE FROM ".$modx->getFullTableName("site_module_depobj")." WHERE module='$id' AND resource IN (".implode(",",$opids).") AND type='$type'");
 			$ds = $modx->dbQuery($sql);
 			if(!$ds){
-				echo "<script tytpe='text/javascript'>" .
+				echo "<script type='text/javascript'>" .
 						"function jsalert(){ alert('An error occured while trying to update the database. '".mysql_error().");" .
 						"setTimeout('jsalert()',100)".
 						"</script>";

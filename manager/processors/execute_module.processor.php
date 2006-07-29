@@ -27,7 +27,7 @@ if($_SESSION['mgrRole']!=1){
 	$row = $modx->fetchRow($rs);
 	if($row["usergroup"] && !$row["member"]) { 
 		include_once "header.inc.php";
-		echo "<script tytpe='text/javascript'>" .
+		echo "<script type='text/javascript'>" .
 				"function jsalert(){ alert('You do not sufficient privileges to execute this module.');" .
 				"window.location.href='index.php?a=106';}".
 				"setTimeout('jsalert()',100)".
@@ -45,7 +45,7 @@ $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
 	include_once "header.inc.php";
-	echo "<script tytpe='text/javascript'>" .
+	echo "<script type='text/javascript'>" .
 			"function jsalert(){ alert('Multiple modules sharing same unique id $id. Please contact the Site Administrator');" .
 			"window.location.href='index.php?a=106';}".
 			"setTimeout('jsalert()',100)".
@@ -55,7 +55,7 @@ if($limit>1) {
 }
 if($limit<1) {
 	include_once "header.inc.php";
-	echo "<script tytpe='text/javascript'>" .
+	echo "<script type='text/javascript'>" .
 			"function jsalert(){ alert('No record found for id $id');" .
 			"window.location.href='index.php?a=106';}" .
 			"setTimeout('jsalert()',100)".
@@ -66,7 +66,7 @@ if($limit<1) {
 $content = mysql_fetch_assoc($rs);
 if($content['disabled']) {
 	include_once "header.inc.php";			
-	echo "<script tytpe='text/javascript'>" .
+	echo "<script type='text/javascript'>" .
 			"function jsalert(){ alert('This module is disabled and cannot be executed.');" .
 			"window.location.href='index.php?a=106';}" .
 			"setTimeout('jsalert()',100)".
