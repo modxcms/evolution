@@ -264,10 +264,10 @@ else {
 }
 
 
-// generate new site_id and set manager theme to MODx 
+// generate new site_id and set manager theme to MODxGreen 
 if($installMode==0) {
 	$siteid = uniqid('');
-	mysql_query("REPLACE INTO $dbase.`".$table_prefix."system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODx')",$sqlParser->conn);
+	mysql_query("REPLACE INTO $dbase.`".$table_prefix."system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxGreen')",$sqlParser->conn);
 }
 else {
 	// update site_id if missing
