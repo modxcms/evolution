@@ -150,7 +150,7 @@ $modx->manager->initPageViewState();
 			<input type="button" value="<?php echo $_lang["add_tag"];?>" name="cmdsavetag" onclick="addTag()" /> <input style="visibility:hidden" type="button" value="<?php echo $_lang["cancel"];?>" name="cmdcanceltag" onclick="cancelTag()" /></td>
 		  </tr>
 		  <tr>
-		      <td colspan="4"><p>You may wish to reference the <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Refernce Guide</a> site for more information. This is not a complete list of possible Meta Tags</p></td>
+		      <td colspan="4"><p>You may wish to reference the <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Refernce Guide</a> site for more information. This is not a complete list of possible Meta Tags.</p></td>
 	      </tr>
 		</table><img src="media/images/_tx_.gif" width="1" height="5" /></td>
 	  </tr>
@@ -164,7 +164,7 @@ $modx->manager->initPageViewState();
 				"ORDER BY name"; 
 		$ds = mysql_query($sql); 
 		include_once $base_path."manager/includes/controls/datagrid.class.php";
-		$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items	
+		$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 		$grd->noRecordMsg = $_lang["no_records_found"];
 		$grd->cssClass="grid";
 		$grd->columnHeaderClass="gridHeader";
@@ -203,18 +203,18 @@ $modx->manager->initPageViewState();
 	$grd->altItemClass="gridAltItem";
 	$grd->fields="id,keyword,keyword"; 
 	$grd->columns=$_lang["delete"]." ,".$_lang["keyword"]." ,".$_lang["rename"];
-	$grd->colWidths="40";					
+	$grd->colWidths="40";
 	$grd->colAligns="center";
-	$grd->colTypes="template:<input id='delete[+id+]' name='delete_keywords[[+id+]]' type='checkbox'  />||".
-				   "template:<a onclick=\"if(document.getElementById('delete[+id+]').checked==true) { document.getElementById('delete[+id+]').checked=false; } else { document.getElementById('delete[+id+]').checked=true; }; return false;\" style='cursor:pointer'>[+keyword+]</a>||".
-				   "template:<input type='hidden' name='orig_keywords[keyword[+id+]]' value='[+keyword+]' /><input type='text' name='rename_keywords[keyword[+id+]]' value='[+keyword+]' style='width:100%;' />";		
-	echo $grd->render();						
+	$grd->colTypes="template:<input id=\"delete[+id+]\" name=\"delete_keywords[[+id+]]\" type=\"checkbox\"  />||".
+				   "template:<a onclick=\"if(document.getElementById('delete[+id+]').checked==true) { document.getElementById('delete[+id+]').checked=false; } else { document.getElementById('delete[+id+]').checked=true; }; return false;\" style=\"cursor:pointer\">[+keyword+]</a>||".
+				   "template:<input type=\"hidden\" name=\"orig_keywords[keyword[+id+]]\" value=\"[+keyword+]\" /><input type=\"text\" name=\"rename_keywords[keyword[+id+]]\" value=\"[+keyword+]\" style=\"width:100%;\" />";
+	echo $grd->render();
 ?>
 	<table border=0 cellpadding=2 cellspacing=0> 
 		<tr><td colspan="5">&nbsp;</td></tr>
 		<tr>
 			<td>
-				<input type=submit value="<?php echo $_lang['save_all_changes']; ?>" onsubmit="return checkForm();" /> &nbsp;				
+				<input type=submit value="<?php echo $_lang['save_all_changes']; ?>" onsubmit="return checkForm();" /> &nbsp;
 			</td>
 			<td align="right">&nbsp;<?php echo $_lang['new_keyword']; ?></td>
 			<td>
