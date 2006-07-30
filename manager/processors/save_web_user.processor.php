@@ -75,7 +75,7 @@ switch ($_POST['mode']) {
 		// check if this user name already exist
 		$sql = "SELECT id FROM $dbase.".$table_prefix."web_users WHERE username='$newusername'";
 		if(!$rs = mysql_query($sql)){
-			webAlert("An error occured while attempting to retreive all users with username $newusername.");
+			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
@@ -87,7 +87,7 @@ switch ($_POST['mode']) {
 		// check if the email address already exist
 		$sql = "SELECT id FROM $dbase.".$table_prefix."web_user_attributes WHERE email='$email'";
 		if(!$rs = mysql_query($sql)){
-			webAlert("An error occured while attempting to retreive all users with email $email.");
+			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
@@ -129,7 +129,7 @@ switch ($_POST['mode']) {
 				VALUES('".$newusername."', md5('".$newpassword."'));";
 		$rs = mysql_query($sql);
 		if(!$rs){
-			webAlert("An error occured while attempting to save the user.");
+			webAlert("An error occurred while attempting to save the user.");
 			exit;
 		} 		
 		// now get the id
@@ -141,7 +141,7 @@ switch ($_POST['mode']) {
 				VALUES($key, '$fullname', '$roleid', '$email', '$phone', '$mobilephone', '$fax', '$zip', '$state', '$country', '$gender', '$dob', '$photo', '$comment', '$blocked', '$blockeduntil', '$blockedafter');";
 		$rs = mysql_query($sql);
 		if(!$rs){
-			webAlert("An error occured while attempting to save the user's attributes.");
+			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;
 		}
 
@@ -175,7 +175,7 @@ switch ($_POST['mode']) {
 					$sql = "INSERT INTO $dbase.".$table_prefix."web_groups(webgroup, webuser) values('".intval($user_groups[$i])."', '".$key."')";
 					$rs = mysql_query($sql);
 					if(!$rs){
-						webAlert("An error occured while attempting to add the user to a web group.");
+						webAlert("An error occurred while attempting to add the user to a web group.");
 						exit;
 					}
 				}
@@ -252,7 +252,7 @@ switch ($_POST['mode']) {
 		// check if the username already exist
 		$sql = "SELECT id FROM $dbase.".$table_prefix."web_users WHERE username='$newusername'";
 		if(!$rs = mysql_query($sql)){
-			webAlert("An error occured while attempting to retreive all users with username $newusername.");
+			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
@@ -267,7 +267,7 @@ switch ($_POST['mode']) {
 		// check if the email address already exists
 		$sql = "SELECT internalKey FROM $dbase.".$table_prefix."web_user_attributes WHERE email='$email'";
 		if(!$rs = mysql_query($sql)){
-			webAlert("An error occured while attempting to retreive all users with email $email.");
+			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
 		} 
 		$limit = mysql_num_rows($rs);
@@ -289,7 +289,7 @@ switch ($_POST['mode']) {
 		// update user name and password
 		$sql = "UPDATE $dbase.".$table_prefix."web_users SET username='$newusername'".$updatepasswordsql." WHERE id=$id";
 		if(!$rs = mysql_query($sql)){
-			webAlert("An error occured while attempting to update the user's data.");
+			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		} 
 		
@@ -313,7 +313,7 @@ switch ($_POST['mode']) {
 			blockedafter='$blockedafter' 
 			WHERE internalKey=$id";
 		if(!$rs = mysql_query($sql)){
-			webAlert("An error occured while attempting to update the user's attributes.");
+			webAlert("An error occurred while attempting to update the user's attributes.");
 			exit;
 		}
 
@@ -357,7 +357,7 @@ switch ($_POST['mode']) {
 			$sql = "DELETE FROM $dbase.".$table_prefix."web_groups WHERE webuser=$id;";
 			$rs = mysql_query($sql);
 			if(!$rs){
-				webAlert("An error occured while attempting to delete previous user_groups entries.");
+				webAlert("An error occurred while attempting to delete previous user_groups entries.");
 				exit;
 			}
 			if(count($user_groups)>0) {
@@ -365,7 +365,7 @@ switch ($_POST['mode']) {
 					$sql = "INSERT INTO $dbase.".$table_prefix."web_groups(webgroup, webuser) VALUES('".intval($user_groups[$i])."', '$id')";
 					$rs = mysql_query($sql);
 					if(!$rs){
-						webAlert("An error occured while attempting to add the user to a user_group.<br />$sql;");
+						webAlert("An error occurred while attempting to add the user to a user_group.<br />$sql;");
 						exit;
 					}
 				}
@@ -426,6 +426,7 @@ function sendMailMessage($email,$uid,$pwd,$ufn){
 	$message = str_replace("[+pwd+]",$pwd,$message);
 	$message = str_replace("[+ufn+]",$ufn,$message);
 	$message = str_replace("[+sname+]",$site_name,$message);
+	$message = str_replace("[+saddr+]",$emailsender,$message);
 	$message = str_replace("[+semail+]",$emailsender,$message);
 	$message = str_replace("[+surl+]",$site_url,$message);
 	if(!mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion(), "-f $emailsender")) {
