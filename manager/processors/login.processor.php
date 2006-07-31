@@ -29,7 +29,10 @@ include_once "version.inc.php";
 include_once "log.class.inc.php";
 
 // include the crypto thing
-//include_once "crypt.class.inc.php";
+include_once "crypt.class.inc.php";
+
+// start session
+startCMSSession();
 
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
@@ -39,7 +42,7 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 include_once "error.class.inc.php";
 $e = new errorHandler;
 
-//$cookieKey = substr(md5($site_id."Admin-User"),0,15);
+$cookieKey = substr(md5($site_id."Admin-User"),0,15);
 
 // initiate the content manager class
 include_once "document.parser.class.inc.php";
@@ -97,6 +100,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 
 if($failedlogins>=3 && $blockeduntildate>time()) {	// blocked due to number of login errors.
 		session_destroy();
+		session_unset();
 		$e->setError(902);
 		$e->dumpError();
 }
@@ -108,6 +112,7 @@ if($failedlogins>=3 && $blockeduntildate<time()) {	// blocked due to number of l
 
 if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
 	session_destroy();
+	session_unset();
 	$e->setError(903);
 	$e->dumpError();
 }
@@ -115,6 +120,7 @@ if($blocked=="1") { // this user has been blocked by an admin, so no way he's lo
 // blockuntil
 if($blockeduntildate>time()) { // this user has a block until date
 	session_destroy();
+	session_unset();
 	$output = jsAlert("You are blocked and cannot log in! Please try again later.");
 	return;
 }
@@ -122,6 +128,7 @@ if($blockeduntildate>time()) { // this user has a block until date
 // blockafter
 if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
 	session_destroy();
+	session_unset();
 	$output = jsAlert("You are blocked and cannot log in! Please try again later.");
 	return;
 }
@@ -187,6 +194,7 @@ if($newloginerror==1) {
 		$rs = mysql_query($sql);
 	}
 	session_destroy();
+	session_unset();
 	$e->dumpError();
 }
 
@@ -232,7 +240,13 @@ $_SESSION['mgrDocgroups'] = $dg;
 
 
 if($_POST['rememberme']==1) {
-	setcookie(session_name(), session_id());
+	$rc4 = new rc4crypt;
+	$username = $_POST['username'];
+	$thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
+	$cookieString = $rc4->endecrypt($thepasswd,$username);
+	setcookie($cookieKey, $cookieString, time()+604800, "/", "", 0);
+} else {
+	setcookie($cookieKey, "",time()-604800, "/", "", 0);
 }
 
 $log = new logHandler;

@@ -1,13 +1,13 @@
 <?php
 /**
- *  MODx Document Parser
- *  Function: This class contains the main document parsing functions
+ *	MODx Document Parser
+ *	Function: This class contains the main document parsing functions
  *
  */
 
 class DocumentParser {
-  var $db;          // db object
-  var $event,$Event;    // event object
+  var $db;			// db object
+  var $event,$Event;	// event object
 
   var $pluginEvent;
 
@@ -17,12 +17,11 @@ class DocumentParser {
       $stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName,
       $aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache,
       $snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir,
-      $placeholders,$sjscripts,$jscripts,$loadedjscripts,$documentMap,$xpdo;
+      $placeholders,$sjscripts,$jscripts,$loadedjscripts,$documentMap;
 
   // constructor
   function DocumentParser() {
-    startCMSSession($this->xpdo);
-    $this->loadExtension('DBAPI'); // load DBAPI class      
+    $this->loadExtension('DBAPI'); // load DBAPI class		
     $this->dbConfig = &$this->db->config; // alias for backward compatibility
     $this->jscripts = array();
     $this->sjscripts = array();
@@ -33,16 +32,8 @@ class DocumentParser {
     $this->pluginEvent = array();
     // set track_errors ini variable
     @ini_set("track_errors","1"); // enable error tracking in $php_errormsg
-    global $base_path;
-    global $database_type, $database_server, $dbase, $database_user, 
-           $database_password, $table_prefix;
-    if (class_exists('xPDO', false) || @include_once ($base_path . 'xpdo/xpdo.class.php')) {
-      $this->xpdo= new xPDO($database_type . ':host=' . $database_server . ';dbname=' . str_replace('`', '', $dbase), $database_user, $database_password, $table_prefix);
-      $this->xpdo->setPackage('modx095');
-      $this->xpdo->setLogTarget('HTML');
-    }
   }
-  
+
   // loads an extension from the extenders folder
   function loadExtension($extname){
     global $base_path;
@@ -54,7 +45,7 @@ class DocumentParser {
     if($extname=='ManagerAPI'){
       include_once $base_path.'/manager/includes/extenders/manager.api.class.inc.php';
       $this->manager = new ManagerAPI;
-    }       
+    }		
   }
 
   function getMicroTime() {
@@ -90,8 +81,8 @@ class DocumentParser {
          // check if url has /$base_url 
          global $base_url,$site_url;
          if (substr($url,0,strlen($base_url))==$base_url) {
-            // append $site_url to make it work with Location:
-            $url = $site_url.substr($url,strlen($base_url));
+         	// append $site_url to make it work with Location:
+         	$url = $site_url.substr($url,strlen($base_url));
          }
         $header = 'Location: '.$url;
       }
@@ -183,7 +174,7 @@ class DocumentParser {
         $result = $this->dbQuery('SELECT setting_name, setting_value FROM '.$query);
         while ($row = $this->fetchRow($result, 'both')) $usrSettings[$row[0]] = $row[1];
         if(isset($usrType)) $_SESSION[$usrType.'UsrConfigSet'] = $usrSettings; // store user settings in session
-      }         
+      }			
       $this->config = array_merge($this->config,$usrSettings);
     }
   }
@@ -320,12 +311,12 @@ class DocumentParser {
               // no match found, send the visitor to the error_page
               $this->sendErrorPage();
               exit; // stop here
-            }                       
+            }						
           }
         }
         unset($docObj['__MODxDocGroups__']);
         $this->documentObject = $docObj;
-        return $a[1];   // return document content
+        return $a[1];	// return document content
       }
     } else {
       $this->documentGenerated=1;
@@ -394,7 +385,7 @@ class DocumentParser {
           $name = preg_replace('/[^\.%a-z0-9 _-]/', '', $name);
           $name = preg_replace('/\s+/', '-', $name);
           $name = preg_replace('|-+|', '-', $name);
-          $name = trim($name, '-');                 
+          $name = trim($name, '-');					
         }
         $header = 'Content-Disposition: attachment; filename='.$name;
         header($header);
@@ -433,7 +424,7 @@ class DocumentParser {
       }
 
       // now, check for documents that need un-publishing
-      $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=0, publishedon=0, publishedby=0 WHERE ".$this->getFullTableName("site_content").".unpub_date < $timeNow AND ".$this->getFullTableName("site_content").".unpub_date!=0";
+      $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=0, publishedon=0, publihsedby=0 WHERE ".$this->getFullTableName("site_content").".unpub_date < $timeNow AND ".$this->getFullTableName("site_content").".unpub_date!=0";
       if(@!$result = $this->dbQuery($sql)) {
         $this->messageQuit("Execution of a query to the database failed", $sql);
       }
@@ -504,7 +495,7 @@ class DocumentParser {
       $this->invokeEvent("OnBeforeSaveWebPageCache");
       if($fp = @fopen($basepath."/docid_".$this->documentIdentifier.".pageCache.php","w")){
         // get and store document groups inside document object. Document groups will be used to check security on cache pages
-        $sql = "SELECT document_group FROM ".$this->getFullTableName("document_groups")." WHERE document='".$this->documentIdentifier."'";              
+        $sql = "SELECT document_group FROM ".$this->getFullTableName("document_groups")." WHERE document='".$this->documentIdentifier."'";				
         $docGroups = $this->db->getColumn("document_group",$sql);
         if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(",",$docGroups);
         $docObjSerial = serialize($this->documentObject);
@@ -514,6 +505,9 @@ class DocumentParser {
       }
     }
 
+    if($this->config['track_visitors']==1 && !isset($_REQUEST['z'])) {
+      $this->log();
+    }
     // end post processing
   }
 
@@ -685,7 +679,7 @@ class DocumentParser {
         $snippetParams[$i] = $params;
       }
       $nrSnippetsToGet = $matchCount;
-      for($i=0;$i<$nrSnippetsToGet;$i++) {  // Raymond: Mod for Snippet props
+      for($i=0;$i<$nrSnippetsToGet;$i++) {	// Raymond: Mod for Snippet props
         if(isset($this->snippetCache[$matches[1][$i]])) {
           $snippets[$i]['name'] = $matches[1][$i];
           $snippets[$i]['snippet'] = $this->snippetCache[$matches[1][$i]];
@@ -868,8 +862,8 @@ class DocumentParser {
       }
 
       // invoke OnParseDocument event
-      $this->documentOutput = $source;      // store source code so plugins can             
-      $this->invokeEvent("OnParseDocument");    // work on it via $modx->documentOutput
+      $this->documentOutput = $source; 		// store source code so plugins can 			
+      $this->invokeEvent("OnParseDocument");	// work on it via $modx->documentOutput
       $source = $this->documentOutput;
 
       // combine template and document variables
@@ -889,7 +883,7 @@ class DocumentParser {
         // check if source length was changed
         $et = strlen($source);
         if($st!=$et) $passes++; // if content change then increase passes because 
-      }                         // we have not yet reached maxParserPasses
+      }							// we have not yet reached maxParserPasses
     }
     return $source;
   }
@@ -1063,9 +1057,9 @@ class DocumentParser {
       $this->documentContent = $this->parseDocumentSource($this->documentContent);
 
       // setup <base> tag for friendly urls
-      //            if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
-      //                $this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
-      //            }           
+      //			if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
+      //				$this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
+      //			}			
 
       // Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
       if ($js = $this->getRegisteredClientStartupScripts()){
@@ -1087,7 +1081,7 @@ class DocumentParser {
 
 
   /***************************************************************************************/
-  /* API functions                                                              /
+  /* API functions																/
   /***************************************************************************************/
 
   function getParentIds($id, $height= 10, $parents= array()) {
@@ -1500,7 +1494,7 @@ class DocumentParser {
     $result = $this->dbQuery($sql);
     $limit = $this->recordCount($result);
     $keywords = array();
-    if($limit > 0)  {
+    if($limit > 0) 	{
       for($i=0;$i<$limit;$i++) {
         $row = $this->fetchRow($result);
         $keywords[] = $row['keyword'];
@@ -1521,7 +1515,7 @@ class DocumentParser {
     $ds = $this->db->query($sql);
     $limit = $this->db->getRecordCount($ds);
     $metatags = array();
-    if($limit > 0)  {
+    if($limit > 0) 	{
       for($i=0;$i<$limit;$i++) {
         $row = $this->db->getRow($ds);
         $metatags[$row['name']] = array("tag"=>$row['tag'],"tagvalue"=>$row['tagvalue'],"http_equiv"=>$row['http_equiv']);
@@ -1814,8 +1808,8 @@ class DocumentParser {
     $m=false;
     if(IN_MANAGER_MODE=='true'){
       $m = true;
-      if (SNIPPET_INTERACTIVE_MODE=='true') $m = "interact";
-      else if (SNIPPET_INSTALL_MODE=='true')    $m = "install";
+      if (SNIPPET_INTERACTIVE_MODE=='true')	$m = "interact";
+      else if (SNIPPET_INSTALL_MODE=='true')	$m = "install";
     }
     return $m;
   }
@@ -1937,9 +1931,9 @@ class DocumentParser {
             // invoke OnWebChangePassword event
             $this->invokeEvent("OnWebChangePassword",
                 array(
-                  "userid"      => $row["id"],
-                  "username"        => $row["username"],
-                  "userpassword"    => $newPwd
+                  "userid"		=> $row["id"],
+                  "username"		=> $row["username"],
+                  "userpassword"	=> $newPwd
                   ));
             return true;
           }
@@ -1997,7 +1991,7 @@ class DocumentParser {
     }
   }
 
-# Registers Client-side JavaScript  - these scripts are loaded at the end of the page
+# Registers Client-side JavaScript 	- these scripts are loaded at the end of the page
   function regClientScript($src, $plaintext=false){
     if ($this->loadedjscripts[$src]) return '';
     $this->loadedjscripts[$src] = true;
@@ -2021,11 +2015,11 @@ class DocumentParser {
 # Remove unwanted html tags and snippet, settings and tags
   function stripTags($html,$allowed="") {
     $t = strip_tags($html,$allowed);
-    $t = preg_replace('~\[\*(.*?)\*\]~',"",$t); //tv
-    $t = preg_replace('~\[\[(.*?)\]\]~',"",$t); //snippet
-    $t = preg_replace('~\[\!(.*?)\!\]~',"",$t); //snippet
-    $t = preg_replace('~\[\((.*?)\)\]~',"",$t); //settings
-    $t = preg_replace('~{{(.*?)}}~',"",$t);     //chunks
+    $t = preg_replace('~\[\*(.*?)\*\]~',"",$t);	//tv
+    $t = preg_replace('~\[\[(.*?)\]\]~',"",$t);	//snippet
+    $t = preg_replace('~\[\!(.*?)\!\]~',"",$t);	//snippet
+    $t = preg_replace('~\[\((.*?)\)\]~',"",$t);	//settings
+    $t = preg_replace('~{{(.*?)}}~',"",$t);		//chunks
     return $t;
   }
 
@@ -2033,14 +2027,14 @@ class DocumentParser {
   function addEventListener($evtName,$pluginName){
     if(!$evtName || !$pluginName) return false;
     $el =  $this->pluginEvent[$evtName];
-    if(empty($el)) $el = $this->pluginEvent[evtName] = array();
+    if(empty($el)) $el = $this->pluginEvent[$evtName] = array();
     return array_push($el,$pluginName); // return index
   }
 
 # remove event listner - only for use within the current execution cycle
   function removeEventListener($evtName){
     if (!$evtName) return false;
-    unset($this->pluginEvent[evtName]);
+    unset($this->pluginEvent[$evtName]);
   }
 
 # remove all event listners - only for use within the current execution cycle
@@ -2286,7 +2280,7 @@ See documentation for usage details
 ########################################
 
   /***************************************************************************************/
-  /* End of API functions                                      */
+  /* End of API functions								       */
   /***************************************************************************************/
 
   function phpError($nr, $text, $file, $line) {

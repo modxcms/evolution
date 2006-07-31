@@ -751,12 +751,11 @@ REPLACE INTO `{PREFIX}user_attributes`
 REPLACE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxGreen'),
-('settings_version','0.9.5'),
+('settings_version','0.9.2'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','english'),
 ('etomite_charset','UTF-8'),
-('modx_charset','UTF-8'),
 ('site_name','My MODx Site'),
 ('site_start','1'),
 ('error_page','1'),

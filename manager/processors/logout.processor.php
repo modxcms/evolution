@@ -13,13 +13,17 @@ $modx->invokeEvent("OnBeforeManagerLogout",
 						));
 
 // Unset all of the session variables.
-//$_SESSION = array();
+$_SESSION = array();
 // destroy session cookie
 if (isset($_COOKIE[session_name()])) {
-    setcookie(session_name(), false);
+    setcookie(session_name(), '', time()-42000, '/');
 }
 // now destroy the session
 @session_destroy(); // this sometimes generate an error in iis
+$sessionID = md5(date('d-m-Y H:i:s'));
+session_id($sessionID);
+startCMSSession();
+session_destroy();
 
 // invoke OnManagerLogout event
 $modx->invokeEvent("OnManagerLogout",

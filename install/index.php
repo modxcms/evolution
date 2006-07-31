@@ -22,7 +22,7 @@
 	}
 
 	$moduleName 		= "Module Installation";
-	$moduleVersion 		= "1.0 ";
+	$moduleVersion 		= "0.9.5 beta";
 	$moduleSQLBaseFile 	= "setup.sql";
 	$moduleSQLDataFile 	= "setup.data.sql";
 	$moduleWhatsNewFile = "setup.whatsnew.html";
@@ -44,7 +44,7 @@
 	
 	# load setup information file
 	$setupPath = dirname(__FILE__);
-	include_once "$setupPath/setup.info.php";
+	include_once "{$setupPath}/setup.info.php";
 
 	$errors = 0;
 	$syscheck = ($_POST['syscheck']=="on") ? true:false;
@@ -76,21 +76,21 @@
 			$status .= '...    Checking database: ';
 			if(!@mysql_select_db(str_replace("`","",$dbase), $conn)) $status .= "failed - $dbase does not exist!"; 
 			else {
-				if(@$rs=mysql_query("SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content")) $status .= "failed - table prefix already in use!";
+				if(@$rs=mysql_query("SELECT COUNT(*) FROM {$dbase}.{$table_prefix}site_content")) $status .= "failed - table prefix already in use!";
 				else {
 					$status .= 'passed';
 					$color = '#007700';
 				}
 			}
 		}		 
-		echo "<script>parent.testResult('$status','$color');</script>";
+		echo "<script type=\"text/javascript\">parent.testResult('{$status}','{$color}');</script>";
 		exit;
 	} // end - Test db connecttion
 	
 	// start install process
 	if($isPostBack) {
 		ob_start();
-		include_once "$setupPath/instprocessor.php";
+		include_once "{$setupPath}/instprocessor.php";
 		$moduleWelcomeMessage = ob_get_contents();
 		ob_end_clean();
 	}
@@ -106,18 +106,17 @@
 				<table width="100%">
 				<tr>
 				<td valign="top">
-					<p class='title'>Welcome to the <?php echo $moduleName; ?> installation program.</p>
+					<p class="title">Welcome to the <?php echo $moduleName; ?> installation program.</p>
 					<p>This program will guide you through the rest of the installation.</p>
-					<p>Please select 'Next' button to continue:</p>
+					<p>Please select the `Next` button to continue:</p>
 					<br />
-					<center><img src="img_splash.gif" /></center>
+					<center><img src="img_splash.gif" alt="MODx Installation" /></center>
 				</td>
 				<td align="center" width="280">
-					<img src="img_box.png" />&nbsp;
+					<img src="img_box.png" alt="MODx Create and Do More with Less" />&nbsp;
 				</td>
 				</tr>
 				</table>
-				
 			<?php
 			$o = ob_get_contents();
 			ob_end_clean();
@@ -134,7 +133,7 @@
 			ob_start();
 			?>
 				<div style="padding-right:10px;">
-				    <p class='title'><?php echo $moduleName; ?> License Agreement.</p>
+                    <p class="title"><?php echo $moduleName; ?> License Agreement.</p>
 				    <hr style="text-align:left;height:1px;width:90%" />
 					<p><h4>You must agree to the License before continuing installation.</h4>
 					Usage of this software is subject to the GPL license. To help you understand 
@@ -194,13 +193,13 @@
 		global $upgradeable;
 		global $moduleName;
 		ob_start();
-		echo "<p class=\"title\">Installation Mode</p>";
+		echo '<p class="title">Installation Mode</p>';
 		?>
 			<table border="0" width="100%">
 			  <tr>
 				<td nowrap valign="top" width="37%">
 				<img src="im_new_inst.gif" align="left" width="32" height="32" hspace="5" />
-				<input type="radio" name="installmode" id="installmode1" value="new" onclick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? "checked='checked'":"" ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
+				<input type="radio" name="installmode" id="installmode1" value="new" onclick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? 'checked="checked"':'' ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
 				<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please note that this option may overwrite any data inside your database. </td>
 			  </tr>
 			  <tr>
@@ -210,7 +209,7 @@
 			  <tr>
 				<td nowrap valign="top" width="37%">
 				<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
-				<input type="radio" name="installmode" id="installmode2" value="upd" onclick="setInstallMode(1);" <?php echo !$upgradeable ? "disabled='diabled'":"" ?> <?php echo $_POST['installmode']=='upd' ? "checked='checked'":"" ?> /><label for="installmode2" class="nofloat">Upgrade Installation</label></td>
+				<input type="radio" name="installmode" id="installmode2" value="upd" onclick="setInstallMode(1);" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo $_POST['installmode']=='upd' ? 'checked="checked"':'' ?> /><label for="installmode2" class="nofloat">Upgrade Installation</label></td>
 				<td width="61%">Select this option to upgrade your current files and database.</td>
 			  </tr>
 			</table>
@@ -270,20 +269,20 @@
 		ob_start();	
 		echo "<p class=\"title\">Optional Items</p><p>Please choose your installation options and click Install:</p>";
 		
-		$chk = isset($_POST['installdata']) ? "checked='checked'":"";
-		echo '<img src="im_sample.gif" align="left" width="45" height="48" hspace="5" hspace="10" />';
+		$chk = isset($_POST['installdata']) ? 'checked="checked"':"";
+		echo '<img src="im_sample.gif" align="left" width="45" height="48" hspace="5" hspace="10" alt="Sample Data" />';
 		echo "<h1>&nbsp;Sample Web Site</h1>";
-		echo "&nbsp;<input type='checkbox' name='installdata' value='1' $chk />Install/Overwrite <span class='comname'>Sample Web Site</span> <br /><span><i>&nbsp;Please note that this will <b style='color:#CC0000'>overwrite</b> existing documents and resources.</i></span><hr size='1' style='border:1px dotted silver;' />";
+		echo "&nbsp;<input type=\"checkbox\" name=\"installdata\" value=\"1\" $chk />Install/Overwrite <span class=\"comname\">Sample Web Site</span> <br /><span><i>&nbsp;Please note that this will <b style=\"color:#CC0000\">overwrite</b> existing documents and resources.</i></span><hr size=\"1\" style=\"border:1px dotted silver;\" />";
 		
 		// display templates
 		$templates = isset($_POST['template']) ? $_POST['template']:array();
 		$limit = count($moduleTemplates);
 		if ($limit>0) {	
-			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="Templates" />';
 			echo "<h1>Templates</h1><br />";
 			for ($i=0;$i<$limit;$i++) {
-				$chk = in_array($i,$templates)||(!count($_POST)) ? "checked='checked'": "";
-				echo "&nbsp;<input type='checkbox' name='template[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleTemplates[$i][0]."</span> - ".$moduleTemplates[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+				$chk = in_array($i,$templates)||(!count($_POST)) ? 'checked="checked"': "";
+				echo "&nbsp;<input type=\"checkbox\" name=\"template[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">".$moduleTemplates[$i][0]."</span> - ".$moduleTemplates[$i][1]."<hr size=\"1\" style=\"border:1px dotted silver;\" />";
 			}
 		}
 		
@@ -291,11 +290,11 @@
 		$chunks = isset($_POST['chunk']) ? $_POST['chunk']:array();
 		$limit = count($moduleChunks);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="Chunks" />';
 			echo "<h1>Chunks</h1>";
 			for ($i=0;$i<$limit;$i++) {
-				$chk = in_array($i,$chunks)||(!count($_POST)) ? "checked='checked'": "";
-				echo "&nbsp;<input type='checkbox' name='chunk[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleChunks[$i][0]."</span> - ".$moduleChunks[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+				$chk = in_array($i,$chunks)||(!count($_POST)) ? 'checked="checked"': "";
+				echo "&nbsp;<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">".$moduleChunks[$i][0]."</span> - ".$moduleChunks[$i][1]."<hr size=\"1\" style=\"border:1px dotted silver;\" />";
 			}
 		}
 		
@@ -303,11 +302,11 @@
 		$modules = isset($_POST['module']) ? $_POST['module']:array();
 		$limit = count($moduleModules);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="Modules" />';
 			echo "<h1>Modules</h1>";
 			for ($i=0;$i<$limit;$i++) {
-				$chk = in_array($i,$modules)||(!count($_POST)) ? "checked='checked'": "";
-				echo "&nbsp;<input type='checkbox' name='module[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleModules[$i][0]."</span> - ".$moduleModules[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+				$chk = in_array($i,$modules)||(!count($_POST)) ? 'checked="checked"': "";
+				echo "&nbsp;<input type=\"checkbox\" name=\"module[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">".$moduleModules[$i][0]."</span> - ".$moduleModules[$i][1]."<hr size=\"1\" style=\"border:1px dotted silver;\" />";
 			}
 		}
 		
@@ -315,11 +314,11 @@
 		$plugins = isset($_POST['plugin']) ? $_POST['plugin']:array();
 		$limit = count($modulePlugins);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="Plugins" />';
 			echo "<h1>Plugins</h1>";
 			for ($i=0;$i<$limit;$i++) {
-				$chk = in_array($i,$plugins)||(!count($_POST)) ? "checked='checked'": "";
-				echo "&nbsp;<input type='checkbox' name='plugin[]' value='$i' $chk />Install/Update <span class='comname'>".$modulePlugins[$i][0]."</span> - ".$modulePlugins[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+				$chk = in_array($i,$plugins)||(!count($_POST)) ? 'checked="checked"': "";
+				echo "&nbsp;<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">".$modulePlugins[$i][0]."</span> - ".$modulePlugins[$i][1]."<hr size=\"1\" style=\"border:1px dotted silver;\" />";
 			}
 		}
 		
@@ -327,11 +326,11 @@
 		$snippets = isset($_POST['snippet']) ? $_POST['snippet']:array();
 		$limit = count($moduleSnippets);
 		if ($limit>0) {
-			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" />';
+			echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="Snippets" />';
 			echo "<h1>Snippets</h1>";
 			for ($i=0;$i<$limit;$i++) {
-				$chk = in_array($i,$snippets)||(!count($_POST)) ? "checked='checked'": "";
-				echo "&nbsp;<input type='checkbox' name='snippet[]' value='$i' $chk />Install/Update <span class='comname'>".$moduleSnippets[$i][0]."</span> - ".$moduleSnippets[$i][1]."<hr size='1' style='border:1px dotted silver;' />";
+				$chk = in_array($i,$snippets)||(!count($_POST)) ? 'checked="checked"': "";
+				echo "&nbsp;<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">".$moduleSnippets[$i][0]."</span> - ".$moduleSnippets[$i][1]."<hr size=\"1\" style=\"border:1px dotted silver;\" />";
 			}
 		}
 		
@@ -353,10 +352,10 @@
 		$php_ver_comp2 =  version_compare(phpversion(), "4.3.8");
 		// -1 if left is less, 0 if equal, +1 if left is higher
 		if($php_ver_comp < 0) {
-			echo "<span class='notok'>Failed!</span> - You are running on PHP ".phpversion().", and ModX requires PHP 4.1.0 or later</p>";
+			echo "<span class=\"notok\">Failed!</span> - You are running on PHP ".phpversion().", and ModX requires PHP 4.1.0 or later</p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 			if($php_ver_comp2 < 0) {
 			   echo "<fieldset><legend>Security notice</legend><p>While MODx will work on your PHP version (".phpversion()."), usage of MODx on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 4.3.8 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p></fieldset>";	
 			}
@@ -364,77 +363,77 @@
 		// check sessions
 		echo "<p>Checking if sessions are properly configured: ";
 		if($_SESSION['session_test']!=1 ) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// check directories
 		// cache exists?
-		echo "<p>Checking if <span class='mono'>assets/cache</span> directory exists: ";
+		echo "<p>Checking if <span class=\"mono\">assets/cache</span> directory exists: ";
 		if(!file_exists("../assets/cache")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// cache writable?
-		echo "<p>Checking if <span class='mono'>assets/cache</span> directory is writable: ";
+		echo "<p>Checking if <span class=\"mono\">assets/cache</span> directory is writable: ";
 		if(!is_writable("../assets/cache")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// cache files writable?
-		echo "<p>Checking if <span class='mono'>assets/cache/siteCache.idx.php</span> file is writable: ";
+		echo "<p>Checking if <span class=\"mono\">assets/cache/siteCache.idx.php</span> file is writable: ";
 		if(!is_writable("../assets/cache/siteCache.idx.php")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
-		echo "<p>Checking if <span class='mono'>assets/cache/sitePublishing.idx.php</span> file is writable: ";
+		echo "<p>Checking if <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> file is writable: ";
 		if(!is_writable("../assets/cache/sitePublishing.idx.php")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// images exists?
-		echo "<p>Checking if <span class='mono'>assets/images</span> directory exists: ";
+		echo "<p>Checking if <span class=\"mono\">assets/images</span> directory exists: ";
 		if(!file_exists("../assets/images")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// images writable?
-		echo "<p>Checking if <span class='mono'>assets/images</span> directory is writable: ";
+		echo "<p>Checking if <span class=\"mono\">assets/images</span> directory is writable: ";
 		if(!is_writable("../assets/images")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// export exists?
-		echo "<p>Checking if <span class='mono'>assets/export</span> directory exists: ";
+		echo "<p>Checking if <span class=\"mono\">assets/export</span> directory exists: ";
 		if(!file_exists("../assets/export")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// export writable?
-		echo "<p>Checking if <span class='mono'>assets/export</span> directory is writable: ";
+		echo "<p>Checking if <span class=\"mono\">assets/export</span> directory is writable: ";
 		if(!is_writable("../assets/export")) {
-			echo "<span class='notok'>Failed!</span></p>";
+			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// config.inc.php writable?
-		echo "<p>Checking if <span class='mono'>manager/includes/config.inc.php</span> exists and is writable: ";
+		echo "<p>Checking if <span class=\"mono\">manager/includes/config.inc.php</span> exists and is writable: ";
 		if(!file_exists("../manager/includes/config.inc.php")) {
 			// make an attempt to create the file
 			@$hnd=fopen("../manager/includes/config.inc.php", 'w');
@@ -443,10 +442,10 @@
 		}
 		$isWriteable = is_writable("../manager/includes/config.inc.php");
 		if(!$isWriteable) {
-			echo "<span class='notok'>Failed!</span></p><p><strong>For new Linux/Unix installs, please create a blank file named <span class='mono'>config.inc.php</span> in the <span class='mono'>manager/includes/</span> directory with file permissions set to 777.</strong></p>";
+			echo "<span class=\"notok\">Failed!</span></p><p><strong>For new Linux/Unix installs, please create a blank file named <span class=\"mono\">config.inc.php</span> in the <span class=\"mono\">manager/includes/</span> directory with file permissions set to 777.</strong></p>";
 			$errors += 1;
 		} else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		
 		// connect to the database
@@ -464,21 +463,21 @@
 		echo "<p>Creating connection to the database: ";
 		if(!@$conn = mysql_connect($database_server, $database_user, $database_password)) {
 			$errors += 1;
-			echo "<span class='notok'>Database connection failed!</span><p />Please check the database login details and try again.</p>";
+			echo "<span class=\"notok\">Database connection failed!</span><p />Please check the database login details and try again.</p>";
 		} 
 		else {
-			echo "<span class='ok'>OK!</span></p>";
+			echo "<span class=\"ok\">OK!</span></p>";
 		}
 		// check table prefix
 		if($conn && $installMode==0) {
 			echo "<p>Checking table prefix `".$table_prefix."`: ";
 			if(@$rs=mysql_query("SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content")) {
-				echo "<span class='notok'>Failed!</span></b> - Table prefix is already in use in this database!</p>";
+				echo "<span class=\"notok\">Failed!</span></b> - Table prefix is already in use in this database!</p>";
 				$errors += 1;
 				echo "<p>Setup couldn't install into the selected database, as it already contains tables with the prefix you specified. Please choose a new table_prefix, and run Setup again.</p>";
 			} 
 			else {
-				echo "<span class='ok'>OK!</span></p>";
+				echo "<span class=\"ok\">OK!</span></p>";
 			}
 		}		
 
@@ -497,8 +496,7 @@
 	}	
 
 ?>
-<!DOCTYPE html PUBliC "-//W3C//DTD XHTML 1.1//EN" 
-  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<title><?php echo $moduleName; ?> &raquo; Install</title>
@@ -506,13 +504,13 @@
         <style type="text/css">
              @import url(./style.css);
         </style>
-	<script type="text/javascript" language="JavaScript" src="webelm.js"></script>
-	<script language="JavaScript" type="text/javascript">
-    	
+	<script type="text/javascript" src="webelm.js"></script>
+	<script type="text/javascript">
+/* <![CDATA[ */
     	var cursrc = 1;
 		var syscheck = <?php echo $syscheck ? "true":"false"; ?>;
 		var installMode = <?php echo $installMode; ?>; // -1 - not set, 0 - new, 1 - upgrade
-		var sidebar = "<a href='<?php echo $moduleWhatsNewFile; ?>' target='_blank'><?php echo $moduleWhatsNewTitle; ?></a>&nbsp;<p /><img src='img_install.gif' width='48' height='48' />";		
+		var sidebar = "<a href=\"<?php echo $moduleWhatsNewFile; ?>\" target=\"_blank\"><?php echo $moduleWhatsNewTitle; ?></a>&nbsp;<br /><img src=\"img_install.gif\" width=\"48\" height=\"48\" />";
 
 		// set I Agree
 		function setIAgree(){
@@ -716,7 +714,7 @@
 				window.location.href = "../manager/";
 			}
 		}
-		
+/* ]]> */
     </script>
 </head>	
 
@@ -725,7 +723,7 @@
 <table border="0" cellpadding="0" cellspacing="0" class="mainTable" style="width:100%;">
 <tr>
     <td colspan="2">
-		  <img style="padding:12px" src="img_banner.gif">
+		  <img style="padding:12px" src="img_banner.gif" alt="MODx Create and Do More with Less" />
     </td>
   </tr>
   <tr class="fancyRow2">
@@ -737,7 +735,7 @@
         <td class="pad" id="content" colspan="2">
 			<table border="0" width="100%">
 			<tr>
-			<td valign="top" nowrap="nowrap"><div id="sidebar" class="sidebar"><script>document.write(sidebar);</script></div></td>
+			<td valign="top" nowrap="nowrap"><div id="sidebar" class="sidebar"><script type="text/javascript">document.write(sidebar);</script></div></td>
 			<td style="border-left:1px dotted silver;padding-left:30px;padding-right:20px;">
 			<form name="install" action="index.php?s=set" method="post">
 			<div id="viewer" class="viewer" style="visibility:hidden">
@@ -754,7 +752,7 @@
 			<br />
 			<div id="navbar">
 				<?php if($isPostBack) { ?>
-					<input type='button' value='Close' name='cmdclose' style='float:right;width:100px;' onclick="closepage();" />
+					<input type="button" value="Close" name="cmdclose" style="float:right;width:100px;" onclick="closepage();" />
 					<?php 
 						if($errors==0) { 
 							// check if install folder is removeable
@@ -766,10 +764,10 @@
 							}					
 						} ?>
 				<?php } else {?>
-					<input type='button' value='Next' name='cmdnext' style='float:right;width:100px;' onclick="changeScreen(1);" />
+					<input type="button" value="Next" name="cmdnext" style="float:right;width:100px;" onclick="changeScreen(1);" />
 					<span style="float:right">&nbsp;</span>
-					<input type='button' value='Back' name='cmdback' style='float:right;width:100px;' onclick="changeScreen(-1);" />
-					<span id="iagreebox" style='float:left;cursor:pointer;background-color:#eee;line-height:18px'><input type='checkbox' value='1' id='chkagree' name='chkagree' onclick="setIAgree()" <?php echo isset($_POST['chkagree']) ? "checked='checked'":""; ?> style='line-height:18px'/><label for='chkagree' style='display: inline;float:none;line-height:18px;'> I agree to the terms set out in this license. </label></span>
+					<input type="button" value="Back" name="cmdback" style="float:right;width:100px;" onclick="changeScreen(-1);" />
+					<span id="iagreebox" style="float:left;cursor:pointer;background-color:#eee;line-height:18px"><input type="checkbox" value="1" id="chkagree" name="chkagree" onclick="setIAgree()" <?php echo isset($_POST['chkagree']) ? 'checked="checked"':""; ?> style="line-height:18px" /><label for="chkagree" style="display: inline;float:none;line-height:18px;"> I agree to the terms set out in this license. </label></span>
 				<?php } ?>
 			</div>
 			<input name="syscheck" type="hidden" value="<?php echo ($syscheck && $errors) ? "on":""; ?>" />

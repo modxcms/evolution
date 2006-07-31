@@ -153,11 +153,15 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		}
 		else {
 			// Unset all of the session variables.
-            session_unset();
+			$_SESSION = array();
 			// destroy session cookie
 			if (isset($_COOKIE[session_name()])) {
-				setcookie(session_name(), false);
+				setcookie(session_name(), '', time()-42000, '/');
 			}
+			session_destroy();
+			$sessionID = md5(date('d-m-Y H:i:s'));
+			session_id($sessionID);
+			startCMSSession();
 			session_destroy();
 		}
 
@@ -223,6 +227,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 	if($failedlogins>=3 && $blockeduntildate>time()) {	// blocked due to number of login errors.
 		session_destroy();
+		session_unset();
 		$output = webLoginAlert("Due to three or more failed logins, you have been blocked!");
 		return;
 	}
@@ -234,6 +239,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 	if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
 		session_destroy();
+		session_unset();
 		$output = webLoginAlert("You are blocked and cannot log in!");
 		return;
 	}
@@ -241,6 +247,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	// blockuntil
 	if($blockeduntildate>time()) { // this user has a block until date
 		session_destroy();
+		session_unset();
 		$output = webLoginAlert("You are blocked and cannot log in! Please try again later.");
 		return;
 	}
@@ -248,6 +255,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	// blockafter
 	if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
 		session_destroy();
+		session_unset();
 		$output = webLoginAlert("You are blocked and cannot log in! Please try again later.");
 		return;
 	}
@@ -305,6 +313,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 			$ds = $modx->dbQuery($sql);
 		}
 		session_destroy();
+		session_unset();
 		return;
 	}
 
@@ -340,7 +349,13 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 	$_SESSION['webDocgroups'] = $dg;
 
 	if($_POST['rememberme']==1) {
-		setcookie(session_name(), session_id());
+		$username = $_POST['username'];
+		$thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
+		$rc4 = new rc4crypt;
+		$thestring = $rc4->endecrypt($thepasswd,$username);
+		setcookie($cookieKey, $thestring,time()+604800, "/", "", 0);
+	} else {
+		setcookie($cookieKey, "",time()-604800, "/", "", 0);
 	}
 
 	$log = new logHandler;

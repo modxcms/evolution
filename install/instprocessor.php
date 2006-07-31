@@ -46,20 +46,20 @@ $base_path = $pth.(substr($pth,-1)!="/"? "/":"");
 // connect to the database
 echo "<p>Creating connection to the database: ";
 if(!@$conn = mysql_connect($database_server, $database_user, $database_password)) {
-	echo "<span class='notok'>Database connection failed!</span></p><p>Please check the database login details and try again.</p>";
+	echo "<span class=\"notok\">Database connection failed!</span></p><p>Please check the database login details and try again.</p>";
 	return;
 } 
 else {
-	echo "<span class='ok'>OK!</span></p>";
+	echo "<span class=\"ok\">OK!</span></p>";
 }
 
 // select database
 echo "<p>Selecting database `".str_replace("`","",$dbase)."`: ";
 if(!@mysql_select_db(str_replace("`","",$dbase), $conn)) {
-	echo "<span class='notok' style='color:#707070'>Database selection failed...</span> The database does not exist. Setup will attempt to create it.</p>";
+	echo "<span class=\"notok\" style='color:#707070'>Database selection failed...</span> The database does not exist. Setup will attempt to create it.</p>";
 	$create = true;
 } else {
-	echo "<span class='ok'>OK!</span></p>";
+	echo "<span class=\"ok\">OK!</span></p>";
 }
 
 // try to create the database
@@ -67,7 +67,7 @@ if($create) {
 	echo "<p>Creating database `".str_replace("`","",$dbase)."`: ";
 //	if(!@mysql_create_db(str_replace("`","",$dbase), $conn)) {
 	if(!@mysql_query("CREATE DATABASE $dbase")) {
-		echo "<span class='notok'>Database creation failed!</span> - Setup could not create the database!</p>";
+		echo "<span class=\"notok\">Database creation failed!</span> - Setup could not create the database!</p>";
 		$errors += 1;
 ?>
 		<p>Setup could not create the database, and no existing database with the same name was found. It is likely that your hosting provider's security does not allow external scripts to create a database. Please create a database according to your hosting provider's procedure, and run Setup again.</p>
@@ -75,7 +75,7 @@ if($create) {
 		return;
 	} 
 	else {
-		echo "<span class='ok'>OK!</span></p>";
+		echo "<span class=\"ok\">OK!</span></p>";
 	}
 }
 
@@ -83,13 +83,13 @@ if($create) {
 if($installMode==0) {
 	echo "<p>Checking table prefix `".$table_prefix."`: ";
 	if(@$rs=mysql_query("SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content")) {
-		echo "<span class='notok'>Failed!</span> - Table prefix is already in use in this database!</p>";
+		echo "<span class=\"notok\">Failed!</span> - Table prefix is already in use in this database!</p>";
 		$errors += 1;
 		echo "<p>Setup couldn't install into the selected database, as it already contains tables with the prefix you specified. Please choose a new table_prefix, and run Setup again.</p>";
 		return;
 	} 
 	else {
-		echo "<span class='ok'>OK!</span></p>";
+		echo "<span class=\"ok\">OK!</span></p>";
 	}
 }
 
@@ -110,7 +110,7 @@ if($moduleSQLBaseFile) {
 	// display database results
 	if ($sqlParser->installFailed==true) {
 		$errors += 1;
-		echo "<span class='notok'><b>Database Alerts!</span></p>";
+		echo "<span class=\"notok\"><b>Database Alerts!</span></p>";
 		echo "<p>MODx setup couldn't install/alter some tables inside the selected database.</p>";
 		echo "<p>The following errors had occurred during installation<br /><br />";
 		for($i=0;$i<count($sqlParser->mysqlErrors);$i++) {
@@ -121,7 +121,7 @@ if($moduleSQLBaseFile) {
 		return;
 	}
 	else {
-		echo "<span class='ok'>OK!</span></p>";
+		echo "<span class=\"ok\">OK!</span></p>";
 	}
 }
 
@@ -132,7 +132,7 @@ if($installData && $moduleSQLDataFile) {
 	// display database results
 	if ($sqlParser->installFailed==true) {
 		$errors += 1;
-		echo "<span class='notok'><b>Database Alerts!</span></p>";
+		echo "<span class=\"notok\"><b>Database Alerts!</span></p>";
 		echo "<p>MODx setup couldn't install/alter some tables inside the selected database.</p>";
 		echo "<p>The following errors had occurred during installation<br /><br />";
 		for($i=0;$i<count($sqlParser->mysqlErrors);$i++) {
@@ -143,97 +143,52 @@ if($installData && $moduleSQLDataFile) {
 		return;
 	}
 	else {
-		echo "<span class='ok'>OK!</span></p>";
+		echo "<span class=\"ok\">OK!</span></p>";
 	}
 }
 
 // write the config.inc.php file if new installation
 echo "<p>Writing configuration file: ";
 $configString = '<?php
-/**
- *	MODx Configuration file
- *
- */
-$database_type = "mysql";
-$database_server = "'.$database_server.'";
-$database_user = "'.$database_user.'";
-$database_password = "'.$database_password.'";
-$dbase = "`'.str_replace("`","",$dbase).'`";
-$table_prefix = "'.$table_prefix.'";		
-error_reporting(E_ALL ^ E_NOTICE);
+	/**
+	 *	MODx Configuration file
+	 *
+	 */
+	$database_type = "mysql";
+	$database_server = "'.$database_server.'";
+	$database_user = "'.$database_user.'";
+	$database_password = "'.$database_password.'";
+	$dbase = "`'.str_replace("`","",$dbase).'`";
+	$table_prefix = "'.$table_prefix.'";		
+	error_reporting(E_ALL ^ E_NOTICE);
 
-$site_sessionname = "'.$site_sessionname.'";
+	$site_sessionname = "'.$site_sessionname.'";
+	
+	// automatically assign base_path and base_url
+	if($base_path==""||$base_url=="") {
+		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
+		if(count($a)>1) array_pop($a);
+		$url = implode("manager",$a); reset($a);
+		$a = explode("manager",str_replace("\\\\","/",dirname(__FILE__)));
+		if(count($a)>1) array_pop($a);
+		$pth = implode("manager",$a); unset($a);
+		$base_url = $url.(substr($url,-1)!="/"? "/":"");
+		$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
+		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? \'http://\' : \'https://\';
+		$site_url .= $_SERVER[\'HTTP_HOST\'];
+		if($_SERVER[\'SERVER_PORT\']!=80) $site_url = str_replace(\':\'.$_SERVER[\'SERVER_PORT\'],\'\',$site_url); // remove port from HTTP_HOST 
+		$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
+		$site_url .= $base_url;
+	}
 
-// automatically assign base_path and base_url
-if($base_path==""||$base_url=="") {
-	$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
-	if(count($a)>1) array_pop($a);
-	$url = implode("manager",$a); reset($a);
-	$a = explode("manager",str_replace("\\\\","/",dirname(__FILE__)));
-	if(count($a)>1) array_pop($a);
-	$pth = implode("manager",$a); unset($a);
-	$base_url = $url.(substr($url,-1)!="/"? "/":"");
-	$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
-	$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? \'http://\' : \'https://\';
-	$site_url .= $_SERVER[\'HTTP_HOST\'];
-	if($_SERVER[\'SERVER_PORT\']!=80) $site_url = str_replace(\':\'.$_SERVER[\'SERVER_PORT\'],\'\',$site_url); // remove port from HTTP_HOST 
-	$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
-	$site_url .= $base_url;
-}
-
-$modx_session_handler= \'\';
-//$modx_session_handler= \'modx095.modSessionHandler\';
-if (!defined(\'MODX_SESSION_GC_MAXLIFETIME\')) {
-    // modify this define to change the session garbarge collection maxlifetime
-    // ex. 60*60*24*7 = 7 days
-    define(\'MODX_SESSION_GC_MAXLIFETIME\', 60*60*24*14);
-    // some settings I used for testing in a short time frame
-//    define(\'MODX_SESSION_GC_MAXLIFETIME\', 30);
-//    ini_set(\'session.gc_probability\', 100);
-//    ini_set(\'session.gc_divisor\', 100);
-}
-if (!defined(\'MODX_SESSION_COOKIE_LIFETIME\')) {
-    // modify this to change the length of time the cookie can access existing session data
-    // 0 = cookie is cleared when browser is closed
-    // 60*60*24*7 = 7 days
-    // 60*60*24*30 = 30 days
-    define(\'MODX_SESSION_COOKIE_LIFETIME\', 60*60*24*7);
-//    define(\'MODX_SESSION_COOKIE_LIFETIME\', 0);
-}
-
-if (!function_exists(\'startCMSSession\')) {
-    function startCMSSession($xpdo= null) {
-        global $base_path, $site_sessionname, $modx_session_handler;
-        if ($modx_session_handler) {
-            if ($xpdo === null) {
-                if (@include_once ($base_path . \'xpdo/xpdo.class.php\')) {
-                    global $database_type, $database_server, $dbase, $database_user, 
-                           $database_password, $table_prefix;
-                    $xpdo= new xPDO($database_type . \':host=\' . $database_server . \';dbname=\' . str_replace(\'`\', \'\', $dbase), $database_user, $database_password, $table_prefix);
-                    $xpdo->setPackage(\'modx095\');
-                    $xpdo->setLogTarget(\'HTML\');
-                }
-            }
-            if ($xpdo !== null && $shClass= $xpdo->loadClass($modx_session_handler, \'\', true, true)) {
-                if ($sh= new $shClass ($xpdo)) {
-                    session_set_save_handler(
-                        array (& $sh, \'open\'), 
-                        array (& $sh, \'close\'),
-                        array (& $sh, \'read\'),
-                        array (& $sh, \'write\'),
-                        array (& $sh, \'destroy\'),
-                        array (& $sh, \'gc\')
-                    );
-                }
-            }
-        } else {
-            @ini_set(\'session.gc_maxlifetime\', MODX_SESSION_GC_MAXLIFETIME);
-        }
-        session_set_cookie_params(MODX_SESSION_COOKIE_LIFETIME, \'/\');
-        session_name($site_sessionname);
-        session_start();
-    }
-}';
+	// start cms session
+	if(!function_exists(\'startCMSSession\')) {
+		function startCMSSession(){
+			global $site_sessionname;
+			session_name($site_sessionname);	
+			session_start();
+		}
+	}';
 $configString .= "\n?>";
 $filename = '../manager/includes/config.inc.php';
 $configFileFailed = false;
@@ -247,7 +202,7 @@ if (@fwrite($handle, $configString) === FALSE) {
 }
 @fclose($handle);	
 if($configFileFailed==true) {
-	echo "<span class='notok'>Failed!</span></p>";
+	echo "<span class=\"notok\">Failed!</span></p>";
 	$errors += 1;
 ?>
 	<p>MODx couldn't write the config file. Please copy the following into the <span class="mono">manager/includes/config.inc.php</span> file:</p>
@@ -259,11 +214,11 @@ if($configFileFailed==true) {
 	return;
 } 
 else {
-	echo "<span class='ok'>OK!</span></p>";
+	echo "<span class=\"ok\">OK!</span></p>";
 }
 
 
-// generate new site_id and set manager theme to MODxGreen 
+// generate new site_id and set manager theme to MODx 
 if($installMode==0) {
 	$siteid = uniqid('');
 	mysql_query("REPLACE INTO $dbase.`".$table_prefix."system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxGreen')",$sqlParser->conn);
@@ -283,7 +238,7 @@ else {
 
 // Install Templates
 if(isset($_POST['template'])) {				
-	echo "<p style='color:#707070'>Templates:</p> ";
+	echo "<p style=\"color:#707070\">Templates:</p> ";
 	$selTemplates = $_POST['template'];
 	foreach($selTemplates as $si) {
 		$si = 		(int)trim($si);
@@ -291,7 +246,7 @@ if(isset($_POST['template'])) {
 		$desc 		= mysql_escape_string($moduleTemplates[$si][1]);
 		$type		= $moduleTemplates[$si][2]; // 0:file, 1:content
 		$filecontent= $moduleTemplates[$si][3];
-		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install template. File '$filecontent' not found.</span></p>";
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install template. File '$filecontent' not found.</span></p>";
 		else {
 			$template = ($type==1)? $filecontent:implode ('', file($filecontent));
 			$template = mysql_escape_string($template);			
@@ -302,7 +257,7 @@ if(isset($_POST['template'])) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
 			}
 			else{
 				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename,description,content) VALUES('$name','$desc','$template');",$sqlParser->conn)) {
@@ -310,7 +265,7 @@ if(isset($_POST['template'])) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
 			}
 		}
 	}
@@ -318,7 +273,7 @@ if(isset($_POST['template'])) {
 
 // Install Chunks
 if(isset($_POST['chunk'])) {				
-	echo "<p style='color:#707070'>Chunks:</p> ";
+	echo "<p style=\"color:#707070\">Chunks:</p> ";
 	$selChunks = $_POST['chunk'];
 	foreach($selChunks as $si) {
 		$si = (int)trim($si);
@@ -326,7 +281,7 @@ if(isset($_POST['chunk'])) {
 		$desc 		= mysql_escape_string($moduleChunks[$si][1]);
 		$type		= $moduleChunks[$si][2]; // 0:file, 1:content
 		$filecontent= $moduleChunks[$si][3];
-		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install chunk. File '$filecontent' not found.</span></p>";
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install chunk. File '$filecontent' not found.</span></p>";
 		else {
 			$chunk = ($type==1)? $filecontent:implode ('', file($filecontent));
 			$chunk = mysql_escape_string($chunk);			
@@ -337,7 +292,7 @@ if(isset($_POST['chunk'])) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
 			}
 			else{
 				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name,description,snippet) VALUES('$name','$desc','$chunk');",$sqlParser->conn)) {
@@ -345,7 +300,7 @@ if(isset($_POST['chunk'])) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
 			}
 		}
 	}
@@ -353,7 +308,7 @@ if(isset($_POST['chunk'])) {
 
 // Install module
 if(isset($_POST['module'])) {				
-	echo "<p style='color:#707070'>Module:</p> ";
+	echo "<p style=\"color:#707070\">Module:</p> ";
 	$selPlugs = $_POST['module'];
 	foreach($selPlugs as $si) {
 		$si 		= (int)trim($si);
@@ -364,7 +319,7 @@ if(isset($_POST['module'])) {
 		$properties	= mysql_escape_string($moduleModules[$si][4]);
 		$guid		= mysql_escape_string($moduleModules[$si][5]);
 		$shared		= mysql_escape_string($moduleModules[$si][6]);
-		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install module. File '$filecontent' not found.</span></p>";
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install module. File '$filecontent' not found.</span></p>";
 		else{
 			$module = ($type==1)? $filecontent:implode ('', file($filecontent));
 			$module = mysql_escape_string($module);			
@@ -374,14 +329,14 @@ if(isset($_POST['module'])) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
 			}
 			else{					
 				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_modules` (name,description,modulecode,properties,guid,enable_sharedparams) VALUES('$name','$desc','$module','$properties','$guid','$shared');",$sqlParser->conn)) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
 			}
 		}
 	}
@@ -390,7 +345,7 @@ if(isset($_POST['module'])) {
 
 // Install plugins
 if(isset($_POST['plugin'])) {				
-	echo "<p style='color:#707070'>Plugin:</p> ";
+	echo "<p style=\"color:#707070\">Plugin:</p> ";
 	$selPlugs = $_POST['plugin'];
 	foreach($selPlugs as $si) {
 		$si 		= (int)trim($si);
@@ -401,7 +356,7 @@ if(isset($_POST['plugin'])) {
 		$properties	= mysql_escape_string($modulePlugins[$si][4]);
 		$events		= explode(",",$modulePlugins[$si][5]);
 		$guid		= mysql_escape_string($modulePlugins[$si][6]);
-		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install plugin. File '$filecontent' not found.</span></p>";
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install plugin. File '$filecontent' not found.</span></p>";
 		else{
 			$plugin = ($type==1)? $filecontent:implode ('', file($filecontent));
 			$plugin = mysql_escape_string($plugin);			
@@ -411,14 +366,14 @@ if(isset($_POST['plugin'])) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
 			}
 			else{					
 				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid) VALUES('$name','$desc','$plugin','$properties','$guid');",$sqlParser->conn)) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
 			}
 			// add system events
 			if(count($events)>0) {
@@ -438,7 +393,7 @@ if(isset($_POST['plugin'])) {
 
 // Install Snippet
 if(isset($_POST['snippet'])) {				
-	echo "<p style='color:#707070'>Snippets:</p> ";
+	echo "<p style=\"color:#707070\">Snippets:</p> ";
 	$selSnips = $_POST['snippet'];
 	foreach($selSnips as $si) {
 		$si = (int)trim($si);
@@ -447,7 +402,7 @@ if(isset($_POST['snippet'])) {
 		$type		= $moduleSnippets[$si][2]; // 0:file, 1:content
 		$filecontent= $moduleSnippets[$si][3];
 		$properties	= mysql_escape_string($moduleSnippets[$si][4]);
-		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class='notok'>Unable to install snippet. File '$filecontent' not found.</span></p>";
+		if ($type==0 && !file_exists($filecontent)) echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install snippet. File '$filecontent' not found.</span></p>";
 		else{
 			$snippet = ($type==1)? $filecontent:implode ('', file($filecontent));
 			$snippet = mysql_escape_string($snippet);			
@@ -457,14 +412,14 @@ if(isset($_POST['snippet'])) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
 			}
 			else{					
 				if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_snippets` (name,description,snippet,properties) VALUES('$name','$desc','$snippet','$properties');",$sqlParser->conn)) {
 					echo "<p>".mysql_error()."</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class='ok'>Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
 			}
 		}
 	}
@@ -489,10 +444,10 @@ $sqlParser->close();
 echo  "<p><b>Installation was successful!</b></p>";
 echo  "<p>To log into the Content Manager (manager/index.php) you can click on the 'Close' button.</p>";
 if($installMode==0) {
-	echo  "<p><img src='img_info.gif' width='32' height='32' align='left' style='margin-right:10px;' /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
+	echo  "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
 }
 else {
-	echo "<p><img src='img_info.gif' width='32' height='32' align='left' style='margin-right:10px;' /><strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.</p><br />&nbsp;";
+	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.</p><br />&nbsp;";
 }
 
 	

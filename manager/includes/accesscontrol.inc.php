@@ -1,5 +1,13 @@
 <?php
 
+// start session
+startCMSSession();
+if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
+	unset($_SESSION['mgrValidated']);
+	session_destroy();
+	// start session
+	startCMSSession();
+}
 if(!isset($_SESSION['mgrValidated'])){
 	include_once("browsercheck.inc.php");
 
@@ -10,17 +18,17 @@ if(!isset($_SESSION['mgrValidated'])){
 		include_once "lang/english.inc.php";
 	}
 
-//	$cookieKey = substr(md5($site_id."Admin-User"),0,15);
-//
-//	include_once ("crypt.class.inc.php");
-//	if(isset($_COOKIE[$cookieKey])) {
-//		$cookieSet = 1;
-//		$username = $_COOKIE[$cookieKey];
-//	}
-//	$thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
-//	$rc4 = new rc4crypt;
-//	$thestring = $rc4->endecrypt($thepasswd,$username,'de');
-//	$uid = $thestring;
+	$cookieKey = substr(md5($site_id."Admin-User"),0,15);
+
+	include_once ("crypt.class.inc.php");
+	if(isset($_COOKIE[$cookieKey])) {
+		$cookieSet = 1;
+		$username = $_COOKIE[$cookieKey];
+	}
+	$thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
+	$rc4 = new rc4crypt;
+	$thestring = $rc4->endecrypt($thepasswd,$username,'de');
+	$uid = $thestring;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -35,7 +43,7 @@ if(!isset($_SESSION['mgrValidated'])){
 <script type="text/javascript" src="media/script/modx.js"></script>
 
 <script type="text/javascript">
-<![CDATA[
+/* <![CDATA[ */
 	document.setIncludePath("media/script/bin/");
 
 	document.addEventListener("oninit",function() {
@@ -43,23 +51,13 @@ if(!isset($_SESSION['mgrValidated'])){
 		document.include("dynelement");
 	})
 
-	function checkRemember () {
-		if(document.loginfrm.rememberme.value==1) {
-			document.loginfrm.rememberme.value=0;
-		} else {
-			document.loginfrm.rememberme.value=1;
-		}
-	}
-
 	if (top.frames.length!=0) {
 		top.location=self.document.location;
 	}
-]]>
+/* ]]> */
 </script>
 </head>
 <body onload="javascript:document.loginfrm.username.focus();" id="login">
-
-<input type="hidden" value="<?php echo isset($cookieSet) ? 1 : 0; ?>" name="rememberme" />
 
 <!-- start the login box -->
 <div id="mx_loginbox">
@@ -99,17 +97,17 @@ if(!isset($_SESSION['mgrValidated'])){
         <?php } ?>
 
         <label><?php echo $_lang["username"]; ?> </label>
-        <input type="text" class="text" name="username" id="username" tabindex="1" onkeypress="return enter(document.loginfrm.password,event);" value="<?php echo $uid ?>" /></td>
+        <input type="text" class="text" name="username" id="username" tabindex="1" value="<?php echo $uid ?>" /></td>
 
         <label><?php echo $_lang["password"]; ?> </label>
-        <input type="password" class="text" name="password" id="password" tabindex="2" onkeypress="return enter(<?php echo $use_captcha==1 ? "document.loginfrm.captcha_code" : "document.getElementById('Button1')" ;?>,event);" value="" />
+        <input type="password" class="text" name="password" id="password" tabindex="2" value="" />
 
         <?php if($use_captcha==1) { ?>
         <label><?php echo $_lang["captcha_code"]; ?></label>
-        <input type="text" name="captcha_code" tabindex="3" onkeypress="return enter(document.getElementById('Button1'),event);" value="" />
+        <input type="text" name="captcha_code" tabindex="3" value="" />
         <?php } ?>
 
-        <input type="checkbox" id="rmcb" tabindex="4" value="" class="checkbox" <?php echo isset($cookieSet) ? "checked=\"checked\"" : ""; ?> onclick="checkRemember()" /><label for="rmcb" style="cursor:pointer"><?php echo $_lang["remember_username"]; ?><input type="submit" class="login" id="submitButton" value="<?php echo $_lang["login_button"]; ?>" onclick="document.loginfrm.submit();" />
+        <input type="checkbox" id="rememberme" tabindex="4" value="" class="checkbox" <?php echo isset($cookieSet) ? "checked=\"checked\"" : ""; ?> /><label for="rememberme" style="cursor:pointer"><?php echo $_lang["remember_username"]; ?><input type="submit" class="login" id="submitButton" value="<?php echo $_lang["login_button"]; ?>" onclick="document.loginfrm.submit();" />
         </label>
         
 
