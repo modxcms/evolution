@@ -667,6 +667,12 @@
 				f.databasename.focus();
 				return false;
 			}
+            var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if(alpha.indexOf(f.tableprefix.value.charAt(0),0) == -1) {
+				alert('Table prefixes must start with a letter!');
+				f.tableprefix.focus();
+				return false;
+			}
 			if(f.databasehost.value=="") {
 				alert('You need to enter a value for database host!');
 				f.databasehost.focus();
