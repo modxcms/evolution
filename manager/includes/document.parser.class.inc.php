@@ -505,8 +505,9 @@ class DocumentParser {
       }
     }
 
-    if($this->config['track_visitors']==1 && !isset($_REQUEST['z'])) {
-      $this->log();
+    // Useful for example to external page counters/stats packages
+    if($this->config['track_visitors']==1) {
+      $this->invokeEvent('OnWebPageComplete');
     }
     // end post processing
   }
@@ -939,11 +940,6 @@ class DocumentParser {
       // make sure the cache doesn't need updating
       $this->checkPublishStatus();
 
-      // check the logging cookie
-      if($this->config['track_visitors']==1 && !isset($_REQUEST['z'])) {
-//        $this->checkCookie(); //TODO: replace this with proper call to a qualified logging tool
-      }
-
       // find out which document we need to display
       $this->documentMethod = $this->getDocumentMethod();
       $this->documentIdentifier = $this->getDocumentIdentifier($this->documentMethod);
@@ -972,6 +968,11 @@ class DocumentParser {
 
     // invoke OnWebPageInit event
     $this->invokeEvent("OnWebPageInit");
+
+    // invoke OnLogPageView event
+    if($this->config['track_visitors']==1) {
+       $this->invokeEvent("OnLogPageView");
+    }
 
     // we now know the method and identifier, let's check the cache
     $this->documentContent = $this->checkCache($this->documentIdentifier);
@@ -1578,14 +1579,6 @@ class DocumentParser {
   function getUserData() {
     include_once $this->config["base_path"]."manager/includes/extenders/getuserdata.extender.php";
     return $tmpArray;
-  }
-
-  function getSiteStats() {
-    $tbl = $this->getFullTableName("log_totals");
-    $sql = "SELECT * FROM $tbl";
-    $result = $this->dbQuery($sql);
-    $tmpRow = $this->fetchRow($result);
-    return $tmpRow;
   }
 
 #::::::::::::::::::::::::::::::::::::::::
