@@ -1375,47 +1375,53 @@ class DocumentParser {
     }
   }
 
-  function makeUrl($id, $alias='', $args='', $https=-1) {
-    $host= '';
-    $url= '';
-    $virtualDir= '';
-    if(!is_numeric($id)) {
-      $this->messageQuit('`'.$id.'` is not numeric and may not be passed to makeUrl()');
-    }
-    if($args!='' && $this->config['friendly_urls']==1) {
-      // add ? to $args if missing
-      $c = substr($args,0,1);
-      if ($c=='&') $args = '?'.substr($args,1);
-      elseif ($c!='?') $args = '?'.$args;
-    }
-    elseif($args!='') {
-      // add & to $args if missing
-      $c = substr($args,0,1);
-      if ($c=='?') $args = '&'.substr($args,1);
-      elseif ($c!='&') $args = '&'.$args;
-    }
-    if($this->config['friendly_urls']==1 && $alias!='') {
-      $url= $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
-    } elseif($this->config['friendly_urls']==1 && $alias=='') {
-      $alias = $id;
-      if($this->config['friendly_alias_urls']==1) {
-//      $this->messageQuit('debug', '', false, '', '', '', print_r($this->aliasListing));
-        $al = $this->aliasListing[$id];
-        $alPath = !empty($al['path'])? $al['path'] . '/': '';
-        if($al && $al['alias']) $alias = $al['alias'];
-      }
-      $alias = $alPath . $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'];
-      $url= $alias.$args;
-    } else {
-      $url= 'index.php?id='.$id.$args;
-    }
-    // If https argument has been set and the desired scheme is different than the current scheme
-    if( ($https!=-1) && ($https != ($_SERVER['HTTPS'])) ) {
-      $scheme = ($_SERVER['HTTPS'] ? 'http' : 'https');
-      $host = "{$scheme}://{$_SERVER['HTTP_HOST']}";
-    }
-    return $host . $this->config['base_url'] . $virtualDir . $url;
-  }
+	function makeUrl($id, $alias='', $args='', $scheme = '') {
+		$url= '';
+		$virtualDir= '';
+		if(!is_numeric($id)) {
+			$this->messageQuit('`'.$id.'` is not numeric and may not be passed to makeUrl()');
+		}
+		if($args!='' && $this->config['friendly_urls']==1) {
+			// add ? to $args if missing
+			$c = substr($args,0,1);
+			if ($c=='&') $args = '?'.substr($args,1);
+			elseif ($c!='?') $args = '?'.$args; 
+		}
+		elseif($args!='') {
+			// add & to $args if missing
+			$c = substr($args,0,1);
+			if ($c=='?') $args = '&'.substr($args,1);
+			elseif ($c!='&') $args = '&'.$args; 
+		}
+		if($this->config['friendly_urls']==1 && $alias!='') {
+			$url= $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'].$args;
+		} elseif($this->config['friendly_urls']==1 && $alias=='') {
+			$alias = $id;
+			if($this->config['friendly_alias_urls']==1) {
+				$al = $this->aliasListing[$id];
+				$alPath = !empty($al['path'])? $al['path'] . '/': '';
+				if($al && $al['alias']) $alias = $al['alias'];
+			}
+			$alias = $alPath . $this->config['friendly_url_prefix'].$alias.$this->config['friendly_url_suffix'];
+			$url= $alias.$args;
+		} else {
+			$url= 'index.php?id='.$id.$args;
+		}
+
+		$host = $this->config['base_url'];
+		// check if scheme argument has been set
+		if($scheme!='') {
+			// for backward compatibility - check if the desired scheme is different than the current scheme
+			if (is_numeric($scheme) && $scheme != $_SERVER['HTTPS']) { 
+				$scheme = ($_SERVER['HTTPS'] ? 'http' : 'https');
+			}
+
+			// to-do: check to make sure that $site_url incudes the url :port (e.g. :8080)
+			$host = $scheme=='full' ? $this->config['site_url'] : $scheme.'://'.$_SERVER['HTTP_HOST'].$this->config['base_url'];
+		}
+
+		return $host . $virtualDir . $url;
+	}
 
   function getConfig($name='') {
     if(!empty($this->config[$name])) {
