@@ -20,7 +20,8 @@
 	$ms[] = array("DateTime","Outputs the current date and time to the page.",0,"$setupPath/snippet.datetime.tpl","");
 	$ms[] = array("GetStats","Fetches the visitor statistics totals from the database",0,"$setupPath/snippet.getstats.tpl","");
 	$ms[] = array("ContactForm","Simple, configurable XHTML-validating contact form for delivery to email accounts.",0,"$setupPath/snippet.contactform.tpl","");
-	$ms[] = array("DropMenu","Robust and configurable XHTML-validating menu and site map builder. Output an unordered list.",0,"$setupPath/snippet.dropmenu.tpl","");
+	$ms[] = array("Wayfinder","<strong>New!:</strong> Completely template-driven menu builder that's simple and fast to configure. Replaces DropMenu.",0,"$setupPath/snippet.wayfinder.tpl","");
+	$ms[] = array("DropMenu","deprecated: Robust and configurable XHTML-validating menu and site map builder. Output an unordered list.",0,"$setupPath/snippet.dropmenu.tpl","");
 	$ms[] = array("AjaxSearch","<strong>NEW:</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
 	$ms[] = array("FlexSearchForm","Robust site search with like and partial matching.",0,"$setupPath/snippet.flexsearchform.tpl","");
 	$ms[] = array("NewsFeed","Enable RSS2 news feed from your website.",0,"$setupPath/snippet.newsfeed.tpl","");
@@ -36,7 +37,6 @@
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
 	$mp[] = array("TinyMCE","<strong>New:</strong> TinyMCE RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&webtheme=Web Theme;list;simple,advanced,full;simple","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
-	$mp[] = array("SlimStats","<strong>New:</strong> a simple web stats analyser based on ShortStat",0,"$setupPath/plugin.slimstats.tpl","","OnWebPagePrerender");
 	$mp[] = array("Forgot Manager Login","<strong>NEW:</strong> Resets your manager login when you forget your password. ",0,"$setupPath/plugin.ForgotManagerPassword.tpl","","OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender");
 	$mp[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
 	$mp[] = array("Inherit Parent Template","<strong>New:</strong> New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
