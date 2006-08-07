@@ -82,7 +82,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 	</div>
 	<?php } ?>
 
-	<!-- visitor stats -->
+	<!-- visitor stats 
 	<div class="tab-page" id="tabVisit" style="padding-left:0px; padding-right:0px">
 		<h2 class="tab"><?php echo $_lang["statistics"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabVisit" ) );</script>
@@ -213,7 +213,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 		  </tr>
 		</table>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- recent activities -->
 	<div class="tab-page" id="tabAct" style="padding-left:0px; padding-right:0px">
