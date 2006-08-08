@@ -165,7 +165,7 @@ class DocumentParser {
       $usrType = $this->getLoginUserType();
       if (isset($usrType) && $usrType!='web') $usrType = 'mgr';
 
-      if $usrType == 'mgr' {
+      if ($usrType == 'mgr') {
           // invoke the OnBeforeManagerInit event
           $this->invokeEvent("OnBeforeManagerInit"); 
       }
