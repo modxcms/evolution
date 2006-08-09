@@ -549,7 +549,7 @@ function decode(s){
 			  </tr>
 			  <tr style="height: 24px;">
 				<td ><span class='warning'><?php echo $_lang['link_attributes']; ?></span></td>
-				<td ><input name="link_attributes" type="text" maxlength="255" value="<?php echo stripslashes($content['link_attributes']);?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onMouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onMouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['link_attributes_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td ><input name="link_attributes" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['link_attributes']));?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onMouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onMouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['link_attributes_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			<?php if($content['type']=="reference" || $_REQUEST['a']==72) { ?>
 			  <tr style="height: 24px;">
@@ -592,7 +592,7 @@ function decode(s){
 			  </tr>
 			  <tr style="height: 24px;">
 				<td align="left" style="width:100px;"><span class='warning'><?php echo $_lang['document_opt_menu_title']; ?></span></td>
-				<td><input name="menutitle" type="text" maxlength="100" value="<?php echo $content['menutitle'];?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onMouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onMouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_title_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
+				<td><input name="menutitle" type="text" maxlength="100" value="<?php echo htmlspecialchars(stripslashes($content['menutitle']));?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onMouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onMouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_title_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			  <tr style="height: 24px;">
 				<td align="left" style="width:100px;"><span class='warning'><?php echo $_lang['document_opt_menu_index']; ?></span></td>
