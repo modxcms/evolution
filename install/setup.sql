@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `longtitle` varchar(255) NOT NULL default '',
   `description` varchar(255) NOT NULL default '',
   `alias` varchar(100) default '',
+  `link_attributes` varchar(255) NOT NULL default '',
   `published` int(1) NOT NULL default '0',
   `pub_date` int(20) NOT NULL default '0',
   `unpub_date` int(20) NOT NULL default '0',
@@ -705,12 +706,17 @@ ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` integer(10) NOT NULL 
 
 ALTER TABLE `{PREFIX}user_roles` ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
 
+
 ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`,
  DROP INDEX `idx_templateid`,
  ADD PRIMARY KEY ( `tmplvarid` , `templateid` );
 
+
 # ryan alter menutitle from 30 characters to 100 characters
 ALTER TABLE `{PREFIX}site_content` MODIFY COLUMN `menutitle` varchar(100);
+
+
+ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `link_attributes` varchar(255) NOT NULL COMMENT 'Link attriubtes' AFTER `alias`;
 
 # ]]upgrade-able
 
