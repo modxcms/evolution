@@ -12,6 +12,7 @@ $content = mysql_escape_string($_POST['ta']);
 $pagetitle = mysql_escape_string($_POST['pagetitle']); //replace apostrophes with ticks :(
 $description = mysql_escape_string($_POST['description']);
 $alias = mysql_escape_string($_POST['alias']);
+$link_attributes = mysql_escape_string($_POST['link_attributes']);
 $isfolder = $_POST['isfolder'];
 $richtext = $_POST['richtext'];
 $published = $_POST['published'];
@@ -254,8 +255,8 @@ switch ($actionToTake) {
 		$publishedon = ($published ? time() : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 								
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_content(introtext,content, pagetitle, longtitle, type, description, alias, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
-				VALUES('".$introtext."','".$content."', '".$pagetitle."', '".$longtitle."', '".$type."', '".$description."', '".$alias."', '".$isfolder."', '".$richtext."', '".$published."', '".$parent."', '".$template."', '".$menuindex."', '".$searchable."', '".$cacheable."', '".$modx->getLoginUserID()."', ".time().", '".$modx->getLoginUserID()."', ".time().", ".$publishedby.", ".$publishedon.", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_content(introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
+				VALUES('".$introtext."','".$content."', '".$pagetitle."', '".$longtitle."', '".$type."', '".$description."', '".$alias."', '".$link_attributes."', '".$isfolder."', '".$richtext."', '".$published."', '".$parent."', '".$template."', '".$menuindex."', '".$searchable."', '".$cacheable."', '".$modx->getLoginUserID()."', ".time().", '".$modx->getLoginUserID()."', ".time().", ".$publishedby.", ".$publishedon.", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
 
 		$rs = mysql_query($sql);
 		if(!$rs){
@@ -419,7 +420,7 @@ switch ($actionToTake) {
 								));    
 		
 		// update the document
-		$sql = "UPDATE $dbase.".$table_prefix."site_content SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias',
+		$sql = "UPDATE $dbase.".$table_prefix."site_content SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes', 
 		isfolder=$isfolder, richtext=$richtext, published=$published, pub_date=$pub_date, unpub_date=$unpub_date, parent=$parent, template=$template, menuindex='$menuindex',
 		searchable=$searchable, cacheable=$cacheable, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedon=$publishedon, publishedby=$publishedby, contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu'  WHERE id=$id;";
 

@@ -1074,7 +1074,9 @@ $_lang['email_sent'] = 'Email sent';
 /***************************************************************************/
 $_lang['tools'] = 'Tools';
 $_lang['reports'] = 'Reports';
-
 $_lang['fe_editor_lang_title'] = 'Front-end Editor Language:';
-$_lang['fe_editor_lang_message'] = 'Choose a language for the editor to use when used as a front-end editor.'
+$_lang['fe_editor_lang_message'] = 'Choose a language for the editor to use when used as a front-end editor.';
+$_lang["unable_set_link"] = "Unable to set the link!";
+$_lang['link_attributes'] = 'Link Attributes';
+$_lang['link_attributes_help'] = 'Here you can enter attributes for the link for this page, such as target= or rel=.';
 ?>
