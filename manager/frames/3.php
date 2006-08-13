@@ -261,6 +261,13 @@
 				alert('<?php echo $_lang['unable_set_parent']; ?>');
 			}
 		}
+		if(ca=="link") {
+			try {
+				parent.main.setLink(id);
+			} catch(oException) {
+				alert('<?php echo $_lang['unable_set_link']; ?>');
+			}
+		}
 	}
 
 	//Raymond: added getFolderState,saveFolderState

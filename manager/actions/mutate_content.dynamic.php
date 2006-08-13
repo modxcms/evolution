@@ -216,7 +216,7 @@ function saveRefreshPreview(){
 // end modifications
 
 var allowParentSelection = false;
-parent.menu.ca = "parent";
+var allowLinkSelection = false;
 
 try {
 	top.menu.Sync(<?php echo $id; ?>);
@@ -224,7 +224,33 @@ try {
 	xyy=window.setTimeout("loadagain(<?php echo $id; ?>)", 1000);
 }
 
+function enableLinkSelection(b){
+  parent.menu.ca = "link";
+	var closed = "media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif";
+	var opened = "media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folderopen.gif";
+	if(b) {
+		document.images["llock"].src = opened;
+		allowLinkSelection = true;
+	}
+	else {
+		document.images["llock"].src = closed;
+		allowLinkSelection = false;
+	}
+}
+
+function setLink(lId) {
+	if (!allowLinkSelection) {
+		window.location.href="index.php?a=3&id="+lId;
+		return;
+	}
+	else {	
+			documentDirty=true;
+			document.mutate.ta.value=lId;
+	}
+}
+
 function enableParentSelection(b){
+  parent.menu.ca = "parent";
 	var closed = "media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif";
 	var opened = "media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folderopen.gif";
 	if(b) {
@@ -553,7 +579,7 @@ function decode(s){
 			  </tr>
 			<?php if($content['type']=="reference" || $_REQUEST['a']==72) { ?>
 			  <tr style="height: 24px;">
-				<td ><span class='warning'><?php echo $_lang['weblink']; ?></span></td>
+				<td ><span class='warning'><?php echo $_lang['weblink']; ?></span> <img name="llock" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif" width="18" height="18" align="absmiddle" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
 				<td ><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://" ;?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onMouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onMouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_weblink_help']; ?>" onClick="alert(this.alt);" style="cursor:help;"></td>
 			  </tr>
 			<?php } else { ?>

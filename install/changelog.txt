@@ -6,6 +6,9 @@ development release, and is only shown to give an idea of what's currently in th
 MOD 0.9.5 (rev 9xx - August XX, 2006)
 ====================================
 
+* Fixed form input fields for link_attributes and menutitle to be able to have double quotes.
+* Patches for adding attributes to links
+* Use a plain document ID as a weblink, and click on the Document Tree to set the ID you want.
 * Hide sensitive debug output from the public
 * [FS#425] Fix for potential Http Response Splitting Attack in sendRedirect
 * [FS#336] Fixes incorrect pub_date if a time is not specified
