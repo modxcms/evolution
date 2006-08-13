@@ -78,13 +78,17 @@ class DocumentParser {
         echo $header;
         exit;
       } elseif($type=='REDIRECT_HEADER' || empty($type)) {
-         // check if url has /$base_url 
-         global $base_url,$site_url;
-         if (substr($url,0,strlen($base_url))==$base_url) {
-         	// append $site_url to make it work with Location:
-         	$url = $site_url.substr($url,strlen($base_url));
-         }
-        $header = 'Location: '.$url;
+        // check if url has /$base_url 
+        global $base_url,$site_url;
+        if (substr($url,0,strlen($base_url))==$base_url) {
+        	// append $site_url to make it work with Location:
+        	$url = $site_url.substr($url,strlen($base_url));
+        }
+        if(strpos($url, "\n") === false) {
+          $header = 'Location: '.$url;
+        } else {
+          $this->messageQuit('No newline allowed in redirect url.');
+        }
       }
       header($header);
       $this->postProcess();
@@ -377,9 +381,8 @@ class DocumentParser {
     // send out content-type and content-disposition headers
     if(IN_PARSER_MODE=="true") {
       $type = !empty($this->contentTypes[$this->documentIdentifier]) ? $this->contentTypes[$this->documentIdentifier] : "text/html";
-      $header = 'Content-Type: '.$type.'; charset='.$this->config['etomite_charset'];
-      $header = (($this->documentIdentifier == $this->config['error_page']) || $redirect_error) ? "HTTP/1.0 404 Not Found\n".$header : $header;
-      header($header);
+      header('Content-Type: '.$type.'; charset='.$this->config['etomite_charset']);
+      if(($this->documentIdentifier == $this->config['error_page']) || $redirect_error) header('HTTP/1.0 404 Not Found');
       if(!$this->checkPreview() && $this->documentObject['content_dispo']==1) {
         if($this->documentObject['alias']) $name = $this->documentObject['alias'];
         else {
@@ -2302,6 +2305,12 @@ See documentation for usage details
   }
 
   function messageQuit($msg='unspecified error', $query='', $is_error=true, $nr='', $file='', $source='', $text='', $line='') {
+    // Don't show this to the public
+    if(!$_SESSION['mgrValidated']) {
+      $this->sendErrorPage();
+      return;
+    }
+    
     $version= isset($GLOBALS['version'])? $GLOBALS['version']: '';
     $code_name= isset($GLOBALS['code_name'])? $GLOBALS['code_name']: '';
     $parsedMessageString = "

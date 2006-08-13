@@ -3,9 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 9xx - March XX, 2006)
+MOD 0.9.5 (rev 9xx - August XX, 2006)
 ====================================
 
+* Hide sensitive debug output from the public
+* [FS#425] Fix for potential Http Response Splitting Attack in sendRedirect
+* [FS#336] Fixes incorrect pub_date if a time is not specified
+* Little fix for outputContent since PHP5.x doesnt want newlines in header-function. 
 * [FS 275] Every call to DBAPI->connect() will now create a new link, to avoid errors when connecting to multiple databases with multiple instances of DBAPI.
 * New manager themeing system -- now you can completely skin the manager easily (various starting at 762)
 * Added bulk Document Tree Manager to the core Modules installed. (909)

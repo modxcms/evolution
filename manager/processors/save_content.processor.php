@@ -1,7 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!$modx->hasPermission('save_document') && $_REQUEST['a']==5) {
+if(!$modx->hasPermission('save_document')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
@@ -79,11 +79,12 @@ elseif($alias) {
 
 $currentdate = time();
 
-if($pub_date=="") {
-	$pub_date="0";
-} else {
+if(empty($pub_date)) {
+	$pub_date = 0;
+} else {       
 	list($d, $m, $Y, $H, $M, $S) = sscanf($pub_date, "%2d-%2d-%4d %2d:%2d:%2d");
-	$pub_date = strtotime("$m/$d/$Y $H:$M:$S");
+	$pub_date = mktime ($H, $M, $S, $m, $d, $Y);
+		
 	if($pub_date < $currentdate) {
 		$published = 1;
 	}  elseif($pub_date > $currentdate) {
@@ -91,11 +92,11 @@ if($pub_date=="") {
 	}
 }
 
-if($unpub_date=="") {
-	$unpub_date="0";
+if(empty($unpub_date)) {
+	$unpub_date = 0;
 } else {
 	list($d, $m, $Y, $H, $M, $S) = sscanf($unpub_date, "%2d-%2d-%4d %2d:%2d:%2d");
-	$unpub_date = strtotime("$m/$d/$Y $H:$M:$S");
+	$unpub_date = mktime ($H, $M, $S, $m, $d, $Y);
 	if($unpub_date < $currentdate) {
 		$published = 0;
 	}

@@ -162,7 +162,10 @@ $modx->tstart = $tstart;	// feed the parser the execution start time
 // Added by Remon
 // Debugging mode:
 $modx->stopOnNotice = false;
-						
+		
+// Don't show PHP errors to the public
+if(!$_SESSION['mgrValidated']) @ini_set("display_errors","0");		
+								
 // execute the parser
 $modx->executeParser();
 
