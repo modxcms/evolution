@@ -69,79 +69,51 @@ $_SERVER['HTTP_REFERER'] = isset($_SERVER['HTTP_REFERER']) ? preg_replace($modxt
 if(strlen($_SERVER['HTTP_USER_AGENT'])>255) $_SERVER['HTTP_USER_AGENT'] = substr(0,255,$_SERVER['HTTP_USER_AGENT']);
 if(isset($_GET['q'])) $_GET['q'] = preg_replace("/[^A-Za-z0-9_\-\.\/]/", "", $_GET['q']);
 
-// first, set some settings, and do some stuff
+// first, set some settings, and address some IE issues
 @ini_set('session.use_trans_sid', false);
-@ini_set("url_rewriter.tags","");
+@ini_set("url_rewriter.tags",'');
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
 ob_start();
 error_reporting(E_ALL);
 
 /**
  *	Filename: index.php
- *	Function: This file loads and executes the parser. 
- *
+ *	Function: This file loads and executes the parser. *
  */
 
-define("IN_ETOMITE_PARSER", "true"); // for backward compatibility with etomite .6
+define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
 define("IN_PARSER_MODE", "true");
-
-// Added by Remon
 define("IN_MANAGER_MODE", "false");
 
-// set these values here for a small speed increase! :)
-$database_type = "";
-$database_server = "";
-$database_user = "";
-$database_password = "";
-$dbase = "";
-$table_prefix = "";		
-$base_url = "";
-$base_path = "";
+// initialize the variables prior to grabbing the config file
+$database_type = '';
+$database_server = '';
+$database_user = '';
+$database_password = '';
+$dbase = '';
+$table_prefix = '';
+$base_url = '';
+$base_path = '';
 
 // get the required includes
 if($database_user=="") {
 	$rt = @include_once "manager/includes/config.inc.php";
 	if(!$rt) {
 	echo "
-		<style type=\"text/css\">
-		* {margin: 0px; padding: 0}
-		body {
-			margin: 50px;
-			background: #eee;
-			}
-		.install {
-			padding: 10px;
-			border-top: 10px solid #f22;
-			border-bottom: 5px solid #f22;
-			background: #f99;
-			margin: 0 auto;
-			font: 120%/1em Georgia, Arial, Helvetica, sans-serif;
-			text-align: center;
-			}
-		p {
-			margin: 20px 0 20px 0;
-			}
-		.link a:link, .link a:visited{
-			font-size: 200%;
-			color: #f22;
-			text-decoration: underline;
-			margin-top: 30px;
-			padding: 5px;
-			}
-		.link a:hover {
-			background: #f22;
-			color: #fff;
-			}
-		</style>
-				<div class=\"install\">
-					  <p>It seems MODx is not currently installed, or the configuration file cannot be found.</p>
-					  <p class=\"link\"><a href=\"install/index.php\">Install Now!</a></p>
-				</div> ";
+<style type=\"text/css\">
+*{margin:0;padding:0}
+body{margin:50px;background:#eee;}
+.install{padding:10px;border:5px solid #f22;background:#f99;margin:0 auto;font:120%/1em serif;text-align:center;}
+p{ margin:20px 0; }
+a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
+</style>
+<div class=\"install\">
+<p>MODx is not currently installed or the configuration file cannot be found.</p>
+<p>Do you want to <a href=\"install/index.php\">install now</a>?</p>
+</div>";
 		exit;
 	}
 }
-
-
 
 // start session 
 startCMSSession();
@@ -151,23 +123,19 @@ include_once($base_path."/manager/includes/document.parser.class.inc.php");
 $modx = new DocumentParser;
 $etomite = &$modx; // for backward compatibility
 
-
 // set some parser options
-$modx->minParserPasses = 1;		// min number of parser recursive loops or passes
-$modx->maxParserPasses = 10;	// max number of parser recursive loops or passes
+$modx->minParserPasses = 1; // min number of parser recursive loops or passes
+$modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
-$modx->dumpSnippets = false;
-$modx->tstart = $tstart;	// feed the parser the execution start time
+$modx->dumpSnippets = false; // feed the parser the execution start time
+$modx->tstart = $tstart;
 
-// Added by Remon
 // Debugging mode:
 $modx->stopOnNotice = false;
-		
+
 // Don't show PHP errors to the public
-if(!$_SESSION['mgrValidated']) @ini_set("display_errors","0");		
-								
+if(!$_SESSION['mgrValidated']) @ini_set("display_errors","0");
+
 // execute the parser
 $modx->executeParser();
-
-
 ?>
