@@ -170,7 +170,7 @@ if(isset($_FILES['userfile']['tmp_name'])) {
 										));
 
 			} else {
-				echo "<br /><span class='warning'>".$_lang['files_upload_copy_failed']."</span> Possible permission problems - the directory you want to upload to needs to be set to 0777 permissions.<br />";
+				echo "<br /><span class='warning'>".$_lang['files_upload_copyfailed']."</span> Possible permission problems - the directory you want to upload to needs to be set to 0777 permissions.<br />";
 			}
 		}
 	}else{
