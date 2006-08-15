@@ -85,7 +85,8 @@ function fsize($file) {
 }
 
 // get the current work directory
-if($_REQUEST['path']!="") {
+if(isset($_REQUEST['path']) && !empty($_REQUEST['path'])) {
+        $_REQUEST['path'] = str_replace('..','',$_REQUEST['path']);
 	$startpath = is_dir($_REQUEST['path']) ? $_REQUEST['path'] : removeLastPath($_REQUEST['path']) ;
 } else {
 	$startpath = $filemanager_path;
@@ -106,7 +107,7 @@ else $webstart_path = "../".$webstart_path;
 </div>
 
 <div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['files_files']; ?></div><div class="sectionBody" style="font-size: 11px;">
-
+<script type="text/javascript" src="media/script/multifile.js"></script>
 <script type="text/javascript">
 function viewfile(url) {
 	document.getElementById('imageviewer').style.border="1px solid #000080";
@@ -143,22 +144,34 @@ function getFolderName(a){
 }
 </script>
 <?php
-if(isset($_FILES['userfile']['tmp_name'])) {
+if(!empty($_FILES['userfile'])) {
+
+  for ($i = 0; $i <= count($_FILES['userfile']['tmp_name']); $i++) {
+   if(!empty($_FILES['userfile']['tmp_name'][$i])) {
+     $userfiles[$i]['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];
+     $userfiles[$i]['error'] = $_FILES['userfile']['error'][$i];
+     $userfiles[$i]['name'] = $_FILES['userfile']['name'][$i];
+     $userfiles[$i]['type'] = $_FILES['userfile']['type'][$i];
+   }
+  }
+
+  foreach((array)$userfiles as $userfile) {
+
 	// this seems to be an upload action.
-	printf($_lang['files_uploading'], $_FILES['userfile']['name'], substr($startpath, $len, strlen($startpath)));
-	echo $_FILES['userfile']['error']==0 ? $_lang['files_file_type'].$_FILES['userfile']['type'].", ".fsize($_FILES['userfile']['tmp_name'])."<br />" : "" ;
+	printf($_lang['files_uploading'], $userfile['name'], substr($startpath, $len, strlen($startpath)));
+	echo $userfile['error']==0 ? $_lang['files_file_type'].$userfile['type'].", ".fsize($userfile['tmp_name'])."<br />" : "" ;
 
-	$userfile = $_FILES['userfile']['tmp_name'];
+	$userfilename = $userfile['tmp_name'];
 
-	if (is_uploaded_file($userfile)) {
+	if (is_uploaded_file($userfilename)) {
 	  // file is uploaded file, process it!
-		if(!in_array(getExtension($_FILES['userfile']['name']), $uploadablefiles)) {
+		if(!in_array(getExtension($userfile['name']), $uploadablefiles)) {
 			echo "<br /><span class='warning'>".$_lang['files_filetype_notok']."</span><br />";
 		} else {
-			if(@move_uploaded_file($_FILES['userfile']['tmp_name'], $_POST['path']."/".$_FILES['userfile']['name'])) {
+			if(@move_uploaded_file($userfile['tmp_name'], $_POST['path']."/".$userfile['name'])) {
 					// Ryan: Repair broken permissions issue with file manager
 					if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
-						@chmod($_POST['path']."/".$_FILES['userfile']['name'], 0777);
+						@chmod($_POST['path']."/".$userfile['name'], 0777);
 					// Ryan: End
 					echo "<br /><span class='success'>".$_lang['files_upload_ok']."</span><br />";
 
@@ -166,7 +179,7 @@ if(isset($_FILES['userfile']['tmp_name'])) {
 					$modx->invokeEvent("OnFileManagerUpload",
 										array(
 											"filepath"	=> $_POST['path'],
-											"filename"	=> $_FILES['userfile']['name']
+											"filename"	=> $userfile['name']
 										));
 
 			} else {
@@ -175,7 +188,7 @@ if(isset($_FILES['userfile']['tmp_name'])) {
 		}
 	}else{
 		echo "<br /><span class='warning'><b>".$_lang['files_upload_error'].":</b> ";
-	  switch($_FILES['userfile']['error']){
+	  switch($userfile['error']){
 	   case 0: //no error; possible file attack!
 		 echo $_lang['files_upload_error0'];
 		 break;
@@ -198,6 +211,7 @@ if(isset($_FILES['userfile']['tmp_name'])) {
 		echo "</span><br />";
 	}
 	echo "<hr/>";
+}
 }
 
 if($_POST['mode']=="save") {
@@ -458,7 +472,7 @@ echo "<div style='float: left; width: 140px;'>".$_lang['files_data'].":</div><b>
 <div align="center">
 <img src="media/style/<?php echo $theme; ?>images/icons/_tx_.gif" id='imageviewer'>
 </div>
-<hr>
+<br /><hr />
 <?php
 if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && is_writable($startpath)) {
 	@ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
@@ -466,9 +480,21 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 <form enctype="multipart/form-data" action="index.php?a=31" method="post">
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576; ?>">
 <input type="hidden" name="path" value="<?php echo $startpath; ?>">
-	<b><?php echo $_lang['files_uploadfile']; ?></b><br />
-	<span style="width:300px;"><?php echo $_lang['files_uploadfile_msg']; ?></span><input name="userfile" type="file" style="height: 19px;"> <input type="submit" value="<?php echo $_lang['files_uploadfile']; ?>">
+
+<span style="width:300px;"><?php echo $_lang['files_uploadfile_msg']; ?></span>
+<input id="file_elem" type="file" name="bogus"  style="height: 19px;">
+
+<div id="files_list"></div>
+<script type="text/javascript">
+	var multi_selector = new MultiSelector( document.getElementById( 'files_list' ), 10 );
+	multi_selector.addElement( document.getElementById( 'file_elem' ) );
+</script>
+
+<input type="submit" value="<?php echo $_lang['files_uploadfile']; ?>">
+
 </form>
+
+
 <?php
 } else {
 	echo $_lang['files_upload_inhibited_msg'];

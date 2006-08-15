@@ -54,10 +54,16 @@ if($friendly_urls) {
 		$cnt = $modx->db->getValue("SELECT count(*) FROM ".$modx->getFullTableName("site_content")." WHERE id<>'$id' AND alias='$alias'");
 		if($cnt>0) $alias.= $cnt;
 	}
+		
 	// check for duplicate alias name if not allowed
-	elseif($alias && !$allow_duplicate_alias) {  
+	elseif($alias && !$allow_duplicate_alias) {  	
 		$alias = stripAlias($alias);
-		$docid = $modx->db->getValue("SELECT id FROM ".$modx->getFullTableName("site_content")." WHERE id<>'$id' AND alias='$alias' LIMIT 1");
+		if($use_alias_path) {
+		  // Only check for duplicates on the same level if alias_path is on (netnoise 2006/08/14)
+		  $docid = $modx->db->getValue("SELECT id FROM ".$modx->getFullTableName("site_content")." WHERE id<>'$id' AND alias='$alias' AND parent=$parent LIMIT 1");
+		} else {
+		  $docid = $modx->db->getValue("SELECT id FROM ".$modx->getFullTableName("site_content")." WHERE id<>'$id' AND alias='$alias' LIMIT 1");
+		}
 		if($docid>0){
 			$modx->manager->saveFormValues(27);
 			$url = "index.php?a=27&id=".$id;

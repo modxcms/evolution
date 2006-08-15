@@ -3,9 +3,15 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 9xx - August XX, 2006)
+MOD 0.9.5 (rev 1288 - August 15, 2006)
 ====================================
 
+* [FS#358] Minor change to duplicate alias warning: If friendly alias paths are on the duplicate check is only performed on the same parent-id, since duplicates work fine if they are placed in different folders.
+* Update to messageQuit and some minor cosmetics.
+* Update/Bugfix for German langfile. (Some strings were missing.)
+* [FS#312] Quick'n'dirty fix for path traversal issue.
+* Introducing a basic multiple file upload feature to filebrowser.
+* [FS#309] Fix for failing manager permissions (part 1)
 * Created a check on permissions for the config.inc.php file. A warning will now appear in the manager if the permissions are loose!
 * Added ability to select if you want menuindex to automatically increment by default or not.
 * [FS#280] Gives DBAPI object default connection values, but allows for others to override if specified - which is needed in some cases when connecting to a different db on the same server.

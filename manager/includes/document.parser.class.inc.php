@@ -6,7 +6,7 @@
  */
 
 class DocumentParser {
-  var $db;			// db object
+  var $db;		// db object
   var $event,$Event;	// event object
 
   var $pluginEvent;
@@ -21,7 +21,7 @@ class DocumentParser {
 
   // constructor
   function DocumentParser() {
-    $this->loadExtension('DBAPI'); // load DBAPI class		
+    $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class		
     $this->dbConfig = &$this->db->config; // alias for backward compatibility
     $this->jscripts = array();
     $this->sjscripts = array();
@@ -38,14 +38,25 @@ class DocumentParser {
   function loadExtension($extname){
     global $base_path;
     global $database_type;
-    if($extname=='DBAPI'){
-      include_once $base_path.'/manager/includes/extenders/dbapi.'.$database_type.'.class.inc.php';
-      $this->db = new DBAPI;
+    
+    switch ($extname) {
+      // Database API
+      case 'DBAPI':
+        if(!include_once $base_path.'/manager/includes/extenders/dbapi.'.$database_type.'.class.inc.php') return false;
+        $this->db = new DBAPI;
+        return true;
+      break;
+      
+      // Manager API
+      case 'ManagerAPI':
+        if(!include_once $base_path.'/manager/includes/extenders/manager.api.class.inc.php') return false;
+        $this->manager = new ManagerAPI;
+        return true;
+      break;
+      
+      default:
+        return false;
     }
-    if($extname=='ManagerAPI'){
-      include_once $base_path.'/manager/includes/extenders/manager.api.class.inc.php';
-      $this->manager = new ManagerAPI;
-    }		
   }
 
   function getMicroTime() {
@@ -204,17 +215,15 @@ class DocumentParser {
     // function to test the query and find the retrieval method
     $docIdentifier= $this->config['site_start'];
     switch($method) {
-      case "alias" :
+      case 'alias':
         $docIdentifier= $this->db->escape($_REQUEST['q']);
       break;
-      case "id" :
+      case 'id':
         if(!is_numeric($_REQUEST['id'])) {
           $this->messageQuit("ID passed in request is NaN!");
         } else {
           $docIdentifier= intval($_REQUEST['id']);
         }
-      break;
-      default :
       break;
     }
     return $docIdentifier;
@@ -248,7 +257,7 @@ class DocumentParser {
       // site online
       return true;
     } elseif($siteStatus==0 && $this->checkSession()) {
-      // site online but launched via the manager
+      // site offline but launched via the manager
       return true;
     } else {
       // site is offline
@@ -792,6 +801,7 @@ class DocumentParser {
     global $myObject;
     $tblsc = $this->getFullTableName("site_content");
     $tbldg = $this->getFullTableName("document_groups");
+       
     // get document groups for current user
     if($docgrp = $this->getUserDocGroups()) $docgrp = implode(",",$docgrp);
     // get document
@@ -806,6 +816,13 @@ class DocumentParser {
     $rowCount = $this->recordCount($result);
     if($rowCount<1) {
       if ($this->config['unauthorized_page']) {
+        // Fix for FS #375 - netnoise 2006/08/14
+        if($method!='id') $identifier = $this->cleanDocumentIdentifier($identifier);
+        if(!is_numeric($identifier) && array_key_exists($identifier, $this->documentListing)) {
+         $identifier = $this->documentListing[$identifier];
+         $method = 'id';
+        }
+    
         // check if file is not public
         $secrs = $this->dbQuery("SELECT id FROM $tbldg WHERE document = '".$identifier."' LIMIT 1;");
         if($secrs) $seclimit = mysql_num_rows($secrs);
@@ -829,10 +846,7 @@ class DocumentParser {
       }
     }
     if ($changed) { return $myObject; }
-    if($rowCount>1) {
-      // too many matches found, send the visitor to the error page
-      $this->messageQuit("More than one result returned when attempting to translate `alias` to `id` - there are multiple documents using the same alias");
-    }
+
 # this is now the document :) #
     $documentObject = $this->fetchRow($result);
 
@@ -965,9 +979,11 @@ class DocumentParser {
       // Check use_alias_path and check if $this->virtualDir is set to anything, then parse the path
       if ($this->config['use_alias_path'] == 1) {
         $alias = (strlen($this->virtualDir) > 0 ? $this->virtualDir.'/' : '').$this->documentIdentifier;
-        if (array_key_exists($alias, $this->documentListing))
+        if (array_key_exists($alias, $this->documentListing)) {
           $this->documentIdentifier = $this->documentListing[$alias];
-
+        } else {
+          $this->sendErrorPage();
+        }
       }
       else {
         $this->documentIdentifier = $this->documentListing[$this->documentIdentifier];
@@ -1642,7 +1658,7 @@ class DocumentParser {
       $result = array();
       for($i=0;$i<count($docs);$i++){
         $tvs = $this->getTemplateVarOutput($tvidnames,$docs[$i]["id"],$published);
-        if($tvs) array_push($result,$tvs);
+        if($tvs) $result[$docs[$i]['id']] = $tvs; // Use docid as key - netnoise 2006/08/14
       }
       return $result;
     }
@@ -2302,12 +2318,7 @@ See documentation for usage details
   }
 
   function messageQuit($msg='unspecified error', $query='', $is_error=true, $nr='', $file='', $source='', $text='', $line='') {
-    // Don't show this to the public
-    if(!$_SESSION['mgrValidated']) {
-      $this->sendErrorPage();
-      return;
-    }
-    
+   
     $version= isset($GLOBALS['version'])? $GLOBALS['version']: '';
     $code_name= isset($GLOBALS['code_name'])? $GLOBALS['code_name']: '';
     $parsedMessageString = "
@@ -2383,22 +2394,31 @@ See documentation for usage details
     $parsedMessageString .= "<tr><td>&nbsp;</td></tr><tr><td colspan='3'><b>Parser timing</b></td></tr>";
 
     $parsedMessageString .= "<tr><td>&nbsp;&nbsp;MySQL: </td>";
-    $parsedMessageString .= "<td><i>[^qt^] s</i></td><td>(<i>[^q^] Requests</i>)</td>";
+    $parsedMessageString .= "<td><i>[^qt^]</i></td><td>(<i>[^q^] Requests</i>)</td>";
     $parsedMessageString .= "</tr>";
 
     $parsedMessageString .= "<tr><td>&nbsp;&nbsp;PHP: </td>";
-    $parsedMessageString .= "<td><i>[^p^] s</i></td><td>&nbsp;</td>";
+    $parsedMessageString .= "<td><i>[^p^]</i></td><td>&nbsp;</td>";
     $parsedMessageString .= "</tr>";
 
     $parsedMessageString .= "<tr><td>&nbsp;&nbsp;Total: </td>";
-    $parsedMessageString .= "<td><i>[^t^] s</i></td><td>&nbsp;</td>";
+    $parsedMessageString .= "<td><i>[^t^]</i></td><td>&nbsp;</td>";
     $parsedMessageString .= "</tr>";
 
     $parsedMessageString .= "</table>";
     $parsedMessageString .= "</body></html>";
 
-    $this->documentContent = $parsedMessageString;
-    $this->outputContent(true); // generate output without events
+    // Log error
+    $this->logEvent(0,3,$parsedMessageString,$source='Parser');
+
+    // Display error (to manager user)
+    if(!$_SESSION['mgrValidated']) {
+      $this->sendErrorPage();
+      return;
+    } else {
+      $this->documentContent = $parsedMessageString;
+      $this->outputContent(true); // generate output without events
+    }
 
     exit;
   }

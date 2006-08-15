@@ -1,7 +1,7 @@
 <?php 
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!$modx->hasPermission('manage_metatags') && $_REQUEST['a']==82) {
+if(!$modx->hasPermission('manage_metatags')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
