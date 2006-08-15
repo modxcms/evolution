@@ -1,7 +1,7 @@
 <?php
 
-/*	Datbase API object of MySQL
- *	Written by Raymond Irving June, 2005
+/* Datbase API object of MySQL
+ * Written by Raymond Irving June, 2005
  *
  */
 
@@ -12,22 +12,22 @@ class DBAPI {
    var $isConnected;
 
    /**
-    *	@name:	DBAPI
+    * @name:  DBAPI
     *	 
     */
-   function DBAPI() {
-      $this->config['host'] = $GLOBALS['database_server'];
-      $this->config['dbase'] = $GLOBALS['dbase'];
-      $this->config['user'] = $GLOBALS['database_user'];
-      $this->config['pass'] = $GLOBALS['database_password'];
-      $this->config['table_prefix'] = $GLOBALS['table_prefix'];
+   function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL) {
+      $this->config['host'] = $host ? $host : $GLOBALS['database_server'];
+      $this->config['dbase'] = $dbase ? $dbase : $GLOBALS['dbase'];
+      $this->config['user'] = $uid ? $uid : $GLOBALS['database_user'];
+      $this->config['pass'] = $pwd ? $pwd : $GLOBALS['database_password'];
+      $this->config['table_prefix'] = ($pre !== NULL) ? $pre : $GLOBALS['table_prefix'];
       $this->initDataTypes();
    }
 
    /**
-    * @name:	initDataTypes
-    * @desc:	called in the constructor to set up arrays containing the types 
-    * 			of	database fields that can be used with specific PHP types 
+    * @name:  initDataTypes
+    * @desc:  called in the constructor to set up arrays containing the types 
+    *         of database fields that can be used with specific PHP types 
     */
    function initDataTypes() {
       $this->dataTypes['numeric'] = array (
@@ -72,7 +72,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	connect
+    * @name:  connect
     *	 
     */
    function connect($host = '', $dbase = '', $uid = '', $pwd = '', $persist = 0) {
@@ -98,13 +98,13 @@ class DBAPI {
          }
          $this->isConnected = true;
          // FIXME (Fixed by line below):
-         // 			this->queryTime = this->queryTime + $totaltime;
+         // this->queryTime = this->queryTime + $totaltime;
          $modx->queryTime += $totaltime;
       }
    }
 
    /**
-    *	@name:	disconnect
+    * @name:  disconnect
     *	 
     */
    function disconnect() {
@@ -121,9 +121,9 @@ class DBAPI {
    }
 
    /**
-    *	@name:	query
-    *	@desc:	Mainly for internal use. 
-    *			Developers should use select, update, insert, delete where possible
+    * @name:  query
+    * @desc:  Mainly for internal use. 
+    * Developers should use select, update, insert, delete where possible
     */
    function query($sql) {
       global $modx;
@@ -146,7 +146,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	delete
+    * @name:  delete
     *	 
     */
    function delete($from, $where = "") {
@@ -160,7 +160,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	select
+    * @name:  select
     *	 
     */
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
@@ -176,7 +176,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	update
+    * @name:  update
     *	 
     */
    function update($fields, $table, $where = "") {
@@ -200,8 +200,8 @@ class DBAPI {
    }
 
    /**
-    *	@name:	insert
-    *	@desc:	returns either last id inserted or the result from the query
+    * @name:  insert
+    * @desc:  returns either last id inserted or the result from the query
     */
    function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
       if (!$intotable)
@@ -227,7 +227,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getInsertId
+    * @name:  getInsertId
     *	 
     */
    function getInsertId($conn=NULL) {
@@ -236,7 +236,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getAffectedRows
+    * @name:  getAffectedRows
     *	 
     */
    function getAffectedRows($conn=NULL) {
@@ -245,7 +245,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getLastError
+    * @name:  getLastError
     *	 
     */
    function getLastError() {
@@ -253,7 +253,7 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getRecordCount
+    * @name:  getRecordCount
     *	 
     */
    function getRecordCount($ds) {
@@ -261,10 +261,10 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getRow
-    *	@desc:	returns an array of column values		
-    *	@param:	$dsq - dataset
-    *	 
+    * @name:  getRow
+    * @desc:  returns an array of column values		
+    * @param: $dsq - dataset
+    *
     */
    function getRow($ds, $mode = 'assoc') {
       if ($ds) {
@@ -284,9 +284,9 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getColumn
-    *	@desc:	returns an array of the values found on colun $name
-    *	@param:	$dsq - dataset or query string	 
+    * @name:  getColumn
+    * @desc:  returns an array of the values found on colun $name
+    * @param: $dsq - dataset or query string	 
     */
    function getColumn($name, $dsq) {
       if (!is_resource($dsq))
@@ -301,9 +301,9 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getColumnNames
-    *	@desc:	returns an array containing the column $name
-    *	@param:	$dsq - dataset or query string	 
+    * @name:  getColumnNames
+    * @desc:  returns an array containing the column $name
+    * @param: $dsq - dataset or query string	 
     */
    function getColumnNames($dsq) {
       if (!is_resource($dsq))
@@ -319,9 +319,9 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getValue
-    *	@desc:	returns the value from the first column in the set
-    *	@param:	$dsq - dataset or query string	 
+    * @name:  getValue
+    * @desc:  returns the value from the first column in the set
+    * @param: $dsq - dataset or query string	 
     */
    function getValue($dsq) {
       if (!is_resource($dsq))
@@ -333,8 +333,8 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getXML
-    *	@desc:	returns an XML formay of the dataset $ds
+    * @name:  getXML
+    * @desc:  returns an XML formay of the dataset $ds
     */
    function getXML($dsq) {
       if (!is_resource($dsq))
@@ -354,10 +354,10 @@ class DBAPI {
    }
 
    /**
-    * @name:	getTableMetaData
-    * @desc:	returns an array of MySQL structure detail for each column of a 
-    * 			table
-    * @param:	$table: the full name of the database table
+    * @name:  getTableMetaData
+    * @desc:  returns an array of MySQL structure detail for each column of a 
+    *         table
+    * @param: $table: the full name of the database table
     */
    function getTableMetaData($table) {
       $metadata = false;
@@ -374,12 +374,12 @@ class DBAPI {
    }
 
    /**
-    * @name:	prepareDate
-    * @desc		prepares a date in the proper format for specific database types
-    * 			given a UNIX timestamp
-    * @param:	$timestamp: a UNIX timestamp
+    * @name:  prepareDate
+    * @desc:  prepares a date in the proper format for specific database types
+    *         given a UNIX timestamp
+    * @param: $timestamp: a UNIX timestamp
     * @param: $fieldType: the type of field to format the date for
-    * 			(in MySQL, you have DATE, TIME, YEAR, and DATETIME)
+    *         (in MySQL, you have DATE, TIME, YEAR, and DATETIME)
     */
    function prepareDate($timestamp, $fieldType = 'DATETIME') {
       $date = '';
@@ -403,30 +403,30 @@ class DBAPI {
    }
 
    /**
-    *	@name:	getHTMLGrid
-    *	@param:	$params: Data grid parameters 
-    *				columnHeaderClass
-    *				tableClass
-    *				itemClass
-    *				altItemClass
-    *				columnHeaderStyle
-    *				tableStyle
-    *				itemStyle
-    *				altItemStyle
-    *				columns
-    *				fields
-    *				colWidths
-    *				colAligns
-    *				colColors
-    *				colTypes
-    *				cellPadding
-    *				cellSpacing
-    *				header
-    *				footer
-    *				pageSize
-    *				pagerLocation
-    *				pagerClass
-    *				pagerStyle
+    * @name:  getHTMLGrid
+    * @param: $params: Data grid parameters 
+    *         columnHeaderClass
+    *         tableClass
+    *         itemClass
+    *         altItemClass
+    *         columnHeaderStyle
+    *         tableStyle
+    *         itemStyle
+    *         altItemStyle
+    *         columns
+    *         fields
+    *         colWidths
+    *         colAligns
+    *         colColors
+    *         colTypes
+    *         cellPadding
+    *         cellSpacing
+    *         header
+    *         footer
+    *         pageSize
+    *         pagerLocation
+    *         pagerClass
+    *         pagerStyle
     * 
     */
    function getHTMLGrid($dsq, $params) {
@@ -466,6 +466,22 @@ class DBAPI {
          $grd->pagerStyle = $params['pagerStyle'];
          return $grd->render();
       }
+   }
+   
+   /**
+   * @name:  makeArray
+   * @desc:  turns a recordset into a multidimensional array
+   * @return: an array of row arrays from recordset, or empty array
+   *          if the recordset was empty, returns false if no recordset
+   *          was passed
+   * @param: $rs Recordset to be packaged into an array
+   */
+   function makeArray($rs=''){
+      if(!$rs) return false;
+      $rsArray = array();
+      $qty = $this->getRecordCount($rs);
+      for ($i = 0; $i < $qty; $i++) $rsArray[] = $this->getRow($rs);
+      return $rsArray;
    }
 }
 ?>

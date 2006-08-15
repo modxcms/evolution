@@ -6,6 +6,10 @@ development release, and is only shown to give an idea of what's currently in th
 MOD 0.9.5 (rev 9xx - August XX, 2006)
 ====================================
 
+* Created a check on permissions for the config.inc.php file. A warning will now appear in the manager if the permissions are loose!
+* Added ability to select if you want menuindex to automatically increment by default or not.
+* [FS#280] Gives DBAPI object default connection values, but allows for others to override if specified - which is needed in some cases when connecting to a different db on the same server.
+* Adds makeArray function to DBAPI so that you don't have to write the same stinkin' routine to array-ize a record set after each select statement result. Very handy. And works.
 * Fixed form input fields for link_attributes and menutitle to be able to have double quotes.
 * Patches for adding attributes to links
 * Use a plain document ID as a weblink, and click on the Document Tree to set the ID you want.

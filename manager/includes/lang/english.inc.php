@@ -1079,4 +1079,9 @@ $_lang['fe_editor_lang_message'] = 'Choose a language for the editor to use when
 $_lang["unable_set_link"] = "Unable to set the link!";
 $_lang['link_attributes'] = 'Link Attributes';
 $_lang['link_attributes_help'] = 'Here you can enter attributes for the link for this page, such as target= or rel=.';
+$_lang['defaultmenuindex_title'] = 'Menu indexing default';
+$_lang['defaultmenuindex_message'] = 'Select \'Yes\' to turn on automatic menu index incrementing by default.';
+$_lang["configcheck_configinc"] = "Config file still writable";
+$_lang["configcheck_configinc_msg"] = "Very naughty people could potentially wreak some havoc on your site and everything associated with it. <strong>Really.</strong> Please make your config file  (/manager/includes/config.inc.php) read only!";
+
 ?>

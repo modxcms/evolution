@@ -810,7 +810,9 @@ REPLACE INTO `{PREFIX}system_settings`
 ('filemanager_path','{FILEMANAGERPATH}'),
 ('theme_refresher',''),
 ('manager_layout','4'),
-('custom_contenttype','text/css,text/html,text/javascript,text/plain,text/xml');
+('custom_contenttype','text/css,text/html,text/javascript,text/plain,text/xml'),
+('auto_menuindex','1');
+
 
 
 # ]]non-upgrade-able
