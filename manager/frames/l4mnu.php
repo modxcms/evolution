@@ -66,9 +66,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <ul class="subnav" id="menu3">
 <!--home--><li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
 <!--preview--><li><a onclick="this.blur();" href="../" target="_blank"><?php echo $_lang["launch_site"]; ?></a></li>
-<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>
-<!--resources--><li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resources"]; ?></a></li>
-<?php } ?>
 <!--new-document--><li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
 <!--new-folder--><li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
 <!--new-weblink--><li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
@@ -77,6 +74,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <?php } ?>
 </ul>
 </li>
+
+<!--Resources-->
+<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>
+<li id="limenu5"><a onclick="new NavToggle(this);return false;" href="#menu5"><?php echo $_lang["resources"]; ?></a>
+<ul class="subnav" id="menu5"><!-- break these out individually soon -->
+<!--resources--><li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resource_management"]; ?></a></li>
+</ul>
+</li>
+<?php } ?>
 
 <!-- Tools -->
 <li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;"><?php echo $_lang["tools"]; ?></a>
@@ -123,8 +129,8 @@ echo $list;
 <!-- Reports -->
 <li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;"><?php echo $_lang["reports"]; ?></a>
 <ul class="subnav" id="menu1-2">
-<!--who's-online--><li><a onclick="this.blur();" href="index.php?a=69" target="main"><?php echo $_lang["visitor_stats_online"]; ?></a></li>
-<!--site-stats--><li><a onclick="this.blur();" href="index.php?a=68" target="main"><?php echo $_lang["visitor_stats"]; ?></a></li>
+<!--who's-online><li><a onclick="this.blur();" href="index.php?a=69" target="main"><?php echo $_lang["visitor_stats_online"]; ?></a></li-->
+<!--site-stats><li><a onclick="this.blur();" href="index.php?a=68" target="main"><?php echo $_lang["visitor_stats"]; ?></a></li-->
 <!--site-sched--><li><a onclick="this.blur();" href="index.php?a=70" target="main"><?php echo $_lang["site_schedule"]; ?></a></li>
 <?php if($modx->hasPermission('view_eventlog')) { ?>
 <!--manager-events--><li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
