@@ -769,7 +769,7 @@ switch ($action) {
 /* Resource Selector													*/
 /********************************************************************/
 	case "84" :
-		include_once "actions/resource_selector.php";
+		include_once "actions/resource_selector.static.php";
 	break;
 /********************************************************************/
 /* Backup Manager													*/

@@ -28,6 +28,19 @@ $disabled = $_POST['disabled']=="on" ? 1 : 0;
 $moduleguid = mysql_escape_string($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
 
+//Kyle Jaebker - added category support
+if (empty($_POST['newcategory'])) {
+    $categoryid = mysql_escape_string($_POST['categoryid']);
+} else {
+    include_once "categories.inc.php";
+    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    if ($catCheck) {
+        $categoryid = $catCheck;
+    } else {
+        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+    }
+}
+
 if($name=="") $name = "Untitled plugin";
 
 switch ($_POST['mode']) {
@@ -41,7 +54,7 @@ switch ($_POST['mode']) {
 								));
     
 		//do stuff to save the new plugin
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_plugins (name, description, plugincode, disabled, moduleguid, locked, properties) VALUES('".$name."', '".$description."', '".$plugincode."', '".$disabled."', '".$moduleguid."', '".$locked."', '".$properties."');";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_plugins (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$plugincode."', '".$disabled."', '".$moduleguid."', '".$locked."', '".$properties."', ".$categoryid.");";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New plugin not saved!";
@@ -89,7 +102,7 @@ switch ($_POST['mode']) {
 								));
      
 		//do stuff to save the edited plugin	
-		$sql = "UPDATE $dbase.".$table_prefix."site_plugins SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."'  WHERE id='".$id."';";
+		$sql = "UPDATE $dbase.".$table_prefix."site_plugins SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category=".$categoryid."  WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited plugin not saved!";

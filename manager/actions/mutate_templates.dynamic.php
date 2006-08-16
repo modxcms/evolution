@@ -182,6 +182,24 @@ function deletedocument() {
 	    <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo html_entity_decode($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
 	  </tr>
 	  <tr>
+		<td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
+		<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
+		<option>&nbsp;</option>
+        <?php
+            include_once "categories.inc.php";
+			$ds = getCategories();
+			if($ds) foreach($ds as $n=>$v){
+				echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+			}
+		?>
+		</select>
+		</td>
+	  </tr>
+      <tr>
+		<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
+		<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+	  </tr>
+	  <tr>
 	    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
 	  </tr>
 	</table>

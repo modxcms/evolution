@@ -33,6 +33,19 @@ $display = mysql_escape_string($_POST['display']);
 $params = mysql_escape_string($_POST['params']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
+//Kyle Jaebker - added category support
+if (empty($_POST['newcategory'])) {
+    $categoryid = mysql_escape_string($_POST['categoryid']);
+} else {
+    include_once "categories.inc.php";
+    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    if ($catCheck) {
+        $categoryid = $catCheck;
+    } else {
+        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+    }
+}
+
 if($caption =="") {
 	$caption  = $name? $name: "Untitled variable";
 }
@@ -47,7 +60,7 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 							));	      	
 		// Add new TV
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_tmplvars (name, description, caption, type, elements, default_text, display,display_params, rank, locked) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."');";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_tmplvars (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New variable not saved!";
@@ -105,7 +118,8 @@ switch ($_POST['mode']) {
         $sql .= "display='".$display."', "; 
         $sql .= "display_params='".$params."', ";         
         $sql .= "rank='".$rank."', ";
-        $sql .= "locked='".$locked."' ";
+        $sql .= "locked='".$locked."', ";
+        $sql .= "category=".$categoryid;
         $sql .= " WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){

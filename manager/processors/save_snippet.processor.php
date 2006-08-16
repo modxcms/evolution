@@ -35,6 +35,19 @@ $properties = mysql_escape_string($_POST['properties']);
 $moduleguid = mysql_escape_string($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
 
+//Kyle Jaebker - added category support
+if (empty($_POST['newcategory'])) {
+    $categoryid = mysql_escape_string($_POST['categoryid']);
+} else {
+    include_once "categories.inc.php";
+    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    if ($catCheck) {
+        $categoryid = $catCheck;
+    } else {
+        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+    }
+}
+
 if($name=="") $name = "Untitled snippet";
 
 switch ($_POST['mode']) {
@@ -48,7 +61,7 @@ switch ($_POST['mode']) {
 								));
 								
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_snippets(name, description, snippet, moduleguid, locked, properties) VALUES('".$name."', '".$description."', '".$snippet."', '".$moduleguid."', '".$locked."','".$properties."');";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_snippets(name, description, snippet, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$moduleguid."', '".$locked."','".$properties."', '".$categoryid."');";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New snippet not saved!";
@@ -94,7 +107,7 @@ switch ($_POST['mode']) {
 								));	
 								
 		//do stuff to save the edited doc	
-		$sql = "UPDATE $dbase.".$table_prefix."site_snippets SET name='".$name."', description='".$description."', snippet='".$snippet."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."'  WHERE id='".$id."';";
+		$sql = "UPDATE $dbase.".$table_prefix."site_snippets SET name='".$name."', description='".$description."', snippet='".$snippet."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category='".$categoryid."'  WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited snippet not saved!";

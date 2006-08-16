@@ -26,7 +26,7 @@ $description = mysql_escape_string($_POST['description']);
 $resourcefile = mysql_escape_string($_POST['resourcefile']);
 $enable_resource = $_POST['enable_resource']=='on' ? 1 : 0 ;
 $icon = mysql_escape_string($_POST['icon']);
-$category = intval($_POST['category']);
+//$category = intval($_POST['category']);
 $disabled = $_POST['disabled']=='on' ? 1 : 0 ;
 $wrap = $_POST['wrap']=='on' ? 1 : 0 ;
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
@@ -34,6 +34,19 @@ $modulecode = mysql_escape_string($_POST['post']);
 $properties = mysql_escape_string($_POST['properties']);
 $enable_sharedparams = $_POST['enable_sharedparams']=='on' ? 1 : 0 ;
 $guid = mysql_escape_string($_POST['guid']);
+
+//Kyle Jaebker - added category support
+if (empty($_POST['newcategory'])) {
+    $categoryid = mysql_escape_string($_POST['categoryid']);
+} else {
+    include_once "categories.inc.php";
+    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    if ($catCheck) {
+        $categoryid = $catCheck;
+    } else {
+        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+    }
+}
 
 if($name=="") $name = "Untitled module";
 
@@ -47,7 +60,7 @@ switch ($_POST['mode']) {
 							));
 								
 		// save the new module
-		$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, wrap, locked, icon, resourcefile, enable_resource, category, enable_sharedparams, guid, modulecode, properties) VALUES('".$name."', '".$description."', '".$disabled."', '".$wrap."', '".$locked."', '".$icon."', '".$resourcefile."', '".$enable_resource."', '".$category."', '".$enable_sharedparams."', '".$guid."', '".$modulecode."', '".$properties."');";
+		$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, wrap, locked, icon, resourcefile, enable_resource, category, enable_sharedparams, guid, modulecode, properties) VALUES('".$name."', '".$description."', '".$disabled."', '".$wrap."', '".$locked."', '".$icon."', '".$resourcefile."', '".$enable_resource."', '".$categoryid."', '".$enable_sharedparams."', '".$guid."', '".$modulecode."', '".$properties."');";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New module not saved!";
@@ -95,7 +108,7 @@ switch ($_POST['mode']) {
 							));	
 								
 		// save the edited module	
-		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$category."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
+		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$categoryid."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited module not saved!".mysql_error();

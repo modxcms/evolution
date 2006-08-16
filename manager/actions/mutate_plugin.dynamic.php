@@ -346,7 +346,25 @@ function decode(s){
     	<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
     	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
-		  <tr>
+          <tr>
+			<td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
+			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
+			<option>&nbsp;</option>
+			<?php
+                include_once "categories.inc.php";
+				$ds = getCategories();
+				if($ds) foreach($ds as $n=>$v){
+					echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+				}
+			?>
+			</select>
+			</td>
+		  </tr>
+          <tr>
+			<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
+			<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+		  </tr>
+          <tr>
 			<td align="left"><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</td>
 			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="moduleguid" style="width:300px;" onChange='documentDirty=true;'>
 			<option>&nbsp;</option>

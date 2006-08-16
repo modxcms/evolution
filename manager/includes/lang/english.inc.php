@@ -1083,5 +1083,11 @@ $_lang['defaultmenuindex_title'] = 'Menu indexing default';
 $_lang['defaultmenuindex_message'] = 'Select \'Yes\' to turn on automatic menu index incrementing by default.';
 $_lang["configcheck_configinc"] = "Config file still writable";
 $_lang["configcheck_configinc_msg"] = "Very naughty people could potentially wreak some havoc on your site and everything associated with it. <strong>Really.</strong> Please make your config file  (/manager/includes/config.inc.php) read only!";
-
+$_lang['resource_categories'] = 'Categories';
+$_lang['no_category'] = 'no category';
+$_lang['existing_category'] = 'Existing Category';
+$_lang['new_category'] = 'New Category';
+$_lang['category_heading'] = 'Category';
+$_lang['category_msg'] = 'Here you can view and edit all resources grouped by category.';
 ?>
+

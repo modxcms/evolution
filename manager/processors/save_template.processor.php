@@ -27,6 +27,19 @@ $templatename = mysql_escape_string($_POST['templatename']);
 $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
+//Kyle Jaebker - added category support
+if (empty($_POST['newcategory'])) {
+    $categoryid = mysql_escape_string($_POST['categoryid']);
+} else {
+    include_once "categories.inc.php";
+    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    if ($catCheck) {
+        $categoryid = $catCheck;
+    } else {
+        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+    }
+}
+
 if($templatename=="") $templatename = "Untitled template";
 
 switch ($_POST['mode']) {
@@ -40,7 +53,7 @@ switch ($_POST['mode']) {
 							));	
 							
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_templates(templatename, description, content, locked) VALUES('$templatename', '$description', '$template', '$locked');";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_templates(templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New template not saved!";
@@ -85,7 +98,7 @@ switch ($_POST['mode']) {
 							));	   
 							
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.".$table_prefix."site_templates SET templatename='$templatename', description='$description', content='$template', locked='$locked' WHERE id=$id;";
+		$sql = "UPDATE $dbase.".$table_prefix."site_templates SET templatename='$templatename', description='$description', content='$template', locked='$locked', category=".$categoryid." WHERE id=$id;";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited template not saved!";

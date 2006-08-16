@@ -371,18 +371,22 @@ function SetUrl(url, width, height, alt){
 			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="icon" value="<?php echo $content['icon']; ?>" /> <input type="button" value="<?php echo $_lang['insert']; ?>" onclick="BrowseServer();" style="width:45px;" /></td>
 		  </tr>
 		  <tr>
-			<td align="left"><?php echo $_lang['category']; ?>:&nbsp;&nbsp;</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="category" style="width:300px;" onChange='documentDirty=true;'>
+			<td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
+			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
 			<option>&nbsp;</option>
 			<?php
-				$sql = "SELECT * FROM ".$modx->getFullTableName("categories")." ORDER BY category ";
-				$ds = $modx->dbQuery($sql);
-				if($ds) while($row = $modx->fetchRow($ds)){
-					echo "<option value='".$row['id']."'".($content["category"]==$row["id"]? " selected='selected'":"").">".htmlspecialchars($row["category"])."</option>";
+                include_once "categories.inc.php";
+				$ds = getCategories();
+				if($ds) foreach($ds as $n=>$v){
+					echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
 				}
 			?>
 			</select>
 			</td>
+		  </tr>
+          <tr>
+			<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
+			<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td align="left"><input name="enable_resource" title="<?php echo $_lang["enable_resource"];?>" type="checkbox" <?php echo $content['enable_resource']==1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang["enable_resource"];?>"><?php echo $_lang['resource']; ?></span>:</td>

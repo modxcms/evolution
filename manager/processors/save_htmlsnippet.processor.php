@@ -13,6 +13,19 @@ $name = mysql_escape_string($_POST['name']);
 $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
+//Kyle Jaebker - added category support
+if (empty($_POST['newcategory'])) {
+    $categoryid = mysql_escape_string($_POST['categoryid']);
+} else {
+    include_once "categories.inc.php";
+    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    if ($catCheck) {
+        $categoryid = $catCheck;
+    } else {
+        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+    }
+}
+
 if($name=="") $name = "Untitled chunk";
 
 switch ($_POST['mode']) {
@@ -26,7 +39,7 @@ switch ($_POST['mode']) {
 								));
 
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_htmlsnippets(name, description, snippet, locked) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."');";
+		$sql = "INSERT INTO $dbase.".$table_prefix."site_htmlsnippets(name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New Chunk not saved!";
@@ -72,7 +85,7 @@ switch ($_POST['mode']) {
 								));
 		
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.".$table_prefix."site_htmlsnippets SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."' WHERE id='".$id."';";
+		$sql = "UPDATE $dbase.".$table_prefix."site_htmlsnippets SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited htmlsnippet not saved!";

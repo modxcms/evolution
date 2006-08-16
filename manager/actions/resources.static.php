@@ -206,5 +206,73 @@ $theme = $manager_theme ? "$manager_theme/":"";
 	</div>
 <?php } ?>
 
+<!-- category view -->
+    <div class="tab-page" id="tabCategory">
+    	<h2 class="tab"><?php echo $_lang["resource_categories"] ?></h2>
+    	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
+		<p><?php echo $_lang['category_msg']; ?></p>
+		<br />
+		<ul>
+		<?php
+		$tablePre = $dbase.'.'.$table_prefix;
+		
+		$displayInfo = array();
+		if($modx->hasPermission('edit_plugin')) {
+            $displayInfo['plugin'] = array('table'=>'site_plugins','action'=>102,'name'=>$_lang['manage_plugins']);
+        }
+        if($modx->hasPermission('edit_snippet')) {
+            $displayInfo['snippet'] = array('table'=>'site_snippets','action'=>22,'name'=>$_lang['manage_snippets']);
+            $displayInfo['htmlsnippet'] = array('table'=>'site_htmlsnippets','action'=>78,'name'=>$_lang['manage_htmlsnippets']);
+        }
+        if($modx->hasPermission('edit_template')) {
+            $displayInfo['templates'] = array('table'=>'site_templates','action'=>16,'name'=>$_lang['manage_templates']);
+            $displayInfo['tmplvars'] = array('table'=>'site_tmplvars','action'=>301,'name'=>$_lang['tmplvars']);
+        }
+        if($modx->hasPermission('edit_module')) {
+            $displayInfo['modules'] = array('table'=>'site_modules','action'=>108,'name'=>$_lang['modules']);
+        }
+
+        $finalInfo = array();
+
+        foreach ($displayInfo as $n => $v) {
+            $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
+            $sql = 'SELECT '.$nameField.' as name, '.$tablePre.$v['table'].'.id, description, locked, '.$tablePre.'categories.category FROM '.$tablePre.$v['table'].' left join '.$tablePre.'categories on '.$tablePre.$v['table'].'.category = '.$tablePre.'categories.id ORDER BY 5,1';
+            $rs = mysql_query($sql);
+    		$limit = mysql_num_rows($rs);
+    		if($limit>0){
+    			for($i=0; $i<$limit; $i++) {
+                    $row = mysql_fetch_assoc($rs);
+                    $row['type'] = $v['name'];
+                    $row['action'] = $v['action'];
+                    if (empty($row['category'])) {$row['category'] = $_lang['no_category'];}
+                    $finalInfo[] = $row;
+                }
+    		}
+        }
+        
+        foreach($finalInfo as $n => $v) {
+            $category[$n] = $v['category'];
+            $name[$n] = $v['name'];
+        }
+        
+        array_multisort($category, SORT_ASC, $name, SORT_ASC, $finalInfo);
+        
+		$preCat = '';
+		foreach($finalInfo as $n => $v) {
+			if ($preCat !== $v['category']) {
+                echo $insideUl? '</ul>': '';
+                echo '<li><strong>'.$v['category'].'</strong><ul>';
+                $insideUl = 1;
+            }
+		?>
+			<li><span style="width: 200px"><a href="index.php?id=<?php echo $v['id']. '&a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo $v['description']!='' ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked']==1 ? ' <i><small>('.$_lang['plugin_locked_message'].')</small></i>' : "" ; ?></li>
+		<?php
+		$preCat = $v['category'];
+        }
+        echo $insideUl? '</ul>': '';
+		?>
+		</ul>
+	</div>
+
 </div>
 </div>
