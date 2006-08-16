@@ -685,24 +685,6 @@ switch ($action) {
 		include_once "processors/remove_locks.processor.php";
 	break;
 /********************************************************************/
-/* site logging														*/
-/********************************************************************/
-	case "68" :
-		// get the site_logging page
-		include_once "header.inc.php";
-		include_once "actions/site_logging.static.php";
-		include_once "footer.inc.php";
-	break;
-/********************************************************************/
-/* online now														*/
-/********************************************************************/
-	case "69" :
-		// get the online_now page
-		include_once "header.inc.php";
-		include_once "actions/online_now.static.php";
-		include_once "footer.inc.php";
-	break;
-/********************************************************************/
 /* Site schedule													*/
 /********************************************************************/
 	case "70" :
