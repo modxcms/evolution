@@ -5,13 +5,17 @@
  Version: beta
  Authors: Ryan Thrash (vertexworks.com)
           Kyle Jaebker (muddydogpaws.com)
- Date: August 2, 2006
+ Date: August 16, 2006
 
  Changelog:
-    August 2, 2006 - Initial Public Beta released
-    August 3, 2006 - Fixed parent class bug
-                   - Added unique row id ability
-                   - Removed ultimate parent code (just use the snippet in your call)
+    August 02, 2006 - Initial Public Beta released
+    August 03, 2006 - Fixed parent class bug
+                    - Added unique row id ability
+                    - Removed ultimate parent code (just use the snippet in your call)
+    August 16, 2006 - Added support for link_attributes
+                    - Made custom version of getActiveChildren in class
+                    - Added class for weblinks
+                    - Weblinks will display the content link instead of link to id
 ::::::::::::::::::::::::::::::::::::::::
 Description:
     Totally refactored from original DropMenu nav builder to make it easier to
@@ -54,6 +58,7 @@ $wf->css['outer'] = isset($outerClass)? $outerClass: '';
 $wf->css['inner'] = isset($innerClass)? $innerClass: '';
 $wf->css['level'] = isset($levelClass)? $levelClass: '';
 $wf->css['self'] = isset($selfClass)? $selfClass: '';
+$wf->css['weblink'] = isset($webLinkClass)? $webLinkClass: '';
 //prefix for adding id to each row
 $wf->rowIdPrefix = isset($rowIdPrefix)? $rowIdPrefix: FALSE;
 //get fields to output

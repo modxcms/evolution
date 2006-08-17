@@ -1,66 +1,64 @@
 #::::::::::::::::::::::::::::::::::::::::
 # Snippet Name: Personalize 
-# Short Desc: basic personalization for logged in users
-# Version: 1.0
-# Created By: Ryan Thrash (modx@vertexworks.com)
+# Short Desc: calls a chunk if the user is logged in, otherwise calls another
+# Version: 2.0
+# Created By: 	Ryan Thrash (modx@vertexworks.com), and then
+#		powered up by kudo (kudo@kudolink.com)
 #
-# Date: December 1, 2005
+# Date: Aug 03, 2006
 #
 # Changelog: 
-# Dec 1, 05 -- initial release
+# Dec 01, 05 -- initial release
+# Jun 19, 06 -- updated description
+# Jul 19, 06 -- hacked by kudo to output chunks
+# Aug 03, 06 -- added placeholder for username
 #
 #::::::::::::::::::::::::::::::::::::::::
 # Description: 	
-#	Checks to see if users belong to a certain group and 
-#	displays the specified chunk if they do. Performs several
-#	sanity checks and allows to be used multiple times on a page.
-#	Only meant to be used once per page.
-#
+#	Checks to see if webusers are logged in and displays yesChunk if the user
+#	is logged or noChunk if user is not logged. Insert only the chunk name as
+#	param, without {{}}. Can use a placeholder to output the username.
+#	TESTED: can be used more than once per page.
+#	TESTED: chunks can contain snippets.
+#	
+#	
 # Params:
-#	&message [string] (optional)
-#		simple message to prepend in front of the username
+#	&yesChunk [string] [REQUIRED]
+#		Output for LOGGED users
 #
-#	&wrapper [string] (optional) 
-#		optional element to wrap the message in
+#	&noChunk [string] [REQUIRED] 
+#		Output for NOT logged users
 #
-#	&class [string] (optional) 
-#		optional name of the class for the wrapper element
-#
-#	&ph [boolean] ( optional ) 
-#		if set, outputs to the ph name passed in, instead 
-#		of directly returning the output
+#	&ph [string] (optional) 
+#		Placeholder for placing the username
+#		ATTENTION!: place this ph only in yesChunk!
+#	
 #
 # Example Usage:
 #
-#	[[Personalize? &message=`Welcome back, ` &wrapper=`h3` &class=`welcome`]]
+#	[[LoggedOrNot? &yesChunk=`Link` &noChunk=`Register` &ph=`name`]]
 #
-#	For a logged in user John, would return: 
-#	<h3 class="welcome">Welcome back, John</h3>
+#	Having Chunks named {{Link}} and another {{Register}}, the first will be
+#	published to registered user, the second to non-registered users.
 #
 #::::::::::::::::::::::::::::::::::::::::
 
-# is there a class defined?
-$class = (isset($class))? ' class="'.$class.'"' : '';
-
-# build the wrappers as needed
-if (isset($wrapper)) {
-	$w1 = '<'.$wrapper.$class.'>' ;
-	$w2 = '</'.$wrapper.'>';
-} else {
-	$w1 = '';
-	$w2 = '';
-}
-
-# add in the message
-$message = (isset($message))? $message : '';
+# prepare params and variables
+$o = '';
+$yesChunk = (isset($yesChunk))? $yesChunk : '';
+$noChunk = (isset($noChunk))? $noChunk : '';
 
 # do the work
-$o = '';
 $test = $modx->getLoginUserName();
-$o = ($test)? "$w1$message$test$w2" : '';
+if ($test) {
+    $o = $modx->getChunk($yesChunk);
+  } else {
+    $o = $modx->getChunk($noChunk);
+}
 
 if (isset($ph)) {
-	$modx->setPlaceholder($ph,$o);
+	$modx->setPlaceholder($ph,$test);
+	return $o;
 } else {
 	return $o;
 }

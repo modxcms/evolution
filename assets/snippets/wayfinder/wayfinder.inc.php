@@ -24,18 +24,39 @@ class Wayfinder {
     var $cssTpl = FALSE;
     var $jsTpl = FALSE;
     var $rowIdPrefix = FALSE;
-    var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]');
+    var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]');
     var $ie = "\n";
     var $debugOutput = '<h2>WayFinder Debug Output:</h2>';
+    
+    function getMenuChildren($id=0, $sort='menuindex', $dir='ASC') {
+        global $modx;
+        $fields = 'sc.id,sc.menutitle,sc.pagetitle,sc.menuindex,sc.published,sc.hidemenu,sc.parent,sc.isfolder,sc.description,sc.alias,sc.longtitle,sc.type,sc.link_attributes,if(sc.type=\'reference\',sc.content,\'\') as content';
+        $tblsc = $modx->getFullTableName("site_content");
+        $tbldg = $modx->getFullTableName("document_groups");
+        
+        if ($this->ignoreHidden) {
+            $menuWhere = '';
+        } else {
+            $menuWhere = ' AND sc.hidemenu = 0';
+        }
 
-    //remove any docs specified with hidemenu
-    function filterHidden($var) {
-		return (!$var['hidemenu']==1);
-	}
-	
-	function endKey(&$array){
-        end($array);
-        return key($array);
+        // modify field names to use sc. table reference
+        $sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
+        // get document groups for current user
+        if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
+        // build query
+        $access = ($modx->isFrontend() ? "sc.privateweb=0":"1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").
+          (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
+        $sql = 'SELECT DISTINCT '.$fields.' FROM '.$tblsc.' sc LEFT JOIN '.$tbldg.
+            ' dg on dg.document = sc.id WHERE sc.parent = '.$id.
+            ' AND sc.published=1 AND sc.deleted=0 AND ('.$access.')'.$menuWhere.
+            ' ORDER BY '.$sort.' '.$dir.';';
+        $result = $modx->dbQuery($sql);
+        $resourceArray = array();
+        for($i=0;$i<@$modx->recordCount($result);$i++)  {
+          array_push($resourceArray,@$modx->fetchRow($result));
+        }
+        return $resourceArray;
     }
 
     //generate the menu
@@ -43,19 +64,18 @@ class Wayfinder {
         global $modx;
         $output = '';
 
-        $getFields = 'id,menutitle,pagetitle,menuindex,published,hidemenu,parent,isfolder,description,alias,longtitle';
-        $resource = $modx->getActiveChildren($parentId,'menuindex','ASC',$getFields);
-
-        if (!$this->ignoreHidden) {
-            $resource = array_filter($resource, array($this, "filterHidden"));
-        }
+        $resource = $this->getMenuChildren($parentId,'menuindex','ASC');
 
         $firstItem = 1;
 
         if (is_array($resource) && !empty($resource)) {
-            $numItems = $this->endKey($resource);
+            $numItems = count($resource);
             foreach ($resource as $n => $v) {
-                $v['link'] = $modx->makeUrl($v['id']);
+                if ($v['type'] == 'reference') {
+                    $v['link'] = $v['content'];
+                } else {
+                    $v['link'] = $modx->makeUrl($v['id']);
+                }
                 $v['level'] = $curLevel;
                 $v['first'] = $firstItem;
                 $firstItem = 0;
@@ -99,8 +119,8 @@ class Wayfinder {
             $output = str_replace($this->placeHolders,$phArray,$useChunk);
 
             if ($this->debug) {
-                $numDocs = $numItems + 1;
-                $this->debugOutput .= '<strong>Nesting Complete</strong> - Previous ' . $numDocs . ' level ' . $curLevel . ' items inserted into ' . $usedTemplate . ' with class ' . $useClass . '<br/>';
+                $numDocs = $numItems;
+                $this->debugOutput .= '<strong>Nesting Complete:</strong> Previous ' . $numDocs . ' level ' . $curLevel . ' items inserted into ' . $usedTemplate . ' with class ' . $useClass . '<br/>';
             }
         }
 
@@ -129,7 +149,7 @@ class Wayfinder {
         $useChunk = $this->templates[$usedTemplate];
 
         $useSub = $subMenu;
-        $useClass = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder']);
+        $useClass = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder'],$resource['type']);
         
         if ($this->rowIdPrefix) {
             $useId = ' id="' . $this->rowIdPrefix . $resource['id'] . '"';
@@ -137,7 +157,7 @@ class Wayfinder {
             $useId = '';
         }
 
-        $phArray = array($useSub,$useClass,$resource['link'],$resource['title'],$resource['linktext'],$useId);
+        $phArray = array($useSub,$useClass,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['link_attributes']);
 
         $output .= str_replace($this->placeHolders,$phArray,$useChunk);
 
@@ -161,16 +181,22 @@ class Wayfinder {
                 if ($n === 'outerTpl') {
                     $this->templates[$n] = '<ul[+wf.classes+]>[+wf.wrapper+]</ul>';
                 } elseif ($n === 'rowTpl') {
-                    $this->templates[$n] = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>';
+                    $this->templates[$n] = '<li[+wf.id+][+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]" [+wf.attributes+]>[+wf.linktext+]</a>[+wf.wrapper+]</li>';
                 } else {
                     $this->templates[$n] = FALSE;
                 }
                 if ($this->debug) {
-                    $this->debugOutput .= '<p>No chunk found for <strong>' . $n . '</strong> using default.</p>';
+                    $this->debugOutput .= 'No chunk found for <strong>' . $n . '</strong> using default.<br/>';
                 }
             } else {
                 $this->templates[$n] = $chunkcheck;
+                if ($this->debug) {
+                    $this->debugOutput .= 'The chunk ('.$v.') for <strong>' . $n . '</strong> was used.<br/>';
+                }
             }
+        }
+        if ($this->debug) {
+            $this->debugOutput .= '<br/>';
         }
     }
 
@@ -180,7 +206,7 @@ class Wayfinder {
     }
 
     //determine style class for current item being processed
-    function setItemClass($classType, $docId = 0, $first = 0, $last = 0, $level = 0, $isFolder = 0) {
+    function setItemClass($classType, $docId = 0, $first = 0, $last = 0, $level = 0, $isFolder = 0, $type = 'document') {
         global $modx;
         $returnClass = '';
         $hasClass = 0;
@@ -227,6 +253,11 @@ class Wayfinder {
             //Set self class if specified
             if (!empty($this->css['self']) && $docId == $modx->documentIdentifier) {
                 $returnClass .= $hasClass ? ' ' . $this->css['self'] : $this->css['self'];
+                $hasClass = 1;
+            }
+            //Set class for weblink
+            if (!empty($this->css['weblink']) && $type == 'reference') {
+                $returnClass .= $hasClass ? ' ' . $this->css['weblink'] : $this->css['weblink'];
                 $hasClass = 1;
             }
         }
