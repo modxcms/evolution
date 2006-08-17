@@ -1090,4 +1090,3 @@ $_lang['new_category'] = 'New Category';
 $_lang['category_heading'] = 'Category';
 $_lang['category_msg'] = 'Here you can view and edit all resources grouped by category.';
 ?>
-

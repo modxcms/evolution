@@ -16,7 +16,7 @@
 	# setup snippets template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$ms = &$moduleSnippets;
 	$ms[] = array("AjaxSearch","<strong>NEW:</strong> Unobtrusive Ajax-enabled search form with results highlighting. Encapsulates FlexSearchForm functionality.",0,"$setupPath/snippet.ajaxSearch.tpl","");
-	$ms[] = array("Breadcrumbs","<strong>NEW:</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumb.tpl","");
+	$ms[] = array("Breadcrumbs","<strong>NEW:</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
 	$ms[] = array("DateTime","Outputs the current date and time to the page.",0,"$setupPath/snippet.datetime.tpl","");
 	$ms[] = array("Ditto","<strong>NEW:</strong> Flexible summarization and listing tool for creating blogs, catalogs, press release archives, bio listings and more.",0,"$setupPath/snippet.ditto.tpl","");
 	$ms[] = array("eForm","<strong>NEW:</strong> Robust form parser and processor with validation, multiple sending options, chunks support for forms and reports and file upload handling.",0,"$setupPath/snippet.eform.tpl","");
