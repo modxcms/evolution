@@ -64,6 +64,7 @@ else {
 	$udperms = new udperms();
 	$udperms->user = $modx->getLoginUserID();
 	$udperms->document = isset($_REQUEST['pid']) ? $_REQUEST['pid'] : 0 ;
+	if ($_POST['parent'] && $udperms->document == 0) $udperms->document = $_POST['parent'];
 	$udperms->role = $_SESSION['mgrRole'];
 
 	if(!$udperms->checkPermissions()) {
@@ -505,7 +506,7 @@ function decode(s){
 
 </script>
 
-<form name="mutate" method="post" enctype="multipart/form-data" action="index.php">
+     <form name="mutate" method="post" enctype="multipart/form-data" action="index.php">
 <?php
 	// invoke OnDocFormPrerender event
 	$evtOut = $modx->invokeEvent("OnDocFormPrerender",array("id" => $id));

@@ -112,12 +112,21 @@ echo $cm->render();
 	<br />
 	<div>
 	<?php
-
+	$noAdminSql = ($_SESSION['mgrRole'] != 1)? 'mua.role != 1' : '' ;
 	$sql = "SELECT mu.id,mu.username,mua.fullname,mua.email,IF(mua.gender=1,'".$_lang['user_male']."',IF(mua.gender=2,'".$_lang['user_female']."','-')) as 'gender',IF(mua.blocked,'".$_lang['yes']."','-') as 'blocked'" .
 			"FROM ".$modx->getFullTableName("manager_users")." mu ".
-			"INNER JOIN ".$modx->getFullTableName("user_attributes")." mua ON mua.internalKey=mu.id ".
-			(!empty($sqlQuery) ? " WHERE (mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%')":"")." ".
-			"ORDER BY username";
+			"INNER JOIN ".$modx->getFullTableName("user_attributes")." mua ON mua.internalKey=mu.id ";
+	if ($noAdminSql){
+	    if(!empty($sqlQuery)){
+	        $sql .= "WHERE ((mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%')) AND $noAdminSql ";
+	    } else {
+	        $sql .= "WHERE $noAdminSql ";
+	    }
+	} else {
+	    $sql .= (!empty($sqlQuery) ? "WHERE (mu.username LIKE '$sqlQuery%') OR (mua.fullname LIKE '%$sqlQuery%') OR (mua.email LIKE '$sqlQuery%') ":"");
+	}
+	$sql .= "ORDER BY username";
+			
 	$ds = mysql_query($sql);
 	include_once $base_path."manager/includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items

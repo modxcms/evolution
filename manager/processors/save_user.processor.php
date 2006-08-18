@@ -71,6 +71,28 @@ if($email=='' || !ereg("^[-!#$%&'*+./0-9=?A-Z^_`a-z{|}~]+", $email)){
 	exit;
 }
 
+// verify admin security
+if ($_SESSION['mgrRole'] != 1){
+    // Check to see if user tried to spoof a "1" (admin) role
+    if ($roleid == 1){
+        webAlert("Illegal attempt to create/modify administrator by non-administrator!");
+        exit;
+    }
+    // Verify that the user being edited wasn't an admin and the user ID got spoofed
+    $sql = "SELECT role FROM $dbase.".$table_prefix."user_attributes AS mua WHERE internalKey = $id";
+    if ($rs = mysql_query($sql)){
+        if($rsQty = mysql_num_rows($rs)){
+            // There should only be one if there is one
+            $row=mysql_fetch_assoc($rs);
+            if ($row['role'] == 1){
+                webAlert("You cannot alter an administrative user.");
+                exit;
+            }
+        }
+    }
+    
+}
+
 switch ($_POST['mode']) {
     case '11':		// new user
 		// check if this user name already exist
@@ -204,7 +226,7 @@ switch ($_POST['mode']) {
 			<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td id="Button1" onclick="window.location.href='index.php?a=75&r=2'"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
+					<td id="Button1" onClick="window.location.href='index.php?a=75&r=2'"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
 						<script>createButton(document.getElementById("Button1"));</script>
 					</td>
 				</tr>
@@ -395,7 +417,7 @@ switch ($_POST['mode']) {
 			<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td id="Button1" onclick="window.location.href='index.php?a=75&r=2'"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
+					<td id="Button1" onClick="window.location.href='index.php?a=75&r=2'"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
 						<script>createButton(document.getElementById("Button1"));</script>
 					</td>
 				</tr>
