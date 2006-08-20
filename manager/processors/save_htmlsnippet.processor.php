@@ -14,8 +14,10 @@ $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
 //Kyle Jaebker - added category support
-if (empty($_POST['newcategory'])) {
+if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
     $categoryid = mysql_escape_string($_POST['categoryid']);
+} elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
+    $categoryid = 0;
 } else {
     include_once "categories.inc.php";
     $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));

@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1318 - August 20, 2006)
+MOD 0.9.5 (rev 1319 - August 20, 2006)
 ====================================
 
+* Fix for category support, items wouldn't save unless category was set. (1319)
 * Various manager theme tweaks and corrections from banzai. (1317,1318)
 * [FS#328] This fix eliminates non-admin users from being able to create admin users. (1308,1310)
 * [FS#440] Fixed problem for non-admin users not being able to change templates on a new document. (1295)
