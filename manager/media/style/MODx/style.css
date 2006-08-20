@@ -1,4 +1,4 @@
-/* MODx Classic blue/orange Manager template */
+/* MODx Classic blue/orange Manager template last update: 23-05-2006*/
 
 body {
 	margin:							0;
@@ -10,7 +10,7 @@ body {
 }
 body * {
     margin: 0;
-    padding: 0;
+    padding: 1;
 }
 
 .warning{
@@ -93,6 +93,7 @@ hr {
 	width:							100%;
 	height:							44px !important;
 	padding:						0px;
+	margin-top: 				0px;
 	margin-bottom:					10px;
 	margin-right:					10px;
 	background-image: 				url(images/bg/buttonbar.gif);
@@ -106,7 +107,7 @@ hr {
 	font-weight: 					bold;
 	color: 							#003399;
 	float: 							right;
-	padding:						0px 10px 0px 0px;
+	padding:						0px 10px 0px 0xp;
 }
 
 .fakefieldset {
@@ -427,56 +428,97 @@ A.hometblink, A.hometblink:ACTIVE, A.hometblink:VISITED, A.hometblink:LINK
 A.hometblink:hover {
 	text-decoration:				none;
 	color:							#EE0000;}
-	/* accesscontrol style*/ 
-	.loginBg {
-	background-image: 			url('images/bg/login_bg.jpg');
-	background-position: 		top;
+/* accesscontrol.inc.php - manager login page 
+-----------------------------------------------------*/
+body#login {
+    background-position: 		top;
 	background-color:			#5377A7;
 	background-repeat: 			repeat-x;
-}
-.loginTbl {
-	background-color:			white;
-	border:						1px solid #5377A7; /*#003399; */
-	background-image: 			url('images/bg/section.jpg');
-	background-position: 		top right;
-	background-repeat: 			no-repeat;
-	padding: 					10px;
-	text-align: 				justify;
-	color:                  #5377A7;
-}
+    background-image: 			url('images/bg/login_bg.jpg');
+}	
+
+#mx_loginbox,
 .loginLicense {
-	background-color:			White;
-	border-right:				1px solid #5377A7;
-	border-bottom:				1px solid #5377A7;
-	border-left:				1px solid #5377A7;
+    width: 460px;
+    margin: 70px auto 0;
+    border: 1px solid Navy;
+    padding: 20px;
+	background-color: White;
 	background-image: 			url('images/bg/login_footer_bg.gif');
 	background-position: 		bottom;
 	background-repeat: 			repeat-x;
-	padding: 					10px;
-	text-align: 				justify;
-	color:                  #5377A7;
 }
-.loginLicense td{
-	color:#5377A7;
+
+#mx_logobox {
+    float: left;
+    margin-right: 15px;
+}
+
+#mx_loginArea {
+    float: right;
+    width: 325px;
+}
+
+h1.siteName {
+	font-weight: bold;
+	font-size: 18px;
+	margin: 0 0 .5em;
+	color: Navy;
+	text-align: right;
+}
+.loginMessage {
+    font-size: 9px;
+    line-height: 1.4;
+    margin-bottom: 1em;
+}
+
+img.loginCaptcha {
+    border: 1px solid #039;
+    width: 148px;
+    height: 60px; 
+}
+
+#mx_loginbox label {
+    display: block;
+    font-weight: bold;
+}
+#mx_loginbox input {
+    margin: 0 0 10px 0;
+}
+#mx_loginbox input.checkbox {
+    float: left;
+    clear: left;
+    margin-right: 3px;
+}
+#mx_loginbox input.text {
+    width: 300px;
+}
+#mx_loginbox input.login {
+    float: right;
+    clear: right;
+    margin-right: 25px;
+}
+.loginLicense {
+	background-color: #60605F;
+	padding: 10px 20px;
+	color: Navy;
+	border: 1px solid Navy;
+	margin: 20px auto;
+	font-size: 9px;
+	
+}
+.loginLicense a {
+	color: #94B451;
+	font-size: 9px;
 }
 
 .notice {
-	width:100%;
-	padding:5px;
-	border:1px solid #eeeeee;
-	background-color:#F4F4F4;
-	font-size:10px;
-	color:#707070;}
+	width: 100%;
+	padding: 5px;
+	border: 1px solid #eee;
+	background-color: #F4F4F4;
+	color: #707070;}
 
-.siteName {
-	font-weight:bold;
-	font-family:verdana, arial;
-	font-size:18px;
-	color:#5377A7;
-	}
-	
-	
-/*end access control style*/
 
 /*topbar.php styles*/
 	
@@ -486,6 +528,26 @@ A.hometblink:hover {
 	margin : 0;
 	background: #4791C5;
 	
+}
+#topbar a:link{
+   font-weight: bold;
+	color: #F4BD54;
+	text-decoration:none;
+}
+#topbar a:Hover{
+   font-weight: bold;
+	color: #fff;
+	text-decoration:underline;
+}
+#topbar a:visited{
+   font-weight: bold;
+	color: #F4BD54;
+	text-decoration:none;
+}
+#topbar a:visited:hover{
+   font-weight: bold;
+	color: #fff;
+	text-decoration:underline;
 }
 #topbar TD {
 	padding-top: 4px;
@@ -570,6 +632,7 @@ A.hometblink:hover {
 
 ul#nav {
 	 margin: 0;
+	 padding: 0;
     height: 25px;
     width: 100%;
     position: absolute;
@@ -581,6 +644,7 @@ ul#nav {
     position: relative;
     z-index: 500;
 	 margin: 0;
+	 padding: 0;
 }
 
 #nav li { 
@@ -814,19 +878,18 @@ ul#nav {
 	font: 				icon;
 	color:				black;
 	border:				0px;
-	padding:			4px 5px 4px 5px;
+	padding:			3px 5px 3px 5px;
 	white-space:		nowrap;
 	vertical-align:		middle;
-	background-image:	url(images/bg/button_up.gif);
+	/*background-image:	url(images/bg/button_up.gif);*/
 }
 
-.coolButton img {
-	filter:				gray();
-}
+
 
 .coolButtonHover {
 	border:		1px solid darkgreen;
-	padding:			3px 4px 3px 4px;		
+	padding:			2px 4px 1px 4px;	
+	height: 20px;
 	background-image:	url(images/bg/button_dn.gif);
 }
 
@@ -836,7 +899,7 @@ ul#nav {
 	border-right-color:	ButtonHighlight;
 	border-top-color:	ButtonShadow;
 	border-bottom-color:ButtonHighlight;
-	padding:			4px 3px 2px 5px;		
+	padding:			2px 3px 1px 5px;		
 	background-image:	url(images/bg/buttonbaractive.gif);
 }
 
@@ -846,7 +909,7 @@ ul#nav {
 	border-right-color:	ButtonHighlight;
 	border-top-color:	ButtonShadow;
 	border-bottom-color:ButtonHighlight;
-	padding:			4px 3px 2px 5px;		
+	padding:			2px 3px 2px 5px;		
 	background-image:	url(images/bg/buttonbaractive.gif);
 }
 
@@ -872,35 +935,269 @@ ul#nav {
 .coolButtonUpDisabled img,
 .coolButtonActiveDisabled img,
 .coolButtonDisabled img {
-	-moz-opacity:		0.5;
+    opacity: 0.5;
+	-moz-opacity: 0.5;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 }
 
-/* IE specific
- * When the button becomes disbabled the innerHTML is enclosed by two spans
- * This is done so that the image will look disabled using filters
- */
-.coolButtonUpDisabled .coolButtonDisabledContainer,
-.coolButtonActiveDisabled .coolButtonDisabledContainer,
-.coolButtonDisabled .coolButtonDisabledContainer {
-	display:			block;
-	background:			GrayText;
-	filter:				chroma(color=#010101) dropshadow(color=ButtonHighlight, offx=1, offy=1);
-	width:				100%;
-	height:				100%;
+/* slimstats styles*/
+.column {
+	float: left;
+	overflow: hidden;
+}
+	#menu li{
+	list-style-image: none;
+	margin: 0px;
+	padding: 0px;
+	}
+
+ul#menu {
+list-style: none;
+	display: block;
+	height: 14px;
+	list-style: none;
+	margin: 0;
+	padding: 0px;
+}
+	ul#menu li {
+		float: left;
+		height: 14px;
+		line-height: 14px;
+		padding: 0;
+		margin: 0;
+	}
+		ul#menu li a{
+	font-family: Tahoma;
+	color: #313131;
+	font-size: 11px;
+	text-decoration: none;
+	/*margin: 3px -3px 1px 5px;*/
+	display:						inline;
+	float:							left;
+	padding:						2px 15px 3px 15px;
+	z-index:						1;
+	position:						relative;
+	top:							0;
+	background-position: 			top left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	border:							1px solid #003399;
+	border-bottom:					0;
+	background-image: 				url(images/bg/buttonbar2.gif);
+	}
+	ul#menu li a:hover{
+	background-position: 			top left;
+	background-repeat: 				repeat-x;	
+	background:						white;
+	border:							1px solid #003399;
+	border-bottom:					0;
+	background-image: 				url(images/bg/buttonbar_gs2.gif);}
+
+ul#filters {
+	list-style: none;
+	padding-left: 2em;
+}
+	ul#filters li {
+		float: left;
+		margin-bottom: 12px;
+		margin-right: 2em;
+	}
+	ul#filters li span {
+		padding: 4px;
+		display: block;
+	}
+	ul#filters li a {
+		padding: 2px;
+		display: block;
+	}
+	ul#filters li span a {
+		padding: 0;
+		display: inline;
+	}
+
+.module {
+	float: left;
+	margin-bottom: 2em;
+	margin-left: 2em;
+	width: 22.5em;
+}
+	.module h3 {
+		padding: 4px;
+		position: relative;
+	}
+	.module h3 span {
+		position: absolute;
+		right: 4px;
+	}
+	.module div {
+		height: 15.2em;
+		overflow: auto;
+		width: 100%;
+	}
+	.module div table {
+		border-collapse: collapse;
+	}
+	.module div table th {
+		padding: 0.2em 3px;
+		text-align: left;
+		white-space: nowrap;
+		width: 100%;
+	}
+	.module div table td {
+		overflow: hidden;
+		padding: 0.2em 3px;
+		vertical-align: top;
+		white-space: nowrap;
+	}
+
+.mediummodule {
+	width: 47em !important;
+}
+.largemodule {
+	width: 71.5em !important;
+}
+.largemodule div {
+	height: 45.6em !important;
 }
 
-.coolButtonUpDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer,
-.coolButtonActiveDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer,
-.coolButtonDisabled .coolButtonDisabledContainer .coolButtonDisabledContainer {
-	background:		Transparent;
-	filter:			gray()
-					/* Remove all bright shades of gray */
-					chroma(color=#ffffff) chroma(color=#fefefe) chroma(color=#fdfdfd)
-					chroma(color=#fcfcfc) chroma(color=#fbfbfb) chroma(color=#fafafa)
-					chroma(color=#f9f9f9) chroma(color=#f8f8f8) chroma(color=#f7f7f7)
-					chroma(color=#f6f6f6) chroma(color=#f5f5f5) chroma(color=#f4f4f4)
-					chroma(color=#f3f3f3) 
-					mask(color=#010101);
+pre {
+	padding: 1em;
 }
 
-/* end IE specific */
+.last {
+	margin-bottom: 0;
+	margin-right: 0;
+	text-align: right !important;
+	width: auto !important;
+}
+
+#donotremove {
+	padding: 1em 2em;
+}
+
+
+/* colours, backgrounds, borders */
+
+#body 
+{
+	color: #333;
+	padding: 0px;
+}
+
+#body h1  {
+	background: transparent url(images/bg/buttonbar_gs.gif) repeat-x left top;
+	font-weight: bold;
+	text-decoration: none;
+	height: 22px;
+	color: #003399;
+	font-size: 14px;
+	padding-top: 5px;
+	padding-left:10px;
+	list-style: none;
+	margin-bottom: 12px
+}
+#body h2  {
+	color: #003399;
+	font-size: 14px;
+	padding: 6px 0 6px 10;
+}
+.positive {
+	color: #090;
+}
+.negative {
+	color: #900;
+}
+pre {
+	background-color: #eee;
+	border: 1px solid #369;
+}
+ul#menu {
+  	list-style-type: none;
+	border-bottom: 1px solid #369;
+}
+	ul#menu li {
+			list-style-type: none;
+			font-family: Tahoma;
+			color: #313131;
+			font-size: 11px;
+
+	}
+	ul#menu li.selected {	
+	border-bottom:	0;
+	z-index:		3;
+	padding:						2px 15px 3px 15px;
+	margin:			1px -3px -2px 0px;
+	top:			-2px;
+	background:						white;
+	border:							1px solid #003399;
+	border-bottom:					0;
+}
+ul#filters li a {
+	list-style-type: none;
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	text-shadow: none;
+}
+	ul#filters li span a {
+		background-color: inherit;
+		border-bottom: none;
+	}
+
+.module h3,
+ul#filters li span {
+	background: transparent url(images/bg/buttonbar_gs.gif) repeat-x left top;
+	font-weight: bold;
+	text-decoration: none;
+	height: 14px;
+	border-bottom: 1px solid #369;
+	color: #003399;
+	text-shadow: 2px 2px #369;
+	font-size: 12px;
+}
+.module h3 span a {
+	color: #fff;
+	text-shadow: 2px 2px #369;
+}
+.module div {
+	border-bottom: 1px solid #369;
+}
+	.module div table th {
+		background-color: #C6E0FE;
+		border-bottom: 1px solid #aaa;
+		color: #000;
+		font-size: 12px;
+	}
+	.module div table td.accent {
+		background-color: #eee;
+		border-bottom: 1px solid #ccc;
+		color: #999;
+	}
+	.module div table td {
+		border-bottom: 1px dotted #ccc;
+	}
+#donotremove a {
+	color: #9cf;
+}
+
+
+/* slimstats fonts */
+
+
+ul#menu li.selected {
+	font-weight: normal;
+}
+
+ul#filters li span {
+	font-size: 12px;
+}
+.module h3 span a {
+	font-size: 9px;
+}
+.very {
+	font-weight: bold;
+}
+
+/*end slimstats styles*/
+
+
+
