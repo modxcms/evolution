@@ -46,22 +46,23 @@ class DocumentParser {
 		global $base_path;
 		global $database_type;
 		$xpath = $base_path.'/manager/includes/extenders/';
-		if($extname=='DBAPI'){
+		$objName = strtolower($extname);
+		$clsFile = $xpath.$objName.'.class.php';
+		if($extname=='DBAPI' && !isset($this->db)){
 			include_once($xpath.'dbapi.'.$database_type.'.class.inc.php');
 			$this->db = new DBAPI;
 		}
-		else if($extname=='ManagerAPI'){
+		else if($extname=='ManagerAPI' && !isset($this->manager)){
 			include_once($xpath.'manager.api.class.inc.php');
 			$this->manager = new ManagerAPI;
 		}
 		// support for addtional extensions - by Raymond
-		elseif (!isset($this->{$extname})) {
-			if(!file_exists($xpath.$extname.'.class.php')) return false;
+		elseif (!isset($this->{$objName})) {
+			if(!file_exists($clsFile)) return false;
 			else {
-				include_once($xpath.$extname.'.class.php');
+				include_once($clsFile);
 				$classname = $extname.'_Extension';
-				$extobjname = strtolower($extname);
-				$this->{$extobjname} = new $classname;
+				$this->{$objName} = new $classname;
 			}
 		}
 		return true;
