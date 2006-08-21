@@ -9,6 +9,7 @@
 #
 # Changelog: 
 # Nov 29, 05 -- initial release
+# Jul 13, 06 -- adjusted Singleton to work under PHP4, added placeholder code (by: garryn)
 #
 #::::::::::::::::::::::::::::::::::::::::
 # Description: 	
@@ -44,80 +45,92 @@
 #::::::::::::::::::::::::::::::::::::::::
 
 # debug parameter
-$debug = isset($debug)? $debug: false;
+$debug = isset ($debug) ? $debug : false;
 
 # check if inside manager
 if ($m = $modx->insideManager()) {
 	return ''; # don't go any further when inside manager
 }
 
-if(!isset($groups)) {
-	return $debug? '<p>Error: No Group Specified</p>': '';
-} 
+if (!isset ($groups)) {
+	return $debug ? '<p>Error: No Group Specified</p>' : '';
+}
 
-if(!isset($chunk)) { return $debug? '<p>Error: No Chunk Specified</p>': ''; }
+if (!isset ($chunk)) {
+	return $debug ? '<p>Error: No Chunk Specified</p>' : '';
+}
 
 # turn comma-delimited list of groups into an array
 $groups = explode(',', $groups);
 
 if (!class_exists('MemberCheck')) {
 	class MemberCheck {
-		static $instance = NULL;
 		var $allGroups = NULL;
 		var $debug;
-		
-		function getInstance($debug=false) {
-			global $modx;
-			if (self::$instance == NULL) {
-				self::$instance= new MemberCheck($debug);
+
+		function getInstance($debug) {
+			static $instance;
+			if (!isset ($instance)) {
+				$instance = new MemberCheck($debug);
 			}
-			return self::$instance;
+			return $instance;
 		}
-	
-		function MemberCheck($debug=false) {
+
+		function MemberCheck($debug = false) {
 			global $modx;
-			$this->debug= $debug;
+
+			$this->debug = $debug;
 			if ($debug) {
-				$this->allGroups= array(); 
-				$tableName= $modx->getFullTableName('webgroup_names');
-				$sql= "SELECT name FROM $tableName";
-				if ($rs= $modx->db->query($sql)) {
-					while ($row= $modx->db->getRow($rs)) {
+				$this->allGroups = array ();
+				$tableName = $modx->getFullTableName('webgroup_names');
+				$sql = "SELECT name FROM $tableName";
+				if ($rs = $modx->db->query($sql)) {
+					while ($row = $modx->db->getRow($rs)) {
 						array_push($this->allGroups, stripslashes($row['name']));
 					}
 				}
 			}
 		}
-		
+
 		function isValidGroup($groupName) {
-			$isValid = !(array_search($groupName, $this->allGroups)===false);
+			$isValid = !(array_search($groupName, $this->allGroups) === false);
 			return $isValid;
 		}
-		
-		function getMemberChunk(&$groups,$chunk) {
+
+		function getMemberChunk(& $groups, $chunk) {
 			global $modx;
-			$o= '';
+			$o = '';
 			if (is_array($groups)) {
-				for ($i=0; $i<count($groups); $i++) {
-					$groups[$i]= trim($groups[$i]);
+				for ($i = 0; $i < count($groups); $i++) {
+					$groups[$i] = trim($groups[$i]);
 					if ($this->debug) {
-						if (!$this->isValidGroup($groups[$i])) return "<p>The group <strong>" . $groups[$i] . "</strong> could not be found...</p>";
+						if (!$this->isValidGroup($groups[$i])) {
+							return "<p>The group <strong>" . $groups[$i] . "</strong> could not be found...</p>";
+						}
 					}
 				}
-				
+
 				$check = $modx->isMemberOfWebGroup($groups);
-				
+
 				$chunkcheck = $modx->getChunk($chunk);
-				
-				$o.= ($check && $chunkcheck)? $chunkcheck : '';
-				if (!$chunkcheck) $o.= $this->debug? "<p>The chunk <strong>$chunk</strong> not found...</p>": '';
+
+				$o .= ($check && $chunkcheck) ? $chunkcheck : '';
+				if (!$chunkcheck)
+					$o .= $this->debug ? "<p>The chunk <strong>$chunk</strong> not found...</p>" : '';
 			} else {
-				$o.= "<p>No valid group names were specified!</p>";
+				$o .= "<p>No valid group names were specified!</p>";
 			}
+
 			return $o;
 		}
 	}
 }
 
-$memberCheck= MemberCheck::getInstance($debug);
-return $memberCheck->getMemberChunk($groups, $chunk);
+$memberCheck = MemberCheck :: getInstance($debug);
+
+if (!isset ($ph)) {
+	return $memberCheck->getMemberChunk($groups, $chunk);
+} else {
+	$modx->setPlaceholder($ph, $memberCheck->getMemberChunk($groups, $chunk));
+	return '';
+}
