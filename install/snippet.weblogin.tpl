@@ -69,7 +69,7 @@ $tpl		= isset($tpl)? $tpl:"";
 $webLoginMode = isset($_REQUEST['webloginmode'])? $_REQUEST['webloginmode']: '';
 $isLogOut		= $webLoginMode=='lo' ? 1:0;
 $isPWDActivate	= $webLoginMode=='actp' ? 1:0;
-$isPostBack		= count($_POST) && isset($_POST['cmdweblogin']);
+$isPostBack		= count($_POST) && (isset($_POST['cmdweblogin']) || isset($_POST['cmdweblogin_x']);
 $txtPwdRem 		= isset($_REQUEST['txtpwdrem'])? $_REQUEST['txtpwdrem']: 0;
 $isPWDReminder	= $isPostBack && $txtPwdRem=='1' ? 1:0;
 
