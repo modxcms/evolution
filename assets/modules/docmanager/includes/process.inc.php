@@ -7,9 +7,168 @@
  * Purpose: Contains the main form processing functions for the module
  * Author: Garry Nutting (Mark Kaplan - Menu Index functionalty, Luke Stokes - Document Permissions concept)
  * For: MODx CMS (www.modxcms.com)
- * Date:24/02/2006 Version: 1
+ * Date:03/09/2006 Version: 1.5
  * 
  */
+
+/**
+ * changeTemplateVariables
+ * 
+ * @input - whether 'tree' or 'range' has been used
+ * @pids - the Document IDs for processing
+ */
+function changeTemplateVariables($input, $pids) {
+	global $theme;
+	global $modx;
+	global $_lang;
+
+	$updateError = '';
+	$output = '';
+	
+	$ignoreList = array();
+	// process 'ignore list'
+	if (trim($_POST['ignoreTV']) <> '') {
+		$ignoreList = explode(',', $_POST['ignoreTV']);
+	}
+	foreach ($ignoreList as $key => $value) {
+		$ignoreList[$key] = trim($value);
+	}
+
+	// opcode is tree, run the tree data handler 
+	if ($input == 'tree') {
+		$pids = rtrim($pids, ',');
+		$pids = explode(',', $pids);
+	}
+	elseif ($input == 'range') {
+		$results = processRange($pids, 'id', 0);
+		$pids = $results[0];
+		$error = $results[1];
+	}
+
+	if (count($pids) > 0) {
+		$tmplVars = array ();
+		foreach ($_POST as $key => $value) {
+				//-- cycle through POST vars and pick out the tv values
+				if (substr($key, 0, 2) == 'tv') {
+					$tvKeyName = substr($key, 2);
+					if ($key == "tv" . $tvKeyName . '_prefix')
+						continue;
+					//-- process values
+					$typeSQL = $modx->db->select('*', $modx->getFullTableName('site_tmplvars'), 'name="' . $tvKeyName . '"');
+					$row = $modx->db->getRow($typeSQL);
+					if ($row['type'] == 'url') {
+						$tmplvar = $_POST["tv" . $row['name']];
+						if ($_POST["tv" . $row['name'] . '_prefix'] != '--') {
+							$tmplvar = str_replace(array (
+								"ftp://",
+								"http://"
+							), "", $tmplvar);
+							$tmplvar = $_POST["tv" . $row['name'] . '_prefix'] . $tmplvar;
+						}
+					} elseif ($row['type'] == 'file') {
+							/* Modified by Timon for use with resource browser */
+							$tmplvar = $_POST["tv" . $row['name']];
+					} else {
+							if (is_array($_POST["tv" . $tvKeyName])) {
+								// handles checkboxes & multiple selects elements
+								$feature_insert = array ();
+								while (list ($featureValue, $feature_item) = each($_POST["tv" . $tvKeyName])) {
+									$feature_insert[count($feature_insert)] = $feature_item;
+								}
+								$tmplvar = implode("||", $feature_insert);
+							} else {
+								$tmplvar = $_POST["tv" . $tvKeyName];
+							}
+						}
+
+					$tmplVars["{$tvKeyName}"] = $tmplvar;
+				}
+		}
+
+		$tvID = getTVIDs($tmplVars,$ignoreList);
+		if (count($tvID) > 0) {
+			foreach ($pids as $docID) {
+				$tempSQL = $modx->db->select('template', $modx->getFullTableName('site_content'), 'id=' . $docID);
+				if ($modx->db->getRecordCount($tempSQL) > 0) {
+					$row = $modx->db->getRow($tempSQL);
+					if ($row['template'] == $_POST['tplID']) {
+						foreach ($tvID as $tvIndex => $tvValue) {
+							$checkSQL = $modx->db->select('value', $modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+							$checkCount = $modx->db->getRecordCount($checkSQL);
+							if ($checkCount) {
+								$checkRow = $modx->db->getRow($checkSQL);
+								//-- check if update is required, blank values will not be updated - if value exists for blank value, value will be removed from table
+								if ($checkRow['value'] == $tmplVars["$tvIndex"]) {
+									$noUpdate = true;
+								}
+								elseif (trim($tmplVars["{$tvIndex}"]) == '') {
+									$modx->db->delete($modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+									$noUpdate = true;
+								}
+							}
+							if ($checkCount > 0 && !isset ($noUpdate)) {
+								//-- update value
+								$fields = array (
+									'value' => $modx->db->escape($tmplVars["$tvIndex"])
+								);
+
+								$modx->db->update($fields, $modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+								$updated = true;
+							}
+							elseif (!isset ($noUpdate) && ltrim($tmplVars["$tvIndex"]) !== '') {
+								//-- insert new value
+								$fields = array (
+									'value' => $modx->db->escape($tmplVars["$tvIndex"]),
+									'contentid' => $modx->db->escape($docID),
+									'tmplvarid' => $modx->db->escape($tvValue)
+								);
+
+								$modx->db->insert($fields, $modx->getFullTableName('site_tmplvar_contentvalues'));
+								$updated = true;
+							}
+						}
+					} else {
+						$updateError .= 'ID: ' . $docID . ' ' . $_lang['DM_tv_template_mismatch'] . '<br />';
+					}
+				} else {
+					if ($docID !== '0') { //-- 0 is used for site-wide changes and is ignored here
+						$updateError .= 'ID: ' . $docID . ' ' . $_lang['DM_tv_doc_not_found'] . '<br />';
+					}
+				}
+			}
+		} else {
+			$updateError .= $_lang['DM_tv_no_tv'] . '<br />';
+		}
+	} else {
+		$updateError .= $_lang['DM_tv_no_docs'] . '<br />';
+	}
+
+	if ($updated) {
+		logDocumentChange('templatevariables');
+	}
+
+	$output .= updateHeader();
+
+	if ($error == '' && $updateError == '') {
+		$output .= '<p>' . $_lang['DM_process_update_success'];
+	} else {
+		$output .= '<p>' . $_lang['DM_process_update_error'] . '<br />';
+		$output .= $error;
+	}
+
+	if ($updateError <> '') {
+		$output .= $updateError . '<br />';
+	}
+
+	$output .= '</p> 
+						<p>' . $_lang['DM_tpl_results_message'] . '</p> 
+						<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" />
+						</form>												 
+						</div> 
+						</body></html>';
+
+	return $output;
+}
 
 /**
  * changeOther
@@ -22,6 +181,9 @@ function changeOther($input, $pids) {
 	global $_lang;
 	global $table;
 
+	//-- start session, required for getting Mgr Login ID
+	session_start();
+
 	function parseDate($date) {
 		list ($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
 		$date = strtotime("$m/$d/$Y $H:$M:$S");
@@ -32,6 +194,9 @@ function changeOther($input, $pids) {
 	//-- miscellaneous document settings
 	if ($_POST['setoption'] == 1) {
 		$fieldval = 'published';
+		$secondaryFields = array (
+			'publishedon' => (($_POST['newvalue'] == '1'
+		) ? time() : 0), 'publishedby' => (($_POST['newvalue'] == '1') ? $_SESSION['mgrInternalKey'] : 0));
 		logDocumentChange('publish');
 	}
 	elseif ($_POST['setoption'] == 2) {
@@ -49,6 +214,13 @@ function changeOther($input, $pids) {
 	elseif ($_POST['setoption'] == 5) {
 		$fieldval = 'richtext';
 		logDocumentChange('richtext');
+	}
+	elseif ($_POST['setoption'] == 6) {
+		$fieldval = 'deleted';
+		$secondaryFields = array (
+			'deletedon' => (($_POST['newvalue'] == '1'
+		) ? time() : '0'), 'deletedby' => (($_POST['newvalue'] == '1') ? $_SESSION['mgrInternalKey'] : '0'));
+		logDocumentChange('delete');
 	}
 
 	//-- document date settings
@@ -80,14 +252,20 @@ function changeOther($input, $pids) {
 	if ($input == 'tree') {
 		$values = $pids;
 		$values = rtrim($values, ',');
-		if ($values<>'') $values = 'id="' . str_replace(',', '" OR id="', $values) . '"';
-		else $output.= $_lang['process_novalues'];
+		if ($values <> '')
+			$values = 'id="' . str_replace(',', '" OR id="', $values) . '"';
+		else
+			$output .= $_lang['DM_process_novalues'];
 
 		if ($pids <> '' && $_POST['setoption'] != 0 && $_POST['newvalue'] <> '') {
 			//-- run UPDATE query for misc settings 
 			$fields = array (
 				$fieldval => intval($_POST['newvalue']
 			));
+			if (isset ($secondaryFields) && is_array($secondaryFields)) {
+				$fields = array_merge($fields, $secondaryFields);
+			}
+
 			$modx->db->update($fields, $table, $values);
 			$new = true; // update has been completed
 		}
@@ -99,7 +277,7 @@ function changeOther($input, $pids) {
 			logDocumentChange('dates');
 		}
 
-		if ($pids <> '' && count($authorval) > 0 && $values<>'') {
+		if ($pids <> '' && count($authorval) > 0 && $values <> '') {
 			//-- run UPDATE query for author settings
 			$modx->db->update($authorval, $table, $values);
 			$new = true; // update has been completed
@@ -107,7 +285,7 @@ function changeOther($input, $pids) {
 		}
 
 		if (!$new) {
-			$error .= $_lang['process_noselection'] . '<br />';
+			$error .= $_lang['DM_process_noselection'] . '<br />';
 		}
 	}
 	elseif ($input == 'range') {
@@ -122,6 +300,10 @@ function changeOther($input, $pids) {
 			$fields = array (
 				$fieldval => intval($_POST['newvalue']
 			));
+			if (isset ($secondaryFields) && is_array($secondaryFields)) {
+				$fields = array_merge($fields, $secondaryFields);
+			}
+
 			$modx->db->update($fields, $table, $values);
 			$new = true;
 		}
@@ -141,18 +323,18 @@ function changeOther($input, $pids) {
 		}
 
 		if (!$new) {
-			$error .= '<br />' . $_lang['process_noselection'] . '<br />';
+			$error .= '<br />' . $_lang['DM_process_noselection'] . '<br />';
 		}
 	}
 
 	if ($error == '') {
-		$output .= '<p>' . $_lang['process_update_success'];
+		$output .= '<p>' . $_lang['DM_process_update_success'];
 	} else {
-		$output .= '<p>' . $_lang['process_update_error'] . '<br />';
+		$output .= '<p>' . $_lang['DM_process_update_error'] . '<br />';
 		$output .= $error;
 	}
 
-	$output .= '<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['process_back'] . '" /></form>';
+	$output .= '<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" /></form>';
 	$output .= '</div></body></html>';
 
 	return $output;
@@ -184,51 +366,52 @@ function sortMenu($id) {
 	$output .= $sortableLists->printTopJS();
 
 	$output .= '
-											<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
-											<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
-											<script type="text/javascript" src="' . $siteURL . 'assets/modules/docmanager/js/functions.js"></script>
-											<script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>';
+																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
+																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
+																<script type="text/javascript" src="' . $siteURL . 'assets/modules/docmanager/js/functions.js"></script>
+																<script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>';
 	$output .= buttonCSS();
 	$output .= '	</head><body>
-											<form action="" method="post" name="resetform" style="display: none;">
-											<input name="actionkey" type="hidden" value="0" />
-											</form>
-											';
+																<form action="" method="post" name="resetform" style="display: none;">
+																<input name="actionkey" type="hidden" value="0" />
+																</form>
+																';
 
 	$header .= '<div class="subTitle" id="bttn"> 
-											    <span class="right"><img src="media/style/' . $theme . '/images/_tx_.gif" width="1" height="5"><br />' . $_lang['module_title'] . '</span>
-												<div class="bttnheight"><a id="Button1" onclick="save();"><img src="media/style' . $theme . '/images/icons/save.gif"> ' . $_lang['save'] . '</a></div>
-												<div class="bttnheight"><a id="Button4" onclick="reset();"><img src="media/style' . $theme . '/images/icons/sort.gif"> ' . $_lang['sort_another'] . '</a></div>';
+																    <span class="right"><img src="media/style/' . $theme . '/images/_tx_.gif" width="1" height="5"><br />' . $_lang['DM_module_title'] . '</span>
+																	<div class="bttnheight"><a id="Button1" onclick="save();"><img src="media/style' . $theme . '/images/icons/save.gif"> ' . $_lang['DM_save'] . '</a></div>
+																	<div class="bttnheight"><a id="Button2" onclick="reset();"><img src="media/style' . $theme . '/images/icons/sort.gif"> ' . $_lang['DM_sort_another'] . '</a></div>
+																	<div class="bttnheight"><a id="Button3" onclick="reset();"><img src="media/style' . $theme . '/images/icons/cancel.gif"> ' . $_lang['DM_cancel'] . '</a></div>';
 
-	$header .= '<div class="bttnheight"><a id="Button5" onclick="document.location.href=\'index.php?a=106\';"><img src="media/style' . $theme . '/images/icons/cancel.gif"> ' . $_lang['cancel'] . '</a></div>
-												<div class="stay">  </div>
-												</div>
-									
-									<div class="sectionHeader"><img src="media/style' . $theme . '/images/misc/dot.gif" alt="." />&nbsp;';
+	$header .= '<div class="bttnheight"><a id="Button4" onclick="document.location.href=\'index.php?a=106\';"><img src="media/style' . $theme . '/images/icons/close.gif"> ' . $_lang['DM_close'] . '</a></div>
+																	<div class="stay">  </div>
+																	</div>
+														
+														<div class="sectionHeader"><img src="media/style' . $theme . '/images/misc/dot.gif" alt="." />&nbsp;';
 	$middle = '</div><div class="sectionBody">';
 	$footer = ' 
-										</div>
-										</body>
-										</html>
-									';
-	$output .= $header . $_lang['sort_title'] . $middle;
-	
-	$tblContent = $modx->getFullTableName('site_content');
-	
-				if (isset ($_POST['sortableListsSubmitted'])) {
-			$output .= "<span class=\"warning\" id=\"updated\">" . $_lang['sort_updated'] . "<br /><br /> </span>";
-			$orderArray = $sortableLists->getOrderArray($_POST['categoriesListOrder'], 'categories');
-			foreach ($orderArray as $item) {
-				$sql = "UPDATE $tblContent set menuindex=" . $item['order'] . " WHERE id=" . $item['element'];
-				$modx->db->query($sql);
-				logDocumentChange('sortmenu');
-			}
+															</div>
+															</body>
+															</html>
+														';
+	$output .= $header . $_lang['DM_sort_title'] . $middle;
 
+	$tblContent = $modx->getFullTableName('site_content');
+
+	if (isset ($_POST['sortableListsSubmitted'])) {
+		$output .= "<span class=\"warning\" id=\"updated\">" . $_lang['DM_sort_updated'] . "<br /><br /> </span>";
+		$orderArray = $sortableLists->getOrderArray($_POST['categoriesListOrder'], 'categories');
+		foreach ($orderArray as $item) {
+			$sql = "UPDATE $tblContent set menuindex=" . $item['order'] . " WHERE id=" . $item['element'];
+			$modx->db->query($sql);
+			logDocumentChange('sortmenu');
 		}
 
+	}
+
 	if ($id <> '' && !isset ($_POST['sortableListsSubmitted'])) {
-		$output .= "<span class=\"warning\" style=\"display:none;\" id=\"updating\">" . $_lang['sort_updating'] . "<br /><br /> </span>";
-				$query = "SELECT id , pagetitle , parent , menuindex FROM $tblContent WHERE parent = $id ORDER BY menuindex ASC";
+		$output .= "<span class=\"warning\" style=\"display:none;\" id=\"updating\">" . $_lang['DM_sort_updating'] . "<br /><br /> </span>";
+		$query = "SELECT id , pagetitle , parent , menuindex FROM $tblContent WHERE parent = $id ORDER BY menuindex ASC";
 
 		if (!$rs = $modx->db->query($query)) {
 			return $output;
@@ -238,15 +421,16 @@ function sortMenu($id) {
 		}
 
 		$output .= '<ul id="categories" class="sortableList">';
-	} elseif ($id=='' && !isset ($_POST['sortableListsSubmitted']) ) {
+	}
+	elseif ($id == '' && !isset ($_POST['sortableListsSubmitted'])) {
 		$no_id = true;
-		$output .= $_lang['sort_noid'] . $footer;
+		$output .= $_lang['DM_sort_noid'] . $footer;
 	}
 
 	if (!$no_id && !isset ($_POST['sortableListsSubmitted'])) {
 		$cnt = count($resource);
 		if ($cnt < 1) {
-			$output .= $_lang['sort_nochildren'] . $footer;
+			$output .= $_lang['DM_sort_nochildren'] . $footer;
 			return $output;
 			//die;
 		} else {
@@ -285,19 +469,21 @@ function changeDocGroups($input, $pids, $docgroup, $action) {
 	global $theme;
 	global $modx;
 	global $_lang;
+	global $basePath;
 
 	$doctable = $modx->getFullTableName('document_groups');
 	$output = '';
 
 	//-- get html header
 	$output .= updateHeader();
-	
-	$doc_id = array();
-	
+
+	$doc_id = array ();
+
 	//-- process the ID numbers
 	if ($input == 'tree') {
 		$pids = rtrim($pids, ',');
-		if ($pids<>'') $doc_id = explode(',', $pids);
+		if ($pids <> '')
+			$doc_id = explode(',', $pids);
 	}
 	elseif ($input == 'range') {
 		$doc_vals = processRange($pids, '', 0);
@@ -318,22 +504,28 @@ function changeDocGroups($input, $pids, $docgroup, $action) {
 						// update the parent
 						$sql = "INSERT INTO " . $modx->getFullTableName('document_groups') . " (document_group, document) VALUES (" . $docgroup . "," . $value . ")";
 						$sqlResult = $modx->db->query($sql);
+
+						// secure web documents - flag as private 
+						secureWebDocument($value);
+						// secure manager documents - flag as private 
+						secureMgrDocument($value);
+
 						$docsAdded += 1;
 					} else {
-						$output .= $_lang['doc_skip_message1'] . ' ' . $value . ' ' . $_lang['doc_skip_message2'] . "<br />";
+						$output .= $_lang['DM_doc_skip_message1'] . ' ' . $value . ' ' . $_lang['DM_doc_skip_message2'] . "<br />";
 					}
 
 				}
 			}
 
 			if ($error == '') {
-				$output .= '<br /><p>' . $_lang['process_update_success'];
+				$output .= '<br /><p>' . $_lang['DM_process_update_success'];
 			} else {
-				$output .= '<p>' . $_lang['process_update_error'] . '<br />';
+				$output .= '<p>' . $_lang['DM_process_update_error'] . '<br />';
 				$output .= $error;
 			}
 
-			$output .= '<br /><br /><form name="back" method="post"><input type="submit" name="back" value="' . $_lang['process_back'] . '" /></form>';
+			$output .= '<br /><br /><form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" /></form>';
 			$output .= '</div></body></html>';
 
 			return $output;
@@ -351,22 +543,28 @@ function changeDocGroups($input, $pids, $docgroup, $action) {
 						// delete the parent 
 						$sql = "DELETE FROM " . $modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
 						$sqlResult = $modx->db->query($sql);
+
+						// secure web documents - flag as private 
+						secureWebDocument($value);
+						// secure manager documents - flag as private 
+						secureMgrDocument($value);
+
 						$docsRemoved += 1;
 					} else {
-						$output .= $_lang['doc_skip_message1'] . $value . $_lang['doc_skip_message2'] . "<br />";
+						$output .= $_lang['DM_doc_skip_message1'] . $value . $_lang['DM_doc_skip_message2'] . "<br />";
 					}
 				}
 			}
 	}
 
 	if ($error == '') {
-		$output .= '<p>' . $_lang['process_update_success'];
+		$output .= '<p>' . $_lang['DM_process_update_success'];
 	} else {
-		$output .= '<p>' . $_lang['process_update_error'] . '<br />';
+		$output .= '<p>' . $_lang['DM_process_update_error'] . '<br />';
 		$output .= $error;
 	}
 
-	$output .= '<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['process_back'] . '" /></form>';
+	$output .= '<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" /></form>';
 	$output .= '</div></body></html>';
 
 	logDocumentChange('docpermissions');
@@ -402,25 +600,25 @@ function changeTemplate($input, $pids, $template) {
 			));
 			$modx->db->update($fields, $table, $values);
 		} else {
-			$error .= '<br />' . $_lang['process_noselection'] . '<br />';
+			$error .= '<br />' . $_lang['DM_process_noselection'] . '<br />';
 		}
 
 		$output .= updateHeader();
 
 		if ($error == '') {
-			$output .= '<p>' . $_lang['process_update_success'];
+			$output .= '<p>' . $_lang['DM_process_update_success'];
 		} else {
-			$output .= '<p>' . $_lang['process_update_error'] . '<br />';
+			$output .= '<p>' . $_lang['DM_process_update_error'] . '<br />';
 			$output .= $error;
 		}
 
 		$output .= '</p> 
-																					<p>' . $_lang['tpl_results_message'] . '</p> 
-																					<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['process_back'] . '" />
-																					</form>
-																					<input type="submit" name="refresh" onclick="document.location.href=\'index.php?a=26\';" value="' . $_lang['tpl_refresh_site'] . '" /> 
-																					</div> 
-																					</body></html>';
+																															<p>' . $_lang['DM_tpl_results_message'] . '</p> 
+																															<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" />
+																															</form>
+																															<input type="submit" name="refresh" onclick="document.location.href=\'index.php?a=26\';" value="' . $_lang['DM_tpl_refresh_site'] . '" /> 
+																															</div> 
+																															</body></html>';
 	}
 
 	//-- values have been passed via the range text field 
@@ -439,24 +637,24 @@ function changeTemplate($input, $pids, $template) {
 			));
 			$modx->db->update($fields, $table, $values);
 		} else {
-			$error .= '<br />' . $_lang['process_noselection'] . '<br />';
+			$error .= '<br />' . $_lang['DM_process_noselection'] . '<br />';
 		}
 
 		$output .= updateHeader();
 
 		if ($error == '') {
-			$output .= '<p>' . $_lang['process_update_success'];
+			$output .= '<p>' . $_lang['DM_process_update_success'];
 		} else {
-			$output .= '<p>' . $_lang['process_update_error'] . '<br />';
+			$output .= '<p>' . $_lang['DM_process_update_error'] . '<br />';
 			$output .= $error;
 		}
 
 		$output .= '</p> 
-																					<p>' . $_lang['tpl_results_message'] . '</p><br />
-																					<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['process_back'] . '" />
-																					</form>
-																					</div> 
-																					</body></html>';
+									<p>' . $_lang['DM_tpl_results_message'] . '</p><br />
+									<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" />
+									</form>
+									</div> 
+									</body></html>';
 	}
 	//-- clear the cache
 	$modx->clearCache();
@@ -486,7 +684,7 @@ function processRange($pids, $column, $returnval = 1) {
 	if (trim($pids) <> '') {
 		$values = explode(',', $pids);
 	} else {
-		$error .= $_lang['process_novalues'];
+		$error .= $_lang['DM_process_novalues'];
 	}
 
 	$pids = '';
@@ -499,7 +697,7 @@ function processRange($pids, $column, $returnval = 1) {
 			$match = explode('-', $value);
 			//-- Upper limit lower than lower limit 
 			if (($match[1] - $match[0]) < 0) {
-				$error = $_lang['process_limits_error'] . $value . '<br />';
+				$error = $_lang['DM_process_limits_error'] . $value . '<br />';
 			}
 			//-- loop through values and parse WHERE SQL statement 
 			$loop = $match[1] - $match[0];
@@ -554,7 +752,7 @@ function processRange($pids, $column, $returnval = 1) {
 			}
 		}
 		//-- value is a single document 
-		elseif (preg_match('/^[\d]+$/', trim($value))) {
+		elseif (preg_match('/^[\d]+$/', trim($value), $match)) {
 			//-- parse WHERE SQL statement 
 			if ($returnval == 0) {
 				$idarray[] = ($i + $match[0]);
@@ -563,7 +761,7 @@ function processRange($pids, $column, $returnval = 1) {
 			}
 			//-- value is invalid 
 		} else {
-			$error .= $_lang['process_invalid_error'] . $value . '<br />';
+			$error .= $_lang['DM_process_invalid_error'] . $value . '<br />';
 		}
 	} //foreach end 
 	if ($returnval == 0) {
@@ -586,46 +784,112 @@ function logDocumentChange($action) {
 	switch ($action) {
 
 		case 'template' :
-			$log->initAndWriteLog($_lang['log_template']);
+			$log->initAndWriteLog($_lang['DM_log_template']);
+			break;
+
+		case 'templatevariables' :
+			$log->initAndWriteLog($_lang['DM_log_templatevariables']);
 			break;
 
 		case 'docpermissions' :
-			$log->initAndWriteLog($_lang['log_docpermissions']);
+			$log->initAndWriteLog($_lang['DM_log_docpermissions']);
 			break;
 
 		case 'sortmenu' :
-			$log->initAndWriteLog($_lang['log_sortmenu']);
+			$log->initAndWriteLog($_lang['DM_log_sortmenu']);
 			break;
 
 		case 'publish' :
-			$log->initAndWriteLog($_lang['log_publish']);
+			$log->initAndWriteLog($_lang['DM_log_publish']);
 			break;
 
 		case 'hidemenu' :
-			$log->initAndWriteLog($_lang['log_hidemenu']);
+			$log->initAndWriteLog($_lang['DM_log_hidemenu']);
 			break;
 
 		case 'search' :
-			$log->initAndWriteLog($_lang['log_search']);
+			$log->initAndWriteLog($_lang['DM_log_search']);
 			break;
 
 		case 'cache' :
-			$log->initAndWriteLog($_lang['log_cache']);
+			$log->initAndWriteLog($_lang['DM_log_cache']);
 			break;
 
 		case 'richtext' :
-			$log->initAndWriteLog($_lang['log_richtext']);
+			$log->initAndWriteLog($_lang['DM_log_richtext']);
+			break;
+
+		case 'delete' :
+			$log->initAndWriteLog($_lang['DM_log_delete']);
 			break;
 
 		case 'dates' :
-			$log->initAndWriteLog($_lang['log_richtext']);
+			$log->initAndWriteLog($_lang['DM_log_richtext']);
 			break;
 
 		case 'authors' :
-			$log->initAndWriteLog($_lang['log_authors']);
+			$log->initAndWriteLog($_lang['DM_log_authors']);
 			break;
 
 	}
 
+}
+
+function secureWebDocument($docid = '') {
+	global $modx;
+
+	$modx->db->query("UPDATE " . $modx->getFullTableName("site_content") . " SET privateweb = 0 WHERE " . ($docid > 0 ? "id='$docid'" : "privateweb = 1"));
+	$sql = "SELECT DISTINCT sc.id 
+								 FROM " . $modx->getFullTableName("site_content") . " sc
+								 LEFT JOIN " . $modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
+								 LEFT JOIN " . $modx->getFullTableName("webgroup_access") . " wga ON wga.documentgroup = dg.document_group
+								 WHERE " . ($docid > 0 ? " sc.id='$docid' AND " : "") . "wga.id>0";
+	$ids = $modx->db->getColumn("id", $sql);
+	if (count($ids) > 0) {
+		$modx->db->query("UPDATE " . $modx->getFullTableName("site_content") . " SET privateweb = 1 WHERE id IN (" . implode(", ", $ids) . ")");
+	}
+}
+
+function secureMgrDocument($docid = '') {
+	global $modx;
+
+	$modx->db->query("UPDATE " . $modx->getFullTableName("site_content") . " SET privatemgr = 0 WHERE " . ($docid > 0 ? "id='$docid'" : "privatemgr = 1"));
+	$sql = "SELECT DISTINCT sc.id 
+								 FROM " . $modx->getFullTableName("site_content") . " sc
+								 LEFT JOIN " . $modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
+								 LEFT JOIN " . $modx->getFullTableName("membergroup_access") . " mga ON mga.documentgroup = dg.document_group
+								 WHERE " . ($docid > 0 ? " sc.id='$docid' AND " : "") . "mga.id>0";
+	$ids = $modx->db->getColumn("id", $sql);
+	if (count($ids) > 0) {
+		$modx->db->query("UPDATE " . $modx->getFullTableName("site_content") . " SET privatemgr = 1 WHERE id IN (" . implode(", ", $ids) . ")");
+	}
+}
+
+/** getTVIDs - returns an associative array of TV ID values
+ * If TV content matches the default content for the TV, the ID will not be returned
+ * 
+ * @tvNames - Associative array of TV Name->TV Content pairs
+ * 
+ */
+function getTVIDs($tvNames = array (),$ignoreList=array()) {
+	global $modx;
+
+	$output = array ();
+	if (count($tvNames) > 0) {
+		foreach ($tvNames as $name => $value) {
+			if (in_array($name,$ignoreList)) {
+				continue;
+			}
+			$sql = $modx->db->select('id,default_text', $modx->getFullTableName('site_tmplvars'), 'name="' . $name . '"');
+			if ($modx->db->getRecordCount($sql) > 0) {
+				$row = $modx->db->getRow($sql);
+				//-- if value is the default value then ignore, except blank values
+				if ($value !== $row['default_text'] || trim($value) == '') {
+					$output["$name"] = $row['id'];
+				}
+			}
+		}
+	}
+	return $output;
 }
 ?>

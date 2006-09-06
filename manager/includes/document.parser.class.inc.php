@@ -271,23 +271,35 @@ class DocumentParser {
     if ($q[ strlen( $q) - 1] == '/') $q = substr( $q,0,-1);
     if ($q[ 0 ] == '/') $q = substr($q,1);
     // Save path if any
+		// FS#476 and FS#308: only return virtualDir if friendly paths are enabled
+		if ($this->config['use_alias_path'] == 1) {
     $this->virtualDir = dirname($q);
     $this->virtualDir = ($this->virtualDir == '.' ? '' : $this->virtualDir);
     $q = basename($q);
+		} else {
+			$this->virtualDir ='';
+		}
     $q = str_replace($this->config['friendly_url_prefix'], "", $q);
     $q = str_replace($this->config['friendly_url_suffix'], "", $q);
-    if(is_numeric($q) && !$this->documentListing[$q]) { // we got an ID returned, check to make sure it;s no an alias
+		if(is_numeric($q) && !$this->documentListing[$q]) { // we got an ID returned, check to make sure it's not an alias
+			// FS#476 and FS#308: check that id is valid in terms of virtualDir structure
+			if ($this->config['use_alias_path'] == 1) {
+				if (($this->virtualDir != '' && in_array($q, $this->getChildIds($this->documentListing[$this->virtualDir],1))) || ($this->virtualDir == '' && in_array($q,$this->getChildIds(0,1)))) { 
       $this->documentMethod = 'id';
       return $q;
+				} else { // not a valid id in terms of virtualDir, treat as alias
+					$this->documentMethod = 'alias';
+					return $q;
     }
-    else { // we didn't get an ID back, so instead we assume it's an alias
-      if($this->config['friendly_alias_urls']==1) {
-        $q = str_replace($this->config['friendly_url_prefix'], "", $q);
-        $q = str_replace($this->config['friendly_url_suffix'], "", $q);
+			} else {
+				$this->documentMethod = 'id';
+				return $q;
       }
-      else {
+		} else { // we didn't get an ID back, so instead we assume it's an alias
+			if($this->config['friendly_alias_urls'] != 1) {
         $q = $qOrig;
       }
+
       $this->documentMethod = 'alias';
       return $q;
     }
@@ -1407,8 +1419,13 @@ class DocumentParser {
 		if($args!='' && $this->config['friendly_urls']==1) {
 			// add ? to $args if missing
 			$c = substr($args,0,1);
+			if (strpos($this->config['friendly_url_prefix'],'?') === false) {
 			if ($c=='&') $args = '?'.substr($args,1);
 			elseif ($c!='?') $args = '?'.$args; 
+			} else {
+				if ($c=='?') $args = '&'.substr($args,1);
+				elseif ($c!='&') $args = '&'.$args;
+		}
 		}
 		elseif($args!='') {
 			// add & to $args if missing

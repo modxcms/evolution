@@ -5,6 +5,8 @@
 *
 * SLLists was created by Greg Neustaetter in 2005 and may be used for free by anyone for any purpose.  Just keep my name in here please and
 * give me credit if you like, but give Thomas all the real credit!
+*
+* This version of the file has been customised to send all output to a variable - garryn (garry@immerse.me.uk) 
 */
 class SLLists {
 

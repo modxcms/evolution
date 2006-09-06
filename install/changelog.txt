@@ -3,9 +3,22 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1319 - August 20, 2006)
+MOD 0.9.5 (rev 1371 - September 6, 2006)
 ====================================
 
+* [FS#438] makeUrl() should use '&' for all query string parameters if '?' is present in FURL prefix.
+* [FS#321] as directory structures such as: 2006/08/01 can now be created with friendly paths enabled (should please the bloggers ;) )
+* [FS#308] and [FS#476] Problem where pages could be referenced from fictitious directories when friendly alias paths are enabled and a document ID is used in the URL. For example, http://mysite.com/made-up-directory/8 will have returned document 8 even though that directory doesn't exist. The fix ties document IDs to the virtual directory structure when friendly alias paths are used preventing document IDs being referenced outside of their location in the structure.
+* [FS#414] Raymond's multi-select TV fix for saving TV values on PHP5. (has worked in majority of cases, but also appears it can be caused by some server configs)
+* Another Datagrid widget fix, not bugtracked but discovered and fixed by Samba here:http://modxcms.com/forums/index.php/topic,6031.0.html
+* Update MODx Installer with latest Doc Manager module code
+* Bulk Document Module: Added bulk updating of Template Variables, language strings moved to main MODx language file (only English so far)
+* [FS#324] Fixes the incorrect assignment of the table class and styles for the datagrid widget. 
+* [FS#345] removed unnecessary escaping in the string replacements in the decodeParamValue() function.
+* [FS#491] Wrong resource browser opening for image and file TVs when editing a document.
+* 'Delete/Undelete' option added to misc settings, published/unpublished option now respects 'publishedby,publishedon' fields
+* Fix for broken image paths, updated paths to account for theme directories.
+* [FS#490] numerous bug fixes for the Doc Manager module - see FS report for more details on the fixes. 
 * Fix for category support, items wouldn't save unless category was set. (1319)
 * Various manager theme tweaks and corrections from banzai. (1317,1318)
 * [FS#328] This fix eliminates non-admin users from being able to create admin users. (1308,1310)

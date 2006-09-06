@@ -188,7 +188,8 @@ if($limit > 0) {
             if(is_array($_POST["tv".$row['name']])) {
 				// handles checkboxes & multiple selects elements
 				$feature_insert = array();
-				while (list($featureValue, $feature_item) = each ($_POST["tv".$row['name']])) {
+				$lst = $_POST["tv".$row['name']];
+				while (list($featureValue, $feature_item) = each ($lst)) {
 					$feature_insert[count($feature_insert)] = $feature_item;
 				}
 				$tmplvar = implode("||",$feature_insert);

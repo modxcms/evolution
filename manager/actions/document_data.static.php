@@ -202,11 +202,11 @@ if($editedbyname!='') {
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_web_access"]; ?>: </td>
-	<td><?php echo $content['privateweb']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
+	<td><?php echo $content['privateweb']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/style/".($manager_theme ? "$manager_theme/":"")."images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_mgr_access"]; ?>: </td>
-	<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
+	<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/style/".($manager_theme ? "$manager_theme/":"")."images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
   </tr>
   <tr>
     <td colspan="2">&nbsp;</td>

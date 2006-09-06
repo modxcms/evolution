@@ -1,6 +1,6 @@
 // Javascript functions for use in the Document Manager
 // Author: Garry Nutting/Mark Kaplan - some functions borrowed from other sources ;)
-// Date: 24/03/2006 Version: 1
+// Date: 03/09/2006 Version: 1.5
 
 function getCookie(name) {
     var dc = document.cookie;
@@ -68,7 +68,7 @@ function getSelectedRadioValue(buttonGroup) {
 // handles most of the form processing 
 function postForm(opcode) {
 	tabActiveID = getCookie("webfxtab_docManagerPane");
-if (tabActiveID == '0') { //Template tab
+if (tabActiveID == '0' || tabActiveID == null) { //Template tab
 	if (opcode=='tree') { 
 		
 		document.module.opcode.value=opcode; 	
@@ -80,8 +80,18 @@ if (tabActiveID == '0') { //Template tab
 	    document.range.tabAction.value='change_template';
 		document.range.newvalue.value=getSelectedRadioValue(document.template.id); 
 		document.range.submit(); 
-	} 
-} else if (tabActiveID == '1') { // Document tab
+	}
+} else if (tabActiveID == '1') {
+	if (opcode=='tree') {
+		document.templatevariables.pids.value=getElementsByClass('pids',document.subdiv,'input'); 
+	}
+	document.templatevariables.opcode.value = opcode;
+	document.templatevariables.pids.value = document.range.pids.value;
+	document.templatevariables.tabAction.value = 'change_tv';
+	document.templatevariables.tplID.value=getSelectedRadioValue(document.templatevariables.tid);
+	document.templatevariables.submit();
+ 
+} else if (tabActiveID == '2') { // Document tab
 	if (opcode=='tree') { 
 		document.module.opcode.value=opcode;
 		if (getSelectedRadioValue(document.docgroups.tabAction)=='pushDocGroup' ) {
@@ -102,9 +112,9 @@ if (tabActiveID == '0') { //Template tab
 		document.range.newvalue.value=getSelectedRadioValue(document.docgroups.docgroupid); 
 		document.range.submit(); 
 	} 
-} else if (tabActiveID == '2') { // Sort Menu tab
+} else if (tabActiveID == '3') { // Sort Menu tab
 		// handled separately using save() function
-} else if (tabActiveID == '3') { // other options
+} else if (tabActiveID == '4') { // other options
 		if (opcode=='tree') {
 		document.module.opcode.value=opcode;
 		document.module.tabAction.value='changeOther';
@@ -177,8 +187,31 @@ function changeOtherLabels() {
    } else if (document.other.misc.value=='5') {
    	   choice1.innerHTML = document.other.option9.value;
 	   choice2.innerHTML = document.other.option10.value;
+   } else if (document.other.misc.value=='6') {
+   	   choice1.innerHTML = document.other.option11.value;
+	   choice2.innerHTML = document.other.option12.value;
    } else if (document.other.misc.value=='0') {
    	   choice1.innerHTML = " - ";
 	   choice2.innerHTML = " - ";
 	}
 }
+
+/* hide the interaction div when Menu Sort is selected */
+function hideInteraction() {
+	$('tvloading').style.display = 'none';
+	tabActiveID = getCookie("webfxtab_docManagerPane");
+	el = document.getElementById('interaction');
+	if (tabActiveID == '3') {
+		el.style.display = 'none';
+		parent.menu.ca = 'move'; //for menu tree document selection
+	} else {
+		el.style.display = '';
+		parent.menu.ca = '';
+	}
+	
+	return true;
+}
+
+/* attach the hideInteraction to relevant event handlers */
+document.onclick = hideInteraction;
+window.onload = hideInteraction;

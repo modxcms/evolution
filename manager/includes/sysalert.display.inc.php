@@ -34,7 +34,7 @@
 		height:					10px;
 		font-size: 				5px;
 		text-align:				center;
-		background-image: 		url("media/images/misc/buttonbar.gif");
+		background-image: 		url("media/style/images/<?php echo ($manager_theme ? "$manager_theme/":"") ?>'bg/buttonbar.gif");
 		background-color:		#A3C8F5;
 		border:1px solid 		#9ABBE5;}
 	</style>		
@@ -54,14 +54,14 @@
 
 		document.addEventListener('onload',function(){ 			
 			var src = '<!--start scroller -->'
-			+'<div style="color:white;background-color:#9ABBE5;padding:3px;font-weight:bold;"><div id="closeSysAlert" style="float:right"><a href="javascript:void(0);" onclick="closeSystemAlerts();return false;"><img border="0" src="media/images/icons/close.gif" width="16" height="16" alt="<?php echo $_lang['close'] ?>" /></a></div> <?php echo $_lang['sys_alert'] ?> </div><div style="position:relative;width:100%;">'
-			+'<div id="up" class="scrollbtn" style="position:relative;" title="<?php echo $_lang['scroll_up'];?>" onmousedown="scrollDown()" onmouseup="scrollReset()" onmouseout="scrollReset()"><img src="media/images/icons/arrow_up.gif" width="5" height="6" alt="up" /></div>'
+			+'<div style="color:white;background-color:#9ABBE5;padding:3px;font-weight:bold;"><div id="closeSysAlert" style="float:right"><a href="javascript:void(0);" onclick="closeSystemAlerts();return false;"><img border="0" src="media/style/<?php echo ($manager_theme ? "$manager_theme/":"") ?>images/icons/close.gif" width="16" height="16" alt="<?php echo $_lang['close'] ?>" /></a></div> <?php echo $_lang['sys_alert'] ?> </div><div style="position:relative;width:100%;">'
+			+'<div id="up" class="scrollbtn" style="position:relative;" title="<?php echo $_lang['scroll_up'];?>" onmousedown="scrollDown()" onmouseup="scrollReset()" onmouseout="scrollReset()"><img src="media/style/<?php echo ($manager_theme ? "$manager_theme/":"") ?>images/icons/arrow_up.gif" width="5" height="6" alt="up" /></div>'
 			+'<div id="navbar" style="position:relative;overflow:hidden;height:200px">'
 			+'<div id="navbarcontent" style="position:relative;padding:3px;">'
 			+'<?php echo mysql_escape_string($sysMsgs);?>'
 			+'</div>'
 			+'</div>'
-			+'<div id="dn" class="scrollbtn" style="position:relative;" title="<?php echo $_lang['scroll_dn'];?>" onmousedown="scrollup()" onmouseup="scrollReset()" onmouseout="scrollReset()"><img src="media/images/icons/arrow_dn.gif" width="5" height="6" alt="down" /></div>'
+			+'<div id="dn" class="scrollbtn" style="position:relative;" title="<?php echo $_lang['scroll_dn'];?>" onmousedown="scrollup()" onmouseup="scrollReset()" onmouseout="scrollReset()"><img src="media/style/<?php echo ($manager_theme ? "$manager_theme/":"") ?>images/icons/arrow_dn.gif" width="5" height="6" alt="down" /></div>'
 			+'</div>'
 			+'<!-- end scroller -->';
 			sysAlertWindow = new Floater('sysAlertWindow',src,(document.ua.ie ? 10:25),10,"top-right");

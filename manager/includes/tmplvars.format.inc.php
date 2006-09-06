@@ -236,15 +236,15 @@ EOD;
 				include_once $base_path."/manager/includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$value);
 
-				$grd->noRecordMsg		=$params['nrmsg'];
+				$grd->noRecordMsg		=$params['egmsg'];
 
 				$grd->columnHeaderClass	=$params['chdrc'];
-				$grd->tableClass		=$params['tblc'];
+				$grd->cssClass			=$params['tblc'];
 				$grd->itemClass			=$params['itmc'];
 				$grd->altItemClass		=$params['aitmc'];
 	
 				$grd->columnHeaderStyle	=$params['chdrs'];
-				$grd->tableStyle		=$params['tbls'];
+				$grd->cssStyle			=$params['tbls'];
 				$grd->itemStyle			=$params['itms'];
 				$grd->altItemStyle		=$params['aitms'];
 
@@ -264,6 +264,7 @@ EOD;
 				$grd->pagerClass		=$params['pclass'];
 				$grd->pagerStyle		=$params['pstyle'];
 				$o = $grd->render();
+				print_r($params);
 				break;
 				
 			default:
@@ -287,10 +288,10 @@ EOD;
 	}
 	
 	function decodeParamValue($s){
-		$s = str_replace("\%3D",'=',$s); // =
-		$s = str_replace("\%26",'&',$s); // &
+		$s = str_replace("%3D",'=',$s); // =
+		$s = str_replace("%26",'&',$s); // &
 		return $s;
-	};
+	}
 	
 	// returns an array if a delimiter is present. returns array is a recordset is present
 	function parseInput($src, $delim="||", $type="string") { // type can be: string, array

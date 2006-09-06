@@ -6,7 +6,7 @@
  * Purpose: Contains the main visual output functions for the module
  * Author: Garry Nutting (Mark Kaplan - Menu Index functionalty, Luke Stokes - Document Permissions concept)
  * For: MODx CMS (www.modxcms.com)
- * Date:24/02/2006 Version: 1
+ * Date:03/09/2006 Version: 1.5
  * 
  */
 
@@ -109,11 +109,61 @@ function buttonCSS() {
 				vertical-align: middle !important;
 			}
 			
-			</style>
-			';
+			</style>';
 
 	return $output;
 
+}
+
+/**
+ * showTemplateVariables - shows the main template variable form§
+ * 
+ */
+function showTemplateVariables() {
+	global $modx;
+	global $_lang;
+	global $theme;
+
+	$temptable = $modx->getFullTableName('site_templates');
+	$templates = $modx->db->select('id,templatename,description', $temptable,'','id ASC');
+
+	$output = '<p>' . $_lang['DM_tv_desc'] . '</p><br />';
+	$output .= '<form name="templatevariables" method="post">';
+	
+	$alt = 0;
+	if($modx->db->getRecordCount($templates) > 0) {
+	$output.='<table style="width:100%">';
+	$output.='<tr><td class="gridHeader"></td>';
+	$output.='<td class="gridHeader">'.$_lang['DM_tpl_column_name'].'</td>';
+	$output.='<td class="gridHeader">'.$_lang['DM_tpl_column_description'].'</td>';
+	$output.='</tr>';
+	while ($row = $modx->db->getRow($templates)) {
+		$output.='<tr><td '.($alt==0 ? 'class="gridItem"' : 'class="gridAltItem"').'>';
+		$output.= '<input name="tid" type=\'radio\' '.(isset($_POST['selectedTV']) && $_POST['selectedTV'] == $row['id'] ? 'checked' : '').' name=\'id\' onclick="document.getElementById(\'tvloading\').style.display=\'block\';new Ajax.Updater(\'results\',\''.$modx->getConfig('site_url').'assets/modules/docmanager/includes/tv.ajax.php\', {method:\'post\',evalScripts:true, postBody:\'theme='.$theme.'&langIgnoreTV='.addslashes($_lang['DM_tv_ignore_tv']).'&langNoTV='.addslashes($_lang['DM_tv_no_tv']).'&tplID='.$row['id'].'&langInsert='.$_lang['DM_tv_ajax_insertbutton'].'\',onSuccess: function(t) { $(\'results\').innerHTML = t.responseText; $(\'selectedTV\').value=\''.$row['id'].'\';}}); document.getElementById(\'tvloading\').style.display = \'none\';" value=\''.$row['id'].'\' /> '.$row['id'];
+		$output.='</td><td '.($alt==0 ? 'class="gridItem"' : 'class="gridAltItem"').'>';
+		$output.= $row['templatename'];
+		$output.='</td><td '.($alt==0 ? 'class="gridItem"' : 'class="gridAltItem"').'>';
+		$output.= ($row['description'] != '') ? $row['description'] : '&nbsp;';
+		$output.='</td></tr>';
+		if($alt == 0) $alt=1;
+		else $alt = 0;
+	}
+	$output.='</table>';
+	} else {
+		$output.=$_lang['DM_tpl_no_templates'];
+	}
+	
+	$output.='<div id="tvloading" class="warning" style="display:none">'.$_lang['DM_tv_loading'].'</div><br />';
+	$output.='<br />' .
+			'<div id="results">'.$_lang['DM_tv_no_template_selected'].'</div>';
+	
+	$output.='<input type="hidden" name="opcode" value="" /> 
+			  <input type="hidden" name="pids" value="" />
+			  <input type="hidden" name="tplID" value="" />
+			  <input type="hidden" name="tabAction" value="" />';
+	$output .= '</form>';
+
+	return $output;
 }
 
 /**
@@ -125,27 +175,27 @@ function showTemplate() {
 	global $_lang;
 
 	$temptable = $modx->getFullTableName('site_templates');
-	$templates = $modx->db->select('id,templatename,description', $temptable);
+	$templates = $modx->db->select('id,templatename,description', $temptable,'','id ASC');
 
-	$output = '<p>' . $_lang['tpl_desc'] . '</p><br />';
+	$output = '<p>' . $_lang['DM_tpl_desc'] . '</p><br />';
 	$output .= '<form name="template">';
 
 	//-- render list of templates
 	$grd = new DataGrid('', $templates);
 	// set page size to 0 to show all items 
-	$grd->noRecordMsg = $_lang['tpl_no_templates'];
+	$grd->noRecordMsg = $_lang['DM_tpl_no_templates'];
 	$grd->cssClass = "grid";
 	$grd->columnHeaderClass = "gridHeader";
 	$grd->itemClass = "gridItem";
 	$grd->altItemClass = "gridAltItem";
-	$grd->columns = " ," . $_lang['tpl_column_id'] . "," . $_lang['tpl_column_name'] . "," . $_lang['tpl_column_description'];
+	$grd->columns = " ," . $_lang['DM_tpl_column_id'] . "," . $_lang['DM_tpl_column_name'] . "," . $_lang['DM_tpl_column_description'];
 	$grd->colTypes = "template:<input type='radio' name='id' value='[+id+]' /> [+value+]";
 	$grd->colWidths = "5%,5%,40%,50%";
 	$grd->fields = "template,id,templatename,description";
 	$output .= $grd->render();
 	$output .= "<br /> 
 								<table class='grid' cellpadding='1' cellspacing='1'><tr><td class='gridItem' style=\"width:5%;\"><input type='radio' name='id' 
-			value='0' /></td><td  class='gridItem' style=\"width:5%;\">0</td><td style=\"width:40%;\" class='gridItem'>" . $_lang['tpl_blank_template'] . "</td><td style=\"width:50%;\"></td></tr></table> 
+			value='0' /></td><td  class='gridItem' style=\"width:5%;\">0</td><td style=\"width:40%;\" class='gridItem'>" . $_lang['DM_tpl_blank_template'] . "</td><td style=\"width:50%;\"></td></tr></table> 
 								";
 
 	$output .= '</form>';
@@ -163,28 +213,28 @@ function showDocGroups() {
 	global $_lang;
 
 	$doctable = $modx->getFullTableName('documentgroup_names');
-	$documentgroups = $modx->db->select('id,name', $doctable);
+	$documentgroups = $modx->db->select('id,name', $doctable,'','id ASC');
 
-	$output = '<p>' . $_lang['doc_desc'] . '</p><br />';
+	$output = '<p>' . $_lang['DM_doc_desc'] . '</p><br />';
 	$output .= '<form name="docgroups">';
 
 	//-- render list of templates
 	$grd = new DataGrid('', $documentgroups);
 	// set page size to 0 to show all items 
-	$grd->noRecordMsg = $_lang['doc_no_docs'];
+	$grd->noRecordMsg = $_lang['DM_doc_no_docs'];
 	$grd->cssClass = "grid";
 	$grd->columnHeaderClass = "gridHeader";
 	$grd->itemClass = "gridItem";
 	$grd->altItemClass = "gridAltItem";
-	$grd->columns = " ," . $_lang['doc_column_id'] . "," . $_lang['doc_column_name'];
+	$grd->columns = " ," . $_lang['DM_doc_column_id'] . "," . $_lang['DM_doc_column_name'];
 	$grd->colTypes = "template:<input type='radio' name='docgroupid' value='[+id+]' /> [+value+]";
 	$grd->colWidths = "5%,5%,40%,50%";
 	$grd->fields = "template,id,name";
 	$output .= $grd->render();
 
 	$output .= '<br /><br />';
-	$output .= '<input type="radio" name="tabAction" value="pushDocGroup" checked />&nbsp;' . $_lang['doc_radio_add'] . '&nbsp;&nbsp;';
-	$output .= '<input type="radio" name="tabAction" value="pullDocGroup" />&nbsp;' . $_lang['doc_radio_remove'] . '<br /><br />';
+	$output .= '<input type="radio" name="tabAction" value="pushDocGroup" checked />&nbsp;' . $_lang['DM_doc_radio_add'] . '&nbsp;&nbsp;';
+	$output .= '<input type="radio" name="tabAction" value="pullDocGroup" />&nbsp;' . $_lang['DM_doc_radio_remove'] . '<br /><br />';
 
 	$output .= '</form>';
 
@@ -202,17 +252,17 @@ function showSortMenu() {
 
 	$output .= ' 
 							<form method="post" action="" name=\'newdocumentparent\'> 
-							<span id="parentName" class="warning">' . $_lang['sort_pick_item'] . '</span><br /> 
+							<span id="parentName" class="warning">' . $_lang['DM_sort_pick_item'] . '</span><br /> 
 							<input name="actionkey" type="hidden" value="1" /> 
 							<input type="hidden" name="new_parent" value="" class="inputBox" />
 							<input type="hidden" name="tabAction" value="sortMenu" />    
 							<br /> 
-							<input type=\'save\' value="' . $_lang['save'] . '" style="display:none"> 
+							<input type=\'save\' value="' . $_lang['DM_save'] . '" style="display:none"> 
 							</form>
 							';
 
 	$output .= '<div class="go"><a id="Button1" onclick="save();">
-						    <img src="media/style' . $theme . '/images/icons/save.gif">' . $_lang['go'] . '</a><br /><br /></div>';
+						    <img src="media/style' . $theme . '/images/icons/save.gif">' . $_lang['DM_go'] . '</a><br /><br /></div>';
 
 	return $output;
 
@@ -225,28 +275,28 @@ function showSortMenu() {
 function showAdjustDates() {
 	global $_lang;
 
-	$output .= '<br /><h3>' . $_lang['adjust_dates_header'] . '</h3><br />
-				   <p>' . $_lang['adjust_dates_desc'] . '</p></br />
+	$output .= '<br /><h3>' . $_lang['DM_adjust_dates_header'] . '</h3><br />
+				   <p>' . $_lang['DM_adjust_dates_desc'] . '</p></br />
 				   <form style="margin-left:50px;" id="dates" name="dates" method="post" action="">
-							<label for="date_pubdate" id="date_pubdate_label">' . $_lang['date_pubdate'] . '</label><input type="hidden" id="date_pubdate" name="date_pubdate" />
+							<label for="date_pubdate" id="date_pubdate_label">' . $_lang['DM_date_pubdate'] . '</label><input type="hidden" id="date_pubdate" name="date_pubdate" />
 								<span id="date_pubdate_show" name="date_pubdate_show"> (not set)</span>
-								<a href="#" onclick="caldate1.popup();">' . $_lang['view_calendar'] . '</a>&nbsp;&nbsp;
-						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_pubdate\'].value=\'\';document.getElementById(\'date_pubdate_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['clear_date'] . '</a>
+								<a href="#" onclick="caldate1.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
+						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_pubdate\'].value=\'\';document.getElementById(\'date_pubdate_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 							<br /><br />
-							<label for="date_unpubdate" id="date_unpubdate_label">' . $_lang['date_unpubdate'] . '</label><input type="hidden" id="date_unpubdate" name="date_unpubdate" />
+							<label for="date_unpubdate" id="date_unpubdate_label">' . $_lang['DM_date_unpubdate'] . '</label><input type="hidden" id="date_unpubdate" name="date_unpubdate" />
 								<span id="date_unpubdate_show" name="date_unpubdate_show"> (not set)</span>
-								<a href="#" onclick="caldate2.popup();">' . $_lang['view_calendar'] . '</a>&nbsp;&nbsp;
-						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_unpubdate\'].value=\'\';document.getElementById(\'date_unpubdate_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['clear_date'] . '</a>
+								<a href="#" onclick="caldate2.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
+						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_unpubdate\'].value=\'\';document.getElementById(\'date_unpubdate_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 							<br /><br />
-							<label for="date" id="date_createdon_label">' . $_lang['date_createdon'] . '</label><input type="hidden" id="date_createdon" name="date_createdon" />
+							<label for="date" id="date_createdon_label">' . $_lang['DM_date_createdon'] . '</label><input type="hidden" id="date_createdon" name="date_createdon" />
 								<span id="date_createdon_show" name="date_createdon_show"> (not set)</span>
-								<a href="#" onclick="caldate3.popup();">' . $_lang['view_calendar'] . '</a>&nbsp;&nbsp;
-						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_createdon\'].value=\'\';document.getElementById(\'date_createdon_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['clear_date'] . '</a>
+								<a href="#" onclick="caldate3.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
+						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_createdon\'].value=\'\';document.getElementById(\'date_createdon_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 							<br /><br />
-							<label for="date_editedon" id="date_editedon_label">' . $_lang['date_editedon'] . '</label><input type="hidden" id="date_editedon" name="date_editedon" />
+							<label for="date_editedon" id="date_editedon_label">' . $_lang['DM_date_editedon'] . '</label><input type="hidden" id="date_editedon" name="date_editedon" />
 						  		<span id="date_editedon_show" name="date_editedon_show"> (not set)</span>
-								<a href="#" onclick="caldate4.popup();">' . $_lang['view_calendar'] . '</a>&nbsp;&nbsp;
-						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_editedon\'].value=\'\';document.getElementById(\'date_editedon_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['clear_date'] . '</a>
+								<a href="#" onclick="caldate4.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
+						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_editedon\'].value=\'\';document.getElementById(\'date_editedon_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 						  </form>
 						  	';
 
@@ -297,20 +347,20 @@ function showAdjustAuthors() {
 		$userOptions .= '<option value="' . $row['id'] . '">' . $row['username'] . '</option>';
 	}
 
-	$output .= '<br /><h3>' . $_lang['adjust_authors_header'] . '</h3><br />
-				   <p>' . $_lang['adjust_authors_desc'] . '</p></br />
+	$output .= '<br /><h3>' . $_lang['DM_adjust_authors_header'] . '</h3><br />
+				   <p>' . $_lang['DM_adjust_authors_desc'] . '</p></br />
 				   <form style="margin-left:50px;" name="authors" method="post" action="">
-				   <label for="author_createdby">' . $_lang['adjust_authors_createdby'] . '</label>
+				   <label for="author_createdby">' . $_lang['DM_adjust_authors_createdby'] . '</label>
 				   <select name="author_createdby" style="width:50%">
-				   <option value="0">' . $_lang['adjust_authors_noselection'] . '</option>';
+				   <option value="0">' . $_lang['DM_adjust_authors_noselection'] . '</option>';
 
 	$output .= $userOptions;
 
 	$output .= '</select><br /><br />';
 
-	$output .= ' <label for="author_editedby">' . $_lang['adjust_authors_editedby'] . '</label>
+	$output .= ' <label for="author_editedby">' . $_lang['DM_adjust_authors_editedby'] . '</label>
 				   <select name="author_editedby" style="width:50%">
-				   <option value="0">' . $_lang['adjust_authors_noselection'] . '</option>';
+				   <option value="0">' . $_lang['DM_adjust_authors_noselection'] . '</option>';
 
 	$output .= $userOptions;
 
@@ -326,31 +376,34 @@ function showAdjustAuthors() {
 function showOther() {
 	global $_lang;
 
-	$output .= '<br /><h3>' . $_lang['other_header'] . '</h3><br />
-					<p>' . $_lang['misc_desc'] . '</p><br />
+	$output .= '<br /><h3>' . $_lang['DM_other_header'] . '</h3><br />
+					<p>' . $_lang['DM_misc_desc'] . '</p><br />
 					<form style="margin-left:50px;" name="other" method="post" action="">
-						  <input type="hidden" name="option1" value="' . $_lang['other_publish_radio1'] . '" />
-						  <input type="hidden" name="option2" value="' . $_lang['other_publish_radio2'] . '" />
-						  <input type="hidden" name="option3" value="' . $_lang['other_show_radio1'] . '" />
-						  <input type="hidden" name="option4" value="' . $_lang['other_show_radio2'] . '" />
-						  <input type="hidden" name="option5" value="' . $_lang['other_search_radio1'] . '" />
-						  <input type="hidden" name="option6" value="' . $_lang['other_search_radio2'] . '" />
-						  <input type="hidden" name="option7" value="' . $_lang['other_cache_radio1'] . '" />
-						  <input type="hidden" name="option8" value="' . $_lang['other_cache_radio2'] . '" />
-						  <input type="hidden" name="option9" value="' . $_lang['other_richtext_radio1'] . '" />
-						  <input type="hidden" name="option10" value="' . $_lang['other_richtext_radio2'] . '" />
-						  <label for="misc" id="misc_label">' . $_lang['misc_label'] . '</label>	
+						  <input type="hidden" name="option1" value="' . $_lang['DM_other_publish_radio1'] . '" />
+						  <input type="hidden" name="option2" value="' . $_lang['DM_other_publish_radio2'] . '" />
+						  <input type="hidden" name="option3" value="' . $_lang['DM_other_show_radio1'] . '" />
+						  <input type="hidden" name="option4" value="' . $_lang['DM_other_show_radio2'] . '" />
+						  <input type="hidden" name="option5" value="' . $_lang['DM_other_search_radio1'] . '" />
+						  <input type="hidden" name="option6" value="' . $_lang['DM_other_search_radio2'] . '" />
+						  <input type="hidden" name="option7" value="' . $_lang['DM_other_cache_radio1'] . '" />
+						  <input type="hidden" name="option8" value="' . $_lang['DM_other_cache_radio2'] . '" />
+						  <input type="hidden" name="option9" value="' . $_lang['DM_other_richtext_radio1'] . '" />
+						  <input type="hidden" name="option10" value="' . $_lang['DM_other_richtext_radio2'] . '" />
+						  <input type="hidden" name="option11" value="' . $_lang['DM_other_delete_radio1'] . '" />
+						  <input type="hidden" name="option12" value="' . $_lang['DM_other_delete_radio2'] . '" />
+						  <label for="misc" id="misc_label">' . $_lang['DM_misc_label'] . '</label>	
 						  <select name="misc" onchange="changeOtherLabels();">
-							<option value="1">' . $_lang['other_dropdown_publish'] . '</option>
-							<option value="2">' . $_lang['other_dropdown_show'] . '</option>
-							<option value="3">' . $_lang['other_dropdown_search'] . '</option>
-							<option value="4">' . $_lang['other_dropdown_cache'] . '</option>
-							<option value="5">' . $_lang['other_dropdown_richtext'] . '</option>
+							<option value="1">' . $_lang['DM_other_dropdown_publish'] . '</option>
+							<option value="2">' . $_lang['DM_other_dropdown_show'] . '</option>
+							<option value="3">' . $_lang['DM_other_dropdown_search'] . '</option>
+							<option value="4">' . $_lang['DM_other_dropdown_cache'] . '</option>
+							<option value="5">' . $_lang['DM_other_dropdown_richtext'] . '</option>
+							<option value="6">' . $_lang['DM_other_dropdown_delete'] . '</option>
 							<option value="0">&nbsp;-</option>
 						  </select>
 						  <br /><br />
-						  <input type="radio" id="choice" name="choice" value = "1" />&nbsp;<label for="choice" id="choice_label_1">' . $_lang['other_publish_radio1'] . '</label>
-						  <input type="radio" id="choice" name="choice" value = "0" />&nbsp;<label for="choice" id="choice_label_2">' . $_lang['other_publish_radio2'] . '</label>
+						  <input type="radio" id="choice" name="choice" value = "1" />&nbsp;<label for="choice" id="choice_label_1">' . $_lang['DM_other_publish_radio1'] . '</label>
+						  <input type="radio" id="choice" name="choice" value = "0" />&nbsp;<label for="choice" id="choice_label_2">' . $_lang['DM_other_publish_radio2'] . '</label>
 						  </form>
 						  	';
 
@@ -369,7 +422,7 @@ function showInteraction() {
 	//-- initiate desired interaction method 
 	if (isset ($_POST['tswitch'])) {
 		$output .= '<div id="interaction">
-											<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['tree_title'] . '</div> 
+											<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['DM_tree_title'] . '</div> 
 											<div class="sectionBody"> 
 											<form name="module" method="post"> 
 											<input type="hidden" name="opcode" value="tree" /> 
@@ -383,19 +436,20 @@ function showInteraction() {
 											<input type="hidden" name="author_createdby" value="" />
 											<input type="hidden" name="author_editedby" value="" />
 											<input type="hidden" name="tabAction" value="" /> 
-											<input type="submit" name="submit" onclick="postForm(\'tree\');" value="' . $_lang['select_submit'] . '" /><br /><br />';
+											<input type="submit" name="submit" onclick="postForm(\'tree\');return false;" value="' . $_lang['DM_select_submit'] . '" /><br /><br />';
 
 		$output .= getDocTree();
 		$output .= '				</form><br />
 											<form name="switch" method="post"> 
-											<input type="submit" style="" name="rswitch" value="' . $_lang['select_range'] . '" /> 
+											<input type="submit" style="" name="rswitch" value="' . $_lang['DM_select_range'] . '" /> 
+											<input type="hidden" id="selectedTV" name="selectedTV" value="" />
 											</form> 
 											<div style="clear:both;"></div> 
 											</div></div>';
 
 	} else {
 		$output .= '<div id="interaction">
-											<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['range_title'] . '</div> 
+											<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['DM_range_title'] . '</div> 
 											<div class="sectionBody"> 
 											<form id="range" name="range" method="post"> 
 											<input type="hidden" name="opcode" value="range" /> 
@@ -409,13 +463,14 @@ function showInteraction() {
 											<input type="hidden" name="author_editedby" value="" />
 											<input type="hidden" name="tabAction" value ="" /> 
 											<input name="pids" type="text" size="100%" /> 
-											<input type="submit" name="submit" onclick="postForm(\'range\');" value="' . $_lang['select_submit'] . '" /> 
+											<input type="submit" name="submit" onclick="postForm(\'range\');return false;" value="' . $_lang['DM_select_submit'] . '" /> 
 											</form><br /> 
 											';
-		$output .= $_lang['select_range_text'];
+		$output .= $_lang['DM_select_range_text'];
 
 		$output .= '	<br /><form name="switch" method="post"> 
-											<input type="submit" style="" name="tswitch" value="' . $_lang['select_tree'] . '" /> 
+											<input type="submit" style="" name="tswitch" value="' . $_lang['DM_select_tree'] . '" /> 
+											<input type="hidden" id="selectedTV" name="selectedTV" value="" />
 											</form> 
 										    <div style="clear:both;"></div> 
 											</div></div>';
@@ -595,8 +650,7 @@ function getDocTree() {
 					}
 
 					if ($itm) {
-						$output .= "<li$class><label for=\"" .
-						$child['id'] . "\">$itm</label></li>$ie";
+						$output .= "<li$class>$itm</li>$ie";
 						$class = '';
 					}
 				}
@@ -634,12 +688,12 @@ function updateHeader() {
 	$output .= ButtonCSS();
 	$output .= '		</head><body> 
 					        <div class="subTitle" id="bttn"> 
-							<span class="right"><img src="media/style' . $theme . '/images/_tx_.gif" width="1" height="5"><br />' . $_lang['module_title'] . '</span> 
+							<span class="right"><img src="media/style' . $theme . '/images/_tx_.gif" width="1" height="5"><br />' . $_lang['DM_module_title'] . '</span> 
 							<div class="bttnheight"><a id="Button5" onclick="document.location.href=\'index.php?a=106\';">
-								<img src="media/style' . $theme . '/images/icons/cancel.gif"> ' . $_lang['cancel'] . '</a>
+								<img src="media/style' . $theme . '/images/icons/close.gif"> ' . $_lang['DM_close'] . '</a>
 							</div><div class="stay">   </div> 
 				            </div>
-							<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['update_title'] . '</div> 
+							<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['DM_update_title'] . '</div> 
 							<div class="sectionBody"> 
 						    ';
 
