@@ -1,3 +1,0 @@
-<?php 
-	// plugin cache
-?>

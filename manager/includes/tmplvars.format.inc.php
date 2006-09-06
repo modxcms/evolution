@@ -29,26 +29,35 @@
 		}
 		
 		$id = "tv$name";
-				
 		switch($format){
 
 			case 'image':
-				$o = '';
+
 				$images = parseInput($value, '||', 'array');
+				$o = '';
+
 				foreach($images as $image){
+
 					if(!is_array($image)) { $image = explode('==',$image); }
 					$src = $image[0];
 
 					if($src) {
+
 						$id = ($params['id'] ? 'id="'.$params['id'].'"' : '');
 						$alt = htmlspecialchars($params['alttext']);
 						$class = $params['class'];
 						$style = $params['style'];
 						$attributes = $params['attrib'];
-						$o.= '<img '.$id.' src="'.$src.'" alt="'.$alt.'" class="'.$class.'" style="'.$style.'" '.$attributes.' />';
+
+$o .= <<<EOD
+<img {$id} src="{$src}" alt="{$alt}" class="{$class}" style="{$style}" {$attributes} />
+EOD;
+
 					}
+
 				}
-				break;
+				
+			break;
 		
 			case "delim":	// display as delimitted list
 				$value = parseInput($value,"||"); 
@@ -95,39 +104,33 @@
 								
 			case "marquee":
 				$transfx = ($params['tfx']=='Horizontal') ? 2:1;
-				$fnc = uniqid("fnc_");;
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/script/scriptaculous/prototype.js");
-				$modx->regClientStartupScript("manager/media/script/bin/marquee.js");
-				$o = "<script type=\"text/javascript\">Marquee.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
-				$o.= "<script type=\"text/javascript\">";
-				$o.= "	window.setTimeout('$fnc()',100);";
-				$o.= "	function $fnc(){";
-				$o.= "		var o = new Marquee('$id','".addslashes(mysql_escape_string($value))."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); ";
-				$o.= "		o.start()";
-				$o.= "	};";
+				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
+				$o = "<script type=\"text/javascript\">";
+				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
+				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('marquee');});";
+				$o.= "	document.addEventListener('onload',function(){var o = new Marquee('$id','".addslashes(mysql_escape_string($value))."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); o.start()});";
 				$o.= "</script>";
+				$o.= "<script type=\"text/javascript\">Marquee.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;
 
 			case "ticker":
 				$transfx = ($params['tfx']=='Fader') ? 2:1;
 				$delim = ($params['delim'])? $params['delim']:"||";
 				if ($delim=="\\n") $delim = "\n";
-				$fnc = uniqid("fnc_");;
 				$value = parseInput($value,$delim,"array");
-				$defaultContent = addslashes(mysql_escape_string($value[0]));
-				$modx->regClientStartupScript("manager/media/script/scriptaculous/prototype.js");
-				$modx->regClientStartupScript("manager/media/script/bin/ticker.js");
-				$o = "<script type=\"text/javascript\">Ticker.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."','".$defaultContent."');</script>";
-				$o.= "<script type=\"text/javascript\">";
-				$o.= "	window.setTimeout('$fnc()',100);";
-				$o.= "	function $fnc(){";
-				$o.= "		var o = new Ticker('$id','".$params['delay']."','".$transfx."'); ";
+				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
+				$o = '<script type="text/javascript">';
+				$o.= "	document.setIncludePath('manager/media/script/bin/');";
+				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('ticker');});";
+				$o.= "	document.addEventListener('onload',function(){";
+				$o.= "	var o = new Ticker('$id','".$params['delay']."','".$transfx."'); ";
 				for($i=0;$i<count($value);$i++){
 					$o.= "	o.addMessage('".addslashes(mysql_escape_string($value[$i]))."');";
 				}
-				$o.= "	};";
+				$o.= "	});";
 				$o.= "</script>";
+				$o.= "<script type=\"text/javascript\">Ticker.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;
 				
 			case "hyperlink":
@@ -268,7 +271,7 @@
 				if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
 					// remove delimiter from checkbox and listbox-multiple TVs
 					$value = str_replace('||','',$value);
-
+					
                 // fix FS 307 to preserve html entities in text/textarea input fields
                 } elseif($tvtype=='rawtext'||$tvtype=='rawtextarea') {
                     $value = $value;

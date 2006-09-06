@@ -134,29 +134,15 @@ class synccache{
 				"LEFT JOIN $dbase.".$table_prefix."site_modules sm on sm.guid=ss.moduleguid "; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
-        $fncCache = '';
 		$tmpPHP .= '$s = &$this->snippetCache;' . "\n";
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
-            $tmp1 = mysql_fetch_assoc($rs); 
-            // Raymond: add function wrapper with new property cache method
-            $fncName = 'snip_0x'.DecHex(crc32($tmp1['name']));
-            $fncCache.= "// Name:{$tmp1['name']}\n";
-            $fncCache.= 'function '.$fncName.'(&$modx,$params){'."\n";
-            $fncCache.= '$etomite=$modx; if(is_array($params)) extract($params, EXTR_SKIP);'."\n";
-            $fncCache.= $tmp1['snippet']."\n}\n\n";
-            $tmpPHP .= '$s[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$fncName."';\n";
-            if ($tmp1['properties']!=''||$tmp1['sharedproperties']!='') {
-				$arr = $this->parseProperties($tmp1['properties']." ".$tmp1['sharedproperties']);
-				if(count($arr)>0) {
-					$serial = $this->escapeSingleQuotes(serialize($arr)); 
-					$tmpPHP .= '$s[\''.mysql_escape_string($tmp1['name']).'Props\']'." = '".$serial."';\n";
-				}
-            }
+		   $tmp1 = mysql_fetch_assoc($rs); 
+		   $tmpPHP .= '$s[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['snippet'])."';\n";
+		   // Raymond: save snippet properties to cache
+		   if ($tmp1['properties']!=""||$tmp1['sharedproperties']!="") $tmpPHP .= '$s[\''.$tmp1['name'].'Props\']'." = '".$this->escapeSingleQuotes($tmp1['properties']." ".$tmp1['sharedproperties'])."';\n";
+		   // End mod
 		}
-		// save snippet functions to cache file.
-        $this->writeToFile('siteSnippets.cache.php',"<?php \n$fncCache \n ?>");
-
-
+		
 		// WRITE plugins to cache file
 		$sql = "SELECT sp.*,sm.properties as 'sharedproperties' ".
 				"FROM $dbase.".$table_prefix."site_plugins sp " .
@@ -164,27 +150,12 @@ class synccache{
 				"WHERE sp.disabled=0"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
-        $fncCache = '';
 		$tmpPHP .= '$p = &$this->pluginCache;' . "\n";
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
-			$tmp1 = mysql_fetch_assoc($rs); 
-            // Raymond: add function wrapper with new property cache method
-            $fncName = 'plug_0x'.DecHex(crc32($tmp1['name']));
-            $fncCache.= "// Name:{$tmp1['name']}\n";
-            $fncCache.= 'function '.$fncName.'(&$modx,$params){'."\n";
-            $fncCache.= '$etomite=$modx; if(is_array($params)) extract($params, EXTR_SKIP);'."\n";
-            $fncCache.= $tmp1['plugincode']."\n}\n\n";
-			$tmpPHP .= '$p[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$fncName."';\n";
-			if ($tmp1['properties']!=""||$tmp1['sharedproperties']!="") {
-				$arr = $this->parseProperties($tmp1['properties']." ".$tmp1['sharedproperties']);
-				if(count($arr)>0) {
-					$serial = $this->escapeSingleQuotes(serialize($arr)); 
-					$tmpPHP .= '$p[\''.mysql_escape_string($tmp1['name']).'Props\']'." = '".$serial."';\n";
-				}
-			}
+		   $tmp1 = mysql_fetch_assoc($rs); 
+		   $tmpPHP .= '$p[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['plugincode'])."';\n";
+		   if ($tmp1['properties']!=""||$tmp1['sharedproperties']!="") $tmpPHP .= '$p[\''.$tmp1['name'].'Props\']'." = '".$this->escapeSingleQuotes($tmp1['properties']." ".$tmp1['sharedproperties'])."';\n";
 		}
-		// save plugin functions to cache file.
-        $this->writeToFile('sitePlugins.cache.php',"<?php \n$fncCache \n ?>");
 
 
 		// WRITE system event triggers
@@ -211,14 +182,24 @@ class synccache{
 		
 		// close and write the file
 		$tmpPHP .= "?>";		
+		$filename = $this->cachePath.'/siteCache.idx.php';
 		$somecontent = $tmpPHP;
 		
 		// invoke OnBeforeCacheUpdate event
 		if ($modx) $modx->invokeEvent("OnBeforeCacheUpdate");
+				
+		if (!$handle = fopen($filename, 'w')) {
+			 echo "Cannot open file ($filename)";
+			 exit;
+		}
+		
+		// Write $somecontent to our opened file.
+		if (fwrite($handle, $somecontent) === FALSE) {
+		   echo "Cannot write main MODx cache file! Make sure the assets/cache directory is writable!";
+		   exit;
+		}
+		fclose($handle);
 
-        // write to file				
-        $this->writeToFile('siteCache.idx.php',$somecontent);
-        
 		// invoke OnCacheUpdate event
 		if ($modx) $modx->invokeEvent("OnCacheUpdate");
 
@@ -257,9 +238,22 @@ class synccache{
 		}
 		
 		// write the file
+		$filename = $this->cachePath.'/sitePublishing.idx.php';
 		$somecontent = "<?php \$cacheRefreshTime=$nextevent; ?>";
-        $this->writeToFile('sitePublishing.idx.php',$somecontent);
-        
+		
+		if (!$handle = fopen($filename, 'w')) {
+			 echo "Cannot open file ($filename)";
+			 exit;
+		}
+		
+		// Write $somecontent to our opened file.
+		if (fwrite($handle, $somecontent) === FALSE) {
+		   echo "Cannot write publishing info file! Make sure the assets/cache directory is writable!";
+		   exit;
+		}
+
+		fclose($handle);
+
 
 /****************************************************************************/
 /*	END OF PUBLISH TIME FILE												*/
@@ -279,47 +273,5 @@ class synccache{
 			}
 		}	
 	}
-    
-    /**
-     * Write file content to disk
-     *
-     */
-    function writeToFile($filename,$content){
-		// write the file
-		$filename = $this->cachePath.'/'.$filename;	
-		if (!$handle = fopen($filename, 'w')) {
-			 echo "Cannot open file ($filename)";
-			 exit;
-		}		
-		// Write $somecontent to our opened file.
-		if (fwrite($handle, $content) === FALSE) {
-		   echo "Cannot write to file $filename! Make sure the assets/cache directory is writable!";
-		   exit;
-		}
-
-		fclose($handle);    
-    }
-    
-    /**
-     * Parses a resource property string and returns the result as an array
-     *
-     * @param: string $propertyString Property sting to be parsed
-     * @return: array 
-     */	
-	function parseProperties($propertyString){
-		$parameter = array();
-		if($propertyString!='') {
-			$tmpParams = explode('&',$propertyString);
-			for($x=0; $x<count($tmpParams); $x++) {
-				if (strpos($tmpParams[$x], '=', 0)) {
-					$pTmp = explode('=', $tmpParams[$x]);
-					$pvTmp = explode(';', trim($pTmp[1]));
-					if ($pvTmp[1]=='list' && $pvTmp[3]!='') $parameter[trim($pTmp[0])] = $pvTmp[3]; //list default
-					else if($pvTmp[1]!='list' && $pvTmp[2]!='') $parameter[trim($pTmp[0])] = $pvTmp[2];
-				}
-			}
-		}
-		return $parameter;
-	}	    
 }
 ?>

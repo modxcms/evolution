@@ -15,8 +15,7 @@ function ProcessTVCommand($value, $name=''){
 	if (substr($nvalue,0,1)!='@') return $value;
 	else {
 
-		list($cmd,$param) = ParseCommand($nvalue);
-		$cmd = trim($cmd);
+		list($cmd,$param) = ParseCommand($nvalue);		
 		switch ($cmd) {
 			case "FILE":
 				$output = ProcessFile($param);
@@ -34,10 +33,15 @@ function ProcessTVCommand($value, $name=''){
 				break;
 
 			case "SELECT":		// selects a record from the cms database
-				$dbtags['DBASE'] = $modx->db->config['dbase'];
-				$dbtags['PREFIX'] = $modx->db->config['table_prefix'];
-				foreach($dbtags as $key => $pValue) 
-					$param = str_replace('[[+'.$key.']]', $pValue, $param);
+				$rt = array();
+				$replacementVars= array(
+					'DBASE'=> $modx->db->config['dbase'],
+					'PREFIX'=> $modx->db->config['table_prefix']
+				);
+				foreach($replacementVars as $key=> $value) {
+					$modx->setPlaceholder($key, $value);
+				}
+				$param = $modx->mergePlaceholderContent($param); 
 				$rs = $modx->db->query("SELECT $param;");
 				$output = $rs;
 				break;
@@ -72,20 +76,21 @@ function ProcessTVCommand($value, $name=''){
 				}
 				break;
 
-			case 'DIRECTORY':
-				$files = array();
-				$path = $modx->config['base_path'].$param;
-				if(substr($path,-1,1)!='/') { $path.='/'; }
-				if(!is_dir($path)) { die($path); break;}
-				$dir = dir($path);
-				while(($file = $dir->read())!==false) {
-						if(substr($file,0,1)!='.') {
-								$files[] = "{$file}=={$param}{$file}";
-						}
-				}
-				asort($files);
-				$output = implode('||',$files);
-				break;
+                        case 'DIRECTORY':
+                                $files = array();
+                                $path = $modx->config['base_path'].$param;
+                                if(substr($path,-1,1)!='/') { $path.='/'; }
+                                if(!is_dir($path)) { die($path); break;}
+                                $dir = dir($path);
+                                while(($file = $dir->read())!==false) {
+                                        if(substr($file,0,1)!='.') {
+                                                $files[] = "{$file}=={$param}{$file}";
+                                        }
+                                }
+                                asort($files);
+                                $output = implode('||',$files);
+                                break;
+
 
 			default:
 				$output = $value;
@@ -93,7 +98,7 @@ function ProcessTVCommand($value, $name=''){
 
 		}
 		// support for nested bindings
-		return is_string($output) && ($output!=$value) ? ProcessTVCommand($output) : $output;
+		return ($output!=$value) ? ProcessTVCommand($output):$output;
 	}
 }
 
@@ -117,13 +122,16 @@ function ParseCommand($binding_string) {
 
 	global $BINDINGS;
 	$match = array();
-	$binding_string = trim($binding_string);
+  $binding_string = trim($binding_string);
 	$regexp = '/@('.implode('|',$BINDINGS).')\s*(.*)/i'; // Split binding on whitespace
 	
 	if(preg_match($regexp, $binding_string, $match)) {
-		// We can't return the match array directly because the first element is the whole string
-		$binding_array = array(strtoupper($match[1]), $match[2]); // Make command uppercase	 
-		return $binding_array;	 
+	
+	 // We can't return the match array directly because the first element is the whole string
+	 $binding_array = array(strtoupper($match[1]), $match[2]); // Make command uppercase
+	 
+	 return $binding_array;
+	 
 	}
 	
 }

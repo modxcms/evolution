@@ -97,7 +97,7 @@ $base_path = '';
 
 // get the required includes
 if($database_user=="") {
-	$rt = @include_once('manager/includes/config.inc.php');
+	$rt = @include_once "manager/includes/config.inc.php";
 	if(!$rt) {
 	echo "
 <style type=\"text/css\">
@@ -124,21 +124,18 @@ $modx = new DocumentParser;
 $etomite = &$modx; // for backward compatibility
 
 // set some parser options
-$modx->enableCompatMode = true; // for backward compatibility with old parser format
+$modx->minParserPasses = 1; // min number of parser recursive loops or passes
+$modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->tstart = $tstart;
 
 // Debugging mode:
 $modx->stopOnNotice = false;
-// $modx->enableDebug(false,false);  // debug, stopOnNotice
-
 
 // Don't show PHP errors to the public
 if(!$_SESSION['mgrValidated']) @ini_set("display_errors","0");
 
 // execute the parser
 $modx->executeParser();
-
-
 ?>
