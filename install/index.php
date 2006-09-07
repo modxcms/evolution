@@ -199,7 +199,7 @@
 			  <tr>
 				<td nowrap valign="top" width="37%">
 				<img src="im_new_inst.gif" align="left" width="32" height="32" hspace="5" />
-				<input type="radio" name="installmode" id="installmode1" value="new" onclick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? 'checked="checked"':'' ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
+				<input type="radio" name="installmode" id="installmode1" value="new" onClick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? 'checked="checked"':'' ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
 				<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please note that this option may overwrite any data inside your database. </td>
 			  </tr>
 			  <tr>
@@ -209,7 +209,7 @@
 			  <tr>
 				<td nowrap valign="top" width="37%">
 				<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
-				<input type="radio" name="installmode" id="installmode2" value="upd" onclick="setInstallMode(1);" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo $_POST['installmode']=='upd' ? 'checked="checked"':'' ?> /><label for="installmode2" class="nofloat">Upgrade Installation</label></td>
+				<input type="radio" name="installmode" id="installmode2" value="upd" onClick="setInstallMode(1);" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo $_POST['installmode']=='upd' ? 'checked="checked"':'' ?> /><label for="installmode2" class="nofloat">Upgrade Installation</label></td>
 				<td width="61%">Select this option to upgrade your current files and database.</td>
 			  </tr>
 			</table>
@@ -239,7 +239,7 @@
 			<input id="databaseloginname" name="databaseloginname" value="<?php echo isset($_POST['databaseloginname']) ? $_POST['databaseloginname']:"" ?>" /></div>
 			<div class="labelHolder"><label for="databaseloginpassword">Database password:</label>
 			<input id="databaseloginpassword" type="password" name="databaseloginpassword"  value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']:"" ?>" />&nbsp;
-			<input type="button" name="cmdtest" value="Test connection" style="width:130px" onclick="testConnection()" /><br />
+			<input type="button" name="cmdtest" value="Test connection" style="width:130px" onClick="testConnection()" /><br />
 			<input id="testbox" name="testbox" value="" size="30" />
   			</div>
 
@@ -395,6 +395,20 @@
 		}
 		echo "<p>Checking if <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> file is writable: ";
 		if(!is_writable("../assets/cache/sitePublishing.idx.php")) {
+			echo "<span class=\"notok\">Failed!</span></p>";
+			$errors += 1;
+		} else {
+			echo "<span class=\"ok\">OK!</span></p>";
+		}
+		echo "<p>Checking if <span class=\"mono\">assets/cache/siteSnippets.cache.php</span> file is writable: ";
+		if(!is_writable("../assets/cache/siteSnippets.cache.php")) {
+			echo "<span class=\"notok\">Failed!</span></p>";
+			$errors += 1;
+		} else {
+			echo "<span class=\"ok\">OK!</span></p>";
+		}
+		echo "<p>Checking if <span class=\"mono\">assets/cache/sitePlugins.cache.php</span> file is writable: ";
+		if(!is_writable("../assets/cache/sitePlugins.cache.php")) {
 			echo "<span class=\"notok\">Failed!</span></p>";
 			$errors += 1;
 		} else {
@@ -752,7 +766,7 @@
 			<br />
 			<div id="navbar">
 				<?php if($isPostBack) { ?>
-					<input type="button" value="Close" name="cmdclose" style="float:right;width:100px;" onclick="closepage();" />
+					<input type="button" value="Close" name="cmdclose" style="float:right;width:100px;" onClick="closepage();" />
 					<?php 
 						if($errors==0) { 
 							// check if install folder is removeable
@@ -764,10 +778,10 @@
 							}					
 						} ?>
 				<?php } else {?>
-					<input type="button" value="Next" name="cmdnext" style="float:right;width:100px;" onclick="changeScreen(1);" />
+					<input type="button" value="Next" name="cmdnext" style="float:right;width:100px;" onClick="changeScreen(1);" />
 					<span style="float:right">&nbsp;</span>
-					<input type="button" value="Back" name="cmdback" style="float:right;width:100px;" onclick="changeScreen(-1);" />
-					<span id="iagreebox" style="float:left;cursor:pointer;background-color:#eee;line-height:18px"><input type="checkbox" value="1" id="chkagree" name="chkagree" onclick="setIAgree()" <?php echo isset($_POST['chkagree']) ? 'checked="checked"':""; ?> style="line-height:18px" /><label for="chkagree" style="display: inline;float:none;line-height:18px;"> I agree to the terms set out in this license. </label></span>
+					<input type="button" value="Back" name="cmdback" style="float:right;width:100px;" onClick="changeScreen(-1);" />
+					<span id="iagreebox" style="float:left;cursor:pointer;background-color:#eee;line-height:18px"><input type="checkbox" value="1" id="chkagree" name="chkagree" onClick="setIAgree()" <?php echo isset($_POST['chkagree']) ? 'checked="checked"':""; ?> style="line-height:18px" /><label for="chkagree" style="display: inline;float:none;line-height:18px;"> I agree to the terms set out in this license. </label></span>
 				<?php } ?>
 			</div>
 			<input name="syscheck" type="hidden" value="<?php echo ($syscheck && $errors) ? "on":""; ?>" />
@@ -789,8 +803,8 @@
     </table></td>
   </tr>
   <tr class="fancyRow2">
-    <td class="border-top-bottom smallText" colspan="2"> 
-    &nbsp;</td>
+    <td class="border-top-bottom smallText" colspan="2">&nbsp; 
+    </td>
   </tr>
 </table>
 <!-- end install screen-->

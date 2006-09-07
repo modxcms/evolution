@@ -47,17 +47,25 @@ class synccache{
 		$filesincache = 0;
 		$deletedfilesincache = 0;
 		if ($handle = opendir($this->cachePath)) {
+            // Initialize deleted per round counter
+            $deletedThisRound = 1;
+            while ($deletedThisRound){
+                if(!$handle) $handle = opendir($this->cachePath);
+                $deletedThisRound = 0;
 			while (false !== ($file = readdir($handle))) { 
 				if ($file != "." && $file != "..") { 
 					$filesincache += 1;
-					if (preg_match ("/\.pageCache/", $file)) {
+                        if ( preg_match("/\.pageCache/", $file) && (!is_array($deletedfiles) || !array_search($file,$deletedfiles)) ) {
 						$deletedfilesincache += 1;
+                            $deletedThisRound++;
 						$deletedfiles[] = $file;
 						unlink($this->cachePath.$file);
-					}
-				} 
-			}
+                        } // End if
+                    } // End if
+                } // End while
 			closedir($handle); 
+                $handle = '';
+            } // End while ($deletedThisRound)
 		}
 
 /****************************************************************************/

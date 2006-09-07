@@ -3,9 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1371 - September 6, 2006)
+MOD 0.9.5 (rev 1373 - September 7, 2006)
 ====================================
 
+* [FS#170] Read the bug report (http://modxcms.com/bugs/task/170) for details, but basically, this kills the need to refresh multiple times to wipe out ALL cache files.
+* [FS#458] The config.inc.php file was being written with all database login credentials surrounded with double quote marks. This made it so PHP wanted to interpolate the $ as a variable name rather than a literal character. The fix is simply to use single quote strings for that information.
 * [FS#438] makeUrl() should use '&' for all query string parameters if '?' is present in FURL prefix.
 * [FS#321] as directory structures such as: 2006/08/01 can now be created with friendly paths enabled (should please the bloggers ;) )
 * [FS#308] and [FS#476] Problem where pages could be referenced from fictitious directories when friendly alias paths are enabled and a document ID is used in the URL. For example, http://mysite.com/made-up-directory/8 will have returned document 8 even though that directory doesn't exist. The fix ties document IDs to the virtual directory structure when friendly alias paths are used preventing document IDs being referenced outside of their location in the structure.

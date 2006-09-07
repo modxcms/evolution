@@ -154,15 +154,15 @@ $configString = '<?php
 	 *	MODx Configuration file
 	 *
 	 */
-	$database_type = "mysql";
-	$database_server = "'.$database_server.'";
-	$database_user = "'.$database_user.'";
-	$database_password = "'.$database_password.'";
-	$dbase = "`'.str_replace("`","",$dbase).'`";
-	$table_prefix = "'.$table_prefix.'";		
+	$database_type = \'mysql\';
+	$database_server = \''.$database_server.'\';
+	$database_user = \''.$database_user.'\';
+	$database_password = \''.$database_password.'\';
+	$dbase = \'`'.str_replace("`","",$dbase).'`\';
+	$table_prefix = \''.$table_prefix.'\';		
 	error_reporting(E_ALL ^ E_NOTICE);
 
-	$site_sessionname = "'.$site_sessionname.'";
+	$site_sessionname = \''.$site_sessionname.'\';
 	
 	// automatically assign base_path and base_url
 	if($base_path==""||$base_url=="") {
