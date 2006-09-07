@@ -3,9 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1373 - September 7, 2006)
+MOD 0.9.5 (rev 1374 - September 7, 2006)
 ====================================
 
+* Updated Wayfinder in core installation.
+* Added category support to all resource views and changed Categories tab to 'Combined View'
+* Updated AjaxSearch snippet to only search docs they have access to.  Updated install to include changes and added Search Highlighting plugin to the install.
 * [FS#170] Read the bug report (http://modxcms.com/bugs/task/170) for details, but basically, this kills the need to refresh multiple times to wipe out ALL cache files.
 * [FS#458] The config.inc.php file was being written with all database login credentials surrounded with double quote marks. This made it so PHP wanted to interpolate the $ as a variable name rather than a literal character. The fix is simply to use single quote strings for that information.
 * [FS#438] makeUrl() should use '&' for all query string parameters if '?' is present in FURL prefix.

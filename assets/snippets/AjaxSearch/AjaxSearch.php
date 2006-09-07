@@ -20,6 +20,7 @@ $showMoreResults = $_GET['showMoreResults'];
 $moreResultsPage = $_GET['moreResultsPage'];
 $moreResultsText = $_GET['moreResultsText'];
 $resultsIntroFailure = $_GET['resultsIntroFailure'];
+$docgrp = $_GET['docgrp'];
 
 include_once $base_path . 'assets/snippets/AjaxSearch/AjaxSearch.inc.php';
 
@@ -34,10 +35,9 @@ $validSearch = ($searchString != '')? true : false ;
 
 if ($validSearch) {
     //Do the search
-    $rs = doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch);
+    $rs = doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp);
 
     $num=mysql_numrows($rs);
-
     if ($num > 0) {
         $result = '';
         $i = 0;

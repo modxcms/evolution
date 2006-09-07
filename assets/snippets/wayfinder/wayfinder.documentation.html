@@ -94,6 +94,11 @@ table thead tr {
 			<td>if set, creates a unique id for each item (id is value of rowIdPrefix + docId)</td>
 			<td>FALSE</td>
 		</tr>
+		<tr>
+			<td>&amp;useWeblinkUrl</td>
+			<td>if set to TRUE the link specified in the weblink will be output to the placeholder [<!-- -->+wf.link+<!-- -->]</td>
+			<td>TRUE</td>
+		</tr>
 		<tr class="subhead">
 			<td colspan="3">
 				Template Chunks for Menu Layout
@@ -104,7 +109,8 @@ table thead tr {
 			<td>
 				the template chunk for the outer most container<br/>
 				placeholders:<br/>
-				[<!-- -->+wf.classes+<!-- -->] - where classes specifed will be inserted<br/>
+				[<!-- -->+wf.classes+<!-- -->] - where classes specifed will be inserted (includes class=" ")<br/>
+				[<!-- -->+wf.classnames+<!-- -->] - outputs the just the class names (without class=" ")<br/>
 		        [<!-- -->+wf.wrapper+<!-- -->] - where inner content will be inserted<br/>
 				example: &lt;ul id=&quot;topnav&quot;[<!-- -->+wf.classes+<!-- -->]&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/ul&gt;
 			</td>
@@ -115,13 +121,15 @@ table thead tr {
 			<td>
 				the template chunk for the row items<br/>
 				placeholders:<br/>
-				[<!-- -->+wf.classes+<!-- -->] - where classes specifed will be inserted<br/>
+				[<!-- -->+wf.classes+<!-- -->] - where classes specifed will be inserted (includes class=" ")<br/>
+				[<!-- -->+wf.classnames+<!-- -->] - outputs the just the class names (without class=" ")<br/>
 				[<!-- -->+wf.link+<!-- -->] - the href value for your link<br/>
 				[<!-- -->+wf.title+<!-- -->] - text for the link title<br/>
 				[<!-- -->+wf.linktext+<!-- -->] - text for the link dispaly<br/>
 				[<!-- -->+wf.wrapper+<!-- -->] - where to insert a submenu<br/>
 				[<!-- -->+wf.id+<!-- -->] - where to insert unique id<br/>
 				[<!-- -->+wf.attributes+<!-- -->] - where to insert link attributes<br/>
+				[<!-- -->+wf.docid+<!-- -->] - the document identifier for the current item<br/>
 				example: &lt;li[<!-- -->+wf.id+<!-- -->][<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot; [<!-- -->+wf.attributes+<!-- -->]&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
 			</td>
 			<td>&#171 See Example</td>
@@ -177,6 +185,24 @@ table thead tr {
 				the template chunk for the current document if in a subfolder<br/>
 				placeholders: same as rowTpl<br/>
 				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;span&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/span&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;activeParentRowTpl</td>
+			<td>
+				the template chunk for the items that are folders and are currently active in the tree<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot;&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;categoryFoldersTpl</td>
+			<td>
+				the template chunk for category folders, category folders are determined by setting the template to blank or by setting the link attributes field to rel="category"<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot;&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
 			</td>
 			<td>none</td>
 		</tr>

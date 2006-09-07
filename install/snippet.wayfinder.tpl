@@ -2,7 +2,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: beta
+ Version: 1.0
  Authors: Ryan Thrash (vertexworks.com)
           Kyle Jaebker (muddydogpaws.com)
  Date: August 16, 2006
@@ -16,6 +16,10 @@
                     - Made custom version of getActiveChildren in class
                     - Added class for weblinks
                     - Weblinks will display the content link instead of link to id
+    Sept 06, 2006   - Added category support, with additional template
+                    - Added active parent template
+                    - Added docid placeholder for output of docid
+                    - Added wf.classnames placeholder
 ::::::::::::::::::::::::::::::::::::::::
 Description:
     Totally refactored from original DropMenu nav builder to make it easier to
@@ -44,6 +48,7 @@ $wf->ph = isset($ph)? $ph: FALSE;
 $wf->debug = isset($debug)? TRUE: FALSE;
 $wf->ignoreHidden = isset($ignoreHidden)? $ignoreHidden: FALSE;
 $wf->hideSubMenus = isset($hideSubMenus)? $hideSubMenus: FALSE;
+$wf->useWeblinkUrl = isset($useWeblinkUrl)? $useWeblinkUrl: TRUE;
 isset($removeNewLines)? $wf->ie = '': $wf->ie = "\n";
 //Include javascript & css chunks
 $wf->cssTpl = isset($cssTpl)? $cssTpl : FALSE;
@@ -73,6 +78,8 @@ $wf->templates['hereTpl'] = isset($hereTpl) ? $hereTpl : '';
 $wf->templates['innerTpl'] = isset($innerTpl) ? $innerTpl : '';
 $wf->templates['innerRowTpl'] = isset($innerRowTpl) ? $innerRowTpl : '';
 $wf->templates['innerHereTpl'] = isset($innerHereTpl) ? $innerHereTpl : '';
+$wf->templates['activeParentRowTpl'] = isset($activeParentRowTpl) ? $activeParentRowTpl : '';
+$wf->templates['categoryFoldersTpl'] = isset($categoryFoldersTpl) ? $categoryFoldersTpl : '';
 //setup here checking array
 $wf->parentTree = $modx->getParentIds($modx->documentIdentifier);
 $wf->parentTree[] = $modx->documentIdentifier;

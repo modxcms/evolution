@@ -14,7 +14,7 @@ function connectForAjax() {
     global $database_user;
     global $database_password;
     global $dbase;
-    global $table_prefix;      
+    global $table_prefix;
     $database = str_replace("`","",$dbase);
     $db = mysql_connect($database_server, $database_user, $database_password, true) or die("Cannot connect to database (connectForAjax)");
     $selected = mysql_select_db($database, $db) or die ("Cannot select database (connectForAjax)");
@@ -77,7 +77,7 @@ function initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$us
         $snippetCount = $modx->recordCount($snippetRs);
     }
     $snippetNameArray = array();
-    
+
     if ($ajaxSearch) {
       while ($thisSnippetRow = mysql_fetch_assoc($snippetRs)) {
           $snippetNameArray[] = strtolower($thisSnippetRow['name']);
@@ -110,7 +110,7 @@ function initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$us
   return $searchString;
 }
 
-function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch) {
+function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
     if ($ajaxSearch) {
       $table_prefix = connectForAjax();
     } else {
@@ -118,38 +118,47 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch) {
     }
     $search = explode(" ", $searchString);
     if ($ajaxSearch) {
-        $tbl = $table_prefix . "site_content";
+        $tbl_sc = $table_prefix . "site_content";
+        $tbl_dg = $table_prefix . "document_groups";
     } else {
-        $tbl = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_content";
+        $tbl_sc = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_content";
+        $tbl_dg = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "document_groups";
+    }
+
+    if ($docgrp) {
+        $tbl_sql = " LEFT JOIN $tbl_dg dg ON sc.id = dg.document";
+        $qry_sql = "(ISNULL(dg.document_group) OR dg.document_group IN ($docgrp)) AND ";
+    } else {
+        $tbl_sql = "";
+        $qry_sql = "sc.privateweb = 0 AND ";
     }
 
     if ($searchStyle == 'partial'){
-      $sql = "SELECT id, pagetitle, description ";
-      $sql .= "FROM $tbl ";
-      $sql .= "WHERE ";
+      $sql = "SELECT DISTINCT sc.id, sc.pagetitle, sc.description, sc.content ";
+      $sql .= "FROM $tbl_sc sc" . $tbl_sql . " WHERE ";
       if (count($search)>1 && $useAllWords){
         foreach ($search as $searchTerm){
-          $sql .= "(pagetitle LIKE '%$searchString%' OR description LIKE '%$searchString%' OR content LIKE '%$searchTerm%') AND ";
+          $sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR sc.content LIKE '%$searchTerm%') AND ";
         }
       } else {
-        $sql .= "(pagetitle LIKE '%$searchString%' OR description LIKE '%$searchString%' OR content LIKE '%$searchString%') AND ";
+        $sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR sc.content LIKE '%$searchString%') AND ";
       }
-      $sql .= "$tbl.published = 1 AND $tbl.searchable=1 AND $tbl.deleted=0;";
+      $sql .= $qry_sql . "sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
     } else {
-      $sql = "SELECT id, pagetitle, description ";
-      $sql .= "FROM $tbl WHERE ";
+      $sql = "SELECT DISTINCT sc.id, sc.pagetitle, sc.description, sc.content ";
+      $sql .= "FROM $tbl_sc" . $tbl_sql . " sc WHERE ";
       if (count($search)>1 && $useAllWords){
         foreach ($search as $searchTerm){
-          $sql .= "MATCH (pagetitle, longtitle, introtext, description, content) AGAINST ('$searchTerm') AND ";
+          $sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchTerm') AND ";
         }
       } else {
-        $sql .= "MATCH (pagetitle, longtitle, introtext, description, content) AGAINST ('$searchString') AND ";
+        $sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchString') AND ";
       }
-      $sql .= "$tbl.published = 1 AND $tbl.searchable=1 AND $tbl.deleted=0;";
+      $sql .= $qry_sql . "sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
     }
 
     if ($ajaxSearch) {
-        $rs = mysql_query($sql) or die ("Cannot query the database (doSearch)");
+        $rs = mysql_query($sql) or die ("Cannot query the database ($sql)");
     } else {
         $rs = $modx->dbQuery($sql);
     }

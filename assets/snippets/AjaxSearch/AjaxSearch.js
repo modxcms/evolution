@@ -55,10 +55,10 @@ function doSearch() {
     c.style.display = 'none';
     o.style.display = 'block';
     // Setup the parameters and make the ajax call
-    pars = 'search=' + escape(s) + '&maxResults=' + maxResults + '&stripHtml=' + stripHtml + '&stripSnip=' + stripSnip + '&stripSnippets=' + stripSnippets + '&useAllWords=' + useAllWords + '&searchStyle=' + escape(searchStyle) + '&minChars=' + minChars + '&showMoreResults=' + showMoreResults + '&moreResultsPage=' + moreResultsPage + '&moreResultsText=' + escape(moreResultsText) + '&resultsIntroFailure=' + escape(resultsIntroFailure);
+    pars = 'search=' + escape(s) + '&maxResults=' + maxResults + '&stripHtml=' + stripHtml + '&stripSnip=' + stripSnip + '&stripSnippets=' + stripSnippets + '&useAllWords=' + useAllWords + '&searchStyle=' + escape(searchStyle) + '&minChars=' + minChars + '&showMoreResults=' + showMoreResults + '&moreResultsPage=' + moreResultsPage + '&moreResultsText=' + escape(moreResultsText) + '&resultsIntroFailure=' + escape(resultsIntroFailure) + '&docgrp=' + escape(docgrp);
 
     //Make sure this points to the correct location.
-    var myAjax = new Ajax.Request('index-ajax.php?q=assets/snippets/AjaxSearch/AjaxSearch.php', 
+    var myAjax = new Ajax.Request('index-ajax.php?q=assets/snippets/AjaxSearch/AjaxSearch.php',
               {method: 'get', parameters: pars, onComplete:doSearchResponse});
 }
 

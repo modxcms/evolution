@@ -1,7 +1,7 @@
 /* -------------------------------------------------------------
 :: Snippet: Ajax Search
 ----------------------------------------------------------------
-    Short Description: 
+    Short Description:
         Ajax-driven search form
 
     Version:
@@ -18,7 +18,7 @@
     Required Usage:
         [!AjaxSearch!]
 
-    Changelog: 
+    Changelog:
         1-Apr-06 -- initial commit into SVN
         30-Mar-06 -- initial work based on FSF_ajax from KyleJ
 
@@ -36,42 +36,42 @@
     &message [string] (optional)
         simple message to prepend in front of the username
 
-    &wrapper [string] (optional) 
+    &wrapper [string] (optional)
         optional element to wrap the message in
 
-    &class [string] (optional) 
+    &class [string] (optional)
         optional name of the class for the wrapper element
 
-    &ph [boolean] ( optional ) 
-        if set, outputs to the ph name passed in, instead 
+    &ph [boolean] ( optional )
+        if set, outputs to the ph name passed in, instead
         of directly returning the output
 
 ----------------------------------------------------------------
 :: CSS                         !!!TO BE DONE!!!
 ----------------------------------------------------------------
     Please see the list of CSS used in this snippet found in
-    assets/snippets/ajaxsearch/style.css 
+    assets/snippets/ajaxsearch/style.css
 
 ----------------------------------------------------------------
 :: Example Calls              !!!TO BE DONE!!!
 ----------------------------------------------------------------
 [!AjaxSearch!]
-    A basic default call that renders a search form with the default 
+    A basic default call that renders a search form with the default
     images and parametes
 
 [!AjaxSearch!]
     Allows a link to a full-page search to go to another page.
-    
+
 [!AjaxSearch!]
     Overrides the number of maximum results returned.
-    
+
 
 ----------------------------------------------------------------
 :: Credits
 ----------------------------------------------------------------
-   Based on Flex Search Form (FSF) by jardc@honeydewdsign.com 
+   Based on Flex Search Form (FSF) by jardc@honeydewdsign.com
    as modified by KyleJ (kjaebker@muddydogpaws.com).
-   
+
    Also based on degradible live search demos at:
      http://orderedlist.com/articles/howto-animated-live-search/
      http://www.gizax.it/experiments/AHAH/degradabile/test/liveSearch.html
@@ -196,11 +196,11 @@
    // $showMoreResults [1 | 0]
    // Set this to 1 if you would like a link to show all of the search results
    $showMoreResults = (isset($showMoreResults))? $showMoreResults : 0;
-   
+
    // $moreResultsPage [int]
    // The document id of the page you want the more results link to point to
    $moreResultsPage = (isset($moreResultsPage ))? $moreResultsPage : 0;
-   
+
    // The text for the more results link
    $moreResultsText = 'Click here to view all results.';
 
@@ -210,41 +210,41 @@
    // $resultsIntroFailure
    // If nothing is found for the search. You should give the user
    // some indication that the search was a failure.
-   $resultsIntroFailure = 'There were no search results. Please try using more general terms to get more results.';
+   $lang['resultsIntroFailure'] = 'There were no search results. Please try using more general terms to get more results.';
 
    // $searchButtonText [string]
    // Label the search button what
    // you wish
-   $searchButtonText = 'Go!';
+   $lang['searchButtonText'] = 'Go!';
 
    // $boxText [ string ]
    // What, if anything, you want to have in the search box when the
    // form first loads. When clicked, it will disappear. This uses
    // JavaScript. If you don't want this feature or the JavaScript,
    // just set to empty string: ''
-   $boxText = 'Search here...';
+   $lang['boxText'] = 'Search here...';
 
    // $introMessage [ string ]
    // This is the text that will show up if the person arrives
    // at the search page without having done a search first.
    // You can leave this as an empty string if you like.
-   $introMessage = 'Please enter a search term to begin your search.';
+   $lang['introMessage'] = 'Please enter a search term to begin your search.';
 
    // $resultsFoundTextSingle, $resultsFoundTextMultiple [ string patttern ]
    // The string that will tell the user how many results were found.
    // two variables will be provided at runtime:
    // %d    The number of results found (integer)
    // %s    The search string itself.
-   $resultsFoundTextSingle = '%d result found for "%s".';
-   $resultsFoundTextMultiple = '%d results found for "%s".';
+   $lang['resultsFoundTextSingle'] = '%d result found for "%s".';
+   $lang['resultsFoundTextMultiple'] = '%d results found for "%s".';
 
    // $paginationTextSinglePage and $paginationTextMultiplePages [ string ]
    // The text that comes before the links to other pages. In this
    // example, "Result pages: " was the $paginationTextMultiplePages:
    // Result pages: 1 | 2 | 3 | 4
    // Page numbers will only appear if there is more than one page.
-   $paginationTextSinglePage = '';
-   $paginationTextMultiplePages = 'Result pages: ';
+   $lang['paginationTextSinglePage'] = '';
+   $lang['paginationTextMultiplePages'] = 'Result pages: ';
 
    // establish whether to show the form or not
    $showSearchWithResults = (isset($AS_showForm))? $AS_showForm : $showSearchWithResults;
@@ -261,6 +261,12 @@ $snipPath = $modx->config['base_path'] . "assets/snippets/";
 
 include_once $snipPath."AjaxSearch/AjaxSearch.inc.php";
 
+// Setup language variables
+global $_lang;
+foreach($lang as $key=>$value) {
+ if($_lang[$key]) { $lang[$key] = $_lang[$key]; }
+}
+extract($lang,EXTR_SKIP);
 
 // establish results page
 if (isset($AS_landing)) { // set in snippet
@@ -296,6 +302,10 @@ $offset = (isset($_GET['AS_offset']))? $_GET['AS_offset'] : 0;
 $SearchForm = '';
 $useAllWords = ($useAllWords) ? 1 : 0;
 
+if ($docgrp = $modx->getUserDocGroups()) {
+  $docgrp = implode(",", $docgrp);
+}
+
 if ($ajaxSearch) {
   $searchFormId = 'id="ajaxSearch_form"'.$newline;
 
@@ -313,6 +323,7 @@ if ($ajaxSearch) {
       moreResultsPage = $moreResultsPage;
       moreResultsText = '$moreResultsText';
       resultsIntroFailure = '$resultsIntroFailure';
+      docgrp = '$docgrp';
       //-->
     </script>
 EOD;
@@ -334,7 +345,7 @@ if (($validSearch && ($showSearchWithResults)) || $showSearchWithResults){
   <input id="ajaxSearch_input" type="text" name="search" value="'.$searchBoxVal.'" ';
   $SearchForm .= ($boxText)? 'onfocus="this.value=(this.value==\''.$boxText.'\')? \'\' : this.value ;" />' : '/>';
   $SearchForm .= $newline;
-  
+
   // the search button
   $SearchForm .= '<input id="ajaxSearch_submit" type="submit" name="sub" value="'.$searchButtonText.'" />';
   $SearchForm .= ($xhtmlStrict)? '</fieldset>' : '';
@@ -344,7 +355,7 @@ if (($validSearch && ($showSearchWithResults)) || $showSearchWithResults){
 if ($showResults) {
   if($validSearch) {
     //**********************************************************************************************************************
-    $rs = doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch);
+    $rs = doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp);
     //**********************************************************************************************************************
     $limit = $modx->recordCount($rs);
 

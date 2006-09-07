@@ -45,6 +45,7 @@
 	$mp[] = array("Inherit Parent Template","<strong>New:</strong> New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
 	$mp[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
 	$mp[] = array("TinyMCE","<strong>NEW:</strong> TinyMCE version 2.0.6.1 RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&webtheme=Web Theme;list;simple,advanced,full;simple","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+    $mp[] = array("Search Highlighting","Show search terms highlighted on page linked from search results. (Requires AjaxSearch snippet)",0,"$setupPath/plugin.searchhighlight.tpl","","OnWebPagePrerender");
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
 	$mm = &$moduleModules;

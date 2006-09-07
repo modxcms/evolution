@@ -24,13 +24,14 @@ class Wayfinder {
     var $cssTpl = FALSE;
     var $jsTpl = FALSE;
     var $rowIdPrefix = FALSE;
-    var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]');
+    var $useWeblinkUrl = TRUE;
+    var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]','[+wf.docid+]');
     var $ie = "\n";
     var $debugOutput = '<h2>WayFinder Debug Output:</h2>';
     
     function getMenuChildren($id=0, $sort='menuindex', $dir='ASC') {
         global $modx;
-        $fields = 'sc.id,sc.menutitle,sc.pagetitle,sc.menuindex,sc.published,sc.hidemenu,sc.parent,sc.isfolder,sc.description,sc.alias,sc.longtitle,sc.type,sc.link_attributes,if(sc.type=\'reference\',sc.content,\'\') as content';
+        $fields = 'sc.id,sc.menutitle,sc.pagetitle,sc.menuindex,sc.published,sc.hidemenu,sc.parent,sc.isfolder,sc.description,sc.alias,sc.longtitle,sc.type,sc.link_attributes,if(sc.type=\'reference\',sc.content,\'\') as content, sc.template';
         $tblsc = $modx->getFullTableName("site_content");
         $tbldg = $modx->getFullTableName("document_groups");
         
@@ -71,7 +72,7 @@ class Wayfinder {
         if (is_array($resource) && !empty($resource)) {
             $numItems = count($resource);
             foreach ($resource as $n => $v) {
-                if ($v['type'] == 'reference') {
+                if ($this->useWeblinkUrl !== 'FALSE' && $v['type'] == 'reference') {
                     $v['link'] = $v['content'];
                 } else {
                     $v['link'] = $modx->makeUrl($v['id']);
@@ -79,7 +80,7 @@ class Wayfinder {
                 $v['level'] = $curLevel;
                 $v['first'] = $firstItem;
                 $firstItem = 0;
-                if ($n == $numItems) {
+                if ($n == ($numItems-1) && $numItems > 1) {
                     $v['last'] = 1;
                 } else {
                     $v['last'] = 0;
@@ -113,14 +114,15 @@ class Wayfinder {
                 $wrapperClass = 'outercls';
             }
 
-            $useClass = $this->setItemClass($wrapperClass);
+            $classNames = $this->setItemClass($wrapperClass);
+            if ($classNames) $useClass = ' class="' . $classNames . '"';
             $phArray = array($output,$useClass);
 
             $output = str_replace($this->placeHolders,$phArray,$useChunk);
 
             if ($this->debug) {
                 $numDocs = $numItems;
-                $this->debugOutput .= '<strong>Nesting Complete:</strong> Previous ' . $numDocs . ' level ' . $curLevel . ' items inserted into ' . $usedTemplate . ' with class ' . $useClass . '<br/>';
+                $this->debugOutput .= '<strong>Nesting Complete:</strong> Previous ' . $numDocs . ' level ' . $curLevel . ' items inserted into ' . $usedTemplate . ' with class ' . $classNames . '<br/>';
             }
         }
 
@@ -138,6 +140,10 @@ class Wayfinder {
             $usedTemplate = 'innerHereTpl';
         } elseif ($resource['id'] == $modx->documentObject['id'] && $this->templates['hereTpl']) {
             $usedTemplate = 'hereTpl';
+        } elseif ($resource['isfolder'] && $this->templates['activeParentRowTpl'] && ($resource['level'] < $this->level || $this->level == 0) && $this->isHere($resource['id'])) {
+            $usedTemplate = 'activeParentRowTpl';
+        } elseif ($resource['isfolder'] && ($resource['template']=="0" || $resource['link_attributes'] == 'rel="category"') && $this->templates['categoryFoldersTpl'] && ($resource['level'] < $this->level || $this->level == 0)) {
+            $usedTemplate = 'categoryFoldersTpl';
         } elseif ($resource['isfolder'] && $this->templates['parentRowTpl'] && ($resource['level'] < $this->level || $this->level == 0)) {
             $usedTemplate = 'parentRowTpl';
         } elseif ($resource['level'] > 1 && $this->templates['innerRowTpl']) {
@@ -149,7 +155,8 @@ class Wayfinder {
         $useChunk = $this->templates[$usedTemplate];
 
         $useSub = $subMenu;
-        $useClass = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder'],$resource['type']);
+        $classNames = $this->setItemClass('rowcls',$resource['id'],$resource['first'],$resource['last'],$resource['level'],$resource['isfolder'],$resource['type']);
+        if ($classNames) $useClass = ' class="' . $classNames . '"';
         
         if ($this->rowIdPrefix) {
             $useId = ' id="' . $this->rowIdPrefix . $resource['id'] . '"';
@@ -157,13 +164,13 @@ class Wayfinder {
             $useId = '';
         }
 
-        $phArray = array($useSub,$useClass,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['link_attributes']);
+        $phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['link_attributes'],$resource['id']);
 
         $output .= str_replace($this->placeHolders,$phArray,$useChunk);
 
         if ($this->debug) {
             $this->debugOutput .= '<strong>Item Processed: (' . $resource['id'] . ') ' . $resource['pagetitle'] . '</strong><br/>
-            template: ' . $usedTemplate . ' | class: ' . $useClass . '<br/>
+            template: ' . $usedTemplate . ' | class: ' . $classNames . '<br/>
             level: ' . $resource['level'] . ' | First/Last: ' . $resource['first'] . '/' . $resource['last'] . '<br/>';
             $this->debugOutput .= $this->rowIdPrefix? 'Id applied: ' . $useId . '<br/>' : '';
         }
@@ -262,9 +269,9 @@ class Wayfinder {
             }
         }
 
-        if ($hasClass) {
+        /*if ($hasClass && !$this->noClassTag) {
             $returnClass = ' class="' . $returnClass . '"';
-        }
+        }*/
         return $returnClass;
     }
     
