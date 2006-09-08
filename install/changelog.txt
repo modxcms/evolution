@@ -3,10 +3,15 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1374 - September 7, 2006)
+MOD 0.9.5 (rev 1380 - September 8, 2006)
 ====================================
 
+* Updated Prototype/Scriptaculous to 1.6.4 (1379)
+* Tweak to allow weblogin to work with image button types (fixes IE failure) (1354)
+* [FS#300] Missing doctype and opening HTML tag on outer frameset. Also updated JS call (language="JavaScript" --> type="text/javascript") (1348)
 * Updated Wayfinder in core installation.
+* Fix membercheck snippet so that it works under PHP 4.3 and above. (1324)
+* Added an empty config.inc.php.blank file (to rename in your FTP program) for convenience on new installs (1321)
 * Added category support to all resource views and changed Categories tab to 'Combined View'
 * Updated AjaxSearch snippet to only search docs they have access to.  Updated install to include changes and added Search Highlighting plugin to the install.
 * [FS#170] Read the bug report (http://modxcms.com/bugs/task/170) for details, but basically, this kills the need to refresh multiple times to wipe out ALL cache files.
