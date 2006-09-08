@@ -400,20 +400,20 @@
 		} else {
 			echo "<span class=\"ok\">OK!</span></p>";
 		}
-		echo "<p>Checking if <span class=\"mono\">assets/cache/siteSnippets.cache.php</span> file is writable: ";
-		if(!is_writable("../assets/cache/siteSnippets.cache.php")) {
-			echo "<span class=\"notok\">Failed!</span></p>";
-			$errors += 1;
-		} else {
-			echo "<span class=\"ok\">OK!</span></p>";
-		}
-		echo "<p>Checking if <span class=\"mono\">assets/cache/sitePlugins.cache.php</span> file is writable: ";
-		if(!is_writable("../assets/cache/sitePlugins.cache.php")) {
-			echo "<span class=\"notok\">Failed!</span></p>";
-			$errors += 1;
-		} else {
-			echo "<span class=\"ok\">OK!</span></p>";
-		}
+	//	echo "<p>Checking if <span class=\"mono\">assets/cache/siteSnippets.cache.php</span> file is writable: ";
+	//	if(!is_writable("../assets/cache/siteSnippets.cache.php")) {
+	//		echo "<span class=\"notok\">Failed!</span></p>";
+	//		$errors += 1;
+	//	} else {
+	//		echo "<span class=\"ok\">OK!</span></p>";
+	//	}
+	//	echo "<p>Checking if <span class=\"mono\">assets/cache/sitePlugins.cache.php</span> file is writable: ";
+	//	if(!is_writable("../assets/cache/sitePlugins.cache.php")) {
+	//		echo "<span class=\"notok\">Failed!</span></p>";
+	//		$errors += 1;
+	//	} else {
+	//		echo "<span class=\"ok\">OK!</span></p>";
+	//	}
 		// images exists?
 		echo "<p>Checking if <span class=\"mono\">assets/images</span> directory exists: ";
 		if(!file_exists("../assets/images")) {
