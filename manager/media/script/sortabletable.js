@@ -93,7 +93,7 @@ SortableTable.prototype.initHeader = function (oSortTypes) {
 	for (var i = 0; i < l; i++) {
 		c = cells[i];
 		img = this.document.createElement("IMG");
-		img.src="media/images/icons/blank.png";
+		img.src="media/style/MODxGreen/images/icons/blank.png";
 		c.appendChild(img);
 		if (oSortTypes[i] != null) {
 			c._sortType = oSortTypes[i];

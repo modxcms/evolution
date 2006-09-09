@@ -3,12 +3,16 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1380 - September 8, 2006)
+MOD 0.9.5 (rev 1381 - September 9, 2006)
 ====================================
 
+* Added Document Manager language files to Manager (1381)
 * Updated Prototype/Scriptaculous to 1.6.4 (1379)
+* [FS#438] makeUrl() should use '&' for all query string parameters if '?' is present in FURL prefix. (1362)
 * Tweak to allow weblogin to work with image button types (fixes IE failure) (1354)
 * [FS#300] Missing doctype and opening HTML tag on outer frameset. Also updated JS call (language="JavaScript" --> type="text/javascript") (1348)
+* [FS#170] Implement logic to ensure all cache files are deleted with clear cache (1347)
+* [FS#458] Alter config.inc.php file to use single-quotes for DB name to allow for special characters ($ in particular) without parsing in php (1342)
 * Updated Wayfinder in core installation.
 * Fix membercheck snippet so that it works under PHP 4.3 and above. (1324)
 * Added an empty config.inc.php.blank file (to rename in your FTP program) for convenience on new installs (1321)
@@ -16,7 +20,6 @@ MOD 0.9.5 (rev 1380 - September 8, 2006)
 * Updated AjaxSearch snippet to only search docs they have access to.  Updated install to include changes and added Search Highlighting plugin to the install.
 * [FS#170] Read the bug report (http://modxcms.com/bugs/task/170) for details, but basically, this kills the need to refresh multiple times to wipe out ALL cache files.
 * [FS#458] The config.inc.php file was being written with all database login credentials surrounded with double quote marks. This made it so PHP wanted to interpolate the $ as a variable name rather than a literal character. The fix is simply to use single quote strings for that information.
-* [FS#438] makeUrl() should use '&' for all query string parameters if '?' is present in FURL prefix.
 * [FS#321] as directory structures such as: 2006/08/01 can now be created with friendly paths enabled (should please the bloggers ;) )
 * [FS#308] and [FS#476] Problem where pages could be referenced from fictitious directories when friendly alias paths are enabled and a document ID is used in the URL. For example, http://mysite.com/made-up-directory/8 will have returned document 8 even though that directory doesn't exist. The fix ties document IDs to the virtual directory structure when friendly alias paths are used preventing document IDs being referenced outside of their location in the structure.
 * [FS#414] Raymond's multi-select TV fix for saving TV values on PHP5. (has worked in majority of cases, but also appears it can be caused by some server configs)
