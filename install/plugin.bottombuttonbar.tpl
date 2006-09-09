@@ -27,6 +27,9 @@
 // Load the language file
 include $modx->config['base_path'].'manager/includes/lang/'.$modx->config['manager_language'].'.inc.php';
 
+//Get Manager Theme - added by garryn
+$manager_theme = $modx->config['manager_theme'] ? $modx->config['manager_theme'] : '';
+
 // Get a reference to the event
 $e = & $modx->Event;
 
