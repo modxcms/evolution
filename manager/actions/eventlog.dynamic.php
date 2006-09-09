@@ -26,17 +26,17 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once $base_path."manager/includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["view_log"],"js:menuAction(1)","media/style/.$manager_theme./images/icons/save.gif");
+$cm->addItem($_lang["view_log"],"js:menuAction(1)","media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/save.gif");
 $cm->addSeparator();
-$cm->addItem($_lang["delete"], "js:menuAction(2)","media/style/$manager_theme/images/icons/delete.gif",(!$modx->hasPermission('delete_eventlog') ? 1:0));
+$cm->addItem($_lang["delete"], "js:menuAction(2)","media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/delete.gif",(!$modx->hasPermission('delete_eventlog') ? 1:0));
 echo $cm->render();
 
 ?>
 
 <div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['eventlog']; ?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['eventlog']; ?></span>
 </div>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
   	function searchResource(){
 		document.resource.op.value="srch";
 		document.resource.submit();
@@ -129,7 +129,7 @@ echo $cm->render();
 	$grd->columns=$_lang["type"]." ,".$_lang["source"]." ,".$_lang["date"]." ,".$_lang["event_id"]." ,".$_lang["sysinfo_userid"];
 	$grd->colWidths="34,,150,60";
 	$grd->colAligns="center,,,center,center";
-	$grd->colTypes="template:<a class='gridRowIcon' href='#' onclick='return showContentMenu([+id+],event);' title='".$_lang["click_to_context"]."'><img src='media/style/$manager_theme/images/icons/event[+type+].gif' width='16' height='16' /></a>||template:<a href='index.php?a=115&id=[+id+]' title='".$_lang["click_to_view_details"]."'>[+source+]</a>||date: %d-%b-%Y %I:%M %p";
+	$grd->colTypes="template:<a class='gridRowIcon' href='#' onclick='return showContentMenu([+id+],event);' title='".$_lang["click_to_context"]."'><img src='media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/event[+type+].gif' width='16' height='16' /></a>||template:<a href='index.php?a=115&id=[+id+]' title='".$_lang["click_to_view_details"]."'>[+source+]</a>||date: %d-%b-%Y %I:%M %p";
 	if($listmode=='1') $grd->pageSize=0;
 	if($_REQUEST['op']=='reset') $grd->pageNumber = 1;
 	// render grid
