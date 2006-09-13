@@ -134,7 +134,7 @@ $modx->tstart = $tstart;
 $modx->stopOnNotice = false;
 
 // Don't show PHP errors to the public
-if(!$_SESSION['mgrValidated']) @ini_set("display_errors","0");
+if(!isset ($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) @ini_set("display_errors","0");
 
 // execute the parser
 $modx->executeParser();

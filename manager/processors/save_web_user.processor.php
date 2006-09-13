@@ -199,10 +199,10 @@ switch ($_POST['mode']) {
 			include_once "header.inc.php";		
 		?>
 			<div class="subTitle">
-			<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
+			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td id="Button1" onclick="window.location.href='index.php?a=99&r=2'"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
+					<td id="Button1" onclick="window.location.href='index.php?a=99&r=2'"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
 						<script>createButton(document.getElementById("Button1"));</script>
 					</td>
 				</tr>
@@ -378,16 +378,16 @@ switch ($_POST['mode']) {
 			include_once "header.inc.php";		
 		?>
 			<div class="subTitle">
-			<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
+			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td id="Button1" onclick="window.location.href='index.php?a=99&r=2'"><img src="media/images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
+					<td id="Button1" onclick="window.location.href='index.php?a=99&r=2'"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
 						<script>createButton(document.getElementById("Button1"));</script>
 					</td>
 				</tr>
 			</table>
 			</div>
-			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
+			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 			<p /><br />

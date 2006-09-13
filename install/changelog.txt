@@ -3,9 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1411 - September 13, 2006)
+MOD 0.9.5 (rev 1416 - September 13, 2006)
 ====================================
 
+* Fixed a few more broken image paths in manager files.
+* Corrected broken image paths when rendering date TV field.
+* index.php - fix for 'undefined index' for $_SESSION['mgrValidated'] on some setups when visitor is not logged in.
+* [FS#181] Removed stripslashes() call prior to merging TVs into document, tested out on a range of content combos and TVs and haven't found any adverse effects.
 * [FS#255] Added $modx->sendForward($docId, $httpResponseCode) method and modified all sendErrorPage and sendUnauthorizedPage functionality to use the new method with the proper response code.  You can use this to forward a request without redirection, to any MODx document with any valid HTTP response code that is appropriate.
 * Removed all remaining references to the visitor log tables, except those in the Backup Manager, which will allow users to manipulate the legacy tables if still in their database following upgrade.
 * Fixed some incorrect image paths in manager (eventlog_details.dynamic.php and Bottom Button Bar plugin)

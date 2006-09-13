@@ -185,9 +185,10 @@ class DocumentParser {
 
     function getSettings() {
         global $base_url, $base_path, $site_url;
-        if (file_exists($base_path . '/assets/cache/siteCache.idx.php')) {
-            include_once $base_path . '/assets/cache/siteCache.idx.php';
-        } else {
+        if ($included= file_exists($base_path . 'assets/cache/siteCache.idx.php')) {
+            $included= include_once $base_path . 'assets/cache/siteCache.idx.php';
+        } 
+        if (!$included) {
             $result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
             while ($row= $this->fetchRow($result, 'both')) {
                 $this->config[$row[0]]= $row[1];
@@ -482,7 +483,8 @@ class DocumentParser {
     }
 
     function checkPublishStatus() {
-        include $this->config["base_path"] . "assets/cache/sitePublishing.idx.php";
+        $cacheRefreshTime= 0;
+        @include $this->config["base_path"] . "assets/cache/sitePublishing.idx.php";
         $timeNow= time() + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
@@ -546,8 +548,7 @@ class DocumentParser {
             $fp= @ fopen($basepath . "/sitePublishing.idx.php", "wb");
             if ($fp) {
                 @ flock($fp, LOCK_EX);
-                $len= strlen($data);
-                @ fwrite($fp, "<?php \$cacheRefreshTime=$nextevent; ?>", $len);
+                @ fwrite($fp, "<?php \$cacheRefreshTime=$nextevent; ?>");
                 @ flock($fp, LOCK_UN);
                 @ fclose($fp);
             }
@@ -618,7 +619,7 @@ class DocumentParser {
                 $h= "300";
                 $value= getTVDisplayFormat($value[0], $value[1], $value[2], $value[3], $value[4]);
             }
-            $replace[$i]= stripslashes($value);
+            $replace[$i]= $value;
         }
         $template= str_replace($matches[0], $replace, $template);
 
@@ -699,8 +700,7 @@ class DocumentParser {
         eval ($pluginCode);
         $msg= ob_get_contents();
         ob_end_clean();
-        if ($msg /* $php_errormsg is not defined!!!! && $php_errormsg */
-            ) {
+        if ($msg && isset ($php_errormsg)) {
             if (!strpos($php_errormsg, 'Deprecated')) { // ignore php5 strict errors
                 // log error
                 $this->logEvent(1, 3, "<b>$php_errormsg</b><br /><br /> $msg", $this->Event->activePlugin . " - Plugin");
