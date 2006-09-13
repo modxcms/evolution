@@ -3,9 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 (rev 1392 - September 9, 2006)
+MOD 0.9.5 (rev 1411 - September 13, 2006)
 ====================================
 
+* [FS#255] Added $modx->sendForward($docId, $httpResponseCode) method and modified all sendErrorPage and sendUnauthorizedPage functionality to use the new method with the proper response code.  You can use this to forward a request without redirection, to any MODx document with any valid HTTP response code that is appropriate.
+* Removed all remaining references to the visitor log tables, except those in the Backup Manager, which will allow users to manipulate the legacy tables if still in their database following upgrade.
+* Fixed some incorrect image paths in manager (eventlog_details.dynamic.php and Bottom Button Bar plugin)
 * Added Document Manager language files to Manager (1381)
 * Updated Prototype/Scriptaculous to 1.6.4 (1379)
 * [FS#438] makeUrl() should use '&' for all query string parameters if '?' is present in FURL prefix. (1362)

@@ -49,7 +49,7 @@ else{
 ?>
 
 <div class="subTitle">
-	<span class="right"><img src="media/" . ($manager_theme ? "$manager_theme/":"") ."images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['eventlog']; ?></span>
+	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['eventlog']; ?></span>
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
@@ -61,7 +61,7 @@ else{
 		</tr>
 	</table>
 </div>
-<script type="text/javascript">
+<script language="JavaScript" type="text/javascript">
 	function deletelog() {
 		if(confirm("<?php echo $_lang['confirm_delete_eventlog']; ?>")==true) {
 			document.location.href="index.php?id=" + document.resource.id.value + "&a=116";
@@ -79,12 +79,11 @@ $date = strftime("%d-%b-%Y %I:%M %p",$content["createdon"]);
 if($content["type"]==1) $msgtype = $_lang["information"];
 else if($content["type"]==2) $msgtype = $_lang["warning"];
 else if($content["type"]==3) $msgtype = $_lang["error"];
-
-$theme = $manager_theme ? "$manager_theme/":"";
+$useTheme = $manager_theme ? "$manager_theme/":"";
 echo <<<HTML
 	<table border="0" width="100%">
 	  <tr><td colspan="4">
-		<div class="warning"><img src="media/style/{$theme}images/icons/event{$content["type"]}.gif" align="absmiddle" /> {$msgtype}</div><br />
+		<div class="warning"><img src="media/style/{$useTheme}images/icons/event{$content["type"]}.gif" align="absmiddle" /> {$msgtype}</div><br />
 	  </td></tr>
 	  <tr>
 		<td width="25%" valign="top">{$_lang["event_id"]}:</td>

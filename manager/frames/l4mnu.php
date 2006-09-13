@@ -129,8 +129,6 @@ echo $list;
 <!-- Reports -->
 <li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;"><?php echo $_lang["reports"]; ?></a>
 <ul class="subnav" id="menu1-2">
-<!--who's-online><li><a onclick="this.blur();" href="index.php?a=69" target="main"><?php echo $_lang["visitor_stats_online"]; ?></a></li-->
-<!--site-stats><li><a onclick="this.blur();" href="index.php?a=68" target="main"><?php echo $_lang["visitor_stats"]; ?></a></li-->
 <!--site-sched--><li><a onclick="this.blur();" href="index.php?a=70" target="main"><?php echo $_lang["site_schedule"]; ?></a></li>
 <?php if($modx->hasPermission('view_eventlog')) { ?>
 <!--manager-events--><li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
