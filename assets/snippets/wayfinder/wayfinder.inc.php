@@ -25,13 +25,19 @@ class Wayfinder {
     var $jsTpl = FALSE;
     var $rowIdPrefix = FALSE;
     var $useWeblinkUrl = TRUE;
+    var $modxVersion = array();
     var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]','[+wf.docid+]');
     var $ie = "\n";
     var $debugOutput = '<h2>WayFinder Debug Output:</h2>';
     
     function getMenuChildren($id=0, $sort='menuindex', $dir='ASC') {
         global $modx;
-        $fields = 'sc.id,sc.menutitle,sc.pagetitle,sc.menuindex,sc.published,sc.hidemenu,sc.parent,sc.isfolder,sc.description,sc.alias,sc.longtitle,sc.type,sc.link_attributes,if(sc.type=\'reference\',sc.content,\'\') as content, sc.template';
+        $fields = 'sc.id,sc.menutitle,sc.pagetitle,sc.introtext,sc.menuindex,sc.published,sc.hidemenu,sc.parent,sc.isfolder,sc.description,sc.alias,sc.longtitle,sc.type,if(sc.type=\'reference\',sc.content,\'\') as content, sc.template';
+        
+        if (substr($this->modxVersion['code_name'],-4) >= 1392) {
+            $fields .= ',sc.link_attributes';
+        }
+        
         $tblsc = $modx->getFullTableName("site_content");
         $tbldg = $modx->getFullTableName("document_groups");
         
@@ -142,7 +148,7 @@ class Wayfinder {
             $usedTemplate = 'hereTpl';
         } elseif ($resource['isfolder'] && $this->templates['activeParentRowTpl'] && ($resource['level'] < $this->level || $this->level == 0) && $this->isHere($resource['id'])) {
             $usedTemplate = 'activeParentRowTpl';
-        } elseif ($resource['isfolder'] && ($resource['template']=="0" || $resource['link_attributes'] == 'rel="category"') && $this->templates['categoryFoldersTpl'] && ($resource['level'] < $this->level || $this->level == 0)) {
+        } elseif ($resource['isfolder'] && ($resource['template']=="0" || is_numeric(strpos($resource['link_attributes'],'rel="category"'))) && $this->templates['categoryFoldersTpl'] && ($resource['level'] < $this->level || $this->level == 0)) {
             $usedTemplate = 'categoryFoldersTpl';
         } elseif ($resource['isfolder'] && $this->templates['parentRowTpl'] && ($resource['level'] < $this->level || $this->level == 0)) {
             $usedTemplate = 'parentRowTpl';
@@ -269,9 +275,6 @@ class Wayfinder {
             }
         }
 
-        /*if ($hasClass && !$this->noClassTag) {
-            $returnClass = ' class="' . $returnClass . '"';
-        }*/
         return $returnClass;
     }
     

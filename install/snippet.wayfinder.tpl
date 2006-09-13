@@ -2,24 +2,10 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 1.0
+ Version: beta3
  Authors: Ryan Thrash (vertexworks.com)
           Kyle Jaebker (muddydogpaws.com)
- Date: August 16, 2006
-
- Changelog:
-    August 02, 2006 - Initial Public Beta released
-    August 03, 2006 - Fixed parent class bug
-                    - Added unique row id ability
-                    - Removed ultimate parent code (just use the snippet in your call)
-    August 16, 2006 - Added support for link_attributes
-                    - Made custom version of getActiveChildren in class
-                    - Added class for weblinks
-                    - Weblinks will display the content link instead of link to id
-    Sept 06, 2006   - Added category support, with additional template
-                    - Added active parent template
-                    - Added docid placeholder for output of docid
-                    - Added wf.classnames placeholder
+ Date: September 12, 2006
 ::::::::::::::::::::::::::::::::::::::::
 Description:
     Totally refactored from original DropMenu nav builder to make it easier to
@@ -83,6 +69,8 @@ $wf->templates['categoryFoldersTpl'] = isset($categoryFoldersTpl) ? $categoryFol
 //setup here checking array
 $wf->parentTree = $modx->getParentIds($modx->documentIdentifier);
 $wf->parentTree[] = $modx->documentIdentifier;
+//Get version info
+$wf->modxVersion = $modx->getVersionData();
 
 if ($wf->debug) {
     $wf->debugOutput .= '<p>Starting Menu from Docid: ' . $wf->id . '<br/>';

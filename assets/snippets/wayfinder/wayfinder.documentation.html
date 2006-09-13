@@ -281,10 +281,83 @@ table thead tr {
 
 <p>* - uses regClientCSS or regClientStartupScript, this may not work correctly unless you have patched the parser with this: <a href="http://modxcms.com/forums/index.php/topic,1942.msg18783.html#msg18783">http://modxcms.com/forums/index.php/topic,1942.msg18783.html#msg18783</a></p>
 
+<hr>
+
 <h2>Example Call:</h2>
 [<!-- -->[Wayfinder? &amp;startId=`0`]<!-- -->]
 <br/><br/>
 [<!-- -->[Wayfinder? &amp;startId=`0` &amp;level=`3` &amp;hideSubMenus=`1` &amp;outerTpl=`wfOuter` &amp;rowTpl=`wfRow` &amp;hereTpl=`wfHere`]<!-- -->]
 
+<hr>
+
+<h2>Change Log</h2>
+<table cellspacing="0" cellpadding="8px" border="0">
+	<thead>
+		<tr>
+			<th>Revision</th>
+			<th>Author</th>
+			<th>Date</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>1396</td>
+            <td>kjaebker</td>
+            <td>3:48:10 PM, Tuesday, September 12, 2006</td>
+            <td>updated to include version checking so it works with releases prior to 0.9.5</td>
+		</tr>
+		<tr class="altrow">
+            <td>1369</td>
+            <td>kjaebker</td>
+            <td>4:30:45 PM, Wednesday, September 06, 2006</td>
+            <td>Removed noClassTag parameter and added separate placeholder for class names
+		</tr>
+		<tr>
+            <td>1368</td>
+            <td>kjaebker</td>
+            <td>4:17:19 PM, Wednesday, September 06, 2006</td>
+            <td>
+            - Added category support, with additional template<br/>
+            - Added active parent template<br/>
+            - Added docid placeholder for output of docid<br/>
+            - Added noClassTag param to allow for output of just class names</td>
+		</tr>
+		<tr class="altrow">
+            <td>1360</td>
+            <td>kjaebker</td>
+            <td>4:12:41 PM, Tuesday, September 05, 2006</td>
+            <td>fix for last item detection</td>
+		</tr>
+		<tr>
+            <td>1327</td>
+            <td>kjaebker</td>
+            <td>10:12:23 PM, Monday, August 21, 2006</td>
+            <td>Updated to add parameter for using content for url or using docId for weblinks.</td>
+		</tr>
+        <tr class="altrow">
+            <td>1300</td>
+            <td>kjaebker</td>
+            <td>3:23:59 PM, Wednesday, August 16, 2006</td>
+            <td>
+            - Added support for link_attributes<br/>
+            - Made custom version of getActiveChildren in class<br/>
+            - Added class for weblinks<br/>
+            - Weblinks will display the content link instead of link to id</td>
+		</tr>
+		<tr>
+            <td>1233</td>
+            <td>kjaebker</td>
+            <td>3:35:58 PM, Friday, August 04, 2006</td>
+            <td>Added parentRowHereTpl template, added selfClass, updated docs</td>
+		</tr>
+		<tr class="altrow">
+            <td>1228</td>
+            <td>kjaebker</td>
+            <td>4:25:55 PM, Thursday, August 03, 2006</td>
+            <td>fixed parent class bug, added unique id param, removed ultimateparent code</td>
+		</tr>
+    </tbody>
+</table>
 </body>
 </html>
