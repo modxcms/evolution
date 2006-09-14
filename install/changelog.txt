@@ -3,10 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 2 (rev 1417 - September 13, 2006)
+MOD 0.9.5 beta 2 (rev 1418 - September 14, 2006)
 ====================================
 
-* Updated Wayfinder to latest version.
+* Remove hard coded default Manager style (1418)
+* Add 'keywords' option to meta tag manager (1418)
+* Updated Wayfinder to latest version for 0.9.5 beta2 build. (1396-1398)
 * Fixed a few more broken image paths in manager files.
 * Corrected broken image paths when rendering date TV field.
 * index.php - fix for 'undefined index' for $_SESSION['mgrValidated'] on some setups when visitor is not logged in.

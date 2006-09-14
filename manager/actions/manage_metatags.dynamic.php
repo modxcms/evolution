@@ -123,6 +123,7 @@ $modx->manager->initPageViewState();
         			<option value="expires;1">expires</option>
         			<option value="generator;0">generator</option>
         			<option value="googlebot;0">googlebot</option>
+        			<option value="keywords;0">keywords</option>
         			<option value="MSSmartTagsPreventParsing;0">MSSmartTagsPreventParsing</option>
         			<option value="owner;0">owner</option>
         			<option value="rating;0">rating</option>

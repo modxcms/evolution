@@ -951,7 +951,6 @@ function updateContentType(){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
             <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.forms['settings'].theme_refresher.value = Date.parse(new Date())">
-            <option value="">Default</option>
              <?php
 				$dir = dir("media/style/");
 				while ($file = $dir->read()) {
