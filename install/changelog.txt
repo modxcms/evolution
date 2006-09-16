@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1432 - September 16, 2006)
+MOD 0.9.5 beta 3 (rev 1433 - September 16, 2006)
 ====================================
 
+* Modified QuickEdit plugin to only execute if manager session is valid and to check if the Output class exists before calling include_once on it again.  Should save .02 to .1s per request when manager is not logged in. (1433)
 * [FS#387] Fix for Firefox browser with caching features disabled. (1432)
 * Updated the SLLists include for Doc Manager with full php tags. (1431)
 * [FS#276] Error prevented empty tags being rendered when using HTML Generic Tag widget when no value is specified (same problem with Image widget was fixed by Adam in commit #869). (1431)

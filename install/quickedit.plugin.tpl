@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 // Don't do anything if we aren't logged in
-if(!isset($_SESSION['mrgValidated'])) {
+if(isset($_SESSION['mgrValidated']) && $_SESSION['mgrValidated']) {
 
  // Set configuration variables if not already set
  if(!isset($mod_path)) { $mod_path = 'assets/modules/quick_edit'; }
@@ -67,7 +67,7 @@ if(!isset($_SESSION['mrgValidated'])) {
 
   // Set the mod_path as a global variable
   $GLOBALS['quick_edit_path'] = $mod_path;
-  include_once($mod_path.'/output.class.inc.php');
+  if (!class_exists('Output')) include_once($mod_path.'/output.class.inc.php');
 
   $outputObject = new Output;
 
