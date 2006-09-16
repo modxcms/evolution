@@ -36,7 +36,7 @@
 	For more information on MODx please visit http://modxcms.com/
 	
 **************************************************************************
-    Originall based on Etomite by Alex Butter
+    Originally based on Etomite by Alex Butter
 **************************************************************************
 */	
 
@@ -70,15 +70,17 @@ if(strlen($_SERVER['HTTP_USER_AGENT'])>255) $_SERVER['HTTP_USER_AGENT'] = substr
 if(isset($_GET['q'])) $_GET['q'] = preg_replace("/[^A-Za-z0-9_\-\.\/]/", "", $_GET['q']);
 
 // first, set some settings, and address some IE issues
-@ini_set('session.use_trans_sid', false);
-@ini_set("url_rewriter.tags",'');
+@ini_set('url_rewriter.tags', '');
+@ini_set('session.use_trans_sid', 0);
+@ini_set('session.use_only_cookies',1);
+session_cache_limiter('');
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
+header('Cache-Control: private, must-revalidate');
 ob_start();
 error_reporting(E_ALL);
 
 /**
  *	Filename: index.php
- *	Function: This file loads and executes the parser. *
  */
 
 define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
@@ -134,7 +136,9 @@ $modx->tstart = $tstart;
 $modx->stopOnNotice = false;
 
 // Don't show PHP errors to the public
-if(!isset ($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) @ini_set("display_errors","0");
+if(!isset ($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
+    @ini_set("display_errors","0");
+}
 
 // execute the parser
 $modx->executeParser();
