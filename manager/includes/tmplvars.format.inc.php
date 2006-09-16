@@ -150,7 +150,7 @@ EOD;
 				for($i = 0;$i<count($value); $i++){
 					$tagvalue = is_array($value[$i]) ? implode(" ",$value[$i]): $value[$i];
 					if(!$url) $url = $name;
-					$o.= "<$tagname id='".($tagid ? $tagid:"tv".$id)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["attrib"]? " ".$params["attrib"]:"").">".$tagvalue."</$tagname>";
+					if ($tagvalue) $o.= "<$tagname id='".($tagid ? $tagid:"tv".$id)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["attrib"]? " ".$params["attrib"]:"").">".$tagvalue."</$tagname>";
 				}				
 				break;
 

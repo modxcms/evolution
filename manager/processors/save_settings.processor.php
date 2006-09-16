@@ -31,10 +31,8 @@ include_once "cache_sync.class.processor.php";
 $sync = new synccache();
 $sync->setCachepath("../assets/cache/");
 $sync->setReport(false);
-$sync->emptyCache(); // first empty the cache		
-//$header="Location: index.php?a=7&r=10";   // use the new following code to fix the infinite refresh!
-$header="Location: index.php?a=7";
+$sync->emptyCache(); // first empty the cache
+$_SESSION['mgrRefreshTheme'] = 1;			
+$header="Location: index.php?a=7&r=10";
 header($header);
-
-
 ?>

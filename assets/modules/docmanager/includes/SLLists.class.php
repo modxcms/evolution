@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 * This class implements a PHP wrapper around the scriptaculous javascript libraries created by
 * Thomas Fuchs (http://script.aculo.us/).
@@ -97,4 +97,4 @@ class SLLists {
 	}
 
 }
-
+?>

@@ -7,7 +7,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 <div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['cleaningup']; ?></div><div class="sectionBody">
 <p><?php echo $_lang['actioncomplete']; ?></p>
-<?php if($_REQUEST['r']==10) { ?>
+<?php if($_REQUEST['r']==10 && $_SESSION['mgrRefreshTheme'] == 1) {
+	$_SESSION['mgrRefreshTheme'] = 0;?>
 <script language="JavaScript">
 function goHome() {
 	top.location.reload();

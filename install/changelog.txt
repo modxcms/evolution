@@ -3,9 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1430 - September 16, 2006)
+MOD 0.9.5 beta 3 (rev 1431 - September 16, 2006)
 ====================================
 
+* Updated the SLLists include for Doc Manager with full php tags. (1431)
+* [FS#276] Error prevented empty tags being rendered when using HTML Generic Tag widget when no value is specified (same problem with Image widget was fixed by Adam in commit #869). (1431)
+* [FS#259] Amended language string that was referencing snippets, and not chunks. (1431)
+* [FS#198] This fix uses a session value to allow the full manager to refresh when a theme is changed and prevents the manager being locked in an endless loop. (1431)
 * Added ability to delete categories (1430)
 * Modified export_site.static.php to handle proper response codes (1429)
 * Modified getSettings() to only include or load system/user settings once per request (1429)
