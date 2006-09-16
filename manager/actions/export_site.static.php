@@ -142,17 +142,17 @@ echo $_lang['export_site_message'];
 			}
 		} else {
 			echo $_lang['export_site_failed']." Could not retrieve document.<br />";
-			return FALSE;
+//			return FALSE;
 		}
 		return TRUE;
 	}
 
 	function getPageName($docid, $alias, $prefix, $suffix) {
 		if(empty($alias)) {
-			$filename = $prefix.$id.$suffix;
+			$filename = $prefix.$docid.$suffix;
 		} else {
 			$pa = pathinfo($alias); // get path info array
-			$tsuffix = !empty($pa[extension]) ? '':$suffix;
+			$tsuffix = !empty($pa['extension']) ? '':$suffix;
 			$filename = $prefix.$alias.$tsuffix;
 		}
 		return $filename;

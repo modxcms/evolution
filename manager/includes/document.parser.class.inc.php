@@ -10,7 +10,8 @@ class DocumentParser {
 
     var $pluginEvent;
 
-    var $rs, $result, $sql, $table_prefix, $config, $debug, $documentIdentifier, $documentMethod, $documentGenerated, $documentContent, $tstart, $minParserPasses, $maxParserPasses, $documentObject, $templateObject, $snippetObjects, $stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName, $aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache, $snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir, $placeholders, $sjscripts, $jscripts, $loadedjscripts, $documentMap;
+    var $config= null;
+    var $rs, $result, $sql, $table_prefix, $debug, $documentIdentifier, $documentMethod, $documentGenerated, $documentContent, $tstart, $minParserPasses, $maxParserPasses, $documentObject, $templateObject, $snippetObjects, $stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName, $aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache, $snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir, $placeholders, $sjscripts, $jscripts, $loadedjscripts, $documentMap;
     var $forwards= 3;
 
     // constructor
@@ -185,47 +186,49 @@ class DocumentParser {
 
     function getSettings() {
         global $base_url, $base_path, $site_url;
-        if ($included= file_exists($base_path . 'assets/cache/siteCache.idx.php')) {
-            $included= include_once $base_path . 'assets/cache/siteCache.idx.php';
-        } 
-        if (!$included) {
-            $result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
-            while ($row= $this->fetchRow($result, 'both')) {
-                $this->config[$row[0]]= $row[1];
+        if (!is_array($this->config) || empty ($this->config)) {
+            if ($included= file_exists($base_path . 'assets/cache/siteCache.idx.php')) {
+                $included= include_once ($base_path . 'assets/cache/siteCache.idx.php');
+            } 
+            if (!$included) {
+                $result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
+                while ($row= $this->fetchRow($result, 'both')) {
+                    $this->config[$row[0]]= $row[1];
+                }
             }
-        }
-
-        // store base_url and base_path inside config array
-        $this->config['base_url']= $base_url;
-        $this->config['base_path']= $base_path;
-        $this->config['site_url']= $site_url;
-
-        // load user setting if user is logged in
-        if ($id= $this->getLoginUserID()) {
-            $usrType= $this->getLoginUserType();
-            if (isset ($usrType) && $usrType != 'web')
-                $usrType= 'mgr';
-
-            if ($usrType == 'mgr') {
-                // invoke the OnBeforeManagerInit event
-                $this->invokeEvent("OnBeforeManagerInit");
+    
+            // store base_url and base_path inside config array
+            $this->config['base_url']= $base_url;
+            $this->config['base_path']= $base_path;
+            $this->config['site_url']= $site_url;
+    
+            // load user setting if user is logged in
+            if ($id= $this->getLoginUserID()) {
+                $usrType= $this->getLoginUserType();
+                if (isset ($usrType) && $usrType != 'web')
+                    $usrType= 'mgr';
+    
+                if ($usrType == 'mgr') {
+                    // invoke the OnBeforeManagerInit event
+                    $this->invokeEvent("OnBeforeManagerInit");
+                }
+    
+                if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
+                    $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
+                } else {
+                    $usrSettings= array ();
+                    if ($usrType == 'web')
+                        $query= $this->getFullTableName('web_user_settings') . ' WHERE webuser=\'' . $id . '\'';
+                    else
+                        $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $id . '\'';
+                    $result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $query);
+                    while ($row= $this->fetchRow($result, 'both'))
+                        $usrSettings[$row[0]]= $row[1];
+                    if (isset ($usrType))
+                        $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
+                }
+                $this->config= array_merge($this->config, $usrSettings);
             }
-
-            if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
-                $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
-            } else {
-                $usrSettings= array ();
-                if ($usrType == 'web')
-                    $query= $this->getFullTableName('web_user_settings') . ' WHERE webuser=\'' . $id . '\'';
-                else
-                    $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $id . '\'';
-                $result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $query);
-                while ($row= $this->fetchRow($result, 'both'))
-                    $usrSettings[$row[0]]= $row[1];
-                if (isset ($usrType))
-                    $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
-            }
-            $this->config= array_merge($this->config, $usrSettings);
         }
     }
 
@@ -556,7 +559,6 @@ class DocumentParser {
     }
 
     function postProcess() {
-
         // if the current document was generated, cache it!
         if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
             $basepath= $this->config["base_path"] . "assets/cache";
