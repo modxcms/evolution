@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 2 (rev 1429 - September 16, 2006)
+MOD 0.9.5 beta 3 (rev 1430 - September 16, 2006)
 ====================================
 
+* Added ability to delete categories (1430)
 * Modified export_site.static.php to handle proper response codes (1429)
 * Modified getSettings() to only include or load system/user settings once per request (1429)
 * Remove hard coded default Manager style (1418)

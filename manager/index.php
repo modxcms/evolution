@@ -849,7 +849,11 @@ switch ($action) {
 		// get the event log delete processor
 		include_once "processors/delete_eventlog.processor.php";
 	break;
-	
+
+    case 501:
+        //delete category
+        include_once "processors/delete_category.processor.php";
+    break;
 /********************************************************************/
 /* default action: show not implemented message						*/
 /********************************************************************/

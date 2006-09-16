@@ -1091,6 +1091,7 @@ $_lang["existing_category"] = 'Existing Category';
 $_lang["new_category"] = 'New Category';
 $_lang["category_heading"] = 'Category';
 $_lang["category_msg"] = 'Here you can view and edit all resources grouped by category.';
+$_lang["delete_category"] = 'Delete';
 
 //Doc Manager Module
 //-- titles

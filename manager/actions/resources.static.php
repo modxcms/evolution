@@ -140,60 +140,73 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 		<?php
 		$displayInfo = array();
 		$tablePre = $dbase . '.' . $table_prefix;
-		if($modx->hasPermission('edit_plugin')) {
+		$hasPermission = 0;
+		if($modx->hasPermission('edit_plugin') || $modx->hasPermission('new_plugin')) {
             $displayInfo['plugin'] = array('table'=>'site_plugins','action'=>102,'name'=>$_lang['manage_plugins']);
+            $hasPermission = 1;
         }
-        if($modx->hasPermission('edit_snippet')) {
+        if($modx->hasPermission('edit_snippet') || $modx->hasPermission('new_snippet')) {
             $displayInfo['snippet'] = array('table'=>'site_snippets','action'=>22,'name'=>$_lang['manage_snippets']);
             $displayInfo['htmlsnippet'] = array('table'=>'site_htmlsnippets','action'=>78,'name'=>$_lang['manage_htmlsnippets']);
+            $hasPermission = 1;
         }
-        if($modx->hasPermission('edit_template')) {
+        if($modx->hasPermission('edit_template') || $modx->hasPermission('new_template')) {
             $displayInfo['templates'] = array('table'=>'site_templates','action'=>16,'name'=>$_lang['manage_templates']);
             $displayInfo['tmplvars'] = array('table'=>'site_tmplvars','action'=>301,'name'=>$_lang['tmplvars']);
+            $hasPermission = 1;
         }
-        if($modx->hasPermission('edit_module')) {
+        if($modx->hasPermission('edit_module') || $modx->hasPermission('new_module')) {
             $displayInfo['modules'] = array('table'=>'site_modules','action'=>108,'name'=>$_lang['modules']);
+            $hasPermission = 1;
         }
 
-        $finalInfo = array();
+        if($hasPermission) {
+            $finalInfo = array();
 
-        foreach ($displayInfo as $n => $v) {
-            $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
-            $sql = 'SELECT '.$nameField.' as name, '.$tablePre.$v['table'].'.id, description, locked, '.$tablePre.'categories.category FROM '.$tablePre.$v['table'].' left join '.$tablePre.'categories on '.$tablePre.$v['table'].'.category = '.$tablePre.'categories.id ORDER BY 5,1';
-            $rs = mysql_query($sql);
-    		$limit = mysql_num_rows($rs);
-    		if($limit>0){
-    			for($i=0; $i<$limit; $i++) {
-                    $row = mysql_fetch_assoc($rs);
-                    $row['type'] = $v['name'];
-                    $row['action'] = $v['action'];
-                    if (empty($row['category'])) {$row['category'] = $_lang['no_category'];}
-                    $finalInfo[] = $row;
-                }
-    		}
-        }
-
-        foreach($finalInfo as $n => $v) {
-            $category[$n] = $v['category'];
-            $name[$n] = $v['name'];
-        }
-
-        array_multisort($category, SORT_ASC, $name, SORT_ASC, $finalInfo);
-
-		$preCat = '';
-		$insideUl = 0;
-		foreach($finalInfo as $n => $v) {
-			if ($preCat !== $v['category']) {
-                echo $insideUl? '</ul>': '';
-                echo '<li><strong>'.$v['category'].'</strong><ul>';
-                $insideUl = 1;
+            foreach ($displayInfo as $n => $v) {
+                $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
+                $sql = 'SELECT '.$nameField.' as name, '.$tablePre.$v['table'].'.id, description, locked, '.$tablePre.'categories.category, '.$tablePre.'categories.id as catid FROM '.$tablePre.$v['table'].' left join '.$tablePre.'categories on '.$tablePre.$v['table'].'.category = '.$tablePre.'categories.id ORDER BY 5,1';
+                $rs = mysql_query($sql);
+        		$limit = mysql_num_rows($rs);
+        		if($limit>0){
+        			for($i=0; $i<$limit; $i++) {
+                        $row = mysql_fetch_assoc($rs);
+                        $row['type'] = $v['name'];
+                        $row['action'] = $v['action'];
+                        if (empty($row['category'])) {$row['category'] = $_lang['no_category'];}
+                        $finalInfo[] = $row;
+                    }
+        		}
             }
+
+            foreach($finalInfo as $n => $v) {
+                $category[$n] = $v['category'];
+                $name[$n] = $v['name'];
+            }
+
+            array_multisort($category, SORT_ASC, $name, SORT_ASC, $finalInfo);
+
+    		$preCat = '';
+    		$insideUl = 0;
+    		foreach($finalInfo as $n => $v) {
+    			if ($preCat !== $v['category']) {
+                    echo $insideUl? '</ul>': '';
+                    if ($v['category'] == $_lang['no_category']) {
+                        echo '<li><strong>'.$v['category'].'</strong><ul>';
+                    } else {
+                        echo '<li><strong>'.$v['category'].'</strong> (<a href="index.php?a=501&catId='.$v['catid'].'">'.$_lang['delete_category'].'</a>)<ul>';
+                    }
+                    $insideUl = 1;
+                }
 		?>
 			<li><span style="width: 200px"><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo $v['description']!='' ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked']==1 ? ' <i><small>('.$_lang['plugin_locked_message'].')</small></i>' : "" ; ?></li>
 		<?php
-		$preCat = $v['category'];
+    		$preCat = $v['category'];
+            }
+            echo $insideUl? '</ul>': '';
+        ?>
+        <?php
         }
-        echo $insideUl? '</ul>': '';
 		?>
 		</ul>
 	</div>
