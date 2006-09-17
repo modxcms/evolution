@@ -37,7 +37,7 @@ class DocumentParser {
         switch ($extname) {
             // Database API
             case 'DBAPI' :
-                if (!include_once $base_path . '/manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
+                if (!include_once $base_path . 'manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
                     return false;
                 $this->db= new DBAPI;
                 return true;
@@ -45,7 +45,7 @@ class DocumentParser {
 
                 // Manager API
             case 'ManagerAPI' :
-                if (!include_once $base_path . '/manager/includes/extenders/manager.api.class.inc.php')
+                if (!include_once $base_path . 'manager/includes/extenders/manager.api.class.inc.php')
                     return false;
                 $this->manager= new ManagerAPI;
                 return true;
@@ -61,7 +61,7 @@ class DocumentParser {
         return ((float) $usec + (float) $sec);
     }
 
-    function sendRedirect($url, $count_attempts= 0, $type= '') {
+    function sendRedirect($url, $count_attempts= 0, $type= '', $responseCode= '') {
         if (empty ($url)) {
             return false;
         } else {
@@ -89,16 +89,18 @@ class DocumentParser {
             }
             elseif ($type == 'REDIRECT_HEADER' || empty ($type)) {
                 // check if url has /$base_url 
-                global $base_url, $site_url;
-                if (substr($url, 0, strlen($base_url)) == $base_url) {
+                if (substr($url, 0, strlen($this->config['base_url'])) == $this->config['base_url']) {
                     // append $site_url to make it work with Location:
-                    $url= $site_url . substr($url, strlen($base_url));
+                    $url= $this->config['site_url'] . substr($url, strlen($this->config['base_url']));
                 }
                 if (strpos($url, "\n") === false) {
                     $header= 'Location: ' . $url;
                 } else {
                     $this->messageQuit('No newline allowed in redirect url.');
                 }
+            }
+            if ($responseCode) {
+                header($responseCode);
             }
             header($header);
             $this->postProcess();
