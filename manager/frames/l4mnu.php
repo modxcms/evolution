@@ -58,6 +58,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <body>
 <form name="menuForm" action="l4mnu.php">
 <div id="Navcontainer">
+<div id="divNav">
 
 <ul id="nav">
 <!-- Site -->
@@ -171,7 +172,7 @@ echo $list;
 
 </ul>
 
-</div>
+</div></div>
 </form>
 </body>
 </html>
