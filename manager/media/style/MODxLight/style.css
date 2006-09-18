@@ -592,7 +592,7 @@ img.loginCaptcha {
 
 #topbar {
 	margin: 0;
-	background: silver;
+	background: #e4e4e4;
 	color: #000;
 }
 #topbar a:link{
@@ -618,10 +618,12 @@ img.loginCaptcha {
 
 
 /* Top Navbar of snap in top menu bar layout*/
+#topMenu {
+    background: #e4e4e4;
+}
 #Navcontainer {
-	width: 100%;
+    padding-left: 10px;
     color: #fff;
-    background: #DBDBDB;
 }
 
 ul#nav {
@@ -637,18 +639,19 @@ ul#nav {
     height: 25px;
     position: relative;
     z-index: 500;
-    margin: 0;
-    padding: 0;
+    margin: 0 0 0 -10px;
+    padding: 0 0 0 10px;
 }
     #nav li { 
         list-style-type: none;
         display: block;
         float: left;
         width: auto;
-        margin: 0;
+        margin: 0 1px 0 0;
     }
         #nav a {
-            color: #677E32;
+            color: #438d29;
+            background: #d4d4d4;
             font-weight: bold;
             text-decoration: none;
             display: block;
@@ -659,18 +662,13 @@ ul#nav {
             padding: 4px 10px 4px;
         }
         #nav a:hover {
-            border: 1px solid darkgreen !important;
-            border-bottom-width: 0 !important;
-            padding: 4px 9px 5px;
-            background: #9EBC5A;
-            color: #fff;
+            background: #e4e4e4; /* 9ebc5a */
         }
         #nav a:active {
            padding: 5px 8px 4px 10px;
-           color: #fff;
         }
     #nav li.active a {
-        background: #677E32;
+        background: #438d29;
         color: #fff;
         font-weight: bold;
         text-decoration: none;
@@ -679,8 +677,8 @@ ul#nav {
         position: relative;
         z-index: 999;
         padding: 3px 9px 5px;
-        border: 1px solid #83a03f;
-        border-right-color: #4e5f26;
+        border: 1px solid #499b2d;
+        border-right-color: #336c1f;
         border-bottom: 0 !important;
     }
     #nav li.active a:hover {
@@ -694,13 +692,13 @@ ul#nav {
             top: 25px;
             width: 100%;
             left: 0;
-            background: #677E32;
+            background: #438d29; /* 677e32 */
         }
             #nav li.active ul.subnav a {
                 color: #fff;
                 font-weight: normal;
                 border: none;
-                background: #677E32;
+                background: #438e29;
                 padding: 4px 10px 5px;
             }
             #nav li.active ul.subnav a:hover {
@@ -708,7 +706,6 @@ ul#nav {
                 font-weight: normal;
                 border-top-width: 0 !important;
                 border-bottom-width: 0 !important;
-                padding: 4px 9px 5px;
             }
             #nav li.active ul.subnav a:active {
                 background: #9EBC5A;

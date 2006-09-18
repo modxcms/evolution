@@ -42,6 +42,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         <?php if($modx->hasPermission('help')) { ?>
             &nbsp;|&nbsp;<a href="index.php?a=9" target="main"><?php echo $_lang["help"]; ?></a>
         <?php } ?>
+            &nbsp;|&nbsp;<a href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a>
     </td>
     <td width="20">&nbsp;</td>
   </tr>

@@ -55,7 +55,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	}
 </script>
 </head>
-<body>
+<body id="topMenu">
 <form name="menuForm" action="l4mnu.php">
 <div id="Navcontainer">
 <div id="divNav">
@@ -69,27 +69,23 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <!--new-document--><li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
 <!--new-folder--><li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
 <!--new-weblink--><li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
-<?php if($modx->hasPermission('settings')) { ?>
-<!--configuration--><li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
-<?php } ?>
 </ul>
 </li>
 
 <!--Resources-->
-<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) { ?>
+<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags') || $modx->hasPermission('file_manager')) { ?>
 <li id="limenu5"><a onclick="new NavToggle(this);return false;" href="#menu5"><?php echo $_lang["resources"]; ?></a>
 <ul class="subnav" id="menu5"><!-- break these out individually soon -->
 <!--resources--><li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resource_management"]; ?></a></li>
-</ul>
+<?php 	if($modx->hasPermission('file_manager')) { ?>
+<!--manage-files--><li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
+<?php } ?></ul>
 </li>
 <?php } ?>
 
 <!-- Tools -->
 <li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;"><?php echo $_lang["tools"]; ?></a>
 <ul class="subnav" id="menu1-1">
-<?php 	if($modx->hasPermission('file_manager')) { ?>
-<!--manage-files--><li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
-<?php } ?>        
 <!--clear-cache--><li><a onclick="this.blur();" href="index.php?a=26" target="main"><?php echo $_lang["refresh_site"]; ?></a></li>
 <?php if($modx->hasPermission('bk_manager')) { ?>
 <!--backup-mgr--><li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
@@ -102,6 +98,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <?php } ?>
 <?php if($modx->hasPermission('edit_document')) { ?>
 <!--export-static-site--><li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>
+<?php } ?>
+<?php if($modx->hasPermission('settings')) { ?>
+<!--configuration--><li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
 <?php } ?>
 </ul>
 </li>
@@ -165,10 +164,6 @@ echo $list;
 </ul>
 </li>
 <?php } ?>
-
-
-<!-- Logout -->
-<li id="limenu8"><a onclick="this.blur();" href="index.php?a=8" target="_top"><?php echo $_lang["logout"]; ?></a></li>
 
 </ul>
 
