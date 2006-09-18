@@ -1,10 +1,13 @@
 <?php
 /*
-* eFormParser 1.0 - an extension to eForm 1.2 by Raymond Irving
+* eFormParser - an extension to eForm 1.2 by Raymond Irving
 * Parses an eForm form template and adds placeholders for form fields
 * It also sets the $formats array from a pseudo attribute in the form fields
 * Created by Jelle Jager, May 2006
 * ----------------------------------
+* version 1.0  200605..	- first public version 
+* version 1.01 20060917	- fixed bug which gobbled up multiple textarea fields
+* 												textarea now retains default text
 * 
 * Note. in order to use this file with eForm you'll have to hack eForm.inc.php
 * (that is if you received this file without the accompanying hacked eForm version)
@@ -55,6 +58,8 @@ $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format se
 
 function  eFormParseTemplate( $tpl ){
 	global $formats,$optionsName;
+	
+	$isPostBack	= (count($_POST)>0)? 1:0;
 	
 	//retrieve all the form fields
 	$regExpr = "#(<(input|select|textarea)[^>]*?>)#si";
@@ -114,9 +119,11 @@ function  eFormParseTemplate( $tpl ){
 				
 			case "textarea":
 				$newTag = buildTagPlaceholder($type,$tagAttributes,$name);
-				$regExp = "#<textarea .*?name=" . $tagAttributes["name"] . "[^>]*?" . ">.*?</textarea>#si";
+				$regExp = "#<textarea [^>]*?name=" . $tagAttributes["name"] . "[^>]*?" . ">(.*?)</textarea>#si";
 				preg_match($regExp,$tpl,$matches);
-				$tpl = str_replace($matches[0],$newTag."[+$name+]</textarea>",$tpl);
+				//if nothing Posted retain the content between start/end tags
+				$placeholderValue = ($isPostBack)?"[+$name+]":$matches[1];
+				$tpl = str_replace($matches[0],$newTag.$placeholderValue."</textarea>",$tpl);
 				break;
 			default: //all the rest, ie. "input"
 				$newTag = buildTagPlaceholder($type,$tagAttributes,$name);
