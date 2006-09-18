@@ -16,6 +16,7 @@ html {
 } 
 body { 
     font-size: 62.5%; /* 10px */
+    font-size: 70%;
     height: 100%;
     margin-bottom: 1px; /* avoid jumping scrollbars */
     background: #F4F4F4
@@ -655,7 +656,7 @@ ul#nav {
             width: auto;
             white-space: nowrap;
             cursor: default;
-            padding: 5px 10px 4px;
+            padding: 4px 10px 4px;
         }
         #nav a:hover {
             border: 1px solid darkgreen !important;
@@ -677,8 +678,9 @@ ul#nav {
         float: left;
         position: relative;
         z-index: 999;
-        padding: 4px 9px 5px;
-        border: 1px solid #fff;
+        padding: 3px 9px 5px;
+        border: 1px solid #83a03f;
+        border-right-color: #4e5f26;
         border-bottom: 0 !important;
     }
     #nav li.active a:hover {
