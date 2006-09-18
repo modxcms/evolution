@@ -1,10 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 ?>
-<html>
-	<head>
-		<title>Scripter</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>Scripter</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
 	<script type="text/javascript" language="JavaScript" src="media/script/bin/webelm.js"></script>
 	<script type="text/javascript" src="media/script/error.js"></script>
 	<script type="text/javascript">
@@ -29,7 +30,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		currentFrameState = 'closed';
 		try {
 			var elm = new DynElement('tocText@topFrame');
-			if(elm) elm.setInnerHTML("<a href='javascript:parent.scripter.defaultTreeFrame();'><img src='media/images/icons/inet1-15.gif' border=0 align='absmiddle' alt='<?php echo $_lang['show_tree']; ?>'></a>");
+			if(elm) elm.setInnerHTML("<a href='javascript:parent.scripter.defaultTreeFrame();'><img src='media/images/icons/inet1-15.gif' border=0 alt='<?php echo $_lang['show_tree']; ?>' /><\/a>");
 			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '0,*';
 		} catch(oException) {
 			x=window.setTimeout('hideTreeFrame()', 1000);
@@ -92,7 +93,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// These functions are used for refreshing the tree or menu
 	function reloadtree() {
 		var elm = new DynElement('buildText@topFrame');
-		if (elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b02.gif' align='absmiddle' width='16' height='16'>&nbsp;<?php echo $_lang['loading_doc_tree']; ?>");
+		if (elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b02.gif' width='16' height='16'>&nbsp;<?php echo $_lang['loading_doc_tree']; ?>");
 		parent.menu.saveFolderState(); // save folder state
 		parent.menu.location.reload();
 	}
@@ -100,7 +101,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	function reloadmenu() {
 <?php if($manager_layout==0) { ?>
 		var elm = new DynElement('buildText@topFrame')
-		if (elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b021.gif' align='absmiddle' width='16' height='16'>&nbsp;<?php echo $_lang['loading_menu']; ?>");
+		if (elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b021.gif' width='16' height='16'>&nbsp;<?php echo $_lang['loading_menu']; ?>");
 		parent.mainMenu.location.reload(); 
 <?php } ?>
 	}
@@ -108,7 +109,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	function startrefresh(rFrame){
 		if(rFrame==1){
 			var elm = new DynElement('buildText@topFrame');
-			if(elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b02.gif' align='absmiddle' width='16' height='16'>&nbsp;<b><?php echo $_lang['loading_doc_tree']; ?></b>");
+			if(elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b02.gif' width='16' height='16'>&nbsp;<b><?php echo $_lang['loading_doc_tree']; ?><\/b>");
 			x=window.setTimeout('reloadtree()',500);
 		}
 		if(rFrame==2) {
@@ -124,7 +125,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// These functions are used for showing the user the system is working
 	function work() {
 		var elm = new DynElement('workText@topFrame');
-		if (elm) elm.setInnerHTML("&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif' align='absmiddle' width='16' height='16'>&nbsp;<b><?php echo $_lang['working']; ?></b>");
+		if (elm) elm.setInnerHTML("&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif' width='16' height='16'>&nbsp;<b><?php echo $_lang['working']; ?><\/b>");
 		else w=window.setTimeout('work()', 50);
 	}
 	
@@ -146,6 +147,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	</head>
 	<body>
 		Document container for main scripting functions.
-		<input type="text" name="focusStealer">
+	<form action="index.php">
+		<input type="text" name="focusStealer" />
+	</form>
 	</body>
 </html>

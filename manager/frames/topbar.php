@@ -14,7 +14,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     <title>Top bar</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
-    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
+    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
     <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 
 </head>
@@ -23,31 +23,30 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <div id="topbar"><table width="100%"  border="0" cellspacing="0" cellpadding="0" style="height:20px;">
   <tr>
     <td width="10">&nbsp;</td>
-    <td id="topbar" valign="middle">
-		<span id="tocText"> </span>
-		<span id="buildText">&nbsp;&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif' align='absmiddle' width='16' height='16' />&nbsp;<b><?php echo $_lang['loading_doc_tree']; ?></b></span>
-		<span id="workText">&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif' align='absmiddle' width='16' height='16' />&nbsp;<b><?php echo $_lang['working']; ?></b></span>	</td>
+    <td valign="middle">
+        <span id="tocText"> </span>
+        <span id="buildText">&nbsp;&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif' width='16' height='16' />&nbsp;<b><?php echo $_lang['loading_doc_tree']; ?></b></span>
+        <span id="workText">&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif' width='16' height='16' />&nbsp;<b><?php echo $_lang['working']; ?></b></span>
+    </td>
     <td>&nbsp;</td>
-    <td id="topbar" align='right' nowrap="nowrap">
-    	<b><?php echo $site_name ;?></b> - <b><?php echo $full_appname; ?> | <img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/user.gif' align='absmiddle' width='16' height='16'> <a href="">
-    	<?php 
-    	    echo ($modx->hasPermission('change_password'))? '<a onclick="this.blur();" href="index.php?a=28" target="main">'.$modx->getLoginUserName().'</a>': $modx->getLoginUserName();
-    	    echo '</b>';
-    	?>
-    	<?php if($modx->hasPermission('messages')) { ?>
-    		 <b>|</b> <span id="newMail" style="display:none;font-size:11px;"><a href="index.php?a=10" title="<?php echo $_lang["you_got_mail"]; ?>" target="main"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/mailalert.gif" align='absmiddle' border="0" width='16' height='16' /></a></span>
-    		<a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang["messages"]; ?> <span id="msgCounter">(? / ? )</span></a>
-    	<?php } ?> 
+    <td align='right' nowrap="nowrap">
+        <b><?php echo $site_name ;?></b> - <b><?php echo $full_appname; ?> | <img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/user.gif' width='16' height='16'>
+        <?php 
+            echo ($modx->hasPermission('change_password'))? '<a onclick="this.blur();" href="index.php?a=28" target="main">'.$modx->getLoginUserName().'</a>': $modx->getLoginUserName();
+            echo '</b>';
+        ?>
+        <?php if($modx->hasPermission('messages')) { ?>
+            <b>|</b> <span id="newMail" style="display:none;font-size:11px;"><a href="index.php?a=10" title="<?php echo $_lang["you_got_mail"]; ?>" target="main"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/mailalert.gif" border="0" width='16' height='16' /></a></span>
+            <a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang["messages"]; ?> <span id="msgCounter">(? / ? )</span></a>
+        <?php } ?> 
         <?php if($modx->hasPermission('help')) { ?>
             &nbsp;|&nbsp;<a href="index.php?a=9" target="main"><?php echo $_lang["help"]; ?></a>
         <?php } ?>
-    
     </td>
     <td width="20">&nbsp;</td>
   </tr>
 </table>
 </div>
-
 
 </body>
 </html>

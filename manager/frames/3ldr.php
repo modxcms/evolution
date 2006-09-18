@@ -8,10 +8,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		exit;
 	}
 ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>Tree loader</title>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+    <title>Tree loader</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>style.css" />
 </head>
 <body onload="javascript:parent.rpcLoadData(output)">
 <!--body onload="javascript:parent.rpcLoadData(document.body.innerHTML)"-->

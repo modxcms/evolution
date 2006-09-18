@@ -10,7 +10,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <head>
 <title>nav</title>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
+<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
 <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
 <script src="media/script/scriptaculous/scriptaculous.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
@@ -56,9 +56,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 </script>
 </head>
 <body>
-<form name="menuForm">
+<form name="menuForm" action="l4mnu.php">
 <div id="Navcontainer">
-<div id="divNav">
 
 <ul id="nav">
 <!-- Site -->
@@ -117,7 +116,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 $list = '';  // initialize list variable
 $rs = $modx->db->select('*',$modx->getFullTableName('site_modules'));  // get modules
 while($content = $modx->db->getRow($rs)) {
-$list .= '<li><a onclick="this.blur();" href="index.php?a=112&id='.$content['id'].'" target="main">'.$content['name'].'</a></li>'."\n";
+$list .= '<li><a onclick="this.blur();" href="index.php?a=112&amp;id='.$content['id'].'" target="main">'.$content['name'].'</a></li>'."\n";
 }
 echo $list;
 ?>
@@ -172,7 +171,7 @@ echo $list;
 
 </ul>
 
-</div></div>
+</div>
 </form>
 </body>
 </html>
