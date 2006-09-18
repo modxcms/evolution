@@ -756,7 +756,7 @@ REPLACE INTO `{PREFIX}user_attributes`
 
 REPLACE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxGreen'),
+('manager_theme','MODxLight'),
 ('settings_version','0.9.5'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
@@ -804,7 +804,10 @@ REPLACE INTO `{PREFIX}system_settings`
 ('editor_css_path',''),
 ('editor_css_selectors',''),
 ('strip_image_paths','0'),
-('upload_files','jpg,gif,png,ico,txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,bmp,mp3,mp4,aac,wav,au,wmv,avi,mpg,mpeg,pdf,psd,doc,xls,txt'),
+('upload_images','jpg,jpeg,png,gif,psd,ico,bmp'),
+('upload_media','mp3,wav,au,wmv,avi,mpg,mpeg'),
+('upload_flash','swf,fla'),
+('upload_files','txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,mp3,mp4,aac,wav,au,wmv,avi,mpg,mpeg,pdf,doc,xls,txt'),
 ('upload_maxsize','1048576'),
 ('show_preview','1'),
 ('filemanager_path','{FILEMANAGERPATH}'),
@@ -957,4 +960,12 @@ UPDATE `{PREFIX}user_roles` SET
 	delete_web_user = 1,
 	web_access_permissions = 1,
 	view_unpublished = 1
-	WHERE  id=1;
+	WHERE `id`=1;
+
+
+# Update any invalid Manager Themes in User Settings
+
+
+UPDATE `{PREFIX}user_settings` SET
+  `setting_value`='MODxLight'
+  WHERE `setting_name`='manager_theme' AND `setting_value`='default';

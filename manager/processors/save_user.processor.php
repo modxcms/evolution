@@ -473,7 +473,7 @@ function sendMailMessage($email,$uid,$pwd,$ufn){
 }
 
 // Save User Settings
-function saveUserSettings($id) {
+function saveUserSettings($id,$mode = 'update') {
 	global $modx;
 		
 	$ignore = array(	// form field to be ignored 
@@ -513,15 +513,28 @@ function saveUserSettings($id) {
 		if(!in_array($n,$ignore)) $settings[] = $n;
 	}
 	
-	mysql_query("DELETE FROM ".$modx->getFullTableName("user_settings")." WHERE user='$id'");
+	if ($mode == 'new') mysql_query("DELETE FROM ".$modx->getFullTableName("user_settings")." WHERE user='$id'");
+
+	//get existing settings
+	$existingSettings = array();
+	$rs = $modx->db->query('SELECT user,setting_name FROM '.$modx->getFullTableName("user_settings").' WHERE user='.$id);
+	if ($modx->db->getRecordCount($rs) > 0) {
+		while ($row = $modx->db->getRow($rs)) {
+			$existingSettings[] = $row['setting_name'];
+		}
+	}
 	
 	for($i=0;$i<count($settings);$i++){
 		$n = $settings[$i]; 
 		$vl = ($GLOBALS[$n]!=$_POST[$n])? $_POST[$n]: "";
 		if (is_array($vl)) $vl = implode(",",$vl);
 		if ($vl!='') {
-			$sql = "INSERT INTO ".$modx->getFullTableName("user_settings")." (user,setting_name,setting_value) VALUES($id,'$n','".mysql_escape_string($vl)."')";
-			mysql_query($sql);
+			if ($mode == 'new' || !in_array($n,$existingSettings)) {
+				$sql = "INSERT INTO ".$modx->getFullTableName("user_settings")." (user,setting_name,setting_value) VALUES($id,'$n','".mysql_escape_string($vl)."')";
+			} else {
+				$sql = "UPDATE ".$modx->getFullTableName("user_settings")." SET user=$id,setting_name='$n',setting_value='".mysql_escape_string($vl)."' WHERE user=$id AND setting_name='$n'";
+			}
+			$modx->db->query($sql);
 		}
 	}
 }

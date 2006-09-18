@@ -132,8 +132,6 @@ $_lang["configcheck_installer"] = 'installer still present';
 $_lang["configcheck_installer_msg"] = 'The install/ directory contains the installer for MODx. Just imagine what might happen if an evil person finds this folder and runs the installer! He\'d probably not get too far, because he\'ll need to enter some user information for the database, but it\'s still best to remove this folder from your server.';
 $_lang["configcheck_cache"] = 'cache directory not writable';
 $_lang["configcheck_cache_msg"] = 'MODx cannot write to the cache directory. MODx will still function as expected, but no caching will take place. To solve this, make the /_cache/ directory writable.';
-$_lang['configcheck_sitecache_integrity']= 'sitecache file corrupt';
-$_lang['configcheck_sitecache_integrity_msg']= 'Your /assets/cache/siteCache.idx.php file appears to be corrupt.  You should refresh your site cache.  If this warning persists, try disabling plugins or removing snippet calls you may have recently added one at a time.';
 $_lang["configcheck_lang_difference"] = 'incorrect number of entries in language file';
 $_lang["configcheck_lang_difference_msg"] = 'The currently selected language has a different number of entries than the default language. While not necessarily a problem, this may mean the language file needs to be updated.';
 $_lang["configcheck_default_msg"] = 'An unspecified warning was found. Which is strange.';
@@ -600,8 +598,8 @@ $_lang["access_permissions_links_tab"] = 'This is where we specify which user gr
 $_lang["access_permissions_off"] = '<span class="warning">Access Permissions are not activated.</span> This means any changes made here will not have any effect until Access Permissions are activated.';
 $_lang["settings_strip_image_paths_title"] = 'Rewrite image paths?';
 $_lang["settings_strip_image_paths_message"] = 'Turning this on will have MODx rewrite image src\'s to be relative instead of absolute. This is very handy if you should ever wish to move your MODx installation (for example from a staging site to a production site). If you have no idea what this means, it\'s best just to leave it set to \'No\'.';
-$_lang["uploadable_files_title"] = 'Uploadable filetypes:';
-$_lang["uploadable_files_message"] = 'Here you can enter a list of files that can be uploaded using the file manager. Please enter the extensions for the filetypes, seperated by commas.';
+$_lang["uploadable_files_title"] = 'Uploadable File Types:';
+$_lang["uploadable_files_message"] = 'Here you can enter a list of files that can be uploaded into \'assets/files/\' using the Resource Manager. Please enter the extensions for the filetypes, seperated by commas.';
 $_lang["keywords"] = 'Keywords';
 $_lang["keyword"] = 'Keyword';
 $_lang["save_all_changes"] = 'Save all changes';
@@ -1091,7 +1089,6 @@ $_lang["existing_category"] = 'Existing Category';
 $_lang["new_category"] = 'New Category';
 $_lang["category_heading"] = 'Category';
 $_lang["category_msg"] = 'Here you can view and edit all resources grouped by category.';
-$_lang["delete_category"] = 'Delete';
 
 //Doc Manager Module
 //-- titles
@@ -1242,12 +1239,11 @@ $_lang['DM_log_delete']='Document Manager: Documents Delete/Undelete settings ch
 $_lang['DM_log_dates']='Document Manager: Documents Date settings changed.';
 $_lang['DM_log_authors']='Document Manager: Documents Author settings changed.';
 
-$_lang['publish_events']='Publish Events';
-$_lang['unpublish_events']='UnPublish Events';
-$_lang['all_events']='All Events';
-$_lang['no_docs_pending_pubunpub']='No Events Found';
-$_lang['no_docs_pending_publishing'] ='No documents pending publishing.';
-$_lang['publish_date']='Publish Date';
-$_lang["no_docs_pending_unpublishing"]='No documents pending unpublising.';
-$_lang['unpublish_date']='Unpublish Date';
+//--file manager configuration settings (please note change $_lang['uploadable_files_title'] and $_lang['uploadable_files_message'] earlier in this file)
+$_lang["uploadable_images_title"] = 'Uploadable Image Types:';
+$_lang["uploadable_images_message"] = 'Here you can enter a list of files that can be uploaded into \'assets/images/\' using the Resource Manager. Please enter the extensions for the image types, seperated by commas.';
+$_lang["uploadable_media_title"] = 'Uploadable Media Types:';
+$_lang["uploadable_media_message"]= 'Here you can enter a list of files that can be uploaded into \'assets/media/\' using the Resource Manager. Please enter the extensions for the media types, seperated by commas.';
+$_lang["uploadable_flash_title"] = 'Uploadable Flash Types:';
+$_lang["uploadable_flash_message"]= 'Here you can enter a list of files that can be uploaded into \'assets/flash/\' using the Resource Manager. Please enter the extensions for the flash types, seperated by commas.';
 ?>

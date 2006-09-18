@@ -264,7 +264,6 @@ EOD;
 				$grd->pagerClass		=$params['pclass'];
 				$grd->pagerStyle		=$params['pstyle'];
 				$o = $grd->render();
-				print_r($params);
 				break;
 				
 			default:

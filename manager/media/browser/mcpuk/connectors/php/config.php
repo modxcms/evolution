@@ -36,8 +36,7 @@ include("../../../../../includes/settings.inc.php");
 
 // Override system settings with user settings
 define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
-include("../../../../../includes/user_settings.inc.php");
-
+include("../../../../../includes/user_settings.inc.php");// make arrays from the file upload settings$upload_files = explode(',',$upload_files);$upload_images = explode(',',$upload_images);$upload_media = explode(',',$upload_media);$upload_flash = explode(',',$upload_flash);
 // ** END FOR MODx
 
 /*------------------------------------------------------------------------------*/
@@ -115,7 +114,7 @@ $fckphp_config['auth']['Handler']['SharedKey']="->Shared_K3y-F0R*5enD1NG^auth3nt
 $fckphp_config['ResourceAreas']['files'] =array(
 	
 	//Files(identified by extension) that may be uploaded to this area
-	'AllowedExtensions'	=>	array("zip","doc","xls","pdf","rtf","csv","jpg","gif","jpeg","png","avi","mpg","mpeg","swf","fla","txt","xml","css","mp3"),
+	'AllowedExtensions'	=>	$upload_files,
 	
 	//Not implemented yet
 	'AllowedMIME'		=>	array(),
@@ -138,7 +137,7 @@ $fckphp_config['ResourceAreas']['files'] =array(
 
 //Image area
 $fckphp_config['ResourceAreas']['images'] =array(
-	'AllowedExtensions'	=>	array("jpg","gif","jpeg","png","tiff","tif",),
+	'AllowedExtensions'	=> $upload_images,
 	'AllowedMIME'		=>	array(),
 	'MaxSize'		=>	$upload_maxsize,
 	'DiskQuota'		=>	-1,
@@ -149,7 +148,7 @@ $fckphp_config['ResourceAreas']['images'] =array(
 
 //Flash area
 $fckphp_config['ResourceAreas']['flash'] =array(
-	'AllowedExtensions'	=>	array("swf","fla"),
+	'AllowedExtensions'	=>	$upload_flash,
 	'AllowedMIME'		=>	array(),
 	'MaxSize'		=>	$upload_maxsize,
 	'DiskQuota'		=>	-1,
@@ -160,7 +159,7 @@ $fckphp_config['ResourceAreas']['flash'] =array(
 	
 //Media area
 $fckphp_config['ResourceAreas']['media'] =array(
-	'AllowedExtensions'	=>	array("swf","fla","jpg","gif","jpeg","png","avi","mpg","mpeg","midi","mid"),
+	'AllowedExtensions'	=>	$upload_media,
 	'AllowedMIME'		=>	array(),
 	'MaxSize'		=>	$upload_maxsize,
 	'DiskQuota'		=>	-1,
