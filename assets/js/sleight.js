@@ -1,5 +1,5 @@
 // USAGE:
-// Add to your template or HTML file by adding <script type="text/javascript" src="assets/js/sleight.js">
+// Add to your template or HTML file by adding <script type="text/javascript" src="assets/js/sleight.js"></sript>
 // to the head of your document or template. Make sure that the transparent GIF file (x.gif) is also
 // in the same directory as the sleight.js file, or that you update the path to the file on
 // the last line of the code below.
