@@ -3,9 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1452 - September 18, 2006)
+MOD 0.9.5 beta 3 (rev 1457 - September 19, 2006)
 ====================================
 
+* Added MIME type fix to ht.access file to make sure .htc files are served properly
+* Added a helper PHP file to make sure HTC files are served to IE properly. (1456)
+* Updated sleight.js usages instructions and added an alternate .png IE fixing method. (1456)
 * Remove all instances of images/misc/dot referenced directly in action pages and move to the CSS file (1452)
 * Rework all /manager/frames files to eliminate HTML warnings and speed up manager rendering (1446)
 * Added MODxLight manager theme and makes it the default in the install script. (1442)
