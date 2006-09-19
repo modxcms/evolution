@@ -14,10 +14,11 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 
-# Make sure .htc files are served with the proper MIME type. Comment this out
-# if it creates problems on your site.
 
-AddType text/x-component .htc 
+
+# Make sure .htc files are served with the proper MIME type, which is critical # for XP SP2. Un-comment if your host allows htaccess MIME type overrides.
+
+#AddType text/x-component .htc 
 
 
 
