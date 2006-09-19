@@ -25,7 +25,7 @@ $allowedfiles = array('html','htm','xml');
 <span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['import_site_html']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
 <?php
 
 if(!isset($_POST['import'])) {

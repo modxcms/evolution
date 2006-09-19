@@ -10,7 +10,7 @@ if(!$modx->hasPermission('messages') && $_REQUEST['a']==10) {
 </div>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
+<div class="sectionHeader"><?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
 <?php
 $sql = "SELECT * FROM $dbase.".$table_prefix."user_messages WHERE $dbase.".$table_prefix."user_messages.id=".$_REQUEST['id'];
 $rs = mysql_query($sql);
@@ -96,7 +96,7 @@ if($limit!=1) {
 <?php } ?>
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
 <?php
 // Get  number of rows
 $sql = "SELECT count(id) FROM $dbase.".$table_prefix."user_messages WHERE recipient=".$modx->getLoginUserID()."";
@@ -239,7 +239,7 @@ st1.onsort = function () {
 <?php } ?>
 	</div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['messages_compose']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['messages_compose']; ?></div><div class="sectionBody">
 <?php
 if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
 	$sql = "SELECT * FROM $dbase.".$table_prefix."user_messages WHERE $dbase.".$table_prefix."user_messages.id=".$_REQUEST['id'];

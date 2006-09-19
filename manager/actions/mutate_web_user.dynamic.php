@@ -229,7 +229,7 @@ function showHide(what, onoff){
 </div>
 
 <!-- Tab Start -->
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div><div class="sectionBody">
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="webUserPane">
@@ -758,7 +758,7 @@ if(is_array($_POST['user_groups'])) {
 
 ?>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_access_permissions']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['web_access_permissions']; ?></div><div class="sectionBody">
 <?php
 	echo $_lang['access_permissions_user_message']."<p />";
 	$sql = "SELECT name, id FROM $dbase.".$table_prefix."webgroup_names";

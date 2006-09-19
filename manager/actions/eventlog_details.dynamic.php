@@ -73,7 +73,7 @@ else{
 <input type="hidden" name="a" value="<?php echo $_REQUEST['a']; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $_REQUEST['listmode']; ?>" />
 <input type="hidden" name="op" value="" />
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $content['source']." - ".$_lang['eventlog_viewer']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $content['source']." - ".$_lang['eventlog_viewer']; ?></div><div class="sectionBody">
 <?php
 $date = strftime("%d-%b-%Y %I:%M %p",$content["createdon"]);
 if($content["type"]==1) $msgtype = $_lang["information"];

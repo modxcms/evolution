@@ -5,7 +5,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['cleaningup']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['cleaningup']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['cleaningup']; ?></div><div class="sectionBody">
 <p><?php echo $_lang['actioncomplete']; ?></p>
 <?php if($_REQUEST['r']==10 && $_SESSION['mgrRefreshTheme'] == 1) {
 	$_SESSION['mgrRefreshTheme'] = 0;?>

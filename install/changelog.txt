@@ -3,9 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1444 - September 18, 2006)
+MOD 0.9.5 beta 3 (rev 1452 - September 18, 2006)
 ====================================
 
+* Remove all instances of images/misc/dot referenced directly in action pages and move to the CSS file (1452)
+* Rework all /manager/frames files to eliminate HTML warnings and speed up manager rendering (1446)
 * Added MODxLight manager theme and makes it the default in the install script. (1442)
 * [FS#344] Changed the bizarre logic in the saveUserSettings() function that was deleting all the user settings before adding the most recent change (resulting in all the other settings returning to the defaults). (1442)
 * [FS#484] This fix hooks in the MODx configuration settings into the Resource Browser allowing the browser to respect the uploadable file types specified in the settings. Config settings have been separated out to account for the 4 possible states that the browser can be opened in (images, media, flash, and files). Added new language strings to english lang file and adjusted existing 'filetype' strings for clarification. (1442)

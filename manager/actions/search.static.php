@@ -7,7 +7,7 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['search']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['search_criteria']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['search_criteria']; ?></div><div class="sectionBody">
 <form action="index.php?a=71" method="post" name="searchform">
 <table width="100%" border="0">
   <tr>
@@ -70,7 +70,7 @@ $sql = "SELECT id, pagetitle, description, deleted, published, isfolder, type FR
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 ?>
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['search_results']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['search_results']; ?></div><div class="sectionBody">
 <?php
 if($limit<1) {
 	echo $_lang['search_empty'];

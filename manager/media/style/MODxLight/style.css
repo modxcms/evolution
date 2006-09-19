@@ -176,11 +176,15 @@ hr {
 
 .sectionHeader, .showHideVisible {
 	margin: 0 10px 4px;
-	padding: 5px 3px;
+	padding: 5px 3px 5px;
 	font-weight: bold;
 	color: #000;
 	background: silver;
 	border: 1px solid #000;
+}
+.sectionHeader {
+    padding: 5px 3px 5px 18px;
+    background: url(images/misc/dot.gif) no-repeat 6px 45%;
 }
 
 .sectionBody, .layerVisible {
@@ -553,9 +557,6 @@ img.loginCaptcha {
     height: 150px;
     padding: 50px;
     border: 1px solid #039;
-}
-.sectionHeader, .sectionBody {
-    width: 100%;
 }
 
 /*contextmenu in editing modules*/

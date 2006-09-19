@@ -74,7 +74,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 	<div class="tab-page" id="tabcheck" style="padding-left:0px; padding-right:0px">
 		<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
-			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["configcheck_title"]; ?></div><div class="sectionBody">
+			<div class="sectionHeader"><?php echo $_lang["configcheck_title"]; ?></div><div class="sectionBody">
 			<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/event2.gif" />
 			<?php echo $config_check_results;	?>
 			</div>
@@ -85,7 +85,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 	<div class="tab-page" id="tabAct" style="padding-left:0px; padding-right:0px">
 		<h2 class="tab"><?php echo $_lang["recent_docs"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabAct" ) );</script>
-		<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["activity_title"]; ?></div><div class="sectionBody">
+		<div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody">
 			<?php echo $_lang["activity_message"]; ?><br /><br /><ul>
 		<?php
 		$sql = "SELECT id, pagetitle, description FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.deleted=0 AND ($dbase.".$table_prefix."site_content.editedby=".$modx->getLoginUserID()." OR $dbase.".$table_prefix."site_content.createdby=".$modx->getLoginUserID().") ORDER BY editedon DESC LIMIT 10";
@@ -112,7 +112,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 	<div class="tab-page" id="tabYour" style="padding-left:0px; padding-right:0px">
 		<h2 class="tab"><?php echo $_lang["info"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabYour" ) );</script>
-		<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["yourinfo_title"]; ?></div><div class="sectionBody">
+		<div class="sectionHeader"><?php echo $_lang["yourinfo_title"]; ?></div><div class="sectionBody">
 			<?php echo $_lang["yourinfo_message"]; ?><br /><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 			  <tr>
@@ -143,7 +143,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 	<div class="tab-page" id="tabOnline" style="padding-left:0px; padding-right:0px">
 		<h2 class="tab"><?php echo $_lang["online"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabOnline" ) );</script>
-		<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["onlineusers_title"]; ?></div><div class="sectionBody">
+		<div class="sectionHeader"><?php echo $_lang["onlineusers_title"]; ?></div><div class="sectionBody">
 			<?php echo $_lang["onlineusers_message"]; ?><b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b>):<br /><br />
 			<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 			  <thead>

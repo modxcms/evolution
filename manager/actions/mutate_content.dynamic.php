@@ -49,7 +49,7 @@ if($action==27 ) {
 	$udperms->role = $_SESSION['mgrRole'];
 
 	if(!$udperms->checkPermissions()) {
-		?><br /><br /><div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+		?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 		<p><?php echo $_lang['access_permission_denied']; ?></p>
 		<?php
 		include("footer.inc.php");
@@ -68,7 +68,7 @@ else {
 	$udperms->role = $_SESSION['mgrRole'];
 
 	if(!$udperms->checkPermissions()) {
-		?><br /><br /><div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+		?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 		<p><?php echo $_lang['access_permission_denied']; ?></p>
 		<?php
 		include("footer.inc.php");
@@ -546,7 +546,7 @@ function decode(s){
 	</div>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['document_setting']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['document_setting']; ?></div><div class="sectionBody">
 	<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 	<script type="text/javascript" src="media/script/tabpane.js"></script>
 	<div class="tab-pane" id="documentPane">
@@ -932,7 +932,7 @@ function decode(s){
 
 <!-- Content -->
 <?php if($content['type']=="document" || $_REQUEST['a']==4) { ?>
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['document_content']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['document_content']; ?></div><div class="sectionBody">
 	<?php
 	if(($content['richtext']==1 || $_REQUEST['a']==4) && $use_editor==1) {
 		// replace image path
@@ -1090,7 +1090,7 @@ if(isset($_POST['docgroups'])) {
 
 <!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <script>
 	function makePublic(b){
 		var notPublic=false;

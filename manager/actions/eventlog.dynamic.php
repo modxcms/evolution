@@ -88,7 +88,7 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['eventlog_viewer']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['eventlog_viewer']; ?></div><div class="sectionBody">
 	<!-- load modules -->
 	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/eventlog.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['eventlog_msg']; ?></p>
 	<div class="searchbar">

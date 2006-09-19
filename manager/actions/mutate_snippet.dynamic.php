@@ -299,7 +299,7 @@ function decode(s){
 
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['snippet_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['snippet_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['snippet_msg']; ?><p />
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>

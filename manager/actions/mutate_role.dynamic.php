@@ -89,7 +89,7 @@ function deletedocument() {
 </div>
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['role_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['role_title']; ?></div><div class="sectionBody">
 <div class='fakefieldset'>
 <table border="0" cellspacing="0" cellpadding="4">
   <tr>

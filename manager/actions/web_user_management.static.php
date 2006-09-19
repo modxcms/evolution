@@ -91,7 +91,7 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_management_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['web_user_management_title']; ?></div><div class="sectionBody">
 	<p><?php echo $_lang['web_user_management_msg']; ?></p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">

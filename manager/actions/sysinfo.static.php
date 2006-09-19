@@ -17,7 +17,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 </script>
 
 <!-- server -->
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Server</div><div class="sectionBody" id="lyr2">
+<div class="sectionHeader">Server</div><div class="sectionBody" id="lyr2">
 		<P>
 		This page shows some general information about the MODx installation.<p>
 
@@ -78,7 +78,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 
 
 <!-- recent documents -->
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
+<div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
 		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 			<thead>
@@ -118,7 +118,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 
 
 <!-- database -->
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Database tables</div><div class="sectionBody" id="lyr4">
+<div class="sectionHeader">Database tables</div><div class="sectionBody" id="lyr4">
 		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>
@@ -207,7 +207,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 </div>
 
 <!-- online users -->
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Online users</div><div class="sectionBody" id="lyr5">
+<div class="sectionHeader">Online users</div><div class="sectionBody" id="lyr5">
 		This list shows users online within the last 20 minutes.<br />
 		Current time: <b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b><p>
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">

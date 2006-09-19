@@ -106,7 +106,7 @@ else $webstart_path = "../".$webstart_path;
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['files_title']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['files_files']; ?></div><div class="sectionBody" style="font-size: 11px;">
+<div class="sectionHeader"><?php echo $_lang['files_files']; ?></div><div class="sectionBody" style="font-size: 11px;">
 <script type="text/javascript" src="media/script/multifile.js"></script>
 <script type="text/javascript">
 function viewfile(url) {

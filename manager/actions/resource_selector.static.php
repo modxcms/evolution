@@ -160,7 +160,7 @@ if($_SESSION['browser']=='ie') {
 <input type="hidden" name="rt" value="<?php echo $rt; ?>" />
 <input type="hidden" name="sm" value="<?php echo $sm; ?>" />
 <input type="hidden" name="cb" value="<?php echo $cb; ?>" />
-<div class="sectionHeader" style="margin:0px"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $title." - ".$_lang['resource_selector_title']; ?></div>
+<div class="sectionHeader" style="margin:0px"><?php echo $title." - ".$_lang['resource_selector_title']; ?></div>
 <div class="sectionBody" style="margin-top:5px;margin-right:0px;margin-left:0px;border:0px;">
 <p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/circlerightarrow.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['resource_selector_msg']; ?></p>
 <br />

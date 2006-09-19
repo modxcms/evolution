@@ -8,7 +8,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==55) {
 <span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />View manager logs</span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Query logging</div><div class="sectionBody" id="lyr1">
+<div class="sectionHeader">Query logging</div><div class="sectionBody" id="lyr1">
 Please make a selection for viewing the logs. You can select log entries by date, but be aware that the dates you enter are not inclusive - to select every log entry for 01-01-2004, set 'date from'to 01-01-2004 and 'date to' to 02-01-2004.
 Message and action are usually the same. If you're searching for a specific message, it's best to set action to 'Any/All'.
 <p>

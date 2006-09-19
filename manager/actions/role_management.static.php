@@ -25,7 +25,7 @@ echo $cm->render();
 </div>
 
 <!-- User Roles -->
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['role_management_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['role_management_title']; ?></div><div class="sectionBody">
 <p><?php echo $_lang['role_management_msg']; ?></p>
 
 <ul>

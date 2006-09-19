@@ -201,7 +201,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $content["name"]." - ".$_lang['module_resource_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $content["name"]." - ".$_lang['module_resource_title']; ?></div><div class="sectionBody">
 <p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['module_resource_msg']; ?></p>
 <br />
 <!-- Dependencies -->

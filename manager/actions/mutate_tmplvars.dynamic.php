@@ -283,7 +283,7 @@ function decode(s){
 	</div>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">
 <?php echo $_lang['tmplvars_msg']; ?><p />
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
@@ -367,7 +367,7 @@ function decode(s){
 </div>
 
 <!-- Template Permission -->
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvar_tmpl_access']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div><div class="sectionBody">
 <?php echo $_lang['tmplvar_tmpl_access_msg']; ?><p />
 <table width="100%" cellspacing="0" cellpadding="0">
 <?php
@@ -406,7 +406,7 @@ if($use_udperms==1) {
 
 <!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <script>
 	function makePublic(b){
 		var notPublic=false;
@@ -451,7 +451,7 @@ if($use_udperms==1) {
 </div>
 <?php }?>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['category_heading']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['category_heading']; ?></div><div class="sectionBody">
         <table width="90%" border="0" cellspacing="0" cellpadding="0">
           <tr>
 			<td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>

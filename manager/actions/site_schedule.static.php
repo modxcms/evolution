@@ -11,7 +11,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <span class="right"><img src="media/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["site_schedule"];?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["publish_events"];?></div><div class="sectionBody" id="lyr1">
+<div class="sectionHeader"><?php echo $_lang["publish_events"];?></div><div class="sectionBody" id="lyr1">
 <?php
 //$db->debug = true;
 $sql = "SELECT id, pagetitle, pub_date FROM $dbase.".$table_prefix."site_content WHERE pub_date > ".time()." ORDER BY pub_date ASC";
@@ -93,7 +93,7 @@ st1.onsort = function () {
 </div>
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["unpublish_events"];?></div><div class="sectionBody" id="lyr2"><?php
+<div class="sectionHeader"><?php echo $_lang["unpublish_events"];?></div><div class="sectionBody" id="lyr2"><?php
 //$db->debug = true;
 $sql = "SELECT id, pagetitle, unpub_date FROM $dbase.".$table_prefix."site_content WHERE unpub_date > ".time()." ORDER BY unpub_date ASC";
 $rs = mysql_query($sql);
@@ -173,7 +173,7 @@ st2.onsort = function () {
 </div>
 
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["all_events"];?></div><div class="sectionBody"><?php
+<div class="sectionHeader"><?php echo $_lang["all_events"];?></div><div class="sectionBody"><?php
 $sql = "SELECT id, pagetitle, pub_date, unpub_date FROM $dbase.".$table_prefix."site_content WHERE pub_date > 0 OR unpub_date > 0 ORDER BY id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);

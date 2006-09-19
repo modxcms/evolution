@@ -5,15 +5,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['help_title']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['about_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['about_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['about_msg']; ?>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['help_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['help_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['help_msg']; ?>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['credits']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['credits']; ?></div><div class="sectionBody">
 <table width="500"  border="0" cellspacing="0" cellpadding="0">
   <tr height="70">
     <td align="center"><a href="http://www.php.net" target="_blank"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/credits/php.gif" border="0"></a></td>

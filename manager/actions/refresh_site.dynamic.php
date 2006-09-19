@@ -17,7 +17,7 @@ $num_rows_unpub = mysql_affected_rows($modxDBConn);
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['refresh_title']; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['refresh_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['refresh_title']; ?></div><div class="sectionBody">
 <?php printf($_lang["refresh_published"], $num_rows_pub) ?><br />
 <?php printf($_lang["refresh_unpublished"], $num_rows_unpub) ?><br />
 <?php

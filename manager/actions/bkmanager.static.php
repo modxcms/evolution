@@ -61,7 +61,7 @@ else {
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["bk_manager"]; ?></span>
 </div>
 
-<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;Database Tables</div><div class="sectionBody" id="lyr4">
+<div class="sectionHeader">Database Tables</div><div class="sectionBody" id="lyr4">
 <form name='frmdb' method='post'>
 <input type='hidden' name='mode' value='' />
 <script language='javascript'>
