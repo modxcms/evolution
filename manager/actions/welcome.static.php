@@ -12,22 +12,22 @@ if(!isset($settings_version) || $settings_version!=$version) {
 
 ?>
 <div class="subTitle" style="margin-bottom:0px">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/home.gif" align="absmiddle" />&nbsp;<?php echo $_lang["home"]; ?></span>
+	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5" /><br /><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/home.gif" />&nbsp;<?php echo $_lang["home"]; ?></span>
 </div>
 
 <!-- welcome -->
 <div class="sectionBody" style="margin-top:0px;">
-<table border="0" cellpadding="5" wdith="100%">
+<table border="0" cellpadding="5" width="100%">
   <tr>
     <td width="10%" align="right">
-		<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logo.png' alt='<?php echo $_lang["logo_slogan"]; ?>'>
-		<p />
+		<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/logo.png' alt='<?php echo $_lang["logo_slogan"]; ?>' />
+		<br /><br />
 	</td>
 	<td>
-	<span style="font-size:18px;font-weight:bold"><?php echo "$site_name"; ?> </span><br>
+	<span style="font-size:18px;font-weight:bold"><?php echo "$site_name"; ?> </span><br />
 	<?php echo $_lang["welcome_title"]; ?><br /><br />
 <?php if($modx->hasPermission('messages')) { ?>
-		<a href="index.php?a=10"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/mail_generic.gif" align="absmiddle" border=0></a>
+		<a href="index.php?a=10"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/mail_generic.gif" /></a>
 		<span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;Inbox<?php echo $_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":""; ?></span><br /><span class="comment"><?php printf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>") ?></span>
 <?php } ?>
 	</td>
@@ -59,7 +59,6 @@ if(!isset($settings_version) || $settings_version!=$version) {
 </table>
 </div>
 <div class="sectionBody" style="border:0px; padding:0px;">
-<link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="welcomePane" style="border:0px">
 	<script type="text/javascript">
@@ -76,7 +75,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 		<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
 			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["configcheck_title"]; ?></div><div class="sectionBody">
-			<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/event2.gif" align="absmiddle" />
+			<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/event2.gif" />
 			<?php echo $config_check_results;	?>
 			</div>
 	</div>
@@ -87,7 +86,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 		<h2 class="tab"><?php echo $_lang["recent_docs"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabAct" ) );</script>
 		<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["activity_title"]; ?></div><div class="sectionBody">
-			<?php echo $_lang["activity_message"]; ?><p />
+			<?php echo $_lang["activity_message"]; ?><br /><br /><ul>
 		<?php
 		$sql = "SELECT id, pagetitle, description FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.deleted=0 AND ($dbase.".$table_prefix."site_content.editedby=".$modx->getLoginUserID()." OR $dbase.".$table_prefix."site_content.createdby=".$modx->getLoginUserID().") ORDER BY editedon DESC LIMIT 10";
 		$rs = mysql_query($sql);
@@ -101,12 +100,12 @@ if(!isset($settings_version) || $settings_version!=$version) {
 					$syncid = $content['id'];
 				}
 		?>
-						<li><span style="width: 40px; text-align:right;"><?php echo $content['id']; ?></span> - <span style="width: 200px;"><a href='index.php?a=3&id=<?php echo $content['id']; ?>'><?php echo $content['pagetitle']; ?></a></span><?php echo $content['description']!='' ? ' - '.$content['description'] : '' ; ?></li>
+						<li><span style="width: 40px; text-align:right;"><?php echo $content['id']; ?></span> - <span style="width: 200px;"><a href='index.php?a=3&amp;id=<?php echo $content['id']; ?>'><?php echo $content['pagetitle']; ?></a></span><?php echo $content['description']!='' ? ' - '.$content['description'] : '' ; ?></li>
 		<?php
 			}
 		}
 		?>
-		</div>
+		</ul></div>
 	</div>
 
 	<!-- your info -->
@@ -114,7 +113,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 		<h2 class="tab"><?php echo $_lang["info"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabYour" ) );</script>
 		<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["yourinfo_title"]; ?></div><div class="sectionBody">
-			<?php echo $_lang["yourinfo_message"]; ?><p />
+			<?php echo $_lang["yourinfo_message"]; ?><br /><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 			  <tr>
 				<td width="150"><?php echo $_lang["yourinfo_username"]; ?></td>
@@ -145,7 +144,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 		<h2 class="tab"><?php echo $_lang["online"] ?></h2>
 		<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabOnline" ) );</script>
 		<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang["onlineusers_title"]; ?></div><div class="sectionBody">
-			<?php echo $_lang["onlineusers_message"]; ?><b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b>):<p />
+			<?php echo $_lang["onlineusers_message"]; ?><b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b>):<br /><br />
 			<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 			  <thead>
 			  <tr>
@@ -166,13 +165,13 @@ if(!isset($settings_version) || $settings_version!=$version) {
 			$rs = mysql_query($sql);
 			$limit = mysql_num_rows($rs);
 			if($limit<1) {
-				echo "No active users found.<p />";
+				echo "No active users found.<br /><br />";
 			} else {
 				for ($i = 0; $i < $limit; $i++) {
 					$activeusers = mysql_fetch_assoc($rs);
 					$currentaction = getAction($activeusers['action'], $activeusers['id']);
-					$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='images/tree/web.gif' alt='Web user'>":"";
-					echo "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td></b>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";
+					$webicon = ($activeusers['internalKey']<0)? "<img  src='images/tree/web.gif' alt='Web user' />":"";
+					echo "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";
 				}
 			}
 			?>
@@ -184,7 +183,7 @@ if(!isset($settings_version) || $settings_version!=$version) {
 </div>
 </div>
 
-<script language="JavaScript">
+<script type="text/javascript">
 try {
 	top.menu.Sync(<?php echo $syncid; ?>);
 } catch(oException) {

@@ -16,7 +16,7 @@ $messagesallowed = $modx->hasPermission('messages');
 <head>
 	<title>MODx</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
-	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
+	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
 	<script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 	<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
 	<script type="text/javascript" language="JavaScript">
@@ -112,33 +112,8 @@ $messagesallowed = $modx->hasPermission('messages');
 <?php
 if($_SESSION['browser']=='ie') {
 ?>   
-	<style>
-	/* stupid box model hack for equally stupid MSIE */
-	.sectionHeader, .sectionBody {
-		width:100%;
-	}
-	</style>
-<?php
-}
-?>
-	<style>
-	#preLoader {
-		position: 						absolute;
-		z-index:						50000;
-		width:							100%;
-		height:							100%;
-		text-align:						center;
-		vertical-align:					middle;
-	}
-	.preLoaderText {
-		background-color:				#ffffff;
-		width:							300px;
-		height:							150px;
-		padding:						50px;
-		border:							1px solid #003399;
-	}
-	</style>
+<?php } ?>
 </head>
 <body ondragstart="return false" onbeforeunload="checkDirt();">
 
-<div id="preLoader"><table width="100%" height="50%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>
+<div id="preLoader"><table width="100%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>
