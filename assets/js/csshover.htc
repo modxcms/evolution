@@ -1,7 +1,7 @@
 <attach event="ondocumentready" handler="parseStylesheets" />
 <script>
 /**
- *	Whatever:hover - V1.41.050927 - hover & active
+ *	Whatever:hover - V1.42.060206 - hover & active
  *	------------------------------------------------------------
  *	(c) 2005 - Peter Nederlof
  *	Peterned - http://www.xs4all.nl/~peterned/
@@ -54,7 +54,7 @@ function parseStylesheets() {
 	function parseCSSRule(rule) {
 		var select = rule.selectorText, style = rule.style.cssText;
 		if(!csshoverReg.test(select) || !style) return;
-		
+
 		var pseudo = select.replace(/[^:]+:([a-z-]+).*/i, 'on$1');
 		var newSelect = select.replace(/(\.([a-z0-9_-]+):[a-z]+)|(:[a-z]+)/gi, '.$2' + pseudo);
 		var className = (/\.([a-z0-9_-]*on(hover|active))/i).exec(newSelect)[1];
@@ -98,7 +98,10 @@ function getElementsBySelect(rule) {
 	function getSelectedNodes(select, elements) {
 		var result, node, nodes = [];
 		var identify = (/\#([a-z0-9_-]+)/i).exec(select);
-		if(identify) return [doc.getElementById(identify[1])];
+		if(identify) {
+			var element = doc.getElementById(identify[1]);
+			return element? [element]:nodes;
+		}
 		
 		var classname = (/\.([a-z0-9_-]+)/i).exec(select);
 		var tagName = select.replace(/(\.|\#|\:)[a-z0-9_-]+/i, '');
@@ -110,6 +113,8 @@ function getElementsBySelect(rule) {
 				if(classReg && !classReg.test(node.className)) continue;
 				nodes[nodes.length] = node;
 			}
-		}	return nodes;
+		}	
+		
+		return nodes;
 	}
 </script>
