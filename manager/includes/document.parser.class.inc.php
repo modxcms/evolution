@@ -2135,7 +2135,7 @@ class DocumentParser {
         if (strpos(strtolower($src), "<style") !== false || strpos(strtolower($src), "<link") !== false) {
             $this->sjscripts[count($this->sjscripts)]= $src;
         } else {
-            $this->sjscripts[count($this->sjscripts)]= '<!-- MODx registered -->' . "\n" . '  <link rel="stylesheet" href="' . $src . ' />';
+            $this->sjscripts[count($this->sjscripts)]= '<!-- MODx registered -->' . "\n" . '  <link rel="stylesheet" href="' . $src . '" />';
         }
     }
 
