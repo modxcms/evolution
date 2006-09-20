@@ -412,12 +412,12 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		} else {
 			$url = $_REQUEST['refurl'];
 		}
-		$modx->sendRedirect($url,0,'REDIRECT_REFRESH');
+		$modx->sendRedirect($url);
 	}
 	else {
 		// login home page
 		$url = $modx->makeUrl($id);
-		$modx->sendRedirect($url,0,'REDIRECT_REFRESH');
+		$modx->sendRedirect($url);
 	}
 	
 	return;
