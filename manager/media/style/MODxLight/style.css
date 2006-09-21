@@ -48,7 +48,7 @@ fieldset {
     border: none;
 }
 input, select, textarea, td {
-    font-size: 100%;
+    font-size: 100% !important;
 }
 /* use with a <br class="cls" /> to clear floats without extra space */
 .clearfix, .cls { 
@@ -331,13 +331,11 @@ a img {
     display: none;
     position: absolute;
     width: 200px; 
-    height: 44px;
-    top: 28px;
+    height: 50px;
+    top: 25px;
     left: 4px;
-    background-position: top;
-    background-repeat: repeat-x;
-    border: 1px solid #fff;
-    border-color: #ccc #444 #444 #ccc; /* ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight */
+    background: #fff;
+    border: 1px solid #444;
     z-index: 500;
 }
 
@@ -458,7 +456,7 @@ a.hometblink:hover {
     color: Gray;}
 
 
-	/* accesscontrol.inc.php - manager login page 
+/* accesscontrol.inc.php - manager login page 
 -----------------------------------------------------*/
 body#login {
     background: #f4f4f4;
@@ -784,8 +782,31 @@ ul#nav {
     margin: 3px 1px 3px 28px; 
 }
 
+/* Settings Table
+---------------------------------------------------------- */
+.settings {
+    width: 600px;
+}
+.settings tr {
+    width: 100% !important;
+}
+.settings td, .settings th {
+    background: transparent;
+}
+.settings td {
+}
+.settings th {
+    width: 200px !important;
+    text-align: left;
+    color: #555;
+    font-size: 120%;
+}
+.settings textarea, .settings input {
+    font-size: 100%;
+}
 
-/* WebFX tabs... must remove these...
+
+/* Tabs
 ---------------------------------------------------------- */
 .dynamic-tab-pane-control.tab-pane {
     position: relative;
