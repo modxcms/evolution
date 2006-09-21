@@ -313,7 +313,6 @@ $count = $row[0];
 		    <tr>
 			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/down.gif'  /></td>
 			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/up.gif'  /></td>
-			<td id="Button3" onclick="top.main.document.location.href='index.php?a=71';" title="<?php echo $_lang['search']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/tree_search.gif'  /></td>
 			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif'  /></td>
 			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/sort.gif'  /></td>
 			<td id="Button10" onclick="emptyTrash();" title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/trash<?php echo $count>0 ? "_full" : ""; ?>.gif'  /></td>
@@ -333,7 +332,6 @@ $count = $row[0];
 <script type="text/javascript">
     createButton(document.getElementById("Button1"));
     createButton(document.getElementById("Button2"));
-    createButton(document.getElementById("Button3"));
     createButton(document.getElementById("Button4"));
     createButton(document.getElementById("Button5"));
     createButton(document.getElementById("Button10"));

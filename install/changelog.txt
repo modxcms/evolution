@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1477 - September 21, 2006)
+MOD 0.9.5 beta 3 (rev 1480 - September 21, 2006)
 ====================================
 
+* Move Search from Tree Menu header icon to Site Menu.
 * [FS#531] QuickEdit trying to update wrong table with editedby and editedon data.
 * [FS#454] Eliminate browser warning when Tree node is null in Tree Menu. 
 * Small revision to code on duplicating document changes - brings duplication functions inside 'insert' loop for the pre-mySQL4 versions. I'm now much happier that multiple children will get handled correctly in this situation.
