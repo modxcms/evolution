@@ -23,7 +23,7 @@ if($limit<1) {
 
 ?>
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['mgr_access_permissions'] ;?></span>
+	<span class="right"><?php echo $_lang['mgr_access_permissions'] ;?></span>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['mgr_access_permissions'] ;?></div><div class="sectionBody">

@@ -6,7 +6,7 @@ if(!$modx->hasPermission('messages') && $_REQUEST['a']==10) {
 }
 ?>
 <div class="subTitle">
-<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['messages_title']; ?></span>
+<span class="right"><?php echo $_lang['messages_title']; ?></span>
 </div>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
@@ -40,12 +40,12 @@ if($limit!=1) {
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button11" onclick="document.location.href='index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/reply.gif" align="absmiddle"> <?php echo $_lang['messages_reply']; ?></td>
-				<script>createButton(document.getElementById("Button11"));</script>
-<?php if($message['sender']==0) { ?>				<script>document.getElementById("Button11").setEnabled(false);</script><?php } ?>
+				<script type="text/javascript">createButton(document.getElementById("Button11"));</script>
+<?php if($message['sender']==0) { ?>				<script type="text/javascript">document.getElementById("Button11").setEnabled(false);</script><?php } ?>
 			<td id="Button21" onclick="document.location.href='index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/forward.gif" align="absmiddle"> <?php echo $_lang['messages_forward']; ?></span></td>
-				<script>createButton(document.getElementById("Button21"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button21"));</script>
 			<td id="Button31" onclick="document.location.href='index.php?a=65&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-				<script>createButton(document.getElementById("Button31"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button31"));</script>
 		</tr>
 	</table>
 	</td>
@@ -363,9 +363,9 @@ function hideSpans(showSpan) {
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button1" onclick="documentDirty=false; document.messagefrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></td>
-				<script>createButton(document.getElementById("Button1"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 			<td id="Button2" onclick="document.location.href='index.php?a=10&t=c';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script>createButton(document.getElementById("Button2"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		</tr>
 	</table>
 </p>

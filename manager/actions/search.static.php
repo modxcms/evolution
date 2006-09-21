@@ -38,10 +38,10 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
   	<td colspan="4">
 		<table cellpadding="0" cellspacing="0" border="0">
 		    <td id="Button1" align="right" onclick="document.searchform.submitok.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?>
-				<script>createButton(document.getElementById("Button1"));</script>	
+				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>	
 			</td>
 		    <td id="Button2" align="right" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?>
-				<script>createButton(document.getElementById("Button2"));</script>	
+				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>	
 			</td>
 		</table>
 	</td>

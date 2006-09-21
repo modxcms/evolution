@@ -201,19 +201,19 @@ function showHide(what, onoff){
 
 <!-- Nav menu -->
 <div class="subTitle">
-<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
+<span class="right"><?php echo $_lang['web_user_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button1" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 			<td id="Button2" onclick="deleteuser();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-				<script>createButton(document.getElementById("Button2"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 				<?php if($_GET['a']!='88') { ?>
-					<script>document.getElementById("Button2").setEnabled(false);</script>
+					<script type="text/javascript">document.getElementById("Button2").setEnabled(false);</script>
 				<?php } ?>
 			<td id="Button3" onclick="document.location.href='index.php?a=99';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script>createButton(document.getElementById("Button3"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 		</tr>
 	</table>
 	<div class="stay">

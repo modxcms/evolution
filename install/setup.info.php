@@ -34,9 +34,7 @@
 	$ms[] = array("ContactForm","deprecated: Simple, configurable XHTML-validating contact form for delivery to email accounts.",0,"$setupPath/snippet.contactform.tpl","");
 	$ms[] = array("DropMenu","deprecated: Robust and configurable XHTML-validating menu and site map builder. Output an unordered list.",0,"$setupPath/snippet.dropmenu.tpl","");
 	$ms[] = array("FlexSearchForm","deprecated: Robust site search with like and partial matching.",0,"$setupPath/snippet.flexsearchform.tpl","");
-	$ms[] = array("NewsFeed","deprecated: Enable RSS2 news feed from your website.",0,"$setupPath/snippet.newsfeed.tpl","");
 	$ms[] = array("NewsListing","deprecated: Versatile news/article display system.",0,"$setupPath/snippet.newslisting.tpl","");
-	$ms[] = array("PageTrail","deprecated: Outputs the page trail, based on Bill Wilson's script",0,"$setupPath/snippet.pagetrail.tpl","&sep=Separator;string; &style=Style;string; &class=Class;string;");
 
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;

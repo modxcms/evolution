@@ -257,19 +257,19 @@ function decode(s){
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo htmlspecialchars($content['display_params']);?>">
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['tmplvars']; ?></span>
+	<span class="right"><?php echo $_lang['tmplvars']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 <?php if($_GET['a']=='301') { ?>
 		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 <?php } ?>
 		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
 	</table>
 	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
@@ -407,7 +407,7 @@ if($use_udperms==1) {
 <!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-<script>
+<script type="text/javascript">
 	function makePublic(b){
 		var notPublic=false;
 		var f=document.forms['mutate'];
@@ -481,4 +481,4 @@ if($use_udperms==1) {
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
-<script>setTimeout('showParameters()',10);</script>
+<script type="text/javascript">setTimeout('showParameters()',10);</script>

@@ -7,11 +7,11 @@ if(!$modx->hasPermission('change_password') && $_REQUEST['a']==28) {
 ?>
 
 <div class="subTitle">
-<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['change_password']; ?></span>
+<span class="right"><?php echo $_lang['change_password']; ?></span>
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button1" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 		</tr>
 	</table>
 </div>

@@ -54,10 +54,10 @@ else{
 		<tr>
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
 		<td id="Button3" onclick="deletelog();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 <?php } ?>
 		<td id="Button4" onclick="document.location.href='index.php?a=114';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
 		</tr>
 	</table>
 </div>

@@ -93,17 +93,17 @@ if($limit > 0) {
 ?>
 
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["doc_data_title"]; ?></span>
+	<span class="right"><?php echo $_lang["doc_data_title"]; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="editdocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
-			<script>createButton(document.getElementById("Button1"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 		<td id="Button2" onclick="movedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
-			<script>createButton(document.getElementById("Button2"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		<td id="Button4" onclick="duplicatedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button4"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
 		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
-			<script>createButton(document.getElementById("Button3"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 	</table>
 </div>
 

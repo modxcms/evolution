@@ -521,17 +521,17 @@ function decode(s){
 <input type="hidden" name="newtemplate" value="">
 
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['edit_document_title']; ?></span>
+	<span class="right"><?php echo $_lang['edit_document_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button1" onclick="documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 			<td id="Button2" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-				<script>createButton(document.getElementById("Button2"));</script>
-				<?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?><script>document.getElementById("Button2").setEnabled(false);</script><?php } ?>
+				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
+				<?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?><script type="text/javascript">document.getElementById("Button2").setEnabled(false);</script><?php } ?>
 			<td id="Button5" onclick="<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-				<script>createButton(document.getElementById("Button5"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button5"));</script>
 		</tr>
 	</table>
 	<div class="stay">
@@ -902,7 +902,7 @@ function decode(s){
 						echo "<option value='".$row['id']."'>".$row['name']."</option>";
 					}
 				?>
-				</select><?php //echo "<script>$sp;</script>"; ?>
+				</select><?php //echo "<script type="text/javascript">$sp;</script>"; ?>
 				</td><td><input type="hidden" onclick="" value="<?php echo $_lang['insert'];?>" title="<?php echo $_lang['insert_snippet'];?>" /></td>
 				</tr>
 				<tr><td colspan="2"></td></tr>
@@ -1091,7 +1091,7 @@ if(isset($_POST['docgroups'])) {
 <!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-<script>
+<script type="text/javascript">
 	function makePublic(b){
 		var notPublic=false;
 		var f=document.forms['mutate'];
@@ -1142,7 +1142,7 @@ if(isset($_POST['docgroups'])) {
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
-<script>//setTimeout('showParameters()',10);</script>
+<script type="text/javascript">//setTimeout('showParameters()',10);</script>
 
 <?php
 

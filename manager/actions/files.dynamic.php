@@ -103,7 +103,7 @@ else $webstart_path = "../".$webstart_path;
 
 ?>
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['files_title']; ?></span>
+	<span class="right"><?php echo $_lang['files_title']; ?></span>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['files_files']; ?></div><div class="sectionBody" style="font-size: 11px;">
@@ -541,9 +541,9 @@ if($_REQUEST['mode']=="edit") {
 
 <table cellpadding="0" cellspacing="0">
 	<td id="Button1" onclick="document.editFile.submit();"><img src="media/style/<?php echo $theme; ?>/images/icons/save.gif" align="absmiddle"> <?php echo $_lang["save"]; ?></td>
-		<script>createButton(document.getElementById("Button1"));</script>
+		<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 	<td id="Button2" onclick="document.location.href='index.php?a=31&path=<?php echo urlencode($_REQUEST['path']); ?>';"><img src="media/style/<?php echo $theme; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></td>
-		<script>createButton(document.getElementById("Button2"));</script>
+		<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 </table>
 <?php } ?>
 </div>

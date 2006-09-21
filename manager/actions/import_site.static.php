@@ -10,7 +10,7 @@ $allowedfiles = array('html','htm','xml');
 
 ?>
 
-<script>
+<script type="text/javascript">
 	parent.menu.ca = "parent";
 	function setParent(pId, pName) {
 		document.importFrm.parent.value=pId;
@@ -22,7 +22,7 @@ $allowedfiles = array('html','htm','xml');
 	}
 </script>
 <div class="subTitle">
-<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['import_site_html']; ?></span>
+<span class="right"><?php echo $_lang['import_site_html']; ?></span>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
@@ -55,7 +55,7 @@ if(!isset($_POST['import'])) {
 <p />
 <table cellpadding="0" cellspacing="0">
 	<td id="Button1" onclick="document.importFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["import_site_start"]; ?></td>
-		<script>createButton(document.getElementById("Button1"));</script>
+		<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 </table>
 </form>
 </fieldset>
@@ -92,9 +92,9 @@ if(!isset($_POST['import'])) {
 <p />
 <table cellpadding="0" cellspacing="0">
 	<td id="Button2" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></td>
-		<script>createButton(document.getElementById("Button2"));</script>
+		<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 </table>
-<script>
+<script type="text/javascript">
 	parent.menu.ca = "";
 </script>
 <?php

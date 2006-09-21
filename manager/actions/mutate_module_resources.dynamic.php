@@ -191,11 +191,11 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 <input type="hidden" name="newids" value="" />
 <input type="hidden" name="id" value="<?php echo $content['id'];?>" />
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['module_resource_title']; ?></span>
+	<span class="right"><?php echo $_lang['module_resource_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button4" onclick="document.location.href='index.php?a=106';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
-			<script>createButton(document.getElementById("Button4"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
 	</table>
 </div>
 

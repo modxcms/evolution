@@ -5,7 +5,7 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==55) {
 	$e->dumpError();
 }?>
 <div class="subTitle">
-<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />View manager logs</span>
+<span class="right">View manager logs</span>
 </div>
 
 <div class="sectionHeader">Query logging</div><div class="sectionBody" id="lyr1">
@@ -139,9 +139,9 @@ $rs = mysql_query($sql);
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button1" onclick="document.logging.log_submit.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></td>
-				<script>createButton(document.getElementById("Button1"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 			<td id="Button2" onclick="document.location.href='index.php?a=13';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script>createButton(document.getElementById("Button2"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		</tr>
 	</table>
       <input type='submit' name='log_submit' value='Search logs' style="display:none">

@@ -11,7 +11,7 @@ $base = 'http://'.$_SERVER['SERVER_NAME'].str_replace("/manager/index.php", "", 
 
 ?>
 
-<script>
+<script type="text/javascript">
 function reloadTree() {
 	// redirect to welcome
 	document.location.href = "index.php?r=1&a=7";
@@ -19,7 +19,7 @@ function reloadTree() {
 </script>
 
 <div class="subTitle">
-<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['export_site_html']; ?></span>
+<span class="right"><?php echo $_lang['export_site_html']; ?></span>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['export_site_html']; ?></div><div class="sectionBody">
@@ -61,7 +61,7 @@ echo $_lang['export_site_message'];
 <p />
 <table cellpadding="0" cellspacing="0">
 	<td id="Button1" onclick="document.exportFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["export_site_start"]; ?></td>
-		<script>createButton(document.getElementById("Button1"));</script>
+		<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 </table>
 </form>
 </fieldset>
@@ -310,7 +310,7 @@ echo $_lang['export_site_message'];
 <p />
 <table cellpadding="0" cellspacing="0">
 	<td id="Button2" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></td>
-		<script>createButton(document.getElementById("Button2"));</script>
+		<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 </table>
 <?php
 }

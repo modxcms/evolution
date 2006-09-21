@@ -25,7 +25,7 @@ if ($mode=='backup') {
 	if (!is_array($tables)) {
 		echo "<html>";
 		echo "<body>";
-		echo "<script>alert('Please select a valid table from the list below');</script>";
+		echo "<script type="text/javascript">alert('Please select a valid table from the list below');</script>";
 		echo "</body>";
 		echo "</html>";
 		exit;

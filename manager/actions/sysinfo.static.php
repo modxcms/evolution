@@ -6,10 +6,10 @@ if(!$modx->hasPermission('logs') && $_REQUEST['a']==53) {
 }
 ?>
 <div class="subTitle">
-<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["view_sysinfo"]; ?></span>
+<span class="right"><?php echo $_lang["view_sysinfo"]; ?></span>
 </div>
 
-<script>
+<script type="text/javascript">
 	function viewPHPInfo() {
 		dontShowWorker = true; // prevent worker from being displayed
 		window.location.href="index.php?a=200";

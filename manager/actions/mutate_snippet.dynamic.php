@@ -275,15 +275,15 @@ function decode(s){
 
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 <?php if($_GET['a']=='22') { ?>
 		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 <?php } ?>
 		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
 	</table>
 	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
@@ -405,6 +405,6 @@ function decode(s){
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
-<script>
+<script type="text/javascript">
 	setTimeout('showParameters();',10);
 </script>

@@ -39,7 +39,7 @@ echo $cm->render();
 ?>
 
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['module_management']; ?></span>
+	<span class="right"><?php echo $_lang['module_management']; ?></span>
 </div>
 <script language="JavaScript" type="text/javascript">
   	function searchResource(){

@@ -119,26 +119,27 @@ function updateContentType(){
 
 </script>
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['settings_title']; ?></span>
+	<span class="right"><?php echo $_lang['settings_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<tr>
-			<td id="Button1" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1"));</script>
-			<td id="Button5" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-				<script>createButton(document.getElementById("Button5"));</script>
+			<td id="Button1" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></td>
+			<td id="Button5" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></td>
 		</tr>
 	</table>
+	<script type="text/javascript">
+	    createButton(document.getElementById("Button1"));
+	    createButton(document.getElementById("Button5"));
+	</script>
 </div>
-<div style="margin: 0px 10px 0px 20px">
+<div style="margin: 0 10px 0 20px">
   <form name="settings" action="index.php?a=30" method="post">
     <input type="hidden" name="site_id" value="<?php echo $site_id; ?>">
     <input type="hidden" name="settings_version" value="<?php echo $version; ?>">
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
     <?php if(!isset($settings_version) || $settings_version!=$version) { ?>
-    <div class='sectionBody' style='margin-left: 0px; margin-right: 0px;'><?php echo $_lang['settings_after_install']; ?></div>
+    <div class='sectionBody'><?php echo $_lang['settings_after_install']; ?></div>
     <?php } ?>
-    <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <div class="tab-pane" id="settingsPane">
       <script type="text/javascript">
@@ -158,7 +159,7 @@ function updateContentType(){
 				$seconds = $i*60*60;
 				$selectedtext = $seconds==$server_offset_time ? "selected='selected'" : "" ;
 			?>
-                <option value="<?php echo $seconds; ?>" <?php echo $selectedtext; ?>><?php echo $i; ?></option>
+                <option value="<?php echo $seconds; ?>" <?php echo $selectedtext; ?> /><?php echo $i; ?></option>
                 <?php
 			}
 			?>
@@ -173,9 +174,9 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["server_protocol_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="http" <?php echo ($server_protocol=='http' || !isset($server_protocol))? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="http" <?php echo ($server_protocol=='http' || !isset($server_protocol))? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["server_protocol_http"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="https" <?php echo $server_protocol=='https' ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="https" <?php echo $server_protocol=='https' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["server_protocol_https"]?> </td>
           </tr>
           <tr>
@@ -197,7 +198,7 @@ function updateContentType(){
 			$languagename = substr($file, 0, $endpos);
 			$selectedtext = $languagename==$manager_language ? "selected='selected'" : "" ;
 ?>
-                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
+                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?> /><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
                 <?php
 		}
 	}
@@ -271,9 +272,9 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["sitestatus_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="site_status" value="1" <?php echo ($site_status=='1' || !isset($site_status)) ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="site_status" value="1" <?php echo ($site_status=='1' || !isset($site_status)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["online"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="site_status" value="0" <?php echo $site_status=='0' ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="site_status" value="0" <?php echo $site_status=='0' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["offline"]?> </td>
           </tr>
           <tr>
@@ -322,9 +323,9 @@ function updateContentType(){
           </tr>
           <tr id='logRow1' class='row1' style="display: <?php echo $track_visitors==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["resolve_hostnames_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="resolve_hostnames" value="1" <?php echo ($resolve_hostnames=='1' || !isset($resolve_hostnames)) ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="resolve_hostnames" value="1" <?php echo ($resolve_hostnames=='1' || !isset($resolve_hostnames)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="resolve_hostnames" value="0" <?php echo $resolve_hostnames=='0' ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="resolve_hostnames" value="0" <?php echo $resolve_hostnames=='0' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr id='logRow2' class='row1' style="display: <?php echo $track_visitors==1 ? $displayStyle : 'none' ; ?>">
@@ -361,7 +362,7 @@ function updateContentType(){
 						$oldTmpName = $row['templatename'];
 					}
 				?>
-					<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?>><?php echo $row['templatename']; ?></option>
+					<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?> /><?php echo $row['templatename']; ?></option>
 				<?php
 				}
 				?>
@@ -382,9 +383,9 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaultpublish_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="publish_default" value="1" <?php echo $publish_default=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="publish_default" value="1" <?php echo $publish_default=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="publish_default" value="0" <?php echo ($publish_default=='0' || !isset($publish_default)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="publish_default" value="0" <?php echo ($publish_default=='0' || !isset($publish_default)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -397,9 +398,9 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaultcache_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="cache_default" value="1" <?php echo $cache_default=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="cache_default" value="1" <?php echo $cache_default=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="cache_default" value="0" <?php echo ($cache_default=='0' || !isset($cache_default)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="cache_default" value="0" <?php echo ($cache_default=='0' || !isset($cache_default)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -411,9 +412,9 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaultsearch_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="search_default" value="1" <?php echo $search_default=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="search_default" value="1" <?php echo $search_default=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="search_default" value="0" <?php echo ($search_default=='0' || !isset($search_default)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="search_default" value="0" <?php echo ($search_default=='0' || !isset($search_default)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -425,9 +426,9 @@ function updateContentType(){
           </tr>
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaultmenuindex_title"] ?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="auto_menuindex" value="1" <?php echo ($auto_menuindex=='1' || !isset($auto_menuindex)) ? 'checked="checked"' : "" ; ?>> 
+            <td> <input onChange="documentDirty=true;" type="radio" name="auto_menuindex" value="1" <?php echo ($auto_menuindex=='1' || !isset($auto_menuindex)) ? 'checked="checked"' : "" ; ?> /> 
             <?php echo $_lang["yes"]?><br /> 
-            <input onChange="documentDirty=true;" type="radio" name="auto_menuindex" value="0" <?php echo ($auto_menuindex=='0') ? 'checked="checked"' : "" ; ?>> 
+            <input onChange="documentDirty=true;" type="radio" name="auto_menuindex" value="0" <?php echo ($auto_menuindex=='0') ? 'checked="checked"' : "" ; ?> /> 
             <?php echo $_lang["no"]?> </td> 
           </tr>
           <tr> 
@@ -516,9 +517,9 @@ function updateContentType(){
           </tr>
           <tr id='furlRow7' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendly_alias_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="1" <?php echo $friendly_alias_urls=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="1" <?php echo $friendly_alias_urls=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="0" <?php echo ($friendly_alias_urls=='0' || !isset($friendly_alias_urls)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="0" <?php echo ($friendly_alias_urls=='0' || !isset($friendly_alias_urls)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr id='furlRow8' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
@@ -530,9 +531,9 @@ function updateContentType(){
           </tr>
           <tr id='furlRow10' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["use_alias_path_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="1" <?php echo $use_alias_path=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="1" <?php echo $use_alias_path=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="0" <?php echo ($use_alias_path=='0' || !isset($use_alias_path)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="use_alias_path" value="0" <?php echo ($use_alias_path=='0' || !isset($use_alias_path)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr id='furlRow11' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
@@ -544,9 +545,9 @@ function updateContentType(){
           </tr>
           <tr id='furlRow16' class='row2' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["duplicate_alias_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="1" <?php echo $allow_duplicate_alias=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="1" <?php echo $allow_duplicate_alias=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="0" <?php echo ($allow_duplicate_alias=='0' || !isset($allow_duplicate_alias)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="allow_duplicate_alias" value="0" <?php echo ($allow_duplicate_alias=='0' || !isset($allow_duplicate_alias)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr id='furlRow17' class='row2' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
@@ -558,9 +559,9 @@ function updateContentType(){
           </tr>
           <tr id='furlRow13' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["automatic_alias_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="1" <?php echo $automatic_alias=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="1" <?php echo $automatic_alias=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="0" <?php echo ($automatic_alias=='0' || !isset($automatic_alias)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="automatic_alias" value="0" <?php echo ($automatic_alias=='0' || !isset($automatic_alias)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr id='furlRow14' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
@@ -603,9 +604,9 @@ function updateContentType(){
           </tr>
           <tr id='udPermsRow1' class='row1' style="display: <?php echo $use_udperms==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["udperms_allowroot_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="udperms_allowroot" value="1" <?php echo $udperms_allowroot=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="udperms_allowroot" value="1" <?php echo $udperms_allowroot=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="udperms_allowroot" value="0" <?php echo ($udperms_allowroot=='0' || !isset($udperms_allowroot)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="udperms_allowroot" value="0" <?php echo ($udperms_allowroot=='0' || !isset($udperms_allowroot)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr id='udPermsRow2' class='row1' style="display: <?php echo $use_udperms==1 ? $displayStyle : 'none' ; ?>">
@@ -617,9 +618,9 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["captcha_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="1" <?php echo $use_captcha=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="1" <?php echo $use_captcha=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="0" <?php echo ($use_captcha=='0' || !isset($use_captcha)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="0" <?php echo ($use_captcha=='0' || !isset($use_captcha)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -842,7 +843,7 @@ function updateContentType(){
 			$languagename = substr($file, 0, $endpos);
 			$selectedtext = $languagename==$fe_editor_lang ? "selected='selected'" : "" ;
 ?>
-                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
+                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?> /><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
                 <?php
 		}
 	}
@@ -888,9 +889,9 @@ function updateContentType(){
         <table border="0" cellspacing="0" cellpadding="3">
 		  <tr>
             <td nowrap class="warning"><b><?php echo $_lang["settings_strip_image_paths_title"]?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?>>
+            <td> <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="0" <?php echo ($strip_image_paths=='0' || !isset($strip_image_paths)) ? 'checked="checked"' : "" ; ?>>
+              <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="0" <?php echo ($strip_image_paths=='0' || !isset($strip_image_paths)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -979,9 +980,9 @@ function updateContentType(){
           </tr>
 			 <tr>
 			   <td nowrap class="warning"><b><?php echo $_lang["show_preview"] ?></b></td>
-			   <td> <input onchange="documentDirty=true;" type="radio" name="show_preview" value="1" <?php echo ($show_preview=='1' || !isset($show_preview)) ? 'checked="checked"' : ""; ?>>
+			   <td> <input onchange="documentDirty=true;" type="radio" name="show_preview" value="1" <?php echo ($show_preview=='1' || !isset($show_preview)) ? 'checked="checked"' : ""; ?> />
 				 <?php echo $_lang["yes"]?><br />
-				 <input onchange="documentDirty=true;" type="radio" name="show_preview" value="0" <?php echo $show_preview=='0' ? 'checked="checked"' : ""; ?>>
+				 <input onchange="documentDirty=true;" type="radio" name="show_preview" value="0" <?php echo $show_preview=='0' ? 'checked="checked"' : ""; ?> />
 				 <?php echo $_lang["no"]?></td>
 			 </tr>
           <tr>

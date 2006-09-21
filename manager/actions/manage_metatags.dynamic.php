@@ -10,7 +10,7 @@ $modx->manager->initPageViewState();
 
 ?>
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['metatags_and_keywords'] ;?></span>
+	<span class="right"><?php echo $_lang['metatags_and_keywords'] ;?></span>
 </div>
 
 <script type="text/javascript">
@@ -176,7 +176,7 @@ $modx->manager->initPageViewState();
 		$grd->colWidths="40";					
 		$grd->colAligns="center";
 		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/><img src='media/images/icons/comment.gif' width='16' height='16' align='absmiddle' /></a>||".
-					   "template:<a href='javascript:;' title='".$_lang["click_to_edit_title"]."' onclick='editTag([+id+])'>[+value+]</a><span style='display:none;'><script> tagRows['[+id+]']=[\"[+name+]\",\"[+tag+]\",\"[+tagvalue+]\",\"[+http_equiv+]\"];</script>";
+					   "template:<a href='javascript:;' title='".$_lang["click_to_edit_title"]."' onclick='editTag([+id+])'>[+value+]</a><span style='display:none;'><script type="text/javascript"> tagRows['[+id+]']=[\"[+name+]\",\"[+tag+]\",\"[+tagvalue+]\",\"[+http_equiv+]\"];</script>";
 		echo $grd->render();						
 	?>
 	</div>

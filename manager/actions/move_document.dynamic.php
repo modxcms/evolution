@@ -85,9 +85,9 @@ function checkParentChildRelation(pId, pName) {
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button1" onclick="document.newdocumentparent.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 			<td id="Button2" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script>createButton(document.getElementById("Button2"));</script>
+				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		</tr>
 	</table>
 </div>

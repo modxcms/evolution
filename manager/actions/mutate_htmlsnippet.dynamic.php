@@ -128,19 +128,19 @@ function deletedocument() {
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
 <div class="subTitle">
-	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['htmlsnippet_title']; ?></span>
+	<span class="right"><?php echo $_lang['htmlsnippet_title']; ?></span>
 
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 <?php if($_GET['a']=='78') { ?>
 		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 <?php } ?>
 		<td id="Button4" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4"));</script>
+			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
 	</table>
 	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
