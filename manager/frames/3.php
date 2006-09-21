@@ -303,6 +303,12 @@ $row = mysql_fetch_row($rs);
 $count = $row[0];
 
 ?>
+<!--[if lt IE 7]>
+    body { behavior: url(../assets/js/htcmime.php?file=csshover.htc) }
+    img { behavior: url(../assets/js/htcmime.php?file=pngbehavior.htc); }
+<![endif]-->
+
+
 </head>
 <!-- Raymond: add onbeforeunload -->
 <body onclick="hideMenu();" class="treeframebody">
