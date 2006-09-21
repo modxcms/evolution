@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1474 - September 21, 2006)
+MOD 0.9.5 beta 3 (rev 1476 - September 21, 2006)
 ====================================
 
+* [FS454] Eliminate browser warning when Tree node is null in Tree Menu. 
 * Small revision to code on duplicating document changes - brings duplication functions inside 'insert' loop for the pre-mySQL4 versions. I'm now much happier that multiple children will get handled correctly in this situation.
 * [FS#503] and [FS#253] Fixes problem with TVs/access permissions being incorrectly assigned to the wrong documents when duplicating a document with children.
 * [FS#508] Changing template breaks publish_date.  This is Susan's fix as outlined in the bug report - tested and it works perfectly.

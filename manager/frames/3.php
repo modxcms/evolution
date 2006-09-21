@@ -142,9 +142,11 @@
 
 	function rpcLoadData(html)
 	{
-		rpcNode.setInnerHTML(html); // modx
-		rpcNode.style.display = 'block';
-		rpcNode.loaded = true;
+		if(rpcNode != null){
+			rpcNode.setInnerHTML(html); // modx
+			rpcNode.style.display = 'block';
+			rpcNode.loaded = true;
+		}
 	}
 
 	function expandTree()
