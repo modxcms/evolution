@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1471 - September 20, 2006)
+MOD 0.9.5 beta 3 (rev 1473 - September 20, 2006)
 ====================================
 
+* Meta tags now inserted immediately after title tag (was head) (1473)
 * Removed needless presentational spacer images from Manager pages
 * Updated javascript tag/attribute syntax to eliminate warnings in the manager
 * Removed snippets from installer no longer included with default distribution

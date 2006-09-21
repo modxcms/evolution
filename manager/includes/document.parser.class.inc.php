@@ -602,7 +602,7 @@ class DocumentParser {
                 $metas .= "\t<meta $tagstyle=\"$tag\" content=\"$tagvalue\" />\n";
             }
         }
-        $template= preg_replace("/(<head>)/i", "\\1\n" . $metas, $template);
+        $template= preg_replace("/(<title>)/i", "\\1\n" . $metas, $template);
         return $template;
     }
 
