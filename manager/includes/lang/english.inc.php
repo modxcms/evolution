@@ -1246,4 +1246,9 @@ $_lang["uploadable_media_title"] = 'Uploadable Media Types:';
 $_lang["uploadable_media_message"]= 'Here you can enter a list of files that can be uploaded into \'assets/media/\' using the Resource Manager. Please enter the extensions for the media types, seperated by commas.';
 $_lang["uploadable_flash_title"] = 'Uploadable Flash Types:';
 $_lang["uploadable_flash_message"]= 'Here you can enter a list of files that can be uploaded into \'assets/flash/\' using the Resource Manager. Please enter the extensions for the flash types, seperated by commas.';
+
+$_lang['failed_login_title'] = 'Failed Login Attempts:';
+$_lang['failed_login_message'] = 'Here you can enter the number of failed login attempts that are allowed before a user is blocked.';
+$_lang['blocked_minutes_title'] = 'Blocked Minutes:';
+$_lang['blocked_minutes_message'] = 'Here you can enter the number of minutes that a user will be blocked for if they reach their maximum number of allowed failed login attempts. Please enter this value as numbers only (no commas, spaces etc.)';
 ?>

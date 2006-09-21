@@ -3,9 +3,17 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1473 - September 20, 2006)
+MOD 0.9.5 beta 3 (rev 1474 - September 21, 2006)
 ====================================
 
+* Small revision to code on duplicating document changes - brings duplication functions inside 'insert' loop for the pre-mySQL4 versions. I'm now much happier that multiple children will get handled correctly in this situation.
+* [FS#503] and [FS#253] Fixes problem with TVs/access permissions being incorrectly assigned to the wrong documents when duplicating a document with children.
+* [FS#508] Changing template breaks publish_date.  This is Susan's fix as outlined in the bug report - tested and it works perfectly.
+* [FS#475] Safari crashes when trying to change database name in Installer. Changed the name of the database name field (and associated references) from 'databasename' to 'database_name' and, err, it now works correctly.
+* [FS#505] Allow arrays to be passed via $_POST with an additional loop for making sure that the array values still get the MODx tag cleansing.
+* [FS#521] Changed reference from 'Etomite' to 'MODx' in error message.
+* [FS#431] Adds in two new system configuration settings: failed login count - max number of failed logins allowed before user is blocked, applied to both manager and web users; blocked minutes - length of time used to calculate the 'blocked until' date (I used minutes as it gives a good spread of time periods without getting into messy decimal values).
+* [FS#273] Resolved issues when HTTPS is available but not ON when determining site_url. (1474)
 * Meta tags now inserted immediately after title tag (was head) (1473)
 * Removed needless presentational spacer images from Manager pages
 * Updated javascript tag/attribute syntax to eliminate warnings in the manager

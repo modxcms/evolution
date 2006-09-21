@@ -21,7 +21,7 @@ else {
 	$database_server = $_POST['databasehost'];
 	$database_user = $_POST['databaseloginname'];
 	$database_password = $_POST['databaseloginpassword'];
-	$dbase = "`".$_POST['databasename']."`";
+	$dbase = "`".$_POST['database_name']."`";
 	$table_prefix = $_POST['tableprefix'];
 	$adminname = $_POST['cmsadmin'];
 	$adminpass = $_POST['cmspassword'];
@@ -163,6 +163,7 @@ $configString = '<?php
 	error_reporting(E_ALL ^ E_NOTICE);
 
 	$site_sessionname = \''.$site_sessionname.'\';
+    $https_port = \'443\';
 	
 	// automatically assign base_path and base_url
 	if($base_path==""||$base_url=="") {
@@ -174,10 +175,10 @@ $configString = '<?php
 		$pth = implode("manager",$a); unset($a);
 		$base_url = $url.(substr($url,-1)!="/"? "/":"");
 		$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
-		$site_url = (!isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\']) != \'on\')? \'http://\' : \'https://\';
+		$site_url = ((isset($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\'])==\'on\') || $_SERVER[\'SERVER_PORT\']==$https_port)? \'https://\' : \'http://\';
 		$site_url .= $_SERVER[\'HTTP_HOST\'];
 		if($_SERVER[\'SERVER_PORT\']!=80) $site_url = str_replace(\':\'.$_SERVER[\'SERVER_PORT\'],\'\',$site_url); // remove port from HTTP_HOST 
-		$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || isset($_SERVER[\'HTTPS\']) || strtolower($_SERVER[\'HTTPS\'])==\'on\')? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
+		$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || (isset($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\'])==\'on\') || $_SERVER[\'SERVER_PORT\']==$https_port)? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
 		$site_url .= $base_url;
 	}
 

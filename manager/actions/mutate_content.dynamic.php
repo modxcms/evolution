@@ -1,45 +1,44 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE != "true")
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 // check for edit permissions
-if(!$modx->hasPermission('edit_document') && $_REQUEST['a']==27) {
+if (!$modx->hasPermission('edit_document') && $_REQUEST['a'] == 27) {
 	$e->setError(3);
 	$e->dumpError();
 }
 
 // check for create permissions
-if(!$modx->hasPermission('new_document') && ($_REQUEST['a']==85 || $_REQUEST['a']==4 || $_REQUEST['a']==72)) {
+if (!$modx->hasPermission('new_document') && ($_REQUEST['a'] == 85 || $_REQUEST['a'] == 4 || $_REQUEST['a'] == 72)) {
 	$e->setError(3);
 	$e->dumpError();
 }
 
-
-function isNumber($var)
-{
-	if(strlen($var)==0) {
+function isNumber($var) {
+	if (strlen($var) == 0) {
 		return false;
 	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
+	for ($i = 0; $i < strlen($var); $i++) {
+		if (substr_count("0123456789", substr($var, $i, 1)) == 0) {
 			return false;
 		}
     }
 	return true;
 }
 
-if(!isset($_REQUEST['id'])) {
-	$id=0;
+if (!isset ($_REQUEST['id'])) {
+	$id = 0;
 } else {
-	$id = !empty($_REQUEST['id']) ? $_REQUEST['id']:0;
+	$id = !empty ($_REQUEST['id']) ? $_REQUEST['id'] : 0;
 }
 
 // make sure the id's a number
-if(!isNumber($id)) {
+if (!isNumber($id)) {
 	$e->setError(4);
 	$e->dumpError();
 }
 
-if($action==27 ) {
+if ($action == 27) {
 	//editing an existing document
 	// check permissions on the document
 	include_once "./processors/user_documents_permissions.class.php";
@@ -48,43 +47,45 @@ if($action==27 ) {
 	$udperms->document = $id;
 	$udperms->role = $_SESSION['mgrRole'];
 
-	if(!$udperms->checkPermissions()) {
+	if (!$udperms->checkPermissions()) {
 		?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 		<p><?php echo $_lang['access_permission_denied']; ?></p>
 		<?php
-		include("footer.inc.php");
+
+		include ("footer.inc.php");
 		exit;
 	}
 
-}
-else {
+} else {
 	// new document, check the user is allowed to create a document here
 	// check permissions on the parent of this document
 	include_once "./processors/user_documents_permissions.class.php";
 	$udperms = new udperms();
 	$udperms->user = $modx->getLoginUserID();
-	$udperms->document = isset($_REQUEST['pid']) ? $_REQUEST['pid'] : 0 ;
-	if ($_POST['parent'] && $udperms->document == 0) $udperms->document = $_POST['parent'];
+	$udperms->document = isset ($_REQUEST['pid']) ? $_REQUEST['pid'] : 0;
+	if ($_POST['parent'] && $udperms->document == 0)
+		$udperms->document = $_POST['parent'];
 	$udperms->role = $_SESSION['mgrRole'];
 
-	if(!$udperms->checkPermissions()) {
+	if (!$udperms->checkPermissions()) {
 		?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 		<p><?php echo $_lang['access_permission_denied']; ?></p>
 		<?php
-		include("footer.inc.php");
+
+		include ("footer.inc.php");
 		exit;
 	}
 }
 
 // check to see the document isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=27 AND $dbase.".$table_prefix."active_users.id=$id";
+$sql = "SELECT internalKey, username FROM $dbase." . $table_prefix . "active_users WHERE $dbase." . $table_prefix . "active_users.action=27 AND $dbase." . $table_prefix . "active_users.id=$id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
+if ($limit > 1) {
+	for ($i = 0; $i < $limit; $i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"],$lock['username'],"document");
+		if ($lock['internalKey'] != $modx->getLoginUserID()) {
+			$msg = sprintf($_lang["lock_msg"], $lock['username'], "document");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -92,17 +93,16 @@ if($limit>1) {
 }
 // end check for lock
 
-
 // get document groups for current user
-if($_SESSION['mgrDocgroups']) {
-	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
+if ($_SESSION['mgrDocgroups']) {
+	$docgrp = implode(",", $_SESSION['mgrDocgroups']);
 }
 
-if(!empty($id)) {
-	$tblsc = $dbase.".".$table_prefix."site_content";
-	$tbldg = $dbase.".".$table_prefix."document_groups";
-	$access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
-			  (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
+if (!empty ($id)) {
+	$tblsc = $dbase . "." . $table_prefix . "site_content";
+	$tbldg = $dbase . "." . $table_prefix . "document_groups";
+	$access = "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0" .
+	 (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
 	$sql = "SELECT DISTINCT sc.*
 			FROM $tblsc sc
 			LEFT JOIN $tbldg dg on dg.document = sc.id
@@ -110,39 +110,53 @@ if(!empty($id)) {
 			AND ($access);";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
-	if($limit>1) {
+	if ($limit > 1) {
 			$e->setError(6);
 			$e->dumpError();
 	}
-	if($limit<1) {
+	if ($limit < 1) {
 			$e->setError(7);
 			$e->dumpError();
 	}
 	$content = mysql_fetch_assoc($rs);
-}
-else {
-	$content = array();
+} else {
+	$content = array ();
 }
 
 // restore saved form
 $formRestored = false;
-if($modx->manager->hasFormValues()) {
+if ($modx->manager->hasFormValues()) {
 	$modx->manager->loadFormValues();
 	$formRestored = true;
 }
 
 // retain form values if template was changed
-if($formRestored==true||isset($_REQUEST['newtemplate'])) {
-	$content = array_merge($content,$_POST);
-	$content["content"]=$_POST["ta"];
-	if(empty($content["pub_date"])) unset($content["pub_date"]);
-	if(empty($content["unpub_date"])) unset($content["unpub_date"]);
+// edited to convert pub_date and unpub_date
+// sottwell 02-09-2006
+if ($formRestored == true || isset ($_REQUEST['newtemplate'])) {
+	$content = array_merge($content, $_POST);
+	$content["content"] = $_POST["ta"];
+	if (empty ($content["pub_date"])) {
+		unset ($content["pub_date"]);
+	} else {
+		$pub_date = $content['pub_date'];
+		list ($d, $m, $Y, $H, $M, $S) = sscanf($pub_date, "%2d-%2d-%4d %2d:%2d:%2d");
+		$pub_date = strtotime("$m/$d/$Y $H:$M:$S");
+		$content['pub_date'] = $pub_date;
+}
+	if (empty ($content["unpub_date"])) {
+		unset ($content["unpub_date"]);
+	} else {
+		$unpub_date = $content['unpub_date'];
+		list ($d, $m, $Y, $H, $M, $S) = sscanf($unpub_date, "%2d-%2d-%4d %2d:%2d:%2d");
+		$unpub_date = strtotime("$m/$d/$Y $H:$M:$S");
+		$content['unpub_date'] = $unpub_date;
+	}
 }
 
-
 // increase menu index if this is a new document
-if(!isset($_REQUEST["id"])) {
-	if (!isset($auto_menuindex) || $auto_menuindex ){
+if (!isset ($_REQUEST["id"])) {
+	if (!isset ($auto_menuindex) || $auto_menuindex) {
 	    $pid = intval($_REQUEST["pid"]);
 	    $tbl = $modx->getFullTableName("site_content");
 	    $sql = "SELECT count(*) as 'cnt' FROM $tbl WHERE parent='$pid'";
@@ -152,7 +166,7 @@ if(!isset($_REQUEST["id"])) {
 	}
 }
 
-if(isset($_POST['which_editor'])){
+if (isset ($_POST['which_editor'])) {
 	$which_editor = $_POST['which_editor'];
 }
 ?>
@@ -508,9 +522,13 @@ function decode(s){
 
      <form name="mutate" method="post" enctype="multipart/form-data" action="index.php">
 <?php
+
 	// invoke OnDocFormPrerender event
-	$evtOut = $modx->invokeEvent("OnDocFormPrerender",array("id" => $id));
-	if(is_array($evtOut)) echo implode("",$evtOut);
+$evtOut = $modx->invokeEvent("OnDocFormPrerender", array (
+	"id" => $id
+));
+if (is_array($evtOut))
+	echo implode("", $evtOut);
 ?>
 <input type="hidden" name="a" value="5">
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
@@ -558,9 +576,12 @@ function decode(s){
 		<div class="tab-page" id="tabGeneral">
 			<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
 			<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabGeneral" ) );</script>
-			<?php if($content['type']=="reference" || $_REQUEST['a']==72) {
+			<?php
+
+if ($content['type'] == "reference" || $_REQUEST['a'] == 72) {
 				echo $_lang['weblink_message'];
-			} ?>
+}
+?>
 			<table width="450" border="0" cellspacing="0" cellpadding="0">
 			  <tr style="height: 24px;">
 				<td width='100px' align="left"><span class='warning'><?php echo $_lang['document_title']; ?></span></span></td>
@@ -597,24 +618,27 @@ function decode(s){
 				<td><span class='warning'><?php echo $_lang['page_data_template']; ?></span></td>
 				<td>
 			<?php
-				$sql = "select templatename, id from $dbase.".$table_prefix."site_templates";
+
+$sql = "select templatename, id from $dbase." . $table_prefix . "site_templates";
 				$rs = mysql_query($sql);
 			?>
 			<select id="template" name="template" class="inputBox" onchange='templateWarning();' style="width:300px">
 				<option value="0">(blank)</option>
 			<?php
+
 			while ($row = mysql_fetch_assoc($rs)) {
-				if(isset($_REQUEST['newtemplate'])){
-					$selectedtext = $row['id']==$_REQUEST['newtemplate'] ? "selected='selected'" : "" ;
-				}
-				else if(isset($content['template'])) {
-					$selectedtext = $row['id']==$content['template'] ? "selected='selected'" : "" ;
+	if (isset ($_REQUEST['newtemplate'])) {
+		$selectedtext = $row['id'] == $_REQUEST['newtemplate'] ? "selected='selected'" : "";
+	} else
+		if (isset ($content['template'])) {
+			$selectedtext = $row['id'] == $content['template'] ? "selected='selected'" : "";
 				} else {
-					$selectedtext = $row['id']==$default_template ? "selected='selected'" : "" ;
+			$selectedtext = $row['id'] == $default_template ? "selected='selected'" : "";
 				}
 			?>
 				<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?>><?php echo $row['templatename']; ?></option>
 			<?php
+
 			}
 			?>
 				</select>
@@ -641,28 +665,30 @@ function decode(s){
 			  <tr style="height: 24px;">
 				<td valign="top"><span class='warning'><?php echo $_lang['document_parent']; ?></span></td>
 				<td valign="top"><?php
-			if(isset($_REQUEST['id'])) {
-				if($content['parent']==0) {
+
+if (isset ($_REQUEST['id'])) {
+	if ($content['parent'] == 0) {
 					$parentname = $site_name;
 				} else {
-					$sql = "SELECT pagetitle FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.id = ".$content['parent'].";";
+		$sql = "SELECT pagetitle FROM $dbase." . $table_prefix . "site_content WHERE $dbase." . $table_prefix . "site_content.id = " . $content['parent'] . ";";
 					$rs = mysql_query($sql);
 					$limit = mysql_num_rows($rs);
-					if($limit!=1) {
+		if ($limit != 1) {
 						$e->setError(8);
 						$e->dumpError();
 					}
 					$parentrs = mysql_fetch_assoc($rs);
 					$parentname = $parentrs['pagetitle'];
 				}
-			} else if(isset($_REQUEST['pid'])) {
-				if($_REQUEST['pid']==0) {
+} else
+	if (isset ($_REQUEST['pid'])) {
+		if ($_REQUEST['pid'] == 0) {
 					$parentname = $site_name;
 				} else {
-					$sql = "SELECT pagetitle FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.id = ".$_REQUEST['pid'].";";
+			$sql = "SELECT pagetitle FROM $dbase." . $table_prefix . "site_content WHERE $dbase." . $table_prefix . "site_content.id = " . $_REQUEST['pid'] . ";";
 					$rs = mysql_query($sql);
 					$limit = mysql_num_rows($rs);
-					if($limit!=1) {
+			if ($limit != 1) {
 						$e->setError(8);
 						$e->dumpError();
 					}
@@ -671,7 +697,7 @@ function decode(s){
 				}
 			} else {
 					$parentname = $site_name;
-					$content['parent']=0;
+		$content['parent'] = 0;
 			}
 			?>&nbsp;<img name="plock" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif" width="18" height="18" align="absmiddle" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /><b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?> (<?php echo $parentname; ?>)</span></b><br />
 			<span class="comment" style="width:300px;"><?php echo $_lang['document_parent_help'];?></span>
@@ -747,11 +773,13 @@ function decode(s){
 				<td >
 					<select name="contentType" class="inputBox" onchange='documentDirty=true;' style="width:200px">
 					<?php
-						if(!$content['contentType']) $content['contentType'] = 'text/html';
-						$custom_contenttype = (isset($custom_contenttype) ? $custom_contenttype : "text/html,text/plain,text/xml");
-						$ct = explode(",",$custom_contenttype);
-						for($i=0;$i<count($ct);$i++) {
-							echo "<option value=\"".$ct[$i]."\"".($content['contentType']==$ct[$i] ? "selected='selected'" : "").">".$ct[$i]."</option>";
+
+if (!$content['contentType'])
+	$content['contentType'] = 'text/html';
+$custom_contenttype = (isset ($custom_contenttype) ? $custom_contenttype : "text/html,text/plain,text/xml");
+$ct = explode(",", $custom_contenttype);
+for ($i = 0; $i < count($ct); $i++) {
+	echo "<option value=\"" . $ct[$i] . "\"" . ($content['contentType'] == $ct[$i] ? "selected='selected'" : "") . ">" . $ct[$i] . "</option>";
 						}
 					?>
 					</select>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_contentType_help']; ?>" onclick="alert(this.alt);" style="cursor:help;">
@@ -782,25 +810,26 @@ function decode(s){
 <?php if($modx->hasPermission('edit_doc_metatags') && ($content['type']!="reference" && $_REQUEST['a']!=72)) { ?>
 		<!-- META Keywords -->
 <?php
+
 	// get list of site keywords - code by stevew! modified by Raymond
-	$keywords = array();
+$keywords = array ();
 	$tbl = $modx->getFullTableName("site_keywords");
-	$ds = $modx->db->select("*",$tbl,"","keyword ASC");
+$ds = $modx->db->select("*", $tbl, "", "keyword ASC");
 	$limit = $modx->db->getRecordCount($ds);
-	if($limit > 0) {
-		for($i=0;$i<$limit;$i++) {
+if ($limit > 0) {
+	for ($i = 0; $i < $limit; $i++) {
 			$row = $modx->db->getRow($ds);
 			$keywords[$row['id']] = $row['keyword'];
 		}
 	}
 	// get selected keywords using document's id
-	if(isset($content['id']) && count($keywords) > 0) {
-		$keywords_selected = array();
+if (isset ($content['id']) && count($keywords) > 0) {
+	$keywords_selected = array ();
 		$tbl = $modx->getFullTableName("keyword_xref");
-		$ds = $modx->db->select("keyword_id",$tbl,"content_id='".$content['id']."'");
+	$ds = $modx->db->select("keyword_id", $tbl, "content_id='" . $content['id'] . "'");
 		$limit = $modx->db->getRecordCount($ds);
-		if($limit > 0) 	{
-			for($i=0;$i<$limit;$i++) {
+	if ($limit > 0) {
+		for ($i = 0; $i < $limit; $i++) {
 				$row = $modx->db->getRow($ds);
 				$keywords_selected[$row['keyword_id']] = " selected=\"selected\"";
 			}
@@ -808,24 +837,24 @@ function decode(s){
 	}
 
 	// get list of site META tags
-	$metatags = array();
+$metatags = array ();
 	$tbl = $modx->getFullTableName("site_metatags");
-	$ds = $modx->db->select("*",$tbl);
+$ds = $modx->db->select("*", $tbl);
 	$limit = $modx->db->getRecordCount($ds);
-	if($limit > 0) {
-		for($i=0;$i<$limit;$i++) {
+if ($limit > 0) {
+	for ($i = 0; $i < $limit; $i++) {
 			$row = $modx->db->getRow($ds);
 			$metatags[$row['id']] = $row['name'];
 		}
 	}
 	// get selected META tags using document's id
-	if(isset($content['id']) && count($keywords) > 0) {
-		$metatags_selected = array();
+if (isset ($content['id']) && count($keywords) > 0) {
+	$metatags_selected = array ();
 		$tbl = $modx->getFullTableName("site_content_metatags");
-		$ds = $modx->db->select("metatag_id",$tbl,"content_id='".$content['id']."'");
+	$ds = $modx->db->select("metatag_id", $tbl, "content_id='" . $content['id'] . "'");
 		$limit = $modx->db->getRecordCount($ds);
-		if($limit > 0) 	{
-			for($i=0;$i<$limit;$i++) {
+	if ($limit > 0) {
+		for ($i = 0; $i < $limit; $i++) {
 				$row = $modx->db->getRow($ds);
 				$metatags_selected[$row['metatag_id']] = " selected=\"selected\"";
 			}
@@ -845,8 +874,9 @@ function decode(s){
 					<span class='warning'><?php echo $_lang['keywords']; ?></span><br />
 					<select name="keywords[]" multiple="multiple"  size="16" class="inputBox" style="width: 200px;" onchange="documentDirty=true;">
 						<?php
+
 						$keys = array_keys($keywords);
-						for($i=0;$i<count($keys);$i++) {
+for ($i = 0; $i < count($keys); $i++) {
 							$key = $keys[$i];
 							$value = $keywords[$key];
 							$selected = $keywords_selected[$key];
@@ -861,8 +891,9 @@ function decode(s){
 					<span class='warning'><?php echo $_lang['metatags']; ?></span><br />
 					<select name="metatags[]" multiple="multiple" size="16" class="inputBox" style="width: 220px;" onchange="documentDirty=true;">
 						<?php
+
 						$keys = array_keys($metatags);
-						for($i=0;$i<count($keys);$i++) {
+for ($i = 0; $i < count($keys); $i++) {
 							$key = $keys[$i];
 							$value = $metatags[$key];
 							$selected = $metatags_selected[$key];
@@ -893,13 +924,14 @@ function decode(s){
 				<tr><td width="1">
 				<select size="10" name="snippets" style="width:400px;">
 				<?php
-					$sql = "SELECT * FROM $dbase.".$table_prefix."site_snippets ORDER BY name ASC;";
+
+$sql = "SELECT * FROM $dbase." . $table_prefix . "site_snippets ORDER BY name ASC;";
 					$rs = mysql_query($sql);
 					$limit = mysql_num_rows($rs);
 					for ($i = 0; $i < $limit; $i++) {
-						$row=mysql_fetch_assoc($rs);
+	$row = mysql_fetch_assoc($rs);
 						//$sp .= "snippetParams['".$row['id']."']='".$row['properties']."';\n";
-						echo "<option value='".$row['id']."'>".$row['name']."</option>";
+	echo "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
 					}
 				?>
 				</select><?php //echo "<script type="text/javascript">$sp;</script>"; ?>
@@ -934,11 +966,12 @@ function decode(s){
 <?php if($content['type']=="document" || $_REQUEST['a']==4) { ?>
 <div class="sectionHeader"><?php echo $_lang['document_content']; ?></div><div class="sectionBody">
 	<?php
-	if(($content['richtext']==1 || $_REQUEST['a']==4) && $use_editor==1) {
+
+if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 		// replace image path
 		$htmlContent = $content['content'];
-		if(!empty($htmlContent)) {
-			if(substr($rb_base_url, -1) != '/') {
+	if (!empty ($htmlContent)) {
+		if (substr($rb_base_url, -1) != '/') {
 				$im_base_url = $rb_base_url . '/';
 			} else {
 				$im_base_url = $rb_base_url;
@@ -946,12 +979,12 @@ function decode(s){
 			$elements = parse_url($im_base_url);
 			$image_path = $elements['path'];
 			// make sure image path ends with a /
-			if(substr($image_path, -1) != '/') {
+		if (substr($image_path, -1) != '/') {
 				$image_path .= '/';
 			}
 			$modx_root = dirname(dirname($_SERVER['PHP_SELF']));
 			$image_prefix = substr($image_path, strlen($modx_root));
-			if(substr($image_prefix, -1) != '/') {
+		if (substr($image_prefix, -1) != '/') {
 				$image_prefix .= '/';
 			}
 			// escape / in path
@@ -965,22 +998,28 @@ function decode(s){
 			<span class='warning'><?php echo $_lang["which_editor_title"]?></span>
 			<select id="which_editor" name="which_editor" onchange="changeRTE();">
 				<?php
+
 					// invoke OnRichTextEditorRegister event
 					$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-					echo "<option value='none'".($which_editor=='none' ? " selected='selected'" : "").">".$_lang["none"]."</option>\n";
-					if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
+	echo "<option value='none'" . ($which_editor == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
+	if (is_array($evtOut))
+		for ($i = 0; $i < count($evtOut); $i++) {
 						$editor = $evtOut[$i];
-						echo "<option value='$editor'".($which_editor==$editor ? " selected='selected'" : "").">$editor</option>\n";
-					}						 
+			echo "<option value='$editor'" . ($which_editor == $editor ? " selected='selected'" : "") . ">$editor</option>\n";
+		}
 				?>
 			</select>
 		</div>
 		<?php
-		$replace_richtexteditor = array("ta");
+
+	$replace_richtexteditor = array (
+		"ta"
+	);
 	} else {
 		?>
 		<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php	echo htmlspecialchars($content['content']); ?></textarea> </div>
 		<?php
+
 	}
 	?>
 </div>
@@ -988,45 +1027,51 @@ function decode(s){
 
 <!-- Template Variables -->
 <?php
+
 	// Modified by Raymond for TV - Orig Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
-	if($content['type']=="document" || $_REQUEST['a']==4) {
+if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
 ?>
 <div class='sectionHeader'><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt='.' />&nbsp;<?php echo $_lang["settings_templvars"]; ?></div><div class="sectionBody">
 <?php
+
 		// MODIFIED BY S.BRENNAN
 		$template = $default_template;
-		if(isset($_REQUEST['newtemplate'])){
+	if (isset ($_REQUEST['newtemplate'])) {
 			$template = $_REQUEST['newtemplate'];
-		}
-		else{
-			if(isset($content['template'])) {
+	} else {
+		if (isset ($content['template'])) {
 				$template = $content['template'];
 			}
 		}
 
 		$sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-		$sql.= "FROM $dbase.".$table_prefix."site_tmplvars tv ";
-		$sql.= "INNER JOIN $dbase.".$table_prefix."site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
-		$sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = $id ";
-		$sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";
-		$sql.= "WHERE tvtpl.templateid = ".$template." AND (1='".$_SESSION['mgrRole']."' OR ISNULL(tva.documentgroup)".((!$docgrp)? "":" OR tva.documentgroup IN ($docgrp)").") ORDER BY tv.rank;";
+	$sql .= "FROM $dbase." . $table_prefix . "site_tmplvars tv ";
+	$sql .= "INNER JOIN $dbase." . $table_prefix . "site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
+	$sql .= "LEFT JOIN $dbase." . $table_prefix . "site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = $id ";
+	$sql .= "LEFT JOIN $dbase." . $table_prefix . "site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";
+	$sql .= "WHERE tvtpl.templateid = " . $template . " AND (1='" . $_SESSION['mgrRole'] . "' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ") ORDER BY tv.rank;";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
-		if($limit>0){
+	if ($limit > 0) {
 			echo "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
-			require('tmplvars.inc.php');
-			require('tmplvars.commands.inc.php');
-			for ($i=0; $i<$limit; $i++) {
+		require ('tmplvars.inc.php');
+		require ('tmplvars.commands.inc.php');
+		for ($i = 0; $i < $limit; $i++) {
 				// go through and display all the document variables
 				$row = mysql_fetch_assoc($rs);
-				if($row['type']=='richtext'||$row['type']=='htmlarea'){ // htmlarea for backward compatibility
+			if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') { // htmlarea for backward compatibility
 					if (is_array($replace_richtexteditor))
-						$replace_richtexteditor = array_merge($replace_richtexteditor,array("tv".$row['name']));
+					$replace_richtexteditor = array_merge($replace_richtexteditor, array (
+						"tv" . $row['name']
+					));
 					else
-						$replace_richtexteditor = array("tv".$row['name']);
+					$replace_richtexteditor = array (
+						"tv" . $row['name']
+					);
 				}
 				// splitter
-				if($i>0 && $i<$limit) echo '<tr><td colspan="2"><div class="split"></div></td></tr>';
+			if ($i > 0 && $i < $limit)
+				echo '<tr><td colspan="2"><div class="split"></div></td></tr>';
 		?>
 			  <tr style="height: 24px;">
 				<td align="left" valign="top" width="150">
@@ -1034,23 +1079,26 @@ function decode(s){
 				</td>
 				<td valign="top" style="position:relative">
 				<?php
-					$tvPBV = $_POST['tv'.$row['name']]; // post back value
-					echo renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], ($tvPBV ? $tvPBV:$row['value']), ' style="width:300px;"');
+
+			$tvPBV = $_POST['tv' . $row['name']]; // post back value
+			echo renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], ($tvPBV ? $tvPBV : $row['value']), ' style="width:300px;"');
 				?>
 				</td>
 			  </tr>
 		<?php
-			}  //loop through all template variables
+
+		} //loop through all template variables
 		?>
 		</table>
 		<?php
-		}
-		else {
+
+	} else {
 			echo $_lang['tmplvars_novars'];
-		}//end check to see if there are template variables to display
+	} //end check to see if there are template variables to display
 ?>
 </div>
 <?php
+
 	} //end check to make sure it is not a weblink
 	// End modification
 ?>
@@ -1058,34 +1106,34 @@ function decode(s){
 
 
 <?php
-if($use_udperms==1) {
-$groupsarray = array();
 
-if($_REQUEST['a']=='27') { // fetch permissions on the document from the database
-	$sql = "SELECT * FROM $dbase.".$table_prefix."document_groups where document=".$id;
+if ($use_udperms == 1) {
+	$groupsarray = array ();
+
+	if ($_REQUEST['a'] == '27') { // fetch permissions on the document from the database
+		$sql = "SELECT * FROM $dbase." . $table_prefix . "document_groups where document=" . $id;
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for ($i = 0; $i < $limit; $i++) {
-		$currentgroup=mysql_fetch_assoc($rs);
+			$currentgroup = mysql_fetch_assoc($rs);
 		$groupsarray[$i] = $currentgroup['document_group'];
 	}
 } else { // set permissions on the document based on the permissions of the parent document
-	if(!empty($_REQUEST['pid'])) {
-		$sql = "SELECT * FROM $dbase.".$table_prefix."document_groups where document=".$_REQUEST['pid'];
+		if (!empty ($_REQUEST['pid'])) {
+			$sql = "SELECT * FROM $dbase." . $table_prefix . "document_groups where document=" . $_REQUEST['pid'];
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		for ($i = 0; $i < $limit; $i++) {
-			$currentgroup=mysql_fetch_assoc($rs);
+				$currentgroup = mysql_fetch_assoc($rs);
 			$groupsarray[$i] = $currentgroup['document_group'];
 		}
 	}
 }
 
 // retain selected doc groups between post
-if(isset($_POST['docgroups'])) {
-	$groupsarray = array_merge($groupsarray,$_POST['docgroups']);
+	if (isset ($_POST['docgroups'])) {
+		$groupsarray = array_merge($groupsarray, $_POST['docgroups']);
 }
-
 ?>
 
 <!-- Access Permissions -->
@@ -1111,55 +1159,64 @@ if(isset($_POST['docgroups'])) {
 </script>
 <p><?php echo $_lang['access_permissions_docs_message']; ?></p>
 <?php
+
 	}
-	$sql = "SELECT name, id FROM $dbase.".$table_prefix."documentgroup_names ORDER BY name";
-	$rs = mysql_query($sql); 
+$sql = "SELECT name, id FROM $dbase." . $table_prefix . "documentgroup_names ORDER BY name";
+$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
-	for($i=0; $i<$limit; $i++) {
-		$row=mysql_fetch_assoc($rs);
+for ($i = 0; $i < $limit; $i++) {
+	$row = mysql_fetch_assoc($rs);
 		$checked = in_array($row['id'], $groupsarray);
-		if($modx->hasPermission('access_permissions')) {
-			if($checked) $notPublic = true;
-			$chks .= "<input type='checkbox' name='docgroups[]' value='".$row['id']."' ".($checked ? "checked='checked'" : '')." onclick=\"makePublic(false)\" />".$row['name']."<br />";
+	if ($modx->hasPermission('access_permissions')) {
+		if ($checked)
+			$notPublic = true;
+		$chks .= "<input type='checkbox' name='docgroups[]' value='" . $row['id'] . "' " . ($checked ? "checked='checked'" : '') . " onclick=\"makePublic(false)\" />" . $row['name'] . "<br />";
 		} else {
-			if($checked) echo "<input type='hidden' name='docgroups[]'  value='".$row['id']."' />";
+		if ($checked)
+			echo "<input type='hidden' name='docgroups[]'  value='" . $row['id'] . "' />";
 		}
 	}
-	if($modx->hasPermission('access_permissions')) {
-		$chks = "<input type='checkbox' name='chkalldocs' ".(!$notPublic ? "checked='checked'" : '')." onclick=\"makePublic(true)\" /><span class='warning'>".$_lang['all_doc_groups']."</span><br />".$chks;
+if ($modx->hasPermission('access_permissions')) {
+	$chks = "<input type='checkbox' name='chkalldocs' " . (!$notPublic ? "checked='checked'" : '') . " onclick=\"makePublic(true)\" /><span class='warning'>" . $_lang['all_doc_groups'] . "</span><br />" . $chks;
 	}
 	echo $chks;
 ?>
 </div>
 <?php
+
 }
 ?>
 
 <input type="submit" name="save" style="display:none">
 <?php
+
 	// invoke OnDocFormRender event
-	$evtOut = $modx->invokeEvent("OnDocFormRender",array("id" => $id));
-	if(is_array($evtOut)) echo implode("",$evtOut);
+$evtOut = $modx->invokeEvent("OnDocFormRender", array (
+	"id" => $id
+));
+if (is_array($evtOut))
+	echo implode("", $evtOut);
 ?>
 </form>
 <script type="text/javascript">//setTimeout('showParameters()',10);</script>
 
 <?php
 
+
 /**
  *	Initialize RichText Editor
  *  orig MODIFIED BY S.BRENNAN for DocVars
  */
-if($content['type']=="document" || $_REQUEST['a']==4) {
-	if(($content['richtext']==1 || $_REQUEST['a']==4) && $use_editor==1) {
-		if(is_array($replace_richtexteditor)) {
+if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
+	if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
+		if (is_array($replace_richtexteditor)) {
 			// invoke OnRichTextEditorInit event
-			$evtOut = $modx->invokeEvent("OnRichTextEditorInit",
-											array(
-												editor 		=> $which_editor,
-												elements	=> $replace_richtexteditor
+			$evtOut = $modx->invokeEvent("OnRichTextEditorInit", array (
+				editor => $which_editor,
+				elements => $replace_richtexteditor
 											));
-			if(is_array($evtOut)) echo implode("",$evtOut);
+			if (is_array($evtOut))
+				echo implode("", $evtOut);
 		}
 	}
 }

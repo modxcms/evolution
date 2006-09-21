@@ -226,8 +226,8 @@
 			<p class="title">Connection Information</p>
 			<p>Database connection and login information</p>
 			<p>Please enter the name of the database created for MODX. If you there is no database yet, the installer will attempt to create a database for you. This may fail depending on the MySQL configuration or the database user permissions for your domain/installation.</p>
-			<div class="labelHolder"><label for="databasename">Database name:</label>
-			<input id="databasename" value="<?php echo isset($_POST['databasename']) ? $_POST['databasename']:"modx" ?>" name="databasename" /></div>
+			<div class="labelHolder"><label for="database_name">Database name:</label>
+			<input id="database_name" value="<?php echo isset($_POST['database_name']) ? $_POST['database_name']:"modx" ?>" name="database_name" /></div>
 			<div class="labelHolder"><label for="tableprefix">Table prefix:</label>
 			<input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']:"modx_" ?>" name="tableprefix" /></div>
 			<br />
@@ -467,11 +467,10 @@
 			include "../manager/includes/config.inc.php";
 		}
 		else {		
-			// get db info from post
 			$database_server = $_POST['databasehost'];
 			$database_user = $_POST['databaseloginname'];
 			$database_password = $_POST['databaseloginpassword'];
-			$dbase = $_POST['databasename'];
+			$dbase = $_POST['database_name'];
 			$table_prefix = $_POST['tableprefix'];
 		}
 		echo "<p>Creating connection to the database: ";
@@ -547,7 +546,7 @@
 			f.target="testPort";
 			f.dbuid.value = document.install.databaseloginname.value;
 			f.dbpwd.value = document.install.databaseloginpassword.value;
-			f.dbase.value = document.install.databasename.value;
+			f.dbase.value = document.install.database_name.value;
 			f.dbhost.value= document.install.databasehost.value;
 			f.tableprefix.value = document.install.tableprefix.value;
 			f.submit();
@@ -674,9 +673,9 @@
 		// validate
 		function validate() {
 			var f = document.install;
-			if(f.databasename.value=="") {
+			if(f.database_name.value=="") {
 				alert('You need to enter a value for database name!');
-				f.databasename.focus();
+				f.database_name.focus();
 				return false;
 			}
             var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

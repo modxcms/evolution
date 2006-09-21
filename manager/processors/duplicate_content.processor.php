@@ -108,10 +108,17 @@ function duplicateDocument($parent,$docid,$children,$_toplevel=0){
 				$rs = @mysql_query($sql);
 				$affected = mysql_affected_rows();
 				$newid = mysql_insert_id();
+				for ($i=0;$i<$affected;$i++) {
+					// duplicate the TVs and keywords for the document's children
+					duplicateTVs($myChildren[$i],$newid);
+					duplicateKeywords($myChildren[$i],$newid);
+					duplicateAccess($myChildren[$i],$newid);
+					$newid++;
+				}
 			}
 			else {
-				$affected = 0;
-				$sql = "SELECT type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu 
+				//-- get children
+				$sql = "SELECT id, type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, '$parent' as 'parent', isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu 
 						FROM $dbase.".$table_prefix."site_content WHERE id IN ($docs_to_duplicated);";
 				$ds = @mysql_query($sql);
 				while($row = mysql_fetch_assoc($ds)) {
@@ -119,20 +126,17 @@ function duplicateDocument($parent,$docid,$children,$_toplevel=0){
 							(type, contentType, pagetitle, longtitle, description, alias, published, pub_date, unpub_date, parent, isfolder, introtext, content, richtext, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, deleted, deletedon, deletedby, menutitle, donthit, privateweb, privatemgr, content_dispo, hidemenu) VALUES
 							('".$row['type']."', '".$row['contentType']."', '".mysql_escape_string($row['pagetitle'])."', '".mysql_escape_string($row['longtitle'])."', '".mysql_escape_string($row['description'])."', NULL, '".$row['published']."', '".$row['pub_date']."', '".$row['unpub_date']."', '".$row['parent']."', '".$row['isfolder']."', '".mysql_escape_string($row['introtext'])."', '".mysql_escape_string($row['content'])."', '".$row['richtext']."', '".$row['template']."', '".$row['menuindex']."', '".$row['searchable']."', '".$row['cacheable']."', $userID, UNIX_TIMESTAMP(), 0, 0, 0, 0, 0, '".mysql_escape_string($row['menutitle'])."', '".$row['donthit']."', '".$row['privateweb']."', '".$row['privatemgr']."', '".$row['content_dispo']."', '".$row['hidemenu']."');";
 					$rs = mysql_query($sql);
-					$affected++; 
-					if ($affected==1) $newid = mysql_insert_id(); // get first inserted id
+					$newid = mysql_insert_id(); // get first inserted id
+					// duplicate the TVs and keywords for the document's children
+					duplicateTVs($row['id'],$newid);
+					duplicateKeywords($row['id'],$newid);
+					duplicateAccess($row['id'],$newid);
 				}
 			}
+			
 			if(!$rs) {
 				echo "A database error occured while trying to duplicate document's children:<br /><br />".mysql_error();
 				exit;
-			}
-			// duplicate the TVs and keywords for the document's children
-			for($i=0;$i<$affected;$i++) {
-				$newid +=$i;
-				duplicateTVs($myChildren[$i],$newid);
-				duplicateKeywords($myChildren[$i],$newid);
-				duplicateAccess($myChildren[$i],$newid);
 			}
 		}
 	}
@@ -141,7 +145,7 @@ function duplicateDocument($parent,$docid,$children,$_toplevel=0){
 // finish cloning - redirect
 if($newdocid) $id = $newdocid;
 $header="Location: index.php?r=1&a=3&id=$id";
-header($header);
+//header($header);
 
 // Get Children
 function getChildren($parent) {
@@ -152,7 +156,7 @@ function getChildren($parent) {
 	
 	//$db->debug = true;
 	
-	$sql = "SELECT id FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.parent=".$parent." AND deleted=0;";
+	$sql = "SELECT id FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.parent=".$parent." AND deleted=0 ORDER BY id ASC;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>0) {

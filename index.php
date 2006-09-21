@@ -58,7 +58,16 @@ $modxtags = array('@<script[^>]*?>.*?</script>@si',
                   '@{{(.*?)}}@si',
                   '@\[\*(.*?)\*\]@si');
 foreach($_POST as $key => $value) {
-  $_POST[$key] = preg_replace($modxtags,"", $value);
+	if (!is_array($value)) {
+  		$_POST[$key] = preg_replace($modxtags,"", $value);
+	} else {
+  		if (count($value) > 0) {
+  			foreach ($value as $k => $v) {
+  				$value[$k] = preg_replace($modxtags,"", $v);
+  			}
+  			$_POST[$key] =$value;
+  		}
+  	}
 }
 foreach($_GET as $key => $value) {
   $_GET[$key] = preg_replace($modxtags,"", $value);
@@ -78,7 +87,6 @@ header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie
 header('Cache-Control: private, must-revalidate');
 ob_start();
 error_reporting(E_ALL);
-
 /**
  *	Filename: index.php
  */

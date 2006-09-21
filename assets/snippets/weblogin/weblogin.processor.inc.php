@@ -6,6 +6,9 @@
 $dbase = $modx->dbConfig['dbase'];
 $table_prefix = $modx->dbConfig['table_prefix'];
 
+// get the settings from the database
+include_once $modx->config['base_path']."manager/includes/settings.inc.php";
+
 # process password activation
 	if ($isPWDActivate==1){
 		$id = $_REQUEST['wli'];
@@ -225,14 +228,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 		while ($row = $modx->fetchRow($result, 'both')) $modx->config[$row[0]] = $row[1];
 	}		
 
-	if($failedlogins>=3 && $blockeduntildate>time()) {	// blocked due to number of login errors.
+	if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) {	// blocked due to number of login errors.
 		session_destroy();
 		session_unset();
-		$output = webLoginAlert("Due to three or more failed logins, you have been blocked!");
+		$output = webLoginAlert("Due to too many failed logins, you have been blocked!");
 		return;
 	}
 
-	if($failedlogins>=3 && $blockeduntildate<time()) {	// blocked due to number of login errors, but get to try again
+	if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) {	// blocked due to number of login errors, but get to try again
 		$sql = "UPDATE $dbase.".$table_prefix."user_attributes SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
 		$ds = $modx->dbQuery($sql);
 	}
@@ -305,8 +308,8 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 	if(isset($newloginerror) && $newloginerror==1) {
 		$failedlogins += $newloginerror;
-		if($failedlogins>=3) { //increment the failed login counter, and block!
-			$sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount='$failedlogins', blockeduntil='".(time()+(1*60*60))."' where internalKey=$internalKey";
+		if($failedlogins>=$failed_login_attempts) { //increment the failed login counter, and block!
+			$sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
 			$ds = $modx->dbQuery($sql);
 		} else { //increment the failed login counter
 			$sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount='$failedlogins' where internalKey=$internalKey";

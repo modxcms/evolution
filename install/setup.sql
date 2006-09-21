@@ -783,6 +783,8 @@ REPLACE INTO `{PREFIX}system_settings`
 ('use_alias_path','0'),
 ('use_udperms','1'),
 ('udperms_allowroot','0'),
+('failed_login_attempts','3'),
+('blocked_minutes','60'),
 ('use_captcha','0'),
 ('captcha_words','MODx,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
 ('emailsender','you@yourdomain.com'),
