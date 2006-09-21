@@ -145,7 +145,7 @@ function duplicateDocument($parent,$docid,$children,$_toplevel=0){
 // finish cloning - redirect
 if($newdocid) $id = $newdocid;
 $header="Location: index.php?r=1&a=3&id=$id";
-//header($header);
+header($header);
 
 // Get Children
 function getChildren($parent) {
