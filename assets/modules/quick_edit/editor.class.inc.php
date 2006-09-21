@@ -306,7 +306,7 @@ EOD;
              
     }
 
-    $modx->db->update(array('editedon'=>$time, 'editedby'=>$user), "{$pre}site_tmplvar_contentvalues", "id = '{$doc_id}'");
+    $modx->db->update(array('editedon'=>$time, 'editedby'=>$user), "{$pre}site_content", "id = '{$doc_id}'");
 
    } elseif(in_array($cv->id, $editable)) {
 
