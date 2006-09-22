@@ -319,20 +319,20 @@ $count = $row[0];
     <td>
 		<table cellpadding="0" cellspacing="0">
 		    <tr>
-			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/arrow_down.png' /></td>
-			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/arrow_up.png' /></td>
-			<td id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/folder_page_add.png' /></td>
-			<td id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/link_add.png' /></td>
-			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.png' /></td>
-			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/sort.png' /></td>
-			<td id="Button10" onclick="emptyTrash();" title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/trash<?php echo $count>0 ? "_full" : ""; ?>.png' /></td>
+			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></td>
+			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></td>
+			<td id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></td>
+			<td id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></td>
+			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></td>
+			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></td>
+			<td id="Button10" onclick="emptyTrash();" title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $count>0 ? $_style['empty_recycle_bin'] : $_style['empty_recycle_bin_empty'] ; ?></td>
 			</tr>
 		</table>
 	</td>
     <td width="23" align="right">
 		<table cellpadding="0" cellspacing="0">
 		    <tr>
-			<td id="Button6" onclick="top.scripter.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/application_side_contract.png'  /></td>
+			<td id="Button6" onclick="top.scripter.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></td>
             </tr>
 		</table>
 	</td>
@@ -394,7 +394,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
 
 <div id="treeHolder">
 
-	<div><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/sitemap.png' width="19" height="18" />&nbsp;<span class="rootNode" onclick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+	<div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onclick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
 	<div><iframe src="about:blank" id="rpcFrame" name="rpcFrame" style="width: 1px; height: 1px; visibility: hidden;"></iframe></div>
 
 </div>

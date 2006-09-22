@@ -165,6 +165,12 @@ if($manager_language!="english") {
 	include_once "lang/".$manager_language.".inc.php";
 }
 
+// include_once the style variables file
+if(isset($manager_theme) && !isset($_style)) {
+	$_style = array();
+	include_once "media/style/".$manager_theme."/style.php";
+}
+
 // get the user settings from the database
 include_once "user_settings.inc.php";
 
