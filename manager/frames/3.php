@@ -319,8 +319,7 @@ $count = $row[0];
 		    <tr>
 			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/arrow_down.png' /></td>
 			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/arrow_up.png' /></td>
-			<td id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/page_white_add.png' /></td>
-			<td id="Button3b" onclick="top.main.document.location.href='index.php?a=85';" title="<?php echo $_lang['add_folder']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/folder_add.png' /></td>
+			<td id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/folder_page_add.png' /></td>
 			<td id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/link_add.png' /></td>
 			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.png' /></td>
 			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/sort.png' /></td>
@@ -342,7 +341,6 @@ $count = $row[0];
     createButton(document.getElementById("Button1"));
     createButton(document.getElementById("Button2"));
     createButton(document.getElementById("Button3a"));
-    createButton(document.getElementById("Button3b"));
     createButton(document.getElementById("Button3c"));
     createButton(document.getElementById("Button4"));
     createButton(document.getElementById("Button5"));

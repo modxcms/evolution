@@ -610,12 +610,12 @@ img.loginCaptcha {
     background: #e4e4e4;
     color: #000;
 }
-#topbar a, #topbar a:link{
+#topbar a, #topbar a:link, #topbar a:visited {
     font-weight: bold;
     color: #677E32;
     text-decoration:none;
 }
-#topbar a:hover, #topbar a:visited{
+#topbar a:hover {
     color: #fff;
     text-decoration: underline;
 }
@@ -651,67 +651,65 @@ ul#nav {
         display: block;
         float: left;
         width: auto;
-        margin: 0 1px 0 0;
+        margin: 0 3px 0 0;
     }
         #nav a {
             color: #438d29;
-            background: #d4d4d4;
+            background: #d4d4d4 url(images/misc/greentab.gif) right bottom;
             font-weight: bold;
             text-decoration: none;
             display: block;
             float: left;
             width: auto;
             white-space: nowrap;
-            cursor: default;
-            padding: 4px 10px 4px;
+            cursor: pointer;
+            cursor: hand;
+            line-height: 25px;
+            padding: 0 15px;
+            border-left: 1px solid #c1e079;
         }
         #nav a:hover {
-            background: #e4e4e4; /* 9ebc5a */
+            color: #264f17; /* 9ebc5a */
         }
         #nav a:active {
-           padding: 5px 8px 4px 10px;
+           color: #000;
         }
     #nav li.active a {
-        background: #438d29;
+        background: #438d29 url(images/misc/greentab.gif) right top;
         color: #fff;
         position: relative;
         z-index: 999;
-        padding: 3px 9px 5px;
-        border: 1px solid #499b2d;
-        border-right-color: #336c1f;
-        border-bottom: 0 !important;
+        border-left: 1px solid #8cc709;
     }
     #nav li.active a:hover {
-        background: #9EBC5A;
-        border-bottom-width: 0 !important;
-        color: #fff;
+        cursor: default;
     }
         #nav li.active ul.subnav {
             display: block;
             position: absolute;
-            top: 25px;
+            top: 24px;
             width: 100%;
             left: 0;
-            background: #438d29; /* 677e32 */
+            background: #8fc70c; /* 677e32 */
         }
             #nav li.active ul.subnav a {
                 color: #fff;
                 font-weight: normal;
                 border: none;
-                background: #438e29;
-                padding: 4px 10px 5px;
+                background: #8fc70c;
+                cursor: pointer;
+                cursor: hand;
+                
+            }
+            #nav li.active ul.subnav li {
+                margin: 0;
             }
             #nav li.active ul.subnav a:hover {
-                background: #9EBC5A;
-                font-weight: normal;
-                border-top-width: 0 !important;
-                border-bottom-width: 0 !important;
+                color: #264f17; /* 9ebc5a */
+                background-color: #a5d535;
             }
             #nav li.active ul.subnav a:active {
-                background: #9EBC5A;
-                border-top-width: 0 !important;
-                border-bottom-width: 0 !important;
-                padding: 4px 9px 5px;
+                color: #000;
             }
 
 

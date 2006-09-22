@@ -49,7 +49,7 @@ clearstatcache();
 
 if ($warningspresent==1) {
 
-$config_check_results = $_lang['configcheck_notok']."<p />";
+$config_check_results = "<h4>".$_lang['configcheck_notok']."</h4>";
 
 for ($i=0;$i<count($warnings);$i++) {
     switch ($warnings[$i][0]) {
