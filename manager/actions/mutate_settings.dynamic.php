@@ -426,9 +426,9 @@ function updateContentType(){
           </tr>
           <tr> 
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaultmenuindex_title"] ?></b></td> 
-            <td> <input onChange="documentDirty=true;" type="radio" name="auto_menuindex" value="1" <?php echo ($auto_menuindex=='1' || !isset($auto_menuindex)) ? 'checked="checked"' : "" ; ?> /> 
+            <td> <input onchange="documentDirty=true;" type="radio" name="auto_menuindex" value="1" <?php echo ($auto_menuindex=='1' || !isset($auto_menuindex)) ? 'checked="checked"' : "" ; ?> /> 
             <?php echo $_lang["yes"]?><br /> 
-            <input onChange="documentDirty=true;" type="radio" name="auto_menuindex" value="0" <?php echo ($auto_menuindex=='0') ? 'checked="checked"' : "" ; ?> /> 
+            <input onchange="documentDirty=true;" type="radio" name="auto_menuindex" value="0" <?php echo ($auto_menuindex=='0') ? 'checked="checked"' : "" ; ?> /> 
             <?php echo $_lang["no"]?> </td> 
           </tr>
           <tr> 
@@ -638,11 +638,15 @@ function updateContentType(){
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+          <?php
+              // Check for GD before allowing captcha to be enabled
+              $gdAvailable = extension_loaded('gd');
+          ?>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["captcha_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="1" <?php echo $use_captcha=='1' ? 'checked="checked"' : "" ; ?> />
+            <td> <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="1" <?php echo ($use_captcha=='1' && $gdAvailable) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : ''; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="0" <?php echo ($use_captcha=='0' || !isset($use_captcha)) ? 'checked="checked"' : "" ; ?> />
+              <input onchange="documentDirty=true;" type="radio" name="use_captcha" value="0" <?php echo ($use_captcha=='0' || !isset($use_captcha) || !$gdAvailable) ? 'checked="checked"' : "" ; echo (!$gdAvailable)? ' readonly="readonly"' : '';?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
