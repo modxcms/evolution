@@ -1,26 +1,28 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_user') && $_REQUEST['a']==12) {
+if (IN_MANAGER_MODE != "true")
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if (!$modx->hasPermission('edit_user') && $_REQUEST['a'] == 12) {
 	$e->setError(3);
 	$e->dumpError();
 }
-if(!$modx->hasPermission('new_user') && $_REQUEST['a']==11) {
+if (!$modx->hasPermission('new_user') && $_REQUEST['a'] == 11) {
 	$e->setError(3);
 	$e->dumpError();
 }
 
 $user = $_REQUEST['id'];
-if($user=="") $user=0;
+if ($user == "")
+	$user = 0;
 
 // check to see the snippet editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=12 AND $dbase.".$table_prefix."active_users.id=$user";
+$sql = "SELECT internalKey, username FROM $dbase." . $table_prefix . "active_users WHERE $dbase." . $table_prefix . "active_users.action=12 AND $dbase." . $table_prefix . "active_users.id=$user";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
+if ($limit > 1) {
+	for ($i = 0; $i < $limit; $i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"],$lock['username'],"user");
+		if ($lock['internalKey'] != $modx->getLoginUserID()) {
+			$msg = sprintf($_lang["lock_msg"], $lock['username'], "user");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -28,73 +30,81 @@ if($limit>1) {
 }
 // end check for lock
 
-if($_REQUEST['a']==12) {
+if ($_REQUEST['a'] == 12) {
 	// get user attribute
-	$sql = "SELECT * FROM $dbase.".$table_prefix."user_attributes WHERE $dbase.".$table_prefix."user_attributes.internalKey = ".$user.";";
+	$sql = "SELECT * FROM $dbase." . $table_prefix . "user_attributes WHERE $dbase." . $table_prefix . "user_attributes.internalKey = " . $user . ";";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
-	if($limit>1) {
+	if ($limit > 1) {
 		echo "More than one user returned!<p>";
 		exit;
 	}
-	if($limit<1) {
+	if ($limit < 1) {
 		echo "No user returned!<p>";
 		exit;
 	}
 	$userdata = mysql_fetch_assoc($rs);
 
 	// get user settings
-	$sql = "SELECT us.* FROM $dbase.".$table_prefix."user_settings us WHERE us.user = ".$user.";";
+	$sql = "SELECT us.* FROM $dbase." . $table_prefix . "user_settings us WHERE us.user = " . $user . ";";
 	$rs = mysql_query($sql);
-	$usersettings = array();
-	while($row=mysql_fetch_assoc($rs)) $usersettings[$row['setting_name']]=$row['setting_value'];
-	extract($usersettings, EXTR_OVERWRITE);
-
+	$usersettings = array ();
+	while ($row = mysql_fetch_assoc($rs))
+		$usersettings[$row['setting_name']] = $row['setting_value'];
+	// manually extract so that user display settings are not overwritten
+	foreach ($usersettings as $k => $v) {
+		if ($k != 'manager_language' && $k!='manager_theme') {
+			${$k} = $v;
+		}	
+	}
+	
 	// get user name
-	$sql = "SELECT * FROM $dbase.".$table_prefix."manager_users WHERE $dbase.".$table_prefix."manager_users.id = ".$user.";";
+	$sql = "SELECT * FROM $dbase." . $table_prefix . "manager_users WHERE $dbase." . $table_prefix . "manager_users.id = " . $user . ";";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
-	if($limit>1) {
+	if ($limit > 1) {
 		echo "More than one user returned while getting username!<p>";
 		exit;
 	}
-	if($limit<1) {
+	if ($limit < 1) {
 		echo "No user returned while getting username!<p>";
 		exit;
 	}
 	$usernamedata = mysql_fetch_assoc($rs);
-	$_SESSION['itemname']=$usernamedata['username'];
+	$_SESSION['itemname'] = $usernamedata['username'];
 } else {
-	$userdata = array();
-	$usersettings = array();
-	$usernamedata = array();
-	$_SESSION['itemname']="New user";
+	$userdata = array ();
+	$usersettings = array ();
+	$usernamedata = array ();
+	$_SESSION['itemname'] = "New user";
 }
 
 // restore saved form
 $formRestored = false;
-if($modx->manager->hasFormValues()) {
+if ($modx->manager->hasFormValues()) {
 	$modx->manager->loadFormValues();
 	// restore post values
-	$userdata = array_merge($userdata,$_POST);
+	$userdata = array_merge($userdata, $_POST);
 	$userdata['dob'] = ConvertDate($userdata['dob']);
 	$usernamedata['username'] = $userdata['newusername'];
 	$usernamedata['oldusername'] = $_POST['oldusername'];
-	$usersettings = array_merge($usersettings,$userdata);
-	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",",$_POST['allowed_days']):"";
+	$usersettings = array_merge($usersettings, $userdata);
+	$usersettings['allowed_days'] = is_array($_POST['allowed_days']) ? implode(",", $_POST['allowed_days']) : "";
 	extract($usersettings, EXTR_OVERWRITE);
 }
 
 // converts date format dd-mm-yyyy to php date
-function ConvertDate($date){
-	if($date=="") return "0";
-	list($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
-	if (!$H && !$M && !$S) return strtotime("$m/$d/$Y");
-	else return strtotime("$m/$d/$Y $H:$M:$S");
+function ConvertDate($date) {
+	if ($date == "")
+		return "0";
+	list ($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
+	if (!$H && !$M && !$S)
+		return strtotime("$m/$d/$Y");
+	else
+		return strtotime("$m/$d/$Y $H:$M:$S");
 }
 
-$displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') ) ? "table-row" : "block" ;
-
+$displayStyle = (($_SESSION['browser'] == 'mz') || ($_SESSION['browser'] == 'op')) ? "table-row" : "block";
 ?>
 <script language="JavaScript">
 
@@ -196,9 +206,13 @@ function showHide(what, onoff){
 
 <form action="index.php?a=32" method="post" name="userform">
 <?php
-	// invoke OnUserFormPrerender event
-	$evtOut = $modx->invokeEvent("OnUserFormPrerender",array("id" => $id));
-	if(is_array($evtOut)) echo implode("",$evtOut);
+
+// invoke OnUserFormPrerender event
+$evtOut = $modx->invokeEvent("OnUserFormPrerender", array (
+	"id" => $id
+));
+if (is_array($evtOut))
+	echo implode("", $evtOut);
 ?>
 <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>">
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
@@ -318,19 +332,22 @@ function showHide(what, onoff){
 			<td>&nbsp;</td>
 			<td>
 		<?php
-			$notAdmin = ($_SESSION['mgrRole'] == 1)? "" : "WHERE id != 1";
-			$sql = "select name, id from $dbase.".$table_prefix."user_roles $notAdmin";
-			$rs = mysql_query($sql);
-		?>
+
+$notAdmin = ($_SESSION['mgrRole'] == 1) ? "" : "WHERE id != 1";
+$sql = "select name, id from $dbase." . $table_prefix . "user_roles $notAdmin";
+$rs = mysql_query($sql);
+?>
 		<select name="role" class="inputBox" onchange='documentDirty=true;' style="width:300px">
 		<?php
-		while ($row = mysql_fetch_assoc($rs)) {
-			$selectedtext = $row['id']==$userdata['role'] ? "selected='selected'" : "" ;
-		?>
+
+while ($row = mysql_fetch_assoc($rs)) {
+	$selectedtext = $row['id'] == $userdata['role'] ? "selected='selected'" : "";
+?>
 			<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?>><?php echo $row['name']; ?></option>
 		<?php
-		}
-		?>
+
+}
+?>
 		</select>
 			</td>
 		  </tr>
@@ -663,8 +680,9 @@ function showHide(what, onoff){
 			</td>
 		  </tr>
 		<?php
-		}
-		?>
+
+}
+?>
 		</table>
 		<?php if($_GET['id']==$modx->getLoginUserID()) { ?><b><?php echo $_lang['user_edit_self_msg']; ?><br><?php } ?>
 	</div>
@@ -673,7 +691,35 @@ function showHide(what, onoff){
     	<h2 class="tab"><?php echo $_lang["settings_users"] ?></h2>
     	<script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabSettings" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
+	  <tr>
+	    <td class='warning'><?php echo $_lang["language_title"] ?></td>
+	    <td> <select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true">
+	    <?php
 
+$dir = dir("includes/lang");
+while ($file = $dir->read()) {
+	if (strpos($file, ".inc.php") > 0) {
+		$endpos = strpos($file, ".");
+		$languagename = substr($file, 0, $endpos);
+		$selectedtext = $languagename == $usersettings['manager_language'] ? "selected='selected'" : "";
+?> 
+                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option> 
+                <?php
+
+	}
+}
+$dir->close();
+?> 
+              </select>
+         </td>
+	  </tr>
+	   <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["language_message"] ?></td>
+          </tr>
+	  	  <tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>  
           <tr>
             <td class="warning"><b><?php echo $_lang["mgr_login_start"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : $usersettings['manager_login_startup']; ?>"></td>
@@ -735,16 +781,17 @@ function showHide(what, onoff){
             <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date())">
             <option value="">Default</option>
              <?php
-				$dir = dir("media/style/");
-				while ($file = $dir->read()) {
-					if($file!="." && $file!=".." && is_dir("media/style/$file")) {
-						$themename = $file;
-						$selectedtext = $themename==$manager_theme ? "selected='selected'" : "" ;
-		            	echo "<option value='$themename' $selectedtext>".ucwords(str_replace("_", " ", $themename))."</option>";
-					}
-				}
-				$dir->close();
-			 ?>
+
+$dir = dir("media/style/");
+while ($file = $dir->read()) {
+	if ($file != "." && $file != ".." && is_dir("media/style/$file")) {
+		$themename = $file;
+		$selectedtext = $themename == $usersettings['manager_theme'] ? "selected='selected'" : "";
+		echo "<option value='$themename' $selectedtext>" . ucwords(str_replace("_", " ", $themename)) . "</option>";
+	}
+}
+$dir->close();
+?>
              </select><input type="hidden" name="theme_refresher" value=""></td>
           </tr>
           <tr>
@@ -765,15 +812,54 @@ function showHide(what, onoff){
             <td class='comment'><?php echo $_lang["filemanager_path_message"]?></td>
           </tr>
           <tr>
-            <td colspan="2"><div class='split'></div></td>
+          <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr class='row2'>
-            <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["uploadable_images_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files']:$upload_files; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($usersettings['upload_images']) ? $usersettings['upload_images'] : "jpg,gif,png,ico,bmp,psd" ; ?>">
             </td>
           </tr>
-          <tr class='row2'>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_images_message"]?></td>
+          </tr>
+          <tr>
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["uploadable_media_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($usersettings['upload_media']) ? $usersettings['upload_media'] : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>">
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_media_message"]?></td>
+          </tr>
+          <tr>
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["uploadable_flash_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($usersettings['upload_flash']) ? $usersettings['upload_flash'] : "swf,fla" ; ?>">
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files'] : "txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,pdf" ; ?>">
+            </td>
+          </tr>
+          <tr>
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["uploadable_files_message"]?></td>
           </tr>
@@ -783,7 +869,7 @@ function showHide(what, onoff){
           <tr class='row2'>
             <td nowrap class="warning"><b><?php echo $_lang["upload_maxsize_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_maxsize" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : "1048576" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_maxsize" value="<?php echo isset($usersettings['upload_maxsize']) ? $usersettings['upload_maxsize'] : "1048576" ; ?>">
             </td>
           </tr>
           <tr class='row2'>
@@ -798,15 +884,17 @@ function showHide(what, onoff){
             <td>
 				<select name="which_editor" onchange="documentDirty=true;">
 					<?php
-						$edt = isset($usersettings["which_editor"]) ?$usersettings["which_editor"]:$which_editor;
-						// invoke OnRichTextEditorRegister event
-						$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-						echo "<option value='none'".($edt=='none' ? " selected='selected'" : "").">".$_lang["none"]."</option>\n";
-						if(is_array($evtOut)) for($i=0;$i<count($evtOut);$i++) {
-							$editor = $evtOut[$i];
-							echo "<option value='$editor'".($edt==$editor ? " selected='selected'" : "").">$editor</option>\n";
-						}
-					?>
+
+$edt = isset ($usersettings["which_editor"]) ? $usersettings["which_editor"] : $which_editor;
+// invoke OnRichTextEditorRegister event
+$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+echo "<option value='none'" . ($edt == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
+if (is_array($evtOut))
+	for ($i = 0; $i < count($evtOut); $i++) {
+		$editor = $evtOut[$i];
+		echo "<option value='$editor'" . ($edt == $editor ? " selected='selected'" : "") . ">$editor</option>\n";
+	}
+?>
 				</select>
 			</td>
           </tr>
@@ -844,10 +932,12 @@ function showHide(what, onoff){
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php
-					// invoke OnInterfaceSettingsRender event
-					$evtOut = $modx->invokeEvent("OnInterfaceSettingsRender");
-					if(is_array($evtOut)) echo implode("",$evtOut);
-		        ?>
+
+// invoke OnInterfaceSettingsRender event
+$evtOut = $modx->invokeEvent("OnInterfaceSettingsRender");
+if (is_array($evtOut))
+	echo implode("", $evtOut);
+?>
             </td>
           </tr>
 		</table>
@@ -900,46 +990,53 @@ function showHide(what, onoff){
 </div>
 
 <?php
-if($use_udperms==1) {
-$groupsarray = array();
 
-if($_GET['a']=='12') { // only do this bit if the user is being edited
-	$sql = "SELECT * FROM $dbase.".$table_prefix."member_groups where member=".$_GET['id']."";
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
-	for ($i = 0; $i < $limit; $i++) {
-		$currentgroup=mysql_fetch_assoc($rs);
-		$groupsarray[$i] = $currentgroup['user_group'];
+if ($use_udperms == 1) {
+	$groupsarray = array ();
+
+	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
+		$sql = "SELECT * FROM $dbase." . $table_prefix . "member_groups where member=" . $_GET['id'] . "";
+		$rs = mysql_query($sql);
+		$limit = mysql_num_rows($rs);
+		for ($i = 0; $i < $limit; $i++) {
+			$currentgroup = mysql_fetch_assoc($rs);
+			$groupsarray[$i] = $currentgroup['user_group'];
+		}
 	}
-}
 
-// retain selected doc groups between post
-if(is_array($_POST['user_groups'])) {
-	foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
-}
-
+	// retain selected doc groups between post
+	if (is_array($_POST['user_groups'])) {
+		foreach ($_POST['user_groups'] as $n => $v)
+			$groupsarray[] = $v;
+	}
 ?>
 
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <?php
-	echo $_lang['access_permissions_user_message']."<p />";
-	$sql = "SELECT name, id FROM $dbase.".$table_prefix."membergroup_names ORDER BY name";
+
+	echo $_lang['access_permissions_user_message'] . "<p />";
+	$sql = "SELECT name, id FROM $dbase." . $table_prefix . "membergroup_names ORDER BY name";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
-	for($i=0; $i<$limit; $i++) {
-		$row=mysql_fetch_assoc($rs);
-		echo "<input type='checkbox' name='user_groups[]' value='".$row['id']."'".(in_array($row['id'], $groupsarray) ? " checked='checked'" : "")." />".$row['name']."<br />";
+	for ($i = 0; $i < $limit; $i++) {
+		$row = mysql_fetch_assoc($rs);
+		echo "<input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "<br />";
 	}
 ?>
 </div>
 <?php
+
 }
 ?>
 <input type="submit" name="save" style="display:none">
 <?php
-	// invoke OnUserFormRender event
-	$evtOut = $modx->invokeEvent("OnUserFormRender",array("id" => $id));
-	if(is_array($evtOut)) echo implode("",$evtOut);
+
+// invoke OnUserFormRender event
+$evtOut = $modx->invokeEvent("OnUserFormRender", array (
+	"id" => $id
+));
+if (is_array($evtOut))
+	echo implode("", $evtOut);
 ?>
 </form>
 <script language="JavaScript" src="media/script/datefunctions.js"></script>

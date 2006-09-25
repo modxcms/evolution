@@ -37,7 +37,7 @@ class DocumentParser {
         switch ($extname) {
             // Database API
             case 'DBAPI' :
-                if (!include_once $base_path . 'manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
+                if (!include_once $base_path . '/manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
                     return false;
                 $this->db= new DBAPI;
                 return true;
@@ -45,7 +45,7 @@ class DocumentParser {
 
                 // Manager API
             case 'ManagerAPI' :
-                if (!include_once $base_path . 'manager/includes/extenders/manager.api.class.inc.php')
+                if (!include_once $base_path . '/manager/includes/extenders/manager.api.class.inc.php')
                     return false;
                 $this->manager= new ManagerAPI;
                 return true;
@@ -61,7 +61,7 @@ class DocumentParser {
         return ((float) $usec + (float) $sec);
     }
 
-    function sendRedirect($url, $count_attempts= 0, $type= '', $responseCode= '') {
+    function sendRedirect($url, $count_attempts= 0, $type= '') {
         if (empty ($url)) {
             return false;
         } else {
@@ -89,18 +89,16 @@ class DocumentParser {
             }
             elseif ($type == 'REDIRECT_HEADER' || empty ($type)) {
                 // check if url has /$base_url 
-                if (substr($url, 0, strlen($this->config['base_url'])) == $this->config['base_url']) {
+                global $base_url, $site_url;
+                if (substr($url, 0, strlen($base_url)) == $base_url) {
                     // append $site_url to make it work with Location:
-                    $url= $this->config['site_url'] . substr($url, strlen($this->config['base_url']));
+                    $url= $site_url . substr($url, strlen($base_url));
                 }
                 if (strpos($url, "\n") === false) {
                     $header= 'Location: ' . $url;
                 } else {
                     $this->messageQuit('No newline allowed in redirect url.');
                 }
-            }
-            if ($responseCode) {
-                header($responseCode);
             }
             header($header);
             $this->postProcess();
@@ -198,6 +196,9 @@ class DocumentParser {
                     $this->config[$row[0]]= $row[1];
                 }
             }
+            
+            // added for backwards compatibility - garry FS#104
+            $this->config['etomite_charset'] = & $this->config['modx_charset'];
     
             // store base_url and base_path inside config array
             $this->config['base_url']= $base_url;
@@ -445,7 +446,7 @@ class DocumentParser {
         // send out content-type and content-disposition headers
         if (IN_PARSER_MODE == "true") {
             $type= !empty ($this->contentTypes[$this->documentIdentifier]) ? $this->contentTypes[$this->documentIdentifier] : "text/html";
-            header('Content-Type: ' . $type . '; charset=' . $this->config['etomite_charset']);
+            header('Content-Type: ' . $type . '; charset=' . $this->config['modx_charset']);
 //            if (($this->documentIdentifier == $this->config['error_page']) || $redirect_error)
 //                header('HTTP/1.0 404 Not Found');
             if (!$this->checkPreview() && $this->documentObject['content_dispo'] == 1) {
@@ -602,7 +603,7 @@ class DocumentParser {
                 $metas .= "\t<meta $tagstyle=\"$tag\" content=\"$tagvalue\" />\n";
             }
         }
-        $template= preg_replace("/(<title>)/i", "\\1\n" . $metas, $template);
+        $template= preg_replace("/(<head>)/i", "\\1\n" . $metas, $template);
         return $template;
     }
 
@@ -799,6 +800,7 @@ class DocumentParser {
                     $splitter= "&";
                     if (strpos($tempSnippetParams, "&amp;") > 0)
                         $tempSnippetParams= str_replace("&amp;", "&", $tempSnippetParams);
+                    //$tempSnippetParams = html_entity_decode($tempSnippetParams, ENT_NOQUOTES, $this->config['etomite_charset']); //FS#334 and FS#456
                     $tempSnippetParams= split($splitter, $tempSnippetParams);
                     $snippetParamCount= count($tempSnippetParams);
                     for ($x= 0; $x < $snippetParamCount; $x++) {
@@ -1680,10 +1682,7 @@ class DocumentParser {
     }
 
     function getChunk($chunkName) {
-        $t= '';
-        if (isset ($this->chunkCache[$chunkName])) {
-            $t= $this->chunkCache[$chunkName];
-        }
+        $t= $this->chunkCache[$chunkName];
         return $t;
     }
 
@@ -2138,7 +2137,7 @@ class DocumentParser {
         if (strpos(strtolower($src), "<style") !== false || strpos(strtolower($src), "<link") !== false) {
             $this->sjscripts[count($this->sjscripts)]= $src;
         } else {
-            $this->sjscripts[count($this->sjscripts)]= '<!-- MODx registered -->' . "\n" . '  <link rel="stylesheet" href="' . $src . '" />';
+            $this->sjscripts[count($this->sjscripts)]= '<!-- MODx registered -->' . "\n" . '  <link rel="stylesheet" href="' . $src . ' />';
         }
     }
 

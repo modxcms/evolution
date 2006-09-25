@@ -761,7 +761,7 @@ REPLACE INTO `{PREFIX}system_settings`
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','english'),
-('etomite_charset','UTF-8'),
+('modx_charset','UTF-8'),
 ('site_name','My MODx Site'),
 ('site_start','1'),
 ('error_page','1'),

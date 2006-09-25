@@ -8,12 +8,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		exit;
 	}
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html>
 <head>
-    <title>Tree loader</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
-    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>style.css" />
+<title>Tree loader</title>
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>">
 </head>
 <body onload="javascript:parent.rpcLoadData(output)">
 <!--body onload="javascript:parent.rpcLoadData(document.body.innerHTML)"-->
@@ -108,7 +106,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			$pagetitle = htmlspecialchars($pagetitle);
 			$pagetitleDisplay = $published==0 ? "<span class='unpublishedNode'>$pagetitle</span>" : ($hidemenu==1 ? "<span class='notInMenuNode'>$pagetitle</span>":"<span class='publishedNode'>$pagetitle</span>");
 			$pagetitleDisplay = $deleted==1 ? "<span class='deletedNode'>$pagetitle</span>" : $pagetitleDisplay;
-			$weblinkDisplay = $type=="reference" ? '&nbsp;<img src="media/style/'.$theme.'images/tree/link_go.png">' : '' ;
+			$weblinkDisplay = $type=="reference" ? '&nbsp;<img align="absmiddle" src="media/style/'.$theme.'images/tree/web.gif">' : '' ;
 
 
 			$alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";

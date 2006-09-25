@@ -3,9 +3,18 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1514 - September 25, 2006)
+MOD 0.9.5 beta 3 (rev 1516 - September 25, 2006)
 ====================================
 
+* [FS#104] Remove all references to 'etomite_charset' and replace with 'modx_charset'. Updated getSettings() in document parser and settings.inc.php to add 'etomite_charset' as an alias for backwards compatibility.
+* Update to BottomButtonBar plugin for changes made regarding RTE selection (changes $_GET to $_REQUEST for chunks and templates).
+* [FS#378] Removes FCK-dependant code and implements RTE selection box as per mutate_content.dynamic.php. Removes $_lang['switch_to_RTE'] as no longer used.
+* [FS#486] Ensures that correct action ID is called when a document fails the 'duplicate alias' check. Prevents new documents being treated as existing documents and subsequently failing when no record is found.
+* [FS#344] and [FS#537] saveUserSettings function - removed $GLOBALS check which was causing problems when testing on my hosted server.
+* [FS#344] and [FS#537] saveUserSettings function - changed to allow blank values to be saved, for example if we don't want the user to have any uploadable filetype permissions.
+* [FS#344] and [FS#537] Added in additional resource browser settings to mirror those available in the main system config.
+* [FS#344] and [FS#537] Manually extract user settings in mutate_user.dynamic.php so that the current user's language and theme settings aren't overridden.
+* [FS#291] Allows manager users to have an individual manager language setting.
 * [FS#506] Redirect according to RFC 2616.
 * [FS#90] In config settings, if GD isn't installed, you [now] can't choose "Yes" for captcha setting.
 * [FS#495] Fixed websignup captcha. Captcha is now a config option. If not set specifically, it defaults to the system wide setting. And regardless of setting, if GD is not available, it will be turned off.

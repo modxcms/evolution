@@ -13,7 +13,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <head>
 
     <title>Top bar</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
     <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 

@@ -15,7 +15,7 @@ $messagesallowed = $modx->hasPermission('messages');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<title>MODx</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
 	<script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
 	<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>

@@ -45,6 +45,11 @@ if(trim($pagetitle=="")) {
 	}
 }
 
+$actionToTake = "new";
+if($_POST['mode']=='73' || $_POST['mode']=='27') {
+	$actionToTake = "edit";
+}
+
 // friendly url alias checks
 if($friendly_urls) {
 	// auto assign alias
@@ -65,12 +70,21 @@ if($friendly_urls) {
 		  $docid = $modx->db->getValue("SELECT id FROM ".$modx->getFullTableName("site_content")." WHERE id<>'$id' AND alias='$alias' LIMIT 1");
 		}
 		if($docid>0){
+			if ($actionToTake == 'edit') {
 			$modx->manager->saveFormValues(27);
 			$url = "index.php?a=27&id=".$id;
 			include_once "header.inc.php";
 			$modx->webAlert(sprintf($_lang["duplicate_alias_found"],$docid,$alias),$url);
 			include_once "footer.inc.php";		
 			exit;
+			} else {
+			$modx->manager->saveFormValues(4);
+			$url = "index.php?a=4";
+			include_once "header.inc.php";
+			$modx->webAlert(sprintf($_lang["duplicate_alias_found"],$docid,$alias),$url);
+			include_once "footer.inc.php";		
+			exit;
+			}
 		}
 	}
 	// strip alias of special characters
@@ -206,12 +220,6 @@ if($limit > 0) {
 	}
 }
 //End Modification
-
-
-$actionToTake = "new";
-if($_POST['mode']=='73' || $_POST['mode']=='27') {
-	$actionToTake = "edit";
-}
 
 // get the document, but only if it already exists (d'oh!)
 if($actionToTake!="new") {
@@ -584,7 +592,7 @@ switch ($actionToTake) {
 function stripAlias($alias) {
     global $modx;
 
-    if(strtoupper($modx->config['etomite_charset'])=='UTF-8') $alias = utf8_decode($alias);
+    if(strtoupper($modx->config['modx_charset'])=='UTF-8') $alias = utf8_decode($alias);
     $alias = strtr($alias, array(chr(196) => 'Ae', chr(214) => 'Oe', chr(220) => 'Ue', chr(228) => 'ae', chr(246) => 'oe', chr(252) => 'ue', chr(223) => 'ss'));
 
     $alias = strip_tags($alias); 

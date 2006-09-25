@@ -52,7 +52,7 @@ var $errors = array(
 	<html>
 	<head>
 	<title>MODx :: Error</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>">
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>">
 	<script>
 		function showError(){
 			alert("<?php echo $this->errormessage; ?>");

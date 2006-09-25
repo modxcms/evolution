@@ -1029,7 +1029,6 @@ $_lang["plugin_code"] = 'Plugin code (php)';
 $_lang["module_code"] = 'Module code (php)';
 $_lang["chunk_code"] = 'Chunk code (html)';
 $_lang["template_code"] = 'Template code (html)';
-$_lang["switch_to_rte"] = 'Switch To RichText';
 
 /***************************************************************************/
 // new in 0.9.1

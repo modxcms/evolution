@@ -103,7 +103,7 @@ ob_start();
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script>createButton(document.getElementById("Button1__"));</script>
-<?php if($_GET['a']=='78') { ?>
+<?php if($_REQUEST['a']=='78') { ?>
 		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script>createButton(document.getElementById("Button2__"));</script>
 		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
@@ -209,7 +209,7 @@ ob_start();
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script>createButton(document.getElementById("Button1__"));</script>
-<?php if($_GET['a']=='16') { ?>
+<?php if($_REQUEST['a']=='16') { ?>
 		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script>createButton(document.getElementById("Button2__"));</script>
 		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>

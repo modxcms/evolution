@@ -215,7 +215,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["charset_title"]?></b></td>
-            <td> <select name="etomite_charset" size="1" class="inputBox" style="width:250px;" onchange="documentDirty=true;">
+            <td> <select name="modx_charset" size="1" class="inputBox" style="width:250px;" onchange="documentDirty=true;">
                 <?php include "charsets.php"; ?>
               </select> </td>
           </tr>

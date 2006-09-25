@@ -475,67 +475,40 @@ function sendMailMessage($email,$uid,$pwd,$ufn){
 // Save User Settings
 function saveUserSettings($id,$mode = 'update') {
 	global $modx;
-		
-	$ignore = array(	// form field to be ignored 
-		'id',			// when saving user settings
-		'newusername',
-		'fullname',
-		'newpassword',
-		'passwordgenmethod',
-		'passwordnotifymethod',
-		'specifiedpassword',
-		'confirmpassword',
-		'email',
-		'phone',
-		'mobilephone',
-		'fax',
-		'dob',
-		'country',
-		'state',
-		'zip',
-		'gender',
-		'photo',
-		'comment',
-		'role',
-		'failedlogincount',
-		'blocked',
-		'blockeduntil',
-		'blockedafter',
-		'user_groups',
-		'mode',
-		'blockedmode',
-		'stay',
-		'save'
+	global $dbase,$table_prefix;
+	
+	$saveVals = array(
+	'manager_language',
+	'manager_login_startup',
+	'allow_manager_access',
+	'allowed_ip',
+	'allowed_days',
+	'manager_theme',
+	'filemanager_path',
+	'upload_images',
+	'upload_media',
+	'upload_flash',
+	'upload_files',
+	'upload_maxsize',
+	'which_editor',
+	'rb_base_dir',
+	'rb_base_url',
+	'tinymce_editor_theme',
+	'tinymce_css_selectors'	
 	);
 
 	// get user setting field names
 	foreach($_POST as $n => $v) {
-		if(!in_array($n,$ignore)) $settings[] = $n;
+		if(in_array($n,$saveVals)) $settings[] = $n;
 	}
 	
-	if ($mode == 'new') mysql_query("DELETE FROM ".$modx->getFullTableName("user_settings")." WHERE user='$id'");
+	mysql_query("DELETE FROM $dbase.".$table_prefix."user_settings WHERE user='$id'");
 
-	//get existing settings
-	$existingSettings = array();
-	$rs = $modx->db->query('SELECT user,setting_name FROM '.$modx->getFullTableName("user_settings").' WHERE user='.$id);
-	if ($modx->db->getRecordCount($rs) > 0) {
-		while ($row = $modx->db->getRow($rs)) {
-			$existingSettings[] = $row['setting_name'];
-		}
-	}
-	
 	for($i=0;$i<count($settings);$i++){
 		$n = $settings[$i]; 
-		$vl = ($GLOBALS[$n]!=$_POST[$n])? $_POST[$n]: "";
+		$vl = $_POST[$n];
 		if (is_array($vl)) $vl = implode(",",$vl);
-		if ($vl!='') {
-			if ($mode == 'new' || !in_array($n,$existingSettings)) {
-				$sql = "INSERT INTO ".$modx->getFullTableName("user_settings")." (user,setting_name,setting_value) VALUES($id,'$n','".mysql_escape_string($vl)."')";
-			} else {
-				$sql = "UPDATE ".$modx->getFullTableName("user_settings")." SET user=$id,setting_name='$n',setting_value='".mysql_escape_string($vl)."' WHERE user=$id AND setting_name='$n'";
-			}
-			$modx->db->query($sql);
-		}
+		mysql_query("INSERT INTO $dbase.".$table_prefix."user_settings (user,setting_name,setting_value) VALUES($id,'$n','".mysql_escape_string($vl)."')");
 	}
 }
 

@@ -9,7 +9,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <html>
 <head>
 <title>nav</title>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $etomite_charset; ?>" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
 <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
 <script src="media/script/scriptaculous/scriptaculous.js" type="text/javascript"></script>

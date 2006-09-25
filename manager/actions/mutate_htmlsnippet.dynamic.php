@@ -1,30 +1,43 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE != "true")
+	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!$modx->hasPermission('edit_snippet') && $_REQUEST['a']==78) {
+if (!$modx->hasPermission('edit_snippet') && $_REQUEST['a'] == 78) {
 	$e->setError(3);
 	$e->dumpError();
 }
-if(!$modx->hasPermission('new_snippet') && $_REQUEST['a']==77) {
+if (!$modx->hasPermission('new_snippet') && $_REQUEST['a'] == 77) {
 	$e->setError(3);
 	$e->dumpError();
 }
 
-if(isset($_REQUEST['id'])) {
+function isNumber($var) {
+	if (strlen($var) == 0) {
+		return false;
+	}
+	for ($i = 0; $i < strlen($var); $i++) {
+		if (substr_count("0123456789", substr($var, $i, 1)) == 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+if (isset ($_REQUEST['id']) && $_REQUEST['id'] != '') {
 	$id = $_REQUEST['id'];
 } else {
-	$id=0;
+	$id = '';
 }
 
 // check to see the snippet editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=78 AND $dbase.".$table_prefix."active_users.id=$id";
+$sql = "SELECT internalKey, username FROM $dbase." . $table_prefix . "active_users WHERE $dbase." . $table_prefix . "active_users.action=78 AND $dbase." . $table_prefix . "active_users.id=$id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
+if ($limit > 1) {
+	for ($i = 0; $i < $limit; $i++) {
 		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"],$lock['username'],"chunk");
+		if ($lock['internalKey'] != $modx->getLoginUserID()) {
+			$msg = sprintf($_lang["lock_msg"], $lock['username'], "chunk");
 			$e->setError(5, $msg);
 			$e->dumpError();
 		}
@@ -33,74 +46,56 @@ if($limit>1) {
 // end check for lock
 
 // make sure the id's a number
-if(!is_numeric($id)) {
-	echo "Passed ID is NaN!";
-	exit;
+if (!isNumber($id)) {
+	header("Location: /index.php?id=" . $site_start);
 }
 
-if(isset($_GET['id'])) {
-	$sql = "SELECT * FROM $dbase.".$table_prefix."site_htmlsnippets WHERE $dbase.".$table_prefix."site_htmlsnippets.id = $id;";
+if (isset ($_REQUEST['id']) && $_REQUEST['id'] != '') {
+	$sql = "SELECT * FROM $dbase." . $table_prefix . "site_htmlsnippets WHERE $dbase." . $table_prefix . "site_htmlsnippets.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
-	if($limit>1) {
+	if ($limit > 1) {
 		echo "Multiple Chunk sharing same unique id. Not good.<p>";
 		exit;
 	}
-	if($limit<1) {
+	if ($limit < 1) {
 		echo "Chunk doesn't exist.";
 		exit;
 	}
 	$content = mysql_fetch_assoc($rs);
-	$_SESSION['itemname']=$content['name'];
-	if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
+	$_SESSION['itemname'] = $content['name'];
+	if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
 		$e->setError(3);
 		$e->dumpError();
 	}
 } else {
-	$_SESSION['itemname']="New Chunk";
+	$_SESSION['itemname'] = "New Chunk";
 }
 
+if (isset ($_POST['which_editor'])) {
+	$which_editor = $_POST['which_editor'];
+}
+
+$content = array_merge($content, $_POST);
+
 // Print RTE Javascript function
-$use_rb = ($use_browser==1 ? "true":"false");
-$autoLang = isset($fck_editor_autolang) ? $fck_editor_autolang : 0;
-echo <<<RTE_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/fckeditor/fckeditor.js"></script>
-<script language="javascript" type="text/javascript">
-	function setRichText(){
-
-		var elm = document.getElementById('switcher');
-		if(elm) elm.style.display='none';
-
-		var rte = new FCKeditor('post') ;
-		var FCKImageBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
-		var FCKLinkBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
-		var FCKFlashBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
-		var FCKAutoLanguage = {$autoLang};
-		var FCKEditorAreaCSS = '{$editor_css_path}';
-
-		rte.Height = '400';
-		rte.BaseHref = '{$site_url}';
-		rte.BasePath = '{$base_url}assets/plugins/fckeditor/';
-		rte.Config['ImageBrowser'] = {$use_rb};
-		rte.Config['ImageBrowserURL'] = FCKImageBrowserURL;
-		rte.Config['LinkBrowser'] = {$use_rb};
-		rte.Config['LinkBrowserURL'] = FCKLinkBrowserURL;
-		rte.Config['FlashBrowser'] = {$use_rb};
-		rte.Config['FlashBrowserURL'] = FCKFlashBrowserURL;
-		rte.Config['SpellChecker'] = 'SpellerPages';
-		rte.Config['CustomConfigurationsPath'] = '{$base_url}assets/plugins/fckeditor/custom_config.js';
-		rte.ToolbarSet = 'standard';
-		rte.Config['EditorAreaCSS'] = FCKEditorAreaCSS;
-
-		rte.Config['FullPage'] = false ;
-		rte.ReplaceTextarea();
-	}
-</script>
-RTE_SCRIPT;
 ?>
+<script language="javascript" type="text/javascript">
+// Added for RTE selection
+function changeRTE(){
+	var whichEditor = document.getElementById('which_editor');
+	if (whichEditor) for (var i=0; i<whichEditor.length; i++){
+		if (whichEditor[i].selected){
+			newEditor = whichEditor[i].value;
+			break;
+		}
+	}
 
-<script language="JavaScript">
-
+	documentDirty=false;
+	document.mutate.a.value = <?php echo $action; ?>;
+	document.mutate.which_editor.value = newEditor;
+	document.mutate.submit();
+}
 
 function duplicaterecord(){
 	if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
@@ -118,14 +113,19 @@ function deletedocument() {
 
 </script>
 
-<form name="mutate" method="post" action="index.php?a=79">
+<form name="mutate" method="post" action="index.php">
 <?php
-	// invoke OnChunkFormPrerender event
-	$evtOut = $modx->invokeEvent("OnChunkFormPrerender",array("id" => $id));
-	if(is_array($evtOut)) echo implode("",$evtOut);
+
+// invoke OnChunkFormPrerender event
+$evtOut = $modx->invokeEvent("OnChunkFormPrerender", array (
+	"id" => $id
+));
+if (is_array($evtOut))
+	echo implode("", $evtOut);
 ?>
-<input type="hidden" name="id" value="<?php echo $content['id'];?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
+<input type="hidden" name="a" value="79">
+<input type="hidden" name="id" value="<?php echo $_REQUEST['id'];?>">
+<input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>">
 
 <div class="subTitle">
 	<span class="right"><?php echo $_lang['htmlsnippet_title']; ?></span>
@@ -133,7 +133,7 @@ function deletedocument() {
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
-<?php if($_GET['a']=='78') { ?>
+<?php if($_REQUEST['a']=='78') { ?>
 		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
@@ -171,18 +171,20 @@ function deletedocument() {
 	<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
 	<option>&nbsp;</option>
 	<?php
-        include_once "categories.inc.php";
-		$ds = getCategories();
-		if($ds) foreach($ds as $n=>$v){
-			echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-		}
-	?>
+
+include_once "categories.inc.php";
+$ds = getCategories();
+if ($ds)
+	foreach ($ds as $n => $v) {
+		echo "<option value='" . $v['id'] . "'" . ($content["category"] == $v["id"] ? " selected='selected'" : "") . ">" . htmlspecialchars($v["category"]) . "</option>";
+	}
+?>
 	</select>
 	</td>
   </tr>
   <tr>
 	<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-	<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+	<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="<? echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
   </tr>
   <tr>
     <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_htmlsnippet']; ?> <span class="comment"><?php echo $_lang['lock_htmlsnippet_msg']; ?></span></td>
@@ -192,16 +194,49 @@ function deletedocument() {
 	<div style="width:100%;position:relative">
 	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
 	    	<span style="float:left;color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['chunk_code']; ?></span>
-	    	<a id="switcher" style="float:right;color:#707070;padding:3px;cursor:pointer" onclick="setRichText()"><?php echo $_lang['switch_to_rte']; ?> &gt;&gt;</a>
 	   	</div>
-		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['snippet']); ?></textarea>
+		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet']); ?></textarea>
 	</div>
+	<span class='warning'><?php echo $_lang["which_editor_title"]?></span>
+			<select id="which_editor" name="which_editor" onchange="changeRTE();">
+	<?php
+
+
+// invoke OnRichTextEditorRegister event
+$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+echo "<option value='none'" . ($which_editor == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
+if (is_array($evtOut))
+	for ($i = 0; $i < count($evtOut); $i++) {
+		$editor = $evtOut[$i];
+		echo "<option value='$editor'" . ($which_editor == $editor ? " selected='selected'" : "") . ">$editor</option>\n";
+	}
+?>
+			</select>
+		</div>
 	<!-- HTML text editor end -->
 <input type="submit" name="save" style="display:none">
 </div>
 <?php
-	// invoke OnChunkFormRender event
-	$evtOut = $modx->invokeEvent("OnChunkFormRender",array("id" => $id));
-	if(is_array($evtOut)) echo implode("",$evtOut);
+
+// invoke OnChunkFormRender event
+$evtOut = $modx->invokeEvent("OnChunkFormRender", array (
+	"id" => $id
+));
+if (is_array($evtOut))
+	echo implode("", $evtOut);
 ?>
 </form>
+<?php
+
+// invoke OnRichTextEditorInit event
+if ($use_editor == 1) {
+$evtOut = $modx->invokeEvent("OnRichTextEditorInit", array (
+	editor => $which_editor,
+	elements => array (
+		'post'
+	)
+));
+if (is_array($evtOut))
+	echo implode("", $evtOut);
+}
+?>

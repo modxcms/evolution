@@ -23,10 +23,10 @@ function isNumber($var)
 	return true;
 }
 
-if(isset($_REQUEST['id'])) {
+if(isset($_REQUEST['id']) && $_REQUEST['id']!='') {
 	$id = $_REQUEST['id'];
 } else {
-	$id=0;
+	$id='';
 }
 
 // check to see the template editor isn't locked
@@ -50,7 +50,8 @@ if(!isNumber($id)) {
 	header("Location: /index.php?id=".$site_start);
 }
 
-if(isset($_GET['id'])) {
+$content = array();
+if(isset($_REQUEST['id']) && $_REQUEST['id']!='') {
 	$sql = "SELECT * FROM $dbase.".$table_prefix."site_templates WHERE $dbase.".$table_prefix."site_templates.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -72,46 +73,31 @@ if(isset($_GET['id'])) {
 	$_SESSION['itemname']="New template";
 }
 
+if (isset ($_POST['which_editor'])) {
+	$which_editor = $_POST['which_editor'];
+}
+
+$content = array_merge($content, $_POST);
+
 // Print RTE Javascript function
-$use_rb = ($use_browser==1 ? "true":"false");
-$autoLang = isset($fck_editor_autolang) ? $fck_editor_autolang : 0;
-echo <<<RTE_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/fckeditor/fckeditor.js"></script>
-<script language="javascript" type="text/javascript">
-	function setRichText(){
-
-		var elm = document.getElementById('switcher');
-		if(elm) elm.style.display='none';
-
-		var rte = new FCKeditor('post') ;
-		var FCKImageBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=images&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
-		var FCKLinkBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
-		var FCKFlashBrowserURL = '{$base_url}manager/media/browser/mcpuk/browser.html?Type=flash&Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}';
-		var FCKAutoLanguage = {$autoLang};
-		var FCKEditorAreaCSS = '{$editor_css_path}';
-
-		rte.Height = '400';
-		rte.BaseHref = '{$site_url}';
-		rte.BasePath = '{$base_url}assets/plugins/fckeditor/';
-		rte.Config['ImageBrowser'] = {$use_rb};
-		rte.Config['ImageBrowserURL'] = FCKImageBrowserURL;
-		rte.Config['LinkBrowser'] = {$use_rb};
-		rte.Config['LinkBrowserURL'] = FCKLinkBrowserURL;
-		rte.Config['FlashBrowser'] = {$use_rb};
-		rte.Config['FlashBrowserURL'] = FCKFlashBrowserURL;
-		rte.Config['SpellChecker'] = 'SpellerPages';
-		rte.Config['CustomConfigurationsPath'] = '{$base_url}assets/plugins/fckeditor/custom_config.js';
-		rte.ToolbarSet = 'advanced';
-		rte.Config['EditorAreaCSS'] = FCKEditorAreaCSS;
-
-		rte.Config['FullPage'] = true ;
-		rte.ReplaceTextarea();
-	}
-</script>
-RTE_SCRIPT;
 ?>
-
 <script language="javascript" type="text/javascript">
+// Added for RTE selection
+function changeRTE(){
+	var whichEditor = document.getElementById('which_editor');
+	if (whichEditor) for (var i=0; i<whichEditor.length; i++){
+		if (whichEditor[i].selected){
+			newEditor = whichEditor[i].value;
+			break;
+		}
+	}
+
+	documentDirty=false;
+	document.mutate.a.value = <?php echo $action; ?>;
+	document.mutate.which_editor.value = newEditor;
+	document.mutate.submit();
+}
+
 function duplicaterecord(){
 	if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
 		documentDirty=false;
@@ -128,23 +114,22 @@ function deletedocument() {
 
 </script>
 
-
-
-<form name="mutate" method="post" action="index.php?a=20">
+<form name="mutate" method="post" action="index.php">
 <?php
 	// invoke OnTempFormPrerender event
 	$evtOut = $modx->invokeEvent("OnTempFormPrerender",array("id" => $id));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
-<input type="hidden" name="id" value="<?php echo $content['id'];?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
+<input type="hidden" name="a" value="20">
+<input type="hidden" name="id" value="<?php echo $_REQUEST['id'];?>">
+<input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>">
 
 <div class="subTitle">
 	<span class="right"><?php echo $_lang['template_title']; ?></span>
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
-<?php if($_GET['a']=='16') { ?>
+<?php if($_REQUEST['a']=='16') { ?>
 		<td id="Button2" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
 			<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
@@ -197,7 +182,7 @@ function deletedocument() {
 	  </tr>
       <tr>
 		<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-		<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+		<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="<? echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
 	  </tr>
 	  <tr>
 	    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
@@ -207,10 +192,24 @@ function deletedocument() {
 	<div style="width:100%;position:relative">
 	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
 	    	<span style="float:left;color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['template_code']; ?></span>
-	    	<a id="switcher" style="float:right;color:#707070;padding:3px;cursor:pointer" onclick="setRichText()"><?php echo $_lang['switch_to_rte']; ?> &gt;&gt;</a>
 	   	</div>
-		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['content']); ?></textarea>
+		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['content']); ?></textarea>
 	</div>
+	<span class='warning'><?php echo $_lang["which_editor_title"]?></span>
+			<select id="which_editor" name="which_editor" onchange="changeRTE();">
+	<?php
+
+	// invoke OnRichTextEditorRegister event
+	$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
+	echo "<option value='none'" . ($which_editor == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
+	if (is_array($evtOut))
+		for ($i = 0; $i < count($evtOut); $i++) {
+			$editor = $evtOut[$i];
+			echo "<option value='$editor'" . ($which_editor == $editor ? " selected='selected'" : "") . ">$editor</option>\n";
+		}
+?>
+			</select>
+		</div>
 	<!-- HTML text editor end -->
 	<input type="submit" name="save" style="display:none">
 </div>
@@ -220,3 +219,14 @@ function deletedocument() {
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
+<?php
+// invoke OnRichTextEditorInit event
+if ($use_editor == 1) {
+			$evtOut = $modx->invokeEvent("OnRichTextEditorInit", array (
+				editor => $which_editor,
+				elements => array('post')
+			));
+			if (is_array($evtOut))
+				echo implode("", $evtOut);
+}
+?>

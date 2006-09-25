@@ -141,7 +141,7 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 include_once "settings.inc.php";
 
 // send the charset header
-header('Content-Type: text/html; charset='.$etomite_charset);
+header('Content-Type: text/html; charset='.$modx_charset);
 
 // include version info
 include_once "version.inc.php";
@@ -154,6 +154,10 @@ if(!isset($_SESSION['mgrValidated'])){
 	echo "Not Logged In!";
 	exit;
 }
+
+// get the user settings from the database
+include_once "user_settings.inc.php";
+
 // include_once the language file
 if(!isset($manager_language)) {
 	$manager_language = "english"; // if not set, get the english language file.
@@ -164,15 +168,6 @@ $length_eng_lang = count($_lang);
 if($manager_language!="english") {
 	include_once "lang/".$manager_language.".inc.php";
 }
-
-// include_once the style variables file
-if(isset($manager_theme) && !isset($_style)) {
-	$_style = array();
-	include_once "media/style/".$manager_theme."/style.php";
-}
-
-// get the user settings from the database
-include_once "user_settings.inc.php";
 
 // include_once the error handler
 include_once "error.class.inc.php";
