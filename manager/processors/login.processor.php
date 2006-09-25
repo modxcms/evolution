@@ -265,8 +265,7 @@ $modx->invokeEvent("OnManagerLogin",
 $tbl = $modx->getFullTableName("user_settings");
 $id = $modx->db->getValue("SELECT setting_value FROM $tbl WHERE user='$internalKey' AND setting_name='manager_login_startup'");
 if(isset($id) && $id>0) {
-	$url = $modx->makeUrl($id);
-	header('Location: '.$url);
+	header('Location: '.$modx->config['site_url'].$modx->makeUrl($id));
 }
 else {
 	header('Location: ../');

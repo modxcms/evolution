@@ -36,7 +36,7 @@
 	For more information on MODx please visit http://modxcms.com/
 	
 **************************************************************************
-    Originally based on Etomite by Alex Butter
+    Originall based on Etomite by Alex Butter
 **************************************************************************
 */	
 
@@ -58,16 +58,7 @@ $modxtags = array('@<script[^>]*?>.*?</script>@si',
                   '@{{(.*?)}}@si',
                   '@\[\*(.*?)\*\]@si');
 foreach($_POST as $key => $value) {
-	if (!is_array($value)) {
-  		$_POST[$key] = preg_replace($modxtags,"", $value);
-	} else {
-  		if (count($value) > 0) {
-  			foreach ($value as $k => $v) {
-  				$value[$k] = preg_replace($modxtags,"", $v);
-  			}
-  			$_POST[$key] =$value;
-  		}
-  	}
+  $_POST[$key] = preg_replace($modxtags,"", $value);
 }
 foreach($_GET as $key => $value) {
   $_GET[$key] = preg_replace($modxtags,"", $value);
@@ -87,8 +78,10 @@ header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie
 header('Cache-Control: private, must-revalidate');
 ob_start();
 error_reporting(E_ALL);
+
 /**
  *	Filename: index.php
+ *	Function: This file loads and executes the parser. *
  */
 
 define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
@@ -144,9 +137,7 @@ $modx->tstart = $tstart;
 $modx->stopOnNotice = false;
 
 // Don't show PHP errors to the public
-if(!isset ($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
-    @ini_set("display_errors","0");
-}
+if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) @ini_set("display_errors","0");
 
 // execute the parser
 $modx->executeParser();

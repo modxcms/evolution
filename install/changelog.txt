@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1513 - September 25, 2006)
+MOD 0.9.5 beta 3 (rev 1514 - September 25, 2006)
 ====================================
 
+* [FS#506] Redirect according to RFC 2616.
 * [FS#90] In config settings, if GD isn't installed, you [now] can't choose "Yes" for captcha setting.
 * [FS#495] Fixed websignup captcha. Captcha is now a config option. If not set specifically, it defaults to the system wide setting. And regardless of setting, if GD is not available, it will be turned off.
 * Move Search from Tree Menu header icon to Site Menu.
