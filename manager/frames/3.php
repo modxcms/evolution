@@ -1,15 +1,13 @@
 <?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly."); ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>Document Tree</title>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>">
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
-<script type="text/javascript" language="JavaScript" src="media/script/bin/webelm.js"></script>
-<script type="text/javascript" src="media/script/cb2.js"></script>
-<script language="JavaScript">
+    <title>Document Tree</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
+    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
+    <script type="text/javascript" src="media/script/bin/webelm.js"></script>
+    <script type="text/javascript" src="media/script/cb2.js"></script>
+    <script type="text/javascript">
 /* including (for the really important bits) code devised and written yb patv */
 
 	document.setIncludePath("media/script/bin/");
@@ -120,7 +118,7 @@
 				openedArray[parent] = 1 ;
 				//Raymond:added getFolderState()
 				frames['rpcFrame'].location.href ='index.php?a=1&f=3ldr&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+getFolderState();
-				rpcNode.setInnerHTML("<span class='emptyNode' style='white-space:nowrap;'>"+spacer+"&nbsp;&nbsp;&nbsp;"+loadText+"...</span>");
+				rpcNode.setInnerHTML("<span class='emptyNode' style='white-space:nowrap;'>"+spacer+"&nbsp;&nbsp;&nbsp;"+loadText+"...<\/span>");
 			} else {
 				rpcNode.style.display = 'block';
 				//Jeroen set opened
@@ -144,9 +142,11 @@
 
 	function rpcLoadData(html)
 	{
-		rpcNode.setInnerHTML(html); // modx
-		rpcNode.style.display = 'block';
-		rpcNode.loaded = true;
+		if(rpcNode != null){
+			rpcNode.setInnerHTML(html); // modx
+			rpcNode.style.display = 'block';
+			rpcNode.loaded = true;
+		}
 	}
 
 	function expandTree()
@@ -303,80 +303,98 @@ $row = mysql_fetch_row($rs);
 $count = $row[0];
 
 ?>
+<!--[if lt IE 7]>
+    <style type="text/css">
+      body { behavior: url(../assets/js/htcmime.php?file=csshover.htc) }
+      img { behavior: url(../assets/js/htcmime.php?file=pngbehavior.htc); }
+    </style>
+<![endif]-->
+
+
+</head>
 <!-- Raymond: add onbeforeunload -->
 <body onclick="hideMenu();" class="treeframebody">
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td>
 		<table cellpadding="0" cellspacing="0">
-			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/down.gif' align="absmiddle"></td>
-				<script>createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/up.gif' align="absmiddle"></td>
-				<script>createButton(document.getElementById("Button2"));</script>
-			<td id="Button3" onclick="top.main.document.location.href='index.php?a=71';" title="<?php echo $_lang['search']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/tree_search.gif' align="absmiddle"></td>
-				<script>createButton(document.getElementById("Button3"));</script>
-			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif' align="absmiddle"></td>
-				<script>createButton(document.getElementById("Button4"));</script>
-			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/sort.gif' align="absmiddle"></td>
-				<script>createButton(document.getElementById("Button5"));</script>
-			<td id="Button10" onclick="emptyTrash();" title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/trash<?php echo $count>0 ? "_full" : ""; ?>.gif' align="absmiddle"></td>
-				<script>createButton(document.getElementById("Button10"));</script>
-			<?php if($count==0) { ?><script>document.getElementById("Button10").setEnabled(false);</script><?php } ?>
+		    <tr>
+			<td id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></td>
+			<td id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></td>
+			<td id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></td>
+			<td id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></td>
+			<td id="Button4" onclick="updateTree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></td>
+			<td id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></td>
+			<td id="Button10" onclick="emptyTrash();" title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $count>0 ? $_style['empty_recycle_bin'] : $_style['empty_recycle_bin_empty'] ; ?></td>
+			</tr>
 		</table>
 	</td>
     <td width="23" align="right">
 		<table cellpadding="0" cellspacing="0">
-			<td id="Button6" onclick="top.scripter.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/close.gif' align="absmiddle"></td>
-				<script>createButton(document.getElementById("Button6"));</script>
+		    <tr>
+			<td id="Button6" onclick="top.scripter.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></td>
+            </tr>
 		</table>
 	</td>
     <td width="16" align="right">&nbsp;</td>
   </tr>
 </table>
+<script type="text/javascript">
+    createButton(document.getElementById("Button1"));
+    createButton(document.getElementById("Button2"));
+    createButton(document.getElementById("Button3a"));
+    createButton(document.getElementById("Button3c"));
+    createButton(document.getElementById("Button4"));
+    createButton(document.getElementById("Button5"));
+    createButton(document.getElementById("Button10"));
+    
+    createButton(document.getElementById("Button6"));
+</script>
+<?php if($count==0) { ?><script type="text/javascript">document.getElementById("Button10").setEnabled(false);</script><?php } ?>
 
 <div id="floater">
 <?php
 if(isset($_REQUEST['tree_sortby'])) {
-	$_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
+    $_SESSION['tree_sortby'] = $_REQUEST['tree_sortby'];
 }
 
 if(isset($_REQUEST['tree_sortdir'])) {
-	$_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
+    $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
 }
 ?>
+<form name="sortFrm" id="sortFrm" action="3.php">
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td style="padding-left: 10px;padding-top: 1px;" colspan="2">
-	<form name="sortFrm" style="margin: 0px; padding: 0px;">
-		<select name="sortby" style="font-size: 9px;">
+        <select name="sortby" style="font-size: 9px;">
             <option value="isfolder" <?php echo $_SESSION['tree_sortby']=='isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
             <option value="id" <?php echo $_SESSION['tree_sortby']=='id' ? "selected='selected'" : "" ?>><?php echo $_lang['id']; ?></option>
             <option value="menuindex" <?php echo $_SESSION['tree_sortby']=='menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['document_opt_menu_index'] ?></option>
             <option value="createdon" <?php echo $_SESSION['tree_sortby']=='createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
-            <option value="editedon" <?php echo $_SESSION['tree_sortby']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>			<option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
-		</select>
-	</td>
+            <option value="editedon" <?php echo $_SESSION['tree_sortby']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
+            <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
+        </select>
+    </td>
   </tr>
-  <tr height="18">
+  <tr>
     <td width="99%" style="padding-left: 10px;padding-top: 1px;">
-		<select name="sortdir" style="font-size: 9px;">
+        <select name="sortdir" style="font-size: 9px;">
             <option value="DESC" <?php echo $_SESSION['tree_sortdir']=='DESC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_desc']; ?></option>
             <option value="ASC" <?php echo $_SESSION['tree_sortdir']=='ASC' ? "selected='selected'" : "" ?>><?php echo $_lang['sort_asc']; ?></option>
-		</select>
-		<input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>'>
-	</form>
-	</td>
-    <td width="1%" id="button7" align="right" onclick="updateTree();" title="<?php echo $_lang['sort_tree']; ?>"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/sort.gif'>
-			<script>createButton(document.getElementById("Button7"));</script>
-	</td>
+        </select>
+        <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
+    </td>
+    <td width="1%" id="button7" align="right" onclick="updateTree();" title="<?php echo $_lang['sort_tree']; ?>"><input type="button" value="Go!" />
+    </td>
   </tr>
 </table>
+</form>
 </div>
 
 <div id="treeHolder">
 
-	<div><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/globe.gif' align="absmiddle" width="19" height="18">&nbsp;<span class="rootNode" onclick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+	<div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onclick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
 	<div><iframe src="about:blank" id="rpcFrame" name="rpcFrame" style="width: 1px; height: 1px; visibility: hidden;"></iframe></div>
 
 </div>
@@ -450,7 +468,7 @@ function menuHandler(action) {
 
 </script>
 
-<!-- Mozilla context menu ... IE removed -->
+<!-- Contextual Menu Popup Code (NEEDS HELP!) -->
 <script type="text/javascript">
 
 	function dopopup(x,y) {
@@ -478,7 +496,7 @@ function menuHandler(action) {
 
 </script>
 <div id="contextMenu" style="position: absolute; right: 20px; top: 20px; z-index:10000; width: 170px; height: auto;visibility: hidden;">
-	<iframe name="oPopup" style="width:170px;height:100%" frameborder="0" src="index.php?a=1&f=3c"></iframe>
+	<iframe name="oPopup" style="width:170px;height:100%" frameborder="0" src="index.php?a=1&amp;f=3c"></iframe>
 </div>
 
 </body>

@@ -22,11 +22,12 @@ function constructLink($action, $img, $text, $allowed, $theme) {
 
 
 ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>ContextMenu</title>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>">
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>style.css<?php echo "?$theme_refresher";?>" />
+    <title>ContextMenu</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>">
+    <link rel="stylesheet" type="text/css" href="media/style/<?php echo $theme; ?>style.css" />
 </head>
 <body onselectstart="return false;" onblur="parent.hideMenu();">
 <div id="mx_contextmenu">

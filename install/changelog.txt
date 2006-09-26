@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1521 - September 25, 2006)
+MOD 0.9.5 beta 3 (rev 1522 - September 25, 2006)
 ====================================
 
+* Eliminate numerous warnings and simplify frames structure (1522)
 * [FS#406] and [FS#539] Reapplied fix to auto-publishing.
 * [FS#104] Remove all references to 'etomite_charset' and replace with 'modx_charset'. Updated getSettings() in document parser and settings.inc.php to add 'etomite_charset' as an alias for backwards compatibility.
 * Update to BottomButtonBar plugin for changes made regarding RTE selection (changes $_GET to $_REQUEST for chunks and templates).
