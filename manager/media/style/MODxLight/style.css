@@ -169,6 +169,9 @@ hr {
     color: #000;
     padding: 0 20px;
 }
+#topbar * {
+    vertical-align: middle;
+}
 #topbar a,
 #topbar a:link,
 #topbar a:visited {
