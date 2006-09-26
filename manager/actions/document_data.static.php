@@ -7,25 +7,24 @@ $id = $_REQUEST['id'];
 if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
 
 ?>
-<script language="JavaScript">
-function duplicatedocument(){
-	if(confirm("<?php echo $_lang['confirm_duplicate_document'] ?>")==true) {
-		document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=94";
-	}
-}
-function deletedocument() {
-	if(confirm("<?php echo $_lang['confirm_delete_document'] ?>")==true) {
-		document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=6";
-	}
-}
-function editdocument() {
-		document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=27";
-}
-function movedocument() {
-		document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=51";
-}
+<script type="text/javascript">
+    function duplicatedocument(){
+        if(confirm("<?php echo $_lang['confirm_duplicate_document'] ?>")==true) {
+            document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=94";
+        }
+    }
+    function deletedocument() {
+        if(confirm("<?php echo $_lang['confirm_delete_document'] ?>")==true) {
+            document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=6";
+        }
+    }
+    function editdocument() {
+        document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=27";
+    }
+    function movedocument() {
+        document.location.href="index.php?id=<?php echo $_REQUEST['id']; ?>&a=51";
+    }
 </script>
-
 
 <?php
 $tblsc = $dbase.".".$table_prefix."site_content";
@@ -97,19 +96,20 @@ if($limit > 0) {
 
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="editdocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
-			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
 		<td id="Button2" onclick="movedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
-			<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		<td id="Button4" onclick="duplicatedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
 		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
-			<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 	</table>
+	<script type="text/javascript">
+	    createButton(document.getElementById("Button1"));
+	    createButton(document.getElementById("Button2"));
+	    createButton(document.getElementById("Button4"));
+	    createButton(document.getElementById("Button3"));
+	</script>
 </div>
 
-<div class="sectionHeader">
-<?php echo $_lang["page_data_title"]; ?>
-</div>
+<div class="sectionHeader"><?php echo $_lang["page_data_title"]; ?></div>
+
 <div class="sectionBody" id="lyr1">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -259,7 +259,7 @@ echo $buffer;
 ?>
 </div>
 
-<script language="JavaScript">
+<script type="text/javascript">
 try {
 	top.menu.Sync(<?php echo $id; ?>);
 } catch(oException) {

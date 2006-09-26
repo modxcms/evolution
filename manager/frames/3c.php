@@ -35,10 +35,8 @@ function constructLink($action, $img, $text, $allowed, $theme) {
 <?php
 constructLink(1, "context_view", $_lang["view_document"], 1,$theme);
 constructLink(2, "save", $_lang["edit_document"], $modx->hasPermission('edit_document'),$theme);
-constructLink(5, "cancel", $_lang["move_document"], $modx->hasPermission('edit_document'),$theme);
-// Ryan: Duplicate Document
+constructLink(5, "cancel", $_lang["move_document"], $modx->hasPermission('save_document'),$theme);
 constructLink(7, "copy", $_lang["duplicate_document"], $modx->hasPermission('new_document'),$theme);
-//Raymond:Create Folder
 constructLink(11, "folder", $_lang["create_folder_here"], $modx->hasPermission('new_document'),$theme);
 constructLink(3, "newdoc", $_lang["create_document_here"], $modx->hasPermission('new_document'),$theme);
 constructLink(6, "weblink", $_lang["create_weblink_here"], $modx->hasPermission('new_document'),$theme);
