@@ -494,13 +494,13 @@ class DocumentParser {
         $timeNow= time() + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
-            $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=1, publishedon=" . time() . ", publishedby=" . $this->getLoginUserID() . " WHERE " . $this->getFullTableName("site_content") . ".pub_date < $timeNow AND " . $this->getFullTableName("site_content") . ".pub_date!=0";
+            $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE ".$this->getFullTableName("site_content").".pub_date < $timeNow AND ".$this->getFullTableName("site_content").".pub_date!=0";
             if (@ !$result= $this->dbQuery($sql)) {
                 $this->messageQuit("Execution of a query to the database failed", $sql);
             }
 
             // now, check for documents that need un-publishing
-            $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=0, publishedon=0, publihsedby=0 WHERE " . $this->getFullTableName("site_content") . ".unpub_date < $timeNow AND " . $this->getFullTableName("site_content") . ".unpub_date!=0";
+            $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=0, publishedon=0 WHERE " . $this->getFullTableName("site_content") . ".unpub_date < $timeNow AND " . $this->getFullTableName("site_content") . ".unpub_date!=0";
             if (@ !$result= $this->dbQuery($sql)) {
                 $this->messageQuit("Execution of a query to the database failed", $sql);
             }
