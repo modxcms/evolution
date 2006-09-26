@@ -675,6 +675,7 @@ ul#nav {
         float: left;
         width: auto;
         margin: 0 3px 0 0;
+        padding: 0;
     }
         #nav a {
             color: #438d29;
@@ -688,6 +689,8 @@ ul#nav {
             cursor: pointer;
             cursor: hand;
             line-height: 25px;
+            height: 25px;
+            overflow: hidden;
             padding: 0 15px;
             border-left: 1px solid #c1e079;
         }
@@ -710,7 +713,7 @@ ul#nav {
         #nav li.active ul.subnav {
             display: block;
             position: absolute;
-            top: 24px;
+            top: 25px;
             width: 100%;
             left: 0;
             background: #8fc70c; /* 677e32 */
