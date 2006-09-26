@@ -211,16 +211,5 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 		</ul>
 	</div>
 
-<!-- Meta tags -->
-<?php 	if($modx->hasPermission('manage_metatags')) { ?>
-    <div class="tab-page" id="tabKeywords">
-    	<h2 class="tab"><?php echo $_lang["meta_keywords"] ?></h2>
-    	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabKeywords" ) );</script>
-		<ul>
-		<li><span style="width: 250px"><a href="index.php?a=81"><?php echo $_lang['manage_metatags']; ?></a></span> - <?php echo $_lang['metatag_message']; ?></li>
-		</ul>
-	</div>
-<?php } ?>
-
 </div>
 </div>

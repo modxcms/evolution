@@ -3,10 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1528 - September 25, 2006)
+MOD 0.9.5 beta 3 (rev 1529 - September 25, 2006)
 ====================================
 
+* Move Manage Metatags to top level resources menu. (1529)
 * Default setting for show_preview changed to off. (1528)
+* [FS#538] Minimally permissioned manager users can no longer move documents. (1527)
 * Eliminate numerous warnings and simplify frames structure. (1522)
 * [FS#406] and [FS#539] Reapplied fix to auto-publishing.
 * [FS#104] Remove all references to 'etomite_charset' and replace with 'modx_charset'. Updated getSettings() in document parser and settings.inc.php to add 'etomite_charset' as an alias for backwards compatibility.

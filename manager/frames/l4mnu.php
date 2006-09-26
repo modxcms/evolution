@@ -74,13 +74,17 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 </li>
 
 <!--Resources-->
-<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags') || $modx->hasPermission('file_manager')) { ?>
+<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) { ?>
 <li id="limenu5"><a onclick="new NavToggle(this);return false;" href="#menu5"><?php echo $_lang["resources"]; ?></a>
 <ul class="subnav" id="menu5"><!-- break these out individually soon -->
 <!--resources--><li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resource_management"]; ?></a></li>
-<?php 	if($modx->hasPermission('file_manager')) { ?>
+<?php if($modx->hasPermission('file_manager')) { ?>
 <!--manage-files--><li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
-<?php } ?></ul>
+<?php } ?>
+<?php if($modx->hasPermission('manage_metatags')) { ?>
+<!--manage-metatags--><li><a onclick="this.blur();" href="index.php?a=81" target="main"><?php echo $_lang["manage_metatags"]; ?></a></li>
+<?php } ?>
+</ul>
 </li>
 <?php } ?>
 
