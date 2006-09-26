@@ -301,12 +301,12 @@ a img {
 
 .disabledImage {
 	width: 20px;
-	opactiy: 0.5;
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+	opactiy: 0.3;
+    filter: alpha(opacity=30);
 }
 
 .disabledImage img {
-	filter: gray();
+    border: 0;
 }
 
 .editorCell {
@@ -315,9 +315,9 @@ a img {
 	vertical-align: baseline;
 }
 
-.row1	{ background-color: #fff; color: #000;}
-.row2	{ background-color: #C8DAA2; color: #000;}
-.row3	{ background-color: #DADDAD; color: #000;}
+.row1, .row2, .row3 { background-color: #fff; color: #000;}
+.row2 { background-color: #C8DAA2;}
+.row3 { background-color: #DADDAD;}
 
 #treeMenuBody {
     background-color: #FCFCFC;
@@ -436,7 +436,7 @@ a img {
 
 .searchtoolbarbtn {
     height: 24px;
-    padding-top: 3px 2px 0;
+    padding: 3px 2px 0;
     text-decoration: none;
     border: 1px solid #e0e0e0; }
 
@@ -655,7 +655,7 @@ ul#nav {
     }
         #nav a {
             color: #438d29;
-            background: #d4d4d4 url(images/misc/greentab.gif) right bottom;
+            background: #d4d4d4 url(images/misc/greentab.gif) 100% 100%;
             font-weight: bold;
             text-decoration: none;
             display: block;
@@ -675,7 +675,7 @@ ul#nav {
            color: #000;
         }
     #nav li.active a {
-        background: #438d29 url(images/misc/greentab.gif) right top;
+        background: #438d29 url(images/misc/greentab.gif) 100% 0;
         color: #fff;
         position: relative;
         z-index: 999;
@@ -885,8 +885,8 @@ ul#nav {
     vertical-align: middle;
 }
 .coolButtonHover {
-    border: 1px solid darkgreen;
-    padding: 2px 4px 1px 4px;	
+    border: 1px solid #006400;
+    padding: 2px 4px 1px 4px;
     height: 20px;
     background: #dee9c6;
 }
