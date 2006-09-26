@@ -19,6 +19,7 @@ $_style["empty_recycle_bin_empty"] = "<img src=\"".$style_path."images/icons/tra
 $_style["expand_tree"] = "<img src=\"".$style_path."images/icons/arrow_down.png\" />";
 $_style["hide_tree"] = "<img src=\"".$style_path."images/icons/application_side_contract.png\" />";
 $_style["refresh_tree"] = "<img src=\"".$style_path."images/icons/refresh.png\" />";
+$_style["show_tree"] = $style_path."images/icons/application_side_expand.png";
 $_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.png\" />";
 
 // Tree Icons

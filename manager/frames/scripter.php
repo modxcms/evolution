@@ -30,7 +30,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		currentFrameState = 'closed';
 		try {
 			var elm = new DynElement('tocText@topFrame');
-			if(elm) elm.setInnerHTML("<a href='javascript:parent.scripter.defaultTreeFrame();'><img src='media/images/icons/inet1-15.gif' border=0 alt='<?php echo $_lang['show_tree']; ?>' /><\/a>");
+			if(elm) elm.setInnerHTML("<a href='javascript:parent.scripter.defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' /><\/a>");
 			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '0,*';
 		} catch(oException) {
 			x=window.setTimeout('hideTreeFrame()', 1000);
