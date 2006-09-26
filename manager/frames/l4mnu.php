@@ -66,11 +66,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <ul class="subnav" id="menu3">
 <!--home--><li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
 <!--preview--><li><a onclick="this.blur();" href="../" target="_blank"><?php echo $_lang["launch_site"]; ?></a></li>
+<!--search--><li><a onclick="this.blur();" href="index.php?a=71" target="main"><?php echo $_lang['search']; ?></a></li>
 <!--new-document--><li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
 <!--new-folder--><li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
 <!--new-weblink--><li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
-<!--search--><li><a onclick="this.blur();" href="index.php?a=71" target="main"><?php echo $_lang['search']; ?></a></li>
-
 </ul>
 </li>
 

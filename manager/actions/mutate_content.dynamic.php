@@ -1031,7 +1031,7 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 	// Modified by Raymond for TV - Orig Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
 if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
 ?>
-<div class='sectionHeader'><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt='.' />&nbsp;<?php echo $_lang["settings_templvars"]; ?></div><div class="sectionBody">
+<div class='sectionHeader'><?php echo $_lang["settings_templvars"]; ?></div><div class="sectionBody">
 <?php
 
 		// MODIFIED BY S.BRENNAN

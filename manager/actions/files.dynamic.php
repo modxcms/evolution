@@ -508,7 +508,7 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 
 if($_REQUEST['mode']=="edit" || $_REQUEST['mode']=="view") {
 ?>
-<div class="sectionHeader"><img src='media/style/<?php echo $theme; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_REQUEST['mode']=="edit" ? $_lang['files_editfile'] : $_lang['files_viewfile'] ; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_REQUEST['mode']=="edit" ? $_lang['files_editfile'] : $_lang['files_viewfile'] ; ?></div><div class="sectionBody">
 <?php
 $filename=$_REQUEST['path'];
 $handle = @fopen($filename, "r");
