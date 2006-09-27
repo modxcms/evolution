@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 3 (rev 1529 - September 25, 2006)
+MOD 0.9.5 beta 3 (rev 1530 - September 25, 2006)
 ====================================
 
+* Update Manager to work better in IE (1530)
 * Move Manage Metatags to top level resources menu. (1529)
 * Default setting for show_preview changed to off. (1528)
 * [FS#538] Minimally permissioned manager users can no longer move documents. (1527)

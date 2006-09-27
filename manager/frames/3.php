@@ -305,8 +305,8 @@ $count = $row[0];
 ?>
 <!--[if lt IE 7]>
     <style type="text/css">
-      body { behavior: url(../assets/js/htcmime.php?file=csshover.htc) }
-      img { behavior: url(../assets/js/htcmime.php?file=pngbehavior.htc); }
+      body { behavior: url(media/script/forIE/htcmime.php?file=csshover.htc) }
+      img { behavior: url(media/script/forIE/htcmime.php?file=pngbehavior.htc); }
     </style>
 <![endif]-->
 

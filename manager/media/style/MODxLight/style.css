@@ -913,7 +913,8 @@ ul#nav {
 .coolButtonHover {
     border: 1px solid #006400;
     padding: 2px 4px 1px 4px;
-    height: 20px;
+    height: 20px !important;
+    height: 17px;
     background: #dee9c6;
 }
 

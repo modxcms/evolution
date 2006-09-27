@@ -11,16 +11,16 @@
 $style_path = "media/style/MODxLight/";
 
 // Tree Menu Toolbar
-$_style["add_doc_tree"] = "<img src=\"".$style_path."images/icons/folder_page_add.png\" />";
-$_style["add_weblink_tree"] = "<img src=\"".$style_path."images/icons/link_add.png\" />";
-$_style["collapse_tree"] = "<img src=\"".$style_path."images/icons/arrow_up.png\" />";
-$_style["empty_recycle_bin"] = "<img src=\"".$style_path."images/icons/trash.png\" />";
-$_style["empty_recycle_bin_empty"] = "<img src=\"".$style_path."images/icons/trash_full.png\" />";
-$_style["expand_tree"] = "<img src=\"".$style_path."images/icons/arrow_down.png\" />";
-$_style["hide_tree"] = "<img src=\"".$style_path."images/icons/application_side_contract.png\" />";
-$_style["refresh_tree"] = "<img src=\"".$style_path."images/icons/refresh.png\" />";
+$_style["add_doc_tree"] = "<img src=\"".$style_path."images/icons/folder_page_add.png\" style=\"width:16px;height:16px\" />";
+$_style["add_weblink_tree"] = "<img src=\"".$style_path."images/icons/link_add.png\" style=\"width:16px;height:16px\" />";
+$_style["collapse_tree"] = "<img src=\"".$style_path."images/icons/arrow_up.png\" style=\"width:16px;height:16px\" />";
+$_style["empty_recycle_bin"] = "<img src=\"".$style_path."images/icons/trash.png\" style=\"width:16px;height:16px\" />";
+$_style["empty_recycle_bin_empty"] = "<img src=\"".$style_path."images/icons/trash_full.png\" style=\"width:16px;height:16px\" />";
+$_style["expand_tree"] = "<img src=\"".$style_path."images/icons/arrow_down.png\" style=\"width:16px;height:16px\" />";
+$_style["hide_tree"] = "<img src=\"".$style_path."images/icons/application_side_contract.png\" style=\"width:16px;height:16px\" />";
+$_style["refresh_tree"] = "<img src=\"".$style_path."images/icons/refresh.png\" style=\"width:16px;height:16px\" />";
 $_style["show_tree"] = $style_path."images/icons/application_side_expand.png";
-$_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.png\" />";
+$_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.png\" style=\"width:16px;height:16px\" />";
 
 // Tree Icons
 $_style["tree_deletedpage"] = $style_path."images/tree/deletedpage.gif";
