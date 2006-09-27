@@ -12,8 +12,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// TREE FUNCTIONS - FRAME
 	// These functions affect the tree frame and any items that may be pointing to the tree.
 	var currentFrameState = 'open';
-	var defaultFrameWidth = '280,*';
-	var userDefinedFrameWidth = '280,*';
+	var defaultFrameWidth = '260,*';
+	var userDefinedFrameWidth = '260,*';
 	
 	var workText;
 	var buildText;
@@ -70,7 +70,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// GENERAL FUNCTIONS - Messages
 	// These functions are used for the messaging system
 	function updateMsgCount(nrnewmessages, nrtotalmessages, messagesallowed) {
-		messagestr = "(" + nrmessages +"/ " + nrtotalmessages +")";
+		messagestr = "( " + nrmessages +" / " + nrtotalmessages +" )";
 		try {
 			var elm = new DynElement('msgCounter@mainMenu');
 			/* message count disabled in opera, let's solve it when Opera 9.0 final will be released */
@@ -125,7 +125,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	// These functions are used for showing the user the system is working
 	function work() {
 		var elm = new DynElement('workText@topFrame');
-		if (elm) elm.setInnerHTML("&nbsp;<img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif' width='16' height='16'>&nbsp;<b><?php echo $_lang['working']; ?><\/b>");
+		if (elm) elm.setInnerHTML("&nbsp;<img src='<?php echo $_style["icons_working"]; ?>' />&nbsp;<?php echo $_lang['working']; ?>");
 		else w=window.setTimeout('work()', 50);
 	}
 	

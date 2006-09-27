@@ -9,49 +9,29 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']==19) {
 	$e->dumpError();
 }
 
-
-function isNumber($var)
-{
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
-    }
-	return true;
-}
-
-if(isset($_REQUEST['id']) && $_REQUEST['id']!='') {
+if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 	$id = $_REQUEST['id'];
+	// check to see the template editor isn't locked
+	$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=16 AND $dbase.".$table_prefix."active_users.id=$id";
+	$rs = mysql_query($sql);
+	$limit = mysql_num_rows($rs);
+	if($limit>1) {
+		for ($i=0;$i<$limit;$i++) {
+			$lock = mysql_fetch_assoc($rs);
+			if($lock['internalKey']!=$modx->getLoginUserID()) {
+				$msg = sprintf($_lang["lock_msg"],$lock['username'],"template");
+				$e->setError(5, $msg);
+				$e->dumpError();
+			}
+		}
+	}
+	// end check for lock
 } else {
 	$id='';
 }
 
-// check to see the template editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=16 AND $dbase.".$table_prefix."active_users.id=$id";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
-if($limit>1) {
-	for ($i=0;$i<$limit;$i++) {
-		$lock = mysql_fetch_assoc($rs);
-		if($lock['internalKey']!=$modx->getLoginUserID()) {
-			$msg = sprintf($_lang["lock_msg"],$lock['username'],"template");
-			$e->setError(5, $msg);
-			$e->dumpError();
-		}
-	}
-}
-// end check for lock
-
-// make sure the id's a number
-if(!isNumber($id)) {
-	header("Location: /index.php?id=".$site_start);
-}
-
 $content = array();
-if(isset($_REQUEST['id']) && $_REQUEST['id']!='') {
+if(isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
 	$sql = "SELECT * FROM $dbase.".$table_prefix."site_templates WHERE $dbase.".$table_prefix."site_templates.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -61,7 +41,9 @@ if(isset($_REQUEST['id']) && $_REQUEST['id']!='') {
 		exit;
 	}
 	if($limit<1) {
-		header("Location: /index.php?id=".$site_start);
+		echo "Oops, something went terribly wrong...<p>";
+		print "No database record has been found for this template. <p>Aborting.";
+		exit;
 	}
 	$content = mysql_fetch_assoc($rs);
 	$_SESSION['itemname']=$content['templatename'];
@@ -182,7 +164,7 @@ function deletedocument() {
 	  </tr>
       <tr>
 		<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-		<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="<? echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+		<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
 	  </tr>
 	  <tr>
 	    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
