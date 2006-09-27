@@ -48,7 +48,20 @@
 
 	$errors = 0;
 	$syscheck = ($_POST['syscheck']=="on") ? true:false;
-	$upgradeable = file_exists("../manager/includes/config.inc.php") ? 1:0;
+	// Determine upgradeability
+	if (file_exists("../manager/includes/config.inc.php")){
+	    // Include the file so we can test its validity
+	    include "../manager/includes/config.inc.php";
+	    // We need to have all connection settings - tho prefix may be empty so we have to ignore it
+	    if ($dbase) {
+	        if(!@$conn = mysql_connect($database_server, $database_user, $database_password)) {
+	            $upgradeable = 0;
+	        }
+	        $upgradeable = 1;
+	    }
+	} else {
+	    $upgradeable = 0;
+	}
 
 	$installMode = !$upgradeable ? 0:-1;
 	if(count($_POST)) $installMode = $_POST['installmode']=='upd' ? 1:0;

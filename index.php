@@ -101,7 +101,8 @@ $base_path = '';
 // get the required includes
 if($database_user=="") {
 	$rt = @include_once "manager/includes/config.inc.php";
-	if(!$rt) {
+	// Be sure config.inc.php is there and that it contains some important values
+	if(!$rt || !$database_type || !$database_server || !$database_user || !$database_password || !$dbase) {
 	echo "
 <style type=\"text/css\">
 *{margin:0;padding:0}
