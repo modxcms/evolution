@@ -4,165 +4,144 @@
  *  Created: 8/14/2005
  *  For: MODx cms (modxcms.com)
  *  Description: Styles for QuickEdit links
+ *  
+ *  Modified by: Jaroslav Sidorkin
+ *  Modification date: 9/28/2006
+ *  Modification purpose: fixes IE6 bug
  */
 
-#QE_Toolbar, #QE_Toolbar *{
-margin:0;
-padding:0;
-font-family:sans-serif;
-font-size:10px;
-color:#000;
-text-decoration:none;
-border-width:1px;
-border-color:#afafaf;
+#QE_Toolbar, #QE_Toolbar * {
+    margin: 0;
+    padding: 0;
+    font: normal 10px/15px sans-serif;
+    color: #000;
+    text-decoration: none;
+    border-width: 1px;
+    border-color: #afafaf;
 }
-
-#QE_Toolbar{
-position:absolute;
-z-index:10000;
-width:200px;
-border-style:solid;
-background: #fff url(../images/link_bg.png) repeat-x 0 0;
--moz-opacity:0.5;
-opacity:0.5;
-filter: alpha(opacity=80);
+#QE_Toolbar {
+    position: absolute;
+    z-index: 10000;
+    width: 200px;
+    border-style: solid none none none;
+    height: 200px;
+    max-height: 15px;
+    background: transparent;
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    filter: alpha(opacity=80);
 }
-
-#QE_Toolbar:hover{
--moz-opacity:1;
-opacity:1;
-filter: alpha(opacity=100);
-}
-
+    #QE_Toolbar:hover,
+    #QE_Toolbar:hover {
+        -moz-opacity: 1;
+        opacity: 1;
+        filter: alpha(opacity=100);
+    }
 /* Use position fixed for more modern browsers */
-body > #QE_Toolbar{
-position: fixed;
+body > #QE_Toolbar {
+    position: fixed;
 }
-
-#QE_Toolbar h1{
-float:left;
-line-height:14px;
-margin:0 0 0 5px;
-cursor: move;
+#QE_Toolbar h1 {
+    float: left;
+    font-weight: bold;
+    cursor: move;
+    width: 89px;
+    height: 15px;
+    padding: 0 0 0 5px;
+    background: #fff url(../images/link_bg.png) repeat-x 0 0;
+    border-left-style: solid;
 }
-
-#QE_Toolbar a{
-padding:0 3px;
-color:#000;
-text-decoration:none;
-border-style:none;
+#QE_Toolbar li a {
+    padding: 0 3px;
+    color: #000;
+    text-decoration: none;
+    border-style: none;
 }
-
-#QE_Toolbar ul{
-float:right;
-margin:0;
-padding:0;
-list-style-type:none;
-cursor:pointer;
+#QE_Toolbar li a:hover {
+    background-color: #dfdfdf;
 }
-
-#QE_Toolbar ul li{
-float:left;
-height:15px;
-padding:0 3px;
-text-transform:lowercase;
-border-left-style:solid;
-background-image:url(../images/menu_button_bg.png);
-background-color:#d5d5d5;
+#QE_Toolbar ul {
+    float: right;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    cursor: pointer;
+    border-right-style: solid;
 }
-
-#QE_Toolbar ul ul{
-position:absolute;
-z-index:10001;
-top:15px;
-left:-1px;
-width:200px;
-text-align:left;
-border-style:none solid solid solid;
-background-image:url(../images/body_bg.png);
-background-position:bottom;
-background-repeat:repeat-x;
-background-color:#fff;
+    #QE_Toolbar ul li {
+        float: left;
+        height: 15px;
+        padding: 0 3px;
+        text-transform: lowercase;
+        border-left-style: solid;
+        background-image: url(../images/menu_button_bg.png);
+        background-color: #d5d5d5;
+    }
+    #QE_Toolbar ul ul {
+        position: absolute;
+        z-index: 10001;
+        top: 15px;
+        left: 0px;
+        width: 198px;
+        text-align: left;
+        border-style: none solid solid solid;
+        background: #fff url(../images/body_bg.png) repeat-x bottom left;
+    }
+        #QE_Toolbar ul ul li {
+            float: none;
+            text-transform: none;
+            border-left-style: none;
+            background-image: none;
+            background-color: transparent;
+        }
+        #QE_Toolbar ul ul li a {
+            z-index: 10004;
+            display: block;
+            padding: 2px 0 2px 10px;
+        }
+#QE_Toolbar a.checked,
+#QE_Toolbar a.unchecked {
+    padding-left: 25px;
+    background: url(../images/checked.gif) no-repeat 10px 0
 }
-
-#QE_Toolbar ul ul li{
-float:none;
-text-transform:none;
-border-left-style:none;
-background-image:none;
-background-color:transparent;
+#QE_Toolbar a.unchecked {
+    background-image: url(../images/unchecked.gif);
 }
-
-#QE_Toolbar ul ul li a{
-z-index:10004;
-display:block;
-padding:2px 0 2px 10px;
-}
-
-
-
-#QE_Toolbar a.checked,#QE_Toolbar a.unchecked{
-padding-left:25px;
-background-repeat:no-repeat;
-background-position:10px;
-}
-
-#QE_Toolbar a.checked{
-background-image:url(../images/checked.gif);
-}
-
-#QE_Toolbar a.unchecked{
-background-image:url(../images/unchecked.gif);
-}
-
-#QE_Toolbar li a:hover{
-background-color:#dfdfdf;
-}
-
-#QE_Toolbar img{
-float:none;
-vertical-align:top;
-border-style:none;
-background-color:transparent;
+#QE_Toolbar img {
+    float: none;
+    vertical-align: top;
+    border-style: none;
+    background-color: transparent;
 }
 
 a.QE_Link {
-float: right;
-clear: right;
-padding: 0 5px;
-white-space: nowrap;
-color: #000;
-font-size: 7pt;
-font-weight: normal;
-text-decoration: none;
-line-height: 15px;
-height: 15px;
-border: 1px solid #afafaf;
-background: #fff url(../images/link_bg.png) repeat-x top left;
-cursor: pointer;
--moz-opacity:0.5;
-opacity:0.5;
-filter: alpha(opacity=80);
+    float: right;
+    clear: right;
+    padding: 0 5px;
+    white-space: nowrap;
+    color: #000;
+    font-size: 7pt;
+    font-weight: normal;
+    text-decoration: none;
+    line-height: 15px;
+    height: 15px;
+    border: 1px solid #afafaf;
+    background: #fff url(../images/link_bg.png) repeat-x top left;
+    cursor: pointer;
+    -moz-opacity: 0.4 !important;
+    opacity: 0.4 !important;
+    filter: alpha(opacity=40) !important;
 }
-
-a.QE_Link:hover {
-border-color: transparent;
-background-image: none;
-background-color: transparent;
--moz-opacity:1;
-opacity:1;
-filter: alpha(opacity=100);
-}
-
+    a.QE_Link:hover {
+        -moz-opacity: 1 !important;
+        opacity: 1 !important;
+        filter: alpha(opacity=100) !important;
+    }
 .QE_Parent {
-background-image: url(../images/parent_bg.gif);
-background-repeat: repeat;
+    background-image: url(../images/parent_bg.gif) !important;
+    background-repeat: repeat !important;
 }
 
 @media print {
-
-#QE_Toolbar, a.QE_Link {
-display:none;
-}
-
+    #QE_Toolbar, a.QE_Link { display: none; }
 }

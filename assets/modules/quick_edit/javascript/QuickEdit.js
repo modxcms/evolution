@@ -140,7 +140,7 @@ QuickEdit.prototype = {
 
  open: function(contentID) {
   var url = this.moduleURL+'&doc='+this.pageID+'&var='+contentID;
-  var name = 'QuickEditor-'+this.pageID+'-'+contentID;
+  var name = 'QuickEditor_'+this.pageID+'-'+contentID;
   window.open(url, name, this.windowSettings); 
  },
  
