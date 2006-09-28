@@ -41,15 +41,6 @@ li, dd, blockquote {
 
 /* Miscellaneous conveniences: 
 ---------------------------------------------------------------- */
-form label {
-    cursor: pointer;
-}
-fieldset {
-    border: none;
-}
-input, select, textarea, td {
-    font-size: 100% !important;
-}
 /* use with a <br class="cls" /> to clear floats without extra space */
 .clearfix, .cls { 
     clear: both;
@@ -199,6 +190,118 @@ hr {
     float: right;
 }
 
+/* Forms:
+---------------------------------------------------------------- */
+form label {
+    cursor: pointer;
+}
+fieldset {
+    border: none;
+}
+input, select, textarea, td {
+    font: inherit;
+}
+form input,
+form textarea {
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    padding: 2px 0 2px 2px;
+    background: #fff url(images/misc/input-bg.gif) repeat-x top left;
+}
+input.radio, input.checkbox {
+    height: auto !important;
+    width: auto !important;
+    background: none !important;
+    vertical-align: middle;
+    border: 0;
+}
+select {
+    border: 1px solid #c3c3c3 !important;
+    border: 0;
+    background: #fcfcfc;
+}
+.form {
+    padding: 15px;
+    border: solid 1px #ddd;
+}
+form input.hidden {
+    display: none !important;
+    position: absolute;
+}
+.form label,
+.form input,
+.form textarea {
+    display: block;
+    float: left;
+    vertical-align: middle;
+    font: inherit;
+    color: inherit;
+}
+.form label {
+    padding-right: 20px;
+    text-align: right;
+    width: 110px;
+}
+form textarea {
+    height: 100px;
+    width: 300px;
+    margin-top: 0;
+}
+.form legend {
+    color: #04C;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.form select {
+    display: inline;
+    float: left;
+}
+.form br {
+    clear: both;
+}
+input.submit {
+    display: block !important;
+    float: none !important;
+    margin: 20px 0 0 140px !important;
+}
+input.button, input.submit {
+    margin: 0;
+    border: 0;
+    padding: auto;
+    width: auto;
+    height: auto;
+    background: transparent;
+    vertical-align: middle;
+    
+}
+.form fieldset.list {
+    border: 0;
+    padding: 0 !important;
+    margin: 6px 0 3px 6px;
+}
+/* in case someone adds a legend */
+.form fieldset.list legend {
+    display: none;
+}
+.form fieldset.list label, 
+.form fieldset.list input {
+    padding: 0;
+    margin: 0 0 3px;
+    float: left;
+    display: inline;
+    border: 0;
+    background: none;
+    width: auto;
+    height: auto;
+}
+.form fieldset.list label {
+    padding-left: 5px;
+    text-align: left;
+    width: auto;
+}
+
 /* Misc stuff:
 ---------------------------------------------------------------- */
 .fakefieldset {
@@ -218,12 +321,11 @@ hr {
 	padding: 5px 3px 5px;
 	font-weight: bold;
 	color: #000;
-	background: silver;
-	border: 1px solid #000;
+	border-top: 1px solid #c5db88;
 }
 .sectionHeader {
     padding: 5px 3px 5px 18px;
-    background: url(images/misc/dot.gif) no-repeat 6px 45%;
+    background: #bee860 url(images/misc/greenfade.gif) repeat-x top;
 }
 
 .sectionBody, .layerVisible {
@@ -231,7 +333,7 @@ hr {
 	top: -5px;
 	display: none;
 	background: #fff;
-	border: 1px solid #E2E2E2;
+	border: 1px solid #e3e3e3;
 	margin: 0 10px 20px;
 	padding: 10px;
 	display: block;
@@ -826,7 +928,6 @@ ul#nav {
     font-size: 120%;
 }
 .settings textarea, .settings input {
-    font-size: 100%;
 }
 
 
@@ -849,8 +950,8 @@ ul#nav {
     z-index: 1;
     position: relative;
     top: 0;
-    background: #F5F5F5;
-    border: 1px solid #E4E4E4;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
 }
 
 .dynamic-tab-pane-control .tab-row .tab.hover {
@@ -861,10 +962,10 @@ ul#nav {
 .dynamic-tab-pane-control .tab-row .tab.selected {
     color: #000;
     z-index: 3;
-    top: 1px;
+    top: 0;
     background: #fff;
     border: 1px solid #e4e4e4;
-    border-color: #e4e4e4 #c0c0c0 #c0c0c0 #e4e4e4;
+    border-color: #e0e0e0 #c0c0c0 #fff #e0e0e0;
 }
 
 .dynamic-tab-pane-control .tab-row .tab span {
@@ -878,8 +979,7 @@ ul#nav {
 .dynamic-tab-pane-control .tab-page {
     clear: both;
     background: #fff;
-    border-top: 1px solid #F5F5F5;
-    border: 1px solid #fff;
+    border-top: 1px solid #c0c0c0;
     z-index: 2;
     position: relative;
     top: -2px;
@@ -912,9 +1012,7 @@ ul#nav {
 }
 .coolButtonHover {
     border: 1px solid #006400;
-    padding: 2px 4px 1px 4px;
-    height: 20px !important;
-    height: 17px;
+    padding: 2px 4px;
     background: #dee9c6;
 }
 

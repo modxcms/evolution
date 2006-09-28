@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1552 - September 28, 2006)
+MOD 0.9.5 beta 4 (rev 1553 - September 28, 2006)
 ====================================
 
 * Fixed default manager_theme selection when added new manager users. (1552)
@@ -11,6 +11,8 @@ MOD 0.9.5 beta 4 (rev 1552 - September 28, 2006)
 * Update to delete categories to check appropriate permissions & display correctly. (1550)
 * [FS#124] RegClientStartupScript and RegClientScript not always inserting code properly. (1550)
 * Preliminary fixes for new QuickEdit using moo.fx (1549)
+* Updated Ajax Search and adding manager resource category deleting (1548)
+* FS#124: RegClient(Startup)Script now properly inserts code (1543)
 * Only make RTE for chunks load if selected from dropdown (ie. stop it loading by default when RTE is selected in site config).
 * Remove the RTE code completely from mutate_templates.dynamic.php - causing problems when RTE is set as default in system config and strips out essential template code when used.
 * [FS#499] Blank config.inc.php PRIOR to installation no longer errors (1534)
