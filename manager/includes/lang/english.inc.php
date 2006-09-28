@@ -1238,6 +1238,15 @@ $_lang['DM_log_delete']='Document Manager: Documents Delete/Undelete settings ch
 $_lang['DM_log_dates']='Document Manager: Documents Date settings changed.';
 $_lang['DM_log_authors']='Document Manager: Documents Author settings changed.';
 
+$_lang['publish_events']='Publish Events';
+$_lang['unpublish_events']='UnPublish Events';
+$_lang['all_events']='All Events';
+$_lang['no_docs_pending_pubunpub']='No Events Found';
+$_lang['no_docs_pending_publishing'] ='No documents pending publishing.';
+$_lang['publish_date']='Publish Date';
+$_lang["no_docs_pending_unpublishing"]='No documents pending unpublising.';
+$_lang['unpublish_date']='Unpublish Date';
+
 //--file manager configuration settings (please note change $_lang['uploadable_files_title'] and $_lang['uploadable_files_message'] earlier in this file)
 $_lang["uploadable_images_title"] = 'Uploadable Image Types:';
 $_lang["uploadable_images_message"] = 'Here you can enter a list of files that can be uploaded into \'assets/images/\' using the Resource Manager. Please enter the extensions for the image types, seperated by commas.';

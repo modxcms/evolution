@@ -58,6 +58,8 @@ if(isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id']))
 
 if (isset ($_POST['which_editor'])) {
 	$which_editor = $_POST['which_editor'];
+} else {
+	$which_editor = 'none';
 }
 
 $content = array_merge($content, $_POST);

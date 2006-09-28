@@ -55,31 +55,10 @@ if(isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id']))
 	$_SESSION['itemname']="New template";
 }
 
-if (isset ($_POST['which_editor'])) {
-	$which_editor = $_POST['which_editor'];
-}
-
 $content = array_merge($content, $_POST);
 
-// Print RTE Javascript function
 ?>
-<script language="javascript" type="text/javascript">
-// Added for RTE selection
-function changeRTE(){
-	var whichEditor = document.getElementById('which_editor');
-	if (whichEditor) for (var i=0; i<whichEditor.length; i++){
-		if (whichEditor[i].selected){
-			newEditor = whichEditor[i].value;
-			break;
-		}
-	}
-
-	documentDirty=false;
-	document.mutate.a.value = <?php echo $action; ?>;
-	document.mutate.which_editor.value = newEditor;
-	document.mutate.submit();
-}
-
+<script type="text/javascript">
 function duplicaterecord(){
 	if(confirm("<?php echo $_lang['confirm_duplicate_record'] ?>")==true) {
 		documentDirty=false;
@@ -177,21 +156,6 @@ function deletedocument() {
 	   	</div>
 		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['content']); ?></textarea>
 	</div>
-	<span class='warning'><?php echo $_lang["which_editor_title"]?></span>
-			<select id="which_editor" name="which_editor" onchange="changeRTE();">
-	<?php
-
-	// invoke OnRichTextEditorRegister event
-	$evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
-	echo "<option value='none'" . ($which_editor == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
-	if (is_array($evtOut))
-		for ($i = 0; $i < count($evtOut); $i++) {
-			$editor = $evtOut[$i];
-			echo "<option value='$editor'" . ($which_editor == $editor ? " selected='selected'" : "") . ">$editor</option>\n";
-		}
-?>
-			</select>
-		</div>
 	<!-- HTML text editor end -->
 	<input type="submit" name="save" style="display:none">
 </div>
@@ -201,14 +165,3 @@ function deletedocument() {
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
-<?php
-// invoke OnRichTextEditorInit event
-if ($use_editor == 1) {
-			$evtOut = $modx->invokeEvent("OnRichTextEditorInit", array (
-				editor => $which_editor,
-				elements => array('post')
-			));
-			if (is_array($evtOut))
-				echo implode("", $evtOut);
-}
-?>
