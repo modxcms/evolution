@@ -779,14 +779,16 @@ $dir->close();
           </tr>
           <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
             <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date())">
-            <option value="">Default</option>
              <?php
-
 $dir = dir("media/style/");
 while ($file = $dir->read()) {
 	if ($file != "." && $file != ".." && is_dir("media/style/$file")) {
 		$themename = $file;
-		$selectedtext = $themename == $usersettings['manager_theme'] ? "selected='selected'" : "";
+        if (isset ($usersettings['manager_theme'])) {
+    		$selectedtext = $themename == $usersettings['manager_theme'] ? "selected='selected'" : "";
+        } else {
+            $selectedtext = $themename == $modx->config['manager_theme'] ? "selected='selected'" : "";
+        }
 		echo "<option value='$themename' $selectedtext>" . ucwords(str_replace("_", " ", $themename)) . "</option>";
 	}
 }
