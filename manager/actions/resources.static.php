@@ -159,6 +159,15 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
             $displayInfo['modules'] = array('table'=>'site_modules','action'=>108,'name'=>$_lang['modules']);
             $hasPermission = 1;
         }
+        
+        //Category Delete permission check
+        $delPerm = 0;
+        if($modx->hasPermission('save_plugin') ||
+           $modx->hasPermission('save_snippet') ||
+           $modx->hasPermission('save_template') ||
+           $modx->hasPermission('save_module')) {
+            $delPerm = 1;
+        }
 
         if($hasPermission) {
             $finalInfo = array();
@@ -191,10 +200,10 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     		foreach($finalInfo as $n => $v) {
     			if ($preCat !== $v['category']) {
                     echo $insideUl? '</ul>': '';
-                    if ($v['category'] == $_lang['no_category']) {
+                    if ($v['category'] == $_lang['no_category'] || !$delPerm) {
                         echo '<li><strong>'.$v['category'].'</strong><ul>';
                     } else {
-                        echo '<li><strong>'.$v['category'].'</strong> (<a href="index.php?a=501&catId='.$v['catid'].'">'.$_lang['delete_category'].'</a>)<ul>';
+                        echo '<li><strong>'.$v['category'].'</strong> (<a href="index.php?a=501&amp;catId='.$v['catid'].'">'.$_lang['delete'].'</a>)<ul>';
                     }
                     $insideUl = 1;
                 }

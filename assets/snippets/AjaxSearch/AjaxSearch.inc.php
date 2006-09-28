@@ -1,11 +1,12 @@
 <?php
 
 /*
-FlexSearchForm.inc.php
+AjaxSearch.inc.php
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 03/14/06
-Description: This code is from the FlexSearchForm Snippet
-    I removed it from the snippet code so I can call it from multiple locations.
+Description: Helper functions for AjaxSearch
+
+Updated: 09/18/06 - Added user permissions to searching
 */
 
 // The connection settings must be set for the ajax call
@@ -163,6 +164,56 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
         $rs = $modx->dbQuery($sql);
     }
     return $rs;
+}
+
+function PrepareSearchContent( $text, $length=200, $search ) {
+    // Regular expressions of things to remove from search string
+    $modRegExArray[] = '~\[\[(.*?)\]\]~';   // [[snippets]]
+    $modRegExArray[] = '~\[!(.*?)!\]~';     // [!noCacheSnippets!]
+    $modRegExArray[] = '!\[\~(.*?)\~\]!is'; // [~links~]
+    $modRegExArray[] = '~\[\((.*?)\)\]~';   // [(settings)]
+    $modRegExArray[] = '~{{(.*?)}}~';       // {{chunks}}
+    $modRegExArray[] = '~\[\*(.*?)\*\]~';   // [*attributes*]
+
+    // Remove modx sensitive tags
+    foreach ($modRegExArray as $mReg){
+        $text = preg_replace($mReg,'',$text);
+    }
+	// strips tags won't remove the actual jscript
+	$text = preg_replace( "'<script[^>]*>.*?</script>'si", "", $text );
+	$text = preg_replace( '/{.+?}/', '', $text);
+	// $text = preg_replace( '/<a\s+.*?href="([^"]+)"[^>]*>([^<]+)<\/a>/is','\2', $text );
+	// replace line breaking tags with whitespace
+	$text = preg_replace( "'<(br[^/>]*?/|hr[^/>]*?/|/(div|h[1-6]|li|p|td))>'si", ' ', $text );
+
+	return SmartSubstr( strip_tags( $text ), $length, $search );
+}
+
+/**
+* returns substring of characters around a searchword
+* @param string The source string
+* @param int Number of chars to return
+* @param string The searchword to select around
+* @return string
+*/
+function SmartSubstr($text, $length=200, $search) {
+    if (extension_loaded('mbstring')) {
+        $wordpos = mb_strpos(mb_strtolower($text), mb_strtolower($search));
+        $halfside = intval($wordpos - $length/2 - mb_strlen($search));
+        if ($wordpos && $halfside > 0) {
+           return '...' . mb_substr($text, $halfside, $length) . '...';
+        } else {
+           return mb_substr( $text, 0, $length) . '...';
+        }
+    } else {
+        $wordpos = strpos(strtolower($text), strtolower($search));
+        $halfside = intval($wordpos - $length/2 - strlen($search));
+        if ($wordpos && $halfside > 0) {
+            return '...' . substr($text, $halfside, $length) . '...';
+        } else {
+            return substr( $text, 0, $length) . '...';
+        }
+    }
 }
 
 ?>

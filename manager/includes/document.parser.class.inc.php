@@ -414,12 +414,12 @@ class DocumentParser {
             if ($js= $this->getRegisteredClientStartupScripts()) {
                 // change to just before closing </head>
                 // $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
-                $this->documentContent= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentContent);
+                $this->documentOutput= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentOutput);
             }
 
             // Insert jscripts & html block into template - template must have a </body> tag
             if ($js= $this->getRegisteredClientScripts()) {
-                $this->documentContent= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentContent);
+                $this->documentOutput= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentOutput);
             }
         }
 
@@ -1162,12 +1162,18 @@ class DocumentParser {
             if ($js= $this->getRegisteredClientStartupScripts()) {
                 // change to just before closing </head>
                 // $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
-                $this->documentContent= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentContent);
+    			foreach ($this->sjscripts as $sjsItem) {
+    				$this->documentContent= preg_replace("/(<\/head>)/i", $sjsItem . "\n\\1", $this->documentContent);
+    				array_shift($this->sjscripts); // prevent double insert in outputContent()
+    			}
             }
 
             // Insert jscripts & html block into template - template must have a </body> tag
             if ($js= $this->getRegisteredClientScripts()) {
-                $this->documentContent= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentContent);
+    			foreach ($this->jscripts as $jsItem) {
+    				$this->documentContent= preg_replace("/(<\/body>)/i", $jsItem . "\n\\1", $this->documentContent);
+    				array_shift($this->jscripts); // prevent double insert in outputContent()
+    			}
             }
 
         }
