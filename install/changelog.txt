@@ -3,9 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1555 - September 28, 2006)
+MOD 0.9.5 beta 4 (rev 1557 - September 28, 2006)
 ====================================
 
+* Remove message count from the topbar header (1557)
+* Remove JS functions/calls to non-existant "Sync" in manager (1556)
+* Fix warnings with auto-loaded modules (1556)
 * Fixed default manager_theme selection when added new manager users. (1552)
 * Update AjaxSearch to most recent version. (1550)
 * Update to delete categories to check appropriate permissions & display correctly. (1550)

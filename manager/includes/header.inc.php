@@ -32,7 +32,7 @@ $messagesallowed = $modx->hasPermission('messages');
 
 		function document_onload() {
  			stopWorker();
- 			msgCount();
+// 			msgCount();
  			hideLoader();
  			<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>;
 		};

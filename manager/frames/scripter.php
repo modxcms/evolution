@@ -14,7 +14,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	var currentFrameState = 'open';
 	var defaultFrameWidth = '260,*';
 	var userDefinedFrameWidth = '260,*';
-	
+
 	var workText;
 	var buildText;
 
@@ -22,9 +22,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 	function document_oninit(){
 		document.include("dynelement");
-	}	
-	
-	
+	}
+
+
 	function hideTreeFrame() {
 		userDefinedFrameWidth = parent.document.getElementsByTagName("FRAMESET").item(1).cols;
 		currentFrameState = 'closed';
@@ -36,7 +36,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			x=window.setTimeout('hideTreeFrame()', 1000);
 		}
 	}
-	
+
 	function defaultTreeFrame() {
 		userDefinedFrameWidth = defaultFrameWidth;
 		currentFrameState = 'open';
@@ -48,7 +48,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			z=window.setTimeout('defaultTreeFrame()', 1000);
 		}
 	}
-	
+
 	// TREE FUNCTIONS - Expand/ Collapse
 	// These functions affect the expanded/collapsed state of the tree and any items that may be pointing to it
 	function expandTree() {
@@ -58,7 +58,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			zz=window.setTimeout('expandTree()', 1000);
 		}
 	}
-	
+
 	function collapseTree() {
 		try {
 			parent.menu.d.closeAll();  // dtree
@@ -66,29 +66,29 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			yy=window.setTimeout('collapseTree()', 1000);
 		}
 	}
-	
+
 	// GENERAL FUNCTIONS - Messages
 	// These functions are used for the messaging system
 	function updateMsgCount(nrnewmessages, nrtotalmessages, messagesallowed) {
-		messagestr = "( " + nrmessages +" / " + nrtotalmessages +" )";
-		try {
-			var elm = new DynElement('msgCounter@mainMenu');
-			/* message count disabled in opera, let's solve it when Opera 9.0 final will be released */
-      if(navigator.userAgent.toLowerCase().indexOf("opera")==-1) elm.setInnerHTML(messagestr);
-			elm = new DynElement('newMail@topFrame');
-			if (elm) elm.style.display = (nrnewmessages>0) ? "inline":"none";
-		} 
-		catch(oException) {
-			nrmessages = nrmessages; messagesallowed = messagesallowed;
-			xx=window.setTimeout('updateMsgCount(nrmessages,nrtotalmessages,messagesallowed)', 1000);
-		}
+//		messagestr = "( " + nrmessages +" / " + nrtotalmessages +" )";
+//		try {
+//			var elm = new DynElement('msgCounter@mainMenu');
+//			/* message count disabled in opera, let's solve it when Opera 9.0 final will be released */
+//      if(navigator.userAgent.toLowerCase().indexOf("opera")==-1) elm.setInnerHTML(messagestr);
+//			elm = new DynElement('newMail@topFrame');
+//			if (elm) elm.style.display = (nrnewmessages>0) ? "inline":"none";
+//		}
+//		catch(oException) {
+//			nrmessages = nrmessages; messagesallowed = messagesallowed;
+//			xx=window.setTimeout('updateMsgCount(nrmessages,nrtotalmessages,messagesallowed)', 1000);
+//		}
 	}
-	
+
 	function startmsgcount(nr, nrtotal, allow){
-		nrmessages = nr; nrtotalmessages=nrtotal; messagesallowed = allow;
-		x=window.setTimeout('updateMsgCount(nrmessages,nrtotalmessages,messagesallowed)',1000);
+//		nrmessages = nr; nrtotalmessages=nrtotal; messagesallowed = allow;
+//		x=window.setTimeout('updateMsgCount(nrmessages,nrtotalmessages,messagesallowed)',1000);
 	}
-	
+
 	// GENERAL FUNCTIONS - Refresh
 	// These functions are used for refreshing the tree or menu
 	function reloadtree() {
@@ -97,15 +97,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		parent.menu.saveFolderState(); // save folder state
 		parent.menu.location.reload();
 	}
-	
+
 	function reloadmenu() {
 <?php if($manager_layout==0) { ?>
 		var elm = new DynElement('buildText@topFrame')
 		if (elm) elm.setInnerHTML("&nbsp;&nbsp;<img src='media/images/icons/b021.gif' width='16' height='16'>&nbsp;<?php echo $_lang['loading_menu']; ?>");
-		parent.mainMenu.location.reload(); 
+		parent.mainMenu.location.reload();
 <?php } ?>
 	}
-	
+
 	function startrefresh(rFrame){
 		if(rFrame==1){
 			var elm = new DynElement('buildText@topFrame');
@@ -120,7 +120,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			y=window.setTimeout('reloadtree()',500);
 		}
 	}
-	
+
 	// GENERAL FUNCTIONS - Work
 	// These functions are used for showing the user the system is working
 	function work() {
@@ -128,13 +128,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		if (elm) elm.setInnerHTML("&nbsp;<img src='<?php echo $_style["icons_working"]; ?>' />&nbsp;<?php echo $_lang['working']; ?>");
 		else w=window.setTimeout('work()', 50);
 	}
-	
+
 	function stopWork() {
 		var elm = new DynElement('workText@topFrame');
 		if (elm) elm.setInnerHTML("");
 		else  ww=window.setTimeout('stopWork()', 50);
 	}
-	
+
 	// GENERAL FUNCTIONS - Remove locks
 	// This function removes locks on documents, templates, parsers, and snippets
 	function removeLocks() {
@@ -142,7 +142,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			top.main.document.location.href="index.php?a=67";
 		}
 	}
-	
+
 	</script>
 	</head>
 	<body>

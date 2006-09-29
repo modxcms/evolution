@@ -30,7 +30,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         ?>
         <?php if($modx->hasPermission('messages')) { ?>
             | <span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang["you_got_mail"]; ?>" target="main"><img src="<?php echo $_style['icons_mail']; ?>" /></a></span>
-            <a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang["messages"]; ?> <span id="msgCounter">( ? / ? )</span></a>
+            <a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang["messages"]; ?><!--<span id="msgCounter">( ? / ? )</span>--></a>
         <?php } ?> 
         <?php if($modx->hasPermission('help')) { ?>
             &nbsp;|&nbsp;<a href="index.php?a=9" target="main"><?php echo $_lang["help"]; ?></a>
