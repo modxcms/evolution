@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1553 - September 28, 2006)
+MOD 0.9.5 beta 4 (rev 1555 - September 28, 2006)
 ====================================
 
 * Fixed default manager_theme selection when added new manager users. (1552)
