@@ -1,8 +1,8 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 // count messages
 $sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()." and messageread=0;";
-$rs = mysql_query($sql); 
+$rs = mysql_query($sql);
 $row = mysql_fetch_assoc($rs);
 $_SESSION['nrnewmessages'] = $row['count(*)'];
 $sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()."";
@@ -21,10 +21,10 @@ $messagesallowed = $modx->hasPermission('messages');
 	<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
 	<script type="text/javascript" language="JavaScript">
 		document.setIncludePath("media/script/bin/");
-		document.addEventListener("oninit",function() { 
+		document.addEventListener("oninit",function() {
 			document.include("dynelement");
 		})
-	</script>	
+	</script>
 	<script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>
 	<script language="JavaScript" type="text/javascript">
 
@@ -32,19 +32,19 @@ $messagesallowed = $modx->hasPermission('messages');
 
 		function document_onload() {
  			stopWorker();
- 			msgCount(); 
+ 			msgCount();
  			hideLoader();
- 			<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>;  
+ 			<?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>;
 		};
-		
+
 		var dontShowWorker = false;
 		function document_onunload() {
  			if(!dontShowWorker) {
  				top.scripter.work();
  			}
  		};
-		
-		// set tree to default action.		
+
+		// set tree to default action.
 		parent.menu.ca = "open";
 
 		function msgCount() {
@@ -54,7 +54,7 @@ $messagesallowed = $modx->hasPermission('messages');
 				ww = window.setTimeout('msgCount()',1000);
 			}
 		}
-		
+
 		function stopWorker() {
 			try {
 				parent.scripter.stopWork();
@@ -62,7 +62,7 @@ $messagesallowed = $modx->hasPermission('messages');
 				ww = window.setTimeout('stopWorker()',500);
 			}
 		}
-		
+
 		function doRefresh(r) {
 			try {
 				rr = r;
@@ -78,7 +78,7 @@ $messagesallowed = $modx->hasPermission('messages');
 				event.returnValue = "<?php echo $_lang['warning_not_saved']; ?>";
 			}
 		}
-		
+
 		function saveWait(fName) {
 			document.getElementById("savingMessage").innerHTML = "<?php echo $_lang['saving']; ?>";
 			for(i = 0; i < document.forms[fName].elements.length; i++) {
@@ -91,27 +91,30 @@ $messagesallowed = $modx->hasPermission('messages');
 		function hideLoader() {
 			document.getElementById('preLoader').style.display = "none";
 		}
-		
+
 		retry=0;
 		function loadagain(id) {
-			try {
-				top.menu.Sync(<?php echo $syncid; ?>);
-			} catch(oException) {
-				retry=retry + 1;
-				if(retry<4) {
-					xyy=window.setTimeout("loadagain(<?php echo $syncid; ?>)", 2000);
-				} else {
-					//alert("Failed to sync to tree!");
-				}
-			}
+
+	// Commented out because Sync is not defined anywhere
+
+	//		try {
+	//			top.menu.Sync(<?php echo $syncid; ?>);
+	//		} catch(oException) {
+	//			retry=retry + 1;
+	//			if(retry<4) {
+	//				xyy=window.setTimeout("loadagain(<?php echo $syncid; ?>)", 2000);
+	//			} else {
+	//				//alert("Failed to sync to tree!");
+	//			}
+	//		}
 		}
 
-		hideL = window.setTimeout("hideLoader()", 5000);
-		
+		hideL = window.setTimeout("hideLoader()", 1500);
+
 	</script>
 <?php
 if($_SESSION['browser']=='ie') {
-?>   
+?>
 <?php } ?>
 </head>
 <body ondragstart="return false" onbeforeunload="checkDirt();">

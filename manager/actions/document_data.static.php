@@ -258,7 +258,7 @@ if(!$handle) {
 echo $buffer;
 ?>
 </div>
-
+<!-- This doesn't seem to do anything...
 <script type="text/javascript">
 try {
 	top.menu.Sync(<?php echo $id; ?>);
@@ -266,3 +266,4 @@ try {
 	xyy=window.setTimeout("loadagain(<?php echo $id; ?>)", 1000);
 }
 </script>
+-->

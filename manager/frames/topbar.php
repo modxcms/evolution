@@ -19,9 +19,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <body id="topbar">
 
 <div id="topbar-container">
-    <span id="tocText"> </span>
-    <span id="buildText"><img src="<?php echo $_style['icons_loading_doc_tree']; ?>" /><?php echo $_lang['loading_doc_tree']; ?></span>
-    <span id="workText"><img src="<?php echo $_style['icons_working']; ?>" /><?php echo $_lang['working']; ?></span>
+    <span id="tocText"></span>
+    <span id="buildText"></span>
+    <span id="workText"></span>
 
     <div id="supplementalNav">
         <?php echo $site_name ;?> - <?php echo $full_appname; ?> | <img src="<?php echo $_style['icons_user_current']; ?>" />

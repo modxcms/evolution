@@ -1,7 +1,7 @@
 <?php
 /*
 *************************************************************************
-	MODx Content Management System and PHP Application Framework 
+	MODx Content Management System and PHP Application Framework
 	Managed and maintained by Raymond Irving, Ryan Thrash and the
 	MODx community
 *************************************************************************
@@ -9,7 +9,7 @@
 	management framework that is flexible, adaptable, supports XHTML/CSS
 	layouts, and works with most web browsers, including Safari.
 
-	MODx is distributed under the GNU General Public License	
+	MODx is distributed under the GNU General Public License
 *************************************************************************
 
 	MODx CMS and Application Framework ("MODx")
@@ -34,23 +34,23 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	For more information on MODx please visit http://modxcms.com/
-	
+
 **************************************************************************
     Originall based on Etomite by Alex Butter
 **************************************************************************
-*/	
+*/
 
 
 /**
  *	Filename: manager/index.php
- *	Function: This file is the main root file for MODx. It is 		
- *          only file that will be directly requested, and 		
- *          depending on the request, will branch different		
- *          content												
+ *	Function: This file is the main root file for MODx. It is
+ *          only file that will be directly requested, and
+ *          depending on the request, will branch different
+ *          content
  */
 
 // get start time
-$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime; 
+$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 
 // send anti caching headers
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -82,14 +82,14 @@ error_reporting(E_ALL ^ E_NOTICE);
 @set_magic_quotes_runtime(0);
 
 // include_once the magic_quotes_gpc workaround
-include_once "quotes_stripper.inc.php"; 
+include_once "quotes_stripper.inc.php";
 
 // include the html_entity_decode fake function :)
 if (!function_exists('html_entity_decode')) {
 	function html_entity_decode ($string, $opt = ENT_COMPAT) {
 		$trans_tbl = get_html_translation_table (HTML_ENTITIES);
 		$trans_tbl = array_flip ($trans_tbl);
-		if ($opt & 1) { 
+		if ($opt & 1) {
 			$trans_tbl["&apos;"] = "'";
 		}
 		if (!($opt & 2)) {
@@ -193,11 +193,11 @@ if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0)) {
 // OK, let's retrieve the action directive from the request
 if(isset($_GET['a']) && isset($_POST['a'])) {
 	$e->setError(100);
-	$e->dumpError();	
+	$e->dumpError();
 	// set $e to a corresponding errorcode
-	// we know that if an error occurs here, something's wrong, 
+	// we know that if an error occurs here, something's wrong,
 	// so we dump the error, thereby stopping the script.
-						
+
 } else {
 	$action=$_REQUEST['a'];
 }
@@ -229,7 +229,7 @@ switch ($action) {
 		// get the home page
 		include_once "header.inc.php";
 		include_once "actions/welcome.static.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 /********************************************************************/
 /* document data													*/
@@ -238,7 +238,7 @@ switch ($action) {
 		// get the page to show document's data
 		include_once "header.inc.php";
 		include_once "actions/document_data.static.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 /********************************************************************/
 /* content management												*/
@@ -247,19 +247,19 @@ switch ($action) {
 		// get the mutate page for adding a folder
 		include_once "header.inc.php";
 		include_once "actions/mutate_content.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "27" :
 		// get the mutate page for changing content
 		include_once "header.inc.php";
 		include_once "actions/mutate_content.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "4" :
 		// get the mutate page for adding content
 		include_once "header.inc.php";
 		include_once "actions/mutate_content.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "5" :
 		// get the save processor
@@ -277,7 +277,7 @@ switch ($action) {
 		// get the move action
 		include_once "header.inc.php";
 		include_once "actions/move_document.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "52" :
 		// get the move document processor
@@ -314,13 +314,13 @@ switch ($action) {
 		// get the new web user page
 		include_once "header.inc.php";
 		include_once "actions/mutate_web_user.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "88" :
 		// get the edit web user page
 		include_once "header.inc.php";
 		include_once "actions/mutate_web_user.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "89" :
 		// get the save web user processor
@@ -334,13 +334,13 @@ switch ($action) {
 		// get the new user page
 		include_once "header.inc.php";
 		include_once "actions/mutate_user.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "12" :
 		// get the edit user page
 		include_once "header.inc.php";
 		include_once "actions/mutate_user.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "32" :
 		// get the save user processor
@@ -350,7 +350,7 @@ switch ($action) {
 		// get the change password page
 		include_once "header.inc.php";
 		include_once "actions/mutate_password.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "34" :
 		// get the save new password page
@@ -367,13 +367,13 @@ switch ($action) {
 		// get the new role page
 		include_once "header.inc.php";
 		include_once "actions/mutate_role.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "35" :
 		// get the edit role page
 		include_once "header.inc.php";
 		include_once "actions/mutate_role.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 	case "36" :
 		// get the save role page
@@ -388,13 +388,13 @@ switch ($action) {
 /********************************************************************/
 	case "16" :
 		// get the edit template action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_templates.dynamic.php";
 		include_once "footer.inc.php";
 	break;
 	case "19" :
 		// get the new template action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_templates.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -415,13 +415,13 @@ switch ($action) {
 /********************************************************************/
 	case "22" :
 		// get the edit snippet action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_snippet.dynamic.php";
 		include_once "footer.inc.php";
 	break;
 	case "23" :
 		// get the new snippet action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_snippet.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -442,13 +442,13 @@ switch ($action) {
 /********************************************************************/
 	case "78" :
 		// get the edit snippet action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_htmlsnippet.dynamic.php";
 		include_once "footer.inc.php";
 	break;
 	case "77" :
 		// get the new snippet action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_htmlsnippet.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -487,19 +487,19 @@ switch ($action) {
 /********************************************************************/
 	case "106" :
 		// get module management
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/modules.static.php";
 		include_once "footer.inc.php";
 	break;
 	case "107" :
 		// get the new module action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_module.dynamic.php";
 		include_once "footer.inc.php";
 	break;
 	case "108" :
 		// get the edit module action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_module.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -514,29 +514,31 @@ switch ($action) {
 	case "111" :
 		// get the duplicate processor
 		include_once "processors/duplicate_module.processor.php";
-	break;	
+	break;
 	case "112" :
 		// execute/run the module
+		include_once "header.inc.php";
 		include_once "processors/execute_module.processor.php";
+		include_once "footer.inc.php";
 		break;
 	case "113" :
 		// get the module resources (dependencies) action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_module_resources.dynamic.php";
-		include_once "footer.inc.php";		
-	break;	
+		include_once "footer.inc.php";
+	break;
 /********************************************************************/
 /* plugin management												*/
 /********************************************************************/
 	case "101" :
 		// get the new plugin action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_plugin.dynamic.php";
 		include_once "footer.inc.php";
 	break;
 	case "102" :
 		// get the edit plugin action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_plugin.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -557,7 +559,7 @@ switch ($action) {
 /********************************************************************/
 	case "200" :
 		// show phpInfo
-		phpInfo();	
+		phpInfo();
 	break;
 /********************************************************************/
 /* errorpage											*/
@@ -573,7 +575,7 @@ switch ($action) {
 		// get the page to manage files
 		include_once "header.inc.php";
 		include_once "actions/files.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 /********************************************************************/
 /* access permissions												*/
@@ -591,12 +593,12 @@ switch ($action) {
 /********************************************************************/
 /* access groups processor											*/
 /********************************************************************/
-	case "41" : 
+	case "41" :
 		include_once "processors/access_groups.processor.php";
-	break; 
-	case "92" : 
+	break;
+	case "92" :
 		include_once "processors/web_access_groups.processor.php";
-	break; 
+	break;
 /********************************************************************/
 /* settings editor													*/
 /********************************************************************/
@@ -604,7 +606,7 @@ switch ($action) {
 		// get the settings editor
 		include_once "header.inc.php";
 		include_once "actions/mutate_settings.dynamic.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 /********************************************************************/
 /* save settings													*/
@@ -620,7 +622,7 @@ switch ($action) {
 		// get the settings editor
 		include_once "header.inc.php";
 		include_once "actions/sysinfo.static.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 /********************************************************************/
 /* optimise table												*/
@@ -636,7 +638,7 @@ switch ($action) {
 		// view logging
 		include_once "header.inc.php";
 		include_once "actions/logging.static.php";
-		include_once "footer.inc.php";		
+		include_once "footer.inc.php";
 	break;
 /********************************************************************/
 /* empty logs														*/
@@ -650,7 +652,7 @@ switch ($action) {
 /********************************************************************/
 	case "999" :
 		// get the test page
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "test_page.php";
 		include_once "footer.inc.php";
 	break;
@@ -666,7 +668,7 @@ switch ($action) {
 /********************************************************************/
 	case "10" :
 		// get the messages page
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/messages.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -683,7 +685,7 @@ switch ($action) {
 	case "66" :
 		// get the message deleter
 		include_once "processors/send_message.processor.php";
-	break;	
+	break;
 /********************************************************************/
 /* Remove locks													*/
 /********************************************************************/
@@ -696,7 +698,7 @@ switch ($action) {
 /********************************************************************/
 	case "70" :
 		// get the schedule page
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/site_schedule.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -705,7 +707,7 @@ switch ($action) {
 /********************************************************************/
 	case "71" :
 		// get the search page
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/search.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -714,7 +716,7 @@ switch ($action) {
 /********************************************************************/
 	case "59" :
 		// get the about page
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/about.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -723,7 +725,7 @@ switch ($action) {
 /********************************************************************/
 	case "72" :
 		// get the weblink page
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/mutate_content.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -731,17 +733,17 @@ switch ($action) {
 /* User management													*/
 /********************************************************************/
 	case "75" :
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/user_management.static.php";
 		include_once "footer.inc.php";
 	break;
 	case "99" :
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/web_user_management.static.php";
 		include_once "footer.inc.php";
 	break;
 	case "86" :
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/role_management.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -749,7 +751,7 @@ switch ($action) {
 /* template/ snippet management													*/
 /********************************************************************/
 	case "76" :
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/resources.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -757,7 +759,7 @@ switch ($action) {
 /* keywords management												*/
 /********************************************************************/
 	case "81" :
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/manage_metatags.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -768,7 +770,7 @@ switch ($action) {
 /* Export to file													*/
 /********************************************************************/
 	case "83" :
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/export_site.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -781,7 +783,7 @@ switch ($action) {
 /********************************************************************/
 /* Backup Manager													*/
 /********************************************************************/
-	case "93" : 
+	case "93" :
 		# header and footer will be handled interally
 		include_once "actions/bkmanager.static.php";
 	break;
@@ -796,16 +798,16 @@ switch ($action) {
 /* Import Document from file										*/
 /********************************************************************/
 	case "95" :
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/import_site.static.php";
 		include_once "footer.inc.php";
-	break;	
+	break;
 /********************************************************************/
 /* Help																*/
 /********************************************************************/
 	case "9" :
 		// get the help page
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/help.static.php";
 		include_once "footer.inc.php";
 	break;
@@ -814,13 +816,13 @@ switch ($action) {
 /********************************************************************/
 	case "300" :
 		// get the new document variable action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_tmplvars.dynamic.php";
 		include_once "footer.inc.php";
 	break;
 	case "301" :
 		// get the edit document variable action
-		include_once "header.inc.php";		
+		include_once "header.inc.php";
 		include_once "actions/mutate_tmplvars.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -842,13 +844,13 @@ switch ($action) {
 /********************************************************************/
 	case 114:
 		// get event logs
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/eventlog.dynamic.php";
 		include_once "footer.inc.php";
 	break;
 	case 115:
 		// get event log details viewer
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		include_once "actions/eventlog_details.dynamic.php";
 		include_once "footer.inc.php";
 	break;
@@ -866,7 +868,7 @@ switch ($action) {
 /********************************************************************/
 	default :
 		// say that what was requested doesn't do anything yet
-		include_once "header.inc.php";	
+		include_once "header.inc.php";
 		echo "
 			<div class='subTitle'>
 				<span class='right'><img src='media/images/_tx_.gif' width='1' height='5'><br />

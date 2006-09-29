@@ -237,11 +237,13 @@ function saveRefreshPreview(){
 var allowParentSelection = false;
 var allowLinkSelection = false;
 
-try {
-	top.menu.Sync(<?php echo $id; ?>);
-} catch(oException) {
-	xyy=window.setTimeout("loadagain(<?php echo $id; ?>)", 1000);
-}
+// The following tries an undefined JS function, so it's getting commented out...
+//
+//try {
+//	top.menu.Sync(<?php echo $id; ?>);
+//} catch(oException) {
+//	xyy=window.setTimeout("loadagain(<?php echo $id; ?>)", 1000);
+//}
 
 function enableLinkSelection(b){
   parent.menu.ca = "link";

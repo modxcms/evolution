@@ -182,13 +182,3 @@ if(!isset($settings_version) || $settings_version!=$version) {
 
 </div>
 </div>
-
-<script type="text/javascript">
-try {
-	top.menu.Sync(<?php echo $syncid; ?>);
-} catch(oException) {
-	xyy=window.setTimeout("loadagain(<?php echo $syncid; ?>)", 1000);
-}
-</script>
-
-<br />
