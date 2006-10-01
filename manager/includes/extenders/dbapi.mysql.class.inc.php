@@ -149,13 +149,13 @@ class DBAPI {
     * @name:  delete
     *	 
     */
-   function delete($from, $where = "") {
+   function delete($from,$where='',$fields='') {
       if (!$from)
          return false;
       else {
          $table = $from;
          $where = ($where != "") ? "WHERE $where" : "";
-         return $this->query("DELETE FROM $table $where;");
+         return $this->query("DELETE $fields FROM $table $where;");
       }
    }
 
