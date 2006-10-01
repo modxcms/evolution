@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1579 - October 1, 2006)
+MOD 0.9.5 beta 4 (rev 1581 - October 1, 2006)
 ====================================
 
 * Added an optional $fields parameter to the DBAPI delete function. While not necessary in most cases, it allows for more complex multi-table deletes that use joins. (1558)
