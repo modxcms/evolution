@@ -19,11 +19,7 @@ $cm->addItem($_lang["delete"], "js:menuAction(2)","media/".$dir."images/icons/de
 echo $cm->render();
 
 ?>
-
-<div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['role_management_title']; ?></span>
-</div>
-
+<br />
 <!-- User Roles -->
 <div class="sectionHeader"><?php echo $_lang['role_management_title']; ?></div><div class="sectionBody">
 <p><?php echo $_lang['role_management_msg']; ?></p>

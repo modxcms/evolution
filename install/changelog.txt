@@ -3,9 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1557 - September 28, 2006)
+MOD 0.9.5 beta 4 (rev 1578 - October 1, 2006)
 ====================================
 
+* Fix JS debug errors when no submenu is present for an item in the MODxHost dropdown menu. (1570)
+* Remove double headings where appropriate, also removed some remaining references to _tx_.gif for the headings (will allow all remaining headings to get consistent styling). (1567,1568)
+* Lots of minor bugfixes and tweaks to the DocManager module. (1565,1566)
+* Stop header.inc.php and footer.inc.php being included when running a module. (1562)
 * Remove message count from the topbar header (1557)
 * Remove JS functions/calls to non-existant "Sync" in manager (1556)
 * Fix warnings with auto-loaded modules (1556)

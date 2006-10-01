@@ -22,10 +22,7 @@ if($limit<1) {
 }
 
 ?>
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['mgr_access_permissions'] ;?></span>
-</div>
-
+<br />
 <div class="sectionHeader"><?php echo $_lang['mgr_access_permissions'] ;?></div><div class="sectionBody">
 <?php echo $_lang['access_permissions_introtext'];?> <?php echo $use_udperms!=1 ? "<p />".$_lang['access_permissions_off'] : "" ;?><p />
 

@@ -21,10 +21,7 @@ $allowedfiles = array('html','htm','xml');
 		document.location.href = "index.php?r=1&a=7";
 	}
 </script>
-<div class="subTitle">
-<span class="right"><?php echo $_lang['import_site_html']; ?></span>
-</div>
-
+<br />
 <div class="sectionHeader"><?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
 <?php
 

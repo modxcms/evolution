@@ -3,7 +3,7 @@
  * Name: TV Ajax Handler
  * For: Doc Manager Module
  * Author: Garry Nutting
- * Date: 03/09/2006 Version: 1.5
+ * Date: 29/09/2006 Version: 1.6
  * 
  * This file includes slightly modified code from the MODx core distribution.
  * 
@@ -185,9 +185,9 @@
 				break;
 			case "image":	// handles image fields using htmlarea image manager
 				global $_lang;
-				global $ImageManagerLoaded;
+				global $ResourceManagerLoaded;
 				global $content,$use_editor,$which_editor;
-				if (!$ImageManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
+				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){ 
 					$field_html .="
 					<script type=\"text/javascript\">
 							var lastImageCtrl;
@@ -233,16 +233,16 @@
 
 							};
 					</script>";
-					$ImageManagerLoaded  = true;					
+					$ResourceManagerLoaded  = true;					
 				} 
 				$field_html .='<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' />&nbsp;<input type="button" value="'.$_POST['langInsert'].'" onclick="BrowseServer(\'tv'.$field_name.'\')" />';
 				break;
 			case "file": // handles the input of file uploads
 			/* Modified by Timon for use with resource browser */
                 		global $_lang;
-				global $ImageManagerLoaded;
+				global $ResourceManagerLoaded;
 				global $content,$use_editor,$which_editor;
-				if (!$ImageManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
+				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){
 				/* I didn't understand the meaning of the condition above, so I left it untouched ;-) */ 
 					$field_html .="
 					<script type=\"text/javascript\">
@@ -267,7 +267,7 @@
 								var h = screen.height * 0.7;
 								OpenServerBrowser('".$base_url."manager/media/browser/mcpuk/browser.html?Type=images&Connector=".$base_url."manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=".$base_url."', w, h);
 							};
-										
+							
 							BrowseFileServer = function(ctrl) {
 								lastFileCtrl = ctrl;
 								var w = screen.width * 0.7;
@@ -276,13 +276,20 @@
 							};
 							
 							SetUrl = function(url, width, height, alt){
-								if(!lastImageCtrl) return;
-								var c = document.templatevariables[lastImageCtrl];
-								if(c) c.value = url;
-								lastImageCtrl = '';
-							};
+								if(lastFileCtrl) {
+									var c = document.mutate[lastFileCtrl];
+									if(c) c.value = url;
+									lastFileCtrl = '';
+								} else if(lastImageCtrl) {
+									var c = document.mutate[lastImageCtrl];
+									if(c) c.value = url;
+									lastImageCtrl = '';
+								} else {
+									return;
+								}
+							}
 					</script>";
-					$ImageManagerLoaded  = true;					
+					$ResourceManagerLoaded  = true;					
 				} 
 				$field_html .='<input type="text" id="tv'.$field_name.'" name="tv'.$field_name.'"  value="'.$field_value .'" '.$field_style.' />&nbsp;<input type="button" value="'.$_POST['langInsert'].'" onclick="BrowseFileServer(\'tv'.$field_name.'\')" />';
                 

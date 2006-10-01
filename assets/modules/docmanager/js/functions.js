@@ -1,6 +1,6 @@
 // Javascript functions for use in the Document Manager
 // Author: Garry Nutting/Mark Kaplan - some functions borrowed from other sources ;)
-// Date: 03/09/2006 Version: 1.5
+// Date: 29/09/2006 Version: 1.6
 
 function getCookie(name) {
     var dc = document.cookie;

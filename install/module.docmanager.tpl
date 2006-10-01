@@ -4,7 +4,7 @@
  * Purpose: Allows for the bulk management of key document settings.
  * Author: Garry Nutting (Mark Kaplan - Menu Index functionalty, Luke Stokes - Document Permissions concept)
  * For: MODx CMS (www.modxcms.com)
- * Date:03/09/2006 Version: 1.5
+ * Date:29/09/2006 Version: 1.6
  *
  */
 
@@ -16,8 +16,27 @@ global $siteURL;
 $basePath = $modx->config['base_path'];
 $siteURL = $modx->config['site_url'];
 
-//-- only include language file for development (language strings are in main MODx language file)
-//include_once $basePath.'assets/modules/docmanager/lang/lang.en.php';
+/** CONFIGURATION SETTINGS **/
+
+//-- set to false to hide the 'Select Tree' option
+$showTree = false;
+
+/** END CONFIGURATION SETTINGS **/
+
+//-- include language file
+$manager_language = $modx->config['manager_language'];
+$sql = "SELECT setting_name, setting_value FROM ".$modx->getFullTableName('user_settings')." WHERE setting_name='manager_language' AND user=" . $modx->getLoginUserID();
+$rs = $modx->db->query($sql);
+if ($modx->db->getRecordCount($rs) > 0) {
+    $row = $modx->db->getRow($rs);
+    $manager_language = $row['setting_value'];
+}
+include_once $basePath.'assets/modules/docmanager/lang/english.inc.php';
+if($manager_language!="english") {
+if (file_exists($basePath.'assets/modules/docmanager/lang/'.$manager_language.'.inc.php')) {
+     include_once $basePath.'assets/modules/docmanager/lang/'.$manager_language.'.inc.php';
+}
+}
 
 //-- get theme
 $tb_prefix = $modx->db->config['table_prefix'];
@@ -60,7 +79,8 @@ if ($tabAction == 'change_template') {
 	$output.=changeDocGroups($intType, $_POST['pids'],$_POST['newvalue'],$tabAction);
 	return $output;
 } elseif ((isset($_POST['actionkey'])) && $tabAction == 'sortMenu' || isset($_POST['sortableListsSubmitted']) ) {
-		$output .= ' <html><head>
+		$output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head>
 									    <script type="text/javascript">
 										function save() 
 										{ 
@@ -84,12 +104,13 @@ if ($tabAction == 'change_template') {
 
 //-- render tabbed output
 //--- HEAD
-$output .= ' 
+$output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html> 
-		<head> 
-		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css?" /> 
-		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css?" /> 
-	    <link rel="stylesheet" type="text/css" href="media/style' . $theme . '/tabs.css?" /> 
+		<head>
+                <title>'.$_lang['DM_module_title'].'</title> 
+		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
+		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
+	    <link rel="stylesheet" type="text/css" href="media/style' . $theme . '/tabs.css"/> 
 		<script type="text/javascript" src="media/script/scriptaculous/prototype.js"></script> 
 		<script type="text/javascript" src="media/script/scriptaculous/scriptaculous.js"></script> 
 	    <script type="text/javascript" src="media/script/modx.js"></script> 
@@ -97,8 +118,8 @@ $output .= '
 		<script type="text/javascript" src="media/script/tabpane.js"></script>  
         <script type="text/javascript" src="../assets/modules/docmanager/js/functions.js"></script>
         <script type="text/javascript" src="media/script/datefunctions.js"></script>
-        <script type="text/javascript">var MODX_MEDIA_PATH = "media";</script>  
         <script type="text/javascript">
+        var MODX_MEDIA_PATH = "media";
         function save()
 		{
 			document.newdocumentparent.submit();
@@ -107,7 +128,7 @@ $output .= '
 function setMoveValue(pId, pName) {
 	if (pId==0 || checkParentChildRelation(pId, pName)) {
 		document.newdocumentparent.new_parent.value=pId;
-		document.getElementById(\'parentName\').innerHTML = "Parent: <b>" + pId + "</b> (" + pName + ")";
+		document.getElementById(\'parentName\').innerHTML = "Parent: <strong>" + pId + "<\/strong> (" + pName + ")";
 	}
 }
 
@@ -134,27 +155,22 @@ if (isset($_POST['selectedTV']) && $_POST['selectedTV'] <> '') {
  $output.= 'new Ajax.Updater(\'results\',\''.$modx->getConfig('site_url').'assets/modules/docmanager/includes/tv.ajax.php\', {method:\'post\',evalScripts:true, postBody:\'theme='.$theme.'&langIgnoreTV='.addslashes($_lang['DM_tv_ignore_tv']).'&langNoTV='.addslashes($_lang['DM_tv_no_tv']).'&tplID='.$_POST['selectedTV'].'&langInsert='.$_lang['DM_tv_ajax_insertbutton'].'\',onSuccess: function(t) { $(\'results\').innerHTML = t.responseText; $(\'selectedTV\').value=\''.$_POST['selectedTV'].'\';}});';
 }
 
-$output.='' . ((isset($_POST['back']) || isset($_POST['actionkey'])) ? 'parent.menu.updateTree();' : '') . '
-		</script>';
-
+$output.='</script>';
 $output.= buttonCSS();
-
 $output.='
         </head>
         <body>
-
         <div class="subTitle" id="bttn"> 
-				<span class="right"><img src="media/style' . $theme . '/images/_tx_.gif" width="1" height="5"><br />' . $_lang['DM_module_title'] . '</span> 
+				<span class="right"><img src="media/style' . $theme . '/images/_tx_.gif" width="1" height="5" alt="" /><br />' . $_lang['DM_module_title'] . '</span> 
 				<div class="bttnheight"><a id="Button5" onclick="document.location.href=\'index.php?a=106\';">
-					<img src="media/style' . $theme . '/images/icons/close.gif"> '.$_lang['DM_close'].'</a>
+					<img src="media/style' . $theme . '/images/icons/close.gif" alt="" /> '.$_lang['DM_close'].'</a>
 				</div> 
-				<div class="stay">   </div> 
+				<div class="stay"></div> 
 	    </div> 
 	';
-	
 		
 //--- TABS
-$output.= '<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['DM_action_title'] . '</div>
+$output.= '<div class="sectionHeader">&nbsp;' . $_lang['DM_action_title'] . '</div>
 		   <div class="sectionBody"> 
 	       <div class="tab-pane" id="docManagerPane"> 
 	       <script type="text/javascript"> 
@@ -166,9 +182,7 @@ $output.= '<div class="tab-page" id="tabTemplates">
 	    <h2 class="tab">' . $_lang['DM_change_template'] . '</h2>  
 	    <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script> 
 		';
-
 $output.=showTemplate();
-
 $output.='</div>';
 
 //--- template variables       
@@ -176,9 +190,7 @@ $output.= '<div class="tab-page" id="tabTemplateVariables">
 	    <h2 class="tab">' . $_lang['DM_template_variables']. '</h2>  
 	    <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplateVariables" ) );</script> 
 		';
-	
 $output.=showTemplateVariables();	
-		
 $output.='</div>';
 
 //--- document permissions	       
@@ -186,9 +198,7 @@ $output.= '<div class="tab-page" id="tabDocPermissions">
 	    <h2 class="tab">' . $_lang['DM_doc_permissions']. '</h2>  
 	    <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabDocPermissions" ) );</script> 
 		';
-	
 $output.=showDocGroups();	
-		
 $output.='</div>';
 
 //--- sort menu	       
@@ -196,9 +206,7 @@ $output.= '<div class="tab-page" id="tabSortMenu">
 	    <h2 class="tab">' . $_lang['DM_sort_menu'] . '</h2>  
 	    <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabSortMenu" ) );</script> 
 		';
-
 $output.= showSortMenu();
-
 $output.='</div>';
 
 //--- show Other    
@@ -206,14 +214,13 @@ $output.= '<div class="tab-page" id="tabOther">
 	    <h2 class="tab">' . $_lang['DM_other'] . '</h2>  
 	    <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabOther" ) );</script> 
 		';
-	
 $output.= showOther();
 $output.= showAdjustDates();
 $output.= showAdjustAuthors();
 	
 $output.='</div></div></div>';
 
-$output.= showInteraction();
+$output.= showInteraction($showTree);
 
 //-- send output
 $output.='</body></html>';

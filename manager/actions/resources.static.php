@@ -39,13 +39,8 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 }
 
 ?>
-
-<div class="subTitle">
-	<span class="right"><img src="media/style/.$theme./images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['resource_management']; ?></span>
-</div>
-
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>tabs.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
+<br />
 <div class="sectionHeader"><?php echo $_lang['resource_management']; ?></div><div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
 	<script type="text/javascript">

@@ -2,11 +2,7 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 ?>
-
-<div class="subTitle">
-	<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['search']; ?></span>
-</div>
-
+<br />
 <div class="sectionHeader"><?php echo $_lang['search_criteria']; ?></div><div class="sectionBody">
 <form action="index.php?a=71" method="post" name="searchform">
 <table width="100%" border="0">

@@ -8,7 +8,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 
 <div class="subTitle">
-<span class="right"><img src="media/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["site_schedule"];?></span>
+<span class="right"><?php echo $_lang["site_schedule"];?></span>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang["publish_events"];?></div><div class="sectionBody" id="lyr1">

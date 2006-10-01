@@ -6,7 +6,7 @@
  * Purpose: Contains the main visual output functions for the module
  * Author: Garry Nutting (Mark Kaplan - Menu Index functionalty, Luke Stokes - Document Permissions concept)
  * For: MODx CMS (www.modxcms.com)
- * Date:03/09/2006 Version: 1.5
+ * Date:29/09/2006 Version: 1.6
  * 
  */
 
@@ -116,7 +116,7 @@ function buttonCSS() {
 }
 
 /**
- * showTemplateVariables - shows the main template variable form§
+ * showTemplateVariables - shows the main template variable form
  * 
  */
 function showTemplateVariables() {
@@ -128,7 +128,7 @@ function showTemplateVariables() {
 	$templates = $modx->db->select('id,templatename,description', $temptable,'','id ASC');
 
 	$output = '<p>' . $_lang['DM_tv_desc'] . '</p><br />';
-	$output .= '<form name="templatevariables" method="post">';
+	$output .= '<form name="templatevariables" action="" method="post">';
 	
 	$alt = 0;
 	if($modx->db->getRecordCount($templates) > 0) {
@@ -139,7 +139,7 @@ function showTemplateVariables() {
 	$output.='</tr>';
 	while ($row = $modx->db->getRow($templates)) {
 		$output.='<tr><td '.($alt==0 ? 'class="gridItem"' : 'class="gridAltItem"').'>';
-		$output.= '<input name="tid" type=\'radio\' '.(isset($_POST['selectedTV']) && $_POST['selectedTV'] == $row['id'] ? 'checked' : '').' name=\'id\' onclick="document.getElementById(\'tvloading\').style.display=\'block\';new Ajax.Updater(\'results\',\''.$modx->getConfig('site_url').'assets/modules/docmanager/includes/tv.ajax.php\', {method:\'post\',evalScripts:true, postBody:\'theme='.$theme.'&langIgnoreTV='.addslashes($_lang['DM_tv_ignore_tv']).'&langNoTV='.addslashes($_lang['DM_tv_no_tv']).'&tplID='.$row['id'].'&langInsert='.$_lang['DM_tv_ajax_insertbutton'].'\',onSuccess: function(t) { $(\'results\').innerHTML = t.responseText; $(\'selectedTV\').value=\''.$row['id'].'\';}}); document.getElementById(\'tvloading\').style.display = \'none\';" value=\''.$row['id'].'\' /> '.$row['id'];
+		$output.= '<input name="tid" type=\'radio\' '.(isset($_POST['selectedTV']) && $_POST['selectedTV'] == $row['id'] ? 'checked' : '').' onclick="document.getElementById(\'tvloading\').style.display=\'block\';new Ajax.Updater(\'results\',\''.$modx->getConfig('site_url').'assets/modules/docmanager/includes/tv.ajax.php\', {method:\'post\',evalScripts:true, postBody:\'theme='.$theme.'&amp;langIgnoreTV='.addslashes($_lang['DM_tv_ignore_tv']).'&amp;langNoTV='.addslashes($_lang['DM_tv_no_tv']).'&amp;tplID='.$row['id'].'&amp;langInsert='.$_lang['DM_tv_ajax_insertbutton'].'\',onSuccess: function(t) { $(\'results\').innerHTML = t.responseText; $(\'selectedTV\').value=\''.$row['id'].'\';}}); document.getElementById(\'tvloading\').style.display = \'none\';" value=\''.$row['id'].'\' /> '.$row['id'];
 		$output.='</td><td '.($alt==0 ? 'class="gridItem"' : 'class="gridAltItem"').'>';
 		$output.= $row['templatename'];
 		$output.='</td><td '.($alt==0 ? 'class="gridItem"' : 'class="gridAltItem"').'>';
@@ -178,7 +178,7 @@ function showTemplate() {
 	$templates = $modx->db->select('id,templatename,description', $temptable,'','id ASC');
 
 	$output = '<p>' . $_lang['DM_tpl_desc'] . '</p><br />';
-	$output .= '<form name="template">';
+	$output .= '<form name="template" action="">';
 
 	//-- render list of templates
 	$grd = new DataGrid('', $templates);
@@ -189,7 +189,7 @@ function showTemplate() {
 	$grd->itemClass = "gridItem";
 	$grd->altItemClass = "gridAltItem";
 	$grd->columns = " ," . $_lang['DM_tpl_column_id'] . "," . $_lang['DM_tpl_column_name'] . "," . $_lang['DM_tpl_column_description'];
-	$grd->colTypes = "template:<input type='radio' name='id' value='[+id+]' /> [+value+]";
+	$grd->colTypes = "template:<input type='radio' name='id' value='[+id+]' />";
 	$grd->colWidths = "5%,5%,40%,50%";
 	$grd->fields = "template,id,templatename,description";
 	$output .= $grd->render();
@@ -216,7 +216,7 @@ function showDocGroups() {
 	$documentgroups = $modx->db->select('id,name', $doctable,'','id ASC');
 
 	$output = '<p>' . $_lang['DM_doc_desc'] . '</p><br />';
-	$output .= '<form name="docgroups">';
+	$output .= '<form name="docgroups" action="">';
 
 	//-- render list of templates
 	$grd = new DataGrid('', $documentgroups);
@@ -227,7 +227,7 @@ function showDocGroups() {
 	$grd->itemClass = "gridItem";
 	$grd->altItemClass = "gridAltItem";
 	$grd->columns = " ," . $_lang['DM_doc_column_id'] . "," . $_lang['DM_doc_column_name'];
-	$grd->colTypes = "template:<input type='radio' name='docgroupid' value='[+id+]' /> [+value+]";
+	$grd->colTypes = "template:<input type='radio' name='docgroupid' value='[+id+]' />";
 	$grd->colWidths = "5%,5%,40%,50%";
 	$grd->fields = "template,id,name";
 	$output .= $grd->render();
@@ -235,7 +235,6 @@ function showDocGroups() {
 	$output .= '<br /><br />';
 	$output .= '<input type="radio" name="tabAction" value="pushDocGroup" checked />&nbsp;' . $_lang['DM_doc_radio_add'] . '&nbsp;&nbsp;';
 	$output .= '<input type="radio" name="tabAction" value="pullDocGroup" />&nbsp;' . $_lang['DM_doc_radio_remove'] . '<br /><br />';
-
 	$output .= '</form>';
 
 	return $output;
@@ -257,12 +256,12 @@ function showSortMenu() {
 							<input type="hidden" name="new_parent" value="" class="inputBox" />
 							<input type="hidden" name="tabAction" value="sortMenu" />    
 							<br /> 
-							<input type=\'save\' value="' . $_lang['DM_save'] . '" style="display:none"> 
+							<input type=\'save\' value="' . $_lang['DM_save'] . '" style="display:none" /> 
 							</form>
 							';
 
 	$output .= '<div class="go"><a id="Button1" onclick="save();">
-						    <img src="media/style' . $theme . '/images/icons/save.gif">' . $_lang['DM_go'] . '</a><br /><br /></div>';
+						    <img src="media/style' . $theme . '/images/icons/save.gif" alt="'.$_lang['DM_go'].'" />' . $_lang['DM_go'] . '</a><br /><br /></div>';
 
 	return $output;
 
@@ -276,25 +275,25 @@ function showAdjustDates() {
 	global $_lang;
 
 	$output .= '<br /><h3>' . $_lang['DM_adjust_dates_header'] . '</h3><br />
-				   <p>' . $_lang['DM_adjust_dates_desc'] . '</p></br />
+				   <p>' . $_lang['DM_adjust_dates_desc'] . '</p><br />
 				   <form style="margin-left:50px;" id="dates" name="dates" method="post" action="">
 							<label for="date_pubdate" id="date_pubdate_label">' . $_lang['DM_date_pubdate'] . '</label><input type="hidden" id="date_pubdate" name="date_pubdate" />
-								<span id="date_pubdate_show" name="date_pubdate_show"> (not set)</span>
+								<span id="date_pubdate_show"> (not set)</span>
 								<a href="#" onclick="caldate1.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
 						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_pubdate\'].value=\'\';document.getElementById(\'date_pubdate_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 							<br /><br />
 							<label for="date_unpubdate" id="date_unpubdate_label">' . $_lang['DM_date_unpubdate'] . '</label><input type="hidden" id="date_unpubdate" name="date_unpubdate" />
-								<span id="date_unpubdate_show" name="date_unpubdate_show"> (not set)</span>
+								<span id="date_unpubdate_show"> (not set)</span>
 								<a href="#" onclick="caldate2.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
 						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_unpubdate\'].value=\'\';document.getElementById(\'date_unpubdate_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 							<br /><br />
 							<label for="date" id="date_createdon_label">' . $_lang['DM_date_createdon'] . '</label><input type="hidden" id="date_createdon" name="date_createdon" />
-								<span id="date_createdon_show" name="date_createdon_show"> (not set)</span>
+								<span id="date_createdon_show"> (not set)</span>
 								<a href="#" onclick="caldate3.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
 						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_createdon\'].value=\'\';document.getElementById(\'date_createdon_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 							<br /><br />
 							<label for="date_editedon" id="date_editedon_label">' . $_lang['DM_date_editedon'] . '</label><input type="hidden" id="date_editedon" name="date_editedon" />
-						  		<span id="date_editedon_show" name="date_editedon_show"> (not set)</span>
+						  		<span id="date_editedon_show"> (not set)</span>
 								<a href="#" onclick="caldate4.popup();">' . $_lang['DM_view_calendar'] . '</a>&nbsp;&nbsp;
 						  		<a href="#" onclick="document.forms[\'dates\'].elements[\'date_editedon\'].value=\'\';document.getElementById(\'date_editedon_show\').innerHTML=\'(not set)\'; return true;">' . $_lang['DM_clear_date'] . '</a>
 						  </form>
@@ -348,7 +347,7 @@ function showAdjustAuthors() {
 	}
 
 	$output .= '<br /><h3>' . $_lang['DM_adjust_authors_header'] . '</h3><br />
-				   <p>' . $_lang['DM_adjust_authors_desc'] . '</p></br />
+				   <p>' . $_lang['DM_adjust_authors_desc'] . '</p><br />
 				   <form style="margin-left:50px;" name="authors" method="post" action="">
 				   <label for="author_createdby">' . $_lang['DM_adjust_authors_createdby'] . '</label>
 				   <select name="author_createdby" style="width:50%">
@@ -402,8 +401,8 @@ function showOther() {
 							<option value="0">&nbsp;-</option>
 						  </select>
 						  <br /><br />
-						  <input type="radio" id="choice" name="choice" value = "1" />&nbsp;<label for="choice" id="choice_label_1">' . $_lang['DM_other_publish_radio1'] . '</label>
-						  <input type="radio" id="choice" name="choice" value = "0" />&nbsp;<label for="choice" id="choice_label_2">' . $_lang['DM_other_publish_radio2'] . '</label>
+						  <input type="radio" name="choice" value = "1" />&nbsp;<label for="choice" id="choice_label_1">' . $_lang['DM_other_publish_radio1'] . '</label>
+						  <input type="radio" name="choice" value = "0" />&nbsp;<label for="choice" id="choice_label_2">' . $_lang['DM_other_publish_radio2'] . '</label>
 						  </form>
 						  	';
 
@@ -415,16 +414,16 @@ function showOther() {
  * showInteraction - shows the 'Range/Treeview' form for module
  * 
  */
-function showInteraction() {
+function showInteraction($showTree = true) {
 	global $_lang;
 	global $theme;
 
 	//-- initiate desired interaction method 
 	if (isset ($_POST['tswitch'])) {
 		$output .= '<div id="interaction">
-											<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['DM_tree_title'] . '</div> 
+											<div class="sectionHeader">&nbsp;' . $_lang['DM_tree_title'] . '</div> 
 											<div class="sectionBody"> 
-											<form name="module" method="post"> 
+											<form name="module" action="" method="post"> 
 											<input type="hidden" name="opcode" value="tree" /> 
 											<input type="hidden" name="pids" value="" />
 											<input type="hidden" name="setoption" value="" />  
@@ -440,8 +439,8 @@ function showInteraction() {
 
 		$output .= getDocTree();
 		$output .= '				</form><br />
-											<form name="switch" method="post"> 
-											<input type="submit" style="" name="rswitch" value="' . $_lang['DM_select_range'] . '" /> 
+											<form name="switch" action="" method="post"> 
+											<input type="submit" name="rswitch" value="' . $_lang['DM_select_range'] . '" /> 
 											<input type="hidden" id="selectedTV" name="selectedTV" value="" />
 											</form> 
 											<div style="clear:both;"></div> 
@@ -449,9 +448,9 @@ function showInteraction() {
 
 	} else {
 		$output .= '<div id="interaction">
-											<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['DM_range_title'] . '</div> 
+											<div class="sectionHeader">&nbsp;' . $_lang['DM_range_title'] . '</div> 
 											<div class="sectionBody"> 
-											<form id="range" name="range" method="post"> 
+											<form id="range" action="" name="range" method="post"> 
 											<input type="hidden" name="opcode" value="range" /> 
 											<input type="hidden" name="newvalue" value="" />
 											<input type="hidden" name="setoption" value="" />
@@ -462,18 +461,18 @@ function showInteraction() {
 											<input type="hidden" name="author_createdby" value="" />
 											<input type="hidden" name="author_editedby" value="" />
 											<input type="hidden" name="tabAction" value ="" /> 
-											<input name="pids" type="text" size="100%" /> 
+											<input name="pids" type="text" style="width:90%;" /> 
 											<input type="submit" name="submit" onclick="postForm(\'range\');return false;" value="' . $_lang['DM_select_submit'] . '" /> 
 											</form><br /> 
 											';
 		$output .= $_lang['DM_select_range_text'];
 
-		$output .= '	<br /><form name="switch" method="post"> 
+		if ($showTree) $output .= '	<br /><form name="switch" action="" method="post"> 
 											<input type="submit" style="" name="tswitch" value="' . $_lang['DM_select_tree'] . '" /> 
 											<input type="hidden" id="selectedTV" name="selectedTV" value="" />
-											</form> 
-										    <div style="clear:both;"></div> 
-											</div></div>';
+											</form>'; 
+		$output .= '<div style="clear:both;"></div> 
+					</div></div>';
 	}
 
 	return $output;
@@ -675,7 +674,8 @@ function updateHeader() {
 	global $siteURL;
 	global $_lang;
 
-	$output = ' <html><head>
+	$output = '<html><head>
+							<title>Update</title>
 							<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
 							<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
 							<style type="text/css"> 
@@ -683,21 +683,20 @@ function updateHeader() {
 							.subdiv {border:0;} 
 							ul, li {list-style:none;} 
 							</style> 
-							<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
-							<script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>';
+							<script type="text/javascript" src="media/script/modx.js"></script>
+							<script type="text/javascript" src="media/script/cb2.js"></script>';
 	$output .= ButtonCSS();
 	$output .= '		</head><body> 
 					        <div class="subTitle" id="bttn"> 
-							<span class="right"><img src="media/style' . $theme . '/images/_tx_.gif" width="1" height="5"><br />' . $_lang['DM_module_title'] . '</span> 
+							<span class="right">' . $_lang['DM_module_title'] . '</span> 
 							<div class="bttnheight"><a id="Button5" onclick="document.location.href=\'index.php?a=106\';">
-								<img src="media/style' . $theme . '/images/icons/close.gif"> ' . $_lang['DM_close'] . '</a>
+								<img src="media/style' . $theme . '/images/icons/close.gif" /> ' . $_lang['DM_close'] . '</a>
 							</div><div class="stay">   </div> 
 				            </div>
-							<div class="sectionHeader"><img src=\'media/style' . $theme . '/images/misc/dot.gif\' alt="." />&nbsp;' . $_lang['DM_update_title'] . '</div> 
+							<div class="sectionHeader">&nbsp;' . $_lang['DM_update_title'] . '</div> 
 							<div class="sectionBody"> 
 						    ';
 
 	return $output;
-
 }
 ?>

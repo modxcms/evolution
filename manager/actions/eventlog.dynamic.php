@@ -32,10 +32,6 @@ $cm->addItem($_lang["delete"], "js:menuAction(2)","media/style/" . ($manager_the
 echo $cm->render();
 
 ?>
-
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['eventlog']; ?></span>
-</div>
 <script type="text/javascript">
   	function searchResource(){
 		document.resource.op.value="srch";
@@ -88,6 +84,7 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
+<br />
 <div class="sectionHeader"><?php echo $_lang['eventlog_viewer']; ?></div><div class="sectionBody">
 	<!-- load modules -->
 	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/eventlog.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['eventlog_msg']; ?></p>

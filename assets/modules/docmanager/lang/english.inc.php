@@ -1,15 +1,11 @@
 <?php
 /**
- * Document Manager Module - lang.en.php
+ * Document Manager Module - english.inc.php
  * 
  * Purpose: Contains the language strings for use in the module.
  * Author: Garry Nutting
  * For: MODx CMS (www.modxcms.com)
- * Date:03/09/2006 Version: 1.5
- * 
- * IMPORTANT: By default, the module uses the MODx global language file.
- * This file is included for reference, if you wish to use this file, then uncomment
- * the language file include in the main Doc Manager module code.
+ * Date:29/09/2006 Version: 1.6
  * 
  */
  

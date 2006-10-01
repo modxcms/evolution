@@ -37,10 +37,6 @@ $cm->addItem($_lang["delete"], "js:menuAction(4)","media/style/$manager_theme/im
 echo $cm->render();
 
 ?>
-
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['module_management']; ?></span>
-</div>
 <script language="JavaScript" type="text/javascript">
   	function searchResource(){
 		document.resource.op.value="srch";
@@ -105,6 +101,7 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
+<br />
 <div class="sectionHeader"><?php echo $_lang['module_management']; ?>
 </div><div class="sectionBody">
 	<!-- load modules -->

@@ -517,9 +517,9 @@ switch ($action) {
 	break;
 	case "112" :
 		// execute/run the module
-		include_once "header.inc.php";
+		//include_once "header.inc.php";
 		include_once "processors/execute_module.processor.php";
-		include_once "footer.inc.php";
+		//include_once "footer.inc.php";
 		break;
 	case "113" :
 		// get the module resources (dependencies) action

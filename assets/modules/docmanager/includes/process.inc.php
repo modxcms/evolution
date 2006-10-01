@@ -1,13 +1,11 @@
 <?php
-
-
 /**
  * Document Manager Module - process.inc.php
  * 
  * Purpose: Contains the main form processing functions for the module
  * Author: Garry Nutting (Mark Kaplan - Menu Index functionalty, Luke Stokes - Document Permissions concept)
  * For: MODx CMS (www.modxcms.com)
- * Date:03/09/2006 Version: 1.5
+ * Date:29/09/2006 Version: 1.6
  * 
  */
 
@@ -71,15 +69,16 @@ function changeTemplateVariables($input, $pids) {
 					} else {
 							if (is_array($_POST["tv" . $tvKeyName])) {
 								// handles checkboxes & multiple selects elements
-								$feature_insert = array ();
-								while (list ($featureValue, $feature_item) = each($_POST["tv" . $tvKeyName])) {
+								$feature_insert = array();
+								$lst = $_POST["tv".$row['name']];
+								while (list($featureValue, $feature_item) = each ($lst)) {
 									$feature_insert[count($feature_insert)] = $feature_item;
 								}
-								$tmplvar = implode("||", $feature_insert);
-							} else {
-								$tmplvar = $_POST["tv" . $tvKeyName];
-							}
-						}
+								$tmplvar = implode("||",$feature_insert);
+             				} else {
+      	  	    				$tmplvar = $_POST["tv".$row['name']];
+             				}             
+					}
 
 					$tmplVars["{$tvKeyName}"] = $tmplvar;
 				}
@@ -369,8 +368,9 @@ function sortMenu($id) {
 																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
 																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
 																<script type="text/javascript" src="' . $siteURL . 'assets/modules/docmanager/js/functions.js"></script>
-																<script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>';
+																<script type="text/javascript" src="media/script/cb2.js"></script>';
 	$output .= buttonCSS();
+	if (isset ($_POST['sortableListsSubmitted'])) $output.='<script type="text/javascript">parent.menu.updateTree()</script>';
 	$output .= '	</head><body>
 																<form action="" method="post" name="resetform" style="display: none;">
 																<input name="actionkey" type="hidden" value="0" />
@@ -378,16 +378,16 @@ function sortMenu($id) {
 																';
 
 	$header .= '<div class="subTitle" id="bttn"> 
-																    <span class="right"><img src="media/style/' . $theme . '/images/_tx_.gif" width="1" height="5"><br />' . $_lang['DM_module_title'] . '</span>
-																	<div class="bttnheight"><a id="Button1" onclick="save();"><img src="media/style' . $theme . '/images/icons/save.gif"> ' . $_lang['DM_save'] . '</a></div>
-																	<div class="bttnheight"><a id="Button2" onclick="reset();"><img src="media/style' . $theme . '/images/icons/sort.gif"> ' . $_lang['DM_sort_another'] . '</a></div>
-																	<div class="bttnheight"><a id="Button3" onclick="reset();"><img src="media/style' . $theme . '/images/icons/cancel.gif"> ' . $_lang['DM_cancel'] . '</a></div>';
+																    <span class="right">' . $_lang['DM_module_title'] . '</span>
+																	<div class="bttnheight"><a id="Button1" onclick="save();"><img src="media/style' . $theme . '/images/icons/save.gif" /> ' . $_lang['DM_save'] . '</a></div>
+																	<div class="bttnheight"><a id="Button2" onclick="reset();"><img src="media/style' . $theme . '/images/icons/sort.gif" /> ' . $_lang['DM_sort_another'] . '</a></div>
+																	<div class="bttnheight"><a id="Button3" onclick="reset();"><img src="media/style' . $theme . '/images/icons/cancel.gif" /> ' . $_lang['DM_cancel'] . '</a></div>';
 
-	$header .= '<div class="bttnheight"><a id="Button4" onclick="document.location.href=\'index.php?a=106\';"><img src="media/style' . $theme . '/images/icons/close.gif"> ' . $_lang['DM_close'] . '</a></div>
+	$header .= '<div class="bttnheight"><a id="Button4" onclick="document.location.href=\'index.php?a=106\';"><img src="media/style' . $theme . '/images/icons/close.gif" /> ' . $_lang['DM_close'] . '</a></div>
 																	<div class="stay">  </div>
 																	</div>
 														
-														<div class="sectionHeader"><img src="media/style' . $theme . '/images/misc/dot.gif" alt="." />&nbsp;';
+														<div class="sectionHeader">&nbsp;';
 	$middle = '</div><div class="sectionBody">';
 	$footer = ' 
 															</div>
@@ -432,9 +432,7 @@ function sortMenu($id) {
 		if ($cnt < 1) {
 			$output .= $_lang['DM_sort_nochildren'] . $footer;
 			return $output;
-			//die;
 		} else {
-
 			foreach ($resource as $item) {
 				$output .= '<li id="item_' . $item['id'] . '">' . $item['pagetitle'] . '</li>';
 
@@ -445,11 +443,8 @@ function sortMenu($id) {
 	}
 
 	$output .= $sortableLists->printForm('', 'POST', 'Submit', 'button');
-
 	$output .= '<br />';
-
 	$output .= $sortableLists->printBottomJS();
-
 	$output .= $footer;
 
 	return $output;
@@ -715,19 +710,21 @@ function processRange($pids, $column, $returnval = 1) {
 			//-- get ID number of folder 
 			$match = rtrim($match[0], '*');
 			//-- get ALL children 
-			$group = $modx->db->select('id', $table, 'parent=' . $match, '', '');
+			$group = $modx->db->select('id', $table, 'parent=' . $match);
 			//-- parse WHERE SQL statement 
 			if ($returnval == 0) {
 				$idarray[] = $match;
 			} else {
 				$pids .= '' . $column . '=\'' . $match . '\' OR ';
 			}
+			if ($modx->db->getRecordCount($group) > 0) {
 			while ($row = $modx->db->getRow($group)) {
-				if (returnval == 0) {
+				if ($returnval == 0) {
 					$idarray[] = ($row['id']);
 				} else {
 					$pids .= '' . $column . '=\'' . $row['id'] . '\' OR ';
 				}
+			}
 			}
 		}
 		//-- value is a group for ALL children 

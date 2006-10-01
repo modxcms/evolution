@@ -9,10 +9,6 @@ if(!$modx->hasPermission('manage_metatags')) {
 $modx->manager->initPageViewState();
 
 ?>
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['metatags_and_keywords'] ;?></span>
-</div>
-
 <script type="text/javascript">
 	
 	// meta tag rows
@@ -99,6 +95,7 @@ $modx->manager->initPageViewState();
 <input type="hidden" name="a" value="82" />
 <input type="hidden" name="op" value="82" />
 <input type="hidden" name="id" value="" />
+<br />
 <!-- META tags -->
 <div class="sectionHeader"><?php echo $_lang['metatags'] ;?></div><div class="sectionBody">
 	<?php echo $_lang['metatag_intro'] ;?><br /><br />

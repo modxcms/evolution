@@ -273,8 +273,6 @@ function decode(s){
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
 <div class="subTitle">
-	<span class="right"><?php echo $_lang['plugin_title']; ?></span>
-
 	<table cellpadding="0" cellspacing="0">
 		<td id="Button1" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
 			<script type="text/javascript">createButton(document.getElementById("Button1"));</script>

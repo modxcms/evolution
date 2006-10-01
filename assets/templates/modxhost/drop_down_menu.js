@@ -55,14 +55,18 @@ DropDownMenu.prototype = {
 
  expand: function(event) {
   var submenu = this.findSubmenu(Event.element(event));
-  submenu.effect.clearTimer();
-  submenu.effect.custom(submenu.effect.now, submenu.originalHeight);
+  if (submenu) {
+  	submenu.effect.clearTimer();
+  	submenu.effect.custom(submenu.effect.now, submenu.originalHeight);
+  }
  },
 
  collapse: function(event) {
   var submenu = this.findSubmenu(Event.element(event));
-  submenu.effect.clearTimer();
-  submenu.effect.custom(submenu.effect.now, 0);
+  if (submenu) {
+  	submenu.effect.clearTimer();
+  	submenu.effect.custom(submenu.effect.now, 0);
+  }
  }
 
 };

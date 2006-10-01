@@ -102,10 +102,7 @@ if(substr($webfile_path,0,1)=="/") $webstart_path = "..".$webstart_path;
 else $webstart_path = "../".$webstart_path;
 
 ?>
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['files_title']; ?></span>
-</div>
-
+<br />
 <div class="sectionHeader"><?php echo $_lang['files_files']; ?></div><div class="sectionBody" style="font-size: 11px;">
 <script type="text/javascript" src="media/script/multifile.js"></script>
 <script type="text/javascript">

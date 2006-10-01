@@ -12,11 +12,7 @@ $rs = mysql_query($sql);
 $num_rows_unpub = mysql_affected_rows($modxDBConn);
 
 ?>
-
-<div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['refresh_title']; ?></span>
-</div>
-
+<br />
 <div class="sectionHeader"><?php echo $_lang['refresh_title']; ?></div><div class="sectionBody">
 <?php printf($_lang["refresh_published"], $num_rows_pub) ?><br />
 <?php printf($_lang["refresh_unpublished"], $num_rows_unpub) ?><br />
