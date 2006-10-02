@@ -16,7 +16,13 @@ $enablefileunzip = true;
 $enablefiledownload = true;
 $newfolderaccessmode = 0777;
 // End Mod -  by Raymond
-$uploadablefiles = split(",", $upload_files);
+// make arrays from the file upload settings
+$upload_files = explode(',',$upload_files);
+$upload_images = explode(',',$upload_images);
+$upload_media = explode(',',$upload_media);
+$upload_flash = explode(',',$upload_flash);
+// now merge them
+$uploadablefiles = array_merge($upload_files,$upload_images,$upload_media,$upload_flash);
 $count = count($uploadablefiles);
 for($i=0; $i<$count; $i++) {
 	$uploadablefiles[$i] = ".".$uploadablefiles[$i]; // add a dot :)
