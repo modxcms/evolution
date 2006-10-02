@@ -66,6 +66,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <ul class="subnav" id="menu3">
 <!--home--><li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
 <!--preview--><li><a onclick="this.blur();" href="../" target="_blank"><?php echo $_lang["launch_site"]; ?></a></li>
+<!--clear-cache--><li><a onclick="this.blur();" href="index.php?a=26" target="main"><?php echo $_lang["refresh_site"]; ?></a></li>
 <!--search--><li><a onclick="this.blur();" href="index.php?a=71" target="main"><?php echo $_lang['search']; ?></a></li>
 <!--new-document--><li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
 <!--new-folder--><li><a onclick="this.blur();" href="index.php?a=85" target="main"><?php echo $_lang["add_folder"]; ?></a></li>
@@ -88,27 +89,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 </li>
 <?php } ?>
 
-<!-- Tools -->
-<li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;"><?php echo $_lang["tools"]; ?></a>
-<ul class="subnav" id="menu1-1">
-<!--clear-cache--><li><a onclick="this.blur();" href="index.php?a=26" target="main"><?php echo $_lang["refresh_site"]; ?></a></li>
-<?php if($modx->hasPermission('bk_manager')) { ?>
-<!--backup-mgr--><li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('settings')) { ?>
-<!--unlock-pages--><li><a onclick="this.blur();" href="javascript:top.scripter.removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('new_document')) { ?>
-<!--import-html--><li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('edit_document')) { ?>
-<!--export-static-site--><li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('settings')) { ?>
-<!--configuration--><li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
-<?php } ?>
-</ul>
-</li>
 
 <!-- Modules -->
 <?php  if($modx->hasPermission('exec_module')) { ?>
@@ -128,23 +108,6 @@ echo $list;
 </ul>
 </li>
 <?php } ?>
-
-
-<!-- Reports -->
-<li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;"><?php echo $_lang["reports"]; ?></a>
-<ul class="subnav" id="menu1-2">
-<!--site-sched--><li><a onclick="this.blur();" href="index.php?a=70" target="main"><?php echo $_lang["site_schedule"]; ?></a></li>
-<?php if($modx->hasPermission('view_eventlog')) { ?>
-<!--manager-events--><li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('logs')) { ?>
-<!--manager-audit-trail--><li><a onclick="this.blur();" href="index.php?a=13" target="main"><?php echo $_lang["view_logging"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('settings')) { ?>
-<!--system-info--><li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
-<?php } ?>
-</ul>
-</li>
 
 
 <!-- Security (users) -->
@@ -169,6 +132,46 @@ echo $list;
 </ul>
 </li>
 <?php } ?>
+
+
+<!-- Tools -->
+<li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;"><?php echo $_lang["tools"]; ?></a>
+<ul class="subnav" id="menu1-1">
+<?php if($modx->hasPermission('bk_manager')) { ?>
+<!--backup-mgr--><li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
+<?php } ?>
+<?php if($modx->hasPermission('settings')) { ?>
+<!--unlock-pages--><li><a onclick="this.blur();" href="javascript:top.scripter.removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
+<?php } ?>
+<?php if($modx->hasPermission('new_document')) { ?>
+<!--import-html--><li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>
+<?php } ?>
+<?php if($modx->hasPermission('edit_document')) { ?>
+<!--export-static-site--><li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>
+<?php } ?>
+<?php if($modx->hasPermission('settings')) { ?>
+<!--configuration--><li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
+<?php } ?>
+</ul>
+</li>
+
+
+
+<!-- Reports -->
+<li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;"><?php echo $_lang["reports"]; ?></a>
+<ul class="subnav" id="menu1-2">
+<!--site-sched--><li><a onclick="this.blur();" href="index.php?a=70" target="main"><?php echo $_lang["site_schedule"]; ?></a></li>
+<?php if($modx->hasPermission('view_eventlog')) { ?>
+<!--manager-events--><li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
+<?php } ?>
+<?php if($modx->hasPermission('logs')) { ?>
+<!--manager-audit-trail--><li><a onclick="this.blur();" href="index.php?a=13" target="main"><?php echo $_lang["view_logging"]; ?></a></li>
+<?php } ?>
+<?php if($modx->hasPermission('settings')) { ?>
+<!--system-info--><li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
+<?php } ?>
+</ul>
+</li>
 
 </ul>
 
