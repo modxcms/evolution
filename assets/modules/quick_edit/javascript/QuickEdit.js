@@ -4,6 +4,10 @@
  *  Created: 4/19/2006
  *  For: MODx cms (modxcms.com)
  *  Description: Javascript for QuickEdit toolbar and links
+ *  
+ *  Modified by: Jaroslav Sidorkin
+ *  Modification date: 9/28/2006
+ *  Modification purpose: fixes IE6 bug
  */
 
 var QuickEdit = Class.create();
@@ -15,7 +19,7 @@ QuickEdit.prototype = {
   this.moduleActionID = 112;
   this.linkClassName = 'QE_Link';
   this.parentClassName = 'QE_Parent';
-  this.windowSettings = 'width=400,height=300,toolbar=0,menubar=0,status=0,alwaysRaised=1, dependent=1';
+  this.windowSettings = 'width=400,height=300,toolbar=0,menubar=0,status=0,resizable=1,alwaysRaised=1,dependent=1';
   this.effectDuration = 250;
   
   this.moduleID = moduleID; // TODO get via AJAX, possibly
@@ -140,7 +144,7 @@ QuickEdit.prototype = {
 
  open: function(contentID) {
   var url = this.moduleURL+'&doc='+this.pageID+'&var='+contentID;
-  var name = 'QuickEditor_'+this.pageID+'-'+contentID;
+  var name = 'QuickEditor_'+this.pageID+'_'+contentID;
   window.open(url, name, this.windowSettings); 
  },
  
