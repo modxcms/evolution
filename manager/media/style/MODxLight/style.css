@@ -500,13 +500,14 @@ a img {
     padding: 1px;
 }
 
-.deletedNode {
-    text-decoration: line-through;
-    color: #A52A2A;
-}
 
 .unpublishedNode {
-    color: #B6B6B6;
+    color: #aaa;
+    font-style: italic;
+}
+
+.deletedNode {
+    color: #A52A2A;
     text-decoration: line-through;
 }
 
@@ -520,7 +521,7 @@ a img {
 }
 
 .notInMenuNode {
-    color: Gray;
+    color: #777;
     text-decoration: none;
 }
 

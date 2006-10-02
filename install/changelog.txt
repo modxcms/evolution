@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1596 - October 2, 2006)
+MOD 0.9.5 beta 4 (rev 1597 - October 2, 2006)
 ====================================
 
 * Change Tiny MCE plugin to use relative URLs, set default theme to MODx Light  and set RTE to Tiny MCE for new installs (1596)
