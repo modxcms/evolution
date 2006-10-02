@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1592 - October 2, 2006)
+MOD 0.9.5 beta 4 (rev 1596 - October 2, 2006)
 ====================================
 
+* Change Tiny MCE plugin to use relative URLs, set default theme to MODx Light  and set RTE to Tiny MCE for new installs (1596)
 * Revise top-level manager menu oreder; move clear cache back to site menu (with preview site menu item) (1588)
 * Replace original MODx theme with MODxLightBlue (1586)
 * Fix for the file manager to allow for filetype setting changes in the system configuration. (1585)

@@ -165,7 +165,7 @@ if (!function_exists('getTinyMCEScript')) {
 	tinyMCE.init({
 		  theme : "advanced",
 		  mode : "exact",
-		  relative_urls : false,
+		  relative_urls : true,
 		  language : "{$tinymce_language}",
 		  $elmList
 		  $webWidth
@@ -211,7 +211,7 @@ FULL_SCRIPT;
 		  mode : "exact",
 		  language : "{$tinymce_language}",
 		  $elmList
-		  relative_urls : false
+		  relative_urls : true
 	   });
 </script>
 STD_SCRIPT;

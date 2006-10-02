@@ -799,7 +799,7 @@ REPLACE INTO `{PREFIX}system_settings`
 ('use_browser','1'),
 ('rb_base_dir','{IMAGEPATH}'),
 ('rb_base_url','{IMAGEURL}'),
-('which_editor','FCKEditor'),
+('which_editor','TinyMCE'),
 ('fe_editor_lang','english'),
 ('fck_editor_toolbar','standard'),
 ('fck_editor_autolang','0'),
@@ -965,9 +965,12 @@ UPDATE `{PREFIX}user_roles` SET
 	WHERE `id`=1;
 
 
-# Update any invalid Manager Themes in User Settings
+# Update any invalid Manager Themes in User Settings and reset the default theme
 
 
 UPDATE `{PREFIX}user_settings` SET
   `setting_value`='MODxLight'
   WHERE `setting_name`='manager_theme' AND `setting_value`='default';
+
+
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxLight');
