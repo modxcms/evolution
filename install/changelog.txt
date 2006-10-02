@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1588 - October 2, 2006)
+MOD 0.9.5 beta 4 (rev 1592 - October 2, 2006)
 ====================================
 
 * Revise top-level manager menu oreder; move clear cache back to site menu (with preview site menu item) (1588)

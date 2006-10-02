@@ -47,7 +47,7 @@ fieldset {
     border: none;
 }
 input, select, textarea, td {
-    font-size: 100% !important;
+    font: inherit;
 }
 /* use with a <br class="cls" /> to clear floats without extra space */
 .clearfix, .cls { 
