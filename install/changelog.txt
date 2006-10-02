@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1585 - October 2, 2006)
+MOD 0.9.5 beta 4 (rev 1586 - October 2, 2006)
 ====================================
 
+* Replace original MODx theme with MODxLightBlue (1586)
 * Fix for the file manager to allow for filetype setting changes in the system configuration. (1585)
 * Added an optional $fields parameter to the DBAPI delete function. While not necessary in most cases, it allows for more complex multi-table deletes that use joins. (1558)
 * Fix JS debug errors when no submenu is present for an item in the MODxHost dropdown menu. (1570)
