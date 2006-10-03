@@ -68,7 +68,7 @@ switch ($_POST['mode']) {
 			}
 			
 			// save event listeners
-			saveEventListeners($newid,$sysevents);	
+			saveEventListeners($newid,$sysevents,$_POST['mode']);
 			
 			// invoke OnPluginFormSave event
 			$modx->invokeEvent("OnPluginFormSave",
@@ -111,7 +111,7 @@ switch ($_POST['mode']) {
 		} 
 		else {		
 			// save event listeners
-			saveEventListeners($id,$sysevents);	
+			saveEventListeners($id,$sysevents,$_POST['mode']);
 
 			// invoke OnPluginFormSave event
 			$modx->invokeEvent("OnPluginFormSave",
@@ -145,15 +145,32 @@ switch ($_POST['mode']) {
 
 
 # Save Plugin Event Listeners
-function saveEventListeners($id,$sysevents) {
+function saveEventListeners($id,$sysevents,$mode) {
 	global $dbase, $table_prefix;
 	// save selected system events
-	mysql_query("DELETE FROM $dbase.".$table_prefix."site_plugin_events WHERE pluginid='".$id."';");
-	$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events (pluginid,evtid) VALUES ";
+	
+	$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events (pluginid,evtid,priority) VALUES ";
 	for($i=0;$i<count($sysevents);$i++){
-		if($i>0) $sql.=",";
-		$sql.= "('".$id."','".$sysevents[$i]."')";	
+		if ($mode == '101') {
+            $prioritySql = 'select max(priority) as priority from '.$dbase.'.'.$table_prefix.'site_plugin_events where evtid=\''.$sysevents[$i].'\'';
+        } else {
+            $prioritySql = 'select priority from '.$dbase.'.'.$table_prefix.'site_plugin_events where evtid=\''.$sysevents[$i].'\' and pluginid=\''.$id.'\'';
+        }
+        $rs = mysql_query($prioritySql);
+        $prevPriority = mysql_fetch_assoc($rs);
+        if ($mode == '101') {
+            if ($prevPriority) {
+                $priority = $prevPriority['priority'] + 1;
+            } else {
+                $priority = 1;
+            }
+        } else {
+            $priority = $prevPriority['priority'];
+        }
+        if($i>0) $sql.=",";
+		$sql.= "('".$id."','".$sysevents[$i]."','".$priority."')";
 	}
+	mysql_query("DELETE FROM $dbase.".$table_prefix."site_plugin_events WHERE pluginid='".$id."';");
 	if (count($sysevents)>0) mysql_query($sql);
 }
 

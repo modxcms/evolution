@@ -119,6 +119,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
 		<ul>
 			<li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li>
+			<?php if($modx->hasPermission('save_plugin')) { ?><li><a href="index.php?a=100"><?php echo $_lang['plugin_priority']; ?></a></li><?php } ?>
 		</ul>
 		<br />
 		<?php echo createResourceList('site_plugins',102,$tablePre); ?>

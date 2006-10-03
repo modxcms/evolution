@@ -35,19 +35,19 @@ else {
 
 // duplicate Plugin Event Listeners
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events (pluginid,evtid) 
-			SELECT $newid, evtid 
+	$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events (pluginid,evtid,priority)
+			SELECT $newid, evtid, priority
 			FROM $dbase.".$table_prefix."site_plugin_events WHERE pluginid=$id;";
 	$rs = mysql_query($sql);
 }
 else {
-	$sql = "SELECT $newid as 'newid', evtid 
+	$sql = "SELECT $newid as 'newid', evtid, priority
 			FROM $dbase.".$table_prefix."site_plugin_events WHERE pluginid=$id;";
 	$ds = mysql_query($sql);
 	while($row = mysql_fetch_assoc($ds)) {
 		$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events 
-				(pluginid, evtid) VALUES 
-				('".$row['newid']."', '".$row['evtid']."');";
+				(pluginid, evtid, priority) VALUES
+				('".$row['newid']."', '".$row['evtid']."', '".$row['priority']."');";
 		$rs = mysql_query($sql);
 	}
 }

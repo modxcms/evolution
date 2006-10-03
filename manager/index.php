@@ -530,6 +530,12 @@ switch ($action) {
 /********************************************************************/
 /* plugin management												*/
 /********************************************************************/
+    case "100" :
+		// change the plugin priority
+		//include_once "header.inc.php"; - in action file
+		include_once "actions/mutate_plugin_priority.dynamic.php";
+		include_once "footer.inc.php";
+    break;
 	case "101" :
 		// get the new plugin action
 		include_once "header.inc.php";

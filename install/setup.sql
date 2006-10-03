@@ -252,7 +252,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugin_events` (
   `pluginid` INT(10) NOT NULL,
-  `evtid` INT(10) NOT NULL
+  `evtid` INT(10) NOT NULL,
+  `priority` INT(10) NOT NULL COMMENT 'determines the run order of the plugin',  
 ) TYPE=MyISAM COMMENT='Links to system events';
 
 
@@ -718,6 +719,9 @@ ALTER TABLE `{PREFIX}site_content` MODIFY COLUMN `menutitle` varchar(100);
 
 ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `link_attributes` varchar(255) NOT NULL COMMENT 'Link attriubtes' AFTER `alias`;
 
+ALTER TABLE `{PREFIX}site_plugin_events`  ADD COLUMN `priority` INT(10) NOT NULL COMMENT 'determines the run order of the plugin' AFTER `evtid`;
+
+
 # ]]upgrade-able
 
 
@@ -971,6 +975,5 @@ UPDATE `{PREFIX}user_roles` SET
 UPDATE `{PREFIX}user_settings` SET
   `setting_value`='MODxLight'
   WHERE `setting_name`='manager_theme' AND `setting_value`='default';
-
 
 REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxLight');

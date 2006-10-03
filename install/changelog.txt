@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1606 - October 3, 2006)
+MOD 0.9.5 beta 4 (rev 1607 - October 3, 2006)
 ====================================
 
+* Added ability to specify plugin run order.  Incorporates a new screen similar to ajaxmenu index for determining the plugin run order per event.  Added column priority to table site_plugin_events.
 * Fix for IE styling issues in file manager
 * Amend getUserData() in document parser so the include filename respects case-sensitivity.
 * Changed phpSniff include in getUserData.extender.php to use $modx->config['base_path'] and not $modx->getManagerPath() so the full path to the file is used.
