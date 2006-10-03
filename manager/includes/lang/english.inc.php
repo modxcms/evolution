@@ -556,6 +556,7 @@ $_lang["plugin_locked_message"] = 'This plugin is locked.';
 $_lang["plugin_management_msg"] = 'Here you can choose which plugin you wish to edit.';
 $_lang["plugin_msg"] = 'Here you can add/ edit plugins. Plugins are \'raw\' PHP codes that are invoked whenever the selected System Events are triggered.';
 $_lang["plugin_name"] = 'Plugin name';
+$_lang["plugin_priority"] = 'Edit Plugin Execution Order by Event';
 $_lang["plugin_title"] = 'Create/ edit plugin';
 $_lang["preview"] = 'Preview';
 $_lang["preview_msg"] = 'This is a preview of your last saved changes. Click here to <a href="#" onclick="saveRefreshPreview();"><img src="media/images/icons/save.gif" align="absmiddle" height="12"> Save and Refresh</a> your current changes';

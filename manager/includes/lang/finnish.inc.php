@@ -563,6 +563,7 @@ $_lang["plugin_locked_message"] = 'T&auml;m&auml; liit&auml;nn&auml;inen on luki
 $_lang["plugin_management_msg"] = 'T&auml;ss&auml; voit valita mit&auml; liit&auml;nn&auml;ist&auml; haluat muokata.';
 $_lang["plugin_msg"] = 'T&auml;ss&auml; voit lis&auml;t&auml;/ muokata liit&auml;nn&auml;isi&auml;. Liit&auml;nn&auml;iset ovat \'raakaa\' PHP koodia jotka aktivoituvat kun valitut J&auml;rjestelm&auml;tapahtumat k&auml;ynnistyv&auml;t.';
 $_lang["plugin_name"] = 'Liit&auml;nn&auml;isen nimi';
+$_lang["plugin_priority"] = 'Edit Plugin Execution Order by Event';
 $_lang["plugin_title"] = 'Luo/ muokkaa liit&auml;nn&auml;ist&auml;';
 $_lang["preview"] = 'Esikatselu';
 $_lang["preview_msg"] = 'T&auml;m&auml; on esikatselu viimeksi tallentamistasi muutoksista. Klikkaa t&auml;st&auml; 

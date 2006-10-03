@@ -144,7 +144,12 @@ $_lang["credits_dTree"] = 'MODx maakt gebruik van het uitstekende dTree-script v
 $_lang["credits_everaldo"] = 'MODx gebruikt een aantal iconen van Everaldo\'s crystal icon set. Great icons!';
 $_lang["credits_mysql"] = 'MODx draait onder MySQL!';
 $_lang["credits_php"] = 'MODx draait onder PHP!';
-$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> &ndash; Project Founders</li><li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> &ndash; Core Architecture &amp; Design</li><li><b>Nicolas Martignoni et Lorenzo</b> &ndash; Traduction franï¿½ise</li></ul>';
+$_lang["credits_shouts_msg"] = '
+<ul>
+<li><b>Raymond Irving, Ryan Thrash</b> &ndash; Project Founders</li>
+<li><b>Jason Coward, Victor Brillon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> &ndash; Core Architecture &amp; Design</li>
+<li><b>Nicolas Martignoni et Lorenzo</b> &ndash; Traduction franï¿½ise</li>
+</ul>';
 $_lang["credits_shouts_title"] = '<b>Mijn dank aan:</b>';
 $_lang["credits_webfx"] = 'MODx maakt gebruik van een aantal JavaScripts van Webfx. Fantastisch spul!';
 $_lang["custom_contenttype_message"] = 'Hier kunnen eigen \'content types\' worden toegevoegd. Vul een nieuw type in en klik op de knop \'Toevoegen\' om een nieuw type toe te voegen';
@@ -559,6 +564,7 @@ $_lang["plugin_locked_message"] = 'Deze Plugin is beveiligd.';
 $_lang["plugin_management_msg"] = 'Hier kunt U kiezen welke plugin U wilt bewerken.';
 $_lang["plugin_msg"] = 'Hier kunt U plugins toevoegen of bewerken. Plugins zijn \'ruwe\' PHP instructies die uitgevoerd worden als de geselecteerde events optreden.';
 $_lang["plugin_name"] = 'Plugin naam';
+$_lang["plugin_priority"] = 'Edit Plugin Execution Order by Event';
 $_lang["plugin_title"] = 'Aanmaken/bewerken plugin';
 $_lang["preview"] = 'Voorbeeld';
 $_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href=\'javascript://\' onclick="saveRefreshPreview();"><img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\'> Opslaan en vernieuwen</a>';
