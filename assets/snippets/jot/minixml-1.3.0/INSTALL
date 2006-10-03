@@ -1,0 +1,38 @@
+Installation instructions for MiniXML:
+
+===== PHP Implementation ====
+
+- Select a directory to install minixml, say /path/to/minixmlinstall and
+  create it:
+  	$ mkdir /path/to/minixmlinstall
+
+
+- Copy the minixml.inc.php file and the 'classes' directory somewhere.
+	$ cp -R minixml.inc.php classes /path/to/minixmlinstall
+
+- Add a 
+	require_once("/path/to/minixmlinstall/minixml.inc.php"); 
+  to your PHP source
+
+- Use!
+
+
+===== Perl implementation =====
+
+- Get the latest source from CPAN.  As root, run
+
+# perl -MCPAN -e 'install XML::Mini'
+
+OR
+
+- cd Perl/XML-Mini
+- perl Makefile.PL
+- make
+- make test
+- su; make install
+
+- Add a 'use XML::Mini::Document;' to your Perl source
+- Use!
+
+Regards,
+Pat Deegan

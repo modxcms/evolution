@@ -1,0 +1,438 @@
+<!doctype html public "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>eForm</title><style type="text/css">*{
+font-family:arial, helvetica, sans-serif;
+font-size:10pt;
+border-width:1px;
+border-color:#003399;
+}
+
+body{
+background-color:#a4d1f9;
+}
+
+h1, h2, h3{
+margin-bottom:0;
+color:#003399;
+}
+
+h1{
+margin-top:0;
+margin-bottom:20px;
+font-size:20pt;
+text-align:center;
+border-bottom-style:solid;
+border-color:#e78900;
+}
+
+h2{
+font-size:12pt;
+}
+
+hr{
+color:#ffffff;
+border-style:none none solid none;
+border-color:#e78900;
+}
+
+p{
+margin-top:0;
+}
+
+ul{
+margin:0 0 0 10px;
+padding:0;
+list-style-type:square;
+}
+
+code{
+font-family:monospace;
+color:#666666;
+}
+
+a{
+color:#e78900;
+text-decoration:none;
+}
+
+a:hover{
+border-bottom-style:dashed;
+}
+
+#qe_logo{
+float:right;
+margin:0 57px 20px 57px;
+}
+
+#qe_toc{
+width:200px;
+margin:0 0 20px 20px;
+padding:20px;
+float:right;
+clear:right;
+border-style:solid;
+background-color:#eaf9ff;
+}
+
+#qe_toc h1{
+margin-top:0;
+font-size:12pt;
+text-align:center;
+}
+
+div.qe_box{
+margin:30px;
+padding:30px;
+border-style:solid;
+background-color:#ffffff;
+}
+
+div.qe_level_2{
+margin-left:20px;
+}
+
+.qe_salutation{
+margin-left:30px;
+}
+
+.qe_signature{
+font-family:cursive;
+font-size:14pt;
+}
+
+.qe_param_list li{
+	margin:2px;
+	color:#333;
+}
+.qe_param_list li strong{
+	color:#036;
+	font-size:1.02em
+}
+.new{ 
+	color:#c00;
+	font-weight:bold;
+}</style>
+</head>
+<body>
+	<div class="qe_box"><h1>eForm 1.3 - Electronic Form Snippet (Extended)</h1><img id="qe_logo" src="logo.png" alt="logo">
+		<div id="qe_toc">
+			<h1>Index</h1>
+				<ul>
+					<li><a href="eform.htm#top">Who's responsible</a></li>
+					<li><a href="eform.htm#what">What is eForm</a></li>
+					<li><a href="eform.htm#whatsnew">What' New</a></li>
+					<li><a href="eform.htm#installation">Installation</a></li>
+					<li><a href="eform.htm#params">Snippet Parameters</a></li>
+					<li><a href="eform.htm#datatypes">Data types</a></li>
+					<li><a href="eform.htm#validation">Extended Form Validation</a></li>
+					<li><a href="eform_examples.htm">Examples</a>
+					<ul>
+						<li><a href="eform_examples.htm#top">Feedback Form</a></li>
+					</ul>
+					</li>
+				</ul>
+			
+		</div>
+
+		<div class="qe_level_1"><h2>Who's responsible for eForm</h2>
+<p>Originally developed by Raymond Irving (15-Dec-2004) who's currently working on version 2.0.
+<br/>Version 1.3 extended by: Jelle Jager (TobyL) September 2006</p>
+<p>Captcha image support - thanks to Djamoer<br/>Multi checkbox, radio, select support - thanks to Djamoer
+<br />Styles (for these docs) 'borrowed' from Adam Crownoble's QuickEdit
+</p>
+		</div>
+		<div class='qe_level_1'><h2>What is eForm?</h2>
+<p>eForm converts a web form into an email which can be sent via email to specified users. Its main features are: html form mail with attachments, auto-respond, report generation using placeholders and extended form validation.</p>
+		</div>
+
+<div class='qe_level_1'>
+<a href="#whatsnew"></a>
+<h2>What's New</h2>
+<div class='qe_level_2'>
+<ul>
+<li><strong>eFormParser included</strong><br />
+This version differs from the original in that it incorporates the eFormParser which retrieves part of it's setting and validation information from the form itself by reading the	<code>eform</code> pseudo attribute from the form fields. eForm also no longer requires to set placeholders in each form field with the exception of the 
+		<code>[+vericode+]</code>,
+		<code>[+verimageurl+]</code>and
+		<code>[+validationmessage+]</code>placeholders.</p></li>
+<li><strong>Extended Server validation</strong><br />
+It is now possible to set validation rules for each field using a list or range of values, regular expressions an <a href="#validation">more</a>.
+</li>
+<li><strong>Language Setting</strong>
+All eForm messages are now stored in a separate language file and a new <code>&language</code> parameter has been added.
+</li>
+<li><strong>Custom validation messages</strong>
+You can now add custom validation messages to each field. The way messages are displayed has also changed slighty. Empty fields will now be listed in one message instead of using a separate message for each field.
+</li>
+</ul>
+</div>
+</div>	
+
+<div class='qe_level_1'>
+<a href="#installation"></a>
+<h2>Installation</h2>
+<div class='qe_level_2'>
+<ul>
+<li>Unzip the eform.1.3.zip file into the assets/snippet/ folder. You should now have an extra folder called eform.</li>
+<li>Create a new snippet, name it eForm and copy and paste the content of the eform.snippet.tpl file</li>
+<li>Start reading this file and the examples</li>
+<li>Create forms</li>
+</ul>
+</div>
+
+</div>		
+		
+		<a name="params" id="params"></a>
+		<div class='qe_level_1'><h2>Snippet Parameters</h2>
+<p>eForm is very flexible and there's quite a collection of parameters you can use to get eForm to do what you want. Read some of the <a href="eform_examples.htm">examples</a> if you're unsure what to do.</p>
+		</div>
+		<div class='qe_level_2'>
+			<ul class="qe_param_list">
+				<li><strong>&amp;vericode</strong> (Optional)<br/>Enables verification code. The template contain a vericode
+	field and a [+vericode+] placeholder</li>
+				<li><strong>&amp;formid</strong><br/>This is a unique id used to identity a form during postbacks
+	This is useful in cases where more than one form exists on
+	a page</li>
+				<li><strong>&amp;to</strong> (Optional)<br/>Email address to send eForm information to
+	For multiple recipients separate emails with a comma (,)
+	If omitted the site settings email address will be used</li>
+				<li><strong>&amp;from</strong> (Optional)<br/>Sets the email address to appear in the From section of the email</li>
+				<li><strong>&amp;fromname</strong> (Optional)<br/>Sets the name of the sender in the From section of the email</li>
+				<li><strong>&amp;replyto</strong> <span class="new">(new)</span> (Optional)<br/>Email address or fieldname containing email address
+	Sets the email address to appear in the ReplyTo section of the email</li>
+				<li><strong>&amp;sendirect</strong> (Optional)<br/>This will use the form field called email to supply the
+	email address to send the message to.
+	Set to 1 to activate send direct. Defaults to 0</li>
+				<li><strong>&amp;cc</strong> (Optional)<br/>Same as
+			<code>&amp;email</code>but for Cc:</li>
+				<li><strong>&amp;bcc</strong> (Optional)<br/>Same as
+			<code>&amp;email</code>but for Bcc:</li>
+				<li><strong>&amp;ccsender</strong> (Optional)<br/>Set to 1 to send the user a copy of the submitted form. Defaults to 0
+	eForm will look for the user's email address inside a field called email.</li>
+				<li><strong>&amp;subject</strong> (Optional)<br/>Subject to appear in email
+	Can include [.form fields.]. E.g. Purcase Order for [.firstname.] [.lastname.]</li>
+				<li><strong>&amp;noemail</strong> (Optional)<br/>Prevents eform from sending emails e.g. no-reply@mydomain.com
+	Set to 1 to disable emails. Defaults to 0</li>
+				<li><strong>&amp;mailselector</strong> (Optional)<br/>Sets the name of the form field to use as a selector to select a single email from the comma (,) delimited emails assigned
+	the
+			<code>&amp;to</code>parameter. This selector field will act like a numeric
+	index to select an email. It will start at 1 for the first email
+	and ends at N for the last email in the list.<br/><br/>For example:
+			<code>&amp;to =`sales@me.com,support@me.com,billing@me.com`
+			<code>&amp;mailselector</code>=`topic`</code><br/><br/>On the web form the topic fields is actually a dropdown menu. when the user selects a topic from the list the value 1,2 or 3 will
+	be sent to eForm which will then be used to select one of the	three emails assigned to the
+			<code>&amp;to</code>parameter. This email address will be the address used to send the email to.</li>
+				<li><strong>&amp;mobile</strong> (Optional)<br/>Mobile email address. This email is used to send a short notification message to a mobile device.</li>
+				<li><strong>&amp;mobiletext</strong> (Optional)<br/>Text message to send to mobile device Can include [.form fields.]. E.g. Order for
+			<code>[.firstname.]</code></li>
+				<li><strong>&amp;gotoid</strong>	(Optional)<br/>document id to load after sending message. See also
+			<code>&amp;thankyou</code></li>
+				<li><strong>&amp;category</strong> (Optional)<br/>Category ID or name used to categorize eForms.
+	If category is not found a new category will beb created
+	This will appear in the subject of the email sent to the user</li>
+				<li><strong>&amp;keywords</strong> (Optional)<br/>Comma delimited keywords or [.form fields.] used when searching databank
+	E.g. [.firstname.], [.lastname.], [.email.]</li>
+				<li><strong>&amp;autosender</strong> (Optional)<br/>email to display as sender of the auto-respond message
+	e.g. no-reply@mydomain.com</li>
+				<li><strong>&amp;automessage</strong> (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as an auto-responder message
+	Can include [form fields]. E.g. [firstname]
+	- tags: [form_fields],[postdate]
+	- note: eForm will send the auto-respond message to the email address specified
+	inside the [email] form field.</li>
+				<li><strong>&amp;tpl</strong> (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as a template. Tags: [+form_fields+],[+validatemessage+], [+postdate+]
+	where form_fields is the name of the field used in a form</li>
+				<li><strong>&amp;report</strong> (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use when generating reports. Tags: same as for
+			<code>&amp;tpl</code></li>
+				<li><strong>&amp;thankyou</strong> <span class="new">(new)</span> (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as a thank you message displayed to the user after a successful submit. 
+	Tags: same as for
+			<code>&amp;tpl</code></li>
+				<li><strong>&amp;allowhtml</strong> (Optional)<br/>Set to 1 to allow user to enter html tags. Defaults to 0</li>
+				<li><strong>&amp;language</strong> <span class="new">(new)</span> (Optional)<br/>Support for multilingual validation and error messages. Uses same language
+	names as MODx.</li>
+				<li><strong>&amp;isDebug</strong> <span class="new">(new)</span> (Optional)<br/>Set to 1 for extended error messages in form validation. Mostly for debugging
+	#LIST and #SELECT validation.</li>
+				<li><strong>&amp;format</strong> (Deprecated)<br/>
+			</ul><h3>PHP Event Function:</h3>
+$eFormOnMailSent<br/>This function is called after email has been sent!
+
+<h3>Examples:</h3>
+<p>
+		<code>[[eForm?
+		<code>&amp;to</code>=me@mydomain.com
+		<code>&amp;gotoid</code>=1
+		<code>&amp;tpl</code>=orders]]</code><br/>
+		<code>[[eForm?
+		<code>&amp;to</code>=`sales@mysuppliers.com`
+		<code>&amp;gotoid</code>=`7`
+		<code>&amp;category</code>=`Purchase Order`
+		<code>&amp;tpl</code>=`chunkPurchaseOrder`]]</code></p>
+		</div>
+		<div class="qe_level_2">
+
+		
+</div>
+<a name="datatypes" id="datatypes"></a>
+<h2>Datatypes and formatting</h2>
+
+<div class='qe_level_1'>
+<p>eForm is incorporating a form parser which extracts formatting and validation options from each form field. To set options for a field add the <code>eform</code> (pseudo) attribute to each required form field.</p>
+
+<p><code>&lt;input type=&quot;text&quot; name=&quot;color&quot; eform=&quot;A Color:string:1&quot; /&gt;</code></p>
+
+<p>The basic format of the eform attribute is:<br /><br />
+<code>[description/title]:[datatype]:[required]:[validation message]:[validation rule]</code></p>
+
+<div class='qe_level_2'>
+<h3>Data types</h3>
+<p>You only need to set the following data types. Others will be set automatically 
+(radio &amp; checkbox as they are, string for textbox and listbox for select)</p>
+
+<p>Standard validation: All fields that are required will be checked if they are left empty.</p>
+
+<ul class="qe_param_list">
+    <li><strong>string</strong>  - No specific validation besides checking if it's empty if the field is required.</li>
+    <li><strong>date</strong> - Checks if it is a valid date (based on php's strtotime() function)</li>
+    <li><strong>integer</strong> - Checks if it is a number (does not check if it is in fact an integer)</li>
+    <li><strong>float</strong> - Checks if it is a number</li>
+    <li><strong>email</strong> - Checks if it's a valid email address using a simple regular expression</li>
+    <li><strong>file</strong> - (for file upload input) - checks if a size error occurs, does not currently check file type</li>
+    <li><strong>html</strong> - Same as string except that it converts line endings (\n) to &lt;br /&gt; tags</li>
+</ul>
+
+<p>The listbox, checkbox and radio fields do normally not require the datatype to be set. eForm will recognize these automatically. It will validate the values against the list of values placed in the form.</p>
+
+</div></div>
+
+<a name="validation" id="validation"></a>
+<div class='qe_level_1'>
+<h2>Extended Server Validation</h2>
+<p>This version instroduces extended server validation and word filtering using very flexible validation rules that can be set in teh <code>eform</code> attribute. You can set 2 extra validation parameters, a custom error message and a validation or filter rule.</p>
+
+<p>example: <code>eform=&quot;Year of Birth:integer:1:Must be between 1950 and 2002:#RANGE 1950-2002&quot;</code></p>
+
+<div class='qe_level_2'>
+<h3>The validation rules</h3>
+
+<ul class="qe_param_list">
+<li><strong>#LIST</strong> - comma separated list of valid values<br />
+example: <code>#LIST blue,red,green.maroon</code></li>
+
+<li><strong>#RANGE</strong> - a comma separated list of numbers or numeric ranges.
+When setting a range the order is not important. 1~10 or 10~1 will both validate a number 
+between 1 and 10 (inclusive). Handles negative as well as positive numbers<br />
+	example:<code>#RANGE 1,3,-5~-15,60~82</code></li>
+
+
+<li><strong>#SELECT</strong> - list of valid values retrieved from a database query
+The query should only return a single column of values (the function only checks
+against the first returned column). You can use the <code>{DBASE}</code> <code>{PREFIX}</code> tags which will be replaced by the MODx database name and table prefix respectively.<br />
+	example:	<code>#SELECT keyword FROM {PREFIX}site_keywords</code></li>
+
+
+<li><strong>#EVAL</strong> - string of php code. Should return either true or false<br />
+	example: <code>#EVAL return (strtotime($value)!==-1 &amp;&amp; strtotime($value)&lt;now())?true:false;</code></li>
+	
+<li><strong>#REGEX</strong> - regular expression - syntax as for preg_match() - see php manual<br />
+	example: <code>#REGEX /^[a-z]+ [a-z0-9_]+/i</code></li>
+	
+<li><strong>#FILTER</strong> - Filters do not validate the input but 
+simply replace words or values using filter criteria. You can use the following filters:
+	
+<ul>
+	<li>#FILTER #LIST<br />
+	use double pipe to separate 2 comma separated lists of words and
+	replacement values.<br />
+		example; <code>#FILTER #LIST badword,verybadword||goodword,verygoodword</code></li>
+
+	<li>#FILTER #EVAL<br />
+		example:  <code>#FILTER #EVAL return myFilterFunction($value);</code><br />
+		(offcourse you have to make sure the function exists somehow)
+	<br /><br />
+	<em>example filter function</em><br />
+	<code>function myFilterFunction($value){<br />
+		&nbsp; &nbsp;$badWords = array('scribble','coding');<br />
+		&nbsp; &nbsp;$goodWords = array('design','sleep');<br />
+		&nbsp; &nbsp;return str_replace($badWords,$goodWords,$value);<br />
+	}</code></li>
+
+	<li>#FILTER #REGEX <br />
+	regular expression replace - syntax as for preg_replace()
+	separate the search and replacement expression with a double pipe symbol (||)<br />
+		TODO: example</li>
+
+</ul></li>
+
+</ul>
+
+		
+
+<h3>Select boxes, radio options and checkbox fields</h3>
+<p>Select boxes, radio options and checkbox fields now have working automatic validation.
+Any input for these fields is validated against the values set in your form template.
+This avoids anyone tampering with the form by adding their own values to these fields</p>
+
+<h3>Hidden fields</h3>
+<p>By default hidden fields are validated as a protection against tampering by comparing the input
+against the value set in the form template (much like the select, checkbox and radio fields)
+In some circumstances this may not be desirable however. For instance when you use some javascript
+in your form to store a result in a hidden field. In those cases you can turn this behaviour off
+by setting the eform attribute (with or without it's own validation).</p>
+
+
+<p>Hidden field example 1.<br />
+The default behaviour is handy for instance if you are storing a document id and want to be sure 
+no one can tamper with the id. the field would look like this:<br />
+	<code>&lt;input type=&quot;hidden&quot; name=&quot;docId&quot; value=&quot;31&quot; /&gt;</code></p>
+
+<p>Hidden field example 2.<br />
+Suppose you have a form where a javascript calculated value is stored in a hidden field. To avoid the hidden
+field being validated at all you add the following eform attribute:
+<code>	&lt;input type=&quot;hidden&quot; name=&quot;calculatedField&quot; value=&quot;&quot; eform=&quot;::0::&quot; /&gt;</code></p>
+   
+<p>Hidden field example 3.<br />
+Same scenario as 2 but suppose you want to make sure a value is returned and that it stays within a certain
+range. The eform attribute is set with:  title,integer data type, required field, error message
+and validation with #RANGE (in this example a value between 1-10)
+<code>	&lt;input type=&quot;hidden&quot; name=&quot;calculatedField&quot; value=&quot;&quot; eform=&quot;Calculated Value:integer:1:Calculation out of range:#RANGE 1-10&quot; /&gt;</code></p>
+
+
+
+<h3>Form field examples with validation</h3>
+
+<p>1. Selectbox - set as required field (no validation required)
+<div class='codeblock'>
+&lt;select name=&quot;mySelect&quot; eform_options=&quot;Select Country::1&quot; /&gt; (datatype left blank)<br />
+	&lt;option value=&quot;en-au&quot;&gt;Australia&lt;/option&gt;<br />
+	&lt;option value=&quot;en-us&quot;&gt;USA&lt;/option&gt;<br />
+&lt;/select&gt;</p>
+</div>
+
+<p>2. Textbox - required and format set to date
+<div class='codeblock'>
+&lt;input type=&quot;text&quot; name=&quot;dobDate&quot; eform_options=&quot;Date of Birth:date:1:@EVAL return (strtotime($value)!==-1)?true:false;&quot; /&gt;
+</div>
+</p>
+<p>3. Multiple checkbox - required, eform_options only set once.
+<div class='codeblock'>
+&lt;input type=&quot;checkbox&quot; name=&quot;myColors[]&quot; value=&quot;Red&quot; eform_options=&quot;Colors::1&quot; /&gt; (datatype left blank)<br />
+&lt;input type=&quot;checkbox&quot; name=&quot;myColors[]&quot; value=&quot;Green&quot; /&gt; (datatype left blank)<br />
+</div>
+</p>
+</div>
+
+<h2>Todo</h2>
+<ul>
+<li>More examples</li>
+<li>Better file upload validation ( read file-size from hidden field?, file-types from #LIST )</li>
+<li>Custom css classes for invalid fields (add to or create class attributes)</li>
+<li>Get eFromParser to parse &lt;label for=&quot;fieldname&quot;&gt;Some Label&lt;label&gt; te fetch field title</li>
+<li>Extend output options - save as document, store in database table??</li>
+</ul>
+
+
+
+</div>
+
+</body>
+</html>

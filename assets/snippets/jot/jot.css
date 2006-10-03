@@ -1,0 +1,12 @@
+.jot-err {border: 1px solid red;font-weight: bold;color: red;padding: 5px;margin-bottom: 10px;}
+.jot-row {border: 1px solid #CCCCCC;margin-bottom: 10px;background-color: #e9e9e9;}
+.jot-row-alt {background-color: #f9f9f9;}
+.jot-row-author {background-color: #FFFFE1;}
+.jot-row-me {background-color: #FFDDDD;}
+.jot-comment {padding: 3px;}
+.jot-mod {font-size: 14px;float: right;width: 100px;text-align: right;color: #666666;font-weight: bold;}
+.jot-subject {font-weight: bold;}
+.jot-message {padding: 2px;}
+.jot-poster {padding: 0px;text-align: right;margin-top: 10px;font-size: 10px;}
+.jot-nav {padding: 0px;text-align: center;margin: 10px;font-size: 10px;}
+.jot-modbar {padding: 0px;text-align: left;margin-top: 10px;}

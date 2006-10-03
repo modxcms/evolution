@@ -1,0 +1,12 @@
+	<a name="jc[+jot.id+]-[+comment.id+]"></a>
+	<div class="jot-row [+chunk.rowclass+]">
+	 <div class="jot-comment">
+	   <div class="jot-mod">[+chunk.moderate+][+comment.postnumber:math=`[+jot.nav.total+]+?`+]&nbsp;</div>
+	   <span class="jot-subject">[+comment.title:esc+]</span>
+	   <div class="jot-message">[+comment.content:esc:nl2br+]</div>
+	 </div>
+	 <div class="jot-poster">
+	  by [+comment.createdby:userinfo=`username`:ifempty=`[+comment.custom.name:ifempty=`[+jot.guestname+]`:esc+]`+]
+	  on [+comment.createdon:date=`%a %B %d, %Y at %H:%M`+]
+	 </div>
+	</div>

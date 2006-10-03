@@ -21,6 +21,7 @@
 	$ms[] = array("Ditto","<strong>NEW:</strong> Flexible summarization and listing tool for creating blogs, catalogs, press release archives, bio listings and more.",0,"$setupPath/snippet.ditto.tpl","");
 	$ms[] = array("eForm","<strong>NEW:</strong> Robust form parser and processor with validation, multiple sending options, chunks support for forms and reports and file upload handling.",0,"$setupPath/snippet.eform.tpl","");
 	$ms[] = array("FirstChildRedicrect","<strong>NEW:</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
+	$ms[] = array("Jot","<strong>1.0</strong> Commenting system that supports Email subscription and moderation.",0,"$setupPath/snippet.jot.tpl","");
 	$ms[] = array("MemberCheck","Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
 	$ms[] = array("NewsPublisher","Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
 	$ms[] = array("Personalize","<strong>updated:</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");

@@ -1,0 +1,66 @@
+<div class="jot-err" id="joterr[+jot.id+]" style="display: none;"></div>
+
+<form method="post" action="[~[*id*]~]">
+	<input name="JotForm" type="hidden" value="[+jot.id+]" />
+	
+	<div id="jotguest[+jot.id+]" style="display: none;">
+	Name:<br />
+	<input name="name" type="text" size="40" value="[+submit.name+]" /><br />
+	Email:<br />
+	<input name="email" type="text" size="40" value="[+submit.email+]" /><br />
+	</div>
+		
+	Subject:<br />
+	<input name="subject" type="text" size="40" value="[+submit.subject+]" /><br />
+	Comment:<br />
+	<textarea name="message" cols="50" rows="8">[+submit.message+]</textarea><br />
+	
+	<div id="jotcaptcha[+jot.id+]" style="display: none;">
+		<div style="width:150px;margin-top: 5px;margin-bottom: 5px;"><a href="[~[*id*]~]"><img src="manager/includes/veriword.php?rand=[+jot.seed+]" width="148" height="60" alt="If you have trouble reading the code, click on the code itself to generate a new random code." style="border: 1px solid #003399"></a></div>
+		Security Code:<br /><input type="text" name="formcode" style="width:150px;" size="20" />&nbsp;
+	</div>
+	
+	<input name="submit" type="submit" value="Post Comment" />
+</form><br />
+
+<script text="type/javascript">
+	
+	function getElementById(id){
+			var o, d=document;
+			if (d.layers) {o=d.layers[id];if(o) o.style=o};
+			if (!o && d.getElementById) o=d.getElementById(id);
+			if (!o && d.all) o = d.all[id];
+			return o;
+	}
+	
+	var a = getElementById('joterr[+jot.id+]');
+	var b = getElementById('jotcaptcha[+jot.id+]');
+	var c = getElementById('jotguest[+jot.id+]');
+	
+	switch([+form.error+]) {
+		case 1:
+			a.innerHTML = "The security code you entered was incorrect.";
+			a.style.display="block";
+			break;
+		case 2:
+			a.innerHTML = "You can only post once each [+jot.postdelay+] seconds.";
+			a.style.display="block";
+			break;
+		case 3:
+			a.innerHTML = "You forgot to enter a comment.";
+			a.style.display="block";
+			break;
+		case -1:
+			a.innerHTML = "Your comment has been saved, it will first be reviewed before it is published.";
+			a.style.display="block";
+			break;
+		case -2:
+			a.innerHTML = "Your comment has been rejected.";
+			a.style.display="block";
+			break;
+	}
+		
+	if([+jot.captcha+]==1) { b.style.display="inline"; }
+	if([+jot.guestform+]==1) { c.style.display="inline"; }
+	
+</script>

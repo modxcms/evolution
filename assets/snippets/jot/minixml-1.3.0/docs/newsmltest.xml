@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<NewsML>
+  <Catalog Href="http://www.afp.com/dtd/AFPCatalog.xml"/>
+  <NewsEnvelope>
+    <DateAndTime>20040602T085510Z</DateAndTime>
+  </NewsEnvelope>
+  <NewsItem>
+    <Identification>
+      <NewsIdentifier>
+        <ProviderId>afp.com</ProviderId>
+        <DateId>20040602</DateId>
+        <NewsItemId>040602085459.e508mtfk</NewsItemId>
+        <RevisionId PreviousRevision="0" Update="N">1</RevisionId>
+        <PublicIdentifier>urn:newsml:afp.com:20040602:040602085459.e508mtfk:1</PublicIdentifier>
+      </NewsIdentifier>
+      <NameLabel>Iraq-US</NameLabel>
+    </Identification>
+    <NewsManagement>
+      <NewsItemType FormalName="News"/>
+      <FirstCreated>20040602T085459Z</FirstCreated>
+      <ThisRevisionCreated>20040602T085459Z</ThisRevisionCreated>
+      <Status FormalName="Usable"/>
+    </NewsManagement>
+    <NewsComponent>
+      <NewsLines>
+        <HeadLine>Iraqi cabinet readies for transition, draft UN resolution boosts sovereignty</HeadLine>
+        
+        <DateLine>BAGHDAD (AFP)</DateLine>
+        <CopyrightLine>© 2004 AFP</CopyrightLine>
+      </NewsLines>
+      <AdministrativeMetadata>
+        <Provider>
+          <Party FormalName="AFP"/>
+        </Provider>
+      </AdministrativeMetadata>
+      <DescriptiveMetadata>
+        <Language FormalName="en"/> 
+	<Genre FormalName="sched"/>
+        <OfInterestTo FormalName="mmd--english--webwires--shared--int"/>
+      </DescriptiveMetadata>
+      <NewsComponent>
+        <ContentItem>
+          <MediaType FormalName="Text"/>
+          <Format FormalName="bcNITF2.5"/>
+          <DataContent>
+            <media media-type="image" style="rightSide">
+<media-reference mime-type="" data-location="#photo0" />
+</media>
+<p>The newly-appointed Iraqi government began preparing for full sovereignty handover from US-led occupation authorities at the end of the month, and received a boost from a new US-British UN resolution draft giving it increased security control.</p>
+
+            <p>While coalition officials hailed the diversity of the line-up presented Tuesday by prime minister Iyad Allawi, some Iraqis were dismissive of a cabinet consisting chiefly of former exiles.</p>
+            <p>UN envoy Lakhdar Brahimi, who had been entrusted with the nomination process and came under pressure from all sides, fell short of his plan to select a government which would be both popular and at the same time willing to work closely with the coalition.</p>
+            <p>UN chief Kofi Annan could not disguise his displeasure that Brahimi was frozen out of the process by Iraqi and US officials opposed to his vision for a technocratic government.</p>
+            <p>"We all have to recognise that the process wasn't perfect," Annan said Tuesday.</p>
+            <p>Brahimi himself stressed on Wednesday at a press conference that the leaders were not elected and would have their work cut out to gain legitimacy. "It will not be easy for them to prove the sceptics wrong," he said.</p>
+            <p>Kurdish leaders took plum posts in the government and tribal leader Ghazi al-Yawar was named president after elder statesman Adnan Pachachi refused the post.</p>
+            <p>The US-backed Allawi hailed the nomination of the new government as an historic step towards sovereignty but showed no sign of rushing to ease the coalition out of Iraq.</p>
+            <media media-type="image" style="leftSide">
+<media-reference mime-type="" data-location="#photo1" />
+</media>
+<p>"We Iraqis are just like the rest of the peoples in the world. We don't want our country to remain under occupation," he said but then went on to stress that Baghdad would still rely heavily on the US-led coalition.</p>
+
+            <p>"We are seeking to be able to deal in the best possible way with the terrorism and security threats by ourselves but because of the situation prevailing it appears to be impossible and we will need the help and support of the multinational forces to defeat the enemies of Iraq, who don't want stability, freedom and prosperity for us," he explained.</p>
+            <p>At the United Nations, changes were made to a UN Security Council resolution sponsored by Britain and the United States after an outcry from other council nations about sending a clear signal that Iraq will gain full sovereignty when the US-led occupation on June 30 hands power to the interim government.</p>
+            <p>Under the new draft, obtained by AFP, the mandate of US-led troops who will remain in Iraq after this month would expire "upon completion of the political process" to create a constitutionally elected Iraqi government.</p>
+            <p>But with that expected to take until late 2005 or even early 2006, it was not immediately clear if the changes would satisfy opposition to the first text led by China, France and Germany.</p>
+            <p>And the draft still fails to clarify the level of sovereignty the Iraqi leadership will enjoy after June 30, in the run-up to elections next year.</p>
+            <media media-type="image" style="rightSide">
+<media-reference mime-type="" data-location="#photo2" />
+</media>
+<p>Iraq's interim foreign minister Hoshyar Zebari who flew to New York on Tuesday was expected to meet Security Council members on Thursday.</p>
+
+            <p>The new government was greeted Tuesday by a new surge of violence on the ground, with car bombs in Baghdad and the northern town of Bayji killing a total of 14.</p>
+            <p>Fresh fighting broke out between members of radical Shiite cleric Moqtada Sadr's militia and US forces, leaving eight Iraqi fighters dead and 23 wounded, medical sources said.</p>
+            <p>One was killed and 12 wounded near a US base in Najaf, while five were killed and 11 wounded in the twin city of Kufa.</p>
+            <p>In the Baghdad neighbourhood of Sadr City, two militiamen were also killed by US troops, Sadr's office said.</p>
+            <p>The renewed bloodshed came a day after the governor of Najaf announced 72-hour truce between the two sides.</p>
+            <p>Meanwhile, three coalition soldiers were wounded near the town of Kish, south of Baghdad, when gunmen ambushed a group of soldiers on their way to the inauguration of a local school, said the Polish command in the region.</p>
+          </DataContent>
+        </ContentItem>
+      </NewsComponent>
+      <NewsComponent Duid="photo0">
+        <NewsLines> 
+          <HeadLine>Iraqis stand on a pavement in Baghdad to read headlines about the new government</HeadLine>
+        </NewsLines> 
+        <AdministrativeMetadata>
+          <Provider>
+            <Party FormalName="AFP"/>
+          </Provider>
+          <Creator>
+            <Party FormalName="Awad Awad"/>
+          </Creator>
+        </AdministrativeMetadata>
+        <NewsComponent>
+          <Role FormalName="Caption"/>
+          <ContentItem>
+            <MediaType FormalName="Text"/>
+            <Format FormalName="bcNITF2.5"/>
+            <DataContent>
+              <p>Iraqis stand on a pavement in Baghdad reading the newspaper headlines a day after the first post-Saddam Hussein era government was unveiled</p>
+            </DataContent>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Thumbnail"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo00.default-71x100.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="71"/>
+              <Property FormalName="Height" Value="100"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Quicklook"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo00.default-174x245.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="174"/>
+              <Property FormalName="Height" Value="245"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Preview"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo00.default-274x384.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="274"/>
+              <Property FormalName="Height" Value="384"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+      </NewsComponent>
+      <NewsComponent Duid="photo1">
+        <NewsLines> 
+          <HeadLine>Iraqi's at a Baghdad coffee shop watch the installing of the new government</HeadLine>
+        </NewsLines> 
+        <AdministrativeMetadata>
+          <Provider>
+            <Party FormalName="AFP"/>
+          </Provider>
+          <Creator>
+            <Party FormalName="Awad Awad"/>
+          </Creator>
+        </AdministrativeMetadata>
+        <NewsComponent>
+          <Role FormalName="Caption"/>
+          <ContentItem>
+            <MediaType FormalName="Text"/>
+            <Format FormalName="bcNITF2.5"/>
+            <DataContent>
+              <p>An Iraqi man points at the television in a Baghdad coffee shop showing the new President of Iraq Sheikh Ghazi al-Yawar speaking during the official ceremony installing a new interim government. The US-led occupation force in Iraq dissolved the Governing Council which it set up after toppling Saddam Hussein 14 months ago and installed a new interim government as the UN Security Council prepared to debate a resolution on the country's future</p>
+            </DataContent>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Thumbnail"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo01.default-120x80.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="120"/>
+              <Property FormalName="Height" Value="80"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Quicklook"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo01.default-245x163.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="245"/>
+              <Property FormalName="Height" Value="163"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Preview"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo01.default-384x256.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="384"/>
+              <Property FormalName="Height" Value="256"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+      </NewsComponent>
+      <NewsComponent Duid="photo2">
+        <NewsLines> 
+          <HeadLine>Fighter of radical Shiite Muslim cleric Moqtada Sadr's Mehdi Army runs down a street during clashes with US troops</HeadLine>
+        </NewsLines> 
+        <AdministrativeMetadata>
+          <Provider>
+            <Party FormalName="AFP"/>
+          </Provider>
+          <Creator>
+            <Party FormalName="Ahmad Al-Rubaye"/>
+          </Creator>
+        </AdministrativeMetadata>
+        <NewsComponent>
+          <Role FormalName="Caption"/>
+          <ContentItem>
+            <MediaType FormalName="Text"/>
+            <Format FormalName="bcNITF2.5"/>
+            <DataContent>
+              <p>A fighter of radical Shiite Muslim cleric Moqtada Sadr's Mehdi Army runs down a street during clashes with US troops in the town of Kufa, a few kilometers away from the holy city of Najaf south of Baghdad</p>
+            </DataContent>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Thumbnail"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo02.default-71x80.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="71"/>
+              <Property FormalName="Height" Value="80"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Quicklook"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo02.default-217x245.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="217"/>
+              <Property FormalName="Height" Value="245"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+        <NewsComponent>
+          <Role FormalName="Preview"/>
+          <ContentItem Href="SGE.ANZ39.020604085451.photo02.default-341x384.jpg">
+            <MediaType FormalName="Photo"/>
+            <Characteristics>
+              <Property FormalName="Width" Value="341"/>
+              <Property FormalName="Height" Value="384"/>
+            </Characteristics>
+          </ContentItem>
+        </NewsComponent>
+      </NewsComponent>
+    </NewsComponent>
+  </NewsItem>
+</NewsML>
