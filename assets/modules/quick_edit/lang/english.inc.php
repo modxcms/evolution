@@ -46,6 +46,7 @@ $_lang['apply'] = 'Apply';
 $_lang['revert_prompt'] = 'Undo ALL of your edits?';
 $_lang['QE_no_edit_rights'] = 'No edit rights';
 $_lang['ok'] = 'OK';
+$_lang['content'] = 'Content';
 $_lang['setting'] = 'Settings';
 $_lang['go'] = 'Go';
 

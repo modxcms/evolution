@@ -8,7 +8,7 @@
  * Version:        1.0
  * MODx version:   0.9.5
 */
-$style_path = "media/style/MODxLightBlue/";
+$style_path = "media/style/MODx/";
 
 // Tree Menu Toolbar
 $_style["expand_tree"] = "<img src=\"".$style_path."images/icons/down.gif\" />";

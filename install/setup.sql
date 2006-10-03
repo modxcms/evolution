@@ -253,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugin_events` (
   `pluginid` INT(10) NOT NULL,
   `evtid` INT(10) NOT NULL,
-  `priority` INT(10) NOT NULL COMMENT 'determines the run order of the plugin',  
+  `priority` INT(10) NOT NULL COMMENT 'determines plugin run order'
 ) TYPE=MyISAM COMMENT='Links to system events';
 
 
