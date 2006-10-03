@@ -3,9 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1602 - October 2, 2006)
+MOD 0.9.5 beta 4 (rev 1606 - October 3, 2006)
 ====================================
 
+* Fix for IE styling issues in file manager
+* Amend getUserData() in document parser so the include filename respects case-sensitivity.
+* Changed phpSniff include in getUserData.extender.php to use $modx->config['base_path'] and not $modx->getManagerPath() so the full path to the file is used.
 * Added Jot 1.0 and updated eFormt to release 1.3 (1602)
 * Change Tiny MCE plugin to use relative URLs, set default theme to MODx Light  and set RTE to Tiny MCE for new installs (1596)
 * Revise top-level manager menu oreder; move clear cache back to site menu (with preview site menu item) (1588)
