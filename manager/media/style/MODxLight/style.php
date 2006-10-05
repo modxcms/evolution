@@ -37,7 +37,7 @@ $_style["tree_page_pdf"] = $style_path."images/tree/page-pdf.gif";
 $_style["tree_page_secure"] = $style_path."images/tree/page-secure.gif";
 $_style["tree_page_xml"] = $style_path."images/tree/page-xml.gif";
 $_style["tree_plusnode"] = $style_path."images/tree/plusnode.gif";
-$_style["tree_showtree"] = "<img src=\"".$style_path."images/tree/sitemap.png\" />";
+$_style["tree_showtree"] = '<img src="'.$style_path.'images/tree/sitemap.png" width="16" height="16" />';
 $_style["tree_snippetfolder"] = $style_path."images/tree/snippetfolder.gif";
 $_style["tree_snippetfolderopen"] = $style_path."images/tree/snippetfolderopen.gif";
 $_style["tree_weblink"] = $style_path."images/tree/link_go.png";

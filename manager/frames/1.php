@@ -13,14 +13,12 @@ $_SESSION['browser_version']=$version;
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
     <script type="text/javascript" src="media/script/session.js"></script>
 </head>
-<frameset rows="0,20,50,*" border="0">
-	<frame src="index.php?a=1&amp;f=scripter" name="scripter" scrolling="no" frameborder="0">
-	<frame src="index.php?a=1&amp;f=topbar" name="topFrame" scrolling="no" frameborder="0">
-	<frame name="mainMenu" src="index.php?a=1&amp;f=l4mnu" scrolling="no" frameborder="0">
-	<frameset cols="260,*" border="3">
-		<frame src="index.php?a=1&amp;f=3" name="menu" scrolling="auto" frameborder="0">
-		<frame src="index.php?a=2" name="main" scrolling="auto" frameborder="0">
-	</frameset>
+<frameset rows="70,*" border="0">
+    <frame name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize">
+    <frameset cols="260,*" border="3" frameborder="3" framespacing="1" bordercolor="#ffffff">
+        <frame name="tree" src="index.php?a=1&amp;f=tree"  scrolling="no" frameborder="0" onresize="top.tree.resizeTree();">
+        <frame name="main" src="index.php?a=2"  scrolling="auto" frameborder="0">
+    </frameset>
 </frameset>
 <noframes>This software requires a browser with support for frames.</noframes>
 </html>

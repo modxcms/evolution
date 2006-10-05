@@ -156,9 +156,8 @@ hr {
 ---------------------------------------------------------------- */
 #topbar {
     margin: 0;
-    background: #e4e4e4;
     color: #000;
-    padding: 0 20px;
+    padding: 0 5px;
 }
 #topbar * {
     vertical-align: middle;
@@ -175,19 +174,36 @@ hr {
     text-decoration: underline;
 }
 
+#tocText {
+	position: absolute;
+	left: 3px;
+	top: 50px;
+	z-index: 1000;
+}
+
+#tocText,
 #buildText,
 #workText { 
     font-weight: bold; 
     line-height: 16px;
     margin-right: 15px;
 }
+#tocText,
 #buildText img,
 #workText img { 
     margin-right: 5px;
 }
 
+#statusbar {
+	position:absolute;
+	right:0px;
+	top:23px;
+}
+
 #supplementalNav {
     float: right;
+    background: transparent;
+    height:20px;
 }
 
 /* Forms:
@@ -460,12 +476,22 @@ a img {
 .row2 { background-color: #C8DAA2;}
 .row3 { background-color: #F4F4F4;}
 
-#treeMenuBody {
-    background-color: #FCFCFC;
+.treeframebody {
+    background-color: #f4f4f4;
+}
+#treeMenu {
+    background-color: #;
+    border-bottom: 1px solid #ddd;
+}
+#treeMenu * {
+    vertical-align: middle;
 }
 #treeHolder {
+	cursor: default;
+	height: 100%;
     padding: 5px 10px 0 10px;
-    border-top: 1px solid #677E32;
+    border-top: 2px solid #fff;
+    background: #f4f4f4;
 }
 
 #floater {
@@ -476,7 +502,7 @@ a img {
     top: 25px;
     left: 4px;
     background: #fff;
-    border: 1px solid #444;
+    border-bottom: 1px solid #666;
     z-index: 500;
 }
 
@@ -523,6 +549,13 @@ a img {
 .notInMenuNode {
     color: #777;
     text-decoration: none;
+}
+
+#treeSplitter {
+	width:10px;
+	height:100%;
+	position:absolute; 
+	right:0px;
 }
 
 
@@ -749,7 +782,7 @@ img.loginCaptcha {
 
 /* Top Navbar of snap in top menu bar layout*/
 #topMenu {
-    background: #e4e4e4;
+    background: #e4e4e4 url(images/misc/menubg.jpg);
 }
 #Navcontainer {
     padding-left: 10px;
@@ -845,10 +878,15 @@ ul#nav {
 /* Contextual Menu used in the Tree Menu
 ---------------------------------------------------------- */
 #mx_contextmenu {
+	position: absolute;
+	height: auto;
+	visibility: hidden;
+	z-index:10000; 
+	width: 170px;
     background: #fff;
     margin: 0;
     padding: 2px;
-    border: 1px solid #fdfdfd;
+    border: 1px solid #ededed;
     border-right-color: #dcdcdc;
     border-bottom-color: #dcdcdc;
     overflow: hidden;
@@ -994,6 +1032,34 @@ ul#nav {
 .dynamic-tab-pane-control li {
     margin-left: 10px;
 }
+
+/* Tree buttons
+---------------------------------------------------------- */
+.treeButton {
+	display:block;
+    cursor: default;
+    color: #000;
+    border: 1px;
+    border-bottom-color: #809c47;
+    padding: 3px 5px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.treeButton:hover {
+    border: 1px solid #006400;
+    padding: 2px 4px;
+    background: #dee9c6;
+}
+
+.treeButtonDisabled {
+    cursor: default;
+    border: 1px solid #006400;
+    padding: 2px 4px;
+    color: #777;
+    border-width: 0;
+}
+
+
 /* WebFX cool buttons... must also remove these...
 ---------------------------------------------------------- */
 .coolButton,
