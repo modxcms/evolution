@@ -1,28 +1,28 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('save_document') && $_REQUEST['a']==51) {
-	$e->setError(3);
-	$e->dumpError();
+    $e->setError(3);
+    $e->dumpError();
 }
 
 function isNumber($var)
 {
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
+    if(strlen($var)==0) {
+        return false;
     }
-	return true;
+    for ($i=0;$i<strlen($var);$i++) {
+        if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
+            return false;
+        }
+    }
+    return true;
 }
 
 if(isset($_REQUEST['id'])) {
-	$id = $_REQUEST['id'];
+    $id = $_REQUEST['id'];
 } else {
-	$e->setError(2);
-	$e->dumpError();
+    $e->setError(2);
+    $e->dumpError();
 }
 
 // check permissions on the document
@@ -33,45 +33,45 @@ $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
 
 if(!$udperms->checkPermissions()) {
-	?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-	<p><?php echo $_lang['access_permission_denied']; ?></p>
-	<?php
-	include("footer.inc.php");
-	exit;
+    ?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+    <p><?php echo $_lang['access_permission_denied']; ?></p>
+    <?php
+    include("footer.inc.php");
+    exit;
 }
 ?>
 
 <script language="javascript">
-parent.menu.ca = "move";
+parent.tree.ca = "move";
 
 function setMoveValue(pId, pName) {
-	if (pId==0 || checkParentChildRelation(pId, pName)) {
-		document.newdocumentparent.new_parent.value=pId;
-		document.getElementById('parentName').innerHTML = "<?php echo $_lang['new_parent']; ?>: <b>" + pId + "</b> (" + pName + ")";
-	}
+    if (pId==0 || checkParentChildRelation(pId, pName)) {
+        document.newdocumentparent.new_parent.value=pId;
+        document.getElementById('parentName').innerHTML = "<?php echo $_lang['new_parent']; ?>: <b>" + pId + "</b> (" + pName + ")";
+    }
 }
 
 // check if the selected parent is a child of this document
 function checkParentChildRelation(pId, pName) {
-	var sp;
-	var id = document.newdocumentparent.id.value;
-	var tdoc = parent.menu.document;
-	var pn = (tdoc.getElementById) ? tdoc.getElementById("node"+pId) : tdoc.all["node"+pId];
-	if (!pn) return;
-	if (pn.id.substr(4)==id) {
-		alert("<?php echo $_lang['illegal_parent_self']; ?>");
-		return;
-	}
-	else {
-		while (pn.p>0) {
-			pn = (tdoc.getElementById) ? tdoc.getElementById("node"+pn.p) : tdoc.all["node"+pn.p];
-			if (pn.id.substr(4)==id) {
-				alert("<?php echo $_lang['illegal_parent_child']; ?>");
-				return;
-			}
-		}
-	}
-	return true;
+    var sp;
+    var id = document.newdocumentparent.id.value;
+    var tdoc = parent.tree.document;
+    var pn = (tdoc.getElementById) ? tdoc.getElementById("node"+pId) : tdoc.all["node"+pId];
+    if (!pn) return;
+    if (pn.id.substr(4)==id) {
+        alert("<?php echo $_lang['illegal_parent_self']; ?>");
+        return;
+    }
+    else {
+        while (pn.p>0) {
+            pn = (tdoc.getElementById) ? tdoc.getElementById("node"+pn.p) : tdoc.all["node"+pn.p];
+            if (pn.id.substr(4)==id) {
+                alert("<?php echo $_lang['illegal_parent_child']; ?>");
+                return;
+            }
+        }
+    }
+    return true;
 }
 
 </script>
@@ -81,14 +81,14 @@ function checkParentChildRelation(pId, pName) {
 <div class="subTitle">
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['move_document_title']; ?></span>
 
-	<table cellpadding="0" cellspacing="0">
-		<tr>
-			<td id="Button1" onclick="document.newdocumentparent.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
-		</tr>
-	</table>
+    <table cellpadding="0" cellspacing="0">
+        <tr>
+            <td id="Button1" onclick="document.newdocumentparent.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
+                <script type="text/javascript">createButton(document.getElementById("Button1"));</script>
+            <td id="Button2" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+                <script type="text/javascript">createButton(document.getElementById("Button2"));</script>
+        </tr>
+    </table>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['move_document_title']; ?></div><div class="sectionBody">

@@ -32,22 +32,22 @@ $tbldg = $dbase.".".$table_prefix."document_groups";
 // get document groups for current user
 if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
 $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
-		  (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
+          (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
 $sql = "SELECT DISTINCT sc.*
-		FROM $tblsc sc
-		LEFT JOIN $tbldg dg on dg.document = sc.id
-		WHERE sc.id = $id
-		AND ($access);";
+        FROM $tblsc sc
+        LEFT JOIN $tbldg dg on dg.document = sc.id
+        WHERE sc.id = $id
+        AND ($access);";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
-	echo " Internal System Error...<p>";
-	print "More results returned than expected. <p>Aborting.";
-	exit;
+    echo " Internal System Error...<p>";
+    print "More results returned than expected. <p>Aborting.";
+    exit;
 }
 else if($limit==0){
-	$e->setError(15);
-	$e->dumpError();
+    $e->setError(15);
+    $e->dumpError();
 }
 $content = mysql_fetch_assoc($rs);
 
@@ -80,32 +80,32 @@ $sql = "SELECT k.keyword FROM $dbase.".$table_prefix."site_keywords as k, $dbase
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit > 0) {
-	for($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
-		$keywords[$i] = $row['keyword'];
-	}
+    for($i=0;$i<$limit;$i++) {
+        $row = mysql_fetch_assoc($rs);
+        $keywords[$i] = $row['keyword'];
+    }
 } else {
-	$keywords = array();
+    $keywords = array();
 }
 // end keywords stuff
 
 ?>
 
 <div class="subTitle">
-	<span class="right"><?php echo $_lang["doc_data_title"]; ?></span>
+    <span class="right"><?php echo $_lang["doc_data_title"]; ?></span>
 
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button1" onclick="editdocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
-		<td id="Button2" onclick="movedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
-		<td id="Button4" onclick="duplicatedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-		<td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
-	</table>
-	<script type="text/javascript">
-	    createButton(document.getElementById("Button1"));
-	    createButton(document.getElementById("Button2"));
-	    createButton(document.getElementById("Button4"));
-	    createButton(document.getElementById("Button3"));
-	</script>
+    <table cellpadding="0" cellspacing="0">
+        <td id="Button1" onclick="editdocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
+        <td id="Button2" onclick="movedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
+        <td id="Button4" onclick="duplicatedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
+        <td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
+    </table>
+    <script type="text/javascript">
+        createButton(document.getElementById("Button1"));
+        createButton(document.getElementById("Button2"));
+        createButton(document.getElementById("Button4"));
+        createButton(document.getElementById("Button3"));
+    </script>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang["page_data_title"]; ?></div>
@@ -138,13 +138,13 @@ if($limit > 0) {
   </tr>
     <tr>
     <td valign="top"><?php echo $_lang['keywords']; ?>: </td>
-	<td><?php
-	  	if(count($keywords) != 0) {
-	  		echo join($keywords, ", ");
-	  	} else {
-			echo "(<i>".$_lang['notset']."</i>)";
-		}
-	?></td>
+    <td><?php
+        if(count($keywords) != 0) {
+            echo join($keywords, ", ");
+        } else {
+            echo "(<i>".$_lang['notset']."</i>)";
+        }
+    ?></td>
   </tr>
   <tr>
     <td colspan="2">&nbsp;</td>
@@ -174,39 +174,39 @@ if($editedbyname!='') {
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_status"]; ?>: </td>
-	<td><?php echo $content['published']==0 ? "<b style='color: #821517'>".$_lang['page_data_unpublished']."</b>" : "<b style='color: #006600'>".$_lang['page_data_published']."</b>"; ?></td>
+    <td><?php echo $content['published']==0 ? "<b style='color: #821517'>".$_lang['page_data_unpublished']."</b>" : "<b style='color: #006600'>".$_lang['page_data_published']."</b>"; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_publishdate"]; ?>: </td>
-	<td><?php echo $content['pub_date']==0 ? "(<i>".$_lang["notset"]."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']); ?></td>
+    <td><?php echo $content['pub_date']==0 ? "(<i>".$_lang["notset"]."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']); ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_unpublishdate"]; ?>: </td>
-	<td><?php echo $content['unpub_date']==0 ? "(<i>".$_lang["notset"]."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']); ?></td>
+    <td><?php echo $content['unpub_date']==0 ? "(<i>".$_lang["notset"]."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']); ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_cacheable"]; ?>: </td>
-	<td><?php echo $content['cacheable']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
+    <td><?php echo $content['cacheable']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_searchable"]; ?>: </td>
-	<td><?php echo $content['searchable']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
+    <td><?php echo $content['searchable']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang['document_opt_menu_index']; ?>: </td>
-	<td><?php echo $content['menuindex']; ?></td>
+    <td><?php echo $content['menuindex']; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang['document_opt_show_menu']; ?>: </td>
-	<td><?php echo $content['hidemenu']==1 ? $_lang['no'] : $_lang['yes']; ?></td>
+    <td><?php echo $content['hidemenu']==1 ? $_lang['no'] : $_lang['yes']; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_web_access"]; ?>: </td>
-	<td><?php echo $content['privateweb']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/style/".($manager_theme ? "$manager_theme/":"")."images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
+    <td><?php echo $content['privateweb']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/style/".($manager_theme ? "$manager_theme/":"")."images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_mgr_access"]; ?>: </td>
-	<td><?php echo $content['privatemgr']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/style/".($manager_theme ? "$manager_theme/":"")."images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
+    <td><?php echo $content['privatemgr']==0 ? $_lang['public'] : "<b style='color: #821517'>".$_lang['private']."</b> <img src='media/style/".($manager_theme ? "$manager_theme/":"")."images/icons/secured.gif' align='absmiddle' width='16' height='16' />"; ?></td>
   </tr>
   <tr>
     <td colspan="2">&nbsp;</td>
@@ -216,15 +216,15 @@ if($editedbyname!='') {
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_template"]; ?>: </td>
-	<td><?php echo $templatename ?></td>
+    <td><?php echo $templatename ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_editor"]; ?>: </td>
-	<td><?php echo $content['richtext']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
+    <td><?php echo $content['richtext']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
   </tr>
   <tr>
     <td><?php echo $_lang["page_data_folder"]; ?>: </td>
-	<td><?php echo $content['isfolder']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
+    <td><?php echo $content['isfolder']==0 ? $_lang['no'] : $_lang['yes']; ?></td>
   </tr>
 </table>
 </div>
@@ -246,24 +246,15 @@ $buffer = "";
 $filename = "../assets/cache/docid_".$id.".pageCache.php";
 $handle = @fopen($filename, "r");
 if(!$handle) {
-	$buffer = $_lang['page_data_notcached'];
+    $buffer = $_lang['page_data_notcached'];
 } else {
-	while (!feof($handle)) {
-		$buffer .= fgets($handle, 4096);
-	}
-	fclose ($handle);
-	$buffer=$_lang['page_data_cached']."<p><textarea style='width: 100%; height: 400px; border: 3px solid #4791C5;'>".htmlspecialchars($buffer)."</textarea>";
+    while (!feof($handle)) {
+        $buffer .= fgets($handle, 4096);
+    }
+    fclose ($handle);
+    $buffer=$_lang['page_data_cached']."<p><textarea style='width: 100%; height: 400px; border: 3px solid #4791C5;'>".htmlspecialchars($buffer)."</textarea>";
 }
 
 echo $buffer;
 ?>
 </div>
-<!-- This doesn't seem to do anything...
-<script type="text/javascript">
-try {
-	top.menu.Sync(<?php echo $id; ?>);
-} catch(oException) {
-	xyy=window.setTimeout("loadagain(<?php echo $id; ?>)", 1000);
-}
-</script>
--->

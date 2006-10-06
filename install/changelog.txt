@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1624 - October 5, 2006)
+MOD 0.9.5 beta 4 (rev 1626 - October 5, 2006)
 ====================================
 
+* Update action pages to reference new frames/menu/tree structure (1626)
 * Merge frames and remove webelm.js for much improved Safari and cross-browser consistency (1623,1624)
 * Added plugin_priority language define to all revised language files (1612)
 * Updated/cleaned launguage files with utf8 encoding when possible (1610)
