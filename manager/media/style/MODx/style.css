@@ -254,7 +254,7 @@ a img {
 
 .sort-table thead {
 	height: 18px !important;
-	background-color: #97B553;
+	background-color: #4791C5;
 }
 
 .sort-table td {
@@ -289,11 +289,11 @@ a img {
 }
 
 .even {
-	background: #D9E7C2;
+	background: #E5F0FD;
 }
 
 .odd {
-	background: #fff;
+	background: #FFF;
 }
 
 /*	end sortable table */
@@ -606,35 +606,58 @@ img.loginCaptcha {
     margin: 3px 1px 3px 28px; }
 /*end context*/
 
-/*The topbar of manager with the admin icon*/	
-
+/* Topbar:
+---------------------------------------------------------------- */
 #topbar {
     margin: 0;
-    background: #F1F5FE;
-    color: navy;
+    color: #000;
+    padding: 0 5px;
 }
-#topbar a, #topbar a:link, #topbar a:visited {
+#topbar * {
+    vertical-align: middle;
+}
+#topbar a,
+#topbar a:link,
+#topbar a:visited {
     font-weight: bold;
-    color: #FFA000;
-    text-decoration:none;
+    color: #FFA60F;
+    text-decoration: none;
 }
 #topbar a:hover {
-    color: navy;
+    color: #0000ff;
     text-decoration: underline;
 }
+
+#tocText {
+	position: absolute;
+	left: 3px;
+	top: 50px;
+	z-index: 1000;
+}
+
+#tocText,
 #buildText,
 #workText { 
     font-weight: bold; 
     line-height: 16px;
     margin-right: 15px;
 }
+#tocText,
 #buildText img,
 #workText img { 
     margin-right: 5px;
 }
 
+#statusbar {
+	position:absolute;
+	right:0px;
+	top:23px;
+}
+
 #supplementalNav {
     float: right;
+    background: transparent;
+    height:20px;
 }
 
 /* Top Navbar of snap in top menu bar layout*/
@@ -887,6 +910,31 @@ ul#nav {
 }
 .dynamic-tab-pane-control li {
 	margin-left: 10px;
+}
+/* Tree buttons
+---------------------------------------------------------- */
+.treeButton {
+	display:block;
+    cursor: default;
+    color: #000;
+    border: 1px;
+    border-bottom-color: Blue;
+    padding: 3px 5px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.treeButton:hover {
+    border: 1px solid #006400;
+    padding: 2px 4px;
+    background: #CDE0F8;
+}
+
+.treeButtonDisabled {
+    cursor: default;
+    border: 1px solid Blue;
+    padding: 2px 4px;
+    color: #777;
+    border-width: 0;
 }
 /* WebFX cool buttons... must also remove these...
 ---------------------------------------------------------- */

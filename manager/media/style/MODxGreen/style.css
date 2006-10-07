@@ -1,4 +1,4 @@
-/* MODx Green Manager template last update: 23-05-2006*/
+/* MODx Green Manager template last update: 07-10-2006*/
 
 body {
 	margin: 0;
@@ -93,10 +93,11 @@ hr {
 }
 
 .right {
-	font-weight: 	bold;
-	color: 	#fff;
-	float: 	right;
-	padding: 0 20px 0 0;
+	font-weight: bold;
+	color: #000;
+	float: right;
+	padding: 0 20px 20px;
+
 }
 
 .fakefieldset {
@@ -114,8 +115,8 @@ hr {
 }
 
 .sectionHeader, .showHideVisible {
-	margin: 0 10px 4px 10px;
-	padding: 5px 3px 5px 3px;
+	margin: 0 10px 4px 0x;
+	padding: 5px 3px 5px 5px;
 	font-weight: bold;
 	color:                     #fff;
 	background-position: 	top left;
@@ -124,18 +125,17 @@ hr {
 	border: 1px solid #000000;
 	background-image: 	url(images/bg/button_dn.gif);
 }
-.sectionHeader {
+/*.sectionHeader {
     padding: 5px 3px 5px 18px;
     background: url(images/misc/dot.gif) no-repeat 6px 45%;
-}
+}*/
 
 .sectionBody, .layerVisible {
 	position: relative;
-	top: -5px;
 	display: none;
 	background: #fff;
 	border: 1px solid #E2E2E2;
-	margin: 0 10px 20px;
+	margin: 3px 10px 20px;
 	padding: 10px;
 	background-position: 	top right;
 	background-repeat: 	no-repeat;	
@@ -565,6 +565,11 @@ img.loginCaptcha {
 	margin: 0;
 	background: #000;
 	color: #fff;
+	padding: 10px 5px;
+
+}
+#topbar * {
+    vertical-align: middle;
 }
 #topbar a:link{
    font-weight: bold;
@@ -586,7 +591,36 @@ img.loginCaptcha {
 	color: #fff;
 	text-decoration:underline;
 }
+#tocText {
+	position: absolute;
+	left: 3px;
+	top: 50px;
+	z-index: 1000;
+}
 
+#tocText,
+#buildText,
+#workText { 
+    font-weight: bold; 
+    line-height: 12px;
+    margin-right: 15px;
+}
+#buildText img,
+#workText img { 
+    margin-right: 5px;
+}
+#statusbar {
+	position:absolute;
+	right:0px;
+	top:23px;
+}
+
+#supplementalNav {
+    float: right;
+    background: transparent;
+    height:20px;
+	 margin-top:-9px;
+}
 
 
 /* Top Navbar of snap in top menu bar layout*/
@@ -847,7 +881,31 @@ ul#nav {
 .dynamic-tab-pane-control li {
 	margin-left: 10px;
 }
+/* Tree buttons
+---------------------------------------------------------- */
+.treeButton {
+	display:block;
+    cursor: default;
+    color: #000;
+    border: 1px;
+    border-bottom-color: #809c47;
+    padding: 3px 5px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.treeButton:hover {
+    border: 1px solid #006400;
+    padding: 2px 4px;
 
+}
+
+.treeButtonDisabled {
+    cursor: default;
+    border: 1px solid #006400;
+    padding: 2px 4px;
+    color: #777;
+    border-width: 0;
+}
 /* WebFX cool buttons... must also remove these...
 ---------------------------------------------------------- */
 .coolButton,

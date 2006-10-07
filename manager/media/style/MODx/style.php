@@ -68,7 +68,7 @@ $_style["icons_user"] = $style_path."images/icons/user.gif";
 $_style["icons_user_current"] = $style_path."images/icons/user_go.png"; // top bar
 $_style["icons_view_document"] = $style_path."images/icons/context_view.gif";
 $_style["icons_weblink"] = $style_path."images/icons/weblink.gif";
-$_style["icons_working"] = $style_path."images/icons/exclamation.png"; // top bar
+$_style["icons_working"] = $style_path."images/icons/event2.gif"; // top bar
 
 // Large Icons
 $_style["icons_backup_large"] = $style_path."images/icons/backup.gif";

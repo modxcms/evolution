@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1626 - October 5, 2006)
+MOD 0.9.5 beta 4 (rev 1631 - October 5, 2006)
 ====================================
 
 * Update action pages to reference new frames/menu/tree structure (1626)
