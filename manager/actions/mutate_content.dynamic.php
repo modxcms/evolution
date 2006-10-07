@@ -170,13 +170,8 @@ if (isset ($_POST['which_editor'])) {
     $which_editor = $_POST['which_editor'];
 }
 ?>
-<style>
-body {
-    overflow-x : hidden; /* stupid hack for equally stupid MSIE */
-}
-</style>
-<script language="JavaScript" src="media/script/datefunctions.js"></script>
-<script language="JavaScript">
+<script type="text/javascript" src="media/script/datefunctions.js"></script>
+<script type="text/javascript">
 
 // save tree folder state
 parent.tree.saveFolderState();
@@ -422,7 +417,7 @@ function showParameters(ctrl) {
     // setup parameters
     dp = (snippetParams[df]) ? snippetParams[df].split("&"):[""];
     if(dp) {
-        t='<table width="100%" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
+        t='<table width="100%" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?><\/td><td width="50%"><?php echo $_lang['value']; ?><\/td><\/tr><\/thead>';
         for(p in dp) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -436,26 +431,26 @@ function showParameters(ctrl) {
             if (dt) {
                 switch(dt) {
                 case 'int':
-                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
+                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" \/>';
                     break;
                 case 'list':
                     c = '<select name="prop_'+key+'" height="1" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
                     ls = (ar[2]+'').split(",");
                     if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
                     for(i=0;i<ls.length;i++){
-                        c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'</option>';
+                        c += '<option value="'+ls[i]+'"'+((ls[i]==value)? ' selected="selected"':'')+'>'+ls[i]+'<\/option>';
                     }
-                    c += '</select>';
+                    c += '<\/select>';
                     break;
                 default:  // string
-                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
+                    c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" \/>';
                     break;
 
                 }
-                t +='<tr><td bgcolor="#FFFFFF" width="50%">'+desc+'</td><td bgcolor="#FFFFFF" width="50%">'+c+'</td></tr>';
+                t +='<tr><td bgcolor="#FFFFFF" width="50%">'+desc+'<\/td><td bgcolor="#FFFFFF" width="50%">'+c+'<\/td><\/tr>';
             };
         }
-        t+='</table>';
+        t+='<\/table>';
         td = (document.getElementById) ? document.getElementById('snippetparams'):document.all['snippetparams'];
         td.innerHTML = t;
     }
@@ -524,47 +519,45 @@ $evtOut = $modx->invokeEvent("OnDocFormPrerender", array (
 if (is_array($evtOut))
     echo implode("", $evtOut);
 ?>
-<input type="hidden" name="a" value="5">
-<input type="hidden" name="id" value="<?php echo $content['id'];?>">
-<input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>">
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576; ?>">
-<input type="hidden" name="refresh_preview" value="0">
-<input type="hidden" name="variablesmodified" value="">
-<input type="hidden" name="newtemplate" value="">
+<input type="hidden" name="a" value="5" />
+<input type="hidden" name="id" value="<?php echo $content['id'];?>" />
+<input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>" />
+<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576; ?>" />
+<input type="hidden" name="refresh_preview" value="0" />
+<input type="hidden" name="variablesmodified" value="" />
+<input type="hidden" name="newtemplate" value="" />
 
 <div class="subTitle">
     <span class="right"><?php echo $_lang['edit_document_title']; ?></span>
 
     <table cellpadding="0" cellspacing="0">
         <tr>
-            <td id="Button1" onclick="documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-                <script type="text/javascript">createButton(document.getElementById("Button1"));</script>
-            <td id="Button2" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-                <script type="text/javascript">createButton(document.getElementById("Button2"));</script>
-                <?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?><script type="text/javascript">document.getElementById("Button2").setEnabled(false);</script><?php } ?>
-            <td id="Button5" onclick="<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-                <script type="text/javascript">createButton(document.getElementById("Button5"));</script>
+            <td id="Button1" onclick="documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></td>
+            <td id="Button2" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" /> <?php echo $_lang['delete']; ?></td>
+            <td id="Button5" onclick="<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></td>
         </tr>
     </table>
+    <script type="text/javascript">
+        createButton(document.getElementById("Button1"));
+        createButton(document.getElementById("Button2"));
+        createButton(document.getElementById("Button5"));
+        <?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?>document.getElementById("Button2").setEnabled(false);<?php } ?>
+    </script>
     <div class="stay">
     <table border="0" cellspacing="1" cellpadding="1">
     <tr>
         <td><span class="comment">&nbsp;<?php echo $_lang["after_saving"];?>:</span></td>
-        <td><input name="stay" type="radio" class="inputBox" value="1"  <?php echo $_REQUEST['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
-        <td><input name="stay" type="radio" class="inputBox" value="2"  <?php echo $_REQUEST['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
-        <td><input name="stay" type="radio" class="inputBox" value=""  <?php echo $_REQUEST['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
+        <td><input name="stay" type="radio" class="inputBox" value="1" <?php echo $_REQUEST['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
+        <td><input name="stay" type="radio" class="inputBox" value="2" <?php echo $_REQUEST['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
+        <td><input name="stay" type="radio" class="inputBox" value="" <?php echo $_REQUEST['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
     </tr>
     </table>
     </div>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['document_setting']; ?></div><div class="sectionBody">
-    <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <div class="tab-pane" id="documentPane">
-        <script type="text/javascript">
-            tpSettings = new WebFXTabPane(document.getElementById( "documentPane" ),false);
-        </script>
 
         <!-- General -->
         <div class="tab-page" id="tabGeneral">
@@ -578,34 +571,34 @@ if ($content['type'] == "reference" || $_REQUEST['a'] == 72) {
 ?>
             <table width="450" border="0" cellspacing="0" cellpadding="0">
               <tr style="height: 24px;">
-                <td width='100px' align="left"><span class='warning'><?php echo $_lang['document_title']; ?></span></span></td>
-                <td ><input name="pagetitle" type="text" maxlength="100" value="<?php echo htmlspecialchars(stripslashes($content['pagetitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td width='100' align="left"><span class='warning'><?php echo $_lang['document_title']; ?></span></td>
+                <td><input name="pagetitle" type="text" maxlength="100" value="<?php echo htmlspecialchars(stripslashes($content['pagetitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
-                <td width='100px' align="left"><span class='warning'><?php echo $_lang['long_title']; ?></span></span></td>
-                <td ><input name="longtitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td align="left"><span class='warning'><?php echo $_lang['long_title']; ?></span></td>
+                <td><input name="longtitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['document_description']; ?></span></td>
-                <td ><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['description']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_description_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><span class='warning'><?php echo $_lang['document_description']; ?></span></td>
+                <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['description']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_description_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['document_alias']; ?></span></td>
-                <td ><input name="alias" type="text" maxlength="100" value="<?php echo stripslashes($content['alias']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_alias_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><span class='warning'><?php echo $_lang['document_alias']; ?></span></td>
+                <td><input name="alias" type="text" maxlength="100" value="<?php echo stripslashes($content['alias']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_alias_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['link_attributes']; ?></span></td>
-                <td ><input name="link_attributes" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['link_attributes']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['link_attributes_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><span class='warning'><?php echo $_lang['link_attributes']; ?></span></td>
+                <td><input name="link_attributes" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['link_attributes']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['link_attributes_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
             <?php if($content['type']=="reference" || $_REQUEST['a']==72) { ?>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['weblink']; ?></span> <img name="llock" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif" width="18" height="18" align="absmiddle" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
-                <td ><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://" ;?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_weblink_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><span class='warning'><?php echo $_lang['weblink']; ?></span> <img name="llock" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif" width="18" height="18" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
+                <td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://" ;?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_weblink_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
             <?php } else { ?>
               <tr style="height: 24px;">
-                <td valign="top" width='100px' align="left"><span class='warning'><?php echo $_lang['document_summary']; ?></span></span></td>
-                <td valign="top"><textarea name="introtext" type="text" maxlength="64000"  class="inputBox" rows="3" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars(stripslashes($content['introtext']));?></textarea>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_summary_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td valign="top" width="100" align="left"><span class='warning'><?php echo $_lang['document_summary']; ?></span></td>
+                <td valign="top"><textarea name="introtext" class="inputBox" rows="3" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars(stripslashes($content['introtext']));?></textarea>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_summary_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
              <?php } ?>
               <tr style="height: 24px;">
@@ -636,19 +629,19 @@ $sql = "select templatename, id from $dbase." . $table_prefix . "site_templates"
             }
             ?>
                 </select>
-                &nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_template_help']; ?>" onclick="alert(this.alt);" style="cursor:help;">
+                &nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_template_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" />
                 </td>
               </tr>
               <tr style="height: 24px;">
                 <td align="left" style="width:100px;"><span class='warning'><?php echo $_lang['document_opt_menu_title']; ?></span></td>
-                <td><input name="menutitle" type="text" maxlength="100" value="<?php echo htmlspecialchars(stripslashes($content['menutitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><input name="menutitle" type="text" maxlength="100" value="<?php echo htmlspecialchars(stripslashes($content['menutitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
                 <td align="left" style="width:100px;"><span class='warning'><?php echo $_lang['document_opt_menu_index']; ?></span></td>
                 <td>
                 <table border="0" cellspacing="0" cellpadding="0" style="width:325px;"><tr>
-                <td><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex'];?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;"><input type="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_index_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
-                <td align="right"><span class='warning'><?php echo $_lang['document_opt_show_menu']; ?></span>&nbsp;<input name="hidemenucheck" type="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''; ?> onclick="changestate(document.mutate.hidemenu);"><input type="hidden" name="hidemenu" value="<?php echo ($content['hidemenu']==1) ? 1 : 0 ;?>" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_show_menu_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+                <td><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex'];?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;" /><input type="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_menu_index_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+                <td align="right"><span class='warning'><?php echo $_lang['document_opt_show_menu']; ?></span>&nbsp;<input name="hidemenucheck" type="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''; ?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" value="<?php echo ($content['hidemenu']==1) ? 1 : 0 ;?>" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_show_menu_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
                 </tr>
                 </table>
                 </td>
@@ -693,7 +686,7 @@ if (isset ($_REQUEST['id'])) {
                     $parentname = $site_name;
         $content['parent'] = 0;
             }
-            ?>&nbsp;<img name="plock" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif" width="18" height="18" align="absmiddle" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /><b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?> (<?php echo $parentname; ?>)</span></b><br />
+            ?>&nbsp;<img name="plock" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif" width="18" height="18" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /><b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?> (<?php echo $parentname; ?>)</span></b><br />
             <span class="comment" style="width:300px;"><?php echo $_lang['document_parent_help'];?></span>
             <input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?>" onchange="documentDirty=true;" />
                 </td>
@@ -708,28 +701,28 @@ if (isset ($_REQUEST['id'])) {
             <table width="450" border="0" cellspacing="0" cellpadding="0">
               <tr style="height: 24px;">
                 <td width="150"><span class='warning'><?php echo $_lang['document_opt_folder']; ?></span></td>
-                <td><input name="isfoldercheck" type="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : "" ;?> onclick="changestate(document.mutate.isfolder);"><input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0 ;?>" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_folder_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><input name="isfoldercheck" type="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : "" ;?> onclick="changestate(document.mutate.isfolder);" /><input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0 ;?>" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_folder_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
             <?php if($content['type']!="reference" && $_REQUEST['a']!=72) { ?>
               <tr style="height: 24px;">
                 <td><span class='warning'><?php echo $_lang['document_opt_richtext']; ?></span></td>
-                <td><input name="richtextcheck" type="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? "" : "checked" ;?> onclick="changestate(document.mutate.richtext);"><input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1 ;?>" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_richtext_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><input name="richtextcheck" type="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? "" : "checked" ;?> onclick="changestate(document.mutate.richtext);" /><input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1 ;?>" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_richtext_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
                 <td width="150"><span class='warning'><?php echo $_lang['track_visitors_title']; ?></span></td>
-                <td><input name="donthitcheck" type="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : "" ;?> onclick="changestate(document.mutate.donthit);"><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0 ;?>" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_trackvisit_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><input name="donthitcheck" type="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : "" ;?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0 ;?>" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_trackvisit_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
             <?php } ?>
               <tr style="height: 24px;">
                 <td><span class='warning'><?php echo $_lang['document_opt_published']; ?></span></td>
-                <td><input name="publishedcheck" type="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.published);"><input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0 ;?>">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_published_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><input name="publishedcheck" type="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.published);" /><input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0 ;?>" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_published_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['page_data_publishdate']; ?></span></td>
-                <td ><input name="pub_date" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']);?>" onblur="documentDirty=true;">
-                        <a onclick="documentDirty=false; cal1.popup();" onmouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>"></a>
-                        <a onclick="document.mutate.pub_date.value=''; document.getElementById('pub_date_show').innerHTML='(<?php echo $_lang['not_set']?>)'; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
-                        &nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_publishdate_help']; ?>" onclick="alert(this.alt);" style="cursor:help;">
+                <td><span class='warning'><?php echo $_lang['page_data_publishdate']; ?></span></td>
+                <td><input name="pub_date" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']);?>" onblur="documentDirty=true;" />
+                        <a onclick="documentDirty=false; cal1.popup();" onmouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>" /></a>
+                        <a onclick="document.mutate.pub_date.value=''; document.getElementById('pub_date_show').innerHTML='(<?php echo $_lang['not_set']?>)'; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
+                        &nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_publishdate_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" />
                 </td>
               </tr>
               <tr>
@@ -737,11 +730,11 @@ if (isset ($_REQUEST['id'])) {
                   <td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['page_data_unpublishdate']; ?></span></td>
-                <td ><input name="unpub_date" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']); ?>" onblur="documentDirty=true;">
-                        <a onclick="documentDirty=false; cal2.popup();" onmouseover="window.status='Select a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0"></a>
-                        <a onclick="document.mutate.unpub_date.value=''; document.getElementById('unpub_date_show').innerHTML = '(not set)'; return true;" onmouseover="window.status='Don\'t set an unpublish date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
-                        &nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_unpublishdate_help']; ?>" onclick="alert(this.alt);" style="cursor:help;">
+                <td><span class='warning'><?php echo $_lang['page_data_unpublishdate']; ?></span></td>
+                <td><input name="unpub_date" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']); ?>" onblur="documentDirty=true;" />
+                        <a onclick="documentDirty=false; cal2.popup();" onmouseover="window.status='Select a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" /></a>
+                        <a onclick="document.mutate.unpub_date.value=''; document.getElementById('unpub_date_show').innerHTML = '(not set)'; return true;" onmouseover="window.status='Don\'t set an unpublish date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date" /></a>
+                        &nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_unpublishdate_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" />
                 </td>
               </tr>
               <tr>
@@ -749,22 +742,22 @@ if (isset ($_REQUEST['id'])) {
                   <td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['page_data_searchable']; ?></span></td>
-                <td ><input name="searchablecheck" type="checkbox" <?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.searchable);"><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? 1 : 0 ;?>" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_searchable_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><span class='warning'><?php echo $_lang['page_data_searchable']; ?></span></td>
+                <td><input name="searchablecheck" type="checkbox" <?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? 1 : 0 ;?>" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_searchable_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
             <?php if($content['type']!="reference" && $_REQUEST['a']!=72) { ?>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['page_data_cacheable']; ?></span></td>
-                <td ><input name="cacheablecheck" type="checkbox" <?php echo (isset($content['cacheable']) && $content['cacheable']==1) || (!isset($content['cacheable']) && $cache_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.cacheable);"><input type="hidden" name="cacheable" value="<?php echo (isset($content['cacheable']) && $content['cacheable']==1) || (!isset($content['cacheable']) && $cache_default==1) ? 1 : 0 ;?>" onchange="documentDirty=true;">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_cacheable_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><span class='warning'><?php echo $_lang['page_data_cacheable']; ?></span></td>
+                <td><input name="cacheablecheck" type="checkbox" <?php echo (isset($content['cacheable']) && $content['cacheable']==1) || (!isset($content['cacheable']) && $cache_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.cacheable);" /><input type="hidden" name="cacheable" value="<?php echo (isset($content['cacheable']) && $content['cacheable']==1) || (!isset($content['cacheable']) && $cache_default==1) ? 1 : 0 ;?>" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_cacheable_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['document_opt_emptycache']; ?></span></td>
-                <td ><input name="syncsitecheck" type="checkbox" checked onclick="changestate(document.mutate.syncsite);"><input type="hidden" name="syncsite" value="1">&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_emptycache_help']; ?>" onclick="alert(this.alt);" style="cursor:help;"></td>
+                <td><span class='warning'><?php echo $_lang['document_opt_emptycache']; ?></span></td>
+                <td><input name="syncsitecheck" type="checkbox" checked onclick="changestate(document.mutate.syncsite);" /><input type="hidden" name="syncsite" value="1" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_emptycache_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
             <?php if($_SESSION['mgrRole']==1) { ?>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['page_data_contentType']; ?></span></td>
-                <td >
+                <td><span class='warning'><?php echo $_lang['page_data_contentType']; ?></span></td>
+                <td>
                     <select name="contentType" class="inputBox" onchange='documentDirty=true;' style="width:200px">
                     <?php
 
@@ -776,12 +769,12 @@ for ($i = 0; $i < count($ct); $i++) {
     echo "<option value=\"" . $ct[$i] . "\"" . ($content['contentType'] == $ct[$i] ? "selected='selected'" : "") . ">" . $ct[$i] . "</option>";
                         }
                     ?>
-                    </select>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_contentType_help']; ?>" onclick="alert(this.alt);" style="cursor:help;">
+                    </select>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_contentType_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" />
                 </td>
               </tr>
               <tr style="height: 24px;">
-                <td ><span class='warning'><?php echo $_lang['document_opt_contentdispo']; ?></span></td>
-                <td ><select name="content_dispo" size="1" onchange="documentDirty=true;" style="width:200px">
+                <td><span class='warning'><?php echo $_lang['document_opt_contentdispo']; ?></span></td>
+                <td><select name="content_dispo" size="1" onchange="documentDirty=true;" style="width:200px">
                 <option value="0"<?php echo !$content["content_dispo"] ? ' selected="selected"':''; ?>><?php echo $_lang['inline']; ?></option>
                 <option value="1"<?php echo $content["content_dispo"]==1 ? ' selected="selected"':''; ?>><?php echo $_lang['attachment']; ?></option>
                 </select>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_contentdispo_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
@@ -789,7 +782,7 @@ for ($i = 0; $i < count($ct); $i++) {
             <?php } else { ?>
             <input type="hidden" name="contentType" value="<?php echo isset($content['contentType']) ? $content['contentType'] : "text/html"; ?>" />
             <?php } ?>
-            <input type="hidden" name="type" value="document">
+            <input type="hidden" name="type" value="document" />
             <?php } else { ?>
             <input type="hidden" name="contentType" value="text/html" />
             <input type="hidden" name="cacheable" value="0" />
@@ -866,7 +859,7 @@ if (isset ($content['id']) && count($keywords) > 0) {
                 <tr>
                 <td>
                     <span class='warning'><?php echo $_lang['keywords']; ?></span><br />
-                    <select name="keywords[]" multiple="multiple"  size="16" class="inputBox" style="width: 200px;" onchange="documentDirty=true;">
+                    <select name="keywords[]" multiple="multiple" size="16" class="inputBox" style="width: 200px;" onchange="documentDirty=true;">
                         <?php
 
                         $keys = array_keys($keywords);
@@ -905,46 +898,11 @@ for ($i = 0; $i < count($keys); $i++) {
         </div>
 <?php } ?>
 
-<?php if($content['type']!="reference" && $_REQUEST['a']!=72) { ?>
-        <!-- Snippets -->
-        <div class="tab-page" id="tabSnippets">
-            <h2 class="tab"><?php echo $_lang["settings_snippets"] ?></h2>
-            <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabSnippets" ) );</script>
-            <table border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td align="left" valign="top" width="10%">
-                <?php echo $_lang['snippets_availabe']; ?>:<br />
-                <table border="0" cellspacing="0" cellpadding="0">
-                <tr><td width="1">
-                <select size="10" name="snippets" style="width:400px;">
-                <?php
-
-$sql = "SELECT * FROM $dbase." . $table_prefix . "site_snippets ORDER BY name ASC;";
-                    $rs = mysql_query($sql);
-                    $limit = mysql_num_rows($rs);
-                    for ($i = 0; $i < $limit; $i++) {
-    $row = mysql_fetch_assoc($rs);
-                        //$sp .= "snippetParams['".$row['id']."']='".$row['properties']."';\n";
-    echo "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
-                    }
-                ?>
-                </select><?php //echo "<script type="text/javascript">$sp;</script>"; ?>
-                </td><td><input type="hidden" onclick="" value="<?php echo $_lang['insert'];?>" title="<?php echo $_lang['insert_snippet'];?>" /></td>
-                </tr>
-                <tr><td colspan="2"></td></tr>
-                </table>
-                <!--select size="10" name="snippetlist" style="width:250px" onclick="showParameters(this)"></select -->
-                </td>
-                <!--td align="left" valign="top" id="snippetparams" width="90%" style="padding-top:35px">&nbsp;</td-->
-              </tr>
-            </table>
-        </div>
-<?php } ?>
 
     <?php if($_REQUEST['a']!='4' && $_REQUEST['a']!=72) { ?>
         <!-- Preview -->
         <div class="tab-page" id="tabPreview">
-            <h2 class="tab"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/preview.gif" align="absmiddle" height="12"> <?php echo $_lang['preview']; ?></h2>
+            <h2 class="tab"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/preview.gif" height="12" /> <?php echo $_lang['preview']; ?></h2>
             <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPreview" ), previewdocument );</script>
             <table width="96%" border="0"><tr><td><?php echo $_lang['preview_msg'];?></td></tr>
             <tr><td><iframe name="preview" frameborder="0" width="100%" height="400" style="border:1px solid #E0E0E0"></iframe></td></tr>
@@ -1020,25 +978,20 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 <?php } ?>
 
 <!-- Template Variables -->
-<?php
-
-    // Modified by Raymond for TV - Orig Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
-if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
-?>
+<?php if ($content['type'] == "document" || $_REQUEST['a'] == 4) { ?>
 <div class='sectionHeader'><?php echo $_lang["settings_templvars"]; ?></div><div class="sectionBody">
 <?php
 
-        // MODIFIED BY S.BRENNAN
-        $template = $default_template;
+    $template = $default_template;
     if (isset ($_REQUEST['newtemplate'])) {
-            $template = $_REQUEST['newtemplate'];
+        $template = $_REQUEST['newtemplate'];
     } else {
         if (isset ($content['template'])) {
                 $template = $content['template'];
-            }
         }
+    }
 
-        $sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
+    $sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
     $sql .= "FROM $dbase." . $table_prefix . "site_tmplvars tv ";
     $sql .= "INNER JOIN $dbase." . $table_prefix . "site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
     $sql .= "LEFT JOIN $dbase." . $table_prefix . "site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = $id ";
@@ -1063,7 +1016,7 @@ if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
                         "tv" . $row['name']
                     );
                 }
-                // splitter
+            // splitter
             if ($i > 0 && $i < $limit)
                 echo '<tr><td colspan="2"><div class="split"></div></td></tr>';
         ?>
@@ -1092,15 +1045,10 @@ if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
 ?>
 </div>
 <?php
-
     } //end check to make sure it is not a weblink
-    // End modification
 ?>
 
-
-
 <?php
-
 if ($use_udperms == 1) {
     $groupsarray = array ();
 
@@ -1181,7 +1129,7 @@ if ($modx->hasPermission('access_permissions')) {
 }
 ?>
 
-<input type="submit" name="save" style="display:none">
+<input type="submit" name="save" style="display:none" />
 <?php
 
     // invoke OnDocFormRender event
