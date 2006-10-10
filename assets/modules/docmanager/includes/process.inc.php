@@ -699,7 +699,7 @@ function processRange($pids, $column, $returnval = 1) {
 			//-- loop through values and parse WHERE SQL statement 
 			$loop = $match[1] - $match[0];
 			for ($i = 0; $i <= $loop; $i++) {
-				if (returnval == 0) {
+				if ($returnval == 0) {
 					$idarray[] = ($i + $match[0]);
 				} else {
 					$pids .= '' . $column . '=\'' . ($i + $match[0]) . '\' OR ';

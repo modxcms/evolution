@@ -3,9 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1655 - October 7, 2006)
+MOD 0.9.5 beta 5 (rev 1667 - October 10, 2006)
 ====================================
 
+* Setting n-m ranges in the DocManager now functions as intended. (1656)
+* Correction to TV count checks for Assigned TVs in the templates section, will now only display sort option if TV count is greater than 1. (1656)
 * DocManager update: Fix menu index parent selection, numerous little bugfixes for js errors. (1649)
 * [FS#444] and [FS#549] Ability to sort TVs by template assignment. (1642,1643,1645,1646)
 * Fix for the QuickEdit language string problem. (1637)

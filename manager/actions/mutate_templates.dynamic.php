@@ -189,11 +189,11 @@ $limit = $modx->db->getRecordCount($rs);
     	<h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2><p />
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
     	<p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>	
-    	<p><?php if($modx->hasPermission('save_template') && $limit > 0) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>
+    	<p><?php if($modx->hasPermission('save_template') && $limit > 1) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>
 <?php
 $tvList = '';
 
-if($limit>1) {
+if($limit>0) {
     for ($i=0;$i<$limit;$i++) {
         $row = $modx->db->getRow($rs);
         if ($i == 0 ) $tvList .= '<br/><ul>';
