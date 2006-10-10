@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1652 - October 7, 2006)
+MOD 0.9.5 beta 5 (rev 1655 - October 7, 2006)
 ====================================
 
 * DocManager update: Fix menu index parent selection, numerous little bugfixes for js errors. (1649)
