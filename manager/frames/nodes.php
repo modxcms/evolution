@@ -97,7 +97,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 FROM $tblsc AS sc 
                 LEFT JOIN $tbldg dg on dg.document = sc.id
                 WHERE (parent=$parent) 
-                AND ($access) 
+                AND ($access)
+                GROUP BY sc.id
                 ORDER BY $orderby";
         $result = mysql_query($sql, $modxDBConn);
         if(mysql_num_rows($result)==0) {

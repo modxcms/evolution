@@ -361,8 +361,9 @@ function sortMenu($id) {
 	$sortableLists = new SLLists($siteURL . 'manager/media/script/scriptaculous/');
 	$sortableLists->addList('categories', 'categoriesListOrder');
 	$sortableLists->debug = false;
-
-	$output .= $sortableLists->printTopJS();
+	if (!isset ($_POST['sortableListsSubmitted'])) {
+		$output .= $sortableLists->printTopJS();
+	}
 
 	$output .= '
 																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
@@ -370,7 +371,7 @@ function sortMenu($id) {
 																<script type="text/javascript" src="' . $siteURL . 'assets/modules/docmanager/js/functions.js"></script>
 																<script type="text/javascript" src="media/script/cb2.js"></script>';
 	$output .= buttonCSS();
-	if (isset ($_POST['sortableListsSubmitted'])) $output.='<script type="text/javascript">parent.menu.updateTree()</script>';
+	if (isset ($_POST['sortableListsSubmitted'])) $output.='<script type="text/javascript">parent.tree.updateTree();</script>';
 	$output .= '	</head><body>
 																<form action="" method="post" name="resetform" style="display: none;">
 																<input name="actionkey" type="hidden" value="0" />
@@ -439,12 +440,13 @@ function sortMenu($id) {
 			}
 		}
 		$output .= '</ul>';
-
 	}
-
-	$output .= $sortableLists->printForm('', 'POST', 'Submit', 'button');
-	$output .= '<br />';
-	$output .= $sortableLists->printBottomJS();
+	
+	if (!isset ($_POST['sortableListsSubmitted'])) {
+		$output .= $sortableLists->printForm('', 'POST', 'Submit', 'button');
+		$output .= '<br />';
+		$output .= $sortableLists->printBottomJS();
+	}
 	$output .= $footer;
 
 	return $output;

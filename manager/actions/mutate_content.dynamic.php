@@ -996,7 +996,7 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
     $sql .= "INNER JOIN $dbase." . $table_prefix . "site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
     $sql .= "LEFT JOIN $dbase." . $table_prefix . "site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = $id ";
     $sql .= "LEFT JOIN $dbase." . $table_prefix . "site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";
-    $sql .= "WHERE tvtpl.templateid = " . $template . " AND (1='" . $_SESSION['mgrRole'] . "' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ") ORDER BY tv.rank;";
+    $sql .= "WHERE tvtpl.templateid = " . $template . " AND (1='" . $_SESSION['mgrRole'] . "' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ") ORDER BY tvtpl.rank,tv.rank;";
         $rs = mysql_query($sql);
         $limit = mysql_num_rows($rs);
     if ($limit > 0) {
@@ -1177,5 +1177,3 @@ if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
     cal2.time_comp = true;
 
 </script>
-
-

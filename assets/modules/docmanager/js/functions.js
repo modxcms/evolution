@@ -198,15 +198,20 @@ function changeOtherLabels() {
 
 /* hide the interaction div when Menu Sort is selected */
 function hideInteraction() {
-	$('tvloading').style.display = 'none';
 	tabActiveID = getCookie("webfxtab_docManagerPane");
-	el = document.getElementById('interaction');
+	if (tabActiveID == '1') { 
+		$('tvloading').style.display = 'none';
+	}
 	if (tabActiveID == '3') {
-		el.style.display = 'none';
-		parent.menu.ca = 'move'; //for menu tree document selection
+		if (document.getElementById('interaction')) {
+			el = document.getElementById('interaction');
+			el.style.display = 'none';
+		}
+		parent.tree.ca = 'move'; //for menu tree document selection
 	} else {
+		el = document.getElementById('interaction');
 		el.style.display = '';
-		parent.menu.ca = '';
+		parent.tree.ca = '';
 	}
 	
 	return true;

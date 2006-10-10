@@ -435,7 +435,7 @@ function showInteraction($showTree = true) {
 											<input type="hidden" name="author_createdby" value="" />
 											<input type="hidden" name="author_editedby" value="" />
 											<input type="hidden" name="tabAction" value="" /> 
-											<input type="submit" name="submit" onclick="postForm(\'tree\');return false;" value="' . $_lang['DM_select_submit'] . '" /><br /><br />';
+											<input type="submit" name="fsubmit" onclick="postForm(\'tree\');return false;" value="' . $_lang['DM_select_submit'] . '" /><br /><br />';
 
 		$output .= getDocTree();
 		$output .= '				</form><br />
@@ -462,7 +462,7 @@ function showInteraction($showTree = true) {
 											<input type="hidden" name="author_editedby" value="" />
 											<input type="hidden" name="tabAction" value ="" /> 
 											<input name="pids" type="text" style="width:90%;" /> 
-											<input type="submit" name="submit" onclick="postForm(\'range\');return false;" value="' . $_lang['DM_select_submit'] . '" /> 
+											<input type="submit" name="fsubmit" onclick="postForm(\'range\');return false;" value="' . $_lang['DM_select_submit'] . '" /> 
 											</form><br /> 
 											';
 		$output .= $_lang['DM_select_range_text'];
@@ -682,7 +682,8 @@ function updateHeader() {
 							.topdiv {border:0;} 
 							.subdiv {border:0;} 
 							ul, li {list-style:none;} 
-							</style> 
+							</style>
+							<script type="text/javascript">var MODX_MEDIA_PATH="media";</script>
 							<script type="text/javascript" src="media/script/modx.js"></script>
 							<script type="text/javascript" src="media/script/cb2.js"></script>';
 	$output .= ButtonCSS();

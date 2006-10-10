@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Written by: Adam Crownoble
  *  Contact: adam@obledesign.com
@@ -33,194 +32,209 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
 
-if(!isset($_lang)) { $_lang = array(); }
+if (!isset ($QE_lang)) {
+	$QE_lang = array ();
+}
 
 class Output {
 
- function Output() {
+	function Output() {
 
-  global $modx;
-  global $base_path;
-  global $_lang;
+		global $modx;
+		global $base_path;
+		global $QE_lang;
 
-  $lang = $modx->config['manager_language'];
-  $qe_path = $base_path.'/'.$GLOBALS['quick_edit_path'];
+		$lang = $modx->config['manager_language'];
+		$qe_path = $base_path . '/' . $GLOBALS['quick_edit_path'];
 
-  $this->output = '';
+		$this->output = '';
 
-  // Combine QE language files with manager language files (manager should override QE)
-  $qe_eng_path = $qe_path.'/lang/english.inc.php';
-  $qe_lang_path = $qe_path.'/lang/'.$lang.'.inc.php';
-  $manager_lang_path = $base_path.'manager/includes/lang/'.$lang.'.inc.php';
-  $lang_set = isset($_lang);
-  include_once($qe_eng_path);
-  if(file_exists($qe_lang_path)) { include_once($qe_lang_path); }
-  if(!$lang_set) { include_once($manager_lang_path); }
+		$_lang = array ();
+		// Combine QE language files with manager language files (manager should override QE)
+		$qe_eng_path = $qe_path . '/lang/english.inc.php';
+		$qe_lang_path = $qe_path . '/lang/' . $lang . '.inc.php';
+		$manager_lang_path = $base_path . 'manager/includes/lang/' . $lang . '.inc.php';
+		$lang_set = isset ($QE_lang);
+		include_once ($qe_eng_path);
+		if (file_exists($qe_lang_path)) {
+			include_once ($qe_lang_path);
+		}
+		if (!$lang_set) {
+			include_once ($manager_lang_path);
+			$QE_lang = $_lang;
+		}
+		unset ($_lang);
+	}
 
- }
+	function mergeTags() {
 
- function mergeTags() {
+		/*
+		 *  Replace content variables that start with a # with <quickedit> tag
+		 *  We can't just replace them with the links because the links would get cached if
+		 *  we did and that's not a good idea, trust me. This way only the custom tags get cached
+		 *  which is harmless enough and the links get added just before the page is rendered.
+		 */
 
-  /*
-   *  Replace content variables that start with a # with <quickedit> tag
-   *  We can't just replace them with the links because the links would get cached if
-   *  we did and that's not a good idea, trust me. This way only the custom tags get cached
-   *  which is harmless enough and the links get added just before the page is rendered.
-   */
+		$output = & $this->output;
+		$output = preg_replace('~\[\*#(.*?)\*\]~', '<quickedit:\\1 />[*\\1*]', $output);
 
-  $output = &$this->output;
-  $output = preg_replace('~\[\*#(.*?)\*\]~', '<quickedit:\\1 />[*\\1*]', $output);
+	}
 
- }
+	function mergeLinks($module_id) {
 
- function mergeLinks($module_id) {
+		/*
+		 *  If you are logged in this function will find the <quickedit:... />
+		 *  tags and replace them with real edit links for frontend editing.
+		 *  It also inserts the styles and javascript necessary to make the
+		 *  parent hover highlighting and editor pop-up window opening possible.
+		 */
 
-  /*
-   *  If you are logged in this function will find the <quickedit:... />
-   *  tags and replace them with real edit links for frontend editing.
-   *  It also inserts the styles and javascript necessary to make the
-   *  parent hover highlighting and editor pop-up window opening possible.
-   */
+		global $modx;
+		global $QE_lang;
+		global $show_manager_link;
+		global $show_help_link;
 
-  global $modx;
-  global $_lang;
-  global $show_manager_link;
-  global $show_help_link;
+		$show_manager_link = $GLOBALS['qe_show_manager_link'];
+		$show_help_link = $GLOBALS['qe_show_help_link'];
+		$editable = explode(',', $GLOBALS['qe_editable']);
+		$manager_link = '';
+		$help_link = '';
+		$allowed = true;
+		$buttons_html = '';
+		$menus_html = '';
+		$toolbar_cv_html = '';
+		$html_bottom = '';
+		$base_path = $modx->config['base_path'];
+		$qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
+		$output = $this->output;
 
-  $show_manager_link = $GLOBALS['qe_show_manager_link'];
-  $show_help_link = $GLOBALS['qe_show_help_link'];
-  $editable = explode(',',$GLOBALS['qe_editable']);
-  $manager_link = '';
-  $help_link = '';
-  $allowed = true;
-  $buttons_html = '';
-  $menus_html = '';
-  $toolbar_cv_html = '';
-  $html_bottom = '';
-  $base_path = $modx->config['base_path'];
-  $qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
-  $output = $this->output;
+		include_once ($base_path . $qe_path . '/module.class.inc.php');
+		$module = new Module;
+		$module->id = $module_id;
 
-  include_once($base_path.$qe_path.'/module.class.inc.php');
-  $module = new Module;
-  $module->id = $module_id;
-  
-  // Set any built-in content variable to check document permissions
-  include_once($base_path.$qe_path.'/contentVariable.class.inc.php');
-  $cv_obj = new ContentVariable;
-  $cv_obj->set('pagetitle');
+		// Set any built-in content variable to check document permissions
+		include_once ($base_path . $qe_path . '/contentVariable.class.inc.php');
+		$cv_obj = new ContentVariable;
+		$cv_obj->set('pagetitle');
 
-  // If we are logged in and have edit permissions...
-  if(!isset($_SESSION['mgrValidated'])) {
-   $allowed = false;
+		// If we are logged in and have edit permissions...
+		if (!isset ($_SESSION['mgrValidated'])) {
+			$allowed = false;
 
-  } elseif(!$modx->hasPermission('edit_document')) {
-   $allowed = false;
+		}
+		elseif (!$modx->hasPermission('edit_document')) {
+			$allowed = false;
 
-  } elseif(!$modx->hasPermission('exec_module')) {
-   $allowed = false;
+		}
+		elseif (!$modx->hasPermission('exec_module')) {
+			$allowed = false;
 
-  } elseif(!$module->checkPermissions()) {
-   $allowed = false;
+		}
+		elseif (!$module->checkPermissions()) {
+			$allowed = false;
 
-  } else if(!$cv_obj->checkPermissions()) {
-   $allowed = false;
-  }
+		} else
+			if (!$cv_obj->checkPermissions()) {
+				$allowed = false;
+			}
 
-  if($allowed) {
+		if ($allowed) {
 
-   $cv = new ContentVariable;
-   $manager_path = $modx->getManagerPath();
-   $doc_id = $modx->documentIdentifier;
-   $logout_url = "index.php?id={$doc_id}&amp;QuickEdit_logout=logout"; // $modx->makeURL($doc_id, '', 'QuickEdit_logout=logout'); // Would like to use makeURL but doesn't produce XHTML valid code
-   $replacements = array();
-   $link = '';
-   $on_click = '';
-   $change_value = '';
-   $menus = array('content'=>array(), 'setting'=>array(), 'go'=>array());
+			$cv = new ContentVariable;
+			$manager_path = $modx->getManagerPath();
+			$doc_id = $modx->documentIdentifier;
+			$logout_url = "index.php?id={$doc_id}&amp;QuickEdit_logout=logout"; // $modx->makeURL($doc_id, '', 'QuickEdit_logout=logout'); // Would like to use makeURL but doesn't produce XHTML valid code
+			$replacements = array ();
+			$link = '';
+			$on_click = '';
+			$change_value = '';
+			$menus = array (
+				'content' => array (),
+				'setting' => array (),
+				'go' => array ()
+			);
 
-$menus['setting'][] = <<<EOD
-<a id="QE_ShowLinks" class="checked" href="javascript:qe.toggleLinks();">{$_lang['QE_show_links']}</a>
+			$menus['setting'][] =<<<EOD
+<a id="QE_ShowLinks" class="checked" href="javascript:qe.toggleLinks();">{$QE_lang['QE_show_links']}</a>
 EOD;
 
-if($show_manager_link) {
-$menus['go'][] = <<<EOD
-<a id="QE_Manager" href="{$manager_path}">{$_lang['manager']}</a>
+			if ($show_manager_link) {
+				$menus['go'][] =<<<EOD
+<a id="QE_Manager" href="{$manager_path}">{$QE_lang['manager']}</a>
 EOD;
-}
+			}
 
-if($show_help_link) {
-$menus['go'][] = <<<EOD
-<a id="QE_Help" href="http://www.modxcms.com/quickedit.html">{$_lang['help']}</a>
+			if ($show_help_link) {
+				$menus['go'][] =<<<EOD
+<a id="QE_Help" href="http://www.modxcms.com/quickedit.html">{$QE_lang['help']}</a>
 EOD;
-}
+			}
 
-$menus['go'][] = <<<EOD
-<a id="QE_Logout" href="{$logout_url}">{$_lang['logout']}</a>
-EOD;
-
-$cvs = $modx->getTemplateVars('*','id, name', '', 1, 'name');
-
-foreach($cvs as $content) {
-
- if(isset($content['id']) || in_array($content['name'], $editable)) {
-
-  if(isset($content['id'])) {
-   $cv_obj->set($content['id']);	
-  } else {
-   $cv_obj->set($content['name']);
-  }
-
-  if($cv_obj && $cv_obj->checkPermissions()) {
-
-   // Get the menu
-   $menu = $cv_obj->group;
-
-   // Check for special CV types //
-
-   // One checkbox and not a binding
-   if($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements,'||') && substr($cv_obj->elements,0,1)!='@') {
-    $class = ($cv_obj->content ? 'checked' : 'unchecked');
-    $change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements,'==') ? substr(strstr($cv_obj->elements,'=='), 2) : $cv_obj->elements));
-$menus[$menu][] .= <<<EOD
-<a class="{$class}" href="javascript: qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
+			$menus['go'][] =<<<EOD
+<a id="QE_Logout" href="{$logout_url}">{$QE_lang['logout']}</a>
 EOD;
 
-   // Everything else
-   } else {
-  
-$menus[$menu][] .= <<<EOD
-<a href="javascript: qe.open('{$cv_obj->id}');" title="{$_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
+			$cvs = $modx->getTemplateVars('*', 'id, name', '', 1, 'name');
+
+			foreach ($cvs as $content) {
+
+				if (isset ($content['id']) || in_array($content['name'], $editable)) {
+
+					if (isset ($content['id'])) {
+						$cv_obj->set($content['id']);
+					} else {
+						$cv_obj->set($content['name']);
+					}
+
+					if ($cv_obj && $cv_obj->checkPermissions()) {
+
+						// Get the menu
+						$menu = $cv_obj->group;
+
+						// Check for special CV types //
+
+						// One checkbox and not a binding
+						if ($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements, '||') && substr($cv_obj->elements, 0, 1) != '@') {
+							$class = ($cv_obj->content ? 'checked' : 'unchecked');
+							$change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements, '==') ? substr(strstr($cv_obj->elements, '=='), 2) : $cv_obj->elements));
+							$menus[$menu][] .=<<<EOD
+<a class="{$class}" href="javascript: qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');" title="{$QE_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
 EOD;
 
-   }
+							// Everything else
+						} else {
 
-  }
- 
- }
- 
-}
+							$menus[$menu][] .=<<<EOD
+<a href="javascript: qe.open('{$cv_obj->id}');" title="{$QE_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
+EOD;
 
-foreach($menus as $menu_name=>$links) {
+						}
 
- $links_html = '';
+					}
 
- foreach($links as $link) {
-  $links_html .= "<li>{$link}</li>";
- }
+				}
 
-$menus_html .= <<<EOD
- <li>{$_lang[$menu_name]}
+			}
+			foreach ($menus as $menu_name => $links) {
+
+				$links_html = '';
+
+				foreach ($links as $link) {
+					$links_html .= "<li>{$link}</li>";
+				}
+
+				$menus_html .=<<<EOD
+ <li>{$QE_lang[$menu_name]}
   <ul>
    {$links_html}
   </ul>
  </li>
 EOD;
 
-}
+			}
 
-  // Define the CSS and Javascript that we will add to the header of the page
-$head = <<<EOD
+			// Define the CSS and Javascript that we will add to the header of the page
+			$head =<<<EOD
 
 <!-- Start QuickEdit headers -->
 <script type="text/javascript" src="{$manager_path}media/script/scriptaculous/prototype.js"></script>
@@ -233,11 +247,11 @@ $head = <<<EOD
 
 EOD;
 
-$html_top = <<<EOD
+			$html_top =<<<EOD
 
 <!-- Start QuickEdit toolbar -->
 <div id="QE_Toolbar">
- <h1>{$_lang['QE_title']}</h1>
+ <h1>{$QE_lang['QE_title']}</h1>
  <ul>
 {$menus_html}
  </ul>
@@ -246,7 +260,7 @@ $html_top = <<<EOD
 
 EOD;
 
-$html_bottom .= <<<EOD
+			$html_bottom .=<<<EOD
 
 <script type="text/javascript">
  var qe = new QuickEdit({$module_id},{$doc_id},'{$manager_path}','{$qe_path}',$('QE_Toolbar'));
@@ -254,58 +268,57 @@ $html_bottom .= <<<EOD
 
 EOD;
 
-   // Get an array of the content variable names
-   $matches= array();
-   preg_match_all('~<quickedit:(.*?)\s*\/>~', $output, $matches);
+			// Get an array of the content variable names
+			$matches = array ();
+			preg_match_all('~<quickedit:(.*?)\s*\/>~', $output, $matches);
 
-   // Loop through every TV we found
-   for($i=0; $i<count($matches[1]); $i++) {
+			// Loop through every TV we found
+			for ($i = 0; $i < count($matches[1]); $i++) {
 
-    $contentVarName = $matches[1][$i];
-    $cv->set($contentVarName, $doc_id);
-    $link = '';
+				$contentVarName = $matches[1][$i];
+				$cv->set($contentVarName, $doc_id);
+				$link = '';
 
-    // Check that we have permission to edit this content
-    if($cv->id && $cv->checkPermissions()) {
+				// Check that we have permission to edit this content
+				if ($cv->id && $cv->checkPermissions()) {
 
-     // Set the HTML for the link
-$link = <<<EOD
-<a href="javascript:;" onclick="javascript: qe.open('{$cv->id}');" title="Edit {$cv->description}" class="QE_Link">&laquo; {$_lang['edit']} {$cv->name}</a>
+					// Set the HTML for the link
+					$link =<<<EOD
+<a href="javascript:;" onclick="javascript: qe.open('{$cv->id}');" title="Edit {$cv->description}" class="QE_Link">&laquo; {$QE_lang['edit']} {$cv->name}</a>
 EOD;
 
-    }
+				}
 
-    $replacements[$i] = $link;
+				$replacements[$i] = $link;
 
-   }
+			}
 
-   // Merge the links with the content
-   $output = str_replace($matches[0], $replacements, $output);
+			// Merge the links with the content
+			$output = str_replace($matches[0], $replacements, $output);
 
-   // If the javascript hasn't already been added to the page, do it now
-   if(strpos($output, $head) === false) {
-    $output = preg_replace('~(</head>)~i', $head.'\1', $output);
-   }
-   
-   // If the top html hasn't already been added to the page, do it now
-   if(strpos($output, $html_top) === false) {
-    $output = preg_replace('~(<body[^>]*>)~i', '\1'.$html_top, $output);
-   }
+			// If the javascript hasn't already been added to the page, do it now
+			if (strpos($output, $head) === false) {
+				$output = preg_replace('~(</head>)~i', $head . '\1', $output);
+			}
 
-   // If the bottom html hasn't already been added to the page, do it now
-   if(strpos($output, $html_bottom) === false) {
-    $output = preg_replace('~(</body>)~i',$html_bottom.'\1',$output);
-   }
+			// If the top html hasn't already been added to the page, do it now
+			if (strpos($output, $html_top) === false) {
+				$output = preg_replace('~(<body[^>]*>)~i', '\1' . $html_top, $output);
+			}
 
-  }
+			// If the bottom html hasn't already been added to the page, do it now
+			if (strpos($output, $html_bottom) === false) {
+				$output = preg_replace('~(</body>)~i', $html_bottom . '\1', $output);
+			}
 
-  // Remove any leftover <quickedit> tags that we may not have had permission to
-  $output = preg_replace('~<quickedit:.*?\s*\/>~', '', $output);
+		}
 
-  $this->output = $output;
+		// Remove any leftover <quickedit> tags that we may not have had permission to
+		$output = preg_replace('~<quickedit:.*?\s*\/>~', '', $output);
 
- }
+		$this->output = $output;
+
+	}
 
 }
-
 ?>

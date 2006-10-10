@@ -324,6 +324,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
 	`tmplvarid` int(10) NOT NULL COMMENT 'Template Variable id',
 	`templateid` int(11) NOT NULL default '0',
+	`rank` int(11) NOT NULL default '0',
 	PRIMARY KEY (`tmplvarid`, `templateid`)
 ) TYPE=MyISAM COMMENT='Site Template Variables Templates Link Table';
 
@@ -720,6 +721,8 @@ ALTER TABLE `{PREFIX}site_content` MODIFY COLUMN `menutitle` varchar(100);
 ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `link_attributes` varchar(255) NOT NULL COMMENT 'Link attriubtes' AFTER `alias`;
 
 ALTER TABLE `{PREFIX}site_plugin_events`  ADD COLUMN `priority` INT(10) NOT NULL COMMENT 'determines the run order of the plugin' AFTER `evtid`;
+
+ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD COLUMN `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
 
 
 # ]]upgrade-able

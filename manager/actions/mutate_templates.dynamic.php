@@ -110,8 +110,23 @@ function deletedocument() {
 	</div>
 </div>
 
+<?php if ($_REQUEST['a'] == 16) { ?>
+<script type="text/javascript" src="media/script/tabpane.js"></script>
+<?php } ?>
+
 <div class="sectionHeader"><?php echo $_lang['template_title']; ?></div>
 <div class="sectionBody">
+
+<?php if ($_REQUEST['a'] == 16) { ?>
+<div class="tab-pane" id="templatesPane">
+	<script type="text/javascript">
+		tpResources = new WebFXTabPane( document.getElementById( "templatesPane" ),false );
+	</script>
+	<div class="tab-page" id="tabTemplate">
+    	<h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
+    	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplate" ) );</script>
+	<?php } ?>
+	
 	<?php echo $_lang['template_msg']; ?><p />
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	  <tr>
@@ -157,10 +172,46 @@ function deletedocument() {
 	</div>
 	<!-- HTML text editor end -->
 	<input type="submit" name="save" style="display:none">
-</div>
+	
+<?php if ($_REQUEST['a'] == 16) { 
+	$sql = "SELECT tv.name as 'name', tv.id as 'id', tr.templateid, tr.rank, if(isnull(cat.category),'".$_lang['no_category']."',cat.category) as category
+	FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
+	INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
+	LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id
+	WHERE tr.templateid='".$_REQUEST['id']."' ORDER BY tr.rank ASC";
+	
+
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
+	?>
+	</div>
+	<div class="tab-page" id="tabAssignedTVs">
+    	<h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2><p />
+    	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
+    	<p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>	
+    	<p><?php if($modx->hasPermission('save_template') && $limit > 0) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>
+<?php
+$tvList = '';
+
+if($limit>1) {
+    for ($i=0;$i<$limit;$i++) {
+        $row = $modx->db->getRow($rs);
+        if ($i == 0 ) $tvList .= '<br/><ul>';
+        $tvList .= '<li><strong>'.$row['name'].'</strong> ('.$row['category'].')</li>';
+    }
+    $tvList .= '</ul>';
+	
+} else {
+	echo $_lang['template_no_tv'];
+}
+echo $tvList;
+?></div>
+<?php } ?>
+
 <?php
 	// invoke OnTempFormRender event
 	$evtOut = $modx->invokeEvent("OnTempFormRender",array("id" => $id));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
+</div>

@@ -3,9 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 4 (rev 1636 - October 7, 2006)
+MOD 0.9.5 beta 5 (rev 1652 - October 7, 2006)
 ====================================
 
+* DocManager update: Fix menu index parent selection, numerous little bugfixes for js errors. (1649)
+* [FS#444] and [FS#549] Ability to sort TVs by template assignment. (1642,1643,1645,1646)
+* Fix for the QuickEdit language string problem. (1637)
+* [FS#512] MySQL 4.1.21 sorting problems. Implemented GROUP BY fix for all necessary queries. (1628)
 * Remove Snippets tab from Content page and Remove dedicated "create folder" manager menu option. (1636)
 * Update action pages to reference new frames/menu/tree structure (1626)
 * Merge frames and remove webelm.js for much improved Safari and cross-browser consistency (1623,1624)

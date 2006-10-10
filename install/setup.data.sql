@@ -222,28 +222,28 @@ REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','richtext','blogContent','blogC
 #
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','1');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','1','0');
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','3');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','3','0');
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','4');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','4','0');
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','6');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','6','0');
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','1');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','1','0');
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','3');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','3','0');
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','4');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','4','0');
 
 
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','6');
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','6','0');
 
 
 #

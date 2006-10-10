@@ -55,7 +55,7 @@ class SLLists {
 		$output.="
 		<script src=\"".$this->jsPath."prototype.js\" type=\"text/javascript\"></script>
 		<script src=\"".$this->jsPath."scriptaculous.js\" type=\"text/javascript\"></script>
-		<script language=\"JavaScript\" type=\"text/javascript\"><!--
+		<script type=\"text/javascript\"><!--
 			function populateHiddenVars() {
 			";
 				foreach($this->lists as $list) {

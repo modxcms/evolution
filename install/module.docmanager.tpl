@@ -108,6 +108,7 @@ $output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
 <html> 
 		<head>
                 <title>'.$_lang['DM_module_title'].'</title> 
+<script type="text/javascript">var MODX_MEDIA_PATH = "media";</script>
 		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
 		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
 	    <link rel="stylesheet" type="text/css" href="media/style' . $theme . '/tabs.css"/> 
@@ -119,7 +120,6 @@ $output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
         <script type="text/javascript" src="../assets/modules/docmanager/js/functions.js"></script>
         <script type="text/javascript" src="media/script/datefunctions.js"></script>
         <script type="text/javascript">
-        var MODX_MEDIA_PATH = "media";
         function save()
 		{
 			document.newdocumentparent.submit();
@@ -136,7 +136,7 @@ function setMoveValue(pId, pName) {
 function checkParentChildRelation(pId, pName) {
 	var sp;
 	var id = document.newdocumentparent.id.value;
-	var tdoc = parent.menu.document;
+	var tdoc = parent.tree.document;
 	var pn = (tdoc.getElementById) ? tdoc.getElementById("node"+pId) : tdoc.all["node"+pId];
 	if (!pn) return;
 		while (pn.p>0) {

@@ -410,6 +410,12 @@ switch ($action) {
 		// get the duplicate template processor
 		include_once "processors/duplicate_template.processor.php";
 	break;
+	case '117' :
+		// change the tv rank for selected template
+		//include_once "header.inc.php"; - in action file
+		include_once "actions/mutate_template_tv_rank.dynamic.php";
+		include_once "footer.inc.php";
+		break;
 /********************************************************************/
 /* snippet management												*/
 /********************************************************************/
