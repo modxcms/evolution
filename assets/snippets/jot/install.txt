@@ -1,0 +1,21 @@
+Quick Installation and Setup quide: 
+-------------------------------------
+
+1) Download and extract the archive. 
+2) Create a directory called "jot" in your [MODx Directory]/assets/snippets directory
+3) FTP or copy the files into [MODx Directory]/assets/snippets/jot
+4) Create a new snippet in the manager called "Jot" and copy/paste the contents of jot.snippet.txt into the code field.
+
+
+Usage example: 
+
+[[Jot? &customfields=`name,email` &subscribe=`1` &pagination=`10`]]
+
+or
+
+[!Jot? &customfields=`name,email` &subscribe=`1` &pagination=`10`!]
+
+Depending on your page cache settings.
+
+
+

@@ -3,6 +3,7 @@
 .jot-row-alt {background-color: #f9f9f9;}
 .jot-row-author {background-color: #FFFFE1;}
 .jot-row-me {background-color: #FFDDDD;}
+.jot-row-up {border: 1px dotted red;}
 .jot-comment {padding: 3px;}
 .jot-mod {font-size: 14px;float: right;width: 100px;text-align: right;color: #666666;font-weight: bold;}
 .jot-subject {font-weight: bold;}

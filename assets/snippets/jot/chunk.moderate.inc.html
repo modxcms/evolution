@@ -1,43 +1,17 @@
-<script text="type/javascript">
-	function getElementById(id){
-			var o, d=document;
-			if (d.layers) {o=d.layers[id];if(o) o.style=o};
-			if (!o && d.getElementById) o=d.getElementById(id);
-			if (!o && d.all) o = d.all[id];
-			return o;
-	}
-	
-	function ShowPublish(cid,published) {
-		var a = getElementById('jm1[+jot.id+]' + cid);
-		var b = getElementById('jm2[+jot.id+]' + cid);
-		
-		if (published == 1) { a.style.display="inline";}
-		 else { b.style.display="inline";}
-	}
-
-</script>
 <a name="jotmod[+jot.id+]"></a>
 <div class="jot-modbar">
 <b>Moderation: </b>
 <ul>
-<li id="jotm1[+jot.id+]" style="display: none;">
-You are currently viewing <b>unpublished</b> comments.<br />
-View <a href="[+jot.link.view+][+jot.querykey.view+]=1#jotmod[+jot.id+]">published</a> comments ([+jot.moderation.published+])</li>
-<li id="jotm2[+jot.id+]" style="display: none;">
-You are currently viewing <b>published</b> comments.<br />
-View <a href="[+jot.link.view+][+jot.querykey.view+]=0#jotmod[+jot.id+]">unpublished</a> comments ([+jot.moderation.unpublished+])</li>
+<li>You are currently viewing <b>[+jot.moderation.view:select=`0=unpublished&1=published&2=mixed`+]</b> comments.</li>
+[+jot.moderation.view:isnt=`0`:then=`
+<li>View <a href="[+jot.link.view+][+jot.querykey.view+]=0#jotmod[+jot.id+]">unpublished</a> comments ([+jot.moderation.unpublished+])</li>
+`:strip+]
+[+jot.moderation.view:isnt=`1`:then=`
+<li>View <a href="[+jot.link.view+][+jot.querykey.view+]=1#jotmod[+jot.id+]">published</a> comments ([+jot.moderation.published+])</li>
+`:strip+]
+[+jot.moderation.view:isnt=`2`:then=`
+<li>View <a href="[+jot.link.view+][+jot.querykey.view+]=2#jotmod[+jot.id+]">mixed</a> comments ([+jot.moderation.mixed+])</li>
+`:strip+]
 </ul>
 </div>
 
-<script text="type/javascript">
-	var a = getElementById('jotm1[+jot.id+]');
-	var b = getElementById('jotm2[+jot.id+]');
-	switch ([+jot.moderation.view+]) {
-		case 0:
-			a.style.display="list-item";
-			break;
-		case 1:
-		default:
-			b.style.display="list-item";
-	}
-</script>

@@ -1,4 +1,12 @@
 <?php
+/*####
+#
+#	Name: Jot Database Provider
+#	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
+#	Date: Oct 8, 2006 0:00 CET
+#
+####*/
+
 class CJotDataDb {
 	var $settings;
 	var $fields;
@@ -12,6 +20,14 @@ class CJotDataDb {
 	
 	function Set($field, $value){
 		$this->fields[$field]=$value; return true;
+	}
+	
+	function Get($field){
+		return $this->fields[$field];
+	}
+	
+	function getFields() {
+		return $this->fields;
 	}
 	
 	function SetCustom($field, $value){
@@ -115,6 +131,9 @@ class CJotDataDb {
 	function GetCommentCount($docid,$tagid,$viewtype) {
 		global $modx;
 		switch ($viewtype) {
+			case 2:
+				$where = " and published >= 0 "; // Mixed
+				break;
 			case 0:
 				$where = " and published = 0 "; // Unpublished
 				break;
@@ -132,6 +151,9 @@ class CJotDataDb {
 		$where = NULL;
 		if ($length > 0 ) { $limit = " limit $offset, $length"; }
 		switch ($viewtype) {
+			case 2:
+				$where = " and published >= 0 "; // Mixed
+				break;
 			case 0:
 				$where = " and published = 0 "; // Unpublished
 				break;
@@ -168,7 +190,7 @@ class CJotDataDb {
 	}
 	
 	
-	function GetSubscriptions($docid = 0,$tagid = '') {
+	function getSubscriptions($docid = 0,$tagid = '') {
 		global $modx;
 		$tbl = $modx->getFullTableName('jot_subscriptions');
 		$rs = $modx->db->query("select userid from $tbl where uparent = $docid and tagid = '$tagid'");	

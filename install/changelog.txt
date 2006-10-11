@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1671 - October 10, 2006)
+MOD 0.9.5 beta 5 (rev 1672 - October 10, 2006)
 ====================================
 
 * temporary source formatting solution for TinyMCE hardcoded in JS -- to be removed at a future date (1671)

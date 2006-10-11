@@ -1,66 +1,33 @@
-<div class="jot-err" id="joterr[+jot.id+]" style="display: none;"></div>
+[+form.error:isnt=`0`:then=`
+<div class="jot-err">
+[+form.error:select=`
+-2=Your comment has been rejected.
+&-1=Your comment has been saved, it will first be reviewed before it is published.
+&1=The security code you entered was incorrect.
+&2=You can only post once each [+jot.postdelay+] seconds.
+&3=You forgot to enter a comment.
+`+]
+</div>
+`:strip+]
 
-<form method="post" action="[~[*id*]~]">
+<form method="post" action="[+jot.link.current+]">
 	<input name="JotForm" type="hidden" value="[+jot.id+]" />
 	
-	<div id="jotguest[+jot.id+]" style="display: none;">
+	[+jot.guestform:is=`1`:then=`
 	Name:<br />
-	<input name="name" type="text" size="40" value="[+submit.name+]" /><br />
+	<input tabindex="1" name="name" type="text" size="40" value="[+submit.name+]" /><br />
 	Email:<br />
-	<input name="email" type="text" size="40" value="[+submit.email+]" /><br />
-	</div>
+	<input tabindex="2" name="email" type="text" size="40" value="[+submit.email+]" /><br />
+	`:strip+]
 		
 	Subject:<br />
-	<input name="subject" type="text" size="40" value="[+submit.subject+]" /><br />
+	<input tabindex="3" name="subject" type="text" size="40" value="[+submit.subject+]" /><br />
 	Comment:<br />
-	<textarea name="message" cols="50" rows="8">[+submit.message+]</textarea><br />
+	<textarea tabindex="4" name="message" cols="50" rows="8">[+submit.message+]</textarea><br />
 	
-	<div id="jotcaptcha[+jot.id+]" style="display: none;">
-		<div style="width:150px;margin-top: 5px;margin-bottom: 5px;"><a href="[~[*id*]~]"><img src="manager/includes/veriword.php?rand=[+jot.seed+]" width="148" height="60" alt="If you have trouble reading the code, click on the code itself to generate a new random code." style="border: 1px solid #003399"></a></div>
+  [+jot.captcha:is=`1`:then=`
+		<div style="width:150px;margin-top: 5px;margin-bottom: 5px;"><a href="[+jot.link.current+]"><img src="[(base_url)]manager/includes/veriword.php?rand=[+jot.seed+]" width="148" height="60" alt="If you have trouble reading the code, click on the code itself to generate a new random code." style="border: 1px solid #003399" /></a></div>
 		Security Code:<br /><input type="text" name="formcode" style="width:150px;" size="20" />&nbsp;
-	</div>
-	
-	<input name="submit" type="submit" value="Post Comment" />
+	`:strip+]
+	<input tabindex="5" name="submit" type="submit" value="Post Comment" />
 </form><br />
-
-<script text="type/javascript">
-	
-	function getElementById(id){
-			var o, d=document;
-			if (d.layers) {o=d.layers[id];if(o) o.style=o};
-			if (!o && d.getElementById) o=d.getElementById(id);
-			if (!o && d.all) o = d.all[id];
-			return o;
-	}
-	
-	var a = getElementById('joterr[+jot.id+]');
-	var b = getElementById('jotcaptcha[+jot.id+]');
-	var c = getElementById('jotguest[+jot.id+]');
-	
-	switch([+form.error+]) {
-		case 1:
-			a.innerHTML = "The security code you entered was incorrect.";
-			a.style.display="block";
-			break;
-		case 2:
-			a.innerHTML = "You can only post once each [+jot.postdelay+] seconds.";
-			a.style.display="block";
-			break;
-		case 3:
-			a.innerHTML = "You forgot to enter a comment.";
-			a.style.display="block";
-			break;
-		case -1:
-			a.innerHTML = "Your comment has been saved, it will first be reviewed before it is published.";
-			a.style.display="block";
-			break;
-		case -2:
-			a.innerHTML = "Your comment has been rejected.";
-			a.style.display="block";
-			break;
-	}
-		
-	if([+jot.captcha+]==1) { b.style.display="inline"; }
-	if([+jot.guestform+]==1) { c.style.display="inline"; }
-	
-</script>
