@@ -122,46 +122,40 @@ REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (4, 'FormSignup', 'For the weblo
 REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (5, 'FormBlogComments', 'Comment to show up beneath a blog for registered user comments', 0, 3, 0, '<a name="comments"></a>\r\n<p style="margin-top: 1em;font-weight:bold">Enter your comments in the space below (registered site users only):</p>\r\n[!UserComments? &canpost=`Registered Users, Site Admins` &makefolder=`0` &postcss=`comment` &titlecss=`commentTitle` &numbercss=`commentNum` &altrowcss=`commentAlt` &authorcss=`commentAuthor` &ownercss=`commentMe` &sortorder=`0`!]', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (6, 'AboutMe', 'The short bio blurb', 0, 1, 0, ' <h2>About  </h2>\r\n  <p class="about">Write about yourself here... To edit this text, login to the manager, and Edit the "AboutMe" chunk found under <strong>Resources</strong> &gt; Manage Resources &gt; Chunks (tab). Chunks make updating consistent "blocks" of content (like footers, menus or this text) used across multiple templates straightforward and efficient.</p>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (6, 'nl_sidebar', 'Default Template TPL for Ditto', 0, 3, 0, '<strong><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></strong><br />\r\n[+longtitle+]<br /><br />', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (7, 'nl_sidebar', 'Default Template TPL for Ditto', 0, 3, 0, '<strong><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></strong><br />\r\n[+longtitle+]<br /><br />', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (7, 'styles', 'Stylesheet switcher list', 0, 1, 0, '    <ul class="links">\r\n<li><a href="#" onclick="setActiveStyleSheet(''Trend''); return false;">Trend (Default)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Trend (Alternate)''); return false;" >Trend (Alternate)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''ZiX''); return false;" >ZiX (Clean)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''ZiX Background''); return false;" >ZiX (Background)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Light''); return false;" >Light</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Light Green''); return false;" >Light Green</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Dark''); return false;" >Dark</a></li>\r\n    </ul>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (8, 'styles', 'Stylesheet switcher list', 0, 1, 0, '    <ul class="links">\r\n<li><a href="#" onclick="setActiveStyleSheet(''Trend''); return false;">Trend (Default)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Trend (Alternate)''); return false;" >Trend (Alternate)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''ZiX''); return false;" >ZiX (Clean)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''ZiX Background''); return false;" >ZiX (Background)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Light''); return false;" >Light</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Light Green''); return false;" >Light Green</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Dark''); return false;" >Dark</a></li>\r\n    </ul>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (8, 'nl_blog', 'Blog Template', 0, 3, 0, '<div class="nl_summaryPost">\r\n  <h3><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></h3>\r\n  <div class="nl_info" >By <strong>[+author+]</strong> on [+date+]. <a  href="[~[+id+]~]#commentsAnchor">Comments\r\n  ([!Jot?&docid=`[+id+]`&action=`count-comments`!])</a></div>\r\n  [+summary+]\r\n  <div id="nl_comments_[+id+]" style="display: none;">\r\n  [[Jot?&docid=`[+id+]`&action=`comments`]] \r\n  </div>\r\n  <p class="nl_link">[+link+]</p>\r\n</div>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (9, 'slogan', 'Default Template Site Slogan', 0, 1, 0, 'Your Site''s Slogan Goes Here', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (9, 'footer', 'Site Template Footer', 0, 1, 0, '[(site_name)] is powered by <a href="http://modxcms.com/" title="Powered by MODx, Do more with less.">MODx CMS</a> |\r\n      <span id="andreas">Design by <a href="http://andreasviklund.com/">Andreas Viklund</a></span>\r\n<span id="zi" style="display: none">Designed by <a href="http://ziworks.com/" target="_blank" title="E-Business &amp; webdesign solutions">ziworks</a></span>\r\n\r\n<!-- the modx icon -->\r\n\r\n<div id="modxicon"><h6><a href="http://modxcms.com" title="MODx - The XHTML, CSS and Ajax CMS and PHP Application Framework" id="modxicon32">MODx - The XHTML, CSS and Ajax CMS and PHP Application Framework</a></h6></div>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (10, 'nl_blog', 'Blog Template', 0, 3, 0, '<div class="nl_summaryPost">\r\n  <h3><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></h3>\r\n  <div class="nl_info" >By <strong>[+author+]</strong> on [+date+]. <a  href="[~[+id+]~]#commentsAnchor">Comments\r\n  ([!Jot?&docid=`[+id+]`&action=`count-comments`!])</a></div>\r\n  [+summary+]\r\n  <div id="nl_comments_[+id+]" style="display: none;">\r\n  [[Jot?&docid=`[+id+]`&action=`comments`]] \r\n  </div>\r\n  <p class="nl_link">[+link+]</p>\r\n</div>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (10, 'meta', 'Site Template Meta', 0, 1, 0, '<p><a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional">Valid <abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a></p>                	<p><a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page uses valid Cascading Stylesheets" rel="external">Valid <abbr title="W3C Cascading Stylesheets">css</abbr></a></p>				    <p><a href="http://modxcms.com/" title="Powered by MODx, Do more with less.">MOD<strong>x</strong></a></p>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (11, 'footer', 'Site Template Footer', 0, 1, 0, '[(site_name)] is powered by <a href="http://modxcms.com/" title="Powered by MODx, Do more with less.">MODx CMS</a> |\r\n      <span id="andreas">Design by <a href="http://andreasviklund.com/">Andreas Viklund</a></span>\r\n<span id="zi" style="display: none">Designed by <a href="http://ziworks.com/" target="_blank" title="E-Business &amp; webdesign solutions">ziworks</a></span>\r\n\r\n<!-- the modx icon -->\r\n\r\n<div id="modxicon"><h6><a href="http://modxcms.com" title="MODx - The XHTML, CSS and Ajax CMS and PHP Application Framework" id="modxicon32">MODx - The XHTML, CSS and Ajax CMS and PHP Application Framework</a></h6></div>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (11, 'mh.InnerRowTpl', 'Inner row template for ModxHost top menu', 0, 8, 0, '<li[+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (12, 'meta', 'Site Template Meta', 0, 1, 0, '<p><a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional">Valid <abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a></p>                	<p><a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page uses valid Cascading Stylesheets" rel="external">Valid <abbr title="W3C Cascading Stylesheets">css</abbr></a></p>				    <p><a href="http://modxcms.com/" title="Powered by MODx, Do more with less.">MOD<strong>x</strong></a></p>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (12, 'mh.InnerTpl', 'Inner nesting template for ModxHost top menu', 0, 8, 0, '<ul style="display:none">\r\n  [+wf.wrapper+]\r\n</ul>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (13, 'mh.InnerRowTpl', 'Inner row template for ModxHost top menu', 0, 8, 0, '<li[+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (13, 'mh.OuterTpl', 'Outer nesting template for ModxHost top menu', 0, 8, 0, '  <ul id="myajaxmenu">\r\n    [+wf.wrapper+]\r\n  </ul>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (14, 'mh.InnerTpl', 'Inner nesting template for ModxHost top menu', 0, 8, 0, '<ul style="display:none">\r\n  [+wf.wrapper+]\r\n</ul>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (14, 'mh.RowTpl', 'Row template for ModxHost top menu', 0, 8, 0, '<li class="category [+wf.classnames+]"><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (15, 'mh.OuterTpl', 'Outer nesting template for ModxHost top menu', 0, 8, 0, '  <ul id="myajaxmenu">\r\n    [+wf.wrapper+]\r\n  </ul>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (15, 'Comments', 'Comments (Jot) showing beneath a blog entry.', 0, 3, 0, '<div id="commentsAnchor">\r\n[!Jot? &customfields=`name,email` &subscribe=`1` &pagination=`4` &badwords=`dotNet` &canmoderate=`Site Admins` !]\r\n</div>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (16, 'mh.RowTpl', 'Row template for ModxHost top menu', 0, 8, 0, '<li class="category [+wf.classnames+]"><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (16, 'ContactForm', '', 0, 5, 0, '<p class="error">[+validationmessage+]</p>\r\n\r\n<form method="post" action="[~[*id*]~]" id="EmailForm" name="EmailForm">\r\n\r\n	<fieldset>\r\n		<h3> Contact Form</h3>\r\n\r\n		<input name="formid" type="hidden" value="ContactForm" />\r\n\r\n		<label for="cfName">Your name:\r\n		<input name="name" id="cfName" class="text" type="text" eform="Your Name::1:" /> </label>\r\n\r\n		<label for="cfEmail">Your Email Address:\r\n		<input name="email" id="cfEmail" class="text" type="text" eform="Email Address:email:1" /> </label>\r\n\r\n		<label for="cfRegarding">Regarding:</label>\r\n		<select name="subject" id="cfRegarding" eform="Form Subject::1">\r\n			<option value="General Inquiries">General Inquiries</option>\r\n			<option value="Press">Press or Interview Request</option>\r\n			<option value="Partnering">Partnering Opportunities</option>\r\n		</select>\r\n\r\n		<label for="cfMessage">Message: \r\n		<textarea name="message" id="cfMessage" rows="4" cols="20" eform="Message:textarea:1"></textarea>\r\n		</label>\r\n\r\n		<label>&nbsp;</label><input type="submit" name="contact" id="cfContact" class="button" value="Send This Message" />\r\n\r\n	</fieldset>\r\n\r\n</form>\r\n', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (17, 'Comments', 'Comments (Jot) showing beneath a blog entry.', 0, 3, 0, '<div id="commentsAnchor">\r\n[!Jot? &customfields=`name,email` &subscribe=`1` &pagination=`4` &badwords=`etomite` &canmoderate=`Site Admins` !]\r\n</div>', 0);
-
-
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (19, 'ContactForm', '', 0, 5, 0, '<p class="error">[+validationmessage+]</p>\r\n\r\n<form method="post" action="[~[*id*]~]" id="EmailForm" name="EmailForm">\r\n\r\n	<fieldset>\r\n		<h3> Contact Form</h3>\r\n\r\n		<input name="formid" type="hidden" value="ContactForm" />\r\n\r\n		<label for="cfName">Your name:\r\n		<input name="name" id="cfName" class="text" type="text" eform="Your Name::1:" /> </label>\r\n\r\n		<label for="cfEmail">Your Email Address:\r\n		<input name="email" id="cfEmail" class="text" type="text" eform="Email Address:email:1" /> </label>\r\n\r\n		<label for="cfRegarding">Regarding:</label>\r\n		<select name="subject" id="cfRegarding" eform="Form Subject::1">\r\n			<option value="General Inquiries">General Inquiries</option>\r\n			<option value="Press">Press or Interview Request</option>\r\n			<option value="Partnering">Partnering Opportunities</option>\r\n		</select>\r\n\r\n		<label for="cfMessage">Message: \r\n		<textarea name="message" id="cfMessage" rows="4" cols="20" eform="Message:textarea:1"></textarea>\r\n		</label>\r\n\r\n		<label>&nbsp;</label><input type="submit" name="contact" id="cfContact" class="button" value="Send This Message" />\r\n\r\n	</fieldset>\r\n\r\n</form>\r\n', 0);
-
-
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (20, 'ContactFormReport', '', 0, 5, 0, '<p>This is a response sent by <b>[+Name+]</b> using the feedaback form on the website. The details of the mesage follow below:</p>\r\n\r\n\r\n<p>Name: [+name+]</p>\r\n<p>Email: [+email+]</p>\r\n<p>Regarding: [+subject+]</p>\r\n<p>comments:<br />[+message+]</p>\r\n\r\n<p>You can use this link to reply: <a href="mailto:[+email+]?subject=RE: [+subject+]">[+email+]</a></p>\r\n', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (17, 'ContactFormReport', '', 0, 5, 0, '<p>This is a response sent by <b>[+Name+]</b> using the feedaback form on the website. The details of the mesage follow below:</p>\r\n\r\n\r\n<p>Name: [+name+]</p>\r\n<p>Email: [+email+]</p>\r\n<p>Regarding: [+subject+]</p>\r\n<p>comments:<br />[+message+]</p>\r\n\r\n<p>You can use this link to reply: <a href="mailto:[+email+]?subject=RE: [+subject+]">[+email+]</a></p>\r\n', 0);
 
 
 #
@@ -196,7 +190,7 @@ REPLACE INTO `{PREFIX}site_templates` VALUES ('4','MODxHost','MODxHost Template'
 
 
 REPLACE INTO `{PREFIX}site_templates` VALUES ('5','MODxHostWithComments','MODxHost Template with comments','0','3','','0','<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<title>[(site_name)] | [*pagetitle*]</title>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n<base href=\"[(site_url)]\" />\r\n<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/modxhost/layout.css\" type=\"text/css\" media=\"screen\" />\r\n<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/modxhost/modxmenu.css\" type=\"text/css\" media=\"screen\" />\r\n<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/modxhost/form.css\" type=\"text/css\" media=\"screen\" />\r\n<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/modxhost/modx.css\" type=\"text/css\" media=\"screen\" />\r\n<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/modxhost/print.css\" type=\"text/css\" media=\"print\" />\r\n<script src=\"[(base_url)]manager/media/script/scriptaculous/prototype.js\" type=\"text/javascript\"></script>\r\n<script src=\"[(base_url)]manager/media/script/scriptaculous/scriptaculous.js\" type=\"text/javascript\"></script>\r\n<script type=\"text/javascript\" src=\"[(base_url)]assets/templates/modxhost/moo.fx.js\"></script>\r\n<script src=\"[(base_url)]assets/templates/modxhost/drop_down_menu.js\" type=\"text/javascript\"></script>\r\n<script type=\"text/javascript\">\r\nimage1 = new Image();\r\nimage1.src = \"[(base_url)]assets/templates/modxhost/images/array_332x28_roll.jpg\";\r\n</script>\r\n<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS 2.0\" href=\"[(site_url)][~11~]\" />\r\n</head>\r\n<body>\r\n<div id=\"wrapper\">\r\n  <div id=\"minHeight\"></div>\r\n  <div id=\"outer\">\r\n    <div id=\"inner\">\r\n      <div id=\"right\">\r\n        <div id=\"right-inner\">\r\n          <h1 style=\"text-indent: -5000px;padding: 0px; margin:0px; font-size: 1px;\">[(site_name)]</h1>\r\n          <div id=\"sidebar\">\r\n            <h2>News:</h2>\r\n            [[Ditto? &startID=`2` &summarize=`2` &total=`20` &commentschunk=`FormBlogComments` &tpl=`nl_sidebar` &showarch=`0` &truncLen=`100` &truncSplit=`0`]]\r\n            <div id=\"recentdocsctnr\">\r\n              <h2>Most Recent:</h2>\r\n              <a name=\"recentdocs\"></a>[[ListIndexer?LIn_root=0]] </div>\r\n            <h2>Login:</h2>\r\n            <div id=\"sidebarlogin\">[!WebLogin? &tpl=`FormLogin` &loginhomeid=`[(site_start)]`!]</div>\r\n            <h2>Meta:</h2>\r\n            <p><a href=\"http://validator.w3.org/check/referer\" title=\"This page validates as XHTML 1.0 Transitional\">Valid <abbr title=\"eXtensible HyperText Markup Language\">XHTML</abbr></a></p>\r\n            <p><a href=\"http://jigsaw.w3.org/css-validator/check/referer\" title=\"This page uses valid Cascading Stylesheets\" rel=\"external\">Valid <abbr title=\"W3C Cascading Stylesheets\">css</abbr></a></p>\r\n            <p><a href=\"http://modxcms.com\" title=\"Ajax CMS and PHP Application Framework\">MODx</a></p>\r\n          </div>\r\n          <!-- close #sidebar -->\r\n        </div>\r\n        <!-- end right inner-->\r\n      </div>\r\n      <!-- end right -->\r\n      <div id=\"left\">\r\n        <div id=\"left-inner\">\r\n          <div id=\"content\">\r\n            <div class=\"post\">\r\n              <h2>[*longtitle*]</h2>\r\n              [*#content*]\r\n</div>\r\n[!Jot? &customfields=`name,email` &subscribe=`1` &pagination=`10`!]\r\n            <!-- close .post (main column content) -->\r\n          </div>\r\n          <!-- close #content -->\r\n        </div>\r\n        <!-- end left-inner -->\r\n      </div>\r\n      <!-- end left -->\r\n    </div>\r\n    <!-- end inner -->\r\n    <div id=\"clearfooter\"></div>\r\n    <div id=\"header\">\r\n      <h1><a id=\"logo\" href=\"[~[(site_start)]~]\" title=\"[(site_name)]\">[(site_name)]</a></h1>\r\n      <div id=\"search\"><span id=\"search-txt\">SEARCH</span><a name=\"search\"></a>[[AjaxSearch? &AS_landing=`8` &moreResultsPage=`8` &showMoreResults=`1` &addJscript=`0` &extract=`0` &AS_showResults=`0`]] </div>\r\n      <div id=\"ajaxmenu\"> [[Wayfinder?startId=`0` &outerTpl=`mh.OuterTpl` &innerTpl=`mh.InnerTpl` &rowTpl=`mh.RowTpl` &innerRowTpl=`mh.InnerRowTpl` &firstClass=`first` &hereClass=``]] </div>\r\n      <!-- end topmenu -->\r\n    </div>\r\n    <!-- end header -->\r\n    <div id=\"footer\">\r\n      <p> <a href=\"http://modxcms.com\" title=\"Ajax CMS and PHP Application Framework\">Powered\r\n          by MODx</a> &nbsp;<a href=\"http://www.modxhost.com/\" title=\"Template Designed by modXhost.com\">Template &copy; 2006\r\n          modXhost.com</a><br />\r\n        MySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved\r\n        from [^s^]. </p>\r\n    </div>\r\n    <!-- end footer -->\r\n  </div>\r\n  <!-- end outer div -->\r\n</div>\r\n<!-- end wrapper -->\r\n<script type=\"text/javascript\">\r\n<!--\r\nvar menu = new DropDownMenu($(\'myajaxmenu\'));\r\n\r\nEvent.observe(document, \"keypress\", function(e){ if(e.keyCode==27) {closeSearch();} });\r\n\r\n-->\r\n</script>\r\n</body>\r\n</html>\r\n','0');
-                                      
+ 
 
 #
 # Dumping data for table `site_tmplvars`
@@ -204,10 +198,10 @@ REPLACE INTO `{PREFIX}site_templates` VALUES ('5','MODxHostWithComments','MODxHo
 
 
 REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('1','richtext','blogContent','blogContent','RTE for the new blog entries','0','0','0','','0','richtext','&w=383px&h=450px&edt=FCKEditor','');
-                                     
+
 
 REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','text','loginName','loginName','Conditional name for the Login menu item','0','0','0','','0','','','@EVAL if ($modx->getLoginUserID()) return \'Logout\'; else return \'Login\';');
-                                     
+
 
 #
 # Dumping data for table `site_tmplvar_templates`
@@ -318,12 +312,12 @@ REPLACE INTO `{PREFIX}categories` VALUES ('8','MODxHost Menu');
 REPLACE INTO `{PREFIX}categories` VALUES ('9','Demo Content');
 
 
+REPLACE INTO `{PREFIX}categories` VALUES ('10','Search');
+
+
 #
 # Update categories for table `site_snippets`
 #
-
-
-UPDATE `{PREFIX}site_snippets` SET `category` = '1' WHERE `name` IN ('PoweredBy');
 
 
 UPDATE `{PREFIX}site_snippets` SET `category` = '2' WHERE `name` IN ('MemberCheck', 'Personalize', 'WebChangePwd', 'WebLogin', 'WebSignup');
@@ -335,7 +329,10 @@ UPDATE `{PREFIX}site_snippets` SET `category` = '3' WHERE `name` IN ('Ditto', 'J
 UPDATE `{PREFIX}site_snippets` SET `category` = '4' WHERE `name` IN ('Breadcrumbs','FirstChildRedirect','UltimateParent','Wayfinder');
 
 
-UPDATE `{PREFIX}site_snippets` SET `category` = '5' WHERE `name` IN ('AjaxSearch', 'eForm');
+UPDATE `{PREFIX}site_snippets` SET `category` = '5' WHERE `name` IN ('eForm');
+
+
+UPDATE `{PREFIX}site_snippets` SET `category` = '10' WHERE `name` IN ('AjaxSearch');
 
 
 #
@@ -343,7 +340,7 @@ UPDATE `{PREFIX}site_snippets` SET `category` = '5' WHERE `name` IN ('AjaxSearch
 #
 
 
-UPDATE `{PREFIX}site_plugins` SET `category` = '5' WHERE `name` IN ('Search Highlighting');
+UPDATE `{PREFIX}site_plugins` SET `category` = '10' WHERE `name` IN ('Search Highlighting');
 
 
 UPDATE `{PREFIX}site_plugins` SET `category` = '6' WHERE `name` IN ('Bottom Button Bar', 'Forgot Manager Login', 'Inherit Parent Template', 'TinyMCE');
@@ -353,6 +350,14 @@ UPDATE `{PREFIX}site_plugins` SET `category` = '7' WHERE `name` IN ('QuickEdit')
 
 
 UPDATE `{PREFIX}site_plugins` SET `category` = '9' WHERE `name` IN ('DisableCache', 'TemplateSwitcher');
+
+
+#
+# Update categories for table `site_tmplvars`
+#
+
+
+UPDATE `{PREFIX}site_tmplvars` SET `category` = '9' WHERE `name` IN ('blogContent','loginName');
 
 
 #
@@ -383,10 +388,10 @@ REPLACE INTO `{PREFIX}jot_content` VALUES ('12','Posting when logged in','','1',
 REPLACE INTO `{PREFIX}jot_content` VALUES ('13','Managers','','1','9','0','','87.211.130.14','91e230cf219e3ade10f32d6a41d0bd4d','Comments posted when only logged in as a manager user will use your manager name.\r\n\r\nModerators options are always shown when you are logged in as manager user.','<custom></custom>','0','1','1160421487','0','0','0','0','0','0','0');
 
 
-REPLACE INTO `{PREFIX}jot_content` VALUES ('14','Moderation','','1','9','0','','87.211.130.14','58fade927c1df50ba6131f2b0e53c120','In this setup the Site Admins group is defined as being the moderator for this particular comment view. These users will have extra moderation options \r\n\r\nManager users, Moderators or Trusted users can post bad words like: etomite.','<custom></custom>','0','-1','1160422081','0','0','0','0','0','0','0');
+REPLACE INTO `{PREFIX}jot_content` VALUES ('14','Moderation','','1','9','0','','87.211.130.14','58fade927c1df50ba6131f2b0e53c120','In this setup the Site Admins group is defined as being the moderator for this particular comment view. These users will have extra moderation options \r\n\r\nManager users, Moderators or Trusted users can post bad words like: dotNet.','<custom></custom>','0','-1','1160422081','0','0','0','0','0','0','0');
 
 
-REPLACE INTO `{PREFIX}jot_content` VALUES ('15','I\'m untrusted','','0','9','0','','87.211.130.14','edb75dab198ff302efbf2f60e548c0b3','Untrusted users however can NOT post bad words like: etomite. When they do the posts will be unpublished.','<custom><name></name><email></email></custom>','0','0','1160422167','0','0','0','0','0','0','0');
+REPLACE INTO `{PREFIX}jot_content` VALUES ('15','I\'m untrusted','','0','9','0','','87.211.130.14','edb75dab198ff302efbf2f60e548c0b3','Untrusted users however can NOT post bad words like: dotNet. When they do the posts will be unpublished.','<custom><name></name><email></email></custom>','0','0','1160422167','0','0','0','0','0','0','0');
 
 
 #

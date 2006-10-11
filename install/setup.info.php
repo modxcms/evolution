@@ -18,7 +18,7 @@
 	$ms[] = array("AjaxSearch","<strong>1.1</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
 	$ms[] = array("Breadcrumbs","<strong>0.9d</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
 	$ms[] = array("Ditto","<strong>1.0.2</strong> Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more.",0,"$setupPath/snippet.ditto.tpl","");
-	$ms[] = array("eForm","<strong>1.0</strong> Robust form parser/processor with validation, multiple sending options, chunks support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
+	$ms[] = array("eForm","<strong>1.4</strong> Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
 	$ms[] = array("FirstChildRedirect","<strong>1.0</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
 	$ms[] = array("Jot","<strong>1.0 beta8</strong> User comments with moderation and email subscription.",0,"$setupPath/snippet.jot.tpl","");
 	$ms[] = array("ListIndexer","<strong>1.0</strong> Shows the most recent documents, highly flexible.",0,"$setupPath/snippet.listindexer.tpl","");
@@ -34,19 +34,19 @@
 
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
-	$mp[] = array("Bottom Button Bar","<strong>New:</strong> Adds a set of buttons to the bottom of all manager pages",0,"$setupPath/plugin.bottombuttonbar.tpl","","OnChunkFormRender, OnDocFormRender, OnModFormRender, OnPluginFormRender, OnSnipFormRender, OnTVFormRender, OnTempFormRender, OnUserFormRender, OnWUsrFormRender");
-	$mp[] = array("Forgot Manager Login","<strong>NEW:</strong> Resets your manager login when you forget your password. ",0,"$setupPath/plugin.ForgotManagerPassword.tpl","","OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender");
-	$mp[] = array("Inherit Parent Template","<strong>New:</strong> New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
-	$mp[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
-	$mp[] = array("TinyMCE","<strong>NEW:</strong> TinyMCE version 2.0.6.1 RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&webtheme=Web Theme;list;simple,advanced,full;simple","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+	$mp[] = array("Bottom Button Bar","Adds a set of buttons to the bottom of all manager pages",0,"$setupPath/plugin.bottombuttonbar.tpl","","OnChunkFormRender, OnDocFormRender, OnModFormRender, OnPluginFormRender, OnSnipFormRender, OnTVFormRender, OnTempFormRender, OnUserFormRender, OnWUsrFormRender");
+	$mp[] = array("Forgot Manager Login","Resets your manager login when you forget your password. ",0,"$setupPath/plugin.ForgotManagerPassword.tpl","","OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender");
+	$mp[] = array("Inherit Parent Template","New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
+	$mp[] = array("QuickEdit","Front-end Content Editor.",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
+	$mp[] = array("TinyMCE","<strong>2.0.6.1:</strong> TinyMCE RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&webtheme=Web Theme;list;simple,advanced,full;simple","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
     $mp[] = array("Search Highlighting","Show search terms highlighted on page linked from search results. (Requires AjaxSearch snippet)",0,"$setupPath/plugin.searchhighlight.tpl","","OnWebPagePrerender");
-    $mp[] = array("DisableCache","Kills the caching for every page (needed for template switcher demo).",0,"$setupPath/plugin.disablecache.tpl","","OnLoadWebDocument");
+    $mp[] = array("DisableCache","Disables the cache for every page (needed for template switcher demo).",0,"$setupPath/plugin.disablecache.tpl","","OnLoadWebDocument");
     $mp[] = array("TemplateSwitcher","Changes templates used on all pages in your site.",0,"$setupPath/plugin.templateswitcher.tpl","","OnLoadWebDocument");
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
 	$mm = &$moduleModules;
-	$mm[] = array("Doc Manager","<strong>NEW:</strong> Quickly make bulk changes to the Documents in your site including templates, publishing details, and permissions.",0,"$setupPath/module.docmanager.tpl","","",1);
-	$mm[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable,template","f888bac76e1537ca8e0cbec772b4624a",1);
+	$mm[] = array("Doc Manager","Quickly perform bulk updates to the Documents in your site including templates, publishing details, and permissions.",0,"$setupPath/module.docmanager.tpl","","",1);
+	$mm[] = array("QuickEdit","Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable,template","f888bac76e1537ca8e0cbec772b4624a",1);
 
 	# setup callback function
 	$callBackFnc = "clean_up";

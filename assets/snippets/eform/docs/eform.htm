@@ -127,9 +127,6 @@ font-size:14pt;
 					<li><a href="eform.htm#datatypes">Data types</a></li>
 					<li><a href="eform.htm#validation">Extended Form Validation</a></li>
 					<li><a href="eform_examples.htm">Examples</a>
-					<ul>
-						<li><a href="eform_examples.htm#top">Feedback Form</a></li>
-					</ul>
 					</li>
 				</ul>
 			
@@ -137,7 +134,7 @@ font-size:14pt;
 
 		<div class="qe_level_1"><h2>Who's responsible for eForm</h2>
 <p>Originally developed by Raymond Irving (15-Dec-2004) who's currently working on version 2.0.
-<br/>Version 1.3 extended by: Jelle Jager (TobyL) September 2006</p>
+<br/>Version 1.3 - 1.4 extended by: Jelle Jager (TobyL) September 2006</p>
 <p>Captcha image support - thanks to Djamoer<br/>Multi checkbox, radio, select support - thanks to Djamoer
 <br />Styles (for these docs) 'borrowed' from Adam Crownoble's QuickEdit
 </p>
@@ -150,6 +147,43 @@ font-size:14pt;
 <a href="#whatsnew"></a>
 <h2>What's New</h2>
 <div class='qe_level_2'>
+<h3>Version 1.4</h3>
+<ul>
+<li>Fixed: <code>&debug</code> parameter wasn't doing anything</li>
+<li>Fixed: Returning 'foreach' error when chunk or document not found for form template</li>
+<li>Fixed: Erroneous error when using multiple forms on a page ($formats persisted between eForm calls)</li>
+<li>Updated: Events now work using the &eFormOnBeforeMailSent and &eFormOnMailSent paramaters.
+The previous event structure did not appear to work without some tricks (variables were out of scope)</li>
+<li>Updated:  [+subject+] can now be used in report and thank you templates</li>
+<li>Updated: When using a document for the templates the document no longer needs to have published set</li>
+<li>New: Show error if &tpl is set to the same document (id) containing the eForm snippet call</li>
+<li>New: extended debug messages for validated fields (if &debug is set)</li>
+<li>New: added some protection against mail injection (still to do -
+ send 'abuse alert' mail to [(mailsender)] (controlled by a configuration parameter)</li>
+
+<li>New: You can now use &lt;form id="formName"...&gt; to match your &formid=`formName`
+instead of &lt;input type="hidden" name="formid" value="formName" /&gt;</li>
+<li>New: You can now set the description using the label tag instead of in the eform attribute
+eg. &lt;label for="email"&gt;Your Email&lt;/label&gt;&lt;input type="text" name="email" eform=":email:1::/&gt;
+instead of &lt;label&gt;Your Email&lt;/label&gt;&lt;input type="text" name="email" eform="Your Email:email:1::/&gt;
+If both are used the eform value takes precedence.</li>
+<li>New: Added &disclaimer parameter for adding a disclaimer to the email body. Can be chunk name or document id
+Need to manually add [+disclaimer+] placeholder to report template</li>
+<li>Optimized: moved form parser code so it is only executed when form is posted</li>
+<li>Updated: You can again use placeholders in &from and &fromname (as you can with &subject and &keywords)</li>
+<li>Updated: It is now possible to use special placeholders in #SELECT validation rule i.e.
+#SELECT jobnum FROM translation_jobs WHERE client_email={email}</li>
+<li>New: you can now use the #LIST validation rule for file type checking with file uploads 
+by supplying a list of file extensions eg: #LIST jpg,jpeg,png,gif</li>
+
+<li>New Examples:
+	<li>How to use eform events</li>
+	<li>Multiple forms on one page</li>
+</li>
+</ul>
+
+
+<h3>Version 1.3</h3>
 <ul>
 <li><strong>eFormParser included</strong><br />
 This version differs from the original in that it incorporates the eFormParser which retrieves part of it's setting and validation information from the form itself by reading the	<code>eform</code> pseudo attribute from the form fields. eForm also no longer requires to set placeholders in each form field with the exception of the 
@@ -174,13 +208,12 @@ You can now add custom validation messages to each field. The way messages are d
 <h2>Installation</h2>
 <div class='qe_level_2'>
 <ul>
-<li>Unzip the eform.1.3.zip file into the assets/snippet/ folder. You should now have an extra folder called eform.</li>
+<li>Unzip the eform.1.4.zip file into the assets/snippet/ folder. You should now have an extra folder called eform.</li>
 <li>Create a new snippet, name it eForm and copy and paste the content of the eform.snippet.tpl file</li>
 <li>Start reading this file and the examples</li>
 <li>Create forms</li>
 </ul>
 </div>
-
 </div>		
 		
 		<a name="params" id="params"></a>
@@ -424,14 +457,9 @@ and validation with #RANGE (in this example a value between 1-10)
 <h2>Todo</h2>
 <ul>
 <li>More examples</li>
-<li>Better file upload validation ( read file-size from hidden field?, file-types from #LIST )</li>
 <li>Custom css classes for invalid fields (add to or create class attributes)</li>
-<li>Get eFromParser to parse &lt;label for=&quot;fieldname&quot;&gt;Some Label&lt;label&gt; te fetch field title</li>
 <li>Extend output options - save as document, store in database table??</li>
 </ul>
-
-
-
 </div>
 
 </body>

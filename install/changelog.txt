@@ -3,9 +3,15 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1686 - October 11, 2006)
+MOD 0.9.5 beta 5 (rev 1687 - October 11, 2006)
 ====================================
 
+* updated eForm to version 1.4
+* separate welcome page logic from UI (welcome.html in manager themes) to allow theme designer to easily style of welcome page
+* fix js bug with "Access Permissions" checkbox in mutate_content, mutate_module, mutate_tmpvar
+* fix: hide working status after module loads
+* fix js bug in mutate_content: tpSetting was not defined
+* fix: context menu in MODx theme + updates
 * [FS#203] Introducing 'publish' permission.
 * Bugfix: Set correct default value for language select box (edit user dlg)
 * Cosmetics: Removed zero-value from phone and mobile of default admin
