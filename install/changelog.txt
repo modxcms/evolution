@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1667 - October 10, 2006)
+MOD 0.9.5 beta 5 (rev 1670 - October 10, 2006)
 ====================================
 
+* updated TinyMCE to 2.0.6.1 version (1669,1670)
 * Setting n-m ranges in the DocManager now functions as intended. (1656)
 * Correction to TV count checks for Assigned TVs in the templates section, will now only display sort option if TV count is greater than 1. (1656)
 * DocManager update: Fix menu index parent selection, numerous little bugfixes for js errors. (1649)
