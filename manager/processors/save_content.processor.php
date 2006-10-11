@@ -123,7 +123,6 @@ if(empty($unpub_date)) {
 }
 
 
-
 if($strip_image_paths==1) {
 	// Strip out absolute URLs for images 
 	// --------------------------------------------------  
@@ -267,7 +266,14 @@ switch ($actionToTake) {
 									"mode"	=> "new",
 									"id"	=> $id
 								));    
-								
+		
+		// Deny publishing if not permitted
+		if(!$modx->hasPermission('publish_document')) {
+			$pub_date = 0;
+			$unpub_date = 0;
+			$published = 0;
+		}
+										
 		$publishedon = ($published ? time() : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 								
@@ -413,11 +419,20 @@ switch ($actionToTake) {
 		if($row['count(*)']>0) {
 			$isfolder=1;
 		}
+  
 
     // Set publishedon and publishedby
     $was_published = $modx->db->getValue("SELECT published FROM {$table_prefix}site_content WHERE id = '{$id}';");
+   
+    // Keep original publish state, if change is not permitted
+    if(!$modx->hasPermission('publish_document')) {
+      $published = $was_published;
+      $pub_date = 'pub_date';
+      $unpub_date = 'unpub_date';
+    }
+    
     // If it was changed from unpublished to published
-    if(!$was_published && $published) {
+    if(!$was_published && $published) {    
      $publishedon = time();
      $publishedby = $modx->getLoginUserID();
     } elseif($was_published && !$published) {

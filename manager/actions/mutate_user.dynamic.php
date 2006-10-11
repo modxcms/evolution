@@ -1,18 +1,25 @@
 <?php
-if (IN_MANAGER_MODE != "true")
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if (!$modx->hasPermission('edit_user') && $_REQUEST['a'] == 12) {
-	$e->setError(3);
-	$e->dumpError();
-}
-if (!$modx->hasPermission('new_user') && $_REQUEST['a'] == 11) {
-	$e->setError(3);
-	$e->dumpError();
+if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+
+switch($_REQUEST['a']) {
+  case 12:
+    if (!$modx->hasPermission('edit_user')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  case 11:
+    if (!$modx->hasPermission('new_user')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  default:
+    $e->setError(3);
+    $e->dumpError();  
 }
 
-$user = $_REQUEST['id'];
-if ($user == "")
-	$user = 0;
+$user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase." . $table_prefix . "active_users WHERE $dbase." . $table_prefix . "active_users.action=12 AND $dbase." . $table_prefix . "active_users.id=$user";
@@ -318,16 +325,6 @@ if (is_array($evtOut))
 			</td>
 		  </tr>
 		  <tr>
-			<td><?php echo $_lang['user_phone']; ?>:</td>
-			<td>&nbsp;</td>
-			<td><input type="text" name="phone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['phone']); ?>" onchange='documentDirty=true;'></td>
-		  </tr>
-		  <tr>
-			<td><?php echo $_lang['user_mobile']; ?>:</td>
-			<td>&nbsp;</td>
-			<td><input type="text" name="mobilephone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['mobilephone']); ?>" onchange='documentDirty=true;'></td>
-		  </tr>
-		  <tr>
 			<td><?php echo $_lang['user_role']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
@@ -352,6 +349,16 @@ while ($row = mysql_fetch_assoc($rs)) {
 			</td>
 		  </tr>
 		  <tr>
+			<td><?php echo $_lang['user_phone']; ?>:</td>
+			<td>&nbsp;</td>
+			<td><input type="text" name="phone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['phone']); ?>" onchange='documentDirty=true;'></td>
+		  </tr>
+		  <tr>
+			<td><?php echo $_lang['user_mobile']; ?>:</td>
+			<td>&nbsp;</td>
+			<td><input type="text" name="mobilephone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['mobilephone']); ?>" onchange='documentDirty=true;'></td>
+		  </tr>		  
+		  <tr>	  
 			<td><?php echo $_lang['user_fax']; ?>:</td>
 			<td>&nbsp;</td>
 			<td><input type="text" name="fax" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['fax']); ?>" onchange='documentDirty=true;'></td>
@@ -696,13 +703,13 @@ while ($row = mysql_fetch_assoc($rs)) {
 	    <td> <select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true">
 	    <option value=""> </option>
 	    <?php
-
+$activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : $manager_language;
 $dir = dir("includes/lang");
 while ($file = $dir->read()) {
 	if (strpos($file, ".inc.php") > 0) {
 		$endpos = strpos($file, ".");
 		$languagename = substr($file, 0, $endpos);
-		$selectedtext = $languagename == $usersettings['manager_language'] ? "selected='selected'" : "";
+		$selectedtext = $languagename == $activelang ? "selected='selected'" : "";
 ?> 
                 <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option> 
                 <?php

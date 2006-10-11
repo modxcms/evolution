@@ -655,6 +655,7 @@ $_lang["role_new_role"] = 'Create new roles';
 $_lang["role_new_user"] = 'Create new users';
 $_lang["role_new_web_user"] = 'Create new web users';
 $_lang["role_plugin_management"] = 'Plugin management';
+$_lang["role_publish_doc"] = 'Publish documents';
 $_lang["role_role_management"] = 'Roles';
 $_lang["role_run_module"] = 'Run module';
 $_lang["role_save_doc"] = 'Save documents';

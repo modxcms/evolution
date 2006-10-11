@@ -400,6 +400,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `view_document` int(1) NOT NULL default '0',
   `new_document` int(1) NOT NULL default '0',
   `save_document` int(1) NOT NULL default '0',
+  `publish_document` int(1) NOT NULL default '0',
   `delete_document` int(1) NOT NULL default '0',
   `action_ok` int(1) NOT NULL default '0',
   `logout` int(1) NOT NULL default '0',
@@ -680,6 +681,8 @@ ALTER TABLE `{PREFIX}user_roles`
  ADD COLUMN `web_access_permissions` int(1) NOT NULL DEFAULT '0' AFTER `delete_web_user`,
  ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0'AFTER `web_access_permissions`;
 
+ALTER TABLE `{PREFIX}user_roles` 
+ ADD COLUMN `publish_document` int(1) NOT NULL DEFAULT '0' AFTER `save_document`;
 
 ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` integer(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
  ADD COLUMN `gender` integer(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
@@ -755,7 +758,7 @@ REPLACE INTO `{PREFIX}manager_users`
 
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Built-in Administration account', 1, 'Your email goes here', '0', '0', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
+(1, 1, 'Built-in Administration account', 1, 'Your email goes here', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
 
 
 # Default Site Settings

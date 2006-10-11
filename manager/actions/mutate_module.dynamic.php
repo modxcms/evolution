@@ -1,12 +1,22 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('new_module') && $_REQUEST['a']==107) {
-	$e->setError(3);
-	$e->dumpError();
-}
-if(!$modx->hasPermission('edit_module') && $_REQUEST['a']==108) {
-	$e->setError(3);
-	$e->dumpError();
+
+switch($_REQUEST['a']) {
+  case 107:
+    if(!$modx->hasPermission('new_module')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  case 108:
+    if(!$modx->hasPermission('edit_module')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  default:
+    $e->setError(3);
+    $e->dumpError();
 }
 
 // create globally unique identifiers (guid)
@@ -18,24 +28,8 @@ function createGUID(){
 	return $m;
 }
 
-function isNumber($var) {
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
-    }
-	return true;
-}
 
-if(isset($_REQUEST['id'])) {
-	$id = $_REQUEST['id'];
-} else {
-	$id=0;
-}
-
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the  editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=108 AND $dbase.".$table_prefix."active_users.id=$id";
@@ -53,11 +47,6 @@ if($limit>1) {
 }
 // end check for lock
 
-// make sure the id's a number
-if(!isNumber($id)) {
-	echo "Passed ID is NaN!";
-	exit;
-}
 
 if(isset($_GET['id'])) {
 	$sql = "SELECT * FROM ".$modx->getFullTableName("site_modules")." WHERE id = $id;";

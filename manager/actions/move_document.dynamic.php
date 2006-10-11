@@ -1,25 +1,12 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('save_document') && $_REQUEST['a']==51) {
+if(!$modx->hasPermission('save_document')) {
     $e->setError(3);
     $e->dumpError();
 }
 
-function isNumber($var)
-{
-    if(strlen($var)==0) {
-        return false;
-    }
-    for ($i=0;$i<strlen($var);$i++) {
-        if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-            return false;
-        }
-    }
-    return true;
-}
-
 if(isset($_REQUEST['id'])) {
-    $id = $_REQUEST['id'];
+    $id = intval($_REQUEST['id']);
 } else {
     $e->setError(2);
     $e->dumpError();

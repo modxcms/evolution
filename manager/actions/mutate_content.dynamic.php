@@ -1,42 +1,34 @@
 <?php
-if (IN_MANAGER_MODE != "true")
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-// check for edit permissions
-if (!$modx->hasPermission('edit_document') && $_REQUEST['a'] == 27) {
+// check permissions
+switch($_REQUEST['a']) {
+  case 27:
+    if(!$modx->hasPermission('edit_document')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  case 85:
+  case 72:
+  case 4:
+    if(!$modx->hasPermission('new_document')) {
+      $e->setError(3);
+      $e->dumpError();
+    }     
+    break;
+  default:
     $e->setError(3);
     $e->dumpError();
 }
 
-// check for create permissions
-if (!$modx->hasPermission('new_document') && ($_REQUEST['a'] == 85 || $_REQUEST['a'] == 4 || $_REQUEST['a'] == 72)) {
-    $e->setError(3);
-    $e->dumpError();
-}
-
-function isNumber($var) {
-    if (strlen($var) == 0) {
-        return false;
-    }
-    for ($i = 0; $i < strlen($var); $i++) {
-        if (substr_count("0123456789", substr($var, $i, 1)) == 0) {
-            return false;
-        }
-    }
-    return true;
-}
 
 if (!isset ($_REQUEST['id'])) {
     $id = 0;
 } else {
-    $id = !empty ($_REQUEST['id']) ? $_REQUEST['id'] : 0;
+    $id = !empty ($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 }
 
-// make sure the id's a number
-if (!isNumber($id)) {
-    $e->setError(4);
-    $e->dumpError();
-}
 
 if ($action == 27) {
     //editing an existing document
@@ -713,6 +705,7 @@ if (isset ($_REQUEST['id'])) {
                 <td><input name="donthitcheck" type="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : "" ;?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0 ;?>" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_trackvisit_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
             <?php } ?>
+            <?php if($modx->hasPermission('publish_document')): // Publish permission set?>
               <tr style="height: 24px;">
                 <td><span class='warning'><?php echo $_lang['document_opt_published']; ?></span></td>
                 <td><input name="publishedcheck" type="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.published);" /><input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0 ;?>" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_published_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
@@ -741,6 +734,32 @@ if (isset ($_REQUEST['id'])) {
                   <td></td>
                   <td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td>
               </tr>
+              <?php else: // No publish permission ?>
+              <tr style="height: 24px;">
+                <td><span class='warning'><?php echo $_lang['document_opt_published']; ?></span></td>
+                <td><input disabled="disabled" name="publishedcheck" type="checkbox" <?php echo (isset($content['published']) && $content['published']==1) ? "checked" : "" ;?> /><input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) ? 1 : 0 ;?>" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_published_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+              </tr>
+              <tr style="height: 24px;">
+                <td><span class='warning'><?php echo $_lang['page_data_publishdate']; ?></span></td>
+                <td><input disabled="disabled" name="pub_date" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date']);?>" />
+                        &nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_publishdate_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" />
+                </td>
+              </tr>
+              <tr>
+                  <td></td>
+                  <td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td>
+              </tr>
+              <tr style="height: 24px;">
+                <td><span class='warning'><?php echo $_lang['page_data_unpublishdate']; ?></span></td>
+                <td><input disabled="disabled" name="unpub_date" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? "" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date']); ?>" />
+                        &nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_unpublishdate_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" />
+                </td>
+              </tr>
+              <tr>
+                  <td></td>
+                  <td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td>
+              </tr>                                      
+              <?php endif; // End publish?>
               <tr style="height: 24px;">
                 <td><span class='warning'><?php echo $_lang['page_data_searchable']; ?></span></td>
                 <td><input name="searchablecheck" type="checkbox" <?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? "checked" : "" ;?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? 1 : 0 ;?>" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_searchable_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>

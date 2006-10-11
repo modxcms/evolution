@@ -538,8 +538,8 @@ function menuHandler(action) {
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(9, "date", $_lang["publish_document"], $modx->hasPermission('edit_document'),$theme);
-    constructLink(10, "date", $_lang["unpublish_document"], $modx->hasPermission('edit_document'),$theme);
+    constructLink(9, "date", $_lang["publish_document"], $modx->hasPermission('publish_document'),$theme);
+    constructLink(10, "date", $_lang["unpublish_document"], $modx->hasPermission('publish_document'),$theme);
     ?>
 </div>
 

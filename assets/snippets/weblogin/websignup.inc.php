@@ -23,15 +23,15 @@ if(!$isPostBack){
 } 
 else if ($isPostBack){
 
-    $username = $modx->db->escape($_POST['username']);
-    $fullname = $modx->db->escape($_POST['fullname']);
-    $email = $modx->db->escape($_POST['email']);
-    $password = $_POST['password'];
-    $country = $_POST['country'];
-    $state = $_POST['state'];
-    $zip = $_POST['zip'];
+    $username = $modx->db->escape($modx->stripTags($_POST['username']));
+    $fullname = $modx->db->escape($modx->stripTags($_POST['fullname']));
+    $email = $modx->db->escape($modx->stripTags($_POST['email']));
+    $password = $modx->db->escape($modx->stripTags($_POST['password']));
+    $country = $modx->db->escape($modx->stripTags($_POST['country']));
+    $state = $modx->db->escape($modx->stripTags($_POST['state']));
+    $zip = $modx->db->escape($modx->stripTags($_POST['zip']));
     $formcode = $_POST['formcode'];
-    
+
     // load template section #1
     $tpl = $tpls[0];
     $tpl = str_replace("[+action+]",$modx->makeURL($modx->documentIdentifier),$tpl);

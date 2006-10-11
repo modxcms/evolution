@@ -24,6 +24,7 @@ $fields = array (
 	view_document => 	 $view_document, 
 	new_document => 	 $new_document, 
 	save_document => 	 $save_document, 
+	publish_document => 	 $publish_document, 	
 	delete_document => 	 $delete_document, 
 	action_ok => 		 $action_ok, 
 	logout => 			 $logout, 

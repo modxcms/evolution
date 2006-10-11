@@ -1,14 +1,26 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_role') && $_REQUEST['a']==35) {	$e->setError(3);
-	$e->dumpError();
-}
-if(!$modx->hasPermission('new_role') && $_REQUEST['a']==38) {	$e->setError(3);
-	$e->dumpError();
+
+switch($_REQUEST['a']) {
+  case 35:
+    if(!$modx->hasPermission('edit_role')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  case 38:
+    if(!$modx->hasPermission('new_role')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  default:
+    $e->setError(3);
+    $e->dumpError();
 }
 
-$role = $_REQUEST['id'];
-if($role=="") $role=0;
+$role = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+
 
 // check to see the role editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=35 and $dbase.".$table_prefix."active_users.id=$role";
@@ -128,6 +140,7 @@ function deletedocument() {
 <input name="new_documentcheck" type="checkbox" onClick="changestate(document.userform.new_document)" <?php echo $roledata['new_document']==1 ? "checked" : "" ; ?>><input type="hidden" name="new_document" value="<?php echo $roledata['new_document']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.new_documentcheck.click()"><?php echo $_lang['role_create_doc']; ?></span><br />
 <input name="edit_documentcheck" type="checkbox" onClick="changestate(document.userform.edit_document)" <?php echo $roledata['edit_document']==1 ? "checked" : "" ; ?>><input type="hidden" name="edit_document" value="<?php echo $roledata['edit_document']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.edit_documentcheck.click()"><?php echo $_lang['role_edit_doc']; ?></span><br />
 <input name="save_documentcheck" type="checkbox" onClick="changestate(document.userform.save_document)" <?php echo $roledata['save_document']==1 ? "checked" : "" ; ?>><input type="hidden" name="save_document" value="<?php echo $roledata['save_document']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.save_documentcheck.click()"><?php echo $_lang['role_save_doc']; ?></span><br />
+<input name="publish_documentcheck" type="checkbox" onClick="changestate(document.userform.publish_document)" <?php echo $roledata['publish_document']==1 ? "checked" : "" ; ?>><input type="hidden" name="publish_document" value="<?php echo $roledata['publish_document']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.publish_documentcheck.click()"><?php echo $_lang['role_publish_doc']; ?></span><br />
 <input name="delete_documentcheck" type="checkbox" onClick="changestate(document.userform.delete_document)" <?php echo $roledata['delete_document']==1 ? "checked" : "" ; ?>><input type="hidden" name="delete_document" value="<?php echo $roledata['delete_document']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.delete_documentcheck.click()"><?php echo $_lang['role_delete_doc']; ?></span><br />
 <input name="edit_doc_metatagscheck" type="checkbox" onClick="changestate(document.userform.edit_doc_metatags)" <?php echo $roledata['edit_doc_metatags']==1 ? "checked" : "" ; ?>><input type="hidden" name="edit_doc_metatags" value="<?php echo $roledata['edit_doc_metatags']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.edit_doc_metatagscheck.click()"><?php echo $_lang['role_edit_doc_metatags']; ?></span><br />
 <input name="empty_cachecheck" type="checkbox" onClick="changestate(document.userform.empty_cache)" checked disabled><input type="hidden" name="empty_cache" value="1"> <span style="cursor:hand"><?php echo $_lang['role_cache_refresh']; ?></span><br />

@@ -1,34 +1,25 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_plugin') && $_REQUEST['a']==102) {
-	$e->setError(3);
-	$e->dumpError();
-}
-if(!$modx->hasPermission('new_plugin') && $_REQUEST['a']==101) {
-	$e->setError(3);
-	$e->dumpError();
-}
 
-
-
-function isNumber($var)
-{
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
+switch($_REQUEST['a']) {
+  case 102:
+    if(!$modx->hasPermission('edit_plugin')) {
+      $e->setError(3);
+      $e->dumpError();
     }
-	return true;
+    break;
+  case 101:
+    if(!$modx->hasPermission('new_plugin')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  default:
+    $e->setError(3);
+    $e->dumpError();  
 }
 
-if(isset($_REQUEST['id'])) {
-	$id = $_REQUEST['id'];
-} else {
-	$id=0;
-}
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 
 // check to see the plugin editor isn't locked
@@ -47,11 +38,6 @@ if($limit>1) {
 }
 // end check for lock
 
-// make sure the id's a number
-if(!isNumber($id)) {
-	echo "Passed ID is NaN!";
-	exit;
-}
 
 if(isset($_GET['id'])) {
 	$sql = "SELECT * FROM $dbase.".$table_prefix."site_plugins WHERE $dbase.".$table_prefix."site_plugins.id = $id;";

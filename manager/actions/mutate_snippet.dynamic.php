@@ -1,33 +1,26 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_snippet') && $_REQUEST['a']==22) {	$e->setError(3);
-	$e->dumpError();
-}
-if(!$modx->hasPermission('new_snippet') && $_REQUEST['a']==23) {	$e->setError(3);
-	$e->dumpError();
-}
 
-
-
-function isNumber($var)
-{
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
+switch($_REQUEST['a']) {
+  case 22:
+    if(!$modx->hasPermission('edit_snippet')) {
+      $e->setError(3);
+      $e->dumpError();
     }
-	return true;
+    break;
+  case 23:
+    if(!$modx->hasPermission('new_snippet')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  default:
+    $e->setError(3);
+    $e->dumpError();
 }
 
-if(isset($_REQUEST['id'])) {
-	$id = $_REQUEST['id'];
-} else {
-	$id=0;
-}
 
+$id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=22 AND $dbase.".$table_prefix."active_users.id=$id";
@@ -45,11 +38,6 @@ if($limit>1) {
 }
 // end check for lock
 
-// make sure the id's a number
-if(!isNumber($id)) {
-	echo "Passed ID is NaN!";
-	exit;
-}
 
 if(isset($_GET['id'])) {
 	$sql = "SELECT * FROM $dbase.".$table_prefix."site_snippets WHERE $dbase.".$table_prefix."site_snippets.id = $id;";

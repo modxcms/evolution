@@ -1,12 +1,22 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==16) {
-	$e->setError(3);
-	$e->dumpError();
-}
-if(!$modx->hasPermission('new_template') && $_REQUEST['a']==19) {
-	$e->setError(3);
-	$e->dumpError();
+
+switch($_REQUEST['a']) {
+  case 16:
+    if(!$modx->hasPermission('edit_template')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  case 19:
+    if(!$modx->hasPermission('new_template')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  default:
+    $e->setError(3);
+    $e->dumpError();
 }
 
 if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {

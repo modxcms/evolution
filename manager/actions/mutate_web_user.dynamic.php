@@ -1,16 +1,26 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_web_user') && $_REQUEST['a']==88) {
-	$e->setError(3);
-	$e->dumpError();
-}
-if(!$modx->hasPermission('new_web_user') && $_REQUEST['a']==87) {
-	$e->setError(3);
-	$e->dumpError();
+
+switch($_REQUEST['a']) {
+  case 88:
+    if(!$modx->hasPermission('edit_web_user')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  case 87:
+    if(!$modx->hasPermission('new_web_user')) {
+      $e->setError(3);
+      $e->dumpError();
+    }
+    break;
+  default:
+    $e->setError(3);
+    $e->dumpError();
 }
 
-$user = $_REQUEST['id'];
-if($user=="") $user=0;
+$user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
+
 
 // check to see the snippet editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=88 AND $dbase.".$table_prefix."active_users.id=$user";
