@@ -694,6 +694,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 	  <tr>
 	    <td class='warning'><?php echo $_lang["language_title"] ?></td>
 	    <td> <select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true">
+	    <option value=""> </option>
 	    <?php
 
 $dir = dir("includes/lang");
@@ -779,6 +780,7 @@ $dir->close();
           </tr>
           <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
             <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date())">
+             <option value=""> </option>
              <?php
 $dir = dir("media/style/");
 while ($file = $dir->read()) {
@@ -786,8 +788,6 @@ while ($file = $dir->read()) {
 		$themename = $file;
         if (isset ($usersettings['manager_theme'])) {
     		$selectedtext = $themename == $usersettings['manager_theme'] ? "selected='selected'" : "";
-        } else {
-            $selectedtext = $themename == $modx->config['manager_theme'] ? "selected='selected'" : "";
         }
 		echo "<option value='$themename' $selectedtext>" . ucwords(str_replace("_", " ", $themename)) . "</option>";
 	}
@@ -806,7 +806,7 @@ $dir->close();
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["filemanager_path_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo htmlspecialchars(isset($usersettings['filemanager_path']) ? $usersettings['filemanager_path']:$filemanager_path); ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="filemanager_path" value="<?php echo htmlspecialchars(isset($usersettings['filemanager_path']) ? $usersettings['filemanager_path']:""); ?>">
               </td>
           </tr>
           <tr>
@@ -819,12 +819,13 @@ $dir->close();
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_images_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($usersettings['upload_images']) ? $usersettings['upload_images'] : "jpg,gif,png,ico,bmp,psd" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($usersettings['upload_images']) ? $usersettings['upload_images'] : "" ; ?>">
+              &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_images" value="1" <?php echo isset($usersettings['upload_images']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
             </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_images_message"]?></td>
+            <td class='comment'><?php echo $_lang["uploadable_images_message"].$_lang["user_upload_message"]?></td>
           </tr>
           <tr>
           <td colspan="2"><div class='split'></div></td>
@@ -832,12 +833,13 @@ $dir->close();
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_media_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($usersettings['upload_media']) ? $usersettings['upload_media'] : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($usersettings['upload_media']) ? $usersettings['upload_media'] : "" ; ?>">
+				&nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_media" value="1" <?php echo isset($usersettings['upload_media']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />            
             </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_media_message"]?></td>
+            <td class='comment'><?php echo $_lang["uploadable_media_message"].$_lang["user_upload_message"]?></td>
           </tr>
           <tr>
           <td colspan="2"><div class='split'></div></td>
@@ -845,12 +847,13 @@ $dir->close();
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_flash_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($usersettings['upload_flash']) ? $usersettings['upload_flash'] : "swf,fla" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($usersettings['upload_flash']) ? $usersettings['upload_flash'] : "" ; ?>">
+            &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_flash" value="1" <?php echo isset($usersettings['upload_flash']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
             </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
+            <td class='comment'><?php echo $_lang["uploadable_flash_message"].$_lang["user_upload_message"]?></td>
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
@@ -858,12 +861,13 @@ $dir->close();
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files'] : "txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,pdf" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_files" value="<?php echo isset($usersettings['upload_files']) ? $usersettings['upload_files'] : "" ; ?>">
+            &nbsp;&nbsp; <input onchange="documentDirty=true;" type="checkbox" name="default_upload_files" value="1" <?php echo isset($usersettings['upload_files']) ? '' : 'checked' ; ?>  /> <?php echo $_lang["user_use_config"]; ?><br />
             </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_files_message"]?></td>
+            <td class='comment'><?php echo $_lang["uploadable_files_message"].$_lang["user_upload_message"]?></td>
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
@@ -871,7 +875,7 @@ $dir->close();
           <tr class='row2'>
             <td nowrap class="warning"><b><?php echo $_lang["upload_maxsize_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_maxsize" value="<?php echo isset($usersettings['upload_maxsize']) ? $usersettings['upload_maxsize'] : "1048576" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="upload_maxsize" value="<?php echo isset($usersettings['upload_maxsize']) ? $usersettings['upload_maxsize'] : "" ; ?>">
             </td>
           </tr>
           <tr class='row2'>
@@ -885,9 +889,10 @@ $dir->close();
             <td nowrap class="warning"><b><?php echo $_lang["which_editor_title"]?></b></td>
             <td>
 				<select name="which_editor" onchange="documentDirty=true;">
+				<option value=""> </option>
 					<?php
 
-$edt = isset ($usersettings["which_editor"]) ? $usersettings["which_editor"] : $which_editor;
+$edt = isset ($usersettings["which_editor"]) ? $usersettings["which_editor"] : '';
 // invoke OnRichTextEditorRegister event
 $evtOut = $modx->invokeEvent("OnRichTextEditorRegister");
 echo "<option value='none'" . ($edt == 'none' ? " selected='selected'" : "") . ">" . $_lang["none"] . "</option>\n";
@@ -909,7 +914,7 @@ if (is_array($evtOut))
           </tr>
           <tr id='rbRow1' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_dir" value="<?php echo isset($usersettings["rb_base_dir"]) ? $usersettings["rb_base_dir"]:$rb_base_dir; ?>" />
+            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_dir" value="<?php echo isset($usersettings["rb_base_dir"]) ? $usersettings["rb_base_dir"]:""; ?>" />
               </td>
           </tr>
           <tr id='rbRow2' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
@@ -921,7 +926,7 @@ if (is_array($evtOut))
           </tr>
           <tr id='rbRow4' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_url_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_url" value="<?php echo isset($usersettings["rb_base_url"]) ? $usersettings["rb_base_url"]:$rb_base_url; ?>" />
+            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_url" value="<?php echo isset($usersettings["rb_base_url"]) ? $usersettings["rb_base_url"]:""; ?>" />
               </td>
           </tr>
           <tr id='rbRow5' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">

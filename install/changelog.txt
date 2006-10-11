@@ -3,9 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1683 - October 10, 2006)
+MOD 0.9.5 beta 5 (rev 1684 - October 11, 2006)
 ====================================
 
+* [FS#561] Fix for not being able to delete a manager user. (1678)
+* [FS#563] Fix broken image paths in the context menu. (1677)
+* [FS#552] Sorts out the 'saving of default values' problem in Manager User Settings. (1668)
 * Updated default content (still needs a little work). (1683)
 * temporary source formatting solution for TinyMCE hardcoded in JS -- to be removed at a future date (1671)
 * updated TinyMCE to 2.0.6.1 version (1669,1670)

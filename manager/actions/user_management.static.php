@@ -74,7 +74,7 @@ echo $cm->render();
 				break;
 			case 2:		// delete
 				if(confirm("<?php echo $_lang['confirm_delete_user']; ?>")==true) {
-					window.location.href='index.php?a=11&id='+id;
+					window.location.href='index.php?a=33&id='+id;
 				}
 				break;
 		}
