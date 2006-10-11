@@ -30,7 +30,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         if(top.__hideTree) {
             // display toc icon
             var elm = $('tocText');
-            if(elm) elm.innerHTML = "<a href='javascript:defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /><\/a>";
+            if(elm) elm.innerHTML = "<a href='javascript:;' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
         }
     })
 
@@ -39,7 +39,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         currentFrameState = 'closed';
         try {
             var elm = $('tocText');
-            if(elm) elm.innerHTML = "<a href='javascript:defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /><\/a>";
+            if(elm) elm.innerHTML = "<a href='javascript:;' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
             parent.document.getElementsByTagName("FRAMESET").item(1).cols = '0,*';
             top.__hideTree = true;
         } catch(oException) {
@@ -106,7 +106,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         var elm = $('buildText');
         if (elm) {
             elm.innerHTML = "&nbsp;&nbsp;<img src='<?php echo $_style["icons_loading_doc_tree"]; ?>' width='16' height='16' />&nbsp;<?php echo $_lang['loading_doc_tree']; ?>";
-            elm.style.display = 'inline';
+            elm.style.display = 'block';
         }
         parent.tree.saveFolderState(); // save folder state
         parent.tree.restoreTree();
@@ -115,7 +115,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     function reloadmenu() {
     <?php if($manager_layout==0) { ?>
         var elm = $('buildText')
-        if (elm) elm.innerHTML = "&nbsp;&nbsp;<img src='<?php echo $_style["icons_working"]; ?>' width='16' height='16' />&nbsp;<?php echo $_lang['loading_menu']; ?>";
+        if (elm) {
+            elm.innerHTML = "&nbsp;&nbsp;<img src='<?php echo $_style["icons_working"]; ?>' width='16' height='16' />&nbsp;<?php echo $_lang['loading_menu']; ?>";
+            elm.style.display = 'block';
+        }
         parent.mainMenu.location.reload();
     <?php } ?>
     }
@@ -361,6 +364,10 @@ echo $list;
 
 </div></div>
 </form>
+
+<!-- can't find a better name :) should alwys be fixed -->
+<div id="menuSplitter"></div>
+
 
 </body>
 </html>

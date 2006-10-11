@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1685 - October 11, 2006)
+MOD 0.9.5 beta 5 (rev 1686 - October 11, 2006)
 ====================================
 
 * [FS#203] Introducing 'publish' permission.

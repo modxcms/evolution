@@ -1,0 +1,91 @@
+<br /><br />
+<style>
+.wm_button {
+	float: left;
+	margin: 0 6px 2px 5px;
+	text-align: center;
+}
+
+</style>
+
+<div class="sectionBody" style="border:0px; padding:0px;">
+	<script type="text/javascript" src="media/script/tabpane.js"></script>
+	<div class="tab-pane" id="welcomePane" style="border:0px">
+		<script type="text/javascript">
+			tpPane = new WebFXTabPane(document.getElementById( "welcomePane" ),false);
+		</script>
+
+		<!-- welcome -->
+		<div class="tab-page" id="tabhome" style="padding-left:0px; padding-right:0px;">
+			<h2 class="tab">[+home+]</h2>
+			<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabhome" ) );</script>
+			<div class="sectionBody" style="margin-top:0px;border:0">
+				<table border="0" cellpadding="5" width="100%">
+				  <tr>
+					<td colspan="2">
+						<span style="font-size:18px;font-weight:bold">[+site_name+] </span><br />
+						[+welcome_title+]
+					</td>
+				  </tr>
+				  <tr>
+					<td width="10%" align="right">
+						<img src='media/style/[+theme+]/images/misc/logo.png' alt='[+logo_slogan+]' />
+						<br /><br />
+					</td>
+					<td valign="top">
+						<span class="wm_button">[+SecurityIcon+]</span>
+						<span class="wm_button">[+WebUserIcon+]</span>
+						<span class="wm_button">[+ModulesIcon+]</span>
+						<span class="wm_button">[+ResourcesIcon+]</span>
+						<span class="wm_button">[+BackupIcon+]</span>
+
+						<br style="clear:both" /><br />
+						[+MessageInfo+]
+
+					</td>
+				  </tr>
+				</table>
+			</div>
+
+		</div>
+
+
+		<!-- system check -->
+		<div class="tab-page" id="tabcheck" style="display:[+config_display+]; padding-left:0px; padding-right:0px;">
+			<h2 class="tab">[+settings_config+]</h2>
+			<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
+			<div class="sectionHeader">[+configcheck_title+]</div><div class="sectionBody">
+				<img src="media/style/[+theme+]/images/icons/event2.gif" />
+				[+config_check_results+]
+			</div>
+		</div>
+
+		<!-- recent activities -->
+		<div class="tab-page" id="tabAct" style="padding-left:0px; padding-right:0px">
+			<h2 class="tab">[+recent_docs+]</h2>
+			<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabAct" ) );</script>
+			<div class="sectionHeader">[+activity_title+]</div><div class="sectionBody">
+				[+RecentInfo+]
+			</div>
+		</div>
+
+		<!-- user info -->
+		<div class="tab-page" id="tabYour" style="padding-left:0px; padding-right:0px">
+			<h2 class="tab">[+info+]</h2>
+			<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabYour" ) );</script>
+			<div class="sectionHeader">[+yourinfo_title+]</div><div class="sectionBody">
+				[+UserInfo+]
+			</div>
+		</div>
+
+		<!-- online info -->
+		<div class="tab-page" id="tabOnline" style="padding-left:0px; padding-right:0px">
+			<h2 class="tab">[+online+]</h2>
+			<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabOnline" ) );</script>
+			<div class="sectionHeader">[+onlineusers_title+]</div><div class="sectionBody">
+				[+OnlineInfo+]
+			</div>
+		</div>
+
+	</div>
+</div>

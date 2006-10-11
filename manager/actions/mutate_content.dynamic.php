@@ -548,8 +548,12 @@ if (is_array($evtOut))
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['document_setting']; ?></div><div class="sectionBody">
-    <script type="text/javascript" src="media/script/tabpane.js"></script>
+    <script type="text/javascript" src="media/script/tabpane.js"></script>   
+
     <div class="tab-pane" id="documentPane">
+        <script type="text/javascript">
+            tpSettings = new WebFXTabPane( document.getElementById( "documentPane" ) );
+        </script>
 
         <!-- General -->
         <div class="tab-page" id="tabGeneral">
@@ -1106,7 +1110,11 @@ if ($use_udperms == 1) {
         var f=document.forms['mutate'];
         var chkpub = f['chkalldocs'];
         var chks = f['docgroups[]'];
-        if (!b && chkpub) {
+        if(!chks && chkpub) {
+            chkpub.checked=true;
+            return false;
+        }
+        else if (!b && chkpub) {
             if(!chks.length) notPublic=chks.checked;
             else for(i=0;i<chks.length;i++) if(chks[i].checked) notPublic=true;
             chkpub.checked=!notPublic;
