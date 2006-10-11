@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1675 - October 10, 2006)
+MOD 0.9.5 beta 5 (rev 1683 - October 10, 2006)
 ====================================
 
+* Updated default content (still needs a little work). (1683)
 * temporary source formatting solution for TinyMCE hardcoded in JS -- to be removed at a future date (1671)
 * updated TinyMCE to 2.0.6.1 version (1669,1670)
 * Setting n-m ranges in the DocManager now functions as intended. (1656)

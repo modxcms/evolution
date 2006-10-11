@@ -15,27 +15,22 @@
 
 	# setup snippets template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$ms = &$moduleSnippets;
-	$ms[] = array("AjaxSearch","<strong>NEW:</strong> Unobtrusive Ajax-enabled search form with results highlighting. Encapsulates FlexSearchForm functionality.",0,"$setupPath/snippet.ajaxSearch.tpl","");
-	$ms[] = array("Breadcrumbs","<strong>NEW:</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
-	$ms[] = array("DateTime","Outputs the current date and time to the page.",0,"$setupPath/snippet.datetime.tpl","");
-	$ms[] = array("Ditto","<strong>NEW:</strong> Flexible summarization and listing tool for creating blogs, catalogs, press release archives, bio listings and more.",0,"$setupPath/snippet.ditto.tpl","");
-	$ms[] = array("eForm","<strong>NEW:</strong> Robust form parser and processor with validation, multiple sending options, chunks support for forms and reports and file upload handling.",0,"$setupPath/snippet.eform.tpl","");
-	$ms[] = array("FirstChildRedicrect","<strong>NEW:</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
-	$ms[] = array("Jot","<strong>1.0</strong> Commenting system that supports Email subscription and moderation.",0,"$setupPath/snippet.jot.tpl","");
-	$ms[] = array("MemberCheck","Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
-	$ms[] = array("NewsPublisher","Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
-	$ms[] = array("Personalize","<strong>updated:</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
+	$ms[] = array("AjaxSearch","<strong>1.1</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
+	$ms[] = array("Breadcrumbs","<strong>0.9d</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
+	$ms[] = array("Ditto","<strong>1.0.2</strong> Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more.",0,"$setupPath/snippet.ditto.tpl","");
+	$ms[] = array("eForm","<strong>1.0</strong> Robust form parser/processor with validation, multiple sending options, chunks support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
+	$ms[] = array("FirstChildRedirect","<strong>1.0</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
+	$ms[] = array("Jot","<strong>1.0 beta8</strong> User comments with moderation and email subscription.",0,"$setupPath/snippet.jot.tpl","");
+	$ms[] = array("ListIndexer","<strong>1.0</strong> Shows the most recent documents, highly flexible.",0,"$setupPath/snippet.listindexer.tpl","");
+	$ms[] = array("MemberCheck","<strong>1.0</strong> Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
+	$ms[] = array("NewsPublisher","<strong>1.4</strong> Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
+	$ms[] = array("Personalize","<strong>2.0</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
 	$ms[] = array("PoweredBy","A little link to MODx",0,"$setupPath/snippet.poweredby.tpl","");
-	$ms[] = array("Wayfinder","<strong>NEW:</strong> Completely template-driven menu builder that's simple and fast to configure. Replaces DropMenu.",0,"$setupPath/snippet.wayfinder.tpl","");
-	$ms[] = array("UserComments","Add user comments to any document.",0,"$setupPath/snippet.usercomments.tpl","");
-	$ms[] = array("UltimateParent","Returns the \"ultimate\" parent of a document.",0,"$setupPath/snippet.ultparent.tpl","");
-	$ms[] = array("WebChangePwd","Web User Change Password Snippet",0,"$setupPath/snippet.webchangepwd.tpl","&tpl=Template;string;");
-	$ms[] = array("WebLogin","Web User Login Snippet",0,"$setupPath/snippet.weblogin.tpl","&loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;");
-	$ms[] = array("WebSignup","Web User Signup Snippet",0,"$setupPath/snippet.websignup.tpl","&tpl=Template;string;");
-	$ms[] = array("ContactForm","deprecated: Simple, configurable XHTML-validating contact form for delivery to email accounts.",0,"$setupPath/snippet.contactform.tpl","");
-	$ms[] = array("DropMenu","deprecated: Robust and configurable XHTML-validating menu and site map builder. Output an unordered list.",0,"$setupPath/snippet.dropmenu.tpl","");
-	$ms[] = array("FlexSearchForm","deprecated: Robust site search with like and partial matching.",0,"$setupPath/snippet.flexsearchform.tpl","");
-	$ms[] = array("NewsListing","deprecated: Versatile news/article display system.",0,"$setupPath/snippet.newslisting.tpl","");
+	$ms[] = array("Wayfinder","<strong>beta3</strong> Completely template-driven menu builder that's simple and fast to configure.",0,"$setupPath/snippet.wayfinder.tpl","");
+	$ms[] = array("UltimateParent","<strong>1.2</strong> - Gets the highest parent that isn't 0.",0,"$setupPath/snippet.ultparent.tpl","");
+	$ms[] = array("WebChangePwd","<strong>1.0</strong> Web User Change Password Snippet.",0,"$setupPath/snippet.webchangepwd.tpl","&tpl=Template;string;");
+	$ms[] = array("WebLogin","<strong>1.0</strong> Web User Login Snippet.",0,"$setupPath/snippet.weblogin.tpl","&loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;");
+	$ms[] = array("WebSignup","<strong>1.1</strong> Web User Signup Snippet.",0,"$setupPath/snippet.websignup.tpl","&tpl=Template;string;");
 
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
@@ -45,6 +40,8 @@
 	$mp[] = array("QuickEdit","<strong>Updated:</strong> Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
 	$mp[] = array("TinyMCE","<strong>NEW:</strong> TinyMCE version 2.0.6.1 RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&webtheme=Web Theme;list;simple,advanced,full;simple","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
     $mp[] = array("Search Highlighting","Show search terms highlighted on page linked from search results. (Requires AjaxSearch snippet)",0,"$setupPath/plugin.searchhighlight.tpl","","OnWebPagePrerender");
+    $mp[] = array("DisableCache","Kills the caching for every page (needed for template switcher demo).",0,"$setupPath/plugin.disablecache.tpl","","OnLoadWebDocument");
+    $mp[] = array("TemplateSwitcher","Changes templates used on all pages in your site.",0,"$setupPath/plugin.templateswitcher.tpl","","OnLoadWebDocument");
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
 	$mm = &$moduleModules;
