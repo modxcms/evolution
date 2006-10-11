@@ -1,5 +1,5 @@
 <?php
-# eForm 1.3 - Electronic Form Snippet (Extended)
+# eForm 1.3.1 - Electronic Form Snippet (Extended)
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -7,10 +7,12 @@
 # Captcha image support - thanks to Djamoer
 # Multi checkbox, radio, select support - thanks to Djamoer
 # Form Parser and extended validation - by Jelle Jager
-# 
-# 
+#
+#
 # see docs/eform.htm for installation and usage information
 #
+# Version 1.3.1 - moved form-parser call so that form only is parsed when posted
+# this preserves default values when from is first displayed.
 
 $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format settings
 
@@ -45,10 +47,12 @@ function eForm($modx,$params) {
 
 	# parse form for formats and generate placeholders
  	global $formats;
-	$tpl = eFormParseTemplate($tpl);
-	foreach($formats as $k => $discard)	$fields[$k] = ""; // store dummy value inside $fields
 
 	if ($isPostBack) {
+
+		$tpl = eFormParseTemplate($tpl);
+		foreach($formats as $k => $discard)	$fields[$k] = ""; // store dummy value inside $fields
+
 		//mod by JJ - extension of validation messages
 		$vMsg = $rMsg = $rClass = array();
 
@@ -108,7 +112,7 @@ function eForm($modx,$params) {
 						case "string":
 							break;
 						case "integer":
-						//removed by JJ as was the same as for 'float' 
+						//removed by JJ as was the same as for 'float'
 						case "float":
 							if (!is_numeric($value)) $vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_number"];
 							break;
@@ -145,7 +149,7 @@ function eForm($modx,$params) {
 				if ($fld) {
 					$datatype = $fld[2];
 					switch ($datatype)  {
-					
+
 						case "integer":
 							$value = number_format($value);
 							break;
@@ -202,16 +206,16 @@ function eForm($modx,$params) {
 					if ($ar[$i]) $to = $ar[$i];
 					else $to = $ar[0];
 				}
-	
-	
+
+
 				# include PHP Mailer
 				include_once "manager/includes/controls/class.phpmailer.php";
-				
+
 				//set reply-to address
 				//$replyto snippet parameter must contain email or fieldname
-				if(!strstr($replyto,'@')) 
+				if(!strstr($replyto,'@'))
 					$replyto = ( $fields[$replyto] && strstr($fields[$replyto],'@') )?$fields[$replyto]:$from;
-					
+
 				# send form
 				if(!$noemail) {
 					if($sendirect) $to = $fields['email'];
@@ -229,7 +233,7 @@ function eForm($modx,$params) {
 					AttachFilesToMailer($mail,$attachments);
 					if(!$mail->send()) return $mail->ErrorInfo;
 				}
-	
+
 				# send user a copy of the report
 				if($ccsender && $fields['email']) {
 					$mail = new PHPMailer();
@@ -243,7 +247,7 @@ function eForm($modx,$params) {
 					AttachFilesToMailer($mail,$attachments);
 					if(!$mail->send()) return $mail->ErrorInfo;
 				}
-	
+
 				# send auto-respond email
 				if ($autotext && $fields['email']!='') {
 					$autotext = formMerge($autotext,$fields);
@@ -257,7 +261,7 @@ function eForm($modx,$params) {
 					AddAddressToMailer($mail,"to",$fields['email']);
 					if(!$mail->send()) return $mail->ErrorInfo;
 				}
-	
+
 				# send mobile email
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
@@ -359,6 +363,7 @@ function AddAddressToMailer(&$mail,$type,$addr){
 			if ($type=="to") $mail->AddAddress($a[$i]);
 			elseif ($type=="cc") $mail->AddCC($a[$i]);
 			elseif ($type=="bcc") $mail->AddBCC($a[$i]);
+			elseif ($type=="replyto") $mail->AddReplyTo($a[$i]);
 		}
 	}
 
@@ -535,13 +540,13 @@ function attr2array($tag){
  * @param mixed, $value
  * @param array, $fld
  * @param array, &$vMsg - reference to validation/error messages array
- * @param boolean, $isDebug - Stricter error reporting  
- * @return boolean, true or false or $value in case of @FILTER. Test for  
+ * @param boolean, $isDebug - Stricter error reporting
+ * @return boolean, true or false or $value in case of @FILTER. Test for
  *  type on return! (ie. $return === false) Returned value could be numeric 0!
  **/
 function validateField($value,$fld,&$vMsg,$isDebug=false){
 	global $modx,$_lang;
-	$output = true; 
+	$output = true;
 	$desc = $fld[1];
 	$fldMsg = trim($fld[4]);
 	if(empty($fld[5])) return;
@@ -567,17 +572,17 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 				$param = explode(',',$param);
 				//the crude way first - will have to refine this
 				foreach($param as $p){
-					
+
 					if( strpos($p,'~')>0)
 						$range = explode('~',$p);
-					else 
+					else
 						$range = array($p,$p); //yes,.. I know - cheating :)
-					
+
 					if($isDebug && (!is_numeric($range[0]) || !is_numeric($range[1])) )
-						$modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values',__LINE__);						
+						$modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#RANGE rule contains non-numeric values',__LINE__);
 					sort($range);
 					if( $value>=$range[0] && $value<=$range[1] ) break 2; //valid
-					
+
 				}
 				$errMsg = $_lang['ef_failed_range'];
 				break;
@@ -596,7 +601,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 					$rt = array();
 					$param = 	str_replace('{DBASE}',$modx->db->config['dbase'],$param);
 					$param = 	str_replace('{PREFIX}',$modx->db->config['table_prefix'],$param);
-			
+
 					$rs = $modx->db->query("SELECT $param;");
 					//select value from 1st field in records only (not case sensitive)
 					while( $v = $modx->db->getValue($rs) ) $vlist[]=strtolower($v);
@@ -638,7 +643,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 	}//end for
 	//make sure we have correct return value in case of #filter
 	$v = (is_array($value))?implode('',$v):$v;
-	
+
 	return ($cmd=="#FILTER")?$v:$output;
 }//end validateField
 
@@ -672,9 +677,9 @@ function filterEformValue($value,$param){
 function efLoadTemplate($tpl){
 	global $_lang,$modx;
 	if (strlen($tpl)<50){
-		if( is_numeric($tpl) ) 
+		if( is_numeric($tpl) )
 			$tpl = ( $doc=$modx->getDocument($tpl) )? $doc['content'] : $_lang['ef_no_doc'] . " '$tpl'";
-		else if($tpl) 
+		else if($tpl)
 			$tpl = ( $chunk=$modx->getChunk($tpl) )? $chunk : $_lang['ef_no_chunk']."'$tpl'";
 	}
 	return $tpl;
