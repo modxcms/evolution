@@ -25,6 +25,7 @@
 	$moduleVersion 		= "0.9.5 beta";
 	$moduleSQLBaseFile 	= "setup.sql";
 	$moduleSQLDataFile 	= "setup.data.sql";
+	$moduleSQLUpdateFile = "setup.updates.sql";
 	$moduleWhatsNewFile = "setup.whatsnew.html";
 	$moduleWhatsNewTitle= "What's New";
 	
@@ -480,6 +481,7 @@
 			include "../manager/includes/config.inc.php";
 		}
 		else {		
+			// get db info from post
 			$database_server = $_POST['databasehost'];
 			$database_user = $_POST['databaseloginname'];
 			$database_password = $_POST['databaseloginpassword'];
@@ -748,9 +750,7 @@
 <!-- start install screen-->
 <table border="0" cellpadding="0" cellspacing="0" class="mainTable" style="width:100%;">
 <tr>
-    <td colspan="2">
-		  <img style="padding:12px" src="img_banner.gif" alt="MODx Create and Do More with Less" />
-    </td>
+    <td height="82" colspan="2" valign="top" background="bgheader.jpg"><img src="img_banner.gif" width="327" height="82" border="0" style="padding:0px"></td>
   </tr>
   <tr class="fancyRow2">
     <td colspan="2" class="border-top-bottom smallText" align="right"><?php echo $moduleName; ?> </b>&nbsp;<i>version <?php echo $moduleVersion; ?></i></td>
@@ -806,19 +806,17 @@
 				<input name="dbhost" type="hidden" />
 				<input name="tableprefix" type="hidden" />
 			</form>
-			<iframe name="testPort" width="1" height="1" style="visibility:hidden" ></iframe>
-            </td>
+			<iframe name="testPort" width="1" height="1" style="visibility:hidden" ></iframe>            </td>
             </tr>
-            </table>
-		</td>
+            </table>		</td>
       </tr>
     </table></td>
   </tr>
   <tr class="fancyRow2">
-    <td class="border-top-bottom smallText" colspan="2">&nbsp; 
-    </td>
+    <td class="border-top-bottom smallText" colspan="2"><div align="center"><a href="http://www.modxcms.com" target="_blank"><img src="logo.png" alt="logo" width="118" height="90" border="0"></a> </div></td>
   </tr>
 </table>
+<br />
 <!-- end install screen-->
 <script type="text/javascript">
 	var errors = <?php echo $errors; ?>;

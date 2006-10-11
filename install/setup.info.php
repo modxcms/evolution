@@ -6,6 +6,7 @@
 	$moduleVersion = " 0.9.5 beta";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
+	$moduleSQLUpdateFile = "setup.updates.sql";
 	$moduleWhatsNewFile = "setup.whatsnew.html";
 	$moduleWhatsNewTitle = "What's New";
 

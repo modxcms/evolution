@@ -328,7 +328,7 @@ echo $list;
 <!--backup-mgr--><li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
 <?php } ?>
 <?php if($modx->hasPermission('settings')) { ?>
-<!--unlock-pages--><li><a onclick="this.blur();" href="javascript:top.scripter.removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
+<!--unlock-pages--><li><a onclick="this.blur();" href="javascript:removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
 <?php } ?>
 <?php if($modx->hasPermission('new_document')) { ?>
 <!--import-html--><li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>

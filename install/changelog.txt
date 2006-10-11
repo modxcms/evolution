@@ -3,9 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1687 - October 11, 2006)
+MOD 0.9.5 beta 5 (rev 1704 - October 11, 2006)
 ====================================
 
+* Remove broken image icons from error.js (1703)
+* Fix the 'Remove Locks' functionality. (1700)
+* New Installer Theme. (1699)
+* Added setup.updates.sql that contains the UPDATE queries to run at end of install script. (1697)
 * updated eForm to version 1.4
 * separate welcome page logic from UI (welcome.html in manager themes) to allow theme designer to easily style of welcome page
 * fix js bug with "Access Permissions" checkbox in mutate_content, mutate_module, mutate_tmpvar

@@ -50,10 +50,10 @@ function doError(msg,url,ln) {
 	str += '</table>'
 	str += '</div>'
 	str += '<table style="width: 100%;" cellspacing=0 cellpadding=5><tr><td>'
-	str += '<button onclick="previous()"><img src="media/images/icons/previous.gif" align="absmiddle" width=16 height=16>&nbsp;Previous</button>'
-	str += '</td><td align=right><button onclick="next()"><img src="media/images/icons/next.gif" align="absmiddle" width=16 height=16>&nbsp;Next</button>'
+	str += '<button onclick="previous()">Previous</button>'
+	str += '</td><td align=right><button onclick="next()">Next</button>'
 	str += '</td></tr>'
-	str += '<tr><td></td><td align="RIGHT"><button onclick="window.close()"><img src="media/images/icons/delete.gif" align="absmiddle" width=16 height=16>&nbsp;Close</button>'
+	str += '<tr><td></td><td align="RIGHT"><button onclick="window.close()">Close</button>'
 	str += '</td></tr></table>'
 	str += '</body>'
 
