@@ -3,9 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1711 - October 12, 2006)
+MOD 0.9.5 beta 5 (rev 1714 - October 12, 2006)
 ====================================
-
+* Fixed warnings with undeclared arrays in save_user.processor.php. (1714)
 * Added login.html to other themes. (1710)
 * Separate manager login logic from content page (see login.html). (1709)
 * Fix bug with tree and deleted documents. (1709)

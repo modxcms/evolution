@@ -515,11 +515,13 @@ function saveUserSettings($id) {
 	);
 
 	// get user setting field names
+    $settings= array ();
 	foreach ($_POST as $n => $v) {
 		if (!in_array($n, $ignore))
 			$settings[] = $n;
 	}
 
+    $exclude= array ();
 	foreach ($allowBlanks as $k) {
 		if (isset ($_POST["default_{$k}"]) && $_POST["default_{$k}"] == '1') {
 			$exclude[] = $k;
