@@ -2,21 +2,21 @@
 
 // set the include_once path
 if(version_compare(phpversion(), "4.3.0")>=0) {
-	set_include_path("../includes/"); // include path the new way
+    set_include_path("../includes/"); // include path the new way
 } else {
-	ini_set("include_path", "../includes/"); // include path the old way
+    ini_set("include_path", "../includes/"); // include path the old way
 }
 
-define("IN_MANAGER_MODE", "true"); 	// we use this to make sure files are accessed through
-									// the manager instead of seperately.
+define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
+                                    // the manager instead of seperately.
 // include the database configuration file
 include_once "config.inc.php";
 
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
-	die("Failed to create the database connection!");
+    die("Failed to create the database connection!");
 } else {
-	mysql_select_db($dbase);
+    mysql_select_db($dbase);
 }
 
 // get the settings from the database
@@ -58,36 +58,36 @@ $captcha_code = $_REQUEST['captcha_code'];
 
 // invoke OnBeforeManagerLogin event
 $modx->invokeEvent("OnBeforeManagerLogin",
-						array(
-							"username"		=> $username,
-							"userpassword"	=> $givenPassword,
-							"rememberme"	=> $_REQUEST['rememberme']
-						));
+                        array(
+                            "username"      => $username,
+                            "userpassword"  => $givenPassword,
+                            "rememberme"    => $_REQUEST['rememberme']
+                        ));
 
 $sql = "SELECT $dbase.".$table_prefix."manager_users.*, $dbase.".$table_prefix."user_attributes.* FROM $dbase.".$table_prefix."manager_users, $dbase.".$table_prefix."user_attributes WHERE BINARY $dbase.".$table_prefix."manager_users.username = '".$username."' and $dbase.".$table_prefix."user_attributes.internalKey=$dbase.".$table_prefix."manager_users.id;";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 
 if($limit==0 || $limit>1) {
-		$e->setError(900);
-		$e->dumpError();
-}	
+        $e->setError(900);
+        $e->dumpError();
+}   
 
 $row = mysql_fetch_assoc($rs);
-	
-$internalKey 			= $row['internalKey'];
-$dbasePassword 			= $row['password'];
-$failedlogins 			= $row['failedlogincount'];
-$blocked 				= $row['blocked'];
-$blockeduntildate		= $row['blockeduntil'];
-$blockedafterdate		= $row['blockedafter'];
-$registeredsessionid	= $row['sessionid'];
-$role					= $row['role'];
-$lastlogin				= $row['lastlogin'];
-$nrlogins				= $row['logincount'];
-$fullname				= $row['fullname'];
-//$sessionRegistered 		= checkSession();
-$email 					= $row['email'];
+    
+$internalKey            = $row['internalKey'];
+$dbasePassword          = $row['password'];
+$failedlogins           = $row['failedlogincount'];
+$blocked                = $row['blocked'];
+$blockeduntildate       = $row['blockeduntil'];
+$blockedafterdate       = $row['blockedafter'];
+$registeredsessionid    = $row['sessionid'];
+$role                   = $row['role'];
+$lastlogin              = $row['lastlogin'];
+$nrlogins               = $row['logincount'];
+$fullname               = $row['fullname'];
+//$sessionRegistered        = checkSession();
+$email                  = $row['email'];
 
 // get the user settings from the database
 // require_once "user_settings.inc.php"; <<< This doesn't work, because $modx is set and $modx->getLoginUserID() returns NULL
@@ -95,42 +95,42 @@ $email 					= $row['email'];
 $sql = "SELECT setting_name, setting_value FROM $dbase.".$table_prefix."user_settings WHERE user='".$internalKey."' AND setting_value!=''";
 $rs = mysql_query($sql);
 while ($row = mysql_fetch_assoc($rs)) {
-	${$row['setting_name']} = $row['setting_value'];
+    ${$row['setting_name']} = $row['setting_value'];
 }
 
-if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) {	// blocked due to number of login errors.
-		session_destroy();
-		session_unset();
-		$e->setError(902);
-		$e->dumpError();
+if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) { // blocked due to number of login errors.
+        session_destroy();
+        session_unset();
+        $e->setError(902);
+        $e->dumpError();
 }
 
-if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) {	// blocked due to number of login errors, but get to try again
-	$sql = "UPDATE $dbase.".$table_prefix."user_attributes SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
-	$rs = mysql_query($sql);
+if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) { // blocked due to number of login errors, but get to try again
+    $sql = "UPDATE $dbase.".$table_prefix."user_attributes SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
+    $rs = mysql_query($sql);
 }
 
 if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
-	session_destroy();
-	session_unset();
-	$e->setError(903);
-	$e->dumpError();
+    session_destroy();
+    session_unset();
+    $e->setError(903);
+    $e->dumpError();
 }
 
 // blockuntil
 if($blockeduntildate>time()) { // this user has a block until date
-	session_destroy();
-	session_unset();
-	$output = jsAlert("You are blocked and cannot log in! Please try again later.");
-	return;
+    session_destroy();
+    session_unset();
+    $output = jsAlert("You are blocked and cannot log in! Please try again later.");
+    return;
 }
 
 // blockafter
 if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
-	session_destroy();
-	session_unset();
-	$output = jsAlert("You are blocked and cannot log in! Please try again later.");
-	return;
+    session_destroy();
+    session_unset();
+    $output = jsAlert("You are blocked and cannot log in! Please try again later.");
+    return;
 }
 
 // allowed ip
@@ -138,7 +138,7 @@ if ($allowed_ip) {
         if(($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
           if(gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
             $output = jsAlert("Your hostname doesn't point back to your IP!");
-	    return;
+        return;
           }
         }
 
@@ -150,59 +150,63 @@ if ($allowed_ip) {
 
 // allowed days
 if ($allowed_days) {
-	$date = getdate();
-	$day = $date['wday']+1;
-	if (strpos($allowed_days,"$day")===false) {
-		$output = jsAlert("You are not allowed to login at this time. Please try again later.");
-		return;
-	}		
+    $date = getdate();
+    $day = $date['wday']+1;
+    if (strpos($allowed_days,"$day")===false) {
+        $output = jsAlert("You are not allowed to login at this time. Please try again later.");
+        return;
+    }       
 }
 
 // invoke OnManagerAuthentication event
 $rt = $modx->invokeEvent("OnManagerAuthentication",
-						array(
-							"userid"		=> $internalKey,
-							"username"		=> $username,
-							"userpassword"	=> $givenPassword,
-							"savedpassword"	=> $dbasePassword,
-							"rememberme"	=> $_REQUEST['rememberme']
-						));
+                        array(
+                            "userid"        => $internalKey,
+                            "username"      => $username,
+                            "userpassword"  => $givenPassword,
+                            "savedpassword" => $dbasePassword,
+                            "rememberme"    => $_REQUEST['rememberme']
+                        ));
 // check if plugin authenticated the user
 
 if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
-	// check user password - local authentication
-	if($dbasePassword != md5($givenPassword)) {
-			$e->setError(901);
-			$newloginerror = 1;
-	}
+    // check user password - local authentication
+    if($dbasePassword != md5($givenPassword)) {
+            $e->setError(901);
+            $newloginerror = 1;
+    }
 }
 
 if($use_captcha==1) {
-	if($_SESSION['veriword']!=$captcha_code) {
-		$e->setError(905);
-		$newloginerror = 1;
-	}
+    if($_SESSION['veriword']!=$captcha_code) {
+        $e->setError(905);
+        $newloginerror = 1;
+    }
 }
 
 if($newloginerror==1) {
-	$failedlogins += $newloginerror;
-	if($failedlogins>=$failed_login_attempts) { //increment the failed login counter, and block!
-		$sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
-		$rs = mysql_query($sql);
-	} else { //increment the failed login counter
-		$sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-		$rs = mysql_query($sql);
-	}
-	session_destroy();
-	session_unset();
-	$e->dumpError();
+    $failedlogins += $newloginerror;
+    if($failedlogins>=$failed_login_attempts) { //increment the failed login counter, and block!
+        $sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
+        $rs = mysql_query($sql);
+    } else { //increment the failed login counter
+        $sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount='$failedlogins' where internalKey=$internalKey";
+        $rs = mysql_query($sql);
+        // mod by raymond - implement failed login delays
+        $sleep = (int)$failedlogins/2;
+        if($sleep>5) $sleep = 5;
+        sleep($sleep);
+    }
+    session_destroy();
+    session_unset();
+    $e->dumpError();
 }
 
 $currentsessionid = session_id();
 
 if(!isset($_SESSION['mgrValidated'])) {
-	$sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-	$rs = mysql_query($sql);
+    $sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
+    $rs = mysql_query($sql);
 }
 
 # Added by Raymond: 
@@ -210,7 +214,7 @@ $_SESSION['usertype'] = 'manager'; // user is a backend user
 
 // get permissions
 //$_SESSION['mgrValid']=base64_encode($givenPassword); //??
-//$_SESSION['mgrUser']=base64_encode($username);		// ??
+//$_SESSION['mgrUser']=base64_encode($username);        // ??
 //$_SESSION['sessionRegistered']=$sessionRegistered; // to be removed
 $_SESSION['mgrShortname']=$username;
 $_SESSION['mgrFullname']=$fullname;
@@ -231,22 +235,22 @@ $dg='';$i=0;
 $tblug = $dbase.".".$table_prefix."member_groups";
 $tbluga = $dbase.".".$table_prefix."membergroup_access";
 $sql = "SELECT uga.documentgroup
-		FROM $tblug ug
-		INNER JOIN $tbluga uga ON uga.membergroup=ug.user_group
-		WHERE ug.member =".$internalKey;
+        FROM $tblug ug
+        INNER JOIN $tbluga uga ON uga.membergroup=ug.user_group
+        WHERE ug.member =".$internalKey;
 $rs = mysql_query($sql); 
 while ($row = mysql_fetch_row($rs)) $dg[$i++]=$row[0];
 $_SESSION['mgrDocgroups'] = $dg;
 
 
 if($_POST['rememberme']==1) {
-	$rc4 = new rc4crypt;
-	$username = $_POST['username'];
-	$thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
-	$cookieString = $rc4->endecrypt($thepasswd,$username);
-	setcookie($cookieKey, $cookieString, time()+604800, "/", "", 0);
+    $rc4 = new rc4crypt;
+    $username = $_POST['username'];
+    $thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
+    $cookieString = $rc4->endecrypt($thepasswd,$username);
+    setcookie($cookieKey, $cookieString, time()+604800, "/", "", 0);
 } else {
-	setcookie($cookieKey, "",time()-604800, "/", "", 0);
+    setcookie($cookieKey, "",time()-604800, "/", "", 0);
 }
 
 $log = new logHandler;
@@ -254,26 +258,26 @@ $log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortn
 
 // invoke OnManagerLogin event
 $modx->invokeEvent("OnManagerLogin",
-						array(
-							"userid"		=> $internalKey,
-							"username"		=> $username,
-							"userpassword"	=> $givenPassword,
-							"rememberme"	=> $_POST['rememberme']
-						));
+                        array(
+                            "userid"        => $internalKey,
+                            "username"      => $username,
+                            "userpassword"  => $givenPassword,
+                            "rememberme"    => $_POST['rememberme']
+                        ));
 
 // check if we should redirect user to a web page
 $tbl = $modx->getFullTableName("user_settings");
 $id = $modx->db->getValue("SELECT setting_value FROM $tbl WHERE user='$internalKey' AND setting_name='manager_login_startup'");
 if(isset($id) && $id>0) {
-	header('Location: '.$modx->config['site_url'].$modx->makeUrl($id));
+    header('Location: '.$modx->config['site_url'].$modx->makeUrl($id));
 }
 else {
-	header('Location: ../');
+    header('Location: ../');
 }
 
-// show javascript alert	
+// show javascript alert    
 function jsAlert($msg){
-	echo "<script>window.setTimeout(\"alert('".addslashes(mysql_escape_string($msg))."')\",10);history.go(-1)</script>";
+    echo "<script>window.setTimeout(\"alert('".addslashes(mysql_escape_string($msg))."')\",10);history.go(-1)</script>";
 }
 
 ?>

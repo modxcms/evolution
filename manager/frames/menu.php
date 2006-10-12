@@ -108,8 +108,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             elm.innerHTML = "&nbsp;&nbsp;<img src='<?php echo $_style["icons_loading_doc_tree"]; ?>' width='16' height='16' />&nbsp;<?php echo $_lang['loading_doc_tree']; ?>";
             elm.style.display = 'block';
         }
-        parent.tree.saveFolderState(); // save folder state
-        parent.tree.restoreTree();
+        top.tree.saveFolderState(); // save folder state
+        setTimeout('top.tree.restoreTree()',200);
     }
 
     function reloadmenu() {

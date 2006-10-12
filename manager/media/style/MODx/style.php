@@ -17,8 +17,8 @@ $_style["add_doc_tree"] = "<img src=\"".$style_path."images/icons/folder_page_ad
 $_style["add_weblink_tree"] = "<img src=\"".$style_path."images/icons/link_add.gif\" />";
 $_style["refresh_tree"] = "<img src=\"".$style_path."images/icons/refresh.gif\" />";
 $_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.gif\" />";
-$_style["empty_recycle_bin_empty"] = "<img src=\"".$style_path."images/tree/trash_full.gif\" />";
-$_style["empty_recycle_bin"] = "<img src=\"".$style_path."images/tree/trash.gif\" />";
+$_style["empty_recycle_bin_empty"] = "<img src=\"".$style_path."images/tree/trash.gif\" />";
+$_style["empty_recycle_bin"] = "<img src=\"".$style_path."images/tree/trash_full.gif\" />";
 $_style["hide_tree"] = "<img src=\"".$style_path."images/icons/close.gif\" />";
 $_style["show_tree"] = $style_path."images/icons/showtree.gif";
 

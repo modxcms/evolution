@@ -3,10 +3,14 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1706 - October 11, 2006)
+MOD 0.9.5 beta 5 (rev 1711 - October 12, 2006)
 ====================================
 
-* Remove any remaining placeholders from output in new welcome.static.php.
+* Added login.html to other themes. (1710)
+* Separate manager login logic from content page (see login.html). (1709)
+* Fix bug with tree and deleted documents. (1709)
+* Fix session timeout bug when expanding nodes. (1709)
+* Remove any remaining placeholders from output in new welcome.static.php. (1706)
 * [FS#203] Added default publish permission value to system settings. (1702)
 * Remove broken image icons from error.js (1703)
 * Fix the 'Remove Locks' functionality. (1700)

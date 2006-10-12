@@ -59,9 +59,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     makeHTML($indent,$parent,$expandAll,$theme);    
     echo $output;
 
-
-    function makeHTML($indent,$parent,$expandAll,$theme)
-    {
+    // check for deleted documents on reload
+    if ($expandAll==2) {
+        $sql = "SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content WHERE deleted=1";
+        $rs = mysql_query($sql);
+        $row = mysql_fetch_row($rs);
+        $count = $row[0];
+        if ($count>0) echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
+    }
+    
+    function makeHTML($indent,$parent,$expandAll,$theme) {
         global $icons, $theme;
         global $modxDBConn, $output, $dbase, $table_prefix, $_lang, $opened, $opened2, $closed2; //added global vars
 

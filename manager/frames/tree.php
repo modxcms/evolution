@@ -222,6 +222,20 @@
                 elm.innerHTML = "";
                 elm.style.display = 'none';
             }
+            // check if bin is full
+            if(rpcNode.id=='treeRoot') {
+                var e = $('binFull');
+                if(e) showBinFull();
+                else showBinEmpty();
+            }
+            
+            // check if our payload contains the login form :)
+            e = $('mx_loginbox');
+            if(e) {
+                // yep the seession has timed out
+                rpcNode.innerHTML = '';
+                top.location = 'index.php';
+            }
         }
     }
 
@@ -365,14 +379,30 @@
     }
     //Raymond:added getFolderState,saveFolderState
 
-</script>
-<?php
-$sql = "SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content WHERE deleted=1";
-$rs = mysql_query($sql);
-$row = mysql_fetch_row($rs);
-$count = $row[0];
 
-?>
+    // show state of recycle bin
+    function showBinFull() {
+        var a = $('Button10');
+        var title = '<? echo $_lang['empty_recycle_bin']; ?>';
+        if(!a.setAttibute) a.title = title;
+        else a.setAttribute('title',title); 
+        a.innerHTML = '<? echo $_style['empty_recycle_bin']; ?>';
+        a.className = 'treeButton';
+        a.onclick = emptyTrash;
+    }
+    
+    function showBinEmpty() {
+        var a = $('Button10');
+        var title = '<? echo $_lang['empty_recycle_bin_empty']; ?>';
+        if(!a.setAttibute) a.title = title;
+        else a.setAttribute('title',title); 
+        a.innerHTML = '<? echo $_style['empty_recycle_bin_empty']; ?>';    
+        a.className = 'treeButtonDisabled';
+        a.onclick = '';
+    }
+    
+</script>
+
 <!--[if lt IE 7]>
     <style type="text/css">
       body { behavior: url(media/script/forIE/htcmime.php?file=csshover.htc) }
@@ -399,7 +429,7 @@ $count = $row[0];
             <td><a href="javascript:;" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
             <td><a href="javascript:;" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="javascript:;" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
-            <td><a href="javascript:;" id="Button10" <?php echo $count>0 ? 'class="treeButton" onclick="emptyTrash();"':'class="treeButtonDisabled"'; ?> title="<?php echo $count>0 ? $_lang['empty_recycle_bin'] : $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $count>0 ? $_style['empty_recycle_bin'] : $_style['empty_recycle_bin_empty'] ; ?></a></td>
+            <td><a href="javascript:;" id="Button10" class="treeButtonDisabled"' title="<? echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             </tr>
         </table>
     </td>
