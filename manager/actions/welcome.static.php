@@ -155,6 +155,7 @@ fclose($handle);
 
 // merge placeholders
 $tpl = $modx->mergePlaceholderContent($tpl);
+$tpl = preg_replace('~\[\+(.*?)\+\]~', '', $tpl); //cleanup
 
 echo $tpl;
 
