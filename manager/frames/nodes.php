@@ -117,7 +117,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $pagetitle = htmlspecialchars($pagetitle);
             $pagetitleDisplay = $published==0 ? "<span class='unpublishedNode'>$pagetitle</span>" : ($hidemenu==1 ? "<span class='notInMenuNode'>$pagetitle</span>":"<span class='publishedNode'>$pagetitle</span>");
             $pagetitleDisplay = $deleted==1 ? "<span class='deletedNode'>$pagetitle</span>" : $pagetitleDisplay;
-            $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="media/style/'.$theme.'images/tree/link_go.png">' : '' ;
+            $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="media/style/'.$theme.'images/tree/link_go.png" width="16" height="16">' : '' ;
 
 
             $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";

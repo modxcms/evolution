@@ -401,6 +401,7 @@ $_lang["logout"] = 'Logout';
 $_lang["logo_slogan"] = 'MODx Content Manager - \nCreate and do more with less';
 $_lang["long_title"] = 'Long title';
 $_lang["manager"] = 'Manager';
+$_lang['manager_lockout_message'] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
 $_lang["manager_permissions"] = 'Manager Permissions';
 $_lang["manager_theme"] = 'Manager Theme:';
 $_lang["manager_theme_message"] = 'Select the Theme for the Content Manager.';

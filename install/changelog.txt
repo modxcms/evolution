@@ -3,8 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1714 - October 12, 2006)
+MOD 0.9.5 beta 5 (rev 1717 - October 12, 2006)
 ====================================
+* Minor tweak to ajax login page and tree nodes. (1713)
+* Added ajax support to login page. (1712)
+* Added manager_lockout_message to english.inc.php. (1712)
+* Added support for allow_manager_access user setting. (1712)
+* Added manager.lockout.inc.php and manager.lockout.html. (1712)
 * Fixed warnings with undeclared arrays in save_user.processor.php. (1714)
 * Added login.html to other themes. (1710)
 * Separate manager login logic from content page (see login.html). (1709)

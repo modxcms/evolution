@@ -232,7 +232,7 @@
             // check if our payload contains the login form :)
             e = $('mx_loginbox');
             if(e) {
-                // yep the seession has timed out
+                // yep! the seession has timed out
                 rpcNode.innerHTML = '';
                 top.location = 'index.php';
             }

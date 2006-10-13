@@ -69,8 +69,8 @@ $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 
 if($limit==0 || $limit>1) {
-        $e->setError(900);
-        $e->dumpError();
+    jsAlert($e->errors[900]);
+    return;
 }   
 
 $row = mysql_fetch_assoc($rs);
@@ -101,8 +101,8 @@ while ($row = mysql_fetch_assoc($rs)) {
 if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) { // blocked due to number of login errors.
         session_destroy();
         session_unset();
-        $e->setError(902);
-        $e->dumpError();
+        jsAlert($e->errors[902]);
+        return;
 }
 
 if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) { // blocked due to number of login errors, but get to try again
@@ -113,15 +113,15 @@ if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) { // block
 if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
     session_destroy();
     session_unset();
-    $e->setError(903);
-    $e->dumpError();
+    jsAlert($e->errors[903]);
+    return;
 }
 
 // blockuntil
 if($blockeduntildate>time()) { // this user has a block until date
     session_destroy();
     session_unset();
-    $output = jsAlert("You are blocked and cannot log in! Please try again later.");
+    jsAlert("You are blocked and cannot log in! Please try again later.");
     return;
 }
 
@@ -129,7 +129,7 @@ if($blockeduntildate>time()) { // this user has a block until date
 if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
     session_destroy();
     session_unset();
-    $output = jsAlert("You are blocked and cannot log in! Please try again later.");
+    jsAlert("You are blocked and cannot log in! Please try again later.");
     return;
 }
 
@@ -137,13 +137,13 @@ if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block a
 if ($allowed_ip) {
         if(($hostname = gethostbyaddr($_SERVER['REMOTE_ADDR'])) && ($hostname != $_SERVER['REMOTE_ADDR'])) {
           if(gethostbyname($hostname) != $_SERVER['REMOTE_ADDR']) {
-            $output = jsAlert("Your hostname doesn't point back to your IP!");
-        return;
+            jsAlert("Your hostname doesn't point back to your IP!");
+            return;
           }
         }
 
         if(!in_array($_SERVER['REMOTE_ADDR'], explode(',',str_replace(' ','',$allowed_ip)))) {
-          $output = jsAlert("You are not allowed to login from this location.");
+          jsAlert("You are not allowed to login from this location.");
           return;
         }
 }
@@ -153,7 +153,7 @@ if ($allowed_days) {
     $date = getdate();
     $day = $date['wday']+1;
     if (strpos($allowed_days,"$day")===false) {
-        $output = jsAlert("You are not allowed to login at this time. Please try again later.");
+        jsAlert("You are not allowed to login at this time. Please try again later.");
         return;
     }       
 }
@@ -172,14 +172,14 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
 if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
     // check user password - local authentication
     if($dbasePassword != md5($givenPassword)) {
-            $e->setError(901);
+            jsAlert($e->errors[901]);
             $newloginerror = 1;
     }
 }
 
 if($use_captcha==1) {
     if($_SESSION['veriword']!=$captcha_code) {
-        $e->setError(905);
+        jsAlert($e->errors[905]);
         $newloginerror = 1;
     }
 }
@@ -199,7 +199,7 @@ if($newloginerror==1) {
     }
     session_destroy();
     session_unset();
-    $e->dumpError();
+    return;
 }
 
 $currentsessionid = session_id();
@@ -269,15 +269,22 @@ $modx->invokeEvent("OnManagerLogin",
 $tbl = $modx->getFullTableName("user_settings");
 $id = $modx->db->getValue("SELECT setting_value FROM $tbl WHERE user='$internalKey' AND setting_name='manager_login_startup'");
 if(isset($id) && $id>0) {
-    header('Location: '.$modx->config['site_url'].$modx->makeUrl($id));
+    $header = 'Location: '.$modx->makeUrl($id,'','','full');
+    if($_POST['ajax']==1) echo $header;
+    else header($header);
 }
 else {
-    header('Location: ../');
+    $header = 'Location: '.$modx->config['site_url'].'manager';
+    if($_POST['ajax']==1) echo $header;
+    else header($header);
 }
 
 // show javascript alert    
 function jsAlert($msg){
-    echo "<script>window.setTimeout(\"alert('".addslashes(mysql_escape_string($msg))."')\",10);history.go(-1)</script>";
+    if($_POST['ajax']==1) echo $msg."\n";
+    else {
+        echo "<script>window.setTimeout(\"alert('".addslashes(mysql_escape_string($msg))."')\",10);history.go(-1)</script>";
+    }
 }
 
 ?>
