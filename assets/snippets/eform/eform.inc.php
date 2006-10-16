@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4 BETA 1 - Electronic Form Snippet (Extended)
+# eForm 1.4 BETA 2 - Electronic Form Snippet (Extended)
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -10,34 +10,48 @@
 #
 #
 # see docs/eform.htm for installation and usage information
-# (* = tested in 0.9.5, ? = not tested)
-# * WHATS NEW for	version 1.4
-# * Fixed: &debug parameter wasn't doing anything
-# * Fixed: Returning 'foreach' error when chunk or document not found for form template
-# * Fixed: Erroneous 'tampering' error when using multiple forms on a page ($formats persisted between eForm calls)
-# * Fixed/Updated: Events now work using the &eFormOnBeforeMailSent and &eFormOnMailSent paramaters.
+# WHATS NEW for	version 1.4
+#
+# ADDED in 1.4 Beta 2
+# New: Extra parameters &sendAsHtml and $sendAsText - force email messages to be in Html
+#    or text only format. Possible values: 
+#    &sendAsHTML=`1`- send all messages as html
+#    &sendAsHTML=`[report],[autotext],[mobile]`- send specified messages as html
+#    &sendAsText=`1`- send all messages as text only
+#    &sendAsText=`[report],[autotext],[mobile]`- send specified messages as text only
+# Fixed: eform attribute not stripped when form is displayed first time
+# Fixed: Error getting templates from document id when this document is published
+# Fixed: Stupid copy/paste errors in snippet call
+# Fixed: placeholders not getting replaced in the report
+#
+# ADDED in 1.4 Beta 1
+# Fixed: &debug parameter wasn't doing anything
+# Fixed: Returning 'foreach' error when chunk or document not found for form template
+# Fixed: Erroneous 'tampering' error when using multiple forms on a page ($formats persisted between eForm calls)
+# Fixed/Updated: Events now work using the &eFormOnBeforeMailSent and &eFormOnMailSent paramaters.
 #   The previous event structure did not appear to work without some tricks (variables were out of scope)
-# * Updated:  [+subject+] can now be used in report and thank you templates
-# * Updated: When using a document for the templates the document no longer needs to have published set
-# * New: Show error if &tpl is set to the same document (id) containing the eForm snippet call
-# * New: extended debug messages for validated fields
-# ? New: added some protection against mail injection
-# ? TODO: send 'abuse alert' mail to [(mailsender)] (controlled by configuration parameter &reportAbuse)?
-# * New: added example on how to use eform events
-# * New: You can now use <form id="formName"...> to match your &formid=`formName`
+# Updated:  [+subject+] can now be used in report and thank you templates
+# Updated: When using a document for the templates the document no longer needs to have published set
+# New: Show error if &tpl is set to the same document (id) containing the eForm snippet call
+# New: extended debug messages for validated fields
+# New: added some protection against mail injection
+# 	TODO: send 'abuse alert' mail to [(mailsender)] (controlled by configuration parameter &reportAbuse)?
+# New: added example on how to use eform events
+# New: You can now use <form id="formName"...> to match your &formid=`formName`
 #   instead of <input type="hidden" name="formid" value="formName" />
-# * New: You can now set the description using the label tag instead of in the eform attribute
+# New: You can now set the description using the label tag instead of in the eform attribute
 #   eg. <label for="email">Your Email</label><input type="text" name="email" eform=":email:1::/>
 #		instead of <label>Your Email</label><input type="text" name="email" eform="Your Email:email:1::/>
 #   If both are used the eform value takes precedence.
-# * New: Added &disclaimer parameter for adding a disclaimer to the email body. Can be chunk name or document id
+# New: Added &disclaimer parameter for adding a disclaimer to the email body. Can be chunk name or document id
 #   Need to manually add [+disclaimer+] placeholder to report template
-# *  Optimized: moved form parser code so it is only executed when form is posted
-#	* Updated: You can again use placeholders in &from and &fromname (as you can with &subject and &keywords)
-# * Updated: It is now possible to use placeholders in #SELECT validation rule i.e.
+# Optimized: moved form parser code so it is only executed when form is posted
+#	Updated: You can again use placeholders in &from and &fromname (as you can with &subject and &keywords)
+# Updated: It is now possible to use placeholders in #SELECT validation rule i.e.
 #   #SELECT jobnum FROM translation_jobs WHERE client_email={email}
-# * New: you can now use the #LIST validation rule for file type checking with file uploads
+# New: you can now use the #LIST validation rule for file type checking with file uploads
 #   by supplying a list of file extensions eg: #LIST jpg,jpeg,png,gif
+#
 # TODO: replace #EVAL with #FUNCTION? Call an external function and not use eval(). More secure...
 # TODO: implement storage of data in document or external database. Perhaps this can be done using an
 #   external script/snippet and the eformOnBeforeMailSent event? Means less bloated code for simple forms and it is
@@ -70,6 +84,7 @@ global $formats,$fields;
 
 	# load templates
 	if($tpl==$modx->documentIdentifier) return $_lang['ef_is_own_id']."'$tpl'";
+	
 	//required
 	if( $tmp=efLoadTemplate($tpl) ) $tpl=$tmp; else return $_lang['ef_no_doc'] . " '$tpl'";
 
@@ -98,9 +113,9 @@ global $formats,$fields;
 		$tpl = eFormParseTemplate($tpl,$isDebug);
 		foreach($formats as $k => $discard)	$fields[$k] = ""; // store dummy value inside $fields
 
-		//added in 1.4 - add a disclaimer from chunk/page id
-		if(($tmp=efLoadTemplate($disclaimer))!==false ) $fields['disclaimer'] = $tmp;
-
+		//added in 1.4 - add a disclaimer from chunk/page id - fails silently if not found
+		 $disclaimer = (($tmp=efLoadTemplate($disclaimer))!==false )? $tmp:'';
+		
 		//error message containers
 		$vMsg = $rMsg = $rClass = array();
 
@@ -137,7 +152,6 @@ global $formats,$fields;
 				$datatype 	= $fld[2];
 				$isRequired = $fld[3];
 // mod by JJ - Separated required test field from other validation as it
-// is the same for each field any field anyway (except 'file')
 // isRequired now sets class var and populates extra $rMsg
 // class stuff not yet implemented here (although I do have a working version somewhere)
 // basic idea is to highlight fields with errors through css
@@ -275,9 +289,11 @@ global $formats,$fields;
 				else
 					if ($eFormOnBeforeMailSent($fields)===false) return;
 			}
-
+			
+			$fields['disclaimer'] = ($disclaimer)? formMerge($disclaimer,$fields):"";
 			$subject	= ($subject)? formMerge($subject,$fields):"$category";
 			$fields['subject'] = $subject; //make subject available in report & thank you page
+			$report	= ($report)? formMerge($report,$fields):"";
 			$keywords	= ($keywords)? formMerge($keywords,$fields):"";
 			$from = ($from)? formMerge($from,$fields):"";
 			$fromname	= ($from)? formMerge($fromname,$fields):"";
@@ -299,13 +315,15 @@ global $formats,$fields;
 
 				# include PHP Mailer
 				include_once "manager/includes/controls/class.phpmailer.php";
-
-				# send form
+				
+				# send form				
+				//defaults to html so only test sendasText
+				$isHtml = ($sendAstText===1 || strstr($sendAsText,'report'))?false:true;
 				if(!$noemail) {
 					if($sendirect) $to = $fields['email'];
 					$mail = new PHPMailer();
 					$mail->IsMail();
-					$mail->IsHTML(true);
+					$mail->IsHTML($isHtml);
 					$mail->From		= $from;
 					$mail->FromName	= $fromname;
 					$mail->Subject	= $subject;
@@ -322,7 +340,7 @@ global $formats,$fields;
 				if($ccsender && $fields['email']) {
 					$mail = new PHPMailer();
 					$mail->IsMail();
-					$mail->IsHTML(true);
+					$mail->IsHTML($isHtml);
 					$mail->From		= $from;
 					$mail->FromName	= $fromname;
 					$mail->Subject	= $subject;
@@ -331,8 +349,10 @@ global $formats,$fields;
 					AttachFilesToMailer($mail,$attachments);
 					if(!$mail->send()) return $mail->ErrorInfo;
 				}
-
+				
 				# send auto-respond email
+				//defaults to html so only test sendasText
+				$isHtml = ($sendAstText===1 || strstr($sendAsText,'autotext'))?false:true;
 				if ($autotext && $fields['email']!='') {
 					$autotext = formMerge($autotext,$fields);
 					$mail = new PHPMailer();
@@ -345,13 +365,15 @@ global $formats,$fields;
 					AddAddressToMailer($mail,"to",$fields['email']);
 					if(!$mail->send()) return $mail->ErrorInfo;
 				}
-
+				
+				//defaults to text - test for sendAsHtml
+				$isHTML = ($sendAsHTML===1 || strstr($sendAsHtml,'mobile'))?true:false;
 				# send mobile email
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
 					$mail = new PHPMailer();
 					$mail->IsMail();
-					$mail->IsHTML(false);
+					$mail->IsHTML($isHtml);
 					$mail->From		= $from;
 					$mail->FromName	= $fromname;
 					$mail->Subject	= $subject;
@@ -394,6 +416,10 @@ global $formats,$fields;
 			}
 			return; // stop here
 		}
+	}else{ //not postback
+		//strip the eform attribute
+		$regExpr = "#eform=([\"'])[^\"']*?\\1#si";
+		$tpl = preg_replace($regExpr,'',$tpl);
 	}
 
 	// set vericode
@@ -733,6 +759,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 				$tmp = $cmd; //just in case eval destroys cmd
 				if( eval($param)===false )
 					$errMsg = $_lang['ef_failed_eval'];
+				if($isDebug) $debugText .= "<strong>$fld[1]</strong>: ".$_lang['ef_eval_deprecated']." $param";
 				$cmd = $tmp;
 				break;
 			//added in 1.4
@@ -806,8 +833,12 @@ function efLoadTemplate($tpl){
 	if (strlen($tpl)<50){
 		if( is_numeric($tpl) ){
 			//try unpublished docs first
-			$tpl = ( $doc=$modx->getDocument($tpl,'content',0) )? $doc['content'] : '';
-			if(!$tpl) $tpl = ( $doc=$modx->getDocument($tmp,'content',1) )? $doc['content'] : false;
+			$tmp = ( $doc=$modx->getDocument($tpl,'content',0) )? $doc['content'] :false;
+			if($tmp) 
+				return $tmp;
+			else 
+				return ( $doc=$modx->getDocument($tpl,'content',1) )? $doc['content'] : false;
+		
 		}else if($tpl)
 			$tpl = ( $chunk=$modx->getChunk($tpl) )? $chunk : false;
 	}

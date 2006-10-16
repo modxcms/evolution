@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1731 - October 16, 2006)
+MOD 0.9.5 beta 5 (rev 1732 - October 16, 2006)
 ====================================
 * Minor tweak to ajax login page and tree nodes. (1713)
 * Added ajax support to login page. (1712)

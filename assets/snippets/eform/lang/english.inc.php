@@ -32,4 +32,5 @@ $_lang['ef_debug_warning'] = '<p style="color:red;"><span style="font-size:1.5em
 $_lang['ef_mail_abuse_subject'] = 'Potential email form abuse detected for form id';
 $_lang['ef_mail_abuse_message'] = '<p>A form on your website may have been the subject of an email injection attempt. The details of the posted values are printed below. Suspected text has been embedded in \[..]\ tags.  </p>';
 $_lang['ef_mail_abuse_error'] = '<strong>Invalid or insecure entries were detected in your form</strong>.';
+$_lang['ef_eval_deprecated'] = "The #EVAL rule is deprecated and may not work in future versions. Use #FUNCTION instead.";
 ?>
