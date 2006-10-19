@@ -3,8 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1742 - October 19, 2006)
+MOD 0.9.5 beta 5 (rev 1743 - October 19, 2006)
 ====================================
+* Removed duplicate english language entry manage_metatags_help (exists as metatag_notice) and corrected reference in manage_metatags.dynamic.php. (1743)
+* Minor changes to login.html. (1738)
 * Fixes a bug where an error 404 was served instead of (site_start) on an empty request. (1739)
 * Security: Important! Fixes remote file inclusion vulnerability in index-ajax.php. (1724)
 * Fix: Don't warn if config file is owner/group writable. Still warn if world-writable. (1721)
