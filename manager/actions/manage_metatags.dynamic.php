@@ -148,7 +148,7 @@ $modx->manager->initPageViewState();
 			<input type="button" value="<?php echo $_lang["add_tag"];?>" name="cmdsavetag" onclick="addTag()" /> <input style="visibility:hidden" type="button" value="<?php echo $_lang["cancel"];?>" name="cmdcanceltag" onclick="cancelTag()" /></td>
 		  </tr>
 		  <tr>
-		      <td colspan="4"><p><?php echo $_lang["metatag_notice"]; ?></p></td>
+		      <td colspan="4"><p><?php echo $_lang['metatag_notice'];?></p></td>
 	      </tr>
 		</table>
 		</td>

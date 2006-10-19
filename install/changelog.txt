@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1744 - October 19, 2006)
+MOD 0.9.5 beta 5 (rev 1745 - October 19, 2006)
 ====================================
 * Corrected spelling for language key 'metatag_notice' in english lang file. (1744)
 * Removed collate and character set keywords from jot_subscriptions table insert for default content installation. (1744)
