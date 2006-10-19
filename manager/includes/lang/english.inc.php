@@ -444,7 +444,7 @@ $_lang["messages_user"] = 'A user';
 $_lang["metatags"] = 'META tags';
 $_lang["metatags_and_keywords"] = 'META tags and Keywords';
 $_lang["metatag_intro"] = 'On this page you can delete, create or edit META tags. To link META tags to documents, click on the <u>META Keywords</u> tab when editing the document, and select the desired META tags and keywords. To add a new tag enter the name and value and click the \'Add tag\' button. To edit the tag click on the name of the tag from within the data grid.';
-$_lang["metatag_notice"] = 'You may wish to reference the <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Refernce Guide</a> site for more information. This is not a complete list of possible Meta Tags.';
+$_lang["metatag_notice"] = 'You may wish to reference the <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a> site for more information. This is not a complete list of possible Meta Tags.';
 $_lang["meta_keywords"] = 'META Keywords';
 $_lang["mgr_access_permissions"] = 'Manager access permissions';
 $_lang["mgr_login_start"] = 'Manager Login Startup';
