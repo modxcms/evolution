@@ -14,9 +14,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
     <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
     <script src="media/script/scriptaculous/scriptaculous.js" type="text/javascript"></script>
-    <script type="text/javascript" src="media/script/error.js"></script>
-
-    <script language="JavaScript" type="text/javascript">
+    <script type="text/javascript">
     // TREE FUNCTIONS - FRAME
     // These functions affect the tree frame and any items that may be pointing to the tree.
     var currentFrameState = 'open';

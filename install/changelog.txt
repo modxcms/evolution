@@ -3,8 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1740 - October 19, 2006)
+MOD 0.9.5 beta 5 (rev 1741 - October 19, 2006)
 ====================================
+* [FS#571] Added permissions check to stop administrator from getting locked out of the settings page after new install or upgrade if the settings haven't been saved and a user without the right to the settings page is trying to log in at the same time. (1736)
+* Remove error.js completely. Only functions correctly in IE, FF and Safari fail to display any js error information in the dialog. (1719)
 * Minor tweak to ajax login page and tree nodes. (1713)
 * Added ajax support to login page. (1712)
 * Added manager_lockout_message to english.inc.php. (1712)
