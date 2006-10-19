@@ -18,57 +18,55 @@ if(!$modx->hasPermission('logs')) {
 
 <!-- server -->
 <div class="sectionHeader">Server</div><div class="sectionBody" id="lyr2">
-		<P>
-		This page shows some general information about the MODx installation.<p>
 
 		<table border="0" cellspacing="2" cellpadding="2">
 		  <tr>
-			<td width="150">MODx version</td>
+			<td width="150"><?php echo $_lang['modx_version']?></td>
 			<td width="20">&nbsp;</td>
 			<td><b><?php echo $version ?></b><?php echo $newversiontext ?></td>
 		  </tr>
 		  <tr>
-			<td width="150">Version codename</td>
+			<td width="150"><?php echo $_lang['version_codename']?></td>
 			<td width="20">&nbsp;</td>
 			<td><b><?php echo $code_name ?></b></td>
 		  </tr>
 		  <tr>
 			<td>phpInfo()</td>
 			<td>&nbsp;</td>
-			<td><b><a href="javascript:;" onclick="viewPHPInfo();return false;">View</a></b></td>
+			<td><b><a href="javascript:;" onclick="viewPHPInfo();return false;"><?php echo $_lang['view']; ?></a></b></td>
 		  </tr>
 		  <tr>
-			<td>Access permissions</td>
+			<td><?php echo $_lang['access_permissions']?></td>
 			<td>&nbsp;</td>
-			<td><b><?php echo $use_udperms==1 ? "enabled" : "disabled"; ?></b></td>
+			<td><b><?php echo $use_udperms==1 ? $_lang['enabled'] : $_lang['disabled']; ?></b></td>
 		  </tr>
 		  <tr>
-			<td>Server Time</td>
+			<td><?php echo $_lang['servertime']?></td>
 			<td>&nbsp;</td>
 			<td><b><?php echo strftime('%H:%M:%S', time()); ?></b></td>
 		  </tr>
 		  <tr>
-			<td>Local time</td>
+			<td><?php echo $_lang['localtime']?></td>
 			<td>&nbsp;</td>
 			<td><b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b></td>
 		  </tr>
 		  <tr>
-			<td>Server Offset</td>
+			<td><?php echo $_lang['serveroffset']?></td>
 			<td>&nbsp;</td>
-			<td><b><?php echo $server_offset_time/(60*60) ?></b> hours (server time - offset time should give your local time)</td>
+			<td><b><?php echo $server_offset_time/(60*60) ?></b> h</td>
 		  </tr>
 		  <tr>
-			<td>Database name</td>
+			<td><?php echo $_lang['database_name']?></td>
 			<td>&nbsp;</td>
-			<td><b><?php echo $dbase ?></b></td>
+			<td><b><?php echo str_replace('`','',$dbase) ?></b></td>
 		  </tr>
 		  <tr>
-			<td>Database server</td>
+			<td><?php echo $_lang['database_server']?></td>
 			<td>&nbsp;</td>
 			<td><b><?php echo $database_server ?></b></td>
 		  </tr>
 		  <tr>
-			<td>Table prefix</td>
+			<td><?php echo $_lang['table_prefix']?></td>
 			<td>&nbsp;</td>
 			<td><b><?php echo $table_prefix ?></b></td>
 		  </tr>
@@ -118,8 +116,8 @@ if(!$modx->hasPermission('logs')) {
 
 
 <!-- database -->
-<div class="sectionHeader">Database tables</div><div class="sectionBody" id="lyr4">
-		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
+<div class="sectionHeader"><?php echo $_lang['database_tables']; ?></div><div class="sectionBody" id="lyr4">
+		<p><?php echo $_lang['table_hoverinfo']; ?><p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>
 		 <tr>
@@ -201,24 +199,24 @@ if(!$modx->hasPermission('logs')) {
 		</table>
 <?php
 	if($totaloverhead>0) { ?>
-		<p><b style='color:#990033'>Note:</b> Overhead is unused space reserved by MySQL. To free up this space, click on the table's overhead figure.
-<?php } ?>
+		<p><?php echo $_lang['database_overhead']; ?></p>	
+		<?php } ?>
 </form>
 </div>
 
 <!-- online users -->
-<div class="sectionHeader">Online users</div><div class="sectionBody" id="lyr5">
-		This list shows users online within the last 20 minutes.<br />
-		Current time: <b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b><p>
+<div class="sectionHeader"><?php echo $_lang['onlineusers_title']; ?></div><div class="sectionBody" id="lyr5">
+		<p><?php echo $_lang['onlineusers_message']; ?>
+		<b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b>)</p>
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>
 		  <tr>
-			<td><b>User</b></td>
-			<td><b>UserID</b></td>
-			<td><b>IP address</b></td>
-			<td><b>Last hit</b></td>
-			<td><b>Action</b></td>
-			<td><b>ActionID</b></td>
+			<td><b><?php echo $_lang['onlineusers_user']; ?></b></td>
+			<td><b><?php echo $_lang['onlineusers_userid']; ?></b></td>
+			<td><b><?php echo $_lang['onlineusers_ipaddress']; ?></b></td>
+			<td><b><?php echo $_lang['onlineusers_lasthit']; ?></b></td>
+			<td><b><?php echo $_lang['onlineusers_action']; ?></b></td>
+			<td><b><?php echo $_lang['onlineusers_actionid']; ?></b></td>			
 		  </tr>
 		  </thead>
 		  <tbody>

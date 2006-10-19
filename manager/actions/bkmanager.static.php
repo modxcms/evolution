@@ -61,7 +61,7 @@ else {
 <span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["bk_manager"]; ?></span>
 </div>
 
-<div class="sectionHeader">Database Tables</div><div class="sectionBody" id="lyr4">
+<div class="sectionHeader"><?php echo $_lang['database_tables']; ?></div><div class="sectionBody" id="lyr4">
 <form name='frmdb' method='post'>
 <input type='hidden' name='mode' value='' />
 <script language='javascript'>
@@ -81,7 +81,7 @@ else {
 	}
 
 </script>
-		Hover the mouse cursor over a table's name to see a short description of the table's function (not all tables have <i>comments</i> set).<p />
+		<?php echo $_lang['table_hoverinfo']; ?><p />
 		<span style='width:100%;'><a href='javascript:;' onclick='submitForm();return false;'><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/ed_save.gif' border=0 align='absmiddle'>Click here</a> to backup & download the selected tables</span><br />&nbsp;&nbsp;&nbsp;
 		<input type='checkbox' name='droptables'> Generate DROP TABLE statements.<p />
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
@@ -164,7 +164,7 @@ else {
 		</table>
 <?php
 	if($totaloverhead>0) { ?>
-		<p><b style='color:#990033'>Note:</b> Overhead is unused space reserved by MySQL. To free up this space, click on the table's overhead figure.
+		<p><?php echo $_lang['database_overhead']; ?></p>
 <?php } ?>
 </form>
 </div>

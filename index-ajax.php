@@ -5,7 +5,6 @@ foreach(array('HTTP_REFERER','HTTP_USER_AGENT') as $outside) {
   $_SERVER[$outside] = isset($_SERVER[$outside]) ? preg_replace("/[^A-Za-z0-9_\-\,\.\/\s]/", "", $_SERVER[$outside]): '';
   if(strlen($_SERVER[$outside])>255) $_SERVER[$outside] = substr(0,255,$_SERVER[$outside]);
 }
-if(isset($_GET['q'])) $_GET['q'] = preg_replace("/[^A-Za-z0-9_\-\.\/]/", "", $_GET['q']);
 
 // Never allow request via get and post contain snippets, javascript or php
 $modxtags = array('@<script[^>]*?>.*?</script>@si',
@@ -28,21 +27,23 @@ $database_server = "";
 $database_user = "";
 $database_password = "";
 $dbase = "";
-$table_prefix = "";		
+$table_prefix = "";
 $base_url = "";
 $base_path = "";
 
 // get the required includes
 if($database_user=="") {
-	if (!$rt = @include_once "manager/includes/config.inc.php") {
-	   exit('Could not load MODx configuration file!');
-	}
+        if (!$rt = @include_once "manager/includes/config.inc.php") {
+           exit('Could not load MODx configuration file!');
+        }
 }
 
-if (isset ($_REQUEST['q'])) {
-   if (! @ include_once ($base_path . $_REQUEST['q'])) {
-      exit('Could not load requested ajax handler: ' . $_REQUEST['q']);
-   }
+if(isset($_REQUEST['q'])) {
+  $axhandler = preg_replace("/[^A-Za-z0-9_\-\.\/]/", "", $_REQUEST['q']);
+  $axhandler = str_replace(array('..','assets','manager','cache','files','export','media','templates'),'',$axhandler);
+  if (!@include_once('./assets' . $axhandler)) {
+     exit('Could not load requested ajax handler: ' . $_REQUEST['q']);
+  }
 }
 
 ?>

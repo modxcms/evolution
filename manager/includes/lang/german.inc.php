@@ -2,44 +2,44 @@
 /**
  * Filename:       includes/lang/german.inc.php
  * Function:       Language file.
- * Encoding:       ?
+ * Encoding:       UTF-8
  * Author:         The MODx Project Team (originally by Alex Butter)
- * Date:           03 Oct 2006
- * Version:        2.01
+ * Date:           12 Oct 2006
+ * Version:        2.02
  * MODx version:   0.9.5
 */
 // NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx ist eine PHP Arbeitsumgebung und ist unter der <a href="../assets/docs/license.txt">GPL</a> Lizenz veröffentlicht.';
 $_lang["about_title"] = 'Über MODx';
 $_lang["access_permissions"] = 'Zugangskontrolle';
-$_lang["access_permissions_add_document_group"] = 'Eine neue Dokumentengruppe erstellen';
+$_lang["access_permissions_add_document_group"] = 'Eine neue Dokumentgruppe erstellen';
 $_lang["access_permissions_add_user_group"] = 'Eine neue Benutzergruppe erstellen';
 $_lang["access_permissions_docs_message"] = 'Hier können Sie auswählen, welcher Dokumentgruppe dieses Dokument zugeordnet ist';
 $_lang["access_permissions_documents_in_group"] = '<b>Dokumente in Gruppe:</b> ';
-$_lang["access_permissions_documents_tab"] = 'Hier sehen Sie die angelegten Dokumentengruppen. Sie können auch neue Gruppen anlegen, Gruppen umbenennen, Dokumente löschen und die Zugehörigkeit der Dokumente zu Gruppen sehen (Um den Namen des Dokuments zu sehen, fahren Sie mit der Maus über die Id). Um ein Dokument einer Gruppe hinzuzufügen oder zu entfernen, ändern Sie direkt das entsprechende Dokument.';
-$_lang["access_permissions_document_groups"] = 'Dokument-Gruppen';
-$_lang["access_permissions_introtext"] = 'Hier können sie Benutzer- und Dokument-Gruppen, die für die Zugriffsberechtigungen benötigt werden, verwalten. Um einen Benutzer einer Benutzer-Gruppe zuzuordnen, bearbeiten Sie den Benutzer und wählen Sie die zugehörige Gruppe. Um ein Dokument einer Benutzer-Gruppe zuzuordnen, bearbeiten Sie das Dokument und wählen Sie die entsprechende Gruppe.';
-$_lang["access_permissions_links"] = 'Benutzer / Dokument Gruppen Links';
+$_lang["access_permissions_documents_tab"] = 'Hier sehen Sie die angelegten Dokumentgruppen. Sie können auch neue Gruppen anlegen, Gruppen umbenennen, Dokumente löschen und die Zugehörigkeit der Dokumente zu Gruppen sehen (Um den Namen des Dokuments zu sehen, fahren Sie mit der Maus über die Id). Um ein Dokument einer Gruppe hinzuzufügen oder zu entfernen, ändern Sie direkt das entsprechende Dokument.';
+$_lang["access_permissions_document_groups"] = 'Dokumentgruppen';
+$_lang["access_permissions_introtext"] = 'Hier können sie Benutzer- und Dokumentgruppen, die für die Zugriffsberechtigungen benötigt werden, verwalten. Um einen Benutzer einer Benutzer-Gruppe zuzuordnen, bearbeiten Sie den Benutzer und wählen Sie die zugehörige Gruppe. Um ein Dokument einer Benutzer-Gruppe zuzuordnen, bearbeiten Sie das Dokument und wählen Sie die entsprechende Gruppe.';
+$_lang["access_permissions_links"] = 'Benutzer- / Dokumentgruppen-Links';
 $_lang["access_permissions_links_tab"] = 'Hiermit legen Sie fest, welche Benutzergruppen auf die Dokumentgruppen Zugriffsrechte haben (z.B. Bearbeiten oder Unterdokumente anlegen). Um eine Dokumenengruppe it einer Benutzergruppe zu verknüpfen, wählen Sie die Gruppe aus dem Dropdown Menü und Klicken anschließend auf \'Link\'. Um einen Link für eine bestimmte Gruppe zu entfernen Klicken Sie auf \'Remove ->\'. Die Verknüpfung wird sofort gelöscht.';
 $_lang["access_permissions_no_documents_in_group"] = 'Keine.';
 $_lang["access_permissions_no_users_in_group"] = 'Keine.';
 $_lang["access_permissions_off"] = '<span class=\'warning\'>Zugriffsberechtigung wurden nicht aktiviert.</span> Sämtliche Einstellungen, die Sie hier vornehmen bleiben wirkungslos, bis die Zugriffsberechtigungen wieder aktiviert werden.';
 $_lang["access_permissions_users_in_group"] = '<b>Benutzer in Gruppe:</b> ';
 $_lang["access_permissions_users_tab"] = 'Hier sehen Sie die angelegten Benutzergruppen. Sie können auch neue Gruppen anlegen, Gruppen umbenennen, Gruppen löschen und die Zugehörigkeit der Benutzer zu Gruppen sehen. Um ein Benutzer einer Gruppe hinzuzufügen oder zu entfernen - &Auml;ndern Sie direkt den entsprechenden Benutzer. Adminstratoren (Benutzer mit Rollen ID 1) haben immer Zugriff auf alle Dokumente und müssen keiner speziellen Gruppen angehören.';
-$_lang["access_permissions_user_group"] = 'Benutzer Gruppe:';
-$_lang["access_permissions_user_groups"] = 'Benutzer-Gruppen';
-$_lang["access_permissions_user_group_access"] = 'Dokumentengruppe auf die diese Benutzer Gruppe Zugriff hat:';
+$_lang["access_permissions_user_group"] = 'Benutzergruppe:';
+$_lang["access_permissions_user_groups"] = 'Benutzergruppen';
+$_lang["access_permissions_user_group_access"] = 'Dokumentgruppe auf die diese Benutzergruppe Zugriff hat:';
 $_lang["access_permissions_user_message"] = 'Hier können Sie auswählen welcher Benutzergruppe dieser Benutzer zugeordnet ist:';
-$_lang["access_permission_denied"] = 'Sie haben nicht die Berechtigung die Zugriffsrechte für dieses Dokument zu ändern.';
-$_lang["access_permission_parent_denied"] = 'Sie haben nicht die Berechtigung, um hier ein Dokument zu erstellen!';
+$_lang["access_permission_denied"] = 'Sie sind nicht Berechtigt, die Zugriffsrechte für dieses Dokument zu ändern.';
+$_lang["access_permission_parent_denied"] = 'Sie sind nicht berechtigt, an dieser Stelle ein Dokument zu erstellen!';
 $_lang["account_email"] = 'E-Mail-Adresse';
 $_lang["actioncomplete"] = '<b>Aktion war erfolgreich!</b><br />- Bitte warten Sie, bis MODx sich neu aufgebaut hat.';
-$_lang["activity_message"] = 'Diese Liste zeigt Ihnen die Dokumente, die Sie kürzlich bearbeitet oder erstellt haben:';
+$_lang["activity_message"] = 'Diese Liste zeigt Ihnen die Dokumente, die kürzlich bearbeitet oder erstellt wurden:';
 $_lang["activity_title"] = 'Kürzlich bearbeitete oder erstellte Dokumente';
 $_lang["add"] = 'Hinzufügen';
 $_lang["add_chunk"] = 'Chunk hinzufügen';
 $_lang["add_doc"] = 'Dokument hinzufügen';
-$_lang["add_document"] = 'Dokument erstellen';
+$_lang["add_document"] = 'Neues Dokument';
 $_lang["add_folder"] = 'Ordner erstellen';
 $_lang["add_plugin"] = 'Plugin hinzufügen';
 $_lang["add_snippet"] = 'Snippet hinzufügen';
@@ -50,12 +50,12 @@ $_lang["add_weblink"] = 'Neuer Weblink';
 $_lang["administrator_role_message"] = 'Diese Rolle kann nicht gelöscht oder bearbeitet werden.';
 $_lang["after_saving"] = 'Nach dem Speichern';
 $_lang["alert_delete_self"] = 'Sie können sich nicht selber löschen!';
-$_lang["alias"] = 'Namensabkürzung';
+$_lang["alias"] = 'Alias';
 $_lang["allow_mgr_access"] = 'Manager-Zugriff';
 $_lang["allow_mgr_access_message"] = 'Aktivieren Sie diese Option, um den Zugriff auf die Managerkonsole zu de- bzw. aktivieren. <b>Hinweis:</b> Wenn diese Option gesetzt ist, wird der Benutzer direkt auf die Managerkonsole bzw. auf die Startseite geleitet.';
-$_lang["all_doc_groups"] = 'Alle Dokumentgruppen (Öffentlich)';
-$_lang["all_events"] = 'All Events';
-$_lang["all_usr_groups"] = 'Alle Benutzergruppen (Öffentlich)';
+$_lang["all_doc_groups"] = 'Alle Dokumentgruppen (öffentlich)';
+$_lang["all_events"] = 'Alle Ereignisse';
+$_lang["all_usr_groups"] = 'Alle Benutzergruppen (öffentlich)';
 $_lang["already_deleted"] = 'wurde schon gelöscht.';
 $_lang["attachment"] = 'Download/Anhang';
 $_lang["automatic_alias_message"] = 'Wählen Sie \'ja\', damit das System bei Speicherung automatisch einen eindeutigen Alias (basierend auf dem Titel) vergibt.';
@@ -65,15 +65,15 @@ $_lang["bk_manager"] = 'Datensicherung';
 $_lang["blocked_minutes_message"] = 'Here you can enter the number of minutes that a user will be blocked for if they reach their maximum number of allowed failed login attempts. Please enter this value as numbers only (no commas, spaces etc.)';
 $_lang["blocked_minutes_title"] = 'Blocked Minutes:';
 $_lang["block_message"] = 'Dieser Benutzer wird deaktiviert sein, nachdem Sie die Benutzerdaten gespeichert haben!';
-$_lang["cache_files_deleted"] = 'Die folgenden Datein wurden gelöscht:';
+$_lang["cache_files_deleted"] = 'Die folgenden Dateien wurden gelöscht:';
 $_lang["cancel"] = 'Abbrechen';
-$_lang["captcha_code"] = 'Sicherheits Code';
+$_lang["captcha_code"] = 'Sicherheits-Code';
 $_lang["captcha_message"] = 'Aktivieren Sie Captcha-Validerung, um die Sicherheit zu steigern.';
 $_lang["captcha_title"] = 'Captcha aktivieren:';
 $_lang["captcha_words_message"] = 'Wenn CAPTCHA aktiviert ist - können Sie eine Liste von CAPTCHA Wörter eingeben Trennen Sie die Wörter mit Kommas. Das Eingabe Feld ist mit 255 Zeichen beschränkt.';
 $_lang["captcha_words_title"] = 'CAPTCHA Wörter';
 $_lang["category_heading"] = 'Category';
-$_lang["category_msg"] = 'Here you can view and edit all resources grouped by category.';
+$_lang["category_msg"] = 'Hier können Sie alle Ressourcen nach Kategorien sortiert bearbeiten.';
 $_lang["change_name"] = 'Name ändern';
 $_lang["change_password"] = 'Passwort ändern';
 $_lang["change_password_confirm"] = 'Passwort bestätigen';
@@ -94,15 +94,15 @@ $_lang["comment"] = 'Kommentar';
 $_lang["configcheck_admin"] = 'Bitte kontaktieren Sie einen Administrator des Systems und informieren Sie Ihn über diese Nachricht!';
 $_lang["configcheck_cache"] = 'Das Cacheverzeichnis ist nicht beschreibbar';
 $_lang["configcheck_cache_msg"] = 'MODx kann das Cacheverzeichnis nicht beschreiben. MODx wird wie erwartet funktionieren, das Caching ist jedoch deaktiviert. Um das Problem zu beheben, machen Sie das /_cache/ Verzeichnis beschreibbar.';
-$_lang["configcheck_configinc"] = 'Config file still writable';
-$_lang["configcheck_configinc_msg"] = 'Very naughty people could potentially wreak some havoc on your site and everything associated with it. <strong>Really.</strong> Please make your config file  (/manager/includes/config.inc.php) read only!';
+$_lang["configcheck_configinc"] = 'Konfigurationsdatei kann immer noch beschrieben werden';
+$_lang["configcheck_configinc_msg"] = 'Dies ist ein Sicherheitsrisiko, das bösartige Menschen dazu verleiten könnte, Schaden an Ihrer Website anzurichten. Ändern Sie jetzt die Zugriffsrechte der Konfigurationsdatei (/manager/includes/config.inc.php) auf nur-lesen!';
 $_lang["configcheck_default_msg"] = 'Which is strange. Ziemlich merwürdig.';
 $_lang["configcheck_images"] = 'Bilderverzeichnis ist nicht beschreibbar';
-$_lang["configcheck_images_msg"] = 'Das Verzeichnis /images/ ist nicht beschreibbar. Das bedeutet, dass der Bildermanager nicht funktioniert!';
+$_lang["configcheck_images_msg"] = 'Das Verzeichnis /images/ ist nicht beschreibbar. Der Bildermanager wird nicht funktionieren!';
 $_lang["configcheck_installer"] = 'Installationsroutine ist noch vorhanden';
-$_lang["configcheck_installer_msg"] = 'Das Installationsverzeichnis enthält die Installationsroutinen von MODx. Stellen Sie sich vor, eine nicht berechtigte Person findet dieses Verzeichnis und startet die Installationsroutine. Wahrscheinlich wird diese Person nicht weit kommen, da die Daten zur Datenbank eingeben werden müssen, aber es ist trotzdem besser, den Ordner vom Server zu löschen.';
+$_lang["configcheck_installer_msg"] = 'Das Installationsverzeichnis enthält die Installationsroutinen von MODx. Um zu verhindern, dass eine nicht berechtigte Person die Installationsroutine möglicherweise nochmals starten kann, sollten Sie den Ordner /install jetzt vom Server löschen.';
 $_lang["configcheck_lang_difference"] = 'Die Sprachdatei enthält eine falsche Anzahl an Einträgen';
-$_lang["configcheck_lang_difference_msg"] = 'Die zur Zeit ausgewählte Sprache () enthält nicht die gleiche Anzahl an Einträgen wie die Standardsprache. Dies ist nicht wirklich ein Problem, bedeutet jedoch, das Sie die Sprachdatei updaten sollten.';
+$_lang["configcheck_lang_difference_msg"] = 'Die zur Zeit ausgewählte Sprache (Deutsch) enthält nicht die gleiche Anzahl an Einträgen wie die Standardsprache. Dies ist nicht wirklich ein Problem, bedeutet jedoch, das Sie die Sprachdatei updaten sollten.';
 $_lang["configcheck_notok"] = 'Ein oder mehrere Optionen der Konfiguration sind nicht in Ordnung: ';
 $_lang["configcheck_ok"] = 'Überprüfung bestanden - keine Warnungen zu melden.';
 $_lang["configcheck_title"] = 'Konfigurationsüberprüfung';
@@ -119,7 +119,7 @@ $_lang["confirm_delete_plugin"] = 'Sind Sie sicher, dass Sie dieses Plugin lösc
 $_lang["confirm_delete_record"] = 'Sind Sie sicher, dass Sie die ausgewählten Einträge löschen möchten?';
 $_lang["confirm_delete_role"] = 'Sind Sie sicher, dass Sie diese Rolle entfernen möchten?';
 $_lang["confirm_delete_snippet"] = 'Sind Sie sicher, das Sie dieses Snippet löschen möchten?';
-$_lang["confirm_delete_tags"] = 'Sind Sie sicher, dass die gewählten META Tags gelöscht werden sollen?';
+$_lang["confirm_delete_tags"] = 'Sind Sie sicher, dass die gewählten META-Tags gelöscht werden sollen?';
 $_lang["confirm_delete_template"] = 'Sind Sie sicher, dass Sie das Template löschen möchten?';
 $_lang["confirm_delete_tmplvars"] = 'Sind Sie sicher, dass Sie diese Variable inkl. der gespeicherten Inhalte löschen möchten?';
 $_lang["confirm_delete_user"] = 'Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?';
@@ -153,8 +153,12 @@ $_lang["credits_shouts_title"] = '<b>Zusätzlicher Dank an: </b>';
 $_lang["credits_webfx"] = 'MODx benutzt einige JavaScripts von Webfx. Dort findet man tolle Sachen!';
 $_lang["custom_contenttype_message"] = 'Hier können Sie eigene Content-Types hinzufügen bzw. löschen. Geben Sie hierzu den Typ ein und drücken auf hinzufügen bzw. wählen Sie den Typ aus der Liste aus und drücken entfernen.';
 $_lang["custom_contenttype_title"] = 'Eigene Inhaltstypen:';
+$_lang["database_name"] = 'Datenbank-Name';
+$_lang["database_server"] = 'Datenbank-Server';
+$_lang["database_tables"] = 'Datenbank-Tabellen';
+$_lang["database_overhead"] = '<b style=\'color:#990033\'>Hinweis:</b> Overhead ist von MySQL reservierter Speicher, der nicht verwendet wird. Sie können diesen Speicher freigeben, indem Sie auf die Overhead-Angabe der jeweiligen Tabelle klicken.';
 $_lang["date"] = 'Datum';
-$_lang["datechanged"] = 'Datum geändert';
+$_lang["datechanged"] = 'Änderungsdatum';
 $_lang["defaultcache_message"] = 'Wählen Sie \'Ja\', um alle neuen Dokumente als standardmäßig cachebar anzulegen.';
 $_lang["defaultcache_title"] = 'Cachebar standardmäßig';
 $_lang["defaultmenuindex_message"] = 'Select \'Yes\' to turn on automatic menu index incrementing by default.';
@@ -163,28 +167,28 @@ $_lang["defaultpublish_message"] = 'Wählen Sie \'Ja\', um alle neuen Dokumente 
 $_lang["defaultpublish_title"] = 'Veröffentliche standardmäßig';
 $_lang["defaultsearch_message"] = 'Wählen Sie \'Ja\', um alle neuen Dokumente standardmäßig durchsuchbar zu machen.';
 $_lang["defaultsearch_title"] = 'Durchsuchbar standardmäßig';
-$_lang["defaulttemplate_message"] = 'Wählen Sie das Standard-Template das Sie für neue Dokumente verwenden möchten. Sie können auch andere Templates im Dokumenten Editor auswählen. Diese Einstellung betrefft nur die Standardeinstellung.';
+$_lang["defaulttemplate_message"] = 'Wählen Sie das Standard-Template das Sie für neue Dokumente verwenden möchten. Sie können auch andere Templates im Dokumenteditor auswählen. Diese Einstellung betrefft nur die Standardeinstellung.';
 $_lang["defaulttemplate_title"] = 'Standard-Template';
 $_lang["delete"] = 'Löschen';
 $_lang["delete_document"] = 'Löschen';
 $_lang["delete_tags"] = 'Tag löschen';
 $_lang["deleting_file"] = 'Löschen von Datei `%s`: ';
 $_lang["description"] = 'Beschreibung';
-$_lang["deselect_keywords"] = 'Schlüsselwörter löschen';
-$_lang["deselect_metatags"] = 'META Tags löschen';
+$_lang["deselect_keywords"] = 'Auswahl aufheben';
+$_lang["deselect_metatags"] = 'Auswahl aufheben';
 $_lang["disabled"] = 'Deaktiviert';
 $_lang["document"] = 'Dokument';
-$_lang["document_alias"] = 'Namensabkürzung';
-$_lang["document_alias_help"] = 'Hier können Sie eine Namensabkürzung für Ihr Dokument definieren. Dadurch wird Ihr Dokument auch über:
+$_lang["document_alias"] = 'Alias';
+$_lang["document_alias_help"] = 'Hier können Sie einen Alias für Ihr Dokument definieren. Dadurch wird Ihr Dokument auch über:
 
-http://ihrserver/Namensabkürzung erreichbar.
+http://ihrserver/<Alias> erreichbar.
 
 Funktioniert nur bei eingeschalteten \'friendly URLs\'.';
 $_lang["document_content"] = 'Inhalt des Dokuments';
 $_lang["document_description"] = 'Beschreibung';
 $_lang["document_description_help"] = 'Sie können hier eine optionale Beschreibung des Dokuments eingeben.';
 $_lang["document_long_title_help"] = 'Hier können Sie einen langen Titel für das Dokument eingeben. Sehr nützlich für Suchmaschinen und viel aussagekräftiger für Ihre Dokumente.';
-$_lang["document_metatag_help"] = 'Wählen Sie jene META-Tags und Schlüsselwörter aus, die diesem Dokument zugewordnet werden sollen. Für eine Mehrfachauswahl benutzen Sie die STRG Taste.';
+$_lang["document_metatag_help"] = 'Wählen Sie jene META-Tags und Schlüsselwörter aus, die diesem Dokument zugeordnet werden sollen. Für eine Mehrfachauswahl halten Sie die STRG-Taste gedrückt.';
 $_lang["document_opt_contentdispo"] = 'Browserhandling';
 $_lang["document_opt_contentdispo_help"] = 'Mit diesem Feld können Sie festlegen, ob der Browser dieses Dokument wie üblich im Browserfenster darstellt oder als Dateidownload anbietet.';
 $_lang["document_opt_emptycache"] = 'Cache leeren';
@@ -192,15 +196,15 @@ $_lang["document_opt_emptycache_help"] = 'Eine Markierung dieses Feldes bringt d
 $_lang["document_opt_folder"] = 'Ordner';
 $_lang["document_opt_folder_help"] = 'Markieren Sie diese Einstellung, wenn dieses Dokument als Ordner für andere Dokumente zur Verfügung stehen soll.';
 $_lang["document_opt_menu_index"] = 'Menüindex';
-$_lang["document_opt_menu_index_help"] = 'Menüindex ist ein Feld zum sortieren im Menüsnippet. Sie können es in Ihren Snippets beliebig nutzen.';
+$_lang["document_opt_menu_index_help"] = 'Der Menüindex legt fest, an welcher Position dieses Dokument in Menülisten erscheinen soll. (Setzt voraus, dass Ihre Menü-Snippets diesen Wert interpretieren.)';
 $_lang["document_opt_menu_title"] = 'Menütitel';
-$_lang["document_opt_menu_title_help"] = 'Dieses Feld können Sie benutzen, um kurze Dokumententitel innerhalb Ihrer Menüsnippets oder -module anzuzeigen.';
+$_lang["document_opt_menu_title_help"] = 'Der Menütitel legt den Text fest, der als Link zu diesem Dokument in Menülisten angezeigt wird. (Setzt voraus, dass Ihre Menü-Snippets diese Angabe interpretieren.)';
 $_lang["document_opt_published"] = 'Veröffentlicht';
 $_lang["document_opt_published_help"] = 'Markieren Sie diese Option, wenn Ihr Dokument direkt nach dem speichern veröffentlicht werden soll.';
 $_lang["document_opt_richtext"] = 'Richtext';
 $_lang["document_opt_richtext_help"] = 'Markieren Sie diese Option, wenn Sie zum bearbeiten des Dokuments den Rich Text Editor nutzen möchten. Fall Ihr Dokument Javascript oder Formulare beinhalten soll, deaktivieren Sie diese Option, damit der HTML-Editor Ihr Dokument nicht zerstört.';
 $_lang["document_opt_show_menu"] = 'Im Menü anzeigen';
-$_lang["document_opt_show_menu_help"] = 'Aktivieren Sie diese Option wenn das Dokument im Menübaum angezeigt werden soll. Achtung: ältere Menügenerationen ignorieren diese Einstellung möglicherweise.';
+$_lang["document_opt_show_menu_help"] = 'Aktivieren Sie diese Option um das Dokument in Menülisten anzuzeigen. (Setzt voraus, dass Ihre Menü-Snippets diese Angabe interpretieren.)';
 $_lang["document_opt_trackvisit_help"] = 'Besucherzugriffe auf diese Seite protokollieren';
 $_lang["document_parent"] = 'Elterndokument';
 $_lang["document_parent_help"] = 'Klicken Sie auf ein Dokument im Baum, um ein übergeordnetes Dokument zu wählen.';
@@ -214,7 +218,7 @@ $_lang["document_weblink_help"] = 'Geben Sie hier die Adresse des Objekts ein, a
 $_lang["doc_data_title"] = 'Daten des Dokuments anzeigen';
 $_lang["duplicate"] = 'Duplizieren';
 $_lang["duplicate_alias_found"] = 'Das Dokument \'%s\' verwendet bereits den Alias \'%s\'. Bitte geben Sie einen eindeutigen Alias ein.';
-$_lang["duplicate_alias_message"] = 'Wählen Sie \'ja\', um zweideutige Alias-Namen zu erlauben. <b>Hinweis:</b> Diese Option sollte zusammen mit der Option \'Benutzerfreundliche URLs\' verwendet werden, um etwaige Probleme bei der Dokumentenreferenzierung zu vermeiden.';
+$_lang["duplicate_alias_message"] = 'Wählen Sie \'ja\', um zweideutige Alias-Namen zu erlauben. <b>Hinweis:</b> Diese Option sollte zusammen mit der Option \'Benutzerfreundliche URLs\' verwendet werden, um etwaige Probleme bei der Dokumentreferenzierung zu vermeiden.';
 $_lang["duplicate_alias_title"] = 'Doppelte Aliase zulassen:';
 $_lang["duplicate_document"] = 'Dokument duplizieren';
 $_lang["edit"] = 'Bearbeiten';
@@ -224,7 +228,7 @@ $_lang["editor_css_path_message"] = 'Geben Sie hier den Pfad zu der CSS Datei an
 $_lang["editor_css_path_title"] = 'Pfad zur CSS Datei:';
 $_lang["edit_document"] = 'Bearbeiten';
 $_lang["edit_document_title"] = 'Dokument erstellen/bearbeiten';
-$_lang["edit_settings"] = 'Einstellungen bearbeiten';
+$_lang["edit_settings"] = 'Konfiguration';
 $_lang["email"] = 'E-Mail';
 $_lang["emailsender_message"] = 'Hier können Sie die E-Mail Adresse angeben, die als Absender genutzt wird.';
 $_lang["emailsender_title"] = 'E-Mail Adresse:';
@@ -234,6 +238,7 @@ $_lang["email_sent"] = 'E-Mail erfolgreich gesendet.';
 $_lang["empty_folder"] = 'Dieser Ordner ist leer';
 $_lang["empty_recycle_bin"] = 'Papierkorb leeren';
 $_lang["empty_recycle_bin_empty"] = 'Es sind keine gelöschten Dokumente zum Verwerfen vorhanden.';
+$_lang["enabled"] = 'Aktiviert';
 $_lang["enable_resource"] = 'Ressourcendatei aktivieren.';
 $_lang["enable_sharedparams"] = 'Gemeinsame Parameter';
 $_lang["enable_sharedparams_msg"] = '<b>Hinweis:</b> Diese eindeutige Identifikationsnummer (GUID) wird dazu benutzt, um das Modul eindeutig zu identifizieren und entsprechende Verknüpfungen zwischen Modulen und Plugins, Snippets und gemeinsamen Parametern zu gewährleisten. ';
@@ -241,20 +246,20 @@ $_lang["error"] = 'Fehler';
 $_lang["errorpage_message"] = 'Geben Sie die ID des Dokuments ein, welches aufgerufen wird, wenn eine Seite angefordert wird die nicht vorhanden ist. <b>Hinweis:</b> Stellen Sie sicher, das dieses Dokument vorhanden und veröffentlicht ist!';
 $_lang["errorpage_title"] = 'Fehlerseite:';
 $_lang["error_sending_email"] = 'E-Mail konnte nicht gesendet werden.';
-$_lang["eventlog"] = 'Ereignisprotokoll';
-$_lang["eventlog_msg"] = 'Informations-, Warn- und Fehlermeldungenmeldungen des MODx Managers werden im Ereignisprotokoll gespeichert. Unter Quelle ist das jeweiligs verursachende Modul angegeben.';
-$_lang["eventlog_viewer"] = 'Ereignisprotokoll';
-$_lang["event_id"] = 'Ereignisid';
-$_lang["existing_category"] = 'Existing Category';
+$_lang["eventlog"] = 'Systemereignisprotokoll';
+$_lang["eventlog_msg"] = 'Informations-, Warn- und Fehlermeldungen des MODx Managers werden im Systemereignisprotokoll gespeichert. Unter Quelle ist das jeweils verursachende Modul angegeben.';
+$_lang["eventlog_viewer"] = 'Systemereignisse';
+$_lang["event_id"] = 'Ereignis-Id';
+$_lang["existing_category"] = 'Bestehende Kategorie';
 $_lang["expand_tree"] = 'Baum aufklappen';
 $_lang["export_site"] = 'Seite exportieren';
-$_lang["export_site_cacheable"] = 'Inklusve nicht-gecachter Datein:';
+$_lang["export_site_cacheable"] = 'Inklusive nicht-gecachter Dateien:';
 $_lang["export_site_exporting_document"] = 'Exportiere <b>%s</b> von <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-$_lang["export_site_failed"] = '<span style=\'color:#990000\'>Nicht Erfolgreich!</span>';
+$_lang["export_site_failed"] = '<span style=\'color:#990000\'>Nicht erfolgreich!</span>';
 $_lang["export_site_html"] = 'Seite nach HTML exportieren';
-$_lang["export_site_maxtime"] = 'Maximale Export Zeit:';
+$_lang["export_site_maxtime"] = 'Maximale Export-Zeit:';
 $_lang["export_site_maxtime_message"] = 'Hier können Sie festlegen wie lange MODx brauchen darf, um die Site zu exportieren (überschreibt PHP einstellungen). 0 für unlimitiert. Achtung, 0 ist ein wirklich hohe Einstellung und kann die Performance Ihres Servers beeinflussen.';
-$_lang["export_site_message"] = 'Diese Funktion exportiert die gesamte Seite in HTML Dateien. Allerdings verlieren Sie viel von der gesamten MODx Funktionalität:<p /><ul><li>Seitenzugriffe auf der exportierten Site werden nicht aufgezeichnet</li><li>Interaktive Snippets arbeiten nicht in der exportierten Site</li><li>Nur reguläre Dokumente werden exportiert - Links werden nicht exportiert.</li><li>Der Export Prozess könnte abbrechen wenn die Dokumenten Snipptes enthalten die Redirection von Headern vornehmen</li><li>Abhängig wie Sie Ihre Dokumente, Style Sheets und Bilder erstellt haben - Könnte das Design zerstört werden. Um dieses Problem zu lösen können Sie die exportierten Dateien in das gleiche Verzeichnis kopieren, in dem die Datei index.php liegt.</li></ul><p /> Bitte füllen Sie das Forumlar aus und klicken auf \'Export\' umd den Export zu starten. Die Datein werden in am angegebenen Ort gespeichert. Es werden - wenn möglich die Aliasnamen als Dateinamen verwendet. Während dem Export der Seite ist es ratsam die Einstellung \'Benutzerfreundliche Namensabkürzung\' auf \'Ja\' zu setzen. Je nach Größe der Seite wird der Export eine Weile dauern. <p /><b>Bestehende Dateien werden bei Namensgleichheit überschrieben!</b><p />';
+$_lang["export_site_message"] = 'Diese Funktion exportiert die gesamte Seite in HTML Dateien. Allerdings verlieren Sie viel von der gesamten MODx Funktionalität:<p /><ul><li>Seitenzugriffe auf der exportierten Site werden nicht aufgezeichnet</li><li>Interaktive Snippets arbeiten nicht in der exportierten Site</li><li>Nur reguläre Dokumente werden exportiert - Links werden nicht exportiert.</li><li>Der Export Prozess könnte abbrechen wenn die Dokument Snipptes enthalten die Redirection von Headern vornehmen</li><li>Abhängig wie Sie Ihre Dokumente, Style Sheets und Bilder erstellt haben - Könnte das Design zerstört werden. Um dieses Problem zu lösen können Sie die exportierten Dateien in das gleiche Verzeichnis kopieren, in dem die Datei index.php liegt.</li></ul><p /> Bitte füllen Sie das Forumlar aus und klicken auf \'Export\' umd den Export zu starten. Die Datein werden in am angegebenen Ort gespeichert. Es werden - wenn möglich die Aliasnamen als Dateinamen verwendet. Während dem Export der Seite ist es ratsam die Einstellung \'Benutzerfreundliche URLs\' auf \'Ja\' zu setzen. Je nach Größe der Seite wird der Export eine Weile dauern. <p /><b>Bestehende Dateien werden bei Namensgleichheit überschrieben!</b><p />';
 $_lang["export_site_numberdocs"] = '<b>%s Dokumente für den Export gefunden...</b><p/>';
 $_lang["export_site_prefix"] = 'Datei-Präfix:';
 $_lang["export_site_start"] = 'Export starten';
@@ -269,7 +274,7 @@ $_lang["fe_editor_lang_title"] = 'Sprache des Frontend-Editors:';
 $_lang["filemanager_path_message"] = 'Unter Umständen erkennt Ihr Webserver (z.B. IIS) den Pfad nicht immer korrekt, überprüfen Sie deshalb diese Einstellung.';
 $_lang["filemanager_path_title"] = 'Dateimanager Pfad:';
 $_lang["files_access_denied"] = 'Zugriff verweigert!';
-$_lang["files_data"] = 'Grösse';
+$_lang["files_data"] = 'Größe';
 $_lang["files_directories"] = 'Verzeichnisse';
 $_lang["files_dirwritable"] = 'Verzeichnis beschreibbar?';
 $_lang["files_dir_listing"] = 'Verzeichnisübersicht für:';
@@ -277,20 +282,20 @@ $_lang["files_editfile"] = 'Datei bearbeiten';
 $_lang["files_filename"] = 'Dateiname';
 $_lang["files_fileoptions"] = 'Optionen';
 $_lang["files_files"] = 'Dateien';
-$_lang["files_filesize"] = 'Dateigrösse';
+$_lang["files_filesize"] = 'Dateigröße';
 $_lang["files_filetype_notok"] = 'Das Hochladen einer Datei von diesem Typ ist nicht erlaubt!';
 $_lang["files_file_type"] = 'Dateityp: ';
 $_lang["files_modified"] = 'Datum';
 $_lang["files_title"] = 'Dateimanager';
 $_lang["files_top_level"] = 'Zum Hauptverzeichnis';
 $_lang["files_uploadfile"] = 'Datei hochladen';
-$_lang["files_uploadfile_msg"] = 'Datei zum upload wählen:';
+$_lang["files_uploadfile_msg"] = 'Datei zum Upload wählen:';
 $_lang["files_uploading"] = 'Upload <b>%s</b> in Verzeichnis <b>%s/</b><br />';
 $_lang["files_upload_copyfailed"] = 'Upload fehlgeschlagen - das Kopieren der Datei in den Zielordner ist nicht möglich!';
 $_lang["files_upload_error"] = 'Fehler';
 $_lang["files_upload_error0"] = 'Ein Problem beim Upload ist aufgetreten.';
-$_lang["files_upload_error1"] = 'Die Datei ist für einen Upload zu gross.';
-$_lang["files_upload_error2"] = 'Die Datei ist für einen Upload zu gross.';
+$_lang["files_upload_error1"] = 'Die Datei ist für einen Upload zu groß.';
+$_lang["files_upload_error2"] = 'Die Datei ist für einen Upload zu groß.';
 $_lang["files_upload_error3"] = 'Die Datei wurde nur teilweise übertragen.';
 $_lang["files_upload_error4"] = 'Sie müssen eine Datei für den Upload auswählen.';
 $_lang["files_upload_error5"] = 'Beim Upload ist ein Problem aufgetreten.';
@@ -299,8 +304,8 @@ $_lang["files_upload_ok"] = 'Upload erfolgreich!';
 $_lang["files_up_level"] = 'Ein Verzeichnis nach oben wechseln';
 $_lang["files_viewfile"] = 'Datei anzeigen';
 $_lang["file_deleted"] = 'Erfolgreich!';
-$_lang["file_delete_file"] = 'Delete File';
-$_lang["file_delete_folder"] = 'Delete Folder';
+$_lang["file_delete_file"] = 'Datei löschen';
+$_lang["file_delete_folder"] = 'Ordner löschen';
 $_lang["file_download_file"] = 'Dateidownload';
 $_lang["file_download_unzip"] = 'Datei entpacken';
 $_lang["file_folder_created"] = 'Ordnererstellung erfolgreich!';
@@ -319,14 +324,14 @@ $_lang["forgot_password_email_intro"] = 'Es wurde ein neues Kennwort für Ihren 
 $_lang["forgot_password_email_link"] = 'Klicken sie hier, um ein neues Kennwort zu erstellen.';
 $_lang["forgot_your_password"] = 'Kennwort vergessen?';
 $_lang["friday"] = 'Freitag';
-$_lang["friendlyurlsprefix_message"] = 'Hier können Sie ein Prefix für die benutzerfreundlichen URLs angeben. Wenn Sie z.B. \'page\' als Prefix angeben, wird die URL /index.php?id=2 in /page2.html umgewandelt (vorrausgesetzt das Suffix wurde auf .html gesetzt).';
-$_lang["friendlyurlsprefix_title"] = 'Prefix für benutzerfreundliche URLs:';
+$_lang["friendlyurlsprefix_message"] = 'Hier können Sie ein Präfix für die benutzerfreundlichen URLs angeben. Wenn Sie z.B. \'page\' als Präfix angeben, wird die URL /index.php?id=2 in /page2.html umgewandelt (vorrausgesetzt das Suffix wurde auf .html gesetzt).';
+$_lang["friendlyurlsprefix_title"] = 'Präfix für benutzerfreundliche URLs:';
 $_lang["friendlyurlsuffix_message"] = 'Hier können Sie ein Suffix angeben.';
 $_lang["friendlyurlsuffix_title"] = 'Suffix für benutzerfreundliche URLs:';
 $_lang["friendlyurls_message"] = 'Diese Option erlaubt Ihnen die Benutzung suchmaschinenfreundlicher URLs. Bitte beachten Sie, dass diese Funktion nur auf dem Apache Webserver mit aktiviertem mod_rewrite funktioniert und dass Sie eine .htaccess Datei anlegen müssen. Schauen Sie in die mitgelieferte .htaccess Datei für mehr Informationen.';
 $_lang["friendlyurls_title"] = 'Benutzerfreundliche URLs nutzen:';
-$_lang["friendly_alias_message"] = 'Wenn Sie benutzerfreundliche URLs verwenden, und das Dokument hat eine Namensabkürzung, dann wird die Namensabkürzung als benutzerfreundliche Url verwendet. Zum Beispiel: willkommen.html statt p12.html. Falls Sie keinen Alias verwenden, generiert Ihnen MODx den Link mit einer durchlaufenden Nummerierung, z.B. `1.html` etc. pp.';
-$_lang["friendly_alias_title"] = 'Benutzerfreundliche Namensabkürzung:';
+$_lang["friendly_alias_message"] = 'Wenn Sie benutzerfreundliche URLs verwenden, und das Dokument hat einen Aliasnamen, dann wird der Alias als benutzerfreundliche Url verwendet. Zum Beispiel: willkommen.html statt p12.html. Falls Sie keinen Alias verwenden, generiert Ihnen MODx den Link mit einer durchlaufenden Nummerierung, z.B. `1.html` etc. pp.';
+$_lang["friendly_alias_title"] = 'Aliasnamen:';
 $_lang["functionnotimpl"] = 'Sorry!';
 $_lang["functionnotimpl_message"] = 'Diese Funktion ist noch nicht implementiert';
 $_lang["group_access_permissions"] = 'Benutzergruppenberechtigungen';
@@ -336,18 +341,18 @@ $_lang["help_msg"] = 'Wenn Sie Hilfe bei der Nutzung von MODx benötigen besuche
 $_lang["help_title"] = 'Hilfe';
 $_lang["hide_tree"] = 'Baum verstecken';
 $_lang["home"] = 'Start';
-$_lang["htmlsnippet_desc"] = 'Chunk Beschreibung';
+$_lang["htmlsnippet_desc"] = 'Chunk-Beschreibung';
 $_lang["htmlsnippet_management_msg"] = 'Hier können Sie das zu bearbeitende Chunk auswählen';
 $_lang["htmlsnippet_msg"] = 'Hier können Sie Chunks hinzufügen oder bearbeiten. Achtung, Chunks sind reiner HTML code - PHP code wird nicht verarbeitet.';
-$_lang["htmlsnippet_name"] = 'Chunk Name';
-$_lang["htmlsnippet_title"] = 'Chunk erstellen / bearbeiten ';
+$_lang["htmlsnippet_name"] = 'Chunk-Name';
+$_lang["htmlsnippet_title"] = 'Chunk erstellen/bearbeiten ';
 $_lang["icon"] = 'Symbol';
 $_lang["id"] = 'ID';
-$_lang["illegal_parent_child"] = 'Überdokumentzuweisung:\n\nDas Dokument ist dem gewählten Dokumen zugehörig.';
+$_lang["illegal_parent_child"] = 'Überdokumentzuweisung:\n\nDas Dokument ist dem gewählten Dokument zugehörig.';
 $_lang["illegal_parent_self"] = 'Überdokumentzuweisung:\n\nDas Dokument kann sich nicht selbst zugewiesen werden.';
 $_lang["import_files_found"] = '<b>%s Dokumente für den Import gefunden...</b><p/>';
 $_lang["import_params"] = 'Importieren von gemeinsamen Parametern';
-$_lang["import_params_msg"] = 'Sie können die Parameter und Einstellungen mittels obiger DropDown-Liste importieren. <b>Hinweis:</b> Damit Module in dieser Liste aufscheinen, muß das jeweilige Plugin/Snippet in der Abhängigkeitsliste des Moduls stehen und das Modul muß die Option \'Gemeinsame Parameter\' aktiviert haben. ';
+$_lang["import_params_msg"] = 'Sie können die Parameter und Einstellungen mittels obiger Auswahlliste importieren. <b>Hinweis:</b> Damit Module in dieser Liste aufscheinen, muß das jeweilige Plugin/Snippet in der Abhängigkeitsliste des Moduls stehen und das Modul muß die Option \'Gemeinsame Parameter\' aktiviert haben. ';
 $_lang["import_parent_document"] = 'Elterndokument:';
 $_lang["import_site"] = 'Seite importieren';
 $_lang["import_site_failed"] = '<span style=\'color:#990000\'>Fehler</span>';
@@ -355,7 +360,7 @@ $_lang["import_site_html"] = 'Website von HTML-Dateien importieren';
 $_lang["import_site_importing_document"] = 'Importiere Datei <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Maximale Importdauer:';
 $_lang["import_site_maxtime_message"] = 'Hier können Sie die Dauer (in Sekunden) angeben, wie lange das System für einen Import maximal benötigen darf. Nach Ablauf dieser Zeit wird der Import abgebrochen. Von der Angabe von 0 Sekunden oder einen extrem hohen Zeitspanne wird dringend abgeraten, da dies zu komplikationen mit Ihrem Webserver führen kann.';
-$_lang["import_site_message"] = 'Mit dieser Importfunktion können Sie eine bestehende Website im HTML Format in das MODx System importieren. Die zu importierenden HTML Dateien bzw. Verzeichnisse müssen unter \'assets/import\' abgelegt werden.<p />Nach dem ausfüllen des untenstehenden Formular können Sie den Import starten. Soweit möglich, werden Dateinamen als Dokumententitel und der HTML Titel als Dokumententitel verwendet.';
+$_lang["import_site_message"] = 'Mit dieser Importfunktion können Sie eine bestehende Website im HTML Format in das MODx System importieren. Die zu importierenden HTML Dateien bzw. Verzeichnisse müssen unter \'assets/import\' abgelegt werden.<p />Nach dem ausfüllen des untenstehenden Formular können Sie den Import starten. Soweit möglich, werden Dateinamen als Dokumenttitel und der HTML-Titel als Dokumententitel verwendet.';
 $_lang["import_site_skip"] = '<span style=\'color:#990000\'>ausgelassen</span>';
 $_lang["import_site_start"] = 'Import starten';
 $_lang["import_site_success"] = '<span style=\'color:#009900\'>OK</span>';
@@ -367,7 +372,7 @@ $_lang["insert"] = 'Einfügen';
 $_lang["insert_snippet"] = 'Snippet in Dokument einfügen';
 $_lang["keyword"] = 'Schlüsselwort';
 $_lang["keywords"] = 'Schlüsselwörter';
-$_lang["keywords_intro"] = 'Hier bearbeiten Sie Schlüsselwörter.';
+$_lang["keywords_intro"] = 'Hier legen Sie die Schlüsselwörter fest, die Ihren Dokument zugewiesen werden können.';
 $_lang["language_message"] = 'Wählen Sie die Sprache für den MODx Manager.';
 $_lang["language_title"] = 'Sprache:';
 $_lang["launch_site"] = 'Anzeigen';
@@ -377,6 +382,7 @@ $_lang["list_mode"] = 'Listenmods ein/aus - alle Einträge anzeigen.';
 $_lang["loading_doc_tree"] = 'Laden des Dokumentenbaums...';
 $_lang["loading_menu"] = 'Laden des Menüs...';
 $_lang["loading_page"] = 'Bitte warten Sie während MODx die Seite lädt...';
+$_lang["localtime"] = 'Ortszeit';
 $_lang["locked"] = 'Gesperrt';
 $_lang["lock_htmlsnippet"] = 'Chunk für Bearbeitung sperren';
 $_lang["lock_htmlsnippet_msg"] = 'Nur Administratoren (Role ID 1) können diesen Chunk bearbeiten.';
@@ -395,21 +401,21 @@ $_lang["lock_tmplvars_msg"] = 'Nur Administratoren (Rolen-ID 1) können diese Va
 $_lang["login_allowed_days"] = 'Wochentagsbeschränkgung';
 $_lang["login_allowed_days_message"] = 'Wählen Sie jene Wochentage aus, an denen der Benutzer Zugriff erhählt.';
 $_lang["login_allowed_ip"] = 'IP Adressbeschränkung';
-$_lang["login_allowed_ip_message"] = 'Geben Sie hier jene IP Adressen an, von welchen aus der Bentzer eine Zugriffsberechtigung erhält. <b>Hinweis: IP Adressen sind mit einem Komma (,) zu separieren.</b>';
+$_lang["login_allowed_ip_message"] = 'Geben Sie hier jene IP Adressen an, von welchen aus der Benutzer eine Zugriffsberechtigung erhält. <b>Hinweis: Mehrere IP Adressen sind mit einem Komma (,) zu trennen.</b>';
 $_lang["login_button"] = 'Anmelden';
-$_lang["login_captcha_message"] = ' Der Administrator hat Captcha-Validerung aktiviert, Sie müssen daher auch den Sicherheits Code eingeben.
+$_lang["login_captcha_message"] = ' Der Administrator hat Captcha-Validerung aktiviert, Sie müssen daher auch den Sicherheits-Code eingeben.
 
-Wenn der Sicherheits Code schlecht lesbar ist, klicken Sie bitte selbst auf den Code, damit ein neuer Code generiert wird.';
+Wenn der Sicherheits-Code schlecht lesbar ist, klicken Sie bitte selbst auf den Code, damit ein neuer Code generiert wird.';
 $_lang["login_homepage"] = 'Anmeldeseite';
-$_lang["login_homepage_message"] = 'Geben Sie die Dokumenten-ID an, zu welcher Webbenutzer nach einer erfolgreichen Anmeldung weitergeleitet werden. <b>Hinweis: stellen Sie sicher, dass das entsprechende Dokument existiert und der jeweilige Benutzer Zugriff darauf hat!</b>';
-$_lang["login_message"] = 'Bitte loggen Sie sich ein, um mit MODx zu arbeiten.<br />Beachten Sie bei Ihrer Eingabe die Groß- und Kleinschreibung.';
+$_lang["login_homepage_message"] = 'Geben Sie die Dokument-ID an, zu welcher Webbenutzer nach einer erfolgreichen Anmeldung weitergeleitet wird. <b>Hinweis: Stellen Sie sicher, dass das entsprechende Dokument existiert und der jeweilige Benutzer Zugriff darauf hat!</b>';
+$_lang["login_message"] = 'Bitte melden Sie sich an, um mit MODx zu arbeiten.<br />Beachten Sie bei Ihrer Eingabe die Groß- und Kleinschreibung.';
 $_lang["logout"] = 'Abmelden';
-$_lang["logo_slogan"] = 'Publizieren mit wenig Aufwand - 
-MODx Content Manager';
-$_lang["long_title"] = 'Langer Titel';
+$_lang["logo_slogan"] = 'MODx Content Manager - 
+Create and do more with less';
+$_lang["long_title"] = 'Langtitel';
 $_lang["manager"] = 'Manager';
 $_lang["manager_permissions"] = 'Manager-Berechtigungen';
-$_lang["manager_theme"] = 'Manager Thema:';
+$_lang["manager_theme"] = 'Manager-Thema:';
 $_lang["manager_theme_message"] = 'Wählen Sie das Thema für den MODx Manager aus.';
 $_lang["manage_depends"] = 'Abhängigkeiten verwalten';
 $_lang["manage_files"] = 'Dateimanager';
@@ -420,15 +426,15 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templateverwaltung';
 $_lang["messages"] = 'Nachrichten';
-$_lang["messages_all"] = 'Jeden';
+$_lang["messages_all"] = 'alle';
 $_lang["messages_compose"] = 'Nachricht verfassen';
 $_lang["messages_forward"] = 'Weiterleiten';
 $_lang["messages_from"] = 'Von';
-$_lang["messages_group"] = 'Einer Gruppe';
+$_lang["messages_group"] = 'eine Gruppe';
 $_lang["messages_inbox"] = 'Posteingang';
 $_lang["messages_message"] = 'Nachricht';
-$_lang["messages_not_allowed_to_read"] = 'Sie haben nicht die Berechtigung, diese Nachricht zu lesen!';
-$_lang["messages_no_messages"] = 'Keine Nachricht im Posteingang vorhanden.';
+$_lang["messages_not_allowed_to_read"] = 'Sie sind nicht berechtigt, diese Nachricht zu lesen!';
+$_lang["messages_no_messages"] = 'Sie haben keine Nachrichten.';
 $_lang["messages_private"] = 'Privat';
 $_lang["messages_read_message"] = 'Nachrichten lesen';
 $_lang["messages_reply"] = 'Antworten';
@@ -440,14 +446,15 @@ $_lang["messages_sent"] = 'gesendet am';
 $_lang["messages_subject"] = 'Betreff';
 $_lang["messages_system_user"] = '[System]';
 $_lang["messages_title"] = 'Nachrichten';
-$_lang["messages_user"] = 'Einen Benutzer';
-$_lang["metatags"] = 'META-Tags';
-$_lang["metatags_and_keywords"] = 'META-Tags und -Keywords';
-$_lang["metatag_intro"] = 'In diesem Bereich können Sie HTML META-Tags erstellen, modifzieren und löschen. Um META Tags mit Dokumenten zu verknüpfen, benutzen Sie die entsprechenden Eigenschaften beim bearbeiten von Dokumenten.';
-$_lang["meta_keywords"] = 'META-Keywords';
-$_lang["mgr_access_permissions"] = 'Zugriffsverwaltung';
+$_lang["messages_user"] = 'einen Benutzer';
+$_lang["metatags"] = 'META-Angaben';
+$_lang["metatags_and_keywords"] = 'META-Angaben und Schlüsselwörter';
+$_lang["metatag_intro"] = 'In diesem Bereich verwalten Sie META-Angaben, die Ihren Dokumenten beim Bearbeiten zugewiesen werden können.';
+$_lang["metatag_notice"] = 'Im HTML-Nachschlagewerk <a href="http://de.selfhtml.org/html/kopfdaten/meta.htm" target="_blank">SELFHTML</a> finden Sie eine Zusammenstellung geläufiger META-Angaben, sowie Hinweise zu deren Anwendung.';
+$_lang["meta_keywords"] = 'META-Angaben';
+$_lang["mgr_access_permissions"] = 'Manager-Zugriffsberechtigungenrec';
 $_lang["mgr_login_start"] = 'Manager-Startbildschirm';
-$_lang["mgr_login_start_message"] = 'Geben Sie die Dokumenten-ID an, zu welcher der Webbenutzer nach einer erfolgreichen Anmeldung weitergeleitet werden. <b>Hinweis: stellen Sie sicher, dass das entsprechende Dokument existiert und der jeweilige Benutzer Zugriff darauf hat!';
+$_lang["mgr_login_start_message"] = 'Geben Sie die Dokument-ID an, zu welcher der Webbenutzer nach einer erfolgreichen Anmeldung weitergeleitet werden. <b>Hinweis: stellen Sie sicher, dass das entsprechende Dokument existiert und der jeweilige Benutzer Zugriff darauf hat!';
 $_lang["modules"] = 'Module';
 $_lang["module_code"] = 'Modul-Code (php)';
 $_lang["module_config"] = 'Modul Konfiguration';
@@ -461,8 +468,9 @@ $_lang["module_msg"] = 'Hier können Sie Module verwalten und bearbeiten. Ein Mo
 $_lang["module_name"] = 'Modulname';
 $_lang["module_resource_msg"] = 'Hier können Sie jene Ressourcen auswählen, die dieses Modul benötigt. Benutzen Sie die entsprechenden Schaltknöpfe.';
 $_lang["module_resource_title"] = 'Modulabhängigkeiten';
-$_lang["module_title"] = 'Modul erstellen / bearbeiten';
+$_lang["module_title"] = 'Modul erstellen/bearbeiten';
 $_lang["module_viewdepend_msg"] = 'Hier können Sie die Abhängigkeiten dieses Moduls bearbeiten und verwalten.';
+$_lang["modx_version"] = "MODx-Version";
 $_lang["monday"] = 'Montag';
 $_lang["move"] = 'Verschieben';
 $_lang["move_document"] = 'Verschieben';
@@ -476,11 +484,11 @@ $_lang["new_keyword"] = 'Neues Schlüsselwort hinzufügen:';
 $_lang["new_module"] = 'Modul erstellen';
 $_lang["new_parent"] = 'Neues Oberelement';
 $_lang["new_plugin"] = 'Plugin erstellen';
-$_lang["new_role"] = 'Neue Rolle anlegen';
+$_lang["new_role"] = 'Neue Rolle erstellen';
 $_lang["new_snippet"] = 'Neues Snippet';
 $_lang["new_template"] = 'Neues Template';
 $_lang["new_tmplvars"] = 'Template Variable erstellen';
-$_lang["new_user"] = 'Neuen Benutzer anlegen';
+$_lang["new_user"] = 'Neuen Benutzer erstellen';
 $_lang["new_web_user"] = 'Webbenutzer erstellen';
 $_lang["no"] = 'Nein';
 $_lang["nologentries_message"] = 'Geben Sie die Anzahl der Einträge an, die Sie im Protokoll sehen möchten ein.';
@@ -494,10 +502,10 @@ $_lang["notset"] = 'Nicht gesetzt';
 $_lang["not_deleted"] = 'wurde nicht gelöscht.';
 $_lang["not_set"] = 'Nicht gesetzt';
 $_lang["no_activity_message"] = 'Sie haben bis jetzt noch keine Dokumente bearbeitet oder erstellt.';
-$_lang["no_category"] = 'uncategorized';
-$_lang["no_docs_pending_publishing"] = 'No documents pending publishing.';
-$_lang["no_docs_pending_pubunpub"] = 'No Events Found';
-$_lang["no_docs_pending_unpublishing"] = 'No documents pending unpublising.';
+$_lang["no_category"] = 'nicht kategorisiert';
+$_lang["no_docs_pending_publishing"] = 'Es stehen keine Dokumente zum zeitgesteuerten Veröffentlichen an.';
+$_lang["no_docs_pending_pubunpub"] = 'Keine Ereignisse.';
+$_lang["no_docs_pending_unpublishing"] = 'Es stehen keine Dokumente zum zeitgesteuerten Zurückziehen an.';
 $_lang["no_groups_found"] = 'Keine Gruppen gefunden.';
 $_lang["no_keywords_found"] = 'Keine Keywords gespeichert.';
 $_lang["no_records_found"] = 'Keine Einträge gefunden.';
@@ -505,6 +513,7 @@ $_lang["no_results"] = 'Es wurden keine Ergebnisse gefunden';
 $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Aktion';
+$_lang["onlineusers_actionid"] = 'Aktion-ID';
 $_lang["onlineusers_ipaddress"] = 'IP-Adresse des Benutzers';
 $_lang["onlineusers_lasthit"] = 'Letzte Aktion';
 $_lang["onlineusers_message"] = 'Diese Liste zeigt Ihnen die aktiven Benutzer der letzten 20 Minuten. (Zur Zeit ist es ';
@@ -552,7 +561,7 @@ $_lang["password_method"] = 'Wie möchten Sie den Benutzer über sein neues Pass
 $_lang["password_method_email"] = 'Neues Passwort per E-Mail senden.';
 $_lang["password_method_screen"] = 'Neues Passwort am Bildschirm ausgeben.';
 $_lang["password_msg"] = 'Das neue Passwort für <b>%s</b> ist <b>%s</b>.';
-$_lang["php_version_check"] = 'MODx ist kompatibel mit PHP 4.0.3 und höher. Bitte installieren Sie eine neuere PHP Version.';
+$_lang["php_version_check"] = 'MODx ist kompatibel mit PHP 4.0.3 und höher. Bitte installieren Sie eine neuere Version von PHP.';
 $_lang["plugin"] = 'Plugin';
 $_lang["plugin_code"] = 'Plugin-Code (php)';
 $_lang["plugin_config"] = 'Plugin Konfiguration';
@@ -563,15 +572,15 @@ $_lang["plugin_locked_message"] = 'Dieses Plugin ist gesperrt.';
 $_lang["plugin_management_msg"] = 'Hier können Sie auswählen welches Plugin Sie bearbeiten möchten.';
 $_lang["plugin_msg"] = 'Hier können Sie Plugins erstellen und bearbeiten. Plugins sind PHP Quellcode, und werden aufgrund von definierten Systemereignissen ausgeführt.';
 $_lang["plugin_name"] = 'Plugin Name';
-$_lang["plugin_priority"] = 'Edit Plugin Execution Order by Event';
-$_lang["plugin_title"] = 'Plugin erstellen / bearbeiten';
+$_lang["plugin_priority"] = 'Ausführungsreihenfolge festlegen';
+$_lang["plugin_title"] = 'Plugin erstellen/bearbeiten';
 $_lang["preview"] = 'Vorschau';
-$_lang["preview_msg"] = 'Dies ist eine Vorschau der zuletzt gespeicherten Änerungen. Klicken Sie hier, um zu <a href=\'javascript://\' onclick="saveRefreshPreview();"><img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\'>Speichern und Aktualisieren</a>.';
+$_lang["preview_msg"] = 'Dies ist eine Vorschau der zuletzt gespeicherten Änderungen. Klicken Sie hier, um zu <a href="javascript://" onclick="saveRefreshPreview();">speichern und Aktualisieren</a>.';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Öffentlich';
-$_lang["publish_date"] = 'Publish Date';
+$_lang["publish_date"] = 'Veröffentlichungstermin';
 $_lang["publish_document"] = 'Veröffentlichen';
-$_lang["publish_events"] = 'Publish Events';
+$_lang["publish_events"] = 'Veröffentlichungen';
 $_lang["QE_cant_find_content"] = 'Kein Inhalt zum bearbeiten gefunden';
 $_lang["QE_charset"] = 'iso-8859-1';
 $_lang["QE_description"] = 'Bearbeitete Seiten von der Startseite';
@@ -592,7 +601,7 @@ $_lang["refresh_published"] = '<b>%s</b> Dokumente wurden veröffentlicht.';
 $_lang["refresh_site"] = 'Cache leeren';
 $_lang["refresh_title"] = 'Website aktualisieren, Cache leeren';
 $_lang["refresh_tree"] = 'Baum aktualisieren';
-$_lang["refresh_unpublished"] = '<b>%s</b> Dokumente wurden unveröffentlicht.';
+$_lang["refresh_unpublished"] = '<b>%s</b> Dokumente wurden zurückgezogen.';
 $_lang["remember_username"] = 'Benutzername merken';
 $_lang["remove"] = 'Entfernen';
 $_lang["remove_date"] = 'Datum löschen';
@@ -600,14 +609,14 @@ $_lang["remove_locks"] = 'Sperren entfernen';
 $_lang["rename"] = 'Umbenennen';
 $_lang["reports"] = 'Berichte';
 $_lang["require_tagname"] = 'Ein Tag-Name ist zwingend erforderlich';
-$_lang["require_tagvalue"] = 'Ein Tag-Wert istzwingend  erforderlich';
+$_lang["require_tagvalue"] = 'Ein Tag-Wert ist zwingend erforderlich';
 $_lang["reset"] = 'Zurücksetzen';
 $_lang["reset_failedlogins"] = 'Zurücksetzen';
 $_lang["resolve_hostnames_message"] = 'Wollen Sie, dass MODx die Hostnamen der Besucher ermittelt? Die Ermittlung der Hostnamen benötigt mehr CPU-Leistung von Ihrem Server.';
 $_lang["resolve_hostnames_title"] = 'Hostnamen ermitteln';
 $_lang["resource"] = 'Ressourcen';
 $_lang["resources"] = 'Ressourcen';
-$_lang["resource_categories"] = 'Combined View';
+$_lang["resource_categories"] = 'Alle Ressourcen';
 $_lang["resource_management"] = 'Ressourcenverwaltung';
 $_lang["resource_name"] = 'Ressourcennamen';
 $_lang["resource_selector_msg"] = 'Wählen Sie die entsprechenden Ressourcen aus und drücken anschließend auf \'einfügen\'.';
@@ -622,8 +631,8 @@ $_lang["role_config_management"] = 'Konfigurations Verwaltung';
 $_lang["role_content_management"] = 'Inhalt Verwaltung';
 $_lang["role_create_doc"] = 'Neues Dokument erstellen';
 $_lang["role_create_plugin"] = 'Neue Plugins erstellen';
-$_lang["role_create_snippet"] = 'Snippet anlegen';
-$_lang["role_create_template"] = 'Neues Template anlegen';
+$_lang["role_create_snippet"] = 'Snippet erstellen';
+$_lang["role_create_template"] = 'Neues Template erstellen';
 $_lang["role_credits"] = 'Anzeigen der Danksagungen';
 $_lang["role_delete_doc"] = 'Dokument löschen';
 $_lang["role_delete_eventlog"] = 'Ereignisprotokoll löschen';
@@ -635,7 +644,7 @@ $_lang["role_delete_template"] = 'Template löschen';
 $_lang["role_delete_user"] = 'Benutzer löschen';
 $_lang["role_delete_web_user"] = 'Webbenutzer löschen';
 $_lang["role_edit_doc"] = 'Dokument bearbeiten';
-$_lang["role_edit_doc_metatags"] = 'META Tags und Schlüsselwörter bearbeiten';
+$_lang["role_edit_doc_metatags"] = 'META-Tags und Schlüsselwörter bearbeiten';
 $_lang["role_edit_module"] = 'Modul bearbeiten';
 $_lang["role_edit_plugin"] = 'Plugins bearbeiten';
 $_lang["role_edit_role"] = 'Rollen bearbeiten';
@@ -651,17 +660,18 @@ $_lang["role_frames"] = 'Managerframes erfragen';
 $_lang["role_help"] = 'Anzeigen der Hilfeseiten';
 $_lang["role_home"] = 'Manager Startseite erfragen';
 $_lang["role_logout"] = 'Abmeldung aus dem MODx Manager';
-$_lang["role_management_msg"] = 'Hier können Sie eine Rolle zum bearbeiten wählen.';
-$_lang["role_management_title"] = 'Rollen Verwaltung';
+$_lang["role_management_msg"] = 'Hier können Sie eine Rolle zum Bearbeiten wählen.';
+$_lang["role_management_title"] = 'Rollen';
 $_lang["role_manage_metatags"] = 'META Tags und Schlüsselwörter verwalten';
 $_lang["role_messages"] = 'Nachrichten anzeigen und senden';
 $_lang["role_module_management"] = 'Moduleverwaltung';
 $_lang["role_name"] = 'Rollenname';
 $_lang["role_new_module"] = 'Modul erstellen';
-$_lang["role_new_role"] = 'Neue Rolle anlegen';
-$_lang["role_new_user"] = 'Neue Benutzer anlegen';
+$_lang["role_new_role"] = 'Neue Rolle erstellen';
+$_lang["role_new_user"] = 'Neuen Benutzer erstellen';
 $_lang["role_new_web_user"] = 'Webbenutzer erstellen';
 $_lang["role_plugin_management"] = 'Plugin-Verwaltung';
+$_lang["role_publish_doc"] = 'Dokument veröffentlichen';
 $_lang["role_role_management"] = 'Rollenverwaltung';
 $_lang["role_run_module"] = 'Module ausführen';
 $_lang["role_save_doc"] = 'Dokument speichern';
@@ -694,25 +704,27 @@ $_lang["scroll_dn"] = 'Hinunter';
 $_lang["scroll_up"] = 'Aufwärts';
 $_lang["search"] = 'Suchen';
 $_lang["search_criteria"] = 'Suchkriterium';
-$_lang["search_criteria_content"] = 'Suche nach Inhalt';
-$_lang["search_criteria_content_msg"] = 'Finden aller Dokumente mit dem eingegebenen Text im Inhalt.';
+$_lang["search_criteria_content"] = 'Suche im Inhalt';
+$_lang["search_criteria_content_msg"] = 'Findet alle Dokument in deren Inhalt der eingegebene Text vorkommt.';
 $_lang["search_criteria_id"] = 'Suche nach ID';
-$_lang["search_criteria_id_msg"] = 'Geben Sie die ID des Dokuments ein, um dieses schnell zu finden.';
+$_lang["search_criteria_id_msg"] = 'Findet das Dokument dessen ID mit der eingegebenen übereinstimmt.';
 $_lang["search_criteria_longtitle"] = 'Suche nach Langtitel';
-$_lang["search_criteria_longtitle_msg"] = 'Alle Dokumente mit dem angegeben Text im Langtitel suchen.';
+$_lang["search_criteria_longtitle_msg"] = 'Findet alle Dokument in deren Langtitel der eingegebene Text vorkommt.';
 $_lang["search_criteria_title"] = 'Suche nach Titel';
-$_lang["search_criteria_title_msg"] = 'Finden aller Dokumente mit dem eingegebenen Text im Titel.';
-$_lang["search_empty"] = 'Ihre Suche ergab keine Treffer. Bitte ädern Sie Ihre Suchanfrage und versuchen Sie es noch einmal.';
+$_lang["search_criteria_title_msg"] = 'Findet alle Dokumente in deren Titel der eingegebene Text vorkommt.';
+$_lang["search_empty"] = 'Ihre Suche ergab keine Treffer. Bitte ändern Sie Ihre Suchanfrage und versuchen Sie es noch einmal.';
 $_lang["search_item_deleted"] = 'Dieses Dokument wurde gelöscht';
 $_lang["search_results"] = 'Suchergebnisse';
 $_lang["search_results_returned_desc"] = 'Beschreibung';
 $_lang["search_results_returned_id"] = 'ID';
-$_lang["search_results_returned_msg"] = 'Ihre Suchanfrage ergab <b>%s</b> Treffer. Wenn zu viele Ergebnisse gefunden wurden, versuchen Sie die Suche zu verfeinern. Das erste Symbol in jeder Spalte zeigt Ihnen die Dokumentenpostion im Baum an. Ganz rechts können Sie den Dokumentenstatus ersehen.';
+$_lang["search_results_returned_msg"] = 'Ihre Suchanfrage ergab <b>%s</b> Treffer. Wenn zu viele Ergebnisse gefunden wurden, versuchen Sie die Suche zu verfeinern. Das erste Symbol in jeder Spalte zeigt Ihnen die Dokumentpostion im Baum an. Ganz rechts können Sie den Dokumentstatus ersehen.';
 $_lang["search_results_returned_title"] = 'Titel';
 $_lang["search_view_docdata"] = 'Dieses Dokument anzeigen';
 $_lang["security"] = 'Sicherheit';
 $_lang["select_date"] = 'Datum auswählen';
 $_lang["send"] = 'Senden';
+$_lang["servertime"] = 'Serverzeit';
+$_lang["serveroffset"] = 'Server-Zeitverschiebung';
 $_lang["serveroffset_message"] = 'Wählen Sie die Anzahl der Stunden, die zwischen der Serverzeit und Ihrer Ortszeit liegen. Die derzeitige Serverzeit ist <b>[%s]</b>, die derzeitige Serverzeit bei Nutzung der Zeitverschiebung ist <b>[%s]</b>.';
 $_lang["serveroffset_title"] = 'Server-Zeitverschiebung:';
 $_lang["server_protocol_http"] = 'http';
@@ -732,9 +744,9 @@ $_lang["settings_properties"] = 'Eigenschaften';
 $_lang["settings_site"] = 'Seiten';
 $_lang["settings_snippets"] = 'Snippets';
 $_lang["settings_strip_image_paths_message"] = 'Wenn diese Einstellung gesetzt wird. Werden die Bild Pfade relaive statt absolut gesetzt. Sehr empfehlswert wenn die Installation umgezogen wird (z.B. von der Entwicklungssite zur Produktionssite). Wenn Sie nicht wissen was gemeint ist - lassen Sie die Einstellung \'Nein\'.';
-$_lang["settings_strip_image_paths_title"] = 'Bild Pfade \'zurückschreiben\'?';
-$_lang["settings_templvars"] = 'Template Variablen';
-$_lang["settings_title"] = 'MODX Konfiguration';
+$_lang["settings_strip_image_paths_title"] = 'Bild-Pfade \'zurückschreiben\'?';
+$_lang["settings_templvars"] = 'Template-Variablen';
+$_lang["settings_title"] = 'MODX-Konfiguration';
 $_lang["settings_ui"] = 'Benutzeroberfläche';
 $_lang["settings_users"] = 'Benutzerverwaltung';
 $_lang["showing"] = 'Anzeige';
@@ -750,7 +762,7 @@ $_lang["sitestart_title"] = 'Startseite:';
 $_lang["sitestatus_message"] = 'Wählen Sie \'Online\', um Ihre Seite zu veröffentlichen. Wenn Sie \'Offline\' wählen wird den Besuchern Ihrer Seite die \'Seite zur Zeit nicht erreichbar\' angezeigt.';
 $_lang["sitestatus_title"] = 'Status der Seite:';
 $_lang["siteunavailable_message"] = 'Diese Nachricht wird angezeigt, wenn Sie Ihre Seite \'Offline\' geschaltet haben oder ein Fehler auftritt.';
-$_lang["siteunavailable_page_message"] = 'Geben Sie die Dokumenten-ID des Dokuments ein, das beim Status \'offline\' angezeigt werden soll. <b>Achtung: stellen Sie sicher, dass die ID gültig und das Dokument publiziert ist!</b>';
+$_lang["siteunavailable_page_message"] = 'Geben Sie die Dokument-ID des Dokuments ein, das beim Status \'offline\' angezeigt werden soll. <b>Achtung: stellen Sie sicher, dass die ID gültig und das Dokument publiziert ist!</b>';
 $_lang["siteunavailable_page_title"] = 'Offline-Seite:';
 $_lang["siteunavailable_title"] = 'Seite nicht erreichbar:';
 $_lang["site_schedule"] = 'Terminplan';
@@ -763,7 +775,7 @@ $_lang["snippet_management_msg"] = 'Hier können Sie ein Snippet wählen, das Si
 $_lang["snippet_msg"] = 'Hier können Sie Snippets anlegen und bearbeiten. Beachten Sie, dass Snippets \'purer\' PHP-Code sind. Wenn Sie den Inhalt des Snippets in einem Template oder dem Inhalt eines Dokuments ausgeben möchten, muss die Ausgabe des Snippets in eine Variable übergeben werden, die den gleichen Namen wie das Snippet trägt.';
 $_lang["snippet_name"] = 'Snippetname';
 $_lang["snippet_properties"] = 'Standardeigenschaften';
-$_lang["snippet_title"] = 'Snippet anlegen/bearbeiten';
+$_lang["snippet_title"] = 'Snippet erstellen/bearbeiten';
 $_lang["sort_asc"] = 'Aufsteigend';
 $_lang["sort_desc"] = 'Absteigend';
 $_lang["sort_tree"] = 'Baum sortieren';
@@ -773,43 +785,45 @@ $_lang["stay_new"] = 'Weiter hinzufügen';
 $_lang["sunday"] = 'Sonntag';
 $_lang["sysinfo_activity_message"] = 'Die Liste zeigt Ihnen die zuletzt bearbeiteten Dateien.';
 $_lang["sysinfo_userid"] = 'Benutzer';
-$_lang["system_email_signup"] = 'Hallo [+uid+] 
+$_lang["system_email_signup"] = 'Hallo [+uid+]! 
 
 Hier sind Ihre Anmeldendaten für [+sname+] Content Manager:
 
 Benutzername: [+uid+]
 Passwort: [+pwd+]
 
-Sobald Sie sich in Ihr Content Manager ([+surl+]) angemeldet haben, können Sie Ihr Passwort ändern.
+Sobald Sie sich in Ihren Content Manager ([+surl+]) angemeldet haben, können Sie Ihr Passwort ändern.
 
-Mit freundlichen Grüßen,
-Site Administrator';
-$_lang["system_email_webreminder"] = 'Hallo [+uid+]
+Mit freundlichen Grüßen
+Ihr Website-Administrator';
+$_lang["system_email_webreminder"] = 'Hallo [+uid+]!
 
-Um Ihr neues Passwort zu aktiven klicken Sie auf folgenden Link:
+Um Ihr neues Passwort zu aktivieren, klicken Sie bitte auf folgenden Link:
 
 [+surl+]
 
-Wenn erfolgreich Sie das folgende Passwort zum Anmelden verwenden:
+Wenn alles erfolgreich war, können Sie danach das folgende Passwort zum Anmelden verwenden:
 
 Passwort:[+pwd+]
 
-Wenn Sie diese E-Mail nicht verlangt haben, dann ignorieren dies bitte.
+Wenn Sie diese E-Mail unverlangt bekommen, ignorieren Sie sie bitte einfach.
 
-Mit freundlichen Grüßen,
-Site Administrator';
-$_lang["system_email_websignup"] = 'Hallo [+uid+] 
+Mit freundlichen Grüßen
+Ihr Website-Administrator';
+$_lang["system_email_websignup"] = 'Hallo [+uid+],
 
 Hier sind Ihre Anmeldedetails für [+sname+]:
 
 Benutzername: [+uid+]
 Passwort: [+pwd+]
 
-Sobald Sie sich auf [+sname+] ([+surl+])angemeldet haben, könne Sie Ihr Passwort ändern.
+Sobald Sie sich auf [+sname+] ([+surl+]) angemeldet haben, könne Sie Ihr Passwort ändern.
 
-Mit freundlichen Grüßen,
-Site Administrator';
+Mit freundlichen Grüßen
+Ihr Website-Administrator';
 $_lang["sys_alert"] = 'Systemalarm';
+$_lang["table_hoverinfo"] = 'Wenn Sie mit dem Mauszeiger über einen Tabellennamen fahren, wird Ihnen (sofern verfügbar) eine kurze Beschreibung der Funktion dieser Tabelle angezeigt.';
+$_lang["table_prefix"] = 'Tabellen-Präfix';
 $_lang["tag"] = 'Tag';
 $_lang["template"] = 'Template';
 $_lang["template_code"] = 'Template-Code (html)';
@@ -820,7 +834,7 @@ $_lang["template_msg"] = 'Hier können Sie Templates anlegen und bearbeiten. Die
 $_lang["template_name"] = 'Templatename';
 $_lang["template_reset_all"] = 'Alle Dokumente auf das Standardtemplate setzen';
 $_lang["template_reset_specific"] = 'Template nur bei Dokumenten mit dem aktuellen Template \'%s\' setzen';
-$_lang["template_title"] = 'Template anlegen/bearbeiten';
+$_lang["template_title"] = 'Template erstellen/bearbeiten';
 $_lang["thursday"] = 'Donnerstag';
 $_lang["tmplvars"] = 'Template Variablen';
 $_lang["tmplvars_binding_msg"] = 'Dieses Feld unterstützt Datenbindung mittels des @ Befehls';
@@ -837,7 +851,7 @@ $_lang["tmplvars_reset_params"] = 'Parameter zurücksetzen';
 $_lang["tmplvars_type"] = 'Eingabetyp';
 $_lang["tmplvars_widget"] = 'Objektauswahl';
 $_lang["tmplvars_widget_prop"] = 'Objekt Eigenschaften';
-$_lang["tmplvar_access_msg"] = 'Wählen Sie jene Dokumentengruppen aus, die diese Variable bearbeiten dürfen.';
+$_lang["tmplvar_access_msg"] = 'Wählen Sie jene Dokumentgruppen aus, die diese Variable bearbeiten dürfen.';
 $_lang["tmplvar_change_template_msg"] = 'Wenn Sie das Template ändern, werden die Template Variablen neu geladen. Achtung: alle nicht gespeicherten Änderungen gehen hierbei verloren!\n\nSind Sie sicher, dass Sie das Template ändern möchten?';
 $_lang["tmplvar_inuse"] = 'Folgende Dokumente verwenden dzt. diese Template Variable. Wollen Sie mit dem Löschen fortfahren?';
 $_lang["tmplvar_tmpl_access"] = 'Template Berechtigungen';
@@ -863,9 +877,9 @@ $_lang["unauthorizedpage_message"] = 'Geben Sie die ID jenes Dokuments an, zu we
 $_lang["unauthorizedpage_title"] = 'Unauthorisierter Zugriff:';
 $_lang["unblock_message"] = 'Dieser Benutzer wird freigeschaltet sein, nachdem Sie die Benutzerdaten gespeichert haben.';
 $_lang["undelete_document"] = 'Wiederherstellen';
-$_lang["unpublish_date"] = 'Unpublish Date';
+$_lang["unpublish_date"] = 'Rückzugstermin';
 $_lang["unpublish_document"] = 'Zurückziehen';
-$_lang["unpublish_events"] = 'Un-publish Events';
+$_lang["unpublish_events"] = 'Rückzüge';
 $_lang["untitled_document"] = 'Unbenanntes Dokument';
 $_lang["untitled_weblink"] = 'Unbenannter Weblink';
 $_lang["update_params"] = 'Parameteranzeige aktualisieren';
@@ -899,7 +913,7 @@ $_lang["user_is_blocked"] = 'Dieser Benutzer ist deaktiviert!';
 $_lang["user_logincount"] = 'Anzahl der Anmeldungen';
 $_lang["user_male"] = 'männlich';
 $_lang["user_management_msg"] = 'Hier können Sie einen Benutzer zur Bearbeitung auswählen.';
-$_lang["user_management_title"] = 'Benutzerverwaltung';
+$_lang["user_management_title"] = 'Managerbenutzer';
 $_lang["user_mobile"] = 'Handynummer';
 $_lang["user_phone"] = 'Telefonnummer';
 $_lang["user_photo"] = 'Benutzerfoto';
@@ -907,34 +921,36 @@ $_lang["user_photo_message"] = 'Geben Sie wahlweise eine URL an oder einen lokal
 $_lang["user_prevlogin"] = 'Letzte Anmeldung';
 $_lang["user_role"] = 'Benutzerrolle';
 $_lang["user_state"] = 'Region';
-$_lang["user_title"] = 'Benutzer anlegen/bearbeiten';
+$_lang["user_title"] = 'Benutzer erstellen/bearbeiten';
 $_lang["user_zip"] = 'PLZ';
 $_lang["use_alias_path_message"] = 'Wenn Sie diese Option mit \'Ja\' einstellen, werden Ihre Dokumente mit den vollen Pfadangaben angezeigt, falls Ihre Dokumente einen Aliasnamen haben. Zum Beispiel: Ein Dokument mit der Aliasbezeichnung \'Kind\' ist innerhalb des Ordners mit der Aliasbezeichnung \'Eltern\' abgelegt. In der Anzeige Ihres Browsers wird nun /Eltern/Kind.html angezeigt.<br /><b> Hinweis:</b> Wenn Sie diese Option mit \'Ja\' einstellen, müssen Sie daran denken, dass alle referenzierten Inhalte (z.B. Bilder, CSS-Dateien, JavaScripts etc.), mit einem absoluten Pfad versehen werden, z.B. \'/assets/images\' anstelle des relativen Pfades \'assets/images\'. Dadurch verhindert Sie, dass Ihr Browser (oder der Webserver) den relativen Pfad in einen Aliaspfad umwandelt.<br />';
 $_lang["use_alias_path_title"] = 'Benutze benutzerfreundliche Aliaspfad-Angaben:';
 $_lang["use_editor_message"] = 'Möchten Sie den Rich Text Editor benutzen? Wenn Sie HTML schreiben möchten, deaktivieren Sie diese Einstellung. Diese Einstellunge gilt für alle Benutzer und Dokumente.';
 $_lang["use_editor_title"] = 'Editor aktivieren:';
 $_lang["value"] = 'Wert';
+$_lang["version_codename"] = "Versions-Codename";
+$_lang["view"] = 'Ansehen';
 $_lang["view_document"] = 'Anzeigen';
 $_lang["view_log"] = 'Protokoll anzeigen';
 $_lang["view_logging"] = 'Benutzerprotokoll';
-$_lang["view_sysinfo"] = 'Systeminformationen';
+$_lang["view_sysinfo"] = 'Systeminfo';
 $_lang["warning"] = 'Warnung!';
 $_lang["warning_not_saved"] = 'Die Änderungen an Ihrem Dokument wurden bis jetzt nicht gespeichert. Sie können zur vorherigen Ansicht zurückwechseln oder die Ansicht verlassen. Ihre geänderten Daten gehen dann verloren.';
 $_lang["weblink"] = 'Weblink';
 $_lang["weblink_message"] = 'Ein Weblink ist eine Referenz zu einem Objekt im Internet. Dies kann ein Dokument in MODx, ein Link auf eine andere Seite, ein Bild oder eine andere Datei im Internet sein.';
 $_lang["webpwdreminder_message"] = 'Definieren Sie hier die Vorlage der E-Mail, die Ihre Webbenutzer erhalten wenn sie ein neues Passwort anfordern. Folgende Platzhalter werden vom System ersetzt, wenn die Nachricht versendet wird:<br /><br />[+sname+] - Name dieser Website<br />[+saddr+] - E-Mail Adresse des Website Verwalters<br />[+surl+] - URL der Website<br />[+uid+] - Name des Benutzerkontos<br />[+pwd+] - Passwort des Benutzerkontos<br />[+ufn+] - Name des Benutzers<br /><br /><b>Hinweis:</b>Sie sollten auf jedenfall [+uid+] und [+pwd+] in der Vorlage anführen, damit Ihre Webbenutzer auch die entsprechenden Logindaten erhalten!';
-$_lang["webpwdreminder_title"] = 'Erinnerungs E-Mail:';
+$_lang["webpwdreminder_title"] = 'Erinnerungs-E-Mail:';
 $_lang["websignupemail_message"] = 'Hier können Sie die Nachricht definieren, die an Ihre Benutzer geschickt wird, wenn sie sich anmelden. Folgende Platzhalter werden vom System ersetzt, wenn die Nachricht versendet wird:<br /><br />[+sname+] - Name dieser Website<br />[+saddr+] - E-Mail Adresse des Website Verwalters<br />[+surl+] - URL der Website<br />[+uid+] - Name des Benutzerkontos<br />[+pwd+] - Passwort des Benutzerkontos<br />[+ufn+] - Name des Benutzers<br /><br /><b>Hinweis:</b> Sie sollten auf jedenfall [+uid+] und [+pwd+] in der Vorlage anführen, damit Ihre Webbenutzer auch die entsprechenden Anmeldedaten erhalten!';
 $_lang["websignupemail_title"] = 'Registrierungsbestätigung:';
-$_lang["web_access_permissions"] = 'Rechteverwaltung Webbenutzer';
+$_lang["web_access_permissions"] = 'Webbenutzer-Zugriffsberechtigungen';
 $_lang["web_access_permissions_user_group"] = 'Webbenutzergruppe:';
 $_lang["web_access_permissions_user_groups"] = 'Webbenutzergruppen';
-$_lang["web_access_permissions_user_group_access"] = 'Dokumentengruppe auf die diese Benutzer Gruppe Zugriff hat:';
+$_lang["web_access_permissions_user_group_access"] = 'Dokumentgruppe auf die diese Benutzergruppe Zugriff hat:';
 $_lang["web_permissions"] = 'Web-Berechtigungen';
 $_lang["web_users"] = 'Webbenutzer';
 $_lang["web_user_management_msg"] = 'Hier können Sie auswählen, welche Webbenutzer sie bearbeiten möchten. Webbenutzer können sich nur an der Website anmelden, nicht jedoch im MODx Manager.';
-$_lang["web_user_management_title"] = 'Webbenutzer verwalten';
-$_lang["web_user_title"] = 'Webbenutzer erstellen / bearbeiten';
+$_lang["web_user_management_title"] = 'Webbenutzer';
+$_lang["web_user_title"] = 'Webbenutzer erstellen/bearbeiten';
 $_lang["wednesday"] = 'Mittwoch';
 $_lang["welcome_messages"] = 'Ihr Posteingang enthält <b>%d</b> Nachricht(en). <b>%s</b> davon sind ungelesen.';
 $_lang["welcome_title"] = 'Willkommen bei MODx';

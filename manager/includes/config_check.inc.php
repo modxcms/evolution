@@ -3,9 +3,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 $warningspresent = 0;
 
+     
+
 if (is_writable("includes/config.inc.php")){
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_configinc']);
+    // Warn if world writable
+    if(@fileperms('includes/config.inc.php') & 0x0002) {
+      $warningspresent = 1;
+      $warnings[] = array($_lang['configcheck_configinc']);      
+    }
 }
 
 if (!function_exists('checkSiteCache')) {

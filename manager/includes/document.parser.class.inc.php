@@ -303,6 +303,7 @@ class DocumentParser {
     }
 
     function cleanDocumentIdentifier($qOrig) { // modx updates
+        (!empty($qOrig)) or $qOrig = $this->config['site_start'];  // <- netnoise 2006-10-19
         $q= $qOrig;
         // First remove any / before or after
         if ($q[strlen($q) - 1] == '/')

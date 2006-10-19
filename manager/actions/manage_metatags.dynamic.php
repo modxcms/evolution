@@ -105,9 +105,9 @@ $modx->manager->initPageViewState();
 		<td width="70%">
 		<table border="0" cellspacing="1">
 		  <tr>
-			<td valign="bottom">Name:<br>
+			<td valign="bottom"><?php echo $_lang['name'];?><br>
 			<input type="text" name="tagname" size="15"></td>
-			<td valign="bottom">Tag:<br>
+			<td valign="bottom"><?php echo $_lang['tag'];?><br>
 			<select size="1" name="tag">
         		<optgroup label="Named Meta Content">
         			<option value="abstract;0">abstract</option>
@@ -142,7 +142,7 @@ $modx->manager->initPageViewState();
         			<option value="set-cookie;1">set-cookie</option>
         		</optgroup>
 			</select></td>
-			<td valign="bottom">Value:<br>
+			<td valign="bottom"><?php echo $_lang['value'];?><br>
 			<input type="text" name="tagvalue" size="20"></td>
 			<td nowrap="nowrap"><br>
 			<input type="button" value="<?php echo $_lang["add_tag"];?>" name="cmdsavetag" onclick="addTag()" /> <input style="visibility:hidden" type="button" value="<?php echo $_lang["cancel"];?>" name="cmdcanceltag" onclick="cancelTag()" /></td>
