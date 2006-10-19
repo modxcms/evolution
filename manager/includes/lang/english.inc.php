@@ -409,6 +409,7 @@ $_lang["manage_depends"] = 'Manage Dependencies';
 $_lang["manage_files"] = 'Manage Files';
 $_lang["manage_htmlsnippets"] = 'Chunks';
 $_lang["manage_metatags"] = 'Manage META tags and Keywords';
+$_lang["manage_metatags_help"] = 'You may wish to reference the <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a> site for more information. This is not a complete list of possible Meta Tags.';
 $_lang["manage_modules"] = 'Manage Modules';
 $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';

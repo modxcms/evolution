@@ -234,7 +234,7 @@ if($editedbyname!='') {
 if ($show_preview==1) { ?>
 <div class="sectionHeader">
   <?php echo $_lang["preview"]; ?></div><div class="sectionBody" id="lyr2">
-  <iframe src="../index.php?id=<?php echo $id; ?>&z=manprev" frameborder=0 border=0 style="width: 100%; height: 400px; border: 3px solid #4791C5;">
+  <iframe src="../index.php?id=<?php echo $id; ?>&z=manprev" frameborder=0 border=0 id="previewIframe">
   </iframe>
 </div>
 <?php } ?>
@@ -252,7 +252,7 @@ if(!$handle) {
         $buffer .= fgets($handle, 4096);
     }
     fclose ($handle);
-    $buffer=$_lang['page_data_cached']."<p><textarea style='width: 100%; height: 400px; border: 3px solid #4791C5;'>".htmlspecialchars($buffer)."</textarea>";
+    $buffer=$_lang['page_data_cached']."<p><textarea style='width: 100%; height: 400px;'>".htmlspecialchars($buffer)."</textarea>";
 }
 
 echo $buffer;

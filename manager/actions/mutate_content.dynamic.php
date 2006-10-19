@@ -928,7 +928,7 @@ for ($i = 0; $i < count($keys); $i++) {
             <h2 class="tab"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/preview.gif" height="12" /> <?php echo $_lang['preview']; ?></h2>
             <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPreview" ), previewdocument );</script>
             <table width="96%" border="0"><tr><td><?php echo $_lang['preview_msg'];?></td></tr>
-            <tr><td><iframe name="preview" frameborder="0" width="100%" height="400" style="border:1px solid #E0E0E0"></iframe></td></tr>
+            <tr><td><iframe name="preview" frameborder="0" width="100%" height="400" id="previewIframe"></iframe></td></tr>
             </table>
         </div>
     <?php } ?>

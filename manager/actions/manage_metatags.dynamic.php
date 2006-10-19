@@ -1,8 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('manage_metatags')) {	
+if(!$modx->hasPermission('manage_metatags')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // initialize page view state - the $_PAGE object
@@ -10,20 +10,20 @@ $modx->manager->initPageViewState();
 
 ?>
 <script type="text/javascript">
-	
+
 	// meta tag rows
 	var tagRows = []; // stores tag information in 2D array. 2nd array = 0-name,1-tag,2-value,3-http_equiv
 
 	function checkForm() {
 		var requireConfirm=false;
 		var deleteList="";
-	<?php for($i=0;$i<$limit;$i++) { 
+	<?php for($i=0;$i<$limit;$i++) {
 		$row=mysql_fetch_assoc($rs);
 		?>
 		if(document.getElementById('delete<?php echo $row['id']; ?>').checked==true) {
 			requireConfirm = true;
 			deleteList = deleteList + "\n - <?php echo addslashes($row['keyword']); ?>";
-			
+
 		}
 	<?php }	?>
 		if(requireConfirm) {
@@ -36,7 +36,7 @@ $modx->manager->initPageViewState();
 		}
 		return true;
 	}
-	
+
 	function addTag() {
 		var f=document.metatag;
 		if(!f) return;
@@ -53,7 +53,7 @@ $modx->manager->initPageViewState();
 		var f=document.metatag;
 		if(!f) return;
 		f.tagname.value = tagRows[id][0];
-		f.tagvalue.value= tagRows[id][2];	
+		f.tagvalue.value= tagRows[id][2];
 		for(i=0;i<f.tag.options.length;i++) {
 			opt = f.tag.options[i];
 			tagkey = tagRows[id][1]+";"+tagRows[id][3]; // combine tag and style to make key
@@ -88,7 +88,7 @@ $modx->manager->initPageViewState();
 			f.submit();
 		}
 	}
-	
+
 	</script>
 
 <form name="metatag" method="post" action="index.php" onsubmit="return checkForm();">
@@ -148,9 +148,10 @@ $modx->manager->initPageViewState();
 			<input type="button" value="<?php echo $_lang["add_tag"];?>" name="cmdsavetag" onclick="addTag()" /> <input style="visibility:hidden" type="button" value="<?php echo $_lang["cancel"];?>" name="cmdcanceltag" onclick="cancelTag()" /></td>
 		  </tr>
 		  <tr>
-		      <td colspan="4"><p>You may wish to reference the <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Refernce Guide</a> site for more information. This is not a complete list of possible Meta Tags.</p></td>
+		      <td colspan="4"><p><?php echo $_lang["manage_metatags_help"]; ?></p></td>
 	      </tr>
-		</table><img src="media/images/_tx_.gif" width="1" height="5" /></td>
+		</table>
+		</td>
 	  </tr>
 	</table>
 	</div>
@@ -159,25 +160,25 @@ $modx->manager->initPageViewState();
 
 		$sql = "SELECT * " .
 				"FROM ".$modx->getFullTableName("site_metatags")." st ".
-				"ORDER BY name"; 
-		$ds = mysql_query($sql); 
+				"ORDER BY name";
+		$ds = mysql_query($sql);
 		include_once $base_path."manager/includes/controls/datagrid.class.php";
 		$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 		$grd->noRecordMsg = $_lang["no_records_found"];
 		$grd->cssClass="grid";
 		$grd->columnHeaderClass="gridHeader";
-		$grd->itemClass="gridItem"; 
+		$grd->itemClass="gridItem";
 		$grd->altItemClass="gridAltItem";
-		$grd->fields="id,name,tag,tagvalue"; 
+		$grd->fields="id,name,tag,tagvalue";
 		$grd->columns=$_lang["delete"]." ,".$_lang["name"]." ,".$_lang["tag"]." ,".$_lang["value"];
-		$grd->colWidths="40";					
+		$grd->colWidths="40";
 		$grd->colAligns="center";
 		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/><img src='media/images/icons/comment.gif' width='16' height='16' align='absmiddle' /></a>||".
 					   "template:<a href='javascript:;' title='".$_lang["click_to_edit_title"]."' onclick='editTag([+id+])'>[+value+]</a><span style='display:none;'><script type=\"text/javascript\"> tagRows['[+id+]']=[\"[+name+]\",\"[+tag+]\",\"[+tagvalue+]\",\"[+http_equiv+]\"];</script>";
-		echo $grd->render();						
+		echo $grd->render();
 	?>
 	</div>
-	<table border=0 cellpadding=2 cellspacing=0> 
+	<table border=0 cellpadding=2 cellspacing=0>
 		<tr><td colspan="5">&nbsp;</td></tr>
 		<tr>
 			<td align="right">
@@ -193,13 +194,13 @@ $modx->manager->initPageViewState();
 <?php
 	$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords ORDER BY keyword ASC";
 	$ds = mysql_query($sql);
-	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items	
+	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_keywords_found"];
 	$grd->cssClass="grid";
 	$grd->columnHeaderClass="gridHeader";
-	$grd->itemClass="gridItem"; 
+	$grd->itemClass="gridItem";
 	$grd->altItemClass="gridAltItem";
-	$grd->fields="id,keyword,keyword"; 
+	$grd->fields="id,keyword,keyword";
 	$grd->columns=$_lang["delete"]." ,".$_lang["keyword"]." ,".$_lang["rename"];
 	$grd->colWidths="40";
 	$grd->colAligns="center";
@@ -208,7 +209,7 @@ $modx->manager->initPageViewState();
 				   "template:<input type=\"hidden\" name=\"orig_keywords[keyword[+id+]]\" value=\"[+keyword+]\" /><input type=\"text\" name=\"rename_keywords[keyword[+id+]]\" value=\"[+keyword+]\" style=\"width:100%;\" />";
 	echo $grd->render();
 ?>
-	<table border=0 cellpadding=2 cellspacing=0> 
+	<table border=0 cellpadding=2 cellspacing=0>
 		<tr><td colspan="5">&nbsp;</td></tr>
 		<tr>
 			<td>
@@ -219,7 +220,7 @@ $modx->manager->initPageViewState();
 				<input type="text" name="new_keyword" value="" size="30" />
 			</td>
 		</tr>
-	</table>	
+	</table>
 </div>
 </form>
-	
+
