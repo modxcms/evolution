@@ -13,6 +13,29 @@
 // TinyMCE will use the following theme
 $webTinyMCETheme = isset($webtheme) ? $webtheme:"simple";
 
+// Set extended valid elements
+global $tinymce_elements;
+$tinymce_elements = "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]";
+
+// Set variables from plugin configuration
+global $tinymce_plugins;
+global $tinymce_buttons1;
+global $tinymce_buttons2;
+global $tinymce_buttons3;
+global $tinymce_buttons4;
+global $tinymce_disable_buttons;
+global $tinymce_formats;
+global $tinymce_entity_encoding;
+global $tinymce_entities;
+$tinymce_plugins = isset($tinyPlugins) ? $tinyPlugins :"";
+$tinymce_buttons1 = isset($tinyButtons1) ? $tinyButtons1 :"";
+$tinymce_buttons2 = isset($tinyButtons2) ? $tinyButtons2 :"";
+$tinymce_buttons3 = isset($tinyButtons3) ? $tinyButtons3 :"";
+$tinymce_buttons4 = isset($tinyButtons4) ? $tinyButtons4 :"";
+$tinymce_disable_buttons = isset($disabledButtons) ? $disabledButtons :"";
+$tinymce_formats = isset($tinyFormats) ? $tinyFormats :"";
+$tinymce_entity_encoding = isset($entity_encoding) ? $entity_encoding :"";
+$tinymce_entities = ($entity_encoding == "named" && !empty($entities)) ? "entities : \"".$entities."\"," :"";
 // Set path variable
 if(!isset($tinymce_path)) { 
 	global $tinymce_path;
@@ -178,7 +201,17 @@ if (!function_exists('getTinyMCEScript')) {
 		global $tinymce_editor_theme;
 		global $tinymce_css_selectors;
 		global $tinymce_editor_relative_urls;
-		
+		global $tinymce_plugins;
+		global $tinymce_buttons1;
+		global $tinymce_buttons2;
+		global $tinymce_buttons3;
+		global $tinymce_buttons4;
+		global $tinymce_disable_buttons;
+		global $tinymce_formats;
+		global $tinymce_elements;
+		global $tinymce_entity_encoding;
+		global $tinymce_entities;
+				
 		$tinymce_editor_theme = $webTheme ? $webTheme : $tinymce_editor_theme;
 		$theme = !empty($tinymce_editor_theme) ? "theme : \"$tinymce_editor_theme\"," : "theme : \"simple\",";
 		$cssPath = !empty($editor_css_path) ? "content_css : \"$editor_css_path\"," : "";
@@ -212,7 +245,7 @@ if (!function_exists('getTinyMCEScript')) {
 		}
 
 		$fullScript = <<<FULL_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce_gzip.php"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
 		  theme : "advanced",
@@ -225,25 +258,27 @@ if (!function_exists('getTinyMCEScript')) {
 		  $elmList
 		  $webWidth
 		  $webHeight
-		  plugins : "style,layer,table,advhr,advimage,advlink,emotions,insertdatetime,preview,flash,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable",
-		  theme_advanced_buttons1_add_before : "save,newdocument,separator",
-		  theme_advanced_buttons1_add : "fontselect,fontsizeselect",
-		  theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",
-		  theme_advanced_buttons2_add_before: "cut,copy,paste,separator,search,replace,separator,pastetext,pasteword,selectall,separator",
-		  theme_advanced_buttons3_add_before: "tablecontrols,separator",
-		  theme_advanced_buttons3_add : "emotions,iespell,flash,advhr,separator,print,separator,ltr,rtl,separator,fullscreen",
-		  theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops",
+		  plugins : "{$tinymce_plugins}",
+		  theme_advanced_buttons0 : "",
+		  theme_advanced_buttons1 : "{$tinymce_buttons1}",
+		  theme_advanced_buttons2 : "{$tinymce_buttons2}",
+		  theme_advanced_buttons3 : "{$tinymce_buttons3}",
+		  theme_advanced_buttons4 : "{$tinymce_buttons4}",
 		  theme_advanced_toolbar_location : "top",
 		  theme_advanced_toolbar_align : "left",
 		  theme_advanced_path_location : "bottom",
+		  theme_advanced_disable : "{$tinymce_disable_buttons}",
+		  theme_advanced_blockformats : "{$tinymce_formats}",
 		  plugin_insertdate_dateFormat : "%Y-%m-%d",
 		  plugin_insertdate_timeFormat : "%H:%M:%S",
-		  extended_valid_elements : "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		  extended_valid_elements : "{$tinymce_elements}",
 		  $cssPath
 		  $cssSelector
-		  apply_source_formatting : false,
+		  entity_encoding : "{$tinymce_entity_encoding}",
+		  $tinymce_entities
+		  apply_source_formatting : true,
 		  remove_linebreaks : false,
-		  button_tile_map : true,
+		  button_tile_map : false,
 		  onchange_callback : "tvOnTinyMCEChangeCallBack",
 		  resource_browser_path : "{$base_url}manager/media/browser/mcpuk/browser.html?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}",
 		  $fileBrowserCallback
@@ -262,13 +297,22 @@ if (!function_exists('getTinyMCEScript')) {
 FULL_SCRIPT;
 
 		$stdScript = <<<STD_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce_gzip.php"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
 		  $theme
 		  mode : "exact",
 		  language : "{$tinymce_language}",
 		  $elmList
+		  theme_advanced_blockformats : "{$tinymce_formats}",
+		  extended_valid_elements : "{$tinymce_elements}",
+		  $cssPath
+		  $cssSelector
+		  entity_encoding : "{$tinymce_entity_encoding}",
+		  $tinymce_entities
+		  apply_source_formatting : true,
+		  remove_linebreaks : false,
+		  button_tile_map : false,
 		  relative_urls : {$relative_urls},
 		  {$document_base_url}
 		  remove_script_host : {$remove_script_host}

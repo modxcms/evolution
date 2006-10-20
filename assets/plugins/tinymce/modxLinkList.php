@@ -1,18 +1,18 @@
 <?php
 include_once "../../../manager/includes/config.inc.php";
 
-$allpages = getActiveChildren();
+$allpages = getAllPages();
 foreach($allpages as $page){
-	$caption = ($page['pagetitle'])?$page['pagetitle']:$page['menutitle'];
+    $caption = ($page['pagetitle'])?htmlspecialchars($page['pagetitle'],ENT_QUOTES):htmlspecialchars($page['menutitle'],ENT_QUOTES);
 	$list .=($list!='')?",\n":"\n";
-	$list.= "[\"".$caption."\", \"[\"+\"~".$page['id']."~\"+\"]\"]";
+	$list.= "[\"".$caption." (".$page['id'].")"."\", \"[\"+\"~".$page['id']."~\"+\"]\"]";
 }
 $output = "var tinyMCELinkList = new Array(\n". $list .");";
 
 echo $output;
 
 
-function getActiveChildren($id=0, $sort='menuindex', $dir='ASC', $fields='id, pagetitle, description, parent, alias, menutitle') {
+function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, id, menutitle') {
     global $database_type;
     global $database_server;
     global $database_user;
@@ -34,7 +34,7 @@ function getActiveChildren($id=0, $sort='menuindex', $dir='ASC', $fields='id, pa
 
     $sql = "SELECT DISTINCT $fields FROM $tblsc sc
       LEFT JOIN $tbldg dg on dg.document = sc.id
-      WHERE sc.parent = '$id' AND sc.published=1 AND sc.deleted=0
+      WHERE sc.published=1 AND sc.deleted=0
       ORDER BY $sort $dir;";
 
     $result = mysql_query($sql) or die('Query failed: ' . mysql_error());
@@ -47,6 +47,8 @@ function getActiveChildren($id=0, $sort='menuindex', $dir='ASC', $fields='id, pa
 	
 	// Closing connection
 	mysql_close($link);
+	
+	sort($resourceArray);
 
     return $resourceArray;
 }
