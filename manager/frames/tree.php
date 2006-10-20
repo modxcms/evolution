@@ -383,20 +383,20 @@
     // show state of recycle bin
     function showBinFull() {
         var a = $('Button10');
-        var title = '<?phpecho $_lang['empty_recycle_bin']; ?>';
+        var title = '<?php echo $_lang['empty_recycle_bin']; ?>';
         if(!a.setAttibute) a.title = title;
         else a.setAttribute('title',title); 
-        a.innerHTML = '<?phpecho $_style['empty_recycle_bin']; ?>';
+        a.innerHTML = '<?php echo $_style['empty_recycle_bin']; ?>';
         a.className = 'treeButton';
         a.onclick = emptyTrash;
     }
     
     function showBinEmpty() {
         var a = $('Button10');
-        var title = '<?phpecho $_lang['empty_recycle_bin_empty']; ?>';
+        var title = '<?php echo $_lang['empty_recycle_bin_empty']; ?>';
         if(!a.setAttibute) a.title = title;
         else a.setAttribute('title',title); 
-        a.innerHTML = '<?phpecho $_style['empty_recycle_bin_empty']; ?>';    
+        a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';    
         a.className = 'treeButtonDisabled';
         a.onclick = '';
     }
@@ -429,7 +429,7 @@
             <td><a href="javascript:;" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
             <td><a href="javascript:;" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="javascript:;" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
-            <td><a href="javascript:;" id="Button10" class="treeButtonDisabled"' title="<?phpecho $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
+            <td><a href="javascript:;" id="Button10" class="treeButtonDisabled"' title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             </tr>
         </table>
     </td>
