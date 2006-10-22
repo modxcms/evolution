@@ -179,21 +179,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             navs[j].className = active;
         }
 
-        // Don't use effect if Opera detected
-        if(navigator.userAgent.toLowerCase().indexOf("opera")==-1){
-            //Hide all content containers
-            contents = document.getElementsByClassName('subnav');
-            contentsCount = contents.length;
-            for(var i = 0; i < contentsCount; i++) {
-                contents[i].style.display = 'none';
-            }
-
-            //Extract content container id from href
-            ele = element.getAttribute('href').replace(/^.*\#/,'');
-
-            //Magic Happens
-            new Effect.Appear(ele,{duration:0.15});        
-        }
         // remove focus from top nav
         if(element) element.blur();
     }

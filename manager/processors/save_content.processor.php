@@ -122,52 +122,6 @@ if(empty($unpub_date)) {
 	}
 }
 
-
-if($strip_image_paths==1) {
-	// Strip out absolute URLs for images 
-	// --------------------------------------------------  
-	// code by stevew (thanks!)
-	// --------------------------------------------------  
-	if(substr($rb_base_url, -1) != '/') {
-		$image_base_url = $rb_base_url . '/';
-	} else {
-		$image_base_url = $rb_base_url;
-	}
-	$elements = parse_url($image_base_url);
-	$image_path = $elements['path'];
-	// make sure image path ends with a /
-	if(substr($image_path, -1) != '/') {
-		$image_path .= '/';
-	}
-	// get path from script name
-	// script path will have "manager" as its last dir - remove this to get install path
-	// by calling dirname twice this will strip the file name and the parent dir "manager"
-	$root = dirname(dirname($_SERVER['PHP_SELF']));
-	// now have the base dir for etomite install - remove base dir from image path
-	// to get a relative path
-	// use length of script path plus one to remove leading /
-	$image_prefix = substr($image_path, strlen($root));
-	// make sure relative path ends with a /
-	if(substr($image_prefix, -1) != '/')
-	{
-		$image_prefix .= '/';
-	}
-
-	$match1 = "/(<img[^>]+src=\\\\?['\"])(";
-	$match2 = ")([^'\"]+\\\\?['\"][^>]*>)/";
-
-	$esc_base_url = str_replace("/", "\/", $base_url);
-	$newcontent = preg_replace($match1 . $esc_base_url . $match2, "\${1}$image_prefix\${3}", $content);
-	if($newcontent == $content) {
-		// try again with just the path
-		$esc_base_url = str_replace("/", "\/", $image_path);
-		$newcontent = preg_replace($match1 . $esc_base_url . $match2, "\${1}$image_prefix\${3}", $content);
-	}
-	$content = $newcontent;
-	// --------------------------------------------------  
-}
-
-
 // Modified by Raymond for TV - Orig Added by Apodigm - DocVars
 // get document groups for current user
 $tmplvars = array();

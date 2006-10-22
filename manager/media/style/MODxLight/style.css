@@ -797,6 +797,7 @@ ul#nav {
     position: absolute;
     overflow: visible !important
 }
+
 #nav ul {
     display: none;
     height: 25px;
@@ -805,76 +806,125 @@ ul#nav {
     margin: 0 0 0 -10px;
     padding: 0 0 0 10px;
 }
-    #nav li { 
-        list-style-type: none;
-        display: block;
-        float: left;
-        width: auto;
-        margin: 0 3px 0 0;
-        padding: 0;
-    }
-        #nav a {
-            color: #438d29;
-            background: #d4d4d4 url(images/misc/greentab.gif) 100% 100%;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            float: left;
-            width: auto;
-            white-space: nowrap;
-            cursor: pointer;
-            cursor: hand;
-            line-height: 25px;
-            height: 25px;
-            overflow: hidden;
-            padding: 0 15px;
-            border-left: 1px solid #c1e079;
-        }
-        #nav a:hover {
-            color: #264f17; /* 9ebc5a */
-        }
-        #nav a:active {
-           color: #000;
-        }
-    #nav li.active a {
-        background: #438d29 url(images/misc/greentab.gif) 100% 0;
-        color: #fff;
-        position: relative;
-        z-index: 999;
-        border-left: 1px solid #8cc709;
-    }
-    #nav li.active a:hover {
-        cursor: default;
-    }
-        #nav li.active ul.subnav {
-            display: block;
-            position: absolute;
-            top: 25px;
-            width: 200%;
-            left: 0;
-            background: #8fc70c; /* 677e32 */
-        }
-            #nav li.active ul.subnav a {
-                color: #fff;
-                font-weight: normal;
-                border: none;
-                background: #8fc70c;
-                cursor: pointer;
-                cursor: hand;
-                
-            }
-            #nav li.active ul.subnav li {
-                margin: 0;
-            }
-            #nav li.active ul.subnav a:hover {
-                color: #264f17; /* 9ebc5a */
-                background-color: #a5d535;
-            }
-            #nav li.active ul.subnav a:active {
-                color: #000;
-            }
+
+#nav li { 
+    list-style-type: none;
+	background: #d4d4d4 url(images/misc/greentab.gif) 100% 100%;
+    display: block;
+    float: left;
+    width: auto;
+    margin: 0 3px 0 0;
+    padding: 0;
+  }
+  
+#nav li a {
+    color: #438d29;
+    height: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: hand;
+    line-height: 25px;
+    overflow: hidden;
+    padding: 0 15px;
+    border-left: 1px solid #c1e079;
+}
+		
+#nav li ul li a {
+    background: #d4d4d4;
+    float: left;
+    width: auto;
+}
+
+#nav a:hover {
+    color: #264f17; /* 9ebc5a */
+}
+
+#nav a:active {
+   color: #000;
+}
+
+#nav li.active  {
+	background: #438d29 url(images/misc/greentab.gif) 100% 0;
+}
+		
+#nav li.active a {
+    color: #fff;
+    position: relative;
+    z-index: 999;
+    border-left: 1px solid #8cc709;
+}
+
+#nav li.active a:hover {
+    cursor: hand;
+}
+
+#nav li.active ul.subnav {
+    display: block;
+    position: absolute;
+    top: 25px;
+    width: 200%;
+    left: 0;
+    background: #8fc70c; /* 677e32 */
+}
+
+#nav li.active ul.subnav a {
+    color: #fff;
+    font-weight: normal;
+    border: none;
+    background: #8fc70c;
+    cursor: hand;
+    
+}
+
+#nav li.active ul.subnav li {
+    margin: 0;
+}
+
+#nav li.active ul.subnav a:hover {
+    color: #264f17; /* 9ebc5a */
+    background-color: #a5d535;
+}
+
+#nav li.active ul.subnav a:active {
+    color: #000;
+}
 
 
+/* Contextual Menu used in the Tree Menu
+---------------------------------------------------------- */
+#mx_contextmenu {
+	position: absolute;
+	height: auto;
+	visibility: hidden;
+	z-index:10000; 
+	width: 170px;
+    background: #fff;
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ededed;
+    border-right-color: #dcdcdc;
+    border-bottom-color: #dcdcdc;
+    overflow: hidden;
+    line-height: 11px; }$$
+
+
+/* Contextual Menu used in the Tree Menu
+---------------------------------------------------------- */
+#mx_contextmenu {
+	position: absolute;
+	height: auto;
+	visibility: hidden;
+	z-index:10000; 
+	width: 170px;
+    background: #fff;
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #ededed;
+    border-right-color: #dcdcdc;
+    border-bottom-color: #dcdcdc;
+    overflow: hidden;
+    line-height: 11px; }$$
 /* Contextual Menu used in the Tree Menu
 ---------------------------------------------------------- */
 #mx_contextmenu {

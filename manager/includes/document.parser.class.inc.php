@@ -1672,7 +1672,7 @@ class DocumentParser {
         } else { // not in cache so let's check the db
             $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . mysql_escape_string($snippetName) . "';";
             $result= $this->dbQuery($sql);
-            if (!$this->recordCount($result) == 1) {
+            if ($this->recordCount($result) == 1) {
                 $row= $this->fetchRow($result);
                 $snippet= $this->snippetCache[$row['name']]= $row['snippet'];
                 $properties= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];

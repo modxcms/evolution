@@ -653,7 +653,7 @@ ul#nav {
     position: relative;
     z-index: 500;
     margin: 0;
-	 padding: 0;
+	padding: 0;
 }
 
 #nav li { 
@@ -662,48 +662,58 @@ ul#nav {
     float: left;
     width: auto;
     margin: 0;
+    padding: 0;
 }
 
-#nav a {
+#nav li a {
 	color: #fff;
+	height: 25px;
 	font-weight: bold;
 	font-size: 11px;
 	text-decoration: none;
-	height: 15px;
-	display: block;
-	float: left;
-	width: auto;
+	line-height: 25px;
 	white-space: nowrap;
-	cursor: default;
-	padding: 5px 10px 4px;
+	cursor: hand;
+	padding: 5px 10px 5px;
 	
 }
+
+#nav li ul li a {
+    background: darkgreen;
+    float: left;
+    width: auto;
+}
+
 #nav a:hover {
 	border: 1px solid darkgreen !important;
 	border-bottom-width: 0 !important;
-	padding: 4px 9px 5px;
+	padding: 6px 9px 6px;
 	background: transparent url(images/bg/button_dn.gif) repeat-x 0px 0px;
 }
+
 #nav a:active {
-   padding: 5px 8px 4px 10px;
-    color: #000;
+   color: #000;
 }
-#nav li.active a {
+
+#nav li.active  {
 	background: transparent url(images/bg/button_dn.gif) repeat-x left top;
+}
+
+#nav li.active a {
 	font-weight: bold;
 	text-decoration: none;
-	height: 14px;
-	display: block;
-	float: left;
+	height: 25px;
 	position: relative;
 	z-index: 999;
-	padding: 4px 9px 5px;
-	border: 1px solid transparent;
+	padding: 0 9px 0 9px;
 	border-bottom-width: 0 !important;
 }
+
 #nav li.active a:hover {
+	height: 25px; 
     background: transparent url(images/bg/buttonbar_gs.gif) repeat-x top left !important;
     border-bottom-width: 0 !important;
+    padding: 6px 8px 5px 8px;
 }
 
 #nav li.active ul.subnav {
@@ -718,9 +728,9 @@ ul#nav {
 	color: #fff;
 	font-weight: normal;
 	border: none;
-	height: 15px;
+	height: 25px;
 	background: transparent url(images/bg/buttonbar_gs.gif) repeat-x 0 -1px;
-	padding: 4px 10px 5px;
+	padding: 0 10px 0 10px;
 }
 
 #nav li.active ul.subnav a:hover {
@@ -729,17 +739,18 @@ ul#nav {
 	font-weight: normal;
 	border-top-width: 0 !important;
 	border-bottom-width: 0 !important;
-	height: 15px;
-	padding: 4px 9px 5px;
+	height: 25px;
+	padding: 0 9px 0 9px;
 }
+
 #nav li.active ul.subnav a:active {
 	color: #fff;
 	background: transparent url(images/bg/buttonbar_gs.gif) repeat-x top left !important;
 	font-weight: normal;
 	border-top-width: 0 !important;
 	border-bottom-width: 0 !important;
-	height: 15px;
-	padding: 4px 9px 5px;
+	height: 25px;
+	padding: 0 9px 0 9px;
 }
 /* end top menu navbar */
 

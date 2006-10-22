@@ -59,9 +59,9 @@ $fckphp_config['basedir'] = (substr($rb_base_dir,-1)=="/") ? substr($rb_base_dir
 /*------------------------------------------------------------------------------*/
 /* Prefix added to image path before sending back to editor			*/
 /*------------------------------------------------------------------------------*/
-//$fckphp_config['urlprefix']=$fckphp_config['prot'].$_SERVER['SERVER_NAME'];
-$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? substr($rb_base_url,0,-1):$rb_base_url;
-//$fckphp_config['urlprefix']=substr($site_url, 0, strlen($site_url)-1);
+//$fckphp_config['urlprefix']=$fckphp_config['prot'].$_SERVER['SERVER_NAME'];if ($strip_image_paths == 1) {
+	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? str_replace($site_url,'',substr($rb_base_url,0,-1)):$rb_base_url;} else {	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? substr($rb_base_url,0,-1):$rb_base_url;}
+//$fckphp_config['urlprefix']=substr($site_url, 0, strlen($site_url)-1);
 /*==============================================================================*/
 
 

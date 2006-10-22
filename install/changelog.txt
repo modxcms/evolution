@@ -3,8 +3,18 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1754 - October 20, 2006)
+MOD 0.9.5 beta 5 (rev 1768 - October 22, 2006)
 ====================================
+* Fix top navigation menu in Opera. Tested in Opera/mac, Opera/win, FF/mac, FF/win, Netscape/win, Safari and IE6. (1764,1765,1766,1767)
+* Fixed typo that prevented OnLogHit event from being triggered. (1763)
+* Fixed regexp in mergeSettingsContent that was hungry for some javascript expressions. (1762)
+* [FS#543] Fix for second part of this bug report. Prevents JS error being generated for missing setActiveStyleSheet() function when using MODxHost template.
+* [FS#581] and [FS#567] Make the resource browser respect the 'Rewrite Image Paths' setting. (will also handle other filetypes inserted by the resource browser). (1760)
+* [FS#581] and [FS#567] Remove the image rewrite code from save_content.processor.php - does not work atm and doesn't take into account TV values. (1760)
+* [FS#579] Stop current date being used if no value is set for a TV when using date formatter widget. (1759)
+* [FS#579] Added new parameter to date formatter widget to allow current date to be used if desired (default = no). (1759)
+* [FS#580] runSnippet(), fix to recordCount conditional if retrieving snippet from database. (1757)
+* Doc Manager: Fix tree refresh when changing settings such as publish/unpublish etc. (1747)
 * Short tags introduced in new ajax tree frame fixed (1752)
 * Corrected spelling for language key 'metatag_notice' in english lang file. (1744)
 * Removed collate and character set keywords from jot_subscriptions table insert for default content installation. (1744)

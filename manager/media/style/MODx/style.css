@@ -800,6 +800,7 @@ ul#nav {
     position: absolute;
     overflow: visible !important
 }
+
 #nav ul {
     display: none;
     height: 25px;
@@ -808,75 +809,88 @@ ul#nav {
     margin: 0 0 0 -10px;
     padding: 0 0 0 10px;
 }
-    #nav li { 
-        list-style-type: none;
-        display: block;
-        float: left;
-        width: auto;
-        margin: 0 3px 0 0;
-        padding: 0;
-    }
-        #nav a {
-            color: Blue;
-            background: #F1F5FE url(images/misc/bluetab.gif) right bottom;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            float: left;
-            width: auto;
-            white-space: nowrap;
-            cursor: pointer;
-            cursor: hand;
-            line-height: 25px;
-            height: 25px;
-            overflow: hidden;
-            padding: 0 15px;
-            border-left: 1px solid #c1e079;
-        }
-        #nav a:hover {
-            color: #FFFFFF; /* 9ebc5a */
-        }
-        #nav a:active {
-           color: #000;
-        }
-    #nav li.active a {
-        background: #84C5F9 url(images/misc/bluetab.gif) right top;
-        color: #fff;
-        position: relative;
-        z-index: 999;
-        border-left: 1px solid #8cc709;
-    }
-    #nav li.active a:hover {
-        cursor: default;
-    }
-        #nav li.active ul.subnav {
-            display: block;
-            position: absolute;
-            top: 25px;
-            width: 200%;
-            left: 0;
-            background: #FFB53B; /* 677e32 */
-        }
-            #nav li.active ul.subnav a {
-                color: #fff;
-                font-weight: normal;
-                border: none;
-                background: #FFB53B;
-                cursor: pointer;
-                cursor: hand;
-                
-            }
-            #nav li.active ul.subnav li {
-                margin: 0;
-            }
-            #nav li.active ul.subnav a:hover {
-                color: #000; /* 9ebc5a */
-                background-color: #FF9900;
-            }
-            #nav li.active ul.subnav a:active {
-                color: #000;
-            }
 
+#nav li {
+	background: #84C5F9 url(images/misc/bluetab.gif) right top;
+    list-style-type: none;
+    display: block;
+    float: left;
+    width: auto;
+    margin: 0 3px 0 0;
+    padding: 0;
+}
+    
+#nav li a {
+    color: blue;
+    height: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: hand;
+    line-height: 25px;
+    overflow: hidden;
+    padding: 0 15px;
+    border-left: 1px solid #c1e079;
+}
+
+#nav li ul li a {
+    background: #84C5F9;
+    float: left;
+    width: auto;
+}
+
+#nav a:hover {
+    color: #FFFFFF; /* 9ebc5a */
+}
+
+#nav a:active {
+   color: #000;
+}
+
+#nav li.active  {
+	background: #84C5F9 url(images/misc/bluetab.gif) right top;
+}
+        
+#nav li.active a {
+    color: #fff;
+    position: relative;
+    z-index: 999;
+    border-left: 1px solid #8cc709;
+}
+
+#nav li.active a:hover {
+    cursor: hand;
+}
+
+#nav li.active ul.subnav {
+    display: block;
+    position: absolute;
+    top: 25px;
+    width: 200%;
+    left: 0;
+    background: #FFB53B; /* 677e32 */
+}
+        
+#nav li.active ul.subnav a {
+    color: #fff;
+    font-weight: normal;
+    border: none;
+    background: #FFB53B;
+    cursor: hand;
+}
+
+#nav li.active ul.subnav li {
+    margin: 0;
+}
+
+#nav li.active ul.subnav a:hover {
+    color: #000; /* 9ebc5a */
+    background-color: #FF9900;
+}
+
+#nav li.active ul.subnav a:active {
+    color: #000;
+}
 
 #menuSplitter {
 	position:absolute; 

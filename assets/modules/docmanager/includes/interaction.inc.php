@@ -685,7 +685,8 @@ function updateHeader() {
 							</style>
 							<script type="text/javascript">var MODX_MEDIA_PATH="media";</script>
 							<script type="text/javascript" src="media/script/modx.js"></script>
-							<script type="text/javascript" src="media/script/cb2.js"></script>';
+							<script type="text/javascript" src="media/script/cb2.js"></script>
+							<script type="text/javascript">parent.tree.updateTree();</script>';
 	$output .= ButtonCSS();
 	$output .= '		</head><body> 
 					        <div class="subTitle" id="bttn"> 
