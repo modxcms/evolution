@@ -148,7 +148,7 @@ if (!function_exists('getTinyMCESettings')) {
 		return <<<TinyMCE_HTML_Settings
 		<table id='editorRow_TinyMCE' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 
 		  <tr class='row1' style="display: $display;"> 
-            <td colspan="2" class="warning" style="color:#707070; background-color:#eeeeee"><h4>{$_lang["tinymce_settings"]}<h4></td> 
+            <td colspan="2" class="warning" style="color:#707070; background-color:#eeeeee"><h4>{$_lang["tinymce_settings"]}</h4></td> 
           </tr> 
           <tr class='row1' style="display: $display"> 
             <td nowrap class="warning"><b>{$_lang["tinymce_editor_theme_title"]}</b></td> 

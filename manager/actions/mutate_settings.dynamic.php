@@ -132,10 +132,10 @@ function updateContentType(){
 	    createButton(document.getElementById("Button5"));
 	</script>
 </div>
+<form name="settings" action="index.php?a=30" method="post" />
 <div style="margin: 0 10px 0 20px">
-  <form name="settings" action="index.php?a=30" method="post">
-    <input type="hidden" name="site_id" value="<?php echo $site_id; ?>">
-    <input type="hidden" name="settings_version" value="<?php echo $version; ?>">
+    <input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
+    <input type="hidden" name="settings_version" value="<?php echo $version; ?>" />
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
     <?php if(!isset($settings_version) || $settings_version!=$version) { ?>
     <div class='sectionBody'><?php echo $_lang['settings_after_install']; ?></div>
@@ -151,41 +151,17 @@ function updateContentType(){
         <h2 class="tab"><?php echo $_lang["settings_site"] ?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage2" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["serveroffset_title"] ?></b></td>
-            <td> <select name="server_offset_time" size="1" class="inputBox">
-                <?php
-			for($i=-24; $i<25; $i++) {
-				$seconds = $i*60*60;
-				$selectedtext = $seconds==$server_offset_time ? "selected='selected'" : "" ;
-			?>
-                <option value="<?php echo $seconds; ?>" <?php echo $selectedtext; ?> /><?php echo $i; ?></option>
-                <?php
-			}
-			?>
-              </select> </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php printf($_lang["serveroffset_message"], strftime('%H:%M:%S', time()), strftime('%H:%M:%S', time()+$server_offset_time)); ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'>&nbsp;</div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["server_protocol_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="http" <?php echo ($server_protocol=='http' || !isset($server_protocol))? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["server_protocol_http"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="https" <?php echo $server_protocol=='https' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["server_protocol_https"]?> </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["server_protocol_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
+            <tr>
+              <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["sitename_message"] ?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["language_title"]?></b></td>
             <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true;">
@@ -198,7 +174,7 @@ function updateContentType(){
 			$languagename = substr($file, 0, $endpos);
 			$selectedtext = $languagename==$manager_language ? "selected='selected'" : "" ;
 ?>
-                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?> /><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
+                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
                 <?php
 		}
 	}
@@ -227,19 +203,8 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["sitename_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
             <td nowrap class="warning"><b><?php echo $_lang["sitestart_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="site_start" value="<?php echo isset($site_start) ? $site_start : 1 ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="site_start" value="<?php echo isset($site_start) ? $site_start : 1 ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -250,7 +215,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["errorpage_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="error_page" value="<?php echo isset($error_page) ? $error_page : 1 ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="error_page" value="<?php echo isset($error_page) ? $error_page : 1 ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -261,7 +226,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["unauthorizedpage_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="unauthorized_page" value="<?php echo isset($unauthorized_page) ? $unauthorized_page : 1 ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="unauthorized_page" value="<?php echo isset($unauthorized_page) ? $unauthorized_page : 1 ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -272,7 +237,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["sitestatus_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="site_status" value="1" <?php echo ($site_status=='1' || !isset($site_status)) ? 'checked="checked"' : "" ; ?> />
+            <td><input onchange="documentDirty=true;" type="radio" name="site_status" value="1" <?php echo ($site_status=='1' || !isset($site_status)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["online"]?><br />
               <input onchange="documentDirty=true;" type="radio" name="site_status" value="0" <?php echo $site_status=='0' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["offline"]?> </td>
@@ -286,7 +251,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["siteunavailable_page_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo isset($site_unavailable_page) ? $site_unavailable_page : "" ; ?>" /></td>
+            <td><input onchange="documentDirty=true;" name="site_unavailable_page" type="text" maxlength="10" size="5" value="<?php echo isset($site_unavailable_page) ? $site_unavailable_page : "" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -309,9 +274,9 @@ function updateContentType(){
 
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["track_visitors_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="track_visitors" value="1" <?php echo ($track_visitors=='1' || !isset($track_visitors)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/logRow/, 1);'>
+            <td><input onchange="documentDirty=true;" type="radio" name="track_visitors" value="1" <?php echo ($track_visitors=='1' || !isset($track_visitors)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/logRow/, 1);' />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="track_visitors" value="0" <?php echo $track_visitors=='0' ? 'checked="checked"' : "" ; ?> onclick='showHide(/logRow/, 0);'>
+              <input onchange="documentDirty=true;" type="radio" name="track_visitors" value="0" <?php echo $track_visitors=='0' ? 'checked="checked"' : "" ; ?> onclick='showHide(/logRow/, 0);' />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -337,7 +302,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["top_howmany_title"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="top_howmany" value="<?php echo isset($top_howmany) ? $top_howmany : 10 ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="top_howmany" value="<?php echo isset($top_howmany) ? $top_howmany : 10 ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -362,16 +327,16 @@ function updateContentType(){
 						$oldTmpName = $row['templatename'];
 					}
 				?>
-					<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?> /><?php echo $row['templatename']; ?></option>
+					<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?>><?php echo $row['templatename']; ?></option>
 				<?php
 				}
 				?>
  			 </select>
  			 	<br />
  			 	<br />
-				<input onchange="documentDirty=true;" type="radio" name="reset_template" value="1"> <?php echo $_lang["template_reset_all"]; ?><br />
-				<input onchange="documentDirty=true;" type="radio" name="reset_template" value="2"> <?php echo sprintf($_lang["template_reset_specific"],$oldTmpName); ?>
-				<input type="hidden" name="old_template" value="<?php echo $oldTmpId; ?>">
+				<input onchange="documentDirty=true;" type="radio" name="reset_template" value="1" /> <?php echo $_lang["template_reset_all"]; ?><br />
+				<input onchange="documentDirty=true;" type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang["template_reset_specific"],$oldTmpName); ?>
+				<input type="hidden" name="old_template" value="<?php echo $oldTmpId; ?>" />
 			</td>
           </tr>
           <tr>
@@ -461,7 +426,41 @@ function updateContentType(){
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
-          </tr>
+            <tr>
+              <td nowrap class="warning"><b><?php echo $_lang["serveroffset_title"] ?></b></td>
+              <td> <select name="server_offset_time" size="1" class="inputBox">
+                  <?php
+  			for($i=-24; $i<25; $i++) {
+  				$seconds = $i*60*60;
+  				$selectedtext = $seconds==$server_offset_time ? "selected='selected'" : "" ;
+  			?>
+                  <option value="<?php echo $seconds; ?>" <?php echo $selectedtext; ?>><?php echo $i; ?></option>
+                  <?php
+  			}
+  			?>
+                </select> </td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php printf($_lang["serveroffset_message"], strftime('%H:%M:%S', time()), strftime('%H:%M:%S', time()+$server_offset_time)); ?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'>&nbsp;</div></td>
+            </tr>
+            <tr>
+              <td nowrap class="warning"><b><?php echo $_lang["server_protocol_title"] ?></b></td>
+              <td> <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="http" <?php echo ($server_protocol=='http' || !isset($server_protocol))? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["server_protocol_http"]?><br />
+                <input onchange="documentDirty=true;" type="radio" name="server_protocol" value="https" <?php echo $server_protocol=='https' ? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["server_protocol_https"]?> </td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["server_protocol_message"] ?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php
@@ -483,7 +482,7 @@ function updateContentType(){
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendlyurls_title"] ?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="friendly_urls" value="1" <?php echo $friendly_urls=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 1);' />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="friendly_urls" value="0" <?php echo ($friendly_urls=='0' || !isset($friendly_urls)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 0);'>
+              <input onchange="documentDirty=true;" type="radio" name="friendly_urls" value="0" <?php echo ($friendly_urls=='0' || !isset($friendly_urls)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/furlRow/, 0);' />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -495,7 +494,7 @@ function updateContentType(){
           </tr>
           <tr id='furlRow1' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendlyurlsprefix_title"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_prefix" value="<?php echo isset($friendly_url_prefix) ? $friendly_url_prefix : "p" ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_prefix" value="<?php echo isset($friendly_url_prefix) ? $friendly_url_prefix : "p" ; ?>" /></td>
           </tr>
           <tr id='furlRow2' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
@@ -506,7 +505,7 @@ function updateContentType(){
           </tr>
           <tr id='furlRow4' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendlyurlsuffix_title"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_suffix" value="<?php echo isset($friendly_url_suffix) ? $friendly_url_suffix : ".html" ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 200px;" name="friendly_url_suffix" value="<?php echo isset($friendly_url_suffix) ? $friendly_url_suffix : ".html" ; ?>" /></td>
           </tr>
           <tr id='furlRow5' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
@@ -590,9 +589,9 @@ function updateContentType(){
         <table border="0" cellspacing="0" cellpadding="3">
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["udperms_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="use_udperms" value="1" <?php echo $use_udperms=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/udPerms/, 1);'>
+            <td> <input onchange="documentDirty=true;" type="radio" name="use_udperms" value="1" <?php echo $use_udperms=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/udPerms/, 1);' />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_udperms" value="0" <?php echo ($use_udperms=='0' || !isset($use_udperms)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/udPerms/, 0);'>
+              <input onchange="documentDirty=true;" type="radio" name="use_udperms" value="0" <?php echo ($use_udperms=='0' || !isset($use_udperms)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/udPerms/, 0);' />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -669,7 +668,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["emailsender_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@yourdomain.com" ; ?>"></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@yourdomain.com" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -680,7 +679,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["emailsubject_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsubject" value="<?php echo isset($emailsubject) ? $emailsubject : "Your login details" ; ?>"></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsubject" value="<?php echo isset($emailsubject) ? $emailsubject : "Your login details" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -736,9 +735,42 @@ function updateContentType(){
         <h2 class="tab"><?php echo $_lang["settings_ui"] ?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage5" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
+            <tr>
+              <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
+              <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.forms['settings'].theme_refresher.value = Date.parse(new Date())">
+               <?php
+      			$dir = dir("media/style/");
+      			while ($file = $dir->read()) {
+      				if($file!="." && $file!=".." && is_dir("media/style/$file")) {
+      					$themename = $file;
+      					$selectedtext = $themename==$manager_theme ? "selected='selected'" : "" ;
+      	            	echo "<option value='$themename' $selectedtext>".ucwords(str_replace("_", " ", $themename))."</option>";
+      				}
+      			}
+      			$dir->close();
+      		 ?>
+               </select><input type="hidden" name="theme_refresher" value="" /></td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["manager_theme_message"]?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+             <tr>
+      		   <td nowrap class="warning"><b><?php echo $_lang["show_preview"] ?></b></td>
+      		   <td> <input onchange="documentDirty=true;" type="radio" name="show_preview" value="1" <?php echo ($show_preview=='1' || !isset($show_preview)) ? 'checked="checked"' : ""; ?> />
+      			 <?php echo $_lang["yes"]?><br />
+      			 <input onchange="documentDirty=true;" type="radio" name="show_preview" value="0" <?php echo $show_preview=='0' ? 'checked="checked"' : ""; ?> />
+      			 <?php echo $_lang["no"]?></td>
+      		 </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["nologentries_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="number_of_logs" value="<?php echo isset($number_of_logs) ? $number_of_logs : 100 ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="number_of_logs" value="<?php echo isset($number_of_logs) ? $number_of_logs : 100 ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -749,7 +781,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["nomessages_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="number_of_messages" value="<?php echo isset($number_of_messages) ? $number_of_messages : 30 ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="number_of_messages" value="<?php echo isset($number_of_messages) ? $number_of_messages : 30 ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -760,7 +792,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["noresults_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="number_of_results" value="<?php echo isset($number_of_results) ? $number_of_results : 30 ; ?>"></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="number_of_results" value="<?php echo isset($number_of_results) ? $number_of_results : 30 ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -773,7 +805,7 @@ function updateContentType(){
             <td nowrap class="warning"><b><?php echo $_lang["rb_title"]?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="use_browser" value="1" <?php echo ($use_browser=='1' || !isset($use_browser)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 1);" />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_browser" value="0" <?php echo $use_browser=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 0);">
+              <input onchange="documentDirty=true;" type="radio" name="use_browser" value="0" <?php echo $use_browser=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 0);" />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -822,9 +854,9 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["use_editor_title"]?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 1); checkCustomIcons();">
+            <td> <input onchange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 1); checkCustomIcons();" />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="use_editor" value="0" <?php echo $use_editor=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 0);">
+              <input onchange="documentDirty=true;" type="radio" name="use_editor" value="0" <?php echo $use_editor=='0' ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 0);" />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -869,7 +901,7 @@ function updateContentType(){
 			$languagename = substr($file, 0, $endpos);
 			$selectedtext = $languagename==$fe_editor_lang ? "selected='selected'" : "" ;
 ?>
-                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?> /><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
+                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
                 <?php
 		}
 	}
@@ -886,7 +918,7 @@ function updateContentType(){
           </tr>
           <tr id='editorRow14' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["editor_css_path_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="editor_css_path" value="<?php echo isset($editor_css_path) ? $editor_css_path : "" ; ?>">
+            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="editor_css_path" value="<?php echo isset($editor_css_path) ? $editor_css_path : "" ; ?>" />
 			</td>
           </tr>
           <tr id='editorRow15' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
@@ -915,7 +947,7 @@ function updateContentType(){
         <table border="0" cellspacing="0" cellpadding="3">
 		  <tr>
             <td nowrap class="warning"><b><?php echo $_lang["settings_strip_image_paths_title"]?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
+            <td><input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
               <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="0" <?php echo ($strip_image_paths=='0' || !isset($strip_image_paths)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
@@ -929,7 +961,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["filemanager_path_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>">
+            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>" />
               <br /> </td>
           </tr>
           <tr>
@@ -942,7 +974,7 @@ function updateContentType(){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_images_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($upload_images) ? $upload_images : "jpg,gif,png,ico,bmp,psd" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($upload_images) ? $upload_images : "jpg,gif,png,ico,bmp,psd" ; ?>" />
             </td>
           </tr>
           <tr>
@@ -955,7 +987,7 @@ function updateContentType(){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_media_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($upload_media) ? $upload_media : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($upload_media) ? $upload_media : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>" />
             </td>
           </tr>
           <tr>
@@ -968,7 +1000,7 @@ function updateContentType(){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_flash_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($upload_flash) ? $upload_flash : "swf,fla" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($upload_flash) ? $upload_flash : "swf,fla" ; ?>" />
             </td>
           </tr>
           <tr>
@@ -981,7 +1013,7 @@ function updateContentType(){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_files" value="<?php echo isset($upload_files) ? $upload_files : "txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,pdf" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_files" value="<?php echo isset($upload_files) ? $upload_files : "txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,pdf" ; ?>" />
             </td>
           </tr>
           <tr>
@@ -994,7 +1026,7 @@ function updateContentType(){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["upload_maxsize_title"]?></b></td>
             <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_maxsize" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : "1048576" ; ?>">
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_maxsize" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : "1048576" ; ?>" />
             </td>
           </tr>
           <tr>
@@ -1003,40 +1035,6 @@ function updateContentType(){
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
-          </tr>
-			 <tr>
-			   <td nowrap class="warning"><b><?php echo $_lang["show_preview"] ?></b></td>
-			   <td> <input onchange="documentDirty=true;" type="radio" name="show_preview" value="1" <?php echo ($show_preview=='1' || !isset($show_preview)) ? 'checked="checked"' : ""; ?> />
-				 <?php echo $_lang["yes"]?><br />
-				 <input onchange="documentDirty=true;" type="radio" name="show_preview" value="0" <?php echo $show_preview=='0' ? 'checked="checked"' : ""; ?> />
-				 <?php echo $_lang["no"]?></td>
-			 </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
-            <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.forms['settings'].theme_refresher.value = Date.parse(new Date())">
-             <?php
-				$dir = dir("media/style/");
-				while ($file = $dir->read()) {
-					if($file!="." && $file!=".." && is_dir("media/style/$file")) {
-						$themename = $file;
-						$selectedtext = $themename==$manager_theme ? "selected='selected'" : "" ;
-		            	echo "<option value='$themename' $selectedtext>".ucwords(str_replace("_", " ", $themename))."</option>";
-					}
-				}
-				$dir->close();
-			 ?>
-             </select><input type="hidden" name="theme_refresher" value=""></td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["manager_theme_message"]?></td>
-          </tr>
-		  <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php
@@ -1049,5 +1047,5 @@ function updateContentType(){
         </table>
       </div>
     </div>
-  </form>
 </div>
+</form>
