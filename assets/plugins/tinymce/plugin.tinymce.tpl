@@ -118,6 +118,7 @@ if (!function_exists('getTinyMCESettings')) {
 		global $tinymce_path;
 		global $manager_language;
 		global $frontend_language;
+		global $tinymce_compressor;
 
 		// language settings
 		if (file_exists($tinymce_path.'/lang/'.$manager_language.'.inc.php')){
@@ -125,6 +126,15 @@ if (!function_exists('getTinyMCESettings')) {
 		} else {
 			include_once($tinymce_path.'/lang/english.inc.php');		
 		}
+		
+		// compressor setting
+		if($tinymce_compressor=='enabled'){
+			 $compressor_on = "selected='selected'";
+			 $compressor_off = "";
+		} else if ($tinymce_compressor=='disabled' || empty($tinymce_compressor)){
+			 $compressor_on = "";
+			 $compressor_off = "selected='selected'";
+		}			
 		
 		$simpleTheme = $tinymce_editor_theme=='simple' ? "selected='selected'" : "" ;
 		$advTheme = $tinymce_editor_theme=='advanced' ? " selected='selected'" : "";
@@ -186,6 +196,19 @@ if (!function_exists('getTinyMCESettings')) {
 		  <tr class='row1' style="display: $display;"> 
 			<td colspan="2"><div class='split'></div></td> 
 		  </tr> 
+		  <tr class='row1' style="display:$display;"> 
+			<td nowrap class="warning"><b>{$_lang["tinymce_compressor_title"]}</b></td> 
+			<td>
+            <select name="tinymce_compressor">
+					<option value="enabled" $compressor_on>{$_lang["enabled"]}</option>
+					<option value="disabled" $compressor_off>{$_lang["disabled"]}</option>
+			</select>			
+			</td> 
+		  </tr> 
+		  <tr class='row1' style="display: $display;"> 
+			<td width="200">&nbsp;</td> 
+			<td class='comment'>{$_lang["tinymce_compressor_message"]}</td> 
+		  </tr> 
 		</table>
 TinyMCE_HTML_Settings;
 	}
@@ -211,7 +234,9 @@ if (!function_exists('getTinyMCEScript')) {
 		global $tinymce_elements;
 		global $tinymce_entity_encoding;
 		global $tinymce_entities;
-				
+		global $tinymce_compressor;
+						
+		$scriptfile = ($tinymce_compressor == 'enabled' ? 'tiny_mce_gzip.php' : 'tiny_mce.js');
 		$tinymce_editor_theme = $webTheme ? $webTheme : $tinymce_editor_theme;
 		$theme = !empty($tinymce_editor_theme) ? "theme : \"$tinymce_editor_theme\"," : "theme : \"simple\",";
 		$cssPath = !empty($editor_css_path) ? "content_css : \"$editor_css_path\"," : "";
@@ -245,7 +270,7 @@ if (!function_exists('getTinyMCEScript')) {
 		}
 
 		$fullScript = <<<FULL_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce_gzip.php"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/{$scriptfile}"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
 		  theme : "advanced",
@@ -297,7 +322,7 @@ if (!function_exists('getTinyMCEScript')) {
 FULL_SCRIPT;
 
 		$stdScript = <<<STD_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce_gzip.php"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/{$scriptfile}"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
 		  $theme

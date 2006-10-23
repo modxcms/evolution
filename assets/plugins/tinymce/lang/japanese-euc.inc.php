@@ -11,11 +11,13 @@
 
 include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
 
-$_lang['tinymce_editor_theme_title'] = "¥Æ¡¼¥Þ:";
-$_lang['tinymce_editor_theme_message'] = "¥Æ¡¼¥Þ¤òÁªÂò¤·¡¢¥Ä¡¼¥ë¥Ð¡¼¥¢¥¤¥³¥ó¤Î¥»¥Ã¥È¤ª¤è¤Ó¥¨¥Ç¥£¥¿¤Î¥Ç¥¶¥¤¥ó¤òÊÑ¹¹¤Ç¤­¤Þ¤¹¡£";
-$_lang['tinymce_editor_css_selectors_title'] = "CSS¥¹¥¿¥¤¥ë¥»¥ì¥¯¥¿:";
-$_lang['tinymce_editor_css_selectors_message'] = "class=xxxxx¤È¤¤¤¦·Á¤ÇÇ¤°Õ¤Î¥¿¥°¤Ë³ä¤êÅö¤Æ¤ë¡ÖCSS¥»¥ì¥¯¥¿¡×¤ò¤³¤³¤ÇÀßÄê¤Ç¤­¤Þ¤¹¡£<br />½ñ¼°¡§'ÅùÉý¥Õ¥©¥ó¥È=mono;¾®¤µ¤¤Ê¸»ú=smallText'<br />¾åµ­¤Î¤è¤¦¤Ë¡¢Ê£¿ô¤Î¥¹¥¿¥¤¥ë¤ò¥»¥ß¥³¥í¥ó¤Ç¶èÀÚ¤Ã¤Æ»ØÄê¤·¤Þ¤¹¡£ºÇ¸å¤Î¹àÌÜ¤Î¸å¤í¤Ë¤Ï¥»¥ß¥³¥í¥ó¤òÉÕ¤±¤Ê¤¤¤Ç¤¯¤À¤µ¤¤¡£";
-$_lang['tinymce_editor_relative_urls_title'] = "¥Ñ¥¹¤ÎÀßÄê:";
-$_lang['tinymce_editor_relative_urls_message'] = "TinyMCE¤¬²èÁü¤Î¥ê¥ó¥¯¤Ê¤É¤ËÍÑ¤¤¤ëÆâÉô¥Ñ¥¹¤Î·Á¼°¤ò»ØÄê¤·¤Þ¤¹¡£Ãí°Õ: ¡Ö¥É¥­¥å¥á¥ó¥È°ÌÃÖ¤«¤é¤ÎÁêÂÐ»ØÄê¡×¤Ï¡¢¼ÂºÝ¤ÏMODx¥¤¥ó¥¹¥È¡¼¥ë¥Ç¥£¥ì¥¯¥È¥ê¤Îindex.php¤«¤é¤ÎÁêÂÐ»ØÄê¤Ç¤¹¡£¥Õ¥ì¥ó¥É¥ê¡¼URL¤ÇÉ½¸½¤µ¤ì¤ë¥Ñ¥¹¤È¤ÏÏ¢Æ°¤·¤Þ¤»¤ó¡£";
-$_lang['tinymce_settings'] = "TinyMCE¤ÎÀßÄê";
+$_lang['tinymce_editor_theme_title'] = "ï¿½Æ¡ï¿½ï¿½ï¿½:";
+$_lang['tinymce_editor_theme_message'] = "ï¿½Æ¡ï¿½ï¿½Þ¤ï¿½jï¿½ò¤·¡ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¥ï¿½ï¿½Ã¥È¤ï¿½ï¿½ï¿½Ó¥ï¿½ï¿½Ç¥ï¿½ï¿½ï¿½ï¿½Î¥Ç¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½Ç¤ï¿½ï¿½Þ¤ï¿½ï¿½ï¿½";
+$_lang['tinymce_editor_css_selectors_title'] = "CSSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¥»ï¿½ì¥¯ï¿½ï¿½:";
+$_lang['tinymce_editor_css_selectors_message'] = "class=xxxxxï¿½È¤ï¿½ï¿½ï¿½ï¿½dï¿½Ç¤ï¿½Õ¤Î¥ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ï¿½Æ¤ï¿½ï¿½CSSï¿½ï¿½ï¿½ì¥¯ï¿½ï¿½ï¿½×¤ò¤³¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¤ï¿½ï¿½Þ¤ï¿½ï¿½ï¿½<br />ï¿½ñ¼°¡ï¿½'ï¿½ï¿½ï¿½ï¿½Õ¥ï¿½ï¿½ï¿½ï¿½=mono;ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¸ï¿½ï¿½=smallText'<br />ï¿½åµ­ï¿½Î¤è¤¦ï¿½Ë¡ï¿½Ê£ï¿½ï¿½Î¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò¥»¥ß¥ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½ï¿½Ú¤Ã¤Æ»ï¿½ï¿½ê¤·ï¿½Þ¤ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½Î¹ï¿½ï¿½Ü¤Î¸ï¿½ï¿½Ë¤Ï¥ï¿½ï¿½ß¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¤ï¿½ï¿½Ê¤ï¿½ï¿½Ç¤ï¿½ï¿½$ï¿½ï¿½ï¿½ï¿½ï¿½";
+$_lang['tinymce_editor_relative_urls_title'] = "ï¿½Ñ¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:";
+$_lang['tinymce_editor_relative_urls_message'] = "TinyMCEï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¥ï¿½ó¥¯¤Ê¤É¤ï¿½ï¿½Ñ¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¥ï¿½ï¿½Î·|ï¿½ï¿½ï¿½ï¿½ï¿½ê¤·ï¿½Þ¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½Ö¥É¥ï¿½ï¿½ï¿½ï¿½ï¿½È°ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½×¤Ï¡ï¿½ï¿½ÂºÝ¤ï¿½MODxï¿½ï¿½ï¿½ó¥¹¥È¡ï¿½ï¿½ï¿½Ç¥ï¿½ï¿½ì¥¯ï¿½È¥ï¿½ï¿½index.phpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½Ç¤ï¿½ï¿½ï¿½ï¿½Õ¥ï¿½ï¿½É¥ê¡¼URLï¿½ï¿½É½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¥ï¿½ï¿½È¤ï¿½Ï¢Æ°ï¿½ï¿½ï¿½Þ¤ï¿½ï¿½ï¿½";
+$_lang["tinymce_compressor_title"] = "Compressor:";
+$_lang["tinymce_compressor_message"] = "This setting enables/disables the TinyMCE GZip Compressor to reduce overall download size which makes TinyMCE 75% smaller and a lot faster to load.  If your server does not support serverside GZip then keep this setting set at disabled.";
+$_lang['tinymce_settings'] = "TinyMCEï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
 ?>
