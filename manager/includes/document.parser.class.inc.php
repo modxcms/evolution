@@ -635,7 +635,7 @@ class DocumentParser {
     function mergeSettingsContent($template) {
         $replace= array ();
         $matches= array ();
-        if (preg_match_all('~\[\((.*?)\)\]~', $template, $matches)) {
+        if (preg_match_all('~\[\(([a-z\_]*?)\)\]~', $template, $matches)) {
             $settingsCount= count($matches[1]);
             for ($i= 0; $i < $settingsCount; $i++) {
                 if (array_key_exists($matches[1][$i], $this->config))
@@ -1063,7 +1063,7 @@ class DocumentParser {
 
         // invoke OnLogPageView event
         if ($this->config['track_visitors'] == 1) {
-            $this->invokeEvent("OnLogPageView");
+            $this->invokeEvent("OnLogPageHit");
         }
         
         $this->prepareResponse();
