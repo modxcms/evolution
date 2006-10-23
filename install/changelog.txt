@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1768 - October 22, 2006)
+MOD 0.9.5 beta 5 (rev 1776 - October 23, 2006)
 ====================================
+* Updated Demo Content Categories (1776)
+* Removed PoweredBy from installer. (1775)
+* Added new configuration option to enable/disable the TinyMCE GZip Compressor script. (1772)
 * Fix top navigation menu in Opera. Tested in Opera/mac, Opera/win, FF/mac, FF/win, Netscape/win, Safari and IE6. (1764,1765,1766,1767)
 * Fixed typo that prevented OnLogHit event from being triggered. (1763)
 * Fixed regexp in mergeSettingsContent that was hungry for some javascript expressions. (1762)

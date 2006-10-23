@@ -291,16 +291,16 @@ REPLACE INTO `{PREFIX}categories` VALUES ('1','MODx default templates');
 REPLACE INTO `{PREFIX}categories` VALUES ('2','User Management');
 
 
-REPLACE INTO `{PREFIX}categories` VALUES ('3','News, Blogs and Catalogues');
+REPLACE INTO `{PREFIX}categories` VALUES ('3','News, Blogs and Catalogs');
 
 
 REPLACE INTO `{PREFIX}categories` VALUES ('4','Navigation');
 
 
-REPLACE INTO `{PREFIX}categories` VALUES ('5','Forms and mail');
+REPLACE INTO `{PREFIX}categories` VALUES ('5','Forms and Mail');
 
 
-REPLACE INTO `{PREFIX}categories` VALUES ('6','Backend Manager');
+REPLACE INTO `{PREFIX}categories` VALUES ('6','Core and Manager');
 
 
 REPLACE INTO `{PREFIX}categories` VALUES ('7','Frontend');

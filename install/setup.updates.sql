@@ -31,10 +31,7 @@ UPDATE `{PREFIX}site_snippets` SET `category` = '10' WHERE `name` IN ('AjaxSearc
 UPDATE `{PREFIX}site_plugins` SET `category` = '10' WHERE `name` IN ('Search Highlighting');
 
 
-UPDATE `{PREFIX}site_plugins` SET `category` = '6' WHERE `name` IN ('Bottom Button Bar', 'Forgot Manager Login', 'Inherit Parent Template', 'TinyMCE');
-
-
-UPDATE `{PREFIX}site_plugins` SET `category` = '7' WHERE `name` IN ('QuickEdit');
+UPDATE `{PREFIX}site_plugins` SET `category` = '6' WHERE `name` IN ('Bottom Button Bar', 'Forgot Manager Login', 'Inherit Parent Template', 'TinyMCE', 'QuickEdit');
 
 
 UPDATE `{PREFIX}site_plugins` SET `category` = '9' WHERE `name` IN ('DisableCache', 'TemplateSwitcher');
