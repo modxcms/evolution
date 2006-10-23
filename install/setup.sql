@@ -815,7 +815,7 @@ REPLACE INTO `{PREFIX}system_settings`
 ('fck_editor_autolang','0'),
 ('editor_css_path',''),
 ('editor_css_selectors',''),
-('strip_image_paths','0'),
+('strip_image_paths','1'),
 ('upload_images','jpg,jpeg,png,gif,psd,ico,bmp'),
 ('upload_media','mp3,wav,au,wmv,avi,mpg,mpeg'),
 ('upload_flash','swf,fla'),
