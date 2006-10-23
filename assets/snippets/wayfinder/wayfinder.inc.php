@@ -3,7 +3,7 @@
 /*
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: beta
+ Version: 1.0
  Authors: Ryan Thrash (vertexworks.com)
           Kyle Jaebker (muddydogpaws.com)
 */
@@ -19,17 +19,55 @@ class Wayfinder {
     var $titleOfLinks = 'pagetitle';
     var $templates = array();
     var $parentTree = array();
-    var $wfDocs = array();
     var $css = array();
     var $cssTpl = FALSE;
     var $jsTpl = FALSE;
     var $rowIdPrefix = FALSE;
     var $useWeblinkUrl = TRUE;
+	var $sortOrder = 'ASC';
+	var $sortBy = 'menuindex';
     var $modxVersion = array();
-    var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]','[+wf.docid+]');
+	var $showSubDocCount = FALSE;
+	var $docCount = array();
+    var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]','[+wf.docid+]','[+wf.introtext+]','[+wf.description+]','[+wf.subitemcount+]');
     var $ie = "\n";
     var $debugOutput = '<h2>WayFinder Debug Output:</h2>';
     
+	//Run all of the wayfinder methods
+	function run() {
+		global $modx;
+		//setup here checking array
+		$this->parentTree = $modx->getParentIds($modx->documentIdentifier);
+		$this->parentTree[] = $modx->documentIdentifier;
+		//Get version info
+		$this->modxVersion = $modx->getVersionData();
+
+		if ($this->debug) {
+		    $this->debugOutput .= '<p>Starting Menu from Docid: ' . $this->id . '<br/>';
+		    $this->debugOutput .= 'Docids for \'Here\' class checking: ' . implode(', ',$this->parentTree) . '</p>';
+		    $this->debugOutput .= '<h3>Chunk Checks</h3>';
+		}
+
+		$this->checkChunks();
+
+		if ($this->cssTpl || $this->jsTpl) {
+		    $this->regJsCss();
+		}
+
+		if ($this->debug) {
+		    $this->debugOutput .= '<h3>Document Processing</h3>';
+		}
+
+		$output = $this->buildMenu($this->id);
+
+		if ($this->debug) {
+		    $output = $output . $this->debugOutput;
+		}
+
+		return $output;
+	}
+	
+	//Get the menu items from the DB
     function getMenuChildren($id=0, $sort='menuindex', $dir='ASC') {
         global $modx;
         $fields = 'sc.id,sc.menutitle,sc.pagetitle,sc.introtext,sc.menuindex,sc.published,sc.hidemenu,sc.parent,sc.isfolder,sc.description,sc.alias,sc.longtitle,sc.type,if(sc.type=\'reference\',sc.content,\'\') as content, sc.template';
@@ -57,6 +95,7 @@ class Wayfinder {
         $sql = 'SELECT DISTINCT '.$fields.' FROM '.$tblsc.' sc LEFT JOIN '.$tbldg.
             ' dg on dg.document = sc.id WHERE sc.parent = '.$id.
             ' AND sc.published=1 AND sc.deleted=0 AND ('.$access.')'.$menuWhere.
+			' GROUP BY sc.id'.
             ' ORDER BY '.$sort.' '.$dir.';';
         $result = $modx->dbQuery($sql);
         $resourceArray = array();
@@ -71,12 +110,13 @@ class Wayfinder {
         global $modx;
         $output = '';
 
-        $resource = $this->getMenuChildren($parentId,'menuindex','ASC');
+        $resource = $this->getMenuChildren($parentId,$this->sortBy,$this->sortOrder);
 
         $firstItem = 1;
 
         if (is_array($resource) && !empty($resource)) {
             $numItems = count($resource);
+			$this->docCount[$parentId] = $numItems;
             foreach ($resource as $n => $v) {
                 if ($this->useWeblinkUrl !== 'FALSE' && $v['type'] == 'reference') {
                     $v['link'] = $v['content'];
@@ -96,13 +136,18 @@ class Wayfinder {
                 $v['linktext'] = $v[$useTextField];
                 $v['title'] = $v[$this->titleOfLinks];
 
-                if ($v['isfolder'] && ($curLevel < $this->level || $this->level == 0) && (!$this->hideSubMenus || in_array($v['id'],$this->parentTree))) {
+                if ($v['isfolder'] && ($curLevel < $this->level || $this->level == 0) && (!$this->hideSubMenus || $this->isHere($v['id']))) {
                     $oldLevel = $curLevel;
                     $subMenu = $this->ie . $this->buildMenu($v['id'],++$curLevel) . $this->ie;
                     $curLevel = $oldLevel;
                 } else {
                     $subMenu = '';
                 }
+				if ($this->showSubDocCount && $v['isfolder']) {
+						$resource = $this->getMenuChildren($v['id'],$this->sortBy,$this->sortOrder);
+						$this->docCount[$v['id']] = count($resource);
+				}
+				
                 $output .= $this->renderRow($v,$subMenu);
             }
 
@@ -127,8 +172,7 @@ class Wayfinder {
             $output = str_replace($this->placeHolders,$phArray,$useChunk);
 
             if ($this->debug) {
-                $numDocs = $numItems;
-                $this->debugOutput .= '<strong>Nesting Complete:</strong> Previous ' . $numDocs . ' level ' . $curLevel . ' items inserted into ' . $usedTemplate . ' with class ' . $classNames . '<br/>';
+                $this->debugOutput .= '<strong>Nesting Complete:</strong> Previous ' . $this->docCount[$parentId] . ' level ' . $curLevel . ' items inserted into ' . $usedTemplate . ' with class ' . $classNames . '<br/>';
             }
         }
 
@@ -170,7 +214,7 @@ class Wayfinder {
             $useId = '';
         }
 
-        $phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['link_attributes'],$resource['id']);
+        $phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$this->docCount[$resource['id']]);
 
         $output .= str_replace($this->placeHolders,$phArray,$useChunk);
 

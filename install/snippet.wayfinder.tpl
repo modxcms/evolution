@@ -2,10 +2,10 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: beta3
+ Version: 1.0
  Authors: Ryan Thrash (vertexworks.com)
           Kyle Jaebker (muddydogpaws.com)
- Date: September 12, 2006
+ Date: October 23, 2006
 ::::::::::::::::::::::::::::::::::::::::
 Description:
     Totally refactored from original DropMenu nav builder to make it easier to
@@ -35,7 +35,11 @@ $wf->debug = isset($debug)? TRUE: FALSE;
 $wf->ignoreHidden = isset($ignoreHidden)? $ignoreHidden: FALSE;
 $wf->hideSubMenus = isset($hideSubMenus)? $hideSubMenus: FALSE;
 $wf->useWeblinkUrl = isset($useWeblinkUrl)? $useWeblinkUrl: TRUE;
+$wf->showSubDocCount = isset($showSubDocCount)? $showSubDocCount: FALSE;
 isset($removeNewLines)? $wf->ie = '': $wf->ie = "\n";
+//Set ordering options
+$wf->sortOrder = isset($sortOrder)? strtoupper($sortOrder): 'ASC';
+$wf->sortBy = isset($sortBy)? $sortBy: 'menuindex';
 //Include javascript & css chunks
 $wf->cssTpl = isset($cssTpl)? $cssTpl : FALSE;
 $wf->jsTpl = isset($jsTpl)? $jsTpl : FALSE;
@@ -66,36 +70,13 @@ $wf->templates['innerRowTpl'] = isset($innerRowTpl) ? $innerRowTpl : '';
 $wf->templates['innerHereTpl'] = isset($innerHereTpl) ? $innerHereTpl : '';
 $wf->templates['activeParentRowTpl'] = isset($activeParentRowTpl) ? $activeParentRowTpl : '';
 $wf->templates['categoryFoldersTpl'] = isset($categoryFoldersTpl) ? $categoryFoldersTpl : '';
-//setup here checking array
-$wf->parentTree = $modx->getParentIds($modx->documentIdentifier);
-$wf->parentTree[] = $modx->documentIdentifier;
-//Get version info
-$wf->modxVersion = $modx->getVersionData();
 
-if ($wf->debug) {
-    $wf->debugOutput .= '<p>Starting Menu from Docid: ' . $wf->id . '<br/>';
-    $wf->debugOutput .= 'Docids for \'Here\' class checking: ' . implode(', ',$wf->parentTree) . '</p>';
-    $wf->debugOutput .= '<h3>Chunk Checks</h3>';
-}
+//Process Wayfinder
+$output = $wf->run();
 
-$wf->checkChunks();
-
-if ($wf->cssTpl || $wf->jsTpl) {
-    $wf->regJsCss();
-}
-
-if ($wf->debug) {
-    $wf->debugOutput .= '<h3>Document Processing</h3>';
-}
-
-$output = $wf->buildMenu($wf->id);
-
-if ($wf->debug) {
-    $output = $output . $wf->debugOutput;
-}
-
-if ($ph) {
-    $modx->setPlaceholder($ph,$output);
+//Ouput Results
+if ($wf->ph) {
+    $modx->setPlaceholder($wf->ph,$output);
 } else {
     return $output;
 }

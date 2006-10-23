@@ -26,8 +26,8 @@
 	$ms[] = array("MemberCheck","<strong>1.0</strong> Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
 	$ms[] = array("NewsPublisher","<strong>1.4</strong> Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
 	$ms[] = array("Personalize","<strong>2.0</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
-	$ms[] = array("Wayfinder","<strong>beta3</strong> Completely template-driven menu builder that's simple and fast to configure.",0,"$setupPath/snippet.wayfinder.tpl","");
 	$ms[] = array("UltimateParent","<strong>1.2</strong> - Gets the highest parent that isn't 0.",0,"$setupPath/snippet.ultparent.tpl","");
+	$ms[] = array("Wayfinder","<strong>1.0</strong> Completely template-driven menu builder that's simple and fast to configure.",0,"$setupPath/snippet.wayfinder.tpl","");
 	$ms[] = array("WebChangePwd","<strong>1.0</strong> Web User Change Password Snippet.",0,"$setupPath/snippet.webchangepwd.tpl","&tpl=Template;string;");
 	$ms[] = array("WebLogin","<strong>1.0</strong> Web User Login Snippet.",0,"$setupPath/snippet.weblogin.tpl","&loginhomeid=Login Home Id;string; &logouthomeid=Logout Home Id;string; &logintext=Login Button Text;string; &logouttext=Logout Button Text;string; &tpl=Template;string;");
 	$ms[] = array("WebSignup","<strong>1.1</strong> Web User Signup Snippet.",0,"$setupPath/snippet.websignup.tpl","&tpl=Template;string;");

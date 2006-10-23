@@ -2,7 +2,7 @@
 
 <html>
 <head>
-	<title>Untitled</title>
+	<title>Wayfinder 1.0</title>
 </head>
 
 <body>
@@ -26,7 +26,7 @@ table thead tr {
 	font-size: 110%;
 }
 </style>
-<h1>Wayfinder (beta)</h1>
+<h1>Wayfinder 1.0</h1>
 <p>Totally refactored from original DropMenu nav builder to make it easier to create custom navigation by using chunks as output templates. By using templates, many of the paramaters are no longer needed for flexible output including tables, unordered- or ordered-lists (ULs or OLs), definition lists (DLs) or in any other format you desire.</p>
 <h2>Install Instructions:</h2>
 <ol>
@@ -99,6 +99,21 @@ table thead tr {
 			<td>if set to TRUE the link specified in the weblink will be output to the placeholder [<!-- -->+wf.link+<!-- -->]</td>
 			<td>TRUE</td>
 		</tr>
+		<tr class="altrow">
+			<td>&amp;showSubDocCount</td>
+			<td>if set to TRUE the number of documents in each folder will be output to the placeholder [<!-- -->+wf.subitemcount+<!-- -->]</td>
+			<td>FALSE</td>
+		</tr>
+		<tr>
+			<td>&amp;sortOrder</td>
+			<td>Allows the menu to be sorted in either ascending or descending order.</td>
+			<td>ASC</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;sortBy</td>
+			<td>Specify any of the following fields to sort the menu: id, menutitle, pagetitle, introtext, menuindex, published, hidemenu, parent, isfolder, description, alias, longtitle, type, template</td>
+			<td>menuindex</td>
+		</tr>
 		<tr class="subhead">
 			<td colspan="3">
 				Template Chunks for Menu Layout
@@ -130,6 +145,9 @@ table thead tr {
 				[<!-- -->+wf.id+<!-- -->] - where to insert unique id<br/>
 				[<!-- -->+wf.attributes+<!-- -->] - where to insert link attributes<br/>
 				[<!-- -->+wf.docid+<!-- -->] - the document identifier for the current item<br/>
+				[<!-- -->+wf.subitemcount+<!-- -->] - displays the number of items in a folder<br/>
+				[<!-- -->+wf.description+<!-- -->] - output the description field<br/>
+				[<!-- -->+wf.introtext+<!-- -->] - output the introtext field<br/>
 				example: &lt;li[<!-- -->+wf.id+<!-- -->][<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot; [<!-- -->+wf.attributes+<!-- -->]&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
 			</td>
 			<td>&#171 See Example</td>
@@ -301,6 +319,18 @@ table thead tr {
 		</tr>
 	</thead>
 	<tbody>
+		<tr class="altrow">
+			<td>1396</td>
+            <td>kjaebker</td>
+            <td>3:45:10 PM, Monday, October 23, 2006</td>
+            <td>
+			- Updated database query so sorting works correctly for MySql 4.1.12 users<br/>
+			- Added parameters for determining sortBy and sortOrder<br/>
+			- Added placeholders for introtext and description<br/>
+			- Added ability to show count of docs in a folder with new placeholder<br/>
+			- Removed some code from snippet into class for easier maintenance
+			</td>
+		</tr>
 		<tr>
 			<td>1396</td>
             <td>kjaebker</td>
