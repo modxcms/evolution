@@ -144,6 +144,7 @@ if (!function_exists('getTinyMCESettings')) {
 		$fullpathurl = $tinymce_editor_relative_urls=='fullpathurl' ? "selected='selected'" : "" ;
 		$display = $use_editor==1 ? $displayStyle : 'none';		
 		$cssSelectors = isset($tinymce_css_selectors) ? htmlspecialchars($tinymce_css_selectors) : "";
+		$_lang["enabled"] = !empty($_lang["enabled"])? $_lang["enabled"]:"Enabled";
 		
 		return <<<TinyMCE_HTML_Settings
 		<table id='editorRow_TinyMCE' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 
