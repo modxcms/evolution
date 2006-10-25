@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1785 - October 23, 2006)
+MOD 0.9.5 beta 5 (rev 1803 - October 24, 2006)
 ====================================
+* Update installer layout (1803)
 * Update Wayfinder to 1.0 (1785)
 * Fix numerous XHTML warnings for site configuration page and language tweaks (1783)
 * Updated File Browser resources to relative paths by default (1780)

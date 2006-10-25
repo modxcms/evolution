@@ -538,7 +538,7 @@
     	var cursrc = 1;
 		var syscheck = <?php echo $syscheck ? "true":"false"; ?>;
 		var installMode = <?php echo $installMode; ?>; // -1 - not set, 0 - new, 1 - upgrade
-		var sidebar = "<a href=\"<?php echo $moduleWhatsNewFile; ?>\" target=\"_blank\"><?php echo $moduleWhatsNewTitle; ?></a>&nbsp;<br /><img src=\"img_install.gif\" width=\"48\" height=\"48\" />";
+		var sidebar = "<div style=\"width:48px\"></div>";
 
 		// set I Agree
 		function setIAgree(){
@@ -748,12 +748,12 @@
 
 <body>
 <!-- start install screen-->
-<table border="0" cellpadding="0" cellspacing="0" class="mainTable" style="width:100%;">
+<table border="0" cellpadding="0" cellspacing="0" class="mainTable" style="width:700px">
 <tr>
     <td height="82" colspan="2" valign="top" background="bgheader.jpg"><img src="img_banner.gif" width="327" height="82" border="0" style="padding:0px"></td>
   </tr>
   <tr class="fancyRow2">
-    <td colspan="2" class="border-top-bottom smallText" align="right"><?php echo $moduleName; ?> </b>&nbsp;<i>version <?php echo $moduleVersion; ?></i></td>
+    <td colspan="2" class="border-top-bottom smallText" style="text-align:right; padding-right: 15px"><?php echo $moduleName; ?> </b>&nbsp;<i>version <?php echo $moduleVersion; ?></i></td>
   </tr>
   <tr align="left" valign="top">
     <td colspan="2"><table width="100%"  border="0" cellspacing="0" cellpadding="1">
@@ -761,8 +761,8 @@
         <td class="pad" id="content" colspan="2">
 			<table border="0" width="100%">
 			<tr>
-			<td valign="top" nowrap="nowrap"><div id="sidebar" class="sidebar"><script type="text/javascript">document.write(sidebar);</script></div></td>
-			<td style="border-left:1px dotted silver;padding-left:30px;padding-right:20px;">
+			<td valign="top" nowrap="nowrap">&nbsp;</td>
+			<td style="padding-left:20px;padding-right:20px;">
 			<form name="install" action="index.php?s=set" method="post">
 			<div id="viewer" class="viewer" style="visibility:hidden">
 				<div id="screen1" style="display:block"><?php echo buildWelcomeScreen(); ?></div>
@@ -813,7 +813,9 @@
     </table></td>
   </tr>
   <tr class="fancyRow2">
-    <td class="border-top-bottom smallText" colspan="2"><div align="center"><a href="http://www.modxcms.com" target="_blank"><img src="logo.png" alt="logo" width="118" height="90" border="0"></a> </div></td>
+    <td class="border-top-bottom smallText" colspan="2">
+        <p style="padding: 5px 10px;">&copy; 2005-2006 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. All rights reserved. MODx is licensed under the GNU GPL. Please install and use this software pretty much however you'd like. Except for demanding help vampires. Especially ones with "wonderful ideas" and "authoritative suggestions" based on their hours (or even days or weeks!) of real-world web development experience. (In this case, please exhaust all other options before coming to MODx.) Unless you donate lots of money &ndash; at which point all bets are off.</p>
+    </td>
   </tr>
 </table>
 <br />
