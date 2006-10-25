@@ -302,7 +302,7 @@ if (!function_exists('getTinyMCEScript')) {
 		  $cssSelector
 		  entity_encoding : "{$tinymce_entity_encoding}",
 		  $tinymce_entities
-		  apply_source_formatting : true,
+		  apply_source_formatting : false,
 		  remove_linebreaks : false,
 		  button_tile_map : false,
 		  onchange_callback : "tvOnTinyMCEChangeCallBack",
@@ -336,7 +336,7 @@ FULL_SCRIPT;
 		  $cssSelector
 		  entity_encoding : "{$tinymce_entity_encoding}",
 		  $tinymce_entities
-		  apply_source_formatting : true,
+		  apply_source_formatting : false,
 		  remove_linebreaks : false,
 		  button_tile_map : false,
 		  relative_urls : {$relative_urls},
