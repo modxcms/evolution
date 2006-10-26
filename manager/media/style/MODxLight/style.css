@@ -6,15 +6,15 @@ html, body, form, fieldset {
         margin: 0;
         padding: 0;
 }
-html { 
+html {
     font-size: 100.01%; /* avoids obscure font-size bug */
     line-height: 1.5; /* http://meyerweb.com/eric/thoughts/2006/02/08/unitless-line-heights/ */
     font-family: "Lucida Grande", Helvetica, Arial, sans-serif !important; /* IE ignores this and renders Arial better */
     font-family: Arial, Tahoma, Helvetica, sans-serif;
     height: 100%;
     color: #111;
-} 
-body { 
+}
+body {
     font-size: 62.5%; /* 10px */
     font-size: 75%; /* 12px */
     font-size: 68.75%; /* 11px */
@@ -39,10 +39,10 @@ li, dd, blockquote {
     margin-left: 1em; /* Left margin only where needed */
 }
 
-/* Miscellaneous conveniences: 
+/* Miscellaneous conveniences:
 ---------------------------------------------------------------- */
 /* use with a <br class="cls" /> to clear floats without extra space */
-.clearfix, .cls { 
+.clearfix, .cls {
     clear: both;
     height: 0 !important;
     margin: 0;
@@ -122,12 +122,15 @@ hr {
 	padding: 0;
 }
 
+#previewIframe {
+    width:100%;
+    height:400px;
+}
 
 .stay {
 	border-bottom: 1px solid #32CD32;
-	margin-left: 0; 
+	margin-left: 0;
 }
-
 
 .messageRead {
 	color: #000;
@@ -143,7 +146,7 @@ hr {
 	height: 44px !important;
 	padding: 0;
 	margin: 0 10px 10px 0;
-	
+
 }
 
 .right {
@@ -183,14 +186,14 @@ hr {
 
 #tocText,
 #buildText,
-#workText { 
-    font-weight: bold; 
+#workText {
+    font-weight: bold;
     line-height: 16px;
     margin-right: 15px;
 }
 #tocText,
 #buildText img,
-#workText img { 
+#workText img {
     margin-right: 5px;
 }
 
@@ -290,7 +293,7 @@ input.button, input.submit {
     height: auto;
     background: transparent;
     vertical-align: middle;
-    
+
 }
 .form fieldset.list {
     border: 0;
@@ -301,7 +304,7 @@ input.button, input.submit {
 .form fieldset.list legend {
     display: none;
 }
-.form fieldset.list label, 
+.form fieldset.list label,
 .form fieldset.list input {
     padding: 0;
     margin: 0 0 3px;
@@ -350,9 +353,11 @@ input.button, input.submit {
 	display: none;
 	background: #fff;
 	border: 1px solid #e3e3e3;
+	border-top-color: #ccc;
 	margin: 0 10px 20px;
 	padding: 10px;
 	display: block;
+	background: #fff url(images/misc/tabareabg.gif) repeat-x top;
 }
 
 .showHideVisible, .layerVisible {
@@ -439,7 +444,7 @@ a img {
 
 .sort-arrow.descending {
 	background-image: url(images/misc/downsimple.png);
-	
+
 }
 
 .sort-arrow.ascending {
@@ -480,7 +485,7 @@ a img {
     background-color: #f4f4f4;
 }
 #treeMenu {
-    background-color: #;
+    background: url(images/misc/treebuttonbg.gif);
     border-bottom: 1px solid #ddd;
 }
 #treeMenu * {
@@ -497,7 +502,7 @@ a img {
 #floater {
     display: none;
     position: absolute;
-    width: 200px; 
+    width: 200px;
     height: 50px;
     top: 25px;
     left: 4px;
@@ -554,7 +559,7 @@ a img {
 #treeSplitter {
 	width:10px;
 	height:100%;
-	position:absolute; 
+	position:absolute;
 	right:0px;
 }
 
@@ -566,7 +571,7 @@ a img {
     border: 1px solid silver;}
 
 .gridHeader {
-    color: #fff; 
+    color: #fff;
     font-weight: bold;
     background-color: #8FC70C;
     height: 25px;
@@ -584,7 +589,7 @@ a img {
     background-color:beige;}
 
 
-	
+
 /* search bar */
 .searchbar {
     width: 100%;
@@ -622,8 +627,8 @@ a img {
 /* home page main links */
 a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hometblink {
     text-decoration: underline;
-    color: #000; 
-    font-weight: bold; 
+    color: #000;
+    font-weight: bold;
 }
 
 a.hometblink:hover {
@@ -631,12 +636,12 @@ a.hometblink:hover {
     color: Gray;}
 
 
-/* accesscontrol.inc.php - manager login page 
+/* accesscontrol.inc.php - manager login page
 -----------------------------------------------------*/
 body#login {
     background: #f4f4f4;
     background-image: none;
-}	
+}
 
 #mx_loginbox,
 .loginLicense {
@@ -673,7 +678,7 @@ h1.siteName {
 img.loginCaptcha {
     border: 1px solid #039;
     width: 148px;
-    height: 60px; 
+    height: 60px;
 }
 
 #mx_loginbox label {
@@ -795,6 +800,7 @@ ul#nav {
     height: 25px;
     width: 100%;
     position: absolute;
+    top: 18px;
     overflow: visible !important
 }
 
@@ -807,16 +813,16 @@ ul#nav {
     padding: 0 0 0 10px;
 }
 
-#nav li { 
+#nav li {
     list-style-type: none;
-	background: #d4d4d4 url(images/misc/greentab.gif) 100% 100%;
+    background: #d4d4d4 url(images/misc/greentab.gif) 100% 100%;
     display: block;
     float: left;
     width: auto;
     margin: 0 3px 0 0;
     padding: 0;
-  }
-  
+    }
+
 #nav li a {
     color: #438d29;
     height: 25px;
@@ -827,9 +833,11 @@ ul#nav {
     line-height: 25px;
     overflow: hidden;
     padding: 0 15px;
-    border-left: 1px solid #c1e079;
+    float: left;
+    display: block;
+    border-left: 1px solid #acda43; /*c1e079*/
 }
-		
+
 #nav li ul li a {
     background: #d4d4d4;
     float: left;
@@ -847,12 +855,13 @@ ul#nav {
 #nav li.active  {
 	background: #438d29 url(images/misc/greentab.gif) 100% 0;
 }
-		
+
 #nav li.active a {
     color: #fff;
     position: relative;
-    z-index: 999;
+    z-index: 999999;
     border-left: 1px solid #8cc709;
+    border-bottom: 1px solid #8fc70c;
 }
 
 #nav li.active a:hover {
@@ -865,7 +874,9 @@ ul#nav {
     top: 25px;
     width: 200%;
     left: 0;
-    background: #8fc70c; /* 677e32 */
+    background: #8fc70c; /* aacb34 */
+    border-top: 1px solid #8ac00c;
+    border-bottom: 1px solid #8caa2b;
 }
 
 #nav li.active ul.subnav a {
@@ -874,7 +885,7 @@ ul#nav {
     border: none;
     background: #8fc70c;
     cursor: hand;
-    
+
 }
 
 #nav li.active ul.subnav li {
@@ -894,45 +905,11 @@ ul#nav {
 /* Contextual Menu used in the Tree Menu
 ---------------------------------------------------------- */
 #mx_contextmenu {
-	position: absolute;
-	height: auto;
-	visibility: hidden;
-	z-index:10000; 
-	width: 170px;
-    background: #fff;
-    margin: 0;
-    padding: 2px;
-    border: 1px solid #ededed;
-    border-right-color: #dcdcdc;
-    border-bottom-color: #dcdcdc;
-    overflow: hidden;
-    line-height: 11px; }$$
-
-
-/* Contextual Menu used in the Tree Menu
----------------------------------------------------------- */
-#mx_contextmenu {
-	position: absolute;
-	height: auto;
-	visibility: hidden;
-	z-index:10000; 
-	width: 170px;
-    background: #fff;
-    margin: 0;
-    padding: 2px;
-    border: 1px solid #ededed;
-    border-right-color: #dcdcdc;
-    border-bottom-color: #dcdcdc;
-    overflow: hidden;
-    line-height: 11px; }$$
-/* Contextual Menu used in the Tree Menu
----------------------------------------------------------- */
-#mx_contextmenu {
-	position: absolute;
-	height: auto;
-	visibility: hidden;
-	z-index:10000; 
-	width: 170px;
+    position: absolute;
+    height: auto;
+    visibility: hidden;
+    z-index:10000;
+    width: 170px;
     background: #fff;
     margin: 0;
     padding: 2px;
@@ -963,12 +940,12 @@ ul#nav {
     cursor: default;
     color: #787878; }
 
-#mx_contextmenu .menuLink img, 
-#mx_contextmenu .menuLinkOver img, 
+#mx_contextmenu .menuLink img,
+#mx_contextmenu .menuLinkOver img,
 #mx_contextmenu .menuLinkDisabled img {
 	margin-right: 8px; }
 
-#mx_contextmenu .menuLink img, 
+#mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLinkDisabled img {
     opacity: .3;
     filter: alpha(opacity=30);
@@ -980,12 +957,12 @@ ul#nav {
     color: #000;
     text-align: right;
     cursor: default;
-    font-weight: bold; 	
+    font-weight: bold;
     padding: 2px;
     margin-bottom: 2px;
     border: 1px solid #fdfdfd;
     border-right-color: #dcdcdc;
-    border-bottom-color: #dcdcdc;	
+    border-bottom-color: #dcdcdc;
     background: #9EBC5A;
 }
 
@@ -994,7 +971,7 @@ ul#nav {
     height: 1px;
     background-color: silver;
     overflow: hidden;
-    margin: 3px 1px 3px 28px; 
+    margin: 3px 1px 3px 28px;
 }
 
 /* Settings Table
@@ -1086,7 +1063,7 @@ ul#nav {
 /* Tree buttons
 ---------------------------------------------------------- */
 .treeButton {
-	display:block;
+    display:block;
     cursor: default;
     color: #000;
     border: 1px;
@@ -1107,6 +1084,8 @@ ul#nav {
     padding: 2px 4px;
     color: #777;
     border-width: 0;
+    opacity: .5;
+    filter: alpha(opacity=50);
 }
 
 
@@ -1160,3 +1139,23 @@ ul#nav {
     opacity: .3;
     filter: alpha(opacity=30);
 }
+
+/* Welcome Page
+---------------------------------------------------------- */
+a.hometblink, a.hometblink img { 
+    border: 0 !important;
+    text-decoration: none !important;
+    }
+.wm_button {
+    float: left;
+    margin: 0 6px 2px 5px;
+    text-align: center;
+    }
+
+/* Welcome Page
+---------------------------------------------------------- */
+#mainActionPages {
+    background: #f4f4f4 url(images/misc/mainbg.gif) repeat-x top;
+}
+.tab-page { border: 1px solid #e4e4e4; }
+.sectionBody .tab-page { border-width: 1px 0 0;}

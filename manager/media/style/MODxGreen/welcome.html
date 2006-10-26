@@ -49,8 +49,8 @@
 
 		<!-- system check -->
 		<div class="tab-page" id="tabcheck" style="display:[+config_display+]; padding-left:0px; padding-right:0px;">
-			<h2 class="tab">[+settings_config+]</h2>
-			<script type="text/javascript">tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
+			<h2 class="tab" style="display:[+config_display+]">[+settings_config+]</h2>
+			<script type="text/javascript"> if('[+config_display+]'=='block') tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
 			<div class="sectionHeader">[+configcheck_title+]</div><div class="sectionBody">
 				<img src="media/style/[+theme+]/images/icons/event2.gif" />
 				[+config_check_results+]

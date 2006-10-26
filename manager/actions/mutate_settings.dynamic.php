@@ -801,6 +801,7 @@ function updateContentType(){
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["rb_title"]?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="use_browser" value="1" <?php echo ($use_browser=='1' || !isset($use_browser)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/rbRow/, 1);" />
@@ -812,11 +813,27 @@ function updateContentType(){
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["rb_message"]?></td>
           </tr>
-          <?php if(!isset($use_browser)) $use_browser=1; ?>
-          <tr id='allRow3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr id='rbRow1' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          
+          <?php if(!isset($use_browser)) $use_browser=1; ?>
+          
+          <tr id='rbRow1' class='row3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><b><?php echo $_lang["settings_strip_image_paths_title"]?></b></td>
+            <td><input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["yes"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="0" <?php echo ($strip_image_paths=='0' || !isset($strip_image_paths)) ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["no"]?> </td>
+          </tr>
+          <tr id='rbRow2' class='row3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["settings_strip_image_paths_message"]?></td>
+          </tr>
+          <tr id='rbRow3' class='row3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='rbRow4' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td>
             <td> <?php
 				function getResourceBaseDir() {
@@ -827,14 +844,14 @@ function updateContentType(){
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" value="<?php echo isset($rb_base_dir) ? $rb_base_dir : getResourceBaseDir() ; ?>" />
               </td>
           </tr>
-          <tr id='rbRow2' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='rbRow5' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["rb_base_dir_message"]?></td>
           </tr>
-          <tr id='rbRow3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='rbRow6' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr id='rbRow4' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='rbRow7' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_url_title"]?></b></td>
             <td> <?php
 				function getResourceBaseUrl() {
@@ -845,13 +862,14 @@ function updateContentType(){
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_url" value="<?php echo isset($rb_base_url) ? $rb_base_url : getResourceBaseUrl() ; ?>" />
               </td>
           </tr>
-          <tr id='rbRow5' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='rbRow8' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["rb_base_url_message"]?></td>
           </tr>
-          <tr id='rbRow6' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='rbRow9' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
+
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["use_editor_title"]?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="use_editor" value="1" <?php echo ($use_editor=='1' || !isset($use_editor)) ? 'checked="checked"' : "" ; ?> onclick="showHide(/editorRow/, 1); checkCustomIcons();" />
@@ -866,7 +884,10 @@ function updateContentType(){
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr id='editorRow0' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          
+          <?php if(!isset($use_editor)) $use_editor=1; ?>
+          
+          <tr id='editorRow0' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["which_editor_title"]?></b></td>
             <td>
 				<select name="which_editor" onchange="documentDirty=true;">
@@ -882,14 +903,14 @@ function updateContentType(){
 				</select>
 			</td>
           </tr>
-          <tr id='editorRow1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='editorRow1' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["which_editor_message"]?></td>
           </tr>
-          <tr id='editorRow3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='editorRow3' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr id='editorRow4' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='editorRow4' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["fe_editor_lang_title"]?></b></td>
             <td> <select name="fe_editor_lang" size="1" class="inputBox" onchange="documentDirty=true;">
                 <?php
@@ -909,23 +930,23 @@ function updateContentType(){
 ?>
               </select> </td>
           </tr>
-          <tr id='editorRow5' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='editorRow5' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["fe_editor_lang_message"]?></td>
           </tr>
-          <tr id='editorRow2' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='editorRow2' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr id='editorRow14' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='editorRow14' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["editor_css_path_title"]?></b></td>
             <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="editor_css_path" value="<?php echo isset($editor_css_path) ? $editor_css_path : "" ; ?>" />
 			</td>
           </tr>
-          <tr id='editorRow15' class='row1' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+          <tr id='editorRow15' class='row3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["editor_css_path_message"]?></td>
           </tr>
-		  <tr id='editorRow16' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+		  <tr id='editorRow16' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
 		  <tr class='row1'>
@@ -945,20 +966,6 @@ function updateContentType(){
         <h2 class="tab"><?php echo $_lang["settings_misc"] ?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage7" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
-		  <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["settings_strip_image_paths_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="0" <?php echo ($strip_image_paths=='0' || !isset($strip_image_paths)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["settings_strip_image_paths_message"]?></td>
-          </tr>
-		  <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["filemanager_path_title"]?></b></td>
             <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>" />
