@@ -100,6 +100,6 @@ if($_SESSION['browser']=='ie') {
 ?>
 <?php } ?>
 </head>
-<body ondragstart="return false" onbeforeunload="checkDirt();">
+<body ondragstart="return false" onbeforeunload="checkDirt();" id="mainActionPages">
 
 <div id="preLoader"><table width="100%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>
