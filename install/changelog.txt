@@ -3,9 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1810 - October 26, 2006)
+MOD 0.9.5 beta 5 (rev 1811 - October 26, 2006)
 ====================================
-* [FS#612] Missing word in english language define (1807)
+* [FS#610] Manager username length increased from 15 to 100 characters (1811)
+* [FS#612] Missing word in english language define (1810)
 * Fix captcha failure on manager login (bad image path) (1806)
 * [FS#597] Fix Preview area size (1805)
 * Update Configuration Page titles and order (1805)

@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}manager_users` (
   `id` int(10) NOT NULL auto_increment,
-  `username` varchar(15) NOT NULL default '',
+  `username` varchar(100) NOT NULL default '',
   `password` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
@@ -726,6 +726,9 @@ ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `link_attributes` varchar(255) NO
 ALTER TABLE `{PREFIX}site_plugin_events`  ADD COLUMN `priority` INT(10) NOT NULL COMMENT 'determines the run order of the plugin' AFTER `evtid`;
 
 ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD COLUMN `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
+
+
+ALTER TABLE `{PREFIX}manager_users` MODIFY COLUMN `username` varchar(100) NOT NULL;
 
 
 # ]]upgrade-able
