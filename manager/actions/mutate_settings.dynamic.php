@@ -124,7 +124,7 @@ function updateContentType(){
 	<table cellpadding="0" cellspacing="0">
 		<tr>
 			<td id="Button1" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></td>
-			<td id="Button5" onclick="document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></td>
+			<td id="Button5" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></td>
 		</tr>
 	</table>
 	<script type="text/javascript">
@@ -741,7 +741,7 @@ function updateContentType(){
                <?php
       			$dir = dir("media/style/");
       			while ($file = $dir->read()) {
-      				if($file!="." && $file!=".." && is_dir("media/style/$file")) {
+      				if($file!="." && $file!=".." && is_dir("media/style/$file") && substr($file,0,1) != '.') {
       					$themename = $file;
       					$selectedtext = $themename==$manager_theme ? "selected='selected'" : "" ;
       	            	echo "<option value='$themename' $selectedtext>".ucwords(str_replace("_", " ", $themename))."</option>";

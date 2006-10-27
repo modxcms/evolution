@@ -1,6 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 ?>
+<br />
 <div class="sectionHeader"><?php echo $_lang['cleaningup']; ?></div><div class="sectionBody">
 <p><?php echo $_lang['actioncomplete']; ?></p>
 <?php if($_REQUEST['r']==10 && $_SESSION['mgrRefreshTheme'] == 1) {

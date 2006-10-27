@@ -34,7 +34,7 @@ UPDATE `{PREFIX}site_plugins` SET `category` = '10' WHERE `name` IN ('Search Hig
 UPDATE `{PREFIX}site_plugins` SET `category` = '6' WHERE `name` IN ('Bottom Button Bar', 'Forgot Manager Login', 'Inherit Parent Template', 'TinyMCE', 'QuickEdit');
 
 
-UPDATE `{PREFIX}site_plugins` SET `category` = '9' WHERE `name` IN ('DisableCache', 'TemplateSwitcher');
+UPDATE `{PREFIX}site_plugins` SET `category` = '9' WHERE `name` IN ('TemplateSwitcher');
 
 
 #

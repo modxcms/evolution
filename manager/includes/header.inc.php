@@ -73,10 +73,17 @@ $messagesallowed = $modx->hasPermission('messages');
         }
         var documentDirty=false;
 
-        function checkDirt() {
+        function checkDirt(evt) {
             if(documentDirty==true) {
-                event.returnValue = "<?php echo $_lang['warning_not_saved']; ?>";
+				var message = "<?php echo $_lang['warning_not_saved']; ?>";
+				if (typeof evt == 'undefined') {
+					evt = window.event;
             }
+				if (evt) {
+					evt.returnValue = message;
+        }
+				return message;
+  			}
         }
 
         function saveWait(fName) {
@@ -94,12 +101,17 @@ $messagesallowed = $modx->hasPermission('messages');
 
         hideL = window.setTimeout("hideLoader()", 1500);
 
+        // add the 'unsaved changes' warning event handler
+        if( window.addEventListener ) {
+			window.addEventListener('beforeunload',checkDirt,false);
+		} else if ( window.attachEvent ) {
+			window.attachEvent('onbeforeunload',checkDirt);
+		} else {
+			window.onbeforeunload = checkDirt;
+		}
+
     </script>
-<?php
-if($_SESSION['browser']=='ie') {
-?>
-<?php } ?>
 </head>
-<body ondragstart="return false" onbeforeunload="checkDirt();" id="mainActionPages">
+<body ondragstart="return false">
 
 <div id="preLoader"><table width="100%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>

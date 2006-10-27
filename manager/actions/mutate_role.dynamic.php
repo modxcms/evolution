@@ -94,7 +94,7 @@ function deletedocument() {
 			<td id="Button2" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
 				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 <?php if($_GET['a']=='38') { ?>					<script type="text/javascript">document.getElementById("Button2").setEnabled(false);</script><?php } ?>
-			<td id="Button3" onclick="document.location.href='index.php?a=86';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+			<td id="Button3" onclick="documentDirty=false;document.location.href='index.php?a=86';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
 				<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 		</tr>
 	</table>

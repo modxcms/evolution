@@ -11,6 +11,7 @@
 // add template=templatename to the URL
 
 if(!strstr($modx->documentContent, "donotswitch")) { // this page is not switchable
+	$modx->documentObject['cacheable'] = 0;
     if (isset($_GET['template'])) {
       $overrideTemplate = $_GET['template'];
    } else if (isset($_COOKIE['template']) && $usecookie == 'yes') {

@@ -222,7 +222,7 @@ function showHide(what, onoff){
 				<?php if($_GET['a']!='88') { ?>
 					<script type="text/javascript">document.getElementById("Button2").setEnabled(false);</script>
 				<?php } ?>
-			<td id="Button3" onclick="document.location.href='index.php?a=99';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+			<td id="Button3" onclick="documentDirty=false;document.location.href='index.php?a=99';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
 				<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 		</tr>
 	</table>

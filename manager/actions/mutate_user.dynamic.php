@@ -238,7 +238,7 @@ if (is_array($evtOut))
 				<?php if($_GET['a']!='12') { ?>
 					<script type="text/javascript">document.getElementById("Button2").setEnabled(false);</script>
 				<?php } ?>
-			<td id="Button3" onclick="document.location.href='index.php?a=75';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
+			<td id="Button3" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
 				<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
 		</tr>
 	</table>
@@ -791,7 +791,7 @@ $dir->close();
              <?php
 $dir = dir("media/style/");
 while ($file = $dir->read()) {
-	if ($file != "." && $file != ".." && is_dir("media/style/$file")) {
+	if ($file != "." && $file != ".." && is_dir("media/style/$file") && substr($file,0,1) != '.') {
 		$themename = $file;
         if (isset ($usersettings['manager_theme'])) {
     		$selectedtext = $themename == $usersettings['manager_theme'] ? "selected='selected'" : "";
