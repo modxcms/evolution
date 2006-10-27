@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1816 - October 27, 2006)
+MOD 0.9.5 beta 5 (rev 1817 - October 27, 2006)
 ====================================
+* [FS#588] Deprecated snippets removed from minimal template (no demo content).
 * [FS#562] Removed ability to directly create folders from context menu in document tree. Makes interface consistent with the top menu options, and the options available as icons above the tree. Also prohibits this bug from occurring.
 * [FS#595] Manager and Web User Settings column type for settings_value was too short - changed to text (1815)
 * [FS#593] Green manager template CSS fix to restore context menu (1814) 
