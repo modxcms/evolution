@@ -462,7 +462,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
   `user` integer NOT NULL,
   `setting_name` varchar(50) NOT NULL default '',
-  `setting_value` varchar(255) NOT NULL default '',
+  `setting_value` text NOT NULL default '',
   KEY `setting_name` (`setting_name`),
   KEY `user` (`user`)
 ) Type=MyISAM COMMENT='Contains backend user settings.';
@@ -534,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
   `webuser` integer NOT NULL,
   `setting_name` varchar(50) NOT NULL default '',
-  `setting_value` varchar(255) NOT NULL default '',
+  `setting_value` text NOT NULL default '',
   KEY `setting_name` (`setting_name`),
   KEY `webuserid` (`webuser`)
 ) Type=MyISAM COMMENT='Contains web user settings.';
@@ -729,6 +729,12 @@ ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD COLUMN `rank` integer(11) NOT N
 
 
 ALTER TABLE `{PREFIX}manager_users` MODIFY COLUMN `username` varchar(100) NOT NULL;
+
+
+ALTER TABLE `{PREFIX}user_settings` MODIFY COLUMN `setting_value` text NOT NULL;
+
+
+ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text NOT NULL;
 
 
 # ]]upgrade-able

@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1814 - October 26, 2006)
+MOD 0.9.5 beta 5 (rev 1815 - October 26, 2006)
 ====================================
+* [FS#595] Manager and Web User Settings column type for settings_value was too short - changed to text (1815)
 * [FS#593] Green manager template CSS fix to restore context menu (1814) 
 * [FS#603] Fixed non-escaped double-quote in manager language file (1813)
 * [FS#609] Removed hard coded language strings from manager (1812)
