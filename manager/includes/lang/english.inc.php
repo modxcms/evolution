@@ -865,6 +865,7 @@ $_lang["users"] = 'Security';
 $_lang["user_block"] = 'Blocked';
 $_lang["user_blockedafter"] = 'Blocked After';
 $_lang["user_blockeduntil"] = 'Blocked Until';
+$_lang["user_changeddata"] = 'Your data has been changed. Please log in again.';
 $_lang["user_country"] = 'Country';
 $_lang["user_dob"] = 'Date of birth';
 $_lang["user_doesnt_exist"] = 'User does not exist';

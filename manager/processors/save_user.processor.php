@@ -314,24 +314,24 @@ switch ($_POST['mode']) {
 			exit;
 		}
 
-		$sql = "UPDATE $dbase." . $table_prefix . "user_attributes SET 
-					fullname='" . mysql_escape_string($fullname) . "', 
-					role='$roleid', 
-					email='$email', 
+		$sql = "UPDATE $dbase." . $table_prefix . "user_attributes SET
+					fullname='" . mysql_escape_string($fullname) . "',
+					role='$roleid',
+					email='$email',
 					phone='$phone',
-					mobilephone='$mobilephone', 
-					fax='$fax', 
-					zip='$zip' , 
-					state='$state', 
-					country='$country', 
-					gender='$gender', 
-					dob='$dob', 
-					photo='$photo', 
+					mobilephone='$mobilephone',
+					fax='$fax',
+					zip='$zip' ,
+					state='$state',
+					country='$country',
+					gender='$gender',
+					dob='$dob',
+					photo='$photo',
 					comment='$comment',
-					failedlogincount='$failedlogincount', 
-					blocked=$blocked, 
-					blockeduntil='$blockeduntil', 
-					blockedafter='$blockedafter' 
+					failedlogincount='$failedlogincount',
+					blocked=$blocked,
+					blockeduntil='$blockeduntil',
+					blockedafter='$blockedafter'
 					WHERE internalKey=$id";
 		if (!$rs = mysql_query($sql)) {
 			webAlert("An error occurred while attempting to update the user's attributes.");
@@ -395,8 +395,8 @@ switch ($_POST['mode']) {
 ?>
 			<body bgcolor='#efefef'>
 			<script language="JavaScript">
-			alert("Your data has been changed.\nPlease log in again.");
-			top.location.href='index.php?a=8';		
+			alert("<?php echo $_lang["user_changeddata"]; ?>");
+			top.location.href='index.php?a=8';
 			</script>
 			</body>
 		<?php
