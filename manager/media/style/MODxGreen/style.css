@@ -290,8 +290,6 @@ a img {
 	margin: 0px; 
 	padding: 0px;
 	background-color: 	#fff;
-	background-position: 	top;
-	background-repeat: 	repeat-x;
 	border: 	1px solid #fff;
 	border-left-color: ButtonHighlight;
 	border-right-color: ButtonShadow;
@@ -301,10 +299,9 @@ a img {
 }
 
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode {
-	font: icon;
 	font-size: 11px;
-	color: Black;
-	padding: 2px 2px 2px 2px;
+	color: #000;
+	padding: 2px;
 	margin: 0;
 	cursor: pointer;
 	width: auto;
@@ -312,15 +309,15 @@ a img {
 
 .treeNodeHover {
 	background-color: #DCDCDC;
-	border: 1px solid #777777;
-	padding: 1px 1px 1px 1px;
+	border: 1px solid #777;
+	padding: 1px;
 }
 
 .treeNodeSelected {
 	background-color: #D4E0B1;
-	color: 	Black;
+	color: 	#000;
 	border: 1px solid #777;
-	padding: 1px 1px 1px 1px;
+	padding: 1px;
 }
 
 .deletedNode {
@@ -763,6 +760,11 @@ ul#nav {
 /* Contextual Menu used in the Tree Menu
 ---------------------------------------------------------- */
 #mx_contextmenu {
+    position: absolute;
+    height: auto;
+    visibility: hidden;
+    z-index:10000;
+    width: 170px;
 	background: #fff url(images/bg/context.gif) repeat-y top left;
 	margin: 0;
 	padding: 2px;
