@@ -539,9 +539,9 @@ function menuHandler(action) {
             top.main.document.location.href="index.php?a=62&id=" + itemToChange;
             }
             break
-        case 11 : //Raymond: create folder
-            top.main.document.location.href="index.php?a=85&pid=" + itemToChange;
-            break
+        //case 11 : //Raymond: create folder (currently removed)
+        //    top.main.document.location.href="index.php?a=85&pid=" + itemToChange;
+        //    break
         default :
             alert('Unknown operation command.');
     }
@@ -549,7 +549,7 @@ function menuHandler(action) {
 
 </script>
 
-<!-- Contextual Menu Popup Code (NEEDS HELP!) -->
+<!-- Contextual Menu Popup Code -->
 <div id="mx_contextmenu" onselectstart="return false;">
     <div id="nameHolder">&nbsp;</div>
     <?php
@@ -557,7 +557,7 @@ function menuHandler(action) {
     constructLink(2, "save", $_lang["edit_document"], $modx->hasPermission('edit_document'),$theme);
     constructLink(5, "cancel", $_lang["move_document"], $modx->hasPermission('save_document'),$theme);
     constructLink(7, "copy", $_lang["duplicate_document"], $modx->hasPermission('new_document'),$theme);
-    constructLink(11, "folder", $_lang["create_folder_here"], $modx->hasPermission('new_document'),$theme);
+    // constructLink(11, "folder", $_lang["create_folder_here"], $modx->hasPermission('new_document'),$theme);
     constructLink(3, "newdoc", $_lang["create_document_here"], $modx->hasPermission('new_document'),$theme);
     constructLink(6, "weblink", $_lang["create_weblink_here"], $modx->hasPermission('new_document'),$theme);
     ?>
