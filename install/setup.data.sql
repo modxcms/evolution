@@ -42,7 +42,7 @@ REPLACE INTO `{PREFIX}site_content` VALUES (3, 'document', 'text/html', 'Add a B
 REPLACE INTO `{PREFIX}site_content` VALUES (4, 'document', 'text/html', '[*loginName*]', 'Login to Enable to Comments', '', 'login', '', 1, 0, 0, 0, 0, '', '<p>In order to comment on blog entries, you must be a registered user of [(site_name)]. If you haven''t already registered, you can  <a href="[~5~]">request an account</a>.</p>\r\n<div> [!WebLogin? &amp;tpl=`FormLogin` &amp;loginhomeid=`2`!] </div>', 1, 4, 11, 0, 0, 1, 1144904400, 1, 1144904400, 0, 0, 0, 0, 0, '[*loginName*]', 0, 0, 0, 0, 0, 0, 1);
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (5, 'document', 'text/html', 'Request an Account', 'Sign Up for Full Site Privileges', '', 'request-an-account', '', 1, 0, 0, 0, 0, '', '[[WebSignup? &formtpl=`FormSignup` &groups=`Registered Users`]]', 1, 4, 3, 0, 0, 1, 1144904400, 1, 1158320704, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 1);
+REPLACE INTO `{PREFIX}site_content` VALUES (5, 'document', 'text/html', 'Request an Account', 'Sign Up for Full Site Privileges', '', 'request-an-account', '', 1, 0, 0, 0, 0, '', '[[WebSignup? &tpl=`FormSignup` &groups=`Registered Users`]]', 1, 4, 3, 0, 0, 1, 1144904400, 1, 1158320704, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 1);
 
 
 REPLACE INTO `{PREFIX}site_content` VALUES (6, 'document', 'text/html', 'Contact Us', 'Contact [(site_name)]', '', 'contact-us', '', 1, 0, 0, 0, 0, '', '[[Contac tForm? &sendTo=`[(emailsender)]`]]\r\n\r\n[!eForm? &formid=`ContactForm` &subject=`[+subject+]` &to=`[(email_sender)]` &ccsender=`1` &tpl=`ContactForm` &report=`ContactFormReport` &gotoid=`46`  !]\r\n', 0, 4, 14, 1, 0, 1, 1144904400, 1, 1159303922, 0, 0, 0, 0, 0, 'Contact us', 0, 0, 0, 0, 0, 0, 0);
