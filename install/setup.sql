@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
   `user` integer NOT NULL DEFAULT 0 COMMENT 'link to user table',
   `usertype` tinyint NOT NULL DEFAULT 0 COMMENT '0 - manager, 1 - web',
   `source` varchar(50) NOT NULL DEFAULT '',
-  `description` text NULL DEFAULT NULL,
+  `description` text,
   PRIMARY KEY(`id`),
   KEY `user`(`user`)
 ) TYPE=MYISAM COMMENT='Stores event and error logs';
@@ -124,8 +124,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `unpub_date` int(20) NOT NULL default '0',
   `parent` int(10) NOT NULL default '0',
   `isfolder` int(1) NOT NULL default '0',
-  `introtext` text NOT NULL COMMENT 'Used to provide quick summary of the document',  
-  `content` mediumtext NOT NULL DEFAULT '',
+  `introtext` text COMMENT 'Used to provide quick summary of the document',  
+  `content` mediumtext,
   `richtext` tinyint(1) NOT NULL default '1',
   `template` int(10) NOT NULL default '1',
   `menuindex` int(10) NOT NULL default '0',
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
   `cache_type`	tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
-  `snippet` mediumtext NOT NULL DEFAULT '',
+  `snippet` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM COMMENT='Contains the site chunks.';
@@ -211,8 +211,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
   `editedon` integer NOT NULL DEFAULT '0',
   `guid` varchar(32) NOT NULL DEFAULT '' COMMENT 'globally unique identifier',
   `enable_sharedparams` tinyint NOT NULL DEFAULT '0',
-  `properties` text NOT NULL DEFAULT '',
-  `modulecode` mediumtext NOT NULL DEFAULT '' COMMENT 'module boot up code',
+  `properties` text,
+  `modulecode` mediumtext COMMENT 'module boot up code',
   PRIMARY KEY(`id`)
 ) TYPE=MyISAM COMMENT='Site Modules';
 
@@ -241,9 +241,9 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
   `cache_type` tinyint(1) NOT NULL default '0' COMMENT 'Cache option',
-  `plugincode` mediumtext NOT NULL default '',
+  `plugincode` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
-  `properties` text NOT NULL default '' COMMENT 'Default Properties',  
+  `properties` text COMMENT 'Default Properties',  
   `disabled` tinyint NOT NULL DEFAULT '0' COMMENT 'Disables the plugin',
   `moduleguid` varchar(32) NOT NULL default '' COMMENT 'GUID of module from which to import shared parameters',
   PRIMARY KEY  (`id`)
@@ -264,9 +264,9 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
   `editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
   `cache_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Cache option',
-  `snippet` mediumtext NOT NULL default '',
+  `snippet` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
-  `properties` text NOT NULL default '' COMMENT 'Default Properties',  
+  `properties` text COMMENT 'Default Properties',  
   `moduleguid` varchar(32) NOT NULL default '' COMMENT 'GUID of module from which to import shared parameters',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM COMMENT='Contains the site snippets.';
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
   `icon` varchar(255) NOT NULL default '' COMMENT 'url to icon file',
   `template_type` integer NOT NULL DEFAULT '0' COMMENT '0-page,1-content',
-  `content` mediumtext NOT NULL default '',
+  `content` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM COMMENT='Contains the site templates.';
@@ -292,12 +292,12 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}system_eventnames` (
   `service` tinyint NOT NULL default '0' COMMENT 'System Service number',
   `groupname` varchar(20) NOT NULL default '',
   PRIMARY KEY(`id`)
-) TYPE=MYISAM COMMENT='System Event Names. Service = 1 - Kernel, 2 - Manager Access, 3 - Web Access, 4 - Cache, 5 - Template System ';
+) TYPE=MYISAM COMMENT='System Event Names.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}system_settings` (
   `setting_name` varchar(50) NOT NULL default '',
-  `setting_value` text NOT NULL default '',
+  `setting_value` text,
   UNIQUE KEY `setting_name` (`setting_name`)
 ) TYPE=MyISAM COMMENT='Contains Content Manager settings.';
 
@@ -314,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
 	`id` int(11) NOT NULL auto_increment,
 	`tmplvarid` int(10) NOT NULL default '0' COMMENT 'Template Variable id',
 	`contentid` int(10) NOT NULL default '0' COMMENT 'Site Content Id',
-	`value` text NOT NULL default '',
+	`value` text,
 	PRIMARY KEY  (id),
 	KEY idx_tmplvarid (tmplvarid),
 	KEY idx_id (contentid)
@@ -338,11 +338,11 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
 	`editor_type` integer NOT NULL DEFAULT '0' COMMENT '0-plain text,1-rich text,2-code editor',
 	`category` integer NOT NULL DEFAULT '0' COMMENT 'category id',
 	`locked` tinyint(4) NOT NULL default '0',
-	`elements` text NOT NULL default '',
+	`elements` text,
 	`rank` int(11) NOT NULL default '0',
 	`display` varchar(20) NOT NULL default '' COMMENT 'Display Control',
-	`display_params` text NOT NULL default '' COMMENT 'Display Control Properties',
-	`default_text` text NOT NULL default '',
+	`display_params` text COMMENT 'Display Control Properties',
+	`default_text` text,
 	PRIMARY KEY  (id),
 	KEY `indx_rank`(`rank`)	
 ) TYPE=MyISAM COMMENT='Site Template Variables';
@@ -381,7 +381,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_messages` (
   `id` int(10) NOT NULL auto_increment,
   `type` varchar(15) NOT NULL default '',
   `subject` varchar(60) NOT NULL default '',
-  `message` text NOT NULL default '',
+  `message` text,
   `sender` int(10) NOT NULL default '0',
   `recipient` int(10) NOT NULL default '0',
   `private` tinyint(4) NOT NULL default '0',
@@ -462,7 +462,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
   `user` integer NOT NULL,
   `setting_name` varchar(50) NOT NULL default '',
-  `setting_value` text NOT NULL default '',
+  `setting_value` text,
   KEY `setting_name` (`setting_name`),
   KEY `user` (`user`)
 ) Type=MyISAM COMMENT='Contains backend user settings.';
@@ -534,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
   `webuser` integer NOT NULL,
   `setting_name` varchar(50) NOT NULL default '',
-  `setting_value` text NOT NULL default '',
+  `setting_value` text,
   KEY `setting_name` (`setting_name`),
   KEY `webuserid` (`webuser`)
 ) Type=MyISAM COMMENT='Contains web user settings.';
@@ -562,7 +562,7 @@ ALTER TABLE `{PREFIX}site_tmplvars` ADD INDEX `indx_rank`(`rank`);
 ALTER TABLE `{PREFIX}site_content` ADD INDEX `aliasidx` (alias);
 
 
-ALTER TABLE `{PREFIX}site_content` ADD COLUMN `introtext` text NOT NULL default '' COMMENT 'Used to provide quick summary of the document' AFTER `isfolder`;
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `introtext` text COMMENT 'Used to provide quick summary of the document' AFTER `isfolder`;
 
 
 ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `menutitle` varchar(30) NOT NULL default '' COMMENT 'Menu title' AFTER `deletedby`,
@@ -627,7 +627,7 @@ ALTER TABLE `{PREFIX}document_groups` ADD INDEX `document` (`document`);
 ALTER TABLE `{PREFIX}document_groups` ADD INDEX `document_group` (`document_group`);
 
 
-ALTER TABLE `{PREFIX}system_settings` MODIFY COLUMN `setting_value` text NOT NULL default '';
+ALTER TABLE `{PREFIX}system_settings` MODIFY COLUMN `setting_value` text;
 
 
 ALTER TABLE `{PREFIX}site_plugins` MODIFY COLUMN `properties` text;
@@ -731,10 +731,10 @@ ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD COLUMN `rank` integer(11) NOT N
 ALTER TABLE `{PREFIX}manager_users` MODIFY COLUMN `username` varchar(100) NOT NULL DEFAULT '';
 
 
-ALTER TABLE `{PREFIX}user_settings` MODIFY COLUMN `setting_value` text NOT NULL DEFAULT '';
+ALTER TABLE `{PREFIX}user_settings` MODIFY COLUMN `setting_value` text;
 
 
-ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text NOT NULL DEFAULT '';
+ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text;
 
 
 # ]]upgrade-able
