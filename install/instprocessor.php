@@ -452,6 +452,9 @@ $sync->setCachepath("../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache
 
+// remove any locks on the manager functions so initial manager login is not blocked
+mysql_query("TRUNCATE TABLE `".$table_prefix."active_users`");
+
 // close db connection
 $sqlParser->close();
 

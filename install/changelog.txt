@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC1 (rev 1848 - October 31, 2006)
+MODx 0.9.5 RC1 (rev 1852 - October 31, 2006)
 ====================================
+* [FS#626] Fix the mysterious missing login button in IE6. (also fixes image paths in CSS). (1851)
+* [FS#583] Separate out the list of countries into a lang file (defaults to English if no other language file is available). (1849)
+* [FS#617] Truncate active_users table to clear locks on manager functions during upgrades. (1822)
 * [FS#620] Adjusted styles to add scrollbars to message area if complete message can not be displayed. (1840)
 * [FS#620] Made the system alert box variable width so it will always fit within the boundaries of the frame. (1840)
 * [FS#620] Moved embedded CSS styles into a sysalert_style.php file in the theme directories. (1840)
