@@ -358,7 +358,9 @@ if (isset ($_POST['plugin'])) {
 			$plugin = mysql_escape_string($plugin);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin' WHERE name='$name';", $sqlParser->conn)) {
+			    $row = mysql_fetch_assoc($rs);
+			    $props = propUpdate($properties,$row['properties']);
+				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE name='$name';", $sqlParser->conn)) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
@@ -465,5 +467,36 @@ if ($installMode == 0) {
 	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
 } else {
 	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.</p><br />&nbsp;";
+}
+
+// Property Update function
+function propUpdate($new,$old){
+    // Split properties up into arrays
+    $returnArr = array();
+    $newArr = explode("&",$new);
+    $oldArr = explode("&",$old);
+
+    foreach ($newArr as $k => $v) {
+        if(!empty($v)){	        
+	        $tempArr = split("=",trim($v));
+	        $returnArr[$tempArr[0]] = $tempArr[1];
+        }
+    }
+    foreach ($oldArr as $k => $v) {
+        if(!empty($v)){	        
+            $tempArr = split("=",trim($v));
+            $returnArr[$tempArr[0]] = $tempArr[1];
+        }
+    }
+
+    // Make unique array
+    $returnArr = array_unique($returnArr);
+    
+    // Build new string for new properties value
+    foreach ($returnArr as $k => $v) {
+        $return .= "&$k=$v ";
+    }
+
+    return $return;
 }
 ?>
