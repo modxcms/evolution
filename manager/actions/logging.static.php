@@ -9,16 +9,13 @@ if(!$modx->hasPermission('logs')) {
 </div>
 
 <div class="sectionHeader"><?php echo $_lang["mgrlog_query"]; ?></div><div class="sectionBody" id="lyr1">
-<?php echo $_lang["mgrlog_query_msg"]; ?>
-<p>
+<p><?php echo $_lang["mgrlog_query_msg"]; ?></p>
 <form action='index.php?a=13' name="logging" method='POST'>
 <table border=0 cellpadding=2 cellspacing=0>
  <thead>
   <tr>
-    <td width="200"><b><?php echo $_lang["mgrlog_field"]; ?>
-    </b></td>
-    <td align="right"><b><?php echo $_lang["mgrlog_value"]; ?>
-    </b></td>
+    <td width="200"><b><?php echo $_lang["mgrlog_field"]; ?></b></td>
+    <td align="right"><b><?php echo $_lang["mgrlog_value"]; ?></b></td>
   </tr>
  </thead>
  </tbody>
@@ -45,7 +42,7 @@ $rs = mysql_query($sql);
     </td>
   </tr>
   <tr bgcolor='#eeeeee'>
-    <td><b>Action</b></td>
+    <td><b><?php echo $_lang["mgrlog_action"]; ?></b></td>
     <td align="right">
       <select name="action" class='inputBox' style='width:240px;'>
         <option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
@@ -146,25 +143,28 @@ $rs = mysql_query($sql);
 				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
 		</tr>
 	</table>
-      <input type='submit' name='log_submit' value='Search logs' style="display:none">
+      <input type='submit' name='log_submit' value='<?php echo $_lang["mgrlog_searchlogs"]?>' style="display:none">
     </td>
   </tr>
   </tbody>
 </table>
 </form>
 </div>
- <script type="text/javascript">
- 	var cal1 = new calendar1(document.forms['logging'].elements['datefrom'], document.getElementById("datefrom_show"));
-	cal1.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-	cal1.year_scroll = true;
-	cal1.time_comp = false;
 
- 	var cal2 = new calendar1(document.forms['logging'].elements['dateto'], document.getElementById("dateto_show"));
-	cal2.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-	cal1.year_scroll = true;
-	cal1.time_comp = false;
- </script>
-<div class="sectionHeader">Query results</div><div class="sectionBody" id="lyr2">
+<script type="text/javascript">
+    var cal1 = new calendar1(document.forms['logging'].elements['datefrom'], document.getElementById("datefrom_show"));
+    cal1.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
+    cal1.year_scroll = true;
+    cal1.time_comp = false;
+
+    var cal2 = new calendar1(document.forms['logging'].elements['dateto'], document.getElementById("dateto_show"));
+    cal2.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
+    cal1.year_scroll = true;
+    cal1.time_comp = false;
+</script>
+
+
+<div class="sectionHeader"><?php echo $_lang["mgrlog_qresults"]; ?></div><div class="sectionBody" id="lyr2">
 <?php
 if(isset($_REQUEST['log_submit'])){
 
@@ -173,11 +173,11 @@ function convertdate($date) {
 	list ($day, $month, $year) = split ("-", $date);
 	$date_valid = checkdate($month, $day, $year);
 	if($date_valid==false) {
-		echo "checkdate() returned false.";
+		echo $_lang["mgrlog_datecheckfalse"];
 		exit;
 	}
 	if (($timestamp = strtotime("$month/$day/$year")) === -1) {
-		echo "Invalid date format.";
+		echo $_lang["mgrlog_dateinvalid"];
 		exit;
 	} else {
 	   return $timestamp;
@@ -250,13 +250,11 @@ $sql .= " LIMIT ".$int_cur_position.", ".$int_num_result;
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
-			echo "<p><?php echo $_lang["mgrlog_emptysrch"]; ?></p>
-			</div></div>";
+			echo '<p>'.$_lang["mgrlog_emptysrch"].'</p>
+			</div></div>';
 			exit;
 		} else {
-?>
-  <p><?php echo $_lang["mgrlog_sortinst"]; ?></p>
-<?php
+            echo '<p>'.$_lang["mgrlog_sortinst"].'</p>';
 
 include_once "paginate.inc.php";
 // New instance of the Paging class, you can modify the color and the width of the html table
@@ -295,12 +293,12 @@ print $array_paging['last_link'] ."[last]</a>";
   <table border=0 cellpadding="2" cellspacing="1" bgcolor="#707070" class="sort-table" id="table-1" width="95%">
     <thead>
       <tr>
-        <td><b><?php echo $_lang["username"]; ?>UserName</b></td>
-        <td><b><?php echo $_lang["actionid"]; ?>ActionID</b></td>
-        <td><b><?php echo $_lang["itemid"]; ?>ItemID</b></td>
-        <td><b><?php echo $_lang["itemname"]; ?>ItemName</b></td>
-        <td><b><?php echo $_lang["msg"]; ?>Message</b></td>
-        <td><b><?php echo $_lang["time"]; ?></b></td>
+        <td><b><?php echo $_lang["mgrlog_username"]; ?></b></td>
+        <td><b><?php echo $_lang["mgrlog_actionid"]; ?></b></td>
+        <td><b><?php echo $_lang["mgrlog_itemid"]; ?></b></td>
+        <td><b><?php echo $_lang["mgrlog_itemname"]; ?></b></td>
+        <td><b><?php echo $_lang["mgrlog_msg"]; ?></b></td>
+        <td><b><?php echo $_lang["mgrlog_time"]; ?></b></td>
       </tr>
     </thead>
     <tbody>
@@ -367,9 +365,7 @@ st1.onsort = function () {
 </div>
 <?php
 } else {
-?>
-No search query entered yet.
-<?php
+    echo $_lang["mgrlog_noquery"];
 }
 ?>
 </div>
