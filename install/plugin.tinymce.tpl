@@ -3,7 +3,7 @@
  * Written By Raymond Irving - June 20, 2005
  * Modified By Jeff Whitfield - September 9, 2005
  *
- * Version 2.0.6.1b
+ * Version 2.0.8
  *
  * Events: OnRichTextEditorInit, OnRichTextEditorRegister, OnInterfaceSettingsRender
  *
@@ -12,10 +12,6 @@
 // When used from the web front-end 
 // TinyMCE will use the following theme
 $webTinyMCETheme = isset($webtheme) ? $webtheme:"simple";
-
-// Set extended valid elements
-global $tinymce_elements;
-$tinymce_elements = "a[name|href|target|title|onclick],img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]";
 
 // Set variables from plugin configuration
 global $tinymce_plugins;
@@ -27,6 +23,10 @@ global $tinymce_disable_buttons;
 global $tinymce_formats;
 global $tinymce_entity_encoding;
 global $tinymce_entities;
+global $tinymce_relative_urls;
+global $tinymce_compressor;
+global $tinymce_cleanup;
+global $tinymce_resizing;
 $tinymce_plugins = isset($tinyPlugins) ? $tinyPlugins :"";
 $tinymce_buttons1 = isset($tinyButtons1) ? $tinyButtons1 :"";
 $tinymce_buttons2 = isset($tinyButtons2) ? $tinyButtons2 :"";
@@ -36,6 +36,11 @@ $tinymce_disable_buttons = isset($disabledButtons) ? $disabledButtons :"";
 $tinymce_formats = isset($tinyFormats) ? $tinyFormats :"";
 $tinymce_entity_encoding = isset($entity_encoding) ? $entity_encoding :"";
 $tinymce_entities = ($entity_encoding == "named" && !empty($entities)) ? "entities : \"".$entities."\"," :"";
+$tinymce_relative_urls = isset($tinyPathOptions) ? $tinyPathOptions :"";
+$tinymce_compressor = isset($tinyCompressor) ? $tinyCompressor :"";
+$tinymce_cleanup = (($tinyCleanup == "enabled" || empty($tinyCleanup)) ? "true" : "false");
+$tinymce_resizing = !empty($tinyResizing) ? $tinyResizing : "false";
+
 // Set path variable
 if(!isset($tinymce_path)) { 
 	global $tinymce_path;
@@ -113,12 +118,10 @@ if (!function_exists('getTinyMCESettings')) {
 		global $use_editor;
 		global $tinymce_editor_theme;
 		global $tinymce_css_selectors;
-		global $tinymce_editor_relative_urls;
 		global $displayStyle;
 		global $tinymce_path;
 		global $manager_language;
 		global $frontend_language;
-		global $tinymce_compressor;
 
 		// language settings
 		if (file_exists($tinymce_path.'/lang/'.$manager_language.'.inc.php')){
@@ -127,24 +130,11 @@ if (!function_exists('getTinyMCESettings')) {
 			include_once($tinymce_path.'/lang/english.inc.php');		
 		}
 		
-		// compressor setting
-		if($tinymce_compressor=='enabled'){
-			 $compressor_on = "selected='selected'";
-			 $compressor_off = "";
-		} else if ($tinymce_compressor=='disabled' || empty($tinymce_compressor)){
-			 $compressor_on = "";
-			 $compressor_off = "selected='selected'";
-		}			
-		
 		$simpleTheme = $tinymce_editor_theme=='simple' ? "selected='selected'" : "" ;
 		$advTheme = $tinymce_editor_theme=='advanced' ? " selected='selected'" : "";
 		$fullTheme = !isset($tinymce_editor_theme) || $tinymce_editor_theme=='full' ? " selected='selected'" : "";
-		$rootrelative = $tinymce_editor_relative_urls=='rootrelative' ? "selected='selected'" : "" ;
-		$docrelative = $tinymce_editor_relative_urls=='docrelative' ? "selected='selected'" : "" ;
-		$fullpathurl = $tinymce_editor_relative_urls=='fullpathurl' ? "selected='selected'" : "" ;
 		$display = $use_editor==1 ? $displayStyle : 'none';		
 		$cssSelectors = isset($tinymce_css_selectors) ? htmlspecialchars($tinymce_css_selectors) : "";
-		$_lang["enabled"] = !empty($_lang["enabled"])? $_lang["enabled"]:"Enabled";
 		
 		return <<<TinyMCE_HTML_Settings
 		<table id='editorRow_TinyMCE' style="width:inherit;" border="0" cellspacing="0" cellpadding="3"> 
@@ -177,39 +167,6 @@ if (!function_exists('getTinyMCESettings')) {
 			<td width="200">&nbsp;</td> 
 			<td class='comment'>{$_lang["tinymce_editor_css_selectors_message"]}</td> 
 		  </tr> 
-		  <tr class='row1' style="display: $display"> 
-            <td colspan="2"><div class='split'></div></td> 
-          </tr> 
-		  <tr class='row1' style="display:$display;"> 
-			<td nowrap class="warning"><b>{$_lang["tinymce_editor_relative_urls_title"]}</b></td> 
-			<td>
-            <select name="tinymce_editor_relative_urls">
-					<option value="docrelative" $docrelative>Document Relative</option>
-					<option value="rootrelative" $rootrelative>Root Relative</option>
-					<option value="fullpathurl" $fullpathurl>Full Path</option>
-			</select>			
-			</td> 
-		  </tr> 
-		  <tr class='row1' style="display: $display;"> 
-			<td width="200">&nbsp;</td> 
-			<td class='comment'>{$_lang["tinymce_editor_relative_urls_message"]}</td> 
-		  </tr> 
-		  <tr class='row1' style="display: $display;"> 
-			<td colspan="2"><div class='split'></div></td> 
-		  </tr> 
-		  <tr class='row1' style="display:$display;"> 
-			<td nowrap class="warning"><b>{$_lang["tinymce_compressor_title"]}</b></td> 
-			<td>
-            <select name="tinymce_compressor">
-					<option value="enabled" $compressor_on>{$_lang["enabled"]}</option>
-					<option value="disabled" $compressor_off>{$_lang["disabled"]}</option>
-			</select>			
-			</td> 
-		  </tr> 
-		  <tr class='row1' style="display: $display;"> 
-			<td width="200">&nbsp;</td> 
-			<td class='comment'>{$_lang["tinymce_compressor_message"]}</td> 
-		  </tr> 
 		</table>
 TinyMCE_HTML_Settings;
 	}
@@ -224,7 +181,7 @@ if (!function_exists('getTinyMCEScript')) {
 		global $editor_css_path;
 		global $tinymce_editor_theme;
 		global $tinymce_css_selectors;
-		global $tinymce_editor_relative_urls;
+		global $tinymce_relative_urls;
 		global $tinymce_plugins;
 		global $tinymce_buttons1;
 		global $tinymce_buttons2;
@@ -232,11 +189,13 @@ if (!function_exists('getTinyMCEScript')) {
 		global $tinymce_buttons4;
 		global $tinymce_disable_buttons;
 		global $tinymce_formats;
-		global $tinymce_elements;
 		global $tinymce_entity_encoding;
 		global $tinymce_entities;
 		global $tinymce_compressor;
-						
+		global $tinymce_relative_urls;
+		global $tinymce_cleanup;
+		global $tinymce_resizing;
+
 		$scriptfile = ($tinymce_compressor == 'enabled' ? 'tiny_mce_gzip.php' : 'tiny_mce.js');
 		$tinymce_editor_theme = $webTheme ? $webTheme : $tinymce_editor_theme;
 		$theme = !empty($tinymce_editor_theme) ? "theme : \"$tinymce_editor_theme\"," : "theme : \"simple\",";
@@ -247,7 +206,7 @@ if (!function_exists('getTinyMCEScript')) {
 		$webWidth = $width ? "width : \"$width\"," : "";
 		$webHeight = $height ? "height : \"$height\"," : "";
 		$tinymce_language = !empty($lang) ? getTinyMCELang($lang) : getTinyMCELang($manager_language);
-		switch($tinymce_editor_relative_urls){
+		switch($tinymce_relative_urls){
 			case "rootrelative":
 				$relative_urls = "false";
 				$remove_script_host = "true";
@@ -272,6 +231,7 @@ if (!function_exists('getTinyMCEScript')) {
 
 		$fullScript = <<<FULL_SCRIPT
 <script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/{$scriptfile}"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/xconfig.js"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
 		  theme : "advanced",
@@ -295,14 +255,19 @@ if (!function_exists('getTinyMCEScript')) {
 		  theme_advanced_path_location : "bottom",
 		  theme_advanced_disable : "{$tinymce_disable_buttons}",
 		  theme_advanced_blockformats : "{$tinymce_formats}",
+		  theme_advanced_resizing : {$tinymce_resizing},
+		  theme_advanced_resize_horizontal : false,
 		  plugin_insertdate_dateFormat : "%Y-%m-%d",
 		  plugin_insertdate_timeFormat : "%H:%M:%S",
-		  extended_valid_elements : "{$tinymce_elements}",
+		  valid_elements : tinymce_valid_elements,
+		  extended_valid_elements : tinymce_extended_valid_elements,
+		  invalid_elements : tinymce_invalid_elements,
 		  $cssPath
 		  $cssSelector
 		  entity_encoding : "{$tinymce_entity_encoding}",
 		  $tinymce_entities
-		  apply_source_formatting : false,
+		  cleanup: {$tinymce_cleanup},
+		  apply_source_formatting : true,
 		  remove_linebreaks : false,
 		  button_tile_map : false,
 		  onchange_callback : "tvOnTinyMCEChangeCallBack",
@@ -324,6 +289,7 @@ FULL_SCRIPT;
 
 		$stdScript = <<<STD_SCRIPT
 <script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/{$scriptfile}"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/xconfig.js"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
 		  $theme
@@ -331,12 +297,15 @@ FULL_SCRIPT;
 		  language : "{$tinymce_language}",
 		  $elmList
 		  theme_advanced_blockformats : "{$tinymce_formats}",
-		  extended_valid_elements : "{$tinymce_elements}",
+		  valid_elements : tinymce_valid_elements,
+		  extended_valid_elements : tinymce_extended_valid_elements,
+		  invalid_elements : tinymce_invalid_elements,
 		  $cssPath
 		  $cssSelector
 		  entity_encoding : "{$tinymce_entity_encoding}",
 		  $tinymce_entities
-		  apply_source_formatting : false,
+		  cleanup: {$tinymce_cleanup},
+		  apply_source_formatting : true,
 		  remove_linebreaks : false,
 		  button_tile_map : false,
 		  relative_urls : {$relative_urls},
