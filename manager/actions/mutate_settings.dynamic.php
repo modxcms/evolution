@@ -869,6 +869,45 @@ function updateContentType(){
           <tr id='rbRow9' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
+          <tr id='rbRow10' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><b><?php echo $_lang["uploadable_images_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($upload_images) ? $upload_images : "jpg,gif,png,ico,bmp,psd" ; ?>" />
+            </td>
+          </tr>
+          <tr id='rbRow11' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_images_message"]?></td>
+          </tr>
+          <tr id='rbRow12' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='rbRow13' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><b><?php echo $_lang["uploadable_media_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($upload_media) ? $upload_media : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>" />
+            </td>
+          </tr>
+          <tr id='rbRow14' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_media_message"]?></td>
+          </tr>
+          <tr id='rbRow15' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr id='rbRow16' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><b><?php echo $_lang["uploadable_flash_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($upload_flash) ? $upload_flash : "swf,fla" ; ?>" />
+            </td>
+          </tr>
+          <tr id='rbRow17' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
+          </tr>
+          <tr id='rbRow18' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+          <td colspan="2"><div class='split'></div></td>
+          </tr>
 
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["use_editor_title"]?></b></td>
@@ -977,45 +1016,6 @@ function updateContentType(){
           </tr>
           <tr>
           <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["uploadable_images_title"]?></b></td>
-            <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_images" value="<?php echo isset($upload_images) ? $upload_images : "jpg,gif,png,ico,bmp,psd" ; ?>" />
-            </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_images_message"]?></td>
-          </tr>
-          <tr>
-          <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["uploadable_media_title"]?></b></td>
-            <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_media" value="<?php echo isset($upload_media) ? $upload_media : "mp3,wav,au,wmv,avi,mpg,mpeg" ; ?>" />
-            </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_media_message"]?></td>
-          </tr>
-          <tr>
-          <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["uploadable_flash_title"]?></b></td>
-            <td>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($upload_flash) ? $upload_flash : "swf,fla" ; ?>" />
-            </td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["uploadable_files_title"]?></b></td>
