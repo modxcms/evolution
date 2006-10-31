@@ -5,24 +5,26 @@ if(!$modx->hasPermission('logs')) {
 	$e->dumpError();
 }?>
 <div class="subTitle">
-<span class="right">View manager logs</span>
+<span class="right"><?php echo $_lang["mgrlog_view"]; ?></span>
 </div>
 
-<div class="sectionHeader">Query logging</div><div class="sectionBody" id="lyr1">
-Please make a selection for viewing the logs. You can select log entries by date, but be aware that the dates you enter are not inclusive - to select every log entry for 01-01-2004, set 'date from'to 01-01-2004 and 'date to' to 02-01-2004.
-Message and action are usually the same. If you're searching for a specific message, it's best to set action to 'Any/All'.
+<div class="sectionHeader"><?php echo $_lang["mgrlog_query"]; ?></div><div class="sectionBody" id="lyr1">
+<?php echo $_lang["mgrlog_query_msg"]; ?>
 <p>
 <form action='index.php?a=13' name="logging" method='POST'>
 <table border=0 cellpadding=2 cellspacing=0>
  <thead>
   <tr>
-    <td width="200"><b>Field</b></td>
-    <td align="right"><b>Value</b></td>
+    <td width="200"><b><?php echo $_lang["mgrlog_field"]; ?>
+    </b></td>
+    <td align="right"><b><?php echo $_lang["mgrlog_value"]; ?>
+    </b></td>
   </tr>
  </thead>
  </tbody>
   <tr>
-    <td><b>User</b></td>
+    <td><b><?php echo $_lang["mgrlog_query_user"]; ?>
+    </b></td>
     <td align="right">
       <?php
 // get all users currently in logging
@@ -30,7 +32,7 @@ $sql = "SELECT DISTINCT(username) AS name, internalKey FROM $dbase.".$table_pref
 $rs = mysql_query($sql);
 ?>
 		<select name="searchuser" class="inputBox" style="width:240px">
-		<option value="0">Any/ All</option>
+		<option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
 		<?php
 		while ($row = mysql_fetch_assoc($rs)) {
 			$selectedtext = $row['internalKey']==$_REQUEST['searchuser'] ? "selected='selected'" : "" ;
@@ -46,7 +48,7 @@ $rs = mysql_query($sql);
     <td><b>Action</b></td>
     <td align="right">
       <select name="action" class='inputBox' style='width:240px;'>
-        <option value="0">Any/ All</option>
+        <option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
         <?php
 include_once "actionlist.inc.php";
 for($i = 1; $i < 1000; $i++) {
@@ -70,7 +72,7 @@ $sql = "SELECT DISTINCT(itemid) AS item, itemid FROM $dbase.".$table_prefix."man
 $rs = mysql_query($sql);
 ?>
 		<select name="itemid" class="inputBox" style="width:240px">
-		<option value="0">Any/ All</option>
+		<option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
 		<?php
 		while ($row = mysql_fetch_assoc($rs)) {
 			$selectedtext = $row['itemid']==$_REQUEST['itemid'] ? "selected='selected'" : "" ;
@@ -83,7 +85,7 @@ $rs = mysql_query($sql);
     </td>
   </tr>
   <tr bgcolor='#eeeeee'>
-    <td><b>Item name</b></td>
+    <td><b><?php echo $_lang["mgrlog_itemname"]; ?></b></td>
     <td align="right">
       <?php
 // get all itemname currently in logging
@@ -91,7 +93,7 @@ $sql = "SELECT DISTINCT(itemname), itemname FROM $dbase.".$table_prefix."manager
 $rs = mysql_query($sql);
 ?>
 		<select name="itemname" class="inputBox" style="width:240px">
-		<option value="0">Any/ All</option>
+		<option value="0"><?php echo $_lang["mgrlog_anyall"]; ?></option>
 		<?php
 		while ($row = mysql_fetch_assoc($rs)) {
 			$selectedtext = $row['itemname']==$_REQUEST['itemname'] ? "selected='selected'" : "" ;
@@ -104,14 +106,14 @@ $rs = mysql_query($sql);
     </td>
   </tr>
   <tr bgcolor='#ffffff'>
-    <td><b>Message</b></td>
+    <td><b><?php echo $_lang["message_message"]; ?></b></td>
     <td align="right">
       <input type=text name='message' class="inputbox" style="width:240px" value="<?php echo $_REQUEST['message']; ?>">
     </td>
   </tr>
   <script language="JavaScript" src="media/script/datefunctions.js"></script>
   <tr bgcolor='#eeeeee'>
-    <td><b>Date from</b></td>
+    <td><b><?php echo $_lang["mgrlog_datefr"]; ?></b></td>
         <td align="right"><input type=hidden name='datefrom' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>">
           <span id="datefrom_show" style="font-weight: bold;"><?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "<i>(not set)</i>" ; ?></span>
 		  <a href="javascript:cal1.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
@@ -119,7 +121,7 @@ $rs = mysql_query($sql);
 	  </td>
   </tr>
   <tr bgcolor='#ffffff'>
-    <td><b>Date to</b></td>
+    <td><b><?php echo $_lang["mgrlog_dateto"]; ?></b></td>
     <td align="right">
 		  <input type=hidden name='dateto' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>">
           <span id="dateto_show" style="font-weight: bold;"><?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "<i>(not set)</i>" ; ?></span>
@@ -129,7 +131,7 @@ $rs = mysql_query($sql);
       </tr>
   </tr>
   <tr bgcolor='#eeeeee'>
-    <td><b>Nr. of results</b></td>
+    <td><b><?php echo $_lang["mgrlog_results"]; ?></b></td>
     <td align="right">
       <input type=text name='nrresults' class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="18" height="16" border="0">
     </td>
@@ -248,15 +250,12 @@ $sql .= " LIMIT ".$int_cur_position.", ".$int_num_result;
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
-			echo "<p>Your search query returned an empty result set (i.e. not matching logs found).<p />
+			echo "<p><?php echo $_lang["mgrlog_emptysrch"]; ?></p>
 			</div></div>";
 			exit;
 		} else {
 ?>
-  You can sort the table by clicking on the column headers. If the logs <br>
-  are becoming too large, you can <a href="index.php?a=55">empty</a> the logs. This will remove<br>
-  all log entries up to now, and cannot be undone!
-  <p>
+  <p><?php echo $_lang["mgrlog_sortinst"]; ?></p>
 <?php
 
 include_once "paginate.inc.php";
@@ -296,12 +295,12 @@ print $array_paging['last_link'] ."[last]</a>";
   <table border=0 cellpadding="2" cellspacing="1" bgcolor="#707070" class="sort-table" id="table-1" width="95%">
     <thead>
       <tr>
-        <td><b>UserName</b></td>
-        <td><b>ActionID</b></td>
-        <td><b>ItemID</b></td>
-        <td><b>ItemName</b></td>
-        <td><b>Message</b></td>
-        <td><b>Time</b></td>
+        <td><b><?php echo $_lang["username"]; ?>UserName</b></td>
+        <td><b><?php echo $_lang["actionid"]; ?>ActionID</b></td>
+        <td><b><?php echo $_lang["itemid"]; ?>ItemID</b></td>
+        <td><b><?php echo $_lang["itemname"]; ?>ItemName</b></td>
+        <td><b><?php echo $_lang["msg"]; ?>Message</b></td>
+        <td><b><?php echo $_lang["time"]; ?></b></td>
       </tr>
     </thead>
     <tbody>

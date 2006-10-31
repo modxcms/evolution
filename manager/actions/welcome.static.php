@@ -18,7 +18,7 @@ $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
 // setup message info
 if($modx->hasPermission('messages')) {
     $msg = '<a href="index.php?a=10"><img src="media/style/[+theme+]/images/icons/mail_generic.gif" /></a>
-    <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;Inbox'.($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span><br />
+    <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;'.$_lang["inbox"].($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span><br />
     <span class="comment">'.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>").'</span>';
     $modx->setPlaceholder('MessageInfo',$msg);
 }

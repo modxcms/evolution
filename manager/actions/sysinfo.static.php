@@ -121,13 +121,13 @@ if(!$modx->hasPermission('logs')) {
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 		 <thead>
 		 <tr>
-			<td width="160"><b>Table name</b></td>
-			<td width="40" align="right"><b>Records</b></td>
-			<td width="120" align="right"><b>Data size</b></td>
-			<td width="120" align="right"><b>Overhead</b></td>
-			<td width="120" align="right"><b>Effective size</b></td>
-			<td width="120" align="right"><b>Index size</b></td>
-			<td width="120" align="right"><b>Total size</b></td>
+			<td width="160"><b><?php echo $_lang["database_table_tablename"]; ?></b></td>
+			<td width="40" align="right"><b><?php echo $_lang["database_table_records"]; ?></b></td>
+			<td width="120" align="right"><b><?php echo $_lang["database_table_datasize"]; ?></b></td>
+			<td width="120" align="right"><b><?php echo $_lang["database_table_overhead"]; ?></b></td>
+			<td width="120" align="right"><b><?php echo $_lang["database_table_effectivesize"]; ?></b></td>
+			<td width="120" align="right"><b><?php echo $_lang["database_table_indexsize"]; ?></b></td>
+			<td width="120" align="right"><b><?php echo $_lang["database_table_totalsize"]; ?></b></td>
 		  </tr>
 		  </thead>
 		  <tbody>
@@ -189,7 +189,7 @@ if(!$modx->hasPermission('logs')) {
 	}
 ?>
 		  <tr bgcolor="#CCCCCC">
-			<td valign="top"><b>Totals:</b></td>
+			<td valign="top"><b><?php echo $_lang['database_table_totals']; ?></b></td>
 			<td colspan="2">&nbsp;</td>
 			<td align="right" valign="top"><?php echo $totaloverhead>0 ? "<b style='color:#990033'>".nicesize($totaloverhead)."</b><br>(".number_format($totaloverhead)." B)" : "-"; ?></td>
 			<td colspan="2">&nbsp;</td>

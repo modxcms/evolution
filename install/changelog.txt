@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1844 - October 30, 2006)
+MOD 0.9.5 beta 5 (rev 1846 - October 31, 2006)
 ====================================
+* [FS#618] Fix additional hard coded manager language strings (1846)
 * Added a README file for install and additional help resources (1844)
 * Updated TinyMCE to 2.0.8 with additional config parameters (1843)
 * [FS#578] Fix errors to install and manager when running MySQL in one of the STRICT sql_mode settings. (1830,1835)
