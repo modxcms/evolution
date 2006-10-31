@@ -22,6 +22,8 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 // get the settings from the database
 include "../../includes/settings.inc.php";
 
+$IMConfig['modx']['folder_permissions'] = octdec($new_folder_permissions);
+
 // ** END FOR MODx
 	
 /**

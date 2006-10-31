@@ -14,7 +14,8 @@ $viewablefiles = array(".jpg", ".gif", ".png", ".ico");
 // Mod added by Raymond
 $enablefileunzip = true;
 $enablefiledownload = true;
-$newfolderaccessmode = 0777;
+$new_file_permissions = octdec($new_file_permissions);
+$newfolderaccessmode = $new_folder_permissions ? octdec($new_folder_permissions) : 0777;
 // End Mod -  by Raymond
 // make arrays from the file upload settings
 $upload_files = explode(',',$upload_files);
@@ -88,6 +89,13 @@ function fsize($file) {
                $pos++;
        }
        return round($size,2)." ".$a[$pos];
+}
+
+function mkdirs($strPath, $mode){ // recursive mkdir function
+	if (is_dir($strPath)) return true;
+	$pStrPath = dirname($strPath);
+	if (!mkdirs($pStrPath, $mode)) return false;
+	return @mkdir($strPath);
 }
 
 // get the current work directory
@@ -174,7 +182,7 @@ if(!empty($_FILES['userfile'])) {
 			if(@move_uploaded_file($userfile['tmp_name'], $_POST['path']."/".$userfile['name'])) {
 					// Ryan: Repair broken permissions issue with file manager
 					if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
-						@chmod($_POST['path']."/".$userfile['name'], 0777);
+						@chmod($_POST['path']."/".$userfile['name'], $new_file_permissions);
 					// Ryan: End
 					echo "<br /><span class='success'>".$_lang['files_upload_ok']."</span><br />";
 
@@ -327,24 +335,23 @@ if (is_writable($startpath)){
 		}
 	}
 
-	// Create folder here
-	if($_REQUEST['mode']=="newfolder") {
-		$old_umask = umask(0);
-		$foldername =  str_replace("..\\","",str_replace("../","",$_REQUEST['name']));
-		if(!mkdirs($startpath."/$foldername",$newfolderaccessmode)) {
-			echo "<span class='warning'><b>".$_lang['file_folder_not_created']."</b></span><br /><br />";
+
+// Create folder here
+if($_REQUEST['mode']=="newfolder") {
+	$old_umask = umask(0);
+	$foldername = str_replace("..\\","",str_replace("../","",$_REQUEST['name']));
+	if(!mkdirs($startpath."/$foldername",$newfolderaccessmode)) {
+		echo "<span class='warning'><b>".$_lang['file_folder_not_created']."</b></span><br /><br />";
+	} else {
+		if (!@chmod($startpath."/$foldername",$newfolderaccessmode)) {
+			echo "<span class='warning'><b>".$_lang['file_folder_chmod_error']."</b></span><br /><br />";
 		} else {
 			echo "<span class='success'><b>".$_lang['file_folder_created']."</b></span><br /><br />";
-		}
-		umask($old_umask);
+		}	
 	}
-	echo "<img src='media/style/".$theme."images/tree/folder.gif' border=0 align='absmiddle' alt='' /> <a href='index.php?a=31&mode=newfolder&path=".$startpath."&name=' onclick=\" return getFolderName(this);\"><b>".$_lang['add_folder']."</b></a><br />\n";
+	umask($old_umask);
 }
-function mkdirs($strPath, $mode){ // recursive mkdir function
-	if (is_dir($strPath)) return true;
-	$pStrPath = dirname($strPath);
-	if (!mkdirs($pStrPath, $mode)) return false;
-	return @mkdir($strPath);
+	echo "<img src='media/style/".$theme."images/tree/folder.gif' border=0 align='absmiddle' alt='' /> <a href='index.php?a=31&mode=newfolder&path=".$startpath."&name=' onclick=\" return getFolderName(this);\"><b>".$_lang['add_folder']."</b></a><br />\n";
 }
 // End New Folder - Raymond
 
@@ -380,7 +387,7 @@ function ls ($curpath) {
 	$curpath = str_replace('//','/',$curpath."/");
 
 	if (!is_dir($curpath)) {
-		echo "Invalid path '$curpath'<br>";
+		echo "Invalid path '$curpath'<br />";
 		return;
 	}
 	$dir = dir($curpath);
@@ -428,7 +435,7 @@ function ls ($curpath) {
 		echo $dirs_array[$i]['delete'];
 		echo "</div>";
 		echo "</div>";
-		echo "<br clear='all' />\n";
+		echo "<br style='clear:both' />\n";
 	}
 
 	// dump array entries for files
@@ -446,7 +453,7 @@ function ls ($curpath) {
 		echo $files_array[$i]['delete'];
 		echo "</div>";
 		echo "</div>";
-		echo "<br clear='all' />\n";
+		echo "<br style='clear:both' />\n";
 	}
 
 

@@ -14,7 +14,7 @@
 
 var Class = function(properties){
 	var klass = function(){
-		for (p in this) this[p]._proto_ = this;
+		for (var p in this) this[p]._proto_ = this;
 		if (arguments[0] != 'noinit' && this.initialize) return this.initialize.apply(this, arguments);
 	};
 	klass.extend = this.extend;
@@ -31,26 +31,26 @@ Class.create = function(properties){
 
 Class.prototype = {
 	extend: function(properties){
-		var prototype = new this('noinit');
-		for (property in properties){
-			var previous = prototype[property];
+		var pr0t0typ3 = new this('noinit');
+		for (var property in properties){
+			var previous = pr0t0typ3[property];
 			var current = properties[property];
 			if (previous && previous != current) current = previous.parentize(current) || current;
-			prototype[property] = current;
+			pr0t0typ3[property] = current;
 		}
-		return new Class(prototype);
+		return new Class(pr0t0typ3);
 	},
 	
 	implement: function(properties){
-		for (property in properties) this.prototype[property] = properties[property];
+		for (var property in properties) this.prototype[property] = properties[property];
 	}
-}
+};
 
 Object.extend = function(){
 	var args = arguments;
 	if (args[1]) args = [args[0], args[1]];
 	else args = [this, args[0]];
-	for (property in args[1]) args[0][property] = args[1][property];
+	for (var property in args[1]) args[0][property] = args[1][property];
 	return args[0];
 };
 
@@ -58,7 +58,7 @@ Object.Native = function(){
 	for (var i = 0; i < arguments.length; i++) arguments[i].extend = Class.prototype.implement;
 };
 
-new Object.Native(Function, Array, String);
+new Object.Native(Function, Array, String, Number);
 
 Function.extend({
 	parentize: function(current){
@@ -70,6 +70,7 @@ Function.extend({
 	}
 });
 
+//part of mootools.js - by Valerio Proietti (http://mad4milk.net). MIT-style license.
 //Function.js : Function extension - Depends on Moo.js
 
 Function.extend({
@@ -78,7 +79,7 @@ Function.extend({
 		var fn = this;
 		if ($type(args) != 'array') args = [args];
 		return function(){
-			fn.apply(bind || fn._proto_ || fn, args);
+			return fn.apply(bind || fn._proto_ || fn, args);
 		};
 	},
 
@@ -128,16 +129,6 @@ function $type(obj, types){
 	return type;
 };
 
-function $check(obj, objTrue, objFalse){
-	if (obj) {
-		if (objTrue && $type(objTrue) == 'function') return objTrue();
-		else return objTrue || obj;
-	} else {
-		if (objFalse && $type(objFalse) == 'function') return objFalse();
-		return objFalse || false;
-	}
-};
-
 var Chain = new Class({
 
 	chain: function(fn){
@@ -148,15 +139,20 @@ var Chain = new Class({
 
 	callChain: function(){
 		if (this.chains && this.chains.length) this.chains.splice(0, 1)[0].delay(10, this);
+	},
+	
+	clearChain: function(){
+		this.chains = [];
 	}
 
 });
 
+//part of mootools.js - by Valerio Proietti (http://mad4milk.net). MIT-style license.
 //Array.js : Array extension - depends on Moo.js
 
 if (!Array.prototype.forEach){
 	Array.prototype.forEach = function(fn, bind){
-		for(var i = 0; i < this.length ; i++) fn.call(bind, this[i], i);
+		for (var i = 0; i < this.length ; i++) fn.call(bind, this[i], i);
 	};
 }
 
@@ -195,6 +191,7 @@ function $A(array){
 	return Array.prototype.copy.call(array);
 };
 
+//part of mootools.js - by Valerio Proietti (http://mad4milk.net). MIT-style license.
 //String.js : String extension - depends on Moo.js
 
 String.extend({
@@ -202,7 +199,11 @@ String.extend({
 	test: function(value, params){
 		return this.match(new RegExp(value, params));
 	},
-
+	
+	toInt: function(){
+		return parseInt(this);
+	},
+	
 	camelCase: function(){
 		return this.replace(/-\D/gi, function(match){
 			return match.charAt(match.length - 1).toUpperCase();
@@ -216,7 +217,7 @@ String.extend({
 	},
 
 	trim: function(){
-		return this.replace(/^\s*|\s*$/g,'');
+		return this.replace(/^\s*|\s*$/g, '');
 	},
 
 	clean: function(){
@@ -224,9 +225,13 @@ String.extend({
 	},
 
 	rgbToHex: function(array){
-		var rgb = this.test('^[rgba]{3,4}\\(([\\d]{0,3}),[\\s]*([\\d]{0,3}),[\\s]*([\\d]{0,3})\\)$');
+		var rgb = this.test('([\\d]{1,3})', 'g');
+		if (rgb[3] == 0) return 'transparent';
 		var hex = [];
-		for (var i = 1; i < rgb.length; i++) hex.push((rgb[i]-0).toString(16));
+		for (var i = 0; i < 3; i++){
+			var bit = (rgb[i]-0).toString(16);
+			hex.push(bit.length == 1 ? '0'+bit : bit);
+		}
 		var hexText = '#'+hex.join('');
 		if (array) return hex;
 		else return hexText;
@@ -246,6 +251,15 @@ String.extend({
 
 });
 
+Number.extend({
+
+	toInt: function(){
+		return this;
+	}
+
+});
+
+//part of mootools.js - by Valerio Proietti (http://mad4milk.net). MIT-style license.
 //Element.js : Element methods - depends on Moo.js + Native Scripts
 
 var Element = new Class({
@@ -260,7 +274,7 @@ var Element = new Class({
 	//injecters
 
 	inject: function(el, where){
-		var el = $check($(el), $(el), new Element(el));
+		el = $(el) || new Element(el);
 		switch(where){
 			case "before": $(el.parentNode).insertBefore(this, el); break;
 			case "after": {
@@ -285,8 +299,7 @@ var Element = new Class({
 	},
 
 	adopt: function(el){
-		var el = $check($(el), $(el), new Element(el));
-		this.appendChild(el);
+		this.appendChild($(el) || new Element(el));
 		return this;
 	},
 
@@ -296,12 +309,12 @@ var Element = new Class({
 		this.parentNode.removeChild(this);
 	},
 
-	clone: function(){
-		return $(this.cloneNode(true));
+	clone: function(contents){
+		return $(this.cloneNode(contents || true));
 	},
 
 	replaceWith: function(el){
-		var el = $check($(el), $(el), new Element(el));
+		var el = $(el) || new Element(el);
 		this.parentNode.replaceChild(el, this);
 		return el;
 	},
@@ -314,37 +327,40 @@ var Element = new Class({
 
 	//classnames
 
-	hasClassName: function(className){
-		return $check(this.className.test("\\b"+className+"\\b"), true);
+	hasClass: function(className){
+		return !!this.className.test("\\b"+className+"\\b");
 	},
 
-	addClassName: function(className){
-		if (!this.hasClassName(className)) this.className = (this.className+' '+className.trim()).clean();
+	addClass: function(className){
+		if (!this.hasClass(className)) this.className = (this.className+' '+className.trim()).clean();
 		return this;
 	},
 
-	removeClassName: function(className){
-		if (this.hasClassName(className)) this.className = this.className.replace(className.trim(), '').clean();
+	removeClass: function(className){
+		if (this.hasClass(className)) this.className = this.className.replace(className.trim(), '').clean();
 		return this;
 	},
 
-	toggleClassName: function(className){
-		if (this.hasClassName(className)) return this.removeClassName(className);
-		else return this.addClassName(className);
+	toggleClass: function(className){
+		if (this.hasClass(className)) return this.removeClass(className);
+		else return this.addClass(className);
 	},
 
 	//styles
 
 	setStyle: function(property, value){
-		if (property == 'opacity') this.setOpacity(value);
+		if (property == 'opacity') this.setOpacity(parseFloat(value));
 		else this.style[property.camelCase()] = value;
 		return this;
 	},
 
 	setStyles: function(source){
 		if ($type(source) == 'object') {
-			for (property in source) this.setStyle(property, source[property]);
-		} else if ($type(source) == 'string') this.setAttribute('style', source);
+			for (var property in source) this.setStyle(property, source[property]);
+		} else if ($type(source) == 'string') {
+			if (window.ActiveXObject) this.cssText = source;
+			else this.setAttribute('style', source);
+		}
 		return this;
 	},
 
@@ -358,14 +374,13 @@ var Element = new Class({
 
 	getStyle: function(property, num){
 		var proPerty = property.camelCase();
-		var style = $check(this.style[proPerty]);
+		var style = this.style[proPerty] || false;
 		if (!style) {
 			if (document.defaultView) style = document.defaultView.getComputedStyle(this,null).getPropertyValue(property);
 			else if (this.currentStyle) style = this.currentStyle[proPerty];
 		}
 		if (style && ['color', 'backgroundColor', 'borderColor'].test(proPerty) && style.test('rgb')) style = style.rgbToHex();
-		if (['auto', 'transparent'].test(style)) style = 0;
-		if (num) return parseInt(style);
+		if (num) return style.toInt();
 		else return style;
 	},
 
@@ -417,6 +432,13 @@ var Element = new Class({
 		while ($type(el) == 'textnode') el = el.nextSibling;
 		return $(el);
 	},
+	
+	getLast: function(){
+		var el = this.lastChild;
+		while ($type(el) == 'textnode')
+		el = el.previousSibling;
+		return $(el);
+	},
 
 	//properties
 
@@ -439,7 +461,7 @@ var Element = new Class({
 	},
 
 	setProperties: function(source){
-		for (property in source) this.setProperty(property, source[property]);
+		for (var property in source) this.setProperty(property, source[property]);
 		return this;
 	},
 
@@ -479,12 +501,19 @@ var Element = new Class({
 
 });
 
+new Object.Native(Element);
+
+Element.extend({
+	hasClassName: Element.prototype.hasClass,
+	addClassName: Element.prototype.addClass,
+	removeClassName: Element.prototype.removeClass,
+	toggleClassName: Element.prototype.toggleClass
+});
+
 function $Element(el, method, args){
 	if ($type(args) != 'array') args = [args];
 	return Element.prototype[method].apply(el, args);
 };
-
-new Object.Native(Element);
 
 function $(el){
 	if ($type(el) == 'string') el = document.getElementById(el);
@@ -498,10 +527,10 @@ function $(el){
 	} else return false;
 };
 
-//garbage collector
+window.addEvent = document.addEvent = Element.prototype.addEvent;
+window.removeEvent = document.removeEvent = Element.prototype.removeEvent;
 
-window.addEvent = Element.prototype.addEvent;
-window.removeEvent = Element.prototype.removeEvent;
+//garbage collector
 
 var Unload = {
 
@@ -515,7 +544,7 @@ var Unload = {
 		window.removeEvent('unload', window.removeFunction);
 		
 		Unload.elements.each(function(el){
-			for(p in Element.prototype){
+			for (var p in Element.prototype){
 				window[p] = null;
 				document[p] = null;
 				el[p] = null;
@@ -528,7 +557,8 @@ var Unload = {
 window.removeFunction = Unload.unload;
 window.addEvent('unload', window.removeFunction);
 
-//Fx.js - depends on Moo.js + Native Scripts
+//part of mootools.js - by Valerio Proietti (http://mad4milk.net). MIT-style license.
+//Fx.js - The Effects - depends on Moo.js + Native Scripts
 
 var Fx = fx = {};
 
@@ -536,47 +566,28 @@ Fx.Base = new Class({
 
 	setOptions: function(options){
 		this.options = Object.extend({
-			duration: 500,
-			onComplete: Class.empty,
 			onStart: Class.empty,
+			onComplete: Class.empty,
+			transition: Fx.Transitions.sineInOut,
+			duration: 500,
 			unit: 'px',
 			wait: true,
-			transition: Fx.sinoidal,
-			fps: 30
+			fps: 50
 		}, options || {});
 	},
 
 	step: function(){
-		var currentTime  = (new Date).getTime();
-		if (currentTime >= this.options.duration+this.startTime){
-			this.clearTimer();
-			this.now = this.to;
-			this.options.onComplete.pass(this.el, this).delay(10);
-			this.callChain();
-		} else {
-			this.tPos = (currentTime - this.startTime) / this.options.duration;
+		var time = new Date().getTime();
+		if (time < this.time + this.options.duration){
+			this.cTime = time - this.time;
 			this.setNow();
+		} else {
+			this.options.onComplete.pass(this.element, this).delay(10);
+			this.clearTimer();
+			this.callChain();
+			this.now = this.to;
 		}
 		this.increase();
-	},
-
-	setNow: function(){
-		this.now = this.compute(this.from, this.to);
-	},
-
-	compute: function(from, to){
-		return this.options.transition(this.tPos) * (to-from) + from;
-	},
-
-	custom: function(from, to){
-		if(!this.options.wait) this.clearTimer();
-		if (this.timer) return;
-		this.options.onStart.pass(this.el, this).delay(10);
-		this.from = from;
-		this.to = to;
-		this.startTime = (new Date).getTime();
-		this.timer = this.step.periodical(Math.round(1000/this.options.fps), this);
-		return this;
 	},
 
 	set: function(to){
@@ -585,16 +596,32 @@ Fx.Base = new Class({
 		return this;
 	},
 
+	setNow: function(){
+		this.now = this.compute(this.from, this.to);
+	},
+
+	compute: function(from, to){
+		return this.options.transition(this.cTime, from, (to - from), this.options.duration);
+	},
+
+	custom: function(from, to){
+		if (!this.options.wait) this.clearTimer();
+		if (this.timer) return;
+		this.options.onStart.pass(this.element, this).delay(10);
+		this.from = from;
+		this.to = to;
+		this.time = new Date().getTime();
+		this.timer = this.step.periodical(Math.round(1000/this.options.fps), this);
+		return this;
+	},
+
 	clearTimer: function(){
 		this.timer = $clear(this.timer);
 		return this;
 	},
 
-	setStyle: function(el, property, value){
-		if (property == 'opacity'){
-			if (value == 1 && navigator.userAgent.test('Firefox')) value = 0.9999;
-			el.setOpacity(value);
-		} else el.setStyle(property, value+this.options.unit);
+	setStyle: function(element, property, value){
+		element.setStyle(property, value + this.options.unit);
 	}
 
 });
@@ -604,74 +631,50 @@ Fx.Base.implement(new Chain);
 Fx.Style = Fx.Base.extend({
 
 	initialize: function(el, property, options){
-		this.el = $(el);
+		this.element = $(el);
 		this.setOptions(options);
 		this.property = property.camelCase();
 	},
-	
+
 	hide: function(){
 		return this.set(0);
 	},
-	
+
 	goTo: function(val){
 		return this.custom(this.now || 0, val);
 	},
-	
+
 	increase: function(){
-		this.setStyle(this.el, this.property, this.now);
+		this.setStyle(this.element, this.property, this.now);
 	}
 
 });
 
-Fx.Layout = Fx.Style.extend({
-	
-	initialize: function(el, layout, options){
-		this.parent(el, layout, options);
-		this.layout = layout.capitalize();
-		this.el.setStyle('overflow', 'hidden');
-	},
-	
-	toggle: function(){
-		if (this.el['offset'+this.layout] > 0) return this.custom(this.el['offset'+this.layout], 0);
-		else return this.custom(0, this.el['scroll'+this.layout]);
-	},
-
-	show: function(){
-		return this.set(this.el['scroll'+this.layout]);
-	}
-	
-});
-
-Fx.Height = Fx.Layout.extend({
+Fx.Styles = Fx.Base.extend({
 
 	initialize: function(el, options){
-		this.parent(el, 'height', options);
-	}
-
-});
-
-Fx.Width = Fx.Layout.extend({
-
-	initialize: function(el, options){
-		this.parent(el, 'width', options);
-	}
-
-});
-
-Fx.Opacity = Fx.Style.extend({
-
-	initialize: function(el, options){
-		this.parent(el, 'opacity', options);
-		this.now = 1;
+		this.element = $(el);
+		this.setOptions(options);
+		this.now = {};
 	},
 
-	toggle: function(){
-		if (this.now > 0) return this.custom(1, 0);
-		else return this.custom(0, 1);
+	setNow: function(){
+		for (var p in this.from) this.now[p] = this.compute(this.from[p], this.to[p]);
 	},
 
-	show: function(){
-		this.set(1);
+	custom: function(objFromTo){
+		if (this.timer && this.options.wait) return;
+		var from = {};
+		var to = {};
+		for (var p in objFromTo){
+			from[p] = objFromTo[p][0];
+			to[p] = objFromTo[p][1];
+		}
+		return this.parent(from, to);
+	},
+
+	increase: function(){
+		for (var p in this.now) this.setStyle(this.element, p, this.now[p]);
 	}
 
 });
@@ -680,18 +683,129 @@ Element.extend({
 
 	effect: function(property, options){
 		return new Fx.Style(this, property, options);
+	},
+
+	effects: function(options){
+		return new Fx.Styles(this, options);
 	}
 
 });
 
-Fx.sinoidal = function(pos){return ((-Math.cos(pos*Math.PI)/2) + 0.5);}; //this transition is from script.aculo.us
+//Easing Equations, (c) 2003 Robert Penner (http://www.robertpenner.com/easing/), Open Source BSD License.
 
-Fx.linear = function(pos){return pos;};
+Fx.Transitions = {
 
-Fx.cubic = function(pos){return Math.pow(pos, 3);};
+	linear: function(t, b, c, d){
+		return c*t/d + b;
+	},
 
-Fx.circ = function(pos){return Math.sqrt(pos);};
+	sineInOut: function(t, b, c, d){
+		return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b;
+	}
 
+};
+
+//part of mootools.js - by Valerio Proietti (http://mad4milk.net). MIT-style license.
+//Ajax.js - depends on Moo.js + Native Scripts
+
+var Ajax = ajax = new Class({
+
+	setOptions: function(options){
+		this.options = {
+			method: 'post',
+			postBody: null,
+			async: true,
+			onComplete: Class.empty,
+			onStateChange: Class.empty,
+			update: null,
+			evalScripts: false
+		};
+		Object.extend(this.options, options || {});
+	},
+
+	initialize: function(url, options){
+		this.setOptions(options);
+		this.url = url;
+		this.transport = this.getTransport();
+	},
+
+	request: function(){
+		this.transport.open(this.options.method, this.url, this.options.async);
+		this.transport.onreadystatechange = this.onStateChange.bind(this);
+		if (this.options.method == 'post'){
+			this.transport.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			if (this.transport.overrideMimeType) this.transport.setRequestHeader('Connection', 'close');
+		}
+		switch($type(this.options.postBody)){
+			case 'element': this.options.postBody = $(this.options.postBody).toQueryString(); break;
+			case 'object': this.options.postBody = Object.toQueryString(this.options.postBody);
+		}
+		this.transport.send(this.options.postBody);
+		return this;
+	},
+
+	onStateChange: function(){
+		this.options.onStateChange.bind(this).delay(10);
+		if (this.transport.readyState == 4 && this.transport.status == 200){
+			if (this.options.update) $(this.options.update).setHTML(this.transport.responseText);
+			this.options.onComplete.pass([this.transport.responseText, this.transport.responseXML], this).delay(20);
+			if (this.options.evalScripts) this.evalScripts.delay(30, this);
+			this.transport.onreadystatechange = Class.empty;
+			this.callChain();
+		}
+	},
+
+	evalScripts: function(){
+		if(scripts = this.transport.responseText.match(/<script[^>]*?>[\S\s]*?<\/script>/g)){
+			scripts.each(function(script){
+				eval(script.replace(/^<script[^>]*?>/, '').replace(/<\/script>$/, ''));
+			});
+		}
+	},
+
+	getTransport: function(){
+		if (window.XMLHttpRequest) return new XMLHttpRequest();
+		else if (window.ActiveXObject) return new ActiveXObject('Microsoft.XMLHTTP');
+	}
+
+});
+
+Ajax.implement(new Chain);
+
+Object.toQueryString = function(source){
+	var queryString = [];
+	for (var property in source) queryString.push(encodeURIComponent(property)+'='+encodeURIComponent(source[property]));
+	return queryString.join('&');
+};
+
+Element.extend({
+
+	send: function(options){
+		options = Object.extend(options, {postBody: this.toQueryString(), method: 'post'});
+		return new Ajax(this.getProperty('action'), options).request();
+	},
+
+	toQueryString: function(){
+		var queryString = [];
+		$A(this.getElementsByTagName('*')).each(function(el){
+			$(el);
+			var name = el.name || false;
+			if (!name) return;
+			var value = false;
+			switch(el.getTag()){
+				case 'select': value = el.getElementsByTagName('option')[el.selectedIndex].value; break;
+				case 'input': if ( (el.checked && ['checkbox', 'radio'].test(el.type)) || (['hidden', 'text', 'password'].test(el.type)) ) 
+					value = el.value; break;
+				case 'textarea': value = el.value;
+			}
+			if (value) queryString.push(encodeURIComponent(name)+'='+encodeURIComponent(value));
+		});
+		return queryString.join('&');
+	}
+
+});
+
+//part of mootools.js - by Valerio Proietti (http://mad4milk.net). MIT-style license.
 //Tips.js : Display a tip on any element with a title and/or href - depends on Moo.js + Native Scripts +  Fx.js
 //Credits : Tips.js is based on Bubble Tooltips (http://web-graphics.com/mtarchive/001717.php) by Alessandro Fulcitiniti (http://web-graphics.com)
 
@@ -718,7 +832,7 @@ var Tips = new Class({
 		this.toolText = new Element('p').injectInside(this.toolTip);
 		this.fx = new fx.Style(this.toolTip, 'opacity', {duration: this.options.fxDuration, wait: false}).hide();
 		$A(elements).each(function(el){
-			$(el).myText = $check(el.title);
+			$(el).myText = el.title || false;
 			if (el.myText) el.removeAttribute('title');
 			if (el.href){
 				if (el.href.test('http://')) el.myTitle = el.href.replace('http://', '');

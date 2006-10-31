@@ -3,8 +3,17 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 RC1 (rev 1847 - October 31, 2006)
+MODx 0.9.5 RC1 (rev 1848 - October 31, 2006)
 ====================================
+* [FS#620] Adjusted styles to add scrollbars to message area if complete message can not be displayed. (1840)
+* [FS#620] Made the system alert box variable width so it will always fit within the boundaries of the frame. (1840)
+* [FS#620] Moved embedded CSS styles into a sysalert_style.php file in the theme directories. (1840)
+* Revised permissions in menu.php and add some extra permissions to hide 'New Document/Weblink' options when user is not assigned new document permissions. (1838)
+* Update Mootools to have Ajax.js. (1833)
+* [FS#525] Add support for folder/file permission settings in the Resource Browser. (1832)
+* [FS#585] and [FS#586] Added file/folder permission settings into the main system configuration. (1831)
+* [FS#585] and [FS#586] Add attempt to CHMOD permissions when uploading files and creating new folders in the File Manager. (1831)
+* [FS#619] Fix path to session_keepalive.php in session.js. (1829)
 * [FS#618] Fix additional hard coded manager language strings (1846)
 * Added a README file for install and additional help resources (1844)
 * Updated TinyMCE to 2.0.8 with additional config parameters (1843)

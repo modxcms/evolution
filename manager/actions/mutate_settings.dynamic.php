@@ -1042,6 +1042,32 @@ function updateContentType(){
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["new_file_permissions_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="new_file_permissions" value="<?php echo isset($new_file_permissions) ? $new_file_permissions : "0644" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["new_file_permissions_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["new_folder_permissions_title"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="new_folder_permissions" value="<?php echo isset($new_folder_permissions) ? $new_folder_permissions : "0755" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["new_folder_permissions_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php

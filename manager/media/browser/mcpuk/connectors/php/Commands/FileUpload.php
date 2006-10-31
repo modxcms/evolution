@@ -139,7 +139,7 @@ class FileUpload {
 											if (is_uploaded_file($_FILES['NewFile']['tmp_name'])) {
 												if 
 												(move_uploaded_file($_FILES['NewFile']['tmp_name'],($this->real_cwd."/$filename($i).$ext"))) {
-													chmod(($this->real_cwd."/$filename($i).$ext"),0777);
+													@chmod(($this->real_cwd."/$filename($i).$ext"),$this->fckphp_config['modx']['file_permissions']); //modified for MODx
 													$disp="201,'..$filename($i).$ext'";
 												} else {
 													$disp="202,'Failed to upload file, internal error.'";
@@ -147,7 +147,7 @@ class FileUpload {
 											} else {
 												if 
 												(rename($_FILES['NewFile']['tmp_name'],($this->real_cwd."/$filename($i).$ext"))) {
-													chmod(($this->real_cwd."/$filename($i).$ext"),0777);
+													@chmod(($this->real_cwd."/$filename($i).$ext"),$this->fckphp_config['modx']['file_permissions']); //modified for MODx
 													$disp="201,'$filename($i).$ext'";
 												} else {
 													$disp="202,'Failed to upload file, internal error.'";
@@ -163,14 +163,14 @@ class FileUpload {
 									//Upload file
 									if (is_uploaded_file($_FILES['NewFile']['tmp_name'])) {
 										if (move_uploaded_file($_FILES['NewFile']['tmp_name'],($this->real_cwd."/$filename.$ext"))) {
-											chmod(($this->real_cwd."/$filename.$ext"),0777);
+											@chmod(($this->real_cwd."/$filename.$ext"),$this->fckphp_config['modx']['file_permissions']); //modified for MODx
 											$disp="0";
 										} else {
 											$disp="202,'Failed to upload file, internal error...'";
 										}
 									} else {
 										if (rename($_FILES['NewFile']['tmp_name'],($this->real_cwd."/$filename.$ext"))) {
-											chmod(($this->real_cwd."/$filename.$ext"),0777);
+											@chmod(($this->real_cwd."/$filename.$ext"),$this->fckphp_config['modx']['file_permissions']); //modified for MODx
 											$disp="0";
 										} else {
 											$disp="202,'Failed to upload file, internal error...'";

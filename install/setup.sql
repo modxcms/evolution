@@ -830,6 +830,8 @@ REPLACE INTO `{PREFIX}system_settings`
 ('upload_flash','swf,fla'),
 ('upload_files','txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,mp3,mp4,aac,wav,au,wmv,avi,mpg,mpeg,pdf,doc,xls,txt'),
 ('upload_maxsize','1048576'),
+('new_file_permissions','0644'),
+('new_folder_permissions','0755'),
 ('show_preview','0'),
 ('filemanager_path','{FILEMANAGERPATH}'),
 ('theme_refresher',''),

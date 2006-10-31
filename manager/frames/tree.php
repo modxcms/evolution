@@ -425,8 +425,10 @@
             <tr>
             <td><a href="javascript:;" class="treeButton" id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></a></td>
             <td><a href="javascript:;" class="treeButton" id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a></td>
-            <td><a href="javascript:;" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
-            <td><a href="javascript:;" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
+            <?php if ($modx->hasPermission('new_document')) { ?>
+	            <td><a href="javascript:;" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
+	            <td><a href="javascript:;" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
+            <?php } ?>
             <td><a href="javascript:;" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="javascript:;" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
             <td><a href="javascript:;" id="Button10" class="treeButtonDisabled"' title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>

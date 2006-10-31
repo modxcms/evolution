@@ -286,7 +286,7 @@ class ImageManager
 			{
 				$path = Files::makePath($path_parts['dirname'],$this->config['thumbnail_dir']);
 				if(!is_dir($path))
-					Files::createFolder($path);
+					Files::createFolder($path,$this->config['modx']['folder_permissions']); //modified for MODx
 				Return Files::makeFile($path,$thumbnail);
 			}
 			else //should this ever happen?
@@ -607,7 +607,7 @@ class ImageManager
 			if(is_dir($fullpath))
 				Return false;
 
-			Return Files::createFolder($fullpath);
+			Return Files::createFolder($fullpath,$this->config['modx']['folder_permissions']); //modified for MODx
 		}
 	}
 }

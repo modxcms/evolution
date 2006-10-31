@@ -36,7 +36,7 @@ include("../../../../../includes/settings.inc.php");
 
 // Override system settings with user settings
 define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
-include("../../../../../includes/user_settings.inc.php");// make arrays from the file upload settings$upload_files = explode(',',$upload_files);$upload_images = explode(',',$upload_images);$upload_media = explode(',',$upload_media);$upload_flash = explode(',',$upload_flash);
+include("../../../../../includes/user_settings.inc.php");// make arrays from the file upload settings$upload_files = explode(',',$upload_files);$upload_images = explode(',',$upload_images);$upload_media = explode(',',$upload_media);$upload_flash = explode(',',$upload_flash);// avoid problems when passing strings into CHMOD$fckphp_config['modx']['file_permissions'] = octdec($new_file_permissions);$fckphp_config['modx']['folder_permissions'] = octdec($new_folder_permissions);
 // ** END FOR MODx
 
 /*------------------------------------------------------------------------------*/

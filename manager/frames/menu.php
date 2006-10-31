@@ -232,125 +232,158 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <div id="divNav">
 
 <ul id="nav">
-<!-- Site -->
-<li id="limenu3" class="active"><a href="#menu3" onclick="new NavToggle(this); return false;"><?php echo $_lang["site"]; ?></a>
-<ul class="subnav" id="menu3">
-<!--home--><li><a onclick="this.blur();" href="index.php?a=2" target="main"><?php echo $_lang["home"]; ?></a></li>
-<!--preview--><li><a onclick="this.blur();" href="../" target="_blank"><?php echo $_lang["launch_site"]; ?></a></li>
-<!--clear-cache--><li><a onclick="this.blur();" href="index.php?a=26" target="main"><?php echo $_lang["refresh_site"]; ?></a></li>
-<!--search--><li><a onclick="this.blur();" href="index.php?a=71" target="main"><?php echo $_lang['search']; ?></a></li>
-<!--new-document--><li><a onclick="this.blur();" href="index.php?a=4" target="main"><?php echo $_lang["add_document"]; ?></a></li>
-<!--new-weblink--><li><a onclick="this.blur();" href="index.php?a=72" target="main"><?php echo $_lang["add_weblink"]; ?></a></li>
-</ul>
-</li>
-
-<!--Resources-->
-<?php if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) { ?>
-<li id="limenu5"><a onclick="new NavToggle(this);return false;" href="#menu5"><?php echo $_lang["resources"]; ?></a>
-<ul class="subnav" id="menu5"><!-- break these out individually soon -->
-<!--resources--><li><a onclick="this.blur();" href="index.php?a=76" target="main"><?php echo $_lang["resource_management"]; ?></a></li>
-<?php if($modx->hasPermission('file_manager')) { ?>
-<!--manage-files--><li><a onclick="this.blur();" href="index.php?a=31" target="main"><?php echo $_lang["manage_files"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('manage_metatags')) { ?>
-<!--manage-metatags--><li><a onclick="this.blur();" href="index.php?a=81" target="main"><?php echo $_lang["manage_metatags"]; ?></a></li>
-<?php } ?>
-</ul>
-</li>
-<?php } ?>
-
-
-<!-- Modules -->
-<?php  if($modx->hasPermission('exec_module')) { ?>
-<li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;"><?php echo $_lang["modules"]; ?></a>
-<ul class="subnav" id="menu9">
-<?php if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) { ?>
-<!--manage-modules--><li><a onclick="this.blur();" href="index.php?a=106" target="main"><?php echo $_lang["module_management"]; ?></a></li>
-<?php } ?>
 <?php
-$list = '';  // initialize list variable
-$rs = $modx->db->select('*',$modx->getFullTableName('site_modules'));  // get modules
-while($content = $modx->db->getRow($rs)) {
-$list .= '<li><a onclick="this.blur();" href="index.php?a=112&amp;id='.$content['id'].'" target="main">'.$content['name'].'</a></li>'."\n";
+
+// Concatenate menu items based on permissions
+
+// Site Menu
+$sitemenu = '';
+// home
+$sitemenu .= '<li><a onclick="this.blur();" href="index.php?a=2" target="main">' . $_lang["home"] . '</a></li>';
+// preview
+$sitemenu .= '<li><a onclick="this.blur();" href="../" target="_blank">' . $_lang["preview"] . '</a></li>';
+// clear-cache
+$sitemenu .= '<li><a onclick="this.blur();" href="index.php?a=26" target="main">' . $_lang["refresh_site"] .'</a></li>';
+// search
+$sitemenu .= '<li><a onclick="this.blur();" href="index.php?a=71" target="main">' . $_lang['search'] .'</a></li>';
+if ($modx->hasPermission('new_document')) { 
+	// new-document
+	$sitemenu .= '<li><a onclick="this.blur();" href="index.php?a=4" target="main">' . $_lang['add_document'] .'</a></li>';
+	// new-weblink
+	$sitemenu .= '<li><a onclick="this.blur();" href="index.php?a=72" target="main">' . $_lang['add_weblink'] .'</a></li>';
 }
-echo $list;
+
+// Resources Menu
+$resourcemenu = '';
+// Resources
+if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) {
+	$resourcemenu .= '<li><a onclick="this.blur();" href="index.php?a=76" target="main">' . $_lang["resource_management"] . '</a></li>';
+}
+// Manage-Files
+if($modx->hasPermission('file_manager')) {
+	$resourcemenu .= '<li><a onclick="this.blur();" href="index.php?a=31" target="main">' . $_lang["manage_files"] .'</a></li>'."\n";
+}
+// Manage-Metatags
+if($modx->hasPermission('manage_metatags')) { 
+	$resourcemenu .= '<li><a onclick="this.blur();" href="index.php?a=81" target="main">' . $_lang["manage_metatags"] . '</a></li>'."\n";
+}
+
+// Modules Menu Items
+$modulemenu = '';
+// manage-modules
+if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) { 
+	$modulemenu .= '<li><a onclick="this.blur();" href="index.php?a=106" target="main">' . $_lang["module_management"] . '</a></li>'."\n";
+}
+// Each module
+if($modx->hasPermission('exec_module')) {
+	$rs = $modx->db->select('*',$modx->getFullTableName('site_modules'));  // get modules
+	while($content = $modx->db->getRow($rs)) {
+		$modulemenu .= '<li><a onclick="this.blur();" href="index.php?a=112&amp;id='.$content['id'].'" target="main">'.$content['name'].'</a></li>'."\n";
+	}
+}
+
+// Security menu items (users)
+$securitymenu = '';
+// manager-users
+if($modx->hasPermission('edit_user')) {
+	$securitymenu .= '<li><a onclick="this.blur();" href="index.php?a=75" target="main">' . $_lang["user_management_title"] . '</a></li>'."\n";
+}
+// web-users
+if($modx->hasPermission('edit_web_user')) { 
+	$securitymenu .= '<li><a onclick="this.blur();" href="index.php?a=99" target="main">' . $_lang["web_user_management_title"] . '</a></li>'."\n";
+}
+// roles
+if($modx->hasPermission('edit_user')) {
+	$securitymenu .= '<li><a onclick="this.blur();" href="index.php?a=86" target="main">' . $_lang["role_management_title"] . '</a></li>'."\n";
+}
+// manager-perms
+if($modx->hasPermission('access_permissions')) {
+	$securitymenu .= '<li><a onclick="this.blur();" href="index.php?a=40" target="main">' . $_lang["manager_permissions"] . '</a></li>'."\n";
+}
+// web-user-perms
+if($modx->hasPermission('web_access_permissions')) {
+	$securitymenu .= '<li><a onclick="this.blur();" href="index.php?a=91" target="main">' . $_lang["web_permissions"] . '</a></li>'."\n";
+}
+
+// Tools Menu
+$toolsmenu = '';
+// backup-mgr
+if($modx->hasPermission('bk_manager')) {
+	$toolsmenu .= '<li><a onclick="this.blur();" href="index.php?a=93" target="main">' . $_lang["bk_manager"] . '</a></li>'."\n";
+}
+// unlock-pages
+if($modx->hasPermission('bk_manager')) {
+	$toolsmenu .= '<li><a onclick="this.blur();" href="javascript:removeLocks();">' . $_lang["remove_locks"] .'</a></li>'."\n";
+}
+// import-html
+if($modx->hasPermission('new_document')) {
+	$toolsmenu .= '<li><a onclick="this.blur();" href="index.php?a=95" target="main">' . $_lang["import_site"] .'</a></li>';
+}
+// export-static-site
+if($modx->hasPermission('edit_document')) {
+	$toolsmenu .= '<li><a onclick="this.blur();" href="index.php?a=83" target="main">' . $_lang["export_site"]. '</a></li>';
+}
+// configuration
+if($modx->hasPermission('settings')) {
+	$toolsmenu .= '<li><a onclick="this.blur();" href="index.php?a=17" target="main">' . $_lang["edit_settings"]. '</a></li>';
+}
+
+// Reports Menu
+$reportsmenu = '';
+// site-sched
+$reportsmenu .= '<li><a onclick="this.blur();" href="index.php?a=70" target="main">' . $_lang["site_schedule"] . '</a></li>'."\n";
+// eventlog
+if($modx->hasPermission('view_eventlog')) {
+	$reportsmenu .= '<li><a onclick="this.blur();" href="index.php?a=114" target="main">' . $_lang["eventlog_viewer"] . '</a></li>'."\n";
+}
+// manager-audit-trail
+if($modx->hasPermission('logs')) {
+	$reportsmenu .= '<li><a onclick="this.blur();" href="index.php?a=13" target="main">' . $_lang["view_logging"] . '</a></li>'."\n";
+}
+// system-info
+if($modx->hasPermission('logs')) {
+	$reportsmenu .= '<li><a onclick="this.blur();" href="index.php?a=53" target="main">' . $_lang["view_sysinfo"] . '</a></li>'."\n";
+}
+
+// Output Menus where there are items to show
+if ($sitemenu) {
+	echo '<li id="limenu3" class="active"><a href="#menu3" onclick="new NavToggle(this); return false;">' . $_lang["site"] . '</a>'."\n";
+	echo '<ul class="subnav" id="menu3">' . $sitemenu . '</ul>'."\n";
+	echo '</li>'."\n";
+}
+if ($resourcemenu) {
+	echo '<li id="limenu5"><a href="#menu5" onclick="new NavToggle(this); return false;">' . $_lang["resources"] . '</a>'."\n";
+	echo '<ul class="subnav" id="menu5">' . $resourcemenu . '</ul>'."\n";
+	echo '</li>'."\n";
+}
+if ($modulemenu) {
+	echo '<li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;">' . $_lang["modules"] . '</a>'."\n";
+	echo '<ul class="subnav" id="menu9">' . $modulemenu . '</ul>'."\n";
+	echo '</li>'."\n";
+}
+if ($securitymenu) {
+	echo '<li id="limenu2"><a href="#menu2" onclick="new NavToggle(this); return false;">' . $_lang["users"] . '</a>'."\n";
+	echo '<ul class="subnav" id="menu2">' . $securitymenu . '</ul>'."\n";
+	echo '</li>'."\n";
+}
+if ($toolsmenu) {
+	echo '<li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;">' . $_lang["tools"] . '</a>'."\n";
+	echo '<ul class="subnav" id="menu1-1">' . $toolsmenu . '</ul>'."\n";
+	echo '</li>'."\n";
+}
+if ($reportsmenu) {
+	echo '<li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;">' . $_lang["reports"] . '</a>'."\n";
+	echo '<ul class="subnav" id="menu1-2">' . $reportsmenu . '</ul>'."\n";
+	echo '</li>'."\n";
+}
 ?>
-</ul>
-</li>
-<?php } ?>
-
-
-<!-- Security (users) -->
-<?php if($modx->hasPermission('new_user') || $modx->hasPermission('edit_user') || $modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('access_permissions')||$modx->hasPermission('new_web_user') || $modx->hasPermission('edit_web_user') || $modx->hasPermission('web_access_permissions')) { ?>
-<li id="limenu2"><a href="#menu2" onclick="new NavToggle(this); return false;"><?php echo $_lang["users"]; ?></a>
-<ul class="subnav" id="menu2">
-<?php if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { ?>
-<!--manager-users--><li><a onclick="this.blur();" href="index.php?a=75" target="main"><?php echo $_lang["user_management_title"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) { ?>
-<!--web-users--><li><a onclick="this.blur();" href="index.php?a=99" target="main"><?php echo $_lang["web_user_management_title"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('new_role')||$modx->hasPermission('edit_user')) { ?>
-<!--roles--><li><a onclick="this.blur();" href="index.php?a=86" target="main"><?php echo $_lang["role_management_title"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('access_permissions')) { ?>
-<!--manager-perms--><li><a onclick="this.blur();" href="index.php?a=40" target="main"><?php echo $_lang["manager_permissions"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('web_access_permissions')) { ?>
-<!--web-user-perms--><li><a onclick="this.blur();" href="index.php?a=91" target="main"><?php echo $_lang["web_permissions"]; ?></a></li>
-<?php } ?>
-</ul>
-</li>
-<?php } ?>
-
-
-<!-- Tools -->
-<li id="limenu1-1"><a href="#menu1-1" onclick="new NavToggle(this); return false;"><?php echo $_lang["tools"]; ?></a>
-<ul class="subnav" id="menu1-1">
-<?php if($modx->hasPermission('bk_manager')) { ?>
-<!--backup-mgr--><li><a onclick="this.blur();" href="index.php?a=93" target="main"><?php echo $_lang["bk_manager"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('settings')) { ?>
-<!--unlock-pages--><li><a onclick="this.blur();" href="javascript:removeLocks();"><?php echo $_lang["remove_locks"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('new_document')) { ?>
-<!--import-html--><li><a onclick="this.blur();" href="index.php?a=95" target="main"><?php echo $_lang["import_site"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('edit_document')) { ?>
-<!--export-static-site--><li><a onclick="this.blur();" href="index.php?a=83" target="main"><?php echo $_lang["export_site"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('settings')) { ?>
-<!--configuration--><li><a onclick="this.blur();" href="index.php?a=17" target="main"><?php echo $_lang["edit_settings"]; ?></a></li>
-<?php } ?>
-</ul>
-</li>
-
-
-
-<!-- Reports -->
-<li id="limenu1-2"><a href="#menu1-2" onclick="new NavToggle(this); return false;"><?php echo $_lang["reports"]; ?></a>
-<ul class="subnav" id="menu1-2">
-<!--site-sched--><li><a onclick="this.blur();" href="index.php?a=70" target="main"><?php echo $_lang["site_schedule"]; ?></a></li>
-<?php if($modx->hasPermission('view_eventlog')) { ?>
-<!--manager-events--><li><a onclick="this.blur();" href="index.php?a=114" target="main"><?php echo $_lang["eventlog_viewer"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('logs')) { ?>
-<!--manager-audit-trail--><li><a onclick="this.blur();" href="index.php?a=13" target="main"><?php echo $_lang["view_logging"]; ?></a></li>
-<?php } ?>
-<?php if($modx->hasPermission('settings')) { ?>
-<!--system-info--><li><a onclick="this.blur();" href="index.php?a=53" target="main"><?php echo $_lang["view_sysinfo"]; ?></a></li>
-<?php } ?>
-</ul>
-</li>
-
 </ul>
 
 </div></div>
 </form>
 
-<!-- can't find a better name :) should alwys be fixed -->
+<!-- can't find a better name :) should always be fixed -->
 <div id="menuSplitter"></div>
-
 
 </body>
 </html>
