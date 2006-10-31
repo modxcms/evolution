@@ -3,8 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MOD 0.9.5 beta 5 (rev 1835 - October 29, 2006)
+MOD 0.9.5 beta 5 (rev 1844 - October 30, 2006)
 ====================================
+* Added a README file for install and additional help resources (1844)
+* Updated TinyMCE to 2.0.8 with additional config parameters (1843)
 * [FS#578] Fix errors to install and manager when running MySQL in one of the STRICT sql_mode settings. (1830,1835)
 * [FS#615] QuickEdit should no longer break on non-enlish languages with longer text strings (1825)
 * [FS#614] Remove DisableCache from the install and add the disable cache functionality into the TemplateSwitcher plugin. (1818)
