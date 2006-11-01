@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC1 (rev 1857 - Nov 1, 2006)
+MODx 0.9.5 RC1 (rev 1858 - Nov 1, 2006)
 ====================================
+* Added new HTML Entities output widget for TVs (1858)
 * Update eForm to 1.4.1
 * Clarify File Manager vs. Resource Browser manager config options (1853)
 * [FS#626] Fix the mysterious missing login button in IE6. (also fixes image paths in CSS). (1851)

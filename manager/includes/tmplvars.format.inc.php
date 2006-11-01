@@ -9,13 +9,13 @@
 
 		global $modx;
 		global $base_path;
-		
+
 		// set media path for js scripts
 		$modx->regClientStartupScript('<script type="text/javascript">var MODX_MEDIA_PATH = "'.(IN_MANAGER_MODE ? 'media':'manager/media').'";</script>');
 
 		// process any TV commands in value
 		$value = ProcessTVCommand($value, $name);
-		
+
 		$param = array();
 		if($paramstring){
 			$cp = split("&",$paramstring);
@@ -27,7 +27,7 @@
 				}
 			}
 		}
-		
+
 		$id = "tv$name";
 		switch($format){
 
@@ -56,18 +56,18 @@ EOD;
 					}
 
 				}
-				
+
 			break;
-		
+
 			case "delim":	// display as delimitted list
-				$value = parseInput($value,"||"); 
+				$value = parseInput($value,"||");
 				$p = $params['format'] ? $params['format']:",";
 				if ($p=="\\n") $p = "\n";
 				$o = str_replace("||",$p,$value);
 				break;
-			
+
 			case "string":
-				$value = parseInput($value); 
+				$value = parseInput($value);
 				$format = strtolower($params['format']);
 				if($format=='upper case') $o = strtoupper($value);
 				else if($format=='lower case') $o = strtolower($value);
@@ -75,10 +75,10 @@ EOD;
 				else if($format=='capitalize') $o = ucwords($value);
 				else $o = $value;
 				break;
-				
+
 			case "date":
 				if ($value !='' || $params['default']=='Yes') {
-					$value = parseInput($value);  
+					$value = parseInput($value);
 					// Check for MySQL style date - Adam Crownoble 8/3/2005
 					$date_match = '^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$';
 					$matches= array();
@@ -89,7 +89,7 @@ EOD;
 						$timestamp = strtotime($value);
 					}
 					$p = $params['format'] ? $params['format']:"%A %d, %B %Y";
-					$o = strftime($p,$timestamp); 
+					$o = strftime($p,$timestamp);
 				} else {
 					$value='';
 				}
@@ -99,19 +99,19 @@ EOD;
 				$value = parseInput($value," ");
 				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
 				$o = "<script type=\"text/javascript\">";
-				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
+				$o.= "	document.setIncludePath('manager/media/script/bin/');";
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('floater');});";
 				$o.= "	document.addEventListener('onload',function(){var o = new Floater('$id','".addslashes(mysql_escape_string($value))."','".$params['x']."','".$params['y']."','".$params['pos']."','".$params['gs']."');});";
 				$o.= "</script>";
-				$o.= "<script type=\"text/javascript\">Floater.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";				
+				$o.= "<script type=\"text/javascript\">Floater.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;
-								
+
 			case "marquee":
 				$transfx = ($params['tfx']=='Horizontal') ? 2:1;
 				$value = parseInput($value," ");
 				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
 				$o = "<script type=\"text/javascript\">";
-				$o.= "	document.setIncludePath('manager/media/script/bin/');";					
+				$o.= "	document.setIncludePath('manager/media/script/bin/');";
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('marquee');});";
 				$o.= "	document.addEventListener('onload',function(){var o = new Marquee('$id','".addslashes(mysql_escape_string($value))."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); o.start()});";
 				$o.= "</script>";
@@ -136,7 +136,7 @@ EOD;
 				$o.= "</script>";
 				$o.= "<script type=\"text/javascript\">Ticker.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;
-				
+
 			case "hyperlink":
 				$value = parseInput($value,"||","array");
 				for($i = 0;$i<count($value); $i++){
@@ -145,8 +145,8 @@ EOD;
 					if($o) $o.='<br />';
 					$o.= "<a href='$url'"." title='".($params["title"] ? mysql_escape_string($params["title"]):$name)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["target"] ? " target='".$params["target"]."'":"").($params["attrib"] ? " ".mysql_escape_string($params["attrib"]) : "").">".($params["text"] ? mysql_escape_string($params["text"]) : $name)."</a>";
 				}
-				break;				
-				
+				break;
+
 			case "htmltag":
 				$value = parseInput($value,"||","array");
 				$tagid = $params['tagid'];
@@ -155,7 +155,7 @@ EOD;
 					$tagvalue = is_array($value[$i]) ? implode(" ",$value[$i]): $value[$i];
 					if(!$url) $url = $name;
 					if ($tagvalue) $o.= "<$tagname id='".($tagid ? $tagid:"tv".$id)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["attrib"]? " ".$params["attrib"]:"").">".$tagvalue."</$tagname>";
-				}				
+				}
 				break;
 
 			case "richtext":
@@ -182,9 +182,9 @@ EOD;
 					if(is_array($evtOut)) $o.= implode("",$evtOut);
 				}
 				break;
-				
+
 			case "unixtime":
-				$value = parseInput($value);  
+				$value = parseInput($value);
 				// Check for MySQL style date - Adam Crownoble 8/3/2005
 				$date_match = '^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$';
 				$matches= array();
@@ -195,8 +195,8 @@ EOD;
 					$timestamp = strtotime($value);
 				}
 				$o = $timestamp;
-				break;				
-						
+				break;
+
 			case "viewport":
 				$value = parseInput($value);
 				$id = '_'.time();
@@ -211,7 +211,7 @@ EOD;
 				$w = $params['width'];
 				$h = $params['height'];
 				if ($params['stretch']=='Yes') {
-					$w = "100%"; 
+					$w = "100%";
 					$h = "100%";
 				}
 				if ($params['asize']=='Yes' || ($params['awidth']=='Yes' && $params['aheight']=='Yes')) {
@@ -246,7 +246,7 @@ EOD;
 				$grd->cssClass			=$params['tblc'];
 				$grd->itemClass			=$params['itmc'];
 				$grd->altItemClass		=$params['aitmc'];
-	
+
 				$grd->columnHeaderStyle	=$params['chdrs'];
 				$grd->cssStyle			=$params['tbls'];
 				$grd->itemStyle			=$params['itms'];
@@ -269,33 +269,35 @@ EOD;
 				$grd->pagerStyle		=$params['pstyle'];
 				$o = $grd->render();
 				break;
-				
-			default:
-				$value = parseInput($value);
-				if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
-					// remove delimiter from checkbox and listbox-multiple TVs
-					$value = str_replace('||','',$value);
-					
-                // fix FS 307 to preserve html entities in text/textarea input fields
-                } elseif($tvtype=='rawtext'||$tvtype=='rawtextarea') {
-                    $value = $value;
-                } elseif($tvtype=='text'||$tvtype=='textarea'||$tvtype=='textareamini') {
-                    $value = htmlentities($value);
-                }
-                // end FS 307 fix
-                
-				$o = $value;
-				break;
+
+            case 'htmlentities':
+               $value= parseInput($value);
+               if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
+                   // remove delimiter from checkbox and listbox-multiple TVs
+                   $value = str_replace('||','',$value);
+               }
+               $o = htmlentities($value, ENT_NOQUOTES, $modx->config['modx_charset']);
+               break;
+
+            default:
+               $value = parseInput($value);
+               if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
+                  // remove delimiter from checkbox and listbox-multiple TVs
+                  $value = str_replace('||','',$value);
+               }
+               $o = $value;
+               break;
+
 		}
 		return $o;
 	}
-	
+
 	function decodeParamValue($s){
 		$s = str_replace("%3D",'=',$s); // =
 		$s = str_replace("%26",'&',$s); // &
 		return $s;
 	}
-	
+
 	// returns an array if a delimiter is present. returns array is a recordset is present
 	function parseInput($src, $delim="||", $type="string") { // type can be: string, array
 		if (is_resource($src)) {
@@ -311,5 +313,5 @@ EOD;
 			else return $src;
 		}
 	}
-	
+
 ?>

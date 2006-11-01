@@ -302,9 +302,9 @@ function decode(s){
     <td align="left"><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="type" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;'>
             <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
-            <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text</option>
+            <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
             <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
-            <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea</option>
+            <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea (deprecated)</option>
             <option value="textareamini" <?php  echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
             <option value="richtext" <?php  echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
             <option value="dropdown" <?php  echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
@@ -331,15 +331,17 @@ function decode(s){
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="display" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;showParameters(this);'>
+    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span>
+        <select name="display" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;showParameters(this);'>
             <option value="" <?php echo ($content['display']=='')? "selected='selected'":""; ?>>&nbsp;</option>
-            <option value="datagrid" <?php echo ($content['display']=='datagrid')? "selected='selected'":""; ?>>DataGrid</option>
+            <option value="datagrid" <?php echo ($content['display']=='datagrid')? "selected='selected'":""; ?>>Data Grid</option>
             <option value="floater" <?php echo ($content['display']=='floater')? "selected='selected'":""; ?>>Floater</option>
             <option value="marquee" <?php echo ($content['display']=='marquee')? "selected='selected'":""; ?>>Marquee</option>
             <option value="richtext" <?php echo ($content['display']=='richtext')? "selected='selected'":""; ?>>RichText</option>
             <option value="ticker" <?php echo ($content['display']=='ticker')? "selected='selected'":""; ?>>Ticker</option>
             <option value="viewport" <?php echo ($content['display']=='viewport')? "selected='selected'":""; ?>>View Port</option>
             <option value="">----------------------------------------------------------------</option>
+            <option value="htmlentities" <?php echo ($content['display']=='htmlentities')? "selected='selected'":""; ?>>HTML Entities</option>
             <option value="date" <?php echo ($content['display']=='date')? "selected='selected'":""; ?>>Date Formatter</option>
             <option value="unixtime" <?php echo ($content['display']=='unixtime')? "selected='selected'":""; ?>>Unixtime</option>
             <option value="delim" <?php echo ($content['display']=='delim')? "selected='selected'":""; ?>>Delimited List</option>
