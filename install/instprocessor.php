@@ -249,7 +249,7 @@ if (isset ($_POST['template'])) {
 			$template = mysql_escape_string($template);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template' WHERE templatename='$name';", $sqlParser->conn)) {
+				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc' WHERE templatename='$name';", $sqlParser->conn)) {
 					$errors += 1;
 					echo "<p>" . mysql_error() . "</p>";
 					return;
@@ -284,7 +284,7 @@ if (isset ($_POST['chunk'])) {
 			$chunk = mysql_escape_string($chunk);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk' WHERE name='$name';", $sqlParser->conn)) {
+				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc' WHERE name='$name';", $sqlParser->conn)) {
 					$errors += 1;
 					echo "<p>" . mysql_error() . "</p>";
 					return;
@@ -322,7 +322,9 @@ if (isset ($_POST['module'])) {
 			$module = mysql_escape_string($module);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_modules` SET modulecode='$module' WHERE name='$name';", $sqlParser->conn)) {
+			    $row = mysql_fetch_assoc($rs);
+			    $props = propUpdate($properties,$row['properties']);
+			    if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_modules` SET modulecode='$module', description='$desc', properties='$props', guid='$guid', enable_sharedparams='$shared' WHERE name='$name';", $sqlParser->conn)) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
@@ -360,7 +362,7 @@ if (isset ($_POST['plugin'])) {
 			if (mysql_num_rows($rs)) {
 			    $row = mysql_fetch_assoc($rs);
 			    $props = propUpdate($properties,$row['properties']);
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE name='$name';", $sqlParser->conn)) {
+				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props', moduleguid='$guid' WHERE name='$name';", $sqlParser->conn)) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
@@ -406,7 +408,9 @@ if (isset ($_POST['snippet'])) {
 			$snippet = mysql_escape_string($snippet);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_snippets` SET snippet='$snippet' WHERE name='$name';", $sqlParser->conn)) {
+			    $row = mysql_fetch_assoc($rs);
+			    $props = propUpdate($properties,$row['properties']);
+			    if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_snippets` SET snippet='$snippet', description='$desc', properties='$props' WHERE name='$name';", $sqlParser->conn)) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
