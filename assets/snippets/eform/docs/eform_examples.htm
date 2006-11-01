@@ -114,7 +114,7 @@ font-size:14pt;
 	color:#036;
 	font-size:1.02em
 }
-.new{ 
+.new{
 	color:#c00;
 	font-weight:bold;
 }
@@ -138,7 +138,7 @@ font-size:14pt;
 	color:#036;
 	font-size:1.02em
 }
-.new{ 
+.new{
 	color:#c00;
 	font-weight:bold;
 }
@@ -149,8 +149,8 @@ font-size:14pt;
 
 <body>
 <div class="qe_box">
-<h1>eForm 1.3 - Examples</h1><img id="qe_logo" src="logo.png" alt="logo">
-	
+<h1>eForm - Examples</h1><img id="qe_logo" src="logo.png" alt="logo">
+
 		<div id="qe_toc">
 			<h1>Index</h1>
 				<ul>
@@ -196,6 +196,10 @@ font-size:14pt;
 The following required field(s) are missing: Your Name, Comments<br />
 Your Email Address is not a valid email address</p>
 
+<p><strong>Note!</strong> In the above template we use a hidden field for the formid: <code>&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;feedbackForm&quot; /&gt;</code><br />
+If you are using eForm 1.4 you can instead use the <strong>id</strong> attribute of the form tag itself and leave out the hidden field: <code>&lt;form id=&quot;feedbackForm&quot; method=&quot;post&quot; action=&quot;[~[*id*]~]&quot;&gt;</code>. Either way will work
+</p>
+
 <a id="email" name="email"></a>
 <h3>The email template</h3>
 <p>We'll create another chunk for the body of the email and call this one '<em>eFeedbackReport</em>'</p>
@@ -215,11 +219,11 @@ Your Email Address is not a valid email address</p>
 <a id="snippetcall" name="snippetcall"></a>
 <h3>The Snippet call</h3>
 <div class='codeblock'>
-[[eForm? &formid=`feedbackForm` &to=`info@some.domain.com,support@some.domain.com,requests@some.domain.com` &tpl=`eFeedBackForm` &report=`eFeedbackReport` &thankyou=`eFeedbackThanks` &mailselector=`department` &vericode=`1` &subject="Web site feedback"]]<br />
+[!eForm? &formid=`feedbackForm` &to=`info@some.domain.com,support@some.domain.com,requests@some.domain.com` &tpl=`eFeedBackForm` &report=`eFeedbackReport` &thankyou=`eFeedbackThanks` &mailselector=`department` &vericode=`1` &subject=`Web site feedback`!]<br />
 </div>
-<p>Just to make things a bit more readable below is a slightly more verbose printout.</p>
+<p>You should have all paramters on one line but just to make things a bit more readable below is a slightly more verbose printout.</p>
 <div class='codeblock'>
-[[eForm?<br />
+[!eForm?<br />
 &nbsp;&nbsp;&formid=`feedbackForm` <br />
 &nbsp;&nbsp;&to=`info@some.domain.com,support@some.domain.com,requests@some.domain.com` <br />
 &nbsp;&nbsp;&tpl=`eFeedBackForm` <br />
@@ -227,8 +231,8 @@ Your Email Address is not a valid email address</p>
 &nbsp;&nbsp;&thankyou=`eFeedbackThanks` <br />
 &nbsp;&nbsp;&mailselector=`department` <br />
 &nbsp;&nbsp;&vericode=`1` <br />
-&nbsp;&nbsp;&subject="Web site feedback"<br />
-]]
+&nbsp;&nbsp;&subject=`Web site feedback`<br />
+!]
 </div>
 <p>I'll go through them one by one</p>
 <ul>

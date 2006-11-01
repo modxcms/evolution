@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC1 (rev 1854 - October 31, 2006)
+MODx 0.9.5 RC1 (rev 1857 - Nov 1, 2006)
 ====================================
+* Update eForm to 1.4.1
 * Clarify File Manager vs. Resource Browser manager config options (1853)
 * [FS#626] Fix the mysterious missing login button in IE6. (also fixes image paths in CSS). (1851)
 * [FS#583] Separate out the list of countries into a lang file (defaults to English if no other language file is available). (1849)

@@ -114,7 +114,7 @@ font-size:14pt;
 	color:#036;
 	font-size:1.02em
 }
-.new{ 
+.new{
 	color:#c00;
 	font-weight:bold;
 }
@@ -138,7 +138,7 @@ font-size:14pt;
 	color:#036;
 	font-size:1.02em
 }
-.new{ 
+.new{
 	color:#c00;
 	font-weight:bold;
 }
@@ -155,8 +155,8 @@ function toggleImage(i){
 
 <body>
 <div class="qe_box">
-<h1>eForm 1.4 - Examples</h1><img id="qe_logo" src="logo.png" alt="logo">
-	
+<h1>eForm - Examples</h1><img id="qe_logo" src="logo.png" alt="logo">
+
 		<div id="qe_toc">
 			<h1>Index</h1>
 				<ul>
@@ -169,7 +169,7 @@ function toggleImage(i){
 					</ul>
 					</li>
 				</ul>
-			
+
 		</div>
 
 <div class='qe_level_1'>
@@ -193,11 +193,11 @@ function toggleImage(i){
     &lt;fieldset&gt;
         &lt;legend&gt;Your personal details&lt;/legend&gt;
         &lt;p&gt;
-            &lt;label&gt;Name&lt;/label&gt;       
+            &lt;label&gt;Name&lt;/label&gt;
             &lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;fullName&quot; maxlength=&quot;60&quot; eform=&quot;Your Name:string:1:Your Full Name is required&quot; /&gt;
         &lt;/p&gt;
         &lt;p&gt;
-            &lt;label&gt;Email&lt;/label&gt;       
+            &lt;label&gt;Email&lt;/label&gt;
             &lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;email&quot; size=&quot;40&quot; maxlength=&quot;40&quot; eform=&quot;Email Address:email:1&quot; /&gt;
         &lt;/p&gt;
     &lt;/fieldset&gt;
@@ -209,15 +209,15 @@ function toggleImage(i){
         &lt;textarea class=&quot;field&quot; name=&quot;summary&quot; eform=&quot;Summary:html:0&quot; rows=&quot;3&quot; cols=&quot;30&quot;&gt;&lt;/textarea&gt;&lt;/p&gt;
         &lt;p&gt;&lt;label&gt;Article&lt;/label&gt;
         &lt;textarea class=&quot;field&quot; name=&quot;article&quot; eform=&quot;Article:html:0&quot; rows=&quot;10&quot; cols=&quot;30&quot;&gt;&lt;/textarea&gt;&lt;/p&gt;
-        &lt;p&gt;&lt;label for=&quot;attachment&quot;&gt;Attachment&lt;/label&gt;       
+        &lt;p&gt;&lt;label for=&quot;attachment&quot;&gt;Attachment&lt;/label&gt;
         &lt;input class=&quot;field&quot; type=&quot;file&quot; name=&quot;attachment&quot; eform=&quot;Attachment:file:0:Only upload of text documents are supported:#LIST pdf,txt,doc &quot; /&gt;&lt;/p&gt;
     &lt;/fieldset&gt;
     &lt;fieldset&gt;
         &lt;legend&gt;Preferences&lt;/legend&gt;
         &lt;p&gt;
-            &lt;label&gt;Format&lt;/label&gt;       
-            &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;legal&quot; eform=&quot;Return Format::1&quot; &gt;&amp;nbsp;Legal       
-            &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;formal&quot;&gt;&amp;nbsp;Formal       
+            &lt;label&gt;Format&lt;/label&gt;
+            &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;legal&quot; eform=&quot;Return Format::1&quot; &gt;&amp;nbsp;Legal
+            &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;formal&quot;&gt;&amp;nbsp;Formal
             &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;loose&quot; checked=&quot;checked&quot;&quot;&gt;&amp;nbsp;Informal
         &lt;/p&gt;
         &lt;p&gt;
@@ -240,13 +240,17 @@ function toggleImage(i){
                 &lt;/optgroup&gt;
             &lt;/select&gt;
         &lt;/p&gt;
-        &lt;p class=&quot;explain&quot;&gt;       
+        &lt;p class=&quot;explain&quot;&gt;
             &lt;input type=&quot;submit&quot; name=&quot;frmGo&quot; value=&quot;Send Job&quot; /&gt;
         &lt;/p&gt;
     &lt;/fieldset&gt;
 &lt;/form&gt;
 </pre>
 </div>
+
+<p><strong>Note!</strong> In the above template we use the hidden field for the formid: <code>&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;newJob&quot; /&gt;</code><br />
+If you are using eForm 1.4 you can instead use the <strong>id</strong> attribute of the form tag itself and leave out the hidden field: <code>&lt;form id==&quot;newJob&quot; action=&quot;[~[*id*]~]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;</code>. Either way will work
+</p>
 
 <h3>The Report template</h3>
 <div class='codeblock'>
@@ -285,19 +289,19 @@ function toggleImage(i){
 <h3>The form template</h3>
 <div class='codeblock'>
 <pre>
-&lt;form action=&quot;[~[*id*]~]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;		
+&lt;form action=&quot;[~[*id*]~]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
 	&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;jobRequest&quot; /&gt;
 	&lt;fieldset&gt;
 		&lt;legend&gt;Job details&lt;/legend&gt;
 		&lt;p&gt;
-			&lt;label&gt;Email&lt;/label&gt;		
+			&lt;label&gt;Email&lt;/label&gt;
 			&lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;email&quot; size=&quot;40&quot; maxlength=&quot;40&quot; eform=&quot;Email Address:email:1&quot; /&gt;
 		&lt;/p&gt;
 		&lt;p&gt;
-			&lt;label&gt;Job Number&lt;/label&gt;		
+			&lt;label&gt;Job Number&lt;/label&gt;
 			&lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;jobnumber&quot; maxlength=&quot;40&quot; eform=&quot;Job Number:string:1&quot; /&gt;
 		&lt;/p&gt;
-		&lt;p class=&quot;explain&quot;&gt;		
+		&lt;p class=&quot;explain&quot;&gt;
 			&lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Send request&quot; /&gt;
 		&lt;/p&gt;
 	&lt;/fieldset&gt;

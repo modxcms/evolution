@@ -267,6 +267,9 @@ function toggleImage(i){
 &lt;/form&gt;
 </pre>
 </div>
+<p><strong>Note!</strong> In the above template we use a hidden field for the formid: <code>&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;newJob&quot; /&gt;</code><br />
+If you are using eForm 1.4 you can instead use the <strong>id</strong> attribute of the form tag itself and leave out the hidden field: <code> &lt;form id=&quot;newJob&quot; action=&quot;[~[*id*]~]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;</code>. Either way will work 
+</p>
 
 <h3>The (adjusted) Report template</h3>
 <div class='codeblock'>
