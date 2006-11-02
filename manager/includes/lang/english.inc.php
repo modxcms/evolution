@@ -481,7 +481,7 @@ Message and action are usually the same. If you\'re searching for a specific mes
 $_lang["mgrlog_results"] = 'No. of results';
 $_lang["mgrlog_qresults"] = 'Query results';
 $_lang["mgrlog_searchlogs"] = 'Search logs';
-$_lang["mgrlog_sortinst"] = 'You can sort the table by clicking on the column headers. If the logs are becoming too large, you can <a href=\"index.php?a=55\">empty</a> the logs. This will remove all log entries up to now, and cannot be undone!';
+$_lang["mgrlog_sortinst"] = 'You can sort the table by clicking on the column headers. If the logs are becoming too large, you can <a href="index.php?a=55">empty</a> the logs. This will remove all log entries up to now, and cannot be undone!';
 $_lang["mgrlog_query"] = 'Query logging';
 $_lang["mgrlog_time"] = 'Time';
 $_lang["mgrlog_user"] = 'User';
