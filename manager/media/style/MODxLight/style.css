@@ -288,7 +288,6 @@ input.submit {
 input.button, input.submit {
     margin: 0;
     border: 0;
-    padding: auto;
     width: auto;
     height: auto;
     background: transparent;
@@ -462,8 +461,8 @@ a img {
 /*	end sortable table */
 
 .disabledImage {
-	width: 20px;
-	opactiy: 0.3;
+    width: 20px;
+    opacity: 0.3;
     filter: alpha(opacity=30);
 }
 
