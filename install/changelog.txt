@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC1 (rev 1869 - Nov 2, 2006)
+MODx 0.9.5 RC1 (rev 1870 - Nov 2, 2006)
 ====================================
+* [FS#632] remove reference to "folder" in main english.inc.php (1870)
 * Language file update to QuickEdit. (1865)
 * [FS#611] Minor change to header location to prevent double-login that is affecting some server configs (doesn't have any adverse effect for configs not experiencing this problem). (1862)
 * [FS#299] getUserLoginID() now returns manager user ID if a manager user is logged in the frontend. (1860)
