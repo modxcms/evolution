@@ -3,8 +3,14 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC1 (rev 1868 - Nov 2, 2006)
+MODx 0.9.5 RC1 (rev 1869 - Nov 2, 2006)
 ====================================
+* Language file update to QuickEdit. (1865)
+* [FS#611] Minor change to header location to prevent double-login that is affecting some server configs (doesn't have any adverse effect for configs not experiencing this problem). (1862)
+* [FS#299] getUserLoginID() now returns manager user ID if a manager user is logged in the frontend. (1860)
+* getLoginUserID() will allow the manager user language setting to override the main language setting if required. (1860)
+* Fix reference to a non-existant event in getSettings(): 'OnBeforeManagerInit' - changed to 'OnBeforeManagerPageInit'. (1860)
+* Modify OnBeforeManagerPageInit event to only run if manager user is logged into the backend. (1860)
 * [FS#621] Minor corrections to MODx light theme (1868)
 * Major cleanup of style.php files, tree.php and nodes.php (1866)
 * Added new HTML Entities output widget for TVs (1858)

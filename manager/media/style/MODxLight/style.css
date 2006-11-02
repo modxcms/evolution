@@ -1,4 +1,4 @@
-/* MODx LE Manager template last update: 01-10-2006*/
+/* MODx LE Manager template last update: 01-11-2006*/
 
 /* Neutralize styles, fonts and viewport:
 ---------------------------------------------------------------- */
@@ -753,11 +753,10 @@ ul#nav {
     text-decoration: none;
     white-space: nowrap;
     cursor: hand;
+    display: block;
     line-height: 25px;
     overflow: hidden;
     padding: 0 15px;
-    float: left;
-    display: block;
     border-left: 1px solid #acda43; /*c1e079*/
 }
 

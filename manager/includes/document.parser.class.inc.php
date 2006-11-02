@@ -211,9 +211,9 @@ class DocumentParser {
                 if (isset ($usrType) && $usrType != 'web')
                     $usrType= 'mgr';
     
-                if ($usrType == 'mgr') {
-                    // invoke the OnBeforeManagerInit event
-                    $this->invokeEvent("OnBeforeManagerInit");
+                if ($usrType == 'mgr' && $this->isBackend()) {
+                    // invoke the OnBeforeManagerPageInit event, only if in backend
+                    $this->invokeEvent("OnBeforeManagerPageInit");
                 }
     
                 if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
@@ -1978,7 +1978,7 @@ class DocumentParser {
         if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return $_SESSION['webInternalKey'];
         } else
-            if ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
+            if (($this->isBackend() || $this->isFrontend())  && isset ($_SESSION['mgrValidated'])) {
                 return $_SESSION['mgrInternalKey'];
             }
     }

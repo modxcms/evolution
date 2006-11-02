@@ -54,23 +54,14 @@ class ContentVariable {
 		global $base_path;
 		global $QE_lang;
 
-		$_lang = array ();
-		// Combine QE language files with manager language files (manager should override QE)
 		$lang = $modx->config['manager_language'];
 		$qe_path = $base_path . '/' . $GLOBALS['quick_edit_path'];
 		$qe_eng_path = $qe_path . '/lang/english.inc.php';
 		$qe_lang_path = $qe_path . '/lang/' . $lang . '.inc.php';
-		$manager_lang_path = $base_path . 'manager/includes/lang/' . $lang . '.inc.php';
-		$lang_set = isset ($QE_lang);
 		include_once ($qe_eng_path);
 		if (file_exists($qe_lang_path)) {
 			include_once ($qe_lang_path);
 		}
-		if (!$lang_set) {
-			include_once ($manager_lang_path);
-			$QE_lang = $_lang;
-		}
-		unset ($_lang);
 	}
 
 	// Gets a content variables paramaters
@@ -188,9 +179,9 @@ class ContentVariable {
 
 					case 'hidemenu' :
 						$type = 'checkbox';
-						$caption = $QE_lang['document_opt_hide_menu'];
+						$caption = $QE_lang['document_opt_show_menu'];
 						$description = $QE_lang['document_opt_show_menu_help'];
-						$elements = "{$QE_lang['document_opt_hide_menu']}==1";
+						$elements = "{$QE_lang['document_opt_show_menu']}==1";
 						$group = 'setting';
 						break;
 

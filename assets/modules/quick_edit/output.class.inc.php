@@ -49,21 +49,13 @@ class Output {
 
 		$this->output = '';
 
-		$_lang = array ();
-		// Combine QE language files with manager language files (manager should override QE)
 		$qe_eng_path = $qe_path . '/lang/english.inc.php';
 		$qe_lang_path = $qe_path . '/lang/' . $lang . '.inc.php';
-		$manager_lang_path = $base_path . 'manager/includes/lang/' . $lang . '.inc.php';
 		$lang_set = isset ($QE_lang);
 		include_once ($qe_eng_path);
 		if (file_exists($qe_lang_path)) {
 			include_once ($qe_lang_path);
 		}
-		if (!$lang_set) {
-			include_once ($manager_lang_path);
-			$QE_lang = $_lang;
-		}
-		unset ($_lang);
 	}
 
 	function mergeTags() {
@@ -195,7 +187,7 @@ EOD;
 
 						// One checkbox and not a binding
 						if ($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements, '||') && substr($cv_obj->elements, 0, 1) != '@') {
-							$class = ($cv_obj->content ? 'checked' : 'unchecked');
+							$class = ($cv_obj->content ? 'unchecked' : 'checked');
 							$change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements, '==') ? substr(strstr($cv_obj->elements, '=='), 2) : $cv_obj->elements));
 							$menus[$menu][] .=<<<EOD
 <a class="{$class}" href="javascript: qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');" title="{$QE_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
