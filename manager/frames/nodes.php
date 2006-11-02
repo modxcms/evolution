@@ -1,20 +1,18 @@
 <?php
 /**
- *  Tree Nodes   
+ *  Tree Nodes
  *  Build and return document tree view nodes
  *
  */
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-    //Raymond: save folderstate
+    // save folderstate
     if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
     if (isset($_GET['savestateonly'])) {
         echo 'send some data'; //??
         exit;
     }
-?>
-<?php
-
+    
     $indent    = $_GET['indent'];
     $parent    = $_GET['parent'];
     $expandAll = $_GET['expandAll'];
@@ -27,7 +25,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     }
     if(isset($_REQUEST['tree_sortdir'])) {
         $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
-    }    
+    }
 
     // icons by content type
     $icons = array(
@@ -40,23 +38,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'text/javascript' => 'page-js'
     );
 
-    //
-    // Jeroen adds an array
-    //
     if (isset($_SESSION['openedArray'])) {
             $opened = explode("|", $_SESSION['openedArray']);
-            //print_r($opened);
     } else {
             $opened = array();
     }
     $opened2 = array();
     $closed2 = array();
-    //
-    // Jeroen end
-    //
-    
-    
-    makeHTML($indent,$parent,$expandAll,$theme);    
+
+    makeHTML($indent,$parent,$expandAll,$theme);
     echo $output;
 
     // check for deleted documents on reload
@@ -67,21 +57,20 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $count = $row[0];
         if ($count>0) echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
     }
-    
+
     function makeHTML($indent,$parent,$expandAll,$theme) {
-        global $icons, $theme;
+        global $icons, $theme, $_style;
         global $modxDBConn, $output, $dbase, $table_prefix, $_lang, $opened, $opened2, $closed2; //added global vars
 
         $pad = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        
+
         // setup spacer
         $spacer = "";
         for ($i = 1; $i <= $indent; $i++){
             $spacer .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         }
 
-
-        // Raymond: query other documents,set default sort order 
+        // query other documents, set default sort order
         $orderby = "isfolder DESC";
         if(isset($_SESSION['tree_sortby']) && isset($_SESSION['tree_sortdir'])) {
             $orderby = $_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir'];
@@ -90,8 +79,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $_SESSION['tree_sortdir'] = 'DESC';
         }
         if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
-        //Raymond: end
-
 
         $tblsc = $dbase.".".$table_prefix."site_content";
         $tbldg = $dbase.".".$table_prefix."document_groups";
@@ -100,16 +87,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
         $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
                   (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
-        $sql = "SELECT DISTINCT sc.id, pagetitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr 
-                FROM $tblsc AS sc 
+        $sql = "SELECT DISTINCT sc.id, pagetitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr
+                FROM $tblsc AS sc
                 LEFT JOIN $tbldg dg on dg.document = sc.id
-                WHERE (parent=$parent) 
+                WHERE (parent=$parent)
                 AND ($access)
                 GROUP BY sc.id
                 ORDER BY $orderby";
         $result = mysql_query($sql, $modxDBConn);
         if(mysql_num_rows($result)==0) {
-            $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="media/style/'.$theme.'images/tree/deletedpage.gif" width="18" height="18">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
+            $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'" width="18" height="18">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }
 
         while(list($id,$pagetitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr) = mysql_fetch_row($result))
@@ -117,7 +104,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $pagetitle = htmlspecialchars($pagetitle);
             $pagetitleDisplay = $published==0 ? "<span class='unpublishedNode'>$pagetitle</span>" : ($hidemenu==1 ? "<span class='notInMenuNode'>$pagetitle</span>":"<span class='publishedNode'>$pagetitle</span>");
             $pagetitleDisplay = $deleted==1 ? "<span class='deletedNode'>$pagetitle</span>" : $pagetitleDisplay;
-            $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="media/style/'.$theme.'images/tree/link_go.png" width="16" height="16">' : '' ;
+            $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="'.$_style["tree_linkgo"].'" width="16" height="16">' : '' ;
 
 
             $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";
@@ -134,49 +121,39 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 $output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>('.$id.')</small></div>';
             }
             else {
-                //
-                // Jeroen add the expandAll 2 type for partial expansion
-                //              
+                // expandAll: two type for partial expansion
                 if ($expandAll ==1 || ($expandAll == 2 && in_array($id, $opened)))
                 {
                     if ($expandAll == 1) {
                        array_push($opened2, $id);
                     }
                     $icon='folderopen';
-                    $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="media/style/'.$theme.'images/tree/minusnode.gif" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
+                    $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_minusnode"].'" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
                     $output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>('.$id.')</small><div style="display:block">';
                     makeHTML($indent+1,$id,$expandAll,$theme);
                     $output .= '</div></div>';
                 }
                 else {
                     $icon='folder';
-                    $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="media/style/'.$theme.'images/tree/plusnode.gif" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
+                    $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_plusnode"].'" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
                     $output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>('.$id.')</small><div style="display:none"></div></div>';
                     array_push($closed2, $id);
                 }
-                //
-                // Jeroen end
-                //
             }
-            //
-            // Jeroen stores vars in Javascript
-            //
-                        if ($expandAll == 1) {
-                            echo '<script language="JavaScript"> ';
-                            foreach ($opened2 as $item) {
-                                     printf("parent.openedArray[%d] = 1; ", $item);
-                            }
-                            echo '</script> ';
-                        } elseif ($expandAll == 0) {
-                            echo '<script language="JavaScript"> ';
-                            foreach ($closed2 as $item) {
-                                     printf("parent.openedArray[%d] = 0; ", $item);
-                            }
-                            echo '</script> ';
-                        }
-            //
-            // Jeroen end
-            //
+            // store vars in Javascript
+            if ($expandAll == 1) {
+                echo '<script language="JavaScript"> ';
+                foreach ($opened2 as $item) {
+                         printf("parent.openedArray[%d] = 1; ", $item);
+                }
+                echo '</script> ';
+            } elseif ($expandAll == 0) {
+                echo '<script language="JavaScript"> ';
+                foreach ($closed2 as $item) {
+                         printf("parent.openedArray[%d] = 0; ", $item);
+                }
+                echo '</script> ';
+            }
         }
     }
 

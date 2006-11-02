@@ -38,15 +38,17 @@
 
     // preload images
     var i = new Image(18,18);
-    i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/page.gif";
+    i.src="<?php echo $_style["tree_page"]?>";
     i = new Image(18,18);
-    i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif";
+    i.src="<?php echo $_style["tree_globe"]?>";
     i = new Image(18,18);
-    i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif";
+    i.src="<?php echo $_style["tree_minusnode"]?>";
     i = new Image(18,18);
-    i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folderopen.gif";
+    i.src="<?php echo $_style["tree_plusnode"]?>";
     i = new Image(18,18);
-    i.src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif";
+    i.src="<?php echo $_style["tree_folderopen"]?>";
+    i = new Image(18,18);
+    i.src="<?php echo $_style["tree_folder"]?>";
 
 
     var rpcNode = null;
@@ -173,8 +175,8 @@
         if (rpcNode.style.display != 'block') {
             // expand
             if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif')>-1) {
-                signImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif';
-                folderImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folderopen.gif';
+                signImg.src = '<?php echo $_style["tree_minusnode"]; ?>';
+                folderImg.src = '<?php echo $_style["tree_folder"]; ?>';
             }
 
             // Raymond: snippet interface
@@ -200,8 +202,8 @@
         else {
             // collapse
             if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif')>-1) {
-                signImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif';
-                folderImg.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif';
+                signImg.src = '<?php echo $_style["tree_plusnode"]; ?>';
+                folderImg.src = '<?php echo $_style["tree_folderopen"]; ?>';
             }
             //Raymond: snippet interface
             if (node.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolderopen.gif')>-1) {node.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolder.gif'}

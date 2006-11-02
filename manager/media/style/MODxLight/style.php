@@ -24,9 +24,10 @@ $_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.png\" style=
 
 // Tree Icons
 $_style["tree_deletedpage"] = $style_path."images/tree/deletedpage.gif";
-$_style["tree_folder"] = $style_path."images/tree/folder.gif";
-$_style["tree_folderopen"] = $style_path."images/tree/folderopen.gif";
+$_style["tree_folder"] = $style_path."images/tree/page-html.gif"; /* folder.gif */
+$_style["tree_folderopen"] = $style_path."images/tree/page-html.gif"; /* folder-open.gif */
 $_style["tree_globe"] = $style_path."images/tree/globe.gif";
+$_style["tree_linkgo"] = $style_path."images/tree/link_go.png";
 $_style["tree_minusnode"] = $style_path."images/tree/minusnode.gif";
 $_style["tree_page"] = $style_path."images/tree/page-blank.gif";
 $_style["tree_page_blank"] = $style_path."images/tree/page-blank.gif";
@@ -37,9 +38,7 @@ $_style["tree_page_pdf"] = $style_path."images/tree/page-pdf.gif";
 $_style["tree_page_secure"] = $style_path."images/tree/page-secure.gif";
 $_style["tree_page_xml"] = $style_path."images/tree/page-xml.gif";
 $_style["tree_plusnode"] = $style_path."images/tree/plusnode.gif";
-$_style["tree_showtree"] = '<img src="'.$style_path.'images/tree/sitemap.png" width="16" height="16" />';
-$_style["tree_snippetfolder"] = $style_path."images/tree/snippetfolder.gif";
-$_style["tree_snippetfolderopen"] = $style_path."images/tree/snippetfolderopen.gif";
+$_style["tree_showtree"] = '<img src="'.$style_path.'images/tree/sitemap.png" width="16" height="16" align=\"absmiddle\" />';
 $_style["tree_weblink"] = $style_path."images/tree/link_go.png";
 
 // Icons
@@ -51,9 +50,6 @@ $_style["icons_delete_document"] = $style_path."images/icons/delete.gif";
 $_style["icons_duplicate_document"] = $style_path."images/icons/copy.gif";
 $_style["icons_edit_document"] = $style_path."images/icons/save.gif";
 $_style["icons_email"] = $style_path."images/icons/email.gif";
-$_style["icons_event_type1"] = $style_path."images/icons/event1.gif";
-$_style["icons_event_type2"] = $style_path."images/icons/event2.gif";
-$_style["icons_event_type3"] = $style_path."images/icons/event3.gif";
 $_style["icons_folder"] = $style_path."images/icons/folder.gif";
 $_style["icons_home"] = $style_path."images/icons/home.gif";
 $_style["icons_information"] = $style_path."images/icons/information.png";
