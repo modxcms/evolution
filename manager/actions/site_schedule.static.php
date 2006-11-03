@@ -1,3 +1,11 @@
+<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
+<script type="text/javascript" language="JavaScript">
+    document.setIncludePath("media/script/bin/");
+    document.addEventListener("oninit",function() {
+        document.include("dynelement");
+    })
+</script>
+<script type="text/javascript" src="media/script/sortabletable.js"></script>
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 /* if(!$modx->hasPermission('edit_document')) {
@@ -21,7 +29,6 @@ if($limit<1) {
 	echo "<p>".$_lang["no_docs_pending_publishing"]."</p>";
 } else {
 ?>
-		<script type="text/javascript" src="media/script/sortabletable.js"></script>
   <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-1" width="100%">
     <thead>
       <tr bgcolor='#CCCCCC'>
