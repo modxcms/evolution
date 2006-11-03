@@ -29,6 +29,8 @@ class Wayfinder {
     var $modxVersion = array();
 	var $showSubDocCount = FALSE;
 	var $docCount = array();
+	var $limit = 0;
+	var $randomLinks = 0;
     var $placeHolders = array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]','[+wf.docid+]','[+wf.introtext+]','[+wf.description+]','[+wf.subitemcount+]');
     var $ie = "\n";
     var $debugOutput = '<h2>WayFinder Debug Output:</h2>';
@@ -84,9 +86,21 @@ class Wayfinder {
         } else {
             $menuWhere = ' AND sc.hidemenu = 0';
         }
+		
+		if ($this->limit) {
+			$sqlLimit = ' LIMIT 0, ' . $this->limit;
+		} else {
+			$sqlLimit = '';
+		}
 
-        // modify field names to use sc. table reference
-        $sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
+		if (strtolower($sort) == 'random') {
+			$sort = 'rand()';
+			$dir = '';
+		} else {
+			// modify field names to use sc. table reference
+			$sort = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$sort)));
+		}
+		
         // get document groups for current user
         if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
         // build query
@@ -96,7 +110,8 @@ class Wayfinder {
             ' dg on dg.document = sc.id WHERE sc.parent = '.$id.
             ' AND sc.published=1 AND sc.deleted=0 AND ('.$access.')'.$menuWhere.
 			' GROUP BY sc.id'.
-            ' ORDER BY '.$sort.' '.$dir.';';
+            ' ORDER BY '.$sort.' '.$dir.
+			$sqlLimit.';';
         $result = $modx->dbQuery($sql);
         $resourceArray = array();
         for($i=0;$i<@$modx->recordCount($result);$i++)  {
@@ -119,7 +134,11 @@ class Wayfinder {
 			$this->docCount[$parentId] = $numItems;
             foreach ($resource as $n => $v) {
                 if ($this->useWeblinkUrl !== 'FALSE' && $v['type'] == 'reference') {
-                    $v['link'] = $v['content'];
+					if (is_numeric($v['content'])) {
+						$v['link'] = $modx->makeUrl(intval($v['content']));
+					} else {
+						$v['link'] = $v['content'];
+					}
                 } else {
                     $v['link'] = $modx->makeUrl($v['id']);
                 }
