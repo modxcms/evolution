@@ -135,12 +135,10 @@ $rs = mysql_query($sql);
   </tr>
   <tr bgcolor='#FFFFFF'>
     <td colspan="2">
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1" onclick="document.logging.log_submit.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></td>
-				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
-			<td id="Button2" onclick="document.location.href='index.php?a=13';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
+			<td id="Button1"><a href="javascript:document.logging.log_submit.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></a></td>
+			<td id="Button2"><a href="index.php?a=13"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></a></td>
 		</tr>
 	</table>
       <input type='submit' name='log_submit' value='<?php echo $_lang["mgrlog_searchlogs"]?>' style="display:none">

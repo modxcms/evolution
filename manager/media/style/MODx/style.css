@@ -1144,3 +1144,40 @@ ul#nav {
     opacity: .3;
     filter: alpha(opacity=30);
 }
+
+/* New Action Buttons
+---------------------------------------------------------- */
+.actionButtons a {
+    color: #000;
+    border: 1px;
+    border-bottom-color: #8FC70C;
+    padding: 3px 5px;
+    white-space: nowrap;
+    vertical-align: middle;
+	display: block;
+	text-decoration: none;
+}
+
+.actionButtons a:hover {
+    border: 1px solid #006400;
+    padding: 2px 4px;
+    background: #CDE0F8;
+}
+
+.actionButtons a:active {
+    border: 1px solid #000;
+    border-color: #444 #ccc #ccc #444; /* ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow */
+    padding: 2px 3px 2px 5px;
+}
+
+.actionButtons a.disabled {
+    border: 1px solid #006400;
+    padding: 2px 4px;
+    color: #777;
+    border-width: 0;
+}
+
+.actionButtons a.disabled img {
+    opacity: .3;
+    filter: alpha(opacity=30);
+}

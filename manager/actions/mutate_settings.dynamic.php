@@ -121,16 +121,12 @@ function updateContentType(){
 <div class="subTitle">
 	<span class="right"><?php echo $_lang['settings_title']; ?></span>
 
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></td>
-			<td id="Button5" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></td>
+			<td id="Button1"><a href="javascript:documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></a></td>
+			<td id="Button5"><a href="javascript:documentDirty=false;document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
-	<script type="text/javascript">
-	    createButton(document.getElementById("Button1"));
-	    createButton(document.getElementById("Button5"));
-	</script>
 </div>
 <form name="settings" action="index.php?a=30" method="post" />
 <div style="margin: 0 10px 0 20px">

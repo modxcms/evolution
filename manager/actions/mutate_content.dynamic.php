@@ -272,8 +272,10 @@ function setParent(pId, pName) {
         if(pId==0 || checkParentChildRelation(pId, pName)){
             documentDirty=true;
             document.mutate.parent.value=pId;
-            var elm = new DynElement('parentName')
-            if(elm) elm.setInnerHTML(pId + " (" + pName + ")");
+            var elm = document.getElementById('parentName');
+            if(elm) {
+            	elm.innerHTML = (pId + " (" + pName + ")");
+            }
         }
     }
 }
@@ -522,18 +524,15 @@ if (is_array($evtOut))
 <div class="subTitle">
     <span class="right"><?php echo $_lang['edit_document_title']; ?></span>
 
-    <table cellpadding="0" cellspacing="0">
+    <table cellpadding="0" cellspacing="0" class="actionButtons">
         <tr>
-            <td id="Button1" onclick="documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></td>
-            <td id="Button2" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" /> <?php echo $_lang['delete']; ?></td>
-            <td id="Button5" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></td>
+            <td id="Button1"><a href="javascript:documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></a></td>
+            <td id="Button2"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" /> <?php echo $_lang['delete']; ?></a></td>
+            <td id="Button5"><a href="javascript:documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></a></td>
         </tr>
     </table>
     <script type="text/javascript">
-        createButton(document.getElementById("Button1"));
-        createButton(document.getElementById("Button2"));
-        createButton(document.getElementById("Button5"));
-        <?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?>document.getElementById("Button2").setEnabled(false);<?php } ?>
+        <?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?>document.getElementById("Button2").className='disabled';<?php } ?>
     </script>
     <div class="stay">
     <table border="0" cellspacing="1" cellpadding="1">

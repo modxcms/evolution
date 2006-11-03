@@ -25,11 +25,9 @@ if(!$modx->hasPermission('delete_template')) {
 			</script>
 			<div class="subTitle">
 			<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['tmplvars']; ?></span>
-				<table cellpadding="0" cellspacing="0">
-					<td id="cmdDelete" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
-						<script>createButton(document.getElementById("cmdDelete"));</script>
-					<td id="cmdCancel" onclick="document.location.href='index.php?a=301&id=<?php echo $id;?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></td>
-						<script>createButton(document.getElementById("cmdCancel"));</script>
+				<table cellpadding="0" cellspacing="0" class="actionButtons">
+					<td id="cmdDelete"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></a></td>
+					<td id="cmdCancel"><a href="index.php?a=301&id=<?php echo $id;?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></a></td>
 				</table>
 			</div>
 			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">

@@ -55,9 +55,8 @@ echo $_lang['export_site_message'];
   </tr>
 </table>
 <p />
-<table cellpadding="0" cellspacing="0">
-	<td id="Button1" onclick="document.exportFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["export_site_start"]; ?></td>
-		<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
+<table cellpadding="0" cellspacing="0" class="actionButtons">
+	<td id="Button1"><a href="javascript:document.exportFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["export_site_start"]; ?></a></td>
 </table>
 </form>
 </fieldset>
@@ -304,9 +303,8 @@ echo $_lang['export_site_message'];
 	printf ("<p />".$_lang['export_site_time'], round($totaltime, 3));
 ?>
 <p />
-<table cellpadding="0" cellspacing="0">
-	<td id="Button2" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></td>
-		<script type="text/javascript">createButton(document.getElementById("Button2"));</script>
+<table cellpadding="0" cellspacing="0" class="actionButtons">
+	<td id="Button2"><a href="javascript:reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
 </table>
 <?php
 }

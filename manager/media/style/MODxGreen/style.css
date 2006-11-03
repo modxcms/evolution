@@ -1002,3 +1002,45 @@ ul#nav {
 	-moz-opacity: 0.5;
 	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
 }
+
+/* New Action Buttons
+---------------------------------------------------------- */
+.actionButtons a {
+	color: #fff;
+	border: 1px;
+	border-bottom-color: #809C47;
+	padding: 3px 5px 3px 5px;
+	white-space: nowrap;
+	vertical-align: middle;
+	background-image: url(images/bg/button_up.gif);
+	background-repeat: repeat-x;	
+	display: block;
+	text-decoration: none;
+}
+
+.actionButtons a:hover {
+	border: 1px solid darkgreen;
+	padding: 2px 4px 1px 4px;	
+	height: 20px;
+	background-image: url(images/bg/button_dn.gif);
+}
+
+.actionButtons a:active {
+	border: 1px solid black;
+	border-left-color: ButtonShadow;
+	border-right-color: ButtonHighlight;
+	border-top-color: ButtonShadow;
+	border-bottom-color:ButtonHighlight;
+	padding: 2px 3px 2px 5px;			
+}
+
+.actionButtons a.disabled {
+	border: 1px solid #006400;
+	padding: 0px 4px 3px 4px;
+}
+
+.actionButtons a.disabled img {
+    opacity: 0.5;
+	-moz-opacity: 0.5;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+}

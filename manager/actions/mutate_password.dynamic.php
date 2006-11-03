@@ -8,10 +8,9 @@ if(!$modx->hasPermission('change_password')) {
 
 <div class="subTitle">
 <span class="right"><?php echo $_lang['change_password']; ?></span>
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script type="text/javascript">createButton(document.getElementById("Button1"));</script>
+			<td id="Button1"><a href="javascript:documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 		</tr>
 	</table>
 </div>

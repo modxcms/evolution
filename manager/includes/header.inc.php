@@ -18,14 +18,6 @@ $messagesallowed = $modx->hasPermission('messages');
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
     <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
-    <script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
-    <script type="text/javascript" language="JavaScript">
-        document.setIncludePath("media/script/bin/");
-        document.addEventListener("oninit",function() {
-            document.include("dynelement");
-        })
-    </script>
-    <script type="text/javascript" language="JavaScript" src="media/script/cb2.js"></script>
     <script language="JavaScript" type="text/javascript">
 
         var MODX_MEDIA_PATH = "media"; // set media path

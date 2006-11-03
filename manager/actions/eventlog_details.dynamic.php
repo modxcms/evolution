@@ -50,14 +50,12 @@ else{
 
 <div class="subTitle">
 	<span class="right"><?php echo $_lang['eventlog']; ?></span>
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
-		<td id="Button3" onclick="deletelog();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script type="text/javascript">createButton(document.getElementById("Button3"));</script>
+		<td id="Button3"><a href="javascript:deletelog();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-		<td id="Button4" onclick="document.location.href='index.php?a=114';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
+		<td id="Button4"><a href="index.php?a=114"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
 </div>

@@ -48,15 +48,12 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1__"));</script>
-			<td id="Button2__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-				<script>createButton(document.getElementById("Button2__"));</script>
-				<?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?><script>document.getElementById("Button2__").setEnabled(false);</script><?php } ?>
-			<td id="Button5__" onclick="<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-				<script>createButton(document.getElementById("Button5__"));</script>
+			<td id="Button1__"><a href="javascript:documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
+			<td id="Button2__"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></a></td>
+				<?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?><script>document.getElementById("Button2__").className='disabled';</script><?php } ?>
+			<td id="Button5__"><a href="<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
 </div>
@@ -74,17 +71,13 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1__"));</script>
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
+		<td id="Button1__"><a href="javascript:documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 <?php if($_GET['a']=='22') { ?>
-		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2__"));</script>
-		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3__"));</script>
+		<td id="Button2__"><a href="javascript:duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+		<td id="Button3__"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-		<td id="Button4__" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4__"));</script>
+		<td id="Button4__"><a href="index.php?a=76"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 	</table>
 </div>
 <?php
@@ -100,17 +93,13 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1__"));</script>
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
+		<td id="Button1__"><a href="javascript:documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 <?php if($_REQUEST['a']=='78') { ?>
-		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2__"));</script>
-		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3__"));</script>
+		<td id="Button2__"><a href="javascript:duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+		<td id="Button3__"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-		<td id="Button4__" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4__"));</script>
+		<td id="Button4__"><a href="index.php?a=76"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 	</table>
 </div>
 <?php
@@ -126,18 +115,14 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1__"));</script>
+		<td id="Button1__"><a href="javascript:documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 <?php if($_GET['a']=='108') { ?>
-		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2__"));</script>
-		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3__"));</script>
+		<td id="Button2__"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+		<td id="Button3__"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-		<td id="Button4__" onclick="document.location.href='index.php?a=106';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4__"));</script>
+		<td id="Button4__"><a href="index.php?a=106"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
 </div>
@@ -154,17 +139,13 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1__"));</script>
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
+		<td id="Button1__"><a href="javascript:documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 <?php if($_GET['a']=='102') { ?>
-		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2__"));</script>
-		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3__"));</script>
+		<td id="Button2__"><a href="javascript:duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+		<td id="Button3__"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-		<td id="Button4__" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4__"));</script>
+		<td id="Button4__"><a href="index.php?a=76"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 	</table>
 </div>
 <?php
@@ -180,17 +161,13 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1__"));</script>
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
+		<td id="Button1__"><a href="javascript:documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 <?php if($_GET['a']=='301') { ?>
-		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2__"));</script>
-		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3__"));</script>
+		<td id="Button2__"><a href="javascript:duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+		<td id="Button3__"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-		<td id="Button4__" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4__"));</script>
+		<td id="Button4__"><a href="index.php?a=76"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 	</table>
 </div>
 <?php
@@ -206,17 +183,13 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button1__" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-			<script>createButton(document.getElementById("Button1__"));</script>
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
+		<td id="Button1__"><a href="javascript:documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 <?php if($_REQUEST['a']=='16') { ?>
-		<td id="Button2__" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-			<script>createButton(document.getElementById("Button2__"));</script>
-		<td id="Button3__" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-			<script>createButton(document.getElementById("Button3__"));</script>
+		<td id="Button2__"><a href="javascript:duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+		<td id="Button3__"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-		<td id="Button4__" onclick="document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></td>
-			<script>createButton(document.getElementById("Button4__"));</script>
+		<td id="Button4__"><a href="javascript:index.php?a=76"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 	</table>
 </div>
 <?php
@@ -232,17 +205,14 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1__" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1__"));</script>
-			<td id="Button2__" onclick="deleteuser();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-				<script>createButton(document.getElementById("Button2__"));</script>
+			<td id="Button1__"><a href="javascript:documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
+			<td id="Button2__"><a href="javascript:deleteuser();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 				<?php if($_GET['a']!='88') { ?>
-					<script>document.getElementById("Button2__").setEnabled(false);</script>
+					<script>document.getElementById("Button2__").className='disabled';</script>
 				<?php } ?>
-			<td id="Button3__" onclick="document.location.href='index.php?a=99';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script>createButton(document.getElementById("Button3__"));</script>
+			<td id="Button3__"><a href="index.php?a=99"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
 </div>
@@ -259,17 +229,14 @@ ob_start();
 <div class="subTitle" style="width:100%">
 	<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br />"<a href='javascript:scroll(0,0);'><?php echo $_lang['scroll_up']; ?></a>"</span>
 
-	<table cellpadding="0" cellspacing="0">
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1__" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></td>
-				<script>createButton(document.getElementById("Button1__"));</script>
-			<td id="Button2__" onclick="deleteuser();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-				<script>createButton(document.getElementById("Button2__"));</script>
+			<td id="Button1__"><a href="javascript:documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
+			<td id="Button2__"><a href="javascript:deleteuser();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 				<?php if($_GET['a']!='12') { ?>	
-					<script>document.getElementById("Button2__").setEnabled(false);</script>
+					<script>document.getElementById("Button2__").className='disabled';</script>
 				<?php } ?>
-			<td id="Button3__" onclick="document.location.href='index.php?a=75';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-				<script>createButton(document.getElementById("Button3__"));</script>
+			<td id="Button3__"><a href="javascript:index.php?a=75"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
 </div>

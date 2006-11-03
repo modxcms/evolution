@@ -222,10 +222,9 @@ switch ($_POST['mode']) {
 ?>
 			<div class="subTitle">
 			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="0" class="actionButtons">
 				<tr>
-					<td id="Button1" onClick="window.location.href='index.php?a=75&r=2'"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
-						<script>createButton(document.getElementById("Button1"));</script>
+					<td id="Button1"><a href="javascript:index.php?a=75&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
 					</td>
 				</tr>
 			</table>
@@ -408,10 +407,9 @@ switch ($_POST['mode']) {
 ?>
 			<div class="subTitle">
 			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="0" class="actionButtons">
 				<tr>
-					<td id="Button1" onClick="window.location.href='index.php?a=75&r=2'"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
-						<script>createButton(document.getElementById("Button1"));</script>
+					<td id="Button1"><a href="index.php?a=75&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
 					</td>
 				</tr>
 			</table>

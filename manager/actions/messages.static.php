@@ -37,15 +37,12 @@ if($limit!=1) {
 <table width="600" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td colspan="2">
-    <table cellpadding="0" cellspacing="0">
+    <table cellpadding="0" cellspacing="0" class="actionButtons">
         <tr>
-            <td id="Button11" onclick="document.location.href='index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/reply.gif" align="absmiddle"> <?php echo $_lang['messages_reply']; ?></td>
-                <script type="text/javascript">createButton(document.getElementById("Button11"));</script>
-<?php if($message['sender']==0) { ?>                <script type="text/javascript">document.getElementById("Button11").setEnabled(false);</script><?php } ?>
-            <td id="Button21" onclick="document.location.href='index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/forward.gif" align="absmiddle"> <?php echo $_lang['messages_forward']; ?></span></td>
-                <script type="text/javascript">createButton(document.getElementById("Button21"));</script>
-            <td id="Button31" onclick="document.location.href='index.php?a=65&id=<?php echo $message['id']; ?>';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></td>
-                <script type="text/javascript">createButton(document.getElementById("Button31"));</script>
+            <td id="Button11"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/reply.gif" align="absmiddle"> <?php echo $_lang['messages_reply']; ?></a></td>
+<?php if($message['sender']==0) { ?>                <script type="text/javascript">document.getElementById("Button11").className='disabled';</script><?php } ?>
+            <td id="Button21"><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/forward.gif" align="absmiddle"> <?php echo $_lang['messages_forward']; ?></a></td>
+            <td id="Button31"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
         </tr>
     </table>
     </td>
@@ -360,12 +357,10 @@ function hideSpans(showSpan) {
   </tr>
 </table>
 <p>
-    <table cellpadding="0" cellspacing="0">
+    <table cellpadding="0" cellspacing="0" class="actionButtons">
         <tr>
-            <td id="Button1" onclick="documentDirty=false; document.messagefrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></td>
-                <script type="text/javascript">createButton(document.getElementById("Button1"));</script>
-            <td id="Button2" onclick="document.location.href='index.php?a=10&t=c';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></td>
-                <script type="text/javascript">createButton(document.getElementById("Button2"));</script>
+            <td id="Button1"><a href="javascript:documentDirty=false; document.messagefrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></a></td>
+            <td id="Button2"><a href="index.php?a=10&t=c"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
         </tr>
     </table>
 </p>

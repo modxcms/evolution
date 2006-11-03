@@ -94,18 +94,12 @@ if($limit > 0) {
 <div class="subTitle">
     <span class="right"><?php echo $_lang["doc_data_title"]; ?></span>
 
-    <table cellpadding="0" cellspacing="0">
-        <td id="Button1" onclick="editdocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></td>
-        <td id="Button2" onclick="movedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></td>
-        <td id="Button4" onclick="duplicatedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></td>
-        <td id="Button3" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></td>
+    <table cellpadding="0" cellspacing="0" class="actionButtons">
+        <td id="Button1"><a href="javascript:editdocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["edit"]; ?></a></td>
+        <td id="Button2"><a href="javascript:movedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>/images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["move"]; ?></a></td>
+        <td id="Button4"><a href="javascript:duplicatedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+        <td id="Button3"><a href="javascript:deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></a></td>
     </table>
-    <script type="text/javascript">
-        createButton(document.getElementById("Button1"));
-        createButton(document.getElementById("Button2"));
-        createButton(document.getElementById("Button4"));
-        createButton(document.getElementById("Button3"));
-    </script>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang["page_data_title"]; ?></div>

@@ -193,9 +193,8 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 <div class="subTitle">
 	<span class="right"><?php echo $_lang['module_resource_title']; ?></span>
 
-	<table cellpadding="0" cellspacing="0">
-		<td id="Button4" onclick="document.location.href='index.php?a=106';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['close']; ?></td>
-			<script type="text/javascript">createButton(document.getElementById("Button4"));</script>
+	<table cellpadding="0" cellspacing="0" class="actionButtons">
+		<td id="Button4"><a href="index.php?a=106"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
 	</table>
 </div>
 
