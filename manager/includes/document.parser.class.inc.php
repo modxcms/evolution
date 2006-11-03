@@ -61,7 +61,7 @@ class DocumentParser {
         return ((float) $usec + (float) $sec);
     }
 
-    function sendRedirect($url, $count_attempts= 0, $type= '') {
+    function sendRedirect($url, $count_attempts= 0, $type= '', $responseCode= '') {
         if (empty ($url)) {
             return false;
         } else {
@@ -99,6 +99,9 @@ class DocumentParser {
                 } else {
                     $this->messageQuit('No newline allowed in redirect url.');
                 }
+            }
+            if ($responseCode && (strpos($responseCode, '30') !== false)) {
+                header($responseCode);
             }
             header($header);
             $this->postProcess();
@@ -1118,7 +1121,7 @@ class DocumentParser {
                     // if it's an internal docid tag, process it
                     $this->documentObject['content']= $this->rewriteUrls($this->documentObject['content']);
                 }
-                $this->sendRedirect($this->documentObject['content']);
+                $this->sendRedirect($this->documentObject['content'], 0, '', 'HTTP/1.0 301 Moved Permanently');
             }
 
             // check if we should not hit this document
