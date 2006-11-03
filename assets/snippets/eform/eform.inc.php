@@ -333,8 +333,9 @@ global $formats,$fields;
 				elseif ($eFormOnBeforeMailSent($fields)===false) {
 					if( isset($fields['validationmessage']) && !empty($fields['validationmessage']) )
 						return formMerge($tpl,$fields);
+					else
+						return;
 				}
-				return;
 			}
 
 			$fields['disclaimer'] = ($disclaimer)? formMerge($disclaimer,$fields):"";
@@ -492,6 +493,7 @@ global $formats,$fields;
 		$sessionVars = (strpos($sessionVars,',',0))?explode(',',$sessionVars):array($sessionVars);
 		foreach( $sessionVars as $varName ){
 			if( empty($varName) ) continue;
+			$varName = trim($varName);
 			if( isset($_SESSION[$varName]) && !empty($_SESSION[$varName]) )
 				$fields[$varName] = ( isset($fields[$varName]) && $postOverides )?$fields[$varName]:$_SESSION[$varName];
 		}
