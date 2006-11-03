@@ -166,8 +166,12 @@ fieldset {
 }
 input, select, textarea, td {
     font: inherit;
+    color: inherit;
 }
-form input,
+#ta, .tmplvars textarea {
+    font-size: 130%;
+    font-family: monospace;
+}
 form textarea {
     border: 1px solid #ddd;
     border-left-color: #c3c3c3;

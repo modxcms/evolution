@@ -1003,7 +1003,8 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 
 <!-- Template Variables -->
 <?php if ($content['type'] == "document" || $_REQUEST['a'] == 4) { ?>
-<div class='sectionHeader'><?php echo $_lang["settings_templvars"]; ?></div><div class="sectionBody">
+<div class='sectionHeader'><?php echo $_lang["settings_templvars"]; ?></div>
+<div class="sectionBody tmplvars">
 <?php
 
     $template = $default_template;

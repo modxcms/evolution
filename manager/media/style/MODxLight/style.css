@@ -219,6 +219,11 @@ fieldset {
 }
 input, select, textarea, td {
     font: inherit;
+    color: inherit;
+}
+#ta, .tmplvars textarea {
+    font-size: 130%;
+    font-family: monospace;
 }
 form input,
 form textarea {
@@ -254,8 +259,6 @@ form input.hidden {
     display: block;
     float: left;
     vertical-align: middle;
-    font: inherit;
-    color: inherit;
 }
 .form label {
     padding-right: 20px;
