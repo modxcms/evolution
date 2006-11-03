@@ -11,17 +11,22 @@ For more installation tips, please visit the following resources:
     http://modxcms.com/forums/
 
 Estimated time to install after uploading files to your server: < 5 minutes
-Last revision date of this document: Oct 30, 2006
+Last revision date of this document: Version 1.1 Nov 2, 2006
 
 --------------------------------
 MODx SUGGESTED REQUIREMENTS :
 --------------------------------
-MODx will run under most typical web servers, including IIS or Apache and on platforms including Windows, FeeBSD (and other similar platforms), *nix, OS X and Solaris (untested on Solaris but it should work). To minimize your learning curve, we suggest the following software for configuration and testing for new installs and users:
+MODx will run under variety web servers with a little work, including IIS or Apache and on platforms including Linux, Windows, FreeBSD (and other similar platforms), *nix, OS X and Solaris (untested on Solaris but it should work). To minimize your learning curve, we suggest the following software configuration for new users and first-time installations:
 
     Webserver: Apache (1.3.x or 2.x) with mod_rewrite enabled
-    PHP: 4.3.11 and above (optimal performance in 5.1.6+)
+    PHP: 4.3.11 and above (optimal performance in 5.1.6)
     MySQL: 4.1.x (performance gains in 5.0.x)
 
+Most modern standards-compliant browsers should work for managing MODx sites. However the following browsers have proven to offer reliable behavior.
+
+    Firefox 1.5.0.7 and 2 (Mac/Windows/Linux)
+    Internet Explorer 6 and 7 (Windows)
+    Safari 2.0.x (Mac OS X)
 
 --------------------------------
 INSTALLING MODx (NEW INSTALLS) :
