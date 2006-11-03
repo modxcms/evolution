@@ -3,8 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC1 (rev 1890 - Nov 2, 2006)
+MODx 0.9.5 RC1 (rev 1901 - Nov 3, 2006)
 ====================================
+* Remove a reference to legacy coolbuttons and fix header buttons on system event log (1901)
+* Removed modx.js (webelm.js) and cb2.js scripts from header due to conflicts with other scripts. (1893)
+* Stripped all CoolButton code and modified all buttons as CSS buttons. (1893)
+* Added modified actionButtons class to CSS in each theme. (1893)
+* Modified setParent function so that it does not use DynElement scripts. (1893)
 * Fix eForm parsing error with spaces and multiple sessionVars and broken Thank You page (1890)
 * Update Wayfinder to record references better: e.g., 6 to [~6~] (1885)
 * Fix incorrect 1px top border on MODx Host menu (1797/1887)

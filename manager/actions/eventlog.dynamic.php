@@ -85,19 +85,22 @@ echo $cm->render();
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
 <br />
-<div class="sectionHeader"><?php echo $_lang['eventlog_viewer']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['eventlog_viewer']; ?></div>
+<div class="sectionBody">
 	<!-- load modules -->
-	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/eventlog.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['eventlog_msg']; ?></p>
+	<p><?php echo $_lang['eventlog_msg']; ?></p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">
 			<tr>
 			<td><a class="searchtoolbarbtn" href="index.php?a=116&cls=1"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif"  align="absmiddle" /> <?php echo $_lang['clear_log']; ?></a></td>
 			<td nowrap="nowrap">
-				<table border="0" style="float:right"><tr><td><?php echo $_lang["search"]; ?> </td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
-				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
-				<td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/table.gif" width="16" height="16"/></a></td>
-				</tr>
+				<table border="0" style="float:right">
+				    <tr>
+				        <td><?php echo $_lang["search"]; ?> </td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
+				        <td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
+				        <td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
+				        <td><a href="javascript:;" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/table.gif" width="16" height="16"/></a></td>
+				    </tr>
 				</table>
 			</td>
 			</tr>
