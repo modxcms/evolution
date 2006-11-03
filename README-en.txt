@@ -27,6 +27,7 @@ Most modern standards-compliant browsers should work for managing MODx sites. Ho
     Firefox 1.5.0.7 and 2 (Mac/Windows/Linux)
     Internet Explorer 6 and 7 (Windows)
     Safari 2.0.x (Mac OS X)
+    Opera 9.02 (Mac/Windows/Linux)
 
 --------------------------------
 INSTALLING MODx (NEW INSTALLS) :

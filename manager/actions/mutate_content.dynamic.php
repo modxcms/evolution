@@ -539,10 +539,10 @@ if (is_array($evtOut))
     <tr>
         <td><span class="comment">&nbsp;<?php echo $_lang["after_saving"];?>:</span></td>
         <?php if ($modx->hasPermission('new_document')) { ?>
-        	<td><input name="stay" type="radio" class="inputBox" value="1" <?php echo $_REQUEST['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
+        	<td><input name="stay" id="stay1" type="radio" class="inputBox" value="1" <?php echo $_REQUEST['stay']=='1' ? "checked='checked'":'' ?> /></td><td><label for="stay1" class="comment"><?php echo $_lang['stay_new']; ?></label></td>
         <?php } ?>
-        <td><input name="stay" type="radio" class="inputBox" value="2" <?php echo $_REQUEST['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
-        <td><input name="stay" type="radio" class="inputBox" value="" <?php echo $_REQUEST['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
+        <td><input name="stay" id="stay2" type="radio" class="inputBox" value="2" <?php echo $_REQUEST['stay']=='2' ? "checked='checked'":'' ?> /></td><td><label for="stay2" class="comment"><?php echo $_lang['stay']; ?></label></td>
+        <td><input name="stay" id="stay3" type="radio" class="inputBox" value="" <?php echo $_REQUEST['stay']=='' ? "checked='checked'":'' ?> /></td><td><label for="stay3" class="comment"><?php echo $_lang['close']; ?></label></td>
     </tr>
     </table>
     </div>
@@ -569,15 +569,15 @@ if ($content['type'] == "reference" || $_REQUEST['a'] == 72) {
             <table width="450" border="0" cellspacing="0" cellpadding="0">
               <tr style="height: 24px;">
                 <td width='100' align="left"><span class='warning'><?php echo $_lang['document_title']; ?></span></td>
-                <td><input name="pagetitle" type="text" maxlength="100" value="<?php echo htmlspecialchars(stripslashes($content['pagetitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+                <td><input name="pagetitle" type="text" maxlength="100" value="<?php echo htmlspecialchars(stripslashes($content['pagetitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" spellcheck="true" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
                 <td align="left"><span class='warning'><?php echo $_lang['long_title']; ?></span></td>
-                <td><input name="longtitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+                <td><input name="longtitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" spellcheck="true" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_long_title_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
                 <td><span class='warning'><?php echo $_lang['document_description']; ?></span></td>
-                <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['description']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_description_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+                <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['description']));?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" spellcheck="true" />&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_description_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
               </tr>
               <tr style="height: 24px;">
                 <td><span class='warning'><?php echo $_lang['document_alias']; ?></span></td>
@@ -595,7 +595,7 @@ if ($content['type'] == "reference" || $_REQUEST['a'] == 72) {
             <?php } else { ?>
               <tr style="height: 24px;">
                 <td valign="top" width="100" align="left"><span class='warning'><?php echo $_lang['document_summary']; ?></span></td>
-                <td valign="top"><textarea name="introtext" class="inputBox" rows="3" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars(stripslashes($content['introtext']));?></textarea>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_summary_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+                <td valign="top"><textarea name="introtext" class="inputBox" rows="3" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars(stripslashes($content['introtext']));?></textarea>&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_summary_help']; ?>" onclick="alert(this.alt);" style="cursor:help;" spellcheck="true"/></td>
               </tr>
              <?php } ?>
               <tr style="height: 24px;">

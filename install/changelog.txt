@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC1 (rev 1903 - Nov 3, 2006)
+MODx 0.9.5 RC1 (rev 1904 - Nov 3, 2006)
 ====================================
+* Enable spellcheck for Firefox 2 on content editing pages and add opera to READM file as a "good manager client" (1904)
 * [FS#638] Allow textareas that might contain code to be styled differently than others (1903)
 * Added back fourth parameter to sendRedirect() function; this responseCode parameter can be used to pass in a valid HTTP redirect code to be set with a header() call (i.e. 'HTTP/1.1 301 Permanently moved'). (1902)
 * Remove a reference to legacy coolbuttons and fix header buttons on system event log (1901)
