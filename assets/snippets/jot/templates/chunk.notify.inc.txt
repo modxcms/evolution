@@ -1,0 +1,11 @@
+Dear [+recipient.username+],
+
+A reply has been posted to a topic you are watching.
+
+View the reply at: [+siteurl+][+jot.link.current+]
+
+Unsubscribe to this topic by clicking here: [+siteurl+][+jot.link.unsubscribe+].
+
+Regards,
+Site Administrator
+

@@ -1,0 +1,12 @@
+<a name="jotnav[+jot.id+]"></a>
+<div class="jot-nav">
+	[+jot.page.current:gt=`1`:then=`
+	<a href="[+jot.link.navigation:esc+][+jot.querykey.navigation+]=1#jotnav[+jot.id+]">First</a> |
+	<a href="[+jot.link.navigation:esc+][+jot.querykey.navigation+]=[+jot.page.current:math=`?-1`+]#jotnav[+jot.id+]">Previous</a> | 
+	`+]
+	Showing comments <b>[+jot.nav.start+]</b> to <b>[+jot.nav.end+]</b> of <b>[+jot.nav.total+]</b> 
+	[+jot.page.current:lt=`[+jot.page.total+]`:then=`
+	| <a href="[+jot.link.navigation:esc+][+jot.querykey.navigation+]=[+jot.page.current:math=`?+1`+]#jotnav[+jot.id+]">Next</a>
+	| <a href="[+jot.link.navigation:esc+][+jot.querykey.navigation+]=[+jot.page.total+]#jotnav[+jot.id+]">Last</a>
+	`+]
+</div>

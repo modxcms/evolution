@@ -1,0 +1,17 @@
+<a name="jotmod[+jot.link.id+]"></a>
+<div class="jot-list">
+<b>Moderation:</b>
+<ul>
+<li>You are currently viewing <b>[+jot.moderation.view:select=`0=unpublished&1=published&2=mixed`+]</b> comments.</li>
+[+jot.moderation.view:isnt=`0`:then=`
+<li>View <a href="[+jot.link.view:esc+][+jot.querykey.view+]=0#jotmod[+jot.link.id+]">unpublished</a> comments ([+jot.moderation.unpublished+])</li>
+`:strip+]
+[+jot.moderation.view:isnt=`1`:then=`
+<li>View <a href="[+jot.link.view:esc+][+jot.querykey.view+]=1#jotmod[+jot.link.id+]">published</a> comments ([+jot.moderation.published+])</li>
+`:strip+]
+[+jot.moderation.view:isnt=`2`:then=`
+<li>View <a href="[+jot.link.view:esc+][+jot.querykey.view+]=2#jotmod[+jot.link.id+]">mixed</a> comments ([+jot.moderation.mixed+])</li>
+`:strip+]
+</ul>
+</div>
+
