@@ -16,6 +16,18 @@ Last revision date of this document: Version 1.1 Nov 2, 2006
 --------------------------------
 MODx SUGGESTED REQUIREMENTS :
 --------------------------------
+<soapbox>
+
+MODx is a PHP application. With that in mind, please be sensible about how you run it and please make sure that your php.ini file is configured for security. If you don't know what that means simple ask your host at a minimum to make sure the following setting is properly handled:
+
+     register_globals OFF
+
+If you DO know what that means, you might be shocked to learn that some of the largest (and cheapest) shared hosting providers out there--including the ones that advertise two-page spreads in glossy magazines--don't either take the time or have the competence to make sure they've properly secured their OS stack and PHP configuration. It's a pity, an inevitable and preventable security compromise waiting for the right exploit to give you a hacked site.
+
+(Anecdotally, the creators of PHP (Zend) consider register_globals being on such a bad idea it's being removed from PHP 6.)
+
+</soapbox>
+
 MODx will run under variety web servers with a little work, including IIS or Apache and on platforms including Linux, Windows, FreeBSD (and other similar platforms), *nix, OS X and Solaris (untested on Solaris but it should work). To minimize your learning curve, we suggest the following software configuration for new users and first-time installations:
 
     Webserver: Apache (1.3.x or 2.x) with mod_rewrite enabled
