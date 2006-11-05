@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `id` int(10) NOT NULL auto_increment,
   `type` varchar(20) NOT NULL default 'document',
   `contentType` varchar(50) NOT NULL default 'text/html',
-  `pagetitle` varchar(100) NOT NULL default '',
+  `pagetitle` varchar(255) NOT NULL default '',
   `longtitle` varchar(255) NOT NULL default '',
   `description` varchar(255) NOT NULL default '',
   `alias` varchar(100) default '',
