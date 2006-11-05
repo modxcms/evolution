@@ -147,9 +147,9 @@ function showParameters(ctrl) {
     if(!dp) tr.style.display='none';
     else {
         t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
-        for(p in dp) {
-            dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
-            ar = dp[p].split("=");
+        for(x = 0; x < dp.length; x++) {
+            dp[x]=(dp[x]+'').replace(/^\s|\s$/,""); // trim
+            ar = dp[x].split("=");
             key = ar[0]     // param
             ar = (ar[1]+'').split(";");
             desc = ar[0];   // description
