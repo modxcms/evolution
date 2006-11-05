@@ -202,7 +202,7 @@ switch ($_POST['mode']) {
 			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
 			<table cellpadding="0" cellspacing="0" class="actionButtons">
 				<tr>
-					<td id="Button1" onclick="window.location.href=''"><a href="index.php?a=99&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
+					<td id="Button1"><a href="index.php?a=99&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
 					</td>
 				</tr>
 			</table>
@@ -380,7 +380,7 @@ switch ($_POST['mode']) {
 			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
 			<table cellpadding="0" cellspacing="0" class="actionButtons">
 				<tr>
-					<td id="Button1" onclick="window.location.href=''"><a href="index.php?a=99&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
+					<td id="Button1"><a href="index.php?a=99&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
 					</td>
 				</tr>
 			</table>

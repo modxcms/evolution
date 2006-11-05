@@ -56,7 +56,7 @@ echo $_lang['export_site_message'];
 </table>
 <p />
 <table cellpadding="0" cellspacing="0" class="actionButtons">
-	<td id="Button1"><a href="javascript:document.exportFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["export_site_start"]; ?></a></td>
+	<td id="Button1"><a href="javascript:;" onclick="document.exportFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["export_site_start"]; ?></a></td>
 </table>
 </form>
 </fieldset>
@@ -304,7 +304,7 @@ echo $_lang['export_site_message'];
 ?>
 <p />
 <table cellpadding="0" cellspacing="0" class="actionButtons">
-	<td id="Button2"><a href="javascript:reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
+	<td id="Button2"><a href="javascript:;" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
 </table>
 <?php
 }

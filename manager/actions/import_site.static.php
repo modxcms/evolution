@@ -51,7 +51,7 @@ if(!isset($_POST['import'])) {
 </table>
 <p />
 <table cellpadding="0" cellspacing="0" class="actionButtons">
-    <td id="Button1"><a href="javascript:document.importFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["import_site_start"]; ?></a></td>
+    <td id="Button1"><a href="javascript:;" onclick="document.importFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["import_site_start"]; ?></a></td>
 </table>
 </form>
 </fieldset>
@@ -87,7 +87,7 @@ if(!isset($_POST['import'])) {
 ?>
 <p />
 <table cellpadding="0" cellspacing="0" class="actionButtons">
-    <td id="Button2"><a href="javascript:reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
+    <td id="Button2"><a href="javascript:;" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
 </table>
 <script type="text/javascript">
     parent.tree.ca = "";
