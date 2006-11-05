@@ -152,15 +152,15 @@ if($limit<1) {
 echo $pager;
 $dotablestuff = 1;
 ?>
-<script type="text/javascript" src="media/script/sortabletable.js"></script>
-  <table border=0 cellpadding=0 cellspacing=0  class="sort-table" id="table-1" width='100%'>
+<script type="text/javascript" src="media/script/tablesort.js"></script>
+  <table border=0 cellpadding=0 cellspacing=0  class="sortabletable sortable-onload-5 rowstyle-even" id="table-1" width='100%'>
     <thead>
       <tr bgcolor='#CCCCCC'>
-        <td width="12"></td>
-        <td width="60%"><b><?php echo $_lang['messages_subject']; ?></b></td>
-        <td><b><?php echo $_lang['messages_from']; ?></b></td>
-        <td><b><?php echo $_lang['messages_private']; ?></b></td>
-        <td width="20%"><b><?php echo $_lang['messages_sent']; ?></b></td>
+        <th width="12"></th>
+        <th width="60%" class="sortable"><b><?php echo $_lang['messages_subject']; ?></b></th>
+        <th class="sortable"><b><?php echo $_lang['messages_from']; ?></b></th>
+        <th class="sortable"><b><?php echo $_lang['messages_private']; ?></b></th>
+        <th width="20%" class="sortable"><b><?php echo $_lang['messages_sent']; ?></b></th>
       </tr>
     </thead>
     <tbody>
@@ -176,10 +176,9 @@ $dotablestuff = 1;
                 $row2 = mysql_fetch_assoc($rs2);
                 $sendername = $row2['username'];
             }
-            $classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
             $messagestyle = $message['messageread']==0 ? "messageUnread" : "messageRead";
 ?>
-    <tr <?php echo $classname; ?>>
+    <tr>
       <td ><?php echo $message['messageread']==0 ? "<img src='media/images/icons/new1-09.gif'>" : ""; ?></td>
       <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td>
       <td ><?php echo $sendername; ?></td>
@@ -193,46 +192,6 @@ $dotablestuff = 1;
 if($dotablestuff==1) { ?>
 </tbody>
 </table>
-<script type="text/javascript">
-
-var st1 = new SortableTable(document.getElementById("table-1"),
-    ["None", "CaseInsensitiveString", "CaseInsensitiveString", "CaseInsensitiveString", "CaseInsensitiveString", "None"]);
-
-function addClassName(el, sClassName) {
-    var s = el.className;
-    var p = s.split(" ");
-    var l = p.length;
-    for (var i = 0; i < l; i++) {
-        if (p[i] == sClassName)
-            return;
-    }
-    p[p.length] = sClassName;
-    el.className = p.join(" ");
-
-}
-
-function removeClassName(el, sClassName) {
-    var s = el.className;
-    var p = s.split(" ");
-    var np = [];
-    var l = p.length;
-    var j = 0;
-    for (var i = 0; i < l; i++) {
-        if (p[i] != sClassName)
-            np[j++] = p[i];
-    }
-    el.className = np.join(" ");
-}
-
-st1.onsort = function () {
-    var rows = st1.tBody.rows;
-    var l = rows.length;
-    for (var i = 0; i < l; i++) {
-        removeClassName(rows[i], i % 2 ? "odd" : "even");
-        addClassName(rows[i], i % 2 ? "even" : "odd");
-    }
-};
-</script>
 <?php } ?>
     </div>
 

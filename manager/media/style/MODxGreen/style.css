@@ -196,53 +196,6 @@ a img {
 	border: 	0;
 }
 
-.sort-table {
-	font: Icon;
-	border: 0px Solid ThreeDShadow;
-	color: WindowText;
-}
-
-.sort-table thead {
-	height: 18px !important;
-	background-image: 	url(images/bg/button_dn.gif);
-	background-color: 	#97B553;
-	background-position: 	top;
-	background-repeat: 	repeat-x;
-	
-}
-
-.sort-table td {
-	padding: 2px 5px;
-}
-
-.sort-table thead td {
-	cursor: pointer;
-	color: #000000;
-}
-
-.sort-table thead td:active {
-	border-color: ButtonShadow ButtonHighlight 
-	ButtonHighlight ButtonShadow;
-	padding: 3px 4px 1px 6px;
-}
-
-.sort-arrow {
-	width: 11px;
-	height: 11px;
-	background-position: center center;
-	background-repeat: no-repeat;
-	margin: 0 2px;
-}
-
-.sort-arrow.descending {
-	background-image: url(images/misc/downsimple.png);
-	
-}
-
-.sort-arrow.ascending {
-	background-image: url(images/misc/upsimple.png);
-}
-
 .even {
 	background: #D9E7C2;
 }
@@ -1048,4 +1001,50 @@ ul#nav {
 ---------------------------------------------------------- */
 #ta, .tmplvars textarea {
     font-family: monospace !important;
+}
+
+/* New sortable table class
+---------------------------------------------------------- */
+
+.sortabletable {
+	font: Icon;
+	border: 0 solid ThreeDShadow;
+	color: WindowText;
+}
+
+.sortabletable thead tr {
+	height: 18px !important;
+	background-image: 	url(images/bg/button_dn.gif);
+	background-color: 	#97B553;
+	background-position: 	top;
+	background-repeat: 	repeat-x;
+}
+
+.sortabletable tr {
+	background: #fff;
+}
+
+.sortabletable tr.even {
+	background: #D9E7C2;
+}
+
+.sortabletable td, .sortabletable th {
+	padding: 2px 5px;
+}
+
+.sortabletable th {
+	text-align: left;
+	cursor: pointer;
+	color: #000;
+}
+
+.sortabletable th a {
+	text-decoration: none;
+	color: #000;
+}
+
+.sortabletable th:active {
+	border-color: ButtonShadow ButtonHighlight 
+	ButtonHighlight ButtonShadow;
+	padding: 3px 4px 1px 6px;
 }

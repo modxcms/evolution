@@ -287,31 +287,30 @@ print $array_paging['last_link'] ."[last]</a>";
 // only the results you would like...
 ?>
 <P>
-	<script type="text/javascript" src="media/script/sortabletable.js"></script>
-  <table border=0 cellpadding="2" cellspacing="1" bgcolor="#707070" class="sort-table" id="table-1" width="95%">
+	<script type="text/javascript" src="media/script/tablesort.js"></script>
+  <table border=0 cellpadding="2" cellspacing="1" bgcolor="#707070" class="sortabletable sortable-onload-6 rowstyle-even" id="table-1" width="95%">
     <thead>
       <tr>
-        <td><b><?php echo $_lang["mgrlog_username"]; ?></b></td>
-        <td><b><?php echo $_lang["mgrlog_actionid"]; ?></b></td>
-        <td><b><?php echo $_lang["mgrlog_itemid"]; ?></b></td>
-        <td><b><?php echo $_lang["mgrlog_itemname"]; ?></b></td>
-        <td><b><?php echo $_lang["mgrlog_msg"]; ?></b></td>
-        <td><b><?php echo $_lang["mgrlog_time"]; ?></b></td>
+        <th class="sortable"><b><?php echo $_lang["mgrlog_username"]; ?></b></th>
+        <th class="sortable"><b><?php echo $_lang["mgrlog_actionid"]; ?></b></th>
+        <th class="sortable"><b><?php echo $_lang["mgrlog_itemid"]; ?></b></th>
+        <th class="sortable"><b><?php echo $_lang["mgrlog_itemname"]; ?></b></th>
+        <th class="sortable"><b><?php echo $_lang["mgrlog_msg"]; ?></b></th>
+        <th class="sortable"><b><?php echo $_lang["mgrlog_time"]; ?></b></th>
       </tr>
     </thead>
     <tbody>
      <?php
 			for ($i = 0; $i < $limit; $i++) {
 				$logentry = mysql_fetch_assoc($rs);
-				$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 ?>
-    <tr <?php echo $classname; ?>>
-      <td class="cell"><?php echo ucfirst($logentry['username'])." (".$logentry['internalKey'].")"; ?></td>
-	  <td class="cell"><?php echo $logentry['action']; ?></td>
-      <td class="cell"><?php echo $logentry['itemid']=="-" ? "" : $logentry['itemid'] ; ?></td>
-      <td class="cell"><?php echo $logentry['itemname']; ?></td>
-      <td class="cell"><?php echo $logentry['message']; ?></td>
-      <td class="cell"><?php echo strftime('%d-%m-%y, %H:%M:%S', $logentry['timestamp']+$server_offset_time); ?></td>
+    <tr>
+      <td><?php echo ucfirst($logentry['username'])." (".$logentry['internalKey'].")"; ?></td>
+	  <td><?php echo $logentry['action']; ?></td>
+      <td><?php echo $logentry['itemid']=="-" ? "" : $logentry['itemid'] ; ?></td>
+      <td><?php echo $logentry['itemname']; ?></td>
+      <td><?php echo $logentry['message']; ?></td>
+      <td><?php echo strftime('%d-%m-%y, %H:%M:%S', $logentry['timestamp']+$server_offset_time); ?></td>
     </tr>
     <?php
 			}
@@ -319,47 +318,6 @@ print $array_paging['last_link'] ."[last]</a>";
 ?>
     </tbody>
      </table>
-<script type="text/javascript">
-
-var st1 = new SortableTable(document.getElementById("table-1"),
-	["CaseInsensitiveString", "Number", "Number", "CaseInsensitiveString", "CaseInsensitiveString", "Date"]);
-
-function addClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var l = p.length;
-	for (var i = 0; i < l; i++) {
-		if (p[i] == sClassName)
-			return;
-	}
-	p[p.length] = sClassName;
-	el.className = p.join(" ");
-
-}
-
-function removeClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var np = [];
-	var l = p.length;
-	var j = 0;
-	for (var i = 0; i < l; i++) {
-		if (p[i] != sClassName)
-			np[j++] = p[i];
-	}
-	el.className = np.join(" ");
-}
-
-st1.onsort = function () {
-	var rows = st1.tBody.rows;
-	var l = rows.length;
-	for (var i = 0; i < l; i++) {
-		removeClassName(rows[i], i % 2 ? "odd" : "even");
-		addClassName(rows[i], i % 2 ? "even" : "odd");
-	}
-};
-</script>
-
 </div>
 <?php
 } else {

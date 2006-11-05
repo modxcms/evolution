@@ -69,24 +69,22 @@ if($limit<1) {
 } else {
 	printf($_lang['search_results_returned_msg'], $limit);
 ?>
-		<script type="text/javascript" src="media/script/sortabletable.js"></script>
-  <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-1" width="90%"> 
+		<script type="text/javascript" src="media/script/tablesort.js"></script>
+  <table border=0 cellpadding=2 cellspacing=0  class="sortabletable sortable-onload-2 rowstyle-even" id="table-1" width="90%"> 
     <thead> 
       <tr bgcolor='#CCCCCC'> 
-		<td width="20"></td>
-		<td width="20"></td>
-        <td><b><?php echo $_lang['search_results_returned_id']; ?></b></td> 
-        <td><b><?php echo $_lang['search_results_returned_title']; ?></b></td> 
-        <td><b><?php echo $_lang['search_results_returned_desc']; ?></b></td>
-		<td width="20"></td>
-		<td width="20"></td>
+		<th width="20"></th>
+        <th class="sortable"><b><?php echo $_lang['search_results_returned_id']; ?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['search_results_returned_title']; ?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['search_results_returned_desc']; ?></b></th>
+		<th width="20"></th>
+		<th width="20"></th>
       </tr> 
     </thead> 
     <tbody>
      <?php
 			for ($i = 0; $i < $limit; $i++) { 
 				$logentry = mysql_fetch_assoc($rs);
-				$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 	// figure out the icon for the document...
 	$icon = "";
 	if($logentry['published']==0) {
@@ -102,60 +100,19 @@ if($limit<1) {
 		$icon .= "page";
 	}
 ?> 
-    <tr <?php echo $classname; ?>> 
-	  <td class="cell" align="center">&nbsp;</td> 
-      <td class="cell" align="center"><a href="index.php?a=3&id=<?php echo $logentry['id']; ?>"onMouseover="status='<?php echo $_lang['search_view_docdata']; ?>';return true;" onmouseout="status='';return true;" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/context_view.gif" border=0></a></td> 
-      <td class="cell"><?php echo $logentry['id']; ?></td> 
-	  <td class="cell"><?php echo strlen($logentry['pagetitle'])>20 ? substr($logentry['pagetitle'], 0, 20)."..." : $logentry['pagetitle'] ; ?></td> 
-      <td class="cell"><?php echo strlen($logentry['description'])>35 ? substr($logentry['description'], 0, 35)."..." : $logentry['description'] ;  ?></td>
-      <td class="cell" align="center"><?php echo $logentry['deleted']==1 ? "<img align='absmiddle' src='media/images/tree/trash.gif' alt='".$_lang['search_item_deleted']."'>" : ""; ?></td>
-      <td class="cell" align="center"><img align='absmiddle' src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/<?php echo $icon; ?>.gif'></td>	  
+    <tr> 
+      <td align="center"><a href="index.php?a=3&id=<?php echo $logentry['id']; ?>"onMouseover="status='<?php echo $_lang['search_view_docdata']; ?>';return true;" onmouseout="status='';return true;" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/context_view.gif" border=0></a></td> 
+      <td><?php echo $logentry['id']; ?></td> 
+	  <td><?php echo strlen($logentry['pagetitle'])>20 ? substr($logentry['pagetitle'], 0, 20)."..." : $logentry['pagetitle'] ; ?></td> 
+      <td><?php echo strlen($logentry['description'])>35 ? substr($logentry['description'], 0, 35)."..." : $logentry['description'] ;  ?></td>
+      <td align="center"><?php echo $logentry['deleted']==1 ? "<img align='absmiddle' src='media/images/tree/trash.gif' alt='".$_lang['search_item_deleted']."'>" : ""; ?></td>
+      <td align="center"><img align='absmiddle' src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/<?php echo $icon; ?>.gif'></td>	  
     </tr> 
     <?php
 			}
 ?> 
     </tbody> 
      </table> 
-<script type="text/javascript">
-
-var st1 = new SortableTable(document.getElementById("table-1"),
-	["None", "None", "Number", "CaseInsensitiveString", "CaseInsensitiveString", "None", "None"]);
-
-function addClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var l = p.length;
-	for (var i = 0; i < l; i++) {
-		if (p[i] == sClassName)
-			return;
-	}
-	p[p.length] = sClassName;
-	el.className = p.join(" ");
-			
-}
-
-function removeClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var np = [];
-	var l = p.length;
-	var j = 0;
-	for (var i = 0; i < l; i++) {
-		if (p[i] != sClassName)
-			np[j++] = p[i];
-	}
-	el.className = np.join(" ");
-}
-
-st1.onsort = function () {
-	var rows = st1.tBody.rows;
-	var l = rows.length;
-	for (var i = 0; i < l; i++) {
-		removeClassName(rows[i], i % 2 ? "odd" : "even");
-		addClassName(rows[i], i % 2 ? "even" : "odd");
-	}
-};
-</script>	
 <?php
 }
 ?>

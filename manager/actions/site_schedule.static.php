@@ -5,7 +5,7 @@
         document.include("dynelement");
     })
 </script>
-<script type="text/javascript" src="media/script/sortabletable.js"></script>
+<script type="text/javascript" src="media/script/tablesort.js"></script>
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 /* if(!$modx->hasPermission('edit_document')) {
@@ -29,70 +29,29 @@ if($limit<1) {
 	echo "<p>".$_lang["no_docs_pending_publishing"]."</p>";
 } else {
 ?>
-  <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-1" width="100%">
+  <table border=0 cellpadding=2 cellspacing=0  class="sortabletable sortable-onload-3 rowstyle-even" id="table-1" width="100%">
     <thead>
       <tr bgcolor='#CCCCCC'>
-        <td><b><?php echo $_lang['document'];?></b></td> 
-        <td><b><?php echo $_lang['id'];?></b></td> 
-        <td><b><?php echo $_lang['publish_date'];?></b></td>
+        <th class="sortable"><b><?php echo $_lang['document'];?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['id'];?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['publish_date'];?></b></th>
       </tr>
     </thead>
     <tbody>
 <?php
 	for ($i=0;$i<$limit;$i++) {
 		$row = mysql_fetch_assoc($rs);
-		$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 ?>
-    <tr <?php echo $classname; ?>>
-      <td class="cell"><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
-	  <td class="cell"><?php echo $row['id'] ;?></td>
-      <td class="cell"><?php echo strftime("%d-%m-%y %H:%M:%S", $row['pub_date']+$server_offset_time) ;?></td>
+    <tr>
+      <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
+	  <td><?php echo $row['id'] ;?></td>
+      <td><?php echo strftime("%d-%m-%y %H:%M:%S", $row['pub_date']+$server_offset_time) ;?></td>
     </tr>
 <?php
 	}
 ?>
 	</tbody>
 </table>
-<script type="text/javascript">
-
-var st1 = new SortableTable(document.getElementById("table-1"),
-	["CaseInsensitiveString", "Number", "Date"]);
-
-function addClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var l = p.length;
-	for (var i = 0; i < l; i++) {
-		if (p[i] == sClassName)
-			return;
-	}
-	p[p.length] = sClassName;
-	el.className = p.join(" ");
-
-}
-
-function removeClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var np = [];
-	var l = p.length;
-	var j = 0;
-	for (var i = 0; i < l; i++) {
-		if (p[i] != sClassName)
-			np[j++] = p[i];
-	}
-	el.className = np.join(" ");
-}
-
-st1.onsort = function () {
-	var rows = st1.tBody.rows;
-	var l = rows.length;
-	for (var i = 0; i < l; i++) {
-		removeClassName(rows[i], i % 2 ? "odd" : "even");
-		addClassName(rows[i], i % 2 ? "even" : "odd");
-	}
-};
-</script>
 <?php
 }
 ?>
@@ -109,70 +68,29 @@ if($limit<1) {
 	echo "<p>".$_lang["no_docs_pending_unpublishing"]."</p>";
 } else {
 ?>
-  <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-2" width="100%">
+  <table border=0 cellpadding=2 cellspacing=0  class="sortabletable sortable-onload-3 rowstyle-even" id="table-2" width="100%">
     <thead>
       <tr bgcolor='#CCCCCC'>
-        <td><b><?php echo $_lang['document'];?></b></td> 
-        <td><b><?php echo $_lang['id'];?></b></td> 
-        <td><b><?php echo $_lang['unpublish_date'];?></b></td>
+        <th class="sortable"><b><?php echo $_lang['document'];?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['id'];?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['unpublish_date'];?></b></th>
       </tr>
     </thead>
     <tbody>
 <?php
 	for ($i=0;$i<$limit;$i++) {
 		$row = mysql_fetch_assoc($rs);
-		$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 ?>
-    <tr <?php echo $classname; ?>>
-      <td class="cell"><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
-	  <td class="cell"><?php echo $row['id'] ;?></td>
-      <td class="cell"><?php echo strftime("%d-%m-%y %H:%M:%S", $row['unpub_date']+$server_offset_time) ;?></td>
+    <tr>
+      <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
+	  <td><?php echo $row['id'] ;?></td>
+      <td><?php echo strftime("%d-%m-%y %H:%M:%S", $row['unpub_date']+$server_offset_time) ;?></td>
     </tr>
 <?php
 	}
 ?>
 	</tbody>
 </table>
-<script type="text/javascript">
-
-var st2 = new SortableTable(document.getElementById("table-2"),
-	["CaseInsensitiveString", "Number", "Date"]);
-
-function addClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var l = p.length;
-	for (var i = 0; i < l; i++) {
-		if (p[i] == sClassName)
-			return;
-	}
-	p[p.length] = sClassName;
-	el.className = p.join(" ");
-
-}
-
-function removeClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var np = [];
-	var l = p.length;
-	var j = 0;
-	for (var i = 0; i < l; i++) {
-		if (p[i] != sClassName)
-			np[j++] = p[i];
-	}
-	el.className = np.join(" ");
-}
-
-st2.onsort = function () {
-	var rows = st2.tBody.rows;
-	var l = rows.length;
-	for (var i = 0; i < l; i++) {
-		removeClassName(rows[i], i % 2 ? "odd" : "even");
-		addClassName(rows[i], i % 2 ? "even" : "odd");
-	}
-};
-</script>
 <?php
 }
 ?>
@@ -188,72 +106,31 @@ if($limit<1) {
 	echo "<p>".$_lang["no_docs_pending_pubunpub"]."</p>";
 } else {
 ?>
-  <table border=0 cellpadding=2 cellspacing=0  class="sort-table" id="table-3" width="100%">
+  <table border=0 cellpadding=2 cellspacing=0  class="sortabletable sortable-onload-3 rowstyle-even" id="table-3" width="100%">
     <thead>
       <tr bgcolor='#CCCCCC'>
-        <td><b><?php echo $_lang['document'];?></b></td> 
-        <td><b><?php echo $_lang['id'];?></b></td> 
-        <td><b><?php echo $_lang['publish_date'];?></b></td>
-        <td><b><?php echo $_lang['unpublish_date'];?></b></td>
+        <th class="sortable"><b><?php echo $_lang['document'];?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['id'];?></b></th> 
+        <th class="sortable"><b><?php echo $_lang['publish_date'];?></b></th>
+        <th class="sortable"><b><?php echo $_lang['unpublish_date'];?></b></th>
       </tr>
     </thead>
     <tbody>
 <?php
 	for ($i=0;$i<$limit;$i++) {
 		$row = mysql_fetch_assoc($rs);
-		$classname = ($i % 2) ? 'class="even" ' : 'class="odd" ';
 ?>
-    <tr <?php echo $classname; ?>>
-      <td class="cell"><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a> &nbsp;</td>
-  	  <td class="cell"><?php echo $row['id'] ;?> &nbsp;</td>
-      <td class="cell"><?php echo $row['pub_date']==0 ? "" : strftime("%d-%m-%y %H:%M:%S", $row['pub_date']+$server_offset_time) ;?> &nbsp;</td>
-      <td class="cell"><?php echo $row['unpub_date']==0 ? "" : strftime("%d-%m-%y %H:%M:%S", $row['unpub_date']+$server_offset_time) ;?> &nbsp;</td>
+    <tr>
+      <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a> &nbsp;</td>
+  	  <td><?php echo $row['id'] ;?> &nbsp;</td>
+      <td><?php echo $row['pub_date']==0 ? "" : strftime("%d-%m-%y %H:%M:%S", $row['pub_date']+$server_offset_time) ;?> &nbsp;</td>
+      <td><?php echo $row['unpub_date']==0 ? "" : strftime("%d-%m-%y %H:%M:%S", $row['unpub_date']+$server_offset_time) ;?> &nbsp;</td>
     </tr>
 <?php
 	}
 ?>
 	</tbody>
 </table>
-<script type="text/javascript">
-
-var st3 = new SortableTable(document.getElementById("table-3"),
-	["CaseInsensitiveString", "Number", "Date", "Date"]);
-
-function addClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var l = p.length;
-	for (var i = 0; i < l; i++) {
-		if (p[i] == sClassName)
-			return;
-	}
-	p[p.length] = sClassName;
-	el.className = p.join(" ");
-
-}
-
-function removeClassName(el, sClassName) {
-	var s = el.className;
-	var p = s.split(" ");
-	var np = [];
-	var l = p.length;
-	var j = 0;
-	for (var i = 0; i < l; i++) {
-		if (p[i] != sClassName)
-			np[j++] = p[i];
-	}
-	el.className = np.join(" ");
-}
-
-st3.onsort = function () {
-	var rows = st3.tBody.rows;
-	var l = rows.length;
-	for (var i = 0; i < l; i++) {
-		removeClassName(rows[i], i % 2 ? "odd" : "even");
-		addClassName(rows[i], i % 2 ? "even" : "odd");
-	}
-};
-</script>
 <?php
 }
 ?>
