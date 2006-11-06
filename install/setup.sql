@@ -367,8 +367,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
   `dob` int(10) NOT NULL DEFAULT '0',
   `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
   `country` varchar(5) NOT NULL default '',
-  `state` varchar(5) NOT NULL default '',
-  `zip` varchar(5) NOT NULL default '',
+  `state` varchar(25) NOT NULL default '',
+  `zip` varchar(25) NOT NULL default '',
   `fax` varchar(100) NOT NULL default '',
   `photo` varchar(255) NOT NULL default '' COMMENT 'link to photo',
   `comment` varchar(255) NOT NULL default '' COMMENT 'short comment',  
@@ -739,6 +739,11 @@ ALTER TABLE `{PREFIX}user_settings` MODIFY COLUMN `setting_value` text;
 
 
 ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text;
+
+
+ALTER TABLE `{PREFIX}user_attributes` 
+  MODIFY COLUMN `state` varchar(25) NOT NULL default '',
+  MODIFY COLUMN `zip` varchar(25) NOT NULL default '';
 
 
 # ]]upgrade-able
