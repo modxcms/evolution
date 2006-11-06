@@ -676,25 +676,22 @@ function updateHeader() {
 
 	$output = '<html><head>
 							<title>Update</title>
-							<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
-							<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
-							<style type="text/css"> 
+							<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" />';
+	$output.='				<style type="text/css"> 
 							.topdiv {border:0;} 
 							.subdiv {border:0;} 
 							ul, li {list-style:none;} 
 							</style>
-							<script type="text/javascript">var MODX_MEDIA_PATH="media";</script>
-							<script type="text/javascript" src="media/script/modx.js"></script>
-							<script type="text/javascript" src="media/script/cb2.js"></script>
 							<script type="text/javascript">parent.tree.updateTree();</script>';
 	$output .= ButtonCSS();
 	$output .= '		</head><body> 
 					        <div class="subTitle" id="bttn"> 
 							<span class="right">' . $_lang['DM_module_title'] . '</span> 
 							<div class="bttnheight"><a id="Button5" onclick="document.location.href=\'index.php?a=106\';">
-								<img src="media/style' . $theme . '/images/icons/close.gif" /> ' . $_lang['DM_close'] . '</a>
-							</div><div class="stay">   </div> 
-				            </div>
+							<img src="media/style' . $theme . '/images/icons/close.gif" alt="" /> '.$_lang['DM_close'].'</a>
+							</div> 
+							<div class="stay"></div> 
+	    					</div> 
 							<div class="sectionHeader">&nbsp;' . $_lang['DM_update_title'] . '</div> 
 							<div class="sectionBody"> 
 						    ';

@@ -28,7 +28,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
 		$output .= '<li><span style="width: 200px"><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].'</a></span>';
         $output .= $row['description']!='' ? ' - '.$row['description'] : '' ;
-        $output .= $row['locked']==1 ? ' <i><small>('.$_lang['template_locked_message'].')</small></i>' : "" ;
+        $output .= $row['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ;
         $output .= '</li>';
 
         $preCat = $row['category'];
@@ -204,7 +204,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
                     $insideUl = 1;
                 }
 		?>
-			<li><span style="width: 200px"><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo $v['description']!='' ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked']==1 ? ' <i><small>('.$_lang['plugin_locked_message'].')</small></i>' : "" ; ?></li>
+			<li><span style="width: 200px"><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo $v['description']!='' ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ; ?></li>
 		<?php
     		$preCat = $v['category'];
             }

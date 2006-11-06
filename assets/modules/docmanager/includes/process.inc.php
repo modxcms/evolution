@@ -368,8 +368,7 @@ function sortMenu($id) {
 	$output .= '
 																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
 																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
-																<script type="text/javascript" src="' . $siteURL . 'assets/modules/docmanager/js/functions.js"></script>
-																<script type="text/javascript" src="media/script/cb2.js"></script>';
+																<script type="text/javascript" src="' . $siteURL . 'assets/modules/docmanager/js/functions.js"></script>';
 	$output .= buttonCSS();
 	if (isset ($_POST['sortableListsSubmitted'])) $output.='<script type="text/javascript">parent.tree.updateTree();</script>';
 	$output .= '	</head><body>

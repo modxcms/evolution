@@ -3,8 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC2 (rev 1922 - Nov 6, 2006)
+MODx 0.9.5 RC2 (rev 1929 - Nov 6, 2006)
 ====================================
+* [FS#634] Order permission groups alphabetically when editing/creating a web user. (1928)
+* [FS#655] Wrong lang string showing for locked items in the 'Manage Resource' section - amended so locked items use the generic 'locked' lang string. (1927)
+* [FS#512] Recommit doc parser changes re mySQL 4.1.21 and document sorting. (1926)
+* DocManager: Remove references to modx.js and cb2.js. (1910, 1911)
 * Added constants to represent global path variables and make use in places where potential remote file inclusion points exist. (1922)
 * Fixed potential remote file inclusion point in install/instprocessor.php. (1922)
 * [FS#648] Increased character length of zip and state to 25 max to better accomodate non-US locations (1920)

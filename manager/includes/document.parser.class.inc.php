@@ -1313,6 +1313,7 @@ class DocumentParser {
               LEFT JOIN $tbldg dg on dg.document = sc.id
               WHERE sc.parent = '$id'
               AND ($access)
+              GROUP BY sc.id
               ORDER BY $sort $dir;";
         $result= $this->dbQuery($sql);
         $resourceArray= array ();
@@ -1339,6 +1340,7 @@ class DocumentParser {
               LEFT JOIN $tbldg dg on dg.document = sc.id
               WHERE sc.parent = '$id' AND sc.published=1 AND sc.deleted=0
               AND ($access)
+              GROUP BY sc.id
               ORDER BY $sort $dir;";
         $result= $this->dbQuery($sql);
         $resourceArray= array ();
@@ -1367,7 +1369,8 @@ class DocumentParser {
               FROM $tblsc sc
               LEFT JOIN $tbldg dg on dg.document = sc.id
               WHERE sc.parent = '$parentid' AND sc.published=$published AND sc.deleted=$deleted $where
-              AND ($access) " .
+              AND ($access)
+              GROUP BY sc.id " .
          ($sort ? " ORDER BY $sort $dir " : "") . " $limit ";
         $result= $this->dbQuery($sql);
         $resourceArray= array ();
@@ -1397,7 +1400,8 @@ class DocumentParser {
             $sql= "SELECT DISTINCT $fields FROM $tblsc sc
                     LEFT JOIN $tbldg dg on dg.document = sc.id
                     WHERE (sc.id IN (" . join($ids, ",") . ") AND sc.published=$published AND sc.deleted=$deleted $where)
-                    AND ($access) " .
+                    AND ($access)
+                    GROUP BY sc.id " .
              ($sort ? " ORDER BY $sort $dir" : "") . " $limit ";
             $result= $this->dbQuery($sql);
             $resourceArray= array ();
