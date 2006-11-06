@@ -1,10 +1,3 @@
-<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
-<script type="text/javascript" language="JavaScript">
-    document.setIncludePath("media/script/bin/");
-    document.addEventListener("oninit",function() {
-        document.include("dynelement");
-    })
-</script>
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");

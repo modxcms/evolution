@@ -1,10 +1,3 @@
-<script type="text/javascript" language="JavaScript" src="media/script/modx.js"></script>
-<script type="text/javascript" language="JavaScript">
-    document.setIncludePath("media/script/bin/");
-    document.addEventListener("oninit",function() {
-        document.include("dynelement");
-    })
-</script>
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
@@ -63,16 +56,14 @@ echo $cm->render();
 	var selectedItem;
 	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
 	function showContentMenu(id,e){
-		var x,y,st = document.getScrollTop();
-		x = e.clientX>0 ? e.clientX:e.pageX;
-		y = e.clientY>0 ? e.clientY:e.pageY;
 		selectedItem=id;
-		if (((y+contextm.getHeight())-10)>document.getHeight()) y=document.getHeight() - contextm.getHeight();
-		contextm.setLocation(x+5,y+st-10);
-		contextm.setVisible(true);
+		contextm.style.left = Event.pointerX(e)+"px";
+		contextm.style.top = Event.pointerY(e)+"px";
+		contextm.style.visibility = "visible";
 		e.cancelBubble=true;
 		return false;
 	};
+	
 	function menuAction(a) {
 		var id = selectedItem;
 		switch(a) {
@@ -87,9 +78,9 @@ echo $cm->render();
 		}
 	}
 
-	document.addEventListener("onclick",function(){
-		contextm.setVisible(false);
-	})
+	Event.observe(document,'click',function(){
+		contextm.style.visibility = "hidden";
+	});
 </script>
 <form name="resource" method="post">
 <input type="hidden" name="id" value="<?php echo $id; ?>" />

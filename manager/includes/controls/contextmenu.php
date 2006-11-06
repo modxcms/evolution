@@ -52,8 +52,7 @@ class ContextMenu {
 $ContextMenuScript = <<<BLOCK
 <script>
 	function getCntxMenu(id) {
-		if(self.DynElement) return new DynElement(id);
-		else return document.getElementById(id);
+		return $(id);
 	}
 	function hideCntxMenu(id){
 		var cm = getCntxMenu(id);

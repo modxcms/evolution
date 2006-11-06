@@ -9,15 +9,6 @@ if(!$modx->hasPermission('edit_user')) {
 // get search string
 $query = $_REQUEST['search'];
 $sqlQuery = mysql_escape_string($query);
-
-// context menu
-include_once $base_path."manager/includes/controls/contextmenu.php";
-$cm = new ContextMenu("cntxm", 150);
-$dir="style/".($manager_theme ? "$manager_theme/":"");
-$cm->addItem($_lang["edit"],"js:menuAction(1)","media/".$dir."images/icons/logging.gif",(!$modx->hasPermission('edit_user') ? 1:0));
-$cm->addItem($_lang["delete"], "js:menuAction(2)","media/".$dir."images/icons/delete.gif",(!$modx->hasPermission('delete_user') ? 1:0));
-echo $cm->render();
-
 ?>
 <br />
 <!-- User Roles -->
