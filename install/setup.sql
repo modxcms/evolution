@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `pagetitle` varchar(255) NOT NULL default '',
   `longtitle` varchar(255) NOT NULL default '',
   `description` varchar(255) NOT NULL default '',
-  `alias` varchar(100) default '',
+  `alias` varchar(255) default '',
   `link_attributes` varchar(255) NOT NULL default '',
   `published` int(1) NOT NULL default '0',
   `pub_date` int(20) NOT NULL default '0',
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `deletedby` int(10) NOT NULL default '0',
   `publishedon` int(20) NOT NULL default '0',
   `publishedby` int(10) NOT NULL default '0',
-  `menutitle` varchar(30) NOT NULL DEFAULT '' COMMENT 'Menu title',
+  `menutitle` varchar(255) NOT NULL DEFAULT '' COMMENT 'Menu title',
   `donthit` tinyint(1) NOT NULL default '0' COMMENT 'Disable page hit count',
   `haskeywords` tinyint(1) NOT NULL default '0' COMMENT 'has links to keywords',
   `hasmetatags` tinyint(1) NOT NULL default '0' COMMENT 'has links to meta tags',
@@ -565,7 +565,7 @@ ALTER TABLE `{PREFIX}site_content` ADD INDEX `aliasidx` (alias);
 ALTER TABLE `{PREFIX}site_content` ADD COLUMN `introtext` text COMMENT 'Used to provide quick summary of the document' AFTER `isfolder`;
 
 
-ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `menutitle` varchar(30) NOT NULL default '' COMMENT 'Menu title' AFTER `deletedby`,
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `menutitle` varchar(255) NOT NULL default '' COMMENT 'Menu title' AFTER `deletedby`,
  ADD COLUMN `donthit` tinyint(1) NOT NULL default '0' COMMENT 'Disable page hit count' AFTER `menutitle`,
  ADD COLUMN `haskeywords` tinyint(1) NOT NULL default '0' COMMENT 'has links to keywords' AFTER `donthit`,
  ADD COLUMN `hasmetatags` tinyint(1) NOT NULL default '0' COMMENT 'has links to meta tags' AFTER `haskeywords`,
@@ -717,13 +717,17 @@ ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`,
  ADD PRIMARY KEY ( `tmplvarid` , `templateid` );
 
 
-# ryan alter menutitle from 30 characters to 100 characters
-ALTER TABLE `{PREFIX}site_content` MODIFY COLUMN `menutitle` varchar(100);
+ALTER TABLE `{PREFIX}site_content` 
+  MODIFY COLUMN `pagetitle` varchar(255) NOT NULL default '',
+  MODIFY COLUMN `alias` varchar(255) default '',
+  MODIFY COLUMN `menutitle` varchar(255) NOT NULL DEFAULT '' COMMENT 'Menu title';
 
 
-ALTER TABLE `{PREFIX}site_content`  ADD COLUMN `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`;
+ALTER TABLE `{PREFIX}site_content` ADD COLUMN `link_attributes` varchar(255) NOT NULL DEFAULT '' COMMENT 'Link attriubtes' AFTER `alias`;
 
-ALTER TABLE `{PREFIX}site_plugin_events`  ADD COLUMN `priority` INT(10) NOT NULL default 0 COMMENT 'determines the run order of the plugin' AFTER `evtid`;
+
+ALTER TABLE `{PREFIX}site_plugin_events` ADD COLUMN `priority` INT(10) NOT NULL default 0 COMMENT 'determines the run order of the plugin' AFTER `evtid`;
+
 
 ALTER TABLE `{PREFIX}site_tmplvar_templates` ADD COLUMN `rank` integer(11) NOT NULL DEFAULT '0' AFTER `templateid`;
 

@@ -1,23 +1,34 @@
-MODx CMS is an open source content management system licensed under the GPL.
+MODx CMS free software targeted at developers, licensed under the GPL.
 Download the latest version and obtain support at http://modxcms.com/
 Copyright 2005-2006 the MODx CMS project. All rights reserved.
 
-The following guidelines and instructions should apply typical LAMP servers. 
+MODx is ideal for web developers and designers looking for a customizable web framework or CMS that doesn't place restrictions on their site output -- a tool they can confidently turn over to their end-users for day-to-day site maintenance. It's probably not ideal for web novices -- it's neither Dreamweaver (tm) nor a CSS editor. It's not a portal or blog or community site (though you can build those in it). And it doesn't ship loaded full of plug-and-play add on modules/extras. 
 
-For more installation tips, please visit the following resources:
+MODx outputs exactly what you create, be it the most semantially pure XHTML/CSS web application or brochureware full of table-tag-soup.
+
+MODx is simply a framework you can build a surprisingly large number of custom web applications, and what we consider to be a pretty solid web CMS that you can use to fly through building marketing websites.
+
+
+--------------------------------
+GETTING HELP & LEARNING MODx :
+--------------------------------
+For more installation tips and resources, please visit the following:
 
     http://modxcms.com/getting-started.html
     http://wiki.modxcms.com/index.php/Category:Installation
-    http://modxcms.com/forums/
+    http://modxcms.com/forums/ (Support fourms)
+    http://modxcms.com/resources.html (Add-on resources)
 
 Estimated time to install after uploading files to your server: < 5 minutes
 Last revision date of this document: Version 1.1 Nov 2, 2006
 
+
 --------------------------------
 MODx SUGGESTED REQUIREMENTS :
 --------------------------------
-<soapbox>
+The following guidelines should apply to typical LAMP servers. 
 
+<soapbox>
 MODx is a PHP application. With that in mind, please be sensible about how you run it and please make sure that your php.ini file is configured for security. If you don't know what that means simple ask your host at a minimum to make sure the following setting is properly handled:
 
      register_globals OFF
@@ -25,7 +36,6 @@ MODx is a PHP application. With that in mind, please be sensible about how you r
 If you DO know what that means, you might be shocked to learn that some of the largest (and cheapest) shared hosting providers out there--including the ones that advertise two-page spreads in glossy magazines--don't either take the time or have the competence to make sure they've properly secured their OS stack and PHP configuration. It's a pity, an inevitable and preventable security compromise waiting for the right exploit to give you a hacked site.
 
 (Anecdotally, the creators of PHP (Zend) consider register_globals being on such a bad idea it's being removed from PHP 6.)
-
 </soapbox>
 
 MODx will run under variety web servers with a little work, including IIS or Apache and on platforms including Linux, Windows, FreeBSD (and other similar platforms), *nix, OS X and Solaris (untested on Solaris but it should work). To minimize your learning curve, we suggest the following software configuration for new users and first-time installations:
@@ -41,10 +51,10 @@ Most modern standards-compliant browsers should work for managing MODx sites. Ho
     Safari 2.0.x (Mac OS X)
     Opera 9.02 (Mac/Windows/Linux)
 
+
 --------------------------------
 INSTALLING MODx (NEW INSTALLS) :
 --------------------------------
-
 1) After you've downloaded the release, unzip the archive. If you can unzip archives on your server, you may wish to just leave the archive compressed.
 
 
