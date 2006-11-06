@@ -44,7 +44,7 @@
 	$callBackFnc =""; 			
 	
 	# load setup information file
-	$setupPath = dirname(__FILE__);
+	$setupPath = realpath(dirname(__FILE__));
 	include_once "{$setupPath}/setup.info.php";
 
 	$errors = 0;

@@ -51,11 +51,10 @@ class ContentVariable {
 		$this->group = '';
 
 		global $modx;
-		global $base_path;
 		global $QE_lang;
 
 		$lang = $modx->config['manager_language'];
-		$qe_path = $base_path . '/' . $GLOBALS['quick_edit_path'];
+		$qe_path = MODX_BASE_PATH . $GLOBALS['quick_edit_path'];
 		$qe_eng_path = $qe_path . '/lang/english.inc.php';
 		$qe_lang_path = $qe_path . '/lang/' . $lang . '.inc.php';
 		include_once ($qe_eng_path);

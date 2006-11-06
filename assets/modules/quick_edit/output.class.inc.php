@@ -41,11 +41,10 @@ class Output {
 	function Output() {
 
 		global $modx;
-		global $base_path;
 		global $QE_lang;
 
 		$lang = $modx->config['manager_language'];
-		$qe_path = $base_path . '/' . $GLOBALS['quick_edit_path'];
+		$qe_path = MODX_BASE_PATH . $GLOBALS['quick_edit_path'];
 
 		$this->output = '';
 

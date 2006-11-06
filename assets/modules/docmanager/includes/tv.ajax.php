@@ -9,8 +9,8 @@
  * 
  */
  
- include_once "../../../../manager/includes/config.inc.php";
- include_once($base_path."/manager/includes/document.parser.class.inc.php");
+ include_once (MODX_BASE_PATH."manager/includes/config.inc.php");
+ include_once(MODX_BASE_PATH."manager/includes/document.parser.class.inc.php");
  $modx = new DocumentParser;
  
  $output = '';
@@ -23,8 +23,7 @@
  	
  	if ($limit > 0) {
  		//-- include the tv files
- 		//require($base_path.'/manager/includes/tmplvars.inc.php');
-		require($base_path.'/manager/includes/tmplvars.commands.inc.php');
+		require(MODX_BASE_PATH.'/manager/includes/tmplvars.commands.inc.php');
 		$output.= "<table style='position:relative' border='0' cellspacing='0' cellpadding='3' width='96%'>";
 		
 		//-- render TV display

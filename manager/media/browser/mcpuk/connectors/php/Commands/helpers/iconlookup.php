@@ -78,9 +78,7 @@ function iconLookup($mime,$ext) {
 			);
 
 
-	// MODx - get base path	
-	global $base_path;
-	$icon_basedir = $base_path.'manager/media/browser/mcpuk/connectors/php/images/';
+	$icon_basedir = MODX_BASE_PATH.'manager/media/browser/mcpuk/connectors/php/images/';
 
 	if ($mime!="text/plain") {	
 		//Check specific cases

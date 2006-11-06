@@ -36,7 +36,7 @@ if (count($a) > 1)
 	array_pop($a);
 $url = implode("install", $a);
 reset($a);
-$a = explode("install", str_replace("\\", "/", dirname(__FILE__)));
+$a = explode("install", str_replace("\\", "/", realpath(dirname(__FILE__))));
 if (count($a) > 1)
 	array_pop($a);
 $pth = implode("install", $a);
@@ -93,6 +93,7 @@ if ($installMode == 0) {
 }
 
 // open db connection
+$setupPath = realpath(dirname(__FILE__));
 include "$setupPath/sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminpass);
 $sqlParser->mode = ($installMode == 0) ? "new" : "upd";
@@ -149,7 +150,6 @@ echo "<p>Writing configuration file: ";
 $configString = '<?php
 	/**
 	 *	MODx Configuration file
-	 *
 	 */
 	$database_type = \'mysql\';
 	$database_server = \'' . $database_server . '\';
@@ -157,7 +157,7 @@ $configString = '<?php
 	$database_password = \'' . $database_password . '\';
 	$dbase = \'`' . str_replace("`", "", $dbase) . '`\';
 	$table_prefix = \'' . $table_prefix . '\';		
-	error_reporting(E_ALL ^ E_NOTICE);
+	error_reporting(E_ALL & ~E_NOTICE);
 
 	$site_sessionname = \'' . $site_sessionname . '\';
     $https_port = \'443\';
@@ -178,6 +178,9 @@ $configString = '<?php
 		$site_url .= ($_SERVER[\'SERVER_PORT\']==80 || (isset($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\'])==\'on\') || $_SERVER[\'SERVER_PORT\']==$https_port)? \'\':\':\'.$_SERVER[\'SERVER_PORT\'];
 		$site_url .= $base_url;
 	}
+    if (!defined(\'MODX_BASE_PATH\')) define(\'MODX_BASE_PATH\', $base_path);
+    if (!defined(\'MODX_BASE_URL\')) define(\'MODX_BASE_URL\', $base_url);
+    if (!defined(\'MODX_SITE_URL\')) define(\'MODX_SITE_URL\', $site_url);
 
 	// start cms session
 	if(!function_exists(\'startCMSSession\')) {

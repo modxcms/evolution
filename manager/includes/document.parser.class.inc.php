@@ -37,7 +37,7 @@ class DocumentParser {
         switch ($extname) {
             // Database API
             case 'DBAPI' :
-                if (!include_once $base_path . '/manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
+                if (!include_once $base_path . 'manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
                     return false;
                 $this->db= new DBAPI;
                 return true;
@@ -45,7 +45,7 @@ class DocumentParser {
 
                 // Manager API
             case 'ManagerAPI' :
-                if (!include_once $base_path . '/manager/includes/extenders/manager.api.class.inc.php')
+                if (!include_once $base_path . 'manager/includes/extenders/manager.api.class.inc.php')
                     return false;
                 $this->manager= new ManagerAPI;
                 return true;

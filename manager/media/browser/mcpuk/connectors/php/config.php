@@ -18,8 +18,7 @@
  */
 // ** START FOR MODx
 
-// load configuration file
-include("../../../../../includes/config.inc.php");
+// load configuration file// initialize the variables prior to grabbing the config file$database_type = '';$database_server = '';$database_user = '';$database_password = '';$dbase = '';$table_prefix = '';$base_url = '';$base_path = '';include("../../../../../includes/config.inc.php");
 /** 
  * Security check user MUST be logged into manager 
  * before being able to run this script

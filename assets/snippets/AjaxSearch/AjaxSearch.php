@@ -24,7 +24,7 @@ $resultsIntroFailure = $_GET['resultsIntroFailure'];
 $extract = $_GET['extract'];
 $docgrp = $_GET['docgrp'];
 
-include_once $base_path . 'assets/snippets/AjaxSearch/AjaxSearch.inc.php';
+include_once MODX_BASE_PATH . 'assets/snippets/AjaxSearch/AjaxSearch.inc.php';
 
 $ajaxSearch = 1;
 if (extension_loaded('mbstring')) {

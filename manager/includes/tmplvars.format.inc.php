@@ -8,7 +8,6 @@
 	function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="") {
 
 		global $modx;
-		global $base_path;
 
 		// set media path for js scripts
 		$modx->regClientStartupScript('<script type="text/javascript">var MODX_MEDIA_PATH = "'.(IN_MANAGER_MODE ? 'media':'manager/media').'";</script>');
@@ -237,7 +236,7 @@ EOD;
 				break;
 
 			case "datagrid":
-				include_once $base_path."/manager/includes/controls/datagrid.class.php";
+				include_once MODX_BASE_PATH."manager/includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$value);
 
 				$grd->noRecordMsg		=$params['egmsg'];

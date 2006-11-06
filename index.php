@@ -77,7 +77,7 @@ session_cache_limiter('');
 header('P3P: CP="NOI NID ADMa OUR IND UNI COM NAV"'); // header for weird cookie stuff. Blame IE.
 header('Cache-Control: private, must-revalidate');
 ob_start();
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_NOTICE);
 
 /**
  *	Filename: index.php
@@ -123,7 +123,7 @@ a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 
 startCMSSession();
 
 // initiate a new document parser
-include_once($base_path."/manager/includes/document.parser.class.inc.php");
+include_once($base_path."manager/includes/document.parser.class.inc.php");
 $modx = new DocumentParser;
 $etomite = &$modx; // for backward compatibility
 

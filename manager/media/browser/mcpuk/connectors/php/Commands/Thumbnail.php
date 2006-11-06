@@ -1,9 +1,4 @@
 <?php 
-
-if(!isset($_SESSION['mgrValidated'])) {
-    die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-}
-
 /*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
@@ -25,8 +20,7 @@ if(!isset($_SESSION['mgrValidated'])) {
  * File Authors:
  * 		Grant French (grant@mcpuk.net)
  */
-global $base_path;
-include  $base_path."manager/media/browser/mcpuk/connectors/php/Commands/helpers/iconlookup.php";
+include  MODX_BASE_PATH."manager/media/browser/mcpuk/connectors/php/Commands/helpers/iconlookup.php";
 
 class Thumbnail {
 	var $fckphp_config;
