@@ -2,7 +2,7 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 1.0
+ Version: 1.0.1
  Authors: Ryan Thrash (vertexworks.com)
           Kyle Jaebker (muddydogpaws.com)
  Date: October 23, 2006
@@ -40,6 +40,7 @@ isset($removeNewLines)? $wf->ie = '': $wf->ie = "\n";
 //Set ordering options
 $wf->sortOrder = isset($sortOrder)? strtoupper($sortOrder): 'ASC';
 $wf->sortBy = isset($sortBy)? $sortBy: 'menuindex';
+$wf->limit = isset($limit)? $limit: 0;
 //Include javascript & css chunks
 $wf->cssTpl = isset($cssTpl)? $cssTpl : FALSE;
 $wf->jsTpl = isset($jsTpl)? $jsTpl : FALSE;

@@ -3,7 +3,7 @@
 /*
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 1.0
+ Version: 1.0.1
  Authors: Ryan Thrash (vertexworks.com)
           Kyle Jaebker (muddydogpaws.com)
 */
@@ -43,7 +43,7 @@ class Wayfinder {
 		$this->parentTree[] = $modx->documentIdentifier;
 		//Get version info
 		$this->modxVersion = $modx->getVersionData();
-
+		
 		if ($this->debug) {
 		    $this->debugOutput .= '<p>Starting Menu from Docid: ' . $this->id . '<br/>';
 		    $this->debugOutput .= 'Docids for \'Here\' class checking: ' . implode(', ',$this->parentTree) . '</p>';
@@ -61,7 +61,7 @@ class Wayfinder {
 		}
 
 		$output = $this->buildMenu($this->id);
-
+		
 		if ($this->debug) {
 		    $output = $output . $this->debugOutput;
 		}
@@ -74,7 +74,8 @@ class Wayfinder {
         global $modx;
         $fields = 'sc.id,sc.menutitle,sc.pagetitle,sc.introtext,sc.menuindex,sc.published,sc.hidemenu,sc.parent,sc.isfolder,sc.description,sc.alias,sc.longtitle,sc.type,if(sc.type=\'reference\',sc.content,\'\') as content, sc.template';
         
-        if (substr($this->modxVersion['code_name'],-4) >= 1392) {
+        $revision= substr($this->modxVersion['code_name'],-4);
+        if ($revision >= 1392 && $revision != 1923) {
             $fields .= ',sc.link_attributes';
         }
         

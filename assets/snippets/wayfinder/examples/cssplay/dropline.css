@@ -1,0 +1,22 @@
+/* common styling */
+.menu {font-family: arial, sans-serif; width:749px; height:30px; position:relative; margin:0; font-size:11px; margin:50px 0; background:#fff; position:relative;}
+.menu ul {padding:0; margin:0; list-style-type: none;}
+.menu ul li {float:left; border-left:1px solid #eee; width:106px;}
+.menu ul li a, .menu ul li a:visited {display:block; float:left; width:101px; text-decoration:none; padding:0 0 0 5px; height:30px; line-height:30px; color:#000; background:#c9c9a7 url(drop.gif) bottom right no-repeat;}
+.menu ul li ul {display: none;}
+
+/* specific to non IE browsers */
+.menu ul li:hover a {color:#fff; background:#b3ab79;}
+.menu ul li:hover ul {display:block; position:absolute; width:749px; top:30px; left:0; background:#b3ab79; color:#fff;}
+.menu ul li:hover ul.right_side li {float:right; border:0; border-left:1px solid #eee;}
+.menu ul li:hover ul.left_side li {float:left; border:0; border-left:1px solid #eee;}
+.menu ul li:hover ul li a.hide {background:#bd8d5e url(drop2.gif) bottom right no-repeat; color:#fff;}
+.menu ul li:hover ul li:hover a.hide {background:#b3ab79; color:#fff;}
+.menu ul li:hover ul li ul {display: none;}
+.menu ul li:hover ul li a {display:block; background:##b3ab79; color:#fff;}
+.menu ul li:hover ul li a:hover {background:#dfc184; color:#000;}
+.menu ul li:hover ul li:hover ul {display:block; position:absolute; left:0; top:30px; color:#000; background:#dfc184;}
+.menu ul li:hover ul.right li {float:right;}
+.menu ul li:hover ul li:hover a.hide {background:#dfc184; color:#000;}
+.menu ul li:hover ul li:hover ul li a {background:#dfc184; color:#000;}
+.menu ul li:hover ul li:hover ul li a:hover {background:#bd8d5e; color:#fff;}

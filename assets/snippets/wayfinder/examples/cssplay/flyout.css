@@ -1,0 +1,18 @@
+/* common styling */
+.menu {font-family: arial, sans-serif; width:106px; height:150px; position:relative; margin:0; font-size:11px; margin:50px 0;}
+.menu ul li a, .menu ul li a:visited {display:block; text-decoration:none; color:#000; width:104px; height:20px; text-align:center; border:1px solid #fff; border-width:1px 1px 0 0; background:#c9c9a7; line-height:19px; font-size:11px;}
+.menu ul {padding:0; margin:0;list-style-type: none; }
+.menu ul li {float:left; margin-right:1px; position:relative;}
+.menu ul li ul {display: none;}
+
+/* specific to non IE browsers */
+.menu ul li:hover a {color:#fff; background:#b3ab79;}
+.menu ul li:hover ul {display:block; position:absolute; top:0; left:105px; width:105px;}
+.menu ul li:hover ul li a.hide {background:#dfc184; color:#000;}
+.menu ul li:hover ul li:hover a.hide {width:150px;}
+.menu ul li:hover ul li ul {display: none;}
+.menu ul li:hover ul li a {display:block; background:#b3ab79; color:#000; width:150px;}
+.menu ul li:hover ul li a:hover {background:#dfc184; color:#000;}
+.menu ul li:hover ul li:hover ul {display:block; position:absolute; left:151px; top:0; color:#000;}
+.menu ul li:hover ul li:hover ul li a {display:block; width:200px; background:#dfc184; color:#000;}
+.menu ul li:hover ul li:hover ul li a:hover {background:#bd8d5e; color:#fff;}
