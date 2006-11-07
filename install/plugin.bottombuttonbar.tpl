@@ -53,7 +53,7 @@ ob_start();
 			<td id="Button1__"><a href="#" onclick="documentDirty=false; document.mutate.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 			<td id="Button2__"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></span></a></td>
 				<?php if($_REQUEST['a']=='4' || $_REQUEST['a']==72) { ?><script>document.getElementById("Button2__").className='disabled';</script><?php } ?>
-			<td id="Button5__"><a href="<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&id=$id';"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
+			<td id="Button5__"><a href="<?php echo $id==0 ? "index.php?a=2" : "index.php?a=3&id=$id"; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
 </div>
