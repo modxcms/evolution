@@ -33,7 +33,7 @@ if(!$modx->hasPermission('logs')) {
 		  <tr>
 			<td>phpInfo()</td>
 			<td>&nbsp;</td>
-			<td><b><a href="javascript:;" onclick="viewPHPInfo();return false;"><?php echo $_lang['view']; ?></a></b></td>
+			<td><b><a href="#" onclick="viewPHPInfo();return false;"><?php echo $_lang['view']; ?></a></b></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['access_permissions']?></td>

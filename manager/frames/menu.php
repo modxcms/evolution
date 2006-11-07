@@ -28,7 +28,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         if(top.__hideTree) {
             // display toc icon
             var elm = $('tocText');
-            if(elm) elm.innerHTML = "<a href='javascript:;' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
+            if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
         }
     })
 
@@ -37,7 +37,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         currentFrameState = 'closed';
         try {
             var elm = $('tocText');
-            if(elm) elm.innerHTML = "<a href='javascript:;' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
+            if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
             parent.document.getElementsByTagName("FRAMESET").item(1).cols = '0,*';
             top.__hideTree = true;
         } catch(oException) {

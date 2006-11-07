@@ -123,8 +123,8 @@ function updateContentType(){
 
 	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1"><a href="javascript:;" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></a></td>
-			<td id="Button5"><a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></a></td>
+			<td id="Button1"><a href="#" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></a></td>
+			<td id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
 </div>

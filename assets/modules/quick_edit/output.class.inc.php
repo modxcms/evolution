@@ -275,7 +275,7 @@ EOD;
 
 					// Set the HTML for the link
 					$link =<<<EOD
-<a href="javascript:;" onclick="javascript: qe.open('{$cv->id}');" title="Edit {$cv->description}" class="QE_Link">&laquo; {$QE_lang['edit']} {$cv->name}</a>
+<a href="#" onclick="javascript: qe.open('{$cv->id}');" title="Edit {$cv->description}" class="QE_Link">&laquo; {$QE_lang['edit']} {$cv->name}</a>
 EOD;
 
 				}

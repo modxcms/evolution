@@ -197,7 +197,7 @@ REPLACE INTO `{PREFIX}site_templates` VALUES ('5','MODxHostWithComments','MODxHo
 #
 
 
-REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('1','richtext','blogContent','blogContent','RTE for the new blog entries','0','0','0','','0','richtext','&w=383px&h=450px&edt=FCKEditor','');
+REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('1','richtext','blogContent','blogContent','RTE for the new blog entries','0','0','0','','0','richtext','&w=383px&h=450px&edt=TinyMCE','');
 
 
 REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','text','loginName','loginName','Conditional name for the Login menu item','0','0','0','','0','','','@EVAL if ($modx->getLoginUserID()) return \'Logout\'; else return \'Login\';');

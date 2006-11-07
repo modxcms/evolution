@@ -53,7 +53,7 @@ else{
 	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
-		<td id="Button3"><a href="javascript:;" onclick="deletelog();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
+		<td id="Button3"><a href="#" onclick="deletelog();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
 		<td id="Button4"><a href="index.php?a=114"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>

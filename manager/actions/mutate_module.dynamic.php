@@ -1,3 +1,4 @@
+<script type="text/javascript" language="javascript" src="media/script/prototypify.js"></script>
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('new_module') && $_REQUEST['a']==107) {
@@ -317,12 +318,12 @@ function SetUrl(url, width, height, alt){
 
     <table cellpadding="0" cellspacing="0" class="actionButtons">
         <tr>
-        <td id="Button1"><a href="javascript:;" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
+        <td id="Button1"><a href="#" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
 <?php if($_GET['a']=='108') { ?>
-        <td id="Button2"><a href="javascript:;" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
-        <td id="Button3"><a href="javascript:;" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
+        <td id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></td>
+        <td id="Button3"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
 <?php } ?>
-        <td id="Button4"><a href="javascript:;" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
+        <td id="Button4"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
         </tr>
     </table>
     <div class="stay">
@@ -440,7 +441,7 @@ function SetUrl(url, width, height, alt){
           <tr>
             <td align="left" valign="top">
                 <p><?php echo $_lang['module_viewdepend_msg']; ?><br /><br />
-                <a class="searchtoolbarbtn" href="javascript:;" style="float:left" onclick="loadDependencies();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['manage_depends']; ?></a>
+                <a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['manage_depends']; ?></a>
                 <br /><br />&nbsp;
                 </p>
             </td>

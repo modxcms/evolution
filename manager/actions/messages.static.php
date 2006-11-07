@@ -318,7 +318,7 @@ function hideSpans(showSpan) {
 <p>
     <table cellpadding="0" cellspacing="0" class="actionButtons">
         <tr>
-            <td id="Button1"><a href="javascript:;" onclick="documentDirty=false; document.messagefrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></a></td>
+            <td id="Button1"><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></a></td>
             <td id="Button2"><a href="index.php?a=10&t=c"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
         </tr>
     </table>

@@ -425,22 +425,22 @@
     <td>
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
-            <td><a href="javascript:;" class="treeButton" id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></a></td>
-            <td><a href="javascript:;" class="treeButton" id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a></td>
             <?php if ($modx->hasPermission('new_document')) { ?>
-	            <td><a href="javascript:;" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
-	            <td><a href="javascript:;" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
+	            <td><a href="#" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
+	            <td><a href="#" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
             <?php } ?>
-            <td><a href="javascript:;" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
-            <td><a href="javascript:;" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
-            <td><a href="javascript:;" id="Button10" class="treeButtonDisabled"' title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
+            <td><a href="#" id="Button10" class="treeButtonDisabled"' title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             </tr>
         </table>
     </td>
     <td align="right">
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
-            <td><a href="javascript:;" class="treeButton" id="Button6" onclick="top.mainMenu.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button6" onclick="top.mainMenu.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></a></td>
             </tr>
         </table>
     </td>
@@ -480,7 +480,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
         </select>
         <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
     </td>
-    <td width="1%"><a href="javascript:;" class="treeButton" id="button7" style="text-align:right" onclick="updateTree();" title="<?php echo $_lang['sort_tree']; ?>">Go!</a></td>
+    <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onclick="updateTree();" title="<?php echo $_lang['sort_tree']; ?>">Go!</a></td>
   </tr>
 </table>
 </form>

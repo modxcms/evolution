@@ -137,7 +137,7 @@ $rs = mysql_query($sql);
     <td colspan="2">
 	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
-			<td id="Button1"><a href="javascript:;" onclick="document.logging.log_submit.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></a></td>
+			<td id="Button1"><a href="#" onclick="document.logging.log_submit.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></a></td>
 			<td id="Button2"><a href="index.php?a=13"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></a></td>
 		</tr>
 	</table>

@@ -34,7 +34,7 @@
 
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
-	$mp[] = array("Bottom Button Bar","Adds a set of buttons to the bottom of all manager pages",0,"$setupPath/plugin.bottombuttonbar.tpl","","OnChunkFormRender, OnDocFormRender, OnModFormRender, OnPluginFormRender, OnSnipFormRender, OnTVFormRender, OnTempFormRender, OnUserFormRender, OnWUsrFormRender");
+	$mp[] = array("Bottom Button Bar","Adds a set of buttons to the bottom of all manager pages",0,"$setupPath/plugin.bottombuttonbar.tpl","","OnChunkFormRender,OnDocFormRender,OnModFormRender,OnPluginFormRender,OnSnipFormRender,OnTVFormRender,OnTempFormRender,OnUserFormRender,OnWUsrFormRender");
 	$mp[] = array("Forgot Manager Login","Resets your manager login when you forget your password. ",0,"$setupPath/plugin.ForgotManagerPassword.tpl","","OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender");
 	$mp[] = array("Inherit Parent Template","New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
 	$mp[] = array("QuickEdit","Front-end Content Editor.",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");

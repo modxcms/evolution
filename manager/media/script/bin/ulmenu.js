@@ -50,7 +50,7 @@ ULMenu.prototype._buildBlockItem = function(itm,_lvl){
 	id = itm.id ? " id='"+itm.id+"'":"";
 	cssStyle = (itm.style) ? " style='"+itm.style+";'":"";
 	cssClass = (itm.css) ? " class='"+itm.css+"'":"";
-	ahref = "<a href='"+(itm.href ? itm.href:"javascript:;")+"' onclick=\""+(itm.onclick ? itm.onclick+";return false;":"")+"\">"+itm.text+"</a>";
+	ahref = "<a href='"+(itm.href ? itm.href:"#")+"' onclick=\""+(itm.onclick ? itm.onclick+";return false;":"")+"\">"+itm.text+"</a>";
 	if(itm.blockid) block = this._buildBlock(this.blocks[itm.blockid],_lvl);
 	//if (_lvl>1 && block) arrow = "<span style='position:absolute; right:10px;top:0px'>&nbsp;&rArr;</span>";
 	t = "<li"+ id + cssClass + cssStyle +">" + ahref + arrow + block +"</li>";
