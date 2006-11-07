@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC2 (rev 1929 - Nov 6, 2006)
+MODx 0.9.5 RC2 (rev 1933 - Nov 6, 2006)
 ====================================
+* Update Jot's included PHx parser class to 1.5 (1933)
 * [FS#634] Order permission groups alphabetically when editing/creating a web user. (1928)
 * [FS#655] Wrong lang string showing for locked items in the 'Manage Resource' section - amended so locked items use the generic 'locked' lang string. (1927)
 * [FS#512] Recommit doc parser changes re mySQL 4.1.21 and document sorting. (1926)
