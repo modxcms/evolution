@@ -17,7 +17,7 @@ $_SESSION['browser_version']=$version;
     <frame name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize">
     <frameset cols="260,*" border="3" frameborder="3" framespacing="3" bordercolor="#ffffff">
         <frame name="tree" src="index.php?a=1&amp;f=tree"  scrolling="no" frameborder="0" onresize="top.tree.resizeTree();">
-        <frame name="main" src="index.php?a=2"  scrolling="auto" frameborder="0">
+        <frame name="main" src="index.php?a=2"  scrolling="auto" frameborder="0" onload="if (top.mainMenu.stopWork()) top.mainMenu.stopWork();">
     </frameset>
 </frameset>
 <noframes>This software requires a browser with support for frames.</noframes>

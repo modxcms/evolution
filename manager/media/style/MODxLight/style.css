@@ -718,6 +718,8 @@ ul#nav {
     overflow: hidden;
     padding: 0 15px;
     border-left: 1px solid #acda43; /*c1e079*/
+    float:left;
+    display:block;
 }
 
 #nav li ul li a {
