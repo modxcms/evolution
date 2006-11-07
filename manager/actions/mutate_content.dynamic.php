@@ -1,4 +1,3 @@
-<script type="text/javascript" language="javascript" src="media/script/prototypify.js"></script>
 <?php
 if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
@@ -324,19 +323,23 @@ var curTemplate = -1;
 var curTemplateIndex = 0;
 function storeCurTemplate(){
     var dropTemplate = document.getElementById('template');
-    if (dropTemplate) for (var i=0; i<dropTemplate.length; i++){
-        if (dropTemplate[i].selected){
-            curTemplate = dropTemplate[i].value;
-            curTemplateIndex = i;
+    if (dropTemplate){ 
+    	for (var i=0; i<dropTemplate.length; i++){
+       		if (dropTemplate[i].selected){
+            	curTemplate = dropTemplate[i].value;
+            	curTemplateIndex = i;
+            }
         }
     }
 }
 function templateWarning(){
     var dropTemplate = document.getElementById('template');
-    if (dropTemplate) for (var i=0; i<dropTemplate.length; i++){
-        if (dropTemplate[i].selected){
-            newTemplate = dropTemplate[i].value;
-            break;
+    if (dropTemplate){ 
+    	for (var i=0; i<dropTemplate.length; i++){
+        	if (dropTemplate[i].selected){
+            	newTemplate = dropTemplate[i].value;
+            	break;
+            }
         }
     }
     if (curTemplate == newTemplate){return;}
@@ -356,18 +359,22 @@ function templateWarning(){
 // Added for RTE selection
 function changeRTE(){
     var whichEditor = document.getElementById('which_editor');
-    if (whichEditor) for (var i=0; i<whichEditor.length; i++){
-        if (whichEditor[i].selected){
-            newEditor = whichEditor[i].value;
-            break;
+    if (whichEditor){
+    	for (var i=0; i<whichEditor.length; i++){
+        	if (whichEditor[i].selected){
+            	newEditor = whichEditor[i].value;
+            	break;
+            }
         }
     }
     var dropTemplate = document.getElementById('template');
-    if (dropTemplate) for (var i=0; i<dropTemplate.length; i++){
-        if (dropTemplate[i].selected){
-            newTemplate = dropTemplate[i].value;
-            break;
-        }
+    if (dropTemplate){ 
+    	for (var i=0; i<dropTemplate.length; i++){
+        	if (dropTemplate[i].selected){
+            	newTemplate = dropTemplate[i].value;
+            	break;
+           	}
+       	 }  		
     }
 
     documentDirty=false;
