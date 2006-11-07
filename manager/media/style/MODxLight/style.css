@@ -714,7 +714,6 @@ ul#nav {
     text-decoration: none;
     white-space: nowrap;
     cursor: hand;
-    display: block;
     line-height: 25px;
     overflow: hidden;
     padding: 0 15px;
