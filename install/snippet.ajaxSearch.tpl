@@ -455,9 +455,9 @@ if (($validSearch && ($showSearchWithResults)) || $showSearchWithResults){
   $SearchForm .= '</label>'.$newline;
 
   // the search button
-  $SearchForm .= '<label for="ajaxSearch_submit"><input id="ajaxSearch_submit" type="submit" name="sub" value="'.$searchButtonText.'" />';
+  $SearchForm .= '<label for="ajaxSearch_submit"><input id="ajaxSearch_submit" type="submit" name="sub" value="'.$searchButtonText.'" /></label>';
   $SearchForm .= ($xhtmlStrict)? '</fieldset>' : '';
-  $SearchForm .= '</label></form>'.$newline;
+  $SearchForm .= '</form>'.$newline;
 }
 
 if ($showResults) {
