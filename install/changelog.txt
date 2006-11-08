@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 1944 - Nov 8, 2006)
+MODx 0.9.5 RC3 (rev 1945 - Nov 8, 2006)
 ====================================
+* Minor update to eForm to address date handling differences between PHP 5.1+ and earlier versions
 * [FS#654] Add regiseter_globals check to manager (1944)
 * [FS#660] Fix minor HTML error with Ajax search (1943)
 * Fix styling on manager pages for IE6 in MODx Light Theme (1942)

@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.1 - Electronic Form Snippet (Extended)
+# eForm 1.4.1a - Electronic Form Snippet (Extended)
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -207,7 +207,8 @@ global $formats,$fields;
 							if (!is_numeric($value)) $vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_number"];
 							break;
 						case "date":
-							if (strtotime($value)===-1) $vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_date"];
+							$rt = strtotime($value); //php 5.1.0+ returns false while < 5.1.0 returns -1
+                            if ($rt===false||$rt===-1) $vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_date"];
 							break;
 						case "email":
 							//stricter email validation
