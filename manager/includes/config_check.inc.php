@@ -13,6 +13,16 @@ if (is_writable("includes/config.inc.php")){
     }
 }
 
+if (file_exists("../install/")) {
+    $warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_installer']);
+}
+
+if (ini_get('register_globals')==TRUE) {
+    $warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_register_globals']);
+}
+
 if (!function_exists('checkSiteCache')) {
     function checkSiteCache() {
         global $modx;
@@ -22,11 +32,6 @@ if (!function_exists('checkSiteCache')) {
         }
         return $checked;
     }
-}
-
-if (file_exists("../install/")) {
-    $warningspresent = 1;
-    $warnings[] = array($_lang['configcheck_installer']);
 }
 
 if (!is_writable("../assets/cache/")) {
@@ -77,6 +82,9 @@ for ($i=0;$i<count($warnings);$i++) {
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];
             break;
+        case $_lang['configcheck_register_globals'] :
+            $warnings[$i][1] = $_lang['configcheck_register_globals_msg'];
+            break;
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];
     }
@@ -84,10 +92,9 @@ for ($i=0;$i<count($warnings);$i++) {
     $admin_warning = $_SESSION['mgrRole']!=1 ? $_lang['configcheck_admin'] : "" ;
     $config_check_results .= "
             <div class='fakefieldset'>
-            <strong>".$_lang['configcheck_warning']."</strong> '".$warnings[$i][0]."'<br />
-            <br />
-            <em>".$_lang['configcheck_what']."</em><br />
-            ".$warnings[$i][1]." ".$admin_warning."<br />
+            <p><strong>".$_lang['configcheck_warning']."</strong> '".$warnings[$i][0]."'</p>
+            <p style=\"padding-left:1em\"><em>".$_lang['configcheck_what']."</em><br />
+            ".$warnings[$i][1]." ".$admin_warning."</p>
             </div>
     ";
         if ($i!=count($warnings)-1) {
