@@ -22,7 +22,7 @@
 	}
 
 	$moduleName 		= "Module Installation";
-	$moduleVersion 		= "0.9.5 RC1";
+	$moduleVersion 		= "0.9.5";
 	$moduleSQLBaseFile 	= "setup.sql";
 	$moduleSQLDataFile 	= "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
