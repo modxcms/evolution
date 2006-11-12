@@ -388,16 +388,16 @@ function changeRTE(){
  * Snippet properties 
  */
 
-var snippetParams = [];     // Snippet Params
-var currentParams = [];     // Current Params
-var lastsp, lastmod = [];
+var snippetParams = {};     // Snippet Params
+var currentParams = {};     // Current Params
+var lastsp, lastmod = {};
 
 function showParameters(ctrl) {
     var c,p,df,cp;
     var ar,desc,value,key,dt;
 
-    cp = [];
-    currentParams = []; // reset;
+    cp = {};
+    currentParams = {}; // reset;
 
     if (ctrl) f = ctrl.form;
     else {
@@ -410,7 +410,7 @@ function showParameters(ctrl) {
 
     // load last modified param values
     if (lastmod[df]) cp = lastmod[df].split("&");
-    for(p in cp){
+    for(p = 0; p < cp.length; p++) {
         cp[p]=(cp[p]+'').replace(/^\s|\s$/,""); // trim
         ar = cp[p].split("=");
         currentParams[ar[0]]=ar[1];
@@ -420,9 +420,9 @@ function showParameters(ctrl) {
     dp = (snippetParams[df]) ? snippetParams[df].split("&"):[""];
     if(dp) {
         t='<table width="100%" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?><\/td><td width="50%"><?php echo $_lang['value']; ?><\/td><\/tr><\/thead>';
-        for(x = 0; x < dp.length; x++) {
-            dp[x]=(dp[x]+'').replace(/^\s|\s$/,""); // trim
-            ar = dp[x].split("=");
+        for(p = 0; p < dp.length; p++) {
+            dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
+            ar = dp[p].split("=");
             key = ar[0]     // param
             ar = (ar[1]+'').split(";");
             desc = ar[0];   // description

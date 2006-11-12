@@ -1,4 +1,3 @@
-<script type="text/javascript" language="javascript" src="media/script/prototypify.js"></script>
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
@@ -83,13 +82,13 @@ function setTextWrap(ctrl,b){
 }
 
 // Current Params/Configurations
-var currentParams = [];
+var currentParams = {};
 
 function showParameters(ctrl) {
 	var c,p,df,cp;
 	var ar,desc,value,key,dt;
 
-	currentParams = []; // reset;
+	currentParams = {}; // reset;
 
 	if (ctrl) f = ctrl.form;
 	else {
@@ -103,9 +102,9 @@ function showParameters(ctrl) {
 	if(!dp) tr.style.display='none';
 	else {
 		t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
-		for(x = 0; x < dp.length; x++) {
-			dp[x]=(dp[x]+'').replace(/^\s|\s$/,""); // trim
-			ar = dp[x].split("=");
+		for(p = 0; p < dp.length; p++) {
+			dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
+			ar = dp[p].split("=");
 			key = ar[0]		// param
 			ar = (ar[1]+'').split(";");
 			desc = ar[0];	// description

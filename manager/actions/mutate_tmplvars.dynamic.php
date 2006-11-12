@@ -1,4 +1,3 @@
-<script type="text/javascript" language="javascript" src="media/script/prototypify.js"></script>
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==301) {
@@ -99,7 +98,7 @@ function deletedocument() {
 }
 
 // Widget Parameters
-var widgetParams = [];          // name = description;datatype;default or list values - datatype: int, string, list : separated by comma (,)
+var widgetParams = {};          // name = description;datatype;default or list values - datatype: int, string, list : separated by comma (,)
     widgetParams['marquee']     = '&width=Width;string;100% &height=Height;string;100px &speed=Speed (1-20);float;3; &pause=Mouse Pause;list;Yes,No;Yes &tfx=Transition;list;Vertical,Horizontal &class=Class;string; &style=Style;string;';
     widgetParams['ticker']      = '&width=Width;string;100% &height=Height;string;50px &delay=Delay (ms);int;3000 &delim=Message Delimiter;string;|| &tfx=Transition;list;Normal,Fader &class=Class;string; &style=Style;string;';
     widgetParams['date']        = '&format=Date Format;string;%A %d, %B %Y &default=If no value, use current date;list;Yes,No;No';
@@ -114,14 +113,14 @@ var widgetParams = [];          // name = description;datatype;default or list v
     widgetParams['image']       = '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
 
 // Current Params
-var currentParams = [];
-var lastdf, lastmod = [];
+var currentParams = {};
+var lastdf, lastmod = {};
 
 function showParameters(ctrl) {
     var c,p,df,cp;
     var ar,desc,value,key,dt;
 
-    currentParams = []; // reset;
+    currentParams = {}; // reset;
 
     if (ctrl) f = ctrl.form;
     else {
@@ -136,7 +135,7 @@ function showParameters(ctrl) {
 
     // load last modified param values
     if (lastmod[df]) cp = lastmod[df].split("&");
-    for(p in cp){
+    for(p = 0; p < cp.length; p++) {
         cp[p]=(cp[p]+'').replace(/^\s|\s$/,""); // trim
         ar = cp[p].split("=");
         currentParams[ar[0]]=ar[1];
@@ -148,9 +147,9 @@ function showParameters(ctrl) {
     if(!dp) tr.style.display='none';
     else {
         t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']; ?></td><td width="50%"><?php echo $_lang['value']; ?></td></tr></thead>';
-        for(x = 0; x < dp.length; x++) {
-            dp[x]=(dp[x]+'').replace(/^\s|\s$/,""); // trim
-            ar = dp[x].split("=");
+        for(p = 0; p < dp.length; p++) {
+            dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
+            ar = dp[p].split("=");
             key = ar[0]     // param
             ar = (ar[1]+'').split(";");
             desc = ar[0];   // description
