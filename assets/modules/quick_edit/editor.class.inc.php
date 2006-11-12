@@ -249,7 +249,7 @@ EOD;
   $result = null;
   $allowed = false;
   $time = time();
-  $user = $modx->getLoginUserID();
+  $user = $modx->getLoginUserID('mgr');
 
   $cv = new ContentVariable;
   $cv->set($var_id, $doc_id);

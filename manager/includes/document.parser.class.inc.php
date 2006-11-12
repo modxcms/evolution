@@ -31,13 +31,12 @@ class DocumentParser {
 
     // loads an extension from the extenders folder
     function loadExtension($extname) {
-        global $base_path;
         global $database_type;
 
         switch ($extname) {
             // Database API
             case 'DBAPI' :
-                if (!include_once $base_path . 'manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
+                if (!include_once MODX_BASE_PATH . 'manager/includes/extenders/dbapi.' . $database_type . '.class.inc.php')
                     return false;
                 $this->db= new DBAPI;
                 return true;
@@ -45,7 +44,7 @@ class DocumentParser {
 
                 // Manager API
             case 'ManagerAPI' :
-                if (!include_once $base_path . 'manager/includes/extenders/manager.api.class.inc.php')
+                if (!include_once MODX_BASE_PATH . 'manager/includes/extenders/manager.api.class.inc.php')
                     return false;
                 $this->manager= new ManagerAPI;
                 return true;
@@ -188,10 +187,9 @@ class DocumentParser {
     }
 
     function getSettings() {
-        global $base_url, $base_path, $site_url;
         if (!is_array($this->config) || empty ($this->config)) {
-            if ($included= file_exists($base_path . 'assets/cache/siteCache.idx.php')) {
-                $included= include_once ($base_path . 'assets/cache/siteCache.idx.php');
+            if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
+                $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
             } 
             if (!$included) {
                 $result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
@@ -204,14 +202,15 @@ class DocumentParser {
             $this->config['etomite_charset'] = & $this->config['modx_charset'];
     
             // store base_url and base_path inside config array
-            $this->config['base_url']= $base_url;
-            $this->config['base_path']= $base_path;
-            $this->config['site_url']= $site_url;
+            $this->config['base_url']= MODX_BASE_URL;
+            $this->config['base_path']= MODX_BASE_PATH;
+            $this->config['site_url']= MODX_SITE_URL;
     
             // load user setting if user is logged in
+            $usrSettings= array ();
             if ($id= $this->getLoginUserID()) {
                 $usrType= $this->getLoginUserType();
-                if (isset ($usrType) && $usrType != 'web')
+                if (isset ($usrType) && $usrType == 'manager')
                     $usrType= 'mgr';
     
                 if ($usrType == 'mgr' && $this->isBackend()) {
@@ -222,7 +221,6 @@ class DocumentParser {
                 if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
                     $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
                 } else {
-                    $usrSettings= array ();
                     if ($usrType == 'web')
                         $query= $this->getFullTableName('web_user_settings') . ' WHERE webuser=\'' . $id . '\'';
                     else
@@ -233,8 +231,25 @@ class DocumentParser {
                     if (isset ($usrType))
                         $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
                 }
-                $this->config= array_merge($this->config, $usrSettings);
             }
+            if ($this->isFrontend() && $mgrid= $this->getLoginUserID('mgr')) {
+                $musrSettings= array ();
+                if (isset ($_SESSION['mgrUsrConfigSet'])) {
+                    $musrSettings= & $_SESSION['mgrUsrConfigSet'];
+                } else {
+                    $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $mgrid . '\'';
+                    if ($result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $query)) {
+                        while ($row= $this->fetchRow($result, 'both')) {
+                            $usrSettings[$row[0]]= $row[1];
+                        }
+                        $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
+                    }
+                }
+                if (!empty ($musrSettings)) {
+                    $usrSettings= array_merge($musrSettings, $usrSettings);
+                }
+            }
+            $this->config= array_merge($this->config, $usrSettings);
         }
     }
 
@@ -1981,34 +1996,38 @@ class DocumentParser {
     }
 
     # Returns current user id
-    function getLoginUserID() {
-        if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
+    function getLoginUserID($context= '') {
+        if ($context && isset ($_SESSION[$context . 'Validated'])) {
+            return $_SESSION[$context . 'InternalKey'];
+        } 
+        elseif ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return $_SESSION['webInternalKey'];
-        } else
-            if (($this->isBackend() || $this->isFrontend())  && isset ($_SESSION['mgrValidated'])) {
-                return $_SESSION['mgrInternalKey'];
-            }
+        } 
+        elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
+            return $_SESSION['mgrInternalKey'];
+        }
     }
 
     # Returns current user name
     function getLoginUserName() {
         if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return $_SESSION['webShortname'];
-        } else
-            if ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
-                return $_SESSION['mgrShortname'];
-            }
+        } 
+        elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
+            return $_SESSION['mgrShortname'];
+        }
     }
 
     # Returns current login user type - web or manager
     function getLoginUserType() {
         if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return 'web';
-        } else
-            if ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
-                return 'manager';
-            } else
-                return '';
+        } 
+        elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
+            return 'manager';
+        } else {
+            return '';
+        }
     }
 
     # Returns a record for the manager user
