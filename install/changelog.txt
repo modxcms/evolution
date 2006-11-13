@@ -3,11 +3,15 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2001 - Nov 12, 2006)
+MODx 0.9.5 RC3 (rev 2004 - Nov 13, 2006)
 ====================================
+* Increased db column lengths for metatags (2002)
 * Modified a few more places that relied on global variables to use the new constants introduced in revision 1922. (2001)
 * Allow QuickEdit to set the proper manager user ID using the new getLoginUserID parameter. (2001)
 * [FS#299] Added context parameter to getLoginUserID API method that will return a specific type of user id if 'web' or 'mgr' is provided (alternate solution to that applied in rev 1860). (2001)
+* Added latest SVN version 84 of mootools (2000)
+* Updated showParameters and related javascript functions for greater compatibility with Prototype. (2000)
+* Removed unneeded prototypify.js script. (2000)
 * [FS#666] Add return false to onclick for Quick Edit buttons (1949) 
 * Minor update to eForm to address date handling differences between PHP 5.1+ and earlier versions
 * [FS#654] Add regiseter_globals check to manager (1944)

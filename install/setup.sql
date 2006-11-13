@@ -187,9 +187,9 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_keywords` (
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_metatags` (
   `id` integer NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL DEFAULT '',
-  `tag` varchar(20) NOT NULL DEFAULT '' COMMENT 'tag name',
-  `tagvalue` varchar(100) NOT NULL DEFAULT '',
+  `name` varchar(50) NOT NULL DEFAULT '',
+  `tag` varchar(50) NOT NULL DEFAULT '' COMMENT 'tag name',
+  `tagvalue` varchar(255) NOT NULL DEFAULT '',
   `http_equiv` tinyint NOT NULL DEFAULT 0 COMMENT '1 - use http_equiv tag style, 0 - use name',
   PRIMARY KEY(`id`)
 ) TYPE=MYISAM COMMENT='Site meta tags';
@@ -744,6 +744,12 @@ ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text;
 ALTER TABLE `{PREFIX}user_attributes` 
   MODIFY COLUMN `state` varchar(25) NOT NULL default '',
   MODIFY COLUMN `zip` varchar(25) NOT NULL default '';
+
+
+ALTER TABLE `{PREFIX}site_metatags` 
+  MODIFY COLUMN `name` varchar(50) NOT NULL DEFAULT '',
+  MODIFY COLUMN `tag` varchar(50) NOT NULL DEFAULT '' COMMENT 'tag name',
+  MODIFY COLUMN `tagvalue` varchar(255) NOT NULL DEFAULT '';
 
 
 # ]]upgrade-able
