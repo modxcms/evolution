@@ -3,8 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2004 - Nov 13, 2006)
+MODx 0.9.5 RC3 (rev 2016 - Nov 15, 2006)
 ====================================
+* [FS#677] Fix for widget parameters not showing when editing/creating a TV. (2007)
+* [FS#674] Correct references to [[UserComments]] snippet in default content to new [[Comments]] snippet powered by Jot. (2003)
 * Increased db column lengths for metatags (2002)
 * Modified a few more places that relied on global variables to use the new constants introduced in revision 1922. (2001)
 * Allow QuickEdit to set the proper manager user ID using the new getLoginUserID parameter. (2001)
