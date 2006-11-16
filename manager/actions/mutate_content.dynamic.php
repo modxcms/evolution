@@ -399,8 +399,9 @@ function showParameters(ctrl) {
     cp = {};
     currentParams = {}; // reset;
 
-    if (ctrl) f = ctrl.form;
-    else {
+    if (ctrl) {
+    	f = ctrl.form;
+    } else {
         f= document.forms['mutate'];
         ctrl = f.snippetlist;
     }

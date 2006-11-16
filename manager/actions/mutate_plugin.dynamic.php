@@ -90,8 +90,9 @@ function showParameters(ctrl) {
 
 	currentParams = {}; // reset;
 
-	if (ctrl) f = ctrl.form;
-	else {
+	if (ctrl) {
+		f = ctrl.form;
+	} else {
 		f= document.forms['mutate'];
 		if(!f) return;
 	}

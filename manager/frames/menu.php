@@ -12,8 +12,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <title>nav</title>
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
     <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
-    <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
-    <script src="media/script/scriptaculous/scriptaculous.js" type="text/javascript"></script>
+    <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
+    <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
     // TREE FUNCTIONS - FRAME
     // These functions affect the tree frame and any items that may be pointing to the tree.
@@ -23,14 +23,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     var workText;
     var buildText;
-
-    Event.observe(window,'load',function() {
+	
+	window.addEvent('load', function() {
         if(top.__hideTree) {
             // display toc icon
             var elm = $('tocText');
             if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
         }
-    })
+    });
 
     function hideTreeFrame() {
         userDefinedFrameWidth = parent.document.getElementsByTagName("FRAMESET").item(1).cols;

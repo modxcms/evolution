@@ -3,8 +3,14 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2016 - Nov 15, 2006)
+MODx 0.9.5 RC3 (rev 2017 - Nov 15, 2006)
 ====================================
+* Fixed a variable issue with the showParameters function. (2011) 
+* Changed header and menu to load mootools instead of Prototype and Scriptaculous. (2011)
+* Added moodx.js script to extend mootools with Prototype-like functions. (2011)
+* Configured context menu scripts to work with mootools. (2011)
+* Modified tree menu for mootools compatibility. (2011)
+* Modified system alert functionality by implementing it as a simple hideable layer and updating the styling.  Will implement as a modal window with mootools later on. (2011)
 * [FS#677] Fix for widget parameters not showing when editing/creating a TV. (2007)
 * [FS#674] Correct references to [[UserComments]] snippet in default content to new [[Comments]] snippet powered by Jot. (2003)
 * Increased db column lengths for metatags (2002)

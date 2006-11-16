@@ -10,38 +10,50 @@ $sysalert_style =<<<EOD
 
 /* System Alert Box
 ---------------------------------------------------------- */
+#sysAlertWrapper {
+	top: 20px;
+    position: absolute;
+    z-index: 50001;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
 
-.systemAlert {
-	width: 95%;
+#sysAlertWindow {
+	width:90%;
+	margin-right: auto;
+	margin-left: auto;
+	height:200px;
 	border: 1px solid #4791c5;
 	background-color: #FFFFE9;
-	z-index:1000;
 	font-family: verdana, arial;
 	font-size: 12px;
+	overflow:hidden;
+    text-align: left;
 }
+
 #closeSysAlert {
 	float: right;
 }
 .evtMsgHeading {
 	color:#000;
 	background: #9abbe5;
-	padding:3px;
+	position:relative;
+	padding:5px;
 	font-weight:bold;
 }
-.evtMsgContainer {
-	position:relative;
-	overflow:hidden;
-	height:200px;
-}
+
 .evtMsg {
 	background-color: #FFFFE9;
 	font-size: 12px;
 	padding:3px;
-	width: 95%; /* force IE to display the scrollbars */
+	width: 98%; /* force IE to display the scrollbars */
 	/* Don't wrap its contents, and show scrollbars. */
 	white-space: nowrap;
 	overflow: auto;
-	height: 190px;
+	height: 160px;
 }
 .scrollbtn {
 	width: 100%;

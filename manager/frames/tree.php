@@ -24,17 +24,15 @@
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
-    <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
-
+    <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
+    <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
     /* including (for the really important bits) code devised and written yb patv */
-
-    Event.observe(window,'load', function(){
+	window.addEvent('load', function(){
         resizeTree();    
         restoreTree();
-        Event.observe(window,'resize', resizeTree);
+        window.addEvent('resize', resizeTree);
     });
-
 
     // preload images
     var i = new Image(18,18);
@@ -191,8 +189,9 @@
                 //Jeroen set opened
                 openedArray[parent] = 1 ;
                 //Raymond:added getFolderState()
+                var folderState = getFolderState();
                 rpcNode.innerHTML = "<span class='emptyNode' style='white-space:nowrap;'>"+spacer+"&nbsp;&nbsp;&nbsp;"+loadText+"...<\/span>";
-                new Ajax.Request('index.php',{method:'get',parameters:'a=1&f=nodes&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+getFolderState(),onComplete:rpcLoadData});
+        		new Ajax('index.php?a=1&f=nodes&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+folderState, {method: 'get',onComplete:rpcLoadData}).request();
             } else {
                 rpcNode.style.display = 'block';
                 //Jeroen set opened
@@ -243,12 +242,12 @@
 
     function expandTree() {
         rpcNode = $('treeRoot'); 
-        new Ajax.Request('index.php',{method:'get',parameters:'a=1&f=nodes&indent=1&parent=0&expandAll=1',onComplete:rpcLoadData});
+        new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     function collapseTree() {
         rpcNode = $('treeRoot'); 
-        new Ajax.Request('index.php',{method:'get',parameters:'a=1&f=nodes&indent=1&parent=0&expandAll=0',onComplete:rpcLoadData});
+        new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     //
@@ -256,7 +255,7 @@
     //
     function restoreTree() {
         rpcNode = $('treeRoot'); 
-        new Ajax.Request('index.php',{method:'get',parameters:'a=1&f=nodes&indent=1&parent=0&expandAll=2',onComplete:rpcLoadData});
+        new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2', {method: 'get',onComplete:rpcLoadData}).request();
     }
     //
     // Jeroen end
@@ -298,7 +297,7 @@
     function updateTree() {
         rpcNode = $('treeRoot'); 
         treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value;
-        new Ajax.Request('index.php',{method:'get',parameters:treeParams,onComplete:rpcLoadData});
+        new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     function emptyTrash() {
@@ -377,7 +376,8 @@
         return oarray;
     }
     function saveFolderState() {
-        new Ajax.Request('index.php',{method:'get',parameters:'a=1&f=nodes&savestateonly=1'+getFolderState()});
+    	var folderState = getFolderState();
+        new Ajax('index.php?a=1&f=nodes&savestateonly=1'+folderState, {method: 'get'}).request();		
     }
     //Raymond:added getFolderState,saveFolderState
 

@@ -55,8 +55,9 @@ echo $cm->render();
 	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
 	function showContentMenu(id,e){
 		selectedItem=id;
-		contextm.style.left = Event.pointerX(e)+"px";
-		contextm.style.top = Event.pointerY(e)+"px";
+		var evt = new Event(e);
+		contextm.style.left = evt.pointerX(e)+"px";
+		contextm.style.top = evt.pointerY(e)+"px";
 		contextm.style.visibility = "visible";
 		e.cancelBubble=true;
 		return false;
@@ -74,7 +75,7 @@ echo $cm->render();
 		}
 	}
 
-	Event.observe(document,'click',function(){
+	document.addEvent('click', function(){
 		contextm.style.visibility = "hidden";
 	});
 </script>

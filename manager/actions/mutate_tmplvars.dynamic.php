@@ -122,12 +122,13 @@ function showParameters(ctrl) {
 
     currentParams = {}; // reset;
 
-    if (ctrl) f = ctrl.form;
-    else {
+    if (ctrl) {
+    	f = ctrl.form;
+    } else {
         f= document.forms['mutate'];
         if(!f) return;
-        ctrl = f.display;
     }
+        ctrl = f.display;
     
 	cp = f.params.value.split("&"); // load current setting once
 
