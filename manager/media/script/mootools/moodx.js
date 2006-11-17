@@ -2,9 +2,6 @@ var Event = function(e) {
     this._event = e || window.event;
 }
 Object.extend(Event.prototype, {
-    initialize: function(e){
-    	this.event = e || window.event;
-    },
     event: function() {
         return this._event;
     },

@@ -29,21 +29,20 @@ if (file_exists($modx->config['base_path'].'manager/media/style/'.$manager_theme
 	echo '</style>';
 } 
 ?>
-
-<div id="sysAlertWrapper">
-	<div id="sysAlertWindow">
-		<div class="evtMsgHeading">
-			<div id="closeSysAlert"><a href="#" onclick="closeSystemAlerts();return false;"><img border="0" src="media/style/<?php echo ($manager_theme ? "$manager_theme/":"") ?>images/icons/close.gif" width="16" height="16" alt="<?php echo $_lang['close'] ?>" /></a></div> 
-			<?php echo $_lang['sys_alert'] ?> 
-		</div>
-		<div class="evtMsg"><?php echo $sysMsgs;?></div>
-	</div>
-</div>
-	<script type="text/javascript">
-	function closeSystemAlerts() {
-		$("sysAlertWrapper").style.display = "none";
-	};
-	</script>
+<script src="media/script/mootools/mooPrompt.js" type="text/javascript"></script>
+<script type="text/javascript">
+Window.onDomReady(function() {
+			var sysAlert = new Element('div').setProperties({
+				'class': 'sysAlert'
+			});
+			sysAlert.innerHTML = '<?php echo mysql_escape_string($sysMsgs);?>';
+			var boxHtml = new MooPrompt('<?php echo $_lang['sys_alert']; ?>', sysAlert, {
+				buttons: 1,
+				button1: 'Ok',
+				width: 500
+			});
+});
+</script>
 
 <?php
 	}

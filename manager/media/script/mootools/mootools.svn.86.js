@@ -1862,7 +1862,7 @@ Class: Element
 
 Element.extend({
 
-	/*
+/*
 	Property: getElements 
 		Gets all the elements within an element that match the given (single) selector.
 	
@@ -1886,14 +1886,14 @@ Element.extend({
 			if (i == 0){
 				if (param['id']){
 					var el = this.getElementById(param['id']);
-					if (!el || (param['tag'] != '*' && $(el).getTag() != param['tag'])) return false;
+					if (!el || ((param['tag'] != '*') && ($Element(el, 'getTag') != param['tag']))) return;
 					filters = [el];
 				} else {
 					filters = $A(this.getElementsByTagName(param['tag']));
 				}
 			} else {
-				if (param['id']) filters = $Elements(filters).filterById(param['id']);
 				filters = $Elements(filters).filterByTagName(param['tag']);
+				if (param['id']) filters = $Elements(filters).filterById(param['id']);
 			}
 			if (param['class']) filters = $Elements(filters).filterByClassName(param['class']);
 			if (param['attribute']) filters = $Elements(filters).filterByAttribute(param['attribute'], param['value'], param['operator']);
@@ -1903,6 +1903,23 @@ Element.extend({
 			$(el);
 		});
 		return $Elements(filters);
+	},
+	
+	/*
+	Property: getElementById
+		Targets an element with the specified id found inside the Element. Does not overwrite document.getElementById.
+
+	Arguments:
+		id - the id of the element to find.
+	*/
+	
+	getElementById: function(id){
+		var el = document.getElementById(id);
+		if (!el) return false;
+		for(var parent = el.parentNode; parent != this; parent = parent.parentNode){
+			if (!parent) return false;
+		}
+		return el;
 	},
 
 	/*
@@ -3539,7 +3556,7 @@ var Tips = new Class({
 			maxOpacity: 1,
 			timeOut: 100,
 			className: 'tooltip'
-		}
+		};
 		Object.extend(this.options, options || {});
 	},
 

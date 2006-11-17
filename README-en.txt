@@ -9,9 +9,9 @@ MODx outputs exactly what you create, be it the most semantially pure XHTML/CSS 
 MODx is simply a framework you can build a surprisingly large number of custom web applications, and what we consider to be a pretty solid web CMS that you can use to fly through building marketing websites.
 
 
---------------------------------
+------------------------------
 GETTING HELP & LEARNING MODx :
---------------------------------
+------------------------------
 For more installation tips and resources, please visit the following:
 
     http://modxcms.com/getting-started.html
@@ -23,9 +23,9 @@ Estimated time to install after uploading files to your server: < 5 minutes
 Last revision date of this document: Version 1.1 Nov 2, 2006
 
 
---------------------------------
-MODx SUGGESTED REQUIREMENTS :
---------------------------------
+-------------------------------
+SUGGESTED MODx INFRASTRUCTURE :
+-------------------------------
 The following guidelines should apply to typical LAMP servers. 
 
 <soapbox>
@@ -49,7 +49,17 @@ Most modern standards-compliant browsers should work for managing MODx sites. Ho
     Firefox 1.5.0.7 and 2 (Mac/Windows/Linux)
     Internet Explorer 6 and 7 (Windows)
     Safari 2.0.x (Mac OS X)
-    Opera 9.02 (Mac/Windows/Linux)
+    Opera 9.02 (Mac/Windows/Linux) -- needs custom manager template
+
+
+----------------------------------
+UPGRADING PREVIOUS MODx INSTALLS :
+----------------------------------
+You should be able to upgrade to 0.9.5 from any prior MODx version. For detailed instructions and best practices, please see our wiki for some best practices for upgrading from previous versions:
+
+    http://wiki.modxcms.com/index.php/Upgrading_Guide
+
+As with any upgrade, make sure you have a full backup including your config.inc.php file, all the items in your assets folder, and a current DB dump. If you've customized any default snippets, please make sure they are not named the same as the default snippets, and that if they include items in the assets folder, that you've modified the filesystem path and include lines as appropriate. If you don't have a clue what this means, you should probably be OK, or might consider hiring someone to perform the upgrade for you.
 
 
 --------------------------------

@@ -3,8 +3,14 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2017 - Nov 15, 2006)
+MODx 0.9.5 RC3 (rev 2032 - Nov 17, 2006)
 ====================================
+* Update README file to reference wiki for upgrade instructions (2030)
+* Change plugin configuration input text box into a textarea (2030)
+* Added new mooPrompt class to the mootools library. (2023)
+* Implemented mooPrompt for System Alert messages. (2023)
+* Remove unneeded dynelement calls from the Resource Selector popup. (2020)
+* Modified the openSelector function on the Module Dependencies page to not use any dynelement functions. (2020)
 * Fixed a variable issue with the showParameters function. (2011) 
 * Changed header and menu to load mootools instead of Prototype and Scriptaculous. (2011)
 * Added moodx.js script to extend mootools with Prototype-like functions. (2011)

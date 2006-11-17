@@ -10,58 +10,34 @@ $sysalert_style =<<<EOD
 
 /* System Alert Box
 ---------------------------------------------------------- */
-#sysAlertWrapper {
-	top: 20px;
-    position: absolute;
-    z-index: 50001;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px;
-}
-
-#sysAlertWindow {
-	width:90%;
-	margin-right: auto;
-	margin-left: auto;
-	height:200px;
-	border: 1px solid #4791c5;
-	background-color: #FFFFE9;
-	font-family: verdana, arial;
-	font-size: 12px;
-	overflow:hidden;
-    text-align: left;
-}
-
-#closeSysAlert {
-	float: right;
-}
-.evtMsgHeading {
-	color:#000;
-	background: #9abbe5;
-	position:relative;
-	padding:5px;
-	font-weight:bold;
-}
-
-.evtMsg {
-	background-color: #FFFFE9;
-	font-size: 12px;
-	padding:3px;
-	width: 98%; /* force IE to display the scrollbars */
-	/* Don't wrap its contents, and show scrollbars. */
-	white-space: nowrap;
-	overflow: auto;
-	height: 160px;
-}
-.scrollbtn {
-	width: 100%;
-	height: 10px;
-	font-size: 5px;
-	text-align: center;
-	background-image: url(images/bg/buttonbar.gif);
-	background-color: #A3C8F5;
-}
+		.cbOverlay {
+			background-color: #000;
+			z-index: 50000;
+		}
+		
+		.cbContainer {
+			padding:5px;
+			background-color:white;
+			z-index: 50000;
+		}
+		.cbBox h3 {
+			color:#000;
+			background: #9abbe5;
+			padding:5px;
+			font-weight:bold;
+		}
+		.cbBox p {
+			margin:3px;
+		}
+		.cbBox .cbButtons {
+			text-align:center;
+		}
+				
+		.sysAlert {
+			width: 500px;
+			height: 330px;
+			white-space: nowrap;
+			overflow: auto;
+		}
 EOD;
 ?>

@@ -298,11 +298,11 @@ function decode(s){
 		<table border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="name" type="text" maxlength="100" value="<?php echo $content['name'];?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><span class="warning" id='savingMessage'>&nbsp;</span></td>
+			<td align="left"><input name="name" type="text" maxlength="100" value="<?php echo $content['name'];?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'>&nbsp;</span></td>
 		  </tr>
 		  <tr>
 			<td align="left"><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo $content['description'];?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+			<td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description'];?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
 		  </tr>
 		  <tr>
 			<td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span>":$_lang['plugin_disabled']; ?></td>
@@ -329,7 +329,7 @@ function decode(s){
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
           <tr>
 			<td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
+			<td align="left"><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
 			<option>&nbsp;</option>
 			<?php
                 include_once "categories.inc.php";
@@ -343,11 +343,11 @@ function decode(s){
 		  </tr>
           <tr>
 			<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-			<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+			<td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
 		  </tr>
           <tr>
 			<td align="left"><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="moduleguid" style="width:300px;" onChange='documentDirty=true;'>
+			<td align="left"><select name="moduleguid" style="width:300px;" onChange='documentDirty=true;'>
 			<option>&nbsp;</option>
 			<?php
 				$sql =	"SELECT sm.id,sm.name,sm.guid " .
@@ -366,11 +366,11 @@ function decode(s){
 		  </tr>
 		  <tr>
 			<td>&nbsp;</td>
-			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br /></td>
+			<td align="left" valign="top"><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br /></td>
 		  </tr>
 		  <tr>
 			<td align="left" valign="top"><?php echo $_lang['plugin_config']; ?>:</td>
-			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties'];?>" class="inputBox" style="width:280px;" onChange='showParameters(this);documentDirty=true;' /><input type="button" value=".." style="width:16px; margin-left:2px;" title="<?php echo $_lang['update_params']; ?>" /></td>
+			<td align="left" valign="top"><textarea name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" value="<?php echo $_lang['update_params']; ?>" class="button" /></td>
 		  </tr>
 		  <tr id="displayparamrow">
 			<td valign="top" align="left">&nbsp;</td>
