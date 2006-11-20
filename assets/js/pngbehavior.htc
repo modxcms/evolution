@@ -26,7 +26,7 @@ var supported = /MSIE ((5\.5)|[6789])/.test(navigator.userAgent) &&
 				navigator.platform == "Win32";
 
 var realSrc;
-var blankSrc = "x.gif";
+var blankSrc = "assets/js/x.gif";
 var isPrinting = false;
 
 if (supported) fixImage();

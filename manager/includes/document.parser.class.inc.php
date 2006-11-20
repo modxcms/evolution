@@ -2270,7 +2270,7 @@ class DocumentParser {
                 } else {
                     $sql= "SELECT * FROM " . $this->getFullTableName("site_plugins") . " WHERE name='" . $pluginName . "' AND disabled=0;";
                     $result= $this->dbQuery($sql);
-                    if (!$this->recordCount($result) == 1) {
+                    if ($this->recordCount($result) == 1) {
                         $row= $this->fetchRow($result);
                         $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
                         $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];

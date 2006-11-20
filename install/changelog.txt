@@ -3,8 +3,18 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2032 - Nov 17, 2006)
+MODx 0.9.5 RC3 (rev 2048 - Nov 17, 2006)
 ====================================
+* Fix problematic img tag in BottomButtonBar plugin (2044)
+* [FS#680] Fix RTE positioning when editing chunks (2043)
+* DocManager: Fix config path issue in tv.ajax.php (2042)
+* Add configuration checks for checking the publish state of the Unauthorized and Error pages (2041)
+* Fix calendar image paths and label positioning in 'FormBlog' chunk (2038)
+* [FS#659] Minor corrections in the country lang file, (ISO 3166-3 used as a reference) (2037)
+* Fix 'new message' image path in messages.static.php (2036)
+* Fix path to x.gif in pngbehavior.htc (2035)
+* Normalise line endings in the resource browser config.php (2034)
+* Fix invokeEvent() in document parser so it fetches the plugin code from the db if not in the cache (2033)
 * Update README file to reference wiki for upgrade instructions (2030)
 * Change plugin configuration input text box into a textarea (2030)
 * Added new mooPrompt class to the mootools library. (2023)

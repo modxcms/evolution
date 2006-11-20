@@ -181,7 +181,7 @@ if ($ds)
 	<!-- HTML text editor start -->
 	<div style="width:100%;position:relative">
 	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
-	    	<span style="float:left;color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['chunk_code']; ?></span>
+	    	<span style="color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['chunk_code']; ?></span>
 	   	</div>
 		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet']); ?></textarea>
 	</div>

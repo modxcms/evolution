@@ -1,4 +1,5 @@
-<?php /*
+<?php 
+/*
  * FCKeditor - The text editor for internet
  * Copyright (C) 2003-2005 Frederico Caldeira Knabben
  * 
@@ -15,14 +16,28 @@
  * 
  * File Authors:
  * 		Grant French (grant@mcpuk.net)
- */
+ */
+
 // ** START FOR MODx
 
-// load configuration file// initialize the variables prior to grabbing the config file$database_type = '';$database_server = '';$database_user = '';$database_password = '';$dbase = '';$table_prefix = '';$base_url = '';$base_path = '';include("../../../../../includes/config.inc.php");
-/** 
+// load configuration file
+// initialize the variables prior to grabbing the config file
+$database_type = '';
+$database_server = '';
+$database_user = '';
+$database_password = '';
+$dbase = '';
+$table_prefix = '';
+$base_url = '';
+$base_path = '';
+include("../../../../../includes/config.inc.php");
+
+/** 
  * Security check user MUST be logged into manager 
  * before being able to run this script
- */startCMSSession(); if(!isset($_SESSION['mgrValidated'])) {
+ */
+startCMSSession(); 
+if(!isset($_SESSION['mgrValidated'])) {
 	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
 // connect to the database
@@ -35,8 +50,19 @@ include("../../../../../includes/settings.inc.php");
 
 // Override system settings with user settings
 define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
-include("../../../../../includes/user_settings.inc.php");// make arrays from the file upload settings$upload_files = explode(',',$upload_files);$upload_images = explode(',',$upload_images);$upload_media = explode(',',$upload_media);$upload_flash = explode(',',$upload_flash);// avoid problems when passing strings into CHMOD$fckphp_config['modx']['file_permissions'] = octdec($new_file_permissions);$fckphp_config['modx']['folder_permissions'] = octdec($new_folder_permissions);
-// ** END FOR MODx
+include("../../../../../includes/user_settings.inc.php");
+
+// make arrays from the file upload settings
+$upload_files = explode(',',$upload_files);
+$upload_images = explode(',',$upload_images);
+$upload_media = explode(',',$upload_media);
+$upload_flash = explode(',',$upload_flash);
+
+// avoid problems when passing strings into CHMOD
+$fckphp_config['modx']['file_permissions'] = octdec($new_file_permissions);
+$fckphp_config['modx']['folder_permissions'] = octdec($new_folder_permissions);
+// ** END FOR MODx
+
 
 /*------------------------------------------------------------------------------*/
 /* HTTP over SSL Detection (shouldnt require changing)				*/
@@ -58,9 +84,14 @@ $fckphp_config['basedir'] = (substr($rb_base_dir,-1)=="/") ? substr($rb_base_dir
 /*------------------------------------------------------------------------------*/
 /* Prefix added to image path before sending back to editor			*/
 /*------------------------------------------------------------------------------*/
-//$fckphp_config['urlprefix']=$fckphp_config['prot'].$_SERVER['SERVER_NAME'];if ($strip_image_paths == 1) {
-	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? str_replace($site_url,'',substr($rb_base_url,0,-1)):$rb_base_url;} else {	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? substr($rb_base_url,0,-1):$rb_base_url;}
-//$fckphp_config['urlprefix']=substr($site_url, 0, strlen($site_url)-1);
+//$fckphp_config['urlprefix']=$fckphp_config['prot'].$_SERVER['SERVER_NAME'];
+if ($strip_image_paths == 1) {
+	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? str_replace($site_url,'',substr($rb_base_url,0,-1)):$rb_base_url;
+} else {
+	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? substr($rb_base_url,0,-1):$rb_base_url;
+}
+//$fckphp_config['urlprefix']=substr($site_url, 0, strlen($site_url)-1);
+
 /*==============================================================================*/
 
 

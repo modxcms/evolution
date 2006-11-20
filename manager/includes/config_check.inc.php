@@ -23,6 +23,16 @@ if (ini_get('register_globals')==TRUE) {
     $warnings[] = array($_lang['configcheck_register_globals']);
 }
 
+if ($modx->db->getValue('SELECT published FROM '.$modx->getFullTableName('site_content').' WHERE id='.$unauthorized_page) == 0) {
+	$warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
+}
+
+if ($modx->db->getValue('SELECT published FROM '.$modx->getFullTableName('site_content').' WHERE id='.$error_page) == 0) {
+	$warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_errorpage_unpublished']);
+}
+
 if (!function_exists('checkSiteCache')) {
     function checkSiteCache() {
         global $modx;
@@ -84,6 +94,12 @@ for ($i=0;$i<count($warnings);$i++) {
             break;
         case $_lang['configcheck_register_globals'] :
             $warnings[$i][1] = $_lang['configcheck_register_globals_msg'];
+            break;
+		case $_lang['configcheck_unauthorizedpage_unpublished'] :
+            $warnings[$i][1] = $_lang['configcheck_unauthorizedpage_unpublished_msg'];
+            break;
+		case $_lang['configcheck_errorpage_unpublished'] :
+            $warnings[$i][1] = $_lang['configcheck_errorpage_unpublished_msg'];
             break;
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];
