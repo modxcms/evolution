@@ -3,8 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2048 - Nov 17, 2006)
+MODx 0.9.5 RC3 (rev 2051 - Nov 21, 2006)
 ====================================
+* Fix incorrect lang string in user_management.static.php (2046)
+* [FS#361] Only use fifth parameter in mail() if safe mode is off when sending password reminder emails (2045)
 * Fix problematic img tag in BottomButtonBar plugin (2044)
 * [FS#680] Fix RTE positioning when editing chunks (2043)
 * DocManager: Fix config path issue in tv.ajax.php (2042)

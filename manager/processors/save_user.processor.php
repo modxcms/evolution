@@ -457,10 +457,11 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+saddr+]", $emailsender, $message);
 	$message = str_replace("[+semail+]", $emailsender, $message);
 	$message = str_replace("[+surl+]", $manager_url, $message);
-	if (!mail($email, $emailsubject, $message, "From: " . $emailsender . "\r\n" . "X-Mailer: Content Manager - PHP/" . phpversion(), "-f $emailsender")) {
+	if ((ini_get('safe_mode') == FALSE && !mail($email, $emailsubject, $message, "From: " . $emailsender . "\r\n" . "X-Mailer: Content Manager - PHP/" . phpversion(), "-f $emailsender")) || !mail($email, $emailsubject, $message, "From: " . $emailsender . "\r\n" . "X-Mailer: Content Manager - PHP/" . phpversion())) {
 		webAlert("Error while sending mail to $mailto");
 		exit;
 	}
+
 }
 
 // Save User Settings
