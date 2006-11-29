@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2051 - Nov 21, 2006)
+MODx 0.9.5 RC3 (rev 2066 - Nov 28, 2006)
 ====================================
+* Fixed session cookie behavior in front-end and back-end, including session_keepalive code. (2066)
+* Changed line endings in readme file to CR+LF for Windows users. (2061)
+* Minor typo fix to english language file. (2060)
 * Fix incorrect lang string in user_management.static.php (2046)
 * [FS#361] Only use fifth parameter in mail() if safe mode is off when sending password reminder emails (2045)
 * Fix problematic img tag in BottomButtonBar plugin (2044)

@@ -14,16 +14,16 @@ $tpls = explode((isset($declare["separator"]) ? $declare["separator"]:"<!--tpl_s
 
 if(!isset($_SESSION['webValidated'])){
     ob_start();
-    if(isset($_COOKIE[$cookieKey])) {
-        $cookieSet = 1;
-        $username = $_COOKIE[$cookieKey];
-        $thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
-        $rc4 = new rc4crypt;
-        $thestring = $rc4->endecrypt($thepasswd,$username,'de');
-        $uid = $thestring;
-    }else{
+//    if(isset($_COOKIE[$cookieKey])) {
+//        $cookieSet = 1;
+//        $sitename = $_COOKIE[$cookieKey];
+//        $thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
+//        $rc4 = new rc4crypt;
+//        $thestring = $rc4->endecrypt($thepasswd,$sitename,'de');
+//        $uid = $thestring;
+//    }else{
         $uid = isset($_POST['username'])? $_POST['username']:'';
-    }
+//    }
     ?>
     <script type="text/JavaScript">
 

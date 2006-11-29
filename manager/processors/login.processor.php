@@ -42,7 +42,7 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 include_once "error.class.inc.php";
 $e = new errorHandler;
 
-$cookieKey = substr(md5($site_id."Admin-User"),0,15);
+//$cookieKey = substr(md5($site_id."Admin-User"),0,15);
 
 // initiate the content manager class
 include_once "document.parser.class.inc.php";
@@ -55,13 +55,14 @@ $etomite = &$modx; // for backward compatibility
 $username = $modx->db->escape($_REQUEST['username']);
 $givenPassword = $modx->db->escape($_REQUEST['password']);
 $captcha_code = $_REQUEST['captcha_code'];
+$rememberme= $_REQUEST['rememberme'];
 
 // invoke OnBeforeManagerLogin event
 $modx->invokeEvent("OnBeforeManagerLogin",
                         array(
                             "username"      => $username,
                             "userpassword"  => $givenPassword,
-                            "rememberme"    => $_REQUEST['rememberme']
+                            "rememberme"    => $rememberme
                         ));
 
 $sql = "SELECT $dbase.".$table_prefix."manager_users.*, $dbase.".$table_prefix."user_attributes.* FROM $dbase.".$table_prefix."manager_users, $dbase.".$table_prefix."user_attributes WHERE BINARY $dbase.".$table_prefix."manager_users.username = '".$username."' and $dbase.".$table_prefix."user_attributes.internalKey=$dbase.".$table_prefix."manager_users.id;";
@@ -165,7 +166,7 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                             "username"      => $username,
                             "userpassword"  => $givenPassword,
                             "savedpassword" => $dbasePassword,
-                            "rememberme"    => $_REQUEST['rememberme']
+                            "rememberme"    => $rememberme
                         ));
 // check if plugin authenticated the user
 
@@ -198,7 +199,6 @@ if($newloginerror==1) {
         sleep($sleep);
     }
     session_destroy();
-    session_unset();
     return;
 }
 
@@ -242,15 +242,10 @@ $rs = mysql_query($sql);
 while ($row = mysql_fetch_row($rs)) $dg[$i++]=$row[0];
 $_SESSION['mgrDocgroups'] = $dg;
 
-
-if($_POST['rememberme']==1) {
-    $rc4 = new rc4crypt;
-    $username = $_POST['username'];
-    $thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
-    $cookieString = $rc4->endecrypt($thepasswd,$username);
-    setcookie($cookieKey, $cookieString, time()+604800, "/", "", 0);
+if($rememberme) {
+    $_SESSION['modx.mgr.session.cookie.lifetime']= intval($modx->config['session.cookie.lifetime']);
 } else {
-    setcookie($cookieKey, "",time()-604800, "/", "", 0);
+    $_SESSION['modx.mgr.session.cookie.lifetime']= 0;
 }
 
 $log = new logHandler;
@@ -262,7 +257,7 @@ $modx->invokeEvent("OnManagerLogin",
                             "userid"        => $internalKey,
                             "username"      => $username,
                             "userpassword"  => $givenPassword,
-                            "rememberme"    => $_POST['rememberme']
+                            "rememberme"    => $rememberme
                         ));
 
 // check if we should redirect user to a web page

@@ -188,6 +188,17 @@ $configString = '<?php
 			global $site_sessionname;
 			session_name($site_sessionname);	
 			session_start();
+            if (isset ($_SESSION[\'mgrValidated\']) || isset ($_SESSION[\'webValidated\'])) {
+                $contextKey= isset ($_SESSION[\'mgrValidated\']) ? \'mgr\' : \'web\';
+                $cookieExpiration= 0;
+                if (isset ($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\']) && is_numeric($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\'])) {
+                    $cookieLifetime= intval($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\']);
+                }
+                if ($cookieLifetime) {
+                    $cookieExpiration= time() + $cookieLifetime;
+                }
+                setcookie(session_name(), session_id(), $cookieExpiration);
+            }
 		}
 	}';
 $configString .= "\n?>";

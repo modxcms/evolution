@@ -3,10 +3,12 @@
 // start session
 startCMSSession();
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
-    unset($_SESSION['mgrValidated']);
+    if (isset($_COOKIE[session_name()])) {
+        setcookie(session_name(), '', 0);
+    }
     session_destroy();
     // start session
-    startCMSSession();
+//    startCMSSession();
 }
 if(!isset($_SESSION['mgrValidated'])){
     include_once("browsercheck.inc.php");
@@ -18,17 +20,17 @@ if(!isset($_SESSION['mgrValidated'])){
         include_once "lang/english.inc.php";
     }
 
-    $cookieKey = substr(md5($site_id."Admin-User"),0,15);
-
-    include_once ("crypt.class.inc.php");
-    if(isset($_COOKIE[$cookieKey])) {
-        $cookieSet = 1;
-        $username = $_COOKIE[$cookieKey];
-    }
-    $thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
-    $rc4 = new rc4crypt;
-    $thestring = $rc4->endecrypt($thepasswd,$username,'de');
-    $uid = $thestring;
+//    $cookieKey = substr(md5($site_id."Admin-User"),0,15);
+//
+//    include_once ("crypt.class.inc.php");
+//    if(isset($_COOKIE[$cookieKey])) {
+//        $cookieSet = 1;
+//        $username = $_COOKIE[$cookieKey];
+//    }
+//    $thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
+//    $rc4 = new rc4crypt;
+//    $thestring = $rc4->endecrypt($thepasswd,$username,'de');
+//    $uid = $thestring;
 
     $modx->setPlaceholder('modx_charset',$modx_charset);
     $modx->setPlaceholder('theme',$manager_theme);

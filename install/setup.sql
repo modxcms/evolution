@@ -852,7 +852,8 @@ REPLACE INTO `{PREFIX}system_settings`
 ('theme_refresher',''),
 ('manager_layout','4'),
 ('custom_contenttype','text/css,text/html,text/javascript,text/plain,text/xml'),
-('auto_menuindex','1');
+('auto_menuindex','1'),
+('session.cookie.lifetime','604800');
 
 
 

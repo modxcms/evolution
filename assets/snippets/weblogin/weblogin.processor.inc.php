@@ -156,16 +156,16 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
         }
         else {
             // Unset all of the session variables.
-            $_SESSION = array();
+//            $_SESSION = array();
             // destroy session cookie
             if (isset($_COOKIE[session_name()])) {
-                setcookie(session_name(), '', time()-42000, '/');
+                setcookie(session_name(), '', 0);
             }
             session_destroy();
-            $sessionID = md5(date('d-m-Y H:i:s'));
-            session_id($sessionID);
-            startCMSSession();
-            session_destroy();
+//            $sessionID = md5(date('d-m-Y H:i:s'));
+//            session_id($sessionID);
+//            startCMSSession();
+//            session_destroy();
         }
 
         // invoke OnWebLogout event
@@ -188,13 +188,14 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
     $username = $modx->db->escape($_POST['username']);
     $givenPassword = $modx->db->escape($_POST['password']);
     $captcha_code = isset($_POST['captcha_code'])? $_POST['captcha_code']: '';
+    $rememberme = $_POST['rememberme'];
 
     // invoke OnBeforeWebLogin event
     $modx->invokeEvent("OnBeforeWebLogin",
                             array(
                                 "username"        => $username,
                                 "userpassword"    => $givenPassword,
-                                "rememberme"    => $_POST['rememberme']
+                                "rememberme"    => $rememberme
                             ));
 
     $sql = "SELECT $dbase.".$table_prefix."web_users.*, $dbase.".$table_prefix."web_user_attributes.* FROM $dbase.".$table_prefix."web_users, $dbase.".$table_prefix."web_user_attributes WHERE BINARY $dbase.".$table_prefix."web_users.username = '".$username."' and $dbase.".$table_prefix."web_user_attributes.internalKey=$dbase.".$table_prefix."web_users.id;";
@@ -288,7 +289,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
                                 "username"      => $username,
                                 "userpassword"  => $givenPassword,
                                 "savedpassword" => $dbasePassword,
-                                "rememberme"    => $_POST['rememberme']
+                                "rememberme"    => $rememberme
                             ));
     // check if plugin authenticated the user
     if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
@@ -351,14 +352,10 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
     while ($row = $modx->db->getRow($ds,'num')) $dg[$i++]=$row[0];
     $_SESSION['webDocgroups'] = $dg;
 
-    if($_POST['rememberme']==1) {
-        $username = $_POST['username'];
-        $thepasswd = substr($site_id,-5)."crypto"; // create a password based on site id
-        $rc4 = new rc4crypt;
-        $thestring = $rc4->endecrypt($thepasswd,$username);
-        setcookie($cookieKey, $thestring,time()+604800, "/", "", 0);
+    if($rememberme) {
+        $_SESSION['modx.web.session.cookie.lifetime']= intval($modx->config['session.cookie.lifetime']);
     } else {
-        setcookie($cookieKey, "",time()-604800, "/", "", 0);
+        $_SESSION['modx.web.session.cookie.lifetime']= 0;
     }
 
     $log = new logHandler;
