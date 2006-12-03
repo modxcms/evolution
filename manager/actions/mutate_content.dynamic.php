@@ -612,7 +612,7 @@ if ($content['type'] == "reference" || $_REQUEST['a'] == 72) {
                 <td>
             <?php
 
-$sql = "select templatename, id from $dbase." . $table_prefix . "site_templates";
+$sql = "select templatename, id from $dbase.".$table_prefix."site_templates ORDER BY templatename ASC";
                 $rs = mysql_query($sql);
             ?>
             <select id="template" name="template" class="inputBox" onchange='templateWarning();' style="width:300px">

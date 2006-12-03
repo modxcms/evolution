@@ -33,6 +33,16 @@ if ($modx->db->getValue('SELECT published FROM '.$modx->getFullTableName('site_c
     $warnings[] = array($_lang['configcheck_errorpage_unpublished']);
 }
 
+if ($modx->db->getValue('SELECT privateweb FROM '.$modx->getFullTableName('site_content').' WHERE id='.$unauthorized_page) == 1) {
+	$warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_unauthorizedpage_unavailable']);
+}
+
+if ($modx->db->getValue('SELECT privateweb FROM '.$modx->getFullTableName('site_content').' WHERE id='.$error_page) == 1) {
+	$warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_errorpage_unavailable']);
+}
+
 if (!function_exists('checkSiteCache')) {
     function checkSiteCache() {
         global $modx;
@@ -95,11 +105,17 @@ for ($i=0;$i<count($warnings);$i++) {
         case $_lang['configcheck_register_globals'] :
             $warnings[$i][1] = $_lang['configcheck_register_globals_msg'];
             break;
-		case $_lang['configcheck_unauthorizedpage_unpublished'] :
+        case $_lang['configcheck_unauthorizedpage_unpublished'] :
             $warnings[$i][1] = $_lang['configcheck_unauthorizedpage_unpublished_msg'];
             break;
-		case $_lang['configcheck_errorpage_unpublished'] :
+        case $_lang['configcheck_errorpage_unpublished'] :
             $warnings[$i][1] = $_lang['configcheck_errorpage_unpublished_msg'];
+            break;
+        case $_lang['configcheck_unauthorizedpage_unavailable'] :
+            $warnings[$i][1] = $_lang['configcheck_unauthorizedpage_unavailable_msg'];
+            break;
+        case $_lang['configcheck_errorpage_unavailable'] :
+            $warnings[$i][1] = $_lang['configcheck_errorpage_unavailable_msg'];
             break;
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];

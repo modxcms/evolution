@@ -160,10 +160,10 @@
         $('mx_contextmenu').style.visibility = 'hidden';
     }
     
-    function toggleNode(node,indent,parent,expandAll) {
-
+    function toggleNode(node,indent,parent,expandAll,private) {
+		private = (!private) ? private =0 : private=1;
         rpcNode = $(node.parentNode.lastChild);
-
+        
         var rpcNodeText;
         var loadText = "<?php echo $_lang['loading_doc_tree'];?>";
 
@@ -174,7 +174,7 @@
             // expand
             if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/plusnode.gif')>-1) {
                 signImg.src = '<?php echo $_style["tree_minusnode"]; ?>';
-                folderImg.src = '<?php echo $_style["tree_folder"]; ?>';
+                folderImg.src = (private=0) ? '<?php echo $_style["tree_folderopen"]; ?>' :'<?php echo $_style["tree_folderopen_secure"]; ?>';
             }
 
             // Raymond: snippet interface
@@ -202,7 +202,7 @@
             // collapse
             if(signImg && signImg.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/minusnode.gif')>-1) {
                 signImg.src = '<?php echo $_style["tree_plusnode"]; ?>';
-                folderImg.src = '<?php echo $_style["tree_folderopen"]; ?>';
+                folderImg.src = (private = 0) ? '<?php echo $_style["tree_folder"]; ?>' : '<?php echo $_style["tree_folder_secure"]; ?>';
             }
             //Raymond: snippet interface
             if (node.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolderopen.gif')>-1) {node.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolder.gif'}

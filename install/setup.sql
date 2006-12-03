@@ -785,10 +785,13 @@ REPLACE INTO `{PREFIX}user_attributes`
 (1, 1, 'Built-in Administration account', 1, 'Your email goes here', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
 
 
+# ]]non-upgrade-able
+
+
 # Default Site Settings
 
 
-REPLACE INTO `{PREFIX}system_settings` 
+INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxLight'),
 ('settings_version','0.9.5'),
@@ -854,10 +857,6 @@ REPLACE INTO `{PREFIX}system_settings`
 ('custom_contenttype','text/css,text/html,text/javascript,text/plain,text/xml'),
 ('auto_menuindex','1'),
 ('session.cookie.lifetime','604800');
-
-
-
-# ]]non-upgrade-able
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -1009,5 +1008,6 @@ UPDATE `{PREFIX}user_roles` SET
 UPDATE `{PREFIX}user_settings` SET
   `setting_value`='MODxLight'
   WHERE `setting_name`='manager_theme' AND `setting_value`='default';
+
 
 REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxLight');

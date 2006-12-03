@@ -96,13 +96,23 @@ EOD;
 
 			case "floater":
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
-				$o = "<script type=\"text/javascript\">";
-				$o.= "	document.setIncludePath('manager/media/script/bin/');";
-				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('floater');});";
-				$o.= "	document.addEventListener('onload',function(){var o = new Floater('$id','".addslashes(mysql_escape_string($value))."','".$params['x']."','".$params['y']."','".$params['pos']."','".$params['gs']."');});";
-				$o.= "</script>";
-				$o.= "<script type=\"text/javascript\">Floater.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
+				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
+				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
+				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
+				$o .= "\n<div id=\"".$id."\"".$class.$style."></div>\n";
+				$o .= "<script type=\"text/javascript\">\n";
+				$o .= "	Window.onDomReady(function() {\n";
+				$o .= "		var modxFloat = new Floater(\$(\"".$id."\"), \"".mysql_escape_string($value)."\",{\n";
+				$o .= "			width: '".$params['width']."',\n";
+				$o .= "			height: '".$params['height']."',\n";
+				$o .= "			position: '".$params['pos']."',\n";
+				$o .= "			glidespeed: ".$params['gs'].",\n";
+				$o .= "			offsetx: ".intval($params['x']).",\n";
+				$o .= "			offsety: ".intval($params['y'])."\n";
+				$o .= "		});\n";
+				$o .= "	});\n";
+				$o .= "</script>\n";
 				break;
 
 			case "marquee":
@@ -112,7 +122,7 @@ EOD;
 				$o = "<script type=\"text/javascript\">";
 				$o.= "	document.setIncludePath('manager/media/script/bin/');";
 				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('marquee');});";
-				$o.= "	document.addEventListener('onload',function(){var o = new Marquee('$id','".addslashes(mysql_escape_string($value))."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); o.start()});";
+				$o.= "	document.addEventListener('onload',function(){var o = new Marquee('$id','".mysql_escape_string($value)."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); o.start()});";
 				$o.= "</script>";
 				$o.= "<script type=\"text/javascript\">Marquee.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
 				break;

@@ -20,7 +20,7 @@ if(!$modx->hasPermission('logs')) {
  </thead>
  </tbody>
   <tr>
-    <td><b><?php echo $_lang["mgrlog_query_user"]; ?>
+    <td><b><?php echo $_lang["mgrlog_user"]; ?>
     </b></td>
     <td align="right">
       <?php
@@ -168,6 +168,7 @@ if(isset($_REQUEST['log_submit'])){
 
 // function to check date and convert to us date
 function convertdate($date) {
+	global $_lang;
 	list ($day, $month, $year) = split ("-", $date);
 	$date_valid = checkdate($month, $day, $year);
 	if($date_valid==false) {

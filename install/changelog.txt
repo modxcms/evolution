@@ -3,8 +3,16 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 RC3 (rev 2066 - Nov 28, 2006)
+MODx 0.9.5 RC3 (rev 2076 - Dec 3, 2006)
 ====================================
+* Modified install to use INSERT IGNORE for system settings on new installs and upgrades, rather than REPLACE INTO only on new installs, so it will add missing settings without overwriting any. (2076)
+* [FS#694] Add tree menu functionality to allow containers to show whether private web or manager permissions have been applied, updated themes style.php with new $_style additions. (2075)
+* [FS#695] Order template dropdown by template name. (2074)
+* [FS#697] Fix incorrect lang reference (also globalised $_lang in one of the functions so it correctly displays the error messages). (2073)
+* [FS#701] Fix path issue for phpSniff.class.php when base dir restrictions are in effect. (2072)
+* Update language file to add note about non-existant Error/Unauthorized pages for site config check. (2071)
+* Moved code for mooFloater and mooPrompt into the mootools MODx script file (moodx.js) for better caching and integration. (2069)
+* [FS#704] Add unathorized/error page config checks to make sure they're not private and that the documents actually exist (2068)
 * Fixed session cookie behavior in front-end and back-end, including session_keepalive code. (2066)
 * Changed line endings in readme file to CR+LF for Windows users. (2061)
 * Minor typo fix to english language file. (2060)

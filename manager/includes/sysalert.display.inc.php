@@ -29,7 +29,6 @@ if (file_exists($modx->config['base_path'].'manager/media/style/'.$manager_theme
 	echo '</style>';
 } 
 ?>
-<script src="media/script/mootools/mooPrompt.js" type="text/javascript"></script>
 <script type="text/javascript">
 Window.onDomReady(function() {
 			var sysAlert = new Element('div').setProperties({
@@ -43,7 +42,6 @@ Window.onDomReady(function() {
 			});
 });
 </script>
-
 <?php
 	}
 ?>

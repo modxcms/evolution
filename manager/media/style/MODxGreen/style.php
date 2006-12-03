@@ -26,6 +26,8 @@ $_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.gif\" style=
 $_style["tree_deletedpage"] = $style_path."images/tree/deletedpage.gif";
 $_style["tree_folder"] = $style_path."images/tree/folder.gif";
 $_style["tree_folderopen"] = $style_path."images/tree/folderopen.gif";
+$_style["tree_folder_secure"] = $style_path."images/tree/folder.gif";
+$_style["tree_folderopen_secure"] = $style_path."images/tree/folderopen.gif";
 $_style["tree_globe"] = $style_path."images/tree/globe.gif";
 $_style["tree_linkgo"] = $style_path."images/tree/link_go.png";
 $_style["tree_minusnode"] = $style_path."images/tree/minusnode.gif";
