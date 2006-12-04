@@ -61,7 +61,7 @@ for($i = 1; $i < 1000; $i++) {
     </td>
   </tr>
   <tr bgcolor='#ffffff'>
-    <td><b>Item id</b></td>
+    <td><b><?php echo $_lang["mgrlog_itemid"]; ?></b></td>
     <td align="right">
       <?php
 // get all itemid currently in logging
@@ -265,11 +265,11 @@ $array_row_paging = $p->getPagingRowArray();
 $current_row = $int_cur_position/$int_num_result;
 
 // Display the result as you like...
-print "Showing ". $array_paging['lower'];
-print " to ". $array_paging['upper'];
-print " (". $array_paging['total']." total)";
-print "<br>". $array_paging['first_link'] ."[first]</a> " ;
-print $array_paging['previous_link'] ."[previous]</a> " ;
+print $_lang["paging_showing"]." ". $array_paging['lower'];
+print " ". $_lang["paging_to"] . " ". $array_paging['upper'];
+print " (". $array_paging['total'] . " " . $_lang["paging_total"] . ")";
+print "<br>". $array_paging['first_link'] . $_lang["paging_first"] . "</a> " ;
+print $array_paging['previous_link'] . $_lang["paging_prev"] . "</a> " ;
 $pagesfound = sizeof($array_row_paging);
 if($pagesfound>6) {
 	print $array_row_paging[$current_row-1]; // ."&nbsp;";
@@ -280,8 +280,8 @@ if($pagesfound>6) {
 	  print $array_row_paging[$i] ."&nbsp;";
 	}
 }
-print $array_paging['next_link'] ."[next]</a> ";
-print $array_paging['last_link'] ."[last]</a>";
+print $array_paging['next_link'] . $_lang["paging_next"] . "</a> ";
+print $array_paging['last_link'] . $_lang["paging_last"] . "</a>";
 // The above exemple print somethings like:
 // Results 1 to 20 of 597  <<< 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 >>>
 // Of course you can now play with array_row_paging in order to print

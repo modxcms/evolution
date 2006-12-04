@@ -401,7 +401,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["custom_contenttype_title"] ?></b></td>
-            <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /> <input type="button" value="Add" style="width:60px" onclick='addContentType()' /><br />
+            <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /> <input type="button" value="<?php echo $_lang["add"]; ?>" style="width:60px" onclick='addContentType()' /><br />
             <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
             <select name="lst_custom_contenttype" style="width:200px;" size="5">
             <?php
@@ -413,7 +413,7 @@ function updateContentType(){
             ?>
             </select>
             <input name="custom_contenttype" type="hidden" value="<?php echo $custom_contenttype; ?>" />
-            </td><td valign="top">&nbsp;<input name="removecontenttype" type="button" value="Remove" style="width:60px" onclick='removeContentType()' /></td></tr></table>
+            </td><td valign="top">&nbsp;<input name="removecontenttype" type="button" value="<?php echo $_lang["remove"]; ?>" style="width:60px" onclick='removeContentType()' /></td></tr></table>
             </td>
           </tr>
           <tr>

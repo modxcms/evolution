@@ -546,9 +546,8 @@ a img {
     padding: 3px; }
 
 .gridRowIcon:hover {
-    background-color:beige;}
-
-
+    background-color: #f5f5dc;
+}
 
 /* search bar */
 .searchbar {
@@ -685,7 +684,7 @@ ul#nav {
     width: 100%;
     position: absolute;
     top: 18px;
-    overflow: visible !important
+    overflow: visible !important;
 }
 
 #nav ul {
@@ -698,9 +697,8 @@ ul#nav {
 }
 
 #nav li {
-    list-style-type: none;
+    list-style: none;
     background: #d4d4d4 url(images/misc/greentab.gif) 100% 100%;
-    display: block;
     float: left;
     width: auto;
     margin: 0 3px 0 0;
@@ -713,13 +711,14 @@ ul#nav {
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    cursor: hand;
+    cursor: pointer;
     line-height: 25px;
     overflow: hidden;
     padding: 0 15px;
     border-left: 1px solid #acda43; /*c1e079*/
-    float:left;
-    display:block;
+    float: none !important;
+    float: left;
+    display: block;
 }
 
 #nav li ul li a {
@@ -749,7 +748,7 @@ ul#nav {
 }
 
 #nav li.active a:hover {
-    cursor: hand;
+    cursor: pointer;
 }
 
 #nav li.active ul.subnav {
@@ -768,7 +767,7 @@ ul#nav {
     font-weight: normal;
     border: none;
     background: #8fc70c;
-    cursor: hand;
+    cursor: pointer;
 
 }
 

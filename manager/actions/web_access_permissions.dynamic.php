@@ -51,7 +51,7 @@ if($limit<1) {
 				<input type="hidden" name="a" value="92" />
 				<input type="hidden" name="operation" value="add_user_group" />
 				<input type=text value='' name='newusergroup' />&nbsp;
-				<input type=submit value='submit'>
+				<input type=submit value='<?php echo $_lang["submit"]; ?>'>
 			</form>
 			</td>
 		</tr>
@@ -152,7 +152,7 @@ if($limit<1) {
 				<input type="hidden" name="a" value="92" />
 				<input type="hidden" name="operation" value="add_document_group" />
 				<input type=text value='' name='newdocgroup' />&nbsp;
-				<input type=submit value='submit'>
+				<input type=submit value='<?php echo $_lang["submit"]; ?>'>
 			</form>
 			</td>
 		</tr>
