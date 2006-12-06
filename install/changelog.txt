@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5 (rev 2095 - Dec 4, 2006)
+MODx 0.9.5 (rev 2105 - Dec 5, 2006)
 ====================================
+* Adding French translations for 095 Distribution. (2103)
+* Adding translation kit Swedish language to Distribution. (2102)
+* Fixed typo with mooFloater call and modified class for better compatibility with Safari. (2099)
 * Remove space after slash mark in alternate word pairs. E.g., Create/ edit -> Create/edit (2081)
 * Fix several hard coded language strings in manager pages (2080)
 * Update minimal template to remove RSS feed (2079)

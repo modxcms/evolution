@@ -304,18 +304,18 @@ var MooFloater = new Class({
 				this.container.setStyle('right', this.options.offsetx+'px');
 				break;
 		}
-		this.float = this.startFloat.pass([this.options,this.container,this.float]).delay(100, window);
-		window.addEvent('scroll', this.onScrollHandler.pass([this.options,this.container,this.float]));
-		window.addEvent('resize', this.onScrollHandler.pass([this.options,this.container,this.float]));
+		this.floater = this.startFloat.pass([this.options,this.container,this.floater]).delay(100, window);
+		window.addEvent('scroll', this.onScrollHandler.pass([this.options,this.container,this.floater]));
+		window.addEvent('resize', this.onScrollHandler.pass([this.options,this.container,this.floater]));
 	},
 
 	onScrollHandler: function(){
-		if (this.float == null){
-			this.float = this.startFloat.pass([this.options,this.container,this.float]).delay(100, window);
+		if (this.floater == null){
+			this.floater = this.startFloat.pass([this.options,this.container,this.floater]).delay(100, window);
 		}else{
-			this.float = $clear(this.float);
-			this.float = null;
-			this.float = this.startFloat.pass([this.options,this.container,this.float]).delay(100, window);
+			this.floater = $clear(this.floater);
+			this.floater = null;
+			this.floater = this.startFloat.pass([this.options,this.container,this.floater]).delay(100, window);
 		}
 	},
 	

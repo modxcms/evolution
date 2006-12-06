@@ -103,7 +103,7 @@ EOD;
 				$o .= "\n<div id=\"".$id."\"".$class.$style."></div>\n";
 				$o .= "<script type=\"text/javascript\">\n";
 				$o .= "	Window.onDomReady(function() {\n";
-				$o .= "		var modxFloat = new Floater(\$(\"".$id."\"), \"".mysql_escape_string($value)."\",{\n";
+				$o .= "		var modxFloat = new MooFloater(\$(\"".$id."\"), \"".mysql_escape_string($value)."\",{\n";
 				$o .= "			width: '".$params['width']."',\n";
 				$o .= "			height: '".$params['height']."',\n";
 				$o .= "			position: '".$params['pos']."',\n";
