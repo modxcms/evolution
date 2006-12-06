@@ -26,7 +26,7 @@
     border-style: solid none none none;
     height: 200px;
     max-height: 15px;
-    background: #fff url(../images/link_bg.png) repeat-x 0 0;
+    background: transparent;
     -moz-opacity: 0.5;
     opacity: 0.5;
     filter: alpha(opacity=80);
@@ -39,6 +39,7 @@
     }
 /* Use position fixed for more modern browsers */
 body > #QE_Toolbar {
+    background: #fff url(../images/link_bg.png) repeat-x 0 0;
     position: fixed;
 }
 #QE_Toolbar h1 {
