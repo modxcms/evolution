@@ -7,8 +7,7 @@
 
 $_lang["ef_thankyou_message"] = "<h3>Merci !</h3><p>Vos informations ont été correctement transmises.</p>";
 $_lang["ef_no_doc"] = "Document ou chunk introuvable pour le modèle n°=";
-//$_lang["ef_no_chunk"] = ""; //obsolète
-$_lang["ef_validation_message"] = "<strong>Des erreurs ont été detectées dans le formulaire :</strong><br />";
+$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Des erreurs ont été detectées dans le formulaire :</strong><br />[+ef_wrapper+]</div>";
 $_lang["ef_required_message"] = " Les champs indispensables ci-dessous sont introuvables: {fields}<br />";
 $_lang["ef_invalid_number"] = " n'est pas un nombre valide";
 $_lang["ef_invalid_date"] = " n'est pas une date valide";

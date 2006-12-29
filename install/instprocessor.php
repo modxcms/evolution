@@ -160,11 +160,11 @@ $configString = '<?php
 	error_reporting(E_ALL & ~E_NOTICE);
 
 	$site_sessionname = \'' . $site_sessionname . '\';
-    $https_port = \'443\';
+	$https_port = \'443\';
 	
 	// automatically assign base_path and base_url
-	if($base_path==""||$base_url=="") {
-		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER["PHP_SELF"])));
+	if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'base_url\']) {
+		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER[\'SCRIPT_NAME\'])));
 		if(count($a)>1) array_pop($a);
 		$url = implode("manager",$a); reset($a);
 		$a = explode("manager",str_replace("\\\\","/",dirname(__FILE__)));
@@ -213,6 +213,10 @@ if (@ fwrite($handle, $configString) === FALSE) {
 	$configFileFailed = true;
 }
 @ fclose($handle);
+
+// try to chmod the config file go-rwx (for suexeced php)
+$chmodSuccess = @chmod($filename, 0600);
+
 if ($configFileFailed == true) {
 	echo "<span class=\"notok\">Failed!</span></p>";
 	$errors += 1;
@@ -471,6 +475,10 @@ $sync = new synccache();
 $sync->setCachepath("../assets/cache/");
 $sync->setReport(false);
 $sync->emptyCache(); // first empty the cache
+
+// try to chmod the cache go-rwx (for suexeced php)
+$chmodSuccess = @chmod('../assets/cache/siteCache.idx.php', 0600);
+$chmodSuccess = @chmod('../assets/cache/sitePublishing.idx.php', 0600);
 
 // remove any locks on the manager functions so initial manager login is not blocked
 mysql_query("TRUNCATE TABLE `".$table_prefix."active_users`");

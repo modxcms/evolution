@@ -131,20 +131,37 @@ font-size:14pt;
 			</ul>
 		</div>
 		<div class="qe_level_1"><h2>Version History</h2>
-		<h3>Version 1.4.1</h3>
+					<h3>Version 1.4.2</h3>
 				<ul>
-					<li>Fixed: inconsisten casing in event names. All events params are now in the form &eFormOn... (although the  &eFormOn... will still work)</li>
+					<li>New: In-line validation classes. <a href="eform.htm#classparams">Two new parameters</a> <code>&amp;requiredClass</code> and<code> &amp;invalidClass</code>. You can use these to set classes for fields and their associated labels when they don't validate. Existing classes will be preserved</li>
+				  <li>Updated: <a href="eform.htm#placeholders">Validation messages</a> are now inserted including wrapping elements (set in the language file)</li>
+					<li>New: You can now also set the <code>[+validationmessage+]</code> placeholder outside the form template (eg: in the page template or elsewhere). </li>
+					<li>New: Added debug levels: 0:none, 1:validation rules and configuration, 2:print all arrays 3:show parsed template. Some values are only shown when the form is parsed and vaidated (so not the first time the form is displayed)</li>
+					<li>Updated: Changed the way date values are verified due to differences in php versions (Raymond Irving)</li>
+					<li>Updated: Email character set now follows modx character set (thanks to Gildas)</li>
+					<li>New: Added &amp;cssStyle parameter for adding css styles to the &lt;head&gt; tag of the document.</li>
+					<li>New: Added &amp;jScript parameter for adding javascript to the &lt;head&gt; tag of the document.</li>
+				  <li>New: Added &protectSubmit parameter to protect against multiple submits of similar form data</li>
+					<li>New: Added &submitLimit parameter for setting a time limit in minutes on successive submits of same form</li>
+					<li>Tweak: Now trims the spaces in comma separated sessionVars parameter</li>
+					<li>Some other minor tweaks</li>
+					<li>Version checking: eForm now checks for and reports differences between snippet and eform.inc.php</li>
+				</ul>
+
+			<h3>Version 1.4.1</h3>
+				<ul>
+					<li>Fixed: inconsistent casing in event names. All events params are now in the form &eFormOn... (although the  &eformOn... will still work)</li>
 					<li>Fixed: If subject comes from a form field the value is cleared before merging placeholders</li>
 					<li>Updated: Debug placeholder is now automatically added to form and thankyou template. (It is not auto-added to email message to avoid sending out sensitive info, although you can add the placeholder manually offcourse)</li>
 					<li>Fixed: Missing language file produces fatal error. (Will now generate a debug message if debug is on)</li>	
 					<li>Fixed: Missing 'replyto' in AddAddressToMailer function.</li>
-					<li>Fixed: Erroneous closing slash (/) being added in &lt;option ..&gt> tags</li>
+					<li>Fixed: Erroneous closing slash (/) being added in &lt;option ..&gt tags</li>
 					<li>Fixed: No whitespace before 'selected' and 'checked' attributes</li>
+					<li>New: Extra event parameter <code>&eformOnBeforeFormParse</code> (triggered as soon as templates are loaded)</li>
 					<li>New: Extra event parameter <code>&eFormOnFormValidate</code> (triggered after eForm validation has occurred)</li>
 					<li>New: Extra event parameter <code>&eFormOnBeforeFormMerge</code> (triggered when and before form is displayed)</li>
 					<li>New: Extra event parameter <code>&eFormOnBeforeFormParse</code> (triggered after template(s) are loaded and before they are parsed)</li>
 				</ul>
-
 			
 			<h3>Version 1.4</h3>
 				<ul>

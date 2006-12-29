@@ -15,7 +15,7 @@
 .jot-mod a {float: right;padding: 1px;padding-left: 2px;padding-right: 2px;}
 .jot-mod a:hover {background-color: #666666;color: #666666;}
 .jot-subject {color: #618200;font-weight: bold;font-size: larger;}
-.jot-message {padding: 2px;}
+.jot-message {padding: 2px;overflow: auto;}
 .jot-poster {padding: 0px;text-align: left;font-size: 10px;}
 .jot-nav {padding: 0px;text-align: center;margin: 10px;}
 .jot-list ul {padding: 0px;text-align: left;margin-bottom: 10px;list-style-position: inside;}

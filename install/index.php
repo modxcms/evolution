@@ -470,7 +470,7 @@
 		}
 		$isWriteable = is_writable("../manager/includes/config.inc.php");
 		if(!$isWriteable) {
-			echo "<span class=\"notok\">Failed!</span></p><p><strong>For new Linux/Unix installs, please create a blank file named <span class=\"mono\">config.inc.php</span> in the <span class=\"mono\">manager/includes/</span> directory with file permissions set to 777.</strong></p>";
+			echo "<span class=\"notok\">Failed!</span></p><p><strong>For new Linux/Unix installs, please create a blank file named <span class=\"mono\">config.inc.php</span> in the <span class=\"mono\">manager/includes/</span> directory with file permissions set to 0666.</strong></p>";
 			$errors += 1;
 		} else {
 			echo "<span class=\"ok\">OK!</span></p>";

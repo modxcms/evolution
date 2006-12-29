@@ -466,6 +466,7 @@ class CJot {
 		global $modx;
 		
 		// Comment
+		$id = intval($id);
 		$pObj = $this->provider;
 		$formMode = $this->config["mode"]["passive"];	
 		$saveComment = 1;
@@ -482,7 +483,9 @@ class CJot {
 					$this->form['save'] = 0;
 					$saveComment = 0;
 				}
-			}
+			} else {
+			$pObj->Comment(0); // fix for update/new problem
+		}
 	
 		// If this is not a postback or a false edit then return.
 		if (!$this->isPostback || !$saveComment) return;

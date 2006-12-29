@@ -140,22 +140,23 @@ font-size:14pt;
 		<div class="qe_level_1"><a name="whatsnew"></a>
 <h2>What's New</h2>
 			<div class="qe_level_2">
-			<h3>Version 1.4.1</h3>
+			<h3>Version 1.4.2</h3>
 				<ul>
-					<li>Fixed: inconsistent casing in event names. All events params are now in the form &eFormOn... (although the  &eformOn... will still work)</li>
-					<li>Fixed: If subject comes from a form field the value is cleared before merging placeholders</li>
-					<li>Updated: Debug placeholder is now automatically added to form and thankyou template. (It is not auto-added to email message to avoid sending out sensitive info, although you can add the placeholder manually offcourse)</li>
-					<li>Fixed: Missing language file produces fatal error. (Will now generate a debug message if debug is on)</li>	
-					<li>Fixed: Missing 'replyto' in AddAddressToMailer function.</li>
-					<li>Fixed: Erroneous closing slash (/) being added in &lt;option ..&gt> tags</li>
-					<li>Fixed: No whitespace before 'selected' and 'checked' attributes</li>
-					<li>New: Extra event parameter <code>&eformOnBeforeFormParse</code> (triggered as soon as templates are loaded)</li>
-					<li>New: Extra event parameter <code>&eFormOnFormValidate</code> (triggered after eForm validation has occurred)</li>
-					<li>New: Extra event parameter <code>&eFormOnBeforeFormMerge</code> (triggered when and before form is displayed)</li>
-					<li>New: Extra event parameter <code>&eFormOnBeforeFormParse</code> (triggered after template(s) are loaded and before they are parsed)</li>
+					<li>New: In-line validation classes. <a href="eform.htm#classparams">Two new parameters</a> <code>&amp;requiredClass</code> and<code> &amp;invalidClass</code>. You can use these to set classes for fields and their associated labels when they don't validate. Existing classes will be preserved</li>
+				  <li>Updated: <a href="eform.htm#placeholders">Validation messages</a> are now inserted including wrapping elements (set in the language file)</li>
+					<li>New: You can now also set the <code>[+validationmessage+]</code> placeholder outside the form template (eg: in the page template or elsewhere). </li>
+					<li>New: Added debug levels: 0:none, 1:validation rules and configuration, 2:print all arrays 3:show parsed template. Some values are only shown when the form is parsed and vaidated (so not the first time the form is displayed)</li>
+					<li>Updated: Changed the way date values are verified due to differences in php versions (Raymond Irving)</li>
+					<li>Updated: Email character set now follows modx character set (thanks to Gildas)</li>
+					<li>New: Added &amp;cssStyle parameter for adding css styles to the &lt;head&gt; tag of the document.</li>
+					<li>New: Added &amp;jScript parameter for adding javascript to the &lt;head&gt; tag of the document.</li>
+				  <li>New: Added &protectSubmit parameter to protect against multiple submits of similar form data</li>
+					<li>New: Added &submitLimit parameter for setting a time limit in minutes on successive submits of same form</li>
+					<li>Tweak: Now trims the spaces in comma separated sessionVars parameter</li>
+					<li>Some other minor tweaks</li>
+					<li>Version checking: eForm now checks for and reports differences between snippet and eform.inc.php</li>
 				</ul>
-			
-			<p><br />You can see a more extensive <a href="eform_history.htm">version history here</a>. </p>
+		<p><br />You can see a more extensive <a href="eform_history.htm">version history here</a>. </p>
 			</div>
 		</div>
 		<div class="qe_level_1"><a name="installation"></a>
@@ -191,7 +192,7 @@ font-size:14pt;
 	If omitted the site settings email address will be used</li>
 				<li><strong>&amp;from</strong> (Optional)<br/>Sets the email address to appear in the From section of the email</li>
 				<li><strong>&amp;fromname</strong> (Optional)<br/>Sets the name of the sender in the From section of the email</li>
-				<li><strong>&amp;replyto</strong> <span class="new">(new)</span> (Optional)<br/>Email address or fieldname containing email address
+				<li><strong>&amp;replyto</strong>  (Optional)<br/>Email address or fieldname containing email address
 	Sets the email address to appear in the ReplyTo section of the email</li>
 				<li><strong>&amp;sendirect</strong> (Optional)<br/>This will use the form field called email to supply the
 	email address to send the message to.
@@ -218,7 +219,7 @@ font-size:14pt;
 				<li><strong>&amp;mobile</strong> (Optional)<br/>Mobile email address. This email is used to send a short notification message to a mobile device.</li>
 				<li><strong>&amp;mobiletext</strong> (Optional)<br/>Text message to send to mobile device Can include [.form fields.]. E.g. Order for
 			<code>[.firstname.]</code></li>
-				<li><strong>&amp;thankyou</strong> <span class="new">(new)</span> (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as a thank you message displayed to the user after a successful submit. 
+				<li><strong>&amp;thankyou</strong>  (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as a thank you message displayed to the user after a successful submit. 
 	Tags: same as for
 			<code>&amp;tpl</code></li>
 				<li><strong>&amp;gotoid</strong> (Optional)<br/>document id to load after sending message. See also
@@ -236,24 +237,48 @@ font-size:14pt;
 	- note: eForm will send the auto-respond message to the email address specified
 	inside the [email] form field.</li>
 				<li><strong>&amp;allowhtml</strong> (Optional)<br/>Set to 1 to allow user to enter html tags. Defaults to 0</li>
-				<li><strong>&amp;language</strong> <span class="new">(new)</span> (Optional)<br/>Support for multilingual validation and error messages. Uses same language
+				<li><strong>&amp;language</strong>  (Optional)<br/>Support for multilingual validation and error messages. Uses same language
 	names as MODx.</li>
 				<li><strong>&amp;vericode</strong> (Optional)<br/>Enables verification code. The template contain a vericode
 	field and a [+vericode+] placeholder</li>
-				<li><strong>&amp;debug</strong> <span class="new">(new)</span> (Optional)<br/>Set to 1 for extended error messages in form validation. Mostly for debugging
+				<li><strong>&amp;debug</strong>  (Optional)<br/>Set to 1 for extended error messages in form validation. Mostly for debugging
 	#LIST and #SELECT validation.</li>
-				<li><strong>&amp;sendAsHtml</strong> <span class="new">(new)</span> (optional)<br/>Force email messages to be in Html.
+				<li><strong>&amp;sendAsHtml</strong>  (optional)<br/>Force email messages to be in Html.
 				Possible values: &amp;sendAsHTML=`1`- send all messages as html, &amp;sendAsHTML=`report,autotext,mobile`- send specified messages as html</li>
-				<li><strong>&amp;sendAsText</strong> <span class="new">(new)</span> (optional)<br/>Force email message to be in plain text.	
+				<li><strong>&amp;sendAsText</strong>  (optional)<br/>Force email message to be in plain text.	
 				Possible values: &amp;sendAsText=`1`- send all messages as text only, &amp;sendAsText=`report,autotext,mobile`- send specified messages as text only</li>
-				<li><strong>&amp;sessionVars</strong> <span class="new">(new)</span> (optional)<br/>Comma delimited list of $_SESSION variable names.  These will be added to the list of field values before the form is displayed and can for instance be used to populate (hidden) fields.
+				<li><strong>&amp;sessionVars</strong>  (optional)<br/>Comma delimited list of $_SESSION variable names.  These will be added to the list of field values before the form is displayed and can for instance be used to populate (hidden) fields.
 				When using this parameter make sure you are not disclosing sensitive information from the session!! (a hidden field is not all that hidden afterall)<br/>As eForm does not parse the complete form 1st time around you will have to have the same placeholders in the form template so the form can receive the values. So for example:
 			<code>[!eForm &amp;sessionVars=`jobID` ... !]</code>and
 			<code>&lt;input type="hidden" value="[+jobID+]" /&gt;</code></li>
-				<li><strong>&amp;postOverides</strong> <span class="new">(new)</span> (optional)<br/>Used in combination of
+				<li><strong>&amp;postOverides</strong>  (optional)<br/>Used in combination of
 			<code>&amp;sessionVars</code>. Normally session variables will overide posted values. By setting &amp;postOverides=`1` posted values will take precedence.</li>
-				<li><strong>&amp;reportAbuse</strong> <span class="new">(new)</span> (optional)<br/>Setting &amp;reportAbuse=`1` will send an email to the system specified email address if email injection attempts are noticed by eForm. (Use sparingly...)</li>
-				<li><strong>&amp;format</strong> (Deprecated)</li>
+				<li><strong>&amp;reportAbuse</strong>  (optional)<br/>Setting &amp;reportAbuse=`1` will send an email to the system specified email address if email injection attempts are noticed by eForm. (Use sparingly...)</li>
+				<li><a name="142new" id="142new"></a><strong>&amp;cssStyle</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />
+				Adds a style declaration to the &lt;head&gt; section of the page when either the form is displayed or the thank you page is displayed (only if the <code>&thankyou</code> parameter is set).  Values can be a document id (numeric), chunk name or (relative or absolute) url to css file. Multiple values can be separated by a comma (in fact all three values can be mixed).<br />examples:<br /><code>[!eForm &amp;cssStyle=`assets/site/forms.css,chunkName` ... !]</code><br />
+<code>[!eForm &amp;cssStyle=`chunkName` ... !]</code><br />
+<code>[!eForm &amp;cssStyle=`http://mysite.com/assets/styles/forms.css` ... !]</code><br />
+Chunks (and documents if a doc id is given) can return a values in the form of:
+<ol>
+	<li>an inline style block, eg. <code>&lt;style type=&quot;text/css&quot;&gt;/*some styles*/&lt;/style&gt;</code></li>
+	<li>a link to stylesheet(s), eg. <code>&lt;link href=&quot;assets/site/forms.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;&gt;</code></li>
+	<li>a comma separated list of urls, eg. <code>assets/site/forms.css,assets/site/more.css,assets/site/gone_overboard.css</code></li>
+</ol>
+				</li>
+				<li><strong>&amp;jScript</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />Similar to <code>&amp;cssStyle</code> but for adding javascript to the &lt;head&gt; of the page document. Currently Javascript is only added when the form is displayed. </li>
+				<li><strong>&amp;protectSubmit</strong> <span class="new">(new in 1.4.2)</span>(optional) defaults to 1 (on)<br />
+				Protects against submitting a form multiple times with the same data. Submitting the form becomes disabled after the first successful submit while the value from key form fields remains the same. This is achieved by setting (and comparing) a session variable with an md5 hash from these key fields. Which fields are compared depends on the value of <code>&amp;protectSubmit</code>.Possible values are <strong>0</strong> (off), <strong>1</strong> (all 'required' fields are used) or you can set a comma separated list of field names. To ensure that the session variable works separatedly for different forms the session variable name is based on <code>&amp;formid</code> ({formid}_hash).
+				</li>
+				<li><strong>&amp;submitLimit</strong> <span class="new">(new in 1.4.2)</span> (optional) off (0) by default<br />
+				Enforces a time limit (in minutes) between form submits. After the form has been submitted successfully it can not be submitted again for <code>&amp;submitLimit</code> minutes irrespective of the form data. When used in combination with <code>&amp;protectSubmit</code> <code>submitLimit</code> takes precedence, meaning that when the time limit has expired the form can be submitted again regardless of the setting of <code>&amp;protectSubmit</code> (it will unset the session variable). As with <code>&amp;protectSubmit</code> this parameter uses a session variable with a variable name based on &amp;formid. 
+				</li>
+			<li><a name="classparams"></a><strong>&amp;requiredClass</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />
+			Css class name. Will add class in (empty) required form fields on validation. Existing classes will be preserved.<br />
+			<em>If you have already set a class for a field or label and you get unexpected css results check the order in which you have declared the classes. The <code>&requiredClass</code> is added to the beginning of any classes already set.</em>
+			</li>
+			<li><strong>&amp;invalidClass</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />
+			Css class name. Will add class in invalid form fields on validation. Existing classes will be preserved.
+			</li>
 			</ul>
 			<a name="events"></a>
 			<h4>PHP Event Functions:</h4>
@@ -262,14 +287,14 @@ font-size:14pt;
 				<li><strong>&amp;eFormOnBeforeMailSent</strong> (optional)<br/>Expects a function name. This function will be called after the form has been validated and before the report and thankyou templates have been parsed and any emails have been sent out.
 				See <a href="eform_example_events.htm">this example</a> on how to use the events.</li>
 				<li><strong>&amp;eFormOnMailSent</strong> (optional)<br/>Expects a function name. This function is called after all templates have been parsed and any emails were sent.</li>
-				<li><strong>&amp;eformOnBeforeFormParse</strong> <span class="new">(new)</span> (optional)<br/>
+				<li><strong>&amp;eformOnBeforeFormParse</strong>  (optional)<br/>
 				Expects a function name. The function is called after the templates are loaded and the formid is found valid. The function should accomodate the following parameter: &amp;$templates - (as reference) an associative array of loaded templates with indexes 'tpl', 'report','thankyou' &amp; 'autotext'. Be aware that the latter three will only have a value if the form has been posted! 
 </li>
-				<li><strong>&amp;eFormOnBeforeFormMerge</strong> <span class="new">(new)</span> (optional)<br/>Expects a function name. This function will <strong>only</strong> be
+				<li><strong>&amp;eFormOnBeforeFormMerge</strong>  (optional)<br/>Expects a function name. This function will <strong>only</strong> be
         	called whenever the form is displayed and just before all placeholders
         	are merged. The function should accomodate the following parameter: &amp;$fields
         	- (as reference) an associative array of field and placeholder values.</li>
-				<li><strong>&amp;eFormOnValidate</strong> <span class="new">(new)</span> (optional)<br/>Expects a function name. This function will be called directly after
+				<li><strong>&amp;eFormOnValidate</strong>  (optional)<br/>Expects a function name. This function will be called directly after
         		the form validation has taken place. You can use this event to add
         		your own extra validation logic. The function should accomodate the
         		following parameters
@@ -300,7 +325,7 @@ font-size:14pt;
 		<div class="qe_level_2">
 		<p>For all normal form fields eForm automatically inserts appropriate placeholders. However there are a few that you may need to add manually:</p>
 		<ul class="qe_param_list">
-		<li><code>[+validationmessage+]</code> - This should be somewhere in your form template. It is used for any validation error messages (suprise, suprise...)</li>
+		<li><code>[+validationmessage+]</code> - This should be somewhere in your form template or document. It is used for any validation error messages. From 1.4.2 the way the placehloder is entered has changed. Firstly you no longer need to place it in the form template. You can now place it anywhere in your document (or even in the global page template). Secondly you don't need to place any hml tags around the placeholder (in fact you probably should not). Any html markup is now included in the <code>$_lang['ef_validation_message']</code> variable in the eform language files (which you can change as required).</li>
 		<li><code>[+vericode+]</code> &amp; <code>[+verimageurl+]</code> - These are needed in the form if you want to use the CAPTHCA code. See the <a href="eform_examples.htm">Examples</a> on how to use these.</li>
 		<li><code>[+postdate+]</code> - This placeholder can be used in reports and in the thankyou template and will be filled with the current date and time (date on the server that is)</li>
 		<li><code>[+debug+]</code> - From version 1.4.1 this is automatically placed (if debug is on) in the form and thankyou template. It is not automatically placed in the report template! This is to avoid any server side information to accidentally be sent out via email. If you need debug info in test emails you will have to add this placeholder in the report template yourself.</li>

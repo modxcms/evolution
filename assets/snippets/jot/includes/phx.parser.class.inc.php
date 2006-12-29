@@ -2,9 +2,9 @@
 /*####
 #
 #	Name: PHx (Placeholders Xtended)
-#	Version: 1.5.0
+#	Version: 1.4.4
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Nov 07, 2006 01:25 CET
+#	Date: Oct 29, 2006 11:25 CET
 #
 ####*/
 
@@ -17,7 +17,7 @@ class PHxParser {
 	function PHxParser($debug=0) {
 		global $modx;
 		$this->name = "PHx";
-		$this->version = "1.5.0";
+		$this->version = "1.4.4";
 		$this->user["mgrid"] = intval($_SESSION['mgrInternalKey']);
 		$this->user["usrid"] = intval($modx->getLoginUserID());
 		$this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
@@ -50,18 +50,20 @@ class PHxParser {
 	
 	function ParseValues($template='',$pass=50) {
 		global $modx;
-		
+    
 		// MODx Chunks
 		$template = $modx->mergeChunkContent($template);
-	
+		
+		// MODx Snippets
+    $template = $modx->evalSnippets($template);
+		
 		// PHx / MODx Tags
-		if ( preg_match_all('~\[(\[|\!|\+|\*|\()([^:\+\[\]]+)([^\[\]]*?)(\1|\)|\])\]~s',$template, $matches) && $pass ) {
-
+		if ( preg_match_all('~\[(\+|\*|\()([^:\+\[\]]+)([^\[]*?)(\1|\))\]~s',$template, $matches) && $pass ) {
+			
 			//$matches[0] // Complete string that's need to be replaced
 			//$matches[1] // Type
 			//$matches[2] // The placeholder(s)
 			//$matches[3] // The modifiers
-			//$matches[4] // Type (end character)
 			
 			// Debugging
 			if ($this->showDebug) {
@@ -76,36 +78,24 @@ class PHxParser {
 			$var_search = array();
 			$var_replace = array();
 			for($i=0; $i<$count; $i++) {
-				$replace = NULL;
 				$match = $matches[0][$i];
 				$type = $matches[1][$i];
-				$type_end = $matches[4][$i];
 				$input = $matches[2][$i];
 				$modifiers = $matches[3][$i];
 				$this->Log("Parsing variable '" . $input . "' of type '" . $type . "'");
 				$var_search[] = $match;
 					switch($type) {
-						// Document / Template Variable eXtended
-						case "*":
+						case "*": // Document / Template Variable
 							$input = $modx->mergeDocumentContent("[*".$input."*]");
-							$replace = $this->Filter($input,$modifiers);
 							break;
-						// MODx Setting eXtended
-						case "(": 
+						case "(": // MODx Setting
 							$input = $modx->mergeSettingsContent("[(".$input.")]");
-							$replace = $this->Filter($input,$modifiers);
 							break;
-						// MODx Snippet Default (can't be eXtended)
-						case "[": case "!": 
-							$replace = $modx->evalSnippets($match);
-							break;
-						// MODx Placeholder eXtended
-						default:  
+						default:  // Placeholder / PHx
 							$input = $this->getPHxVariable($input);
-							$replace = $this->Filter($input,$modifiers);
    						break;
 					}
-					$var_replace[] = $replace;
+					$var_replace[] = $this->Filter($input,$modifiers);
 			 }
 			 $template = $this->ParseValues(str_replace($var_search, $var_replace, $template),$pass-1);
 		}

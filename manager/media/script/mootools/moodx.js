@@ -304,18 +304,18 @@ var MooFloater = new Class({
 				this.container.setStyle('right', this.options.offsetx+'px');
 				break;
 		}
-		this.floater = this.startFloat.pass([this.options,this.container,this.floater]).delay(100, window);
-		window.addEvent('scroll', this.onScrollHandler.pass([this.options,this.container,this.floater]));
-		window.addEvent('resize', this.onScrollHandler.pass([this.options,this.container,this.floater]));
+		this.floater = this.startFloat.bind(this).delay(100, window);
+		window.addEvent('scroll', this.onScrollHandler.bind(this));
+		window.addEvent('resize', this.onScrollHandler.bind(this));
 	},
 
 	onScrollHandler: function(){
 		if (this.floater == null){
-			this.floater = this.startFloat.pass([this.options,this.container,this.floater]).delay(100, window);
+			this.floater = this.startFloat.bind(this).delay(100, window);
 		}else{
 			this.floater = $clear(this.floater);
 			this.floater = null;
-			this.floater = this.startFloat.pass([this.options,this.container,this.floater]).delay(100, window);
+			this.floater = this.startFloat.bind(this).delay(100, window);
 		}
 	},
 	

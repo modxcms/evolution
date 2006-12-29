@@ -274,7 +274,7 @@ function setParent(pId, pName) {
             document.mutate.parent.value=pId;
             var elm = document.getElementById('parentName');
             if(elm) {
-            	elm.innerHTML = (pId + " (" + pName + ")");
+                elm.innerHTML = (pId + " (" + pName + ")");
             }
         }
     }
@@ -324,10 +324,10 @@ var curTemplateIndex = 0;
 function storeCurTemplate(){
     var dropTemplate = document.getElementById('template');
     if (dropTemplate){ 
-    	for (var i=0; i<dropTemplate.length; i++){
-       		if (dropTemplate[i].selected){
-            	curTemplate = dropTemplate[i].value;
-            	curTemplateIndex = i;
+        for (var i=0; i<dropTemplate.length; i++){
+            if (dropTemplate[i].selected){
+                curTemplate = dropTemplate[i].value;
+                curTemplateIndex = i;
             }
         }
     }
@@ -335,10 +335,10 @@ function storeCurTemplate(){
 function templateWarning(){
     var dropTemplate = document.getElementById('template');
     if (dropTemplate){ 
-    	for (var i=0; i<dropTemplate.length; i++){
-        	if (dropTemplate[i].selected){
-            	newTemplate = dropTemplate[i].value;
-            	break;
+        for (var i=0; i<dropTemplate.length; i++){
+            if (dropTemplate[i].selected){
+                newTemplate = dropTemplate[i].value;
+                break;
             }
         }
     }
@@ -360,21 +360,21 @@ function templateWarning(){
 function changeRTE(){
     var whichEditor = document.getElementById('which_editor');
     if (whichEditor){
-    	for (var i=0; i<whichEditor.length; i++){
-        	if (whichEditor[i].selected){
-            	newEditor = whichEditor[i].value;
-            	break;
+        for (var i=0; i<whichEditor.length; i++){
+            if (whichEditor[i].selected){
+                newEditor = whichEditor[i].value;
+                break;
             }
         }
     }
     var dropTemplate = document.getElementById('template');
     if (dropTemplate){ 
-    	for (var i=0; i<dropTemplate.length; i++){
-        	if (dropTemplate[i].selected){
-            	newTemplate = dropTemplate[i].value;
-            	break;
-           	}
-       	 }  		
+        for (var i=0; i<dropTemplate.length; i++){
+            if (dropTemplate[i].selected){
+                newTemplate = dropTemplate[i].value;
+                break;
+            }
+         }          
     }
 
     documentDirty=false;
@@ -400,7 +400,7 @@ function showParameters(ctrl) {
     currentParams = {}; // reset;
 
     if (ctrl) {
-    	f = ctrl.form;
+        f = ctrl.form;
     } else {
         f= document.forms['mutate'];
         ctrl = f.snippetlist;
@@ -548,7 +548,7 @@ if (is_array($evtOut))
     <tr>
         <td><span class="comment">&nbsp;<?php echo $_lang["after_saving"];?>:</span></td>
         <?php if ($modx->hasPermission('new_document')) { ?>
-        	<td><input name="stay" id="stay1" type="radio" class="radio" value="1" <?php echo $_REQUEST['stay']=='1' ? "checked='checked'":'' ?> /></td><td><label for="stay1" class="comment"><?php echo $_lang['stay_new']; ?></label></td>
+            <td><input name="stay" id="stay1" type="radio" class="radio" value="1" <?php echo $_REQUEST['stay']=='1' ? "checked='checked'":'' ?> /></td><td><label for="stay1" class="comment"><?php echo $_lang['stay_new']; ?></label></td>
         <?php } ?>
         <td><input name="stay" id="stay2" type="radio" class="radio" value="2" <?php echo $_REQUEST['stay']=='2' ? "checked='checked'":'' ?> /></td><td><label for="stay2" class="comment"><?php echo $_lang['stay']; ?></label></td>
         <td><input name="stay" id="stay3" type="radio" class="radio" value="" <?php echo $_REQUEST['stay']=='' ? "checked='checked'":'' ?> /></td><td><label for="stay3" class="comment"><?php echo $_lang['close']; ?></label></td>
@@ -820,14 +820,13 @@ for ($i = 0; $i < count($ct); $i++) {
             <input type="hidden" name="contentType" value="text/html" />
             <input type="hidden" name="cacheable" value="0" />
             <input type="hidden" name="syncsite" value="1" />
-            <input type="hidden" name="template" value="0" />
             <input type="hidden" name="richtext" value="0" />
             <input type="hidden" name="type" value="reference" />
             <?php } ?>
             </table>
         </div>
 
-<?php if($modx->hasPermission('edit_doc_metatags') && ($content['type']!="reference" && $_REQUEST['a']!=72)) { ?>
+<?php if($modx->hasPermission('edit_doc_metatags')) { ?>
         <!-- META Keywords -->
 <?php
 
@@ -1011,7 +1010,7 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 <?php } ?>
 
 <!-- Template Variables -->
-<?php if ($content['type'] == "document" || $_REQUEST['a'] == 4) { ?>
+<?php if (($content['type'] == "document" || $_REQUEST['a'] == 4) || ($content['type']=="reference" || $_REQUEST['a']==72)) { ?>
 <div class='sectionHeader'><?php echo $_lang["settings_templvars"]; ?></div>
 <div class="sectionBody tmplvars">
 <?php
@@ -1192,8 +1191,8 @@ if ($content['type'] == "document" || $_REQUEST['a'] == 4) {
         if (is_array($replace_richtexteditor)) {
             // invoke OnRichTextEditorInit event
             $evtOut = $modx->invokeEvent("OnRichTextEditorInit", array (
-                editor => $which_editor,
-                elements => $replace_richtexteditor
+                'editor' => $which_editor,
+                'elements' => $replace_richtexteditor
                                             ));
             if (is_array($evtOut))
                 echo implode("", $evtOut);

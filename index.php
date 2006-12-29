@@ -36,7 +36,7 @@
 	For more information on MODx please visit http://modxcms.com/
 	
 **************************************************************************
-    Originall based on Etomite by Alex Butter
+    Originally based on Etomite by Alex Butter
 **************************************************************************
 */	
 
@@ -58,7 +58,16 @@ $modxtags = array('@<script[^>]*?>.*?</script>@si',
                   '@{{(.*?)}}@si',
                   '@\[\*(.*?)\*\]@si');
 foreach($_POST as $key => $value) {
-  $_POST[$key] = preg_replace($modxtags,"", $value);
+	if (!is_array($value)) {
+  		$_POST[$key] = preg_replace($modxtags,"", $value);
+	} else {
+  		if (count($value) > 0) {
+  			foreach ($value as $k => $v) {
+  				$value[$k] = preg_replace($modxtags,"", $v);
+  			}
+  			$_POST[$key] =$value;
+  		}
+  	}
 }
 foreach($_GET as $key => $value) {
   $_GET[$key] = preg_replace($modxtags,"", $value);

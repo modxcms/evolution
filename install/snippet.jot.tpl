@@ -1,7 +1,7 @@
 /*####
 #
 #	Name: Jot
-#	Version: 1.0
+#	Version: 1.0.1
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
 #	Date: Nov 3, 2006 23:30 CET
 #
