@@ -10,18 +10,18 @@ $id=$_GET['id'];
 
 // duplicate Plugin
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.".$table_prefix."site_plugins (name, description, disabled, moduleguid, plugincode, properties) 
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name, description, disabled, moduleguid, plugincode, properties) 
 			SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, moduleguid, plugincode, properties 
-			FROM $dbase.".$table_prefix."site_plugins WHERE id=$id;";
+			FROM $dbase.`".$table_prefix."site_plugins` WHERE id=$id;";
 	$rs = mysql_query($sql);
 }
 else {
 	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, moduleguid, plugincode, properties 
-			FROM $dbase.".$table_prefix."site_plugins WHERE id=$id;";
+			FROM $dbase.`".$table_prefix."site_plugins` WHERE id=$id;";
 	$rs = mysql_query($sql);
 	if($rs) {
 		$row = mysql_fetch_assoc($rs);
-		$sql ="INSERT INTO $dbase.".$table_prefix."site_plugins 
+		$sql ="INSERT INTO $dbase.`".$table_prefix."site_plugins` 
 				(name, description, disabled, moduleguid, plugincode, properties) VALUES 
 				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', '".$row['disabled']."', '".mysql_escape_string($row['moduleguid'])."', '".mysql_escape_string($row['plugincode'])."', '".mysql_escape_string($row['properties'])."');";
 		$rs = mysql_query($sql);
@@ -35,17 +35,17 @@ else {
 
 // duplicate Plugin Event Listeners
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events (pluginid,evtid,priority)
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugin_events` (pluginid,evtid,priority)
 			SELECT $newid, evtid, priority
-			FROM $dbase.".$table_prefix."site_plugin_events WHERE pluginid=$id;";
+			FROM $dbase.`".$table_prefix."site_plugin_events` WHERE pluginid=$id;";
 	$rs = mysql_query($sql);
 }
 else {
 	$sql = "SELECT $newid as 'newid', evtid, priority
-			FROM $dbase.".$table_prefix."site_plugin_events WHERE pluginid=$id;";
+			FROM $dbase.`".$table_prefix."site_plugin_events` WHERE pluginid=$id;";
 	$ds = mysql_query($sql);
 	while($row = mysql_fetch_assoc($ds)) {
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events 
+		$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugin_events` 
 				(pluginid, evtid, priority) VALUES
 				('".$row['newid']."', '".$row['evtid']."', '".$row['priority']."');";
 		$rs = mysql_query($sql);

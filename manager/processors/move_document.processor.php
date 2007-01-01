@@ -21,7 +21,7 @@ if($_REQUEST['new_parent']=="") {
 		$e->dumpError();
 }
 
-$sql = "SELECT parent FROM $dbase.".$table_prefix."site_content WHERE id=".$_REQUEST['id'].";";
+$sql = "SELECT parent FROM $dbase.`".$table_prefix."site_content` WHERE id=".$_REQUEST['id'].";";
 $rs = mysql_query($sql);
 if(!$rs){
 	echo "An error occured while attempting to find the document's current parent.";
@@ -54,20 +54,20 @@ $children= allChildren($_REQUEST['id']);
 
 if (!array_search($newParentID, $children)) {
 
-	$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=1 WHERE id=".$_REQUEST['new_parent'].";";
+	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=1 WHERE id=".$_REQUEST['new_parent'].";";
 	$rs = mysql_query($sql);
 	if(!$rs){
 		echo "An error occured while attempting to change the new parent to a folder.";
 	}
 	
-	$sql = "UPDATE $dbase.".$table_prefix."site_content SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
+	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
 	$rs = mysql_query($sql);
 	if(!$rs){
 		echo "An error occured while attempting to move the document to the new parent.";
 	}
 	
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
-	$sql = "SELECT count(*) FROM $dbase.".$table_prefix."site_content WHERE parent=$oldparent;";
+	$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=$oldparent;";
 	$rs = mysql_query($sql);
 	if(!$rs){
 		echo "An error occured while attempting to find the old parents' children.";
@@ -76,7 +76,7 @@ if (!array_search($newParentID, $children)) {
 	$limit = $row['count(*)'];
 	
 	if(!$limit>0) {
-		$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=0 WHERE id=$oldparent;";
+		$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=0 WHERE id=$oldparent;";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "An error occured while attempting to change the old parent to a regular document.";

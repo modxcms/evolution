@@ -74,7 +74,7 @@ class logHandler{
 			}
 		}
 		
-		$sql = "INSERT INTO $dbase.".$table_prefix."manager_log(timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$this->internalKey."', '".$this->username."'";
+		$sql = "INSERT INTO $dbase.`".$table_prefix."manager_log` (timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$this->internalKey."', '".$this->username."'";
 		$sql .= ", '".$this->action."', '".$this->itemId."', '".$this->itemName."', '".$this->msg."')"; 
 		
 		if(!$rs=$modx->db->query($sql)) {

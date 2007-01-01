@@ -10,7 +10,7 @@ if(!$modx->hasPermission('delete_web_user')) {
 $id=intval($_GET['id']);
 
 // get user name
-$sql = "SELECT * FROM $dbase.".$table_prefix."web_users WHERE $dbase.".$table_prefix."web_users.id='".$id."' LIMIT 1;";
+$sql = "SELECT * FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id='".$id."' LIMIT 1;";
 $rs = mysql_query($sql);
 if($rs) {
 	$row = mysql_fetch_assoc($rs);
@@ -25,21 +25,21 @@ $modx->invokeEvent("OnBeforeWUsrFormDelete",
 					));
 						
 // delete the user.
-$sql = "DELETE FROM $dbase.".$table_prefix."web_users WHERE $dbase.".$table_prefix."web_users.id=".$id.";";
+$sql = "DELETE FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id=".$id.";";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the web user...";
 	exit;
 } 
 // delete user groups
-$sql = "DELETE FROM $dbase.".$table_prefix."web_groups WHERE $dbase.".$table_prefix."web_groups.webuser=".$id.";";
+$sql = "DELETE FROM $dbase.`".$table_prefix."web_groups` WHERE $dbase.`".$table_prefix."web_groups`.webuser=".$id.";";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the web user's access permissions...";
 	exit;
 } 
 // delete the attributes
-$sql = "DELETE FROM $dbase.".$table_prefix."web_user_attributes WHERE $dbase.".$table_prefix."web_user_attributes.internalKey=".$id.";";
+$sql = "DELETE FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey=".$id.";";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the web user attributes...";

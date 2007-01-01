@@ -16,7 +16,7 @@ if($id==$modx->getLoginUserID()) {
 }
 
 // get user name
-$sql = "SELECT * FROM $dbase.".$table_prefix."manager_users WHERE $dbase.".$table_prefix."manager_users.id='".$id."' LIMIT 1;";
+$sql = "SELECT * FROM $dbase.`".$table_prefix."manager_users` WHERE $dbase.`".$table_prefix."manager_users`.id='".$id."' LIMIT 1;";
 $rs = mysql_query($sql);
 if($rs) {
 	$row = mysql_fetch_assoc($rs);
@@ -30,14 +30,14 @@ $modx->invokeEvent("OnBeforeUserFormDelete",
 						));
 
 //ok, delete the user.
-$sql = "DELETE FROM $dbase.".$table_prefix."manager_users WHERE $dbase.".$table_prefix."manager_users.id=".$id.";";
+$sql = "DELETE FROM $dbase.`".$table_prefix."manager_users` WHERE $dbase.`".$table_prefix."manager_users`.id=".$id.";";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the user...";
 	exit;
 } 
 
-$sql = "DELETE FROM $dbase.".$table_prefix."member_groups WHERE $dbase.".$table_prefix."member_groups.member=".$id.";";
+$sql = "DELETE FROM $dbase.`".$table_prefix."member_groups` WHERE $dbase.`".$table_prefix."member_groups`.member=".$id.";";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the user's access permissions...";
@@ -45,7 +45,7 @@ if(!$rs) {
 } 
 
 // delete the attributes
-$sql = "DELETE FROM $dbase.".$table_prefix."user_attributes WHERE $dbase.".$table_prefix."user_attributes.internalKey=".$id.";";
+$sql = "DELETE FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.internalKey=".$id.";";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the user attributes...";

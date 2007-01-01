@@ -3,6 +3,8 @@
 # Created By Raymond Irving 2004
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+defined('IN_PARSER_MODE') or die();
+
 # load tpl
 if(is_numeric($tpl)) $tpl = ($doc=$modx->getDocuments($tpl)) ? $doc['content']:"Document '$tpl' not found.";
 else if($tpl) $tpl = ($chunk=$modx->getChunk($tpl)) ? $chunk:"Chunk '$tpl' not found.";
@@ -103,7 +105,7 @@ if(!isset($_SESSION['webValidated'])){
     $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
     
     if($a!=1) {
-        $sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+        $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
         if(!$rs = $modx->dbQuery($sql)) {
             $output = "error replacing into active users! SQL: ".$sql;
             return;

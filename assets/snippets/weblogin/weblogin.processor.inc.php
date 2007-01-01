@@ -3,11 +3,13 @@
 # Created By Raymond Irving 2004
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+defined('IN_PARSER_MODE') or die();
+
 $dbase = $modx->dbConfig['dbase'];
 $table_prefix = $modx->dbConfig['table_prefix'];
 
 // get the settings from the database
-include_once $modx->config['base_path']."manager/includes/settings.inc.php";
+include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
 
 # process password activation
     if ($isPWDActivate==1){
@@ -15,7 +17,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
         $pwdkey = $_REQUEST['wlk'];
 
         $sql = "SELECT wu.*
-                FROM $dbase.".$table_prefix."web_users wu 
+                FROM $dbase.`".$table_prefix."web_users` wu 
                 WHERE wu.id='".mysql_escape_string($id)."'";                
         $ds = $modx->dbQuery($sql);
         $limit = $modx->recordCount($ds);
@@ -29,13 +31,13 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
             }
             // activate new password
             $newpwd = md5($newpwd);
-            $sql="UPDATE $dbase.".$table_prefix."web_users 
+            $sql="UPDATE $dbase.`".$table_prefix."web_users` 
                   SET password = '".$newpwd."', cachepwd='' 
                   WHERE id=".$row['id'];
             $ds = $modx->dbQuery($sql);
 
             // unblock user by resetting "blockeduntil"
-            $sql="UPDATE $dbase.".$table_prefix."web_user_attributes 
+            $sql="UPDATE $dbase.`".$table_prefix."web_user_attributes` 
                   SET blockeduntil = '0' 
                   WHERE internalKey=".$row['id'];
             $ds2 = $modx->dbQuery($sql);
@@ -75,8 +77,8 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
         $site_name = $modx->config['site_name'];
         // lookup account
         $sql = "SELECT wu.*, wua.fullname 
-                FROM $dbase.".$table_prefix."web_users wu 
-                INNER JOIN $dbase.".$table_prefix."web_user_attributes wua ON wua.internalkey=wu.id 
+                FROM $dbase.`".$table_prefix."web_users` wu 
+                INNER JOIN $dbase.`".$table_prefix."web_user_attributes` wua ON wua.internalkey=wu.id 
                 WHERE wua.email='".mysql_escape_string($email)."'";
                 
         $ds = $modx->dbQuery($sql);
@@ -86,7 +88,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
             $newpwdkey = webLoginGeneratePassword(8); // activation key
             $row = $modx->fetchRow($ds);
             //save new password
-            $sql="UPDATE $dbase.".$table_prefix."web_users 
+            $sql="UPDATE $dbase.`".$table_prefix."web_users` 
                   SET cachepwd='".$newpwd."|".$newpwdkey."' 
                   WHERE id=".$row['id'];
             $modx->dbQuery($sql);
@@ -198,7 +200,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
                                 "rememberme"    => $rememberme
                             ));
 
-    $sql = "SELECT $dbase.".$table_prefix."web_users.*, $dbase.".$table_prefix."web_user_attributes.* FROM $dbase.".$table_prefix."web_users, $dbase.".$table_prefix."web_user_attributes WHERE BINARY $dbase.".$table_prefix."web_users.username = '".$username."' and $dbase.".$table_prefix."web_user_attributes.internalKey=$dbase.".$table_prefix."web_users.id;";
+    $sql = "SELECT $dbase.`".$table_prefix."web_users`.*, $dbase.`".$table_prefix."web_user_attributes`.* FROM $dbase.`".$table_prefix."web_users`, $dbase.`".$table_prefix."web_user_attributes` WHERE BINARY $dbase.`".$table_prefix."web_users`.username = '".$username."' and $dbase.`".$table_prefix."web_user_attributes`.internalKey=$dbase.`".$table_prefix."web_users`.id;";
     $ds = $modx->dbQuery($sql);
     $limit = $modx->db->getRecordCount($ds);
 
@@ -225,7 +227,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
 
     // load user settings
     if($internalKey){
-        $result = $modx->dbQuery("SELECT setting_name, setting_value FROM ".$dbase.".".$table_prefix."web_user_settings WHERE webuser='$internalKey'");
+        $result = $modx->dbQuery("SELECT setting_name, setting_value FROM ".$dbase.".`".$table_prefix."web_user_settings` WHERE webuser='$internalKey'");
         while ($row = $modx->fetchRow($result, 'both')) $modx->config[$row[0]] = $row[1];
     }        
 
@@ -237,7 +239,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
     }
 
     if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) {    // blocked due to number of login errors, but get to try again
-        $sql = "UPDATE $dbase.".$table_prefix."user_attributes SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
+        $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
         $ds = $modx->dbQuery($sql);
     }
 
@@ -310,10 +312,10 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
     if(isset($newloginerror) && $newloginerror==1) {
         $failedlogins += $newloginerror;
         if($failedlogins>=$failed_login_attempts) { //increment the failed login counter, and block!
-            $sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
+            $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
             $ds = $modx->dbQuery($sql);
         } else { //increment the failed login counter
-            $sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount='$failedlogins' where internalKey=$internalKey";
+            $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
             $ds = $modx->dbQuery($sql);
         }
         session_destroy();
@@ -324,7 +326,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
     $currentsessionid = session_id();
 
     if(!isset($_SESSION['webValidated'])) {
-        $sql = "update $dbase.".$table_prefix."web_user_attributes SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
+        $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
         $ds = $modx->dbQuery($sql);
     }
 
@@ -342,8 +344,8 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
 
     // get user's document groups
     $dg='';$i=0;
-    $tblug = $dbase.".".$table_prefix."web_groups";
-    $tbluga = $dbase.".".$table_prefix."webgroup_access";
+    $tblug = $dbase.".`".$table_prefix."web_groups`";
+    $tbluga = $dbase.".`".$table_prefix."webgroup_access`";
     $sql = "SELECT uga.documentgroup
             FROM $tblug ug
             INNER JOIN $tbluga uga ON uga.webgroup=ug.webgroup
@@ -380,7 +382,7 @@ include_once $modx->config['base_path']."manager/includes/settings.inc.php";
         $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
         if($a!=1) {
             // web users are stored with negative id
-            $sql = "REPLACE INTO $dbase.".$table_prefix."active_users(internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+            $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
             if(!$ds = $modx->dbQuery($sql)) {
                 $output = "error replacing into active users! SQL: ".$sql;
                 return;

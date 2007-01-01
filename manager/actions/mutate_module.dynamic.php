@@ -38,7 +38,7 @@ if(isset($_REQUEST['id'])) {
 
 
 // check to see the  editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=108 AND $dbase.".$table_prefix."active_users.id=$id";
+$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=108 AND $dbase.`".$table_prefix."active_users`.id=$id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {

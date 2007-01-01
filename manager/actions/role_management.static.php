@@ -22,7 +22,7 @@ $sqlQuery = mysql_escape_string($query);
 <ul>
 <?php
 
-$sql = "select name, id, description from $dbase.".$table_prefix."user_roles order by name";
+$sql = "select name, id, description from $dbase.`".$table_prefix."user_roles` order by name";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1){

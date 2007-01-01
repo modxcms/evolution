@@ -17,7 +17,7 @@ function connectForAjax() {
     global $dbase;
     global $table_prefix;
     $database = str_replace("`","",$dbase);
-    $db = mysql_connect($database_server, $database_user, $database_password, true) or die("Cannot connect to database (connectForAjax)");
+    $db = mysql_connect($database_server, $database_user, $database_password) or die("Cannot connect to database (connectForAjax)");
     $selected = mysql_select_db($database, $db) or die ("Cannot select database (connectForAjax)");
     return $table_prefix;
 }
@@ -69,10 +69,10 @@ function initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$us
     // get all the snippet names
     if ($ajaxSearch) {
         $tbl = $table_prefix . "site_snippets";
-        $snippetSql = "SELECT $tbl.name FROM $tbl;";
+        $snippetSql = "SELECT `$tbl`.name FROM `$tbl`;";
         $snippetRs = mysql_query($snippetSql) or die ("Cannot query the database (initSearchString)");
     } else {
-        $tbl = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_snippets";
+        $tbl = $modx->dbConfig['dbase'] . ".`" . $modx->dbConfig['table_prefix'] . "site_snippets`";
         $snippetSql = "SELECT $tbl.name FROM $tbl;";
         $snippetRs = $modx->dbQuery($snippetSql);
         $snippetCount = $modx->recordCount($snippetRs);
@@ -112,6 +112,8 @@ function initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$us
 }
 
 function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
+    $searchString = mysql_real_escape_string($searchString); // (netnoise)
+
     if ($ajaxSearch) {
       $table_prefix = connectForAjax();
     } else {
@@ -119,11 +121,11 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
     }
     $search = explode(" ", $searchString);
     if ($ajaxSearch) {
-        $tbl_sc = $table_prefix . "site_content";
-        $tbl_dg = $table_prefix . "document_groups";
+        $tbl_sc = "`{$table_prefix}site_content`";
+        $tbl_dg = "`{$table_prefix}document_groups`";
     } else {
-        $tbl_sc = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_content";
-        $tbl_dg = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "document_groups";
+        $tbl_sc = $modx->dbConfig['dbase'] . ".`" . $modx->dbConfig['table_prefix'] . "site_content`";
+        $tbl_dg = $modx->dbConfig['dbase'] . ".`" . $modx->dbConfig['table_prefix'] . "document_groups`";
     }
 
     if ($docgrp) {

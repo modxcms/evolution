@@ -23,7 +23,7 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 	$id = $_REQUEST['id'];
 
 	// check to see the snippet editor isn't locked
-	$sql = "SELECT internalKey, username FROM $dbase." . $table_prefix . "active_users WHERE $dbase." . $table_prefix . "active_users.action=78 AND $dbase." . $table_prefix . "active_users.id=$id";
+	$sql = "SELECT internalKey, username FROM $dbase.`" . $table_prefix . "active_users` WHERE $dbase.`" . $table_prefix . "active_users`.action=78 AND $dbase.`" . $table_prefix . "active_users`.id=$id";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if ($limit > 1) {
@@ -43,7 +43,7 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 
 $content = array();
 if(isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
-	$sql = "SELECT * FROM $dbase." . $table_prefix . "site_htmlsnippets WHERE $dbase." . $table_prefix . "site_htmlsnippets.id = $id;";
+	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE $dbase.`" . $table_prefix . "site_htmlsnippets`.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if ($limit > 1) {

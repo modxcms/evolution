@@ -6,6 +6,7 @@
  * @package ImageManager
  */
 
+require_once('../../includes/protect.inc.php');
 require_once('config.inc.php');
 require_once('Classes/ImageManager.php');
 require_once('Classes/ImageEditor.php');

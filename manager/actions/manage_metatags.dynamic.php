@@ -192,7 +192,7 @@ $modx->manager->initPageViewState();
 <div class="sectionHeader"><?php echo $_lang['keywords'] ;?></div><div class="sectionBody">
 <?php echo $_lang['keywords_intro'] ;?><br /><br />
 <?php
-	$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords ORDER BY keyword ASC";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
 	$ds = mysql_query($sql);
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_keywords_found"];

@@ -1,11 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 // count messages
-$sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()." and messageread=0;";
+$sql="SELECT count(*) FROM $dbase.`".$table_prefix."user_messages` where recipient=".$modx->getLoginUserID()." and messageread=0;";
 $rs = mysql_query($sql);
 $row = mysql_fetch_assoc($rs);
 $_SESSION['nrnewmessages'] = $row['count(*)'];
-$sql="SELECT count(*) FROM $dbase.".$table_prefix."user_messages where recipient=".$modx->getLoginUserID()."";
+$sql="SELECT count(*) FROM $dbase.`".$table_prefix."user_messages` where recipient=".$modx->getLoginUserID()."";
 $rs = mysql_query($sql);
 $row = mysql_fetch_assoc($rs);
 $_SESSION['nrtotalmessages'] = $row['count(*)'];

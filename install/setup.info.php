@@ -59,11 +59,11 @@
 		}	
 		
 		// secure web documents - privateweb 
-		mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privateweb = 0 WHERE privateweb = 1",$sqlParser->conn);
+		mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1",$sqlParser->conn);
 		$sql =  "SELECT DISTINCT sc.id 
-				 FROM ".$sqlParser->prefix."site_content sc
-				 LEFT JOIN ".$sqlParser->prefix."document_groups dg ON dg.document = sc.id
-				 LEFT JOIN ".$sqlParser->prefix."webgroup_access wga ON wga.documentgroup = dg.document_group
+				 FROM `".$sqlParser->prefix."site_content` sc
+				 LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
+				 LEFT JOIN `".$sqlParser->prefix."webgroup_access` wga ON wga.documentgroup = dg.document_group
 				 WHERE wga.id>0";
 		$ds = mysql_query($sql,$sqlParser->conn);
 		if(!$ds) {
@@ -72,17 +72,17 @@
 		else {
 			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
-				mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");	
+				mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");	
 				unset($ids);
 			}
 		}
 		
 		// secure manager documents privatemgr
-		mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privatemgr = 0 WHERE privatemgr = 1");
+		mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
 		$sql =  "SELECT DISTINCT sc.id 
-				 FROM ".$sqlParser->prefix."site_content sc
-				 LEFT JOIN ".$sqlParser->prefix."document_groups dg ON dg.document = sc.id
-				 LEFT JOIN ".$sqlParser->prefix."membergroup_access mga ON mga.documentgroup = dg.document_group
+				 FROM `".$sqlParser->prefix."site_content` sc
+				 LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
+				 LEFT JOIN `".$sqlParser->prefix."membergroup_access` mga ON mga.documentgroup = dg.document_group
 				 WHERE mga.id>0";
 		$ds = mysql_query($sql);
 		if(!$ds) {
@@ -91,14 +91,14 @@
 		else {
 			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
-				mysql_query("UPDATE ".$sqlParser->prefix."site_content SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
+				mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
 				unset($ids);
 			}		
 		}
 
 		/**** Add Quick Plugin to Module ***/
 		// get quick edit module id
-		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_modules WHERE name='QuickEdit'");
+		$ds = mysql_query("SELECT id FROM `".$sqlParser->prefix."site_modules` WHERE name='QuickEdit'");
 		if(!$ds) {
 			echo "An error occurred while executing a query: ".mysql_error();
 		}
@@ -107,7 +107,7 @@
 			$moduleid=$row["id"];
 		}		
 		// get plugin id
-		$ds = mysql_query("SELECT id FROM ".$sqlParser->prefix."site_plugins WHERE name='QuickEdit'");
+		$ds = mysql_query("SELECT id FROM `".$sqlParser->prefix."site_plugins` WHERE name='QuickEdit'");
 		if(!$ds) {
 			echo "An error occurred while executing a query: ".mysql_error();
 		}
@@ -116,12 +116,12 @@
 			$pluginid=$row["id"];
 		}		
 		// setup plugin as module dependency
-		$ds = mysql_query("SELECT module FROM ".$sqlParser->prefix."site_module_depobj WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
+		$ds = mysql_query("SELECT module FROM `".$sqlParser->prefix."site_module_depobj` WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
 		if(!$ds) {
 			echo "An error occurred while executing a query: ".mysql_error();
 		}
 		elseif (mysql_num_rows($ds)==0){
-			mysql_query("INSERT INTO ".$sqlParser->prefix."site_module_depobj (module, resource, type) VALUES('$moduleid','$pluginid',30)");
+			mysql_query("INSERT INTO `".$sqlParser->prefix."site_module_depobj` (module, resource, type) VALUES('$moduleid','$pluginid',30)");
 		}
 	}
 ?>

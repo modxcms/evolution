@@ -1,4 +1,5 @@
 <?php
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 // start session
 startCMSSession();
@@ -102,7 +103,7 @@ else {
     $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : '' ;$lasthittime = time();$a = isset($_REQUEST['a']) ? $_REQUEST['a'] : "" ;
     if($a!=1) {
         if (!intval($itemid)) $itemid= 'NULL';
-        $sql = "REPLACE INTO $dbase.".$table_prefix."active_users (internalKey, username, lasthit, action, id, ip) values(".$modx->getLoginUserID().", '{$_SESSION['mgrShortname']}', '{$lasthittime}', '{$a}', {$itemid}, '{$ip}')";
+        $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(".$modx->getLoginUserID().", '{$_SESSION['mgrShortname']}', '{$lasthittime}', '{$a}', {$itemid}, '{$ip}')";
         if(!$rs = mysql_query($sql)) {
             echo "error replacing into active users! SQL: ".$sql."\n".mysql_error();
             exit;

@@ -3,6 +3,8 @@
 # Created By Raymond Irving April, 2005
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+defined('IN_PARSER_MODE') or die();
+
 # load tpl
 if(is_numeric($tpl)) $tpl = ($doc=$modx->getDocuments($tpl)) ? $doc['content']:"Document '$tpl' not found.";
 else if($tpl) $tpl = ($chunk=$modx->getChunk($tpl)) ? $chunk:"Chunk '$tpl' not found.";

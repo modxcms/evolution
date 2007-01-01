@@ -7,7 +7,7 @@ if(!$modx->hasPermission('access_permissions')) {
 
 
 // find all document groups, for the select :)
-$sql = "SELECT * FROM $dbase.".$table_prefix."documentgroup_names ORDER BY name";
+$sql = "SELECT * FROM $dbase.`".$table_prefix."documentgroup_names` ORDER BY name";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1) {
@@ -66,7 +66,7 @@ if($limit<1) {
 		</tr>
 		</thead>
 <?php
-		$sql = "SELECT * FROM $dbase.".$table_prefix."membergroup_names ORDER BY name";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."membergroup_names` ORDER BY name";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
@@ -103,8 +103,8 @@ if($limit<1) {
 					<?php echo $_lang['access_permissions_users_in_group']; ?>
 					<?php
 					$sql = "SELECT tbl1.username AS user, tbl1.id AS internalKey FROM
-					$dbase.".$table_prefix."manager_users AS tbl1,
-					$dbase.".$table_prefix."member_groups AS tbl2
+					$dbase.`".$table_prefix."manager_users` AS tbl1,
+					$dbase.`".$table_prefix."member_groups` AS tbl2
 					WHERE tbl2.user_group=".$row['id']." AND
 					tbl1.id = tbl2.member
 					ORDER BY tbl1.username ASC";
@@ -167,7 +167,7 @@ if($limit<1) {
 		</tr>
 		</thead>
 <?php
-		$sql = "SELECT * FROM $dbase.".$table_prefix."documentgroup_names ORDER BY name";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."documentgroup_names` ORDER BY name";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
@@ -204,8 +204,8 @@ if($limit<1) {
 					<?php echo $_lang['access_permissions_documents_in_group']; ?>
 					<?php
 					$sql = "SELECT tbl1.pagetitle AS document, tbl1.id AS id FROM
-					$dbase.".$table_prefix."site_content AS tbl1,
-					$dbase.".$table_prefix."document_groups AS tbl2
+					$dbase.`".$table_prefix."site_content` AS tbl1,
+					$dbase.`".$table_prefix."document_groups` AS tbl2
 					WHERE tbl2.document_group=".$row['id']." AND
 					tbl1.id = tbl2.document
 					ORDER BY tbl1.id ASC";
@@ -240,7 +240,7 @@ if($limit<1) {
 <script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage3" ) );</script>
 	<?php echo $_lang['access_permissions_links_tab']; ?> <p />
 <?php
-		$sql = "SELECT * FROM $dbase.".$table_prefix."membergroup_names ORDER BY name";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."membergroup_names` ORDER BY name";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
@@ -260,8 +260,8 @@ if($limit<1) {
 			<?php
 				$sql = "
 				SELECT * FROM
-				$dbase.".$table_prefix."documentgroup_names AS tbl1,
-				$dbase.".$table_prefix."membergroup_access AS tbl2
+				$dbase.`".$table_prefix."documentgroup_names` AS tbl1,
+				$dbase.`".$table_prefix."membergroup_access` AS tbl2
 				WHERE tbl2.membergroup = ".$row['id']." AND
 				tbl1.id = tbl2.documentgroup
 				ORDER BY tbl1.name ASC

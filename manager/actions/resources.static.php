@@ -3,13 +3,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 $theme = $manager_theme ? "$manager_theme/":"";
 
-$tablePre = $dbase . '.' . $table_prefix;
+$tablePre = $dbase . '.`' . $table_prefix;
 
 function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name') {
     global $modx, $_lang;
     $output = '<ul>';
 
-    $sql = 'SELECT '.$tablePre.$resourceTable.'.'.$nameField.' as name, '.$tablePre.$resourceTable.'.id, '.$tablePre.$resourceTable.'.description, '.$tablePre.$resourceTable.'.locked, if(isnull('.$tablePre.'categories.category),\''.$_lang['no_category'].'\','.$tablePre.'categories.category) as category FROM '.$tablePre.$resourceTable.' left join '.$tablePre.'categories on '.$tablePre.$resourceTable.'.category = '.$tablePre.'categories.id ORDER BY 5,1';
+    $sql = 'SELECT '.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
 
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -135,7 +135,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 		<ul>
 		<?php
 		$displayInfo = array();
-		$tablePre = $dbase . '.' . $table_prefix;
+		$tablePre = $dbase . '.`' . $table_prefix;
 		$hasPermission = 0;
 		if($modx->hasPermission('edit_plugin') || $modx->hasPermission('new_plugin')) {
             $displayInfo['plugin'] = array('table'=>'site_plugins','action'=>102,'name'=>$_lang['manage_plugins']);
@@ -170,7 +170,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
             foreach ($displayInfo as $n => $v) {
                 $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
-                $sql = 'SELECT '.$nameField.' as name, '.$tablePre.$v['table'].'.id, description, locked, '.$tablePre.'categories.category, '.$tablePre.'categories.id as catid FROM '.$tablePre.$v['table'].' left join '.$tablePre.'categories on '.$tablePre.$v['table'].'.category = '.$tablePre.'categories.id ORDER BY 5,1';
+                $sql = 'SELECT '.$nameField.' as name, '.$tablePre.$v['table'].'`.id, description, locked, '.$tablePre.'categories`.category, '.$tablePre.'categories`.id as catid FROM '.$tablePre.$v['table'].'` left join '.$tablePre.'categories` on '.$tablePre.$v['table'].'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
                 $rs = mysql_query($sql);
         		$limit = mysql_num_rows($rs);
         		if($limit>0){

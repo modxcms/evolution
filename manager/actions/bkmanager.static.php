@@ -128,7 +128,7 @@ else {
 	// enable record deletion for certain tables
 	// sottwell@sottwell.com
 	// 08-2005
-	if($modx->hasPermission('settings') && ($db_status['Name'] == $table_prefix."event_log" || $db_status['Name'] == $table_prefix."log_access" || $db_status['Name'] == $table_prefix."log_hosts" || $db_status['Name'] == $table_prefix."log_visitors" || $db_status['Name'] == $table_prefix."manager_log")) {
+	if($modx->hasPermission('settings') && ($db_status['Name'] == "`" . $table_prefix."event_log`" || $db_status['Name'] == "`" . $table_prefix."log_access`" || $db_status['Name'] == "`" . $table_prefix."log_hosts`" || $db_status['Name'] == "`".$table_prefix."log_visitors`" || $db_status['Name'] == "`" . $table_prefix."manager_log`")) {
 		echo "<td align='right'>";
 		echo "<a href='index.php?a=54&mode=$action&u=".$db_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($db_status['Data_length']+$db_status['Data_free'])."</a>";
 		echo "</td>";

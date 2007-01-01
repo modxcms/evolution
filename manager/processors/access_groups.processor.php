@@ -18,7 +18,7 @@ switch ($operation) {
 			echo "no group name specified";
 			exit;
 		} else {
-			$sql = "INSERT INTO $dbase.".$table_prefix."membergroup_names(name) VALUES('".$newgroup."')";
+			$sql = "INSERT INTO $dbase.`".$table_prefix."membergroup_names` (name) VALUES('".$newgroup."')";
 			if(!$rs = mysql_query($sql)) {
 				echo "Failed to insert new group. Possible duplicate group name?";
 				exit;
@@ -41,7 +41,7 @@ switch ($operation) {
 			echo "no group name specified";
 			exit;
 		} else {
-			$sql = "INSERT INTO $dbase.".$table_prefix."documentgroup_names(name) VALUES('".$newgroup."')";
+			$sql = "INSERT INTO $dbase.`".$table_prefix."documentgroup_names` (name) VALUES('".$newgroup."')";
 			if(!$rs = mysql_query($sql)) {
 				echo "Failed to insert new group. Possible duplicate group name?";
 				exit;
@@ -65,17 +65,17 @@ switch ($operation) {
 			echo "No user group name specified for deletion";
 			exit;
 		} else {
-			$sql = "DELETE FROM $dbase.".$table_prefix."membergroup_names WHERE id='".$usergroup."'";
+			$sql = "DELETE FROM $dbase.`".$table_prefix."membergroup_names` WHERE id='".$usergroup."'";
 			if(!$rs = mysql_query($sql)) {
 				echo "Unable to delete group. SQL failed.";
 				exit;
 			}
-			$sql = "DELETE FROM $dbase.".$table_prefix."membergroup_access WHERE membergroup='".$usergroup."'";
+			$sql = "DELETE FROM $dbase.`".$table_prefix."membergroup_access` WHERE membergroup='".$usergroup."'";
 			if(!$rs = mysql_query($sql)) {
 				echo "Unable to delete group from access table. SQL failed.";
 				exit;
 			}
-			$sql = "DELETE FROM $dbase.".$table_prefix."member_groups WHERE user_group='".$usergroup."'";
+			$sql = "DELETE FROM $dbase.`".$table_prefix."member_groups` WHERE user_group='".$usergroup."'";
 			if(!$rs = mysql_query($sql)) {
 				echo "Unable to delete user-group links. SQL failed.";
 				exit;
@@ -88,17 +88,17 @@ switch ($operation) {
 			echo "No user group name specified for deletion";
 			exit;
 		} else {
-			$sql = "DELETE FROM $dbase.".$table_prefix."documentgroup_names WHERE id='".$group."'";
+			$sql = "DELETE FROM $dbase.`".$table_prefix."documentgroup_names` WHERE id='".$group."'";
 			if(!$rs = mysql_query($sql)) {
 				echo "Unable to delete group. SQL failed.";
 				exit;
 			}
-			$sql = "DELETE FROM $dbase.".$table_prefix."membergroup_access WHERE documentgroup='".$group."'";
+			$sql = "DELETE FROM $dbase.`".$table_prefix."membergroup_access` WHERE documentgroup='".$group."'";
 			if(!$rs = mysql_query($sql)) {
 				echo "Unable to delete group from access table. SQL failed.";
 				exit;
 			}
-			$sql = "DELETE FROM $dbase.".$table_prefix."document_groups WHERE document_group='".$group."'";
+			$sql = "DELETE FROM $dbase.`".$table_prefix."document_groups` WHERE document_group='".$group."'";
 			if(!$rs = mysql_query($sql)) {
 				echo "Unable to delete document-group links. SQL failed.";
 				exit;
@@ -116,7 +116,7 @@ switch ($operation) {
 			echo "No group id specified";
 			exit;
 		}
-		$sql = "UPDATE $dbase.".$table_prefix."membergroup_names SET name='".$newgroupname."' WHERE id='".$groupid."' LIMIT 1";
+		$sql = "UPDATE $dbase.`".$table_prefix."membergroup_names` SET name='".$newgroupname."' WHERE id='".$groupid."' LIMIT 1";
 		if(!$rs = mysql_query($sql)) {
 			echo "Failed to update group name. Possible duplicate group name?";
 			exit;
@@ -133,7 +133,7 @@ switch ($operation) {
 			echo "No group id specified";
 			exit;
 		}
-		$sql = "UPDATE $dbase.".$table_prefix."documentgroup_names SET name='".$newgroupname."' WHERE id='".$groupid."' LIMIT 1";
+		$sql = "UPDATE $dbase.`".$table_prefix."documentgroup_names` SET name='".$newgroupname."' WHERE id='".$groupid."' LIMIT 1";
 		if(!$rs = mysql_query($sql)) {
 			echo "Failed to update group name. Possible duplicate group name?";
 			exit;
@@ -143,11 +143,11 @@ switch ($operation) {
 		$updategroupaccess = true;
 		$usergroup = $_REQUEST['usergroup'];
 		$docgroup = $_REQUEST['docgroup'];
-		$sql = "SELECT * FROM $dbase.".$table_prefix."membergroup_access WHERE membergroup='$usergroup' AND documentgroup='$docgroup'";		
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."membergroup_access` WHERE membergroup='$usergroup' AND documentgroup='$docgroup'";		
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);			
 		if($limit<=0) {
-			$sql = "INSERT INTO $dbase.".$table_prefix."membergroup_access(membergroup, documentgroup) VALUES('".$usergroup."', '".$docgroup."')";
+			$sql = "INSERT INTO $dbase.`".$table_prefix."membergroup_access` (membergroup, documentgroup) VALUES('".$usergroup."', '".$docgroup."')";
 			if(!$rs = mysql_query($sql)) {
 				echo "Failed to link document group to user group";
 				exit;
@@ -159,7 +159,7 @@ switch ($operation) {
 	case "remove_document_group_from_user_group" :
 		$updategroupaccess = true;
 		$coupling = $_REQUEST['coupling'];
-		$sql = "DELETE FROM $dbase.".$table_prefix."membergroup_access WHERE id='".$coupling."'";
+		$sql = "DELETE FROM $dbase.`".$table_prefix."membergroup_access` WHERE id='".$coupling."'";
 		if(!$rs = mysql_query($sql)) {
 			echo "Failed to remove document group from user group";
 			exit;

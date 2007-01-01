@@ -923,11 +923,10 @@ class DocumentParser {
         $documentObject= $this->fetchRow($result);
 
         // load TVs and merge with document - Orig by Apodigm - Docvars
-        $tbn= $this->dbConfig['dbase'] . "." . $this->dbConfig['table_prefix'];
         $sql= "SELECT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-        $sql .= "FROM " . $tbn . "site_tmplvars tv ";
-        $sql .= "INNER JOIN " . $tbn . "site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
-        $sql .= "LEFT JOIN " . $tbn . "site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $this->documentIdentifier . "' ";
+        $sql .= "FROM " . $this->getFullTableName("site_tmplvars") . " tv ";
+        $sql .= "INNER JOIN " . $this->getFullTableName("site_tmplvar_templates")." tvtpl ON tvtpl.tmplvarid = tv.id ";
+        $sql .= "LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $this->documentIdentifier . "' ";
         $sql .= "WHERE tvtpl.templateid = '" . $documentObject['template'] . "'";
         $rs= $this->dbQuery($sql);
         $rowCount= $this->recordCount($rs);
@@ -1648,8 +1647,9 @@ class DocumentParser {
         if ($id == 0) {
             $id= $this->documentObject['id'];
         }
-        $tbl= $this->dbConfig['dbase'] . "." . $this->dbConfig['table_prefix'];
-        $sql= "SELECT keywords.keyword FROM " . $tbl . "site_keywords AS keywords INNER JOIN " . $tbl . "keyword_xref AS xref ON keywords.id=xref.keyword_id WHERE xref.content_id = '$id'";
+        $tblKeywords= $this->getFullTableName('site_keywords');
+        $tblKeywordXref= $this->getFullTableName('keyword_xref');
+        $sql= "SELECT keywords.keyword FROM " . $tblKeywords . " AS keywords INNER JOIN " . $tblKeywordXref . " AS xref ON keywords.id=xref.keyword_id WHERE xref.content_id = '$id'";
         $result= $this->dbQuery($sql);
         $limit= $this->recordCount($result);
         $keywords= array ();
@@ -1666,7 +1666,6 @@ class DocumentParser {
         if ($id == 0) {
             $id= $this->documentObject['id'];
         }
-        $tbl= $this->dbConfig['dbase'] . "." . $this->dbConfig['table_prefix'];
         $sql= "SELECT smt.* " .
         "FROM " . $this->getFullTableName("site_metatags") . " smt " .
         "INNER JOIN " . $this->getFullTableName("site_content_metatags") . " cmt ON cmt.metatag_id=smt.id " .
@@ -1753,7 +1752,6 @@ class DocumentParser {
                 $query= "tv.id<>0";
             else
                 $query= (is_numeric($tvidnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $tvidnames) . "')";
-            $tbn= $this->dbConfig['dbase'] . "." . $this->dbConfig['table_prefix'];
             if ($docgrp= $this->getUserDocGroups())
                 $docgrp= implode(",", $docgrp);
 
@@ -1765,9 +1763,9 @@ class DocumentParser {
                 $docid= $docRow['id'];
 
                 $sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-                $sql .= "FROM " . $tbn . "site_tmplvars tv ";
-                $sql .= "INNER JOIN " . $tbn . "site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
-                $sql .= "LEFT JOIN " . $tbn . "site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
+                $sql .= "FROM " . $this->getFullTableName('site_tmplvars') . " tv ";
+                $sql .= "INNER JOIN " . $this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id ";
+                $sql .= "LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
                 $sql .= "WHERE " . $query . " AND tvtpl.templateid = " . $docRow['template'];
                 if ($tvsort)
                     $sql .= " ORDER BY $tvsort $tvsortdir ";
@@ -1846,13 +1844,12 @@ class DocumentParser {
                 $query= "tv.id<>0";
             else
                 $query= (is_numeric($idnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $idnames) . "')";
-            $tbn= $this->dbConfig['dbase'] . "." . $this->dbConfig['table_prefix'];
             if ($docgrp= $this->getUserDocGroups())
                 $docgrp= implode(",", $docgrp);
             $sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-            $sql .= "FROM " . $tbn . "site_tmplvars tv ";
-            $sql .= "INNER JOIN " . $tbn . "site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
-            $sql .= "LEFT JOIN " . $tbn . "site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
+            $sql .= "FROM " . $this->getFullTableName('site_tmplvars')." tv ";
+            $sql .= "INNER JOIN " . $this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id ";
+            $sql .= "LEFT JOIN " . $this->getFullTableName('site_tmplvar_contentvalues')." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $docid . "' ";
             $sql .= "WHERE " . $query . " AND tvtpl.templateid = " . $docRow['template'];
             if ($sort)
                 $sql .= " ORDER BY $sort $dir ";
@@ -1906,7 +1903,7 @@ class DocumentParser {
 
     # returns the full table name based on db settings
     function getFullTableName($tbl) {
-        return $this->dbConfig['dbase'] . "." . $this->dbConfig['table_prefix'] . $tbl;
+        return $this->db->config['dbase'] . ".`" . $this->db->config['table_prefix'] . $tbl . "`";
     }
 
     # returns the physical path from the supplied virtual
@@ -1956,10 +1953,9 @@ class DocumentParser {
     # sends a message to a user's message box
     function sendAlert($type, $to, $from, $subject, $msg, $private= 0) {
         $private= ($private) ? 1 : 0;
-        $tbl= $this->dbConfig['dbase'] . "." . $this->dbConfig['table_prefix'];
         if (!is_numeric($to)) {
             // Query for the To ID
-            $sql= "SELECT id FROM " . $tbl . "manager_users WHERE " . $tbl . "manager_users.username='$to';";
+            $sql= "SELECT id FROM " . $this->getFullTableName("manager_users") . " WHERE username='$to';";
             $rs= $this->dbQuery($sql);
             if ($this->recordCount($rs)) {
                 $rs= $this->fetchRow($rs);
@@ -1968,7 +1964,7 @@ class DocumentParser {
         }
         if (!is_numeric($from)) {
             // Query for the From ID
-            $sql= "SELECT id FROM " . $tbl . "manager_users WHERE " . $tbl . "manager_users.username='$from';";
+            $sql= "SELECT id FROM " . $this->getFullTableName("manager_users") . " WHERE username='$from';";
             $rs= $this->dbQuery($sql);
             if ($this->recordCount($rs)) {
                 $rs= $this->fetchRow($rs);
@@ -1976,7 +1972,7 @@ class DocumentParser {
             }
         }
         // insert a new message into user_messages
-        $sql= "INSERT INTO " . $tbl . "user_messages ( id , type , subject , message , sender , recipient , private , postdate , messageread ) VALUES ( '', '$type', '$subject', '$msg', '$from', '$to', '$private', '" . time() . "', '0' );";
+        $sql= "INSERT INTO " . $this->getFullTableName("user_messages") . " ( id , type , subject , message , sender , recipient , private , postdate , messageread ) VALUES ( '', '$type', '$subject', '$msg', '$from', '$to', '$private', '" . time() . "', '0' );";
         $rs= $this->dbQuery($sql);
     }
 
@@ -2218,6 +2214,7 @@ class DocumentParser {
         $t= preg_replace('~\[\[(.*?)\]\]~', "", $t); //snippet
         $t= preg_replace('~\[\!(.*?)\!\]~', "", $t); //snippet
         $t= preg_replace('~\[\((.*?)\)\]~', "", $t); //settings
+        $t= preg_replace('~\[\+(.*?)\+\]~', "", $t); //placeholders
         $t= preg_replace('~{{(.*?)}}~', "", $t); //chunks
         return $t;
     }

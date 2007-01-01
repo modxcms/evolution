@@ -6,7 +6,7 @@ if(!$modx->hasPermission('settings')) {
 }
 
 // check to see the edit settings page isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=17";
+$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=17";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
@@ -24,7 +24,7 @@ if($limit>1) {
 // reload system settings from the database.
 // this will prevent user-defined settings from being saved as system setting
 $settings = array();
-$sql = "SELECT setting_name, setting_value FROM $dbase.".$table_prefix."system_settings";
+$sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."system_settings`";
 $rs = mysql_query($sql);
 $number_of_settings = mysql_num_rows($rs);
 while ($row = mysql_fetch_assoc($rs)) $settings[$row['setting_name']] = $row['setting_value'];
@@ -311,7 +311,7 @@ function updateContentType(){
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaulttemplate_title"] ?></b></td>
             <td>
 			<?php
-				$sql = "select templatename, id from $dbase.".$table_prefix."site_templates";
+				$sql = "select templatename, id from $dbase.`".$table_prefix."site_templates`";
 				$rs = mysql_query($sql);
 			?>
 			  <select name="default_template" class="inputBox" onchange='documentDirty=true;' style="width:150px">

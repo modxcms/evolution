@@ -434,7 +434,7 @@ class DBAPI {
       if (!is_resource($dsq))
          $dsq = $this->query($dsq);
       if ($dsq) {
-         include_once $base_path . "/manager/includes/controls/datagrid.class.php";
+         include_once MODX_BASE_PATH . '/manager/includes/controls/datagrid.class.php';
          $grd = new DataGrid('', $dsq);
 
          $grd->noRecordMsg = $params['noRecordMsg'];

@@ -56,7 +56,7 @@ switch ($_POST['mode']) {
 								));
     
 		//do stuff to save the new plugin
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_plugins (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$plugincode."', '".$disabled."', '".$moduleguid."', '".$locked."', '".$properties."', ".$categoryid.");";
+		$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$plugincode."', '".$disabled."', '".$moduleguid."', '".$locked."', '".$properties."', ".$categoryid.");";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New plugin not saved!";
@@ -104,7 +104,7 @@ switch ($_POST['mode']) {
 								));
      
 		//do stuff to save the edited plugin	
-		$sql = "UPDATE $dbase.".$table_prefix."site_plugins SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category=".$categoryid."  WHERE id='".$id."';";
+		$sql = "UPDATE $dbase.".$table_prefix."site_plugins` SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category=".$categoryid."  WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited plugin not saved!";
@@ -149,12 +149,12 @@ function saveEventListeners($id,$sysevents,$mode) {
 	global $dbase, $table_prefix;
 	// save selected system events
 	
-	$sql = "INSERT INTO $dbase.".$table_prefix."site_plugin_events (pluginid,evtid,priority) VALUES ";
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugin_events` (pluginid,evtid,priority) VALUES ";
 	for($i=0;$i<count($sysevents);$i++){
 		if ($mode == '101') {
-            $prioritySql = 'select max(priority) as priority from '.$dbase.'.'.$table_prefix.'site_plugin_events where evtid=\''.$sysevents[$i].'\'';
+            $prioritySql = 'select max(priority) as priority from '.$dbase.'.`'.$table_prefix.'site_plugin_events` where evtid=\''.$sysevents[$i].'\'';
         } else {
-            $prioritySql = 'select priority from '.$dbase.'.'.$table_prefix.'site_plugin_events where evtid=\''.$sysevents[$i].'\' and pluginid=\''.$id.'\'';
+            $prioritySql = 'select priority from '.$dbase.'.`'.$table_prefix.'site_plugin_events` where evtid=\''.$sysevents[$i].'\' and pluginid=\''.$id.'\'';
         }
         $rs = mysql_query($prioritySql);
         $prevPriority = mysql_fetch_assoc($rs);
@@ -170,7 +170,7 @@ function saveEventListeners($id,$sysevents,$mode) {
         if($i>0) $sql.=",";
 		$sql.= "('".$id."','".$sysevents[$i]."','".$priority."')";
 	}
-	mysql_query("DELETE FROM $dbase.".$table_prefix."site_plugin_events WHERE pluginid='".$id."';");
+	mysql_query("DELETE FROM $dbase.`".$table_prefix."site_plugin_events` WHERE pluginid='".$id."';");
 	if (count($sysevents)>0) mysql_query($sql);
 }
 

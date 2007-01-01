@@ -51,7 +51,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     // check for deleted documents on reload
     if ($expandAll==2) {
-        $sql = "SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content WHERE deleted=1";
+        $sql = "SELECT COUNT(*) FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1";
         $rs = mysql_query($sql);
         $row = mysql_fetch_row($rs);
         $count = $row[0];
@@ -80,9 +80,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         }
         if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 
-        $tblsc = $dbase.".".$table_prefix."site_content";
-        $tbldg = $dbase.".".$table_prefix."document_groups";
-        $tbldgn = $dbase.".".$table_prefix."documentgroup_names";
+        $tblsc = $dbase.".`".$table_prefix."site_content`";
+        $tbldg = $dbase.".`".$table_prefix."document_groups`";
+        $tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
         // get document groups for current user
         if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
         $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".

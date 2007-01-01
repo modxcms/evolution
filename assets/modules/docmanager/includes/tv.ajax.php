@@ -8,7 +8,8 @@
  * This file includes slightly modified code from the MODx core distribution.
  * 
  */
- 
+
+ require_once '../../../../manager/includes/protect.inc.php'; 
  include_once ("../../../../manager/includes/config.inc.php");
  include_once(MODX_BASE_PATH."manager/includes/document.parser.class.inc.php");
  $modx = new DocumentParser;

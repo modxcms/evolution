@@ -31,7 +31,7 @@ class udperms{
 		}
 		
 		/*// get the groups this user is a member of
-		$sql = "SELECT * FROM $dbase.".$table_prefix."member_groups WHERE $dbase.".$table_prefix."member_groups.member = $user;";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."member_groups` WHERE $dbase.`".$table_prefix."member_groups`.member = $user;";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
@@ -45,7 +45,7 @@ class udperms{
 		$list = implode(",", $membergroups);
 
 		// get the permissions for the groups this user is a member of
-		$sql = "SELECT * FROM $dbase.".$table_prefix."membergroup_access WHERE $dbase.".$table_prefix."membergroup_access.membergroup IN($list);";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."membergroup_access` WHERE $dbase.`".$table_prefix."membergroup_access`.membergroup IN($list);";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
@@ -60,7 +60,7 @@ class udperms{
 		$list = implode(",", $documentgroups);
 
 		// get the groups this user has permissions for
-		$sql = "SELECT * FROM $dbase.".$table_prefix."document_groups WHERE $dbase.".$table_prefix."document_groups.document_group IN($list);";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."document_groups` WHERE $dbase.`".$table_prefix."document_groups`.document_group IN($list);";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
@@ -87,9 +87,9 @@ class udperms{
 			are private to the manager users will not be private to web users if the 
 			document group is not assigned to a web user group and visa versa.
 		 */
-		$tblsc = $dbase.".".$table_prefix."site_content";
-		$tbldg = $dbase.".".$table_prefix."document_groups";
-		$tbldgn = $dbase.".".$table_prefix."documentgroup_names";
+		$tblsc = $dbase.".`".$table_prefix."site_content`";
+		$tbldg = $dbase.".`".$table_prefix."document_groups`";
+		$tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
 		$sql = "SELECT DISTINCT sc.id 
 				FROM $tblsc sc 
 				LEFT JOIN $tbldg dg on dg.document = sc.id

@@ -6,21 +6,21 @@ if(!$modx->hasPermission('delete_document')) {
 }
 
 // remove the document groups link.
-$sql = "DELETE $dbase.".$table_prefix."document_groups 
-		FROM $dbase.".$table_prefix."document_groups 
-		INNER JOIN $dbase.".$table_prefix."site_content ON $dbase.".$table_prefix."site_content.id = $dbase.".$table_prefix."document_groups.document 
-		WHERE $dbase.".$table_prefix."site_content.deleted=1;";
+$sql = "DELETE $dbase.`".$table_prefix."document_groups` 
+		FROM $dbase.`".$table_prefix."document_groups` 
+		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."document_groups`.document 
+		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
 @mysql_query($sql);
 
 // remove the TV content values.
-$sql = "DELETE $dbase.".$table_prefix."site_tmplvar_contentvalues 
-		FROM $dbase.".$table_prefix."site_tmplvar_contentvalues  
-		INNER JOIN $dbase.".$table_prefix."site_content ON $dbase.".$table_prefix."site_content.id = $dbase.".$table_prefix."site_tmplvar_contentvalues.contentid 
-		WHERE $dbase.".$table_prefix."site_content.deleted=1;";
+$sql = "DELETE $dbase.`".$table_prefix."site_tmplvar_contentvalues` 
+		FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues`  
+		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."site_tmplvar_contentvalues`.contentid 
+		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
 @mysql_query($sql);
 
 //'undelete' the document.
-$sql = "DELETE FROM $dbase.".$table_prefix."site_content WHERE deleted=1;";
+$sql = "DELETE FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1;";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to remove deleted documents!";

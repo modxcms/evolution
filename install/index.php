@@ -90,7 +90,7 @@
 			$status .= '...    Checking database: ';
 			if(!@mysql_select_db(str_replace("`","",$dbase), $conn)) $status .= "failed - $dbase does not exist!"; 
 			else {
-				if(@$rs=mysql_query("SELECT COUNT(*) FROM {$dbase}.{$table_prefix}site_content")) $status .= "failed - table prefix already in use!";
+				if(@$rs=mysql_query("SELECT COUNT(*) FROM {$dbase}.`{$table_prefix}site_content`")) $status .= "failed - table prefix already in use!";
 				else {
 					$status .= 'passed';
 					$color = '#007700';
@@ -499,7 +499,7 @@
 		// check table prefix
 		if($conn && $installMode==0) {
 			echo "<p>Checking table prefix `".$table_prefix."`: ";
-			if(@$rs=mysql_query("SELECT COUNT(*) FROM $dbase.".$table_prefix."site_content")) {
+			if(@$rs=mysql_query("SELECT COUNT(*) FROM $dbase.`".$table_prefix."site_content`")) {
 				echo "<span class=\"notok\">Failed!</span></b> - Table prefix is already in use in this database!</p>";
 				$errors += 1;
 				echo "<p>Setup couldn't install into the selected database, as it already contains tables with the prefix you specified. Please choose a new table_prefix, and run Setup again.</p>";

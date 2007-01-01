@@ -70,7 +70,7 @@ if ($action == 27) {
 }
 
 // check to see the document isn't locked
-$sql = "SELECT internalKey, username FROM $dbase." . $table_prefix . "active_users WHERE $dbase." . $table_prefix . "active_users.action=27 AND $dbase." . $table_prefix . "active_users.id=$id";
+$sql = "SELECT internalKey, username FROM $dbase.`" . $table_prefix . "active_users` WHERE $dbase.`" . $table_prefix . "active_users`.action=27 AND $dbase.`" . $table_prefix . "active_users`.id=$id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if ($limit > 1) {
@@ -91,8 +91,8 @@ if ($_SESSION['mgrDocgroups']) {
 }
 
 if (!empty ($id)) {
-    $tblsc = $dbase . "." . $table_prefix . "site_content";
-    $tbldg = $dbase . "." . $table_prefix . "document_groups";
+    $tblsc = $dbase . ".`" . $table_prefix . "site_content`";
+    $tbldg = $dbase . ".`" . $table_prefix . "document_groups`";
     $access = "1='" . $_SESSION['mgrRole'] . "' OR sc.privatemgr=0" .
      (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
     $sql = "SELECT DISTINCT sc.*
@@ -612,7 +612,7 @@ if ($content['type'] == "reference" || $_REQUEST['a'] == 72) {
                 <td>
             <?php
 
-$sql = "select templatename, id from $dbase.".$table_prefix."site_templates ORDER BY templatename ASC";
+$sql = "select templatename, id from $dbase.`".$table_prefix."site_templates` ORDER BY templatename ASC";
                 $rs = mysql_query($sql);
             ?>
             <select id="template" name="template" class="inputBox" onchange='templateWarning();' style="width:300px">
@@ -663,7 +663,7 @@ if (isset ($_REQUEST['id'])) {
     if ($content['parent'] == 0) {
                     $parentname = $site_name;
                 } else {
-        $sql = "SELECT pagetitle FROM $dbase." . $table_prefix . "site_content WHERE $dbase." . $table_prefix . "site_content.id = " . $content['parent'] . ";";
+        $sql = "SELECT pagetitle FROM $dbase.`" . $table_prefix . "site_content` WHERE $dbase.`" . $table_prefix . "site_content`.id = " . $content['parent'] . ";";
                     $rs = mysql_query($sql);
                     $limit = mysql_num_rows($rs);
         if ($limit != 1) {
@@ -678,7 +678,7 @@ if (isset ($_REQUEST['id'])) {
         if ($_REQUEST['pid'] == 0) {
                     $parentname = $site_name;
                 } else {
-            $sql = "SELECT pagetitle FROM $dbase." . $table_prefix . "site_content WHERE $dbase." . $table_prefix . "site_content.id = " . $_REQUEST['pid'] . ";";
+            $sql = "SELECT pagetitle FROM $dbase.`" . $table_prefix . "site_content` WHERE $dbase.`" . $table_prefix . "site_content`.id = " . $_REQUEST['pid'] . ";";
                     $rs = mysql_query($sql);
                     $limit = mysql_num_rows($rs);
             if ($limit != 1) {
@@ -1025,10 +1025,10 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
     }
 
     $sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-    $sql .= "FROM $dbase." . $table_prefix . "site_tmplvars tv ";
-    $sql .= "INNER JOIN $dbase." . $table_prefix . "site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
-    $sql .= "LEFT JOIN $dbase." . $table_prefix . "site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = $id ";
-    $sql .= "LEFT JOIN $dbase." . $table_prefix . "site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";
+    $sql .= "FROM $dbase.`" . $table_prefix . "site_tmplvars` tv ";
+    $sql .= "INNER JOIN $dbase.`" . $table_prefix . "site_tmplvar_templates` tvtpl ON tvtpl.tmplvarid = tv.id ";
+    $sql .= "LEFT JOIN $dbase.`" . $table_prefix . "site_tmplvar_contentvalues` tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = $id ";
+    $sql .= "LEFT JOIN $dbase.`" . $table_prefix . "site_tmplvar_access` tva ON tva.tmplvarid=tv.id  ";
     $sql .= "WHERE tvtpl.templateid = " . $template . " AND (1='" . $_SESSION['mgrRole'] . "' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ") ORDER BY tvtpl.rank,tv.rank;";
         $rs = mysql_query($sql);
         $limit = mysql_num_rows($rs);
@@ -1086,7 +1086,7 @@ if ($use_udperms == 1) {
     $groupsarray = array ();
 
     if ($_REQUEST['a'] == '27') { // fetch permissions on the document from the database
-        $sql = "SELECT * FROM $dbase." . $table_prefix . "document_groups where document=" . $id;
+        $sql = "SELECT * FROM $dbase.`" . $table_prefix . "document_groups` where document=" . $id;
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
     for ($i = 0; $i < $limit; $i++) {
@@ -1095,7 +1095,7 @@ if ($use_udperms == 1) {
     }
 } else { // set permissions on the document based on the permissions of the parent document
         if (!empty ($_REQUEST['pid'])) {
-            $sql = "SELECT * FROM $dbase." . $table_prefix . "document_groups where document=" . $_REQUEST['pid'];
+            $sql = "SELECT * FROM $dbase.`" . $table_prefix . "document_groups` where document=" . $_REQUEST['pid'];
         $rs = mysql_query($sql);
         $limit = mysql_num_rows($rs);
         for ($i = 0; $i < $limit; $i++) {
@@ -1140,7 +1140,7 @@ if ($use_udperms == 1) {
 <?php
 
     }
-$sql = "SELECT name, id FROM $dbase." . $table_prefix . "documentgroup_names ORDER BY name";
+$sql = "SELECT name, id FROM $dbase.`" . $table_prefix . "documentgroup_names` ORDER BY name";
 $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
 for ($i = 0; $i < $limit; $i++) {

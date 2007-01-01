@@ -18,7 +18,7 @@ foreach ($_POST as $k => $v) {
 if (isset($_POST['reset_template'])) {
 	$template = $_POST['default_template'];	
 	$oldtemplate = $_POST['old_template'];
-	$tbl = $dbase.".".$table_prefix."site_content";
+	$tbl = $dbase.".`".$table_prefix."site_content`";
 	$reset = $_POST['reset_template'];
 	if($reset==1) mysql_query("UPDATE $tbl SET template = '$template' WHERE type='document'");
 	else if($reset==2) mysql_query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");	

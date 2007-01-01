@@ -62,8 +62,8 @@ EOD;
   
    $where = ' WHERE '.implode(' AND ',$wheres);
    $sql = "SELECT usr.id, usr.username, attr.email, MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) AS hash
-           FROM {$pre}manager_users usr
-           INNER JOIN {$pre}user_attributes attr ON usr.id = attr.internalKey
+           FROM `{$pre}manager_users` usr
+           INNER JOIN `{$pre}user_attributes` attr ON usr.id = attr.internalKey
            {$where};";
    
    if($result = $modx->db->query($sql)){
@@ -119,7 +119,7 @@ EOD;
   global $modx, $_lang;
   $pre = $modx->db->config['table_prefix'];
   
-  $modx->db->update(array('blocked'=>'', 'blockeduntil'=>''), "{$pre}user_attributes", "internalKey = '{$user_id}'");
+  $modx->db->update(array('blocked'=>'', 'blockeduntil'=>''), "`{$pre}user_attributes`", "internalKey = '{$user_id}'");
   
   if(!$modx->db->getAffectedRows()) { $this->errors[] = $_lang['user_doesnt_exist']; return; }
   

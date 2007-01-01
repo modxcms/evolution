@@ -129,10 +129,10 @@ if($_SESSION['mgrDocgroups']) {
 	$docgrp = implode(",",$_SESSION['mgrDocgroups']);
 }
 $sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-$sql.= "FROM $dbase.".$table_prefix."site_tmplvars tv ";
-$sql.= "INNER JOIN $dbase.".$table_prefix."site_tmplvar_templates tvtpl ON tvtpl.tmplvarid = tv.id ";
-$sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_contentvalues tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '$id' ";
-$sql.= "LEFT JOIN $dbase.".$table_prefix."site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";			
+$sql.= "FROM $dbase.`".$table_prefix."site_tmplvars` tv ";
+$sql.= "INNER JOIN $dbase.`".$table_prefix."site_tmplvar_templates` tvtpl ON tvtpl.tmplvarid = tv.id ";
+$sql.= "LEFT JOIN $dbase.`".$table_prefix."site_tmplvar_contentvalues` tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '$id' ";
+$sql.= "LEFT JOIN $dbase.`".$table_prefix."site_tmplvar_access` tva ON tva.tmplvarid=tv.id  ";			
 $sql.= "WHERE tvtpl.templateid = '".$template."' AND (1='".$_SESSION['mgrRole']."' OR ISNULL(tva.documentgroup)".((!$docgrp)? "":" OR tva.documentgroup IN ($docgrp)").") ORDER BY tv.rank;";
 $rs = mysql_query($sql); 
 $limit = mysql_num_rows($rs);
@@ -176,7 +176,7 @@ if($limit > 0) {
 
 // get the document, but only if it already exists (d'oh!)
 if($actionToTake!="new") {
-	$sql = "SELECT * FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.id = $id;";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {
@@ -231,7 +231,7 @@ switch ($actionToTake) {
 		$publishedon = ($published ? time() : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 								
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_content(introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
+		$sql = "INSERT INTO $dbase.`".$table_prefix."site_content` (introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
 				VALUES('".$introtext."','".$content."', '".$pagetitle."', '".$longtitle."', '".$type."', '".$description."', '".$alias."', '".$link_attributes."', '".$isfolder."', '".$richtext."', '".$published."', '".$parent."', '".$template."', '".$menuindex."', '".$searchable."', '".$cacheable."', '".$modx->getLoginUserID()."', ".time().", '".$modx->getLoginUserID()."', ".time().", ".$publishedby.", ".$publishedon.", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
 
 		$rs = mysql_query($sql);
@@ -252,7 +252,7 @@ switch ($actionToTake) {
 			if (is_array($value)) {
 				$tvId  = $value[0];
 				$tvVal = $value[1];
-				$sql = "INSERT INTO $dbase.".$table_prefix."site_tmplvar_contentvalues(tmplvarid, contentid, value) VALUES('$tvId','$key', '".mysql_escape_string($tvVal)."')";
+				$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_contentvalues` (tmplvarid, contentid, value) VALUES('$tvId','$key', '".mysql_escape_string($tvVal)."')";
 				$rs = mysql_query($sql);
 			}
 		}
@@ -264,7 +264,7 @@ switch ($actionToTake) {
 		if($use_udperms==1) {
 			if(is_array($document_groups)) {
 				foreach ($document_groups as $dgkey=>$value) {
-					$sql = "INSERT INTO $dbase.".$table_prefix."document_groups(document_group, document) values(".stripslashes($value).", $key)";
+					$sql = "INSERT INTO $dbase.`".$table_prefix."document_groups` (document_group, document) values(".stripslashes($value).", $key)";
 					$rs = mysql_query($sql);
 					if(!$rs){
 						$modx->manager->saveFormValues(27);
@@ -279,7 +279,7 @@ switch ($actionToTake) {
 
 		/*******************************************************************************/		
 		if($parent!=0) {			
-			$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=1 WHERE id=".$_REQUEST['parent'].";";
+			$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=1 WHERE id=".$_REQUEST['parent'].";";
 			$rs = mysql_query($sql);
 			if(!$rs){
 				echo "An error occured while attempting to change the document's parent to a folder.";
@@ -333,7 +333,7 @@ switch ($actionToTake) {
     case 'edit':
     								
 		// first, get the document's current parent.	
-		$sql = "SELECT parent FROM $dbase.".$table_prefix."site_content WHERE id=".$_REQUEST['id'].";";
+		$sql = "SELECT parent FROM $dbase.`".$table_prefix."site_content` WHERE id=".$_REQUEST['id'].";";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			$modx->manager->saveFormValues(27);
@@ -362,7 +362,7 @@ switch ($actionToTake) {
 			exit;
 		}
 		// check to see document is a folder.
-		$sql = "SELECT count(*) FROM $dbase.".$table_prefix."site_content WHERE parent=".$_REQUEST['id'].";";
+		$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=".$_REQUEST['id'].";";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			$modx->manager->saveFormValues(27);
@@ -376,7 +376,7 @@ switch ($actionToTake) {
   
 
     // Set publishedon and publishedby
-    $was_published = $modx->db->getValue("SELECT published FROM {$table_prefix}site_content WHERE id = '{$id}';");
+    $was_published = $modx->db->getValue("SELECT published FROM `{$table_prefix}site_content` WHERE id = '{$id}';");
    
     // Keep original publish state, if change is not permitted
     if(!$modx->hasPermission('publish_document')) {
@@ -405,7 +405,7 @@ switch ($actionToTake) {
 								));    
 		
 		// update the document
-		$sql = "UPDATE $dbase.".$table_prefix."site_content SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes', 
+		$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes', 
 		isfolder=$isfolder, richtext=$richtext, published=$published, pub_date=$pub_date, unpub_date=$unpub_date, parent=$parent, template=$template, menuindex='$menuindex',
 		searchable=$searchable, cacheable=$cacheable, editedby=".$modx->getLoginUserID().", editedon=".time().", publishedon=$publishedon, publishedby=$publishedby, contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu'  WHERE id=$id;";
 
@@ -415,7 +415,7 @@ switch ($actionToTake) {
 		}
 
 		// Modified by Raymond for TV - Orig Added by Apodigm - DocVars
-		$sql = "SELECT tmplvarid FROM $dbase.".$table_prefix."site_tmplvar_contentvalues WHERE contentid=$id";
+		$sql = "SELECT tmplvarid FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues` WHERE contentid=$id";
 		$rs = mysql_query($sql);
 		$tvIds = array();
 		while (list($tvId) = mysql_fetch_row($rs)) {
@@ -425,7 +425,7 @@ switch ($actionToTake) {
 			if (!is_array($value)) {
 				if (in_array($value,$tvIds)){
 					//delete unused variable 
-					$sql = "DELETE FROM $dbase.".$table_prefix."site_tmplvar_contentvalues WHERE tmplvarid=$value AND contentid='$id';";
+					$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues` WHERE tmplvarid=$value AND contentid='$id';";
 					$rs = mysql_query($sql);
 				}
 			}
@@ -434,12 +434,12 @@ switch ($actionToTake) {
 				$tvVal = $value[1];
 				if(in_array($tvId,$tvIds)) {
 				   //update the existing record
-				   $sql = "UPDATE $dbase.".$table_prefix."site_tmplvar_contentvalues SET value='".mysql_escape_string($tvVal)."' WHERE tmplvarid=$tvId AND contentid='$id';";
+				   $sql = "UPDATE $dbase.`".$table_prefix."site_tmplvar_contentvalues` SET value='".mysql_escape_string($tvVal)."' WHERE tmplvarid=$tvId AND contentid='$id';";
 				   $rs = mysql_query($sql);
 				}
 				else {
 				   //add a new record
-				   $sql = "INSERT INTO $dbase.".$table_prefix."site_tmplvar_contentvalues (tmplvarid, contentid,value) VALUES($tvId, '$id', '".mysql_escape_string($tvVal)."')";
+				   $sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_contentvalues` (tmplvarid, contentid,value) VALUES($tvId, '$id', '".mysql_escape_string($tvVal)."')";
 				   $rs = mysql_query($sql);
 				}
 			}
@@ -451,7 +451,7 @@ switch ($actionToTake) {
 		// first, check that up_perms are switched on!
 		if($use_udperms==1) {
 			// delete old permissions on the document
-			$sql = "DELETE FROM $dbase.".$table_prefix."document_groups WHERE document=$id;";
+			$sql = "DELETE FROM $dbase.`".$table_prefix."document_groups` WHERE document=$id;";
 			$rs = mysql_query($sql);
 			if(!$rs){
 				$modx->manager->saveFormValues(27);
@@ -460,7 +460,7 @@ switch ($actionToTake) {
 			}
 			if(is_array($document_groups)) {
 				foreach ($document_groups as $dgkey=>$value) {
-					$sql = "INSERT INTO $dbase.".$table_prefix."document_groups(document_group, document) values(".stripslashes($value).", $id)";
+					$sql = "INSERT INTO $dbase.`".$table_prefix."document_groups` (document_group, document) values(".stripslashes($value).", $id)";
 					$rs = mysql_query($sql);
 					if(!$rs){
 						$modx->manager->saveFormValues(27);
@@ -478,7 +478,7 @@ switch ($actionToTake) {
 
 
 		if($parent!=0) {			
-			$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=1 WHERE id=".$_REQUEST['parent'].";";
+			$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=1 WHERE id=".$_REQUEST['parent'].";";
 			$rs = mysql_query($sql);
 			if(!$rs){
 				echo "An error occured while attempting to change the new parent to a folder.";
@@ -486,7 +486,7 @@ switch ($actionToTake) {
 		}			
 
 		// finished moving the document, now check to see if the old_parent should no longer be a folder.
-		$sql = "SELECT count(*) FROM $dbase.".$table_prefix."site_content WHERE parent=$oldparent;";
+		$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=$oldparent;";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "An error occured while attempting to find the old parents' children.";
@@ -495,7 +495,7 @@ switch ($actionToTake) {
 		$limit = $row['count(*)'];
 
 		if($limit==0) {
-			$sql = "UPDATE $dbase.".$table_prefix."site_content SET isfolder=0 WHERE id=$oldparent;";
+			$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=0 WHERE id=$oldparent;";
 			$rs = mysql_query($sql);
 			if(!$rs){
 				echo "An error occured while attempting to change the old parent to a regular document.";

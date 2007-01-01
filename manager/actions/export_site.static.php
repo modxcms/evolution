@@ -82,7 +82,7 @@ echo $_lang['export_site_message'];
 	$prefix = $_POST['prefix'];
 	$suffix = $_POST['suffix'];
 
-	$noncache = $_POST['includenoncache']==1 ? "" : "AND $dbase.".$table_prefix."site_content.cacheable=1";
+	$noncache = $_POST['includenoncache']==1 ? "" : "AND $dbase.`".$table_prefix."site_content`.cacheable=1";
 
 	// Modified for export alias path  2006/3/24 start
 	function removeDirectoryAll($directory) {
@@ -191,7 +191,7 @@ echo $_lang['export_site_message'];
 		global $table_prefix;
 		global $sqlcond;
 
-		$sql = "SELECT id, alias, pagetitle, isfolder, (content = '' AND template = 0) AS wasNull, editedon FROM $dbase.".$table_prefix."site_content WHERE $dbname.".$table_prefix."site_content.parent = ".$dirid." AND ".$sqlcond;
+		$sql = "SELECT id, alias, pagetitle, isfolder, (content = '' AND template = 0) AS wasNull, editedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbname.`".$table_prefix."site_content`.parent = ".$dirid." AND ".$sqlcond;
 		$rs = mysql_query($sql);
 		$dircontent = array();
 		while($row = mysql_fetch_assoc($rs)) {
@@ -234,8 +234,8 @@ echo $_lang['export_site_message'];
 	}
 
 	if($modx->config['friendly_urls']==1 && $modx->config['use_alias_path']==1) {
-		$sqlcond = "$dbase.".$table_prefix."site_content.deleted=0 AND (($dbase.".$table_prefix."site_content.published=1 AND $dbase.".$table_prefix."site_content.type='document') OR ($dbase.".$table_prefix."site_content.isfolder=1)) $noncache";
-		$sql = "SELECT count(*) as count1 FROM $dbase.".$table_prefix."site_content WHERE ".$sqlcond;
+		$sqlcond = "$dbase.`".$table_prefix."site_content`.deleted=0 AND (($dbase.`".$table_prefix."site_content`.published=1 AND $dbase.`".$table_prefix."site_content`.type='document') OR ($dbase.`".$table_prefix."site_content`.isfolder=1)) $noncache";
+		$sql = "SELECT count(*) as count1 FROM $dbase.`".$table_prefix."site_content` WHERE ".$sqlcond;
 		$rs = mysql_query($sql);
 		$row = mysql_fetch_row($rs);
 		$prefix = $modx->config['friendly_url_prefix'];
@@ -247,7 +247,7 @@ echo $_lang['export_site_message'];
 
 	} else {
 	// Modified for export alias path  2006/3/24 end
-		$sql = "SELECT id, alias, pagetitle FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.deleted=0 AND $dbase.".$table_prefix."site_content.published=1 AND $dbase.".$table_prefix."site_content.type='document' $noncache";
+		$sql = "SELECT id, alias, pagetitle FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 AND $dbase.`".$table_prefix."site_content`.published=1 AND $dbase.`".$table_prefix."site_content`.type='document' $noncache";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		printf($_lang['export_site_numberdocs'], $limit);

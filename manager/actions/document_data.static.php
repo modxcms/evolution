@@ -27,8 +27,8 @@ if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
 </script>
 
 <?php
-$tblsc = $dbase.".".$table_prefix."site_content";
-$tbldg = $dbase.".".$table_prefix."document_groups";
+$tblsc = $dbase.".`".$table_prefix."site_content`";
+$tbldg = $dbase.".`".$table_prefix."document_groups`";
 // get document groups for current user
 if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
 $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
@@ -52,21 +52,21 @@ else if($limit==0){
 $content = mysql_fetch_assoc($rs);
 
 $createdby = $content['createdby'];
-$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id='$createdby';";
+$sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id='$createdby';";
 $rs = mysql_query($sql);
 
 $row=mysql_fetch_assoc($rs);
 $createdbyname = $row['username'];
 
 $editedby = $content['editedby'];
-$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=$editedby;";
+$sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=$editedby;";
 $rs = mysql_query($sql);
 
   $row=mysql_fetch_assoc($rs);
   $editedbyname = $row['username'];
 
 $templateid = $content['template'];
-$sql = "SELECT templatename FROM $dbase.".$table_prefix."site_templates WHERE id=$templateid;";
+$sql = "SELECT templatename FROM $dbase.`".$table_prefix."site_templates` WHERE id=$templateid;";
 $rs = mysql_query($sql);
 
   $row=mysql_fetch_assoc($rs);
@@ -76,7 +76,7 @@ $rs = mysql_query($sql);
    $_SESSION['itemname']=$content['pagetitle'];
 
 // keywords stuff, by stevew (thanks Steve!)
-$sql = "SELECT k.keyword FROM $dbase.".$table_prefix."site_keywords as k, $dbase.".$table_prefix."keyword_xref as x WHERE k.id = x.keyword_id AND x.content_id = $id ORDER BY k.keyword ASC";
+$sql = "SELECT k.keyword FROM $dbase.`".$table_prefix."site_keywords` as k, $dbase.`".$table_prefix."keyword_xref` as x WHERE k.id = x.keyword_id AND x.content_id = $id ORDER BY k.keyword ASC";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit > 0) {

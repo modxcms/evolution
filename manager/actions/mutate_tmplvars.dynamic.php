@@ -32,7 +32,7 @@ if(isset($_REQUEST['id'])) {
 
 
 // check to see the variable editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE action=301 AND id=$id";
+$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE action=301 AND id=$id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
@@ -55,7 +55,7 @@ if(!isNumber($id)) {
 }
 
 if(isset($_GET['id'])) {
-    $sql = "SELECT * FROM $dbase.".$table_prefix."site_tmplvars WHERE id = $id;";
+    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id = $id;";
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
     if($limit>1) {
@@ -369,8 +369,8 @@ function decode(s){
 <table width="100%" cellspacing="0" cellpadding="0">
 <?php
     // Added by Raymond - based on S.BRENNAN modifications
-    $tbl = $dbase.".".$table_prefix."site_templates" ;
-    $tblsel = $dbase.".".$table_prefix."site_tmplvar_templates" ;
+    $tbl = $dbase.".`".$table_prefix."site_templates`" ;
+    $tblsel = $dbase.".`".$table_prefix."site_tmplvar_templates`";
     $sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id";
     $rs = mysql_query($sql);
 ?>
@@ -391,7 +391,7 @@ if($use_udperms==1) {
     $groupsarray = array();
 
     // fetch permissions for the variable
-    $sql = "SELECT * FROM $dbase.".$table_prefix."site_tmplvar_access where tmplvarid=".$id;
+    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
     for ($i = 0; $i < $limit; $i++) {
@@ -430,7 +430,7 @@ if($use_udperms==1) {
 <?php
     }
     $chk ='';
-    $sql = "SELECT name, id FROM $dbase.".$table_prefix."documentgroup_names";
+    $sql = "SELECT name, id FROM $dbase.`".$table_prefix."documentgroup_names`";
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
     for($i=0; $i<$limit; $i++) {

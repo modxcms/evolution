@@ -22,7 +22,7 @@ switch($_REQUEST['a']) {
 if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 	$id = $_REQUEST['id'];
 	// check to see the template editor isn't locked
-	$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=16 AND $dbase.".$table_prefix."active_users.id=$id";
+	$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=16 AND $dbase.`".$table_prefix."active_users`.id=$id";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {
@@ -42,7 +42,7 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 
 $content = array();
 if(isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
-	$sql = "SELECT * FROM $dbase.".$table_prefix."site_templates WHERE $dbase.".$table_prefix."site_templates.id = $id;";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {

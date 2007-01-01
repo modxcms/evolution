@@ -15,7 +15,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <div class="sectionHeader"><?php echo $_lang["publish_events"];?></div><div class="sectionBody" id="lyr1">
 <?php
 //$db->debug = true;
-$sql = "SELECT id, pagetitle, pub_date FROM $dbase.".$table_prefix."site_content WHERE pub_date > ".time()." ORDER BY pub_date ASC";
+$sql = "SELECT id, pagetitle, pub_date FROM $dbase.`".$table_prefix."site_content` WHERE pub_date > ".time()." ORDER BY pub_date ASC";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1) {
@@ -54,7 +54,7 @@ if($limit<1) {
 
 <div class="sectionHeader"><?php echo $_lang["unpublish_events"];?></div><div class="sectionBody" id="lyr2"><?php
 //$db->debug = true;
-$sql = "SELECT id, pagetitle, unpub_date FROM $dbase.".$table_prefix."site_content WHERE unpub_date > ".time()." ORDER BY unpub_date ASC";
+$sql = "SELECT id, pagetitle, unpub_date FROM $dbase.`".$table_prefix."site_content` WHERE unpub_date > ".time()." ORDER BY unpub_date ASC";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1) {
@@ -92,7 +92,7 @@ if($limit<1) {
 
 
 <div class="sectionHeader"><?php echo $_lang["all_events"];?></div><div class="sectionBody"><?php
-$sql = "SELECT id, pagetitle, pub_date, unpub_date FROM $dbase.".$table_prefix."site_content WHERE pub_date > 0 OR unpub_date > 0 ORDER BY id";
+$sql = "SELECT id, pagetitle, pub_date, unpub_date FROM $dbase.`".$table_prefix."site_content` WHERE pub_date > 0 OR unpub_date > 0 ORDER BY id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1) {

@@ -89,7 +89,7 @@ if(!$modx->hasPermission('logs')) {
 			</thead>
 			<tbody>
 		<?php
-		$sql = "SELECT id, pagetitle, editedby, editedon FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.deleted=0 ORDER BY editedon DESC LIMIT 20";
+		$sql = "SELECT id, pagetitle, editedby, editedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 ORDER BY editedon DESC LIMIT 20";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
@@ -97,7 +97,7 @@ if(!$modx->hasPermission('logs')) {
 		} else {
 			for ($i = 0; $i < $limit; $i++) {
 				$content = mysql_fetch_assoc($rs);
-				$sql = "SELECT username FROM $dbase.".$table_prefix."manager_users WHERE id=".$content['editedby'];
+				$sql = "SELECT username FROM $dbase.`".$table_prefix."manager_users` WHERE id=".$content['editedby'];
 				$rs2 = mysql_query($sql);
 				$limit2 = mysql_num_rows($rs2);
 				if($limit2==0) $user = '-';
@@ -163,7 +163,7 @@ if(!$modx->hasPermission('logs')) {
 	// enable record deletion for certain tables
 	// sottwell@sottwell.com
 	// 08-2005
-	if($modx->hasPermission('settings') && ($log_status['Name'] == $table_prefix."event_log" || $log_status['Name'] == $table_prefix."log_access" || $log_status['Name'] == $table_prefix."log_hosts" || $log_status['Name'] == $table_prefix."log_visitors" || $log_status['Name'] == $table_prefix."manager_log")) {
+	if($modx->hasPermission('settings') && ($log_status['Name'] == "`".$table_prefix."event_log`" || $log_status['Name'] == "`".$table_prefix."log_access`" || $log_status['Name'] == "`".$table_prefix."log_hosts`" || $log_status['Name'] == "`".$table_prefix."log_visitors`" || $log_status['Name'] == "`".$table_prefix."manager_log`")) {
 		echo "<td align='right'>";
 		echo "<a href='index.php?a=54&mode=$action&u=".$log_status['Name']."' title='".$_lang['truncate_table']."'>".nicesize($log_status['Data_length']+$log_status['Data_free'])."</a>";
 		echo "</td>";
@@ -225,7 +225,7 @@ if(!$modx->hasPermission('logs')) {
 
 		include_once "actionlist.inc.php";
 
-		$sql = "SELECT * FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.lasthit>$timetocheck ORDER BY username ASC";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.lasthit>$timetocheck ORDER BY username ASC";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {

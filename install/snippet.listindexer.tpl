@@ -220,7 +220,7 @@ if ($sortDir == '') $sortDir = ($sortBy == 'date')? 'DESC' : 'ASC' ;
 
 
 // Make useful variable shortcut for the content table
-$tbl = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_content";
+$tbl = $modx->dbConfig['dbase'] . ".`" . $modx->dbConfig['table_prefix'] . "site_content`";
 
 // Initialize output
 $output = '';

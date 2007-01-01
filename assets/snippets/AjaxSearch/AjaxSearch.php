@@ -10,6 +10,8 @@ Updated: 09/18/06 - Added user permissions to searching
 Updated: 03/20/06 - All variables are set in the main snippet & snippet call
 */
 
+require_once(MODX_MANAGER_PATH . '/includes/protect.inc.php');
+
 $stripHTML = $_GET['stripHTML'];
 $stripSnip = $_GET['stripSnip'];
 $stripSnippets = $_GET['stripSnippets'];

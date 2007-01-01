@@ -24,7 +24,7 @@ if(!$udperms->checkPermissions()) {
 }
 
 // get the timestamp on which the document was deleted.
-$sql = "SELECT deletedon FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.id=".$id." AND deleted=1;";
+$sql = "SELECT deletedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.id=".$id." AND deleted=1;";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit!=1) {
@@ -46,7 +46,7 @@ function getChildren($parent) {
 	
 	$db->debug = true;
 	
-	$sql = "SELECT id FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.parent=".$parent." AND deleted=1 AND deletedon=$deltime;";
+	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=1 AND deletedon=$deltime;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>0) {
@@ -64,7 +64,7 @@ getChildren($id);
 
 if(count($children)>0) {
 	$docs_to_undelete = implode(" ,", $children);
-	$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=0, deletedby=0, deletedon=0 WHERE id IN($docs_to_undelete);";
+	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id IN($docs_to_undelete);";
 	$rs = @mysql_query($sql);
 	if(!$rs) {
 		echo "Something went wrong while trying to set the document's children to undeleted status...";
@@ -72,7 +72,7 @@ if(count($children)>0) {
 	}
 }
 //'undelete' the document.
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=0, deletedby=0, deletedon=0 WHERE id=$id;";
+$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=0, deletedby=0, deletedon=0 WHERE id=$id;";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to set the document to undeleted status...";

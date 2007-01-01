@@ -59,7 +59,7 @@ else {
 
 // recent document info
 $html = $_lang["activity_message"].'<br /><br /><ul>';
-$sql = "SELECT id, pagetitle, description FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.deleted=0 AND ($dbase.".$table_prefix."site_content.editedby=".$modx->getLoginUserID()." OR $dbase.".$table_prefix."site_content.createdby=".$modx->getLoginUserID().") ORDER BY editedon DESC LIMIT 10";
+$sql = "SELECT id, pagetitle, description FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 AND ($dbase.`".$table_prefix."site_content`.editedby=".$modx->getLoginUserID()." OR $dbase.`".$table_prefix."site_content`.createdby=".$modx->getLoginUserID().") ORDER BY editedon DESC LIMIT 10";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1) {
@@ -128,7 +128,7 @@ $html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_
 
     include_once "actionlist.inc.php";
 
-    $sql = "SELECT * FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.lasthit>'$timetocheck' ORDER BY username ASC";
+    $sql = "SELECT * FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.lasthit>'$timetocheck' ORDER BY username ASC";
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
     if($limit<1) {

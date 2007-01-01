@@ -52,14 +52,14 @@ else {
 	// do any renaming that has to be done
 	foreach($orig_keywords as $key => $value) {
 		if($rename_keywords[$key]!=$value) {
-			$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords WHERE BINARY keyword='".addslashes($rename_keywords[$key])."'";
+			$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE BINARY keyword='".addslashes($rename_keywords[$key])."'";
 			$rs = mysql_query($sql);
 			$limit = mysql_num_rows($rs);
 			if($limit > 0) {
 				echo "  - This keyword has already been defined!";
 				exit;		
 			} else {
-				$sql = "UPDATE $dbase.".$table_prefix."site_keywords SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
+				$sql = "UPDATE $dbase.`".$table_prefix."site_keywords` SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
 				$rs = mysql_query($sql);
 			}
 		}
@@ -72,14 +72,14 @@ else {
 			$keywords_array[] = $key;
 		}
 
-		$sql = "DELETE FROM $dbase.".$table_prefix."keyword_xref WHERE keyword_id IN(".join($keywords_array, ",").")";
+		$sql = "DELETE FROM $dbase.`".$table_prefix."keyword_xref` WHERE keyword_id IN(".join($keywords_array, ",").")";
 		$rs = mysql_query($sql);
 		if(!$rs) {
 			echo "Failure on deletion of xref keys: ".mysql_error();
 			exit;
 		}
 
-		$sql = "DELETE FROM $dbase.".$table_prefix."site_keywords WHERE id IN(".join($keywords_array, ",").")";
+		$sql = "DELETE FROM $dbase.`".$table_prefix."site_keywords` WHERE id IN(".join($keywords_array, ",").")";
 		$rs = mysql_query($sql);
 		if(!$rs) {
 			echo "Failure on deletion of keywords ".mysql_error();
@@ -92,14 +92,14 @@ else {
 	if(!empty($_POST['new_keyword'])) {
 		$nk = $_POST['new_keyword'];
 
-		$sql = "SELECT * FROM $dbase.".$table_prefix."site_keywords WHERE keyword='".addslashes($nk)."'";
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` WHERE keyword='".addslashes($nk)."'";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit > 0) {
 			echo "Keyword $nk already exists!";
 			exit;		
 		} else {
-			$sql = "INSERT INTO $dbase.".$table_prefix."site_keywords(keyword) VALUES('".addslashes($nk)."')";
+			$sql = "INSERT INTO $dbase.`".$table_prefix."site_keywords` (keyword) VALUES('".addslashes($nk)."')";
 			$rs = mysql_query($sql);
 		}
 	}

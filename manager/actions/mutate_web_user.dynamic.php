@@ -23,7 +23,7 @@ $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 
 // check to see the snippet editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=88 AND $dbase.".$table_prefix."active_users.id=$user";
+$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=88 AND $dbase.`".$table_prefix."active_users`.id=$user";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
@@ -40,7 +40,7 @@ if($limit>1) {
 
 if($_REQUEST['a']==88) {
 	// get user attributes
-	$sql = "SELECT * FROM $dbase.".$table_prefix."web_user_attributes WHERE $dbase.".$table_prefix."web_user_attributes.internalKey = ".$user.";";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey = ".$user.";";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {
@@ -54,14 +54,14 @@ if($_REQUEST['a']==88) {
 	$userdata = mysql_fetch_assoc($rs);
 
 	// get user settings
-	$sql = "SELECT wus.* FROM $dbase.".$table_prefix."web_user_settings wus WHERE wus.webuser = ".$user.";";
+	$sql = "SELECT wus.* FROM $dbase.`".$table_prefix."web_user_settings` wus WHERE wus.webuser = ".$user.";";
 	$rs = mysql_query($sql);
 	$usersettings = array();
 	while($row=mysql_fetch_assoc($rs)) $usersettings[$row['setting_name']]=$row['setting_value'];
 	extract($usersettings, EXTR_OVERWRITE);
 
 	// get user name
-	$sql = "SELECT * FROM $dbase.".$table_prefix."web_users WHERE $dbase.".$table_prefix."web_users.id = ".$user.";";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_users` WHERE $dbase.`".$table_prefix."web_users`.id = ".$user.";";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {
@@ -523,7 +523,7 @@ if($use_udperms==1) {
 $groupsarray = array();
 
 if($_GET['a']=='88') { // only do this bit if the user is being edited
-	$sql = "SELECT * FROM $dbase.".$table_prefix."web_groups where webuser=".$_GET['id']."";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_groups` where webuser=".$_GET['id']."";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for ($i = 0; $i < $limit; $i++) {
@@ -542,7 +542,7 @@ if(is_array($_POST['user_groups'])) {
 <div class="sectionHeader"><?php echo $_lang['web_access_permissions']; ?></div><div class="sectionBody">
 <?php
 	echo $_lang['access_permissions_user_message']."<p />";
-	$sql = "SELECT name, id FROM $dbase.".$table_prefix."webgroup_names ORDER BY name";
+	$sql = "SELECT name, id FROM $dbase.`".$table_prefix."webgroup_names` ORDER BY name";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for($i=0; $i<$limit; $i++) {

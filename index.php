@@ -31,7 +31,7 @@
 
 	You should have received a copy of the GNU General Public License
 	along with MODx (located in "/assets/docs/"); if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 	For more information on MODx please visit http://modxcms.com/
 	
@@ -45,40 +45,16 @@
  * -----------------------------
  */
  
+// is this file included?
+if(count(get_included_files())>1) $noparser = true;
+
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 
-// secure variables from outside
-$modxtags = array('@<script[^>]*?>.*?</script>@si',
-                  '@&#(\d+);@e',
-                  '@\[\[(.*?)\]\]@si',
-                  '@\[!(.*?)!\]@si',
-                  '@\[\~(.*?)\~\]@si',
-                  '@\[\((.*?)\)\]@si',
-                  '@{{(.*?)}}@si',
-                  '@\[\*(.*?)\*\]@si');
-foreach($_POST as $key => $value) {
-	if (!is_array($value)) {
-  		$_POST[$key] = preg_replace($modxtags,"", $value);
-	} else {
-  		if (count($value) > 0) {
-  			foreach ($value as $k => $v) {
-  				$value[$k] = preg_replace($modxtags,"", $v);
-  			}
-  			$_POST[$key] =$value;
-  		}
-  	}
-}
-foreach($_GET as $key => $value) {
-  $_GET[$key] = preg_replace($modxtags,"", $value);
-}
+// harden it
+require_once(dirname(__FILE__).'/manager/includes/protect.inc.php');
 
-$_SERVER['HTTP_USER_AGENT'] = isset($_SERVER['HTTP_USER_AGENT']) ? preg_replace("/[^A-Za-z0-9_\-\,\.\/\s]/", "", $_SERVER['HTTP_USER_AGENT']): '';
-$_SERVER['HTTP_REFERER'] = isset($_SERVER['HTTP_REFERER']) ? preg_replace($modxtags,"", $_SERVER['HTTP_REFERER']) : '';
-if(strlen($_SERVER['HTTP_USER_AGENT'])>255) $_SERVER['HTTP_USER_AGENT'] = substr(0,255,$_SERVER['HTTP_USER_AGENT']);
-if(isset($_GET['q'])) $_GET['q'] = preg_replace("/[^A-Za-z0-9_\-\.\/]/", "", $_GET['q']);
-
-// first, set some settings, and address some IE issues
+// set some settings, and address some IE issues
 @ini_set('url_rewriter.tags', '');
 @ini_set('session.use_trans_sid', 0);
 @ini_set('session.use_only_cookies',1);
@@ -109,7 +85,7 @@ $base_path = '';
 
 // get the required includes
 if($database_user=="") {
-	$rt = @include_once "manager/includes/config.inc.php";
+	$rt = @include_once(dirname(__FILE__).'/manager/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
 	echo "
@@ -132,7 +108,7 @@ a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 
 startCMSSession();
 
 // initiate a new document parser
-include_once($base_path."manager/includes/document.parser.class.inc.php");
+include_once(MODX_MANAGER_PATH.'/includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $etomite = &$modx; // for backward compatibility
 
@@ -149,6 +125,7 @@ $modx->stopOnNotice = false;
 // Don't show PHP errors to the public
 if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) @ini_set("display_errors","0");
 
-// execute the parser
-$modx->executeParser();
+// execute the parser if index.php was not included
+if(!$noparser) $modx->executeParser();
+exit;
 ?>

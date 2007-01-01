@@ -25,7 +25,7 @@ if(!$modx->hasPermission('logs')) {
     <td align="right">
       <?php
 // get all users currently in logging
-$sql = "SELECT DISTINCT(username) AS name, internalKey FROM $dbase.".$table_prefix."manager_log";
+$sql = "SELECT DISTINCT(username) AS name, internalKey FROM $dbase.`".$table_prefix."manager_log`";
 $rs = mysql_query($sql);
 ?>
 		<select name="searchuser" class="inputBox" style="width:240px">
@@ -65,7 +65,7 @@ for($i = 1; $i < 1000; $i++) {
     <td align="right">
       <?php
 // get all itemid currently in logging
-$sql = "SELECT DISTINCT(itemid) AS item, itemid FROM $dbase.".$table_prefix."manager_log";
+$sql = "SELECT DISTINCT(itemid) AS item, itemid FROM $dbase.`".$table_prefix."manager_log`";
 $rs = mysql_query($sql);
 ?>
 		<select name="itemid" class="inputBox" style="width:240px">
@@ -86,7 +86,7 @@ $rs = mysql_query($sql);
     <td align="right">
       <?php
 // get all itemname currently in logging
-$sql = "SELECT DISTINCT(itemname), itemname FROM $dbase.".$table_prefix."manager_log";
+$sql = "SELECT DISTINCT(itemname), itemname FROM $dbase.`".$table_prefix."manager_log`";
 $rs = mysql_query($sql);
 ?>
 		<select name="itemname" class="inputBox" style="width:240px">
@@ -209,7 +209,7 @@ if($_REQUEST['datefrom']!="") $sqladd .= " AND timestamp>".convertdate($_REQUEST
 if($_REQUEST['dateto']!="") $sqladd .= " AND timestamp<".convertdate($_REQUEST['dateto']);
 
 // Get  number of rows
-$sql = "SELECT count(id) FROM $dbase.".$table_prefix."manager_log WHERE 1=1";
+$sql = "SELECT count(id) FROM $dbase.`".$table_prefix."manager_log` WHERE 1=1";
 $sql .= $sqladd;
 //echo "<fieldset>".$sql."</fieldset>";
 $rs=mysql_query($sql);
@@ -240,7 +240,7 @@ $extargv = 	"&a=13&searchuser=".$_REQUEST['searchuser']."&action=".$_REQUEST['ac
 
 
 // build the sql
-$sql = "SELECT * FROM $dbase.".$table_prefix."manager_log WHERE 1=1";
+$sql = "SELECT * FROM $dbase.`".$table_prefix."manager_log` WHERE 1=1";
 $sql .= $sqladd;
 
 $sql .= " LIMIT ".$int_cur_position.", ".$int_num_result;

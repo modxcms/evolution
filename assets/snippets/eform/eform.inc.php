@@ -32,6 +32,8 @@
 # For a full version history see the eform_history.htm file in the docs directory
 ##
 
+defined('IN_PARSER_MODE') or die();
+
 $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format settings
 function eForm($modx,$params) {
 global $_lang;

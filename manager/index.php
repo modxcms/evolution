@@ -31,7 +31,7 @@
 
     You should have received a copy of the GNU General Public License
     along with MODx (located in "/assets/docs/"); if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
     For more information on MODx please visit http://modxcms.com/
 
@@ -52,6 +52,12 @@
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 
+define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
+                                    // the manager instead of seperately.
+
+// harden it
+require_once('./includes/protect.inc.php');
+
 // send anti caching headers
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -60,7 +66,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 // set error reporting
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE);
 
 // check PHP version. MODx is compatible with php 4 (4.1.0 up), extra/ improved features are planned for 5
 $php_ver_comp =  version_compare(phpversion(), "4.1.0");
@@ -78,7 +84,6 @@ if(version_compare(phpversion(), "4.3.0")>=0) {
     ini_set("include_path", $incPath); // include path the old way
 }
 
-error_reporting(E_ALL ^ E_NOTICE);
 @set_magic_quotes_runtime(0);
 
 // include_once the magic_quotes_gpc workaround
@@ -108,10 +113,8 @@ if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
     $_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", ereg_replace("[\][\]", "/", $_SERVER["PATH_TRANSLATED"]))."/";
 }
 
-
 define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
-define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
-                                    // the manager instead of seperately.
+
 // include_once config file
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
@@ -910,5 +913,3 @@ if($action!=1 && $action!=7 && $action!=2) {
 // show debug
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 include_once "debug.inc.php";
-
-?>

@@ -112,7 +112,7 @@ function importFiles($parent,$filepath,$files) {
             $alias = !isset($modx->documentListing[$id]) ? $id:$id.'-'.substr(uniqid(''),-3);
             $modx->documentListing[$alias] = true;
             printf($_lang['import_site_importing_document'], $id);
-            $sql = "INSERT INTO $dbase.".$table_prefix."site_content
+            $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
                    (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
                    ('document', 'text/html', '".mysql_escape_string($id)."', '".stripAlias($alias)."', 1, '$parent', 1, '', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
             $rs = mysql_query($sql);
@@ -144,7 +144,7 @@ function importFiles($parent,$filepath,$files) {
                     $content = $matches[1];
 
                 } else $content = $file;
-                $sql = "INSERT INTO $dbase.".$table_prefix."site_content
+                $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
                        (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
                        ('document', 'text/html', '".mysql_escape_string($pagetitle)."', '".stripAlias($alias)."', 1, '$parent', 0, '".mysql_escape_string($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
                 $rs = mysql_query($sql);

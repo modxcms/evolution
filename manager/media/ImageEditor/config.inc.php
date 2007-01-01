@@ -2,6 +2,8 @@
 
 // ** START FOR MODx
 
+require_once('../../includes/protect.inc.php');
+
 // load configuration file
 include "../../includes/config.inc.php";
 

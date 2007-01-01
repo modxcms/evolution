@@ -38,7 +38,7 @@ function getChildren($parent) {
 	
 	$db->debug = true;
 	
-	$sql = "SELECT id FROM $dbase.".$table_prefix."site_content WHERE $dbase.".$table_prefix."site_content.parent=".$parent." AND deleted=0;";
+	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=0;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>0) {
@@ -71,7 +71,7 @@ $modx->invokeEvent("OnBeforeDocFormDelete",
 
 if(count($children)>0) {
 	$docs_to_delete = implode(" ,", $children);
-	$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id IN($docs_to_delete);";
+	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id IN($docs_to_delete);";
 	$rs = @mysql_query($sql);
 	if(!$rs) {
 		echo "Something went wrong while trying to set the document's children to deleted status...";
@@ -90,7 +90,7 @@ if($site_unavailable_page==$id){
 }
 
 //ok, 'delete' the document.
-$sql = "UPDATE $dbase.".$table_prefix."site_content SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id=$id;";
+$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET deleted=1, deletedby=".$modx->getLoginUserID().", deletedon=$deltime WHERE id=$id;";
 $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to set the document to deleted status...";

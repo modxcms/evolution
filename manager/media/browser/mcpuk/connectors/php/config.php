@@ -20,6 +20,8 @@
 
 // ** START FOR MODx
 
+require_once('../../../../../includes/protect.inc.php');
+
 // load configuration file
 // initialize the variables prior to grabbing the config file
 $database_type = '';

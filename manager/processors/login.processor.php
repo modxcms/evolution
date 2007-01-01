@@ -1,4 +1,5 @@
 <?php
+require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
 // set the include_once path
 if(version_compare(phpversion(), "4.3.0")>=0) {
@@ -65,7 +66,7 @@ $modx->invokeEvent("OnBeforeManagerLogin",
                             "rememberme"    => $rememberme
                         ));
 
-$sql = "SELECT $dbase.".$table_prefix."manager_users.*, $dbase.".$table_prefix."user_attributes.* FROM $dbase.".$table_prefix."manager_users, $dbase.".$table_prefix."user_attributes WHERE BINARY $dbase.".$table_prefix."manager_users.username = '".$username."' and $dbase.".$table_prefix."user_attributes.internalKey=$dbase.".$table_prefix."manager_users.id;";
+$sql = "SELECT $dbase.`".$table_prefix."manager_users`.*, $dbase.`".$table_prefix."user_attributes`.* FROM $dbase.`".$table_prefix."manager_users`, $dbase.`".$table_prefix."user_attributes` WHERE BINARY $dbase.`".$table_prefix."manager_users`.username = '".$username."' and $dbase.`".$table_prefix."user_attributes`.internalKey=$dbase.`".$table_prefix."manager_users`.id;";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 
@@ -93,7 +94,7 @@ $email                  = $row['email'];
 // get the user settings from the database
 // require_once "user_settings.inc.php"; <<< This doesn't work, because $modx is set and $modx->getLoginUserID() returns NULL
 // netnoise:
-$sql = "SELECT setting_name, setting_value FROM $dbase.".$table_prefix."user_settings WHERE user='".$internalKey."' AND setting_value!=''";
+$sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."user_settings` WHERE user='".$internalKey."' AND setting_value!=''";
 $rs = mysql_query($sql);
 while ($row = mysql_fetch_assoc($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
@@ -107,7 +108,7 @@ if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) { // block
 }
 
 if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) { // blocked due to number of login errors, but get to try again
-    $sql = "UPDATE $dbase.".$table_prefix."user_attributes SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
+    $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
     $rs = mysql_query($sql);
 }
 
@@ -188,10 +189,10 @@ if($use_captcha==1) {
 if($newloginerror==1) {
     $failedlogins += $newloginerror;
     if($failedlogins>=$failed_login_attempts) { //increment the failed login counter, and block!
-        $sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
+        $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
         $rs = mysql_query($sql);
     } else { //increment the failed login counter
-        $sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount='$failedlogins' where internalKey=$internalKey";
+        $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
         $rs = mysql_query($sql);
         // mod by raymond - implement failed login delays
         $sleep = (int)$failedlogins/2;
@@ -205,7 +206,7 @@ if($newloginerror==1) {
 $currentsessionid = session_id();
 
 if(!isset($_SESSION['mgrValidated'])) {
-    $sql = "update $dbase.".$table_prefix."user_attributes SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
+    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
     $rs = mysql_query($sql);
 }
 
@@ -225,15 +226,15 @@ $_SESSION['mgrFailedlogins']=$failedlogins;
 $_SESSION['mgrLastlogin']=$lastlogin;
 $_SESSION['mgrLogincount']=$nrlogins; // login count
 $_SESSION['mgrRole']=$role;
-$sql="SELECT * FROM $dbase.".$table_prefix."user_roles WHERE id=".$role.";";
+$sql="SELECT * FROM $dbase.`".$table_prefix."user_roles` WHERE id=".$role.";";
 $rs = mysql_query($sql); 
 $row = mysql_fetch_assoc($rs);
 $_SESSION['mgrPermissions'] = $row;
 
 // get user's document groups
 $dg='';$i=0;
-$tblug = $dbase.".".$table_prefix."member_groups";
-$tbluga = $dbase.".".$table_prefix."membergroup_access";
+$tblug = $dbase.".`".$table_prefix."member_groups`";
+$tbluga = $dbase.".`".$table_prefix."membergroup_access`";
 $sql = "SELECT uga.documentgroup
         FROM $tblug ug
         INNER JOIN $tbluga uga ON uga.membergroup=ug.user_group

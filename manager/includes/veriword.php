@@ -77,7 +77,7 @@ class VeriWord {
 		// connect to the database
 		if(@$dbConn = mysql_connect($database_server, $database_user, $database_password)) {
 			mysql_select_db($dbase);
-			$sql = "SELECT * FROM $dbase.".$table_prefix."system_settings WHERE setting_name='captcha_words'";
+			$sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings` WHERE setting_name='captcha_words'";
 			$rs = mysql_query($sql);
 			$limit = mysql_num_rows($rs);
 			if($limit==1) {

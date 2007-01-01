@@ -19,6 +19,9 @@
  * 		Grant French (grant@mcpuk.net)
  */
 //Errors in the config.php could still cause problems.
+
+require_once('../../../../../includes/protect.inc.php');
+
 global $fckphp_config;
 require_once "config.php";
 

@@ -11,18 +11,18 @@ $id=$_GET['id'];
 
 // duplicate Snippet
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.".$table_prefix."site_snippets (name, description, snippet, properties) 
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, properties) 
 			SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties 
-			FROM $dbase.".$table_prefix."site_snippets WHERE id=$id;";
+			FROM $dbase.`".$table_prefix."site_snippets` WHERE id=$id;";
 	$rs = mysql_query($sql);
 }
 else {
 	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties 
-			FROM $dbase.".$table_prefix."site_snippets WHERE id=$id;";
+			FROM $dbase.`".$table_prefix."site_snippets` WHERE id=$id;";
 	$rs = mysql_query($sql);
 	if($rs) {
 		$row = mysql_fetch_assoc($rs);
-		$sql ="INSERT INTO $dbase.".$table_prefix."site_snippets 
+		$sql ="INSERT INTO $dbase.`".$table_prefix."site_snippets` 
 				(name, description, snippet, properties) VALUES 
 				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', '".mysql_escape_string($row['snippet'])."', '".mysql_escape_string($row['properties'])."');";
 		$rs = mysql_query($sql);

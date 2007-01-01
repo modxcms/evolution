@@ -8,6 +8,8 @@
 	 *
 	 */
 	
+	require_once(dirname(__FILE__).'/protect.inc.php');
+	
 	$sysMsgs = "";
 	$limit = count($SystemAlertMsgQueque);
 	for($i=0;$i<$limit;$i++) {
@@ -22,7 +24,7 @@
 ?>	
 
 <?php // fetch the styles
-if (file_exists($modx->config['base_path'].'manager/media/style/'.$manager_theme.'/sysalert_style.php')) {
+if (file_exists(MODX_BASE_PATH.'manager/media/style/'.$manager_theme.'/sysalert_style.php')) {
 	include_once ($modx->config['base_path'].'manager/media/style/'.$manager_theme.'/sysalert_style.php');
 	echo '<style type="text/css">';
 	echo $sysalert_style;

@@ -53,12 +53,12 @@ if(isset($_REQUEST['submitok'])) {
 	$searchlongtitle = addslashes($_REQUEST['longtitle']);
 	
 
-$sqladd .= $searchid!="" ? " AND $dbase.".$table_prefix."site_content.id='$searchid' " : "" ;
-$sqladd .= $searchtitle!="" ? " AND $dbase.".$table_prefix."site_content.pagetitle LIKE '%$searchtitle%' " : "" ;
-$sqladd .= $searchlongtitle!="" ? " AND $dbase.".$table_prefix."site_content.longtitle LIKE '%$searchlongtitle%' " : "" ;
-$sqladd .= $searchcontent!="" ? " AND $dbase.".$table_prefix."site_content.content LIKE '%$searchcontent%' " : "" ;
+$sqladd .= $searchid!="" ? " AND $dbase.`".$table_prefix."site_content`.id='$searchid' " : "" ;
+$sqladd .= $searchtitle!="" ? " AND $dbase.`".$table_prefix."site_content`.pagetitle LIKE '%$searchtitle%' " : "" ;
+$sqladd .= $searchlongtitle!="" ? " AND $dbase.`".$table_prefix."site_content`.longtitle LIKE '%$searchlongtitle%' " : "" ;
+$sqladd .= $searchcontent!="" ? " AND $dbase.`".$table_prefix."site_content`.content LIKE '%$searchcontent%' " : "" ;
 
-$sql = "SELECT id, pagetitle, description, deleted, published, isfolder, type FROM $dbase.".$table_prefix."site_content where 1=1 ".$sqladd." ORDER BY id;";
+$sql = "SELECT id, pagetitle, description, deleted, published, isfolder, type FROM $dbase.`".$table_prefix."site_content` where 1=1 ".$sqladd." ORDER BY id;";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 ?>

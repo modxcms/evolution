@@ -40,7 +40,7 @@ if (file_exists($basePath.'assets/modules/docmanager/lang/'.$manager_language.'.
 
 //-- get theme
 $tb_prefix = $modx->db->config['table_prefix'];
-$theme = $modx->db->select('setting_value', $tb_prefix . 'system_settings', 'setting_name=\'manager_theme\'', '');
+$theme = $modx->db->select('setting_value', '`' . $tb_prefix . 'system_settings`', 'setting_name=\'manager_theme\'', '');
 $theme = $modx->db->getRow($theme);
 $theme = ($theme['setting_value'] <> '') ? '/' . $theme['setting_value'] : '';
 

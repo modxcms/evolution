@@ -3,8 +3,19 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5.1 (rev 2165 - Dec 28, 2006)
+MODx 0.9.5.1 (rev 2179 - Jan 1, 2007)
 ====================================
+* [FS#649] Minor typos in eform documentation (2173)
+* [FS#711] Missing image for Green manager theme (2172)
+* Remove outdated call to contact form snippet in demo data (2171)
+* [FS#140] MODx doesn't work with reserved tokens in table_prefix. (2170)
+* [Security] Fixing issues on systems having register_globals = on. (2169)
+* Including main index.php provides the MODx API for Ajax snippets (intended as an alternative for index-ajax.php when full API is required). (2168)
+* Adding MANAGER_BASE_URL and MANAGER_BASE_PATH. (2168)
+* [Security] Improved input filtering. (2167, 2170)
+* [Security] GPC globals are now removed if register_globals is on. (2167)
+* [Security] Minor fixes in bundled snippets. (2167)
+* Modified stripTags() to strip placeholders. (2166)
 * [FS#732] Fix error with @EVAL and other @bindings that expect multi-line content. (2164)
 * Modified mutate_contant.dynamic.php to allow template selection, metakeywords, and template variables to be assigned to web links. (2164)
 * Fixed syntax error in assets/snippets/ditto/lang/nederlands.inc.php (2164)

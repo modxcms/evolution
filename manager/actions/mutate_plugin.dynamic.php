@@ -23,7 +23,7 @@ $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 
 // check to see the plugin editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=102 AND $dbase.".$table_prefix."active_users.id=$id";
+$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=102 AND $dbase.`".$table_prefix."active_users`.id=$id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
@@ -40,7 +40,7 @@ if($limit>1) {
 
 
 if(isset($_GET['id'])) {
-	$sql = "SELECT * FROM $dbase.".$table_prefix."site_plugins WHERE $dbase.".$table_prefix."site_plugins.id = $id;";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_plugins` WHERE $dbase.`".$table_prefix."site_plugins`.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {
@@ -399,7 +399,7 @@ function decode(s){
 							// get selected events
 							$sql = "
 								SELECT evtid, pluginid
-								FROM $dbase.".$table_prefix."site_plugin_events
+								FROM $dbase.`".$table_prefix."site_plugin_events`
 								WHERE pluginid='$id'
 							";
 							$evts = array();
@@ -420,7 +420,7 @@ function decode(s){
 								"Template Service Events",
 								"User Defined Events"
 							);
-		  					$sql = "SELECT * FROM $dbase.".$table_prefix."system_eventnames ORDER BY service DESC, groupname, name";
+		  					$sql = "SELECT * FROM $dbase.`".$table_prefix."system_eventnames` ORDER BY service DESC, groupname, name";
 							$rs = mysql_query($sql);
 							$limit = mysql_num_rows($rs);
 							if($limit==0) echo "<tr><td>&nbsp;</td></tr>";

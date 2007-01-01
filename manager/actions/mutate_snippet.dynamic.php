@@ -23,7 +23,7 @@ switch($_REQUEST['a']) {
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.".$table_prefix."active_users WHERE $dbase.".$table_prefix."active_users.action=22 AND $dbase.".$table_prefix."active_users.id=$id";
+$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=22 AND $dbase.`".$table_prefix."active_users`.id=$id";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit>1) {
@@ -40,7 +40,7 @@ if($limit>1) {
 
 
 if(isset($_GET['id'])) {
-	$sql = "SELECT * FROM $dbase.".$table_prefix."site_snippets WHERE $dbase.".$table_prefix."site_snippets.id = $id;";
+	$sql = "SELECT * FROM $dbase.`".$table_prefix."site_snippets` WHERE $dbase.`".$table_prefix."site_snippets`.id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit>1) {

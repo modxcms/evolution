@@ -41,7 +41,7 @@ switch ($_POST['mode']) {
 								));
 
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_htmlsnippets(name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
+		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New Chunk not saved!";
@@ -87,7 +87,7 @@ switch ($_POST['mode']) {
 								));
 		
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.".$table_prefix."site_htmlsnippets SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
+		$sql = "UPDATE $dbase.`".$table_prefix."site_htmlsnippets` SET name='".$name."', description='".$description."', snippet='".$snippet."', locked='".$locked."', category=".$categoryid." WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited htmlsnippet not saved!";

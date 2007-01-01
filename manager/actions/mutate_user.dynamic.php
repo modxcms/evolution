@@ -22,7 +22,7 @@ switch($_REQUEST['a']) {
 $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase." . $table_prefix . "active_users WHERE $dbase." . $table_prefix . "active_users.action=12 AND $dbase." . $table_prefix . "active_users.id=$user";
+$sql = "SELECT internalKey, username FROM $dbase.`" . $table_prefix . "active_users` WHERE $dbase.`" . $table_prefix . "active_users`.action=12 AND $dbase.`" . $table_prefix . "active_users`.id=$user";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if ($limit > 1) {
@@ -39,7 +39,7 @@ if ($limit > 1) {
 
 if ($_REQUEST['a'] == 12) {
 	// get user attribute
-	$sql = "SELECT * FROM $dbase." . $table_prefix . "user_attributes WHERE $dbase." . $table_prefix . "user_attributes.internalKey = " . $user . ";";
+	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "user_attributes` WHERE $dbase.`" . $table_prefix . "user_attributes`.internalKey = " . $user . ";";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if ($limit > 1) {
@@ -53,7 +53,7 @@ if ($_REQUEST['a'] == 12) {
 	$userdata = mysql_fetch_assoc($rs);
 
 	// get user settings
-	$sql = "SELECT us.* FROM $dbase." . $table_prefix . "user_settings us WHERE us.user = " . $user . ";";
+	$sql = "SELECT us.* FROM $dbase.`" . $table_prefix . "user_settings` us WHERE us.user = " . $user . ";";
 	$rs = mysql_query($sql);
 	$usersettings = array ();
 	while ($row = mysql_fetch_assoc($rs))
@@ -66,7 +66,7 @@ if ($_REQUEST['a'] == 12) {
 	}
 	
 	// get user name
-	$sql = "SELECT * FROM $dbase." . $table_prefix . "manager_users WHERE $dbase." . $table_prefix . "manager_users.id = " . $user . ";";
+	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "manager_users` WHERE $dbase.`" . $table_prefix . "manager_users`.id = " . $user . ";";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if ($limit > 1) {
@@ -335,7 +335,7 @@ if (is_array($evtOut))
 		<?php
 
 $notAdmin = ($_SESSION['mgrRole'] == 1) ? "" : "WHERE id != 1";
-$sql = "select name, id from $dbase." . $table_prefix . "user_roles $notAdmin";
+$sql = "select name, id from $dbase.`" . $table_prefix . "user_roles` $notAdmin";
 $rs = mysql_query($sql);
 ?>
 		<select name="role" class="inputBox" onchange='documentDirty=true;' style="width:300px">
@@ -779,7 +779,7 @@ if ($use_udperms == 1) {
 	$groupsarray = array ();
 
 	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
-		$sql = "SELECT * FROM $dbase." . $table_prefix . "member_groups where member=" . $_GET['id'] . "";
+		$sql = "SELECT * FROM $dbase.`" . $table_prefix . "member_groups` where member=" . $_GET['id'] . "";
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		for ($i = 0; $i < $limit; $i++) {
@@ -799,7 +799,7 @@ if ($use_udperms == 1) {
 <?php
 
 	echo $_lang['access_permissions_user_message'] . "<p />";
-	$sql = "SELECT name, id FROM $dbase." . $table_prefix . "membergroup_names ORDER BY name";
+	$sql = "SELECT name, id FROM $dbase.`" . $table_prefix . "membergroup_names` ORDER BY name";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for ($i = 0; $i < $limit; $i++) {

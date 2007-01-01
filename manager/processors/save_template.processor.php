@@ -55,7 +55,7 @@ switch ($_POST['mode']) {
 							));	
 							
 		//do stuff to save the new doc
-		$sql = "INSERT INTO $dbase.".$table_prefix."site_templates(templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
+		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! New template not saved!";
@@ -100,7 +100,7 @@ switch ($_POST['mode']) {
 							));	   
 							
 		//do stuff to save the edited doc
-		$sql = "UPDATE $dbase.".$table_prefix."site_templates SET templatename='$templatename', description='$description', content='$template', locked='$locked', category=".$categoryid." WHERE id=$id;";
+		$sql = "UPDATE $dbase.`".$table_prefix."site_templates` SET templatename='$templatename', description='$description', content='$template', locked='$locked', category=".$categoryid." WHERE id=$id;";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited template not saved!";

@@ -12,7 +12,7 @@ if (isset ($modx)) {
 
 // Raymond: grab the user settings from the database.
 //$sql = "SELECT setting_name, setting_value FROM $dbase.".$table_prefix."user_settings WHERE user='".$modx->getLoginUserID()."' AND setting_value!=''";
-$sql = "SELECT setting_name, setting_value FROM $dbase." . $table_prefix . "user_settings WHERE user=" . $user_id;
+$sql = "SELECT setting_name, setting_value FROM $dbase.`" . $table_prefix . "user_settings` WHERE user=" . $user_id;
 $rs = mysql_query($sql);
 $number_of_settings = mysql_num_rows($rs);
 

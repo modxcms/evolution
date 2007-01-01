@@ -27,7 +27,7 @@ $updateMsg = '';
 
 if(isset($_POST['sortableListsSubmitted'])) {
     $updateMsg .= "<span class=\"warning\" id=\"updated\">Updated!<br /><br /> </span>";
-	$tbl = $dbase.'.'.$table_prefix.'site_tmplvar_templates';
+	$tbl = $dbase.'.`'.$table_prefix.'site_tmplvar_templates`';
 	foreach ($_POST as $listName=>$listValue) {
         if ($listName == 'sortableListsSubmitted') continue;
     	$orderArray = $sortableLists->getOrderArray($listValue,$listName.'List');

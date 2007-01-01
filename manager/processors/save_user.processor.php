@@ -80,7 +80,7 @@ if ($_SESSION['mgrRole'] != 1) {
 		exit;
 	}
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
-	$sql = "SELECT role FROM $dbase." . $table_prefix . "user_attributes AS mua WHERE internalKey = $id";
+	$sql = "SELECT role FROM $dbase.`" . $table_prefix . "user_attributes` AS mua WHERE internalKey = $id";
 	if ($rs = mysql_query($sql)) {
 		if ($rsQty = mysql_num_rows($rs)) {
 			// There should only be one if there is one
@@ -97,7 +97,7 @@ if ($_SESSION['mgrRole'] != 1) {
 switch ($_POST['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$sql = "SELECT id FROM $dbase." . $table_prefix . "manager_users WHERE username='$newusername'";
+		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername'";
 		if (!$rs = mysql_query($sql)) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
@@ -109,7 +109,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exist
-		$sql = "SELECT id FROM $dbase." . $table_prefix . "user_attributes WHERE email='$email'";
+		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "user_attributes` WHERE email='$email'";
 		if (!$rs = mysql_query($sql)) {
 			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
@@ -150,7 +150,7 @@ switch ($_POST['mode']) {
 		));
 
 		// build the SQL
-		$sql = "INSERT INTO $dbase." . $table_prefix . "manager_users(username, password)
+		$sql = "INSERT INTO $dbase.`" . $table_prefix . "manager_users` (username, password)
 						VALUES('" . $newusername . "', md5('" . $newpassword . "'));";
 		$rs = mysql_query($sql);
 		if (!$rs) {
@@ -162,7 +162,7 @@ switch ($_POST['mode']) {
 			//get the key by sql
 		}
 
-		$sql = "INSERT INTO $dbase." . $table_prefix . "user_attributes(internalKey, fullname, role, email, phone, mobilephone, fax, zip, state, country, gender, dob, photo, comment, blocked, blockeduntil, blockedafter)
+		$sql = "INSERT INTO $dbase.`" . $table_prefix . "user_attributes` (internalKey, fullname, role, email, phone, mobilephone, fax, zip, state, country, gender, dob, photo, comment, blocked, blockeduntil, blockedafter)
 						VALUES($key, '$fullname', '$roleid', '$email', '$phone', '$mobilephone', '$fax', '$zip', '$state', '$country', '$gender', '$dob', '$photo', '$comment', '$blocked', '$blockeduntil', '$blockedafter');";
 		$rs = mysql_query($sql);
 		if (!$rs) {
@@ -196,7 +196,7 @@ switch ($_POST['mode']) {
 		if ($use_udperms == 1) {
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$sql = "INSERT INTO $dbase." . $table_prefix . "member_groups(user_group, member) values('" . intval($user_groups[$i]) . "', $key)";
+					$sql = "INSERT INTO $dbase.`" . $table_prefix . "member_groups` (user_group, member) values('" . intval($user_groups[$i]) . "', $key)";
 					$rs = mysql_query($sql);
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.");
@@ -271,7 +271,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the username already exist
-		$sql = "SELECT id FROM $dbase." . $table_prefix . "manager_users WHERE username='$newusername'";
+		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername'";
 		if (!$rs = mysql_query($sql)) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
@@ -286,7 +286,7 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-		$sql = "SELECT internalKey FROM $dbase." . $table_prefix . "user_attributes WHERE email='$email'";
+		$sql = "SELECT internalKey FROM $dbase.`" . $table_prefix . "user_attributes` WHERE email='$email'";
 		if (!$rs = mysql_query($sql)) {
 			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
@@ -307,13 +307,13 @@ switch ($_POST['mode']) {
 		));
 
 		// update user name and password
-		$sql = "UPDATE $dbase." . $table_prefix . "manager_users SET username='$newusername'" . $updatepasswordsql . " WHERE id=$id";
+		$sql = "UPDATE $dbase.`" . $table_prefix . "manager_users` SET username='$newusername'" . $updatepasswordsql . " WHERE id=$id";
 		if (!$rs = mysql_query($sql)) {
 			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		}
 
-		$sql = "UPDATE $dbase." . $table_prefix . "user_attributes SET
+		$sql = "UPDATE $dbase.`" . $table_prefix . "user_attributes` SET
 					fullname='" . mysql_escape_string($fullname) . "',
 					role='$roleid',
 					email='$email',
@@ -371,7 +371,7 @@ switch ($_POST['mode']) {
 		// first, check that up_perms are switched on!
 		if ($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$sql = "DELETE FROM $dbase." . $table_prefix . "member_groups WHERE member=$id;";
+			$sql = "DELETE FROM $dbase.`" . $table_prefix . "member_groups` WHERE member=$id;";
 			$rs = mysql_query($sql);
 			if (!$rs) {
 				webAlert("An error occurred while attempting to delete previous user_groups entries.");
@@ -379,7 +379,7 @@ switch ($_POST['mode']) {
 			}
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$sql = "INSERT INTO $dbase." . $table_prefix . "member_groups(user_group, member) values(" . intval($user_groups[$i]) . ", $id)";
+					$sql = "INSERT INTO $dbase.`" . $table_prefix . "member_groups` (user_group, member) values(" . intval($user_groups[$i]) . ", $id)";
 					$rs = mysql_query($sql);
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.<br />$sql;");
@@ -528,7 +528,7 @@ function saveUserSettings($id) {
 		unset ($_POST["default_{$k}"]);
 	}
 
-	mysql_query("DELETE FROM $dbase." . $table_prefix . "user_settings WHERE user='$id'");
+	mysql_query("DELETE FROM $dbase.`" . $table_prefix . "user_settings` WHERE user='$id'");
 
 	for ($i = 0; $i < count($settings); $i++) {
 		if (in_array($settings[$i],$exclude)) continue;
@@ -537,7 +537,7 @@ function saveUserSettings($id) {
 		if (is_array($vl))
 			$vl = implode(",", $vl);
 		if (trim($vl) != '' || in_array($n, $allowBlanks))
-			mysql_query("INSERT INTO $dbase." . $table_prefix . "user_settings (user,setting_name,setting_value) VALUES($id,'$n','" . mysql_escape_string($vl) . "')");
+			mysql_query("INSERT INTO $dbase.`" . $table_prefix . "user_settings` (user,setting_name,setting_value) VALUES($id,'$n','" . mysql_escape_string($vl) . "')");
 	}
 }
 

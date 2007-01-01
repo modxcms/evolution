@@ -143,8 +143,8 @@ var MooPrompt = box = new Class({
 		}
 		this.boxHeight = (this.box.offsetHeight < this.options.maxHeight) ? this.box.offsetHeight : this.options.maxHeight;
 		this.boxHeight = (this.options.height > 0) ? this.options.height : this.boxHeight;
-		this._position();
-		this.eventPosition = this._position.bind(this);
+		this.position();
+		this.eventPosition = this.position.bind(this);
 		window.addEvent('scroll', this.eventPosition).addEvent('resize', this.eventPosition);
 		this.box.setStyle('display', 'none');
 		if (this.options.overlay) {
@@ -216,7 +216,7 @@ var MooPrompt = box = new Class({
 		}
 	},
 	
-	_position: function() {
+	position: function() {
 		var wHeight = (Window.getScrollHeight() > Window.getHeight()) ? Window.getScrollHeight() : Window.getHeight();
 		//var bHeight = this.container.getStyle('height').toInt();
 		var lr = (this.options.effect == 'grow') ? this.options.width/2 : 0;

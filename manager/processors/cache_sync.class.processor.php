@@ -28,7 +28,7 @@ class synccache{
 
 	function getParents($id, $path = '') { // modx:returns child's parent
 		global $dbase, $table_prefix;
-		$sql = "SELECT id, alias, parent FROM $dbase.".$table_prefix."site_content WHERE id = '$id'";
+		$sql = "SELECT id, alias, parent FROM $dbase.`".$table_prefix."site_content` WHERE id = '$id'";
 		$qh = mysql_query($sql);
 		if ($qh && mysql_num_rows($qh) > 0)	{
 			$row = mysql_fetch_assoc($qh);
@@ -81,7 +81,7 @@ class synccache{
 		// SETTINGS & DOCUMENT LISTINGS CACHE
 
 		// get settings
-		$sql = "SELECT * FROM $dbase.".$table_prefix."system_settings"; 
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings`"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$config = array();
@@ -97,7 +97,7 @@ class synccache{
 		$tmpPHP .= '$a = &$this->aliasListing;' . "\n";
 		$tmpPHP .= '$d = &$this->documentListing;' . "\n";
 		$tmpPHP .= '$m = &$this->documentMap;' . "\n";
-		$sql = "SELECT IF(alias='', id, alias) AS alias, id, contentType, parent FROM $dbase.".$table_prefix."site_content ORDER BY parent, menuindex";
+		$sql = "SELECT IF(alias='', id, alias) AS alias, id, contentType, parent FROM $dbase.`".$table_prefix."site_content` ORDER BY parent, menuindex";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
@@ -117,7 +117,7 @@ class synccache{
 		
 				
 		// get content types
-		$sql = "SELECT id, contentType FROM $dbase.".$table_prefix."site_content"; 
+		$sql = "SELECT id, contentType FROM $dbase.`".$table_prefix."site_content`"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$c = &$this->contentTypes;' . "\n";
@@ -127,7 +127,7 @@ class synccache{
 		}
 
 		// WRITE Chunks to cache file
-		$sql = "SELECT * FROM $dbase.".$table_prefix."site_htmlsnippets"; 
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_htmlsnippets`"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$c = &$this->chunkCache;' . "\n";
@@ -137,9 +137,9 @@ class synccache{
 		}
 
 		// WRITE snippets to cache file
-		$sql = "SELECT ss.*,sm.properties as 'sharedproperties' ".
-				"FROM $dbase.".$table_prefix."site_snippets ss ". 
-				"LEFT JOIN $dbase.".$table_prefix."site_modules sm on sm.guid=ss.moduleguid "; 
+		$sql = "SELECT ss.*,sm.properties as `sharedproperties` ".
+				"FROM $dbase.`".$table_prefix."site_snippets` ss ". 
+				"LEFT JOIN $dbase.`".$table_prefix."site_modules` sm on sm.guid=ss.moduleguid "; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$s = &$this->snippetCache;' . "\n";
@@ -153,8 +153,8 @@ class synccache{
 		
 		// WRITE plugins to cache file
 		$sql = "SELECT sp.*,sm.properties as 'sharedproperties' ".
-				"FROM $dbase.".$table_prefix."site_plugins sp " .
-				"LEFT JOIN $dbase.".$table_prefix."site_modules sm on sm.guid=sp.moduleguid " .
+				"FROM $dbase.`".$table_prefix."site_plugins` sp " .
+				"LEFT JOIN $dbase.`".$table_prefix."site_modules` sm on sm.guid=sp.moduleguid " .
 				"WHERE sp.disabled=0"; 
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
@@ -169,9 +169,9 @@ class synccache{
 		// WRITE system event triggers
 		$sql = "
 			SELECT sysevt.name as 'evtname', pe.pluginid, plugs.name
-			FROM $dbase.".$table_prefix."system_eventnames sysevt
-			INNER JOIN $dbase.".$table_prefix."site_plugin_events pe ON pe.evtid = sysevt.id
-			INNER JOIN $dbase.".$table_prefix."site_plugins plugs ON plugs.id = pe.pluginid
+			FROM $dbase.`".$table_prefix."system_eventnames` sysevt
+			INNER JOIN $dbase.`".$table_prefix."site_plugin_events` pe ON pe.evtid = sysevt.id
+			INNER JOIN $dbase.`".$table_prefix."site_plugins` plugs ON plugs.id = pe.pluginid
 			WHERE plugs.disabled=0
 			ORDER BY sysevt.name,pe.priority
 		";
@@ -218,7 +218,7 @@ class synccache{
 
 		// update publish time file
 		$timesArr = array();
-		$sql = "SELECT MIN(pub_date) AS minpub FROM $dbase.".$table_prefix."site_content WHERE pub_date>".time();
+		$sql = "SELECT MIN(pub_date) AS minpub FROM $dbase.`".$table_prefix."site_content` WHERE pub_date>".time();
 		if(@!$result = mysql_query($sql)) {
 			echo "Couldn't determine next publish event!";
 		}
@@ -229,7 +229,7 @@ class synccache{
 			$timesArr[] = $minpub;
 		}
 		
-		$sql = "SELECT MIN(unpub_date) AS minunpub FROM $dbase.".$table_prefix."site_content WHERE unpub_date>".time();
+		$sql = "SELECT MIN(unpub_date) AS minunpub FROM $dbase.`".$table_prefix."site_content` WHERE unpub_date>".time();
 		if(@!$result = mysql_query($sql)) {
 			echo "Couldn't determine next unpublish event!";
 		}
