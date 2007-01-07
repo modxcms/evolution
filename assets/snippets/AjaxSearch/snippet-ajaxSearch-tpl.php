@@ -1,3 +1,4 @@
+<?php
 /* -------------------------------------------------------------
 :: Snippet: Ajax Search
 ----------------------------------------------------------------
@@ -5,7 +6,7 @@
         Ajax-driven search form
 
     Version:
-        1.1
+        1.2
 
     Created by:
 	    Jason Coward (opengeek - jason@opengeek.com)
@@ -13,14 +14,17 @@
 	    Ryan Thrash (rthrash - ryan@vertexworks.com)
 	    
 	    Live Search by Thomas (Shadock)
+	    Fixes & Additions by
+		identity/Perrine/mikkelwe
 
     Date:
-        19-Sep-06
+        01/03/2007
 
     Required Usage:
         [!AjaxSearch!]
 
     Changelog:
+        03-Jan-07 -- Added many bugfixes/additions from AjaxSearch forum
         18-Sep-06 -- Added code to only show results for allowed pages
         05-May-06 -- Added liveSearch functionality and new parameter
         21-Apr-06 -- Added code to make it compatible with tagcloud snippet
@@ -481,7 +485,8 @@ if ($showResults) {
           if($offset == ($resultPageLinkNumber-1)*$grabMax){
             $resultPageLinks .= $resultPageLinkNumber;
           } else {
-            $resultPageLinks .= '<a href="[~' . $modx->documentObject['id'] . '~]&AS_offset=' . $nrp . '&AS_search=' . urlencode($searchString) . '">' . $resultPageLinkNumber . '</a>';
+			$resultPageUrl = $modx->makeUrl($modx->documentIdentifier, '', 'AS_offset=' . $nrp . '&AS_search=' . urlencode($searchString));
+			$resultPageLinks .= '<a href="'. $resultPageUrl .'">' . $resultPageLinkNumber . '</a>';
           }
           $resultPageLinks .= ($nrp+$grabMax < $limit)? $pageLinkSeparator : '' ;
           $resultPageLinkNumber++;
@@ -496,6 +501,8 @@ if ($showResults) {
                 $searchwords.='<span class="ajaxSearch_highlight ajaxSearch_highlight'.$hits.'">'.$words.'</span>&nbsp;';
                 $hits++;
             }
+			// Remove trailing '&nbsp;'
+			$searchwords = substr($searchwords, 0, strlen($searchwords) -6);
             $SearchForm .= sprintf($resultsFoundText,$limit,$searchwords);
         } else {
             $SearchForm .= sprintf($resultsFoundText,$limit,$searchString);
@@ -511,29 +518,30 @@ if ($showResults) {
         if ($extract) {
             $highlightClass = 'ajaxSearch_highlight';
             $text=$SearchFormsrc['content'];
-            if (count($search)>1){
-                $count=1;
-                $summary='';
-                foreach ($search as $searchTerm){
-                    $summary .= PrepareSearchContent( $text, $length=200, $searchTerm );
-                    $summary = preg_replace( '/' . preg_quote( $searchTerm, '/' ) . '/i', '<span class="ajaxSearch_highlight ajaxSearch_highlight'.$count.'">\0</span>', $summary );
-                    $highlightClass .= ' ajaxSearch_highlight'.$count;
-                    $count++;
+            $count=1;
+            $summary='';
+            $toAdd = PrepareSearchContent( $text, $length=200, $search[0] );
+            strip_tags( $text );
+            foreach ($search as $searchTerm) {
+                if (preg_match('/' . preg_quote($searchTerm) . '/i', $text)) {
+                    if ($count > 1) { // The first summary was already extracted above
+                        $toAdd = SmartSubstr( $text , $length=200, $searchTerm );
+                    }
+                    $summary .= preg_replace( '/' . preg_quote( $searchTerm, '/' ) . '/i', '<span class="ajaxSearch_highlight ajaxSearch_highlight'.$count.'">\0</span>', $toAdd ) . ' ';
                 }
-                $text=$summary;
-            } else {
-                $search=$searchString;
-                $text=PrepareSearchContent( $text, $length=200, $search );
-                $text = preg_replace( '/' . preg_quote( $searchString, '/' ) . '/i', '<span class="ajaxSearch_highlight ajaxSearch_highlight1">\0</span>', $text );
-                $highlightClass .= ' ajaxSearch_highlight1';
+                $highlightClass .= ' ajaxSearch_highlight'.$count;
+                $count++;
             }
+            $text=$summary;
         }
         $SearchForm.='<div class="ajaxSearch_result">'.$newline;
         
         if ($extract) {
-            $SearchForm.='<a class="ajaxSearch_resultLink" href="[~'.$SearchFormsrc['id'].'~]&searched='.urlencode($searchString).'&highlight='.urlencode($highlightClass).'" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
+			$searchFormLink = $modx->makeUrl($SearchFormsrc['id'],'','searched='.urlencode($searchString).'&amp;highlight='.urlencode($highlightClass));
+            $SearchForm.='<a class="ajaxSearch_resultLink" href="' . $searchFormLink . '" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
         } else {
-            $SearchForm.='<a class="ajaxSearch_resultLink" href="[~'.$SearchFormsrc['id'].'~]" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
+			$searchFormLink = $modx->makeUrl($SearchFormsrc['id']);
+            $SearchForm.='<a class="ajaxSearch_resultLink" href="'.$searchFormLink.'" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
         }
         
         $SearchForm.=$SearchFormsrc['description']!='' ? '<span class="ajaxSearch_resultDescription">' . $SearchFormsrc['description'] . "</span>".$newline : "" ;
@@ -567,3 +575,4 @@ if ($ajaxSearch) {
 }
 
 return $SearchForm;
+?>

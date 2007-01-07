@@ -1,4 +1,4 @@
-/* MODx LE Manager Blue template last update: 01-10-2006*/
+/* MODx LE Manager Blue template last update: 05-01-2007*/
 
 /* Neutralize styles, fonts and viewport:
 ---------------------------------------------------------------- */
@@ -777,7 +777,8 @@ ul#nav {
 }
 
 #nav li {
-	background: #84C5F9 url(images/misc/bluetab.gif) right top;
+	background: #84C5F9 url(images/misc/bluetab.gif) right -25px;
+
     list-style-type: none;
     display: block;
     float: left;
@@ -796,7 +797,6 @@ ul#nav {
     line-height: 25px;
     overflow: hidden;
     padding: 0 15px;
-    border-left: 1px solid #c1e079;
 }
 
 #nav li ul li a {
@@ -821,7 +821,6 @@ ul#nav {
     color: #fff;
     position: relative;
     z-index: 999;
-    border-left: 1px solid #8cc709;
 }
 
 #nav li.active a:hover {

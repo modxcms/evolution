@@ -5,7 +5,7 @@
  */
 
 	// Added by Raymond 20-Jan-2005
-	function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="") {
+	function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$docid="") {
 
 		global $modx;
 
@@ -13,7 +13,8 @@
 		$modx->regClientStartupScript('<script type="text/javascript">var MODX_MEDIA_PATH = "'.(IN_MANAGER_MODE ? 'media':'manager/media').'";</script>');
 
 		// process any TV commands in value
-		$value = ProcessTVCommand($value, $name);
+        $docid= intval($docid) ? intval($docid) : $modx->documentIdentifier;
+		$value = ProcessTVCommand($value, $name, $docid);
 
 		$param = array();
 		if($paramstring){

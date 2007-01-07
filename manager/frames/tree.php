@@ -480,7 +480,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
         </select>
         <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
     </td>
-    <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onclick="updateTree();" title="<?php echo $_lang['sort_tree']; ?>">Go!</a></td>
+    <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onclick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>">Go!</a></td>
   </tr>
 </table>
 </form>
@@ -539,8 +539,12 @@ function menuHandler(action) {
             }
             break
         case 10 :
-            if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
-            top.main.document.location.href="index.php?a=62&id=" + itemToChange;
+        	if (itemToChange != <?php echo $modx->config['site_start']?>) {
+            	if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
+            		top.main.document.location.href="index.php?a=62&id=" + itemToChange;
+            	}
+            } else {
+            	alert('Document is linked to site_start variable and cannot be unpublished!');
             }
             break
         //case 11 : //Raymond: create folder (currently removed)

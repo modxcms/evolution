@@ -58,7 +58,7 @@ else {
 
 ?>
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["bk_manager"]; ?></span>
+<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang["bk_manager"]; ?></span>
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['database_tables']; ?></div><div class="sectionBody" id="lyr4">
@@ -193,12 +193,14 @@ class Mysqldumper {
 	var $_dbname;
 	var $_dbtables;
 	var $_isDroptables;
+    var $_dbcharset;
 
-	function Mysqldumper($host = "localhost", $dbuser = "", $dbpassword = "", $dbname = "") {
+	function Mysqldumper($host = "localhost", $dbuser = "", $dbpassword = "", $dbname = "", $connection_charset= "utf8") {
 		$this->setHost($host);
 		$this->setDBuser($dbuser);
 		$this->setDBpassword($dbpassword);
 		$this->setDBname($dbname);
+        $this->setDBcharset($connection_charset);
 		// Don't drop tables by default.
 		$this->setDroptables(false);
 	}
@@ -248,6 +250,14 @@ class Mysqldumper {
 		return $this->_isDroptables;
 	}
 
+    function setDBcharset($dbcharset) {
+        $this->_dbcharset = $dbcharset;
+    }
+
+    function getDBcharset() {
+        return $this->_dbcharset;
+    }
+
 	function createDump($callBack) {
 
 		global $site_name,$full_appname;
@@ -256,7 +266,9 @@ class Mysqldumper {
 		$lf = "\n";
 
 		$resource = mysql_connect($this->getHost(), $this->getDBuser(), $this->getDBpassword());
-		mysql_select_db($this->getDbname(), $resource);
+		mysql_select_db($this->getDBname(), $resource);
+        $database_connection_charset= $this->getDBcharset();
+        @mysql_query("SET CHARACTER SET {$database_connection_charset}");
 		$result = mysql_query("SHOW TABLES",$resource);
 		$tables = $this->result2Array(0, $result);
 		foreach ($tables as $tblval) {

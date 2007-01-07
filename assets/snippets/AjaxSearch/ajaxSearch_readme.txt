@@ -1,4 +1,4 @@
-AjaxSearch Readme
+AjaxSearch Readme ver 1.2
 
 Created By: KyleJ (kjaebker@muddydogpaws.com)
 This code is based off of the FlexSearchForm snippet created by jaredc
@@ -6,6 +6,7 @@ The javascript code is based off of the example by Steve Smith of orderlist.com
 The search highlighting is based off of the code by Marc (MadeMyDay | http://www.modxcms.de)
 The search highlighting plugin is based off of code from sottwell (www.sottwell.com)
 The live Search functionality is from Thomas (shadock)
+Many fixes/additions were contributed by mikkelwe/identity/Perrine
 
 Note: For this code to work you must include a call to the prototype and the scriptaculous js libraries in your template.
 This is done automatically with the addJscript parameter unless you set it to 0.

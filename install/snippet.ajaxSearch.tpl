@@ -1,26 +1,29 @@
 /* -------------------------------------------------------------
 :: Snippet: Ajax Search
 ----------------------------------------------------------------
-    Short Description:
+    Short Description: 
         Ajax-driven search form
 
     Version:
-        1.1
+        1.2
 
     Created by:
 	    Jason Coward (opengeek - jason@opengeek.com)
 	    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
 	    Ryan Thrash (rthrash - ryan@vertexworks.com)
-
+	    
 	    Live Search by Thomas (Shadock)
+	    Fixes & Additions by
+		identity/Perrine/mikkelwe
 
     Date:
-        19-Sep-06
+        01/03/2007
 
     Required Usage:
         [!AjaxSearch!]
 
     Changelog:
+        03-Jan-07 -- Added many bugfixes/additions from AjaxSearch forum
         18-Sep-06 -- Added code to only show results for allowed pages
         05-May-06 -- Added liveSearch functionality and new parameter
         21-Apr-06 -- Added code to make it compatible with tagcloud snippet
@@ -44,16 +47,16 @@
 
     &AS_showForm [1 | 0] (optional)
         Show the search form with the results. Default is 1 (true)
-
+        
     &AS_landing [int] (optional)
         Document id you would like the search to show on. (For non-ajax search)
-
+        
     &AS_showResults [1 | 0] (optional)
         Show the results with the snippet. (For non-ajax search)
-
+        
     &extract [1 | 0] (optional)
         Show the search words highlighting.
-
+        
     &ajaxSearch [1 | 0] (optional)
         Use the ajaxSearch. Default is 1 (true)
 
@@ -66,18 +69,18 @@
 
     &ajaxMax [int] (optional)
         The number of results you would like returned from the ajax search.
-
+        
     &grabMax [int] (optional)
         The number of results per page returned for non-ajax search
         and for the more results page.
-
+        
     &showMoreResults [1 | 0] (optional)
         If you want a link to show all of the results from the ajax search.
-
+        
     &moreResultsPage [int] (optional)
         Page you want the more results link to point to. This page should
         contain another call to this snippet for displaying results.
-
+        
     &addJscript [1 | 0] (Default: 1)
         If you want the prototype and the scriptaculous libraries added
         to the header of your pages automatically set this to 1.  Set to
@@ -85,7 +88,7 @@
 
 
 ----------------------------------------------------------------
-:: CSS
+:: CSS                         
 ----------------------------------------------------------------
     The following items are used to style the starting form and
     ajax result container.
@@ -94,10 +97,10 @@
     #ajaxSearch_input - id of the input box on the form
     #ajaxSearch_submit - id of the submit button
     #ajaxSearch_output - id of the div that the ajax results are returned in
-
+    
     The following items are used to style the reults when the user
     does not have javascript or they have clicked the more results link
-
+    
     #ajaxSearch_resultListContainer - id of the results container
     .ajaxSearch_paging - class for span of result pages listing
     .ajaxSearch_pagination - class for pagination paragraph
@@ -124,30 +127,30 @@
 
 
 ----------------------------------------------------------------
-:: Example Calls
+:: Example Calls              
 ----------------------------------------------------------------
 [!AjaxSearch!]
-    A basic default call that renders a search form with the default
+    A basic default call that renders a search form with the default 
     images and parametes
 
 [!AjaxSearch? &showMoreResults=`1` &moreResultsPage=`25`!]
     Allows a link to a full-page search to go to another page.
-
+    
 [!AjaxSearch? &ajaxMax=`10` &extract=`0`!]
     Overrides the number of maximum results returned and removes search
     term highlighting.
-
+    
 
 ----------------------------------------------------------------
 :: Credits
 ----------------------------------------------------------------
-   Based on Flex Search Form (FSF) by jardc@honeydewdsign.com
+   Based on Flex Search Form (FSF) by jardc@honeydewdsign.com 
    as modified by KyleJ (kjaebker@muddydogpaws.com).
-
+   
    Also based on degradible live search demos at:
      http://orderedlist.com/articles/howto-animated-live-search/
      http://www.gizax.it/experiments/AHAH/degradabile/test/liveSearch.html
-
+     
    The search highlighting was based off of the original FSF
      modification by Marc (MadeMyDay).
 
@@ -279,11 +282,11 @@
    // $showMoreResults [1 | 0]
    // Set this to 1 if you would like a link to show all of the search results
    $showMoreResults = (isset($showMoreResults))? $showMoreResults : 0;
-
+   
    // $moreResultsPage [int]
    // The document id of the page you want the more results link to point to
    $moreResultsPage = (isset($moreResultsPage ))? $moreResultsPage : 0;
-
+   
    // The text for the more results link
    $moreResultsText = 'Click here to view all results.';
 
@@ -291,7 +294,7 @@
    // Set this to 1 if you would like to include the javascript libraries in the
    // header of your pages automatically.
    $addJscript = (isset($addJscript ))? $addJscript : 1;
-
+   
    //Location of the ajaxsearch, prototype, and scriptaculous libraries
    //These will be set in the page head if they are not included in the template
    $jsInclude = 'assets/snippets/AjaxSearch/AjaxSearch.js';
@@ -383,7 +386,7 @@ if ( isset($_POST['search']) || isset($_GET['AS_search']) || isset($_GET['FSF_se
     // Code to make tag cloud snippet work with this search
     $searchString = urldecode($_GET['FSF_search']);
   }
-
+  
   //$searchString = (isset($_POST['search']))? $_POST['search'] : urldecode($_GET['AS_search']) ;
   //**********************************************************************************************************************
   $searchString = initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$useAllWords,$searchStyle,$minChars,$ajaxSearch);
@@ -414,7 +417,7 @@ if ($ajaxSearch) {
   }
 
   $modx->regClientStartupScript($jsInclude);
-
+  
   $jsVars = <<<EOD
     <script type="text/javascript">
       <!--
@@ -453,7 +456,7 @@ if (($validSearch && ($showSearchWithResults)) || $showSearchWithResults){
   $SearchForm .= '<label for="ajaxSearch_input"><input id="ajaxSearch_input" type="text" name="search" value="'.$searchBoxVal.'" ';
   $SearchForm .= ($boxText)? 'onfocus="this.value=(this.value==\''.$boxText.'\')? \'\' : this.value ;" />' : '/>';
   $SearchForm .= '</label>'.$newline;
-
+  
   // the search button
   $SearchForm .= '<label for="ajaxSearch_submit"><input id="ajaxSearch_submit" type="submit" name="sub" value="'.$searchButtonText.'" /></label>';
   $SearchForm .= ($xhtmlStrict)? '</fieldset>' : '';
@@ -481,7 +484,8 @@ if ($showResults) {
           if($offset == ($resultPageLinkNumber-1)*$grabMax){
             $resultPageLinks .= $resultPageLinkNumber;
           } else {
-            $resultPageLinks .= '<a href="[~' . $modx->documentObject['id'] . '~]&AS_offset=' . $nrp . '&AS_search=' . urlencode($searchString) . '">' . $resultPageLinkNumber . '</a>';
+			$resultPageUrl = $modx->makeUrl($modx->documentIdentifier, '', 'AS_offset=' . $nrp . '&AS_search=' . urlencode($searchString));
+			$resultPageLinks .= '<a href="'. $resultPageUrl .'">' . $resultPageLinkNumber . '</a>';
           }
           $resultPageLinks .= ($nrp+$grabMax < $limit)? $pageLinkSeparator : '' ;
           $resultPageLinkNumber++;
@@ -496,6 +500,8 @@ if ($showResults) {
                 $searchwords.='<span class="ajaxSearch_highlight ajaxSearch_highlight'.$hits.'">'.$words.'</span>&nbsp;';
                 $hits++;
             }
+			// Remove trailing '&nbsp;'
+			$searchwords = substr($searchwords, 0, strlen($searchwords) -6);
             $SearchForm .= sprintf($resultsFoundText,$limit,$searchwords);
         } else {
             $SearchForm .= sprintf($resultsFoundText,$limit,$searchString);
@@ -511,31 +517,32 @@ if ($showResults) {
         if ($extract) {
             $highlightClass = 'ajaxSearch_highlight';
             $text=$SearchFormsrc['content'];
-            if (count($search)>1){
-                $count=1;
-                $summary='';
-                foreach ($search as $searchTerm){
-                    $summary .= PrepareSearchContent( $text, $length=200, $searchTerm );
-                    $summary = preg_replace( '/' . preg_quote( $searchTerm, '/' ) . '/i', '<span class="ajaxSearch_highlight ajaxSearch_highlight'.$count.'">\0</span>', $summary );
-                    $highlightClass .= ' ajaxSearch_highlight'.$count;
-                    $count++;
+            $count=1;
+            $summary='';
+            $toAdd = PrepareSearchContent( $text, $length=200, $search[0] );
+            strip_tags( $text );
+            foreach ($search as $searchTerm) {
+                if (preg_match('/' . preg_quote($searchTerm) . '/i', $text)) {
+                    if ($count > 1) { // The first summary was already extracted above
+                        $toAdd = SmartSubstr( $text , $length=200, $searchTerm );
+                    }
+                    $summary .= preg_replace( '/' . preg_quote( $searchTerm, '/' ) . '/i', '<span class="ajaxSearch_highlight ajaxSearch_highlight'.$count.'">\0</span>', $toAdd ) . ' ';
                 }
-                $text=$summary;
-            } else {
-                $search=$searchString;
-                $text=PrepareSearchContent( $text, $length=200, $search );
-                $text = preg_replace( '/' . preg_quote( $searchString, '/' ) . '/i', '<span class="ajaxSearch_highlight ajaxSearch_highlight1">\0</span>', $text );
-                $highlightClass .= ' ajaxSearch_highlight1';
+                $highlightClass .= ' ajaxSearch_highlight'.$count;
+                $count++;
             }
+            $text=$summary;
         }
         $SearchForm.='<div class="ajaxSearch_result">'.$newline;
-
+        
         if ($extract) {
-            $SearchForm.='<a class="ajaxSearch_resultLink" href="[~'.$SearchFormsrc['id'].'~]&searched='.urlencode($searchString).'&highlight='.urlencode($highlightClass).'" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
+			$searchFormLink = $modx->makeUrl($SearchFormsrc['id'],'','searched='.urlencode($searchString).'&amp;highlight='.urlencode($highlightClass));
+            $SearchForm.='<a class="ajaxSearch_resultLink" href="' . $searchFormLink . '" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
         } else {
-            $SearchForm.='<a class="ajaxSearch_resultLink" href="[~'.$SearchFormsrc['id'].'~]" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
+			$searchFormLink = $modx->makeUrl($SearchFormsrc['id']);
+            $SearchForm.='<a class="ajaxSearch_resultLink" href="'.$searchFormLink.'" title="' . $SearchFormsrc['pagetitle'] . '">' . $SearchFormsrc['pagetitle'] . "</a>".$newline;
         }
-
+        
         $SearchForm.=$SearchFormsrc['description']!='' ? '<span class="ajaxSearch_resultDescription">' . $SearchFormsrc['description'] . "</span>".$newline : "" ;
         if ($extract) {
             $SearchForm.='<div class="ajaxSearch_extract">'. $text . '</div>'.$newline;

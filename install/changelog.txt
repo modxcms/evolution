@@ -3,8 +3,30 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5.1 (rev 2179 - Jan 1, 2007)
+MODx 0.9.5.1 (rev 2205 - Jan 7, 2007)
 ====================================
+* [FS#723] Hide the sort box for the tree menu when clicking the 'Go' button (2204)
+* [FS#737] CSS fixes for tab styling in the MODx manager theme, courtesy of Mitch (2203)
+* Added parent permission checks to move_document.processor.php - prevents a possible bypassing of the Allow Root site configuration setting (2202)
+* [FS#722] Moved the parent/role permission check to the save_content processor file, allowing for the 'New Document' top menu item to work for users with restricted permissions. (2202)
+* [FS#738] Stop context menu on document tree allowing the site start page to be unpublished (2201)
+* [FS#744] Fix permission check in web_access_groups.processor.php to use web_access_permissions (2200)
+* [FS#743] Escape the manager log entries when being inserted into the manager_log table to prevent SQL errors when using quotes (2199)
+* Remove html limitation on manager user name lengths (was 15 now 100 to match DB) (2198)
+* [FS#740] Remove blank lines at end of file. [2197]
+* [FS#712] Fix to image path in bkmanager.static.php (2196)
+* [FS#721] Stop password reminder emails from being sent out twice on some PHP5 configurations. (2195)
+* Fix bug where the email address wasn't being shown in the error message if the mail() call fails. (2195)
+* Make sure magic_quotes_runtime and magic_quotes_sybase settings are off when installing MODx. (2194)
+* Quickedit styles update to restore functionality in Safari and IE7 (2193)
+* [FS#682] Demo content validation fix on web signup form (2190)
+* Removed call to sendErrorPage() and outputContent() inside of $modx->messageQuit() function that could cause recursive calls to messageQuit under certain error conditions. (2188)
+* Changes to error handling that were ignoring php error suppression using @. (2188)
+* Add options to installations (and upgrades) to allow explicit setting of database collation sequence. (2188)
+* [FS#734] Set MySQL connection encoding to make non-ASCII characters work under PHP5. (2188)
+* Added German country langfile (together with a small fix for correct sort order). (2187)
+* Added German langfile for quick_edit. (2185)
+* Updated German langfile (manager). (2175)
 * [FS#649] Minor typos in eform documentation (2173)
 * [FS#711] Missing image for Green manager theme (2172)
 * Remove outdated call to contact form snippet in demo data (2171)

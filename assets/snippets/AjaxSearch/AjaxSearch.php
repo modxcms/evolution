@@ -3,9 +3,10 @@
 /*
 AjaxSearch.php
 Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 03/14/06
+Created on: 01/03/2007
 Description: This code is called from the ajax request.  It returns the search resluts.
 
+Updated: 01/03/07 - Added fixes/updates from forum
 Updated: 09/18/06 - Added user permissions to searching
 Updated: 03/20/06 - All variables are set in the main snippet & snippet call
 */
@@ -85,7 +86,7 @@ if ($validSearch) {
           $result.='<div class="AS_ajax_result">'.$newline;
           
           if ($extract) {
-            $result .='  <a class="AS_ajax_resultLink" href="index.php?id='.strval($row['id']).'&searched='.urlencode($searchString).'&highlight='.urlencode($highlightClass).'" title="' . $row['longtitle'] . '">' . $row['pagetitle'] . "</a>";
+            $result .='  <a class="AS_ajax_resultLink" href="index.php?id='.strval($row['id']).'&amp;searched='.urlencode($searchString).'&amp;highlight='.urlencode($highlightClass).'" title="' . $row['longtitle'] . '">' . $row['pagetitle'] . "</a>";
           } else {
             $result .='  <a class="AS_ajax_resultLink" href="index.php?id='.strval($row['id']).'" title="' . $row['longtitle'] . '">' . $row['pagetitle'] . "</a>";
           }
@@ -99,7 +100,7 @@ if ($validSearch) {
           if (++$i == $maxResults) {
             //If more than max results so link to all results
             if ($showMoreResults) {
-                $result .= '<div class="AS_ajax_more"><a href="index.php?id='.$moreResultsPage.'&AS_search='.urlencode($_GET['search']).'"/>'.$moreResultsText.'</a></div>'.$newline;
+                $result .= '<div class="AS_ajax_more"><a href="index.php?id='.$moreResultsPage.'&amp;AS_search='.urlencode($_GET['search']).'"/>'.$moreResultsText.'</a></div>'.$newline;
             }
             break;
           }

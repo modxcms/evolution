@@ -8,8 +8,9 @@ class SqlParser {
 	var $conn, $installFailed, $sitename, $adminname, $adminpass;
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
 	var $dbVersion;
+    var $connection_charset;
 
-	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminpass) {
+	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminpass, $connection_charset= 'utf8') {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -17,6 +18,7 @@ class SqlParser {
 		$this->password = $password;
 		$this->adminpass = $adminpass;
 		$this->adminname = $adminname;
+		$this->connection_charset = $connection_charset;
 		$this->ignoreDuplicateErrors = false;
 	}
 
@@ -28,8 +30,10 @@ class SqlParser {
 		if(function_exists("mysql_get_server_info")) {
 			$ver = mysql_get_server_info();
 			$this->dbMODx 	 = version_compare($ver,"4.0.2");
-			$this->dbVersion = doubleval($ver);
+			$this->dbVersion = floatval($ver);
 		}
+        
+        mysql_query("SET CHARACTER SET {$this->connection_charset}");
 	}
 	
 	function process($filename) {

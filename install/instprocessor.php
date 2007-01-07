@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE);
 
 $create = false;
 $errors = 0;
@@ -19,6 +19,9 @@ if ($installMode == 1) {
 	$database_server = $_POST['databasehost'];
 	$database_user = $_POST['databaseloginname'];
 	$database_password = $_POST['databaseloginpassword'];
+	$database_collation = $_POST['database_collation'];
+	$database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
+	$database_connection_charset = $_POST['database_connection_charset'];
 	$dbase = "`" . $_POST['database_name'] . "`";
 	$table_prefix = $_POST['tableprefix'];
 	$adminname = $_POST['cmsadmin'];
@@ -59,6 +62,7 @@ if (!@ mysql_select_db(str_replace("`", "", $dbase), $conn)) {
 	echo "<span class=\"notok\" style='color:#707070'>Database selection failed...</span> The database does not exist. Setup will attempt to create it.</p>";
 	$create = true;
 } else {
+    @ mysql_query("SET CHARACTER SET {$database_connection_charset}");
 	echo "<span class=\"ok\">OK!</span></p>";
 }
 
@@ -66,10 +70,14 @@ if (!@ mysql_select_db(str_replace("`", "", $dbase), $conn)) {
 if ($create) {
 	echo "<p>Creating database `" . str_replace("`", "", $dbase) . "`: ";
 	//	if(!@mysql_create_db(str_replace("`","",$dbase), $conn)) {
-	if (!@ mysql_query("CREATE DATABASE $dbase")) {
+	if (! mysql_query("CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
 		echo "<span class=\"notok\">Database creation failed!</span> - Setup could not create the database!</p>";
 		$errors += 1;
 ?>
+        <pre>
+        database charset = <?php $database_charset ?>
+        database collation = <?php $database_collation ?>
+        </pre>
 		<p>Setup could not create the database, and no existing database with the same name was found. It is likely that your hosting provider's security does not allow external scripts to create a database. Please create a database according to your hosting provider's procedure, and run Setup again.</p>
 <?php
 
@@ -95,7 +103,7 @@ if ($installMode == 0) {
 // open db connection
 $setupPath = realpath(dirname(__FILE__));
 include "$setupPath/sqlParser.class.php";
-$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminpass);
+$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminpass, $database_connection_charset);
 $sqlParser->mode = ($installMode == 0) ? "new" : "upd";
 $sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imagePath = $base_path . "assets/";
@@ -155,6 +163,7 @@ $configString = '<?php
 	$database_server = \'' . $database_server . '\';
 	$database_user = \'' . $database_user . '\';
 	$database_password = \'' . $database_password . '\';
+	$database_connection_charset = \'' . $database_connection_charset . '\';
 	$dbase = \'`' . str_replace("`", "", $dbase) . '`\';
 	$table_prefix = \'' . $table_prefix . '\';		
 	error_reporting(E_ALL & ~E_NOTICE);

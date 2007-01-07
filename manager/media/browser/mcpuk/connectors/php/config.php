@@ -47,11 +47,12 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 	die("Failed to create the database connection!");
 } else {
 	mysql_select_db($dbase);
+    @mysql_query("SET CHARACTER SET {$database_connection_charset}");
 }
-include("../../../../../includes/settings.inc.php");
 
 // Override system settings with user settings
 define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
+include("../../../../../includes/settings.inc.php");
 include("../../../../../includes/user_settings.inc.php");
 
 // make arrays from the file upload settings

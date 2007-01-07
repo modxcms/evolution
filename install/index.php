@@ -4,11 +4,15 @@
 #:::::::::::::::::::::::::::::::::::::::::
 #:: Installs Modules, Plugins, Snippets, Chunks
 
+    // do a little bit of environment cleanup if possible
+    @ini_set('magic_quotes_runtime', 0);
+    @ini_set('magic_quotes_sybase', 0);
+
 	// start session
 	session_start();
 
 	// set error reporting
-	error_reporting(E_ALL ^ E_NOTICE);
+	error_reporting(E_ALL & ~E_NOTICE);
 	
 	// session loop-back tester
 	if(!$_SESSION['session_test'] && $_GET['s']!='set') {
@@ -22,7 +26,7 @@
 	}
 
 	$moduleName 		= "Module Installation";
-	$moduleVersion 		= "0.9.5";
+	$moduleVersion 		= "0.9.5.1";
 	$moduleSQLBaseFile 	= "setup.sql";
 	$moduleSQLDataFile 	= "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
@@ -244,6 +248,10 @@
 			<input id="database_name" value="<?php echo isset($_POST['database_name']) ? $_POST['database_name']:"modx" ?>" name="database_name" /></div>
 			<div class="labelHolder"><label for="tableprefix">Table prefix:</label>
 			<input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']:"modx_" ?>" name="tableprefix" /></div>
+			<div class="labelHolder"><label for="database_collation">Collation:</label>
+			<input id="database_collation" value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']:"utf8_unicode_ci" ?>" name="database_collation" /></div>
+			<div class="labelHolder"><label for="database_connection_charset">Connection character set:</label>
+			<input id="database_connection_charset" value="<?php echo isset($_POST['database_connection_charset']) ? $_POST['database_connection_charset']:"utf8" ?>" name="database_connection_charset" /></div>
 			<br />
 			<p>Now please enter the login data for your database.</p>
 			<br />
@@ -485,6 +493,9 @@
 			$database_server = $_POST['databasehost'];
 			$database_user = $_POST['databaseloginname'];
 			$database_password = $_POST['databaseloginpassword'];
+            $database_collation = $_POST['database_collation'];
+            $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
+            $database_connection_charset = $_POST['database_connection_charset'];
 			$dbase = $_POST['database_name'];
 			$table_prefix = $_POST['tableprefix'];
 		}

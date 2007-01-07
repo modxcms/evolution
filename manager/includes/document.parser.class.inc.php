@@ -452,16 +452,6 @@ class DocumentParser {
 
         $this->documentOutput= $this->rewriteUrls($this->documentOutput);
 
-        $totalTime= ($this->getMicroTime() - $this->tstart);
-        $queryTime= $this->queryTime;
-        $phpTime= $totalTime - $queryTime;
-
-        $queryTime= sprintf("%2.4f s", $queryTime);
-        $totalTime= sprintf("%2.4f s", $totalTime);
-        $phpTime= sprintf("%2.4f s", $phpTime);
-        $source= $this->documentGenerated == 1 ? "database" : "cache";
-        $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-
         // send out content-type and content-disposition headers
         if (IN_PARSER_MODE == "true") {
             $type= !empty ($this->contentTypes[$this->documentIdentifier]) ? $this->contentTypes[$this->documentIdentifier] : "text/html";
@@ -486,6 +476,16 @@ class DocumentParser {
                 header($header);
             }
         }
+
+        $totalTime= ($this->getMicroTime() - $this->tstart);
+        $queryTime= $this->queryTime;
+        $phpTime= $totalTime - $queryTime;
+
+        $queryTime= sprintf("%2.4f s", $queryTime);
+        $totalTime= sprintf("%2.4f s", $totalTime);
+        $phpTime= sprintf("%2.4f s", $phpTime);
+        $source= $this->documentGenerated == 1 ? "database" : "cache";
+        $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
 
         $out= $this->documentOutput;
         if ($this->dumpSQL) {
@@ -1286,19 +1286,19 @@ class DocumentParser {
         $msg= mysql_escape_string($msg);
         $source= mysql_escape_string($source);
         $evtid= intval($evtid);
-        if ($type < 1)
+        if ($type < 1) {
             $type= 1;
-        else
-            if ($type > 3)
-                $type= 3; // Types: 1 = information, 2 = warning, 3 = error
-        $sql= "INSERT INTO " . $this->getFullTableName("event_log") . "(eventid,type,createdon,source,description,user) " .
+        } 
+        elseif ($type > 3) {
+            $type= 3; // Types: 1 = information, 2 = warning, 3 = error
+        }
+        $sql= "INSERT INTO " . $this->getFullTableName("event_log") . " (eventid,type,createdon,source,description,user) " .
         "VALUES($evtid,$type," . time() . ",'$source','$msg','" . $this->getLoginUserID() . "')";
-        $ds= $this->dbQuery($sql);
+        $ds= @mysql_query($sql);
         if (!$ds) {
             echo "Error while inserting event log into database.";
-            exit;
+            exit();
         }
-
     }
 
     # Returns true if parser is executed in backend (manager) mode
@@ -1813,9 +1813,7 @@ class DocumentParser {
         if ($idname == "") {
             return false;
         } else {
-            $result= $this->getTemplateVars(array (
-                $idname
-            ), $fields, $docid, $published, "", ""); //remove sorting for speed
+            $result= $this->getTemplateVars(array ($idname), $fields, $docid, $published, "", ""); //remove sorting for speed
             return ($result != false) ? $result[0] : false;
         }
     }
@@ -1878,9 +1876,9 @@ class DocumentParser {
             return false;
         } else {
             $output= array ();
-            $result= $this->getTemplateVars(($idnames == '*' || is_array($idnames)) ? $idnames : array (
-                $idnames
-            ), "*", $docid, $published, "", ""); // remove sort for speed
+            $vars= ($idnames == '*' || is_array($idnames)) ? $idnames : array ($idnames);
+            $docid= intval($docid) ? intval($docid) : $this->documentIdentifier;
+            $result= $this->getTemplateVars($vars, "*", $docid, $published, "", ""); // remove sort for speed
             if ($result == false)
                 return false;
             else {
@@ -1894,7 +1892,7 @@ class DocumentParser {
                     $richtexteditor= "";
                     $w= "100%";
                     $h= "300";
-                    $output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type']);
+                    $output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid);
                 }
                 return $output;
             }
@@ -2502,7 +2500,7 @@ class DocumentParser {
     /***************************************************************************************/
 
     function phpError($nr, $text, $file, $line) {
-        if ($nr == 8 && $this->stopOnNotice == false) {
+        if ($nr == 0 || ($nr == 8 && $this->stopOnNotice == false)) {
             return true;
         }
         if (is_readable($file)) {
@@ -2606,19 +2604,28 @@ class DocumentParser {
         $parsedMessageString .= "</table>";
         $parsedMessageString .= "</body></html>";
 
+        $totalTime= ($this->getMicroTime() - $this->tstart);
+        $queryTime= $this->queryTime;
+        $phpTime= $totalTime - $queryTime;
+        $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
+        $queryTime= sprintf("%2.4f s", $queryTime);
+        $totalTime= sprintf("%2.4f s", $totalTime);
+        $phpTime= sprintf("%2.4f s", $phpTime);
+
+        $parsedMessageString= str_replace("[^q^]", $queries, $parsedMessageString);
+        $parsedMessageString= str_replace("[^qt^]", $queryTime, $parsedMessageString);
+        $parsedMessageString= str_replace("[^p^]", $phpTime, $parsedMessageString);
+        $parsedMessageString= str_replace("[^t^]", $totalTime, $parsedMessageString);
+
+        // Display error
+        echo $parsedMessageString;
+        ob_end_flush();
+
         // Log error
         $this->logEvent(0, 3, $parsedMessageString, $source= 'Parser');
 
-        // Display error (to manager user)
-        if (!$_SESSION['mgrValidated']) {
-            $this->sendErrorPage();
-            return;
-        } else {
-            $this->documentContent= $parsedMessageString;
-            $this->outputContent(true); // generate output without events
-        }
-
-        exit;
+        // Make sure and die!
+        exit();
     }
 
     function getRegisteredClientScripts() {

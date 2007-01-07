@@ -42,7 +42,7 @@ class logHandler{
 		if($this->itemId==0) $this->itemId="-"; // to stop items having id 0
 		$this->itemName = $itemname=="" ? $_SESSION['itemname'] : $itemname;	// writes the id to the object
 		if($this->itemName=="") $this->itemName="-"; // to stop item name being empty
-		$this->itemName = addslashes($this->itemName);
+		//$this->itemName = addslashes($this->itemName);
 		$this->writeToLog();
 		return;
 	}
@@ -74,8 +74,8 @@ class logHandler{
 			}
 		}
 		
-		$sql = "INSERT INTO $dbase.`".$table_prefix."manager_log` (timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$this->internalKey."', '".$this->username."'";
-		$sql .= ", '".$this->action."', '".$this->itemId."', '".$this->itemName."', '".$this->msg."')"; 
+		$sql = "INSERT INTO $dbase.`".$table_prefix."manager_log` (timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$modx->db->escape($this->internalKey)."', '".$modx->db->escape($this->username)."'";
+		$sql .= ", '".$modx->db->escape($this->action)."', '".$modx->db->escape($this->itemId)."', '".$modx->db->escape($this->itemName)."', '".$modx->db->escape($this->msg)."')"; 
 		
 		if(!$rs=$modx->db->query($sql)) {
 			$this->logError("Couldn't save log to table! ".mysql_error());

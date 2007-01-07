@@ -18,6 +18,7 @@ function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, i
     global $database_server;
     global $database_user;
     global $database_password;    
+    global $database_connection_charset;    
 	global $dbase;
 	global $table_prefix;		
     
@@ -32,6 +33,7 @@ function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, i
 	$link = mysql_connect($database_server, $database_user, $database_password) or die('Could not connect: ' . mysql_error());
 	$dbase = str_replace('`', '', $dbase);
 	mysql_select_db($dbase) or die('Could not select database');
+    $result = mysql_query("SET CHARACTER SET {$database_connection_charset}") or die('Query failed: ' . mysql_error());
 
     $sql = "SELECT DISTINCT $fields FROM $tblsc sc
       LEFT JOIN $tbldg dg on dg.document = sc.id

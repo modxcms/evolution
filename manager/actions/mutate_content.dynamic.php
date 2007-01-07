@@ -17,9 +17,9 @@ switch($_REQUEST['a']) {
       $e->dumpError();
     }     
     break;
-  default:
+ default:
     $e->setError(3);
-    $e->dumpError();
+   $e->dumpError();
 }
 
 
@@ -47,27 +47,7 @@ if ($action == 27) {
         include ("footer.inc.php");
         exit;
     }
-
-} else {
-    // new document, check the user is allowed to create a document here
-    // check permissions on the parent of this document
-    include_once "./processors/user_documents_permissions.class.php";
-    $udperms = new udperms();
-    $udperms->user = $modx->getLoginUserID();
-    $udperms->document = isset ($_REQUEST['pid']) ? $_REQUEST['pid'] : 0;
-    if ($_POST['parent'] && $udperms->document == 0)
-        $udperms->document = $_POST['parent'];
-    $udperms->role = $_SESSION['mgrRole'];
-
-    if (!$udperms->checkPermissions()) {
-        ?><br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-        <p><?php echo $_lang['access_permission_denied']; ?></p>
-        <?php
-
-        include ("footer.inc.php");
-        exit;
-    }
-}
+} 
 
 // check to see the document isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.`" . $table_prefix . "active_users` WHERE $dbase.`" . $table_prefix . "active_users`.action=27 AND $dbase.`" . $table_prefix . "active_users`.id=$id";

@@ -1,10 +1,11 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('access_permissions')) {	
+if(!$modx->hasPermission('web_access_permissions')) {	
 	$e->setError(3);
 	$e->dumpError();	
 }
-
+print_r($_SESSION);
+exit();
 // web access group processor.
 // figure out what the user wants to do...
 

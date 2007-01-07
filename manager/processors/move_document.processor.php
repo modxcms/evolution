@@ -31,6 +31,28 @@ $row = mysql_fetch_assoc($rs);
 $oldparent = $row['parent'];
 $newParentID = $_REQUEST['new_parent'];
 
+// check user has permission to move document to chosen location
+
+if ($use_udperms == 1) {
+if ($oldparent != $newParentID) {
+		include_once "./processors/user_documents_permissions.class.php";
+		$udperms = new udperms();
+		$udperms->user = $modx->getLoginUserID();
+		$udperms->document = $newParentID;
+		$udperms->role = $_SESSION['mgrRole'];	
+		
+		 if (!$udperms->checkPermissions()) {
+		 include ("header.inc.php");
+		 ?><script type="text/javascript">parent.tree.ca = '';</script>
+		 <br /><br /><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+        <p><?php echo $_lang['access_permission_parent_denied']; ?></p>
+        <?php
+        include ("footer.inc.php");
+        exit;
+		 }	
+	}
+}
+
 function allChildren($currDocID) {
 	global $modx;
 	$children= array();

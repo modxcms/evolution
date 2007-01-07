@@ -283,7 +283,7 @@ EOD;
     $sql = "SELECT id
             FROM {$db}.`{$pre}site_tmplvar_contentvalues`
             WHERE `tmplvarid` = '{$cv->id}'
-            AND `contentid` = '{$doc_id}';";
+            AND `contentid` = '{$doc_id}'";
     $result = $modx->db->query($sql);
 
     if($modx->db->getRecordCount($result)) {
@@ -291,12 +291,12 @@ EOD;
      $sql = "UPDATE {$db}.`{$pre}site_tmplvar_contentvalues`
              SET `value` = '{$value_prep}'
              WHERE `tmplvarid` = '{$cv->id}'
-             AND `contentid` = '{$doc_id}';";
+             AND `contentid` = '{$doc_id}'";
 
     } else {
 
-     $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues`(tmplvarid, contentid, value)
-             VALUES('{$cv->id}', '{$doc_id}', '{$value_prep}');";
+     $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues` (tmplvarid, contentid, value)
+             VALUES('{$cv->id}', '{$doc_id}', '{$value_prep}')";
              
     }
 

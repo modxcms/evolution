@@ -15,11 +15,12 @@ class DBAPI {
     * @name:  DBAPI
     *	 
     */
-   function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL) {
+   function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='') {
       $this->config['host'] = $host ? $host : $GLOBALS['database_server'];
       $this->config['dbase'] = $dbase ? $dbase : $GLOBALS['dbase'];
       $this->config['user'] = $uid ? $uid : $GLOBALS['database_user'];
       $this->config['pass'] = $pwd ? $pwd : $GLOBALS['database_password'];
+      $this->config['charset'] = $charset ? $charset : $GLOBALS['database_connection_charset'];
       $this->config['table_prefix'] = ($pre !== NULL) ? $pre : $GLOBALS['table_prefix'];
       $this->initDataTypes();
    }
@@ -81,6 +82,7 @@ class DBAPI {
       $pwd = $pwd ? $pwd : $this->config['pass'];
       $host = $host ? $host : $this->config['host'];
       $dbase = $dbase ? $dbase : $this->config['dbase'];
+      $charset = $charset ? $charset : $this->config['charset'];
       $tstart = $modx->getMicroTime();
       if (!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd) : mysql_connect($host, $uid, $pwd, true))) {
          $modx->messageQuit("Failed to create the database connection!");
@@ -91,6 +93,7 @@ class DBAPI {
             $modx->messageQuit("Failed to select the database '" . $dbase . "'!");
             exit;
          }
+         @mysql_query("SET CHARACTER SET {$charset}");
          $tend = $modx->getMicroTime();
          $totaltime = $tend - $tstart;
          if ($modx->dumpSQL) {
@@ -155,7 +158,7 @@ class DBAPI {
       else {
          $table = $from;
          $where = ($where != "") ? "WHERE $where" : "";
-         return $this->query("DELETE $fields FROM $table $where;");
+         return $this->query("DELETE $fields FROM $table $where");
       }
    }
 
@@ -171,7 +174,7 @@ class DBAPI {
          $where = ($where != "") ? "WHERE $where" : "";
          $orderby = ($orderby != "") ? "ORDER BY $orderby " : "";
          $limit = ($limit != "") ? "LIMIT $limit" : "";
-         return $this->query("SELECT $fields FROM $table $where $orderby $limit;");
+         return $this->query("SELECT $fields FROM $table $where $orderby $limit");
       }
    }
 
@@ -195,7 +198,7 @@ class DBAPI {
             }
          }
          $where = ($where != "") ? "WHERE $where" : "";
-         return $this->query("UPDATE $table SET $flds $where;");
+         return $this->query("UPDATE $table SET $flds $where");
       }
    }
 
@@ -220,7 +223,7 @@ class DBAPI {
                $sql = "SELECT $fromfields FROM $fromtable $where $limit";
             }
          }
-         $rt = $this->query("INSERT INTO $intotable $flds $sql;");
+         $rt = $this->query("INSERT INTO $intotable $flds $sql");
          $lid = mysql_insert_id();
          return $lid ? $lid : $rt;
       }

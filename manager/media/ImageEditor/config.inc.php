@@ -20,9 +20,13 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 	die("Failed to create the database connection!");
 } else {
 	mysql_select_db($dbase);
+    @mysql_query("SET CHARACTER SET {$database_connection_charset}");
 }
-// get the settings from the database
-include "../../includes/settings.inc.php";
+
+define('IN_MANAGER_MODE', 'true'); // set this so that settings will trust us.
+include("../../includes/settings.inc.php"); // get the settings from the database
+include("../../includes/user_settings.inc.php");// Override system settings with user settings
+
 
 $IMConfig['modx']['folder_permissions'] = octdec($new_folder_permissions);
 

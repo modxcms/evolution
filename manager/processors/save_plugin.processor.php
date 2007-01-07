@@ -104,7 +104,7 @@ switch ($_POST['mode']) {
 								));
      
 		//do stuff to save the edited plugin	
-		$sql = "UPDATE $dbase.".$table_prefix."site_plugins` SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category=".$categoryid."  WHERE id='".$id."';";
+		$sql = "UPDATE " . $modx->getFullTableName('site_plugins') . " SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category=".$categoryid."  WHERE id='".$id."';";
 		$rs = mysql_query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited plugin not saved!";

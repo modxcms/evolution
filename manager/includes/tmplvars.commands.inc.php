@@ -14,10 +14,10 @@ $BINDINGS = array (
     'DIRECTORY'
 );
 
-function ProcessTVCommand($value, $name = '') {
+function ProcessTVCommand($value, $name = '', $docid= '') {
     global $modx;
     $etomite = & $modx;
-
+    $docid= intval($docid) ? intval($docid) : $modx->documentIdentifier;
     $nvalue = trim($value);
     if (substr($nvalue, 0, 1) != '@')
         return $value;
@@ -62,7 +62,7 @@ function ProcessTVCommand($value, $name = '') {
 
             case "INHERIT" :
                 $output = $param; // Default to param value if no content from parents
-                $doc = $modx->getDocument($modx->documentIdentifier, 'id,parent');
+                $doc = $modx->getDocument($docid, 'id,parent');
 
                 while ($doc['parent'] != 0) {
 
@@ -112,7 +112,7 @@ function ProcessTVCommand($value, $name = '') {
 
         }
         // support for nested bindings
-        return is_string($output) && ($output != $value) ? ProcessTVCommand($output) : $output;
+        return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid) : $output;
     }
 }
 

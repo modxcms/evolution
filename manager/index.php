@@ -36,7 +36,7 @@
     For more information on MODx please visit http://modxcms.com/
 
 **************************************************************************
-    Originall based on Etomite by Alex Butter
+    Originally based on Etomite by Alex Butter
 **************************************************************************
 */
 
@@ -138,6 +138,7 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
     die("<h2>Failed to create the database connection!</h2>. Please run the MODx <a href='../install'>install utility</a>");
 } else {
     mysql_select_db($dbase);
+    @mysql_query("SET CHARACTER SET {$database_connection_charset}");
 }
 
 // get the settings from the database
@@ -214,7 +215,7 @@ if(isset($_GET['a']) && isset($_POST['a'])) {
 $modx->manager->action = $action;
 
 // invoke OnManagerPageInit event
-$modx->invokeEvent("OnManagerPageInit",array("action" => $action));
+$modx->invokeEvent("OnManagerPageInit", array("action" => $action));
 
 
 // Now we decide what to do according to the action request. This is a BIG list :)

@@ -287,7 +287,7 @@ if (is_array($evtOut))
 		  <tr id="editname" style="display:<?php echo $_GET['a']=='11'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="15" /></td>
+			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='11' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>

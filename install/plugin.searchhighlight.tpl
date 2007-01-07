@@ -1,28 +1,23 @@
 /*
   ------------------------------------------------------------------------
-  Plugin: Search_Highlight
+  Plugin: Search_Highlight v1.2
   ------------------------------------------------------------------------
-  
+  Changes:
+  01/03/07 - Added fies/updates from forum from users mikkelwe/identity
+  (better highlight replacement, additional div around term/removal message)
+  ------------------------------------------------------------------------
   Description: When a user clicks on the link from the AjaxSearch results
     the target page will have the terms highlighted.
-    
   ------------------------------------------------------------------------
-  
   Created By:  Susan Ottwell (sottwell@sottwell.com)
                Kyle Jaebker (kjaebker@muddydogpaws.com)
-               
   ------------------------------------------------------------------------
-
   Based off the the code by Susan Ottwell (www.sottwell.com)
     http://modxcms.com/forums/index.php/topic,1237.0.html
-
   ------------------------------------------------------------------------
-
   CSS:
     The classes used for the highlighting are the same as the AjaxSearch
-
   ------------------------------------------------------------------------
-  
   Notes:
     To add a link to remove the highlighting and to show the searchterms
     put the following on your page where you would like this to appear:
@@ -38,7 +33,6 @@
     
       $termText - the text before the search terms
       $removeText - the text for the remove link
-      
   ------------------------------------------------------------------------
 */
 
@@ -46,7 +40,7 @@ if(isset($_GET['searched']) && isset($_GET['highlight'])) {
 
   // Set these to customize the text for the highlighting key
   // --------------------------------------------------------
-     $termText = 'Search Terms: ';
+     $termText = '<div class="searchTerms">Search Terms: ';
      $removeText = 'Remove Highlighting';
   // --------------------------------------------------------
 
@@ -71,15 +65,15 @@ if(isset($_GET['searched']) && isset($_GET['highlight'])) {
     $highlightText .= ($i > 1) ? ', ' : '';
     $highlightText .= '<span class="'.$class.'">'.$word.'</span>';
 
-    $pattern = '(>[^<]*)('. quotemeta($word) .')';
-    $replacement = '\\1<span class="'.$class.'">\\2</span>';
-    $body[1] = eregi_replace($pattern, $replacement, $body[1]);
+    $pattern = '/' . preg_quote($word) . '(?=[^>]*<)/i';
+    $replacement = '<span class="' . $class . '">${0}</span>';
+    $body[1] = preg_replace($pattern, $replacement, $body[1]);
   }
 
   $output = implode("<body>", $body);
 
   $removeUrl = $modx->makeUrl($modx->documentIdentifier);
-  $highlightText .= '<br/><a href="'.$removeUrl.'">'.$removeText.'</a>';
+  $highlightText .= '<br /><a href="'.$removeUrl.'" class="ajaxSearch_removeHighlight">'.$removeText.'</a></div>';
 
   $output = str_replace('<!--search_terms-->',$highlightText,$output);
 

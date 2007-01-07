@@ -17,4 +17,3 @@ $_lang["help_msg"] = '<p>You can obtain free community support by <a href="http:
 $_lang["unauthorizedpage_message"] = 'Enter the ID of the document you want to send users to if they have requested a secured or unauthorised document. <b>NOTE: make sure the ID you\'ve entered belongs to an existing document, and that it has been published and is publicly accessible!</b>';
 $_lang["unauthorizedpage_title"] = 'Unauthorised page:';
 ?>
-

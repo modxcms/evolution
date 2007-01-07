@@ -269,7 +269,7 @@ class ContentVariable {
 				            INNER JOIN {$memberGroupAccessTable} ON `user_group` = `membergroup`
 				            INNER JOIN {$documentGroupsTable} ON {$memberGroupAccessTable}.`documentgroup` = {$documentGroupsTable}.`document_group`
 				            WHERE `member` = '{$userId}'
-				            AND `document` = '{$pageId}';";
+				            AND `document` = '{$pageId}'";
 				$result = $modx->db->query($sql);
 
 				// If we have permission to this page...
@@ -303,7 +303,7 @@ class ContentVariable {
 				            INNER JOIN {$memberGroupAccessTable} ON `user_group` = `membergroup`
 				            INNER JOIN {$siteTmplVarAccessTable} ON {$memberGroupAccessTable}.`documentgroup` = {$siteTmplVarAccessTable}.`documentgroup`
 				            WHERE `member` = '{$userId}'
-				            AND `tmplvarid` = '{$varId}';";
+				            AND `tmplvarid` = '{$varId}'";
 				$result = $modx->db->query($sql);
 
 				// If we have permission to this template variable...
@@ -316,7 +316,7 @@ class ContentVariable {
 					// Get all document groups assigned to the TV
 					$sql = "SELECT `documentgroup`
 					             FROM {$siteTmplVarAccessTable}
-					             WHERE `tmplvarid` = '{$varId}';";
+					             WHERE `tmplvarid` = '{$varId}'";
 					$result = $modx->db->query($sql);
 
 					// If no permissions are set for the TV then allow access
@@ -356,7 +356,7 @@ class ContentVariable {
 		$sql = "SELECT `internalKey`
 		          FROM {$activeUsersTable}
 		          WHERE (`action` = 27)
-		          AND `internalKey` != '{$iserId}'
+		          AND `internalKey` != '{$userId}'
 		          AND `id` = '{$pageId}';";
 		$result = $modx->db->query($sql);
 

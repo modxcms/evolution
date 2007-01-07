@@ -3,10 +3,11 @@
 /*
 AjaxSearch.inc.php
 Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 03/14/06
+Created on: 01/03/2007
 Description: Helper functions for AjaxSearch
 
 Updated: 09/18/06 - Added user permissions to searching
+Updated: 01/03/2007 - Added fixes/additions from forums
 */
 
 // The connection settings must be set for the ajax call
@@ -95,8 +96,8 @@ function initSearchString($searchString,$stripHTML,$stripSnip,$stripSnippets,$us
     foreach($searchWords as $word){
       if ($word != '' &&
           !in_array(strtolower($word),$snippetNameArray) &&
-            ((!$useAllWords) ||
-            ($searchStyle == 'partial') ||
+            ((!$useAllWords) && (strlen($word) >= $minChars) ||
+			($searchStyle == 'partial') && (strlen($word) >= $minChars) ||
             (strlen($word) >= $minChars && $useAllWords && $searchStyle == 'relevance'))
          ){
         $cleansedWords .= $word.' ';
@@ -136,28 +137,47 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
         $qry_sql = "sc.privateweb = 0 AND ";
     }
 
+	$numTerms = count($search);
     if ($searchStyle == 'partial'){
-      $sql = "SELECT DISTINCT sc.id, sc.pagetitle, sc.description, sc.content ";
-      $sql .= "FROM $tbl_sc sc" . $tbl_sql . " WHERE ";
-      if (count($search)>1 && $useAllWords){
-        foreach ($search as $searchTerm){
-          $sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR sc.content LIKE '%$searchTerm%') AND ";
-        }
-      } else {
-        $sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR sc.content LIKE '%$searchString%') AND ";
-      }
-      $sql .= $qry_sql . "sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
+		$sql = "SELECT DISTINCT sc.id, sc.pagetitle, sc.description, sc.content, sc.introtext ";
+		$sql .= "FROM $tbl_sc sc" . $tbl_sql . " WHERE ";
+		if ($numTerms>1 && $useAllWords){
+			$sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR ";
+			$sqlCounter = 1;
+			$sqlContent = '(';
+			$sqlIntro = '(';
+			foreach ($search as $searchTerm){
+				$sqlContent .= "sc.content LIKE '%$searchTerm%'";
+				$sqlIntro .= "sc.introtext LIKE '%$searchTerm%'";
+				$sqlCounter++;
+				if ($sqlCounter > $numTerms) {
+					$sqlContent .= ')';
+					$sqlIntro .= ')';
+				} else {
+					$sqlContent .= ' AND ';
+					$sqlIntro .= ' AND ';
+				}
+			}
+			$sql = $sqlContent . ' OR ' . $sqlIntro . ') AND ';
+		} else {
+			$sql .= "(";
+			foreach ($search as $searchTerm){
+			    $sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR sc.content LIKE '%$searchTerm%' OR sc.introtext LIKE '%$searchTerm%') OR ";
+			}
+			$sql = substr_replace($sql, ') AND ', -4);
+		}
+		$sql .= $qry_sql . "sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
     } else {
-      $sql = "SELECT DISTINCT sc.id, sc.pagetitle, sc.description, sc.content ";
-      $sql .= "FROM $tbl_sc" . $tbl_sql . " sc WHERE ";
-      if (count($search)>1 && $useAllWords){
-        foreach ($search as $searchTerm){
-          $sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchTerm') AND ";
-        }
-      } else {
-        $sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchString') AND ";
-      }
-      $sql .= $qry_sql . "sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
+		$sql = "SELECT DISTINCT sc.id, sc.pagetitle, sc.description, sc.content, sc.introtext ";
+		$sql .= "FROM $tbl_sc" . $tbl_sql . " sc WHERE ";
+		if ($numTerms>1 && $useAllWords){
+	        foreach ($search as $searchTerm){
+	          $sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchTerm') AND ";
+	        }
+		} else {
+			$sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchString') AND ";
+		}
+		$sql .= $qry_sql . "sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
     }
 
     if ($ajaxSearch) {
