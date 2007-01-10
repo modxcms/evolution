@@ -4,7 +4,7 @@
  */
 
 // Null is evil
-if (strpos(urldecode($_SERVER['QUERY_STRING']), chr(0)))
+if (strpos(urldecode($_SERVER['QUERY_STRING']), chr(0)) !== false)
     die();
 
 // Unregister globals
@@ -38,15 +38,15 @@ if (!function_exists('modx_sanitize_gpc')) {
     }
 }
 modx_sanitize_gpc($_GET, $modxtags);
-if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && !IN_MANAGER_MODE)) {
+if (!defined('IN_MANAGER_MODE') || (defined('IN_MANAGER_MODE') && (!IN_MANAGER_MODE || IN_MANAGER_MODE == 'false'))) {
     modx_sanitize_gpc($_POST, $modxtags);
 }
 modx_sanitize_gpc($_COOKIE, $modxtags);
 modx_sanitize_gpc($_REQUEST, $modxtags);
 
 foreach (array ('PHP_SELF', 'HTTP_USER_AGENT', 'HTTP_REFERER', 'QUERY_STRING') as $key) {
-    $_SERVER[$key] = isset ($_SERVER[$key]) ? htmlspecialchars($key, ENT_QUOTES) : null;
+    $_SERVER[$key] = isset ($_SERVER[$key]) ? htmlspecialchars($_SERVER[$key], ENT_QUOTES) : null;
 }
 
 // Unset vars
-unset ($modxtags, $key, $value, $var_order, $gpc);
+unset ($modxtags, $key, $value);

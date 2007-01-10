@@ -1,4 +1,4 @@
-/* MODx LE Manager Blue template last update: 05-01-2007*/
+/* MODx LE Manager Blue template last update: 08-01-2007*/
 
 /* Neutralize styles, fonts and viewport:
 ---------------------------------------------------------------- */
@@ -470,6 +470,11 @@ a img {
 	position:absolute; 
 	right:0px;
 	border-right:1px solid #e0e0e0;
+}
+
+.disabledPlugin a {
+	color: #aaa;
+	text-decoration: line-through;	
 }
 
 /* grid style */

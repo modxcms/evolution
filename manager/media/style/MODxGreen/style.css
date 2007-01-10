@@ -1,4 +1,4 @@
-/* MODx Green Manager template last update: 07-10-2006*/
+/* MODx Green Manager template last update: 08-01-2007*/
 
 body {
 	margin: 0;
@@ -295,6 +295,10 @@ a img {
 	color: #FFA204;
 }
 
+.disabledPlugin a {
+	color: #aaa;
+	text-decoration: line-through;	
+}
 
 /* grid style */
 .grid {

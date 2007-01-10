@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5.1 (rev 2205 - Jan 7, 2007)
+MODx 0.9.5.1 (rev 2214 - Jan 10, 2007)
 ====================================
+* Fixed issues with new protect.inc.php file to prevent it from setting $_SERVER values to the value of the variables key (i.e. $_SERVER['PHP_SELF']= 'PHP_SELF').
+* [FS#274] Stop hyperlink widget outputting tag with empty href attribute if no link is specified (2209)
+* [FS#591] Added visual styling to Manage Resource page in the manager to show whether a plugin is disabled (2208)
 * [FS#723] Hide the sort box for the tree menu when clicking the 'Go' button (2204)
 * [FS#737] CSS fixes for tab styling in the MODx manager theme, courtesy of Mitch (2203)
 * Added parent permission checks to move_document.processor.php - prevents a possible bypassing of the Allow Root site configuration setting (2202)

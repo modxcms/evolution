@@ -4,8 +4,7 @@ if(!$modx->hasPermission('web_access_permissions')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
-print_r($_SESSION);
-exit();
+
 // web access group processor.
 // figure out what the user wants to do...
 

@@ -152,8 +152,10 @@ EOD;
 				for($i = 0;$i<count($value); $i++){
 					list($name,$url) = is_array($value[$i]) ? $value[$i]: explode("==",$value[$i]);
 					if(!$url) $url = $name;
-					if($o) $o.='<br />';
-					$o.= "<a href='$url'"." title='".($params["title"] ? mysql_escape_string($params["title"]):$name)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["target"] ? " target='".$params["target"]."'":"").($params["attrib"] ? " ".mysql_escape_string($params["attrib"]) : "").">".($params["text"] ? mysql_escape_string($params["text"]) : $name)."</a>";
+					if ($url) {
+						if($o) $o.='<br />';
+						$o.= "<a href='$url'"." title='".($params["title"] ? mysql_escape_string($params["title"]):$name)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["target"] ? " target='".$params["target"]."'":"").($params["attrib"] ? " ".mysql_escape_string($params["attrib"]) : "").">".($params["text"] ? mysql_escape_string($params["text"]) : $name)."</a>";
+					}
 				}
 				break;
 

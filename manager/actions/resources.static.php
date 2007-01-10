@@ -8,8 +8,9 @@ $tablePre = $dbase . '.`' . $table_prefix;
 function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name') {
     global $modx, $_lang;
     $output = '<ul>';
-
-    $sql = 'SELECT '.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
+	
+	$pluginsql = $resourceTable == 'site_plugins' ? $tablePre.$resourceTable.'`.disabled, ' : '';
+    $sql = 'SELECT '.$pluginsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
 
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -26,7 +27,8 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
             $insideUl = 1;
         }
 
-		$output .= '<li><span style="width: 200px"><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].'</a></span>';
+		if ($resourceTable == 'site_plugins') $class.= $row['disabled'] == 1 ? ' class="disabledPlugin"' : '';
+		$output .= '<li><span'.$class.' style="width: 200px"><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].'</a></span>';
         $output .= $row['description']!='' ? ' - '.$row['description'] : '' ;
         $output .= $row['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ;
         $output .= '</li>';
@@ -170,7 +172,8 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
             foreach ($displayInfo as $n => $v) {
                 $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
-                $sql = 'SELECT '.$nameField.' as name, '.$tablePre.$v['table'].'`.id, description, locked, '.$tablePre.'categories`.category, '.$tablePre.'categories`.id as catid FROM '.$tablePre.$v['table'].'` left join '.$tablePre.'categories` on '.$tablePre.$v['table'].'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
+                $pluginsql = $v['table'] == 'site_plugins' ? $tablePre.$v['table'].'`.disabled, ' : '';
+                $sql = 'SELECT '.$pluginsql.$nameField.' as name, '.$tablePre.$v['table'].'`.id, description, locked, '.$tablePre.'categories`.category, '.$tablePre.'categories`.id as catid FROM '.$tablePre.$v['table'].'` left join '.$tablePre.'categories` on '.$tablePre.$v['table'].'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
                 $rs = mysql_query($sql);
         		$limit = mysql_num_rows($rs);
         		if($limit>0){
@@ -203,8 +206,9 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
                     }
                     $insideUl = 1;
                 }
+                $class = array_key_exists('disabled',$v) && $v['disabled'] == 1 ? ' class="disabledPlugin"' : '';
 		?>
-			<li><span style="width: 200px"><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo $v['description']!='' ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ; ?></li>
+			<li><span<?php echo $class;?> style="width: 200px"><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo $v['description']!='' ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ; ?></li>
 		<?php
     		$preCat = $v['category'];
             }

@@ -1,4 +1,4 @@
-/* MODx LE Manager template last update: 01-11-2006*/
+/* MODx LE Manager template last update: 08-01-2007*/
 
 /* Neutralize styles, fonts and viewport:
 ---------------------------------------------------------------- */
@@ -521,6 +521,11 @@ a img {
 	height:100%;
 	position:absolute;
 	right:0px;
+}
+
+.disabledPlugin a {
+	color: #aaa;
+	text-decoration: line-through;	
 }
 
 
