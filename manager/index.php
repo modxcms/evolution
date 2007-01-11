@@ -193,7 +193,7 @@ if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque']
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
 // first we check to see if this is a frameset request
-if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0)) {
+if(!isset($_POST['a']) && !isset($_GET['a']) && ($e->getError()==0) && !isset($_POST['updateMsgCount'])) {
     // this looks to be a top-level frameset request, so let's serve up a frameset
     include_once "frames/1.php";
     exit;
@@ -209,6 +209,10 @@ if(isset($_GET['a']) && isset($_POST['a'])) {
 
 } else {
     $action=$_REQUEST['a'];
+}
+
+if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
+	include_once 'messageCount.inc.php';
 }
 
 // save page to manager object

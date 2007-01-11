@@ -8,9 +8,6 @@ defined('IN_PARSER_MODE') or die();
 $dbase = $modx->dbConfig['dbase'];
 $table_prefix = $modx->dbConfig['table_prefix'];
 
-// get the settings from the database
-include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
-
 # process password activation
     if ($isPWDActivate==1){
         $id = $_REQUEST['wli'];
@@ -19,7 +16,7 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
         $sql = "SELECT wu.*
                 FROM $dbase.`".$table_prefix."web_users` wu 
                 WHERE wu.id='".mysql_escape_string($id)."'";                
-        $ds = $modx->dbQuery($sql);
+        $ds = $modx->db->query($sql);
         $limit = $modx->recordCount($ds);
         if($limit==1) {
             $row = $modx->fetchRow($ds);
@@ -34,13 +31,13 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
             $sql="UPDATE $dbase.`".$table_prefix."web_users` 
                   SET password = '".$newpwd."', cachepwd='' 
                   WHERE id=".$row['id'];
-            $ds = $modx->dbQuery($sql);
+            $ds = $modx->db->query($sql);
 
             // unblock user by resetting "blockeduntil"
             $sql="UPDATE $dbase.`".$table_prefix."web_user_attributes` 
                   SET blockeduntil = '0' 
                   WHERE internalKey=".$row['id'];
-            $ds2 = $modx->dbQuery($sql);
+            $ds2 = $modx->db->query($sql);
 
             // invoke OnWebChangePassword event
             if(!$ds || !$ds2) 
@@ -68,8 +65,7 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
 
 
 # process password reminder
-    if ($isPWDReminder==1){
-        global $mailto;
+    if ($isPWDReminder==1) {
         $email = $_POST['txtwebemail'];        
         $webpwdreminder_message = $modx->config['webpwdreminder_message'];
         $emailsubject = $modx->config['emailsubject'];
@@ -79,9 +75,9 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
         $sql = "SELECT wu.*, wua.fullname 
                 FROM $dbase.`".$table_prefix."web_users` wu 
                 INNER JOIN $dbase.`".$table_prefix."web_user_attributes` wua ON wua.internalkey=wu.id 
-                WHERE wua.email='".mysql_escape_string($email)."'";
+                WHERE wua.email='".$modx->db->escape($email)."'";
                 
-        $ds = $modx->dbQuery($sql);
+        $ds = $modx->db->query($sql);
         $limit = $modx->recordCount($ds);
         if($limit==1) {
             $newpwd = webLoginGeneratePassword(8);
@@ -91,7 +87,7 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
             $sql="UPDATE $dbase.`".$table_prefix."web_users` 
                   SET cachepwd='".$newpwd."|".$newpwdkey."' 
                   WHERE id=".$row['id'];
-            $modx->dbQuery($sql);
+            $modx->db->query($sql);
             // built activation url
             if($_SERVER['SERVER_PORT']!='80') {
               $url = $modx->config['server_protocol'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$modx->makeURL($modx->documentIdentifier,'',"webloginmode=actp&wli=".$row['id']."&wlk=".$newpwdkey);
@@ -201,7 +197,7 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
                             ));
 
     $sql = "SELECT $dbase.`".$table_prefix."web_users`.*, $dbase.`".$table_prefix."web_user_attributes`.* FROM $dbase.`".$table_prefix."web_users`, $dbase.`".$table_prefix."web_user_attributes` WHERE BINARY $dbase.`".$table_prefix."web_users`.username = '".$username."' and $dbase.`".$table_prefix."web_user_attributes`.internalKey=$dbase.`".$table_prefix."web_users`.id;";
-    $ds = $modx->dbQuery($sql);
+    $ds = $modx->db->query($sql);
     $limit = $modx->db->getRecordCount($ds);
 
     if($limit==0 || $limit>1) {
@@ -227,20 +223,20 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
 
     // load user settings
     if($internalKey){
-        $result = $modx->dbQuery("SELECT setting_name, setting_value FROM ".$dbase.".`".$table_prefix."web_user_settings` WHERE webuser='$internalKey'");
+        $result = $modx->db->query("SELECT setting_name, setting_value FROM ".$dbase.".`".$table_prefix."web_user_settings` WHERE webuser='$internalKey'");
         while ($row = $modx->fetchRow($result, 'both')) $modx->config[$row[0]] = $row[1];
     }        
 
-    if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) {    // blocked due to number of login errors.
+    if($failedlogins>=$modx->config['failed_login_attempts'] && $blockeduntildate>time()) {    // blocked due to number of login errors.
         session_destroy();
         session_unset();
         $output = webLoginAlert("Due to too many failed logins, you have been blocked!");
         return;
     }
 
-    if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) {    // blocked due to number of login errors, but get to try again
+    if($failedlogins>=$modx->config['failed_login_attempts'] && $blockeduntildate<time()) {    // blocked due to number of login errors, but get to try again
         $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
-        $ds = $modx->dbQuery($sql);
+        $ds = $modx->db->query($sql);
     }
 
     if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
@@ -302,7 +298,7 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
         }
     }
 
-    if(isset($use_captcha) && $use_captcha==1) {
+    if(isset($modx->config['use_captcha']) && $modx->config['use_captcha']==1) {
         if($_SESSION['veriword']!=$captcha_code) {
             $output = webLoginAlert("The security code you entered didn't validate! Please try to login again!");
             $newloginerror = 1;
@@ -311,12 +307,12 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
 
     if(isset($newloginerror) && $newloginerror==1) {
         $failedlogins += $newloginerror;
-        if($failedlogins>=$failed_login_attempts) { //increment the failed login counter, and block!
+        if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block!
             $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
-            $ds = $modx->dbQuery($sql);
+            $ds = $modx->db->query($sql);
         } else { //increment the failed login counter
             $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-            $ds = $modx->dbQuery($sql);
+            $ds = $modx->db->query($sql);
         }
         session_destroy();
         session_unset();
@@ -327,7 +323,7 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
 
     if(!isset($_SESSION['webValidated'])) {
         $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-        $ds = $modx->dbQuery($sql);
+        $ds = $modx->db->query($sql);
     }
 
     $_SESSION['webShortname']=$username; 
@@ -383,7 +379,7 @@ include_once MODX_BASE_PATH . 'manager/includes/settings.inc.php';
         if($a!=1) {
             // web users are stored with negative id
             $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
-            if(!$ds = $modx->dbQuery($sql)) {
+            if(!$ds = $modx->db->query($sql)) {
                 $output = "error replacing into active users! SQL: ".$sql;
                 return;
             }

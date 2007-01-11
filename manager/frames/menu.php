@@ -23,8 +23,28 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     var workText;
     var buildText;
+    
+    function updateMail(now) {
+    	try {
+    	  // if 'now' is set, runs immediate ajax request (avoids problem on initial loading where periodical waits for time period before making first request)
+    	  if (now) new ajax('index.php', {postBody:'updateMsgCount=true', onComplete:showResponse}).request();
+		  new ajax('index.php', {postBody:'updateMsgCount=true', onComplete:showResponse}).request.periodical(<?php echo $modx->config['mail_check_timeperiod'] * 1000; ?>);
+		  return false;
+    	} catch(oException) {
+          xx=window.setTimeout('updateMail()', 1000);
+    	}
+	};
+
+	function showResponse(request) {
+		var counts = request.split(',');
+		var elm = $('msgCounter');
+          if (elm) elm.innerHTML ='(' + counts[0] + ' / ' + counts[1] + ')';
+        var elm = $('newMail');
+		  if (elm) elm.style.display = counts[0] >0 ? 'inline' :  'none';
+	}
 	
 	window.addEvent('load', function() {
+        updateMail();
         if(top.__hideTree) {
             // display toc icon
             var elm = $('tocText');
@@ -74,28 +94,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         } catch(oException) {
             yy=window.setTimeout('collapseTree()', 1000);
         }
-    }
-
-    // GENERAL FUNCTIONS - Messages
-    // These functions are used for the messaging system
-    function updateMsgCount(nrnewmessages, nrtotalmessages, messagesallowed) {
-//      messagestr = "( " + nrmessages +" / " + nrtotalmessages +" )";
-//      try {
-//          var elm = $('msgCounter@mainMenu'); to use mootools
-//          /* message count disabled in opera, let's solve it when Opera 9.0 final will be released */
-//      if(navigator.userAgent.toLowerCase().indexOf("opera")==-1) elm.innerHTML = messagestr;
-//          elm = $('newMail');
-//          if (elm) elm.style.display = (nrnewmessages>0) ? "inline":"none";
-//      }
-//      catch(oException) {
-//          nrmessages = nrmessages; messagesallowed = messagesallowed;
-//          xx=window.setTimeout('updateMsgCount(nrmessages,nrtotalmessages,messagesallowed)', 1000);
-//      }
-    }
-
-    function startmsgcount(nr, nrtotal, allow){
-//      nrmessages = nr; nrtotalmessages=nrtotal; messagesallowed = allow;
-//      x=window.setTimeout('updateMsgCount(nrmessages,nrtotalmessages,messagesallowed)',1000);
     }
 
     // GENERAL FUNCTIONS - Refresh
@@ -209,8 +207,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 echo ($modx->hasPermission('change_password'))? '<a onclick="this.blur();" href="index.php?a=28" target="main">'.$modx->getLoginUserName().'</a>': $modx->getLoginUserName();
             ?>
             <?php if($modx->hasPermission('messages')) { ?>
-                | <span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang["you_got_mail"]; ?>" target="main"><img src="<?php echo $_style['icons_mail']; ?>" width="16" height="16" /></a></span>
-                <a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang["messages"]; ?><!--<span id="msgCounter">( ? / ? )</span>--></a>
+                | <span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang["you_got_mail"]; ?>" target="main"> <img src="<?php echo $_style['icons_mail']; ?>" width="16" height="16" /></a></span>
+                <a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang["messages"]; ?> <span id="msgCounter">( ? / ? )</span></a>
             <?php } ?> 
             <?php if($modx->hasPermission('help')) { ?>
                 &nbsp;|&nbsp;<a href="index.php?a=9" target="main"><?php echo $_lang["help"]; ?></a>

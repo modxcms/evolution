@@ -856,7 +856,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('manager_layout','4'),
 ('custom_contenttype','text/css,text/html,text/javascript,text/plain,text/xml'),
 ('auto_menuindex','1'),
-('session.cookie.lifetime','604800');
+('session.cookie.lifetime','604800'),
+('mail_check_timeperiod','60');
 
 
 REPLACE INTO `{PREFIX}user_roles` 

@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5.1 (rev 2214 - Jan 10, 2007)
+MODx 0.9.5.1 (rev 2220 - Jan 10, 2007)
 ====================================
+* Enhancement to new mail notification, now uses mootools ajax periodical request to update the mail notification, added system setting to set the time period between mail checks (2219)
+* [FS#749] Fixed and reinstated the new mail message notification (and message counts) in the top nav, mail icon now only appears when new mail is in inbox. (2217)
+* [FS#750] Fix weblogin snippet so it doesn't throw an INCLUDE_ORDERING_ERROR when logging into frontend. (2216)
 * Fixed issues with new protect.inc.php file to prevent it from setting $_SERVER values to the value of the variables key (i.e. $_SERVER['PHP_SELF']= 'PHP_SELF').
 * [FS#274] Stop hyperlink widget outputting tag with empty href attribute if no link is specified (2209)
 * [FS#591] Added visual styling to Manage Resource page in the manager to show whether a plugin is disabled (2208)

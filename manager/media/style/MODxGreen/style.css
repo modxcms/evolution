@@ -549,6 +549,11 @@ img.loginCaptcha {
 	color: #fff;
 	text-decoration:underline;
 }
+
+#msgCounter, #newMail {
+	padding-bottom: 4px;
+}
+
 #tocText {
 	position: absolute;
 	left: 3px;

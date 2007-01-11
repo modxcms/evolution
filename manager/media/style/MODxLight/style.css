@@ -677,6 +677,11 @@ a.hometblink:hover {
 #topMenu {
     background: #e4e4e4 url(images/misc/menubg.jpg);
 }
+
+#msgCounter,#newMail {
+	padding-bottom: 4px;
+}
+
 #Navcontainer {
     padding-left: 10px;
     color: #fff;
