@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5.1 (rev 2243 - Jan 19, 2007)
+MODx 0.9.5.1 (rev 2245 - Jan 19, 2007)
 ====================================
+* Fix bug in manager language inclusion that was introduced in commit #2225 (2244)
 * [FS#753] Add a validation check for the mail_check_timeperiod value to prevent null value being passed into the ajax periodical update for messages (2239)
 * [FS#599] Added distinct permissions for importing/exporting static HTML. (2226)
 * Added a check to see if the chosen manager language file exists first before including it. (2225)
