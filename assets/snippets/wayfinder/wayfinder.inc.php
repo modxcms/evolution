@@ -187,7 +187,7 @@ class Wayfinder {
 
             $classNames = $this->setItemClass($wrapperClass);
             if ($classNames) $useClass = ' class="' . $classNames . '"';
-            $phArray = array($output,$useClass);
+            $phArray = array($output,$useClass,$classNames);
 
             $output = str_replace($this->placeHolders,$phArray,$useChunk);
 

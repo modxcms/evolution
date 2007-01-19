@@ -673,7 +673,7 @@ if (isset ($_REQUEST['id'])) {
         $content['parent'] = 0;
             }
             ?>&nbsp;<img name="plock" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/folder.gif" width="18" height="18" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /><b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?> (<?php echo $parentname; ?>)</span></b><br />
-            <span class="comment" style="width:300px;"><?php echo $_lang['document_parent_help'];?></span>
+            <span class="comment" style="width:300px;display:block;"><?php echo $_lang['document_parent_help'];?></span>
             <input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']; ?>" onchange="documentDirty=true;" />
                 </td>
               </tr>

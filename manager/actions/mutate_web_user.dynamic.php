@@ -343,13 +343,13 @@ function showHide(what, onoff){
 			<td>&nbsp;</td>
 			<td>
             <select size="1" name="country" style="width:300px" onChange='documentDirty=true;'>
-<option value="" <?php (!isset($country) ? 'selected' : '') ?> >&nbsp;</option>
-<?php
-foreach ($_country_lang as $key => $country) {
- echo "<option value=\"$key\"".(isset($country) && $country == $key ? 'selected' : '') .">$country</option>";
-}
-?>
-
+            <?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
+			<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
+				<?php
+				foreach ($_country_lang as $key => $country) {
+				 echo "<option value=\"$key\"".(isset($chosenCountry) && $chosenCountry == $key ? ' selected' : '') .">$country</option>";
+				}
+				?>
             </select>
             </td>
 		  </tr>
@@ -564,10 +564,6 @@ if(is_array($_POST['user_groups'])) {
 </form>
 <script language="JavaScript" src="media/script/datefunctions.js"></script>
 <script language="javascript" type="text/javascript">
-	var f = document.userform;
-	var i = parseInt('<?php echo isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>');
-	if (!isNaN(i)) f.country.options[i].selected = true;
-
 	// dob
 	var calDOB = new calendar1(document.userform.dob, new Object);
 	calDOB.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";

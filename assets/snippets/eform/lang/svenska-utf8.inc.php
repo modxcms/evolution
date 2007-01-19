@@ -1,10 +1,10 @@
 <?php
 /**
 * snippets/eform/svenska.inc.php
-* Swedish language file for eForm
+* Swedish language file for eForm 1.4.2
 *
 * Translation: Pontus Ågren
-* Date: 4/12/2006
+* Date: 11/12/2006
 */
 
 
@@ -35,4 +35,7 @@ $_lang['ef_mail_abuse_subject'] = 'Potentiellt manipuleringsförsök av mailform
 $_lang['ef_mail_abuse_message'] = '<p>Ett formulär på din webbplats kan vara föremål för ett mailinjiceringsförsök. De inmatade värdena är utskrivna nedan. Misstänkt text har bäddats in i \[..]\-taggar.</p>'; 
 $_lang['ef_mail_abuse_error'] = '<strong>Felaktiga eller osäkra värden upptäcktes i ditt formulär</strong>.';
 $_lang['ef_eval_deprecated'] = "#EVAL-regeln används inte längre och kommer kanske inte att fungera i framtida versioner. Använd #FUNCTION istället.";
+$_lang['ef_multiple_submit'] = "<p>Det här formuläret har redan skickats utan problem. Du behöver inte skicka din information flera gånger.</p>";
+$_lang['ef_submit_time_limit'] = "<p>Det här formuläret har redan skickats utan problem. Omskickning av formuläret är blockerat i  ".($submitLimit/60)." minuter.</p>";
+$_lang['ef_version_error'] = "<strong>VARNING!</strong> Versionen på eForm-snippeten (version:&nbsp;$version) skiljer sig från den inkluderade eForm-filen (version:&nbsp;$fileVersion). Kontrollera att du använder samma version på båda.";
 ?>

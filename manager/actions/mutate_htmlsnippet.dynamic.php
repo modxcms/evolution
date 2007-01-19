@@ -3,13 +3,13 @@ if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Ple
 
 switch($_REQUEST['a']) {
   case 78:
-    if(!$modx->hasPermission('edit_snippet')) {
+    if(!$modx->hasPermission('edit_chunk')) {
       $e->setError(3);
       $e->dumpError();
     }
     break;
   case 77:
-    if(!$modx->hasPermission('new_snippet')) {
+    if(!$modx->hasPermission('new_chunk')) {
       $e->setError(3);
       $e->dumpError();
     }

@@ -45,6 +45,10 @@ $fields = array (
     'new_snippet' => $new_snippet,
     'save_snippet' => $save_snippet,
     'delete_snippet' => $delete_snippet,
+    'edit_chunk' => $edit_chunk,
+    'new_chunk' => $new_chunk,
+    'save_chunk' => $save_chunk,
+    'delete_chunk' => $delete_chunk,
     'empty_cache' => $empty_cache,
     'edit_document' => $edit_document,
     'change_password' => $change_password,
@@ -78,7 +82,9 @@ $fields = array (
     'save_web_user' => $save_web_user,
     'delete_web_user' => $delete_web_user,
     'web_access_permissions' => $web_access_permissions,
-    'view_unpublished' => $view_unpublished
+    'view_unpublished' => $view_unpublished,
+	'import_static' => $import_static,
+	'export_static' => $export_static
 );
 
 switch ($_POST['mode']) {

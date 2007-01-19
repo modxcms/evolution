@@ -6,13 +6,6 @@
 *  	Created: 19/12/2006
  *  For: MODx cms (modxcms.com)
  *  Description: Class for the QuickEditor, portuguese translation
- *
- *	Based on the original file:
- *  Written by:	Adam Crownoble
- *  Contact: adam@obledesign.com
- *  Created: 11/18/2005
- *  For: MODx cms (modxcms.com)
- *  Description: Class for the QuickEditor
  */
 
  /*

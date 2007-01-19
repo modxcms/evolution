@@ -83,7 +83,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 <?php } ?>
 
 <!-- chunks -->
-<?php 	if($modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet')) { ?>
+<?php 	if($modx->hasPermission('new_chunk') || $modx->hasPermission('edit_chunk')) { ?>
     <div class="tab-page" id="tabChunks">
     	<h2 class="tab"><?php echo $_lang["manage_htmlsnippets"] ?></h2>
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
@@ -145,6 +145,9 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
         }
         if($modx->hasPermission('edit_snippet') || $modx->hasPermission('new_snippet')) {
             $displayInfo['snippet'] = array('table'=>'site_snippets','action'=>22,'name'=>$_lang['manage_snippets']);
+            $hasPermission = 1;
+        }
+        if($modx->hasPermission('edit_chunk') || $modx->hasPermission('new_chunk')) {
             $displayInfo['htmlsnippet'] = array('table'=>'site_htmlsnippets','action'=>78,'name'=>$_lang['manage_htmlsnippets']);
             $hasPermission = 1;
         }
@@ -162,6 +165,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
         $delPerm = 0;
         if($modx->hasPermission('save_plugin') ||
            $modx->hasPermission('save_snippet') ||
+           $modx->hasPermission('save_chunk') ||
            $modx->hasPermission('save_template') ||
            $modx->hasPermission('save_module')) {
             $delPerm = 1;

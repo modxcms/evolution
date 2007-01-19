@@ -3,8 +3,14 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5.1 (rev 2220 - Jan 10, 2007)
+MODx 0.9.5.1 (rev 2243 - Jan 19, 2007)
 ====================================
+* [FS#753] Add a validation check for the mail_check_timeperiod value to prevent null value being passed into the ajax periodical update for messages (2239)
+* [FS#599] Added distinct permissions for importing/exporting static HTML. (2226)
+* Added a check to see if the chosen manager language file exists first before including it. (2225)
+* [FS#752] Minor fixes to the getHTMLGrid() method in the dbapi.mysql.class.inc.php (2224)
+* [FS#751] Added chunk role permissions and separated out accordingly from the snippet permissions (2223)
+* [FS#746] Remove javascript causing problems with the country selection dropdown when creating/editing users and amended PHP code to render 'selected' attribute correctly (2222)
 * Enhancement to new mail notification, now uses mootools ajax periodical request to update the mail notification, added system setting to set the time period between mail checks (2219)
 * [FS#749] Fixed and reinstated the new mail message notification (and message counts) in the top nav, mail icon now only appears when new mail is in inbox. (2217)
 * [FS#750] Fix weblogin snippet so it doesn't throw an INCLUDE_ORDERING_ERROR when logging into frontend. (2216)

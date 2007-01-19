@@ -443,7 +443,7 @@ class DBAPI {
          $grd->noRecordMsg = $params['noRecordMsg'];
 
          $grd->columnHeaderClass = $params['columnHeaderClass'];
-         $grd->tableClass = $params['tableClass'];
+         $grd->cssClass = $params['cssClass'];
          $grd->itemClass = $params['itemClass'];
          $grd->altItemClass = $params['altItemClass'];
 
@@ -458,6 +458,7 @@ class DBAPI {
          $grd->colAligns = $params['colAligns'];
          $grd->colColors = $params['colColors'];
          $grd->colTypes = $params['colTypes'];
+         $grd->colWraps = $params['colWraps'];
 
          $grd->cellPadding = $params['cellPadding'];
          $grd->cellSpacing = $params['cellSpacing'];

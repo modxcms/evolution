@@ -169,7 +169,7 @@ if(!isset($manager_language)) {
 $_lang = array();
 include_once "lang/english.inc.php";
 $length_eng_lang = count($_lang);
-if($manager_language!="english") {
+if($manager_language!="english" && file_exists("lang/".$manager_language.".inc.php")) {
     include_once "lang/".$manager_language.".inc.php";
 }
 

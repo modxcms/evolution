@@ -129,7 +129,7 @@ function getWebLogintpl(){
     <!-- #declare:separator <hr> --> 
     <!-- login form section-->
     <form method="post" name="loginfrm" action="[+action+]" style="margin: 0px; padding: 0px;"> 
-    <input type="hidden" value="[+rememberme+]" name="rememberme"> 
+    <input type="hidden" value="[+rememberme+]" name="rememberme" /> 
     <table border="0" cellspacing="0" cellpadding="0">
     <tr>
     <td>

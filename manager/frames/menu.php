@@ -4,6 +4,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     // close the session as it is not used here
     // this should speed up frame loading, does it?
     //session_write_close();
+    
+    if (!array_key_exists('mail_check_timeperiod',$modx->config) || !is_numeric($modx->config['mail_check_timeperiod'])) {
+    	$modx->config['mail_check_timeperiod'] = 5;
+    }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
@@ -254,7 +258,7 @@ if ($modx->hasPermission('new_document')) {
 // Resources Menu
 $resourcemenu = '';
 // Resources
-if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) {
+if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_chunk') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) {
 	$resourcemenu .= '<li><a onclick="this.blur();" href="index.php?a=76" target="main">' . $_lang["resource_management"] . '</a></li>';
 }
 // Manage-Files
@@ -314,11 +318,11 @@ if($modx->hasPermission('bk_manager')) {
 	$toolsmenu .= '<li><a onclick="this.blur();" href="javascript:removeLocks();">' . $_lang["remove_locks"] .'</a></li>'."\n";
 }
 // import-html
-if($modx->hasPermission('new_document')) {
+if($modx->hasPermission('import_static')) {
 	$toolsmenu .= '<li><a onclick="this.blur();" href="index.php?a=95" target="main">' . $_lang["import_site"] .'</a></li>';
 }
 // export-static-site
-if($modx->hasPermission('edit_document')) {
+if($modx->hasPermission('export_static')) {
 	$toolsmenu .= '<li><a onclick="this.blur();" href="index.php?a=83" target="main">' . $_lang["export_site"]. '</a></li>';
 }
 // configuration

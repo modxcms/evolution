@@ -421,6 +421,10 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `new_snippet` int(1) NOT NULL default '0',
   `save_snippet` int(1) NOT NULL default '0',
   `delete_snippet` int(1) NOT NULL default '0',
+  `edit_chunk` int(1) NOT NULL default '0',
+  `new_chunk` int(1) NOT NULL default '0',
+  `save_chunk` int(1) NOT NULL default '0',
+  `delete_chunk` int(1) NOT NULL default '0',
   `empty_cache` int(1) NOT NULL default '0',
   `edit_document` int(1) NOT NULL default '0',
   `change_password` int(1) NOT NULL default '0',
@@ -455,6 +459,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `delete_web_user` int(1) NOT NULL default '0',
   `web_access_permissions` int(1) NOT NULL default '0',
   `view_unpublished` int(1) NOT NULL default '0',
+  `import_static` int(1) NOT NULL default '0',
+  `export_static` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM COMMENT='Contains information describing the user roles.';
 
@@ -684,6 +690,19 @@ ALTER TABLE `{PREFIX}user_roles`
 ALTER TABLE `{PREFIX}user_roles` 
  ADD COLUMN `publish_document` int(1) NOT NULL DEFAULT '0' AFTER `save_document`;
 
+
+ALTER TABLE `{PREFIX}user_roles`
+ ADD COLUMN `new_chunk` int(1) NOT NULL DEFAULT '0' AFTER `delete_snippet`,
+ ADD COLUMN `edit_chunk` int(1) NOT NULL DEFAULT '0' AFTER `new_chunk`,
+ ADD COLUMN `save_chunk` int(1) NOT NULL DEFAULT '0' AFTER `edit_chunk`,
+ ADD COLUMN `delete_chunk` int(1) NOT NULL DEFAULT '0' AFTER `save_chunk`;
+
+
+ALTER TABLE `{PREFIX}user_roles`
+ ADD COLUMN `import_static` int(1) NOT NULL DEFAULT '0' AFTER `view_unpublished`,
+ ADD COLUMN `export_static` int(1) NOT NULL DEFAULT '0' AFTER `import_static`;
+
+
 ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` integer(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
  ADD COLUMN `gender` integer(1) NOT NULL DEFAULT 0 COMMENT '0 - unknown, 1 - Male 2 - female' AFTER `dob`,
  ADD COLUMN `country` varchar(5) NOT NULL DEFAULT '' AFTER `gender`,
@@ -861,8 +880,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 
 
 REPLACE INTO `{PREFIX}user_roles` 
-(id, name, description, frames, home, view_document, new_document, save_document, publish_document, delete_document, action_ok, logout, help, messages, new_user, edit_user, logs, edit_parser, save_parser, edit_template, settings, credits, new_template, save_template, delete_template, edit_snippet, new_snippet, save_snippet, delete_snippet, empty_cache, edit_document, change_password, error_dialog, about, file_manager, save_user, delete_user, save_password, edit_role, save_role, delete_role, new_role, access_permissions, bk_manager, new_plugin, edit_plugin, save_plugin, delete_plugin, new_module, edit_module, save_module, exec_module, delete_module, view_eventlog, delete_eventlog, manage_metatags, edit_doc_metatags, new_web_user, edit_web_user, save_web_user, delete_web_user, web_access_permissions, view_unpublished) VALUES 
-(1, 'Administrator', 'Site administrators have full access to all functions', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+(id, name, description, frames, home, view_document, new_document, save_document, publish_document, delete_document, action_ok, logout, help, messages, new_user, edit_user, logs, edit_parser, save_parser, edit_template, settings, credits, new_template, save_template, delete_template, edit_snippet, new_snippet, save_snippet, delete_snippet, edit_chunk, new_chunk, save_chunk, delete_chunk, empty_cache, edit_document, change_password, error_dialog, about, file_manager, save_user, delete_user, save_password, edit_role, save_role, delete_role, new_role, access_permissions, bk_manager, new_plugin, edit_plugin, save_plugin, delete_plugin, new_module, edit_module, save_module, exec_module, delete_module, view_eventlog, delete_eventlog, manage_metatags, edit_doc_metatags, new_web_user, edit_web_user, save_web_user, delete_web_user, web_access_permissions, view_unpublished, import_static, export_static ) VALUES 
+(1, 'Administrator', 'Site administrators have full access to all functions', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 
 # 1 - "Parser Service Events", 2 -  "Manager Access Events", 3 - "Web Access Service Events", 4 - "Cache Service Events", 5 - "Template Service Events", 6 - Custom Events
@@ -997,9 +1016,15 @@ UPDATE `{PREFIX}user_roles` SET
 	edit_web_user = 1,
 	save_web_user = 1,
 	delete_web_user = 1,
+	new_chunk = 1,
+	edit_chunk = 1,
+	save_chunk = 1,
+	delete_chunk = 1,
 	web_access_permissions = 1,
 	view_unpublished = 1,
-	publish_document = 1
+	publish_document = 1,
+	import_static = 1,
+	export_static = 1
 	WHERE `id`=1;
 
 

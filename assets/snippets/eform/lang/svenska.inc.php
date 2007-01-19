@@ -1,38 +1,41 @@
 <?php
 /**
 * snippets/eform/svenska.inc.php
-* Swedish language file for eForm
+* Swedish language file for eForm 1.4.2
 *
-* Translation: Pontus Ã…gren
-* Date: 4/12/2006
+* Translation: Pontus Ågren
+* Date: 11/12/2006
 */
 
 
 $_lang["ef_thankyou_message"] = "<h3>Tack!</h3><p>Din information skickades utan problem.</p>";
-$_lang["ef_no_doc"] = "Varken dokument eller chunk kunde inte hittas fÃ¶r mall-ID: ";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>NÃ¥gra fel upptÃ¤cktes i ditt formulÃ¤r:</strong><br />[+ef_wrapper+]</div>";
-$_lang["ef_required_message"] = " De fÃ¶ljande, nÃ¶dvÃ¤ndiga, fÃ¤lt(en) saknas: {fields}<br />";
-$_lang["ef_invalid_number"] = " Ã¤r inte ett giltigt nummer";
-$_lang["ef_invalid_date"] = " Ã¤r inte ett giltigt datum";
-$_lang["ef_invalid_email"] = " Ã¤r inte en giltig epostadress";
-$_lang["ef_upload_exceeded"] = " har Ã¶verskridit den maximala uppladdningsstorleken.";
-$_lang["ef_failed_default"] = "Falaktigt vÃ¤rde";
+$_lang["ef_no_doc"] = "Varken dokument eller chunk kunde inte hittas för mall-ID: ";
+$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Några fel upptäcktes i ditt formulär:</strong><br />[+ef_wrapper+]</div>";
+$_lang["ef_required_message"] = " De följande, nödvändiga, fält(en) saknas: {fields}<br />";
+$_lang["ef_invalid_number"] = " är inte ett giltigt nummer";
+$_lang["ef_invalid_date"] = " är inte ett giltigt datum";
+$_lang["ef_invalid_email"] = " är inte en giltig epostadress";
+$_lang["ef_upload_exceeded"] = " har överskridit den maximala uppladdningsstorleken.";
+$_lang["ef_failed_default"] = "Falaktigt värde";
 $_lang["ef_failed_vericode"] = "Felaktig verifieringskod.";
-$_lang["ef_failed_range"] = "VÃ¤rdet Ã¤r inte inom det tillÃ¥tna omrÃ¥det";
-$_lang["ef_failed_list"] = "VÃ¤rdet finns inte i listan med tillÃ¥tna vÃ¤rden";
-$_lang["ef_failed_eval"] = "VÃ¤rdet validerar inte";
-$_lang["ef_failed_ereg"] = "VÃ¤rdet validerar inte";
+$_lang["ef_failed_range"] = "Värdet är inte inom det tillåtna området";
+$_lang["ef_failed_list"] = "Värdet finns inte i listan med tillåtna värden";
+$_lang["ef_failed_eval"] = "Värdet validerar inte";
+$_lang["ef_failed_ereg"] = "Värdet validerar inte";
 $_lang["ef_failed_upload"] = "Felaktig filtyp.";
-$_lang["ef_error_validation_rule"] = "Valideringsregeln kÃ¤nns inte igen";
-$_lang["ef_tamper_attempt"] = "ManipuleringsfÃ¶rsÃ¶k upptÃ¤ckt!";
-$_lang["ef_error_formid"] = "Ogiltigt ID-nummer eller -namn i formulÃ¤ret.";
+$_lang["ef_error_validation_rule"] = "Valideringsregeln känns inte igen";
+$_lang["ef_tamper_attempt"] = "Manipuleringsförsök upptäckt!";
+$_lang["ef_error_formid"] = "Ogiltigt ID-nummer eller -namn i formuläret.";
 $_lang["ef_debug_info"] = "Debugg-info: "; 
-$_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">FormulÃ¤rmallen Ã¤r satt till samma ID som sidan som innehÃ¥ller snippet-anropet! Du kan inte ha formulÃ¤ret i samma dokument som snippet-anropet.</span> ID="; 
+$_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Formulärmallen är satt till samma ID som sidan som innehåller snippet-anropet! Du kan inte ha formuläret i samma dokument som snippet-anropet.</span> ID="; 
 $_lang["ef_sql_no_result"] = " klarade valideringen i smyg. <span style=\"color:red;\"> SQL returnerade inget resultat!</span> "; 
-$_lang['ef_regex_error'] = 'fel i reguljÃ¤ra uttrycket '; 
-$_lang['ef_debug_warning'] = '<p style="color:red;"><span style="font-size:1.5em;font-weight:bold;">VARNING - DEBUGGNING Ã„R PÃ…</span> <br />Var noga med att stÃ¤nga av debuggningen innan du bÃ¶rjar anvÃ¤nda formulÃ¤ret live!</p>'; 
-$_lang['ef_mail_abuse_subject'] = 'Potentiellt manipuleringsfÃ¶rsÃ¶k av mailformulÃ¤r upptÃ¤ckt fÃ¶r formulÃ¤r-ID'; 
-$_lang['ef_mail_abuse_message'] = '<p>Ett formulÃ¤r pÃ¥ din webbplats kan vara fÃ¶remÃ¥l fÃ¶r ett mailinjiceringsfÃ¶rsÃ¶k. De inmatade vÃ¤rdena Ã¤r utskrivna nedan. MisstÃ¤nkt text har bÃ¤ddats in i \[..]\-taggar.</p>'; 
-$_lang['ef_mail_abuse_error'] = '<strong>Felaktiga eller osÃ¤kra vÃ¤rden upptÃ¤cktes i ditt formulÃ¤r</strong>.';
-$_lang['ef_eval_deprecated'] = "#EVAL-regeln anvÃ¤nds inte lÃ¤ngre och kommer kanske inte att fungera i framtida versioner. AnvÃ¤nd #FUNCTION istÃ¤llet.";
+$_lang['ef_regex_error'] = 'fel i reguljära uttrycket '; 
+$_lang['ef_debug_warning'] = '<p style="color:red;"><span style="font-size:1.5em;font-weight:bold;">VARNING - DEBUGGNING ÄR PÅ</span> <br />Var noga med att stänga av debuggningen innan du börjar använda formuläret live!</p>'; 
+$_lang['ef_mail_abuse_subject'] = 'Potentiellt manipuleringsförsök av mailformulär upptäckt för formulär-ID'; 
+$_lang['ef_mail_abuse_message'] = '<p>Ett formulär på din webbplats kan vara föremål för ett mailinjiceringsförsök. De inmatade värdena är utskrivna nedan. Misstänkt text har bäddats in i \[..]\-taggar.</p>'; 
+$_lang['ef_mail_abuse_error'] = '<strong>Felaktiga eller osäkra värden upptäcktes i ditt formulär</strong>.';
+$_lang['ef_eval_deprecated'] = "#EVAL-regeln används inte längre och kommer kanske inte att fungera i framtida versioner. Använd #FUNCTION istället.";
+$_lang['ef_multiple_submit'] = "<p>Det här formuläret har redan skickats utan problem. Du behöver inte skicka din information flera gånger.</p>";
+$_lang['ef_submit_time_limit'] = "<p>Det här formuläret har redan skickats utan problem. Omskickning av formuläret är blockerat i  ".($submitLimit/60)." minuter.</p>";
+$_lang['ef_version_error'] = "<strong>VARNING!</strong> Versionen på eForm-snippeten (version:&nbsp;$version) skiljer sig från den inkluderade eForm-filen (version:&nbsp;$fileVersion). Kontrollera att du använder samma version på båda.";
 ?>

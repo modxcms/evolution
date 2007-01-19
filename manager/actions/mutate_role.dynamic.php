@@ -163,6 +163,15 @@ function deletedocument() {
 </div>
 <br /><br />
 
+<span class='fakefieldsettitle'><?php echo $_lang['role_chunk_management']; ?></span><br />
+<div class='fakefieldset'>
+<input name="new_chunkcheck" type="checkbox" onClick="changestate(document.userform.new_chunk)" <?php echo $roledata['new_chunk']==1 ? "checked" : "" ; ?>><input type="hidden" name="new_chunk" value="<?php echo $roledata['new_chunk']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.new_chunkcheck.click()"><?php echo $_lang['role_create_chunk']; ?></span><br />
+<input name="edit_chunkcheck" type="checkbox" onClick="changestate(document.userform.edit_chunk)" <?php echo $roledata['edit_chunk']==1 ? "checked" : "" ; ?>><input type="hidden" name="edit_chunk" value="<?php echo $roledata['edit_chunk']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.edit_chunkcheck.click()"><?php echo $_lang['role_edit_chunk']; ?></span><br />
+<input name="save_chunkcheck" type="checkbox" onClick="changestate(document.userform.save_chunk)" <?php echo $roledata['save_chunk']==1 ? "checked" : "" ; ?>><input type="hidden" name="save_chunk" value="<?php echo $roledata['save_chunk']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.save_chunkcheck.click()"><?php echo $_lang['role_save_chunk']; ?></span><br />
+<input name="delete_chunkcheck" type="checkbox" onClick="changestate(document.userform.delete_chunk)" <?php echo $roledata['delete_chunk']==1 ? "checked" : "" ; ?>><input type="hidden" name="delete_chunk" value="<?php echo $roledata['delete_chunk']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.delete_chunkcheck.click()"><?php echo $_lang['role_delete_chunk']; ?></span><br />
+</div>
+<br /><br />
+
 <span class='fakefieldsettitle'><?php echo $_lang['role_plugin_management']; ?></span><br />
 <div class='fakefieldset'>
 <input name="new_plugincheck" type="checkbox" onClick="changestate(document.userform.new_plugin)" <?php echo $roledata['new_plugin']==1 ? "checked" : "" ; ?>><input type="hidden" name="new_plugin" value="<?php echo $roledata['new_plugin']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.new_plugincheck.click()"><?php echo $_lang['role_create_plugin']; ?></span><br />
@@ -230,6 +239,8 @@ function deletedocument() {
 <input name="file_managercheck" type="checkbox" onClick="changestate(document.userform.file_manager)" <?php echo $roledata['file_manager']==1 ? "checked" : "" ; ?>><input type="hidden" name="file_manager" value="<?php echo $roledata['file_manager']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.file_managercheck.click()"><?php echo $_lang['role_file_manager']; ?></span><br />
 <input name="bk_managercheck" type="checkbox" onClick="changestate(document.userform.bk_manager)" <?php echo $roledata['bk_manager']==1 ? "checked" : "" ; ?>><input type="hidden" name="bk_manager" value="<?php echo $roledata['bk_manager']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.bk_managercheck.click()"><?php echo $_lang['role_bk_manager']; ?></span><br />
 <input name="manage_metatagscheck" type="checkbox" onClick="changestate(document.userform.manage_metatags)" <?php echo $roledata['manage_metatags']==1 ? "checked" : "" ; ?>><input type="hidden" name="manage_metatags" value="<?php echo $roledata['manage_metatags']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.manage_metatagscheck.click()"><?php echo $_lang['role_manage_metatags']; ?></span><br />
+<input name="importcheck" type="checkbox" onClick="changestate(document.userform.import_static)" <?php echo $roledata['import_static']==1 ? "checked" : "" ; ?>><input type="hidden" name="import_static" value="<?php echo $roledata['import_static']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.importcheck.click()"><?php echo $_lang['role_import_static']; ?></span><br />
+<input name="exportcheck" type="checkbox" onClick="changestate(document.userform.export_static)" <?php echo $roledata['export_static']==1 ? "checked" : "" ; ?>><input type="hidden" name="export_static" value="<?php echo $roledata['export_static']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.exportcheck.click()"><?php echo $_lang['role_export_static']; ?></span><br />
 </div>
 <br /><br />
 

@@ -1,15 +1,15 @@
 <?php
 /**
- * Document Manager Module - english.inc.php
+ * Document Manager Module - portuguese.inc.php
  * 
  * Purpose: Contains the language strings for use in the module.
- * Author: Garry Nutting
+ * Author: Joao Peixoto
  * For: MODx CMS (www.modxcms.com)
- * Date:29/09/2006 Version: 1.6
+ * Date:08/01/2006 Version: 1.6
  * 
  */
  
-//-- ENGLISH LANGUAGE FILE
+//-- PORTUGUESE LANGUAGE FILE
  
 //-- titles
 $_lang['DM_module_title'] = 'Gestor de Documentos';
