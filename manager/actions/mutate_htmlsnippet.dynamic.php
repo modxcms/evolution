@@ -183,7 +183,7 @@ if ($ds)
 	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
 	    	<span style="color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['chunk_code']; ?></span>
 	   	</div>
-		<textarea name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet']); ?></textarea>
+		<textarea dir="ltr" name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet']); ?></textarea>
 	</div>
 	<span class='warning'><?php echo $_lang["which_editor_title"]?></span>
 			<select id="which_editor" name="which_editor" onchange="changeRTE();">

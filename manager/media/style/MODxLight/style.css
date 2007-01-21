@@ -1,4 +1,4 @@
-/* MODx LE Manager template last update: 08-01-2007*/
+/* MODx LE Manager template last update: 21-01-2007*/
 
 /* Neutralize styles, fonts and viewport:
 ---------------------------------------------------------------- */
@@ -179,9 +179,13 @@ hr {
 
 #tocText {
 	position: absolute;
-	left: 3px;
+	left:3px;
 	top: 50px;
 	z-index: 1000;
+}
+
+.tocTextRTL {
+	right: 3px;	
 }
 
 #tocText,
@@ -394,12 +398,12 @@ thead td {
 
 li {
 	padding: 0;
-	margin: 0 0 0 15px;
+	margin: 0;
 	list-style: disc outside url(images/misc/li.gif);
 }
 
 ul {
-	margin: 0 0 0 20px;
+	margin: 0 10px 0 20px;
 }
 
 .screen {
@@ -949,8 +953,15 @@ ul#nav {
     z-index: 1;
     white-space: nowrap;
 }
+
+.dynamic-tab-pane-control ul {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .dynamic-tab-pane-control li {
-    margin-left: 10px;
+	padding-left:5px;
+	padding-right:5px;
 }
 
 /* Tree buttons

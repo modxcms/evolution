@@ -427,58 +427,57 @@ function ls ($curpath) {
 	$folders = count($dirs_array);
 	for($i=0; $i<$folders; $i++) {
 		$filesizes += $dirs_array[$i]['stats']['7'];
-		echo "<div style='cursor:default;' onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";
-		echo "<div style='position: relative; float: left; width: 300px;'>".$dirs_array[$i]['text']."</div>";
-		echo "<div style='position: relative; float: left; width: 120px; text-align:right;'>".strftime('%d-%m-%y, %H:%M:%S', $dirs_array[$i]['stats']['9'])."</div>";
-		echo "<div style='position: relative; float: left; width: 120px; text-align:right;'>".ufilesize($dirs_array[$i]['stats']['7'])."</div>";
-		echo "<div style='position: relative; float: left; width: 120px; text-align:right;'>";
+		echo "<tr style='cursor:default;' onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";
+		echo "<td>".$dirs_array[$i]['text']."</td>";
+		echo "<td>".strftime('%d-%m-%y, %H:%M:%S', $dirs_array[$i]['stats']['9'])."</td>";
+		echo "<td dir='ltr'>".ufilesize($dirs_array[$i]['stats']['7'])."</td>";
+		echo "<td>";
 		echo $dirs_array[$i]['delete'];
-		echo "</div>";
-		echo "</div>";
-		echo "<br style='clear:both' />\n";
+		echo "</td>";
+		echo "</tr>";
 	}
 
 	// dump array entries for files
 	$files = count($files_array);
 	for($i=0; $i<$files; $i++) {
 		$filesizes += $files_array[$i]['stats']['7'];
-		echo "<div style='position: relative; float: left; cursor:default;' onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";
-		echo "<div style='position: relative; float: left; width: 300px;'>".$files_array[$i]['text']."</div>";
-		echo "<div style='position: relative; float: left; width: 120px; text-align:right;'>".strftime('%d-%m-%y, %H:%M:%S', $files_array[$i]['stats']['9'])."</div>";
-		echo "<div style='position: relative; float: left; width: 120px; text-align:right;'>".ufilesize($files_array[$i]['stats']['7'])."</div>";
-		echo "<div style='position: relative; float: left; width: 120px; text-align:right;'>";
+		echo "<tr onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";
+		echo "<td>".$files_array[$i]['text']."</td>";
+		echo "<td>".strftime('%d-%m-%y, %H:%M:%S', $files_array[$i]['stats']['9'])."</td>";
+		echo "<td dir='ltr'>".ufilesize($files_array[$i]['stats']['7'])."</td>";
+		echo "<td>";
 		echo $files_array[$i]['unzip'];
 		echo $files_array[$i]['view'];
 		echo $files_array[$i]['edit'];
 		echo $files_array[$i]['delete'];
-		echo "</div>";
-		echo "</div>";
-		echo "<br style='clear:both' />\n";
+		echo "</td>";
+		echo "</tr>";
 	}
 
 
 	return;
 }
-echo "\n\n\n\n\n\n\n";
+echo "<br /><br />";
 ?>
-<div style='position: relative; float: left; width: 300px;'><b><?php echo $_lang['files_filename']; ?></b></div>
-<div style='position: relative; float: left; width: 120px; text-align:right;'><b><?php echo $_lang['files_modified']; ?></b></div>
-<div style='position: relative; float: left; width: 120px; text-align:right;'><b><?php echo $_lang['files_filesize']; ?></b></div>
-<div style='position: relative; float: left; width: 120px; text-align:right;'><b><?php echo $_lang['files_fileoptions']; ?></b></div>
-<br />
+<table>
+<tr>
+<td style="width:300px;"><b><?php echo $_lang['files_filename']; ?></b></td>
+<td><b><?php echo $_lang['files_modified']; ?></b></td>
+<td><b><?php echo $_lang['files_filesize']; ?></b></td>
+<td><b><?php echo $_lang['files_fileoptions']; ?></b></td>
+</tr>
 <?php
 ls($startpath);
 echo "\n\n\n\n\n\n\n";
 if($folders==0 && $files==0) {
-	echo "<img src='media/style/".$theme."images/tree/deletedfolder.gif' border=0 align='absmiddle'><span style='color:#888;cursor:default;'> This directory is empty.</span><br />\n";
+	echo "<tr><td colspan='4'><img src='media/style/".$theme."images/tree/deletedfolder.gif' border=0 align='absmiddle'><span style='color:#888;cursor:default;'> This directory is empty.</span></td></tr>\n";
 }
+?></table><?php
 
-echo "<br />";
-echo "<div style='position: relative; float: left; width: 140px;'>".$_lang['files_directories'].":</div><b>$folders</b><br />";
-echo "<div style='position: relative; float: left; width: 140px;'>".$_lang['files_files'].":</div><b>$files</b><br />";
-echo "<div style='position: relative; float: left; width: 140px;'>".$_lang['files_data'].":</div><b>".ufilesize($filesizes)."</b><br />";
-?>
-<span style='position: relative; float: left; width: 140px;'><?php echo $_lang['files_dirwritable']; ?></span><b><?php echo is_writable($startpath)==1 ? $_lang["yes"]."." : $_lang["no"]."."; ?></b><br />
+echo $_lang['files_directories'].": <b>$folders</b><br />";
+echo $_lang['files_files'].": <b>$files</b><br />";
+echo $_lang['files_data'].": <b><span dir='ltr>'".ufilesize($filesizes)."</span></b>";
+echo $_lang['files_dirwritable']; ?><b><?php echo is_writable($startpath)==1 ? $_lang["yes"]."." : $_lang["no"]."."; ?></b><br />
 <div align="center">
 <img src="media/style/<?php echo $theme; ?>images/icons/_tx_.gif" id='imageviewer'>
 </div>
@@ -540,7 +539,7 @@ if(!$handle) {
 <input type="hidden" name="path" value="<?php echo $_REQUEST['path']; ?>" />
 <table width="100%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td><textarea style="width:100%; height:370px;" name="content"><?php echo htmlentities($buffer); ?></textarea></td>
+    <td><textarea dir="ltr" style="width:100%; height:370px;" name="content"><?php echo htmlentities($buffer); ?></textarea></td>
   </tr>
 </table>
 </form>

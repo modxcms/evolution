@@ -158,9 +158,11 @@ if(!isset($_SESSION['mgrValidated'])){
     echo "Not Logged In!";
     exit;
 }
-
 // get the user settings from the database
 include_once "user_settings.inc.php";
+
+//echo $manager_direction;
+//echo $modx->config['manager_direction'];
 
 // include_once the language file
 if(!isset($manager_language)) {
@@ -170,7 +172,7 @@ $_lang = array();
 include_once "lang/english.inc.php";
 $length_eng_lang = count($_lang);
 
-if($manager_language!=="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
     include_once "lang/".$manager_language.".inc.php";
 }
 

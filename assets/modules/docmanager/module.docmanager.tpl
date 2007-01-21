@@ -80,7 +80,8 @@ if ($tabAction == 'change_template') {
 	return $output;
 } elseif ((isset($_POST['actionkey'])) && $tabAction == 'sortMenu' || isset($_POST['sortableListsSubmitted']) ) {
 		$output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html><head>
+<html'.($modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : '').' lang="'.$modx->config['manager_lang_attribute'].'" xml:lang="'.$modx->config['manager_lang_attribute'].'">
+<head>
 									    <script type="text/javascript">
 										function save() 
 										{ 
@@ -105,7 +106,7 @@ if ($tabAction == 'change_template') {
 //-- render tabbed output
 //--- HEAD
 $output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html> 
+<html '.($modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : '').' lang="'.$modx->config['manager_lang_attribute'].'" xml:lang="'.$modx->config['manager_lang_attribute'].'"> 
 		<head>
                 <title>'.$_lang['DM_module_title'].'</title> 
 <script type="text/javascript">var MODX_MEDIA_PATH = "media";</script>
@@ -128,7 +129,7 @@ $output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
 function setMoveValue(pId, pName) {
 	if (pId==0 || checkParentChildRelation(pId, pName)) {
 		document.newdocumentparent.new_parent.value=pId;
-		document.getElementById(\'parentName\').innerHTML = "Parent: <strong>" + pId + "<\/strong> (" + pName + ")";
+		document.getElementById(\'parentName\').innerHTML = "Parent: <strong>" + pId + "<\/strong> '.($modx->config['manager_direction']=='rtl' ? '&rlm;' : '') .'(" + pName + ")";
 	}
 }
 

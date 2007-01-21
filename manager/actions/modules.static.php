@@ -61,7 +61,7 @@ echo $cm->render();
 	function showContentMenu(id,e){
 		selectedItem=id;
 		var evt = new Event(e);
-		contextm.style.left = evt.pointerX(e)+"px";
+		contextm.style.left = evt.pointerX(e)<?php echo $modx->config['manager_direction']=='rtl' ? '-190' : '';?>+"px"; //offset menu if RTL is selected
 		contextm.style.top = evt.pointerY(e)+"px";
 		contextm.style.visibility = "visible";
 		e.cancelBubble=true;

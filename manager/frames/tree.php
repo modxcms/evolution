@@ -19,7 +19,7 @@
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
+<html <?php echo $modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : '';?> lang="<?php echo $modx->config['manager_lang_attribute'];?>" xml:lang="<?php echo $modx->config['manager_lang_attribute'];?>">
 <head>
     <title>Document Tree</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
@@ -147,7 +147,7 @@
             selectedObjectName = selectedObjectName.substr(0, 20) + "...";
         }
         var h,context = $('mx_contextmenu');
-        context.style.left= x+"px";
+        context.style.left= x<?php echo $modx->config['manager_direction']=='rtl' ? '-190' : '';?>+"px"; //offset menu to the left if rtl is selected
         context.style.top = y+"px";
         var elm = $("nameHolder");
         elm.innerHTML = selectedObjectName;

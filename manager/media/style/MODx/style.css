@@ -1,4 +1,4 @@
-/* MODx LE Manager Blue template last update: 08-01-2007*/
+/* MODx LE Manager Blue template last update: 21-01-2007*/
 
 /* Neutralize styles, fonts and viewport:
 ---------------------------------------------------------------- */
@@ -342,12 +342,12 @@ thead td {
 
 li {
 	padding: 0;
-	margin: 0 0 0 15px;
+	margin: 0;
 	list-style: disc outside url(images/misc/li.gif);
 }
 
 ul {
-	margin: 0 0 0 20px;
+	margin: 0 10px 0 20px;
 }
 
 .screen {
@@ -740,6 +740,12 @@ img.loginCaptcha {
     line-height: 16px;
     margin-right: 15px;
 }
+
+.tocTextRTL {
+	right: 3px;	
+}
+
+
 #tocText,
 #buildText img,
 #workText img { 
@@ -1036,8 +1042,15 @@ ul#nav {
 	z-index:		1;
 	white-space:	nowrap;
 }
+
+.dynamic-tab-pane-control ul {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .dynamic-tab-pane-control li {
-	margin-left: 10px;
+	padding-left:5px;
+	padding-right:5px;
 }
 /* Tree buttons
 ---------------------------------------------------------- */

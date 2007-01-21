@@ -6,6 +6,7 @@ if(!$modx->hasPermission('settings')) {
 }
 foreach ($_POST as $k => $v) {
 	$v = is_array($v) ? implode(",", $v) : $v;
+	if ($k == 'manager_lang_attribute' && trim($v) == '') $v = 'en';
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('".mysql_escape_string($k)."', '".mysql_escape_string($v)."')";
 	
 	if(!@$rs = mysql_query($sql)) {

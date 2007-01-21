@@ -10,7 +10,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
+<html <?php echo $modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : '';?> lang="<?php echo $modx->config['manager_lang_attribute'];?>" xml:lang="<?php echo $modx->config['manager_lang_attribute'];?>">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
     <title>nav</title>
@@ -22,8 +22,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     // TREE FUNCTIONS - FRAME
     // These functions affect the tree frame and any items that may be pointing to the tree.
     var currentFrameState = 'open';
-    var defaultFrameWidth = '260,*';
-    var userDefinedFrameWidth = '260,*';
+    var defaultFrameWidth = '<?php echo $modx->config['manager_direction']=='ltr' ? '260,*' : '*,260';?>';
+    var userDefinedFrameWidth = '<?php echo $modx->config['manager_direction']=='ltr' ? '260,*' : '*,260';?>';
 
     var workText;
     var buildText;
@@ -62,7 +62,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         try {
             var elm = $('tocText');
             if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']; ?>' alt='<?php echo $_lang['show_tree']; ?>' width='16' height='16' /></a>";
-            parent.document.getElementsByTagName("FRAMESET").item(1).cols = '0,*';
+            parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo ($modx->config['manager_direction'] == 'ltr' ? '0,*' : '*,0')?>';
             top.__hideTree = true;
         } catch(oException) {
             x=window.setTimeout('hideTreeFrame()', 1000);
@@ -197,7 +197,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 <body id="topMenu">
 
-<div id="tocText"></div>
+<div id="tocText" <?php echo $modx->config['manager_direction'] ? 'class="tocTextRTL"' : '' ?>></div>
 <div id="topbar">
     <div id="topbar-container">
         <div id="statusbar">

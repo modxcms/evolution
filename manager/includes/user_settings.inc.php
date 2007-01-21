@@ -18,6 +18,9 @@ $number_of_settings = mysql_num_rows($rs);
 
 while ($row = mysql_fetch_assoc($rs)) {
 	$settings[$row['setting_name']] = $row['setting_value'];
+	if (isset($modx->config)) {
+		$modx->config[$row['setting_name']] = $row['setting_value'];
+	}
 }
 
 extract($settings, EXTR_OVERWRITE);

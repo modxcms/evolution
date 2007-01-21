@@ -199,6 +199,31 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["manager_direction_title"] ?></b></td>
+            <td><select name="manager_direction" size="1" class="inputBox" style="width:100px;" onchange="documentDirty=true;">
+                <option value="ltr" <?php echo (isset($manager_direction) && $manager_direction=='ltr') ? 'selected' : ''?>>ltr</option>
+                <option value="rtl" <?php echo (isset($manager_direction) && $manager_direction=='rtl') ? 'selected' : ''?>>rtl</option>
+              </select></td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["manager_direction_message"] ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["manager_lang_attribute_title"] ?></b></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='20' size='10' name="manager_lang_attribute" value="<?php echo isset($manager_lang_attribute) ? $manager_lang_attribute : 'en' ; ?>" /></td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["manager_lang_attribute_message"] ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
             <td nowrap class="warning"><b><?php echo $_lang["sitestart_title"] ?></b></td>
             <td><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="site_start" value="<?php echo isset($site_start) ? $site_start : 1 ; ?>" /></td>
           </tr>

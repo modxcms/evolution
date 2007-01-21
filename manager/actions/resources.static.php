@@ -28,7 +28,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
         }
 
 		if ($resourceTable == 'site_plugins') $class.= $row['disabled'] == 1 ? ' class="disabledPlugin"' : '';
-		$output .= '<li><span'.$class.' style="width: 200px"><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].'</a></span>';
+		$output .= '<li><span'.$class.' style="width: 200px"><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].'</a>'.($modx->config['manager_direction']=='rtl' ? '&rlm;' : '').'</span>';
         $output .= $row['description']!='' ? ' - '.$row['description'] : '' ;
         $output .= $row['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ;
         $output .= '</li>';
