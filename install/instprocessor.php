@@ -9,7 +9,20 @@ $errors = 0;
 
 echo "Setup will now attempt to setup the database:<br />";
 
-$installMode = $_POST['installmode'] == 'upd' ? 1 : 0;
+$installMode= 0;
+if (isset ($_POST['installmode'])) {
+    switch ($_POST['installmode']) {
+        case 'upd2':
+            $installMode= 2;
+            break;
+        case 'upd':
+            $installMode= 1;
+            break;
+        default:
+            break;
+    }
+}
+
 $installData = $_POST['installdata'] ? 1 : 0;
 
 if ($installMode == 1) {
@@ -104,7 +117,7 @@ if ($installMode == 0) {
 $setupPath = realpath(dirname(__FILE__));
 include "$setupPath/sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminpass, $database_connection_charset);
-$sqlParser->mode = ($installMode == 0) ? "new" : "upd";
+$sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 $sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imagePath = $base_path . "assets/";
 $sqlParser->fileManagerPath = $base_path;
@@ -502,7 +515,7 @@ $sqlParser->close();
 echo "<p><b>Installation was successful!</b></p>";
 echo "<p>To log into the Content Manager (manager/index.php) you can click on the 'Close' button.</p>";
 if ($installMode == 0) {
-	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by  choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
+	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
 } else {
 	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.</p><br />&nbsp;";
 }
