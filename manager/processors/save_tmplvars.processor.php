@@ -28,7 +28,7 @@ $caption = mysql_escape_string($_POST['caption']);
 $type = mysql_escape_string($_POST['type']);
 $elements = mysql_escape_string($_POST['elements']);
 $default_text = mysql_escape_string($_POST['default_text']);
-$rank = mysql_escape_string($_POST['rank']);
+$rank = isset ($_POST['rank']) ? mysql_escape_string($_POST['rank']) : 0;
 $display = mysql_escape_string($_POST['display']);
 $params = mysql_escape_string($_POST['params']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
