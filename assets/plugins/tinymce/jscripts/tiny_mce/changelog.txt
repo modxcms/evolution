@@ -1,0 +1,39 @@
+Version 1.10 (2006-12-21)
+	Added new workaround for the gzip bug in IE.
+	Fixed so that file_put_contents warnings are ignored.
+	Fixed some default values to prevent notice errors.
+	Fixed error reporting to prevent most notices or strict errors.
+	Fixed bug with BSD systems and realpath returning incorrect value.
+	Updated readme file with clear instructions for seperate script containers.
+Version 1.09 (2006-10-20)
+	Complete rewrite of the script inorder to make it easier to understand and maintain.
+	Added support for custom javascripts to be compressed in the same stream.
+	Added checks for IE versions with the gzip compression bug.
+	Added new and improved documentation.
+Version 1.08 (2006-03-21)
+	Fixed so external plugins can be loaded with the loadPlugin call.
+	Fixed so it handles the x-gzip encoding correctly.
+Version 1.07 (2006-02-13)
+	Added fix for older PHP versions, contributed by Markus (kills).
+	Fixed bug with multiple inits of TinyMCE.
+	Fixed bug with Opera, accept-encoding needed to be trimmed from whitespace.
+	Fixed so it uses the DOMContentLoaded on Gecko and Opera.
+Version 1.06 (2005-12-29)
+	Added new disk cache support, this option will reduce the CPU load on the server.
+	Added new debug option, this enables you to see the compression ratio of cached files and where they are stored.
+	Fixed possible XSS vulnerability, reported by Stefan Esser (www.hardened-php.net).
+Version 1.05 (2005-12-27)
+	Added trim() around plugin names, in case anyone uses plugin1, plugin2 , plugin3 kind of string for plugins.
+	Fixed possible vulnerability with path access, reported by Stefan Esser (www.hardened-php.net).
+Version 1.04 (2005-12-01)
+	Fixed issue with zlib.output_compression option, contributed by Jami Pekkanen.
+Version 1.03 (2005-11-14)
+	Fixed issue with Northon Internet Securities.
+	Fixed compatiblity issues with various systems that uses cookies for language.
+Version 1.02 (2005-10-18)14/11/2005
+	Added fix to resolve issues with proxy servers, it now returns a "Vary: Accept-Encoding" header.
+	Fixed so it automaticly detects if clients or servers doesn't support gzip compression (streams uncompressed).
+Version 1.01 (2005-09-26)
+	Fixed multiple init call issues, multiple init calls can now be used aswell.
+Version 1.0 (2005-09-12)
+	First official release as a stand alone application.

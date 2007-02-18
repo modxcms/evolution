@@ -94,7 +94,6 @@ class Output {
 		$buttons_html = '';
 		$menus_html = '';
 		$toolbar_cv_html = '';
-		$html_bottom = '';
 		$base_path = $modx->config['base_path'];
 		$qe_path = $GLOBALS['quick_edit_path']; // Path to the Quick Edit folder, set in the QuickEdit module preferences
 		$output = $this->output;
@@ -146,7 +145,7 @@ class Output {
 			);
 
 			$menus['setting'][] =<<<EOD
-<a id="QE_ShowLinks" class="checked" href="javascript:qe.toggleLinks();">{$QE_lang['QE_show_links']}</a>
+<a id="QE_ShowLinks" class="checkbox" href="javascript:qe.toggleLinks();">{$QE_lang['QE_show_links']}</a>
 EOD;
 
 			if ($show_manager_link) {
@@ -186,17 +185,17 @@ EOD;
 
 						// One checkbox and not a binding
 						if ($cv_obj->type == 'checkbox' && !strpos($cv_obj->elements, '||') && substr($cv_obj->elements, 0, 1) != '@') {
-							$class = ($cv_obj->content ? 'unchecked' : 'checked');
+							$class = 'checkbox'.($cv_obj->content ? ' checked' : '');
 							$change_value = ($cv_obj->content ? '' : (strpos($cv_obj->elements, '==') ? substr(strstr($cv_obj->elements, '=='), 2) : $cv_obj->elements));
 							$menus[$menu][] .=<<<EOD
-<a class="{$class}" href="javascript: qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');" title="{$QE_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
+<a class="{$class}" href="#" onclick="qe.ajaxSave('{$cv_obj->id}', '{$cv_obj->name}', '{$change_value}');return false;" title="{$QE_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
 EOD;
 
 							// Everything else
 						} else {
 
 							$menus[$menu][] .=<<<EOD
-<a href="javascript: qe.open('{$cv_obj->id}');" title="{$QE_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
+<a href="#" onclick="qe.open('{$cv_obj->id}');return false;" title="{$QE_lang['edit']} {$cv_obj->description}">{$cv_obj->caption}</a>
 EOD;
 
 						}
@@ -228,12 +227,14 @@ EOD;
 			$head =<<<EOD
 
 <!-- Start QuickEdit headers -->
-<script type="text/javascript" src="{$manager_path}media/script/scriptaculous/prototype.js"></script>
-<script type="text/javascript" src="{$qe_path}/javascript/Cookie.js"></script>
-<script type="text/javascript" src="{$qe_path}/javascript/Drag.js"></script>
-<script type="text/javascript" src="{$qe_path}/javascript/moo.fx.js"></script>
+<script type="text/javascript" src="{$qe_path}/javascript/mootools.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/QuickEdit.js"></script>
 <link type="text/css" rel="stylesheet" href="{$qe_path}/styles/toolbar.css" />
+<script type="text/javascript">
+ Window.addEvent('load',function() {
+  qe = new QuickEdit({$module_id},{$doc_id},'{$manager_path}','{$qe_path}',$('QE_Toolbar'));
+ });
+</script>
 <!-- End QuickEdit headers -->
 
 EOD;
@@ -248,14 +249,6 @@ EOD;
  </ul>
 </div>
 <!-- End QuickEdit toolbar -->
-
-EOD;
-
-			$html_bottom .=<<<EOD
-
-<script type="text/javascript">
- var qe = new QuickEdit({$module_id},{$doc_id},'{$manager_path}','{$qe_path}',$('QE_Toolbar'));
-</script>
 
 EOD;
 
@@ -295,11 +288,6 @@ EOD;
 			// If the top html hasn't already been added to the page, do it now
 			if (strpos($output, $html_top) === false) {
 				$output = preg_replace('~(<body[^>]*>)~i', '\1' . $html_top, $output);
-			}
-
-			// If the bottom html hasn't already been added to the page, do it now
-			if (strpos($output, $html_bottom) === false) {
-				$output = preg_replace('~(</body>)~i', $html_bottom . '\1', $output);
 			}
 
 		}

@@ -2,9 +2,9 @@
 /*####
 #
 #	Name: Jot
-#	Version: 1.0
+#	Version: 1.1.1
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Nov 3, 2006 23:30 CET
+#	Date: Feb 13, 2006 23:09 CET
 #
 # Latest Version: http://modxcms.com/Jot-998.html
 # Jot Demo Site: http://projects.zerobarrier.nl/modx/
@@ -24,12 +24,15 @@ class CJot {
 	var $_link = array();
 	
 	function CJot() {
+		global $modx;
 		$path = strtr(realpath(dirname(__FILE__)), '\\', '/');
 		include_once($path . '/includes/jot.db.class.inc.php');
-		include_once($path . '/includes/chunkie.class.inc.php');
+		if (!class_exists('CChunkie'))
+			include_once($path . '/includes/chunkie.class.inc.php');
 		$this->name = $this->config["snippet"]["name"] = "Jot";
-		$this->version = $this->config["snippet"]["version"] = "1.0";
+		$this->version = $this->config["snippet"]["version"] = "1.1.1"; //
 		$this->config["snippet"]["versioncheck"] = "Unknown";
+		$this->client = $modx->getUserData();
 		$this->_ctime = time();
 		$this->_check = 0;
 		$this->provider = new CJotDataDb;
@@ -48,26 +51,7 @@ class CJot {
 	function Set($field, $value) {
 		$this->parameters[$field] = $value;
 	}
-	
-	function GetIP(&$type_used) {
-        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
-            $_ip = $_SERVER['HTTP_CLIENT_IP'];
-            $type_used = 'C';
-        } else
-            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                $type_used = 'F';
-       } else
-            if (isset($_SERVER['REMOTE_ADDR'])) {
-                $_ip = $_SERVER['REMOTE_ADDR'];
-                $type_used = 'R';
-        } else {
-                $_ip = 'UNKNOWN';
-                $type_used = 'U';
-        }
-        return $_ip;
- 	}
-	
+
 	function UniqueId($docid = 0,$tagid = '') {
 		// Creates a unique hash / id
 		$id[] = $docid."&".$tagid."&";
@@ -92,6 +76,7 @@ class CJot {
 		$this->config["snippet"]["input"] = $this->parameters; 
 				
 		// General settings
+		// TODO Add docid/tagid from all
 		$this->config["docid"] = !is_null($this->Get("docid")) ? intval($this->Get("docid")):$modx->documentIdentifier;
 		$this->config["tagid"] = !is_null($this->Get("tagid")) ? preg_replace("/[^A-z0-9_\-]/",'',$this->Get("tagid")):'';
 		$this->config["pagination"] = !is_null($this->Get("pagination")) ? $this->Get("pagination") : 10; // Set pagination (0 = disabled, # = comments per page)
@@ -118,11 +103,12 @@ class CJot {
 		
 		// Security
 		$this->config["user"]["mgrid"] = intval($_SESSION['mgrInternalKey']);
-		$this->config["user"]["usrid"] = intval($modx->getLoginUserID());
-		$this->config["user"]["id"] = ($this->config["user"]["usrid"] > 0 ) ? (-$this->config["user"]["usrid"]) : $this->config["user"]["mgrid"];
-		$this->config["user"]["host"] = NULL;
-		$this->config["user"]["ip"] = $this->GetIP($this->config["user"]["host"]);
-		$this->config["user"]["agent"] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT']  : 'NO USER AGENT';
+		$this->config["user"]["usrid"] = intval($_SESSION['webInternalKey']);
+		$this->config["user"]["id"] = (	$this->config["user"]["usrid"] > 0 ) ? (-$this->config["user"]["usrid"]) : $this->config["user"]["mgrid"];
+
+		$this->config["user"]["host"] = $this->client['ip'];
+		$this->config["user"]["ip"] = $this->client['ip'];
+		$this->config["user"]["agent"] = $this->client['ua'];
 		$this->config["user"]["sechash"] = md5($this->config["user"]["id"].$this->config["user"]["host"].$this->config["user"]["ip"].$this->config["user"]["agent"]);
 		
 		// Automatic settings
@@ -147,6 +133,7 @@ class CJot {
 		$this->config["moderation"]["notify"] = !is_null($this->Get("notify")) ? intval($this->Get("notify")) : 1;
 		
 		// Access Booleans
+		// TODO Add logic for manager groups
 		$this->isModerator = $this->config["moderation"]["enabled"] = intval($modx->isMemberOfWebGroup($this->config["permissions"]["moderate"] ) || $modx->checkSession());
 		$this->isTrusted = $this->config["moderation"]["trusted"] = intval($modx->isMemberOfWebGroup($this->config["permissions"]["trusted"] ) || $this->isModerator);
 		$this->canPost = $this->config["user"]["canpost"] = ((count($this->config["permissions"]["post"])==0) || $modx->isMemberOfWebGroup($this->config["permissions"]["post"]) || $this->isModerator) ? 1 : 0;
@@ -543,7 +530,7 @@ class CJot {
 		//-- Security check (Post Delay?)
 		if ($saveComment && $this->form['error'] == 0 && $this->config["postdelay"] != 0 && $pObj->hasPosted($this->config["postdelay"],$this->config["user"])) {
 			$this->form['error'] = 3; // Post to fast (within delay)
-			return $form;
+			return;
 		};
 
 		//-- Captcha/Veriword
@@ -757,13 +744,12 @@ class CJot {
 
 	// Templating
 	function getChunkRowClass($count,$userid) {
+		$rowstyle = ($count%2) ? "jot-row-alt" : "";
 		if ( $this->config["user"]["id"] == $userid && ($userid != 0)) {
-			$rowstyle = "jot-row-me";
+			$rowstyle .= " jot-row-me";
 		} elseif ( $this->config["authorid"] == $userid && ($userid != 0) ) {
-			$rowstyle = "jot-row-author";
-		} else {
-			$rowstyle = ($count%2) ? "jot-row-alt" : "";
-		}
+			$rowstyle .= " jot-row-author";
+		} 
 		return $rowstyle;
 	}
 	
@@ -785,7 +771,7 @@ class CJot {
 					// email validation
 					case "email": $re = "~^(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$~i"; break;
 					// simple required field validation
-					case "required": $re = "~[\w]~s";break;
+					case "required": $re = "~.+~s";break;
 					// simple number validation
 					case "number": $re = "~^\d+$~";break;
 					// custom regexp pattern

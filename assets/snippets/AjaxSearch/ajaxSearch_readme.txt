@@ -1,4 +1,4 @@
-AjaxSearch Readme ver 1.2
+AjaxSearch Readme ver 1.5
 
 Created By: KyleJ (kjaebker@muddydogpaws.com)
 This code is based off of the FlexSearchForm snippet created by jaredc
@@ -8,7 +8,7 @@ The search highlighting plugin is based off of code from sottwell (www.sottwell.
 The live Search functionality is from Thomas (shadock)
 Many fixes/additions were contributed by mikkelwe/identity/Perrine
 
-Note: For this code to work you must include a call to the prototype and the scriptaculous js libraries in your template.
+Note: For this code to work you must include a call to the Mootools js library in your template.
 This is done automatically with the addJscript parameter unless you set it to 0.
 
 
@@ -53,7 +53,7 @@ This is done automatically with the addJscript parameter unless you set it to 0.
         contain another call to this snippet for displaying results.
         
     &addJscript [1 | 0] (Default: 1)
-        If you want the prototype and the scriptaculous libraries added
+        If you want the Mootools library added
         to the header of your pages automatically set this to 1.  Set to
         0 if you do not want them inculded automatically.
 

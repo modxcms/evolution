@@ -11,7 +11,7 @@ if (navigator.platform == "Win32" && navigator.appName == "Microsoft Internet Ex
 
 function fnLoadPngs() {
 	var rslt = navigator.appVersion.match(/MSIE (\d+\.\d+)/, '');
-	var itsAllGood = (rslt != null && Number(rslt[1]) >= 5.5);
+	var itsAllGood = (rslt != null && Number(rslt[1]) >= 5.5 && Number(rslt[1]) < 7.0);
 
 	for (var i = document.images.length - 1, img = null; (img = document.images[i]); i--) {
 		if (itsAllGood && img.src.match(/\.png$/i) != null) {

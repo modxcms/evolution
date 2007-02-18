@@ -7,7 +7,7 @@
  *  For: MODx cms (modxcms.com)
  *  Description: Class for the QuickEditor
  *
- *  Translation: Pontus Ågren
+ *  Translation: Pontus Ã…gren
  *  Date: 4/12/2006
  */
 
@@ -39,47 +39,47 @@ $QE_lang['QE_lang'] = 'sv';
 $QE_lang['QE_xml_lang'] = 'sv'; 
 $QE_lang['QE_charset'] = 'iso-8859-1'; 
 $QE_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks 
-$QE_lang['QE_show_links'] = 'Visa länkar'; 
-$QE_lang['QE_hide_links'] = 'Dölj länkar'; 
-$QE_lang['QE_someone_editing'] = 'Någon annan redigerar det här dokumentet'; 
-$QE_lang['QE_cant_find_content'] = 'Kunde inte hitta något innehåll att redigera'; 
-$QE_lang['QE_description'] = 'Redigera sidor direkt från webbplatsen'; 
-$QE_lang['revert'] = 'Återställ'; 
-$QE_lang['apply'] = 'Verkställ'; 
-$QE_lang['revert_prompt'] = 'Ångra ALLA dina ändringar?'; 
-$QE_lang['QE_no_edit_rights'] = 'Inga redigeringsrättigheter';
+$QE_lang['QE_show_links'] = 'Visa lÃ¤nkar'; 
+$QE_lang['QE_hide_links'] = 'DÃ¶lj lÃ¤nkar'; 
+$QE_lang['QE_someone_editing'] = 'NÃ¥gon annan redigerar det hÃ¤r dokumentet'; 
+$QE_lang['QE_cant_find_content'] = 'Kunde inte hitta nÃ¥got innehÃ¥ll att redigera'; 
+$QE_lang['QE_description'] = 'Redigera sidor direkt frÃ¥n webbplatsen'; 
+$QE_lang['revert'] = 'Ã…terstÃ¤ll'; 
+$QE_lang['apply'] = 'VerkstÃ¤ll'; 
+$QE_lang['revert_prompt'] = 'Ã…ngra ALLA dina Ã¤ndringar?'; 
+$QE_lang['QE_no_edit_rights'] = 'Inga redigeringsrÃ¤ttigheter';
 $QE_lang['ok'] = 'OK'; 
-$QE_lang['content'] = 'Innehåll'; 
-$QE_lang['setting'] = 'Inställningar'; 
-$QE_lang['go'] = 'Utför'; 
+$QE_lang['content'] = 'InnehÃ¥ll'; 
+$QE_lang['setting'] = 'InstÃ¤llningar'; 
+$QE_lang['go'] = 'UtfÃ¶r'; 
 $QE_lang['manager'] = 'Hanterare'; 
-$QE_lang['help'] = 'Hjälp'; 
+$QE_lang['help'] = 'HjÃ¤lp'; 
 $QE_lang['edit'] = 'Redigera'; 
 $QE_lang['logout'] = 'Logga ut'; 
-$QE_lang['close'] = 'Stäng'; 
+$QE_lang['close'] = 'StÃ¤ng'; 
 $QE_lang['document_title'] = 'Titel'; 
-$QE_lang['document_title_help'] = 'Skriv namnet/titeln på dokumentet här. Försök att undvika omvända snedstreck i namnet!'; 
-$QE_lang['long_title'] = 'Lång titel'; 
-$QE_lang['document_long_title_help'] = 'Här kan du skriva in en längre titel för ditt dokument. Detta är bra för sökmotorer, och kan bättre beskriva ditt dokumentet.'; 
+$QE_lang['document_title_help'] = 'Skriv namnet/titeln pÃ¥ dokumentet hÃ¤r. FÃ¶rsÃ¶k att undvika omvÃ¤nda snedstreck i namnet!'; 
+$QE_lang['long_title'] = 'LÃ¥ng titel'; 
+$QE_lang['document_long_title_help'] = 'HÃ¤r kan du skriva in en lÃ¤ngre titel fÃ¶r ditt dokument. Detta Ã¤r bra fÃ¶r sÃ¶kmotorer, och kan bÃ¤ttre beskriva ditt dokumentet.'; 
 $QE_lang['document_description'] = 'Beskrivning'; 
-$QE_lang['document_description_help'] = 'Du kan skriva en valfri beskrivning av dokumentet här.'; 
-$QE_lang['document_content'] = 'Dokumentinnehåll'; 
+$QE_lang['document_description_help'] = 'Du kan skriva en valfri beskrivning av dokumentet hÃ¤r.'; 
+$QE_lang['document_content'] = 'DokumentinnehÃ¥ll'; 
 $QE_lang['template'] = 'Mall'; 
-$QE_lang['page_data_template_help'] = 'Här kan du välja vilken mall dokumentet ska använda.'; 
+$QE_lang['page_data_template_help'] = 'HÃ¤r kan du vÃ¤lja vilken mall dokumentet ska anvÃ¤nda.'; 
 $QE_lang['document_alias'] = 'Dokumentets&nbsp;alias'; 
-$QE_lang['document_alias_help'] = 'Här kan du ange ett alias för dokumentet. Detta gör dokumentet nåbart genom: \n\nhttp://dinserver/alias\n\nDetta fungerar endast om du använder vänliga adresser.'; 
+$QE_lang['document_alias_help'] = 'HÃ¤r kan du ange ett alias fÃ¶r dokumentet. Detta gÃ¶r dokumentet nÃ¥bart genom: \n\nhttp://dinserver/alias\n\nDetta fungerar endast om du anvÃ¤nder vÃ¤nliga adresser.'; 
 $QE_lang['document_opt_published'] = 'Publiserad'; 
-$QE_lang['document_opt_published_help'] = 'Markera detta fält om dokumentet ska publiceras direkt när det sparas.'; 
+$QE_lang['document_opt_published_help'] = 'Markera detta fÃ¤lt om dokumentet ska publiceras direkt nÃ¤r det sparas.'; 
 $QE_lang['document_summary'] = 'Sammanfattning'; 
 $QE_lang['document_summary_help'] = 'Skriv en kort sammanfattning av dokumentet'; 
 $QE_lang['document_opt_menu_index'] = 'Menyindex'; 
-$QE_lang['document_opt_menu_index_help'] = 'Menyindex är ett fält du kan använda för att sortera dokument i din kodsnutt som bygger menyn. Du kan också använda det för andra ändamål i dina kodsnuttar.'; 
+$QE_lang['document_opt_menu_index_help'] = 'Menyindex Ã¤r ett fÃ¤lt du kan anvÃ¤nda fÃ¶r att sortera dokument i din kodsnutt som bygger menyn. Du kan ocksÃ¥ anvÃ¤nda det fÃ¶r andra Ã¤ndamÃ¥l i dina kodsnuttar.'; 
 $QE_lang['document_opt_menu_title'] = 'Menytitle'; 
-$QE_lang['document_opt_menu_title_help'] = 'Menytitel är ett fält du kan använda för att visa en kort titel för dokumentet i dina menykodsnuttar eller moduler.'; 
+$QE_lang['document_opt_menu_title_help'] = 'Menytitel Ã¤r ett fÃ¤lt du kan anvÃ¤nda fÃ¶r att visa en kort titel fÃ¶r dokumentet i dina menykodsnuttar eller moduler.'; 
 $QE_lang['document_opt_show_menu'] = 'Visa i meny'; 
-$QE_lang['document_opt_show_menu_help'] = 'Välj den här inställningen för att visa dokumentet i en webbmeny. Notera att vissa menybyggarprogram kan välja att strunta i den här inställningen.'; 
-$QE_lang['page_data_searchable'] = 'Sökbar'; 
-$QE_lang['page_data_searchable_help'] = 'Om detta fält markeras, kommer dokumentet att bli sökbart. Du kan också använda det för andra ändamål i dina snippets.'; 
+$QE_lang['document_opt_show_menu_help'] = 'VÃ¤lj den hÃ¤r instÃ¤llningen fÃ¶r att visa dokumentet i en webbmeny. Notera att vissa menybyggarprogram kan vÃ¤lja att strunta i den hÃ¤r instÃ¤llningen.'; 
+$QE_lang['page_data_searchable'] = 'SÃ¶kbar'; 
+$QE_lang['page_data_searchable_help'] = 'Om detta fÃ¤lt markeras, kommer dokumentet att bli sÃ¶kbart. Du kan ocksÃ¥ anvÃ¤nda det fÃ¶r andra Ã¤ndamÃ¥l i dina snippets.'; 
 $QE_lang['page_data_cacheable'] = 'Cachebar'; 
-$QE_lang['page_data_cacheable_help'] = 'Om detta fält lämnas markerat, kommer dokumentet att sparas i cachen. Se till att fältet är avmarkerat om ditt dokument innehåller snippets.';
+$QE_lang['page_data_cacheable_help'] = 'Om detta fÃ¤lt lÃ¤mnas markerat, kommer dokumentet att sparas i cachen. Se till att fÃ¤ltet Ã¤r avmarkerat om ditt dokument innehÃ¥ller snippets.';
 ?>

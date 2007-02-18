@@ -15,7 +15,7 @@ class CChunkie {
 		if (!class_exists("PHxParser")) include_once(strtr(realpath(dirname(__FILE__))."/phx.parser.class.inc.php", '\\', '/')); 
 		$this->template = $this->getTemplate($template);
 		$this->phx = new PHxParser();
-		$this->phxreq = "1.4.4";
+		$this->phxreq = "2.0.0";
 		$this->phxerror = '<div style="border: 1px solid red;font-weight: bold;margin: 10px;padding: 5px;">
 			Error! This MODx installation is running an older version of the PHx plugin.<br /><br />
 			Please update PHx to version '.$this->phxreq .' or higher.<br />OR - Disable the PHx plugin in the MODx Manager. (Manage Resources -> Plugins)

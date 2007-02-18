@@ -1,17 +1,4 @@
 <?php
-/*####
-#
-#	Name: Jot - Database Class
-#	Version: 1.0
-#	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Nov 3, 2006 23:30 CET
-#
-# Latest Version: http://modxcms.com/Jot-998.html
-# Jot Demo Site: http://projects.zerobarrier.nl/modx/
-# Documentation: http://wiki.modxcms.com/index.php/Jot (wiki)
-#
-####*/
-
 class CJotDataDb {
 	var $fields = array();
 	var $cfields = array();
@@ -24,6 +11,7 @@ class CJotDataDb {
 		$this->tbl["content"] = $modx->getFullTableName('jot_content');
 		$this->tbl["subscriptions"] = $modx->getFullTableName('jot_subscriptions');
 		$this->tbl["fields"] = $modx->getFullTableName('jot_fields');
+		$this->cache["userpostcount"] = array();
 		$this->isNew = false;
 	}
 	
@@ -72,13 +60,19 @@ class CJotDataDb {
 		}
 	}
 	
-	function getCustomFieldsArray($id = 0) {
+	function getCustomFieldsArray($id_values) {
 		global $modx;
 		$custom = array();
 		$tbl = $this->tbl["fields"];
-		$rs = $modx->db->query("select label, content from $tbl where id = $id");
+		
+		if (is_array($id_values)) {
+			$idstring = "'" . implode("','",$id_values) . "'";
+		} else {
+			$idstring = "'" . $id_values . "'";
+		}
+		$rs = $modx->db->query("select id, label, content from $tbl where id IN (" . $idstring . ")");
 		while ($row = $modx->db->getRow($rs)) {
-			$custom[$row["label"]] = $row["content"];
+			$custom[$row['id']][$row['label']] = $row['content'];
 		}
 		return $custom;		
 	}
@@ -95,7 +89,8 @@ class CJotDataDb {
 			$this->fields['id'] = $id;		
 			
 			// Custom Fields
-			$this->cfields = $this->getCustomFieldsArray($id);
+			$cust = $this->getCustomFieldsArray($id);
+			$this->cfields = $cust[$id];
 
 		}
 		else {		
@@ -151,7 +146,7 @@ class CJotDataDb {
 					'label' => $n,
 					'content' => $modx->db->escape($v)
 				);
-				if (!$modx->db->update($update, $this->tbl["fields"], "id=$id and label='".$update["label"]."'")) $modx->db->insert($insert,$this->tbl["fields"]);
+				if (!$modx->db->update($update, $this->tbl["fields"], "id=$id and label='".$update["label"]."'")) $modx->db->insert($update,$this->tbl["fields"]);
 			}
 			
 			
@@ -177,8 +172,15 @@ class CJotDataDb {
 	
 	function getUserPostCount($userid, $docid,$tagid) {
 		global $modx;
-		$sql = 'SELECT count(id) FROM '.$this->tbl["content"].' WHERE createdby = "'.$userid.'" AND uparent = '.$docid.' AND tagid = "' . $tagid .'"'.$where;
-		return intval($modx->db->getValue($sql));
+		$key = $userid . "&" . $docid . "&" . $tagid;
+		if (array_key_exists($key, $this->cache["userpostcount"])) {
+			$count = $this->cache["userpostcount"][$key];
+		} else {
+			$sql = 'SELECT count(id) FROM '.$this->tbl["content"].' WHERE createdby = "'.$userid.'" AND uparent = "'.$docid.'" AND tagid = "' . $tagid . '"';			
+			$count = intval($modx->db->getValue($sql));
+			$this->cache["userpostcount"][$key] = $count;
+		}
+		return $count;
 	}
 	
 	function GetCommentCount($docid,$tagid,$viewtype) {
@@ -255,13 +257,22 @@ class CJotDataDb {
 		global $modx;
 		$rs = $modx->db->query($query);	
 		$comments = array();
+		$ids = array();
 		while ($row = $modx->db->getRow($rs)) {
+			$ids[] = $row["id"];
 			$comments[] = $row;
-			$i = count($comments)-1;
-			$comments[$i]["custom"] = $this->getCustomFieldsArray($comments[$i]["id"]);
-			$comments[$i]["userpostcount"] = $this->getUserPostCount($comments[$i]["createdby"],$comments[$i]["uparent"],$comments[$i]["tagid"]);
 		}
-		return $comments;
+		
+		$custom = $this->getCustomFieldsArray($ids);
+		
+		$arrComments = array();
+		foreach($comments as $comment) {
+			$comment["custom"] = $custom[$comment["id"]];
+			$comment["userpostcount"] = $this->getUserPostCount($comment["createdby"],$comment["uparent"],$comment["tagid"]);
+			$arrComments[] = $comment;
+		}
+
+		return $arrComments;
 	}
 	
 	function hasSubscription($docid = 0,$tagid = '', $user = array()) {

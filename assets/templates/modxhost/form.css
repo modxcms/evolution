@@ -79,107 +79,81 @@ display: none;
 	height: 19px;
 }
 
-
-
 #search-txt {
-position: absolute;
-top: 0px;
-left: 158px;
-width: 57px;
-height: 21px;
-color: #ffffff;
-font-size: 13px;
-line-height: 23px;
+    position: absolute;
+    top: 0px;
+    left: 158px;
+    width: 57px;
+    height: 21px;
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 23px;
 }
 
-
 #ajaxSearch_input {
-position: absolute;
-top: 0px;
-left: 220px;
-width: 165px;
-height: 19px;
+    position: absolute;
+    top: 0px;
+    left: 220px;
+    width: 165px;
+    height: 19px;
 }
 
 #ajaxSearch_submit {
-width: 70px !important;
-height: 21px !important;
-margin: 0 !important;
-border: 0 !important;
-background: transparent  url(images/search_70x21.gif) no-repeat center top;
-padding: 55px 0 0 !important;
-cursor: pointer; /* hand-shaped cursor */
-cursor: hand; /* for IE 5.x */
-position: absolute;
-top: 0px;
-left: 400px;
-
+    width: 70px !important;
+    height: 21px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent  url(images/search_70x21.gif) no-repeat center top;
+    padding: 55px 0 0 !important;
+    cursor: pointer; /* hand-shaped cursor */
+    cursor: hand; /* for IE 5.x */
+    position: absolute;
+    top: 0px;
+    left: 400px;
 }
 
-        #ajaxSearch_output {
-			background-color: #000000;
-			background-image: url(images/search_bg_1_71.gif);
-			background-repeat: repeat-x;
-			background-position: center center;
-			color: white;
-			-moz-opacity:0.9;
-			opacity:0.9;
-			filter: alpha(opacity=90);
-			position: absolute;
-			top: 23px;
-			left: 220px;
-			width: 165px !important;
-			z-index: 1;
-			border: 0;
-			padding: 0;
-			margin: 0;
-        }
-        #ajaxSearch_output a:hover{
-			color: #fff;
-			background-repeat: no-repeat;
-			background-color: #8dbc00;
-			background-position: left center;
-			display: block;
-			width: 93% !important;
-			padding: 5px;
-		}
-		#ajaxSearch_output a{
-			color: #ffffff;
-			background-repeat: no-repeat !important;
-			text-align: left;
-			border-right: 1px solid #2f2f2f;
-			border-top: 1px solid #2f2f2f;
-			border-left: 1px solid #2f2f2f;
-			font-weight: normal;
-			width: 172px;
-			background-position: left center;
-			display: block;	
-			width: 93% !important;
-			padding: 5px;
-	}
-        .ajaxSearch_paging {
-    
-        }
-        .AS_ajax_result {
-            color: #444;
-            margin-bottom: 3px;
-        }
-        .AS_resultLink {
-            text-decoration: underline;
-        }
-        .AS_resultDescription{
-            color: #555;
-        }
-        .AS_ajax_more {
-            color: #555;
-        }
+#ajaxSearch_output {
+    background: #000;
+    color: white;
+    -moz-opacity:0.95 !important;
+    opacity:0.95 !important;
+    filter: alpha(opacity=95) !important;
+    position: absolute;
+    top: 23px;
+    left: 220px;
+    width: 165px !important;
+    z-index: 1;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+#ajaxSearch_output a {
+	color: #fff;
+	text-align: left;
+	width: 172px;
+	display: block;	
+	width: 93% !important;
+}
+#ajaxSearch_output a:hover{ background-color: #8dbc00; }
+#ajaxSearch_output p {margin: 0;}
+.ajaxSearch_paging { }
 
-		.AS_intro { display: none;}
-
-
-
-
-
+.AS_ajax_result {
+    border-top: 1px solid #2f2f2f;
+    color: #444;
+    padding: 5px 10px 7px;
+    margin: 0;
+}
+    .AS_resultLink {
+        text-decoration: underline;
+        padding: 0;
+        margin: 0;
+    }
+    .AS_ajax_resultDescription {
+        color: #888;
+    }
+    .AS_ajax_more { color: #555; }
+    .AS_intro { display: none;}
 
 
 #dirsearch-txt {
@@ -209,8 +183,6 @@ width: 70px;
 height: 21px;
 }
 
-
-
 #dirsearch-txt2 {
 position: absolute;
 top: 3px;
@@ -224,24 +196,16 @@ color: #4E5760;
 color: #4E5760;
 }
 
-
-
-
-
 #join {
 position: relative;
 }
-
-
-
-#join-inp {
-margin-top: 5px;
-width: 158px;
-height: 18px;
-}
-
-#join-btn {
-margin-top: 5px;
-width: 120px;
-height: 21px;
-}
+    #join-inp {
+    margin-top: 5px;
+    width: 158px;
+    height: 18px;
+    }
+    #join-btn {
+    margin-top: 5px;
+    width: 120px;
+    height: 21px;
+    }

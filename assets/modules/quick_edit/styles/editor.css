@@ -22,56 +22,56 @@ font-size:10pt;
 background-color:#fff;
 }
 
-#tv_container{
-position:relative;
-margin:0;
-padding:10px;
-}
-
 #toolbar{
+border-style:solid;
+position:relative;
 height:25px;
+width:100%;
 border-bottom-style:solid;
 border-color:#aeaeae;
 background-image:url(../images/menu_button_hover_bg.png);
 background-repeat:repeat-x;
 }
 
-#toolbar a{
+#toolbar button{
 position:relative;
-display:block;
-float:left;
-height:15px;
+height:25px;
 margin:0;
-padding:5px 10px 5px 30px;
+padding:0 5px 0 30px;
 vertical-align:middle;
 color:#000000;
 text-decoration:none;
 border-style:none solid;
-border-left-color:#d2d2d2;
-border-right-color:#aeaeae;
-background-repeat:repeat-x;
+border-left-color:#eee;
+border-right-color:#888;
+background-color:transparent;
+background-position:5px 0;
+cursor:pointer;
 }
 
-#toolbar a:hover{
-background-image:url(../images/link_bg.png);
-background-color:#fff;
+#apply{
+background-image:url(../images/ok.gif);
+background-repeat:no-repeat;
 }
 
-#toolbar a img{
-position:absolute;
-left:4px;
-top:0;
-border-style:none;
+#revert{
+background-image:url(../images/revert.gif);
+background-repeat:no-repeat;
 }
 
 #close{
-float:right !important;
+position:absolute !important;
+right:0;
+width:100px;
+background-image:url(../images/close.gif);
+background-repeat:no-repeat;
 }
 
 #info{
 position:relative;
 margin:0;
 height:18px;
+text-align:center;
 background-color:#f0f0f0;
 cursor:help;
 }
@@ -79,29 +79,24 @@ cursor:help;
 #info h1{
 margin:0;
 padding:2px 0;
-text-align:center;
 font-size:8pt;
 font-weight:bold;
 }
 
-#tv_description{position:absolute;
+#description{position:absolute;
 z-index:1000;
+left:0;
 margin:0;
 padding:0;
 width:100%;
 font-size:8pt;
 font-weight:normal;
-text-align:left;
 background-color:#f0f0f0;
+overflow:hidden;
 }
 
-#tv_description div{
+#tv_container{
 position:relative;
-z-index:1001;
-margin:10px;
-}
-
-/* --- TV TYPE STYLES --- */
-.richtext{
-width:625px;
+margin:0;
+padding:10px;
 }

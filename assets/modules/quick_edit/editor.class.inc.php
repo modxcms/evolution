@@ -135,24 +135,10 @@ class QuickEditor {
 
    $tv_html = renderFormElement($cv->type, $cv->name, $cv->default_text, $cv->elements, $cv->content);
 
-   // Set the buttons for this TV
-$buttons = <<<EOD
-<a id="close" href="javascript: close();"><img src="../{$qe_path}/images/close.gif" alt="{$QE_lang['close']}" /> {$QE_lang['close']}</a>
-
-<a href="javascript: $('tv_form').submit();"><img src="../{$qe_path}/images/ok.gif" alt="{$QE_lang['ok']}" /> {$QE_lang['ok']}</a>
-EOD;
-
-   if($cv->type != 'richtext' || in_array(strtolower($modx->config['which_editor']), $snapshot_compatible_editors)) {
-$buttons .= <<<EOD
-<a href="javascript: applyChanges($('tv_form'));"><img src="../{$qe_path}/images/apply.gif" alt="{$QE_lang['apply']}" /> {$QE_lang['apply']}</a>
-<a href="javascript: if(confirm('{$QE_lang['revert_prompt']}')) { saveSnapshot(); }"><img src="../{$qe_path}/images/revert.gif" alt="{$QE_lang['revert']}" /> {$QE_lang['revert']}</a>
-EOD;
-   }
-
    // Get the name of the TV
-   if(!($tv_desc = $cv->description)) {
-   } elseif(!($tv_desc = $cv->caption)) {
-   } else {	$tv_desc = $cv->name; }
+   if(!($description = $cv->description)) {
+   } elseif(!($description = $cv->caption)) {
+   } else { $description = $cv->name; }
 
    // HTML
 $html = <<<EOD
@@ -167,20 +153,37 @@ $html = <<<EOD
 <title>{$QE_lang['QE_title']}</title>
 
 <link type="text/css" rel="stylesheet" href="../{$qe_path}/styles/editor.css" />
-<script type="text/javascript">
-var QE_ModuleActionId = '{$module_exec_action}';
-var QE_ModuleId = '{$mod_id}';
-var QE_FormSnapshot = '';
-</script>
-<script type="text/javascript" src="media/script/scriptaculous/prototype.js"></script>
-<script type="text/javascript" src="media/script/scriptaculous/scriptaculous.js"></script>
+
+<script type="text/javascript" src="../{$qe_path}/javascript/mootools.js"></script>
 <script type="text/javascript" src="media/script/datefunctions.js"></script>
-<script type="text/javascript" src="../{$qe_path}/javascript/editor.js"></script>
+<script type="text/javascript" src="../{$qe_path}/javascript/QuickEditor.js"></script>
+
+<script type="text/javascript">
+<!--
+
+ function apply() { qe.apply(); }
+
+ Window.addEvent('load', function() {
+
+  qe = new QuickEditor('qe_form');
+
+  $('qe_form').addEvent('submit',function() { apply.delay(500); return false; } );
+  $('revert').addEvent('click',function() { if(confirm('{$QE_lang['revert_prompt']}')) { qe.revert(); }; });
+  $('close').addEvent('click',function() { self.close(); });
+  $('info').addEvent('click',function() { qe.showDescription(); });
+
+ });
+
+ // Dummy function that richtext editor fires
+ function setVariableModified() { }
+
+// -->
+</script>
 
 </head>
-<body onload="takeSnapshot($('tv_form'));">
+<body>
 
-<form id="tv_form" class="{$cv->type}" name="mutate" method="post" enctype="multipart/form-data" action="index.php">
+<form id="qe_form" class="{$cv->type}" name="mutate" method="post" enctype="multipart/form-data" action="index.php">
 <input type="hidden" name="a" value="{$module_exec_action}" />
 <input type="hidden" name="id" value="{$mod_id}" />
 <input type="hidden" name="doc" value="{$doc_id}" />
@@ -189,14 +192,14 @@ var QE_FormSnapshot = '';
 <input type="hidden" name="variablesmodified" value="">
 
 <div id="toolbar">
-
-{$buttons}
-
+<button id="apply" type="submit">{$QE_lang['apply']}</button>
+<button id="revert" type="button">{$QE_lang['revert']}</button>
+<button id="close" type="button">{$QE_lang['close']}</button>
 </div>
 
-<div id="info" onclick="javascript: showDescription()">
+<div id="info">
  <h1>{$cv->caption}</h1>
- <div id="tv_description" style="display:none;"><div id="tv_description_text">{$cv->description}</div></div>
+ <div id="description">{$description}</div>
 </div>
 
 <div id="tv_container">
@@ -205,19 +208,9 @@ var QE_FormSnapshot = '';
 
 </div>
 
-<button type="submit" style="display:none;"></button>
-
 </form>
 
-$editor_html
-
-<script type="text/javascript">
-
- // Resize the window to fit the TV
- fitWindow();
- var QE_ContentVariableID = 'tv{$cv->name}';
-
-</script>
+{$editor_html}
 
 </body>
 </html>
@@ -283,7 +276,7 @@ EOD;
     $sql = "SELECT id
             FROM {$db}.`{$pre}site_tmplvar_contentvalues`
             WHERE `tmplvarid` = '{$cv->id}'
-            AND `contentid` = '{$doc_id}'";
+            AND `contentid` = '{$doc_id}';";
     $result = $modx->db->query($sql);
 
     if($modx->db->getRecordCount($result)) {
@@ -291,16 +284,16 @@ EOD;
      $sql = "UPDATE {$db}.`{$pre}site_tmplvar_contentvalues`
              SET `value` = '{$value_prep}'
              WHERE `tmplvarid` = '{$cv->id}'
-             AND `contentid` = '{$doc_id}'";
+             AND `contentid` = '{$doc_id}';";
 
     } else {
 
-     $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues` (tmplvarid, contentid, value)
-             VALUES('{$cv->id}', '{$doc_id}', '{$value_prep}')";
+     $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues`(tmplvarid, contentid, value)
+             VALUES('{$cv->id}', '{$doc_id}', '{$value_prep}');";
              
     }
 
-    $modx->db->update(array('editedon'=>$time, 'editedby'=>$user), "`{$pre}site_content`", "id = '{$doc_id}'");
+    $modx->db->update(array('editedon'=>$time, 'editedby'=>$user), "{$pre}site_content", "id = '{$doc_id}'");
 
    } elseif(in_array($cv->id, $editable)) {
 

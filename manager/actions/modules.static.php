@@ -60,9 +60,8 @@ echo $cm->render();
 	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
 	function showContentMenu(id,e){
 		selectedItem=id;
-		var evt = new Event(e);
-		contextm.style.left = evt.pointerX(e)<?php echo $modx->config['manager_direction']=='rtl' ? '-190' : '';?>+"px"; //offset menu if RTL is selected
-		contextm.style.top = evt.pointerY(e)+"px";
+		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?php echo $modx->config['manager_direction']=='rtl' ? '-190' : '';?>+"px"; //offset menu if RTL is selected
+		contextm.style.top = (e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop)))+"px";
 		contextm.style.visibility = "visible";
 		e.cancelBubble=true;
 		return false;

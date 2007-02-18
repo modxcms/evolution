@@ -43,7 +43,7 @@ $sql = "
 	SELECT sysevt.name as 'evtname', sysevt.id as 'evtid', pe.pluginid, plugs.name, pe.priority
 	FROM $dbase.`".$table_prefix."system_eventnames` sysevt
 	INNER JOIN $dbase.`".$table_prefix."site_plugin_events` pe ON pe.evtid = sysevt.id
-	INNER JOIN $dbase.`".$table_prefix."site_plugins plugs` ON plugs.id = pe.pluginid
+	INNER JOIN $dbase.`".$table_prefix."site_plugins` plugs ON plugs.id = pe.pluginid
 	WHERE plugs.disabled=0
 	ORDER BY sysevt.name,pe.priority
 ";

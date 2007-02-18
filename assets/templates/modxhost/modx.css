@@ -356,8 +356,21 @@ border: 0;
 
 text-decoration: none; 
 }
-/* END */
 
 .stylebox {background-color: #F7F7F7; border: 1px solid #A0A0A0; padding: 5px;}
 .hide {display: none;}
 
+/* Search Terms Highlighting
+------------------------------------------------------------------------------- */
+.AS_ajax_highlight {
+    background-color: #ffb;
+    padding: 2px;
+    margin: -3px;
+    border: 1px solid #dd3;
+    color: #000;
+}
+
+.searchTerms { color: #eee; }
+.searchTerms .AS_ajax_highlight { margin: 0 0 0 3px;}
+a.ajaxSearch_removeHighlight, a.ajaxSearch_removeHighlight:visited { display: block; float: left; margin: 6px 0 0; padding: 1px 2px 2px; color: #888; }
+a.ajaxSearch_removeHighlight:hover { background-color: #888; color: #222; }

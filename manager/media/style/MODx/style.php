@@ -6,7 +6,7 @@
  * Author:         Jeff Whitfield
  * Date:           2006/05/30
  * Version:        1.0
- * MODx version:   0.9.5
+ * MODx version:   0.9.6
 */
 $style_path = "media/style/MODx/";
 

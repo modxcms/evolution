@@ -3,8 +3,17 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.5.1-RC1 (rev 2258 - Jan 28, 2007)
+MODx 0.9.6-RC1 (rev 2359 - Feb 18, 2007)
 ====================================
+* Added new param to AjaxSearch to enable search highlighting without the extract param being on (2355)
+* Update MODxHost template to support new Mootools dropdown menu and AjaxSearch (2354)
+* Update Jot to version 1.1.1 (2335)
+* Add more examples to .htaccess for more "best practices" URL handling examples, including www.domain.com -> domain.com and SSL handling (2315)
+* Update Jot to version 1.1 (2308)
+* Update to AjaxSearch version 1.5 for Mootools (2271)
+* [FS#770] Update version detection in sleight.js to skip IE 7 and above (2267)
+* Updated QuickEdit to use Mootools 1.0 (2265)
+* Added full (compressed) distribution of Mootools 1.0 official release to manager (2262)
 * Fix to save_tmplvars to avoid errors when MySQL is running in a strict SQL_MODE. (2252)
 * Added baseline support for RTL languages in the Manager (2248)
 * Added new upgrade option for editing database connection settings; this will allow users to set the character set options properly during upgrades. (2246,2247,2249)
@@ -70,6 +79,11 @@ MODx 0.9.5.1-RC1 (rev 2258 - Jan 28, 2007)
 * Russian language added (2149)
 * Polish language added (2146)
 * Persian/Farsi language added (2142)
+
+
+
+MODx 0.9.5 (rev 2109 - Dec 06, 2006)
+====================================
 * [FS#419] Fix error when saving roles on some configurations due to MySQL STRICT sql_mode restrictions (2096)
 * [FS#699] Correct typo in the 'revisit-after' metatag (2097)
 * Prevent 'To top level' and 'Up one level' being shown as links in file manager when returning to the root level after drilling down in the structure (2096)

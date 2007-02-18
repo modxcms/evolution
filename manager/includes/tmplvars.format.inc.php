@@ -101,10 +101,10 @@ EOD;
 				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
 				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
 				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
-				$o .= "\n<div id=\"".$id."\"".$class.$style."></div>\n";
+				$o .= "\n<div id=\"".$id."\"".$class.$style.">".mysql_escape_string($value)."</div>\n";
 				$o .= "<script type=\"text/javascript\">\n";
 				$o .= "	Window.onDomReady(function() {\n";
-				$o .= "		var modxFloat = new MooFloater(\$(\"".$id."\"), \"".mysql_escape_string($value)."\",{\n";
+				$o .= "		var modxFloat = new MooFloater(\$(\"".$id."\"),{\n";
 				$o .= "			width: '".$params['width']."',\n";
 				$o .= "			height: '".$params['height']."',\n";
 				$o .= "			position: '".$params['pos']."',\n";
@@ -129,22 +129,31 @@ EOD;
 				break;
 
 			case "ticker":
-				$transfx = ($params['tfx']=='Fader') ? 2:1;
-				$delim = ($params['delim'])? $params['delim']:"||";
-				if ($delim=="\\n") $delim = "\n";
-				$value = parseInput($value,$delim,"array");
-				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
-				$o = '<script type="text/javascript">';
-				$o.= "	document.setIncludePath('manager/media/script/bin/');";
-				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('ticker');});";
-				$o.= "	document.addEventListener('onload',function(){";
-				$o.= "	var o = new Ticker('$id','".$params['delay']."','".$transfx."'); ";
-				for($i=0;$i<count($value);$i++){
-					$o.= "	o.addMessage('".addslashes(mysql_escape_string($value[$i]))."');";
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
+				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
+				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
+				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
+				$o .= "\n<div id=\"".$id."\"".$class.$style.">\n";
+				if(!empty($value)){
+					$delim = ($params['delim'])? $params['delim']:"||";
+					if ($delim=="\\n") $delim = "\n";
+					$value = parseInput($value,$delim,"array");
+					if(count($value)>0){
+	                    for($i=0;$i<count($value);$i++){
+							$o.= "    <div class=\"mooticker\">".$value[$i]."</div>\n";
+						}
+	                }
 				}
-				$o.= "	});";
-				$o.= "</script>";
-				$o.= "<script type=\"text/javascript\">Ticker.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
+				$o .= "</div>\n";
+				$o .= "<script type=\"text/javascript\">\n";
+				$o .= "	Window.onDomReady(function() {\n";
+				$o .= "		var modxTicker = new MooTicker(\$(\"".$id."\"),{\n";
+				$o .= "			width: '".$params['width']."',\n";
+				$o .= "			height: '".$params['height']."',\n";
+				$o .= "			interval: ".$params['delay']."\n";
+				$o .= "		});\n";
+				$o .= "	});\n";
+				$o .= "</script>\n";
 				break;
 
 			case "hyperlink":

@@ -10,6 +10,31 @@
 
 RewriteEngine On
 RewriteBase /
+
+
+
+# Rewrite www.domain.com -> domain.com -- used with SEO Strict URLs plugin
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} !^example-domain-please-change\.com [NC]
+#RewriteRule (.*) http://example-domain-please-change.com/$1 [R=301,L]
+#
+# or for the opposite domain.com -> www.domain.com use the following
+# DO NOT USE BOTH
+#
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} !^www\.example-domain-please-change\.com [NC]
+#RewriteRule (.*) http://www.example-domain-please-change.com/$1 [R=301,L]
+
+
+
+# Rewrite secure requests properly to prevent SSL cert warnings, e.g. prevent 
+# https://www.domain.com when your cert only allows https://secure.domain.com
+#RewriteCond %{SERVER_PORT} !^443
+#RewriteRule (.*) https://example-domain-please-change.com.com/$1 [R=301,L]
+
+
+
+# The Friendly URLs part
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
@@ -47,7 +72,7 @@ RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 
 
 # For servers that support output compression, you should pick up a bit of
-# speed but uncommenting the following lines.
+# speed but un-commenting the following lines.
 
 #php_flag zlib.output_compression On
 #php_value zlib.output_compression_level 5

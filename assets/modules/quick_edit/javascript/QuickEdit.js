@@ -10,94 +10,95 @@
  *  Modification purpose: fixes IE6 bug
  */
 
-var QuickEdit = Class.create();
-QuickEdit.prototype = {
+var QuickEdit = new Class({
 
  initialize: function(moduleID, pageID, managerPath, modulePath, toolbar) {
- 
+
   // Pseudo Constants //
   this.moduleActionID = 112;
   this.linkClassName = 'QE_Link';
   this.parentClassName = 'QE_Parent';
   this.windowSettings = 'width=400,height=300,toolbar=0,menubar=0,status=0,resizable=1,alwaysRaised=1,dependent=1';
   this.effectDuration = 250;
-  
+
   this.moduleID = moduleID; // TODO get via AJAX, possibly
   this.pageID = pageID;
   this.managerPath = managerPath; // Any way to automatically get this?
   this.modulePath = modulePath; // TODO get automatically
   this.moduleURL = managerPath+'index.php?a='+this.moduleActionID+'&id='+this.moduleID;
-  this.linksShown = (Cookie.get('QE_linksShown')==0 ? 0 : 1);
+  this.linksShown = (Cookie.get('QE_linksShown')==='0' ? false : true);
   this.position = Cookie.get('QE_position');
   this.xPosition = (this.position ? this.position.split('/')[0] : 0);
   this.yPosition = (this.position ? this.position.split('/')[1] : 0);
-  this.cookieExpiration = new Date(new Date().getTime()+31536000000); // One year from now
+  this.cookieDuration = 365; // days
 
   this.toolbar = toolbar;
-  this.title = toolbar.getElementsByTagName('h1')[0];
-  this.menu = this.toolbar.getElementsByTagName('ul')[0];
-  this.buttons = $A(this.menu.getElementsByTagName('li')).findAll(
-   function(li) {
-    return (li.parentNode==this.menu);
-   }.bind(this)
-  );
-  this.menus = $A(this.menu.getElementsByTagName('ul'));
+  this.menu = $E('ul',toolbar);
+  this.title = $E('h1',toolbar);
+  this.buttons = $ES('li','QE_Toolbar');
+  this.buttons.each(function(button,i) {
+   if(!button.parentNode==this.menu) { this.buttons.remove(this.buttons[i]); }
+  },this);
+  this.menus = this.menu.getElements('ul');
   this.openMenu = null;
-  this.links = $A(document.getElementsByClassName(this.linkClassName));
+  this.links = $$('.'+this.linkClassName);
 
   this.assignEffects();
   this.assignEvents();
-  
+
  },
 
  assignEffects: function() {
  
-  // Contextual Links
+  this.toolbar.setStyle('display','block');
+
+  // Contextual link effects
   this.links.each(
    function(link) {
-    link.effect = new fx.Opacity(link);
-    if(!this.linksShown) { link.hide(); }
-    Element.show(link);
+    link.effect = new Fx.Style(link,'opacity',{duration:100});
+    link.effect.set(0);
+    link.setStyle('display','block');
    }
   )
-
   this.showLinks(this.linksShown);
   
-  // Toolbar menus
+  // Toolbar menus effects
   this.menus.each(
    function(menu) {
-    menu.originalHeight = Element.getHeight(menu);
-    menu.effect = new fx.Height(menu, { duration: this.effectDuration });
-    menu.effect.hide();
+    menu.originalHeight = $(menu).getSize().size.y;
+    menu.effect = new Fx.Style(menu,'height',{ duration: this.effectDuration });
+    menu.effect.set(0);
    }.bind(this)
   );
-  
+
   // Draggable toolbar title
-  Drag.init(this.title,this.toolbar);
-  this.toolbar.onDragEnd = function(x,y) {
-   Cookie.set('QE_position', x+'/'+y, this.cookieExpiration);
-  }.bind(this);
-  
+  this.toolbar.makeDraggable({
+   handle: $E('h1',toolbar),
+   onStart:function() { this.toolbar.setStyle('opacity',0.5); }.bind(this),
+   onComplete: function(x,y) { this.toolbar.setStyle('opacity',1);Cookie.set('QE_position', this.toolbar.getLeft()+'/'+this.toolbar.getTop(), {duration:this.cookieDuration}); }.bind(this)
+  });
+
   // Reposition toolbar
   this.toolbar.style.left = this.xPosition+'px';
   this.toolbar.style.top = this.yPosition+'px';
-  Element.show(this.toolbar);
- 
+
  },
 
  assignEvents: function() {
  
   this.buttons.each(
    function(button) {
-    Event.observe(button, 'click',this.menuClick.bindAsEventListener(this))
+    button.addEvent('click',this.menuClick.bind(this));
    }.bind(this)
   );
   
  },
 
  menuClick: function(event) {
+
+  var event = new Event(event);
  
-  var clicked = Event.element(event);
+  var clicked = event.target;
   var menu = clicked.getElementsByTagName('ul')[0];
   
   this.menus.each(
@@ -113,14 +114,14 @@ QuickEdit.prototype = {
 
  expand: function(menu) {
   if(menu!=this.openMenu) {
-   menu.effect.custom(menu.effect.now,menu.originalHeight);
+   menu.effect.start(menu.originalHeight);
    this.openMenu = menu;
   }
  },
 
  collapse: function(menu) {
   if(menu.effect.now > 0) {
-   menu.effect.custom(menu.effect.now,0);
+   menu.effect.start(0);
   }
  },
 
@@ -130,14 +131,13 @@ QuickEdit.prototype = {
 
  showLinks: function(show) {
  
-  this.linksShown = (show ? 1 : 0);
-  Cookie.set('QE_linksShown', this.linksShown, this.cookieExpiration);
+  this.linksShown = (show ? true : false);
+  Cookie.set('QE_linksShown', (this.linksShown ? '1' : '0'), {duration:this.cookieDuration});
   
-  Element.removeClassName('QE_ShowLinks',(this.linksShown ? 'unchecked' : 'checked'));
-  Element.addClassName('QE_ShowLinks',(this.linksShown ? 'checked' : 'unchecked'));
+  $('QE_ShowLinks')[this.linksShown ? 'addClass' : 'removeClass']('checked');
   
   this.links.each(
-   function(link) { Element[this.linksShown ? 'show' : 'hide'](link); }.bind(this)
+   function(link) { link.effect.start(this.linksShown ? 100 : 0); }.bind(this)
   );
   
  },
@@ -151,19 +151,17 @@ QuickEdit.prototype = {
  ajaxSave: function(contentID, contentName, value) {
  
   var url = this.managerPath+'index.php?a='+this.moduleActionID+'&id='+this.moduleID+'&doc='+this.pageID+'&ajax=1';
-  var params = new Array();
+  var params = [];
   params['var'] = contentID;
   params['tv'+contentName] = value;
   params['save'] = 1;
-  var param_string = $H(params).toQueryString();
   
-  new Ajax.Request(url, {
+  new Ajax(url, {
    method:'post',
-   postBody:param_string,
-   onSuccess: function() { window.location.reload(); },
-   onFailure: function(request) { alert(request.responseText); }
-  } ); 
+   postBody:Object.toQueryString(params),
+   onComplete: function() { window.location.reload(); }
+  }).request(); 
   
  }
 
-}
+});

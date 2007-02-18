@@ -1,78 +1,3 @@
-var Event = function(e) {
-    this._event = e || window.event;
-}
-Object.extend(Event.prototype, {
-    event: function() {
-        return this._event;
-    },
-    type: function() {
-        return this._event.type || undefined;
-    },
-    target: function() {
-        if (this._event.target) var target = this._event.target;
-        else if (this._event.srcElement) var target = this._event.srcElement;
-        if (target.nodeType == 3) target = target.parentNode; // Safari
-        return $(target);
-    },
-    relatedTarget: function() {
-        if (this.type() == 'mouseover') return $(this._event.relatedTarget || this._event.fromElement);
-        if (this.type() == 'mouseout') return $(this._event.relatedTarget || this._event.toElement);
-        return false;
-    },
-    modifier: function () {
-        var e = this._event;
-        return {alt: e.altKey,
-            ctrl: e.ctrlKey,
-            meta: e.metaKey || false,
-            shift: e.shiftKey, 
-            any: e.altKey || e.ctrlKey || e.metaKey || e.shiftKey
-        };
-    },
-    key: function() {
-        var k = {}, e = this._event;
-        if (e.keyCode) k.code = e.keyCode;
-        else if (e.which) k.code = e.which;
-        k.string = String.fromCharCode(k.code);
-        return k;
-    },
-    isRightClick: function() {
-        var e = this._event;
-        return (((e.which) && (e.which == 3)) || ((e.button) && (e.button == 2)));
-    },
-    pointerX: function() {
-        var e = this._event;
-        return e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft));
-    },
-    pointerY: function() {
-        var e = this._event;
-        return e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop));
-    },
-    stop: function() {
-        this.stopPropagation();
-        this.preventDefault();
-    },
-    stopPropagation: function() {
-        if (this._event.stopPropagation) this._event.stopPropagation();
-        else this._event.cancelBubble = true;
-    },
-    preventDefault: function() {
-        if (this._event.preventDefault) this._event.preventDefault();
-        else this._event.returnValue = false;
-    },
-    findParentTag: function(tagName) {
-        var el = this.target();
-        while (el.parentNode && (!el.tagName || (el.tagName.toUpperCase() != tagName.toUpperCase())))
-            el = el.parentNode;
-        return $(el);
-    },
-    findParentId: function(id) {
-        var el = this.target();
-        while (el.parentNode && (!el.id || (el.id != id)))
-            el = el.parentNode;
-        return $(el);
-    }
-});
-
 var MooPrompt = box = new Class({
 	setOptions: function(options){
 		this.options = {
@@ -171,7 +96,7 @@ var MooPrompt = box = new Class({
 				this.box.setStyles({
 					'visibility': 'hidden', 'display': '', 'height': this.boxHeight+'px'
 				});
-				new fx.Style(this.box, 'opacity', {duration: 500}).custom(0, 1).chain(function() {
+				new Fx.Style(this.box, 'opacity', {duration: 500}).custom(0, 1).chain(function() {
 					if (this.options.delay > 0) {
 						var fn = function () {
 							this.close()
@@ -251,8 +176,8 @@ var MooPrompt = box = new Class({
 		if (typeof(fn) == 'function') {
 			fn();
 		}
-		if (this.options.overlay) {new fx.Style(this.overlay, 'opacity', {duration:250}).custom(.8, 0);}
-		new fx.Style(this.container, 'opacity', {
+		if (this.options.overlay) {new Fx.Style(this.overlay, 'opacity', {duration:250}).custom(.8, 0);}
+		new Fx.Style(this.container, 'opacity', {
 			duration:250,
 			onComplete: function() {
 				window.removeEvent('scroll', this.eventPosition).removeEvent('resize', this.eventPosition);
@@ -280,10 +205,9 @@ var MooFloater = new Class({
 		Object.extend(this.options, options || {});
 	},
 	
-	initialize: function(id, content, options){
+	initialize: function(id, options){
 		this.setOptions(options);
 		this.container = id;
-		this.container.setHTML(content);
 		this.container.setStyle('position','absolute');
 		this.container.setStyle('width',this.options.width);
 		this.container.setStyle('height',this.options.height);
@@ -324,21 +248,21 @@ var MooFloater = new Class({
 		position = this.options.position.split('-');
 		switch(position[0]) {
 			case 'top':
-				var floatTop = new fx.Style(this.container, 'top', {duration:glidespeed});
+				var floatTop = new Fx.Style(this.container, 'top', {duration:glidespeed});
 				floatTop.custom(this.container.getStyle('top').toInt(), Window.getScrollTop()+this.options.offsety);
 				break;
 			case 'bottom':
-				var floatBottom = new fx.Style(this.container, 'bottom', {duration:glidespeed});
+				var floatBottom = new Fx.Style(this.container, 'bottom', {duration:glidespeed});
 				floatBottom.custom(this.container.getStyle('bottom').toInt(), -Window.getScrollTop()+this.options.offsety);
 				break;
 		}
 		switch(position[1]) {
 			case 'left':
-				var floatLeft = new fx.Style(this.container, 'left', {duration:glidespeed});
+				var floatLeft = new Fx.Style(this.container, 'left', {duration:glidespeed});
 				floatLeft.custom(this.container.getStyle('left').toInt(), Window.getScrollLeft()+this.options.offsetx);
 				break;
 			case 'right':
-				var floatRight = new fx.Style(this.container, 'right', {duration:glidespeed});
+				var floatRight = new Fx.Style(this.container, 'right', {duration:glidespeed});
 				floatRight.custom(this.container.getStyle('right').toInt(), -Window.getScrollLeft()+this.options.offsetx);
 				break;
 		}
@@ -346,3 +270,71 @@ var MooFloater = new Class({
 });
 
 MooFloater.implement(new Chain);
+
+var MooTicker = new Class({
+	setOptions: function(options){
+		this.options = {
+			width: '',
+			height: '',
+			interval: 3000
+		};
+		Object.extend(this.options, options || {});
+	},
+	
+	initialize: function(id,options){
+		this.setOptions(options);
+		this.container = id;
+		this.container.setStyle('width',this.options.width);
+		this.container.setStyle('height',this.options.height);
+		this.messages  = $$('div.mooticker');
+		this.number_of_messages = this.messages.length;
+		
+		if(this.number_of_messages == 0){
+			this.showError();
+			return false;
+		}else if(this.number_of_messages == 1){
+			return false;		
+		}
+
+		this.current_message = 0;
+		this.previous_message = this.current_message;
+		this.hideMessages();
+		this.showMessage();
+		this.timer = setInterval(this.showMessage.bind(this), this.options.interval);
+	},
+
+	hideMessages: function(){
+		this.messages.each(function(message){
+			message.setStyle('display', 'none');
+			new Fx.Style(message, 'opacity').set(0);			
+		})
+	},
+
+	showMessage: function(){
+		this.messages[this.current_message].setStyle('display', '');
+		this.message = new Fx.Style(this.messages[this.current_message], 'opacity').start(0,1);
+		this.timer = setTimeout(this.fadeMessage.bind(this), this.options.interval-1000);
+	},
+
+	fadeMessage: function(){
+		new Fx.Style(this.messages[this.current_message], 'opacity').addEvent('onComplete', function(){
+    		this.messages[this.current_message].setStyle('display', 'none');
+			if (this.current_message < this.number_of_messages-1){
+				this.previous_message = this.current_message;
+				this.current_message = this.current_message + 1;
+			} else {
+				this.current_message = 0;
+				this.previous_message = this.number_of_messages - 1;
+			}		
+		}.bind(this)).start(1,0);
+	},
+	
+	showError: function(){
+		this.errorMessage = new Element('div').addClass('mooticker');
+		this.errorMessage.injectInside(this.container);
+		this.errorSpan = new Element('span').addClass('error').appendText('Could not retrieve data');
+		this.errorSpan.injectInside(this.errorMessage);
+	}			
+});
+
+MooTicker.implement(new Chain);

@@ -117,10 +117,10 @@ class DocumentParser {
                 header($responseCode);
             }
             $this->prepareResponse();
-            exit;
+            exit();
         } else {
-            $this->messageQuit('Too many forward attempts.', 'The request could not be completed due to too many unsuccessful forward attempts.');
-            exit;
+            header('HTTP/1.0 500 Internal Server Error');
+            die('<h1>ERROR: Too many forward attempts!</h1><p>The request could not be completed due to too many unsuccessful forward attempts.</p>');
         }
     }
 
@@ -129,7 +129,7 @@ class DocumentParser {
         $this->invokeEvent('OnPageNotFound');
 //        $this->sendRedirect($this->makeUrl($this->config['error_page'], '', '&refurl=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'])), 1);
         $this->sendForward($this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'], 'HTTP/1.0 404 Not Found');
-        exit;
+        exit();
     }
 
     function sendUnauthorizedPage() {
@@ -143,8 +143,8 @@ class DocumentParser {
             $unauthorizedPage= $this->config['site_start'];
         }
 //        $this->sendRedirect($this->makeUrl($this->config['unauthorized_page'], '', '&refurl=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'])), 1);
-        $this->sendForward($unauthorizedPage, 'HTTP/1.0 401 Unauthorized');
-        exit;
+        $this->sendForward($unauthorizedPage, 'HTTP/1.1 401 Unauthorized');
+        exit();
     }
 
     // function to connect to the database

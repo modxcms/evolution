@@ -42,11 +42,11 @@
 			<b>Published:</b> [+form.field.published:select=`0=No&1=Yes`+]<br />
 			[+form.field.publishedon:gt=`0`:then=`
 				<b>Published on:</b> [+form.field.publishedon:date=`%a %B %d, %Y at %H:%M`+]<br />
-				<b>Published by:</b> [+form.field.publishedby:userinfo=`username`:ifempty=` * `+]<br />
+				<b>Published by:</b> [+form.field.publishedby:userinfo=`username`:ifempty=` - `+]<br />
 			`+]
 			[+form.field.editedon:gt=`0`:then=`
 				<b>Edited on:</b> [+form.field.editedon:date=`%a %B %d, %Y at %H:%M`+]<br />
-				<b>Edited by:</b> [+form.field.editedby:userinfo=`username`:ifempty=` * `+]<br />
+				<b>Edited by:</b> [+form.field.editedby:userinfo=`username`:ifempty=` -`+]<br />
 			`+]
 		</div>
 	`:strip+]

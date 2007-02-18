@@ -138,7 +138,7 @@ class ContentVariable {
 						$type = 'dropdown';
 						$caption = $QE_lang['template'];
 						$description = $QE_lang['page_data_template_help'];
-						$templates = $modx->db->select('templatename,id', $modx->getFullTableName('site_templates'));
+						$templates = $modx->db->select('templatename,id', $modx->db->config['table_prefix'] . 'site_templates');
 						$template_strings[] = '(blank)==0';
 						while ($template = $modx->db->getRow($templates)) {
 							$template_strings[] = $template['templatename'] . '==' . $template['id'];
@@ -158,7 +158,7 @@ class ContentVariable {
 						$type = 'checkbox';
 						$caption = $QE_lang['document_opt_published'];
 						$description = $QE_lang['document_opt_published_help'];
-						$elements = "{$QE_lang['publish_document']}==1";
+						$elements = "{$QE_lang['document_opt_published']}==1";
 						$group = 'setting';
 						break;
 
@@ -269,7 +269,7 @@ class ContentVariable {
 				            INNER JOIN {$memberGroupAccessTable} ON `user_group` = `membergroup`
 				            INNER JOIN {$documentGroupsTable} ON {$memberGroupAccessTable}.`documentgroup` = {$documentGroupsTable}.`document_group`
 				            WHERE `member` = '{$userId}'
-				            AND `document` = '{$pageId}'";
+				            AND `document` = '{$pageId}';";
 				$result = $modx->db->query($sql);
 
 				// If we have permission to this page...
@@ -303,7 +303,7 @@ class ContentVariable {
 				            INNER JOIN {$memberGroupAccessTable} ON `user_group` = `membergroup`
 				            INNER JOIN {$siteTmplVarAccessTable} ON {$memberGroupAccessTable}.`documentgroup` = {$siteTmplVarAccessTable}.`documentgroup`
 				            WHERE `member` = '{$userId}'
-				            AND `tmplvarid` = '{$varId}'";
+				            AND `tmplvarid` = '{$varId}';";
 				$result = $modx->db->query($sql);
 
 				// If we have permission to this template variable...
@@ -316,7 +316,7 @@ class ContentVariable {
 					// Get all document groups assigned to the TV
 					$sql = "SELECT `documentgroup`
 					             FROM {$siteTmplVarAccessTable}
-					             WHERE `tmplvarid` = '{$varId}'";
+					             WHERE `tmplvarid` = '{$varId}';";
 					$result = $modx->db->query($sql);
 
 					// If no permissions are set for the TV then allow access
@@ -356,7 +356,7 @@ class ContentVariable {
 		$sql = "SELECT `internalKey`
 		          FROM {$activeUsersTable}
 		          WHERE (`action` = 27)
-		          AND `internalKey` != '{$userId}'
+		          AND `internalKey` != '{$iserId}'
 		          AND `id` = '{$pageId}';";
 		$result = $modx->db->query($sql);
 
