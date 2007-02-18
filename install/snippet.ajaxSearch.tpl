@@ -5,7 +5,7 @@
         Ajax-driven search form
 
     Version:
-        1.5
+        1.6
 
     Created by:
 	    Jason Coward (opengeek - jason@opengeek.com)
@@ -16,7 +16,7 @@
 	    Fixes & Additions by identity/Perrine/mikkelwe
 
     Date:
-        01/22/2007
+        02/18/2007
 
     Required Usage:
         [!AjaxSearch!]
@@ -202,6 +202,10 @@
    // $extract [1 | 0]
    // show the search terms highlighted in a little extract (like Google)
    $extract = (isset($extract))? $extract : 1;
+   
+   // $highlightResult [1 | 0]
+   // create links so that search terms will be highlighted when linked page clicked
+   $highlightResult = (isset($highlightResult)) ? $highlightResult : 1;
 
    // $ajaxSearch [1 | 0] (as passed in snippet variable ONLY)
    // Use this to display the search results using ajax You must include the Mootools library in your template
@@ -237,9 +241,6 @@
 
    // establish whether to show the results or not
    $showResults = (isset($AS_showResults))? $AS_showResults : true;
-   
-   //highlight the result linked pages
-   $highlightResult = (isset($hlghtResult))? $hlghtResult : 1;
 
 /* -------------
   End configure
@@ -368,7 +369,6 @@ if ($showResults) {
 	//**********************************************************************************************************************
 	$limit = $modx->recordCount($rs);
 	$search = explode(" ", $searchString);
-
 		if($limit>0) {
 			// pagination
 			if ($grabMax > 0){
@@ -453,6 +453,15 @@ if ($showResults) {
 				}
 				
 				if ($highlightResult) {
+					if (!$extract) {
+						$highlightClass = 'ajaxSearch_highlight';
+						$count=1;
+						foreach ($search as $searchTerm) {
+							$highlightClass .= ' ajaxSearch_highlight'.$count;
+							$count++;
+						}
+					}
+				
 					$searchFormLink = $modx->makeUrl($SearchFormsrc['id'],'','searched='.urlencode($searchString).'&amp;highlight='.urlencode($highlightClass));
 				} else {
 					$searchFormLink = $modx->makeUrl($SearchFormsrc['id']);

@@ -12,7 +12,7 @@ Updated: 09/18/06 - Added user permissions to searching
 Updated: 03/20/06 - All variables are set in the main snippet & snippet call
 */
 
-//require_once(MODX_MANAGER_PATH . '/includes/protect.inc.php');
+require_once(MODX_MANAGER_PATH . '/includes/protect.inc.php');
 
 $stripHTML = $_POST['stripHTML'];
 $stripSnip = $_POST['stripSnip'];
@@ -74,7 +74,7 @@ if ($validSearch) {
         $i = 0;
         //Output the results
         while ($row = mysql_fetch_assoc($rs)) {
-			if ($extract || $highlightResult) {
+			/*if ($extract) {
 				$highlightClass = 'AS_ajax_highlight';
 				$text=$row['content'];
 				if (count($search)>1){
@@ -93,14 +93,43 @@ if ($validSearch) {
 					$text = preg_replace( '/' . preg_quote( $searchString, '/' ) . '/i', '<span class="AS_ajax_highlight AS_ajax_highlight1">\0</span>', $text );
 					$highlightClass .= ' AS_ajax_highlight1';
 				}
+			}*/
+			
+			if ($extract) {
+				$highlightClass = 'ajaxSearch_highlight';
+				$text=$row['content'];
+				$count=1;
+				$summary='';
+				$toAdd = PrepareSearchContent( $text, $length=200, $search[0] );
+				strip_tags( $text );
+				foreach ($search as $searchTerm) {
+					if (preg_match('/' . preg_quote($searchTerm) . '/i', $text)) {
+						if ($count > 1) { // The first summary was already extracted above
+							$toAdd = SmartSubstr( $text , $length=200, $searchTerm );
+						}
+						$summary .= preg_replace( '/' . preg_quote( $searchTerm, '/' ) . '/i', '<span class="AS_ajax_highlight AS_ajax_highlight'.$count.'">\0</span>', $toAdd ) . ' ';
+					}
+					$highlightClass .= ' AS_ajax_highlight'.$count;
+					$count++;
+				}
+				$text=$summary;
 			}
-
-            if ($highlightResult) {
-                $resultLink = 'index.php?id='.strval($row['id']).'&amp;searched='.urlencode($searchString).'&amp;highlight='.urlencode($highlightClass);
-            } else {
-                $resultLink = 'index.php?id='.strval($row['id']);
-            }
-
+			
+			if ($highlightResult) {
+				if (!$extract) {
+					$highlightClass = 'AS_ajax_highlight';
+					$count=1;
+					foreach ($search as $searchTerm) {
+						$highlightClass .= ' AS_ajax_highlight'.$count;
+						$count++;
+					}
+				}
+				
+				$resultLink = 'index.php?id='.strval($row['id']).'&amp;searched='.urlencode($searchString).'&amp;highlight='.urlencode($highlightClass);
+			} else {
+				$resultLink = 'index.php?id='.strval($row['id']);
+			}
+          
 			if ($extract) {
 				$extractPlaceholders = array(
 					'[+as.extractClass+]' => 'AS_ajax_extract',
@@ -110,7 +139,7 @@ if ($validSearch) {
 			} else {
 				$resultExtract = '';
 			}
-
+          
 			if ($row['description'] != '') {
 				$descPlaceholders = array(
 					'[+as.descriptionClass+]' => 'AS_ajax_resultDescription',
@@ -120,7 +149,7 @@ if ($validSearch) {
 			} else {
 				$resultDesc = '';
 			}
-
+		  
 			$resultPlaceholders = array(
 				'[+as.resultClass+]' => 'AS_ajax_result',
 				'[+as.resultLinkClass+]' => 'AS_ajax_resultLink',
@@ -130,9 +159,9 @@ if ($validSearch) {
 				'[+as.description+]' => $resultDesc,
 				'[+as.extract+]' => $resultExtract,
 			);
-
+			
 			$result .= str_replace(array_keys($resultPlaceholders),array_values($resultPlaceholders),$asTemplates['result']);
-
+		  
 			if (++$i == $maxResults) {
 				//If more than max results so link to all results
 				if ($showMoreResults) {
@@ -142,7 +171,7 @@ if ($validSearch) {
 						'[+as.moreTitle+]' => $_lang['as_moreResultsTitle'],
 						'[+as.moreText+]' => $_lang['as_moreResultsText'],
 					);
-
+				
 					$result .= str_replace(array_keys($morePlaceholders),array_values($morePlaceholders),$asTemplates['ajax_more_results']);
 				}
 				break;
