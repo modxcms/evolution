@@ -1,0 +1,247 @@
+<?php
+
+// ---------------------------------------------------
+// Summary Placeholdr
+// ---------------------------------------------------
+
+$placeholders['summary'] = array("introtext,content","determineSummary");
+$placeholders['link'] = array("id","determineLink");
+
+$trunc = isset($trunc) ? $trunc : 1;
+    // should there be summary/short version of the posts?
+
+$splitter = isset($truncAt) ? $truncAt : "<!-- splitter -->";
+    // where to split the text
+
+$length = isset($truncLen) ? $truncLen : 300;
+    // how many characters to show of blogs
+
+$offset = isset($truncOffset) ? $truncOffset : 30;
+    // how many characters to show of blogs
+
+$text = isset($truncText)? $truncText : "Read more...";
+    // text to be displayed in item link
+
+$GLOBALS['ditto_summary_link'] = "";
+$GLOBALS['ditto_summary_params'] = compact("trunc","splitter","length","offset","text");
+
+// ---------------------------------------------------
+// Truncate Functions
+// ---------------------------------------------------
+
+function determineLink($resource) {
+	return $GLOBALS['ditto_summary_link'];
+}
+
+
+function determineSummary($resource) {
+	global $ditto_summary_params;
+	$trunc = new truncate();
+	$p = $ditto_summary_params;
+	$output = $trunc->execute($resource, $p['trunc'], $p['splitter'], $p['text'], $p['length'], $p['offset'], $p['splitter'], "", true);
+	$GLOBALS['ditto_summary_link'] = $trunc->link;
+	return $output;
+}
+
+// ---------------------------------------------------
+// Truncate Class
+// ---------------------------------------------------
+
+class truncate{
+	var $summaryType,$link;
+
+	function html_substr($posttext, $minimum_length = 200, $length_offset = 20, $truncChars=false) {
+
+	   // $minimum_length:
+	   // The approximate length you want the concatenated text to be
+
+
+	   // $length_offset:
+	   // The variation in how long the text can be in this example text
+	   // length will be between 200 and 200-20=180 characters and the
+	   // character where the last tag ends
+
+	   // Reset tag counter & quote checker
+	   $tag_counter = 0;
+	   $quotes_on = FALSE;
+	   // Check if the text is too long
+	   if (strlen($posttext) > $minimum_length && $truncChars != 1) {
+
+	       // Reset the tag_counter and pass through (part of) the entire text
+	       $c = 0;
+	       for ($i = 0; $i < strlen($posttext); $i++) {
+	           // Load the current character and the next one
+	           // if the string has not arrived at the last character
+	           $current_char = substr($posttext,$i,1);
+	           if ($i < strlen($posttext) - 1) {
+	               $next_char = substr($posttext,$i + 1,1);
+	           }
+	           else {
+	               $next_char = "";
+	           }
+	           // First check if quotes are on
+	           if (!$quotes_on) {
+	               // Check if it's a tag
+	               // On a "<" add 3 if it's an opening tag (like <a href...)
+	               // or add only 1 if it's an ending tag (like </a>)
+	               if ($current_char == '<') {
+	                   if ($next_char == '/') {
+	                       $tag_counter += 1;
+	                   }
+	                   else {
+	                       $tag_counter += 3;
+	                   }
+	               }
+	               // Slash signifies an ending (like </a> or ... />)
+	               // substract 2
+	               if ($current_char == '/' && $tag_counter <> 0) $tag_counter -= 2;
+	               // On a ">" substract 1
+	               if ($current_char == '>') $tag_counter -= 1;
+	               // If quotes are encountered, start ignoring the tags
+	               // (for directory slashes)
+	               if ($current_char == '"') $quotes_on = TRUE;
+	           }
+	           else {
+	               // IF quotes are encountered again, turn it back off
+	               if ($current_char == '"') $quotes_on = FALSE;
+	           }
+
+	           // Count only the chars outside html tags
+	           if($tag_counter == 2 || $tag_counter == 0){
+	               $c++;
+	           }
+
+	           // Check if the counter has reached the minimum length yet,
+	           // then wait for the tag_counter to become 0, and chop the string there
+	           if ($c > $minimum_length - $length_offset && $tag_counter == 0) {
+	               $posttext = substr($posttext,0,$i + 1);
+	               return $posttext;
+	           }
+	       }
+	   }  return $this->textTrunc($posttext, $minimum_length + $length_offset);
+	}
+
+	function textTrunc($string, $limit, $break=". ") {
+  	// Original PHP code from The Art of Web: www.the-art-of-web.com
+
+    // return with no change if string is shorter than $limit
+    if(strlen($string) <= $limit) return $string;
+
+    $string = substr($string, 0, $limit);
+    if(false !== ($breakpoint = strrpos($string, $break))) {
+      $string = substr($string, 0, $breakpoint+1);
+    }
+
+    return $string;
+  }
+
+	function closeTags($text) {
+		global $debug;
+		$openPattern = "/<([^\/].*?)>/";
+		$closePattern = "/<\/(.*?)>/";
+		$endOpenPattern = "/<([^\/].*?)$/";
+		$endClosePattern = "/<(\/.*?[^>])$/";
+		$endTags = '';
+
+		preg_match_all($openPattern, $text, $openTags);
+		preg_match_all($closePattern, $text, $closeTags);
+
+		if ($debug == 1) {
+			print_r($openTags);
+			print_r($closeTags);
+		}
+
+		$c = 0;
+		$loopCounter = count($closeTags[1]); //used to prevent an infinite loop if the html is malformed
+		while ($c < count($closeTags[1]) && $loopCounter) {
+			$i = 0;
+			while ($i < count($openTags[1])) {
+				$tag = trim($openTags[1][$i]);
+
+				if (strstr($tag, ' ')) {
+					$tag = substr($tag, 0, strpos($tag, ' '));
+				}
+				if ($debug == 1) {
+					echo $tag . '==' . $closeTags[1][$c] . "\n";
+				}
+				if ($tag == $closeTags[1][$c]) {
+					$openTags[1][$i] = '';
+					$c++;
+					break;
+				}
+				$i++;
+			}
+			$loopCounter--;
+		}
+
+		$results = $openTags[1];
+
+		if (is_array($results)) {
+			$results = array_reverse($results);
+
+			foreach ($results as $tag) {
+				$tag = trim($tag);
+
+				if (strstr($tag, ' ')) {
+					$tag = substr($tag, 0, strpos($tag, ' '));
+				}
+				if (!stristr($tag, 'br') && !stristr($tag, 'img') && !empty ($tag)) {
+					$endTags .= '</' . $tag . '>';
+				}
+			}
+		}
+		return $text . $endTags;
+	}
+
+	function execute($resource, $trunc, $splitter, $linktext, $truncLen, $truncOffset, $truncsplit, $commentschunk, $truncChars) {
+		$summary = '';
+		$this->link = '';
+		$closeTags = true;
+		// summary is turned off
+		if ($trunc == false) {
+			$summary = $resource['content'];
+			$this->summaryType = "content";
+			$closeTags = false;
+			// contains the splitter and use splitter is on
+		} else
+			if ((strstr($resource['content'], $splitter)) && $truncsplit) {
+				$summary = array ();
+
+				// HTMLarea/XINHA encloses it in paragraph's
+				$summary = explode('<p>' . $splitter . '</p>', $resource['content']);
+
+				// For TinyMCE or if it isn't wrapped inside paragraph tags
+				$summary = explode($splitter, $summary['0']);
+
+				$summary = $summary['0'];
+				$this->link = '<a href="[~' . $resource['id'] . '~]">' . $linktext . '</a>';
+				$this->summaryType = "content";
+			
+				// fall back to the summary text
+			} else
+				if (strlen($resource['introtext']) > 0) {
+					$summary = $resource['introtext'];
+					$this->link = '<a href="[~' . $resource['id'] . '~]">' . $linktext . '</a>';
+					$this->summaryType = "introtext";
+					$closeTags = false;
+					// fall back to the summary text count of characters
+				} else
+					if (strlen($resource['content']) > $truncLen) {
+						$summary = $this->html_substr($resource['content'], $truncLen, $truncOffset, $truncChars);
+						$this->link = '<a href="[~' . $resource['id'] . '~]">' . $linktext . '</a>';
+						$this->summaryType = "content";
+						// and back to where we started if all else fails (short post)
+					} else {
+						$summary = $resource['content'];
+						$this->summaryType = "content";
+						$this->link = '   ';
+					}
+
+		// Post-processing to clean up summaries
+		$summary = ($closeTags === true) ? $this->closeTags($summary) : $summary;
+		$summary = str_replace($commentschunk, "", $summary);
+		return $summary;
+	}
+}
+
+?>

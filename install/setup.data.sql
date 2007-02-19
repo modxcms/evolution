@@ -33,7 +33,7 @@ REPLACE INTO `{PREFIX}documentgroup_names` VALUES ('1','Site Admin Pages','0','0
 REPLACE INTO `{PREFIX}site_content` VALUES (1, 'document', 'text/html', 'Home', 'Welcome to MODx', 'Introduction to MODx', 'index', '', 1, 0, 0, 0, 0, 'Create and do amazing things with MODx', '<h3>Install Successful!</h3>\r\n<p>You have successfully installed and configured MODx. We hope you find this site an adequate starting configuration for many small business, organization or personal websites; just change the template and content, and you''ll be good to go! This site is preconfigured with a variety of options we hope are helpful, relevant and just plain cool for many marketing or personal sites:</p>\r\n<ul>\r\n    <li><strong>Simple Blog.</strong> When logged into your site, you''ll be able to create new entries from the front end. This can also be turned into a News publishing or PR publishing system. <a href="[~2~]">View example blog</a></li>\r\n    <li><strong>Easy Comments.</strong> When logged into your site, your registered site users can comment on your posts. <a href="[~9~]">View example</a></li>\r\n    <li><strong>RSS Feeds.</strong> Your site visitors can stay up to date using your site feeds. <a href="feed.rss">View RSS feed</a></li>\r\n    <li><strong>Automatic User Registration.</strong> Those that wish to comment on blogs must first create an account. This comes pre-configured with a &quot;Captcha&quot; anti-robot registration feature. <a href="[~5~]">View registration form</a></li>\r\n    <li><strong>QuickEdit.</strong> When you''re logged into the manager, you can edit a page directly from the front end! <a href="[~14~]">More about CMS features</a></li>\r\n    <li><strong>Integrated Site Search.</strong> Allows visitors to search only the pages you wish them to search. Uses Ajax to display results without loading a new page. <a href="javascript:void(0)" onclick="new Effect.Highlight( ''ajaxSearch_input'' , {endcolor:''#FFFFFF'', duration: 2} );">Highlight feature</a></li>\r\n    <li><strong>Powerful Navigation Builder.</strong> Duplicate or build virtually any navigation system with our dynamic menu builder code. The menu above, for example. <a href="[~22~]">More about menu features</a></li>\r\n    <li><strong>Mootools enabled.</strong> You''re on your way to Web 2.0 and AJAX goodness. <a href="[~16~]">More about Ajax features</a></li>\r\n    <li><strong>Custom &quot;page not found (404)&quot; page.</strong> Help visitors who go astray to find what they''re looking for. <a href="[~7~]">View 404 page</a></li>\r\n    <li><strong>Contact Us form.</strong> A highly configurable contact form you <em>should</em> customize to point to the right email address. Comes pre-configured to prevent mail-form-injection so your site does <em>not</em> become a source for spam. <a href="[~6~]">View form</a></li>\r\n    <li><strong>Newest documents list.</strong> Shows your visitor the most recently added pages (configurable). <a href="javascript:void(0)" onclick="new Effect.Highlight( ''recentdocsctnr'' , {endcolor:''#E2E2E2'', duration: 2} );">Highlight example</a></li>\r\n</ul>\r\n<p><strong>To log into the MODx Control Panel and start customizing this site, point your browser to <a href="manager">[(site_url)]manager/</a>.</strong></p>', 1, 4, 1, 1, 1, 1, 1144904400, 1, 1160262629, 0, 0, 0, 0, 0, 'Home', 0, 0, 0, 0, 0, 0, 0);
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (2, 'document', 'text/html', 'Blog', 'My Blog', '', 'blog', '', 1, 0, 0, 0, 1, '', '[[Ditto? &startID=`2` &summarize=`2` &total=`20` &commentschunk=`Comments` &tpl=`nl_blog` &paginate=`1` &alwaysshow=`1`]]\r\n\r\n<p>Showing <strong>[+start+]</strong> - <strong>[+stop+]</strong> of <strong>[+total+]</strong> Articles</p>\r\n\r\n<div id="nl_pages"> [+previous+] [+pages+] [+next+] </div> ', 1, 4, 2, 0, 0, 1, 1144904400, 1, 1159818696, 0, 0, 0, 0, 0, 'Blog', 0, 0, 0, 0, 0, 0, 0);
+REPLACE INTO `{PREFIX}site_content` VALUES (2, 'document', 'text/html', 'Blog', 'My Blog', '', 'blog', '', 1, 0, 0, 0, 1, '', '[[Ditto? &startID=`2` &summarize=`2` &removeChunk=`Comments` &tpl=`ditto_blog` &paginate=`1` &extenders=`date,summary,dateFilter` &paginateAlwaysShowLinks=`1` &tagData=`documentTags`]]\r\n\r\n<p>Showing <strong>[+start+]</strong> - <strong>[+stop+]</strong> of <strong>[+total+]</strong> Articles</p>\r\n\r\n<div id="ditto_pages"> [+previous+] [+pages+] [+next+] </div>\r\n\r\n<div id="ditto_pages">&nbsp;</div>\r\n\r\n[[Reflect? &dittoSnippetParameters=`startID:2` &groupByYears=`0` &showItems=0` &tplMonth=`reflect_month_tpl`]]', 1, 4, 2, 0, 0, 1, 1144904400, 1, 1159818696, 0, 0, 0, 0, 0, 'Blog', 0, 0, 0, 0, 0, 0, 0);
 
 
 REPLACE INTO `{PREFIX}site_content` VALUES (3, 'document', 'text/html', 'Add a Blog Entry', 'Add a Blog Entry', '', 'add-a-blog-entry', '', 1, 0, 0, 2, 0, '', '[!NewsPublisher? &folder=`2` &canpost=`Site Admins` &formtpl=`FormBlog` &footertpl=`Comments` &makefolder=`1` &rtcontent=`tvblogContent`!]', 0, 4, 2, 0, 0, 1, 1144904400, 3, 1144904400, 0, 0, 0, 0, 0, 'Add Blog Entry', 1, 0, 0, 1, 0, 0, 0);
@@ -51,8 +51,7 @@ REPLACE INTO `{PREFIX}site_content` VALUES (6, 'document', 'text/html', 'Contact
 REPLACE INTO `{PREFIX}site_content` VALUES (7, 'document', 'text/html', '404 - Document Not Found', 'Uh oh ... it''s a 404! (Page Not Found)', '', 'doc-not-found', '', 1, 0, 0, 0, 0, '', '<p>Looks like you tried to go somewhere that does not exist... perhaps you <a href="">need to login</a> or you''d like one of the following pages instead:</p>\r\n\r\n[[Wayfinder? &startId=`0` &showDescription=`1`]]\r\n\r\n<h3>Want to find it the old fashioned way? Use the site search at the top of this site to find what you seek.</h3>\r\n\r\n', 1, 4, 4, 0, 1, 1, 1144904400, 1, 1159301173, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 1);
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (8, 'document', 'text/html', 'Search Results', 'Your Search Results', '', 'search-results', '', 1, 0, 0, 0, 0, '', '[!AjaxSearch? &AS_showForm=`0` 
-&ajaxSearch=`0`!]', 0, 4, 5, 0, 0, 1, 1144904400, 1, 1158613055, 0, 0, 0, 0, 0, '', 1, 0, 0, 0, 0, 0, 1);
+REPLACE INTO `{PREFIX}site_content` VALUES (8, 'document', 'text/html', 'Search Results', 'Your Search Results', '', 'search-results', '', 1, 0, 0, 0, 0, '', '[!AjaxSearch? &AS_showForm=`0` &ajaxSearch=`0`!]', 0, 4, 5, 0, 0, 1, 1144904400, 1, 1158613055, 0, 0, 0, 0, 0, '', 1, 0, 0, 0, 0, 0, 1);
 
 
 REPLACE INTO `{PREFIX}site_content` VALUES (9, 'document', 'text/html', 'Mini-Blog HOWTO', 'How to Start Posting with MODx Mini-Blogs', '', 'article-1126081344', '', 1, 0, 0, 2, 1, '', '<p>Setting up a mini-blog is relatively simple. Here''s what you need to do to get started with making new posts:</p>\r\n<ol>\r\n    <li>Login to the <a href="[(site_url)]manager/">MODx Control Panel</a>.</li>\r\n    <li>Create a new Webuser by clicking the <strong>Users &gt; Manage web users</strong> link.</li>\r\n    <li>Make sure to check the <strong>Site Admins</strong> Webuser Group at the bottom of the page.</li>\r\n    <!-- splitter -->\r\n    <li>Go to the <a href="[~4~]">login page</a> and login using this newly created Webuser information.</li>\r\n    <li>You should now notice a new <a href="[~3~]">Add a Blog Entry</a> menu item that automatically appeared under the Blog Page link in the right column.</li>\r\n</ol>\r\n{{Comments}}', 1, 4, 0, 1, 1, -1, 1144904400, 1, 1160171764, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 1);
@@ -129,7 +128,7 @@ REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (6, 'nl_sidebar', 'Default Templ
 REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (7, 'styles', 'Stylesheet switcher list', 0, 1, 0, '<div id="modxhost">The CSS Themes can only be used on the MODxCSS and MODxCSSW Layouts</div>\r\n<script type="text/javascript">Element.hide(\'modxhost\');</script>\r\n<ul class="links">\r\n<li><a href="#" onclick="setActiveStyleSheet(''Trend''); return false;">Trend (Default)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Trend (Alternate)''); return false;" >Trend (Alternate)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''ZiX''); return false;" >ZiX (Clean)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''ZiX Background''); return false;" >ZiX (Background)</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Light''); return false;" >Light</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Light Green''); return false;" >Light Green</a></li>\r\n<li><a href="#" onclick="setActiveStyleSheet(''Dark''); return false;" >Dark</a></li>\r\n    </ul>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (8, 'nl_blog', 'Blog Template', 0, 3, 0, '<div class="nl_summaryPost">\r\n  <h3><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></h3>\r\n  <div class="nl_info" >By <strong>[+author+]</strong> on [+date+]. <a  href="[~[+id+]~]#commentsAnchor">Comments\r\n  ([!Jot?&docid=`[+id+]`&action=`count-comments`!])</a></div>\r\n  [+summary+]\r\n  <div id="nl_comments_[+id+]" style="display: none;">\r\n  [[Jot?&docid=`[+id+]`&action=`comments`]] \r\n  </div>\r\n  <p class="nl_link">[+link+]</p>\r\n</div>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (8, 'ditto_blog', 'Blog Template', 0, 3, 0, '<div class="ditto_summaryPost">\r\n\  <h3><a href="[~[+id+]~]" title="[+title+]">[+title+]</a></h3>\r\n  <div class="ditto_info" >By <strong>[+author+]</strong> on [+date+]. <a  href="[~[+id+]~]#commentsAnchor">Comments\r\n  ([!Jot?&docid=`[+id+]`&action=`count-comments`!])</a></div><div class="ditto_tags">Tags: [+tagLinks+]</div>\r\n  [+summary+]\r\n  <p class="ditto_link">[+link+]</p>\r\n</div>', 0);
 
 
 REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (9, 'footer', 'Site Template Footer', 0, 1, 0, '[(site_name)] is powered by <a href="http://modxcms.com/" title="Powered by MODx, Do more with less.">MODx CMS</a> |\r\n      <span id="andreas">Design by <a href="http://andreasviklund.com/">Andreas Viklund</a></span>\r\n<span id="zi" style="display: none">Designed by <a href="http://ziworks.com/" target="_blank" title="E-Business &amp; webdesign solutions">ziworks</a></span>\r\n\r\n<!-- the modx icon -->\r\n\r\n<div id="modxicon"><h6><a href="http://modxcms.com" title="MODx - The XHTML, CSS and Ajax CMS and PHP Application Framework" id="modxicon32">MODx - The XHTML, CSS and Ajax CMS and PHP Application Framework</a></h6></div>', 0);
@@ -157,6 +156,9 @@ REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (16, 'ContactForm', '', 0, 5, 0,
 
 
 REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (17, 'ContactFormReport', '', 0, 5, 0, '<p>This is a response sent by <b>[+Name+]</b> using the feedaback form on the website. The details of the mesage follow below:</p>\r\n\r\n\r\n<p>Name: [+name+]</p>\r\n<p>Email: [+email+]</p>\r\n<p>Regarding: [+subject+]</p>\r\n<p>comments:<br />[+message+]</p>\r\n\r\n<p>You can use this link to reply: <a href="mailto:[+email+]?subject=RE: [+subject+]">[+email+]</a></p>\r\n', 0);
+
+
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (18, 'reflect_month_tpl', 'For the yearly archive. Use with Ditto.', 0, 3, 0, '<a href="[+url+]" title="[+month+] [+year+]" class="reflect_month_link">[+month+] [+year+]</a>', 0);
 
 
 #
@@ -204,6 +206,20 @@ REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('1','richtext','blogContent','blogC
 REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','text','loginName','loginName','Conditional name for the Login menu item','0','0','0','','0','','','@EVAL if ($modx->getLoginUserID()) return \'Logout\'; else return \'Login\';');
 
 
+REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('3','text','documentTags','Tags','Space delimited tags for the current document','0','3','0','','0','','','');
+
+
+#
+# Dumping data for table `modx2352_site_tmplvar_contentvalues`
+#
+
+
+REPLACE INTO `{PREFIX}site_tmplvar_contentvalues` VALUES ('1','3','9','demo miniblog howto tutorial posting');
+
+
+REPLACE INTO `{PREFIX}site_tmplvar_contentvalues` VALUES ('2','3','18','demo older posting');
+
+
 #
 # Dumping data for table `site_tmplvar_templates`
 #
@@ -225,6 +241,18 @@ REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','3','2');
 
 
 REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','4','3');
+
+
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','3','0');
+
+
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','4','0');
+
+
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','1','0');
+
+
+REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','5','0');
 
 
 #

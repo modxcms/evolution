@@ -11,7 +11,7 @@
 UPDATE `{PREFIX}site_snippets` SET `category` = '2' WHERE `name` IN ('MemberCheck', 'Personalize', 'WebChangePwd', 'WebLogin', 'WebSignup');
 
 
-UPDATE `{PREFIX}site_snippets` SET `category` = '3' WHERE `name` IN ('Ditto', 'Jot', 'ListIndexer', 'NewsPublisher');
+UPDATE `{PREFIX}site_snippets` SET `category` = '3' WHERE `name` IN ('Ditto', 'Jot', 'ListIndexer', 'NewsPublisher', 'Reflect');
 
 
 UPDATE `{PREFIX}site_snippets` SET `category` = '4' WHERE `name` IN ('Breadcrumbs','FirstChildRedirect','UltimateParent','Wayfinder');
@@ -43,3 +43,6 @@ UPDATE `{PREFIX}site_plugins` SET `category` = '9' WHERE `name` IN ('TemplateSwi
 
 
 UPDATE `{PREFIX}site_tmplvars` SET `category` = '9' WHERE `name` IN ('blogContent','loginName');
+
+
+UPDATE `{PREFIX}site_tmplvars` SET `category` = '3' WHERE `name` IN ('documentTags');

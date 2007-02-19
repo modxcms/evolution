@@ -117,24 +117,26 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
     $searchString = mysql_real_escape_string($searchString); // (netnoise)
 
     if ($ajaxSearch) {
-      $table_prefix = connectForAjax();
+		$table_prefix = connectForAjax();
     } else {
-      global $modx;
+		global $modx;
     }
     $search = explode(" ", $searchString);
     if ($ajaxSearch) {
         $tbl_sc = "`{$table_prefix}site_content`";
         $tbl_dg = "`{$table_prefix}document_groups`";
+		$tbl_stc = "`{$table_prefix}site_tmplvar_contentvalues`";
     } else {
-        $tbl_sc = $modx->dbConfig['dbase'] . ".`" . $modx->dbConfig['table_prefix'] . "site_content`";
-        $tbl_dg = $modx->dbConfig['dbase'] . ".`" . $modx->dbConfig['table_prefix'] . "document_groups`";
+        $tbl_sc = "{$modx->dbConfig['dbase']}.`{$modx->dbConfig['table_prefix']}site_content`";
+        $tbl_dg = "{$modx->dbConfig['dbase']}.`{$modx->dbConfig['table_prefix']}document_groups`";
+		$tbl_stc = "{$modx->dbConfig['dbase']}.`{$modx->dbConfig['table_prefix']}site_tmplvar_contentvalues`";
     }
 
     if ($docgrp) {
-        $tbl_sql = " LEFT JOIN $tbl_dg dg ON sc.id = dg.document";
-        $qry_sql = "(ISNULL(dg.document_group) OR dg.document_group IN ($docgrp)) AND ";
+		$tbl_sql = " LEFT JOIN $tbl_stc stc ON sc.id = stc.contentid LEFT JOIN $tbl_dg dg ON sc.id = dg.document";
+        $qry_sql = "(ISNULL(dg.document_group) OR dg.document_group IN ({$docgrp})) AND ";
     } else {
-        $tbl_sql = "";
+        $tbl_sql = " LEFT JOIN $tbl_stc stc ON sc.id = stc.contentid ";
         $qry_sql = "sc.privateweb = 0 AND ";
     }
 
@@ -143,27 +145,31 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
 		$sql = "SELECT DISTINCT sc.id, sc.pagetitle, sc.description, sc.content, sc.introtext, sc.longtitle ";
 		$sql .= "FROM $tbl_sc sc" . $tbl_sql . " WHERE ";
 		if ($numTerms>1 && $useAllWords){
-			$sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR ";
+			$sql .= "(sc.pagetitle LIKE '%{$searchString}%' OR sc.description LIKE '%{$searchString}%' OR ";
 			$sqlCounter = 1;
 			$sqlContent = '(';
 			$sqlIntro = '(';
+			$sqlTv = '(';
 			foreach ($search as $searchTerm){
-				$sqlContent .= "sc.content LIKE '%$searchTerm%'";
-				$sqlIntro .= "sc.introtext LIKE '%$searchTerm%'";
+				$sqlContent .= "sc.content LIKE '%{$searchTerm}%'";
+				$sqlIntro .= "sc.introtext LIKE '%{$searchTerm}%'";
+				$sqlTv .= "stc.value LIKE '%{$searchTerm}%'";
 				$sqlCounter++;
 				if ($sqlCounter > $numTerms) {
 					$sqlContent .= ')';
 					$sqlIntro .= ')';
+					$sqlTv .= ')';
 				} else {
 					$sqlContent .= ' AND ';
 					$sqlIntro .= ' AND ';
+					$sqlTv .= ' AND ';
 				}
 			}
-			$sql = $sqlContent . ' OR ' . $sqlIntro . ') AND ';
+			$sql .= "{$sqlContent} OR {$sqlIntro} OR {$sqlTv}) AND ";
 		} else {
 			$sql .= "(";
 			foreach ($search as $searchTerm){
-			    $sql .= "(sc.pagetitle LIKE '%$searchString%' OR sc.description LIKE '%$searchString%' OR sc.content LIKE '%$searchTerm%' OR sc.introtext LIKE '%$searchTerm%') OR ";
+			    $sql .= "(sc.pagetitle LIKE '%{$searchString}%' OR sc.description LIKE '%{$searchString}%' OR sc.content LIKE '%{$searchTerm}%' OR sc.introtext LIKE '%{$searchTerm}%' OR stc.value LIKE '%{$searchTerm}%') OR ";
 			}
 			$sql = substr_replace($sql, ') AND ', -4);
 		}
@@ -173,16 +179,16 @@ function doSearch($searchString,$searchStyle,$useAllWords,$ajaxSearch,$docgrp) {
 		$sql .= "FROM $tbl_sc" . $tbl_sql . " sc WHERE ";
 		if ($numTerms>1 && $useAllWords){
 	        foreach ($search as $searchTerm){
-	          $sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchTerm') AND ";
+				$sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content, stc.value) AGAINST ('{$searchTerm}') AND ";
 	        }
 		} else {
-			$sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content) AGAINST ('$searchString') AND ";
+			$sql .= "MATCH (sc.pagetitle, sc.longtitle, sc.introtext, sc.description, sc.content, stc.value) AGAINST ('{$searchString}') AND ";
 		}
-		$sql .= $qry_sql . "sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
+		$sql .= "$qry_sql sc.published = 1 AND sc.searchable=1 AND sc.deleted=0;";
     }
 
     if ($ajaxSearch) {
-        $rs = mysql_query($sql) or die ("Cannot query the database ($sql)");
+        $rs = mysql_query($sql) or die ("Cannot query the database ({$sql})");
     } else {
         $rs = $modx->dbQuery($sql);
     }

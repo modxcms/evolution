@@ -1,0 +1,144 @@
+[2007-1-06: REVISION 0000]
+
+[NEW] phx capability
+[NEW] summarize extender
+
+[2007-1-06: REVISION 0000]
+
+[FIXED] request config
+[FIXED] randomize
+[FIXED] 1-0 pagination placeholders issue
+[NEW] dateFilter to the extenders
+
+[2007-1-07: REVISION 0000]
+
+[CHANGED] made request a extender
+[NEW] item[x] placeholders which now work with pagination
+[FIXED] sortBy
+[NEW] templates to debug output
+
+[2007-1-12: REVISION 0000]
+
+[FIXED] various minor bugs
+[CHANGED] moved template debug output back to [+tpl+] debug item
+[CHANGED] removed appendTVs method for getTV which allows for fetching of a TV for all needed documents with support for default values
+[CHANGED] determine IDs to use document IDs instead of parents since getTV requires document IDs
+[FIXED] sortBy glitch
+
+[2007-1-14: REVISION 1286]
+
+[FIXED] build URL and pagination
+[CHANGED] changed getTV to appendTV
+[FIXED] fixed document & TV retrieval
+
+[2007-1-14: REVISION 1287]
+
+[NEW] getChildIDs method has been rewritten for raw performance
+[NEW] date extender for date placeholder and related params
+[CHANGED] Moved debug CSS to its own language key and now uses regClientCSS to add to header
+[NEW] Save support added with 0 outputting only content, 1 outputting the remaining content past stop and setting the placeholders, and 2 setting the placeholders with no output.
+[FIXED] Call-time pass-by-reference
+[FIXED] MakeURL nolonger prepends the site_url
+
+[2007-1-16: REVISION 0000]
+
+[FIXED] &tags parameters and tplAlt vs tplFirst assignment
+[CHANGED] first and last templates are now the first and last items on a given page, not of all documents
+
+[2007-1-17: REVISION 0000]
+
+[FIXED] &tags parameter
+[FIXED] &debug output when no documents found
+[FIXED] QE placeholders now correctly add pagetitle field to fields array
+
+[2007-1-18: REVISION 0000]
+
+[FIXED] Advanced sorting
+
+[2007-1-19: REVISION 0000]
+
+[FIXED] Tag filter only enables if tags are specified
+[FIXED] No results display with custom formats
+
+[2007-1-22: REVISION 0000]
+
+[FIXED] Limit = 0 error handling
+[FIXED] Pagination division by 0 error
+[FIXED] Empty $_GET tags
+[NEW] Reflect can now get its own documents by running Ditto
+[NEW] seeThroughUnpub = 0 performance drastically increased
+[CHANGED] $ditto->getDocuments now returns an array with numeric, not string, keys
+
+[2007-2-4: REVISION 0000]
+[CHANGED] Reflect source code order and comments
+
+[2007-2-7: REVISION 0000]
+[NEW] Save option 3
+[CHANGED] Reflect to obey save option 3
+[CHANGED] Added if function exists statements to custom placeholders declarations
+[CHANGED] getDocuments parameters order and fields are now given as an array
+[NEW] prefetch variable now contains the data array fetched by the prefetcher when true
+
+[2007-2-9: REVISION 0000]
+[FIXED] Server offset is now applied to the date placeholder
+
+[2007-2-10: REVISION 0000]
+[CHANGED] Reflect Ditto ID detection
+[REMOVED] Save = 0 restraint on pagination
+[NEW] Data is now saved and reused from the prefetcher
+[FIXED] Prefetcher field parsing error
+[REMOVED] if function exists statements to custom placeholders declarations
+
+[2007-2-11: REVISION 0000]
+[CHANGED] Ditto snippet source code order
+
+[2007-2-12: REVISION 0000]
+[NEW] Server offset is applied to format date placeholders
+[FIXED] Filtering + Prefetch now work correctly together
+[CHANGED] #ID keys are now preserved in the getDocuments function
+[NEW] rel="tags" to tag links
+[NEW] local and global filter delimiter parameters for customization
+[CHANGED] MakeURL function for compliance with TVexplorer (heliotrope @ http://modxcms.com/forums/index.php/topic,12007.msg80206.html#msg80206)
+[FIXED] ;; in source code removed
+[CHANGED] = to == in filter source
+[REMOVED] debug->stored references
+[CHANGED] Parameter comments to reflect recent changes
+
+[2007-2-13: REVISION 0000]
+[FIXED] Missing commas in JSON format file
+[CHANGED] &start in Reflect can now be dynamically set like Ditto
+[REMOVED] &debug parameter in Reflect
+
+[2007-2-14: REVISION 0000]
+[FIXED] &start in Reflect
+[FIXED] Localization support for UTF-8 strings
+[FIXED] Randomize
+[NEW] If getDocuments is 1, Reflect will get its own documents even if given an ID
+[FIXED] Ditto ID can now be fed to ditto->buildURL as a parameter again
+[FIXED] Reflect now sets an empty month URL variable so that Ditto filtering works properly on years
+
+[2007-2-15: REVISION 0000]
+[FIXED] "etomite" string in charset param from older MODx versions
+
+[2007-2-16: REVISION 0000]
+[CHANGED] debug output to clean tables
+[FIXED] Reflect now sets an false month URL variable instead of an empty one
+[REMOVED] utf8_str_replace as it was not necessary
+
+[2007-2-17: REVISION 0000]
+[CHANGED] PHx Pre-Parser version and code
+[REMOVED] &total parameter
+[FIXED] &save=1 now saves the documents not shown to the resource placeholder as intended
+[FIXED] Reflect ordering
+[FIXED] Prefetcher
+[FIXED] Single chunk removal
+[NEW] Allow for multiple chunk removal
+
+[2007-2-18: REVISION 0000]
+[NEW] Ditto class commenting for Natural Docs
+[FIXED] Reflect source code ordering
+[FIXED] &tags=`` extra delimiter
+[FIXED] TV prefix and prefetch issue
+[FIXED] Reflect no documents error
+[FIXED] Reflect custom templates fetching
+[FIXED] Reflect tag closings thanks to new algorithm

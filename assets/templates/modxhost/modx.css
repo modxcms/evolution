@@ -253,69 +253,64 @@ code {
 	border: 0px;
 }
 
-/* NL Stuff
+/* Ditto 2 Blog
 ------------------------------------------------------------------------------- */
-.nl_summaryPost h3 {
-border-bottom: 1px solid #CCCCCC;
-margin: 0px !important;
-padding: 5px !important;
-color: black;
+.ditto_summaryPost h3 {
+    border-bottom: 1px solid #ccc;
+    margin: 0px !important;
+    padding: 5px !important;
+    color: black;
 }
-
- .nl_summaryPost .nl_info {
-background-color: #F8F8F8;
-padding: 5px !important;
-font-size: 0.8em;
-color: black;
+.ditto_summaryPost .ditto_info {
+    background-color: #F8F8F8;
+    padding: 5px !important;
+    font-size: 0.8em;
+    color: black;
 }
-
-
-.nl_link {
-font-size: 76%;
-text-align: right;
+.ditto_link {
+    font-size: 76%;
+    text-align: right;
 }
-
-
-.nl_paging {
+.ditto_paging {
     border-top: 1px solid #ccc;
     padding: 10px; 
     font-size: 86%;
     color: #618100;
 }
-#nl_pages #nl_currentpage {
+#ditto_pages .ditto_currentpage {
     border: 1px solid #618100;
     padding: 1px 5px 2px; 
     margin-right: 1px;
     background-color: #9c0; 
     color: #fff;
 } 
-#nl_pages .nl_off {
+#ditto_pages .ditto_off {
     border: 1px solid #ccc;
     padding: 1px 5px 2px; 
     margin-right: 1px;
     color: #ccc;
 }
-#nl_pages a, #nl_pages a:link, #nl_pages a:visited {
+#ditto_pages a, #ditto_pages a:link, #ditto_pages a:visited {
     border: 1px solid #9c0; 
     padding: 1px 5px 2px; 
     margin-right: 1px; 
     text-decoration: none !important; 
     color: #618100;
 } 
-#nl_pages a:hover {
+#ditto_pages a:hover {
     background-color: #fff;
     color: #000;
 }
-#nl_archivelist ul {
+#ditto_archivelist ul {
     list-style-type: none; 
     margin-left: 15px; 
     padding-left: 0;
 }
-#nl_archivelist ul ul{
+#ditto_archivelist ul ul{
     list-style-type: square;
     margin-left: 35px;
 } 
-#nl_archivelist .nl_month {
+#ditto_archivelist .ditto_month {
     font-weight: bold;
 }
 

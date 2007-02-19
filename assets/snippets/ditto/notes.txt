@@ -1,0 +1,17 @@
+In the next release:
+Finish PHx truncate extension
+Conditional Templating
+Optimize getKeywords
+Allow config to load extenders
+
+dittoSnippetParameters
+
+dittoSnippetName
+
+to Reflect documentation
+
+remove total
+
+add summarize, doh!
+
+fix pagination in documentation

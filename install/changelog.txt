@@ -3,8 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC1 (rev 2363 - Feb 18, 2007)
+MODx 0.9.6-RC1 (rev 2374 - Feb 18, 2007)
 ====================================
+* Update Blog demo content to include tags and monthly archive. Update Ditto/Reflect to RC2 (2373)
+* Update to Ditto 2, add Reflect, and update default content for new Ditto syntax (2367)
+* AjaxSearch: added heliotropes mods to allow basic searches in some TV types (2365)
 * AjaxSearch: added back protect.inc.php for increased security, updated default content to fix landing page (2361,2362)
 * Added new param to AjaxSearch to enable search highlighting without the extract param being on (2355)
 * Update MODxHost template to support new Mootools dropdown menu and AjaxSearch (2354)
