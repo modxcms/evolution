@@ -20,12 +20,6 @@ var newToggle;
 var is_searching=false;
 var liveTimeout = null;
 
-Fx.mySlide = Fx.Slide.extend({
-    isDisplayed: function() {
-        return this.wrapper['offset'+this.layout.capitalize()] > 0;
-    }
-});
-
 function activateSearch() {
 	var searchForm = $('ajaxSearch_form');
     if (searchForm) {
@@ -65,7 +59,10 @@ function activateSearch() {
 		n.setProperty('id', 'current-search-results');
 		n.setStyle('opacity', '1 !important');
 		s.appendChild(n);
-		newToggle = new Fx.mySlide('current-search-results', {duration: 1000}).hide();
+		newToggle = new Fx.Slide('current-search-results', {duration: 600}).hide();
+		newToggle.isDisplayed = function() {
+			return this.wrapper['offset'+this.layout.capitalize()] > 0;
+		}
 		
         if (liveSearch) {
 			s.appendChild(c);
@@ -130,7 +127,7 @@ function doSearch() {
     var ajaxSearchReq = new Ajax('index-ajax.php', {postBody: pars, onComplete: doSearchResponse});
 	if (newToggle.isDisplayed()) {
 		newToggle.toggle(); 
-		ajaxSearchReq.request.delay(1000, ajaxSearchReq);
+		ajaxSearchReq.request.delay(600, ajaxSearchReq);
 	} else {
 		ajaxSearchReq.request();
 	}
@@ -143,7 +140,7 @@ function doSearchResponse(request) {
     $('current-search-results').setHTML(decodeURIComponent(request));
 	newToggle.toggle();
 	is_searching = false;
-	setTimeout('resetForm()',1000);
+	setTimeout('resetForm()',600);
 }
 
 function resetForm() {
@@ -154,7 +151,7 @@ function resetForm() {
 
 function closeSearch() {
 	newToggle.toggle();
-	setTimeout('clearSearch()',1000);
+	setTimeout('clearSearch()',600);
 }
 
 function clearSearch() {

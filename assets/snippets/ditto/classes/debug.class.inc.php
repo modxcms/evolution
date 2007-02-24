@@ -39,7 +39,20 @@ class debug{
 	
 	function content($resource,$placeholders,$currentTPLname, $currentTPL) {
 		global $ditto_lang;
-		$placeholders["$currentTPLname"] = $currentTPL;
+		switch ($currentTPLname) {
+			case "base":
+				$displayName = "tpl";
+			break;
+			
+			case "default":
+				$displayName = "tpl";
+			break;
+			
+			default:
+				$displayName = "tpl".$tplName;
+			break;
+		}
+		$placeholders["$displayName"] = $currentTPL;
 		$header = str_replace(array('[+pagetitle+]','[+id+]'),array($resource['pagetitle'],$resource['id']),$ditto_lang['debug_item']);
 		$output = $this->parameters2table($placeholders,$header)."<br />";
 

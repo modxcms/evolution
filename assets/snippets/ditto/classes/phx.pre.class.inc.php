@@ -13,7 +13,7 @@ class prePHx {
 	
 	function prePHx($template = '') {
 		if (!class_exists("PHxParser")) include_once(strtr(realpath(dirname(__FILE__))."/phx.parser.class.inc.php", '\\', '/')); 
-		$this->template = $this->getTemplate($template);
+		$this->template = $template;
 		$this->phx = new PHxParser();
 		$this->phxreq = "2.0.0";
 		$this->phxerror = '<div style="border: 1px solid red;font-weight: bold;margin: 10px;padding: 5px;">
@@ -23,33 +23,17 @@ class prePHx {
 		$this->check = ($this->phx->version < $this->phxreq) ? 0 : 1;
 	}
 
-	function CreateVars($value = '', $key = '', $path = '') {
+	function setPlaceholders($value = '', $key = '', $path = '') {
 		$keypath = !empty($path) ? $path . "." . $key : $key;
 	    if (is_array($value)) {
 				foreach ($value as $subkey => $subval) {
-					$this->CreateVars($subval, $subkey, $keypath);
+					$this->setPlaceholders($subval, $subkey, $keypath);
 					}
 			} else { $this->phx->setPHxVariable($keypath, $value); }
 	}
 	
-	function AddVar($name, $value) {
-		if ($this->check) $this->CreateVars($value,$name);
-	}
-	
-	function getTemplate($tpl){
-		global $modx;
-		$template = "";
-		if ($modx->getChunk($tpl) != "") {
-			$template = $modx->getChunk($tpl);
-		} else if(is_file($tpl)) {
-			$template = file_get_contents($tpl);
-		} else {
-			$template = $tpl;
-		}
-		return $template;
-	}
-	
-	function Render() {
+
+	function output() {
 		global $modx;
 		if (!$this->check) {
 			$template = $this->phxerror;

@@ -3,7 +3,7 @@
  * Written By Jeff Whitfield - September 9, 2005
  * Modified On - February 1, 2007
  *
- * Version 2.0.9
+ * Version 2.1.0
  *
  * Events: OnRichTextEditorInit, OnRichTextEditorRegister, OnInterfaceSettingsRender
  *

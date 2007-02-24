@@ -2,10 +2,11 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 1.0.1
- Authors: Ryan Thrash (vertexworks.com)
-          Kyle Jaebker (muddydogpaws.com)
- Date: October 23, 2006
+ Version: 2.0 RC1
+ Authors: 
+	Kyle Jaebker (muddydogpaws.com)
+	Ryan Thrash (vertexworks.com)
+ Date: February 21, 2006
 ::::::::::::::::::::::::::::::::::::::::
 Description:
     Totally refactored from original DropMenu nav builder to make it easier to
@@ -19,7 +20,15 @@ Example Usage:
 ::::::::::::::::::::::::::::::::::::::::
 */
 
-include_once("assets/snippets/wayfinder/wayfinder.inc.php");
+$wayfinder_base = $modx->config['base_path']."assets/snippets/wayfinder/";
+
+//Include a custom config file if specified
+$config = (isset($config)) ? "{$wayfinder_base}configs/{$config}.config.php" : "{$wayfinder_base}configs/default.config.php";
+if (file_exists($config)) {
+	include_once("$config");
+}
+
+include_once("{$wayfinder_base}wayfinder.inc.php");
 
 if (class_exists('Wayfinder')) {
    $wf = new Wayfinder();
@@ -27,57 +36,68 @@ if (class_exists('Wayfinder')) {
     return 'error: Wayfinder class not found';
 }
 
-//parameter overrides
-$wf->id = isset($startId)? $startId: $modx->documentIdentifier;
-$wf->level = isset($level)? $level: 0;
-$wf->ph = isset($ph)? $ph: FALSE;
-$wf->debug = isset($debug)? TRUE: FALSE;
-$wf->ignoreHidden = isset($ignoreHidden)? $ignoreHidden: FALSE;
-$wf->hideSubMenus = isset($hideSubMenus)? $hideSubMenus: FALSE;
-$wf->useWeblinkUrl = isset($useWeblinkUrl)? $useWeblinkUrl: TRUE;
-$wf->showSubDocCount = isset($showSubDocCount)? $showSubDocCount: FALSE;
-isset($removeNewLines)? $wf->ie = '': $wf->ie = "\n";
-//Set ordering options
-$wf->sortOrder = isset($sortOrder)? strtoupper($sortOrder): 'ASC';
-$wf->sortBy = isset($sortBy)? $sortBy: 'menuindex';
-$wf->limit = isset($limit)? $limit: 0;
-//Include javascript & css chunks
-$wf->cssTpl = isset($cssTpl)? $cssTpl : FALSE;
-$wf->jsTpl = isset($jsTpl)? $jsTpl : FALSE;
+$wf->_config = array(
+	'id' => isset($startId) ? $startId : $modx->documentIdentifier,
+	'level' => isset($level) ? $level : 0,
+	'includeDocs' => isset($includeDocs) ? $includeDocs : 0,
+	'excludeDocs' => isset($excludeDocs) ? $excludeDocs : 0,
+	'ph' => isset($ph) ? $ph : FALSE,
+	'debug' => isset($debug) ? TRUE : FALSE,
+	'ignoreHidden' => isset($ignoreHidden) ? $ignoreHidden : FALSE,
+	'hideSubMenus' => isset($hideSubMenus) ? $hideSubMenus : FALSE,
+	'useWeblinkUrl' => isset($useWeblinkUrl) ? $useWeblinkUrl : TRUE,
+	'showSubDocCount' => isset($showSubDocCount) ? $showSubDocCount : FALSE,
+	'nl' => isset($removeNewLines) ? '' : "\n",
+	'sortOrder' => isset($sortOrder) ? strtoupper($sortOrder) : 'ASC',
+	'sortBy' => isset($sortBy) ? $sortBy : 'menuindex',
+	'limit' => isset($limit) ? $limit : 0,
+	'cssTpl' => isset($cssTpl) ? $cssTpl : FALSE,
+	'jsTpl' => isset($jsTpl) ? $jsTpl : FALSE,
+	'rowIdPrefix' => isset($rowIdPrefix) ? $rowIdPrefix : FALSE,
+	'textOfLinks' => isset($textOfLinks) ? $textOfLinks : 'menutitle',
+	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
+	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
+);
+
 //get user class definitions
-$wf->css['first'] = isset($firstClass)? $firstClass: '';
-$wf->css['last'] = isset($lastClass)? $lastClass: 'last';
-$wf->css['here'] = isset($hereClass)? $hereClass: 'active';
-$wf->css['parent'] = isset($parentClass)? $parentClass: '';
-$wf->css['row'] = isset($rowClass)? $rowClass: '';
-$wf->css['outer'] = isset($outerClass)? $outerClass: '';
-$wf->css['inner'] = isset($innerClass)? $innerClass: '';
-$wf->css['level'] = isset($levelClass)? $levelClass: '';
-$wf->css['self'] = isset($selfClass)? $selfClass: '';
-$wf->css['weblink'] = isset($webLinkClass)? $webLinkClass: '';
-//prefix for adding id to each row
-$wf->rowIdPrefix = isset($rowIdPrefix)? $rowIdPrefix: FALSE;
-//get fields to output
-$wf->textOfLinks = (isset($textOfLinks)) ? $textOfLinks : 'menutitle';
-$wf->titleOfLinks = (isset($titleOfLinks)) ? $titleOfLinks : 'pagetitle';
+$wf->_css = array(
+	'first' => isset($firstClass) ? $firstClass : '',
+	'last' => isset($lastClass) ? $lastClass : 'last',
+	'here' => isset($hereClass) ? $hereClass : 'active',
+	'parent' => isset($parentClass) ? $parentClass : '',
+	'row' => isset($rowClass) ? $rowClass : '',
+	'outer' => isset($outerClass) ? $outerClass : '',
+	'inner' => isset($innerClass) ? $innerClass : '',
+	'level' => isset($levelClass) ? $levelClass: '',
+	'self' => isset($selfClass) ? $selfClass : '',
+	'weblink' => isset($webLinkClass) ? $webLinkClass : '',
+);
+
 //get user templates
-$wf->templates['outerTpl'] = isset($outerTpl) ? $outerTpl : '';
-$wf->templates['rowTpl'] = isset($rowTpl) ? $rowTpl : '';
-$wf->templates['parentRowTpl'] = isset($parentRowTpl) ? $parentRowTpl : '';
-$wf->templates['parentRowHereTpl'] = isset($parentRowHereTpl) ? $parentRowHereTpl : '';
-$wf->templates['hereTpl'] = isset($hereTpl) ? $hereTpl : '';
-$wf->templates['innerTpl'] = isset($innerTpl) ? $innerTpl : '';
-$wf->templates['innerRowTpl'] = isset($innerRowTpl) ? $innerRowTpl : '';
-$wf->templates['innerHereTpl'] = isset($innerHereTpl) ? $innerHereTpl : '';
-$wf->templates['activeParentRowTpl'] = isset($activeParentRowTpl) ? $activeParentRowTpl : '';
-$wf->templates['categoryFoldersTpl'] = isset($categoryFoldersTpl) ? $categoryFoldersTpl : '';
+$wf->_templates = array(
+	'outerTpl' => isset($outerTpl) ? $outerTpl : '',
+	'rowTpl' => isset($rowTpl) ? $rowTpl : '',
+	'parentRowTpl' => isset($parentRowTpl) ? $parentRowTpl : '',
+	'parentRowHereTpl' => isset($parentRowHereTpl) ? $parentRowHereTpl : '',
+	'hereTpl' => isset($hereTpl) ? $hereTpl : '',
+	'innerTpl' => isset($innerTpl) ? $innerTpl : '',
+	'innerRowTpl' => isset($innerRowTpl) ? $innerRowTpl : '',
+	'innerHereTpl' => isset($innerHereTpl) ? $innerHereTpl : '',
+	'activeParentRowTpl' => isset($activeParentRowTpl) ? $activeParentRowTpl : '',
+	'categoryFoldersTpl' => isset($categoryFoldersTpl) ? $categoryFoldersTpl : '',
+	'startItemTpl' => isset($startItemTpl) ? $startItemTpl : '',
+);
 
 //Process Wayfinder
 $output = $wf->run();
 
+if ($wf->_config['debug']) {
+	$output .= $wf->renderDebugOutput();
+}
+
 //Ouput Results
-if ($wf->ph) {
-    $modx->setPlaceholder($wf->ph,$output);
+if ($wf->_config['ph']) {
+    $modx->setPlaceholder($wf->_config['ph'],$output);
 } else {
     return $output;
 }

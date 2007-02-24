@@ -1,3 +1,5 @@
+Title: Changelog
+
 [2007-1-06: REVISION 0000]
 
 [NEW] phx capability
@@ -142,3 +144,34 @@
 [FIXED] Reflect no documents error
 [FIXED] Reflect custom templates fetching
 [FIXED] Reflect tag closings thanks to new algorithm
+
+[2007-2-19: REVISION 0000]
+[FIXED] is_file error
+[NEW] caseSensitive option for tagging to determine whether or not the tag filter is case sensitive 
+[NEW] Proper display of tags when case sensitive is on AND off
+[FIXED] File retrieval logic to handle different extenders in different calls
+[CHANGED] caseSensitive default to 0
+[FIXED] SortBy pub_date
+[FIXED] include issues
+
+[2007-2-20: REVISION 0000]
+[FIXED] [*field*] support
+[FIXED] No tags error
+[NEW] &yearSortDir and &monthSortDir in Reflect for the direction of the sort of the year and month
+[FIXED] include issues (hopefully for good!)
+[FIXED] template order mixup in language file
+
+[2007-2-21: REVISION 0000]
+[CHANGED] Ditto base path can now be over-ridden so when debugging locally no incorrect paths will be committed to svn
+[NEW] Ditto snippet commenting for Natural Docs (Not Yet Complete)
+[FIXED] Array error when no documents are given
+[FIXED] Tags None Error
+[FIXED] &documents = "" and &parents = "" error handling
+[CHANGED] Cleaned up template processing
+[NEW] Date parameter added back in for UTF-8 compatibility. No-longer an extension as it is needed on sites using the UTF-8 charset.
+
+[2007-2-22: REVISION 0000]
+[CHANGED] More commenting
+[FIXED] $row['contentid'] omitted in appendTVs
+[FIXED] TPL Debug Rendering
+[FIXED] Correct template is now applied to documents

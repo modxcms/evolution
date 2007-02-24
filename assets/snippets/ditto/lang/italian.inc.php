@@ -23,7 +23,7 @@ $_lang['default_template'] = '
     </div>
 ';
 
-$_lang['blank_tpl'] = "Il tuo template per Ditto è vuoto o c'è un errore nel nome del chunk, per favore controlla.";
+$_lang['blank_tpl'] = "Il tuo template per Ditto ï¿½ vuoto o c'ï¿½ un errore nel nome del chunk, per favore controlla.";
 
 $_lang['missing_placeholders_tpl'] = 'Nel tuo template per Ditto mancano i segnaposto (placeholders), per favore controlla il tuo template: <br /><br /><hr /><br /><br />';
 
@@ -69,7 +69,7 @@ $_lang['debug_document_data'] = "Dati del documento per";
 
 $_lang['default_archive_template'] = "<a href=\"[~[+id+]~]\">[+title+]</a> (<span class=\"ditto_date\">[+date+]</span>)";
 
-$_lang['invalid_class'] = "La classe di Ditto non è valida. Per favore controllala.";
+$_lang['invalid_class'] = "La classe di Ditto non ï¿½ valida. Per favore controllala.";
 
 // New language key added 2-July-2006 to 5-July-2006
 

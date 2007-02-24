@@ -3,8 +3,15 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC1 (rev 2374 - Feb 18, 2007)
+MODx 0.9.6-RC2 (rev 2409 - Feb 24, 2007)
 ====================================
+* More Ditto 2 updates through rev1343 (2406)
+* Significantly improve the Document Overview information ... thanks heliotrope (2405)
+* Update to latest Ditto 2RC2 rev1341 (2380)
+* Update copyright to reference 2005-2007 (2380)
+* Add preview in new window function to tree menu context item (2379)
+* Update Jot to 1.1.2 to resolve bugs with Comment edits and Unpublishing errors in moderation mode (2377)
+* Update AjaxSearch to work when QE is also on the page (2376)
 * Update Blog demo content to include tags and monthly archive. Update Ditto/Reflect to RC2 (2373)
 * Update to Ditto 2, add Reflect, and update default content for new Ditto syntax (2367)
 * AjaxSearch: added heliotropes mods to allow basic searches in some TV types (2365)

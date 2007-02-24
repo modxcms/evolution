@@ -117,15 +117,23 @@ EOD;
 				break;
 
 			case "marquee":
-				$transfx = ($params['tfx']=='Horizontal') ? 2:1;
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/script/bin/webelm.js");
-				$o = "<script type=\"text/javascript\">";
-				$o.= "	document.setIncludePath('manager/media/script/bin/');";
-				$o.= "	document.addEventListener('oninit',function(){document.include('dynelement');document.include('marquee');});";
-				$o.= "	document.addEventListener('onload',function(){var o = new Marquee('$id','".mysql_escape_string($value)."','".$params['speed']."','".($params['pause']=='Yes'? 1:0)."','".$transfx."'); o.start()});";
-				$o.= "</script>";
-				$o.= "<script type=\"text/javascript\">Marquee.Render('$id','".$params['width']."','".$params['height']."','".$params['class']."','".$params['style']."');</script>";
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
+				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
+				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
+				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
+				$o .= "\n<div id=\"".$id."\"".$class.$style."><div id=\"marqueeContent\">".mysql_escape_string($value)."</div></div>\n";
+				$o .= "<script type=\"text/javascript\">\n";
+				$o .= "	Window.onDomReady(function() {\n";
+				$o .= "		var modxMarquee = new MooMarquee(\$(\"".$id."\"),{\n";
+				$o .= "			width: '".$params['width']."',\n";
+				$o .= "			height: '".$params['height']."',\n";
+				$o .= "			speed: ".$params['speed'].",\n";
+				$o .= "			mousepause: '".$params['pause']."',\n";
+				$o .= "			direction: '".$params['tfx']."'\n";
+				$o .= "		});\n";
+				$o .= "	});\n";
+				$o .= "</script>\n";
 				break;
 
 			case "ticker":

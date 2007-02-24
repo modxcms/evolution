@@ -280,16 +280,7 @@ function insertAction() {
 	}
 
 	if (tinyMCE.getParam("accessibility_warnings")) {
-		if (formObj.alt.value == "") {
-			var answer = confirm(tinyMCE.getLang('lang_advimage_missing_alt', '', true));
-			if (answer == true) {
-				formObj.alt.value = " ";
-			}
-		} else {
-			var answer = true;
-		}
-
-		if (!answer)
+		if (formObj.alt.value == "" && !confirm(tinyMCE.getLang('lang_advimage_missing_alt', '', true)))
 			return;
 	}
 
@@ -438,7 +429,7 @@ function changeHeight() {
 	if (formObj.width.value == "" || formObj.height.value == "")
 		return;
 
-	var temp = (formObj.width.value / preloadImg.width) * preloadImg.height;
+	var temp = (parseInt(formObj.width.value) / parseInt(preloadImg.width)) * preloadImg.height;
 	formObj.height.value = temp.toFixed(0);
 	updateStyle();
 }
@@ -454,7 +445,7 @@ function changeWidth() {
 	if (formObj.width.value == "" || formObj.height.value == "")
 		return;
 
-	var temp = (formObj.height.value / preloadImg.height) * preloadImg.width;
+	var temp = (parseInt(formObj.height.value) / parseInt(preloadImg.height)) * preloadImg.width;
 	formObj.width.value = temp.toFixed(0);
 	updateStyle();
 }
@@ -488,7 +479,8 @@ function showPreviewImage(src, start) {
 
 function updateImageData() {
 	var formObj = document.forms[0];
-	var preloadImg = document.getElementById('previewImg');
+
+	preloadImg = document.getElementById('previewImg');
 
 	if (formObj.width.value == "")
 		formObj.width.value = preloadImg.width;

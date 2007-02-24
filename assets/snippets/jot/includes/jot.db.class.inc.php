@@ -91,7 +91,7 @@ class CJotDataDb {
 			// Custom Fields
 			$cust = $this->getCustomFieldsArray($id);
 			$this->cfields = $cust[$id];
-
+			if (!is_array($this->cfields)) $this->cfields = array();
 		}
 		else {		
 			$this->fields = array(

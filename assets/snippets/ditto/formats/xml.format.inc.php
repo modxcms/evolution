@@ -15,15 +15,16 @@ $xml_placeholders['[+xml_charset+]'] = isset($charset) ? $charset : $modx->confi
 $rss_placeholders['[+xml_xsl+]'] = isset($xsl) ? '<?xml-stylesheet type="text/xsl" href="'.$modx->config['site_url'].$xsl.'" ?>' : '';
 // set tpl rss placeholders
 $placeholders['*'] = "xml_parameters"; 
-function xml_parameters($placeholders) {
-	$xmlArr = array();
-	foreach ($placeholders as $name=>$value) {
-		$xmlArr["xml_".$name] = htmlentities($value);
+if(!function_exists("xml_parameters")) { 
+	function xml_parameters($placeholders) {
+		$xmlArr = array();
+		foreach ($placeholders as $name=>$value) {
+			$xmlArr["xml_".$name] = htmlentities($value);
+		}
+		$placeholders = array_merge($xmlArr,$placeholders);
+		return $placeholders;	
 	}
-	$placeholders = array_merge($xmlArr,$placeholders);
-	return $placeholders;	
 }
-
 // set default templates
 
 $xml_header = <<<TPL

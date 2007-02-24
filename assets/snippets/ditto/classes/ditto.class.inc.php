@@ -1,12 +1,11 @@
 <?php
 
 /*
- * Title: Ditto Class
- * Desc: Aggregates documents to create blogs, article/news
- * 		 collections, etc.,with full support for templating.
- * Author: Mark Kaplan
- * Version: 2.0 RC1
- */
+ * Title: Class
+ * Purpose:
+ *  	The Ditto class contains all functions relating to Ditto's
+ *  	functionality and any supporting functions they need
+*/
 
 class ditto {
 	var $template,$resource,$format,$debug,$advSort,$header,$footer,$fields,$constantFields,$prefetch,$sortOrder;
@@ -122,11 +121,14 @@ class ditto {
 				$this->advSort = $sortBy;
 			break;
 			case "db":
-				if (!in_array($sortBy, $advSort)) {
-					$sort = $sortBy;
+				if (in_array($sortBy, $advSort)) {
+					$this->advSort = $sortBy;
 				} else {
-					$sort = "createdon";
+					$sort = $sortBy;
 				}
+			break;
+			case "unknown":
+				$sort = "createdon";
 			break;
 		}
 		if ($this->advSort !== false) {$this->addField($this->advSort,"backend");}
@@ -167,15 +169,17 @@ class ditto {
 	// Render the document output
 	// ---------------------------------------------------
 	
-	function render($resource, $template, $removeChunk,$ph=array(),$phx) {
+	function render($resource, $template, $removeChunk,$dateSource,$dateFormat,$ph=array(),$phx=1) {
 		global $modx,$ditto_lang;
 
 		if (!is_array($resource)) {
 			return $ditto_lang["resource_array_error"];
 		}
 		$placeholders = array();
+		$contentVars = array();
 		foreach ($resource as $name=>$value) {
 			$placeholders["$name"] = $value;
+			$contentVars["[*$name*]"] = $value;
 		}
 
 		// set author placeholder
@@ -192,7 +196,10 @@ class ditto {
 		if (in_array("url",$this->fields["display"]["custom"])) {
 			$placeholders['url'] = substr($modx->config['site_url'], 0, -1).$modx->makeURL($resource['id']);
 		}
-
+		if (in_array("date",$this->fields["display"]["custom"])) {
+			$placeholders['date'] = $this->formatDate($resource[$dateSource], $dateFormat);
+		}
+	
 		if (count($this->fields["display"]['qe']) > 0) {
 			$placeholders = $this->renderQELinks($this->template->fields['qe'],$resource,$ditto_lang["edit"]." : ".$resource['pagetitle']." : ",$placeholders);
 				// set QE Placeholders
@@ -209,11 +216,12 @@ class ditto {
 		if (!$this->debug) {
 			if ($phx == 1) {
 				$phx = new prePHx($template);
-				$phx->CreateVars($placeholders);
-				$output = $phx->Render();
+				$phx->setPlaceholders($placeholders);
+				$output = $phx->output();
 			} else {
 			 	$output = $this->str_replace_phx($placeholders,$template);
 			}
+			$output = str_replace( array_keys( $contentVars ), array_values( $contentVars ), $output );
 			if ($removeChunk) {
 				foreach ($removeChunk as $chunk) {
 					$output = str_replace('{{'.$chunk.'}}',"",$output);
@@ -224,7 +232,7 @@ class ditto {
 		} else {
 			$output = $this->debug->content($resource, $placeholders,$this->template->current,$template);
 		}
-
+		
 		return $output;
 	}
 
@@ -241,11 +249,12 @@ class ditto {
 	// Find the fields that are contained in the custom placeholders or those that are needed in other functions
 	// ---------------------------------------------------
 	
-	function parseFields($placeholders,$seeThruUnpub,$customReset) {
+	function parseFields($placeholders,$seeThruUnpub,$customReset,$dateSource) {
 		$this->parseCustomPlaceholders($placeholders);
 		$this->parseDBFields($seeThruUnpub,$customReset);
 		$this->addField("id","display","db");
 		$this->addField("pagetitle","display","db");
+		$this->addField($dateSource,"display");
 		$this->fields = $this->arrayUnique($this->fields);
 	}
 
@@ -388,8 +397,7 @@ class ditto {
 		
 	function determineIDs($IDs, $IDType, $TVs, $sortBy, $advSort, $sortDir, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $showInMenuOnly, $myWhere, $keywords, $limit, $summarize, $filter, $paginate) {
 		global $modx;
-
-		if ($summarize == 0 && $summarize != "all") {
+		if (($summarize == 0 && $summarize != "all") || count($IDs) == 0 || $IDs == false) {
 			return array();
 		}
 		
@@ -403,21 +411,20 @@ class ditto {
 				$documentIDs = explode(",",$IDs);
 			break;
 		}
-
 		if ($this->advSort == false && $hideFolders==0 && $myWhere == "" && $filter == false) { 
 			$this->prefetch = false; 
-			if ($paginate = 1) {
 				$documents = $modx->getDocuments($documentIDs, $showPublishedOnly, 0,"id");
 				$documentIDs = array();
-				foreach ($documents as $null=>$doc) {
-					$documentIDs[] = $doc["id"];
+				if ($documents) {
+					foreach ($documents as $null=>$doc) {
+						$documentIDs[] = $doc["id"];
+					}
 				}
-			}
 			return $documentIDs;			
 		} else {
 			$this->prefetch = true; 
 		}
-		
+
 		// Create where clause
 		$where = array ();
 		if ($hideFolders) {
@@ -432,9 +439,9 @@ class ditto {
 		$where = implode(" AND ", $where);
 		$limit = ($limit == 0) ? "" : $limit;
 			// set limit
-			
-		$customReset = $this->buildCustomResetList($sortBy,$this->advSort);
 
+		$customReset = $this->buildCustomResetList($sortBy,$this->advSort);
+		if (count($customReset) > 0) {$this->addField("createdon","backend","db");}
 		$resource = $this->getDocuments($documentIDs, $this->fields["backend"]["db"], $TVs,$keywords,$showPublishedOnly,0,$where,$limit,$sortBy,$sortDir);
 		$resource = array_values($resource);
 		
@@ -500,7 +507,7 @@ class ditto {
 				$this->sortOrder = $this->setSortOrder($processedIDs);
 					// saves the order of the documents for use later
 			}
-			
+
 			return $processedIDs;
 		} else {
 			return array();
@@ -555,7 +562,7 @@ class ditto {
 		$resourceArray = array();
 		for($i=0;$i<$tot;$i++)  {
 			$row = @$modx->fetchRow($rs);
-			$resourceArray["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type']);   
+			$resourceArray["#".$row['contentid']][$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);   
 			$resourceArray["#".$row['contentid']]["tv".$row['name']] = $resourceArray["#".$row['contentid']][$row['name']];
 		}
 		if ($tot != count($docIDs)) {
@@ -564,7 +571,7 @@ class ditto {
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
 			$row = @$modx->fetchRow($rs);
-			$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type']);
+			$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
 			foreach ($docIDs as $id) {
 				if (!isset($resourceArray["#".$id])) {
 					$resourceArray["#$id"][$tvname] = $defaultOutput;
@@ -682,31 +689,35 @@ class ditto {
 			$cnt = @$modx->recordCount($result);
 			$TVData = array();
 			$TVIDs = array();
-			for ($i= 0; $i < $cnt; $i++) {
-	            $resource = $modx->fetchRow($result);
-				if($keywords) {
-					$resource = $this->appendKeywords($resource);
-				}
-				if ($this->prefetch == true && $this->sortOrder !== false) $resource["ditto_sort"] = $this->sortOrder[$resource["id"]];
-				$TVIDs[] = $resource["id"];
-				$resourceArray["#".$resource["id"]] = $resource;
-				if (count($this->prefetch["resource"]) > 0) {
-					$x = "#".$resource["id"];
-					$resourceArray[$x] = array_merge($resource,$this->prefetch["resource"][$x]);
-							// merge the prefetch array and the normal array
-				}
-	        }
+			if ($cnt) {
+				for ($i= 0; $i < $cnt; $i++) {
+		            $resource = $modx->fetchRow($result);
+					if($keywords) {
+						$resource = $this->appendKeywords($resource);
+					}
+					if ($this->prefetch == true && $this->sortOrder !== false) $resource["ditto_sort"] = $this->sortOrder[$resource["id"]];
+					$TVIDs[] = $resource["id"];
+					$resourceArray["#".$resource["id"]] = $resource;
+					if (count($this->prefetch["resource"]) > 0) {
+						$x = "#".$resource["id"];
+						$resourceArray[$x] = array_merge($resource,$this->prefetch["resource"][$x]);
+								// merge the prefetch array and the normal array
+					}
+		        }
 
-			$TVs = array_unique($TVs);
-			if (count($TVs) > 0) {
-				foreach($TVs as $tv){
-					$TVData = array_merge_recursive($this->appendTV($tv,$TVIDs),$TVData);
+				$TVs = array_unique($TVs);
+				if (count($TVs) > 0) {
+					foreach($TVs as $tv){
+						$TVData = array_merge_recursive($this->appendTV($tv,$TVIDs),$TVData);
+					}
 				}
+
+				$resourceArray = array_merge_recursive($resourceArray,$TVData);
+				if ($this->prefetch == true && $this->sortOrder !== false) {$resourceArray = $this->customSort($resourceArray,"ditto_sort","ASC");}
+				return $resourceArray;
+			} else {
+				return false;
 			}
-
-			$resourceArray = array_merge_recursive($resourceArray,$TVData);
-			if ($this->prefetch == true && $this->sortOrder !== false) {$resourceArray = $this->customSort($resourceArray,"ditto_sort","ASC");}
-			return $resourceArray;
 	    }
 	}
 
@@ -729,7 +740,6 @@ class ditto {
 				$customReset[] = $check;
 			}
 		}
-
 		return $customReset;
 	}
 	
@@ -759,6 +769,20 @@ class ditto {
 		return $IDs;
 	}
 
+	// ---------------------------------------------------
+	// Function: formatDate
+	// Render the date in the proper format and encoding
+	// ---------------------------------------------------
+	
+	function formatDate($dateUnixTime, $dateFormat) {
+		global $modx;
+		$dt =  strftime($dateFormat, (intval($dateUnixTime) + $modx->config["server_offset_time"]));
+		if ($modx->config["modx_charset"] == "UTF-8") {
+			$dt = utf8_encode($dt);
+		}
+		return $dt;
+	}
+	
 	// ---------------------------------------------------
 	// Function: buildURL
 	// Build a URL with regard to Ditto ID

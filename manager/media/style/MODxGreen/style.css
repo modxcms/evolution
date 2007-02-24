@@ -1068,3 +1068,32 @@ ul#nav {
 	ButtonHighlight ButtonShadow;
 	padding: 3px 4px 1px 6px;
 }
+
+/* Pagination table
+---------------------------------------------------------- */
+#max-display-records {
+    margin:10px 0;
+}
+#pagination {
+ margin: 10px 0;
+}
+#pagination ul {
+    margin: 10px 0; 
+    display: inline;
+}
+#pagination li {
+    list-style: none;
+    display: inline;
+    width: 15px;
+    margin: 0 0 0 1px;
+}
+#pagination li a {
+    padding: 3px;
+    border: 1px solid #D9E7C2;
+    text-decoration: none;
+    color: #000;
+}
+#pagination li.currentPage a, #pagination li a:hover {
+    color: #060;
+    border: 1px solid #060;
+}

@@ -4,14 +4,13 @@ Conditional Templating
 Optimize getKeywords
 Allow config to load extenders
 
-dittoSnippetParameters
+Documentation Changes TODO:
+caseSensitive needs to be added
+&yearSortDir and &monthSortDir in Reflect
 
-dittoSnippetName
 
-to Reflect documentation
+Fix givenTags = array in debug
 
-remove total
+Check filtering with tv prefix...
 
-add summarize, doh!
-
-fix pagination in documentation
+check, first, last, etc. templates

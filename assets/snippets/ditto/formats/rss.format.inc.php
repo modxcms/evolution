@@ -20,18 +20,21 @@ $placeholders['rss_date'] = array($dateSource,"rss_date");
 $placeholders['rss_pagetitle'] = array("pagetitle","rss_pagetitle");
 $placeholders['rss_author'] = array("createdby","rss_author"); 
 
-function rss_date($resource) {
-	return date("r",  intval($resource["createdon"]) + $modx->config["server_offset_time"]);
+if(!function_exists("rss_date")) { 
+	function rss_date($resource) {
+		return date("r",  intval($resource["createdon"]) + $modx->config["server_offset_time"]);
+	}
 }
-
-function rss_pagetitle($resource) {
-	return htmlspecialchars(html_entity_decode($resource['pagetitle'], ENT_QUOTES));
+if(!function_exists("rss_pagetitle")) { 
+	function rss_pagetitle($resource) {
+		return htmlspecialchars(html_entity_decode($resource['pagetitle'], ENT_QUOTES));
+	}
 }
-
-function rss_author($resource) {
-	return htmlspecialchars(html_entity_decode(ditto::getAuthor($resource['createdby']), ENT_QUOTES));
+if(!function_exists("rss_author")) { 
+	function rss_author($resource) {
+		return htmlspecialchars(html_entity_decode(ditto::getAuthor($resource['createdby']), ENT_QUOTES));
+	}
 }
-
 // set default templates
 
 $rss_header = <<<TPL

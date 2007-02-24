@@ -14,16 +14,17 @@ $json_placeholders['[+json_ttl+]'] = isset($ttl) ? intval($ttl):120;
 $json_placeholders['[+json_op+]'] = (!empty($_REQUEST['jsonp']) ? $_REQUEST['jsonp'] : '');
 
 // set tpl JSON placeholders
-$placeholders['*'] = "json_parameters"; 
-function json_parameters($placeholders) {
-	$jsonArr = array();
-	foreach ($placeholders as $name=>$value) {
-		$jsonArr["json_".$name] = addslashes($value);
+$placeholders['*'] = "json_parameters";
+if(!function_exists("json_parameters")) { 
+	function json_parameters($placeholders) {
+		$jsonArr = array();
+		foreach ($placeholders as $name=>$value) {
+			$jsonArr["json_".$name] = addslashes($value);
+		}
+		$placeholders = array_merge($jsonArr,$placeholders);
+		return $placeholders;	
 	}
-	$placeholders = array_merge($jsonArr,$placeholders);
-	return $placeholders;	
 }
-
 // ---------------------------------------------------
 // JSON Templates
 // ---------------------------------------------------

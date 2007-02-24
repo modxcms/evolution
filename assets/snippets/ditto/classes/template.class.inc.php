@@ -1,10 +1,11 @@
 <?php
 
-// ---------------------------------------------------
-// Title: Template Class
-// File: template.class.inc.php
-// Functions that handle templating
-// ---------------------------------------------------
+/*
+ * Title: Template Class
+ * Purpose:
+ *  	The Template class contains all functions relating to Ditto's
+ *  	handling of templates and any supporting functions they need
+*/
 
 class template{
 	var $language,$fields,$current;
@@ -24,20 +25,13 @@ class template{
 			"unknown" => array()
 		);
 	}
-	function process($tpl,$tplAlt,$tplFirst,$tplLast,$tplCurrentDocument) {
-		$templates['tpl'] = (!empty($tpl)) ? $this->fetch($tpl): $this->language['default_template'];
-			// optional user defined chunk name to format the summary posts
 
-		$templateNames = array (
-			"tplAlt" => $tplAlt,
-			"tplFirst" => $tplFirst,
-			"tplLast" => $tplLast,
-			"tplCurrentDocument" => $tplCurrentDocument
-		);
-			// template names list
-
-		foreach ($templateNames as $name=>$tpl) {
-			if(!empty($tpl)) {
+	function process($template) {
+		if (!isset($template["base"])) {
+			$template["base"] = $template["default"];
+		}
+		foreach ($template as $name=>$tpl) {
+			if(!empty($tpl) && $tpl != "") {
 				$templates[$name] = $this->fetch($tpl);
 			}
 		}
@@ -46,8 +40,21 @@ class template{
 			$check = $this->findTemplateVars($tpl);
 			if (is_array($check)) {
 				$fieldList = array_merge($check, $fieldList);
-			}else{
-				return $check;
+			} else {
+				switch ($tplName) {
+					case "base":
+						$displayName = "tpl";
+					break;
+					
+					case "default":
+						$displayName = "tpl";
+					break;
+					
+					default:
+						$displayName = "tpl".$tplName;
+					break;
+				}
+				$templates[$tplName] = str_replace("[+tpl+]",$displayName,$this->language["bad_tpl"]);
 			}
 		}
 
@@ -95,7 +102,7 @@ class template{
 			"unknown" => array()
 		);
 		
-		$custom = array("author","tagLinks","url","title");
+		$custom = array("author","date","tagLinks","url","title");
 
 		foreach ($fieldList as $field) {
 			if (substr($field, 0, 4) == "rss_") {
@@ -133,22 +140,21 @@ class template{
 		global $modx;
 
 		// determine current template
-		$currentTPL = "tpl";
-		if (($x + 1) % 2) {
-			$currentTPL = "tplAlt";
+		$currentTPL = "base";
+		if ($x % 2 && !empty($templates["alt"])) {
+			$currentTPL = "alt";
 		}
-		if ($id == $modx->documentObject['id']) {
-			$currentTPL = "tplCurrentDocument";
+		if ($id == $modx->documentObject['id'] && !empty($templates["current"])){
+			$currentTPL = "current";
 		}
-		if ($x == 0) {
-			$currentTPL = "tplFirst";
+		if ($x == 0 && !empty($templates["first"])) {
+			$currentTPL = "first";
 		}
-		if ($x == ($stop -1)) {
-			$currentTPL = "tplLast";
-		}
-		$tpl = empty($templates[$currentTPL]) ? $templates["tpl"] : $templates[$currentTPL];
+		if ($x == ($stop -1) && !empty($templates["last"])) {
+			$currentTPL = "last";
+		} 
 		$this->current = $currentTPL;
-		return $tpl;
+		return $templates[$currentTPL];
 	}
 
 	function fetch($tpl){

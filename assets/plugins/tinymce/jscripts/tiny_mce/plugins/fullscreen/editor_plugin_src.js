@@ -1,5 +1,5 @@
 /**
- * $Id: editor_plugin_src.js 172 2007-01-09 11:37:11Z spocke $
+ * $Id: editor_plugin_src.js 201 2007-02-12 15:56:56Z spocke $
  *
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
@@ -14,7 +14,7 @@ var TinyMCE_FullScreenPlugin = {
 			longname : 'Fullscreen',
 			author : 'Moxiecode Systems AB',
 			authorurl : 'http://tinymce.moxiecode.com',
-			infourl : 'http://tinymce.moxiecode.com/tinymce/docs/plugin_fullscreen.html',
+			infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/fullscreen',
 			version : tinyMCE.majorVersion + "." + tinyMCE.minorVersion
 		};
 	},
@@ -67,7 +67,7 @@ var TinyMCE_FullScreenPlugin = {
 	},
 
 	_toggleFullscreen : function(inst) {
-		var ds = inst.getData('fullscreen'), editorContainer, tableElm, iframe, vp, cw, cd, re, w, h, si, blo, delta = 0, cell, row;
+		var ds = inst.getData('fullscreen'), editorContainer, tableElm, iframe, vp, cw, cd, re, w, h, si, blo, delta = 0, cell, row, fcml, bcml;
 
 		cw = inst.getContainerWin();
 		cd = cw.document;
@@ -76,6 +76,19 @@ var TinyMCE_FullScreenPlugin = {
 		iframe = inst.iframeElement;
 		re = cd.getElementById(inst.editorId + '_resize');
 		blo = document.getElementById('mce_fullscreen_blocker');
+		fcm = new TinyMCE_Layer(inst.editorId + '_fcMenu');
+		fcml = new TinyMCE_Layer(inst.editorId + '_fcMenu');
+		bcml = new TinyMCE_Layer(inst.editorId + '_bcMenu');
+
+		if (fcml.exists() && fcml.isVisible()) {
+			tinyMCE.switchClass(inst.editorId + '_forecolor', 'mceMenuButton');
+			fcml.hide();
+		}
+
+		if (bcml.exists() && bcml.isVisible()) {
+			tinyMCE.switchClass(inst.editorId + '_backcolor', 'mceMenuButton');
+			bcml.hide();
+		}
 
 		if (!ds.enabled) {
 			// Handle External Toolbar

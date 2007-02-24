@@ -1,13 +1,12 @@
 <?php
 
 /*
- * Title: Ditto Language File
- * Desc: Aggregates documents to create blogs, article/news
- * 		 collections, etc.,with full support for templating.
- * About: Default English language file for Ditto.
- * Author: Mark Kaplan
- * Note: New language keys should added at the bottom of this page
- * Version: 2.0 RC1
+ * Title: Class
+ * Purpose:
+ *  	Default English language file for Ditto
+ *  	
+ * Note:
+ * 		New language keys should added at the bottom of this page
  */
 
 $_lang['language'] = "english";
@@ -20,11 +19,13 @@ $_lang['default_template'] = <<<TPL
 
     <div class="ditto_item" id="ditto_item_[+id+]">
         <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
-        <div class="ditto_introText">[+introtext+]</div>
         <div class="ditto_documentInfo">by <strong>[+author+]</strong> on [+createdon:date=`%d-%b-%y %H:%M`+]</div>
+        <div class="ditto_introText">[+introtext+]</div>
     </div>
 
 TPL;
+
+$_lang["bad_tpl"] = "<p>[+tpl+] either does not contain any placeholders or is an invalid chunk name, code block, or filename. Please check it.</p>";
 
 $_lang['no_documents'] = '<p>No documents found.</p>';
 

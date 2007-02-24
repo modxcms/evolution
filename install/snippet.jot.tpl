@@ -1,9 +1,9 @@
 /*####
 #
 #	Name: Jot
-#	Version: 1.1.1
+#	Version: 1.1.2
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Feb 13, 2006 23:09 CET
+#	Date: Feb 19, 2006 15:26 CET
 #
 # Latest Version: http://modxcms.com/Jot-998.html
 # Jot Demo Site: http://projects.zerobarrier.nl/modx/
@@ -15,7 +15,7 @@ $jotPath = $modx->config['base_dir'] . 'assets/snippets/jot/';
 include_once($jotPath.'jot.class.inc.php');
 
 $Jot = new CJot;
-$Jot->VersionCheck("1.1.1");
+$Jot->VersionCheck("1.1.2");
 $Jot->Set("path",$jotPath);
 $Jot->Set("action", $action);
 $Jot->Set("postdelay", $postdelay);

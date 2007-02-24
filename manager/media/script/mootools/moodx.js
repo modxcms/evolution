@@ -338,3 +338,69 @@ var MooTicker = new Class({
 });
 
 MooTicker.implement(new Chain);
+
+var MooMarquee = new Class({
+	setOptions: function(options){
+		this.options = {
+			width: '',
+			height: '',
+			speed: 3, 
+			mousepause: 'Yes', 
+			direction: 'Horizontal'
+		};
+		Object.extend(this.options, options || {});
+	},
+
+	initialize: function(id, options){
+		this.setOptions(options);
+		this.scrollingContainer = id;
+		this.scrollingContent = this.scrollingContainer.getFirst();
+		this.direction = (this.options.direction == 'Horizontal' ? 'top' : 'left')
+
+		this.scrollingContainer.setStyle('width',this.options.width);
+		this.scrollingContainer.setStyle('height',this.options.height);
+		this.scrollingContainer.setStyle('position', 'relative');
+		this.scrollingContainer.setStyle('overflow', 'hidden');
+		this.scrollingContent.setStyle('position', 'relative');
+		this.scrollingContent.setStyle(this.direction, '0px');
+		
+		if(this.options.mousepause == 'Yes'){		
+			this.scrollingContainer.addEvent('mouseover', function(){
+				this.stopSliding();
+			}.bind(this));
+			this.scrollingContainer.addEvent('mouseout', function(){
+				this.restartSliding();
+			}.bind(this));
+		}
+		
+		this.objRef = this.scrollingContent;
+		this.contentSize = (this.direction == 'top' ? this.scrollingContent.offsetHeight : this.scrollingContent.offsetWidth);
+		this.containerSize = (this.direction == 'top' ? this.scrollingContainer.clientHeight : this.scrollingContainer.clientWidth);
+		this.slideSpeed = this.options.speed;
+		this.origSlideSpeed = this.slideSpeed;
+		this.slideTimeBetweenSteps = 30;
+				
+		this.slideContent();
+	},
+	
+	slideContent: function(){
+		var topPos = this.scrollingContent.getStyle(this.direction).toInt();
+		var topPosOrig = topPos;
+		topPos = topPos - this.slideSpeed;
+		if(topPos/1 + this.contentSize/1<0){
+			topPos = this.containerSize;
+		}
+		this.scrollingContent.setStyle(this.direction, topPos + 'px');
+		setTimeout(this.slideContent.bind(this),this.slideTimeBetweenSteps);	
+	},
+	
+	stopSliding: function(){
+		this.slideSpeed = 0;	
+	},
+	
+	restartSliding: function(){
+		this.slideSpeed = this.origSlideSpeed;
+	}		
+});
+
+MooMarquee.implement(new Chain);

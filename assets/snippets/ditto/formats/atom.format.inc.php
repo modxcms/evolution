@@ -1,7 +1,7 @@
 <?php
 
 // ---------------------------------------------------
-// atom Parameters
+// ATOM Parameters
 // ---------------------------------------------------
 
 $startID= (isset($_REQUEST['startID'])? $_REQUEST['startID']: $startID);
@@ -14,11 +14,15 @@ $atom_placeholders['[+atom_lastmodified+]'] = date('Y-m-d\TH:i:s\Z', $modx->docu
 $placeholders['atom_createdon'] = array("createdon","atomCreatedDate"); 
 $placeholders['atom_editedon'] = array("editedon","atomEditedDate");
 
-function atomCreatedDate($resource) {
-	return date('Y-m-d\TH:i:s\Z', intval($resource["createdon"]) + $modx->config["server_offset_time"]);
+if(!function_exists("atomCreatedDate")) {
+	function atomCreatedDate($resource) {
+		return date('Y-m-d\TH:i:s\Z', intval($resource["createdon"]) + $modx->config["server_offset_time"]);
+	}
 }
-function atomEditedDate($resource) {
-	return date('Y-m-d\TH:i:s\Z', intval($resource["editedon"]) + $modx->config["server_offset_time"]);
+if(!function_exists("atomEditedDate")) {
+	function atomEditedDate($resource) {
+		return date('Y-m-d\TH:i:s\Z', intval($resource["editedon"]) + $modx->config["server_offset_time"]);
+	}
 }
 
 // set default templates
