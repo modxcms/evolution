@@ -10,5 +10,5 @@ if ($rt = @ include_once('config.inc.php')) {
 // Keep it alive
   startCMSSession(); 
 
-  header('Location: ' . MODX_BASE_URL . '/media/script/_session.gif?rnd=' . intval($_REQUEST['rnd']));
+  header('Location: ' . MODX_BASE_URL . 'manager/media/script/_session.gif?rnd=' . intval($_REQUEST['rnd']));
 }

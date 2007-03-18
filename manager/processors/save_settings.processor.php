@@ -4,7 +4,18 @@ if(!$modx->hasPermission('settings')) {
 	$e->setError(3);
 	$e->dumpError();	
 }
+
 foreach ($_POST as $k => $v) {
+	switch ($k) {
+		case 'error_page':
+		case 'unauthorized_page':
+		if (trim($v) == '' || !is_numeric($v)) {
+			$v = $_POST['site_start'];
+		}
+		break;
+		default:
+		break;
+	}
 	$v = is_array($v) ? implode(",", $v) : $v;
 	if ($k == 'manager_lang_attribute' && trim($v) == '') $v = 'en';
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('".mysql_escape_string($k)."', '".mysql_escape_string($v)."')";

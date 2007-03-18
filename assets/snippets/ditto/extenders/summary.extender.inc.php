@@ -1,36 +1,124 @@
 <?php
 
-// ---------------------------------------------------
-// Summary Placeholdr
-// ---------------------------------------------------
+/*
+ * Title: Summary
+ * Purpose:
+ *  	Legacy support for the [+summary+] placeholder
+*/
 
 $placeholders['summary'] = array("introtext,content","determineSummary");
 $placeholders['link'] = array("id","determineLink");
 
 $trunc = isset($trunc) ? $trunc : 1;
-    // should there be summary/short version of the posts?
+ /*
+	Param: trunc
 
+	Purpose:
+	Enable truncation on the summary placeholder
+
+	Options:
+	0 - off
+	1 - on
+	
+	Default:
+	1 - on
+*/
 $splitter = isset($truncAt) ? $truncAt : "<!-- splitter -->";
-    // where to split the text
+ /*
+	Param: truncAt
 
+	Purpose:
+	Location to split the content at
+
+	Options:
+	Any unique text or code string that is contained
+	in the content of each document
+	
+	Default:
+	"<!-- splitter -->"
+*/
 $length = isset($truncLen) ? $truncLen : 300;
-    // how many characters to show of blogs
+ /*
+	Param: truncLen
 
+	Purpose:
+	Number of characters to show of the content
+
+	Options:
+	Any number greater than <truncOffset>
+
+	Default:
+	300
+*/
 $offset = isset($truncOffset) ? $truncOffset : 30;
-    // how many characters to show of blogs
+ /*
+	Param: truncOffset
 
+	Purpose:
+	Number of charactars to "wander" either way of <truncLen>
+
+	Options:
+	Any number greater less than <truncLen>
+
+	Default:
+	30
+*/
 $text = isset($truncText)? $truncText : "Read more...";
-    // text to be displayed in item link
+ /*
+	Param: truncText
 
+	Purpose:
+	Text to be displayed in [+link+]
+
+	Options:
+	Any valid text or html
+	
+	Default:
+	"Read more..."
+*/
+$trunc_tpl = isset($tplTrunc)? template::fetch($tplTrunc) : false;
+ /*
+	Param: tplTrunc
+
+	Purpose:
+	Template to be used for [+link+]
+
+	Options:
+	- Any valid chunk name
+	- Code via @CODE:
+	- File via @FILE:
+	
+	Placeholders:
+	[+url+] - URL of the document
+	[+text+] - &truncText
+
+	Default:
+	&truncText
+*/
 $GLOBALS['ditto_summary_link'] = "";
-$GLOBALS['ditto_summary_params'] = compact("trunc","splitter","length","offset","text");
+$GLOBALS['ditto_summary_params'] = compact("trunc","splitter","length","offset","text","trunc_tpl");
 
 // ---------------------------------------------------
 // Truncate Functions
 // ---------------------------------------------------
 if (!function_exists("determineLink")) {
 	function determineLink($resource) {
-		return $GLOBALS['ditto_summary_link'];
+		global $ditto_summary_params,$ditto_summary_link;
+		if ($ditto_summary_link !== false) {
+			$parameters = array(
+			"[+url+]" => $ditto_summary_link,
+			"[+text+]" => $ditto_summary_params["text"],
+			);
+			$tplTrunc = $ditto_summary_params["trunc_tpl"];
+			if ($tplTrunc !== false) {
+				$source = $tplTrunc;
+			} else {
+				$source = '<a href="[+url+]" title="[+text+]">[+text+]</a>';
+			}
+			return str_replace(array_keys($parameters),array_values($parameters),$source);
+		} else {
+			return '';
+		}
 	}
 }
 if (!function_exists("determineSummary")) {
@@ -40,6 +128,7 @@ if (!function_exists("determineSummary")) {
 		$p = $ditto_summary_params;
 		$output = $trunc->execute($resource, $p['trunc'], $p['splitter'], $p['text'], $p['length'], $p['offset'], $p['splitter'], "", true);
 		$GLOBALS['ditto_summary_link'] = $trunc->link;
+		$GLOBALS['ditto_summary_type'] = $trunc->summaryType;
 		return $output;
 	}
 }
@@ -195,7 +284,8 @@ if (!class_exists("truncate")) {
 
 		function execute($resource, $trunc, $splitter, $linktext, $truncLen, $truncOffset, $truncsplit, $commentschunk, $truncChars) {
 			$summary = '';
-			$this->link = '';
+			$this->summaryType = "content";
+			$this->link = false;
 			$closeTags = true;
 			// summary is turned off
 			if ($trunc == false) {
@@ -214,27 +304,27 @@ if (!class_exists("truncate")) {
 					$summary = explode($splitter, $summary['0']);
 
 					$summary = $summary['0'];
-					$this->link = '<a href="[~' . $resource['id'] . '~]">' . $linktext . '</a>';
+					$this->link = '[~' . $resource['id'] . '~]';
 					$this->summaryType = "content";
 			
 					// fall back to the summary text
 				} else
 					if (strlen($resource['introtext']) > 0) {
 						$summary = $resource['introtext'];
-						$this->link = '<a href="[~' . $resource['id'] . '~]">' . $linktext . '</a>';
+						$this->link = '[~' . $resource['id'] . '~]';
 						$this->summaryType = "introtext";
 						$closeTags = false;
 						// fall back to the summary text count of characters
 					} else
 						if (strlen($resource['content']) > $truncLen) {
 							$summary = $this->html_substr($resource['content'], $truncLen, $truncOffset, $truncChars);
-							$this->link = '<a href="[~' . $resource['id'] . '~]">' . $linktext . '</a>';
+							$this->link = '[~' . $resource['id'] . '~]';
 							$this->summaryType = "content";
 							// and back to where we started if all else fails (short post)
 						} else {
 							$summary = $resource['content'];
 							$this->summaryType = "content";
-							$this->link = '   ';
+							$this->link = false;
 						}
 
 			// Post-processing to clean up summaries

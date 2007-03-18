@@ -1,5 +1,3 @@
-Title: Changelog
-
 [2007-1-06: REVISION 0000]
 
 [NEW] phx capability
@@ -175,3 +173,102 @@ Title: Changelog
 [FIXED] $row['contentid'] omitted in appendTVs
 [FIXED] TPL Debug Rendering
 [FIXED] Correct template is now applied to documents
+[FIXED] Reflect no date visible issue
+
+[2007-2-23: REVISION 0000]
+[FIXED] Documentation typos and additions
+[FIXED] [*ph*] style placeholders fixed
+[CHANGED] &total is back in business
+[FIXED] &showInMenuOnly
+[FIXED] &parents = 0
+
+[2007-2-24: REVISION 0000]
+[FIXED] Reflect template issue
+[NEW] &hiddenFields parameter to support things like nested placeholders and [*fields*]
+[FIXED] No documents found with prefetch
+[CHANGED] Build URL function to support passing of arrays
+
+[2007-2-28: REVISION 0000]
+[CHANGED] Build URL now trims ID before building the URL string
+[NEW] Debug View
+[CHANGED] English language file for new debug view
+[CHANGED] Reflect passes months by numbers not by name, should make multi-language compatible
+[CHANGED] Date filter is now its own custom filter as originally planned
+[NEW] Filters can now specify data sources they need (including multiple sources via a comma delimited list)
+[REMOVED] $debug reference in Reflect
+[NEW] Custom Filters can now add hidden Fields
+
+[2007-3-1: REVISION 0000]
+[CHANGED] Minor bug-fixes to debug system
+[CHANGED] Debug templates moved out of language file into new debug templates php file like formats
+[CHANGED] Language file now properly formatted
+
+[2007-3-3: REVISION 0000]
+[FIXED] Tags & RSS
+
+[2007-3-4: REVISION 0000]
+[CHANGED] noResults logic for compatibility with new debug code
+[REMOVED] Non essential ditto->header and ditto->footer variables for local versions
+[NEW] Format files documented
+[REMOVED] Temp file code removed in favor of faster header code
+[FIXED] &sortBy=`pub_date`
+[CHANGED] source,function is now the order for both placeholders and filters
+
+[2007-3-5: REVISION 0000]
+[FIXED] Custom filters being used without a normal filter not functioning
+[FIXED] Wordwrap in debug class
+[FIXED] Titles for Format Files (those were documented in the last commit not language files)
+[CHANGED] Parameter order for parse filters is now logical
+[NEW] tplTrunk which allows the [+link+] parameter to be templated using [+url+] and [+text+] placeholders
+[FIXED] Wordwrap in debug class (again...)
+[NEW] Configs, formats, and extenders can load extenders via adding to the $extenders array
+[CHANGED] Pagination logic to handle &total=0 or &summarize=0
+[CHANGED] RSS now uses [+summary+] placeholder again
+[CHANGED] Debug window now resizeable
+[CHANGED] Version number from RC2 to RC3
+[NEW] install.txt file which doubles as a splash page for the documentation
+
+[2007-3-6: REVISION 0000]
+[FIXED] wordwrap non-string warning
+[FIXED] filter variable overwrite resulting in all filters failing
+[FIXED] wordwrap non-string warning (take 2)
+[FIXED] implode error in debug
+[FIXED] SQL error when start > total
+[CHANGED] Debug output in MODx info to not var_export objects and resource arrays
+[CHANGED] Moved cFilters and extenders initiation arrays to the beginning
+[CHANGED] Documentation to show the only configs and formats can load extenders, not extenders themselves
+[NEW] PHx version 2.1.2
+[FIXED] QE Issues with incorrect ID and custom placeholders
+[FIXED] ksort error
+[REMOVED] Non-neccessary header
+[FIXED] Blank author placeholder with QE
+
+[2007-3-7: REVISION 0000]
+[FIXED] Reflect "@CODE:" prefix moved to correct line
+
+[2007-3-8: REVISION 0000]
+[CHANGED] Links in install.txt to their correct values
+[FIXED] Pre-parsed filters
+[NEW] Example extender for use when creating new extenders
+[NEW] Template and debug classes now documented
+[FIXED] "retrieved" fields array() error
+[REMOVED] notes.txt file in preparation for release
+[FIXED] debug parameters output
+[CHANGED] Version number from RC3 to 2.0.0
+
+[2007-3-9: REVISION 0000]
+[FIXED] Duplicate tuncAt -> truncText in documentation
+[FIXED] include_once for extenders is now include
+
+[2007-3-12: REVISION 0000]
+[NEW] Now uses MODxDebugConsole class as a base for the debug class
+[CHANGED] minor indenting of the debug templates and new tab template
+[FIXED] &start
+[FIXED] missing urlencode on values of makeURL arguments
+[CHANGED] install.txt to include new stable download link
+[FIXED] &randomize
+[NEW] Compatibility config to allow backwards compatibility with Ditto 1.0.2 calls
+
+[2007-3-13: REVISION 0000]
+[NEW] &randomize now uses mySQL's RAND() function for faster parsing and LIMIT support
+[CHANGED] compatibility extender to include emptyText support

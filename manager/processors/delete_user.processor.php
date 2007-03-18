@@ -42,7 +42,15 @@ $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the user's access permissions...";
 	exit;
-} 
+}
+
+// delete user settings
+$sql = "DELETE FROM $dbase.`".$table_prefix."user_settings` WHERE $dbase.`".$table_prefix."user_settings`.user=".$id.";";
+$rs = mysql_query($sql);
+if(!$rs) {
+	echo "Something went wrong while trying to delete the user's settings...";
+	exit;
+}
 
 // delete the attributes
 $sql = "DELETE FROM $dbase.`".$table_prefix."user_attributes` WHERE $dbase.`".$table_prefix."user_attributes`.internalKey=".$id.";";

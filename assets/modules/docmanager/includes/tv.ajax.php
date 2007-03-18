@@ -18,7 +18,7 @@
  
  if(isset($_POST['tplID']) && is_numeric($_POST['tplID'])) {
  	//-- grab the template variables
- 	$sql = "SELECT * FROM `modx_site_tmplvars` tv LEFT JOIN modx_site_tmplvar_templates ON tv.id = modx_site_tmplvar_templates.tmplvarid WHERE modx_site_tmplvar_templates.templateid ='". $_POST['tplID']."'";
+ 	$sql = "SELECT * FROM ".$modx->getFullTableName('site_tmplvars')." tv LEFT JOIN ".$modx->getFullTableName('site_tmplvar_templates')." ON tv.id = ".$modx->getFullTableName('site_tmplvar_templates').".tmplvarid WHERE ".$modx->getFullTableName('site_tmplvar_templates').".templateid ='". $_POST['tplID']."'";
  	$rs = $modx->db->query($sql);
  	$limit = $modx->db->getRecordCount($rs);
  	

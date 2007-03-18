@@ -1,17 +1,57 @@
 <?php
 
-// ---------------------------------------------------
-// JSON Parameters
-// ---------------------------------------------------
-
-$startID= (isset($_REQUEST['startID'])? $_REQUEST['startID']: $startID);
+/*
+ * Title: JSON
+ * Purpose:
+ *  	Collection of parameters, functions, and classes that expand
+ *  	Ditto's output capabilities to include JSON
+*/
 
 // set json placeholders
 $json_placeholders['[+json_lang+]'] = (isset($abbrLanguage))? $abbrLanguage : $_lang['abbr_lang'];
-$json_placeholders['[+json_copyright+]'] = isset($copyright) ? $copyright:'[(site_name)] 2006';
+/*
+	Param: abbrLanguage
+
+	Purpose:
+	Language for the JSON document
+
+	Options:
+	Any valid 2 character language abbreviation
+
+	Default:
+	[LANG]
+
+	Related:
+	- <language>
+*/
+$json_placeholders['[+json_copyright+]'] = isset($copyright) ? $copyright: $_lang['default_copyright'];
+/*
+	Param: copyright
+
+	Purpose:
+	Copyright message to embed in the JSON document
+
+	Options:
+	Any text
+
+	Default:
+	[LANG]
+*/
 $json_placeholders['[+json_link+]'] = $modx->config['site_url']."[~".$modx->documentObject['id']."~]";
 $json_placeholders['[+json_ttl+]'] = isset($ttl) ? intval($ttl):120;
-$json_placeholders['[+json_op+]'] = (!empty($_REQUEST['jsonp']) ? $_REQUEST['jsonp'] : '');
+/*
+	Param: ttl
+
+	Purpose:
+	Time to live for the JSON feed
+
+	Options:
+	Any integer greater than 1
+
+	Default:
+	120
+*/
+$json_placeholders['[+json_op+]'] = (!empty($_REQUEST[$dittoID.'jsonp']) ? $_REQUEST[$dittoID.'jsonp'] : '');
 
 // set tpl JSON placeholders
 $placeholders['*'] = "json_parameters";

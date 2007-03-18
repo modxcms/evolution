@@ -81,13 +81,13 @@ TINYMCE_HTML;
 
 // getTinyMCEScript function
 if (!function_exists('getTinyMCEScript')) {
-	function getTinyMCEScript($elmList, $theme='simple', $width, $height, $language='en', $frontend, $base_url, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $disabledButtons, $blockFormats, $entity_encoding, $entities, $compressor, $pathoptions, $cleanup, $resizing,  $css_path, $css_selectors, $use_browser, $toolbar_align, $advimage_styles, $advlink_styles) {
+	function getTinyMCEScript($elmList, $theme='simple', $width, $height, $language='en', $frontend, $base_url, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $disabledButtons, $blockFormats, $entity_encoding, $entities, $pathoptions, $cleanup, $resizing, $css_path, $css_selectors, $use_browser, $toolbar_align, $advimage_styles, $advlink_styles) {
 		// Set theme
 		if($theme == "editor" || $theme == "custom"){
 			$tinyTheme = "advanced";
-			if($theme == "editor" || ($theme == "custom" && (empty($plugins) || empty($buttons1)))){
+			if(($theme == "editor" || $theme == "full") || ($theme == "custom" && (empty($plugins) || empty($buttons1)))){
 				$blockFormats = "p,h1,h2,h3,h4,h5,h6,div,blockquote,code,pre,address";
-				$plugins = "text;style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,noneditable,nonbreaking,xhtmlxtras,visualchars,media";
+				$plugins = "style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,noneditable,nonbreaking,xhtmlxtras,visualchars,media";
 				$buttons1 = "undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help";
 				$buttons2 = "bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops";
 				$buttons3 = ""; 
@@ -185,10 +185,9 @@ TINY_CALLBACK;
 		}
 		
 		$tinymceInit .= "		  button_tile_map : false \n";
-		$scriptfile = (($frontend=='false' && $compressor == 'enabled') ? 'tiny_mce_gzip.php' : 'tiny_mce.js');
 
 $script = <<<TINY_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/{$scriptfile}"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce/xconfig.js"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
@@ -198,6 +197,7 @@ $script = <<<TINY_SCRIPT
 	function tvOnTinyMCEChangeCallBack(i){
 		  i.oldTargetElement.onchange();            
 	}
+	
 </script>
 TINY_SCRIPT;
 

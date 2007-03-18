@@ -2,9 +2,9 @@
 /*####
 #
 #	Name: PHx (Placeholders Xtended)
-#	Version: 2.1.1
+#	Version: 2.1.2
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Nov 29, 2006 1:17 CET
+#	Date: Feb 13, 2007 8:52 CET
 #
 ####*/
 
@@ -14,7 +14,7 @@ class PHxParser {
 	function PHxParser($debug=0,$maxpass=50) {
 		global $modx;
 		$this->name = "PHx";
-		$this->version = "2.1.1";
+		$this->version = "2.1.2";
 		$this->user["mgrid"] = intval($_SESSION['mgrInternalKey']);
 		$this->user["usrid"] = intval($_SESSION['webInternalKey']);
 		$this->user["id"] = ($this->user["usrid"] > 0 ) ? (-$this->user["usrid"]) : $this->user["mgrid"];
@@ -240,21 +240,18 @@ class PHxParser {
 					case "lcase": $output = strtolower($output); break;
 					case "ucase": $output = strtoupper($output); break;
 					case "ucfirst": $output = ucfirst($output); break;
-					case "htmlent": $output = htmlentities($output,ENT_QUOTES,$modx->config['modx_charset']); break;
+					case "htmlent": $output = htmlentities($output,ENT_QUOTES,$modx->config['etomite_charset']); break;
 					case "esc":
 						$output = preg_replace("/&amp;(#[0-9]+|[a-z]+);/i", "&$1;", htmlspecialchars($output));
-  					$output = str_replace(array("[","]","`"),array("&#91;","&#93;","&#96;"),$output);
+  						$output = str_replace(array("[","]","`"),array("&#91;","&#93;","&#96;"),$output);
 						break;
 					case "strip": $output = preg_replace("~([\n\r\t\s]+)~"," ",$output); break;
 					case "notags": $output = strip_tags($output); break;
 					case "length": case "len": $output = strlen($output); break;
 					case "reverse": $output = strrev($output); break;
 					case "wordwrap": // default: 70
-					  $wrapat = intval($modifier_value[$i]);
-						if ($wrapat) { $output = wordwrap($output,$wrapat," ",1); }
-						else { 
-						$output = wordwrap($output,70," ",1);
-						}
+					  	$wrapat = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 70;
+						$output = preg_replace("~(\b\w+\b)~e","wordwrap('\\1',\$wrapat,' ',1)",$output);
 						break;
 					case "limit": // default: 100
 					  $limit = intval($modifier_value[$i]) ? intval($modifier_value[$i]) : 100;
@@ -268,7 +265,7 @@ class PHxParser {
 						$output = eval("return ".$filter.";");
 						break;					
 					case "ifempty": if (empty($output)) $output = $modifier_value[$i]; break;
-				  case "nl2br": $output = nl2br($output); break;
+				  	case "nl2br": $output = nl2br($output); break;
 					case "date": $output = strftime($modifier_value[$i],0+$output); break;
 					case "set":
 						$c = $i+1;

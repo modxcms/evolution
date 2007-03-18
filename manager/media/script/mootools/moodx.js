@@ -345,8 +345,9 @@ var MooMarquee = new Class({
 			width: '',
 			height: '',
 			speed: 3, 
+			modifier: 90, 
 			mousepause: 'Yes', 
-			direction: 'Horizontal'
+			direction: 'Vertical'
 		};
 		Object.extend(this.options, options || {});
 	},
@@ -355,7 +356,7 @@ var MooMarquee = new Class({
 		this.setOptions(options);
 		this.scrollingContainer = id;
 		this.scrollingContent = this.scrollingContainer.getFirst();
-		this.direction = (this.options.direction == 'Horizontal' ? 'top' : 'left')
+		this.direction = (this.options.direction == 'Vertical' ? 'top' : 'left')
 
 		this.scrollingContainer.setStyle('width',this.options.width);
 		this.scrollingContainer.setStyle('height',this.options.height);
@@ -374,11 +375,10 @@ var MooMarquee = new Class({
 		}
 		
 		this.objRef = this.scrollingContent;
-		this.contentSize = (this.direction == 'top' ? this.scrollingContent.offsetHeight : this.scrollingContent.offsetWidth);
+		this.contentSize = (this.direction == 'top' ?  this.scrollingContent.offsetHeight : this.scrollingContent.offsetWidth);
 		this.containerSize = (this.direction == 'top' ? this.scrollingContainer.clientHeight : this.scrollingContainer.clientWidth);
 		this.slideSpeed = this.options.speed;
 		this.origSlideSpeed = this.slideSpeed;
-		this.slideTimeBetweenSteps = 30;
 				
 		this.slideContent();
 	},
@@ -391,7 +391,7 @@ var MooMarquee = new Class({
 			topPos = this.containerSize;
 		}
 		this.scrollingContent.setStyle(this.direction, topPos + 'px');
-		setTimeout(this.slideContent.bind(this),this.slideTimeBetweenSteps);	
+		setTimeout(this.slideContent.bind(this),this.options.modifier);	
 	},
 	
 	stopSliding: function(){

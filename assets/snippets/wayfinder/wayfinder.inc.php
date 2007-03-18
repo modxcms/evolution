@@ -3,11 +3,11 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0 RC1
+ Version: 2.0
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
- Date: February 21, 2006
+ Date: February 27, 2006
 ::::::::::::::::::::::::::::::::::::::::
 */
 
@@ -62,7 +62,7 @@ class Wayfinder {
 			//Loop through each document group (grouped by parent doc)
 			foreach ($subDocs as $parentId => $docs) {
 				//only process document group, if starting at root, hidesubmenus is off, or is in current parenttree
-				if ($parentId == 0 || !$this->_config['hideSubMenus'] || $this->isHere($parentId)) {
+				if (!$this->_config['hideSubMenus'] || $this->isHere($parentId) || $level <= 1) {
 					//Build the output for the group of documents
 					$menuPart = $this->buildSubMenu($docs,$level);
 					//If we are at the top of the menu start the output, otherwise replace the wrapper with the submenu
@@ -368,16 +368,17 @@ class Wayfinder {
 				$tempDocInfo = $modx->fetchRow($result);
 				$resultIds[] = $tempDocInfo['id'];
 				//Create the link
+				$linkScheme = $this->_config['fullLink'] ? 'full' : '';
 				if ($this->_config['useWeblinkUrl'] !== 'FALSE' && $tempDocInfo['type'] == 'reference') {
 					if (is_numeric($tempDocInfo['content'])) {
-						$tempDocInfo['link'] = $modx->makeUrl(intval($tempDocInfo['content']));
+						$tempDocInfo['link'] = $modx->makeUrl(intval($tempDocInfo['content']),'','',$linkScheme);
 					} else {
 						$tempDocInfo['link'] = $tempDocInfo['content'];
 					}
 				} elseif ($tempDocInfo['id'] == $modx->config['site_start']) {
 					$tempDocInfo['link'] = $modx->config['site_url'];
 				} else {
-					$tempDocInfo['link'] = $modx->makeUrl($tempDocInfo['id']);
+					$tempDocInfo['link'] = $modx->makeUrl($tempDocInfo['id'],'','',$linkScheme);
 				}
 				//determine the level, if parent has changed
 				if ($prevParent !== $tempDocInfo['parent']) {

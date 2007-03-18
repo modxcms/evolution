@@ -3,7 +3,7 @@
 #:::::::::::::::::::::::::::::::::::::::::
 
 	$moduleName = "MODx";
-	$moduleVersion = " 0.9.6-RC1";
+	$moduleVersion = " 0.9.6-RC2";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
@@ -18,7 +18,7 @@
 	$ms = &$moduleSnippets;
 	$ms[] = array("AjaxSearch","<strong>1.5</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
 	$ms[] = array("Breadcrumbs","<strong>0.9d</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
-	$ms[] = array("Ditto","<strong>2.0 RC2</strong> Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more.",0,"$setupPath/snippet.ditto.tpl","");
+	$ms[] = array("Ditto","<strong>2.0 (r1374)</strong> Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more. ",0,"$setupPath/snippet.ditto.tpl","");
 	$ms[] = array("eForm","<strong>1.4.2</strong> Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
 	$ms[] = array("FirstChildRedirect","<strong>1.0</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
 	$ms[] = array("Jot","<strong>1.1.1</strong> User comments with moderation and email subscription.",0,"$setupPath/snippet.jot.tpl","");
@@ -26,7 +26,7 @@
 	$ms[] = array("MemberCheck","<strong>1.0</strong> Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
 	$ms[] = array("NewsPublisher","<strong>1.4</strong> Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
 	$ms[] = array("Personalize","<strong>2.0</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
-	$ms[] = array("Reflect","<strong>1.0 RC2</strong> Used with Ditto, creates archives of articles, blog entries, image galleries and more.",0,"$setupPath/snippet.reflect.tpl","");
+	$ms[] = array("Reflect","<strong>1.0</strong> Used with Ditto, creates archives of articles, blog entries, image galleries and more.",0,"$setupPath/snippet.reflect.tpl","");
 	$ms[] = array("UltimateParent","<strong>2.0 beta</strong> - Travels up the document tree from a specified document and returns the \"ultimate\" parent.",0,"$setupPath/snippet.ultparent.tpl","");
 	$ms[] = array("Wayfinder","<strong>2.0 RC1</strong> Completely template-driven menu builder that's simple and fast to configure.",0,"$setupPath/snippet.wayfinder.tpl","");
 	$ms[] = array("WebChangePwd","<strong>1.0</strong> Web User Change Password Snippet.",0,"$setupPath/snippet.webchangepwd.tpl","&tpl=Template;string;");
@@ -39,7 +39,7 @@
 	$mp[] = array("Forgot Manager Login","Resets your manager login when you forget your password. ",0,"$setupPath/plugin.ForgotManagerPassword.tpl","","OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender");
 	$mp[] = array("Inherit Parent Template","New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
 	$mp[] = array("QuickEdit","Front-end Content Editor.",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
-	$mp[] = array("TinyMCE","<strong>2.1.0:</strong> TinyMCE RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&tinyFormats=Block Formats;text;p,h1,h2,h3,h4,h5,h6,div,blockquote,code,pre,address &entity_encoding=Entity Encoding;list;named,numeric,raw;named &entities=Entities;text; &tinyCompressor=Compressor;list;enabled,disabled;enabled &tinyPathOptions=Path Options;list;rootrelative,docrelative,fullpathurl;docrelative &tinyCleanup=Cleanup;list;enabled,disabled;enabled &tinyResizing=Advanced Resizing;list;true,false;false &advimage_styles=Advanced Image Styles;text; &advlink_styles=Advanced Link Styles;text; &disabledButtons=Disabled Buttons;text; &webtheme=Web Theme;list;simple,advanced,editor,custom;simple &webPlugins=Web Plugins;text;style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,noneditable,nonbreaking,xhtmlxtras,visualchars,media &webButtons1=Web Buttons 1;text;undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help &webButtons2=Web Buttons 2;text;bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops &webButtons3=Web Buttons 3;text; &webButtons4=Web Buttons 4;text; &webAlign=Web Toolbar Alignment;list;ltr,rtl;ltr","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
+	$mp[] = array("TinyMCE","<strong>2.1.0:</strong> TinyMCE RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&tinyFormats=Block Formats;text;p,h1,h2,h3,h4,h5,h6,div,blockquote,code,pre,address &entity_encoding=Entity Encoding;list;named,numeric,raw;named &entities=Entities;text; &tinyPathOptions=Path Options;list;rootrelative,docrelative,fullpathurl;docrelative &tinyCleanup=Cleanup;list;enabled,disabled;enabled &tinyResizing=Advanced Resizing;list;true,false;false &advimage_styles=Advanced Image Styles;text; &advlink_styles=Advanced Link Styles;text; &disabledButtons=Disabled Buttons;text; &webtheme=Web Theme;list;simple,advanced,editor,custom;simple &webPlugins=Web Plugins;text;style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,noneditable,nonbreaking,xhtmlxtras,visualchars,media &webButtons1=Web Buttons 1;text;undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help &webButtons2=Web Buttons 2;text;bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops &webButtons3=Web Buttons 3;text; &webButtons4=Web Buttons 4;text; &webAlign=Web Toolbar Alignment;list;ltr,rtl;ltr","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
 	$mp[] = array("Search Highlighting","Show search terms highlighted on page linked from search results. (Requires AjaxSearch snippet)",0,"$setupPath/plugin.searchhighlight.tpl","","OnWebPagePrerender");
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams

@@ -1,17 +1,44 @@
 <?php
 
-// ------------------------------------------------------------------------------//
-// All variables must be prefixed with ditto_ for the snippet to recognize them! //
-// ------------------------------------------------------------------------------//
+/*
+ * Title: Request
+ * Purpose:
+ *  	Adds support for changing Ditto parameters via URL
+ * 
+ * Note:
+ * 		- All variables must be prefixed with ditto_ for the snippet to recognize them!
+ * 		- If a Ditto id is set use the sntax 
+*/
+
 
 $variables = array();
-$ok = array();
-$offLimits = array("seeThroughtUnpub","showInMenuOnly","showPublishedOnly","debug","start","config","extenders","dittoID");
-	// Can't set &seeThroughtUnpub, &showInMenuOnly, &showPublishedOnly, &start by Url.
-$safeIDs = isset($safeIDs) ? explode(",",$safeIDs) : array();
-	// IDs that are ok to use
 $stripTags = isset($stripTags) ? $stripTags : 1;
-$bad = isset($bad) ? array_merge($offLimits,explode(",",$bad)) : $offLimits;
+/*
+	Param: stripTags
+	
+	Purpose:
+	Remove HTML tags from the parameters provided
+
+	Options:
+	0 - off
+	1 - on
+	
+	Default:
+	1 - on
+*/
+$bad = isset($bad) ? explode(",",$bad) : array("seeThroughtUnpub","showInMenuOnly","showPublishedOnly","debug","start","config","extenders","dittoID");
+/*
+	Param: bad
+	
+	Purpose:
+	Parameters that are not allowed to be set
+	
+	Options:
+	Any valid Ditto options separated by commas
+	
+	Default:
+	"seeThroughtUnpub,showInMenuOnly,showPublishedOnly,debug,start,config,extenders,dittoID"
+*/
 foreach ($_REQUEST as $name=>$value) {
 	$saneName = str_replace($dittoID, "", substr($name, 6));
 	$dID = ($dittoID == "") ? true : strpos($name, $dittoID);
@@ -20,7 +47,19 @@ foreach ($_REQUEST as $name=>$value) {
 		$variables[$saneName] = trim($value);
 	}
 }
-
+/*
+	Param: dbg
+	
+	Purpose:
+	Output variables being set
+	
+	Options:
+	0 - off
+	1 - on
+	
+	Default:
+	0 - off
+*/
 if ($_REQUEST[$dittoID."dbg"]==1) {print_r($variables);}
 extract($variables);
 

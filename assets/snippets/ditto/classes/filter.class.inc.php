@@ -1,9 +1,17 @@
 <?php
 
+/*
+ * Title: Filter Class
+ * Purpose:
+ *  	The Filter class contains all functions relating to filtering,
+ * 		the removing of documents from the result set
+*/
+
 class filter {
 	var $array_key, $filtertype, $filterValue, $filterArgs;
 
 // ---------------------------------------------------
+// Function: execute
 // Filter documents via either a custom filter or basic filter
 // ---------------------------------------------------
 	function execute($resource, $filter) {
@@ -23,9 +31,10 @@ class filter {
 		return $resource;
 	}
 	
-	// ---------------------------------------------------
-	// Filter supporting code
-	// ---------------------------------------------------
+// ---------------------------------------------------
+// Function: basicFilter
+// Do basic comparison filtering
+// ---------------------------------------------------
 	
 	function basicFilter ($value) {
 			$unset = 1;
@@ -70,17 +79,7 @@ class filter {
 					if (strpos($value[$this->array_key], $this->filterValue)!==FALSE)
 						$unset = 0;
 					break;					
-
-				// Date Filtering
-				case "date" :
-					$start = (strlen($this->filterValue) <= 4) ? mktime(0,0,0,1,1,$this->filterValue) : strtotime($this->filterValue);
-						$date = getdate($start);
-					$min = (strlen($this->filterValue) <= 4) ? $start : mktime(0,0,0,$date['mon'],1,$date['year']);
-					$max = (strlen($this->filterValue) <= 4) ? mktime(0,0,0,1,1,($this->filterValue)+1): mktime(0,0,0,($date['mon']+1),0,$date['year']);
-					if ($value[$this->array_key] <= $min || $value[$this->array_key] >= $max)
-						$unset = 0;
-					break;
-			}
+		}
 			return $unset;
 	}
 	

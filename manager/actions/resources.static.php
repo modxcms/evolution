@@ -10,7 +10,8 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     $output = '<ul>';
 	
 	$pluginsql = $resourceTable == 'site_plugins' ? $tablePre.$resourceTable.'`.disabled, ' : '';
-    $sql = 'SELECT '.$pluginsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
+	$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
+    $sql = 'SELECT '.$pluginsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY '.$orderby;
 
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -27,10 +28,10 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
             $insideUl = 1;
         }
 
-		if ($resourceTable == 'site_plugins') $class.= $row['disabled'] == 1 ? ' class="disabledPlugin"' : '';
-		$output .= '<li><span'.$class.' style="width: 200px"><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].'</a>'.($modx->config['manager_direction']=='rtl' ? '&rlm;' : '').'</span>';
-        $output .= $row['description']!='' ? ' - '.$row['description'] : '' ;
-        $output .= $row['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ;
+		if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
+		$output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].'</a>'.($modx->config['manager_direction']=='rtl' ? '&rlm;' : '').'</span>';
+        $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
+        $output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
         $output .= '</li>';
 
         $preCat = $row['category'];
@@ -210,9 +211,9 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
                     }
                     $insideUl = 1;
                 }
-                $class = array_key_exists('disabled',$v) && $v['disabled'] == 1 ? ' class="disabledPlugin"' : '';
+                $class = array_key_exists('disabled',$v) && $v['disabled'] ? ' class="disabledPlugin"' : '';
 		?>
-			<li><span<?php echo $class;?> style="width: 200px"><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo $v['description']!='' ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked']==1 ? ' <i><small>('.$_lang['locked'].')</small></i>' : "" ; ?></li>
+			<li><span<?php echo $class;?>><a href="index.php?id=<?php echo $v['id']. '&amp;a='.$v['action'];?>"><?php echo $v['name']; ?></a></span><?php echo ' (' . $v['type'] . ')'; echo !empty($v['description']) ? ' - '.$v['description'] : '' ; ?><?php echo $v['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ; ?></li>
 		<?php
     		$preCat = $v['category'];
             }

@@ -1,177 +1,163 @@
 <?php
 
-class debug{
-	function debug() {
-		global $modx,$ditto_lang;
-		$modx->regClientCSS($ditto_lang["debug_styles"]);
-	}
+/*
+ * Title: Debug Class
+ * Purpose:
+ *  	The Debug class contains all functions relating to Ditto's 
+ * 		implimentation of the MODx debug console
+*/
+
+class debug extends modxDebugConsole {
+	var $debug;
 	
-	function modxPrep($value) {
-		$value = (strpos($value,"<") !== FALSE) ? htmlentities($value) : $value;
-		$value = str_replace("[","&#091;",$value);
-		$value = str_replace("]","&#093;",$value);
-		$value = str_replace("{","&#123;",$value);
-		$value = str_replace("}","&#125;",$value);
-		return $value;
-	}
-	
-	function header($ditto,$ditto_version, $IDs, $fields, $summarize, $recordCount, $sortBy, $sortDir, $start, $stop, $total,$filter) {
+	// ---------------------------------------------------
+	// Function: render_link
+	// Render the links to the debug console
+	// ---------------------------------------------------
+	function render_link($dittoID,$ditto_base) {
 		global $ditto_lang,$modx;
+		$base_url = str_replace($modx->config["base_path"],$modx->config["site_url"],$ditto_base);
+		return $this->makeLink($ditto_lang["debug"],$ditto_lang["open_dbg_console"], $ditto_lang["save_dbg_console"],$base_url.'debug/',"ditto_".$dittoID);
+	}
+	// ---------------------------------------------------
+	// Function: render_popup
+	// Render the contents of the debug console
+	// ---------------------------------------------------	
+	function render_popup($ditto,$ditto_base,$ditto_version, $ditto_params, $IDs, $fields, $summarize, $templates, $sortBy, $sortDir, $start, $stop, $total,$filter,$resource) {
+		global $ditto_lang,$modx;
+		$tabs = array();
+		$fields = (count($fields["db"]) > 0 && count($fields["tv"]) > 0) ? array_merge_recursive($ditto->fields,array("retrieved"=>$fields)) : $fields;
+		
+		$tabs[$ditto_lang["info"]] = $this->prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $sortBy, $sortDir, $start, $stop, $total);
+		$tabs[$ditto_lang["modx"]] = $this->prepareMODxInfo();
+		$tabs[$ditto_lang["params"]] = $this->makeParamTable($ditto_params,$ditto_lang["params"]);
+		$tabs[$ditto_lang["fields"]] = "<div class='ditto_dbg_fields'>".$this->array2table($this->cleanArray($fields), true, true)."</div>";		
+		$tabs[$ditto_lang["templates"]] =  $this->makeParamTable($this->prepareTemplates($templates),$ditto_lang["templates"]);
+			
+		if ($filter !== false) {
+			$tabs[$ditto_lang["filters"]] = $this->prepareFilters($filter);
+		}
 
-		sort($IDs);
-		$fields = array("retrieved"=>$fields);
-		$items['[+call+]'] =  $this->parameters2table($modx->event->params,$ditto_lang["params"]);
-		$items['[+version+]'] = $ditto_version;
-		$items['[+summarize+]'] = $summarize;
-		$items['[+recordCount+]'] = $recordCount;	 
-		$items['[+sortBy+]'] = ($ditto->advSort !== false) ? $ditto->advSort : $sortBy;	 
-		$items['[+sortDir+]'] = $sortDir;	 
-		$items['[+start+]'] = $start;	 
-		$items['[+stop+]'] = $stop;	 
-		$items['[+total+]'] = $total;	 
-		$items['[+prefetch+]'] = ($ditto->prefetch == true) ? $ditto_lang["yes"] : $ditto_lang["no"];	 
-		$items['[+ids+]'] = (count($IDs) > 0) ? wordwrap(implode(", ",$IDs),75, "<br />") : $ditto_lang['none'];	 
-		$items['[+filter+]'] = ($filter !== false) ? $this->array2table($this->cleanArray($filter), true, true) : $ditto_lang['none'];
-		$items['[+fields+]'] = $this->array2table($this->cleanArray(array_merge_recursive($ditto->fields,$fields)), true, true);
-
-		return str_replace(array_keys($items), array_values($items), $ditto_lang['debug_head']);
+		if ($ditto->prefetch == true) {
+			$tabs[$ditto_lang["prefetch_data"]] = $this->preparePrefetch($ditto->prefetch);				
+		}
+		if (count($resource) > 0) {
+			$tabs[$ditto_lang["retrieved_data"]] = $this->prepareDocumentInfo($resource);
+		}
+		$base_url = str_replace($modx->config["base_path"],$modx->config["site_url"],$ditto_base);
+		return $this->render($tabs,$ditto_lang['debug'],$base_url);
 	}
 	
-	function content($resource,$placeholders,$currentTPLname, $currentTPL) {
+	// ---------------------------------------------------
+	// Function: preparePrefetch
+	// Create the content of the Prefetch tab
+	// ---------------------------------------------------
+	function preparePrefetch($prefetch) {
 		global $ditto_lang;
-		switch ($currentTPLname) {
-			case "base":
-				$displayName = "tpl";
-			break;
-			
-			case "default":
-				$displayName = "tpl";
-			break;
-			
-			default:
-				$displayName = "tpl".$tplName;
-			break;
+		if (count($prefetch["dbg_IDs_pre"]) > 0 && count($prefetch["dbg_IDs_post"]) > 0) {
+			$ditto_IDs = array($ditto_lang["ditto_IDs_all"]." (".count($prefetch["dbg_IDs_pre"]).")"=>implode(", ",$prefetch["dbg_IDs_pre"]),$ditto_lang["ditto_IDs_selected"]." (".count($prefetch["dbg_IDs_post"]).")"=>implode(", ",$prefetch["dbg_IDs_post"]));
+			$out = $this->array2table(array($ditto_lang["prefetch_data"]=>$ditto_IDs),true,true);
+		} else {
+			$out = $ditto_lang["no_documents"];
 		}
-		$placeholders["$displayName"] = $currentTPL;
-		$header = str_replace(array('[+pagetitle+]','[+id+]'),array($resource['pagetitle'],$resource['id']),$ditto_lang['debug_item']);
-		$output = $this->parameters2table($placeholders,$header)."<br />";
+		return $out.$this->prepareDocumentInfo($prefetch["dbg_resource"]);
+	}
 
+	// ---------------------------------------------------
+	// Function: prepareFilters
+	// Create the content of the Filters tab
+	// ---------------------------------------------------
+	function prepareFilters($filter) {
+ 		$output = "";
+		foreach ($filter as $name=>$value) {
+			if ($name == "custom") {
+				foreach ($value as $name=>$value) {
+					$output .= $this->array2table(array($name=>$value), true, true);
+				}
+			} else {
+				$output .= $this->array2table(array($name=>$value), true, true);
+			}
+		}
+		return $output;
+	}
+
+	// ---------------------------------------------------
+	// Function: prepareMODxInfo
+	// Create the content of the MODx tab
+	// ---------------------------------------------------
+	function prepareMODxInfo() {
+		global $modx,$ditto_lang;
+		$output = "";
+		$ph = array();
+		foreach ($modx->placeholders as $key=>$value) {
+			if (strpos($key,"resource") === FALSE && strpos($key,"object") === FALSE) {
+				$ph[$key] = $value;
+			}
+		}
+		$output .= $this->makeParamTable($ph,$ditto_lang['placeholders']);
+		$output .= $this->makeParamTable($modx->documentObject,$ditto_lang['document_info']);
 		return $output;
 	}
 	
-	//---Helper Functions------------------------------------------------ //
-
-	function cleanArray($array) {
-	   foreach ($array as $index => $value) {
-	       if(is_array($array[$index])) $array[$index] = $this->cleanArray($array[$index]);
-	       if (empty($value)) unset($array[$index]);
-	   }
-	   return $array;
-	}
-	
-	function parameters2table($parameters,$header,$sort=true) {
-		if ($sort === true) {
-					ksort($parameters);
+	// ---------------------------------------------------
+	// Function: prepareDocumentInfo
+	// Create the output for the Document Info tab
+	// ---------------------------------------------------	
+	function prepareDocumentInfo($resource) {
+		global $ditto_lang;
+		$output = "";
+		if (count($resource) > 0) {
+			foreach ($resource as $item) {
+				$header = str_replace(array('[+pagetitle+]','[+id+]'),array($item['pagetitle'],$item['id']),$this->templates["item"]);
+				$output .=  $this->makeParamTable($item,$header,true,true,true,"resource");
+			}
 		}
-				$output = '<table>
-				  <tbody>
-				    <tr>
-				      <th>'.$header.'</th>
-				    </tr>
-				    <tr>
-				      <td>
-				      <table>
-				        <tbody>
-		';
-		foreach ($parameters as $key=>$value) {
-			$output .= '
-					    <tr>
-					      <th>'.$key.'</th>
-					      <td>'.$this->modxPrep($value).'</td>
-					    </tr>
-			';
+		return $output;
+	}
+
+	// ---------------------------------------------------
+	// Function: prepareBasicInfo
+	// Create the outut for the Info ta
+	// ---------------------------------------------------
+		function prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $sortBy, $sortDir, $start, $stop, $total) {
+		global $ditto_lang,$dittoID,$modx;
+			$items[$ditto_lang['version']] = $ditto_version;
+			$items[$ditto_lang['summarize']] = $summarize;
+			$items[$ditto_lang['total']] = $total;	 
+			$items[$ditto_lang['sortBy']] = ($ditto->advSort !== false) ? $ditto->advSort : $sortBy;	 
+			$items[$ditto_lang['sortDir']] = $sortDir;	 
+			$items[$ditto_lang['start']] = $start;	 
+			$items[$ditto_lang['stop']] = $stop;	 	 
+			$items[$ditto_lang['ditto_IDs']] = (count($IDs) > 0) ? wordwrap(implode(", ",$IDs),100, "<br />") : $ditto_lang['none'];
+			return $this->makeParamTable($items,$ditto_lang["basic_info"],false,false);
+	}
+
+	// ---------------------------------------------------
+	// Function: prepareTemplates
+	// Create the output for the Templates tab
+	// ---------------------------------------------------	
+	function prepareTemplates($templates) {
+		global $ditto_lang;
+		$displayTPLs = array();
+		foreach ($templates as $name=>$value) {
+			switch ($name) {
+				case "base":
+					$displayName = "tpl";
+				break;
+
+				case "default":
+					$displayName = "tpl";
+				break;
+
+				default:
+					$displayName = "tpl".strtoupper($name{0}).substr($name,1);
+				break;
+			}
+			$displayTPLs[$displayName] = $value;
 		}
-		$output .=
-		'
-				        </tbody>
-				      </table>
-				      </td>
-				    </tr>
-				  </tbody>
-				</table>
-				';
-
-	return $output;
+		return $displayTPLs;
 	}
-	
-	/**
-	 * Translate a result array into a HTML table
-	 *
-	 * @author      Aidan Lister <aidan@php.net>
-	 * @version     1.3.1
-	 * @link        http://aidanlister.com/repos/v/function.array2table.php
-	 * @param       array  $array      The result (numericaly keyed, associative inner) array.
-	 * @param       bool   $recursive  Recursively generate tables for multi-dimensional arrays
-	 * @param       bool   $return     return or echo the data
-	 * @param       string $null       String to output for blank cells
-	 */
-	function array2table($array, $recursive = false, $return = false, $null = '&nbsp;')
-	{
-	    // Sanity check
-	    if (empty($array) || !is_array($array)) {
-	        return false;
-	    }
 
-	    if (!isset($array[0]) || !is_array($array[0])) {
-	        $array = array($array);
-	    }
-
-	    // Start the table
-	    $table = "<table>\n";
-		$head = array_keys($array[0]);
-	if (!is_numeric($head[0])) {
-	    // The header
-	    $table .= "\t<tr>";
-	    // Take the keys from the first row as the headings
-	    foreach (array_keys($array[0]) as $heading) {
-	        $table .= '<th>' . $heading . '</th>';
-	    }
-	    $table .= "</tr>\n";
-	}
-	    // The body
-	    foreach ($array as $row) {
-	        $table .= "\t<tr>" ;
-	        foreach ($row as $cell) {
-	            $table .= '<td>';
-
-	            // Cast objects
-	            if (is_object($cell)) { $cell = (array) $cell; }
-
-	            if ($recursive === true && is_array($cell) && !empty($cell)) {
-	                // Recursive mode
-	                $table .= "\n" . $this->array2table($cell, true, true) . "\n";
-	            } else {
-	                $table .= (strlen($cell) > 0) ?
-	                    htmlspecialchars((string) $cell) :
-	                    $null;
-	            }
-
-	            $table .= '</td>';
-	        }
-
-	        $table .= "</tr>\n";
-	    }
-
-	    // End the table
-	    $table .= '</table>';
-
-	    // Method of output
-	    if ($return === false) {
-	        echo $table;
-	    } else {
-	        return $table;
-	    }
-	}
 }
 
 ?>

@@ -227,7 +227,7 @@ EOD;
 			$head =<<<EOD
 
 <!-- Start QuickEdit headers -->
-<script type="text/javascript" src="{$qe_path}/javascript/mootools.js"></script>
+<script type="text/javascript" src="manager/media/script/mootools/mootools.js"></script>
 <script type="text/javascript" src="{$qe_path}/javascript/QuickEdit.js"></script>
 <link type="text/css" rel="stylesheet" href="{$qe_path}/styles/toolbar.css" />
 <script type="text/javascript">

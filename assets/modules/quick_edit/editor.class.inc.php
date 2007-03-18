@@ -154,7 +154,7 @@ $html = <<<EOD
 
 <link type="text/css" rel="stylesheet" href="../{$qe_path}/styles/editor.css" />
 
-<script type="text/javascript" src="../{$qe_path}/javascript/mootools.js"></script>
+<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
 <script type="text/javascript" src="media/script/datefunctions.js"></script>
 <script type="text/javascript" src="../{$qe_path}/javascript/QuickEditor.js"></script>
 

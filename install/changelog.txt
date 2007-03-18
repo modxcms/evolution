@@ -3,8 +3,15 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC2 (rev 2409 - Feb 24, 2007)
+MODx 0.9.6-RC2 (rev 2446 - March 18, 2007)
 ====================================
+* [FS#758] Use web_access_permissions instead of access_permissions when checking if a user can set the Access Permissions when editing/creating a document (2440)
+* [FS#763] Fix broken image path (2439)
+* [FS#792] Default the unauthorized page and error page config settings to site_start if an invalid/blank value is specified in the config settings (2438)
+* [FS#797] Delete user settings when manager user is deleted (2437)
+* [FS#803] Fix hardcoded table prefix in the Doc Manager tv.ajax.php (2435)
+* [FS#813] Minor correction to add space between buttons on the 'View Children' tab (2434)
+* Ditto update through rev1374 (2433)
 * More Ditto 2 updates through rev1343 (2406)
 * Significantly improve the Document Overview information ... thanks heliotrope (2405)
 * Update to latest Ditto 2RC2 rev1341 (2380)

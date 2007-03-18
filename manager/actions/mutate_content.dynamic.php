@@ -1092,7 +1092,7 @@ if ($use_udperms == 1) {
 ?>
 
 <!-- Access Permissions -->
-<?php if($modx->hasPermission('access_permissions')) { ?>
+<?php if($modx->hasPermission('web_access_permissions')) { ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <script type="text/javascript">
     function makePublic(b){

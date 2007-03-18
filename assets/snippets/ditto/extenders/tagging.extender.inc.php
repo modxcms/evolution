@@ -103,7 +103,7 @@ if(!class_exists("tagging")) {
 	
 		function tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive) {
 			$this->delimiter = $delimiter;
-			$this->source = $source;
+			$this->source = $this->parseTagData($source);
 			$this->mode = $mode;
 			$this->landing = $landing;
 			$this->format = $format;
@@ -186,7 +186,6 @@ if(!class_exists("tagging")) {
 		}
 
 		function combineTags($tagData, $resource, $resourceTags = array(),$leaveAsArray=false) {
-			$tagData = $this->parseTagData($tagData);
 			$tags = array();
 			foreach ($tagData as $source) {
 				if(!empty($resource[$source])) {
@@ -223,8 +222,8 @@ if(!class_exists("tagging")) {
 					$url = ditto::buildURL("tags=$tag",$tagDocID);
 					$output .= "<a href=\"$url\" class=\"ditto_tag\" rel=\"tag\">$tag</a> ";
 				} else if ($format == "rss" || $format == "xml") {
-					$output .=  "<category>$tag</category>
-					";
+					$output .=  "
+					<category>$tag</category>";
 				}
 			}
 			return $output;
@@ -238,8 +237,8 @@ if(!class_exists("tagging")) {
 
 $tags = new tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive);
 
-if ($tags->givenTags != "") {
-	$cFilters["tagging"] = array($tags,"tagFilter"); 
+if (count($tags->givenTags) > 0) {
+	$cFilters["tagging"] = array($source,array($tags,"tagFilter")); 
 		// set tagging custom filter
 }
 

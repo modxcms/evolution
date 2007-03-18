@@ -2,11 +2,11 @@
 ::::::::::::::::::::::::::::::::::::::::
  Snippet name: Wayfinder
  Short Desc: builds site navigation
- Version: 2.0 RC1
+ Version: 2.0
  Authors: 
 	Kyle Jaebker (muddydogpaws.com)
 	Ryan Thrash (vertexworks.com)
- Date: February 21, 2006
+ Date: February 27, 2006
 ::::::::::::::::::::::::::::::::::::::::
 Description:
     Totally refactored from original DropMenu nav builder to make it easier to
@@ -46,7 +46,7 @@ $wf->_config = array(
 	'ignoreHidden' => isset($ignoreHidden) ? $ignoreHidden : FALSE,
 	'hideSubMenus' => isset($hideSubMenus) ? $hideSubMenus : FALSE,
 	'useWeblinkUrl' => isset($useWeblinkUrl) ? $useWeblinkUrl : TRUE,
-	'showSubDocCount' => isset($showSubDocCount) ? $showSubDocCount : FALSE,
+	'fullLink' => isset($fullLink) ? $fullLink : FALSE,
 	'nl' => isset($removeNewLines) ? '' : "\n",
 	'sortOrder' => isset($sortOrder) ? strtoupper($sortOrder) : 'ASC',
 	'sortBy' => isset($sortBy) ? $sortBy : 'menuindex',

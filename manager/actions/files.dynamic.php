@@ -425,6 +425,7 @@ function ls ($curpath) {
 
 	// dump array entries for directories
 	$folders = count($dirs_array);
+	sort($dirs_array); // sorting the array alphabetically (Thanks pxl8r!)
 	for($i=0; $i<$folders; $i++) {
 		$filesizes += $dirs_array[$i]['stats']['7'];
 		echo "<tr style='cursor:default;' onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";
@@ -439,6 +440,7 @@ function ls ($curpath) {
 
 	// dump array entries for files
 	$files = count($files_array);
+	sort($files_array); // sorting the array alphabetically (Thanks pxl8r!)
 	for($i=0; $i<$files; $i++) {
 		$filesizes += $files_array[$i]['stats']['7'];
 		echo "<tr onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";

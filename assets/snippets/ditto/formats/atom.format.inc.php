@@ -1,15 +1,44 @@
 <?php
 
-// ---------------------------------------------------
-// ATOM Parameters
-// ---------------------------------------------------
-
-$startID= (isset($_REQUEST['startID'])? $_REQUEST['startID']: $startID);
+/*
+ * Title: ATOM
+ * Purpose:
+ *  	Collection of parameters, functions, and classes that expand
+ *  	Ditto's output capabilities to include ATOM
+*/
 
 // set placeholders
 $atom_placeholders['[+atom_lang+]'] = (isset($abbrLanguage))? $abbrLanguage : $_lang['abbr_lang'];
+/*
+	Param: abbrLanguage
+
+	Purpose:
+	Language for the Atom feed
+
+	Options:
+	Any valid 2 character language abbreviation
+
+	Default:
+	[LANG]
+
+	Related:
+	- <language>
+*/
 $atom_placeholders['[+atom_link+]'] = $modx->config['site_url']."[~".$modx->documentObject['id']."~]";
 $atom_placeholders['[+atom_charset+]'] = isset($charset) ? $charset : $modx->config['modx_charset'];
+/*
+	Param: charset
+
+	Purpose:
+	Charset to use for the Atom feed
+
+	Options:
+	Any valid charset identifier
+
+	Default:
+	MODx default charset
+*/
+
 $atom_placeholders['[+atom_lastmodified+]'] = date('Y-m-d\TH:i:s\Z', $modx->documentObject["editedon"]);
 $placeholders['atom_createdon'] = array("createdon","atomCreatedDate"); 
 $placeholders['atom_editedon'] = array("editedon","atomEditedDate");

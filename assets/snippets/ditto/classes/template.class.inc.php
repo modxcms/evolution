@@ -10,6 +10,10 @@
 class template{
 	var $language,$fields,$current;
 
+	// ---------------------------------------------------
+	// Function: template
+	// Set the class language and fields variables
+	// ---------------------------------------------------
 	function template() {
 		$this->language = $GLOBALS["ditto_lang"];
 		$this->fields = array (
@@ -26,6 +30,11 @@ class template{
 		);
 	}
 
+	// ---------------------------------------------------
+	// Function: process
+	// Take the templates and parse them for tempalte variables,
+	// Check to make sure they have fields, and sort the fields
+	// ---------------------------------------------------
 	function process($template) {
 		if (!isset($template["base"])) {
 			$template["base"] = $template["default"];
@@ -68,6 +77,10 @@ class template{
 		return $templates;
 	}
 
+	// ---------------------------------------------------
+	// Function: findTemplateVars
+	// Find al the template variables in the template
+	// ---------------------------------------------------
 	function findTemplateVars($tpl) {
 		preg_match_all('~\[\+(.*?)\+\]~', $tpl, $matches);
 		$cnt = count($matches[1]);
@@ -85,6 +98,10 @@ class template{
 		}
 	}
 
+	// ---------------------------------------------------
+	// Function: sortFields
+	// Sort the array of fields provided by type
+	// ---------------------------------------------------
 	function sortFields ($fieldList) {
 		global $ditto_constantFields;
 		$dbFields = $ditto_constantFields["db"];
@@ -132,10 +149,19 @@ class template{
 		}
 		return $fields;
 	}
+
+	// ---------------------------------------------------
+	// Function: replace
+	// Replcae placeholders with their values
+	// ---------------------------------------------------
     function replace( $placeholders, $tpl ) {
 		return str_replace( array_keys( $placeholders ), array_values( $placeholders ), $tpl );
 	}
-		
+
+	// ---------------------------------------------------
+	// Function: determine
+	// Determine the correct template to apply
+	// ---------------------------------------------------		
 	function determine($templates,$x,$start,$stop,$id) {
 		global $modx;
 
@@ -157,8 +183,13 @@ class template{
 		return $templates[$currentTPL];
 	}
 
+	// ---------------------------------------------------
+	// Function: fetch
+	// Get a template, based on version by Doze
+	// 
+	// http://modxcms.com/forums/index.php/topic,5344.msg41096.html#msg41096
+	// ---------------------------------------------------
 	function fetch($tpl){
-		// based on version by Doze at http://modxcms.com/forums/index.php/topic,5344.msg41096.html#msg41096
 		global $modx;
 		$template = "";
 		if ($modx->getChunk($tpl) != "") {
@@ -173,9 +204,13 @@ class template{
 			return $template;
 	}
 
+	// ---------------------------------------------------
+	// Function: get_file_contents
+	// Returns the contents of file name passed
+	// 
+	// From http://www.nutt.net/2006/07/08/file_get_contents-function-for-php-4/#more-210
+	// ---------------------------------------------------
 	function get_file_contents($filename) {
-		// Function written at http://www.nutt.net/2006/07/08/file_get_contents-function-for-php-4/#more-210
-		// Returns the contents of file name passed
 		if (!function_exists('file_get_contents')) {
 			$fhandle = fopen($filename, "r");
 			$fcontents = fread($fhandle, filesize($filename));

@@ -390,7 +390,7 @@ if($numRecords > 0){
                     'docid'=>$children['id'],
                     'title'=>$children['pagetitle'],                    
                     'statut'=>($children['published'] == 0) ? "<span class='unpublishedDoc'>".$_lang['page_data_unpublished']."</span>"  : "<span class='publishedDoc'>".$_lang['page_data_published']."</span>",
-                    'edit'=>"<a href=\"index.php?a=3&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/context_view.gif' />".$_lang["view"]."</a>".(($modx->hasPermission('edit_document')) ? "<a href=\"index.php?a=27&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/save.gif' />".$_lang["edit"]."</a>&nbsp;<a href=\"index.php?a=51&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/cancel.gif' />".$_lang["move"]."</a>" : "" )
+                    'edit'=>"<a href=\"index.php?a=3&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/context_view.gif' />".$_lang["view"]."</a>".(($modx->hasPermission('edit_document')) ? "&nbsp;<a href=\"index.php?a=27&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/save.gif' />".$_lang["edit"]."</a>&nbsp;<a href=\"index.php?a=51&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/cancel.gif' />".$_lang["move"]."</a>" : "" )
                     );
 	
 	
