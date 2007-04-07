@@ -18,7 +18,11 @@ class filter {
 		foreach ($filter["basic"] AS $currentFilter) {
 			if (is_array($currentFilter) && count($currentFilter) > 0) {
 				$this->array_key = $currentFilter["source"];
-				$this->filterValue = $currentFilter["value"];
+				if(substr($currentFilter["value"],0,5) != "@EVAL") {
+					$this->filterValue = $currentFilter["value"];
+				} else {
+					$this->filterValue = eval(substr($currentFilter["value"],5));
+				}
 				$this->filtertype = (isset ($currentFilter["mode"])) ? $currentFilter["mode"] : 1;
 				$resource = array_filter($resource, array($this, "basicFilter"));
 			}

@@ -26,26 +26,26 @@ class debug extends modxDebugConsole {
 	function render_popup($ditto,$ditto_base,$ditto_version, $ditto_params, $IDs, $fields, $summarize, $templates, $sortBy, $sortDir, $start, $stop, $total,$filter,$resource) {
 		global $ditto_lang,$modx;
 		$tabs = array();
-		$fields = (count($fields["db"]) > 0 && count($fields["tv"]) > 0) ? array_merge_recursive($ditto->fields,array("retrieved"=>$fields)) : $fields;
+		$fields = (count($fields["db"]) > 0 && count($fields["tv"]) > 0) ? array_merge_recursive($ditto->fields,array("retrieved"=>$fields)) : $ditto->fields;
 		
 		$tabs[$ditto_lang["info"]] = $this->prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $sortBy, $sortDir, $start, $stop, $total);
-		$tabs[$ditto_lang["modx"]] = $this->prepareMODxInfo();
 		$tabs[$ditto_lang["params"]] = $this->makeParamTable($ditto_params,$ditto_lang["params"]);
 		$tabs[$ditto_lang["fields"]] = "<div class='ditto_dbg_fields'>".$this->array2table($this->cleanArray($fields), true, true)."</div>";		
 		$tabs[$ditto_lang["templates"]] =  $this->makeParamTable($this->prepareTemplates($templates),$ditto_lang["templates"]);
 			
 		if ($filter !== false) {
-			$tabs[$ditto_lang["filters"]] = $this->prepareFilters($filter);
+			$tabs[$ditto_lang["filters"]] = $this->prepareFilters($this->cleanArray($filter));
 		}
 
 		if ($ditto->prefetch == true) {
 			$tabs[$ditto_lang["prefetch_data"]] = $this->preparePrefetch($ditto->prefetch);				
 		}
-		if (count($resource) > 0) {
+		if (count($resource) > 0 && $resource) {
 			$tabs[$ditto_lang["retrieved_data"]] = $this->prepareDocumentInfo($resource);
 		}
 		$base_url = str_replace($modx->config["base_path"],$modx->config["site_url"],$ditto_base);
-		return $this->render($tabs,$ditto_lang['debug'],$base_url);
+		$generatedOn = "\r\n\r\n".'<!--- '.strftime('%c').' --->';
+		return $this->render($tabs,$ditto_lang['debug'],$base_url).$generatedOn;
 	}
 	
 	// ---------------------------------------------------
@@ -54,12 +54,16 @@ class debug extends modxDebugConsole {
 	// ---------------------------------------------------
 	function preparePrefetch($prefetch) {
 		global $ditto_lang;
-		if (count($prefetch["dbg_IDs_pre"]) > 0 && count($prefetch["dbg_IDs_post"]) > 0) {
-			$ditto_IDs = array($ditto_lang["ditto_IDs_all"]." (".count($prefetch["dbg_IDs_pre"]).")"=>implode(", ",$prefetch["dbg_IDs_pre"]),$ditto_lang["ditto_IDs_selected"]." (".count($prefetch["dbg_IDs_post"]).")"=>implode(", ",$prefetch["dbg_IDs_post"]));
-			$out = $this->array2table(array($ditto_lang["prefetch_data"]=>$ditto_IDs),true,true);
-		} else {
-			$out = $ditto_lang["no_documents"];
+		$ditto_IDs = array();
+		if (count($prefetch["dbg_IDs_pre"]) > 0) {
+			$ditto_IDs[$ditto_lang["ditto_IDs_all"]." (".count($prefetch["dbg_IDs_pre"]).")"] = implode(",",$prefetch["dbg_IDs_pre"]);
 		}
+		if (count($prefetch["dbg_IDs_post"]) > 0) {
+			$ditto_IDs[$ditto_lang["ditto_IDs_selected"]." (".count($prefetch["dbg_IDs_post"]).")"] = implode(", ",$prefetch["dbg_IDs_post"]);
+		} else {
+			$ditto_IDs[$ditto_lang["ditto_IDs_selected"]." (0)"] = strip_tags($ditto_lang["no_documents"]);
+		}
+		$out = $this->array2table(array($ditto_lang["prefetch_data"]=>$ditto_IDs),true,true);
 		return $out.$this->prepareDocumentInfo($prefetch["dbg_resource"]);
 	}
 
@@ -78,24 +82,6 @@ class debug extends modxDebugConsole {
 				$output .= $this->array2table(array($name=>$value), true, true);
 			}
 		}
-		return $output;
-	}
-
-	// ---------------------------------------------------
-	// Function: prepareMODxInfo
-	// Create the content of the MODx tab
-	// ---------------------------------------------------
-	function prepareMODxInfo() {
-		global $modx,$ditto_lang;
-		$output = "";
-		$ph = array();
-		foreach ($modx->placeholders as $key=>$value) {
-			if (strpos($key,"resource") === FALSE && strpos($key,"object") === FALSE) {
-				$ph[$key] = $value;
-			}
-		}
-		$output .= $this->makeParamTable($ph,$ditto_lang['placeholders']);
-		$output .= $this->makeParamTable($modx->documentObject,$ditto_lang['document_info']);
 		return $output;
 	}
 	

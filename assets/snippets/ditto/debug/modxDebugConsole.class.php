@@ -57,7 +57,7 @@ class modxDebugConsole{
 		global $modx;
 		$placeholders = array(
 			"[+open_url+]" => $this->buildURL("debug=open",$modx->documentIdentifier,$prefix),
-			"[+curl+]" =>  $this->buildURL("open_debug_console=true",$modx->documentIdentifier,$prefix),
+			"[+curl+]" => $_SERVER["REQUEST_URI"],
 			"[+dbg_title+]" => $title,
 			"[+dbg_icon_url+]" => $base_path.'bug.png',
 			"[+save_url+]" => $this->buildURL("debug=save",$modx->documentIdentifier,$prefix),
@@ -80,11 +80,11 @@ class modxDebugConsole{
 				$args = explode("&",$args);
 				foreach ($args as $arg) {
 					$arg = explode("=",$arg);
-					$query[$prefix.$arg[0]] = $arg[1];
+					$query[$prefix.$arg[0]] = urlencode(trim($arg[1]));
 				}
 			} else {
 				foreach ($args as $name=>$value) {
-					$query[$prefix.$name] = urlencode($value);
+					$query[$prefix.$name] = urlencode(trim($value));
 				}
 			}
 			$queryString = "";
@@ -126,6 +126,9 @@ class modxDebugConsole{
 	// Turn an array of parameters in the format ["param"] => "value" into a table
 	// ---------------------------------------------------	
 	function makeParamTable($parameters=array(),$header="",$sort=true,$prep=true,$wordwrap=true) {
+		if (!is_array($parameters)) {
+			return "";
+		}
 		if ($sort === true) {
 					ksort($parameters);
 		}
@@ -174,6 +177,7 @@ class modxDebugConsole{
 	   foreach ($array as $index => $value) {
 	       if(is_array($array[$index])) $array[$index] = $this->cleanArray($array[$index]);
 	       if (empty($value)) unset($array[$index]);
+		   if (count($array[$index]) == 0) unset($array[$index]);
 	   }
 	   return $array;
 	}

@@ -39,11 +39,24 @@ $bad = isset($bad) ? explode(",",$bad) : array("seeThroughtUnpub","showInMenuOnl
 	Default:
 	"seeThroughtUnpub,showInMenuOnly,showPublishedOnly,debug,start,config,extenders,dittoID"
 */
+$good = isset($good) ? explode(",",$good) : false;
+/*
+	Param: good
+	
+	Purpose:
+	Parameters that are allowed to be set
+	
+	Options:
+	Any valid Ditto options separated by commas
+	
+	Default:
+	All parameters execpt those in &bad
+*/
 foreach ($_REQUEST as $name=>$value) {
 	$saneName = str_replace($dittoID, "", substr($name, 6));
 	$dID = ($dittoID == "") ? true : strpos($name, $dittoID);
-	if ((substr($name, 0, 6) == "ditto_" && $dID) && !in_array($saneName,$bad) && !ereg("[\^`~!/@\\#\}\$%:;\)\(\{&\*=\|'\+]", $value)){
-		if ($stripTags) $var = strip_tags($value);
+	if ((substr($name, 0, 6) == "ditto_" && $dID) && !in_array($saneName,$bad) && ($good == false || in_array($saneName,$good)) && !ereg("[\^`~!/@\\#\}\$%:;\)\(\{&\*=\|'\+]", $value)){
+		if ($stripTags) $var = $modx->stripTags($value);
 		$variables[$saneName] = trim($value);
 	}
 }

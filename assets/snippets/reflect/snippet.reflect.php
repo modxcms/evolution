@@ -3,23 +3,64 @@
 /*
  * Title: Reflect Snippet
  * 
- * Desciption: 
+ * Description: 
  * 		Generates date based archives using Ditto
  * 
  * Author: 
  * 		Mark Kaplan for MODx CMF
  * 
  * Version: 
- * 		1.0.0
+ * 		1.0.2.BETA
  * 
  * Note: 
- * 		 If Reflect is not retrieving its own documents, make sure that the
- *		 Ditto call feeding it has all of the fields in it that you plan on
+ * 		If Reflect is not retrieving its own documents, make sure that the
+ *			Ditto call feeding it has all of the fields in it that you plan on
  *       calling in your Reflect template. Furthermore, Reflect will ONLY
- * 		 show what is currently in the Ditto result set.
+ *			show what is currently in the Ditto result set.
  *       Thus, if pagination is on it will ONLY show that page's items.
 */
  
+
+// ---------------------------------------------------
+//  Includes
+// ---------------------------------------------------
+
+$reflect_base = isset($reflect_base) ? $modx->config['base_path'].$reflect_base : $modx->config['base_path']."assets/snippets/reflect/";
+/*
+	Param: ditto_base
+	
+	Purpose:
+	Location of Ditto files
+
+	Options:
+	Any valid folder location containing the Ditto source code with a trailing slash
+
+	Default:
+	[(base_path)]assets/snippets/ditto/
+*/
+
+$config = (isset($config)) ? $config : "default";
+/*
+	Param: config
+
+	Purpose:
+ 	Load a custom configuration
+
+	Options:
+	"default" - default blank config file
+	CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODx base path via @FILE
+
+	Default:
+	"default"
+	
+	Related:
+	- <extenders>
+*/
+
+require((substr($config, 0, 5) != "@FILE") ? $reflect_base."configs/$config.config.php" : $modx->config['base_path'].trim(substr($config, 5)));
+
+
+
 // ---------------------------------------------------
 //  Parameters
 // ---------------------------------------------------
@@ -233,7 +274,32 @@ if ($placeholder === false) {
 			$dParams[$p[0]] = $p[1];
 		}
 	}
+	/*
+		Param: dittoSnippetParameters
+
+		Purpose:
+	 	Pass parameters to the Ditto instance used to retreive the documents
+	
+		Options:
+		Any valid ditto parameters in the format name:value 
+		with multiple parameters separated by a pipe (|)
+
+		Default:
+		[NULL]
+	*/
 	$dittoSnippetName = isset($dittoSnippetName) ? $dittoSnippetName : "Ditto";
+	/*
+		Param: dittoSnippetName
+
+		Purpose:
+		Name of the Ditto snippet to use
+
+		Options:
+		Any valid snippet name
+
+		Default:
+		"Ditto"
+	*/
 	$modx->runSnippet($dittoSnippetName,$dParams);
 	$ditto = $modx->getPlaceholder($rID."_ditto_object");
 	$resource = $modx->getPlaceholder($rID."_ditto_resource");
@@ -354,11 +420,11 @@ function reflect($archiveDocumentID, $showItems, $groupByYears, $resource, $arch
 	}
 	$output .= '<ul class="reflect_archive">';
 	foreach ($build as $year=>$months) {
-		$year_url = $ditto->buildURL("year=".$year."&month=false",$archiveDocumentID,$id);
+		$year_url = $ditto->buildURL("year=".$year."&month=false&day=false&start=0",$archiveDocumentID,$id);
 		if ($groupByYears) $output .=  '<li class="reflect_year">'.str_replace(array("[+year+]","[+url+]"),array($year,$year_url),$archive['year'])."\n\n";	
 		foreach ($months as $mon=>$month) {
 			$month_text = $ditto->formatDate(mktime(10, 10, 10, $mon, 10, $year),"%B");
-			$month_url = $ditto->buildURL("month=".$mon."&year=".$year,$archiveDocumentID,$id);
+			$month_url = $ditto->buildURL("month=".$mon."&year=".$year."&day=false&start=0",$archiveDocumentID,$id);
 			if ($groupByYears) $output .=  '<ul>';
 			$output .= '<li class="reflect_month">'.str_replace(array("[+year+]","[+month+]","[+url+]"),array($year,$month_text,$month_url),$archive['month'])."\n";
 			if ($showItems) {

@@ -8,12 +8,18 @@
 
 $_lang["ef_thankyou_message"] = "<h3>Thank You!</h3><p>Your information was successfully submitted.</p>";
 $_lang["ef_no_doc"] = "Document or chunk not found for template id=";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Some errors were detected in your form:</strong><br />[+ef_wrapper+]</div>";
+//$_lang["ef_no_chunk"] = ""; //deprecated
+//$_lang["ef_validation_message"] = "<strong>Some errors were detected in your form:</strong><br />";
+$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Some errors were detected in your form:</strong><br />[+ef_wrapper+]</div>"; //changed
+$_lang['ef_rule_passed'] = 'Passed using rule [+rule+] (input="[+input+]").';
+$_lang['ef_rule_failed'] = '<span style="color:red;">Failed</span> using rule [+rule+] (input="[+input+]")';
 $_lang["ef_required_message"] = " The following required field(s) are missing: {fields}<br />";
+$_lang['ef_error_list_rule'] = 'Error in validating form field! #LIST rule declared but no list values Found: ';
 $_lang["ef_invalid_number"] = " is not a valid number";
 $_lang["ef_invalid_date"] = " is not a valid date";
 $_lang["ef_invalid_email"] = " is not a valid email address";
 $_lang["ef_upload_exceeded"] = " has exceeded maximum upload limit.";
+$_lang["ef_upload_error"] = ": error in uploading file."; //NEW
 $_lang["ef_failed_default"] = "Incorrect value";
 $_lang["ef_failed_vericode"] = "Invalid verification code.";
 $_lang["ef_failed_range"] = "Value not in permitted range";
@@ -22,6 +28,7 @@ $_lang["ef_failed_eval"] = "Value did not validate";
 $_lang["ef_failed_ereg"] = "Value did not validate";
 $_lang["ef_failed_upload"] = "Incorrect file type.";
 $_lang["ef_error_validation_rule"] = "Validation rule not recognized";
+$_lang["ef_error_filter_rule"] = "Text filter not recognized";
 $_lang["ef_tamper_attempt"] = "Tampering attempt detected!";
 $_lang["ef_error_formid"] = "Invalid Form Id number or name.";
 $_lang["ef_debug_info"] = "Debug info: ";
@@ -36,4 +43,7 @@ $_lang['ef_eval_deprecated'] = "The #EVAL rule is deprecated and may not work in
 $_lang['ef_multiple_submit'] = "<p>This form was already submitted succesfully. There is no need to submit your information multiple times.</p>";
 $_lang['ef_submit_time_limit'] = "<p>This form was already submitted succesfully. Re-submission of the form is disabled for ".($submitLimit/60)." minutes.</p>";
 $_lang['ef_version_error'] = "<strong>WARNING!</strong> The version of the eForm snippet (version:&nbsp;$version) is different from the included eForm file (version:&nbsp;$fileVersion). Please make sure you use the same version for both.";
+$_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
+$_lang['ef_date_format'] = '%d-%b-%Y %H:%M:%S';
+$_lang['ef_mail_error'] = 'Mailer was unable to send mail';
 ?>

@@ -272,3 +272,104 @@
 [2007-3-13: REVISION 0000]
 [NEW] &randomize now uses mySQL's RAND() function for faster parsing and LIMIT support
 [CHANGED] compatibility extender to include emptyText support
+[CHANGED] optimized getParam
+[NEW] Implemented Ticket #20
+[FIXED] Page reload on debug link click
+[FIXED] Ticket #25
+[NEW] Implemented Ticket #26 : Added @EVAL to filtering system. Note that it is only for basic filtering, not custom filtering (tagging, etc).
+[CHANGED] Implemented Ticket #28 : Removed : from @ bindings
+
+[2007-3-14: REVISION 0000]
+[FIXED] Debug error when no documents found
+[CHANGED] &cFilters and $parsedFilters removed in favor of new $filters array. All extenders have been updated for compatibility.
+[NEW] Implemented Ticket #29 so that extenders can be located outside of Ditto folder
+[FIXED] When clicking on a tag link start is reset for proper display of documents
+[CHANGED] Documentation corrections
+[NEW] Weighted Random via &randomize having the value of a tv or field
+[FIXED] Weights are now converted to integer before being used in weighted random
+[FIXED] Weighted Random with &summary = 1
+[FIXED] makeParamTable array error
+[CHANGED] &summarize to &show for simplicity
+
+[2007-3-15: REVISION 0000]
+[NEW] dateFilter extender can now filter down to days
+[CHANGED] Reflect to pass &date=false to dateFilter to not trigger an error
+[CHANGED] &show (which was &summarize) to &display
+[REMOVED] Non-needed $ditto->advSort pass through
+[FIXED] Default template now correctly uses [+date+] again
+[FIXED] CustomReset on display side
+
+[2007-3-17: REVISION 0000]
+[FIXED] Debug "unknown" field type issue
+[NEW] Placeholders can now specify their QE field
+[FIXED] $dittoID prefix missing from [+tags+] MODx placeholder
+[NEW] Added trim to @bindings
+[CHANGED] Improvements to internal QE link renderer
+[FIXED] Summary extender
+[FIXED] Summary extender typo...
+[NEW] urlStart placeholder for referencing the start value in the URL
+[CHANGED] Increment version number to 2.0.1.SVN in preparation for release
+
+[2007-3-18: REVISION 0000]
+[NEW] Added documentation to Reflect
+[CHANGED] Version number to 2.0.1
+
+[2007-3-19: REVISION 0000]
+[CHANGED] Version number to 2.0.2.SVN
+[FIXED] Removed variable referencing as it causes errors in some php versions
+[FIXED] Minor language typo's
+
+[2007-3-20: REVISION 0000]
+[FIXED] Language number typos
+[FIXED] Default template un-needed parsing
+[FIXED] Changelog dates
+
+[2007-3-21: REVISION 0000]
+[REMOVED] Debug Console MODx Tab
+[FIXED] Debug Console fields
+
+[2007-3-22: REVISION 0000]
+[FIXED] URL encoding
+[FIXED] Typo in header --- "Desciption" to "Description"
+
+[2007-3-23: REVISION 0000]
+[FIXED] Bug where * placeholders were parsed before all custom placeholders
+[FIXED] Atom encoding
+[FIXED] Filters array now cleaned first
+[FIXED] Version typo
+[CHANGED] &ditto_base to prepend base_path
+[FIXED] Prefetch no documents found
+[FIXED] Debug data display
+[FIXED] Tagging trim() missing from certain functions
+
+[2007-3-26: REVISION 0000]
+[FIXED] @FILE inclusion error for extenders
+[FIXED] Documentation for Ditto ID
+[NEW] dateFilter $_GET variables secured and sanitized
+[NEW] Request extender now employ's $modx->stripTags for security
+[NEW] Secured start variable via intval in snippet
+[NEW] Added &good to request extender to compliment &bad
+[NEW] Debug generation date and time added as an html comment to the debug console output
+
+[2007-3-27: REVISION 0000]
+[FIXED] Pagination and &start
+[FIXED] &start and &sortDir=`ASC`
+
+[2007-3-28: REVISION 0000]
+[FIXED] &start and createdonReset
+[FIXED] &start and sortDir
+[CHANGED] Whitespace and comments
+[FIXED] item[x] placeholders (Closes #38)
+[FIXED] stripTags in the Request extender
+
+[2007-4-2: REVISION 0000]
+[NEW] Relative URLs are now converted to absolute URLs in the content and introtext fields when in a format other than html
+
+[2007-4-5: REVISION 0000]
+[CHANGED] &limit to &queryLimit (Closes #43)
+[NEW] Additional tag parameters (Closes #39)
+[CHANGED] &trunc behavior (Closes #33)
+[NEW] Extenders and configs can be called outside the Ditto folder (Closes #29)
+[NEW] Reflect configs and Wordpress Reflect config (Closes #31)
+[NEW] Ability to call all documents using &parents=`0` &depth=`0` (Closes #40)
+[CHANGED] Version number to 2.0.2.BETA

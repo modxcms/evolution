@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.2 - Electronic Form Snippet (Extended)
+# eForm 1.4.4 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -12,27 +12,28 @@
 # see docs/eform.htm for installation and usage information
 #
 # VERSION HISTORY
-# Version 1.4.2
-# New: validation message placeholder no longer requires wrapping elements - You should now just use 
-#      [+validationmesage+] instead of <div clas="error">[+validationmesage+]</div> (or similar) 
-#      You can use the $_lang['ef_validation_message'] in your eform language file to format
-#      the message. Add [+ef_wrapper+] to this variable where you want the messages to appear
-# New: You can now place the [+validationmessage+] anywhere in your document (outside the form template)
-# New: Support for in-line validation alert via the new &requiredClass and &invalidClass parameters
-# New: Email character set now follows the modx setting (thanks to Gildas)
-# Update: Tweaked the sessionVars parameter so it's no longer sensitive to spaces in comma seperated values
-# Update: Changed the date validation due to php version differences (Raymond Irving)
-# New: &css parameter - Adds css to the head of the document when the form is displayed
-# New: &jscript parameter - Adds javascript to the head of the document when form is displayed
-# New: eForm now checks for version differences between snippet and eform.inc.php
-# New: &protectSubmit parameter - protect against multiple submits of similar form data
-#      values: 0=off, 1=use required fields, or comma separated list of fields to compare
-# New: &submitLimit parameter - Time limit in minutes on successive submits of same form
-#      works standalone or in combination with &protectSubmit - see documentation for details
+# Version 1.4.3
+# This is a bug squashing release only.
+# FIXED: When using multiple forms on a page all forms are parsed and validated even
+# when only one form is submitted.
+# FIXED: fields array values were not cleared between forms (resulting in setting
+# validation messages in all forms when one form doesn't validate)
+# FIXED: numeric and date values are incorrectly validated for empty values when not required
 # For a full version history see the eform_history.htm file in the docs directory
+#
+# Some more fixes and problems:
+# FIXED: reg expression failed for select and textarea boxes which have regex special
+# characters in their name attribute. eg name="multipleSelection[]"
+# FIXED: validation of multiple values with #LIST & #SELECT stopped after 1st value
+# Caused by repeating $v variable naming (overwriting $v array)
+# e.g.
+# <select name="multipleSelection[]" multiple="multiple" eform="::1::"/>
+#   <option value="1">1</option>
+#   <option value="2">2</option>
+#   <option value="3">3</option>
+# </select>
+# would only have the first selected value validated!
 ##
-
-defined('IN_PARSER_MODE') or die();
 
 $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format settings
 function eForm($modx,$params) {
@@ -40,22 +41,25 @@ global $_lang;
 global $debugText;
 global $formats,$fields;
 
+
+$fields = array(); //reset fields array - needed in case of multiple forms
+
 // define some variables used as array index
 $_dfnMaxlength = 6;
 
 	extract($params,EXTR_SKIP); // extract params into variables
 
-	$fileVersion = '1.4.2';
+	$fileVersion = '1.4.4';
 	$version = isset($version)?$version:'prior to 1.4.2';
 
 	#include default language file
-	include_once($snipPath."eform/lang/english.inc.php");
+	include_once($snipPath."lang/english.inc.php");
 
 	#include other language file if set.
 	$form_language = isset($language)?$language:$modx->config['manager_language'];
 	if($form_language!="english" && $form_language!='') {
-		if(file_exists($snipPath ."eform/lang/".$form_language.".inc.php"))
-			include_once $snipPath ."eform/lang/".$form_language.".inc.php";
+		if(file_exists($snipPath ."lang/".$form_language.".inc.php"))
+			include_once $snipPath ."lang/".$form_language.".inc.php";
 		else
 			if( $isDebug ) $debugText .= "<strong>Language file '$form_language.inc.php' not found!</strong><br />"; //always in english!
 	}
@@ -69,8 +73,10 @@ $_dfnMaxlength = 6;
 
 	# check for valid form key - moved to below fetching form template to allow id coming from form template
 
+	$nomail = $noemail; //adjust variable name confusion
 	# activate nomail if missing $to
 	if (!$to) $nomail = 1;
+
 
 	# load templates
 	if($tpl==$modx->documentIdentifier) return $_lang['ef_is_own_id']."'$tpl'";
@@ -81,11 +87,17 @@ $_dfnMaxlength = 6;
 	# check for valid form key
 	if ($formid=="") return $_lang['ef_error_formid'];
 
-	//get formid from <form> tag id
+	//changed in 1.4.3 - re-introduced hidden formid field as this is essential for multiple forms on one page
+	// try to get formid from <form> tag id
 	preg_match('/<form[^>]*?id=[\'"]([^\'"]*?)[\'"]/i',$tpl,$matches);
-	$validFormId = isset($matches[1])? ($formid==$matches[1]):false;
-	//for backward compatibility
-	if( !$validFormId && isset($_POST['formid']) ) $validFormId = ($formid==$_POST['formid']);
+	$form_id = isset($matches[1])?$matches[1]:'';
+	//check for <input type='hidden name='formid'...>
+	if( !preg_match('/<input[^>]*?name=[\'"]formid[\'"]/i',$tpl) ){
+			//insert hidden formid field
+			$tpl = str_replace('</form>',"<input type=\"hidden\" name=\"formid\" value=\"$form_id\" /></form>",$tpl);
+	}
+
+	$validFormId = ($formid==$_POST['formid']);
 
 	# check if postback mode
 	$isPostBack	= ($validFormId && count($_POST)>0)? true:false;
@@ -109,6 +121,13 @@ $_dfnMaxlength = 6;
 		$startupSource[]= array($tmp,'javascript');
 	}
 
+	#New in 1.4.4 - run snippet to include 'event' functions
+	if( strlen($runSnippet)>0 ){
+		$modx->runSnippet($runSnippet, array('formid'=>$formid));
+		//Sadly we cannot know if the snippet fails or if it exists as modx->runsnippet's return value
+		//is ambiguous in this case (see modx->evalSnippet where a boolean false is concatenated with an
+		//empty string (from output buffering) if a snippet doesn't exist
+	}
 
 	# invoke onBeforeFormParse event set by another script
 	if ($eFormOnBeforeFormParse) {
@@ -124,7 +143,6 @@ $_dfnMaxlength = 6;
 	}
 
 	if ($isPostBack) {
-	//if( $isDebug ) $debugText .= "<hr />POSTED Values:<pre>".var_export($_POST,true)."</pre><hr />";
 
 		# parse form for formats and generate placeholders
 		$tpl = eFormParseTemplate($tpl,$isDebug);
@@ -159,6 +177,7 @@ $_dfnMaxlength = 6;
 			$code = $_SESSION['veriword'] ? $_SESSION['veriword'] : $_SESSION['eForm.VeriCode'];
 			if($fields['vericode']!=$code) {
 				$vMsg[count($vMsg)]=$_lang['ef_failed_vericode'];
+				$rClass['vericode']=$invalidClass; //added in 1.4.4
 			}
 		}
 
@@ -173,26 +192,27 @@ $_dfnMaxlength = 6;
 // mod by JJ - Separated required test field from other validation
 				if ($isRequired==1 && $value=="" && $datatype!="file"){
 					$rMsg[count($rMsg)]="$desc";
-					$rClass[$name]=$requiredClass; //not used yet
+					$rClass[$name]=$requiredClass;
 //mod by JJ - extended field validation - see validation functions elsewhere
 				}elseif( isset($fld[5]) && $value!="" && $datatype!="file" ) {
 					$value = validateField($value,$fld,$vMsg,$isDebug);
-					
+
 					if($value===false) $rClass[$name]=$invalidClass;
 					//if returned value is not of type boolean replace value...
 					elseif($value!==true) $fields[$name]=$value; //replace value.
 
 //end mod
-				}else{
+				}else{ //value check
 					switch ($datatype){
 						case "integer":
 						case "float":
-							if (!is_numeric($value)){
+							if (strlen($value)>0 && !is_numeric($value)){
 								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_number"];
 								$rClass[$name]=$invalidClass;
 							}
 							break;
 						case "date":
+							if(strlen($value)==0) break;
 							//corrected by xwisdom for php version differences
 							$rt = strtotime($value); //php 5.1.0+ returns false while < 5.1.0 returns -1
 							if ($rt===false||$rt===-1){
@@ -201,10 +221,10 @@ $_dfnMaxlength = 6;
 							}
 							break;
 						case "email":
-							//stricter email validation
+							//stricter email validation - udated to allow + in local name part
 							if (strlen($value)>0 &&  !preg_match(
-							'/^(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$/i', $value) ){
-								$vMsg[count($vMsg)]=$desc . $_lang["ef_invalid_email"];
+							'/^(?:[a-z0-9+_-]+?\.)*?[a-z0-9_+-]+?@(?:[a-z0-9_-]+?\.)*?[a-z0-9_-]+?\.[a-z0-9]{2,5}$/i', $value) ){
+								$vMsg[count($vMsg)] = isset($formats[$name][4]) ? $formats[$name][4] : $desc . $_lang["ef_invalid_email"];
 								$rClass[$name]=$invalidClass;
 							}
 							break;
@@ -243,7 +263,7 @@ $_dfnMaxlength = 6;
 // MOD for 1.4.1 - Changed order for error testing so we can use the event
 // for extra validation e.g. validate for a combination of fields.
 	if(count($vMsg)>0 || count($rMsg)>0){
-		
+
 		//New in 1.4.2 - classes are set in labels and form elements for invalid fields
 		foreach($rClass as $n => $class){
 			$fields[$n.'_class'] = $fields[$n.'_class']?$fields[$n.'_class'].' '. $class:$class;
@@ -261,7 +281,7 @@ $_dfnMaxlength = 6;
 			$debugText .= "<br /><strong>eForm configuration:</strong><pre>\n". var_export($params,true).'</pre>';
 			$fields['debug']=$debugText;
 		}
-		
+
 // New in 1.4.2 - wrapper elements now should be placed in the $_lang['ef_validation_message']
 // and only a bare [+validationmessage+] needs to be placed in the template/document
 			#set validation message
@@ -270,8 +290,9 @@ $_dfnMaxlength = 6;
 			if(!strstr($tpl,'[+validationmessage+]'))
 				$modx->setPlaceholder('validationmessage',str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']));
 			else
-				$fields['validationmessage'] .= str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']);	
+				$fields['validationmessage'] .= str_replace('[+ef_wrapper+]', $tmp, $_lang['ef_validation_message']);
 	} else {
+
 			# format report fields
 			foreach($fields as $name => $value) {
 				$fld = $formats[$name];
@@ -283,15 +304,22 @@ $_dfnMaxlength = 6;
 							$value = number_format($value);
 							break;
 						case "float":
-							$value = number_format($value, 2, '.', ',');
+							$localeInfo = localeconv();
+							$th_sep = empty($_lang['ef_thousands_separator'])?$localeInfo['thousands_sep']:$_lang['ef_thousands_separator'];
+							$dec_point= $localeInfo['decimal_point'];
+$debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
+							$value = number_format($value, 2, $dec_point, $th_sep);
+							//$format_string = isset($_lang['ef_float_format']) ? $_lang['ef_float_format'] : "%f";
+							//$value = sprintf($format_string,$value);
 							break;
 						case "date":
-							$value = ($value)? strftime("%d-%b-%Y %H:%M:%S",strtotime($value)):"";
+							$format_string = isset($_lang['ef_date_format']) ? $_lang['ef_date_format'] : '%d-%b-%Y %H:%M:%S';
+							$value = ($value)? strftime($format_string,strtotime($value)):"";
 							$value=str_replace("00:00:00","",$value);// remove trailing zero time values
 							break;
 						case "html":
 							// convert \n to <br>
-							$value = str_replace("\n","<br />",$value);
+							if(!$sendAsText ) $value = preg_replace('#(\n<br[ /]*?>|<br[ /]*?>\n|\n)#i','<br />',$value);
 							break;
 						case "file":
 							// set file name
@@ -309,7 +337,7 @@ $_dfnMaxlength = 6;
 				}
 			}
 			# set postdate
-			$fields['postdate'] = strftime("%d-%b-%Y %H:%M:%S",time());;
+			$fields['postdate'] = strftime("%d-%b-%Y %H:%M:%S",time());
 
 			//check against email injection and replace suspect content
 			if( hasMailHeaders($fields) ){
@@ -366,7 +394,6 @@ $_dfnMaxlength = 6;
 				}
 			}
 
-
 			# added in 1.4.2 - protect against multiple submits
 			if( $protectSubmit ){
 				$hash = '';
@@ -378,7 +405,7 @@ $_dfnMaxlength = 6;
 					foreach($formats as $fld) $hash .= ($fld[3]==1) ? $fields[$fld[0]] : '';
 				if($hash) $hash = md5($hash);
 
-				if( $isDebug ) $debugText .= "<strong>SESSION HASH</strong>:".$_SESSION['testForm_hash']."<br />"."<b>FORM HASH</b>:".$hash."<br />";
+				if( $isDebug ) $debugText .= "<strong>SESSION HASH</strong>:".$_SESSION[$formid.'_hash']."<br />"."<b>FORM HASH</b>:".$hash."<br />";
 
 				# check if already succesfully submitted with same data
 				if( isset($_SESSION[$formid.'_hash']) && $_SESSION[$formid.'_hash'] == $hash && $hash!='' )
@@ -393,7 +420,11 @@ $_dfnMaxlength = 6;
 			$from = ($from)? formMerge($from,$fields):"";
 			$fromname	= ($from)? formMerge($fromname,$fields):"";
 
+			$to = formMerge($to,$fields);
+			if(empty($to) || !strpos($to,'@')) $nomail=1;
+//return '<pre>'. var_export($params,true).'</pre>';
 			if(!$nomail){
+
 				# check for mail selector field - select an email from to list
 				if ($mselector && $fields[$mselector]) {
 					$i = (int)$fields[$mselector];
@@ -413,7 +444,8 @@ $_dfnMaxlength = 6;
 
 				# send form
 				//defaults to html so only test sendasText
-				$isHtml = ($sendAstText===1 || strstr($sendAsText,'report'))?false:true;
+				$isHtml = ($sendAsText==1 || strstr($sendAsText,'report'))?false:true;
+
 				if(!$noemail) {
 					if($sendirect) $to = $fields['email'];
 					$mail = new PHPMailer();
@@ -429,7 +461,7 @@ $_dfnMaxlength = 6;
 					AddAddressToMailer($mail,"cc",$cc);
 					AddAddressToMailer($mail,"bcc",$bcc);
 					AttachFilesToMailer($mail,$attachments);
-					if(!$mail->send()) return $mail->ErrorInfo;
+					if(!$mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
 				}
 
 				# send user a copy of the report
@@ -444,12 +476,12 @@ $_dfnMaxlength = 6;
 					$mail->Body		= $report;
 					AddAddressToMailer($mail,"to",$fields['email']);
 					AttachFilesToMailer($mail,$attachments);
-					if(!$mail->send()) return $mail->ErrorInfo;
+					if(!$mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
 				}
 
 				# send auto-respond email
 				//defaults to html so only test sendasText
-				$isHtml = ($sendAstText===1 || strstr($sendAsText,'autotext'))?false:true;
+				$isHtml = ($sendAsText==1 || strstr($sendAsText,'autotext'))?false:true;
 				if ($autotext && $fields['email']!='') {
 					$autotext = formMerge($autotext,$fields);
 					$mail = new PHPMailer();
@@ -457,15 +489,15 @@ $_dfnMaxlength = 6;
 					$mail->CharSet = $modx->config['modx_charset'];
 					$mail->IsHTML(true);
 					$mail->From		= ($autosender)? $autosender:$from;
-					$mail->FromName	= $fromname;
+					$mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
 					$mail->Subject	= $subject;
 					$mail->Body		= $autotext;
 					AddAddressToMailer($mail,"to",$fields['email']);
-					if(!$mail->send()) return $mail->ErrorInfo;
+					if(!$mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
 				}
 
 				//defaults to text - test for sendAsHtml
-				$isHTML = ($sendAsHTML===1 || strstr($sendAsHtml,'mobile'))?true:false;
+				$isHTML = ($sendAsHTML==1 || strstr($sendAsHtml,'mobile'))?true:false;
 				# send mobile email
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
@@ -500,6 +532,7 @@ $_dfnMaxlength = 6;
 				}
 
 			}//end test nomail
+//return $debugText . "NO MAIL!";
 
 			if($isDebug){
 				$debugText .="<strong>Mail Headers:</strong><br>From: $from ($fromname)<br/>Reply-to:$replyto<br />To: $to<br/>Subject: $subject<br />CC: $cc<br /> BCC:$bcc<br />";
@@ -516,6 +549,10 @@ $_dfnMaxlength = 6;
 				if(!empty($thankyou) ){
 					if($isDebug && !strstr($thankyou,'[+debug+]')) $thankyou .= '[+debug+]';
 					if( isset($startupSource) ) efRegisterStartupBlock($startupSource,true);	//skip scripts
+					if( $sendAsText ){
+						foreach($formats as $key => $fmt)
+							if($fmt[2]=='html') $fields[$key] = str_replace("\n",'<br />',$fields[$key]);
+					}
 					$thankyou = formMerge($thankyou,$fields);
 					return $thankyou;
 				}else{
@@ -579,8 +616,8 @@ $_dfnMaxlength = 6;
 function formMerge($docText, $docFields, $vClasses='') {
 	global $formats;
 	$lastitems;
-	if(!docText) return '';
-	
+	if(!$docText) return '';
+
 	preg_match_all('~\[\+(.*?)\+\]~', $docText, $matches);
 	for($i=0;$i<count($matches[1]);$i++) {
 		$name = $matches[1][$i];
@@ -679,7 +716,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				$tpl = str_replace($fld,$newTag,$tpl);
 		}
 	}
-		
+
 	//retrieve all the form fields
 	$regExpr = "#(<(input|select|textarea)[^>]*?>)#si";
 	preg_match_all($regExpr,$tpl,$matches);
@@ -695,8 +732,20 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 		//attribute values are stored including quotes
 		//strip quotes as well as any brackets to get the raw name
 		$name = str_replace(array("'",'"','[',']'),'',$tagAttributes['name']);
-		#skip vericode field
-		if($name=="vericode") continue;
+
+		#skip vericode field - updated in 1.4.4
+		#special case. We need to set the class placeholder but forget about the rest
+		if($name=="vericode"){
+			if(isset($tagAttributes['class'])){
+				$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
+			}
+			$tagAttributes['class'] = '"[+'.$name.'_class+]"';
+			$tagAttributes['value'] = '';
+			$newTag = buildTagPlaceholder('input',$tagAttributes,$name);
+			$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
+			continue;
+		}
+
 		//store the field options
 		if (isset($tagAttributes[$optionsName])){
 			//split to max of 5 so validation rule can contain ':'
@@ -710,7 +759,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 			$formats[$name][1]=(isset($labels[$name])) ? $labels[$name] : $name;
 
 		unset($tagAttributes[$optionsName]);
-		
+
 		//added in 1.4.2 - add placeholder to class attribute
 		if(isset($tagAttributes['class'])){
 			$fields[$name.'_class'] = substr($tagAttributes['class'],1,-1);
@@ -725,7 +774,8 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				if($formats[$name]) $formats[$name][2]='listbox';
 
 				//Get the whole select block with option tags
-				$regExp = "#<select .*?name=".$tagAttributes['name']."[^>]*?".">(.*?)</select>#si";
+				//escape any regex characters!
+				$regExp = "#<select [^><]*?name=".preg_quote($tagAttributes['name'],'#')."[^>]*?".">(.*?)</select>#si";
 				preg_match($regExp,$tpl,$matches);
 				$optionTags = $matches[1];
 
@@ -736,7 +786,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				foreach($matches[1] as $option){
 					$attr = attr2array($option);
 					$value = substr($attr['value'],1,-1); //strip outer quotes
-					if($value) $validValues[] = $value; //strip outer quotes
+					if( trim($value)!='' ) $validValues[] = $value;
 					$newTag = buildTagPlaceholder('option',$attr,$name);
 					$newSelect = str_replace($option,$newTag,$newSelect);
 				}
@@ -745,7 +795,8 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				//add valid values to formats... (extension to $formats)
 				if($formats[$name] && !$formats[$name][5])
 					$formats[$name][4] = $_lang['ef_failed_default'];
-					$formats[$name][5]= "#LIST " . implode(",",$validValues);
+					//convert commas in values to something else !
+					$formats[$name][5]= "#LIST " . implode(",",str_replace(',','&#44;',$validValues));
 				break;
 
 			case "textarea":
@@ -770,6 +821,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 					if( $fieldType=='text' && $tagAttributes['maxlength'] ){
 						$formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
 					}
+$debugText .= $name.'<pre>'.var_export($formats[$name],true).'</pre>';
 					if($formats[$name] && !$formats[$name][2]) $formats[$name][2]=($fieldType=='text')?"string":$fieldType;
 					//populate automatic validation values for hidden, checbox and radio fields
 					if($fieldType=='hidden'){
@@ -779,7 +831,8 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 					}elseif($fieldType=='checkbox' || $fieldType=='radio'){
 						$formats[$name][4]= $_lang['ef_failed_default'];
 						$formats[$name][5] .= isset($formats[$name][5])?",":"#LIST ";
-						$formats[$name][5] .= stripTagQuotes($tagAttributes['value']);
+						//convert embedded comma's in values!
+						$formats[$name][5] .= str_replace(',','&#44;',stripTagQuotes($tagAttributes['value']));
 					}
 					/* //not tested yet!! do all browsers include mime-type when uploading files?
 					elseif($fieldType=="file"){
@@ -820,6 +873,8 @@ function buildTagPlaceholder($tag,$attributes,$name){
 				case 'checkbox':
 					return "<input$t value=".$quotedValue." [+$name:$val+] />";
 				case 'text':
+					if($name=='vericode') return "<input$t value=\"\" />";
+					//else pass on to next
 				case 'password':
 					return "<input$t value=\"[+$name+]\" />";
 				default: //leave as is - no placeholder
@@ -844,23 +899,13 @@ function attr2array($tag){
 	return $rt;
 }
 
-/*--- Validation  Code ----------------------*/
-/**
- * validateField()
- *
- * @param mixed, $value
- * @param array, $fld
- * @param array, &$vMsg - reference to validation/error messages array
- * @param boolean, $isDebug - Stricter error reporting
- * @return boolean, true or false or $value in case of @FILTER. Test for
- *  type on return! (ie. $return === false) Returned value could be numeric 0!
- **/
 function validateField($value,$fld,&$vMsg,$isDebug=false){
 	global $modx,$_lang, $debugText,$fields;
 	$output = true;
 	$desc = $fld[1];
 	$fldMsg = trim($fld[4]);
-	if(empty($fld[5])) return $output; //corrected in 1.4 - if no rule is given value validates
+	if(empty($fld[5])) return $output; //if no rule value validates
+
 	list($cmd,$param) = explode(" ",trim($fld[5]),2);
 		$cmd = strtoupper(trim($cmd));
 	if (substr($cmd,0,1)!='#'){
@@ -868,12 +913,14 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 		return false;
 	}
 
-	$v = (is_array($value))?$value:array($value);
+	$valList = (is_array($value))?$value:array($value);
 	//init vars
 	$errMsg='';
 	unset($vlist);
-	for($i=0;$i<count($v);$i++){
-		$value = $v[$i];
+
+	for($i=0;$i<count($valList);$i++){
+		$value = $valList[$i]; //re-using $value, destroying original!!
+
 		switch ($cmd) {
 			//really only used internally for hidden fields
 			case "#VALUE":
@@ -899,13 +946,19 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 			case "#LIST":		// List of comma separated values (not case sensitive)
 				//added in 1.4 - file upload filetype test
 				if($fld[2]=='file')$value = substr($value,strrpos($value,'.')+1); //file extension
-				if(!isset($vlist)) $vlist = explode(',',strtolower(trim($param))); //cached
+				if(!isset($vlist)){
+					$vlist = 	explode(',',strtolower(trim($param))); //cached
+					foreach($vlist as $k =>$v ) $vlist[$k]=str_replace('&#44;',',',$v);
+
+				} //changes to make sure embedded commma's in values are recognized
+
 				if( $isDebug && count($vlist)==1 && empty($vlist[0])  ){
+					 //if debugging bail out big time
 					 $modx->messageQuit('Error in validating form field!', '',$false,E_USER_WARNING,__FILE__,'','#LIST rule declared but no list values supplied: '.$fld[5],__LINE__);
-					//if debugging bail out big time
 				}elseif(!in_array(strtolower($value),$vlist))
 					$errMsg = ($fld[2]=='file')? $_lang["ef_failed_upload"]: $_lang['ef_failed_list'];
 				break;
+
 			case "#SELECT":	//validates against a list of values from the cms database
 				#cache all this
 				if( !isset($vlist) ) {
@@ -954,7 +1007,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 				break;
 
 			case "#FILTER":
-				$v[$i] = filterEformValue($value,$param);
+				$valList[$i] = filterEformValue($value,$param);
 				break;
 
 			default:
@@ -964,7 +1017,7 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 		if($isDebug) {
 			$debugText .="'<strong>$fld[1]</strong>' ";
 			$debugText .= (empty($errMsg))?'passed':'<span style="color:red;">Failed</span>';
-			$debugText .= " using rule: $cmd ".$param.', (input='.htmlspecialchars($value).")<br />\n";
+			$debugText .= " using rule: $cmd ".$param.', (input='.htmlspecialchars($valList[$i]).")<br />\n";
 		}
 		if(!empty($errMsg)){
 			$errMsg = ($fldMsg)?"$desc &raquo; $fldMsg":"$desc &raquo; $errMsg";
@@ -973,10 +1026,12 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 			break; //quit testing more values
 		}
 	}//end for
-	//make sure we have correct return value in case of #filter
-	$v = (is_array($value))?implode('',$v):$v;
 
-	return ($cmd=="#FILTER")?$v:$output;
+
+	//make sure we have correct return value in case of #filter
+	$valList = (!is_array($value))?implode('',$valList):$valList;
+
+	return ($cmd=="#FILTER")?$valList:$output;
 }//end validateField
 
 function filterEformValue($value,$param){
@@ -1003,6 +1058,7 @@ function filterEformValue($value,$param){
 	return $value;
 }
 #loads tempate from chunk or document
+/*
 function efLoadTemplate($tpl){
 	global $modx;
 	if (strlen($tpl)<50){
@@ -1019,6 +1075,24 @@ function efLoadTemplate($tpl){
 	}
 	return $tpl;
 }
+*/
+	function efLoadTemplate($key){
+		global $modx;
+		if( strlen($key)>50 ) return $key;
+		$tpl = false;
+		if( is_numeric($key) ) { //get from document id
+			//try unpublished docs first
+			$tpl = ( $doc=$modx->getDocument($key,'content',0) )? $doc['content'] :false;
+			if(!$tpl )
+				$tpl = ( $doc=$modx->getDocument($key,'content',1) )? $doc['content'] : false;
+
+		}elseif( $key ){
+			$tpl = ( $doc=$modx->getChunk($key) )? $doc : false;
+			//try snippet if chunk is not found
+			if(!$tpl) $tpl = ( $doc=$this->modx->runSnippet($key) )? $doc : false;
+		}
+		return $tpl;
+	}
 
 
 # registers css and/or javascript to modx class
@@ -1069,4 +1143,5 @@ function hasMailHeaders( &$fields ){
 	}
 	return ($injectionAttempt)?true:false;
 }
+
 ?>

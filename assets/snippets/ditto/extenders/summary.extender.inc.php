@@ -6,7 +6,7 @@
  *  	Legacy support for the [+summary+] placeholder
 */
 
-$placeholders['summary'] = array("introtext,content","determineSummary");
+$placeholders['summary'] = array("introtext,content","determineSummary","@GLOBAL ditto_summary_type");
 $placeholders['link'] = array("id","determineLink");
 
 $trunc = isset($trunc) ? $trunc : 1;
@@ -126,7 +126,7 @@ if (!function_exists("determineSummary")) {
 		global $ditto_summary_params;
 		$trunc = new truncate();
 		$p = $ditto_summary_params;
-		$output = $trunc->execute($resource, $p['trunc'], $p['splitter'], $p['text'], $p['length'], $p['offset'], $p['splitter'], "", true);
+		$output = $trunc->execute($resource, $p['trunc'], $p['splitter'], $p['text'], $p['length'], $p['offset'], $p['splitter'], true);
 		$GLOBALS['ditto_summary_link'] = $trunc->link;
 		$GLOBALS['ditto_summary_type'] = $trunc->summaryType;
 		return $output;
@@ -282,54 +282,46 @@ if (!class_exists("truncate")) {
 			return $text . $endTags;
 		}
 
-		function execute($resource, $trunc, $splitter, $linktext, $truncLen, $truncOffset, $truncsplit, $commentschunk, $truncChars) {
+		function execute($resource, $trunc, $splitter, $linktext, $truncLen, $truncOffset, $truncsplit, $truncChars) {
 			$summary = '';
 			$this->summaryType = "content";
 			$this->link = false;
 			$closeTags = true;
 			// summary is turned off
-			if ($trunc == false) {
-				$summary = $resource['content'];
+
+			if ((strstr($resource['content'], $splitter)) && $truncsplit) {
+				$summary = array ();
+
+				// HTMLarea/XINHA encloses it in paragraph's
+				$summary = explode('<p>' . $splitter . '</p>', $resource['content']);
+
+				// For TinyMCE or if it isn't wrapped inside paragraph tags
+				$summary = explode($splitter, $summary['0']);
+
+				$summary = $summary['0'];
+				$this->link = '[~' . $resource['id'] . '~]';
 				$this->summaryType = "content";
-				$closeTags = false;
-				// contains the splitter and use splitter is on
-			} else
-				if ((strstr($resource['content'], $splitter)) && $truncsplit) {
-					$summary = array ();
-
-					// HTMLarea/XINHA encloses it in paragraph's
-					$summary = explode('<p>' . $splitter . '</p>', $resource['content']);
-
-					// For TinyMCE or if it isn't wrapped inside paragraph tags
-					$summary = explode($splitter, $summary['0']);
-
-					$summary = $summary['0'];
+		
+				// fall back to the summary text
+			} else if (strlen($resource['introtext']) > 0) {
+					$summary = $resource['introtext'];
+					$this->link = '[~' . $resource['id'] . '~]';
+					$this->summaryType = "introtext";
+					$closeTags = false;
+					// fall back to the summary text count of characters
+			} else if (strlen($resource['content']) > $truncLen && $trunc == 1) {
+					$summary = $this->html_substr($resource['content'], $truncLen, $truncOffset, $truncChars);
 					$this->link = '[~' . $resource['id'] . '~]';
 					$this->summaryType = "content";
-			
-					// fall back to the summary text
-				} else
-					if (strlen($resource['introtext']) > 0) {
-						$summary = $resource['introtext'];
-						$this->link = '[~' . $resource['id'] . '~]';
-						$this->summaryType = "introtext";
-						$closeTags = false;
-						// fall back to the summary text count of characters
-					} else
-						if (strlen($resource['content']) > $truncLen) {
-							$summary = $this->html_substr($resource['content'], $truncLen, $truncOffset, $truncChars);
-							$this->link = '[~' . $resource['id'] . '~]';
-							$this->summaryType = "content";
-							// and back to where we started if all else fails (short post)
-						} else {
-							$summary = $resource['content'];
-							$this->summaryType = "content";
-							$this->link = false;
-						}
+					// and back to where we started if all else fails (short post)
+			} else {
+				$summary = $resource['content'];
+				$this->summaryType = "content";
+				$this->link = false;
+			}
 
 			// Post-processing to clean up summaries
 			$summary = ($closeTags === true) ? $this->closeTags($summary) : $summary;
-			$summary = str_replace($commentschunk, "", $summary);
 			return $summary;
 		}
 	}

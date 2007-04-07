@@ -40,8 +40,10 @@ $atom_placeholders['[+atom_charset+]'] = isset($charset) ? $charset : $modx->con
 */
 
 $atom_placeholders['[+atom_lastmodified+]'] = date('Y-m-d\TH:i:s\Z', $modx->documentObject["editedon"]);
+$placeholders['*'] = "atom_placeholders";
 $placeholders['atom_createdon'] = array("createdon","atomCreatedDate"); 
 $placeholders['atom_editedon'] = array("editedon","atomEditedDate");
+$placeholders['atom_author'] = array("createdby","atomCreatedBy");
 
 if(!function_exists("atomCreatedDate")) {
 	function atomCreatedDate($resource) {
@@ -51,6 +53,26 @@ if(!function_exists("atomCreatedDate")) {
 if(!function_exists("atomEditedDate")) {
 	function atomEditedDate($resource) {
 		return date('Y-m-d\TH:i:s\Z', intval($resource["editedon"]) + $modx->config["server_offset_time"]);
+	}
+}
+if(!function_exists("atomCreatedBy")) { 
+	function atomCreatedBy($resource) {
+		return htmlspecialchars(html_entity_decode(ditto::getAuthor($resource['createdby']), ENT_QUOTES));
+	}
+}
+$extenders[] = "summary";
+	// load required summary extender for backwards compatibility
+	// TODO: Remove summary extender in next major version
+
+// set atom placeholders
+if(!function_exists("atom_placeholders")) { 
+	function atom_placeholders($placeholders) {
+		$field = array();
+		foreach ($placeholders as $name=>$value) {
+			$field["atom_escaped_".$name] = htmlspecialchars(html_entity_decode($value));
+		}
+		$placeholders = array_merge($field,$placeholders);
+		return $placeholders;	
 	}
 }
 
@@ -72,13 +94,13 @@ TPL;
 $atom_tpl = <<<TPL
 
 	<entry>
-		<title>[+pagetitle+]</title>
+		<title>[+atom_escaped_pagetitle+]</title>
 		<link rel="alternate" type="text/html" href="[+url+]" />
-		<author><name>[+author+]</name></author>
+		<author><name>[+atom_author+]</name></author>
 		<id>[+url+]</id>
 		<updated>[+atom_editedon+]</updated>
 		<published>[+atom_createdon+]</published>
-		<content type="html">[+introtext+]</content>
+		<content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">[+summary+]</div></content>
 	</entry>
 TPL;
 

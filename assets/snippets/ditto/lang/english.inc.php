@@ -21,7 +21,7 @@ $_lang['default_template'] = <<<TPL
 
     <div class="ditto_item" id="ditto_item_[+id+]">
         <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
-        <div class="ditto_documentInfo">by <strong>[+author+]</strong> on [+createdon:date=`%d-%b-%y %H:%M`+]</div>
+        <div class="ditto_documentInfo">by <strong>[+author+]</strong> on [+date+]</div>
         <div class="ditto_introText">[+introtext+]</div>
     </div>
 

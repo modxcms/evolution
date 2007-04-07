@@ -30,14 +30,14 @@ $param = isset($param) ? $param : "default";
 // Defin the values of custom placeholders for access in the tpl like so [+phname+]
 // ---------------------------------------------------
 
-$placeholders['example'] = array(array("pagetitle","*"),"exampleFunction");
+$placeholders['example'] = array(array("pagetitle","*"),"exampleFunction","pagetitle");
 	// Variable: $placeholders['example']
 	// Add the placeholder example to the custom placeholders list 
 	// with the source pagetitle in both display and backend using the 
-	// exampleFunction callback. If you only needed the placeholder in 
-	// the frontent you would jus use "pagetitle"  as the first value of 
-	// the arrayIf the callback was in a class use the 
-	// array($initialized_class,"member") method
+	// exampleFunction callback and pagetitle as the field for QuickEdit.
+	// If you only needed the placeholder in the frontent you would just
+	// use "pagetitle"  as the first value of the array. If the callback 
+	// was in a class use the array($initialized_class,"member") method.
 
 if (!function_exists("exampleFunction")) {
 	// wrap functions in !functino_exists statements to ensure that they are not defined twice
@@ -59,8 +59,8 @@ if (!function_exists("exampleFunction")) {
 // Define custom or basic filters within the extender to expand Ditto's filtering capabilities
 // ---------------------------------------------------
 
-$cFilters["exampleFilter"] = array("pagetitle","exampleFilter"); 
-	// Variable: $cFilters["exampleFilter"]
+$filters["custom"]["exampleFilter"] = array("pagetitle","exampleFilter"); 
+	// Variable: $filters["custom"]["exampleFilter"]
 	// Add the filter exampleFilter to the custom filters 
 	// list with the source pagetitle and the callback
 	// exampleFilter
@@ -86,8 +86,8 @@ if (!function_exists("exampleFilter")) {
 	}
 }
 
-$parsedFilters[] = array('exampleFilter' => array("source"=>"id","value"=>"9239423942","mode"=>"2"));
-	// Variable: $parsedFilters[]
+$filters["parsed"][] = array('exampleFilter' => array("source"=>"id","value"=>"9239423942","mode"=>"2"));
+	// Variable: $filters["parsed"][]
 	// Add the pre-parsed filter to the parsed filters list with the
 	// source as id, the value of 9239423942 and the mode 2
 

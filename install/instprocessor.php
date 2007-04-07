@@ -405,10 +405,17 @@ if (isset ($_POST['plugin'])) {
 			if (mysql_num_rows($rs)) {
 			    $row = mysql_fetch_assoc($rs);
 			    $props = propUpdate($properties,$row['properties']);
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE name='$name';", $sqlParser->conn)) {
-					echo "<p>" . mysql_error() . "</p>";
-					return;
-				}
+			    if($row['description'] == $desc){
+				    if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props' WHERE name='$name';", $sqlParser->conn)) {
+					    echo "<p>" . mysql_error() . "</p>";
+					    return;
+					}
+			    } else {
+			    	if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled) VALUES('$name','$desc','$plugin','$properties','$guid','1');",$sqlParser->conn)) {
+						echo "<p>".mysql_error()."</p>";
+						return;
+			    	}
+			    }
 				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
 			} else {
 				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid) VALUES('$name','$desc','$plugin','$properties','$guid');", $sqlParser->conn)) {

@@ -9,13 +9,13 @@
  *
  */
 
-include_once $modx->config['filemanager_path'].'assets/plugins/tinymce/tinymce.lang.php';
-include_once $modx->config['filemanager_path'].'assets/plugins/tinymce/tinymce.functions.php';
+include_once $modx->config['base_path'].'assets/plugins/tinymce210/tinymce.lang.php';
+include_once $modx->config['base_path'].'assets/plugins/tinymce210/tinymce.functions.php';
 
 // Set path and base setting variables
 if(!isset($tinyPath)) { 
 	global $tinyPath;
-	$tinyPath = $modx->config['filemanager_path'].'assets/plugins/tinymce'; 
+	$tinyPath = $modx->config['base_path'].'assets/plugins/tinymce210'; 
 }
 $base_url = $modx->config['base_url'];
 $displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') ) ? "table-row" : "block" ;

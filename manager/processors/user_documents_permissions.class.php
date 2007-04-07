@@ -5,12 +5,14 @@ class udperms{
 	var $user;
 	var $document;
 	var $role;
+	var $duplicateDoc = false;
 	
 	function checkPermissions() {
 		
 		global $table_prefix;
 		global $dbase;
 		global $udperms_allowroot;
+		global $modx;
 
 		$user = $this->user;
 		$document = $this->document;
@@ -28,6 +30,11 @@ class udperms{
 		
 		if($GLOBALS['use_udperms']==0 || $GLOBALS['use_udperms']=="" || !isset($GLOBALS['use_udperms'])) {
 			return true; // permissions aren't in use
+		}
+		
+		$parent = $modx->db->getValue('SELECT parent FROM '.$modx->getFullTableName('site_content').' WHERE id='.$this->document);
+		if ($this->duplicateDoc==true && $parent==0 && $udperms_allowroot==0) {
+			return false; // deny duplicate document at root if Allow Root is No
 		}
 		
 		/*// get the groups this user is a member of

@@ -78,7 +78,7 @@ $rss_placeholders['[+xml_xsl+]'] = isset($xsl) ? '<?xml-stylesheet type="text/xs
 	None
 */
 
-// set tpl rss placeholders
+// set tpl xml placeholders
 $placeholders['*'] = "xml_parameters"; 
 if(!function_exists("xml_parameters")) { 
 	function xml_parameters($placeholders) {

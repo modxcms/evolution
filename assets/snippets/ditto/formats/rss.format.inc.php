@@ -104,7 +104,7 @@ if(!function_exists("rss_author")) {
 
 $extenders[] = "summary";
 	// load required summary extender for backwards compatibility
-	// TODO: Remove with summary extender in next major version
+	// TODO: Remove summary extender in next major version
 	
 // set default templates
 

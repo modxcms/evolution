@@ -131,6 +131,34 @@ font-size:14pt;
 			</ul>
 		</div>
 		<div class="qe_level_1"><h2>Version History</h2>
+					<h3>Version 1.4.4</h3>
+					<ul>
+						<li>Fixed various Select box inconsistencies</li>
+				    <li>Adjusted email validation expression to allow + character.</li>
+				    <li>Line breaks in 'Html' fields will only be replaced in report template if &amp;sendAsText false!</li>
+				    <li>Line breaks in 'Html' fields will be replaced in thankyou template when &amp;sendAsText is true</li>
+				    <li>Properly display session hash name in debug text for &amp;protectsubmit code</li>
+				    <li>Properly escape regular expression in form parser</li>
+				    <li>Fixed 0 (zero) values not being processed in form parser for validating select boxes</li>
+				    <li>Fixed ambiguous variable naming in validation code</li>
+				    <li>Enhanced efLoadTemplate function to also allow snippets as templates</li>
+				    <li>&amp;invalidClass now also works for vericode field</li>
+				    <li>Added &amp;autoSenderName parameter</li>
+				    <li>Added &amp;runSnippet parameter - Call a snippet before main form processing. See parameter documentation for details.</li>
+						<li>Added &amp;snipFolder parameter for those that want to keep different versions of eform in different folders. 
+						<li>Added $lang['ef_mail_error'] to the language file and a slightly improved error reporting when sending mail fails</li>
+						<li>Date formatting for report can now be set in language file: $_lang['ef_date_format']</li>
+						<li>Report output is now more locale aware as far as numbers are concerned. Added $_lang['ef_thousands_separator'] to the language file. If set to an empty string (default) the character defined in the current (php) locale will be used (if any).</li>
+ 					</ul>
+					<h3>Version 1.4.3</h3>
+					<ul>
+						<li>FIXED: When using multiple forms on a page all forms are parsed and validated even when only one form is submitted.</li>
+				    <li>FIXED: fields array values were not cleared between forms (resulting in setting validation messages in all forms when any of the forms form doesn't validate)</li>
+				    <li>FIXED: typo in line 78 - thanks to pixelchutes</li>
+				    <li>Some other issues introduced in the last version have also been addressed</li>
+					</ul>
+
+					
 					<h3>Version 1.4.2</h3>
 				<ul>
 					<li>New: In-line validation classes. <a href="eform.htm#classparams">Two new parameters</a> <code>&amp;requiredClass</code> and<code> &amp;invalidClass</code>. You can use these to set classes for fields and their associated labels when they don't validate. Existing classes will be preserved</li>

@@ -140,22 +140,26 @@ font-size:14pt;
 		<div class="qe_level_1"><a name="whatsnew"></a>
 <h2>What's New</h2>
 			<div class="qe_level_2">
-			<h3>Version 1.4.2</h3>
+			<h3>Version 1.4.4</h3>
 				<ul>
-					<li>New: In-line validation classes. <a href="eform.htm#classparams">Two new parameters</a> <code>&amp;requiredClass</code> and<code> &amp;invalidClass</code>. You can use these to set classes for fields and their associated labels when they don't validate. Existing classes will be preserved</li>
-				  <li>Updated: <a href="eform.htm#placeholders">Validation messages</a> are now inserted including wrapping elements (set in the language file)</li>
-					<li>New: You can now also set the <code>[+validationmessage+]</code> placeholder outside the form template (eg: in the page template or elsewhere). </li>
-					<li>New: Added debug levels: 0:none, 1:validation rules and configuration, 2:print all arrays 3:show parsed template. Some values are only shown when the form is parsed and vaidated (so not the first time the form is displayed)</li>
-					<li>Updated: Changed the way date values are verified due to differences in php versions (Raymond Irving)</li>
-					<li>Updated: Email character set now follows modx character set (thanks to Gildas)</li>
-					<li>New: Added &amp;cssStyle parameter for adding css styles to the &lt;head&gt; tag of the document.</li>
-					<li>New: Added &amp;jScript parameter for adding javascript to the &lt;head&gt; tag of the document.</li>
-				  <li>New: Added &protectSubmit parameter to protect against multiple submits of similar form data</li>
-					<li>New: Added &submitLimit parameter for setting a time limit in minutes on successive submits of same form</li>
-					<li>Tweak: Now trims the spaces in comma separated sessionVars parameter</li>
-					<li>Some other minor tweaks</li>
-					<li>Version checking: eForm now checks for and reports differences between snippet and eform.inc.php</li>
-				</ul>
+					<li>Fixed various Select box inconsistencies</li>
+			    <li>Adjusted email validation expression to allow + character.</li>
+			    <li>Line breaks in 'Html' fields will only be replaced in report template if &amp;sendAsText false!</li>
+			    <li>Line breaks in 'Html' fields will be replaced in thankyou template when &amp;sendAsText is true</li>
+			    <li>Properly display session hash name in debug text for &amp;protectsubmit code</li>
+			    <li>Properly escape regular expression in form parser</li>
+			    <li>Fixed 0 (zero) values not being processed in form parser for validating select boxes</li>
+			    <li>Fixed ambiguous variable naming in validation code</li>
+			    <li>Enhanced efLoadTemplate function to also allow snippets as templates</li>
+			    <li>&amp;invalidClass now also works for vericode field</li>
+			    <li>Added &amp;autoSenderName parameter</li>
+			    <li>Added &amp;runSnippet parameter - Call a snippet before main form processing. See parameter documentation for details.</li>
+					<li>Added &amp;snipFolder parameter for those that want to keep different versions of eform in different folders.
+ defaults to &quot;eform&quot;.</li>
+ 					<li>Added $lang['ef_mail_error'] to the language file and a slightly improved error reporting when sending mail fails</li>
+ 					<li>Date formatting for report can now be set in language file: $_lang['ef_date_format']</li>
+					<li>Report output is now more locale aware as far as numbers are concerned. Added $_lang['ef_thousands_separator'] to the language file. If set to an empty string (default) the character defined in the current (php) locale will be used (if any).</li>
+					</ul>
 		<p><br />You can see a more extensive <a href="eform_history.htm">version history here</a>. </p>
 			</div>
 		</div>
@@ -177,10 +181,10 @@ font-size:14pt;
 			<ul class="qe_param_list">
 				<li><strong>&amp;formid</strong><br/>This is a unique id used to identity a form during postbacks. This is useful in cases where more than one form exists on a page. 
 			Your form template should either have a hidden field with the same formid
-			<code>&lt;input type="hidden" name="formid" value="formName" /&gt;</code>or (in eForm 1.4:final) you can set the the id in the form tag itself:
+			<code>&lt;input type="hidden" name="formid" value="formName" /&gt;</code> or (from eForm 1.4.x) you can set the the id in the form tag itself:
 			<code>&lt;form id="formName"...&gt</code>;</li>
-				<li><strong>&amp;tpl</strong><br/>chunk name (non-numeric) or document id (numeric) to use as a form template.
-			For the regular form fields you do not need to add placeholders, they automatically get inserted by eForm. Special placeholders available are:
+				<li><strong>&amp;tpl</strong><br/>chunk name (non-numeric) or document id (numeric) to use as a form template <span class="new">(new in 1.4.4)</span> You can now also use a snippet as the template source. No parameters are forwarded to the snippet call in this version.
+			For the regular form fields you do not normally need to add placeholders, they automatically get inserted by eForm. The esception to this rule are in the case of event functions where you want to set specific values. Special placeholders available are:
 			[+validationmessage+], [+postdate+],[+verimageurl+] &amp; [+debugText+]. You should have the [+validatiomessage+] placeholder in all your forms. The others you may need depending on other parameters.</li>
 				<li><strong>&amp;report</strong><br/>chunk name (non-numeric) or document id (numeric) to use when generating reports. 
 			Tags: Same as for
@@ -231,6 +235,7 @@ font-size:14pt;
 	E.g. [+firstname+], [+lastname+], [+email+]</li>
 				<li><strong>&amp;autosender</strong> (Optional)<br/>email to display as sender of the auto-respond message
 	e.g. no-reply@mydomain.com</li>
+				<li><strong>&quot;autoSenderName</strong> <span class="new">(new in 1.4.4)</span> (optional)<br />Name to display as sender of the auto-respond message.</li>
 				<li><strong>&amp;automessage</strong> (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as an auto-responder message
 	Can include [+form fields+]. E.g. [+firstname+]
 	- tags: [form_fields],[postdate]
@@ -254,7 +259,7 @@ font-size:14pt;
 				<li><strong>&amp;postOverides</strong>  (optional)<br/>Used in combination of
 			<code>&amp;sessionVars</code>. Normally session variables will overide posted values. By setting &amp;postOverides=`1` posted values will take precedence.</li>
 				<li><strong>&amp;reportAbuse</strong>  (optional)<br/>Setting &amp;reportAbuse=`1` will send an email to the system specified email address if email injection attempts are noticed by eForm. (Use sparingly...)</li>
-				<li><a name="142new" id="142new"></a><strong>&amp;cssStyle</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />
+				<li><a name="142new" id="142new"></a><strong>&amp;cssStyle</strong> (optional)<br />
 				Adds a style declaration to the &lt;head&gt; section of the page when either the form is displayed or the thank you page is displayed (only if the <code>&thankyou</code> parameter is set).  Values can be a document id (numeric), chunk name or (relative or absolute) url to css file. Multiple values can be separated by a comma (in fact all three values can be mixed).<br />examples:<br /><code>[!eForm &amp;cssStyle=`assets/site/forms.css,chunkName` ... !]</code><br />
 <code>[!eForm &amp;cssStyle=`chunkName` ... !]</code><br />
 <code>[!eForm &amp;cssStyle=`http://mysite.com/assets/styles/forms.css` ... !]</code><br />
@@ -265,21 +270,29 @@ Chunks (and documents if a doc id is given) can return a values in the form of:
 	<li>a comma separated list of urls, eg. <code>assets/site/forms.css,assets/site/more.css,assets/site/gone_overboard.css</code></li>
 </ol>
 				</li>
-				<li><strong>&amp;jScript</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />Similar to <code>&amp;cssStyle</code> but for adding javascript to the &lt;head&gt; of the page document. Currently Javascript is only added when the form is displayed. </li>
-				<li><strong>&amp;protectSubmit</strong> <span class="new">(new in 1.4.2)</span>(optional) defaults to 1 (on)<br />
+				<li><strong>&amp;jScript</strong> (optional)<br />Similar to <code>&amp;cssStyle</code> but for adding javascript to the &lt;head&gt; of the page document. Currently Javascript is only added when the form is displayed. </li>
+				<li><strong>&amp;protectSubmit</strong>(optional) defaults to 1 (on)<br />
 				Protects against submitting a form multiple times with the same data. Submitting the form becomes disabled after the first successful submit while the value from key form fields remains the same. This is achieved by setting (and comparing) a session variable with an md5 hash from these key fields. Which fields are compared depends on the value of <code>&amp;protectSubmit</code>.Possible values are <strong>0</strong> (off), <strong>1</strong> (all 'required' fields are used) or you can set a comma separated list of field names. To ensure that the session variable works separatedly for different forms the session variable name is based on <code>&amp;formid</code> ({formid}_hash).
 				</li>
-				<li><strong>&amp;submitLimit</strong> <span class="new">(new in 1.4.2)</span> (optional) off (0) by default<br />
+				<li><strong>&amp;submitLimit</strong> (optional) off (0) by default<br />
 				Enforces a time limit (in minutes) between form submits. After the form has been submitted successfully it can not be submitted again for <code>&amp;submitLimit</code> minutes irrespective of the form data. When used in combination with <code>&amp;protectSubmit</code> <code>submitLimit</code> takes precedence, meaning that when the time limit has expired the form can be submitted again regardless of the setting of <code>&amp;protectSubmit</code> (it will unset the session variable). As with <code>&amp;protectSubmit</code> this parameter uses a session variable with a variable name based on &amp;formid. 
 				</li>
-			<li><a name="classparams"></a><strong>&amp;requiredClass</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />
+			<li><a name="classparams"></a><strong>&amp;requiredClass</strong> (optional)<br />
 			Css class name. Will add class in (empty) required form fields on validation. Existing classes will be preserved.<br />
 			<em>If you have already set a class for a field or label and you get unexpected css results check the order in which you have declared the classes. The <code>&requiredClass</code> is added to the beginning of any classes already set.</em>
 			</li>
-			<li><strong>&amp;invalidClass</strong> <span class="new">(new in 1.4.2)</span> (optional)<br />
+			<li><strong>&amp;invalidClass</strong> (optional)<br />
 			Css class name. Will add class in invalid form fields on validation. Existing classes will be preserved.
 			</li>
+			<li><strong>&amp;runSnippet</strong> <span class="new">(new in 1.4.4)</span> (optional)<br />
+			Expects a snippet name. Snippet will be run before any eForm handling. One parameter, the &amp;&formid will be passed to the snippet. Any return value from the snippet is discarded. This can be used to insert functions as an alternative to declaring a separate snippet in the document.  Sadly eForm will silently ignore a snippet that does not exist due to the way $modx->runSnippet handles snippet return values.
+			</li>
+			<li><strong>&amp;snipFolder</strong> <span class="new">(new in 1.4.4)</span> (optional)<br />
+			For those that want to keep different versions of eForm active. You can now save all of eForm's files in a different directory and set the &amp;snipFolder accordingly. You can for instance save version 1.4.4 in the 'assets/snippets/eform/1.4.4' folder and set <code>&amp;snipFolder=`eform/1.4.4`</code>. The value of &amp;snipFolder is added to the basic snippets folder 'assets/snippets/'.It should not include a closing slash (/)!</li>
 			</ul>
+			
+			
+			
 			<a name="events"></a>
 			<h4>PHP Event Functions:</h4>
 <p>The eForm event functions are now incorporated into the parameters. They are:</p>

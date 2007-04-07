@@ -38,6 +38,8 @@ class template{
 	function process($template) {
 		if (!isset($template["base"])) {
 			$template["base"] = $template["default"];
+		} else {
+			unset($template["default"]);
 		}
 		foreach ($template as $name=>$tpl) {
 			if(!empty($tpl) && $tpl != "") {
@@ -119,7 +121,7 @@ class template{
 			"unknown" => array()
 		);
 		
-		$custom = array("author","date","tagLinks","url","title");
+		$custom = array("author","date","url","title");
 
 		foreach ($fieldList as $field) {
 			if (substr($field, 0, 4) == "rss_") {
@@ -144,7 +146,7 @@ class template{
 				$fields['tv'][] = substr($field,2);
 					// TODO: Remove TV Prefix support in Ditto 2.1
 			}else {
-				$fields['unknown'] = $field; 
+				$fields['unknown'][] = $field; 
 			}
 		}
 		return $fields;
@@ -198,6 +200,10 @@ class template{
 			$template = $this->get_file_contents(substr($tpl, 6));
 		} else if(substr($tpl, 0, 6) == "@CODE:") {
 			$template = substr($tpl, 6);
+		} else if(substr($tpl, 0, 5) == "@FILE") {
+			$template = $this->get_file_contents(trim(substr($tpl, 5)));
+		} else if(substr($tpl, 0, 5) == "@CODE") {
+			$template = trim(substr($tpl, 5));
 		} else {
 			$template = $this->language['missing_placeholders_tpl'];
 		}

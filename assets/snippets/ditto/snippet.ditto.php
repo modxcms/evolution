@@ -3,7 +3,7 @@
 /*
  * Title: Ditto Snippet
  * 
- * Desciption:
+ * Description:
  *  	Aggregates documents to create blogs, article/news
  *  	collections, and more,with full support for templating.
  * 
@@ -11,15 +11,15 @@
  * 		Mark Kaplan for MODx CMF
  * 
  * Version: 
- * 		2.0.0
+ * 		2.0.2.BETA
 */
 
 //---Core Settings---------------------------------------------------- //
 
-$ditto_version = "2.0.0";
+$ditto_version = "2.0.2.BETA";
 	// Ditto version being executed
 
-$ditto_base = isset($ditto_base) ? $ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
+$ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
 /*
 	Param: ditto_base
 	
@@ -41,7 +41,10 @@ $GLOBALS["dittoID"] = $dittoID;
 	Unique ID for this Ditto instance for connection with other scripts (like Reflect) and unique URL parameters
 
 	Options:
-	Any valid folder location containing the Ditto source code with a trailing slash
+	Any combination of characters a-z, underscores, and numbers 0-9
+	
+	Note:
+	This is case sensitive
 
 	Default:
 	"" - blank
@@ -85,7 +88,7 @@ $config = (isset($config)) ? $config : "default";
 
 	Options:
 	"default" - default blank config file
-	CONFIG_NAME - Other configs installed in the configs folder 
+	CONFIG_NAME - Other configs installed in the configs folder or in any folder within the MODx base path via @FILE
 
 	Default:
 	"default"
@@ -132,7 +135,7 @@ $extenders = isset($extenders) ? explode(",",$extenders) : array();
  	Load an extender which adds functionality to Ditto
 
 	Options:
-	Any extender in the extenders folder
+	Any extender in the extenders folder or in any folder within the MODx base path via @FILE
 
 	Default:
 	[NULL]
@@ -147,15 +150,13 @@ $placeholders = array();
 	// Variable: placeholders
 	// Initialize custom placeholders array for configs or extenders to add to
 
-$cFilters = array();
-	// Variable: cFilters
-	// Initialize custom filters array for configs or extenders to add to
-
-$parsedFilters = array();
-	// Variable: parsedFilters
-	// Initialize array of parsed filters which can be added to with an array in the following format
+$filters = array("custom"=>array(),"parsed"=>array());
+	// Variable: filters
+	// Holds both the custom filters array for configs or extenders to add to 
+	// and the parsed filters array. To add to this array, use the following format
 	// (code)
-	// array("name" => array("source"=>$source,"value"=>$value,"mode"=>$mode));
+	// $filters["parsed"][] = array("name" => array("source"=>$source,"value"=>$value,"mode"=>$mode));
+	// $filters["custom"][] = array("source","callback_function");
 	
 //---Includes-------------------------------------------------------- //
 
@@ -165,10 +166,13 @@ $files = array (
 	"template_class" => $ditto_base."classes/template.class.inc.php",
 	"filter_class" => $ditto_base."classes/filter.class.inc.php",
 	"format" => $ditto_base."formats/$format.format.inc.php",
-	"config" => $ditto_base."configs/$config.config.php"
+	"config" => (substr($config, 0, 5) != "@FILE") ? $ditto_base."configs/$config.config.php" : $modx->config['base_path'].trim(substr($config, 5))
 );
 if ($phx == 1) {
 	$files["prePHx_class"] = $ditto_base."classes/phx.pre.class.inc.php";
+}
+if (isset($randomize)) {
+	$files["randomize_class"] = $ditto_base."classes/random.class.inc.php";
 }
 if ($debug == 1) {
 	$files["modx_debug_class"] = $ditto_base."debug/modxDebugConsole.class.php";
@@ -199,14 +203,19 @@ if (class_exists('ditto')) {
 	return $_lang['invalid_class'];
 }
 
-//---Initiate Class-------------------------------------------------- //
+//---Initiate Extenders---------------------------------------------- //
 if (isset($tagData)) {
 	$extenders[] = "tagging";
 }
 if(count($extenders) > 0) {
 	$extenders = array_unique($extenders);
 	foreach ($extenders as $extender) {
-			$extender_path = $ditto_base."extenders/".$extender.".extender.inc.php";
+			if(substr($extender, 0, 5) != "@FILE") {
+				$extender_path = $ditto_base."extenders/".$extender.".extender.inc.php";				
+			} else {
+				$extender_path = $modx->config['base_path'].trim(substr($extender, 5));
+			}
+			
 			if (file_exists($extender_path)){
 				include($extender_path);
 			} else {
@@ -219,7 +228,8 @@ if(count($extenders) > 0) {
 //---Parameters------------------------------------------------------- /*
 
 if (isset($startID)) {$parents = $startID;}
-	// Variable: startID
+if (isset($summarize)) {$display = $summarize;}
+if (isset($limit)) {$queryLimit = $limit;}
 	// Allow backwards compatibility
 
 $idType = isset($documents) ? "documents" : "parents";
@@ -263,7 +273,7 @@ $documents = isset($documents) ? $ditto->cleanIDs($documents) : false;
 
 $IDs = ($idType == "parents") ? $parents : $documents;
 	// Variable: IDs
-	// Internal variable which holders the set of IDs for Ditto to fetch
+	// Internal variable which holds the set of IDs for Ditto to fetch
 
 $depth = isset($depth) ? $depth : 1;
 /*
@@ -286,7 +296,7 @@ $paginate = isset($paginate)? $paginate : 0;
 	Param: paginate
 
 	Purpose:
-	Paginate the results set into pages of &summarize lenght
+	Paginate the results set into pages of &show lenght
 
 	Options:
 	0 - off
@@ -298,7 +308,7 @@ $paginate = isset($paginate)? $paginate : 0;
 	Related:
 	- <paginateAlwaysShowLinks>
 	- <paginateSplitterCharacter>
-	- <summarize>
+	- <show>
 */
 $dateSource = isset($dateSource) ? $dateSource : "createdon";
 /*
@@ -332,9 +342,9 @@ $dateFormat = isset($dateFormat)? $dateFormat : $_lang["dateFormat"];
 	Related:
 	- <dateSource>
 */
-$summarize = isset($summarize) ? $summarize : 3;
+$display = isset($display) ? $display : 3;
 /*
-	Param: summarize
+	Param: display
 
 	Purpose:
 	Number of documents to display in the results
@@ -347,7 +357,7 @@ $summarize = isset($summarize) ? $summarize : 3;
 	3
 	
 	Related:
-	- <limit>
+	- <queryLimit>
 	- <total>
 */
 $total = isset($total) ? $total : "all";
@@ -365,8 +375,8 @@ $total = isset($total) ? $total : "all";
 	"all" - All documents found
 	
 	Related:
-	- <summarize>
-	- <limit>
+	- <show>
+	- <queryLimit>
 */
 $showPublishedOnly = isset($showPublishedOnly) ? $showPublishedOnly : 1;
 /*
@@ -451,12 +461,12 @@ $seeThruUnpub = (isset($seeThruUnpub))? $seeThruUnpub : 1 ;
 	- <showInMenuOnly>
 	- <where>
 */
-$limit = (isset($limit))? $limit : 0;
+$queryLimit = (isset($queryLimit))? $queryLimit : 0;
 /*
-	Param: limit
+	Param: queryLimit
 
 	Purpose:
-	Number of documents to retrieve from database, same as MySQL LIMIT
+	Number of documents to retrieve from the database, same as MySQL LIMIT
 
 	Options:
 	# - Any number
@@ -482,7 +492,7 @@ $where = (isset($where))? $where : "";
 	[NULL]
 	
 	Related:
-	- <limit>
+	- <queryLimit>
 */
 $noResults = isset($noResults)? $ditto->getParam($noResults,"no_documents") : $_lang['no_documents'];
 /*
@@ -558,7 +568,7 @@ $sortBy = isset($sortBy) ? $ditto->parseSort($sortBy, $randomize) : "createdon";
 	- <sortDir>
 */
 $offset = isset($start) ? $start : 0;
-$start = (isset($_GET[$dittoID.'start'])) ? ($_GET[$dittoID.'start']) : 0;
+$start = (isset($_GET[$dittoID.'start'])) ? intval($_GET[$dittoID.'start']) : 0;
 /*
 	Param: start
 
@@ -608,8 +618,10 @@ $localFilterDelimiter = isset($localFilterDelimiter) ? $localFilterDelimiter : "
 	- <filter>
 	- <parseFilters>
 */
-
-$filter = (isset($filter) || ($cFilters != false) || ($parsedFilters != false)) ? $ditto->parseFilters($filter,$cFilters,$parsedFilters,$globalFilterDelimiter,$localFilterDelimiter) : false;
+$filters["custom"] = isset($cFilters) ? array_merge($filters["custom"],$cFilters) : $filters["custom"];
+$filters["parsed"] = isset($parsedFilters) ? array_merge($filters["parsed"],$parsedFilters) : $filters["parsed"];
+	// handle 2.0.0 compatibility
+$filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"] != false)) ? $ditto->parseFilters($filter,$filters["custom"],$filters["parsed"],$globalFilterDelimiter,$localFilterDelimiter) : false;
 /*
 	Param: filter
 
@@ -627,6 +639,11 @@ $filter = (isset($filter) || ($cFilters != false) || ($parsedFilters != false)) 
 	6 - >=
 	7 - Text not in field value
 	8 - Text in field value
+	
+	@EVAL:
+		@EVAL in filters works the same as it does in MODx exect it can only be used 
+		with basic filtering, not custom filtering (tagging, etc). Make sure that
+		you return the value you wish Ditto to filter by and that the code is valid PHP.
 
 	Default:
 	[NULL]
@@ -662,9 +679,10 @@ $randomize = (isset($randomize))? $randomize : 0;
 	Options:
 	0 - off
 	1 - on
+	Any MODx field or TV for weighted random
 	
 	Default:
-	1 - on
+	0 - off
 */
 $save = (isset($save))? $save : 0;
 /*
@@ -684,7 +702,7 @@ $save = (isset($save))? $save : 0;
 		0 - off; returns output
 */
 $templates = array(
-	"default" => "@CODE:".$_lang['default_template'],
+	"default" => "@CODE".$_lang['default_template'],
 	"base" => $tpl,
 	"alt" => $tplAlt,
 	"first" => $tplFirst,
@@ -699,8 +717,8 @@ $templates = array(
 
 	Options:
 	- Any valid chunk name
-	- Code via @CODE:
-	- File via @FILE:
+	- Code via @CODE
+	- File via @FILE
 
 	Default:
 	[LANG]
@@ -713,8 +731,8 @@ $templates = array(
 
 	Options:
 	- Any valid chunk name
-	- Code via @CODE:
-	- File via @FILE:
+	- Code via @CODE
+	- File via @FILE
 
 	Default:
 	&tpl
@@ -727,8 +745,8 @@ $templates = array(
 
 	Options:
 	- Any valid chunk name
-	- Code via @CODE:
-	- File via @FILE:
+	- Code via @CODE
+	- File via @FILE
 
 	Default:
 	&tpl
@@ -741,8 +759,8 @@ $templates = array(
 
 	Options:
 	- Any valid chunk name
-	- Code via @CODE:
-	- File via @FILE:
+	- Code via @CODE
+	- File via @FILE
 
 	Default:
 	&tpl
@@ -755,8 +773,8 @@ $templates = array(
 
 	Options:
 	- Any valid chunk name
-	- Code via @CODE:
-	- File via @FILE:
+	- Code via @CODE
+	- File via @FILE
 
 	Default:
 	&tpl
@@ -770,25 +788,25 @@ $templates = $ditto->template->process($templates);
 $ditto->setDisplayFields($ditto->template->fields,$hiddenFields);
 	// parse hidden fields
 	
-$ditto->parseFields($placeholders,$seeThruUnpub,$dateSource);
+$ditto->parseFields($placeholders,$seeThruUnpub,$dateSource,$randomize);
 	// parse the fields into the field array
 		
-$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $sortBy, $ditto->advSort, $sortDir, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $showInMenuOnly, $where, $keywords, $limit, $summarize, $filter,$paginate, $randomize);
+$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $sortBy, $sortDir, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $showInMenuOnly, $where, $keywords, $queryLimit, $display, $filter,$paginate, $randomize);
 	// retrieves a list of document IDs that meet the criteria and populates the $resources array with them
 $count = count($documentIDs);
 	// count the number of documents to be retrieved
 $count = $count-$offset;
-	// handle first offset
+	// handle the offset
 if ($count > 0) {
 	// if documents are returned continue with execution
 	
 	$total = ($total == "all") ? $count : min($total,$count);
 		// set total equal to count if all documents are to be included
 	
-	$summarize = ($summarize == "all") ? min($count,$total) : min($summarize,$total);
-		// allow summarize to use all option
+	$display = ($display == "all") ? min($count,$total) : min($display,$total);
+		// allow show to use all option
 
-	$stop = ($save != "1") ? min($total-$start,$summarize) : min($count,$total);
+	$stop = ($save != "1") ? min($total-$start,$display) : min($count,$total);
 		// set initial stop count
 
 	if($paginate == 1) {
@@ -836,8 +854,8 @@ if ($count > 0) {
 
 			Options:
 			- Any valid chunk name
-			- Code via @CODE:
-			- File via @FILE:
+			- Code via @CODE
+			- File via @FILE
 
 			Default:
 			[LANG]
@@ -855,8 +873,8 @@ if ($count > 0) {
 
 			Options:
 			- Any valid chunk name
-			- Code via @CODE:
-			- File via @FILE:
+			- Code via @CODE
+			- File via @FILE
 
 			Default:
 			[LANG]
@@ -865,15 +883,26 @@ if ($count > 0) {
 			- <tplPaginatePrevious>
 			- <paginateSplitterCharacter>
 		*/
-		$ditto->paginate($start, $stop, $total, $summarize, $tplPaginateNext, $tplPaginatePrevious, $paginateAlwaysShowLinks, $paginateSplitterCharacter);
+		$ditto->paginate($start, $stop, $total, $display, $tplPaginateNext, $tplPaginatePrevious, $paginateAlwaysShowLinks, $paginateSplitterCharacter);
 			// generate the pagination placeholders
 	}
-	$start = $start + $offset;
-		// handle second offset
+
 	$dbFields = $ditto->fields["display"]["db"];
 		// get the database fields
 	$TVs = $ditto->fields["display"]["tv"];
 		// get the TVs
+	
+	switch($sortDir) {
+		case "DESC":
+			$stop = ($ditto->prefetch === false) ? $stop + $start + $offset : $stop + $offset; 
+			$start += $offset;
+		break;
+		case "ASC":
+			$start += $offset;
+			$stop += $start;
+		break;
+	}
+
 	if ($ditto->prefetch !== false) {
 		$documentIDs = array_slice($documentIDs,$start,$stop);
 			// set the document IDs equal to the trimmed array
@@ -883,43 +912,31 @@ if ($count > 0) {
 			// append id to the db fields array
 		$TVs = array_diff($TVs,$ditto->prefetch["fields"]["tv"]);
 			// calculate the difference between the tv fields and those already prefetched
-	} else if ($paginate) {
-		$limit = min($start,$total).', '.min($summarize,abs($total-$start));
-			// limit the number of items to be retrieved
+		$start = 0;
+		$stop = min($display,count($documentIDs));
 	} else {
-		$limit = ($limit == 0) ? "" : $limit;
+		$queryLimit = ($queryLimit == 0) ? "" : $queryLimit;
 	}
 
-	$resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $keywords, $showPublishedOnly, 0, $where, $limit, $sortBy, $sortDir,$randomize);
+	$resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $keywords, $showPublishedOnly, 0, $where, $queryLimit, $sortBy, $sortDir,$randomize);
 		// retrieves documents
-
 	$output = $header;
 		// initialize the output variable and send the header
 
-	$stop = min($summarize,count($resource));
-		// check stop one last time
-
 	if ($resource) {
+		if ($randomize != "0" && $randomize != "1") {
+			$resource = $ditto->weightedRandom($resource,$randomize,$stop);
+				// randomize the documents
+		}
+		
 		$resource = array_values($resource);
-		/*
-			Param: randomize
 
-			Purpose:
-			Randomize the order of the results
-
-			Options:
-			0 - off
-			1 - on
-
-			Default:
-			0 - off
-		*/
-		for ($x=0;$x<$stop;$x++) {
+		for ($x=$start;$x<$stop;$x++) {
 			$template = $ditto->template->determine($templates,$x,0,$stop,$resource[$x]["id"]);
 				// choose the template to use and set the code of that template to the template variable
 			$renderedOutput = $ditto->render($resource[$x], $template, $removeChunk, $dateSource, $dateFormat, $placeholders,$phx);
 				// render the output using the correct template, in the correct format and language
-			$modx->setPlaceholder($dittoID."item[".($x)."]",$renderedOutput);
+			$modx->setPlaceholder($dittoID."item[".abs($start-$x)."]",$renderedOutput);
 			/*
 				Placeholder: item[x]
 
@@ -942,7 +959,7 @@ if ($count > 0) {
 
 	if($save) {
 		$modx->setPlaceholder($dittoID."ditto_object", $ditto);
-		$modx->setPlaceholder($dittoID."ditto_resource", ($save == "1") ? array_slice($resource,$summarize) : $resource);
+		$modx->setPlaceholder($dittoID."ditto_resource", ($save == "1") ? array_slice($resource,$display) : $resource);
 	}
 } else {
 	$output = $header.$noResults.$footer;
@@ -952,15 +969,17 @@ if ($count > 0) {
 // ---------------------------------------------------
 
 if ($debug == 1) {
+	$ditto_params = func_get_args();
+	if (!isset($_GET["ditto_".$dittoID."debug"])) {
+	$_SESSION["ditto_debug_$dittoID"] = $ditto->debug->render_popup($ditto, $ditto_base, $ditto_version, $ditto_params[1], $documentIDs, array("db"=>$dbFields,"tv"=>$TVs), $display, $templates, $sortBy, $sortDir, $start, $stop, $total,$filter,$resource);
+	}
 	if (isset($_GET["ditto_".$dittoID."debug"])) {
-		$ditto_params = func_get_args();
-		$debug_html = $ditto->debug->render_popup($ditto, $ditto_base, $ditto_version, $ditto_params[1], $documentIDs, array("db"=>$dbFields,"tv"=>$TVs), $summarize, $templates, $sortBy, $sortDir, $start, $stop+$start,$total,$filter,$resource);
 		switch ($_GET["ditto_".$dittoID."debug"]) {
 			case "open" :
-				exit($debug_html);
+				exit($_SESSION["ditto_debug_$dittoID"]);
 			break;
 			case "save" :
-				$ditto->debug->save($debug_html,"ditto".strtolower($ditto_version)."_debug_doc".$modx->documentIdentifier.".html");
+				$ditto->debug->save($_SESSION["ditto_debug_$dittoID"],"ditto".strtolower($ditto_version)."_debug_doc".$modx->documentIdentifier.".html");
 			break;
 		}
 	} else {
@@ -969,5 +988,4 @@ if ($debug == 1) {
 }
 
 return ($save != 3) ? $output : "";
-
 ?>

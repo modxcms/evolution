@@ -80,6 +80,47 @@ $delimiter= isset($tagDelimiter) ? $tagDelimiter: " ";
 	Default:
 	" " - space
 */
+$displayDelimiter= isset($tagDisplayDelimiter) ? $tagDisplayDelimiter: $delimiter;
+/*
+	Param: tagDisplayDelimiter
+
+	Purpose:
+ 	What separates the tags in [+tagLinks+]
+
+	Options:
+	Any character
+
+	Default:
+	&tagDelimiter
+*/
+$sort= isset($tagSort) ? $tagSort: 1;
+/*
+	Param: tagSort
+
+	Purpose:
+ 	Sort the tags alphanumerically
+
+	Options:
+	0 - off
+	1 - on
+
+	Default:
+	1 - on
+*/
+$displayMode= isset($tagDisplayMode) ? $tagDisplayMode: 1;
+/*
+	Param: tagSort
+
+	Purpose:
+ 	How to display the tags in [+tagLinks+]
+
+	Options:
+	1 - string of links &tagDisplayDelimiter separated 
+	2 - ul/li list
+
+	Default:
+	1 - string of links &tagDisplayDelimiter separated 
+*/
 $givenTags = !empty($tags) ? trim($tags) : false;
 /*
 	Param: tags
@@ -99,9 +140,9 @@ $givenTags = !empty($tags) ? trim($tags) : false;
 // ---------------------------------------------------
 if(!class_exists("tagging")) {
 	class tagging {
-		var $delimiter,$source,$landing,$mode,$format,$givenTags,$caseSensitive;
-	
-		function tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive) {
+		var $delimiter,$source,$landing,$mode,$format,$givenTags,$caseSensitive, $displayDelimiter, $sort, $displayMode;
+
+		function tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive, $displayDelimiter, $sort, $displayMode) {
 			$this->delimiter = $delimiter;
 			$this->source = $this->parseTagData($source);
 			$this->mode = $mode;
@@ -109,6 +150,9 @@ if(!class_exists("tagging")) {
 			$this->format = $format;
 			$this->givenTags = $this->prepGivenTags($givenTags);
 			$this->caseSensitive = $caseSensitive;
+			$this->displayDelimiter = $displayDelimiter;
+			$this->sort = $sort;
+			$this->displayMode = $displayMode;
 		}
 	
 		function prepGivenTags ($givenTags) {
@@ -133,9 +177,9 @@ if(!class_exists("tagging")) {
 			foreach ($tags as $tag) {
 				if (!empty($tag)) {				
 					if ($this->caseSensitive) {
-						$kTags[$tag] = $tag;
+						$kTags[trim($tag)] = trim($tag);
 					} else {
-						$kTags[strtolower($tag)] = $tag;
+						$kTags[strtolower(trim($tag))] = trim($tag);
 					}
 				}
 			}
@@ -197,9 +241,9 @@ if(!class_exists("tagging")) {
 			foreach ($tags as $tag) {
 				if (!empty($tag)) {
 					if ($this->caseSensitive) {
-						$kTags[$tag] = $tag;
+						$kTags[trim($tag)] = trim($tag);
 					} else {
-						$kTags[strtolower($tag)] = $tag;
+						$kTags[strtolower(trim($tag))] = trim($tag);
 					}
 				}
 			}
@@ -207,26 +251,42 @@ if(!class_exists("tagging")) {
 		}
 
 		function tagLinks($tags, $tagDelimiter, $tagID=false, $format="html") {
-			global $ditto_lang;
+			global $ditto_lang,$modx;
 			if(count($tags) == 0 && $format=="html") {
 				return $ditto_lang['none'];
-			} else if (count($tags) == 0 && ($format=="rss" || $format=="xml")) 
+			} else if (count($tags) == 0 && ($format=="rss" || $format=="xml" || $format == "xml")) 
 			{
 				return "<category>".$ditto_lang['none']."</category>";
 			}
 
 			$output = "";
+			if ($this->sort) {
+				ksort($tags);
+			}
+			
+			if ($this->displayMode == 1) {
 			foreach ($tags as $tag) {
 				if ($format == "html") {
 					$tagDocID = (!$tagID) ? $modx->documentObject['id'] : $tagID;
-					$url = ditto::buildURL("tags=$tag",$tagDocID);
-					$output .= "<a href=\"$url\" class=\"ditto_tag\" rel=\"tag\">$tag</a> ";
-				} else if ($format == "rss" || $format == "xml") {
+					$url = ditto::buildURL("tags=$tag&start=0",$tagDocID);
+					$output .= "<a href=\"$url\" class=\"ditto_tag\" rel=\"tag\">$tag</a>".$this->displayDelimiter;
+				} else if ($format == "rss" || $format == "xml" || $format == "atom") {
 					$output .=  "
 					<category>$tag</category>";
 				}
 			}
-			return $output;
+			
+			} else if ($format != "rss" && $format != "xml" && $format != "atom" && $this->displayMode == 2) {
+				$tagList = array();
+				foreach ($tags as $tag) {
+					$tagDocID = (!$tagID) ? $modx->documentObject['id'] : $tagID;
+					$url = ditto::buildURL("tags=$tag&start=0",$tagDocID);
+					$tagList[] = "<a href=\"$url\" class=\"ditto_tag\" rel=\"tag\">$tag</a>";
+				}
+				$output = $modx->makeList($tagList, $ulroot='ditto_tag_list', $ulprefix='ditto_tag_', $type='', $ordered=false, $tablevel=0);
+			}
+			
+			return substr($output,0,-1*strlen($this->displayDelimiter));
 		}
 	}
 }
@@ -235,10 +295,10 @@ if(!class_exists("tagging")) {
 // Tagging Parameters
 // ---------------------------------------------------
 
-$tags = new tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive);
+$tags = new tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive,$displayDelimiter, $sort, $displayMode);
 
 if (count($tags->givenTags) > 0) {
-	$cFilters["tagging"] = array($source,array($tags,"tagFilter")); 
+	$filters["custom"]["tagging"] = array($source,array($tags,"tagFilter")); 
 		// set tagging custom filter
 }
 
@@ -251,7 +311,7 @@ $modx->setPlaceholder($dittoID."tagLinks",$tags->tagLinks($tags->givenTags, $del
 	Nice 'n beautiful tag list with links pointing to <tagDocumentID>
 */
 // set raw tags placeholder
-$modx->setPlaceholder("tags",implode($delimiter,$tags->givenTags));
+$modx->setPlaceholder($dittoID."tags",implode($delimiter,$tags->givenTags));
 /*
 	Placeholder: tags
 	

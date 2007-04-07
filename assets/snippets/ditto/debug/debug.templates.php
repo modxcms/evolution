@@ -28,7 +28,7 @@ $dbg_templates["main"] = <<<TPL
 TPL;
 
 $dbg_templates["links"] = <<<TPL
-<img src="[+dbg_icon_url+]" /> <a href="[+curl+]#" onclick="window.open('[+open_url+]','[+dbg_title+]','width=720, height=500, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1, scrollbars=1, resizable=yes');">[+open_dbg_console+]</a><br />
+<img src="[+dbg_icon_url+]" /> <a onclick="window.open('[+open_url+]','[+dbg_title+]','width=720, height=500, toolbar=0, menubar=0, status=0, alwaysRaised=1, dependent=1, scrollbars=1, resizable=yes');">[+open_dbg_console+]</a><br />
 <img src="[+dbg_icon_url+]" /> <a href="[+save_url+]">[+save_dbg_console+]</a><br /><br />
 TPL;
 

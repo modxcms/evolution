@@ -3,8 +3,15 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC2 (rev 2446 - March 18, 2007)
+MODx 0.9.6-RC2 (rev 2500 - April 7, 2007)
 ====================================
+* Update to Ditto (2.0.2) and Reflect (2498)
+* Update eForm to 1.4.4 (2492)
+* Fixed error in file manager (2490)
+* Remove "MODx Registered" and update regClientCSS to support media (2462)
+* [FS#815] Prevent documents being duplicated at root level by non-Admins if user permissions are active and Allow Root is set to No (2456)
+* Added alphabetical sorting of files and folders to the file manager. (2445)
+* Template Variable output widget updates (2443)
 * [FS#758] Use web_access_permissions instead of access_permissions when checking if a user can set the Access Permissions when editing/creating a document (2440)
 * [FS#763] Fix broken image path (2439)
 * [FS#792] Default the unauthorized page and error page config settings to site_start if an invalid/blank value is specified in the config settings (2438)

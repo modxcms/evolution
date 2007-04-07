@@ -25,19 +25,31 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
 */
 if (!class_exists("dateFilter")) {
 	class dateFilter {
-		var $month,$year,$dateSource;
+		var $month,$year,$day,$dateSource;
 	
-		function dateFilter($month,$year,$dateSource) {
+		function dateFilter($month,$year,$day,$dateSource) {
 			$this->month = $month;
 			$this->year = $year;
+			$this->day = $day;
 			$this->dateSource = $dateSource;
 		}
 		function execute($value) {
 			$month = $this->month;
 			$year = $this->year;
+			$day = $this->day;
 			$unset = 1;
-			$min = ($month == false) ? mktime(0,0,0,1,1,$year) : mktime(0,0,0,$month,1,$year);
-			$max = ($month == false) ? mktime(0,0,0,1,1,$year+1): mktime(0,0,0,($month+1),0,$year);
+			
+			if ($year && !$month && !$day) { // Year only e.g. 2007
+				$min = mktime(0,0,0,1,1,$year);
+				$max = mktime(23,59,59,12,31,$year);
+			} else if ($year && $month && !$day) { // Year and month e.g. 2007-01
+				$min = mktime(0,0,0,$month, 1, $year);
+				$max = mktime(23,59,59,$month, date("t", $min), $year);
+			} else if ($year && $month && $day) { // Year month and day e.g. 2007-01-11
+				$min = mktime(0,0,0,$month, $day, $year);
+				$max = mktime(23,59,59,$month, $day, $year);
+			}
+			
 			if ($value[$this->dateSource] <= $min || $value[$this->dateSource] >= $max){
 				$unset = 0;
 			}
@@ -47,8 +59,8 @@ if (!class_exists("dateFilter")) {
 }
 if (!empty($_GET[$dittoID.'year'])) {
 	if (!empty($_GET[$dittoID.'month']) && $_GET[$dittoID.'month'] != 'false') {
-		$month = $_GET[$dittoID.'month'];
-		$year = $_GET[$dittoID.'year'];
+		$month = intval($_GET[$dittoID.'month']);
+		$year = intval($_GET[$dittoID.'year']);
 		$month_text = ditto::formatDate(mktime(10, 10, 10, $month, 10, $year),"%B");
 		$modx->setPlaceholder($dittoID."month",$month_text);
 		/*
@@ -57,20 +69,31 @@ if (!empty($_GET[$dittoID.'year'])) {
 			Content:
 			Month being filtered by
 		*/
-		$modx->setPlaceholder($dittoID."year",$_GET[$dittoID.'year']);
+		$modx->setPlaceholder($dittoID."year",$year);
 		/*
 			Placeholder: year
 
 			Content:
 			Year being filtered by
 		*/
-	} else {
-		$year = $_GET[$dittoID.'year'];
-		$month = false;
-		$modx->setPlaceholder($dittoID."year",$_GET[$dittoID.'year']);		
+	if ($_GET[$dittoID.'day'] != 'false') {
+		$day = intval($_GET[$dittoID.'day']);
+		$modx->setPlaceholder($dittoID."day",$day);
+		/*
+			Placeholder: day
+
+			Content:
+			Day being filtered by
+		*/
 	}
-	$dateFilterOject = new dateFilter($month,$year,$dateSource);
-	$cFilters["dateFilter"] = array($dateSource,array($dateFilterOject,"execute"));
+} else {
+		$year = intval($_GET[$dittoID.'year']);
+		$day = false;
+		$month = false;
+		$modx->setPlaceholder($dittoID."year",$year);		
+}
+	$dateFilterOject = new dateFilter($month,$year,$day,$dateSource);
+	$filters["custom"]["dateFilter"] = array($dateSource,array($dateFilterOject,"execute"));
 }
 
 ?>

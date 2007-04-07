@@ -142,14 +142,15 @@ font-size:14pt;
 	color:#c00;
 	font-weight:bold;
 }
-</style>
+.style1 {font-size: smaller}
+    </style>
 
-</style>
+
 </head>
 
 <body>
 <div class="qe_box">
-<h1>eForm - Examples</h1><img id="qe_logo" src="logo.png" alt="logo">
+<h1>eForm - Examples</h1><img id="qe_logo" src="logo.png" alt="logo" />
 
 		<div id="qe_toc">
 			<h1>Index</h1>
@@ -185,8 +186,11 @@ font-size:14pt;
 <h3>The HTML Form Template</h3>
 <p>For this example we will create a chunk called '<em>eFeedBackForm</em>' and copy and paste the following form</p>
 	<div class='codeblock'>
-	&lt;p&gt;&lt;span style=&quot;color:#900;&quot;&gt;[+validationmessage+]&lt;/span&gt;&lt;/p&gt;<br />&lt;form method=&quot;post&quot; action=&quot;[~[*id*]~]&quot;&gt;<br />&nbsp;&nbsp; &nbsp;&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;feedbackForm&quot; /&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;n&quot; for=&quot;Name&quot;&gt;Your Name&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;input type=&quot;text&quot; name=&quot;Name&quot; maxlength=&quot;60&quot; eform=&quot;Your Name::1:Expected at least two words:#REGEX /\w+\b\w{2,}/i&quot; /&gt;&lt;/p&gt;<br /><br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;e&quot; for=&quot;email&quot;&gt;Your Email Address&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;input type=&quot;text&quot; name=&quot;email&quot; size=&quot;40&quot; maxlength=&quot;40&quot; eform=&quot;Your Email Address:email:1&quot; /&gt;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;s&quot; for=&quot;department&quot;&gt;Subject&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;select name=&quot;department&quot;&gt;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;option value=&quot;1&quot;&gt;Website feedback&lt;/option&gt;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;option value=&quot;2&quot;&gt;Support request&lt;/option&gt;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;option value=&quot;3&quot;&gt;Feature request&lt;/option&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/select&gt;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;c&quot; for=&quot;comments&quot;&gt;Comments&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;textarea cols=&quot;40&quot; rows=&quot;10&quot; name=&quot;comments&quot; eform=&quot;Comments:html:1&quot;&gt;&lt;/textarea&gt;&lt;/p&gt;<br /><br />&nbsp;&nbsp; &nbsp;&lt;p&gt;<br />&nbsp;&nbsp; &nbsp;Please enter the &nbsp;&nbsp; &nbsp;anti spam code below:&lt;br /&gt;<br />&nbsp;&nbsp; &nbsp;&lt;img src=&quot;[+verimageurl+]&quot; alt=&quot;verification code&quot; border=&quot;1&quot;/&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;<br />&nbsp;&nbsp; &nbsp;&lt;label accesskey=&quot;c&quot; for=&quot;vericode&quot;&gt;code&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;input type=&quot;text&quot; name=&quot;vericode&quot; size=&quot;20&quot; /&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Send Feedback&quot;&gt;&lt;/p&gt;<br />&lt;/form&gt;
-	</div>
+	[+validationmessage+]<br />
+	&lt;form method=&quot;post&quot; action=&quot;[~[*id*]~]&quot;&gt;<br />&nbsp;&nbsp; &nbsp;&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;feedbackForm&quot; /&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;n&quot; for=&quot;Name&quot;&gt;Your Name&lt;/label&gt;<br />
+	&nbsp;&nbsp; &nbsp;&lt;input type=&quot;text&quot; name=&quot;Name&quot; maxlength=&quot;60&quot; eform=&quot;Your
+	Name::1:Expected at least two words:#REGEX /^\w+\s\w+/i&quot; /&gt;&lt;/p&gt;<br />
+	<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;e&quot; for=&quot;email&quot;&gt;Your Email Address&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;input type=&quot;text&quot; name=&quot;email&quot; size=&quot;40&quot; maxlength=&quot;40&quot; eform=&quot;Your Email Address:email:1&quot; /&gt;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;s&quot; for=&quot;department&quot;&gt;Subject&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;select name=&quot;department&quot;&gt;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;option value=&quot;1&quot;&gt;Website feedback&lt;/option&gt;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;option value=&quot;2&quot;&gt;Support request&lt;/option&gt;<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&lt;option value=&quot;3&quot;&gt;Feature request&lt;/option&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/select&gt;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;label accesskey=&quot;c&quot; for=&quot;comments&quot;&gt;Comments&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;textarea cols=&quot;40&quot; rows=&quot;10&quot; name=&quot;comments&quot; eform=&quot;Comments:html:1&quot;&gt;&lt;/textarea&gt;&lt;/p&gt;<br /><br />&nbsp;&nbsp; &nbsp;&lt;p&gt;<br />&nbsp;&nbsp; &nbsp;Please enter the &nbsp;&nbsp; &nbsp;anti spam code below:&lt;br /&gt;<br />&nbsp;&nbsp; &nbsp;&lt;img src=&quot;[+verimageurl+]&quot; alt=&quot;verification code&quot; border=&quot;1&quot;/&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;<br />&nbsp;&nbsp; &nbsp;&lt;label accesskey=&quot;c&quot; for=&quot;vericode&quot;&gt;code&lt;/label&gt;<br />&nbsp;&nbsp; &nbsp;&lt;input type=&quot;text&quot; name=&quot;vericode&quot; size=&quot;20&quot; /&gt;<br />&nbsp;&nbsp; &nbsp;&lt;/p&gt;<br />&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;&lt;p&gt;&lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Send Feedback&quot;&gt;&lt;/p&gt;<br />&lt;/form&gt;	</div>
 <a id="formid" name="formid"></a>
 <p>A fairly straight forward html form with some placeholders for error messages and the vericode (CAPTCHA). Note the <code>formid</code> field. This hidden field is required so that eForm can recognize the form. We'll get back to that later at the <a href="#snippetcall">snippet call</a>.</p>
 <p>The required fields have formatting and validations options set using the <code>eform</code> pseudo attribute (See the <a href="eform_validation.htm">form validation page</a> for details on setting values for the <code>eform</code> attribute) The eform attribute will be stripped from the form before it is sent to the browser.</p>
@@ -197,7 +201,9 @@ The following required field(s) are missing: Your Name, Comments<br />
 Your Email Address is not a valid email address</p>
 
 <p><strong>Note!</strong> In the above template we use a hidden field for the formid: <code>&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;feedbackForm&quot; /&gt;</code><br />
-If you are using eForm 1.4 you can instead use the <strong>id</strong> attribute of the form tag itself and leave out the hidden field: <code>&lt;form id=&quot;feedbackForm&quot; method=&quot;post&quot; action=&quot;[~[*id*]~]&quot;&gt;</code>. Either way will work
+If you are using eForm 1.4+ you can instead use the <strong>id</strong> attribute
+of the form tag itself and leave out the hidden field: <code>&lt;form id=&quot;feedbackForm&quot; method=&quot;post&quot; action=&quot;[~[*id*]~]&quot;&gt;</code>.
+Either way will work
 </p>
 
 <a id="email" name="email"></a>
@@ -263,14 +269,30 @@ This will be used as the subject of the email.
 
 <p><br /><strong>That's it,.. have fun.</strong></p>
 
-<h3>Using chunks or documents for eForm templates</h3>
-<p>Although we have been using chunks for this example you can just as easily use documents for each template. In that case you would pass the document id to eForm as for example <code>&tpl=`31`</code>. There is a catch however when you are using the tinyMCE editor. TinyMCE cleans HTML from what it considers invalid attributes and thus will strip the <code>eform</code> attribute from your form. If you want to place your form in a document instead of a chunk make sure you don't use the TinyMCE editor for that document.</p>
+<h3>Using chunks, snippets or documents for eForm templates</h3>
+<p>Although we have been using chunks for this example you can just as easily
+	use documentsor even snippets for each template.<br />
+	In the case of a document
+		you would pass the document id to eForm, for example <code>&tpl=`31`</code>. <span class="style1">(There is a catch however when you are using the tinyMCE editor. TinyMCE cleans
+		HTML from what it considers invalid attributes and thus will strip the <code>eform</code> attribute
+		from your form. If you want to place your form in a document instead of a chunk
+		make sure you don't use the TinyMCE editor for that document.)<br />
+		</span>Using a snippet as your template source gives you even more flexibility.
+		You can dynamically create options and fields, however you must make sure
+		that the snippet returns the same form template between form submits as otherwise
+		eForm's validation code may incorrectly evaluate invalid values.<span class="style1"> If for instance
+		you have a select box with the  options values 1,2 &amp; 3 (from a database for
+		instance) at the first pass and when those values have changed to
+		2,3 &amp; 4 by the time the form is submitted (and the template retrieved a
+		second time with the changed values),  eform will see a submitted
+		value of 1 as invalid...</span></p>
 <p><em>There is a way to add the eform as a valid attribute to tinyMCE but you'll have to dig into the tinyMCE plugin code to do that. However that's beyond the scope of this article.</em></p>
-<hr>
+<hr />
 <p ><span class='qe_signature'>Jelle Jager</span><br />
 AKA TobyL<br />
 (and no,.. don't try to pronounce it)
 </p>
+</div>
 </div>
 </body>
 </html>

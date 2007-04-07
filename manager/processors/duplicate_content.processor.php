@@ -17,6 +17,7 @@ $udperms = new udperms();
 $udperms->user = $modx->getLoginUserID();
 $udperms->document = $id;
 $udperms->role = $_SESSION['mgrRole'];
+$udperms->duplicateDoc = true;
 
 if(!$udperms->checkPermissions()) {
 	include "header.inc.php";

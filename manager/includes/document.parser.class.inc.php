@@ -2157,14 +2157,14 @@ class DocumentParser {
     }
 
     # Registers Client-side CSS scripts - these scripts are loaded at inside the <head> tag
-    function regClientCSS($src) {
+    function regClientCSS($src, $media='') {
         if (isset ($this->loadedjscripts[$src]) && $this->loadedjscripts[$src])
             return '';
         $this->loadedjscripts[$src]= true;
         if (strpos(strtolower($src), "<style") !== false || strpos(strtolower($src), "<link") !== false) {
             $this->sjscripts[count($this->sjscripts)]= $src;
         } else {
-            $this->sjscripts[count($this->sjscripts)]= '<!-- MODx registered -->' . "\n" . '  <link rel="stylesheet" href="' . $src . '" />';
+            $this->sjscripts[count($this->sjscripts)]= "\t" . '<link rel="stylesheet" type="text/css" href="'.$src.'" '.($media ? 'media="'.$media.'" ' : '').'/>';
         }
     }
 
@@ -2179,7 +2179,7 @@ class DocumentParser {
                 $this->sjscripts[count($this->sjscripts)]= $src;
             elseif (strpos(strtolower($src), "<script") !== false) $this->sjscripts[count($this->sjscripts)]= $src;
             else
-                $this->sjscripts[count($this->sjscripts)]= '<!-- MODx registered -->' . "\n" . '  <script type="text/javascript" src="' . $src . '"></script>';
+                $this->sjscripts[count($this->sjscripts)]= "\t" . '<script type="text/javascript" src="' . $src . '"></script>';
         }
     }
 
@@ -2192,7 +2192,7 @@ class DocumentParser {
             $this->jscripts[count($this->jscripts)]= $src;
         elseif (strpos(strtolower($src), "<script") !== false) $this->jscripts[count($this->jscripts)]= $src;
         else
-            $this->jscripts[count($this->jscripts)]= '<!-- MODx registered -->' . "\n" . '  <script type="text/javascript" src="' . $src . '"></script>';
+            $this->jscripts[count($this->jscripts)]= "\t" . '<script type="text/javascript" src="' . $src . '"></script>';
     }
 
     # Registers Client-side Startup HTML block

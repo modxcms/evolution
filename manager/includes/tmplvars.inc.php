@@ -111,7 +111,7 @@
 			case "checkbox": // handles check boxes
 				$field_value = explode("||",$field_value);
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_name));
-				$i=0;
+				static $i=0;
 				while (list($item, $itemvalue) = each ($index_list))
 				{
 					list($item,$itemvalue) =  (is_array($itemvalue)) ? $itemvalue : explode("==",$itemvalue);
