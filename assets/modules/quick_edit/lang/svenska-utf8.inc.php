@@ -8,7 +8,7 @@
  *  Description: Class for the QuickEditor
  *
  *  Translation: Pontus Ågren
- *  Date: 4/12/2006
+ *  Date: 2007-02-19
  */
 
 /*
@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 $QE_lang['QE_lang'] = 'sv'; 
 $QE_lang['QE_xml_lang'] = 'sv'; 
-$QE_lang['QE_charset'] = 'iso-8859-1'; 
+$QE_lang['QE_charset'] = 'utf-8'; 
 $QE_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks 
 $QE_lang['QE_show_links'] = 'Visa länkar'; 
 $QE_lang['QE_hide_links'] = 'Dölj länkar'; 

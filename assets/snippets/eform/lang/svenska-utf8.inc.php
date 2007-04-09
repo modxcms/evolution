@@ -1,6 +1,6 @@
 <?php
 /**
-* snippets/eform/svenska.inc.php
+* snippets/eform/svenska-utf8.inc.php
 * Swedish language file for eForm 1.4.2
 *
 * Translation: Pontus Ågren

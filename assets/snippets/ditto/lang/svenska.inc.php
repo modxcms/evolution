@@ -1,44 +1,38 @@
 <?php
 
-/**
- * Filename:       assets/snippets/ditto/svenska.inc.php
- * Function:       Swedish language file for Ditto.
- * Author:         The MODx Project
- * Version:        1.0.2
- * MODx version:   0.9.5
+/*
+ * Title: Language File
+ * Purpose:
+ *      Default Swedish language file for Ditto
+ *     
+ * Note:
+ *      New language keys should added at the bottom of this page
  *
- * Translation:    Pontus Ågren
- * Date:           4/12/2006
-*/
+ * Translation: Pontus Ågren
+ * Date: 2007-02-24
+ */
 
-// NOTE: New language keys should added at the bottom of this page
+$_lang['language'] = "svenska";
+
+$_lang['abbr_lang'] = "sv";
 
 $_lang['file_does_not_exist'] = " finns inte. Kontrollera filen.";
 
-$_lang['default_template'] = '
-    <div class="ditto_summaryPost">
-        <h3><a href="[~[+id+]~]">[+title+]</a></h3>
-        <div>[+summary+]</div>
-        <p>[+link+]</p>
-        <div style="text-align:right;">av <strong>[+author+]</strong> den [+date+]</div>
+$_lang['default_template'] = <<<TPL
+
+    <div class="ditto_item" id="ditto_item_[+id+]">
+        <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
+        <div class="ditto_documentInfo">av <strong>[+author+]</strong> den [+createdon:date=`%d-%b-%y %H:%M`+]</div>
+        <div class="ditto_introText">[+introtext+]</div>
     </div>
-';
 
-$_lang['blank_tpl'] = "är tom eller så har du stavat kodstyckets namn fel. Var snäll och kontrollera.";
+TPL;
 
-$_lang['missing_placeholders_tpl'] = 'En av dina Ditto-mallar saknar platshållare. Kontrollera nedanstående mall: <br /><br /><hr /><br /><br />';
+$_lang["bad_tpl"] = "<p>&[+tpl+] innehåller inga platshållare eller också är det ett ogiltigt chunk-namn, kodblock eller filnamn. Kontrollera det.</p>";
 
-$_lang['missing_placeholders_tpl_2'] = '<br /><br /><hr /><br />';
+$_lang['no_documents'] = '<p>Inga dokument hittades.</p>';
 
-$_lang['default_splitter'] = "<!-- delare -->";
-
-$_lang['more_text'] = "Läs mer...";
-
-$_lang['no_entries'] = '<p>Inga poster funna.</p>';
-
-$_lang['date_format'] = "%d-%b-%y %H:%M";
-
-$_lang['archives'] = "Arkiv";
+$_lang['resource_array_error'] = 'Fel i resursfältet';
 
 $_lang['prev'] = "&lt; Föregående";
 
@@ -46,38 +40,67 @@ $_lang['next'] = "Nästa &gt;";
 
 $_lang['button_splitter'] = "|";
 
-$_lang['default_copyright'] = "[(site_name)] 2006";	
-
-$_lang['rss_lang'] = "sv";
-
-$_lang['debug_summarized'] = "Antal dokument som förväntades bli summerade (summarize):";
-
-$_lang['debug_returned'] = "<br />Totalt antal som förväntas returneras:";
-
-$_lang['debug_retrieved_from_db'] = "Antal i databasen:";
-
-$_lang['debug_sort_by'] = "Sortera efter (sortBy):";
-
-$_lang['debug_sort_dir'] = "Sorteringsriktning (sortDir):";
-
-$_lang['debug_start_at'] = "Börja vid";
-
-$_lang['debug_stop_at'] = "och stanna vid";
-
-$_lang['debug_out_of'] = "av";
-
-$_lang['debug_document_data'] = "Dokumentdata för ";
-
-$_lang['default_archive_template'] = "<a href=\"[~[+id+]~]\">[+title+]</a> (<span class=\"ditto_date\">[+date+]</span>)";
+$_lang['default_copyright'] = "[(site_name)] 2007";	
 
 $_lang['invalid_class'] = "Ditto-klassen är ogiltig. Kontrollera den.";
 
-// New language key added 2-July-2006 to 5-July-2006
+$_lang['none'] = "Inga";
 
-// Keys deprecated : $_lang['api_method'] and $_lang['GetAllSubDocs_method'] 
+$_lang['edit'] = "Redigera";
 
-$_lang['tvs'] = "Mallvariabler:";
+$_lang['yes'] = "Ja";
 
-$_lang['api'] = "Använder den nya APIn för MODx 0.9.2.1";
+$_lang['no'] = "Nej";
+
+$_lang['params'] = "Parametrar";
+
+$_lang['debug_head'] = "
+<h2>Ditto version [+version+]</h2>
+<h3>Debug-info</h3>
+Antal dokument som förväntades bli summerade: [+summarize+]<br />
+Antal dokument som hämtades från databasen: [+recordCount+]<br />
+Sortera efter: [+sortBy+]<br />
+Sorteringsriktning: [+sortDir+]<br />
+Börja vid [+start+] och stanna vid [+stop+] av [+total+]<br />
+Förhämtning: [+prefetch+]<br />
+<h3>IDn</h3>
+[+ids+]<br />
+<h3>Snippetparametrar</h3>
+[+call+]<br />
+<h3>Filter</h3>
+[+filter+]<br />
+<h3>Fält</h3>
+<div class='ditto_dbg_fields'>
+[+fields+]
+</div><br />
+<h3>Dokumentdata</h3>
+";
+
+$_lang["debug_styles"] = "
+<style>
+  .debug {
+    border: 1px solid #888;
+    border-left: 5px solid #888;
+    background-color: white;
+    padding: 3px !important;
+    margin: 5px 3px !important;
+  }
+
+ 	table { border: 1px solid #888; margin: 0; padding: 0;}
+  table td table {border: 0;}
+  table th td {border: 1px solid #888;}
+  table td { background-color:#FFFFFF; padding: 2px;}
+  table th { background-color:#888; padding: 2px; border: 1px solid #888;}
+  table td th { background-color:#008CBA; color: white; border: 1px solid #888; }
+  table td {vertical-align: top !important;}
+    .ditto_dbg_fields table table table { width: 80px; display: block} 
+    .ditto_dbg_fields table table table td{ width: 80px; display: block; float: left; border: none; background: none !important;} 
+    .ditto_dbg_fields table table table {display: block; float: left; border: 1px solid #888;}
+  table table tr td tr td{border: 1px solid #888; }
+	
+</style>
+";
+
+$_lang['debug_item'] = "[+pagetitle+] ([+id+])";
 
 ?>

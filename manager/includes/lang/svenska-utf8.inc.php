@@ -1,18 +1,18 @@
 <?php
 /**
- * Filename:       includes/lang/svenska.inc.php
- * Function:       Swedish language file.
+ * Filename:       includes/lang/svenska-utf8.inc.php
+ * Function:       Swedish language file
  * Encoding:       UTF-8
  * Author:         Pontus Ågren & Johnny Chadda
- * Date:           4 Dec 2006
- * Version:        0.9.5
- * MODx version:   0.9.5 rev 2092
+ * Date:           2007-02-25
+ * Version:        0.9.6
+ * MODx version:   0.9.6 RC2 rev 2409
 */
 
 $_lang["about_msg"] = 'MODx är ett <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP applikationsramverk och system för innehållshantering</a> och är licensierat under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
 $_lang["access_permission_denied"] = 'Du har inte behörighet för detta dokument.';
-$_lang["access_permission_parent_denied"] = 'Du har inte behörighet att skapa ett dokument här!';
+$_lang["access_permission_parent_denied"] = 'Du har inte behörighet att skapa ett dokument här eller att flytta ett hit! Välj en annan plats.';
 $_lang["access_permissions"] = 'Åtkomstinställningar';
 $_lang["access_permissions_add_document_group"] = 'Skapa en ny dokumentgrupp';
 $_lang["access_permissions_add_user_group"] = 'Skapa en ny användargrupp';
@@ -191,7 +191,7 @@ $_lang["delete_document"] = 'Ta bort dokument';
 $_lang["delete_tags"] = 'Ta bort taggar';
 $_lang["deleting_file"] = 'Tar bort filen `%s`: ';
 $_lang["description"] = 'Beskrivning';
-$_lang["deselect_keywords"] = 'Rensa nyckeord';
+$_lang["deselect_keywords"] = 'Rensa nyckelord';
 $_lang["deselect_metatags"] = 'Rensa META-taggar';
 $_lang["disabled"] = 'Avstängd';
 $_lang["doc_data_title"] = 'Visa dokumentdata';
@@ -220,6 +220,7 @@ $_lang["document_opt_richtext_help"] = 'Lämna denna ikryssad för att använda 
 $_lang["document_opt_show_menu"] = 'Visa i meny';
 $_lang["document_opt_show_menu_help"] = 'Välj den här inställningen för att visa dokumentet i en webbmeny. Notera att vissa menybyggarprogram kan välja att strunta i den här inställningen.';
 $_lang["document_opt_trackvisit_help"] = 'Logga varje besökares besök på den här sidan';
+$_lang["document_overview"] = 'Dokumentöversikt';
 $_lang["document_parent"] = 'Dokumentförälder';
 $_lang["document_parent_help"] = 'Klicka på ovanstående ikon för att sätta på (eller stänga av) föräldraval för detta dokument. Klicka sedan på ett dokument i dokumentträdet för att sätta det som ny förälder.';
 $_lang["document_setting"] = 'Dokumentinställningar';
@@ -229,6 +230,8 @@ $_lang["document_title"] = 'Titel';
 $_lang["document_title_help"] = 'Skriv namnet/titeln på dokumentet här. Försök att undvika omvända snedstreck i namnet!';
 $_lang["document_to_be_moved"] = 'Dokumentet som ska flyttas';
 $_lang["document_weblink_help"] = 'Ange adressen till objektet du vill referera till med denna webblänk.';
+$_lang["documents_in_container"] = "dokument i den här behållaren";
+$_lang["documents_in_container_no"] = "Den här behållaren har inga underdokument (barn).";
 $_lang["duplicate"] = 'Duplicera';
 $_lang["duplicate_alias_found"] = 'Dokumentet \'%s\' använder redan aliaset \'%s\'. Ange ett unikt alias.';
 $_lang["duplicate_alias_message"] = 'Här kan du välja "Ja" för att tillåta att aliasdubletter sparas.<br /><b>Notera: Den här inställningen bör användas med "Vänliga aliassökvägar" satt till "Ja" för att undvika problem med refereringen av dokument.</b>';
@@ -426,6 +429,8 @@ $_lang["login_message"] = 'Fyll i dina inloggningsuppgifter för att starta din 
 $_lang["logo_slogan"] = 'Skapa och gör mer med mindre - \nMODx innehållshanterare';
 $_lang["logout"] = 'Logga ut';
 $_lang["long_title"] = 'Lång titel';
+$_lang["mail_check_timeperiod_message"] = 'Anger hur ofta systemet kontrollerar om ny epost inkommit till hanteraren, i sekunder.';
+$_lang["mail_check_timeperiod_title"] = 'Periodicitet för kontroll av inkorg';
 $_lang["manage_depends"] = 'Hantera beroenden';
 $_lang["manage_files"] = 'Hantera filer';
 $_lang["manage_htmlsnippets"] = 'Chunks';
@@ -435,6 +440,10 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Mallar';
 $_lang["manager"] = 'Hanterare';
+$_lang["manager_direction_message"] = 'Välj textriktning i hanteraren: antingen vänster-till-höger eller höger-till-vänster.';
+$_lang["manager_direction_title"] = 'Textriktning i hanteraren';
+$_lang["manager_lang_attribute_message"] = 'Ange den språkkod som bäst överensstämmer med din språkinställning för hanteraren. Det här säkerställer att webbläsare kan presentera innehållet i det bästa formatet för dig.';
+$_lang["manager_lang_attribute_title"] = 'Hanterarens språkattribut<br />för HTML och XML';
 $_lang['manager_lockout_message'] = 'Du är för närvarande inloggad i innehållshanteraren. Klicka på "Logga ut" om du vill stänga din session. <p />Klicka på "Hem"-knappen om du vill gå till din start eller hemsida.';
 $_lang["manager_permissions"] = 'Rättigheter för hanteraren';
 $_lang["manager_theme"] = 'Tema för hanteraren';
@@ -591,6 +600,9 @@ $_lang["page_data_unpublishdate"] = 'Avpubliceringsdatum';
 $_lang["page_data_unpublishdate_help"] = 'Om du sätter ett avpubliceringsdatum, kommer dokumentet avpubliceras så snart som datumet är nått. Klicka på kalenderikonen för att välja ett datum, eller ikonen bredvid för att ta bort det. Om datumet tas bort, kommer dokumentet aldrig att avpubliceras automatiskt.';
 $_lang["page_data_unpublished"] = 'Avpublicerad';
 $_lang["page_data_web_access"] = 'Webbåtkomst';
+$_lang["pagination_table_first"] = "Första";
+$_lang["pagination_table_last"] = "Sista";
+$_lang["pagination_table_gotopage"] = "Gå till sidan";
 $_lang["paging_first"] = 'första';
 $_lang["paging_last"] = 'sista';
 $_lang["paging_next"] = 'nästa';
@@ -624,6 +636,7 @@ $_lang["plugin_name"] = 'Pluginnamn';
 $_lang["plugin_priority"] = 'Redigera körordningen för plugins efter händelse';
 $_lang["plugin_title"] = 'Skapa/redigera plugin';
 $_lang["preview"] = 'Förhandsgranska';
+$_lang["preview_document"] = 'Förhandsgranska dokument';
 $_lang["preview_msg"] = 'Detta är en förhandsgranskning av dina senast sparade ändringar. Klicka här för att <a href="#" onclick="saveRefreshPreview();">spara och ladda om</a> dina nuvarande ändringar';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentlig';
@@ -668,13 +681,16 @@ $_lang["role_actionok"] = 'Visa \'Handling utförd\'-sidan';
 $_lang["role_bk_manager"] = 'Använd hanteraren för säkerhetskopiering';
 $_lang["role_cache_refresh"] = 'Töm webbplatsens cache';
 $_lang["role_change_password"] = 'Byta lösenord';
+$_lang["role_chunk_management"] = 'Chunk-hantering';
 $_lang["role_config_management"] = 'Konfigurationshantering';
 $_lang["role_content_management"] = 'Innehållshantering';
+$_lang["role_create_chunk"] = 'Skapa nya chunks';
 $_lang["role_create_doc"] = 'Skapa nya dokument';
 $_lang["role_create_plugin"] = 'Skapa nya plugins';
 $_lang["role_create_snippet"] = 'Skapa nya snippets';
 $_lang["role_create_template"] = 'Skapa nya mallar';
 $_lang["role_credits"] = 'Visa erkännandesidan';
+$_lang["role_delete_chunk"] = 'Ta bort chunks';
 $_lang["role_delete_doc"] = 'Ta bort dokument';
 $_lang["role_delete_eventlog"] = 'Ta bort händelselogg';
 $_lang["role_delete_module"] = 'Ta bort modul';
@@ -684,6 +700,7 @@ $_lang["role_delete_snippet"] = 'Ta bort snippets';
 $_lang["role_delete_template"] = 'Ta bort mallar';
 $_lang["role_delete_user"] = 'Ta bort användare';
 $_lang["role_delete_web_user"] = 'Ta bort webbanvändare';
+$_lang["role_edit_chunk"] = 'Redigera chunks';
 $_lang["role_edit_doc"] = 'Redigera dokument';
 $_lang["role_edit_doc_metatags"] = 'Redigera dokumentets META-taggar och nyckelord';
 $_lang["role_edit_module"] = 'Redigera modul';
@@ -696,10 +713,12 @@ $_lang["role_edit_user"] = 'Redigera användare';
 $_lang["role_edit_web_user"] = 'Redigera webbanvändare';
 $_lang["role_errors"] = 'Visa feldialog';
 $_lang["role_eventlog_management"] = 'Hantera händelseloggar';
+$_lang['role_export_static'] = 'Exportera statisk HTML';
 $_lang["role_file_manager"] = 'Använda filhanteraren';
 $_lang["role_frames"] = 'Ladda sidhanteraren';
 $_lang["role_help"] = 'Visa hjälpsidor';
 $_lang["role_home"] = 'Ladda introduktionssidan';
+$_lang['role_import_static'] = 'Importera HTML';
 $_lang["role_logout"] = 'Logga ut från sidhanteraren';
 $_lang["role_manage_metatags"] = 'Hantera webbplatsens META-taggar och nyckelord';
 $_lang["role_management_msg"] = 'Här kan du skapa en ny roll eller välja en redan befintlig för redigering.';
@@ -715,6 +734,7 @@ $_lang["role_plugin_management"] = 'Hantera plugins';
 $_lang["role_publish_doc"] = 'Publicera dokument';
 $_lang["role_role_management"] = 'Roller';
 $_lang["role_run_module"] = 'Kör modul';
+$_lang["role_save_chunk"] = 'Spara chunks';
 $_lang["role_save_doc"] = 'Spara dokument';
 $_lang["role_save_module"] = 'Spara modul';
 $_lang["role_save_password"] = 'Spara lösenord';
@@ -947,6 +967,7 @@ $_lang["users"] = 'Säkerhet';
 $_lang["value"] = 'Värde';
 $_lang["version_codename"] = 'Versionens kodnamn'; 
 $_lang["view"] = 'Visa';
+$_lang["view_child_documents_in_container"] = "Visa underdokument (barn)";
 $_lang["view_document"] = 'Visa dokument';
 $_lang["view_log"] = 'Visa logg';
 $_lang["view_logging"] = 'Aktiviteter i hanteraren';

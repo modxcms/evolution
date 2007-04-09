@@ -8,7 +8,7 @@
  * Date:29/09/2006 Version: 1.6
  *
  * Translation: Pontus Ågren
- * Date: 4/12/2006
+ * Date: 2007-02-19
  * 
  */
 
