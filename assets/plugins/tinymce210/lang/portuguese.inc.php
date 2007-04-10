@@ -2,24 +2,24 @@
 /*
  * Filename:       assets/plugins/tinymce/lang/portuguese.inc.php
  * Function:       Portuguese language file for TinyMCE
- * Encoding:       ISO-Latin-1
- * Author:         Jeff Whitfield
- * Date:           2007/01/06
+ * Encoding:       UTF-8
+ * Author:         Jeff Whitfield - translation João Peixoto (joeindio@gmail.com)
+ * Date:           2007/04/09
  * Version:        2.0.9
  * MODx version:   0.9.5
 */
 
-$_lang['tinymce_editor_theme_title'] = "Theme:";
-$_lang['tinymce_editor_theme_message'] = "Here you can select which theme or skin to use with the editor.";
-$_lang['tinymce_editor_custom_plugins_title'] = "Custom Plugins:";
-$_lang['tinymce_editor_custom_plugins_message'] = "Enter the plugins to use for the 'custom' theme as a comma separated list.";
-$_lang['tinymce_editor_custom_buttons_title'] = "Custom Buttons:";
-$_lang['tinymce_editor_custom_buttons_message'] = "Enter the buttons to use for the 'custom' theme as a comma separated list for each row. Be sure that each button has the required plugin enabled in the 'Custom Plugins' setting.";
-$_lang['tinymce_editor_css_selectors_title'] = "CSS selectors:";
-$_lang['tinymce_editor_css_selectors_message'] = "Here you can enter a list of selectors that should be available in the editor. Enter them as follows:<br />'displayName=selectorName;displayName2=selectorName2'<br />For instance, say you have <b>.mono</b> and <b>.smallText</b> selectors in your CSS file, you could add them here as:<br />'Monospaced text=mono;Small text=smallText'<br />Note that the last entry should not have a semi-colon after it.";
-$_lang['tinymce_settings'] = "TinyMCE Settings";
-$_lang['tinymce_theme_simple'] = "Simple";
-$_lang['tinymce_theme_advanced'] = "Advanced";
-$_lang['tinymce_theme_editor'] = "Content Editor";
-$_lang['tinymce_theme_custom'] = "Custom";
+$_lang['tinymce_editor_theme_title'] = "Tema:";
+$_lang['tinymce_editor_theme_message'] = "Aqui pode seleccionar que tema ou capa deseja utilizar com o editor.";
+$_lang['tinymce_editor_custom_plugins_title'] = "Plugins personalizados:";
+$_lang['tinymce_editor_custom_plugins_message'] = "Indique os plugins a utilizar com o tema personalizado, numa lista separada por vírgulas.";
+$_lang['tinymce_editor_custom_buttons_title'] = "Botões personalizados:";
+$_lang['tinymce_editor_custom_buttons_message'] = "Indique os botões a utilizar para o tema personalizado, numa lista separada por vírgulas para cada linha. Assegure-se de que cada botão tem o plugin requerido activado na opção 'Plugins Personalizados'.";
+$_lang['tinymce_editor_css_selectors_title'] = "Selectores CSS:";
+$_lang['tinymce_editor_css_selectors_message'] = "Aqui pode indicar uma lista dos selectores que deverão estar disponíveis no editor. Indique-os da seguinte forma:<br />'nomeMostrado=nomeSelector;nomeMostrado2=nomeSelector2'<br />Por exemplo, se tiver os selectores <b>.mono</b> e <b>.texto Pequeno</b> no seu ficheiro CSS, pode adicioná-los aqui como:<br />'Texto com espaçamento simples=mono;Texto Pequeno=textoPequeno'<br />Note que a última entrada não deverá ter ponto e vírgula a segui-la.";
+$_lang['tinymce_settings'] = "Opções TinyMCE";
+$_lang['tinymce_theme_simple'] = "Simples";
+$_lang['tinymce_theme_advanced'] = "Avançado";
+$_lang['tinymce_theme_editor'] = "Editor de Conteúdo";
+$_lang['tinymce_theme_custom'] = "Personalizar";
 ?>

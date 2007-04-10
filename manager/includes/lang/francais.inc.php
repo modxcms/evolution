@@ -3,10 +3,10 @@
  * Filename:       includes/lang/francais.inc.php
  * Function:       French language file for MODx
  * Encoding:       ISO-8859-1 (Latin 1)
- * Author:         Nicolas Martignoni (Nissai), révisé par David Mollière pour la 0.9.5 (davidm)
+ * Author:         Nicolas Martignoni (Nissai), révisé par David Mollière pour la 0.9.6 (davidm)
  * Date:           2006/12/05
- * Version:        2.0.3
- * MODx version:   0.9.5
+ * Version:        2.1
+ * MODx version:   0.9.6
 */
 // NOTE: Now alpha-sorted
 
@@ -36,7 +36,7 @@ $_lang["access_permissions_user_groups"] = 'Groupes d\'utilisateurs';
 $_lang["access_permissions_user_group_access"] = 'Groupes de documents auxquels le groupe d\'utilisateurs a accès :';
 $_lang["access_permissions_user_message"] = 'Vous pouvez choisir ici les groupes d\'utilisateurs auxquels cet utilisateur appartient';
 $_lang["access_permission_denied"] = 'Vous n\'avez pas les autorisations nécessaires pour modifier ce document.';
-$_lang["access_permission_parent_denied"] = 'Vous n\'avez pas l\'autorisation de créer un document ici !';
+$_lang["access_permission_parent_denied"] = 'Vous n\'avez pas l\'autorisation de créer ou de déplacer un document ici !';
 $_lang["account_email"] = 'Email du compte utilisateur';
 $_lang["actioncomplete"] = '<strong>l\'action a été accomplie avec succès&nbsp;!</strong><br /> - Veuillez patienter un instant.';
 $_lang["activity_message"] = 'Cette liste contient les documents que vous avez modifiés ou créés récemment&nbsp;:';
@@ -224,6 +224,7 @@ $_lang["document_opt_richtext_help"] = 'Cocher cette case si vous voulez utilise
 $_lang["document_opt_show_menu"] = 'Afficher dans le menu';
 $_lang["document_opt_show_menu_help"] = 'Choisissez cette option pour afficher le document dans un menu web. Certains scripts de construction de menus peuvent ignorer cette option.';
 $_lang["document_opt_trackvisit_help"] = 'Enregistrer les visites de chaque internaute sur cette page';
+$_lang["document_overview"] = 'Résumé du document';
 $_lang["document_parent"] = 'Document parent';
 $_lang["document_parent_help"] = 'Cliquez sur l\'icône dossier ci-dessus pour activer ou désactiver la sélection d\'un parent, puis cliquer sur un document dans l\'arbre pour le choisir comme parent de ce document.';
 $_lang["document_setting"] = 'Propriétés du document';
@@ -233,6 +234,8 @@ $_lang["document_title"] = 'Titre';
 $_lang["document_title_help"] = 'Taper ici le nom du document. Évitez d\'utiliser des antislashs (\) dans ce nom&nbsp;!';
 $_lang["document_to_be_moved"] = 'Document à déplacer';
 $_lang["document_weblink_help"] = 'Taper ici l\'adresse (URL) de l\'objet que vous souhaitez référencer.';
+$_lang["documents_in_container"] = 'documents dans ce dossier';
+$_lang["documents_in_container_no"] = 'Ce dossier n\'a aucun document enfant.';
 $_lang["doc_data_title"] = 'Afficher les données du document';
 $_lang["duplicate"] = 'Dupliquer';
 $_lang["duplicate_alias_found"] = 'Le document «&nbsp;%s&nbsp;» utilise déjà l\'alias «&nbsp;%s&nbsp;». Veuillez choisir un alias unique.';
@@ -431,7 +434,11 @@ $_lang["login_message"] = 'Veuillez vous identifier afin d\'accéder au gestionna
 $_lang["logout"] = 'Déconnexion';
 $_lang["logo_slogan"] = 'Faire plus avec moins - MODx Content Manager';
 $_lang["long_title"] = 'Titre long';
+$_lang["mail_check_timeperiod_title"] = 'Intervalle de vérification des messages:';
+$_lang["mail_check_timeperiod_message"] = 'A quel intervalle MODx doit-il vérifier l\'arrivée de nouveaux messages, en secondes.';
 $_lang["manager"] = 'Gestionnaire';
+$_lang["manager_direction_message"] = 'Choisissez la direction dans laquelle le texte sera lu dans le gestionnaire, de gauche à droite ou de droite à gauche.';
+$_lang["manager_direction_title"] = 'Sens de lecture du gestionnaire:';
 $_lang["manager_lockout_message"] = 'Vous êtes déjà connecté au Manager. Si vous souhaitez fermer votre session merci de bien vouloir utiliser le bouton "Déconnexion". <p />Pour aller à la page d\'accueil. Cliquer sur "Site > Accueil".';
 $_lang["manager_permissions"] = 'Autorisations du gestionnaire';
 $_lang["manager_theme"] = 'Thème du gestionnaire&nbsp;:';
@@ -439,6 +446,8 @@ $_lang["manager_theme_message"] = 'Choisir un thème pour le gestionnaire de cont
 $_lang["manage_depends"] = 'Gestion des dépendances';
 $_lang["manage_files"] = 'Gestion des fichiers';
 $_lang["manage_htmlsnippets"] = 'Gestion des chunks';
+$_lang["manager_lang_attribute_message"] = 'Saisissez le code qui convient le mieux à la langue utilisée pour le gestionnaire, cela garantira que votre navigateur affichera les contenus au format correct.';
+$_lang["manager_lang_attribute_title"] = 'Attribut de langue HTML et XML du gestionnaire:';
 $_lang["manage_metatags"] = 'Gestion des balises META et des mots-clés';
 $_lang["manage_modules"] = 'Gestion des modules';
 $_lang["manage_plugins"] = 'Plugins';
@@ -598,6 +607,9 @@ $_lang["page_data_unpublishdate"] = 'Date fin de publication';
 $_lang["page_data_unpublishdate_help"] = 'Si vous choisissez une date de fin de publication, le document sera dépublié lorsque cette date sera atteinte. Cliquez sur l\'icône du calendrier pour choisir une date, ou sur l\'icône à côté pour supprimer la date de fin de publication. Dans ce cas le document ne sera pas dépublié automatiquement.';
 $_lang["page_data_unpublished"] = 'Non publié';
 $_lang["page_data_web_access"] = 'Accès web';
+$_lang["pagination_table_first"] = "Début";
+$_lang["pagination_table_last"] = "Fin";
+$_lang["pagination_table_gotopage"] = "Aller à la page";
 $_lang["paging_first"] = 'première';
 $_lang["paging_last"] = 'dernière';
 $_lang["paging_next"] = 'suivant';
@@ -630,6 +642,7 @@ $_lang["plugin_name"] = 'Nom du plugin';
 $_lang["plugin_priority"] = 'Editer l\'ordre d\'exécution du plugin';
 $_lang["plugin_title"] = 'Créer/modifier plugin';
 $_lang["preview"] = 'Prévisualiser';
+$_lang["preview_document"] = 'Prévisualiser le document';
 $_lang["preview_msg"] = 'Voici la prévisualisation de vos derniers changements enregistrés. Cliquer ici pour <a href="javascript://" onclick="saveRefreshPreview();"><img src="media/images/icons/save.gif" align="absmiddle" height="12">Enregistrer et afficher</a> vos modifications actuelles';
 $_lang["private"] = 'Privé';
 $_lang["public"] = 'Public';
@@ -674,13 +687,16 @@ $_lang["role_actionok"] = 'Accès à l\'écran de fin d\'action';
 $_lang["role_bk_manager"] = 'Utiliser le gestionnaire de sauvegardes';
 $_lang["role_cache_refresh"] = 'Purge du cache du site';
 $_lang["role_change_password"] = 'Changement de mot de passe';
+$_lang["role_chunk_management"] = 'Gestion des Chunks';
 $_lang["role_config_management"] = 'Gestion de la configuration';
 $_lang["role_content_management"] = 'Gestion du contenu';
+$_lang["role_create_chunk"] = 'Créer un Chunk';
 $_lang["role_create_doc"] = 'Création de documents';
 $_lang["role_create_plugin"] = 'Créer plugins';
 $_lang["role_create_snippet"] = 'Création de snippets';
 $_lang["role_create_template"] = 'Création de modèles';
 $_lang["role_credits"] = 'Accès aux crédits';
+$_lang["role_delete_chunk"] = 'Supprimer les Chunks';
 $_lang["role_delete_doc"] = 'Suppression de documents';
 $_lang["role_delete_eventlog"] = 'Supprimer l\'historique des événements';
 $_lang["role_delete_module"] = 'Supprimer module';
@@ -690,6 +706,7 @@ $_lang["role_delete_snippet"] = 'Suppression de snippets';
 $_lang["role_delete_template"] = 'Suppression de modèles';
 $_lang["role_delete_user"] = 'Suppression d\'utilisateurs';
 $_lang["role_delete_web_user"] = 'Supprimer utilisateurs web';
+$_lang["role_edit_chunk"] = 'Editer les chunks';
 $_lang["role_edit_doc"] = 'Modification de documents';
 $_lang["role_edit_doc_metatags"] = 'Modifier les balises META et les mots-clés du document';
 $_lang["role_edit_module"] = 'Modifier module';
@@ -701,11 +718,13 @@ $_lang["role_edit_template"] = 'Modification des modèles';
 $_lang["role_edit_user"] = 'Modification d\'utilisateurs';
 $_lang["role_edit_web_user"] = 'Modifier utilisateurs web';
 $_lang["role_errors"] = 'Accès aux annonces d\'erreurs';
+$_lang['role_export_static'] = 'Exportation HTML';
 $_lang["role_eventlog_management"] = 'Gestion de l\'historique des événements';
 $_lang["role_file_manager"] = 'Utilisation du gestionnaire de fichiers';
 $_lang["role_frames"] = 'Accès aux cadres du gestionnaire';
 $_lang["role_help"] = 'Accès aux pages d\'aide';
 $_lang["role_home"] = 'Accès à la page d\'introduction du gestionnaire';
+$_lang['role_import_static'] = 'Importation HTML';
 $_lang["role_logout"] = 'Déconnexion du gestionnaire';
 $_lang["role_management_msg"] = 'Cette section vous permet de créer et de modifier des rôles.';
 $_lang["role_management_title"] = 'Gestion rôles';
@@ -721,6 +740,7 @@ $_lang["role_plugin_management"] = 'Gestion des plugins';
 $_lang["role_role_management"] = 'Gestion des rôles';
 $_lang["role_publish_doc"] = 'Publier les documents';
 $_lang["role_run_module"] = 'Lancer module';
+$_lang["role_save_chunk"] = 'Enregistrement des chunks';
 $_lang["role_save_doc"] = 'Enregistrement de documents';
 $_lang["role_save_module"] = 'Enregistrer module';
 $_lang["role_save_password"] = 'Enregistrement du mot de passe';
@@ -953,6 +973,7 @@ $_lang["use_editor_title"] = 'Activer l\'éditeur :';
 $_lang["value"] = 'Valeur';
 $_lang["version_codename"] = "Nom de code de version";
 $_lang["view"] = 'Afficher';
+$_lang["view_child_documents_in_container"] = "Voir les documents enfants";
 $_lang["view_document"] = 'Afficher page';
 $_lang["view_log"] = 'Afficher l\'historique';
 $_lang["view_logging"] = 'Historiques';

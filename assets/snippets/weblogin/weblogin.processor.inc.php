@@ -235,7 +235,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
     }
 
     if($failedlogins>=$modx->config['failed_login_attempts'] && $blockeduntildate<time()) {    // blocked due to number of login errors, but get to try again
-        $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
+        $sql = "UPDATE $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
         $ds = $modx->db->query($sql);
     }
 

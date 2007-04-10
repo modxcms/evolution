@@ -1,12 +1,13 @@
 <?php
 
 /*
- *  Written by: Adam Crownoble
- *  Contact: adam@obledesign.com
- *  Created: 11/18/2005
- *  For: MODx cms (modxcms.com)
- *  Description: Class for the QuickEditor
- */
+* Written by: Adam Crownoble
+* Contact: adam@obledesign.com
+* Created: 11/18/2005
+* For: MODx cms (modxcms.com)
+* Description: Class for the QuickEditor
+* Dutch language file
+*/
 
 /*
                              License
@@ -28,12 +29,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
 */
 
 $QE_lang['QE_lang'] = 'nl';
 $QE_lang['QE_xml_lang'] = 'nl';
-$QE_lang['QE_charset'] = 'iso-8859-1';
+$QE_lang['QE_charset'] = 'utf-8';
 $QE_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
 $QE_lang['QE_show_links'] = 'Toon links';
 $QE_lang['QE_hide_links'] = 'Verberg links';
@@ -78,4 +78,5 @@ $QE_lang['page_data_searchable'] = 'Doorzoekbaar';
 $QE_lang['page_data_searchable_help'] = 'Vink dit aan om het doorzoeken van het document toe te staan. U kunt het ook voor elk ander doel in uw snippets gebruiken.';
 $QE_lang['page_data_cacheable'] = 'Cachebaar';
 $QE_lang['page_data_cacheable_help'] = 'Door dit aangevinkt te laten wordt uw document in cache opgeslagen. Als uw document snippets bevat, zorg er dan voor dat deze optie is uitgevinkt.';
+
 ?>

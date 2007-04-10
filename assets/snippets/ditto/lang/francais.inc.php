@@ -1,72 +1,101 @@
 <?php
 
-/**
- * Nom du fichier: assets/snippets/ditto/french.inc.php
- * Fonction:       Fichier de langue francisé pour Ditto.
- * Auteur:         The MODx Project
- * Date:           2006/12/05
- * Version:        1.0.2
- * Version de Modx:0.9.5
-*/
+/*
+ * Title: Ditto French Language File
+ * Desc: Aggregates documents to create blogs, article/news
+ * 		 collections, etc.,with full support for templating.
+ * About: Default English language file for Ditto.
+ * Author: Mark Kaplan     French Translation : David Mollière
+ * Note: New language keys should added at the bottom of this page
+ * Version: 2.0 RC1
+ */
 
-// NOTE: De nouveaux paramètres de langue seront ajoutés à la fin de cette page
+$_lang['language'] = "french";
 
-$_lang['file_does_not_exist'] = " n'existe pas. Veuillez vérifier le fichier.";
+$_lang['abbr_lang'] = "fr";
 
-$_lang['default_template'] = '
-    <div class="ditto_summaryPost">
-        <h3><a href="[~[+id+]~]">[+title+]</a></h3>
-        <div>[+summary+]</div>
-        <p>[+link+]</p>
-        <div style="text-align:right;">par <strong>[+author+]</strong> le [+date+]</div>
+$_lang['file_does_not_exist'] = "n\'existe pas. Merci de vérifier le fichier.";
+
+$_lang['default_template'] = <<<TPL
+
+    <div class="ditto_item" id="ditto_item_[+id+]">
+        <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
+        <div class="ditto_introText">[+introtext+]</div>
+        <div class="ditto_documentInfo">par <strong>[+author+]</strong> le [+createdon:date=`%d-%b-%y %H:%M`+]</div>
     </div>
-';
 
-$_lang['blank_tpl'] = "Le modèle utilisé pour Ditto est vide ou il y a une erreur dans le nom du chunk, merci de le vérifier.";
+TPL;
 
-$_lang['missing_placeholders_tpl'] = 'Le modèle utilisé pour Ditto ne contient pas de conteneur, merci de vérifier votre modèle affiché ci-dessous: <br /><br /><hr /><br /><br />';
+$_lang['no_documents'] = '<p>Aucun document trouvé.</p>';
 
-$_lang['missing_placeholders_tpl_2'] = '<br /><br /><hr /><br />';
-
-$_lang['default_splitter'] = "<!-- splitter -->";
-
-$_lang['more_text'] = "Voir la suite...";
-
-$_lang['no_entries'] = '<p>Aucun document n\'a été trouvé.</p>';
-
-$_lang['date_format'] = "%d/%b/%y %H:%M";
-
-$_lang['archives'] = "Archive";
-
+$_lang['resource_array_error'] = 'Resource Array Error';
+ 
 $_lang['prev'] = "&lt; Précédent";
 
 $_lang['next'] = "Suivant &gt;";
 
 $_lang['button_splitter'] = "|";
 
-$_lang['default_copyright'] = "[(site_name)] 2006";	
+$_lang['default_copyright'] = "[(site_name)] 2007";
 
-$_lang['rss_lang'] = "fr";
+$_lang['invalid_class'] = "La classe Ditto est invalide. Merci de la vérifier.";
 
-$_lang['debug_summarized'] = "Nombre censé être résumé (summarize):";
+$_lang['none'] = "Aucun";
 
-$_lang['debug_returned'] = "<br />Nombre censé être retourné:";
+$_lang['edit'] = "Editer";
 
-$_lang['debug_retrieved_from_db'] = "Nombre total dans la base de données:";
+$_lang['yes'] = "Oui";
 
-$_lang['debug_sort_by'] = "Trié par (sortby):";
+$_lang['no'] = "Non";
 
-$_lang['debug_sort_dir'] = "Sens du tri (sortdir):";
+$_lang['params'] = "Paramètres";
 
-$_lang['debug_start_at'] = "Commence à";
+$_lang['debug_head'] = "
+<h2>Ditto version [+version+]</h2>
+<h3>Information de debug</h3>
+Nombre de documents à afficher : [+summarize+]<br />
+Nombre de documents extraits de la base : [+recordCount+]<br />
+Trier par : [+sortBy+]<br />
+Direction du tri : [+sortDir+]<br />
+Commencer à l'item [+start+] et arrêter à [+stop+] parmi [+total+]<br />
+Prefetch: [+prefetch+]<br />
+<h3>IDs</h3>
+[+ids+]<br />
+<h3>Paramètres du snippet</h3>
+[+call+]<br />
+<h3>Filtres</h3>
+[+filter+]<br />
+<h3>Champs</h3>
+<div class='ditto_dbg_fields'>
+[+fields+]
+</div><br />
+<h3>Données du document</h3>
+";
 
-$_lang['debug_stop_at'] = "et s'arrête à";
+$_lang["debug_styles"] = "
+<style>
+  .debug {
+  	border: 1px solid #888;
+  	border-left: 5px solid #888;
+  	background-color: white;
+  	padding: 3px !important;
+  	margin: 5px 3px !important;
+  }        
 
-$_lang['debug_out_of'] = "hors de";
+ 	table { border: 1px solid #888; margin: 0; padding: 0;}
+	table td table {border: 0;}
+	table th td {border: 1px solid #888;}
+	table td { background-color:#FFFFFF; padding: 2px;}
+	table th { background-color:#888; padding: 2px; border: 1px solid #888;}
+	table td th { background-color:#008CBA; color: white; border: 1px solid #888; }
+	table td {vertical-align: top !important;}
+	.ditto_dbg_fields table table table { width: 60px; display: block}
+	.ditto_dbg_fields table table table td{display: block; float: left;}
+	table table tr td tr td{border: 1px solid #888; }
+	
+</style>
+";
 
-$_lang['debug_document_data'] = "Données du document pour";
+$_lang['debug_item'] = "[+pagetitle+] ([+id+])";
 
-$_lang['default_archive_template'] = "<a href='[~[+id+]~]'>[+title+]</a> (<span class=\"ditto_date\">[+date+]</span>)";
-
-$_lang['invalid_class'] = "La class utilisée par Ditto est invalide. Vous devriez la vérifier.";
 ?>
