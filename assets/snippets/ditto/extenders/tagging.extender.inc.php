@@ -109,7 +109,7 @@ $sort= isset($tagSort) ? $tagSort: 1;
 */
 $displayMode= isset($tagDisplayMode) ? $tagDisplayMode: 1;
 /*
-	Param: tagSort
+	Param: tagDisplayMode
 
 	Purpose:
  	How to display the tags in [+tagLinks+]

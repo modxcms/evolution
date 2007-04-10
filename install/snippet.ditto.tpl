@@ -9,12 +9,12 @@
  * 		Mark Kaplan for MODx CMF
  * 
  * Version: 
- * 		2.0.2.BETA
+ * 		2.0.2
 */
 
 //---Core Settings---------------------------------------------------- //
 
-$ditto_version = "2.0.2.BETA";
+$ditto_version = "2.0.2";
 	// Ditto version being executed
 
 $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";

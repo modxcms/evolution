@@ -373,3 +373,7 @@
 [NEW] Reflect configs and Wordpress Reflect config (Closes #31)
 [NEW] Ability to call all documents using &parents=`0` &depth=`0` (Closes #40)
 [CHANGED] Version number to 2.0.2.BETA
+
+[2007-4-8: REVISION 0000]
+[FIXED] Documentation typos
+[CHANGED] Version number to 2.0.2

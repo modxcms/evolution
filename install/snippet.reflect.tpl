@@ -8,7 +8,7 @@
  * 		Mark Kaplan for MODx CMF
  * 
  * Version: 
- * 		1.0.2.BETA
+ * 		1.0.2
  * 
  * Note: 
  * 		 If Reflect is not retrieving its own documents, make sure that the
