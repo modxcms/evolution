@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC2 (rev 2516 - April 10, 2007)
+MODx 0.9.6-RC2 (rev 2521 - April 10, 2007)
 ====================================
+* [CHANGED] Cache syncronization methods now use glob(), backwards compatible (2520)
 * Update Dutch and French for 096 release (2511)
 * Update Ditto call in demo content and ditto/reflect verion numbers in resources (2504)
 * Update Portuguese and Swedish for 096 release (2501)
