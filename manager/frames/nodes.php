@@ -86,13 +86,19 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
         // get document groups for current user
         if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
-        $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
-                  (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
+        $hideProtected= true;
+        if (isset($modx->config['tree_hide_protected'])) {
+            $hideProtected= (boolean) $modx->config['tree_hide_protected'];
+        }
+        if ($hideProtected) {
+            $access = "AND (1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
+                      (!$docgrp ? ")":" OR dg.document_group IN ($docgrp))");
+        }
         $sql = "SELECT DISTINCT sc.id, pagetitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr
                 FROM $tblsc AS sc
                 LEFT JOIN $tbldg dg on dg.document = sc.id
                 WHERE (parent=$parent)
-                AND ($access)
+                $access
                 GROUP BY sc.id
                 ORDER BY $orderby";
         $result = mysql_query($sql, $modxDBConn);
