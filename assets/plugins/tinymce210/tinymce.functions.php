@@ -87,7 +87,7 @@ if (!function_exists('getTinyMCEScript')) {
 			$tinyTheme = "advanced";
 			if(($theme == "editor" || $theme == "full") || ($theme == "custom" && (empty($plugins) || empty($buttons1)))){
 				$blockFormats = "p,h1,h2,h3,h4,h5,h6,div,blockquote,code,pre,address";
-				$plugins = "style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,noneditable,nonbreaking,xhtmlxtras,visualchars,media";
+				$plugins = "style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media";
 				$buttons1 = "undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help";
 				$buttons2 = "bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops";
 				$buttons3 = ""; 

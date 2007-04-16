@@ -206,7 +206,7 @@ class synccache{
 		
 		// close and write the file
 		$tmpPHP .= "?>";		
-		$filename = $this->cachePath.'/siteCache.idx.php';
+		$filename = $this->cachePath.'siteCache.idx.php';
 		$somecontent = $tmpPHP;
 		
 		// invoke OnBeforeCacheUpdate event

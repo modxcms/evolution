@@ -5,12 +5,12 @@
 
 class SqlParser {
 	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
-	var $conn, $installFailed, $sitename, $adminname, $adminpass;
+	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass;
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
 	var $dbVersion;
     var $connection_charset;
 
-	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminpass, $connection_charset= 'utf8') {
+	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8') {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -18,6 +18,7 @@ class SqlParser {
 		$this->password = $password;
 		$this->adminpass = $adminpass;
 		$this->adminname = $adminname;
+		$this->adminemail = $adminemail;
 		$this->connection_charset = $connection_charset;
 		$this->ignoreDuplicateErrors = false;
 	}
@@ -32,10 +33,10 @@ class SqlParser {
 			$this->dbMODx 	 = version_compare($ver,"4.0.2");
 			$this->dbVersion = floatval($ver);
 		}
-        
+
         mysql_query("SET CHARACTER SET {$this->connection_charset}");
 	}
-	
+
 	function process($filename) {
 		// check to make sure file exists
 		if (!file_exists($filename)) {
@@ -43,10 +44,10 @@ class SqlParser {
 			$this->installFailed = true ;
 			return false;
 		}
-		
+
 		$fh = fopen($filename, 'r');
 		$idata = '';
-		
+
 		while (!feof($fh)) {
 			$idata .= fread($fh, 1024);
 		}
@@ -59,42 +60,38 @@ class SqlParser {
 			// remove non-upgradeable parts
 			$s = strpos($idata,"non-upgrade-able[[");
 			$e = strpos($idata,"]]non-upgrade-able")+17;
-			if($s && $e) $idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);  
+			if($s && $e) $idata = str_replace(substr($idata,$s,$e-$s)," Removed non upgradeable items",$idata);
 		}
-		
+
 		// replace {} tags
 		$idata = str_replace('{PREFIX}', $this->prefix, $idata);
 		$idata = str_replace('{ADMIN}', $this->adminname, $idata);
+		$idata = str_replace('{ADMINEMAIL}', $this->adminemail, $idata);
 		$idata = str_replace('{ADMINPASS}', $this->adminpass, $idata);
 		$idata = str_replace('{IMAGEPATH}', $this->imagePath, $idata);
 		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
-		
 
 		$sql_array = split("\n\n", $idata);
-
 
 		$num = 0;
 		foreach($sql_array as $sql_entry) {
 			$sql_do = trim($sql_entry, "\r\n; ");
-			//$sql_do = str_replace('{PREFIX}', $this->prefix, $sql_do);
-			//$sql_do = str_replace('{ADMIN}', $this->adminname, $sql_do);
-			//$sql_do = str_replace('{ADMINPASS}', $this->adminpass, $sql_do);
 
 			if (ereg('^\#', $sql_do)) continue;
-			
+
 			// strip out comments and \n for mysql 3.x
 			if ($this->dbVersion <4.0) {
 				$sql_do = preg_replace("~COMMENT.*[^']?'.*[^']?'~","",$sql_do);
 				$sql_do = str_replace('\r', "", $sql_do);
 				$sql_do = str_replace('\n', "", $sql_do);
 			}
-			
-			
+
+
 			$num = $num + 1;
 			if ($sql_do) mysql_query($sql_do, $this->conn);
 			if(mysql_error()) {
-				// Ignore duplicate and drop errors - Raymond 
+				// Ignore duplicate and drop errors - Raymond
 				if ($this->ignoreDuplicateErrors){
 					if (mysql_errno() == 1060 || mysql_errno() == 1061 || mysql_errno() == 1091) continue;
 				}

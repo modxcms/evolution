@@ -185,49 +185,49 @@ function buildLicenseScreen() {
         <p class="title"><?php echo $moduleName; ?> License Agreement.</p>
 	    <hr style="text-align:left;height:1px;width:90%" />
 		<p><h4>You must agree to the License before continuing installation.</h4>
-		Usage of this software is subject to the GPL license. To help you understand 
-		what the GPL licence is and how it affects your ability to use the software, we 
+		Usage of this software is subject to the GPL license. To help you understand
+		what the GPL licence is and how it affects your ability to use the software, we
 		have provided the following summary:</p>
 		<h4>The GNU General Public License is a Free Software license.</h4>
-		<p>Like any Free Software license, it grants to you the four following freedoms:</p> 
+		<p>Like any Free Software license, it grants to you the four following freedoms:</p>
 		<ul>
             <li>The freedom to run the program for any purpose. </li>
             <li>The freedom to study how the program works and adapt it to your needs. </li>
             <li>The freedom to redistribute copies so you can help your neighbor. </li>
-            <li>The freedom to improve the program and release your improvements to the 
+            <li>The freedom to improve the program and release your improvements to the
             public, so that the whole community benefits. </li>
 		</ul>
-		<p>You may exercise the freedoms specified here provided that you comply with 
+		<p>You may exercise the freedoms specified here provided that you comply with
 		the express conditions of this license. The principal conditions are:</p>
 		<ul>
-            <li>You must conspicuously and appropriately publish on each copy distributed an 
-            appropriate copyright notice and disclaimer of warranty and keep intact all the 
-            notices that refer to this License and to the absence of any warranty; and give 
-            any other recipients of the Program a copy of the GNU General Public License 
-            along with the Program. Any translation of the GNU General Public License must 
+            <li>You must conspicuously and appropriately publish on each copy distributed an
+            appropriate copyright notice and disclaimer of warranty and keep intact all the
+            notices that refer to this License and to the absence of any warranty; and give
+            any other recipients of the Program a copy of the GNU General Public License
+            along with the Program. Any translation of the GNU General Public License must
             be accompanied by the GNU General Public License.</li>
 
-            <li>If you modify your copy or copies of the program or any portion of it, or 
-            develop a program based upon it, you may distribute the resulting work provided 
-            you do so under the GNU General Public License. Any translation of the GNU 
+            <li>If you modify your copy or copies of the program or any portion of it, or
+            develop a program based upon it, you may distribute the resulting work provided
+            you do so under the GNU General Public License. Any translation of the GNU
             General Public License must be accompanied by the GNU General Public License. </li>
 
-            <li>If you copy or distribute the program, you must accompany it with the 
-            complete corresponding machine-readable source code or with a written offer, 
-            valid for at least three years, to furnish the complete corresponding 
+            <li>If you copy or distribute the program, you must accompany it with the
+            complete corresponding machine-readable source code or with a written offer,
+            valid for at least three years, to furnish the complete corresponding
             machine-readable source code.</li>
 
-            <li>Any of these conditions can be waived if you get permission from the 
+            <li>Any of these conditions can be waived if you get permission from the
             copyright holder.</li>
 
-            <li>Your fair use and other rights are in no way affected by the above. 
+            <li>Your fair use and other rights are in no way affected by the above.
             </li>
         </ul>
-		<p>The above is a summary of the GNU General Public License. By proceeding, you 
-		are agreeing to the GNU General Public Licence, not the above. The above is 
-		simply a summary of the GNU General Public Licence, and its accuracy is not 
-		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>GNU General Public 
-		License</a> in full before proceeding, which can also be found in the license 
+		<p>The above is a summary of the GNU General Public License. By proceeding, you
+		are agreeing to the GNU General Public Licence, not the above. The above is
+		simply a summary of the GNU General Public Licence, and its accuracy is not
+		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>GNU General Public
+		License</a> in full before proceeding, which can also be found in the license
 		file distributed with this package.</p>
 	</div>
 <?php
@@ -248,8 +248,28 @@ function buildInstallModeScreen() {
 	  <tr>
 		<td nowrap valign="top" width="37%">
 		<img src="im_new_inst.gif" align="left" width="32" height="32" hspace="5" />
-		<input type="radio" name="installmode" id="installmode1" value="new" onClick="setInstallMode(0);" <?php echo !$upgradeable||$_POST['installmode']=='new' ? 'checked="checked"':'' ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
-		<td width="61%">This will install a new copy of the <?php echo $moduleName; ?> software on your web site. Please note that this option may overwrite any data inside your database. </td>
+		<input type="radio" name="installmode" id="installmode1" value="new" onClick="setInstallMode(0);showdiv('AUH');" <?php echo !$upgradeable||$_POST['installmode']=='new' ? 'checked="checked"':'' ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
+		<td width="61%">Install a new copy of <?php echo $moduleName; ?>. <b>Please note this option may overwrite any data inside your database.</b></td>
+	  </tr>
+      <tr>
+    	<td nowrap valign="top" width="37%">&nbsp;</td>
+    	<td width="61%">&nbsp;</td>
+      </tr>
+      <tr>
+    	<td nowrap valign="top" width="37%">&nbsp;</td>
+    	<td width="61%"><div style="background: #FFFDBB;padding:0 1em;border:2px solid #CBD499">
+    	<h3>Important Upgrade Note</h3>
+    	<p>Make sure all Manager users <b>log out before upgrading</b> to prevent problems (e.g., not being able to access resources). If you have trouble after upgrading, log out of any Manager sessions, clear your browser cache, then log in again.</div></td>
+      </tr>
+      <tr>
+    	<td nowrap valign="top" width="37%">&nbsp;</td>
+    	<td width="61%">&nbsp;</td>
+      </tr>
+	  <tr>
+		<td nowrap valign="top" width="37%">
+		<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
+		<input type="radio" name="installmode" id="installmode2" value="upd" onClick="setInstallMode(1);;hidediv('AUH')" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='upd' && $upgradeable != 2) ? 'checked="checked"':'' ?> /><label for="installmode2" class="nofloat">Upgrade Existing Install</label></td>
+		<td width="61%">Upgrade your current files and database.</td>
 	  </tr>
 	  <tr>
 		<td nowrap valign="top" width="37%">&nbsp;</td>
@@ -258,18 +278,8 @@ function buildInstallModeScreen() {
 	  <tr>
 		<td nowrap valign="top" width="37%">
 		<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
-		<input type="radio" name="installmode" id="installmode2" value="upd" onClick="setInstallMode(1);" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='upd' && $upgradeable != 2) ? 'checked="checked"':'' ?> /><label for="installmode2" class="nofloat">Upgrade Installation</label></td>
-		<td width="61%">Select this option to upgrade your current files and database.</td>
-	  </tr>
-	  <tr>
-		<td nowrap valign="top" width="37%">&nbsp;</td>
-		<td width="61%">&nbsp;</td>
-	  </tr>
-	  <tr>
-		<td nowrap valign="top" width="37%">
-		<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
-		<input type="radio" name="installmode" id="installmode3" value="upd2" onClick="setInstallMode(2);" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='upd2' || $upgradeable == 2) ? 'checked="checked"':'' ?> /><label for="installmode2" class="nofloat">Upgrade Installation<br /><small>(edit database config)</small></label></td>
-		<td width="61%">Select this option to upgrade your current files and database after editing your database configuration details.</td>
+		<input type="radio" name="installmode" id="installmode3" value="upd2" onClick="setInstallMode(2);hidediv('AUH');" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='upd2' || $upgradeable == 2) ? 'checked="checked"':'' ?> /><label for="installmode3" class="nofloat">Advanced Upgrade Install<br /><small>(edit database config)</small></label></td>
+		<td width="61%">For advanced database admins or moving to servers with a different database connection character set. <b>You will need to know your full databass name, user, password and connection/collation details.</b></td>
 	  </tr>
 	</table>
 <?php
@@ -291,7 +301,7 @@ function buildConnectionScreen() {
         $database_connection_charset = empty ($database_connection_charset) ? 'utf8' : $database_connection_charset;
     }
     ob_start();
-?>  
+?>
 	<p class="title">Connection Information</p>
 	<p>Database connection and login information</p>
 	<p>Please enter the name of the database created for MODX. If you there is no database yet, the installer will attempt to create a database for you. This may fail depending on the MySQL configuration or the database user permissions for your domain/installation.</p>
@@ -315,20 +325,34 @@ function buildConnectionScreen() {
 	<input type="button" name="cmdtest" value="Test connection" style="width:130px" onClick="testConnection()" /><br />
 	<input id="testbox" name="testbox" value="" size="30" />
 	</div>
+	
+<div id="AUH">
+
+    <p class="title">Default Admin User</p>
+
 	<p>Now you&#39;ll need to enter some details for the main administrator account. You can fill in your own name here, and a password you&#39;re not likely to forget. You&#39;ll need these to log into Admin once setup is complete.</p>
 
-	<div class="labelHolder"><label for="cmsadmin">Administrator username:</label>
-	<input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" /></div>
+    <div class="labelHolder"><label for="cmsadmin">Administrator username:</label>
+    <input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" /></div>
+
+<div class="labelHolder"><label for="cmsadminemail">Administrator email:</label>
+<input id="cmsadminemail" value="<?php echo isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail']:"" ?>" name="cmsadminemail" /></div>
+
 	<div class="labelHolder"><label for="cmspassword">Administrator password:</label>
 	<input id="cmspassword" type="password" name="cmspassword" value="<?php echo isset($_POST['cmspassword']) ? $_POST['cmspassword']:"" ?>" /></div>
 	<div class="labelHolder"><label for="cmspasswordconfirm">Confirm password:</label>
 	<input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" /></div>
+
+</div>
+
 	<br />
 <?php
     $o = ob_get_contents();
     ob_end_clean();
     return $o;
 }
+
+
 
 // build Options Screen
 function buildOptionsScreen() {
@@ -338,12 +362,18 @@ function buildOptionsScreen() {
     global $moduleSnippets;
     global $moduleTemplates;
     ob_start();
+    
     echo "<p class=\"title\">Optional Items</p><p>Please choose your installation options and click Install:</p>";
 
     $chk = isset ($_POST['installdata']) ? 'checked="checked"' : "";
     echo '<img src="im_sample.gif" align="left" width="45" height="48" hspace="5" hspace="10" alt="Sample Data" />';
     echo "<h1>&nbsp;Sample Web Site</h1>";
-    echo "&nbsp;<input type=\"checkbox\" name=\"installdata\" value=\"1\" $chk />Install/Overwrite <span class=\"comname\">Sample Web Site</span> <br /><span><i>&nbsp;Please note that this will <b style=\"color:#CC0000\">overwrite</b> existing documents and resources.</i></span><hr size=\"1\" style=\"border:1px dotted silver;\" />";
+    echo "&nbsp;<input type=\"checkbox\" name=\"installdata\" value=\"1\" $chk />Install/Overwrite <span class=\"comname\">Sample Web Site</span> <br /><span><i>&nbsp;Please note that this will <b style=\"color:#CC0000\">overwrite</b> existing documents and resources.</i></span><hr size=\"1\" style=\"border:1px dotted silver;\" /><br />";
+
+
+    // toggle options
+    echo "<h4>Checkbox select options:</h4><p class=\"actions\"><a href=\"javascript:Checkboxes.checkAll('toggle');\">All</a> <a href=\"javascript:Checkboxes.uncheckAll('toggle');\">None</a> <a href=\"javascript:Checkboxes.toggle('toggle');\">Toggle</a></p><br class=\"clear\" />";
+
 
     // display templates
     $templates = isset ($_POST['template']) ? $_POST['template'] : array ();
@@ -353,7 +383,7 @@ function buildOptionsScreen() {
         echo "<h1>Templates</h1><br />";
         for ($i = 0; $i < $limit; $i++) {
             $chk = in_array($i, $templates) || (!count($_POST)) ? 'checked="checked"' : "";
-            echo "&nbsp;<input type=\"checkbox\" name=\"template[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
+            echo "&nbsp;<input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"toggle\" $chk />Install/Update <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
         }
     }
 
@@ -365,7 +395,7 @@ function buildOptionsScreen() {
         echo "<h1>Chunks</h1>";
         for ($i = 0; $i < $limit; $i++) {
             $chk = in_array($i, $chunks) || (!count($_POST)) ? 'checked="checked"' : "";
-            echo "&nbsp;<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
+            echo "&nbsp;<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"toggle\" $chk />Install/Update <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
         }
     }
 
@@ -377,7 +407,7 @@ function buildOptionsScreen() {
         echo "<h1>Modules</h1>";
         for ($i = 0; $i < $limit; $i++) {
             $chk = in_array($i, $modules) || (!count($_POST)) ? 'checked="checked"' : "";
-            echo "&nbsp;<input type=\"checkbox\" name=\"module[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
+            echo "&nbsp;<input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"toggle\" $chk />Install/Update <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
         }
     }
 
@@ -389,7 +419,7 @@ function buildOptionsScreen() {
         echo "<h1>Plugins</h1>";
         for ($i = 0; $i < $limit; $i++) {
             $chk = in_array($i, $plugins) || (!count($_POST)) ? 'checked="checked"' : "";
-            echo "&nbsp;<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
+            echo "&nbsp;<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"toggle\" $chk />Install/Update <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
         }
     }
 
@@ -401,7 +431,7 @@ function buildOptionsScreen() {
         echo "<h1>Snippets</h1>";
         for ($i = 0; $i < $limit; $i++) {
             $chk = in_array($i, $snippets) || (!count($_POST)) ? 'checked="checked"' : "";
-            echo "&nbsp;<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" $chk />Install/Update <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
+            echo "&nbsp;<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"toggle\" $chk />Install/Update <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
         }
     }
 
@@ -631,17 +661,17 @@ function buildSummaryScreen() {
 			var btnnext = document.install.cmdnext;
 			var chkagree = document.install.chkagree;
 			if(!chkagree.checked) btnnext.disabled="disabled";
-			else btnnext.disabled = "";					
+			else btnnext.disabled = "";
 		}
-		
+
 		// set install mode
 		function setInstallMode(n) {
 			var btnnext = document.install.cmdnext;
 			installMode=n;
-			btnnext.disabled = "";			
+			btnnext.disabled = "";
 		}
 
-		// test DB connection	
+		// test DB connection
 		function testConnection(){
 			var f=document.testform;
 			f.target="testPort";
@@ -657,7 +687,7 @@ function buildSummaryScreen() {
 			tb.style.color = "#000099";
 		}
 
-		// test DB result	
+		// test DB result
 		function testResult(msg,color){
 			var tb = document.install.testbox;
 			tb.value = msg;
@@ -675,7 +705,72 @@ function buildSummaryScreen() {
 				}
 			}
 		}
-			
+
+        function hidediv(pass) {
+            var divs = document.getElementsByTagName('div');
+            for(i=0;i<divs.length;i++){
+                if(divs[i].id.match(pass)){//if they are 'see' divs
+                if (document.getElementById) // DOM3 = IE5, NS6
+                    divs[i].style.display="none";// show/hide
+                else
+                if (document.layers) // Netscape 4
+                    document.layers[divs[i]].display = 'hidden';
+                else // IE 4
+                    document.all.hideshow.divs[i].visibility = 'hidden';
+                }
+            }
+        }
+
+        function showdiv(pass) {
+            var divs = document.getElementsByTagName('div');
+                for(i=0;i<divs.length;i++){
+                    if(divs[i].id.match(pass)){
+                    if (document.getElementById)
+                        divs[i].style.display="block";
+                    else
+                    if (document.layers) // Netscape 4
+                        document.layers[divs[i]].display = 'visible';
+                    else // IE 4
+                        document.all.hideshow.divs[i].visibility = 'visible';
+                }
+            }
+        }
+
+var Checkboxes = {
+    // checks all the checkboxes of a given class name
+    checkAll: function(className) {
+      Checkboxes.setChecking(className, true);
+    },
+
+    // unchecks all the checkboxes of a given class name
+    uncheckAll: function(className) {
+      Checkboxes.setChecking(className, false);
+    },
+
+    // toggles the value of the checkboxes of a given class name
+    toggle: function(className) {
+      Checkboxes.setChecking(className, 'toggle');
+    },
+
+    // sets the checked value of elements of a given class name
+    setChecking: function(className, value) {
+       var boxes = getElementsByClassName(document, "*", className);
+       var cur_value = false;
+       for (var i=0, boxes_len=boxes.length; i<boxes_len; i++) {
+         if (value == 'toggle') {
+           cur_value = boxes[i].checked;
+           if (cur_value == true) {
+               boxes[i].checked = '';
+           } else {
+               boxes[i].checked = 'checked';
+           }
+         } else {
+               boxes[i].checked = value;
+         }
+       }
+    }
+}
+
 		// change screen
 		function changeScreen(n){
 			var o;
@@ -683,7 +778,7 @@ function buildSummaryScreen() {
 			var agreebox = document.getElementById("iagreebox");
 			var btnback = document.install.cmdback;
 			var btnnext = document.install.cmdnext;
-			
+
 			//window.scrollTo(0,0);
 			viewer.scrollTop = 0;
 			// set default values
@@ -739,7 +834,7 @@ function buildSummaryScreen() {
 					if(!syscheck) {
 						btnnext.disabled = "disabled";
 						document.install.syscheck.value="on";
-						document.install.submit();						
+						document.install.submit();
 						return;
 					}
 					btnnext.value = "Install now";
@@ -747,12 +842,12 @@ function buildSummaryScreen() {
 					if(errors>0) {
 						btnnext.value = "Retry";
 					}
-						
+
 					break;
 				case 7:	// final screen
 					if(document.install.syscheck=="on") {
 						btnnext.disabled = "disabled";
-						document.install.submit();						
+						document.install.submit();
 						return;
 					}
 					btnnext.value = "Close";
@@ -770,7 +865,7 @@ function buildSummaryScreen() {
 				}
 			}
 		}
-		
+
 		// validate
 		function validate() {
 			var f = document.install;
@@ -812,25 +907,46 @@ function buildSummaryScreen() {
 			}
 			return true;
 		}
-		
+
 		function rmInstallResult(msg){
 			if(msg) alert(msg);
 			gotoManager();
 		}
-		
+
 		function closepage(){
 			var chk = document.install.rminstaller;
 			if(chk && chk.checked) {
 				// remove install folder and files
 				window.location.href = "../manager/processors/remove_installer.processor.php?rminstall=1";
 			}
-			else { 
+			else {
 				window.location.href = "../manager/";
 			}
 		}
+
+		/*
+			Written by Jonathan Snook, http://www.snook.ca/jonathan
+			Add-ons by Robert Nyman, http://www.robertnyman.com
+		*/
+		
+		function getElementsByClassName(oElm, strTagName, strClassName){
+			var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName);
+			var arrReturnElements = new Array();
+			strClassName = strClassName.replace(/-/g, "\-");
+			var oRegExp = new RegExp("(^|\s)" + strClassName + "(\s|$)");
+			var oElement;
+			for(var i=0; i<arrElements.length; i++){
+				oElement = arrElements[i];
+				if(oRegExp.test(oElement.className)){
+					arrReturnElements.push(oElement);
+				}
+			}
+			return (arrReturnElements)
+		}		
+
 /* ]]> */
     </script>
-</head>	
+</head>
 
 <body>
 <!-- start install screen-->

@@ -67,6 +67,8 @@ h1, h4 {
 }
 h4 {
 	font-size: 12px;
+	margin-bottom: 0;
+	line-height: 14px;
 }
 
 .fancyRow, .fancyRow2 {
@@ -126,3 +128,36 @@ div.labelHolder input {
 	border-top:			1px solid silver; 
 	background-color:	#eeeeee; 
 	font-weight:		bold;   }
+
+p.actions a {
+    margin: 0 3px;
+    padding: 1px 4px 2px;
+    border: 1px solid #777;
+    border-top-color: #bbb;
+    border-left-color: #bbb;
+    background: #e4e4e4;
+    display: block;
+    float: left;
+    color: #222;
+}
+p.actions a:hover {
+    margin: 1px 2px -1px 4px;
+    border: 1px solid #bbb;
+    border-top-color: #777;
+    border-left-color: #777;
+    text-decoration: none;
+}
+p.actions {
+    line-height: 1;
+    margin-top: 3px;
+}
+p.actions a:active {
+    background-color: #ccc;
+}
+
+.clear {
+    clear: both;
+    font-size: 0;
+    height: 0;
+    line-height: 0;
+}

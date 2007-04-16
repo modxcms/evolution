@@ -428,19 +428,21 @@ class DocumentParser {
 
             // Parse document source
             $this->documentOutput= $this->parseDocumentSource($this->documentOutput);
+	}
 
-            // Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
-            if ($js= $this->getRegisteredClientStartupScripts()) {
-                // change to just before closing </head>
-                // $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
-                $this->documentOutput= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentOutput);
-            }
+	// Moved from prepareResponse() by sirlancelot
+	// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
+	if ($js= $this->getRegisteredClientStartupScripts()) {
+		// change to just before closing </head>
+		// $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
+		$this->documentOutput= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentOutput);
+	}
 
-            // Insert jscripts & html block into template - template must have a </body> tag
-            if ($js= $this->getRegisteredClientScripts()) {
-                $this->documentOutput= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentOutput);
-            }
-        }
+	// Insert jscripts & html block into template - template must have a </body> tag
+	if ($js= $this->getRegisteredClientScripts()) {
+		$this->documentOutput= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentOutput);
+	}
+	// End fix by sirlancelot
 
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+') > -1) {
@@ -487,7 +489,7 @@ class DocumentParser {
         $source= $this->documentGenerated == 1 ? "database" : "cache";
         $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
 
-        $out= $this->documentOutput;
+        $out =& $this->documentOutput;
         if ($this->dumpSQL) {
             $out .= $this->queryCode;
         }
@@ -496,7 +498,7 @@ class DocumentParser {
         $out= str_replace("[^p^]", $phpTime, $out);
         $out= str_replace("[^t^]", $totalTime, $out);
         $out= str_replace("[^s^]", $source, $out);
-        $this->documentOutput= $out;
+        //$this->documentOutput= $out;
 
         // invoke OnWebPagePrerender event
         if (!$noEvent) {
@@ -1176,6 +1178,7 @@ class DocumentParser {
             //				$this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
             //			}			
 
+/**
             // Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
             if ($js= $this->getRegisteredClientStartupScripts()) {
                 // change to just before closing </head>
@@ -1193,6 +1196,7 @@ class DocumentParser {
     				array_shift($this->jscripts); // prevent double insert in outputContent()
     			}
             }
+/**/
 
         }
         register_shutdown_function(array (

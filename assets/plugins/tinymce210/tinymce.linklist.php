@@ -20,8 +20,8 @@ function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, i
 	global $dbase;
 	global $table_prefix;		
     
-    $tblsc = $dbase.".".$table_prefix."site_content";
-    $tbldg = $dbase.".".$table_prefix."document_groups";
+    $tblsc = $dbase.".`".$table_prefix."site_content`";
+    $tbldg = $dbase.".`".$table_prefix."document_groups`";
 
     // modify field names to use sc. table reference
     $fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));

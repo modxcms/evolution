@@ -288,12 +288,12 @@ EOD;
 
     } else {
 
-     $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues`(tmplvarid, contentid, value)
+     $sql = "INSERT INTO {$db}.`{$pre}site_tmplvar_contentvalues` (tmplvarid, contentid, value)
              VALUES('{$cv->id}', '{$doc_id}', '{$value_prep}');";
              
     }
 
-    $modx->db->update(array('editedon'=>$time, 'editedby'=>$user), "{$pre}site_content", "id = '{$doc_id}'");
+    $modx->db->update(array('editedon'=>$time, 'editedby'=>$user), "`{$pre}site_content`", "`id` = '{$doc_id}'");
 
    } elseif(in_array($cv->id, $editable)) {
 

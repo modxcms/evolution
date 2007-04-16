@@ -3,9 +3,19 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC2 (rev 2521 - April 10, 2007)
+MODx 0.9.6-RC2 (rev 2545 - April 15, 2007)
 ====================================
-* [CHANGED] Cache syncronization methods now use glob(), backwards compatible (2520)
+* Fix to cachesync processor (removed extra / in path assignment) (2545)
+* [FS#825] New approach to automatic path configuration (2545)
+* Add check all, uncheck all and toggle to installer for resources (2541)
+* [FS#811] Missing Unpublished Page icon in manager (2539)
+* [FS#764] "Go!" hardcoded in tree sorting button (2538)
+* Update installer to include admin email and update new advanced DB upgrade explanation (2537)
+* Fixed undefined setVariableModified bug with TV calls. (2530)
+* [FIX] Startup Scripts are no longer saved to the cache (this eliminates the double "MODX_MEDIA_PATH" in outputted HTML) (2528)
+* Removed the noneditable plugin from the Content Editor theme in TinyMCE and default plugin settings due to a conflict in Safari. (2522)
+* [CHANGED] Cache syncronization methods now use glob(), backwards compatible
+  @see http://modxcms.com/forums/index.php/topic,13796.0.html (2520)
 * Update Dutch and French for 096 release (2511)
 * Update Ditto call in demo content and ditto/reflect verion numbers in resources (2504)
 * Update Portuguese and Swedish for 096 release (2501)

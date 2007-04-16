@@ -38,6 +38,7 @@ if ($installMode == 1) {
 	$dbase = "`" . $_POST['database_name'] . "`";
 	$table_prefix = $_POST['tableprefix'];
 	$adminname = $_POST['cmsadmin'];
+	$adminemail = $_POST['cmsadminemail'];
 	$adminpass = $_POST['cmspassword'];
 }
 
@@ -116,7 +117,7 @@ if ($installMode == 0) {
 // open db connection
 $setupPath = realpath(dirname(__FILE__));
 include "$setupPath/sqlParser.class.php";
-$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminpass, $database_connection_charset);
+$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 $sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imagePath = $base_path . "assets/";
@@ -186,14 +187,29 @@ $configString = '<?php
 	
 	// automatically assign base_path and base_url
 	if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'base_url\']) {
-		$a = explode("/manager",str_replace("\\\\","/",dirname($_SERVER[\'SCRIPT_NAME\'])));
-		if(count($a)>1) array_pop($a);
-		$url = implode("manager",$a); reset($a);
-		$a = explode("manager",str_replace("\\\\","/",dirname(__FILE__)));
-		if(count($a)>1) array_pop($a);
-		$pth = implode("manager",$a); unset($a);
-		$base_url = $url.(substr($url,-1)!="/"? "/":"");
-		$base_path = $pth.(substr($pth,-1)!="/" && substr($pth,-1)!="\\\\"? "/":"");
+    
+        // assign base_path
+        $base_path = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR.\'..\'.DIRECTORY_SEPARATOR.\'..\').DIRECTORY_SEPARATOR;
+        $base_path = str_replace(\'\\\\\',\'/\',$base_path);
+        if($base_path{strlen($base_path)-1}!=\'/\') $base_path.= \'/\';
+
+                // strip appended paths
+        $base_url = !empty($_SERVER[\'PHP_SELF\']) ? $_SERVER[\'PHP_SELF\'] : $_SERVER[\'REQUEST_URI\'];
+        $base_url = str_replace(\'\\\\\',\'/\',$base_url);
+        $truncate = strpos($base_url, !empty($_SERVER[\'SCRIPT_FILENAME\']) ? basename($_SERVER[\'SCRIPT_FILENAME\']) : \'.php\');
+        if($truncate!==false) $base_url = substr($base_url, 0, $truncate);
+            
+        // walk trough url until we reach our base directory
+        $base_url_tokens = explode(\'/\', $base_url);
+        while(count($base_url_tokens)>0) { 
+          $base_url = implode(\'/\', $base_url_tokens);
+          if(preg_match(\'/\'.preg_quote($base_url, \'/\').\'[\/|]$/\', $base_path)) break;
+          array_pop($base_url_tokens);
+        }
+        
+        if($base_url{strlen($base_url)-1}!=\'/\') $base_url.= \'/\';
+        
+        // assign site_url
 		$site_url = ((isset($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\'])==\'on\') || $_SERVER[\'SERVER_PORT\']==$https_port)? \'https://\' : \'http://\';
 		$site_url .= $_SERVER[\'HTTP_HOST\'];
 		if($_SERVER[\'SERVER_PORT\']!=80) $site_url = str_replace(\':\'.$_SERVER[\'SERVER_PORT\'],\'\',$site_url); // remove port from HTTP_HOST 
@@ -250,7 +266,7 @@ if ($configFileFailed == true) {
 	<textarea style="width:400px; height:160px;">
 	<?php echo $configString; ?>
 	</textarea>
-	<p>Once that's been done, you can log into MODx Admin by pointing your browser at YourSiteNameL.com/manager/.</p>
+	<p>Once that's been done, you can log into MODx Admin by pointing your browser at YourSiteName.com/manager/.</p>
 <?php
 
 	return;

@@ -138,7 +138,7 @@ class ContentVariable {
 						$type = 'dropdown';
 						$caption = $QE_lang['template'];
 						$description = $QE_lang['page_data_template_help'];
-						$templates = $modx->db->select('templatename,id', $modx->db->config['table_prefix'] . 'site_templates');
+						$templates = $modx->db->select('templatename,id', '`' . $modx->db->config['table_prefix'] . 'site_templates`');
 						$template_strings[] = '(blank)==0';
 						while ($template = $modx->db->getRow($templates)) {
 							$template_strings[] = $template['templatename'] . '==' . $template['id'];

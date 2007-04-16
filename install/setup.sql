@@ -517,8 +517,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
   `dob` int(10) NOT NULL DEFAULT '0',
   `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
   `country` varchar(5) NOT NULL default '',
-  `state` varchar(5) NOT NULL default '',
-  `zip` varchar(5) NOT NULL default '',
+  `state` varchar(25) NOT NULL default '',
+  `zip` varchar(25) NOT NULL default '',
   `fax` varchar(100) NOT NULL default '',
   `photo` varchar(255) NOT NULL default '' COMMENT 'link to photo',
   `comment` varchar(255) NOT NULL default '' COMMENT 'short comment',  
@@ -771,6 +771,11 @@ ALTER TABLE `{PREFIX}site_metatags`
   MODIFY COLUMN `tagvalue` varchar(255) NOT NULL DEFAULT '';
 
 
+ALTER TABLE `{PREFIX}web_user_attributes`
+  MODIFY COLUMN `state` varchar(25) NOT NULL default '',
+  MODIFY COLUMN `zip` varchar(25) NOT NULL default '';
+
+
 # ]]upgrade-able
 
 
@@ -801,7 +806,7 @@ REPLACE INTO `{PREFIX}manager_users`
 
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Built-in Administration account', 1, 'Your email goes here', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
+(1, 1, 'Default admin account', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
 
 
 # ]]non-upgrade-able
@@ -880,7 +885,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('manager_lang_attribute','en'),
 ('manager_direction','ltr'),
 ('tinymce_editor_theme','editor'),
-('tinymce_custom_plugins','style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,noneditable,nonbreaking,xhtmlxtras,visualchars,media'),
+('tinymce_custom_plugins','style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media'),
 ('tinymce_custom_buttons1','undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help'),
 ('tinymce_custom_buttons2','bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops');
 
