@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC2 (rev 2545 - April 15, 2007)
+MODx 0.9.6-RC2 (rev 2547 - April 16, 2007)
 ====================================
+* [FS#130] Partial fix: Added system setting to toggle the ability for users to be able to see all items in the tree, regardless of access permissions (still needs configuration UI in manager). (2546)
 * Fix to cachesync processor (removed extra / in path assignment) (2545)
 * [FS#825] New approach to automatic path configuration (2545)
 * Add check all, uncheck all and toggle to installer for resources (2541)
