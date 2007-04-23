@@ -28,16 +28,19 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     var workText;
     var buildText;
     
+    // Create the AJAX mail update object before requesting it
+    var updateMailerAjx = new Ajax('index.php', {method:'post', postBody:'updateMsgCount=true', onComplete:showResponse});
     function updateMail(now) {
     	try {
     	  // if 'now' is set, runs immediate ajax request (avoids problem on initial loading where periodical waits for time period before making first request)
-    	  if (now) new ajax('index.php', {postBody:'updateMsgCount=true', onComplete:showResponse}).request();
-		  new ajax('index.php', {postBody:'updateMsgCount=true', onComplete:showResponse}).request.periodical(<?php echo $modx->config['mail_check_timeperiod'] * 1000; ?>);
+    	  if (now)
+		  updateMailerAjx.request();
 		  return false;
     	} catch(oException) {
-          xx=window.setTimeout('updateMail()', 1000);
+		// Delay first run until we're ready...
+		xx=updateMail.delay(1000,'',true);
     	}
-	};
+    };
 
 	function showResponse(request) {
 		var counts = request.split(',');
@@ -48,7 +51,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	}
 	
 	window.addEvent('load', function() {
-        updateMail();
+        updateMail(true); // First run update
+	updateMail.periodical(<?php echo $modx->config['mail_check_timeperiod'] * 1000; ?>, '', true); // Periodical Updater
         if(top.__hideTree) {
             // display toc icon
             var elm = $('tocText');

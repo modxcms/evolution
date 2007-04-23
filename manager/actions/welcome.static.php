@@ -63,7 +63,7 @@ $sql = "SELECT id, pagetitle, description FROM $dbase.`".$table_prefix."site_con
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if($limit<1) {
-    echo "\t".$_lang["no_activity_message"];
+    $html .= '<li>'.$_lang['no_activity_message'].'</li>';
 } else {
     for ($i = 0; $i < $limit; $i++) {
         $content = mysql_fetch_assoc($rs);

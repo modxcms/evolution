@@ -520,6 +520,10 @@ a img {
     text-decoration: none;
 }
 
+.protectedNode {
+    color: #aaa;
+}
+
 #treeSplitter {
 	width:10px;
 	height:100%;

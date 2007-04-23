@@ -7,8 +7,8 @@
  *  For: MODx cms (modxcms.com)
  *  Description: Class for the QuickEditor
  *
- *  Translation: Pontus Ågren
- *  Date: 2007-02-19
+ *  Translation: Pontus Ågren (Pont)
+ *  Date: 2007-03-20
  */
 
 /*
@@ -74,7 +74,7 @@ $QE_lang['document_summary'] = 'Sammanfattning';
 $QE_lang['document_summary_help'] = 'Skriv en kort sammanfattning av dokumentet'; 
 $QE_lang['document_opt_menu_index'] = 'Menyindex'; 
 $QE_lang['document_opt_menu_index_help'] = 'Menyindex är ett fält du kan använda för att sortera dokument i din kodsnutt som bygger menyn. Du kan också använda det för andra ändamål i dina kodsnuttar.'; 
-$QE_lang['document_opt_menu_title'] = 'Menytitle'; 
+$QE_lang['document_opt_menu_title'] = 'Menytitel'; 
 $QE_lang['document_opt_menu_title_help'] = 'Menytitel är ett fält du kan använda för att visa en kort titel för dokumentet i dina menykodsnuttar eller moduler.'; 
 $QE_lang['document_opt_show_menu'] = 'Visa i meny'; 
 $QE_lang['document_opt_show_menu_help'] = 'Välj den här inställningen för att visa dokumentet i en webbmeny. Notera att vissa menybyggarprogram kan välja att strunta i den här inställningen.'; 

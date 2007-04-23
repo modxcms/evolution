@@ -295,6 +295,12 @@ a img {
 	color: #FFA204;
 }
 
+
+.protectedNode {
+	color: #AE0000;
+}
+
+
 .disabledPlugin a {
 	color: #aaa;
 	text-decoration: line-through;	

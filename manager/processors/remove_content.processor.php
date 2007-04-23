@@ -5,6 +5,23 @@ if(!$modx->hasPermission('delete_document')) {
 	$e->dumpError();	
 }
 
+$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
+$rs = mysql_query($sql);
+$limit = mysql_num_rows($rs);
+$ids = array();
+if($limit>0) {
+	for($i=0;$i<$limit;$i++) {
+		$row=mysql_fetch_assoc($rs);
+		array_push($ids, @$row['id']);
+	}
+}
+
+// invoke OnBeforeEmptyTrash event
+$modx->invokeEvent("OnBeforeEmptyTrash",
+						array(
+							"ids"=>$ids
+						));
+
 // remove the document groups link.
 $sql = "DELETE $dbase.`".$table_prefix."document_groups` 
 		FROM $dbase.`".$table_prefix."document_groups` 
@@ -26,6 +43,12 @@ if(!$rs) {
 	echo "Something went wrong while trying to remove deleted documents!";
 	exit;
 } else {
+	// invoke OnEmptyTrash event
+	$modx->invokeEvent("OnEmptyTrash",
+						array(
+							"ids"=>$ids
+						));
+	
 	// empty cache
 	include_once "cache_sync.class.processor.php";
 	$sync = new synccache();

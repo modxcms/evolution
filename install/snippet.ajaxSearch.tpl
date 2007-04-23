@@ -250,16 +250,16 @@
 $snipPath = $modx->config['base_path'] . "assets/snippets/";
 
 include_once $snipPath."AjaxSearch/includes/AjaxSearch.inc.php";
-include_once $snipPath."AjaxSearch/includes/templates.inc.php";
+include $snipPath."AjaxSearch/includes/templates.inc.php";
 
 #include default language file
-include_once($snipPath."AjaxSearch/lang/english.inc.php");
+include($snipPath."AjaxSearch/lang/english.inc.php");
 
 #include other language file if set.
 $as_language = isset($language) ? $language : $modx->config['manager_language'];
 if($as_language!="english" && $as_language != '') {
 	if(file_exists($snipPath ."AjaxSearch/lang/".$as_language.".inc.php"))
-		include_once $snipPath ."AjaxSearch/lang/".$as_language.".inc.php";
+		include $snipPath ."AjaxSearch/lang/".$as_language.".inc.php";
 }
 
 $liveSearch = $ajaxSearchType;

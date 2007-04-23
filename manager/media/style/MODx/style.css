@@ -464,6 +464,11 @@ a img {
     text-decoration: none;
 }
 
+.protectedNode {
+    color: #B6B6B6;
+    text-decoration: none !important;
+}
+
 #treeSplitter {
 	width:10px;
 	height:100%;

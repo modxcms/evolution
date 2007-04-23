@@ -3,11 +3,14 @@
 # change the file name from ht.access to .htaccess.
 #
 # Make sure RewriteBase points to the directory where you installed MODx.
-# E.g., "/modx" if your installation is in a "modx" subdirectory.
+# E.g., "/modx" if your installation is in a "modx" subdirectory. If you have
+# problems with your .htaccess working at all, try un-commenting the first 
+# line above the "RewriteEngine On" directive.
 #
 # You may choose to make your URLs non-case-sensitive by adding a NC directive
 # to your rule: RewriteRule ^(.*)$ index.php?q=$1 [L,QSA,NC]
 
+#Options +FollowSymlinks
 RewriteEngine On
 RewriteBase /
 
@@ -19,7 +22,7 @@ RewriteBase /
 #RewriteRule (.*) http://example-domain-please-change.com/$1 [R=301,L]
 #
 # or for the opposite domain.com -> www.domain.com use the following
-# DO NOT USE BOTH
+# >>> DO NOT USE BOTH THE ABOVE AND BELOW <<<
 #
 #RewriteCond %{HTTP_HOST} .
 #RewriteCond %{HTTP_HOST} !^www\.example-domain-please-change\.com [NC]

@@ -274,7 +274,7 @@ class DocumentParser {
                 break;
             case 'id' :
                 if (!is_numeric($_REQUEST['id'])) {
-                    $this->messageQuit("ID passed in request is NaN!");
+                    $this->sendErrorPage();
                 } else {
                     $docIdentifier= intval($_REQUEST['id']);
                 }
@@ -1577,7 +1577,11 @@ class DocumentParser {
             $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $this->config['base_url'];
         }
 
-        return $host . $virtualDir . $url;
+        if ($this->config['xhtml_urls']) {
+        	return preg_replace("/&(?!amp;)/","&amp;", $host . $virtualDir . $url);
+        } else {
+        	return $host . $virtualDir . $url;	
+        }
     }
 
     function getConfig($name= '') {

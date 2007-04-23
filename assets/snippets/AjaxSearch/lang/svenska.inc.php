@@ -6,7 +6,7 @@ Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
 Description: Language strings for AjaxSearch
 
-Translation: Pontus Ågren
+Translation: Pontus Ågren (Pont)
 Date: 2007-02-19
 */
 

@@ -11,17 +11,17 @@
 
 include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
 
-$_lang['tinymce_editor_theme_title'] = "Theme:";
-$_lang['tinymce_editor_theme_message'] = "Here you can select which theme or skin to use with the editor.";
-$_lang['tinymce_editor_custom_plugins_title'] = "Custom Plugins:";
-$_lang['tinymce_editor_custom_plugins_message'] = "Enter the plugins to use for the 'custom' theme as a comma separated list.";
-$_lang['tinymce_editor_custom_buttons_title'] = "Custom Buttons:";
-$_lang['tinymce_editor_custom_buttons_message'] = "Enter the buttons to use for the 'custom' theme as a comma separated list for each row. Be sure that each button has the required plugin enabled in the 'Custom Plugins' setting.";
-$_lang['tinymce_editor_css_selectors_title'] = "CSS selectors:";
-$_lang['tinymce_editor_css_selectors_message'] = "Here you can enter a list of selectors that should be available in the editor. Enter them as follows:<br />'displayName=selectorName;displayName2=selectorName2'<br />For instance, say you have <b>.mono</b> and <b>.smallText</b> selectors in your CSS file, you could add them here as:<br />'Monospaced text=mono;Small text=smallText'<br />Note that the last entry should not have a semi-colon after it.";
-$_lang['tinymce_settings'] = "TinyMCE Settings";
-$_lang['tinymce_theme_simple'] = "Simple";
-$_lang['tinymce_theme_advanced'] = "Advanced";
-$_lang['tinymce_theme_editor'] = "Content Editor";
-$_lang['tinymce_theme_custom'] = "Custom";
+$_lang['tinymce_editor_theme_title'] = "Teema:";
+$_lang['tinymce_editor_theme_message'] = "Valitse editorille haluamasi teema/ulkoasu.";
+$_lang['tinymce_editor_custom_plugins_title'] = "Valinnaiset pluginit:";
+$_lang['tinymce_editor_custom_plugins_message'] = "Anna t&auml;h&auml;n pilkuilla eroteltuina ne pluginit, joita k&auml;yt&auml;t kustomoidussa teemassa.";
+$_lang['tinymce_editor_custom_buttons_title'] = "Valinnaiset painikkeet:";
+$_lang['tinymce_editor_custom_buttons_message'] = "Anna t&auml;h&auml;n pilkuilla eroteltuina joka riville ne painikkeet, joita k&auml;yt&auml;t kustomoidussa teemassa. Varmista, ett&auml; jokaiselle painikkeelle on asetettu plugin 'Valinnaiset pluginit'-kohdassa.";
+$_lang['tinymce_editor_css_selectors_title'] = "CSS-valitsimet:";
+$_lang['tinymce_editor_css_selectors_message'] = "Anna t&auml;h&auml;n css-valitsimet, joita haluat k&auml;ytt&auml;&auml; editorissa. Sy&ouml;t&auml; ne n&auml;in:<br />'n&auml;ytt&ouml;Nimi=valitsimenNimi;n&auml;ytt&ouml;Nimi2=valitsimenNimi2'<br />Jos sinulla on esim. <b>.leipateksti</b> ja <b>.otsikko</b> valitsimina css-tiedostossasi, lis&auml;&auml; ne listaan n&auml;in:<br />'Leipis=leipateksti;Otsikko=otsikko'<br />Huomaa, ettei viimeisen kohdan j&auml;lkeen le puolipistett&auml;.";
+$_lang['tinymce_settings'] = "TinyMCE:n asetukset";
+$_lang['tinymce_theme_simple'] = "Yksinkertaistettu";
+$_lang['tinymce_theme_advanced'] = "Edistynyt";
+$_lang['tinymce_theme_editor'] = "Sis&auml;ll&ouml;nmuokkaajalle";
+$_lang['tinymce_theme_custom'] = "Kustomoitu";
 ?>

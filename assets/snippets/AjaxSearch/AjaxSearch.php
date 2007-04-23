@@ -29,15 +29,15 @@ $docgrp = $_POST['docgrp'];
 $highlightResult = $_POST['highlightResult'];
 
 include_once MODX_BASE_PATH . 'assets/snippets/AjaxSearch/includes/AjaxSearch.inc.php';
-include_once MODX_BASE_PATH . 'assets/snippets/AjaxSearch/includes/templates.inc.php';
+include MODX_BASE_PATH . 'assets/snippets/AjaxSearch/includes/templates.inc.php';
 
 #include default language file
-include_once(MODX_BASE_PATH . "assets/snippets/AjaxSearch/lang/english.inc.php");
+include(MODX_BASE_PATH . "assets/snippets/AjaxSearch/lang/english.inc.php");
 
 #include other language file if set.
 if($as_language!="english" && $as_language != '') {
 	if(file_exists(MODX_BASE_PATH . "assets/snippets/AjaxSearch/lang/".$as_language.".inc.php"))
-		include_once MODX_BASE_PATH . "assets/snippets/AjaxSearch/lang/".$as_language.".inc.php";
+		include MODX_BASE_PATH . "assets/snippets/AjaxSearch/lang/".$as_language.".inc.php";
 }
 
 $ajaxSearch = 1;

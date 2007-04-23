@@ -224,7 +224,7 @@ class DBAPI {
             }
          }
          $rt = $this->query("INSERT INTO $intotable $flds $sql");
-         $lid = mysql_insert_id();
+         $lid = $this->getInsertId();
          return $lid ? $lid : $rt;
       }
    }

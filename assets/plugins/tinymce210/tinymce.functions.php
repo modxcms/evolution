@@ -194,10 +194,11 @@ $script = <<<TINY_SCRIPT
 {$tinymceInit}
 	});
 {$tinyCallback}
-	function tvOnTinyMCEChangeCallBack(i){
-		  i.oldTargetElement.onchange();            
-	}
-	
+  function tvOnTinyMCEChangeCallBack(i){
+    if (i.oldTargetElement.onchange) {
+      i.oldTargetElement.onchange();
+    }
+  }	
 </script>
 TINY_SCRIPT;
 

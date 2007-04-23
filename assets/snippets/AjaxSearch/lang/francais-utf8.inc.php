@@ -8,7 +8,7 @@ Description: UTF-8 French Language file for AjaxSearch
 */
 
 $_lang['as_resultsIntroFailure'] = 'Aucun résultat de recherche. Elargissez votre requête pour obtenir plus de résultats.';
-$_lang['as_searchButtonText'] = 'Recherche';
+$_lang['as_searchButtonText'] = 'rechercher!';
 $_lang['as_boxText'] = 'Saisissez votre recherche ici...';
 $_lang['as_introMessage'] = 'Veuilez saisir un terme à rechercher avant de lancer la recherche.';
 $_lang['as_resultsFoundTextSingle'] = '%d résultat trouvé pour "%s".';

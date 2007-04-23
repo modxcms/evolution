@@ -1089,7 +1089,7 @@ function efLoadTemplate($tpl){
 		}elseif( $key ){
 			$tpl = ( $doc=$modx->getChunk($key) )? $doc : false;
 			//try snippet if chunk is not found
-			if(!$tpl) $tpl = ( $doc=$this->modx->runSnippet($key) )? $doc : false;
+            if(!$tpl) $tpl = ( $doc=$modx->runSnippet($key) )? $doc : false;
 		}
 		return $tpl;
 	}

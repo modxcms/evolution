@@ -8,8 +8,8 @@
  * Note:
  *      New language keys should added at the bottom of this page
  *
- * Translation: Pontus Ågren
- * Date: 2007-02-24
+ * Translation: Pontus Ågren (Pont)
+ * Date: 2007-03-07
  */
 
 $_lang['language'] = "svenska";
@@ -18,11 +18,13 @@ $_lang['abbr_lang'] = "sv";
 
 $_lang['file_does_not_exist'] = " finns inte. Kontrollera filen.";
 
+$_lang['extender_does_not_exist'] = "extendern finns inte. Kontrollera den.";
+
 $_lang['default_template'] = <<<TPL
 
     <div class="ditto_item" id="ditto_item_[+id+]">
         <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
-        <div class="ditto_documentInfo">av <strong>[+author+]</strong> den [+createdon:date=`%d-%b-%y %H:%M`+]</div>
+        <div class="ditto_documentInfo">av <strong>[+author+]</strong> den [+date+]</div>
         <div class="ditto_introText">[+introtext+]</div>
     </div>
 
@@ -48,59 +50,58 @@ $_lang['none'] = "Inga";
 
 $_lang['edit'] = "Redigera";
 
-$_lang['yes'] = "Ja";
+$_lang['dateFormat'] = "%y-%b-%d %H:%M";
 
-$_lang['no'] = "Nej";
+// Debug Tab Names
+
+$_lang['info'] = "Information";
+
+$_lang['modx'] = "MODx";
+
+$_lang['fields'] = "Fält";
+
+$_lang['templates'] = "Mallar";
+
+$_lang['filters'] = "Filter";
+
+$_lang['prefetch_data'] = "Förhämtad data";
+
+$_lang['retrieved_data'] = "Hämtad data";
+
+// Debug Text
+
+$_lang['placeholders'] = "Platshållare";
 
 $_lang['params'] = "Parametrar";
 
-$_lang['debug_head'] = "
-<h2>Ditto version [+version+]</h2>
-<h3>Debug-info</h3>
-Antal dokument som förväntades bli summerade: [+summarize+]<br />
-Antal dokument som hämtades från databasen: [+recordCount+]<br />
-Sortera efter: [+sortBy+]<br />
-Sorteringsriktning: [+sortDir+]<br />
-Börja vid [+start+] och stanna vid [+stop+] av [+total+]<br />
-Förhämtning: [+prefetch+]<br />
-<h3>IDn</h3>
-[+ids+]<br />
-<h3>Snippetparametrar</h3>
-[+call+]<br />
-<h3>Filter</h3>
-[+filter+]<br />
-<h3>Fält</h3>
-<div class='ditto_dbg_fields'>
-[+fields+]
-</div><br />
-<h3>Dokumentdata</h3>
-";
+$_lang['basic_info'] = "Grundläggande information";
 
-$_lang["debug_styles"] = "
-<style>
-  .debug {
-    border: 1px solid #888;
-    border-left: 5px solid #888;
-    background-color: white;
-    padding: 3px !important;
-    margin: 5px 3px !important;
-  }
+$_lang['document_info'] = "Dokumentinformation";
 
- 	table { border: 1px solid #888; margin: 0; padding: 0;}
-  table td table {border: 0;}
-  table th td {border: 1px solid #888;}
-  table td { background-color:#FFFFFF; padding: 2px;}
-  table th { background-color:#888; padding: 2px; border: 1px solid #888;}
-  table td th { background-color:#008CBA; color: white; border: 1px solid #888; }
-  table td {vertical-align: top !important;}
-    .ditto_dbg_fields table table table { width: 80px; display: block} 
-    .ditto_dbg_fields table table table td{ width: 80px; display: block; float: left; border: none; background: none !important;} 
-    .ditto_dbg_fields table table table {display: block; float: left; border: 1px solid #888;}
-  table table tr td tr td{border: 1px solid #888; }
-	
-</style>
-";
+$_lang['debug'] = "Debug";
 
-$_lang['debug_item'] = "[+pagetitle+] ([+id+])";
+$_lang['version'] = "Version";
+
+$_lang['summarize'] = "Summera";
+
+$_lang['total'] = "Totalt";
+
+$_lang['sortBy'] = "Sortera efter";
+
+$_lang['sortDir'] = "Sorteringsriktning";
+
+$_lang['start'] = "Starta";
+         
+$_lang['stop'] = "Stoppa";
+
+$_lang['ditto_IDs'] = "IDn";
+
+$_lang['ditto_IDs_selected'] = "Valda IDn";
+
+$_lang['ditto_IDs_all'] = "Alla IDn";
+
+$_lang['open_dbg_console'] = "Öppna Debugkonsolen";
+
+$_lang['save_dbg_console'] = "Spara Debugkonsolen";
 
 ?>

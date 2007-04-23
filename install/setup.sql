@@ -714,7 +714,8 @@ ALTER TABLE `{PREFIX}user_attributes` ADD COLUMN `dob` integer(10) NOT NULL DEFA
  ADD COLUMN `comment` varchar(255) NOT NULL DEFAULT '' COMMENT 'short comment' AFTER `photo`;
 
 
-ALTER TABLE `{PREFIX}web_users` MODIFY COLUMN `username` varchar(100) NOT NULL DEFAULT '';
+ALTER TABLE `{PREFIX}web_users` 
+ MODIFY COLUMN `username` varchar(100) NOT NULL DEFAULT '';
 
 
 ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` integer(10) NOT NULL DEFAULT 0 AFTER `sessionid`,
@@ -725,7 +726,9 @@ ALTER TABLE `{PREFIX}web_user_attributes` ADD COLUMN `dob` integer(10) NOT NULL 
  ADD COLUMN `fax` varchar(100) NOT NULL DEFAULT '' AFTER `zip`,
  ADD COLUMN `blockedafter` integer(11) NOT NULL DEFAULT 0 AFTER `blockeduntil`,
  ADD COLUMN `photo` varchar(255) NOT NULL DEFAULT '' COMMENT 'link to photo' AFTER `fax`,
- ADD COLUMN `comment` varchar(255) NOT NULL DEFAULT '' COMMENT 'short comment' AFTER `photo`;
+ ADD COLUMN `comment` varchar(255) NOT NULL DEFAULT '' COMMENT 'short comment' AFTER `photo`,
+ MODIFY COLUMN `state` varchar(25) NOT NULL DEFAULT '',
+ MODIFY COLUMN `zip` varchar(25) NOT NULL DEFAULT '';
 
 
 ALTER TABLE `{PREFIX}user_roles` ADD COLUMN `view_unpublished` int(1) NOT NULL DEFAULT '0' AFTER `web_access_permissions`;
@@ -888,7 +891,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tinymce_custom_plugins','style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media'),
 ('tinymce_custom_buttons1','undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help'),
 ('tinymce_custom_buttons2','bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops'),
-('tree_hide_protected', '1');
+('tree_show_protected', '1');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -997,6 +1000,9 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('94','OnWebPageComplete','5',''),
 ('95','OnLogPageHit','5',''),
 ('96','OnBeforeManagerPageInit','2',''),
+('97','OnBeforeEmptyTrash','1','Documents'),
+('98','OnEmptyTrash','1','Documents'),
+('99','OnManagerLoginFormPrerender','2',''),
 ('200','OnCreateDocGroup','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');

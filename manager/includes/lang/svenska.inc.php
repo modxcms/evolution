@@ -3,10 +3,10 @@
  * Filename:       includes/lang/svenska.inc.php
  * Function:       Swedish language file
  * Encoding:       ISO-8859-1
- * Author:         Pontus Ågren & Johnny Chadda
+ * Author:         Pontus Ågren (Pont) & Johnny Chadda
  * Date:           2007-02-25
  * Version:        0.9.6
- * MODx version:   0.9.6 RC2 rev 2409
+ * MODx version:   0.9.6
 */
 
 $_lang["about_msg"] = 'MODx är ett <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP applikationsramverk och system för innehållshantering</a> och är licensierat under <a href="../assets/docs/license.txt">GNU GPL</a>.';
@@ -231,7 +231,7 @@ $_lang["document_title_help"] = 'Skriv namnet/titeln på dokumentet här. Försök a
 $_lang["document_to_be_moved"] = 'Dokumentet som ska flyttas';
 $_lang["document_weblink_help"] = 'Ange adressen till objektet du vill referera till med denna webblänk.';
 $_lang["documents_in_container"] = "dokument i den här behållaren";
-$_lang["documents_in_container_no"] = "Den här behållaren har inga underdokument (barn).";
+$_lang["documents_in_container_no"] = "Den här behållaren har inga underdokument.";
 $_lang["duplicate"] = 'Duplicera';
 $_lang["duplicate_alias_found"] = 'Dokumentet \'%s\' använder redan aliaset \'%s\'. Ange ett unikt alias.';
 $_lang["duplicate_alias_message"] = 'Här kan du välja "Ja" för att tillåta att aliasdubletter sparas.<br /><b>Notera: Den här inställningen bör användas med "Vänliga aliassökvägar" satt till "Ja" för att undvika problem med refereringen av dokument.</b>';
@@ -574,7 +574,7 @@ $_lang["onlineusers_userid"] = 'Användarens ID';
 $_lang["optimize_table"] = 'Klicka här för att optimera den här tabellen';
 $_lang["page_data_cacheable"] = 'Cachebar';
 $_lang["page_data_cacheable_help"] = 'Om detta fält lämnas markerat, kommer dokumentet att sparas i cachen. Se till att fältet är avmarkerat om ditt dokument innehåller snippets.';
-$_lang["page_data_cached"] = '<b>Källan hämtad från cache:</b>';
+$_lang["page_data_cached"] = '<b>Källa hämtad från cache:</b>';
 $_lang["page_data_changes"] = 'Ändringar';
 $_lang["page_data_contentType"] = 'Innehållstyp';
 $_lang["page_data_contentType_help"] = 'Välj innehållstypen för detta dokument. Om du inte är säker på vilken innehållstyp dokumentet ska ha, låt den stå som text/html.';
@@ -636,7 +636,7 @@ $_lang["plugin_name"] = 'Pluginnamn';
 $_lang["plugin_priority"] = 'Redigera körordningen för plugins efter händelse';
 $_lang["plugin_title"] = 'Skapa/redigera plugin';
 $_lang["preview"] = 'Förhandsgranska';
-$_lang["preview_document"] = 'Förhandsgranska dokument';
+$_lang["preview_document"] = 'Förhandsgranska';
 $_lang["preview_msg"] = 'Detta är en förhandsgranskning av dina senast sparade ändringar. Klicka här för att <a href="#" onclick="saveRefreshPreview();">spara och ladda om</a> dina nuvarande ändringar';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentlig';
@@ -967,7 +967,7 @@ $_lang["users"] = 'Säkerhet';
 $_lang["value"] = 'Värde';
 $_lang["version_codename"] = 'Versionens kodnamn'; 
 $_lang["view"] = 'Visa';
-$_lang["view_child_documents_in_container"] = "Visa underdokument (barn)";
+$_lang["view_child_documents_in_container"] = 'Underdokument';
 $_lang["view_document"] = 'Visa dokument';
 $_lang["view_log"] = 'Visa logg';
 $_lang["view_logging"] = 'Aktiviteter i hanteraren';

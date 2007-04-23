@@ -25,7 +25,7 @@ if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
 }
 
 $moduleName = "MODx Installation";
-$moduleVersion = "0.9.6 RC1";
+$moduleVersion = "0.9.6 RC3";
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 $moduleSQLUpdateFile = "setup.updates.sql";
@@ -625,6 +625,22 @@ function buildSummaryScreen() {
             echo "<span class=\"ok\">OK!</span></p>";
         }
     }
+
+
+    // andrazk 20070416 - add install flag and disable manager login
+    // assets/cache writable?
+    if (is_writable("../assets/cache")) {
+		  if (file_exists('../assets/cache/installProc.inc.php')) {
+    	  @chmod('../assets/cache/installProc.inc.php', 0755);
+				unlink('../assets/cache/installProc.inc.php');
+			}
+      
+			// make an attempt to create the file
+      @ $hnd = fopen("../assets/cache/installProc.inc.php", 'w');
+      @ fwrite($hnd, '<?php $installStartTime = '.time().'; ?>');
+      @ fclose($hnd);
+    } 
+
 
     if ($errors > 0) {
 ?>

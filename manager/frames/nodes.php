@@ -86,15 +86,16 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
         // get document groups for current user
         if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
-        $hideProtected= true;
-        if (isset($modx->config['tree_hide_protected'])) {
-            $hideProtected= (boolean) $modx->config['tree_hide_protected'];
+        $showProtected= false;
+        if (isset ($modx->config['tree_show_protected'])) {
+            $showProtected= (boolean) $modx->config['tree_show_protected'];
         }
-        if ($hideProtected) {
+        if ($showProtected == false) {
             $access = "AND (1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
                       (!$docgrp ? ")":" OR dg.document_group IN ($docgrp))");
         }
-        $sql = "SELECT DISTINCT sc.id, pagetitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr
+        $sql = "SELECT DISTINCT sc.id, pagetitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr,
+                IF(sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ($docgrp)") . ", 1, 0) AS has_access 
                 FROM $tblsc AS sc
                 LEFT JOIN $tbldg dg on dg.document = sc.id
                 WHERE (parent=$parent)
@@ -106,13 +107,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'" width="18" height="18">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }
 
-        while(list($id,$pagetitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr) = mysql_fetch_row($result))
+        while(list($id,$pagetitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = mysql_fetch_row($result))
         {
             $pagetitle = htmlspecialchars($pagetitle);
-            $pagetitleDisplay = $published==0 ? "<span class='unpublishedNode'>$pagetitle</span>" : ($hidemenu==1 ? "<span class='notInMenuNode'>$pagetitle</span>":"<span class='publishedNode'>$pagetitle</span>");
-            $pagetitleDisplay = $deleted==1 ? "<span class='deletedNode'>$pagetitle</span>" : $pagetitleDisplay;
+            $protectedClass = $hasAccess==0 ? ' protectedNode' : '';
+            $pagetitleDisplay = $published==0 ? "<span class=\"unpublishedNode\">$pagetitle</span>" : ($hidemenu==1 ? "<span class=\"notInMenuNode$protectedClass\">$pagetitle</span>":"<span class=\"publishedNode$protectedClass\">$pagetitle</span>");
+            $pagetitleDisplay = $deleted==1 ? "<span class=\"deletedNode\">$pagetitle</span>" : $pagetitleDisplay;
             $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="'.$_style["tree_linkgo"].'" width="16" height="16">' : '' ;
-
 
             $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";
             $alt.= "\n".$_lang['document_opt_menu_index'].": ".$menuindex;

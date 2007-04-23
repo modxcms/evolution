@@ -200,7 +200,10 @@ if($newloginerror==1) {
         if($sleep>5) $sleep = 5;
         sleep($sleep);
     }
+    $veriword = $_SESSION['veriword'];
     session_destroy();
+    session_start();
+    $_SESSION['veriword'] = $veriword;
     return;
 }
 

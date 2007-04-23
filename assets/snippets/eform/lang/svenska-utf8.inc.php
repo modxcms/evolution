@@ -1,21 +1,25 @@
 <?php
 /**
-* snippets/eform/svenska-utf8.inc.php
-* Swedish language file for eForm 1.4.2
+* snippets/eform/lang/svenska-utf8.inc.php
+* Swedish language file for eForm 1.4.4
 *
-* Translation: Pontus Ågren
-* Date: 11/12/2006
+* Translation: Pontus Ågren (Pont)
+* Date: 2007-04-18
 */
 
 
 $_lang["ef_thankyou_message"] = "<h3>Tack!</h3><p>Din information skickades utan problem.</p>";
 $_lang["ef_no_doc"] = "Varken dokument eller chunk kunde inte hittas för mall-ID: ";
 $_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Några fel upptäcktes i ditt formulär:</strong><br />[+ef_wrapper+]</div>";
+$_lang['ef_rule_passed'] = 'Utfördes med regeln [+rule+] (input="[+input+]").';
+$_lang['ef_rule_failed'] = '<span style="color:red;">Misslyckades</span> med regeln [+rule+] (input="[+input+]")';
 $_lang["ef_required_message"] = " De följande, nödvändiga, fält(en) saknas: {fields}<br />";
+$_lang['ef_error_list_rule'] = 'Ett fel uppstod när formulärfältet validerades! En #LIST-regel är deklarerad, men inga listvärden funna: ';
 $_lang["ef_invalid_number"] = " är inte ett giltigt nummer";
 $_lang["ef_invalid_date"] = " är inte ett giltigt datum";
 $_lang["ef_invalid_email"] = " är inte en giltig epostadress";
 $_lang["ef_upload_exceeded"] = " har överskridit den maximala uppladdningsstorleken.";
+$_lang["ef_upload_error"] = ": fel vid uppladdning av fil."; //NEW
 $_lang["ef_failed_default"] = "Falaktigt värde";
 $_lang["ef_failed_vericode"] = "Felaktig verifieringskod.";
 $_lang["ef_failed_range"] = "Värdet är inte inom det tillåtna området";
@@ -24,6 +28,7 @@ $_lang["ef_failed_eval"] = "Värdet validerar inte";
 $_lang["ef_failed_ereg"] = "Värdet validerar inte";
 $_lang["ef_failed_upload"] = "Felaktig filtyp.";
 $_lang["ef_error_validation_rule"] = "Valideringsregeln känns inte igen";
+$_lang["ef_error_filter_rule"] = "Textfiltret kändes inte igen";
 $_lang["ef_tamper_attempt"] = "Manipuleringsförsök upptäckt!";
 $_lang["ef_error_formid"] = "Ogiltigt ID-nummer eller -namn i formuläret.";
 $_lang["ef_debug_info"] = "Debugg-info: "; 
@@ -38,4 +43,7 @@ $_lang['ef_eval_deprecated'] = "#EVAL-regeln används inte längre och kommer ka
 $_lang['ef_multiple_submit'] = "<p>Det här formuläret har redan skickats utan problem. Du behöver inte skicka din information flera gånger.</p>";
 $_lang['ef_submit_time_limit'] = "<p>Det här formuläret har redan skickats utan problem. Omskickning av formuläret är blockerat i  ".($submitLimit/60)." minuter.</p>";
 $_lang['ef_version_error'] = "<strong>VARNING!</strong> Versionen på eForm-snippeten (version:&nbsp;$version) skiljer sig från den inkluderade eForm-filen (version:&nbsp;$fileVersion). Kontrollera att du använder samma version på båda.";
+$_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
+$_lang['ef_date_format'] = '%Y-%b-%d %H:%M:%S';
+$_lang['ef_mail_error'] = 'Mailscriptet kunde inte skicka eposten';
 ?>

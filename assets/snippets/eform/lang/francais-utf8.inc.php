@@ -1,13 +1,14 @@
 <?php
 /**
-* snippets/eform/francais.inc.php
+* snippets/eform/francais-utf8.inc.php
 * Fichier Langue en francais pour eForm
 */
 
 
 $_lang["ef_thankyou_message"] = "<h3>Merci !</h3><p>Vos informations ont été correctement transmises.</p>";
 $_lang["ef_no_doc"] = "Document ou chunk introuvable pour le modèle n°=";
-$_lang["ef_validation_message"] = "<div class=\"errors\"><strong>Des erreurs ont été detectées dans le formulaire :</strong><br />[+ef_wrapper+]</div>";
+//$_lang["ef_no_chunk"] = ""; //obsolète
+$_lang["ef_validation_message"] = "<strong>Des erreurs ont été detectées dans le formulaire :</strong><br />";
 $_lang["ef_required_message"] = " Les champs indispensables ci-dessous sont introuvables: {fields}<br />";
 $_lang["ef_invalid_number"] = " n'est pas un nombre valide";
 $_lang["ef_invalid_date"] = " n'est pas une date valide";
@@ -32,4 +33,7 @@ $_lang['ef_mail_abuse_subject'] = 'un abus potentiel de formualaire a été dét
 $_lang['ef_mail_abuse_message'] = '<p>Un formulaire de votre site Web a peut-être fait l\'objet d\'une tentative d\'injection d\'email. Le détail des valeurs envoyées sont imprimées ci-dessous. Le texte suspecté est mis en valeur à l\'aide des tags \[..]\ .  </p>';
 $_lang['ef_mail_abuse_error'] = '<strong>Des entrées invalides ou dangereuses ont été detectées dans votre formulaire</strong>.';
 $_lang['ef_eval_deprecated'] = "La règle #EVAL est obsolète et ne devrait plus fonctionner dans les versions futures. Utilisez #FUNCTION à la place.";
+$_lang['ef_multiple_submit'] = "<p>Ce formulaire a déjà été soumis avec succès. Il est inutile de soumettre le même formulaire plusieurs fois.</p>";
+$_lang['ef_submit_time_limit'] = "<p>Ce formulaire a déjà été soumis avec succès. La soumission du formulaire est bloquée pour ".($submitLimit/60)." minutes.</p>";
+$_lang['ef_version_error'] = "<strong>ATTENTION!</strong> La version du snippet eForum (version:&nbsp;$version) est différente de celle des fichiers eForm présents sur votre serveur (version:&nbsp;$fileVersion). Attention de bien mettre à jour les fichiers lorsque vous mettez à jour le snippet.";
 ?>

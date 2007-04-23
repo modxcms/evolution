@@ -7,7 +7,7 @@
  * For: MODx CMS (www.modxcms.com)
  * Date:29/09/2006 Version: 1.6
  *
- * Translation: Pontus Ågren
+ * Translation: Pontus Ågren (Pont)
  * Date: 2007-02-19
  * 
  */

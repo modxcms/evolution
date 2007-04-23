@@ -7,7 +7,7 @@ if(!$modx->hasPermission('file_manager')) {
 $theme = $manager_theme ? "$manager_theme/":"";
 
 // settings
-$excludes = array(".", "..", "cgi-bin", "manager");
+$excludes = array(".", "..", "cgi-bin", "manager", ".svn");
 $editablefiles = array(".txt", ".php", ".shtml", ".html", ".htm", ".xml", ".js", ".css", ".pageCache", $friendly_url_suffix);
 $inlineviewablefiles = array(".txt", ".php", ".html", ".htm", ".xml", ".js", ".css", ".pageCache", $friendly_url_suffix);
 $viewablefiles = array(".jpg", ".gif", ".png", ".ico");

@@ -3,9 +3,23 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC2 (rev 2547 - April 16, 2007)
+MODx 0.9.6-RC3 (rev 2588 - April 23, 2007)
 ====================================
-* [FS#130] Partial fix: Added system setting to toggle the ability for users to be able to see all items in the tree, regardless of access permissions (still needs configuration UI in manager). (2546)
+* Initial commit to make tree menu visibility for protected manager pages a config setting (2587)
+* [FS#839] Make OnManagerLoginFormPrerender selectable as a plugin event in Manager (2581)
+* [FS#841] Spelling Error (2580)
+* Adding Finnish 096 (2576)
+* [FS#663] Importing sites now respect the default publish setting
+* OnBeforeEmptyTrash and OnEmptyTrash events added, $modx->event->params['ids'] will hold an array of document id's to be deleted or have been deleted (2574)
+* Adding German, Spanish 096 (2573)
+* Added Manager setting to change MODx-generated URLs to XHTML compatible: & -> &amp; (2571)
+* Manager login prevented and existing sessions destroyed during upgrades (2563)
+* [FS#838] Passing non-numeric ID now uses sendErrorPage() to return a 404 (2562)
+* [FS#827] Increase field size of 'state' and 'zip' fields to 25 in the webuser_attributes table (2561)
+* [FS#819] Add 'shtml' as a valid file extension when using the Site Import feature (2560)
+* [FS#823] Ensure that the veriword session value is retained in the session after a failed login attempt (2559)
+* [FS#814] Minor fix to the DBAPI insert function, now uses $this->getInsertId() (2558)
+* [FS#130] Added system setting to toggle the ability for users to be able to see all items in the tree, regardless of access permissions (still needs configuration UI in manager). (2546)
 * Fix to cachesync processor (removed extra / in path assignment) (2545)
 * [FS#825] New approach to automatic path configuration (2545)
 * Add check all, uncheck all and toggle to installer for resources (2541)

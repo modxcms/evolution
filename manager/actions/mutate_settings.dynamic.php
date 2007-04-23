@@ -224,6 +224,20 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["xhtml_urls_title"] ?></b></td>
+            <td><input onchange="documentDirty=true;" type="radio" name="xhtml_urls" value="1" <?php echo $xhtml_urls=='1' ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["yes"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="xhtml_urls" value="0" <?php echo ($xhtml_urls=='0' || !isset($xhtml_urls)) ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["no"]?> </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["xhtml_urls_message"] ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
             <td nowrap class="warning"><b><?php echo $_lang["sitestart_title"] ?></b></td>
             <td><input onchange="documentDirty=true;" type='text' maxlength='10' size='5' name="site_start" value="<?php echo isset($site_start) ? $site_start : 1 ; ?>" /></td>
           </tr>
@@ -776,6 +790,20 @@ function updateContentType(){
               <td width="200">&nbsp;</td>
               <td class='comment'><?php echo $_lang["manager_theme_message"]?></td>
             </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+             <tr>
+      		   <td nowrap class="warning"><b><?php echo $_lang["tree_show_protected"] ?></b></td>
+      		   <td> <input onchange="documentDirty=true;" type="radio" name="show_protected" value="1" <?php echo ($show_protected=='1' || !isset($show_protected)) ? 'checked="checked"' : ""; ?> />
+      			 <?php echo $_lang["yes"]?><br />
+      			 <input onchange="documentDirty=true;" type="radio" name="show_protected" value="0" <?php echo $show_protected=='0' ? 'checked="checked"' : ""; ?> />
+      			 <?php echo $_lang["no"]?></td>
+      		 </tr>
+                 <tr>
+                   <td width="200">&nbsp;</td>
+                   <td class='comment'><?php echo $_lang["tree_show_protected_message"]?></td>
+                 </tr>
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
