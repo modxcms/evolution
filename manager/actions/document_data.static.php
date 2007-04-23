@@ -35,7 +35,7 @@ if($limit>1) {
     exit;
 }
 else if($limit==0){
-    $e->setError(15);
+    $e->setError(3);
     $e->dumpError();
 }
 $content = mysql_fetch_assoc($rs);

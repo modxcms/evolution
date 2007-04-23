@@ -279,7 +279,7 @@ function buildInstallModeScreen() {
 		<td nowrap valign="top" width="37%">
 		<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
 		<input type="radio" name="installmode" id="installmode3" value="upd2" onClick="setInstallMode(2);hidediv('AUH');" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='upd2' || $upgradeable == 2) ? 'checked="checked"':'' ?> /><label for="installmode3" class="nofloat">Advanced Upgrade Install<br /><small>(edit database config)</small></label></td>
-		<td width="61%">For advanced database admins or moving to servers with a different database connection character set. <b>You will need to know your full databass name, user, password and connection/collation details.</b></td>
+		<td width="61%">For advanced database admins or moving to servers with a different database connection character set. <b>You will need to know your full database name, user, password and connection/collation details.</b></td>
 	  </tr>
 	</table>
 <?php

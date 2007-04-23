@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC3 (rev 2588 - April 23, 2007)
+MODx 0.9.6-RC3 (rev 2592 - April 23, 2007)
 ====================================
 * Initial commit to make tree menu visibility for protected manager pages a config setting (2587)
 * [FS#839] Make OnManagerLoginFormPrerender selectable as a plugin event in Manager (2581)

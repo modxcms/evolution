@@ -87,7 +87,7 @@ if (!empty ($id)) {
             $e->dumpError();
     }
     if ($limit < 1) {
-            $e->setError(7);
+            $e->setError(3);
             $e->dumpError();
     }
     $content = mysql_fetch_assoc($rs);

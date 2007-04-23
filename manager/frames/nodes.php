@@ -90,18 +90,19 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         if (isset ($modx->config['tree_show_protected'])) {
             $showProtected= (boolean) $modx->config['tree_show_protected'];
         }
+        $mgrRole= isset ($_SESSION['mgrRole']) && $_SESSION['mgrRole'] ? '1' : '0';
         if ($showProtected == false) {
-            $access = "AND (1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
-                      (!$docgrp ? ")":" OR dg.document_group IN ($docgrp))");
+            $access = "AND (1={$mgrRole} OR sc.privatemgr=0".
+                      (!$docgrp ? ")":" OR dg.document_group IN ({$docgrp}))");
         }
         $sql = "SELECT DISTINCT sc.id, pagetitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr,
-                IF(sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ($docgrp)") . ", 1, 0) AS has_access 
-                FROM $tblsc AS sc
-                LEFT JOIN $tbldg dg on dg.document = sc.id
-                WHERE (parent=$parent)
+                IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0) AS has_access 
+                FROM {$tblsc} AS sc
+                LEFT JOIN {$tbldg} dg on dg.document = sc.id
+                WHERE (parent={$parent})
                 $access
                 GROUP BY sc.id
-                ORDER BY $orderby";
+                ORDER BY {$orderby}";
         $result = mysql_query($sql, $modxDBConn);
         if(mysql_num_rows($result)==0) {
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'" width="18" height="18">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
