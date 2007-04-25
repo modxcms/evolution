@@ -3,8 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC3 (rev 2592 - April 23, 2007)
+MODx 0.9.6-RC3 (rev 2600 - April 25, 2007)
 ====================================
+* Corrected configuration editor for tree_show_protected setting. (2596)
+* Removed upgrade note regarding logging out of manager; was causing confusion. (2596)
+* [FS#843] @INHERIT would not inherit a value of '0' (2595)
+* Adding Japanese UTF-8 096 (2593)
 * Initial commit to make tree menu visibility for protected manager pages a config setting (2587)
 * [FS#839] Make OnManagerLoginFormPrerender selectable as a plugin event in Manager (2581)
 * [FS#841] Spelling Error (2580)

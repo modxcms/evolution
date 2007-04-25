@@ -45,7 +45,7 @@ $_lang['next'] = "次へ &gt;";
 
 $_lang['button_splitter'] = "｜";
 
-$_lang['default_copyright'] = "[(site_name)] 2006";	
+$_lang['default_copyright'] = "[(site_name)] 2007";	
 
 $_lang['rss_lang'] = "ja";
 

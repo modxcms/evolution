@@ -5,7 +5,7 @@
 */
 
 
-$_lang["ef_thankyou_message"] = "<h3>ありがとう!</h3><p>入力された情報は無事送信されました。</p>";
+$_lang["ef_thankyou_message"] = "<h3>ありがとうございます。</h3><p>入力された情報は無事送信されました。</p>";
 $_lang["ef_no_doc"] = "テンプレートのドキュメントまたはチャンクが見つかりません。 id=";
 $_lang["ef_validation_message"] = "<div class=\"errors\"><strong>いくつかのエラーが見つかりました</strong><br />[+ef_wrapper+]</div>";
 $_lang["ef_required_message"] = "{fields}は、必須項目です<br />";

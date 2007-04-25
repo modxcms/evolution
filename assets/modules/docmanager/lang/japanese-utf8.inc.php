@@ -149,14 +149,14 @@ $_lang['DM_process_back'] = '戻る';
 $_lang['DM_log_template'] = 'Doc Manager: テンプレートを変更しました。';
 $_lang['DM_log_templatevariables'] = 'Doc Manager: テンプレート変数を変更しました。';
 $_lang['DM_log_docpermissions'] ='Doc Manager: ドキュメントのアクセス制限を変更しました。';
-$_lang['DM_log_sortmenu']='Doc Manager: メニューインデックス操作を完了しました。';
-$_lang['DM_log_publish']='Doc Manager: ドキュメントの公開/非公開を変更しました。';
-$_lang['DM_log_hidemenu']='Doc Manager: ドキュメントのメニュー表示/非表示を変更しました。';
-$_lang['DM_log_search']='Doc Manager: ドキュメントの検索対象/非対象を変更しました。';
-$_lang['DM_log_cache']='Doc Manager: ドキュメントのキャッシュ可/不可を変更しました。';
-$_lang['DM_log_richtext']='Doc Manager: ドキュメントのリッチテキストエディタの設定を変更しました。';
-$_lang['DM_log_delete']='Doc Manager: ドキュメントの削除/復活を変更しました。';
-$_lang['DM_log_dates']='Doc Manager: ドキュメントの各種日付を変更しました。';
-$_lang['DM_log_authors']='Doc Manager: ドキュメントの作成者などの情報を変更しました。';
+$_lang['DM_log_sortmenu']='Document Manager: メニューインデックス操作を完了しました。';
+$_lang['DM_log_publish']='Document Manager: ドキュメントの公開/非公開を変更しました。';
+$_lang['DM_log_hidemenu']='Document Manager: ドキュメントのメニュー表示/非表示を変更しました。';
+$_lang['DM_log_search']='Document Manager: ドキュメントの検索対象/非対象を変更しました。';
+$_lang['DM_log_cache']='Document Manager: ドキュメントのキャッシュ可/不可を変更しました。';
+$_lang['DM_log_richtext']='Document Manager: ドキュメントのリッチテキストエディタの設定を変更しました。';
+$_lang['DM_log_delete']='Document Manager: ドキュメントの削除/復活を変更しました。';
+$_lang['DM_log_dates']='Document Manager: ドキュメントの各種日付を変更しました。';
+$_lang['DM_log_authors']='Document Manager: ドキュメントの作成者などの情報を変更しました。';
 
 ?>

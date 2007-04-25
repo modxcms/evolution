@@ -90,7 +90,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         if (isset ($modx->config['tree_show_protected'])) {
             $showProtected= (boolean) $modx->config['tree_show_protected'];
         }
-        $mgrRole= isset ($_SESSION['mgrRole']) && $_SESSION['mgrRole'] ? '1' : '0';
+        $mgrRole= (isset ($_SESSION['mgrRole']) && (string) $_SESSION['mgrRole']==='1') ? '1' : '0';
         if ($showProtected == false) {
             $access = "AND (1={$mgrRole} OR sc.privatemgr=0".
                       (!$docgrp ? ")":" OR dg.document_group IN ({$docgrp}))");

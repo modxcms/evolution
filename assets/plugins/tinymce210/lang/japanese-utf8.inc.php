@@ -1,16 +1,14 @@
 <?php
 /*
  * Filename:       assets/plugins/tinymce/lang/japanese-utf8.inc.php
- * Function:       Japanese language file for TinyMCE.  Needs to be translated and re-encoded!
- * Encoding:       ISO-Latin-1
- * Author:         yamamoto
- * Date:           2006/07/03
- * Version:        2.0.6.1
- * MODx version:   0.9.2
+ * Function:       Japanese language file for TinyMCE.
+ * Encoding:       UTF-8
+ * Author:         Japanese community
+ * Date:           2007/04/24
+ * Version:        2.1.0
+ * MODx version:   0.9.6
 */
-
 include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
-
 $_lang['tinymce_editor_theme_title'] = "テーマ:";
 $_lang['tinymce_editor_theme_message'] = "テーマを選択し、ツールバーアイコンのセットおよびエディタのデザインを変更できます。";
 $_lang['tinymce_editor_custom_plugins_title'] = "Custom Plugins:";

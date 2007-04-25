@@ -255,16 +255,6 @@ function buildInstallModeScreen() {
     	<td nowrap valign="top" width="37%">&nbsp;</td>
     	<td width="61%">&nbsp;</td>
       </tr>
-      <tr>
-    	<td nowrap valign="top" width="37%">&nbsp;</td>
-    	<td width="61%"><div style="background: #FFFDBB;padding:0 1em;border:2px solid #CBD499">
-    	<h3>Important Upgrade Note</h3>
-    	<p>Make sure all Manager users <b>log out before upgrading</b> to prevent problems (e.g., not being able to access resources). If you have trouble after upgrading, log out of any Manager sessions, clear your browser cache, then log in again.</div></td>
-      </tr>
-      <tr>
-    	<td nowrap valign="top" width="37%">&nbsp;</td>
-    	<td width="61%">&nbsp;</td>
-      </tr>
 	  <tr>
 		<td nowrap valign="top" width="37%">
 		<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />

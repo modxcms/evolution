@@ -795,9 +795,9 @@ function updateContentType(){
             </tr>
              <tr>
       		   <td nowrap class="warning"><b><?php echo $_lang["tree_show_protected"] ?></b></td>
-      		   <td> <input onchange="documentDirty=true;" type="radio" name="show_protected" value="1" <?php echo ($show_protected=='1' || !isset($show_protected)) ? 'checked="checked"' : ""; ?> />
+      		   <td> <input onchange="documentDirty=true;" type="radio" name="tree_show_protected" value="1" <?php echo (!isset($tree_show_protected) || $tree_show_protected=='0') ? '' : 'checked="checked" '; ?>/>
       			 <?php echo $_lang["yes"]?><br />
-      			 <input onchange="documentDirty=true;" type="radio" name="show_protected" value="0" <?php echo $show_protected=='0' ? 'checked="checked"' : ""; ?> />
+      			 <input onchange="documentDirty=true;" type="radio" name="tree_show_protected" value="0" <?php echo (!isset($tree_show_protected) || $tree_show_protected=='0') ? 'checked="checked" ' : ''; ?>/>
       			 <?php echo $_lang["no"]?></td>
       		 </tr>
                  <tr>

@@ -104,9 +104,9 @@ $_dfnMaxlength = 6;
 
 	//moved so it can be used in onBeforeFormParse event
 	if($isPostBack){
-		$report = (($tmp=efLoadTemplate($report))!==false)?$tmp:$_lang['ef_no_report'] . " '$report'";
-		$thankyou = (($tmp=efLoadTemplate($thankyou))!==false )?$tmp:$_lang['ef_no_thankyou'] . " '$thankyou'";
-		$autotext = (($tmp=efLoadTemplate($autotext))!==false )?$tmp:$_lang['ef_no_autotext'] . " '$autotext'";
+		$report = (($tmp=efLoadTemplate($report))!==false)?$tmp:$_lang['ef_no_doc'] . " '$report'";
+		if($thankyou) $thankyou = (($tmp=efLoadTemplate($thankyou))!==false )?$tmp:$_lang['ef_no_doc'] . " '$thankyou'";
+		if($autotext) $autotext = (($tmp=efLoadTemplate($autotext))!==false )?$tmp:$_lang['ef_no_doc'] . " '$autotext'";
 	}
 
 	//added eFormCSS and eFormJS parameters
@@ -513,6 +513,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$mail->send();
 				}
 
+			}//end test nomail
 			 # added in 1.4.2 - Protection against multiple submit with same form data
 			 if($protectSubmit) $_SESSION[$formid.'_hash'] = $hash; //hash is set earlier
 
@@ -531,8 +532,6 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 						if ($eFormOnMailSent($fields)===false) return;
 				}
 
-			}//end test nomail
-//return $debugText . "NO MAIL!";
 
 			if($isDebug){
 				$debugText .="<strong>Mail Headers:</strong><br>From: $from ($fromname)<br/>Reply-to:$replyto<br />To: $to<br/>Subject: $subject<br />CC: $cc<br /> BCC:$bcc<br />";
@@ -573,7 +572,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 		}
 
 		//strip the eform attribute
-		$regExpr = "#eform=([\"'])[^\"']*?\\1#si";
+		$regExpr = "#eform=([\"'])[^\\1]*?\\1#si";
 		$tpl = preg_replace($regExpr,'',$tpl);
 	}
 
@@ -1057,25 +1056,7 @@ function filterEformValue($value,$param){
 	}
 	return $value;
 }
-#loads tempate from chunk or document
-/*
-function efLoadTemplate($tpl){
-	global $modx;
-	if (strlen($tpl)<50){
-		if( is_numeric($tpl) ){
-			//try unpublished docs first
-			$tmp = ( $doc=$modx->getDocument($tpl,'content',0) )? $doc['content'] :false;
-			if($tmp)
-				return $tmp;
-			else
-				return ( $doc=$modx->getDocument($tpl,'content',1) )? $doc['content'] : false;
 
-		}else if($tpl)
-			$tpl = ( $chunk=$modx->getChunk($tpl) )? $chunk : false;
-	}
-	return $tpl;
-}
-*/
 	function efLoadTemplate($key){
 		global $modx;
 		if( strlen($key)>50 ) return $key;

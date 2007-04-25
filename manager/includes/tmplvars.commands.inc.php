@@ -71,8 +71,8 @@ function ProcessTVCommand($value, $name = '', $docid= '') {
                     if ($doc = $modx->getDocument($parent_id, 'id,parent')) {
 
                         $tv = $modx->getTemplateVar($name, '*', $doc['id']);
-                        if ($tv['value'] && substr($tv['value'], 0, 1) != '@') {
-                            $output = $tv['value'];
+                        if ((string) $tv['value'] !== '' && substr($tv['value'], 0, 1) != '@') {
+                            $output = (string) $tv['value'];
                             break 2;
                         }
 
