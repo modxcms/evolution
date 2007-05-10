@@ -56,7 +56,7 @@ if ($_POST['mode'] == '73' || $_POST['mode'] == '27') {
 if ($friendly_urls) {
 	// auto assign alias
 	if (!$alias && $automatic_alias) {
-		$alias = stripAlias(strtolower(trim($pagetitle)));
+		$alias = strtolower(stripAlias(trim($pagetitle)));
 		// check if alias already exists. if yes then append $cnt to alias
 		$cnt = $modx->db->getValue("SELECT count(*) FROM " . $modx->getFullTableName("site_content") . " WHERE id<>'$id' AND alias='$alias'");
 		if ($cnt > 0)
@@ -313,11 +313,11 @@ switch ($actionToTake) {
 			"id" => $key
 		));
 
-		// secure web documents - flag as private 
+		// secure web documents - flag as private
 		include $base_path . "manager/includes/secure_web_documents.inc.php";
 		secureWebDocument($key);
 
-		// secure manager documents - flag as private 
+		// secure manager documents - flag as private
 		include $base_path . "manager/includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($key);
 
@@ -327,10 +327,10 @@ switch ($actionToTake) {
 			$sync = new synccache();
 			$sync->setCachepath("../assets/cache/");
 			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$sync->emptyCache(); // first empty the cache
 		}
 
-		// redirect/stay options						
+		// redirect/stay options
 		if ($_POST['stay'] != '') {
 			// weblink
 			if ($_POST['mode'] == "72")
@@ -347,7 +347,7 @@ switch ($actionToTake) {
 		break;
 	case 'edit' :
 
-		// first, get the document's current parent.	
+		// first, get the document's current parent.
 		$sql = "SELECT parent FROM $dbase.`" . $table_prefix . "site_content` WHERE id=" . $_REQUEST['id'] . ";";
 		$rs = mysql_query($sql);
 		if (!$rs) {
@@ -419,7 +419,7 @@ switch ($actionToTake) {
 		));
 
 		// update the document
-		$sql = "UPDATE $dbase.`" . $table_prefix . "site_content` SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes', 
+		$sql = "UPDATE $dbase.`" . $table_prefix . "site_content` SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes',
 				isfolder=$isfolder, richtext=$richtext, published=$published, pub_date=$pub_date, unpub_date=$unpub_date, parent=$parent, template=$template, menuindex='$menuindex',
 				searchable=$searchable, cacheable=$cacheable, editedby=" . $modx->getLoginUserID() . ", editedon=" . time() . ", publishedon=$publishedon, publishedby=$publishedby, contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu'  WHERE id=$id;";
 
@@ -438,7 +438,7 @@ switch ($actionToTake) {
 		foreach ($tmplvars as $field => $value) {
 			if (!is_array($value)) {
 				if (in_array($value, $tvIds)) {
-					//delete unused variable 
+					//delete unused variable
 					$sql = "DELETE FROM $dbase.`" . $table_prefix . "site_tmplvar_contentvalues` WHERE tmplvarid=$value AND contentid='$id';";
 					$rs = mysql_query($sql);
 				}
@@ -525,11 +525,11 @@ switch ($actionToTake) {
 			"id" => $id
 		));
 
-		// secure web documents - flag as private 
+		// secure web documents - flag as private
 		include $base_path . "manager/includes/secure_web_documents.inc.php";
 		secureWebDocument($id);
 
-		// secure manager documents - flag as private 
+		// secure manager documents - flag as private
 		include $base_path . "manager/includes/secure_mgr_documents.inc.php";
 		secureMgrDocument($id);
 
@@ -539,7 +539,7 @@ switch ($actionToTake) {
 			$sync = new synccache();
 			$sync->setCachepath("../assets/cache/");
 			$sync->setReport(false);
-			$sync->emptyCache(); // first empty the cache		
+			$sync->emptyCache(); // first empty the cache
 		}
 
 		// Mod by Raymond
@@ -549,10 +549,10 @@ switch ($actionToTake) {
 			if ($_POST['stay'] != '') {
 				$id = $_REQUEST['id'];
 				if ($type == "reference") {
-					// weblink		
+					// weblink
 					$a = ($_POST['stay'] == '2') ? "27&id=$id" : "72&pid=$parent";
 				} else {
-					// document		
+					// document
 					$a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parent";
 				}
 				$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
@@ -571,19 +571,299 @@ function stripAlias($alias) {
 	global $modx;
 
 	if (strtoupper($modx->config['modx_charset']) == 'UTF-8')
-		$alias = utf8_decode($alias);
-	$alias = strtr($alias, array (
-		chr(196
-	) => 'Ae', chr(214) => 'Oe', chr(220) => 'Ue', chr(228) => 'ae', chr(246) => 'oe', chr(252) => 'ue', chr(223) => 'ss'));
+        //$alias = utf8_decode($alias);
+        //$alias = strtr($alias, array (chr(196) => 'Ae', chr(214) => 'Oe', chr(220) => 'Ue', chr(228) => 'ae', chr(246) => 'oe', chr(252) => 'ue', chr(223) => 'ss'));
 
-	$alias = strip_tags($alias);
-	//$alias = strtolower($alias); 
-	$alias = preg_replace('/&.+?;/', '', $alias); // kill entities 
-	$alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias);
-	$alias = preg_replace('/\s+/', '-', $alias);
-	$alias = preg_replace('|-+|', '-', $alias);
-	$alias = trim($alias, '-');
-	return $alias;
+        // Convert accented characters to their non-accented counterparts. Idea originally from Brett Florio (thanks!) ... expanded list from Textpattern (double-thanks!)
+        $replace_array = array(
+            ' ' => '-',
+            '&' => 'and',
+            '\'' => '',
+            'À' => 'A',
+            'À' => 'A',
+            'Á' => 'A',
+            'Á' => 'A',
+            'Â' => 'A',
+            'Â' => 'A',
+            'Ã' => 'A',
+            'Ã' => 'A',
+            'Ä' => 'e',
+            'Ä' => 'A',
+            'Å' => 'A',
+            'Å' => 'A',
+            'Æ' => 'e',
+            'Æ' => 'E',
+            'Ā' => 'A',
+            'Ą' => 'A',
+            'Ă' => 'A',
+            'Ç' => 'C',
+            'Ç' => 'C',
+            'Ć' => 'C',
+            'Č' => 'C',
+            'Ĉ' => 'C',
+            'Ċ' => 'C',
+            'Ď' => 'D',
+            'Đ' => 'D',
+            'È' => 'E',
+            'È' => 'E',
+            'É' => 'E',
+            'É' => 'E',
+            'Ê' => 'E',
+            'Ê' => 'E',
+            'Ë' => 'E',
+            'Ë' => 'E',
+            'Ē' => 'E',
+            'Ę' => 'E',
+            'Ě' => 'E',
+            'Ĕ' => 'E',
+            'Ė' => 'E',
+            'Ĝ' => 'G',
+            'Ğ' => 'G',
+            'Ġ' => 'G',
+            'Ģ' => 'G',
+            'Ĥ' => 'H',
+            'Ħ' => 'H',
+            'Ì' => 'I',
+            'Ì' => 'I',
+            'Í' => 'I',
+            'Í' => 'I',
+            'Î' => 'I',
+            'Î' => 'I',
+            'Ï' => 'I',
+            'Ï' => 'I',
+            'Ī' => 'I',
+            'Ĩ' => 'I',
+            'Ĭ' => 'I',
+            'Į' => 'I',
+            'İ' => 'I',
+            'Ĳ' => 'J',
+            'Ĵ' => 'J',
+            'Ķ' => 'K',
+            'Ľ' => 'K',
+            'Ĺ' => 'K',
+            'Ļ' => 'K',
+            'Ŀ' => 'K',
+            'Ñ' => 'N',
+            'Ñ' => 'N',
+            'Ń' => 'N',
+            'Ň' => 'N',
+            'Ņ' => 'N',
+            'Ŋ' => 'N',
+            'Ò' => 'O',
+            'Ò' => 'O',
+            'Ó' => 'O',
+            'Ó' => 'O',
+            'Ô' => 'O',
+            'Ô' => 'O',
+            'Õ' => 'O',
+            'Õ' => 'O',
+            'Ö' => 'e',
+            'Ö' => 'e',
+            'Ø' => 'O',
+            'Ø' => 'O',
+            'Ō' => 'O',
+            'Ő' => 'O',
+            'Ŏ' => 'O',
+            'Œ' => 'E',
+            'Ŕ' => 'R',
+            'Ř' => 'R',
+            'Ŗ' => 'R',
+            'Ś' => 'S',
+            'Ş' => 'S',
+            'Ŝ' => 'S',
+            'Ș' => 'S',
+            'Ť' => 'T',
+            'Ţ' => 'T',
+            'Ŧ' => 'T',
+            'Ț' => 'T',
+            'Ù' => 'U',
+            'Ù' => 'U',
+            'Ú' => 'U',
+            'Ú' => 'U',
+            'Û' => 'U',
+            'Û' => 'U',
+            'Ü' => 'e',
+            'Ū' => 'U',
+            'Ü' => 'e',
+            'Ů' => 'U',
+            'Ű' => 'U',
+            'Ŭ' => 'U',
+            'Ũ' => 'U',
+            'Ų' => 'U',
+            'Ŵ' => 'W',
+            'Ŷ' => 'Y',
+            'Ÿ' => 'Y',
+            'Ź' => 'Z',
+            'Ż' => 'Z',
+            'à' => 'a',
+            'á' => 'a',
+            'â' => 'a',
+            'ã' => 'a',
+            'ä' => 'e',
+            'ä' => 'e',
+            'å' => 'a',
+            'ā' => 'a',
+            'ą' => 'a',
+            'ă' => 'a',
+            'å' => 'a',
+            'æ' => 'e',
+            'ç' => 'c',
+            'ć' => 'c',
+            'č' => 'c',
+            'ĉ' => 'c',
+            'ċ' => 'c',
+            'ď' => 'd',
+            'đ' => 'd',
+            'è' => 'e',
+            'é' => 'e',
+            'ê' => 'e',
+            'ë' => 'e',
+            'ē' => 'e',
+            'ę' => 'e',
+            'ě' => 'e',
+            'ĕ' => 'e',
+            'ė' => 'e',
+            'ƒ' => 'f',
+            'ĝ' => 'g',
+            'ğ' => 'g',
+            'ġ' => 'g',
+            'ģ' => 'g',
+            'ĥ' => 'h',
+            'ħ' => 'h',
+            'ì' => 'i',
+            'í' => 'i',
+            'î' => 'i',
+            'ï' => 'i',
+            'ī' => 'i',
+            'ĩ' => 'i',
+            'ĭ' => 'i',
+            'į' => 'i',
+            'ı' => 'i',
+            'ĳ' => 'j',
+            'ĵ' => 'j',
+            'ķ' => 'k',
+            'ĸ' => 'k',
+            'ł' => 'l',
+            'ľ' => 'l',
+            'ĺ' => 'l',
+            'ļ' => 'l',
+            'ŀ' => 'l',
+            'ñ' => 'n',
+            'ń' => 'n',
+            'ň' => 'n',
+            'ņ' => 'n',
+            'ŉ' => 'n',
+            'ŋ' => 'n',
+            'ò' => 'o',
+            'ó' => 'o',
+            'ô' => 'o',
+            'õ' => 'o',
+            'ö' => 'e',
+            'ö' => 'e',
+            'ø' => 'o',
+            'ō' => 'o',
+            'ő' => 'o',
+            'ŏ' => 'o',
+            'œ' => 'e',
+            'ŕ' => 'r',
+            'ř' => 'r',
+            'ŗ' => 'r',
+            'ù' => 'u',
+            'ú' => 'u',
+            'û' => 'u',
+            'ü' => 'e',
+            'ū' => 'u',
+            'ü' => 'e',
+            'ů' => 'u',
+            'ű' => 'u',
+            'ŭ' => 'u',
+            'ũ' => 'u',
+            'ų' => 'u',
+            'ŵ' => 'w',
+            'ÿ' => 'y',
+            'ŷ' => 'y',
+            'ż' => 'z',
+            'ź' => 'z',
+            'ß' => 's',
+            'ſ' => 's',
+            'Α' => 'A',
+            'Ά' => 'A',
+            'Β' => 'B',
+            'Γ' => 'G',
+            'Δ' => 'D',
+            'Ε' => 'E',
+            'Έ' => 'E',
+            'Ζ' => 'Z',
+            'Η' => 'I',
+            'Ή' => 'I',
+            'Θ' => 'TH',
+            'Ι' => 'I',
+            'Ί' => 'I',
+            'Ϊ' => 'I',
+            'Κ' => 'K',
+            'Λ' => 'L',
+            'Μ' => 'M',
+            'Ν' => 'N',
+            'Ξ' => 'KS',
+            'Ο' => 'O',
+            'Ό' => 'O',
+            'Π' => 'P',
+            'Ρ' => 'R',
+            'Σ' => 'S',
+            'Τ' => 'T',
+            'Υ' => 'Y',
+            'Ύ' => 'Y',
+            'Ϋ' => 'Y',
+            'Φ' => 'F',
+            'Χ' => 'X',
+            'Ψ' => 'PS',
+            'Ω' => 'O',
+            'Ώ' => 'O',
+            'α' => 'a',
+            'ά' => 'a',
+            'β' => 'b',
+            'γ' => 'g',
+            'δ' => 'd',
+            'ε' => 'e',
+            'έ' => 'e',
+            'ζ' => 'z',
+            'η' => 'i',
+            'ή' => 'i',
+            'θ' => 'th',
+            'ι' => 'i',
+            'ί' => 'i',
+            'ϊ' => 'i',
+            'ΐ' => 'i',
+            'κ' => 'k',
+            'λ' => 'l',
+            'μ' => 'm',
+            'ν' => 'n',
+            'ξ' => 'ks',
+            'ο' => 'o',
+            'ό' => 'o',
+            'π' => 'p',
+            'ρ' => 'r',
+            'σ' => 's',
+            'τ' => 't',
+            'υ' => 'y',
+            'ύ' => 'y',
+            'ϋ' => 'y',
+            'ΰ' => 'y',
+            'φ' => 'f',
+            'χ' => 'x',
+            'ψ' => 'ps',
+            'ω' => 'o',
+            'ώ' => 'o',
+        );
+        $alias = strtr($alias, $replace_array);
+
+        $alias = strip_tags($alias);
+        $alias = preg_replace('/&.+?;/', '', $alias); // kill entities
+        $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias);
+        //$alias = preg_replace('/\s+/', '-', $alias);
+        $alias = preg_replace('|-+|', '-', $alias);
+        $alias = trim($alias, '-');
+        return $alias;
 }
 
 // -- Save META Keywords --

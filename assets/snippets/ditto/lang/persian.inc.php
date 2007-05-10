@@ -1,82 +1,104 @@
 <?php
 
-/**
- * Filename:       assets/snippets/ditto/persian.inc.php
- * Function:       Persian/Farsi language file for Ditto.
- * Author:         The MODx Project
- * Translation:	   Mohsen.H.Z.
- * Date:           22 DEC 2006
- * Version:        1.0.0
- * MODx version:   0.9.5
+/*
+ * Title:       Persian Language File for Ditto.
+ * Path:        assets/snippets/ditto/lang/
+ * Translation: Mohsen (MotSmart ~ www.modxcms.ir)
+ * Date:        26.4.2007
+ * Note:        New language keys should added at the bottom of this page
+ *
 */
 
-// NOTE: New language keys should added at the bottom of this page
+$_lang['language'] = "persian";
 
-$_lang['file_does_not_exist'] = " موجود نیست. لطفا فایل را چک کنید.";
+$_lang['abbr_lang'] = "fa";
 
-$_lang['default_template'] = '
-    <div class="ditto_summaryPost">
-        <h3><a href="[~[+id+]~]">[+title+]</a></h3>
-        <div>[+summary+]</div>
-        <p>[+link+]</p>
-        <div style="text-align:right;">توسط <strong>[+author+]</strong> در [+date+]</div>
+$_lang['file_does_not_exist'] = "یافت نشد. لطفا فایل را مرور کنید.";
+
+$_lang['extender_does_not_exist'] = "ادامه دهنده یافت نشد. لطفا آنرا مرور کنید.";
+
+$_lang['default_template'] = <<<TPL
+
+    <div class="ditto_item" id="ditto_item_[+id+]">
+        <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
+        <div class="ditto_documentInfo">توسط <strong>[+author+]</strong> در [+date+]</div>
+        <div class="ditto_introText">[+introtext+]</div>
     </div>
-';
 
-$_lang['blank_tpl'] = "خالی می باشد و یا تایپو در نام چانک خود دارید, لطفا چک کنید.";
+TPL;
 
-$_lang['missing_placeholders_tpl'] = 'یکی از پوسته های دیتتوی شما مقادیرشان به درستی جاگذاری نشده است, لطفا قالب زیر را چک کنید: <br /><br /><hr /><br /><br />';
+$_lang["bad_tpl"] = "<p>&[+tpl+] یا حامل هیچ نگهدار محتوایی نیست یا اینکه اسم چانک یا, مجموع کد, یا اسم فایل اشتباه است. لطفا آنرا مرور کنید.</p>";
 
-$_lang['missing_placeholders_tpl_2'] = '<br /><br /><hr /><br />';
+$_lang['no_documents'] = '<p>پرونده ای یافت نشد.</p>';
 
-$_lang['default_splitter'] = "<!-- جاگذار یا جداکن - splitter -->";
-
-$_lang['more_text'] = "ادامه...";
-
-$_lang['no_entries'] = '<p>هیچ نتیجه ای یافت نشد.</p>';
-
-$_lang['date_format'] = "%d-%b-%y %H:%M";
-
-$_lang['archives'] = "بایگانی";
-
+$_lang['resource_array_error'] = 'خطای ردیف منابع';
+ 
 $_lang['prev'] = "&lt; قبلی";
 
 $_lang['next'] = "بعدی &gt;";
 
 $_lang['button_splitter'] = "|";
 
-$_lang['default_copyright'] = "[(site_name)] 2006";	
+$_lang['default_copyright'] = "[(site_name)] 2007";
 
-$_lang['rss_lang'] = "fa";
+$_lang['invalid_class'] = "کلاس دیتتو صحیح نیست. لطفا مرور کنید.";
 
-$_lang['debug_summarized'] = "مجموعی که انتظار اختصار آنرا داریم (summarize):";
+$_lang['none'] = "هیچکدام";
 
-$_lang['debug_returned'] = "<br />مجموعی که انتظار بازگشت داریم:";
+$_lang['edit'] = "ویرایش";
 
-$_lang['debug_retrieved_from_db'] = "تعداد کل در دیتابیس:";
+$_lang['dateFormat'] = "%d-%b-%y %H:%M";
 
-$_lang['debug_sort_by'] = "چگونگی تنظیم با (sortBy):";
+// Debug Tab Names
 
-$_lang['debug_sort_dir'] = "مسیر یا سمت را مشخص کنید (sortDir):";
+$_lang['info'] = "اطلاعات";
 
-$_lang['debug_start_at'] = "شروع از";
+$_lang['modx'] = "مادایکس";
 
-$_lang['debug_stop_at'] = "و توقف در";
+$_lang['fields'] = "فیلدها";
 
-$_lang['debug_out_of'] = "خارج از";
+$_lang['templates'] = "قالبها";
 
-$_lang['debug_document_data'] = "محتوای پرونده برای ";
+$_lang['filters'] = "فیلترها";
 
-$_lang['default_archive_template'] = "<a href=\"[~[+id+]~]\">[+title+]</a> (<span class=\"ditto_date\">[+date+]</span>)";
+$_lang['prefetch_data'] = "پیش دریافت داده";
 
-$_lang['invalid_class'] = "کلاس دیتتو صحیح نیست. لطفا مجددا مرور کنید.";
+$_lang['retrieved_data'] = "بازخوانی داده";
 
-// New language key added 2-July-2006 to 5-July-2006
+// Debug Text
 
-// Keys deprecated : $_lang['api_method'] and $_lang['GetAllSubDocs_method'] 
+$_lang['placeholders'] = "نگهدار محتوایی";
 
-$_lang['tvs'] = "متغیرهای قالب:";
+$_lang['params'] = "پارامترها";
 
-$_lang['api'] = "با استفاده از ای پی آی مدایکس 0.9.2.1";
+$_lang['basic_info'] = "اطلاعات پایه";
+
+$_lang['document_info'] = "اطلاعات پرونده";
+
+$_lang['debug'] = "دیباگ";
+
+$_lang['version'] = "نسخه";
+
+$_lang['summarize'] = "خلاصه";
+
+$_lang['total'] = "مجموع";	 
+
+$_lang['sortBy'] = "ردیف با";
+
+$_lang['sortDir'] = "جهت ردیف";
+
+$_lang['start'] = "شروع";
+	 
+$_lang['stop'] = "ایست";
+
+$_lang['ditto_IDs'] = "ردیفها";
+
+$_lang['ditto_IDs_selected'] = "ردیفهای انتخابی";
+
+$_lang['ditto_IDs_all'] = "همه ی ردیفها";
+
+$_lang['open_dbg_console'] = "بازکردن پیشخوان دیباگ";
+
+$_lang['save_dbg_console'] = "ذخیره ی پیشخوان دیباگ";
 
 ?>

@@ -1,4 +1,4 @@
-// SE lang variables
+// SV lang variables
 
 tinyMCE.addToLang('emotions',{
 title : 'Klistra in k&auml;nsla',
@@ -11,12 +11,12 @@ frown : 'Ledsen',
 innocent : 'Oskyldig',
 kiss : 'Kyss',
 laughing : 'Skrattande',
-money_mouth : 'Penga mun',
+money_mouth : 'Pengamun',
 sealed : 'Hemlis',
 smile : 'Glad',
 surprised : 'F&ouml;rv&aring;nad',
 tongue_out : 'R&auml;cka ut tungan',
 undecided : 'Fundersam',
 wink : 'Fl&ouml;rt',
-yell : 'Skrikandes'
+yell : 'Skrik'
 });

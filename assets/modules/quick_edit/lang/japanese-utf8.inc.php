@@ -14,6 +14,7 @@
 
 /*
                              License
+//-- JAPANESE LANGUAGE FILE ENCODED IN UTF-8
 
 QuickEdit - A MODx module which allows the editing of content via
             the frontent of the site
@@ -34,6 +35,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 */
+
+include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
+/* Set locale to Japanese */
+setlocale (LC_ALL, 'ja_JP');
 
 $QE_lang['QE_lang'] = 'ja';
 $QE_lang['QE_xml_lang'] = 'ja';

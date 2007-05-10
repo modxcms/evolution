@@ -457,7 +457,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
     $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
 }
 ?>
-<form name="sortFrm" id="sortFrm" action="3.php">
+<form name="sortFrm" id="sortFrm" action="menu.php">
 <table width="100%"  border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td style="padding-left: 10px;padding-top: 1px;" colspan="2">

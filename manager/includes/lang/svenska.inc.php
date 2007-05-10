@@ -4,7 +4,7 @@
  * Function:       Swedish language file
  * Encoding:       ISO-8859-1
  * Author:         Pontus Ågren (Pont) & Johnny Chadda
- * Date:           2007-02-25
+ * Date:           2007-04-24
  * Version:        0.9.6
  * MODx version:   0.9.6
 */
@@ -422,6 +422,8 @@ $_lang["login_allowed_days_message"] = 'Välj de dagar som den här användaren får
 $_lang["login_allowed_ip"] = 'Tillåten IP-adress';
 $_lang["login_allowed_ip_message"] = 'Ange de IP-adresser som den här användaren får logga in från.<br /><b>Notera: Separera flera IP-adresser med kommatecken (,)</b>';
 $_lang["login_button"] = 'Logga in';
+$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Installation/uppdatering av den här webbplatsen pågår.<br />Försök igen om ett par minuter!</span><br />';
+$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Installationen/uppdateringen av den här webbplatsen är klar. Nu kan du logga in igen!</span><br />';
 $_lang["login_captcha_message"] = 'Skriv in säkerhetskoden som visas i bilden. Om du har problem att läsa koden, så kan du klicka på bilden för att generera en ny kod eller kontakta din webmaster.';
 $_lang["login_homepage"] = 'Startsida efter inloggning';
 $_lang["login_homepage_message"] = 'Ange ID till det dokument du vill skicka användaren till efter den har loggat in.<br /><b>OBS: Se till att det ID du skrivit in tillhör ett existerande dokument, att det har blivit publicerat och kan kommas åt av användaren!</b>';
@@ -897,6 +899,8 @@ $_lang["top_howmany_title"] = 'Hur många i toppen';
 $_lang["total"] = 'totalt';
 $_lang['track_visitors_message'] = 'Den här inställningen har ingen effekt om du inte har en besöksräknare eller ett statistikprogram installerat som stödjer den här inställningen. Genom att logga besök kan du få fram statistik på hur din webbplats används.';
 $_lang['track_visitors_title'] = 'Logga besök (statistik)';
+$_lang["tree_show_protected"] = 'Visa skyddade dokument';
+$_lang["tree_show_protected_message"] = 'När den här inställningen är satt till "Nej" visas inte skyddade dokument (och deras underdokument) i dokumentträdet. "Nej" är den traditionella inställningen för MODx.';
 $_lang["truncate_table"] = 'Klicka här för att trunkera den här tabellen';
 $_lang["tuesday"] = 'Tisdag';
 $_lang["tv"] = 'Mallvariabel';
@@ -996,6 +1000,8 @@ $_lang["which_editor_message"] = 'Här kan du välja vilken richtext-editor du vil
 $_lang["which_editor_title"] = 'Editor att använda';
 $_lang["working"] = 'Arbetar...';
 $_lang["wrap_lines"] = 'Radbryt';
+$_lang["xhtml_urls_title"] = 'XHTML-URLer';
+$_lang["xhtml_urls_message"] = 'Ersätter et-tecken (&amp;) i URLer som genereras av MODx med den validerande &amp;<!-- -->amp; html-entiteten.';
 $_lang["yes"] = 'Ja';
 $_lang["you_got_mail"] = 'Du har fått epost';
 $_lang["yourinfo_message"] = 'Denna sektion visar information om dig:';

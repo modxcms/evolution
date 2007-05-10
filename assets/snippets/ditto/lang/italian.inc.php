@@ -1,82 +1,104 @@
 <?php
 
-/**
- * Filename:       assets/snippets/ditto/italian.inc.php
- * Function:       Default Italian language file for Ditto.
- * Author:         The MODx Project
- * Date:           18/10/2006
- * Version:        1.0.2
- * MODx version:   0.9.5.1
- * Translation: Edipo, Nicola Lambathaki (Banzai)
+/*
+ * Title: Language File
+ * Purpose:
+ *  	Default Italian language file for Ditto
+ *  	
+ * Note:
+ * 		New language keys should added at the bottom of this page
 */
 
-// NOTE: New language keys should added at the bottom of this page
+$_lang['language'] = "italian";
 
-$_lang['file_does_not_exist'] = " non esiste. Prego controlla il file.";
+$_lang['abbr_lang'] = "it";
 
-$_lang['default_template'] = '
-    <div class="ditto_summaryPost">
-        <h3><a href="[~[+id+]~]">[+title+]</a></h3>
-        <div>[+summary+]</div>
-        <p>[+link+]</p>
-        <div style="text-align:right;">di <strong>[+author+]</strong> il [+date+]</div>
+$_lang['file_does_not_exist'] = "non esiste. Prego controlla il file.";
+
+$_lang['extender_does_not_exist'] = "extender non esiste. Prego controlla il file.";
+
+$_lang['default_template'] = <<<TPL
+
+    <div class="ditto_item" id="ditto_item_[+id+]">
+        <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
+        <div class="ditto_documentInfo">di <strong>[+author+]</strong> il [+date+]</div>
+        <div class="ditto_introText">[+introtext+]</div>
     </div>
-';
 
-$_lang['blank_tpl'] = "Il tuo template per Ditto ï¿½ vuoto o c'ï¿½ un errore nel nome del chunk, per favore controlla.";
+TPL;
 
-$_lang['missing_placeholders_tpl'] = 'Nel tuo template per Ditto mancano i segnaposto (placeholders), per favore controlla il tuo template: <br /><br /><hr /><br /><br />';
+$_lang["bad_tpl"] = "<p>&[+tpl+] either does not contain any placeholders or is an invalid chunk name, code block, or filename. Please check it.</p>";
 
-$_lang['missing_placeholders_tpl_2'] = '<br /><br /><hr /><br />';
+$_lang['no_documents'] = '<p>Nessun documento trovato.</p>';
 
-$_lang['default_splitter'] = "<!-- divisore -->";
-
-$_lang['more_text'] = "Leggi tutto...";
-
-$_lang['no_entries'] = '<p>Nessun inserimento.</p>';
-
-$_lang['date_format'] = "%d-%b-%y %H:%M";
-
-$_lang['archives'] = "Archivi";
-
+$_lang['resource_array_error'] = 'Resource Array Error';
+ 
 $_lang['prev'] = "&lt; Precedente";
 
 $_lang['next'] = "Successivo &gt;";
 
 $_lang['button_splitter'] = "|";
 
-$_lang['default_copyright'] = "[(site_name)] 2006";
+$_lang['default_copyright'] = "[(site_name)] 2007";
 
-$_lang['rss_lang'] = "it";
+$_lang['invalid_class'] = "La classe di Ditto non è valida. Per favore controllala.";
 
-$_lang['debug_summarized'] = "Presunto numero di post da sommarizzare (nrposts/count):";
+$_lang['none'] = "Nessuno";
 
-$_lang['debug_returned'] = "<br />Totale presunto per essere rinviato:";
+$_lang['edit'] = "Modifica";
 
-$_lang['debug_retrieved_from_db'] = "Conto totali nel db:";
+$_lang['dateFormat'] = "%d-%b-%y %H:%M";
 
-$_lang['debug_sort_by'] = "Ordina per (sortby):";
+// Debug Tab Names
 
-$_lang['debug_sort_dir'] = "Senso d'ordine (sortdir):";
+$_lang['info'] = "Info";
 
-$_lang['debug_start_at'] = "Inizia a";
+$_lang['modx'] = "MODx";
 
-$_lang['debug_stop_at'] = "e termina a";
+$_lang['fields'] = "Campi";
 
-$_lang['debug_out_of'] = "fuori di";
+$_lang['templates'] = "Templates";
 
-$_lang['debug_document_data'] = "Dati del documento per";
+$_lang['filters'] = "Filtri";
 
-$_lang['default_archive_template'] = "<a href=\"[~[+id+]~]\">[+title+]</a> (<span class=\"ditto_date\">[+date+]</span>)";
+$_lang['prefetch_data'] = "Prefetch Data";
 
-$_lang['invalid_class'] = "La classe di Ditto non ï¿½ valida. Per favore controllala.";
+$_lang['retrieved_data'] = "Retreived Data";
 
-// New language key added 2-July-2006 to 5-July-2006
+// Debug Text
 
-// Keys deprecated : $_lang['api_method'] and $_lang['GetAllSubDocs_method']
+$_lang['placeholders'] = "Placeholders";
 
-$_lang['tvs'] = "TV:";
+$_lang['params'] = "Parameteri";
 
-$_lang['api'] = "Sto usando le API di MODx 0.9.2.1";
+$_lang['basic_info'] = "Basic Info";
+
+$_lang['document_info'] = "Document Info";
+
+$_lang['debug'] = "Debug";
+
+$_lang['version'] = "Versione";
+
+$_lang['summarize'] = "Summarize";
+
+$_lang['total'] = "Totale";	 
+
+$_lang['sortBy'] = "Ordina per autore";
+
+$_lang['sortDir'] = "Direnzione ordinamento";
+
+$_lang['start'] = "Inizio";
+	 
+$_lang['stop'] = "Fine";
+
+$_lang['ditto_IDs'] = "IDs";
+
+$_lang['ditto_IDs_selected'] = "Selected IDs";
+
+$_lang['ditto_IDs_all'] = "All IDs";
+
+$_lang['open_dbg_console'] = "Open Debug Console";
+
+$_lang['save_dbg_console'] = "Save Debug Console";
 
 ?>

@@ -2,10 +2,10 @@
 /**
  * Filename:       includes/lang/francais.inc.php
  * Function:       French language file for MODx
- * Encoding:       UTF-8
+ * Encoding:       ISO-8859-1 (Latin 1)
  * Author:         Nicolas Martignoni (Nissai), révisé par David Mollière pour la 0.9.6 (davidm)
- * Date:           2006/12/05
- * Version:        2.1
+ * Date:           2007/05/02
+ * Version:        2.2
  * MODx version:   0.9.6
 */
 // NOTE: Now alpha-sorted
@@ -427,6 +427,9 @@ $_lang["login_allowed_days_message"] = 'Choisissez les jours durant lesquels l\'
 $_lang["login_allowed_ip"] = 'Adresses IP autorisée';
 $_lang["login_allowed_ip_message"] = 'Taper ici les adresses IP d\'où l\'utilisateur a l\'autorisation de se connecter. <strong>ATTENTION&nbsp;! Séparez les diverses adresses IP par une virgule (,)</strong>';
 $_lang["login_button"] = 'Connecter';
+$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">L\'installation du site est actuellement en cours.<br /> Merci de ré-essayer dans quelques minutes !</span><br />';
+$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">MODx a été ré-installé. Merci de vous logger a nouveau!</span><br/>';
+$_lang["login_captcha_message"] = 'Merci de saisir le code de sécurité tel qu\'affiché sur le graphique. Si vous ne pouvez pas lire le code, cliquez sur l\'image pour en générer un nouveau ou contactez votre administrateur.';
 $_lang["login_captcha_message"] = ' Un administrateur a activé la validation par CAPTCHA. Vous devez par conséquent taper le code de sécurité. Si vous avez du mal à lire le code, cliquez sur le code pour en produire un nouveau.';
 $_lang["login_homepage"] = 'Connexion page d\'accueil';
 $_lang["login_homepage_message"] = 'Taper le numéro du document où envoyer l\'utilisateur après sa connexion. <strong>ATTENTION&nbsp;! Assurez-vous que ce numéro est bien celui d\'un document existant et qu\'il est publié et accessible par l\'utilisateur&nbsp;!</strong>';
@@ -903,6 +906,8 @@ $_lang["top_howmany_title"] = 'Lignes à afficher :';
 $_lang["total"] = 'total';
 $_lang["track_visitors_message"] = 'l\'enregistrement de visites vous permettra d\'afficher des statistiques d\'utilisation de votre site. Cependant, cela ralentit un peu l\'analyseur du site. Si les statistiques des visites ne vous intéressent pas particulièrement, vous pouvez sans risque les désactiver et apprécier l\'augmentation de vitesse.';
 $_lang["track_visitors_title"] = 'Enregistrer les visites :';
+$_lang["tree_show_protected"] = 'Montrer les pages protégées';
+$_lang["tree_show_protected_message"] = 'Lorsque cette option est sur "Non", les pages protégées (et tous leurs enfants) ne seront pas visibles dans l\'arbre des documents aux utlisateurs hors du groupe d\'utilisateur autorisé. ""Non" était le réglage par défaut dans les versions antérieures."Oui" permet de donner accès à vos utilisateur aux enfants d\'un document protégé sans donner accès pour autant au parent.';
 $_lang["truncate_table"] = 'Cliquez ici pour tronquer cette table';
 $_lang["tuesday"] = 'Mardi';
 $_lang["tv"] = 'Variable de modèle';
@@ -1002,6 +1007,8 @@ $_lang["which_editor_message"] = 'Vous pouvez choisir ici l\'éditeur WYSIWYG qu
 $_lang["which_editor_title"] = 'Éditeur WYSIWYG à utiliser :';
 $_lang["working"] = 'Patience...';
 $_lang["wrap_lines"] = 'Retour à la ligne';
+$_lang["xhtml_urls_title"] = 'URLs XHTML valides';
+$_lang["xhtml_urls_message"] = 'Remplace les ampersand (&) dans les URLs par des entités html valides &<!-- -->amp;';
 $_lang["yes"] = 'Oui';
 $_lang["yourinfo_message"] = 'Informations sur votre compte utilisateur&nbsp;:';
 $_lang["yourinfo_previous_login"] = 'Votre dernière connexion&nbsp;:';

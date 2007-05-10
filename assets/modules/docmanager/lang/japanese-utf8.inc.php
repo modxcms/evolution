@@ -1,17 +1,20 @@
 <?php
 /**
  * Document Manager Module - japanese-utf8.inc.php
- * 
+ *
  * Purpose: Contains the language strings for use in the module.
  * Author: Garry Nutting
  * For: MODx CMS (www.modxcms.com)
  * Date:29/09/2006 Version: 1.6
  * Trabslated: 04/10/2006 by eastbind (eastbind@bodenplatte.jp)
- * 
+ *
  */
- 
+
 //-- JAPANESE LANGUAGE FILE ENCODED IN UTF-8
- 
+include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
+/* Set locale to Japanese */
+setlocale (LC_ALL, 'ja_JP');
+
 //-- titles
 $_lang['DM_module_title'] = 'Doc Manager';
 $_lang['DM_action_title'] = '操作を選択します';
@@ -27,7 +30,7 @@ $_lang['DM_sort_menu'] = 'メニュー整列';
 $_lang['DM_change_template'] = 'テンプレート選択';
 $_lang['DM_publish'] = '公開/非公開';
 $_lang['DM_other'] = 'その他のプロパティ';
- 
+
 //-- buttons
 $_lang['DM_close'] = 'Doc Managerを閉じる';
 $_lang['DM_cancel'] = '戻る';
@@ -68,7 +71,7 @@ $_lang['DM_doc_skip_message1'] = 'ドキュメントID';
 $_lang['DM_doc_skip_message2'] = 'は選択したドキュメントグループに既に含まれています。(スキップ)';
 
 //-- sort menu tab
-$_lang['DM_sort_pick_item'] = 'サイトルートか、整列したい範囲の親ドキュメントをクリックしてください。'; 
+$_lang['DM_sort_pick_item'] = 'サイトルートか、整列したい範囲の親ドキュメントをクリックしてください。';
 $_lang['DM_sort_updating'] = '更新中 ...';
 $_lang['DM_sort_updated'] = '更新';
 $_lang['DM_sort_nochildren'] = 'このドキュメントには子ドキュメントがありません。';
@@ -87,20 +90,20 @@ $_lang['DM_other_dropdown_richtext'] = 'エディタ/なし';
 $_lang['DM_other_dropdown_delete'] = '削除/復活';
 
 //-- radio button text
-$_lang['DM_other_publish_radio1'] = '公開'; 
+$_lang['DM_other_publish_radio1'] = '公開';
 $_lang['DM_other_publish_radio2'] = '非公開';
-$_lang['DM_other_show_radio1'] = 'メニューから隠す'; 
+$_lang['DM_other_show_radio1'] = 'メニューから隠す';
 $_lang['DM_other_show_radio2'] = 'メニューに表示';
-$_lang['DM_other_search_radio1'] = '検索対象'; 
+$_lang['DM_other_search_radio1'] = '検索対象';
 $_lang['DM_other_search_radio2'] = '検索しない';
-$_lang['DM_other_cache_radio1'] = 'キャッシュする'; 
+$_lang['DM_other_cache_radio1'] = 'キャッシュする';
 $_lang['DM_other_cache_radio2'] = 'キャッシュしない';
-$_lang['DM_other_richtext_radio1'] = 'エディタ使用'; 
+$_lang['DM_other_richtext_radio1'] = 'エディタ使用';
 $_lang['DM_other_richtext_radio2'] = 'エディタ不要';
-$_lang['DM_other_delete_radio1'] = '削除'; 
+$_lang['DM_other_delete_radio1'] = '削除';
 $_lang['DM_other_delete_radio2'] = '削除から復活';
 
-//-- adjust dates 
+//-- adjust dates
 $_lang['DM_adjust_dates_header'] = 'ドキュメントの各種日時設定';
 $_lang['DM_adjust_dates_desc'] = '次の日時設定を変更できます。「カレンダーを表示」をお使いください。';
 $_lang['DM_view_calendar'] = 'カレンダーを表示';
@@ -128,8 +131,8 @@ $_lang['DM_date_dateselect_label'] = '日付を選択: ';
 $_lang['DM_select_submit'] = '適用';
 $_lang['DM_select_range'] = 'ID指定画面に戻ります';
 $_lang['DM_select_range_text'] = '<p><strong>指定方法（n、m はドキュメントIDを示す数字です):</strong></p><br />
-						<ul><li>n*　 - そのドキュメント（フォルダ）と直下の子ドキュメントを意味する指定</li> 
-							<li>n** - そのドキュメント（フォルダ）と配下の子、孫など全てのドキュメントを意味する指定</li> 
+						<ul><li>n*　 - そのドキュメント（フォルダ）と直下の子ドキュメントを意味する指定</li>
+							<li>n** - そのドキュメント（フォルダ）と配下の子、孫など全てのドキュメントを意味する指定</li>
 							<li>n-m - n から m までのIDの範囲を意味る指定。n、m を含みます</li>
 							<li>n　　 - IDがnの1つのドキュメントを意味する指定</li>
 							<li>例：1*,4**,2-20,25　- この指定では、1、1の子ドキュメント、4、4の全配下ドキュメント、

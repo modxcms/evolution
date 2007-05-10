@@ -1,12 +1,11 @@
 <?php
 
 /*
- *  Written by: Adam Crownoble
- *  Contact: adam@obledesign.com
- *  Created: 11/18/2005
- *  For: MODx cms (modxcms.com)
- *  Persian/Farsi Translation by: Mohsen.H.Z.
- *  Description: Class for the QuickEditor
+ *  Written by:  Adam Crownoble - For: MODx cms (modxcms.com)
+ *  Contact:     adam@obledesign.com
+ *  Created:     11/18/2005
+ *  Path:        assets/modules/quick_edit/lang
+ *  Description: QuickEditor Class - Persian Translation By:  Mohsen (MotSmart ~ www.modxcms.ir)
  */
 
 /*
@@ -35,14 +34,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 $QE_lang['QE_lang'] = 'fa';
 $QE_lang['QE_xml_lang'] = 'fa';
 $QE_lang['QE_charset'] = 'utf-8';
-$QE_lang['QE_title'] = 'QuickEdit'; // please change only if it violates local trademarks
+$QE_lang['QE_title'] = 'ویرایش سریع'; // please change only if it violates local trademarks
 $QE_lang['QE_show_links'] = 'نمایش لینکها';
 $QE_lang['QE_hide_links'] = 'مخفی کردن لینکها';
 $QE_lang['QE_someone_editing'] = 'فرد دیگری درحال ویرایش این پرونده است';
 $QE_lang['QE_cant_find_content'] = 'قادر به یافتن پرونده برای ویرایش نیست';
 $QE_lang['QE_description'] = 'صفحات از نمای اصلی(فرانت اند) ویرایش شود';
-$QE_lang['revert'] = 'Revert';
-$QE_lang['apply'] = 'Apply';
+$QE_lang['revert'] = 'بازگشت';
+$QE_lang['apply'] = 'انجام';
 $QE_lang['revert_prompt'] = 'بازگردانی همه ویرایش ها?';
 $QE_lang['QE_no_edit_rights'] = 'حق ویرایش نیست';
 $QE_lang['ok'] = 'قبول';

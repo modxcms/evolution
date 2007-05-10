@@ -2,11 +2,11 @@
 /**
  * Filename:				includes/lang/portuguese-pt.inc.php
  * Function:				Portuguese language file.
- * Encoding:			UTF-8
+ * Encoding:			ISO8991-latin1
  * Author:				João Peixoto <joeindio@gmail.com>
- * Date:				2007/04/07
- * Version:				2.0 - updated for MODx 0.9.6
- * MODx version:			0.9.6
+ * Date:				01 May 2007
+ * Version:				2.1 - updated for MODx 0.9.6 RC3
+ * MODx version:			0.9.6 RC3
 */
 // NOTE: New language keys should be added at the bottom of this page
 
@@ -191,7 +191,7 @@ $_lang["defaultpublish_message"] = 'Seleccione \'Sim\' para fazer com que todos 
 $_lang["defaultpublish_title"] = 'Publicação Padrão';
 $_lang["defaultsearch_message"] = 'Seleccione \'Sim\' para activar por defeito a procura nos documentos.';
 $_lang["defaultsearch_title"] = 'Procura Padrão';
-$_lang["defaulttemplate_message"] = 'Seleccione o Template padrão que deseja utilizar em novos documentos. Pode seleccionar um Modelo diferente no editor de documentos. Esta opção apenas selecciona o Modelo a utilizar por defeito.';
+$_lang["defaulttemplate_message"] = 'Seleccione o Template padrão que deseja utilizar em novos documentos. Pode seleccionar um Template diferente no editor de documentos. Esta opção apenas selecciona o Template a utilizar por defeito.';
 $_lang["defaulttemplate_title"] = 'Template Padrão';
 $_lang["delete"] = 'Apagar';
 $_lang["delete_document"] = 'Apagar documento';
@@ -421,7 +421,7 @@ $_lang["lock_settings_msg"] = '%s está actualmente a editar estas opções. Agu
 $_lang["lock_snippet"] = 'Bloquear Snippet contra edição';
 $_lang["lock_snippet_msg"] = 'Apenas administradores (Perfil ID 1) podem editar este Snippet.';
 $_lang["lock_template"] = 'Bloquear Template contra edição';
-$_lang["lock_template_msg"] = 'Apenas administradores (Perfil ID 1) podem editar este Modelo.';
+$_lang["lock_template_msg"] = 'Apenas administradores (Perfil ID 1) podem editar este Template.';
 $_lang["lock_tmplvars"] = 'Bloquear Variável contra edição';
 $_lang["lock_tmplvars_msg"] = 'Apenas administradores (Perfil ID 1) podem editar esta Variável.';
 $_lang["login_allowed_days"] = 'Dias com autorização';
@@ -429,6 +429,8 @@ $_lang["login_allowed_days_message"] = 'Indique os dias em que o utilizador pode
 $_lang["login_allowed_ip"] = 'Endereços IP permitidos';
 $_lang["login_allowed_ip_message"] = 'Digite o(s) endereço(s) IP a partir dos quais este utilizador tem permissão para aceder ao sistema. <b>Importante: Separe múltiplos endereços IP com vírgulas (,)</b>';
 $_lang["login_button"] = 'Entrar';
+$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">A Instalação/actualização deste site encontra-se actualmente a decorrer. <br />Por favor tente aceder novamente dentro de alguns minutos!</span><br />';
+$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Install/update on this site was executed, please login again!</span><br />';
 $_lang["login_captcha_message"] = 'Por favor digite o código de segurança mostrado na figura. Se não consegue ler o código, clique na figura para gerar um novo ou contacte o administrador do site.';
 $_lang["login_homepage"] = 'Acesso  - Página Principal';
 $_lang["login_homepage_message"] = 'Digite a ID do documento que deseja que o utilizador veja após aceder ao sistema (login). <b>Importante: Certifique-se que a ID do documento está certa e que o mesmo existe e está publicado para evitar possíveis páginas de erros no site!</b>';
@@ -866,16 +868,16 @@ $_lang["template_assignedtv_tab"] = 'Variáveis de Template atribuídas';
 $_lang["template_code"] = 'Código HTML do Template';
 $_lang["template_desc"] = 'Descrição';
 $_lang["template_edit_tab"] = 'Editar Template';
-$_lang["template_locked_message"] = 'Este Modelo está bloqueado.';
-$_lang["template_management_msg"] = 'Aqui pode escolher que Modelo deseja editar.';
-$_lang["template_msg"] = 'Criar e editar Templates. Templates novos ou modificados não serão visíveis nas páginas em cache até que esta seja esvaziada, no entanto pode usar a função de pré-visualização na página para ver o Modelo em acção.';
+$_lang["template_locked_message"] = 'Este Template está bloqueado.';
+$_lang["template_management_msg"] = 'Aqui pode escolher que Template deseja editar.';
+$_lang["template_msg"] = 'Criar e editar Templates. Templates novos ou modificados não serão visíveis nas páginas em cache até que esta seja esvaziada, no entanto pode usar a função de pré-visualização na página para ver o Template em acção.';
 $_lang["template_name"] = 'Nome do Template';
-$_lang["template_no_tv"] = 'Ainda não foi atribuída nenhuma Variável de Template a este Modelo.';
+$_lang["template_no_tv"] = 'Ainda não foi atribuída nenhuma Variável a este Template.';
 $_lang["template_reset_all"] = 'Aplicar o Template padrão a todas as páginas';
-$_lang["template_reset_specific"] = 'Aplicar apenas às páginas que usam o Modelo %s';
+$_lang["template_reset_specific"] = 'Aplicar apenas às páginas que usam o Template %s';
 $_lang["template_title"] = 'Criar/editar Template';
 $_lang["template_tv_edit"] = 'Editar a ordem de ordenação das Variáveis de Template';
-$_lang["template_tv_msg"] = 'As Variáveis de Template atribuídas a este Modelo estão listadas abaixo.';
+$_lang["template_tv_msg"] = 'As Variáveis atribuídas a este Template estão listadas abaixo.';
 $_lang["thursday"] = 'Quinta-feira';
 $_lang["tmplvars"] = 'Variáveis de Template';
 $_lang["tmplvars_binding_msg"] = 'Este campo suporta ligação (binding) a fontes de dados usando comandos @';
@@ -893,7 +895,7 @@ $_lang["tmplvars_type"] = 'Tipo de entrada (input)';
 $_lang["tmplvars_widget"] = 'Formato saída (widget)';
 $_lang["tmplvars_widget_prop"] = 'Propriedades da estrutura a retonar (Widget)';
 $_lang["tmplvar_access_msg"] = 'Seleccione o grupo de documentos autorizados a fazer alterações ao conteúdo ou valor desta variável';
-$_lang["tmplvar_change_template_msg"] = 'Alterar este Modelo implica recarregar para actualização todas as Variáveis. Todas as mudanças serão perdidas.\n\n De certeza que deseja alterar o Modelo?';
+$_lang["tmplvar_change_template_msg"] = 'Alterar este Template implica recarregar para actualização todas as Variáveis. Todas as mudanças serão perdidas.\n\n De certeza que deseja alterar o Template?';
 $_lang["tmplvar_inuse"] = 'Os seguintes documentos utilizam actualmente esta Variável de Template. Para continuar e apagar clique no botão Apagar, para cancelar clique em Cancelar.';
 $_lang["tmplvar_tmpl_access"] = 'Acesso a Templates';
 $_lang["tmplvar_tmpl_access_msg"] = 'Seleccione que Templates têm permissão para aceder e/ou processar esta variável';
@@ -904,6 +906,8 @@ $_lang["top_howmany_title"] = 'Top n';
 $_lang["total"] = 'total';
 $_lang["track_visitors_message"] = 'Esta opção não tem nenhum efeito a menos que exista um recurso de seguimento de visitantes (tracking) ou de estatísticas instalado e que suporte esta opção. Fazer um relatório de visitas permite analisar estatísticas sobre a utilização do site.';
 $_lang["track_visitors_title"] = 'Manter relatório de visitantes';
+$_lang["tree_show_protected"] = 'Mostrar páginas protegidas';
+$_lang["tree_show_protected_message"] = 'Quando marcado como "Não", as Páginas Protegidas (e todos os documentos seus descendentes) não aparecem na árvore de documentos. "Não" é a opção por defeito do MODx para compatibilidade com versões antigas.';
 $_lang["truncate_table"] = 'Clique aqui para truncar esta tabela';
 $_lang["tuesday"] = 'Terça-feira';
 $_lang["tv"] = 'TV';
@@ -1003,6 +1007,8 @@ $_lang["which_editor_message"] = 'Aqui pode escolher qual o editor gráfico (tip
 $_lang["which_editor_title"] = 'Editor a utilizar:';
 $_lang["working"] = 'Processando, aguarde...';
 $_lang["wrap_lines"] = 'Quebra de linhas automática';
+$_lang["xhtml_urls_title"] = 'URLs XHTML';
+$_lang["xhtml_urls_message"] = 'Subtitui os caracteres "i comercial" (&amp;) nos urls que são gerados pelo MODx pela sintaxe conforme aos standards W3C &<!-- -->amp; (entidade html)';
 $_lang["yes"] = 'Sim';
 $_lang["yourinfo_message"] = 'Esta secção mostra alguma informação sobre si:';
 $_lang["yourinfo_previous_login"] = 'Último acesso:';

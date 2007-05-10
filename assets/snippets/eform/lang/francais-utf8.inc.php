@@ -1,6 +1,6 @@
 <?php
 /**
-* snippets/eform/francais-utf8.inc.php
+* snippets/eform/francais.inc.php
 * Fichier Langue en francais pour eForm
 */
 
@@ -36,4 +36,7 @@ $_lang['ef_eval_deprecated'] = "La règle #EVAL est obsolète et ne devrait plus
 $_lang['ef_multiple_submit'] = "<p>Ce formulaire a déjà été soumis avec succès. Il est inutile de soumettre le même formulaire plusieurs fois.</p>";
 $_lang['ef_submit_time_limit'] = "<p>Ce formulaire a déjà été soumis avec succès. La soumission du formulaire est bloquée pour ".($submitLimit/60)." minutes.</p>";
 $_lang['ef_version_error'] = "<strong>ATTENTION!</strong> La version du snippet eForum (version:&nbsp;$version) est différente de celle des fichiers eForm présents sur votre serveur (version:&nbsp;$fileVersion). Attention de bien mettre à jour les fichiers lorsque vous mettez à jour le snippet.";
+$_lang['ef_thousands_separator'] = ''; //leave empty to use (php) locale, only needed if you want to overide locale setting!
+$_lang['ef_date_format'] = '%d-%b-%Y %H:%M:%S';
+$_lang['ef_mail_error'] = 'Le serveur mail est incapable d\'expédier l\'email';
 ?>

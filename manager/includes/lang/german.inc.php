@@ -3,10 +3,10 @@
  * Filename:       includes/lang/german.inc.php
  * Function:       Language file.
  * Encoding:       UTF-8
- * Author:         The MODx Project Team (originally by Alex Butter) - Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier
- * Date:            2007/01/13
- * Version:        2.02.1
- * MODx version:   0.9.5
+ * Author:         The MODx Project Team (originally by Alex Butter) - Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
+ * Date:            2007/05/03
+ * Version:        2.12
+ * MODx version:   0.9.6RC3
 */
 // NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx ist eine PHP Arbeitsumgebung und ist unter der <a href="../assets/docs/license.txt">GPL</a> Lizenz veröffentlicht.';
@@ -426,6 +426,8 @@ $_lang["login_allowed_days_message"] = 'Wählen Sie jene Wochentage aus, an dene
 $_lang["login_allowed_ip"] = 'IP Adressbeschränkung';
 $_lang["login_allowed_ip_message"] = 'Geben Sie hier jene IP Adressen an, von welchen aus der Benutzer eine Zugriffsberechtigung erhält. <b>Hinweis: Mehrere IP Adressen sind mit einem Komma (,) zu trennen.</b>';
 $_lang["login_button"] = 'Anmelden';
+$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Installation/Update der Site läuft. <br />Bitte versuchen Sie es in einigen Minuten erneut!</span><br />';
+$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Installation/Update der Site wurde abgeschlossen. Bitte loggen Sie sich erneut ein!</span><br />';
 $_lang["login_captcha_message"] = ' Der Administrator hat Captcha-Validerung aktiviert, Sie müssen daher auch den Sicherheits-Code eingeben. \n\nWenn der Sicherheits-Code schlecht lesbar ist, klicken Sie bitte selbst auf den Code, damit ein neuer Code generiert wird.';
 $_lang["login_homepage"] = 'Anmeldeseite';
 $_lang["login_homepage_message"] = 'Geben Sie die Dokument-ID an, zu welcher der Webnutzer nach einer erfolgreichen Anmeldung weitergeleitet wird. <b>Hinweis: Stellen Sie sicher, dass das entsprechende Dokument existiert und der jeweilige Benutzer Zugriff darauf hat!</b>';
@@ -902,6 +904,8 @@ $_lang["top_howmany_title"] = 'Top Liste';
 $_lang["total"] = 'insgesamt';
 $_lang["track_visitors_message"] = 'Die Protokollierung der Besucher ermöglicht Ihnen die Besucherstatistik, es verlangsamt ein wenig die Darstellung der Seite.';
 $_lang["track_visitors_title"] = 'Besucherprotokollierung';
+$_lang["tree_show_protected"] = 'Zeige geschützte Dokumente';
+$_lang["tree_show_protected_message"] = 'Wenn auf "Nein" gesetzt, erscheinen geschützte Dokumente (inklusive ihrer Kindelemente) nicht im Strukturbaum, das heißt Manager ohne Berechtigung diese Dokumente zu bearbeiten sehen sie nicht. "Nein" ist Standardeinstellung.';
 $_lang["truncate_table"] = 'Klicken Sie hier, um die Tabelle zu schließen';
 $_lang["tuesday"] = 'Dienstag';
 $_lang["tv"] = 'TV';
@@ -1001,6 +1005,8 @@ $_lang["which_editor_message"] = 'Hier legen Sie fest welchen Rich Text Editor S
 $_lang["which_editor_title"] = 'Eingesetzter Editor:';
 $_lang["working"] = 'Arbeite...';
 $_lang["wrap_lines"] = 'Automatischer Zeilenumbruch';
+$_lang["xhtml_urls_title"] = 'XHTML URLs';
+$_lang["xhtml_urls_message"] = 'Ersetzt Ampersands (&amp;) in URLs, die von MODx erzeugt werden mit validierbarem &<!-- -->amp; HTML Sonderzeichen.';
 $_lang["yes"] = 'Ja';
 $_lang["yourinfo_message"] = 'Dieser Bereich zeigt Ihnen einige Informationen über Sie:';
 $_lang["yourinfo_previous_login"] = 'Ihre letzte Anmeldung:';

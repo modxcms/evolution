@@ -9,7 +9,7 @@ html, body, form, fieldset {
 html {
     font-size: 100.01%; /* avoids obscure font-size bug */
     line-height: 1.5; /* http://meyerweb.com/eric/thoughts/2006/02/08/unitless-line-heights/ */
-    font-family: "Lucida Grande", Helvetica, Arial, sans-serif !important; /* IE ignores this and renders Arial better */
+    font-family: Helvetica, Arial, sans-serif !important; /* IE ignores this and renders Arial better */
     font-family: Arial, Tahoma, Helvetica, sans-serif;
     height: 100%;
     color: #111;

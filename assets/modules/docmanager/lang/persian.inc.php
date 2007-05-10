@@ -1,124 +1,123 @@
 <?php
 /**
- * Document Manager Module - persian.inc.php
- * 
- * Purpose: Contains the language strings for use in the module.
- * Author: Garry Nutting
- * Translator: Mohsen.H.Z.
- * For: MODx CMS (www.modxcms.com)
- * Date:29/09/2006 Version: 1.6
- * 
- */
+ * Nme:          Document Manager Module - persian.inc.php
+ * Path:         assets/modules/docmanager/lang
+ * Purpose:      Contains the language strings for use in the module.
+ * Author:       Garry Nutting
+ * For:          MODx CMS (www.modxcms.com)
+ * Date:         29/09/2006 Version: 1.6 
+ * Translation:  Mohsen (MotSmart ~ www.modxcms.ir)
+*/
  
-//-- Persian/Farsi LANGUAGE FILE
+//-- PERSIAN LANGUAGE FILE
  
 //-- titles
 $_lang['DM_module_title'] = 'مدیریت پرونده';
-$_lang['DM_action_title'] = 'انتخاب دستورالعمل';
-$_lang['DM_range_title'] = 'بازه ی شناسه ای پرونده ها را انتخاب کنید';
-$_lang['DM_tree_title'] = 'انتخاب پرونده ها از درختی';
-$_lang['DM_update_title'] = 'بروزرسانی انجام شد';
-$_lang['DM_sort_title'] = 'ویرایش محتوای فهرست(منو)';
+$_lang['DM_action_title'] = 'انتخاب دستور';
+$_lang['DM_range_title'] = 'انتخاب بازه ی شناسه های پرونده';
+$_lang['DM_tree_title'] = 'پرونده ها را از درختی انتخاب کنید';
+$_lang['DM_update_title'] = 'به روز رسانی شد';
+$_lang['DM_sort_title'] = 'ویرایشگر فهرست وب';
 
 //-- tabs
-$_lang['DM_doc_permissions'] = 'سطوح دسترسی به پرونده';
-$_lang['DM_template_variables'] = 'متغیرهای پوسته یا قالب';
-$_lang['DM_sort_menu'] = 'ترتیب موارد فهرست(منو)';
+$_lang['DM_doc_permissions'] = 'سطوح دسترسی پرونده';
+$_lang['DM_template_variables'] = 'متغیرهای قالب';
+$_lang['DM_sort_menu'] = 'ترتیب دهی فهرست';
 $_lang['DM_change_template'] = 'تغییر پوسته یا قالب';
-$_lang['DM_publish'] = 'انتشار/ تعلیق';
-$_lang['DM_other'] = 'سایر تنظیمات';
+$_lang['DM_publish'] = 'انتشار/تعلیق';
+$_lang['DM_other'] = 'مشخصات دیگر';
  
 //-- buttons
 $_lang['DM_close'] = 'بستن مدیریت پرونده';
-$_lang['DM_cancel'] = 'بازگشت به قبل';
+$_lang['DM_cancel'] = 'بازگشت';
 $_lang['DM_go'] = 'برو';
-$_lang['DM_save'] = 'حفظ و ذخیره';
-$_lang['DM_sort_another'] = 'تنظیم و ترتیب دهی بعدی';
+$_lang['DM_save'] = 'ذخیره';
+$_lang['DM_sort_another'] = 'فهرست کردن یکی دیگه';
 
 //-- templates tab
-$_lang['DM_tpl_desc'] = 'از جدول زیر پوسته یا قالب مورد نیاز را انتخاب کنید و سپس شناسه پرونده هایی را که بایستی تغییر داده شوند را انتخاب کنید. یا با انتخاب بازه ی شناسه های پرونده ها و یا استفاده از حالت درختی زیر.';
-$_lang['DM_tpl_no_templates'] = 'پوسته یا قالبی یافت نشد';
+$_lang['DM_tpl_desc'] = 'قالب مورد نظر خود را از جدول زیر انتخاب کنید و سپس شناسه ی پرونده هایی که نیاز به تغییر دارند را مشخص کنید. هم میتوانید بازه ی پرونده ها را مشخص کنید و یا از درختی زیر استفاده کنید.';
+$_lang['DM_tpl_no_templates'] = 'پوسته یا قلبی پیدا نشد';
 $_lang['DM_tpl_column_id'] = 'شناسه';
-$_lang['DM_tpl_column_name'] = 'نام';
+$_lang['DM_tpl_column_name'] = 'اسم';
 $_lang['DM_tpl_column_description'] ='توضیحات';
 $_lang['DM_tpl_blank_template'] = 'پوسته یا قالب خالی';
 
-$_lang['DM_tpl_results_message']= 'در صورتیکه نازمند تغییرات بیشتر هستید از دکمه ی بازگشت به قبل استفاده کنید. ذخیره یا کش وبگاه(سایت) بصورت خودکار پاک شده است.';
+$_lang['DM_tpl_results_message']= 'در صورتیکه نیاز به اعمال تغییرات بیشتری هستید دکمه ی هقب را بزنید. کش وبگاه بطور خودکار پاک شده.';
 
 //-- template variables tab
-$_lang['DM_tv_desc'] = 'شناسه ی پرونده هایی را که نیازمند تغییرات هستند را مشخص کنید, یا از طریق مشخص کردن بازه ی شناسه ی پرونده ها و یا از طریق استفاده از حالت درختی زیر, سپس پوسته یا قالب مورد نیاز را از جدول انتخاب کنید تا متغیرهای مربوط به آن پوسته یا قالب اجرا شوند. مقادیر متغیرهای مورد نظر پوسته یا قالب خود را برای پردازش وارد کنید.';
-$_lang['DM_tv_template_mismatch'] = 'این پرونده از پوسته یا قالب انتخابی استفاده نمی کند.';
-$_lang['DM_tv_doc_not_found'] = 'این پرونده در دیتابیس موجود نمی باشد.';
-$_lang['DM_tv_no_tv'] = 'هیچ متغیر پوسته یا قالبی در قالب یافت نشد.';
-$_lang['DM_tv_no_docs'] = 'هیچ پرونده ای برای به روز رسانی انتخاب نشده است.';
-$_lang['DM_tv_no_template_selected'] = 'هیچ پوسته یا قالبی انتخاب نشده است.';
-$_lang['DM_tv_loading'] = 'مقادیر متغیرهای پوسته یا قالب در حال بازخوانی می باشد...';
-$_lang['DM_tv_ignore_tv'] = 'ترتیب اثری به این متغیرها داده نشود (مقادیر را با کاما از هم جدا کنید):';
+$_lang['DM_tv_desc'] = 'شناسه ی پرونده هایی را که نیازمند تغییر است مشخص کنید, هم میتوانید از طریق مشخص کردن بازه ی شناسه انتخاب کنید و یا  از طریق درختی زیر, سپس قالب مورد نیاز را از جدل زیر انتخاب کنید تا متغیرهای قالب بازخوانی شود. مقدار متغیرهای مورد نظر خود را وارد و برای پردازش ارسال کنید.';
+$_lang['DM_tv_template_mismatch'] = 'این پرونده از قالب انتخابی استفاده نمی کند.';
+$_lang['DM_tv_doc_not_found'] = 'این پرونده در دیتابیس موجود نیست.';
+$_lang['DM_tv_no_tv'] = 'هیچ متغیر قالبی برای این پوسته یا قالب یافت نشد.';
+$_lang['DM_tv_no_docs'] = 'پرونده ای برای به روز رسانی انتخاب نشده.';
+$_lang['DM_tv_no_template_selected'] = 'قالب یا پوسته ای انتخاب نشده.';
+$_lang['DM_tv_loading'] = 'در حال بازخوانی متغیرهای قالب ...';
+$_lang['DM_tv_ignore_tv'] = 'به این متغیرها اهمیتی داده نشود (متغیرها را با کاما جدا کنید):';
 $_lang['DM_tv_ajax_insertbutton'] = 'وارد کردن';
 
 //-- document permissions tab
-$_lang['DM_doc_desc'] = 'برای اضافه یا حذف کردن گروه پرونده ها گروه پرونده های مورد نیاز را از جدول زیر انتخاب کنید. سپس شناسه ی پرونده هایی که نیازمند به تغییرات هستند را مشخص کنید. یا از طریق مشخص کردن بازه ی شناسه ها یا از طریق استفاده از حالت درختی زیر.';
-$_lang['DM_doc_no_docs'] = 'هیچ گروه پرونده ای یافت نشد';
+$_lang['DM_doc_desc'] = 'گروه پرونده ای مورد نیاز را از جدول زیر انتخاب کنید. در صورت تمایل میتوانید گروه پرونده ای را اضافه یا حذف کنید. سپس شناسه ی پرونده را که بایستی تغیر کند مشخص کنید. همپنین از طریق بازه ی شناسه یا از طریق استفاده از درختی زیر.';
+$_lang['DM_doc_no_docs'] = 'گروه پرونده ای یافت نشد.';
 $_lang['DM_doc_column_id'] = 'شناسه';
-$_lang['DM_doc_column_name'] = 'نام';
-$_lang['DM_doc_radio_add'] = 'افزودن گروه پرونده ای';
+$_lang['DM_doc_column_name'] = 'اسم';
+$_lang['DM_doc_radio_add'] = 'اضافه کردن گروه پرونده ای';
 $_lang['DM_doc_radio_remove'] = 'حذف گروه پرونده ای';
 
-$_lang['DM_doc_skip_message1'] = 'پرونده ای یا شناسه ی';
-$_lang['DM_doc_skip_message2'] = 'در حال حاضر جزیی از گروه پرونده ای انتخاب شده است (اسکیپ کردن یا ترتیب اثر ندادن)';
+$_lang['DM_doc_skip_message1'] = 'پرونده با شناسه ی';
+$_lang['DM_doc_skip_message2'] = 'جزو گروه پرونده ای انتخاب شده است (بی اثر)';
 
 //-- sort menu tab
-$_lang['DM_sort_pick_item'] = 'لطفا شاخه ی اصلی وبگاه(روت) یا پرونده ی سرگروه یا سربخشی را از درختی اصلی پرونده ها انتخاب کنید که تمایل دارید پرونده در آن مرتب قرار داده شود.'; 
-$_lang['DM_sort_updating'] = 'در حال به روز رسانی ...';
-$_lang['DM_sort_updated'] = 'به روز رسانی شد';
-$_lang['DM_sort_nochildren'] = 'سرگروه یا سربخش هیچ زیر شاخه یا زیر بخشی ندارد';
-$_lang['DM_sort_noid']='هیچ پرونده ای انتخاب نشده است. لطفا به عقب بازگشته و پرونده ای را انتخاب کنید.';
+$_lang['DM_sort_pick_item'] = 'لطفا روت سایت یا پرونده ی دست بالا را تمایل به ترتیب دهی دارید را از درختی اصلی پرونده ها کلیک کنید.'; 
+$_lang['DM_sort_updating'] = 'به روز رسانی ...';
+$_lang['DM_sort_updated'] = 'به روز شد';
+$_lang['DM_sort_nochildren'] = 'پرونده ی دست بالا هیپ پرونده ی زیر دستی ندارد';
+$_lang['DM_sort_noid']='هیچ پرونده ای انتخاب نشده است. لطفا برگشته و پرونده ای را انتخاب کنید.';
 
 //-- other tab
-$_lang['DM_other_header'] = 'انواع تنظیمات پرونده';
-$_lang['DM_misc_label'] = 'تنظیمات های موجود:';
-$_lang['DM_misc_desc'] = 'لطفا ابتدا تنظیماتی را از فهرست کشویی سپس حالت مورد نیاز را انتخاب کنید. لطفا توجه داشته باشید که تنها یکی از تنظیمات در آن واحد قابل تغییر است.';
+$_lang['DM_other_header'] = 'تنظیمات مخالف پرونده';
+$_lang['DM_misc_label'] = 'تنظیمات موجود:';
+$_lang['DM_misc_desc'] = 'لطفا از فهرست آبشاری تنظیم مورد نظر خود را انتخاب کنید. لطفا توجه کنید که تنها یک تنظیم در هر زمان قابل اجرا و تغییر است.';
 
-$_lang['DM_other_dropdown_publish'] = 'انتشار / تعلیق';
-$_lang['DM_other_dropdown_show'] = 'نمایش / مخفی کردن در فهرست(منو)';
+$_lang['DM_other_dropdown_publish'] = 'انتشار/تعلیق';
+$_lang['DM_other_dropdown_show'] = 'نمایش/مخفی کردن در فهرست';
 $_lang['DM_other_dropdown_search'] = 'قابل جستجو/غیر قابل جستجو';
-$_lang['DM_other_dropdown_cache'] = 'قابل ذخیره یا کش/غیر قابل ذخیره یا کش';
-$_lang['DM_other_dropdown_richtext'] = 'همراه با ویرایشگر متن/بدون ویرایشگر متن';
-$_lang['DM_other_dropdown_delete'] = 'حذف/بازگردانی از حالت حذف';
+$_lang['DM_other_dropdown_cache'] = 'قابل کش/غیر قابل کش';
+$_lang['DM_other_dropdown_richtext'] = 'ویرایشگر متن/بدون ویرایشگر';
+$_lang['DM_other_dropdown_delete'] = 'حذف/بازگردانی';
 
 //-- radio button text
 $_lang['DM_other_publish_radio1'] = 'انتشار'; 
-$_lang['DM_other_publish_radio2'] = 'تعلیق یا عدم انتشار';
-$_lang['DM_other_show_radio1'] = 'مخقی کردن از فهرست(منو)'; 
-$_lang['DM_other_show_radio2'] = 'نمایش در فهرست(منو)';
+$_lang['DM_other_publish_radio2'] = 'تعلیق';
+$_lang['DM_other_show_radio1'] = 'مخفی کردن در فهرست'; 
+$_lang['DM_other_show_radio2'] = 'نمایش در فهرست';
 $_lang['DM_other_search_radio1'] = 'قابل جستجو'; 
 $_lang['DM_other_search_radio2'] = 'غیر قابل جستجو';
-$_lang['DM_other_cache_radio1'] = 'قابل ذخیره یا کش'; 
-$_lang['DM_other_cache_radio2'] = 'غیر قابل ذخیره یا کش';
+$_lang['DM_other_cache_radio1'] = 'قابل کش'; 
+$_lang['DM_other_cache_radio2'] = 'غیر قابل کش';
 $_lang['DM_other_richtext_radio1'] = 'ویرایشگر متن'; 
-$_lang['DM_other_richtext_radio2'] = 'بدون ویرایشگر متن';
+$_lang['DM_other_richtext_radio2'] = 'بدون ویرایشگر';
 $_lang['DM_other_delete_radio1'] = 'حذف'; 
-$_lang['DM_other_delete_radio2'] = 'برگردانی از حذف';
+$_lang['DM_other_delete_radio2'] = 'بازگردانی';
 
 //-- adjust dates 
-$_lang['DM_adjust_dates_header'] = 'تنظیم تاریخ پرونده';
-$_lang['DM_adjust_dates_desc'] = 'هر یک از تنظیمات تاریخ پرونده قابل تغییر می باشد. با استفاده از حالت "مرور تقویم" تاریخ را تنظیم کنید.';
+$_lang['DM_adjust_dates_header'] = 'تنظیم تاریخ پرونده ها';
+$_lang['DM_adjust_dates_desc'] = 'هر یک از تنظیمات مربوط به تاریخ پرونده در زیر قابل تغییر است. بوسیله ی تنظیمات "مرور تقویم" تاریخ را تنظیم کنید.';
 $_lang['DM_view_calendar'] = 'مرور تقویم';
 $_lang['DM_clear_date'] = 'پاک کردن تاریخ';
 
 //-- adjust authors
-$_lang['DM_adjust_authors_header'] = 'انتخاب ویراستاران';
-$_lang['DM_adjust_authors_desc'] = 'برای تعیین ویراستاران جدید پرونده از فهرست(منو) کشویی استفاده کنید.';
+$_lang['DM_adjust_authors_header'] = 'تنظیم نویسنده ها';
+$_lang['DM_adjust_authors_desc'] = 'از لیست آبشاری زیر نویسنده جدید را برای پرونده انتخاب کنید.';
 $_lang['DM_adjust_authors_createdby'] = 'ایجاد شده توسط:';
 $_lang['DM_adjust_authors_editedby'] = 'ویرایش شده توسط:';
 $_lang['DM_adjust_authors_noselection'] = 'بدون تغییر';
 
  //-- labels
 $_lang['DM_date_pubdate'] = 'تاریخ انتشار:';
-$_lang['DM_date_unpubdate'] = 'تاریخ تعلیق یا خروج از انتشار:';
+$_lang['DM_date_unpubdate'] = 'تاریخ تعلیق:';
 $_lang['DM_date_createdon'] = 'ایجاد شده در تاریخ:';
 $_lang['DM_date_editedon'] = 'ویرایش شده در تاریخ:';
-//$_lang['DM_date_deletedon'] = 'Deleted On Date';
+//$_lang['DM_date_deletedon'] = 'حذف شده در تاریخ:';
 
 $_lang['DM_date_notset'] = ' (بدون تنظیم)';
 //deprecated
@@ -126,38 +125,38 @@ $_lang['DM_date_dateselect_label'] = 'انتخاب تاریخ: ';
 
 //-- document select section
 $_lang['DM_select_submit'] = 'ارسال';
-$_lang['DM_select_range'] = 'برای انتخاب بازه ی شناسه ی پرونده ها به عقب برگردید';
-$_lang['DM_select_range_text'] = '<p><strong>کلید (که ایکس شماره ی شناسه ی پرونده است):</strong><br /><br />
-							  ایکس* - اعمال تغییرات در تنظیمات این پرونده و اولین سطح از زیرشاخه و بخش<br /> 
-							  ایکس** - اعمال تغییرات در تنظیمات این پرونده و کلیه ی زیرشاخه و بخش آن<br /> 
-							  ایکس-ایکس2 - اعمال تغییر در این بازه از پرونده ها<br /> 
-							  ایکس - اعمال تغییرات در تنظیمات یک پرونده</p> 
-							  <p>مثال: 1*,4**,2-20,25 - این تنظیمات انتخاب شده را تغییر می دهد
-						      برای پرونده های 1 و زیربخش های آن, پرونده ی شماره ی 4 و همه ی زیر بخش های آن, پرونده های شماره ی 2 
-						      تا شماره ی 20 و پرونده ی شماره ی 25.</p>';
+$_lang['DM_select_range'] = 'برای انتخاب و تنظیم بازه ی پرونده به عقب برگردید';
+$_lang['DM_select_range_text'] = '<p><strong>توضیح (n شناسه ی پرونده است):</strong><br /><br />
+							  n* - تنظیمات برای این پرونده و اولین سری از پرونده های زیر دست اعمال شود.<br /> 
+							  n** - تغییر تنظیمات برای این پرونده و کلیه پرونده های زیر دست.<br /> 
+							  n-n2 - تغییرات در بازه مشخص از پرونده ها اعمال شود<br /> 
+							  n - تنظیمات فقط برای همین پرونده اعمال شود</p> 
+							  <p>مثال: 1*,4**,2-20,25 - این تغییرات انتخاب شده را اعمال می کند
+						      برای پرونده های شماره ی 1 و زیر دستهای آن, پرونده ی 4 و همه ی زیر دستی ها آن, پرونده های 2 
+						      الی 20 و پرونده ی با شناسه ی 25.</p>';
 $_lang['DM_select_tree'] ='مرور و انتخاب پرونده ها با استفاده از درختی پرونده ها';
 
 //-- process tree/range messages
-$_lang['DM_process_noselection'] = 'هیچ انتخابی انجام نشده. ';
-$_lang['DM_process_novalues'] = 'هیچ مقداری وارد نشده.';
-$_lang['DM_process_limits_error'] = 'حد بالایی کمتر از حد پایین است:';
-$_lang['DM_process_invalid_error'] = 'مقدار نادرست:';
-$_lang['DM_process_update_success'] = 'به روز رسانی موفقیت آمیز بود, بدون خطا.';
-$_lang['DM_process_update_error'] = 'بروز رسانی انجام شد اما همراه خطا انجام شد:';
+$_lang['DM_process_noselection'] = 'انتخابی صورت نگرفته. ';
+$_lang['DM_process_novalues'] = 'هیچ مقداری مشخص نشده.';
+$_lang['DM_process_limits_error'] = 'حدود بالایی کمتر از مقدار حدود پایینی است:';
+$_lang['DM_process_invalid_error'] = 'مقدار اشتباه:';
+$_lang['DM_process_update_success'] = 'به روز رسانی موفقیت آمیز بود, بدون هیچ ایرادی.';
+$_lang['DM_process_update_error'] = 'به روز رسانی با ایراد انجام شد:';
 $_lang['DM_process_back'] = 'عقب';
 
 //-- manager access logging
-$_lang['DM_log_template'] = 'مدیریت پرونده: پوسته ها یا قالبها تغییر داده شده.';
-$_lang['DM_log_templatevariables'] = 'مدیریت پرونده: متغیرهای پوسته یا قالب تغییر داده شد.';
-$_lang['DM_log_docpermissions'] ='مدیریت پرونده: سطوح دسترسی پرونده عوض شد.';
-$_lang['DM_log_sortmenu']='مدیریت پرونده: عملیات روی فهرست(منو) موفقیت آمیز بود.';
-$_lang['DM_log_publish']='مدیریت پرونده: تنظیمات انتشار یا تعلیق پرونده عوض شد.';
-$_lang['DM_log_hidemenu']='مدیریت پرونده: تنظیمات نمایش یا مخفی کردن در فهرست(منو) عوض شد.';
-$_lang['DM_log_search']='مدیریت پرونده: تنظیمات قابلیت جستجو یا عدم آن در پرونده عوض شد.';
-$_lang['DM_log_cache']='مدیریت پرونده: تنظیمات ذخیره یا کش پرونده عوض شد.';
-$_lang['DM_log_richtext']='مدیریت پرونده: تنظیمات استفاده یا عدم استفاده از ویرایشگر متون عوض شد.';
-$_lang['DM_log_delete']='مدیریت پرونده: تنظیمات حذف/خروج از حذف پرونده عوض شد.';
-$_lang['DM_log_dates']='مدیریت پرونده: تنظیمات تاریخ پرونده عوض شد.';
-$_lang['DM_log_authors']='مدیریت پرونده: تنظیمات ویراستار پرونده عوض شد.';
+$_lang['DM_log_template'] = 'مدیریت پرونده: پوسته و قالبها عوض شد.';
+$_lang['DM_log_templatevariables'] = 'مدیریت پرونده: متغییرهای پوسته یا قالب عوض شد.';
+$_lang['DM_log_docpermissions'] ='مدیریت پرونده: سطوح دسترسی پرونده تغییر کرد.';
+$_lang['DM_log_sortmenu']='مدیریت پرونده: پردازش فهرست کامل شد.';
+$_lang['DM_log_publish']='مدیریت پرونده: تنظیمات انتشار/تعلیق پرونده ها تغییر یافت.';
+$_lang['DM_log_hidemenu']='مدیریت پرونده: تنظیمات مخفی کردن/نمایش در فهرست تغییر یافت.';
+$_lang['DM_log_search']='مدیریت پرونده: تنظیمات قابل جستجو/غیرقابل جستجو بودن پرونده ها تغییر یافت.';
+$_lang['DM_log_cache']='مدیریت پرونده: تنظیمات قابل کش/غیر قابل کش بودن پرونده ها تغییر یافت.';
+$_lang['DM_log_richtext']='مدیریت پرونده: تنظیمات مربوط به استفاده از ویرایشگر متن تغییر یافت.';
+$_lang['DM_log_delete']='مدیریت پرونده: تنظیمات حذف/بازگردانی پرونده ها تغییر یافت.';
+$_lang['DM_log_dates']='مدیریت پرونده: تنظیمات تاریخ پرونده ها تغییر یافت.';
+$_lang['DM_log_authors']='مدیریت پرونده: تنظیمات مربوط به نویسندگان تغییر کرد.';
 
 ?>

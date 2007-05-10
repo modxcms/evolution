@@ -45,7 +45,7 @@ REPLACE INTO `{PREFIX}site_content` VALUES (4, 'document', 'text/html', '[*login
 REPLACE INTO `{PREFIX}site_content` VALUES (5, 'document', 'text/html', 'Request an Account', 'Sign Up for Full Site Privileges', '', 'request-an-account', '', 1, 0, 0, 0, 0, '', '[[WebSignup? &tpl=`FormSignup` &groups=`Registered Users`]]', 1, 4, 3, 0, 0, 1, 1144904400, 1, 1158320704, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 1);
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (6, 'document', 'text/html', 'Contact Us', 'Contact [(site_name)]', '', 'contact-us', '', 1, 0, 0, 0, 0, '', '[!eForm? &formid=`ContactForm` &subject=`[+subject+]` &to=`[(email_sender)]` &ccsender=`1` &tpl=`ContactForm` &report=`ContactFormReport` &gotoid=`46`  !]\r\n', 0, 4, 14, 1, 0, 1, 1144904400, 1, 1159303922, 0, 0, 0, 0, 0, 'Contact us', 0, 0, 0, 0, 0, 0, 0);
+REPLACE INTO `{PREFIX}site_content` VALUES (6, 'document', 'text/html', 'Contact Us', 'Contact [(site_name)]', '', 'contact-us', '', 1, 0, 0, 0, 0, '', '[!eForm? &formid=`ContactForm` &subject=`[+subject+]` &to=`[(email_sender)]` &ccsender=`1` &tpl=`ContactForm` &report=`ContactFormReport` &invalidClass=`invalidValue` &requiredClass=`requiredValue` &cssStyle=`ContactStyles` &gotoid=`46`  !]\r\n', 0, 4, 14, 1, 0, 1, 1144904400, 1, 1159303922, 0, 0, 0, 0, 0, 'Contact us', 0, 0, 0, 0, 0, 0, 0);
 
 
 REPLACE INTO `{PREFIX}site_content` VALUES (7, 'document', 'text/html', '404 - Document Not Found', 'Uh oh ... it''s a 404! (Page Not Found)', '', 'doc-not-found', '', 1, 0, 0, 0, 0, '', '<p>Looks like you tried to go somewhere that does not exist... perhaps you <a href="">need to login</a> or you''d like one of the following pages instead:</p>\r\n\r\n[[Wayfinder? &startId=`0` &showDescription=`1`]]\r\n\r\n<h3>Want to find it the old fashioned way? Use the site search at the top of this site to find what you seek.</h3>\r\n\r\n', 1, 4, 4, 0, 1, 1, 1144904400, 1, 1159301173, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 1);
@@ -159,6 +159,10 @@ REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (17, 'ContactFormReport', '', 0,
 
 
 REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (18, 'reflect_month_tpl', 'For the yearly archive. Use with Ditto.', 0, 3, 0, '<a href="[+url+]" title="[+month+] [+year+]" class="reflect_month_link">[+month+] [+year+]</a>', 0);
+
+
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (19, 'ContactStyles', 'Styles for form validation', 0, 5, 0, '<style type="text/css">\r\ndiv.errors{ color:#F00; }\r\n#EmailForm .invalidValue{ background: #FFDFDF; border:1px solid #F00; }\r\n#EmailForm .requiredValue{ background: #FFFFDF; border:1px solid #F00; }\r\n</style>', 0);
+
 
 
 #

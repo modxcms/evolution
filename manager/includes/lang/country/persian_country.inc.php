@@ -3,7 +3,7 @@
 * Country List Language File
 * Version: 1.0
 * Date: 13/12/2006
-* persian/Farsi Translation and Arrangement by: Mohsen.H.Z.
+* Translation: Mohsen (MotSmart ~ www.modxcms.ir)
 * Array keys refer to the ID number that is saved in the database
 *
 */
@@ -203,7 +203,7 @@ $_country_lang["190"] = 'اسلوانی'; // Slovenia
 $_country_lang["191"] = 'جزایر سولومون'; // Solomon Islands
 $_country_lang["192"] = 'سومالی'; // Somalia
 $_country_lang["193"] = 'آفریقای جنوبی'; // South Africa
-$_country_lang["194"] = 'گرجستان و جزایر جنوبی ساندویچ'; // South Georgia and the South Sandwich Islands
+$_country_lang["194"] = 'گرجستان و جزایر جنوبی سندویچ'; // South Georgia and the South Sandwich Islands
 $_country_lang["195"] = 'اسپانیا'; // Spain
 $_country_lang["196"] = 'سری لانکا'; // Sri Lanka
 $_country_lang["197"] = 'ست هلنا'; // St. Helena

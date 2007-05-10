@@ -39,7 +39,7 @@ $_lang['next'] = "Next &gt;";
 
 $_lang['button_splitter'] = "|";
 
-$_lang['default_copyright'] = "[(site_name)] 2006";
+$_lang['default_copyright'] = "[(site_name)] 2007";
 
 $_lang['invalid_class'] = "The Ditto class is invalid. Please check it.";
 

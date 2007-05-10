@@ -3,8 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC3 (rev 2600 - April 25, 2007)
+MODx 0.9.6-RC3 (rev 2687 - May 10, 2007)
 ====================================
+* [FS#641] incorporate better i18n to ASCII conversion for automatic alias creation (2680)
+* [FS#851] non-existant 3.php for sorting the tree menu (2679)
+* Add Italian 096 (2637)
+* Update demo content to use better contact form (thanks TobyL) (2627)
+* Add Persian 096 (2626)
 * Corrected configuration editor for tree_show_protected setting. (2596)
 * Removed upgrade note regarding logging out of manager; was causing confusion. (2596)
 * [FS#843] @INHERIT would not inherit a value of '0' (2595)

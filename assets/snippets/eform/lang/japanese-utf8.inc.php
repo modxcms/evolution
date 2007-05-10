@@ -4,6 +4,10 @@
 * 日本語 language file for eForm
 */
 
+//-- JAPANESE LANGUAGE FILE ENCODED IN UTF-8
+include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
+/* Set locale to Japanese */
+setlocale (LC_ALL, 'ja_JP');
 
 $_lang["ef_thankyou_message"] = "<h3>ありがとうございます。</h3><p>入力された情報は無事送信されました。</p>";
 $_lang["ef_no_doc"] = "テンプレートのドキュメントまたはチャンクが見つかりません。 id=";
