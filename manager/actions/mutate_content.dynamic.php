@@ -50,7 +50,8 @@ if ($action == 27) {
 } 
 
 // check to see the document isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.`" . $table_prefix . "active_users` WHERE $dbase.`" . $table_prefix . "active_users`.action=27 AND $dbase.`" . $table_prefix . "active_users`.id=$id";
+$sql =	"SELECT internalKey, username FROM ".$modx->getFullTableName('active_users') .
+	"WHERE action='27' AND id='$id'";
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 if ($limit > 1) {
