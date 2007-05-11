@@ -429,7 +429,11 @@ if (isset ($_POST['plugin'])) {
 					    return;
 					}
 			    } else {
-			    	if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled) VALUES('$name','$desc','$plugin','$properties','$guid','1');",$sqlParser->conn)) {
+			    	if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE name='$name';", $sqlParser->conn)) {
+						echo "<p>".mysql_error()."</p>";
+						return;
+					}
+			        if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled) VALUES('$name','$desc','$plugin','$properties','$guid','0');",$sqlParser->conn)) {
 						echo "<p>".mysql_error()."</p>";
 						return;
 			    	}
@@ -444,7 +448,7 @@ if (isset ($_POST['plugin'])) {
 			}
 			// add system events
 			if (count($events) > 0) {
-				$ds = mysql_query("SELECT id FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name';", $sqlParser->conn);
+				$ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_plugins` WHERE name='$name' AND description='$desc';",$sqlParser->conn); 
 				if ($ds) {
 					$row = mysql_fetch_assoc($ds);
 					$id = $row["id"];

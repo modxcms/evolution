@@ -613,6 +613,9 @@ class DocumentParser {
             // insert keywords
             $keywords= implode(", ", $this->getKeywords());
             $metas= "\t<meta name=\"keywords\" content=\"$keywords\" />\n";
+
+	    // Don't process when cached
+	    $this->documentObject['haskeywords'] = '0';
         }
         if ($this->documentObject['hasmetatags'] == 1) {
             // insert meta tags
@@ -623,8 +626,11 @@ class DocumentParser {
                 $tagstyle= $col['http_equiv'] ? 'http-equiv' : 'name';
                 $metas .= "\t<meta $tagstyle=\"$tag\" content=\"$tagvalue\" />\n";
             }
+
+	    // Don't process when cached
+	    $this->documentObject['hasmetatags'] = '0';
         }
-        $template= preg_replace("/(<head>)/i", "\\1\n" . $metas, $template);
+	if ($metas) $template = preg_replace("/(<head>)/i", "\\1\n\t" . trim($metas), $template);
         return $template;
     }
 
@@ -976,6 +982,8 @@ class DocumentParser {
             $source= $this->mergeSettingsContent($source);
             // replace HTMLSnippets in document
             $source= $this->mergeChunkContent($source);
+	    // insert META tags & keywords
+	    $source= $this->mergeDocumentMETATags($source);
             // find and merge snippets
             $source= $this->evalSnippets($source);
             // find and replace Placeholders (must be parsed last) - Added by Raymond
@@ -1166,9 +1174,10 @@ class DocumentParser {
 
             // Insert META tags & keywords - template must have a <head> tag
             // note: we do it here so we can process things like [*TVs*] and [+placeholders+] from inside META tags
+	    /* Moved to parseDocumentSource() *
             if ($this->documentObject['hasmetatags'] == 1 || $this->documentObject['haskeywords'] == 1) {
                 $this->documentContent= $this->mergeDocumentMETATags($this->documentContent);
-            }
+            }/**/
 
             // Parse document source
             $this->documentContent= $this->parseDocumentSource($this->documentContent);

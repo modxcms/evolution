@@ -3,11 +3,12 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC3 (rev 2687 - May 10, 2007)
+MODx 0.9.6-RC3 (rev 2688 - May 10, 2007)
 ====================================
 * [FS#641] incorporate better i18n to ASCII conversion for automatic alias creation (2680)
 * [FS#851] non-existant 3.php for sorting the tree menu (2679)
 * Add Italian 096 (2637)
+* [FS#848] META Tags and keywords now merge correctly in to the document. (2631)
 * Update demo content to use better contact form (thanks TobyL) (2627)
 * Add Persian 096 (2626)
 * Corrected configuration editor for tree_show_protected setting. (2596)

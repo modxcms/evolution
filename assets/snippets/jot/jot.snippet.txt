@@ -11,7 +11,7 @@
 #
 ####*/
 
-$jotPath = $modx->config['base_dir'] . 'assets/snippets/jot/';
+$jotPath = $modx->config['base_path'] . 'assets/snippets/jot/';
 include_once($jotPath.'jot.class.inc.php');
 
 $Jot = new CJot;

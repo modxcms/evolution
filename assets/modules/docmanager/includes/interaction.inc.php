@@ -674,7 +674,7 @@ function updateHeader() {
 	global $siteURL;
 	global $_lang;
 
-	$output = '<html'.$modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : ''.' lang="'.$modx->config['manager_lang_attribute'].'" xml:lang="'.$modx->config['manager_lang_attribute'].'"><head>
+	$output = '<html'.($modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : '').' lang="'.$modx->config['manager_lang_attribute'].'" xml:lang="'.$modx->config['manager_lang_attribute'].'"><head>
 							<title>Update</title>
 							<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" />';
 	$output.='				<style type="text/css"> 
