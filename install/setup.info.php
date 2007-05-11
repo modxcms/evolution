@@ -7,8 +7,6 @@
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
-	$moduleWhatsNewFile = "setup.whatsnew.html";
-	$moduleWhatsNewTitle = "What's New";
 
 	# setup chunks template files - array : name, description, type - 0:file or 1:content, file or content
 	$mc = &$moduleChunks;

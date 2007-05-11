@@ -33,8 +33,8 @@ var QuickEdit = new Class({
   this.cookieDuration = 365; // days
 
   this.toolbar = toolbar;
-  this.menu = $E('ul',toolbar);
-  this.title = $E('h1',toolbar);
+  this.menu = $E('ul',this.toolbar);
+  this.title = $E('h1',this.toolbar);
   this.buttons = $ES('li','QE_Toolbar');
   this.buttons.each(function(button,i) {
    if(!button.parentNode==this.menu) { this.buttons.remove(this.buttons[i]); }
@@ -73,9 +73,8 @@ var QuickEdit = new Class({
 
   // Draggable toolbar title
   this.toolbar.makeDraggable({
-   handle: $E('h1',toolbar),
-   onStart:function() { this.toolbar.setStyle('opacity',0.5); }.bind(this),
-   onComplete: function(x,y) { this.toolbar.setStyle('opacity',1);Cookie.set('QE_position', this.toolbar.getLeft()+'/'+this.toolbar.getTop(), {duration:this.cookieDuration}); }.bind(this)
+   handle: $E('h1',this.toolbar),
+   onComplete: function(x,y) {Cookie.set('QE_position', this.toolbar.getLeft()+'/'+this.toolbar.getTop(), {duration:this.cookieDuration}); }.bind(this)
   });
 
   // Reposition toolbar
