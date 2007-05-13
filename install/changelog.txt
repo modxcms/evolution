@@ -3,7 +3,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6-RC3 (rev 2695 - May 11, 2007)
+MODx 0.9.6 (rev 2700 - May 13, 2007)
 ====================================
 * QuickEdit fixes for IE6 and IE7. (2694)
 * Fix Document locking bug. (2689)
