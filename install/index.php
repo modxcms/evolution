@@ -94,6 +94,20 @@ if (count($_POST) && isset ($_POST['installmode'])) {
     if ($installMode && (!isset ($database_connection_charset) || !$database_connection_charset)) {
         $installMode = 2;
         $upgradeable = 2;
+
+        // check the database collation if not specified in the configuration
+	    if (!isset ($database_connection_charset) || empty ($database_connection_charset)) {
+	        if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
+	            $rs = @ mysql_query("show session variables like 'collation_server'");
+	        }
+	        if ($rs && $collation = mysql_fetch_row($rs)) {
+	            $database_collation = $collation[1];
+	        }
+	        if (!empty ($database_collation)) {
+		        $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
+		        $database_connection_charset = $database_charset;
+	        }
+	    }
     }
 } else {
     $installMode = !$upgradeable ? 0 : $upgradeable;
@@ -285,7 +299,7 @@ function buildConnectionScreen() {
         $database_name = empty ($dbase) ? 'modx' : trim($dbase, '`');
         $table_prefix = empty ($table_prefix) ? 'modx_' : $table_prefix;
         $database_server = empty ($database_server) ? 'localhost' : $database_server;
-        $database_collation = empty ($database_collation) ? 'utf8_unicode_ci' : $database_collation;
+        $database_collation = empty ($database_collation) ? 'utf8_general_ci' : $database_collation;
         $database_connection_charset = empty ($database_connection_charset) ? 'utf8' : $database_connection_charset;
     }
     ob_start();
@@ -297,10 +311,19 @@ function buildConnectionScreen() {
 	<input id="database_name" value="<?php echo isset($_POST['database_name']) ? $_POST['database_name']:$database_name ?>" name="database_name" /></div>
 	<div class="labelHolder"><label for="tableprefix">Table prefix:</label>
 	<input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']:$table_prefix ?>" name="tableprefix" /></div>
+<?php
+    if ($installMode == 0) {
+?>
 	<div class="labelHolder"><label for="database_collation">Collation:</label>
 	<input id="database_collation" value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']:$database_collation ?>" name="database_collation" /></div>
+<?php
+    } else {
+?>
 	<div class="labelHolder"><label for="database_connection_charset">Connection character set:</label>
 	<input id="database_connection_charset" value="<?php echo isset($_POST['database_connection_charset']) ? $_POST['database_connection_charset']:$database_connection_charset ?>" name="database_connection_charset" /></div>
+<?php
+    }
+?>
 	<br />
 	<p>Now please enter the login data for your database.</p>
 	<br />
@@ -562,21 +585,6 @@ function buildSummaryScreen() {
     if ($installMode > 0 && !@ mysql_query("USE {$dbase}")) {
         $errors += 1;
         echo "<span class=\"notok\">Database could not be selected!</span><p />Please check the database permissions for the specified user and try again.</p>";
-    }
-
-    // check the database collation if not specified in the configuration
-    if (!isset ($database_connection_charset) || empty ($database_connection_charset)) {
-        if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
-            $rs = @ mysql_query("show session variables like 'collation_server'");
-        }
-        if ($rs && $collation = mysql_fetch_row($rs)) {
-            $database_collation = $collation[1];
-        }
-        if (empty ($database_collation)) {
-            $database_collation = 'utf8_unicode_ci';
-        }
-        $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
-        $database_connection_charset = $database_charset;
     }
 
     // check table prefix

@@ -3,19 +3,19 @@
  * Written By Jeff Whitfield - September 9, 2005
  * Modified On - February 1, 2007
  *
- * Version 2.1.1
+ * Version 2.1.1.1
  *
  * Events: OnRichTextEditorInit, OnRichTextEditorRegister, OnInterfaceSettingsRender
  *
  */
 
-include_once $modx->config['base_path'].'assets/plugins/tinymce211/tinymce.lang.php';
-include_once $modx->config['base_path'].'assets/plugins/tinymce211/tinymce.functions.php';
+include_once $modx->config['base_path'].'assets/plugins/tinymce2111/tinymce.lang.php';
+include_once $modx->config['base_path'].'assets/plugins/tinymce2111/tinymce.functions.php';
 
 // Set path and base setting variables
 if(!isset($tinyPath)) { 
 	global $tinyPath;
-	$tinyPath = $modx->config['base_path'].'assets/plugins/tinymce211'; 
+	$tinyPath = $modx->config['base_path'].'assets/plugins/tinymce2111'; 
 }
 $base_url = $modx->config['base_url'];
 $displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') ) ? "table-row" : "block" ;

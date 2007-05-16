@@ -126,7 +126,7 @@ $modx->manager->initPageViewState();
         			<option value="rating;0">rating</option>
         			<option value="refresh;0">refresh</option>
         			<option value="reply-to;0">reply-to</option>
-        			<option value="revisit-after;0">revist-after</option>
+        			<option value="revisit-after;0">revisit-after</option>
         			<option value="robots;0">robots</option>
         			<option value="subject;0">subject</option>
         			<option value="title;0">title</option>

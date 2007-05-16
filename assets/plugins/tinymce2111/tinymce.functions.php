@@ -155,7 +155,7 @@ if (!function_exists('getTinyMCEScript')) {
 		// Advanced options		
 		if($theme == "editor" || $theme == "custom"){
 			if($frontend=='false'){
-				$tinymceInit .= ($linklist == 'enabled') ? "		  external_link_list_url : \"".$base_url."assets/plugins/tinymce211/tinymce.linklist.php\",\n" : "";
+				$tinymceInit .= ($linklist == 'enabled') ? "		  external_link_list_url : \"".$base_url."assets/plugins/tinymce2111/tinymce.linklist.php\",\n" : "";
 				$tinymceInit .= ($use_browser==1 ? "		  resource_browser_path : \"".$base_url."manager/media/browser/mcpuk/browser.html?Connector=".$base_url."manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=".$base_url."\",\n" : "");
 				$tinymceInit .= ($use_browser==1 ? "		  file_browser_callback : \"fileBrowserCallBack\",\n":"");
 
@@ -192,8 +192,8 @@ TINY_CALLBACK;
 		$tinymceInit .= "		  button_tile_map : false \n";
 
 $script = <<<TINY_SCRIPT
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce211/jscripts/tiny_mce/tiny_mce.js"></script>
-<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce211/xconfig.js"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce2111/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="javascript" type="text/javascript" src="{$base_url}assets/plugins/tinymce2111/xconfig.js"></script>
 <script language="javascript" type="text/javascript">
 	tinyMCE.init({
 {$tinymceInit}
