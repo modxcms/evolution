@@ -1,3 +1,4 @@
+<p class="title">Install results</p>
 <?php
 ob_start();
 include "instprocessor.php";

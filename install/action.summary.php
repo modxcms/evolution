@@ -1,6 +1,6 @@
 <?php
 $installMode = intval($_POST['installmode']);
-
+echo "<p class=\"title\">Pre-install validation</p>";
 echo "<p>Setup has carried out a number of checks to see if everything's ready to start the setup.</p>";
 $errors = 0;
 // check PHP version
@@ -57,20 +57,6 @@ if (!is_writable("../assets/cache/sitePublishing.idx.php")) {
 } else {
     echo "<span class=\"ok\">OK!</span></p>";
 }
-//	echo "<p>Checking if <span class=\"mono\">assets/cache/siteSnippets.cache.php</span> file is writable: ";
-//	if(!is_writable("../assets/cache/siteSnippets.cache.php")) {
-//		echo "<span class=\"notok\">Failed!</span></p>";
-//		$errors += 1;
-//	} else {
-//		echo "<span class=\"ok\">OK!</span></p>";
-//	}
-//	echo "<p>Checking if <span class=\"mono\">assets/cache/sitePlugins.cache.php</span> file is writable: ";
-//	if(!is_writable("../assets/cache/sitePlugins.cache.php")) {
-//		echo "<span class=\"notok\">Failed!</span></p>";
-//		$errors += 1;
-//	} else {
-//		echo "<span class=\"ok\">OK!</span></p>";
-//	}
 // images exists?
 echo "<p>Checking if <span class=\"mono\">assets/images</span> directory exists: ";
 if (!file_exists("../assets/images")) {
@@ -130,7 +116,7 @@ if ($installMode == 1) {
     $database_collation = $_POST['database_collation'];
     $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
     $database_connection_charset = $_POST['database_connection_charset'];
-    $dbase = $_POST['database_name'];
+    $dbase = '`' . $_POST['database_name'] . '`';
     $table_prefix = $_POST['tableprefix'];
 }
 echo "<p>Creating connection to the database: ";
@@ -213,6 +199,7 @@ MODx Forums</a>.</p>
 echo "<p>&nbsp;</p>";
 
 $nextAction= $errors > 0 ? 'summary' : 'install';
+$nextButton= $errors > 0 ? 'Retry' : 'Install';
 
 ?>
 <form name="install" action="index.php?action=<?php echo $nextAction ?>" method="post">
@@ -248,7 +235,7 @@ foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]
 ?>
 	</div>
 	<div id="navbar">
-		<input type="submit" value="Next" name="cmdnext" style="float:right;width:100px;" />
+		<input type="submit" value="<?php echo $nextButton ?>" name="cmdnext" style="float:right;width:100px;" />
 		<span style="float:right">&nbsp;</span>
 		<input type="submit" value="Back" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=options';this.form.submit();return false;" />
 	</div>

@@ -8,16 +8,17 @@
  * 		Mark Kaplan for MODx CMF
  * 
  * Version: 
- * 		1.0.2
+ * 		2.1.SVN
  * 
  * Note: 
- * 		 If Reflect is not retrieving its own documents, make sure that the
- *		 Ditto call feeding it has all of the fields in it that you plan on
+ * 		If Reflect is not retrieving its own documents, make sure that the
+ *			Ditto call feeding it has all of the fields in it that you plan on
  *       calling in your Reflect template. Furthermore, Reflect will ONLY
- * 		 show what is currently in the Ditto result set.
+ *			show what is currently in the Ditto result set.
  *       Thus, if pagination is on it will ONLY show that page's items.
 */
  
+
 // ---------------------------------------------------
 //  Includes
 // ---------------------------------------------------
@@ -55,7 +56,7 @@ $config = (isset($config)) ? $config : "default";
 */
 
 require((substr($config, 0, 5) != "@FILE") ? $reflect_base."configs/$config.config.php" : $modx->config['base_path'].trim(substr($config, 5)));
-
+require($reflect_base."default.templates.php");
 
 
 // ---------------------------------------------------
@@ -65,7 +66,7 @@ require((substr($config, 0, 5) != "@FILE") ? $reflect_base."configs/$config.conf
 $id = isset($id) ? $id."_" : false;
 /*
 	Param: id
-	
+
 	Purpose:
 	Unique ID for this Ditto instance for connection with other scripts (like Reflect) and unique URL parameters
 
@@ -149,7 +150,7 @@ $dateSource = isset($dateSource) ? $dateSource : "createdon";
 $dateFormat = isset($dateFormat) ? $dateFormat : "%d-%b-%y %H:%M";	
 /*
 	Param: dateFormat
-	
+
 	Purpose:
 	Format the [+date+] placeholder in human readable form
 
@@ -202,7 +203,7 @@ $start = isset($start)? intval($start) : 0;
 
 	Purpose:
  	Number of documents to skip in the results
-
+	
 	Options:
 	Any number
 
@@ -223,29 +224,6 @@ $phx = (isset($phx))? $phx : 1;
 	Default:
 	1 - on
 */
-
-// ---------------------------------------------------
-//  Default Templates
-// ---------------------------------------------------
-
-$defaultTemplates['tpl'] = <<<TPL
-<h3>Archives</h3>
-<div class="reflect_archive_list">
-	[+archive_items+]
-</div>
-TPL;
-
-$defaultTemplates['year'] = <<<TPL
-<a href="[+url+]" title="[+year+]" class="reflect_year_link">[+year+]</a>
-TPL;
-
-$defaultTemplates['month'] = <<<TPL
-<a href="[+url+]" title="[+month+] [+year+]" class="reflect_month_link">[+month+]</a>
-TPL;
-
-$defaultTemplates['item'] = <<<TPL
-<a href="[~[+id+]~]" title="[+pagetitle+]" class="reflect_item_link">[+pagetitle+]</a> (<span class="reflect_date">[+date+]</span>)
-TPL;
 
 // ---------------------------------------------------
 //  Initialize Ditto
@@ -304,7 +282,6 @@ if ($placeholder === false) {
 	$ditto = $modx->getPlaceholder($id."ditto_object");
 	$resource = $modx->getPlaceholder($id."ditto_resource");
 }
-
 if (!is_object($ditto) || !isset($ditto) || !isset($resource)) {
 	return "The Ditto object is invalid. Please check it.";
 }
@@ -326,18 +303,14 @@ $templates['tpl'] = isset($tplContainer) ? $ditto->template->fetch($tplContainer
 	- File via @FILE:
 
 	Default:
-	(code)
-	<h3>Archives</h3>
-	<div class="reflect_archive_list">
-		[+archive_items+]
-	</div>
+	See default.tempates.php
 */
 $templates['year'] = isset($tplYear) ? $ditto->template->fetch($tplYear): $defaultTemplates['year'];
 /*
 	Param: tplYear
 
 	Purpose:
-	Template for the year item (inside of li)
+	Template for the year item
 
 	Options:
 	- Any valid chunk name
@@ -345,15 +318,29 @@ $templates['year'] = isset($tplYear) ? $ditto->template->fetch($tplYear): $defau
 	- File via @FILE:
 
 	Default:
-	(code)
-	<a href="[+url+]" title="[+year+]" class="reflect_year_link">[+year+]</a>
+	See default.tempates.php
+*/
+$templates['year_inner'] = isset($tplYearInner) ? $ditto->template->fetch($tplYearInner): $defaultTemplates['year_inner'];
+/*
+	Param: tplYearInner
+
+	Purpose:
+	Template for the year item (the ul to hold the year template)
+
+	Options:
+	- Any valid chunk name
+	- Code via @CODE:
+	- File via @FILE:
+
+	Default:
+	See default.tempates.php
 */
 $templates['month'] = isset($tplMonth) ? $ditto->template->fetch($tplMonth): $defaultTemplates['month'];
 /*
 	Param: tplMonth
 
 	Purpose:
-	Template for the month item (inside of li)
+	Template for the month item
 
 	Options:
 	- Any valid chunk name
@@ -361,15 +348,29 @@ $templates['month'] = isset($tplMonth) ? $ditto->template->fetch($tplMonth): $de
 	- File via @FILE:
 
 	Default:
-	(code)
-	<a href="[+url+]" title="[+month+] [+year+]" class="reflect_month_link">[+month+]</a>
+	See default.tempates.php
+*/
+$templates['month_inner'] = isset($tplMonthInner) ? $ditto->template->fetch($tplMonthInner): $defaultTemplates['month_inner'];
+/*
+	Param: tplMonthInner
+
+	Purpose:
+	Template for the month item  (the ul to hold the month template)
+
+	Options:
+	- Any valid chunk name
+	- Code via @CODE:
+	- File via @FILE:
+
+	Default:
+	See default.tempates.php
 */
 $templates['item'] = isset($tplItem) ? $ditto->template->fetch($tplItem): $defaultTemplates['item'];
 /*
 	Param: tplItem
 
 	Purpose:
-	Template for the individual item (inside of li)
+	Template for the individual item
 
 	Options:
 	- Any valid chunk name
@@ -377,8 +378,7 @@ $templates['item'] = isset($tplItem) ? $ditto->template->fetch($tplItem): $defau
 	- File via @FILE:
 
 	Default:
-	(code)
-	<a href="[~[+id+]~]" title="[+pagetitle+]" class="reflect_item_link">[+pagetitle+]</a> (<span class="reflect_date">[+date+]</span>)
+	See default.tempates.php
 */
 
 $ditto->addField("date","display","custom");
@@ -387,57 +387,70 @@ $ditto->addField("date","display","custom");
 // ---------------------------------------------------
 //  Reflect
 // ---------------------------------------------------
+
 if (function_exists("reflect") === FALSE) {
-function reflect($archiveDocumentID, $showItems, $groupByYears, $resource, $archiveDateSource, $dateFormat, $ditto, $archive,$id,$start,$yearSortDir,$monthSortDir) {
+function reflect($templatesDocumentID, $showItems, $groupByYears, $resource, $templatesDateSource, $dateFormat, $ditto, $templates,$id,$start,$yearSortDir,$monthSortDir) {
 	global $modx;
 	$cal = array();
 	$output = '';
+	$ph = array('year'=>'','month'=>'','item'=>'','out'=>'');
 	$build = array();
 	$stop = count($resource);
 
 	// loop and fetch all the results
 	for ($i = $start; $i < $stop; $i++) {
-		$date = getdate($resource[$i][$archiveDateSource]);
+		$date = getdate($resource[$i][$templatesDateSource]);
 		$year = $date["year"];
 		$month = $date["mon"];
 		$cal[$year][$month][] = $resource[$i];
 	}
 	if ($yearSortDir == "DESC") {
-	krsort($cal);
+		krsort($cal);
 	} else {
 		ksort($cal);
 	}
 	foreach ($cal as $year=>$months) {
 		if ($monthSortDir == "ASC") {
-		ksort($months);
+			ksort($months);
 		} else {
 			krsort($months);
 		}
 		$build[$year] = $months;
 	}
-	$output .= '<ul class="reflect_archive">';
+	
 	foreach ($build as $year=>$months) {
-		$year_url = $ditto->buildURL("year=".$year."&month=false&day=false&start=0",$archiveDocumentID,$id);
-		if ($groupByYears) $output .=  '<li class="reflect_year">'.str_replace(array("[+year+]","[+url+]"),array($year,$year_url),$archive['year'])."\n\n";	
+		$r_year = '';
+		$r_month = '';
+		$r_month_2 = '';
+		$items = array();
+		
 		foreach ($months as $mon=>$month) {
 			$month_text = $ditto->formatDate(mktime(10, 10, 10, $mon, 10, $year),"%B");
-			$month_url = $ditto->buildURL("month=".$mon."&year=".$year."&day=false&start=0",$archiveDocumentID,$id);
-			if ($groupByYears) $output .=  '<ul>';
-			$output .= '<li class="reflect_month">'.str_replace(array("[+year+]","[+month+]","[+url+]"),array($year,$month_text,$month_url),$archive['month'])."\n";
+			$month_url = $ditto->buildURL("month=".$mon."&year=".$year."&day=false&start=0",$templatesDocumentID,$id);
+			$r_month = str_replace(array("[+year+]","[+month+]","[+url+]"),array($year,$month_text,$month_url),$templates['month']);
 			if ($showItems) {
-				$output .=  '<ul class="reflect_items">'."\n";
-				foreach ($month as $resource) {
-					$output .=  '<li class="reflect_item">'.$ditto->render($resource, $archive['item'], false, $archiveDateSource, $dateFormat, array(),$phx).'</li>';
+				foreach ($month as $item) {
+					$items[$year][$mon]['items'][] = $ditto->render($item, $templates['item'], false, $templatesDateSource, $dateFormat, array(),$phx);
 				}
-				$output .= '</ul>';
+				$r_month_2 = str_replace('[+wrapper+]',implode('',$items[$year][$mon]['items']),$templates['month_inner']);
+				$items[$year][$mon] = str_replace('[+wrapper+]',$r_month_2,$r_month);
+			} else {
+				$items[$year][$mon] = $r_month;
 			}
-			$output .= '</li>';
-			if ($groupByYears) $output .= '</ul>';
 		}
-		if ($groupByYears) $output .= '</li>';
+		if ($groupByYears) {
+			$year_url = $ditto->buildURL("year=".$year."&month=false&day=false&start=0",$templatesDocumentID,$id);
+			$r_year =  str_replace(array("[+year+]","[+url+]"),array($year,$year_url),$templates['year']);
+			$var = str_replace('[+wrapper+]',implode('',$items[$year]),$templates['year_inner']);
+			$output .= str_replace('[+wrapper+]',$var,$r_year);
+		} else {
+			$output .= implode('',$items[$year]);
+		}
 	}
-	$output .= '</ul>';
-return str_replace("[+archive_items+]",$output, $archive['tpl']);
+
+	$output = str_replace('[+wrapper+]',$output,$templates['tpl']);
+
+return $output;
 	
 }
 }

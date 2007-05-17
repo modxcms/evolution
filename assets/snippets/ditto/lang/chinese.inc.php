@@ -9,11 +9,11 @@
  * 		New language keys should added at the bottom of this page
 */
 
-$_lang['language'] = "english";
+$_lang['language'] = "chinese";
 
-$_lang['abbr_lang'] = "en";
+$_lang['abbr_lang'] = "cn";
 
-$_lang['file_does_not_exist'] = "does not exist. Please check the file.";
+$_lang['file_does_not_exist'] = "不存在. 请检查文件.";
 
 $_lang['extender_does_not_exist'] = "extender does not exist. Please check it.";
 

@@ -3,10 +3,13 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6 (rev 2730 - May 17, 2007)
+MODx 0.9.6 (rev 2732 - May 17, 2007)
 ====================================
-* Refactored installer and fixed inconsistent behavior regarding new collation and charset settings when installing or upgrading. (2727)
+* Update Ditto/Reflect to rev 1432 version 2.0.3 (2729)
+* Add partial Chinese UTF8 (2728)
+* New installer to better handle upgrade issues (2727)
 * Update default content to use mootools-based effects (2715)
+* Updated TinyMCE to 2.1.1 (2714)
 * QuickEdit fixes for IE6 and IE7. (2694)
 * Fix Document locking bug. (2689)
 * [FS#641] incorporate better i18n to ASCII conversion for automatic alias creation (2680)

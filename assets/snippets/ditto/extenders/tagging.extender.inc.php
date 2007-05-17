@@ -286,7 +286,7 @@ if(!class_exists("tagging")) {
 				$output = $modx->makeList($tagList, $ulroot='ditto_tag_list', $ulprefix='ditto_tag_', $type='', $ordered=false, $tablevel=0);
 			}
 			
-			return substr($output,0,-1*strlen($this->displayDelimiter));
+			return ($format == "rss" || $format == "xml" || $format == "atom") ? $output : substr($output,0,-1*strlen($this->displayDelimiter));
 		}
 	}
 }

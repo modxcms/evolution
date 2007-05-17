@@ -12,7 +12,7 @@ $dbg_templates["main"] = <<<TPL
 		<script type="text/javascript" src="[+base_url+]/media/script/scriptaculous/prototype.js"></script> 
 		<script type="text/javascript" src="[+base_url+]/media/script/scriptaculous/scriptaculous.js"></script> 
 		<script type="text/javascript" src="[+base_url+]/media/script/tabpane.js"></script>
-		<link rel="stylesheet" type="text/css" href="[+ditto_base_url+]/debug/main.template.css" />
+		<link rel="stylesheet" type="text/css" href="[+ditto_base_url+]/debug/debug.template.css" />
         </head>
 
         <body>

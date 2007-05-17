@@ -49,6 +49,7 @@ if ($installMode > 0) {
 	        } else {
 	            $upgradeable = 1;
 	        }
+	        $database_name= trim($dbase, '`');
 	    } else {
 	        $upgradable= 2;
 	    }
@@ -70,7 +71,7 @@ if ($upgradeable && (!isset ($database_connection_charset) || empty($database_co
     if (empty ($database_collation)) {
         $database_collation = 'utf8_general_ci';
     }
-    $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
+    $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
     $database_connection_charset = $database_charset;
 } else {
     $database_collation = 'utf8_general_ci';
