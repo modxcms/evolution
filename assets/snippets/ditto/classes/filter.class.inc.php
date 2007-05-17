@@ -28,7 +28,9 @@ class filter {
 			}
 		}
 		foreach ($filter["custom"] AS $currentFilter) {
-			$resource = array_filter($resource, $currentFilter);
+			if (is_array($currentFilter)  && count($currentFilter) > 0) {
+				$resource = array_filter($resource, $currentFilter);
+			}
 		}
 		return $resource;
 	}

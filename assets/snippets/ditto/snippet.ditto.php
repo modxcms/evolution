@@ -11,12 +11,12 @@
  * 		Mark Kaplan for MODx CMF
  * 
  * Version: 
- * 		2.1.SVN
+ * 		2.0.2
 */
 
 //---Core Settings---------------------------------------------------- //
 
-$ditto_version = "2.0.3.SVN";
+$ditto_version = "2.0.2";
 	// Ditto version being executed
 
 $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
@@ -296,8 +296,7 @@ $paginate = isset($paginate)? $paginate : 0;
 	Param: paginate
 
 	Purpose:
-	Paginate the results set into pages of &display length.
-	Use &total to limit the number of documents retreived.
+	Paginate the results set into pages of &show lenght
 
 	Options:
 	0 - off
@@ -309,7 +308,7 @@ $paginate = isset($paginate)? $paginate : 0;
 	Related:
 	- <paginateAlwaysShowLinks>
 	- <paginateSplitterCharacter>
-	- <display>
+	- <show>
 */
 $dateSource = isset($dateSource) ? $dateSource : "createdon";
 /*
@@ -376,7 +375,7 @@ $total = isset($total) ? $total : "all";
 	"all" - All documents found
 	
 	Related:
-	- <display>
+	- <show>
 	- <queryLimit>
 */
 $showPublishedOnly = isset($showPublishedOnly) ? $showPublishedOnly : 1;
@@ -402,6 +401,7 @@ $showPublishedOnly = isset($showPublishedOnly) ? $showPublishedOnly : 1;
 	Todo:
 	- Allow when set to 0 show both published and unpublished documents
 */
+
 $showInMenuOnly = isset($showInMenuOnly) ? $showInMenuOnly : 0;
 /*
 	Param: showInMenuOnly
@@ -421,6 +421,7 @@ $showInMenuOnly = isset($showInMenuOnly) ? $showInMenuOnly : 0;
 	- <hideFolders>
 	- <where>
 */
+
 $hideFolders = isset($hideFolders)? $hideFolders : 0;
 /*
 	Param: hideFolders
@@ -434,25 +435,6 @@ $hideFolders = isset($hideFolders)? $hideFolders : 0;
 	
 	Default:
 	0 - keep folders
-	
-	Related:
-	- <seeThruUnpub>
-	- <showInMenuOnly>
-	- <where>
-*/
-$hidePrivate = isset($hidePrivate)? $hidePrivate : 1;
-/*
-	Param: hidePrivate
-
-	Purpose:
-	Don't show documents the guest or user does not have permission to see
-
-	Options:
-	0 - show private documents
-	1 - hide private documents
-	
-	Default:
-	1 - hide private documents
 	
 	Related:
 	- <seeThruUnpub>
@@ -644,7 +626,7 @@ $filter = (isset($filter) || ($filters["custom"] != false) || ($filters["parsed"
 	Param: filter
 
 	Purpose:
-	Removes items not meeting a critera. Thus, if pagetitle == joe then it will be removed.
+	Only show items meeting a criteria
 	Use in the format field,criteria,mode with the comma being the local delimiter
 
 	*Mode* *Meaning*
@@ -809,7 +791,7 @@ $ditto->setDisplayFields($ditto->template->fields,$hiddenFields);
 $ditto->parseFields($placeholders,$seeThruUnpub,$dateSource,$randomize);
 	// parse the fields into the field array
 		
-$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $sortBy, $sortDir, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $hidePrivate, $showInMenuOnly, $where, $keywords, $queryLimit, $display, $filter,$paginate, $randomize);
+$documentIDs = $ditto->determineIDs($IDs, $idType, $ditto->fields["backend"]["tv"], $sortBy, $sortDir, $depth, $showPublishedOnly, $seeThruUnpub, $hideFolders, $showInMenuOnly, $where, $keywords, $queryLimit, $display, $filter,$paginate, $randomize);
 	// retrieves a list of document IDs that meet the criteria and populates the $resources array with them
 $count = count($documentIDs);
 	// count the number of documents to be retrieved
@@ -863,49 +845,28 @@ if ($count > 0) {
 			- <paginate>
 			- <paginateSplitterCharacter>
 		*/
-		$tplPaginatePrevious = isset($tplPaginatePrevious)? $ditto->template->fetch($tplPaginatePrevious) : "<a href='[+url+]' class='ditto_previous_link'>[+lang:previous+]</a>";
+		$tplPaginatePrevious = isset($tplPaginatePrevious)? $ditto->template->fetch($tplPaginatePrevious) : $_lang['prev'];
 		/*
 			Param: tplPaginatePrevious
 
 			Purpose:
-			Template for the previous link
+			Template for the inside of the previous link
 
 			Options:
 			- Any valid chunk name
 			- Code via @CODE
 			- File via @FILE
 
-			Placeholders:
-			url - URL for the previous link
-			lang:previous - value of 'prev' from the language file
+			Default:
+			[LANG]
 		
 			Related:
 			- <tplPaginateNext>
 			- <paginateSplitterCharacter>
 		*/
-		$tplPaginateNext = isset($tplPaginateNext)? $ditto->template->fetch($tplPaginateNext) : "<a href='[+url+]' class='ditto_next_link'>[+lang:next+]</a>";
+		$tplPaginateNext = isset($tplPaginateNext)? $ditto->template->fetch($tplPaginateNext) : $_lang['next'];
 		/*
 			Param: tplPaginateNext
-
-			Purpose:
-			Template for the next link
-
-			Options:
-			- Any valid chunk name
-			- Code via @CODE
-			- File via @FILE
-
-			Placeholders:
-			url - URL for the next link
-			lang:next - value of 'next' from the language file
-		
-			Related:
-			- <tplPaginatePrevious>
-			- <paginateSplitterCharacter>
-		*/
-		$tplPaginateNextOff = isset($tplPaginateNextOff)? $ditto->template->fetch($tplPaginateNextOff) : "<span class='ditto_next_off ditto_off'>[+lang:next+]</span>";
-		/*
-			Param: tplPaginateNextOff
 
 			Purpose:
 			Template for the inside of the next link
@@ -915,73 +876,14 @@ if ($count > 0) {
 			- Code via @CODE
 			- File via @FILE
 
-			Placeholders:
-			lang:next - value of 'next' from the language file
+			Default:
+			[LANG]
 		
 			Related:
 			- <tplPaginatePrevious>
 			- <paginateSplitterCharacter>
 		*/
-		$tplPaginatePreviousOff = isset($tplPaginatePreviousOff)? $ditto->template->fetch($tplPaginatePreviousOff) : "<span class='ditto_previous_off ditto_off'>[+lang:previous+]</span>";
-		/*
-			Param: tplPaginatePreviousOff
-
-			Purpose:
-			Template for the previous link when it is off
-
-			Options:
-			- Any valid chunk name
-			- Code via @CODE
-			- File via @FILE
-
-			Placeholders:
-			lang:previous - value of 'prev' from the language file
-	
-			Related:
-			- <tplPaginatePrevious>
-			- <paginateSplitterCharacter>
-		*/
-		$tplPaginatePage = isset($tplPaginatePage)? $ditto->template->fetch($tplPaginatePage) : "<a class='ditto_page' href='[+url+]'>[+page+]</a>";
-		/*
-			Param: tplPaginatePage
-
-			Purpose:
-			Template for the page link
-
-			Options:
-			- Any valid chunk name
-			- Code via @CODE
-			- File via @FILE
-
-			Placeholders:
-			url - url for the page
-			page - number of the page
-	
-			Related:
-			- <tplPaginatePrevious>
-			- <paginateSplitterCharacter>
-		*/
-		$tplPaginateCurrentPage = isset($tplPaginateCurrentPage)? $ditto->template->fetch($tplPaginateCurrentPage) : "<span class='ditto_currentpage'>[+page+]</span>";
-		/*
-			Param: tplPaginateCurrentPage
-
-			Purpose:
-			Template for the current page link
-
-			Options:
-			- Any valid chunk name
-			- Code via @CODE
-			- File via @FILE
-
-			Placeholders:
-			page - number of the page
-	
-			Related:
-			- <tplPaginatePrevious>
-			- <paginateSplitterCharacter>
-		*/
-		
-		$ditto->paginate($start, $stop, $total, $display, $tplPaginateNext, $tplPaginatePrevious, $tplPaginateNextOff, $tplPaginatePreviousOff, $tplPaginatePage, $tplPaginateCurrentPage, $paginateAlwaysShowLinks, $paginateSplitterCharacter);
+		$ditto->paginate($start, $stop, $total, $display, $tplPaginateNext, $tplPaginatePrevious, $paginateAlwaysShowLinks, $paginateSplitterCharacter);
 			// generate the pagination placeholders
 	}
 
@@ -1011,12 +913,12 @@ if ($count > 0) {
 		$TVs = array_diff($TVs,$ditto->prefetch["fields"]["tv"]);
 			// calculate the difference between the tv fields and those already prefetched
 		$start = 0;
-		$stop = min($display,($queryLimit != 0) ? $queryLimit : $display,count($documentIDs));
+		$stop = min($display,count($documentIDs));
 	} else {
 		$queryLimit = ($queryLimit == 0) ? "" : $queryLimit;
 	}
-	
-	$resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $sortBy, $sortDir, $showPublishedOnly, 0, $hidePrivate, $where, $queryLimit, $keywords, $randomize);
+
+	$resource = $ditto->getDocuments($documentIDs, $dbFields, $TVs, $keywords, $showPublishedOnly, 0, $where, $queryLimit, $sortBy, $sortDir,$randomize);
 		// retrieves documents
 	$output = $header;
 		// initialize the output variable and send the header
@@ -1045,7 +947,7 @@ if ($count > 0) {
 				// send the rendered output to the buffer
 		}
 	} else {
-		$output .= $ditto->noResults($noResults,$paginate);
+		$output .= $noResults;
 			// if no documents are found return a no documents found string
 	}
 	$output .= $footer;
@@ -1060,7 +962,7 @@ if ($count > 0) {
 		$modx->setPlaceholder($dittoID."ditto_resource", ($save == "1") ? array_slice($resource,$display) : $resource);
 	}
 } else {
-	$output = $header.$ditto->noResults($noResults,$paginate).$footer;
+	$output = $header.$noResults.$footer;
 }
 // ---------------------------------------------------
 // Handle Debugging

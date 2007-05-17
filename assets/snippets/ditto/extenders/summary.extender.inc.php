@@ -97,17 +97,17 @@ $trunc_tpl = isset($tplTrunc)? template::fetch($tplTrunc) : false;
 */
 $GLOBALS['ditto_summary_link'] = "";
 $GLOBALS['ditto_summary_params'] = compact("trunc","splitter","length","offset","text","trunc_tpl");
-$GLOBALS['ditto_object'] = $ditto;
+
 // ---------------------------------------------------
 // Truncate Functions
 // ---------------------------------------------------
 if (!function_exists("determineLink")) {
 	function determineLink($resource) {
-		global $ditto_object,$ditto_summary_params,$ditto_summary_link;
+		global $ditto_summary_params,$ditto_summary_link;
 		if ($ditto_summary_link !== false) {
 			$parameters = array(
-			"url" => $ditto_summary_link,
-			"text" => $ditto_summary_params["text"],
+			"[+url+]" => $ditto_summary_link,
+			"[+text+]" => $ditto_summary_params["text"],
 			);
 			$tplTrunc = $ditto_summary_params["trunc_tpl"];
 			if ($tplTrunc !== false) {
@@ -115,7 +115,7 @@ if (!function_exists("determineLink")) {
 			} else {
 				$source = '<a href="[+url+]" title="[+text+]">[+text+]</a>';
 			}
-			return $ditto_object->template->replace($parameters,$source);
+			return str_replace(array_keys($parameters),array_values($parameters),$source);
 		} else {
 			return '';
 		}

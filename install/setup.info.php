@@ -16,7 +16,7 @@
 	$ms = &$moduleSnippets;
 	$ms[] = array("AjaxSearch","<strong>1.5</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
 	$ms[] = array("Breadcrumbs","<strong>0.9d</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
-	$ms[] = array("Ditto","<strong>2.0.3</strong> Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more. ",0,"$setupPath/snippet.ditto.tpl","");
+	$ms[] = array("Ditto","<strong>2.0.2</strong> Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more. ",0,"$setupPath/snippet.ditto.tpl","");
 	$ms[] = array("eForm","<strong>1.4.4</strong> Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
 	$ms[] = array("FirstChildRedirect","<strong>1.0</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
 	$ms[] = array("Jot","<strong>1.1.2</strong> User comments with moderation and email subscription.",0,"$setupPath/snippet.jot.tpl","");
@@ -24,7 +24,7 @@
 	$ms[] = array("MemberCheck","<strong>1.0</strong> Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
 	$ms[] = array("NewsPublisher","<strong>1.4</strong> Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
 	$ms[] = array("Personalize","<strong>2.0</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
-	$ms[] = array("Reflect","<strong>2.0.3</strong> Used with Ditto, creates archives of articles, blog entries, image galleries and more.",0,"$setupPath/snippet.reflect.tpl","");
+	$ms[] = array("Reflect","<strong>1.0.2</strong> Used with Ditto, creates archives of articles, blog entries, image galleries and more.",0,"$setupPath/snippet.reflect.tpl","");
 	$ms[] = array("UltimateParent","<strong>2.0 beta</strong> - Travels up the document tree from a specified document and returns the \"ultimate\" parent.",0,"$setupPath/snippet.ultparent.tpl","");
 	$ms[] = array("Wayfinder","<strong>2.0</strong> Completely template-driven menu builder that's simple and fast to configure.",0,"$setupPath/snippet.wayfinder.tpl","");
 	$ms[] = array("WebChangePwd","<strong>1.0</strong> Web User Change Password Snippet.",0,"$setupPath/snippet.webchangepwd.tpl","&tpl=Template;string;");

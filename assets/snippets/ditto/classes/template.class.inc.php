@@ -84,14 +84,17 @@ class template{
 	// Find al the template variables in the template
 	// ---------------------------------------------------
 	function findTemplateVars($tpl) {
-		preg_match_all('~\[\+([^\+\]]*+)\+\]~' , $tpl, $matches);
-		$TVs = array();
-		foreach($matches[1] as $tv) {
-			$match = explode(":", $tv);
-			$TVs[strtolower($match[0])] = $match[0];
+		preg_match_all('~\[\+(.*?)\+\]~', $tpl, $matches);
+		$cnt = count($matches[1]);
+
+		$tvnames = array ();
+		for ($i = 0; $i < $cnt; $i++) {
+			$match = explode(":", $matches[1][$i]);
+			$tvnames[] = (strpos($matches[1][$i], "phx") === false) ? $match[0] : $matches[1][$i];
 		}
-		if (count($TVs) >= 1) {
-			return array_values($TVs);
+
+		if (count($tvnames) >= 1) {
+			return array_unique($tvnames);
 		} else {
 			return false;
 		}
@@ -154,13 +157,7 @@ class template{
 	// Replcae placeholders with their values
 	// ---------------------------------------------------
     function replace( $placeholders, $tpl ) {
-		$keys = array();
-		$values = array();
-		foreach ($placeholders as $key=>$value) {
-			$keys[] = '[+'.$key.'+]';
-			$values[] = $value;
-		}
-		return str_replace($keys,$values,$tpl);
+		return str_replace( array_keys( $placeholders ), array_values( $placeholders ), $tpl );
 	}
 
 	// ---------------------------------------------------
