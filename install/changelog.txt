@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6 (rev 2719 - May 16, 2007)
+MODx 0.9.6 (rev 2730 - May 17, 2007)
 ====================================
+* Refactored installer and fixed inconsistent behavior regarding new collation and charset settings when installing or upgrading. (2727)
 * Update default content to use mootools-based effects (2715)
 * QuickEdit fixes for IE6 and IE7. (2694)
 * Fix Document locking bug. (2689)

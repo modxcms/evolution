@@ -821,7 +821,7 @@ REPLACE INTO `{PREFIX}user_attributes`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxLight'),
-('settings_version','0.9.6-RC1'),
+('settings_version','0.9.6'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','english'),

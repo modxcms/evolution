@@ -1,33 +1,33 @@
 <?php
-error_reporting(E_ALL & ~E_NOTICE);
+global $moduleName;
+global $moduleVersion;
+global $moduleSQLBaseFile;
+global $moduleSQLDataFile;
+global $moduleSQLUpdateFile;
+
+global $moduleChunks;
+global $moduleTemplates;
+global $moduleSnippets; 
+global $modulePlugins; 
+global $moduleModules; 
+global $moduleTemplates;
+global $moduleTVs;
+
+global $errors;
 
 $create = false;
-$errors = 0;
 
 // set timout limit
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
 echo "Setup will now attempt to setup the database:<br />";
 
-$installMode= 0;
-if (isset ($_POST['installmode'])) {
-    switch ($_POST['installmode']) {
-        case 'upd2':
-            $installMode= 2;
-            break;
-        case 'upd':
-            $installMode= 1;
-            break;
-        default:
-            break;
-    }
-}
-
+$installMode= intval($_POST['installmode']);
 $installData = $_POST['installdata'] ? 1 : 0;
 
-if ($installMode == 1) {
-	include "../manager/includes/config.inc.php";
-} else {
+//if ($installMode == 1) {
+//	include "../manager/includes/config.inc.php";
+//} else {
 	// get db info from post
 	$database_server = $_POST['databasehost'];
 	$database_user = $_POST['databaseloginname'];
@@ -40,7 +40,7 @@ if ($installMode == 1) {
 	$adminname = $_POST['cmsadmin'];
 	$adminemail = $_POST['cmsadminemail'];
 	$adminpass = $_POST['cmspassword'];
-}
+//}
 
 // set session name variable
 if (!isset ($site_sessionname)) {
@@ -116,10 +116,12 @@ if ($installMode == 0) {
 
 // open db connection
 $setupPath = realpath(dirname(__FILE__));
-include "$setupPath/sqlParser.class.php";
+include "{$setupPath}/setup.info.php";
+include "{$setupPath}/sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
-$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
+//$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
+$sqlParser->imageUrl = "assets/";
 $sqlParser->imagePath = $base_path . "assets/";
 $sqlParser->fileManagerPath = $base_path;
 $sqlParser->ignoreDuplicateErrors = true;
