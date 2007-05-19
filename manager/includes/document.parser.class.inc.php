@@ -387,7 +387,7 @@ class DocumentParser {
                                 break;
                             }
                     }
-                    // diplay error pages is user has no access to cached doc
+                    // diplay error pages if user has no access to cached doc
                     if (!$pass) {
                         if ($this->config['unauthorized_page']) {
                             // check if file is not public
@@ -407,7 +407,13 @@ class DocumentParser {
                         }
                     }
                 }
-                unset ($docObj['__MODxDocGroups__']);
+				// Grab the Scripts
+				if (isset($docObj['__MODxSJScripts__'])) $this->sjscripts = $docObj['__MODxSJScripts__'];
+				if (isset($docObj['__MODXJScripts__']))  $this->jscripts = $docObj['__MODxJScripts__'];
+
+				// Remove intermediate variables
+                unset($docObj['__MODxDocGroups__'], $docObj['__MODxSJScripts__'], $docObj['__MODxJScripts__']);
+
                 $this->documentObject= $docObj;
                 return $a[1]; // return document content
             }
@@ -592,8 +598,12 @@ class DocumentParser {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $sql= "SELECT document_group FROM " . $this->getFullTableName("document_groups") . " WHERE document='" . $this->documentIdentifier . "'";
                 $docGroups= $this->db->getColumn("document_group", $sql);
-                if (is_array($docGroups))
-                    $this->documentObject['__MODxDocGroups__']= implode(",", $docGroups);
+
+				// Attach Document Groups and Scripts
+				if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(",", $docGroups);
+				if (!empty($this->sjscripts)) $this->documentObject['__MODxSJScripts__'] = $this->sjscripts;
+				if (!empty($this->jscripts)) $this->documentObject['__MODxJScripts__'] = $this->jscripts;
+
                 $docObjSerial= serialize($this->documentObject);
                 $cacheContent= $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
                 fputs($fp, "<?php die('Unauthorized access.'); ?>$cacheContent");
@@ -1172,13 +1182,6 @@ class DocumentParser {
             // invoke OnLoadWebDocument event
             $this->invokeEvent("OnLoadWebDocument");
 
-            // Insert META tags & keywords - template must have a <head> tag
-            // note: we do it here so we can process things like [*TVs*] and [+placeholders+] from inside META tags
-	    /* Moved to parseDocumentSource() *
-            if ($this->documentObject['hasmetatags'] == 1 || $this->documentObject['haskeywords'] == 1) {
-                $this->documentContent= $this->mergeDocumentMETATags($this->documentContent);
-            }/**/
-
             // Parse document source
             $this->documentContent= $this->parseDocumentSource($this->documentContent);
 
@@ -1186,27 +1189,6 @@ class DocumentParser {
             //			if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
             //				$this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
             //			}			
-
-/**
-            // Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
-            if ($js= $this->getRegisteredClientStartupScripts()) {
-                // change to just before closing </head>
-                // $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
-    			foreach ($this->sjscripts as $sjsItem) {
-    				$this->documentContent= preg_replace("/(<\/head>)/i", $sjsItem . "\n\\1", $this->documentContent);
-    				array_shift($this->sjscripts); // prevent double insert in outputContent()
-    			}
-            }
-
-            // Insert jscripts & html block into template - template must have a </body> tag
-            if ($js= $this->getRegisteredClientScripts()) {
-    			foreach ($this->jscripts as $jsItem) {
-    				$this->documentContent= preg_replace("/(<\/body>)/i", $jsItem . "\n\\1", $this->documentContent);
-    				array_shift($this->jscripts); // prevent double insert in outputContent()
-    			}
-            }
-/**/
-
         }
         register_shutdown_function(array (
             & $this,

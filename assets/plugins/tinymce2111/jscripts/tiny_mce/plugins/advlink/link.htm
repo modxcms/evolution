@@ -6,6 +6,43 @@
 	<script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
 	<script language="javascript" type="text/javascript" src="../../utils/validate.js"></script>
 	<script language="javascript" type="text/javascript" src="jscripts/functions.js"></script>
+	<script language="javascript" type="text/javascript">
+	//MODx Modification - Added for Resource Browser
+		var curFormField = "";
+		
+		function BrowseServer(formfield)
+		{
+			var imgr_path = tinyMCE.getParam("resource_browser_path") + '&Type=files';
+			curFormField = formfield;
+			OpenServerBrowser(
+				'images',
+				imgr_path,
+				screen.width * 0.7,
+				screen.width * 0.7 ) ;
+		}
+	
+		function OpenServerBrowser( type, url, width, height )
+		{
+			sActualBrowser = type ;
+		
+			var iLeft = (screen.width  - width) / 2 ;
+			var iTop  = (screen.height - height) / 2 ;
+		
+			var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
+			sOptions += ",width=" + width ;
+			sOptions += ",height=" + height ;
+			sOptions += ",left=" + iLeft ;
+			sOptions += ",top=" + iTop ;
+		
+			var oWindow = window.open( url, "TinyBrowseWindow", sOptions ) ;
+		}
+		
+		function SetUrl( url )
+		{
+			document.forms[0].elements[curFormField].value = url ;
+		}
+	// End MODx modification
+	</script>
 	<link href="css/advlink.css" rel="stylesheet" type="text/css" />
 	<base target="_self" />
 </head>
