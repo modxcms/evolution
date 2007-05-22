@@ -90,7 +90,7 @@ class VeriWord {
 		$arr_words = explode(",", $words);
 
 		/* pick one randomly for text verification */
-		return sprintf("%s",$arr_words[array_rand($arr_words)].rand(10,90));
+		return (string) $arr_words[array_rand($arr_words)].rand(10,999);
 	}	
 
 	function draw_text() {
@@ -107,16 +107,17 @@ class VeriWord {
 		
 		/* pick one font type randomly from font directory */
 		//$text_font 	= $this->dir_font."".rand(1,3).".ttf";
-			// added by Alex - read ttf dir
-			$dir = dir("./ttf");
-			$fontstmp = array();
-			while ($file = $dir->read()) {
-				if($file!="." && $file!="..") {
-					$fontstmp[] = './ttf/'.$file;
-				}
+		// added by Alex - read ttf dir
+		$dir = dir("./ttf");
+		$fontstmp = array();
+		while (false !== ($file = $dir->read())) {
+			if($file!="." && $file!=".." && file_exists('./ttf/'.$file) && !is_dir('./ttf/' . $file)) {
+				$fontstmp[] = './ttf/'.$file;
 			}
-			$dir->close();
-			$text_font = sprintf("%s",$fontstmp[array_rand($fontstmp)]);
+		}
+		$dir->close();
+		$text_font = (string) $fontstmp[array_rand($fontstmp)];
+
 		/* angle for text inclination */
 		$text_angle = rand(-9,9);
 		/* initial text size */

@@ -176,6 +176,10 @@
             var header = text.substr(0,9)
             if (header.toLowerCase()=='location:') top.location = text.substr(10);
             else {
+                var cimg = $('captcha_image');
+                if (typeof(cimg) != 'undefined') {
+                	cimg.src = 'includes/veriword.php?rand=' + Math.random();
+                }
                 var f = $('loginfrm');
                 Form.enable(f);
                 alert(text);

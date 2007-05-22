@@ -157,7 +157,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 //            $_SESSION = array();
             // destroy session cookie
             if (isset($_COOKIE[session_name()])) {
-                setcookie(session_name(), '', 0);
+                setcookie(session_name(), '', 0, MODX_BASE_URL);
             }
             session_destroy();
 //            $sessionID = md5(date('d-m-Y H:i:s'));

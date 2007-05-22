@@ -32,6 +32,10 @@
 		var header = text.substr(0,9)
 		if (header.toLowerCase()=='location:') top.location = text.substr(10);
 		else {
+            var cimg = $('captcha_image');
+            if (typeof(cimg) != 'undefined') {
+            	cimg.src = 'includes/veriword.php?rand=' + Math.random();
+            }
 			var f = $('loginfrm');
 			Form.enable(f);
 			alert(text);
@@ -69,7 +73,7 @@
         [+captcha_image+]
 
         <label>[+username+] </label>
-        <input type="text" class="text" name="username" id="username" tabindex="1" value="[+uid+]" /></td>
+        <input type="text" class="text" name="username" id="username" tabindex="1" value="[+uid+]" />
 
         <label>[+password+] </label>
         <input type="password" class="text" name="password" id="password" tabindex="2" value="" />

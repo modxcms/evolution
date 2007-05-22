@@ -13,6 +13,9 @@ define("IN_MANAGER_MODE", "true");  // we use this to make sure files are access
 // include the database configuration file
 include_once "config.inc.php";
 
+// start session
+startCMSSession();
+
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
     die("Failed to create the database connection!");
@@ -32,9 +35,6 @@ include_once "log.class.inc.php";
 
 // include the crypto thing
 include_once "crypt.class.inc.php";
-
-// start session
-startCMSSession();
 
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
@@ -102,7 +102,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 }
 
 if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) { // blocked due to number of login errors.
-        session_destroy();
+        @session_destroy();
         session_unset();
         jsAlert($e->errors[902]);
         return;
@@ -114,7 +114,7 @@ if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) { // block
 }
 
 if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
-    session_destroy();
+    @session_destroy();
     session_unset();
     jsAlert($e->errors[903]);
     return;
@@ -122,7 +122,7 @@ if($blocked=="1") { // this user has been blocked by an admin, so no way he's lo
 
 // blockuntil
 if($blockeduntildate>time()) { // this user has a block until date
-    session_destroy();
+    @session_destroy();
     session_unset();
     jsAlert("You are blocked and cannot log in! Please try again later.");
     return;
@@ -130,7 +130,7 @@ if($blockeduntildate>time()) { // this user has a block until date
 
 // blockafter
 if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
-    session_destroy();
+    @session_destroy();
     session_unset();
     jsAlert("You are blocked and cannot log in! Please try again later.");
     return;
@@ -181,7 +181,11 @@ if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
 }
 
 if($use_captcha==1) {
-    if($_SESSION['veriword']!=$captcha_code) {
+	if (!isset ($_SESSION['veriword'])) {
+		jsAlert('Captcha is not configured properly.');
+		return;
+	}
+	elseif ($_SESSION['veriword'] != $captcha_code) {
         jsAlert($e->errors[905]);
         $newloginerror = 1;
     }
@@ -200,11 +204,7 @@ if($newloginerror==1) {
         if($sleep>5) $sleep = 5;
         sleep($sleep);
     }
-    $veriword = $_SESSION['veriword'];
-    session_destroy();
-    session_start();
-    $_SESSION['veriword'] = $veriword;
-    return;
+	@session_destroy();
 }
 
 $currentsessionid = session_id();

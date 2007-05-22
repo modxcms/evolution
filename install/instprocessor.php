@@ -230,9 +230,9 @@ if(!function_exists(\'startCMSSession\')) {
 		global $site_sessionname;
 		session_name($site_sessionname);	
 		session_start();
+		$cookieExpiration= 0;
         if (isset ($_SESSION[\'mgrValidated\']) || isset ($_SESSION[\'webValidated\'])) {
             $contextKey= isset ($_SESSION[\'mgrValidated\']) ? \'mgr\' : \'web\';
-            $cookieExpiration= 0;
             if (isset ($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\']) && is_numeric($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\'])) {
                 $cookieLifetime= intval($_SESSION[\'modx.\' . $contextKey . \'.session.cookie.lifetime\']);
             }
@@ -242,8 +242,8 @@ if(!function_exists(\'startCMSSession\')) {
 			if (!isset($_SESSION[\'modx.session.created.time\'])) {
 			  $_SESSION[\'modx.session.created.time\'] = time();
 			}														
-            setcookie(session_name(), session_id(), $cookieExpiration);
         }
+		setcookie(session_name(), session_id(), $cookieExpiration, MODX_BASE_URL);
 	}
 }';
 $configString .= "\n?>";

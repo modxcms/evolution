@@ -1,10 +1,5 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-
-    // close the session as it is not used here
-    // this should speed up frame loading, does it?
-    //session_write_close();
-    
     if (!array_key_exists('mail_check_timeperiod',$modx->config) || !is_numeric($modx->config['mail_check_timeperiod'])) {
     	$modx->config['mail_check_timeperiod'] = 5;
     }
