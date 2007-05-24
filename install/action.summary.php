@@ -1,212 +1,216 @@
 <?php
 $installMode = intval($_POST['installmode']);
-echo "<p class=\"title\">Pre-install validation</p>";
-echo "<p>Setup has carried out a number of checks to see if everything's ready to start the setup.</p>";
+echo "<p class=\"title\">" . $_lang['preinstall_validation'] . "</p>";
+echo "<p>" . $_lang['summary_setup_check'] . "</p>";
 $errors = 0;
 // check PHP version
-echo "<p>Checking PHP version: ";
+echo "<p>" . $_lang['checking_php_version'];
 $php_ver_comp = version_compare(phpversion(), "4.1.0");
 $php_ver_comp2 = version_compare(phpversion(), "4.3.8");
 // -1 if left is less, 0 if equal, +1 if left is higher
 if ($php_ver_comp < 0) {
-    echo "<span class=\"notok\">Failed!</span> - You are running on PHP " . phpversion() . ", and ModX requires PHP 4.1.0 or later</p>";
-    $errors += 1;
+	echo "<span class=\"notok\">" . $_lang['failed'] . "</span>".$_lang['you_running_php'] . phpversion() . $_lang["modx_requires_php"]."</p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
-    if ($php_ver_comp2 < 0) {
-        echo "<fieldset><legend>Security notice</legend><p>While MODx will work on your PHP version (" . phpversion() . "), usage of MODx on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 4.3.8 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p></fieldset>";
-    }
+	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+	if ($php_ver_comp2 < 0) {
+		echo "<fieldset>" . $_lang['php_security_notice'] . "</fieldset>";
+	}
 }
 // check sessions
-echo "<p>Checking if sessions are properly configured: ";
+echo "<p>" . $_lang['checking_sessions'];
 if ($_SESSION['session_test'] != 1) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">" . $_lang['failed'].  "</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 // check directories
 // cache exists?
-echo "<p>Checking if <span class=\"mono\">assets/cache</span> directory exists: ";
+echo "<p>" . $_lang['checking_if_cache_exist'];
 if (!file_exists("../assets/cache")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 // cache writable?
-echo "<p>Checking if <span class=\"mono\">assets/cache</span> directory is writable: ";
+echo "<p>" . $_lang['checking_if_cache_writable'];
 if (!is_writable("../assets/cache")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 // cache files writable?
-echo "<p>Checking if <span class=\"mono\">assets/cache/siteCache.idx.php</span> file is writable: ";
+echo "<p>" . $_lang['checking_if_cache_file_writable'];
 if (!is_writable("../assets/cache/siteCache.idx.php")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
-echo "<p>Checking if <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> file is writable: ";
+echo "<p>".$_lang['checking_if_cache_file2_writable'];
 if (!is_writable("../assets/cache/sitePublishing.idx.php")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // images exists?
-echo "<p>Checking if <span class=\"mono\">assets/images</span> directory exists: ";
+echo "<p>".$_lang['checking_if_images_exist'];
 if (!file_exists("../assets/images")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // images writable?
-echo "<p>Checking if <span class=\"mono\">assets/images</span> directory is writable: ";
+echo "<p>".$_lang['checking_if_images_writable'];
 if (!is_writable("../assets/images")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // export exists?
-echo "<p>Checking if <span class=\"mono\">assets/export</span> directory exists: ";
+echo "<p>".$_lang['checking_if_export_exists'];
 if (!file_exists("../assets/export")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // export writable?
-echo "<p>Checking if <span class=\"mono\">assets/export</span> directory is writable: ";
+echo "<p>".$_lang['checking_if_export_writable'];
 if (!is_writable("../assets/export")) {
-    echo "<span class=\"notok\">Failed!</span></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // config.inc.php writable?
-echo "<p>Checking if <span class=\"mono\">manager/includes/config.inc.php</span> exists and is writable: ";
+echo "<p>".$_lang['checking_if_config_exist_and_writable'];
 if (!file_exists("../manager/includes/config.inc.php")) {
-    // make an attempt to create the file
-    @ $hnd = fopen("../manager/includes/config.inc.php", 'w');
-    @ fwrite($hnd, "<?php //MODx configuration file ?>");
-    @ fclose($hnd);
+	// make an attempt to create the file
+	@ $hnd = fopen("../manager/includes/config.inc.php", 'w');
+	@ fwrite($hnd, "<?php //MODx configuration file ?>");
+	@ fclose($hnd);
 }
 $isWriteable = is_writable("../manager/includes/config.inc.php");
 if (!$isWriteable) {
-    echo "<span class=\"notok\">Failed!</span></p><p><strong>For new Linux/Unix installs, please create a blank file named <span class=\"mono\">config.inc.php</span> in the <span class=\"mono\">manager/includes/</span> directory with file permissions set to 0666.</strong></p>";
-    $errors += 1;
+	echo "<span class=\"notok\">".$_lang['failed']."</span></p><p><strong>".$_lang['config_permissions_note']."</strong></p>";
+	$errors += 1;
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
-
 // connect to the database
 if ($installMode == 1) {
-    include "../manager/includes/config.inc.php";
+	include "../manager/includes/config.inc.php";
 } else {
-    // get db info from post
-    $database_server = $_POST['databasehost'];
-    $database_user = $_POST['databaseloginname'];
-    $database_password = $_POST['databaseloginpassword'];
-    $database_collation = $_POST['database_collation'];
-    $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
-    $database_connection_charset = $_POST['database_connection_charset'];
-    $dbase = '`' . $_POST['database_name'] . '`';
-    $table_prefix = $_POST['tableprefix'];
+	// get db info from post
+	$database_server = $_POST['databasehost'];
+	$database_user = $_POST['databaseloginname'];
+	$database_password = $_POST['databaseloginpassword'];
+	$database_collation = $_POST['database_collation'];
+	$database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
+	$database_connection_charset = $_POST['database_connection_charset'];
+	$dbase = $_POST['database_name'];
+	$table_prefix = $_POST['tableprefix'];
 }
-echo "<p>Creating connection to the database: ";
+echo "<p>".$_lang['creating_database_connection'];
 if (!@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
-    $errors += 1;
-    echo "<span class=\"notok\">Database connection failed!</span><p />Please check the database login details and try again.</p>";
+	$errors += 1;
+	echo "<span class=\"notok\">".$_lang['database_connection_failed']."</span><p />".$_lang['database_connection_failed_note']."</p>";
 } else {
-    echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 // make sure we can use the database
 if ($installMode > 0 && !@ mysql_query("USE {$dbase}")) {
-    $errors += 1;
-    echo "<span class=\"notok\">Database could not be selected!</span><p />Please check the database permissions for the specified user and try again.</p>";
+	$errors += 1;
+	echo "<span class=\"notok\">".$_lang['database_use_failed']."</span><p />".$_lang["database_use_failed_note"]."</p>";
 }
 
 // check the database collation if not specified in the configuration
 if (!isset ($database_connection_charset) || empty ($database_connection_charset)) {
-    if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
-        $rs = @ mysql_query("show session variables like 'collation_server'");
-    }
-    if ($rs && $collation = mysql_fetch_row($rs)) {
-        $database_collation = $collation[1];
-    }
-    if (empty ($database_collation)) {
-        $database_collation = 'utf8_unicode_ci';
-    }
-    $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
-    $database_connection_charset = $database_charset;
+	if (!$rs = @ mysql_query("show session variables like 'collation_database'")) {
+		$rs = @ mysql_query("show session variables like 'collation_server'");
+	}
+	if ($rs && $collation = mysql_fetch_row($rs)) {
+		$database_collation = $collation[1];
+	}
+	if (empty ($database_collation)) {
+		$database_collation = 'utf8_unicode_ci';
+	}
+	$database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
+	$database_connection_charset = $database_charset;
 }
 
 // check table prefix
 if ($conn && $installMode == 0) {
-    echo "<p>Checking table prefix `" . $table_prefix . "`: ";
-    if (@ $rs = mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo "<span class=\"notok\">Failed!</span></b> - Table prefix is already in use in this database!</p>";
-        $errors += 1;
-        echo "<p>Setup couldn't install into the selected database, as it already contains tables with the prefix you specified. Please choose a new table_prefix, and run Setup again.</p>";
-    } else {
-        echo "<span class=\"ok\">OK!</span></p>";
-    }
+	echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
+	if (@ $rs == mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
+		echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b>" . $_lang['table_prefix_already_inuse'] . "</p>";
+		$errors += 1;
+		echo "<p>" . $_lang['table_prefix_already_inuse_note'] . "</p>";
+	} else {
+		echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+	}
 } elseif ($conn && $installMode == 2) {
-    echo "<p>Checking table prefix `" . $table_prefix . "`: ";
-    if (!$rs = @mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-        echo "<span class=\"notok\">Failed!</span></b> - Table prefix does not exist in this database!</p>";
-        $errors += 1;
-        echo "<p>Setup couldn't install into the selected database, as it does not contain existing tables with the prefix you specified to be upgraded. Please choose an existing table_prefix, and run Setup again.</p>";
-    } else {
-        echo "<span class=\"ok\">OK!</span></p>";
-    }
+	echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
+	if (!$rs = @mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
+		echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b>" . $_lang['table_prefix_not_exist'] . "</p>";
+		$errors += 1;
+		echo "<p>" . $_lang['table_prefix_not_exist_note'] . "</p>";
+	} else {
+		echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+	}
 }
 
 
 // andrazk 20070416 - add install flag and disable manager login
 // assets/cache writable?
 if (is_writable("../assets/cache")) {
-		  if (file_exists('../assets/cache/installProc.inc.php')) {
-		      @chmod('../assets/cache/installProc.inc.php', 0755);
-		      unlink('../assets/cache/installProc.inc.php');
-		  }
+	if (file_exists('../assets/cache/installProc.inc.php')) {
+		@chmod('../assets/cache/installProc.inc.php', 0755);
+		unlink('../assets/cache/installProc.inc.php');
+	}
 
-		  // make an attempt to create the file
-		  @ $hnd = fopen("../assets/cache/installProc.inc.php", 'w');
-		  @ fwrite($hnd, '<?php $installStartTime = '.time().'; ?>');
-		  @ fclose($hnd);
+	// make an attempt to create the file
+	@ $hnd = fopen("../assets/cache/installProc.inc.php", 'w');
+	@ fwrite($hnd, '<?php $installStartTime = '.time().'; ?>');
+	@ fclose($hnd);
 }
 
 
 if ($errors > 0) {
-    ?>
-<p>Unfortunately, Setup cannot continue at the moment, due to the above
-<?php echo $errors > 1 ? $errors." " : "" ; ?>error<?php echo $errors > 1 ? "s" : "" ; ?>.
-Please correct the error<?php echo $errors > 1 ? "s" : "" ; ?>, and try
-again. If you need help figuring out how to fix the problem<?php echo $errors > 1 ? "s" : "" ; ?>,
-visit the <a href="http://www.modxcms.com/forums/" target="_blank">Operation
-MODx Forums</a>.</p>
-</p>
-<?php
+?>
+			<p>
+			<?php
+			echo $_lang['setup_cannot_continue'];
+			echo $errors > 1 ? $errors." " : "";
+			if ($errors > 1) echo $_lang['errors'];
+			else echo $_lang['error'];
+			if ($errors > 1) echo $_lang['please_correct_errors'];
+			else echo $_lang['please_correct_error'];
+			if ($errors > 1) echo $_lang['and_try_again_plural'];
+			else echo $_lang['and_try_again'];
+			echo $_lang['visit_forum']?></p>
+			</p>
+		<?php
 }
 
 echo "<p>&nbsp;</p>";
 
 $nextAction= $errors > 0 ? 'summary' : 'install';
-$nextButton= $errors > 0 ? 'Retry' : 'Install';
+$nextButton= $errors > 0 ? $_lang['retry'] : $_lang['install'];
 
 ?>
 <form name="install" action="index.php?action=<?php echo $nextAction ?>" method="post">
 	<div>
+		<input type="hidden" value="<?php echo $install_language?>" name="language" />
 		<input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
 		<input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
-
 		<input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
 		<input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />
 		<input type="hidden" value="<?php echo $_POST['database_collation'] ?>" name="database_collation" />
@@ -237,6 +241,6 @@ foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]
 	<div id="navbar">
 		<input type="submit" value="<?php echo $nextButton ?>" name="cmdnext" style="float:right;width:100px;" />
 		<span style="float:right">&nbsp;</span>
-		<input type="submit" value="Back" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=options';this.form.submit();return false;" />
+		<input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=options&language=<?php $install_language?>';this.form.submit();return false;" />
 	</div>
 </form>

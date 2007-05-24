@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6 (rev 2759 - May 23, 2007)
+MODx 0.9.6 (rev 2761 - May 24, 2007)
 ====================================
+* [FS#155] Implemented installer internationalization (english and russian initial languages). (2760)
 * [FS#873] Fix recent change to use of glob() in cache_sync.class.processors.php; make sure function is available. (2757)
 * [FS#756] Fixes to prevent errors saving user_attributes/webuser_attributes in manager when running MySQL with sql_mode = STRICT_TRANS_TABLES. (2756)
 * [FS#869] Fixed some problems with captcha and session cookie paths affecting logins. (2753)

@@ -20,7 +20,7 @@ $create = false;
 // set timout limit
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
-echo "Setup will now attempt to setup the database:<br />";
+echo $_lang['setup_database'];
 
 $installMode= intval($_POST['installmode']);
 $installData = $_POST['installdata'] ? 1 : 0;
@@ -62,55 +62,55 @@ $base_url = $url . (substr($url, -1) != "/" ? "/" : "");
 $base_path = $pth . (substr($pth, -1) != "/" ? "/" : "");
 
 // connect to the database
-echo "<p>Creating connection to the database: ";
+echo "<p>". $_lang['setup_database_create_connection'];
 if (!@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
-	echo "<span class=\"notok\">Database connection failed!</span></p><p>Please check the database login details and try again.</p>";
+	echo "<span class=\"notok\">".$_lang["setup_database_create_connection_failed"]."</span></p><p>".$_lang['setup_database_create_connection_failed_note']."</p>";
 	return;
 } else {
-	echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 
 // select database
-echo "<p>Selecting database `" . str_replace("`", "", $dbase) . "`: ";
+echo "<p>".$_lang['setup_database_selection']. str_replace("`", "", $dbase) . "`: ";
 if (!@ mysql_select_db(str_replace("`", "", $dbase), $conn)) {
-	echo "<span class=\"notok\" style='color:#707070'>Database selection failed...</span> The database does not exist. Setup will attempt to create it.</p>";
+	echo "<span class=\"notok\" style='color:#707070'>".$_lang['setup_database_selection_failed']."</span>".$_lang['setup_database_selection_failed_note']."</p>";
 	$create = true;
 } else {
     @ mysql_query("SET CHARACTER SET {$database_connection_charset}");
-	echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 
 // try to create the database
 if ($create) {
-	echo "<p>Creating database `" . str_replace("`", "", $dbase) . "`: ";
+	echo "<p>".$_lang['setup_database_creation']. str_replace("`", "", $dbase) . "`: ";
 	//	if(!@mysql_create_db(str_replace("`","",$dbase), $conn)) {
 	if (! mysql_query("CREATE DATABASE $dbase DEFAULT CHARACTER SET $database_charset COLLATE $database_collation")) {
-		echo "<span class=\"notok\">Database creation failed!</span> - Setup could not create the database!</p>";
+		echo "<span class=\"notok\">".$_lang['setup_database_creation_failed']."</span>".$_lang['setup_database_creation_failed_note']."</p>";
 		$errors += 1;
 ?>
         <pre>
         database charset = <?php $database_charset ?>
         database collation = <?php $database_collation ?>
         </pre>
-		<p>Setup could not create the database, and no existing database with the same name was found. It is likely that your hosting provider's security does not allow external scripts to create a database. Please create a database according to your hosting provider's procedure, and run Setup again.</p>
+		<p><?php echo $_lang['setup_database_creation_failed_note2']?></p>
 <?php
 
 		return;
 	} else {
-		echo "<span class=\"ok\">OK!</span></p>";
+		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 	}
 }
 
 // check table prefix
 if ($installMode == 0) {
-	echo "<p>Checking table prefix `" . $table_prefix . "`: ";
+	echo "<p>" . $_lang['checking_table_prefix'] . $table_prefix . "`: ";
 	if (@ $rs = mysql_query("SELECT COUNT(*) FROM $dbase.`" . $table_prefix . "site_content`")) {
-		echo "<span class=\"notok\">Failed!</span> - Table prefix is already in use in this database!</p>";
+		echo "<span class=\"notok\">" . $_lang['failed'] . "</span>" . $_lang['table_prefix_already_inuse'] . "</p>";
 		$errors += 1;
-		echo "<p>Setup couldn't install into the selected database, as it already contains tables with the prefix you specified. Please choose a new table_prefix, and run Setup again.</p>";
+		echo "<p>" . $_lang['table_prefix_already_inuse_note'] . "</p>";
 		return;
 	} else {
-		echo "<span class=\"ok\">OK!</span></p>";
+		echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 	}
 }
 
@@ -128,49 +128,49 @@ $sqlParser->ignoreDuplicateErrors = true;
 $sqlParser->connect();
 
 // install/update database
-echo "<p>Creating database tables: ";
+echo "<p>" . $_lang['setup_database_creating_tables'];
 if ($moduleSQLBaseFile) {
 	$sqlParser->process($moduleSQLBaseFile);
 	// display database results
 	if ($sqlParser->installFailed == true) {
 		$errors += 1;
-		echo "<span class=\"notok\"><b>Database Alerts!</span></p>";
-		echo "<p>MODx setup couldn't install/alter some tables inside the selected database.</p>";
-		echo "<p>The following errors had occurred during installation<br /><br />";
+		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
 		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em> during the execution of SQL statement <span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
 		}
 		echo "</p>";
-		echo "<p>Some tables were not updated. This might be due to previous modifications.</p>";
+		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
 		return;
 	} else {
-		echo "<span class=\"ok\">OK!</span></p>";
+		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 	}
 }
 
 // install data
 if ($installData && $moduleSQLDataFile) {
-	echo "<p>Installing demo site: ";
+	echo "<p>" . $_lang['installing_demo_site'];
 	$sqlParser->process($moduleSQLDataFile);
 	// display database results
 	if ($sqlParser->installFailed == true) {
 		$errors += 1;
-		echo "<span class=\"notok\"><b>Database Alerts!</span></p>";
-		echo "<p>MODx setup couldn't install/alter some tables inside the selected database.</p>";
-		echo "<p>The following errors had occurred during installation<br /><br />";
+		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
 		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em> during the execution of SQL statement <span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
 		}
 		echo "</p>";
-		echo "<p>Some tables were not updated. This might be due to previous modifications.</p>";
+		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
 		return;
 	} else {
-		echo "<span class=\"ok\">OK!</span></p>";
+		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 	}
 }
 
 // write the config.inc.php file if new installation
-echo "<p>Writing configuration file: ";
+echo "<p>" . $_lang['writing_config_file'];
 $configString = '<?php
 /**
  *	MODx Configuration file
@@ -263,19 +263,19 @@ if (@ fwrite($handle, $configString) === FALSE) {
 $chmodSuccess = @chmod($filename, 0600);
 
 if ($configFileFailed == true) {
-	echo "<span class=\"notok\">Failed!</span></p>";
+	echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
 	$errors += 1;
 ?>
-	<p>MODx couldn't write the config file. Please copy the following into the <span class="mono">manager/includes/config.inc.php</span> file:</p>
+	<p><?php echo $_lang['cant_write_config_file']?><span class="mono">manager/includes/config.inc.php</span></p>
 	<textarea style="width:400px; height:160px;">
 	<?php echo $configString; ?>
 	</textarea>
-	<p>Once that's been done, you can log into MODx Admin by pointing your browser at YourSiteName.com/manager/.</p>
+	<p><?php echo $_lang['cant_write_config_file_note']?></p>
 <?php
 
 	return;
 } else {
-	echo "<span class=\"ok\">OK!</span></p>";
+	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 
 // generate new site_id and set manager theme to MODx 
@@ -297,7 +297,7 @@ if ($installMode == 0) {
 
 // Install Templates
 if (isset ($_POST['template'])) {
-	echo "<p style=\"color:#707070\">Templates:</p> ";
+	echo "<p style=\"color:#707070\">" . $_lang['templates'] . ":</p> ";
 	$selTemplates = $_POST['template'];
 	foreach ($selTemplates as $si) {
 		$si = (int) trim($si);
@@ -306,7 +306,7 @@ if (isset ($_POST['template'])) {
 		$type = $moduleTemplates[$si][2]; // 0:file, 1:content
 		$filecontent = $moduleTemplates[$si][3];
 		if ($type == 0 && !file_exists($filecontent))
-			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install template. File '$filecontent' not found.</span></p>";
+			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$template = ($type == 1) ? $filecontent : implode('', file($filecontent));
 			$template = mysql_escape_string($template);
@@ -317,14 +317,14 @@ if (isset ($_POST['template'])) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
 			} else {
 				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_templates` (templatename,description,content) VALUES('$name','$desc','$template');", $sqlParser->conn)) {
 					$errors += 1;
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
 			}
 		}
 	}
@@ -332,7 +332,7 @@ if (isset ($_POST['template'])) {
 
 // Install Chunks
 if (isset ($_POST['chunk'])) {
-	echo "<p style=\"color:#707070\">Chunks:</p> ";
+	echo "<p style=\"color:#707070\">" . $_lang['chunks'] . ":</p> ";
 	$selChunks = $_POST['chunk'];
 	foreach ($selChunks as $si) {
 		$si = (int) trim($si);
@@ -341,7 +341,7 @@ if (isset ($_POST['chunk'])) {
 		$type = $moduleChunks[$si][2]; // 0:file, 1:content
 		$filecontent = $moduleChunks[$si][3];
 		if ($type == 0 && !file_exists($filecontent))
-			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install chunk. File '$filecontent' not found.</span></p>";
+			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_chunk'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$chunk = ($type == 1) ? $filecontent : implode('', file($filecontent));
 			$chunk = mysql_escape_string($chunk);
@@ -352,14 +352,14 @@ if (isset ($_POST['chunk'])) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
 			} else {
 				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_htmlsnippets` (name,description,snippet) VALUES('$name','$desc','$chunk');", $sqlParser->conn)) {
 					$errors += 1;
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
 			}
 		}
 	}
@@ -367,7 +367,7 @@ if (isset ($_POST['chunk'])) {
 
 // Install module
 if (isset ($_POST['module'])) {
-	echo "<p style=\"color:#707070\">Module:</p> ";
+	echo "<p style=\"color:#707070\">" . $_lang['modules'] . ":</p> ";
 	$selPlugs = $_POST['module'];
 	foreach ($selPlugs as $si) {
 		$si = (int) trim($si);
@@ -379,7 +379,7 @@ if (isset ($_POST['module'])) {
 		$guid = mysql_escape_string($moduleModules[$si][5]);
 		$shared = mysql_escape_string($moduleModules[$si][6]);
 		if ($type == 0 && !file_exists($filecontent))
-			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install module. File '$filecontent' not found.</span></p>";
+			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$module = ($type == 1) ? $filecontent : implode('', file($filecontent));
 			$module = mysql_escape_string($module);
@@ -391,13 +391,13 @@ if (isset ($_POST['module'])) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
 			} else {
 				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_modules` (name,description,modulecode,properties,guid,enable_sharedparams) VALUES('$name','$desc','$module','$properties','$guid','$shared');", $sqlParser->conn)) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
 			}
 		}
 	}
@@ -405,7 +405,7 @@ if (isset ($_POST['module'])) {
 
 // Install plugins
 if (isset ($_POST['plugin'])) {
-	echo "<p style=\"color:#707070\">Plugin:</p> ";
+	echo "<p style=\"color:#707070\">" . $_lang['plugins'] . ":</p> ";
 	$selPlugs = $_POST['plugin'];
 	foreach ($selPlugs as $si) {
 		$si = (int) trim($si);
@@ -417,7 +417,7 @@ if (isset ($_POST['plugin'])) {
 		$events = explode(",", $modulePlugins[$si][5]);
 		$guid = mysql_escape_string($modulePlugins[$si][6]);
 		if ($type == 0 && !file_exists($filecontent))
-			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install plugin. File '$filecontent' not found.</span></p>";
+			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_plugin'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$plugin = ($type == 1) ? $filecontent : implode('', file($filecontent));
 			$plugin = mysql_escape_string($plugin);
@@ -440,13 +440,13 @@ if (isset ($_POST['plugin'])) {
 						return;
 			    	}
 			    }
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
 			} else {
 				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid) VALUES('$name','$desc','$plugin','$properties','$guid');", $sqlParser->conn)) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
 			}
 			// add system events
 			if (count($events) > 0) {
@@ -466,7 +466,7 @@ if (isset ($_POST['plugin'])) {
 
 // Install Snippet
 if (isset ($_POST['snippet'])) {
-	echo "<p style=\"color:#707070\">Snippets:</p> ";
+	echo "<p style=\"color:#707070\">" . $_lang['snippets'] . ":</p> ";
 	$selSnips = $_POST['snippet'];
 	foreach ($selSnips as $si) {
 		$si = (int) trim($si);
@@ -476,7 +476,7 @@ if (isset ($_POST['snippet'])) {
 		$filecontent = $moduleSnippets[$si][3];
 		$properties = mysql_escape_string($moduleSnippets[$si][4]);
 		if ($type == 0 && !file_exists($filecontent))
-			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">Unable to install snippet. File '$filecontent' not found.</span></p>";
+			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$snippet = ($type == 1) ? $filecontent : implode('', file($filecontent));
 			$snippet = mysql_escape_string($snippet);
@@ -488,13 +488,13 @@ if (isset ($_POST['snippet'])) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Upgraded</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
 			} else {
 				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_snippets` (name,description,snippet,properties) VALUES('$name','$desc','$snippet','$properties');", $sqlParser->conn)) {
 					echo "<p>" . mysql_error() . "</p>";
 					return;
 				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">Installed</span></p>";
+				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
 			}
 		}
 	}
@@ -502,22 +502,22 @@ if (isset ($_POST['snippet'])) {
 
 // install updates now all records have been added
 if ($installData && $moduleSQLUpdateFile) {
-	echo "<p>Running database updates: ";
+	echo "<p>" . $_lang['running_database_updates'];
 	$sqlParser->process($moduleSQLUpdateFile);
 	// display database results
 	if ($sqlParser->installFailed == true) {
 		$errors += 1;
-		echo "<span class=\"notok\"><b>Database Alerts!</span></p>";
-		echo "<p>MODx setup couldn't update some tables inside the selected database.</p>";
-		echo "<p>The following errors had occurred during installation<br /><br />";
+		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+		echo "<p>" . $_lang["installation_error_occured"] . "<br /><br />";
 		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em> during the execution of SQL statement <span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
 		}
 		echo "</p>";
-		echo "<p>Some tables were not updated. This might be due to previous modifications.</p>";
+		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
 		return;
 	} else {
-		echo "<span class=\"ok\">OK!</span></p>";
+		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 	}
 }
 
@@ -549,12 +549,12 @@ $sqlParser->close();
 	}
 
 // setup completed!
-echo "<p><b>Installation was successful!</b></p>";
-echo "<p>To log into the Content Manager (manager/index.php) you can click on the 'Close' button.</p>";
+echo "<p><b>" . $_lang['installation_successful'] . "</b></p>";
+echo "<p>" . $_lang['to_log_into_content_manager'] . "</p>";
 if ($installMode == 0) {
-	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by choosing <strong>Administration</strong> -> System Configuration in the MODx Manager.</p><br />&nbsp;";
+	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['installation_note'] . "</p><br />&nbsp;";
 } else {
-	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" /><strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.</p><br />&nbsp;";
+	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p><br />&nbsp;";
 }
 
 // Property Update function

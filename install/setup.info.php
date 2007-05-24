@@ -10,7 +10,7 @@
 
 	# setup chunks template files - array : name, description, type - 0:file or 1:content, file or content
 	$mc = &$moduleChunks;
-	$mc[] = array("WebLoginSideBar","WebLogin Sidebar Template",0,"./chunk.weblogin.sidebar.tpl");
+	$mc[] = array("WebLoginSideBar","WebLogin Sidebar Template",0,"$setupPath/chunk.weblogin.sidebar.tpl");
 
 	# setup snippets template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$ms = &$moduleSnippets;

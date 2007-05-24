@@ -21,15 +21,18 @@ if (file_exists("../manager/includes/config.inc.php")) {
 ?>
 <form name="install" action="index.php?action=connection" method="post">
 	<div>
+		<input type="hidden" value="<?php echo $install_language?>" name="language" />
 		<input type="hidden" value="1" id="chkagree" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
 	</div>
-	<p class="title">Installation Mode</p>
+	<p class="title"><?php echo $_lang['installation_mode']?></p>
 	<table border="0" width="100%">
 	  <tr>
 		<td nowrap valign="top" width="37%">
 		<img src="im_new_inst.gif" align="left" width="32" height="32" hspace="5" />
-		<input type="radio" name="installmode" id="installmode1" value="0" <?php echo !$upgradeable ? 'checked="checked"':'' ?> /><label for="installmode1" class="nofloat">New Installation</label></td>
-		<td width="61%">Install a new copy of <?php echo $moduleName; ?>. <b>Please note this option may overwrite any data inside your database.</b></td>
+		<input type="radio" name="installmode" id="installmode1" value="0" <?php echo !$upgradeable ? 'checked="checked"':'' ?> />
+		<label for="installmode1" class="nofloat"><?php echo $_lang['installation_new_installation']?></label></td>
+		<td width="61%"><?php echo $_lang['installation_install_new_copy'] . $moduleName?>
+		<strong><?php echo $_lang['installation_install_new_note']?></strong></td>
 	  </tr>
       <tr>
     	<td nowrap valign="top" width="37%">&nbsp;</td>
@@ -38,8 +41,9 @@ if (file_exists("../manager/includes/config.inc.php")) {
 	  <tr>
 		<td nowrap valign="top" width="37%">
 		<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
-		<input type="radio" name="installmode" id="installmode2" value="1" <?php echo $upgradeable == 1 ? '':'disabled="disabled"' ?> <?php echo ($_POST['installmode']=='upd' && $upgradeable != 2) ? 'checked="checked"':'' ?> /><label for="installmode2" class="nofloat">Upgrade Existing Install</label></td>
-		<td width="61%">Upgrade your current files and database.</td>
+		<input type="radio" name="installmode" id="installmode2" value="1" <?php echo $upgradeable !== 1 ? 'disabled="disabled"' : '' ?> <?php echo ($_POST['installmode']=='1' || $upgradeable === 1) ? 'checked="checked"':'' ?> />
+		<label for="installmode2" class="nofloat"><?php echo $_lang['installation_upgrade_existing']?></label></td>
+		<td width="61%"><?php echo $_lang['installation_upgrade_existing_note']?></td>
 	  </tr>
 	  <tr>
 		<td nowrap valign="top" width="37%">&nbsp;</td>
@@ -48,14 +52,15 @@ if (file_exists("../manager/includes/config.inc.php")) {
 	  <tr>
 		<td nowrap valign="top" width="37%">
 		<img src="im_inst_upgrade.gif" align="left" width="32" height="32" hspace="5" />
-		<input type="radio" name="installmode" id="installmode3" value="2" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='upd2' || $upgradeable == 2) ? 'checked="checked"':'' ?> /><label for="installmode3" class="nofloat">Advanced Upgrade Install<br /><small>(edit database config)</small></label></td>
-		<td width="61%">For advanced database admins or moving to servers with a different database connection character set. <b>You will need to know your full database name, user, password and connection/collation details.</b></td>
+		<input type="radio" name="installmode" id="installmode3" value="2" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='2' || $upgradeable === 2) ? 'checked="checked"':'' ?> />
+		<label for="installmode3" class="nofloat"><?php echo $_lang['installation_upgrade_advanced']?></label></td>
+		<td width="61%"><?php echo $_lang['installation_upgrade_advanced_note']?></td>
 	  </tr>
 	</table>
 	<br />
 	<div id="navbar">
-		<input type="submit" value="Next" name="cmdnext" style="float:right;width:100px;" onclick="if (this.form.installmode[1].checked) this.form.action='index.php?action=options'; this.form.submit();return false;" />
+		<input type="submit" value="<?php echo $_lang['btnnext_value']?>" name="cmdnext" style="float:right;width:100px;" onclick="if (this.form.installmode[1].checked) this.form.action='index.php?action=options'; this.form.submit();return false;" />
 		<span style="float:right">&nbsp;</span>
-		<input type="submit" value="Back" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=license';this.form.submit();return false;" />
+		<input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=license';this.form.submit();return false;" />
 	</div>
 </form>

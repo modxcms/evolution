@@ -12,6 +12,8 @@ session_start();
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
 
+require_once("lang.php");
+
 // session loop-back tester
 if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
     $_SESSION['session_test'] = 1;
@@ -20,7 +22,7 @@ if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
     if ($_SERVER['SERVER_PORT'] != 80)
         $installBaseUrl = str_replace(':' . $_SERVER['SERVER_PORT'], '', $installBaseUrl); // remove port from HTTP_HOST
     $installBaseUrl .= ($_SERVER['SERVER_PORT'] == 80 || isset ($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'on') ? '' : ':' . $_SERVER['SERVER_PORT'];
-    echo "<html><head><title>Loading...</title><script>window.location.href='" . $installBaseUrl . $_SERVER['PHP_SELF'] . "?action=welcome';</script></head><body></body></html>";
+    echo "<html><head><title>" . $_lang['loading'] . "</title><script>window.location.href='" . $installBaseUrl . $_SERVER['PHP_SELF'] . "?action=language';</script></head><body></body></html>";
     exit;
 }
 
@@ -43,10 +45,10 @@ $errors= 0;
 // get post back status
 $isPostBack = (count($_POST));
 
-$action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'welcome';
+$action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
 
 // make sure they agree to the license
-if (!in_array($action, array ('welcome', 'license'))) {
+if (!in_array($action, array ('language', 'welcome', 'license'))) {
     if (!isset ($_POST['chkagree'])) $action= 'license';
 }
 
