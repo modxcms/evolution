@@ -46,18 +46,18 @@ $oldemail = $_POST['oldemail'];
 $phone = mysql_escape_string($_POST['phone']);
 $mobilephone = mysql_escape_string($_POST['mobilephone']);
 $fax = mysql_escape_string($_POST['fax']);
-$dob = ConvertDate($_POST['dob']);
+$dob = !empty ($_POST['dob']) ? ConvertDate($_POST['dob']) : 0;
 $country = $_POST['country'];
 $state = mysql_escape_string($_POST['state']);
 $zip = mysql_escape_string($_POST['zip']);
-$gender = $_POST['gender'];
+$gender = !empty ($_POST['gender']) ? $_POST['gender'] : 0;
 $photo = mysql_escape_string($_POST['photo']);
 $comment = mysql_escape_string($_POST['comment']);
-$roleid = $_POST['role'];
+$roleid = !empty ($_POST['role']) ? $_POST['role'] : 0;
 $failedlogincount = $_POST['failedlogincount'];
-$blocked = $_POST['blocked'];
-$blockeduntil = ConvertDate($_POST['blockeduntil']);
-$blockedafter = ConvertDate($_POST['blockedafter']);
+$blocked = !empty ($_POST['blocked']) ? $_POST['blocked'] : 0;
+$blockeduntil = !empty ($_POST['blockeduntil']) ? ConvertDate($_POST['blockeduntil']) : 0;
+$blockedafter = !empty ($_POST['blockedafter']) ? ConvertDate($_POST['blockedafter']) : 0;
 $user_groups = $_POST['user_groups'];
 
 // verify password

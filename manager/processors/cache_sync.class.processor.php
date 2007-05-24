@@ -46,7 +46,7 @@ class synccache{
 		}
 		$filesincache = 0;
 		$deletedfilesincache = 0;
-		if (version_compare(phpversion(), '4.3.0') >= 0) {
+		if (function_exists('glob')) {
 			// New and improved!
 			$files = glob(realpath($this->cachePath).'/*');
 			$filesincache = count($files);
@@ -60,7 +60,7 @@ class synccache{
 				}
 			}
 		} else {
-			// Old way of doing it (versions of php < 4.3.0)
+			// Old way of doing it (no glob function available)
 			if ($handle = opendir($this->cachePath)) {
 				// Initialize deleted per round counter
 				$deletedThisRound = 1;

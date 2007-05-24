@@ -570,7 +570,7 @@ switch ($actionToTake) {
 function stripAlias($alias) {
 	global $modx;
 
-	if (strtoupper($modx->config['modx_charset']) == 'UTF-8')
+	if (strtoupper($modx->config['modx_charset']) == 'UTF-8'){
         //$alias = utf8_decode($alias);
         //$alias = strtr($alias, array (chr(196) => 'Ae', chr(214) => 'Oe', chr(220) => 'Ue', chr(228) => 'ae', chr(246) => 'oe', chr(252) => 'ue', chr(223) => 'ss'));
 
@@ -855,15 +855,16 @@ function stripAlias($alias) {
             'ω' => 'o',
             'ώ' => 'o',
         );
-        $alias = strtr($alias, $replace_array);
+    }
+    $alias = strtr($alias, $replace_array);
 
-        $alias = strip_tags($alias);
-        $alias = preg_replace('/&.+?;/', '', $alias); // kill entities
-        $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias);
-        //$alias = preg_replace('/\s+/', '-', $alias);
-        $alias = preg_replace('|-+|', '-', $alias);
-        $alias = trim($alias, '-');
-        return $alias;
+    $alias = strip_tags($alias);
+    $alias = preg_replace('/&.+?;/', '', $alias); // kill entities
+    $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias);
+    //$alias = preg_replace('/\s+/', '-', $alias);
+    $alias = preg_replace('|-+|', '-', $alias);
+    $alias = trim($alias, '-');
+    return $alias;
 }
 
 // -- Save META Keywords --
