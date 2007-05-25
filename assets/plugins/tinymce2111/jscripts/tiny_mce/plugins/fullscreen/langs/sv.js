@@ -1,6 +1,5 @@
 // SV lang variables
 
 tinyMCE.addToLang('',{
-fullscreen_title : 'Fullskärmsläge',
-fullscreen_desc : 'Hoppa från/till fullskärmsläge'
+fullscreen_desc : 'Fullsk&auml;rmsl&auml;ge p&aring;/av'
 });

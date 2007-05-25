@@ -1,16 +1,16 @@
-// UK lang variables
+// SV lang variables
 
 tinyMCE.addToLang('style',{
-title : 'Edit CSS Style',
-styleinfo_desc : 'Edit CSS Style',
-apply : 'Apply',
+title : 'Redigera CSS-stil',
+styleinfo_desc : 'Redigera CSS-stil',
+apply : 'Anv&auml;nd',
 text_tab : 'Text',
-background_tab : 'Background',
+background_tab : 'Bakgrund',
 block_tab : 'Block',
 box_tab : 'Box',
-border_tab : 'Border',
-list_tab : 'List',
-positioning_tab : 'Positioning',
+border_tab : 'Ram',
+list_tab : 'Lista',
+positioning_tab : 'Positionering',
 text_props : 'Text',
 text_font : 'Font',
 text_size : 'Size',

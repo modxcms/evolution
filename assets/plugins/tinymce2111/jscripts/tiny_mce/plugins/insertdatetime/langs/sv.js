@@ -1,4 +1,4 @@
-// SE lang variables
+// SV lang variables
 
 tinyMCE.addToLang('',{
 insertdate_def_fmt : '%Y-%m-%d',

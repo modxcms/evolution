@@ -58,7 +58,7 @@ $_lang['license'] = '<p class="title">Лицензионное соглашен�
 		<p>The above is a summary of the GNU General Public License. By proceeding, you
 		are agreeing to the GNU General Public Licence, not the above. The above is
 		simply a summary of the GNU General Public Licence, and its accuracy is not
-		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>GNU General Public
+		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public
 		License</a> in full before proceeding, which can also be found in the license
 		file distributed with this package.</p>';
 $_lang["encoding"] = 'utf-8';
