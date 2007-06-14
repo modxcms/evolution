@@ -1,6 +1,6 @@
 <?php
 /**
- * MODx Installer for 0.9.6
+ * MODx Installer for 0.9.6.1
  */
 // do a little bit of environment cleanup if possible
 @ ini_set('magic_quotes_runtime', 0);
@@ -27,7 +27,7 @@ if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
 }
 
 $moduleName = "MODx";
-$moduleVersion = "0.9.6";
+$moduleVersion = "0.9.6.1";
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 $moduleSQLUpdateFile = "setup.updates.sql";

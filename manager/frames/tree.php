@@ -491,14 +491,22 @@ if(isset($_REQUEST['tree_sortdir'])) {
 </div>
 
 <script type="text/javascript">
+// pixelchutes - 6/4/2007
+// Set 'treeNodeSelected' class on document node when editing via Context Menu
+function setActiveFromContextMenu( doc_id ){
+	$$('.treeNodeSelected').removeClass('treeNodeSelected');
+	$$('#node'+doc_id+' span')[0].className='treeNodeSelected';
+}
 
 // Context menu stuff
 function menuHandler(action) {
     switch (action) {
         case 1 :
+			setActiveFromContextMenu( itemToChange ); //  pixelchutes
             top.main.document.location.href="index.php?a=3&id=" + itemToChange;
             break
         case 2 :
+			setActiveFromContextMenu( itemToChange ); //  pixelchutes
             top.main.document.location.href="index.php?a=27&id=" + itemToChange;
             break
         case 3 :

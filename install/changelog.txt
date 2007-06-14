@@ -3,7 +3,19 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6 (rev 2767 - May 24, 2007)
+MODx 0.9.6.1 (rev 2784 - June 14, 2007)
+====================================
+* [FS#894] Checking table_prefix failed during installation. (2782)
+* [FS#14] Changed default sort order to 'menuindex ASC'. (2780)
+* Highlight current document in document tree corrected (when editing/viewing via right-click context menu). (2777)
+* [FS#874] Alias not saved if char-encoding set other then UTF-8 (bug in save_content.processor.php). (2776,2782,2783)
+* [FS#865] Fix to prevent registered scripts from being duplicated when registered by non-cacheable snippets in cacheable documents. (2781)
+* UTF-8 fixes for AjaxSearch. (2775) 
+* [FS#877] Implemented MODX_API_MODE constant to allow inclusion of index.php for access to $modx API without executing the parser. (2772)
+* Added Spanish installer language file. (2771)
+
+
+MODx 0.9.6 (rev 2767 - May 25, 2007)
 ====================================
 * Added German, updated French and Russian installer language files. (2766)
 * Added French and Swedish installer language files. (2762)

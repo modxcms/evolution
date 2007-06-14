@@ -5,6 +5,7 @@
 //My thanks to Steve Smith of orderlist.com for sharing his code on how he did this
 //Live Search by Thomas (Shadock)
 
+//Updated: 06/03/07 - Added utf8 fix from atma
 //Updated: 01/22/07 - Switched to mootools support
 //Updated: 09/18/06 - Added user permissions to searching
 
@@ -108,7 +109,7 @@ function doSearch() {
     // Setup the parameters and make the ajax call
 	var pars = Object.toQueryString({
 		q: 'assets/snippets/AjaxSearch/AjaxSearch.php',
-		search: s, 
+		search: unescape( encodeURIComponent( s ) ), 
 		maxResults: maxResults,
 		stripHtml: stripHtml,
 		stripSnip: stripSnip,
@@ -137,7 +138,7 @@ function doSearch() {
 function doSearchResponse(request) {
     var o = $('ajaxSearch_output');
     o.style.opacity = '1';
-    $('current-search-results').setHTML(decodeURIComponent(request));
+    $('current-search-results').setHTML(decodeURIComponent( escape( request ) ));
 	newToggle.toggle();
 	is_searching = false;
 	setTimeout('resetForm()',600);

@@ -44,9 +44,6 @@
  * Initialize Document Parsing
  * -----------------------------
  */
- 
-// is this file included?
-if(count(get_included_files())>1) $noparser = true;
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
@@ -72,6 +69,10 @@ error_reporting(E_ALL & ~E_NOTICE);
 define("IN_ETOMITE_PARSER", "true"); // provides compatibility with etomite 0.6 and maybe later versions
 define("IN_PARSER_MODE", "true");
 define("IN_MANAGER_MODE", "false");
+
+if (!defined('MODX_API_MODE')) {
+    define('MODX_API_MODE', false);
+}
 
 // initialize the variables prior to grabbing the config file
 $database_type = '';
@@ -123,9 +124,13 @@ $modx->tstart = $tstart;
 $modx->stopOnNotice = false;
 
 // Don't show PHP errors to the public
-if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) @ini_set("display_errors","0");
+if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
+    @ini_set("display_errors","0");
+}
 
 // execute the parser if index.php was not included
-if(!$noparser) $modx->executeParser();
-exit;
+if (!MODX_API_MODE) {
+    $modx->executeParser();
+}
+exit();
 ?>

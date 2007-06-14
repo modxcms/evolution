@@ -71,15 +71,15 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $spacer .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         }
 
-        // query other documents, set default sort order
-        $orderby = "isfolder DESC";
-        if(isset($_SESSION['tree_sortby']) && isset($_SESSION['tree_sortdir'])) {
-            $orderby = $_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir'];
-        } else {
-            $_SESSION['tree_sortby'] = 'isfolder';
-            $_SESSION['tree_sortdir'] = 'DESC';
-        }
-        if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
+	if (!isset($_SESSION['tree_sortby']) && !isset($_SESSION['tree_sortdir'])) {
+		// This is the first startup, set default sort order
+		$_SESSION['tree_sortby'] = 'isfolder';
+		$_SESSION['tree_sortdir'] = 'DESC';
+	}
+	$orderby = $_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir'];
+
+	// Folder sorting gets special setup ;) Add menuindex and pagetitle
+	if($_SESSION['tree_sortby'] == 'isfolder') $orderby .= ", menuindex ASC, pagetitle";
 
         $tblsc = $dbase.".`".$table_prefix."site_content`";
         $tbldg = $dbase.".`".$table_prefix."document_groups`";

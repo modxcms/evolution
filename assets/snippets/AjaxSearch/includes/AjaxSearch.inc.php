@@ -6,9 +6,10 @@ Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/03/2007
 Description: Helper functions for AjaxSearch
 
+Updated: 06/03/07 - Added utf8 fix from atma
 Updated: 01/22/07 - Added Template/Lang/Mootools support
-Updated: 09/18/06 - Added user permissions to searching
 Updated: 01/03/2007 - Added fixes/additions from forums
+Updated: 09/18/06 - Added user permissions to searching
 */
 
 // The connection settings must be set for the ajax call
@@ -21,6 +22,7 @@ function connectForAjax() {
     $database = str_replace("`","",$dbase);
     $db = mysql_connect($database_server, $database_user, $database_password) or die("Cannot connect to database (connectForAjax)");
     $selected = mysql_select_db($database, $db) or die ("Cannot select database (connectForAjax)");
+	mysql_query("SET CHARACTER SET utf8;");
     return $table_prefix;
 }
 

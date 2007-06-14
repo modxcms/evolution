@@ -427,6 +427,11 @@ class DocumentParser {
 
         $this->documentOutput= $this->documentContent;
 
+        if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
+    		if (!empty($this->sjscripts)) $this->documentObject['__MODxSJScripts__'] = $this->sjscripts;
+    		if (!empty($this->jscripts)) $this->documentObject['__MODxJScripts__'] = $this->jscripts;
+        }
+        
         // check for non-cached snippet output
         if (strpos($this->documentOutput, '[!') > -1) {
             $this->documentOutput= str_replace('[!', '[[', $this->documentOutput);
@@ -434,21 +439,21 @@ class DocumentParser {
 
             // Parse document source
             $this->documentOutput= $this->parseDocumentSource($this->documentOutput);
-	}
-
-	// Moved from prepareResponse() by sirlancelot
-	// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
-	if ($js= $this->getRegisteredClientStartupScripts()) {
-		// change to just before closing </head>
-		// $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
-		$this->documentOutput= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentOutput);
-	}
-
-	// Insert jscripts & html block into template - template must have a </body> tag
-	if ($js= $this->getRegisteredClientScripts()) {
-		$this->documentOutput= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentOutput);
-	}
-	// End fix by sirlancelot
+    	}
+    
+    	// Moved from prepareResponse() by sirlancelot
+    	// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
+    	if ($js= $this->getRegisteredClientStartupScripts()) {
+    		// change to just before closing </head>
+    		// $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
+    		$this->documentOutput= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentOutput);
+    	}
+    
+    	// Insert jscripts & html block into template - template must have a </body> tag
+    	if ($js= $this->getRegisteredClientScripts()) {
+    		$this->documentOutput= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentOutput);
+    	}
+    	// End fix by sirlancelot
 
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+') > -1) {
@@ -601,8 +606,6 @@ class DocumentParser {
 
 				// Attach Document Groups and Scripts
 				if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(",", $docGroups);
-				if (!empty($this->sjscripts)) $this->documentObject['__MODxSJScripts__'] = $this->sjscripts;
-				if (!empty($this->jscripts)) $this->documentObject['__MODxJScripts__'] = $this->jscripts;
 
                 $docObjSerial= serialize($this->documentObject);
                 $cacheContent= $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
