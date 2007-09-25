@@ -1,8 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_snippet')) {	
+if(!$modx->hasPermission('delete_snippet')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 <?php
@@ -20,7 +20,7 @@ $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the snippet...";
 	exit;
-} else {	
+} else {
 		// invoke OnSnipFormDelete event
 		$modx->invokeEvent("OnSnipFormDelete",
 								array(
@@ -32,10 +32,11 @@ if(!$rs) {
 		$sync = new synccache();
 		$sync->setCachepath("../assets/cache/");
 		$sync->setReport(false);
-		$sync->emptyCache(); // first empty the cache		
+		$sync->emptyCache(); // first empty the cache
 		// finished emptying cache - redirect
-		
+
 	$header="Location: index.php?a=76&r=2";
 	header($header);
 }
+
 ?>

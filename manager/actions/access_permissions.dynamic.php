@@ -13,12 +13,12 @@ $limit = mysql_num_rows($rs);
 if($limit<1) {
 	$docgroupselector = "[no groups to add]";
 } else {
-	$docgroupselector = "<select name='docgroup'>";
+	$docgroupselector = '<select name="docgroup">';
 	for($i=0; $i<$limit; $i++) {
 		$row = mysql_fetch_assoc($rs);
-		$docgroupselector .= "<option value='".$row['id']."'>".$row['name']."</option>";
+		$docgroupselector .= '<option value="'.$row['id'].'">'.$row['name'].'</option>';
 	}
-	$docgroupselector .= "</select>";
+	$docgroupselector .= '</select>';
 }
 
 ?>
@@ -34,24 +34,24 @@ if($limit<1) {
 </script>
 
   <div class="tab-page" id="tabPage1">
-	<h2 class="tab"><?php echo $_lang["access_permissions_user_groups"] ?></h2>
+	<h2 class="tab"><?php echo $_lang['access_permissions_user_groups'] ?></h2>
 	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage1" ) );</script>
 	<?php echo $_lang['access_permissions_users_tab']; ?> <p />
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 		<thead>
 		<tr>
 			<td>
-				<b><?php echo $_lang["access_permissions_add_user_group"] ?></b>
+				<b><?php echo $_lang['access_permissions_add_user_group'] ?></b>
 			</td>
 		</tr>
 		</thead>
-		<tr class='row1'>
+		<tr class="row1">
 			<td>
-			<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 				<input type="hidden" name="a" value="41" />
 				<input type="hidden" name="operation" value="add_user_group" />
-				<input type=text value='' name='newusergroup' />&nbsp;
-				<input type=submit value='<?php echo $_lang["submit"]; ?>'>
+				<input type="text" value="" name="newusergroup" />&nbsp;
+				<input type="submit" value="<?php echo $_lang['submit']; ?>">
 			</form>
 			</td>
 		</tr>
@@ -61,7 +61,7 @@ if($limit<1) {
 		<thead>
 		<tr>
 			<td colspan="3">
-				<b><?php echo $_lang["access_permissions_user_groups"] ?></b>
+				<b><?php echo $_lang['access_permissions_user_groups'] ?></b>
 			</td>
 		</tr>
 		</thead>
@@ -70,36 +70,36 @@ if($limit<1) {
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
-			echo "<tr><td class='row1'><span class='warning'>".$_lang['no_groups_found']."</span></td></tr>";
+			echo '<tr><td class="row1"><span class="warning">'.$_lang['no_groups_found'].'</span></td></tr>';
 		} else {
 			for($i=0; $i<$limit; $i++) {
 			$row = mysql_fetch_assoc($rs);
 			?>
-			<tr class='row3'>
+			<tr class="row3">
 				<td width="350">
 					<?php echo $row['name'] ;?>
 				</td>
 				<td align="right" width="50">
-					<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+					<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 						<input type="hidden" name="a" value="41" />
 						<input type="hidden" name="usergroup" value="<?php echo $row['id'];?>" />
 						<input type="hidden" name="operation" value="delete_user_group" />
-						<input type=submit value='<?php echo $_lang['delete']; ?>'>
+						<input type="submit" value="<?php echo $_lang['delete']; ?>">
 					</form>
 				</td>
 				<td align="right" width="200">
-					<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+					<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 						<input type="hidden" name="a" value="41" />
 						<input type="hidden" name="groupid" value="<?php echo $row['id'];?>" />
 						<input type="hidden" name="operation" value="rename_user_group" />
-						<input type='text' name='newgroupname' value='<?php echo $row['name'] ;?>'>&nbsp;
-						<input type='submit' value='<?php echo $_lang['rename']; ?>'>
+						<input type="text" name="newgroupname" value="<?php echo $row['name'] ;?>">&nbsp;
+						<input type="submit" value="<?php echo $_lang['rename']; ?>">
 					</form>
 				</td>
 			</tr>
 			<tr>
-				<td class='row2' colspan="3">&nbsp;&raquo;&nbsp;
-					<span style='font-size: 9px'>
+				<td class="row2" colspan="3">&nbsp;&raquo;&nbsp;
+					<span style="font-size: 9px">
 					<?php echo $_lang['access_permissions_users_in_group']; ?>
 					<?php
 					$sql = "SELECT tbl1.username AS user, tbl1.id AS internalKey FROM
@@ -116,9 +116,9 @@ if($limit<1) {
 						$users = array();
 						for($y=0; $y<$limit2; $y++) {
 							$row2 = mysql_fetch_assoc($rs2);
-							$users[] = "<a href='index.php?id=".$row2['internalKey']."&a=12' style='font-size: 9px'>".$row2['user']."</a>";
+							$users[] = '<a href="index.php?id='.$row2['internalKey'].'&a=12" style="font-size: 9px">'.$row2['user'].'</a>';
 						}
-						echo join($users, ", ");
+						echo "\n\t".join($users, ",\n\t");
 					}
 					?>
 					</span>
@@ -135,24 +135,24 @@ if($limit<1) {
 
 
   <div class="tab-page" id="tabPage2">
-	<h2 class="tab"><?php echo $_lang["access_permissions_document_groups"] ?></h2>
+	<h2 class="tab"><?php echo $_lang['access_permissions_document_groups'] ?></h2>
 	<script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage2" ) );</script>
 	<?php echo $_lang['access_permissions_documents_tab']; ?> <p />
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 		<thead>
 		<tr>
 			<td>
-				<b><?php echo $_lang["access_permissions_add_document_group"] ?></b>
+				<b><?php echo $_lang['access_permissions_add_document_group'] ?></b>
 			</td>
 		</tr>
 		</thead>
-		<tr class='row1'>
+		<tr class="row1">
 			<td>
-			<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 				<input type="hidden" name="a" value="41" />
 				<input type="hidden" name="operation" value="add_document_group" />
-				<input type=text value='' name='newdocgroup' />&nbsp;
-				<input type=submit value='<?php echo $_lang["submit"]; ?>'>
+				<input type="text" value="" name="newdocgroup" />&nbsp;
+				<input type="submit" value="<?php echo $_lang['submit']; ?>">
 			</form>
 			</td>
 		</tr>
@@ -162,7 +162,7 @@ if($limit<1) {
 		<thead>
 		<tr>
 			<td colspan="3">
-				<b><?php echo $_lang["access_permissions_document_groups"] ?></b>
+				<b><?php echo $_lang['access_permissions_document_groups'] ?></b>
 			</td>
 		</tr>
 		</thead>
@@ -171,37 +171,36 @@ if($limit<1) {
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
-			echo "<tr><td class='row1'><span class='warning'>".$_lang['no_groups_found']."</span></td></tr>";
+			echo '<tr><td class="row1"><span class="warning">'.$_lang['no_groups_found'].'</span></td></tr>';
 		} else {
 			for($i=0; $i<$limit; $i++) {
 			$row = mysql_fetch_assoc($rs);
 			?>
-			<tr class='row3'>
+			<tr class="row3">
 				<td width="350">
 					<?php echo $row['name'] ;?>
 				</td>
 				<td align="right" width="50">
-					<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+					<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 						<input type="hidden" name="a" value="41" />
 						<input type="hidden" name="documentgroup" value="<?php echo $row['id'];?>" />
 						<input type="hidden" name="operation" value="delete_document_group" />
-						<input type=submit value='<?php echo $_lang['delete']; ?>'>
+						<input type="submit" value="<?php echo $_lang['delete']; ?>">
 					</form>
 				</td>
 				<td align="right" width="200">
-					<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+					<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 						<input type="hidden" name="a" value="41" />
-						<input type="hidden" name="groupid" value="<?php echo $row['id'];?>" />
+						<input type="hidden" name="groupid" value="<?php echo $row['id']; ?>" />
 						<input type="hidden" name="operation" value="rename_document_group" />
-						<input type='text' name='newgroupname' value='<?php echo $row['name'] ;?>'>&nbsp;
-						<input type='submit' value='<?php echo $_lang['rename']; ?>'>
+						<input type="text" name="newgroupname" value="<?php echo $row['name']; ?>">&nbsp;
+						<input type="submit" value="<?php echo $_lang['rename']; ?>">
 					</form>
 				</td>
 			</tr>
 			<tr>
-				<td class='row2' colspan="3">&nbsp;&raquo;&nbsp;
-					<span style='font-size: 9px'>
-					<?php echo $_lang['access_permissions_documents_in_group']; ?>
+				<td class="row2" colspan="3">&nbsp;&raquo;&nbsp;
+					<span style="font-size: 9px"><?=$_lang['access_permissions_documents_in_group']?>
 					<?php
 					$sql = "SELECT tbl1.pagetitle AS document, tbl1.id AS id FROM
 					$dbase.`".$table_prefix."site_content` AS tbl1,
@@ -217,9 +216,9 @@ if($limit<1) {
 						$users = array();
 						for($y=0; $y<$limit2; $y++) {
 							$row2 = mysql_fetch_assoc($rs2);
-							$users[] = "<a href='index.php?id=".$row2['id']."&a=3' style='font-size: 9px' title='".$row2['document']."'> ".$row2['id']."</a>";
+							$users[] = '<a href="index.php?id='.$row2['id'].'&a=3" style="font-size: 9px" title="'.htmlspecialchars($row2['document']).'">'.$row2['id'].'</a>';
 						}
-						echo join($users, ", ");
+						echo "\n\t".join($users, ",\n\t");
 					}
 					?>
 					</span>
@@ -236,7 +235,7 @@ if($limit<1) {
 
 
 <div class="tab-page" id="tabPage3">
-<h2 class="tab"><?php echo $_lang["access_permissions_links"] ?></h2>
+<h2 class="tab"><?php echo $_lang['access_permissions_links'] ?></h2>
 <script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage3" ) );</script>
 	<?php echo $_lang['access_permissions_links_tab']; ?> <p />
 <?php
@@ -244,17 +243,17 @@ if($limit<1) {
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
-			echo "<span class='warning'>".$_lang['no_groups_found']."</span><br />";
+			echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
 		} else {
 			?>
 			<table width="95%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
-			<thead><tr><td><b><?php echo $_lang["access_permissions_user_group"]; ?></b></td><td><b><?php echo $_lang["access_permissions_user_group_access"]; ?></b></td></tr></thead>
+			<thead><tr><td><b><?php echo $_lang['access_permissions_user_group']; ?></b></td><td><b><?php echo $_lang['access_permissions_user_group_access']; ?></b></td></tr></thead>
 			<?php
 			for($i=0; $i<$limit; $i++) {
 			$row = mysql_fetch_assoc($rs);
 			?>
-			<tr class='row3'>
-				<td><b><?php echo $row['name'] ;?></b></td>
+			<tr class="row3">
+				<td><b><?php echo $row['name']; ?></b></td>
 				<td>&nbsp;</td>
 			</tr>
 			<?php
@@ -270,37 +269,37 @@ if($limit<1) {
 				$limit2 = mysql_num_rows($rs2);
 				if($limit2<1) {
 					?>
-					<tr class='row1'><td>&nbsp;</td><td><i><?php echo $_lang['no_groups_found']; ?></i></td></tr>
+					<tr class="row1"><td>&nbsp;</td><td><i><?php echo $_lang['no_groups_found']; ?></i></td></tr>
 					<?php
 				} else {
 					for($y=0; $y<$limit2; $y++) {
 						$row2 = mysql_fetch_assoc($rs2);
 						?>
-						<tr class='row1'>
-							<td align='right'>
-								<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+						<tr class="row1">
+							<td align="right">
+								<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 									<input type="hidden" name="a" value="41" />
 									<input type="hidden" name="coupling" value="<?php echo $row2['id'];?>" />
 									<input type="hidden" name="operation" value="remove_document_group_from_user_group" />
-									<input type=submit value='<?php echo $_lang['remove'];?> ->'>
+									<input type="submit" value="<?php echo $_lang['remove']; ?> ->">
 								</form>
 							</td>
 							<td>
-									<?php echo $row2['name'] ;?>
+									<?php echo $row2['name']; ?>
 							</td>
 						</tr>
 						<?php
 					}
 				}
 				?>
-				<tr class='row1'><td>&nbsp;
+				<tr class="row1"><td>&nbsp;
 				</td><td>
-				<form method="post" action="index.php" name='accesspermissions' style="margin: 0px;">
+				<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 						<input type="hidden" name="a" value="41" />
 						<input type="hidden" name="usergroup" value="<?php echo $row['id'];?>" />
 						<input type="hidden" name="operation" value="add_document_group_to_user_group" />
 						<?php echo $docgroupselector; ?>&nbsp;
-						<input type=submit value='<?php echo $_lang['add'];?>'>
+						<input type="submit" value="<?php echo $_lang['add']; ?>">
 				</form>
 				</td></tr>
 				<?php

@@ -16,7 +16,7 @@ class DocumentParser {
 
     // constructor
     function DocumentParser() {
-        $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class		
+        $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
         $this->dbConfig= & $this->db->config; // alias for backward compatibility
         $this->jscripts= array ();
         $this->sjscripts= array ();
@@ -87,7 +87,7 @@ class DocumentParser {
                 exit;
             }
             elseif ($type == 'REDIRECT_HEADER' || empty ($type)) {
-                // check if url has /$base_url 
+                // check if url has /$base_url
                 global $base_url, $site_url;
                 if (substr($url, 0, strlen($base_url)) == $base_url) {
                     // append $site_url to make it work with Location:
@@ -103,7 +103,7 @@ class DocumentParser {
                 header($responseCode);
             }
             header($header);
-            $this->postProcess();
+            exit();
         }
     }
 
@@ -112,7 +112,7 @@ class DocumentParser {
             $this->forwards= $this->forwards - 1;
             $this->documentIdentifier= $id;
             $this->documentMethod= 'id';
-            $this->documentObject= $this->getDocumentObject('id', $id); 
+            $this->documentObject= $this->getDocumentObject('id', $id);
             if ($responseCode) {
                 header($responseCode);
             }
@@ -190,34 +190,34 @@ class DocumentParser {
         if (!is_array($this->config) || empty ($this->config)) {
             if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
-            } 
+            }
             if (!$included) {
                 $result= $this->dbQuery('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
                 while ($row= $this->fetchRow($result, 'both')) {
                     $this->config[$row[0]]= $row[1];
                 }
             }
-            
+
             // added for backwards compatibility - garry FS#104
             $this->config['etomite_charset'] = & $this->config['modx_charset'];
-    
+
             // store base_url and base_path inside config array
             $this->config['base_url']= MODX_BASE_URL;
             $this->config['base_path']= MODX_BASE_PATH;
             $this->config['site_url']= MODX_SITE_URL;
-    
+
             // load user setting if user is logged in
             $usrSettings= array ();
             if ($id= $this->getLoginUserID()) {
                 $usrType= $this->getLoginUserType();
                 if (isset ($usrType) && $usrType == 'manager')
                     $usrType= 'mgr';
-    
+
                 if ($usrType == 'mgr' && $this->isBackend()) {
                     // invoke the OnBeforeManagerPageInit event, only if in backend
                     $this->invokeEvent("OnBeforeManagerPageInit");
                 }
-    
+
                 if (isset ($_SESSION[$usrType . 'UsrConfigSet'])) {
                     $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
                 } else {
@@ -431,7 +431,7 @@ class DocumentParser {
     		if (!empty($this->sjscripts)) $this->documentObject['__MODxSJScripts__'] = $this->sjscripts;
     		if (!empty($this->jscripts)) $this->documentObject['__MODxJScripts__'] = $this->jscripts;
         }
-        
+
         // check for non-cached snippet output
         if (strpos($this->documentOutput, '[!') > -1) {
             $this->documentOutput= str_replace('[!', '[[', $this->documentOutput);
@@ -440,7 +440,7 @@ class DocumentParser {
             // Parse document source
             $this->documentOutput= $this->parseDocumentSource($this->documentOutput);
     	}
-    
+
     	// Moved from prepareResponse() by sirlancelot
     	// Insert Startup jscripts & CSS scripts into template - template must have a <head> tag
     	if ($js= $this->getRegisteredClientStartupScripts()) {
@@ -448,7 +448,7 @@ class DocumentParser {
     		// $this->documentContent = preg_replace("/(<head[^>]*>)/i", "\\1\n".$js, $this->documentContent);
     		$this->documentOutput= preg_replace("/(<\/head>)/i", $js . "\n\\1", $this->documentOutput);
     	}
-    
+
     	// Insert jscripts & html block into template - template must have a </body> tag
     	if ($js= $this->getRegisteredClientScripts()) {
     		$this->documentOutput= preg_replace("/(<\/body>)/i", $js . "\n\\1", $this->documentOutput);
@@ -985,7 +985,7 @@ class DocumentParser {
             }
 
             // invoke OnParseDocument event
-            $this->documentOutput= $source; // store source code so plugins can 			
+            $this->documentOutput= $source; // store source code so plugins can
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
 
@@ -1008,7 +1008,7 @@ class DocumentParser {
                 // check if source length was changed
                 $et= strlen($source);
                 if ($st != $et)
-                    $passes++; // if content change then increase passes because 
+                    $passes++; // if content change then increase passes because
             } // we have not yet reached maxParserPasses
         }
         return $source;
@@ -1034,7 +1034,7 @@ class DocumentParser {
             $this->getSettings();
         }
 
-        // IIS friendly url fix 
+        // IIS friendly url fix
         if ($this->config['friendly_urls'] == 1 && strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== false) {
             $url= $_SERVER['QUERY_STRING'];
             $err= substr($url, 0, 3);
@@ -1105,10 +1105,10 @@ class DocumentParser {
         if ($this->config['track_visitors'] == 1) {
             $this->invokeEvent("OnLogPageHit");
         }
-        
+
         $this->prepareResponse();
     }
-    
+
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
         $this->documentContent= $this->checkCache($this->documentIdentifier);
@@ -1191,7 +1191,7 @@ class DocumentParser {
             // setup <base> tag for friendly urls
             //			if($this->config['friendly_urls']==1 && $this->config['use_alias_path']==1) {
             //				$this->regClientStartupHTMLBlock('<base href="'.$this->config['site_url'].'" />');
-            //			}			
+            //			}
         }
         register_shutdown_function(array (
             & $this,
@@ -1286,7 +1286,7 @@ class DocumentParser {
         $evtid= intval($evtid);
         if ($type < 1) {
             $type= 1;
-        } 
+        }
         elseif ($type > 3) {
             $type= 3; // Types: 1 = information, 2 = warning, 3 = error
         }
@@ -1574,7 +1574,7 @@ class DocumentParser {
         if ($this->config['xhtml_urls']) {
         	return preg_replace("/&(?!amp;)/","&amp;", $host . $virtualDir . $url);
         } else {
-        	return $host . $virtualDir . $url;	
+        	return $host . $virtualDir . $url;
         }
     }
 
@@ -1936,6 +1936,26 @@ class DocumentParser {
         $this->placeholders[$name]= $value;
     }
 
+    # set arrays or object vars as placeholders
+    function toPlaceholders($subject, $prefix= '') {
+        if (is_object($subject)) {
+            $subject= get_object_vars($subject);
+        }
+        if (is_array($subject)) {
+            foreach ($subject as $key => $value) {
+                $this->toPlaceholder($key, $value, $prefix);
+            }
+        }
+    }
+
+    function toPlaceholder($key, $value, $prefix= '') {
+        if (is_array($value) || is_object($value)) {
+            $this->toPlaceholders($value, "{$prefix}{$key}.");
+        } else {
+            $this->setPlaceholder("{$prefix}{$key}", $value);
+        }
+    }
+
     # returns the virtual relative path to the manager folder
     function getManagerPath() {
         global $base_url;
@@ -1995,10 +2015,10 @@ class DocumentParser {
     function getLoginUserID($context= '') {
         if ($context && isset ($_SESSION[$context . 'Validated'])) {
             return $_SESSION[$context . 'InternalKey'];
-        } 
+        }
         elseif ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return $_SESSION['webInternalKey'];
-        } 
+        }
         elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
             return $_SESSION['mgrInternalKey'];
         }
@@ -2008,7 +2028,7 @@ class DocumentParser {
     function getLoginUserName() {
         if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return $_SESSION['webShortname'];
-        } 
+        }
         elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
             return $_SESSION['mgrShortname'];
         }
@@ -2018,7 +2038,7 @@ class DocumentParser {
     function getLoginUserType() {
         if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return 'web';
-        } 
+        }
         elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
             return 'manager';
         } else {
@@ -2562,7 +2582,7 @@ class DocumentParser {
                 E_USER_ERROR => "User Error",
                 E_USER_WARNING => "User Warning",
                 E_USER_NOTICE => "User Notice",
-                
+
             );
 
             $parsedMessageString .= "<tr><td>&nbsp;</td></tr><tr><td colspan='3'><b>PHP error debug</b></td></tr>";

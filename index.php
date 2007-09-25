@@ -132,5 +132,4 @@ if(!isset($_SESSION['mgrValidated']) || !$_SESSION['mgrValidated']) {
 if (!MODX_API_MODE) {
     $modx->executeParser();
 }
-exit();
 ?>

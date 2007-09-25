@@ -1,8 +1,8 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('edit_document')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // ok, two things to check.
@@ -39,8 +39,8 @@ if ($oldparent != $newParentID) {
 		$udperms = new udperms();
 		$udperms->user = $modx->getLoginUserID();
 		$udperms->document = $newParentID;
-		$udperms->role = $_SESSION['mgrRole'];	
-		
+		$udperms->role = $_SESSION['mgrRole'];
+
 		 if (!$udperms->checkPermissions()) {
 		 include ("header.inc.php");
 		 ?><script type="text/javascript">parent.tree.ca = '';</script>
@@ -49,7 +49,7 @@ if ($oldparent != $newParentID) {
         <?php
         include ("footer.inc.php");
         exit;
-		 }	
+		 }
 	}
 }
 
@@ -81,13 +81,13 @@ if (!array_search($newParentID, $children)) {
 	if(!$rs){
 		echo "An error occured while attempting to change the new parent to a folder.";
 	}
-	
+
 	$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET parent=".$_REQUEST['new_parent'].", editedby=".$modx->getLoginUserID().", editedon=".time()." WHERE id=".$_REQUEST['id'].";";
 	$rs = mysql_query($sql);
 	if(!$rs){
 		echo "An error occured while attempting to move the document to the new parent.";
 	}
-	
+
 	// finished moving the document, now check to see if the old_parent should no longer be a folder.
 	$sql = "SELECT count(*) FROM $dbase.`".$table_prefix."site_content` WHERE parent=$oldparent;";
 	$rs = mysql_query($sql);
@@ -96,7 +96,7 @@ if (!array_search($newParentID, $children)) {
 	}
 	$row = mysql_fetch_assoc($rs);
 	$limit = $row['count(*)'];
-	
+
 	if(!$limit>0) {
 		$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET isfolder=0 WHERE id=$oldparent;";
 		$rs = mysql_query($sql);
@@ -104,13 +104,13 @@ if (!array_search($newParentID, $children)) {
 			echo "An error occured while attempting to change the old parent to a regular document.";
 		}
 	}
-	
+
 	// empty cache & sync site
 	include_once "cache_sync.class.processor.php";
 	$sync = new synccache();
 	$sync->setCachepath("../assets/cache/");
 	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache		
+	$sync->emptyCache(); // first empty the cache
 	$header="Location: index.php?r=1&id=$id&a=7";
 	header($header);
 } else {

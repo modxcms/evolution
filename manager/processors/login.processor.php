@@ -74,10 +74,10 @@ $limit = mysql_num_rows($rs);
 if($limit==0 || $limit>1) {
     jsAlert($e->errors[900]);
     return;
-}   
+}
 
 $row = mysql_fetch_assoc($rs);
-    
+
 $internalKey            = $row['internalKey'];
 $dbasePassword          = $row['password'];
 $failedlogins           = $row['failedlogincount'];
@@ -158,7 +158,7 @@ if ($allowed_days) {
     if (strpos($allowed_days,"$day")===false) {
         jsAlert("You are not allowed to login at this time. Please try again later.");
         return;
-    }       
+    }
 }
 
 // invoke OnManagerAuthentication event
@@ -214,8 +214,8 @@ if(!isset($_SESSION['mgrValidated'])) {
     $rs = mysql_query($sql);
 }
 
-# Added by Raymond: 
-$_SESSION['usertype'] = 'manager'; // user is a backend user  
+# Added by Raymond:
+$_SESSION['usertype'] = 'manager'; // user is a backend user
 
 // get permissions
 //$_SESSION['mgrValid']=base64_encode($givenPassword); //??
@@ -231,7 +231,7 @@ $_SESSION['mgrLastlogin']=$lastlogin;
 $_SESSION['mgrLogincount']=$nrlogins; // login count
 $_SESSION['mgrRole']=$role;
 $sql="SELECT * FROM $dbase.`".$table_prefix."user_roles` WHERE id=".$role.";";
-$rs = mysql_query($sql); 
+$rs = mysql_query($sql);
 $row = mysql_fetch_assoc($rs);
 $_SESSION['mgrPermissions'] = $row;
 
@@ -243,7 +243,7 @@ $sql = "SELECT uga.documentgroup
         FROM $tblug ug
         INNER JOIN $tbluga uga ON uga.membergroup=ug.user_group
         WHERE ug.member =".$internalKey;
-$rs = mysql_query($sql); 
+$rs = mysql_query($sql);
 while ($row = mysql_fetch_row($rs)) $dg[$i++]=$row[0];
 $_SESSION['mgrDocgroups'] = $dg;
 
@@ -279,7 +279,7 @@ else {
     else header($header);
 }
 
-// show javascript alert    
+// show javascript alert
 function jsAlert($msg){
     if($_POST['ajax']==1) echo $msg."\n";
     else {

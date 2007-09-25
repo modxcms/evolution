@@ -13,7 +13,7 @@
 		$modx->regClientStartupScript('<script type="text/javascript">var MODX_MEDIA_PATH = "'.(IN_MANAGER_MODE ? 'media':'manager/media').'";</script>');
 
 		// process any TV commands in value
-        $docid= intval($docid) ? intval($docid) : $modx->documentIdentifier;
+		$docid= intval($docid) ? intval($docid) : $modx->documentIdentifier;
 		$value = ProcessTVCommand($value, $name, $docid);
 
 		$param = array();
@@ -30,33 +30,30 @@
 
 		$id = "tv$name";
 		switch($format){
-
 			case 'image':
-
 				$images = parseInput($value, '||', 'array');
 				$o = '';
-
 				foreach($images as $image){
-
 					if(!is_array($image)) { $image = explode('==',$image); }
 					$src = $image[0];
 
 					if($src) {
+						// We have a valid source
+						$attributes = '';
+						$attr = array(
+							'class' => $params['class'],
+							'src' => $src,
+							'id' => ($params['id'] ? $params['id'] : ''),
+							'alt' => htmlspecialchars($params['alttext']),
+							'style' => $params['style']
+						);
+						foreach ($attr as $k => $v) $attributes.= ($v ? ' '.$k.'="'.$v.'"' : '');
+						$attributes .= ' '.$params['attrib'];
 
-						$id = ($params['id'] ? 'id="'.$params['id'].'"' : '');
-						$alt = htmlspecialchars($params['alttext']);
-						$class = $params['class'];
-						$style = $params['style'];
-						$attributes = $params['attrib'];
-
-$o .= <<<EOD
-<img {$id} src="{$src}" alt="{$alt}" class="{$class}" style="{$style}" {$attributes} />
-EOD;
-
+						// Output the image with attributes
+						$o .= '<img'.rtrim($attributes).' />';
 					}
-
 				}
-
 			break;
 
 			case "delim":	// display as delimitted list
@@ -148,10 +145,10 @@ EOD;
 					if ($delim=="\\n") $delim = "\n";
 					$value = parseInput($value,$delim,"array");
 					if(count($value)>0){
-	                    for($i=0;$i<count($value);$i++){
+						for($i=0;$i<count($value);$i++){
 							$o.= "    <div class=\"mooticker\">".$value[$i]."</div>\n";
 						}
-	                }
+					}
 				}
 				$o .= "</div>\n";
 				$o .= "<script type=\"text/javascript\">\n";
@@ -167,12 +164,25 @@ EOD;
 
 			case "hyperlink":
 				$value = parseInput($value,"||","array");
-				for($i = 0;$i<count($value); $i++){
+				for ($i = 0; $i < count($value); $i++) {
 					list($name,$url) = is_array($value[$i]) ? $value[$i]: explode("==",$value[$i]);
-					if(!$url) $url = $name;
+					if (!$url) $url = $name;
 					if ($url) {
 						if($o) $o.='<br />';
-						$o.= "<a href='$url'"." title='".($params["title"] ? mysql_escape_string($params["title"]):$name)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["target"] ? " target='".$params["target"]."'":"").($params["attrib"] ? " ".mysql_escape_string($params["attrib"]) : "").">".($params["text"] ? mysql_escape_string($params["text"]) : $name)."</a>";
+						$attributes = '';
+						// setup the link attributes
+						$attr = array(
+							'href' => $url,
+							'title' => $params['title'] ? htmlspecialchars($params['title']) : $name,
+							'class' => $params['class'],
+							'style' => $params['style'],
+							'target' => $params['target'],
+						);
+						foreach ($attr as $k => $v) $attributes .= ($v ? ' '.$k.'="'.$v.'"' : '');
+						$attributes .= ' '.$params['attrib']; // add extra
+
+						// Output the link
+						$o .= '<a'.rtrim($attributes).'>'. ($params['text'] ? htmlspecialchars($params['text']) : $name) .'</a>';
 					}
 				}
 				break;
@@ -181,10 +191,22 @@ EOD;
 				$value = parseInput($value,"||","array");
 				$tagid = $params['tagid'];
 				$tagname = ($params['tagname'])? $params['tagname']:'div';
-				for($i = 0;$i<count($value); $i++){
-					$tagvalue = is_array($value[$i]) ? implode(" ",$value[$i]): $value[$i];
-					if(!$url) $url = $name;
-					if ($tagvalue) $o.= "<$tagname id='".($tagid ? $tagid:"tv".$id)."'".($params["class"] ? " class='".$params["class"]."'":"").($params["style"] ? " style='".$params["style"]."'":"").($params["attrib"]? " ".$params["attrib"]:"").">".$tagvalue."</$tagname>";
+				// Loop through a list of tags
+				for ($i = 0; $i < count($value); $i++) {
+					$tagvalue = is_array($value[$i]) ? implode(' ', $value[$i]) : $value[$i];
+					if (!$tagvalue) continue;
+
+					$attributes = '';
+					$attr = array(
+						'id' => ($tagid ? $tagid : $id), // 'tv' already added to id
+						'class' => $params['class'],
+						'style' => $params['style'],
+					);
+					foreach ($attr as $k => $v) $attributes.= ($v ? ' '.$k.'="'.$v.'"' : '');
+					$attributes .= ' '.$params['attrib']; // add extra 
+
+					// Output the HTML Tag
+					$o .= '<'.$tagname.rtrim($attributes).'>'.$tagvalue.'</'.$tagname.'>';
 				}
 				break;
 
@@ -200,14 +222,13 @@ EOD;
 				// setup editors
 				if (!empty($replace_richtext) && !empty($richtexteditor)) {
 					// invoke OnRichTextEditorInit event
-					$evtOut = $modx->invokeEvent("OnRichTextEditorInit",
-													array(
-														'editor'		=> $richtexteditor,
-														'elements'		=> $replace_richtext,
-														'forfrontend'=> 1,
-														'width'			=> $w,
-														'height'		=> $h
-													));
+					$evtOut = $modx->invokeEvent("OnRichTextEditorInit", array(
+						'editor'		=> $richtexteditor,
+						'elements'		=> $replace_richtext,
+						'forfrontend'		=> 1,
+						'width'			=> $w,
+						'height'		=> $h
+					));
 					if(is_array($evtOut)) $o.= implode("",$evtOut);
 				}
 				break;
@@ -299,24 +320,23 @@ EOD;
 				$o = $grd->render();
 				break;
 
-            case 'htmlentities':
-               $value= parseInput($value);
-               if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
-                   // remove delimiter from checkbox and listbox-multiple TVs
-                   $value = str_replace('||','',$value);
-               }
-               $o = htmlentities($value, ENT_NOQUOTES, $modx->config['modx_charset']);
-               break;
+			case 'htmlentities':
+				$value= parseInput($value);
+				if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
+					// remove delimiter from checkbox and listbox-multiple TVs
+					$value = str_replace('||','',$value);
+				}
+				$o = htmlentities($value, ENT_NOQUOTES, $modx->config['modx_charset']);
+				break;
 
-            default:
-               $value = parseInput($value);
-               if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
-                  // remove delimiter from checkbox and listbox-multiple TVs
-                  $value = str_replace('||','',$value);
-               }
-               $o = $value;
-               break;
-
+			default:
+				$value = parseInput($value);
+				if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {
+					// remove delimiter from checkbox and listbox-multiple TVs
+					$value = str_replace('||','',$value);
+				}
+				$o = $value;
+				break;
 		}
 		return $o;
 	}

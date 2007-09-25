@@ -77,7 +77,7 @@ if(isset($_GET['id'])) {
 
 // get available RichText Editors
 $RTEditors = "";
-$evtOut = $modx->invokeEvent("OnRichTextEditorRegister",array(forfrontend => 1));
+$evtOut = $modx->invokeEvent("OnRichTextEditorRegister",array('forfrontend' => 1));
 if(is_array($evtOut)) $RTEditors = implode(",",$evtOut);
 
 ?>
@@ -158,6 +158,7 @@ function showParameters(ctrl) {
             value = decode((currentParams[key]) ? currentParams[key]:(dt=='list') ? ar[3] : (ar[2])? ar[2]:'');
             if (value!=currentParams[key]) currentParams[key] = value;
             value = (value+'').replace(/^\s|\s$/,""); // trim
+	    value = value.replace(/\"/g,"&quot;"); // replace double quotes with &quot;
             if (dt) {
                 switch(dt) {
                     case 'int':

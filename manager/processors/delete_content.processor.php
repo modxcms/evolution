@@ -1,9 +1,9 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 if(!$modx->hasPermission('delete_document')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 <?php
@@ -25,7 +25,7 @@ if(!$udperms->checkPermissions()) {
 	<p><?php echo $_lang['access_permission_denied']; ?></p>
 	<?php
 	include("footer.inc.php");
-	exit;	
+	exit;
 }
 
 function getChildren($parent) {
@@ -35,9 +35,9 @@ function getChildren($parent) {
 	global $children;
 	global $site_start;
 	global $site_unavailable_page;
-	
+
 	$db->debug = true;
-	
+
 	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=0;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -108,7 +108,7 @@ if(!$rs) {
 	$sync = new synccache();
 	$sync->setCachepath("../assets/cache/");
 	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache		
+	$sync->emptyCache(); // first empty the cache
 	// finished emptying cache - redirect
 	$header="Location: index.php?r=1&a=7";
 	header($header);

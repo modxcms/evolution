@@ -1,9 +1,9 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 if(!$modx->hasPermission('manage_metatags')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // get op code
@@ -17,7 +17,7 @@ if($opcode=="addtag") {
 		tag => mysql_escape_string($tag),
 		tagvalue => mysql_escape_string($_POST["tagvalue"]),
 		http_equiv => intval($http_equiv)
-	);	
+	);
 	if($f["name"] && $f["tagvalue"]) {
 		$modx->db->insert($f,$modx->getFullTableName("site_metatags"));
 	}
@@ -31,7 +31,7 @@ else if($opcode=="edttag") {
 		tag => mysql_escape_string($tag),
 		tagvalue => mysql_escape_string($_POST["tagvalue"]),
 		http_equiv => intval($http_equiv)
-	);	
+	);
 	if($f["name"] && $f["tagvalue"]) {
 		$modx->db->update($f,$modx->getFullTableName("site_metatags"),"id='$id'");
 	}
@@ -57,7 +57,7 @@ else {
 			$limit = mysql_num_rows($rs);
 			if($limit > 0) {
 				echo "  - This keyword has already been defined!";
-				exit;		
+				exit;
 			} else {
 				$sql = "UPDATE $dbase.`".$table_prefix."site_keywords` SET keyword='".addslashes($rename_keywords[$key])."' WHERE keyword='".addslashes($value)."'";
 				$rs = mysql_query($sql);
@@ -97,7 +97,7 @@ else {
 		$limit = mysql_num_rows($rs);
 		if($limit > 0) {
 			echo "Keyword $nk already exists!";
-			exit;		
+			exit;
 		} else {
 			$sql = "INSERT INTO $dbase.`".$table_prefix."site_keywords` (keyword) VALUES('".addslashes($nk)."')";
 			$rs = mysql_query($sql);

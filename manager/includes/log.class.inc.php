@@ -1,7 +1,7 @@
 <?php
 
 // logger class.
-/* 
+/*
 
 Usage:
 
@@ -29,14 +29,14 @@ class logHandler{
 		$e = new errorHandler;
 		$e->setError(9, "Logging error: ".$msg);
 		$e->dumpError();
-		return;	
+		return;
 	}
-	
+
 	function initAndWriteLog($msg="", $internalKey="", $username="", $action="", $itemid="", $itemname="") {
 		global $modx;
 		$this->msg = $msg=="" ? "" : $msg;	// writes testmessage to the object
 		$this->internalKey = $internalKey=="" ? $modx->getLoginUserID() : $internalKey;	// writes the key to the object
-		$this->username = $username=="" ? $modx->getLoginUserName() : $username;	// writes the key to the object		
+		$this->username = $username=="" ? $modx->getLoginUserName() : $username;	// writes the key to the object
 		$this->action = $action=="" ? $_REQUEST['a'] : $action;	// writes the action to the object
 		$this->itemId = $itemid=="" ? $_REQUEST['id'] : $itemid;	// writes the id to the object
 		if($this->itemId==0) $this->itemId="-"; // to stop items having id 0
@@ -46,11 +46,11 @@ class logHandler{
 		$this->writeToLog();
 		return;
 	}
-	
-	
+
+
 	// function to write to the log
-	// collects all required info, and 
-	// writes it to the logging table 
+	// collects all required info, and
+	// writes it to the logging table
 	function writeToLog() {
 
 		global $modx;
@@ -73,13 +73,13 @@ class logHandler{
 				return;
 			}
 		}
-		
+
 		$sql = "INSERT INTO $dbase.`".$table_prefix."manager_log` (timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$modx->db->escape($this->internalKey)."', '".$modx->db->escape($this->username)."'";
-		$sql .= ", '".$modx->db->escape($this->action)."', '".$modx->db->escape($this->itemId)."', '".$modx->db->escape($this->itemName)."', '".$modx->db->escape($this->msg)."')"; 
-		
+		$sql .= ", '".$modx->db->escape($this->action)."', '".$modx->db->escape($this->itemId)."', '".$modx->db->escape($this->itemName)."', '".$modx->db->escape($this->msg)."')";
+
 		if(!$rs=$modx->db->query($sql)) {
 			$this->logError("Couldn't save log to table! ".mysql_error());
-			return true;		
+			return true;
 		}
 	}
 }

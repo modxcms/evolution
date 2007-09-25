@@ -176,22 +176,6 @@ function previewdocument() {
     }
 }
 
-// Added by Raymond
-var modVariables = [];
-function setVariableModified(fieldName){
-    var i, isDirty, mv = modVariables;
-    for(i=0;i<mv.length;i++){
-        if (mv[i]==fieldName) {
-            isDirty=true;
-        }
-    }
-    if (!isDirty) {
-        mv[mv.length]=fieldName;
-        var f = document.forms['mutate'];
-        f.variablesmodified.value=mv.join(",");
-    }
-}
-
 function saveRefreshPreview(){
     var f = document.forms['mutate'];
     documentDirty=false;
@@ -508,7 +492,6 @@ if (is_array($evtOut))
 <input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>" />
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576; ?>" />
 <input type="hidden" name="refresh_preview" value="0" />
-<input type="hidden" name="variablesmodified" value="" />
 <input type="hidden" name="newtemplate" value="" />
 
 <div class="subTitle">

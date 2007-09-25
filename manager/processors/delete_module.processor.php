@@ -1,8 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('delete_module')) {	
+if(!$modx->hasPermission('delete_module')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 <?php
@@ -21,7 +21,7 @@ if(!$rs) {
 	echo "Something went wrong while trying to delete the module...";
 	exit;
 }
-else {	
+else {
 
 	//ok, delete the module dependencies.
 	$sql = "DELETE FROM ".$modx->getFullTableName("site_module_depobj")." WHERE module='".$id."';";
@@ -43,12 +43,11 @@ else {
 	$sync = new synccache();
 	$sync->setCachepath("../assets/cache/");
 	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache		
+	$sync->emptyCache(); // first empty the cache
 	// finished emptying cache - redirect
 
 	$header="Location: index.php?a=106&r=2";
 	header($header);
 }
-
 
 ?>

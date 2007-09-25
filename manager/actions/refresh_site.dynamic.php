@@ -3,11 +3,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 // (un)publishing of documents, version 2!
 // first, publish document waiting to be published
-$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=1 WHERE $dbase.`".$table_prefix."site_content`.pub_date < ".time()." AND $dbase.`".$table_prefix."site_content`.pub_date!=0";
+$ctime = time();
+$sctable = $modx->getFullTableName('site_content');
+
+$sql = "UPDATE $sctable SET published=1 WHERE pub_date < ".$ctime." AND pub_date!=0 AND unpub_date > ".$ctime;
 $rs = mysql_query($sql);
 $num_rows_pub = mysql_affected_rows($modxDBConn);
 
-$sql = "UPDATE $dbase.`".$table_prefix."site_content` SET published=0 WHERE $dbase.`".$table_prefix."site_content`.unpub_date < ".time()." AND $dbase.`".$table_prefix."site_content`.unpub_date!=0";
+$sql = "UPDATE $sctable SET published=0 WHERE unpub_date < ".$ctime." AND unpub_date!=0 AND published=1";
 $rs = mysql_query($sql);
 $num_rows_unpub = mysql_affected_rows($modxDBConn);
 

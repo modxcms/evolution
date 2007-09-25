@@ -1,8 +1,8 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('messages')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 //$db->debug = true;
@@ -42,7 +42,7 @@ if($sendto=='g') {
 					values(".$row['internalKey'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
 			$rs2 = $modx->db->query($sql2);
 		}
-	}	
+	}
 }
 
 
@@ -57,7 +57,7 @@ if($sendto=='a') {
 					values(".$row['id'].", ".$modx->getLoginUserID().", '$subject', '$message', $postdate, 'Message', 0);";
 			$rs2 = $modx->db->query($sql2);
 		}
-	}	
+	}
 }
 
 //exit;

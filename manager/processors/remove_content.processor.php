@@ -1,8 +1,8 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_document')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 $sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
@@ -23,16 +23,16 @@ $modx->invokeEvent("OnBeforeEmptyTrash",
 						));
 
 // remove the document groups link.
-$sql = "DELETE $dbase.`".$table_prefix."document_groups` 
-		FROM $dbase.`".$table_prefix."document_groups` 
-		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."document_groups`.document 
+$sql = "DELETE $dbase.`".$table_prefix."document_groups`
+		FROM $dbase.`".$table_prefix."document_groups`
+		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."document_groups`.document
 		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
 @mysql_query($sql);
 
 // remove the TV content values.
-$sql = "DELETE $dbase.`".$table_prefix."site_tmplvar_contentvalues` 
-		FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues`  
-		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."site_tmplvar_contentvalues`.contentid 
+$sql = "DELETE $dbase.`".$table_prefix."site_tmplvar_contentvalues`
+		FROM $dbase.`".$table_prefix."site_tmplvar_contentvalues`
+		INNER JOIN $dbase.`".$table_prefix."site_content` ON $dbase.`".$table_prefix."site_content`.id = $dbase.`".$table_prefix."site_tmplvar_contentvalues`.contentid
 		WHERE $dbase.`".$table_prefix."site_content`.deleted=1;";
 @mysql_query($sql);
 
@@ -48,15 +48,16 @@ if(!$rs) {
 						array(
 							"ids"=>$ids
 						));
-	
+
 	// empty cache
 	include_once "cache_sync.class.processor.php";
 	$sync = new synccache();
 	$sync->setCachepath("../assets/cache/");
 	$sync->setReport(false);
-	$sync->emptyCache(); // first empty the cache		
+	$sync->emptyCache(); // first empty the cache
 	// finished emptying cache - redirect
 	$header="Location: index.php?r=1&a=7";
 	header($header);
 }
+
 ?>

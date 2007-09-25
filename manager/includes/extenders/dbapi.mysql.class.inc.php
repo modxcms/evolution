@@ -13,7 +13,7 @@ class DBAPI {
 
    /**
     * @name:  DBAPI
-    *	 
+    *
     */
    function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='') {
       $this->config['host'] = $host ? $host : $GLOBALS['database_server'];
@@ -27,8 +27,8 @@ class DBAPI {
 
    /**
     * @name:  initDataTypes
-    * @desc:  called in the constructor to set up arrays containing the types 
-    *         of database fields that can be used with specific PHP types 
+    * @desc:  called in the constructor to set up arrays containing the types
+    *         of database fields that can be used with specific PHP types
     */
    function initDataTypes() {
       $this->dataTypes['numeric'] = array (
@@ -74,7 +74,7 @@ class DBAPI {
 
    /**
     * @name:  connect
-    *	 
+    *
     */
    function connect($host = '', $dbase = '', $uid = '', $pwd = '', $persist = 0) {
       global $modx;
@@ -89,11 +89,11 @@ class DBAPI {
          exit;
       } else {
          $dbase = str_replace('`', '', $dbase); // remove the `` chars
-         if (!@ mysql_select_db($dbase)) {
+         if (!@ mysql_select_db($dbase, $this->conn)) {
             $modx->messageQuit("Failed to select the database '" . $dbase . "'!");
             exit;
          }
-         @mysql_query("SET CHARACTER SET {$charset}");
+         @mysql_query("SET CHARACTER SET {$charset}", $this->conn);
          $tend = $modx->getMicroTime();
          $totaltime = $tend - $tstart;
          if ($modx->dumpSQL) {
@@ -108,7 +108,7 @@ class DBAPI {
 
    /**
     * @name:  disconnect
-    *	 
+    *
     */
    function disconnect() {
       @ mysql_close($this->conn);
@@ -125,7 +125,7 @@ class DBAPI {
 
    /**
     * @name:  query
-    * @desc:  Mainly for internal use. 
+    * @desc:  Mainly for internal use.
     * Developers should use select, update, insert, delete where possible
     */
    function query($sql) {
@@ -150,7 +150,7 @@ class DBAPI {
 
    /**
     * @name:  delete
-    *	 
+    *
     */
    function delete($from,$where='',$fields='') {
       if (!$from)
@@ -164,7 +164,7 @@ class DBAPI {
 
    /**
     * @name:  select
-    *	 
+    *
     */
    function select($fields = "*", $from = "", $where = "", $orderby = "", $limit = "") {
       if (!$from)
@@ -180,7 +180,7 @@ class DBAPI {
 
    /**
     * @name:  update
-    *	 
+    *
     */
    function update($fields, $table, $where = "") {
       if (!$table)
@@ -231,33 +231,34 @@ class DBAPI {
 
    /**
     * @name:  getInsertId
-    *	 
+    *
     */
    function getInsertId($conn=NULL) {
-      if(!is_resource($conn)) { $conn = $this->conn; }
+      if( !is_resource($conn)) $conn =& $this->conn;
       return mysql_insert_id($conn);
    }
 
    /**
     * @name:  getAffectedRows
-    *	 
+    *
     */
    function getAffectedRows($conn=NULL) {
-      if(!is_resource($conn)) { $conn = $this->conn; }
+      if (!is_resource($conn)) $conn =& $this->conn;
       return mysql_affected_rows($conn);
    }
 
    /**
     * @name:  getLastError
-    *	 
+    *
     */
-   function getLastError() {
-      return mysql_error();
+   function getLastError($conn=NULL) {
+      if (!is_resource($conn)) $conn =& $this->conn;
+      return mysql_error($conn);
    }
 
    /**
     * @name:  getRecordCount
-    *	 
+    *
     */
    function getRecordCount($ds) {
       return (is_resource($ds)) ? mysql_num_rows($ds) : 0;
@@ -265,7 +266,7 @@ class DBAPI {
 
    /**
     * @name:  getRow
-    * @desc:  returns an array of column values		
+    * @desc:  returns an array of column values
     * @param: $dsq - dataset
     *
     */
@@ -289,7 +290,7 @@ class DBAPI {
    /**
     * @name:  getColumn
     * @desc:  returns an array of the values found on colun $name
-    * @param: $dsq - dataset or query string	 
+    * @param: $dsq - dataset or query string
     */
    function getColumn($name, $dsq) {
       if (!is_resource($dsq))
@@ -306,7 +307,7 @@ class DBAPI {
    /**
     * @name:  getColumnNames
     * @desc:  returns an array containing the column $name
-    * @param: $dsq - dataset or query string	 
+    * @param: $dsq - dataset or query string
     */
    function getColumnNames($dsq) {
       if (!is_resource($dsq))
@@ -324,7 +325,7 @@ class DBAPI {
    /**
     * @name:  getValue
     * @desc:  returns the value from the first column in the set
-    * @param: $dsq - dataset or query string	 
+    * @param: $dsq - dataset or query string
     */
    function getValue($dsq) {
       if (!is_resource($dsq))
@@ -358,7 +359,7 @@ class DBAPI {
 
    /**
     * @name:  getTableMetaData
-    * @desc:  returns an array of MySQL structure detail for each column of a 
+    * @desc:  returns an array of MySQL structure detail for each column of a
     *         table
     * @param: $table: the full name of the database table
     */
@@ -407,7 +408,7 @@ class DBAPI {
 
    /**
     * @name:  getHTMLGrid
-    * @param: $params: Data grid parameters 
+    * @param: $params: Data grid parameters
     *         columnHeaderClass
     *         tableClass
     *         itemClass
@@ -430,7 +431,7 @@ class DBAPI {
     *         pagerLocation
     *         pagerClass
     *         pagerStyle
-    * 
+    *
     */
    function getHTMLGrid($dsq, $params) {
       global $base_path;
@@ -471,7 +472,7 @@ class DBAPI {
          return $grd->render();
       }
    }
-   
+
    /**
    * @name:  makeArray
    * @desc:  turns a recordset into a multidimensional array

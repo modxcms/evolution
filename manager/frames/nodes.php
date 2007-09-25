@@ -12,7 +12,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         echo 'send some data'; //??
         exit;
     }
-    
+
     $indent    = $_GET['indent'];
     $parent    = $_GET['parent'];
     $expandAll = $_GET['expandAll'];
@@ -73,8 +73,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 	if (!isset($_SESSION['tree_sortby']) && !isset($_SESSION['tree_sortdir'])) {
 		// This is the first startup, set default sort order
-		$_SESSION['tree_sortby'] = 'isfolder';
-		$_SESSION['tree_sortdir'] = 'DESC';
+		$_SESSION['tree_sortby'] = 'menuindex';
+		$_SESSION['tree_sortdir'] = 'ASC';
 	}
 	$orderby = $_SESSION['tree_sortby']." ".$_SESSION['tree_sortdir'];
 
@@ -96,7 +96,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                       (!$docgrp ? ")":" OR dg.document_group IN ({$docgrp}))");
         }
         $sql = "SELECT DISTINCT sc.id, pagetitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr,
-                IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0) AS has_access 
+                IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0) AS has_access
                 FROM {$tblsc} AS sc
                 LEFT JOIN {$tbldg} dg on dg.document = sc.id
                 WHERE (parent={$parent})

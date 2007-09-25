@@ -1,8 +1,8 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('delete_user')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 <?php
@@ -35,7 +35,7 @@ $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the user...";
 	exit;
-} 
+}
 
 $sql = "DELETE FROM $dbase.`".$table_prefix."member_groups` WHERE $dbase.`".$table_prefix."member_groups`.member=".$id.";";
 $rs = mysql_query($sql);
@@ -58,7 +58,7 @@ $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the user attributes...";
 	exit;
-} else {		
+} else {
 	// invoke OnManagerDeleteUser event
 	$modx->invokeEvent("OnManagerDeleteUser",
 						array(
@@ -71,7 +71,7 @@ if(!$rs) {
 						array(
 							"id"	=> $id
 						));
-						
+
 	$header="Location: index.php?a=75";
 	header($header);
 }

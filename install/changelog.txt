@@ -3,10 +3,19 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6.1 (rev 2784 - June 14, 2007)
+MODx 0.9.6.1 (rev 2945 - September 25, 2007)
 ====================================
+* Replaced $this->postProcess() call at end of DocumentParser::sendRedirect() function to exit(). (2944)
+* [FS#866] Cleaned up code, made all mysql_* functions use the object's (or a reference to the) connection. (2912)
+* [FS#875] Removed the $variablesmodified logic, changed TV saving logic to REPLACE INTO queries. (2869)
+* [FS#877] Removed exit() from index.php that prevented MODX_API_MODE usage. (2853)
+* [FS#922] Duplicate Content Processor now honors a user's ability to publish documents. (2836)
+* [FS#921] Changed the way a few TVs are rendered, they no longer escape strings. (2812)
+* [FS#920] Manager menu now shows only active modules the user can execute ('disabled' modules are hidden). (2811)
+* Added two new API methods to the MODx DocumentParser class: $modx->toPlaceholder(string $key, mixed $value, string $prefix= '') and $modx->toPlaceholders(array|object $subject, string prefix= ''). (2803)
+* [FS#896] Document (Un)Publishing during "Clear Cache" now accurately (Un)Publishes documents. (2786)
 * [FS#894] Checking table_prefix failed during installation. (2782)
-* [FS#14] Changed default sort order to 'menuindex ASC'. (2780)
+* [FS#14] Changed default sort order to 'menuindex ASC'. (2780,2795)
 * Highlight current document in document tree corrected (when editing/viewing via right-click context menu). (2777)
 * [FS#874] Alias not saved if char-encoding set other then UTF-8 (bug in save_content.processor.php). (2776,2782,2783)
 * [FS#865] Fix to prevent registered scripts from being duplicated when registered by non-cacheable snippets in cacheable documents. (2781)

@@ -1,8 +1,8 @@
-<?php 
+<?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('new_snippet')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 ?>
 <?php
@@ -11,22 +11,22 @@ $id=$_GET['id'];
 
 // duplicate Snippet
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, properties) 
-			SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties 
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, properties)
+			SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties
 			FROM $dbase.`".$table_prefix."site_snippets` WHERE id=$id;";
 	$rs = mysql_query($sql);
 }
 else {
-	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties 
+	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, properties
 			FROM $dbase.`".$table_prefix."site_snippets` WHERE id=$id;";
 	$rs = mysql_query($sql);
 	if($rs) {
 		$row = mysql_fetch_assoc($rs);
-		$sql ="INSERT INTO $dbase.`".$table_prefix."site_snippets` 
-				(name, description, snippet, properties) VALUES 
+		$sql ="INSERT INTO $dbase.`".$table_prefix."site_snippets`
+				(name, description, snippet, properties) VALUES
 				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', '".mysql_escape_string($row['snippet'])."', '".mysql_escape_string($row['properties'])."');";
 		$rs = mysql_query($sql);
-	}	
+	}
 }
 if($rs) $newid = mysql_insert_id(); // get new id
 else {
