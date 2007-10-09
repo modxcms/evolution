@@ -14,8 +14,8 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         $pwdkey = $_REQUEST['wlk'];
 
         $sql = "SELECT wu.*
-                FROM $dbase.`".$table_prefix."web_users` wu 
-                WHERE wu.id='".mysql_escape_string($id)."'";                
+                FROM $dbase.`".$table_prefix."web_users` wu
+                WHERE wu.id='".mysql_escape_string($id)."'";
         $ds = $modx->db->query($sql);
         $limit = $modx->recordCount($ds);
         if($limit==1) {
@@ -28,26 +28,26 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             }
             // activate new password
             $newpwd = md5($newpwd);
-            $sql="UPDATE $dbase.`".$table_prefix."web_users` 
-                  SET password = '".$newpwd."', cachepwd='' 
+            $sql="UPDATE $dbase.`".$table_prefix."web_users`
+                  SET password = '".$newpwd."', cachepwd=''
                   WHERE id=".$row['id'];
             $ds = $modx->db->query($sql);
 
             // unblock user by resetting "blockeduntil"
-            $sql="UPDATE $dbase.`".$table_prefix."web_user_attributes` 
-                  SET blockeduntil = '0' 
+            $sql="UPDATE $dbase.`".$table_prefix."web_user_attributes`
+                  SET blockeduntil = '0'
                   WHERE internalKey=".$row['id'];
             $ds2 = $modx->db->query($sql);
 
             // invoke OnWebChangePassword event
-            if(!$ds || !$ds2) 
+            if(!$ds || !$ds2)
                 $modx->invokeEvent("OnWebChangePassword",
                                 array(
                                     "userid"        => $id,
                                     "username"        => $username,
                                     "userpassword"    => $newpwd
                                 ));
-            
+
             if(!$ds || !$ds2) $output = webLoginAlert("Error while activating password.");
             else if(!$pwdActId) $output = webLoginAlert("Your new password was successfully activated.");
             else {
@@ -66,17 +66,17 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 # process password reminder
     if ($isPWDReminder==1) {
-        $email = $_POST['txtwebemail'];        
+        $email = $_POST['txtwebemail'];
         $webpwdreminder_message = $modx->config['webpwdreminder_message'];
         $emailsubject = $modx->config['emailsubject'];
         $emailsender = $modx->config['emailsender'];
         $site_name = $modx->config['site_name'];
         // lookup account
-        $sql = "SELECT wu.*, wua.fullname 
-                FROM $dbase.`".$table_prefix."web_users` wu 
-                INNER JOIN $dbase.`".$table_prefix."web_user_attributes` wua ON wua.internalkey=wu.id 
+        $sql = "SELECT wu.*, wua.fullname
+                FROM $dbase.`".$table_prefix."web_users` wu
+                INNER JOIN $dbase.`".$table_prefix."web_user_attributes` wua ON wua.internalkey=wu.id
                 WHERE wua.email='".$modx->db->escape($email)."'";
-                
+
         $ds = $modx->db->query($sql);
         $limit = $modx->recordCount($ds);
         if($limit==1) {
@@ -84,8 +84,8 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             $newpwdkey = webLoginGeneratePassword(8); // activation key
             $row = $modx->fetchRow($ds);
             //save new password
-            $sql="UPDATE $dbase.`".$table_prefix."web_users` 
-                  SET cachepwd='".$newpwd."|".$newpwdkey."' 
+            $sql="UPDATE $dbase.`".$table_prefix."web_users`
+                  SET cachepwd='".$newpwd."|".$newpwdkey."'
                   WHERE id=".$row['id'];
             $modx->db->query($sql);
             // built activation url
@@ -101,12 +101,12 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             $message = str_replace("[+sname+]",$site_name,$message);
             $message = str_replace("[+semail+]",$emailsender,$message);
             $message = str_replace("[+surl+]",$url,$message);
-            
+
             if(!mail($email, "New Password Activation for $site_name", $message, "From: ".$emailsender."\r\n"."X-Mailer: MODx Content Manager - PHP/".phpversion())) {
-                // error 
+                // error
                 $output =  webLoginAlert("Error while sending mail to $email. Please contact the Site Administrator");
                 return;
-            }    
+            }
             if(!$pwdReqId) $output = webLoginAlert("Please check your email account ($email) for login instructions.");
             else {
                 // redirect to password request notification page
@@ -119,8 +119,8 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         }
 
         return;
-    
-    }    
+
+    }
 
 
 # process logout
@@ -135,7 +135,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
                                     "username" => $username
                                 ));
 
-        // if we were launched from the manager 
+        // if we were launched from the manager
         // do NOT destroy session
         if(isset($_SESSION['mgrValidated'])) {
             unset($_SESSION['webShortname']);
@@ -150,7 +150,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             unset($_SESSION['webnrlogins']);
             unset($_SESSION['webUsrConfigSet']);
             unset($_SESSION['webUserGroupNames']);
-            unset($_SESSION['webDocgroups']);            
+            unset($_SESSION['webDocgroups']);
         }
         else {
             // Unset all of the session variables.
@@ -203,7 +203,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
     if($limit==0 || $limit>1) {
         $output = webLoginAlert("Incorrect username or password entered!");
         return;
-    }    
+    }
 
     $row = $modx->db->getRow($ds);
 
@@ -225,7 +225,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
     if($internalKey){
         $result = $modx->db->query("SELECT setting_name, setting_value FROM ".$dbase.".`".$table_prefix."web_user_settings` WHERE webuser='$internalKey'");
         while ($row = $modx->fetchRow($result, 'both')) $modx->config[$row[0]] = $row[1];
-    }        
+    }
 
     if($failedlogins>=$modx->config['failed_login_attempts'] && $blockeduntildate>time()) {    // blocked due to number of login errors.
         session_destroy();
@@ -277,7 +277,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         if (strpos($modx->config['allowed_days'],"$day")===false) {
             $output = webLoginAlert("You are not allowed to login at this time. Please try again later.");
             return;
-        }        
+        }
     }
 
     // invoke OnWebAuthentication event
@@ -326,15 +326,15 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         $ds = $modx->db->query($sql);
     }
 
-    $_SESSION['webShortname']=$username; 
-    $_SESSION['webFullname']=$fullname; 
-    $_SESSION['webEmail']=$email; 
-    $_SESSION['webValidated']=1; 
-    $_SESSION['webInternalKey']=$internalKey; 
-    $_SESSION['webValid']=base64_encode($givenPassword); 
-    $_SESSION['webUser']=base64_encode($username); 
-    $_SESSION['webFailedlogins']=$failedlogins; 
-    $_SESSION['webLastlogin']=$lastlogin; 
+    $_SESSION['webShortname']=$username;
+    $_SESSION['webFullname']=$fullname;
+    $_SESSION['webEmail']=$email;
+    $_SESSION['webValidated']=1;
+    $_SESSION['webInternalKey']=$internalKey;
+    $_SESSION['webValid']=base64_encode($givenPassword);
+    $_SESSION['webUser']=base64_encode($username);
+    $_SESSION['webFailedlogins']=$failedlogins;
+    $_SESSION['webLastlogin']=$lastlogin;
     $_SESSION['webnrlogins']=$nrlogins;
     $_SESSION['webUserGroupNames'] = ''; // reset user group names
 
@@ -346,7 +346,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             FROM $tblug ug
             INNER JOIN $tbluga uga ON uga.webgroup=ug.webgroup
             WHERE ug.webuser =".$internalKey;
-    $ds = $modx->db->query($sql); 
+    $ds = $modx->db->query($sql);
     while ($row = $modx->db->getRow($ds,'num')) $dg[$i++]=$row[0];
     $_SESSION['webDocgroups'] = $dg;
 
@@ -358,7 +358,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
     $log = new logHandler;
     $log->initAndWriteLog("Logged in", $_SESSION['webInternalKey'], $_SESSION['webShortname'], "58", "-", "WebLogin");
-                                
+
     // get login home page
     $ok=false;
     if(isset($modx->config['login_home']) && $id=$modx->config['login_home']) {
@@ -378,7 +378,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         $itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : 'NULL' ;$lasthittime = time();$a = 998;
         if($a!=1) {
             // web users are stored with negative id
-            $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', '".$itemid."', '$ip')";
+            $sql = "REPLACE INTO $dbase.`".$table_prefix."active_users` (internalKey, username, lasthit, action, id, ip) values(-".$_SESSION['webInternalKey'].", '".$_SESSION['webShortname']."', '".$lasthittime."', '".$a."', ".$itemid.", '$ip')";
             if(!$ds = $modx->db->query($sql)) {
                 $output = "error replacing into active users! SQL: ".$sql;
                 return;
@@ -395,14 +395,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
                                 "rememberme"    => $_POST['rememberme']
                             ));
 
-    // redirect 
+    // redirect
     if(isset($_REQUEST['refurl']) && !empty($_REQUEST['refurl'])) {
         // last accessed page
         $targetPageId= html_entity_decode($_REQUEST['refurl']);
         if (strpos($targetPageId, 'q=') !== false) {
             $urlPos = strpos($targetPageId, 'q=')+2;
             $alias = substr($targetPageId, $urlPos);
-            $aliasLength = (strpos($alias, '&'))? strpos($alias, '&'): strlen($alias); 
+            $aliasLength = (strpos($alias, '&'))? strpos($alias, '&'): strlen($alias);
             $alias = substr($alias, 0, $aliasLength);
             $url = $modx->config['base_url'] . $alias;
         } elseif ($targetPageId= array_search($targetPageId, $modx->documentListing)) {
@@ -417,7 +417,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         $url = $modx->makeUrl($id);
         $modx->sendRedirect($url);
     }
-    
+
     return;
 
 ?>

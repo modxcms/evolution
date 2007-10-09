@@ -3,8 +3,9 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6.1 (rev 2945 - September 25, 2007)
+MODx 0.9.6.1 (rev 3013 - October 8, 2007)
 ====================================
+* [FS#929] weblogin error in SQL statement for active_users in STRICT sql_mode. (2987)
 * Replaced $this->postProcess() call at end of DocumentParser::sendRedirect() function to exit(). (2944)
 * [FS#866] Cleaned up code, made all mysql_* functions use the object's (or a reference to the) connection. (2912)
 * [FS#875] Removed the $variablesmodified logic, changed TV saving logic to REPLACE INTO queries. (2869)
