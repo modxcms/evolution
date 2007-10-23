@@ -134,6 +134,7 @@ class DocumentParser {
 
     function sendUnauthorizedPage() {
         // invoke OnPageUnauthorized event
+        $_REQUEST['refurl'] = $this->documentIdentifier;
         $this->invokeEvent('OnPageUnauthorized');
         if ($this->config['unauthorized_page']) {
             $unauthorizedPage= $this->config['unauthorized_page'];
@@ -142,7 +143,6 @@ class DocumentParser {
         } else {
             $unauthorizedPage= $this->config['site_start'];
         }
-//        $this->sendRedirect($this->makeUrl($this->config['unauthorized_page'], '', '&refurl=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'])), 1);
         $this->sendForward($unauthorizedPage, 'HTTP/1.1 401 Unauthorized');
         exit();
     }

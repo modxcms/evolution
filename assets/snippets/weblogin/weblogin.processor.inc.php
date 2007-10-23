@@ -405,7 +405,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             $aliasLength = (strpos($alias, '&'))? strpos($alias, '&'): strlen($alias);
             $alias = substr($alias, 0, $aliasLength);
             $url = $modx->config['base_url'] . $alias;
-        } elseif ($targetPageId= array_search($targetPageId, $modx->documentListing)) {
+        } elseif (intval($targetPageId)) {
             $url = $modx->makeUrl($targetPageId);
         } else {
             $url = $_REQUEST['refurl'];

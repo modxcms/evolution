@@ -14,10 +14,10 @@ define('MAX_DISPLAY_RECORDS_NUM',$maxpageSize);
 //end table pagination
 
 
-$url = $modx->config[(site_url)];
+$url = $modx->config['site_url'];
 
-$tblsc = $dbase.".".$table_prefix."site_content";
-$tbldg = $dbase.".".$table_prefix."document_groups";
+$tblsc = $dbase.".`".$table_prefix."site_content`";
+$tbldg = $dbase.".`".$table_prefix."document_groups`";
 // get document groups for current user
 if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
 $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
@@ -93,7 +93,7 @@ if ($limit > 0) {
         }
     }
     // get selected META tags using document's id
-    
+
 if (isset ($content['id']) && count($metatags) > 0) {//changed this line from original code
     $metatags_selected = array ();
         $tbl = $modx->getFullTableName("site_content_metatags");
@@ -107,7 +107,7 @@ if (isset ($content['id']) && count($metatags) > 0) {//changed this line from or
             }
         }
     }
-// end metadata stuff 
+// end metadata stuff
 
 
 
@@ -147,19 +147,19 @@ if (isset ($content['id']) && count($metatags) > 0) {//changed this line from or
 
 <!-- helio : changed here, add tab support -->
 
-<script type="text/javascript" src="media/script/tabpane.js"></script>   
+<script type="text/javascript" src="media/script/tabpane.js"></script>
 
     <div class="tab-pane" id="childPane">
         <script type="text/javascript">
             docSettings = new WebFXTabPane( document.getElementById( "childPane" ) );
         </script>
-        
+
         <!-- General -->
         <div class="tab-page" id="tabdocGeneral">
             <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
             <script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabdocGeneral" ) );</script>
 
-<!-- end change -->        
+<!-- end change -->
 <div class="sectionBody">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -203,7 +203,7 @@ if (isset ($content['id']) && count($metatags) > 0) {//changed this line from or
   </tr>
   <tr>
     <td valign="top"><?php echo $_lang['metatags']; ?>: </td>
-    <td><?php // added keywords 
+    <td><?php // added keywords
         if(count($metatags_selected) != 0) {
             echo join($metatags_selected, "<br /> ");
         } else {
@@ -308,7 +308,7 @@ $tblsc = $modx->getFullTableName("site_content");
 $tbldg = $modx->getFullTableName("document_groups");
 $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".
           (!$docgrp ? "":" OR dg.document_group IN ($docgrp)");
- 
+
 
 $query = "SELECT COUNT(*) as total FROM ".$tblsc ." sc ";
 $query .= " LEFT JOIN $tbldg dg on dg.document = sc.id";
@@ -330,34 +330,34 @@ $sql .= $childsTable->handlePaging();// add limit clause
         	</table>
 
 		';
-	
+
 	}else{
-		
+
 		$addContentBar = "";
 	}
-	
-	
+
+
 
 if($numRecords > 0){
 
-	if(!$rs = $modx->db->query($sql)){		
-		//sql error 
-		
+	if(!$rs = $modx->db->query($sql)){
+		//sql error
+
 		$e->setError(1);
     	$e->dumpError();
     	include("../includes/footer.inc.php");
     	exit;
-    	
-	}else{	
-		
+
+	}else{
+
 		$resource = array();
-		while($row = $modx->fetchRow($rs)){		
-		$resource[] = $row;	
-		
+		while($row = $modx->fetchRow($rs)){
+		$resource[] = $row;
+
 		}
-	
-	
-	
+
+
+
 	// css style for table
 	$tableClass = "grid";
 	$rowHeaderClass = "gridHeader";//
@@ -372,41 +372,41 @@ if($numRecords > 0){
 	//table header
 	$listTableHeader = array(
                     'docid'=>$_lang["id"],
-                    'title'=>$_lang["document_title"],                    
+                    'title'=>$_lang["document_title"],
                     'statut'=>$_lang["page_data_status"],
                     'edit'=>$_lang["mgrlog_action"]
                     );
-     $tbWidth = array("5%","60%","10%","25%");           
+     $tbWidth = array("5%","60%","10%","25%");
      $childsTable->setColumnWidths($tbWidth);
-    	
+
 	$limitClause = $childsTable->handlePaging();
-	
-	
-	
+
+
+
 	$listDocs = array();
 		foreach($resource as $k=>$children){
-	
+
 			$listDocs[]= array(
                     'docid'=>$children['id'],
-                    'title'=>$children['pagetitle'],                    
+                    'title'=>$children['pagetitle'],
                     'statut'=>($children['published'] == 0) ? "<span class='unpublishedDoc'>".$_lang['page_data_unpublished']."</span>"  : "<span class='publishedDoc'>".$_lang['page_data_published']."</span>",
                     'edit'=>"<a href=\"index.php?a=3&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/context_view.gif' />".$_lang["view"]."</a>".(($modx->hasPermission('edit_document')) ? "&nbsp;<a href=\"index.php?a=27&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/save.gif' />".$_lang["edit"]."</a>&nbsp;<a href=\"index.php?a=51&id=".$children['id']."\"><img src='media/style/$manager_theme/images/icons/cancel.gif' />".$_lang["move"]."</a>" : "" )
                     );
-	
-	
+
+
 		}
-		
+
 	$childsTable->createPagingNavigation($numRecords,'a=3&id='.$content['id']);
 	$output = $childsTable->create($listDocs,$listTableHeader,'index.php?a=3&id='.$content['id']);
 
-	    
-	    
+
+
 	}
-	
+
 }else{//no childrens yet
 
 	$output = $addContentBar . $_lang["documents_in_container_no"];//add this to lang file
-	
+
 }
 
 ?>
@@ -414,13 +414,13 @@ if($numRecords > 0){
             <h2 class="tab"><?php echo $_lang["view_child_documents_in_container"];?></h2>
             <script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );</script>
 			<script type="text/javascript" src="media/script/tablesort.js"></script>
-			<?php 
-			
+			<?php
+
 			if($numRecords > 0) echo $addContentBar . "<h4><span class='publishedDoc'>". $numRecords ."</span> ".$_lang["documents_in_container"]." (<strong>".$content['pagetitle']."</strong>)</h4>";
-			echo $output; 
-			
+			echo $output;
+
 			?>
-			
+
 		</div><!-- end tab div-->
 	</div><!-- end documentPane -->
 </div><!-- end sectionBody -->
@@ -428,7 +428,7 @@ if($numRecords > 0){
 
 <!--BEGIN SHOW HIDE PREVIEW WINDOW MOD-->
 <?php
-			
+
 if ($show_preview==1) { ?>
 <div class="sectionHeader">
   <?php echo $_lang["preview"]; ?></div><div class="sectionBody" id="lyr2">
