@@ -3,8 +3,10 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx 0.9.6.1 (rev 3057 - October 23, 2007)
+MODx 0.9.6.1 (rev 3115 - November 7, 2007)
 ====================================
+* Updated TinyMCE to version 2.1.2 of the plugin.  Fixes various issues and bugs as well as re-enables the linklist feature by default. (3086)
+* Removed extra line feeds/carraige returns after closing PHP tags in a few files. (3078)
 * [FS#773] WebLogin doesn't return to previous URL after 401. (3056)
 * [FS#929] weblogin error in SQL statement for active_users in STRICT sql_mode. (2987)
 * Replaced $this->postProcess() call at end of DocumentParser::sendRedirect() function to exit(). (2944)
