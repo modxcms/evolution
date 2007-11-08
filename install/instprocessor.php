@@ -7,10 +7,9 @@ global $moduleSQLUpdateFile;
 
 global $moduleChunks;
 global $moduleTemplates;
-global $moduleSnippets; 
-global $modulePlugins; 
-global $moduleModules; 
-global $moduleTemplates;
+global $moduleSnippets;
+global $modulePlugins;
+global $moduleModules;
 global $moduleTVs;
 
 global $errors;
@@ -181,7 +180,7 @@ $database_user = \'' . $database_user . '\';
 $database_password = \'' . $database_password . '\';
 $database_connection_charset = \'' . $database_connection_charset . '\';
 $dbase = \'`' . str_replace("`", "", $dbase) . '`\';
-$table_prefix = \'' . $table_prefix . '\';		
+$table_prefix = \'' . $table_prefix . '\';
 error_reporting(E_ALL & ~E_NOTICE);
 
 $lastInstallTime = '.time().';
@@ -209,7 +208,7 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
     unset ($a);
     $base_url= $url . (substr($url, -1) != "/" ? "/" : "");
     $base_path= $pth . (substr($pth, -1) != "/" && substr($pth, -1) != "\\\\" ? "/" : "");
-    // assign site_url 
+    // assign site_url
     $site_url= ((isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'https://\' : \'http://\';
     $site_url .= $_SERVER[\'HTTP_HOST\'];
     if ($_SERVER[\'SERVER_PORT\'] != 80)
@@ -228,7 +227,7 @@ if (!defined(\'MODX_MANAGER_URL\')) define(\'MODX_MANAGER_URL\', $site_url.\'man
 if(!function_exists(\'startCMSSession\')) {
 	function startCMSSession(){
 		global $site_sessionname;
-		session_name($site_sessionname);	
+		session_name($site_sessionname);
 		session_start();
 		$cookieExpiration= 0;
         if (isset ($_SESSION[\'mgrValidated\']) || isset ($_SESSION[\'webValidated\'])) {
@@ -241,7 +240,7 @@ if(!function_exists(\'startCMSSession\')) {
             }
 			if (!isset($_SESSION[\'modx.session.created.time\'])) {
 			  $_SESSION[\'modx.session.created.time\'] = time();
-			}														
+			}
         }
 		setcookie(session_name(), session_id(), $cookieExpiration, MODX_BASE_URL);
 	}
@@ -278,7 +277,7 @@ if ($configFileFailed == true) {
 	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 
-// generate new site_id and set manager theme to MODx 
+// generate new site_id and set manager theme to MODx
 if ($installMode == 0) {
 	$siteid = uniqid('');
 	mysql_query("REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxLight')", $sqlParser->conn);
@@ -450,7 +449,7 @@ if (isset ($_POST['plugin'])) {
 			}
 			// add system events
 			if (count($events) > 0) {
-				$ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_plugins` WHERE name='$name' AND description='$desc';",$sqlParser->conn); 
+				$ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_plugins` WHERE name='$name' AND description='$desc';",$sqlParser->conn);
 				if ($ds) {
 					$row = mysql_fetch_assoc($ds);
 					$id = $row["id"];
@@ -545,7 +544,7 @@ $sqlParser->close();
 // andrazk 20070416 - release manager access
   if (file_exists('../assets/cache/installProc.inc.php')) {
 	  @chmod('../assets/cache/installProc.inc.php', 0755);
-    unlink('../assets/cache/installProc.inc.php');		
+    unlink('../assets/cache/installProc.inc.php');
 	}
 
 // setup completed!
@@ -565,13 +564,13 @@ function propUpdate($new,$old){
     $oldArr = explode("&",$old);
 
     foreach ($newArr as $k => $v) {
-        if(!empty($v)){	        
+        if(!empty($v)){
 	        $tempArr = split("=",trim($v));
 	        $returnArr[$tempArr[0]] = $tempArr[1];
         }
     }
     foreach ($oldArr as $k => $v) {
-        if(!empty($v)){	        
+        if(!empty($v)){
             $tempArr = split("=",trim($v));
             $returnArr[$tempArr[0]] = $tempArr[1];
         }
@@ -579,7 +578,7 @@ function propUpdate($new,$old){
 
     // Make unique array
     $returnArr = array_unique($returnArr);
-    
+
     // Build new string for new properties value
     foreach ($returnArr as $k => $v) {
         $return .= "&$k=$v ";
