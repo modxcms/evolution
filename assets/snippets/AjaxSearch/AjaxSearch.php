@@ -23,7 +23,7 @@ $minChars = $_POST['minChars'];
 $maxResults = $_POST['maxResults'];
 $showMoreResults = $_POST['showMoreResults'];
 $moreResultsPage = $_POST['moreResultsPage'];
-$as_language = $_POST['as_language'];
+$as_language = basename($_POST['as_language']);
 $extract = $_POST['extract'];
 $docgrp = $_POST['docgrp'];
 $highlightResult = $_POST['highlightResult'];
@@ -94,7 +94,7 @@ if ($validSearch) {
 					$highlightClass .= ' AS_ajax_highlight1';
 				}
 			}*/
-			
+
 			if ($extract) {
 				$highlightClass = 'ajaxSearch_highlight';
 				$text=$row['content'];
@@ -114,7 +114,7 @@ if ($validSearch) {
 				}
 				$text=$summary;
 			}
-			
+
 			if ($highlightResult) {
 				if (!$extract) {
 					$highlightClass = 'AS_ajax_highlight';
@@ -124,12 +124,12 @@ if ($validSearch) {
 						$count++;
 					}
 				}
-				
+
 				$resultLink = 'index.php?id='.strval($row['id']).'&amp;searched='.urlencode($searchString).'&amp;highlight='.urlencode($highlightClass);
 			} else {
 				$resultLink = 'index.php?id='.strval($row['id']);
 			}
-          
+
 			if ($extract) {
 				$extractPlaceholders = array(
 					'[+as.extractClass+]' => 'AS_ajax_extract',
@@ -139,7 +139,7 @@ if ($validSearch) {
 			} else {
 				$resultExtract = '';
 			}
-          
+
 			if ($row['description'] != '') {
 				$descPlaceholders = array(
 					'[+as.descriptionClass+]' => 'AS_ajax_resultDescription',
@@ -149,7 +149,7 @@ if ($validSearch) {
 			} else {
 				$resultDesc = '';
 			}
-		  
+
 			$resultPlaceholders = array(
 				'[+as.resultClass+]' => 'AS_ajax_result',
 				'[+as.resultLinkClass+]' => 'AS_ajax_resultLink',
@@ -159,9 +159,9 @@ if ($validSearch) {
 				'[+as.description+]' => $resultDesc,
 				'[+as.extract+]' => $resultExtract,
 			);
-			
+
 			$result .= str_replace(array_keys($resultPlaceholders),array_values($resultPlaceholders),$asTemplates['result']);
-		  
+
 			if (++$i == $maxResults) {
 				//If more than max results so link to all results
 				if ($showMoreResults) {
@@ -171,7 +171,7 @@ if ($validSearch) {
 						'[+as.moreTitle+]' => $_lang['as_moreResultsTitle'],
 						'[+as.moreText+]' => $_lang['as_moreResultsText'],
 					);
-				
+
 					$result .= str_replace(array_keys($morePlaceholders),array_values($morePlaceholders),$asTemplates['ajax_more_results']);
 				}
 				break;

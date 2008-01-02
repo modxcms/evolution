@@ -3,6 +3,11 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
+MODx 0.9.6.2 (rev 3281 - January 2, 2008)
+====================================
+* Fixes for local file inclusion vulnerabilities, reported at http://www.securityfocus.com/archive/1/485707/30/0/threaded. (3279,3280)
+
+
 MODx 0.9.6.1 (rev 3118 - November 8, 2007)
 ====================================
 * [FS#892] — Upgrading: 0.9.5 -> 0.9.6 Snippets upgraded regardless of whether ticked. (3118)
