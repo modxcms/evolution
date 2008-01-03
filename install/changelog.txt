@@ -2,11 +2,41 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-
-MODx 0.9.6.2 (rev 3281 - January 2, 2008)
+MODx 0.9.6.2 (rev 3282 - January 2, 2008)
 ====================================
 * Fixes for local file inclusion vulnerabilities, reported at http://www.securityfocus.com/archive/1/485707/30/0/threaded. (3279,3280)
-
+* [FS#991] addEventListener now works directly on the event array (3278)
+* [FS#986] Removed hidden input box in manager menu, cleaned up whitespace, organized source file (3278)
+* [FS#981] Moved "Page Source" section to a tab in document data viewer, cleaned and organized source file (3278)
+* [Trac#52] TVs in QuickEdit now ordered by rank, then by name
+* [FS#984] Added labels to "After saving:" radio buttons in Manager when editing Templates, Template Variables, Chunks, Snippets and Plugins
+* [FS#844] Small fix to BottomButtonBar plugin related to language strings (3171)
+* [FS#940] Only add count suffix to auto-generated alias if duplicate aliases setting isn't enabled (3170)
+* [FS#915] Small fix to checkPublishStatus() in document.parser.inc.php (3167)
+* [FS#934] Fix use of join() in getDocuments() API function (3163)
+* [FS#929] Additional fix for weblogin error in SQL statement for active_users in STRICT sql_mode. (3162)
+* [FS#927] Allow plugins to work correctly when the plugin name has single quotes in the name (3160)
+* [FS#942] Applying andyccn's patch for Doc Manager - related to saving updated TV values. (3159)
+* [FS#945] Use htmlspecialchars() on resource and module names (3158)
+* [FS#946] Fix the message counts on the Manager welcome page (3157)
+* [FS#972] Fix issue with recurring refresh when settings are being saved in Safari 3 (3156)
+* Many Optimizations all over, double quoted many HTML attributes, not XHTML, but it's a start ;)
+* Added 'Role' column to manager user table page
+* Rewrote display and optimized queries for (web_)access_permissions pages
+* Fixed user theme bug (manager theme would always reset)
+* Added File Manager Upload Tracking, with hack to prevent double logging.
+* Cleaned up saveUserSettings() function and added ability to skip common settings in system_settings table
+* Updated @INHERIT TV command to see through un-published pages.
+* English Language Key updates:
+    - access_permissions_links_tab
+    - access_permissions_off
+    - access_permissions_users_in_group (added)
+    - access_permissions_user_group (removed, no longer used)
+    - access_permissions_user_group_access (removed, no longer used)
+    - role (added)
+    - web_access_permissions_user_group (removed, no longer used)
+    - web_access_permissions_user_group_access (removed, no longer used)
+* Moved actions list out of switch() statement and into $GLOBALS['action_list']
 
 MODx 0.9.6.1 (rev 3118 - November 8, 2007)
 ====================================

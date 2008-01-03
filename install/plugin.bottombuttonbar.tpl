@@ -21,11 +21,9 @@
  * 
  */
 
-
 // I know the code looks messy, but that is mainly because of the copy/pasting.
 
-// Load the language file
-include $modx->config['base_path'].'manager/includes/lang/'.$modx->config['manager_language'].'.inc.php';
+global $_lang;
 
 //Get Manager Theme - added by garryn
 $manager_theme = $modx->config['manager_theme'] ? $modx->config['manager_theme'] : '';

@@ -539,8 +539,8 @@ $dir->close();
           <tr>
             <td class="warning"valign="top"><b><?php echo $_lang["allow_mgr_access"] ?></b></td>
             <td>
-            	<input onchange="documentDirty=true;"  type="radio" name="allow_manager_access" value="1" <?php echo !isset($usersettings['allow_manager_access'])||$usersettings['allow_manager_access']==1 ? ' checked="checked"':'' ; ?> /> <?php echo $_lang['yes']; ?> <br />
-            	<input onchange="documentDirty=true;"  type="radio" name="allow_manager_access" value="0" <?php echo isset($usersettings['allow_manager_access']) && $usersettings['allow_manager_access']==0 ? ' checked="checked"':'' ; ?> /> <?php echo $_lang['no']; ?>
+            	<input onchange="documentDirty=true;" type="radio" name="allow_manager_access" value="1" <?php echo !isset($usersettings['allow_manager_access'])||$usersettings['allow_manager_access']==1 ? 'checked="checked"':'' ; ?> /> <?php echo $_lang['yes']; ?> <br />
+            	<input onchange="documentDirty=true;" type="radio" name="allow_manager_access" value="0" <?php echo isset($usersettings['allow_manager_access']) && $usersettings['allow_manager_access']==0 ? 'checked="checked"':'' ; ?> /> <?php echo $_lang['no']; ?>
             </td>
           </tr>
           <tr>
@@ -583,19 +583,19 @@ $dir->close();
           </tr>
           <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
             <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date())">
-             <option value=""> </option>
-             <?php
-$dir = dir("media/style/");
-while ($file = $dir->read()) {
-	if ($file != "." && $file != ".." && is_dir("media/style/$file") && substr($file,0,1) != '.') {
-		$themename = $file;
-        if (isset ($usersettings['manager_theme'])) {
-    		$selectedtext = $themename == $usersettings['manager_theme'] ? "selected='selected'" : "";
-        }
-		echo "<option value='$themename' $selectedtext>" . ucwords(str_replace("_", " ", $themename)) . "</option>";
-	}
-}
-$dir->close();
+		<option value=""> </option>
+<?php
+		$dir = dir("media/style/");
+		while ($file = $dir->read()) {
+			if ($file != "." && $file != ".." && is_dir("media/style/$file") && substr($file,0,1) != '.') {
+				$themename = $file;
+				$attr = 'value="'.$themename.'" ';
+				if (isset($usersettings['manager_theme']) && $themename == $usersettings['manager_theme'])
+					$attr .= 'selected="selected" ';
+				echo "\t\t<option ".rtrim($attr).'>'.ucwords(str_replace("_", " ", $themename))."</option>\n";
+			}
+		}
+		$dir->close();
 ?>
              </select><input type="hidden" name="theme_refresher" value=""></td>
           </tr>

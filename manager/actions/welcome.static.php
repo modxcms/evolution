@@ -17,6 +17,12 @@ $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
 
 // setup message info
 if($modx->hasPermission('messages')) {
+	if (!isset($_SESSION['nrtotalmessages']) || !isset($_SESSION['nrnewmessages'])) {
+		include_once MODX_MANAGER_PATH.'includes/messageCount.inc.php';
+		$_SESSION['nrtotalmessages'] = $nrtotalmessages;
+		$_SESSION['nrnewmessages'] = $nrnewmessages;
+	}
+
     $msg = '<a href="index.php?a=10"><img src="media/style/[+theme+]/images/icons/mail_generic.gif" /></a>
     <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;'.$_lang["inbox"].($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span><br />
     <span class="comment">'.sprintf($_lang["welcome_messages"], $_SESSION['nrtotalmessages'], "<span style='color:red;'>".$_SESSION['nrnewmessages']."</span>").'</span>';

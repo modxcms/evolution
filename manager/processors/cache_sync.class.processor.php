@@ -13,32 +13,33 @@ class synccache{
 	function setReport($bool) {
 		$this->showReport = $bool;
 	}
-	
+
 	function escapeDoubleQuotes($s) {
 		$q1 = array("\\","\"","\r","\n","\$");
 		$q2 = array("\\\\","\\\"","\\r","\\n","\\$");
 		return str_replace($q1,$q2,$s);
-	}	
+	}
 
 	function escapeSingleQuotes($s) {
 		$q1 = array("\\","'");
 		$q2 = array("\\\\","\\'");
 		return str_replace($q1,$q2,$s);
-	}	
+	}
 
 	function getParents($id, $path = '') { // modx:returns child's parent
 		global $dbase, $table_prefix;
 		$sql = "SELECT id, alias, parent FROM $dbase.`".$table_prefix."site_content` WHERE id = '$id'";
 		$qh = mysql_query($sql);
 		if ($qh && mysql_num_rows($qh) > 0)	{
-			$row = mysql_fetch_assoc($qh);
-			$path = ($row['alias'] ? $row['alias'] : $row['id']) . ($path != '' ? '/' : '') . $path;
-			mysql_free_result( $qh );
-			return $this->getParents($row['parent'], $path);
+			if ($row = mysql_fetch_assoc($qh)) {
+    			$path = ($row['alias'] ? $row['alias'] : $row['id']) . ($path != '' ? '/' : '') . $path;
+    			mysql_free_result( $qh );
+    			return $this->getParents($row['parent'], $path);
+            }
 		}
 		return $path;
 	}
-   
+
 	function emptyCache() {
 		if(!isset($this->cachePath)) {
 			echo "Cache path not set.";
@@ -67,8 +68,8 @@ class synccache{
 				while ($deletedThisRound){
 					if(!$handle) $handle = opendir($this->cachePath);
 					$deletedThisRound = 0;
-					while (false !== ($file = readdir($handle))) { 
-						if ($file != "." && $file != "..") { 
+					while (false !== ($file = readdir($handle))) {
+						if ($file != "." && $file != "..") {
 							$filesincache += 1;
 							if ( preg_match("/\.pageCache/", $file) && (!is_array($deletedfiles) || !array_search($file,$deletedfiles)) ) {
 								$deletedfilesincache += 1;
@@ -78,7 +79,7 @@ class synccache{
 							} // End if
 						} // End if
 					} // End while
-					closedir($handle); 
+					closedir($handle);
 					$handle = '';
 				} // End while ($deletedThisRound)
 			}
@@ -88,7 +89,7 @@ class synccache{
 /*	BUILD CACHE FILES														*/
 /****************************************************************************/
 
-		
+
 		global $modx;
 		global $dbase, $table_prefix;
 
@@ -97,7 +98,7 @@ class synccache{
 		// SETTINGS & DOCUMENT LISTINGS CACHE
 
 		// get settings
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings`"; 
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings`";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$config = array();
@@ -116,7 +117,7 @@ class synccache{
 		$sql = "SELECT IF(alias='', id, alias) AS alias, id, contentType, parent FROM $dbase.`".$table_prefix."site_content` ORDER BY parent, menuindex";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
-		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
+		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
 			$tmp1 = mysql_fetch_assoc($rs);
 			if ($config['friendly_urls'] == 1 && $config['use_alias_path'] == 1) {
 				$tmpPath = $this->getParents($tmp1['parent']);
@@ -130,53 +131,53 @@ class synccache{
 			$tmpPHP .= '$a[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".mysql_escape_string($tmp1['alias'])."', 'path' => '" . mysql_escape_string($tmpPath). "');\n";
 			$tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');\n";
 		}
-		
-				
+
+
 		// get content types
-		$sql = "SELECT id, contentType FROM $dbase.`".$table_prefix."site_content`"; 
+		$sql = "SELECT id, contentType FROM $dbase.`".$table_prefix."site_content`";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$c = &$this->contentTypes;' . "\n";
-		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
-		   $tmp1 = mysql_fetch_assoc($rs); 
+		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
+		   $tmp1 = mysql_fetch_assoc($rs);
 		   $tmpPHP .= '$c['.$tmp1['id'].']'." = '".$tmp1['contentType']."';\n";
 		}
 
 		// WRITE Chunks to cache file
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_htmlsnippets`"; 
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_htmlsnippets`";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$c = &$this->chunkCache;' . "\n";
-		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
-		   $tmp1 = mysql_fetch_assoc($rs); 
+		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
+		   $tmp1 = mysql_fetch_assoc($rs);
 		   $tmpPHP .= '$c[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['snippet'])."';\n";
 		}
 
 		// WRITE snippets to cache file
 		$sql = "SELECT ss.*,sm.properties as `sharedproperties` ".
-				"FROM $dbase.`".$table_prefix."site_snippets` ss ". 
-				"LEFT JOIN $dbase.`".$table_prefix."site_modules` sm on sm.guid=ss.moduleguid "; 
+				"FROM $dbase.`".$table_prefix."site_snippets` ss ".
+				"LEFT JOIN $dbase.`".$table_prefix."site_modules` sm on sm.guid=ss.moduleguid ";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$s = &$this->snippetCache;' . "\n";
-		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
-		   $tmp1 = mysql_fetch_assoc($rs); 
+		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
+		   $tmp1 = mysql_fetch_assoc($rs);
 		   $tmpPHP .= '$s[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['snippet'])."';\n";
 		   // Raymond: save snippet properties to cache
 		   if ($tmp1['properties']!=""||$tmp1['sharedproperties']!="") $tmpPHP .= '$s[\''.$tmp1['name'].'Props\']'." = '".$this->escapeSingleQuotes($tmp1['properties']." ".$tmp1['sharedproperties'])."';\n";
 		   // End mod
 		}
-		
+
 		// WRITE plugins to cache file
 		$sql = "SELECT sp.*,sm.properties as 'sharedproperties' ".
 				"FROM $dbase.`".$table_prefix."site_plugins` sp " .
 				"LEFT JOIN $dbase.`".$table_prefix."site_modules` sm on sm.guid=sp.moduleguid " .
-				"WHERE sp.disabled=0"; 
+				"WHERE sp.disabled=0";
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$p = &$this->pluginCache;' . "\n";
-		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) { 
-		   $tmp1 = mysql_fetch_assoc($rs); 
+		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
+		   $tmp1 = mysql_fetch_assoc($rs);
 		   $tmpPHP .= '$p[\''.mysql_escape_string($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($tmp1['plugincode'])."';\n";
 		   if ($tmp1['properties']!=""||$tmp1['sharedproperties']!="") $tmpPHP .= '$p[\''.$tmp1['name'].'Props\']'." = '".$this->escapeSingleQuotes($tmp1['properties']." ".$tmp1['sharedproperties'])."';\n";
 		}
@@ -195,28 +196,28 @@ class synccache{
 		$rs = mysql_query($sql);
 		$limit_tmp = mysql_num_rows($rs);
 		$tmpPHP .= '$e = &$this->pluginEvent;' . "\n";
-		for ($i=0; $i<$limit_tmp; $i++) { 
-			$evt = mysql_fetch_assoc($rs); 
+		for ($i=0; $i<$limit_tmp; $i++) {
+			$evt = mysql_fetch_assoc($rs);
 			if(!$events[$evt['evtname']]) $events[$evt['evtname']] = array();
 			$events[$evt['evtname']][] = $evt['name'];
 		}
 		foreach($events as $evtname => $pluginnames) {
-			$tmpPHP .= '$e[\''.$evtname.'\'] = array(\''.implode("','",$pluginnames)."');\n";
+			$tmpPHP .= '$e[\''.$evtname.'\'] = array(\''.implode("','",$this->escapeSingleQuotes($pluginnames))."');\n";
 		}
-		
+
 		// close and write the file
-		$tmpPHP .= "?>";		
+		$tmpPHP .= "?>";
 		$filename = $this->cachePath.'siteCache.idx.php';
 		$somecontent = $tmpPHP;
-		
+
 		// invoke OnBeforeCacheUpdate event
 		if ($modx) $modx->invokeEvent("OnBeforeCacheUpdate");
-				
+
 		if (!$handle = fopen($filename, 'w')) {
 			 echo "Cannot open file ($filename)";
 			 exit;
 		}
-		
+
 		// Write $somecontent to our opened file.
 		if (fwrite($handle, $somecontent) === FALSE) {
 		   echo "Cannot write main MODx cache file! Make sure the assets/cache directory is writable!";
@@ -244,7 +245,7 @@ class synccache{
 		if($minpub!=NULL) {
 			$timesArr[] = $minpub;
 		}
-		
+
 		$sql = "SELECT MIN(unpub_date) AS minunpub FROM $dbase.`".$table_prefix."site_content` WHERE unpub_date>".time();
 		if(@!$result = mysql_query($sql)) {
 			echo "Couldn't determine next unpublish event!";
@@ -258,18 +259,18 @@ class synccache{
 		if(count($timesArr)>0) {
 			$nextevent = min($timesArr);
 		} else {
-			$nextevent = 0;			
+			$nextevent = 0;
 		}
-		
+
 		// write the file
 		$filename = $this->cachePath.'/sitePublishing.idx.php';
 		$somecontent = "<?php \$cacheRefreshTime=$nextevent; ?>";
-		
+
 		if (!$handle = fopen($filename, 'w')) {
 			 echo "Cannot open file ($filename)";
 			 exit;
 		}
-		
+
 		// Write $somecontent to our opened file.
 		if (fwrite($handle, $somecontent) === FALSE) {
 		   echo "Cannot write publishing info file! Make sure the assets/cache directory is writable!";
@@ -284,7 +285,7 @@ class synccache{
 /****************************************************************************/
 
 		// finished cache stuff.
-		if($this->showReport==true) { 
+		if($this->showReport==true) {
 		global $_lang;
 			printf($_lang["refresh_cache"], $filesincache, $deletedfilesincache);
 			$limit = count($deletedfiles);
@@ -295,7 +296,7 @@ class synccache{
 				}
 				echo "</ul>";
 			}
-		}	
+		}
 	}
 }
 ?>

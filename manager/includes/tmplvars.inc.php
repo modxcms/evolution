@@ -101,8 +101,8 @@
 				foreach($urls as $k => $v){
 					if(strpos($field_value,$v)===false) $field_html.='<option value="'.$v.'">'.$k.'</option>';
 					else{
-						$field_value = str_replace($v,"",$field_value);
-						$field_html.='<option value="$v" selected="selected">'.$k.'</option>';
+						$field_value = str_replace($v,'',$field_value);
+						$field_html.='<option value="'.$v.'" selected="selected">'.$k.'</option>';
 					}
 				}
 				$field_html .='</select></td><td>';

@@ -272,9 +272,9 @@ function decode(s){
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
 		<td><span class="comment">&nbsp;<?php echo $_lang["after_saving"];?>:</span></td>
-		<td><input name="stay" type="radio" class="radio" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
-		<td><input name="stay" type="radio" class="radio" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
-		<td><input name="stay" type="radio" class="radio" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
+		<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":'' ?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']; ?></label></td>
+		<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":'' ?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']; ?></label></td>
+		<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":'' ?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']; ?></label></td>
 	</tr>
 	</table>
 	</div>
@@ -298,7 +298,7 @@ function decode(s){
 		<table border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left"><?php echo $_lang['snippet_name']; ?>:</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">[[</span><input name="name" type="text" maxlength="100" value="<?php echo $content['name'];?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">]]</span><span class="warning" id='savingMessage'>&nbsp;</span></td>
+			<td align="left"><span style="font-family:'Courier New', Courier, mono">[[</span><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">]]</span><span class="warning" id='savingMessage'>&nbsp;</span></td>
 		  </tr>
 		  <tr>
 			<td align="left"><?php echo $_lang['snippet_desc']; ?>:&nbsp;&nbsp;</td>

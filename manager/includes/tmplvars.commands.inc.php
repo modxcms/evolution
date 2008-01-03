@@ -1,6 +1,6 @@
 <?php
 /*
- * Template Variable Data Source @Bindings 
+ * Template Variable Data Source @Bindings
  * Created by Raymond Irving Feb, 2005
  */
 global $BINDINGS; // Array of supported bindings. must be upper case
@@ -14,10 +14,10 @@ $BINDINGS = array (
     'DIRECTORY'
 );
 
-function ProcessTVCommand($value, $name = '', $docid= '') {
+function ProcessTVCommand($value, $name = '', $docid = '') {
     global $modx;
     $etomite = & $modx;
-    $docid= intval($docid) ? intval($docid) : $modx->documentIdentifier;
+    $docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
     $nvalue = trim($value);
     if (substr($nvalue, 0, 1) != '@')
         return $value;
@@ -62,27 +62,22 @@ function ProcessTVCommand($value, $name = '', $docid= '') {
 
             case "INHERIT" :
                 $output = $param; // Default to param value if no content from parents
-                $doc = $modx->getDocument($docid, 'id,parent');
+                $doc = $modx->getPageInfo($docid, 0, 'id,parent');
 
                 while ($doc['parent'] != 0) {
-
                     $parent_id = $doc['parent'];
 
-                    if ($doc = $modx->getDocument($parent_id, 'id,parent')) {
+                    // Grab document regardless of publish status
+                    $doc = $modx->getPageInfo($parent_id, 0, 'id,parent,published');
+                    if ($doc['parent'] != 0 && !$doc['published'])
+                        continue; // hide unpublished docs if we're not at the top
 
-                        $tv = $modx->getTemplateVar($name, '*', $doc['id']);
-                        if ((string) $tv['value'] !== '' && substr($tv['value'], 0, 1) != '@') {
-                            $output = (string) $tv['value'];
-                            break 2;
-                        }
-
-                    } else {
-
-                        // Get unpublished document
-                        $doc = $modx->getDocument($parent_id, 'id,parent', 0);
-
+                    $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
+                    if ((string) $tv['value'] !== '' && $tv['value'] { 0 }
+                        != '@') {
+                        $output = (string) $tv['value'];
+                        break 2;
                     }
-
                 }
                 break;
 
@@ -134,11 +129,11 @@ function ProcessFile($file) {
 function ParseCommand($binding_string) {
     global $BINDINGS;
     $match = array ();
-    $regexp= '/@(' . implode('|', $BINDINGS) . ')\s*(.*)/im'; // Split binding on whitespace
+    $regexp = '/@(' . implode('|', $BINDINGS) . ')\s*(.*)/im'; // Split binding on whitespace
     if (preg_match($regexp, $binding_string, $match)) {
         // We can't return the match array directly because the first element is the whole string
         $binding_array = array (
-            strtoupper($match[1]), 
+            strtoupper($match[1]),
             $match[2]
         ); // Make command uppercase
         return $binding_array;

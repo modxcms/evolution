@@ -4,7 +4,7 @@
  */
 
 // Null is evil
-if (strpos(urldecode($_SERVER['QUERY_STRING']), chr(0)) !== false)
+if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']), chr(0)) !== false)
     die();
 
 // Unregister globals

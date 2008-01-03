@@ -471,16 +471,21 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 // Save User Settings
 function saveUserSettings($id) {
 	global $modx;
-	global $dbase, $table_prefix;
+
+	//$config = array();
+	//$rs = $modx->db->query('SELECT * FROM '.$modx->getFullTableName('system_settings'));
+	//while ($row = $modx->db->getRow($rs, 'num'))
+	//	$config[$row[0]] = $row[1];
 
 	// array of post values to ignore in this function
-	$ignore = array (
+	$ignore = array(
 		'id',
 		'oldusername',
 		'oldemail',
 		'newusername',
 		'fullname',
 		'newpassword',
+		'newpasswordcheck',
 		'passwordgenmethod',
 		'passwordnotifymethod',
 		'specifiedpassword',
@@ -510,7 +515,7 @@ function saveUserSettings($id) {
 	);
 
 	// determine which settings can be saved blank (based on 'default_{settingname}' POST checkbox values)
-	$allowBlanks = array (
+	$defaults = array(
 		'upload_images',
 		'upload_media',
 		'upload_flash',
@@ -518,30 +523,31 @@ function saveUserSettings($id) {
 	);
 
 	// get user setting field names
-    $settings= array ();
+	$settings= array ();
 	foreach ($_POST as $n => $v) {
-		if (!in_array($n, $ignore))
-			$settings[] = $n;
+		if (in_array($n, $ignore) || empty($v)) continue; // ignore blacklist and empties
+
+		//if ($config[$n] == $v) continue; // ignore commonalities in base config
+
+		$settings[$n] = $v; // this value should be saved
+	}
+	foreach ($defaults as $k) {
+		if (isset($settings['default_'.$k]) && $_settings['default_'.$k] == '1')
+			unset($settings[$k]);
+		unset($settings['default_'.$k]);
 	}
 
-    $exclude= array ();
-	foreach ($allowBlanks as $k) {
-		if (isset ($_POST["default_{$k}"]) && $_POST["default_{$k}"] == '1') {
-			$exclude[] = $k;
-		}
-		unset ($_POST["default_{$k}"]);
-	}
+	$usrTable = $modx->getFullTableName('user_settings');
 
-	mysql_query("DELETE FROM $dbase.`" . $table_prefix . "user_settings` WHERE user='$id'");
+	mysql_query('DELETE FROM '.$usrTable.' WHERE user='.$id);
 
-	for ($i = 0; $i < count($settings); $i++) {
-		if (in_array($settings[$i],$exclude)) continue;
-		$n = $settings[$i];
-		$vl = $_POST[$n];
-		if (is_array($vl))
-			$vl = implode(",", $vl);
-		if (trim($vl) != '' || in_array($n, $allowBlanks))
-			mysql_query("INSERT INTO $dbase.`" . $table_prefix . "user_settings` (user,setting_name,setting_value) VALUES($id,'$n','" . mysql_escape_string($vl) . "')");
+	$savethese = array();
+	foreach ($settings as $k => $v) $savethese[] = '('.$id.', \''.$k.'\', \''.mysql_escape_string($v).'\')';
+
+	$sql = 'INSERT INTO '.$usrTable.' (user, setting_name, setting_value)
+		VALUES '.implode(', ', $savethese);
+	if (!@$rs = mysql_query($sql)) {
+		die('Failed to update user settings!');
 	}
 }
 

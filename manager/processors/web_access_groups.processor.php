@@ -1,8 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('web_access_permissions')) {	
+if(!$modx->hasPermission('web_access_permissions')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // web access group processor.
@@ -26,7 +26,7 @@ switch ($operation) {
 
 			// get new id
 			$id = mysql_insert_id();
-			
+
 			// invoke OnWebCreateGroup event
 			$modx->invokeEvent("OnWebCreateGroup",
 								array(
@@ -56,7 +56,6 @@ switch ($operation) {
 									"groupid"	=> $id,
 									"groupname"	=> $newgroup
 								));
-
 		}
 	break;
 	case "delete_user_group" :
@@ -82,7 +81,7 @@ switch ($operation) {
 				exit;
 			}
 		}
-	break;	
+	break;
 	case "delete_document_group" :
 		$group = $_REQUEST['documentgroup'];
 		if(empty($group)) {
@@ -122,7 +121,7 @@ switch ($operation) {
 			echo "Failed to update group name. Possible duplicate group name?";
 			exit;
 		}
-	break;	
+	break;
 	case "rename_document_group" :
 		$newgroupname = $_REQUEST['newgroupname'];
 		if(empty($newgroupname)) {
@@ -139,14 +138,14 @@ switch ($operation) {
 			echo "Failed to update group name. Possible duplicate group name?";
 			exit;
 		}
-	break;	
+	break;
 	case "add_document_group_to_user_group" :
 		$updategroupaccess = true;
 		$usergroup = $_REQUEST['usergroup'];
 		$docgroup = $_REQUEST['docgroup'];
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."webgroup_access` WHERE webgroup='$usergroup' AND documentgroup='$docgroup'";		
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."webgroup_access` WHERE webgroup='$usergroup' AND documentgroup='$docgroup'";
 		$rs = mysql_query($sql);
-		$limit = mysql_num_rows($rs);			
+		$limit = mysql_num_rows($rs);
 		if($limit<=0) {
 			$sql = "INSERT INTO $dbase.`".$table_prefix."webgroup_access` (webgroup, documentgroup) VALUES('".$usergroup."', '".$docgroup."')";
 			if(!$rs = mysql_query($sql)) {
@@ -171,7 +170,7 @@ switch ($operation) {
 		exit;
 }
 
-// secure web documents - flag as private 
+// secure web documents - flag as private
 if($updategroupaccess==true){
 	include $base_path."manager/includes/secure_web_documents.inc.php";
 	secureWebDocument();
@@ -179,6 +178,4 @@ if($updategroupaccess==true){
 
 $header = "Location: index.php?a=91";
 header($header);
-
-	
 ?>

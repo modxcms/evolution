@@ -1,8 +1,8 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('access_permissions')) {	
+if(!$modx->hasPermission('access_permissions')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 // access group processor.
@@ -26,7 +26,7 @@ switch ($operation) {
 
 			// get new id
 			$id = mysql_insert_id();
-			
+
 			// invoke OnManagerCreateGroup event
 			$modx->invokeEvent("OnManagerCreateGroup",
 								array(
@@ -46,7 +46,7 @@ switch ($operation) {
 				echo "Failed to insert new group. Possible duplicate group name?";
 				exit;
 			}
-			
+
 			// get new id
 			$id = mysql_insert_id();
 
@@ -55,7 +55,7 @@ switch ($operation) {
 								array(
 									"groupid"	=> $id,
 									"groupname"	=> $newgroup
-								));			
+								));
 		}
 	break;
 	case "delete_user_group" :
@@ -81,11 +81,11 @@ switch ($operation) {
 				exit;
 			}
 		}
-	break;	
+	break;
 	case "delete_document_group" :
 		$group = $_REQUEST['documentgroup'];
 		if(empty($group)) {
-			echo "No user group name specified for deletion";
+			echo "No document group name specified for deletion";
 			exit;
 		} else {
 			$sql = "DELETE FROM $dbase.`".$table_prefix."documentgroup_names` WHERE id='".$group."'";
@@ -121,7 +121,7 @@ switch ($operation) {
 			echo "Failed to update group name. Possible duplicate group name?";
 			exit;
 		}
-	break;	
+	break;
 	case "rename_document_group" :
 		$newgroupname = $_REQUEST['newgroupname'];
 		if(empty($newgroupname)) {
@@ -138,14 +138,14 @@ switch ($operation) {
 			echo "Failed to update group name. Possible duplicate group name?";
 			exit;
 		}
-	break;	
+	break;
 	case "add_document_group_to_user_group" :
 		$updategroupaccess = true;
 		$usergroup = $_REQUEST['usergroup'];
 		$docgroup = $_REQUEST['docgroup'];
-		$sql = "SELECT * FROM $dbase.`".$table_prefix."membergroup_access` WHERE membergroup='$usergroup' AND documentgroup='$docgroup'";		
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."membergroup_access` WHERE membergroup='$usergroup' AND documentgroup='$docgroup'";
 		$rs = mysql_query($sql);
-		$limit = mysql_num_rows($rs);			
+		$limit = mysql_num_rows($rs);
 		if($limit<=0) {
 			$sql = "INSERT INTO $dbase.`".$table_prefix."membergroup_access` (membergroup, documentgroup) VALUES('".$usergroup."', '".$docgroup."')";
 			if(!$rs = mysql_query($sql)) {
@@ -170,7 +170,7 @@ switch ($operation) {
 		exit;
 }
 
-// secure manager documents - flag as private 
+// secure manager documents - flag as private
 if($updategroupaccess==true){
 	include $base_path."manager/includes/secure_mgr_documents.inc.php";
 	secureMgrDocument();

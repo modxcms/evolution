@@ -5,6 +5,7 @@
  *  Created: 8/14/2005
  *  Updated: 10/7/05 - Added editable description
  *  Updated: 11/17/05 - Fixed href="#" and uppercase </HEAD>
+ *  Updated: 12/10/07 - changed order of TVs to be based on rank first, then by name
  *  For: MODx cms (modxcms.com)
  *  Description: Class for outputing QuickEdit links
  */
@@ -164,7 +165,7 @@ EOD;
 <a id="QE_Logout" href="{$logout_url}">{$QE_lang['logout']}</a>
 EOD;
 
-			$cvs = $modx->getTemplateVars('*', 'id, name', '', 1, 'name');
+			$cvs = $modx->getTemplateVars('*', 'id, name', '', 1, 'rank,name');
 
 			foreach ($cvs as $content) {
 

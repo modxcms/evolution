@@ -1,17 +1,17 @@
 <?php
 /**
  * Document Manager Module - process.inc.php
- * 
+ *
  * Purpose: Contains the main form processing functions for the module
  * Author: Garry Nutting (Mark Kaplan - Menu Index functionalty, Luke Stokes - Document Permissions concept)
  * For: MODx CMS (www.modxcms.com)
  * Date:29/09/2006 Version: 1.6
- * 
+ *
  */
 
 /**
  * changeTemplateVariables
- * 
+ *
  * @input - whether 'tree' or 'range' has been used
  * @pids - the Document IDs for processing
  */
@@ -22,7 +22,7 @@ function changeTemplateVariables($input, $pids) {
 
 	$updateError = '';
 	$output = '';
-	
+
 	$ignoreList = array();
 	// process 'ignore list'
 	if (trim($_POST['ignoreTV']) <> '') {
@@ -32,7 +32,7 @@ function changeTemplateVariables($input, $pids) {
 		$ignoreList[$key] = trim($value);
 	}
 
-	// opcode is tree, run the tree data handler 
+	// opcode is tree, run the tree data handler
 	if ($input == 'tree') {
 		$pids = rtrim($pids, ',');
 		$pids = explode(',', $pids);
@@ -77,20 +77,24 @@ function changeTemplateVariables($input, $pids) {
 								$tmplvar = implode("||",$feature_insert);
              				} else {
       	  	    				$tmplvar = $_POST["tv".$row['name']];
-             				}             
+             				}
 					}
 
 					$tmplVars["{$tvKeyName}"] = $tmplvar;
 				}
 		}
 
-		$tvID = getTVIDs($tmplVars,$ignoreList);
-		if (count($tvID) > 0) {
-			foreach ($pids as $docID) {
-				$tempSQL = $modx->db->select('template', $modx->getFullTableName('site_content'), 'id=' . $docID);
-				if ($modx->db->getRecordCount($tempSQL) > 0) {
-					$row = $modx->db->getRow($tempSQL);
-					if ($row['template'] == $_POST['tplID']) {
+		// Changed by Andy Shellam - 09/09/2007
+		// We now get the TVs on a per-document basis so that we can check
+		// for custom values that are to be changed to defaults (see getTVIDs)
+
+		foreach ($pids as $docID) {
+			$tempSQL = $modx->db->select('template', $modx->getFullTableName('site_content'), 'id=' . $docID);
+			if ($modx->db->getRecordCount($tempSQL) > 0) {
+				$row = $modx->db->getRow($tempSQL);
+				if ($row['template'] == $_POST['tplID']) {
+					$tvID = getTVIDs($tmplVars,$docID,$ignoreList);
+					if (count($tvID) > 0) {
 						foreach ($tvID as $tvIndex => $tvValue) {
 							$checkSQL = $modx->db->select('value', $modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
 							$checkCount = $modx->db->getRecordCount($checkSQL);
@@ -127,16 +131,19 @@ function changeTemplateVariables($input, $pids) {
 							}
 						}
 					} else {
-						$updateError .= 'ID: ' . $docID . ' ' . $_lang['DM_tv_template_mismatch'] . '<br />';
+						// Changed by Andy Shellam - 09/09/2007
+						// Omit this from output as if no TVs have to be changed
+						// we'll still get an error
+						//$updateError .= $_lang['DM_tv_no_tv'] . '<br />';
 					}
 				} else {
-					if ($docID !== '0') { //-- 0 is used for site-wide changes and is ignored here
-						$updateError .= 'ID: ' . $docID . ' ' . $_lang['DM_tv_doc_not_found'] . '<br />';
-					}
+					$updateError .= 'ID: ' . $docID . ' ' . $_lang['DM_tv_template_mismatch'] . '<br />';
+				}
+			} else {
+				if ($docID !== '0') { //-- 0 is used for site-wide changes and is ignored here
+					$updateError .= 'ID: ' . $docID . ' ' . $_lang['DM_tv_doc_not_found'] . '<br />';
 				}
 			}
-		} else {
-			$updateError .= $_lang['DM_tv_no_tv'] . '<br />';
 		}
 	} else {
 		$updateError .= $_lang['DM_tv_no_docs'] . '<br />';
@@ -159,11 +166,11 @@ function changeTemplateVariables($input, $pids) {
 		$output .= $updateError . '<br />';
 	}
 
-	$output .= '</p> 
-						<p>' . $_lang['DM_tpl_results_message'] . '</p> 
+	$output .= '</p>
+						<p>' . $_lang['DM_tpl_results_message'] . '</p>
 						<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" />
-						</form>												 
-						</div> 
+						</form>
+						</div>
 						</body></html>';
 
 	return $output;
@@ -171,7 +178,7 @@ function changeTemplateVariables($input, $pids) {
 
 /**
  * changeOther
- * 
+ *
  * @input - whether 'tree' or 'range' has been used
  * @pids - the Document IDs for processing
  */
@@ -257,7 +264,7 @@ function changeOther($input, $pids) {
 			$output .= $_lang['DM_process_novalues'];
 
 		if ($pids <> '' && $_POST['setoption'] != 0 && $_POST['newvalue'] <> '') {
-			//-- run UPDATE query for misc settings 
+			//-- run UPDATE query for misc settings
 			$fields = array (
 				$fieldval => intval($_POST['newvalue']
 			));
@@ -295,7 +302,7 @@ function changeOther($input, $pids) {
 		$values = rtrim($pids, ' OR ');
 
 		if ($pids <> '' && $_POST['newvalue'] <> '') {
-			//-- run UPDATE query for misc settings 
+			//-- run UPDATE query for misc settings
 			$fields = array (
 				$fieldval => intval($_POST['newvalue']
 			));
@@ -343,7 +350,7 @@ function changeOther($input, $pids) {
 
 /**
  * sortMenu
- * 
+ *
  * @id - Document ID of parent
  */
 
@@ -366,8 +373,8 @@ function sortMenu($id) {
 	}
 
 	$output .= '
-																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
-																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
+																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" />
+																<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" />
 																<script type="text/javascript" src="' . $siteURL . 'assets/modules/docmanager/js/functions.js"></script>';
 	$output .= buttonCSS();
 	if (isset ($_POST['sortableListsSubmitted'])) $output.='<script type="text/javascript">parent.tree.updateTree();</script>';
@@ -377,7 +384,7 @@ function sortMenu($id) {
 																</form>
 																';
 
-	$header .= '<div class="subTitle" id="bttn"> 
+	$header .= '<div class="subTitle" id="bttn">
 																    <span class="right">' . $_lang['DM_module_title'] . '</span>
 																	<div class="bttnheight"><a id="Button1" onclick="save();"><img src="media/style' . $theme . '/images/icons/save.gif" /> ' . $_lang['DM_save'] . '</a></div>
 																	<div class="bttnheight"><a id="Button2" onclick="reset();"><img src="media/style' . $theme . '/images/icons/sort.gif" /> ' . $_lang['DM_sort_another'] . '</a></div>
@@ -386,10 +393,10 @@ function sortMenu($id) {
 	$header .= '<div class="bttnheight"><a id="Button4" onclick="document.location.href=\'index.php?a=106\';"><img src="media/style' . $theme . '/images/icons/close.gif" /> ' . $_lang['DM_close'] . '</a></div>
 																	<div class="stay">  </div>
 																	</div>
-														
+
 														<div class="sectionHeader">&nbsp;';
 	$middle = '</div><div class="sectionBody">';
-	$footer = ' 
+	$footer = '
 															</div>
 															</body>
 															</html>
@@ -440,7 +447,7 @@ function sortMenu($id) {
 		}
 		$output .= '</ul>';
 	}
-	
+
 	if (!isset ($_POST['sortableListsSubmitted'])) {
 		$output .= $sortableLists->printForm('', 'POST', 'Submit', 'button');
 		$output .= '<br />';
@@ -454,7 +461,7 @@ function sortMenu($id) {
 
 /**
  * changeDocGroups
- * 
+ *
  * @input - 'tree' or 'range' used for selection
  * @pids - the Document ID range
  * @docgroup - The Document Group ID
@@ -492,7 +499,7 @@ function changeDocGroups($input, $pids, $docgroup, $action) {
 			if (count($doc_id) > 0) {
 				foreach ($doc_id as $value) {
 					$docsAdded = 0;
-					// first check to see if the document already belongs to this doc group: 
+					// first check to see if the document already belongs to this doc group:
 					$sql = "SELECT * FROM " . $modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
 					$sqlResult = $modx->db->query($sql);
 					$NotAMember = ($modx->db->getRecordCount($sqlResult) == 0);
@@ -501,9 +508,9 @@ function changeDocGroups($input, $pids, $docgroup, $action) {
 						$sql = "INSERT INTO " . $modx->getFullTableName('document_groups') . " (document_group, document) VALUES (" . $docgroup . "," . $value . ")";
 						$sqlResult = $modx->db->query($sql);
 
-						// secure web documents - flag as private 
+						// secure web documents - flag as private
 						secureWebDocument($value);
-						// secure manager documents - flag as private 
+						// secure manager documents - flag as private
 						secureMgrDocument($value);
 
 						$docsAdded += 1;
@@ -531,18 +538,18 @@ function changeDocGroups($input, $pids, $docgroup, $action) {
 			if (count($doc_id) > 0) {
 				foreach ($doc_id as $value) {
 					$docsRemoved = 0;
-					// first check to see if the document already belongs to this doc group:  
+					// first check to see if the document already belongs to this doc group:
 					$sql = "SELECT * FROM " . $modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
 					$sqlResult = $modx->db->query($sql);
 					$AMember = ($modx->db->getRecordCount($sqlResult) <> 0);
 					if ($AMember) {
-						// delete the parent 
+						// delete the parent
 						$sql = "DELETE FROM " . $modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
 						$sqlResult = $modx->db->query($sql);
 
-						// secure web documents - flag as private 
+						// secure web documents - flag as private
 						secureWebDocument($value);
-						// secure manager documents - flag as private 
+						// secure manager documents - flag as private
 						secureMgrDocument($value);
 
 						$docsRemoved += 1;
@@ -571,7 +578,7 @@ function changeDocGroups($input, $pids, $docgroup, $action) {
 
 /**
  * changeDocGroups
- * 
+ *
  * @input - 'tree' or 'range' used for selection
  * @pids - the Document ID range
  * @template - the Template ID to be used
@@ -584,11 +591,11 @@ function changeTemplate($input, $pids, $template) {
 
 	$table = $modx->getFullTableName('site_content');
 
-	// opcode is tree, run the tree data handler 
+	// opcode is tree, run the tree data handler
 	if ($input == 'tree') {
 		$values = $pids;
 		if ($pids <> '' && $template <> '') {
-			//-- run UPDATE query 
+			//-- run UPDATE query
 			$values = rtrim($values, ',');
 			$values = 'id="' . str_replace(',', '" OR id="', $values) . '"';
 			$fields = array (
@@ -608,16 +615,16 @@ function changeTemplate($input, $pids, $template) {
 			$output .= $error;
 		}
 
-		$output .= '</p> 
-																															<p>' . $_lang['DM_tpl_results_message'] . '</p> 
+		$output .= '</p>
+																															<p>' . $_lang['DM_tpl_results_message'] . '</p>
 																															<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" />
 																															</form>
-																															<input type="submit" name="refresh" onclick="document.location.href=\'index.php?a=26\';" value="' . $_lang['DM_tpl_refresh_site'] . '" /> 
-																															</div> 
+																															<input type="submit" name="refresh" onclick="document.location.href=\'index.php?a=26\';" value="' . $_lang['DM_tpl_refresh_site'] . '" />
+																															</div>
 																															</body></html>';
 	}
 
-	//-- values have been passed via the range text field 
+	//-- values have been passed via the range text field
 	elseif ($input == 'range') {
 		//-- parse values
 		$results = processRange($pids, 'id', 1);
@@ -625,7 +632,7 @@ function changeTemplate($input, $pids, $template) {
 		$error = $results[1];
 
 		if ($pids <> '' && $template <> '') {
-			//-- run UPDATE query 
+			//-- run UPDATE query
 
 			$values = rtrim($pids, ' OR ');
 			$fields = array (
@@ -645,11 +652,11 @@ function changeTemplate($input, $pids, $template) {
 			$output .= $error;
 		}
 
-		$output .= '</p> 
+		$output .= '</p>
 									<p>' . $_lang['DM_tpl_results_message'] . '</p><br />
 									<form name="back" method="post"><input type="submit" name="back" value="' . $_lang['DM_process_back'] . '" />
 									</form>
-									</div> 
+									</div>
 									</body></html>';
 	}
 	//-- clear the cache
@@ -662,7 +669,7 @@ function changeTemplate($input, $pids, $template) {
 
 /**
  * Process Range
- * 
+ *
  * @pids - The document ID range
  * @column - The column to return (eg. id,document etc.) if returnval is 1.
  * @returnval - Return values as array(0) or SQL WHERE string (1)
@@ -672,11 +679,11 @@ function processRange($pids, $column, $returnval = 1) {
 	global $modx;
 	global $_lang;
 
-	//-- set initial vars 
+	//-- set initial vars
 	$values = array ();
 	$error = '';
 
-	//-- check for empty field 
+	//-- check for empty field
 	if (trim($pids) <> '') {
 		$values = explode(',', $pids);
 	} else {
@@ -685,17 +692,17 @@ function processRange($pids, $column, $returnval = 1) {
 
 	$pids = '';
 
-	//-- parse values, and check for invalid entries 
+	//-- parse values, and check for invalid entries
 	foreach ($values as $key => $value) {
-		//-- value is a range 
+		//-- value is a range
 		if (preg_match('/^[\d]+\-[\d]+$/', trim($value))) {
-			//-- explode the lower and upper limits 
+			//-- explode the lower and upper limits
 			$match = explode('-', $value);
-			//-- Upper limit lower than lower limit 
+			//-- Upper limit lower than lower limit
 			if (($match[1] - $match[0]) < 0) {
 				$error = $_lang['DM_process_limits_error'] . $value . '<br />';
 			}
-			//-- loop through values and parse WHERE SQL statement 
+			//-- loop through values and parse WHERE SQL statement
 			$loop = $match[1] - $match[0];
 			for ($i = 0; $i <= $loop; $i++) {
 				if ($returnval == 0) {
@@ -706,13 +713,13 @@ function processRange($pids, $column, $returnval = 1) {
 			}
 		}
 
-		//-- value is a group for immediate children 
+		//-- value is a group for immediate children
 		elseif (preg_match('/^[\d]+\*$/', trim($value), $match)) {
-			//-- get ID number of folder 
+			//-- get ID number of folder
 			$match = rtrim($match[0], '*');
-			//-- get ALL children 
+			//-- get ALL children
 			$group = $modx->db->select('id', $table, 'parent=' . $match);
-			//-- parse WHERE SQL statement 
+			//-- parse WHERE SQL statement
 			if ($returnval == 0) {
 				$idarray[] = $match;
 			} else {
@@ -728,12 +735,12 @@ function processRange($pids, $column, $returnval = 1) {
 			}
 			}
 		}
-		//-- value is a group for ALL children 
+		//-- value is a group for ALL children
 		elseif (preg_match('/^[\d]+\*\*$/', trim($value), $match)) {
-			//-- get ID number of folder 
+			//-- get ID number of folder
 			$match = rtrim($match[0], '**');
 			$idarray[] = $match;
-			//-- recurse and get ALL children 
+			//-- recurse and get ALL children
 			for ($i = 0; $i < count($idarray); $i++) {
 				$where = 'parent=' . $idarray[$i];
 				$rs = $modx->db->select("id", $table, $where);
@@ -744,24 +751,24 @@ function processRange($pids, $column, $returnval = 1) {
 				}
 			}
 
-			//-- parse array into string 
+			//-- parse array into string
 			for ($i = 0; $i < count($idarray); $i++) {
 				$pids .= '' . $column . '=\'' . $idarray[$i] . '\' OR ';
 			}
 		}
-		//-- value is a single document 
+		//-- value is a single document
 		elseif (preg_match('/^[\d]+$/', trim($value), $match)) {
-			//-- parse WHERE SQL statement 
+			//-- parse WHERE SQL statement
 			if ($returnval == 0) {
 				$idarray[] = ($i + $match[0]);
 			} else {
 				$pids .= '' . $column . '=\'' . trim($value) . '\' OR ';
 			}
-			//-- value is invalid 
+			//-- value is invalid
 		} else {
 			$error .= $_lang['DM_process_invalid_error'] . $value . '<br />';
 		}
-	} //foreach end 
+	} //foreach end
 	if ($returnval == 0) {
 		$results[] = $idarray;
 		$results[] = $error;
@@ -837,7 +844,7 @@ function secureWebDocument($docid = '') {
 	global $modx;
 
 	$modx->db->query("UPDATE " . $modx->getFullTableName("site_content") . " SET privateweb = 0 WHERE " . ($docid > 0 ? "id='$docid'" : "privateweb = 1"));
-	$sql = "SELECT DISTINCT sc.id 
+	$sql = "SELECT DISTINCT sc.id
 								 FROM " . $modx->getFullTableName("site_content") . " sc
 								 LEFT JOIN " . $modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
 								 LEFT JOIN " . $modx->getFullTableName("webgroup_access") . " wga ON wga.documentgroup = dg.document_group
@@ -852,7 +859,7 @@ function secureMgrDocument($docid = '') {
 	global $modx;
 
 	$modx->db->query("UPDATE " . $modx->getFullTableName("site_content") . " SET privatemgr = 0 WHERE " . ($docid > 0 ? "id='$docid'" : "privatemgr = 1"));
-	$sql = "SELECT DISTINCT sc.id 
+	$sql = "SELECT DISTINCT sc.id
 								 FROM " . $modx->getFullTableName("site_content") . " sc
 								 LEFT JOIN " . $modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
 								 LEFT JOIN " . $modx->getFullTableName("membergroup_access") . " mga ON mga.documentgroup = dg.document_group
@@ -865,11 +872,12 @@ function secureMgrDocument($docid = '') {
 
 /** getTVIDs - returns an associative array of TV ID values
  * If TV content matches the default content for the TV, the ID will not be returned
- * 
+ *
  * @tvNames - Associative array of TV Name->TV Content pairs
- * 
+ * @documentID - document ID to find values for
+ *
  */
-function getTVIDs($tvNames = array (),$ignoreList=array()) {
+function getTVIDs($tvNames = array (), $documentID, $ignoreList=array()) {
 	global $modx;
 
 	$output = array ();
@@ -882,8 +890,21 @@ function getTVIDs($tvNames = array (),$ignoreList=array()) {
 			if ($modx->db->getRecordCount($sql) > 0) {
 				$row = $modx->db->getRow($sql);
 				//-- if value is the default value then ignore, except blank values
+				// Added by Andy.Shellam - 09/09/2007
+				// However if the new value given for TV is the default, but the document's
+				// custom value is not the default, remove it from the database
+				// effectively resetting this document/TV value to the default
 				if ($value !== $row['default_text'] || trim($value) == '') {
 					$output["$name"] = $row['id'];
+				} elseif ($value == $row["default_text"]) {
+					$newSql = $modx->db->select("value", $modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid=" . $row["id"] . " AND contentid=" . $documentID);
+					if ($modx->db->getRecordCount($newSql) == 1)
+					{
+						// Remove from table so it's reset to default, don't add it to process list
+						$modx->db->delete($modx->getFullTableName("site_tmplvar_contentvalues"), "tmplvarid=" . $row["id"] . " AND contentid=" . $documentID);
+					} else {
+						// Don't do anything as it's already at the default (unassigned) value
+					}
 				}
 			}
 		}

@@ -98,6 +98,27 @@ function mkdirs($strPath, $mode){ // recursive mkdir function
 	return @mkdir($strPath);
 }
 
+function logFileChange($type, $filename) {
+	//global $_lang;
+
+	include_once('log.class.inc.php');
+	$log = new logHandler();
+
+	switch ($type) {
+	case 'upload':		$string = 'Uploaded File'; break;
+	case 'delete':		$string = 'Deleted File'; break;
+	case 'modify':		$string = 'Modified File'; break;
+	default:		$string = 'Viewing File'; break;
+	}
+
+	$string = sprintf($string, $filename);
+	$log->initAndWriteLog($string, '', '', '', $type, $filename);
+
+	// HACK: change the global action to prevent double logging
+	// @see manager/index.php @ 915
+	global $action; $action = 1;
+}
+
 // get the current work directory
 if(isset($_REQUEST['path']) && !empty($_REQUEST['path'])) {
         $_REQUEST['path'] = str_replace('..','',$_REQUEST['path']);
@@ -188,11 +209,12 @@ if(!empty($_FILES['userfile'])) {
 
 					// invoke OnFileManagerUpload event
 					$modx->invokeEvent("OnFileManagerUpload",
-										array(
-											"filepath"	=> $_POST['path'],
-											"filename"	=> $userfile['name']
-										));
-
+						array(
+							"filepath"	=> $_POST['path'],
+							"filename"	=> $userfile['name']
+					));
+					// Log the change
+					logFileChange('upload', $_POST['path'].'/'.$userfile['name']);
 			} else {
 				echo "<br /><span class=\"warning\">".$_lang['files_upload_copyfailed']."</span> Possible permission problems - the directory you want to upload to needs to be set to 0777 permissions.<br />";
 			}
@@ -242,6 +264,9 @@ if($_POST['mode']=="save") {
 	   $_REQUEST['mode'] = "edit";
 	}
 	fclose($handle);
+
+	// Log the change
+	logFileChange('modify', $filename);
 }
 
 
@@ -253,6 +278,9 @@ if($_REQUEST['mode']=="delete") {
 	} else {
 	   echo "<span class=\"success\"><b>".$_lang['file_deleted']."</b></span><br /><br />";
 	}
+
+	// Log the change
+	logFileChange('delete', $file);
 }
 
 
@@ -523,6 +551,8 @@ if($_REQUEST['mode']=="edit" || $_REQUEST['mode']=="view") {
 <?php
 $filename=$_REQUEST['path'];
 $handle = @fopen($filename, "r");
+// Log the change
+logFileChange('view', $filename);
 $theme = $manager_theme ? "$manager_theme/":"";
 if(!$handle) {
 	echo 'Error opening file for reading.';

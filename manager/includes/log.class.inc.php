@@ -12,17 +12,9 @@ $log->initAndWriteLog($msg, $internalKey, $username, $action, $id, $itemname); /
 
 */
 
-class logHandler{
-	// first, declare class variables
-	var $msg;			// required
-	var $internalKey;	// required
-	var $action;		// required
-	var $username;		// not required
-	var $itemId;			// not required
-	var $itemName;		// not required, not used?
-	var $loggingError;	// internal variable
-
-
+class logHandler {
+	// Single variable for a log entry
+	var $entry = array();
 
 	function logError($msg) {
 		include_once dirname(__FILE__)."/error.class.inc.php";
@@ -34,48 +26,55 @@ class logHandler{
 
 	function initAndWriteLog($msg="", $internalKey="", $username="", $action="", $itemid="", $itemname="") {
 		global $modx;
-		$this->msg = $msg=="" ? "" : $msg;	// writes testmessage to the object
-		$this->internalKey = $internalKey=="" ? $modx->getLoginUserID() : $internalKey;	// writes the key to the object
-		$this->username = $username=="" ? $modx->getLoginUserName() : $username;	// writes the key to the object
-		$this->action = $action=="" ? $_REQUEST['a'] : $action;	// writes the action to the object
-		$this->itemId = $itemid=="" ? $_REQUEST['id'] : $itemid;	// writes the id to the object
-		if($this->itemId==0) $this->itemId="-"; // to stop items having id 0
-		$this->itemName = $itemname=="" ? $_SESSION['itemname'] : $itemname;	// writes the id to the object
-		if($this->itemName=="") $this->itemName="-"; // to stop item name being empty
-		//$this->itemName = addslashes($this->itemName);
+		$this->entry['msg'] = $msg;	// writes testmessage to the object
+		$this->entry['action'] = $action == "" ? $_REQUEST['a'] : $action;	// writes the action to the object
+
+		// User Credentials
+		$this->entry['internalKey'] = $internalKey == "" ? $modx->getLoginUserID() : $internalKey;
+		$this->entry['username'] = $username == "" ? $modx->getLoginUserName() : $username;
+
+		$this->entry['itemId'] = $itemid == "" ? $_REQUEST['id'] : $itemid;	// writes the id to the object
+		if($this->entry['itemId'] == 0) $this->entry['itemId'] = "-"; // to stop items having id 0
+
+		$this->entry['itemName'] = $itemname == "" ? $_SESSION['itemname'] : $itemname;	// writes the id to the object
+		if($this->entry['itemName'] == "") $this->entry['itemName'] = "-"; // to stop item name being empty
+
 		$this->writeToLog();
 		return;
 	}
-
 
 	// function to write to the log
 	// collects all required info, and
 	// writes it to the logging table
 	function writeToLog() {
-
 		global $modx;
-		global $table_prefix;
-		global $dbase;
 
-		if($this->internalKey == "") {
+		if($this->entry['internalKey'] == "") {
 			$this->logError("internalKey not set.");
 			return;
 		}
-		if($this->action == "") {
+		if($this->entry['action'] == "") {
 			$this->logError("action not set.");
 			return;
 		}
-		if($this->msg == "") {
+		if($this->entry['msg'] == "") {
 			include_once "actionlist.inc.php";
-			$this->msg = getAction($this->action, $this->itemId);
-			if($this->msg=="") {
+			$this->entry['msg'] = getAction($this->entry['action'], $this->entry['itemId']);
+			if($this->entry['msg'] == "") {
 				$this->logError("couldn't find message to write to log.");
 				return;
 			}
 		}
 
-		$sql = "INSERT INTO $dbase.`".$table_prefix."manager_log` (timestamp, internalKey, username, action, itemid, itemname, message) VALUES('".time()."', '".$modx->db->escape($this->internalKey)."', '".$modx->db->escape($this->username)."'";
-		$sql .= ", '".$modx->db->escape($this->action)."', '".$modx->db->escape($this->itemId)."', '".$modx->db->escape($this->itemName)."', '".$modx->db->escape($this->msg)."')";
+		$sql = 'INSERT INTO '.$modx->getFullTableName('manager_log').'
+			(timestamp, internalKey, username, action, itemid, itemname, message) VALUES
+			(\''.time().'\',
+			 \''.$modx->db->escape($this->entry['internalKey']).'\',
+			 \''.$modx->db->escape($this->entry['username']).'\',
+			 \''.$modx->db->escape($this->entry['action']).'\',
+			 \''.$modx->db->escape($this->entry['itemId']).'\',
+			 \''.$modx->db->escape($this->entry['itemName']).'\',
+			 \''.$modx->db->escape($this->entry['msg']).'\')';
 
 		if(!$rs=$modx->db->query($sql)) {
 			$this->logError("Couldn't save log to table! ".mysql_error());
@@ -83,4 +82,3 @@ class logHandler{
 		}
 	}
 }
-?>

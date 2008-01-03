@@ -526,13 +526,13 @@ class DocumentParser {
         $timeNow= time() + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
             // now, check for documents that need publishing
-            $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE ".$this->getFullTableName("site_content").".pub_date < $timeNow AND ".$this->getFullTableName("site_content").".pub_date!=0 AND published=0";
+            $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE ".$this->getFullTableName("site_content").".pub_date <= $timeNow AND ".$this->getFullTableName("site_content").".pub_date!=0 AND published=0";
             if (@ !$result= $this->dbQuery($sql)) {
                 $this->messageQuit("Execution of a query to the database failed", $sql);
             }
 
             // now, check for documents that need un-publishing
-            $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=0, publishedon=0 WHERE " . $this->getFullTableName("site_content") . ".unpub_date < $timeNow AND " . $this->getFullTableName("site_content") . ".unpub_date!=0 AND published=1";
+            $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=0, publishedon=0 WHERE " . $this->getFullTableName("site_content") . ".unpub_date <= $timeNow AND " . $this->getFullTableName("site_content") . ".unpub_date!=0 AND published=1";
             if (@ !$result= $this->dbQuery($sql)) {
                 $this->messageQuit("Execution of a query to the database failed", $sql);
             }
@@ -1411,7 +1411,7 @@ class DocumentParser {
              (!$docgrp ? "" : " OR dg.document_group IN ($docgrp)");
             $sql= "SELECT DISTINCT $fields FROM $tblsc sc
                     LEFT JOIN $tbldg dg on dg.document = sc.id
-                    WHERE (sc.id IN (" . join($ids, ",") . ") AND sc.published=$published AND sc.deleted=$deleted $where)
+                    WHERE (sc.id IN (" . implode(",",$ids) . ") AND sc.published=$published AND sc.deleted=$deleted $where)
                     AND ($access)
                     GROUP BY sc.id " .
              ($sort ? " ORDER BY $sort $dir" : "") . " $limit ";
@@ -1884,19 +1884,16 @@ class DocumentParser {
             if ($result == false)
                 return false;
             else {
-                $baspath= $this->config["base_path"] . "manager/includes";
-                include_once $baspath . "/tmplvars.format.inc.php";
-                include_once $baspath . "/tmplvars.commands.inc.php";
-                for ($i= 0; $i < count($result); $i++) {
-                    $row= $result[$i];
-                    // to-do needs fixing when getting tvs from other pages
-                    $replace_richtext= "";
-                    $richtexteditor= "";
-                    $w= "100%";
-                    $h= "300";
-                    $output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid);
-                }
-                return $output;
+		$baspath= $this->config["base_path"] . "manager/includes";
+		include_once $baspath . "/tmplvars.format.inc.php";
+		include_once $baspath . "/tmplvars.commands.inc.php";
+		for ($i= 0; $i < count($result); $i++) {
+			$row= $result[$i];
+			if (!$row['id'])
+				$output[$row['name']]= $row['value'];
+			else	$output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid);
+		}
+		return $output;
             }
         }
     }
@@ -2241,12 +2238,11 @@ class DocumentParser {
 
     # add an event listner to a plugin - only for use within the current execution cycle
     function addEventListener($evtName, $pluginName) {
-        if (!$evtName || !$pluginName)
-            return false;
-        $el= $this->pluginEvent[$evtName];
-        if (empty ($el))
-            $el= $this->pluginEvent[$evtName]= array ();
-        return array_push($el, $pluginName); // return index
+	    if (!$evtName || !$pluginName)
+		    return false;
+	    if (!array_key_exists($this->pluginEvent[$evtName]))
+		    $this->pluginEvent[$evtName] = array();
+	    return array_push($this->pluginEvent[$evtName], $pluginName); // return array count
     }
 
     # remove event listner - only for use within the current execution cycle
@@ -2274,6 +2270,7 @@ class DocumentParser {
         if ($numEvents > 0)
             for ($i= 0; $i < $numEvents; $i++) { // start for loop
                 $pluginName= $el[$i];
+                $pluginName = stripslashes($pluginName);
                 // reset event object
                 $e= & $this->Event;
                 $e->_resetEventObject();
