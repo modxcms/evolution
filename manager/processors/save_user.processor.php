@@ -313,8 +313,9 @@ switch ($_POST['mode']) {
 			exit;
 		}
 
+		// Removed second mysql_escape_string from fullname - pixelchutes
 		$sql = "UPDATE $dbase.`" . $table_prefix . "user_attributes` SET
-					fullname='" . mysql_escape_string($fullname) . "',
+					fullname='" . $fullname . "',
 					role='$roleid',
 					email='$email',
 					phone='$phone',

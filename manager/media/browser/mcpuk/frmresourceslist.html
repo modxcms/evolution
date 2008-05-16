@@ -186,10 +186,8 @@ function OpenFolder( folderPath )
 function OpenFile( fileUrl )
 {
 	fileUrl=unescape(fileUrl);
-	window.top.opener.SetUrl( fileUrl ) ;
-	window.top.close() ;
-	window.top.opener.focus() ;
-}
+	window.top.SetUrl(fileUrl);
+} 
 
 function DeleteFile( fileName, fileUrl )
 {

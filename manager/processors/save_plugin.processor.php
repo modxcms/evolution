@@ -39,7 +39,7 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
     if ($catCheck) {
         $categoryid = $catCheck;
     } else {
-        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+        $categoryid = newCategory($_POST['newcategory']);
     }
 }
 

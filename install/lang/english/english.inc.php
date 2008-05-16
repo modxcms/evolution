@@ -123,6 +123,8 @@ $_lang["ok"] = 'OK!';
 $_lang["you_running_php"] = ' - You are running on PHP ';
 $_lang["modx_requires_php"] = ', and MODx requires PHP 4.1.0 or later';
 $_lang["php_security_notice"] = '<legend>Security notice</legend><p>While MODx will work on your PHP version, usage of MODx on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 4.3.8 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p>';
+$_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
+$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODx install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODx, but consider yourself warned.'; //Look at changing this to provide a solution.
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_if_cache_exist"] = 'Checking if <span class=\"mono\">assets/cache</span> directory exists: ';
 $_lang["checking_if_cache_writable"] = 'Checking if <span class=\"mono\">assets/cache</span> directory is writable: ';

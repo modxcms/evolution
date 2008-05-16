@@ -23,12 +23,12 @@ class debug extends modxDebugConsole {
 	// Function: render_popup
 	// Render the contents of the debug console
 	// ---------------------------------------------------	
-	function render_popup($ditto,$ditto_base,$ditto_version, $ditto_params, $IDs, $fields, $summarize, $templates, $sortBy, $sortDir, $start, $stop, $total,$filter,$resource) {
+	function render_popup($ditto,$ditto_base,$ditto_version, $ditto_params, $IDs, $fields, $summarize, $templates, $orderBy, $start, $stop, $total,$filter,$resource) {
 		global $ditto_lang,$modx;
 		$tabs = array();
 		$fields = (count($fields["db"]) > 0 && count($fields["tv"]) > 0) ? array_merge_recursive($ditto->fields,array("retrieved"=>$fields)) : $ditto->fields;
 		
-		$tabs[$ditto_lang["info"]] = $this->prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $sortBy, $sortDir, $start, $stop, $total);
+		$tabs[$ditto_lang["info"]] = $this->prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $orderBy, $start, $stop, $total);
 		$tabs[$ditto_lang["params"]] = $this->makeParamTable($ditto_params,$ditto_lang["params"]);
 		$tabs[$ditto_lang["fields"]] = "<div class='ditto_dbg_fields'>".$this->array2table($this->cleanArray($fields), true, true)."</div>";		
 		$tabs[$ditto_lang["templates"]] =  $this->makeParamTable($this->prepareTemplates($templates),$ditto_lang["templates"]);
@@ -105,17 +105,23 @@ class debug extends modxDebugConsole {
 	// Function: prepareBasicInfo
 	// Create the outut for the Info ta
 	// ---------------------------------------------------
-		function prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $sortBy, $sortDir, $start, $stop, $total) {
+		function prepareBasicInfo($ditto,$ditto_version, $IDs, $summarize, $orderBy, $start, $stop, $total) {
 		global $ditto_lang,$dittoID,$modx;
 			$items[$ditto_lang['version']] = $ditto_version;
 			$items[$ditto_lang['summarize']] = $summarize;
 			$items[$ditto_lang['total']] = $total;	 
-			$items[$ditto_lang['sortBy']] = ($ditto->advSort !== false) ? $ditto->advSort : $sortBy;	 
-			$items[$ditto_lang['sortDir']] = $sortDir;	 
 			$items[$ditto_lang['start']] = $start;	 
 			$items[$ditto_lang['stop']] = $stop;	 	 
 			$items[$ditto_lang['ditto_IDs']] = (count($IDs) > 0) ? wordwrap(implode(", ",$IDs),100, "<br />") : $ditto_lang['none'];
-			return $this->makeParamTable($items,$ditto_lang["basic_info"],false,false);
+			$output = '';
+			if (is_array($orderBy['parsed']) && count($orderBy['parsed']) > 0) {
+				$sort = array();
+				foreach ($orderBy['parsed'] as $key=>$value) {
+					$sort[$key] = array($ditto_lang['sortBy']=>$value[0],$ditto_lang['sortDir']=>$value[1]);
+				}
+				$output = $this->array2table($this->cleanArray($sort), true, true);	
+			}
+			return $this->makeParamTable($items,$ditto_lang["basic_info"],false,false).$output;
 	}
 
 	// ---------------------------------------------------

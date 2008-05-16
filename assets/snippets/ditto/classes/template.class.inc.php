@@ -85,16 +85,13 @@ class template{
 	// ---------------------------------------------------
 	function findTemplateVars($tpl) {
 		preg_match_all('~\[\+(.*?)\+\]~', $tpl, $matches);
-		$cnt = count($matches[1]);
-
-		$tvnames = array ();
-		for ($i = 0; $i < $cnt; $i++) {
-			$match = explode(":", $matches[1][$i]);
-			$tvnames[] = (strpos($matches[1][$i], "phx") === false) ? $match[0] : $matches[1][$i];
+		$TVs = array();
+		foreach($matches[1] as $tv) {
+			$match = explode(":", $tv);
+			$TVs[strtolower($match[0])] = $match[0];
 		}
-
-		if (count($tvnames) >= 1) {
-			return array_unique($tvnames);
+		if (count($TVs) >= 1) {
+			return array_values($TVs);
 		} else {
 			return false;
 		}
@@ -121,7 +118,7 @@ class template{
 			"unknown" => array()
 		);
 		
-		$custom = array("author","date","url","title");
+		$custom = array("author","date","url","title","ditto_iteration");
 
 		foreach ($fieldList as $field) {
 			if (substr($field, 0, 4) == "rss_") {
@@ -132,8 +129,6 @@ class template{
 				$fields['json'][] = substr($field,5);
 			}else if (substr($field, 0, 4) == "item") {
 				$fields['item'][] = substr($field, 4);
-			}else if (in_array($field, $custom)) {
-				$fields['custom'][] = $field;
 			}else if (substr($field, 0, 1) == "#") {
 				$fields['qe'][] = substr($field,1);
 			}else if (substr($field, 0, 3) == "phx") {
@@ -144,7 +139,9 @@ class template{
 				$fields['tv'][] = $field;
 			}else if(substr($field, 0, 2) == "tv" && in_array(substr($field,2), $tvFields)) {
 				$fields['tv'][] = substr($field,2);
-					// TODO: Remove TV Prefix support in Ditto 2.1
+					// TODO: Remove TV Prefix support in Ditto
+			}else if (in_array($field, $custom)) {
+				$fields['custom'][] = $field;
 			}else {
 				$fields['unknown'][] = $field; 
 			}
@@ -157,7 +154,13 @@ class template{
 	// Replcae placeholders with their values
 	// ---------------------------------------------------
     function replace( $placeholders, $tpl ) {
-		return str_replace( array_keys( $placeholders ), array_values( $placeholders ), $tpl );
+		$keys = array();
+		$values = array();
+		foreach ($placeholders as $key=>$value) {
+			$keys[] = '[+'.$key.'+]';
+			$values[] = $value;
+		}
+		return str_replace($keys,$values,$tpl);
 	}
 
 	// ---------------------------------------------------

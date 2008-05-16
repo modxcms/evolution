@@ -7,22 +7,9 @@
 */
 
 // ---------------------------------------------------
-// Date Filter Parameters
+// Date Filter Class
 // ---------------------------------------------------
 
-$dateSource = isset($dateSource) ? $dateSource : "createdon";
-/*
-	Param: dateSource
-
-	Purpose:
-	Source of the [+date+] placeholder
-
-	Options:
-	# - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
-	
-	Default:
-	"createdon"
-*/
 if (!class_exists("dateFilter")) {
 	class dateFilter {
 		var $month,$year,$day,$dateSource;
@@ -50,48 +37,192 @@ if (!class_exists("dateFilter")) {
 				$max = mktime(23,59,59,$month, $day, $year);
 			}
 			
-			if ($value[$this->dateSource] <= $min || $value[$this->dateSource] >= $max){
+			$compare = $value[$this->dateSource];
+			if ($compare < $min || $compare > $max){
 				$unset = 0;
 			}
 			return $unset;
 		}
 	}
 }
-if (!empty($_GET[$dittoID.'year'])) {
-	if (!empty($_GET[$dittoID.'month']) && $_GET[$dittoID.'month'] != 'false') {
-		$month = intval($_GET[$dittoID.'month']);
-		$year = intval($_GET[$dittoID.'year']);
-		$month_text = ditto::formatDate(mktime(10, 10, 10, $month, 10, $year),"%B");
-		$modx->setPlaceholder($dittoID."month",$month_text);
-		/*
-			Placeholder: month
 
-			Content:
-			Month being filtered by
-		*/
-		$modx->setPlaceholder($dittoID."year",$year);
-		/*
-			Placeholder: year
+// ---------------------------------------------------
+// Date Filter Parameters
+// ---------------------------------------------------
 
-			Content:
-			Year being filtered by
-		*/
-	if ($_GET[$dittoID.'day'] != 'false') {
-		$day = intval($_GET[$dittoID.'day']);
-		$modx->setPlaceholder($dittoID."day",$day);
-		/*
-			Placeholder: day
+$source = isset($dateFilterSource) ? $dateFilterSource : 'get';
+/*
+	Param: dateFilterSource
 
-			Content:
-			Day being filtered by
-		*/
-	}
+	Purpose:
+	Source for the day, month, and year to filter by
+
+	Options:
+	get - gets the value of year, month, and day from the URL (pre-appended with the Ditto ID)
+	params - gets the value from the snippet cal
+	text - name of the request variable to use
+
+	Default:
+	get
+*/
+$dateSource = isset($dateSource) ? $dateSource : "createdon";
+/*
+	Param: dateSource
+
+	Purpose:
+	Source of the [+date+] placeholder
+
+	Options:
+	# - Any UNIX timestamp from MODx fields or TVs such as createdon, pub_date, or editedon
+	
+	Default:
+	"createdon"
+	
+	Related:
+	- <dateFormat>
+*/
+$default = isset($dateFilterDefault) ? $dateFilterDefault : 0;
+/*
+	Param: dateFilterDefault
+
+	Purpose:
+	Determine the default filter
+
+	Options:
+	0 - filter off
+	1 - current year
+	2 - current year and month
+	3 - current year, month, and day
+	
+	Default:
+	0
+*/
+if ($source == 'get') {
+	$year = (!empty($_GET[$dittoID.'year']) && $_GET[$dittoID.'year'] != 'false') ? intval($_GET[$dittoID.'year']) : 0;
+	$month = (!empty($_GET[$dittoID.'month']) && $_GET[$dittoID.'month'] != 'false') ? intval($_GET[$dittoID.'month']) : 0;
+	$day = (!empty($_GET[$dittoID.'day']) && $_GET[$dittoID.'day'] != 'false') ? intval($_GET[$dittoID.'day']) : 0;
+} else if ($source == 'params'){
+	$month = isset($month) ? intval($month) : 0;
+	/*
+		Param: month
+
+		Purpose:
+		Month to filter by
+
+		Options:
+		# - Number between 1-12 (inclusive) that corresponds to the month to filter by
+
+		Default:
+		[NULL]
+	*/
+	$year = isset($year) ? intval($year) : 0;
+	/*
+		Param: year
+
+		Purpose:
+		Year to filter by
+
+		Options:
+		# - Any numerical year (4 numbers; ex: 2006)
+
+		Default:
+		[NULL]
+	*/
+	$day = isset($day) ? intval($day) : 0;
+	/*
+		Param: day
+
+		Purpose:
+		Day to filter by
+
+		Options:
+		# - Any numerical day within the current month
+
+		Default:
+		[NULL]
+	*/
 } else {
-		$year = intval($_GET[$dittoID.'year']);
-		$day = false;
-		$month = false;
-		$modx->setPlaceholder($dittoID."year",$year);		
+	if (!empty($_REQUEST[$dittoID.$source])) {
+		$date = getdate(strtotime($_REQUEST[$dittoID.$source]));
+		$year = $date["year"];
+		$month = $date["mon"];
+		$day = $date["mday"];
+	}
 }
+
+// ---------------------------------------------------
+// Date Filter Defaults
+// ---------------------------------------------------
+
+
+switch ($dateFilterDefault) {
+	case 0:
+		// do nothing
+	break;
+
+	case 1:
+		$cDate = getdate();
+		$year = ($year) ? $year : $cDate["year"]; 
+	break;
+	
+	case 2:
+		$cDate = getdate();
+		$year = ($year) ? $year : $cDate["year"]; 
+		$month = ($month) ? $month : $cDate["mon"];
+	break;
+	
+	case 3:
+		$cDate = getdate();
+		$year = ($year) ? $year : $cDate["year"]; 
+		$month = ($month) ? $month : $cDate["mon"];
+		$day = ($day) ? $day : $cDate["mday"];
+	break;
+}
+
+// ---------------------------------------------------
+// Date Filter Placeholders
+// ---------------------------------------------------
+
+if ($year) {
+	$modx->setPlaceholder($dittoID."year",$year);
+	/*
+		Placeholder: year
+
+		Content:
+		Year being filtered by
+	*/
+}
+if ($month && $year) {
+	$month_text = strftime("%B", mktime(10, 10, 10, $month, 10, $year));
+	$modx->setPlaceholder($dittoID."month",$month_text);
+	/*
+		Placeholder: month
+
+		Content:
+		Month being filtered by
+	*/
+	$modx->setPlaceholder($dittoID."month_numeric",$month);
+	/*
+		Placeholder: month
+
+		Content:
+		Numeric version of the month being filtered by
+	*/
+}
+if ($day && $month && $year) {
+	$modx->setPlaceholder($dittoID."day",$day);
+	/*
+		Placeholder: day
+
+		Content:
+		Day being filtered by
+	*/
+}
+
+// ---------------------------------------------------
+// Date Filter Execution
+// ---------------------------------------------------
+if ($year || ($year && $month) || ($year && $month && $day)) {
 	$dateFilterOject = new dateFilter($month,$year,$day,$dateSource);
 	$filters["custom"]["dateFilter"] = array($dateSource,array($dateFilterOject,"execute"));
 }

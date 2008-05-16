@@ -39,21 +39,40 @@ class GetFolders {
 	<Folders>
 		<?php
 			if ($dh=opendir($this->real_cwd)) {
-				while (($filename=readdir($dh))!==false) {
+
+			    /**
+			     * Initiate the array to store the filenames
+			     */
+			    $files_in_folder = array();
+
+			    while (($filename=readdir($dh))!==false) {
 					if (($filename!=".")&&($filename!="..")) {
 						if (is_dir($this->real_cwd."/$filename")) {
 							
 							//check if$fckphp_configured not to show this folder
 							$hide=false;
-							for($i=0;$i<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders']);$i++) 
+							for($i=0;$i<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders']);$i++)
 								$hide=(ereg($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders'][$i],$filename)?true:$hide);
-							
-							if (!$hide) echo "<Folder name=\"$filename\" />\n";
+
+                           /**
+                            * Dont echo the entry, push it in the array
+                            */
+					       //if (!$hide) echo "<Folder name=\"$filename\" />\n";
+					       if (!$hide) array_push($files_in_folder,$filename);
 						}
 					}
 				}
 				closedir($dh);
 			}
+
+			/**
+			 * Sort the array by the way you like and show it.
+			 */
+			natcasesort($files_in_folder);
+            foreach($files_in_folder as $k=>$v)
+            {
+	           echo '<Folder name="'.$v.'" />'."\n";
+            }
 		?>
 	</Folders>
 </Connector>

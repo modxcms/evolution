@@ -31,7 +31,7 @@ class SqlParser {
 		if(function_exists("mysql_get_server_info")) {
 			$ver = mysql_get_server_info();
 			$this->dbMODx 	 = version_compare($ver,"4.0.2");
-			$this->dbVersion = floatval($ver);
+			$this->dbVersion = (float) $ver; // Typecasting (float) instead of floatval() [PHP < 4.2]
 		}
 
         mysql_query("SET CHARACTER SET {$this->connection_charset}");

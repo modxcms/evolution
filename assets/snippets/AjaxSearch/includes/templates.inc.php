@@ -1,21 +1,19 @@
 <?php
-
 /*
-templates.inc.php - for AjaxSearch 1.5
+templates.inc.php - for AjaxSearch 1.7
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
 Description: Templates used to display AjaxSearch form/results
 */
-
 $asTemplates = array(
 	//Template for output of all search elements
 	'layout' => '
-		[+as.form+]
-		[+as.intro+]
-		[+as.results+]',
+  [+as.form+]
+  [+as.intro+]
+  [+as.results+]',
 	//Form Template
 	'form' => '
-		<form [+as.formId+]action="[+as.formAction+]" method="post">
+  <form [+as.formId+]action="[+as.formAction+]" method="post">
 			<label for="ajaxSearch_input">
 				<input id="ajaxSearch_input" type="text" name="search" value="[+as.inputValue+]"[+as.inputOptions+] />
 			</label>

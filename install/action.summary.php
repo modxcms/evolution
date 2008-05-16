@@ -17,6 +17,15 @@ if ($php_ver_comp < 0) {
 		echo "<fieldset>" . $_lang['php_security_notice'] . "</fieldset>";
 	}
 }
+// check php register globals off
+echo "<p>" . $_lang['checking_registerglobals'];
+$register_globals = (int) ini_get('register_globals');
+if ($register_globals == '1'){
+	echo "<span class=\"notok\">" . $_lang['failed'].  "</span></p><p><strong>".$_lang['checking_registerglobals_note']."</strong></p>";
+	// $errors += 1; // comment out for now so we still allow installs if folks are simply stubborn
+} else {
+	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+}
 // check sessions
 echo "<p>" . $_lang['checking_sessions'];
 if ($_SESSION['session_test'] != 1) {

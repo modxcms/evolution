@@ -8,15 +8,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
 
-    <script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"; ?>";</script>
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script language="JavaScript" type="text/javascript">
         window.addEvent('load', document_onload);
-        window.addEvent('unload', document_onunload);
+        window.addEvent('beforeunload', document_onunload);
         
-        var MODX_MEDIA_PATH = "media"; // set media path
-
         function document_onload() {
             stopWorker();
             hideLoader();

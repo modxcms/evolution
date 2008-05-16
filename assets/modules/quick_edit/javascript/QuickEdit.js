@@ -93,9 +93,9 @@ var QuickEdit = new Class({
   
  },
 
- menuClick: function(event) {
+ menuClick: function(evnt) {
 
-  var event = new Event(event);
+  var event = new Event(evnt);
  
   var clicked = event.target;
   var menu = clicked.getElementsByTagName('ul')[0];

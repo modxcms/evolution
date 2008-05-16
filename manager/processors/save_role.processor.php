@@ -26,6 +26,7 @@ $fields = array (
     'save_document' => $save_document,
     'publish_document' => $publish_document,
     'delete_document' => $delete_document,
+    'empty_trash' => $empty_trash,
     'action_ok' => $action_ok,
     'logout' => $logout,
     'help' => $help,

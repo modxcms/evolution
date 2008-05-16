@@ -65,52 +65,80 @@ class GetFoldersAndFiles {
 	<Folders>
 <?php
 			$files=array();
+
 			if ($dh=opendir($this->real_cwd)) {
+
+			    /**
+			     * Initiate the array to store the foldernames
+			     */
+			    $folders_array = array();
+
 				while (($filename=readdir($dh))!==false) {
-					
+
 					if (($filename!=".")&&($filename!="..")) {
 						if (is_dir($this->real_cwd."/$filename")) {
 							//check if$fckphp_configured not to show this folder
 							$hide=false;
-							for($i=0;$i<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders']);$i++) 
+							for($i=0;$i<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders']);$i++)
 								$hide=(ereg($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders'][$i],$filename)?true:$hide);
-							
-							if (!$hide) echo "\t\t<Folder name=\"$filename\" />\n";
-							
+
+						  /**
+                           * Dont echo the entry, push it in the array
+                           */
+    					  //if (!$hide) echo "\t\t<Folder name=\"$filename\" />\n";
+    					    if (!$hide) array_push($folders_array,$filename);
+
 						} else {
 							array_push($files,$filename);
 						}
 					}
 				}
-				closedir($dh); 
+				closedir($dh);
+
+				/**
+			     * Sort the array by the way you like and show it.
+			     */
+			    natcasesort($folders_array);
+                foreach($folders_array as $k=>$v)
+                {
+	               echo '<Folder name="'.$v.'" />'."\n";
+                }
+
 			}
+
 			echo "\t</Folders>\n";
 			echo "\t<Files>\n";
 
+			/**
+			 * The filenames are in the array $files
+			 * SORT IT!
+			 */
+			natcasesort($files);
+
 			for ($i=0;$i<sizeof($files);$i++) {
-				
+
 				$lastdot=strrpos($files[$i],".");
 				$ext=(($lastdot!==false)?(substr($files[$i],$lastdot+1)):"");
-				
+
 				if (in_array(strtolower($ext),$this->fckphp_config['ResourceAreas'][$this->type]['AllowedExtensions'])) {
-				
+
 					//check if$fckphp_configured not to show this file
 					$editable=$hide=false;
-					for($j=0;$j<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFiles']);$j++) 
+					for($j=0;$j<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFiles']);$j++)
 						$hide=(ereg($this->fckphp_config['ResourceAreas'][$this->type]['HideFiles'][$j],$files[$i])?true:$hide);
-					
+
 					if (!$hide) {
-						if ($this->fckphp_config['ResourceAreas'][$this->type]['AllowImageEditing']) 
+						if ($this->fckphp_config['ResourceAreas'][$this->type]['AllowImageEditing'])
 							$editable=$this->isImageEditable($this->real_cwd."/".$files[$i]);
-						
-						echo "\t\t<File name=\"".htmlentities($files[$i])."\" size=\"".ceil(filesize($this->real_cwd."/".$files[$i])/1024)."\" editable=\"" . ( $editable?"1":"0" ) . "\" />\n";	
+
+						echo "\t\t<File name=\"".htmlentities($files[$i])."\" size=\"".ceil(filesize($this->real_cwd."/".$files[$i])/1024)."\" editable=\"" . ( $editable?"1":"0" ) . "\" />\n";
 					}
 
 				}
-				
+
 			}
-		
-			echo "\t</Files>\n"; 
+
+			echo "\t</Files>\n";
 			echo "</Connector>\n";
 	}
 	

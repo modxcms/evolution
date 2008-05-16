@@ -118,6 +118,9 @@ $displayMode= isset($tagDisplayMode) ? $tagDisplayMode: 1;
 	1 - string of links &tagDisplayDelimiter separated 
 	2 - ul/li list
 
+	Note:
+	Output of individual items can be customized by <tplTagLinks>
+	
 	Default:
 	1 - string of links &tagDisplayDelimiter separated 
 */
@@ -134,15 +137,50 @@ $givenTags = !empty($tags) ? trim($tags) : false;
 	Default:
 	[NULL]
 */
+$tplTagLinks = !empty($tplTagLinks) ? template::fetch($tplTagLinks) : false;
+/*
+	Param: tplTagLinks
+
+	Purpose:
+ 	Define a custom template for the tagLinks placeholder
+
+	Options:
+	- Any valid chunk name
+	- Code via @CODE
+	- File via @FILE
+	
+	Default:
+	(code)
+	<a href="[+url+]" class="ditto_tag" rel="tag">[+tag+]</a>	
+*/
+$callback = !empty($tagCallback) ? trim($tagCallback) : false;
+/*
+	Param: tagCallback
+
+	Purpose:
+ 	Allow the user to modify both where the tags come from and how they are parsed.
+
+	Options:
+	Any valid function name
+	
+	Default:
+	[NULL]
+	
+	Notes:
+	The function should expect to receive the following three parameters:
+	tagData - the provided source of the tags
+	resource - the resource array for the document being parsed
+	array - return the results in an array if true
+*/
 
 // ---------------------------------------------------
 // Tagging Class
 // ---------------------------------------------------
 if(!class_exists("tagging")) {
 	class tagging {
-		var $delimiter,$source,$landing,$mode,$format,$givenTags,$caseSensitive, $displayDelimiter, $sort, $displayMode;
+		var $delimiter,$source,$landing,$mode,$format,$givenTags,$caseSensitive, $displayDelimiter, $sort, $displayMode, $tpl, $callback;
 
-		function tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive, $displayDelimiter, $sort, $displayMode) {
+		function tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive, $displayDelimiter, $callback, $sort, $displayMode, $tpl) {
 			$this->delimiter = $delimiter;
 			$this->source = $this->parseTagData($source);
 			$this->mode = $mode;
@@ -153,6 +191,8 @@ if(!class_exists("tagging")) {
 			$this->displayDelimiter = $displayDelimiter;
 			$this->sort = $sort;
 			$this->displayMode = $displayMode;
+			$this->tpl = $tpl;
+			$this->callback = $callback;
 		}
 	
 		function prepGivenTags ($givenTags) {
@@ -189,10 +229,10 @@ if(!class_exists("tagging")) {
 		function tagFilter ($value) {
 			if ($this->caseSensitive == false) {
 				$documentTags = array_values(array_flip($this->givenTags));
-				$filterTags = array_values(array_flip($this->combineTags($this->source, $value,array(),true)));
+				$filterTags = array_values(array_flip($this->combineTags($this->source, $value,true)));
 			} else {
 				$documentTags = $this->givenTags;
-				$filterTags =$this->combineTags($this->source, $value,array(),true);
+				$filterTags =$this->combineTags($this->source, $value,true);
 			}
 			$compare = array_intersect($filterTags, $documentTags);
 			$commonTags = count($compare);
@@ -222,14 +262,17 @@ if(!class_exists("tagging")) {
 		}
 
 		function makeLinks($resource) {
-			return $this->tagLinks($this->combineTags($this->source,$resource,array(),true), $this->delimiter, $this->landing, $this->format);
+			return $this->tagLinks($this->combineTags($this->source,$resource,true), $this->delimiter, $this->landing, $this->format);
 		}
 	
 		function parseTagData($tagData,$names=array()) {
 			return explode(",",$tagData);
 		}
 
-		function combineTags($tagData, $resource, $resourceTags = array(),$leaveAsArray=false) {
+		function combineTags($tagData, $resource, $array=false) {
+			if ($this->callback !== false) {
+				return call_user_func_array($this->callback,array('tagData'=>$tagData,'resource'=>$resource,'array'=>$array));
+			}
 			$tags = array();
 			foreach ($tagData as $source) {
 				if(!empty($resource[$source])) {
@@ -247,7 +290,7 @@ if(!class_exists("tagging")) {
 					}
 				}
 			}
-			return ($leaveAsArray == true) ? $kTags : implode($this->delimiter,$kTags);
+			return ($array == true) ? $kTags : implode($this->delimiter,$kTags);
 		}
 
 		function tagLinks($tags, $tagDelimiter, $tagID=false, $format="html") {
@@ -264,29 +307,30 @@ if(!class_exists("tagging")) {
 				ksort($tags);
 			}
 			
+			// set templates array
+			$tplRss = "\r\n"."				<category>[+tag+]</category>";
+			$tpl = ($this->tpl == false) ? '<a href="[+url+]" class="ditto_tag" rel="tag">[+tag+]</a>' : $this->tpl;
+			
+			$tpl = (($format == "rss" || $format == "xml" || $format == "atom") && $templates['user'] == false) ? $tplRss : $tpl; 
+			
 			if ($this->displayMode == 1) {
-			foreach ($tags as $tag) {
-				if ($format == "html") {
+				foreach ($tags as $tag) {
 					$tagDocID = (!$tagID) ? $modx->documentObject['id'] : $tagID;
 					$url = ditto::buildURL("tags=$tag&start=0",$tagDocID);
-					$output .= "<a href=\"$url\" class=\"ditto_tag\" rel=\"tag\">$tag</a>".$this->displayDelimiter;
-				} else if ($format == "rss" || $format == "xml" || $format == "atom") {
-					$output .=  "
-					<category>$tag</category>";
-				}
-			}
-			
+					$output .= template::replace(array('url'=>$url,'tag'=>$tag),$tpl);
+					$output .= ($format != "rss" && $format != "xml" && $format != "atom") ? $this->displayDelimiter : '';
+				}			
 			} else if ($format != "rss" && $format != "xml" && $format != "atom" && $this->displayMode == 2) {
 				$tagList = array();
 				foreach ($tags as $tag) {
 					$tagDocID = (!$tagID) ? $modx->documentObject['id'] : $tagID;
 					$url = ditto::buildURL("tags=$tag&start=0",$tagDocID);
-					$tagList[] = "<a href=\"$url\" class=\"ditto_tag\" rel=\"tag\">$tag</a>";
+					$tagList[] = template::replace(array('url'=>$url,'tag'=>$tag),$tpl);
 				}
 				$output = $modx->makeList($tagList, $ulroot='ditto_tag_list', $ulprefix='ditto_tag_', $type='', $ordered=false, $tablevel=0);
 			}
 			
-			return substr($output,0,-1*strlen($this->displayDelimiter));
+			return ($format != "rss" && $format != "xml" && $format != "atom") ? substr($output,0,-1*strlen($this->displayDelimiter)) : $output;
 		}
 	}
 }
@@ -295,7 +339,7 @@ if(!class_exists("tagging")) {
 // Tagging Parameters
 // ---------------------------------------------------
 
-$tags = new tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive,$displayDelimiter, $sort, $displayMode);
+$tags = new tagging($delimiter,$source,$mode,$landing,$givenTags,$format,$caseSensitive,$displayDelimiter, $callback, $sort, $displayMode,$tplTagLinks);
 
 if (count($tags->givenTags) > 0) {
 	$filters["custom"]["tagging"] = array($source,array($tags,"tagFilter")); 

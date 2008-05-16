@@ -377,3 +377,153 @@
 [2007-4-8: REVISION 0000]
 [FIXED] Documentation typos
 [CHANGED] Version number to 2.0.2
+
+[2007-4-10: REVISION 0000]
+[CHANGED] Indentation on getDocuments function
+[NEW] Public flag on getDocuments function (Related to #47)
+[NEW] hidePrivate parameter to interface with above (Closes #47)
+[CHANGED] $modx->recordCount to $modx->db->getRecordCount($result); (Related to #30)
+[FIXED] &depth now stops when there are no more levels (Closes #45)
+
+[2007-4-12: REVISION 0000]
+[CHANGED] Documentation corrections
+[CHANGED] Improved performance when getting all documents (References #40)
+
+[2007-4-15: REVISION 0000]
+[CHANGED] Version number to 2.0.3 SVN
+[FIXED] Category tags in RSS, ATOM, and XML output
+[FIXED] Sort order of wordpress config
+
+[2007-4-23: REVISION 0000]
+[FIXED] Shortags issue (Closes #51)
+
+[2007-4-25: REVISION 0000]
+[FIXED] Changelog typo
+[FIXED] Documentation typos
+[NEW] getParam now supports full template fetching (Closes #50)
+[NEW] Reflect now is fully template-able ala Wayfinder (Closes #42)
+[CHANGED] Version number to 2.1.SVN for both Ditto and Reflect
+
+[2007-5-6: REVISION 0000]
+[NEW] dateFilter now can use parameters to get the year, month, or day to filter by
+[REMOVED] Requirement for filter functions to be enclosed in classes
+
+[2007-5-7: REVISION 0000]
+[NEW] noResults function to handle conditions where there are no results (References #53)
+[FIXED] Pagination placeholders now are correctly blank or show zero when no results are found (Closes #53)
+[CHANGED] template->replace now accepts an associative array of name=>value of placeholders (format is no-longer part of the array)
+[NEW] Pagination is now fully templateable for 100% templateability (Closes #41)
+[FIXED] Bug with &limit < &display
+
+[2007-5-10: REVISION 1428]
+[REMOVED] Not needed setSortOrder function
+[CHANGED] main.template.css to debug.template.css for consistancy
+[CHANGED] Many str_replace calls replaced with template->replace (References #30)
+[REMOVED] Not needed str_replace_phx function
+
+[2007-5-15: REVISION 0000]
+[FIXED] hidePrivate now triggers a prefetch
+[FIXED] PHx placeholders are now detected
+------> [REMOVED] Fix until it can be more properly implemented
+------> [FIXED] Repaired using "a greedy plus and a negated character class"
+[FIXED] Placeholder detection is now optimized
+
+[2007-5-17: REVISION 0000]
+[REMOVED] PHx placeholder detection as it causes errors with other placeholder's detection
+[NEW] dateFilter now accepts a single value containing whole date (Closes #55)
+[CHANGED] Version number to 2.1.BETA
+
+[2007-7-06: REVISION 0000]
+[FIXED] &keywords
+
+[2007-07-07: REVISION 0000]
+[NEW] Reflect now passes on Ditto errors to the user
+[NEW] Reflect now natively accepts most Ditto parameters (no more &dittoSnippetParameters!)
+
+[2007-07-10: REVISION 0000]
+[NEW] Placeholders now work in filter arguments (Closes #60)
+
+[2007-07-14: REVISION 0000]
+[NEW] Sort by multiple fields just like MySQL using the new &orderBy parameter (Closes #46)
+
+[2007-7-15: REVISION 0000]
+[NEW] Added credits and documentation to the multiSort function
+[FIXED] Direction arguments are now correctly trimmed in &orderBy by the parseOrderByFunction
+
+[2007-7-15: REVISION 0000]
+[NEW] Default config and language file now always load in both Ditto and Reflect
+[FIXED] Debug console now correctly shows sortBy and sortDir
+[FIXED] &showPublishedOnly now correctly functions
+[FIXED] Removed extra whitespace from request config
+
+[2007-7-18: REVISION 0000]
+[FIXED] xHTML URL setting in the manager no-longer leads to double encoding (Closes #58)
+[FIXED] array_multisort error when no documents found
+
+[2007-7-21: REVISION 0000]
+[NEW] Added Bulgarian, German, Dutch, and Italian language files
+
+[2007-7-24: REVISION 0000]
+[NEW] Added ditto_iteration placeholder for sequence
+[NEW] Added Spanish and Persian language files
+[FIXED] Documentation headers in language files
+
+[2007-7-26: REVISION 0000]
+[CHANGED] Version number to 2.1.SVN
+[FIXED] Url placeholder
+
+[2007-8-03: REVISION 0000]
+[FIXED] Invalid orderBy array error (Closes #63)
+
+[2007-8-05: REVISION 0000]
+[FIXED] RSS, ATOM, and JSON issue with template::replace
+[FIXED] RSS category element indentation
+[FIXED] Custom placeholders over-writing tvs (Closes #52)
+[NEW] tplTagLinks parameter allows tagLinks placeholder to be templated (Closes #56)
+
+[2007-8-06: REVISION 0000]
+[NEW] Sort callbacks for user created sort functions via usort (Closes #61)
+[NEW] New addFields replaces duplicate code loops with addField
+[FIXED] Bug in userSort function
+
+[2007-8-07: REVISION 0000]
+[FIXED] UTF-8 dates
+
+[2007-8-08: REVISION 0000]
+[FIXED] tplTagLinks parameter (References #56)
+[FIXED] Removed non-used parameter from combineTags
+[FIXED] Major bug in addFields when a delimiter is used
+[NEW] Added &tagCallback parameter to allow the user to modify the tag source and how tags are parsed (Closes #68)
+[FIXED] Another major bug in addFields when a delimiter is not used
+[FIXED] Parsed filters glitch where fields were not being added properly
+[NEW] Reflect reset placeholder (prefixed by ID) provides a url which will show all articles (Closes #65)
+
+[2007-8-09: REVISION 0000]
+[NEW] Reflect now uses ditto->template->replace instead of str_replace
+[NEW] Reflect count placeholder shows the number of documents at that level (Closes #69)
+
+[2007-8-15: REVISION 0000]
+[NEW] dateFilterDefault allows you to set a default date filter based on the current date
+[CHANGED] Version number to 2.1.BETA2
+
+[2007-8-20: REVISION 0000]
+[FIXED] RSS category tag bug
+[FIXED] Security Issue (Closes #72)
+[FIXED] buildURL with xHTML urls
+
+[2007-11-12: REVISION 0000]
+[NEW] Added filters 9-11 contributed by highlander (Closes #78)
+[FIXED] Updated filter documentation
+[FIXED] dateFilter and 00:00 on first day of month (Closes #75)
+[CHANGED] Version number to 2.1b3
+
+[2008-1-20: REVISION 0000]
+[FIXED] atom_lastmodified placeholder (Closes #87)
+[NEW] month_numeric placeholder in the dateFilter extender (Closes #88)
+
+[2008-2-01: REVISION 0000]
+[NEW] Server offset now applied to dateSource both in display and filtering (Closes #90)
+[FIXED] Updated documentation for depth
+
+[2008-2-09: REVISION 0000]
+[CHANGED] Version number to 2.1.0

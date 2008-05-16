@@ -36,11 +36,11 @@ function checkCategory($newCat = '') {
 function getCategories() {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
-    $sql = 'select * from ' . $useTable . ' order by category';
+    $sql = 'select id, category from ' . $useTable . ' order by category';
     $cats = $modx->dbQuery($sql);
     $resourceArray = array();
     if($cats) while($row = $modx->fetchRow($cats)) {
-        array_push($resourceArray,$row);
+        array_push($resourceArray,array( 'id' => $row['id'], 'category' => stripslashes( $row['category'] ) )); // pixelchutes
     }
     return $resourceArray;
 }

@@ -288,9 +288,10 @@ switch ($_POST['mode']) {
 			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		}
-
+		
+		// Removed second mysql_escape_string from fullname - pixelchutes
 		$sql = "UPDATE $dbase.`" . $table_prefix . "web_user_attributes` SET 
-					fullname='" . mysql_escape_string($fullname) . "', 
+					fullname='" . $fullname . "', 
 					role='$roleid', 
 					email='$email', 
 					phone='$phone',

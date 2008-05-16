@@ -73,9 +73,12 @@ class modxDebugConsole{
 	// ---------------------------------------------------
 	function buildURL($args,$id=false,$prefix="") {
 		global $modx;
-			$query = $_GET;
-			unset($query["id"]);
-			unset($query["q"]);
+			$query = array();
+			foreach ($_GET as $param=>$value) {
+				if ($param != 'id' && $param != 'q') {
+					$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);					
+				}
+			}
 			if (!is_array($args)) {
 				$args = explode("&",$args);
 				foreach ($args as $arg) {
@@ -93,7 +96,7 @@ class modxDebugConsole{
 			}
 			$cID = ($id !== false) ? $id : $modx->documentObject['id'];
 			$url = $modx->makeURL(trim($cID), '', $queryString);
-			return str_replace("&","&amp;",$url);
+			return ($modx->config['xhtml_urls']) ? $url : str_replace("&","&amp;",$url);
 	}
 	
 	// ---------------------------------------------------

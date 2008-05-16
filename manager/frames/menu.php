@@ -11,7 +11,6 @@ if ($manager_theme) $manager_theme .= '/';
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />
 	<title>nav</title>
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css" />
-	<script type="text/javascript">var MODX_MEDIA_PATH = "<?php echo IN_MANAGER_MODE ? "media":"manager/media"?>";</script>
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
 	<script type="text/javascript">

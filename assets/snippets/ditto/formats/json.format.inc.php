@@ -8,7 +8,7 @@
 */
 
 // set json placeholders
-$json_placeholders['[+json_lang+]'] = (isset($abbrLanguage))? $abbrLanguage : $_lang['abbr_lang'];
+$json_placeholders['json_lang'] = (isset($abbrLanguage))? $abbrLanguage : $_lang['abbr_lang'];
 /*
 	Param: abbrLanguage
 
@@ -24,7 +24,7 @@ $json_placeholders['[+json_lang+]'] = (isset($abbrLanguage))? $abbrLanguage : $_
 	Related:
 	- <language>
 */
-$json_placeholders['[+json_copyright+]'] = isset($copyright) ? $copyright: $_lang['default_copyright'];
+$json_placeholders['json_copyright'] = isset($copyright) ? $copyright: $_lang['default_copyright'];
 /*
 	Param: copyright
 
@@ -37,8 +37,8 @@ $json_placeholders['[+json_copyright+]'] = isset($copyright) ? $copyright: $_lan
 	Default:
 	[LANG]
 */
-$json_placeholders['[+json_link+]'] = $modx->config['site_url']."[~".$modx->documentObject['id']."~]";
-$json_placeholders['[+json_ttl+]'] = isset($ttl) ? intval($ttl):120;
+$json_placeholders['json_link'] = $modx->config['site_url']."[~".$modx->documentObject['id']."~]";
+$json_placeholders['json_ttl'] = isset($ttl) ? intval($ttl):120;
 /*
 	Param: ttl
 
@@ -51,7 +51,7 @@ $json_placeholders['[+json_ttl+]'] = isset($ttl) ? intval($ttl):120;
 	Default:
 	120
 */
-$json_placeholders['[+json_op+]'] = (!empty($_REQUEST[$dittoID.'jsonp']) ? $_REQUEST[$dittoID.'jsonp'] : '');
+$json_placeholders['json_op'] = (!empty($_REQUEST[$dittoID.'jsonp']) ? $_REQUEST[$dittoID.'jsonp'] : '');
 
 // set tpl JSON placeholders
 $placeholders['*'] = "json_parameters";

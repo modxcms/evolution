@@ -1,8 +1,9 @@
 // --------------------
 // Snippet: ListIndexer
 // --------------------
-// Version: 1.0
-// Date: 10 Oct 2005
+// Version: 1.0.1
+//
+// added in 1.0.1: hidePrivate (hide items from unauthorized users)
 //
 // Derived from ListIndex 0.6j by jaredc@honeydewdesign.com
 // Now supports Show In Menu
@@ -52,6 +53,13 @@
    // Snippet parameter: LIn_seeShowInMenu
    // [[ListIndexer?LIn_seeShowInMenu=1]]
    $seeShowInMenu = false;
+   
+   // $hidePrivate [ true | false ]
+   // Hide items from users that don't have appropriate
+   // rights to view. Usually true. But you decide.
+   // Snippet parameter: LIn_hidePrivate
+   // [[ListIndexer?LIn_hidePrivate=0]]
+   $hidePrivate = true;
 
    // $mode [ 'short' | 'full' ]
    // Defines whether this list should be a full, paged
@@ -205,6 +213,7 @@ $mode = (isset($LIn_mode))? $LIn_mode : $mode ;
 $descendentDepth = (isset($LIn_depth))? $LIn_depth : $descendentDepth ;
 $seeThruUnpub = (isset($LIn_seeThru))? $LIn_seeThru : $seeThruUnpub ;
 $seeShowInMenu = (isset($LIn_seeShowInMenu))? $LIn_seeShowInMenu : $seeShowInMenu ;
+$hidePrivate = (isset($LIn_hidePrivate))? $LIn_hidePrivate : $hidePrivate;
 $linkToIndex = (isset($LIn_link))? $LIn_link : $linkToIndex ;
 $rootFolder = (isset($LIn_root))? $LIn_root : $rootFolder ;
 $shortQty = (isset($LIn_sQty))? $LIn_sQty : $shortQty ;
@@ -220,7 +229,9 @@ if ($sortDir == '') $sortDir = ($sortBy == 'date')? 'DESC' : 'ASC' ;
 
 
 // Make useful variable shortcut for the content table
-$tbl = $modx->dbConfig['dbase'] . ".`" . $modx->dbConfig['table_prefix'] . "site_content`";
+//$tbl = $modx->dbConfig['dbase'] . "." . $modx->dbConfig['table_prefix'] . "site_content";
+$tblsc = $modx->getFullTableName("site_content");
+$tbldg = $modx->getFullTableName("document_groups");
 
 // Initialize output
 $output = '';
@@ -269,10 +280,10 @@ if ((!$inFolder && $useFastUrls) || !$useFastUrls ){
 
       // Get children who are parents (isfolder = 1)
       $validParentSql = "";
-      $validParentSql .= "SELECT id FROM $tbl WHERE ";
+      $validParentSql .= "SELECT id FROM $tblsc sc WHERE ";
       $validParentSql .= "isfolder = 1 AND parent = $p ";
-      $validParentSql .= "AND $tbl.deleted=0 ";
-      $validParentSql .= ($seeThruUnpub)? ";" : "AND $tbl.published = 1;";
+      $validParentSql .= "AND sc.deleted=0 ";
+      $validParentSql .= ($seeThruUnpub)? ";" : "AND sc.published = 1;";
 
       // Run statement
       $rsTempParents = $modx->dbQuery($validParentSql);
@@ -322,21 +333,28 @@ if ((!$inFolder && $useFastUrls) || !$useFastUrls ){
 // Make appropriate SQL statement to pull recent items
 // ---------------------------------------------------
 
+// get document groups for current user
+if($docgrp = $modx->getUserDocGroups()) $docgrp = implode(",",$docgrp);
+
+$access = " (".($modx->isFrontend() ? "sc.privateweb=0":"1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0").
+          (!$docgrp ? "":" OR dg.document_group IN ($docgrp)").") AND ";
+
 // Initialize
 $recentSql = "";
-$recentSql .= "SELECT id, pagetitle, description";
+$recentSql .= "SELECT sc.id, pagetitle, description";
 // Include pub_date or createdon date if date is desired
 $recentSql .= ($showCreationDate)? ", IF(pub_date > 0, pub_date, createdon) AS pubDate ": " " ;
-$recentSql .= "FROM $tbl ";
+$recentSql .= "FROM $tblsc sc LEFT JOIN $tbldg dg on dg.document = sc.id ";
 $recentSql .= "WHERE ";
+$recentSql .= ($hidePrivate)? $access:"";
 // Look everywhere, or just under valid parents
 $recentSql .= (($rootFolder == 0) && $seeThruUnpub && ($descendentDepth == 0))? "" : "parent IN ($validParents) AND " ;
 // Published
-$recentSql .= "$tbl.published = 1 ";
+$recentSql .= "sc.published = 1 ";
 // Show In Menu
-$recentSql .= ($seeShowInMenu)? " " : " AND $tbl.hidemenu=0 " ;
+$recentSql .= ($seeShowInMenu)? " " : " AND sc.hidemenu=0 " ;
 // Not deleted
-$recentSql .= "AND $tbl.deleted=0 ";
+$recentSql .= "AND sc.deleted=0 ";
 // Choose sort method
 switch ($sortBy){
   case 'alpha':

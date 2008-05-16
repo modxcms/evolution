@@ -879,6 +879,17 @@ function updateContentType(){
           
           <?php if(!isset($use_browser)) $use_browser=1; ?>
           
+          <tr class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><b><?php echo $_lang["rb_webuser_title"]?></b></td>
+            <td><input onchange="documentDirty=true;" type="radio" name="rb_webuser" value="1" <?php echo $rb_webuser=='1' ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["yes"]?><br />
+              <input onchange="documentDirty=true;" type="radio" name="rb_webuser" value="0" <?php echo ($rb_webuser=='0' || !isset($rb_webuser)) ? 'checked="checked"' : "" ; ?> />
+              <?php echo $_lang["no"]?> </td>
+          </tr>
+          <tr class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class="comment"><?php echo $_lang["rb_webuser_message"]?></td>
+          </tr>
           <tr id='rbRow1' class='row3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["settings_strip_image_paths_title"]?></b></td>
             <td><input onchange="documentDirty=true;" type="radio" name="strip_image_paths" value="1" <?php echo $strip_image_paths=='1' ? 'checked="checked"' : "" ; ?> />
@@ -895,13 +906,8 @@ function updateContentType(){
           </tr>
           <tr id='rbRow4' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td>
-            <td> <?php
-				function getResourceBaseDir() {
-					global $base_path;
-					return $base_path."assets/";
-				}
-				?>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" value="<?php echo isset($rb_base_dir) ? $rb_base_dir : getResourceBaseDir() ; ?>" />
+            <td> 
+              <?php echo $base_path; ?><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" value="<?php echo isset($rb_base_dir) ? $rb_base_dir : "assets/" ; ?>" />
               </td>
           </tr>
           <tr id='rbRow5' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
@@ -913,13 +919,8 @@ function updateContentType(){
           </tr>
           <tr id='rbRow7' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_url_title"]?></b></td>
-            <td> <?php
-				function getResourceBaseUrl() {
-					global $site_url;
-					return $site_url . "assets/";
-				}
-				?>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_url" value="<?php echo isset($rb_base_url) ? $rb_base_url : getResourceBaseUrl() ; ?>" />
+            <td> 
+              <?php echo $site_url; ?><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_url" value="<?php echo isset($rb_base_url) ? $rb_base_url : "assets/" ; ?>" />
               </td>
           </tr>
           <tr id='rbRow8' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">

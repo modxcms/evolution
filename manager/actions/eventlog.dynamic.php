@@ -4,7 +4,16 @@ if(!$modx->hasPermission('view_eventlog')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-$theme = $manager_theme ? "$manager_theme/":"";
+
+if ($manager_theme)
+        $manager_theme .= '/';
+else    $manager_theme  = '';
+
+// Get table Names (alphabetical)
+$tbl_event_log     = $modx->getFullTableName('event_log');
+$tbl_manager_users = $modx->getFullTableName('manager_users');
+$tbl_web_users     = $modx->getFullTableName('web_users');
+
 // initialize page view state - the $_PAGE object
 $modx->manager->initPageViewState();
 
@@ -26,9 +35,9 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once $base_path."manager/includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["view_log"],"js:menuAction(1)","media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/save.gif");
+$cm->addItem($_lang['view_log'],"js:menuAction(1)","media/style/" . $manager_theme ."images/icons/save.gif");
 $cm->addSeparator();
-$cm->addItem($_lang["delete"], "js:menuAction(2)","media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/delete.gif",(!$modx->hasPermission('delete_eventlog') ? 1:0));
+$cm->addItem($_lang['delete'], "js:menuAction(2)","media/style/" . $manager_theme ."images/icons/delete.gif",(!$modx->hasPermission('delete_eventlog') ? 1:0));
 echo $cm->render();
 
 ?>
@@ -52,7 +61,7 @@ echo $cm->render();
 	};
 
 	var selectedItem;
-	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
+	var contextm = <?php echo $cm->getClientScriptObject()?>;
 	function showContentMenu(id,e){
 		selectedItem=id;
 		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))+"px";
@@ -61,7 +70,7 @@ echo $cm->render();
 		e.cancelBubble=true;
 		return false;
 	};
-	
+
 	function menuAction(a) {
 		var id = selectedItem;
 		switch(a) {
@@ -69,7 +78,7 @@ echo $cm->render();
 				window.location.href='index.php?a=115&id='+id;
 				break;
 			case 2:		// clear log
-				window.location.href='index.php?a=116&id='+id ;
+				window.location.href='index.php?a=116&id='+id;
 				break;
 		}
 	}
@@ -79,25 +88,25 @@ echo $cm->render();
 	});
 </script>
 <form name="resource" method="post">
-<input type="hidden" name="id" value="<?php echo $id; ?>" />
-<input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
+<input type="hidden" name="id" value="<?php echo $id?>" />
+<input type="hidden" name="listmode" value="<?php echo $listmode?>" />
 <input type="hidden" name="op" value="" />
 <br />
-<div class="sectionHeader"><?php echo $_lang['eventlog_viewer']; ?></div>
+<div class="sectionHeader"><?php echo $_lang['eventlog_viewer']?></div>
 <div class="sectionBody">
 	<!-- load modules -->
-	<p><?php echo $_lang['eventlog_msg']; ?></p>
+	<p><?php echo $_lang['eventlog_msg']?></p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">
 			<tr>
-			<td><a class="searchtoolbarbtn" href="index.php?a=116&cls=1"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif"  align="absmiddle" /> <?php echo $_lang['clear_log']; ?></a></td>
+			<td><a class="searchtoolbarbtn" href="index.php?a=116&cls=1"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif"  align="absmiddle" /> <?php echo $_lang['clear_log']?></a></td>
 			<td nowrap="nowrap">
 				<table border="0" style="float:right">
 				    <tr>
-				        <td><?php echo $_lang["search"]; ?> </td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
-				        <td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-				        <td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
-				        <td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/table.gif" width="16" height="16"/></a></td>
+				        <td><?php echo $_lang['search']?> </td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query?>" /></td>
+				        <td><a href="#" class="searchbutton" title="<?php echo $_lang['search']?>" onclick="searchResource();return false;"><?php echo $_lang['go']?></a></td>
+				        <td><a href="#" class="searchbutton" title="<?php echo $_lang['reset']?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/refresh.gif" width="16" height="16"/></a></td>
+				        <td><a href="#" class="searchbutton" title="<?php echo $_lang['list_mode']?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/table.gif" width="16" height="16"/></a></td>
 				    </tr>
 				</table>
 			</td>
@@ -110,24 +119,24 @@ echo $cm->render();
 
 
 	$sql = "SELECT el.id, el.type, el.createdon, el.source, el.eventid,IFNULL(wu.username,mu.username) as 'username' " .
-			"FROM ".$modx->getFullTableName("event_log")." el ".
-			"LEFT JOIN ".$modx->getFullTableName("manager_users")." mu ON mu.id=el.user AND el.usertype=0 ".
-			"LEFT JOIN ".$modx->getFullTableName("web_users")." wu ON wu.id=el.user AND el.usertype=1 ".
-			($sqlQuery ? " WHERE ".(is_numeric($sqlQuery)?"(eventid='$sqlQuery') OR ":'')."(source LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
-			"ORDER BY createdon DESC";
+	       "FROM ".$tbl_event_log." el ".
+	       "LEFT JOIN ".$tbl_manager_users." mu ON mu.id=el.user AND el.usertype=0 ".
+	       "LEFT JOIN ".$tbl_web_users." wu ON wu.id=el.user AND el.usertype=1 ".
+	       ($sqlQuery ? " WHERE ".(is_numeric($sqlQuery)?"(eventid='$sqlQuery') OR ":'')."(source LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
+	       "ORDER BY createdon DESC";
 	$ds = mysql_query($sql);
 	include_once $base_path."manager/includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
-	$grd->noRecordMsg = $_lang["no_records_found"];
+	$grd->noRecordMsg = $_lang['no_records_found'];
 	$grd->cssClass="grid";
 	$grd->columnHeaderClass="gridHeader";
 	$grd->itemClass="gridItem";
 	$grd->altItemClass="gridAltItem";
 	$grd->fields="type,source,createdon,eventid,username";
-	$grd->columns=$_lang["type"]." ,".$_lang["source"]." ,".$_lang["date"]." ,".$_lang["event_id"]." ,".$_lang["sysinfo_userid"];
+	$grd->columns=$_lang['type']." ,".$_lang['source']." ,".$_lang['date']." ,".$_lang['event_id']." ,".$_lang['sysinfo_userid'];
 	$grd->colWidths="34,,150,60";
 	$grd->colAligns="center,,,center,center";
-	$grd->colTypes="template:<a class='gridRowIcon' href='#' onclick='return showContentMenu([+id+],event);' title='".$_lang["click_to_context"]."'><img src='media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/event[+type+].gif' width='16' height='16' /></a>||template:<a href='index.php?a=115&id=[+id+]' title='".$_lang["click_to_view_details"]."'>[+source+]</a>||date: %d-%b-%Y %I:%M %p";
+	$grd->colTypes="template:<a class='gridRowIcon' href='#' onclick='return showContentMenu([+id+],event);' title='".$_lang['click_to_context']."'><img src='media/style/" . $manager_theme ."images/icons/event[+type+].gif' width='16' height='16' /></a>||template:<a href='index.php?a=115&id=[+id+]' title='".$_lang['click_to_view_details']."'>[+source+]</a>||date: %d-%b-%Y %I:%M %p";
 	if($listmode=='1') $grd->pageSize=0;
 	if($_REQUEST['op']=='reset') $grd->pageNumber = 1;
 	// render grid

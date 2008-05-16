@@ -8,7 +8,7 @@
 */
 
 // set placeholders
-$rss_placeholders['[+rss_copyright+]'] = isset($copyright) ? $copyright: $_lang['default_copyright'];
+$rss_placeholders['rss_copyright'] = isset($copyright) ? $copyright: $_lang['default_copyright'];
 /*
 	Param: copyright
 
@@ -21,7 +21,7 @@ $rss_placeholders['[+rss_copyright+]'] = isset($copyright) ? $copyright: $_lang[
 	Default:
 	[LANG]
 */
-$rss_placeholders['[+rss_lang+]'] = (isset($abbrLanguage))? $abbrLanguage : $_lang['abbr_lang'];
+$rss_placeholders['rss_lang'] = (isset($abbrLanguage))? $abbrLanguage : $_lang['abbr_lang'];
 /*
 	Param: abbrLanguage
 
@@ -37,8 +37,8 @@ $rss_placeholders['[+rss_lang+]'] = (isset($abbrLanguage))? $abbrLanguage : $_la
 	Related:
 	- <language>
 */
-$rss_placeholders['[+rss_link+]'] = $modx->config['site_url']."[~".$modx->documentObject['id']."~]";
-$rss_placeholders['[+rss_ttl+]'] = isset($ttl) ? intval($ttl):120;
+$rss_placeholders['rss_link'] = $modx->config['site_url']."[~".$modx->documentObject['id']."~]";
+$rss_placeholders['rss_ttl'] = isset($ttl) ? intval($ttl):120;
 /*
 	Param: ttl
 
@@ -51,7 +51,7 @@ $rss_placeholders['[+rss_ttl+]'] = isset($ttl) ? intval($ttl):120;
 	Default:
 	120
 */
-$rss_placeholders['[+rss_charset+]'] = isset($charset) ? $charset : $modx->config['modx_charset'];
+$rss_placeholders['rss_charset'] = isset($charset) ? $charset : $modx->config['modx_charset'];
 /*
 	Param: charset
 
@@ -64,7 +64,7 @@ $rss_placeholders['[+rss_charset+]'] = isset($charset) ? $charset : $modx->confi
 	Default:
 	MODx default charset
 */
-$rss_placeholders['[+rss_xsl+]'] = isset($xsl) ? '<?xml-stylesheet type="text/xsl" href="'.$modx->config['site_url'].$xsl.'" ?>' : ''; 
+$rss_placeholders['rss_xsl'] = isset($xsl) ? '<?xml-stylesheet type="text/xsl" href="'.$modx->config['site_url'].$xsl.'" ?>' : ''; 
 /*
 	Param: xsl
 
@@ -141,7 +141,6 @@ $rss_footer = <<<TPL
 TPL;
 
 // set template values
-
 $header = isset($header) ? $header : template::replace($rss_placeholders,$rss_header);
 
 $tpl = isset($tpl) ? $tpl : "@CODE:".$rss_tpl;

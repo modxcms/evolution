@@ -40,8 +40,11 @@ include("../../../../../includes/config.inc.php");
  */
 startCMSSession(); 
 if(!isset($_SESSION['mgrValidated'])) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+	if(!isset($_SESSION['webValidated'])){
+		die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+	}
 }
+
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
 	die("Failed to create the database connection!");
@@ -54,6 +57,16 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
 include("../../../../../includes/settings.inc.php");
 include("../../../../../includes/user_settings.inc.php");
+
+if($settings['use_browser'] != 1){
+	die("<b>PERMISSION DENIED</b><br /><br />You do not have permission to access this file!");
+}
+
+if(!isset($_SESSION['mgrValidated'])){
+	if($_SESSION['webValidated'] && $settings['rb_webuser'] != 1 ){
+		die("<b>PERMISSION DENIED</b><br /><br />You do not have permission to access this file!");
+	}
+}
 
 // make arrays from the file upload settings
 $upload_files = explode(',',$upload_files);
@@ -75,11 +88,17 @@ $fckphp_config['prot'].=((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']=='on')?"s"
 $fckphp_config['prot'].="://";
 /*==============================================================================*/
 
+$basedir = $base_path.$rb_base_dir;
+if($_GET['editor'] == 'fckeditor2' && $strip_image_paths == 1){
+	$baseurl = $base_url.$rb_base_url;
+}else{
+	$baseurl = $site_url.$rb_base_url;
+}
 
 /*------------------------------------------------------------------------------*/
 /* The physical path to the document root, Set manually if not using apache	*/
 /*------------------------------------------------------------------------------*/
-$fckphp_config['basedir'] = (substr($rb_base_dir,-1)=="/") ? substr($rb_base_dir,0,-1):$rb_base_dir;
+$fckphp_config['basedir'] = (substr($basedir,-1)=="/") ? substr($basedir,0,-1):$basedir;
 //$fckphp_config['basedir']=substr($base_path, 0, strlen($base_path)-1);
 //$fckphp_config['basedir'] = $_SERVER['DOCUMENT_ROOT'] ;
 /*==============================================================================*/
@@ -89,9 +108,9 @@ $fckphp_config['basedir'] = (substr($rb_base_dir,-1)=="/") ? substr($rb_base_dir
 /*------------------------------------------------------------------------------*/
 //$fckphp_config['urlprefix']=$fckphp_config['prot'].$_SERVER['SERVER_NAME'];
 if ($strip_image_paths == 1) {
-	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? str_replace($site_url,'',substr($rb_base_url,0,-1)):$rb_base_url;
+	$fckphp_config['urlprefix'] = (substr($baseurl,-1)=="/") ? str_replace($site_url,'',substr($baseurl,0,-1)):$baseurl;
 } else {
-	$fckphp_config['urlprefix'] = (substr($rb_base_url,-1)=="/") ? substr($rb_base_url,0,-1):$rb_base_url;
+	$fckphp_config['urlprefix'] = (substr($baseurl,-1)=="/") ? substr($baseurl,0,-1):$baseurl;
 }
 //$fckphp_config['urlprefix']=substr($site_url, 0, strlen($site_url)-1);
 

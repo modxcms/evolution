@@ -65,6 +65,26 @@ if(!$modx->hasPermission('logs')) {
 			<td>&nbsp;</td>
 			<td><b><?php echo $database_server ?></b></td>
 		  </tr>
+		   <tr>
+			<td><?php echo $_lang['database_charset']?></td>
+			<td>&nbsp;</td>
+			<td><strong><?php 
+	$sql1 = "show variables like 'character_set_database'";
+    $res = $modx->db->query($sql1);
+    $charset = $modx->db->getRow($res, 'num');
+    echo $charset[1];			
+			?></strong></td>
+		  </tr>
+		  <tr>
+			<td><?php echo $_lang['database_collation']?></td>
+			<td>&nbsp;</td>
+			<td><strong><?php
+    $sql2 = "show variables like 'collation_database'";
+    $res = $modx->db->query($sql2);
+    $collation = $modx->db->getRow($res, 'num');
+    echo $collation[1];
+            ?></strong></td>
+		  </tr>
 		  <tr>
 			<td><?php echo $_lang['table_prefix']?></td>
 			<td>&nbsp;</td>

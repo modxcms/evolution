@@ -66,7 +66,7 @@ echo $cm->render();
 		e.cancelBubble=true;
 		return false;
 	};
-	
+
 	function menuAction(a) {
 		var id = selectedItem;
 		switch(a) {
@@ -103,7 +103,7 @@ echo $cm->render();
 </div><div class="sectionBody">
 	<!-- load modules -->
 	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" hspace="15" vspace="15" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
-	<p>&nbsp;</p> 
+	<p>&nbsp;</p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">
 			<tr>

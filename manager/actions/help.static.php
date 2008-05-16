@@ -1,48 +1,44 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 ?>
-<div class="subTitle">
-<span class="right"><?php echo $_lang['help_title']; ?></span>
+<script type="text/javascript" src="media/script/tabpane.js"></script>
+<br />
+<div class="sectionHeader"><img src="media/style/<?php echo $manager_theme; ?>/images/icons/b02.gif" alt="Help" style="vertical-align: text-bottom;" />&nbsp;&nbsp;<?php echo $_lang['help']; ?></div>
+<div class="sectionBody">
+    <div class="tab-pane" id="resourcesPane">
+        <script type="text/javascript">
+            tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ) );
+        </script>
+<?php
+if ($handle = opendir('help')) {
+    while (false !== ($file = readdir($handle))) {
+        if ($file != "." && $file != "..") {
+            $help[] = $file;
+        }
+    }
+    closedir($handle);
+}
+
+
+natcasesort($help);
+
+foreach($help as $k=>$v) {
+
+    $helpname =  substr($v, 0, strrpos($v, '.'));
+
+    $prefix = substr($helpname, 0, 2);
+    if(is_numeric($prefix)) {
+        $helpname =  substr($helpname, 2, strlen($helpname)-1 );
+    }
+
+    $helpname = str_replace('_', ' ', $helpname);
+
+    echo '<div class="tab-page" id="tab'.$v.'Help">';
+    echo '<h2 class="tab">'.$helpname.'</h2>';
+    echo '<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
+    include "./help/$v";
+    echo '</div>';
+}
+?>
+    </div>
 </div>
-
-<div class="sectionHeader"><?php echo $_lang['about_title']; ?></div><div class="sectionBody">
-<?php echo $_lang['about_msg']; ?>
-</div>
-
-<div class="sectionHeader"><?php echo $_lang['help_title']; ?></div><div class="sectionBody">
-<?php echo $_lang['help_msg']; ?>
-</div>
-
-<div class="sectionHeader"><?php echo $_lang['credits']; ?></div><div class="sectionBody">
-<table width="500"  border="0" cellspacing="0" cellpadding="0">
-  <tr height="70">
-    <td align="center"><a href="http://www.php.net" target="_blank"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/credits/php.gif" border="0"></a></td>
-    <td align="left"><?php echo $_lang['credits_php']; ?></td>
-  </tr>
-  <tr height="70">
-    <td align="center"><a href="http://www.mysql.com" target="_blank"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/credits/mysql.gif" border="0"></a></td>
-    <td align="left"><?php echo $_lang['credits_mysql']; ?></td>
-  </tr>
-  <tr height="70">
-    <td align="center"><a href="http://webfx.eae.net" target="_blank"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/credits/webfx.gif" border="0"></a></td>
-    <td align="left"><?php echo $_lang['credits_webfx']; ?></td>
-  </tr>
-  <tr height="70">
-    <td align="center"><a href="http://www.destroydrop.com" target="_blank"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/credits/dtree.gif" border="0"></a></td>
-    <td align="left"><?php echo $_lang['credits_dTree']; ?></td>
-  </tr>
-  <tr height="70">
-    <td align="center"><a href="http://www.everaldo.com" target="_blank"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/credits/penguin.gif" border="0"></a></td>
-    <td align="left"><?php echo $_lang['credits_everaldo']; ?></td>
-  </tr>
-  <tr>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center" valign="top"><?php echo $_lang['credits_shouts_title']; ?></td>
-	<td align="left"><?php echo $_lang['credits_shouts_msg']; ?></td>
-  </tr>
-</table>
-
-</div>
-

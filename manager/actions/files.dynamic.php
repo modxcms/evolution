@@ -4,7 +4,10 @@ if(!$modx->hasPermission('file_manager')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-$theme = $manager_theme ? "$manager_theme/":"";
+
+if ($manager_theme)
+        $manager_theme .= '/';
+else    $manager_theme  = '';
 
 // settings
 $excludes = array(".", "..", "cgi-bin", "manager", ".svn");
@@ -138,7 +141,7 @@ else $webstart_path = "../".$webstart_path;
 
 ?>
 <br />
-<div class="sectionHeader"><?php echo $_lang['files_files']; ?></div><div class="sectionBody" style="font-size: 11px;">
+<div class="sectionHeader"><?php echo $_lang['files_files']?></div><div class="sectionBody" style="font-size: 11px;">
 <script type="text/javascript" src="media/script/multifile.js"></script>
 <script type="text/javascript">
 function viewfile(url) {
@@ -284,11 +287,11 @@ if($_REQUEST['mode']=="delete") {
 }
 
 
-echo $_lang['files_dir_listing']; ?><b><?php echo substr($startpath, $len, strlen($startpath))=="" ? "/" : substr($startpath, $len, strlen($startpath)) ; ?></b><br /><br />
+echo $_lang['files_dir_listing']?><b><?php echo substr($startpath, $len, strlen($startpath))=="" ? "/" : substr($startpath, $len, strlen($startpath))?></b><br /><br />
 <?php
 // check to see user isn't trying to move below the document_root
 if(substr(strtolower(str_replace('//','/',$startpath."/")), 0, $len)!=strtolower(str_replace('//','/',$filemanager_path."/"))) {
-	echo $_lang['files_access_denied']; ?>
+	echo $_lang['files_access_denied']?>
 </div>
 
 <?php
@@ -375,11 +378,11 @@ if($_REQUEST['mode']=="newfolder") {
 			echo "<span class=\"warning\"><b>".$_lang['file_folder_chmod_error']."</b></span><br /><br />";
 		} else {
 			echo "<span class=\"success\"><b>".$_lang['file_folder_created']."</b></span><br /><br />";
-		}	
+		}
 	}
 	umask($old_umask);
 }
-	echo "<img src=\"media/style/".$theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=newfolder&path=".$startpath."&name=\" onclick=\" return getFolderName(this);\"><b>".$_lang['add_folder']."</b></a><br />\n";
+	echo "<img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=newfolder&path=".$startpath."&name=\" onclick=\" return getFolderName(this);\"><b>".$_lang['add_folder']."</b></a><br />\n";
 }
 // End New Folder - Raymond
 
@@ -387,15 +390,15 @@ $uponelevel = removeLastPath($startpath);
 
 // To Top Level with folder icon to the left
 if($startpath==$filemanager_path || $startpath.'/' == $filemanager_path) {
-	echo "<img src=\"media/style/".$theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\" alt=\"\" /><span style=\"color:#bbb;cursor:default;\"> <b>".$_lang['files_top_level']."</b></span><br />\n";
+	echo "<img src=\"media/style/".$manager_theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\" alt=\"\" /><span style=\"color:#bbb;cursor:default;\"> <b>".$_lang['files_top_level']."</b></span><br />\n";
 } else {
-	echo "<img src=\"media/style/".$theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=drill&path=".$filemanager_path."\"><b>".$_lang['files_top_level']."</b></a><br />\n";
+	echo "<img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=drill&path=".$filemanager_path."\"><b>".$_lang['files_top_level']."</b></a><br />\n";
 }
 // Up One level with folder icon to the left
 if($startpath == $filemanager_path || $startpath.'/' == $filemanager_path) {
-	echo "<img src=\"media/style/".$theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\" alt=\"\"/><span style=\"color:#bbb;cursor:default;\"> <b>".$_lang['files_up_level']."</b></span><br />\n";
+	echo "<img src=\"media/style/".$manager_theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\" alt=\"\"/><span style=\"color:#bbb;cursor:default;\"> <b>".$_lang['files_up_level']."</b></span><br />\n";
 } else {
-	echo "<a href=\"index.php?a=31&mode=drill&path=$uponelevel\"><img src=\"media/style/".$theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <b>".$_lang['files_up_level']."</b></a><br />\n";
+	echo "<a href=\"index.php?a=31&mode=drill&path=$uponelevel\"><img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <b>".$_lang['files_up_level']."</b></a><br />\n";
 }
 echo "<br />";
 
@@ -407,9 +410,9 @@ $dirs_array = array();
 $files_array = array();
 if(strlen(MODX_BASE_PATH) < strlen($filemanager_path)) $len--;
 
-function ls ($curpath) {
+function ls($curpath) {
 	global $_lang;
-	global $excludes, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $theme;
+	global $excludes, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $manager_theme;
 	$dircounter = 0;
 	$filecounter = 0;
 	$curpath = str_replace('//','/',$curpath."/");
@@ -427,8 +430,8 @@ function ls ($curpath) {
 			if(is_dir($newpath)) {
 				$dirs_array[$dircounter]['dir'] = $newpath;
 				$dirs_array[$dircounter]['stats'] = lstat($newpath);
-				$dirs_array[$dircounter]['text'] = "<img src=\"media/style/".$theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=drill&path=$newpath\"><b style=\"\">$file</b></a>";
-				$dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript:confirmDeleteFolder(\''.addslashes("index.php?a=31&mode=deletefolder&path=$curpath&folderpath=$newpath").'\');"><img src="media/style/'.$theme.'images/icons/delete.gif" alt="'.$_lang["file_delete_folder"].'" title="'.$_lang["file_delete_folder"].'" /></a></span>' : '';
+				$dirs_array[$dircounter]['text'] = "<img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=drill&path=$newpath\"><b style=\"\">$file</b></a>";
+				$dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript:confirmDeleteFolder(\''.addslashes("index.php?a=31&mode=deletefolder&path=$curpath&folderpath=$newpath").'\');"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></a></span>' : '';
 
 				// increment the counter
 				$dircounter++;
@@ -436,13 +439,13 @@ function ls ($curpath) {
 				$type=getExtension($newpath);
 				$files_array[$filecounter]['file'] = $newpath;
 				$files_array[$filecounter]['stats'] = lstat($newpath);
-				$files_array[$filecounter]['text'] = "<img src=\"media/style/".$theme."images/tree/page-html.gif\" border=0 align=\"absmiddle\" alt=\"\" /> $file";
+				$files_array[$filecounter]['text'] = "<img src=\"media/style/".$manager_theme."images/tree/page-html.gif\" border=0 align=\"absmiddle\" alt=\"\" /> $file";
 				$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles)) ?
-				"<span style=\"cursor:pointer; width:20px;\" onclick=\"viewfile('$webstart_path".substr($newpath, $len, strlen($newpath))."');\"><img src=\"media/style/".$theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_viewfile"]."\" title=\"".$_lang["file_viewfile"]."\"/></span>" : (($enablefiledownload && in_array($type, $uploadablefiles))? "<a href=\"$webstart_path".substr($newpath, $len, strlen($newpath))."\" style=\"cursor:pointer; width:20px;\"><img src=\"media/style/".$theme."images/misc/ed_save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_download_file"]."\" title=\"".$_lang["file_download_file"]."\" /></a>":"<span class=\"disabledImage\"><img src=\"media/style/".$theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_viewfile"]."\" title=\"".$_lang["file_viewfile"]."\" /></span>");
-				$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=view&path=$newpath\"><img src=\"media/style/".$theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_viewfile"]."\" title=\"".$_lang["file_viewfile"]."\" /></a></span>" : $files_array[$filecounter]['view'] ;
-				$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=unzip&path=$curpath&file=$file\" onclick=\"return confirmUnzip();\"><img src=\"media/style/".$theme."images/icons/unzip.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_download_unzip"]."\" title=\"".$_lang["file_download_unzip"]."\" /></a></span>" : "" ;
-				$files_array[$filecounter]['edit'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=edit&path=$newpath\"><img src=\"media/style/".$theme."images/icons/save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_editfile"]."\" title=\"".$_lang["file_editfile"]."\" /></a></span>" : "<span class=\"disabledImage\"><img src=\"media/style/".$theme."images/icons/save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_editfile"]."\" title=\"".$_lang["file_editfile"]."\" /></span>" ;
-				$files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? "<span style=\"width:20px;\"><a href=\"javascript:confirmDelete('".addslashes("index.php?a=31&mode=delete&path=$newpath")."');\"><img src=\"media/style/".$theme."images/icons/delete.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_delete_file"]."\" title=\"".$_lang["file_delete_file"]."\" /></a></span>" : "<span class=\"disabledImage\"><img src=\"media/style/".$theme."images/icons/delete.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang["file_delete_file"]."\" title=\"".$_lang["file_delete_file"]."\" /></span>" ;
+				"<span style=\"cursor:pointer; width:20px;\" onclick=\"viewfile('$webstart_path".substr($newpath, $len, strlen($newpath))."');\"><img src=\"media/style/".$manager_theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_viewfile']."\" title=\"".$_lang['file_viewfile']."\"/></span>" : (($enablefiledownload && in_array($type, $uploadablefiles))? "<a href=\"$webstart_path".substr($newpath, $len, strlen($newpath))."\" style=\"cursor:pointer; width:20px;\"><img src=\"media/style/".$manager_theme."images/misc/ed_save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_download_file']."\" title=\"".$_lang['file_download_file']."\" /></a>":"<span class=\"disabledImage\"><img src=\"media/style/".$manager_theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_viewfile']."\" title=\"".$_lang['file_viewfile']."\" /></span>");
+				$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=view&path=$newpath\"><img src=\"media/style/".$manager_theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_viewfile']."\" title=\"".$_lang['file_viewfile']."\" /></a></span>" : $files_array[$filecounter]['view'] ;
+				$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=unzip&path=$curpath&file=$file\" onclick=\"return confirmUnzip();\"><img src=\"media/style/".$manager_theme."images/icons/unzip.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_download_unzip']."\" title=\"".$_lang['file_download_unzip']."\" /></a></span>" : "" ;
+				$files_array[$filecounter]['edit'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=edit&path=$newpath\"><img src=\"media/style/".$manager_theme."images/icons/save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_editfile']."\" title=\"".$_lang['file_editfile']."\" /></a></span>" : "<span class=\"disabledImage\"><img src=\"media/style/".$manager_theme."images/icons/save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_editfile']."\" title=\"".$_lang['file_editfile']."\" /></span>" ;
+				$files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? "<span style=\"width:20px;\"><a href=\"javascript:confirmDelete('".addslashes("index.php?a=31&mode=delete&path=$newpath")."');\"><img src=\"media/style/".$manager_theme."images/icons/delete.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_delete_file']."\" title=\"".$_lang['file_delete_file']."\" /></a></span>" : "<span class=\"disabledImage\"><img src=\"media/style/".$manager_theme."images/icons/delete.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_delete_file']."\" title=\"".$_lang['file_delete_file']."\" /></span>" ;
 
 				// increment the counter
 				$filecounter++;
@@ -491,25 +494,25 @@ echo "<br /><br />";
 ?>
 <table>
 <tr>
-<td style="width:300px;"><b><?php echo $_lang['files_filename']; ?></b></td>
-<td><b><?php echo $_lang['files_modified']; ?></b></td>
-<td><b><?php echo $_lang['files_filesize']; ?></b></td>
-<td><b><?php echo $_lang['files_fileoptions']; ?></b></td>
+<td style="width:300px;"><b><?php echo $_lang['files_filename']?></b></td>
+<td><b><?php echo $_lang['files_modified']?></b></td>
+<td><b><?php echo $_lang['files_filesize']?></b></td>
+<td><b><?php echo $_lang['files_fileoptions']?></b></td>
 </tr>
 <?php
 ls($startpath);
 echo "\n\n\n\n\n\n\n";
 if($folders==0 && $files==0) {
-	echo "<tr><td colspan=\"4\"><img src=\"media/style/".$theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\"><span style=\"color:#888;cursor:default;\"> This directory is empty.</span></td></tr>\n";
+	echo "<tr><td colspan=\"4\"><img src=\"media/style/".$manager_theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\"><span style=\"color:#888;cursor:default;\"> This directory is empty.</span></td></tr>\n";
 }
 ?></table><?php
 
 echo $_lang['files_directories'].": <b>$folders</b><br />";
 echo $_lang['files_files'].": <b>$files</b><br />";
 echo $_lang['files_data'].": <b><span dir=\"ltr\">".ufilesize($filesizes)."</span></b><br/>";
-echo $_lang['files_dirwritable']; ?><b> <?php echo is_writable($startpath)==1 ? $_lang["yes"]."." : $_lang["no"]."."; ?></b><br />
+echo $_lang['files_dirwritable']?><b> <?php echo is_writable($startpath)==1 ? $_lang['yes']."." : $_lang['no']."."?></b><br />
 <div align="center">
-<img src="media/style/<?php echo $theme; ?>images/icons/_tx_.gif" id="imageviewer">
+<img src="media/style/<?php echo $manager_theme?>images/icons/_tx_.gif" id="imageviewer">
 </div>
 <br /><hr />
 <?php
@@ -517,10 +520,10 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 	@ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
 ?>
 <form enctype="multipart/form-data" action="index.php?a=31" method="post">
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576; ?>">
-<input type="hidden" name="path" value="<?php echo $startpath; ?>">
+<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576?>">
+<input type="hidden" name="path" value="<?php echo $startpath?>">
 
-<span style="width:300px;"><?php echo $_lang['files_uploadfile_msg']; ?></span>
+<span style="width:300px;"><?php echo $_lang['files_uploadfile_msg']?></span>
 <input id="file_elem" type="file" name="bogus"  style="height: 19px;">
 
 <div id="files_list"></div>
@@ -529,7 +532,7 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 	multi_selector.addElement( document.getElementById( 'file_elem' ) );
 </script>
 
-<input type="submit" value="<?php echo $_lang['files_uploadfile']; ?>">
+<input type="submit" value="<?php echo $_lang['files_uploadfile']?>">
 
 </form>
 
@@ -547,13 +550,12 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 
 if($_REQUEST['mode']=="edit" || $_REQUEST['mode']=="view") {
 ?>
-<div class="sectionHeader"><?php echo $_REQUEST['mode']=="edit" ? $_lang['files_editfile'] : $_lang['files_viewfile'] ; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_REQUEST['mode']=="edit" ? $_lang['files_editfile'] : $_lang['files_viewfile']?></div><div class="sectionBody">
 <?php
 $filename=$_REQUEST['path'];
 $handle = @fopen($filename, "r");
 // Log the change
 logFileChange('view', $filename);
-$theme = $manager_theme ? "$manager_theme/":"";
 if(!$handle) {
 	echo 'Error opening file for reading.';
 	exit;
@@ -568,10 +570,10 @@ if(!$handle) {
 <form action="index.php" method="post" name="editFile">
 <input type="hidden" name="a" value="31" />
 <input type="hidden" name="mode" value="save" />
-<input type="hidden" name="path" value="<?php echo $_REQUEST['path']; ?>" />
+<input type="hidden" name="path" value="<?php echo $_REQUEST['path']?>" />
 <table width="100%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td><textarea dir="ltr" style="width:100%; height:370px;" name="content"><?php echo htmlentities($buffer); ?></textarea></td>
+    <td><textarea dir="ltr" style="width:100%; height:370px;" name="content"><?php echo htmlentities($buffer)?></textarea></td>
   </tr>
 </table>
 </form>
@@ -581,8 +583,8 @@ if($_REQUEST['mode']=="edit") {
 ?>
 
 <table cellpadding="0" cellspacing="0" class="actionButtons">
-	<td id="Button1"><a href="#" onclick="document.editFile.submit();"><img src="media/style/<?php echo $theme; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["save"]; ?></a></td>
-	<td id="Button2"><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path']); ?>"><img src="media/style/<?php echo $theme; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></a></td>
+	<td id="Button1"><a href="#" onclick="document.editFile.submit();"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']?></a></td>
+	<td id="Button2"><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path'])?>"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']?></a></td>
 </table>
 <?php } ?>
 </div>

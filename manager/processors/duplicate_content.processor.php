@@ -65,14 +65,17 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	$content['editedby'] = $content['editedon'] = $content['deleted'] = $content['deletedby'] = $content['deletedon'] = 0;
 
 	// [FS#922] Should the published status be honored? - sirlancelot
-	if ($modx->hasPermission('publish_document')) {
-		if ($modx->config['publish_default'])
-			$content['pub_date'] = $content['pub_date']; // should this be changed to 1?
-		else	$content['pub_date'] = 0;
-	} else {
+//	if ($modx->hasPermission('publish_document')) {
+//		if ($modx->config['publish_default'])
+//			$content['pub_date'] = $content['pub_date']; // should this be changed to 1?
+//		else	$content['pub_date'] = 0;
+//	} else {
 		// User can't publish documents
-		$content['published'] = $content['pub_date'] = 0;
-	}
+//		$content['published'] = $content['pub_date'] = 0;
+//	}
+
+    // Set the published status to unpublished by default (see above ... commit #3388)
+    $content['published'] = $content['pub_date'] = 0;
 
 	// Escape the proper strings
 	$content['pagetitle'] = $modx->db->escape($content['pagetitle']);

@@ -433,7 +433,9 @@
             <?php } ?>
             <td><a href="#" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="#" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
-            <td><a href="#" id="Button10" class="treeButtonDisabled"' title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
+            <?php if ($modx->hasPermission('empty_trash')) { ?>
+                <td><a href="#" id="Button10" class="treeButtonDisabled"' title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
+            <?php } ?>
             </tr>
         </table>
     </td>

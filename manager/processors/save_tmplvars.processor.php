@@ -44,7 +44,7 @@ if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
     if ($catCheck) {
         $categoryid = $catCheck;
     } else {
-        $categoryid = newCategory(mysql_escape_string($_POST['newcategory']));
+        $categoryid = newCategory($_POST['newcategory']);
     }
 }
 
@@ -166,14 +166,30 @@ switch ($_POST['mode']) {
 function saveTemplateAccess() {	
 	global $dbase,$table_prefix;
 	global $id,$newid;
+	global $modx;
 
 	if($newid) $id = $newid;
 	$templates =  $_POST['template']; // get muli-templates based on S.BRENNAN mod
 		
 	// update template selections
 	$tbl = "$dbase.`".$table_prefix."site_tmplvar_templates`";
+	
+	$getRankArrayKey = array();
+    $getRankArrayValue = array();
+
+    $getRank = $modx->db->select("templateid, rank", $tbl, "tmplvarid=$id");
+
+    while( $row = $modx->db->getRow( $getRank ) ) {
+    array_push($getRankArrayKey, $row[templateid]);
+    array_push($getRankArrayValue, $row[rank]);
+    }
+
+    $getRankArray = array_combine($getRankArrayKey,$getRankArrayValue);
+    
+	
 	mysql_query("DELETE FROM $tbl WHERE tmplvarid = $id");
 	for($i=0;$i<count($templates);$i++){
+	    $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
 		mysql_query("INSERT INTO $tbl (tmplvarid,templateid) VALUES($id,".$templates[$i].");");
 	}	
 }

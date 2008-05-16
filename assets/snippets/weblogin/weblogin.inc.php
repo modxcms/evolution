@@ -28,7 +28,7 @@ if(!isset($_SESSION['webValidated'])){
 //    }
     ?>
     <script type="text/JavaScript">
-
+    <!--//--><![CDATA[//><!--
         function getElementById(id){
             var o, d=document;
             if (d.layers) {o=d.layers[id];if(o) o.style=o};
@@ -72,6 +72,7 @@ if(!isset($_SESSION['webValidated'])){
                 return true;
             }
         }
+    //--><!]]>
     </script>
     <?php
 

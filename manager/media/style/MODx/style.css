@@ -473,7 +473,7 @@ a img {
 	width:10px;
 	height:100%;
 	position:absolute; 
-	right:0px;
+	right:-10px;
 	border-right:1px solid #e0e0e0;
 }
 

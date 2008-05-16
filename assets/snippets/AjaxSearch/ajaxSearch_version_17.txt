@@ -1,0 +1,151 @@
+
+                           AjaxSearch - version 1.7.0.2
+
+AjaxSearch version 1.7.0.2
+
+- to avoid SQL injection and Cross site scripting (XSS):
+http://modxcms.com/forums/index.php/topic,22843.msg140543.html#msg140543
+ckecking of $listIDs and $docgrp variables validity (see includes/ajaxSearch.inc.php)
+                           
+
+AjaxSearch version 1.7.0.1 
+
+- "version" name conflict
+http://modxcms.com/forums/index.php/topic,5357.msg133667.html#msg133667
+tab character at the end of the line 313 of snippet.ajaxSearch.inc.php
+return statement & "version" name conflict in ajaxSearch.js
+
+
+                           
+Previous version : 1.6
+
+Version 1.6.1 and 1.6.2x have been released as beta versions of 1.7
+
+================================= NEW OPTIONS ==================================
+
+    &parents [comma-separated list of integers  MODx document IDs] (optional)
+        A list of parent-documents whose descendants you want searched to &depth 
+        depth when searching. All parent-documents by default
+
+    &depth [int] (optional)
+        Number of levels deep to go.
+        Any number greater than or equal to 1. All levels by default
+
+    &documents [comma-separated list of integers  MODx document IDs] (optional)
+        A list of documents where to search
+
+
+    &extractLength [int]  (optional)
+        Length of extract around the search words found
+        between 50 and 800 characters. 200 by default
+
+
+    &opacity [float value between 0. and 1.] (optional)
+        Opacity of the ajaxSearch_output div where are returned the ajax results. Défault is 1.
+        Float value between 0. (transparent) and 1. (opaque)  
+
+
+    &useAllWords [ 1 | 0 ] (optional)
+      If you want only documents which contain ALL words in the search string, set to true
+      Otherwise, the search will return all pages with ONE or more of the search words. Default 0 (False))
+
+
+    &config [config_name | "default"] (optional)
+        Load a custom configuration
+        config_name - Other configs installed in the configs folder or in any folder within the MODx base path via @FILE
+        Configuration files are named in the form: <config_name>.config.php
+        
+
+========================= CHANGE REQUESTS IMPLEMENTED ==========================
+
+- Coroico's request - take into account Accented non utf-8 web site (latin1, latin2, ..)
+- Coroico's request - Management of the opacity with IE
+http://modxcms.com/forums/index.php/topic,5357.msg122752.html#msg122752
+
+
+- Coroico's request - add a selection of documents where to search
+http://modxcms.com/forums/index.php/topic,5357.msg123851.html#msg123851
+
+
+- Coroico's request - add a config file for default parameters
+
+
+- Paul's request - strip html tags in title, long title and description
+http://modxcms.com/forums/index.php/topic,5357.msg128909.html#msg128909
+
+
+- Rickstervn41x8's request : 
+http://modxcms.com/forums/index.php/topic,20136.msg124792.html#msg124792
+
+ajaxSearch is working pretty good for me but I have some problem with the Extract 
+function which seems to extract far too much content. Not only that, but it extracts 
+content with the original formatting and line breaks which makes for very long and 
+confusing results layout. Is there any way to exert some control over these results 
+and perhaps strip out the formatting and line breaks? Thanks
+
+
+================================ ISSUES CORRECTED ==============================
+
+- Cmku's feedback : 
+http://modxcms.com/forums/index.php/topic,20128.msg125501.html#msg125501
+If your database charset and your pages are all in UTF-8, normally you do not 
+use the phb.mbstring extension, but ...
+
+Corrected with 1.6.2b fix
+
+
+- Bwente's feedback : 
+http://modxcms.com/forums/index.php/topic,5357.msg128813.html#msg128813
+My $database_connection_charset variable was not set. 
+The interesting thing is that it was not set on my home machine either and it worked.
+
+Corrected with 1.6.2c fix
+
+
+- Transeffect's feedback :
+http://modxcms.com/forums/index.php/topic,5357.msg128938.html#msg128938
+I just noticed that it fails if I do a search while logged in as a web user.
+Not logged in, everything works, but when logged in as any web user, I get the 
+following javascript error: "The URI to be decoded is not a valid encoding"
+
+Corrected with 1.6.2d
+
+
+- Jean-Marie feedback
+http://modxcms.com/forums/index.php/topic,19755.msg130245.html#msg130245
+Double initialisation of javascript variables
+
+Corrected with MODX 0.9.6.1 
+http://modxcms.com/forums/index.php/topic,21109.msg130413.html#msg130413
+
+
+- VanMeter's feedback :
+http://modxcms.com/forums/index.php/topic,21047.msg131003.html#msg131003
+I searched for card and then for "world phonecards" and it showed results with 
+formatting, then when I search for just "phonecards" it didn't show the formatting...
+
+Corrected with 1.6.2e
+
+
+- Security patch :
+http://modxcms.com/forums/index.php/topic,5357.msg131495.html#msg131495
+
+
+- Ublix's feedback 
+http://modxcms.com/forums/index.php/topic,5357.msg125737.html#msg125737
+- Andy's feedback : 
+http://modxcms.com/forums/index.php/topic,5357.msg126745.html#msg126745
+- Tuatara (Matt)'s feedback : 
+http://modxcms.com/forums/index.php/topic,21047.msg131559.html#msg131559
+
+If I start the search only with  ... [!AjaxSearch!] ... I get an error after 4 
+seconds:
+Fatal error: Allowed memory size of 16777216 bytes exhausted (tried to allocate 
+524288 bytes)
+in .../assets/snippets/AjaxSearch/includes/AjaxSearch.inc.php 
+on line 325
+
+
+- Coroico's feedback :
+The searchword highlighted is not in the middle of the extract
+

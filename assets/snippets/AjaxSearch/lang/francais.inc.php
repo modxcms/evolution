@@ -2,7 +2,7 @@
 
 /*
 francais.inc.php - for AjaxSearch 1.5
-Created by: KyleJ (kjaebker@muddydogpaws.com)    Translated by : David Mollière
+Created by: KyleJ (kjaebker@muddydogpaws.com) Translated by: David Mollière
 Created on: 01/22/07    Translated on : 04/10/07
 Description: Latin1 French Language file for AjaxSearch
 */

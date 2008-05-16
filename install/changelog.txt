@@ -2,9 +2,41 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.2 (rev 3282 - January 2, 2008)
+MODx 0.9.6.2-rc1 (rev 3708 - May 17, 2008)
 ====================================
-* Fixes for local file inclusion vulnerabilities, reported at http://www.securityfocus.com/archive/1/485707/30/0/threaded. (3279,3280)
+* [FS#863] — IE7 gives JS error on navigating away from/logging out of Manager (3705)
+* [MODX-124] Added a manager role for emptying the trash/permanently purging docs (rev 3682)
+* Changing TVs no longer looses the sort order  on templates to which they're assigned (see http://modxcms.com/forums/index.php/topic,16090.msg146881.html#msg146881) (3622)
+* Insert CDATA Tags into Weblogin snippet code so it will validate (3622)
+* [#MODX-101] Fix ability to make document Public after it has been assigned to one or more Document Groups
+* Patches to Ditto 2.1 to fix sorting and change default docs displayed number from 3 to "all" (see http://modxcms.com/forums/index.php/topic,23204.msg146176.html#msg146176) (3511)
+* [#MODX-50] stripAlias function converts named entities to their numeric equivalents and then further to their actual character.
+* Fixed bad markup in language files (see http://modxcms.com/forums/index.php/topic,23353.0)
+* [FS#997] Add database collation charset and database charset to System Info. (3403)
+* Fix to prevent JS warning in FF with QuickEdit (3402)
+* Fix installer to use multi-language based images (3401)
+* Added Japanese translation/images to the installer (3400)
+* Allow weblinks to have summary(introtext) fields (3390)
+* Set the published status of duplicated documents to unpublished (3388)
+* Update ajaxSearch to 1.7.0.2 and Search Highlighting plugin to 1.2.0.2 (3386,3387)
+* Update Ditto/Reflect to version 2.1 (3377)
+* [FS#988] Changed htmlspecialchars() on Search Highlighting plugin to strip_tags() (3359)
+* Fix demo content error with web signup (see http://modxcms.com/forums/index.php/topic,22374.msg137890.html)
+* Update IE6 (and earlier) helper files for transparent png support and for adding :hover, :active, :focus support to all elements (not just links/inputs)
+* [FS#905] sqlParser.class.php now typecasting (float) instead of floatval() [PHP < 4.2] (3338)
+* Updated rss.inc.php to handle 404 errors if the feeds cannot be found (3317)
+* [FS#947] Module permissions did not handle multiple user groups (3314)
+* [FS#977] Updated handling for apostrophes in Full Name (user/web user) and resource categories (3309)
+    - Removed redundant mysql_escape_string() from the (web)users and Resources save processors 
+    - Added stripslashes() to categories.inc.php getCategories() function
+    - Added stripslashes() to resources.static.php 
+* [FS#988] Use htmlspecialchars() on Search Highlighting plugin parameters and updated version included in the distribution (3303)
+* [FS#998] Update ListIndexer version included in the distribution (3302)
+* [FS#996] Update installer to detect register_globals being on during installation (3301)
+* Added RSS feeds of Security and Announcements forums messages to manager welcome page with required English language file additions in installer. (3295, 3296, 3298, 3299, 3300)
+* Migrated Mootools to 1.11 (3293, 3294)
+* Fix for tree menu scrolling (credit smashingred ... thanks!). See http://modxcms.com/forums/index.php/topic,21735.msg134298.html#msg134298 (3292)
+* Fix htcmime.php and local file inclusion vulnerabilities for certain server configs, reported at http://www.securityfocus.com/archive/1/485707/30/0/threaded (3279, 3280)
 * [FS#991] addEventListener now works directly on the event array (3278)
 * [FS#986] Removed hidden input box in manager menu, cleaned up whitespace, organized source file (3278)
 * [FS#981] Moved "Page Source" section to a tab in document data viewer, cleaned and organized source file (3278)

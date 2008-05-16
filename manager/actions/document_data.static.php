@@ -1,24 +1,27 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if (IN_MANAGER_MODE!='true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-// The id of the page
-$id = intval($_REQUEST['id']);
+if (isset($_REQUEST['id']))
+        $id = (int)$_REQUEST['id'];
+else    $id = 0;
 
 if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
 
-if ($manager_theme) $manager_theme .= '/';
+if ($manager_theme)
+        $manager_theme .= '/';
+else    $manager_theme  = '';
 
 $url = $modx->config['site_url'];
 
-// Get table names (in order of appearance)
-$tblsc     = $modx->getFullTableName('site_content');
-$tbldg     = $modx->getFullTableName('document_groups');
-$tblmu     = $modx->getFullTableName('manager_users');
-$tbltpl    = $modx->getFullTableName('site_templates');
-$tblkw     = $modx->getFullTableName('site_keywords');
-$tblkx     = $modx->getFullTableName('keyword_xref');
-$tblmeta   = $modx->getFullTableName('site_metatags');
-$tblscmeta = $modx->getFullTableName('site_content_metatags');
+// Get table names (alphabetical)
+$tbl_document_groups       = $modx->getFullTableName('document_groups');
+$tbl_keyword_xref          = $modx->getFullTableName('keyword_xref');
+$tbl_manager_users         = $modx->getFullTableName('manager_users');
+$tbl_site_content          = $modx->getFullTableName('site_content');
+$tbl_site_content_metatags = $modx->getFullTableName('site_content_metatags');
+$tbl_site_keywords         = $modx->getFullTableName('site_keywords');
+$tbl_site_metatags         = $modx->getFullTableName('site_metatags');
+$tbl_site_templates        = $modx->getFullTableName('site_templates');
 
 // Get access permissions
 if($_SESSION['mgrDocgroups'])
@@ -27,8 +30,8 @@ $access = "1='".$_SESSION['mgrRole']."' OR sc.privatemgr=0".(!$docgrp ? "":" OR 
 
 // Get the document content
 $sql = 'SELECT DISTINCT sc.* '.
-       'FROM '.$tblsc.' AS sc '.
-       'LEFT JOIN '.$tbldg.' AS dg ON dg.document = sc.id '.
+       'FROM '.$tbl_site_content.' AS sc '.
+       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
        'WHERE sc.id =\''.$id.'\' '.
        'AND ('.$access.')';
 $rs = mysql_query($sql);
@@ -48,17 +51,17 @@ $content = mysql_fetch_assoc($rs);
  * "General" tab setup
  */
 // Get Creator's username
-$rs = mysql_query('SELECT username FROM '.$tblmu.' WHERE id=\''.$content['createdby'].'\'');
+$rs = mysql_query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['createdby'].'\'');
 if ($row = mysql_fetch_assoc($rs))
 	$createdbyname = $row['username'];
 
 // Get Editor's username
-$rs = mysql_query('SELECT username FROM '.$tblmu.' WHERE id=\''.$content['editedby'].'\'');
+$rs = mysql_query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['editedby'].'\'');
 if ($row = mysql_fetch_assoc($rs))
 	$editedbyname = $row['username'];
 
 // Get Template name
-$rs = mysql_query('SELECT templatename FROM '.$tbltpl.' WHERE id=\''.$content['template'].'\'');
+$rs = mysql_query('SELECT templatename FROM '.$tbl_site_templates.' WHERE id=\''.$content['template'].'\'');
 if ($row = mysql_fetch_assoc($rs))
 	$templatename = $row['templatename'];
 
@@ -67,7 +70,7 @@ $_SESSION['itemname'] = $content['pagetitle'];
 
 // Get list of current keywords for this document
 $keywords = array();
-$sql = 'SELECT k.keyword FROM '.$tblkw.' AS k, '.$tblkx.' AS x '.
+$sql = 'SELECT k.keyword FROM '.$tbl_site_keywords.' AS k, '.$tbl_keyword_xref.' AS x '.
        'WHERE k.id = x.keyword_id AND x.content_id = \''.$id.'\' '.
        'ORDER BY k.keyword ASC';
 $rs = mysql_query($sql);
@@ -82,8 +85,8 @@ if ($limit > 0) {
 // Get list of selected site META tags for this document
 $metatags_selected = array();
 $sql = 'SELECT meta.id, meta.name, meta.tagvalue '.
-       'FROM '.$tblmeta.' AS meta '.
-       'LEFT JOIN '.$tblscmeta.' AS sc ON sc.metatag_id = meta.id '.
+       'FROM '.$tbl_site_metatags.' AS meta '.
+       'LEFT JOIN '.$tbl_site_content_metatags.' AS sc ON sc.metatag_id = meta.id '.
        'WHERE sc.content_id=\''.$content['id'].'\'';
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
@@ -105,8 +108,8 @@ $childsTable = new makeTable();
 
 // Get child document count
 $sql = 'SELECT DISTINCT sc.id '.
-       'FROM '.$tblsc.' AS sc '.
-       'LEFT JOIN '.$tbldg.' AS dg ON dg.document = sc.id '.
+       'FROM '.$tbl_site_content.' AS sc '.
+       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
        'WHERE sc.parent=\''.$content['id'].'\' '.
        'AND ('.$access.')';
 $rs = $modx->db->query($sql);
@@ -114,8 +117,8 @@ $numRecords = $modx->db->getRecordCount($rs);
 
 // Get child documents (with paging)
 $sql = 'SELECT DISTINCT sc.* '.
-       'FROM '.$tblsc.' AS sc '.
-       'LEFT JOIN '.$tbldg.' AS dg ON dg.document = sc.id '.
+       'FROM '.$tbl_site_content.' AS sc '.
+       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
        'WHERE sc.parent=\''.$content['id'].'\' '.
        'AND ('.$access.') '.
        $childsTable->handlePaging(); // add limit clause

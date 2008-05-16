@@ -19,6 +19,13 @@
 	<head>
 		<title>FCKeditor - Resources Browser</title>
 		<link href="browser.css" type="text/css" rel="stylesheet">
+		<script language="javascript">
+			function SetUrl(fileUrl){
+				window.top.opener.SetUrl(fileUrl);
+				window.top.close();
+				window.top.opener.focus();
+			}
+		</script>
 	</head>
 	<frameset cols="150,*" framespacing="0" bordercolor="#f1f1e3" frameborder="no" class="Frame_none">
 		<frameset rows="50,*" framespacing="0"  class="Frame_r">

@@ -27,7 +27,7 @@ $cacheable = $_POST['cacheable'];
 $syncsite = $_POST['syncsite'];
 $pub_date = $_POST['pub_date'];
 $unpub_date = $_POST['unpub_date'];
-$document_groups = $_POST['docgroups'];
+$document_groups = (isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on') ? array() : $_POST['docgroups'];
 $type = $_POST['type'];
 $keywords = $_POST['keywords'];
 $metatags = $_POST['metatags'];
@@ -39,13 +39,16 @@ $donthit = intval($_POST['donthit']);
 $menutitle = mysql_escape_string($_POST['menutitle']);
 $hidemenu = intval($_POST['hidemenu']);
 
-// Get Table names
-$tblsc = $modx->getFullTableName('site_content');
-$tbldg = $modx->getFullTableName('document_groups');
-$tbltv = $modx->getFullTableName('site_tmplvars');
-$tbltvt = $modx->getFullTableName('site_tmplvar_templates');
-$tbltvc = $modx->getFullTableName('site_tmplvar_contentvalues');
-$tbltva = $modx->getFullTableName('site_tmplvar_access');
+// Get table names (alphabetical)
+$tbl_document_groups            = $modx->getFullTableName('document_groups');
+$tbl_documentgroup_names        = $modx->getFullTableName('documentgroup_names');
+$tbl_keyword_xref               = $modx->getFullTableName('keyword_xref');
+$tbl_site_content               = $modx->getFullTableName('site_content');
+$tbl_site_content_metatags      = $modx->getFullTableName('site_content_metatags');
+$tbl_site_tmplvar_access        = $modx->getFullTableName('site_tmplvar_access');
+$tbl_site_tmplvar_contentvalues = $modx->getFullTableName('site_tmplvar_contentvalues');
+$tbl_site_tmplvar_templates     = $modx->getFullTableName('site_tmplvar_templates');
+$tbl_site_tmplvars              = $modx->getFullTableName('site_tmplvars');
 
 if (trim($pagetitle == "")) {
 	if ($type == "reference") {
@@ -67,7 +70,7 @@ if ($friendly_urls) {
 		$alias = strtolower(stripAlias(trim($pagetitle)));
 		if(!$allow_duplicate_alias){
 			// check if alias already exists. if yes then append $cnt to alias
-			$cnt = $modx->db->getValue("SELECT count(*) FROM " . $modx->getFullTableName("site_content") . " WHERE id<>'$id' AND alias='$alias'");
+			$cnt = $modx->db->getValue("SELECT count(*) FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias'");
 			if ($cnt > 0)
 				$alias .= $cnt;
 		}
@@ -78,9 +81,9 @@ if ($friendly_urls) {
 		$alias = stripAlias($alias);
 		if ($use_alias_path) {
 			// Only check for duplicates on the same level if alias_path is on (netnoise 2006/08/14)
-			$docid = $modx->db->getValue("SELECT id FROM " . $tblsc . " WHERE id<>'$id' AND alias='$alias' AND parent=$parent LIMIT 1");
+			$docid = $modx->db->getValue("SELECT id FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias' AND parent=$parent LIMIT 1");
 		} else {
-			$docid = $modx->db->getValue("SELECT id FROM " . $tblsc . " WHERE id<>'$id' AND alias='$alias' LIMIT 1");
+			$docid = $modx->db->getValue("SELECT id FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias' LIMIT 1");
 		}
 		if ($docid > 0) {
 			if ($actionToTake == 'edit') {
@@ -143,10 +146,10 @@ if ($_SESSION['mgrDocgroups']) {
 }
 
 $sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
-$sql .= "FROM $tbltv AS tv ";
-$sql .= "INNER JOIN $tbltvt AS tvtpl ON tvtpl.tmplvarid = tv.id ";
-$sql .= "LEFT JOIN $tbltvc AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '$id' ";
-$sql .= "LEFT JOIN $tbltva tva ON tva.tmplvarid=tv.id  ";
+$sql .= "FROM $tbl_site_tmplvars AS tv ";
+$sql .= "INNER JOIN $tbl_site_tmplvar_templates AS tvtpl ON tvtpl.tmplvarid = tv.id ";
+$sql .= "LEFT JOIN $tbl_site_tmplvar_contentvalues AS tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '$id' ";
+$sql .= "LEFT JOIN $tbl_site_tmplvar_access tva ON tva.tmplvarid=tv.id  ";
 $sql .= "WHERE tvtpl.templateid = '" . $template . "' AND (1='" . $_SESSION['mgrRole'] . "' OR ISNULL(tva.documentgroup)" . ((!$docgrp) ? "" : " OR tva.documentgroup IN ($docgrp)") . ") ORDER BY tv.rank;";
 $rs = mysql_query($sql);
 while ($row = mysql_fetch_assoc($rs)) {
@@ -197,7 +200,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 
 // get the document, but only if it already exists (d'oh!)
 if ($actionToTake != "new") {
-	$sql = "SELECT * FROM $tblsc WHERE id = $id;";
+	$sql = "SELECT * FROM $tbl_site_content WHERE id = $id;";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	if ($limit > 1) {
@@ -259,7 +262,7 @@ switch ($actionToTake) {
 		$publishedon = ($published ? time() : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 
-		$sql = "INSERT INTO $tblsc (introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
+		$sql = "INSERT INTO $tbl_site_content (introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
 						VALUES('" . $introtext . "','" . $content . "', '" . $pagetitle . "', '" . $longtitle . "', '" . $type . "', '" . $description . "', '" . $alias . "', '" . $link_attributes . "', '" . $isfolder . "', '" . $richtext . "', '" . $published . "', '" . $parent . "', '" . $template . "', '" . $menuindex . "', '" . $searchable . "', '" . $cacheable . "', '" . $modx->getLoginUserID() . "', " . time() . ", '" . $modx->getLoginUserID() . "', " . time() . ", " . $publishedby . ", " . $publishedon . ", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
 
 		$rs = mysql_query($sql);
@@ -285,33 +288,37 @@ switch ($actionToTake) {
 			}
 		}
 		if (!empty($tvChanges)) {
-			$sql = 'INSERT INTO '.$tbltvc.' (tmplvarid, contentid, value) VALUES '.implode(',', $tvChanges);
+			$sql = 'INSERT INTO '.$tbl_site_tmplvar_contentvalues.' (tmplvarid, contentid, value) VALUES '.implode(',', $tvChanges);
 			$rs = mysql_query($sql);
 		}
 		//End Modification
 
-		/*******************************************************************************/
-		// put the document in the document_groups it should be in
-		// first, check that up_perms are switched on!
-		if ($use_udperms == 1) {
-			if (is_array($document_groups)) {
-				foreach ($document_groups as $dgkey => $value) {
-					$sql = "INSERT INTO $tbldg (document_group, document) values(" . stripslashes($value) . ", $key)";
-					$rs = mysql_query($sql);
-					if (!$rs) {
-						$modx->manager->saveFormValues(27);
-						echo "An error occured while attempting to add the document to a document_group.";
-						exit;
-					}
-				}
+		/*******************************
+		 * Document Access Permissions */
+		if ($use_udperms == 1 && is_array($document_groups)) {
+			$new_groups = array();
+			foreach ($document_groups as $value_pair) {
+				// first, split the pair (this is a new document, so ignore the second value
+				list($group) = explode(',', $value_pair); // @see manager/actions/mutate_content.dynamic.php @ line 1138 (permissions list)
+				$new_groups[] = '('.(int)$group.','.$key.')';
+			}
+			$saved = true;
+			if (!empty($new_groups)) {
+				$sql = 'INSERT INTO '.$tbl_document_groups.' (document_group, document) VALUES '. implode(',', $new_groups);
+				$saved = mysql_query($sql) ? $saved : false;
+			}
+			if (!$saved) {
+				$modx->manager->saveFormValues(27);
+				echo "An error occured while attempting to add the document to a document_group.";
+				exit;
 			}
 		}
-		// end of document_groups stuff!
-		/*******************************************************************************/
+		/* End Document Access Permissions *
+		 ***********************************/
 
 		/*******************************************************************************/
 		if ($parent != 0) {
-			$sql = "UPDATE $tblsc SET isfolder=1 WHERE id=" . $_REQUEST['parent'];
+			$sql = "UPDATE $tbl_site_content SET isfolder=1 WHERE id=" . $_REQUEST['parent'];
 			$rs = mysql_query($sql);
 			if (!$rs) {
 				echo "An error occured while attempting to change the document's parent to a folder.";
@@ -364,7 +371,7 @@ switch ($actionToTake) {
 	case 'edit' :
 
 		// first, get the document's current parent.
-		$sql = "SELECT parent FROM $tblsc WHERE id=" . $_REQUEST['id'];
+		$sql = "SELECT parent FROM $tbl_site_content WHERE id=" . $_REQUEST['id'];
 		$rs = mysql_query($sql);
 		if (!$rs) {
 			$modx->manager->saveFormValues(27);
@@ -393,7 +400,7 @@ switch ($actionToTake) {
 			exit;
 		}
 		// check to see document is a folder.
-		$sql = "SELECT count(*) FROM $tblsc WHERE parent=" . $_REQUEST['id'];
+		$sql = "SELECT count(*) FROM $tbl_site_content WHERE parent=" . $_REQUEST['id'];
 		$rs = mysql_query($sql);
 		if (!$rs) {
 			$modx->manager->saveFormValues(27);
@@ -406,7 +413,7 @@ switch ($actionToTake) {
 		}
 
 		// Set publishedon and publishedby
-		$was_published = $modx->db->getValue("SELECT published FROM $tblsc WHERE id='$id'");
+		$was_published = $modx->db->getValue("SELECT published FROM $tbl_site_content WHERE id='$id'");
 
 		// Keep original publish state, if change is not permitted
 		if (!$modx->hasPermission('publish_document')) {
@@ -435,7 +442,7 @@ switch ($actionToTake) {
 		));
 
 		// update the document
-		$sql = "UPDATE $tblsc SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes',
+		$sql = "UPDATE $tbl_site_content SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes',
 				isfolder=$isfolder, richtext=$richtext, published=$published, pub_date=$pub_date, unpub_date=$unpub_date, parent=$parent, template=$template, menuindex='$menuindex',
 				searchable=$searchable, cacheable=$cacheable, editedby=" . $modx->getLoginUserID() . ", editedon=" . time() . ", publishedon=$publishedon, publishedby=$publishedby, contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu'  WHERE id=$id;";
 
@@ -445,7 +452,7 @@ switch ($actionToTake) {
 		}
 
 		// Modified by Raymond for TV - OrigAdded by Apodigm - DocVars
-		$sql = 'SELECT id, tmplvarid FROM '.$tbltvc.' WHERE contentid='.$id;
+		$sql = 'SELECT id, tmplvarid FROM '.$tbl_site_tmplvar_contentvalues.' WHERE contentid='.$id;
 		$rs = mysql_query($sql);
 		$tvIds = array ();
 		while ($row = mysql_fetch_assoc($rs)) {
@@ -465,46 +472,70 @@ switch ($actionToTake) {
 		}
 		// Only two queries to the db are made now - sirlancelot
 		if (!empty($deletions)) {
-			$sql = 'DELETE FROM '.$tbltvc.' WHERE id IN ('.implode(',', $deletions).')';
+			$sql = 'DELETE FROM '.$tbl_site_tmplvar_contentvalues.' WHERE id IN ('.implode(',', $deletions).')';
 			$rs = mysql_query($sql);
 		}
 		if (!empty($tvChanges)) {
-			$sql = 'REPLACE INTO '.$tbltvc.' (id, tmplvarid, contentid, value) VALUES '.implode(',', $tvChanges);
+			$sql = 'REPLACE INTO '.$tbl_site_tmplvar_contentvalues.' (id, tmplvarid, contentid, value) VALUES '.implode(',', $tvChanges);
 			$rs = mysql_query($sql);
 		}
 		//End Modification
 
-		/*******************************************************************************/
-		// put the document in the document_groups it should be in
-		// first, check that up_perms are switched on!
-		if ($use_udperms == 1) {
-			// delete old permissions on the document
-			$sql = "DELETE FROM $tbldg WHERE document=$id;";
-			$rs = mysql_query($sql);
-			if (!$rs) {
-				$modx->manager->saveFormValues(27);
-				echo "An error occured while attempting to delete previous document_group entries.";
-				exit;
+		/*******************************
+		 * Document Access Permissions */
+		if ($use_udperms == 1 && is_array($document_groups)) {
+			$new_groups = array();
+			// Process the new input
+			foreach ($document_groups as $value_pair) {
+				list($group, $link_id) = explode(',', $value_pair); // @see manager/actions/mutate_content.dynamic.php @ line 1138 (permissions list)
+				$new_groups[$group] = $link_id;
 			}
-			if (is_array($document_groups)) {
-				foreach ($document_groups as $dgkey => $value) {
-					$sql = "INSERT INTO $tbldg (document_group, document) values(" . stripslashes($value) . ", $id)";
-					$rs = mysql_query($sql);
-					if (!$rs) {
-						$modx->manager->saveFormValues(27);
-						echo "An error occured while attempting to add the document to a document_group.<br /><i>$sql</i>";
-						exit;
-					}
+
+			// Grab the current set of permissions on this document the user can access
+			$isManager = $modx->hasPermission('access_permissions');
+			$isWeb     = $modx->hasPermission('web_access_permissions');
+			$sql = 'SELECT groups.id, groups.document_group FROM '.$tbl_document_groups.' AS groups '.
+			       'LEFT JOIN '.$tbl_documentgroup_names.' AS dgn ON dgn.id = groups.document_group '.
+			       'WHERE ((1='.(int)$isManager.' AND dgn.private_memgroup) '.
+			       'OR    (1='.(int)$isWeb.' AND dgn.private_webgroup))'.
+			       'AND groups.document = '.$id;
+			$rs = mysql_query($sql);
+			$old_groups = array();
+			while ($row = mysql_fetch_assoc($rs)) $old_groups[$row['document_group']] = $row['id'];
+
+			// Update the permissions in the database
+			$insertions = $deletions = array();
+			foreach ($new_groups as $group => $link_id) {
+				if (array_key_exists($group, $old_groups)) {
+					// The link already exists?
+					unset($old_groups[$group]);
+					continue;
+				} elseif ($link_id == 'new') {
+					$insertions[] = '('.(int)$group.','.$id.')';
 				}
 			}
+			$saved = true;
+			if (!empty($insertions)) {
+				$sql_insert = 'INSERT INTO '.$tbl_document_groups.' (document_group, document) VALUES '.implode(',', $insertions);
+				$saved = mysql_query($sql_insert) ? $saved : false;
+			}
+			if (!empty($old_groups)) {
+				$sql_delete = 'DELETE FROM '.$tbl_document_groups.' WHERE id IN ('.implode(',', $old_groups).')';
+				$saved = mysql_query($sql_delete) ? $saved : false;
+			}
+			if (!$saved) {
+				$modx->manager->saveFormValues(27);
+				echo "An error occured while saving document groups.";
+				exit;
+			}
 		}
-		// end of document_groups stuff!
-		/*******************************************************************************/
+		/* End Document Access Permissions *
+		 ***********************************/
 
 		/*******************************************************************************/
 		// do the parent stuff
 		if ($parent != 0) {
-			$sql = "UPDATE $tblsc SET isfolder=1 WHERE id=" . $_REQUEST['parent'];
+			$sql = "UPDATE $tbl_site_content SET isfolder=1 WHERE id=" . $_REQUEST['parent'];
 			$rs = mysql_query($sql);
 			if (!$rs) {
 				echo "An error occured while attempting to change the new parent to a folder.";
@@ -512,7 +543,7 @@ switch ($actionToTake) {
 		}
 
 		// finished moving the document, now check to see if the old_parent should no longer be a folder.
-		$sql = "SELECT count(*) FROM $tblsc WHERE parent=$oldparent";
+		$sql = "SELECT count(*) FROM $tbl_site_content WHERE parent=$oldparent";
 		$rs = mysql_query($sql);
 		if (!$rs) {
 			echo "An error occured while attempting to find the old parents' children.";
@@ -521,7 +552,7 @@ switch ($actionToTake) {
 		$limit = $row['count(*)'];
 
 		if ($limit == 0) {
-			$sql = "UPDATE $tblsc SET isfolder=0 WHERE id=$oldparent";
+			$sql = "UPDATE $tbl_site_content SET isfolder=0 WHERE id=$oldparent";
 			$rs = mysql_query($sql);
 			if (!$rs) {
 				echo "An error occured while attempting to change the old parent to a regular document.";
@@ -582,334 +613,141 @@ switch ($actionToTake) {
 		exit;
 }
 
+/**
+ * Swap named HTML entities with numeric entities.
+ *
+ * @see http://www.lazycat.org/software/html_entity_decode_full.phps
+ */
+function convert_entity($matches, $destroy= true) {
+	static $table = array(
+	    'quot' => '&#34;','amp' => '&#38;','lt' => '&#60;','gt' => '&#62;','OElig' => '&#338;','oelig' => '&#339;','Scaron' => '&#352;','scaron' => '&#353;',
+	    'Yuml' => '&#376;','circ' => '&#710;','tilde' => '&#732;','ensp' => '&#8194;','emsp' => '&#8195;','thinsp' => '&#8201;','zwnj' => '&#8204;','zwj' => '&#8205;',
+	    'lrm' => '&#8206;','rlm' => '&#8207;','ndash' => '&#8211;','mdash' => '&#8212;','lsquo' => '&#8216;','rsquo' => '&#8217;','sbquo' => '&#8218;','ldquo' => '&#8220;',
+	    'rdquo' => '&#8221;','bdquo' => '&#8222;','dagger' => '&#8224;','Dagger' => '&#8225;','permil' => '&#8240;','lsaquo' => '&#8249;','rsaquo' => '&#8250;','euro' => '&#8364;',
+	    'fnof' => '&#402;','Alpha' => '&#913;','Beta' => '&#914;','Gamma' => '&#915;','Delta' => '&#916;','Epsilon' => '&#917;','Zeta' => '&#918;','Eta' => '&#919;',
+	    'Theta' => '&#920;','Iota' => '&#921;','Kappa' => '&#922;','Lambda' => '&#923;','Mu' => '&#924;','Nu' => '&#925;','Xi' => '&#926;','Omicron' => '&#927;',
+	    'Pi' => '&#928;','Rho' => '&#929;','Sigma' => '&#931;','Tau' => '&#932;','Upsilon' => '&#933;','Phi' => '&#934;','Chi' => '&#935;','Psi' => '&#936;',
+	    'Omega' => '&#937;','alpha' => '&#945;','beta' => '&#946;','gamma' => '&#947;','delta' => '&#948;','epsilon' => '&#949;','zeta' => '&#950;','eta' => '&#951;',
+	    'theta' => '&#952;','iota' => '&#953;','kappa' => '&#954;','lambda' => '&#955;','mu' => '&#956;','nu' => '&#957;','xi' => '&#958;','omicron' => '&#959;',
+	    'pi' => '&#960;','rho' => '&#961;','sigmaf' => '&#962;','sigma' => '&#963;','tau' => '&#964;','upsilon' => '&#965;','phi' => '&#966;','chi' => '&#967;',
+	    'psi' => '&#968;','omega' => '&#969;','thetasym' => '&#977;','upsih' => '&#978;','piv' => '&#982;','bull' => '&#8226;','hellip' => '&#8230;','prime' => '&#8242;',
+	    'Prime' => '&#8243;','oline' => '&#8254;','frasl' => '&#8260;','weierp' => '&#8472;','image' => '&#8465;','real' => '&#8476;','trade' => '&#8482;','alefsym' => '&#8501;',
+	    'larr' => '&#8592;','uarr' => '&#8593;','rarr' => '&#8594;','darr' => '&#8595;','harr' => '&#8596;','crarr' => '&#8629;','lArr' => '&#8656;','uArr' => '&#8657;',
+	    'rArr' => '&#8658;','dArr' => '&#8659;','hArr' => '&#8660;','forall' => '&#8704;','part' => '&#8706;','exist' => '&#8707;','empty' => '&#8709;','nabla' => '&#8711;',
+	    'isin' => '&#8712;','notin' => '&#8713;','ni' => '&#8715;','prod' => '&#8719;','sum' => '&#8721;','minus' => '&#8722;','lowast' => '&#8727;','radic' => '&#8730;',
+	    'prop' => '&#8733;','infin' => '&#8734;','ang' => '&#8736;','and' => '&#8743;','or' => '&#8744;','cap' => '&#8745;','cup' => '&#8746;','int' => '&#8747;',
+	    'there4' => '&#8756;','sim' => '&#8764;','cong' => '&#8773;','asymp' => '&#8776;','ne' => '&#8800;','equiv' => '&#8801;','le' => '&#8804;','ge' => '&#8805;',
+	    'sub' => '&#8834;','sup' => '&#8835;','nsub' => '&#8836;','sube' => '&#8838;','supe' => '&#8839;','oplus' => '&#8853;','otimes' => '&#8855;','perp' => '&#8869;',
+	    'sdot' => '&#8901;','lceil' => '&#8968;','rceil' => '&#8969;','lfloor' => '&#8970;','rfloor' => '&#8971;','lang' => '&#9001;','rang' => '&#9002;','loz' => '&#9674;',
+	    'spades' => '&#9824;','clubs' => '&#9827;','hearts' => '&#9829;','diams' => '&#9830;','nbsp' => '&#160;','iexcl' => '&#161;','cent' => '&#162;','pound' => '&#163;',
+	    'curren' => '&#164;','yen' => '&#165;','brvbar' => '&#166;','sect' => '&#167;','uml' => '&#168;','copy' => '&#169;','ordf' => '&#170;','laquo' => '&#171;',
+	    'not' => '&#172;','shy' => '&#173;','reg' => '&#174;','macr' => '&#175;','deg' => '&#176;','plusmn' => '&#177;','sup2' => '&#178;','sup3' => '&#179;',
+	    'acute' => '&#180;','micro' => '&#181;','para' => '&#182;','middot' => '&#183;','cedil' => '&#184;','sup1' => '&#185;','ordm' => '&#186;','raquo' => '&#187;',
+	    'frac14' => '&#188;','frac12' => '&#189;','frac34' => '&#190;','iquest' => '&#191;','Agrave' => '&#192;','Aacute' => '&#193;','Acirc' => '&#194;','Atilde' => '&#195;',
+	    'Auml' => '&#196;','Aring' => '&#197;','AElig' => '&#198;','Ccedil' => '&#199;','Egrave' => '&#200;','Eacute' => '&#201;','Ecirc' => '&#202;','Euml' => '&#203;',
+	    'Igrave' => '&#204;','Iacute' => '&#205;','Icirc' => '&#206;','Iuml' => '&#207;','ETH' => '&#208;','Ntilde' => '&#209;','Ograve' => '&#210;','Oacute' => '&#211;',
+	    'Ocirc' => '&#212;','Otilde' => '&#213;','Ouml' => '&#214;','times' => '&#215;','Oslash' => '&#216;','Ugrave' => '&#217;','Uacute' => '&#218;','Ucirc' => '&#219;',
+	    'Uuml' => '&#220;','Yacute' => '&#221;','THORN' => '&#222;','szlig' => '&#223;','agrave' => '&#224;','aacute' => '&#225;','acirc' => '&#226;','atilde' => '&#227;',
+	    'auml' => '&#228;','aring' => '&#229;','aelig' => '&#230;','ccedil' => '&#231;','egrave' => '&#232;','eacute' => '&#233;','ecirc' => '&#234;','euml' => '&#235;',
+	    'igrave' => '&#236;','iacute' => '&#237;','icirc' => '&#238;','iuml' => '&#239;','eth' => '&#240;','ntilde' => '&#241;','ograve' => '&#242;','oacute' => '&#243;',
+	    'ocirc' => '&#244;','otilde' => '&#245;','ouml' => '&#246;','divide' => '&#247;','oslash' => '&#248;','ugrave' => '&#249;','uacute' => '&#250;','ucirc' => '&#251;',
+	    'uuml' => '&#252;','yacute' => '&#253;','thorn' => '&#254;','yuml' => '&#255;',
+	);
+	if (isset($table[$matches[1]]))
+	        return $table[$matches[1]];
+	else    return $destroy ? '' : $matches[0];
+}
+
+/**
+ * Format alias to be URL-safe
+ *
+ * @todo Make this function UTF-8 safe in PHP4? (see http://docs.php.net/manual/en/function.html-entity-decode.php#75153 )
+ * @param string Alias to be formatted
+ * @return string Safe alias
+ */
 function stripAlias($alias) {
 	global $modx;
 
+	// Convert all named HTML entities to numeric entities
+	$alias = preg_replace_callback('/&([a-zA-Z][a-zA-Z0-9]{1,7});/', 'convert_entity', $alias);
+
+	// Convert all numeric entities to their actual character
+	$alias = preg_replace('/&#x([0-9a-f]{1,7});/ei', 'chr(hexdec("\\1"))', $alias);
+	$alias = preg_replace('/&#([0-9]{1,7});/e', 'chr("\\1")', $alias);
+
 	// Convert accented characters to their non-accented counterparts. Idea originally from Brett Florio (thanks!) ... expanded list from Textpattern (double-thanks!)
-	$replace_array = array(
-        '&' => 'and',
-        '\'' => '',
-        'À' => 'A',
-        'À' => 'A',
-        'Á' => 'A',
-        'Á' => 'A',
-        'Â' => 'A',
-        'Â' => 'A',
-        'Ã' => 'A',
-        'Ã' => 'A',
-        'Ä' => 'e',
-        'Ä' => 'A',
-        'Å' => 'A',
-        'Å' => 'A',
-        'Æ' => 'e',
-        'Æ' => 'E',
-        'Ā' => 'A',
-        'Ą' => 'A',
-        'Ă' => 'A',
-        'Ç' => 'C',
-        'Ç' => 'C',
-        'Ć' => 'C',
-        'Č' => 'C',
-        'Ĉ' => 'C',
-        'Ċ' => 'C',
-        'Ď' => 'D',
-        'Đ' => 'D',
-        'È' => 'E',
-        'È' => 'E',
-        'É' => 'E',
-        'É' => 'E',
-        'Ê' => 'E',
-        'Ê' => 'E',
-        'Ë' => 'E',
-        'Ë' => 'E',
-        'Ē' => 'E',
-        'Ę' => 'E',
-        'Ě' => 'E',
-        'Ĕ' => 'E',
-        'Ė' => 'E',
-        'Ĝ' => 'G',
-        'Ğ' => 'G',
-        'Ġ' => 'G',
-        'Ģ' => 'G',
-        'Ĥ' => 'H',
-        'Ħ' => 'H',
-        'Ì' => 'I',
-        'Ì' => 'I',
-        'Í' => 'I',
-        'Í' => 'I',
-        'Î' => 'I',
-        'Î' => 'I',
-        'Ï' => 'I',
-        'Ï' => 'I',
-        'Ī' => 'I',
-        'Ĩ' => 'I',
-        'Ĭ' => 'I',
-        'Į' => 'I',
-        'İ' => 'I',
-        'Ĳ' => 'J',
-        'Ĵ' => 'J',
-        'Ķ' => 'K',
-        'Ľ' => 'K',
-        'Ĺ' => 'K',
-        'Ļ' => 'K',
-        'Ŀ' => 'K',
-        'Ñ' => 'N',
-        'Ñ' => 'N',
-        'Ń' => 'N',
-        'Ň' => 'N',
-        'Ņ' => 'N',
-        'Ŋ' => 'N',
-        'Ò' => 'O',
-        'Ò' => 'O',
-        'Ó' => 'O',
-        'Ó' => 'O',
-        'Ô' => 'O',
-        'Ô' => 'O',
-        'Õ' => 'O',
-        'Õ' => 'O',
-        'Ö' => 'e',
-        'Ö' => 'e',
-        'Ø' => 'O',
-        'Ø' => 'O',
-        'Ō' => 'O',
-        'Ő' => 'O',
-        'Ŏ' => 'O',
-        'Œ' => 'E',
-        'Ŕ' => 'R',
-        'Ř' => 'R',
-        'Ŗ' => 'R',
-        'Ś' => 'S',
-        'Ş' => 'S',
-        'Ŝ' => 'S',
-        'Ș' => 'S',
-        'Ť' => 'T',
-        'Ţ' => 'T',
-        'Ŧ' => 'T',
-        'Ț' => 'T',
-        'Ù' => 'U',
-        'Ù' => 'U',
-        'Ú' => 'U',
-        'Ú' => 'U',
-        'Û' => 'U',
-        'Û' => 'U',
-        'Ü' => 'e',
-        'Ū' => 'U',
-        'Ü' => 'e',
-        'Ů' => 'U',
-        'Ű' => 'U',
-        'Ŭ' => 'U',
-        'Ũ' => 'U',
-        'Ų' => 'U',
-        'Ŵ' => 'W',
-        'Ŷ' => 'Y',
-        'Ÿ' => 'Y',
-        'Ź' => 'Z',
-        'Ż' => 'Z',
-        'à' => 'a',
-        'á' => 'a',
-        'â' => 'a',
-        'ã' => 'a',
-        'ä' => 'e',
-        'ä' => 'e',
-        'å' => 'a',
-        'ā' => 'a',
-        'ą' => 'a',
-        'ă' => 'a',
-        'å' => 'a',
-        'æ' => 'e',
-        'ç' => 'c',
-        'ć' => 'c',
-        'č' => 'c',
-        'ĉ' => 'c',
-        'ċ' => 'c',
-        'ď' => 'd',
-        'đ' => 'd',
-        'è' => 'e',
-        'é' => 'e',
-        'ê' => 'e',
-        'ë' => 'e',
-        'ē' => 'e',
-        'ę' => 'e',
-        'ě' => 'e',
-        'ĕ' => 'e',
-        'ė' => 'e',
-        'ƒ' => 'f',
-        'ĝ' => 'g',
-        'ğ' => 'g',
-        'ġ' => 'g',
-        'ģ' => 'g',
-        'ĥ' => 'h',
-        'ħ' => 'h',
-        'ì' => 'i',
-        'í' => 'i',
-        'î' => 'i',
-        'ï' => 'i',
-        'ī' => 'i',
-        'ĩ' => 'i',
-        'ĭ' => 'i',
-        'į' => 'i',
-        'ı' => 'i',
-        'ĳ' => 'j',
-        'ĵ' => 'j',
-        'ķ' => 'k',
-        'ĸ' => 'k',
-        'ł' => 'l',
-        'ľ' => 'l',
-        'ĺ' => 'l',
-        'ļ' => 'l',
-        'ŀ' => 'l',
-        'ñ' => 'n',
-        'ń' => 'n',
-        'ň' => 'n',
-        'ņ' => 'n',
-        'ŉ' => 'n',
-        'ŋ' => 'n',
-        'ò' => 'o',
-        'ó' => 'o',
-        'ô' => 'o',
-        'õ' => 'o',
-        'ö' => 'e',
-        'ö' => 'e',
-        'ø' => 'o',
-        'ō' => 'o',
-        'ő' => 'o',
-        'ŏ' => 'o',
-        'œ' => 'e',
-        'ŕ' => 'r',
-        'ř' => 'r',
-        'ŗ' => 'r',
-        'ù' => 'u',
-        'ú' => 'u',
-        'û' => 'u',
-        'ü' => 'e',
-        'ū' => 'u',
-        'ü' => 'e',
-        'ů' => 'u',
-        'ű' => 'u',
-        'ŭ' => 'u',
-        'ũ' => 'u',
-        'ų' => 'u',
-        'ŵ' => 'w',
-        'ÿ' => 'y',
-        'ŷ' => 'y',
-        'ż' => 'z',
-        'ź' => 'z',
-        'ß' => 's',
-        'ſ' => 's',
-        'Α' => 'A',
-        'Ά' => 'A',
-        'Β' => 'B',
-        'Γ' => 'G',
-        'Δ' => 'D',
-        'Ε' => 'E',
-        'Έ' => 'E',
-        'Ζ' => 'Z',
-        'Η' => 'I',
-        'Ή' => 'I',
-        'Θ' => 'TH',
-        'Ι' => 'I',
-        'Ί' => 'I',
-        'Ϊ' => 'I',
-        'Κ' => 'K',
-        'Λ' => 'L',
-        'Μ' => 'M',
-        'Ν' => 'N',
-        'Ξ' => 'KS',
-        'Ο' => 'O',
-        'Ό' => 'O',
-        'Π' => 'P',
-        'Ρ' => 'R',
-        'Σ' => 'S',
-        'Τ' => 'T',
-        'Υ' => 'Y',
-        'Ύ' => 'Y',
-        'Ϋ' => 'Y',
-        'Φ' => 'F',
-        'Χ' => 'X',
-        'Ψ' => 'PS',
-        'Ω' => 'O',
-        'Ώ' => 'O',
-        'α' => 'a',
-        'ά' => 'a',
-        'β' => 'b',
-        'γ' => 'g',
-        'δ' => 'd',
-        'ε' => 'e',
-        'έ' => 'e',
-        'ζ' => 'z',
-        'η' => 'i',
-        'ή' => 'i',
-        'θ' => 'th',
-        'ι' => 'i',
-        'ί' => 'i',
-        'ϊ' => 'i',
-        'ΐ' => 'i',
-        'κ' => 'k',
-        'λ' => 'l',
-        'μ' => 'm',
-        'ν' => 'n',
-        'ξ' => 'ks',
-        'ο' => 'o',
-        'ό' => 'o',
-        'π' => 'p',
-        'ρ' => 'r',
-        'σ' => 's',
-        'τ' => 't',
-        'υ' => 'y',
-        'ύ' => 'y',
-        'ϋ' => 'y',
-        'ΰ' => 'y',
-        'φ' => 'f',
-        'χ' => 'x',
-        'ψ' => 'ps',
-        'ω' => 'o',
-        'ώ' => 'o',
+	static $replace_array = array('&' => 'and','\'' => '','À' => 'A','À' => 'A','Á' => 'A','Á' => 'A','Â' => 'A','Â' => 'A','Ã' => 'A','Ã' => 'A',
+	    'Ä' => 'e','Ä' => 'A','Å' => 'A','Å' => 'A','Æ' => 'e','Æ' => 'E','Ā' => 'A','Ą' => 'A','Ă' => 'A','Ç' => 'C',
+	    'Ç' => 'C','Ć' => 'C','Č' => 'C','Ĉ' => 'C','Ċ' => 'C','Ď' => 'D','Đ' => 'D','È' => 'E','È' => 'E','É' => 'E',
+	    'É' => 'E','Ê' => 'E','Ê' => 'E','Ë' => 'E','Ë' => 'E','Ē' => 'E','Ę' => 'E','Ě' => 'E','Ĕ' => 'E','Ė' => 'E',
+	    'Ĝ' => 'G','Ğ' => 'G','Ġ' => 'G','Ģ' => 'G','Ĥ' => 'H','Ħ' => 'H','Ì' => 'I','Ì' => 'I','Í' => 'I','Í' => 'I',
+	    'Î' => 'I','Î' => 'I','Ï' => 'I','Ï' => 'I','Ī' => 'I','Ĩ' => 'I','Ĭ' => 'I','Į' => 'I','İ' => 'I','Ĳ' => 'J',
+	    'Ĵ' => 'J','Ķ' => 'K','Ľ' => 'K','Ĺ' => 'K','Ļ' => 'K','Ŀ' => 'K','Ñ' => 'N','Ñ' => 'N','Ń' => 'N','Ň' => 'N',
+	    'Ņ' => 'N','Ŋ' => 'N','Ò' => 'O','Ò' => 'O','Ó' => 'O','Ó' => 'O','Ô' => 'O','Ô' => 'O','Õ' => 'O','Õ' => 'O',
+	    'Ö' => 'e','Ö' => 'e','Ø' => 'O','Ø' => 'O','Ō' => 'O','Ő' => 'O','Ŏ' => 'O','Œ' => 'E','Ŕ' => 'R','Ř' => 'R',
+	    'Ŗ' => 'R','Ś' => 'S','Ş' => 'S','Ŝ' => 'S','Ș' => 'S','Ť' => 'T','Ţ' => 'T','Ŧ' => 'T','Ț' => 'T','Ù' => 'U',
+	    'Ù' => 'U','Ú' => 'U','Ú' => 'U','Û' => 'U','Û' => 'U','Ü' => 'e','Ū' => 'U','Ü' => 'e','Ů' => 'U','Ű' => 'U',
+	    'Ŭ' => 'U','Ũ' => 'U','Ų' => 'U','Ŵ' => 'W','Ŷ' => 'Y','Ÿ' => 'Y','Ź' => 'Z','Ż' => 'Z','à' => 'a','á' => 'a',
+	    'â' => 'a','ã' => 'a','ä' => 'e','ä' => 'e','å' => 'a','ā' => 'a','ą' => 'a','ă' => 'a','å' => 'a','æ' => 'e',
+	    'ç' => 'c','ć' => 'c','č' => 'c','ĉ' => 'c','ċ' => 'c','ď' => 'd','đ' => 'd','è' => 'e','é' => 'e','ê' => 'e',
+	    'ë' => 'e','ē' => 'e','ę' => 'e','ě' => 'e','ĕ' => 'e','ė' => 'e','ƒ' => 'f','ĝ' => 'g','ğ' => 'g','ġ' => 'g',
+	    'ģ' => 'g','ĥ' => 'h','ħ' => 'h','ì' => 'i','í' => 'i','î' => 'i','ï' => 'i','ī' => 'i','ĩ' => 'i','ĭ' => 'i',
+	    'į' => 'i','ı' => 'i','ĳ' => 'j','ĵ' => 'j','ķ' => 'k','ĸ' => 'k','ł' => 'l','ľ' => 'l','ĺ' => 'l','ļ' => 'l',
+	    'ŀ' => 'l','ñ' => 'n','ń' => 'n','ň' => 'n','ņ' => 'n','ŉ' => 'n','ŋ' => 'n','ò' => 'o','ó' => 'o','ô' => 'o',
+	    'õ' => 'o','ö' => 'e','ö' => 'e','ø' => 'o','ō' => 'o','ő' => 'o','ŏ' => 'o','œ' => 'e','ŕ' => 'r','ř' => 'r',
+	    'ŗ' => 'r','ù' => 'u','ú' => 'u','û' => 'u','ü' => 'e','ū' => 'u','ü' => 'e','ů' => 'u','ű' => 'u','ŭ' => 'u',
+	    'ũ' => 'u','ų' => 'u','ŵ' => 'w','ÿ' => 'y','ŷ' => 'y','ż' => 'z','ź' => 'z','ß' => 's','ſ' => 's','Α' => 'A',
+	    'Ά' => 'A','Β' => 'B','Γ' => 'G','Δ' => 'D','Ε' => 'E','Έ' => 'E','Ζ' => 'Z','Η' => 'I','Ή' => 'I','Θ' => 'TH',
+	    'Ι' => 'I','Ί' => 'I','Ϊ' => 'I','Κ' => 'K','Λ' => 'L','Μ' => 'M','Ν' => 'N','Ξ' => 'KS','Ο' => 'O','Ό' => 'O',
+	    'Π' => 'P','Ρ' => 'R','Σ' => 'S','Τ' => 'T','Υ' => 'Y','Ύ' => 'Y','Ϋ' => 'Y','Φ' => 'F','Χ' => 'X','Ψ' => 'PS',
+	    'Ω' => 'O','Ώ' => 'O','α' => 'a','ά' => 'a','β' => 'b','γ' => 'g','δ' => 'd','ε' => 'e','έ' => 'e','ζ' => 'z',
+	    'η' => 'i','ή' => 'i','θ' => 'th','ι' => 'i','ί' => 'i','ϊ' => 'i','ΐ' => 'i','κ' => 'k','λ' => 'l','μ' => 'm',
+	    'ν' => 'n','ξ' => 'ks','ο' => 'o','ό' => 'o','π' => 'p','ρ' => 'r','σ' => 's','τ' => 't','υ' => 'y','ύ' => 'y',
+	    'ϋ' => 'y','ΰ' => 'y','φ' => 'f','χ' => 'x','ψ' => 'ps','ω' => 'o','ώ' => 'o',
 	);
-    $alias = strtr($alias, $replace_array);
-    $alias = strip_tags($alias);
-    $alias = preg_replace('/&.+?;/', '', $alias); // kill entities
-    $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias);
-    $alias = preg_replace('/\s+/', '-', $alias);
-    $alias = preg_replace('|-+|', '-', $alias);
-    $alias = trim($alias, '-');
-    return $alias;
+	$alias = strtr($alias, $replace_array);
+
+	$alias = strip_tags($alias); // strip HTML
+	$alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
+	$alias = preg_replace('/\s+/', '-', $alias); // convert white-space to dash
+	$alias = preg_replace('/-+/', '-', $alias);  // convert multiple dashes to one
+	$alias = trim($alias, '-'); // trim excess
+	return $alias;
 }
 
 // -- Save META Keywords --
 function saveMETAKeywords($id) {
-	global $modx;
-	global $keywords;
-	global $metatags;
+	global $modx, $keywords, $metatags,
+	       $tbl_keyword_xref,
+	       $tbl_site_content,
+	       $tbl_site_content_metatags;
 
 	if ($modx->hasPermission('edit_doc_metatags')) {
 		// keywords - remove old keywords first
-		$tbl = $modx->getFullTableName("keyword_xref");
-		$modx->db->delete($tbl, "content_id='$id'");
+		$modx->db->delete($tbl_keyword_xref, "content_id='$id'");
 		for ($i = 0; $i < count($keywords); $i++) {
 			$kwid = $keywords[$i];
 			$flds = array (
-				content_id => $id,
-				keyword_id => $kwid
+				'content_id' => $id,
+				'keyword_id' => $kwid
 			);
-			$modx->db->insert($flds, $tbl);
+			$modx->db->insert($flds, $tbl_keywords_xref);
 		}
 		// meta tags - remove old tags first
-		$tbl = $modx->getFullTableName("site_content_metatags");
-		$modx->db->delete($tbl, "content_id='$id'");
+		$modx->db->delete($tbl_site_content_metatags, "content_id='$id'");
 		for ($i = 0; $i < count($metatags); $i++) {
 			$kwid = $metatags[$i];
 			$flds = array (
-				content_id => $id,
-				metatag_id => $kwid
+				'content_id' => $id,
+				'metatag_id' => $kwid
 			);
-			$modx->db->insert($flds, $tbl);
+			$modx->db->insert($flds, $tbl_site_content_metatags);
 		}
-		$tbl = $modx->getFullTableName("site_content");
 		$flds = array (
-			haskeywords => (count($keywords) ? 1 : 0), 
-			hasmetatags => (count($metatags) ? 1 : 0)
+			'haskeywords' => (count($keywords) ? 1 : 0),
+			'hasmetatags' => (count($metatags) ? 1 : 0)
 		);
-		$modx->db->update($flds, $tbl, "id='$id'");
+		$modx->db->update($flds, $tbl_site_content, "id='$id'");
 	}
 }
 

@@ -15,6 +15,7 @@ class filter {
 // Filter documents via either a custom filter or basic filter
 // ---------------------------------------------------
 	function execute($resource, $filter) {
+		global $modx;
 		foreach ($filter["basic"] AS $currentFilter) {
 			if (is_array($currentFilter) && count($currentFilter) > 0) {
 				$this->array_key = $currentFilter["source"];
@@ -23,14 +24,15 @@ class filter {
 				} else {
 					$this->filterValue = eval(substr($currentFilter["value"],5));
 				}
+				if(strpos($this->filterValue,'[+') !== false) {
+					$this->filterValue = $modx->mergePlaceholderContent($this->filterValue);
+				}
 				$this->filtertype = (isset ($currentFilter["mode"])) ? $currentFilter["mode"] : 1;
 				$resource = array_filter($resource, array($this, "basicFilter"));
 			}
 		}
 		foreach ($filter["custom"] AS $currentFilter) {
-			if (is_array($currentFilter)  && count($currentFilter) > 0) {
-				$resource = array_filter($resource, $currentFilter);
-			}
+			$resource = array_filter($resource, $currentFilter);
 		}
 		return $resource;
 	}
@@ -82,7 +84,22 @@ class filter {
 				case 8 :
 					if (strpos($value[$this->array_key], $this->filterValue)!==FALSE)
 						$unset = 0;
-					break;					
+					break;	
+				
+				// Cases 9-11 created by highlander
+				case 9 : // case insenstive version of #7 - exclude records that do not contain the text of the criterion
+					if (strpos(strtolower($value[$this->array_key]), strtolower($this->filterValue))===FALSE)
+						$unset = 0;
+					break;
+				case 10 : // case insenstive version of #8 - exclude records that do contain the text of the criterion
+					if (strpos(strtolower($value[$this->array_key]), strtolower($this->filterValue))!==FALSE)
+						$unset = 0;
+					break;
+				case 11 : // checks leading character of the field
+					$firstChr = strtoupper(substr($value[$this->array_key], 0, 1));
+					if ($firstChr!=$this->filterValue)
+						$unset = 0;
+					break;				
 		}
 			return $unset;
 	}

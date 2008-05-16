@@ -34,8 +34,9 @@ if($install_language!="english" && file_exists("lang/".$install_language."/".$in
  *
  */
 function include_image ($image) {
+	global $install_language;
 	$result = "lang/english/images/" . $image;
-	if($install_language!="english" && file_exists("lang/" . $install_language . "/" . $install_language . ".inc.php")) {
+	if($install_language!="english" && file_exists("lang/" . $install_language . "/images/" . $image)) {
     	$result = "lang/" . $install_language . "/images/" . $image;
 	} else {
     	$result = "lang/english/images/" . $image;

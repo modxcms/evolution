@@ -63,6 +63,25 @@ else {
     $modx->setPlaceholder('config_display','none');
 }
 
+// TODO: 
+// - Move Titles/Labels into $_lang (correct)
+// - Translate as necessary (foreign)
+
+include_once "rss.inc.php"; // pixelchutes
+
+// modx news - pixelchutes
+$html = 'MODx News<br /><br />';
+$modx->setPlaceholder('modx_news','MODx News');
+$modx->setPlaceholder('modx_news_title','MODx News');
+$modx->setPlaceholder('modx_news_content',$feedData['modx_news_content']);
+
+// security notices - pixelchutes
+$html = 'MODx Security Notices<br /><br />';
+$modx->setPlaceholder('modx_security_notices','Security Notices');
+$modx->setPlaceholder('modx_security_notices_title','MODx Security Notices');
+$modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_notices_content']);
+
+
 // recent document info
 $html = $_lang["activity_message"].'<br /><br /><ul>';
 $sql = "SELECT id, pagetitle, description FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 AND ($dbase.`".$table_prefix."site_content`.editedby=".$modx->getLoginUserID()." OR $dbase.`".$table_prefix."site_content`.createdby=".$modx->getLoginUserID().") ORDER BY editedon DESC LIMIT 10";

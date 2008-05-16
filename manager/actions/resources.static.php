@@ -22,6 +22,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 	$insideUl = 0;
 	for($i=0; $i<$limit; $i++) {
 		$row = mysql_fetch_assoc($rs);
+		$row['category'] = stripslashes($row['category']); //pixelchutes
 		if ($preCat !== $row['category']) {
             $output .= $insideUl? '</ul>': '';
             $output .= '<li><strong>'.$row['category'].'</strong><ul>';

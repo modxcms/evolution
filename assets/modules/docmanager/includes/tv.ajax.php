@@ -38,8 +38,7 @@
 					<span class=\'warning\'>'.$row['caption'].'</span><br /><span class=\'comment\'>'.$row['description'].'</span>
 				</td>
 				<td valign="top" style="position:relative">';
-				
-				$base_url = 'http://localhost/garryn/';
+				$base_url = $modx->config['base_url'];
 				$output.= renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], $row['value'], ' style="width:300px;"');
 				$output.= '</td></tr>';
 		}

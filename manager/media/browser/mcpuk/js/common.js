@@ -57,6 +57,7 @@ oConnector.ConnectorUrl		= GetUrlParam( 'Connector' ) ;
 oConnector.ResourceType		= GetUrlParam( 'Type' ) ;
 oConnector.ServerPath		= GetUrlParam( 'ServerPath' ) ;
 oConnector.ExtraParams		= GetUrlParam( 'ExtraParams' ) ;
+oConnector.Editor			= GetUrlParam( 'editor' ) ;
 
 if ((oConnector.UploadHandler=='')||(oConnector.UploadHandler=='undefined')) oConnector.UploadHandler=oConnector.ConnectorUrl;
 
@@ -67,6 +68,7 @@ oConnector.SendCommand = function( command, params, callBackFunction )
 	sUrl += '&Type=' + this.ResourceType ;
 	sUrl += '&ExtraParams=' + this.ExtraParams ;
 	sUrl += '&CurrentFolder=' + escape( this.CurrentFolder ) ;
+	sUrl += '&editor=' + escape( this.Editor ) ;
 	
 	if ( params ) sUrl += '&' + params ;
 

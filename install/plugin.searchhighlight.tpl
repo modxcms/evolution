@@ -1,8 +1,9 @@
 /*
   ------------------------------------------------------------------------
-  Plugin: Search_Highlight v1.2
+  Plugin: Search_Highlight v1.2.0.2
   ------------------------------------------------------------------------
   Changes:
+  10/02/08 - Strip_tags added to avoid sql injection and XSS. Use of $_REQUEST 
   01/03/07 - Added fies/updates from forum from users mikkelwe/identity
   (better highlight replacement, additional div around term/removal message)
   ------------------------------------------------------------------------
@@ -36,7 +37,7 @@
   ------------------------------------------------------------------------
 */
 
-if(isset($_GET['searched']) && isset($_GET['highlight'])) {
+if(isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
 
   // Set these to customize the text for the highlighting key
   // --------------------------------------------------------
@@ -46,8 +47,8 @@ if(isset($_GET['searched']) && isset($_GET['highlight'])) {
 
   $highlightText = $termText;
 
-  $searched = urldecode($_GET['searched']);
-  $highlight = urldecode($_GET['highlight']);
+  $searched = strip_tags(urldecode($_REQUEST['searched']));
+  $highlight = strip_tags(urldecode($_REQUEST['highlight']));
   $output = $modx->documentOutput; // get the parsed document
 
   $body = explode("<body>", $output); // break out the head
