@@ -60,6 +60,11 @@ a:hover {
 	color: #707070;
 	font-weight: bold;
 }
+.subtitle {
+	font-size: 13px;
+	color: #707070;
+	font-weight: bold;
+}
 h1, h4 {
 	font-size: 13px;
 	color: #000;
@@ -119,6 +124,16 @@ label {
 
 div.labelHolder input {
     width: 200px; }
+
+div.clickHere {
+    color: #0000CD;
+    margin: 20px 0 20px 0; }
+
+div.clickHere a{
+    color: #0000CD;}
+    
+div.status {
+    margin: 0 0 30px 0; }
 
 #testbox {
 	width:				100%; 
