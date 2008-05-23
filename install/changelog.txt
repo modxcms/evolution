@@ -2,7 +2,7 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.2-rc1 (rev 3739 - May 22, 2008)
+MODx 0.9.6.2-rc2 (rev 3741 - May 23, 2008)
 ====================================
 * [FS#1064] Fix event name for OnDocUnpublished (3718)
 * Added plugin to show image previews in the manager for Image TVs as a tribute to Brett joining the team (3709)
