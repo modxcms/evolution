@@ -1,0 +1,21 @@
+Dear [+recipient.fullname+],
+
+A new comment has been posted to your post: 
+"[+jot.title+]"
+
+-----
+Name: [+comment.custom.name+]
+Email: [+comment.custom.email+] 
+Subject: [+comment.title+]
+Message:
+
+[+comment.content+]
+-----
+
+View the published replies at: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=1
+View the unpublished replies at: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=0
+(You must log in first)
+
+Regards,
+Site Administrator
+

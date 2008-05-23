@@ -48,6 +48,7 @@ if ($upgradeable && (!isset ($database_connection_charset) || empty($database_co
 ?>
 <script type="text/javascript" src="connection.mootools.1.11.js"></script>
 <script type="text/javascript" src="connection.js"></script>
+<script type="text/javascript">language ='<?php echo $install_language?>'</script>
 
 <form name="install" action="index.php?action=options" method="post">
   <div>
@@ -127,58 +128,58 @@ if ($upgradeable && (!isset ($database_connection_charset) || empty($database_co
   function validate() {
     var f = document.install;
     if(f.databasehost.value=="") {
-      alert('<?php echo $_lang['alert_enter_host']?>');
+      alert("<?php echo $_lang['alert_enter_host']?>");
       f.databasehost.focus();
       return false;
     }
     if(f.databaseloginname.value=="") {
-      alert('<?php echo $_lang['alert_enter_login']?>');
+      alert("<?php echo $_lang['alert_enter_login']?>");
       f.databaseloginname.focus();
       return false;
     }
     ss = document.getElementById('serverstatus');
     ssv = ss.innerHTML;
     if(ssv.length==0) {
-      alert('<?php echo $_lang['alert_server_test_connection']?>');
+      alert("<?php echo $_lang['alert_server_test_connection']?>");
       return false;
     }
     if (ssv.indexOf("failed") >=0) {
-      alert('<?php echo $_lang['alert_server_test_connection_failed']?>');
+      alert("<?php echo $_lang['alert_server_test_connection_failed']?>");
       return false;
     }   
     if(f.database_name.value=="") {
-      alert('<?php echo $_lang['alert_enter_database_name']?>');
+      alert("<?php echo $_lang['alert_enter_database_name']?>");
       f.database_name.focus();
       return false;
     }
     var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     if(alpha.indexOf(f.tableprefix.value.charAt(0),0) == -1) {
-      alert('<?php echo $_lang['alert_table_prefixes']?>');
+      alert("<?php echo $_lang['alert_table_prefixes']?>");
       f.tableprefix.focus();
       return false;
     }
     dbs = document.getElementById('databasestatus');
     dbsv = dbs.innerHTML;
     if(dbsv.length==0) {
-      alert('<?php echo $_lang['alert_database_test_connection']?>');
+      alert("<?php echo $_lang['alert_database_test_connection']?>");
       return false;
     }
     if (dbsv.indexOf("failed") >=0) {
-      alert('<?php echo $_lang['alert_database_test_connection_failed']?>');
+      alert("<?php echo $_lang['alert_database_test_connection_failed']?>");
       return false;
     }   
     if(f.cmsadmin.value=="") {
-      alert('<?php echo $_lang['alert_enter_adminlogin']?>');
+      alert("<?php echo $_lang['alert_enter_adminlogin']?>");
       f.cmsadmin.focus();
       return false;
     }
     if(f.cmspassword.value=="") {
-      alert('<?php echo $_lang['alert_enter_adminpassword']?>');
+      alert("<?php echo $_lang['alert_enter_adminpassword']?>");
       f.cmspassword.focus();
       return false;
     }
     if(f.cmspassword.value!=f.cmspasswordconfirm.value) {
-      alert('<?php echo $_lang['alert_enter_adminconfirm']?>');
+      alert("<?php echo $_lang['alert_enter_adminconfirm']?>");
       f.cmspassword.focus();
       return false;
     }

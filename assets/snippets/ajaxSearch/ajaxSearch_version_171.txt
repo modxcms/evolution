@@ -1,0 +1,54 @@
+
+                           AjaxSearch - version 1.7.1
+                 
+Previous version : 1.7.0.2 delivered the 9th January 2008
+
+============================== NEW OPTIONS / CHANGES ==================================
+
+
+    CAUTION: &useAllWords is now deprecated and replace by &advSearch = "allwords"
+
+    &advSearch [ 'exactphrase' | 'allwords' | 'nowords' | 'oneword' ]
+
+    Advanced search:    
+    - exactphrase : provides the documents which contain the exact phrase 
+    - allwords : provides the documents which contain all the words
+    - nowords : provides the documents which do not contain the words
+    - oneword : provides the document which contain at least one word [default] 
+
+    &hideMenu [ 0 | 1 | 2 ]
+    
+    Search in hidden documents from menu
+    - 0 : search only in documents visible from menu
+    - 1 : search only in documents hidden from menu
+    - 2 : search in hidden or visible documents from menu [default]
+
+
+========================= CHANGE REQUESTS IMPLEMENTED ==========================
+
+- search in hidden documents from menu
+http://modxcms.com/forums/index.php/topic,5357.msg144232.html#msg144232
+
+Documents flaged with hidden should only be shown in the result list, if the user wants to. 
+
+- advanced search
+The following search are now allowed:
+* exactphrase : the exact phrase is used as searchstring
+* allwords : search the documents which contains all the search terms
+* oneword : search the documents which contains at least one word
+* nowords : search the documents which do not contain the words
+
+
+================================ ISSUES CORRECTED ==============================
+
+http://modxcms.com/forums/index.php/topic,5357.msg139525.html#msg139525
+
+Extract with a % percent character freeze the display of the results output
+Unuseless usage of the decodeURIComponent function in js/ajaxSearch.js (line 162)
+
+
+Correction of search with searchStyle = "relevance"
+Do a full text search in pagetitle, description and content fields. Use LIKE for others fields
+FULLTEXT indexes exists only for `pagetitle`,`description`,`content`
+
+

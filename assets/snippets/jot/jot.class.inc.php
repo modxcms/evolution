@@ -2,9 +2,9 @@
 /*####
 #
 #	Name: Jot
-#	Version: 1.1.2
+#	Version: 1.1.3
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Feb 19, 2006 15:26 CET
+#	Date: Apr 03, 2008 15:26 CET
 #
 # Latest Version: http://modxcms.com/Jot-998.html
 # Jot Demo Site: http://projects.zerobarrier.nl/modx/
@@ -30,7 +30,7 @@ class CJot {
 		if (!class_exists('CChunkie'))
 			include_once($path . '/includes/chunkie.class.inc.php');
 		$this->name = $this->config["snippet"]["name"] = "Jot";
-		$this->version = $this->config["snippet"]["version"] = "1.1.2"; //
+		$this->version = $this->config["snippet"]["version"] = "1.1.3"; //
 		$this->config["snippet"]["versioncheck"] = "Unknown";
 		$this->client = $modx->getUserData();
 		$this->_ctime = time();
@@ -90,6 +90,7 @@ class CJot {
 		$this->config["title"] = !is_null($this->Get("title")) ? intval($this->Get("title")) : $modx->documentObject["longtitle"];
 		$this->config["subject"]["subscribe"] = !is_null($this->Get("subjectSubscribe")) ? $this->Get("subjectSubscribe") : "New reply to a topic you are watching";
 		$this->config["subject"]["moderate"] = !is_null($this->Get("subjectModerate")) ? $this->Get("subjectModerate") : "New reply to a topic you are moderating";
+		$this->config["subject"]["author"] = !is_null($this->Get("subjectAuthor")) ? $this->Get("subjectAuthor") : "New comment on your post";
 		$this->config["debug"] = !is_null($this->Get("debug")) ? intval($this->Get("debug")) : 0;
 		$this->config["output"] = !is_null($this->Get("output")) ? intval($this->Get("output")) : 1;
 		$this->config["validate"] = !is_null($this->Get("validate")) ? $this->Get("validate") : "content:You forgot to enter a comment.";
@@ -131,6 +132,9 @@ class CJot {
 		// Moderation
 		$this->config["moderation"]["type"] = !is_null($this->Get("moderated")) ? intval($this->Get("moderated")) : 0;
 		$this->config["moderation"]["notify"] = !is_null($this->Get("notify")) ? intval($this->Get("notify")) : 1;
+		$this->config["moderation"]["notifyAuthor"] = !is_null($this->Get("notifyAuthor")) ? intval($this->Get("notifyAuthor")) : 0;
+		
+		echo '<!-- norify author: '.$this->config["moderation"]["notifyAuthor"] .' -->';
 		
 		// Access Booleans
 		// TODO Add logic for manager groups
@@ -148,6 +152,7 @@ class CJot {
 		$this->templates["subscribe"] = !is_null($this->Get("tplSubscribe")) ? $this->Get("tplSubscribe") : $this->config["path"]."/templates/chunk.subscribe.inc.html";
 		$this->templates["notify"] = !is_null($this->Get("tplNotify")) ? $this->Get("tplNotify") : $this->config["path"]."/templates/chunk.notify.inc.txt";				
 		$this->templates["notifymoderator"] = !is_null($this->Get("tplNotifyModerator")) ? $this->Get("tplNotifyModerator") : $this->config["path"]."/templates/chunk.notify.moderator.inc.txt";
+		$this->templates["notifyauthor"] = !is_null($this->Get("tplNotifyAuthor")) ? $this->Get("tplNotifyAuthor") : $this->config["path"]."/templates/chunk.notify.author.inc.txt";
 		
 		// Querystring keys
 		$this->config["querykey"]["action"] = "jot".$this->_idshort;
@@ -615,6 +620,9 @@ class CJot {
 		// Notify Moderators
 		if ($saveComment && (($this->form['published']==0) || ($this->form['published'] >0 && $this->config["moderation"]["notify"]==2))) $this->doNotifyModerators($pObj->Get("id"));
 		
+		// Notify Author
+		if ($saveComment && $this->config["moderation"]["notifyAuthor"]) $this->doNotifyAuthor($pObj->Get("id"));
+		
 		// If no error occured clear fields.
 		if ($this->form['error'] <= 0 ) $this->form["field"] = array();
 		
@@ -694,6 +702,42 @@ class CJot {
 				mail($user["email"], $this->config["subject"]["moderate"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
 			}
 		}
+	}
+	
+	// Author Notification
+	function doNotifyAuthor($commentid=0) {
+		
+		echo '<!-- notifying author -->';
+		
+		global $modx;
+		
+		if ($this->config["moderation"]["notifyAuthor"]) {
+			
+			// What is the e-mail address of the article author?
+			$author_id = $this->config['authorid'];		
+			$res = $modx->db->select('*',  $modx->getFullTableName('user_attributes'), 'id = '.$author_id);
+			$results_array = $modx->db->makeArray($res);
+			$user = $results_array[0]; // Assume there is only one result			
+			
+			// Get comment fields (copied from doNotifyModerators)
+			$cObj = $this->provider;
+			$cObj->Comment($commentid);
+			$comment = $cObj->getFields();
+			unset($cObj);
+			
+			$tpl = new CChunkie($this->templates["notifyauthor"]);
+			$tpl->AddVar('jot',$this->config);
+			$tpl->AddVar('comment',$comment);
+			$tpl->AddVar('siteurl',"http://".$_SERVER["SERVER_NAME"]);
+			$tpl->AddVar('recipient',$user);
+			$message = $tpl->Render();
+			
+			mail($user["email"], $this->config["subject"]["author"], $message, "From: ".$modx->config['emailsender']."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+			
+		}
+		
+		
+		
 	}
 	
 	// Returns comment count

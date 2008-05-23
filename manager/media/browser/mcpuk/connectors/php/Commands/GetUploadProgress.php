@@ -44,7 +44,9 @@ class GetUploadProgress {
 			$uploadProgressHandler=$this->fckphp_config['uploadProgressHandler'];
 			if ($uploadProgressHandler=='') {
 				//Progresshandler not specified, return generic response
+				header ("content-type: text/xml"); //Nick Crossland (ncrossland)
 		?>
+<?xml version="1.0" encoding="utf-8"?>
 <Connector command="GetUploadProgress" resourceType="<?php echo $this->type; ?>">
 	<CurrentFolder path="<?php echo $this->raw_cwd; ?>" url="<?php echo $this->actual_cwd; ?>" />
 	<Progress max="2" value="1" />

@@ -8,13 +8,13 @@
 .jot-row-new {border: 1px dotted green;}
 .jot-comment {padding: 3px;}
 .jot-comment hr {border: 0px; border-bottom: 1px solid #cccccc;}
-.jot-posticon {float: left;width: 20px;height: 20px;padding-top: 8px;padding-right: 3px;}
+.jot-posticon {float: right;width: 20px;height: 20px;padding-top: 8px;padding-right: 3px;}
 .jot-posticon img {border: 0px;}
 .jot-mod {float: right;width: 100px;text-align: right;color: #666666;font-weight: bold;}
 .jot-mod img {border: 0px;}
 .jot-mod a {float: right;padding: 1px;padding-left: 2px;padding-right: 2px;}
 .jot-mod a:hover {background-color: #666666;color: #666666;}
-.jot-subject {color: #618200;font-weight: bold;font-size: larger;}
+.jot-subject {font-weight: bold;font-size: 1.1em;}
 .jot-message {padding: 2px;overflow: auto;}
 .jot-poster {padding: 0px;text-align: left;font-size: 10px;}
 .jot-nav {padding: 0px;text-align: center;margin: 10px;}

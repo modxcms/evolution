@@ -1,9 +1,9 @@
 /*####
 #
 #	Name: Jot
-#	Version: 1.1.2
+#	Version: 1.1.3
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Feb 19, 2006 15:26 CET
+#	Date: Apr 03, 2008 15:26 CET
 #
 # Latest Version: http://modxcms.com/Jot-998.html
 # Jot Demo Site: http://projects.zerobarrier.nl/modx/
@@ -15,7 +15,7 @@ $jotPath = $modx->config['base_path'] . 'assets/snippets/jot/';
 include_once($jotPath.'jot.class.inc.php');
 
 $Jot = new CJot;
-$Jot->VersionCheck("1.1.2");
+$Jot->VersionCheck("1.1.3");
 $Jot->Set("path",$jotPath);
 $Jot->Set("action", $action);
 $Jot->Set("postdelay", $postdelay);
@@ -39,7 +39,9 @@ $Jot->Set("pagination", $pagination);
 $Jot->Set("placeholders", $placeholders);
 $Jot->Set("subjectSubscribe", $subjectSubscribe);
 $Jot->Set("subjectModerate", $subjectModerate);
+$Jot->Set("subjectAuthor", $subjectAuthor);
 $Jot->Set("notify", $notify);
+$Jot->Set("notifyAuthor", $notifyAuthor);
 $Jot->Set("validate", $validate);
 $Jot->Set("title", $title);
 $Jot->Set("authorid", $authorid);
@@ -54,6 +56,7 @@ $Jot->Set("tplModerate", $tplModerate);
 $Jot->Set("tplNav", $tplNav);
 $Jot->Set("tplNotify", $tplNotify);
 $Jot->Set("tplNotifyModerator", $tplNotifyModerator);
+$Jot->Set("tplNotifyAuthor", $tplNotifyAuthor);
 $Jot->Set("tplSubscribe", $tplSubscribe);
 $Jot->Set("debug", $debug);
 $Jot->Set("output", $output);

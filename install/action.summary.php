@@ -175,33 +175,31 @@ if ($conn && $installMode == 0) {
         echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
   }
 }
-// Version and strict mode check begin
+
 // check mysql version
 if ($conn) {
-    echo "<p>Checking MySQL version: ";
+    echo "<p>" . $_lang['checking_mysql_version'];
     if ( version_compare(mysql_get_server_info(), '5.0.51', '=') ) {
-        echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b> 5.0.51</p>";
-        //$errors += 1; Not an error, just  warning?
-        echo "<p>There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.</p>"; //$_lang['table_prefix_already_inuse_note']
+        echo "<span class=\"ok\">"  . $_lang['ok'] . "</span></b>&nbsp;&nbsp;<strong>". $_lang['mysql_5051'] . "</strong></p>";
+        echo "<p><strong>" . $_lang['mysql_5051_warning'] . "</strong></p>";
     } else {
-        echo "Your MySQL version is ".mysql_get_server_info()." <span class=\"ok\">" . $_lang['ok'] . "</span></p>";
+        echo "<span class=\"ok\">" . $_lang['ok'] . "</span>&nbsp;&nbsp;<strong>" . $_lang['mysql_version_is'] . mysql_get_server_info() . "</strong></p>";
     }
 }
 
 // check for strict mode
 if ($conn) {
-    echo "<p>Checking MySQL for strict mode: ";
+    echo "<p>". $_lang['checking_mysql_strict_mode'];
     $mysqlmode = @ mysql_query("SELECT @@global.sql_mode");
-    // $mode = mysql_fetch_row($mysqlmode);
     if (mysql_num_rows($mysqlmode) > 0){
         $modes = mysql_fetch_array($mysqlmode, MYSQL_NUM);
         //$modes = array("STRICT_TRANS_TABLES"); // for testing
         // print_r($modes);
         foreach ($modes as $mode) {
             if (strtoupper($mode) == "STRICT_TRANS_TABLES") {
-                echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b> MySQL is in Strict Mode</p>";
+                echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b> <strong>&nbsp;&nbsp;" . $_lang['strict_mode'] . "</strong></p>";
                 $errors += 1;
-                echo "<p><span class=\"notok\">MODx requires that strict mode be disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.</span></p>"; // add to lang file
+                echo "<p><span class=\"notok\">" . $_lang['strict_mode_error'] . "</span></p>";
             } else {
                 echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
             }

@@ -1,3 +1,4 @@
+<?php
 /* -------------------------------------------------------------
 :: Snippet: ajaxSearch
 ----------------------------------------------------------------
@@ -70,3 +71,5 @@ $output = "";
 include(AS_PATH.'includes/snippet.ajaxSearch.inc.php');
 
 return $output;
+
+?>
