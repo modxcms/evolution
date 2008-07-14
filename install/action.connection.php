@@ -48,7 +48,11 @@ if ($upgradeable && (!isset ($database_connection_charset) || empty($database_co
 ?>
 <script type="text/javascript" src="connection.mootools.1.11.js"></script>
 <script type="text/javascript" src="connection.js"></script>
-<script type="text/javascript">language ='<?php echo $install_language?>'</script>
+<script type="text/javascript">
+language ='<?php echo $install_language?>';
+installMode ='<?php echo $installMode ?>';
+passed ='<?php echo $_lang["status_passed_server"]?>';
+</script>
 
 <form name="install" action="index.php?action=options" method="post">
   <div>
@@ -77,7 +81,6 @@ if ($upgradeable && (!isset ($database_connection_charset) || empty($database_co
   <div class="labelHolder"><label for="tableprefix"><?php echo $_lang['connection_screen_table_prefix']?></label>
     <input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']: $table_prefix ?>" name="tableprefix" />
   </div>
-<?php if ($installMode == 0) { ?>
   <div class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
     <div id="collation" name="collation"><select id="database_collation" name="database_collation">
         <option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected >
@@ -85,11 +88,6 @@ if ($upgradeable && (!isset ($database_connection_charset) || empty($database_co
         </option>
     </select></div>
   </div>
-<?php } else { ?>
-  <div class="labelHolder"><label for="database_connection_charset"><?php echo $_lang['connection_screen_character_set']?></label> 
-    <input id="database_connection_charset" value="<?php echo isset($_POST['database_connection_charset']) ? $_POST['database_connection_charset']: $database_connection_charset ?>" name="database_connection_charset" />
-  </div>
-<?php } ?>
   <div class="clickHere"><a id="databasetest" href="#"><?php echo $_lang['connection_screen_database_test_connection']?></a></div>
   <div class="status" id="databasestatus"></div>
 <?php

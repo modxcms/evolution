@@ -317,7 +317,7 @@ function showAdjustDates() {
 
 	foreach ($calarray as $cal) {
 		$field_html .= '	var ' . $cal . ' = new calendar1(document.forms[\'dates\'].elements[\'' . $caltarget[$i] . '\'], document.getElementById("' . $caltarget[$i] . '_show"));';
-		$field_html .= '   ' . $cal . '.path="' . str_replace("index.php", "media/", $_SERVER["PHP_SELF"]) . '";';
+		$field_html .= '   ' . $cal . '.path="' . MODX_MANAGER_URL . 'media/";';
 
 		$field_html .= '	' . $cal . '.year_scroll = true;';
 		$field_html .= '   ' . $cal . '.time_comp = true;';

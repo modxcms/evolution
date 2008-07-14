@@ -523,6 +523,11 @@ switch ($actionToTake) {
 				$sql_delete = 'DELETE FROM '.$tbl_document_groups.' WHERE id IN ('.implode(',', $old_groups).')';
 				$saved = mysql_query($sql_delete) ? $saved : false;
 			}
+			// necessary to remove all permissions as document is public
+			if ((isset($_POST['chkalldocs']) && $_POST['chkalldocs'] == 'on')) {
+				$sql_delete = 'DELETE FROM '.$tbl_document_groups.' WHERE document='.$id;
+				$saved = mysql_query($sql_delete) ? $saved : false;
+			}
 			if (!$saved) {
 				$modx->manager->saveFormValues(27);
 				echo "An error occured while saving document groups.";
@@ -731,7 +736,7 @@ function saveMETAKeywords($id) {
 				'content_id' => $id,
 				'keyword_id' => $kwid
 			);
-			$modx->db->insert($flds, $tbl_keywords_xref);
+			$modx->db->insert($flds, $tbl_keyword_xref);
 		}
 		// meta tags - remove old tags first
 		$modx->db->delete($tbl_site_content_metatags, "content_id='$id'");

@@ -5,12 +5,12 @@
 
 class SqlParser {
 	var $host, $dbname, $prefix, $user, $password, $mysqlErrors;
-	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass;
+	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
 	var $dbVersion;
     var $connection_charset;
 
-	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8') {
+	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english') {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -21,6 +21,7 @@ class SqlParser {
 		$this->adminemail = $adminemail;
 		$this->connection_charset = $connection_charset;
 		$this->ignoreDuplicateErrors = false;
+		$this->managerlanguage = $managerlanguage;
 	}
 
 	function connect() {
@@ -71,6 +72,7 @@ class SqlParser {
 		$idata = str_replace('{IMAGEPATH}', $this->imagePath, $idata);
 		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
+		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
 
 		$sql_array = split("\n\n", $idata);
 

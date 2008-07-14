@@ -27,9 +27,13 @@ sort($langs);
 	<div id="navbar">
 	<h1 style="float:left;">Choose language:&nbsp;&nbsp;</h1>
 	<select name="language" style="float:left;">
-	<?php foreach ($langs as $language) echo '<option>' . $language . '</option>' ?>
+	<?php 
+    foreach ($langs as $language) {
+      $abrv_language = explode('-',$language); // filter of character set extension
+      echo '<option value="' . $language . '">' . $abrv_language[0] . '</option>'."\n";
+    }
+  ?>
 	</select>
 	<input type="submit" value="<?php echo $_lang['btnnext_value']; ?>" style="float:right;width:100px;" />
-	</form>
 	</div>
 </form>

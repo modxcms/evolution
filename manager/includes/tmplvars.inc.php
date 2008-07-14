@@ -53,7 +53,7 @@
 
 				$field_html .=  '<script type="text/javascript">';
 				$field_html .=  '	var '.$cal.' = new calendar1(document.forms[\'mutate\'].elements[\'tv'.$field_name.'\'], document.getElementById("tv'.$field_name.'_show"));';
-				$field_html .=  '   '.$cal.'.path="' . str_replace("index.php", "media/", $_SERVER["PHP_SELF"]) . '";';
+				$field_html .=  '   '.$cal.'.path="' . MODX_MANAGER_URL . 'media/";';
 
 				$field_html .=  '	'.$cal.'.year_scroll = true;';
 				$field_html .=  '   '.$cal.'.time_comp = true;';

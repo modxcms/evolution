@@ -6,7 +6,7 @@ if(!$modx->hasPermission('export_static')) {
 }
 
 // figure out the base of the server, so we know where to get the documents in order to export them
-$base = 'http://'.$_SERVER['SERVER_NAME'].str_replace("/manager/index.php", "", $_SERVER["PHP_SELF"]);
+$base = MODX_SITE_URL;
 
 
 ?>

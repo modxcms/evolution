@@ -543,7 +543,10 @@ function saveUserSettings($id) {
 	mysql_query('DELETE FROM '.$usrTable.' WHERE user='.$id);
 
 	$savethese = array();
-	foreach ($settings as $k => $v) $savethese[] = '('.$id.', \''.$k.'\', \''.mysql_escape_string($v).'\')';
+	foreach ($settings as $k => $v) {
+	    if(is_array($v)) $v = implode(',', $v);
+	    $savethese[] = '('.$id.', \''.$k.'\', \''.mysql_escape_string($v).'\')';
+	}
 
 	$sql = 'INSERT INTO '.$usrTable.' (user, setting_name, setting_value)
 		VALUES '.implode(', ', $savethese);

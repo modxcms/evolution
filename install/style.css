@@ -76,14 +76,6 @@ h4 {
 	line-height: 14px;
 }
 
-.fancyRow, .fancyRow2 {
-	background: #fff url(../manager/media/images/misc/buttonbar_gs.gif) repeat-x top left;
-}
-
-.fancyRow2 {
-	background-image: url(footer_bg.png);
-}
-
 .border-top-bottom {
 	border: 1px solid Black;
 	border-width: 1px 0;
@@ -104,7 +96,7 @@ ul {
 li {
 	padding: 0px;
 	margin: 6px 0px 0px 15px;
-	list-style: disc outside url("../manager/media/images/misc/dot.gif");
+	list-style: disc outside url("dot.gif");
 }
 
 

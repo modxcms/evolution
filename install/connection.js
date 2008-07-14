@@ -44,7 +44,8 @@ window.addEvent('domready', function(){
             database_name: database_name,
             tableprefix: tableprefix,
             database_collation: database_collation,
-            language: language
+            language: language,
+            installMode: installMode
         });
 
         new Ajax(url, { postBody: pars, update: $('databasestatus') } ).request();
@@ -74,7 +75,7 @@ function setColor(){
     col = $('database_collation');
     ss = document.getElementById('serverstatus');
     ssv = ss.innerHTML;
-    if (ssv.indexOf("passed") >=0) {
+    if (ssv.indexOf(passed) >=0) {
         col.setStyle('background-color', '#9CCD00');
         col.setStyle('color', '#0000CD');
     }

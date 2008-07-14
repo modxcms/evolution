@@ -1903,26 +1903,6 @@ class DocumentParser {
         return $this->db->config['dbase'] . ".`" . $this->db->config['table_prefix'] . $tbl . "`";
     }
 
-    # returns the physical path from the supplied virtual
-    function mapPath($path, $filename= "") {
-        if (!$path)
-            $path= ".";
-        if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-            // only on windows?
-            $absPath= str_replace("\\", "/", realpath($path));
-            return $absPath . ($absPath && $filename ? "/$filename" : "$filename");
-        } else {
-            // determine base path
-            if (substr($path, 0, 1) == "/")
-                $basePath= $_SERVER['DOCUMENT_ROOT'];
-            else
-                $basePath= dirname($_SERVER['SCRIPT_FILENAME']);
-            // return absolute path
-            $absPath= realpath("$basePath/$path");
-            return $absPath . ($absPath && $filename ? "/$filename" : "$filename");
-        }
-    }
-
     # return placeholder value
     function getPlaceholder($name) {
         return $this->placeholders[$name];

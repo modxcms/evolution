@@ -39,6 +39,7 @@ $installData = $_POST['installdata'] ? 1 : 0;
 	$adminname = $_POST['cmsadmin'];
 	$adminemail = $_POST['cmsadminemail'];
 	$adminpass = $_POST['cmspassword'];
+	$managerlanguage = $_POST['language'];
 //}
 
 // set session name variable
@@ -117,7 +118,7 @@ if ($installMode == 0) {
 $setupPath = realpath(dirname(__FILE__));
 include "{$setupPath}/setup.info.php";
 include "{$setupPath}/sqlParser.class.php";
-$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset);
+$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 //$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imageUrl = "assets/";

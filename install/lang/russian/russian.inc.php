@@ -10,7 +10,8 @@
  * Language:       Russian
  * Encoding:       UTF-8
  * Translated by:  Pertsev Dmitriy
- * Date:           14 may 2007
+                   Safronovich Victor
+ * Date:           29 june 2008
  */
 
 setlocale (LC_ALL, 'ru_RU');
@@ -67,9 +68,12 @@ $_lang["loading"] = 'Загружается...';
 $_lang["Begin"] = 'Начать';
 $_lang["status_connecting"] = ' Соединяюсь: ';
 $_lang["status_failed"] = 'ошибка!';
-$_lang["status_passed"] = 'успех';
-$_lang["status_checking_database"] = '...    Проверка базы данных: ';
+$_lang["status_passed"] = 'успех - база данных выбрана';
+$_lang["status_passed_server"] = 'успех - сопоставление базы данных не доступно';
+$_lang["status_passed_database_created"] = 'успех - база данных выбрана';
+$_lang["status_checking_database"] = 'Проверка базы данных: ';
 $_lang["status_failed_could_not_select_database"] = 'ошибка - нет базы данных';
+$_lang["status_failed_could_not_create_database"] = 'ошибка - не удается создать базу данных';
 $_lang["status_failed_table_prefix_already_in_use"] = 'ошибка - префикс таблицы уже используется!';
 $_lang["welcome_message_welcome"] = 'Добро пожаловать в программу установки MODx.';
 $_lang["welcome_message_text"] = 'Эта программа проведет Вас через весь процесс установки.';
@@ -83,17 +87,20 @@ $_lang["installation_upgrade_existing_note"] = 'Обновление Ваших 
 $_lang["installation_upgrade_advanced"] = 'Расширенное обновление<br />установки<br /><small>(с настройкой параметров<br />базы данных)</small>';
 $_lang["installation_upgrade_advanced_note"] = 'Для расширенного управления базой данных с различным набором символов.<br /><b>Вы должны знать полное название Вашей базы данных, имя пользователя, пароль, детали подключения, таблицу сопоставления.</b>';
 $_lang["connection_screen_connection_information"] = 'Информация о подключении';
-$_lang["connection_screen_connection_and_login_information"] = 'Параметры подключения и входа в базу данных';
-$_lang["connection_screen_connection_note"] = 'Введите имя базы данных, созданной для MODx. Если у Вас еще нет базы данных, то программа установки попытается создать базу данных для Вас. В зависимости от конфигурации MySQL или прав пользователя базы данных процесс может завершиться неудачей.';
+$_lang["connection_screen_server_connection_information"] = 'Параметры подключения и входа на сервер базы данных';
+$_lang["connection_screen_server_connection_note"] = 'Введите данные для входа в базу данных и затем проверьте их.';
+$_lang["connection_screen_server_test_connection"] = 'Нажмите здесь для проверки соединения с вашим сервером базы данных и получения сопостовления кодировки';
+$_lang["connection_screen_database_connection_information"] = 'Параметры базы данных';
+$_lang["connection_screen_database_connection_note"] = 'Введите имя базы данных, созданной для MODx. Если у Вас еще нет базы данных, то программа установки попытается создать базу данных для Вас. В зависимости от конфигурации MySQL или прав пользователя базы данных процесс может завершиться неудачей.';
+$_lang["connection_screen_database_test_connection"] = 'Нажмите здесь для создания базы данных или для проверки что такая база существует';
 $_lang["connection_screen_database_name"] = 'Имя базы данных:';
 $_lang["connection_screen_table_prefix"] = 'Префикс таблиц:';
 $_lang["connection_screen_collation"] = 'Сопоставление:';
 $_lang["connection_screen_character_set"] = 'Набор символов подключения:';
-$_lang["connection_screen_database_info"] = 'Теперь, пожалуйста, введите данные для входа в базу данных.';
 $_lang["connection_screen_database_host"] = 'Хост базы данных:';
 $_lang["connection_screen_database_login"] = 'Имя пользователя:';
 $_lang["connection_screen_database_pass"] = 'Пароль:';
-$_lang["connection_screen_test_connection"] = 'Проверить';
+$_lang["connection_screen_default_admin_information"] = 'Информация об администраторе';
 $_lang["connection_screen_default_admin_user"] = 'Администратор по умолчанию';
 $_lang["connection_screen_default_admin_note"] = 'Теперь Вы должны ввести данные о главной записи Администратора. Вы можете ввести свое имя и пароль, который Вы вряд ли забудете. Вам понадобятся эти данные чтобы войти в Панель Управления после окончания установки.';
 $_lang["connection_screen_default_admin_login"] = 'Имя администратора:';
@@ -123,6 +130,8 @@ $_lang["ok"] = 'OK!';
 $_lang["you_running_php"] = ' - Вы используете PHP ';
 $_lang["modx_requires_php"] = ', а MODx необходим PHP 4.1.0 или более поздний';
 $_lang["php_security_notice"] = '<legend>Уведомление безопасности</legend><p>Несмотря на то, что MODx будет работать на Вашей версии PHP, использовать его c этой версией PHP крайне не рекомендуется.  Ваша версия PHP уязвима из-за многочисленных брешей в защите. Обновите PHP до версии 4.3.8 или более поздней для безопасности Вашего сайта.</p>';
+$_lang["checking_registerglobals"] = 'Проверка php-пареметра Register_Globals: ';
+$_lang["checking_registerglobals_note"] = 'Конфигурация php делает ваш сайт более восприимчевым к XSS-аттакам. Вы должны самостоятельно, или связавшись с администрацией хостинга, выключить Register_Globals. Обычно это делается одним из следующих путей: вносятся исправления в php.ini файл, добавляются правила в .htaccess файл, который находится в корне папки MODx, или добавлением своего php.ini в каждую директорию внутри папки MODx (их очень много). Вы можете продолжить установку MODx, но обдумайте это предупреждение.'; //Look at changing this to provide a solution.
 $_lang["checking_sessions"] = 'Проверка настроек сессий: ';
 $_lang["checking_if_cache_exist"] = 'Проверка существования папки <span class=\"mono\">assets/cache</span>: ';
 $_lang["checking_if_cache_writable"] = 'Проверка возможности записи в папку <span class=\"mono\">assets/cache</span>: ';
@@ -151,15 +160,24 @@ $_lang["please_correct_error"] = '. Исправьте эту ошибку';
 $_lang["please_correct_errors"] = '. Исправьте эти ошибки'; //Plural form
 $_lang["and_try_again"] = ', и попробуйте снова. Если Вам нужна помощь по исправлению этой ошибки';
 $_lang["and_try_again_plural"] = ', и попробуйте снова. Если Вам нужна помощь по исправлению этих ошибок'; //Plural form
+$_lang["checking_mysql_version"] = 'Проверка версии MySQL: ';
+$_lang["mysql_version_is"] = ' Ваша версия MySQL: ';
+$_lang["mysql_5051_warning"] = 'Известны проблемы с MySQL 5.0.51. Настоятельно рекомендуем обновить базу данных перед продолжением установки.';
+$_lang["mysql_5051"] = ' версия MySQL - 5.0.51!';
+$_lang["checking_mysql_strict_mode"] = 'Проверка MySQL на строгий режим: ';
+$_lang["strict_mode_error"] = 'MODx требует чтобы строгий режим был выключен. Вы можете установить режим через внесения изменений в my.cnf файл или связаться с администратором базы данных.';
+$_lang["strict_mode"] = ' сервер MySQL работает в строгом режиме!';
 $_lang["visit_forum"] = ', посетите форум <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.';
 $_lang["testing_connection"] = 'Проверка соединения...';
 $_lang["btnback_value"] = 'Назад';
 $_lang["btnnext_value"] = 'Далее';
 $_lang["retry"] = 'Повторить';
-$_lang["alert_enter_database_name"] = 'Введите имя базы данных!';
-$_lang["alert_table_prefixes"] = 'Префикс таблиц должен начинаться с буквы!';
 $_lang["alert_enter_host"] = 'Введите хост базы данных!';
 $_lang["alert_enter_login"] = 'Введите имя пользователя базы данных!';
+$_lang["alert_server_test_connection"] = 'Проверьте соединение с сервером базы данных!';
+$_lang["alert_server_test_connection_failed"] = 'Соединиться с сервером базы данных не удалось!';
+$_lang["alert_enter_database_name"] = 'Введите имя базы данных!';
+$_lang["alert_table_prefixes"] = 'Префикс таблиц должен начинаться с буквы!';
 $_lang["alert_enter_adminlogin"] = 'Введите имя Администратора!';
 $_lang["alert_enter_adminpassword"] = 'Введите пароль Администратора!';
 $_lang["alert_enter_adminconfirm"] = 'Пароль Администратора и подтверждение пароля не сходятся!';

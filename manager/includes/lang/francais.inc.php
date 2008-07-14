@@ -3,10 +3,10 @@
  * Filename:       includes/lang/francais.inc.php
  * Function:       French language file for MODx
  * Encoding:       ISO-8859-1 (Latin 1)
- * Author:         Nicolas Martignoni (Nissai), révisé par David Mollière pour la 0.9.6 (davidm)
- * Date:           2007/05/02
- * Version:        2.2
- * MODx version:   0.9.6
+ * Author:         Nicolas Martignoni (Nissai), révisé par David Mollière pour la 0.9.6 2(davidm)
+ * Date:           2008/05/23
+ * Version:        2.3
+ * MODx version:   0.9.6.2
 */
 // NOTE: Now alpha-sorted
 
@@ -31,9 +31,7 @@ $_lang["access_permissions_no_users_in_group"] = 'Néant.';
 $_lang["access_permissions_off"] = '<span class="warning">Les autorisations d\'accès ne sont pas activées.</span> Les modifications faites ici n\'auront aucun effet jusqu\'à ce que les autorisations d\'accès soient activées.';
 $_lang["access_permissions_users_in_group"] = '<strong>Utilisateurs dans le groupe :</strong> ';
 $_lang["access_permissions_users_tab"] = 'Les groupes d\'utilisateurs actuels sont affichés ci-dessous. Vous pouvez en créer de nouveaux, les renommer, les supprimer et voir quels utilisateurs sont membres des différents groupes. Pour ajouter un nouvel utilisateur à un groupe ou pour l\'en retirer, modifiez directement l\'utilisateur. Les administrateurs ont toujours accès à tous les documents. Ils n\'est donc pas nécessaire de les ajouter à aucun groupe.';
-$_lang["access_permissions_user_group"] = 'Groupe d\'utilisateurs';
 $_lang["access_permissions_user_groups"] = 'Groupes d\'utilisateurs';
-$_lang["access_permissions_user_group_access"] = 'Groupes de documents auxquels le groupe d\'utilisateurs a accès :';
 $_lang["access_permissions_user_message"] = 'Vous pouvez choisir ici les groupes d\'utilisateurs auxquels cet utilisateur appartient';
 $_lang["access_permission_denied"] = 'Vous n\'avez pas les autorisations nécessaires pour modifier ce document.';
 $_lang["access_permission_parent_denied"] = 'Vous n\'avez pas l\'autorisation de créer ou de déplacer un document ici !';
@@ -164,6 +162,8 @@ $_lang["credits_shouts_title"] = '<strong>Remerciements également à :</strong>';
 $_lang["credits_webfx"] = 'MODx utilise un certain nombre de JavaScript de Webfx.';
 $_lang["custom_contenttype_message"] = 'Vous pouvez ajouter ici des types de contenu personnalisés pour vos documents. Pour ajouter un nouveau type, tapez-le dans le champ, puis cliquez le bouton «&nbsp;Ajouter&nbsp;».';
 $_lang["custom_contenttype_title"] = 'Types de contenu personnalisés&nbsp;:';
+$_lang["database_collation"] = 'Collation de la BDD';
+$_lang["database_charset"] = 'Jeu de caractères de la BDD';
 $_lang["database_name"] = 'Nom de la BDD';
 $_lang["database_server"] = 'Nom du serveur de la BDD';
 $_lang["database_tables"] = 'Tables de la BDD';
@@ -658,6 +658,8 @@ $_lang["rb_base_url_message"] = 'Tapez ici le chemin virtuel vers le dossier des
 $_lang["rb_base_url_title"] = 'URL des ressources&nbsp;:';
 $_lang["rb_message"] = 'Une fois activé, vos utilisateurs pourront consulter et télécharger des ressources, par exemple des images, fichiers flash et d\'autres médias sur le serveur.';
 $_lang["rb_title"] = 'Activer le gestionnaire de ressources&nbsp;:';
+$_lang["rb_webuser_message"] = 'Voulez vous autoriser un utilisateur web à utiliser le gestionnaire de ressources? <b>ATTENTION:</b> Laisser les utilisateurs web utiliser le gestionnaire de ressources exposes les fichiers disponibles pour les utilisateurs du gestionnaire.  Utiliser cette option uniquement pour les utilisateurs web de confiance.';
+$_lang["rb_webuser_title"] = 'Utilisateurs web?';
 $_lang["recent_docs"] = 'Documents récents';
 $_lang["refresh_cache"] = 'Cache : <strong>%s</strong> fichier(s) en cache&nbsp; <strong>%d</strong> d\'entre eux ont été supprimés.<br />De nouveaux fichiers seront créés en cache à mesure que les pages sont visitées.';
 $_lang["refresh_published"] = 'Documents publiés&nbsp;: <strong>%s</strong> document(s) a(ont) été publié(s).';
@@ -684,6 +686,7 @@ $_lang["resource_management"] = 'Gestion ressources';
 $_lang["resource_name"] = 'Nom de la ressource';
 $_lang["resource_selector_msg"] = 'Sélectionnez les ressources dans la liste ci-dessous et cliquer sur le bouton «&nbsp;Insérer&nbsp;».';
 $_lang["resource_selector_title"] = 'Sélecteur de ressources';
+$_lang["role"] = 'Role';
 $_lang["role_about"] = 'Accès à la page «&nbsp;À propos de&nbsp;»';
 $_lang["role_access_persmissions"] = 'Autorisations d\'accès';
 $_lang["role_actionok"] = 'Accès à l\'écran de fin d\'action';
@@ -720,6 +723,7 @@ $_lang["role_edit_snippet"] = 'Modification de snippets';
 $_lang["role_edit_template"] = 'Modification des modèles';
 $_lang["role_edit_user"] = 'Modification d\'utilisateurs';
 $_lang["role_edit_web_user"] = 'Modifier utilisateurs web';
+$_lang["role_empty_trash"] = 'Purge définitive des documents supprimés';
 $_lang["role_errors"] = 'Accès aux annonces d\'erreurs';
 $_lang['role_export_static'] = 'Exportation HTML';
 $_lang["role_eventlog_management"] = 'Gestion de l\'historique des événements';
@@ -992,9 +996,7 @@ $_lang["webpwdreminder_title"] = 'Message pour nouveau mot de passe :';
 $_lang["websignupemail_message"] = 'Vous pouvez taper ici le message envoyé à vos utilisateurs web lorsque vous créez pour eux un compte. Le système leur enverra par email leur nom d\'utilisateur et leur mot de passe. <br /><strong>Remarque&nbsp;:</strong> Le gestionnaire de contenu remplacera les champs suivants avant l\'envoi du message&nbsp;: <br /><br />[+sname+] - Nom de votre site web, <br />[+saddr+] - Adresse email du site web, <br />[+surl+] - Adresse URL de votre site web, <br />[+uid+] - Nom d\'utilisateur, <br />[+pwd+] - Mot de passe, <br />[+ufn+] - Nom complet de l\'utilisateur. <br /><br /><strong>Ne retirer pas les champs [+uid+] et [+pwd+] du message, sans quoi le nom d\'utilisateur et le mot de passe ne seront pas envoyés et vos utilisateurs ne pourront pas se connecter&nbsp;!</strong>';
 $_lang["websignupemail_title"] = 'Message pour inscription web :';
 $_lang["web_access_permissions"] = 'Autorisations d\'accès web';
-$_lang["web_access_permissions_user_group"] = 'Groupe d\'utilisateurs web :';
 $_lang["web_access_permissions_user_groups"] = 'Groupes d\'utilisateurs web :';
-$_lang["web_access_permissions_user_group_access"] = 'Groupes de documents auxquels le groupe d\'utilisateurs a accès :';
 $_lang["web_permissions"] = 'Autorisations web';
 $_lang["web_users"] = 'Utilisateurs web';
 $_lang["web_user_management_msg"] = 'Vous pouvez choisir ici quel utilisateur web modifier. Les utilisateurs web sont ceux qui ne peuvent se connecter que sur le site web';

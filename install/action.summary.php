@@ -237,7 +237,8 @@ if ($errors > 0) {
       else echo $_lang['please_correct_error'];
       if ($errors > 1) echo $_lang['and_try_again_plural'];
       else echo $_lang['and_try_again'];
-      echo $_lang['visit_forum']?></p>
+      echo $_lang['visit_forum'];
+      ?>
       </p>
       <?php
 }

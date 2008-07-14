@@ -4,12 +4,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 // start session
 startCMSSession();
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
-		if (isset($_COOKIE[session_name()])) {
-			setcookie(session_name(), '', 0, MODX_BASE_URL);
-		}
+//		if (isset($_COOKIE[session_name()])) {
+//			setcookie(session_name(), '', 0, MODX_BASE_URL);
+//		}
 		@session_destroy();
 		// start session
-	    startCMSSession();
+//	    startCMSSession();
 }
 
 // andrazk 20070416 - if installer is running, destroy active sessions
@@ -27,7 +27,7 @@ if (file_exists($pth.'/../../assets/cache/installProc.inc.php')) {
 				if (isset($_COOKIE[session_name()])) {
 					session_unset();
 					@session_destroy();
-					setcookie(session_name(), '', 0, MODX_BASE_URL);
+//					setcookie(session_name(), '', 0, MODX_BASE_URL);
 				}
 				$installGoingOn = 1;
 			}
@@ -44,7 +44,7 @@ if (isset($lastInstallTime)) {
 					if (isset($_COOKIE[session_name()])) {
 						session_unset();
 						@session_destroy();
-						setcookie(session_name(), '', 0, MODX_BASE_URL);
+//						setcookie(session_name(), '', 0, MODX_BASE_URL);
 					}
 					header('HTTP/1.0 307 Redirect');
 					header('Location: '.MODX_MANAGER_URL.'index.php?installGoingOn=2');
@@ -104,7 +104,7 @@ if(!isset($_SESSION['mgrValidated'])){
 
 	if($use_captcha==1)  {
 		$modx->setPlaceholder('login_captcha_message',$_lang["login_captcha_message"]);
-		$modx->setPlaceholder('captcha_image','<a href="'.$_SERVER['PHP_SELF'].'" class="loginCaptcha"><img id="captcha_image" src="'.$modx->getManagerPath().'includes/veriword.php?rand='.rand().'" alt="'.$_lang["login_captcha_message"].'" /></a>');
+		$modx->setPlaceholder('captcha_image','<a href="'.MODX_MANAGER_URL.'" class="loginCaptcha"><img id="captcha_image" src="'.$modx->getManagerPath().'includes/veriword.php?rand='.rand().'" alt="'.$_lang["login_captcha_message"].'" /></a>');
 		$modx->setPlaceholder('captcha_input','<label>'.$_lang["captcha_code"].'</label> <input type="text" name="captcha_code" tabindex="3" value="" />');
 	}
 
