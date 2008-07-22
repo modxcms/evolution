@@ -496,6 +496,20 @@ function updateContentType(){
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
+            <tr>
+              <td nowrap class="warning"><b><?php echo $_lang["validate_referer_title"] ?></b></td>
+              <td><input onchange="documentDirty=true;" type="radio" name="validate_referer" value="1" <?php echo ($validate_referer=='1' || !isset($validate_referer)) ? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["yes"]?><br />
+                <input onchange="documentDirty=true;" type="radio" name="validate_referer" value="0" <?php echo $validate_referer=='0' ? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["no"]?> </td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["validate_referer_message"] ?></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php

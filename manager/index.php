@@ -221,6 +221,25 @@ if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
 // save page to manager object
 $modx->manager->action = $action;
 
+// attempt to foil some simple types of CSRF attacks
+if (isset($modx->config['validate_referer']) && $modx->config['validate_referer']) {
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        $referer = $_SERVER['HTTP_REFERER'];
+        if (!empty($referer)) {
+            if (!eregi(MODX_SITE_URL, $referer)) {
+                echo "A possible CSRF attempt was detected from referer: {$referer}.";
+                exit();
+            }
+        } else {
+            echo "A possible CSRF attempt was detected. No referer was provided by the client.";
+            exit();
+        }
+    } else {
+        echo "A possible CSRF attempt was detected. No referer was provided by the server.";
+        exit();
+    }
+}
+
 // invoke OnManagerPageInit event
 $modx->invokeEvent("OnManagerPageInit", array("action" => $action));
 

@@ -832,7 +832,7 @@ REPLACE INTO `{PREFIX}user_attributes`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxLight'),
-('settings_version','0.9.6.2-rc1'),
+('settings_version','0.9.6.2-rc2'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),
@@ -902,7 +902,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tinymce_custom_plugins','style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media'),
 ('tinymce_custom_buttons1','undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help'),
 ('tinymce_custom_buttons2','bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops'),
-('tree_show_protected', '0');
+('tree_show_protected', '0'),
+('validate_referer', '0');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
