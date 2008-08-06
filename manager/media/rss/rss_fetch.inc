@@ -27,6 +27,10 @@ if (!defined('MAGPIE_DIR')) {
     define('MAGPIE_DIR', dirname(__FILE__) . DIR_SEP);
 }
 
+if (!defined('MAGPIE_CACHE_DIR')) {
+    define('MAGPIE_CACHE_DIR', MODX_BASE_PATH . 'assets/cache/rss/');
+}
+
 require_once( MAGPIE_DIR . 'rss_parse.inc' );
 require_once( MAGPIE_DIR . 'rss_cache.inc' );
 

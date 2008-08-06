@@ -2,7 +2,7 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.2-rc2 (rev 3872 - July 22, 2008)
+MODx 0.9.6.2-rc2 (rev 3895 - August 6, 2008)
 ====================================
 * [#MODX-206] Vulnerability with CSRF(Cross Site Request Forgery); added configurable http referer validation option.
 * [#MODX-164] The keywords cannot be saved on manager.  See also, FS#1055 in old bug tracker.
