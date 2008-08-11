@@ -1,4 +1,4 @@
-<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly."); 
+<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
     $theme = $manager_theme ? "$manager_theme/":"";
 
@@ -8,7 +8,7 @@
                 <img src='media/style/<?php echo $theme; ?>images/icons/<?php echo $img; ?>.gif' /><?php echo $text; ?>
             </div>
         <?php
-        } 
+        }
         else { ?>
             <div class="menuLinkDisabled">
                 <img src='media/style/<?php echo $theme; ?>images/icons/<?php echo $img; ?>.gif' /><?php echo $text; ?>
@@ -29,7 +29,7 @@
     <script type="text/javascript">
     /* including (for the really important bits) code devised and written yb patv */
 	window.addEvent('load', function(){
-        resizeTree();    
+        resizeTree();
         restoreTree();
         window.addEvent('resize', resizeTree);
     });
@@ -54,6 +54,7 @@
     var selectedObject = 0;
     var selectedObjectDeleted = 0;
     var selectedObjectName = "";
+    var _rc = 0; // added to fix onclick body event from closing ctx menu - 08/11/08
 
 <?php
     //
@@ -71,7 +72,7 @@
     // Jeroen end
     //
 ?>
-    
+
     // return window dimensions in array
     function getWindowDimension() {
         var width  = 0;
@@ -80,26 +81,26 @@
         if ( typeof( window.innerWidth ) == 'number' ){
             width  = window.innerWidth;
             height = window.innerHeight;
-        }else if ( document.documentElement && 
+        }else if ( document.documentElement &&
                  ( document.documentElement.clientWidth ||
                    document.documentElement.clientHeight ) ){
             width  = document.documentElement.clientWidth;
             height = document.documentElement.clientHeight;
         }
-        else if ( document.body && 
+        else if ( document.body &&
                 ( document.body.clientWidth || document.body.clientHeight ) ){
             width  = document.body.clientWidth;
             height = document.body.clientHeight;
         }
-        
+
         return {'width':width,'height':height};
     }
 
     function resizeTree() {
-        
+
         // get window width/height
         var win = getWindowDimension();
-        
+
         // set tree height
         var tree = $('treeHolder');
         var tmnu = $('treeMenu');
@@ -153,17 +154,19 @@
         elm.innerHTML = selectedObjectName;
 
         context.style.visibility = 'visible';
-
+        _rc = 1;
+        setTimeout("_rc = 0;",100);
     }
 
     function hideMenu() {
+        if (_rc) return false;
         $('mx_contextmenu').style.visibility = 'hidden';
     }
-    
+
     function toggleNode(node,indent,parent,expandAll,privatenode) {
 		privatenode = (!privatenode || privatenode == '0') ? privatenode = '0' : privatenode = '1';
         rpcNode = $(node.parentNode.lastChild);
-        
+
         var rpcNodeText;
         var loadText = "<?php echo $_lang['loading_doc_tree'];?>";
 
@@ -215,7 +218,7 @@
 
     function rpcLoadData(response) {
         if(rpcNode != null){
-            rpcNode.innerHTML = typeof response=='object' ? response.responseText : response ; 
+            rpcNode.innerHTML = typeof response=='object' ? response.responseText : response ;
             rpcNode.style.display = 'block';
             rpcNode.loaded = true;
             var elm = top.mainMenu.$("buildText");
@@ -229,7 +232,7 @@
                 if(e) showBinFull();
                 else showBinEmpty();
             }
-            
+
             // check if our payload contains the login form :)
             e = $('mx_loginbox');
             if(e) {
@@ -241,12 +244,12 @@
     }
 
     function expandTree() {
-        rpcNode = $('treeRoot'); 
+        rpcNode = $('treeRoot');
         new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=1', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
     function collapseTree() {
-        rpcNode = $('treeRoot'); 
+        rpcNode = $('treeRoot');
         new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
@@ -254,7 +257,7 @@
     // Jeroen makes new function used in body onload
     //
     function restoreTree() {
-        rpcNode = $('treeRoot'); 
+        rpcNode = $('treeRoot');
         new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2', {method: 'get',onComplete:rpcLoadData}).request();
     }
     //
@@ -295,7 +298,7 @@
     };
 
     function updateTree() {
-        rpcNode = $('treeRoot'); 
+        rpcNode = $('treeRoot');
         treeParams = 'a=1&f=nodes&indent=1&parent=0&expandAll=2&dt=' + document.sortFrm.dt.value + '&tree_sortby=' + document.sortFrm.sortby.value + '&tree_sortdir=' + document.sortFrm.sortdir.value;
         new Ajax('index.php?'+treeParams, {method: 'get',onComplete:rpcLoadData}).request();
     }
@@ -377,7 +380,7 @@
     }
     function saveFolderState() {
     	var folderState = getFolderState();
-        new Ajax('index.php?a=1&f=nodes&savestateonly=1'+folderState, {method: 'get'}).request();		
+        new Ajax('index.php?a=1&f=nodes&savestateonly=1'+folderState, {method: 'get'}).request();
     }
     //Raymond:added getFolderState,saveFolderState
 
@@ -387,22 +390,22 @@
         var a = $('Button10');
         var title = '<?php echo $_lang['empty_recycle_bin']; ?>';
         if(!a.setAttibute) a.title = title;
-        else a.setAttribute('title',title); 
+        else a.setAttribute('title',title);
         a.innerHTML = '<?php echo $_style['empty_recycle_bin']; ?>';
         a.className = 'treeButton';
         a.onclick = emptyTrash;
     }
-    
+
     function showBinEmpty() {
         var a = $('Button10');
         var title = '<?php echo $_lang['empty_recycle_bin_empty']; ?>';
         if(!a.setAttibute) a.title = title;
-        else a.setAttribute('title',title); 
-        a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';    
+        else a.setAttribute('title',title);
+        a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';
         a.className = 'treeButtonDisabled';
         a.onclick = '';
     }
-    
+
 </script>
 
 <!--[if lt IE 7]>
@@ -415,7 +418,7 @@
 
 </head>
 <!-- Raymond: add onbeforeunload -->
-<body onclick="hideMenu();" class="treeframebody">
+<body onclick="hideMenu(1);" class="treeframebody">
 
 <!-- to be improved -->
 <div id="treeSplitter"></div>
@@ -565,7 +568,7 @@ function menuHandler(action) {
             //window.open("../index.php?id=" + itemToChange); //open in new window each time
             //top.main.document.location.href="../index.php?id=" + itemToChange; //open in manager
             break
-        
+
         default :
             alert('Unknown operation command.');
     }
