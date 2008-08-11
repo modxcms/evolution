@@ -21,9 +21,10 @@
 		<link href="browser.css" type="text/css" rel="stylesheet">
 <?php
 if($_GET['editor'] == 'tinymce3' && $_GET['editorpath']){
+	$editorPath = htmlspecialchars($_GET['editorpath'], ENT_QUOTES);
 ?>
-		<script language="javascript" type="text/javascript" src="<?php echo $_GET['editorpath']; ?>/jscripts/tiny_mce/tiny_mce_popup.js"></script>
-		<script language="javascript" type="text/javascript" src="<?php echo $_GET['editorpath']; ?>/tinymce.modxfb.js"></script>
+		<script language="javascript" type="text/javascript" src="<?php echo $editorPath; ?>/jscripts/tiny_mce/tiny_mce_popup.js"></script>
+		<script language="javascript" type="text/javascript" src="<?php echo $editorPath; ?>/tinymce.modxfb.js"></script>
 <?php
 }else{
 ?>

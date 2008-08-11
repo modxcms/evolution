@@ -13,13 +13,14 @@ if (!$conn = @ mysql_connect($host, $uid, $pwd)) {
 }
 else {
     $database_name = $_POST['database_name'];
+    $database_name = str_replace("`", "", $database_name);
     $tableprefix = $_POST['tableprefix'];
     $database_collation = $_POST['database_collation'];
 
-    if (!@ mysql_select_db(str_replace("`", "", $database_name), $conn)) {
+    if (!@ mysql_select_db($database_name, $conn)) {
         // create database
         $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
-        $query = "CREATE DATABASE ".$database_name." CHARACTER SET ".$database_charset." COLLATE ".$database_collation.";";
+        $query = "CREATE DATABASE `".$database_name."` CHARACTER SET ".$database_charset." COLLATE ".$database_collation.";";
 
         if (!@ mysql_query($query)){
             $output .= '<span style="color:#FF0000;">'.$_lang['status_failed_could_not_create_database'].'</span>';
