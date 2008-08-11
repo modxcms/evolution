@@ -2,8 +2,9 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.2 (rev 3902 - August 11, 2008)
+MODx 0.9.6.2 (rev 3903 - August 11, 2008)
 ====================================
+* Added <small>(ID)</small> markup to resource list so resources saved without a name can be easily accessed.
 * [#MODX-246] Cannot create database with reserved MySQL characters (not properly escaped).
 * [#MODX-163] - Fix issue with context menu closing in FF3 on right click.
 * [#MODX-176] XSS vulnerability in mcpuk resource browser; fixed problem in GET parameter "editorpath".
