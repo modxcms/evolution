@@ -184,7 +184,7 @@ $_lang["alert_enter_adminconfirm"] = 'Пароль Администратора 
 $_lang["iagree_box"] = 'Я согласен с условиями лицензии.';
 $_lang["btnclose_value"] = 'Закрыть';
 $_lang["running_setup_script"] = 'Запущен скрипт установки... ждите';
-$_lang["modx_footer1"] = '&copy; 2005-2007 <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. Все права защищены. MODx лицензирован GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2008 <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. Все права защищены. MODx лицензирован GNU GPL.';
 $_lang["modx_footer2"] = 'MODx - свободное ПО.  Мы поощряем Вас быть творческими и использовать MODx как Вы считаете целесообразным.<br />Если Вы внесете изменения и решите распространять Ваш измененный MODx, Вы должны сохранять и распространять<br />исходный код бесплатно.';
 $_lang["setup_database"] = 'Программа установки сейчас попробует установить базу данных:<br />';
 $_lang["setup_database_create_connection"] = 'Создание подключения к базе данных: ';

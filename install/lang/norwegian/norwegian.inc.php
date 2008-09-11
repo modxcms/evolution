@@ -163,7 +163,7 @@ $_lang["alert_enter_adminconfirm"] = 'Brukernavnet og passordet til administrasj
 $_lang["iagree_box"] = 'Jeg aksepterer vilkårene i denne lisensen.';
 $_lang["btnclose_value"] = 'Lukk';
 $_lang["running_setup_script"] = 'Kjører installasjonsprogrammet... vent litt';
-$_lang["modx_footer1"] = '&copy; 2005-2007 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. Med enerett. MODx er lisensiert under GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2008 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. Med enerett. MODx er lisensiert under GNU GPL.';
 $_lang["modx_footer2"] = 'MODx er fri programvare. Vi oppmuntrer deg til å være kreativ og bruke MODx på hvilken måte du vil. Vær bare nøye med å beholde kildekoden fri om du gjør endringer og siden velger å omdistribuere din modifiserte versjon av MODx.';
 $_lang["setup_database"] = 'Installasjonsprogrammet kommer nå til å forsøke å konfigurere databasen:<br />';
 $_lang["setup_database_create_connection"] = 'Oppretter tilkobling til databasen: ';

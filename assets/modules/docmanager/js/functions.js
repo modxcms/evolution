@@ -99,7 +99,7 @@ if (tabActiveID == '0' || tabActiveID == null) { //Template tab
 		} else {
 		document.module.tabAction.value='pullDocGroup';
 		}
-        document.module.newvalue.value=getSelectedRadioValue(document.template.id); 
+        document.module.newvalue.value=getSelectedRadioValue(document.docgroups.docgroupid);
 		document.module.pids.value=getElementsByClass('pids',document.subdiv,'input'); 
 		document.module.submit(); 
 	} else {

@@ -45,6 +45,11 @@ if ($upgradeable && (!isset ($database_connection_charset) || empty($database_co
     $database_collation = 'utf8_general_ci';
 }
 
+// determine the database connection method if not specified in the configuration
+if ($upgradeable && (!isset($database_connection_method) || empty($database_connection_method))) {
+    $database_connection_method = 'SET CHARACTER SET';
+}
+
 ?>
 <script type="text/javascript" src="connection.mootools.1.11.js"></script>
 <script type="text/javascript" src="connection.js"></script>
@@ -59,6 +64,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
     <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
+    <input type="hidden" value="<?php echo isset($database_connection_method) ? $database_connection_method : ''; ?>" name="database_connection_method" />
   </div>
   <p class="title"><?php echo $_lang['connection_screen_connection_information']?></p>
   <p class="subtitle"><?php echo $_lang['connection_screen_server_connection_information']?></p>
@@ -81,6 +87,24 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
   <div class="labelHolder"><label for="tableprefix"><?php echo $_lang['connection_screen_table_prefix']?></label>
     <input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']: $table_prefix ?>" name="tableprefix" />
   </div>
+<?php
+  if (($installMode == 0) || ($installMode == 2)) {
+?>
+  <div class="labelHolder"><label for="database_connection_method"><?php echo $_lang['connection_screen_connection_method']?></label>
+    <div id="connection_method" name="connection_method">
+      <select id="database_connection_method" name="database_connection_method">
+        <option value="SET CHARACTER SET" <?php echo isset($database_connection_method) && $database_connection_method == 'SET CHARACTER SET' ? 'selected="selected"' : '' ?>>
+          SET CHARACTER SET
+        </option>
+        <option value="SET NAMES" <?php echo isset($database_connection_method) && $database_connection_method == 'SET NAMES' ? 'selected="selected"' : '' ?>>
+          SET NAMES
+        </option>
+      </select>
+    </div>
+  </div>
+<?php
+  }
+?>
   <div class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
     <div id="collation" name="collation"><select id="database_collation" name="database_collation">
         <option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected >

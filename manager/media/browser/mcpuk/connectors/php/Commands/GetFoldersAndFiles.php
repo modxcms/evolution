@@ -114,6 +114,7 @@ class GetFoldersAndFiles {
 			 * SORT IT!
 			 */
 			natcasesort($files);
+            $files = array_values($files);
 
 			for ($i=0;$i<sizeof($files);$i++) {
 

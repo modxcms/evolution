@@ -8,9 +8,9 @@ class SqlParser {
 	var $conn, $installFailed, $sitename, $adminname, $adminemail, $adminpass, $managerlanguage;
 	var $mode, $fileManagerPath, $imgPath, $imgUrl;
 	var $dbVersion;
-    var $connection_charset;
+    var $connection_charset, $connection_method;
 
-	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english') {
+	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET') {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -20,6 +20,7 @@ class SqlParser {
 		$this->adminname = $adminname;
 		$this->adminemail = $adminemail;
 		$this->connection_charset = $connection_charset;
+		$this->connection_method = $connection_method;
 		$this->ignoreDuplicateErrors = false;
 		$this->managerlanguage = $managerlanguage;
 	}
@@ -35,7 +36,7 @@ class SqlParser {
 			$this->dbVersion = (float) $ver; // Typecasting (float) instead of floatval() [PHP < 4.2]
 		}
 
-        mysql_query("SET CHARACTER SET {$this->connection_charset}");
+        mysql_query("{$this->connection_method} {$this->connection_charset}");
 	}
 
 	function process($filename) {

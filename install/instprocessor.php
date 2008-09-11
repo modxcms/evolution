@@ -34,6 +34,7 @@ $installData = $_POST['installdata'] ? 1 : 0;
 	$database_collation = $_POST['database_collation'];
 	$database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
 	$database_connection_charset = $_POST['database_connection_charset'];
+	$database_connection_method = $_POST['database_connection_method'];
 	$dbase = "`" . $_POST['database_name'] . "`";
 	$table_prefix = $_POST['tableprefix'];
 	$adminname = $_POST['cmsadmin'];
@@ -76,7 +77,7 @@ if (!@ mysql_select_db(str_replace("`", "", $dbase), $conn)) {
 	echo "<span class=\"notok\" style='color:#707070'>".$_lang['setup_database_selection_failed']."</span>".$_lang['setup_database_selection_failed_note']."</p>";
 	$create = true;
 } else {
-    @ mysql_query("SET CHARACTER SET {$database_connection_charset}");
+    @ mysql_query("{$database_connection_method} {$database_connection_charset}");
 	echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 
@@ -118,7 +119,7 @@ if ($installMode == 0) {
 $setupPath = realpath(dirname(__FILE__));
 include "{$setupPath}/setup.info.php";
 include "{$setupPath}/sqlParser.class.php";
-$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage);
+$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 //$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imageUrl = "assets/";
@@ -180,6 +181,7 @@ $database_server = \'' . $database_server . '\';
 $database_user = \'' . $database_user . '\';
 $database_password = \'' . $database_password . '\';
 $database_connection_charset = \'' . $database_connection_charset . '\';
+$database_connection_method = \'' . $database_connection_method . '\';
 $dbase = \'`' . str_replace("`", "", $dbase) . '`\';
 $table_prefix = \'' . $table_prefix . '\';
 error_reporting(E_ALL & ~E_NOTICE);

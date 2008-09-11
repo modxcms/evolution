@@ -24,9 +24,14 @@ elseif ($installMode == 1) {
     $database_connection_charset = $database_charset;
   }
 
+  if (!isset($database_connection_method) || empty($database_connection_method)) {
+    $database_connection_method = 'SET CHARACTER SET';
+  }
+
   $_POST['database_name']= $dbase;
   $_POST['tableprefix']= $table_prefix;
   $_POST['database_connection_charset']= $database_connection_charset;
+  $_POST['database_connection_method']= $database_connection_method;
   $_POST['databasehost']= $database_server;
   $_POST['databaseloginname']= $database_user;
   $_POST['databaseloginpassword']= $database_password;
@@ -42,6 +47,7 @@ elseif ($installMode == 1) {
     <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />
     <input type="hidden" value="<?php echo $_POST['database_collation'] ?>" name="database_collation" />
     <input type="hidden" value="<?php echo $_POST['database_connection_charset'] ?>" name="database_connection_charset" />
+    <input type="hidden" value="<?php echo $_POST['database_connection_method'] ?>" name="database_connection_method" />
     <input type="hidden" value="<?php echo $_POST['databasehost'] ?>" name="databasehost" />
     <input type="hidden" value="<?php echo $_POST['databaseloginname'] ?>" name="databaseloginname" />
     <input type="hidden" value="<?php echo $_POST['databaseloginpassword'] ?>" name="databaseloginpassword" />

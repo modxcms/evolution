@@ -138,7 +138,7 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
     die("<h2>Failed to create the database connection!</h2>. Please run the MODx <a href='../install'>install utility</a>");
 } else {
     mysql_select_db($dbase);
-    @mysql_query("SET CHARACTER SET {$database_connection_charset}");
+    @mysql_query("{$database_connection_method} {$database_connection_charset}");
 }
 
 // get the settings from the database

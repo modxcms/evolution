@@ -93,7 +93,7 @@ class DBAPI {
             $modx->messageQuit("Failed to select the database '" . $dbase . "'!");
             exit;
          }
-         @mysql_query("SET CHARACTER SET {$charset}", $this->conn);
+         @mysql_query("{$database_connection_method} {$charset}", $this->conn);
          $tend = $modx->getMicroTime();
          $totaltime = $tend - $tstart;
          if ($modx->dumpSQL) {

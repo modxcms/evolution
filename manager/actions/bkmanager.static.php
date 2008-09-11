@@ -245,7 +245,7 @@ class Mysqldumper {
 		$resource = mysql_connect($this->getHost(), $this->getDBuser(), $this->getDBpassword());
 		mysql_select_db($this->getDBname(), $resource);
 		$database_connection_charset= $this->getDBcharset();
-		@mysql_query("SET CHARACTER SET {$database_connection_charset}");
+		@mysql_query("{$database_connection_method} {$database_connection_charset}");
 		$result = mysql_query("SHOW TABLES",$resource);
 		$tables = $this->result2Array(0, $result);
 		foreach ($tables as $tblval) {
