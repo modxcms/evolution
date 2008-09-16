@@ -2,47 +2,61 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.2 (rev 4064 - September 11, 2008)
+MODx 0.9.6.2 (rev 4077 - September 15, 2008)
 ====================================
+* [#MODX-178] Captcha fails when there is a non-TTF file in the /ttf folder.
+* Implement Captcha workaround for imagettfbbox() error in Windows requiring absolute path in fontfile parameter.
+* [#MODX-289] Fixed MODx Parse Error in module dependencies tab. (4069)
 * [#MODX-185] SET NAMES vs SET CHARACTER SET issue resolved; preferred method can be specified at installation.
 * Added <small>(ID)</small> markup to resource list so resources saved without a name can be easily accessed.
 * [#MODX-246] Cannot create database with reserved MySQL characters (not properly escaped).
 * [#MODX-163] - Fix issue with context menu closing in FF3 on right click.
-* Added <small>(ID)</small> markup to resource list so resources saved without a name can be easily accessed.
-* [#MODX-246] Cannot create database with reserved MySQL characters (not properly escaped).
-* [#MODX-163] - Fix issue with context menu closing in FF3 on right click.
-* [#MODX-176] XSS vulnerability in mcpuk resource browser; fixed problem in GET parameter "editorpath".
-* [#MODX-206] Vulnerability with CSRF(Cross Site Request Forgery); added configurable http referer validation option.
-* [#MODX-164] The keywords cannot be saved on manager.  See also, FS#1055 in old bug tracker.
-* [#MODX-159] installer style fix
-* [#MODX-183] fixes database creation problem - fix provided by sottwell
-* Updated TinyMCE to v3.1.0.1a
+* Fix to alphabetical sorting in MCPUCK browser (3938)
+* Fix parser error in Doc Manager when setting document permissions if using the tree to sort documents (3913)
+* [#MODX-176] XSS vulnerability in mcpuk resource browser; fixed problem in GET parameter "editorpath" (3896)
+* Modified MAGPIE_CACHE_DIR to store RSS cache in assets/cache/rss (3893)
+* [#MODX-206] Vulnerability with CSRF (Cross Site Request Forgery); added configurable http referer validation option (3871)
+* [#MODX-164] The keywords cannot be saved on manager.  See also, FS#1055 in old bug tracker. (3389)
+* [#MODX-159] installer style fix (3836)
+* [#MODX-183] fixes database creation problem - fix provided by sottwell (3825)
+* Updated TinyMCE to v3.1.0.1a (3824)
 * Updated Russian language files (thanks to Safronovich Victor)
-* Additional fix for [#MODX-101] so that any existing document group/document relationships are actually removed from the database if the 'public access' permission is selected.
-* [#MODX-155] fix 'Allowed Days' checkboxes for Manager users
-* [#MODX-153] - avoid table prefix when installMode = 3
-* action.language.php:mix of </div></form>, action.license.php: useless </span> tag, action.summary.php: useless </p> tag
-* [#MODX-152] Fixed. Advanced Upgrade Install doesn't work
-* Update to 0.9.6.2 the $module_version variable for a correct version label in the installer
-* [#MODX-151] php4 fix - remove use of array_combine() when saving TVs
-* [#MODX-138] inherit language which selected by installer to manager
-* collation list highlighting issue with non-english languages fixed and tested
+* Additional fix for [#MODX-101] so that any existing document group/document relationships are actually removed from the database if the 'public access' permission is selected. (3783)
+* [#MODX-155] fix 'Allowed Days' checkboxes for Manager users (3782)
+* [#MODX-153] - avoid table prefix when installMode = 3 (3780)
+* action.language.php:mix of </div></form>, action.license.php: useless </span> tag, action.summary.php: useless </p> tag (3777)
+* [#MODX-152] Fixed. Advanced Upgrade Install doesn't work (3776)
+* Update to 0.9.6.2 the $module_version variable for a correct version label in the installer (3775)
+* [#MODX-151] php4 fix - remove use of array_combine() when saving TVs (3773,3774)
+* [#MODX-138] inherit language which selected by installer to manager (3766-3768)
+* Collation list highlighting issue with non-english languages fixed and tested (3765)
 * Added/Updated Persian, Bulgarian, French, and Swedish manager localizations.
-* Added/Updated Persian, Norwegian, Bulgarian, German, and Swedish installer localizations
+  Added/Updated Persian, Norwegian, Bulgarian, German, and Swedish installer localizations (3753-3761)
 * Updated Jot snippet to version 1.1.3
 * Updated Breadcrumbs snippet to 1.0.1
-* [#MODX-147] Fixed plus english and francais-utf8 language file updates.
-* [#MODX-141] Install mod to verify MySQL version + strict mode.
+* [#MODX-141] Install mod to verify MySQL version + strict mode (3730)
+* [#MODX-147] Fixed plus english and francais-utf8 language file updates (3729)
+* Update AjaxSearch to 1.7.1 (3726,3728)
 * [FS#1064] Fix event name for OnDocUnpublished (3718)
+* Added XML doctype and header to MCPUK for file uploads (3715)
 * Added plugin to show image previews in the manager for Image TVs as a tribute to Brett joining the team (3709)
 * [FS#863] — IE7 gives JS error on navigating away from/logging out of Manager (3705)
 * [#MODX-124] Added a manager role for emptying the trash/permanently purging docs (rev 3682)
+* Fix PHP-syntax-incuded parser error (3648)
+* Added a unique CSS ID to the form on multate_content_dyanamic.php to help with custom plugins (3646)
 * Changing TVs no longer looses the sort order  on templates to which they're assigned (see http://modxcms.com/forums/index.php/topic,16090.msg146881.html#msg146881) (3622)
 * Insert CDATA Tags into Weblogin snippet code so it will validate (3622)
 * [#MODX-101] Fix ability to make document Public after it has been assigned to one or more Document Groups
 * Patches to Ditto 2.1 to fix sorting and change default docs displayed number from 3 to "all" (see http://modxcms.com/forums/index.php/topic,23204.msg146176.html#msg146176) (3511)
-* [#MODX-50] stripAlias function converts named entities to their numeric equivalents and then further to their actual character.
+* Update TinyMCE to 3.0.3 (3496)
+* Many updates to MCPUCK brower (3492)
+* [#MODX-50] stripAlias function converts named entities to their numeric equivalents and then further to their actual character. (3457)
+* [#MODX-34] Document permissions are saved now when a document is saved.
+  [#MODX-35] private_*group columns now fully implemented. (3429)
+* [#MODX-51] Format and general code cleanups. (3422,3423)
 * Fixed bad markup in language files (see http://modxcms.com/forums/index.php/topic,23353.0)
+* Sorting for files/folders in MCPUCK file browser. .htaccess file for MCPUCK browser for mod_security workaround (3409)
+* Removed calls to modx.js and MODX_MEDIA_PATH variables (3407)
 * [FS#997] Add database collation charset and database charset to System Info. (3403)
 * Fix to prevent JS warning in FF with QuickEdit (3402)
 * Fix installer to use multi-language based images (3401)

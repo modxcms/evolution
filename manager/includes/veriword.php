@@ -40,7 +40,7 @@ $vword->destroy_image();
 class VeriWord {
 
 	/* path to font directory*/
-	var $dir_font 	= "fonts/";
+	var $dir_font 	= "ttf/";
 	/* path to background image directory*/
 	var $dir_noise 	= "noises/";
 	var $word 		= ""; 
@@ -50,7 +50,8 @@ class VeriWord {
 	function VeriWord($w=200, $h=80) {
 		/* create session to set word for verification */
 		startCMSSession();
-		$this->set_veriword();	
+		$this->set_veriword();
+		$this->dir_font = dirname(__FILE__) . '/' . $this->dir_font;
 		$this->im_width 		= $w;
 		$this->im_height 		= $h;
 	}
@@ -105,14 +106,11 @@ class VeriWord {
 		   } 
 		} 		
 		
-		/* pick one font type randomly from font directory */
-		//$text_font 	= $this->dir_font."".rand(1,3).".ttf";
-		// added by Alex - read ttf dir
-		$dir = dir("./ttf");
+		$dir = dir($this->dir_font);
 		$fontstmp = array();
 		while (false !== ($file = $dir->read())) {
-			if($file!="." && $file!=".." && file_exists('./ttf/'.$file) && !is_dir('./ttf/' . $file)) {
-				$fontstmp[] = './ttf/'.$file;
+			if(substr($file, -4) == '.ttf') {
+				$fontstmp[] = $this->dir_font.$file;
 			}
 		}
 		$dir->close();
