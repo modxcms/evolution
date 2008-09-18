@@ -18,7 +18,7 @@ else    $manager_theme  ='';
 $tbl_active_users       = $modx->getFullTableName('active_users');
 $tbl_site_content       = $modx->getFullTableName('site_content');
 $tbl_site_htmlsnippets  = $modx->getFullTableName('site_htmlsnippets');
-$tbl_site_module_debobj = $modx->getFullTableName('site_module_depobj');
+$tbl_site_module_depobj = $modx->getFullTableName('site_module_depobj');
 $tbl_site_modules       = $modx->getFullTableName('site_modules');
 $tbl_site_plugins       = $modx->getFullTableName('site_plugins');
 $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
@@ -63,13 +63,13 @@ switch ($_REQUEST['op']) {
 			if ($rt == 'snip')  $type = 40;
 			if ($rt == 'tpl')   $type = 50;
 			if ($rt == 'tv')    $type = 60;
-			$sql = 'INSERT INTO '.$tbl_site_module_debobj.' (module, resource, type) VALUES ';
+			$sql = 'INSERT INTO '.$tbl_site_module_depobj.' (module, resource, type) VALUES ';
 			for($i=0;$i<count($opids);$i++) {
 				if ($i != 0) $sql .= ',';
 				$opids[$i] = intval($opids[$i]);
 				$sql.="('$id',".$opids[$i].",$type)";
 			}
-			$modx->dbQuery('DELETE FROM '.$tbl_site_module_debobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
+			$modx->dbQuery('DELETE FROM '.$tbl_site_module_depobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
 			$ds = $modx->dbQuery($sql);
 			if(!$ds){
 				echo '<script type="text/javascript">'.
@@ -85,7 +85,7 @@ switch ($_REQUEST['op']) {
 			$opids[$i]=intval($opids[$i]); // convert ids to numbers
 		}
 		// get resources that needs to be removed
-		$ds = $modx->dbQuery("SELECT * FROM ".$tbl_site_module_debobj." WHERE id IN (".implode(",",$opids).")");
+		$ds = $modx->dbQuery("SELECT * FROM ".$tbl_site_module_depobj." WHERE id IN (".implode(",",$opids).")");
 		if ($ds) {
 			// loop through resources and look for plugins and snippets
 			$i=0; $plids=array(); $snid=array();
@@ -111,7 +111,7 @@ switch ($_REQUEST['op']) {
 				$sync->emptyCache(); // first empty the cache
 			}
 		}
-		$sql = 'DELETE FROM '.$tbl_site_module_debobj.' WHERE id IN ('.implode(',', $opids).')';
+		$sql = 'DELETE FROM '.$tbl_site_module_depobj.' WHERE id IN ('.implode(',', $opids).')';
 		$modx->dbQuery($sql);
 		break;
 }
