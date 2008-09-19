@@ -35,7 +35,7 @@
 				break;
 			case "date":
                 if($field_value=='') $field_value=0;
-                $cal = 'cal' . $field_name;
+                $cal = 'cal' . str_replace('-','_',$field_name);
 
 				$field_html .=  '<input id="tv'.$field_name.'" name="tv'.$field_name.'" type="hidden" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;">';
 
@@ -184,7 +184,7 @@
 				break;
 			case "file": // handles the input of file uploads
 			/* Modified by Timon for use with resource browser */
-                		global $_lang;
+                global $_lang;
 				global $ResourceManagerLoaded;
 				global $content,$use_editor,$which_editor;
 				if (!$ResourceManagerLoaded && !(($content['richtext']==1 || $_GET['a']==4) && $use_editor==1 && $which_editor==3)){

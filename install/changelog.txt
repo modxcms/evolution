@@ -2,6 +2,19 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx 0.9.6.3 (rev 4107 - September 18, 2008)
+====================================
+* [#MODX-185] Problems with original SET NAMES vs SET CHARACTER SET patches resolved.
+* [#MODX-289] Fix was not merged into trunk for 0.9.6.2 release.
+* Fix MySQL Strict mode problem in save_content.processor.php
+* [FS#1038] Fix consistency of 'z=manprev' for document preview in manager code
+* [FS#1066] Fix problem with Newspublisher snippet and the calendar showing a 404 error when using the FormBlog chunk template
+* [FS#1062] Fix Weblogin snippet to correctly block users for period of time specified in system settings if they reach the maximum failed attempts
+* [FS#1079] Apply URL TV patch to Doc Manager module
+* [#MODX-218] Fix broken image paths in Newspublisher snippet
+* [#MODX-266] Stop .svn folder appearing on help screen if MODx install was checked out from SVN
+* [FS#1076] Fix calendar JS error occurring if calendar TV name contains an hyphen
+
 MODx 0.9.6.2 (rev 4077 - September 15, 2008)
 ====================================
 * [#MODX-178] Captcha fails when there is a non-TTF file in the /ttf folder.

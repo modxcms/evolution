@@ -15,12 +15,13 @@ class DBAPI {
     * @name:  DBAPI
     *
     */
-   function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='') {
+   function DBAPI($host='',$dbase='', $uid='',$pwd='',$pre=NULL,$charset='',$connection_method='SET CHARACTER SET') {
       $this->config['host'] = $host ? $host : $GLOBALS['database_server'];
       $this->config['dbase'] = $dbase ? $dbase : $GLOBALS['dbase'];
       $this->config['user'] = $uid ? $uid : $GLOBALS['database_user'];
       $this->config['pass'] = $pwd ? $pwd : $GLOBALS['database_password'];
       $this->config['charset'] = $charset ? $charset : $GLOBALS['database_connection_charset'];
+      $this->config['connection_method'] =  $this->_dbconnectionmethod = (isset($GLOBALS['database_connection_method']) ? $GLOBALS['database_connection_method'] : $connection_method);
       $this->config['table_prefix'] = ($pre !== NULL) ? $pre : $GLOBALS['table_prefix'];
       $this->initDataTypes();
    }
@@ -83,6 +84,7 @@ class DBAPI {
       $host = $host ? $host : $this->config['host'];
       $dbase = $dbase ? $dbase : $this->config['dbase'];
       $charset = $charset ? $charset : $this->config['charset'];
+      $connection_method = $this->config['connection_method'];
       $tstart = $modx->getMicroTime();
       if (!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd) : mysql_connect($host, $uid, $pwd, true))) {
          $modx->messageQuit("Failed to create the database connection!");
@@ -93,7 +95,7 @@ class DBAPI {
             $modx->messageQuit("Failed to select the database '" . $dbase . "'!");
             exit;
          }
-         @mysql_query("{$database_connection_method} {$charset}", $this->conn);
+         @mysql_query("{$connection_method} {$charset}", $this->conn);
          $tend = $modx->getMicroTime();
          $totaltime = $tend - $tstart;
          if ($modx->dumpSQL) {

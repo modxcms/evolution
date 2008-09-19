@@ -12,7 +12,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <?php
 if ($handle = opendir('help')) {
     while (false !== ($file = readdir($handle))) {
-        if ($file != "." && $file != "..") {
+        if ($file != "." && $file != ".." && $file != ".svn") {
             $help[] = $file;
         }
     }

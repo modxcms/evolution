@@ -8,11 +8,11 @@
 #  Modified: December 13, 2005
 #
 #  Changelog: 
-#	 Mar 05, 06 -- modx_ prefix removed [Mark]
+#    Mar 05, 06 -- modx_ prefix removed [Mark]
 #    Dec 13, 05 -- Now inherrits web/manager docgroups thanks to Jared Carlow
 #
 #::::::::::::::::::::::::::::::::::::::::
-#  Description: 	
+#  Description:     
 #    Checks to see if users belong to a certain group and 
 #    displays the specified chunk if they do. Performs several
 #    sanity checks and allows to be used multiple times on a page.
@@ -42,10 +42,10 @@ $postgrp = isset($canpost) ? explode(",",$canpost):array();
 $allowAnyPost = count($postgrp)==0 ? true : false;
 
 // get clear cache
-$clearcache	 = isset($clearcache) ? 1:0;
+$clearcache  = isset($clearcache) ? 1:0;
 
 // get alias title
-$aliastitle	 = isset($aliastitle) ? 1:0;
+$aliastitle  = isset($aliastitle) ? 1:0;
 
 // get folder id where we should store articles
 // else store in current document
@@ -89,11 +89,11 @@ if(empty($formTpl)) $formTpl = '
         Long title:<br /><input name="longtitle" type="text" size="40" value="[+longtitle+]" /><br />
         Description:<br /><input name="description" type="text" size="40" value="[+description+]" /><br />
         Published date:<br /><input name="pub_date" type="text" value="[+pub_date+]" size="40" readonly="readonly" />
-        <a onClick="nwpub_cal1.popup();" onMouseover="window.status=\'Select date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/images/icons/cal.gif" width="16" height="16" border="0" alt="Select date" /></a>
-        <a onClick="document.NewsPublisher.pub_date.value=\'\'; return true;" onMouseover="window.status=\'Remove date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="Remove date"></a><br />
+        <a onClick="nwpub_cal1.popup();" onMouseover="window.status=\'Select date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/style/MODxLight/images/icons/cal.gif" width="16" height="16" border="0" alt="Select date" /></a>
+        <a onClick="document.NewsPublisher.pub_date.value=\'\'; return true;" onMouseover="window.status=\'Remove date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/style/MODxLight/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="Remove date"></a><br />
         Unpublished date:<br /><input name="unpub_date" type="text" value="[+unpub_date+]" size="40" readonly="readonly" />
-        <a onClick="nwpub_cal2.popup();" onMouseover="window.status=\'Select date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/images/icons/cal.gif" width="16" height="16" border="0" alt="Select date" /></a>
-        <a onClick="document.NewsPublisher.unpub_date.value=\'\'; return true;" onMouseover="window.status=\'Remove date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="Remove date"></a><br />
+        <a onClick="nwpub_cal2.popup();" onMouseover="window.status=\'Select date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/style/MODxLight/images/icons/cal.gif" width="16" height="16" border="0" alt="Select date" /></a>
+        <a onClick="document.NewsPublisher.unpub_date.value=\'\'; return true;" onMouseover="window.status=\'Remove date\'; return true;" onMouseout="window.status=\'\'; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="manager/media/style/MODxLight/images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="Remove date"></a><br />
         Summary:<br /><textarea name="introtext" cols="50" rows="5">[+introtext+]</textarea><br />
         Content:<br /><textarea name="content" cols="50" rows="8">[+content+]</textarea><br />
         <input name="send" type="submit" value="Submit" />
@@ -105,13 +105,13 @@ if(empty($formTpl)) $formTpl = '
         var nwpub_cal1 = new calendar1(pub,elm_txt);
         nwpub_cal1.path="[(base_url)]manager/media/";
         nwpub_cal1.year_scroll = true;
-        nwpub_cal1.time_comp = true;	
+        nwpub_cal1.time_comp = true;    
 
         var unpub = document.forms["NewsPublisher"].elements["unpub_date"];
         var nwpub_cal2 = new calendar1(unpub,elm_txt);
         nwpub_cal2.path="[(base_url)]manager/media/";
         nwpub_cal2.year_scroll = true;
-        nwpub_cal2.time_comp = true;	
+        nwpub_cal2.time_comp = true;    
     </script>';
 
 
@@ -122,7 +122,7 @@ switch ($isPostBack) {
         // remove magic quotes from POST
         if(get_magic_quotes_gpc()){
             $_POST = array_map("stripslashes", $_POST);
-        }	
+        }   
         if(trim($_POST['pagetitle'])=='') $modx->webAlert('Missing page title.');
         elseif($_POST[$rtcontent]=='') $modx->webAlert('Missing news content.');
         else {
@@ -138,7 +138,7 @@ switch ($isPostBack) {
                 $alias = preg_replace('/[^\.%a-z0-9 _-]/', '', $alias);
                 $alias = preg_replace('/\s+/', '-', $alias);
                 $alias = preg_replace('|-+|', '-', $alias);
-                $alias = trim($alias, '-');			
+                $alias = trim($alias, '-');         
                 $alias = 'article-'.$modx->db->escape($alias);
             }
 
@@ -156,6 +156,8 @@ switch ($isPostBack) {
             // format content
             $content = $modx->stripTags($_POST[$rtcontent],$allowedTags);
             $content = str_replace('[+user+]',$user,$content);
+
+
             $content = str_replace('[+createdon+]',strftime('%d-%b-%Y %H:%M',$createdon),$content);
             foreach($_POST as $n=>$v) {
                 if(!empty($badwords)) $v = preg_replace($badwords,'[Filtered]',$v); // remove badwords
@@ -182,7 +184,7 @@ switch ($isPostBack) {
                 if($pub_date < $createdon) {
                     $published = 1;
                 }    elseif($pub_date > $createdon) {
-                    $published = 0;	
+                    $published = 0; 
                 }
             }
 
@@ -262,7 +264,7 @@ switch ($isPostBack) {
                 ".$modx->getFullTableName('document_groups').".document = $lastInsertId;";
                 $privatewebIds = $modx->db->getColumn("document_group",$privatewebSql);
                 if(count($privatewebIds)>0) {
-                    $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privateweb = 1 WHERE id = $lastInsertId;");	
+                    $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privateweb = 1 WHERE id = $lastInsertId;");    
                 }
 
                 // And privatemgr
@@ -276,7 +278,7 @@ switch ($isPostBack) {
                     ".$modx->getFullTableName('document_groups').".document = $lastInsertId;";
                     $privatemgrIds = $modx->db->getColumn("document_group",$privatemgrSql);
                     if(count($privatemgrIds)>0) {
-                        $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 1 WHERE id = $lastInsertId;");	
+                        $modx->db->query("UPDATE ".$modx->getFullTableName("site_content")." SET privatemgr = 1 WHERE id = $lastInsertId;");    
                     }
             // end of document_groups stuff!
 
@@ -291,7 +293,7 @@ switch ($isPostBack) {
                 $sync = new synccache();
                 $sync->setCachepath("assets/cache/");
                 $sync->setReport(false);
-                $sync->emptyCache(); // first empty the cache		
+                $sync->emptyCache(); // first empty the cache       
             }
 
             // get redirect/post id
@@ -312,6 +314,7 @@ switch ($isPostBack) {
                 $formTpl = str_replace('[+'.$n.'+]',$v,$formTpl);
             }
         }
+        $formTpl = str_replace('[+base_url+]', $modx->config['base_url'], $formTpl);
         // return form
         return $message.$formTpl;
         break;

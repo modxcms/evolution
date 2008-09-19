@@ -1,6 +1,5 @@
 <?php
 include_once "../../../manager/includes/config.inc.php";
-global $database_connection_charset;
 
 $allpages = getAllPages();
 foreach($allpages as $page){
@@ -32,7 +31,7 @@ function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, i
 	$link = mysql_connect($database_server, $database_user, $database_password) or die('Could not connect: ' . mysql_error());
 	$dbase = str_replace('`', '', $dbase);
 	mysql_select_db($dbase) or die('Could not select database');
-	@mysql_query("{$database_connection_method} {$database_connection_charset}");
+	@mysql_query("{$GLOBALS['database_connection_method']} {$GLOBALS['database_connection_charset']}");
 
     $sql = "SELECT DISTINCT $fields FROM $tblsc sc
       LEFT JOIN $tbldg dg on dg.document = sc.id

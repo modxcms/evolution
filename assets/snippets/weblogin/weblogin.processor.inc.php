@@ -308,7 +308,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
     if(isset($newloginerror) && $newloginerror==1) {
         $failedlogins += $newloginerror;
         if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block!
-            $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
+            $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins', blockeduntil='".(time()+($modx->config['blocked_minutes']*60))."' where internalKey=$internalKey";
             $ds = $modx->db->query($sql);
         } else { //increment the failed login counter
             $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";

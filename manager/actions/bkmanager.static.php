@@ -207,28 +207,32 @@ class Mysqldumper {
 	var $_dbtables;
 	var $_isDroptables;
 	var $_dbcharset;
+	var $_dbconnectionmethod;
 
-	function Mysqldumper($host = "localhost", $dbuser = "", $dbpassword = "", $dbname = "", $connection_charset= "utf8") {
+	function Mysqldumper($host = "localhost", $dbuser = "", $dbpassword = "", $dbname = "", $connection_charset= "utf8", $connection_method='SET CHARACTER SET') {
 		$this->setHost($host);
 		$this->setDBuser($dbuser);
 		$this->setDBpassword($dbpassword);
 		$this->setDBname($dbname);
 		$this->setDBcharset($connection_charset);
+		$this->setDBconnectionMethod($connection_method);
 		// Don't drop tables by default.
 		$this->setDroptables(false);
 	}
 
-	function getDBcharset()     { return $this->_dbcharset; }
-	function getDBname()        { return $this->_dbname; }
-	function getDBpassword()    { return $this->_dbpassword; }
-	function getDBuser()        { return $this->_dbuser; }
-	function getHost()          { return $this->_host; }
+  function getDBconnectionMethod() { return $this->_dbconnectionmethod; }
+	function getDBcharset()          { return $this->_dbcharset; }
+	function getDBname()             { return $this->_dbname; }
+	function getDBpassword()         { return $this->_dbpassword; }
+	function getDBuser()             { return $this->_dbuser; }
+	function getHost()               { return $this->_host; }
 
-	function setDBcharset($dbcharset)   { $this->_dbcharset = $dbcharset; }
-	function setDBname($dbname)         { $this->_dbname = $dbname; }
-	function setDBpassword($dbpassword) { $this->_dbpassword = $dbpassword; }
-	function setDBuser($dbuser)         { $this->_dbuser = $dbuser; }
-	function setHost($host)             { $this->_host = $host; }
+	function setDBconnectionMethod($connection_method) { $this->_dbconnectionmethod = (isset($GLOBALS['database_connection_method']) ? $GLOBALS['database_connection_method'] : $connection_method); }
+	function setDBcharset($dbcharset)                  { $this->_dbcharset = $dbcharset; }
+	function setDBname($dbname)                        { $this->_dbname = $dbname; }
+	function setDBpassword($dbpassword)                { $this->_dbpassword = $dbpassword; }
+	function setDBuser($dbuser)                        { $this->_dbuser = $dbuser; }
+	function setHost($host)                            { $this->_host = $host; }
 
 	function setDBtables($dbtables) { $this->_dbtables = $dbtables; }
 
@@ -244,7 +248,8 @@ class Mysqldumper {
 
 		$resource = mysql_connect($this->getHost(), $this->getDBuser(), $this->getDBpassword());
 		mysql_select_db($this->getDBname(), $resource);
-		$database_connection_charset= $this->getDBcharset();
+		$database_connection_method = $this->getDBconnectionMethod(); 
+		$database_connection_charset = $this->getDBcharset();
 		@mysql_query("{$database_connection_method} {$database_connection_charset}");
 		$result = mysql_query("SHOW TABLES",$resource);
 		$tables = $this->result2Array(0, $result);

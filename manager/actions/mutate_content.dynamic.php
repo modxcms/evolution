@@ -179,8 +179,8 @@ function deletedocument() {
 
 function previewdocument() {
 	var win = window.frames['preview'];
-	url = "../index.php?id=" + document.mutate.id.value + "&manprev=z";
-	nQ = "id=" + document.mutate.id.value + "&manprev=z"; // new querysting
+	url = "../index.php?id=" + document.mutate.id.value + "&z=manprev";
+	nQ = "id=" + document.mutate.id.value + "&z=manprev"; // new querysting
 	oQ = (win.location.href.split("?"))[1]; // old querysting
 	if (nQ != oQ) {
 		win.location.href = url;
