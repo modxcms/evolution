@@ -68,11 +68,17 @@ if ($friendly_urls) {
 	// auto assign alias
 	if (!$alias && $automatic_alias) {
 		$alias = strtolower(stripAlias(trim($pagetitle)));
-		if(!$allow_duplicate_alias){
-			// check if alias already exists. if yes then append $cnt to alias
-			$cnt = $modx->db->getValue("SELECT count(*) FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias'");
-			if ($cnt > 0)
-				$alias .= $cnt;
+		if(!$allow_duplicate_alias) {
+			if ($modx->db->getValue("SELECT count(id) FROM " . $tbl_site_content . " WHERE id<>$id AND alias='$alias'") != 0) {
+				$cnt = 1;
+				$tempAlias = $alias;
+				while ($modx->db->getValue("SELECT count(id) FROM " . $tbl_site_content . " WHERE id<>$id AND alias='$tempAlias'") != 0) {
+					$tempAlias = $alias;
+					$tempAlias .= $cnt;
+					$cnt++;
+				}
+				$alias = $tempAlias;
+			}
 		}
 	}
 

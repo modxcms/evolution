@@ -510,6 +510,28 @@ function updateContentType(){
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["rss_url_news_title"] ?></b></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_news" value="<?php echo isset($rss_url_news) ? $rss_url_news : "http://feeds.feedburner.com/modx-announce" ; ?>" /></td>
+            </tr>
+			<tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["rss_url_news_message"] ?></td>
+            </tr>
+			<tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["rss_url_security_title"] ?></b></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_security" value="<?php echo isset($rss_url_security) ? $rss_url_security : "http://feeds.feedburner.com/modxsecurity" ; ?>" /></td>
+            </tr>
+			<tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["rss_url_security_message"] ?></td>
+            </tr>
+			<tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php

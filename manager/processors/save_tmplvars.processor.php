@@ -186,7 +186,7 @@ function saveTemplateAccess() {
 	mysql_query("DELETE FROM $tbl WHERE tmplvarid = $id");
 	for($i=0;$i<count($templates);$i++){
 	    $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-		mysql_query("INSERT INTO $tbl (tmplvarid,templateid) VALUES($id,".$templates[$i].");");
+		mysql_query("INSERT INTO $tbl (tmplvarid,templateid,rank) VALUES($id,".$templates[$i].",$setRank);");
 	}	
 }
 

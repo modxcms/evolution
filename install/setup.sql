@@ -903,6 +903,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tinymce_custom_buttons1','undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help'),
 ('tinymce_custom_buttons2','bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops'),
 ('tree_show_protected', '0'),
+('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
+('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
 ('validate_referer', '0');
 
 

@@ -22,8 +22,8 @@
 ---------------------------------------------- */
 // Here you can set the urls to retrieve the RSS from. Simply add a $urls line following the numbering progress in the square brakets.
 
-$urls['modx_news_content'] ="http://feeds.feedburner.com/modx-announce";
-$urls['modx_security_notices_content'] = "http://feeds.feedburner.com/modxsecurity";
+$urls['modx_news_content'] = $rss_url_news;
+$urls['modx_security_notices_content'] = $rss_url_security;
 
 // How many items per Feed?
 $itemsNumber = '10';
@@ -74,9 +74,9 @@ foreach ($urls as $section=>$url) {
         $description = strip_tags($item['description']);
         if (strlen($description) > 199) {
             $description = substr($description, 0, 200);
-            $description .= '...<br />Read <a href="'.$href.'">more</a>.';
+            $description .= '...<br />Read <a href="'.$href.'" target="_blank">more</a>.';
         }
-        $output .= '<li><a href="'.$href.'">'.$title.'</a> - <b>'.$pubdate.'</b><br />'.$description.'</li>';
+        $output .= '<li><a href="'.$href.'" target="_blank">'.$title.'</a> - <b>'.$pubdate.'</b><br />'.$description.'</li>';
     }
 
     #$output .= '</ul></div>';

@@ -31,7 +31,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         parent.tree.ca = "open";
 
 		// call the updateMail function, updates mail notification in top navigation
-		top.mainMenu.updateMail(true);
+		if(top.mainMenu.updateMail) {
+			top.mainMenu.updateMail(true);
+		}
 		
         function stopWorker() {
             try {

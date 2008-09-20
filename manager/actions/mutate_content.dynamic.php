@@ -791,7 +791,7 @@ if (is_array($evtOut))
 		}
 	}
 	// get selected META tags using document's id
-	if (isset ($content['id']) && count($keywords) > 0) {
+	if (isset ($content['id']) && count($metatags) > 0) {
 		$metatags_selected = array();
 		$ds = $modx->db->select('metatag_id', $tbl_site_content_metatags, 'content_id=\''.$content['id'].'\'');
 		$limit = $modx->db->getRecordCount($ds);

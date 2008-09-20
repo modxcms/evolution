@@ -11,6 +11,7 @@
 
 /* Set locale to Japanese */
 setlocale (LC_ALL, 'ja_JP');
+define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
 include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
 
 // NOTE: アルファベット順に並んでいます
