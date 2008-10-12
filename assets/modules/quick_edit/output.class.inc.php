@@ -223,14 +223,14 @@ EOD;
 EOD;
 
 			}
-
+			$site_url = MODX_BASE_URL;
 			// Define the CSS and Javascript that we will add to the header of the page
 			$head =<<<EOD
 
 <!-- Start QuickEdit headers -->
-<script type="text/javascript" src="manager/media/script/mootools/mootools.js"></script>
-<script type="text/javascript" src="{$qe_path}/javascript/QuickEdit.js"></script>
-<link type="text/css" rel="stylesheet" href="{$qe_path}/styles/toolbar.css" />
+<script type="text/javascript" src="{$site_url}manager/media/script/mootools/mootools.js"></script>
+<script type="text/javascript" src="{$site_url}{$qe_path}/javascript/QuickEdit.js"></script>
+<link type="text/css" rel="stylesheet" href="{$site_url}{$qe_path}/styles/toolbar.css" />
 <script type="text/javascript">
  Window.addEvent('load',function() {
   qe = new QuickEdit({$module_id},{$doc_id},'{$manager_path}','{$qe_path}',$('QE_Toolbar'));

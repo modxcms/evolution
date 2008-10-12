@@ -249,10 +249,10 @@ if (is_array($evtOut))
 	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang["after_saving"];?>:</span></td>
-		<td><input name="stay" type="radio" class="radio" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
-		<td><input name="stay" type="radio" class="radio" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
-		<td><input name="stay" type="radio" class="radio" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
+		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
+		<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
+		<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
+		<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
 	</tr>
 	</table>
 	</div>
@@ -715,6 +715,18 @@ if (is_array($evtOut))
           <tr id='editorRow2' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
+          <tr id='editorRow14' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td nowrap class="warning"><b><?php echo $_lang["editor_css_path_title"]?></b></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="editor_css_path" value="<?php echo isset($usersettings["editor_css_path"]) ? $usersettings["editor_css_path"] : "" ; ?>" />
+			</td>
+          </tr>
+          <tr id='editorRow15' class='row3' style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["editor_css_path_message"]?></td>
+          </tr>
+		  <tr id='editorRow16' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
           <tr id='rbRow1' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td>
             <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 300px;" name="rb_base_dir" value="<?php echo isset($usersettings["rb_base_dir"]) ? $usersettings["rb_base_dir"]:""; ?>" />
@@ -792,7 +804,7 @@ if (is_array($evtOut))
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-              <td colspan="2" align="center"><img name="iphoto" src="<?php echo $userdata['photo'] ? $userdata['photo']: "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
+              <td colspan="2" align="center"><img name="iphoto" src="<?php echo !empty($userdata['photo']) ? MODX_SITE_URL.$userdata['photo'] : "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
           </tr>
 		</table>
 	</div>

@@ -129,7 +129,7 @@ $_lang["checking_php_version"] = "Vérification de la version PHP: ";
 $_lang["failed"] = 'Echec!';
 $_lang["ok"] = 'OK!';
 $_lang["you_running_php"] = ' - Vous utilisez PHP ';
-$_lang["modx_requires_php"] = ', alors que MODx nécessite PHP 4.1.0 ou ultérieur';
+$_lang["modx_requires_php"] = ', alors que MODx nécessite PHP 4.2.0 ou ultérieur';
 $_lang["php_security_notice"] = '<legend>Avertissement Sécurité</legend><p>Bien que MODx fonctionne avec votre version de PHP, nous n\'en recommandons pas l\'utilisation. Votre version de PHP comporte de nombreuses vulnérabilités de sécurité. Veuillez mettre à jour PHP vers une version 4.3.8 ou supérieure afin de corriger ces failles. Cette mise à jour est recommandée pour la sécurité de votre site internet.</p>';
 $_lang["checking_registerglobals"] = 'Vérification que Register_Globals est sur off: ';
 $_lang["checking_registerglobals_note"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/attaques/cross-site-scripting.php3">XCSS</a> (cross site scripting). Consulter votre hébergeur sur la marche à suivre pour désactiver ce réglage.'; //Look at changing this to provide a solution.

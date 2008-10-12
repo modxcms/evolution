@@ -140,7 +140,7 @@ if ($limit > 0) {
   <div id="navbar">
     <input type="submit" value="<?php echo $_lang['install']?>" name="cmdnext" style="float:right;width:100px;" />
     <span style="float:right">&nbsp;</span>
-    <input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=connection';this.form.submit();return false;" />
+    <input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=<?php echo (($installMode == 1) ? 'mode' : 'connection'); ?>';this.form.submit();return false;" />
   </div>
 </form>
 <script type="text/javascript">

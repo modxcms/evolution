@@ -111,8 +111,6 @@ $output .= ' <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
                 <title>'.$_lang['DM_module_title'].'</title> 
 <script type="text/javascript">var MODX_MEDIA_PATH = "media";</script>
 		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/style.css" /> 
-		<link rel="stylesheet" type="text/css" href="media/style' . $theme . '/coolButtons2.css" /> 
-	    <link rel="stylesheet" type="text/css" href="media/style' . $theme . '/tabs.css"/> 
 		<script type="text/javascript" src="media/script/scriptaculous/prototype.js"></script> 
 		<script type="text/javascript" src="media/script/scriptaculous/scriptaculous.js"></script> 
 	    <script type="text/javascript" src="media/script/modx.js"></script> 

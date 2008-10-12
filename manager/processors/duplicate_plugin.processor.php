@@ -10,20 +10,20 @@ $id=$_GET['id'];
 
 // duplicate Plugin
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name, description, disabled, moduleguid, plugincode, properties) 
-			SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, moduleguid, plugincode, properties 
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name, description, disabled, moduleguid, plugincode, properties, category) 
+			SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, moduleguid, plugincode, properties, category 
 			FROM $dbase.`".$table_prefix."site_plugins` WHERE id=$id;";
 	$rs = mysql_query($sql);
 }
 else {
-	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, moduleguid, plugincode, properties 
+	$sql = "SELECT CONCAT('Duplicate of ',name) AS 'name', description, disabled, moduleguid, plugincode, properties, category
 			FROM $dbase.`".$table_prefix."site_plugins` WHERE id=$id;";
 	$rs = mysql_query($sql);
 	if($rs) {
 		$row = mysql_fetch_assoc($rs);
 		$sql ="INSERT INTO $dbase.`".$table_prefix."site_plugins` 
-				(name, description, disabled, moduleguid, plugincode, properties) VALUES 
-				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', '".$row['disabled']."', '".mysql_escape_string($row['moduleguid'])."', '".mysql_escape_string($row['plugincode'])."', '".mysql_escape_string($row['properties'])."');";
+				(name, description, disabled, moduleguid, plugincode, properties, category) VALUES 
+				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', '".$row['disabled']."', '".mysql_escape_string($row['moduleguid'])."', '".mysql_escape_string($row['plugincode'])."', '".mysql_escape_string($row['properties'])."', ".mysql_escape_string($row['category']).");";
 		$rs = mysql_query($sql);
 	}	
 }

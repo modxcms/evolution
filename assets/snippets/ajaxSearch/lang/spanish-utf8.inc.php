@@ -1,8 +1,9 @@
 ﻿<?php
 /*
-spanish.inc.php - for AjaxSearch 1.5
+spanish.inc.php - for AjaxSearch 1.8
 Created by: KyleJ (kjaebker@muddydogpaws.com)
-Created on: 01/22/07 - Modified: 17/04/2007 Translated to spanish by Luciano A. Ferrer
+Created on: 01/22/07
+Modified: 21/07/08 Translated to spanish by Luciano A. Ferrer & Coroico
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'No hay resultados. Intente utilizando términos más generales para obtener más resultados.';
@@ -15,4 +16,9 @@ $_lang['as_paginationTextSinglePage'] = '';
 $_lang['as_paginationTextMultiplePages'] = 'Páginas de resultado: ';
 $_lang['as_moreResultsText'] = 'Presione aquí para ver todos los resultados.';
 $_lang['as_moreResultsTitle'] = 'Más resultados';
+$_lang['as_minChars'] = 'Para la búsqueda se necessita entrar por lo menos %d letras ';
+$_lang['oneword'] = 'Una palabra';
+$_lang['allwords'] = 'Todas las palabras';
+$_lang['exactphrase'] = 'Frasé exacta';
+$_lang['nowords'] = 'ninguna palabra';
 ?>

@@ -21,7 +21,7 @@ function isNumber($var)
 }
 
 $id = intval($_POST['id']);
-$name = mysql_escape_string($_POST['name']);
+$name = mysql_escape_string(trim($_POST['name']));
 $description = mysql_escape_string($_POST['description']);
 $resourcefile = mysql_escape_string($_POST['resourcefile']);
 $enable_resource = $_POST['enable_resource']=='on' ? 1 : 0 ;

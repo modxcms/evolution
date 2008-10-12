@@ -65,7 +65,12 @@ if(!$modx->hasPermission('logs')) {
 			<td>&nbsp;</td>
 			<td><b><?php echo $database_server ?></b></td>
 		  </tr>
-		   <tr>
+		  <tr>
+		    <td><?php echo $_lang['database_version']?></td>
+		    <td>&nbsp;</td>
+		    <td><strong><?php echo $modx->db->getVersion(); ?></strong></td>
+		  </tr>
+		  <tr>
 			<td><?php echo $_lang['database_charset']?></td>
 			<td>&nbsp;</td>
 			<td><strong><?php 

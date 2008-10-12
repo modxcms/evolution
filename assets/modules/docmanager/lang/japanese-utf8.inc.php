@@ -6,14 +6,14 @@
  * Author: Garry Nutting
  * For: MODx CMS (www.modxcms.com)
  * Date:29/09/2006 Version: 1.6
- * Trabslated: 04/10/2006 by eastbind (eastbind@bodenplatte.jp)
+ * Translated: 04/10/2006 by eastbind (eastbind@bodenplatte.jp)
  *
  */
 
 //-- JAPANESE LANGUAGE FILE ENCODED IN UTF-8
 include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
 /* Set locale to Japanese */
-setlocale (LC_ALL, 'ja_JP');
+setlocale (LC_ALL, "ja_JP.UTF-8");
 
 //-- titles
 $_lang['DM_module_title'] = 'Doc Manager';

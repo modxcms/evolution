@@ -8,7 +8,7 @@ defined('IN_PARSER_MODE') or die();
 # load tpl
 if(is_numeric($tpl)) $tpl = ($doc=$modx->getDocuments($tpl)) ? $doc['content']:"Document '$tpl' not found.";
 else if($tpl) $tpl = ($chunk=$modx->getChunk($tpl)) ? $chunk:"Chunk '$tpl' not found.";
-if(!$tpl) $tpl = getWebSignuptpl();
+if(!$tpl) $tpl = getWebSignuptpl($useCaptcha);
 
 // extract declarations
 $declare = webLoginExtractDeclarations($tpl);
@@ -68,11 +68,6 @@ else if ($isPostBack){
         $output = webLoginAlert("E-mail address doesn't seem to be valid!").$tpl;
         return;
     }
-    // verify password
-    if ($_POST['password']!=$_POST['confirmpassword']) {
-        $output = webLoginAlert("Password typed is mismatched").$tpl;
-        return;
-    }
 
     // check for duplicate email address
     $sql = "SELECT internalKey FROM ".$modx->getFullTableName("web_user_attributes")." WHERE email='$email'";
@@ -88,16 +83,27 @@ else if ($isPostBack){
             return;
         }
     }
+    
+    // if there is no password, randomly generate a new one 	 
+ 	if (isset($_POST['password'])) { 	  	 
+		// verify password 	  	 
+ 	    if ($_POST['password'] != $_POST['confirmpassword']) { 	  	 
+ 	  		$output = webLoginAlert("Password typed is mismatched"). $tpl; 	  	 
+ 	  	    return; 	  	 
+ 	  	} 	  	 
 
-    // check password
-    if (strlen($password) < 6 ) {
-        $output = webLoginAlert("Password is too short!").$tpl;
-        return;
-    } 
-    elseif($password=="") {
-        $output = webLoginAlert("You didn't specify a password for this user!").$tpl;
-        return;        
-    }
+	    // check password
+	    if (strlen($password) < 6 ) {
+	        $output = webLoginAlert("Password is too short!").$tpl;
+	        return;
+	    } 
+	    elseif($password=="") {
+	        $output = webLoginAlert("You didn't specify a password for this user!").$tpl;
+	        return;        
+	    }
+ 	} else {
+ 		$password = webLoginGeneratePassword();
+ 	}
 
     // verify form code
     if($useCaptcha && $_SESSION['veriword']!=$formcode) {
@@ -163,7 +169,7 @@ else if ($isPostBack){
 }
 
 // Returns Default WebChangePwd tpl
-function getWebSignuptpl(){
+function getWebSignuptpl($useCaptcha){
     ob_start();
     ?>
     <!-- #declare:separator <hr> --> 

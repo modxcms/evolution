@@ -24,7 +24,7 @@ if(!$modx->hasPermission('delete_template')) {
 				}
 			</script>
 			<div class="subTitle">
-			<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['tmplvars']; ?></span>
+			<span class="right"><?php echo $_lang['tmplvars']; ?></span>
 				<table cellpadding="0" cellspacing="0" class="actionButtons">
 					<td id="cmdDelete"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang["delete"]; ?></a></td>
 					<td id="cmdCancel"><a href="index.php?a=301&id=<?php echo $id;?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["cancel"]; ?></a></td>

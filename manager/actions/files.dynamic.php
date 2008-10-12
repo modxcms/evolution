@@ -10,10 +10,10 @@ if ($manager_theme)
 else    $manager_theme  = '';
 
 // settings
-$excludes = array(".", "..", "cgi-bin", "manager", ".svn");
-$editablefiles = array(".txt", ".php", ".shtml", ".html", ".htm", ".xml", ".js", ".css", ".pageCache", $friendly_url_suffix);
-$inlineviewablefiles = array(".txt", ".php", ".html", ".htm", ".xml", ".js", ".css", ".pageCache", $friendly_url_suffix);
-$viewablefiles = array(".jpg", ".gif", ".png", ".ico");
+$excludes = array('.', '..', 'cgi-bin', 'manager', '.svn');
+$editablefiles = array('.txt', '.php', '.shtml', '.html', '.htm', '.xml', '.js', '.css', '.pageCache', $friendly_url_suffix);
+$inlineviewablefiles = array('.txt', '.php', '.html', '.htm', '.xml', '.js', '.css', '.pageCache', $friendly_url_suffix);
+$viewablefiles = array('.jpg', '.gif', '.png', '.ico');
 // Mod added by Raymond
 $enablefileunzip = true;
 $enablefiledownload = true;
@@ -34,7 +34,7 @@ for($i=0; $i<$count; $i++) {
 // end settings
 
 function ufilesize($size) {
-	$a = array("B", "KB", "MB", "GB", "TB", "PB");
+	$a = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
 	$pos = 0;
 	while ($size >= 1024) {
 		   $size /= 1024;
@@ -84,7 +84,7 @@ function getExtension($string) {
 }
 
 function fsize($file) {
-       $a = array("B", "KB", "MB", "GB", "TB", "PB");
+       $a = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
        $pos = 0;
        $size = filesize($file);
        while ($size >= 1024) {
@@ -134,10 +134,10 @@ $len = strlen($filemanager_path);
 
 // Raymond: get web start path for showing pictures
 $rf = realpath($filemanager_path);
-$rw = realpath("../");
-$webstart_path = str_replace("\\","/",str_replace($rw,"",$rf));
-if(substr($webstart_path,0,1)=="/") $webstart_path = "..".$webstart_path;
-else $webstart_path = "../".$webstart_path;
+$rw = realpath('../');
+$webstart_path = str_replace('\\','/',str_replace($rw,'',$rf));
+if(substr($webstart_path,0,1)=='/') $webstart_path = '..'.$webstart_path;
+else $webstart_path = '../'.$webstart_path;
 
 ?>
 <br />
@@ -155,26 +155,22 @@ function setColor(o,state){
 	else if (o.style) o.style.backgroundColor='transparent';
 }
 
-function confirmDelete(url) {
-	if(confirm("<?php echo $_lang['confirm_delete_file'] ?>")) {
-		document.location.href=url;
-	}
+function confirmDelete() {
+	return confirm("<?php echo $_lang['confirm_delete_file'] ?>");
 }
 
-function confirmDeleteFolder(url) {
-	if(confirm("<?php echo str_replace('file','folder',$_lang['confirm_delete_file']) ?>")) {
-		document.location.href=url;
-	}
+function confirmDeleteFolder() {
+	return confirm("<?php echo str_replace('file','folder',$_lang['confirm_delete_file']) ?>");
 }
 
-function confirmUnzip(url) {
+function confirmUnzip() {
 	return confirm("<?php echo $_lang['confirm_unzip_file'] ?>");
 }
 
 function getFolderName(a){
 	var f;
 	f=window.prompt('Enter New Folder Name:','')
-	if (f) a.href+=f;
+	if (f) a.href+=escape(f);
 	return (f) ? true:false;
 }
 </script>
@@ -194,36 +190,36 @@ if(!empty($_FILES['userfile'])) {
 
 	// this seems to be an upload action.
 	printf($_lang['files_uploading'], $userfile['name'], substr($startpath, $len, strlen($startpath)));
-	echo $userfile['error']==0 ? $_lang['files_file_type'].$userfile['type'].", ".fsize($userfile['tmp_name'])."<br />" : "" ;
+	echo $userfile['error']==0 ? $_lang['files_file_type'].$userfile['type'].", ".fsize($userfile['tmp_name']).'<br />' : '';
 
 	$userfilename = $userfile['tmp_name'];
 
 	if (is_uploaded_file($userfilename)) {
 	  // file is uploaded file, process it!
 		if(!in_array(getExtension($userfile['name']), $uploadablefiles)) {
-			echo "<br /><span class=\"warning\">".$_lang['files_filetype_notok']."</span><br />";
+			echo '<br /><span class="warning">'.$_lang['files_filetype_notok'].'</span><br />';
 		} else {
-			if(@move_uploaded_file($userfile['tmp_name'], $_POST['path']."/".$userfile['name'])) {
+			if(@move_uploaded_file($userfile['tmp_name'], $_POST['path'].'/'.$userfile['name'])) {
 					// Ryan: Repair broken permissions issue with file manager
 					if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
 						@chmod($_POST['path']."/".$userfile['name'], $new_file_permissions);
 					// Ryan: End
-					echo "<br /><span class=\"success\">".$_lang['files_upload_ok']."</span><br />";
+					echo '<br /><span class="success">'.$_lang['files_upload_ok'].'</span><br />';
 
 					// invoke OnFileManagerUpload event
-					$modx->invokeEvent("OnFileManagerUpload",
+					$modx->invokeEvent('OnFileManagerUpload',
 						array(
-							"filepath"	=> $_POST['path'],
-							"filename"	=> $userfile['name']
+							'filepath'	=> $_POST['path'],
+							'filename'	=> $userfile['name']
 					));
 					// Log the change
 					logFileChange('upload', $_POST['path'].'/'.$userfile['name']);
 			} else {
-				echo "<br /><span class=\"warning\">".$_lang['files_upload_copyfailed']."</span> Possible permission problems - the directory you want to upload to needs to be set to 0777 permissions.<br />";
+				echo '<br /><span class="warning">'.$_lang['files_upload_copyfailed'].'</span> Possible permission problems - the directory you want to upload to needs to be set to 0777 permissions.<br />';
 			}
 		}
 	}else{
-		echo "<br /><span class=\"warning\"><b>".$_lang['files_upload_error'].":</b> ";
+		echo '<br /><span class="warning"><b>'.$_lang['files_upload_error'].':</b>';
 	  switch($userfile['error']){
 	   case 0: //no error; possible file attack!
 		 echo $_lang['files_upload_error0'];
@@ -244,27 +240,27 @@ if(!empty($_FILES['userfile'])) {
 		 echo $_lang['files_upload_error5'];
 		 break;
 		}
-		echo "</span><br />";
+		echo '</span><br />';
 	}
-	echo "<hr/>";
+	echo '<hr/>';
 }
 }
 
-if($_POST['mode']=="save") {
+if($_POST['mode']=='save') {
 	echo $_lang['editing_file'];
 	$filename = $_POST['path'];
 	$content = $_POST['content'];
 	if (!$handle = fopen($filename, 'w')) {
-		 echo "Cannot open file ($filename)";
+		 echo 'Cannot open file (',$filename,')';
 		 exit;
 	}
 
 	// Write $content to our opened file.
 	if (fwrite($handle, $content) === FALSE) {
-	   echo "<span class=\"warning\"><b>".$_lang['file_not_saved']."</b></span><br /><br />";
+	   echo '<span class="warning"><b>'.$_lang['file_not_saved'].'</b></span><br /><br />';
 	} else {
-	   echo "<span class=\"success\"><b>".$_lang['file_saved']."</b></span><br /><br />";
-	   $_REQUEST['mode'] = "edit";
+	   echo '<span class="success"><b>'.$_lang['file_saved'].'</b></span><br /><br />';
+	   $_REQUEST['mode'] = 'edit';
 	}
 	fclose($handle);
 
@@ -273,13 +269,13 @@ if($_POST['mode']=="save") {
 }
 
 
-if($_REQUEST['mode']=="delete") {
+if($_REQUEST['mode']=='delete') {
 	printf($_lang['deleting_file'], str_replace('\\', '/', $_REQUEST['path']));
 	$file = $_REQUEST['path'];
 	if (!@unlink($file)) {
-	   echo "<span class=\"warning\"><b>".$_lang['file_not_deleted']."</b></span><br /><br />";
+	   echo '<span class="warning"><b>'.$_lang['file_not_deleted'].'</b></span><br /><br />';
 	} else {
-	   echo "<span class=\"success\"><b>".$_lang['file_deleted']."</b></span><br /><br />";
+	   echo '<span class="success"><b>'.$_lang['file_deleted'].'</b></span><br /><br />';
 	}
 
 	// Log the change
@@ -287,10 +283,10 @@ if($_REQUEST['mode']=="delete") {
 }
 
 
-echo $_lang['files_dir_listing']?><b><?php echo substr($startpath, $len, strlen($startpath))=="" ? "/" : substr($startpath, $len, strlen($startpath))?></b><br /><br />
+echo $_lang['files_dir_listing']?><b><?php echo substr($startpath, $len, strlen($startpath))=='' ? '/' : substr($startpath, $len, strlen($startpath))?></b><br /><br />
 <?php
 // check to see user isn't trying to move below the document_root
-if(substr(strtolower(str_replace('//','/',$startpath."/")), 0, $len)!=strtolower(str_replace('//','/',$filemanager_path."/"))) {
+if(substr(strtolower(str_replace('//','/',$startpath."/")), 0, $len)!=strtolower(str_replace('//','/',$filemanager_path.'/'))) {
 	echo $_lang['files_access_denied']?>
 </div>
 
@@ -299,13 +295,13 @@ if(substr(strtolower(str_replace('//','/',$startpath."/")), 0, $len)!=strtolower
 }
 
 // Unzip .zip files - by Raymond
-if ($enablefileunzip && $_REQUEST['mode']=="unzip" && is_writable($startpath)){
+if ($enablefileunzip && $_REQUEST['mode']=='unzip' && is_writable($startpath)){
 	// by patrick_allaert - php user notes
 	function unzip($file, $path) {
 		global $newfolderaccessmode;
 		// added by Raymond
 		$r = substr($path,strlen($path)-1,1);
-		if ($r!="\\"||$r!="/") $path .="/";
+		if ($r!='\\'||$r!='/') $path .='/';
 		if (!extension_loaded('zip')) {
 		   if (strtoupper(substr(PHP_OS, 0,3) == 'WIN')) {
 				if(!@dl('php_zip.dll')) return 0;
@@ -331,7 +327,7 @@ if ($enablefileunzip && $_REQUEST['mode']=="unzip" && is_writable($startpath)){
 							}
 						}
 					}
-					if (zip_entry_open($zip, $zip_entry, "r")) {
+					if (zip_entry_open($zip, $zip_entry, 'r')) {
 						$fd = fopen($complete_name, 'w');
 						fwrite($fd, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)));
 						fclose($fd);
@@ -346,9 +342,9 @@ if ($enablefileunzip && $_REQUEST['mode']=="unzip" && is_writable($startpath)){
 		zip_close($zip);
 	}
 	if(!$err=@unzip(realpath("$startpath/".$_REQUEST['file']),realpath($startpath))) {
-		echo "<span class=\"warning\"><b>".$_lang['file_unzip_fail'].($err===0? " Missing zip library (php_zip.dll / zip.so)":"")."</b></span><br /><br />";
+		echo '<span class="warning"><b>'.$_lang['file_unzip_fail'].($err===0? 'Missing zip library (php_zip.dll / zip.so)':'').'</b></span><br /><br />';
 	} else {
-		echo "<span class=\"success\"><b>".$_lang['file_unzip']."</b></span><br /><br />";
+		echo '<span class="success"><b>'.$_lang['file_unzip'].'</b></span><br /><br />';
 	}
 }
 // End Unzip - Raymond
@@ -357,32 +353,32 @@ if ($enablefileunzip && $_REQUEST['mode']=="unzip" && is_writable($startpath)){
 // New Folder & Delete Folder option - Raymond
 if (is_writable($startpath)){
 	// Delete Folder
-	if($_REQUEST['mode']=="deletefolder") {
+	if($_REQUEST['mode']=='deletefolder') {
 		$folder = $_REQUEST['folderpath'];
 		if(!@rmdir($folder)) {
-			echo "<span class=\"warning\"><b>".$_lang['file_folder_not_deleted']."</b></span><br /><br />";
+			echo '<span class="warning"><b>'.$_lang['file_folder_not_deleted'].'</b></span><br /><br />';
 		} else {
-			echo "<span class=\"success\"><b>".$_lang['file_folder_deleted']."</b></span><br /><br />";
+			echo '<span class="success"><b>'.$_lang['file_folder_deleted'].'</b></span><br /><br />';
 		}
 	}
 
 
 // Create folder here
-if($_REQUEST['mode']=="newfolder") {
+if($_REQUEST['mode']=='newfolder') {
 	$old_umask = umask(0);
-	$foldername = str_replace("..\\","",str_replace("../","",$_REQUEST['name']));
+	$foldername = str_replace('..\\','',str_replace('../','',$_REQUEST['name']));
 	if(!mkdirs($startpath."/$foldername",$newfolderaccessmode)) {
-		echo "<span class=\"warning\"><b>".$_lang['file_folder_not_created']."</b></span><br /><br />";
+		echo '<span class="warning"><b>',$_lang['file_folder_not_created'],'</b></span><br /><br />';
 	} else {
-		if (!@chmod($startpath."/$foldername",$newfolderaccessmode)) {
-			echo "<span class=\"warning\"><b>".$_lang['file_folder_chmod_error']."</b></span><br /><br />";
+		if (!@chmod($startpath.'/'.$foldername,$newfolderaccessmode)) {
+			echo '<span class="warning"><b>'.$_lang['file_folder_chmod_error'].'</b></span><br /><br />';
 		} else {
-			echo "<span class=\"success\"><b>".$_lang['file_folder_created']."</b></span><br /><br />";
+			echo '<span class="success"><b>'.$_lang['file_folder_created'].'</b></span><br /><br />';
 		}
 	}
 	umask($old_umask);
 }
-	echo "<img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=newfolder&path=".$startpath."&name=\" onclick=\" return getFolderName(this);\"><b>".$_lang['add_folder']."</b></a><br />\n";
+	echo '<img src="media/style/'.$manager_theme.'images/tree/folder.gif" border="0" align="absmiddle" alt="" /> <a href="index.php?a=31&mode=newfolder&path='.urlencode($startpath).'&name=" onclick="return getFolderName(this);"><b>'.$_lang['add_folder'].'</b></a><br />';
 }
 // End New Folder - Raymond
 
@@ -390,17 +386,17 @@ $uponelevel = removeLastPath($startpath);
 
 // To Top Level with folder icon to the left
 if($startpath==$filemanager_path || $startpath.'/' == $filemanager_path) {
-	echo "<img src=\"media/style/".$manager_theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\" alt=\"\" /><span style=\"color:#bbb;cursor:default;\"> <b>".$_lang['files_top_level']."</b></span><br />\n";
+	echo '<img src="media/style/',$manager_theme,'images/tree/deletedfolder.gif" border="0" align="absmiddle" alt="" /><span style="color:#bbb;cursor:default;"> <b>',$_lang['files_top_level'],'</b></span><br />';
 } else {
-	echo "<img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=drill&path=".$filemanager_path."\"><b>".$_lang['files_top_level']."</b></a><br />\n";
+	echo '<img src="media/style/',$manager_theme,'images/tree/folder.gif" border="0" align="absmiddle" alt="" /> <a href="index.php?a=31&mode=drill&path=',$filemanager_path,'"><b>',$_lang['files_top_level'],'</b></a><br />';
 }
 // Up One level with folder icon to the left
 if($startpath == $filemanager_path || $startpath.'/' == $filemanager_path) {
-	echo "<img src=\"media/style/".$manager_theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\" alt=\"\"/><span style=\"color:#bbb;cursor:default;\"> <b>".$_lang['files_up_level']."</b></span><br />\n";
+	echo '<img src="media/style/',$manager_theme,'images/tree/deletedfolder.gif" border="0" align="absmiddle" alt="" /><span style="color:#bbb;cursor:default;"> <b>'.$_lang['files_up_level'].'</b></span><br />';
 } else {
-	echo "<a href=\"index.php?a=31&mode=drill&path=$uponelevel\"><img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <b>".$_lang['files_up_level']."</b></a><br />\n";
+	echo '<a href="index.php?a=31&mode=drill&path=',urlencode($uponelevel),'"><img src="media/style/',$manager_theme,'images/tree/folder.gif" border="0" align="absmiddle" alt="" /> <b>',$_lang['files_up_level'],'</b></a><br />';
 }
-echo "<br />";
+echo '<br />';
 
 
 $filesize = 0;
@@ -415,10 +411,10 @@ function ls($curpath) {
 	global $excludes, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $manager_theme;
 	$dircounter = 0;
 	$filecounter = 0;
-	$curpath = str_replace('//','/',$curpath."/");
+	$curpath = str_replace('//','/',$curpath.'/');
 
 	if (!is_dir($curpath)) {
-		echo "Invalid path '$curpath'<br />";
+		echo 'Invalid path "',$curpath,'"<br />';
 		return;
 	}
 	$dir = dir($curpath);
@@ -426,12 +422,12 @@ function ls($curpath) {
 	// first, get info
 	while ($file = $dir->read()) {
 		if(!in_array($file, $excludes)) {
-			$newpath = $curpath."".$file;
+			$newpath = $curpath.$file;
 			if(is_dir($newpath)) {
 				$dirs_array[$dircounter]['dir'] = $newpath;
 				$dirs_array[$dircounter]['stats'] = lstat($newpath);
-				$dirs_array[$dircounter]['text'] = "<img src=\"media/style/".$manager_theme."images/tree/folder.gif\" border=0 align=\"absmiddle\" alt=\"\" /> <a href=\"index.php?a=31&mode=drill&path=$newpath\"><b style=\"\">$file</b></a>";
-				$dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript:confirmDeleteFolder(\''.addslashes("index.php?a=31&mode=deletefolder&path=$curpath&folderpath=$newpath").'\');"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></a></span>' : '';
+				$dirs_array[$dircounter]['text'] = '<img src="media/style/'.$manager_theme.'images/tree/folder.gif" border="0" align="absmiddle" alt="" /> <a href="index.php?a=31&mode=drill&path='.urlencode($newpath).'"><b>'.$file.'</b></a>';
+				$dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="index.php?a=31&mode=deletefolder&path='.urlencode($curpath).'&folderpath='.urlencode($newpath).'" onclick="return confirmDeleteFolder();"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></a></span>' : '';
 
 				// increment the counter
 				$dircounter++;
@@ -439,13 +435,13 @@ function ls($curpath) {
 				$type=getExtension($newpath);
 				$files_array[$filecounter]['file'] = $newpath;
 				$files_array[$filecounter]['stats'] = lstat($newpath);
-				$files_array[$filecounter]['text'] = "<img src=\"media/style/".$manager_theme."images/tree/page-html.gif\" border=0 align=\"absmiddle\" alt=\"\" /> $file";
+				$files_array[$filecounter]['text'] = '<img src="media/style/'.$manager_theme.'images/tree/page-html.gif" border="0" align="absmiddle" alt="" />'.$file;
 				$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles)) ?
-				"<span style=\"cursor:pointer; width:20px;\" onclick=\"viewfile('$webstart_path".substr($newpath, $len, strlen($newpath))."');\"><img src=\"media/style/".$manager_theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_viewfile']."\" title=\"".$_lang['file_viewfile']."\"/></span>" : (($enablefiledownload && in_array($type, $uploadablefiles))? "<a href=\"$webstart_path".substr($newpath, $len, strlen($newpath))."\" style=\"cursor:pointer; width:20px;\"><img src=\"media/style/".$manager_theme."images/misc/ed_save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_download_file']."\" title=\"".$_lang['file_download_file']."\" /></a>":"<span class=\"disabledImage\"><img src=\"media/style/".$manager_theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_viewfile']."\" title=\"".$_lang['file_viewfile']."\" /></span>");
-				$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=view&path=$newpath\"><img src=\"media/style/".$manager_theme."images/icons/context_view.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_viewfile']."\" title=\"".$_lang['file_viewfile']."\" /></a></span>" : $files_array[$filecounter]['view'] ;
-				$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=unzip&path=$curpath&file=$file\" onclick=\"return confirmUnzip();\"><img src=\"media/style/".$manager_theme."images/icons/unzip.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_download_unzip']."\" title=\"".$_lang['file_download_unzip']."\" /></a></span>" : "" ;
-				$files_array[$filecounter]['edit'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? "<span style=\"width:20px;\"><a href=\"index.php?a=31&mode=edit&path=$newpath\"><img src=\"media/style/".$manager_theme."images/icons/save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_editfile']."\" title=\"".$_lang['file_editfile']."\" /></a></span>" : "<span class=\"disabledImage\"><img src=\"media/style/".$manager_theme."images/icons/save.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_editfile']."\" title=\"".$_lang['file_editfile']."\" /></span>" ;
-				$files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? "<span style=\"width:20px;\"><a href=\"javascript:confirmDelete('".addslashes("index.php?a=31&mode=delete&path=$newpath")."');\"><img src=\"media/style/".$manager_theme."images/icons/delete.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_delete_file']."\" title=\"".$_lang['file_delete_file']."\" /></a></span>" : "<span class=\"disabledImage\"><img src=\"media/style/".$manager_theme."images/icons/delete.gif\" border=0 align=\"absmiddle\" alt=\"".$_lang['file_delete_file']."\" title=\"".$_lang['file_delete_file']."\" /></span>" ;
+				'<span style="cursor:pointer; width:20px;" onclick="viewfile(\''.urlencode($webstart_path.substr($newpath, $len, strlen($newpath))).'\');"><img src="media/style/'.$manager_theme.'images/icons/context_view.gif" border="0" align="absmiddle" alt="'.$_lang['file_viewfile'].'" title="'.$_lang['file_viewfile'].'" /></span>' : (($enablefiledownload && in_array($type, $uploadablefiles))? '<a href="'.urlencode($webstart_path.substr($newpath, $len, strlen($newpath))).'" style="cursor:pointer; width:20px;"><img src="media/style/'.$manager_theme.'images/misc/ed_save.gif" border="0" align="absmiddle" alt="'.$_lang['file_download_file'].'" title="'.$_lang['file_download_file'].'" /></a>':'<span class="disabledImage"><img src="media/style/'.$manager_theme.'images/icons/context_view.gif" border="0" align="absmiddle" alt="'.$_lang['file_viewfile'].'" title="'.$_lang['file_viewfile'].'" /></span>');
+				$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=view&path='.urlencode($newpath).'"><img src="media/style/'.$manager_theme.'images/icons/context_view.gif" border="0" align="absmiddle" alt="'.$_lang['file_viewfile'].'" title="'.$_lang['file_viewfile'].'" /></a></span>' : $files_array[$filecounter]['view'] ;
+				$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? '<span style="width:20px;"><a href="index.php?a=31&mode=unzip&path='.$curpath.'&file='.urlencode($file).'" onclick="return confirmUnzip();"><img src="media/style/'.$manager_theme.'images/icons/unzip.gif" border="0" align="absmiddle" alt="'.$_lang['file_download_unzip'].'" title="'.$_lang['file_download_unzip'].'" /></a></span>' : '' ;
+				$files_array[$filecounter]['edit'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=edit&path='.urlencode($newpath).'"><img src="media/style/'.$manager_theme.'images/icons/save.gif" border="0" align="absmiddle" alt="'.$_lang['file_editfile'].'" title="'.$_lang['file_editfile'].'" /></a></span>' : '<span class="disabledImage"><img src="media/style/'.$manager_theme.'images/icons/save.gif" border="0" align="absmiddle" alt="'.$_lang['file_editfile'].'" title="'.$_lang['file_editfile'].'" /></span>';
+				$files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? '<span style="width:20px;"><a href="index.php?a=31&mode=delete&path='.urlencode($newpath).'" onclick="return confirmDelete();"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" border="0" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></a></span>' : '<span class="disabledImage"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" border="0" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></span>';
 
 				// increment the counter
 				$filecounter++;
@@ -459,14 +455,14 @@ function ls($curpath) {
 	sort($dirs_array); // sorting the array alphabetically (Thanks pxl8r!)
 	for($i=0; $i<$folders; $i++) {
 		$filesizes += $dirs_array[$i]['stats']['7'];
-		echo "<tr style=\"cursor:default;\" onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";
-		echo "<td>".$dirs_array[$i]['text']."</td>";
-		echo "<td>".strftime('%d-%m-%y, %H:%M:%S', $dirs_array[$i]['stats']['9'])."</td>";
-		echo "<td dir=\"ltr\">".ufilesize($dirs_array[$i]['stats']['7'])."</td>";
-		echo "<td>";
+		echo '<tr style="cursor:default;" onmouseout="setColor(this,0)" onmouseover="setColor(this,1)">';
+		echo '<td>',$dirs_array[$i]['text'],'</td>';
+		echo '<td>',strftime('%d-%m-%y, %H:%M:%S', $dirs_array[$i]['stats']['9']),'</td>';
+		echo '<td dir="ltr">',ufilesize($dirs_array[$i]['stats']['7']),'</td>';
+		echo '<td>';
 		echo $dirs_array[$i]['delete'];
-		echo "</td>";
-		echo "</tr>";
+		echo '</td>';
+		echo '</tr>';
 	}
 
 	// dump array entries for files
@@ -474,23 +470,23 @@ function ls($curpath) {
 	sort($files_array); // sorting the array alphabetically (Thanks pxl8r!)
 	for($i=0; $i<$files; $i++) {
 		$filesizes += $files_array[$i]['stats']['7'];
-		echo "<tr onmouseout=\"setColor(this,0)\" onmouseover=\"setColor(this,1)\">";
-		echo "<td>".$files_array[$i]['text']."</td>";
-		echo "<td>".strftime('%d-%m-%y, %H:%M:%S', $files_array[$i]['stats']['9'])."</td>";
-		echo "<td dir=\"ltr\">".ufilesize($files_array[$i]['stats']['7'])."</td>";
-		echo "<td>";
+		echo '<tr onmouseout="setColor(this,0)" onmouseover="setColor(this,1)">';
+		echo '<td>',$files_array[$i]['text'],'</td>';
+		echo '<td>',strftime('%d-%m-%y, %H:%M:%S', $files_array[$i]['stats']['9']),'</td>';
+		echo '<td dir="ltr">',ufilesize($files_array[$i]['stats']['7']),'</td>';
+		echo '<td>';
 		echo $files_array[$i]['unzip'];
 		echo $files_array[$i]['view'];
 		echo $files_array[$i]['edit'];
 		echo $files_array[$i]['delete'];
-		echo "</td>";
-		echo "</tr>";
+		echo '</td>';
+		echo '</tr>';
 	}
 
 
 	return;
 }
-echo "<br /><br />";
+echo '<br /><br />';
 ?>
 <table>
 <tr>
@@ -503,14 +499,15 @@ echo "<br /><br />";
 ls($startpath);
 echo "\n\n\n\n\n\n\n";
 if($folders==0 && $files==0) {
-	echo "<tr><td colspan=\"4\"><img src=\"media/style/".$manager_theme."images/tree/deletedfolder.gif\" border=0 align=\"absmiddle\"><span style=\"color:#888;cursor:default;\"> This directory is empty.</span></td></tr>\n";
+	echo '<tr><td colspan="4"><img src="media/style/',$manager_theme,'images/tree/deletedfolder.gif" border="0" align="absmiddle"><span style="color:#888;cursor:default;"> This directory is empty.</span></td></tr>';
 }
 ?></table><?php
 
-echo $_lang['files_directories'].": <b>$folders</b><br />";
-echo $_lang['files_files'].": <b>$files</b><br />";
-echo $_lang['files_data'].": <b><span dir=\"ltr\">".ufilesize($filesizes)."</span></b><br/>";
-echo $_lang['files_dirwritable']?><b> <?php echo is_writable($startpath)==1 ? $_lang['yes']."." : $_lang['no']."."?></b><br />
+echo $_lang['files_directories'],': <b>',$folders,'</b><br />';
+echo $_lang['files_files'],': <b>',$files,'</b><br />';
+echo $_lang['files_data'],': <b><span dir="ltr">',ufilesize($filesizes),'</span></b><br/>';
+echo $_lang['files_dirwritable'],'<b>',is_writable($startpath)==1 ? $_lang['yes'].'.' : $_lang['no'].'.'
+?></b><br />
 <div align="center">
 <img src="media/style/<?php echo $manager_theme?>images/icons/_tx_.gif" id="imageviewer">
 </div>
@@ -520,7 +517,7 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 	@ini_set("upload_max_filesize", $upload_maxsize); // modified by raymond
 ?>
 <form enctype="multipart/form-data" action="index.php?a=31" method="post">
-<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576?>">
+<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize)? $upload_maxsize:1048576; ?>">
 <input type="hidden" name="path" value="<?php echo $startpath?>">
 
 <span style="width:300px;"><?php echo $_lang['files_uploadfile_msg']?></span>

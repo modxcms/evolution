@@ -1,4 +1,4 @@
-# eForm 1.4.4 - Electronic Form Snippet
+# eForm 1.4.4.5 - Electronic Form Snippet
 # Original created by Raymond Irving 15-Dec-2004.
 # Version 1.3+ extended by Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -11,7 +11,6 @@
 #
 
 # Set Snippet Paths
-#new in 1.4.4 - sub-folder set by parameter
 $snipFolder = isset($snipFolder)?$snipFolder:'eform';
 $snipPath = $modx->config["base_path"].'assets/snippets/'.$snipFolder.'/';
 
@@ -35,7 +34,7 @@ if(isset($eFormCSS)) $cssStyle = $eFormCSS;
 $params = array (
    // Snippet Path
    'snipPath' => $snipPath, //includes $snipFolder
-	 'snipFolder' => $snipFolder,
+     'snipFolder' => $snipFolder,
 
 // eForm Params
    'vericode' => isset($vericode)? $vericode:"",
@@ -46,8 +45,8 @@ $params = array (
    'cc' => isset($cc)? $cc:"",
    'bcc' => isset($bcc)? $bcc:"",
    'subject' => isset($subject)? $subject:"",
-   'ccsender' => isset($ccsender)? 1:0,
-   'sendirect' => isset($sendirect)? 1:0,
+   'ccsender' => isset($ccsender)?$ccsender:0,
+   'sendirect' => isset($sendirect)? $sendirect:0,
    'mselector' => isset($mailselector)? $mailselector:0,
    'mobile' => isset($mobile)? $mobile:'',
    'mobiletext' => isset($mobiletext)? $mobiletext:'',
@@ -60,7 +59,7 @@ $params = array (
    'saveform' => isset($saveform)? ($saveform? true:false):true,
    'tpl' => isset($tpl)? $tpl:"",
    'report' => isset($report)? $report:"",
-   'allowhtml' => isset($allowhtml)? 1:0,
+   'allowhtml' => isset($allowhtml)? $allowhtml:0,
    //Added by JJ
    'replyto' => isset($replyto)? $replyto:"",
    'language' => isset($language)? $language:$modx->config['manager_language'],

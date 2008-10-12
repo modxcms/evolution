@@ -6,6 +6,7 @@ $ContextMenuCnt = 0;
 class ContextMenu {
 
 	function ContextMenu($id='',$width=120,$visible=false) {
+		global $ContextMenuCnt;
 		$ContextMenuCnt++;
 		$this->html = "";
 		$this->visible = $visible ? $visible:false;
@@ -14,8 +15,8 @@ class ContextMenu {
 	}
 
 	function addItem($text,$action="",$img="",$disabled=0){
-		global $base_url;
-		if(!$img) $img = $base_url."manager/media/images/_tx_.gif";
+		global $base_url, $manager_theme;
+		if(!$img) $img = $base_url."manager/media/styles/".($manager_theme ? $manager_theme : '')."/images/_tx_.gif";
 		if(substr($action,0,3)=="js:") $action = substr($action,3);
 		else if(substr($action,0,3)=="hl:") $action = "window.location.href='".substr($action,3)."'";
 		else $action = "window.location.href='".$action."'";

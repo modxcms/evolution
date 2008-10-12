@@ -209,3 +209,33 @@ position: relative;
     width: 120px;
     height: 21px;
     }
+.AS_ajax_highlight1, .ajaxSearch_highlight1{
+  color : #CC0000;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight2, .ajaxSearch_highlight2{
+  color : #CB53DF;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight3, .ajaxSearch_highlight3{
+  color : #DF53B5;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight4, .ajaxSearch_highlight4{
+  color : #DF5380;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight5, .ajaxSearch_highlight5{
+  color : #A453DF;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight6, .ajaxSearch_highlight6{
+  color : #53ADDF;
+  padding: 0;
+  font-weight: bold;
+}

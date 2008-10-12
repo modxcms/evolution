@@ -11,20 +11,20 @@ $id=$_GET['id'];
 
 // duplicate TV
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (type, name, caption, description, default_text, elements, rank, display, display_params)
-			SELECT type, name, CONCAT('Duplicate of ',caption) AS 'caption', description, default_text, elements, rank, display, display_params
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (type, name, caption, description, default_text, elements, rank, display, display_params, category)
+			SELECT type, name, CONCAT('Duplicate of ',caption) AS 'caption', description, default_text, elements, rank, display, display_params, category
 			FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=$id;";
 	$rs = mysql_query($sql);
 }
 else {
-	$sql = "SELECT type, name, CONCAT('Duplicate of ',caption) AS 'caption', description, default_text, elements, rank, display, display_params
+	$sql = "SELECT type, name, CONCAT('Duplicate of ',caption) AS 'caption', description, default_text, elements, rank, display, display_params, category
 			FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id=$id;";
 	$rs = mysql_query($sql);
 	if($rs) {
 		$row = mysql_fetch_assoc($rs);
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars`
-				(type, name, caption, description, default_text, elements, rank, display, display_params) VALUES
-				('".$row['type']."', '".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['caption'])."', '".mysql_escape_string($row['description'])."', '".mysql_escape_string($row['default_text'])."', '".mysql_escape_string($row['elements'])."', '".$row['rank']."', '".$row['display']."', '".mysql_escape_string($row['display_params'])."');";
+				(type, name, caption, description, default_text, elements, rank, display, display_params, category) VALUES
+				('".$row['type']."', '".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['caption'])."', '".mysql_escape_string($row['description'])."', '".mysql_escape_string($row['default_text'])."', '".mysql_escape_string($row['elements'])."', '".$row['rank']."', '".$row['display']."', '".mysql_escape_string($row['display_params'])."', ".mysql_escape_string($row['category']).");";
 		$rs = mysql_query($sql);
 	}
 }

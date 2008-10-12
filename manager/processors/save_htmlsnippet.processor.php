@@ -9,7 +9,7 @@ if(!$modx->hasPermission('save_chunk')) {
 
 $id = intval($_POST['id']);
 $snippet = mysql_escape_string($_POST['post']);
-$name = mysql_escape_string($_POST['name']);
+$name = mysql_escape_string(trim($_POST['name']));
 $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 

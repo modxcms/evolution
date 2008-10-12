@@ -23,7 +23,7 @@ function isNumber($var)
 
 $id = intval($_POST['id']);
 $template = mysql_escape_string($_POST['post']);
-$templatename = mysql_escape_string($_POST['templatename']);
+$templatename = mysql_escape_string(trim($_POST['templatename']));
 $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 

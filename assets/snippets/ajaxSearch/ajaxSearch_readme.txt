@@ -1,21 +1,22 @@
 
-AjaxSearch Readme version 1.7.1
+AjaxSearch Readme version 1.8.1
 
 ---------------------------------------------------------------
-:: Snippet: ajaxSearch
+:: Snippet: AjaxSearch
 ----------------------------------------------------------------
   Short Description: 
         Ajax-driven & Flexible Search form
 
   Version:
-        1.7.1
+        1.8.1
 
   Created by:
+      Coroico - (coroico@wangba.fr)
 	    Jason Coward (opengeek - jason@opengeek.com)
 	    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
 	    Ryan Thrash  (rthrash - ryan@vertexworks.com)
 
-  Parts refactored and new features/fixes added by Coroico (coroico@wangba.fr)
+  
   
 ----------------------------------------------------------------
 :: Credits
@@ -50,6 +51,35 @@ This is done automatically with the addJscript parameter unless you set it to 0.
 ---------------------------------------------------------------
 :: Changelog:
 ----------------------------------------------------------------
+
+  02-oct-08 (1.8.1)
+    -- subSearch added. 
+    -- mysql query redesigned.
+    -- whereSearch parameter improved. Fields definition added
+    -- withTvs parameter added. specify the search in Tvs
+    -- # metacharacter for filter
+    -- improvement of the searchword list parameter
+    -- debug - file and firebug console
+    -- bug fixing
+  21 -July-08 (1.8.0)
+    -- define where to do the search (&whereSearch parameter)
+    -- define which fields to use for the extracts (&extract parameter)
+    -- use AjaxSearch with non MOdx tables
+    -- order the results with the &order parameter
+    -- define the ranking value and sort the results with it
+    -- filter the unwanted documents of the search
+    -- define the extract eliipsis
+    -- define the extract separator
+    -- Extended place holder templating and template parameters
+    -- Improvement of the extract algorithm
+    -- Define the number of extracts displayed in the search results
+    -- Use of &advSearch parameter available from the front-end by the end user
+    -- Choose your search term from a predefined search word list
+    -- stripInput user function
+    -- stripOutput user function
+    -- Configuration file and $__ global parameters
+    -- snippet code completely refactored and objectified
+    -- Bugfixes regarding Quoted searchstring
 
   06-Mar-08 (1.7.1)
     -- Advanced search (partial & relevance)
@@ -111,19 +141,48 @@ This is done automatically with the addJscript parameter unless you set it to 0.
         Load a custom configuration
         config_name - Other config installed in the configs folder or in any folder within the MODx base path via @FILE
         Configuration files are named in the form: <config_name>.config.php
+    
+    &debug = [ 0 | 1 | 2 | 3 | -1 | -2 | -3 ] (optional) - Output debugging information
+
+      0 : debug not activated (Default)
         
+      1, 2, 3 : File mode
+      debug activated. Trace is by default logged into a file named ajaxSearch_log.txt
+      in the ajaxSearch folder.
+      
+        1 : Parameters, search context and sql query logged.
+        2 : Parameters, search context, sql query AND templates logged
+        3 : Parameters, search context, sql query, templates AND Results logged
+      
+      To avoid an increasing of the file, only one transaction is logged. Overwritted 
+      by the log of the following one.
+      
+      -1, -2, -3 : FireBug mode
+      debug activated. The trace is logged into the firebug console of Mozilla.
+      
+        -1 : Parameters, search context and sql query logged.
+        -2 : Parameters, search context, sql query AND templates logged
+        -3 : Parameters, search context, sql query, templates AND Results logged    
+        
+        with the FireBug mode you need to install:
+        the Firebug plugin under Firefox : https://addons.mozilla.org/en-US/firefox/addon/1843
+        and the FirePhp plugin (version 0.2.b.1 or upper) : http://www.firephp.org/
+        
+      For the FireBug mode, Php5 is mandatory. These level -1,-2,-3 are switched 
+      respectively to 1,2,3 if your server runs whith Php4.
+      
+      For security reasons, the full name of tables (with database name) have 
+      been replaced by short names (prefix + table name only)
+      
+      The output produce the SELECT statement and you could use it directly by 
+      copy & paste in PhpMyAdmin to retrieve your results and undertsand it.
+         
     &language [ language_name | manager_language ] (optional)
         with manager_language = $modx->config['manager_language'] by default 
 
     &ajaxSearch [1 | 0] (optional)
         Use the ajaxSearch mode. Default is 1 (true)
         The AjaxSearch mode use an Ajax call to get the results without full page reloading
-
-    &AS_showForm [1 | 0] (optional)
-        Show the search form with the results. Default is 1 (true)
-
-    &AS_showResults [1 | 0] (optional)
-        Show the results with the snippet. (For non-ajax search)
 
     &advSearch [ 'exactphrase' | 'allwords' | 'nowords' | 'oneword' ]
         Advanced search    
@@ -132,18 +191,78 @@ This is done automatically with the addJscript parameter unless you set it to 0.
         - nowords : provides the documents which do not contain the words
         - oneword : provides the document which contain at least one word [default] 
 
+    &subSearch : [int, int | 5, 1]
+        subSearch allow to use radio buttons to select sub-domains where to search
+        Initialize the subSearch by defining the number of possible choices (radio-buttons)
+        and choose the default checked selection
+        By default 5 choices and the first one selected
+        
+    &whereSearch : [comma separated list of key | content,tv] (optional)
+        define in wich tables the search occurs
+        by default in documents and TVs
+        other predefined key: jot, maxigallery
+        by default all the text fields are searchable but you could specify the fields like this:
+        whereSearch=`content:pagetitle,introtext,content|tv:tv_value|maxigallery:gal_title`
+
+    &withTvs     
+        Define which Tvs are used for the search in Tvs
+        a comma separated list of TV names
+        by default all TVs are used (empty list)
+
+    &order
+        Define in which order are sorted the displayed search results
+        `comma separarted list of fields`
+        by default: 'publishedon,pagetitle' (sorted by published date and then pagetitle)
+
+    &rank
+        define the ranking of search results
+        &rank=`comma separarted list of fields with optionaly user defined weight`
+        by default: pagetitle:100,extract
+
+    &minChars [ int ]
+        Minimum number of characters to require for a word to be valid for searching.
+    
+    &AS_showForm [1 | 0] (optional)
+        Show the search form with the results. Default is 1 (true)
+
+    &AS_showResults [1 | 0] (optional)
+        Show the results with the snippet. (For non-ajax search)
+
+    &extract [int : Comma separated list of searchable fields | '99:site_content,tmplvar_contentvalues] (optional)
+        Define the maximum number of extracts that will be displayed per 
+        document and define which fields will be used to set up extracts
+    
+    &extractEllips : define your ellipsis in extract
+        string used as ellipsis to start/end an extract
+        by default : " ... "
+        
+    &extractSeparator : Define how separate extracts
+        html tag like <br /> or <hr /> or any other html tag
+        Default : "<br />"
+        
+    &extractLength [int] (optional)
+        Length of extract around the search words found - between 50 and 800 characters
+        
+    &formatDate [ string ]
+        The format of outputted dates. See http://www.php.net/manual/en/function.date.php
+        by default : "d/m/y : H:i:s" e.g: 21/01/08 : 23:09:22
+
     &hideMenu [ 0 | 1 | 2 ]    
         Search in hidden documents from menu
         - 0 : search only in documents visible from menu
         - 1 : search only in documents hidden from menu
         - 2 : search in hidden or visible documents from menu [default]
+        
+    &hideLink [0 | 1] : Search in content of type reference
+    
+        - 0 : search only in content of type document
+        - 1 : search in content of type document AND reference (default)
 
-    &extract [1 | 0] (optional)
-        Show the search words highlighting.
-        
-    &extractLength [int] (optional)
-        Length of extract around the search words found - between 50 and 800 characters
-        
+
+    &formatDate : the format of outputted dates. 
+        See http://www.php.net/manual/en/function.date.php
+        by default : "d/m/y : H:i:s" e.g: 21/01/08 : 23:09:22
+    
     &parents [comma-separated list of integers  MODx document IDs] (optional)
         A list of parent-documents whose descendants you want searched to &depth depth when searching. 
         All parent-documents by default
@@ -154,6 +273,64 @@ This is done automatically with the addJscript parameter unless you set it to 0.
 
     &documents [comma-separated list of integers  MODx document IDs] (optional)
         A list of documents where to search
+
+    &filter : exclude unwanted documents
+        &filter runs as the &filter Ditto 2.1 parameter. 
+        (see http://ditto.modxcms.com/tutorials/basic_filtering.html)
+
+    &stripInput user function 
+        to transform on fly the search input text
+        by default: defaultStripInput
+
+    &stripOutput user function
+        to transform on fly the result output
+        by default: defaultStripOutut
+
+    &searchWordList user function
+        to define a search word list: [user_function_name,params] 
+        where params is an optional array of parameters
+
+    &clearDefault 
+      clearing default text: [1| 0]
+      Set this to 1 if you would like to include the clear default js function
+      add the class "cleardefault" to your input text form and set this parameter
+      
+    &jsClearDefault
+        Location of the clearDefault javascript library
+
+    &breadcrumbs
+        0 : disallow the breadcrumbs link
+        Name of the breadcrumbs function : allow the breadcrumbs link
+        The function name could be followed by some parameter initialization
+        e.g: &breadcrumbs=`Breadcrumbs,showHomeCrumb:0,showCrumbsAtHome:1`
+
+    &tvPhx
+        Set placeHolders for TV (template variables)
+        0 : disallow the feature (default)
+        'tv:displayTV' : set up a placeholder named [+as.tvName.+] for each TV (named tvName) linked to the documents found
+        displayTV is a provided ajaxSearch function which render the TV output
+        tvPhx could also be used with custom tables
+
+    &addJscript [1 | 0]
+        Set this to 1 if you would like to include the mootool/jquery librairy
+        in the header of your pages automatically.
+    
+    &jScript ['jquery'|'mootools']
+        Set this to jquery if you would like to include the jquery librairy
+        Default: mootools
+    
+    &jsMooTools
+        Location of the mootools javascript library
+        by default: 'manager/media/script/mootools/mootools.js'
+    
+    &jquery
+        Location of the jquery javascript library
+        by default: AS_SPATH . 'js/jquery.js'
+    
+
+    &tplLayout chunk to style the ajaxSearch input form and layout
+        @FILE:".AS_SPATH.'templates/layout.tpl.html' by default
+
 
 ----------------------------------------------------------------
 :: Ajax Parameters - Used only with the ajaxSearch mode
@@ -181,6 +358,15 @@ This is done automatically with the addJscript parameter unless you set it to 0.
         If you want the mootools library added to the header of your pages automatically set this to 1.  
         Set to 0 if you do not want them inculded automatically. Défault is 1.
 
+    &tplAjaxResults
+        chunk to style the ajax output results outer
+        by default: @FILE:".AS_SPATH.'templates/ajaxResults.tpl.html'
+    
+    &tplAjaxResult
+        chunk to style each output result
+        by default: @FILE:".AS_SPATH.'templates/ajaxResult.tpl.html'
+        
+        
 ----------------------------------------------------------------
 :: Non Ajax Parameters - Used only with the non-ajaxSearch mode
 ----------------------------------------------------------------
@@ -190,6 +376,19 @@ This is done automatically with the addJscript parameter unless you set it to 0.
         
     &grabMax [int] (optional)
         The number of results per page returned (For non-ajax search)
+
+    &tplResults
+        chunk to style the non-ajax output results outer
+        by default: @FILE:".AS_SPATH.'templates/results.tpl.html'
+
+    &tplResult
+        chunk to style each output result
+        by default: @FILE:".AS_SPATH.'templates/result.tpl.html'
+
+    &tplPaging
+        chunk to style the paging links
+        @FILE:".AS_SPATH.'templates/paging.tpl.html'
+
 
 ----------------------------------------------------------------
 :: CSS                         

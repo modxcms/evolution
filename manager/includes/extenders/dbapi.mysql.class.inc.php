@@ -490,5 +490,15 @@ class DBAPI {
       for ($i = 0; $i < $qty; $i++) $rsArray[] = $this->getRow($rs);
       return $rsArray;
    }
+   
+   /**
+    * @name	getVersion
+    * @desc	returns a string containing the database server version
+    *
+    * @return string
+    */
+   function getVersion() {
+       return mysql_get_server_info();
+   }
 }
 ?>

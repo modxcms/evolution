@@ -918,10 +918,9 @@ switch ($action) {
         include_once "header.inc.php";
         echo "
             <div class='subTitle'>
-                <span class='right'><img src='media/images/_tx_.gif' width='1' height='5'><br />
-                ".$_lang['functionnotimpl']."</span>
+                <span class='right'>".$_lang['functionnotimpl']."</span>
             </div>
-            <div class='sectionHeader'><img src='media/images/misc/dot.gif' alt='.' />&nbsp;
+            <div class='sectionHeader'><img src='media/style/".($manager_theme ? $manager_theme : '')."/images/misc/dot.gif' alt='.' />&nbsp;
                 ".$_lang['functionnotimpl']."</div><div class='sectionBody'>
                 ".$_lang['functionnotimpl_message']."
             </div>

@@ -208,15 +208,15 @@ if (mysql_num_rows($rs) < 1) {
 		?>
 		<table border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 			<thead>
-			<tr><td><b>Create a new group link</b></td></tr>
+			<tr><td><b><?php echo $_lang["access_permissions_group_link"] ?></b></td></tr>
 			</thead>
 			<tr class="row1"><td>
 				<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
 					<input type="hidden" name="a" value="41" />
 					<input type="hidden" name="operation" value="add_document_group_to_user_group" />
-					Link User Group
+					<?php echo $_lang["access_permissions_link_user_group"]?>
 					<?php echo $usrgroupselector?>
-					to Document Group
+					<?php echo $_lang["access_permissions_link_to_group"]?>
 					<?php echo $docgroupselector?>
 					<input type="submit" value="<?php echo $_lang['submit']?>">
 				</form>

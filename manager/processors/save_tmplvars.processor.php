@@ -22,7 +22,7 @@ function isNumber($var)
 
 
 $id = intval($_POST['id']);
-$name = mysql_escape_string($_POST['name']);				
+$name = mysql_escape_string(trim($_POST['name']));				
 $description = mysql_escape_string($_POST['description']);
 $caption = mysql_escape_string($_POST['caption']);
 $type = mysql_escape_string($_POST['type']);

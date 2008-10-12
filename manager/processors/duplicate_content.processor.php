@@ -190,7 +190,7 @@ function duplicateAccess($oldid,$newid){
 		$rs = mysql_query($sql);
 		/**/
 	} else {
-		$ds = $modx->db->select('document_group', 'document='.$oldid);
+		$ds = $modx->db->select('document_group', $tbldg, 'document='.$oldid);
 		while ($row = $modx->db->getRow($ds))
 			$modx->db->insert(array('document'=>$newid, 'document_group'=>$row['document_group']), $tbldg);
 		/* old way *

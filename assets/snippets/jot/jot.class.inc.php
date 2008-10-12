@@ -2,9 +2,9 @@
 /*####
 #
 #	Name: Jot
-#	Version: 1.1.3
+#	Version: 1.1.4
 #	Author: Armand "bS" Pondman (apondman@zerobarrier.nl)
-#	Date: Apr 03, 2008 15:26 CET
+#	Date: Aug 04, 2008
 #
 # Latest Version: http://modxcms.com/Jot-998.html
 # Jot Demo Site: http://projects.zerobarrier.nl/modx/
@@ -30,7 +30,7 @@ class CJot {
 		if (!class_exists('CChunkie'))
 			include_once($path . '/includes/chunkie.class.inc.php');
 		$this->name = $this->config["snippet"]["name"] = "Jot";
-		$this->version = $this->config["snippet"]["version"] = "1.1.3"; //
+		$this->version = $this->config["snippet"]["version"] = "1.1.4"; //
 		$this->config["snippet"]["versioncheck"] = "Unknown";
 		$this->client = $modx->getUserData();
 		$this->_ctime = time();
@@ -87,7 +87,7 @@ class CJot {
 		$this->config["numdir"] = !is_null($this->Get("numdir")) ? intval($this->Get("numdir")) : 1;
 		$this->config["placeholders"] = !is_null($this->Get("placeholders")) ? intval($this->Get("placeholders")) : 0;
 		$this->config["authorid"] = !is_null($this->Get("authorid")) ? intval($this->Get("authorid")) : $modx->documentObject["createdby"];
-		$this->config["title"] = !is_null($this->Get("title")) ? intval($this->Get("title")) : $modx->documentObject["longtitle"];
+		$this->config["title"] = !is_null($this->Get("title")) ? $this->Get("title") : $modx->documentObject["longtitle"];
 		$this->config["subject"]["subscribe"] = !is_null($this->Get("subjectSubscribe")) ? $this->Get("subjectSubscribe") : "New reply to a topic you are watching";
 		$this->config["subject"]["moderate"] = !is_null($this->Get("subjectModerate")) ? $this->Get("subjectModerate") : "New reply to a topic you are moderating";
 		$this->config["subject"]["author"] = !is_null($this->Get("subjectAuthor")) ? $this->Get("subjectAuthor") : "New comment on your post";
@@ -133,8 +133,6 @@ class CJot {
 		$this->config["moderation"]["type"] = !is_null($this->Get("moderated")) ? intval($this->Get("moderated")) : 0;
 		$this->config["moderation"]["notify"] = !is_null($this->Get("notify")) ? intval($this->Get("notify")) : 1;
 		$this->config["moderation"]["notifyAuthor"] = !is_null($this->Get("notifyAuthor")) ? intval($this->Get("notifyAuthor")) : 0;
-		
-		echo '<!-- norify author: '.$this->config["moderation"]["notifyAuthor"] .' -->';
 		
 		// Access Booleans
 		// TODO Add logic for manager groups

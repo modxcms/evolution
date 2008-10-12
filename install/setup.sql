@@ -846,7 +846,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('track_visitors','0'),
 ('resolve_hostnames','0'),
 ('top_howmany','10'),
-('default_template','1'),
+('default_template','3'),
 ('old_template',''),
 ('publish_default','0'),
 ('cache_default','1'),

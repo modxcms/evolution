@@ -173,6 +173,10 @@ class DataGrid {
 		$this->_colcolors = explode((strstr($this->colColors,"||")!==false ? "||":","),$this->colColors);
 		$this->_coltypes = explode((strstr($this->colTypes,"||")!==false ? "||":","),$this->colTypes);
 		$this->_colcount = count($this->_colnames);
+		if(!$this->_isDataset) {
+			$this->ds = explode((strstr($this->ds,"||")!==false ? "||":","),$this->ds);
+			$this->ds = array_chunk($this->ds, $this->_colcount);
+		}
 		$tblColHdr ="<tr>";
 		for($c=0;$c<$this->_colcount;$c++){
 			$name=$this->_colnames[$c];

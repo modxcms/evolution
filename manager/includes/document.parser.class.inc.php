@@ -624,8 +624,11 @@ class DocumentParser {
     function mergeDocumentMETATags($template) {
         if ($this->documentObject['haskeywords'] == 1) {
             // insert keywords
-            $keywords= implode(", ", $this->getKeywords());
-            $metas= "\t<meta name=\"keywords\" content=\"$keywords\" />\n";
+            $keywords = $this->getKeywords();
+            if (is_array($keywords) && count($keywords) > 0) {
+	            $keywords = implode(", ", $keywords);
+	            $metas= "\t<meta name=\"keywords\" content=\"$keywords\" />\n";
+            }
 
 	    // Don't process when cached
 	    $this->documentObject['haskeywords'] = '0';
@@ -1292,7 +1295,7 @@ class DocumentParser {
         }
         $sql= "INSERT INTO " . $this->getFullTableName("event_log") . " (eventid,type,createdon,source,description,user) " .
         "VALUES($evtid,$type," . time() . ",'$source','$msg','" . $this->getLoginUserID() . "')";
-        $ds= @mysql_query($sql);
+        $ds= @$this->db->query($sql);
         if (!$ds) {
             echo "Error while inserting event log into database.";
             exit();
@@ -1873,14 +1876,14 @@ class DocumentParser {
     }
 
     # returns an associative array containing TV rendered output values. $idnames - can be an id or name that belongs the template that the current document is using
-    function getTemplateVarOutput($idnames= array (), $docid= "", $published= 1) {
+    function getTemplateVarOutput($idnames= array (), $docid= "", $published= 1, $sep='') {
         if (count($idnames) == 0) {
             return false;
         } else {
             $output= array ();
             $vars= ($idnames == '*' || is_array($idnames)) ? $idnames : array ($idnames);
             $docid= intval($docid) ? intval($docid) : $this->documentIdentifier;
-            $result= $this->getTemplateVars($vars, "*", $docid, $published, "", ""); // remove sort for speed
+            $result= $this->getTemplateVars($vars, "*", $docid, $published, "", "", $sep); // remove sort for speed
             if ($result == false)
                 return false;
             else {
@@ -1891,7 +1894,7 @@ class DocumentParser {
 			$row= $result[$i];
 			if (!$row['id'])
 				$output[$row['name']]= $row['value'];
-			else	$output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid);
+			else	$output[$row['name']]= getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
 		}
 		return $output;
             }

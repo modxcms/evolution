@@ -2,8 +2,54 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.3 (rev 4120 - September 20, 2008)
-====================================
+MODx 0.9.6.3 (rev 4291 - October 11, 2008)
+===================================
+* [#MODX-415] Update German manager file
+* [FS#1011] Minor CSS change to color of Unread Message links
+* [#MODX-365] Fix some hardcoded language strings in the Access Permissions pages
+* [#MODX-389] Convert TV Input Options field to be a textarea
+* [#MODX-394] Updating incorrect language string in installer
+* Updated AjaxSearch to version 1.8.1
+* Fix to user permissions class (thanks Dimmy!)
+* [#MODX-351] Update eForm to version 1.4.4.5
+* [#MODX-352] Update Jot to version 1.1.4
+* [#MODX-304] Update Japanese language file for Quickedit
+* [FS#1052] Fix CC bug in PHPMailer class
+* [FS#806] Allow '.','-', and '_' in TV names - manually encode these as rawurlencode() doesn't convert them (related to [#MODX-154])
+* [FS#833] Fix inconsistent Stay buttons (use labels like on other pages)
+* [FS#1037] Prevent currently logged-in user password update logging out without displaying the new password 
+* [FS#944] Enable RTE for TVs when creating/editing a weblink
+* Fix urldecode() bug with 'refurl' querystring parameter in WebLogin
+* [FS#548] Preserve querystring parameters when logging in/logging out with WebLogin
+* [FS#1074] Apply DataGrid patch
+* Add default sort order for new template variables, prevents '$rs not set' error
+* [FS#900] Fix incorrect system setting for default template on install (without demo content)
+* [FS#392] Add optional separator parameter to $modx->getTemplateVarOutput() for checkbox/multiselect lists
+* [FS#895] Fix Captcha implementation in WebSignup snippet
+* [FS#912] Add charset encoding to page title htmlentities() call in the Manager search
+* [FS#1073] Duplicate TV associations when duplicating a template
+* [FS#283] Allow Weblogin to work with password-less registration forms by generating random password if no password POST value is passed
+* [FS#687] Fix the [+surl+] placeholder in the Weblogin snippet
+* [FS#999] Prevent log error when connecting to a second database
+* [#MODX-154] rawurlencode() TV names so TVs with spaces in the name can be saved when editing/creating a document
+* [FS#1032] Convert TV saving in save_content.processor.inc.php to use three-stage DELETE/INSERT/UPDATE method
+* [FS#978] manage keywords length not limited to varchar(40) DB value
+* [CR-MODX-39] Button Back in Upgrade Existing Install goes to wrong screen.
+* [#MODX-188] Default installation language set to english, patch from CR-MODX-28.
+* [FS#907] Small fix to QuickEdit to correctly include JS/CSS files if friendly alias paths are being used and no <base> tag is specified in the template
+* [#MODX-139] Updated cache_sync.class.processor.php to use $modx->db methods instead of mysql functions. 
+* [FS#1003] Amend the top username link to explicitly state a 'change password' link instead of just linking the username
+* [#MODX-362] Added database version to MySQL DBAPI class and to the System Information report
+* Switched double quotes to single quotes and added minor speed improvements to files.dynamic.php
+* [#MODX-209] File manager can now handle files with illegal url characters (added urlencode escaping).
+* [#MODX-219] Fix broken image paths
+* [#MODX-179] Duplicating resources now duplicates the category setting as well
+* [#MODX-290] Minimum PHP requirement updated in language files to 4.2.0
+* [#MODX-168] Fix issue where phantom keywords metatag could be added to document due to haskeywords setting being out of sync
+* [FS#1078] Fix duplicate content processor for MySQL versions < 4.0.14
+* [#MODX-303] Update DocManager Japanese language file
+* [#MODX-158] Remove broken stylesheet references from DocManager module
+* [#MODX-244] Fix the display of user and web user photos in the manager
 * [#MODX-140] Make Security Notices and News items open in new tab/window
 * [#MODX-341] Ensure duplicate aliases have the number suffix properly incremented
 * [FS#1065] Fix problem with losing selected metatags when editing documents
@@ -19,7 +65,13 @@ MODx 0.9.6.3 (rev 4120 - September 20, 2008)
 * [FS#1079] Apply URL TV patch to Doc Manager module
 * [#MODX-218] Fix broken image paths in Newspublisher snippet
 * [#MODX-266] Stop .svn folder appearing on help screen if MODx install was checked out from SVN
-* [FS#1076] Fix calendar JS error occurring if calendar TV name contains an hyphen
+* [FS#1076] [FS#853] Fix calendar JS error occurring if calendar TV name contains an hyphen
+* Updated TinyMCE to version 3.2.0.1
+* [FS#1036] Moved Rewrite Browser Paths (strip_image_paths) in configuration so that it's editable even when Enable Resource Browser is set to 'no'.
+* [FS#665] Fixed ViewPort Javascript code errors (thanks to Antonio)
+* [FS#1027] Added 'Path to CSS file' to user configuration so that it can be overridden on a per user basis
+* [FS#821] Fixed Javascript Error using QuickEdit and IE7 (thanks to Marc [MadeMyDay])
+* [FS#939] Fixed recordset handling for ticker widget and replaced ticker javascript with Moostick.
 
 MODx 0.9.6.2 (rev 4077 - September 15, 2008)
 ====================================

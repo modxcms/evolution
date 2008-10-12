@@ -234,10 +234,10 @@ function showHide(what, onoff){
 	<div class="stay">
 	<table border="0" cellspacing="1" cellpadding="1">
 	<tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang["after_saving"];?>:</span></td>
-		<td><input name="stay" type="radio" class="radio" value="1"  <?php echo $_GET['stay']=='1' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay_new']; ?></span></td>
-		<td><input name="stay" type="radio" class="radio" value="2"  <?php echo $_GET['stay']=='2' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['stay']; ?></span></td>
-		<td><input name="stay" type="radio" class="radio" value=""  <?php echo $_GET['stay']=='' ? "checked='checked'":'' ?> /></td><td><span class="comment"><?php echo $_lang['close']; ?></span></td>
+		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
+		<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
+		<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
+		<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
 	</tr>
 	</table>
 	</div>
@@ -511,7 +511,7 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo'] ? $userdata['photo']: "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
+            <td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? MODX_SITE_URL.$_POST['photo'] : !empty($userdata['photo']) ? MODX_SITE_URL.$userdata['photo']: "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
           </tr>
 		</table>
 	</div>

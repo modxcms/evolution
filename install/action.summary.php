@@ -5,7 +5,7 @@ echo "<p>" . $_lang['summary_setup_check'] . "</p>";
 $errors = 0;
 // check PHP version
 echo "<p>" . $_lang['checking_php_version'];
-$php_ver_comp = version_compare(phpversion(), "4.1.0");
+$php_ver_comp = version_compare(phpversion(), "4.2.0");
 $php_ver_comp2 = version_compare(phpversion(), "4.3.8");
 // -1 if left is less, 0 if equal, +1 if left is higher
 if ($php_ver_comp < 0) {

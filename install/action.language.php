@@ -30,7 +30,11 @@ sort($langs);
 	<?php 
     foreach ($langs as $language) {
       $abrv_language = explode('-',$language); // filter of character set extension
-      echo '<option value="' . $language . '">' . $abrv_language[0] . '</option>'."\n";
+      if ($abrv_language[0] == 'english') {
+        echo '<option value="' . $language . '" selected="selected">' . $abrv_language[0] . '</option>'."\n";
+      } else {
+        echo '<option value="' . $language . '">' . $abrv_language[0] . '</option>'."\n";
+      }
     }
   ?>
 	</select>

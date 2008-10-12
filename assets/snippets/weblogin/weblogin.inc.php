@@ -77,10 +77,10 @@ if(!isset($_SESSION['webValidated'])){
     <?php
         
         // display login
-        $ref = isset($_REQUEST["refurl"]) ? "&refurl=".urlencode($_REQUEST["refurl"]):"";
+        $ref = isset($_REQUEST["refurl"]) ? array("refurl" => urlencode($_REQUEST["refurl"])) : array();
         $tpl = "<div id='WebLoginLayer0' style='position:relative'>".$tpls[0]."</div>";
         $tpl.= "<div id='WebLoginLayer2' style='position:relative;display:none'>".$tpls[2]."</div>";
-        $tpl = str_replace("[+action+]",$modx->makeUrl($modx->documentIdentifier,"",$ref),$tpl);
+        $tpl = str_replace("[+action+]",preserveUrl($modx->documentIdentifier,"",$ref),$tpl);
         $tpl = str_replace("[+rememberme+]",(isset($cookieSet) ? 1 : 0),$tpl);    
         $tpl = str_replace("[+username+]",$uid,$tpl);    
         $tpl = str_replace("[+checkbox+]",(isset($cookieSet) ? "checked" : ""),$tpl);
@@ -115,13 +115,12 @@ if(!isset($_SESSION['webValidated'])){
     
     // display logout
     $tpl = $tpls[1];
-    $url = $modx->makeUrl($modx->documentIdentifier);
+    $url = preserveUrl($modx->documentObject['id']);
     $url = $url.((strpos($url,"?")===false) ? "?":"&amp;")."webloginmode=lo";
     $tpl = str_replace("[+action+]",$url,$tpl);    
     $tpl = str_replace("[+logouttext+]",$logoutText,$tpl);    
     $output .= $tpl;
 }
-
 
 # Returns Default WebLogin tpl
 function getWebLogintpl(){

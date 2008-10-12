@@ -1,12 +1,15 @@
 //ajaxSearch.js
-//Version: 1.7.1 - refactored by coroico
+//Version: 1.8.1 - refactored by coroico
 //Created by: KyleJ (kjaebker@muddydogpaws.com)
 //Created on: 03/14/06
 //Description: This code is used to setup the ajax search request.
 //My thanks to Steve Smith of orderlist.com for sharing his code on how he did this
 //Live Search by Thomas (Shadock)
 
-//Updated: 06/03/08 - added advSearch and Hidden from menu options - 1.7.1
+//Updated: 02/10/08 - whereSearch, withTvs
+//Updated: 10/07/08 - Added whereSearch, rank, order and filter parameters
+//Updated: 02/07/08 - Added Phx templating & some new parameters
+//Updated: 06/03/08 - Added advSearch and Hidden from menu options - 1.7.1
 //Updated: 03/03/08 - Fix : % character freeze the search - 1.7.1
 //Updated: 01/02/08 - Added version, folder and some others parameters - 1.7.0
 //Updated: 12/14/07 - Fix : bad URI with several document groups - 1.6.2d - 
@@ -24,7 +27,7 @@
 var _base = 'assets/snippets/ajaxSearch/';
 
 // AjaxSearch Snippet folder
-var _version = '1.7.1';
+var _version = '1.8.1';
 
 //From Thomas : vars for live search
 var _oldInputFieldValue = "";
@@ -38,9 +41,12 @@ function activateSearch() {
   var searchForm = $('ajaxSearch_form');
 
   if (as_version != _version) {
-    alert("AjaxSearch version obsolete. Check the version of AjaxSearch.js file");
+    alert("AjaxSearch version obsolete. Empty your browser cache and check the version of AjaxSearch.js file");
     return;
   }
+
+  var s = $('ajaxSearch_output');
+  s.setStyle('opacity', '0');
 
   if (searchForm) {
     $('ajaxSearch_form').onsubmit = function() { doSearch(); return false; };
@@ -72,8 +78,6 @@ function activateSearch() {
     } else {
       toggleImage(c);
     }
-
-    var s = $('ajaxSearch_output');
 
     var n = new Element('div'); // New search results div
     n.setProperty('id', 'current-search-results');
@@ -109,8 +113,17 @@ function liveSearchReq() {
 function doSearch() {
   // If we're already loading, don't do anything
   if (is_searching) return false;
-  s = $('ajaxSearch_input').value;
-  // Same if the search is blank
+  
+  // get the input searchstring from select or from input
+  if (ss = $('ajaxSearch_select')) {
+    selected = new Array();
+    for (var i = 0; i < ss.options.length; i++) if (ss.options[ i ].selected) selected.push(ss.options[ i ].value);
+    s = selected.join(" ");
+  }
+  else {
+    s = $('ajaxSearch_input').value;
+  }
+  // Same if the searchstring is blank
   if (s == '') return false;
   is_searching = true;
   c = $('current-search-results');
@@ -120,35 +133,70 @@ function doSearch() {
   search_open = true;
   b = $('ajaxSearch_submit');
   b.disabled = true;
-  
+
   if (newToggle.isDisplayed()) {
     newToggle.toggle(); 
+  }  
+
+  // update the advSearch value from radio button if they exists
+  if (r = $('radio_oneword')) {
+    if (r.checked == true) advSearch = r.value;
+  }
+  if (r = $('radio_allwords')) {
+    if (r.checked == true) advSearch = r.value;
+  }
+  if (r = $('radio_exactphrase')) {
+    if (r.checked == true) advSearch = r.value;
+  }
+  if (r = $('radio_nowords')) {
+    if (r.checked == true) advSearch = r.value;
+  }
+  
+  // update the subSearch value from radio button if they exists
+  sbsname = '';
+  for (var i = 1; i < subSearch+1; i++) {
+    if (sbs = $('subSearch'+i)) {
+      if (sbs.checked == true) sbsname = sbs.value;
+    }
   }
 
-  // Setup the parameters and make the ajax call
+  // Setup the parameters and make the ajax call to the popup window
   var pars = Object.toQueryString({
-    q: _base + 'ajaxSearch.php',
-    search: s, 
+    q: _base + 'ajaxSearchPopup.php',
+    search: s,
+    config: config,
     as_version: as_version,
     debug: debug,
     ajaxMax: ajaxMax,
-    stripHtml: stripHtml,
-    stripSnip: stripSnip,
-    stripSnippets: stripSnippets,
-    searchStyle: encodeURI(searchStyle),
     advSearch: encodeURI(advSearch),
+    subSearch: encodeURI(sbsname),
+    whereSearch: encodeURI(whereSearch),
+    withTvs: withTvs,
+    order: order,
+    rank: rank,
     minChars: minChars,
     showMoreResults: showMoreResults,
     moreResultsPage: moreResultsPage,
     as_language: as_language,
     extract: extract,
     extractLength: extractLength,
+    extractEllips: extractEllips,
+    extractSeparator: extractSeparator,
+    formatDate: formatDate,
     docgrp: encodeURI(docgrp),
-    idgrp: encodeURI(idgrp),
+    listIDs: encodeURI(listIDs),
     idType: idType,
     depth: depth,
     highlightResult: highlightResult,
-    hideMenu: hideMenu
+    hideMenu: hideMenu,
+    hideLink: hideLink,
+    as_filter: as_filter,
+    tplAjaxResult: tplAjaxResult,
+    tplAjaxResults: tplAjaxResults,
+    stripInput: stripInput,
+    stripOutput: stripOutput,
+    breadcrumbs: breadcrumbs,
+    tvPhx: tvPhx
   });
 
   var ajaxSearchReq = new Ajax('index-ajax.php', {postBody: pars, onComplete: doSearchResponse});

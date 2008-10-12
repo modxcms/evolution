@@ -125,7 +125,7 @@ $_lang["checking_php_version"] = "Revisando versión de PHP: ";
 $_lang["failed"] = '¡Falló!';
 $_lang["ok"] = 'OK';
 $_lang["you_running_php"] = ' - Tu serivdor tiene versión ';
-$_lang["modx_requires_php"] = ' de PHP, mientras MODx requiere por lo menos la versión 4.1.0';
+$_lang["modx_requires_php"] = ' de PHP, mientras MODx requiere por lo menos la versión 4.2.0';
 $_lang["php_security_notice"] = '<legend>Aviso de Seguridad</legend><p>Aunque MODx puede funcionar con esta versión de PHP, no lo recomendamos. Esta versión de PHP tiene varias vulnerabilidades y problemas de seguridad. Debes de actualizar PHP a la versión 4.3.8 o más nueva para tu seguridad. Esto se debe de hacer aunque no se instala MODx porque implica una falta de seguridad para todo el servidor.</p>';
 $_lang["checking_sessions"] = 'Revisando la configuración de las sesiones: ';
 $_lang["checking_if_cache_exist"] = 'Comprobando que existe el directorio <span class=\"mono\">assets/cache</span>: ';

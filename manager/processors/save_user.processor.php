@@ -391,7 +391,7 @@ switch ($_POST['mode']) {
 		}
 		// end of user_groups stuff!
 		/*******************************************************************************/
-		if ($id == $modx->getLoginUserID()) {
+		if ($id == $modx->getLoginUserID() && ($genpassword !==1 && $passwordnotifymethod !='s')) {
 ?>
 			<body bgcolor='#efefef'>
 			<script language="JavaScript">
@@ -410,7 +410,7 @@ switch ($_POST['mode']) {
 			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
 			<table cellpadding="0" cellspacing="0" class="actionButtons">
 				<tr>
-					<td id="Button1"><a href="index.php?a=75&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
+					<td id="Button1"><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : 'index.php?a=75&r=2'; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['close']; ?></a></td>
 					</td>
 				</tr>
 			</table>
@@ -419,12 +419,12 @@ switch ($_POST['mode']) {
 			<div class="sectionBody">
 			<div id="disp">
 			<p /><br />
-			<?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?>
+			<?php echo sprintf($_lang["password_msg"], $newusername, $newpassword).(($id == $modx->getLoginUserID()) ? ' '.$_lang['user_changeddata'] : ''); ?>
 			<p />
 			</div>
 			</div>
 		<?php
-
+			
 			include_once "footer.inc.php";
 		} else {
 			if ($_POST['stay'] != '') {

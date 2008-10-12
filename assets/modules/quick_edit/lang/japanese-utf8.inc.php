@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
 /* Set locale to Japanese */
-setlocale (LC_ALL, 'ja_JP');
+setlocale (LC_ALL, "ja_JP.UTF-8");
 
 $QE_lang['QE_lang'] = 'ja';
 $QE_lang['QE_xml_lang'] = 'ja';

@@ -787,6 +787,10 @@ class PHPMailer
         $from[0][1] = $this->FromName;
         $result .= $this->AddrAppend("From", $from); 
 
+		// sendmail and mail() extract Cc from the header before sending 
+    	if((($this->Mailer == "sendmail") || ($this->Mailer == "mail")) && (count($this->cc) > 0)) 
+        	$result .= $this->AddrAppend("Cc", $this->cc); 
+
         // sendmail and mail() extract Bcc from the header before sending
         if((($this->Mailer == "sendmail") || ($this->Mailer == "mail")) && (count($this->bcc) > 0))
             $result .= $this->AddrAppend("Bcc", $this->bcc);

@@ -1,16 +1,13 @@
 <?php
-
-/*
-*
-* Filename: includes/lang/nederlands.inc.php
-* Function: Dutch language file.
-* Encoding: UTF8
-* Author: The MODx Project Team
-* Date: 03 Mar 2007
-* Version: 2.1
-* MODx version: 0.9.6
+/**
+ * Filename: 		includes/lang/nederlands.inc.php
+ * Function: 		Dutch language file.
+ * Encoding: 		UTF8
+ * Author: 			The MODx Project Team
+ * Date: 			03 Mar 2007
+ * Version: 		2.1
+ * MODx version: 	0.9.6
 */
-
 // NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx is een <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Applicatie Framework en Content Management Systeem</a> gelicentieerd onder de <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Over MODx';
@@ -29,9 +26,7 @@ $_lang["access_permissions_no_users_in_group"] = 'Geen.';
 $_lang["access_permissions_off"] = '<span class="warning">Toegangsbeheer is niet geactiveerd.</span> Dit betekent dat wijzigingen die hier worden gemaakt geen effect hebben zolang toegangsbeheer niet is geactiveerd.';
 $_lang["access_permissions_users_in_group"] = '<b>Gebruikers in deze groep:</b> ';
 $_lang["access_permissions_users_tab"] = 'Hier ziet u welke groepen er zijn. U kunt ook nieuwe groepen maken, bestaande wijzigen of verwijderen, of nagaan wie deel uitmaakt van een groep. Om een gebruiker uit een groep te halen of aan een groep toe te wijzen, wijzigt u de gegevens van de gebruiker. Beheerders (dit zijn gebruikers met profiel ID 1) hebben altijd toegang tot alle documenten dus hoeft u hen niet toe te voegen aan een groep.';
-$_lang["access_permissions_user_group"] = 'Gebruikersgroep:';
 $_lang["access_permissions_user_groups"] = 'Gebruikersgroepen';
-$_lang["access_permissions_user_group_access"] = 'Documentengroepen waartoe deze gebruiker toegang heeft:';
 $_lang["access_permissions_user_message"] = 'Kies tot welke groepen deze gebruiker behoort:';
 $_lang["access_permission_denied"] = 'U heeft niet de juiste toegang tot dit document.';
 $_lang["access_permission_parent_denied"] = 'U kunt hier geen document aanmaken of naartoe verplaatsen! Kies een andere locatie.';
@@ -166,6 +161,8 @@ $_lang["credits_shouts_title"] = '<b>Extra dank aan:</b>';
 $_lang["credits_webfx"] = 'MODx maakt gebruik van een aantal JavaScripts van Webfx. Fantastisch spul!';
 $_lang["custom_contenttype_message"] = 'Hier kunnen eigen \'content types\' worden toegevoegd. Vul een nieuw type in en klik op de knop \'Toevoegen\' om een nieuw type toe te voegen';
 $_lang["custom_contenttype_title"] = 'Toegevoegde \'content types\':';
+$_lang["database_collation"] = 'Database Collatie Karakterset';
+$_lang["database_charset"] = 'Database Karakterset';
 $_lang["database_name"] = 'Database naam';
 $_lang["database_server"] = 'Database server';
 $_lang["database_tables"] = 'Database tabellen';
@@ -203,11 +200,7 @@ $_lang["deselect_metatags"] = 'Verwijder \'META tags\'';
 $_lang["disabled"] = 'Uitgeschakeld';
 $_lang["document"] = 'Document';
 $_lang["document_alias"] = 'Alias van het bestand';
-$_lang["document_alias_help"] = 'Hier kunt u voor dit document een alias selecteren. Dit zal het document toegangelijk maken als u gebruik maakt van:
-
-http://uwserveradres/alias
-
-Dit werkt alleen bij gebruiksvriendelijke URLs.';
+$_lang["document_alias_help"] = 'Hier kunt u voor dit document een alias selecteren. Dit zal het document toegangelijk maken als u gebruik maakt van:\n\nhttp://uwserveradres/alias\n\nDit werkt alleen bij gebruiksvriendelijke URLs.';
 $_lang["document_content"] = 'Documentinhoud';
 $_lang["document_description"] = 'Beschrijving';
 $_lang["document_description_help"] = 'Hier kunt u een eventuele beschrijving van het document invoeren.';
@@ -433,9 +426,9 @@ $_lang["login_allowed_days_message"] = 'Selecteer de dagen dat deze gebruiker in
 $_lang["login_allowed_ip"] = 'Toegestane IP Addressen';
 $_lang["login_allowed_ip_message"] = 'Voer de IP adressen in waarvan deze gebruiker mag aanmelden. <br /><br /><b>NB: Meerdere IP adressen worden gescheiden met een komma (,)</b>';
 $_lang["login_button"] = 'Aanmelden';
-$_lang["login_captcha_message"] = ' De beheerder heeft de Captcha validatie ingeschakeld. Dit betekent dat u deze beveiligingscode hier moet ingeven.
-
-Indien de code slecht leesbaar is, kan u op de code zelf klikken om een nieuwe willekeurige code te laten aanmaken.';
+$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Install/update of this site is currently in progress. <br />Please retry in a couple of minutes!</span><br />';
+$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Install/update on this site was executed, please login again!</span><br />';
+$_lang["login_captcha_message"] = ' De beheerder heeft de Captcha validatie ingeschakeld. Dit betekent dat u deze beveiligingscode hier moet ingeven.\n\nIndien de code slecht leesbaar is, kan u op de code zelf klikken om een nieuwe willekeurige code te laten aanmaken.';
 $_lang["login_homepage"] = 'Aanmelden startpagina';
 $_lang["login_homepage_message"] = 'Voer het ID in van het document waarnaar gebruikers worden verwezen als ze aangemeld zijn. <br /><br /><b>NB: Zorg er voor dat het ID dat u invoert een bestaand, gepubliceerd en voor deze gebruiker toegangkelijk document is!</b>';
 $_lang["login_message"] = 'Om MODx te gebruiken dient u zich eerst aan te melden. Let op: hierbij wordt onderscheid gemaakt tussen hoofd- en kleine letters!';
@@ -486,6 +479,7 @@ $_lang["messages_user"] = 'Een gebruiker';
 $_lang["metatags"] = 'META tags';
 $_lang["metatags_and_keywords"] = 'META tags en sleutelwoorden';
 $_lang["metatag_intro"] = 'Op deze pagina kun je \'META tags\' toevoegen, verwijderen en bewerken. De \'META tags\' kun je aan documenten toevoegen op de <u>META Sleutelwoorden</u> tab bij het bewerken van een document. Vul een naam en een waarde in voor een nieuwe tag en klik op de \'Tag toevoegen\' knop om een nieuwe \'tag\' toe te voegen. Klik op de naam van een \'tag\' om deze te bewerken.';
+$_lang["metatag_notice"] = 'Misschien wilt u een <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a> raadplegen voor meer informatie. Dit is geen complete lijst van mogelijke Meta Tags.';
 $_lang["meta_keywords"] = 'META Sleutelwoorden';
 $_lang["mgr_access_permissions"] = 'Toegangsbeheer';
 $_lang["mgr_login_start"] = 'Manager Login Startup';
@@ -662,6 +656,8 @@ $_lang["rb_base_url_message"] = 'Het virtuele pad naar de bestanden. Normaal ges
 $_lang["rb_base_url_title"] = 'URL naar de bestanden:';
 $_lang["rb_message"] = 'Kies \'ja\' om de bestandsbeheer in te schakelen. Met bestandsbeheer is het voor gebruikers eenvoudig mogelijk om bestanden zoals afbeeldingen, flash-media en documenten op de server te plaatsen.';
 $_lang["rb_title"] = 'Bestandsbeheer inschakelen';
+$_lang["rb_webuser_message"] = 'Wilt u de web-gebruikers toestaan de bestanden op de server te beheren? <b>WAARSCHUWING:</b> Door dit toe te staan kunnen web-gebruikers dezelfde bestanden beheren als de website manager(s).  Gebruik dit alleen voor web-gebruikers die u vertrouwd.';
+$_lang["rb_webuser_title"] = 'Web Gebruikers?';
 $_lang["recent_docs"] = 'Recente documenten';
 $_lang["refresh_cache"] = 'Cache: <b>%s</b> bestanden in cache-map gevonden en <b>%d</b> bestanden verwijderd.<p>Nieuwe cache-bestanden worden aangemaakt wanneer pagina\'s worden opgevraagd.';
 $_lang["refresh_published"] = 'Gepubliceerde documenten: <b>%s</b> documenten zijn gepubliceerd.';
@@ -688,6 +684,7 @@ $_lang["resource_management"] = 'Bronnen beheren';
 $_lang["resource_name"] = 'Bron naam';
 $_lang["resource_selector_msg"] = 'Selecteer een bron uit onderstaande lijst en klik op de knop \'Toevoegen\'.';
 $_lang["resource_selector_title"] = 'Selecteer een bron';
+$_lang["role"] = 'Rol';
 $_lang["role_about"] = 'Infopagina weergeven';
 $_lang["role_access_persmissions"] = 'Toegangsrechten';
 $_lang["role_actionok"] = '\'Bewerking is voltooid\'-scherm weergeven';
@@ -724,6 +721,7 @@ $_lang["role_edit_snippet"] = 'Snippet bewerken';
 $_lang["role_edit_template"] = 'Website template bewerken';
 $_lang["role_edit_user"] = 'Gebruikers bewerken';
 $_lang["role_edit_web_user"] = 'Gebruiker bewerken (web)';
+$_lang["role_empty_trash"] = 'Verwijderde documenten permanent vernietigen';
 $_lang["role_errors"] = 'Waarschuwingsvenster weergeven';
 $_lang['role_export_static'] = 'Exporteer statische HTML';
 $_lang["role_eventlog_management"] = 'Logboek beheer (events)';
@@ -860,42 +858,9 @@ $_lang["submit"] = 'Verzenden';
 $_lang["sunday"] = 'zondag';
 $_lang["sysinfo_activity_message"] = 'Deze lijst toont de documenten die recent door uw gebruikers werden gewijzigd.';
 $_lang["sysinfo_userid"] = 'gebruiker';
-$_lang["system_email_signup"] = 'Hallo [+uid+]
-
-Hier zijn uw inloggegevens voor [+sname+] Content Manager ([+surl+]):
-
-Gebruikersnaam: [+uid+]
-Wachtwoord: [+pwd+]
-
-Na dat u ingelogd bent in de Manager, kunt u uw wachtwoord wijzigen.
-
-Met vriendelijke groet,
-Uw Website Beheerder';
-$_lang["system_email_webreminder"] = 'Hallo [+uid+]
-
-Om uw wachtwoord te activeren klikt u op de volgende link:
-
-[+surl+]
-
-Waneer dit succesvol is kunt u met het volgende wachtwoord inloggen:
-
-Wachtwoord:[+pwd+]
-
-Waneer u niet om deze mail gevraagd heeft kunt u deze mail verwijderen zonder aktie te ondernemen.
-
-Met vriendelijke groet,
-Uw Website Beheerder';
-$_lang["system_email_websignup"] = 'Hallo [+uid+] 
-
-Hier zijn uw inloggegevens voor [+sname+] ([+surl+]):
-
-Gebruikersnaam: [+uid+]
-Wachtwoord: [+pwd+]
-
-Na dat u ingelogd bent in [+sname+], kunt u uw wachtwoord wijzigen.
-
-Met vriendelijke groet,
-Uw Website Beheerder';
+$_lang["system_email_signup"] = 'Hallo [+uid+]\n\nHier zijn uw inloggegevens voor [+sname+] Content Manager ([+surl+]):\n\nGebruikersnaam: [+uid+]\nWachtwoord: [+pwd+]\n\nNa dat u ingelogd bent in de Manager, kunt u uw wachtwoord wijzigen.\n/nMet vriendelijke groet,\nUw Website Beheerder';
+$_lang["system_email_webreminder"] = 'Hallo [+uid+]/n/nOm uw wachtwoord te activeren klikt u op de volgende link:/n/n[+surl+]/n/nWaneer dit succesvol is kunt u met het volgende wachtwoord inloggen:/n/nWachtwoord:[+pwd+]/n/nWaneer u niet om deze mail gevraagd heeft kunt u deze mail verwijderen zonder aktie te ondernemen./n/nMet vriendelijke groet,\nUw Website Beheerder';
+$_lang["system_email_websignup"] = 'Hallo [+uid+]/n/nHier zijn uw inloggegevens voor [+sname+] ([+surl+]):/n/nGebruikersnaam: [+uid+]/nWachtwoord: [+pwd+]/n/nNa dat u ingelogd bent in [+sname+], kunt u uw wachtwoord wijzigen./nMet vriendelijke groet,/nUw Website Beheerder';
 $_lang["sys_alert"] = 'Systeem alarm';
 $_lang["table_hoverinfo"] = 'Beweeg de muiscursor over een tabelnaam om een korte beschrijving te zien van de funktie van de tabel (niet voor alle tabellen is <i>informatie</i> beschikbaar).';
 $_lang["table_prefix"] = 'Tabel voorvoegsel (prefix)';
@@ -943,6 +908,8 @@ $_lang["top_howmany_title"] = 'Top \'hoeveel\'';
 $_lang["total"] = 'Totaal';
 $_lang["track_visitors_message"] = 'Door elk bezoek aan de website te loggen, kunt u bezoekersstatistieken bekijken. Dit vertraagt de website een klein beetje. Indien dergelijke statistieken u niet interesseren, kunt u deze optie zondermeer uitschakelen. Uw website zal er iets sneller door worden.';
 $_lang["track_visitors_title"] = 'Log bezoeken';
+$_lang["tree_show_protected"] = 'Toon beschermde paginas';
+$_lang["tree_show_protected_message"] = 'Als dit op "Nee" staat, worden beschermde paginas en al hun afstammelingen niet getoond in de document structuur-boom. "Nee" is de legacy (erfenis) instelling van MODx.';
 $_lang["truncate_table"] = 'Klik hier om deze tabel in te korten';
 $_lang["tuesday"] = 'dinsdag';
 $_lang["tv"] = 'TV';
@@ -1010,6 +977,8 @@ $_lang["use_alias_path_message"] = 'Door \'Ja\' te selecteren wordt het volledig
 $_lang["use_alias_path_title"] = 'Gebruik vriendelijke alias paden:';
 $_lang["use_editor_message"] = 'Wilt u de geavanceerde teksteditor aanzetten? Als u het fijner vindt om in HTML te schrijven, dan kunt u met deze instelling de teksteditor uitzetten. LET OP: Houdt u er rekening mee dat deze instelling voor alle documenten en alle gebruikers geldt!';
 $_lang["use_editor_title"] = 'Teksteditor aanzetten:';
+$_lang["validate_referer_title"] = 'Valideer HTTP_REFERER headers?';
+$_lang["validate_referer_message"] = 'Valideer de HTTP_REFERER headers om het risico te verkleinen dat uw website managers bedonderd worden door een CSRF (Cross Site Request Forgery) aanval. Soms is dit echter niet mogelijk als uw server geen HTTP_REFERER headers verzend.';
 $_lang["value"] = 'Waarde';
 $_lang["version_codename"] = "Versie codenaam";
 $_lang["view"] = 'Bekijken';
@@ -1027,9 +996,7 @@ $_lang["webpwdreminder_title"] = 'Herinnerings e-mail:<br />(webuser)';
 $_lang["websignupemail_message"] = 'Hier kunt u de boodschap instellen die naar uw gebruikers verstuurd wordt wanneer u voor hen een webaccount heeft aangemaakt en MODx een e-mail laat sturen met hun gebruikersnaam en wachtwoord. <br /><br /><b>NB:</b> De volgende codes worden MODx vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - Naam van uw website, <br />[+saddr+] - E-mail adres van uw website, <br />[+surl+] - Adres van de site, <br />[+uid+] - Aanmeld naam of id, <br />[+pwd+] - Wachtwoord, <br />[+ufn+] - Volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw gebruikers daardoor hun aanmeldgegevens niet ontvangen!</b>';
 $_lang["websignupemail_title"] = 'Bevestings-e-mail bij aanmelding:<br />(webuser)';
 $_lang["web_access_permissions"] = 'Webuser toegangsrechten';
-$_lang["web_access_permissions_user_group"] = 'Webuser groep:';
 $_lang["web_access_permissions_user_groups"] = 'Webuser groepen';
-$_lang["web_access_permissions_user_group_access"] = 'Documentengroepen waartoe deze gebruiker toegang heeft:';
 $_lang["web_permissions"] = 'Toegangsbeheer (web)';
 $_lang["web_users"] = 'Gebruikers (web)';
 $_lang["web_user_management_msg"] = 'Hier kunt u kiezen welke webuser u wilt bewerken. Webusers zijn gebruikers die alleen op de website kunnen aanmelden (en dus niet op de manager)';
@@ -1042,6 +1009,8 @@ $_lang["which_editor_message"] = 'Hier kiest u welke teksteditor u wenst te gebr
 $_lang["which_editor_title"] = 'Welke teksteditor:';
 $_lang["working"] = 'Wordt verwerkt...';
 $_lang["wrap_lines"] = 'Regels afbreken';
+$_lang["xhtml_urls_title"] = 'XHTML URLs';
+$_lang["xhtml_urls_message"] = 'Vervangt ampersand (&amp;) tekens in urls die zijn gegenereerd door MODx met de validerende &amp;<!-- -->amp; html entiteit';
 $_lang["yes"] = 'Ja';
 $_lang["yourinfo_message"] = 'In deze sectie wordt uw persoonlijke informatie weergegeven:';
 $_lang["yourinfo_previous_login"] = 'De laatste keer dat u aanmeldde:';
@@ -1050,5 +1019,4 @@ $_lang["yourinfo_title"] = 'Uw info';
 $_lang["yourinfo_total_logins"] = 'Het totaal aantal keren dat u aanmeldde:';
 $_lang["yourinfo_username"] = 'U bent aangemeld als:';
 $_lang["you_got_mail"] = 'U heeft een nieuwe bericht';
-
 ?>

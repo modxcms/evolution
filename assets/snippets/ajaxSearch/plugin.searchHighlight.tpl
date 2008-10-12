@@ -1,8 +1,9 @@
 /*
   ------------------------------------------------------------------------
-  Plugin: Search_Highlight v1.2.0.2
+  Plugin: Search_Highlight v1.3
   ------------------------------------------------------------------------
   Changes:
+  18/07/08 - advSearch parameter and pcre modifier added
   10/02/08 - Strip_tags added to avoid sql injection and XSS. Use of $_REQUEST 
   01/03/07 - Added fies/updates from forum from users mikkelwe/identity
   (better highlight replacement, additional div around term/removal message)
@@ -37,7 +38,7 @@
   ------------------------------------------------------------------------
 */
 
-if(isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
+if (isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
 
   // Set these to customize the text for the highlighting key
   // --------------------------------------------------------
@@ -49,34 +50,43 @@ if(isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
 
   $searched = strip_tags(urldecode($_REQUEST['searched']));
   $highlight = strip_tags(urldecode($_REQUEST['highlight']));
-  $output = $modx->documentOutput; // get the parsed document
 
-  $body = explode("<body>", $output); // break out the head
+  if (isset($_REQUEST['advsearch'])) $advsearch = strip_tags(urldecode($_REQUEST['advsearch']));
+  else $advsearch = 'oneword'; 
 
-  $searchArray = explode(' ', $searched); // break apart the search terms
-
-  $highlightClass = explode(' ',$highlight); // break out the highlight classes
-
-  $i = 0; // for individual class names
-
-  foreach($searchArray as $word) {
-    $i++;
-    $class = $highlightClass[0].' '.$highlightClass[$i];
-
-    $highlightText .= ($i > 1) ? ', ' : '';
-    $highlightText .= '<span class="'.$class.'">'.$word.'</span>';
-
-    $pattern = '/' . preg_quote($word) . '(?=[^>]*<)/i';
-    $replacement = '<span class="' . $class . '">${0}</span>';
-    $body[1] = preg_replace($pattern, $replacement, $body[1]);
+  if ($advsearch != 'nowords') {
+  
+      $output = $modx->documentOutput; // get the parsed document
+   
+      $body = explode("<body>", $output); // break out the head
+    
+      $searchArray = array();      
+      if ($advsearch == 'exactphrase') $searchArray[0] = $searched;
+      else $searchArray = explode(' ', $searched);
+    
+      $highlightClass = explode(' ',$highlight); // break out the highlight classes
+    
+      $i = 0; // for individual class names
+      $pcreModifier = ($database_connection_charset == 'utf8') ? 'iu' : 'i';
+       
+      foreach($searchArray as $word) {
+        $i++;
+        $class = $highlightClass[0].' '.$highlightClass[$i];
+    
+        $highlightText .= ($i > 1) ? ', ' : '';
+        $highlightText .= '<span class="'.$class.'">'.$word.'</span>';
+    
+        $pattern = '/' . preg_quote($word, '/') . '(?=[^>]*<)/' . $pcreModifier;
+        $replacement = '<span class="' . $class . '">${0}</span>';
+        $body[1] = preg_replace($pattern, $replacement, $body[1]);
+      }
+    
+      $output = implode("<body>", $body);
+    
+      $removeUrl = $modx->makeUrl($modx->documentIdentifier);
+      $highlightText .= '<br /><a href="'.$removeUrl.'" class="ajaxSearch_removeHighlight">'.$removeText.'</a></div>';
+    
+      $output = str_replace('<!--search_terms-->',$highlightText,$output);
+      $modx->documentOutput = $output;
   }
-
-  $output = implode("<body>", $body);
-
-  $removeUrl = $modx->makeUrl($modx->documentIdentifier);
-  $highlightText .= '<br /><a href="'.$removeUrl.'" class="ajaxSearch_removeHighlight">'.$removeText.'</a></div>';
-
-  $output = str_replace('<!--search_terms-->',$highlightText,$output);
-
-  $modx->documentOutput = $output;
 }

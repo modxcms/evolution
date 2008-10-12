@@ -1,7 +1,7 @@
 <?php
 
 /*
-english.inc.php - for AjaxSearch 1.5
+english.inc.php - for AjaxSearch 1.8
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
 Description: Language strings for AjaxSearch
@@ -17,5 +17,9 @@ $_lang['as_paginationTextSinglePage'] = '';
 $_lang['as_paginationTextMultiplePages'] = 'Result pages: ';
 $_lang['as_moreResultsText'] = 'Click here to view all results.';
 $_lang['as_moreResultsTitle'] = 'More Results';
-
+$_lang['as_minChars'] = 'At least %d characters are required for your search term';
+$_lang['oneword'] = 'One word';
+$_lang['allwords'] = 'All words';
+$_lang['exactphrase'] = 'Exact phrase';
+$_lang['nowords'] = 'No words';
 ?>

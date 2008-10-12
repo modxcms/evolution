@@ -28,7 +28,7 @@ class udperms{
 		
 		$permissionsok = false;  // set permissions to false
 		
-		if($GLOBALS['use_udperms']==0 || $GLOBALS['use_udperms']=="" || !isset($GLOBALS['use_udperms'])) {
+		if($modx->config['use_udperms']==0 || $modx->config['use_udperms']=="" || !isset($modx->config['use_udperms'])) {
 			return true; // permissions aren't in use
 		}
 		
@@ -83,7 +83,7 @@ class udperms{
 
 		// get document groups for current user
 		if($_SESSION['mgrDocgroups']) {
-			$docgrp = implode(",",$_SESSION['mgrDocgroups']);
+			$docgrp = implode(" || dg.document_group = ",$_SESSION['mgrDocgroups']);
 		}
 
 		/* Note:
@@ -97,13 +97,13 @@ class udperms{
 		$tblsc = $dbase.".`".$table_prefix."site_content`";
 		$tbldg = $dbase.".`".$table_prefix."document_groups`";
 		$tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
-		$sql = "SELECT DISTINCT sc.id 
+                $sql = "SELECT DISTINCT sc.id 
 				FROM $tblsc sc 
 				LEFT JOIN $tbldg dg on dg.document = sc.id
 				LEFT JOIN $tbldgn dgn ON dgn.id = dg.document_group
 				WHERE sc.id = $document 
-				AND (1='' OR NOT(dgn.private_memgroup<=>1)".(!$docgrp ? "":" OR dg.document_group IN ($docgrp)").");";
-				   // ^ MySQL 4.1 will not return the correct result if this statement is removed! ???
+				AND (dg.document_group = $docgrp || sc.privatemgr = 0)";
+				   
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit==1) $permissionsok = true;

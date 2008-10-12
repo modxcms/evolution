@@ -120,7 +120,7 @@ $_lang["checking_php_version"] = "PHPのバージョンチェック: ";
 $_lang["failed"] = '確認してください';
 $_lang["ok"] = '問題なし';
 $_lang["you_running_php"] = ' - You are running on PHP ';
-$_lang["modx_requires_php"] = ', and MODx requires PHP 4.1.0 or later';
+$_lang["modx_requires_php"] = ', and MODx requires PHP 4.2.0 or later';
 $_lang["php_security_notice"] = '<legend>セキュリティ警告</legend><p>このサーバ上で稼働しているPHPには重大な問題があります。MODxの稼働自体には問題はありませんが、このバージョンのPHPには報告されている脆弱性がいくつか存在し、MODxに限らず様々なPHPアプリを通じて多数の攻撃にさらされてきました。脆弱性からサイトを守る上で最低限必要とされるPHPのバージョンは4.3.8以上とされており、この機会にPHPのアップデートをおすすめします。</p>';
 $_lang["checking_sessions"] = 'セッション情報が正常に構成されるかどうか: ';
 $_lang["checking_if_cache_exist"] = '<span class=\"mono\">assets/cache</span>ディレクトリの存在チェック(なければ転送に失敗しています): ';

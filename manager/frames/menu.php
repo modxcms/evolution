@@ -206,7 +206,7 @@ if ($manager_theme) $manager_theme .= '/';
 	</div>
 
 	<div id="supplementalNav">
-	&nbsp;<img src="<?php echo $_style['icons_user_current']?>" width="16" height="16" /><?php echo ($modx->hasPermission('change_password') ? '<a onclick="this.blur();" href="index.php?a=28" target="main">'.$modx->getLoginUserName().'</a>': $modx->getLoginUserName())."\n" ?>
+	&nbsp;<img src="<?php echo $_style['icons_user_current']?>" width="16" height="16" /><?php echo $modx->getLoginUserName(). ($modx->hasPermission('change_password') ? ': <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") ?>
 <?php if($modx->hasPermission('messages')) { ?>
 	| <span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang['you_got_mail']?>" target="main"> <img src="<?php echo $_style['icons_mail']?>" width="16" height="16" /></a></span>
 	<a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang['messages']?> <span id="msgCounter">( ? / ? )</span></a>

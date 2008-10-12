@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Name:          persian.inc.php - for AjaxSearch 1.5
+ * Name:          persian.inc.php - for AjaxSearch 1.8
  * Path:          assets\snippets\AjaxSearch\lang
  * Created        By: KyleJ (kjaebker@muddydogpaws.com) on: 01/22/07
  * Description:   Language strings for AjaxSearch - Translation By: Mohsen (MotSmart ~ www.modxcms.ir)
@@ -17,5 +17,9 @@ $_lang['as_paginationTextSinglePage'] = '';
 $_lang['as_paginationTextMultiplePages'] = 'صفحه ی نتیجه ی جستجو: ';
 $_lang['as_moreResultsText'] = 'برای مرور کلیه ی نتایج اینجا کلیک کنید.';
 $_lang['as_moreResultsTitle'] = 'نتایج بیشتر';
-
+$_lang['as_minChars'] = 'حداقل %d کاراکتر برای جستجو لازم است که وارد کنید!';
+$_lang['oneword'] = 'یک کلمه ای';
+$_lang['allwords'] = 'همه ی کلمات';
+$_lang['exactphrase'] = 'همان کلمات';
+$_lang['nowords'] = 'بدون نتیجه';
 ?>

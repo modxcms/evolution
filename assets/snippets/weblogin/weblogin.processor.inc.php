@@ -174,7 +174,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
                                 ));
 
         // redirect to first authorized logout page
-        $url = $modx->makeURL($loHomeId);
+        $url = preserveUrl($loHomeId);
         $modx->sendRedirect($url,0,'REDIRECT_REFRESH');
         return;
 
@@ -398,7 +398,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
     // redirect
     if(isset($_REQUEST['refurl']) && !empty($_REQUEST['refurl'])) {
         // last accessed page
-        $targetPageId= html_entity_decode($_REQUEST['refurl']);
+        $targetPageId= urldecode($_REQUEST['refurl']);
         if (strpos($targetPageId, 'q=') !== false) {
             $urlPos = strpos($targetPageId, 'q=')+2;
             $alias = substr($targetPageId, $urlPos);
@@ -408,13 +408,13 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         } elseif (intval($targetPageId)) {
             $url = $modx->makeUrl($targetPageId);
         } else {
-            $url = $_REQUEST['refurl'];
+            $url = urldecode($_REQUEST['refurl']);
         }
         $modx->sendRedirect($url);
     }
     else {
         // login home page
-        $url = $modx->makeUrl($id);
+        $url = preserveUrl($id);
         $modx->sendRedirect($url);
     }
 

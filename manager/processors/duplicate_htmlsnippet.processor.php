@@ -11,8 +11,8 @@ $id=$_GET['id'];
 
 // duplicate htmlsnippet
 if (version_compare(mysql_get_server_info(),"4.0.14")>=0) {
-	$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet)
-			SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet
+	$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, category)
+			SELECT CONCAT('Duplicate of ',name) AS 'name', description, snippet, category
 			FROM $dbase.`".$table_prefix."site_htmlsnippets` WHERE id=$id;";
 	$rs = mysql_query($sql);
 }
@@ -23,8 +23,8 @@ else {
 	if($rs) {
 		$row = mysql_fetch_assoc($rs);
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets`
-				(name, description, snippet) VALUES
-				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."','".mysql_escape_string($row['snippet'])."');";
+				(name, description, snippet, category) VALUES
+				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."','".mysql_escape_string($row['snippet'])."', ".mysql_escape_string($row['category']).");";
 		$rs = mysql_query($sql);
 	}
 }

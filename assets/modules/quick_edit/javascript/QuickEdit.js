@@ -74,7 +74,7 @@ var QuickEdit = new Class({
   // Draggable toolbar title
   this.toolbar.makeDraggable({
    handle: $E('h1',this.toolbar),
-   onComplete: function(x,y) {Cookie.set('QE_position', this.toolbar.getLeft()+'/'+this.toolbar.getTop(), {duration:this.cookieDuration}); }.bind(this)
+    onComplete: function(x,y) { Cookie.set('QE_position', this.toolbar.getLeft()+'/'+this.toolbar.getTop(), {duration:this.cookieDuration}); }.bind(this)
   });
 
   // Reposition toolbar
@@ -93,9 +93,9 @@ var QuickEdit = new Class({
   
  },
 
- menuClick: function(evnt) {
+ menuClick: function(event) {
 
-  var event = new Event(evnt);
+  var event = new Event(event);
  
   var clicked = event.target;
   var menu = clicked.getElementsByTagName('ul')[0];

@@ -19,7 +19,7 @@ function isNumber($var) {
 }
 
 $id = intval($_POST['id']);
-$name = mysql_escape_string($_POST['name']);
+$name = mysql_escape_string(trim($_POST['name']));
 $description = mysql_escape_string($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 $plugincode = mysql_escape_string($_POST['post']);

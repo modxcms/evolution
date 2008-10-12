@@ -66,7 +66,7 @@ function checkParentChildRelation(pId, pName) {
 
 
 <div class="subTitle">
-<span class="right"><img src="media/images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['move_document_title']; ?></span>
+<span class="right"><?php echo $_lang['move_document_title']; ?></span>
 
     <table cellpadding="0" cellspacing="0" class="actionButtons">
         <tr>

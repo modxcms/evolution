@@ -653,11 +653,11 @@ if (is_array($evtOut))
 				<td><input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : ''?> onclick="changestate(document.mutate.isfolder);" />
 				<input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0?>" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_folder_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-<?php if ($content['type'] != 'reference' && $_REQUEST['a'] != 72) { ?>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['document_opt_richtext']?></span></td>
 				<td><input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? '' : "checked"?> onclick="changestate(document.mutate.richtext);" />
 				<input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1?>" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_richtext_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+<?php if ($content['type'] != 'reference' && $_REQUEST['a'] != 72) { ?>
 			<tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['track_visitors_title']?></span></td>
 				<td><input name="donthitcheck" type="checkbox" class="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : ''?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0?>" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_trackvisit_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
@@ -751,7 +751,6 @@ if (is_array($evtOut))
 			<input type="hidden" name="contentType" value="text/html" />
 			<input type="hidden" name="cacheable" value="0" />
 			<input type="hidden" name="syncsite" value="1" />
-			<input type="hidden" name="richtext" value="0" />
 <?php } ?>
 		</table>
 	</div><!-- end #tabSettings -->
@@ -950,6 +949,8 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 		for ($i = 0; $i < $limit; $i++) {
 			// Go through and display all Template Variables
 			$row = mysql_fetch_assoc($rs);
+			$additionalEncodings = array('-' => '%2D', '.' => '%2E', '_' => '%5F');
+			$row['name'] = str_replace(array_keys($additionalEncodings), array_values($additionalEncodings), rawurlencode($row['name']));
 			if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
 				// Add richtext editor to the list
 				if (is_array($replace_richtexteditor)) {
@@ -1115,8 +1116,7 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 
 <script type="text/javascript">//setTimeout('showParameters()',10);</script>
 <?php
-if ($content['type'] == 'document' || $_REQUEST['a'] == 4) {
-	if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
+	if (($content['richtext'] == 1 || $_REQUEST['a'] == 4 || $_REQUEST['a'] == 72) && $use_editor == 1) {
 		if (is_array($replace_richtexteditor)) {
 			// invoke OnRichTextEditorInit event
 			$evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(
@@ -1127,7 +1127,6 @@ if ($content['type'] == 'document' || $_REQUEST['a'] == 4) {
 				echo implode('', $evtOut);
 		}
 	}
-}
 ?>
 
 <script type="text/javascript">

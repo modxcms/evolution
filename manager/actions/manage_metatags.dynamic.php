@@ -173,7 +173,7 @@ $modx->manager->initPageViewState();
 		$grd->columns=$_lang["delete"]." ,".$_lang["name"]." ,".$_lang["tag"]." ,".$_lang["value"];
 		$grd->colWidths="40";
 		$grd->colAligns="center";
-		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/><img src='media/images/icons/comment.gif' width='16' height='16' align='absmiddle' /></a>||".
+		$grd->colTypes="template:<input name='tag[]' type='checkbox' value='[+id+]'/><img src='media/style/".$manager_theme."/images/icons/comment.gif' width='16' height='16' align='absmiddle' /></a>||".
 					   "template:<a href='#' title='".$_lang["click_to_edit_title"]."' onclick='editTag([+id+])'>[+value+]</a><span style='display:none;'><script type=\"text/javascript\"> tagRows['[+id+]']=[\"[+name+]\",\"[+tag+]\",\"[+tagvalue+]\",\"[+http_equiv+]\"];</script>";
 		echo $grd->render();
 	?>
@@ -206,7 +206,7 @@ $modx->manager->initPageViewState();
 	$grd->colAligns="center";
 	$grd->colTypes="template:<input id=\"delete[+id+]\" name=\"delete_keywords[[+id+]]\" type=\"checkbox\"  />||".
 				   "template:<a onclick=\"if(document.getElementById('delete[+id+]').checked==true) { document.getElementById('delete[+id+]').checked=false; } else { document.getElementById('delete[+id+]').checked=true; }; return false;\" style=\"cursor:pointer\">[+keyword+]</a>||".
-				   "template:<input type=\"hidden\" name=\"orig_keywords[keyword[+id+]]\" value=\"[+keyword+]\" /><input type=\"text\" name=\"rename_keywords[keyword[+id+]]\" value=\"[+keyword+]\" style=\"width:100%;\" />";
+				   "template:<input type=\"hidden\" name=\"orig_keywords[keyword[+id+]]\" value=\"[+keyword+]\" /><input type=\"text\" name=\"rename_keywords[keyword[+id+]]\" value=\"[+keyword+]\" style=\"width:100%;\" maxlength=\"40\" />";
 	echo $grd->render();
 ?>
 	<table border=0 cellpadding=2 cellspacing=0>
@@ -217,7 +217,7 @@ $modx->manager->initPageViewState();
 			</td>
 			<td align="right">&nbsp;<?php echo $_lang['new_keyword']; ?></td>
 			<td>
-				<input type="text" name="new_keyword" value="" size="30" />
+				<input type="text" name="new_keyword" value="" size="30" maxlength="40" />
 			</td>
 		</tr>
 	</table>
