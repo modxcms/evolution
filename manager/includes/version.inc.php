@@ -1,5 +1,5 @@
 <?php
-$version = '0.9.6.3-rc1';   // Current version
+$version = '0.9.6.3-RC1';   // Current version
 $code_name = 'rev 4291';    // SVN version number
 $full_appname = 'MODx'.' '.$version.($code_name ? " ($code_name)":"");
 $small_version = '0';
