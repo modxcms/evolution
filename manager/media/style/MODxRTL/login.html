@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>MODx CMF Manager Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <style type="text/css">
+    /* Neutralize styles, fonts and viewport:
+    ---------------------------------------------------------------- */
+    html, body, form, fieldset {
+        margin: 0;
+        padding: 0;
+        }
+    html {
+        font-size: 100.01%; /* avoids obscure font-size bug */
+        line-height: 1.5; /* http://meyerweb.com/eric/thoughts/2006/02/08/unitless-line-heights/ */
+        font-family: Tahoma, "Lucida Grande", Helvetica, Arial, sans-serif !important; /* IE ignores this and renders Arial better */
+        font-family: Arial, Tahoma, Helvetica, sans-serif;
+        height: 100%;
+        color: #111;
+        }
+    body {
+        font-size: 75%; /* 12px 62.5% for 10px*/
+        height: 99%; /* IE rely on this in scrooler overflow */
+        margin-bottom: 1px; /* avoid jumping scrollbars */
+		background: #94D33E url('media/style/MODxRTL/images/misc/leaves_bg_btm.jpg');
+		background-repeat: no-repeat; background-position: bottom; 
+        }
+    img, a img {
+        border: 0 !important;
+        text-decoration: none;
+        padding: 0;
+        margin: 0;
+        }
+    h1, h2, h3, h4, h5, h6, p, pre,
+    blockquote, ul, ol, dl, address {
+        margin: 0 0 .5em; /* Reset vertical margins on selected elements */
+        padding: 0;
+        }
+    li, dd, blockquote {
+        margin-right: 1em; /* Left margin only where needed */
+        }
+
+    /* Headers and Paragraphs:
+    ---------------------------------------------------------------- */
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: normal;
+        }
+    h1 { font-size: 218%; }
+    h2 { font-size: 164%; }
+    h3 { font-size: 145%; }
+    h4 { font-size: 118%; }
+    h5 { font-size: 100%; font-weight: bold; }
+    h6 { font-size: 86%; font-weight: bold; }
+
+    p.caption, p.comment { font-size: 86%; color: #888; }
+    .warning{
+        color: #821517;
+        font-weight: bold;
+        }
+    .success{
+        color: #090;
+        font-weight: bold;
+        }
+    a, a:active, a:visited, a:link {
+        color: #1a32c7;
+        text-decoration: underline;
+        }
+    a:hover {
+        color: #0f1e76;
+        }
+    input, .inputBox {
+        padding: 1px;
+        }
+    .sectionHeader {
+        padding: 5px 18px 5px 3px;
+        font-weight: bold;
+        color: #000;
+        border-top: 1px solid #c5db88;
+        background: #bee860 url(media/style/MODxRTL/images/misc/greenfade.gif) repeat-x top;
+        }
+    .sectionBody {
+        border: 1px solid #e3e3e3;
+        border-top-color: #ccc;
+        padding: 10px 20px 20px;
+        display: block; 
+        /* background: #fff url(media/style/MODxRTL/images/misc/tabareabg.gif) repeat-x top; */
+		background: #fff url('media/style/MODxRTL/images/misc/besm01.gif') no-repeat left;
+        }
+    #mx_loginbox { direction: rtl;
+        width: 460px;
+        margin: auto auto 5px;
+		padding-top: 100px;
+        }
+    img.loginCaptcha {
+        border: 1px solid #039;
+        width: 148px;
+        height: 60px;
+        }
+    label {
+        display: block;
+        font-weight: bold;
+        }
+    input { direction: ltr;
+        margin: 0 0 10px 0;
+        }
+    input.checkbox {
+        float: right;
+        clear: right;
+        margin-left: 3px;
+        }
+    input.text { direction: ltr;
+        width: 300px;
+        }
+    input.login {
+        float: left;
+        clear: left;
+        margin-left: 25px;
+    }
+    .loginLicense { direction: rtl;
+        width: 460px;
+        color: #555;
+        margin: 0 auto;
+        font-size: 65%;
+        padding-right: 20px;
+        }
+        .loginLicense a {
+            color: #fff/*94B451*/; text-decoration: none;
+            font-size: 9px;
+            }
+    .notice {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #eee;
+        background-color: #F4F4F4;
+        color: #707070;
+        }
+    #preLoader {
+        position: absolute;
+        z-index: 50000;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        vertical-align: middle;
+        }
+    .preLoaderText {
+        background-color: #fff;
+        width: 300px;
+        height: 150px;
+        padding: 50px;
+        border: 1px solid #039;
+        }
+    </style>
+    
+
+    <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+        if (top.frames.length!=0) {
+            top.location=self.document.location;
+        }
+
+        function doLogin() {
+            var f, values;
+            if(!self.Ajax) document.loginfrm.submit();
+            else {
+                f = $('loginfrm');
+                params = 'ajax=1&' + Form.serialize(f);
+                url = 'processors/login.processor.php';
+                new Ajax.Request(url,{method:'post',parameters:params,onComplete:ajaxReturn});
+                Form.disable(f);
+                return false;
+            }
+        }
+
+        function ajaxReturn(response) {
+            var text = response.responseText;
+            var header = text.substr(0,9)
+            if (header.toLowerCase()=='location:') top.location = text.substr(10);
+            else {
+                var cimg = $('captcha_image');
+                if (typeof(cimg) != 'undefined') {
+                	cimg.src = 'includes/veriword.php?rand=' + Math.random();
+                }
+                var f = $('loginfrm');
+                Form.enable(f);
+                alert(text);
+            }
+        }
+    /* ]]> */
+    </script>
+</head>
+<body onload="javascript:document.loginfrm.username.focus();" id="login">
+
+<div id="mx_loginbox">
+    <form method="post" name="loginfrm" id="loginfrm" action="processors/login.processor.php">
+    <!-- anything to output before the login box via a plugin? -->
+    [+OnManagerLoginFormPrerender+]
+
+        <div class="sectionHeader">[+site_name+]</div>
+        <div class="sectionBody">
+            <p class="loginMessage">[+login_message+]</p>
+
+            <label>[+username+] </label>
+            <input type="text" class="text" name="username" id="username" tabindex="1" value="[+uid+]" />
+
+            <label>[+password+] </label>
+            <input type="password" class="text" name="password" id="password" tabindex="2" value="" />
+
+            
+            <div>[+captcha_image+]</div>
+            [+captcha_input+]
+            <p class="caption">[+login_captcha_message+]</p>
+
+            <input type="checkbox" id="rememberme" name="rememberme" tabindex="4" value="1" class="checkbox" [+remember_me+] /><label for="rememberme" style="cursor:pointer">[+remember_username+]</label>
+            <input type="submit" class="login" id="submitButton" value="[+login_button+]" onclick="return doLogin();" />
+
+            <!-- anything to output before the login box via a plugin ... like the forgot password link? -->
+            [+OnManagerLoginFormRender+]
+        </div>
+    </form>
+</div>
+<!-- close #mx_loginbox -->
+
+<!-- convert this to a language include -->
+<p class="loginLicense">
+&copy; 2005-2007 کلیه حقوق <a href="http://modxcms.com/" target="_blank">مدیریت محتوای مادایکس</a> محفوظ است. <strong>MODx</strong><span dir="ltr">&trade;</span> تحت لیسانس GPL منتشر شده است.
+</p>
+
+</body>
+</html>
+

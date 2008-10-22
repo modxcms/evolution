@@ -4,9 +4,9 @@
  * Function:       Persian Language file
  * Encoding:       UTF8
  * Author:         Mohsen Zare (MotSmart ~ www.modxcms.ir)
- * Date:           24 May 2008
- * Version:        2.13
- * MODx version:   0.9.6.2 RC-1
+ * Date:           15 Oct 2008
+ * Version:        3.13
+ * MODx version:   0.9.6.3 RC-2
 */
 // NOTE: Now alpha-sorted
 include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
@@ -19,9 +19,12 @@ $_lang["access_permissions_docs_message"] = 'در اینجا شما میتوان
 $_lang["access_permissions_documents_in_group"] = '<b>پرونده های این گروه:</b> ';
 $_lang["access_permissions_documents_tab"] = 'در اینجا شما میتوانید مشاهده کنید که چه گروههای پرونده ای تهیه شده است. همچنین شما قادر خواهید بود گروههای جدیدی را تعریف و ایجاد کنید, نام گروه ها را تغییر دهید, گروه ها را حذف کنید و ببنید که چه پرونده ای در چه چه گروهی قرار دارد (نشانگر موس را روی ردیف یا شناسه ی پرونده برانید تا اسم آنرا مشاهده کنید). برای افزودن پرونده به گروه یا حذف پرونده از یک گروه, پوشه ی پرونده را ویرایش کنید.';
 $_lang["access_permissions_document_groups"] = 'گروههای پرونده';
+$_lang["access_permissions_group_link"] = 'ایجاد وب لینک گروهی';
 $_lang["access_permissions_introtext"] = 'در اینجا شما میتوانید گروههای کاربری و گروههای پرونده ها را که برای اعمال در سطوح دسترسی کاربرد دارند را مدیریت کنید. برای افزودن کاربر به یک گروه کاربری , کاربر مورد نظر را ویرایش کرده و گروههایی را که این کاربر بایستی در آنها عضو باشد را انتخاب کنید. برای افزودن پرونده ای به یک گروه کاربری, پرونده را ویرایش کرده و گروههایی را که به متعلق به آنهاست را انتخاب کنید.';
+$_lang["access_permissions_link_to_group"] = 'به گروه پرونده';
 $_lang["access_permissions_links"] = 'لینک گروههای پرونده ها / کاربران';
 $_lang["access_permissions_links_tab"] = 'اینجا محلی است که ما تعیین میکنیم که کدام گروه کاربری دسترسی خواهد داشت(بنابرین میتوانید زیر مجموعه ایجاد یا ویرایش کنید) برای گروه پرونده ها. برای لینک کردن گروه پرونده ها به یک گروه کاربری, گروه را از فهرست کشویی انتخاب کنید, و روی \'لینک\' کلیک کنید. برای حذف لینک از گروه مورد نظرتان, بر روی گزینه ی \'حذف ->\' کلیک کنید. و لینک حذف خواهد شد.';
+$_lang["access_permissions_link_user_group"] = 'پیوند گروه کاربری';
 $_lang["access_permissions_no_documents_in_group"] = 'هیچکدام.';
 $_lang["access_permissions_no_users_in_group"] = 'هیچکدام.';
 $_lang["access_permissions_off"] = '<span class="warning">سطوح دسترسی فعال نشده است</span> این بدین معنی است که هر تغییری که در اینجا صورت گرفته هیچ تاثیری نخواهد داشت تا زمانیکه سطوح دسترسی فعال شوند.';
@@ -179,6 +182,7 @@ $_lang["database_table_records"] = 'رکوردها';
 $_lang["database_table_tablename"] = 'نام جدول';
 $_lang["database_table_totalsize"] = 'حجم کامل';
 $_lang["database_table_totals"] = 'مجموعا:';
+$_lang['database_version'] = 'نسخه دیتابیس:';
 $_lang["date"] = 'تاریخ';
 $_lang["datechanged"] = 'اطلاعات یا داده ها تغییر داده شد';
 $_lang["defaultcache_message"] = 'گزینه ی \'بلی\' را انتخاب کنید تا کلیه ی پرونده های جدید قابلیت ذخیره یا کش را به طور پیشفرض دارا باشند.';
@@ -766,6 +770,10 @@ $_lang["role_view_eventlog"] = 'مرور آمار فعالیت ها';
 $_lang["role_view_logs"] = 'مرور ثبت یا لاگ سیستم';
 $_lang["role_view_unpublished"] = 'مرور پرونده های منتشر نشده';
 $_lang["role_web_access_persmissions"] = 'سطوح دسترسی وب';
+$_lang["rss_url_news_message"] = 'URL منبع آخرین اخبار مادایکس.';
+$_lang["rss_url_news_title"] = 'RSS اخبار';
+$_lang["rss_url_security_message"] = 'URL منبع اخبار امنیتی.';
+$_lang["rss_url_security_title"] = 'RSS امنیتی';
 $_lang["role_web_user_management"] = 'مدیریت کاربر وب';
 $_lang["run_module"] = 'اجرای ماژول';
 $_lang["saturday"] = 'شنبه';
@@ -977,6 +985,8 @@ $_lang["user_zip"] = 'کدپستی ';
 $_lang["use_alias_path_message"] = 'تنظیم کردن این حالت به  \'بله\' مسیر کامل به پرونده را نمایش میدهد. اگر پرونده همراه آدرس باشد.به عنوان مثال,اگر پرونده در داخل آدرس به این عنوان خوانده شود \'child\' واقع شده باشد در داخلپرونده ی حاوی آن با این آدرس خوانده میشود \'parent\', بنابراین آدرس کامل به پرونده به این صورت نمایش داده خواهد شد \'/parent/child.html\'.<br /><b>تذکر: وقتی که این حالت را \'فعال\' (آدرس دهی را روشن نمایید), آیتمهای مرجع (مثل عکس یا تصویر یا فایلهای CSS و جاوا اسکریپتها و غیره) با اشتفاده از مکان معلوم و مشخص : بعنوان مثال \'/assets/images\' به جای استفاده از \'assets/images\'. با استفاده از این حالت درواقع شما مرورگر یا بازدیدکننده را ببه محل اصلی آن ارجاع میدهید</b>';
 $_lang["use_alias_path_title"] = 'آدرس مکانی قابل فهم:';
 $_lang["use_editor_message"] = 'آیا شما تمایلی برای فراهم کردن امکان ویرایشگر متون دارید؟,اگر شما راحتی بیشتری برای استفاده از کدهای HTML دارید میتوانید ویرایشگر متون را از طریق همین تنظیمات خاموش کنید توجه داشته باشید که این حالت برای کلیه ی پرونده ها و کلیه ی کاربران لحاظ خواهد شد.';
+$_lang["validate_referer_title"] = 'ارزیابی HTTP_REFERER انجام شود؟';
+$_lang["validate_referer_message"] = 'انجام ارزیابی HTTP_REFERER باعث کاهش خطر احتمال بروز رفتارهای ناخواسته ویراستارهای شما از بخش مدیریت به عنوان قربانیان حمله CSRF (Cross Site Request Forgery - جعل درخواست) شوید. اگر سرور HTTP_REFERER را ارسال نکند ممکن است برخی از تنظیمات قادر به استفاده از این حالت نباشد.';
 $_lang["use_editor_title"] = 'استفاده از ویرایشگر:';
 $_lang["value"] = 'Value';
 $_lang["version_codename"] = "مشخصه و کد نسخه";

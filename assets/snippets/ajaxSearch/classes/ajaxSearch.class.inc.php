@@ -252,7 +252,7 @@ class AjaxSearch extends Search{
 
     // check if the mbstring extension is required and loaded
     if ($this->dbCharset == 'utf8' && !extension_loaded('mbstring')) {
-        $msgErr = "<br /><h3>Error: php_mbstring extension required</h3><br />";
+        $msgErr = "<br /><h3>AjaxSearch error: php_mbstring extension required</h3><br />";
         $valid = false;
     }
     return $valid;
@@ -279,7 +279,7 @@ class AjaxSearch extends Search{
       else $this->subSearchSel = 1;
       // existing function ?
       if (!function_exists($this->subSearchName)) {
-          $msgErr = "<br /><h3>Error: search function $this->subSearchName not defined in the configuration file: ".$this->cfg['config']." !</h3><br />";
+          $msgErr = "<br /><h3>AjaxSearch error: search function $this->subSearchName not defined in the configuration file: ".$this->cfg['config']." !</h3><br />";
           return false;
       }
       else {
@@ -385,7 +385,7 @@ class AjaxSearch extends Search{
         $jsInclude = AS_SPATH.'js/ajaxSearch-jquery.js';
       }
       else {
-        if ($this->cfg['addJscript']) $modx->regClientStartupScript($this->cfg['jsMootools']);
+        if ($this->cfg['addJscript']) $modx->regClientStartupScript($this->cfg['jsMooTools']);
         $jsInclude = AS_SPATH.'js/ajaxSearch.js';
       }
       $modx->regClientStartupScript($jsInclude);
@@ -549,7 +549,6 @@ EOD;
         }
         $varLink['pagingSeparator'] = ($nrp + $grabMax < $nbrs) ? $this->cfg['pageLinkSeparator'] : '' ;          
         $varLink['pagingText'] = $resultPageLinkNumber;
-if ($this->dbg) $this->asDebug->dbgLog($varLink['pagingSeparator'],"pagingSeparator");   // user parameters
         $resultPageLinkNumber++;
 
         // parse the template and output the paging link

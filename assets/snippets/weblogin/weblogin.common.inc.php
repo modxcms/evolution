@@ -57,9 +57,9 @@
         $message = str_replace("[+sname+]",$site_name,$message);
         $message = str_replace("[+semail+]",$emailsender,$message);
         $message = str_replace("[+surl+]",$site_url,$message);
-        if(!mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion())) {
-            return webLoginAlert("Error while sending mail to $mailto",1);
-        }        
+        if (!ini_get('safe_mode')) $sent = mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion(), "-f {$emailsender}");
+        else $sent = mail($email, $emailsubject, $message, "From: ".$emailsender."\r\n"."X-Mailer: Content Manager - PHP/".phpversion());
+        if (!$sent) webLoginAlert("Error while sending mail to $mailto",1);
         return true;
     }
     

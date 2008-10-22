@@ -258,11 +258,6 @@ This is done automatically with the addJscript parameter unless you set it to 0.
         - 0 : search only in content of type document
         - 1 : search in content of type document AND reference (default)
 
-
-    &formatDate : the format of outputted dates. 
-        See http://www.php.net/manual/en/function.date.php
-        by default : "d/m/y : H:i:s" e.g: 21/01/08 : 23:09:22
-    
     &parents [comma-separated list of integers  MODx document IDs] (optional)
         A list of parent-documents whose descendants you want searched to &depth depth when searching. 
         All parent-documents by default
@@ -544,14 +539,14 @@ This is done automatically with the addJscript parameter unless you set it to 0.
 
 To change the location of the ajaxSearch snippet folder :
 
-1. change the definition of AS_PATH in snippet.ajaxSearch.php
+1. change the definition of AS_SPATH in snippet.ajaxSearch.php
 
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 
-2. change the definition of AS_PATH in ajaxSearch.php
+2. change the definition of AS_SPATH in ajaxSearchPopup.php
 
-define('AS_PATH' , MODX_BASE_PATH . 'assets/snippets/ajaxSearch/');
+define ('AS_SPATH' , 'assets/snippets/ajaxSearch/');
 
 3. in the js/ajaxSearch.js file change the _base value:
 

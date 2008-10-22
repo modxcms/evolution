@@ -64,21 +64,21 @@ else {
 }
 
 // TODO: 
-// - Move Titles/Labels into $_lang (correct)
+// - Move Titles/Labels into $_lang (correct) // Done by MotSmart
 // - Translate as necessary (foreign)
 
 include_once "rss.inc.php"; // pixelchutes
 
 // modx news - pixelchutes
-$html = 'MODx News<br /><br />';
-$modx->setPlaceholder('modx_news','MODx News');
-$modx->setPlaceholder('modx_news_title','MODx News');
+$html = $_lang["modx_news"].'<br /><br />';
+$modx->setPlaceholder('modx_news',$_lang["modx_news_tab"]);
+$modx->setPlaceholder('modx_news_title',$_lang["modx_news_title"]);
 $modx->setPlaceholder('modx_news_content',$feedData['modx_news_content']);
 
 // security notices - pixelchutes
-$html = 'MODx Security Notices<br /><br />';
-$modx->setPlaceholder('modx_security_notices','Security Notices');
-$modx->setPlaceholder('modx_security_notices_title','MODx Security Notices');
+$html = $_lang["modx_security_notices"].'<br /><br />';
+$modx->setPlaceholder('modx_security_notices',$_lang["security_notices_tab"]);
+$modx->setPlaceholder('modx_security_notices_title',$_lang["security_notices_title"]);
 $modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_notices_content']);
 
 

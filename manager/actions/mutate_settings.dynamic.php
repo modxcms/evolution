@@ -739,7 +739,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["emailsender_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@yourdomain.com" ; ?>" /></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsender" value="<?php echo isset($emailsender) ? $emailsender : "you@example.com" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>

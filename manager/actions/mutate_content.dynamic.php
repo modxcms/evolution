@@ -990,7 +990,7 @@ if ($use_udperms == 1) {
 	$groupsarray = array();
 	$sql = '';
 
-	$documentId = ($_REQUEST['a'] == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : 0));
+	$documentId = ($_REQUEST['a'] == '27' ? $id : (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']));
 	if ($documentId > 0) {
 		// Load up, the permissions from the parent (if new document) or existing document
 		$sql = 'SELECT id, document_group FROM '.$tbl_document_groups.' WHERE document=\''.$documentId.'\'';

@@ -102,7 +102,9 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             $message = str_replace("[+semail+]",$emailsender,$message);
             $message = str_replace("[+surl+]",$url,$message);
 
-            if(!mail($email, "New Password Activation for $site_name", $message, "From: ".$emailsender."\r\n"."X-Mailer: MODx Content Manager - PHP/".phpversion())) {
+            if (!ini_get('safe_mode')) $sent = mail($email, "New Password Activation for $site_name", $message, "From: ".$emailsender."\r\n"."X-Mailer: MODx Content Manager - PHP/".phpversion(), "-f {$emailsender}");
+            else $sent = mail($email, "New Password Activation for $site_name", $message, "From: ".$emailsender."\r\n"."X-Mailer: MODx Content Manager - PHP/".phpversion());
+            if(!$sent) {
                 // error
                 $output =  webLoginAlert("Error while sending mail to $email. Please contact the Site Administrator");
                 return;

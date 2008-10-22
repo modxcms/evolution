@@ -81,6 +81,7 @@ class udperms{
 			}
 		}*/
 
+
 		// get document groups for current user
 		if($_SESSION['mgrDocgroups']) {
 			$docgrp = implode(" || dg.document_group = ",$_SESSION['mgrDocgroups']);
@@ -97,12 +98,12 @@ class udperms{
 		$tblsc = $dbase.".`".$table_prefix."site_content`";
 		$tbldg = $dbase.".`".$table_prefix."document_groups`";
 		$tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
-                $sql = "SELECT DISTINCT sc.id 
+		$sql = "SELECT DISTINCT sc.id 
 				FROM $tblsc sc 
 				LEFT JOIN $tbldg dg on dg.document = sc.id
 				LEFT JOIN $tbldgn dgn ON dgn.id = dg.document_group
 				WHERE sc.id = $document 
-				AND (dg.document_group = $docgrp || sc.privatemgr = 0)";
+				AND (". ( (!$docgrp) ? null : "dg.document_group = ".$docgrp." ||" ) . " sc.privatemgr = 0)";
 				   
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);

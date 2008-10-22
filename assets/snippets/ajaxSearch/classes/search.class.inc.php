@@ -42,7 +42,7 @@ class Search {
       $valid = true;
     }
     else {
-      $msgErr = $configFile . ' not found ! check your config parameter or the existing of your configuration file!';
+      $msgErr = $configFile . ' not found ! check your AjaxSearch config parameter or the existing of your configuration file!';
     }
     return $valid;
   }
@@ -739,7 +739,7 @@ class Search {
     foreach($tvs as $tv){
       $tplRS = $modx->db->select('id', $tplName, 'name="' . $tv . '"');
       if (!$modx->db->getRecordCount($tplRS)) {
-        $msgErr = "<br /><h3>Error: tv $tv not defined - Check your withTvs parameter !</h3><br />";
+        $msgErr = "<br /><h3>AjaxSearch error: tv $tv not defined - Check your withTvs parameter !</h3><br />";
         return false;       
       }
     }
@@ -962,7 +962,7 @@ class Search {
           $p_array = explode(':',$p);
           $table = $p_array[0];
           if (($table != 'content') && ($table != 'tv') && ($table != 'jot') && ($table != 'maxigallery') && !function_exists($table)) {
-            $msgErr = "<br /><h3>Error: table $table not defined in the configuration file: ".$this->cfg['config']." !</h3><br />";
+            $msgErr = "<br /><h3>AjaxSearch error: table $table not defined in the configuration file: ".$this->cfg['config']." !</h3><br />";
             return $valid;
           }
         }
@@ -992,7 +992,7 @@ class Search {
         $tvphx_table = $tvphx_array[0];
         if (isset($tvphx_array[1])) $tvphx_func = $tvphx_array[1];      
         if (!function_exists($tvphx_func)) {
-          $msgErr = "<br /><h3>Error: the function $tvphx_func is not defined in the configuration file: ".$this->cfg['config']." !</h3><br />";
+          $msgErr = "<br /><h3>AjaxSearch error: the function $tvphx_func is not defined in the configuration file: ".$this->cfg['config']." !</h3><br />";
           return false;
         }
       }

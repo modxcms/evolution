@@ -2,6 +2,21 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx 0.9.6.3-RC2 (rev 4361 - October 22, 2008)
+===================================
+* [#MODX-453] Weblogin calls to mail should set envelope sender address when safe_mode is not enabled.
+* [#TINYMCE-1] Japanese language file provided by MEGU
+* [#MODX-450] bug fix to prevent invalid SQL syntax / error
+* [#MODX-430] Update Japanese language files
+* Update Bulgarian language files (Manager, Install and TinyMCE)
+* [#MODX-438] Ensure that access permissions are inherited from parent when changing template on new document
+* [#MODX-405] Fix problem in media browser generated XML when PHP short tags is being used
+* [#MODX-429] Change yourdomain.com to example.com in default settings
+* Added $_lang strings for RSS tabs in welcome page.
+* Added RTL-Manager-theme.
+* Added Persian language manager file.
+* [#MODX-431] Fix icon alignment for the tree menu in default MODxLight theme
+
 MODx 0.9.6.3-RC1 (rev 4291 - October 12, 2008)
 ===================================
 * [#MODX-415] Update German manager file
