@@ -3,7 +3,7 @@
 #:::::::::::::::::::::::::::::::::::::::::
 
 	$moduleName = "MODx";
-	$moduleVersion = " 0.9.6.3-RC1";
+	$moduleVersion = " 0.9.6.3-RC2";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
