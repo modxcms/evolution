@@ -16,6 +16,7 @@ else {
     $database_name = str_replace("`", "", $database_name);
     $tableprefix = $_POST['tableprefix'];
     $database_collation = $_POST['database_collation'];
+    $database_connection_method = $_POST['database_connection_method'];
 
     if (!@ mysql_select_db($database_name, $conn)) {
         // create database
@@ -31,6 +32,9 @@ else {
     }
     elseif (($installMode == 0) && (@ mysql_query("SELECT COUNT(*) FROM {$database_name}.`{$tableprefix}site_content`"))) {
         $output .= '<span style="color:#FF0000;">'.$_lang['status_failed_table_prefix_already_in_use'].'</span>';
+    }
+    elseif (($database_connection_method != 'SET NAMES') && ($rs = @ mysql_query("show variables like 'collation_database'")) && ($row = @ mysql_fetch_row($rs)) && ($row[1] != $database_collation)) {
+        $output .= '<span style="color:#FF0000;">'.sprintf($_lang['status_failed_database_collation_does_not_match'], $row[1]).'</span>';
     }
     else {
         $output .= '<span style="color:#9CCD00;">'.$_lang['status_passed'].'</span>';

@@ -73,6 +73,7 @@ $_lang["status_passed_database_created"] = 'passed - database created';
 $_lang["status_checking_database"] = 'Checking database: ';
 $_lang["status_failed_could_not_select_database"] = 'failed - could not select database';
 $_lang["status_failed_could_not_create_database"] = 'failed - could not create database';
+$_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'failed - table prefix already in use!';
 $_lang["welcome_message_welcome"] = 'Welcome to the MODx installation program.';
 $_lang["welcome_message_text"] = 'This program will guide you through the rest of the installation.';

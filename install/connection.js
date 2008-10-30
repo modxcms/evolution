@@ -10,6 +10,7 @@ window.addEvent('domready', function(){
         uid = $('databaseloginname').value;
         pwd = $('databaseloginpassword').value;
         database_collation = $('database_collation').value;
+        database_connection_method = $('database_connection_method').value;
                 
         var pars = Object.toQueryString({
             q: url,
@@ -17,6 +18,7 @@ window.addEvent('domready', function(){
             uid: uid,
             pwd: pwd,
             database_collation: database_collation,
+            database_connection_method: database_connection_method,
             language: language
         });
          
@@ -35,6 +37,7 @@ window.addEvent('domready', function(){
         database_name = $('database_name').value;
         tableprefix = $('tableprefix').value;
         database_collation = $('database_collation').value;
+        database_connection_method = $('database_connection_method').value;
 
         var pars = Object.toQueryString({
             q: url,
@@ -44,6 +47,7 @@ window.addEvent('domready', function(){
             database_name: database_name,
             tableprefix: tableprefix,
             database_collation: database_collation,
+            database_connection_method: database_connection_method,
             language: language,
             installMode: installMode
         });

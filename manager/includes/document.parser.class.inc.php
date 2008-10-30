@@ -2619,6 +2619,9 @@ class DocumentParser {
         $parsedMessageString= str_replace("[^p^]", $phpTime, $parsedMessageString);
         $parsedMessageString= str_replace("[^t^]", $totalTime, $parsedMessageString);
 
+        // Set 500 response header
+        header('HTTP/1.1 500 Internal Server Error');
+
         // Display error
         echo $parsedMessageString;
         ob_end_flush();

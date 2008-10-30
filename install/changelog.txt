@@ -2,8 +2,13 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.3-RC2 (rev 4361 - October 22, 2008)
+MODx 0.9.6.3-RC2 (rev 4378 - October 30, 2008)
 ===================================
+* [#MODX-185] Improvements to installation with errors when SET CHARACTER SET is used and collation does not match database.
+* [#MODX-346] Fixed additional errors on advanced upgrades.
+* Add to ht.access template to prevent Apache internal dummy connections breaking hostname [(site_url)]
+* [#MODX-455] Have messageQuit() set a 500 error response to avoid indexing pages with PHP parse errors.
+* [#MODX-346] Fixed error with $database_connection_charset being empty after "Advanced Upgrade Install".
 * [#MODX-453] Weblogin calls to mail should set envelope sender address when safe_mode is not enabled.
 * [#TINYMCE-1] Japanese language file provided by MEGU
 * [#MODX-450] bug fix to prevent invalid SQL syntax / error
