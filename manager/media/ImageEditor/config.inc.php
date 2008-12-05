@@ -48,7 +48,7 @@ $IMConfig['modx']['folder_permissions'] = octdec($new_folder_permissions);
        PHP must be able to create files in this directory.
 	   Able to create directories is nice, but not necessary.
 */
-$IMConfig['base_dir'] = $base_path.$rb_base_dir;
+$IMConfig['base_dir'] = $rb_base_dir;
 
 
 /*
@@ -59,7 +59,7 @@ $IMConfig['base_dir'] = $base_path.$rb_base_dir;
  for this directory (i.e. disable PHP, Perl, CGI). We only want to store assets
  in this directory and its subdirectories.
 */
-$IMConfig['base_url'] = $site_url.$rb_base_url;
+$IMConfig['base_url'] = $rb_base_url;
 //echo $IMConfig['base_url']."<br />";
 
 /*

@@ -63,7 +63,7 @@ switch ($_POST['mode']) {
 								
 		// save the new module
 		$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, wrap, locked, icon, resourcefile, enable_resource, category, enable_sharedparams, guid, modulecode, properties) VALUES('".$name."', '".$description."', '".$disabled."', '".$wrap."', '".$locked."', '".$icon."', '".$resourcefile."', '".$enable_resource."', '".$categoryid."', '".$enable_sharedparams."', '".$guid."', '".$modulecode."', '".$properties."');";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "\$rs not set! New module not saved!";
 			exit;
@@ -111,7 +111,7 @@ switch ($_POST['mode']) {
 								
 		// save the edited module	
 		$sql = "UPDATE ".$modx->getFullTableName("site_modules")." SET name='".$name."', description='".$description."', icon='".$icon."', enable_resource='".$enable_resource."', resourcefile='".$resourcefile."', disabled='".$disabled."', wrap='".$wrap."', locked='".$locked."', category='".$categoryid."', enable_sharedparams='".$enable_sharedparams."', guid='".$guid."', modulecode='".$modulecode."', properties='".$properties."'  WHERE id='".$id."';";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited module not saved!".mysql_error();
 			exit;
@@ -163,7 +163,7 @@ function saveUserGroupAccessPermissons(){
 	if($use_udperms==1) {
 		// delete old permissions on the module
 		$sql = "DELETE FROM ".$modx->getFullTableName("site_module_access")." WHERE module=$id;";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "An error occured while attempting to delete previous module user access permission entries.";
 			exit;
@@ -171,7 +171,7 @@ function saveUserGroupAccessPermissons(){
 		if(is_array($usrgroups)) {
 			foreach ($usrgroups as $ugkey=>$value) {
 				$sql = "INSERT INTO ".$modx->getFullTableName("site_module_access")." (module,usergroup) values($id,".stripslashes($value).")";
-				$rs = mysql_query($sql);
+				$rs = $modx->db->query($sql);
 				if(!$rs){
 					echo "An error occured while attempting to save module user acess permissions.";
 					exit;

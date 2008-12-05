@@ -40,7 +40,7 @@ if (isset($_POST) && count($_POST) > 0) {
 	// Run a single query to save all the values
 	$sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value)
 		VALUES ".implode(', ', $savethese);
-	if(!@$rs = mysql_query($sql)) {
+	if(!@$rs = $modx->db->query($sql)) {
 		echo "Failed to update setting value!";
 		exit;
 	}

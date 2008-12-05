@@ -13,7 +13,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 	$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
     $sql = 'SELECT '.$pluginsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY '.$orderby;
 
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	$limit = mysql_num_rows($rs);
 	if($limit<1){
 		echo $_lang['no_results'];
@@ -180,7 +180,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
                 $nameField = ($v['table'] == 'site_templates')? 'templatename': 'name';
                 $pluginsql = $v['table'] == 'site_plugins' ? $tablePre.$v['table'].'`.disabled, ' : '';
                 $sql = 'SELECT '.$pluginsql.$nameField.' as name, '.$tablePre.$v['table'].'`.id, description, locked, '.$tablePre.'categories`.category, '.$tablePre.'categories`.id as catid FROM '.$tablePre.$v['table'].'` left join '.$tablePre.'categories` on '.$tablePre.$v['table'].'`.category = '.$tablePre.'categories`.id ORDER BY 5,1';
-                $rs = mysql_query($sql);
+                $rs = $modx->db->query($sql);
         		$limit = mysql_num_rows($rs);
         		if($limit>0){
         			for($i=0; $i<$limit; $i++) {

@@ -1,10 +1,10 @@
 // <?php
 //    @name       ShowImageTVs
-//    @version    0.2, 5 Feb 2008
+//    @version    0.2.2, 24 Nov 2008
 //
 //
 //    @author     Brett @ The Man Can!
-//                rewritten by Rachael Black
+//                rewritten by Rachael Black, update by pixelchutes
 //                now works with MooTools and finds the image tvs itself
 //
 
@@ -57,7 +57,8 @@ if ($e->name == 'OnDocFormRender' && ($template > 0)) {
 
   function full_url(url)
   {
-	 	return (url != '' && url.search(/http:\/\//i) == -1) ? ('$site' + url) : url;
+	new_url = (url != '' && url.search(/http:\/\//i) == -1) ? ('$site' + url) : url;
+	return ( ( new_url.search('@INHERIT') == -1 ) ? new_url : new_url.replace( new RegExp(/@INHERIT/ig), '' ) ); // Update by pixelchutes
   }
 
   function checkImages()
@@ -76,6 +77,14 @@ if ($e->name == 'OnDocFormRender' && ($template > 0)) {
 	window.onDomReady(function() {
     for (var i = 0; i < imageNames.length; i++) {
     	var elem = $('tv' + imageNames[i]);
+
+  	// Account for TVs with "underscores" in their name (MODx escapes them to %5F)
+        // Update by pixelchutes
+        if (!elem) {
+            newname = imageNames[i].replace(new RegExp(/_/ig),'%5F');
+            var elem = $('tv' + newname);
+        }
+
       if (elem) {
         var url = elem.value;
 

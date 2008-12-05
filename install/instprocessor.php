@@ -123,7 +123,7 @@ $sqlParser = new SqlParser($database_server, $database_user, $database_password,
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 //$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imageUrl = "assets/";
-$sqlParser->imagePath = "assets/";
+$sqlParser->imagePath = $base_path . "assets/";
 $sqlParser->fileManagerPath = $base_path;
 $sqlParser->ignoreDuplicateErrors = true;
 $sqlParser->connect();

@@ -2,6 +2,15 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx 0.9.6.3 (rev 4521 - December 5, 2008)
+===================================
+* Fix XSS vulnerabilities in weblogin (error in preserveUrls() function and not escaping username input using htmlspecialchars() properly). [JVN#10170564]
+* Modified strict sql_mode check to be a warning rather than an error that prevents installation.
+* [#MODX-468] and [#MODX-469] Japanese language file updates.
+* Updated Image TV Preview plugin to support @INHERIT binding.
+* Change Ajax Search reference snippet to .txt extension for security reasons.
+* Remove snippet.ditto.php and snippet.reflect.php to address http://secunia.com/Advisories/32824/.
+
 MODx 0.9.6.3-RC2 (rev 4378 - October 30, 2008)
 ===================================
 * [#MODX-185] Improvements to installation with errors when SET CHARACTER SET is used and collation does not match database.

@@ -186,8 +186,8 @@ if ($conn && $installMode == 0) {
 if ($conn) {
     echo "<p>" . $_lang['checking_mysql_version'];
     if ( version_compare(mysql_get_server_info(), '5.0.51', '=') ) {
-        echo "<span class=\"ok\">"  . $_lang['ok'] . "</span></b>&nbsp;&nbsp;<strong>". $_lang['mysql_5051'] . "</strong></p>";
-        echo "<p><strong>" . $_lang['mysql_5051_warning'] . "</strong></p>";
+        echo "<span class=\"notok\">"  . $_lang['warning'] . "</span></b>&nbsp;&nbsp;<strong>". $_lang['mysql_5051'] . "</strong></p>";
+        echo "<p><span class=\"notok\">" . $_lang['mysql_5051_warning'] . "</span></p>";
     } else {
         echo "<span class=\"ok\">" . $_lang['ok'] . "</span>&nbsp;&nbsp;<strong>" . $_lang['mysql_version_is'] . mysql_get_server_info() . "</strong></p>";
     }
@@ -203,8 +203,7 @@ if ($conn) {
         // print_r($modes);
         foreach ($modes as $mode) {
             if (strtoupper($mode) == "STRICT_TRANS_TABLES") {
-                echo "<span class=\"notok\">" . $_lang['failed'] . "</span></b> <strong>&nbsp;&nbsp;" . $_lang['strict_mode'] . "</strong></p>";
-                $errors += 1;
+                echo "<span class=\"notok\">" . $_lang['warning'] . "</span></b> <strong>&nbsp;&nbsp;" . $_lang['strict_mode'] . "</strong></p>";
                 echo "<p><span class=\"notok\">" . $_lang['strict_mode_error'] . "</span></p>";
             } else {
                 echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";

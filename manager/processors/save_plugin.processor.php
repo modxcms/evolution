@@ -57,7 +57,7 @@ switch ($_POST['mode']) {
     
 		//do stuff to save the new plugin
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_plugins` (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$plugincode."', '".$disabled."', '".$moduleguid."', '".$locked."', '".$properties."', ".$categoryid.");";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "\$rs not set! New plugin not saved!";
 		} else {	
@@ -105,7 +105,7 @@ switch ($_POST['mode']) {
      
 		//do stuff to save the edited plugin	
 		$sql = "UPDATE " . $modx->getFullTableName('site_plugins') . " SET name='".$name."', description='".$description."', plugincode='".$plugincode."', disabled='".$disabled."', moduleguid='".$moduleguid."', locked='".$locked."', properties='".$properties."', category=".$categoryid."  WHERE id='".$id."';";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited plugin not saved!";
 		} 

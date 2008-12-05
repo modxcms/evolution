@@ -185,7 +185,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
 # process login
 
-    $username = $modx->db->escape(strip_tags($_POST['username']));
+    $username = $modx->db->escape(htmlspecialchars($_POST['username'], ENT_QUOTES));
     $givenPassword = $modx->db->escape($_POST['password']);
     $captcha_code = isset($_POST['captcha_code'])? $_POST['captcha_code']: '';
     $rememberme = $_POST['rememberme'];

@@ -4,7 +4,7 @@
  *
  * @author MEGU, yamamoto
  * @package MODx
- * @version 1.0.1
+ * @version 1.0.2
  * 
  * Filename:       /install/lang/japanese/japanese-utf8.inc.php
  * Language:       Japanese
@@ -14,23 +14,23 @@
 
 
 $_lang['license'] = '<p class="title">MODxの著作権と使用許諾条件について</p>
-	    <hr style="text-align:left;height:1px;width:90%" />
-		<h4>You must agree to the License before continuing installation.</h4>
-		<p>Usage of this software is subject to the GPL license. To help you understand
-		what the GPL licence is and how it affects your ability to use the software, we
-		have provided the following summary:</p>
-		<h4>The GNU General Public License is a Free Software license.</h4>
-		<p>Like any Free Software license, it grants to you the four following freedoms:</p>
-		<ul>
+        <hr style="text-align:left;height:1px;width:90%" />
+        <h4>You must agree to the License before continuing installation.</h4>
+        <p>Usage of this software is subject to the GPL license. To help you understand
+        what the GPL licence is and how it affects your ability to use the software, we
+        have provided the following summary:</p>
+        <h4>The GNU General Public License is a Free Software license.</h4>
+        <p>Like any Free Software license, it grants to you the four following freedoms:</p>
+        <ul>
             <li>The freedom to run the program for any purpose. </li>
             <li>The freedom to study how the program works and adapt it to your needs. </li>
             <li>The freedom to redistribute copies so you can help your neighbor. </li>
             <li>The freedom to improve the program and release your improvements to the
             public, so that the whole community benefits. </li>
-		</ul>
-		<p>You may exercise the freedoms specified here provided that you comply with
-		the express conditions of this license. The principal conditions are:</p>
-		<ul>
+        </ul>
+        <p>You may exercise the freedoms specified here provided that you comply with
+        the express conditions of this license. The principal conditions are:</p>
+        <ul>
             <li>You must conspicuously and appropriately publish on each copy distributed an
             appropriate copyright notice and disclaimer of warranty and keep intact all the
             notices that refer to this License and to the absence of any warranty; and give
@@ -54,13 +54,13 @@ $_lang['license'] = '<p class="title">MODxの著作権と使用許諾条件に�
             <li>Your fair use and other rights are in no way affected by the above.
             </li>
         </ul>
-		<p>The above is a summary of the GNU General Public License. By proceeding, you
-		are agreeing to the GNU General Public Licence, not the above. The above is
-		simply a summary of the GNU General Public Licence, and its accuracy is not
-		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public
-		License</a> in full before proceeding, which can also be found in the license
-		file distributed with this package.</p>';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
+        <p>The above is a summary of the GNU General Public License. By proceeding, you
+        are agreeing to the GNU General Public Licence, not the above. The above is
+        simply a summary of the GNU General Public Licence, and its accuracy is not
+        guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public
+        License</a> in full before proceeding, which can also be found in the license
+        file distributed with this package.</p>';
+$_lang["encoding"] = 'utf-8';   //charset encoding for html header
 $_lang["modx_install"] = 'MODx &raquo; インストール';
 $_lang["loading"] = '処理中...';
 $_lang["Begin"] = '開始';
@@ -72,6 +72,7 @@ $_lang["status_passed_database_created"] = 'データベースを作成できま
 $_lang["status_checking_database"] = '...    データベースとの接続テストの結果: ';
 $_lang["status_failed_could_not_select_database"] = '接続できません - データベース名を確認 - ';
 $_lang["status_failed_could_not_create_database"] = 'データベースを作成できません';
+$_lang["status_failed_database_collation_does_not_match"] = 'failed - データベース側の照合順序のデフォルト値が「%s」になっています。データベース側の設定を「utf8_general_ci」に変更してからインストールを再試行するか、接続方法として「SET NAMES」を選択する必要があります。phpMyAdminが利用できる場合は、該当データベースの「操作」タブで照合順序のデフォルト値を変更できます。';
 $_lang["status_failed_table_prefix_already_in_use"] = '接続できません - このTableプリフィクスはすでに使われています。異なるTableプリフィクスを指定するか、phpMyAdminなどを利用し関連Tableを削除してください。';
 $_lang["welcome_message_welcome"] = 'MODxのインストールを開始します。';
 $_lang["welcome_message_text"] = '心踊る、未知の領域へようこそ。ガイドに従ってインストールを進めましょう。特殊な条件のサーバでない限り、マニュアルに頼る必要はありません。分かりやすいインストーラとあなたの好奇心が、このプロセスを先に進めます。<br /><br />このインストーラの手順に従うことにより、他のCMSとのデータベースの共有設定や、サンプルコンテンツ及び、推奨される拡張機能のインストールを個別に選択できます。何も選択せずシンプルにコアのみをインストールすることもできます。また、すでにインストール済みのMODxをアップデートしたり、データベースの設定を変更することもできます。';
@@ -85,12 +86,12 @@ $_lang["installation_upgrade_existing_note"] = 'コアファイル・リソー�
 $_lang["installation_upgrade_advanced"] = 'カスタムアップデート<br /><small>(データベース設定を変更できます)</small>';
 $_lang["installation_upgrade_advanced_note"] = 'データベース設定の変更を伴うアップデートが必要な場合はこちらを選んでください。<br />';
 $_lang["connection_screen_connection_information"] = 'データベース設定';
-$_lang["connection_screen_server_connection_information"] = 'データベース接続';
-$_lang["connection_screen_server_connection_note"] = 'Webサーバーと共有していることが多いため、ホスト名は「localhost」であることがほとんどです。';
+$_lang["connection_screen_server_connection_information"] = 'データベースホストへの接続';
+$_lang["connection_screen_server_connection_note"] = 'データベースサーバのホスト名・ログイン名・パスワードを入力し、「ここをクリック」をクリックし接続テストをしてください。<br />※MySQL4.1未満ではAjaxSearchなど一部のアドオンが使えません。ご注意ください。';
 $_lang["connection_screen_server_test_connection"] = 'ここをクリックすると正常に接続できるかどうかを確認できます';
-$_lang["connection_screen_database_connection_information"] = 'データベースのプロパティ';
-$_lang["connection_screen_database_connection_note"] = 'Please enter the name of the database created for MODX. If you there is no database yet, the installer will attempt to create a database for you. This may fail depending on the MySQL configuration or the database user permissions for your domain/installation.';
-$_lang["connection_screen_database_test_connection"] = 'ここをクリックすると正常に接続できるかどうかを確認できます';
+$_lang["connection_screen_database_connection_information"] = 'データベース設定';
+$_lang["connection_screen_database_connection_note"] = 'データベース名を入力してください。データベース作成権限がある場合は、指定に従ってデータベースが作成されます。<br />日本語環境で使う場合は、接続方法は「SET CHARACTER SET」(よりよいセキュリティ対策として)・接続照合順序は「utf8_general_ci」をおすすめします。<br />※なおMySQL4.1未満ではこれらのエンコード設定を無視して日本語を扱います。';
+$_lang["connection_screen_database_test_connection"] = 'ここをクリックしてデータベースを作成します。または指定条件での選択をテストできます';
 $_lang["connection_screen_database_name"] = 'データベース名:';
 $_lang["connection_screen_table_prefix"] = 'Tableプリフィクス:';
 $_lang["connection_screen_collation"] = '文字セットの接続照合順序:';
@@ -129,8 +130,8 @@ $_lang["ok"] = '問題なし';
 $_lang["you_running_php"] = ' - You are running on PHP ';
 $_lang["modx_requires_php"] = ', and MODx requires PHP 4.1.0 or later';
 $_lang["php_security_notice"] = '<legend>セキュリティ警告</legend><p>このサーバ上で稼働しているPHPには重大な問題があります。MODxの稼働自体には問題はありませんが、このバージョンのPHPには報告されている脆弱性がいくつか存在し、MODxに限らず様々なPHPアプリを通じて多数の攻撃にさらされてきました。脆弱性からサイトを守る上で最低限必要とされるPHPのバージョンは4.3.8以上とされており、この機会にPHPのアップデートをおすすめします。</p>';
-$_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
-$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODx install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODx, but consider yourself warned.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals"] = 'Register_Globalsの設定: ';
+$_lang["checking_registerglobals_note"] = 'Register_Globalsがオンになっていると、サイトはXSS攻撃の対象としてさらされます。非常に危険ですので、特に必要がなければオフにしてください。.htaccessに「php_flag register_globals off」と記述を加えることでオフに設定できます。'; //Look at changing this to provide a solution.
 $_lang["checking_sessions"] = 'セッション情報が正常に構成されるかどうか: ';
 $_lang["checking_if_cache_exist"] = '<span class=\"mono\">assets/cache</span>ディレクトリの存在チェック(なければ転送に失敗しています): ';
 $_lang["checking_if_cache_writable"] = '<span class=\"mono\">assets/cache</span>ディレクトリの書き込み属性(707などに設定): ';
@@ -152,27 +153,27 @@ $_lang["table_prefix_already_inuse"] = ' - このTableプリフィクスはす�
 $_lang["table_prefix_already_inuse_note"] = '異なるTableプリフィクスを指定するか、phpMyAdminなどを利用し関連Tableを削除し、再びインストールを試してみてください。';
 $_lang["table_prefix_not_exist"] = ' - Table prefix does not exist in this database!';
 $_lang["table_prefix_not_exist_note"] = 'Setup couldn\'t install into the selected database, as it does not contain existing tables with the prefix you specified to be upgraded. Please choose an existing table prefix, and run Setup again.';
-$_lang["setup_cannot_continue"] = 'Unfortunately, Setup cannot continue at the moment, due to the above ';
-$_lang["error"] = 'エラー';
-$_lang["errors"] = 'errors'; //Plural form
-$_lang["please_correct_error"] = '. Please correct the error';
-$_lang["please_correct_errors"] = '. Please correct the errors'; //Plural form
-$_lang["and_try_again"] = ', and try again. If you need help figuring out how to fix the problem';
-$_lang["and_try_again_plural"] = ', and try again. If you need help figuring out how to fix the problems'; //Plural form
-$_lang["checking_mysql_version"] = 'Checking MySQL version: ';
-$_lang["mysql_version_is"] = ' MySQLのバージョン : ';
-$_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
+$_lang["setup_cannot_continue"] = '';
+$_lang["error"] = 'つのエラー';
+$_lang["errors"] = 'つのエラー'; //Plural form
+$_lang["please_correct_error"] = 'があります。';
+$_lang["please_correct_errors"] = 'があります。'; //Plural form
+$_lang["and_try_again"] = 'これらのエラーを修正し、右下の「再チェック」ボタンをクリックしてください。';
+$_lang["and_try_again_plural"] = 'これらのエラーを修正し、右下の「再チェック」ボタンをクリックしてください。'; //Plural form
+$_lang["checking_mysql_version"] = 'MySQLのバージョン: ';
+$_lang["mysql_version_is"] = ' Version ';
+$_lang["mysql_5051_warning"] = 'MySQL 5.0.51では問題が確認されています。アップデートのうえインストールを再試行してください。';
 $_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict mode: ';
 $_lang["strict_mode_error"] = 'MODx requires that strict mode be disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
 $_lang["strict_mode"] = ' MySQL server is in strict mode!';
-$_lang["visit_forum"] = ', visit the <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.';
+$_lang["visit_forum"] = '';
 $_lang["testing_connection"] = '接続テスト中...';
 $_lang["btnback_value"] = '戻る';
 $_lang["btnnext_value"] = '進む';
 $_lang["retry"] = '再チェック';
-$_lang["alert_enter_host"] = 'You need to enter a value for database host!';
-$_lang["alert_enter_login"] = 'You need to enter your database login name!';
+$_lang["alert_enter_host"] = 'DBのホスト名を入力してください';
+$_lang["alert_enter_login"] = 'DBのログイン名を入力してください';
 $_lang["alert_server_test_connection"] = 'You need to test your server connection!';
 $_lang["alert_server_test_connection_failed"] = 'The test of your server connection has failed!';
 $_lang["alert_enter_database_name"] = 'You need to enter a value for database name!';

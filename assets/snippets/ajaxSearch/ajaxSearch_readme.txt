@@ -464,7 +464,7 @@ This is done automatically with the addJscript parameter unless you set it to 0.
 :: How-to use this snippet
 -----------------------------------------------------------------
 
-1. Copy the contents of the file snippet.ajaxSearch.php into a new snippet named AjaxSearch
+1. Copy the contents of the file snippet.ajaxSearch.txt into a new snippet named AjaxSearch
 
 2. Create a directory named ajaxSearch under the assets/snippets folder.
 

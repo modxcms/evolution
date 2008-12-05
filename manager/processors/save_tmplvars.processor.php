@@ -63,7 +63,7 @@ switch ($_POST['mode']) {
 							));	      	
 		// Add new TV
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "\$rs not set! New variable not saved!";
 		} else {	
@@ -123,7 +123,7 @@ switch ($_POST['mode']) {
         $sql .= "locked='".$locked."', ";
         $sql .= "category=".$categoryid;
         $sql .= " WHERE id='".$id."';";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "\$rs not set! Edited variable not saved!";
 		} else {		

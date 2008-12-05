@@ -75,7 +75,7 @@
 		$array_url = array_merge($array_get, $array_values);
 		foreach ($array_url as $name => $value) {
 			if (!is_null($value)) {
-				$urlstring[] = $name . '=' . urlencode($value);
+				$urlstring[] = urlencode($name) . '=' . urlencode($value);
 			}
 		}
 	
