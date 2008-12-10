@@ -26,14 +26,6 @@ if (isset($_POST) && count($_POST) > 0) {
 		$v = is_array($v) ? implode(",", $v) : $v;
 		if ($k == 'manager_lang_attribute' && trim($v) == '') $v = 'en';
 
-		// Strip base path and URL from resource browser settings
-		if ($k == 'rb_base_url'){
-			$v = str_replace($site_url,'',$v);	
-		}
-		if ($k == 'rb_base_dir'){
-			$v = str_replace($base_path,'',$v);	
-		}
-	
 		$savethese[] = '(\''.mysql_escape_string($k).'\', \''.mysql_escape_string($v).'\')';
 	}
 	

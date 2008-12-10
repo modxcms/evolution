@@ -8,7 +8,7 @@ function newCategory($newCat) {
     $useTable = $modx->getFullTableName('categories');
     $sql = 'insert into ' . $useTable . ' (category) values (\''.mysql_escape_string($newCat).'\')';
     $catrs = $modx->dbQuery($sql);
-    if(!catrs) {
+    if(!$catrs) {
         $categoryId = 0;
     } else {
         if(!$newCatid=mysql_insert_id()) {

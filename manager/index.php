@@ -137,7 +137,7 @@ $etomite = &$modx; // for backward compatibility
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
     die("<h2>Failed to create the database connection!</h2>. Please run the MODx <a href='../install'>install utility</a>");
 } else {
-    mysql_select_db($dbase);
+    mysql_select_db(str_replace('`', '', $dbase));
     @mysql_query("{$database_connection_method} {$database_connection_charset}");
 }
 
@@ -215,7 +215,7 @@ if(isset($_GET['a']) && isset($_POST['a'])) {
 }
 
 if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
-	include_once 'messageCount.inc.php';
+    include_once 'messageCount.inc.php';
 }
 
 // save page to manager object
@@ -606,7 +606,7 @@ switch ($action) {
 /********************************************************************/
     case "200" :
         // show phpInfo
-		if($modx->hasPermission('logs')) phpInfo();
+        if($modx->hasPermission('logs')) phpInfo();
     break;
 /********************************************************************/
 /* errorpage                                            */
