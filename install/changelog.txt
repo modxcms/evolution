@@ -2,8 +2,9 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.3 (rev 4542 - December 10, 2008)
+MODx 0.9.6.3 (rev 4544 - December 10, 2008)
 ===================================
+* Fixed SQL injection vulnerability in manager search. [JVN#72630020] 
 * [#MODX-489] Manager encoding issue with direct mysql_ calls due to mysql_select_db including the MySQL escape character.
 * Added a sample robots.txt file to site root 
 * [#MODX-536] MySQL STRICT mode error with plugin event checkboxes not getting saved and existing ones deleted.

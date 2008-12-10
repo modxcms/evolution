@@ -47,11 +47,10 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 
 <?php
 if(isset($_REQUEST['submitok'])) {
-	$searchid = $_REQUEST['searchid'];
+	$searchid = !empty($_REQUEST['searchid']) ? intval($_REQUEST['searchid']) : 0;
 	$searchtitle = htmlentities($_POST['pagetitle'], ENT_QUOTES, $modx_charset);
-	$searchcontent = addslashes($_REQUEST['content']);
-	$searchlongtitle = addslashes($_REQUEST['longtitle']);
-	
+	$searchcontent = $modx->db->escape($_REQUEST['content']);
+	$searchlongtitle = $modx->db->escape($_REQUEST['longtitle']);
 
 $sqladd .= $searchid!="" ? " AND $dbase.`".$table_prefix."site_content`.id='$searchid' " : "" ;
 $sqladd .= $searchtitle!="" ? " AND $dbase.`".$table_prefix."site_content`.pagetitle LIKE '%$searchtitle%' " : "" ;
@@ -59,8 +58,8 @@ $sqladd .= $searchlongtitle!="" ? " AND $dbase.`".$table_prefix."site_content`.l
 $sqladd .= $searchcontent!="" ? " AND $dbase.`".$table_prefix."site_content`.content LIKE '%$searchcontent%' " : "" ;
 
 $sql = "SELECT id, pagetitle, description, deleted, published, isfolder, type FROM $dbase.`".$table_prefix."site_content` where 1=1 ".$sqladd." ORDER BY id;";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 ?>
 <div class="sectionHeader"><?php echo $_lang['search_results']; ?></div><div class="sectionBody">
 <?php
@@ -84,7 +83,7 @@ if($limit<1) {
     <tbody>
      <?php
 			for ($i = 0; $i < $limit; $i++) { 
-				$logentry = mysql_fetch_assoc($rs);
+				$logentry = $modx->db->getRow($rs);
 	// figure out the icon for the document...
 	$icon = "";
 	if($logentry['published']==0) {
