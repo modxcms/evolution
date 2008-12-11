@@ -320,16 +320,16 @@ class DocumentParser {
         }
     }
 
-    function cleanDocumentIdentifier($qOrig) { // modx updates
-        (!empty($qOrig)) or $qOrig = $this->config['site_start'];  // <- netnoise 2006-10-19
+    function cleanDocumentIdentifier($qOrig) {
+        (!empty($qOrig)) or $qOrig = $this->config['site_start'];
         $q= $qOrig;
-        // First remove any / before or after
+        /* First remove any / before or after */
         if ($q[strlen($q) - 1] == '/')
             $q= substr($q, 0, -1);
         if ($q[0] == '/')
             $q= substr($q, 1);
-        // Save path if any
-        // FS#476 and FS#308: only return virtualDir if friendly paths are enabled
+        /* Save path if any */
+        /* FS#476 and FS#308: only return virtualDir if friendly paths are enabled */
         if ($this->config['use_alias_path'] == 1) {
             $this->virtualDir= dirname($q);
             $this->virtualDir= ($this->virtualDir == '.' ? '' : $this->virtualDir);
@@ -339,25 +339,23 @@ class DocumentParser {
         }
         $q= str_replace($this->config['friendly_url_prefix'], "", $q);
         $q= str_replace($this->config['friendly_url_suffix'], "", $q);
-        if (is_numeric($q) && !$this->documentListing[$q]) { // we got an ID returned, check to make sure it's not an alias
-            // FS#476 and FS#308: check that id is valid in terms of virtualDir structure
+        if (is_numeric($q) && !$this->documentListing[$q]) { /* we got an ID returned, check to make sure it's not an alias */
+            /* FS#476 and FS#308: check that id is valid in terms of virtualDir structure */
             if ($this->config['use_alias_path'] == 1) {
-                if (($this->virtualDir != '' && in_array($q, $this->getChildIds($this->documentListing[$this->virtualDir], 1))) || ($this->virtualDir == '' && in_array($q, $this->getChildIds(0, 1)))) {
+                if ((($this->virtualDir != '' && !$this->documentListing[$this->virtualDir . '/' . $q]) || ($this->virtualDir == '' && !$this->documentListing[$q])) && (($this->virtualDir != '' && in_array($q, $this->getChildIds($this->documentListing[$this->virtualDir], 1))) || ($this->virtualDir == '' && in_array($q, $this->getChildIds(0, 1))))) {
                     $this->documentMethod= 'id';
                     return $q;
-                } else { // not a valid id in terms of virtualDir, treat as alias
+                } else { /* not a valid id in terms of virtualDir, treat as alias */
                     $this->documentMethod= 'alias';
                     return $q;
-                }
-            } else {
+                }            
                 $this->documentMethod= 'id';
                 return $q;
             }
-        } else { // we didn't get an ID back, so instead we assume it's an alias
+        } else { /* we didn't get an ID back, so instead we assume it's an alias */
             if ($this->config['friendly_alias_urls'] != 1) {
                 $q= $qOrig;
             }
-
             $this->documentMethod= 'alias';
             return $q;
         }
