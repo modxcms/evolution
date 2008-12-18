@@ -81,6 +81,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
   <div class="clickHere"><a id="servertest" href="#"><?php echo $_lang['connection_screen_server_test_connection']?></a></div>
   <div class="status" id="serverstatus"></div>
   <p class="subtitle"><?php echo $_lang['connection_screen_database_connection_information']?></p>
+  <p><?php echo $_lang['connection_screen_database_connection_note']?></p>
   <div class="labelHolder"><label for="database_name"><?php echo $_lang['connection_screen_database_name']?></label>
     <input id="database_name" value="<?php echo isset($_POST['database_name']) ? $_POST['database_name']: $database_name ?>" name="database_name" />
   </div>

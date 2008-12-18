@@ -4,8 +4,8 @@
 * Function:       Language file.
 * Encoding:       UTF-8
 * Author:         MODx CMS JAPAN
-* Date:           2008/11/3
-* Version:        2.16
+* Date:           2008/11/21
+* Version:        2.17
 * MODx version:   0.9.6.3
 */
 /* Set locale to Japanese */
@@ -148,7 +148,7 @@ $_lang["confirm_remove_locks"] = '他ユーザーが編集操作を正常に終�
 $_lang["confirm_unblock"] = 'このユーザーのアクセス拒否を解除します。';
 $_lang["confirm_undelete"] = '\n\nこのドキュメントと同時に削除されたサブドキュメントの削除が取り消されます。このドキュメントの削除以前に削除されたサブドキュメントは削除されたままです。';
 $_lang["confirm_unpublish"] = '\n\nこのドキュメントの公開を取り消すことで、設定された公開/公開取消日時は上書きされます。公開・公開取消日時をそのままにしたい場合は「ドキュメントの編集」を選択してください。\n\n続けますか?';
-$_lang["confirm_unzip_file"] = 'このファイルを解凍してよろしいですか?\n\n既にあるファイルは上書きされます。';
+$_lang["confirm_unzip_file"] = 'このファイルを解凍してよろしいですか?\n\nすでにあるファイルは上書きされます。';
 $_lang["could_not_find_user"] = 'ユーザーが見つかりません';
 $_lang["createdon"] = '作成日時';
 $_lang["create_document_here"] = 'ドキュメントの作成';
@@ -156,24 +156,20 @@ $_lang["create_folder_here"] = 'フォルダの作成';
 $_lang["create_weblink_here"] = 'ウェブリンクの作成';
 $_lang["credits"] = '著作権表示/謝辞';
 $_lang["credits_dTree"] = 'MODxは、DestroyDrop.com の dTree script を利用しています';
-$_lang["credits_everaldo"] = 'MODxは、Everaldo のクリスタルアイコン・セットを多く利用しています。すばらしいアイコンです!';
+$_lang["credits_everaldo"] = 'MODxは、Everaldo のクリスタルアイコン・セットを多く利用しています。素晴らしいアイコンです!';
 $_lang["credits_mysql"] = 'MODx は MySQL によって動作しています!';
 $_lang["credits_php"] = 'MODx は PHP によって動作しています!';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><strong>Raymond Irving, Ryan Thrash</strong> - プロジェクト創始者</li>
-<li><strong>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</strong> - コアアーキテクチャ &amp; デザイン</li>
-</ul>';
+$_lang["credits_shouts_msg"] = '<ul><li><strong>Raymond Irving, Ryan Thrash</strong> - プロジェクト創始者</li><li><strong>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</strong> - コアアーキテクチャ &amp; デザイン</li></ul>';
 $_lang["credits_shouts_title"] = '<strong>さらなる感謝:</strong>';
-$_lang["credits_webfx"] = 'MODx は Webfx の JavaScripts を多く利用しています。すばらしいスクリプトです!';
-$_lang["custom_contenttype_message"] = 'ドキュメントが使用するコンテントタイプに独自のものを追加できます。新しいタイプを追加するにはテキストボックスに入力して「追加」ボタンをクリックします。';
+$_lang["credits_webfx"] = 'MODx は Webfx の JavaScripts を多く利用しています。素晴らしいスクリプトです!';
+$_lang["custom_contenttype_message"] = 'ドキュメントが使用するコンテントタイプに独自のタイプを追加できます。新しいタイプを追加するにはテキストボックスに入力して「追加」ボタンをクリックします。';
 $_lang["custom_contenttype_title"] = 'カスタムコンテントタイプ:';
-$_lang["database_collation"] = 'データベース照合順序';
+$_lang["database_collation"] = '文字セット照合順序';
 $_lang["database_charset"] = 'データベース文字コード';
 $_lang["database_name"] = 'データベース名';
 $_lang["database_server"] = 'データベースサーバー';
 $_lang["database_tables"] = 'テーブル一覧';
-$_lang["database_overhead"] = '<strong style=\'color:#990033\'>注:</strong>オーバーヘッドとは、MySQLが確保はしてが使用はしていない領域のことです。オーバーヘッドの数字をクリックすると、この領域を開放します';
+$_lang["database_overhead"] = '<strong style=\'color:#990033\'>注:</strong>オーバーヘッドとは、確保されているが使われていない領域のことです。オーバーヘッドの数字をクリックすると、この領域を開放します';
 $_lang["database_table_clickhere"] = 'ここをクリック';
 $_lang["database_table_clickbackup"] = '選択したテーブルをバックアップ・ダウンロード';
 $_lang["database_table_datasize"] = 'データサイズ';
@@ -212,7 +208,7 @@ $_lang["document_alias_help"] = 'このドキュメントのエイリアスを�
 $_lang["document_content"] = '内容 ( MODxタグ：[*content*] )';
 $_lang["document_description"] = '説明';
 $_lang["document_description_help"] = 'ドキュメントに関する任意の説明をここに入力することができます。MODxタグ：[*description*]';
-$_lang["document_long_title_help"] = 'ドキュメントに長いタイトルを付けたいときに利用します。この値をwebページのタイトルや、ヘッディングで利用すれば、サーチエンジンに対して効果があるでしょう。MODxタグ：[*longtitle*]';
+$_lang["document_long_title_help"] = 'ドキュメントに長いタイトルを付けたいときに利用します。この値をwebページのタイトルや、ヘッダーなどで利用すれば、サーチエンジンに対して効果があるでしょう。MODxタグ：[*longtitle*]';
 $_lang["document_metatag_help"] = 'このドキュメントに付加したいMETAタグやキーワードを選択してください。CTRLキーを押しながらクリックと複数のタグやキーワードを選択できます。選択元とするMETAタグ・キーワードの作成・管理は「リソース」→<a href="index.php?a=81" target="_self">「METAタグとキーワードの管理」</a>で行ないます。';
 $_lang["document_opt_contentdispo"] = '内容の配置';
 $_lang["document_opt_contentdispo_help"] = 'この内容の配置フィールドを用いてウェブブラウザがこのドキュメントをどう扱うか指定することができます。「Attachment」を選択するとウェブブラウザはドキュメントをダウンロードファイルとみなします。';
@@ -230,19 +226,19 @@ $_lang["document_opt_richtext"] = 'リッチテキストで編集';
 $_lang["document_opt_richtext_help"] = '通常の記事を書く場合はここにチェックを入れたままとし、リッチテキストエディターでドキュメントを編集することをおすすめします。ドキュメントがJavaScriptやフォームを含む場合は、チェックを外してプレーンテキストによる編集を行ってください。';
 $_lang["document_opt_show_menu"] = 'メニューに表示';
 $_lang["document_opt_show_menu_help"] = 'メニューにこのドキュメントを表示するにはこのオプションをチェックしてください。メニュー作成スニペットにはこのオプションを無視するものもあることに注意してください。';
-$_lang["document_opt_trackvisit_help"] = 'このページへの訪問者をログ';
+$_lang["document_opt_trackvisit_help"] = 'このページへの訪問者をログに記録する(対応モジュールが必要)';
 $_lang["document_overview"] = 'ドキュメントの詳細';
 $_lang["document_parent"] = '親ドキュメント';
-$_lang["document_parent_help"] = '上のフォルダアイコンをクリックすると、このドキュメントの親を選択する状態になります（もう一度クリックすると元に戻ります）。次に新しい親ドキュメントをツリー内でクリックしてください。';
+$_lang["document_parent_help"] = '上のフォルダアイコンをクリックすると、このドキュメントの親を選択できる状態になります（もう一度クリックすると元に戻ります）。次に新しい親ドキュメントをツリー内でクリックしてください。';
 $_lang["document_setting"] = 'ドキュメント設定';
 $_lang["document_summary"] = '要約（序説）';
 $_lang["document_summary_help"] = 'ドキュメントの要約を入力します。MODxタグ：[*introtext*]';
 $_lang["document_title"] = 'タイトル';
 $_lang["document_title_help"] = 'ドキュメントの名称/タイトルを入力してください。バックスラッシュは使用できません。(MODxタグ：[*pagetitle*])';
 $_lang["document_to_be_moved"] = '移動対象ドキュメント';
-$_lang["document_weblink_help"] = 'ウェブリンクで参照したい対象のアドレスを入力してください。';
-$_lang["documents_in_container"] = "つのサブドキュメントをこのドキュメントは持っています";
-$_lang["documents_in_container_no"] = "このドキュメントはサブドキュメントを持っていません";
+$_lang["document_weblink_help"] = 'ウェブリンクで参照したい対象のURLを入力してください。';
+$_lang["documents_in_container"] = "つのサブドキュメントがあります。";
+$_lang["documents_in_container_no"] = "サブドキュメントはありません。";
 $_lang["doc_data_title"] = 'ドキュメントの詳細';
 $_lang["duplicate"] = '複製';
 $_lang["duplicate_alias_found"] = '\'%s\'というドキュメントが\'%s\'というエイリアスを既に使用しています。別のエイリアスを入力してください。';
@@ -258,11 +254,11 @@ $_lang["edit_document"] = 'ドキュメントの編集';
 $_lang["edit_document_title"] = 'ドキュメントの作成/編集';
 $_lang["edit_settings"] = 'グローバル設定';
 $_lang["email"] = 'email';
-$_lang["emailsender_message"] = 'ユーザーにユーザー名とパスワードを送信時の送信元メールアドレスを指定してください。';
+$_lang["emailsender_message"] = 'ユーザー名とパスワードを送信時の送信元メールアドレスを指定してください。';
 $_lang["emailsender_title"] = '送信者メールアドレス:';
 $_lang["emailsubject_message"] = 'サインアップメールの件名を指定してください。';
 $_lang["emailsubject_title"] = 'メール件名:';
-$_lang["email_sent"] = 'メールを送信しました';
+$_lang["email_sent"] = 'パスワード再発行メールを送信しました。';
 $_lang["empty_folder"] = 'フォルダは空です';
 $_lang["empty_recycle_bin"] = '削除済みドキュメントを消去';
 $_lang["empty_recycle_bin_empty"] = '消去するための削除済みドキュメントがありません。';
@@ -287,13 +283,13 @@ $_lang["export_site_failed"] = '<span style="color:#990000">失敗!</span>';
 $_lang["export_site_html"] = 'サイト全体を静的HTMLとしてエクスポート';
 $_lang["export_site_maxtime"] = '最大エクスポート時間:';
 $_lang["export_site_maxtime_message"] = 'MODxがサイトのエクスポートに使用できる秒数を指定してください(PHPの設定を上書きします)。0の入力で時間無制限に設定します。0または非常に大きな数字を設定することで、サーバーが正常に動作しない場合もありますのでお勧めしません。';
-$_lang["export_site_message"] = '<p>サイト全体をHTMLファイルとしてエクスポート(一括書き出し)できます。書き出したファイルをまとめてサーバ上に転送することで、通常のサイトと同様の運用が可能です。この場合、通常の静的サイトの運用と同等になるため、下記の機能が失われます。:</p><ul><li>エクスポートファイルのページ閲覧はログに記録されません。</li><li>エクスポートファイルで動的なスニペットは動作しません。</li><li>通常のドキュメントのみエクスポートされ、ウェブリンクはエクスポートされません。</li><li>ドキュメントにリダイレクトヘッダを送信するスニペットが含まれている場合、エクスポートプロセスが失敗する場合があります。</li><li>ドキュメント、スタイルシート、イメージの記述方法により、サイトのデザインが崩れる場合があります。これを直すためには、MODxのindex.phpファイルが保存されている同じディレクトリに、エクスポートファイルを保存または移動してください。</li></ul><p>フォームに必要事項を入力して「エクスポートの開始」をクリックすると処理を開始します。作成されたファイルは、ドキュメントエイリアスをファイル名として、指定した場所に保存されます。サイトをエクスポートする場合、グローバル設定で「フレンドリーエイリアス」を「はい」にすることをお勧めします。サイトのサイズにより、エクスポートに暫く時間を要する場合もあります。</p><p><em>ファイル名が同じ場合、新しいファイルは既存のファイルに上書きされます</em></p>';
+$_lang["export_site_message"] = '<p>サイト全体をHTMLファイルとしてエクスポート(一括書き出し)できます。書き出したファイルをまとめてサーバ上に転送することで、通常のサイトと同様の運用が可能です。この場合、通常の静的サイトの運用と同等になるため、下記の機能が失われます。:</p><ul><li>エクスポートファイルのページ閲覧はログに記録されません。</li><li>エクスポートファイルで動的なスニペットは動作しません。</li><li>通常のドキュメントのみエクスポートされ、ウェブリンクはエクスポートされません。</li><li>ドキュメントにリダイレクトヘッダを送信するスニペットが含まれている場合、エクスポートプロセスが失敗する場合があります。</li><li>ドキュメント、スタイルシート、イメージの記述方法により、サイトのデザインが崩れる場合があります。これを直すためには、MODxのindex.phpファイルが保存されている同じディレクトリに、エクスポートファイルを保存または移動してください。</li></ul><p>フォームに必要事項を入力して「エクスポートの開始」をクリックすると処理を開始します。作成されたファイルは、ドキュメントエイリアスをファイル名として、指定した場所に保存されます。サイトをエクスポートする場合、グローバル設定で「フレンドリエイリアス」を「はい」にすることをお勧めします。サイトのサイズにより、エクスポートに暫く時間を要する場合もあります。</p><p><em>ファイル名が同じ場合、新しいファイルは既存のファイルに上書きされます</em></p>';
 $_lang["export_site_numberdocs"] = '<p><strong>%s 個のエクスポート対象ドキュメントが見つかりました...</strong><p/>';
 $_lang["export_site_prefix"] = 'ファイル名の接頭辞:';
 $_lang["export_site_start"] = 'エクスポートの開始';
 $_lang["export_site_success"] = '<span style="color:#009900">成功!</span>';
 $_lang["export_site_suffix"] = 'ファイル名の接尾辞:';
-$_lang["export_site_target_unwritable"] = 'ターゲットディレクトリが書き込みができません。ディレクトリが書き込み可能であるか確認して、再度処理を行ってください。';
+$_lang["export_site_target_unwritable"] = 'ターゲットディレクトリ内に書き込みができません。ディレクトリが書き込み可能であるか確認して、再度処理を行ってください。';
 $_lang["export_site_time"] = 'エクスポートが完了しました。エクスポートに要した時間は %s 秒です。';
 $_lang["failed_login_message"] = 'ユーザーアカウントがロックされるまで何回ログイン失敗を許すか回数を入力します。';
 $_lang["failed_login_title"] = 'ログイン失敗の回数:';
@@ -351,16 +347,16 @@ $_lang["forgot_password_email_fine_print"] = '注意：上記のURLは明日あ�
 $_lang["forgot_password_email_instructions"] = 'そのページの「私のアカウント」メニューからパスワードを変更することができます。';
 $_lang["forgot_password_email_intro"] = 'アカウントへのパスワード変更リクエストを受け付けました。';
 $_lang["forgot_password_email_link"] = '処理を完了するためここをクリックしてください。';
-$_lang["forgot_your_password"] = 'パスワード紛失';
+$_lang["forgot_your_password"] = 'パスワードを忘れた場合';
 $_lang["friday"] = '金曜';
-$_lang["friendlyurlsprefix_message"] = 'ユーザーフレンドリーURLの接頭辞を指定してください。例えば接頭辞を「page」に設定した場合、URLの /index.php?id=2 は、 /page2.htmlというユーザーフレンドリーURLに変換されます(接尾辞が .htmlに設定されていると仮定して)。このように、ユーザー(そしてサーチエンジン)が、サイトを閲覧するためのリンクを指定することができます。';
-$_lang["friendlyurlsprefix_title"] = 'フレンドリーURLの接頭辞:';
-$_lang["friendlyurlsuffix_message"] = 'ユーザーフレンドリーURLの接尾辞を指定してください。例えば「.html」と指定すると、全てのユーザーフレンドリーURLの末尾に .htmlを追加します。';
-$_lang["friendlyurlsuffix_title"] = 'フレンドリーURLの接尾辞:';
+$_lang["friendlyurlsprefix_message"] = 'ユーザーフレンドリURLの接頭辞を指定してください。例えば接頭辞を「page」に設定した場合、URLの /index.php?id=2 は、 /page2.htmlというユーザーフレンドリURLに変換されます(接尾辞が .htmlに設定されていると仮定して)。このように、ユーザー(そしてサーチエンジン)が、サイトを閲覧するためのリンクを指定することができます。';
+$_lang["friendlyurlsprefix_title"] = 'フレンドリURLの接頭辞:';
+$_lang["friendlyurlsuffix_message"] = 'ユーザーフレンドリURLの接尾辞を指定してください。例えば「.html」と指定すると、全てのユーザーフレンドリURLの末尾に .htmlを追加します。';
+$_lang["friendlyurlsuffix_title"] = 'フレンドリURLの接尾辞:';
 $_lang["friendlyurls_message"] = '静的URI機能（フレンドリURL）の設定を行います。この機能はMODxがApache上で動作している時のみ有効です。この機能を動作させるために .htaccessファイルに簡単な編集を加える必要があります。詳細は同梱 .htaccessファイルの末尾あたりをご覧ください。';
-$_lang["friendlyurls_title"] = 'フレンドリーURLの使用:';
-$_lang["friendly_alias_message"] = 'フレンドリーURLを使用して、かつドキュメントがエイリアスを持つ場合、エイリアスは常にフレンドリーURLに優先します。このオプションを「はい」に設定することで、フレンドリーURLの接頭辞と接尾辞もエイリアスに適用されます。例えば、ドキュメントのIDが1、エイリアスが「introduction」、接頭辞が「」(空白)、接尾辞が「.html」の場合、このオプションを「はい」にすると、URLは「introduction.html」となります。 エイリアスを設定していない場合は、MODxが「1.html」というリンクを生成します。';
-$_lang["friendly_alias_title"] = 'フレンドリーエイリアス:';
+$_lang["friendlyurls_title"] = 'フレンドリURLの使用:';
+$_lang["friendly_alias_message"] = 'フレンドリURLを使用して、かつドキュメントがエイリアスを持つ場合、エイリアスは常にフレンドリURLに優先します。このオプションを「はい」に設定することで、フレンドリURLの接頭辞と接尾辞もエイリアスに適用されます。例えば、ドキュメントのIDが1、エイリアスが「introduction」、接頭辞が「」(空白)、接尾辞が「.html」の場合、このオプションを「はい」にすると、URLは「introduction.html」となります。 エイリアスを設定していない場合は、MODxが「1.html」というリンクを生成します。';
+$_lang["friendly_alias_title"] = 'フレンドリエイリアス:';
 $_lang["functionnotimpl"] = 'ごめんなさい!';
 $_lang["functionnotimpl_message"] = 'この機能は、まだ実装されていません';
 $_lang["go"] = '実行';
@@ -505,8 +501,7 @@ $_lang["mgrlog_itemid"] = '対象ID';
 $_lang["mgrlog_itemname"] = '対象名';
 $_lang["mgrlog_msg"] = 'メッセージ';
 $_lang["mgrlog_noquery"] = '検索されていません。';
-$_lang["mgrlog_query_msg"] = '管理画面の操作履歴に対する検索条件を指定します。日付の条件指定は、「以上」「未満」です。例: 2009年1月1日のログを含めるには、「この日付から」を 01-01-2009 に、「この日付の前」を 02-01-2009 にしてください。<br /><br />
-メッセージとアクションはほぼ同じものです。何かのメッセージを探したいときは、まずはアクションを「全て」にしたままにしておくとよいでしょう。';
+$_lang["mgrlog_query_msg"] = '管理画面の操作履歴に対する検索条件を指定します。日付の条件指定は、「以上」「未満」です。例: 2009年1月1日のログを含めるには、「この日付から」を 01-01-2009 に、「この日付の前」を 02-01-2009 にしてください。<br /><br />メッセージとアクションはほぼ同じものです。何かのメッセージを探したいときは、アクションを「全て」にしたままにしておくとよいでしょう。';
 $_lang["mgrlog_results"] = '結果の件数';
 $_lang["mgrlog_qresults"] = '結果';
 $_lang["mgrlog_searchlogs"] = '検索の履歴';
@@ -825,7 +820,7 @@ $_lang["settings_after_install"] = '<p><strong style="color:red;">新規イン�
 $_lang["settings_config"] = '設定';
 $_lang["settings_dependencies"] = '依存性';
 $_lang["settings_events"] = 'システムイベント';
-$_lang["settings_furls"] = 'フレンドリーURL';
+$_lang["settings_furls"] = 'フレンドリURL';
 $_lang["settings_general"] = 'プロフィール';
 $_lang["settings_misc"] = 'ファイルマネージャー';
 $_lang["settings_page_settings"] = 'ページ設定';
@@ -869,7 +864,7 @@ $_lang["snippet_title"] = 'スニペットの作成/編集';
 $_lang["sort_asc"] = '昇順';
 $_lang["sort_desc"] = '降順';
 $_lang["sort_tree"] = 'ツリーのソート';
-$_lang["source"] = '元';
+$_lang["source"] = 'ソース';
 $_lang["stay"] = '保存後に続けて編集';
 $_lang["stay_new"] = '次の作成';
 $_lang["submit"] = '実行';
@@ -1036,5 +1031,5 @@ $_lang["yourinfo_role"] = '所属ロール(役割):';
 $_lang["yourinfo_title"] = 'あなたの情報';
 $_lang["yourinfo_total_logins"] = '合計ログイン回数は:';
 $_lang["yourinfo_username"] = 'ログイン名は:';
-$_lang["you_got_mail"] = 'メールが届いています';
+$_lang["you_got_mail"] = 'メッセージが届いています';
 ?>

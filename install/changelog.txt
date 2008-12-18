@@ -2,8 +2,13 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx 0.9.6.3 (rev 4546 - December 10, 2008)
+MODx 0.9.6.3 (rev 4563 - December 17, 2008)
 ===================================
+* [#MODX-547] Japanese manager lang file update.
+* [#MODX-460] Unnecessary PHP warnings in installer no longer displayed.
+* [#MODX-546] Japanese Install lang file update.
+* [#MODX-461] Missing connection_screen_database_connection_note in presentation of connection options during install.
+* [#MODX-555] Fix to properly invoke OnWebPageComplete system event.
 * [#MODX-427] Numeric aliases confused with ID when Friendly alias is enabled.
 * Fixed SQL injection vulnerability in manager search. [JVN#72630020] 
 * [#MODX-489] Manager encoding issue with direct mysql_ calls due to mysql_select_db including the MySQL escape character.

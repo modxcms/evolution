@@ -613,9 +613,8 @@ class DocumentParser {
         }
 
         // Useful for example to external page counters/stats packages
-        if ($this->config['track_visitors'] == 1) {
-            $this->invokeEvent('OnWebPageComplete');
-        }
+        $this->invokeEvent('OnWebPageComplete');
+
         // end post processing
     }
 
