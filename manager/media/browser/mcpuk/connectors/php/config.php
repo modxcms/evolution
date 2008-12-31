@@ -32,7 +32,7 @@ $dbase = '';
 $table_prefix = '';
 $base_url = '';
 $base_path = '';
-include("../../../../../../assets/config.inc.php");
+include("../../../../../includes/config.inc.php");
 
 /** 
  * Security check user MUST be logged into manager 

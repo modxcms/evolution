@@ -118,7 +118,7 @@ $_lang["checking_if_images_exist"] = 'Kontrollerer at katalogen <span class="mon
 $_lang["checking_if_images_writable"] = 'Kontrollerer at katalogen <span class="mono">assets/images</span> er skrivbar: ';
 $_lang["checking_if_export_exists"] = 'Kontrollerer at katalogen <span class="mono">assets/export</span> eksisterer: ';
 $_lang["checking_if_export_writable"] = 'Kontrollerer at katalogen <span class="mono">assets/export</span> er skrivbar: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Kontrollerer at filen <span class="mono">assets/config.inc.php</span> eksisterer og er skrivbar: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Kontrollerer at filen <span class="mono">manager/includes/config.inc.php</span> eksisterer og er skrivbar: ';
 $_lang["config_permissions_note"] = 'For nye installasjoner i Linux/Unix-miljø må en tom fil med navnet <span class="mono">config.inc.php</span> opprettes i katalogen <span class="mono">manager/includes/</span> med skriverrettighetene satt til 666.';
 $_lang["creating_database_connection"] = 'Oppretter en tilkobling til databasen: ';
 $_lang["database_connection_failed"] = 'Tilkobling til databasen mislyktes!';

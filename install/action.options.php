@@ -6,7 +6,7 @@ if ($installMode == 0 || $installMode == 2) {
     $_POST['database_connection_charset'] = $database_charset;
 }
 elseif ($installMode == 1) {
-    include "../assets/config.inc.php";
+    include "../manager/includes/config.inc.php";
 
     if (@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
         if (@ mysql_query("USE {$dbase}")) {

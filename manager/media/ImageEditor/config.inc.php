@@ -5,7 +5,7 @@
 require_once('../../includes/protect.inc.php');
 
 // load configuration file
-include "../../../assets/config.inc.php";
+include "../../includes/config.inc.php";
 
 /** 
  * Security check user MUST be logged into manager 

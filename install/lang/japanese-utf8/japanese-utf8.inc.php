@@ -142,7 +142,7 @@ $_lang["checking_if_images_exist"] = '<span class=\"mono\">assets/images</span>�
 $_lang["checking_if_images_writable"] = '<span class=\"mono\">assets/images</span>ディレクトリの書き込み属性(707などに設定): ';
 $_lang["checking_if_export_exists"] = '<span class=\"mono\">assets/export</span>ディレクトリの存在(なければ転送に失敗しています): ';
 $_lang["checking_if_export_writable"] = '<span class=\"mono\">assets/export</span>ディレクトリの書き込み属性(707などに設定): ';
-$_lang["checking_if_config_exist_and_writable"] = 'ファイル<span class=\"mono\">assets/config.inc.php</span>の存在と書き込み属性: ';
+$_lang["checking_if_config_exist_and_writable"] = 'ファイル<span class=\"mono\">manager/includes/config.inc.php</span>の存在と書き込み属性: ';
 $_lang["config_permissions_note"] = '<span class=\"mono\">config.inc.php</span>という名前の空ファイルを作り<span class=\"mono\">manager/includes/</span>ディレクトリに転送し、パーミッションを606などに設定してください。';
 $_lang["creating_database_connection"] = 'データベース接続: ';
 $_lang["database_connection_failed"] = 'データベース接続に異常があります';

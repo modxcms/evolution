@@ -119,7 +119,7 @@ $_lang["checking_if_images_exist"] = 'Überprüfen ob Ordner <span class=\"mono\
 $_lang["checking_if_images_writable"] = 'Überprüfen ob Ordner <span class=\"mono\">assets/images</span> beschreibbar ist: ';
 $_lang["checking_if_export_exists"] = 'Überprüfen ob Ordner <span class=\"mono\">assets/export</span> existiert: ';
 $_lang["checking_if_export_writable"] = 'Überprüfen ob Ordner <span class=\"mono\">assets/export</span> beschreibbar ist: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Überprüfen ob Datei <span class=\"mono\">assets/config.inc.php</span> existiert und beschreibbar ist: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Überprüfen ob Datei <span class=\"mono\">manager/includes/config.inc.php</span> existiert und beschreibbar ist: ';
 $_lang["config_permissions_note"] = 'Für neue Linux/Unix Installationen bitt eine leere Datei <span class=\"mono\">config.inc.php</span> im Ordner <span class=\"mono\">manager/includes/</span> anlegen und die Dateirechte auf 0666 setzen.';
 $_lang["creating_database_connection"] = 'Stelle Verbindung zur Datenbank: ';
 $_lang["database_connection_failed"] = 'Datenbankverbindung fehlgeschlagen!';

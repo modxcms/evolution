@@ -143,7 +143,7 @@ $_lang["checking_if_images_exist"] = 'Checking if <span class=\"mono\">assets/im
 $_lang["checking_if_images_writable"] = 'Checking if <span class=\"mono\">assets/images</span> directory is writable: ';
 $_lang["checking_if_export_exists"] = 'Checking if <span class=\"mono\">assets/export</span> directory exists: ';
 $_lang["checking_if_export_writable"] = 'Checking if <span class=\"mono\">assets/export</span> directory is writable: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class=\"mono\">assets/config.inc.php</span> exists and is writable: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class=\"mono\">manager/includes/config.inc.php</span> exists and is writable: ';
 $_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class=\"mono\">config.inc.php</span> in the <span class=\"mono\">manager/includes/</span> directory with file permissions set to 0666.';
 $_lang["creating_database_connection"] = 'Creating connection to the database: ';
 $_lang["database_connection_failed"] = 'Database connection failed!';

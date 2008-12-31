@@ -14,7 +14,7 @@ $base_path = "";
 
 // get the required includes
 if($database_user=='') {
-        if (!$rt = @include_once "assets/config.inc.php") {
+        if (!$rt = @include_once "manager/includes/config.inc.php") {
            exit('Could not load MODx configuration file!');
         }
 }

@@ -25,7 +25,7 @@ $installMode= intval($_POST['installmode']);
 $installData = $_POST['installdata'] ? 1 : 0;
 
 //if ($installMode == 1) {
-//	include "../assets/config.inc.php";
+//	include "../manager/includes/config.inc.php";
 //} else {
 	// get db info from post
 	$database_server = $_POST['databasehost'];
@@ -203,21 +203,14 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
     if (count($a) > 1)
         array_pop($a);
     $url= implode("manager", $a);
-
     reset($a);
-    $a= explode("assets", str_replace("\\\\", "/", dirname(__FILE__)));
+    $a= explode("manager", str_replace("\\\\", "/", dirname(__FILE__)));
     if (count($a) > 1)
         array_pop($a);
-    $pth= implode("assets", $a);
+    $pth= implode("manager", $a);
+    unset ($a);
     $base_url= $url . (substr($url, -1) != "/" ? "/" : "");
     $base_path= $pth . (substr($pth, -1) != "/" && substr($pth, -1) != "\\\\" ? "/" : "");
-
-    unset ($a);
-    unset ($url);
-    unset ($pth);
-    unset ($sapi);
-    unset ($script_name);
-
     // assign site_url
     $site_url= ((isset ($_SERVER[\'HTTPS\']) && strtolower($_SERVER[\'HTTPS\']) == \'on\') || $_SERVER[\'SERVER_PORT\'] == $https_port) ? \'https://\' : \'http://\';
     $site_url .= $_SERVER[\'HTTP_HOST\'];
@@ -256,7 +249,7 @@ if(!function_exists(\'startCMSSession\')) {
 	}
 }';
 $configString .= "\n?>";
-$filename = '../assets/config.inc.php';
+$filename = '../manager/includes/config.inc.php';
 $configFileFailed = false;
 if (@ !$handle = fopen($filename, 'w')) {
 	$configFileFailed = true;
@@ -275,7 +268,7 @@ if ($configFileFailed == true) {
 	echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
 	$errors += 1;
 ?>
-	<p><?php echo $_lang['cant_write_config_file']?><span class="mono">assets/config.inc.php</span></p>
+	<p><?php echo $_lang['cant_write_config_file']?><span class="mono">manager/includes/config.inc.php</span></p>
 	<textarea style="width:400px; height:160px;">
 	<?php echo $configString; ?>
 	</textarea>
