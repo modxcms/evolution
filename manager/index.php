@@ -116,7 +116,7 @@ if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
 define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
 
 // include_once config file
-$config_filename = "./includes/config.inc.php";
+$config_filename = "../assets/config.inc.php";
 if (!file_exists($config_filename)) {
     echo "<h3>Unable to load configuration settings</h3>";
     echo "Please run the MODx <a href='../install'>install utility</a>";
@@ -124,7 +124,7 @@ if (!file_exists($config_filename)) {
 }
 
 // include the database configuration file
-include_once "config.inc.php";
+include_once $config_filename;
 
 // initiate the content manager class
 include_once "document.parser.class.inc.php";

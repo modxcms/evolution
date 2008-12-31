@@ -5,9 +5,9 @@ $warningspresent = 0;
 
      
 
-if (is_writable("includes/config.inc.php")){
+if (is_writable("../assets/config.inc.php")){
     // Warn if world writable
-    if(@fileperms('includes/config.inc.php') & 0x0002) {
+    if(@fileperms('../assets/config.inc.php') & 0x0002) {
       $warningspresent = 1;
       $warnings[] = array($_lang['configcheck_configinc']);      
     }

@@ -4,6 +4,7 @@ development release, and is only shown to give an idea of what's currently in th
 
 MODx Evolution 1.0 (rev 4565 - December 17, 2008)
 ===================================
+* Move config.inc.php file from /manager/includes to /assets directory
 * Add config.inc.php constants to the system info page
 
 MODx 0.9.6.3 (rev 4565 - December 17, 2008)

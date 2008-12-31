@@ -98,7 +98,7 @@ $_lang["configcheck_admin"] = 'Merci de contacter un administrateur et de lui co
 $_lang["configcheck_cache"] = 'Répertoire cache non modifiable ';
 $_lang["configcheck_cache_msg"] = 'MODx ne peut pas écrire dans le répertoire cache. Il fonctionnera normalement, le cache ne fonctionnera pas. Pour corriger ce problème, veuillez permettre l\'écriture dans le répertoire /_cache/.';
 $_lang["configcheck_configinc"] = 'Le fichier de configuration est modifiable.';
-$_lang["configcheck_configinc_msg"] = 'Des personnes mal intentionnées pourrait modifier la configuration de votre site (notamment, login et mot de passe). Modifiez <strong>immédiatement</strong> les permissions de votre fichier de configuration (/manager/includes/config.inc.php) en lecture seule (effectuez un CHMOD 644)!';
+$_lang["configcheck_configinc_msg"] = 'Des personnes mal intentionnées pourrait modifier la configuration de votre site (notamment, login et mot de passe). Modifiez <strong>immédiatement</strong> les permissions de votre fichier de configuration (/assets/config.inc.php) en lecture seule (effectuez un CHMOD 644)!';
 $_lang["configcheck_default_msg"] = 'Une erreur inconnue est survenue. Merci de rapporter celle-ci via notre <a href="http://MODxcms.com/bugs\">bugtracker</a>';
 $_lang["configcheck_errorpage_unavailable"] = 'La page d\'erreur de votre site n\'est pas définie.';
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Cela signifie que votre page d\'erreur n\'est pas accessible à vos visiteurs ou qu\'elle n\'existe pas. Cela peut provoquer une boucle infinie, générer des erreurs dans vos logs. Assurez vous qu\'aucun groupe utilisateur n\'est défini pour cette page.';

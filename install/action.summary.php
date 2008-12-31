@@ -100,13 +100,13 @@ if (!is_writable("../assets/export")) {
 }
 // config.inc.php writable?
 echo "<p>".$_lang['checking_if_config_exist_and_writable'];
-if (!file_exists("../manager/includes/config.inc.php")) {
+if (!file_exists("../assets/config.inc.php")) {
     // make an attempt to create the file
-    @ $hnd = fopen("../manager/includes/config.inc.php", 'w');
+    @ $hnd = fopen("../assets/config.inc.php", 'w');
     @ fwrite($hnd, "<?php //MODx configuration file ?>");
     @ fclose($hnd);
 }
-$isWriteable = is_writable("../manager/includes/config.inc.php");
+$isWriteable = is_writable("../assets/config.inc.php");
 if (!$isWriteable) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p><p><strong>".$_lang['config_permissions_note']."</strong></p>";
     $errors += 1;
@@ -115,7 +115,7 @@ if (!$isWriteable) {
 }
 // connect to the database
 if ($installMode == 1) {
-    include "../manager/includes/config.inc.php";
+    include "../assets/config.inc.php";
 } else {
     // get db info from post
     $database_server = $_POST['databasehost'];

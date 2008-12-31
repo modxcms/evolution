@@ -1,17 +1,17 @@
 <?php
 require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect.inc.php');
 
+define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
+                                    // the manager instead of seperately.
+// include the database configuration file
+include_once '../../assets/config.inc.php';
+
 // set the include_once path
 if(version_compare(phpversion(), "4.3.0")>=0) {
     set_include_path("../includes/"); // include path the new way
 } else {
     ini_set("include_path", "../includes/"); // include path the old way
 }
-
-define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
-                                    // the manager instead of seperately.
-// include the database configuration file
-include_once "config.inc.php";
 
 // start session
 startCMSSession();

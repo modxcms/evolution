@@ -141,7 +141,7 @@ $_lang["checking_if_images_exist"] = 'Проверка дали съществу
 $_lang["checking_if_images_writable"] = 'Проверка дали в директорията <span class=\"mono\">assets/images</span> може да се пише: ';
 $_lang["checking_if_export_exists"] = 'Проверка дали съществува директорията <span class=\"mono\">assets/export</span> : ';
 $_lang["checking_if_export_writable"] = 'Проверка дали в директорията <span class=\"mono\">assets/export</span> може да се пише: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Проверка дали <span class=\"mono\">manager/includes/config.inc.php</span> съществува и може да се пише в него: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Проверка дали <span class=\"mono\">assets/config.inc.php</span> съществува и може да се пише в него: ';
 $_lang["config_permissions_note"] = 'За нови Linux/Unix инсталации, моля, създайте празен файл с име <span class=\"mono\">config.inc.php</span> в директорията <span class=\"mono\">manager/includes/</span> и задайте права на файла 0666.';
 $_lang["creating_database_connection"] = 'Създаване на връзка към БД: ';
 $_lang["database_connection_failed"] = 'Връзката към БД неуспешна!';

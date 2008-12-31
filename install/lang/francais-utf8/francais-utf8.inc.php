@@ -142,7 +142,7 @@ $_lang["checking_if_images_exist"] = 'Vérification de l\'existence du répertoi
 $_lang["checking_if_images_writable"] = 'Vérification des droits en écriture du répertoire <span class=\"mono\">assets/images</span>: ';
 $_lang["checking_if_export_exists"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Vérification des droits en écriture du répertoire <span class=\"mono\">assets/export</span>: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Vérification de l\'existence et des droits en écriture du fichier <span class=\"mono\">manager/includes/config.inc.php</span>: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Vérification de l\'existence et des droits en écriture du fichier <span class=\"mono\">assets/config.inc.php</span>: ';
 $_lang["config_permissions_note"] = 'Lors des installations Linux/Unix, veuillez créer un nouveau fichier nommé <span class=\"mono\">config.inc.php</span> dans le répertoire <span class=\"mono\">manager/includes/</span> avec les droits d\'accès 0666.';
 $_lang["creating_database_connection"] = 'Création de la connexion à la base de données: ';
 $_lang["database_connection_failed"] = 'Echec de connexion à la base de données!';

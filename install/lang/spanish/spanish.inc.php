@@ -136,7 +136,7 @@ $_lang["checking_if_images_exist"] = 'Comprobando que existe el directorio <span
 $_lang["checking_if_images_writable"] = 'Comprobando que <span class=\"mono\">assets/images</span> tiene permisos de escritura: ';
 $_lang["checking_if_export_exists"] = 'Comprobando que existe el directorio <span class=\"mono\">assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Comprobando que <span class=\"mono\">assets/export</span> tiene permisos de escritura: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Comprobando que existe el archivo <span class=\"mono\">manager/includes/config.inc.php</span> y que tiene permisos de escritura: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Comprobando que existe el archivo <span class=\"mono\">assets/config.inc.php</span> y que tiene permisos de escritura: ';
 $_lang["config_permissions_note"] = 'Para instalaciones nuevas en servidores Linux/Unix, hay que crear un archivo nuevo en blanco llamado <span class=\"mono\">config.inc.php</span> en el directorio <span class=\"mono\">manager/includes/</span> con los permisos 0666.';
 $_lang["creating_database_connection"] = 'Conectándose a la base de datos: ';
 $_lang["database_connection_failed"] = '¡Falló la conexión a la base de datos!';
