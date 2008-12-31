@@ -2,6 +2,10 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0 (rev 4565 - December 17, 2008)
+===================================
+* Add config.inc.php constants to the system info page
+
 MODx 0.9.6.3 (rev 4565 - December 17, 2008)
 ===================================
 * [#MODX-547] Japanese manager lang file update.

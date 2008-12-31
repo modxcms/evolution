@@ -95,6 +95,31 @@ if(!$modx->hasPermission('logs')) {
 			<td>&nbsp;</td>
 			<td><b><?php echo $table_prefix ?></b></td>
 		  </tr>
+		  <tr>
+			<td><?php echo $_lang['cfg_base_path']?></td>
+			<td>&nbsp;</td>
+			<td><b><?php echo MODX_BASE_PATH ?></b></td>
+		  </tr>
+		  <tr>
+			<td><?php echo $_lang['cfg_base_url']?></td>
+			<td>&nbsp;</td>
+			<td><b><?php echo MODX_BASE_URL ?></b></td>
+		  </tr>
+		  <tr>
+			<td><?php echo $_lang['cfg_manager_url']?></td>
+			<td>&nbsp;</td>
+			<td><b><?php echo MODX_MANAGER_URL ?></b></td>
+		  </tr>
+		  <tr>
+			<td><?php echo $_lang['cfg_manager_path']?></td>
+			<td>&nbsp;</td>
+			<td><b><?php echo MODX_MANAGER_PATH ?></b></td>
+		  </tr>
+		  <tr>
+			<td><?php echo $_lang['cfg_site_url']?></td>
+			<td>&nbsp;</td>
+			<td><b><?php echo MODX_SITE_URL ?></b></td>
+		  </tr>
 		</table>
 
    </div>
