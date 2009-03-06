@@ -1733,7 +1733,7 @@ class DocumentParser {
     }
 
     function getUserData() {
-        include_once $this->config["base_path"] . "manager/includes/extenders/getUserData.extender.php";
+        include $this->config["base_path"] . "manager/includes/extenders/getUserData.extender.php";
         return $tmpArray;
     }
 
