@@ -60,7 +60,7 @@ $dcfg['jscript'] = 'mootools';
 $dcfg['addJscript'] = 1;
 $dcfg['jsMooTools'] = 'manager/media/script/mootools/mootools.js';
 $dcfg['jsMooTools1.2'] = AS_SPATH . 'js/mootools1.2/mootools.js';
-$dcfg['jsJquery'] = AS_SPATH . 'js/jquery/jquery.js';
+$dcfg['jsJquery'] = AS_SPATH . 'js/jQuery/jquery.js';
 
 
 // For a global parameter initialisation use the following syntax $__param = 'value';
