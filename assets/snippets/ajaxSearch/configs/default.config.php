@@ -1,6 +1,7 @@
 <?php
 
-// default values - Keep care all these values are required
+// Default configuration file - AjaxSearch 1.8.2
+// Keep care all these values are required
 
 $dcfg['config'] = '';
 $dcfg['debug'] = 0;
@@ -65,25 +66,4 @@ $dcfg['jsJquery'] = AS_SPATH . 'js/jquery/jquery.js';
 // For a global parameter initialisation use the following syntax $__param = 'value';
 // To overwrite parameter snippet call use $param = 'value';
 
-$__debug = 3;
-$__asLog = '2:1:10';
-
-function searchWordList($params){ 
-
-  switch($params[0]){ 
-    case '61':
-      $list = "primary,school,education,children,teacher,africa,litteracy,bicycle";
-      break;         
-    case '62':
-      $list = "primaire,école,éducation,enfants,professeur,afrique,littérature,bicyclette";
-      break; 
-  }
-  return $list;
-}
-
-function galWordList(){ 
-
-  $list = "Peterhof,Suzdal,Sergijev,Train,Oginu,Enden,yourte,Giant,Temple,Poupées,photo,Ecole,Jeune";
-  return $list;
-}
 ?>
