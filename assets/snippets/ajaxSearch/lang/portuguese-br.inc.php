@@ -1,17 +1,16 @@
 <?php
-
 /*
-portuguese.inc.php - for AjaxSearch 1.6
-Created by: Joeindio (joeindio@gmail.com)
-Created on: 08/04/07
-Updated on: 03/02/09 by dev_cw
+portuguese-br.inc.php - for AjaxSearch 1.8
+Original by: Joeindio (joeindio@gmail.com)
+Adapted to pt-br by: dev_cw (shane sponagle)
+Updated on: 03/02/09
 Description: Language strings for AjaxSearch
 */
 
-$_lang['as_resultsIntroFailure'] = 'Não foram encontrados resultados para a pesquisa. Por favor tente utilizar termos mais gerais para obter meis resultados.';
-$_lang['as_searchButtonText'] = 'Procurar!';
-$_lang['as_boxText'] = 'Pesquisar...';
-$_lang['as_introMessage'] = 'Por favor indique um termo para iniciar a sua pesquisa.';
+$_lang['as_resultsIntroFailure'] = 'Não foram encontrados resultados para a busca. Por favor tente utilizar termos mais gerais para obter mais resultados.';
+$_lang['as_searchButtonText'] = 'Buscar!';
+$_lang['as_boxText'] = 'Buscando...';
+$_lang['as_introMessage'] = 'Por favor indique um termo para iniciar a sua busca.';
 $_lang['as_resultsFoundTextSingle'] = '%d resultado encontrado para "%s".';
 $_lang['as_resultsFoundTextMultiple'] = '%d resultados encontrados para "%s".';
 $_lang['as_paginationTextSinglePage'] = '';

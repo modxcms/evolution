@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 
 /*
- * Name:          persian.inc.php - for AjaxSearch 1.8
+ * Name:          persian.inc.php - for AjaxSearch 1.8.2
  * Path:          assets\snippets\AjaxSearch\lang
- * Created        By: KyleJ (kjaebker@muddydogpaws.com) on: 01/22/07
+ * Created        By: KyleJ (kjaebker@muddydogpaws.com) on: 01/22/07 | updated on 6th MAR 2009
  * Description:   Language strings for AjaxSearch - Translation By: Mohsen (MotSmart ~ www.modxcms.ir)
 */
 
@@ -22,4 +22,9 @@ $_lang['oneword'] = 'یک کلمه ای';
 $_lang['allwords'] = 'همه ی کلمات';
 $_lang['exactphrase'] = 'همان کلمات';
 $_lang['nowords'] = 'بدون نتیجه';
+$_lang['as_cmtHiddenFieldIntro'] = 'این بخش بایستی خالی باشد<br />از درج متن خودداری کنید';
+$_lang['as_cmtIntroMessage'] = 'آیا چیزی که دنبالش بودید را یاقتید؟ نظرات خود را اینجا بنویسید!';
+$_lang['as_cmtSubmitText'] = 'ارسال';
+$_lang['as_cmtResetText'] = 'از نو';
+$_lang['as_cmtThksMessage'] = 'با تشکر از ابراز نظر!';
 ?>

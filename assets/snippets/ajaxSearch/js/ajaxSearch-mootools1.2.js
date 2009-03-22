@@ -1,9 +1,6 @@
-//ajaxSearch.js
+//ajaxSearch-mootools1.2.js
 //Version: 1.8.2 - refactored by coroico
-//01/03/2009
-//Created by: KyleJ (kjaebker@muddydogpaws.com)
-//Created on: 03/14/2006
-//Description: This code is used to setup the ajax search request
+//01/03/2009 - mootools 1.2 version of ajaxSearch.js
 
 //set the loading and the close image to the correct location for you
 //set the folder location to the correct location of ajaxSearch.php
@@ -38,11 +35,12 @@ function activateSearch() {
   if (res != null) minChars = parseInt(res[1]);
 
   var asf = $('ajaxSearch_form');
+
   var aso = $('ajaxSearch_output');
   aso.setStyle('opacity', '0');
 
   if (asf) {
-    asf.onsubmit = function() { doSearch(); return false; };
+    asf.addEvent('submit', function(e) { e.stop(); doSearch(); });
 
     var c = new Element('img'); //Close Image
     c.setProperties({
@@ -53,7 +51,7 @@ function activateSearch() {
     c.addEvent('click', function(){closeSearch();});
     toggleImage(c);
     asf.appendChild(c);
-
+    
     var i = new Element('img');
     i.setProperties({
        src: _base + 'images/indicator.white.gif', //Loading Image
@@ -67,7 +65,7 @@ function activateSearch() {
     n.setProperty('id', 'current-search-results');
     n.setStyle('opacity', '1');
     aso.appendChild(n);
-    newToggle = new Fx.Slide('current-search-results', {duration: 600}).hide();
+    newToggle = new Fx.Slide('current-search-results', {duration: 600,transition: Fx.Transitions.Quint.easeIn}).hide();
     newToggle.isDisplayed = function() {
       return this.wrapper['offset'+this.layout.capitalize()] > 0;
     }
@@ -85,7 +83,7 @@ function liveSearchReq() {
   if (liveTimeout) {
     window.clearTimeout(liveTimeout);
   }
-  liveTimeout = window.setTimeout("doSearch()",400);
+  liveTimeout = window.setTimeout("doSearch()",600);
 }
 
 function doSearch() {
@@ -133,7 +131,7 @@ function doSearch() {
   subSearch = sbsname;
 
   // Setup the parameters and make the ajax call to the popup window
-  var pars = Object.toQueryString({
+  var pars = Hash.toQueryString({
     q: _base + 'ajaxSearchPopup.php',
     search: s,
     as_version: as_version,
@@ -142,12 +140,12 @@ function doSearch() {
     ucfg: ucfg
   });
 
-  var ajaxSearchReq = new Ajax('index-ajax.php', {postBody: pars, onComplete: doSearchResponse});
+  var ajaxSearchReq = new Request({url: 'index-ajax.php', method: 'post', data: pars, onComplete: doSearchResponse});
   if (newToggle.isDisplayed()) {
-    newToggle.toggle();
-    ajaxSearchReq.request.delay(600, ajaxSearchReq);
+	newToggle.toggle();
+    ajaxSearchReq.send.delay(600, ajaxSearchReq);
   } else {
-    ajaxSearchReq.request();
+      ajaxSearchReq.send();
   }
   return true;
 }
@@ -155,7 +153,7 @@ function doSearch() {
 function doSearchResponse(request) {
   var o = $('ajaxSearch_output');
   o.setStyle('opacity', opacity);  // set of opacity parameter
-  $('current-search-results').setHTML(request);
+  $('current-search-results').set('html', request);
   newToggle.toggle();
   is_searching = false;
   setTimeout('resetForm()',600);
@@ -197,5 +195,6 @@ function toggleImage(imgElement) {
   }
 }
 
-//Event.observe(window, 'load', activateSearch, false);
-Window.onDomReady(activateSearch);
+window.addEvent('domready', function(){
+   activateSearch();
+})

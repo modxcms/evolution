@@ -17,9 +17,16 @@ $_lang['as_paginationTextSinglePage'] = '';
 $_lang['as_paginationTextMultiplePages'] = 'Result pages: ';
 $_lang['as_moreResultsText'] = 'Click here to view all results.';
 $_lang['as_moreResultsTitle'] = 'More Results';
+$_lang['as_maxWords'] = 'A maximum of %d words is allowed for your search';
 $_lang['as_minChars'] = 'At least %d characters are required for your search term';
+$_lang['as_maxChars'] = 'A maximum of %d characters is allowed for your search term';
 $_lang['oneword'] = 'One word';
 $_lang['allwords'] = 'All words';
 $_lang['exactphrase'] = 'Exact phrase';
 $_lang['nowords'] = 'No words';
+$_lang['as_cmtHiddenFieldIntro'] = 'This field should be empty. <br />Refrain from entering any text.';
+$_lang['as_cmtIntroMessage'] = 'Did you find what you are looking for? Leave your comments here!';
+$_lang['as_cmtSubmitText'] = 'Send';
+$_lang['as_cmtResetText'] = 'Clear';
+$_lang['as_cmtThksMessage'] = 'Thanks for your comment !';
 ?>

@@ -18,10 +18,16 @@ $_lang['as_paginationTextSinglePage'] = '';
 $_lang['as_paginationTextMultiplePages'] = 'Ergebnisseiten: ';
 $_lang['as_moreResultsText'] = 'Bitte hier klicken, um alle Ergebnisse anzuzeigen.';
 $_lang['as_moreResultsTitle'] = 'Weitere Ergebnisse';
+$_lang['as_maxWords'] = 'Nicht mehr als %d Wörter für Ihre Suche eingeben';
 $_lang['as_minChars'] = 'Es werden mindestens %d Zeichen benötigt, um die Suche zu starten.';
+$_lang['as_maxChars'] = 'Nicht mehr als %d Buchstaben für den Suchbegriff eingeben';
 $_lang['oneword'] = 'Irgendein Wort';
 $_lang['allwords'] = 'Alle Wörter';
 $_lang['exactphrase'] = 'Exakte Wortgruppe';
 $_lang['nowords'] = 'Keine Wörter';
-
+$_lang['as_cmtHiddenFieldIntro'] = 'Dieses Feld bitte leer lassen. <br />Nicht ausfüllen.';
+$_lang['as_cmtIntroMessage'] = 'Haben Sie gefunden, wonach Sie gesucht haben? Hier bitte kommentieren!';
+$_lang['as_cmtSubmitText'] = 'Senden';
+$_lang['as_cmtResetText'] = 'Löschen';
+$_lang['as_cmtThksMessage'] = 'Danke für Ihren Kommentar !';
 ?>
