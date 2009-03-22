@@ -344,9 +344,9 @@ class Search {
   }
 
 /**
- * get the "ORDER BY" clause of the AS query
+ * get the "GROUP BY" clause of the AS query
  * 
- * @return "ORDER BY" clause  
+ * @return "GROUP BY" clause  
  */
   function getOrderBy(){
 
