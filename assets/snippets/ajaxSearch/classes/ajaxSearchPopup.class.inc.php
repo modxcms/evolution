@@ -343,7 +343,7 @@ class AjaxSearchPopup extends Search{
  */
   function validSearchString(& $msgErr){
 
-    global modx;
+    global $modx;
 
     $valid = false;
     $msgErr = '';
