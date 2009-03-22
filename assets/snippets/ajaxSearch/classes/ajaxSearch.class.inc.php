@@ -241,6 +241,10 @@ class AjaxSearch extends Search{
       } // end if not validSearch
     } // end if showResults
 
+
+    // init searchString as Phx
+    $modx->setPlaceholder("as.searchString", $this->searchString);
+
     if ($this->cfg['ajaxSearch']) {
       $this->varLayout['showIntro'] = 0;
       $this->varLayout['showResults'] = 1;
@@ -354,6 +358,8 @@ class AjaxSearch extends Search{
  * validSearchString : valid the input search term
  */
   function validSearchString(& $msgErr){
+  
+    global $modx;
 
     $valid = false;
     $msgErr = '';
@@ -382,6 +388,10 @@ class AjaxSearch extends Search{
     // Clean the searchString
     $valid = $this->stripSearchString($this->searchString,$this->cfg['stripInput'],$this->advSearch);
     if (!$valid) $msgErr = $this->_lang['as_resultsIntroFailure'];
+    
+    // init searchString as Phx [+as.searchString+]
+    if ($valid) $modx->setPlaceholder("as.searchString", $this->searchString);
+
     return $valid;
   }
 

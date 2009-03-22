@@ -45,7 +45,7 @@
     - Multiple search options including live search and non-AJAX option
     - Available link to view all results in a new page (FSF) when only a subset is retuned
     - Customize the number of results returned
-    - Uses the MooTools js library for AJAX and visual effects
+    - Uses the MooTools js or jQuery library for AJAX and visual effects
 
     non-ajaxSearch mode (FSF) :
     - Search results displayed in a new page
