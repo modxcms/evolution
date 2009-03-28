@@ -116,66 +116,29 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
 :: Description
 ----------------------------------------------------------------
 
-    The AjaxSearch snippet provide a robust content search feature for your MODx site.
+    The AjaxSearch snippet is an enhanced version of the original FlexSearchForm
+    snippet for MODx. This snippet adds AJAX functionality on top of the robust 
+    content searching.
     
     - search in title, description, content and TVs of documents
-    - search in comments (jot), images (maxigallery) and possibly in your own tables
+    - search in a subset of documents
     - highlighting of searchword in the results returned
    
     It could works in two modes:
     
-  ajaxSearch mode: 
-    - search results displayed in current page through AJAX request
-    - multiple search options including live search and non-AJAX option
-    - available link to view all results in a new page when only a subset is retuned
-    - customize the number of results returned
-    - uses the MooTools or jQuery js library for AJAX and visual effects
+    ajaxSearch mode : 
+    - Search results displayed in current page through AJAX request
+    - Multiple search options including live search and non-AJAX option
+    - Available link to view all results in a new page (FSF) when only a subset is retuned
+    - Customize the number of results returned
+    - Uses the MooTools or jQuery js library for AJAX and visual effects
 
-  non-ajaxSearch mode:
-    - search results are displayed in a new page
+    non-ajaxSearch mode (FSF) :
+    - Search results displayed in a new page
     - customize the paginating of results
-    - works without JS enabled
-    - designed to load the minimum required code
-
-
-----------------------------------------------------------------
-:: AjaxSearch principles
-----------------------------------------------------------------
-
-  non-ajaxSearch mode:
-    When the ajaxSearch mode is not set you need two AjaxSearch snippet calls.
-    The first one, to create the search input form: 
+    - works without JS enabled as FlexSearchForm
+    - designed to load only the required FSF code
     
-        [!AjaxSearch? &ajaxSearch=`0` &AS_landing= `25`!]  
-
-    and the second one to display the result on a landing page (here #25)
-    
-        [!AjaxSearch? &ajaxSearch=`0` &AS_showForm=`0`!]
-
-    
-    If you would like the results below the input form on the same page:
-    
-        [!AjaxSearch? &ajaxSearch=`0`]   
-
-    Keep in mind that except the &configuration parameter, most of the parameters
-    are usefull for the landing page, not to set up the search input form.
-
-
-  ajaxSearch mode:
-    With the ajaxSearch mode (default), the results are displayed in a window 
-    which overlap the document where the input search is displayed. So a single
-    snippet, the simplest, is required:
-    
-        [!AjaxSearch!]
-
-  If the number of search results is greater than the maximum number results allowed
-  by the ajaxMax parameter, and if the showMoreResults link is allowed then you need
-  to add a landing page to display the results. In this case we use the same parameters
-  than in the non-ajax mode for the landing page.
-  
-        [!AjaxSearch? &showMoreResults=`1` &AS_landing= `25`!] 
-
-
 ----------------------------------------------------------------
 :: General Parameters (all are optional parameters)
 ----------------------------------------------------------------
@@ -183,7 +146,6 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
 Keep in mind that all parameters are optional.
 If not used, the default value of each parameter will be applied
 The simplest snippet call is [!Ajaxsearch!] without any parameters.
-All the default values are listed in the configs/default.config.php file.
 
 ---- &config [config_name | "default"] (optional)
 
@@ -206,7 +168,7 @@ All the default values are listed in the configs/default.config.php file.
         
         For instance, in a AjaxSearch call if we have [!AjaxSearch? &AS_landing=`25`] and
         in the config file $__AS_landing = `12`; that means that by default the page #12
-        will be used as a landing page, except in the document where &AS_landing = `25` 
+        will be used as a landing page, except in the document where &AS_landing=`25` 
         is set in the snippet call.
 
 
@@ -248,7 +210,7 @@ All the default values are listed in the configs/default.config.php file.
 
          
 ---- &language [ language_name | manager_language ]    (optional)
-        with manager_language = $modx->config['manager_language'] (default)
+        with manager_language = $modx->config['manager_language'] by default
         See in the lang folder the languages available
 
 
@@ -269,15 +231,15 @@ All the default values are listed in the configs/default.config.php file.
         subSearch allow to use radio buttons to select sub-domains where to search
         Initialize the subSearch by defining the number of possible choices (radio-buttons)
         and choose the default checked selection
-        Default: 5 choices and the first one selected
+        By default 5 choices and the first one selected
 
 
 ---- &whereSearch : [comma separated list of key | content,tv] (optional)
         define in which tables the search occurs
-        Default: 'content,tv' - in documents and TVs
-        other predefined keys: jot, maxigallery
-        by default all the text fields are searchable but you could specify the fields:
-            whereSearch=`content:pagetitle,introtext,content|tv:tv_value|maxigallery:gal_title`
+        by default in documents and TVs
+        other predefined key: jot, maxigallery
+        by default all the text fields are searchable but you could specify the fields like this:
+        whereSearch=`content:pagetitle,introtext,content|tv:tv_value|maxigallery:gal_title`
         
         You could also add your own tables where to do a search by defining your own keys.
 
@@ -285,13 +247,13 @@ All the default values are listed in the configs/default.config.php file.
 ---- &withTvs    (optional)     
         Define which Tvs are used for the search in Tvs
         a comma separated list of TV names
-        Default: '' (empty list)- all TVs are used 
+        by default all TVs are used (empty list)
 
 
 ---- &order    (optional)
         Define in which order are sorted the displayed search results
         `comma separated list of fields`
-        Default: 'publishedon,pagetitle' (sorted by published date and then pagetitle)
+        by default: 'publishedon,pagetitle' (sorted by published date and then pagetitle)
 
         The fields should come from the tables used and defined from the whereSearch parameter
         You could add DESC to sort by decreasing order. By default increasing order (ASC) is used.
@@ -302,7 +264,7 @@ All the default values are listed in the configs/default.config.php file.
 ---- &rank     (optional)
         define the ranking of search results
         &rank=`comma separarted list of fields with optionaly user defined weight`
-        Default: pagetitle:100,extract
+        by default: pagetitle:100,extract
 
         The rank is a calculated value used to sort the results. This value is function of
         number of search term found and optionaly of a specified user weight.
@@ -331,11 +293,12 @@ All the default values are listed in the configs/default.config.php file.
 
 
 ---- &AS_showForm [1 | 0] (optional)
-        Show the search form with the results. Default: 1 (true)
+        Show the search form with the results. Default is 1 (true)
 
 
 ---- &AS_showResults [1 | 0] (optional)
         Show the results with the snippet. (For non-ajax search)
+
 
 
 ---- &extract [int : Comma separated list of displayable fields | '1:content,description,introtext,tv_value] (optional)
@@ -393,7 +356,7 @@ All the default values are listed in the configs/default.config.php file.
 
 ---- &extractEllips : define your ellipsis in extract    (optional)
         string used as ellipsis to start/end an extract
-        Default : " ... "
+        by default : " ... "
 
 
 ---- &extractSeparator : Define how separate extracts      (optional)
@@ -407,14 +370,14 @@ All the default values are listed in the configs/default.config.php file.
 
 ---- &formatDate [ string ]    (optional)
         The format of outputted dates. See http://www.php.net/manual/en/function.date.php
-        Default : "d/m/y : H:i:s"   e.g: 21/01/08 : 23:09:22
+        by default : "d/m/y : H:i:s" e.g: 21/01/08 : 23:09:22
 
 
 ---- &hideMenu [ 0 | 1 | 2 ]    (optional)
         Search in hidden documents from menu
         - 0 : search only in documents visible from menu
         - 1 : search only in documents hidden from menu
-        - 2 : search in hidden or visible documents from menu (default)
+        - 2 : search in hidden or visible documents from menu [default]
 
 
 ---- &hideLink [0 | 1] : Search in content of type reference   (optional)
@@ -430,8 +393,7 @@ All the default values are listed in the configs/default.config.php file.
 
 ---- &depth [int] (optional)
         Number of levels deep to go.
-        Any number greater than or equal to 1. 
-        Default: 10 - 10 levels
+        Any number greater than or equal to 1. 10 levels by default
 
 
 ---- &documents [comma-separated list of integers  MODx document IDs] (optional)
@@ -635,7 +597,7 @@ All the default values are listed in the configs/default.config.php file.
 
 
 ---- &breadcrumbs        (optional)
-        0 : disallow the breadcrumbs link (default)
+        0 : disallow the breadcrumbs link
         Name of the breadcrumbs function : allow the breadcrumbs link
         The function name could be followed by some parameter initialization
         e.g: &breadcrumbs=`Breadcrumbs,showHomeCrumb:0,showCrumbsAtHome:1`
@@ -668,12 +630,11 @@ All the default values are listed in the configs/default.config.php file.
 
 
 ---- &addJscript [1 | 0]     (optional)
-        Set this to 1 if you would like to include the mootool/jquery library
+        Set this to 1 if you would like to include the mootool/jquery librairy
         in the header of your pages automatically.
-        Default: 1 - library automaticaly included
 
 
----- &jScript ['jquery'|'mootools1.2'|'mootools'] (optional)
+---- &jScript ['jquery'|'mootools1.2'|'mootools'](optional)
         Set this to jquery if you would like to include the jquery library
         set this to mootools1.2 to include the mootools 1.2.1 library (limited to JS functions used by AS)
         Default: mootools
@@ -681,30 +642,23 @@ All the default values are listed in the configs/default.config.php file.
 
 ---- &jsMooTools
         Location of the mootools javascript library
-        Default: 'manager/media/script/mootools/mootools.js'
+        by default: 'manager/media/script/mootools/mootools.js'
 
 
 ---- &jquery
         Location of the jquery javascript library
-        Default: AS_SPATH . 'js/jquery.js'
+        by default: AS_SPATH . 'js/jquery.js'
 
 
 ---- &tplLayout chunk to style the ajaxSearch input form and layout
-        Default: @FILE:".AS_SPATH.'templates/layout.tpl.html'
+        @FILE:".AS_SPATH.'templates/layout.tpl.html' by default
 
 
 ---- &mbstring  (optional)
         Set to 0 if you can't load the php_mbstring extension
-        Default: 1
+        by default: 1
 
-        The php_mbstring is supposed to be loaded. 
-        If html charset page is "UTF-8", php_mbstring extension should be loaded for language which
-        need a multi-byte representation. 
-        If the extension is not available for the PHP server, some charset like ISO-8859-1 (latin1) could be used.
-        With UTF-8, a message "Php_mbstring extension is required" when &mbstring=`1` and the extension not loaded.
-        In this case load the extension or set the mbstring parameter to 0 if you couldn't load the extension
-    
-    
+
 ---- &asLog - ajaxSearch log [ level [: comment [: purge]]]
         level:
           0 : disallow the ajaxSearch log (default)
@@ -729,7 +683,7 @@ All the default values are listed in the configs/default.config.php file.
 
 ---- &tplComment
         chunk to style comment form
-        Default: @FILE:".AS_SPATH.'templates/comment.tpl.html'
+        by default: @FILE:".AS_SPATH.'templates/comment.tpl.html'
 
     The comment form is protected from spamming by the use of a hidden input field.
     (idea suggested from SPForm by Bob Ray ) This field should be hidden by the 
@@ -817,25 +771,23 @@ All the default values are listed in the configs/default.config.php file.
 
 
 ---- &opacity [float value between 0. and 1.] (optional)
-        Opacity of the ajaxSearch_output div where are returned the ajax results. 
-        Default: 1.
+        Opacity of the ajaxSearch_output div where are returned the ajax results. Default is 1.
         Float value between 0. (transparent) and 1. (opaque)        
 
 
 ---- &addJscript [1 | 0] (optional)
         If you want the mootools library added to the header of your pages automatically set this to 1.  
-        Set to 0 if you do not want them inculded automatically. 
-        Default: 1 - automatically added
+        Set to 0 if you do not want them inculded automatically. Default is 1.
 
 
 ---- &tplAjaxResults
         chunk to style the ajax output results outer
-        Default: @FILE:".AS_SPATH.'templates/ajaxResults.tpl.html'
+        by default: @FILE:".AS_SPATH.'templates/ajaxResults.tpl.html'
 
 
 ---- &tplAjaxResult
         chunk to style each output result
-        Default: @FILE:".AS_SPATH.'templates/ajaxResult.tpl.html'
+        by default: @FILE:".AS_SPATH.'templates/ajaxResult.tpl.html'
         
         
 ----------------------------------------------------------------
@@ -853,7 +805,7 @@ All the default values are listed in the configs/default.config.php file.
 ---- &pageLinkSeparator [ string ] (optional)
         separator of the paging's links
         any string you want, between your page link numbers
-        Default: " | "
+        by default: " | "
 
 
 ---- &showPagingAlways [1 | 0] (optional)
@@ -863,21 +815,21 @@ All the default values are listed in the configs/default.config.php file.
         Two use cases: You are using non-ajax search or when you are using ajax search but 
         you have set up showMoreResults to `1` and you have defined moreResultsPage, 
         then it may happen that ajax search result have only one page and pagination isn't showed
-	      Default: 0
+	      by default : 0
 
 
 ---- &tplResults
         chunk to style the non-ajax output results outer
-        Default: @FILE:".AS_SPATH.'templates/results.tpl.html'
+        by default: @FILE:".AS_SPATH.'templates/results.tpl.html'
 
 
 ---- &tplResult
         chunk to style each output result
-        Default: @FILE:".AS_SPATH.'templates/result.tpl.html'
+        by default: @FILE:".AS_SPATH.'templates/result.tpl.html'
 
 
 ---- &tplPaging
-        Chunk to style the paging links
+        chunk to style the paging links
         @FILE:".AS_SPATH.'templates/paging.tpl.html'
 
 
@@ -932,35 +884,35 @@ All the default values are listed in the configs/default.config.php file.
 
     &tplLayout : chunk to style the ajaxSearch input form and layout
           Global ajaxSearch layout (input form, intro message, results)
-          Default: /templates/layout.tpl.html
+          by default : /templates/layout.tpl.html
 
   Non ajax mode & more results page :
 
     &tplResults : chunk to style the output results outer
           Results outer layout (number of results, list of results, paging)
-          Default: /templates/results.tpl.html
+          by default : /templates/results.tpl.html
 
     &tplResult : chunk to style each output result
           Result template (title link, description, extract, breadcrumbs link)
-          Default: /templates/result.tpl.html
+          by default : /templates/result.tpl.html
   
     &tplPaging : chunk to style the paging links
           Paging link template (pages, current page)
-          Default: /templates/paging.tpl.html
+          by default : /templates/paging.tpl.html
 
     &tplComment
         chunk to style comment form
-        Default: @FILE:".AS_SPATH.'templates/comment.tpl.html'
+        by default: @FILE:".AS_SPATH.'templates/comment.tpl.html'
 
   Ajax mode :
 
     &tplAjaxResults : chunk to style the ajax output results outer
           Results outer layout (number of results, list of results, more results link)
-          Default: /templates/ajaxResults.tpl.html
+          by default : /templates/ajaxResults.tpl.html
   
     &tplAjaxResult : chunk to style each ajax output result
           Result template (title link, description, extract, breadcrumbs link)
-          Default: /templates/ajaxResult.tpl.html
+          by default : /templates/ajaxResult.tpl.html
 
 
 searchString available as placeholder
@@ -1034,6 +986,44 @@ With &whereSearch="content,tv,maxigallery,jot" we add :
   displayTV is a provided ajaxSearch function which render the Modx TV output. Don't change the name!
   
   But tvPhx could also be a user function and runs with your custom tables.
+
+
+----------------------------------------------------------------
+:: Ajax Mode Example Calls              
+----------------------------------------------------------------
+[!AjaxSearch!]
+    A basic (Ajax) default call that renders a search form with the default images and parameters
+
+[!AjaxSearch? &showMoreResults=`1` &moreResultsPage=`25`!]
+    Allows a link to a full-page search to go to another page.
+    in this example, the document #25 should contain a non-ajaxSearch snippet call like :  
+    [!AjaxSearch? &ajaxSearch=`0` &AS_showForm=`0`!] to display the results without the 
+    search form again
+    
+[!AjaxSearch? &ajaxMax=`10` &extract=`0`!]
+    Overrides the number of maximum results returned and removes search term highlighting.
+    
+[!AjaxSearch? &documents=`2,3,8,16`!]
+    A call that renders a search form with the default images and parameters
+    search terms are searched among the documents `2,3,8,16`
+
+[!AjaxSearch? &parents=`5,7` &depth=`2`!]
+    A call that renders a search form with the default images and parameters
+    search terms are searched on 2 levels among the document childs of documents 5, 7
+
+----------------------------------------------------------------
+:: Non-Ajax Mode Example Calls              
+----------------------------------------------------------------   
+[!AjaxSearch? &ajaxSearch=`0`!]
+    A basic non-Ajax default call that renders a search form with the default images
+    and non-Ajax parameters
+
+[!AjaxSearch? &ajaxSearch=`0` &AS_landing=`25`!]
+    In this example, search results will be displayed on document #25 
+    This document should contain a non-ajaxSearch snippet call like :  
+    [!AjaxSearch? &ajaxSearch=`0` &AS_showForm=`0` &grabMax=`10` &extract=`0`!] 
+    to display the results without the search form again
+    And overrides the number of maximum results returned per page and removes search term highlighting.    
 
 
 -----------------------------------------------------------------
@@ -1110,45 +1100,6 @@ With &whereSearch="content,tv,maxigallery,jot" we add :
 
 
 ----------------------------------------------------------------
-:: Ajax Mode Example Calls              
-----------------------------------------------------------------
-[!AjaxSearch!]
-    A basic (Ajax) default call that renders a search form with the default images and parameters
-
-[!AjaxSearch? &showMoreResults=`1` &moreResultsPage=`25`!]
-    Allows a link to a full-page search to go to a results page.
-    in this example, the document #25 should contain a non-ajaxSearch snippet call like :  
-    [!AjaxSearch? &ajaxSearch=`0` &AS_showForm=`0`!] to display the results without the 
-    search input form again
-    
-[!AjaxSearch? &ajaxMax=`10` &extract=`0`!]
-    Overrides the number of maximum results returned and removes the display of extracts.
-    
-[!AjaxSearch? &documents=`2,3,8,16`!]
-    A call that renders a search form with the default images and parameters
-    search terms are searched among the documents `2,3,8,16`
-
-[!AjaxSearch? &parents=`5,7` &depth=`2`!]
-    A call that renders a search form with the default images and parameters
-    search terms are searched on 2 levels among the document childs of documents 5, 7
-
-----------------------------------------------------------------
-:: Non-Ajax Mode Example Calls              
-----------------------------------------------------------------   
-[!AjaxSearch? &ajaxSearch=`0`!]
-    A basic non-Ajax default call that renders a search form with the default images
-    and non-Ajax parameters
-
-[!AjaxSearch? &ajaxSearch=`0` &AS_landing= `25`!]
-    In this example, search results will be displayed on document #25 
-    This document should contain a non-ajaxSearch snippet call like :  
-    [!AjaxSearch? &ajaxSearch=`0` &AS_showForm=`0` &grabMax=`5` &extract=`0`!] 
-    to display the results without the search form again
-    And overrides the number of maximum results returned per page and removes
-    the display of extracts 
-    
-
-----------------------------------------------------------------
 :: How-to change the ajaxSearch folder location
 ----------------------------------------------------------------
 
@@ -1217,11 +1168,3 @@ Install it as the search highlight plugin.
 
 4. Bugs & features : http://svn.modxcms.com/jira/browse/AJAXSEARCH
    Don't hesitate to signup for an account to post an issue or a new feature
-
-
-----------------------------------------------------------------
-:: Help me to improve this documentation
-----------------------------------------------------------------
-Thanks to help me to improve this document. 
-Don't hesitate to post your suggestion (misprints, better english wording) to 
-improve this documentation. 
