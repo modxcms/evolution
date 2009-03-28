@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /*
-spanish.inc.php - for AjaxSearch 1.8
+spanish.inc.php - for AjaxSearch 1.8.2
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
 Modified: 21/07/08 Translated to spanish by Luciano A. Ferrer & Coroico
@@ -21,4 +21,9 @@ $_lang['oneword'] = 'Una palabra';
 $_lang['allwords'] = 'Todas las palabras';
 $_lang['exactphrase'] = 'Frasé exacta';
 $_lang['nowords'] = 'ninguna palabra';
+$_lang['as_cmtHiddenFieldIntro'] = 'Este campo debe quedarse vacio. <br />No entrar ningún texto.';
+$_lang['as_cmtIntroMessage'] = '¿Encontró lo que estaba buscando?  ¡Deje un comentario aquí!';
+$_lang['as_cmtSubmitText'] = 'enviar';
+$_lang['as_cmtResetText'] = 'borrar';
+$_lang['as_cmtThksMessage'] = 'Gracias por su comentario';
 ?>

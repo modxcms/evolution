@@ -186,6 +186,9 @@ Previous version : 1.8.1 delivered the 13th October 2008
 
 ================================ ISSUES CORRECTED ==============================
 
+==== AJAXSEARCH-6 : Sort with order and ranking parameters. Results with a wrong order
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-6
+
 ==== AJAXSEARCH-12 : Take into account of the &advSearch parameter when the &minChars is checked
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-12
 
@@ -221,3 +224,6 @@ http://svn.modxcms.com/jira/browse/AJAXSEARCH-26
 
 ==== AJAXSEARCH-27 : AjaxSearch and Document Group permissions
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-27
+
+==== AJAXSEARCH-29 : When using french UTF8 or english UTF8, I get a blank line at the top of the search
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-29

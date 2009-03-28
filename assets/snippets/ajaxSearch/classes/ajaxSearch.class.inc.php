@@ -161,21 +161,20 @@ class AjaxSearch extends Search{
           $this->initExtractVariables(); // initialize extractNb and extractFields
 
           // output results in searchResults array
-          $useLimit = ($this->cfg['grabMax'] > 0)? $this->offset + $this->cfg['grabMax'] : $nbrs;
-          for ($y = $this->offset; ($y < $useLimit) && ($y < $nbrs); $y++) {
-            $moveToRow = mysql_data_seek($rs,$y);
-            $row = $modx->db->getRow($rs);
+          while ($row = mysql_fetch_assoc($rs)) {
             $result = $this->addExtractToRow($row);
-            $this->searchResults[] = $result; 
-            if ($this->dbgRes) $this->asDebug->dbgLog($result,"AjaxSearch - Output results before ranking");
+            $this->searchResults[] = $result;
+            if ($this->dbgRes) $this->asDebug->dbgLog($result,"AjaxSearch - Output results before ranking");   // search results
           }
 
           // sort search results by rank if needed
           $this->sortResultsByRank($this->searchString,$this->advSearch); 
+          // limit the search results to the current page
+          $length = ($this->cfg['grabMax'] > 0)? $this->cfg['grabMax'] : $nbrs;
+          $this->searchResults = array_slice($this->searchResults,$this->offset,$length);
 
           $nbResults = count($this->searchResults);
           for($i=0;$i<$nbResults;$i++){
-
             $this->chkResult = new asChunkie($this->tplRes);
             $this->varResult = array();
 
@@ -215,7 +214,7 @@ class AjaxSearch extends Search{
         
         $this->chkResults->AddVar("as", $this->varResults);
         $this->varLayout['showResults'] = 1;
-        $this->varLayout['results'] = $this->chkResults->Render()."\n";
+        $this->varLayout['results'] = $this->chkResults->Render()."\n"; 
         unset($this->varResults);
         unset($this->chkResults);
       } // end if validSearch

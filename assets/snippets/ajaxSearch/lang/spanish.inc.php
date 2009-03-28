@@ -21,5 +21,8 @@ $_lang['oneword'] = 'Una palabra';
 $_lang['allwords'] = 'Todas las palabras';
 $_lang['exactphrase'] = 'Frasé exacta';
 $_lang['nowords'] = 'ninguna palabra';
-
+$_lang['as_cmtIntroMessage'] = '¿Encontró lo que estaba buscando?  ¡Deje un comentario aquí!';
+$_lang['as_cmtSubmitText'] = 'enviar';
+$_lang['as_cmtResetText'] = 'borrar';
+$_lang['as_cmtThksMessage'] = 'Gracias por su comentario';
 ?>
