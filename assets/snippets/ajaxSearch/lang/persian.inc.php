@@ -1,12 +1,10 @@
-﻿<?php
-
+<?php
 /*
  * Name:          persian.inc.php - for AjaxSearch 1.8.2
  * Path:          assets\snippets\AjaxSearch\lang
  * Created        By: KyleJ (kjaebker@muddydogpaws.com) on: 01/22/07 | updated on 6th MAR 2009
  * Description:   Language strings for AjaxSearch - Translation By: Mohsen (MotSmart ~ www.modxcms.ir)
 */
-
 $_lang['as_resultsIntroFailure'] = 'جستجو حاصلی در بر نداشت. لطفا جستجوی کلی تری برای کسب نتایج بیشتر بکار ببرید.';
 $_lang['as_searchButtonText'] = 'بگرد';
 $_lang['as_boxText'] = 'جستجو در اینجا...';

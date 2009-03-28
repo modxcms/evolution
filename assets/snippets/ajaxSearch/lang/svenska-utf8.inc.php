@@ -1,5 +1,4 @@
-﻿<?php
-
+<?php
 /*
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
@@ -9,9 +8,7 @@ svenska-utf8.inc.php - Swedish language file for AjaxSearch 1.8
 Translation: Andreas Wettainen [mrhaw]
 Date: 2009-03-04
 
-
 */
-
 $_lang['as_resultsIntroFailure'] = 'Din sökning gav inga träffar. Pröva att använda mer allmänna sökord.';
 $_lang['as_searchButtonText'] = 'Sök!';
 $_lang['as_boxText'] = 'Sök här...';

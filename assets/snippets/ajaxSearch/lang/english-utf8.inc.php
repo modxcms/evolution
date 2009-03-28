@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 english.inc.php - for AjaxSearch 1.8
 Created by: KyleJ (kjaebker@muddydogpaws.com)
