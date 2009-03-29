@@ -6,7 +6,7 @@
  *
  *    Version: 1.8.2  - Coroico (coroico@wangba.fr) 
  *    
- *    01/03/2009  
+ *    29/03/2009  
  *     
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -14,7 +14,7 @@
 */
 
 // Default number admitted in case of a wrong &minChars parameter
-define('MIN_CHARS',3);     // minimum number of characters
+define('MIN_CHARS',2);     // minimum number of characters
 define('MAX_CHARS',30);    // maximum number of characters
 define('MIN_WORDS',1);     // minimum number of words
 define('MAX_WORDS',10);    // maximum number of words
@@ -1331,7 +1331,7 @@ class Search {
     // exclude the unwanted IDs with the filter parameter
     if ($this->cfg['filter']){
       // interpret possible searchString metacharacter before to use
-      $filter = $this->interpretFilterMetaCharacters();
+      $filter = $this->interpretFilterMetaCharacters($this->searchString,$this->advSearch);
       // build the filter list
       $parsedFilters = $this->parseFilters($filter);
 
@@ -1357,11 +1357,32 @@ class Search {
 
 /**
  *  interpretFilterMetaCharacters : interpret the possible metacharacter of the filter order
+ *  
+ *  Take into account of the advSearch parameter
+ *  if advSearch = 'oneword','nowords','allwords' then # is replaced by as many filters as searchterms
+ *  e.g: &filter=`pagetitle,#,8` with searchString='school child' and advSearch='oneword'
+ *  is equivalent to `pagetitle,school,8|pagetitle,child,8`    
  */
-  function interpretFilterMetaCharacters() {
-    $filter = $this->cfg['filter'];
-    
-    $filter = preg_replace('/#/i',$this->searchString,$filter);
+  function interpretFilterMetaCharacters($searchString,$advSearch) {
+    if ($searchString == 'exactphrase') $searchString_array[] = $searchString;
+    else $searchString_array = explode(' ',$searchString);
+    $nbs = count($searchString_array);
+
+    $filter_array = explode('|',$this->cfg['filter']);
+    $nbf = count($filter_array);
+    for($i=0;$i<$nbf;$i++){
+      if (preg_match('/#/',$filter_array[$i])){
+        $terms_array = explode(',',$filter_array[$i]);
+        if ($searchString == 'exactphrase') $filter_array[$i] = preg_replace('/#/i',$searchString,$filter_array[$i]);
+        else {
+          $filter_array[$i] = preg_replace('/#/i',$searchString_array[0],$filter_array[$i]);
+          for($j=1;$j<$nbs;$j++){
+            $filter_array[] = $terms_array[0] . ',' . $searchString_array[$j] . ',' . $terms_array[2];
+          }
+        }
+      }
+    }
+    $filter = implode('|',$filter_array);
     return $filter;
   }
 

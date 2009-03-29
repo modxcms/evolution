@@ -6,7 +6,7 @@
  *
  *    Version: 1.8.2  - Coroico (coroico@wangba.fr) 
  *    
- *    01/03/2009  
+ *    29/03/2009  
  *      
 */
 

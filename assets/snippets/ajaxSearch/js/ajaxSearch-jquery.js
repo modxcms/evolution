@@ -1,7 +1,7 @@
 //ajaxSearch_jquery.js
 //Version: 1.8.2 - refactored by coroico
 
-//01/03/09 - jquery version of ajaxSearch.js (jQuery 1.2.6)
+//29/03/09 - jquery version of ajaxSearch.js (jQuery 1.2.6)
 
 //set the loading image to the correct location for you
 //set the close image to the correct location for you

@@ -1,6 +1,6 @@
 //ajaxSearch-mootools1.2.js
 //Version: 1.8.2 - refactored by coroico
-//01/03/2009 - mootools 1.2 version of ajaxSearch.js
+//29/03/2009 - mootools 1.2 version of ajaxSearch.js
 
 //set the loading and the close image to the correct location for you
 //set the folder location to the correct location of ajaxSearch.php

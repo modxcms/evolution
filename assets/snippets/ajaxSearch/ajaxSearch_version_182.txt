@@ -1,9 +1,10 @@
 
-                           AjaxSearch - version 1.8.2
+                              AjaxSearch - version 1.8.2
                            
                            Coroico - http://www.modx.wangba.fr
                            
-                 
+                                29th March 2009
+
 Previous version : 1.8.1 delivered the 13th October 2008
 
 ============================== NEW OPTIONS / CHANGES ===========================
@@ -128,7 +129,23 @@ Previous version : 1.8.1 delivered the 13th October 2008
     - filter view with commented (successfull, unsuccessfull, all) searches
 
     See the Log search requests demo and the AjaxSearch 1.8.2 logs on the demo site
+
+
+==== SearchString metacharacter available with &filter parameter - AJAXSEARCH-4
+
+    The metacharacter '#' is replaced by the search string provided by the web user
+    when used with the filter parameter. The advSearch parameter is also taken into account.
     
+    e.g: &filter=`pagetitle,#,8` with searchString=`school child` and advSearch='oneword' 
+    is equivalent to &filter=`pagetitle,school,8|pagetitle,child,8`
+    
+    'oneword','allwords','nowords' generate as many clause as searchterms.
+    'exactphrase' generate only one clause with the exactphrase as criterion.
+    
+    Multiple clauses have an "OR" relationship. I.e. a document will be excluded 
+    if it meets the criterion of any one clause (clause-1 OR clause-2 OR clause-3, etc.).
+    (see http://ditto.modxcms.com/tutorials/basic_filtering.html)
+
 
 ==== Limit the amount of keywords that will be queried by a search - AJAXSEARCH-9
 

@@ -8,7 +8,7 @@ AjaxSearch Readme version 1.8.2
         Ajax-driven & Flexible Search form
 
   Version:
-        1.8.2
+        1.8.2  - 29/03/2009
 
   Created by:
       Coroico - (coroico@wangba.fr)

@@ -1,6 +1,6 @@
 //ajaxSearch.js
 //Version: 1.8.2 - refactored by coroico
-//01/03/2009
+//29/03/2009
 //Created by: KyleJ (kjaebker@muddydogpaws.com)
 //Created on: 03/14/2006
 //Description: This code is used to setup the ajax search request

@@ -8,7 +8,7 @@
  *
  * Description: This code is called from the ajax request. It returns the search results.
  *
- * 01/03/2009 - mootools1.2, jquery, maxWords, mbstring parameters, search logs
+ * 29/03/2009 - mootools1.2, jquery, maxWords, mbstring parameters, search logs
  * 02/10/2008 - whereSearch, withTvs, new sql query, debug, subSearch
  * 24/07/2008 - Added rank, order & filter, breadcrumbs, tvPhx, cleardefault parameters    
  * O2/07/2008 - New extract algorithm, search in tv, jot and maxygallery

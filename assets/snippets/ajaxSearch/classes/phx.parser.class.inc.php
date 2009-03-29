@@ -33,7 +33,7 @@ class PHxParser {
     $this->curPass = 0;
     $this->maxPasses = ($maxpass!='') ? $maxpass : 50;
     $this->swapSnippetCache = array();
-    $modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");
+    $modx->setPlaceholder("phx", "&_PHX_INTERNAL_&");    
   }
 
   // Plugin event hook for MODx

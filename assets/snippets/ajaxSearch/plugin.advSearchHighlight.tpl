@@ -3,7 +3,7 @@
   Plugin: advSearch_Highlight v1.4
   ------------------------------------------------------------------------
   Changes:
-  12/03/09 - Removed urldecode calls;
+  29/03/09 - Removed urldecode calls;
            - Added check for magic quotes - if set, remove slashes
            - Highlights terms searched for when target is a HTML entity
   18/07/08 - advSearch parameter and pcre modifier added

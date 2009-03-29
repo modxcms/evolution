@@ -8,7 +8,7 @@
   Version:
         1.8.2
 
-  Date: 01/03/2009
+  Date: 29/03/2009
   
   Created by:
       Coroico (coroico@wangba.fr)
@@ -43,11 +43,11 @@
     ajaxSearch mode : 
     - Search results displayed in current page through AJAX request
     - Multiple search options including live search and non-AJAX option
-    - Available link to view all results in a new page (FSF) when only a subset is retuned
+    - Available link to view all results in a new page when only a subset is retuned
     - Customize the number of results returned
-    - Uses the MooTools js or jQuery library for AJAX and visual effects
+    - Uses the MooTools js library for AJAX and visual effects
 
-    non-ajaxSearch mode (FSF) :
+    non-ajaxSearch mode :
     - Search results displayed in a new page
     - customize the paginating of results
     - works without JS enabled as FlexSearchForm
