@@ -5,7 +5,9 @@
  *    The ajaxSearchPopup class contains all variables and functions 
  *    used to display search results in a popup window througth an ajax request
  *
- *    Version: 1.8.2  - Coroico (coroico@wangba.fr) 
+ *    Version: 1.8.2a  - Coroico (coroico@wangba.fr) 
+ *
+ *    06/04/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -46,14 +48,6 @@ class AjaxSearchPopup extends Search{
   var $cfg = array();   // final configuration parameters
   var $asCall;          // AjaxSearch snippet call
 
-  // conversion code name between html page character encoding and Mysql character encoding
-  // Some others conversions should be added if needed
-  var $pageCharset = array(
-    'utf8' => 'UTF-8',
-    'latin1' => 'ISO-8859-1',
-    'latin2' => 'ISO-8859-2'
-    );
-
   var $language;        // language name
   var $_lang;           // language labels
 
@@ -62,12 +56,6 @@ class AjaxSearchPopup extends Search{
 
   var $subSearch;       // search in a subdomain
   var $subSearchName;   // sub search function name
-
-  var $pgCharset;       // page charset
-  var $dbCharset;       // database charset
-  var $needsConvert;    // charset conversion boolean
-  var $pcreModifier;    // PCRE modifier
-  var $isPhp5;          // Php version >= 5.0.0
 
   var $withContent;     // content as main table 
   var $listIDs;         // list of Id allowed
@@ -81,7 +69,6 @@ class AjaxSearchPopup extends Search{
   // Search context  
   var $main = array();       // main content table
   var $joined = array();     // joined tables
-
 
   // chunkie variables
   var $chkResults;            
@@ -128,9 +115,8 @@ class AjaxSearchPopup extends Search{
 
     $this->loadLang();    // load language labels
 
-    // set page and database charset
-    if (!$this->setCharset($msg)) return $msg;
-
+    if (!$this->setCharset($msg)) return $msg;  // set page and database charset
+    
     if (!$this->checkAjaxSearchParams($msg)) return $msg;  // Check user parameters
     
     $validSearch = $this->validSearchString($msg); // Initialize search string & advanced search mode
@@ -264,7 +250,8 @@ class AjaxSearchPopup extends Search{
     $valid = false;
     $msgErr = '';
     $this->setDatabaseCharset();  // initialize the database charset
-
+    $this->setPageCharset(); // initialize the page charset
+    
     // Ajax window charset = UTF-8 and should to be coherent with database
     if (isset($this->dbCharset) && isset($this->pageCharset[$this->dbCharset])) {
       // if the charset of database is different of utf8 a mbstring conversion will be required
@@ -281,9 +268,10 @@ class AjaxSearchPopup extends Search{
     } elseif (!strlen($this->dbCharset)){
       $msgErr = "AjaxSearch: database_connection_charset is null. Check your config file";
     } else {
-      // if you get this message, simply update the $pageCharset array above with the appropriate mapping between Mysql Charset and Html charset
-      // eg: 'latin2' => 'ISO-8859-2' and send me a email to update the source code
-      $msgErr = "AjaxSearch: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the ajaxSearch.php file";
+      // if you get this message, simply update the $pageCharset array in search.class.inc.php file 
+      // with the appropriate mapping between Mysql Charset and Html charset
+      // eg: 'latin2' => 'ISO-8859-2'
+      $msgErr = "AjaxSearch: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the search.class.inc.php file";
     }
     return $valid;
   }

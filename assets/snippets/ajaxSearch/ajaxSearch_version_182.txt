@@ -1,11 +1,14 @@
 
-                              AjaxSearch - version 1.8.2
+                              AjaxSearch - version 1.8.2a
                            
                            Coroico - http://www.modx.wangba.fr
                            
-                                29th March 2009
+                                06th April 2009
 
 Previous version : 1.8.1 delivered the 13th October 2008
+
+Issue AjaxSearch-30 solved with the release 1.8.2a
+This issue occurs with release 1.8.2 when Php<5.2.3
 
 ============================== NEW OPTIONS / CHANGES ===========================
 
@@ -244,3 +247,6 @@ http://svn.modxcms.com/jira/browse/AJAXSEARCH-27
 
 ==== AJAXSEARCH-29 : When using french UTF8 or english UTF8, I get a blank line at the top of the search
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-29
+
+==== AJAXSEARCH-30 : htmlspecialchars() expects at most 3 parameters, 4 given
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-30

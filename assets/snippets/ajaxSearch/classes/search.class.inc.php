@@ -4,10 +4,10 @@
  * Purpose:
  *    The Search class contains all functions common to AjaxSearch functionalities
  *
- *    Version: 1.8.2  - Coroico (coroico@wangba.fr) 
- *    
- *    29/03/2009  
- *     
+ *    Version: 1.8.2a  - Coroico (coroico@wangba.fr) 
+ *
+ *    06/04/2009  
+ *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
  *    Ryan Thrash (rthrash - ryan@vertexworks.com) 
@@ -26,6 +26,19 @@ define('PURGE',200); // maximum number of logs before a purge - 0 = illimited
 
 class Search {
 
+  // Conversion code name between html page character encoding and Mysql character encoding
+  // Some others conversions should be added if needed. Otherwise Page charset = Database charset
+  var $pageCharset = array(
+    'utf8' => 'UTF-8',
+    'latin1' => 'ISO-8859-1',
+    'latin2' => 'ISO-8859-2'
+  );
+
+  var $pgCharset;       // page charset
+  var $dbCharset;       // database charset
+  var $needsConvert;    // charset conversion boolean
+  var $pcreModifier;    // PCRE modifier
+
   // debug
   var $dbg;       // debug flag
   var $dbgTpl;    // log templates
@@ -37,10 +50,10 @@ class Search {
   var $logcmt;    // log comment flag
   var $asLog;     // log instance
   var $logid;     // search log id
-  
+
   // search statement
   var $asSelect;
-  
+
 /**
  * Load the configuration file 
  */
@@ -84,7 +97,7 @@ class Search {
   }
 
 /**
- *  setDatabaseCharset : initialize the dbCharset, isPhp5 and the appropriate 
+ *  setDatabaseCharset : initialize the dbCharset and the appropriate 
  *                       PCRE modifiers depending of the charset of database
  */
   function setDatabaseCharset(){
@@ -92,16 +105,15 @@ class Search {
 
     $this->dbCharset = $database_connection_charset; // database charset
     $this->pcreModifier = ($database_connection_charset == "utf8") ? 'iu' : 'i';
-    $this->setIsPhp5(); // set the boolen isPhp5
     return;
   }
 
 /**
- *  setIsPhp5 : set the boolean isPhp5
- */ 
-  function setIsPhp5(){
-    // Initialize isPhp5 boolean
-    $this->isPhp5 = (version_compare(phpversion(), "5.0.0", ">=")) ? true : false;
+ *  setPageCharset : initialize the pageCharset, depending of the charset of database
+ */
+  function setPageCharset(){
+
+    $this ->pgCharset = array_key_exists($this->dbCharset,$this->pageCharset) ? $this->pageCharset[$this->dbCharset] : $this->dbCharset;
     return;
   }
 
@@ -142,8 +154,11 @@ class Search {
       $searchString = stripHtml($searchString);
     
       // and finally prevent JS XSS
-      $searchString = htmlspecialchars($searchString, ENT_COMPAT, $pgCharset, False);
-
+      // The double_encode  parameter was added with version 5.2.3
+      if (version_compare(PHP_VERSION, '5.2.3', '>='))
+        $searchString = htmlspecialchars($searchString, ENT_COMPAT, $pgCharset, False);
+      else 
+        $searchString = $this->php_compat_htmlspecialchars($searchString, ENT_COMPAT, $pgCharset, False);
     }  
     return $searchString;
   }
@@ -161,7 +176,7 @@ class Search {
     global $modx;
     $records = NULL;
     $searchString = mysql_real_escape_string($this->searchString);
-    
+
     $this->asSelect = '';
     if ($this->initSearchContext()) {
       $fields = $this->getFields();
@@ -308,7 +323,7 @@ class Search {
 
     if (isset($this->main['searchable'])) 
       foreach($this->main['searchable'] as $searchable) $hvg[] = '(' . $this->main['tb_alias'] . '.' . $searchable . $like .')';
-    
+
     // having clause from joined tables
     if ($advSearch != 'nowords') {
       if (isset($this->joined)) 
@@ -373,7 +388,7 @@ class Search {
     $from = array();
     $where = array();
     $whl = array();
-    
+
     // field id of the joined table 
     $fields[] = $joined['tb_alias'] . '.' . $joined['id'];
 
@@ -416,7 +431,7 @@ class Search {
     // where clause for search terms restriction
     $whl[] = '(' . $this->getSearchTermsWhere($joined,$searchString,$advSearch). ')';
     $whereClause = '(' . implode(' AND ',$whl). ')';
-  
+
     $subSelect = 'SELECT DISTINCT ' . $fieldsClause . ' FROM ' . $fromClause . ' WHERE ' . $whereClause;
     return $subSelect;
   }
@@ -488,7 +503,7 @@ class Search {
     else if ($advSearch == 'exactphrase') return '';
     else return $whereStringOper['or'];
   }
-  
+
 /**
  * get the "WHERE" clause related to search terms for joined tables
  * 
@@ -1142,7 +1157,7 @@ class Search {
       if (($this->dbCharset == 'utf8') && ($this->cfg['mbstring'])) {
         // convert of all Html entities before extraction
         // require version 5.0 and upper : http://bugs.php.net/bug.php?id=25670
-        if ($this->isPhp5) $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+        if (version_compare(PHP_VERSION, '5.0.0', '>=')) $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
         $mbStrpos = 'mb_strpos';
         $mbStrlen = 'mb_strlen';
         $mbStrtolower = 'mb_strtolower';
@@ -1676,7 +1691,7 @@ class Search {
       $f = $joined['tb_alias'] . '_' . $id;
       $this->setPhxField($f,$row,'string');
     }
-    
+
     // set Phx for displayed fields from joined tables.
     if (isset($this->joined)) foreach($this->joined as $joined){
       foreach($joined['displayed'] as $field) {
@@ -1684,7 +1699,7 @@ class Search {
         $this->setPhxField($f,$row,'string');
       }
     }
-    
+
     // if rank requested publish the rank value
     if ($this->cfg['rank']) $this->setPhxField('rank',$row,'int');
     
@@ -1869,6 +1884,62 @@ class Search {
     $output = fread($fh, filesize($configFile));
     fclose($fh);
     return "\n" . $output;
+  }
+
+/**
+* Replace function htmlspecialchars()
+ *
+ * @category    PHP
+ * @package     PHP_Compat
+ * @license     LGPL - http://www.gnu.org/licenses/lgpl.html
+ * @copyright   2004-2007 Aidan Lister <aidan@php.net>, Arpad Ray <arpad@php.net>
+ * @link        http://php.net/function.htmlspecialchars
+ * @author      Aidan Lister <aidan@php.net>
+ * @version     $Revision: 1.2 $
+ * @since       PHP 5.1.0
+ * @require     PHP 4.0.0 (user_error)
+ */
+  function php_compat_htmlspecialchars($string, $quote_style = null, $charset = null, $double_encode = true){
+    // Sanity check
+    if (!is_scalar($string)) {
+      user_error('htmlspecialchars() expects parameter 1 to be string, ' .
+              gettype($string) . ' given', E_USER_WARNING);
+      return;
+    }
+
+    if (!is_int($quote_style) && $quote_style !== null) {
+      user_error('htmlspecialchars() expects parameter 2 to be integer, ' .
+              gettype($quote_style) . ' given', E_USER_WARNING);
+        return;
+    }
+
+    if (!is_scalar($charset)) {
+        user_error('htmlspecialchars() expects parameter 3 to be string, ' .
+            gettype($charset) . ' given', E_USER_WARNING);
+        return;
+    }
+
+    if (!is_bool($double_encode)) {
+        user_error('htmlspecialchars() expects parameter 4 to be bool, ' .
+            gettype($double_encode) . ' given', E_USER_WARNING);
+        return;
+    }
+
+    if ($double_encode === true) {
+      $string = str_replace('&amp;', '&', $string);
+    }
+
+    $tf = array('&' => '&amp;','<' => '&lt;','>' => '&gt;');
+
+    if ($quote_style & ENT_NOQUOTES) {
+      $tf['"'] = '&quot';
+    }
+
+    if ($quote_style & ENT_QUOTES) {
+      $tf["'"] = '&#039;';
+    }
+
+    return str_replace(array_keys($tf), array_values($tf), $string);
   }
 }
 //

@@ -5,8 +5,10 @@
  *    The AjaxSearch class contains all variables and functions 
  *    used to display search form and results 
  *
- *    Version: 1.8.2  - Coroico (coroico@wangba.fr) 
- *     
+ *    Version: 1.8.2a  - Coroico (coroico@wangba.fr) 
+ * 
+ *    06/04/2009
+ *  
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
  *    Ryan Thrash (rthrash - ryan@vertexworks.com) 
@@ -60,10 +62,6 @@ class AjaxSearch extends Search{
   var $subSearchName;   // sub search function name
   var $subSearchSel;    // choice selected
   var $subSearchNb;     // max number of choices
-
-  var $dbCharset;       // database charset
-  var $pcreModifier;    // PCRE modifier
-  var $isPhp5;          // Php version >= 5.0.0
 
   var $searchFormId;    // ajaxSearch form id
   var $offset;          // paging offset
@@ -123,7 +121,7 @@ class AjaxSearch extends Search{
 
     $this->loadLang();    // load language labels
 
-    if (!$this->checkDatabaseCharset($msg)) return $msg;  // Check database charset
+    if (!$this->setCharset($msg)) return $msg;  // set page and database charset
 
     if (!$this->checkAjaxSearchParams($msg)) return $msg;  // Check user parameters
 
@@ -254,21 +252,30 @@ class AjaxSearch extends Search{
   }
 
 /**
- * checkDatabaseCharset : check the database charset
+ * setCharset : Set the Page and database charset
  * 
  * @param string $msgErr error message
  * @return validity (true/false)    
  */
-  function checkDatabaseCharset(& $msgErr){
+  function setCharset(& $msgErr){
   
     $valid = true;
     $msgErr = '';
     $this->setDatabaseCharset();  // initialize the database charset
-
-    // check if the mbstring extension is required and loaded
-    if (($this->dbCharset == 'utf8') && ($this->cfg['mbstring']) && (!extension_loaded('mbstring'))) {
-        $msgErr = "<br /><h3>AjaxSearch error: php_mbstring extension required</h3><br />";
-        $valid = false;
+    $this->setPageCharset(); // initialize the page charset
+    
+    // check if the page charset exists
+    if (!isset($this->pageCharset[$this->dbCharset])){
+      // if you get this message, simply update the $pageCharset array in search.class.inc.php file 
+      // with the appropriate mapping between Mysql Charset and Html charset
+      // eg: 'latin2' => 'ISO-8859-2'
+      $msgErr = "AjaxSearch: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the search.class.inc.php file";
+      $valid = false;
+    }
+    elseif (($this->dbCharset == 'utf8') && ($this->cfg['mbstring']) && (!extension_loaded('mbstring'))) {
+      // check if the mbstring extension is required and loaded
+      $msgErr = "<br /><h3>AjaxSearch: php_mbstring extension required</h3><br />";
+      $valid = false;
     }
     return $valid;
   }
@@ -282,7 +289,7 @@ class AjaxSearch extends Search{
   function checkAjaxSearchParams(& $msgErr){
 
     $msgErr = '';
-    
+
     if (isset($_POST['subSearch']) || isset($_GET['subsearch'])) {
       // catch the new parameters from config file and overwrite pre-existing parameters
       if (isset($_POST['subSearch'])) $this->subSearch = $_POST['subSearch']; 
@@ -327,11 +334,11 @@ class AjaxSearch extends Search{
  * initVariables : Initialize some variables used
  */
   function initVariables(){
-  
+
     global $modx;
 
     $this->initIdGroup();         // Initialize Id groups
-      
+
     $this->initDocGroup();        // Initialize Documents group
     
     $this->initASCall();          // Initialize AS Call
@@ -379,11 +386,11 @@ class AjaxSearch extends Search{
     // check searchString
     $valid = $this->checkSearchString($this->searchString,$msgErr);
     if (!$valid) return false;
-       
+
     // Clean the searchString
     $valid = $this->stripSearchString($this->searchString,$this->cfg['stripInput'],$this->advSearch);
     if (!$valid) $msgErr = $this->_lang['as_resultsIntroFailure'];
-    
+
     // init searchString as Phx [+as.searchString+]
     if ($valid) $modx->setPlaceholder("as.searchString", $this->searchString);
 
@@ -396,10 +403,10 @@ class AjaxSearch extends Search{
   function setAjaxSearchHeader(){
 
     global $modx;
-      
+
     // add the clearDefault js library if needed
     if ($this->cfg['clearDefault']) $modx->regClientStartupScript($this->cfg['jsClearDefault']);
-    
+
     if ($this->cfg['ajaxSearch']) {
       //Adding the javascript libraries & variables to the header
       if ($this->cfg['jscript'] == 'jquery') {
@@ -459,7 +466,7 @@ EOD;
     $this->tplRes = "@CODE:" . $this->chkResult->template;
 
     $this->chkLayout = new asChunkie($this->cfg['tplLayout']);   // layout
-    
+
     if ($this->dbgTpl) {
       $this->asDebug->dbgLog($this->chkResults->getTemplate($tplResult),"AjaxSearch - tplResult template " . $tplResult);
       $this->asDebug->dbgLog($this->chkResult->getTemplate($tplResults),"AjaxSearch - tplResults template" . $tplResults);
