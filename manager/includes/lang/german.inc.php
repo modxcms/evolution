@@ -650,7 +650,7 @@ $_lang["plugin_priority"] = 'Ausführungsreihenfolge festlegen';
 $_lang["plugin_title"] = 'Plugin erstellen/bearbeiten';
 $_lang["preview"] = 'Vorschau';
 $_lang["preview_document"] = 'Dokumentvorschau';
-$_lang["preview_msg"] = 'Dies ist eine Vorschau der zuletzt gespeicherten Änderungen. Klicken Sie hier, um zu <a href="javascript://" onclick="saveRefreshPreview();">speichern und Aktualisieren</a>.';
+$_lang["preview_msg"] = 'Dies ist eine Vorschau der zuletzt gespeicherten Änderungen. Klicken Sie hier, um zu <a href="#" onclick="saveRefreshPreview();">speichern und Aktualisieren</a>.';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Öffentlich';
 $_lang["publish_date"] = 'Veröffentlichungstermin';

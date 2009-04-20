@@ -827,7 +827,7 @@ $_lang["new_web_user"] = "新网站用户";
 $_lang["new_plugin"] = "新插件";
 $_lang["edit_plugin"] = "编辑插件";
 $_lang["create_folder_here"] = "在这里建立文件夹";
-$_lang["preview_msg"] = "这个是你最后一次改动的预览. 点击这里 <a href='javascript://' onclick=\"saveRefreshPreview();\"><img src='media/images/icons/save.gif' align='absmiddle' height='12'> 保存刷新</a>你现在的页面";
+$_lang["preview_msg"] = '这个是你最后一次改动的预览. 点击这里 <a href="#" onclick="saveRefreshPreview();">保存刷新</a>你现在的页面';
 $_lang['role_plugin_management'] = "插件管理";
 $_lang['role_create_plugin'] = "建立新的插件";
 $_lang['role_edit_plugin'] = "编辑插件";

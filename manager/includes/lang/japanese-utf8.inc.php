@@ -647,7 +647,7 @@ $_lang["plugin_priority"] = 'イベント発生時のプラグインの実行順
 $_lang["plugin_title"] = 'プラグインの作成/編集';
 $_lang["preview"] = 'プレビュー';
 $_lang["preview_document"] = 'プレビュー(別窓)';
-$_lang["preview_msg"] = 'ここには最後に保存した内容をプレビューしています。<a href="#" onclick="saveRefreshPreview();"><img src="media/images/icons/save.gif" align="absmiddle" height="12"> 保存と再描画</a>を行うにはここをクリックしてください。';
+$_lang["preview_msg"] = 'ここには最後に保存した内容をプレビューしています。 <a href="#" onclick="saveRefreshPreview();">保存と再描画</a>を行うにはここをクリックしてください。';
 $_lang["private"] = 'プライベート';
 $_lang["public"] = 'パブリック';
 $_lang["publish_date"] = '公開日付';

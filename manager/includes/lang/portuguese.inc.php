@@ -649,7 +649,7 @@ $_lang["plugin_priority"] = 'Editar ordem de execução de Plugin por evento';
 $_lang["plugin_title"] = 'Criar/editar plugin';
 $_lang["preview"] = 'Prever Site';
 $_lang["preview_document"] = 'Prever documento';
-$_lang["preview_msg"] = 'Esta é uma pré-visualização das últimas alterações guardadas. Clique aqui para <a href=\'#\' onclick=\'saveRefreshPreview();\'>Guardar e actualizar</a> as alterações mais recentes';
+$_lang["preview_msg"] = 'Esta é uma pré-visualização das últimas alterações guardadas. Clique aqui para <a href="#" onclick="saveRefreshPreview();">Guardar e actualizar</a> as alterações mais recentes';
 $_lang["private"] = 'Privado';
 $_lang["public"] = 'Público';
 $_lang["publish_date"] = 'Data de Publicação';

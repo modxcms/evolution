@@ -574,7 +574,7 @@ $_lang["plugin_name"] = 'Pluginnavn';
 $_lang["plugin_priority"] = 'Edit Plugin Execution Order by Event';
 $_lang["plugin_title"] = 'Opprette/ redigere plugin.';
 $_lang["preview"] = 'Forhåndsvis';
-$_lang["preview_msg"] = 'Dette er en forhandsvisnin av dine siste endringer. Klikk her for å <a href=\'javascript://\' onclick="saveRefreshPreview();"> <img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\' width=\'12\' alt=\'\' />  lagre og laste om</a> din dine nåværende endringer';
+$_lang["preview_msg"] = 'Dette er en forhandsvisnin av dine siste endringer. Klikk her for å <a href="#" onclick="saveRefreshPreview();">lagre og laste om</a> din dine nåværende endringer';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentlig';
 $_lang["publish_date"] = 'Publish Date';

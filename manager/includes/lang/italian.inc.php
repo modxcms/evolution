@@ -645,7 +645,7 @@ $_lang["plugin_priority"] = 'Modificate l\'ordine di esecuzione dei plugin in ba
 $_lang["plugin_title"] = 'Crea/modifica plugin';
 $_lang["preview"] = 'Anteprima';
 $_lang["preview_document"] = 'Anteprima documento';
-$_lang["preview_msg"] = 'Questa √® l\'anteprima dell\'ultimo salvataggio. Clicca qui <a href=\'javascript://\' onclick="saveRefreshPreview();"><img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\'> Salva e Aggiorna</a> le modifiche';
+$_lang["preview_msg"] = 'Questa √® l\'anteprima dell\'ultimo salvataggio. Clicca qui <a href="#" onclick="saveRefreshPreview();">Salva e Aggiorna</a> le modifiche';
 $_lang["private"] = 'Privato';
 $_lang["public"] = 'Pubblico';
 $_lang["publish_date"] = 'Data di pubblicazione';

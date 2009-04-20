@@ -644,7 +644,7 @@ $_lang["plugin_priority"] = 'Wijzig volgorde uitvoeren plugin per gebeurtenis';
 $_lang["plugin_title"] = 'Aanmaken/bewerken plugin';
 $_lang["preview"] = 'Voorbeeld';
 $_lang["preview_document"] = 'Document voorbeeld';
-$_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href=\'javascript://\' onclick="saveRefreshPreview();"><img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\'> Opslaan en vernieuwen</a>';
+$_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href="#" onclick="saveRefreshPreview();">Opslaan en vernieuwen</a>';
 $_lang["private"] = 'Gesloten';
 $_lang["public"] = 'Open';
 $_lang["publish_date"] = 'Publicatiedatum';

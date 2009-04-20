@@ -887,7 +887,7 @@ $_lang['new_web_user'] = "Nowy u¿ytkownik web";
 $_lang['new_plugin'] = "Nowa wtyczka";
 $_lang['edit_plugin'] = "Edytuj wtyczkê";
 $_lang['create_folder_here'] = "Utwórz tutaj folder";
-$_lang['preview_msg'] = "To jest podgl±d ostatnio dokonanych zmian. Kliknij tutaj aby <a href='javascript://' onclick=\"saveRefreshPreview();\"><img src='media/images/icons/save.gif' align='absmiddle' height='12'>zapisaæ i od¶wie¿yæ</a> bie¿±ce zmiany";
+$_lang['preview_msg'] = 'To jest podgl±d ostatnio dokonanych zmian. Kliknij tutaj aby <a href="#" onclick="saveRefreshPreview();">zapisaæ i od¶wie¿yæ</a> bie¿±ce zmiany';
 $_lang['role_plugin_management'] = "Zarz±dzenie wtyczkami";
 $_lang['role_create_plugin'] = "Utwórz nowe wtyczki";
 $_lang['role_edit_plugin'] = "Edytuj wtyczki";
