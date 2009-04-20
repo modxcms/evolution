@@ -382,8 +382,8 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 
 ---- &hideLink [0 | 1] : Search in content of type reference   (optional)
     
-        - 0 : search only in content of type document
-        - 1 : search in content of type document AND reference (default)
+        - 0 : search in content of document AND reference type 
+        - 1 : search only in content of document type (default)
 
 
 ---- &parents [comma-separated list of integers  MODx document IDs] (optional)
