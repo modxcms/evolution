@@ -1,14 +1,15 @@
 
-                              AjaxSearch - version 1.8.2a
+                              AjaxSearch - version 1.8.2b
                            
                            Coroico - http://www.modx.wangba.fr
                            
-                                06th April 2009
+                                21th April 2009
 
 Previous version : 1.8.1 delivered the 13th October 2008
 
 Issue AjaxSearch-30 solved with the release 1.8.2a
-This issue occurs with release 1.8.2 when Php<5.2.3
+Issue AjaxSearch-31 AjaxSearch-32  solved with the release 1.8.2b
+
 
 ============================== NEW OPTIONS / CHANGES ===========================
 
@@ -250,3 +251,9 @@ http://svn.modxcms.com/jira/browse/AJAXSEARCH-29
 
 ==== AJAXSEARCH-30 : htmlspecialchars() expects at most 3 parameters, 4 given
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-30
+
+==== AJAXSEARCH-31 : parse error with AjaxSearch 1.8.2 when the search has no results and filter parameter used
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-31
+
+==== AJAXSEARCH-32 : pages not to validate as XHTML
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-32
