@@ -541,8 +541,8 @@ EOD;
           $varLink['tpl'] = 'pagingLinksCurrent';
         } else {
           $varLink['tpl'] = 'pagingLinks';
-          if (!isset($this->subSearch)) $varLink['pagingLink'] = $modx->makeUrl($modx->documentIdentifier,'','AS_offset='.$nrp.'&AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch));
-          else $varLink['pagingLink'] = $modx->makeUrl($modx->documentIdentifier,'','AS_offset='.$nrp.'&AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch).'&amp;subsearch='.urlencode($this->subSearch));
+          if (!isset($this->subSearch)) $varLink['pagingLink'] = $modx->makeUrl($modx->documentIdentifier,'','AS_offset='.$nrp.'&amp;AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch));
+          else $varLink['pagingLink'] = $modx->makeUrl($modx->documentIdentifier,'','AS_offset='.$nrp.'&amp;AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch).'&amp;subsearch='.urlencode($this->subSearch));
         }
         $varLink['pagingSeparator'] = ($nrp + $grabMax < $nbrs) ? $this->cfg['pageLinkSeparator'] : '' ;          
         $varLink['pagingText'] = $resultPageLinkNumber;

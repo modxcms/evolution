@@ -1352,18 +1352,21 @@ class Search {
 
       // get the rows linked to the unfiltered listIDs
       $rs = $this->doSearch();
-      while ($row = mysql_fetch_assoc($rs)) {
-        $rows[] = $row;
-      }
-      // filter the listIDs
-      if (!class_exists('asFilter')) include_once AS_PATH . "classes/filter.class.inc.php";
-      $filter = new asFilter();
-      $rows = $filter->execute($rows,$parsedFilters);
-      if (count($rows) > 0) {
-        foreach ($rows as $key => $value) {
-          $filteredIDs[] = $value[$this->main['id']];
+      if ($modx->getRecordCount($rs) > 0){
+        $rows = array();
+        while ($row = mysql_fetch_assoc($rs)) {
+          $rows[] = $row;
         }
-        $this->listIDs = implode(',',$filteredIDs);       
+        // filter the listIDs
+        if (!class_exists('asFilter')) include_once AS_PATH . "classes/filter.class.inc.php";
+        $filter = new asFilter();
+        $rows = $filter->execute($rows,$parsedFilters);
+        if (count($rows) > 0) {
+          foreach ($rows as $key => $value) {
+            $filteredIDs[] = $value[$this->main['id']];
+          }
+          $this->listIDs = implode(',',$filteredIDs);       
+        }
       }
     }
 
