@@ -47,6 +47,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 
 
+# Write sessions to a server directory and set length 
+#php_value session.save_path /path/to/your/web/content/sessions/
+#php_value session.gc_maxlifetime 28800
+
+
 
 # Make sure .htc files are served with the proper MIME type, which is critical # for XP SP2. Un-comment if your host allows htaccess MIME type overrides.
 
