@@ -2,6 +2,19 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0.0 (rev 4952 - May 8, 2009)
+===================================
+* Updated snoopy class to version 1.2.4 (used by magpierss).
+* [#MODX-320] Updated the logo for 3 default manager themes.
+* [#MODX-724] Create .htaccess template to set the session paths out of shared /tmp/ directories which can lead to loosing sessions from aggressive garbage collection.
+* [#AJAXSEARCH-31] and [#AJAXSEARCH-32] fixed.
+* [#MODX-220] Update language files.
+* [#MODX-394] Update Russian installation file.
+* [#MODX-715] Fix .jp lang file for incorrect hard-coded link
+* Updated AjaxSearch to release 1.8.2.
+* [#MODX-541] Fix the include statement in getUserData() method.
+* [#MODX-650]  bad reference to csshover.htc (now csshover2.htc).
+
 MODx 0.9.6.3 (rev 4565 - December 17, 2008)
 ===================================
 * [#MODX-547] Japanese manager lang file update.
