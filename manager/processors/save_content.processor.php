@@ -294,6 +294,7 @@ switch ($actionToTake) {
 		}
 
 		// document access permissions
+		$docgrp_save_attempt = false;
 		if ($use_udperms == 1 && is_array($document_groups)) {
 			$new_groups = array();
 			foreach ($document_groups as $value_pair) {
@@ -305,13 +306,24 @@ switch ($actionToTake) {
 			if (!empty($new_groups)) {
 				$sql = 'INSERT INTO '.$tbl_document_groups.' (document_group, document) VALUES '. implode(',', $new_groups);
 				$saved = $modx->db->query($sql) ? $saved : false;
+				$docgrp_save_attempt = true;
 			}
-			if (!$saved) {
-				$modx->manager->saveFormValues(27);
-				echo "An error occured while attempting to add the document to a document_group.";
-				exit;
+		} else {
+			$isManager = $modx->hasPermission('access_permissions');
+			$isWeb     = $modx->hasPermission('web_access_permissions');
+			if($use_udperms && !($isManager && $isWeb) && $parent != 0) {
+				// inherit document access permissions
+				$sql = "INSERT INTO $tbl_document_groups (document_group, document) SELECT document_group, $key FROM $tbl_document_groups WHERE document = $parent";
+				$saved = $modx->db->query($sql);
+				$docgrp_save_attempt = true;
 			}
 		}
+		if ($docgrp_save_attempt && !$saved) {
+			$modx->manager->saveFormValues(27);
+			echo "An error occured while attempting to add the document to a document_group.";
+			exit;
+		}
+
 
 		// update parent folder status
 		if ($parent != 0) {
