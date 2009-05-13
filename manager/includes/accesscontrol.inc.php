@@ -125,7 +125,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
 	// load template file
-    $tplFile = $base_path.'manager/media/style/'.$manager_theme.'/login.html';
+    $tplFile = $base_path.'assets/templates/manager/login.html';
     $handle = fopen($tplFile, "r");
 	$tpl = fread($handle, filesize($tplFile));
 	fclose($handle);

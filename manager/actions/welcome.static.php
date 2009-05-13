@@ -173,7 +173,7 @@ $html.= '
 $modx->setPlaceholder('OnlineInfo',$html);
 
 // load template file
-$tplFile = $base_path.'manager/media/style/'.$manager_theme.'/welcome.html';
+$tplFile = $base_path.'assets/templates/manager/welcome.html';
 $handle = fopen($tplFile, "r");
 $tpl = fread($handle, filesize($tplFile));
 fclose($handle);
