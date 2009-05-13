@@ -10,7 +10,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ) );
         </script>
 <?php
-if ($handle = opendir('help')) {
+if ($handle = opendir('../assets/templates/help')) {
     while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != ".." && $file != ".svn") {
             $help[] = $file;
@@ -36,7 +36,7 @@ foreach($help as $k=>$v) {
     echo '<div class="tab-page" id="tab'.$v.'Help">';
     echo '<h2 class="tab">'.$helpname.'</h2>';
     echo '<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
-    include "./help/$v";
+    include "../assets/templates/help/$v";
     echo '</div>';
 }
 ?>
