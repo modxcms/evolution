@@ -165,8 +165,11 @@ while ($row = $modx->db->getRow($rs)) {
 			$tmplvar = $_POST["tv" . $row['name']];
 			if ($_POST["tv" . $row['name'] . '_prefix'] != '--') {
 				$tmplvar = str_replace(array (
+					"feed://",
 					"ftp://",
-					"http://"
+					"http://",
+					"https://",
+					"mailto:"
 				), "", $tmplvar);
 				$tmplvar = $_POST["tv" . $row['name'] . '_prefix'] . $tmplvar;
 			}
