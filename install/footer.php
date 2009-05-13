@@ -1,19 +1,18 @@
-						</td>
-	    	        </tr>
-	            </table>
-	         </td>
-	      </tr>
-	    </table>
-    </td>
-  </tr>
-  <tr class="fancyRow2">
-    <td class="border-top-bottom smallText" colspan="2">
-        <p style="padding: 5px 10px;"><?php echo $_lang['modx_footer1']?></p>
-        <p style="padding: 5px 10px;"><?php echo $_lang['modx_footer2']?></p>
-    </td>
-  </tr>
-</table>
+        </div><!-- // content -->
+    </div>
+</div><!-- // contentarea -->
+
 <br />
+<div id="footer">
+    <div id="footer-inner">
+        <div class="container_12">
+            <?php echo $_lang['modx_footer1']?>
+            <br />
+            <?php echo $_lang['modx_footer2']?>
+        </div>
+    </div>
+</div>
+
 <!-- end install screen-->
 
 </body>

@@ -43,7 +43,7 @@ elseif ($installMode == 1) {
 }
 ?>
 
-<form name="install" action="index.php?action=summary" method="post">
+<form name="install" id="install_form" action="index.php?action=summary" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
     <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
@@ -69,12 +69,12 @@ elseif ($installMode == 1) {
 $setupPath = realpath(dirname(__FILE__));
 include "{$setupPath}/setup.info.php";
 
-echo "<p class=\"title\">" . $_lang['optional_items'] . "</p><p>" . $_lang['optional_items_note'] . "</p>";
+echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_note'] . "</p>";
 
 $chk = isset ($_POST['installdata']) ? 'checked="checked"' : "";
-echo '<img src="im_sample.gif" align="left" width="45" height="48" hspace="5" hspace="10" alt="Sample Data" />';
-echo "<h1>&nbsp;" . $_lang['sample_web_site'] . "</h1>";
-echo "&nbsp;<input type=\"checkbox\" name=\"installdata\" value=\"1\" $chk />" . $_lang['install_overwrite'] . " <span class=\"comname\">" . $_lang['sample_web_site'] . "</span> <br /><span><i>&nbsp;" . $_lang['sample_web_site_note'] . "</i></span><hr size=\"1\" style=\"border:1px dotted silver;\" /><br />";
+echo '<img src="im_sample.gif" class="options" alt="Sample Data" />';
+echo "<h3>&nbsp;" . $_lang['sample_web_site'] . "</h3>";
+echo "&nbsp;<input type=\"checkbox\" name=\"installdata\" id=\"installdata_field\" value=\"1\" $chk />&nbsp;<label for=\"installdata_field\">" . $_lang['install_overwrite'] . " <span class=\"comname\">" . $_lang['sample_web_site'] . "</span></label> <br /><span><i>&nbsp;" . $_lang['sample_web_site_note'] . "</i></span><hr size=\"1\" style=\"border:1px dotted silver;\" /><br />";
 
 // toggle options
 echo "<h4>" . $_lang['checkbox_select_options'] . "</h4><p class=\"actions\"><a href=\"javascript:Checkboxes.checkAll('toggle');\">" . $_lang['all'] . "</a> <a href=\"javascript:Checkboxes.uncheckAll('toggle');\">" . $_lang['none'] . "</a> <a href=\"javascript:Checkboxes.toggle('toggle');\">" . $_lang['toggle'] . "</a></p><br class=\"clear\" />";
@@ -85,8 +85,8 @@ $options_selected = isset ($_POST['options_selected']);
 $templates = isset ($_POST['template']) ? $_POST['template'] : array ();
 $limit = count($moduleTemplates);
 if ($limit > 0) {
-    echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="' . $_lang['templates'] . '" />';
-    echo "<h1>" . $_lang['templates'] . "</h1><br />";
+    echo '<br/><img src="im_resources.gif" class="options" alt="' . $_lang['templates'] . '" />';
+    echo "<h3>" . $_lang['templates'] . "</h3><br />";
     for ($i = 0; $i < $limit; $i++) {
         $chk = in_array($i, $templates) || (!$options_selected) ? 'checked="checked"' : "";
         echo "&nbsp;<input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
@@ -97,8 +97,8 @@ if ($limit > 0) {
 $chunks = isset ($_POST['chunk']) ? $_POST['chunk'] : array ();
 $limit = count($moduleChunks);
 if ($limit > 0) {
-    echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="' . $_lang['chunks'] . '" />';
-    echo "<h1>" . $_lang['chunks'] . "</h1>";
+    echo '<br/><img src="im_resources.gif" class="options" alt="' . $_lang['chunks'] . '" />';
+    echo "<h3>" . $_lang['chunks'] . "</h3>";
     for ($i = 0; $i < $limit; $i++) {
         $chk = in_array($i, $chunks) || (!$options_selected) ? 'checked="checked"' : "";
         echo "&nbsp;<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
@@ -109,8 +109,8 @@ if ($limit > 0) {
 $modules = isset ($_POST['module']) ? $_POST['module'] : array ();
 $limit = count($moduleModules);
 if ($limit > 0) {
-    echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="' . $_lang['modules'] . '" />';
-    echo "<h1>" . $_lang['modules'] . "</h1>";
+    echo '<br/><img src="im_resources.gif" class="options" alt="' . $_lang['modules'] . '" />';
+    echo "<h3>" . $_lang['modules'] . "</h3>";
     for ($i = 0; $i < $limit; $i++) {
         $chk = in_array($i, $modules) || (!$options_selected) ? 'checked="checked"' : "";
         echo "&nbsp;<input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
@@ -121,8 +121,8 @@ if ($limit > 0) {
 $plugins = isset ($_POST['plugin']) ? $_POST['plugin'] : array ();
 $limit = count($modulePlugins);
 if ($limit > 0) {
-    echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="' . $_lang['plugins'] . '" />';
-    echo "<h1>" . $_lang['plugins'] . "</h1>";
+    echo '<br/><img src="im_resources.gif" class="options" alt="' . $_lang['plugins'] . '" />';
+    echo "<h3>" . $_lang['plugins'] . "</h3>";
     for ($i = 0; $i < $limit; $i++) {
         $chk = in_array($i, $plugins) || (!$options_selected) ? 'checked="checked"' : "";
         echo "&nbsp;<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
@@ -133,20 +133,19 @@ if ($limit > 0) {
 $snippets = isset ($_POST['snippet']) ? $_POST['snippet'] : array ();
 $limit = count($moduleSnippets);
 if ($limit > 0) {
-    echo '<br/><img src="im_resources.gif" align="left" width="15" height="15" hspace="5" alt="' . $_lang['snippets'] . '" />';
-    echo "<h1>" . $_lang['snippets'] . "</h1>";
+    echo '<br/><img src="im_resources.gif" class="options" alt="' . $_lang['snippets'] . '" />';
+    echo "<h3>" . $_lang['snippets'] . "</h3>";
     for ($i = 0; $i < $limit; $i++) {
         $chk = in_array($i, $snippets) || (!$options_selected) ? 'checked="checked"' : "";
         echo "&nbsp;<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr size=\"1\" style=\"border:1px dotted silver;\" />";
     }
 }
 ?>
+    <p class="buttonlinks">
+        <a href="javascript:document.getElementById('install_form').action='index.php?action=<?php echo (($installMode == 1) ? 'mode' : 'connection'); ?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
+        <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['install']?>"><span><?php echo $_lang['install']?></span></a>
+    </p>
 
-  <div id="navbar">
-    <input type="submit" value="<?php echo $_lang['install']?>" name="cmdnext" style="float:right;width:100px;" />
-    <span style="float:right">&nbsp;</span>
-    <input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=<?php echo (($installMode == 1) ? 'mode' : 'connection'); ?>';this.form.submit();return false;" />
-  </div>
 </form>
 <script type="text/javascript">
 /* <![CDATA[ */

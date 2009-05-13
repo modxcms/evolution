@@ -8,23 +8,23 @@
  *
  * Filename:       /install/lang/spanish/spanish.inc.php
  * Language:       Spanish
- * Encoding:       iso-8859-1
+ * Encoding:       UTF-8
  */
 
 
 
 
-$_lang['license'] = '<p class="title">Acuerdo de Licencia de MODx.</p>
+$_lang['license'] = '<h2>Acuerdo de Licencia de MODx.</h2>
       <hr style="text-align:left;height:1px;width:90%" />
       <p><em>Aviso: Puedes encontrar una traducción de este acuerdo
       <a href="http://creativecommons.org/licenses/GPL/2.0/deed.es_CL" target=_blank>aquí</a>.
       Fíjate que esto es solamente un resumen del acuerdo completo, cuyo enlace está en el último párafo abajo.
       Al seguir con la instalación estás señalando tu conformidad con el acuerdo completo (el GNU General Public License).</em></p>
-		<h4>You must agree to the License before continuing installation.</h4>
+		<h3>You must agree to the License before continuing installation.</h3>
 		<p>Usage of this software is subject to the GPL license. To help you understand
 		what the GPL licence is and how it affects your ability to use the software, we
 		have provided the following summary:</p>
-		<h4>The GNU General Public License is a Free Software license.</h4>
+		<h3>The GNU General Public License is a Free Software license.</h3>
 		<p>Like any Free Software license, it grants to you the four following freedoms:</p>
 		<ul>
             <li>The freedom to run the program for any purpose. </li>
@@ -65,7 +65,7 @@ $_lang['license'] = '<p class="title">Acuerdo de Licencia de MODx.</p>
 		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>GNU General Public
 		License</a> in full before proceeding, which can also be found in the license
 		file distributed with this package.</p>';
-$_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
+$_lang["encoding"] = 'utf-8';	//charset encoding for html header
 $_lang["modx_install"] = 'MODx &raquo; Instalar';
 $_lang["loading"] = 'Cargando...';
 $_lang["Begin"] = 'Iniciar';

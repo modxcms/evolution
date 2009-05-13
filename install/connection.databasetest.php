@@ -27,7 +27,7 @@ else {
             $output .= '<span style="color:#FF0000;">'.$_lang['status_failed_could_not_create_database'].'</span>';
         }
         else {
-            $output .= '<span style="color:#9CCD00;">'.$_lang['status_passed_database_created'].'</span>';
+            $output .= '<span style="color:#80c000;">'.$_lang['status_passed_database_created'].'</span>';
         }
     }
     elseif (($installMode == 0) && (@ mysql_query("SELECT COUNT(*) FROM {$database_name}.`{$tableprefix}site_content`"))) {
@@ -37,7 +37,7 @@ else {
         $output .= '<span style="color:#FF0000;">'.sprintf($_lang['status_failed_database_collation_does_not_match'], $row[1]).'</span>';
     }
     else {
-        $output .= '<span style="color:#9CCD00;">'.$_lang['status_passed'].'</span>';
+        $output .= '<span style="color:#80c000;">'.$_lang['status_passed'].'</span>';
     }
 }
 

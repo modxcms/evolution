@@ -14,11 +14,11 @@
  * Date: 2008-05-22
  */
 
-$_lang['license'] = '<p class="title">MODx Lisensavtale</p>
+$_lang['license'] = '<h2>MODx Lisensavtale</h2>
     <hr style="text-align:left;height:1px;width:100%;" />
-    <h4>Du må godkjenne lisensen før installasjonen kan fortsette.</h4>
+    <h3>Du må godkjenne lisensen før installasjonen kan fortsette.</h3>
     <p>Bruk av dette programmet kommer inn under GPL-lisensen. For å hjelpe deg å forstå hva GPL-lisensen er og hvordan den påvirker dine muligheter til å bruke dette programmet, har vi gjort følgende sammenfatning.</p>
-    <h4>GNU General Public License (GPL) er en lisens for Fri programvare.</h4>
+    <h3>GNU General Public License (GPL) er en lisens for Fri programvare.</h3>
     <p>Som alle lisenser for Fri programvare gir den deg tilgang til følgende fire friheter:</p>
     <ul>
         <li>Frihet til å bruke programmet til alle formål.</li>

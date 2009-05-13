@@ -14,13 +14,13 @@
 
 
 
-$_lang['license'] = '<p class="title">MODx Contrat de Licence.</p>
+$_lang['license'] = '<h2>MODx Contrat de Licence.</h2>
 	    <hr style="text-align:left;height:1px;width:90%" />
-		<h4>Vous devez accepter les termes du contrat de licence avant de poursuivre l\'installation.</h4>
+		<h3>Vous devez accepter les termes du contrat de licence avant de poursuivre l\'installation.</h3>
 		<p>L\'utilisation de ce logiciel est soumise à la licence GPL. Pour vous aider à comprendre ce qu\'est
     	la licence GPL et de quelle manière elle régit vos droits d\'utilisation de ce logiciel, nous vous en
     	proposons le résumé suivant:</p>
-		<h4>La Licence Publique Générale GNU est une licence du logiciel libre.</h4>
+		<h3>La Licence Publique Générale GNU est une licence du logiciel libre.</h3>
 		<p>Comme toute licence du logiciel libre, elle vous accorde les quatre libertés suivantes:</p>
 		<ul>
             <li>La liberté d\'utilisation du logiciel. </li>

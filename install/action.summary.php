@@ -1,7 +1,7 @@
 <?php
 $installMode = intval($_POST['installmode']);
-echo "<p class=\"title\">" . $_lang['preinstall_validation'] . "</p>";
-echo "<p>" . $_lang['summary_setup_check'] . "</p>";
+echo "<h2>" . $_lang['preinstall_validation'] . "</h2>";
+echo "<h3>" . $_lang['summary_setup_check'] . "</h3>";
 $errors = 0;
 // check PHP version
 echo "<p>" . $_lang['checking_php_version'];
@@ -254,7 +254,7 @@ $nextAction= $errors > 0 ? 'summary' : 'install';
 $nextButton= $errors > 0 ? $_lang['retry'] : $_lang['install'];
 
 ?>
-<form name="install" action="index.php?action=<?php echo $nextAction ?>" method="post">
+<form name="install" id="install_form" action="index.php?action=<?php echo $nextAction ?>" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
     <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
@@ -287,9 +287,8 @@ $modules = isset ($_POST['module']) ? $_POST['module'] : array ();
 foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]\" value=\"$module\" />\n";
 ?>
   </div>
-  <div id="navbar">
-    <input type="submit" value="<?php echo $nextButton ?>" name="cmdnext" style="float:right;width:100px;" />
-    <span style="float:right">&nbsp;</span>
-    <input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=options&language=<?php $install_language?>';this.form.submit();return false;" />
-  </div>
+    <p class="buttonlinks">
+        <a href="javascript:document.getElementById('install_form').action='index.php?action=options&language=<?php $install_language?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
+        <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $nextButton ?>"><span><?php echo $nextButton ?></span></a>
+    </p>
 </form>

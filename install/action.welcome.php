@@ -1,26 +1,16 @@
-<form name="install" action="index.php?action=license" method="post">
-	<div>
-		<input type="hidden" value="<?php echo $install_language?>" name="language" />
-	</div>
-	<table width="100%">
-	<tr>
-	<td valign="top">
+
+    <form name="install" id="install_form" action="index.php?action=license" method="post">
+        <input type="hidden" value="<?php echo $install_language?>" name="language" />
+
 <?php
-	echo '	<p class="title">' . $_lang['welcome_message_welcome'] . '</p>';
+	echo '	<h2>' . $_lang['welcome_message_welcome'] . '</h2>';
 	echo '	<p>' . $_lang['welcome_message_text'] . '</p>';
 	echo '	<p>' . $_lang['welcome_message_select_begin_button'] . '</p>';
 ?>
-		<br />
-		<center><img src="<?php echo include_image('img_splash.gif')?>" alt="<? echo $_lang['modx_install']?>" /></center>
-	</td>
-	<td align="center" width="280">
-		<img src="<?php echo include_image('img_box.png')?>" alt="MODx Create and Do More with Less" />&nbsp;
-	</td>
-	</tr>
-	</table>
-	<div id="navbar">
-		<input type="submit" value="<?php echo $_lang['Begin']?>" name="cmdnext" style="float:right;width:100px;" />
-		<span style="float:right">&nbsp;</span>
-		<input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=language';this.form.submit();return false;" />
-	</div>
-</form>
+
+        <p class="buttonlinks">
+            <a href="javascript:document.getElementById('install_form').action='index.php?action=language';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
+            <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['Begin']?>"><span><?php echo $_lang['Begin']?></span></a>
+        </p>
+
+    </form>

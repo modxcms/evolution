@@ -14,14 +14,14 @@
 
 
 
-$_lang['license'] = '<p class="title">MODx Lizenzvereinbarung.</p>
+$_lang['license'] = '<h2>MODx Lizenzvereinbarung.</h2>
   <hr style="WIDTH: 90%; HEIGHT: 1px; TEXT-ALIGN: left">
 
-  <h4>Sie m&uuml;ssen der Lizenz zustimmen bevor Sie mit der Installation fortfahren.</h4>
+  <h3>Sie m&uuml;ssen der Lizenz zustimmen bevor Sie mit der Installation fortfahren.</h3>
 
   <p>Die Software ist unter der GPL lizenziert. Das Benutzen der Software unterliegt den bestimmungen der GPL. Die GPL betrifft diese Software sowie Ihre Benutzung in folgender Weise:</p>
 
-  <h4>Die GNU General Public License ist eine freie Software Lizenz.</h4>
+  <h3>Die GNU General Public License ist eine freie Software Lizenz.</h3>
 
   <p>Wie bei jeder freien Softwarelizenz haben Sie folgende Freiheiten:</p>
 

@@ -59,15 +59,15 @@ installMode ='<?php echo $installMode ?>';
 passed ='<?php echo $_lang["status_passed_server"]?>';
 </script>
 
-<form name="install" action="index.php?action=options" method="post">
+<form name="install" id="install_form" action="index.php?action=options" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
     <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
     <input type="hidden" value="<?php echo isset($database_connection_method) ? $database_connection_method : ''; ?>" name="database_connection_method" />
   </div>
-  <p class="title"><?php echo $_lang['connection_screen_connection_information']?></p>
-  <p class="subtitle"><?php echo $_lang['connection_screen_server_connection_information']?></p>
+  <h2><?php echo $_lang['connection_screen_connection_information']?></h2>
+  <h3><?php echo $_lang['connection_screen_server_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_server_connection_note']?></p>
   <div class="labelHolder"><label for="databasehost"><?php echo $_lang['connection_screen_database_host']?></label>
     <input id="databasehost" value="<?php echo isset($_POST['databasehost']) ? $_POST['databasehost']: $database_server ?>" name="databasehost" />
@@ -80,7 +80,8 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
   </div>
   <div class="clickHere"><a id="servertest" href="#"><?php echo $_lang['connection_screen_server_test_connection']?></a></div>
   <div class="status" id="serverstatus"></div>
-  <p class="subtitle"><?php echo $_lang['connection_screen_database_connection_information']?></p>
+  <br />
+  <h3><?php echo $_lang['connection_screen_database_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_database_connection_note']?></p>
   <div class="labelHolder"><label for="database_name"><?php echo $_lang['connection_screen_database_name']?></label>
     <input id="database_name" value="<?php echo isset($_POST['database_name']) ? $_POST['database_name']: $database_name ?>" name="database_name" />
@@ -118,8 +119,8 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 <?php
   if ($installMode == 0) {
 ?>
-  <div id="AUH">
-    <p class="title"><?php echo $_lang['connection_screen_default_admin_user']?></p>
+  <div id="AUH" style="margin-top:1.5em;">
+    <h2><?php echo $_lang['connection_screen_default_admin_user']?></h2>
     <p><?php echo $_lang['connection_screen_default_admin_note']?></p>
     <div class="labelHolder"><label for="cmsadmin"><?php echo $_lang['connection_screen_default_admin_login']?></label>
       <input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" />
@@ -138,12 +139,11 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 <?php
   }
 ?>
-  <br />
-  <div id="navbar">
-    <input type="submit" value="<?php echo $_lang['btnnext_value']?>" name="cmdnext" style="float:right;width:100px;" onclick="if (validate()) this.form.submit(); return false;" />
-    <span style="float:right">&nbsp;</span>
-    <input type="submit" value="<?php echo $_lang['btnback_value']?>" name="cmdback" style="float:right;width:100px;" onclick="this.form.action='index.php?action=mode';this.form.submit();return false;" />
-  </div>
+    <br />
+    <p class="buttonlinks">
+        <a href="javascript:document.getElementById('install_form').action='index.php?action=mode';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
+        <a style="display:inline;" href="javascript:if (validate()){document.getElementById('install_form').submit();}" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
+    </p>
 </form>
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -191,17 +191,17 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
       alert("<?php echo $_lang['alert_database_test_connection_failed']?>");
       return false;
     }   
-    if(f.cmsadmin.value=="") {
+    if(f.cmsadmin && f.cmsadmin.value=="") {
       alert("<?php echo $_lang['alert_enter_adminlogin']?>");
       f.cmsadmin.focus();
       return false;
     }
-    if(f.cmspassword.value=="") {
+    if(f.cmspassword && f.cmspassword.value=="") {
       alert("<?php echo $_lang['alert_enter_adminpassword']?>");
       f.cmspassword.focus();
       return false;
     }
-    if(f.cmspassword.value!=f.cmspasswordconfirm.value) {
+    if(f.cmspassword && f.cmspassword.value!=f.cmspasswordconfirm.value) {
       alert("<?php echo $_lang['alert_enter_adminconfirm']?>");
       f.cmspassword.focus();
       return false;

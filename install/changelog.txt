@@ -2,8 +2,10 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 4952 - May 8, 2009)
+MODx Evolution 1.0.0 (rev 4985 - May 13, 2009)
 ===================================
+* Updated installer styling
+* [#MODX-410] Fix document permissions inheriting (for users without access to manage document permissions)
 * Updated snoopy class to version 1.2.4 (used by magpierss).
 * [#MODX-320] Updated the logo for 3 default manager themes.
 * [#MODX-724] Create .htaccess template to set the session paths out of shared /tmp/ directories which can lead to loosing sessions from aggressive garbage collection.

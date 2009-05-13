@@ -14,13 +14,13 @@
 
 
 
-$_lang['license'] = '<p class="title">Licença e Contrato do MODx.</p>
+$_lang['license'] = '<h2>Licença e Contrato do MODx.</h2>
 	    <hr style="text-align:left;height:1px;width:90%" />
-		<h4>Você deve concordar com o contrato para continuar a instalação.</h4>
+		<h3>Você deve concordar com o contrato para continuar a instalação.</h3>
 		<p>Este software está licenciado através da licensa GPL. Para te ajudar a entender
 		o que é a licensa GPL e como esta licensa interfere no uso deste software, nós
 		fornecemos o seguinte índice:</p>
-		<h4>A GNU "General Public License" é uma licensa de Software Livre.</h4>
+		<h3>A GNU "General Public License" é uma licensa de Software Livre.</h3>
 		<p>Como qualquer licensa de Software Gratuito, isto garante a sua liberdade de:</p>
 		<ul>
             <li>Usar o programa por qualquer propósito. </li>
