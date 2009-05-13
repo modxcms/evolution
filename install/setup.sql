@@ -831,7 +831,7 @@ REPLACE INTO `{PREFIX}user_attributes`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxLight'),
+('manager_theme','MODxCarbon'),
 ('settings_version','0.9.6.3'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
@@ -1065,8 +1065,8 @@ UPDATE `{PREFIX}user_roles` SET
 
 
 UPDATE `{PREFIX}user_settings` SET
-  `setting_value`='MODxLight'
-  WHERE `setting_name`='manager_theme' AND `setting_value`='default';
+  `setting_value`='MODxCarbon'
+  WHERE `setting_name`='manager_theme';
 
 
-REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxLight');
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxCarbon');
