@@ -160,11 +160,7 @@ $_lang["credits_dTree"] = 'MODx uses the excellent dTree script from DestroyDrop
 $_lang["credits_everaldo"] = 'MODx uses a number of icons from Everaldo\'s crystal icon set. Great icons!';
 $_lang["credits_mysql"] = 'MODx is powered by MySQL!';
 $_lang["credits_php"] = 'MODx is powered by PHP!';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
-</ul>';
+$_lang["credits_shouts_msg"] = '<p>MODx is managed and maintained at <a href="http://modxcms.com/about/" target="_blank">MODxCMS.com</a>.</p>';
 $_lang["credits_shouts_title"] = '<b>Additional thanks to:</b>';
 $_lang["credits_webfx"] = 'MODx uses a number of JavaScripts from Webfx. Great stuff!';
 $_lang["custom_contenttype_message"] = 'Here you can add custom content types to be used in your documents. To add a new entry, enter the content type in the text box then click the \'Add\' button.';
