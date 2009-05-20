@@ -64,6 +64,7 @@ $_lang['license'] = '<h2>MODx Contrat de Licence.</h2>
     	avant de poursuivre l\'installation. Vous en trouverez également une copie dans le fichier de licence qui accompagne
     	la distribution de ce Logiciel.</p>';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["language_code"] = 'fr';	// for html element e.g. <html xml:lang="fr" lang="fr">
 $_lang["modx_install"] = 'MODx &raquo; Installation';
 $_lang["loading"] = 'Chargement...';
 $_lang["Begin"] = 'Démarrer';

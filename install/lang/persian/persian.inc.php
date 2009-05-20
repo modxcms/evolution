@@ -41,6 +41,7 @@ $_lang['license'] = '<div style="padding-right:10px;" class="prtext">
 					<p>موارد آمده در بالا تنها خلاصه ای از گواهینامه ی GNU است، با قبول بندهای مندرج در بالا شما با کلیه موارد مندرج در گواهسنامه GNU موافقت خود را اعلام می کنید. از آنجا که موارد بالا تنها خلاصه ای از بندهای مندرج در GNU است لذا بهترین کار مطالعه کامل موافقتنامه <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>گواهی نامه ی GNU</a> می باشد که یک نسخه از آن به همراه برنامه دریافتی شما موجود است.</p></div>
 ';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["language_code"] = 'fa';	// for html element e.g. <html xml:lang="fa" lang="fa">
 $_lang["modx_install"] = 'MODx &raquo; برنامه نصب';
 $_lang["loading"] = 'در حال بارگذاری ...';
 $_lang["Begin"] = 'شروع';

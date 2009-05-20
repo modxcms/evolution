@@ -61,6 +61,7 @@ $_lang['license'] = '<p class="title">MODxの著作権と使用許諾条件に�
 		License</a> in full before proceeding, which can also be found in the license
 		file distributed with this package.</p>';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["language_code"] = 'ja';	// for html element e.g. <html xml:lang="ja" lang="ja">
 $_lang["modx_install"] = 'MODx &raquo; インストール';
 $_lang["loading"] = '処理中...';
 $_lang["Begin"] = '開始';

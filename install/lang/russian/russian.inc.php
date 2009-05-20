@@ -63,6 +63,7 @@ $_lang['license'] = '<h2>Лицензионное соглашение MODx.</h2
 		License</a> in full before proceeding, which can also be found in the license
 		file distributed with this package.</p>';
 $_lang["encoding"] = 'utf-8';
+$_lang["language_code"] = 'ru';	// for html element e.g. <html xml:lang="ru" lang="ru">
 $_lang["modx_install"] = 'Установка MODx';
 $_lang["loading"] = 'Загружается...';
 $_lang["Begin"] = 'Начать';

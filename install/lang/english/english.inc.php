@@ -62,6 +62,7 @@ $_lang['license'] = '<h2>MODx License Agreement.</h2>
 		License</a> in full before proceeding, which can also be found in the license
 		file distributed with this package.</p>';
 $_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
+$_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["modx_install"] = 'MODx &raquo; Install';
 $_lang["loading"] = 'Loading...';
 $_lang["Begin"] = 'Begin';

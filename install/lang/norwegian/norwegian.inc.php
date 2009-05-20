@@ -40,6 +40,7 @@ $_lang['license'] = '<h2>MODx Lisensavtale</h2>
     </ul>
     <p>Ovenforstående er en sammenfattning av GNU GPL-lisensen. Gjennom å fortsette godkjenner du GNU GPL-licensen - ikke ovenforstående. Ovenforstående er en enkel sammenfattning og dens korrekthet kan ikke garanteres. Det oppfordres sterkt at du leser den fullstendige <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU GPL-licensen</a> før du fortsetter. Den finnes også i filen license.txt som distribueres sammen med det her programmet.';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["language_code"] = 'no';	// for html element e.g. <html xml:lang="no" lang="no">
 $_lang["modx_install"] = 'MODx &raquo; Installasjon';
 $_lang["loading"] = 'Henter...';
 $_lang["Begin"] = 'Start';

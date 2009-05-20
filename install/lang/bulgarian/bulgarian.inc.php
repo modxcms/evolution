@@ -62,6 +62,7 @@ $_lang['license'] = '<h2>MODx Лицензионно Споразумение.</
 		разпространяван с този пакет.</p>';
 
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["language_code"] = 'bg';	// for html element e.g. <html xml:lang="bg" lang="bg">
 $_lang["modx_install"] = 'MODx &raquo; Инсталиране';
 $_lang["loading"] = 'Зареждане...';
 $_lang["Begin"] = 'Начало';

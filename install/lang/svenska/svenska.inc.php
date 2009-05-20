@@ -64,6 +64,7 @@ $_lang['license'] = '<h2>MODx Licensavtal</h2>
        Det finns en <a href="http://danielnylander.se/gpl/" target="_blank">inofficiell svensk
        översättning</a>.</p>';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["language_code"] = 'sv';	// for html element e.g. <html xml:lang="sv" lang="sv">
 $_lang["modx_install"] = 'MODx &raquo; Installation';
 $_lang["loading"] = 'Laddar...';
 $_lang["Begin"] = 'Starta';

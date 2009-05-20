@@ -41,6 +41,7 @@ $_lang['license'] = '<h2>MODx Lizenzvereinbarung.</h2>
   nur eine Zusammenfassng dar, seine Richtigkeit kann nicht garantiert werden.&nbsp;Es wird dringend empfohlen, die&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General
   Public License</a> im Original zu lesen bevor Sie fortfahren, diese k&ouml;nnen Sie auch im heruntergeladenen Paket als Textdatei finden.</p>';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["language_code"] = 'de';	// for html element e.g. <html xml:lang="de" lang="de">
 $_lang["modx_install"] = 'MODx &raquo; Installation';
 $_lang["loading"] = 'Laden...';
 $_lang["Begin"] = 'Anfang';

@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $_lang['language_code']?>" lang="<?php echo $_lang['language_code']?>">
 <head>
 	<title><?php echo $_lang['modx_install']?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_lang['encoding']?>" />
@@ -16,13 +16,14 @@
             padding-top:16px;
         }
         #mainheader {
-            height:114px;
+            height:116px;
+            margin-top:25px;
         }
         #downloadbar {
             height:93px;
         }
         #downloadbar ul {
-            margin-top:20px;
+            margin:0 0 1.5em 15px;
         }
         #downloadbar li {
             list-style-type:none;
@@ -84,15 +85,10 @@
         }
     </style>
     <!--[if lt IE 7]>
-    <script src="assets/js/DD_belatedPNG-min.js"></script>
+    <script src="DD_belatedPNG-min.js"></script>
     <script>
         DD_belatedPNG.fix('.pngfix');
     </script>
-    <style type="text/css">
-        body {
-    	    behavior:url("assets/js/csshover2.htc");
-    	}
-    </style>
     <![endif]-->
 </head>
 
@@ -103,7 +99,7 @@
         <span style="color:#fff;"><?php echo $moduleName; ?> <?php echo $moduleVersion; ?> (<?php echo $moduleRelease;?>)</span>
         <div id="mainheader">
             <div id="downloadbar" class="pngfix installbar">
-                <span id="downloadarrow" title="Install"></span>
+                <span id="downloadarrow" title="<?php echo $_lang["install_update"]; ?>"></span>
                 <ul style="margin-left:287px;">
                     <li id="downloadinfo"> <?php echo $_lang["install_update"]; ?></li>
                     <li id="downloaddate"> </li>
