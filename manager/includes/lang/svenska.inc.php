@@ -8,7 +8,6 @@
  * Version:        0.9.6.2rc1
  * MODx version:   0.9.6.2rc1 rev 3724
 */
-
 $_lang["about_msg"] = 'MODx är ett <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP applikationsramverk och system för innehållshantering</a> och är licensierat under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
 $_lang["access_permission_denied"] = 'Du har inte behörighet för detta dokument.';
@@ -1012,5 +1011,4 @@ $_lang["yourinfo_role"] = 'Din roll är:';
 $_lang["yourinfo_title"] = 'Din information';
 $_lang["yourinfo_total_logins"] = 'Totalt antal inloggningar:';
 $_lang["yourinfo_username"] = 'Du är inloggad som:';
-
 ?>

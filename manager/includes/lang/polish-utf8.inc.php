@@ -1090,5 +1090,4 @@ $_lang["yourinfo_title"] = 'Twoje info';
 $_lang["yourinfo_total_logins"] = 'Całkowita ilość logowań:';
 $_lang["yourinfo_username"] = 'Jesteś zalogowany jako:';
 $_lang["you_got_mail"] = 'Masz wiadomość';
-
 ?>

@@ -9,7 +9,6 @@
  * MODx version:   0.9.6.3 RC-2
 */
 // NOTE: Now alpha-sorted
-include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
 $_lang["about_msg"] = 'مادایکس یک <a href="http://modxcms.com/what-is-modx.html" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
 $_lang["about_title"] = 'درباره مادایکس';
 $_lang["access_permissions"] = 'سطوح دسترسی';
@@ -182,7 +181,7 @@ $_lang["database_table_records"] = 'رکوردها';
 $_lang["database_table_tablename"] = 'نام جدول';
 $_lang["database_table_totalsize"] = 'حجم کامل';
 $_lang["database_table_totals"] = 'مجموعا:';
-$_lang['database_version'] = 'نسخه دیتابیس:';
+$_lang["database_version"] = 'نسخه دیتابیس:';
 $_lang["date"] = 'تاریخ';
 $_lang["datechanged"] = 'اطلاعات یا داده ها تغییر داده شد';
 $_lang["defaultcache_message"] = 'گزینه ی \'بلی\' را انتخاب کنید تا کلیه ی پرونده های جدید قابلیت ذخیره یا کش را به طور پیشفرض دارا باشند.';
@@ -728,13 +727,13 @@ $_lang["role_edit_user"] = 'ویرایش کاربران';
 $_lang["role_edit_web_user"] = 'ویرایش کاربران وب';
 $_lang["role_empty_trash"] = 'کلیه ی پرونده های حذف شده را دور بریز';
 $_lang["role_errors"] = 'مشاهده ی پنجره ی خطا و اشتباه';
-$_lang['role_export_static'] = 'تهیه ی خروجی از صفحات استاتیک';
+$_lang["role_export_static"] = 'تهیه ی خروجی از صفحات استاتیک';
 $_lang["role_eventlog_management"] = 'مدیریت آمار فعالیت ها';
 $_lang["role_file_manager"] = 'استفاده از قابلیت مدیریت فایل';
 $_lang["role_frames"] = 'درخواست فریم های مدیریت';
 $_lang["role_help"] = 'مشاهده ی صفحات راهنما';
 $_lang["role_home"] = 'درخواست صفحه ی مقدمه ی مدیریت';
-$_lang['role_import_static'] = 'واردسازی HTML';
+$_lang["role_import_static"] = 'واردسازی HTML';
 $_lang["role_logout"] = 'خروج از مدیریت';
 $_lang["role_management_msg"] = 'در اینجا شما میتوانید نقش مورد نظر خود را برای ویرایش انتخاب کنید.';
 $_lang["role_management_title"] = 'نقش ها';

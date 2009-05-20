@@ -8,7 +8,6 @@
  * Version:        2.1
  * MODx version:   0.9.6
 */
-// NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx on <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>PHP Sovelluskehitysymp&auml;rist&ouml; ja Sis&auml;ll&ouml;nhallintaj&auml;rjestelm&auml;</a> joka on lisensoitu <a href="../assets/docs/license.txt">GNU GPL - lisenssin alaisuuteen</a>.';
 $_lang["about_title"] = 'Tietoa MODx:sta';
 $_lang["access_permissions"] = 'P&auml;&auml;syoikeudet';

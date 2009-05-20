@@ -11,7 +11,6 @@
 /* Set locale to Japanese */
 setlocale (LC_ALL, 'ja_JP.UTF-8');
 define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
-include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
 // NOTE: Now alpha-sorted
 $_lang["about_msg"] = '<p>MODx(モドエックスまたはモッドエックス)は <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP アプリケーション フレームワーク・コンテンツ管理システム</a>です。<a href="../assets/docs/license.txt">GNU GPL</a> に基づいて使用が許諾されます。</p><p>MODx は、CMS AWARDS 2007 <a href="http://www.packtpub.com/article/modx-wins-most-promising-open-source-cms" target="_blank">「最も有望なオープンソースコンテント管理システム」1位を受賞</a>しました。</p> <p>また、ウィキペディア日本語版に<a href="http://ja.wikipedia.org/wiki/MODx" target="_blank">詳細な解説</a>があります。</p>';
 $_lang["about_title"] = 'MODx について';

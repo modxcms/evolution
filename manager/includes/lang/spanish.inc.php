@@ -8,9 +8,7 @@
  * Version:        2.12
  * MODx version:   0.9.6 RC3
 */
-// NOTE: Now alpha-sorted
 setlocale (LC_ALL, 'es_ES');
-include_once(dirname(__FILE__).'/english.inc.php');
 $_lang["about_msg"] = 'MODx es un <a href="http://modxcms.com/what-is-modx.html" target="_blank">Sistema de Administración de Contenido usando el marco de PHP</a> licenciado debajo <a href="../assets/docs/license.txt">GNU GPL</a>. Encargados de la traducción:  <a href="http://www.modx-cms.com.ar" target="_blank">Comunidad Hispana de MODx</a>.';
 $_lang["about_title"] = 'Acerca de MODx';
 $_lang["access_permissions"] = 'Permisos de acceso';
@@ -1018,4 +1016,3 @@ $_lang["yourinfo_total_logins"] = 'Número total de ingresos:';
 $_lang["yourinfo_username"] = 'Ha ingresado como:';
 $_lang["you_got_mail"] = 'Ha recibido un mensaje';
 ?>
-

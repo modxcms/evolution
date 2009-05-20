@@ -8,10 +8,6 @@
  * Version:				2.1 - updated for MODx 0.9.6 RC3
  * MODx version:			0.9.6 RC3
 */
-// NOTE: New language keys should be added at the bottom of this page
-
-include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
-
 $_lang["about_msg"] = 'MODx é um <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>Sistema em PHP para Gestão de Conteúdos</a> (em Inglês).';
 $_lang["about_title"] = 'Àcerca do MODx';
 $_lang["access_permissions"] = 'Permissões de Acesso';
@@ -157,11 +153,7 @@ $_lang["credits_dTree"] = 'MODx usa o excelente script \'dTree\' de árvore de d
 $_lang["credits_everaldo"] = 'MODx usa alguns ícones do conjunto \'crystal\' criado por Everaldo';
 $_lang["credits_mysql"] = 'MODx utiliza o motor de base de dados MySQL';
 $_lang["credits_php"] = 'MODx utiliza a linguagem PHP';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><b>Raymond Irving, Ryan Thrash</b> - Fundadores do projecto</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Arquitectura do Núcleo da aplicação e Design</li>
-<li><b>João Peixoto</b> pela tradução para Português ;-)</li></ul>';
+$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Fundadores do projecto</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Arquitectura do Núcleo da aplicação e Design</li><li><b>João Peixoto</b> pela tradução para Português ;-)</li></ul>';
 $_lang["credits_shouts_title"] = '<b>Agradecimentos especiais para:</b>';
 $_lang["credits_webfx"] = 'MODx usa vários JavaScripts da WebFX';
 $_lang["custom_contenttype_message"] = 'Aqui pode adicionar tipos de conteúdos personalizados para usar nos seus documentos. Para adicionar uma nova entrada, digite o tipo de conteúdo na caixa de texto e clique no botão \'Adicionar\'.';
@@ -438,7 +430,6 @@ $_lang["login_message"] = 'Por favor digite o seu username e senha para aceder a
 $_lang["logout"] = 'Sair';
 $_lang["logo_slogan"] = 'Gestor de Conteúdos MODx - \nCrie e faça mais com menos';
 $_lang["long_title"] = 'Título longo';
-
 $_lang["mail_check_timeperiod_title"] = 'Período para verificar novos e-mails:';
 $_lang["mail_check_timeperiod_message"] = 'Com que frequência pretende vHow often to check forerificar novas mensagens de e-mail no Administrador do site, em segundos.';
 $_lang["manager"] = 'Administrador';

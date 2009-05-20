@@ -9,11 +9,7 @@
  * MODx version:   0.9.6.2
 */
 // NOTE: Now alpha-sorted
-
 setlocale (LC_ALL, 'fr_FR');
-
-include_once(dirname(__FILE__).'/english.inc.php'); // fall back to English defaults if needed
-
 $_lang["about_msg"] = 'MODx a été développé à partir d\'Etomite. Il est placé sous licence <a href="../assets/docs/license.txt\">GPL</a>.';
 $_lang["about_title"] = 'À propos de MODx';
 $_lang["access_permissions"] = 'Autorisations d\'accès';

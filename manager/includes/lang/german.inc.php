@@ -4,8 +4,8 @@
  * Function:       Language file.
  * Encoding:       UTF-8
  * Autoren:        The MODx Project Team (originally by Alex Butter).
-                   Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
-                   Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
+ *                 Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
+ *                 Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
  * Date:           2008/10/09
  * Version:        2.13
  * MODx version:   0.9.6.3

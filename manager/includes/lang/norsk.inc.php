@@ -870,9 +870,7 @@ $_lang["udperms_message"] = 'Tilgangsrettigheter tillater deg å spesifisere hvi
 $_lang["udperms_title"] = 'Bruk tilgansgrettigheter';
 $_lang["unable_set_link"] = 'Unable to set the link!';
 $_lang["unable_set_parent"] = 'Kunne ikke sette ny eier!';
-$_lang["unauthorizedpage_message"] = 'Angi ID til det dokumentet du vil sende brukere til
- om de har spurt etter et sikkert eller ikke tillat dokument.<br />
- <b>OBS: Se til at den ID\'en du skrev inn tilhører et eksisterende dokument, at det har blitt publisert og kan nås av brukeren!</b>';
+$_lang["unauthorizedpage_message"] = 'Angi ID til det dokumentet du vil sende brukere til om de har spurt etter et sikkert eller ikke tillat dokument.<br /> <b>OBS: Se til at den ID\'en du skrev inn tilhører et eksisterende dokument, at det har blitt publisert og kan nås av brukeren!</b>';
 $_lang["unauthorizedpage_title"] = 'Ikke tillatt side';
 $_lang["unblock_message"] = 'Denne brukeren kommer ikke lengre til å blokkeres når brukerens data lagres.';
 $_lang["undelete_document"] = 'Tilbakestill dokument';
@@ -951,8 +949,7 @@ $_lang["web_user_title"] = 'Opprett/rediger webbrukere';
 $_lang["wednesday"] = 'Onsdag';
 $_lang["welcome_messages"] = 'Din Innboks inneholder <b>%d</b> beskjed(er), hvorav <b>%s</b> er uleste.';
 $_lang["welcome_title"] = 'Velkommen till MODx webpubliseringsverktøy';
-$_lang["which_editor_message"] = 'Her kan du velge hvilken ricktekst-editor du vil bruke.
- Du kan laste ned och installere fleer ricktekst-editorer fra MODx nedlastingsside.';
+$_lang["which_editor_message"] = 'Her kan du velge hvilken ricktekst-editor du vil bruke. Du kan laste ned och installere fleer ricktekst-editorer fra MODx nedlastingsside.';
 $_lang["which_editor_title"] = 'Editor å bruke';
 $_lang["working"] = 'Jobber...';
 $_lang["wrap_lines"] = 'Bryt linjer';
