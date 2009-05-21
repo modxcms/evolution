@@ -314,7 +314,7 @@ switch ($actionToTake) {
 		} else {
 			$isManager = $modx->hasPermission('access_permissions');
 			$isWeb     = $modx->hasPermission('web_access_permissions');
-			if($use_udperms && !($isManager && $isWeb) && $parent != 0) {
+			if($use_udperms && !($isManager || $isWeb) && $parent != 0) {
 				// inherit document access permissions
 				$sql = "INSERT INTO $tbl_document_groups (document_group, document) SELECT document_group, $key FROM $tbl_document_groups WHERE document = $parent";
 				$saved = $modx->db->query($sql);
