@@ -11,9 +11,12 @@ RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
 RewriteRule .* - [F,L]
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
-RewriteCond %{HTTP_HOST} .
-RewriteCond %{HTTP_HOST} !^example\.com [NC]
-RewriteRule (.*) http://example.com/$1 [R=301,L]
+#RewriteCond %{HTTP_HOST} .
+#RewriteCond %{HTTP_HOST} !^example\.com [NC]
+#RewriteRule (.*) http://example.com/$1 [R=301,L]
+
+# Exclude /assets and /manager directories from rewrite rules
+RewriteRule ^(manager|assets) - [L]
 
 # For Friendly URLs
 RewriteCond %{REQUEST_FILENAME} !-f
