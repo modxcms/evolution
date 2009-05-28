@@ -2,8 +2,10 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 4985 - May 13, 2009)
+MODx Evolution 1.0.0 (rev 5053 - May 28, 2009)
 ===================================
+* [#MODX-620] Add boolean support to Datagrid class
+* [#MODX-446] Implement Soushi's path for large site cache optimizations
 * Updated installer styling
 * [#MODX-410] Fix document permissions inheriting (for users without access to manage document permissions)
 * Updated snoopy class to version 1.2.4 (used by magpierss).
