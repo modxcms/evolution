@@ -1263,7 +1263,7 @@ class DocumentParser {
             $act= ($url ? "window.location.href='" . addslashes($url) . "';" : "");
         }
         $html= "<script>$fnc window.setTimeout(\"alert('$msg');$act\",100);</script>";
-        if ($this->isFrontend($html))
+        if ($this->isFrontend())
             $this->regClientScript($html);
         else {
             echo $html;
