@@ -11,19 +11,6 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']==300) {
 
 
 
-function isNumber($var)
-{
-    if(strlen($var)==0) {
-        return false;
-    }
-    for ($i=0;$i<strlen($var);$i++) {
-        if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-            return false;
-        }
-    }
-    return true;
-}
-
 if(isset($_REQUEST['id'])) {
     $id = $_REQUEST['id'];
 } else {
@@ -49,7 +36,7 @@ if($limit>1) {
 
 
 // make sure the id's a number
-if(!isNumber($id)) {
+if(!is_numeric($id)) {
     echo "Passed ID is NaN!";
     exit;
 }

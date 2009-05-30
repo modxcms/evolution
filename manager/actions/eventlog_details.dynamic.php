@@ -5,18 +5,6 @@ if(!$modx->hasPermission('view_eventlog')) {
 	$e->dumpError();	
 }
 
-function isNumber($var) {
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
-    }
-	return true;
-}
-
 // get id
 if(isset($_REQUEST['id'])) {
 	$id = intval($_REQUEST['id']);
@@ -26,7 +14,7 @@ else {
 }
 
 // make sure the id's a number
-if(!isNumber($id)) {
+if(!is_numeric($id)) {
 	echo "Passed ID is NaN!";
 	exit;
 }

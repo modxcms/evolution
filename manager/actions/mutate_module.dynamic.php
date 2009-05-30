@@ -49,17 +49,6 @@ function createGUID(){
 	return $m;
 }
 
-function isNumber($var) {
-	if (strlen($var) == 0) {
-		return false;
-	}
-	for ($i = 0; $i < strlen($var); $i++) {
-		if (substr_count('0123456789', substr($var, $i, 1)) == 0)
-			return false;
-	}
-	return true;
-}
-
 // Check to see the editor isn't locked
 $sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=108 AND id=\''.$id.'\'';
 $rs = mysql_query($sql);
@@ -77,7 +66,7 @@ if ($limit > 1) {
 // end check for lock
 
 // make sure the id's a number
-if (!isNumber($id)) { // Should this use is_numeric() instead? -sirlancelot (2008-02-27)
+if (!is_numeric($id)) {
 	echo 'Passed ID is NaN!';
 	exit;
 }
