@@ -40,6 +40,25 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 							));	
 							
+		// disallow duplicate template names for new templates
+		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_templates` WHERE templatename = '{$templatename}'";
+		$rs = $modx->db->query($sql);
+		$count = $modx->db->getValue($rs);
+		if($count > 0) {
+			$modx->event->alert(sprintf($_lang['duplicate_template_name_found'], $templatename));
+
+			// prepare a few request/post variables for form redisplay...
+			$_REQUEST['a'] = '19';
+			if(isset($_POST['locked']) && $_POST['locked'] == 'on') $_POST['locked'] = 1;
+			$_POST['category'] = $categoryid;
+
+			include 'header.inc.php';
+			include(dirname(dirname(__FILE__)).'/actions/mutate_templates.dynamic.php');
+			include 'footer.inc.php';
+			
+			exit;
+		}
+
 		//do stuff to save the new doc
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates` (templatename, description, content, locked, category) VALUES('$templatename', '$description', '$template', '$locked', ".$categoryid.");";
 		$rs = $modx->db->query($sql);
