@@ -346,7 +346,7 @@ function decode(s){
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
   </tr>
   <tr>
-    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
+    <td align="left" colspan="2"><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
 </table>
 </div>
