@@ -7,19 +7,6 @@ if(!$modx->hasPermission('save_module')) {
 ?>
 <?php
 
-function isNumber($var)
-{
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
-    }
-	return true;
-}
-
 $id = intval($_POST['id']);
 $name = mysql_escape_string(trim($_POST['name']));
 $description = mysql_escape_string($_POST['description']);
