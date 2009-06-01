@@ -40,6 +40,28 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 								));
 
+		// disallow duplicate names for new chunks
+		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_htmlsnippets` WHERE name = '{$name}'";
+		$rs = $modx->db->query($sql);
+		$count = $modx->db->getValue($rs);
+		if($count > 0) {
+			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['chunk'], $name));
+
+			// prepare a few variables prior to redisplaying form...
+			$content = array();
+			$_REQUEST['id'] = 0;
+			$_REQUEST['a'] = 77;
+			$_GET['stay'] = $_POST['stay'];
+			$content['id'] = 0;
+			$content['locked'] = $_POST['locked'] == 'on' ? 1 : 0;
+			$content['category'] = $_POST['categoryid'];
+
+			include 'header.inc.php';
+			include(dirname(dirname(__FILE__)).'/actions/mutate_htmlsnippet.dynamic.php');
+			include 'footer.inc.php';
+			
+			exit;
+		}
 		//do stuff to save the new doc
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_htmlsnippets` (name, description, snippet, locked, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$locked."', ".$categoryid.");";
 		$rs = $modx->db->query($sql);

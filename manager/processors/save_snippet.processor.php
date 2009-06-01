@@ -49,6 +49,33 @@ switch ($_POST['mode']) {
 									"id"	=> $id
 								));
 								
+		// disallow duplicate names for new snippets
+		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_snippets` WHERE name = '{$name}'";
+		$rs = $modx->db->query($sql);
+		$count = $modx->db->getValue($rs);
+		if($count > 0) {
+			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang["snippet"], $name));
+
+			// prepare a few variables prior to redisplaying form...
+			$_REQUEST['id'] = 0;
+			$_REQUEST['a'] = '23';
+			$_GET['a'] = '23';
+			$content = array();
+			$content['id'] = 0;
+			$content = array_merge($content, $_POST);
+			$content['locked'] = $content['locked'] == 'on' ? 1: 0;
+			$content['category'] = $_POST['categoryid'];
+			$content['snippet'] = preg_replace("/^\s*\<\?php/m", '', $_POST['post']);
+			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
+			$content['runsnippet'] = isset($_POST['runsnippet']);
+
+			include 'header.inc.php';
+			include(dirname(dirname(__FILE__)).'/actions/mutate_snippet.dynamic.php');
+			include 'footer.inc.php';
+			
+			exit;
+		}
+
 		//do stuff to save the new doc
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_snippets` (name, description, snippet, moduleguid, locked, properties, category) VALUES('".$name."', '".$description."', '".$snippet."', '".$moduleguid."', '".$locked."','".$properties."', '".$categoryid."');";
 		$rs = $modx->db->query($sql);

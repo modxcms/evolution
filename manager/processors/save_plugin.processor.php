@@ -44,7 +44,35 @@ switch ($_POST['mode']) {
                                     "id"    => $id
                                 ));
     
-        //do stuff to save the new plugin
+		// disallow duplicate names for new plugins
+		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_plugins` WHERE name = '{$name}'";
+		$rs = $modx->db->query($sql);
+		$count = $modx->db->getValue($rs);
+		if($count > 0) {
+			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['plugin'], $name));
+
+			// prepare a few variables prior to redisplaying form...
+			$content = array();
+			$_REQUEST['a'] = '101';
+			$_GET['a'] = '101';
+			$_GET['stay'] = $_POST['stay'];
+			$content = array_merge($content, $_POST);
+			$content['locked'] = $locked;
+			$content['plugincode'] = $_POST['post'];
+			$content['category'] = $_POST['categoryid'];
+			$content['disabled'] = $disabled;
+			$content['properties'] = $properties;
+			$content['moduleguid'] = $moduleguid;
+			$content['sysevents'] = $sysevents;
+
+			include 'header.inc.php';
+			include(dirname(dirname(__FILE__)).'/actions/mutate_plugin.dynamic.php');
+			include 'footer.inc.php';
+			
+			exit;
+		}
+
+		//do stuff to save the new plugin
         $sql = "INSERT INTO {$tblSitePlugins} (name, description, plugincode, disabled, moduleguid, locked, properties, category) VALUES('{$name}', '{$description}', '{$plugincode}', {$disabled}, '{$moduleguid}', {$locked}, '{$properties}', {$categoryid});";
         $rs = $modx->db->query($sql);
         if(!$rs){

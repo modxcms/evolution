@@ -47,6 +47,31 @@ switch ($_POST['mode']) {
 									"mode"	=> "new",
 									"id"	=> $id
 							));	      	
+
+		// disallow duplicate names for new tvs
+		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_tmplvars` WHERE name = '{$name}'";
+		$rs = $modx->db->query($sql);
+		$count = $modx->db->getValue($rs);
+		if($count > 0) {
+			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name));
+
+			// prepare a few variables prior to redisplaying form...
+			$content = array();
+			$_REQUEST['id'] = 0;
+			$content['id'] = 0;
+			$_GET['a'] = '300';
+			$_GET['stay'] = $_POST['stay'];
+			$content = array_merge($content, $_POST);
+			$content['locked'] = $content['locked'] == 'on' ? 1: 0;
+			$content['category'] = $_POST['categoryid'];
+
+			include 'header.inc.php';
+			include(dirname(dirname(__FILE__)).'/actions/mutate_tmplvars.dynamic.php');
+			include 'footer.inc.php';
+			
+			exit;
+		}
+
 		// Add new TV
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars` (name, description, caption, type, elements, default_text, display,display_params, rank, locked, category) VALUES('".$name."', '".$description."', '".$caption."', '".$type."', '".$elements."', '".$default_text."', '".$display."', '".$params."', '".$rank."', '".$locked."', ".$categoryid.");";
 		$rs = $modx->db->query($sql);

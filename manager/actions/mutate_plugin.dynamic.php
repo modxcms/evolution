@@ -397,17 +397,21 @@ function decode(s){
 		  				<?php
 
 							// get selected events
-							$sql = "
-								SELECT evtid, pluginid
-								FROM $dbase.`".$table_prefix."site_plugin_events`
-								WHERE pluginid='$id'
-							";
-							$evts = array();
-							$rs = mysql_query($sql);
-							$limit = mysql_num_rows($rs);
-							for ($i=0; $i<$limit; $i++) {
-							   $row = mysql_fetch_assoc($rs);
-							   $evts[] = $row['evtid'];
+							if(is_numeric($id) && $id > 0) {
+								$sql = "
+									SELECT evtid, pluginid
+									FROM $dbase.`".$table_prefix."site_plugin_events`
+									WHERE pluginid='$id'
+								";
+								$evts = array();
+								$rs = mysql_query($sql);
+								$limit = mysql_num_rows($rs);
+								for ($i=0; $i<$limit; $i++) {
+								   $row = mysql_fetch_assoc($rs);
+								   $evts[] = $row['evtid'];
+								}
+							} else {
+								$evts = $content['sysevents'];
 							}
 
 							// display system events

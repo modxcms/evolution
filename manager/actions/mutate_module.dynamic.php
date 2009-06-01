@@ -514,6 +514,7 @@ if ($use_udperms == 1) {
 	$limit = mysql_num_rows($rs);
 	for ($i = 0; $i < $limit; $i++) {
 		$row = mysql_fetch_assoc($rs);
+		$groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : $content['usrgroups'];
 		$checked = in_array($row['id'], $groupsarray);
 		if($modx->hasPermission('access_permissions')) {
 			if ($checked) $notPublic = true;

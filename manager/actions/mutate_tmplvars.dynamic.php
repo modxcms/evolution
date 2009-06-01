@@ -366,7 +366,12 @@ function decode(s){
     <td>
 <?php
     while ($row = mysql_fetch_assoc($rs)) {
-        echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($row['tmplvarid']? "checked='checked'":'')." />".$row['templatename']."<br />";
+    	if($id == 0 && is_array($_POST['template'])) {
+    		$checked = in_array($row['id'], $_POST['template']);
+    	} else {
+    		$checked = $row['tmplvarid'];
+    	}
+        echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($checked? "checked='checked'":'')." />".$row['templatename']."<br />";
     }
 ?>
     </td>
@@ -421,6 +426,9 @@ if($use_udperms==1) {
     $sql = "SELECT name, id FROM $dbase.`".$table_prefix."documentgroup_names`";
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
+    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
+    	$groupsarray = $_POST['docgroups'];
+    }
     for($i=0; $i<$limit; $i++) {
         $row=mysql_fetch_assoc($rs);
         $checked = in_array($row['id'], $groupsarray);
