@@ -411,7 +411,11 @@ function decode(s){
 								   $evts[] = $row['evtid'];
 								}
 							} else {
-								$evts = $content['sysevents'];
+								if(isset($content['sysevents']) && is_array($content['sysevents'])) {
+									$evts = $content['sysevents'];
+								} else {
+									$evts = array();
+								}
 							}
 
 							// display system events
