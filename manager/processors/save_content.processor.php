@@ -48,6 +48,8 @@ if (trim($pagetitle == "")) {
 // get table names
 $tbl_document_groups            = $modx->getFullTableName('document_groups');
 $tbl_documentgroup_names        = $modx->getFullTableName('documentgroup_names');
+$tbl_member_groups              = $modx->getFullTableName('member_groups');
+$tbl_membergroup_access         = $modx->getFullTableName('membergroup_access');
 $tbl_keyword_xref               = $modx->getFullTableName('keyword_xref');
 $tbl_site_content               = $modx->getFullTableName('site_content');
 $tbl_site_content_metatags      = $modx->getFullTableName('site_content_metatags');
@@ -107,6 +109,7 @@ if ($friendly_urls) {
 			}
 		}
 	}
+
 	// strip alias of special characters
 	elseif ($alias) {
 		$alias = stripAlias($alias);
@@ -147,6 +150,37 @@ if (empty ($unpub_date)) {
 $tmplvars = array ();
 if ($_SESSION['mgrDocgroups']) {
 	$docgrp = implode(",", $_SESSION['mgrDocgroups']);
+}
+
+// ensure that user has not made this document inaccessible to themselves
+if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
+	$document_group_list = implode(',', $document_groups);
+	$document_group_list = implode(',', array_filter(explode(',',$document_group_list), 'is_numeric'));
+	if(!empty($document_group_list)) {
+		$sql = "SELECT COUNT(mg.id) FROM {$tbl_membergroup_access} mga, {$tbl_member_groups} mg
+ WHERE mga.membergroup = mg.user_group
+ AND mga.documentgroup IN({$document_group_list})
+ AND mg.member = {$_SESSION['mgrInternalKey']};";
+		$rs = $modx->db->query($sql);
+		$count = $modx->db->getValue($rs);
+		if($count == 0) {
+			if ($actionToTake == 'edit') {
+				$modx->manager->saveFormValues(27);
+				$url = "index.php?a=27&id=" . $id;
+				include_once "header.inc.php";
+				$modx->webAlert(sprintf($_lang["document_permissions_error"]), $url);
+				include_once "footer.inc.php";
+				exit;
+			} else {
+				$modx->manager->saveFormValues(4);
+				$url = "index.php?a=4";
+				include_once "header.inc.php";
+				$modx->webAlert(sprintf($_lang["document_permissions_error"]), $url);
+				include_once "footer.inc.php";
+				exit;
+			}
+		}
+	}
 }
 
 $sql = "SELECT DISTINCT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";

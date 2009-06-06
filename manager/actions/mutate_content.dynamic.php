@@ -15,6 +15,17 @@ switch ($_REQUEST['a']) {
 		if (!$modx->hasPermission('new_document')) {
 			$e->setError(3);
 			$e->dumpError();
+		} elseif(isset($_REQUEST['pid']) && $_REQUEST['pid'] != '0') {
+			// check user has permissions for parent
+			include_once(MODX_MANAGER_PATH.'processors/user_documents_permissions.class.php');
+			$udperms = new udperms();
+			$udperms->user = $modx->getLoginUserID();
+			$udperms->document = empty($_REQUEST['pid']) ? 0 : $_REQUEST['pid'];
+			$udperms->role = $_SESSION['mgrRole'];
+			if (!$udperms->checkPermissions()) {
+				$e->setError(3);
+				$e->dumpError();
+			}
 		}
 		break;
 	default:
@@ -34,6 +45,8 @@ else    $manager_theme  = '';
 // Get table names (alphabetical)
 $tbl_active_users               = $modx->getFullTableName('active_users');
 $tbl_document_group_names       = $modx->getFullTableName('documentgroup_names');
+$tbl_member_groups              = $modx->getFullTableName('member_groups');
+$tbl_membergroup_access         = $modx->getFullTableName('membergroup_access');
 $tbl_document_groups            = $modx->getFullTableName('document_groups');
 $tbl_keyword_xref               = $modx->getFullTableName('keyword_xref');
 $tbl_site_content               = $modx->getFullTableName('site_content');
@@ -1028,6 +1041,8 @@ if ($use_udperms == 1) {
 		'onclick' => 'makePublic(false);',
 	);
 	$permissions = array(); // New Permissions array list (this contains the HTML)
+	$permissions_yes = 0; // count permissions the current mgr user has
+	$permissions_no = 0; // count permissions the current mgr user doesn't have
 
 	// Loop through the permissions list
 	for ($i = 0; $i < $limit; $i++) {
@@ -1058,9 +1073,25 @@ if ($use_udperms == 1) {
 		// Make the <input> HTML
 		$inputHTML = '<input '.implode(' ', $inputString).' />';
 
+		// does user have this permission?
+		$sql = "SELECT COUNT(mg.id) FROM {$tbl_membergroup_access} mga, {$tbl_member_groups} mg
+ WHERE mga.membergroup = mg.user_group
+ AND mga.documentgroup = {$row['id']}
+ AND mg.member = {$_SESSION['mgrInternalKey']};";
+		$rsp = $modx->db->query($sql);
+		$count = $modx->db->getValue($rsp);
+		if($count > 0) {
+			++$permissions_yes;
+		} else {
+			++$permissions_no;
+		}
 		$permissions[] = "\t\t".'<li>'.$inputHTML.'<label for="'.$inputId.'">'.$row['name'].'</label></li>';
 	}
-
+	// if mgr user doesn't have access to any of the displayable permissions, forget about them and make doc public
+	if($_SESSION['mgrRole'] != 1 && ($permissions_yes == 0 && $permissions_no > 0)) {
+		$permissions = array();
+	}
+	
 	// See if the Access Permissions section is worth displaying...
 	if (!empty($permissions)) {
 		// Add the "All Document Groups" item if we have rights in both contexts
@@ -1098,6 +1129,15 @@ if ($use_udperms == 1) {
 </div><!-- end .sectionBody -->
 <?php
 	} // !empty($permissions)
+	elseif($_SESSION['mgrRole'] != 1 && ($permissions_yes == 0 && $permissions_no > 0)) {
+?>
+<div class="sectionHeader"><?php echo $_lang['access_permissions']?></div>
+<div class="sectionBody">
+	<p><?php echo $_lang["access_permissions_docs_collision"];?></p>
+</div>
+<?php
+		
+	}
 }
 /* End Document Access Permissions *
  ***********************************/
