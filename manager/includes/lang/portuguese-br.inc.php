@@ -1,6 +1,6 @@
 <?php
 /**
- * Filename:       includes/lang/english.inc.php
+ * Filename:       includes/lang/portuguese-br.inc.php
  * Function:       Language file.
  * Encoding:       UTF8
  * Author:         The MODx Project Team
@@ -8,7 +8,6 @@
  * Version:        2.01
  * MODx version:   0.9.5
 */
-// NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx é um <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>Sistema em PHP para Gestão de Conteúdos</a> (em Inglês).';
 $_lang["about_title"] = 'Sobre o MODx';
 $_lang["access_permissions"] = 'Permissões de Acesso';
@@ -155,11 +154,7 @@ $_lang["credits_dTree"] = 'MODx usa o excelente script \'dTree\' de árvore de d
 $_lang["credits_everaldo"] = 'MODx usa alguns ícones do conjunto \'crystal\' criado por Everaldo';
 $_lang["credits_mysql"] = 'MODx utiliza o motor de base de dados MySQL';
 $_lang["credits_php"] = 'MODx utiliza a linguagem PHP';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><b>Raymond Irving, Ryan Thrash</b> - Fundadores do projeto</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Arquitetura do Núcleo da aplicação e Design</li>
-<li><b>Daniel Miguel</b> - tradução para o Português do Brasil. Visite o site (www.modxcms.com.br)</li></ul>';
+$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Fundadores do projeto</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Arquitetura do Núcleo da aplicação e Design</li><li><b>Daniel Miguel</b> - tradução para o Português do Brasil. Visite o site (www.modxcms.com.br)</li></ul>';
 $_lang["credits_shouts_title"] = '<b>Agradecimentos especiais para:</b>';
 $_lang["credits_webfx"] = 'MODx usa vários JavaScripts da WebFX';
 $_lang["custom_contenttype_message"] = 'Aqui pode adicionar tipos de conteúdos personalizados para usar nos seus documentos. Para adicionar uma nova entrada, digite o tipo de conteúdo na caixa de texto e clique no botão \'Adicionar\'.';
@@ -180,7 +175,7 @@ $_lang["database_table_records"] = 'Registos';
 $_lang["database_table_tablename"] = 'Nome da tabela';
 $_lang["database_table_totalsize"] = 'Tamanho total';
 $_lang["database_table_totals"] = 'Totais:';
-$_lang['database_version'] = 'Versão da Base de Dados:';
+$_lang["database_version"] = 'Versão da Base de Dados:';
 $_lang["date"] = 'Date';
 $_lang["datechanged"] = 'Date changed';
 $_lang["defaultcache_message"] = 'Select \'Yes\' to make all new documents cacheable by default.';
@@ -239,8 +234,8 @@ $_lang["document_title"] = 'Título';
 $_lang["document_title_help"] = 'Digite nome/título do documento aqui. Convém separar as palavras com uma underline(_)!';
 $_lang["document_to_be_moved"] = 'O Documento a ser movido';
 $_lang["document_weblink_help"] = 'Digite aqui o endereço do objecto ou documento a que deseja ligar.';
-$_lang["documents_in_container"] = "documentos nesta pasta";
-$_lang["documents_in_container_no"] = "Esta pasta não contém nenhum documento.";
+$_lang["documents_in_container"] = 'documentos nesta pasta';
+$_lang["documents_in_container_no"] = 'Esta pasta não contém nenhum documento.';
 $_lang["doc_data_title"] = 'Ver dados do documento';
 $_lang["duplicate"] = 'Duplicar';
 $_lang["duplicate_alias_found"] = 'O Documento \'%s\' já utiliza o apelido (alias) \'%s\'. Por favor indique um apelido único.';
@@ -446,7 +441,7 @@ $_lang["mail_check_timeperiod_message"] = 'Com que frequência pretende vHow oft
 $_lang["manager"] = 'Administrador';
 $_lang["manager_direction_message"] = 'Escolha a direção do texto que será mostrado no Administrador, esquerda para direita ou direita para esquerda.';
 $_lang["manager_direction_title"] = 'Direção do texto no Administrador:';
-$_lang['manager_lockout_message'] = 'Está atualmente ligado no Gestor de Conteúdos. Se deseja fechar a sua sessão, por favor clique no botão \'Sair\'. <br />Para ir para a sua página inicial clique no botão \'Início\'';
+$_lang["manager_lockout_message"] = 'Está atualmente ligado no Gestor de Conteúdos. Se deseja fechar a sua sessão, por favor clique no botão \'Sair\'. <br />Para ir para a sua página inicial clique no botão \'Início\'';
 $_lang["manager_permissions"] = 'Permissões (no Interface de Gestão)';
 $_lang["manager_theme"] = 'Tema (template) do Interface de Gestão:';
 $_lang["manager_theme_message"] = 'Escolha o Tema para o Interface de Gestão de Conteúdos.';
@@ -503,8 +498,7 @@ $_lang["mgrlog_itemid"] = 'ID do item';
 $_lang["mgrlog_itemname"] = 'Nome do Item';
 $_lang["mgrlog_msg"] = 'Mensagem';
 $_lang["mgrlog_noquery"] = 'Não foram indicados critérios de procura.';
-$_lang["mgrlog_query_msg"] = 'Por favor escolha uma opção para ver os registos. Pode selecionar registos por data, mas atenção que as datas que indicar não são inclusivas - para selecionar todos os registos para 01-01-2004, indique \'Data a partir de\' como 01-01-2004 e \'Data até\' como 02-01-2004.<br /><br />
-Mensagem e Ação são normalmente o mesmo. Se está à procura de uma mensagem específica, é melhor escolher para Ação \'Qualquer/Tudo\'.';
+$_lang["mgrlog_query_msg"] = 'Por favor escolha uma opção para ver os registos. Pode selecionar registos por data, mas atenção que as datas que indicar não são inclusivas - para selecionar todos os registos para 01-01-2004, indique \'Data a partir de\' como 01-01-2004 e \'Data até\' como 02-01-2004.<br /><br />Mensagem e Ação são normalmente o mesmo. Se está à procura de uma mensagem específica, é melhor escolher para Ação \'Qualquer/Tudo\'.';
 $_lang["mgrlog_results"] = 'No. de resultados';
 $_lang["mgrlog_qresults"] = 'Resultados da pequisa';
 $_lang["mgrlog_searchlogs"] = 'Procurar registos';
@@ -614,9 +608,9 @@ $_lang["page_data_unpublishdate"] = 'Data de retirada do site';
 $_lang["page_data_unpublishdate_help"] = 'Se definir uma data de retirada, o documento deixará de estar publicado quando esta data for alcançada.\nClique no ícone do calendário para selecionar a data desejada, ou no ícone ao lado para apagar a data de retirada.\n\nTenha cuidado com a data que escolher pois o documento poderá manter-se publicado!';
 $_lang["page_data_unpublished"] = 'Não publicado';
 $_lang["page_data_web_access"] = 'Acesso Web';
-$_lang["pagination_table_first"] = "Primeiro";
-$_lang["pagination_table_last"] = "Último";
-$_lang["pagination_table_gotopage"] = "Ir para página";
+$_lang["pagination_table_first"] = 'Primeiro';
+$_lang["pagination_table_last"] = 'Último';
+$_lang["pagination_table_gotopage"] = 'Ir para página';
 $_lang["paging_first"] = 'primeiro';
 $_lang["paging_last"] = 'último';
 $_lang["paging_next"] = 'próximo';
@@ -729,13 +723,13 @@ $_lang["role_edit_user"] = 'Editar usuários';
 $_lang["role_edit_web_user"] = 'Editar usuários (web)';
 $_lang["role_empty_trash"] = 'Esvaziar lixeira de documentos';
 $_lang["role_errors"] = 'Ver diálogo de erro';
-$_lang['role_export_static'] = 'Exportar HTML estático';
+$_lang["role_export_static"] = 'Exportar HTML estático';
 $_lang["role_eventlog_management"] = 'Gestão de registos de eventos';
 $_lang["role_file_manager"] = 'Usar o gestor de arquivos';
 $_lang["role_frames"] = 'Pedir áreas (frames) do Interface de Gestão';
 $_lang["role_help"] = 'Ver páginas de ajuda';
 $_lang["role_home"] = 'Pedir página de início do Interface de Gestão';
-$_lang['role_import_static'] = 'Importar HTML';
+$_lang["role_import_static"] = 'Importar HTML';
 $_lang["role_logout"] = 'Sair do Interface de Gestão';
 $_lang["role_management_msg"] = 'Aqui pode escolher qual o perfil que deseja alterar.';
 $_lang["role_management_title"] = 'Perfis';
@@ -776,12 +770,12 @@ $_lang["rss_url_news_message"] = 'Digite o URL para o Feed de notícias MODx.';
 $_lang["rss_url_news_title"] = 'Feed de Notícias RSS';
 $_lang["rss_url_security_message"] = 'Digite o URL para o Feed de segurança MODx.';
 $_lang["rss_url_security_title"] = 'Feed de Segurança RSS';
-$_lang["modx_news"] ='MODx Avisos de Novidades';
-$_lang["modx_news_tab"] ='MODx Notícias';
-$_lang["modx_news_title"] ='MODx Notícias';
-$_lang["modx_security_notices"] ='MODx Notícias de Segurança';
-$_lang["security_notices_tab"] ='Avisos de Segurança';
-$_lang["security_notices_title"] ='Avisos de Segurança';
+$_lang["modx_news"] = 'MODx Avisos de Novidades';
+$_lang["modx_news_tab"] = 'MODx Notícias';
+$_lang["modx_news_title"] = 'MODx Notícias';
+$_lang["modx_security_notices"] = 'MODx Notícias de Segurança';
+$_lang["security_notices_tab"] = 'Avisos de Segurança';
+$_lang["security_notices_title"] = 'Avisos de Segurança';
 $_lang["run_module"] = 'Executar Módulo';
 $_lang["saturday"] = 'Sábado';
 $_lang["save"] = 'Salvar';
@@ -875,7 +869,7 @@ $_lang["sunday"] = 'Domingo';
 $_lang["sysinfo_activity_message"] = 'Esta lista mostra quais os documentos que foram recentemente editados pelos seus usuários.';
 $_lang["sysinfo_userid"] = 'Usuário';
 $_lang["system_email_signup"] = 'Olá [+uid+] \n\nAqui estão os seus detalhes para entrar ao Gestor de Conteúdos de [+sname+] :\n\nUsername: [+uid+]\nSenha: [+pwd+]\n\nAssim que entrar no Gestor de Conteúdos ([+surl+]), pode alterar a sua senha.\n\nACumprimentos,\nO Administrador [+sname+]';
-$_lang["system_email_webreminder"] = 'Olá [+uid+]\n\nPara ativar a sua nova senha, clique no seguinte link:\n\n[+surl+]\n\nPode usar a seguinte senha para entrar:\n\\nSenha:[+pwd+]\n\nSe não pediu este email, por favor ignore-o.\n\nCumprimentos,\nO Administrador [+sname+]';
+$_lang["system_email_webreminder"] = 'Olá [+uid+]\n\nPara ativar a sua nova senha, clique no seguinte link:\n\n[+surl+]\n\nPode usar a seguinte senha para entrar:\n\nSenha:[+pwd+]\n\nSe não pediu este email, por favor ignore-o.\n\nCumprimentos,\nO Administrador [+sname+]';
 $_lang["system_email_websignup"] = 'Olá [+uid+] \n\nAqui estão seus detalhes para entrar a [+sname+]:\n\nLogin: [+uid+]\nSenha: [+pwd+]\n\nUma vez que entrar como [+sname+] ([+surl+]), pode alterar sua senha.\n\nCumprimentos,\nO Administrador [+sname+]';
 $_lang["sys_alert"] = 'Alerta do Sistema';
 $_lang["table_hoverinfo"] = 'Passe o cursor do rato sobre o nome da tabela para ver uma curta descrição da função da tabela (<i>nem todas as tabelas têm comentários activos</i>).';
@@ -966,7 +960,7 @@ $_lang["user_changeddata"] = 'Os seus dados foram alterados. Por favor volte a e
 $_lang["user_country"] = 'País';
 $_lang["user_dob"] = 'Data de nascimento';
 $_lang["user_doesnt_exist"] = 'O usuário não existe';
-$_lang["user_edit_self_msg"] = '<b>Deve sair do sistema e entrar novamente para implementar todas as alterações.</b><br>Caso decida gerar uma nova senha para si, esta ser-lhe-à enviada por e-mail.';
+$_lang["user_edit_self_msg"] = '<b>Deve sair do sistema e entrar novamente para implementar todas as alterações.</b><br />Caso decida gerar uma nova senha para si, esta ser-lhe-à enviada por e-mail.';
 $_lang["user_email"] = 'Endereço de E-mail';
 $_lang["user_failedlogincount"] = 'Tentativas de acesso falhadas';
 $_lang["user_fax"] = 'Fax';
