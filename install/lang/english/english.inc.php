@@ -10,54 +10,48 @@
  * Language:       English
  * Encoding:       iso-8859-1
  */
-$_lang['license'] = '<h2>MODx License Agreement.</h2>
-	    <hr style="text-align:left;height:1px;width:90%" />
-		<h3>You must agree to the License before continuing installation.</h3>
-		<p>Usage of this software is subject to the GPL license. To help you understand
-		what the GPL licence is and how it affects your ability to use the software, we
-		have provided the following summary:</p>
-		<h3>The GNU General Public License is a Free Software license.</h3>
-		<p>Like any Free Software license, it grants to you the four following freedoms:</p>
-		<ul>
-            <li>The freedom to run the program for any purpose. </li>
-            <li>The freedom to study how the program works and adapt it to your needs. </li>
-            <li>The freedom to redistribute copies so you can help your neighbor. </li>
-            <li>The freedom to improve the program and release your improvements to the
-            public, so that the whole community benefits. </li>
-		</ul>
-		<p>You may exercise the freedoms specified here provided that you comply with
-		the express conditions of this license. The principal conditions are:</p>
-		<ul>
-            <li>You must conspicuously and appropriately publish on each copy distributed an
-            appropriate copyright notice and disclaimer of warranty and keep intact all the
-            notices that refer to this License and to the absence of any warranty; and give
-            any other recipients of the Program a copy of the GNU General Public License
-            along with the Program. Any translation of the GNU General Public License must
-            be accompanied by the GNU General Public License.</li>
-
-            <li>If you modify your copy or copies of the program or any portion of it, or
-            develop a program based upon it, you may distribute the resulting work provided
-            you do so under the GNU General Public License. Any translation of the GNU
-            General Public License must be accompanied by the GNU General Public License. </li>
-
-            <li>If you copy or distribute the program, you must accompany it with the
-            complete corresponding machine-readable source code or with a written offer,
-            valid for at least three years, to furnish the complete corresponding
-            machine-readable source code.</li>
-
-            <li>Any of these conditions can be waived if you get permission from the
-            copyright holder.</li>
-
-            <li>Your fair use and other rights are in no way affected by the above.
-            </li>
-        </ul>
-		<p>The above is a summary of the GNU General Public License. By proceeding, you
-		are agreeing to the GNU General Public Licence, not the above. The above is
-		simply a summary of the GNU General Public Licence, and its accuracy is not
-		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public
-		License</a> in full before proceeding, which can also be found in the license
-		file distributed with this package.</p>';
-
+$_lang["license"] = '<h2>MODx License Agreement.</h2>
+<hr style="text-align:left;height:1px;width:90%;" />
+<h3>You must agree to the License before continuing installation.</h3>
+<p>Usage of this software is subject to the GPL license. To help you understand
+  what the GPL licence is and how it affects your ability to use the software, we
+  have provided the following summary:</p>
+<h3>The GNU General Public License is a Free Software license.</h3>
+<p>Like any Free Software license, it grants to you the four following freedoms:</p>
+<ul>
+  <li>The freedom to run the program for any purpose.</li>
+  <li>The freedom to study how the program works and adapt it to your needs.</li>
+  <li>The freedom to redistribute copies so you can help your neighbor.</li>
+  <li>The freedom to improve the program and release your improvements to the
+    public, so that the whole community benefits.</li>
+</ul>
+<p>You may exercise the freedoms specified here provided that you comply with
+  the express conditions of this license. The principal conditions are:</p>
+<ul>
+  <li>You must conspicuously and appropriately publish on each copy distributed an
+    appropriate copyright notice and disclaimer of warranty and keep intact all the
+    notices that refer to this License and to the absence of any warranty; and give
+    any other recipients of the Program a copy of the GNU General Public License
+    along with the Program. Any translation of the GNU General Public License must
+    be accompanied by the GNU General Public License.</li>
+  <li>If you modify your copy or copies of the program or any portion of it, or
+    develop a program based upon it, you may distribute the resulting work provided
+    you do so under the GNU General Public License. Any translation of the GNU
+    General Public License must be accompanied by the GNU General Public License.</li>
+  <li>If you copy or distribute the program, you must accompany it with the
+    complete corresponding machine-readable source code or with a written offer,
+    valid for at least three years, to furnish the complete corresponding
+    machine-readable source code.</li>
+  <li>Any of these conditions can be waived if you get permission from the
+    copyright holder.</li>
+  <li>Your fair use and other rights are in no way affected by the above.</li>
+</ul>
+<p>The above is a summary of the GNU General Public License. By proceeding, you
+  are agreeing to the GNU General Public Licence, not the above. The above is
+  simply a summary of the GNU General Public Licence, and its accuracy is not
+  guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public
+  License</a> in full before proceeding, which can also be found in the license
+  file distributed with this package.</p>';
 $_lang["alert_database_test_connection"] = 'You need to create your database or test the selection of your database!';
 $_lang["alert_database_test_connection_failed"] = 'The test of your database selection has failed!';
 $_lang["alert_enter_adminconfirm"] = 'The administrator password and the confirmation don\\\'t match!';
@@ -71,7 +65,7 @@ $_lang["alert_server_test_connection_failed"] = 'The test of your server connect
 $_lang["alert_table_prefixes"] = 'Table prefixes must start with a letter!';
 $_lang["all"] = 'All';
 $_lang["and_try_again"] = ', and try again. If you need help figuring out how to fix the problem';
-$_lang["and_try_again_plural"] = ', and try again. If you need help figuring out how to fix the problems'; //Plural form
+$_lang["and_try_again_plural"] = ', and try again. If you need help figuring out how to fix the problems';
 $_lang["Begin"] = 'Begin';
 $_lang["btnback_value"] = 'Back';
 $_lang["btnclose_value"] = 'Close';
@@ -90,7 +84,7 @@ $_lang["checking_if_images_exist"] = 'Checking if <span class=\"mono\">assets/im
 $_lang["checking_if_images_writable"] = 'Checking if <span class=\"mono\">assets/images</span> directory is writable: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
-$_lang["checking_php_version"] = "Checking PHP version: ";
+$_lang["checking_php_version"] = 'Checking PHP version: ';
 $_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
 $_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODx install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODx, but consider yourself warned.'; //Look at changing this to provide a solution.
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
@@ -128,7 +122,7 @@ $_lang["database_use_failed_note"] = 'Please check the database permissions for 
 $_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
 $_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
 $_lang["error"] = 'error';
-$_lang["errors"] = 'errors'; //Plural form
+$_lang["errors"] = 'errors';
 $_lang["failed"] = 'FAILED!';
 $_lang["iagree_box"] = 'I agree to the terms set out in this license.';
 $_lang["install"] = 'Install';
@@ -165,7 +159,7 @@ $_lang["optional_items"] = 'Optional Items';
 $_lang["optional_items_note"] = 'Please choose your installation options and click Install:';
 $_lang["php_security_notice"] = '<legend>Security notice</legend><p>While MODx will work on your PHP version, usage of MODx on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 4.3.8 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p>';
 $_lang["please_correct_error"] = '. Please correct the error';
-$_lang["please_correct_errors"] = '. Please correct the errors'; //Plural form
+$_lang["please_correct_errors"] = '. Please correct the errors';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Pre-install validation';
 $_lang["remove_install_folder_auto"] = 'Remove the install folder and files from my website <br />&nbsp;(This operation requires delete permission to the granted to the install folder).';

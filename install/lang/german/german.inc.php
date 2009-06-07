@@ -10,38 +10,24 @@
  * Language:       German
  * Encoding:       UTF-8
  */
-
-
-
-
-$_lang['license'] = '<h2>MODx Lizenzvereinbarung.</h2>
-  <hr style="WIDTH: 90%; HEIGHT: 1px; TEXT-ALIGN: left">
-
-  <h3>Sie m&uuml;ssen der Lizenz zustimmen bevor Sie mit der Installation fortfahren.</h3>
-
-  <p>Die Software ist unter der GPL lizenziert. Das Benutzen der Software unterliegt den bestimmungen der GPL. Die GPL betrifft diese Software sowie Ihre Benutzung in folgender Weise:</p>
-
-  <h3>Die GNU General Public License ist eine freie Software Lizenz.</h3>
-
-  <p>Wie bei jeder freien Softwarelizenz haben Sie folgende Freiheiten:</p>
-
-  <ul>
-    <li>Die Freiheit, das Programm zu jedem Zweck zu benutzen.</li>
-
-    <li>Die Freiheit das Programm zu studieren und es Ihren Bed&uuml;rfnissen anzupassen.</li>
-
-    <li>Die Freiheit, Kopien des Programms zu verbreiten und so dem N&auml;chsten zu helfen.</li>
-
-    <li>Die Freiheit, das Programm zu verbessern, weiter zu verbreiten und so der gesamten Nutzergemeinde zu helfen.</li>
-  </ul>
-
-  <p>Sie k&ouml;nnen diese Freiheiten aus&uuml;ben wenn Sie mit den Bedingungen der GNU GPL einverstanden erkl&auml;ren. Die Bedingungen finden Sie <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank">hier</a>.</p>
-
-  <p>Das oben stehende ist eine Zusammenfassung der GNU GPL. Wenn Sie fortfahren, stimmen Sie den Bestimmungen der GNU General Public Licence zu, nicht dem hier beschriebenen. Oben stehendes stellt
+$_lang["license"] = '<h2>MODx Lizenzvereinbarung.</h2>
+<hr style="text-align:left;height:1px;width:90%;" />
+<h3>Sie m&uuml;ssen der Lizenz zustimmen bevor Sie mit der Installation fortfahren.</h3>
+<p>Die Software ist unter der GPL lizenziert. Das Benutzen der Software unterliegt den bestimmungen der GPL. Die GPL betrifft diese Software sowie Ihre Benutzung in folgender Weise:</p>
+<h3>Die GNU General Public License ist eine freie Software Lizenz.</h3>
+<p>Wie bei jeder freien Softwarelizenz haben Sie folgende Freiheiten:</p>
+<ul>
+  <li>Die Freiheit, das Programm zu jedem Zweck zu benutzen.</li>
+  <li>Die Freiheit das Programm zu studieren und es Ihren Bed&uuml;rfnissen anzupassen.</li>
+  <li>Die Freiheit, Kopien des Programms zu verbreiten und so dem N&auml;chsten zu helfen.</li>
+  <li>Die Freiheit, das Programm zu verbessern, weiter zu verbreiten und so der gesamten Nutzergemeinde zu helfen.</li>
+</ul>
+<p>Sie k&ouml;nnen diese Freiheiten aus&uuml;ben wenn Sie mit den Bedingungen der GNU GPL einverstanden erkl&auml;ren. Die Bedingungen finden Sie <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank">hier</a>.</p>
+<p>Das oben stehende ist eine Zusammenfassung der GNU GPL. Wenn Sie fortfahren, stimmen Sie den Bestimmungen der GNU General Public Licence zu, nicht dem hier beschriebenen. Oben stehendes stellt
   nur eine Zusammenfassng dar, seine Richtigkeit kann nicht garantiert werden.&nbsp;Es wird dringend empfohlen, die&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General
   Public License</a> im Original zu lesen bevor Sie fortfahren, diese k&ouml;nnen Sie auch im heruntergeladenen Paket als Textdatei finden.</p>';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
-$_lang["language_code"] = 'de';	// for html element e.g. <html xml:lang="de" lang="de">
+$_lang["encoding"] = 'utf-8';
+$_lang["language_code"] = 'de';
 $_lang["modx_install"] = 'MODx &raquo; Installation';
 $_lang["loading"] = 'Laden...';
 $_lang["Begin"] = 'Anfang';
@@ -103,7 +89,7 @@ $_lang["plugins"] = 'Plugins';
 $_lang["snippets"] = 'Snippets';
 $_lang["preinstall_validation"] = 'Pre-install Prüfung';
 $_lang["summary_setup_check"] = 'Das Programm führt einige Checks durch, um zu prüfen ob alles für die Installation bereit ist.';
-$_lang["checking_php_version"] = "Überprüfe PHP-Version: ";
+$_lang["checking_php_version"] = 'Überprüfe PHP-Version: ';
 $_lang["failed"] = 'fehlgeschlagen!';
 $_lang["ok"] = 'OK!';
 $_lang["you_running_php"] = ' - Benutzte PHP Version ';
@@ -136,18 +122,18 @@ $_lang["table_prefix_not_exist"] = ' - Tabellen Präfix existiert nicht in der g
 $_lang["table_prefix_not_exist_note"] = 'Das Programm konnte nicht in der gewählten Datenbank installiert werden, da keine Tabellen mit dem gewählten Prefix existieren. to be upgraded. Bitte wählen Sie einen exisiterenden Prefix und wiederholen Sie die Installation.';
 $_lang["setup_cannot_continue"] = 'Leider kann die Installation nicht fortgesetzt werden wegen oben aufgeführter Gründe. ';
 $_lang["error"] = 'Fehler';
-$_lang["errors"] = 'Fehler'; //Plural form
+$_lang["errors"] = 'Fehler';
 $_lang["please_correct_error"] = '. Bitte korrigieren Sie den Fehler';
-$_lang["please_correct_errors"] = '. Bitte korrigieren Sie die Fehler'; //Plural form
+$_lang["please_correct_errors"] = '. Bitte korrigieren Sie die Fehler';
 $_lang["and_try_again"] = ', und versuchen Sie es erneut. Falls Sie Hilfe bei der Lösung des Problems benötigen';
-$_lang["and_try_again_plural"] = ', und versuchen Sie es erneut. Falls Sie Hilfe bei der Lösung der Probleme benötigen'; //Plural form
-$_lang["checking_mysql_version"] = 'Checking MySQL version: ';//translate from here
+$_lang["and_try_again_plural"] = ', und versuchen Sie es erneut. Falls Sie Hilfe bei der Lösung der Probleme benötigen';
+$_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["mysql_version_is"] = ' Your MySQL version is: ';
 $_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
 $_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict mode: ';
 $_lang["strict_mode_error"] = 'MODx requires that strict mode be disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
-$_lang["strict_mode"] = ' MySQL server is in strict mode!';//translate up to here
+$_lang["strict_mode"] = ' MySQL server is in strict mode!';
 $_lang["visit_forum"] = ', besuchen Sie die <a href="http://www.modxcms.com/forums/" target="_blank">MODx Foren</a>.';
 $_lang["testing_connection"] = 'Teste Verbindung...';
 $_lang["btnback_value"] = 'zurück';
@@ -169,7 +155,7 @@ $_lang["btnclose_value"] = 'Schließen';
 $_lang["running_setup_script"] = 'Starte Setup Script... bitte warten';
 $_lang["modx_footer1"] = '&copy; 2005-2008 <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODx unter der GNU GPL lizenziert.';
 $_lang["modx_footer2"] = 'MODx is freie Software.  Wir ermutigen Sie, kreativ zu sein und MODx so zu nutzen wie es Ihnen am besten passt. Stellen Sie nur sicher, dass Sie bei Veränderungen des Quelltextes und der Weiterverbreitung der modifizierten MODx-Version den Quelltext frei zugänglich belassen!';
-$_lang["setup_database"] = 'Setup will now attempt to setup the database:<br />'; //translate this
+$_lang["setup_database"] = 'Setup will now attempt to setup the database:<br />';
 $_lang["setup_database_create_connection"] = 'Verbindund zur Datenbank: ';
 $_lang["setup_database_create_connection_failed"] = 'Datenbank Verbindung fehlgeschlagen!';
 $_lang["setup_database_create_connection_failed_note"] = 'Bitte prüfen Sie die Datenbank-Details und versuchen Sie es erneut.';

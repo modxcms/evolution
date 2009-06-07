@@ -10,56 +10,47 @@
  * Language:       Português do Brasil
  * Encoding:       iso-8859-1
  */
-
-
-
-
-$_lang['license'] = '<h2>Licença e Contrato do MODx.</h2>
-	    <hr style="text-align:left;height:1px;width:90%" />
-		<h3>Você deve concordar com o contrato para continuar a instalação.</h3>
-		<p>Este software está licenciado através da licensa GPL. Para te ajudar a entender
-		o que é a licensa GPL e como esta licensa interfere no uso deste software, nós
-		fornecemos o seguinte índice:</p>
-		<h3>A GNU "General Public License" é uma licensa de Software Livre.</h3>
-		<p>Como qualquer licensa de Software Gratuito, isto garante a sua liberdade de:</p>
-		<ul>
-            <li>Usar o programa por qualquer propósito. </li>
-            <li>Estudar como o programa funciona e adaptar-lo à suas necessidades. </li>
-            <li>Poder distribuir o Software à sua rede, para que você possa ajudá-los. </li>
-            <li>Aperfeiçoar o programa e compartilhar suas modificações com o público para que
-            beneficie toda a comunidade. </li>
-		</ul>
-		<p>Você podera usufruir dos direitos citados acima se você concordar com as
-		condições expressas nesta licensa. As principais condições são:</p>
-		<ul>
-            <li>Você deve distribuir o software acompanhado de sua licensa apropiada, incluindo
-            marcas de Direitos de Cópia (Copyright) e os avisos de garantia intactos, referentes
-            à esta Licensa e pela ausência de garantia; e enviar qualquer outros recipientes do
-            Programa, uma copia da licensa GNU General Public License, juntamente com o programa.
-            Qualquer tradução da Licensa GNU deve ser acompanhada da Licensa Pública Geral GNU.</li>
-
-            <li>Se você modificar suas cópias ou qualquer cópia do programa, ou desenvolver um
-            programa baseado nele, você deverá distribuir o conteúdo dentro da Licensa Pública Geral
-            GNU. Qualquer tradução da Licensa Pública Geral GNU deve ser acompanhada da GNU 
-            General Public License. </li>
-
-            <li>Se você copiar ou distribuir o programa, você deve acompanhá-lo de uma
-            completa cópia correspondendo a um código-fonte de leitura por máquinas ou com uma oferta escrita,
-            valida por pelomenos 3 (três) anos, à fornecer o código-fonte.</li>
-
-            <li>Todas estas condições podem ser removidas se você conseguir uma autorização
-            do dono dos Direitos de Cópia (copyright).</li>
-
-            <li>Seus direitos de utilização e outros direitos não são afetados pelos acima citados.
-            </li>
-        </ul>
-		<p>O sumário acima pertence à Licensa Pública Geral GNU. Ao proceder, você
-		está concordando com a Licensa Pública Geral GNU, não com o sumário. Acima
-		citamos apenas um índice da Licensa Pública Geral GNU, e sua integridade
-		é garantida. É altamente recomendável que você leia a<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">Licensa Pública
-		Geral GNU</a> por completa antes de prosseguir, que também é encontrada no
-		arquivo de licensa que acompanha este pacote.</p>';
-$_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
+$_lang["license"] = '<h2>Licença e Contrato do MODx.</h2>
+<hr style="text-align:left;height:1px;width:90%;" />
+<h3>Você deve concordar com o contrato para continuar a instalação.</h3>
+<p>Este software está licenciado através da licensa GPL. Para te ajudar a entender
+  o que é a licensa GPL e como esta licensa interfere no uso deste software, nós
+  fornecemos o seguinte índice:</p>
+<h3>A GNU "General Public License" é uma licensa de Software Livre.</h3>
+<p>Como qualquer licensa de Software Gratuito, isto garante a sua liberdade de:</p>
+<ul>
+  <li>Usar o programa por qualquer propósito.</li>
+  <li>Estudar como o programa funciona e adaptar-lo à suas necessidades.</li>
+  <li>Poder distribuir o Software à sua rede, para que você possa ajudá-los.</li>
+  <li>Aperfeiçoar o programa e compartilhar suas modificações com o público para que
+    beneficie toda a comunidade.</li>
+</ul>
+<p>Você podera usufruir dos direitos citados acima se você concordar com as
+  condições expressas nesta licensa. As principais condições são:</p>
+<ul>
+  <li>Você deve distribuir o software acompanhado de sua licensa apropiada, incluindo
+    marcas de Direitos de Cópia (Copyright) e os avisos de garantia intactos, referentes
+    à esta Licensa e pela ausência de garantia; e enviar qualquer outros recipientes do
+    Programa, uma copia da licensa GNU General Public License, juntamente com o programa.
+    Qualquer tradução da Licensa GNU deve ser acompanhada da Licensa Pública Geral GNU.</li>
+  <li>Se você modificar suas cópias ou qualquer cópia do programa, ou desenvolver um
+    programa baseado nele, você deverá distribuir o conteúdo dentro da Licensa Pública Geral
+    GNU. Qualquer tradução da Licensa Pública Geral GNU deve ser acompanhada da GNU 
+    General Public License.</li>
+  <li>Se você copiar ou distribuir o programa, você deve acompanhá-lo de uma
+    completa cópia correspondendo a um código-fonte de leitura por máquinas ou com uma oferta escrita,
+    valida por pelomenos 3 (três) anos, à fornecer o código-fonte.</li>
+  <li>Todas estas condições podem ser removidas se você conseguir uma autorização
+    do dono dos Direitos de Cópia (copyright).</li>
+  <li>Seus direitos de utilização e outros direitos não são afetados pelos acima citados.</li>
+</ul>
+<p>O sumário acima pertence à Licensa Pública Geral GNU. Ao proceder, você
+  está concordando com a Licensa Pública Geral GNU, não com o sumário. Acima
+  citamos apenas um índice da Licensa Pública Geral GNU, e sua integridade
+  é garantida. É altamente recomendável que você leia a<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">Licensa Pública
+  Geral GNU</a> por completa antes de prosseguir, que também é encontrada no
+  arquivo de licensa que acompanha este pacote.</p>';
+$_lang["encoding"] = 'iso-8859-1';
 $_lang["modx_install"] = 'MODx &raquo; Instalação';
 $_lang["loading"] = 'Carregando...';
 $_lang["Begin"] = 'Começar';
@@ -121,7 +112,7 @@ $_lang["plugins"] = 'Plugins';
 $_lang["snippets"] = 'Snippets';
 $_lang["preinstall_validation"] = 'Validação de Pré Instalação';
 $_lang["summary_setup_check"] = 'O setup carregou um número de checkagens para verificar se está pronto para iniciar o setup.';
-$_lang["checking_php_version"] = "Checando versão do PHP: ";
+$_lang["checking_php_version"] = 'Checando versão do PHP: ';
 $_lang["failed"] = 'Falhou!';
 $_lang["ok"] = 'OK!';
 $_lang["you_running_php"] = ' - Você está rodando no PHP ';
@@ -154,11 +145,11 @@ $_lang["table_prefix_not_exist"] = ' - Prefixo de Table não existe nesta Base de
 $_lang["table_prefix_not_exist_note"] = 'Não foi possível instalar na base de dados selecionada, como não há tabelas com o prefixo que você inseriu. Por favor, escolha outro prefixo de tabela e re-começe a atualização.';
 $_lang["setup_cannot_continue"] = 'Infelizmente o Setup não pode continuar pelos motivos acima citados ';
 $_lang["error"] = 'erro';
-$_lang["errors"] = 'erros'; //Plural form
+$_lang["errors"] = 'erros';
 $_lang["please_correct_error"] = '. Por favor, corriga o erro';
-$_lang["please_correct_errors"] = '. Por favor, corriga os erros'; //Plural form
+$_lang["please_correct_errors"] = '. Por favor, corriga os erros';
 $_lang["and_try_again"] = ', e tente novamente. Se você prescisa de algum tipo de ajuda para resolver este problema';
-$_lang["and_try_again_plural"] = ', e tente novamente. Se você prescisa de algum tipo de ajuda para resolver estes problemas'; //Plural form
+$_lang["and_try_again_plural"] = ', e tente novamente. Se você prescisa de algum tipo de ajuda para resolver estes problemas';
 $_lang["visit_forum"] = ', visite o <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.';
 $_lang["testing_connection"] = 'Testando conexão...';
 $_lang["btnback_value"] = 'Anterior';

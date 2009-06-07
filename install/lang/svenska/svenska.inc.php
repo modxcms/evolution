@@ -13,58 +13,50 @@
  * Translation: Pontus Ågren (Pont) & Thomas Djärv (Beryl)
  * Date: 2008-05-22
  */
-
-
-
-
-$_lang['license'] = '<h2>MODx Licensavtal</h2>
-    <hr style="text-align:left;height:1px;width:90%;" />
-    <h3>Du måste godkänna licensen innan installationen kan fortsätta.</h3>
-    <p>Användning av den här mjukvaran lyder under GPL-licensen. För att hjälpa dig förstå
-       vad GPL-licensen är och hur den påverkar dina möjligheter att använda mjukvaran, så
-       har vi gjort följande sammanfattning.</p>
-    <h3>GNU General Public License (GPL) är en licens för Fri Mjukvara.</h3>
-    <p>Som alla licenser för Fri Mjukvara ger den dig följande fyra friheter:</p>
-    <ul>
-        <li>Friheten att köra programmet för alla ändamål.</li>
-        <li>Friheten att studera hur programmet fungerar och anpassa det efter dina önskemål.</li>
-        <li>Friheten att distribuera kopior så att du kan hjälpa din granne. </li>
-        <li>Friheten att förbättra programmet och publicera dina förbättringar till
-            allmänheten, så att hela gemenskapen kan dra nytta av dom.</li>
-    </ul>
-    <p>Du kan åtnjuta de ovan specificerade friheterna förutsatt att du följer
-       de uttryckliga krav som licensen uttalar. De huvudsakliga kraven är:</p>
-    <ul>
-        <li>Du måste på varje kopia du distribuerar, tydligt och på lämpligt sätt
-            publicera ett tillämpligt meddelande om copyright och en garantifriskrivning,
-            behålla alla meddelanden som refererar till den här licensen och frånvaron
-            av garanti samt ge varje mottagare av programmet en kopia av GNU GPL-licensen
-            tillsammans med programmet. Alla översättningar av GNU GPL-licensen måste
-            åtföljas av det oöversatta originalet.</li>
-
-        <li>Om du modifierar din kopia eller kopior av programmet eller någon del av det,
-            eller utvecklar ett program baserat på det, så får du distribuera det resulterande
-            arbetet förutsatt att du gör det under GNU GPL-licensen. Alla översättningar av
-            GNU GPL-licensen måste åtföljas av det oöversatta originalet.</li>
-
-        <li>Om du kopierar eller distribuerar programmet, så måste det åtföljas av den
-            motsvarande kompletta maskinläsbara källkoden eller ett skriftligt erbjudande,
-            giltigt minst tre år, att lämna ut den motsvarande kompletta maskinläsbara
-            källkoden.</li>
-
-        <li>Ovanstående krav kan hävas om du ges tillåtelse av innehavaren av copyrighten.</li>
-
-        <li>Din rätt att citera samt andra rättigheter påverkas inte av ovanstående.</li>
-    </ul>
-    <p>Ovanstående är en sammanfattning av GNU GPL-licensen. Genom att fortsätta godkänner du
-       GNU GPL-licensen - inte ovanstående. Ovanstående är en enkel sammanfattning och dess korrekthet
-       kan inte garanteras. En stark rekommendation är att du läser den fullständiga <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU GPL-licensen</a> innan du
-       fortsätter. Den återfinns också i filen license.txt som distribueras tillsammans med det här
-       programmet.<br />
-       Det finns en <a href="http://danielnylander.se/gpl/" target="_blank">inofficiell svensk
-       översättning</a>.</p>';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
-$_lang["language_code"] = 'sv';	// for html element e.g. <html xml:lang="sv" lang="sv">
+$_lang["license"] = '<h2>MODx Licensavtal</h2>
+<hr style="text-align:left;height:1px;width:90%;" />
+<h3>Du måste godkänna licensen innan installationen kan fortsätta.</h3>
+<p>Användning av den här mjukvaran lyder under GPL-licensen. För att hjälpa dig förstå
+  vad GPL-licensen är och hur den påverkar dina möjligheter att använda mjukvaran, så
+  har vi gjort följande sammanfattning.</p>
+<h3>GNU General Public License (GPL) är en licens för Fri Mjukvara.</h3>
+<p>Som alla licenser för Fri Mjukvara ger den dig följande fyra friheter:</p>
+<ul>
+  <li>Friheten att köra programmet för alla ändamål.</li>
+  <li>Friheten att studera hur programmet fungerar och anpassa det efter dina önskemål.</li>
+  <li>Friheten att distribuera kopior så att du kan hjälpa din granne.</li>
+  <li>Friheten att förbättra programmet och publicera dina förbättringar till
+    allmänheten, så att hela gemenskapen kan dra nytta av dom.</li>
+</ul>
+<p>Du kan åtnjuta de ovan specificerade friheterna förutsatt att du följer
+  de uttryckliga krav som licensen uttalar. De huvudsakliga kraven är:</p>
+<ul>
+  <li>Du måste på varje kopia du distribuerar, tydligt och på lämpligt sätt
+    publicera ett tillämpligt meddelande om copyright och en garantifriskrivning,
+    behålla alla meddelanden som refererar till den här licensen och frånvaron
+    av garanti samt ge varje mottagare av programmet en kopia av GNU GPL-licensen
+    tillsammans med programmet. Alla översättningar av GNU GPL-licensen måste
+    åtföljas av det oöversatta originalet.</li>
+  <li>Om du modifierar din kopia eller kopior av programmet eller någon del av det,
+    eller utvecklar ett program baserat på det, så får du distribuera det resulterande
+    arbetet förutsatt att du gör det under GNU GPL-licensen. Alla översättningar av
+    GNU GPL-licensen måste åtföljas av det oöversatta originalet.</li>
+  <li>Om du kopierar eller distribuerar programmet, så måste det åtföljas av den
+    motsvarande kompletta maskinläsbara källkoden eller ett skriftligt erbjudande,
+    giltigt minst tre år, att lämna ut den motsvarande kompletta maskinläsbara
+    källkoden.</li>
+  <li>Ovanstående krav kan hävas om du ges tillåtelse av innehavaren av copyrighten.</li>
+  <li>Din rätt att citera samt andra rättigheter påverkas inte av ovanstående.</li>
+</ul>
+<p>Ovanstående är en sammanfattning av GNU GPL-licensen. Genom att fortsätta godkänner du
+  GNU GPL-licensen - inte ovanstående. Ovanstående är en enkel sammanfattning och dess korrekthet
+  kan inte garanteras. En stark rekommendation är att du läser den fullständiga <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU GPL-licensen</a> innan du
+  fortsätter. Den återfinns också i filen license.txt som distribueras tillsammans med det här
+  programmet.<br />
+  Det finns en <a href="http://danielnylander.se/gpl/" target="_blank">inofficiell svensk
+  översättning</a>.</p>';
+$_lang["encoding"] = 'utf-8';
+$_lang["language_code"] = 'sv';
 $_lang["modx_install"] = 'MODx &raquo; Installation';
 $_lang["loading"] = 'Laddar...';
 $_lang["Begin"] = 'Starta';
@@ -126,7 +118,7 @@ $_lang["plugins"] = 'Plugins';
 $_lang["snippets"] = 'Snippets';
 $_lang["preinstall_validation"] = 'Kontroller innan installation';
 $_lang["summary_setup_check"] = 'Installationsprogrammet har gjort ett antal test för att kontrollera att allt är klart för att starta installationen.';
-$_lang["checking_php_version"] = "Kontrollerar PHP-version: ";
+$_lang["checking_php_version"] = 'Kontrollerar PHP-version: ';
 $_lang["failed"] = 'Misslyckades!';
 $_lang["ok"] = 'OK!';
 $_lang["you_running_php"] = ' - Du kör PHP ';
@@ -157,11 +149,11 @@ $_lang["table_prefix_not_exist"] = ' - Tabellprefixet finns inte i den här data
 $_lang["table_prefix_not_exist_note"] = 'Installationsprogrammet kunde inte installera i den valda databasen eftersom den inte innehåller tabeller med det prefix du angav för uppgradering. Välj ett existerande prefix och kör installationsprogrammet igen.';
 $_lang["setup_cannot_continue"] = 'Installationsprogrammet kan tyvärr inte fortsätta på grund av ovanstående ';
 $_lang["error"] = 'fel';
-$_lang["errors"] = 'fel'; //Plural form
+$_lang["errors"] = 'fel';
 $_lang["please_correct_error"] = '. Korrigera felet';
-$_lang["please_correct_errors"] = '. Korrigera felen'; //Plural form
+$_lang["please_correct_errors"] = '. Korrigera felen';
 $_lang["and_try_again"] = ', och försök igen. Om du behöver hjälp med att klura ut hur du ska åtgärda problemet';
-$_lang["and_try_again_plural"] = ', och försök igen. Om du behöver hjälp med att klura ut hur du ska åtgärda problemen'; //Plural form
+$_lang["and_try_again_plural"] = ', och försök igen. Om du behöver hjälp med att klura ut hur du ska åtgärda problemen';
 $_lang["checking_mysql_version"] = 'Kontrollerar MySQL-versionen: ';
 $_lang["mysql_version_is"] = ' Din MySQL-version är: ';
 $_lang["mysql_5051_warning"] = 'Det finns kända problem med MySQL 5.0.51. Du rekommenderas att uppgradera innan du fortsätter.';

@@ -10,63 +10,53 @@
  * Language:       Spanish
  * Encoding:       UTF-8
  */
-
-
-
-
-$_lang['license'] = '<h2>Acuerdo de Licencia de MODx.</h2>
-      <hr style="text-align:left;height:1px;width:90%" />
-      <p><em>Aviso: Puedes encontrar una traducción de este acuerdo
-      <a href="http://creativecommons.org/licenses/GPL/2.0/deed.es_CL" target=_blank>aquí</a>.
-      Fíjate que esto es solamente un resumen del acuerdo completo, cuyo enlace está en el último párafo abajo.
-      Al seguir con la instalación estás señalando tu conformidad con el acuerdo completo (el GNU General Public License).</em></p>
-		<h3>You must agree to the License before continuing installation.</h3>
-		<p>Usage of this software is subject to the GPL license. To help you understand
-		what the GPL licence is and how it affects your ability to use the software, we
-		have provided the following summary:</p>
-		<h3>The GNU General Public License is a Free Software license.</h3>
-		<p>Like any Free Software license, it grants to you the four following freedoms:</p>
-		<ul>
-            <li>The freedom to run the program for any purpose. </li>
-            <li>The freedom to study how the program works and adapt it to your needs. </li>
-            <li>The freedom to redistribute copies so you can help your neighbor. </li>
-            <li>The freedom to improve the program and release your improvements to the
-            public, so that the whole community benefits. </li>
-		</ul>
-		<p>You may exercise the freedoms specified here provided that you comply with
-		the express conditions of this license. The principal conditions are:</p>
-		<ul>
-            <li>You must conspicuously and appropriately publish on each copy distributed an
-            appropriate copyright notice and disclaimer of warranty and keep intact all the
-            notices that refer to this License and to the absence of any warranty; and give
-            any other recipients of the Program a copy of the GNU General Public License
-            along with the Program. Any translation of the GNU General Public License must
-            be accompanied by the GNU General Public License.</li>
-
-            <li>If you modify your copy or copies of the program or any portion of it, or
-            develop a program based upon it, you may distribute the resulting work provided
-            you do so under the GNU General Public License. Any translation of the GNU
-            General Public License must be accompanied by the GNU General Public License. </li>
-
-            <li>If you copy or distribute the program, you must accompany it with the
-            complete corresponding machine-readable source code or with a written offer,
-            valid for at least three years, to furnish the complete corresponding
-            machine-readable source code.</li>
-
-            <li>Any of these conditions can be waived if you get permission from the
-            copyright holder.</li>
-
-            <li>Your fair use and other rights are in no way affected by the above.
-            </li>
-        </ul>
-		<p>The above is a summary of the GNU General Public License. By proceeding, you
-		are agreeing to the GNU General Public Licence, not the above. The above is
-		simply a summary of the GNU General Public Licence, and its accuracy is not
-		guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>GNU General Public
-		License</a> in full before proceeding, which can also be found in the license
-		file distributed with this package.</p>';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
-$_lang["language_code"] = 'es';	// for html element e.g. <html xml:lang="es" lang="es">
+$_lang["license"] = '<h2>Acuerdo de Licencia de MODx.</h2>
+<hr style="text-align:left;height:1px;width:90%;" />
+<p><em>Aviso: Puedes encontrar una traducción de este acuerdo <a href="http://creativecommons.org/licenses/GPL/2.0/deed.es_CL" target=_blank>aquí</a>.
+  Fíjate que esto es solamente un resumen del acuerdo completo, cuyo enlace está en el último párafo abajo.
+  Al seguir con la instalación estás señalando tu conformidad con el acuerdo completo (el GNU General Public License).</em></p>
+<h3>You must agree to the License before continuing installation.</h3>
+<p>Usage of this software is subject to the GPL license. To help you understand
+  what the GPL licence is and how it affects your ability to use the software, we
+  have provided the following summary:</p>
+<h3>The GNU General Public License is a Free Software license.</h3>
+<p>Like any Free Software license, it grants to you the four following freedoms:</p>
+<ul>
+  <li>The freedom to run the program for any purpose.</li>
+  <li>The freedom to study how the program works and adapt it to your needs.</li>
+  <li>The freedom to redistribute copies so you can help your neighbor.</li>
+  <li>The freedom to improve the program and release your improvements to the
+    public, so that the whole community benefits.</li>
+</ul>
+<p>You may exercise the freedoms specified here provided that you comply with
+  the express conditions of this license. The principal conditions are:</p>
+<ul>
+  <li>You must conspicuously and appropriately publish on each copy distributed an
+    appropriate copyright notice and disclaimer of warranty and keep intact all the
+    notices that refer to this License and to the absence of any warranty; and give
+    any other recipients of the Program a copy of the GNU General Public License
+    along with the Program. Any translation of the GNU General Public License must
+    be accompanied by the GNU General Public License.</li>
+  <li>If you modify your copy or copies of the program or any portion of it, or
+    develop a program based upon it, you may distribute the resulting work provided
+    you do so under the GNU General Public License. Any translation of the GNU
+    General Public License must be accompanied by the GNU General Public License.</li>
+  <li>If you copy or distribute the program, you must accompany it with the
+    complete corresponding machine-readable source code or with a written offer,
+    valid for at least three years, to furnish the complete corresponding
+    machine-readable source code.</li>
+  <li>Any of these conditions can be waived if you get permission from the
+    copyright holder.</li>
+  <li>Your fair use and other rights are in no way affected by the above.</li>
+</ul>
+<p>The above is a summary of the GNU General Public License. By proceeding, you
+  are agreeing to the GNU General Public Licence, not the above. The above is
+  simply a summary of the GNU General Public Licence, and its accuracy is not
+  guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>GNU General Public
+  License</a> in full before proceeding, which can also be found in the license
+  file distributed with this package.</p>';
+$_lang["encoding"] = 'utf-8';
+$_lang["language_code"] = 'es';
 $_lang["modx_install"] = 'MODx &raquo; Instalar';
 $_lang["loading"] = 'Cargando...';
 $_lang["Begin"] = 'Iniciar';
@@ -122,7 +112,7 @@ $_lang["plugins"] = 'Plugins';
 $_lang["snippets"] = 'Snippets';
 $_lang["preinstall_validation"] = 'Revisión previa a la instalación';
 $_lang["summary_setup_check"] = 'El asistente ha revisado varios elementos para averiguar que todo está en orden para seguir.';
-$_lang["checking_php_version"] = "Revisando versión de PHP: ";
+$_lang["checking_php_version"] = 'Revisando versión de PHP: ';
 $_lang["failed"] = '¡Falló!';
 $_lang["ok"] = 'OK';
 $_lang["you_running_php"] = ' - Tu serivdor tiene versión ';
@@ -151,11 +141,11 @@ $_lang["table_prefix_not_exist"] = ' - ¡Este prefijo no existe en esta base de 
 $_lang["table_prefix_not_exist_note"] = 'El asistente no puede seguir porque no existen las tablas con el prefijo que especificaste en esta base de datos. Favor de proporcionar el prefijo correcto de las tablas que quieres actualizar y volver a intentar.';
 $_lang["setup_cannot_continue"] = 'Lo sentimos. El asistente no puede seguir debido ';
 $_lang["error"] = 'al error indicado.';
-$_lang["errors"] = 'a los errores indicados.'; //Plural form
+$_lang["errors"] = 'a los errores indicados.';
 $_lang["please_correct_error"] = ' Favor de corregirlo ';
-$_lang["please_correct_errors"] = ' Favor de corregirlos '; //Plural form
+$_lang["please_correct_errors"] = ' Favor de corregirlos ';
 $_lang["and_try_again"] = 'y volver a intentar. Si tienes dudas o necesitas ayuda';
-$_lang["and_try_again_plural"] = 'y volver a intentar. Si tienes dudas o necesitas ayuda'; //Plural form
+$_lang["and_try_again_plural"] = 'y volver a intentar. Si tienes dudas o necesitas ayuda';
 $_lang["visit_forum"] = 'visita <a href="http://modxcms.com/forums/index.php/board,121.0.html" target="_blank">los Foros de MODx</a>.';
 $_lang["testing_connection"] = 'Probando la conexión...';
 $_lang["btnback_value"] = 'Anterior';
