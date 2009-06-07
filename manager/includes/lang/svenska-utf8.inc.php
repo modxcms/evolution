@@ -2,7 +2,7 @@
 /**
  * Filename:       includes/lang/svenska-utf8.inc.php
  * Function:       Swedish language file
- * Encoding:       UTF-8
+ * Encoding:       UTF8
  * Author:         Pontus Ågren (Pont) & Johnny Chadda
  * Date:           2008-05-21
  * Version:        0.9.6.3
@@ -198,8 +198,8 @@ $_lang["deselect_keywords"] = 'Rensa nyckelord';
 $_lang["deselect_metatags"] = 'Rensa META-taggar';
 $_lang["disabled"] = 'Avstängd';
 $_lang["document"] = 'Dokument';
-$_lang["documents_in_container"] = "dokument i den här behållaren";
-$_lang["documents_in_container_no"] = "Den här behållaren har inga underdokument.";
+$_lang["documents_in_container"] = 'dokument i den här behållaren';
+$_lang["documents_in_container_no"] = 'Den här behållaren har inga underdokument.';
 $_lang["document_alias"] = 'Dokumentets&nbsp;alias';
 $_lang["document_alias_help"] = 'Här kan du ange ett alias för dokumentet. Detta gör dokumentet nåbart genom: \n\nhttp://dinserver/alias\n\nDetta fungerar endast om du använder vänliga adresser.';
 $_lang["document_content"] = 'Dokumentinnehåll';
@@ -279,7 +279,7 @@ $_lang["export_site_html"] = 'Exportera webbplatsen till HTML';
 $_lang["export_site_maxtime"] = 'Max exporttid';
 $_lang["export_site_maxtime_message"] = 'Här kan du specificera antal sekunder som MODx har på sig att exportera webbplatsen (åsidosätter PHPs inställningar). Skriv 0 för obegränsad tid. Notera att om 0 eller ett väldigt högt nummer skrivs, kan det få din server att göra konstiga saker och rekommenderas därför inte.';
 $_lang["export_site_message"] = 'Med denna funktion kan du exportera hela webbplatsen till HTML-filer. Kom ihåg att du förlorar stora delar av funktionaliteten i MODx om du gör det:<p /><ul><li>Sidläsningar på exporterade filer kommer inte att lagras.</li><li>Interaktiva snippets kommer inte att fungera i exporterade filer</li><li>Endast vanliga dokument kommer att exporteras. Webblänkar blir alltså inte exporterade.</li><li>Exportprocessen kan misslyckas om dina dokument innehåller snippets som skickar omdirigeringsanvisningar.</li><li>Beroende på hur du skrivit dina dokument, kan bilder och stilmallar få fel sökvägar. För att fixa detta, kan du spara eller flytta dina exporterade filer till samma katalog som index.php för MODx befinner sig i.</li></ul><p />Fyll i formuläret och tryck på "Starta export" för att starta exportprocessen. Filerna som skapas kommer att sparas där du specificerat, och när det är möjligt, används dokumentets alias som filnamn. När du ska exporterar din webbplats är det bäst att ha MODx  konfigurationsinställning "Vänliga alias" satt till "Ja". Beroende på storleken på din webbplats, kan exporten ta en del tid.<p /><b>Redan existerande filer kommer att skrivas över om de har samma namn som en exporterad fil!</b><p />';
-$_lang["export_site_numberdocs"] = '<b>Hittade %s dokument att exportera...</b><p/>';
+$_lang["export_site_numberdocs"] = '<b>Hittade %s dokument att exportera...</b><p />';
 $_lang["export_site_prefix"] = 'Filprefix';
 $_lang["export_site_start"] = 'Starta export';
 $_lang["export_site_success"] = '<span style="color:#009900">Klart!</span>';
@@ -371,7 +371,7 @@ $_lang["icon"] = 'Ikon';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Föräldratilldelning:\n\nDokumentet är ett barn till det valda dokumentet.';
 $_lang["illegal_parent_self"] = 'Föräldratilldelning:\n\nDet valda dokumentet kan inte bli tilldelat sig själv.';
-$_lang["import_files_found"] = '<b>Hittade %s dokument för import...</b><p/>';
+$_lang["import_files_found"] = '<b>Hittade %s dokument för import...</b><p />';
 $_lang["import_params"] = 'Importera en moduls delade parametrar';
 $_lang["import_params_msg"] = 'Du kan importera parametrarna eller inställningarna av en modul genom att välja modulens namn i ovanstående meny.<br /><b>Notera:</b> För att moduler ska synas i menyn måste denna plugin/snippeten vara med i modulens beroendelista och modulen måste vara inställd för parameterdelning.';
 $_lang["import_parent_document"] = 'Föräldrardokument';
@@ -522,10 +522,10 @@ $_lang["module_resource_msg"] = 'Här kan du lägga till eller ta bort resurser 
 $_lang["module_resource_title"] = 'Modulberoenden';
 $_lang["module_title"] = 'Skapa/redigera modul';
 $_lang["module_viewdepend_msg"] = 'Här kan du se vilka resurser modulen är beroende av. Klicka på knappen "Hantera beroenden" för att ändra beroendena.';
-$_lang["modx_news"] ='MODx Nyhetsnotiser';
-$_lang["modx_news_tab"] ='MODx Nyheter';
-$_lang["modx_news_title"] ='MODx Nyheter';
-$_lang["modx_security_notices"] ='MODx Säkerhetsnotiser';
+$_lang["modx_news"] = 'MODx Nyhetsnotiser';
+$_lang["modx_news_tab"] = 'MODx Nyheter';
+$_lang["modx_news_title"] = 'MODx Nyheter';
+$_lang["modx_security_notices"] = 'MODx Säkerhetsnotiser';
 $_lang["modx_version"] = 'MODx-version';
 $_lang["monday"] = 'Måndag';
 $_lang["move"] = 'Flytta';
@@ -610,9 +610,9 @@ $_lang["page_data_unpublishdate"] = 'Avpubliceringsdatum';
 $_lang["page_data_unpublishdate_help"] = 'Om du sätter ett avpubliceringsdatum, kommer dokumentet avpubliceras så snart som datumet är nått. Klicka på kalenderikonen för att välja ett datum, eller ikonen bredvid för att ta bort det. Om datumet tas bort, kommer dokumentet aldrig att avpubliceras automatiskt.';
 $_lang["page_data_unpublished"] = 'Avpublicerad';
 $_lang["page_data_web_access"] = 'Webbåtkomst';
-$_lang["pagination_table_first"] = "Första";
-$_lang["pagination_table_gotopage"] = "Gå till sidan";
-$_lang["pagination_table_last"] = "Sista";
+$_lang["pagination_table_first"] = 'Första';
+$_lang["pagination_table_gotopage"] = 'Gå till sidan';
+$_lang["pagination_table_last"] = 'Sista';
 $_lang["paging_first"] = 'första';
 $_lang["paging_last"] = 'sista';
 $_lang["paging_next"] = 'nästa';
@@ -798,8 +798,8 @@ $_lang["search_results_returned_msg"] = 'Din sökning returnerade <b>%s</b> doku
 $_lang["search_results_returned_title"] = 'Titel';
 $_lang["search_view_docdata"] = 'Visa denna post';
 $_lang["security"] = 'Säkerhet';
-$_lang["security_notices_tab"] ='Säkerhetsnotiser';
-$_lang["security_notices_title"] ='Säkerhetsnotiser';
+$_lang["security_notices_tab"] = 'Säkerhetsnotiser';
+$_lang["security_notices_title"] = 'Säkerhetsnotiser';
 $_lang["select_date"] = 'Välj ett datum';
 $_lang["send"] = 'Skicka';
 $_lang["serveroffset"] = 'Serverns tidsskillnad';

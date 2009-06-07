@@ -1,17 +1,15 @@
 <?php
 /**
-* Filename:       includes/lang/japanese-utf8.inc.php
-* Function:       Language file.
-* Encoding:       UTF-8
-* Author:         MODx CMS JAPAN
-* Date:           2008/11/21
-* Version:        2.17
-* MODx version:   0.9.6.3
+ * Filename:       includes/lang/japanese-utf8.inc.php
+ * Function:       Japanese language file.
+ * Encoding:       UTF8
+ * Author:         MODx CMS JAPAN
+ * Date:           2008/11/21
+ * Version:        2.17
+ * MODx version:   0.9.6.3
 */
-/* Set locale to Japanese */
 setlocale (LC_ALL, 'ja_JP.UTF-8');
 define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
-// NOTE: Now alpha-sorted
 $_lang["about_msg"] = '<p>MODx(モドエックスまたはモッドエックス)は <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP アプリケーション フレームワーク・コンテンツ管理システム</a>です。<a href="../assets/docs/license.txt">GNU GPL</a> に基づいて使用が許諾されます。</p><p>MODx は、CMS AWARDS 2007 <a href="http://www.packtpub.com/article/modx-wins-most-promising-open-source-cms" target="_blank">「最も有望なオープンソースコンテント管理システム」1位を受賞</a>しました。</p> <p>また、ウィキペディア日本語版に<a href="http://ja.wikipedia.org/wiki/MODx" target="_blank">詳細な解説</a>があります。</p>';
 $_lang["about_title"] = 'MODx について';
 $_lang["access_permissions"] = 'アクセス許可';
@@ -180,7 +178,7 @@ $_lang["database_table_records"] = '件数';
 $_lang["database_table_tablename"] = 'テーブル名';
 $_lang["database_table_totalsize"] = '合計サイズ';
 $_lang["database_table_totals"] = '総計:';
-$_lang['database_version'] = 'データベースのバージョン:';
+$_lang["database_version"] = 'データベースのバージョン:';
 $_lang["date"] = '日付';
 $_lang["datechanged"] = '編集日時';
 $_lang["defaultcache_message"] = '新しく作成するドキュメントをデフォルトでキャッシュ可能にする場合は「はい」を選択してください。';
@@ -236,8 +234,8 @@ $_lang["document_title"] = 'タイトル';
 $_lang["document_title_help"] = 'ドキュメントの名称/タイトルを入力してください。バックスラッシュは使用できません。(MODxタグ：[*pagetitle*])';
 $_lang["document_to_be_moved"] = '移動対象ドキュメント';
 $_lang["document_weblink_help"] = 'ウェブリンクで参照したい対象のURLを入力してください。';
-$_lang["documents_in_container"] = "つのサブドキュメントがあります。";
-$_lang["documents_in_container_no"] = "サブドキュメントはありません。";
+$_lang["documents_in_container"] = 'つのサブドキュメントがあります。';
+$_lang["documents_in_container_no"] = 'サブドキュメントはありません。';
 $_lang["doc_data_title"] = 'ドキュメントの詳細';
 $_lang["duplicate"] = '複製';
 $_lang["duplicate_alias_found"] = '\'%s\'というドキュメントが\'%s\'というエイリアスを既に使用しています。別のエイリアスを入力してください。';
@@ -283,7 +281,7 @@ $_lang["export_site_html"] = 'サイト全体を静的HTMLとしてエクスポ�
 $_lang["export_site_maxtime"] = '最大エクスポート時間:';
 $_lang["export_site_maxtime_message"] = 'MODxがサイトのエクスポートに使用できる秒数を指定してください(PHPの設定を上書きします)。0の入力で時間無制限に設定します。0または非常に大きな数字を設定することで、サーバーが正常に動作しない場合もありますのでお勧めしません。';
 $_lang["export_site_message"] = '<p>サイト全体をHTMLファイルとしてエクスポート(一括書き出し)できます。書き出したファイルをまとめてサーバ上に転送することで、通常のサイトと同様の運用が可能です。この場合、通常の静的サイトの運用と同等になるため、下記の機能が失われます。:</p><ul><li>エクスポートファイルのページ閲覧はログに記録されません。</li><li>エクスポートファイルで動的なスニペットは動作しません。</li><li>通常のドキュメントのみエクスポートされ、ウェブリンクはエクスポートされません。</li><li>ドキュメントにリダイレクトヘッダを送信するスニペットが含まれている場合、エクスポートプロセスが失敗する場合があります。</li><li>ドキュメント、スタイルシート、イメージの記述方法により、サイトのデザインが崩れる場合があります。これを直すためには、MODxのindex.phpファイルが保存されている同じディレクトリに、エクスポートファイルを保存または移動してください。</li></ul><p>フォームに必要事項を入力して「エクスポートの開始」をクリックすると処理を開始します。作成されたファイルは、ドキュメントエイリアスをファイル名として、指定した場所に保存されます。サイトをエクスポートする場合、グローバル設定で「フレンドリエイリアス」を「はい」にすることをお勧めします。サイトのサイズにより、エクスポートに暫く時間を要する場合もあります。</p><p><em>ファイル名が同じ場合、新しいファイルは既存のファイルに上書きされます</em></p>';
-$_lang["export_site_numberdocs"] = '<p><strong>%s 個のエクスポート対象ドキュメントが見つかりました...</strong><p/>';
+$_lang["export_site_numberdocs"] = '<p><strong>%s 個のエクスポート対象ドキュメントが見つかりました...</strong><p />';
 $_lang["export_site_prefix"] = 'ファイル名の接頭辞:';
 $_lang["export_site_start"] = 'エクスポートの開始';
 $_lang["export_site_success"] = '<span style="color:#009900">成功!</span>';
@@ -375,7 +373,7 @@ $_lang["icon"] = 'アイコン';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = '親の指定:\n\nドキュメントは選択ドキュメントのサブドキュメントです。';
 $_lang["illegal_parent_self"] = '親の指定:\n\n自分自身を親に割り当てることはできません。';
-$_lang["import_files_found"] = '<strong>インポートする %s個のドキュメントを見つけました...</strong><p/>';
+$_lang["import_files_found"] = '<strong>インポートする %s個のドキュメントを見つけました...</strong><p />';
 $_lang["import_params"] = '共有パラメータのインポート';
 $_lang["import_params_msg"] = 'ドロップダウンメニューからモジュール名を選択することにより、他のモジュールのパラメータや設定をインポートすることができます。 <strong>注意:</strong>メニューにモジュールが表示されるためには、このプラグインやスニペットがモジュール依存リストにありモジュールの共有パラメータ使用がONである必要があります。 ';
 $_lang["import_parent_document"] = '親ドキュメント:';
@@ -526,7 +524,7 @@ $_lang["module_resource_msg"] = 'このモジュールが依存するリソー�
 $_lang["module_resource_title"] = 'モジュール依存';
 $_lang["module_title"] = 'モジュールの作成/編集';
 $_lang["module_viewdepend_msg"] = 'モジュールが依存するリソースの状況を見ることができます。依存性を変更するには「依存性の管理」ボタンをクリックします';
-$_lang["modx_version"] = "MODxバージョン";
+$_lang["modx_version"] = 'MODxバージョン';
 $_lang["monday"] = '月曜';
 $_lang["move"] = '移動';
 $_lang["move_document"] = 'ドキュメントの移動';
@@ -610,9 +608,9 @@ $_lang["page_data_unpublishdate"] = '公開取消日時';
 $_lang["page_data_unpublishdate_help"] = '非公開日時を設定した場合、非公開日時の到来と共にドキュメントの公開が取り消されます。カレンダーアイコンをクリックして非公開日時を選択するか、カレンダーアイコンの隣のアイコンをクリックして非公開日時を削除してください。非公開日時を削除すると、ドキュメントの公開取消は自動的には行われません。';
 $_lang["page_data_unpublished"] = '非公開';
 $_lang["page_data_web_access"] = 'ウェブからアクセス';
-$_lang["pagination_table_first"] = "先頭";
-$_lang["pagination_table_last"] = "最後";
-$_lang["pagination_table_gotopage"] = "Go to page";
+$_lang["pagination_table_first"] = '先頭';
+$_lang["pagination_table_last"] = '最後';
+$_lang["pagination_table_gotopage"] = 'Go to page';
 $_lang["paging_first"] = '先頭';
 $_lang["paging_last"] = '最後';
 $_lang["paging_next"] = '次へ';
@@ -725,13 +723,13 @@ $_lang["role_edit_user"] = 'ユーザーの編集';
 $_lang["role_edit_web_user"] = 'ウェブユーザーの編集';
 $_lang["role_empty_trash"] = '全ての削除済みドキュメントを完全に消去する';
 $_lang["role_errors"] = 'エラーダイアログの表示';
-$_lang['role_export_static'] = '静的HTMLファイルとして書き出す';
+$_lang["role_export_static"] = '静的HTMLファイルとして書き出す';
 $_lang["role_eventlog_management"] = 'システムログ管理';
 $_lang["role_file_manager"] = 'ファイルマネージャーの使用';
 $_lang["role_frames"] = '管理画面フレームの要求';
 $_lang["role_help"] = 'ヘルプページの表示';
 $_lang["role_home"] = '管理画面ホームの要求';
-$_lang['role_import_static'] = '静的HTMLファイルをインポート';
+$_lang["role_import_static"] = '静的HTMLファイルをインポート';
 $_lang["role_logout"] = '管理画面をログアウト';
 $_lang["role_management_msg"] = 'ロール(役割)ごとに、アクセス可能な機能を選択・設定します。たとえば「管理者」「投稿者」といったロールを作る場合、「管理者」には全権を、そして「投稿者」にはサイト管理に関する設定をさわれないように制限をかけます。ロールは役割・役職のようなもので、たとえば営業グループと秘書グループとで役割が違うのと似ています。各ユーザごとに個別に権限を直接割り当てるのではなく、ロールという形で役割・権限を割り当てる考え方となっています。MODxでは、管理画面にアクセスする全てのユーザが何らかのロール(役割)を持ちます。';
 $_lang["role_management_title"] = 'ロール管理';
@@ -772,12 +770,12 @@ $_lang["rss_url_news_message"] = '管理画面トップの「MODx News」のフ�
 $_lang["rss_url_news_title"] = 'RSS News Feed';
 $_lang["rss_url_security_message"] = '管理画面トップの「MODx Security」のフィードURL';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
-$_lang["modx_news"] ='MODx News Notices';
-$_lang["modx_news_tab"] ='MODxの最新情報';
-$_lang["modx_news_title"] ='MODxの最新情報';
-$_lang["modx_security_notices"] ='MODx Security Notices';
-$_lang["security_notices_tab"] ='セキュリティ情報';
-$_lang["security_notices_title"] ='セキュリティ情報';
+$_lang["modx_news"] = 'MODx News Notices';
+$_lang["modx_news_tab"] = 'MODxの最新情報';
+$_lang["modx_news_title"] = 'MODxの最新情報';
+$_lang["modx_security_notices"] = 'MODx Security Notices';
+$_lang["security_notices_tab"] = 'セキュリティ情報';
+$_lang["security_notices_title"] = 'セキュリティ情報';
 $_lang["run_module"] = 'モジュールの実行';
 $_lang["saturday"] = '土曜';
 $_lang["save"] = '保存';
@@ -992,9 +990,9 @@ $_lang["use_editor_title"] = 'エディターの使用:';
 $_lang["validate_referer_title"] = 'HTTP_REFERER チェック';
 $_lang["validate_referer_message"] = '「はい」を選択すると、HTTP_REFERER チェックを行い、認証されないHTTP_REFERERヘッダからの要求を拒否します。これにより、管理画面にログイン中に意図しない動作をさせられてしまう脅威 (CSRF=Cross Site Request Forgery)をある程度軽減できます。ただし、HTTP_REFERERを無効にしているサーバーには、有効な手段ではありません。完全な回避策が出るまでは、管理画面にログイン中は、不用意に外部リンクをクリックしない・こまめにログアウトをするなどして十分注意してください';
 $_lang["value"] = '値';
-$_lang["version_codename"] = "コードネーム";
+$_lang["version_codename"] = 'コードネーム';
 $_lang["view"] = 'ここをクリック';
-$_lang["view_child_documents_in_container"] = "サブドキュメントを表示";
+$_lang["view_child_documents_in_container"] = 'サブドキュメントを表示';
 $_lang["view_document"] = 'ドキュメントの表示';
 $_lang["view_log"] = 'ログを見る';
 $_lang["view_logging"] = '管理操作ログ';

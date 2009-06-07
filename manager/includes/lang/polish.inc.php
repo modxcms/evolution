@@ -11,7 +11,6 @@
  * Version:        1.2
  * MODx version:   0.9.6.3
 */
-
 $_lang["about_msg"] = 'MODx jest to <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'O MODx';
 $_lang["access_permissions"] = 'Uprawnienia dostêpu';
@@ -22,8 +21,7 @@ $_lang["access_permissions_documents_in_group"] = '<b>Dokumenty w grupie:</b> ';
 $_lang["access_permissions_documents_tab"] = 'Tutaj mo¿esz zobaczyæ jakie grupy dokumentów zosta³y stworzone. Mo¿esz tak¿e stworzyæ nowe grupy, zmieniaæ nazwy, usuwaæ i sprawdzaæ które dokumenty nale¿± do danej grupy (najed¼ kursorem na ID dokumentu, aby zobaczyæ jego nazwê). Aby dodaæ dokument do grupy albo usun±æ go z grupy, edytuj dokument bezpo¶rednio.';
 $_lang["access_permissions_document_groups"] = 'Grupy dokumentów';
 $_lang["access_permissions_group_link"] = 'Utwórz nowe powi±zanie z grup±';
-$_lang["access_permissions_introtext"] = 'Tutaj mo¿esz zarz±dzaæ uprawnieniami dostêpu grup u¿ytkowników i grup dokumentów.
-¯eby dodaæ u¿ytkownika do grupy edytuj u¿ytkownika i wybierz grupê (grupy) do których powinien nale¿eæ. Aby dodaæ dokument do grupy u¿ytkowników, edytuj dokument i wybierz grupê (grupy) do których powinien nale¿eæ.';
+$_lang["access_permissions_introtext"] = 'Tutaj mo¿esz zarz±dzaæ uprawnieniami dostêpu grup u¿ytkowników i grup dokumentów. ¯eby dodaæ u¿ytkownika do grupy edytuj u¿ytkownika i wybierz grupê (grupy) do których powinien nale¿eæ. Aby dodaæ dokument do grupy u¿ytkowników, edytuj dokument i wybierz grupê (grupy) do których powinien nale¿eæ.';
 $_lang["access_permissions_link_to_group"] = 'z grup± dokumentów';
 $_lang["access_permissions_links"] = 'Linki grup u¿ytkowników/dokumentów';
 $_lang["access_permissions_links_tab"] = 'Tutaj okre¶lamy, które grupy u¿ytkowników maj± dostêp do okre¶lonych grup dokumentów. Aby po³±czyæ grupê dokumentów z grup± u¿ytkowników, wybierz grupê z listy rozwijalnej i kliknij "Po³±cz". Aby usun±æ po³±czenie dla danej grupy kliknij \'Usuñ ->\'. Spowoduje to usuniêcie po³±czenia.';
@@ -103,8 +101,7 @@ $_lang["configcheck_configinc"] = 'Plik konfiguracyjny jest zapisywalny';
 $_lang["configcheck_configinc_msg"] = 'Dla wiêkszego bezpieczeñstwa ustaw prawa dostêpu do pliku konfiguracji (/manager/includes/config.inc.php) na tylko do odczytu.';
 $_lang["configcheck_default_msg"] = 'Wyst±pi³ nieokre¶lony b³±d.';
 $_lang["configcheck_errorpage_unavailable"] = 'Strona b³êdu Twojego serwisu jest niedostêpna';
-$_lang["configcheck_errorpage_unavailable_msg"] = '
-Oznacza to, ¿e Twoja strona b³êdu jest niedostêpna dla u¿ytkowników albo nie istnieje. Mo¿e to powodowaæ niestabilno¶æ i wiele b³êdnych wpisów w logach serwisu. Upewnij siê, ¿e ¿adna grupa u¿ytkowników nie jest przypisana do strony.';
+$_lang["configcheck_errorpage_unavailable_msg"] = 'Oznacza to, ¿e Twoja strona b³êdu jest niedostêpna dla u¿ytkowników albo nie istnieje. Mo¿e to powodowaæ niestabilno¶æ i wiele b³êdnych wpisów w logach serwisu. Upewnij siê, ¿e ¿adna grupa u¿ytkowników nie jest przypisana do strony.';
 $_lang["configcheck_errorpage_unpublished"] = 'Strona b³êdu Twojego serwisu jest nieopublikowana lub nie istnieje.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Oznacza to, ¿e strona b³êdu Twojego serwisu jest niedostêpna dla odwiedzaj±cych. Opublikuj t± stronê albo upewnij siê, ¿e jest ona przypisana do istniej±cego dokumentu w drzewie zawarto¶ci Twojej strony.';
 $_lang["configcheck_images"] = 'Katalog z obrazkami - Images - nie ma praw do zapisu';
@@ -119,8 +116,7 @@ $_lang["configcheck_register_globals"] = 'register_globals jest w³±czona w konfi
 $_lang["configcheck_register_globals_msg"] = 'Taka konfiguracja mo¿e zagroziæ bezpieczeñstwu strony, poniewa¿ powoduje wiêksz± wra¿liwo¶æ na ataki typu XSS.';
 $_lang["configcheck_title"] = 'Sprawdzenie konfiguracji';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Strona Braku Autoryzacji Twojego serwisu jest nieopublikowana lub nieistnieje.';
-$_lang["configcheck_unauthorizedpage_unavailable_msg"] = '
-Oznacza to, ¿e Strona Braku Autoryzacji jest niedostêpna dla odwiedzaj±cych.  Mo¿e to powodowaæ niestabilno¶æ i wiele b³êdnych wpisów w logach serwisu. Upewnij siê, ¿e ¿adna grupa u¿ytkowników nie jest przypisana do strony.';
+$_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Oznacza to, ¿e Strona Braku Autoryzacji jest niedostêpna dla odwiedzaj±cych.  Mo¿e to powodowaæ niestabilno¶æ i wiele b³êdnych wpisów w logach serwisu. Upewnij siê, ¿e ¿adna grupa u¿ytkowników nie jest przypisana do strony.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Strona Braku Konfiguracji zdefiniowana w ustawieniach jest nieopublikowana.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Oznacza to, ¿e Strona Braku Autoryzacji serwisu jest niedostêpna dla odwiedzaj±cych. Opublikuj t± stronê albo upewnij siê, ¿e jest ona przypisana do istniej±cego dokumentu w drzewie zawarto¶ci Twojej strony.';
 $_lang["configcheck_warning"] = 'Nieprawid³owo¶ci w konfiguracji:';
@@ -128,8 +124,7 @@ $_lang["configcheck_what"] = 'Co to oznacza?';
 $_lang["confirm_block"] = 'Czy na pewno chcesz zablokowaæ tego u¿ytkownika?';
 $_lang["confirm_delete_document"] = 'Czy na pewno chcesz usun±æ ten dokument?nWszystkie podrzêdne dokumenty zostan± równie¿ usuniête.';
 $_lang["confirm_delete_eventlog"] = 'Czy na pewno chcesz usun±æ log zdarzeñ?';
-$_lang["confirm_delete_file"] = 'Czy na pewno chcesz usun±æ ten plik?nn
-Mo¿e to spowodowaæ nieprawid³owe dzia³anie Twojej strony! Usuwaj tylko te pliki, co do których jeste¶ pewien, ¿e mo¿na je bezpiecznie usun±æ.';
+$_lang["confirm_delete_file"] = 'Czy na pewno chcesz usun±æ ten plik?\n\nMo¿e to spowodowaæ nieprawid³owe dzia³anie Twojej strony! Usuwaj tylko te pliki, co do których jeste¶ pewien, ¿e mo¿na je bezpiecznie usun±æ.';
 $_lang["confirm_delete_htmlsnippet"] = 'Czy na pewno chcesz usun±æ t± wlepkê?';
 $_lang["confirm_delete_keywords"] = 'Czy na pewno chcesz usun±æ te s³owa kluczowe?';
 $_lang["confirm_delete_module"] = 'Czy na pewno chcesz usun±æ ten modu³?';
@@ -162,11 +157,7 @@ $_lang["credits_dTree"] = 'MODx u¿ywa wspania³ego skryptu dTree od DestroyDrop.c
 $_lang["credits_everaldo"] = 'MODx uses a number of icons from Everaldo\'s crystal icon set. Great icons!';
 $_lang["credits_mysql"] = 'MODx jest napêdzane przez MySQL!';
 $_lang["credits_php"] = 'MODx jest napêdzane przez PHP!';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
-</ul>';
+$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
 $_lang["credits_shouts_title"] = '<b>Dodatkowe podziêkowania dla:</b>';
 $_lang["credits_webfx"] = 'MODx u¿ywa wielu skryptów JavaScript od Webfx. ¦wietne!';
 $_lang["custom_contenttype_message"] = 'Tutaj mo¿esz dodaæ w³asne typy tre¶ci, które zostan± u¿yte w dokumentach. Aby dodaæ now± pozycjê wprowad¼ typ tre¶ci w polu tekstowym i naci¶nij przycisk \'Dodaj\'.';
@@ -211,11 +202,7 @@ $_lang["deselect_metatags"] = 'Wyczy¶æ META tagi';
 $_lang["disabled"] = 'Wy³±czony';
 $_lang["document"] = 'Dokument';
 $_lang["document_alias"] = 'Alias dokumentu';
-$_lang["document_alias_help"] = 'Tutaj mo¿esz wybraæ alias tego dokumentu. To spowoduje dostêpno¶æ dokumentu poprzez:
-
-http://yourserver/alias
-
- Funkcja ta dzia³a tylko, przy u¿yciu przyjaznych URL.';
+$_lang["document_alias_help"] = 'Tutaj mo¿esz wybraæ alias tego dokumentu. To spowoduje dostêpno¶æ dokumentu poprzez: http://yourserver/alias Funkcja ta dzia³a tylko, przy u¿yciu przyjaznych URL.';
 $_lang["document_content"] = 'Zawarto¶æ dokumentu';
 $_lang["document_description"] = 'Opis';
 $_lang["document_description_help"] = 'Mo¿esz wprowadziæ dodatkowy opis dokumentu.';
@@ -294,14 +281,8 @@ $_lang["export_site_failed"] = '<span style=\'color:#990000\'>B³±d!</span>';
 $_lang["export_site_html"] = 'Eksportuj stronê do HTML';
 $_lang["export_site_maxtime"] = 'Maksymalny czas eksportu:';
 $_lang["export_site_maxtime_message"] = 'Tutaj mo¿esz ustawiæ ilo¶æ sekund, które system mo¿e przeznaczyæ na eksportowanie serwisu (pomijaj±c ustawienie PHP). Wprowad¼ 0 dla nieograniczonego czasu, jednak takie ustawienie mo¿e prowadziæ do niestabilno¶ci serwera i jest niezalecane.';
-$_lang["export_site_message"] = 'U¿ywaj±c tej funkcji mo¿esz wyeksportowaæ ca³y serwis do statycznego HTML. Pamiêtaj, ¿e stracisz wiele funkcjonalno¶ci systemu MODx:
-<p /><ul><li>Wy¶wietlenia stron, które zosta³y wyeksportowane nie zostan± zapisane.</li><li>Interaktywne snippety nie bêd± dzia³aæ w wyeksportowanych plikach</li><li>Tylko zwyk³e dokumenty zostan± wyeksportowane, odno¶niki web nie.</li><li>
-Proces eksportu mo¿e siê nie udaæ je¶li Twoje dokumenty zawieraj± snippety z nag³ówkiem przekierowania.</li><li>
-Uk³ad i wygl±d strony mo¿e siê ró¿niæ od zak³adanego, w zale¿no¶ci od tego jak skonstruowa³e¶ swoje dokumenty, arkusze stylów, obrazki. Aby to naprawiæ mo¿esz spróbowaæ przenie¶æ wyeksportowane pliki do katalogu g³ównego (tam gdzie jest umieszczony g³ówny plik MODx-a \'index.php\'.</li></ul><p />
-Proszê wype³niæ formularz i nacisn±æ \'Eksport\' aby rozpocz±æ proces eksportu. Pliki zostan± zapisane w lokalizacji, któr± poda³e¶ u¿ywaj±c aliasu dokumentu jako nazwy pliku. Podczas eksportu dobrze jest ustawiæ opcjê konfiguracji MODx-a \'Przyjazne aliasy\' na \'Tak\'. <br>
-W zale¿no¶ci od rozmiaru serwisu eksport mo¿e trochê potrwaæ. <br>
-<b>Wszystkie istniej±ce pliki zostan± nadpisane nowymi, je¶li ich nazwy bêd± identyczne!</b><p />';
-$_lang["export_site_numberdocs"] = '<b>Znaleziono %s dokumentów do eksportu...</b><p/>';
+$_lang["export_site_message"] = 'U¿ywaj±c tej funkcji mo¿esz wyeksportowaæ ca³y serwis do statycznego HTML. Pamiêtaj, ¿e stracisz wiele funkcjonalno¶ci systemu MODx:<p /><ul><li>Wy¶wietlenia stron, które zosta³y wyeksportowane nie zostan± zapisane.</li><li>Interaktywne snippety nie bêd± dzia³aæ w wyeksportowanych plikach</li><li>Tylko zwyk³e dokumenty zostan± wyeksportowane, odno¶niki web nie.</li><li>Proces eksportu mo¿e siê nie udaæ je¶li Twoje dokumenty zawieraj± snippety z nag³ówkiem przekierowania.</li><li>Uk³ad i wygl±d strony mo¿e siê ró¿niæ od zak³adanego, w zale¿no¶ci od tego jak skonstruowa³e¶ swoje dokumenty, arkusze stylów, obrazki. Aby to naprawiæ mo¿esz spróbowaæ przenie¶æ wyeksportowane pliki do katalogu g³ównego (tam gdzie jest umieszczony g³ówny plik MODx-a \'index.php\'.</li></ul><p />Proszê wype³niæ formularz i nacisn±æ \'Eksport\' aby rozpocz±æ proces eksportu. Pliki zostan± zapisane w lokalizacji, któr± poda³e¶ u¿ywaj±c aliasu dokumentu jako nazwy pliku. Podczas eksportu dobrze jest ustawiæ opcjê konfiguracji MODx-a \'Przyjazne aliasy\' na \'Tak\'. <br />W zale¿no¶ci od rozmiaru serwisu eksport mo¿e trochê potrwaæ. <br /><b>Wszystkie istniej±ce pliki zostan± nadpisane nowymi, je¶li ich nazwy bêd± identyczne!</b><p />';
+$_lang["export_site_numberdocs"] = '<b>Znaleziono %s dokumentów do eksportu...</b><p />';
 $_lang["export_site_prefix"] = 'Prefix pliku:';
 $_lang["export_site_start"] = 'Rozpocznij eksport';
 $_lang["export_site_success"] = '<span style=\'color:#009900\'>Powodzenie!</span>';
@@ -393,10 +374,9 @@ $_lang["icon"] = 'Ikona';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Przypisanie nadrzêdne:nnDokument jest dzieckiem wybranego dokumentu.';
 $_lang["illegal_parent_self"] = 'Przypisanie nadrzêdne:nnWybrany dokument nie mo¿e byæ przypisany do samego siebie.';
-$_lang["import_files_found"] = '<b>Znaleziono %s dokumentów do importu...</b><p/>';
+$_lang["import_files_found"] = '<b>Znaleziono %s dokumentów do importu...</b><p />';
 $_lang["import_params"] = 'Importuj parametry udostêpniane przez modu³';
-$_lang["import_params_msg"] = 'Mo¿esz zaimportowaæ parametry i ustawienia modu³u wybieraj±c nazwê modu³u z menu rozwijalnego.<br>
-<b>Uwaga:</b> Aby modu³ pojawi³ siê na li¶ci ta wtyczka/snippet musi byæ czê¶ci± listy zale¿no¶ci modu³u oraz modu³ musi mieæ w³±czone udostêpnianie parametrów. ';
+$_lang["import_params_msg"] = 'Mo¿esz zaimportowaæ parametry i ustawienia modu³u wybieraj±c nazwê modu³u z menu rozwijalnego.<br /><b>Uwaga:</b> Aby modu³ pojawi³ siê na li¶ci ta wtyczka/snippet musi byæ czê¶ci± listy zale¿no¶ci modu³u oraz modu³ musi mieæ w³±czone udostêpnianie parametrów. ';
 $_lang["import_parent_document"] = 'Dokument nadrzêdny:';
 $_lang["import_site"] = 'Importuj serwis';
 $_lang["import_site_failed"] = '<span style=\'color:#990000\'>B³±d!</span>';
@@ -404,8 +384,7 @@ $_lang["import_site_html"] = 'Importuj stronê z HTML';
 $_lang["import_site_importing_document"] = 'Importowanie pliku <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Maksymalny czas importu:';
 $_lang["import_site_maxtime_message"] = 'Tutaj mo¿esz ustawiæ maksymalny czas importu w sekundach. Wpisz 0 aby ustawiæ nieograniczony czas. Zwróæ uwagê, ¿e ustawienie 0 lub wysokiej warto¶ci mo¿e powodowaæ niestabilne dzia³anie serwera i nie jest zalecane.';
-$_lang["import_site_message"] = 'U¿ywaj±c tej funkcji mo¿esz importowaæ ca³e dokumenty HTML do bazy danych. Zwróæ uwagê, ¿e bêdziesz musia³ przekopiowaæ dokumenty HTML do folderu \'assets/import\'.<br>
-Wype³nij formularz i kliknij \'Import\' aby rozpocz±æ importowanie. Importowane pliki bêd± zapisane w wybranej lokalizacji z u¿yciem nazwy pliku jako aliasu, tytu³u strony i tytu³u dokumentu.';
+$_lang["import_site_message"] = 'U¿ywaj±c tej funkcji mo¿esz importowaæ ca³e dokumenty HTML do bazy danych. Zwróæ uwagê, ¿e bêdziesz musia³ przekopiowaæ dokumenty HTML do folderu \'assets/import\'.<br />Wype³nij formularz i kliknij \'Import\' aby rozpocz±æ importowanie. Importowane pliki bêd± zapisane w wybranej lokalizacji z u¿yciem nazwy pliku jako aliasu, tytu³u strony i tytu³u dokumentu.';
 $_lang["import_site_skip"] = '<span style=\'color:#990000\'>Pominiêto!</span>';
 $_lang["import_site_start"] = 'Rozpocznij import';
 $_lang["import_site_success"] = '<span style=\'color:#009900\'>Sukces!</span>';
@@ -449,14 +428,11 @@ $_lang["login_allowed_days_message"] = 'Wybierz dni, w które u¿ytkownik mo¿e siê
 $_lang["login_allowed_ip"] = 'Dozwolone adresy IP';
 $_lang["login_allowed_ip_message"] = 'Wprowad¼ adresy IP z których te¿ u¿ytkownik mo¿e siê logowaæ. <b>Uwaga: oddziel kilka adresów przecinkiem (,)</b>';
 $_lang["login_button"] = 'Zaloguj';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">W tej chwili trwa instalacja/aktualizacja tego serwisu.<br/>Spróbuj ponownie za kilka minut!</span><br/>';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Instalacja/aktualizacja tego serwisu zosta³a zakoñczona, zaloguj siê ponownie!</span><br/>';
-$_lang["login_captcha_message"] = ' Administrator w³±czy³ walidacjê kodów Captcha, wiêc bêdziesz musia³ tak¿e wprowadziæ kod bezpieczeñstwa.
-
-Je¶li masz problem z odczytaniem kodu, kliknij na nim w celu wygenerowania nowego.';
+$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">W tej chwili trwa instalacja/aktualizacja tego serwisu.<br />Spróbuj ponownie za kilka minut!</span><br />';
+$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Instalacja/aktualizacja tego serwisu zosta³a zakoñczona, zaloguj siê ponownie!</span><br />';
+$_lang["login_captcha_message"] = ' Administrator w³±czy³ walidacjê kodów Captcha, wiêc bêdziesz musia³ tak¿e wprowadziæ kod bezpieczeñstwa. Je¶li masz problem z odczytaniem kodu, kliknij na nim w celu wygenerowania nowego.';
 $_lang["login_homepage"] = 'Strona po zalogowaniu';
-$_lang["login_homepage_message"] = 'Wprowad¼ ID dokumentu, który chcesz pokazaæ u¿ytkownikowi po jego zalogowaniu.
-<b>Uwaga! Upewnij siê, ¿e ID, które wprowadzi³e¶ jest przypisane do istniej±cego dokumentu oraz, ¿e jest opublikowane i dostêpne dla danego u¿ytkownika!</b>';
+$_lang["login_homepage_message"] = 'Wprowad¼ ID dokumentu, który chcesz pokazaæ u¿ytkownikowi po jego zalogowaniu. <b>Uwaga! Upewnij siê, ¿e ID, które wprowadzi³e¶ jest przypisane do istniej±cego dokumentu oraz, ¿e jest opublikowane i dostêpne dla danego u¿ytkownika!</b>';
 $_lang["login_message"] = 'Proszê podaæ swoje dane uwierzytelniaj±ce, aby siê zalogowaæ. Podaj±c nazwê u¿ytkownika oraz has³o zwróæ szczególn± uwagê na wielko¶æ znaków!';
 $_lang["logout"] = 'Wyloguj siê';
 $_lang["logo_slogan"] = 'MODx Content Manager';
@@ -523,8 +499,7 @@ $_lang["mgrlog_itemid"] = 'ID rzeczy';
 $_lang["mgrlog_itemname"] = 'Nazwa rzeczy';
 $_lang["mgrlog_msg"] = 'Komunikat';
 $_lang["mgrlog_noquery"] = 'Nie wprowadzono jeszcze ¿adnych kryteriów zapytania.';
-$_lang["mgrlog_query_msg"] = 'Wprowad¼ kryteria przegl±dania dziennika. Mo¿esz wybraæ wpisy wg daty, ale miej na uwadze, ¿e wprowadzone daty nie s± zawierane - aby wybraæ wszystkie wpisy z 01-01-2004, ustaw "datê od" na 01-01-2004, a "datê do" na 02-01-2004.<br/><br/>
-Komunikat i Akcja z regu³y s± takie same. Je¿eli szukasz konkretnego komunikatu, najlepiej ustaw akcjê na "Dowolne/wszystkie".';
+$_lang["mgrlog_query_msg"] = 'Wprowad¼ kryteria przegl±dania dziennika. Mo¿esz wybraæ wpisy wg daty, ale miej na uwadze, ¿e wprowadzone daty nie s± zawierane - aby wybraæ wszystkie wpisy z 01-01-2004, ustaw "datê od" na 01-01-2004, a "datê do" na 02-01-2004.<br /><br />Komunikat i Akcja z regu³y s± takie same. Je¿eli szukasz konkretnego komunikatu, najlepiej ustaw akcjê na "Dowolne/wszystkie".';
 $_lang["mgrlog_results"] = 'Ilo¶æ wyników';
 $_lang["mgrlog_qresults"] = 'Wyniki zapytania';
 $_lang["mgrlog_searchlogs"] = 'Szukaj w dzienniku';
@@ -670,14 +645,13 @@ $_lang["plugin_priority"] = 'Edytuj kolejno¶æ wykonywania pluginów po wydarzenia
 $_lang["plugin_title"] = 'Stwórz/edytuj wtyczkê';
 $_lang["preview"] = 'Podgl±d';
 $_lang["preview_document"] = 'Podgl±d dokumentu';
-$_lang["preview_msg"] = 'To jest podgl±d ostatnio dokonanych zmian. Kliknij tutaj aby <a href=\'javascript://\' onclick="saveRefreshPreview();"><img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\'>zapisaæ i od¶wie¿yæ</a> bie¿±ce zmiany';
+$_lang["preview_msg"] = 'To jest podgl±d ostatnio dokonanych zmian. Kliknij tutaj aby <a href="#" onclick="saveRefreshPreview();">zapisaæ i od¶wie¿yæ</a> bie¿±ce zmiany';
 $_lang["private"] = 'Prywatny';
 $_lang["public"] = 'Publiczny';
 $_lang["publish_date"] = 'Data publikacji';
 $_lang["publish_document"] = 'Publikuj dokument';
 $_lang["publish_events"] = 'Wydarzenia publikacji';
-$_lang["rb_base_dir_message"] = 'Wprowad¼ fizyczn± ¶cie¿kê do katalogu zasobów. To ustawienie jest zwykle generowane automatycznie. Mo¿e nie dzia³aæ na serwerze IIS. <br>
-<b>Uwaga: </b> katalog zasobów musi zawieraæ podkatalogi: images, files, flash, media aby przegl±darka zasobów dzia³a³a poprawnie.';
+$_lang["rb_base_dir_message"] = 'Wprowad¼ fizyczn± ¶cie¿kê do katalogu zasobów. To ustawienie jest zwykle generowane automatycznie. Mo¿e nie dzia³aæ na serwerze IIS. <br /><b>Uwaga: </b> katalog zasobów musi zawieraæ podkatalogi: images, files, flash, media aby przegl±darka zasobów dzia³a³a poprawnie.';
 $_lang["rb_base_dir_title"] = 'Katalog przechowywania zasobów:';
 $_lang["rb_base_url_message"] = 'Podaj URL do katalogu zasobów. To ustawienia jest zwykle generowane automatycznie. Mo¿e nie dzia³aæ na serwerze IIS.';
 $_lang["rb_base_url_title"] = 'URL zasobu:';
@@ -895,42 +869,9 @@ $_lang["submit"] = 'Wy¶lij';
 $_lang["sunday"] = 'Niedziela';
 $_lang["sysinfo_activity_message"] = 'Ta lista pokazuje dokumenty, które by³y ostatnio edytowane przez u¿ytkowników.';
 $_lang["sysinfo_userid"] = 'U¿ytkownik';
-$_lang["system_email_signup"] = 'Witaj [+uid+]
-
-Poni¿ej znajduj± siê szczegó³y logowania do Panelu Administracji [+sname+] :
-
-Login: [+uid+]
-Has³o: [+pwd+]
-
-Po zalogowaniu do Panelu Administracji ([+surl+]), mo¿esz zmieniæ swoje has³o.
-
-Pozdrawiam,
-Administrator witryny';
-$_lang["system_email_webreminder"] = 'Witaj [+uid+]
-
-Aby uaktywniæ nowe has³o kliknij na poni¿szy link:
-
-[+surl+]
-
-Po zakoñczeniu mo¿esz u¿yæ nastêpuj±cego has³a do zalogowania siê:
-
-Has³o:[+pwd+]
-
-Je¶li nie zg³asza³e¶ zmiany has³a zignoruj ten e-mail.
-
-Pozdrawiam,
-Administrator witryny';
-$_lang["system_email_websignup"] = 'Witaj [+uid+]
-
-Poni¿ej znajduj± siê szczegó³y logowania do strony [+sname+]:
-
-Login: [+uid+]
-Has³o: [+pwd+]
-
-Po zalogowaniu do [+sname+] ([+surl+]), mo¿esz zmieniæ swoje has³o.
-
-Pozdrawiam,
-Administrator witryny';
+$_lang["system_email_signup"] = 'Witaj [+uid+]\n\nPoni¿ej znajduj± siê szczegó³y logowania do Panelu Administracji [+sname+] :\n\nLogin: [+uid+]\nHas³o: [+pwd+]\n\nPo zalogowaniu do Panelu Administracji ([+surl+]), mo¿esz zmieniæ swoje has³o.\n\nPozdrawiam,\nAdministrator witryny';
+$_lang["system_email_webreminder"] = 'Witaj [+uid+]\n\nAby uaktywniæ nowe has³o kliknij na poni¿szy link:\n\n[+surl+]\n\nPo zakoñczeniu mo¿esz u¿yæ nastêpuj±cego has³a do zalogowania siê:\n\nHas³o:[+pwd+]\n\ne¶li nie zg³asza³e¶ zmiany has³a zignoruj ten e-mail.\n\nPozdrawiam,\nAdministrator witryny';
+$_lang["system_email_websignup"] = 'Witaj [+uid+]\n\nPoni¿ej znajduj± siê szczegó³y logowania do strony [+sname+]:\n\nLogin: [+uid+]\nHas³o: [+pwd+]\n\nPo zalogowaniu do [+sname+] ([+surl+]), mo¿esz zmieniæ swoje has³o.\n\nPozdrawiam,\nAdministrator witryny';
 $_lang["sys_alert"] = 'Alarm systemowy';
 $_lang["table_hoverinfo"] = 'Zatrzymaj kursor myszy nad nazw± tabeli aby zobaczyæ krótki opis jej funkcji (nie wszystkie tabele s± opatrzone <i>komentarzami</i>.)';
 $_lang["table_prefix"] = 'Prefiks tabel';
@@ -1020,7 +961,7 @@ $_lang["user_changeddata"] = 'Twoje dane zmieni³y siê. Zaloguj siê ponownie.';
 $_lang["user_country"] = 'Kraj';
 $_lang["user_dob"] = 'Data urodzenia';
 $_lang["user_doesnt_exist"] = 'Uzytkownik nie istnieje';
-$_lang["user_edit_self_msg"] = 'Aby w pe³ni zaktualizowaæ swoje dane wymagane jest przelogowanie siê.</b><br>Mo¿esz równie¿ wygenerowaæ dla siebie nowe has³o, zostanie ono przes³ane do Ciebie poprzez email.';
+$_lang["user_edit_self_msg"] = 'Aby w pe³ni zaktualizowaæ swoje dane wymagane jest przelogowanie siê.</b><br />Mo¿esz równie¿ wygenerowaæ dla siebie nowe has³o, zostanie ono przes³ane do Ciebie poprzez email.';
 $_lang["user_email"] = 'Adres email';
 $_lang["user_failedlogincount"] = 'Nieudane próby logowania';
 $_lang["user_fax"] = 'Fax';
@@ -1043,8 +984,7 @@ $_lang["user_title"] = 'Utwórz/ edytuj u¿ytkownika';
 $_lang["user_upload_message"] = 'Je¶li chcesz zabroniæ temu uzytkownikowi ³adowania dowolnych typów plików z tej kategorii, upewnij siê ¿e opcja "U¿ywaj ustawienia g³ównej konfiguracji" jest odznaczona i pozostaw to pole puste.';
 $_lang["user_use_config"] = 'U¿ywaj ustawienia g³ównej konfiguracji';
 $_lang["user_zip"] = 'Kod pocztowy';
-$_lang["use_alias_path_message"] = 'Ustawienie tej opcji na \'tak\' spowoduje wy¶wietlenie pe³nej ¶cie¿ki do dokumentu, je¶li dokument bêdzie posiada³ alias. Np. je¶li dokument z aliasem \'dziecko\' jest umieszczony w katalogu o aliasie \'rodzic\' wtedy pe³ny, wy¶wietlany alias bêdzie wygl±da³ tak: \'/rodzic/dziecko.html\'. <br>
-<b>Uwaga: Po ustawieniu tej opcji na \'tak\' musisz linkowaæ rzeczy (obazki, css, skrypty JS itp.) u¿ywaj±c adresów bezwzglêdnych np. \'/pliki/obrazki\' a nie \'pliki/obrazki\'. W ten sposób zapobiegniesz uzupe³nianiu przez przegl±darkê lub serwer przed uzupe³nianiem adresów wzglêdnych.</b>';
+$_lang["use_alias_path_message"] = 'Ustawienie tej opcji na \'tak\' spowoduje wy¶wietlenie pe³nej ¶cie¿ki do dokumentu, je¶li dokument bêdzie posiada³ alias. Np. je¶li dokument z aliasem \'dziecko\' jest umieszczony w katalogu o aliasie \'rodzic\' wtedy pe³ny, wy¶wietlany alias bêdzie wygl±da³ tak: \'/rodzic/dziecko.html\'. <br /><b>Uwaga: Po ustawieniu tej opcji na \'tak\' musisz linkowaæ rzeczy (obazki, css, skrypty JS itp.) u¿ywaj±c adresów bezwzglêdnych np. \'/pliki/obrazki\' a nie \'pliki/obrazki\'. W ten sposób zapobiegniesz uzupe³nianiu przez przegl±darkê lub serwer przed uzupe³nianiem adresów wzglêdnych.</b>';
 $_lang["use_alias_path_title"] = 'Alias przyjazny dla u¿ytkownika:';
 $_lang["use_editor_message"] = 'Czy chcesz udostêpniæ edytor RTE? Je¿eli wygodniej ci pisaæ w HTML, mo¿esz wy³±czyæ edytor za pomoc± tych ustawieñ. Pamiêtaj, ¿e ta opcja dotyczy wszystkich dokumentów i wszystkich u¿ytkowników!';
 $_lang["use_editor_title"] = 'W³±cz edytor:';

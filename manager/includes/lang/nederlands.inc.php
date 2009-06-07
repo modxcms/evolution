@@ -1,15 +1,13 @@
 <?php
 /**
- * Filename: 		includes/lang/nederlands.inc.php
- * Function: 		Dutch language file.
- * Encoding: 		UTF8
- * Author: 			The MODx Project Team
- *              Stefan van Zanden (21-03-2009 Update to 0.9.6.3 + large amount of typo / consistency / translation fixes)
- * Date: 			  03 Mar 2007
- * Version: 		2.2
- * MODx version: 	0.9.6.3
+ * Filename:       includes/lang/nederlands.inc.php
+ * Function:       Dutch language file.
+ * Encoding:       UTF8
+ * Author:         The MODx Project Team, Stefan van Zanden (21-03-2009 Update to 0.9.6.3 + large amount of typo / consistency / translation fixes)
+ * Date:           03 Mar 2007
+ * Version:        2.2
+ * MODx version:   0.9.6.3
 */
-// NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx is een <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Applicatie Framework en Content Management Systeem</a> gelicentieerd onder de <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Over MODx';
 $_lang["access_permissions"] = 'Toegangsrechten';
@@ -200,8 +198,8 @@ $_lang["deselect_keywords"] = 'Deselecteer keywords';
 $_lang["deselect_metatags"] = 'Verwijder \'META tags\'';
 $_lang["disabled"] = 'Uitgeschakeld';
 $_lang["document"] = 'Document';
-$_lang["documents_in_container"] = "documenten in deze container";
-$_lang["documents_in_container_no"] = "Deze container bevat geen subdocumenten.";
+$_lang["documents_in_container"] = 'documenten in deze container';
+$_lang["documents_in_container_no"] = 'Deze container bevat geen subdocumenten.';
 $_lang["document_alias"] = 'Document\'s alias';
 $_lang["document_alias_help"] = 'Hier kunt u voor dit document een alias invoeren. Dit zal het document toegangelijk maken als u gebruik maakt van:\n\nhttp://uwserveradres/alias\n\nDit werkt alleen als u gebruik maakt van gebruiksvriendelijke URLs.';
 $_lang["document_content"] = 'Documentinhoud';
@@ -373,7 +371,7 @@ $_lang["icon"] = 'Icoon';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Hoofddocument toekenning:\n\nDocument is een kind van het geselecteerde document.';
 $_lang["illegal_parent_self"] = 'Hoofddocument toekenning::\n\nHet geselecteerde document kan niet zijn eigen hoofddocument zijn.';
-$_lang["import_files_found"] = '<b>%s documenten gevonden om te importeren...</b><p/>';
+$_lang["import_files_found"] = '<b>%s documenten gevonden om te importeren...</b><p />';
 $_lang["import_params"] = 'Gedeelde module parameters importeren';
 $_lang["import_params_msg"] = 'De parameters en instellingen van een module kunnen worden ge&#239;mporteerd door de naam van de module te selecteren uit het bovenstaande menu. <b>NB:</b> Modules verschijnen in het menu wanneer de module is ingesteld voor het \'delen van parameters\' en wanneer bij de module is opgegeven dat de module afhankelijk is van deze snippet/plugin.';
 $_lang["import_parent_document"] = 'Hoofddocument:';
@@ -524,11 +522,11 @@ $_lang["module_resource_msg"] = 'Bronnen waarvan deze module afhankelijk is kunn
 $_lang["module_resource_title"] = 'Module afhankelijkheden';
 $_lang["module_title"] = 'Modules bewerken/toevoegen';
 $_lang["module_viewdepend_msg"] = 'Een module is afhankelijk van bepaalde bronnen. Klik op de knop \'Beheer afhankelijkheden\' om deze te bewerken.';
-$_lang["modx_news"] ='MODx Nieuws Waarschuwingen';
-$_lang["modx_news_tab"] ='MODx Nieuws';
-$_lang["modx_news_title"] ='MODx Nieuws';
-$_lang["modx_security_notices"] ='MODx Beveiligingswaarschuwingen';
-$_lang["modx_version"] = "MODx versie";
+$_lang["modx_news"] = 'MODx Nieuws Waarschuwingen';
+$_lang["modx_news_tab"] = 'MODx Nieuws';
+$_lang["modx_news_title"] = 'MODx Nieuws';
+$_lang["modx_security_notices"] = 'MODx Beveiligingswaarschuwingen';
+$_lang["modx_version"] = 'MODx versie';
 $_lang["monday"] = 'Maandag';
 $_lang["move"] = 'Verplaatsen';
 $_lang["move_document"] = 'Verplaats document';
@@ -612,9 +610,9 @@ $_lang["page_data_unpublishdate"] = 'Datum einde publicatie';
 $_lang["page_data_unpublishdate_help"] = 'Als u een datum einde publicatie instelt, wordt vanaf deze datum de publicatie be&#235;indigd. Klik op het kalenderpictogram om een datum te selecteren, of op het pictogram ernaast om de datum waarop de publicatie be&#235;indigd wordt, te verwijderen. Dit houdt in dat de publicatie van het document niet automatisch be&#235;indigd wordt.';
 $_lang["page_data_unpublished"] = 'Niet-gepubliceerd';
 $_lang["page_data_web_access"] = 'Webtoegang';
-$_lang["pagination_table_first"] = "Eerste";
-$_lang["pagination_table_gotopage"] = "Ga naar pagina";
-$_lang["pagination_table_last"] = "Laatste";
+$_lang["pagination_table_first"] = 'Eerste';
+$_lang["pagination_table_gotopage"] = 'Ga naar pagina';
+$_lang["pagination_table_last"] = 'Laatste';
 $_lang["paging_first"] = 'eerste';
 $_lang["paging_last"] = 'laatste';
 $_lang["paging_next"] = 'volgende';
@@ -648,7 +646,7 @@ $_lang["plugin_priority"] = 'Wijzig volgorde uitvoeren plugin per gebeurtenis';
 $_lang["plugin_title"] = 'Aanmaken/bewerken plugin';
 $_lang["preview"] = 'Voorbeeld';
 $_lang["preview_document"] = 'Document voorbeeld';
-$_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href=\'javascript://\' onclick="saveRefreshPreview();"><img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\'> Opslaan en vernieuwen</a>';
+$_lang["preview_msg"] = 'Dit is een voorbeeld van de laatst opgeslagen veranderingen. Klik op de link om veranderingen op te slaan en het voorbeeld te vernieuwen. <a href="#" onclick="saveRefreshPreview();">Opslaan en vernieuwen</a>';
 $_lang["private"] = 'Gesloten';
 $_lang["public"] = 'Open';
 $_lang["publish_date"] = 'Publicatiedatum';
@@ -801,8 +799,8 @@ $_lang["search_results_returned_msg"] = 'Uw zoekcriteria hebben <b>%s</b> docume
 $_lang["search_results_returned_title"] = 'Titel';
 $_lang["search_view_docdata"] = 'Geef dit item weer';
 $_lang["security"] = 'Beveiliging';
-$_lang["security_notices_tab"] ='Beveiligingswaarschuwingen';
-$_lang["security_notices_title"] ='Beveiligingswaarschuwingen';
+$_lang["security_notices_tab"] = 'Beveiligingswaarschuwingen';
+$_lang["security_notices_title"] = 'Beveiligingswaarschuwingen';
 $_lang["select_date"] = 'Selecteer een datum';
 $_lang["send"] = 'Verzenden';
 $_lang["serveroffset"] = 'Server verschil';
@@ -960,7 +958,7 @@ $_lang["user_changeddata"] = 'Uw gegevens zijn gewijzigd. A.u.b. opnieuw aanmeld
 $_lang["user_country"] = 'Land';
 $_lang["user_dob"] = 'Geboortedatum';
 $_lang["user_doesnt_exist"] = 'Gebruiker bestaat niet';
-$_lang["user_edit_self_msg"] = 'Wellicht dient u na het opslaan eerst af te melden en dan weer aan te melden om uw gegevens volledig te actualiseren.</b><br>Als u ervoor gekozen heeft om voor uzelf een nieuw wachtwoord te generen, dan zal dit via e-mail toegezonden worden.';
+$_lang["user_edit_self_msg"] = 'Wellicht dient u na het opslaan eerst af te melden en dan weer aan te melden om uw gegevens volledig te actualiseren.</b><br />Als u ervoor gekozen heeft om voor uzelf een nieuw wachtwoord te generen, dan zal dit via e-mail toegezonden worden.';
 $_lang["user_email"] = 'E-mailadres';
 $_lang["user_failedlogincount"] = 'Aantal mislukte aanmeldpogingen';
 $_lang["user_fax"] = 'Fax';
@@ -990,9 +988,9 @@ $_lang["use_editor_title"] = 'Teksteditor aanzetten:';
 $_lang["validate_referer_message"] = 'Valideer de HTTP_REFERER headers om het risico te verkleinen dat uw website beheerders bedonderd worden door een CSRF (Cross Site Request Forgery) aanval. Soms is dit echter niet mogelijk als uw server geen HTTP_REFERER headers verzend.';
 $_lang["validate_referer_title"] = 'Valideer HTTP_REFERER headers?';
 $_lang["value"] = 'Waarde';
-$_lang["version_codename"] = "Versie codenaam";
+$_lang["version_codename"] = 'Versie codenaam';
 $_lang["view"] = 'Bekijken';
-$_lang["view_child_documents_in_container"] = "Bekijk subdocumenten in container";
+$_lang["view_child_documents_in_container"] = 'Bekijk subdocumenten in container';
 $_lang["view_document"] = 'Bekijk document';
 $_lang["view_log"] = 'Bekijk logboek';
 $_lang["view_logging"] = 'CMS logboek';

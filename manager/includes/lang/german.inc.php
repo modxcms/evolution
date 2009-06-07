@@ -2,15 +2,14 @@
 /**
  * Filename:       includes/lang/german.inc.php
  * Function:       Language file.
- * Encoding:       UTF-8
- * Autoren:        The MODx Project Team (originally by Alex Butter).
+ * Encoding:       UTF8
+ * Author:         The MODx Project Team
  *                 Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
  *                 Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
  * Date:           2008/10/09
  * Version:        2.13
  * MODx version:   0.9.6.3
 */
-// NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx ist eine PHP Arbeitsumgebung und ist unter der <a href="../assets/docs/license.txt">GPL</a> Lizenz veröffentlicht.';
 $_lang["about_title"] = 'Über MODx';
 $_lang["access_permissions"] = 'Zugangskontrolle';
@@ -157,11 +156,7 @@ $_lang["credits_dTree"] = 'MODx benutzt das exzellente dTree-Script von DestroyD
 $_lang["credits_everaldo"] = 'MODx nutzt grafische Symbole von Everaldo\'s \'Crystal Icons\'.';
 $_lang["credits_mysql"] = 'MODx läuft mit MySQL!';
 $_lang["credits_php"] = 'MODx läuft mit PHP!';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><b>Raymond Irving, Ryan Thrash</b> - Projekt-Gründer</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
-</ul>';
+$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Projekt-Gründer</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
 $_lang["credits_shouts_title"] = '<b>Zusätzlicher Dank an: </b>';
 $_lang["credits_webfx"] = 'MODx benutzt einige JavaScripts von Webfx. Dort findet man tolle Sachen!';
 $_lang["custom_contenttype_message"] = 'Hier können Sie eigene Content-Types hinzufügen bzw. löschen. Geben Sie hierzu den Typ ein und klicken auf hinzufügen bzw. wählen Sie den Typ aus der Liste aus und klicken entfernen.';
@@ -183,7 +178,7 @@ $_lang["database_table_records"] = 'Datensätze';
 $_lang["database_table_tablename"] = 'Tabellenname';
 $_lang["database_table_totalsize"] = 'Gesamtgröße';
 $_lang["database_table_totals"] = 'Summen:';
-$_lang['database_version'] = 'Datenbank-Version:';
+$_lang["database_version"] = 'Datenbank-Version:';
 $_lang["date"] = 'Datum';
 $_lang["datechanged"] = 'Änderungsdatum';
 $_lang["defaultcache_message"] = 'Wählen Sie \'Ja\', um alle neuen Dokumente als standardmäßig cachebar anzulegen.';
@@ -239,8 +234,8 @@ $_lang["document_title"] = 'Titel';
 $_lang["document_title_help"] = 'Geben Sie hier den Namen/Titel des Dokuments ein. Vermeiden Sie die Benutzung von Backslashes im Namen!';
 $_lang["document_to_be_moved"] = 'Dokument das verschoben werden soll';
 $_lang["document_weblink_help"] = 'Geben Sie hier die Adresse des Objekts ein, auf welches Sie verlinken möchten.';
-$_lang["documents_in_container"] = "Dokumente in diesem Container.";
-$_lang["documents_in_container_no"] = "Dieser Container hat keine Kind-Dokumente.";
+$_lang["documents_in_container"] = 'Dokumente in diesem Container.';
+$_lang["documents_in_container_no"] = 'Dieser Container hat keine Kind-Dokumente.';
 $_lang["doc_data_title"] = 'Daten des Dokuments anzeigen';
 $_lang["duplicate"] = 'Duplizieren';
 $_lang["duplicate_alias_found"] = 'Das Dokument \'%s\' verwendet bereits den Alias \'%s\'. Bitte geben Sie einen eindeutigen Alias ein.';
@@ -286,7 +281,7 @@ $_lang["export_site_html"] = 'Seite nach HTML exportieren';
 $_lang["export_site_maxtime"] = 'Maximale Export-Zeit:';
 $_lang["export_site_maxtime_message"] = 'Hier können Sie festlegen wie lange MODx brauchen darf, um die Site zu exportieren (überschreibt PHP-Einstellungen). 0 für unbegrenzt. Achtung, 0 ist eine sehr hohe Einstellung und kann die Performance Ihres Servers beeinflussen.';
 $_lang["export_site_message"] = 'Diese Funktion exportiert die gesamte Seite in HTML Dateien. Allerdings verlieren Sie viel von der gesamten MODx Funktionalität:<p /><ul><li>Seitenzugriffe auf der exportierten Site werden nicht aufgezeichnet</li><li>Interaktive Snippets arbeiten nicht in der exportierten Site</li><li>Nur reguläre Dokumente werden exportiert - Links werden nicht exportiert.</li><li>Der Exportprozess könnte abbrechen wenn Dokument-Snippets enthalten sind die eine Header-Weiterleitung vornehmen</li><li>Abhängig davon wie Sie Ihre Dokumente, Style Sheets und Bilder erstellt haben könnte das Design zerstört werden. Um dieses Problem zu lösen können Sie die exportierten Dateien in das gleiche Verzeichnis kopieren, in dem die Datei index.php liegt.</li></ul><p /> Bitte füllen Sie das Formular aus und klicken auf \'Export\' um den Export zu starten. Die Dateien werden am angegebenen Ort gespeichert. Es werden - wenn möglich die Aliasnamen als Dateinamen verwendet. Während dem Export der Seite ist es ratsam die Einstellung \'Benutzerfreundliche URLs\' auf \'Ja\' zu setzen. Je nach Größe der Seite wird der Export eine Weile dauern. <p /><b>Bestehende Dateien werden bei Namensgleichheit überschrieben!</b><p />';
-$_lang["export_site_numberdocs"] = '<b>%s Dokumente für den Export gefunden...</b><p/>';
+$_lang["export_site_numberdocs"] = '<b>%s Dokumente für den Export gefunden...</b><p />';
 $_lang["export_site_prefix"] = 'Datei-Präfix:';
 $_lang["export_site_start"] = 'Export starten';
 $_lang["export_site_success"] = '<span style=\'color:#009900\'>Erfolgreich!</span>';
@@ -378,7 +373,7 @@ $_lang["icon"] = 'Symbol';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Elterndokumentzuweisung:\n\nDas Dokument ist dem gewählten Dokument zugehörig.';
 $_lang["illegal_parent_self"] = 'Elterndokumentzuweisung:\n\nDas Dokument kann sich nicht selbst zugewiesen werden.';
-$_lang["import_files_found"] = '<b>%s Dokumente für den Import gefunden...</b><p/>';
+$_lang["import_files_found"] = '<b>%s Dokumente für den Import gefunden...</b><p />';
 $_lang["import_params"] = 'Importieren von gemeinsamen Parametern';
 $_lang["import_params_msg"] = 'Sie können die Parameter und Einstellungen mittels obiger Auswahlliste importieren. <b>Hinweis:</b> Damit Module in dieser Liste erscheinen, muss das jeweilige Plugin/Snippet in der Abhängigkeitsliste des Moduls stehen und das Modul muss die Option \'Gemeinsame Parameter\' aktiviert haben. ';
 $_lang["import_parent_document"] = 'Elterndokument:';
@@ -446,7 +441,7 @@ $_lang["mail_check_timeperiod_message"] = 'Wie oft soll nach neuen Nachrichten i
 $_lang["manager"] = 'Manager';
 $_lang["manager_direction_message"] = 'Leserichtung auswählen, von links nach rechts oder von rechts nach links.';
 $_lang["manager_direction_title"] = 'Leserichtung im Manager:';
-$_lang['manager_lockout_message'] = 'Sie sind gegenwärtig im Content Manager angemeldet. Wenn Sie Ihre Login-Session beenden wollen, klicken Sie bitte den "Abmelden"-Button. <p />Um zu Ihrer Start- oder Home-Seite zu gelangen klicken Sie bitte den "Start"-Button.';
+$_lang["manager_lockout_message"] = 'Sie sind gegenwärtig im Content Manager angemeldet. Wenn Sie Ihre Login-Session beenden wollen, klicken Sie bitte den "Abmelden"-Button. <p />Um zu Ihrer Start- oder Home-Seite zu gelangen klicken Sie bitte den "Start"-Button.';
 $_lang["manager_permissions"] = 'Management-Berechtigungen';
 $_lang["manager_theme"] = 'Manager-Thema:';
 $_lang["manager_theme_message"] = 'Wählen Sie das Thema für den MODx Manager aus.';
@@ -503,8 +498,7 @@ $_lang["mgrlog_itemid"] = 'Element-ID';
 $_lang["mgrlog_itemname"] = 'Elementname';
 $_lang["mgrlog_msg"] = 'Nachricht';
 $_lang["mgrlog_noquery"] = 'Es wurde noch keine Suchanfrage eingegeben.';
-$_lang["mgrlog_query_msg"] = 'Bitte treffen Sie eine Auswahl, um die Protokoll-Einträge anzusehen. Sie können Einträge innerhalb eines bestimmten Zeitraums durchsuchen. Aber berücksichtigen Sie, dass das eingegebene Datum nicht inklusive ist - um alle Einträge für den 01-01-2004 auszuwählen, setzen Sie \'Datum von\' auf den 01-01-2004 und \'Datum bis\' auf den 02-01-2004.<br /><br />
-Eine Nachricht und eine Aktion sind üblicherweise dasselbe. Wenn Sie nach einer bestimmten Nachricht suchen, ist es am besten die Aktion \'Einzelne/Alle\' auszuwählen.';
+$_lang["mgrlog_query_msg"] = 'Bitte treffen Sie eine Auswahl, um die Protokoll-Einträge anzusehen. Sie können Einträge innerhalb eines bestimmten Zeitraums durchsuchen. Aber berücksichtigen Sie, dass das eingegebene Datum nicht inklusive ist - um alle Einträge für den 01-01-2004 auszuwählen, setzen Sie \'Datum von\' auf den 01-01-2004 und \'Datum bis\' auf den 02-01-2004.<br /><br />Eine Nachricht und eine Aktion sind üblicherweise dasselbe. Wenn Sie nach einer bestimmten Nachricht suchen, ist es am besten die Aktion \'Einzelne/Alle\' auszuwählen.';
 $_lang["mgrlog_results"] = 'Anzahl der Ergebnisse';
 $_lang["mgrlog_qresults"] = 'Suchergebnisse';
 $_lang["mgrlog_searchlogs"] = 'Such-Protokoll';
@@ -530,7 +524,7 @@ $_lang["module_resource_msg"] = 'Hier können Sie die Ressourcen verwalten, die 
 $_lang["module_resource_title"] = 'Modulabhängigkeiten';
 $_lang["module_title"] = 'Modul erstellen/bearbeiten';
 $_lang["module_viewdepend_msg"] = 'Hier können Sie die Abhängigkeiten dieses Moduls bearbeiten und verwalten.';
-$_lang["modx_version"] = "MODx-Version";
+$_lang["modx_version"] = 'MODx-Version';
 $_lang["monday"] = 'Montag';
 $_lang["move"] = 'Verschieben';
 $_lang["move_document"] = 'Verschieben';
@@ -614,9 +608,9 @@ $_lang["page_data_unpublishdate"] = 'Zurückziehen am';
 $_lang["page_data_unpublishdate_help"] = 'Falls Sie ein Datum setzen, wird das Dokument zum angegebenen Zeitpunkt versteckt.';
 $_lang["page_data_unpublished"] = 'Unveröffentlicht';
 $_lang["page_data_web_access"] = 'Web Zugriff';
-$_lang["pagination_table_first"] = "Anfang";
-$_lang["pagination_table_last"] = "Ende";
-$_lang["pagination_table_gotopage"] = "Gehe zu Seite";
+$_lang["pagination_table_first"] = 'Anfang';
+$_lang["pagination_table_last"] = 'Ende';
+$_lang["pagination_table_gotopage"] = 'Gehe zu Seite';
 $_lang["paging_first"] = 'Anfang';
 $_lang["paging_last"] = 'Ende';
 $_lang["paging_next"] = 'Vor';
@@ -728,13 +722,13 @@ $_lang["role_edit_user"] = 'Benutzer bearbeiten';
 $_lang["role_edit_web_user"] = 'Webnutzer bearbeiten';
 $_lang["role_empty_trash"] = 'Gelöschte Dokumente endgültig entfernen';
 $_lang["role_errors"] = 'Fehlerdialoge anzeigen';
-$_lang['role_export_static'] = 'Statisches HTML exportieren';
+$_lang["role_export_static"] = 'Statisches HTML exportieren';
 $_lang["role_eventlog_management"] = 'Ereignisverwaltung';
 $_lang["role_file_manager"] = 'Dateimanager benutzen';
 $_lang["role_frames"] = 'Manager-Frames erfragen';
 $_lang["role_help"] = 'Anzeigen der Hilfeseiten';
 $_lang["role_home"] = 'Manager Startseite erfragen';
-$_lang['role_import_static'] = 'HTML importieren';
+$_lang["role_import_static"] = 'HTML importieren';
 $_lang["role_logout"] = 'Abmeldung aus dem MODx Manager';
 $_lang["role_management_msg"] = 'Hier können Sie eine Rolle zum Bearbeiten wählen.';
 $_lang["role_management_title"] = 'Rollen';
@@ -989,9 +983,9 @@ $_lang["use_editor_title"] = 'Editor aktivieren:';
 $_lang["validate_referer_title"] = 'HTTP_REFERER-Header überprüfen?';
 $_lang["validate_referer_message"] = 'Die HTTP_REFERER-Header können überprüft werden um das Risiko zu verringern, dass Inhaltsredakteure Opfer eines CSRF-Angriffs (Cross Site Request Forgery) werden und unbeabsichtigte Aktionen im Manager durchführen. Einige Konfigurationen unterstützen diese Option nicht, wenn der Server keine HTTP_REFERER Header sendet.';
 $_lang["value"] = 'Wert';
-$_lang["version_codename"] = "Versions-Codename";
+$_lang["version_codename"] = 'Versions-Codename';
 $_lang["view"] = 'Ansehen';
-$_lang["view_child_documents_in_container"] = "Dokumente in Container anzeigen";
+$_lang["view_child_documents_in_container"] = 'Dokumente in Container anzeigen';
 $_lang["view_document"] = 'Anzeigen';
 $_lang["view_log"] = 'Protokoll anzeigen';
 $_lang["view_logging"] = 'Benutzerprotokoll';

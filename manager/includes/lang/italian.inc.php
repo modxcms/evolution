@@ -3,12 +3,11 @@
  * Filename:       includes/lang/italian.inc.php
  * Function:       Language file.
  * Encoding:       UTF8
- * Author:         The MODx Project Team (originally by Alex Butter)
+ * Author:         The MODx Project Team, Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif
  * Date:           2 Jan 2009
  * Version:        Version: 2.14
  * MODx version:   MODx version: 0.9.6.3
- * Translation:    Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif */
-// NOTE: Now alpha-sorted
+*/
 $_lang["about_msg"] = 'MODx &egrave; un <a href="http://modxcms.com/what-is-modx.html" target="_blank">framework PHP e un sistema di gestione dei contenuti (CMS)</a> su licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Cos\'&egrave; MODx';
 $_lang["access_permissions"] = 'Permessi di accesso';
@@ -155,11 +154,7 @@ $_lang["credits_dTree"] = 'MODx utilizza l\'eccellente script per la struttura r
 $_lang["credits_everaldo"] = 'MODx utilizza numerose icone del set Everaldo\'s crystal. Ottime icone!';
 $_lang["credits_mysql"] = 'MODx utilizza MySQL!';
 $_lang["credits_php"] = 'MODx utilizza PHP!';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li>
-</ul>';
+$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
 $_lang["credits_shouts_title"] = '<b>Particolari ringraziamenti a:</b>';
 $_lang["credits_webfx"] = 'MODx usa diversi JavaScripts di Webfx. Grande gruppo!!';
 $_lang["custom_contenttype_message"] = 'qui potete impostare il formato del contenuto dei documenti pubblicati. Per aggiunere un nuovo formato, inserite il tipo di contenuto nel campo e cliccate sul pulsante \'Aggiungi\'.';
@@ -181,7 +176,7 @@ $_lang["database_table_records"] = 'Record';
 $_lang["database_table_tablename"] = 'Nome tabella';
 $_lang["database_table_totalsize"] = 'Dimensione totale';
 $_lang["database_table_totals"] = 'Totali:';
-$_lang['database_version'] = 'Versione Database:';
+$_lang["database_version"] = 'Versione Database:';
 $_lang["date"] = 'Data';
 $_lang["datechanged"] = 'Data modifica';
 $_lang["defaultcache_message"] = 'Selezionate \'si\' se volete che tutti i nuovi documenti siano salvati in cache di default.';
@@ -237,8 +232,8 @@ $_lang["document_title"] = 'Titolo';
 $_lang["document_title_help"] = 'Digitate qui il nome/ titolo del documento. Cercate di evitare l\'uso delle barre rovesciate!';
 $_lang["document_to_be_moved"] = 'Documento da spostare';
 $_lang["document_weblink_help"] = 'Digitate qui l\'indirizzo dell\'oggetto a cui volete collegare questo link web.';
-$_lang["documents_in_container"] = "documenti in questo contenitore";
-$_lang["documents_in_container_no"] = "Questo contenitore non ha documenti figli.";
+$_lang["documents_in_container"] = 'documenti in questo contenitore';
+$_lang["documents_in_container_no"] = 'Questo contenitore non ha documenti figli.';
 $_lang["doc_data_title"] = 'Visualizza dati documento';
 $_lang["duplicate"] = 'Duplica';
 $_lang["duplicate_alias_found"] = 'Il documento \'%s\' utilizza gi&agrave; l\'alias \'%s\'. Inserire un altro alias.';
@@ -284,7 +279,7 @@ $_lang["export_site_html"] = 'Esporta sito in HTML';
 $_lang["export_site_maxtime"] = 'Tempo massimo di esportazione:';
 $_lang["export_site_maxtime_message"] = 'Qui potete specificare il numero massimo di secondi che MODx pu&ograve; impiegare per esportare il sito (escludendo le impostazioni PHP). Inserite 0 per un tempo illimitato. Da notare che &egrave; sconsigliato impostare 0 o un numero veramente alto di secondi in quanto ci&ograve; pu&ograve; causare effetti indesiderati al server.';
 $_lang["export_site_message"] = 'Usando questa funzione potete esportare l\'intero sito in HTML. Per contro, considerate che cos&igrave; facendo perderete molte funzionalit&agrave; di MODx:<p /><ul><li>La pagina di lettura sui file esportati non sar&agrave; registrata.</li><li>Gli snippet interattivi NON funzionano nei file esportati.</li><li>Solo i normali documenti saranno esportati, i link web non lo saranno.</li><li>Il processo di esportazione potrebbe fallire se i documenti contengono snippet che inviano intestazioni di redirezione.</li><li>A seconda di come avete scritto i documenti, i fogli di stile e le immagini, il design del sito potrebbe essere compromesso. Per sistemarlo, potete salvare/ spostare i file esportati nella stessa cartella ove risiede il principale file index.php di MODx.</li></ul><p />Per favore compilate il modulo e premete \'Avvia esportazione\' per avviare il processo. I file creati saranno salvati nel punto specificato usando, ove possibile, gli alias dei documenti come nomi dei file. Nell\'esportare il sito, sarebbe meglio aver attivato gli \'URL semplici\' nella configurazione di MODx. In base alla dimensione del sito, l\'esportazione potrebbe impiegare un po\' di tempo.<p /><b>Ogni file esistente sar&agrave; sovrascritto dai nuovi file se i loro nomi sono identici!</b><p />';
-$_lang["export_site_numberdocs"] = '<b>Trovati %s documenti da esportare...</b><p/>';
+$_lang["export_site_numberdocs"] = '<b>Trovati %s documenti da esportare...</b><p />';
 $_lang["export_site_prefix"] = 'Prefisso file:';
 $_lang["export_site_start"] = 'Avvia esportazione';
 $_lang["export_site_success"] = '<span style=\'color:#009900\'>Riuscita!</span>';
@@ -376,7 +371,7 @@ $_lang["icon"] = 'Icona';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Assegnazione parentela:\n\nIl documento &egrave; un sottodocumento del documento selezionato.';
 $_lang["illegal_parent_self"] = 'Assegnazione parentela:\n\nIl documento selezionato non pu&ograve; essere assegnato a se stesso.';
-$_lang["import_files_found"] = '<b>Trovati %s documenti da importare...</b><p/>';
+$_lang["import_files_found"] = '<b>Trovati %s documenti da importare...</b><p />';
 $_lang["import_params"] = 'Importa paramentri condivisi modulo';
 $_lang["import_params_msg"] = 'Potete importare i paramentri e le impostazioni di un modulo selezionando il nome del modulo dalla lista sottostante. <b>NOTE:</b> Per far apparire un modulo del menu , questo plugin/snippet deve essere una parte dell\'elenco di dipendenza del modulo ed il modulo deve avere il paramentro di condivisione attivato. ';
 $_lang["import_parent_document"] = 'Documento genitore:';
@@ -444,7 +439,7 @@ $_lang["mail_check_timeperiod_message"] = 'Intervallo di tempo per controllore s
 $_lang["manager"] = 'Sistema di gestione';
 $_lang["manager_direction_message"] = 'Scegliere la direzione da cui appare il testo nel Manager, da sinistra a destra o da destra a  sinistra';
 $_lang["manager_direction_title"] = 'Direzione del testo nel Manager:';
-$_lang['manager_lockout_message'] = 'Siete attualmete autenticati nel sistema di gestione dei contenuti. Se desiderate uscire dalla sessione, cliccate sul pulsante "Uscita".<p />Per andare alla pagina di inzio, cliccate sul pulsante "Home".';
+$_lang["manager_lockout_message"] = 'Siete attualmete autenticati nel sistema di gestione dei contenuti. Se desiderate uscire dalla sessione, cliccate sul pulsante "Uscita".<p />Per andare alla pagina di inzio, cliccate sul pulsante "Home".';
 $_lang["manager_permissions"] = 'Gestione permessi';
 $_lang["manager_theme"] = 'Tema del sistema di gestione:';
 $_lang["manager_theme_message"] = 'Selezionate un tema per il sistema di gestione dei contenuti.';
@@ -501,8 +496,7 @@ $_lang["mgrlog_itemid"] = 'ID oggetto';
 $_lang["mgrlog_itemname"] = 'Nome oggetto';
 $_lang["mgrlog_msg"] = 'Messaggio';
 $_lang["mgrlog_noquery"] = 'Non &egrave; stata ancora iniziata una ricerca.';
-$_lang["mgrlog_query_msg"] = 'Per vedere i log, fate una selezione. Potete selezionare un intervallo di date, ma ricordate che le date che immettete non sono entrambe incluse. Ad esempio per selezionare tutti i dati di log del giorno 1 gennaio 2007, impostate \'Data iniziale\' su 01-01-2007 e \'Data finale\' su 02-01-2007.<br /><br />
-Messaggio ed azione sono in genere coincidenti. Se state cercando un messaggio specifico, &egrave; meglio impostare l\'azione su \'Qualunque/tutti\'.';
+$_lang["mgrlog_query_msg"] = 'Per vedere i log, fate una selezione. Potete selezionare un intervallo di date, ma ricordate che le date che immettete non sono entrambe incluse. Ad esempio per selezionare tutti i dati di log del giorno 1 gennaio 2007, impostate \'Data iniziale\' su 01-01-2007 e \'Data finale\' su 02-01-2007.<br /><br />Messaggio ed azione sono in genere coincidenti. Se state cercando un messaggio specifico, &egrave; meglio impostare l\'azione su \'Qualunque/tutti\'.';
 $_lang["mgrlog_results"] = 'N. di risultati';
 $_lang["mgrlog_qresults"] = 'Risultati ricerca';
 $_lang["mgrlog_searchlogs"] = 'Ricerca log';
@@ -528,7 +522,7 @@ $_lang["module_resource_msg"] = 'Qui potete aggiungere o rimuovere risorse dalle
 $_lang["module_resource_title"] = 'Dipendenze Moduli';
 $_lang["module_title"] = 'Crea/modifica Moduli';
 $_lang["module_viewdepend_msg"] = 'Qui potete vedere le risorse assegnate dalle quali dipende il modulo. Cliccate sul pulsante \'Gestione Dipendenze\' per modificare le dipendenze';
-$_lang["modx_version"] = "Versione MODx";
+$_lang["modx_version"] = 'Versione MODx';
 $_lang["monday"] = 'Luned&igrave;';
 $_lang["move"] = 'Sposta';
 $_lang["move_document"] = 'Sposta documento';
@@ -612,9 +606,9 @@ $_lang["page_data_unpublishdate"] = 'Data ritiro';
 $_lang["page_data_unpublishdate_help"] = 'Se impostate una data di ritiro, il documento sar&agrave; ritirato alla data prescelta. Cliccate sull\'icona del calendario per selezionare una data di ritiro o sull\'icona a fianco per rimuoverla. Con questo sistema, il documento non verr&agrave; mai ritirato automaticamente.';
 $_lang["page_data_unpublished"] = 'Ritirato';
 $_lang["page_data_web_access"] = 'Accesso dal web';
-$_lang["pagination_table_first"] = "Primo";
-$_lang["pagination_table_last"] = "Ultimo";
-$_lang["pagination_table_gotopage"] = "Vai alla pagina";
+$_lang["pagination_table_first"] = 'Primo';
+$_lang["pagination_table_last"] = 'Ultimo';
+$_lang["pagination_table_gotopage"] = 'Vai alla pagina';
 $_lang["paging_first"] = 'primo';
 $_lang["paging_last"] = 'ultimo';
 $_lang["paging_next"] = 'succcessivo';
@@ -648,7 +642,7 @@ $_lang["plugin_priority"] = 'Modificate l\'ordine di esecuzione dei plugin in ba
 $_lang["plugin_title"] = 'Crea/modifica plugin';
 $_lang["preview"] = 'Anteprima';
 $_lang["preview_document"] = 'Anteprima documento';
-$_lang["preview_msg"] = 'Questa &egrave; l\'anteprima dell\'ultimo salvataggio. Clicca qui <a href=\'javascript://\' onclick="saveRefreshPreview();"><img src=\'media/images/icons/save.gif\' align=\'absmiddle\' height=\'12\'> Salva e Aggiorna</a> le modifiche';
+$_lang["preview_msg"] = 'Questa &egrave; l\'anteprima dell\'ultimo salvataggio. Clicca qui <a href="#" onclick="saveRefreshPreview();">Salva e Aggiorna</a> le modifiche';
 $_lang["private"] = 'Privato';
 $_lang["public"] = 'Pubblico';
 $_lang["publish_date"] = 'Data di pubblicazione';
@@ -727,13 +721,13 @@ $_lang["role_edit_user"] = 'Modifica utenti';
 $_lang["role_edit_web_user"] = 'Modifica utente web';
 $_lang["role_empty_trash"] = 'Elimina in modo permanente i documenti cancellati';
 $_lang["role_errors"] = 'Visualizza i messaggi di errore';
-$_lang['role_export_static'] = 'Esporta in HTML statico';
+$_lang["role_export_static"] = 'Esporta in HTML statico';
 $_lang["role_eventlog_management"] = 'Gestione log eventi';
 $_lang["role_file_manager"] = 'Usa il sistema di gestione file';
 $_lang["role_frames"] = 'Richiama le cornici del sistema di gestione';
 $_lang["role_help"] = 'Visualizza le pagine di aiuto';
 $_lang["role_home"] = 'Richiama la pagina introduttiva del sistema di gestione';
-$_lang['role_import_static'] = 'Importa HTML';
+$_lang["role_import_static"] = 'Importa HTML';
 $_lang["role_logout"] = 'Esci dal sistema di gestione';
 $_lang["role_management_msg"] = 'Qui potete scegliere il ruolo da modificare.';
 $_lang["role_management_title"] = 'Gestione ruoli';
@@ -774,12 +768,12 @@ $_lang["rss_url_news_message"] = 'Inserire l\'URL per il News Feed Modx.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
 $_lang["rss_url_security_message"] = 'Inserire l\' URL per il Security Feed Modx.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
-$_lang["modx_news"] ='MODx News Notices';
-$_lang["modx_news_tab"] ='Novit&agrave; MODx';
-$_lang["modx_news_title"] ='Novit&agrave; MODx';
-$_lang["modx_security_notices"] ='Avvisi di Protezione MODx';
-$_lang["security_notices_tab"] ='Avvisi di Protezione';
-$_lang["security_notices_title"] ='Avvisi di Protezione';
+$_lang["modx_news"] = 'MODx News Notices';
+$_lang["modx_news_tab"] = 'Novit&agrave; MODx';
+$_lang["modx_news_title"] = 'Novit&agrave; MODx';
+$_lang["modx_security_notices"] = 'Avvisi di Protezione MODx';
+$_lang["security_notices_tab"] = 'Avvisi di Protezione';
+$_lang["security_notices_title"] = 'Avvisi di Protezione';
 $_lang["run_module"] = 'Esegui modulo';
 $_lang["saturday"] = 'Sabato';
 $_lang["save"] = 'Salva';
@@ -964,7 +958,7 @@ $_lang["user_changeddata"] = 'I vostri dati sono stati modificati. Per favore au
 $_lang["user_country"] = 'Nazione';
 $_lang["user_dob"] = 'Data di nascita';
 $_lang["user_doesnt_exist"] = 'L\'utente non esiste';
-$_lang["user_edit_self_msg"] = 'Per aggiornare completamente le vostre informazioni dopo il salvataggio, potreste aver bisogno di scollegarvi e di ricollegarvi nuovamente.</b><br>Inoltre, se avete scelto di generare una nuova password, essa vi verr&agrave; inviata per e-mail.';
+$_lang["user_edit_self_msg"] = 'Per aggiornare completamente le vostre informazioni dopo il salvataggio, potreste aver bisogno di scollegarvi e di ricollegarvi nuovamente.</b><br />Inoltre, se avete scelto di generare una nuova password, essa vi verr&agrave; inviata per e-mail.';
 $_lang["user_email"] = 'Indirizzo e-mail';
 $_lang["user_failedlogincount"] = 'Login falliti';
 $_lang["user_fax"] = 'Fax';
@@ -994,9 +988,9 @@ $_lang["use_editor_title"] = 'Abilita editor:';
 $_lang["validate_referer_title"] = 'Validare HTTP_REFERER headers?';
 $_lang["validate_referer_message"] = 'Validare gli headers HTTP_REFERER per ridurre il rischio che gli editors di contenuti possano essere vittime di un attacco CSRF (Cross Site Request Forgery). Alcune configurazioni possono non essere in grado di gestire questa opzione se il server non invia gli headers HTTP_REFERER.';
 $_lang["value"] = 'Valore';
-$_lang["version_codename"] = "Nome in codice versione";
+$_lang["version_codename"] = 'Nome in codice versione';
 $_lang["view"] = 'Mostra';
-$_lang["view_child_documents_in_container"] = "Vedi i documenti figli";
+$_lang["view_child_documents_in_container"] = 'Vedi i documenti figli';
 $_lang["view_document"] = 'Visualizza documento';
 $_lang["view_log"] = 'Vedi log';
 $_lang["view_logging"] = 'Cronistorie';

@@ -10,7 +10,6 @@
  * Version:        2.02
  * MODx version:   0.9.6.2
 */
-// NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx er et <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework og Content Management System</a> licenseret under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
 $_lang["access_permissions"] = 'Adgangsrettigheder';
@@ -370,7 +369,7 @@ $_lang["icon"] = 'Ikon';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Hoveddokument-tildeling:\n\nDokumentet er et underdokument af det valgte dokument.';
 $_lang["illegal_parent_self"] = 'Hoveddokument-tildeling:\n\nDet valgte dokument kan ikke blive tilføjet sig selv.';
-$_lang["import_files_found"] = '<b>Fandt %s dokumenter til import...</b><p/>';
+$_lang["import_files_found"] = '<b>Fandt %s dokumenter til import...</b><p />';
 $_lang["import_params"] = 'Importér moduldelte parametre';
 $_lang["import_params_msg"] = 'Du kan importerer parametre eller indstillinger fra et modul ved at vælge modulets navn fra ovenstående dropdown menu. <b>NOTE:</b> For at modulerne kan vises i menuen, skal dette plugin/snippet være en del af modulets afhængighedsliste og modulet skal have parameter deling aktiveret. ';
 $_lang["import_parent_document"] = 'Hoveddokument:';
@@ -947,7 +946,7 @@ $_lang["user_changeddata"] = 'Dine data er blevet ændret. Log venligst ind igen
 $_lang["user_country"] = 'Land';
 $_lang["user_dob"] = 'Fødselsdato';
 $_lang["user_doesnt_exist"] = 'Bruger eksisterer ikke';
-$_lang["user_edit_self_msg"] = 'Det er måske nødvendigt at du logger ud og logger ind igen efter at have gemt dine opdaterede oplysninger.</b><br>Hvis du har valgt at systemet skal genererer et nyt password til dig, vil det blive sendt til dig per email.';
+$_lang["user_edit_self_msg"] = 'Det er måske nødvendigt at du logger ud og logger ind igen efter at have gemt dine opdaterede oplysninger.</b><br />Hvis du har valgt at systemet skal genererer et nyt password til dig, vil det blive sendt til dig per email.';
 $_lang["user_email"] = 'E-mail adresse';
 $_lang["user_failedlogincount"] = 'Mislykkede logind';
 $_lang["user_fax"] = 'Fax';

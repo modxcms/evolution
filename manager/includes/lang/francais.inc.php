@@ -1,14 +1,13 @@
 <?php
 /**
  * Filename:       includes/lang/francais.inc.php
- * Function:       French language file for MODx
+ * Function:       French language file
  * Encoding:       ISO-8859-1 (Latin 1)
  * Author:         Nicolas Martignoni (Nissai), révisé par David Mollière pour la 0.9.6 2(davidm)
  * Date:           2008/05/23
  * Version:        2.3
  * MODx version:   0.9.6.2
 */
-// NOTE: Now alpha-sorted
 setlocale (LC_ALL, 'fr_FR');
 $_lang["about_msg"] = 'MODx a été développé à partir d\'Etomite. Il est placé sous licence <a href="../assets/docs/license.txt\">GPL</a>.';
 $_lang["about_title"] = 'À propos de MODx';
@@ -369,7 +368,7 @@ $_lang["icon"] = 'Icône';
 $_lang["id"] = 'No';
 $_lang["illegal_parent_child"] = 'Choix du parent&nbsp;:\n\nle document est un enfant du document sélectionné.';
 $_lang["illegal_parent_self"] = 'Choix du parent&nbsp;:\n\nle document sélectionné ne peut pas être son propre parent.';
-$_lang["import_files_found"] = '<strong>%s documents trouvés pour importation...</strong><p/>';
+$_lang["import_files_found"] = '<strong>%s documents trouvés pour importation...</strong><p />';
 $_lang["import_params"] = 'Importer les paramètres partagés du module';
 $_lang["import_params_msg"] = 'Vous pouvez importer les paramètres ou réglages d\'un module en sélectionnant le nom du module dans le menu déroulant ci-dessus. <strong>Remarque&nbsp;:</strong> pour qu\'un module apparaisse dans le menu, ce plugin ou ce snippet doit faire partie des ressources dont le module dépend et le partage des paramètres doit être activé pour ce module.';
 $_lang["import_parent_document"] = 'Document parent&nbsp:';
@@ -424,7 +423,7 @@ $_lang["login_allowed_ip"] = 'Adresses IP autorisée';
 $_lang["login_allowed_ip_message"] = 'Taper ici les adresses IP d\'où l\'utilisateur a l\'autorisation de se connecter. <strong>ATTENTION&nbsp;! Séparez les diverses adresses IP par une virgule (,)</strong>';
 $_lang["login_button"] = 'Connecter';
 $_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">L\'installation du site est actuellement en cours.<br /> Merci de ré-essayer dans quelques minutes !</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">MODx a été ré-installé. Merci de vous logger a nouveau!</span><br/>';
+$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">MODx a été ré-installé. Merci de vous logger a nouveau!</span><br />';
 $_lang["login_captcha_message"] = 'Merci de saisir le code de sécurité tel qu\'affiché sur le graphique. Si vous ne pouvez pas lire le code, cliquez sur l\'image pour en générer un nouveau ou contactez votre administrateur.';
 $_lang["login_captcha_message"] = ' Un administrateur a activé la validation par CAPTCHA. Vous devez par conséquent taper le code de sécurité. Si vous avez du mal à lire le code, cliquez sur le code pour en produire un nouveau.';
 $_lang["login_homepage"] = 'Connexion page d\'accueil';
@@ -495,8 +494,7 @@ $_lang["mgrlog_itemid"] = 'ID de l\'item';
 $_lang["mgrlog_itemname"] = 'Nom de l\'item';
 $_lang["mgrlog_msg"] = 'Message';
 $_lang["mgrlog_noquery"] = 'Pas de recherche effectuée.';
-$_lang["mgrlog_query_msg"] = 'Merci d\'effecteur une sélection pour visualiser les logs. Vous pouvez effectuer une sélection par date, mais faites bien attention : les dates saisies ne sont pas inclusives - pour sélectionner les logs du 1/1/2004 vous devez sélectionner les logs du 1/1/2004 au 2/1/2004.<br /><br />
-Message et action ont habituellement les mêmes valeurs. Si vous recherchez un message spécifique, il vaut mieux sélectionner l\'action sur «&nbsp;Toutes/Acune&nbsp;».';
+$_lang["mgrlog_query_msg"] = 'Merci d\'effecteur une sélection pour visualiser les logs. Vous pouvez effectuer une sélection par date, mais faites bien attention : les dates saisies ne sont pas inclusives - pour sélectionner les logs du 1/1/2004 vous devez sélectionner les logs du 1/1/2004 au 2/1/2004.<br /><br />Message et action ont habituellement les mêmes valeurs. Si vous recherchez un message spécifique, il vaut mieux sélectionner l\'action sur «&nbsp;Toutes/Acune&nbsp;».';
 $_lang["mgrlog_results"] = 'Nb. de résultats';
 $_lang["mgrlog_qresults"] = 'Résultat de la recherche';
 $_lang["mgrlog_searchlogs"] = 'Rechercher les logs';
@@ -522,7 +520,7 @@ $_lang["module_resource_msg"] = 'Vous pouvez ici ajouter ou supprimer les ressou
 $_lang["module_resource_title"] = 'Dépendances du module';
 $_lang["module_title"] = 'Créer/modifier un module';
 $_lang["module_viewdepend_msg"] = 'Vous pouvez voir ici les ressources dont dépend le fonctionnement du module. Cliquer sur le bouton «&nbsp;Dépendances du gestionnaire&nbsp;» pour modifier les dépendances';
-$_lang["modx_version"] = "Version de MODx";
+$_lang["modx_version"] = 'Version de MODx';
 $_lang["monday"] = 'Lundi';
 $_lang["move"] = 'Déplacer';
 $_lang["move_document"] = 'Déplacer document';
@@ -606,9 +604,9 @@ $_lang["page_data_unpublishdate"] = 'Date fin de publication';
 $_lang["page_data_unpublishdate_help"] = 'Si vous choisissez une date de fin de publication, le document sera dépublié lorsque cette date sera atteinte. Cliquez sur l\'icône du calendrier pour choisir une date, ou sur l\'icône à côté pour supprimer la date de fin de publication. Dans ce cas le document ne sera pas dépublié automatiquement.';
 $_lang["page_data_unpublished"] = 'Non publié';
 $_lang["page_data_web_access"] = 'Accès web';
-$_lang["pagination_table_first"] = "Début";
-$_lang["pagination_table_last"] = "Fin";
-$_lang["pagination_table_gotopage"] = "Aller à la page";
+$_lang["pagination_table_first"] = 'Début';
+$_lang["pagination_table_last"] = 'Fin';
+$_lang["pagination_table_gotopage"] = 'Aller à la page';
 $_lang["paging_first"] = 'première';
 $_lang["paging_last"] = 'dernière';
 $_lang["paging_next"] = 'suivant';
@@ -721,13 +719,13 @@ $_lang["role_edit_user"] = 'Modification d\'utilisateurs';
 $_lang["role_edit_web_user"] = 'Modifier utilisateurs web';
 $_lang["role_empty_trash"] = 'Purge définitive des documents supprimés';
 $_lang["role_errors"] = 'Accès aux annonces d\'erreurs';
-$_lang['role_export_static'] = 'Exportation HTML';
+$_lang["role_export_static"] = 'Exportation HTML';
 $_lang["role_eventlog_management"] = 'Gestion de l\'historique des événements';
 $_lang["role_file_manager"] = 'Utilisation du gestionnaire de fichiers';
 $_lang["role_frames"] = 'Accès aux cadres du gestionnaire';
 $_lang["role_help"] = 'Accès aux pages d\'aide';
 $_lang["role_home"] = 'Accès à la page d\'introduction du gestionnaire';
-$_lang['role_import_static'] = 'Importation HTML';
+$_lang["role_import_static"] = 'Importation HTML';
 $_lang["role_logout"] = 'Déconnexion du gestionnaire';
 $_lang["role_management_msg"] = 'Cette section vous permet de créer et de modifier des rôles.';
 $_lang["role_management_title"] = 'Gestion rôles';
@@ -976,9 +974,9 @@ $_lang["use_alias_path_title"] = 'Chemin d\'accès pour les alias simples&nbsp;:'
 $_lang["use_editor_message"] = 'Voulez-vous activer l\'éditeur WYSIWYG ? Si vous êtes plus à l\'aise avec le code HTML, ce réglage vous permet de désactiver l\'éditeur. Ce réglage s\'applique à tous les documents et à tous les utilisateurs !';
 $_lang["use_editor_title"] = 'Activer l\'éditeur :';
 $_lang["value"] = 'Valeur';
-$_lang["version_codename"] = "Nom de code de version";
+$_lang["version_codename"] = 'Nom de code de version';
 $_lang["view"] = 'Afficher';
-$_lang["view_child_documents_in_container"] = "Voir les documents enfants";
+$_lang["view_child_documents_in_container"] = 'Voir les documents enfants';
 $_lang["view_document"] = 'Afficher page';
 $_lang["view_log"] = 'Afficher l\'historique';
 $_lang["view_logging"] = 'Historiques';

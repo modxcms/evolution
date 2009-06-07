@@ -3,12 +3,11 @@
  * Filename:       includes/lang/norsk.inc.php
  * Function:       Language file.
  * Encoding:       ?
- * Author:         The MODx Project Team (originally by Alex Butter)
+ * Author:         The MODx Project Team
  * Date:           03 Oct 2006
  * Version:        2.01
  * MODx version:   0.9.5
 */
-// NOTE: Now alpha-sorted
 $_lang["about_msg"] = 'MODx er et <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>PHP applikasjonsramverk og system for innholdshåndtering</a> og er lisensiert under <a href=\'../assets/docs/license.txt\'>GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
 $_lang["access_permissions"] = 'Tilgangsinstillinger';
@@ -70,8 +69,7 @@ $_lang["cancel"] = 'Avbryt';
 $_lang["captcha_code"] = 'Sikkerhetskode';
 $_lang["captcha_message"] = 'Bruk dette efor å styrke sikkerheten ved å la brukere skrive inn en sikkerhetskode som er ulesbar for datamaskiner (og scriptkiddie hackingscript).';
 $_lang["captcha_title"] = 'Bruk CAPTCHA-koder';
-$_lang["captcha_words_message"] = 'Her kan du skrive en liste av CAPTCHA-ord som brukes hvis CAPTCHA er slått på.
- Separer ordene med kommategn. Dette tekstfeltet er begrenset til 255 tegn.';
+$_lang["captcha_words_message"] = 'Her kan du skrive en liste av CAPTCHA-ord som brukes hvis CAPTCHA er slått på. Separer ordene med kommategn. Dette tekstfeltet er begrenset til 255 tegn.';
 $_lang["captcha_words_title"] = 'CAPTCHA-ord';
 $_lang["category_heading"] = 'Category';
 $_lang["category_msg"] = 'Here you can view and edit all resources grouped by category.';
@@ -145,17 +143,10 @@ $_lang["credits_dTree"] = 'MODx bruker det utmerkede dTree-scriptet fran Destroy
 $_lang["credits_everaldo"] = 'MODx bruker et antakk ikoner fra Everaldos Crystal-samling. Toppikoner!';
 $_lang["credits_mysql"] = 'MODx bruker MySQL!';
 $_lang["credits_php"] = 'MODx bruker PHP!';
-$_lang["credits_shouts_msg"] = '
-<ul>
-<li><b>Raymond Irving, Ryan Thrash</b> - Projektets grunnlegeer</li>
-<li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Indre arkitektur &amp; Design</li>
-</ul>';
+$_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Projektets grunnlegeer</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Indre arkitektur &amp; Design</li></ul>';
 $_lang["credits_shouts_title"] = '<b>Stort takk til:</b>';
 $_lang["credits_webfx"] = 'MODx bruker et antall javascript fra Webfx. Bra greier!';
-$_lang["custom_contenttype_message"] = 'Her kan du legge til egne innholdstyper som kan
- brukes i dine dokumenter. Skriv inn innholdstypen i det øvre feltet og klikk 
- på \'Legg til\' for å legg til en ny. Marker den innholdstypen i det nedre 
- feltet som du vil fjerne og klikk på \'Fjern\'.';
+$_lang["custom_contenttype_message"] = 'Her kan du legge til egne innholdstyper som kan brukes i dine dokumenter. Skriv inn innholdstypen i det øvre feltet og klikk på \'Legg til\' for å legg til en ny. Marker den innholdstypen i det nedre feltet som du vil fjerne og klikk på \'Fjern\'.';
 $_lang["custom_contenttype_title"] = 'Egne innholdstyper';
 $_lang["date"] = 'Dato';
 $_lang["datechanged"] = 'Endret dato';
@@ -179,11 +170,7 @@ $_lang["deselect_metatags"] = 'Fjern merking av META-tagger';
 $_lang["disabled"] = 'Slått av';
 $_lang["document"] = 'Dokument';
 $_lang["document_alias"] = 'Dokumentets alias';
-$_lang["document_alias_help"] = 'Her kan du angi et alias for dokumentet. Dette gjør dokumentet mulig å nå via: 
-
-http://dinserver/alias
-
-Dette bere om du har tatt i bruk vanlige adresser';
+$_lang["document_alias_help"] = 'Her kan du angi et alias for dokumentet. Dette gjør dokumentet mulig å nå via: http://dinserver/alias Dette bere om du har tatt i bruk vanlige adresser';
 $_lang["document_content"] = 'Dokumentinnhold';
 $_lang["document_description"] = 'Beskrivelse';
 $_lang["document_description_help"] = 'Du kan skrive en valgfri beskrivelse av dokumentet her.';
@@ -240,16 +227,13 @@ $_lang["empty_recycle_bin"] = 'Slett fjernede dokumenter';
 $_lang["empty_recycle_bin_empty"] = 'Det fins ingen fjernede dokumenter å slette.';
 $_lang["enable_resource"] = 'Bruk ressursfil.';
 $_lang["enable_sharedparams"] = 'Bruk delte parametere';
-$_lang["enable_sharedparams_msg"] = '<b>Noter:</b> Ovenstående globalt unike ID (GUID) kommer 
-til å brukes til å unikt identifisere denn modulen og dens delte parametere. GUIDen brukes også for
-å lenke mellon modulen og pluginer eller kodesnutter som bruker modulens delte parametere.';
+$_lang["enable_sharedparams_msg"] = '<b>Noter:</b> Ovenstående globalt unike ID (GUID) kommer til å brukes til å unikt identifisere denn modulen og dens delte parametere. GUIDen brukes også for å lenke mellon modulen og pluginer eller kodesnutter som bruker modulens delte parametere.';
 $_lang["error"] = 'Fil';
 $_lang["errorpage_message"] = 'Skriv inn ID til den siden du vil sende brukere til om de prøver å komme til et dokument som ikke finnes.<br /><b>OBS: Pass på att denne ID\'en tillhører et ekisterendende dokument, og at det er publisert!</b>';
 $_lang["errorpage_title"] = 'Feilside';
 $_lang["error_sending_email"] = 'Error sending email';
 $_lang["eventlog"] = 'Hendelseslogg';
-$_lang["eventlog_msg"] = 'Hendelsesloggen brukes dor å vise informasjons-, advarsels- og feilmeldinger genererte av informationshåndtereren.
- Kildekolonnen viser i vilken del av informationshenteren hendelsen intraff.';
+$_lang["eventlog_msg"] = 'Hendelsesloggen brukes dor å vise informasjons-, advarsels- og feilmeldinger genererte av informationshåndtereren. Kildekolonnen viser i vilken del av informationshenteren hendelsen intraff.';
 $_lang["eventlog_viewer"] = 'Vis hendelsesloggen';
 $_lang["event_id"] = 'Hendelse-ID';
 $_lang["existing_category"] = 'Existing Category';
@@ -262,7 +246,7 @@ $_lang["export_site_html"] = 'Eksporter webplassen til HTML';
 $_lang["export_site_maxtime"] = 'Maks eksporttid';
 $_lang["export_site_maxtime_message"] = 'Her kan du specifisere antall sekunder MODx har på seg til å exportere webplassen (tilsidesetter PHPs instillninger). Skriv 0 for ubegrenset tid. Obs. hvis 0 eller et veldig høyt nummer skrives, kan det få din server til å gjøre rare ting og anbefales derfor ikke.';
 $_lang["export_site_message"] = 'Med denne funksjonen kan du ekportere hele webplassen til HTML-filer. Husk at du mister store deker av funksjinaliteten i MODx hvis du gjør dt:<p /><ul><li> Sidlesinger på eksporterte filer kommer ikke til å lagres.</li><li> Interaktive kodesnutter kommer ikke til å fungere i eksporterte filer.</li><li> Bare vanlige filer kommer til å bli eksportert. Weblinker kommer heller ikke til å bli eksporterte.</li><li> Eksportprosessen kan misslykkes om dine dokumenter inneholder kodsenutter som sender omdirigeringsanvisninger.</li><li> Avhengig av hvordan du har skrevet dine dokument, kan bilder og stilmaler få feil søkestier.  For å fikse dette, kan du lagre eller flytte dine exporterte filer til samme katalog som  index.php for MODx befinner seg.</li></ul><p />Fyll inn i skjemaet og trykk på \'Start ekportering\' for å starte eksporterinsprosessen. Filenea som lages kommer til å lagres der du har spesifisert, og nå det er mulig, brukes dokumentets alias som filnavn. När du skal eksportere din webplass er det best å ha MODx  konfigurationsinstillning \'Vanliga alias\' satt til \'Ja\'. Avhengig av webplassen på din site, kan eksporteringen ta en del tid.<p /><b> Allerede eksisterende filer kommer til å overskrives hvis de har samme navn som en eksportert fil!</b><p />';
-$_lang["export_site_numberdocs"] = '<b>Antall %s dokument å exportere...</b><p/>';
+$_lang["export_site_numberdocs"] = '<b>Antall %s dokument å exportere...</b><p />';
 $_lang["export_site_prefix"] = 'Filprefix';
 $_lang["export_site_start"] = 'Start eksportering';
 $_lang["export_site_success"] = '<span style=\'color:#009900\'>Suksess!</span>';
@@ -352,7 +336,7 @@ $_lang["icon"] = 'Ikon';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Eiertildeling:\n\nDokumentet er et hund til det valgte dokumentet.';
 $_lang["illegal_parent_self"] = 'Eiertildeling:\n\nDet valgte dokumentet kan ikke tildeles tilseg selv.';
-$_lang["import_files_found"] = '<b>Fant %s dokumenter for importering...</b><p/>';
+$_lang["import_files_found"] = '<b>Fant %s dokumenter for importering...</b><p />';
 $_lang["import_params"] = 'Importer en moduls delte parametere';
 $_lang["import_params_msg"] = 'Du kan importere parameterne eller instillingene av en modul gennom å velge modulens navn i ovenstående meny. <b>Noter:</b> For at moduler skal syneas i menyen må denne pluginen/kodesnutten være med i modulens avhengighetsliste og modulen må være instilt for parameterdeling.';
 $_lang["import_parent_document"] = 'Eierdokument';
@@ -402,18 +386,14 @@ $_lang["lock_tmplvars_msg"] = 'Bare administratorer (Rolle-ID 1) kan redigere de
 $_lang["login_allowed_days"] = 'Tillatte dager';
 $_lang["login_allowed_days_message"] = 'Velg de dagene denne brukeren kan logge inn.';
 $_lang["login_allowed_ip"] = 'Tillatt IP-adresse';
-$_lang["login_allowed_ip_message"] = 'Angi IP-adressene som dene brukeran kan logge inn fra.
-<br /><b>Noter: Separer flere IP-adresser med kommategn (,)</b>';
+$_lang["login_allowed_ip_message"] = 'Angi IP-adressene som dene brukeran kan logge inn fra.<br /><b>Noter: Separer flere IP-adresser med kommategn (,)</b>';
 $_lang["login_button"] = 'Logg inn';
-$_lang["login_captcha_message"] = 'En administrator har slått på Captcha, så du må skrive inn sikkerhetskoden.
-
-Hvis du har problemer, klikk på selve koden og det genereres en ny.';
+$_lang["login_captcha_message"] = 'En administrator har slått på Captcha, så du må skrive inn sikkerhetskoden. Hvis du har problemer, klikk på selve koden og det genereres en ny.';
 $_lang["login_homepage"] = 'Startside etter innlogging';
 $_lang["login_homepage_message"] = 'Angi ID til det dokumentet du vil sende brukeren til etter han/hun har logget inn.<br /><b>OBS: Se til at den ID\'en du skrev inn tillhører et eksisterende dokument, at det har blitt publisert og kan nås av brukeren!</b>';
 $_lang["login_message"] = 'Fyll in din inloggningsinformasjon for å starte din sesjon. Det skilles mellom store og små bokstaver i ditt brukernavn og passord.';
 $_lang["logout"] = 'Logg ut';
-$_lang["logo_slogan"] = 'Lag og gjør mer med mindre - 
-MODx innholdshåndterer';
+$_lang["logo_slogan"] = 'Lag og gjør mer med mindre - MODx innholdshåndterer';
 $_lang["long_title"] = 'Lang tittel';
 $_lang["manager"] = 'Håndterere';
 $_lang["manager_permissions"] = 'Rettigheter for håndtereren';
@@ -739,10 +719,7 @@ $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Egenskaper';
 $_lang["settings_site"] = 'Webplassen';
 $_lang["settings_snippets"] = 'Kodesnutter';
-$_lang["settings_strip_image_paths_message"] = 'Settes dette på, kommer MODx til å skrive om bilders søkestier 
-så de bli relative istede for absolutte. Dette er veldig hedig hvis du får behov for å flytte din MODx-installasjon
- (for eksempel fra en testserver til et produksjonsmiljø). 
- Hvis du ikke har noen anelse om hva dette betyr, la det bare stå igjen som \'Nei\'.';
+$_lang["settings_strip_image_paths_message"] = 'Settes dette på, kommer MODx til å skrive om bilders søkestier så de bli relative istede for absolutte. Dette er veldig hedig hvis du får behov for å flytte din MODx-installasjon (for eksempel fra en testserver til et produksjonsmiljø). Hvis du ikke har noen anelse om hva dette betyr, la det bare stå igjen som \'Nei\'.';
 $_lang["settings_strip_image_paths_title"] = 'Skriv om søkestier til bilder?';
 $_lang["settings_templvars"] = 'Malvariabler';
 $_lang["settings_title"] = 'Systeminstillninger';
@@ -784,42 +761,9 @@ $_lang["stay_new"] = 'Legg til enda en';
 $_lang["sunday"] = 'Søndag';
 $_lang["sysinfo_activity_message"] = 'Denne listen viser hvilke doument som nylig har blitt redigert av dine brukere.';
 $_lang["sysinfo_userid"] = 'Brukere';
-$_lang["system_email_signup"] = 'Hei [+uid+] 
-
-Her kommer dine inloggningsopplysninger for [+sname+] ([+surl+]) innholdshånterer:
-
-Brukernavn: [+uid+]
- Passord: [+pwd+]
-
-Du kan endra ditt passord når du har logget inn i innholdshådtereren.
-
-V Med vennlig hilsen
-Webmaster';
-$_lang["system_email_webreminder"] = 'Hei [+uid+]
-
-Klikk på følgende link for å aktivere ditt nye passord:
-
-[+surl+]
-
-nHvis alt går bra bruker du følgende passord for å logge inn:
-
-Passord:[+pwd+]
-
-Hvis du ikke har bedt om denne eposten kan du bare se bort ifra den.
-
-Med vennlig hilsen
-Webmastern';
-$_lang["system_email_websignup"] = 'Hei [+uid+] 
-
-Her kommer dine inloggningsopplysninger for [+sname+] ([+surl+]) innholdshånterer:
-
-Brukernavn: [+uid+]
- Passord: [+pwd+]
-
-Du kan endra ditt passord når du har logget inn i innholdshådtereren.
-
-V Med vennlig hilsen
-Webmaster';
+$_lang["system_email_signup"] = 'Hei [+uid+]\n\nHer kommer dine inloggningsopplysninger for [+sname+] ([+surl+]) innholdshånterer:\n\nBrukernavn: [+uid+]\nPassord: [+pwd+]\n\nDu kan endra ditt passord når du har logget inn i innholdshådtereren.\n\nV Med vennlig hilsen\nWebmaster';
+$_lang["system_email_webreminder"] = 'Hei [+uid+]\n\nKlikk på følgende link for å aktivere ditt nye passord:\n\n[+surl+]\n\nnHvis alt går bra bruker du følgende passord for å logge inn:\n\nPassord:[+pwd+]\n\nHvis du ikke har bedt om denne eposten kan du bare se bort ifra den.\n\nMed vennlig hilsen\nWebmastern';
+$_lang["system_email_websignup"] = 'Hei [+uid+]\n\nHer kommer dine inloggningsopplysninger for [+sname+] ([+surl+]) innholdshånterer:\n\nBrukernavn: [+uid+]\nPassord: [+pwd+]\n\nDu kan endra ditt passord når du har logget inn i innholdshådtereren.\n\nV Med vennlig hilsen\nWebmaster';
 $_lang["sys_alert"] = 'Systemlarm';
 $_lang["tag"] = 'Tag';
 $_lang["template"] = 'Mal';
