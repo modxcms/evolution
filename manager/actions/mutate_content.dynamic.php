@@ -1131,7 +1131,7 @@ if ($use_udperms == 1) {
 </div><!-- end .sectionBody -->
 <?php
 	} // !empty($permissions)
-	elseif($_SESSION['mgrRole'] != 1 && ($permissions_yes == 0 && $permissions_no > 0)) {
+	elseif($_SESSION['mgrRole'] != 1 && ($permissions_yes == 0 && $permissions_no > 0) && ($_SESSION['mgrPermissions']['access_permissions'] == 1 || $_SESSION['mgrPermissions']['web_access_permissions'] == 1)) {
 ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']?></div>
 <div class="sectionBody">
