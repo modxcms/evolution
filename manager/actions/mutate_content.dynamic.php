@@ -617,37 +617,39 @@ if (is_array($evtOut))
 		<tr><td colspan="2"><div class="split"></div></td></tr>
 			<tr style="height: 24px;"><td valign="top"><span class="warning"><?php echo $_lang['document_parent']?></span></td>
 				<td valign="top"><?php
+				$parentlookup = false;
 				if (isset ($_REQUEST['id'])) {
 					if ($content['parent'] == 0) {
 						$parentname = $site_name;
 					} else {
-						$sql = 'SELECT pagetitle FROM '.$tbl_site_content.' WHERE id=\''.$content['parent'].'\'';
-						$rs = mysql_query($sql);
-						$limit = mysql_num_rows($rs);
-						if ($limit != 1) {
-							$e->setError(8);
-							$e->dumpError();
-						}
-						$parentrs = mysql_fetch_assoc($rs);
-						$parentname = $parentrs['pagetitle'];
+						$parentlookup = $content['parent'];
 					}
 				} elseif (isset ($_REQUEST['pid'])) {
 					if ($_REQUEST['pid'] == 0) {
 						$parentname = $site_name;
 					} else {
-						$sql = 'SELECT pagetitle FROM '.$tbl_site_content.' WHERE id=\''.$_REQUEST['pid'].'\'';
-						$rs = mysql_query($sql);
-						$limit = mysql_num_rows($rs);
-						if ($limit != 1) {
-							$e->setError(8);
-							$e->dumpError();
-						}
-						$parentrs = mysql_fetch_assoc($rs);
-						$parentname = $parentrs['pagetitle'];
+						$parentlookup = $_REQUEST['pid'];
+					}
+				} elseif (isset($_POST['parent'])) {
+					if ($_POST['parent'] == 0) {
+						$parentname = $site_name;
+					} else {
+						$parentlookup = $_POST['parent'];
 					}
 				} else {
 					$parentname = $site_name;
 					$content['parent'] = 0;
+				}
+				if($parentlookup !== false && is_numeric($parentlookup)) {
+					$sql = 'SELECT pagetitle FROM '.$tbl_site_content.' WHERE id=\''.$parentlookup.'\'';
+					$rs = mysql_query($sql);
+					$limit = mysql_num_rows($rs);
+					if ($limit != 1) {
+						$e->setError(8);
+						$e->dumpError();
+					}
+					$parentrs = mysql_fetch_assoc($rs);
+					$parentname = $parentrs['pagetitle'];
 				}
 ?>&nbsp;<img name="plock" src="media/style/<?php echo $manager_theme?>images/tree/folder.gif" width="18" height="18" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /><b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?> (<?php echo $parentname?>)</span></b><br />
 				<span class="comment" style="width:300px;display:block;"><?php echo $_lang['document_parent_help']?></span>
