@@ -569,7 +569,6 @@ $_lang["noresults_message"] = 'Ange antalet resultat som visas när listningar oc
 $_lang["noresults_title"] = 'Antal resultat';
 $_lang["not_deleted"] = 'har inte tagits bort.';
 $_lang["not_set"] = 'Inte satt';
-$_lang["notset"] = 'Ej satt';
 $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Handling';

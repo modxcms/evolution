@@ -569,7 +569,6 @@ $_lang["noresults_message"] = 'Het aantal regels dat wordt weergegeven in lijste
 $_lang["noresults_title"] = 'Aantal regels:';
 $_lang["not_deleted"] = 'is niet verwijderd!';
 $_lang["not_set"] = 'Niet ingesteld';
-$_lang["notset"] = 'Niet ingesteld';
 $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Handeling';

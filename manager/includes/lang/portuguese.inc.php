@@ -562,7 +562,6 @@ $_lang["noresults_message"] = 'Digite o número de resultados a mostrar em tabel
 $_lang["noresults_title"] = 'Número de resultados:';
 $_lang["not_deleted"] = 'não foi apagado.';
 $_lang["not_set"] = 'Não definido';
-$_lang["notset"] = 'Não definido';
 $_lang["offline"] = 'Desligado (Offline)';
 $_lang["online"] = 'Ligado (Online)';
 $_lang["onlineusers_action"] = 'Acção';

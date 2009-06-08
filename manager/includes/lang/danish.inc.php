@@ -563,7 +563,6 @@ $_lang["noresults_message"] = 'Indtast antallet af resultater som vises i data t
 $_lang["noresults_title"] = 'Antal af resultater:';
 $_lang["not_deleted"] = 'Er ikke blevet slettet.';
 $_lang["not_set"] = 'Ikke sat';
-$_lang["notset"] = 'Ikke sat';
 $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Handling';

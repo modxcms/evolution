@@ -559,7 +559,6 @@ $_lang["noresults_message"] = 'Sy&ouml;t&auml; dataruudukossa n&auml;ytett&auml;
 $_lang["noresults_title"] = 'Tulosten lukum&auml;&auml;r&auml;:';
 $_lang["not_deleted"] = 'ei ole poistettu.';
 $_lang["not_set"] = 'Ei asetettu';
-$_lang["notset"] = 'Ei asetettu';
 $_lang["offline"] = 'Poissa';
 $_lang["online"] = 'Paikalla';
 $_lang["onlineusers_action"] = 'Toiminto';

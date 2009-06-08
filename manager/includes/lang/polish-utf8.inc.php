@@ -9,7 +9,7 @@
  *                    Łukasz Kowalczyk - lukasz@pixeligence.com
  * Date:           2009/04/03
  * Version:        1.2
- * MODx version:   0.9.6.3
+ * MODx version:   Evolution 1.0
 */
 $_lang["about_msg"] = 'MODx jest to <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'O MODx';
@@ -571,7 +571,7 @@ $_lang["none"] = 'Brak';
 $_lang["noresults_message"] = 'Podaj liczbę wyników wyświetlanych na listach i w wynikach wyszukiwania.';
 $_lang["noresults_title"] = 'Liczba wyników:';
 $_lang["not_deleted"] = 'nie został skasowany.';
-$_lang["notset"] = 'Nieustawione';
+$_lang["not_set"] = 'Nieustawione';
 $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Akcja';

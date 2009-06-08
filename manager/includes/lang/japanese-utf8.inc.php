@@ -571,7 +571,6 @@ $_lang["noresults_message"] = 'リスト表示や検索結果の表示の際に�
 $_lang["noresults_title"] = '結果の件数:';
 $_lang["not_deleted"] = 'は削除されていません';
 $_lang["not_set"] = '設定なし';
-$_lang["notset"] = '設定なし';
 $_lang["offline"] = 'オフライン';
 $_lang["online"] = 'オンライン';
 $_lang["onlineusers_action"] = 'アクション';

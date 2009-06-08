@@ -567,7 +567,6 @@ $_lang["noresults_message"] = 'Anzahl der anzuzeigenden Ergebnisse in Datenmatri
 $_lang["noresults_title"] = 'Ergebnisse';
 $_lang["not_deleted"] = 'wurde nicht gelöscht.';
 $_lang["not_set"] = 'Nicht gesetzt';
-$_lang["notset"] = 'Nicht gesetzt';
 $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Aktion';

@@ -487,7 +487,6 @@ $_lang["noresults_message"] = 'Angi antallet resultater som vises når listinger
 $_lang["noresults_title"] = 'Antall resultater';
 $_lang["not_deleted"] = 'ble ikke slettet.';
 $_lang["not_set"] = 'Ikke satt';
-$_lang["notset"] = 'Ikke satt';
 $_lang["offline"] = 'Offline';
 $_lang["online"] = 'Online';
 $_lang["onlineusers_action"] = 'Handling';
