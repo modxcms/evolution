@@ -5,10 +5,10 @@
         Ajax-driven & Flexible Search form
 
   Version:
-        1.8.2
+        1.8.3
 
-  Date: 29/03/2009
-  
+  Date: 08/06/2009
+
   Created by:
       Coroico (coroico@wangba.fr)
       Jason Coward (opengeek - jason@opengeek.com)
@@ -18,7 +18,7 @@
       Live Search by Thomas (Shadock)
       Fixes & Additions by identity/Perrine/mikkelwe
       Document selection from Ditto by Mark Kaplan
-      
+
   Copyright & Licencing:
   ----------------------
   GNU General Public License (GPL) (http://www.gnu.org/copyleft/gpl.html)
@@ -59,7 +59,7 @@ MORE : See the ajaxSearch.readme.txt file for more informations
 global $modx;
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.8.2');
+define('AS_VERSION', '1.8.3');
 
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
