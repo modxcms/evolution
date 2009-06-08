@@ -4,9 +4,9 @@
  * Purpose:
  *    The Search class contains all functions common to AjaxSearch functionalities
  *
- *    Version: 1.8.2a  - Coroico (coroico@wangba.fr) 
+ *    Version: 1.8.3  - Coroico (coroico@wangba.fr) 
  *
- *    06/04/2009  
+ *    08/06/2009  
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -765,7 +765,10 @@ class Search {
  *  validListIDs : check the validity of a value separated list of Ids
  */
   function validListIDs($IDs){
-    if (preg_match('/^([0-9]+,)*[0-9]+$/',$IDs) == 0) return false;
+    $groups = explode(',',$IDs);
+    $nbg = count($groups);
+    for($i=0;$i<$nbg;$i++)
+      if (preg_match('/^[0-9]+$/',$groups[$i]) == 0) return false;
     return true;
   }
 
@@ -1674,8 +1677,15 @@ class Search {
   }
 
 /**
- *  setResultSearchable : set fields like id, displayed, date, rank as PHx
+ *  setResultNumber : set number of result as PHx
  */ 
+  function setResultNumber($no){
+  	$this->varResult['resultNumber'] = $no;
+  }
+
+/**
+ *  setResultSearchable : set fields like id, displayed, date, rank as PHx
+ */
   function setResultSearchable($row){
 
     // set Phx for the "id" of the main table

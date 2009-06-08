@@ -1,5 +1,5 @@
 
-AjaxSearch Readme version 1.8.2
+AjaxSearch Readme version 1.8.3
 
 ---------------------------------------------------------------
 :: Snippet: AjaxSearch
@@ -8,7 +8,7 @@ AjaxSearch Readme version 1.8.2
         Ajax-driven & Flexible Search form
 
   Version:
-        1.8.2  - 29/03/2009
+        1.8.3  - 08/06/2009
 
   Created by:
       Coroico - (coroico@wangba.fr)
@@ -45,6 +45,10 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
 ----------------------------------------------------------------
 :: Changelog:
 ----------------------------------------------------------------
+
+  08-june-09 (1.8.3)
+    -- Bug fixing
+    -- The number of results is available with the [+as.resultNumber+] placeholder
 
   01-mar-09 (1.8.2)
     -- liveSearch parameter renamed
@@ -962,6 +966,7 @@ With &whereSearch="content,tv,maxigallery,jot" we add :
 [+as.gal_title],   [+as.gal_titleShow],   [+as.gal_titleClass]
 [+as.gal_descr],   [+as.gal_descrShow],   [+as.gal_descrClass]
 
+[+as.resultNumber+] is available to display the number of the result
 
 &tvPhx : Set placeHolders for TV (template variables)
 
@@ -1097,6 +1102,24 @@ With &whereSearch="content,tv,maxigallery,jot" we add :
    call to display your results.
 
 8. Test and see the search working with Ajax!
+
+
+----------------------------------------------------------------
+:: IMPORTANT NOTE
+----------------------------------------------------------------
+
+  * Your database character set is different of utf8: 
+
+   1. the php_mbstring extension for the multibyte support should be loaded. 
+      Check the phpinfo file of your server
+   2. the $database_connection_charset variable of your /manager/includes/config.inc.php file 
+      should be set with the MySql database character set (not the collation) of your database. 
+      e.g: latin1, latin2, ... 
+
+Searching for words containing characters like "å,ä,ö,Å,Ä,Ö" require to configure 
+your editor to avoid entity encoding. 
+With TinyMCE, for that, change the entity_encoding parameter from "named" to "raw" 
+in the configuration tab and save again your documents.
 
 
 ----------------------------------------------------------------

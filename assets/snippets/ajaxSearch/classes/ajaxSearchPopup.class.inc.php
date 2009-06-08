@@ -5,9 +5,9 @@
  *    The ajaxSearchPopup class contains all variables and functions 
  *    used to display search results in a popup window througth an ajax request
  *
- *    Version: 1.8.2a  - Coroico (coroico@wangba.fr) 
+ *    Version: 1.8.3  - Coroico (coroico@wangba.fr) 
  *
- *    06/04/2009
+ *    08/06/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -171,6 +171,9 @@ class AjaxSearchPopup extends Search{
                         
           // set result fields like id, searchable, date, rank as PHx
           $found .= $this->setResultSearchable($this->searchResults[$i]) . " ";
+
+			    //set result number as PHx
+          $this->setResultNumber($i+1);
 
           // parse the template and output the result
           $this->chkResult->AddVar("as", $this->varResult);
