@@ -579,13 +579,10 @@ if (is_array($evtOut))
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="media/style/<?php echo $manager_theme?>images/tree/folder.gif" width="18" height="18" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
 				<td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://"?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-<?php } else {
-	// Document specific
-?>
+<?php } ?>
 			<tr style="height: 24px;"><td valign="top" width="100" align="left"><span class="warning"><?php echo $_lang['document_summary']?></span></td>
 				<td valign="top"><textarea name="introtext" class="inputBox" rows="3" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars(stripslashes($content['introtext']))?></textarea>
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_summary_help']?>" onclick="alert(this.alt);" style="cursor:help;" spellcheck="true"/></td></tr>
-<?php } ?>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_template']?></span></td>
 				<td><select id="template" name="template" class="inputBox" onchange="templateWarning();" style="width:300px">
 					<option value="0">(blank)</option>
