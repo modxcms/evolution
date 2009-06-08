@@ -28,6 +28,6 @@ foreach ($langs as $language) {
 ?>
     </select></h2>
         <p class="buttonlinks">
-            <a style="display:inline;" href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['Begin']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
+            <a style="display:inline;" href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['begin']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
         </p>
 </form>

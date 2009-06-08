@@ -10,7 +10,7 @@
 
         <p class="buttonlinks">
             <a href="javascript:document.getElementById('install_form').action='index.php?action=language';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
-            <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['Begin']?>"><span><?php echo $_lang['Begin']?></span></a>
+            <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['begin']?>"><span><?php echo $_lang['begin']?></span></a>
         </p>
 
     </form>
