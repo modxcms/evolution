@@ -5,8 +5,8 @@
  * Encoding:       ISO-8859-1
  * Author:         Pontus Ågren (Pont) & Johnny Chadda
  * Date:           2008-05-21
- * Version:        0.9.6.2rc1
- * MODx version:   0.9.6.2rc1 rev 3724
+ * Version:        0.9.6.3
+ * MODx version:   0.9.6.3
 */
 $_lang["about_msg"] = 'MODx är ett <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP applikationsramverk och system för innehållshantering</a> och är licensierat under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
@@ -19,7 +19,10 @@ $_lang["access_permissions_docs_message"] = 'Här kan du välja vilka dokumentgrup
 $_lang["access_permissions_document_groups"] = 'Dokumentgrupper';
 $_lang["access_permissions_documents_in_group"] = '<b>Dokument i gruppen:</b> ';
 $_lang["access_permissions_documents_tab"] = 'Här kan du se vilka dokumentgrupper som har blivit konfigurereade. Du kan även skapa nya och byta namn på grupper samt se vilka dokument som tillhör en specifik grupp (håll musen över dokumentets ID för att se dess namn). För att lägga till eller ta bort ett dokument från en grupp, redigera dokumentet direkt.';
+$_lang["access_permissions_group_link"] = 'Skapa en ny grupplänk';
 $_lang["access_permissions_introtext"] = 'Här kan du hantera de användargrupper och dokumentgrupper som används för åtkomstkontroll. För att lägga till en användare i en grupp, redigera användaren och välj de grupper som han/hon ska vara medlem i. För att lägga till ett dokument till en användargrupp, redigera dokumentet och välj de grupper som det ska tillhöra.';
+$_lang["access_permissions_link_to_group"] = 'till dokumentgrupp';
+$_lang["access_permissions_link_user_group"] = 'Länka användargrupp';
 $_lang["access_permissions_links"] = 'Användar/dokumentgruppslänkar';
 $_lang["access_permissions_links_tab"] = 'Här specificerar du vilka användargrupper som har behörighet för de olika dokumentgrupperna (dvs kan redigera eller skapa underdokument). För att länka en dokumentgrupp till en användargrupp, välj de lämpliga grupperna från rullgardinsmenyerna och klicka på "Skicka". För att ta bort länken för en grupp, klicka på "Ta bort". Detta tar genast bort länken.';
 $_lang["access_permissions_no_documents_in_group"] = 'Inga.';
@@ -156,8 +159,8 @@ $_lang["credits_shouts_title"] = '<b>Stort tack till:</b>';
 $_lang["credits_webfx"] = 'MODx använder ett antal javascript från Webfx. Fina grejer!';
 $_lang["custom_contenttype_message"] = 'Här kan du lägga till egna innehållstyper som kan användas i dina dokument. Skriv in innehållstypen i det övre fältet och klicka på "Lägg till" för att lägga till en ny. Markera den innehållstyp i det nedre fältet som du vill ta bort och klicka på "Ta bort".';
 $_lang["custom_contenttype_title"] = 'Egna innehållstyper';
-$_lang["database_collation"] = 'Databasens kollationering';
 $_lang["database_charset"] = 'Databasens teckenuppsättning';
+$_lang["database_collation"] = 'Databasens kollationering';
 $_lang["database_name"] = 'Databasens namn'; 
 $_lang["database_overhead"] = '<b style=\'color:#990033\'>Notera:</b><br />"Overhead" är oanvänt utrymme reserverat av MySQL. Klicka på ett overhead-belopp för att frigöra utrymmet.';
 $_lang["database_server"] = 'Databasens server';
@@ -173,6 +176,7 @@ $_lang["database_table_tablename"] = 'Tabellnamn';
 $_lang["database_table_totals"] = 'Totalt:';
 $_lang["database_table_totalsize"] = 'Total storlek';
 $_lang["database_tables"] = 'Databasens tabeller';
+$_lang["database_version"] = 'Databasversion:';
 $_lang["date"] = 'Datum';
 $_lang["datechanged"] = 'Ändrat datum';
 $_lang["defaultcache_message"] = 'Välj "Ja" för att göra alla nya dokument cachebara som standard.';
@@ -518,6 +522,10 @@ $_lang["module_resource_title"] = 'Modulberoenden';
 $_lang["module_title"] = 'Skapa/redigera modul';
 $_lang["module_viewdepend_msg"] = 'Här kan du se vilka resurser modulen är beroende av. Klicka på knappen "Hantera beroenden" för att ändra beroendena.';
 $_lang["modules"] = 'Moduler';
+$_lang["modx_news"] = 'MODx Nyhetsnotiser';
+$_lang["modx_news_tab"] = 'MODx Nyheter';
+$_lang["modx_news_title"] = 'MODx Nyheter';
+$_lang["modx_security_notices"] = 'MODx Säkerhetsnotiser';
 $_lang["modx_version"] = 'MODx-version';
 $_lang["monday"] = 'Måndag';
 $_lang["move"] = 'Flytta';
@@ -641,7 +649,7 @@ $_lang["preview_document"] = 'Förhandsgranska';
 $_lang["preview_msg"] = 'Detta är en förhandsgranskning av dina senast sparade ändringar. Klicka här för att <a href="#" onclick="saveRefreshPreview();">spara och ladda om</a> dina nuvarande ändringar';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentlig';
-$_lang["publish_date"] = 'Publiseringsdatum';
+$_lang["publish_date"] = 'Publiceringsdatum';
 $_lang["publish_document"] = 'Publicera dokument';
 $_lang["publish_events"] = 'Publicera händelser';
 $_lang["rb_base_dir_message"] = 'Ange den fysiska sökvägen till resursens katalog. Den här inställningen görs vanligen automatiskt, men om du använder IIS är det möjligt att MODx inte kan räkna ut sökvägen själv, vilket orsakar ett felmeddelande i resursläsaren. I så fall kan du skriva in sökvägen till bildkatalogen här (sökvägen som den visas i Utforskaren).<br /><b>OBS: Resurskatalogen måste innehålla underkatalogerna images, files, flash och media för att resursläsaren ska fungera korrekt.</b>';
@@ -760,7 +768,10 @@ $_lang["role_view_logs"] = 'Visa systemloggar';
 $_lang["role_view_unpublished"] = 'Visa opublicerade dokument';
 $_lang["role_web_access_persmissions"] = 'Rättigheter för webbåtkomst';
 $_lang["role_web_user_management"] = 'Hantera webbanvändare';
-$_lang["run_module"] = 'Kör modul';
+$_lang["rss_url_news_message"] = 'Ange URLen för MODx nyhetsflöde.';
+$_lang["rss_url_news_title"] = 'RSS nyhetsflöde';
+$_lang["rss_url_security_message"] = 'Ange URLen för MODx säkerhetsflöde.';
+$_lang["rss_url_security_title"] = 'RSS säkerhetsflöde';$_lang["run_module"] = 'Kör modul';
 $_lang["saturday"] = 'Lördag';
 $_lang["save"] = 'Spara';
 $_lang["save_all_changes"] = 'Spara alla ändringar';
@@ -787,6 +798,8 @@ $_lang["search_results_returned_msg"] = 'Din sökning returnerade <b>%s</b> dokum
 $_lang["search_results_returned_title"] = 'Titel';
 $_lang["search_view_docdata"] = 'Visa denna post';
 $_lang["security"] = 'Säkerhet';
+$_lang["security_notices_tab"] = 'Säkerhetsnotiser';
+$_lang["security_notices_title"] = 'Säkerhetsnotiser';
 $_lang["select_date"] = 'Välj ett datum';
 $_lang["send"] = 'Skicka';
 $_lang["server_protocol_http"] = 'http';
@@ -862,7 +875,7 @@ $_lang["tag"] = 'Tagg';
 $_lang["template"] = 'Mall';
 $_lang["template_assignedtv_tab"] = 'Tilldelade mallvariabler';
 $_lang["template_code"] = 'Mall-kod (html)';
-$_lang["template_desc"] = 'Beskrivnig';
+$_lang["template_desc"] = 'Beskrivning';
 $_lang["template_edit_tab"] = 'Redigera mall';
 $_lang["template_locked_message"] = 'Denna mall är låst.';
 $_lang["template_management_msg"] = 'Här kan du skapa en ny mall eller välja en redan befintlig för redigering.';
@@ -971,6 +984,8 @@ $_lang["user_use_config"] = 'Använd systemets konfigurationsinställning';
 $_lang["user_zip"] = 'Postnummer';
 $_lang["username"] = 'Användarnamn';
 $_lang["users"] = 'Säkerhet';
+$_lang["validate_referer_message"] = 'Kontrollera HTTP_REFERER-headers för att minska risken för att dina innehållsredaktörer ska kunna luras att utföra oavsiktliga handlingar i redigeraren, pga att de blivit offer för CSRF-attacker (Cross Site Request Forgery). Det är möjligt att vissa konfigurationer inte kan använda denna kontroll om servern inte skickar några HTTP_REFERER-headers.';
+$_lang["validate_referer_title"] = 'Kontrollera HTTP_REFERER-headers?';
 $_lang["value"] = 'Värde';
 $_lang["version_codename"] = 'Versionens kodnamn'; 
 $_lang["view"] = 'Visa';
