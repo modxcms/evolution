@@ -18,6 +18,7 @@ MODx Evolution 1.0.0 (rev 5053 - May 28, 2009)
 * Updated AjaxSearch to release 1.8.2.
 * [#MODX-541] Fix the include statement in getUserData() method.
 * [#MODX-650]  bad reference to csshover.htc (now csshover2.htc).
+* Updated TinyMCE to release 3.2.4.1.
 
 MODx 0.9.6.3 (rev 4565 - December 17, 2008)
 ===================================
