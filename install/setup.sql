@@ -1017,6 +1017,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('97','OnBeforeEmptyTrash','1','Documents'),
 ('98','OnEmptyTrash','1','Documents'),
 ('99','OnManagerLoginFormPrerender','2',''),
+('100','OnStripAlias','1','Documents'),
 ('200','OnCreateDocGroup','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');
