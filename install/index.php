@@ -27,8 +27,8 @@ if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
 }
 
 $moduleName = "MODx";
-$moduleVersion = "Evolution 1.0.0.0";
-$moduleRelease = "2009-05-13";
+$moduleVersion = "Evolution 1.0.0-RC1";
+$moduleRelease = "2009-06-11";
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 $moduleSQLUpdateFile = "setup.updates.sql";

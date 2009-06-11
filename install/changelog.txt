@@ -2,7 +2,7 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0-RC1 (rev 5121 - June 11, 2009)
+MODx Evolution 1.0.0-RC1 (rev 5122 - June 11, 2009)
 ===================================
 * [#MODX-620] Add boolean support to Datagrid class
 * [#MODX-446] Implement Soushi's path for large site cache optimizations
