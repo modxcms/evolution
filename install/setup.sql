@@ -804,7 +804,7 @@ UPDATE {PREFIX}documentgroup_names AS dgn
 
 
 REPLACE INTO `{PREFIX}site_templates` 
-(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Minimal Template','Default minimal empty template','0','0','','0','<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n\r\n<head>\r\n	<title>[(site_name)] | [*pagetitle*]</title>\r\n\r\n	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n\r\n	<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/default/site.css\" type=\"text/css\" media=\"screen\" />\r\n        <base href=\"[(site_url)]\" />\r\n\r\n<!--[if lte IE 6]>\r\n\r\n  <style type=\"text/css\" media=\"screen, tv, projection\">\r\n        body { behavior: url(assets/js/csshover.htc); } /* hover:anything support */\r\n        #content { margin-left: 22px; } /* to avoid the BMH */\r\n        a,  a:link { border-bottom-style: solid } /* becuase IE just doesn\'t dot */\r\n  </style>\r\n\r\n  <script type=\"text/javascript\" src=\"assets/js/sleight.js\"></script>\r\n\r\n<![endif]-->\r\n\r\n        </head>\r\n<body>\r\n\r\n<div id=\"page\">\r\n\r\n\r\n<div id=\"header\">\r\n	<div id=\"search\"><a name=\"search\"></a>\r\n		<!-- if you wanted a site search, this would be a good place -->\r\n	</div>\r\n	<h1><a href=\"[~[(site_start)]~]\" title=\"[(site_name)]\">[(site_name)]</a></h1>\r\n</div>\r\n<!-- close #header -->\r\n\r\n	<div id=\"content\">\r\n\r\n		<div class=\"post\">\r\n			<h3 id=\"post-\">[*longtitle*]</h3>\r\n				[*#content*]\r\n		</div>\r\n		<!-- close .post (main column content) -->\r\n\r\n	</div>\r\n	<!-- close #content -->\r\n\r\n	<div id=\"sidebar\">\r\n		<ul>\r\n			<li id=\"dropmenu\"><a name=\"dropmenu\"></a><h2>Pages:</h2>\r\n			[[Wayfinder? &startId=`0`]]\r\n			</li>\r\n\r\n			<li><h2>Meta:</h2>\r\n				<ul>\r\n				    <li><a href=\"http://validator.w3.org/check/referer\" title=\"This page validates as XHTML 1.0 Transitional\">Valid <abbr title=\"eXtensible HyperText Markup Language\">XHTML</abbr></a></li>\r\n                	<li><a href=\"http://jigsaw.w3.org/css-validator/check/referer\" title=\"This page uses valid Cascading Stylesheets\" rel=\"external\">Valid <abbr title=\"W3C Cascading Stylesheets\">css</abbr></a></li>\r\n				    <li><a href=\"http://modxcms.com/\" title=\"Powered by MODx, Do more with less.\">MOD<strong>x</strong></a></li>\r\n		        </ul>\r\n			</li>\r\n\r\n		</ul>\r\n	</div>\r\n	<!-- close #sidebar -->\r\n\r\n<div class=\"clear\">&nbsp;</div>\r\n\r\n<div id=\"footer\">\r\n	<p>\r\n		[(site_name)] is powered by\r\n		<a href=\"http://modxcms.com/\" title=\"Powered by MODx\"><strong>MOD</strong>x Content Management System</a>\r\n		<br /><a href=\"[~11~]\" title=\"Link to our Blog RSS Feeds\">Blog Entries (RSS)</a><br />\r\nMySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved from [^s^].\r\n	</p>\r\n</div>\r\n<!-- close #footer -->\r\n\r\n</div>\r\n<!-- close #page -->\r\n\r\n</body>\r\n</html>','0');
+(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Minimal Template','Default minimal empty template','0','0','','0','<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n\r\n<head>\r\n	<title>[(site_name)] | [*pagetitle*]</title>\r\n\r\n	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n\r\n	<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/default/site.css\" type=\"text/css\" media=\"screen\" />\r\n        <base href=\"[(site_url)]\" />\r\n\r\n<!--[if lte IE 6]>\r\n\r\n  <style type=\"text/css\" media=\"screen, tv, projection\">\r\n        body { behavior: url(assets/js/csshover2.htc); } /* hover:anything support */\r\n        #content { margin-left: 22px; } /* to avoid the BMH */\r\n        a,  a:link { border-bottom-style: solid } /* becuase IE just doesn\'t dot */\r\n  </style>\r\n\r\n  <script type=\"text/javascript\" src=\"assets/js/sleight.js\"></script>\r\n\r\n<![endif]-->\r\n\r\n        </head>\r\n<body>\r\n\r\n<div id=\"page\">\r\n\r\n\r\n<div id=\"header\">\r\n	<div id=\"search\"><a name=\"search\"></a>\r\n		<!-- if you wanted a site search, this would be a good place -->\r\n	</div>\r\n	<h1><a href=\"[~[(site_start)]~]\" title=\"[(site_name)]\">[(site_name)]</a></h1>\r\n</div>\r\n<!-- close #header -->\r\n\r\n	<div id=\"content\">\r\n\r\n		<div class=\"post\">\r\n			<h3 id=\"post-\">[*longtitle*]</h3>\r\n				[*#content*]\r\n		</div>\r\n		<!-- close .post (main column content) -->\r\n\r\n	</div>\r\n	<!-- close #content -->\r\n\r\n	<div id=\"sidebar\">\r\n		<ul>\r\n			<li id=\"dropmenu\"><a name=\"dropmenu\"></a><h2>Pages:</h2>\r\n			[[Wayfinder? &startId=`0`]]\r\n			</li>\r\n\r\n			<li><h2>Meta:</h2>\r\n				<ul>\r\n				    <li><a href=\"http://validator.w3.org/check/referer\" title=\"This page validates as XHTML 1.0 Transitional\">Valid <abbr title=\"eXtensible HyperText Markup Language\">XHTML</abbr></a></li>\r\n                	<li><a href=\"http://jigsaw.w3.org/css-validator/check/referer\" title=\"This page uses valid Cascading Stylesheets\" rel=\"external\">Valid <abbr title=\"W3C Cascading Stylesheets\">css</abbr></a></li>\r\n				    <li><a href=\"http://modxcms.com/\" title=\"Powered by MODx, Do more with less.\">MOD<strong>x</strong></a></li>\r\n		        </ul>\r\n			</li>\r\n\r\n		</ul>\r\n	</div>\r\n	<!-- close #sidebar -->\r\n\r\n<div class=\"clear\">&nbsp;</div>\r\n\r\n<div id=\"footer\">\r\n	<p>\r\n		[(site_name)] is powered by\r\n		<a href=\"http://modxcms.com/\" title=\"Powered by MODx\"><strong>MOD</strong>x Content Management System</a>\r\n		<br /><a href=\"[~11~]\" title=\"Link to our Blog RSS Feeds\">Blog Entries (RSS)</a><br />\r\nMySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved from [^s^].\r\n	</p>\r\n</div>\r\n<!-- close #footer -->\r\n\r\n</div>\r\n<!-- close #page -->\r\n\r\n</body>\r\n</html>','0');
 
 
 # Default Site Documents
@@ -831,7 +831,7 @@ REPLACE INTO `{PREFIX}user_attributes`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxLight'),
+('manager_theme','MODxCarbon'),
 ('settings_version','0.9.6.3'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
@@ -881,10 +881,10 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('editor_css_path',''),
 ('editor_css_selectors',''),
 ('strip_image_paths','1'),
-('upload_images','jpg,jpeg,png,gif,psd,ico,bmp'),
-('upload_media','mp3,wav,au,wmv,avi,mpg,mpeg'),
-('upload_flash','swf,fla'),
-('upload_files','txt,php,html,htm,xml,js,css,cache,zip,gz,rar,z,tgz,tar,htaccess,mp3,mp4,aac,wav,au,wmv,avi,mpg,mpeg,pdf,doc,xls,txt'),
+('upload_images','bmp,ico,gif,jpeg,jpg,png,psd,tif,tiff'),
+('upload_media','au,avi,mp3,mp4,mpeg,mpg,wav,wmv'),
+('upload_flash','fla,flv,swf'),
+('upload_files','aac,au,avi,css,cache,doc,docx,gz,gzip,htaccess,htm,html,js,mp3,mp4,mpeg,mpg,ods,odp,odt,pdf,ppt,pptx,rar,tar,tgz,txt,wav,wmv,xls,xlsx,xml,z,zip'),
 ('upload_maxsize','1048576'),
 ('new_file_permissions','0644'),
 ('new_folder_permissions','0755'),
@@ -1017,6 +1017,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('97','OnBeforeEmptyTrash','1','Documents'),
 ('98','OnEmptyTrash','1','Documents'),
 ('99','OnManagerLoginFormPrerender','2',''),
+('100','OnStripAlias','1','Documents'),
 ('200','OnCreateDocGroup','1','Documents'),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');
@@ -1065,8 +1066,8 @@ UPDATE `{PREFIX}user_roles` SET
 
 
 UPDATE `{PREFIX}user_settings` SET
-  `setting_value`='MODxLight'
-  WHERE `setting_name`='manager_theme' AND `setting_value`='default';
+  `setting_value`='MODxCarbon'
+  WHERE `setting_name`='manager_theme';
 
 
-REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxLight');
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxCarbon');

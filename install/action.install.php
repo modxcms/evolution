@@ -1,4 +1,4 @@
-<p class="title"><?php echo $_lang['install_results']?></p>
+<h2><?php echo $_lang['install_results']?></h2>
 <?php
 ob_start();
 include "instprocessor.php";
@@ -7,8 +7,7 @@ ob_end_clean();
 echo $content;
 
 ?>
-<form name="install" action="index.php?action=options" method="post">
-	<div id="navbar">
+<form name="install" id="install_form" action="index.php?action=options" method="post">
 <?php
 if ($errors == 0) {
 	// check if install folder is removeable
@@ -22,9 +21,12 @@ if ($errors == 0) {
     }
 }
 ?>
-		<input type="submit" value="<?php echo $_lang['btnclose_value']?>" name="cmdnext" style="float:right;width:100px;" onclick="closepage(); return false;" />
-	</div>
+    <p class="buttonlinks">
+        <a href="javascript:closepage();" title="<?php echo $_lang['btnclose_value']?>"><span><?php echo $_lang['btnclose_value']?></span></a>
+    </p>
+	<br />
 </form>
+<br />
 <script type="text/javascript">
 /* <![CDATA[ */
 function closepage(){

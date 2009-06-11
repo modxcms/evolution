@@ -11,19 +11,6 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']==300) {
 
 
 
-function isNumber($var)
-{
-    if(strlen($var)==0) {
-        return false;
-    }
-    for ($i=0;$i<strlen($var);$i++) {
-        if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-            return false;
-        }
-    }
-    return true;
-}
-
 if(isset($_REQUEST['id'])) {
     $id = $_REQUEST['id'];
 } else {
@@ -49,7 +36,7 @@ if($limit>1) {
 
 
 // make sure the id's a number
-if(!isNumber($id)) {
+if(!is_numeric($id)) {
     echo "Passed ID is NaN!";
     exit;
 }
@@ -359,7 +346,7 @@ function decode(s){
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
   </tr>
   <tr>
-    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
+    <td align="left" colspan="2"><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
 </table>
 </div>
@@ -379,7 +366,12 @@ function decode(s){
     <td>
 <?php
     while ($row = mysql_fetch_assoc($rs)) {
-        echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($row['tmplvarid']? "checked='checked'":'')." />".$row['templatename']."<br />";
+    	if($id == 0 && is_array($_POST['template'])) {
+    		$checked = in_array($row['id'], $_POST['template']);
+    	} else {
+    		$checked = $row['tmplvarid'];
+    	}
+        echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($checked? "checked='checked'":'')." />".$row['templatename']."<br />";
     }
 ?>
     </td>
@@ -434,6 +426,9 @@ if($use_udperms==1) {
     $sql = "SELECT name, id FROM $dbase.`".$table_prefix."documentgroup_names`";
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
+    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
+    	$groupsarray = $_POST['docgroups'];
+    }
     for($i=0; $i<$limit; $i++) {
         $row=mysql_fetch_assoc($rs);
         $checked = in_array($row['id'], $groupsarray);

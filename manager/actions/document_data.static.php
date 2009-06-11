@@ -229,26 +229,26 @@ function movedocument() {
 			<tr><td width="200" valign="top"><?php echo $_lang['document_title']?>: </td>
 				<td><b><?php echo $content['pagetitle']?></b></td></tr>
 			<tr><td width="200" valign="top"><?php echo $_lang['long_title']?>: </td>
-				<td><small><?php echo $content['longtitle']!='' ? $content['longtitle'] : "(<i>".$_lang['notset']."</i>)"?></small></td></tr>
+				<td><small><?php echo $content['longtitle']!='' ? $content['longtitle'] : "(<i>".$_lang['not_set']."</i>)"?></small></td></tr>
 			<tr><td valign="top"><?php echo $_lang['document_description']?>: </td>
-				<td><?php echo $content['description']!='' ? $content['description'] : "(<i>".$_lang['notset']."</i>)"?></td></tr>
+				<td><?php echo $content['description']!='' ? $content['description'] : "(<i>".$_lang['not_set']."</i>)"?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['document_summary']?>: </td>
-				<td><?php echo $content['introtext']!='' ? $content['introtext'] : "(<i>".$_lang['notset']."</i>)"?></td></tr>
+				<td><?php echo $content['introtext']!='' ? $content['introtext'] : "(<i>".$_lang['not_set']."</i>)"?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['type']?>: </td>
 				<td><?php echo $content['type']=='reference' ? $_lang['weblink'] : $_lang['document']?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['document_alias']?>: </td>
-				<td><?php echo $content['alias']!='' ? $content['alias'] : "(<i>".$_lang['notset']."</i>)"?></td></tr>
+				<td><?php echo $content['alias']!='' ? $content['alias'] : "(<i>".$_lang['not_set']."</i>)"?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['keywords']?>: </td>
 				<td><?php // Keywords
 				if(count($keywords) != 0)
 					echo join($keywords, ", ");
-				else    echo "(<i>".$_lang['notset']."</i>)";
+				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['metatags']?>: </td>
 				<td><?php // META Tags
 				if(count($metatags_selected) != 0)
 					echo join($metatags_selected, "<br /> ");
-				else    echo "(<i>".$_lang['notset']."</i>)";
+				else    echo "(<i>".$_lang['not_set']."</i>)";
 				?></td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_changes']?></b></td></tr>
@@ -263,9 +263,9 @@ function movedocument() {
 			<tr><td><?php echo $_lang['page_data_status']?>: </td>
 				<td><?php echo $content['published']==0 ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publisheddoc">'.$_lang['page_data_published'].'</span>'?></td></tr>
 			<tr><td><?php echo $_lang['page_data_publishdate']?>: </td>
-				<td><?php echo $content['pub_date']==0 ? "(<i>".$_lang['notset']."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date'])?></td></tr>
+				<td><?php echo $content['pub_date']==0 ? "(<i>".$_lang['not_set']."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date'])?></td></tr>
 			<tr><td><?php echo $_lang['page_data_unpublishdate']?>: </td>
-				<td><?php echo $content['unpub_date']==0 ? "(<i>".$_lang['notset']."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date'])?></td></tr>
+				<td><?php echo $content['unpub_date']==0 ? "(<i>".$_lang['not_set']."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date'])?></td></tr>
 			<tr><td><?php echo $_lang['page_data_cacheable']?>: </td>
 				<td><?php echo $content['cacheable']==0 ? $_lang['no'] : $_lang['yes']?></td></tr>
 			<tr><td><?php echo $_lang['page_data_searchable']?>: </td>

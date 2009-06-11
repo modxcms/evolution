@@ -7,19 +7,6 @@ if(!$modx->hasPermission('save_module')) {
 ?>
 <?php
 
-function isNumber($var)
-{
-	if(strlen($var)==0) {
-		return false;
-	}
-	for ($i=0;$i<strlen($var);$i++) {
-		if ( substr_count ("0123456789", substr ($var, $i, 1) ) == 0 ) {
-			return false;
-		}
-    }
-	return true;
-}
-
 $id = intval($_POST['id']);
 $name = mysql_escape_string(trim($_POST['name']));
 $description = mysql_escape_string($_POST['description']);
@@ -61,6 +48,38 @@ switch ($_POST['mode']) {
 								"id"	=> $id
 							));
 								
+		// disallow duplicate names for new modules
+		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_modules` WHERE name = '{$name}'";
+		$rs = $modx->db->query($sql);
+		$count = $modx->db->getValue($rs);
+		if($count > 0) {
+			$modx->event->alert(sprintf($_lang['duplicate_name_found_module'], $name));
+
+			// prepare a few variables prior to redisplaying form...
+			$content = array();
+			$_REQUEST['a'] = '107';
+			$_GET['a'] = '107';
+			$_GET['stay'] = $_POST['stay'];
+			$content = array_merge($content, $_POST);
+			$content['wrap'] = $wrap;
+			$content['disabled'] = $disabled;
+			$content['locked'] = $locked;
+			$content['plugincode'] = $_POST['post'];
+			$content['category'] = $_POST['categoryid'];
+			$content['properties'] = $_POST['properties'];
+			$content['modulecode'] = $_POST['post'];
+			$content['enable_resource'] = $enable_resource;
+			$content['enable_sharedparams'] = $enable_sharedparams;
+			$content['usrgroups'] = $_POST['usrgroups'];
+
+
+			include 'header.inc.php';
+			include(dirname(dirname(__FILE__)).'/actions/mutate_module.dynamic.php');
+			include 'footer.inc.php';
+			
+			exit;
+		}
+
 		// save the new module
 		$sql = "INSERT INTO ".$modx->getFullTableName("site_modules")." (name, description, disabled, wrap, locked, icon, resourcefile, enable_resource, category, enable_sharedparams, guid, modulecode, properties) VALUES('".$name."', '".$description."', '".$disabled."', '".$wrap."', '".$locked."', '".$icon."', '".$resourcefile."', '".$enable_resource."', '".$categoryid."', '".$enable_sharedparams."', '".$guid."', '".$modulecode."', '".$properties."');";
 		$rs = $modx->db->query($sql);

@@ -8,7 +8,7 @@ if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_v
     exit;
 }
 
-// content added my Raymond
+// set placeholders
 $modx->setPlaceholder('theme',$manager_theme ? $manager_theme : '');
 $modx->setPlaceholder('home', $_lang["home"]);
 $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
@@ -63,24 +63,20 @@ else {
     $modx->setPlaceholder('config_display','none');
 }
 
-// TODO: 
-// - Move Titles/Labels into $_lang (correct) // Done by MotSmart
-// - Translate as necessary (foreign)
+// include rss feeds for important forum topics
+include_once "rss.inc.php"; 
 
-include_once "rss.inc.php"; // pixelchutes
-
-// modx news - pixelchutes
+// modx news
 $html = $_lang["modx_news"].'<br /><br />';
 $modx->setPlaceholder('modx_news',$_lang["modx_news_tab"]);
 $modx->setPlaceholder('modx_news_title',$_lang["modx_news_title"]);
 $modx->setPlaceholder('modx_news_content',$feedData['modx_news_content']);
 
-// security notices - pixelchutes
+// security notices
 $html = $_lang["modx_security_notices"].'<br /><br />';
 $modx->setPlaceholder('modx_security_notices',$_lang["security_notices_tab"]);
 $modx->setPlaceholder('modx_security_notices_title',$_lang["security_notices_title"]);
 $modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_notices_content']);
-
 
 // recent document info
 $html = $_lang["activity_message"].'<br /><br /><ul>';
@@ -173,7 +169,7 @@ $html.= '
 $modx->setPlaceholder('OnlineInfo',$html);
 
 // load template file
-$tplFile = $base_path.'manager/media/style/'.$manager_theme.'/welcome.html';
+$tplFile = $base_path.'assets/templates/manager/welcome.html';
 $handle = fopen($tplFile, "r");
 $tpl = fread($handle, filesize($tplFile));
 fclose($handle);

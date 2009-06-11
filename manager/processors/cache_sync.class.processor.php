@@ -5,6 +5,8 @@ class synccache{
 	var $cachePath;
 	var $showReport;
 	var $deletedfiles = array();
+	var $aliases = array();
+	var $parents = array();
 
 	function setCachepath($path) {
 		$this->cachePath = $path;
@@ -28,14 +30,19 @@ class synccache{
 
 	function getParents($id, $path = '') { // modx:returns child's parent
 		global $modx;
-		$sql = 'SELECT id, alias, parent FROM '.$modx->getFullTableName('site_content').' WHERE id = "'.$id.'"';
-		$qh = $modx->db->query($sql);
-		if ($qh && $modx->db->getRecordCount($qh) > 0)	{
-			if ($row = $modx->db->getRow($qh)) {
-    			$path = ($row['alias'] ? $row['alias'] : $row['id']) . ($path != '' ? '/' : '') . $path;
-    			// mysql_free_result( $qh );
-    			return $this->getParents($row['parent'], $path);
-            }
+		if(empty($this->aliases)) {
+			$sql = "SELECT id, IF(alias='', id, alias) AS alias, parent FROM ".$modx->getFullTableName('site_content');
+			$qh = $modx->db->query($sql);
+			if ($qh && $modx->db->getRecordCount($qh) > 0)	{
+				while ($row = $modx->db->getRow($qh)) {
+					$this->aliases[$row['id']] = $row['alias'];
+					$this->parents[$row['id']] = $row['parent'];
+				}
+			}
+		}
+		if (isset($this->aliases[$id])) {
+			$path = $this->aliases[$id] . ($path != '' ? '/' : '') . $path;
+			return $this->getParents($this->parents[$id], $path);
 		}
 		return $path;
 	}
@@ -113,7 +120,7 @@ class synccache{
 		$tmpPHP .= '$a = &$this->aliasListing;' . "\n";
 		$tmpPHP .= '$d = &$this->documentListing;' . "\n";
 		$tmpPHP .= '$m = &$this->documentMap;' . "\n";
-		$sql = 'SELECT IF(alias="", id, alias) AS alias, id, contentType, parent FROM '.$modx->getFullTableName('site_content').' ORDER BY parent, menuindex';
+		$sql = 'SELECT IF(alias="", id, alias) AS alias, id, contentType, parent FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
 		$rs = $modx->db->query($sql);
 		$limit_tmp = $modx->db->getRecordCount($rs);
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {

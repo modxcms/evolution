@@ -19,7 +19,7 @@ $create = false;
 // set timout limit
 @ set_time_limit(120); // used @ to prevent warning when using safe mode?
 
-echo $_lang['setup_database'];
+echo "<p>{$_lang['setup_database']}</p>\n";
 
 $installMode= intval($_POST['installmode']);
 $installData = $_POST['installdata'] ? 1 : 0;
@@ -280,10 +280,10 @@ if ($configFileFailed == true) {
 	echo "<span class=\"ok\">" . $_lang['ok'] . "</span></p>";
 }
 
-// generate new site_id and set manager theme to MODx
+// generate new site_id and set manager theme to MODxCarbon
 if ($installMode == 0) {
 	$siteid = uniqid('');
-	mysql_query("REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxLight')", $sqlParser->conn);
+	mysql_query("REPLACE INTO $dbase.`" . $table_prefix . "system_settings` (setting_name,setting_value) VALUES('site_id','$siteid'),('manager_theme','MODxCarbon')", $sqlParser->conn);
 } else {
 	// update site_id if missing
 	$ds = mysql_query("SELECT setting_name,setting_value FROM $dbase.`" . $table_prefix . "system_settings` WHERE setting_name='site_id'", $sqlParser->conn);
@@ -334,7 +334,7 @@ if (isset ($_POST['template'])) {
 
 // Install Chunks
 if (isset ($_POST['chunk'])) {
-	echo "<p style=\"color:#707070\">" . $_lang['chunks'] . ":</p> ";
+	echo "<h3>" . $_lang['chunks'] . ":</h3> ";
 	$selChunks = $_POST['chunk'];
 	foreach ($selChunks as $si) {
 		$si = (int) trim($si);
@@ -369,7 +369,7 @@ if (isset ($_POST['chunk'])) {
 
 // Install module
 if (isset ($_POST['module'])) {
-	echo "<p style=\"color:#707070\">" . $_lang['modules'] . ":</p> ";
+	echo "<h3>" . $_lang['modules'] . ":</h3> ";
 	$selPlugs = $_POST['module'];
 	foreach ($selPlugs as $si) {
 		$si = (int) trim($si);
@@ -407,7 +407,7 @@ if (isset ($_POST['module'])) {
 
 // Install plugins
 if (isset ($_POST['plugin'])) {
-	echo "<p style=\"color:#707070\">" . $_lang['plugins'] . ":</p> ";
+	echo "<h3>" . $_lang['plugins'] . ":</h3> ";
 	$selPlugs = $_POST['plugin'];
 	foreach ($selPlugs as $si) {
 		$si = (int) trim($si);
@@ -468,7 +468,7 @@ if (isset ($_POST['plugin'])) {
 
 // Install Snippet
 if (isset ($_POST['snippet'])) {
-	echo "<p style=\"color:#707070\">" . $_lang['snippets'] . ":</p> ";
+	echo "<h3>" . $_lang['snippets'] . ":</h3> ";
 	$selSnips = $_POST['snippet'];
 	foreach ($selSnips as $si) {
 		$si = (int) trim($si);
@@ -563,9 +563,9 @@ $sqlParser->close();
 echo "<p><b>" . $_lang['installation_successful'] . "</b></p>";
 echo "<p>" . $_lang['to_log_into_content_manager'] . "</p>";
 if ($installMode == 0) {
-	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['installation_note'] . "</p><br />&nbsp;";
+	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['installation_note'] . "</p>";
 } else {
-	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p><br />&nbsp;";
+	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p>";
 }
 
 // Property Update function

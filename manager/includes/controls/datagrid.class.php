@@ -116,6 +116,16 @@ class DataGrid {
 				if(!$type_format) $type_format = "%A %d, %B %Y";
 				$value = strftime($type_format,$value);
 				break;
+			
+			case "boolean":
+				if ($align=='') $align="center";
+				$value = number_format($value);
+				if ($value) {
+					$value = '&bull;';
+				} else {
+					$value = '&nbsp;';
+				}
+				break;
 
 			case "template":
 				// replace [+value+] first

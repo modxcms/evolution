@@ -65,6 +65,55 @@ function fb()
 
 class FB
 {
+  /**
+   * Enable and disable logging to Firebug
+   * 
+   * @see FirePHP->setEnabled()
+   * @param boolean $Enabled TRUE to enable, FALSE to disable
+   * @return void
+   */
+  public static function setEnabled($Enabled) {
+    $instance = FirePHP::getInstance(true);
+    $instance->setEnabled($Enabled);
+  }
+  
+  /**
+   * Check if logging is enabled
+   * 
+   * @see FirePHP->getEnabled()
+   * @return boolean TRUE if enabled
+   */
+  public static function getEnabled() {
+    $instance = FirePHP::getInstance(true);
+    return $instance->getEnabled();
+  }  
+  
+  /**
+   * Specify a filter to be used when encoding an object
+   * 
+   * Filters are used to exclude object members.
+   * 
+   * @see FirePHP->setObjectFilter()
+   * @param string $Class The class name of the object
+   * @param array $Filter An array or members to exclude
+   * @return void
+   */
+  public static function setObjectFilter($Class, $Filter) {
+    $instance = FirePHP::getInstance(true);
+    $instance->setObjectFilter($Class, $Filter);
+  }
+  
+  /**
+   * Set some options for the library
+   * 
+   * @see FirePHP->setOptions()
+   * @param array $Options The options to be set
+   * @return void
+   */
+  public static function setOptions($Options) {
+    $instance = FirePHP::getInstance(true);
+    $instance->setOptions($Options);
+  }
 
   /**
    * Log object to firebug

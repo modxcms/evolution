@@ -62,7 +62,7 @@ class FirePHP {
    *
    * @var string
    */
-  const VERSION = '0.2.b.2';
+  const VERSION = '0.2.1';
   
   /**
    * Firebug LOG level
@@ -157,7 +157,54 @@ class FirePHP {
    * @var int
    */
   protected $messageIndex = 1;
+    
+  /**
+   * Options for the library
+   * 
+   * @var array
+   */
+  protected $options = array();
   
+  /**
+   * Filters used to exclude object members when encoding
+   * 
+   * @var array
+   */
+  protected $objectFilters = array();
+  
+  /**
+   * A stack of objects used to detect recursion during object encoding
+   * 
+   * @var object
+   */
+  protected $objectStack = array();
+  
+  /**
+   * Flag to enable/disable logging
+   * 
+   * @var boolean
+   */
+  protected $enabled = true;
+  
+  /**
+   * The object constructor
+   */
+  function __construct() {
+    $this->options['maxObjectDepth'] = 10;
+    $this->options['maxArrayDepth'] = 20;
+    $this->options['useNativeJsonEncode'] = true;
+    $this->options['includeLineNumbers'] = true;
+  }
+    
+  /**
+   * When the object gets serialized only include specific object members.
+   * 
+   * @return array
+   */  
+  public function __sleep() {
+    return array('options','objectFilters','enabled');
+  }
+    
   /**
    * Gets singleton instance of FirePHP
    *
@@ -178,7 +225,55 @@ class FirePHP {
    */
   public static function init() {
     return self::$instance = new self();
-  } 
+  }
+  
+  /**
+   * Enable and disable logging to Firebug
+   * 
+   * @param boolean $Enabled TRUE to enable, FALSE to disable
+   * @return void
+   */
+  public function setEnabled($Enabled) {
+    $this->enabled = $Enabled;
+  }
+  
+  /**
+   * Check if logging is enabled
+   * 
+   * @return boolean TRUE if enabled
+   */
+  public function getEnabled() {
+    return $this->enabled;
+  }
+  
+  /**
+   * Specify a filter to be used when encoding an object
+   * 
+   * Filters are used to exclude object members.
+   * 
+   * @param string $Class The class name of the object
+   * @param array $Filter An array or members to exclude
+   * @return void
+   */
+  public function setObjectFilter($Class, $Filter) {
+    $this->objectFilters[$Class] = $Filter;
+  }
+  
+  /**
+   * Set some options for the library
+   * 
+   * Options:
+   *  - maxObjectDepth: The maximum depth to traverse objects (default: 10)
+   *  - maxArrayDepth: The maximum depth to traverse arrays (default: 20)
+   *  - useNativeJsonEncode: If true will use json_encode() (default: true)
+   *  - includeLineNumbers: If true will include line numbers and filenames (default: true)
+   * 
+   * @param array $Options The options to be set
+   * @return void
+   */
+  public function setOptions($Options) {
+    $this->options = array_merge($this->options,$Options);
+  }
   
   /**
    * Register FirePHP as your error handler
@@ -384,14 +479,18 @@ class FirePHP {
   }
  
   /**
-   * Log object to firebug
+   * Log varible to Firebug
    * 
    * @see http://www.firephp.org/Wiki/Reference/Fb
-   * @param mixed $Object
-   * @return true
+   * @param mixed $Object The variable to be logged
+   * @return true Return TRUE if message was added to headers, FALSE otherwise
    * @throws Exception
    */
   public function fb($Object) {
+  
+    if(!$this->enabled) {
+      return false;
+    }
   
     if (headers_sent($filename, $linenum)) {
         throw $this->newException('Headers already sent in '.$filename.' on line '.$linenum.'. Cannot send log data to FirePHP. You must have Output Buffering enabled via ob_start() or output_buffering ini directive.');
@@ -433,7 +532,13 @@ class FirePHP {
       return false;
     }
   
+    $meta = array();
+    $skipFinalObjectEncode = false;
+  
     if($Object instanceof Exception) {
+
+      $meta['file'] = $this->_escapeTraceFile($Object->getFile());
+      $meta['line'] = $Object->getLine();
       
       $trace = $Object->getTrace();
       if($Object instanceof ErrorException
@@ -461,7 +566,7 @@ class FirePHP {
                         'Line'=>$Object->getLine(),
                         'Type'=>'trigger',
                         'Trace'=>$this->_escapeTrace(array_splice($trace,2)));
-      
+        $skipFinalObjectEncode = true;
       } else {
         $Object = array('Class'=>get_class($Object),
                         'Message'=>$Object->getMessage(),
@@ -469,6 +574,7 @@ class FirePHP {
                         'Line'=>$Object->getLine(),
                         'Type'=>'throw',
                         'Trace'=>$this->_escapeTrace($trace));
+        $skipFinalObjectEncode = true;
       }
       $Type = self::EXCEPTION;
       
@@ -500,21 +606,72 @@ class FirePHP {
                           'Type'=>isset($trace[$i]['type'])?$trace[$i]['type']:'',
                           'Function'=>isset($trace[$i]['function'])?$trace[$i]['function']:'',
                           'Message'=>$trace[$i]['args'][0],
-                          'File'=>$this->_escapeTraceFile($trace[$i]['file']),
-                          'Line'=>$trace[$i]['line'],
-                          'Args'=>$trace[$i]['args'],
+                          'File'=>isset($trace[$i]['file'])?$this->_escapeTraceFile($trace[$i]['file']):'',
+                          'Line'=>isset($trace[$i]['line'])?$trace[$i]['line']:'',
+                          'Args'=>isset($trace[$i]['args'])?$this->encodeObject($trace[$i]['args']):'',
                           'Trace'=>$this->_escapeTrace(array_splice($trace,$i+1)));
+
+          $skipFinalObjectEncode = true;
+          $meta['file'] = isset($trace[$i]['file'])?$this->_escapeTraceFile($trace[$i]['file']):'';
+          $meta['line'] = isset($trace[$i]['line'])?$trace[$i]['line']:'';
           break;
         }
       }
 
+    } else
+    if($Type==self::TABLE) {
+      
+      if(isset($Object[0]) && is_string($Object[0])) {
+        $Object[1] = $this->encodeTable($Object[1]);
+      } else {
+        $Object = $this->encodeTable($Object);
+      }
+
+      $skipFinalObjectEncode = true;
+      
     } else {
       if($Type===null) {
         $Type = self::LOG;
       }
     }
+    
+    if($this->options['includeLineNumbers']) {
+      if(!isset($meta['file']) || !isset($meta['line'])) {
 
-  	$this->setHeader('X-Wf-Protocol-1','http://meta.wildfirehq.org/Protocol/JsonStream/0.1');
+        $trace = debug_backtrace();
+        for( $i=0 ; $trace && $i<sizeof($trace) ; $i++ ) {
+  
+          if(isset($trace[$i]['class'])
+             && isset($trace[$i]['file'])
+             && ($trace[$i]['class']=='FirePHP'
+                 || $trace[$i]['class']=='FB')
+             && (substr($this->_standardizePath($trace[$i]['file']),-18,18)=='FirePHPCore/fb.php'
+                 || substr($this->_standardizePath($trace[$i]['file']),-29,29)=='FirePHPCore/FirePHP.class.php')) {
+            /* Skip - FB::trace(), FB::send(), $firephp->trace(), $firephp->fb() */
+          } else
+          if(isset($trace[$i]['class'])
+             && isset($trace[$i+1]['file'])
+             && $trace[$i]['class']=='FirePHP'
+             && substr($this->_standardizePath($trace[$i+1]['file']),-18,18)=='FirePHPCore/fb.php') {
+            /* Skip fb() */
+          } else
+          if(isset($trace[$i]['file'])
+             && substr($this->_standardizePath($trace[$i]['file']),-18,18)=='FirePHPCore/fb.php') {
+            /* Skip FB::fb() */
+          } else {
+            $meta['file'] = isset($trace[$i]['file'])?$this->_escapeTraceFile($trace[$i]['file']):'';
+            $meta['line'] = isset($trace[$i]['line'])?$trace[$i]['line']:'';
+            break;
+          }
+        }      
+      
+      }
+    } else {
+      unset($meta['file']);
+      unset($meta['line']);
+    }
+
+  	$this->setHeader('X-Wf-Protocol-1','http://meta.wildfirehq.org/Protocol/JsonStream/0.2');
   	$this->setHeader('X-Wf-1-Plugin-1','http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/'.self::VERSION);
  
     $structure_index = 1;
@@ -526,21 +683,38 @@ class FirePHP {
     }
   
     if($Type==self::DUMP) {
-    	$msg = '{"'.$Label.'":'.$this->json_encode($Object).'}';
+    	$msg = '{"'.$Label.'":'.$this->jsonEncode($Object, $skipFinalObjectEncode).'}';
     } else {
-      $meta = array('Type'=>$Type);
+      $msg_meta = array('Type'=>$Type);
       if($Label!==null) {
-        $meta['Label'] = $Label;
-      }    
-    	$msg = '['.$this->json_encode($meta).','.$this->json_encode($Object).']';
+        $msg_meta['Label'] = $Label;
+      }
+      if(isset($meta['file'])) {
+        $msg_meta['File'] = $meta['file'];
+      }
+      if(isset($meta['line'])) {
+        $msg_meta['Line'] = $meta['line'];
+      }
+    	$msg = '['.$this->jsonEncode($msg_meta).','.$this->jsonEncode($Object, $skipFinalObjectEncode).']';
     }
+    
+    $parts = explode("\n",chunk_split($msg, 5000, "\n"));
 
-    foreach (explode("\n",chunk_split($msg, 4998, "\n")) as $part) {
-
+    for( $i=0 ; $i<count($parts) ; $i++) {
+        
+        $part = $parts[$i];
         if ($part) {
             
-            $this->setHeader('X-Wf-1-'.$structure_index.'-'.'1-'.$this->messageIndex,
-                             '|' . $part . '|');
+            if(count($parts)>2) {
+              // Message needs to be split into multiple parts
+              $this->setHeader('X-Wf-1-'.$structure_index.'-'.'1-'.$this->messageIndex,
+                               (($i==0)?strlen($msg):'')
+                               . '|' . $part . '|'
+                               . (($i<count($parts)-2)?'\\':''));
+            } else {
+              $this->setHeader('X-Wf-1-'.$structure_index.'-'.'1-'.$this->messageIndex,
+                               strlen($part) . '|' . $part . '|');
+            }
             
             $this->messageIndex++;
             
@@ -576,6 +750,9 @@ class FirePHP {
     for( $i=0 ; $i<sizeof($Trace) ; $i++ ) {
       if(isset($Trace[$i]['file'])) {
         $Trace[$i]['file'] = $this->_escapeTraceFile($Trace[$i]['file']);
+      }
+      if(isset($Trace[$i]['args'])) {
+        $Trace[$i]['args'] = $this->encodeObject($Trace[$i]['args']);
       }
     }
     return $Trace;    
@@ -628,8 +805,220 @@ class FirePHP {
   protected function newException($Message) {
     return new Exception($Message);
   }
-
+  
+  /**
+   * Encode an object into a JSON string
+   * 
+   * Uses PHP's jeson_encode() if available
+   * 
+   * @param object $Object The object to be encoded
+   * @return string The JSON string
+   */
+  public function jsonEncode($Object, $skipObjectEncode=false)
+  {
+    if(!$skipObjectEncode) {
+      $Object = $this->encodeObject($Object);
+    }
     
+    if(function_exists('json_encode')
+       && $this->options['useNativeJsonEncode']!=false) {
+
+      return json_encode($Object);
+    } else {
+      return $this->json_encode($Object);
+    }
+  }
+  
+  /**
+   * Encodes a table by encoding each row and column with encodeObject()
+   * 
+   * @param array $Table The table to be encoded
+   * @return array
+   */  
+  protected function encodeTable($Table) {
+    if(!$Table) return $Table;
+    for( $i=0 ; $i<count($Table) ; $i++ ) {
+      if(is_array($Table[$i])) {
+        for( $j=0 ; $j<count($Table[$i]) ; $j++ ) {
+          $Table[$i][$j] = $this->encodeObject($Table[$i][$j]);
+        }
+      }
+    }
+    return $Table;
+  }
+  
+  /**
+   * Encodes an object including members with
+   * protected and private visibility
+   * 
+   * @param Object $Object The object to be encoded
+   * @param int $Depth The current traversal depth
+   * @return array All members of the object
+   */
+  protected function encodeObject($Object, $ObjectDepth = 1, $ArrayDepth = 1)
+  {
+    $return = array();
+
+    if (is_resource($Object)) {
+
+      return '** '.(string)$Object.' **';
+
+    } else    
+    if (is_object($Object)) {
+
+        if ($ObjectDepth > $this->options['maxObjectDepth']) {
+          return '** Max Object Depth ('.$this->options['maxObjectDepth'].') **';
+        }
+        
+        foreach ($this->objectStack as $refVal) {
+            if ($refVal === $Object) {
+                return '** Recursion ('.get_class($Object).') **';
+            }
+        }
+        array_push($this->objectStack, $Object);
+                
+        $return['__className'] = $class = get_class($Object);
+
+        $reflectionClass = new ReflectionClass($class);  
+        $properties = array();
+        foreach( $reflectionClass->getProperties() as $property) {
+          $properties[$property->getName()] = $property;
+        }
+            
+        $members = (array)$Object;
+            
+        foreach( $properties as $raw_name => $property ) {
+          
+          $name = $raw_name;
+          if($property->isStatic()) {
+            $name = 'static:'.$name;
+          }
+          if($property->isPublic()) {
+            $name = 'public:'.$name;
+          } else
+          if($property->isPrivate()) {
+            $name = 'private:'.$name;
+            $raw_name = "\0".$class."\0".$raw_name;
+          } else
+          if($property->isProtected()) {
+            $name = 'protected:'.$name;
+            $raw_name = "\0".'*'."\0".$raw_name;
+          }
+          
+          if(!(isset($this->objectFilters[$class])
+               && is_array($this->objectFilters[$class])
+               && in_array($raw_name,$this->objectFilters[$class]))) {
+
+            if(array_key_exists($raw_name,$members)
+               && !$property->isStatic()) {
+              
+              $return[$name] = $this->encodeObject($members[$raw_name], $ObjectDepth + 1, 1);      
+            
+            } else {
+              if(method_exists($property,'setAccessible')) {
+                $property->setAccessible(true);
+                $return[$name] = $this->encodeObject($property->getValue($Object), $ObjectDepth + 1, 1);
+              } else
+              if($property->isPublic()) {
+                $return[$name] = $this->encodeObject($property->getValue($Object), $ObjectDepth + 1, 1);
+              } else {
+                $return[$name] = '** Need PHP 5.3 to get value **';
+              }
+            }
+          } else {
+            $return[$name] = '** Excluded by Filter **';
+          }
+        }
+        
+        // Include all members that are not defined in the class
+        // but exist in the object
+        foreach( $members as $raw_name => $value ) {
+          
+          $name = $raw_name;
+          
+          if ($name{0} == "\0") {
+            $parts = explode("\0", $name);
+            $name = $parts[2];
+          }
+          
+          if(!isset($properties[$name])) {
+            $name = 'undeclared:'.$name;
+              
+            if(!(isset($this->objectFilters[$class])
+                 && is_array($this->objectFilters[$class])
+                 && in_array($raw_name,$this->objectFilters[$class]))) {
+              
+              $return[$name] = $this->encodeObject($value, $ObjectDepth + 1, 1);
+            } else {
+              $return[$name] = '** Excluded by Filter **';
+            }
+          }
+        }
+        
+        array_pop($this->objectStack);
+        
+    } elseif (is_array($Object)) {
+
+        if ($ArrayDepth > $this->options['maxArrayDepth']) {
+          return '** Max Array Depth ('.$this->options['maxArrayDepth'].') **';
+        }
+      
+        foreach ($Object as $key => $val) {
+          
+          // Encoding the $GLOBALS PHP array causes an infinite loop
+          // if the recursion is not reset here as it contains
+          // a reference to itself. This is the only way I have come up
+          // with to stop infinite recursion in this case.
+          if($key=='GLOBALS'
+             && is_array($val)
+             && array_key_exists('GLOBALS',$val)) {
+            $val['GLOBALS'] = '** Recursion (GLOBALS) **';
+          }
+          
+          $return[$key] = $this->encodeObject($val, 1, $ArrayDepth + 1);
+        }
+    } else {
+      if(self::is_utf8($Object)) {
+        return $Object;
+      } else {
+        return utf8_encode($Object);
+      }
+    }
+    return $return;
+  }
+
+  /**
+   * Returns true if $string is valid UTF-8 and false otherwise.
+   *
+   * @param mixed $str String to be tested
+   * @return boolean
+   */
+  protected static function is_utf8($str) {
+    $c=0; $b=0;
+    $bits=0;
+    $len=strlen($str);
+    for($i=0; $i<$len; $i++){
+        $c=ord($str[$i]);
+        if($c > 128){
+            if(($c >= 254)) return false;
+            elseif($c >= 252) $bits=6;
+            elseif($c >= 248) $bits=5;
+            elseif($c >= 240) $bits=4;
+            elseif($c >= 224) $bits=3;
+            elseif($c >= 192) $bits=2;
+            else return false;
+            if(($i+$bits) > $len) return false;
+            while($bits > 1){
+                $i++;
+                $b=ord($str[$i]);
+                if($b < 128 || $b > 191) return false;
+                $bits--;
+            }
+        }
+    }
+    return true;
+  } 
+
   /**
    * Converts to and from JSON format.
    *
@@ -931,7 +1320,7 @@ class FirePHP {
               return '[' . join(',', $elements) . ']';
 
           case 'object':
-              $vars = $this->json_get_object_vars($var);
+              $vars = self::encodeObject($var);
 
               $this->json_objectStack[] = $var;
 
@@ -953,96 +1342,6 @@ class FirePHP {
               return null;
       }
   }
-  
-  /**
-   * Obtains all object member values including ones with
-   * protected and private visibility
-   * 
-   * @param Object $variable
-   * @return array All members of the object
-   */
-  private function json_get_object_vars($variable)
-  {
-    // This is required until everyone is running PHP 5.3 at which
-    // point the Reflection API can provide private and protected
-    // object member values.
-    $code = var_export($variable, true);
-    
-    if(preg_match_all('/[\s>=]?(\S*?)::__set_state\(/si',$code,$m)) {
-      for( $i=0; $i < count($m[0]); $i++ ) {
-        $code = preg_replace('/'.preg_quote($m[0][$i],'/').'/',
-                                'FirePHP::json_generate_object_member_array(\''.$m[1][$i].'\',',
-                                $code);
-    	}
-    }
-
-    eval('$dump = ' . $code . ';');
-    
-    return $dump;
-  }
-
-  /**
-   * Generates an array of object members and includes hints about visibility
-   * 
-   * @param string $class The class of the object
-   * @param array $members All object members
-   * @return array All object members with class and visibility hints added
-   */
-  private static function json_generate_object_member_array($class, $members)
-  {    
-    $reflection_class = new ReflectionClass($class);  
-    
-    $props = array();
-    foreach( $reflection_class->getProperties() as $property) {
-      $props[$property->getName()] = $property;
-    }
-  
-    $dump = array('__className'=>$class);
-
-    foreach( $props as $raw_name => $property ) {
-
-      $name = $raw_name;
-      if($property->isStatic()) {
-        $name = 'static:'.$name;
-      }
-
-      if($property->isPublic()) {
-        $name = 'public:'.$name;
-      } else
-      if($property->isPrivate()) {
-        $name = 'private:'.$name;
-      } else
-      if($property->isProtected()) {
-        $name = 'protected:'.$name;
-      }
-      
-      if($members[$raw_name]) {
-        $dump[$name] = $members[$raw_name];      
-      } else {
-
-        if(method_exists($property,'setAccessible')) {
-          $property->setAccessible(true);
-
-          $dump[$name] = $property->getValue();
-        } else
-        if($property->isPublic()) {
-          $dump[$name] = $property->getValue();
-        } else {
-          $dump[$name] = 'Need PHP 5.3 to get value!';
-        }
-      }
-    }    
-    
-    foreach( $members as $name => $value ) {
-      // Include all members that are not defined in the class
-      // but exist in the object
-      if(!$props[$name]) {
-        $name = 'undeclared:'.$name;
-        $dump[$name] = $value;
-      }
-    }
-    return $dump;
-  }  
 
  /**
   * array-walking function for use in generating JSON-formatted name-value pairs

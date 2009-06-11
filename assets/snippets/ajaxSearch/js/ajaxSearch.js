@@ -1,65 +1,48 @@
 //ajaxSearch.js
-//Version: 1.8.1 - refactored by coroico
+//Version: 1.8.3 - refactored by coroico
+//08/06/2009
 //Created by: KyleJ (kjaebker@muddydogpaws.com)
-//Created on: 03/14/06
-//Description: This code is used to setup the ajax search request.
-//My thanks to Steve Smith of orderlist.com for sharing his code on how he did this
-//Live Search by Thomas (Shadock)
+//Created on: 03/14/2006
+//Description: This code is used to setup the ajax search request
 
-//Updated: 02/10/08 - whereSearch, withTvs
-//Updated: 10/07/08 - Added whereSearch, rank, order and filter parameters
-//Updated: 02/07/08 - Added Phx templating & some new parameters
-//Updated: 06/03/08 - Added advSearch and Hidden from menu options - 1.7.1
-//Updated: 03/03/08 - Fix : % character freeze the search - 1.7.1
-//Updated: 01/02/08 - Added version, folder and some others parameters - 1.7.0
-//Updated: 12/14/07 - Fix : bad URI with several document groups - 1.6.2d - 
-//Updated: 11/17/07 - Added IDs document selection - 1.6.2
-//Updated: 11/06/07 - character encoding and opacity troubles corrected - 1.6.1
-
-//Updated: 01/22/07 - Switched to mootools support
-//Updated: 09/18/06 - Added user permissions to searching
-
-//set the loading image to the correct location for you
-//set the close image to the correct location for you
-//set the ajax call to the correct location of ajaxSearch.php
+//set the loading and the close image to the correct location for you
+//set the folder location to the correct location of ajaxSearch.php
+//set the default parameters as default.config.inc.php
 
 // AjaxSearch Snippet folder location
 var _base = 'assets/snippets/ajaxSearch/';
 
-// AjaxSearch Snippet folder
-var _version = '1.8.1';
+// AjaxSearch default snippet parameter values
+var _version = '1.8.3';
+var opacity = 1.;
+var liveSearch = 0;
+var minChars = 3;
 
-//From Thomas : vars for live search
-var _oldInputFieldValue = "";
-var _currentInputFieldValue = "";
-var _timeoutAdjustment = 0;
 var newToggle;
 var is_searching = false;
 var liveTimeout = null;
 
 function activateSearch() {
-  var searchForm = $('ajaxSearch_form');
-
   if (as_version != _version) {
     alert("AjaxSearch version obsolete. Empty your browser cache and check the version of AjaxSearch.js file");
     return;
   }
 
-  var s = $('ajaxSearch_output');
-  s.setStyle('opacity', '0');
+  res = ucfg.match(/&opacity=`([^`]*)`/);
+  if (res != null) opacity = parseFloat(res[1]); 
 
-  if (searchForm) {
-    $('ajaxSearch_form').onsubmit = function() { doSearch(); return false; };
+  res = ucfg.match(/&liveSearch=`([^`]*)`/);
+  if (res != null) liveSearch = parseInt(res[1]);
 
-    var i = new Element('img');
-    i.setProperties({
-       src: _base + 'images/indicator.white.gif', //Loading Image
-       alt: 'loading',
-       id: 'indicator'
-    });
-    toggleImage(i);
+  res = ucfg.match(/&minChars=`([^`]*)`/);
+  if (res != null) minChars = parseInt(res[1]);
 
-    searchForm.appendChild(i);
+  var asf = $('ajaxSearch_form');
+  var aso = $('ajaxSearch_output');
+  aso.setStyle('opacity', '0');
+
+  if (asf) {
+    asf.onsubmit = function() { doSearch(); return false; };
 
     var c = new Element('img'); //Close Image
     c.setProperties({
@@ -68,31 +51,26 @@ function activateSearch() {
        id: 'searchClose'
     });
     c.addEvent('click', function(){closeSearch();});
+    toggleImage(c);
+    asf.appendChild(c);
 
-    if (liveSearch) {
-      c.setStyles({
-         position: 'absolute',
-         top: '1px',
-         right: '1px'
-      });
-    } else {
-      toggleImage(c);
-    }
+    var i = new Element('img');
+    i.setProperties({
+       src: _base + 'images/indicator.white.gif', //Loading Image
+       alt: 'loading',
+       id: 'indicator'
+    });
+    toggleImage(i);
+    asf.appendChild(i);
 
     var n = new Element('div'); // New search results div
     n.setProperty('id', 'current-search-results');
     n.setStyle('opacity', '1');
-    s.appendChild(n);
+    aso.appendChild(n);
     newToggle = new Fx.Slide('current-search-results', {duration: 600}).hide();
     newToggle.isDisplayed = function() {
       return this.wrapper['offset'+this.layout.capitalize()] > 0;
     }
-
-    if (liveSearch) {
-      s.appendChild(c);
-    } else {
-      searchForm.appendChild(c);
-    }        
 
     is_searching = false;
     search_open = false;
@@ -113,7 +91,7 @@ function liveSearchReq() {
 function doSearch() {
   // If we're already loading, don't do anything
   if (is_searching) return false;
-  
+
   // get the input searchstring from select or from input
   if (ss = $('ajaxSearch_select')) {
     selected = new Array();
@@ -125,33 +103,26 @@ function doSearch() {
   }
   // Same if the searchstring is blank
   if (s == '') return false;
+  if (liveSearch && s.length < minChars) return false;
   is_searching = true;
   c = $('current-search-results');
 
   toggleImage($('indicator'));
-  if (!liveSearch) {if (!search_open) {toggleImage($('searchClose'));}}
+  if (!search_open) {toggleImage($('searchClose'));}
   search_open = true;
   b = $('ajaxSearch_submit');
   b.disabled = true;
 
   if (newToggle.isDisplayed()) {
     newToggle.toggle(); 
-  }  
+  }
 
   // update the advSearch value from radio button if they exists
-  if (r = $('radio_oneword')) {
-    if (r.checked == true) advSearch = r.value;
-  }
-  if (r = $('radio_allwords')) {
-    if (r.checked == true) advSearch = r.value;
-  }
-  if (r = $('radio_exactphrase')) {
-    if (r.checked == true) advSearch = r.value;
-  }
-  if (r = $('radio_nowords')) {
-    if (r.checked == true) advSearch = r.value;
-  }
-  
+  setAdvSearch('radio_oneword');
+  setAdvSearch('radio_allwords');
+  setAdvSearch('radio_exactphrase');
+  setAdvSearch('radio_nowords');
+
   // update the subSearch value from radio button if they exists
   sbsname = '';
   for (var i = 1; i < subSearch+1; i++) {
@@ -159,49 +130,21 @@ function doSearch() {
       if (sbs.checked == true) sbsname = sbs.value;
     }
   }
+  subSearch = sbsname;
 
   // Setup the parameters and make the ajax call to the popup window
   var pars = Object.toQueryString({
     q: _base + 'ajaxSearchPopup.php',
     search: s,
-    config: config,
     as_version: as_version,
-    debug: debug,
-    ajaxMax: ajaxMax,
     advSearch: encodeURI(advSearch),
-    subSearch: encodeURI(sbsname),
-    whereSearch: encodeURI(whereSearch),
-    withTvs: withTvs,
-    order: order,
-    rank: rank,
-    minChars: minChars,
-    showMoreResults: showMoreResults,
-    moreResultsPage: moreResultsPage,
-    as_language: as_language,
-    extract: extract,
-    extractLength: extractLength,
-    extractEllips: extractEllips,
-    extractSeparator: extractSeparator,
-    formatDate: formatDate,
-    docgrp: encodeURI(docgrp),
-    listIDs: encodeURI(listIDs),
-    idType: idType,
-    depth: depth,
-    highlightResult: highlightResult,
-    hideMenu: hideMenu,
-    hideLink: hideLink,
-    as_filter: as_filter,
-    tplAjaxResult: tplAjaxResult,
-    tplAjaxResults: tplAjaxResults,
-    stripInput: stripInput,
-    stripOutput: stripOutput,
-    breadcrumbs: breadcrumbs,
-    tvPhx: tvPhx
+    subSearch: encodeURI(subSearch),
+    ucfg: ucfg
   });
 
   var ajaxSearchReq = new Ajax('index-ajax.php', {postBody: pars, onComplete: doSearchResponse});
-   if (newToggle.isDisplayed()) {
-    newToggle.toggle(); 
+  if (newToggle.isDisplayed()) {
+    newToggle.toggle();
     ajaxSearchReq.request.delay(600, ajaxSearchReq);
   } else {
     ajaxSearchReq.request();
@@ -237,6 +180,12 @@ function clearSearch() {
   o.setStyle('opacity', '0');
   $('ajaxSearch_input').value="";
   $('ajaxSearch_input').focus();
+}
+
+function setAdvSearch(id) {
+  if (r = $(id)) {
+    if (r.checked == true) advSearch = r.value;
+  }
 }
 
 function toggleImage(imgElement) {

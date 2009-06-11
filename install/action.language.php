@@ -13,31 +13,21 @@ if ($handle = opendir("lang/")) {
 }
 sort($langs);
 ?>
-<form name="install" action="index.php?action=welcome" method="post">
-	<table width="100%">
-	<tr>
-	<td valign="top">
-		<center><img src="<?php echo include_image('img_splash.gif')?>" alt="<? echo $_lang['modx_install']?>" /></center>
-	</td>
-	<td align="center" width="280">
-		<img src="<?php echo include_image('img_box.png')?>" alt="MODx Create and Do More with Less" />&nbsp;
-	</td>
-	</tr>
-	</table>
-	<div id="navbar">
-	<h1 style="float:left;">Choose language:&nbsp;&nbsp;</h1>
-	<select name="language" style="float:left;">
-	<?php 
-    foreach ($langs as $language) {
-      $abrv_language = explode('-',$language); // filter of character set extension
-      if ($abrv_language[0] == 'english') {
+<form name="install" id="install_form" action="index.php?action=welcome" method="post">
+    <h2>Choose language:&nbsp;&nbsp;
+    <select name="language">
+<?php
+foreach ($langs as $language) {
+    $abrv_language = explode('-',$language); // filter of character set extension
+    if ($abrv_language[0] == 'english') {
         echo '<option value="' . $language . '" selected="selected">' . $abrv_language[0] . '</option>'."\n";
-      } else {
+    } else {
         echo '<option value="' . $language . '">' . $abrv_language[0] . '</option>'."\n";
-      }
     }
-  ?>
-	</select>
-	<input type="submit" value="<?php echo $_lang['btnnext_value']; ?>" style="float:right;width:100px;" />
-	</div>
+}
+?>
+    </select></h2>
+        <p class="buttonlinks">
+            <a style="display:inline;" href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['begin']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
+        </p>
 </form>

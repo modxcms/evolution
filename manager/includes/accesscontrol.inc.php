@@ -58,6 +58,9 @@ if(!isset($_SESSION['mgrValidated'])){
 	include_once("browsercheck.inc.php");
 
 	if(isset($manager_language)) {
+		// establish fallback to English default
+		include_once "lang/english.inc.php";
+		// include localized overrides
 		include_once "lang/".$manager_language.".inc.php";
 	}
 	else {
@@ -125,7 +128,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
 	// load template file
-    $tplFile = $base_path.'manager/media/style/'.$manager_theme.'/login.html';
+    $tplFile = $base_path.'assets/templates/manager/login.html';
     $handle = fopen($tplFile, "r");
 	$tpl = fread($handle, filesize($tplFile));
 	fclose($handle);
