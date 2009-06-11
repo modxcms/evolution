@@ -371,7 +371,7 @@ $_lang["import_site_html"] = '从HTML导入站点';
 $_lang["import_site_importing_document"] = '导入文件 <b>%s</b> ';
 $_lang["import_site_maxtime"] = '最大输入时间:';
 $_lang["import_site_maxtime_message"] = '您可以在这里设置导入过程的最长时间（覆盖PHP设置）输入0代表时间没限制，但是请注意：如果您输入的时间过大或输入0，您的服务器可能出现不可预料的情况，因此我们不建议您输入0，详细问题您可以咨询您的服务器技术人员.';
-$_lang["import_site_message"] = '使用这个功能能把整个HTML网站内容导入到数据库. 您需要把文件和文件夹先拷贝到 assets/import文件夹里.<p />填完表单后，请按'导入'就可以开始站点的导入了.导入的文件将保存您您选择的目录内,另外，文件的名字将作为文件的别名页面的标题将作为文件的标题.';
+$_lang["import_site_message"] = '<p>使用这个功能能把整个HTML网站内容导入到数据库. 您需要把文件和文件夹先拷贝到 assets/import文件夹里.</p><p>填完表单后，请按\'导入\'就可以开始站点的导入了.导入的文件将保存您您选择的目录内,另外，文件的名字将作为文件的别名页面的标题将作为文件的标题.</p>';
 $_lang["import_site_skip"] = '<span style="color:#990000">跳过!</span>';
 $_lang["import_site_start"] = '导入';
 $_lang["import_site_success"] = '<span style="color:#009900">成功!</span>';
