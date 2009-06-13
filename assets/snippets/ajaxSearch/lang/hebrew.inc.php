@@ -1,9 +1,9 @@
 <?php
 /*
-hebrew.inc.php - for AjaxSearch 1.5
+hebrew.inc.php - for AjaxSearch 1.8.2
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
-Translated on: 07/02/08
+Translated on: 13/06/09
 Description: Language strings for AjaxSearch
 */
 $_lang['as_resultsIntroFailure'] = 'לא נמצאו תוצאות לחיפוש זה.';
@@ -21,4 +21,9 @@ $_lang['oneword'] = 'מילה אחת';
 $_lang['allwords'] = 'כל המילים';
 $_lang['exactphrase'] = 'ביטוי מדוייק';
 $_lang['nowords'] = 'אין מילים';
+$_lang['as_cmtHiddenFieldIntro'] = 'יש להשיק את זה ריק. אין לכתוב כאן';
+$_lang['as_cmtIntroMessage'] = 'האם מצתם? נא להגיב כאן';
+$_lang['as_cmtSubmitText'] = 'שלח';
+$_lang['as_cmtResetText'] = 'לנקות';
+$_lang['as_cmtThksMessage'] = 'תודה להתגובה';
 ?>
