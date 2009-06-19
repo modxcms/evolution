@@ -195,7 +195,7 @@ if ($manager_theme) $manager_theme .= '/';
 	<![endif]-->
 </head>
 
-<body id="topMenu">
+<body id="topMenu" class="<?php echo $modx->config['manager_direction'] ?>">
 
 <div id="tocText" <?php echo $modx->config['manager_direction'] ? 'class="tocTextRTL"' : '' ?>></div>
 <div id="topbar">

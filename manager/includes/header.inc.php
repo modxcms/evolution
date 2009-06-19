@@ -92,6 +92,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     </script>
 </head>
-<body ondragstart="return false">
+<body ondragstart="return false" class="<?php echo $modx->config['manager_direction'] ?>">
 
 <div id="preLoader"><table width="100%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>

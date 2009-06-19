@@ -417,8 +417,8 @@
 
 
 </head>
-<!-- Raymond: add onbeforeunload -->
-<body onclick="hideMenu(1);" class="treeframebody">
+<!-- Raymond: add onbeforeunload --><!-- smashingred: added dir class -->
+<body onclick="hideMenu(1);" class="treeframebody <?php echo $modx->config['manager_direction'] ?>">
 
 <!-- to be improved -->
 <div id="treeSplitter"></div>
