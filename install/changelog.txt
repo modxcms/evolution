@@ -4,21 +4,66 @@ development release, and is only shown to give an idea of what's currently in th
 
 MODx Evolution 1.0.0 (rev 5053 - May 28, 2009)
 ===================================
+--------------------------------------------
+Bugfixes & Feature Requests:
+--------------------------------------------
+* [#MODX-85] Removed transliteration code from core and turn into a plugin
+    - Supports multiple languages
+    - Template Variable can override transliteration table (file) per-document/section (supports @INHERIT)
+ 	- Move stripAlias function into parser
+    - Add OnStripAlias parser/system event
+* [#MODX-445] Fix case where deleted docs with the same alias as another document caused a 404 response. Remove deleted docs from site cache.
+* [#MODX-593] Add missing summary/introtext to Weblink manager page
+* [#MODX-220] Manager language updates for sorting and formatting consistency across loanguages
+* [#MODX-393] Show Protected Pages issue solved by Thomas Leiritz
+* [#MODX-516] and [#MODX-397] 
+    - fix to display of Access Permissions depending on Role permissions
+    - fix to preserve parent after new document save permissions error
+* [#MODX-397] Fix logic: creating documents inside restricted containers
+    - disallow users from creating restricted docs they can't access
+    - disallow  "Create Document Here" and "Create Weblink Here" under restricted parents
+* [#MODX-572] new Elements must be given unique names
+    - applies only to elements created with "New..." buttons
+    - templates, tvs, plugins, snippets, chunks, modules
+	- Removed isNumber function, not needed since PHP < 4
 * [#MODX-620] Add boolean support to Datagrid class
-* [#MODX-446] Implement Soushi's path for large site cache optimizations
-* Updated installer styling
-* [#MODX-410] Fix document permissions inheriting (for users without access to manage document permissions)
-* Updated snoopy class to version 1.2.4 (used by magpierss).
-* [#MODX-320] Updated the logo for 3 default manager themes.
+* [#MODX-446] Committing Soushi's cache sync patch (re: optimizations to cache syncing when the site has a large number of documents)
+* [#MODX-686] Major updates to Dutch language file
+* [#MODX-582] Update and alphabetize default upload-able file types for new installs. (Also removes php files from list)
+* [#MODX-457] Updates to Swedish language file
+* [#MODX-363] missing URL types for cleaning in save content processor
+* [#MODX-701] Polish updates
+* [#MODX-713] Brazillian Portuguese updates
+* [#MODX-580] Update Italian language files
+* [#MODX-515] Fix non-clickable view unpublished role label
+* [#MODX-724] Reference wiki page for fix for multi-server/cloud deployments and unexpected logoffs
+* [#MODX-734] Typo in language file it's->its
+* [#MODX-410] access permissions will be inherited from parent when user creates new child but and does not have role permission for access permissions
 * [#MODX-724] Create .htaccess template to set the session paths out of shared /tmp/ directories which can lead to loosing sessions from aggressive garbage collection.
-* [#AJAXSEARCH-31] and [#AJAXSEARCH-32] fixed.
-* [#MODX-220] Update language files.
-* [#MODX-394] Update Russian installation file.
+* [#MODx-394] Update Russian installation file per http://modxcms.com/forums/index.php/topic,34998.msg212346/topicseen.html#msg212346
 * [#MODX-715] Fix .jp lang file for incorrect hard-coded link
-* Updated AjaxSearch to release 1.8.2.
-* [#MODX-541] Fix the include statement in getUserData() method.
-* [#MODX-650]  bad reference to csshover.htc (now csshover2.htc).
-* Updated TinyMCE to release 3.2.4.1.
+* [#MODX-541] Fix the include statement in getUserData() method
+* [#MODX-650] bad reference to csshover.htc (now csshover2.htc)
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users.
+* Upgrade Add-on: AjaxSearch 1.8.3
+* Updated Add-on: TinyMCE 3.2.4.1
+* Update English language to have clearer and simpler instructions.
+* Fix the Template Variable "Lock variable for editing" checkbox
+* Removed erroneous parameter in isFrontend() method call
+* Exclude /assets and /manager by default from MODx rewrite and to comment out example.com -> www.example.com rule by default
+* Fix bug when login page language file was missing translation strings. Now falls back to main English file.
+* New installer skin and fixes
+* Updating language to be in line with Revo. (mainly: Resources -> Elements and resource browser -> File Browser)
+* Added additional database diagnostic info to system info page (auto-generated paths)
+* Moving Manager login/welcome/blocked templates into /assets/templates/manager to make upgrades easier
+* Moving Manager Help pages into /assets/templates/help to make upgrades easier
+* Removed deprecated themes for Evo 1.0 release
+* New MODx Carbon default theme for MODx Evolution 1.0 release
+* Updated snoopy class to version 1.2.4 (used by magpierss).
 
 MODx 0.9.6.3 (rev 4565 - December 17, 2008)
 ===================================
