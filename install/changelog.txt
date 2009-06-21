@@ -2,7 +2,7 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5053 - May 28, 2009)
+MODx Evolution 1.0.0 (rev 5169 - June 21, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
@@ -48,6 +48,7 @@ Bugfixes & Feature Requests:
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
+* Refactored DocManager module to remove Prototype dependencies (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions.
 * Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users.
 * Upgrade Add-on: AjaxSearch 1.8.3
 * Updated Add-on: TinyMCE 3.2.4.1
