@@ -12,8 +12,8 @@ $dm->ph['ajax.endpoint'] = MODX_SITE_URL.'assets/modules/docmanager/tv.ajax.php'
 $dm->ph['calendar.path'] = MODX_SITE_URL.'manager/media/';
 
 if (isset($_POST['tabAction'])) {
-    $dmb->handlePostback();
+	$dmb->handlePostback();
 } else {
-    $dmf->getViews();
-    echo $dm->parseTemplate('main.tpl', $dm->ph);
+	$dmf->getViews();
+	echo $dm->parseTemplate('main.tpl', $dm->ph);
 }
