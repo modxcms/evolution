@@ -16,27 +16,23 @@ if ($manager_theme) {
 	$manager_theme  = '';
 }
 
-// Get table names (alphabetical)
 $tbl_site_templates         = $modx->getFullTableName('site_templates');
 $tbl_site_tmplvar_templates = $modx->getFullTableName('site_tmplvar_templates');
 $tbl_site_tmplvars          = $modx->getFullTableName('site_tmplvars');
 
 $basePath = $modx->config['base_path'];
 $siteURL = $modx->config['site_url'];
-$include = 'SLLists.class.php';
 
-require_once($include);
-$sortableLists = new SLLists($siteURL.'manager/media/script/scriptaculous/');
-$sortableLists->debug = FALSE;
 $updateMsg = '';
 
-if(isset($_POST['sortableListsSubmitted'])) {
+if(isset($_POST['listSubmitted'])) {
 	$updateMsg .= '<span class="warning" id="updated">Updated!<br /><br /></span>';
 	foreach ($_POST as $listName=>$listValue) {
-		if ($listName == 'sortableListsSubmitted') continue;
-		$orderArray = $sortableLists->getOrderArray($listValue,$listName.'List');
-		foreach($orderArray as $item) {
-			$sql = 'UPDATE '.$tbl_site_tmplvar_templates.' SET rank='.$item['order'].' WHERE tmplvarid='.$item['element'].' AND templateid='.$_REQUEST['id'];
+		if ($listName == 'listSubmitted') continue;
+		$orderArray = explode(';', rtrim($listValue, ';'));
+		foreach($orderArray as $key => $item) {
+			$tmplvar = ltrim($item, 'item_');
+			$sql = 'UPDATE '.$tbl_site_tmplvar_templates.' SET rank='.$key.' WHERE tmplvarid='.$tmplvar.' AND templateid='.$_REQUEST['id'];
 			$modx->db->query($sql);
 		}
 	}
@@ -57,13 +53,11 @@ $sql = 'SELECT tv.name AS `name`, tv.id AS `id`, tr.templateid, tr.rank, tm.temp
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 
-$sortableLists->addList($_REQUEST['id'].'List',$_REQUEST['id']);
-
 if($limit>1) {
 	for ($i=0;$i<$limit;$i++) {
 		$row = $modx->db->getRow($rs);
-		if ($i == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br/><ul id="'.$row['templateid'].'List" class="sortableList">';
-		$evtLists .= '<li id="item_'.$row['id'].'">'.$row['name'].'</li>';
+		if ($i == 0) $evtLists .= '<strong>'.$row['templatename'].'</strong><br/><ul id="sortlist" class="sortableList">';
+		$evtLists .= '<li id="item_'.$row['id'].'" class="sort">'.$row['name'].'</li>';
 	}
 }
 
@@ -75,9 +69,8 @@ $header = '
 <head>
 	<title>MODx</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_charset.'" />
-	<link rel="stylesheet" type="text/css" href="media/style/'.$manager_theme.'style.css" />';
-
-$header .= $sortableLists->printTopJS();
+	<link rel="stylesheet" type="text/css" href="media/style/'.$manager_theme.'style.css" />
+	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>';
 
 $header .= '
     <style type="text/css">
@@ -90,10 +83,6 @@ $header .= '
 		}
 
 		li {list-style:none;}
-
-		.tplbutton {
-			text-align: right;
-		}
 
 		ul.sortableList {
 			padding-left: 20px;
@@ -112,56 +101,34 @@ $header .= '
 			background-image: url("media/style/'.$manager_theme.'images/bg/grid_hdr.gif");
 			background-repeat: repeat-x;
 		}
-
-		#bttn .bttnheight {
-			height: 25px !important;
-			padding: 0px;
-			padding-top: 6px;
-			float: left;
-			vertical-align: middle !important;
-		}
-		#bttn a{
-			cursor: default !important;
-			font: icon !important;
-			color: black !important;
-			border: 0px !important;
-			padding: 5px 5px 7px 5px!important;
-			white-space: nowrap !important;
-			vertical-align: middle !important;
-			background: transparent !important;
-			text-decoration: none;
-		}
-
-		#bttn a:hover {
-			border: 1px solid darkgreen !important;
-			padding: 4px 4px 6px 4px !important;
-			background-image: url("media/style/'.$manager_theme.'images/bg/button_dn.gif") !important;
-			text-decoration: none;
-		}
-
-		#bttn a img {
-			vertical-align: middle !important;
-		}
-
-        #sortableListForm {display:none;}
 	</style>
-    <script type="text/javascript" language="JavaScript">
+    <script type="text/javascript">
         function save() {
-            populateHiddenVars();
-        	if (document.getElementById("updated")) {new Effect.Fade(\'updated\', {duration:0});}
-        	new Effect.Appear(\'updating\',{duration:0.5});
         	setTimeout("document.sortableListForm.submit()",1000);
     	}
+    		
+    	window.addEvent(\'domready\', function() {
+	       new Sortables($(\'sortlist\'), {
+	           onComplete: function() {
+	               var list = \'\';
+	               $$(\'li.sort\').each(function(el, i) {
+	                   list += el.id + \';\';
+	               });
+	               $(\'list\').value = list;
+	           }
+	       });
+	    });
 	</script>';
 
 $header .= '</head>
 <body ondragstart="return false;">
 
-<div class="subTitle" id="bttn">
-	<div class="bttnheight"><a id="Button1" onclick="save();"><img src="media/style/'.$manager_theme.'images/icons/save.gif"> '.$_lang['save'].'</a></div>
-	<div class="bttnheight"><a id="Button2" onclick="document.location.href=\'index.php?a=16&amp;id='.$_REQUEST['id'].'\';"><img src="media/style/'.$manager_theme.'images/icons/cancel.gif"> '.$_lang['cancel'].'</a></div>
-	<div class="stay">  </div>
-</div>
+    <table cellpadding="0" cellspacing="0" class="actionButtons">
+        <tr>
+        	<td id="Button1"><a href="#" onclick="save();"><img src="media/style/'.$manager_theme.'images/icons/save.gif"> '.$_lang['save'].'</a></td>
+			<td id="Button2"><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$_REQUEST['id'].'\';"><img src="media/style/'.$manager_theme.'images/icons/cancel.gif"> '.$_lang['cancel'].'</a></td></div>
+		</tr>
+	</table>
 
 <div class="sectionHeader"><img src="media/style/'.$manager_theme.'images/misc/dot.gif" alt="." />&nbsp;';
 
@@ -178,10 +145,10 @@ echo $evtLists;
 
 echo $footer;
 
-echo $sortableLists->printForm('', 'POST', 'Submit', 'button');
+echo '<form action="" method="post" name="sortableListForm" style="display: none;">
+            <input type="hidden" name="listSubmitted" value="true" />
+            <input type="text" id="list" name="list" value="" />
+</form>';
 
-echo '<br/>';
-
-echo $sortableLists->printBottomJS();
 
 ?>
