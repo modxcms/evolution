@@ -2,11 +2,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5170 - June 21, 2009)
+MODx Evolution 1.0.0 (rev 5172 - June 21, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-209] Amended original patch: remove urlencode() call for viewable files (i.e. images) when generating the preview buttons in the file manager.
 * [#MODX-85] Removed transliteration code from core and turn into a plugin
     - Supports multiple languages
     - Template Variable can override transliteration table (file) per-document/section (supports @INHERIT)
