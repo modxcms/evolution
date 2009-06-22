@@ -2,7 +2,7 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5184 - June 22, 2009)
+MODx Evolution 1.0.0 (rev 5185 - June 22, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
@@ -50,7 +50,7 @@ Bugfixes & Feature Requests:
 Additional Improvements & Updates:
 --------------------------------------------
 * Demo content updates
-* Removed SLLists.class.php from core distribution, no longer used.
+* Removed Prototype JS and SLLists.class.php from core distribution, no longer used.
 * Convert manager login page to use mootools.
 * Convert the 'Sort TV by template' and 'Plugin Execution Ordering' functionality to use mootools, also fix the button CSS styling on those pages
 * Refactored DocManager module to remove Prototype dependencies (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions.
