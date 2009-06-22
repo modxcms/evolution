@@ -51,38 +51,40 @@
 	.loginMessage {font-size:11px;color: #999;padding-top: 20px;}
     </style>
 
-    <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
+    <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 
     <script type="text/javascript">
     /* <![CDATA[ */
         if (top.frames.length!=0) {
             top.location=self.document.location;
         }
+        
+        window.addEvent('domready', function() {
+            $('submitButton').addEvent('click', function(e) {
+                 e = new Event(e).stop();
+                 params = 'ajax=1&' + $('loginfrm').toQueryString();
+                 url = 'processors/login.processor.php';
+                 new Ajax(url,
+                    {
+                        method: 'post',
+                        postBody: params,
+                        onComplete:ajaxReturn
+                    }
+                ).request();
+                $$('input').setProperty('readonly', 'readonly');
+            });     
+        });
 
-        function doLogin() {
-            var f, values;
-            if(!self.Ajax) document.loginfrm.submit();
-            else {
-                f = $('loginfrm');
-                params = 'ajax=1&' + Form.serialize(f);
-                url = 'processors/login.processor.php';
-                new Ajax.Request(url,{method:'post',parameters:params,onComplete:ajaxReturn});
-                Form.disable(f);
-                return false;
-            }
-        }
         function ajaxReturn(response) {
-            var text = response.responseText;
-            var header = text.substr(0,9)
-            if (header.toLowerCase()=='location:') top.location = text.substr(10);
+            var header = response.substr(0,9);
+            if (header.toLowerCase()=='location:') top.location = response.substr(10);
             else {
                 var cimg = $('captcha_image');
-                if (typeof(cimg) != 'undefined') {
+                if (cimg) {
                 	cimg.src = 'includes/veriword.php?rand=' + Math.random();
                 }
-                var f = $('loginfrm');
-                Form.enable(f);
-                alert(text);
+                $$('input').removeProperty('readonly');
+                alert(response);
             }
         }
     /* ]]> */
@@ -106,7 +108,7 @@
             <div>[+captcha_image+]</div>
             [+captcha_input+]
             <input type="checkbox" id="rememberme" name="rememberme" tabindex="4" value="1" class="checkbox" [+remember_me+] /><label for="rememberme" style="cursor:pointer">[+remember_username+]</label>
-            <input type="submit" class="login" id="submitButton" value="[+login_button+]" onclick="return doLogin();" />
+            <input type="submit" class="login" id="submitButton" value="[+login_button+]" />
             <!-- anything to output before the login box via a plugin ... like the forgot password link? -->
             [+OnManagerLoginFormRender+]
         </div>
