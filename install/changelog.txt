@@ -50,7 +50,7 @@ Bugfixes & Feature Requests:
 Additional Improvements & Updates:
 --------------------------------------------
 * Convert manager login page to use mootools.
-* Convert the 'Sort TV by template' functionality to use mootools, also fix the button CSS styling on that page
+* Convert the 'Sort TV by template' and 'Plugin Execution Ordering' functionality to use mootools, also fix the button CSS styling on those pages
 * Refactored DocManager module to remove Prototype dependencies (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions.
 * Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users.
 * Upgrade Add-on: AjaxSearch 1.8.3
