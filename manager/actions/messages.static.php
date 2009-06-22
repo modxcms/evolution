@@ -182,7 +182,7 @@ $dotablestuff = 1;
       <td ><?php echo $message['messageread']==0 ? "<img src='media/style/" . ($manager_theme ? "$manager_theme/":"") ."images/icons/new1-09.gif'>" : ""; ?></td>
       <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td>
       <td ><?php echo $sendername; ?></td>
-      <td ><?php echo $message['private']==0 ? "No" : "Yes"; ?></td>
+      <td ><?php echo $message['private']==0 ? $_lang['no'] : $_lang['yes'] ; ?></td>
       <td ><?php echo strftime('%d-%m-%y, %H:%M:%S', $message['postdate']+$server_offset_time); ?></td>
     </tr>
     <?php
