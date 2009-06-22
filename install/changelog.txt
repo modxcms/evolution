@@ -49,6 +49,9 @@ Bugfixes & Feature Requests:
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
+* Updated RSS feeds to more manageable number of entries for welcome page. 
+* Removed dedicated RTL theme as all RTL issues now driven from pure CSS in all themes
+* Removed legacy Javascript fils from Manager
 * Demo content updates
 * Removed Prototype JS and SLLists.class.php from core distribution, no longer used.
 * Convert manager login page to use mootools.
