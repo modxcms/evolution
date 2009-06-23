@@ -7,6 +7,7 @@ MODx Evolution 1.0.0 (rev 5185 - June 22, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-821] Added Hebrew Manager translation
 * [#MODX-209] Amended original patch: remove urlencode() call for viewable files (i.e. images) when generating the preview buttons in the file manager.
 * [#MODX-85] Removed transliteration code from core and turn into a plugin
     - Supports multiple languages
@@ -15,7 +16,7 @@ Bugfixes & Feature Requests:
     - Add OnStripAlias parser/system event
 * [#MODX-445] Fix case where deleted docs with the same alias as another document caused a 404 response. Remove deleted docs from site cache.
 * [#MODX-593] Add missing summary/introtext to Weblink manager page
-* [#MODX-220] Manager language updates for sorting and formatting consistency across loanguages
+* [#MODX-220] Manager language updates for sorting and formatting consistency across languages
 * [#MODX-393] Show Protected Pages issue solved by Thomas Leiritz
 * [#MODX-516] and [#MODX-397] 
     - fix to display of Access Permissions depending on Role permissions
@@ -49,6 +50,7 @@ Bugfixes & Feature Requests:
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
+* Updates to most manager and installer language file translations
 * Updated RSS feeds to more manageable number of entries for welcome page. 
 * Removed dedicated RTL theme as all RTL issues now driven from pure CSS in all themes
 * Removed legacy Javascript fils from Manager
