@@ -79,9 +79,9 @@ if($php_ver_comp < 0) {
 // set some runtime options
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
 if(version_compare(phpversion(), "4.3.0")>=0) {
-    set_include_path($incPath); // this now works, above code did not?
+    set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 } else {
-    ini_set("include_path", $incPath); // include path the old way
+    ini_set("include_path", $incPath); // include path the old way (note we don't have PATH_SEPARATOR before 4.3.0, so we're not appending to the existing include path.. it's an edge case at this point)
 }
 
 @set_magic_quotes_runtime(0);
