@@ -2697,7 +2697,7 @@ class SystemEvent {
     }
 
     function stopPropagation() {
-        $_propagate= false;
+        $this->_propagate= false;
     }
 
     function _resetEventObject() {
