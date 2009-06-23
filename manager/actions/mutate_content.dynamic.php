@@ -44,6 +44,7 @@ else    $manager_theme  = '';
 
 // Get table names (alphabetical)
 $tbl_active_users               = $modx->getFullTableName('active_users');
+$tbl_categories                 = $modx->getFullTableName('categories');
 $tbl_document_group_names       = $modx->getFullTableName('documentgroup_names');
 $tbl_member_groups              = $modx->getFullTableName('member_groups');
 $tbl_membergroup_access         = $modx->getFullTableName('membergroup_access');
@@ -587,10 +588,25 @@ if (is_array($evtOut))
 				<td><select id="template" name="template" class="inputBox" onchange="templateWarning();" style="width:300px">
 					<option value="0">(blank)</option>
 <?php
-				$sql = 'SELECT templatename, id FROM '.$tbl_site_templates.' ORDER BY templatename ASC';
+
+				$sql = 'SELECT t.templatename, t.id, c.category FROM '.$tbl_site_templates.' t LEFT JOIN '.$tbl_categories.' c ON t.category = c.id ORDER BY c.category, t.templatename ASC';
 				$rs = mysql_query($sql);
 
+				$currentCategory = '';
 				while ($row = mysql_fetch_assoc($rs)) {
+					$thisCategory = $row['category'];
+					if($thisCategory == null) {
+						$thisCategory = $_lang["no_category"];
+					}
+					if($thisCategory != $currentCategory) {
+						if($thisCategory != '') {
+							echo "\t\t\t\t\t</optgroup>\n";							
+						}
+						echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
+						$closeOptGroup = true;
+					} else {
+						$closeOptGroup = false;
+					}
 					if (isset($_REQUEST['newtemplate'])) {
 						$selectedtext = $row['id'] == $_REQUEST['newtemplate'] ? ' selected="selected"' : '';
 					} else {
@@ -599,6 +615,9 @@ if (is_array($evtOut))
 						else    $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
 					}
 					echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
+				}
+				if($thisCategory != '') {
+					echo "\t\t\t\t\t</optgroup>\n";							
 				}
 ?>				</select>&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_template_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['document_opt_menu_title']?></span></td>
