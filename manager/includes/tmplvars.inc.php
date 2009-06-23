@@ -35,7 +35,7 @@
 				break;
 			case "date":
                 if($field_value=='') $field_value=0;
-                $cal = 'cal' . str_replace('-','_',$field_name);
+                $cal = 'cal' . str_replace('-','_', urldecode($field_name));
 
 				$field_html .=  '<input id="tv'.$field_name.'" name="tv'.$field_name.'" type="hidden" value="' . ($field_value==0 || !isset($field_value) ? "" : $field_value) . '" onblur="documentDirty=true;">';
 
