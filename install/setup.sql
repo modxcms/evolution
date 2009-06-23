@@ -790,6 +790,9 @@ UPDATE {PREFIX}documentgroup_names AS dgn
   SET dgn.private_memgroup = (mga.membergroup IS NOT NULL),
       dgn.private_webgroup = (wga.webgroup IS NOT NULL);
 
+
+UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
+
 # ]]upgrade-able
 
 

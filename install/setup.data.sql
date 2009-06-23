@@ -86,6 +86,7 @@ REPLACE INTO `{PREFIX}site_content` VALUES (33, 'document', 'text/html', 'Gettin
 
 REPLACE INTO `{PREFIX}site_content` VALUES (37, 'document', 'text/html', '[*loginName*]', 'The page you''re trying to reach requires a login', '', 'blog-login', '', 1, 0, 0, 0, 0, '', '<p>In order to add a blog entry, you must be logged in as a Site Admin webuser. Also, commenting on posts requires a login. <a href="[~6~]">Contact the site owner</a> for permissions to create new post, or <a href="[~5~]">create a web user account</a> to automatically receive commenting privileges. If you already have an account, please login below.</p>\r\n\r\n[!WebLogin? &tpl=`FormLogin` &loginhomeid=`3`!]', 1, 4, 12, 0, 0, 1, 1144904400, 1, 1158599931, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 1);
 
+
 REPLACE INTO `{PREFIX}site_content` VALUES (46, 'document', 'text/html', 'Thank You', '', '', 'thank-you', '', 1, 0, 0, 0, 0, '', '<h3>Thank You!</h3>\r\n<p>We do appreciate your feedback. Your comments have been submitted to our office and hopefully someone will bother to actually read it. You should also receive a copy of the message in your inbox.</p>\r\n<p>Please be assured that we will do our best not to ignore you, but if today''s a Monday please try again in a few days.</p>\r\n', 1, 4, 13, 1, 1, 1, 1159302141, 1, 1159302892, 0, 0, 0, 1159302182, 1, '', 0, 0, 0, 0, 0, 0, 1);
 
 

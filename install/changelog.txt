@@ -7,10 +7,16 @@ MODx Evolution 1.0.0 (rev 5185 - June 22, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-806] Add option groups to template chooser in Manager
+* [#MODX-571] Fix TV date picker when special characters in TV name
+* [#MODX-588] Missing else in document parser that orphaned a small piece of code
+* [#MODX-608] Missing "$this->" in SystemEvent::stopPropagation()
+* [#MODX-592] Site Cache improvement for only storing doctypes that are different from text/html in cache files
+* [#MODX-681] Manager include path fix for occasional errors and working better with third-party libraries
 * [#MODX-449] Incorrect language setting for RTE used in front end instances at install
 * [#MODX-812] Added Hebrew Manager translation
 * [#MODX-209] Amended original patch: remove urlencode() call for viewable files (i.e. images) when generating the preview buttons in the file manager.
-* [#MODX-85] Removed transliteration code from core and turn into a plugin
+* [#MODX-85]  Removed transliteration code from core and turn into a plugin
     - Supports multiple languages
     - Template Variable can override transliteration table (file) per-document/section (supports @INHERIT)
  	- Move stripAlias function into parser
@@ -34,7 +40,7 @@ Bugfixes & Feature Requests:
 * [#MODX-686] Major updates to Dutch language file
 * [#MODX-582] Update and alphabetize default upload-able file types for new installs. (Also removes php files from list)
 * [#MODX-457] Updates to Swedish language file
-* [#MODX-363] missing URL types for cleaning in save content processor
+* [#MODX-363] Missing URL types for cleaning in save content processor
 * [#MODX-701] Polish updates
 * [#MODX-713] Brazillian Portuguese updates
 * [#MODX-580] Update Italian language files
@@ -51,9 +57,10 @@ Bugfixes & Feature Requests:
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
-* Many updates to most manager and installer language file translations
+* Many updates to Manager and Installer language translations
 	- Updating language to be in line with Revo. (Resources -> Elements, resource browser -> File Browser, Documents -> Resources)
 	- Simplify language and remove overly-wordy phrases
+	- New language strings where appropriate and needed
 * Remove outdated Javascript files no longer used
 	- Prototype and Scriptaculous JS and SLLists.class.php from core distribution, no longer used 
 	- Update demo content to remove Prototype/Scriptaculous dependencies
@@ -72,6 +79,7 @@ Additional Improvements & Updates:
 * New MODx Carbon default theme for MODx Evolution 1.0 release
 	- Removed deprecated themes for Evo 1.0 release
 	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users
+	- Remove Bottom Button Bar plugin due to new static button bar similar to Revo
 * Make upgrades between versions simpler
  	- Moving Manager login/welcome/blocked templates into /assets/templates/manager
 	- Moving Manager Help pages into /assets/templates/help
