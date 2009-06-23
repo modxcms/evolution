@@ -4,8 +4,8 @@
  * Function:       Language file.
  * Encoding:       UTF8
  * Author:         The MODx Project Team
- * Date:           29 May 2009
- * Version:        2.01
+ * Date:           22 June 2009
+ * Version:        2.0.2
  * MODx version:   Evolution 1.0
 */
 $_lang["about_msg"] = 'MODx is a <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
@@ -209,8 +209,8 @@ $_lang["document_alias"] = 'Document\'s alias';
 $_lang["document_alias_help"] = 'Set the URL alias to make the document accessible as http://example.com/alias. This only works friendly URLs are enabled in the site configuration.';
 $_lang["document_content"] = 'Document content';
 $_lang["document_description"] = 'Description';
-$_lang["document_description_help"] = 'You can enter an optional description of the document here.';
-$_lang["document_long_title_help"] = 'Enter a longer title for your document. This is handy for search engines, and might be more descriptive for your document.';
+$_lang["document_description_help"] = 'Enter an optional description of this Resource.';
+$_lang["document_long_title_help"] = 'Enter an optional longer title for your Resource. This can be used for automatica document header tags for search engines, and might be more descriptive for your Resource.';
 $_lang["document_metatag_help"] = 'Select the META tags or keywords you wish to assign to this document. Hold down the CTRL key to select multiple keywords or meta tags.';
 $_lang["document_opt_contentdispo"] = 'Content Disposition';
 $_lang["document_opt_contentdispo_help"] = 'Use the content disposition field to specify how this document will be handled by the web browser. For file downloads select the Attachment option.';
@@ -219,9 +219,9 @@ $_lang["document_opt_emptycache_help"] = 'Leaving this field checked will make M
 $_lang["document_opt_folder"] = 'Container?';
 $_lang["document_opt_folder_help"] = 'Check this to make the document also act as a container for other documents. A \'container\' is like a folder, only it can also have content.';
 $_lang["document_opt_menu_index"] = 'Menu index';
-$_lang["document_opt_menu_index_help"] = 'Menu Index is a field you can use for sorting document in your menu snippet(s). You can also use it for any other purpose in your snippets.';
+$_lang["document_opt_menu_index_help"] = 'Menu Index is a field that can control sorting Resources, particularly in menu snippet(s). You can also use it for any other purpose in your snippets.';
 $_lang["document_opt_menu_title"] = 'Menu title';
-$_lang["document_opt_menu_title_help"] = 'Menu title is a field you can use to display a short title for the document inside your menu snippet(s) or modules.';
+$_lang["document_opt_menu_title_help"] = 'Menu title is an optional field used to display a short title in menu snippet(s) or modules.';
 $_lang["document_opt_published"] = 'Published?';
 $_lang["document_opt_published_help"] = 'Check this field to have the document published immediately after saving it.';
 $_lang["document_opt_richtext"] = 'Rich text?';
@@ -232,7 +232,7 @@ $_lang["document_opt_trackvisit_help"] = 'Log each visitor\'s visit to this page
 $_lang["document_overview"] = 'Document overview';
 $_lang["document_parent"] = 'Document parent';
 $_lang["document_parent_help"] = 'Click on the icon above to enable (or disable) selecting this document\'s parent. Next, click a document in the tree to set its new parent.';
-$_lang["document_permissions_error"] = 'Assign this Document to at least one Document Group which you can access.';
+$_lang["document_permissions_error"] = 'Assign this Resource to at least one Document Group to which you have access.';
 $_lang["document_setting"] = 'Document setting';
 $_lang["document_summary"] = 'Summary (introtext)';
 $_lang["document_summary_help"] = 'Type a brief summary of the document';
@@ -244,7 +244,7 @@ $_lang["documents_in_container"] = 'documents in this container';
 $_lang["documents_in_container_no"] = 'This container does not have child-documents.';
 $_lang["duplicate"] = 'Duplicate';
 $_lang["duplicate_alias_found"] = 'Document \'%s\' is already using the alias \'%s\'. Please enter a unique alias.';
-$_lang["duplicate_alias_message"] = 'Here you can select \'yes\' to allow duplicate aliases to be saved. <b>NOTE: This option should be used with \'Friendly alias path\' option set to \'Yes\' in order to avoid problems when referencing a document.</b>';
+$_lang["duplicate_alias_message"] = 'Select \'yes\' to allow duplicate aliases to be saved. <b>NOTE: This option should be used with \'Friendly alias path\' option set to \'Yes\' in order to avoid problems when referencing a document.</b>';
 $_lang["duplicate_alias_title"] = 'Allow duplicate aliases:';
 $_lang["duplicate_document"] = 'Duplicate Document';
 $_lang["duplicate_name_found_general"] = 'There is already a %s named \'%s\'. Please enter a unique name.';
@@ -259,9 +259,9 @@ $_lang["editor_css_path_message"] = 'Enter the path to your CSS file that you wi
 $_lang["editor_css_path_title"] = 'Path to CSS file:';
 $_lang["email"] = 'Email';
 $_lang["email_sent"] = 'Email sent';
-$_lang["emailsender_message"] = 'Here you can specify the e-mail address used when sending users their usernames and passwords.';
+$_lang["emailsender_message"] = 'Specify the e-mail address used when sending users their usernames and passwords.';
 $_lang["emailsender_title"] = 'E-mail address:';
-$_lang["emailsubject_message"] = 'Here you can specify the value of the subject of the signup e-mail.';
+$_lang["emailsubject_message"] = 'Specify the value of the subject of the signup e-mail.';
 $_lang["emailsubject_title"] = 'E-mail subject:';
 $_lang["empty_folder"] = 'This folder is empty';
 $_lang["empty_recycle_bin"] = 'Purge deleted documents';
@@ -286,8 +286,8 @@ $_lang["export_site_exporting_document"] = 'Exporting file <b>%s</b> of <b>%s</b
 $_lang["export_site_failed"] = '<span style="color:#990000">Failed!</span>';
 $_lang["export_site_html"] = 'Export site to HTML';
 $_lang["export_site_maxtime"] = 'Max export time:';
-$_lang["export_site_maxtime_message"] = 'Here you can specify the number of seconds MODx can take to export the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.';
-$_lang["export_site_message"] = '<p>Using this function you can export the entire site to HTML files. Please note, however, that you will lose a lot of the MODx functionality should you do so:</p><ul><li>Page reads on the exported files will not be recorded.</li><li>Interactive snippets will NOT work in exported files</li><li>Only regular documents will be exported, Weblinks will not be exported.</li><li>The export process may fail if your documents contain snippets which send redirection headers.</li><li>Depending on how you\'ve written your documents, style sheets and images, the design of your site may be broken. To fix this, you can save/move your exported files to the same directory where the main MODx index.php file is located.</li></ul><p>Please fill out the form and press \'Export\' to start the export process. The files created will be saved in the /assets/export directory, using the documents\' aliases as filenames when possible. While exporting your site, it\'s best to have the MODx configuration item \'Friendly aliases\' set to \'yes\'. Depending on the size of your site, the export may take a while.</p><p><em>Any existing files will be overwritten by the new files if their names are identical!</em></p>';
+$_lang["export_site_maxtime_message"] = 'Specify the number of seconds MODx can take to export the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.';
+$_lang["export_site_message"] = '<p>Use this to export the entire site to static HTML files. Please note, however, that you will lose a lot of the MODx functionality should you do so:</p><ul><li>Page reads on the exported files will not be recorded.</li><li>Interactive snippets will NOT work in exported files</li><li>Only regular documents will be exported, Weblinks will not be exported.</li><li>The export process may fail if your documents contain snippets which send redirection headers.</li><li>Depending on how you\'ve written your documents, style sheets and images, the design of your site may be broken. To fix this, save/move your exported files to the same directory where the main MODx index.php file is located.</li></ul><p>Please fill out the form and press \'Export\' to start the export process. The files created will be saved in the /assets/export directory, using the documents\' aliases as filenames when possible. While exporting your site, it\'s best to have the MODx configuration item \'Friendly aliases\' set to \'yes\'. Depending on the size of your site, the export may take a while.</p><p><em>Any existing files will be overwritten by the new files if their names are identical!</em></p>';
 $_lang["export_site_numberdocs"] = '<p><b>Found %s documents to export...</b></p>';
 $_lang["export_site_prefix"] = 'File prefix:';
 $_lang["export_site_start"] = 'Start export';
@@ -357,9 +357,9 @@ $_lang["friendly_alias_message"] = 'If you are using friendly URLs, and the docu
 $_lang["friendly_alias_title"] = 'Use friendly aliases:';
 $_lang["friendlyurls_message"] = 'This allows you to use search engine friendly URLs with MODx. Please note, this only works for MODx installations running on Apache, and you\'ll need to write a .htaccess file for this to work. See the .htaccess file included in the distribution for more info.';
 $_lang["friendlyurls_title"] = 'Use friendly URLs:';
-$_lang["friendlyurlsprefix_message"] = 'Here you can specify the prefix to use for friendly URLs. For example, a prefix setting of \'page\' will turn the URL /index.php?id=2 to the friendly URL /page2.html (assuming the suffix is set to .html). This way you can specify what your users (and search engines) see for links on your site.';
+$_lang["friendlyurlsprefix_message"] = 'Specify the friendly URLs prefix to control how Search Engines and Site Visitors access your site. For example, a prefix setting of \'page\' will turn the URL /index.php?id=2 to the friendly URL /page2.html (assuming the suffix is set to .html).';
 $_lang["friendlyurlsprefix_title"] = 'Prefix for friendly URLs:';
-$_lang["friendlyurlsuffix_message"] = 'Here you can specify the suffix for Friendly URLs. Specifying \'.html\' will append .html to all your friendly URLs.';
+$_lang["friendlyurlsuffix_message"] = 'Specify the Friendly URLs suffix. Specifying \'.html\' will append .html to all your friendly URLs.';
 $_lang["friendlyurlsuffix_title"] = 'Suffix for friendly URLs:';
 $_lang["functionnotimpl"] = 'Sorry!';
 $_lang["functionnotimpl_message"] = 'This function has not been implemented yet.';
@@ -372,8 +372,8 @@ $_lang["help_title"] = 'Help';
 $_lang["hide_tree"] = 'Hide tree';
 $_lang["home"] = 'Home';
 $_lang["htmlsnippet_desc"] = 'Description';
-$_lang["htmlsnippet_management_msg"] = 'Here you can select which chunk you wish to edit.';
-$_lang["htmlsnippet_msg"] = 'Here you can add/edit chunks. Remember, chunks are \'raw\' HTML code, so any PHP code won\'t be processed.';
+$_lang["htmlsnippet_management_msg"] = 'Select the chunk you wish to edit.';
+$_lang["htmlsnippet_msg"] = 'Add and edit chunks. Remember, chunks are \'raw\' HTML code, so any PHP code won\'t be processed.';
 $_lang["htmlsnippet_name"] = 'Chunk name';
 $_lang["htmlsnippet_title"] = 'Create/edit chunk';
 $_lang["icon"] = 'Icon';
@@ -390,7 +390,7 @@ $_lang["import_site_html"] = 'Import site from HTML';
 $_lang["import_site_importing_document"] = 'Importing file <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Max import time:';
 $_lang["import_site_maxtime_message"] = 'Specify the number of seconds allowed for the Content Manager to import the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.';
-$_lang["import_site_message"] = 'Using this function you can import an entire HTML site into the database. Please note that you will need to copy your html files and/or folders into the assets/import folder.<p />Please fill out the form and press \'Import\' to start the import process. The files imported will be saved into the selected location, using, where possible, the files name as the document\'s aliases, the page title as the document\'s title.';
+$_lang["import_site_message"] = '<p>Import an entire HTML site into your site database. Please note that you will need to copy your html files and/or folders into the /assets/import directory.</p><p>Please fill out the form and press \'Import\' to start the import process. The files imported will be saved into the selected location, using the files name as the document\'s aliases where possible, and the document title tag as the pagetitle.';
 $_lang["import_site_skip"] = '<span style="color:#990000">Skipped!</span>';
 $_lang["import_site_start"] = 'Start Import';
 $_lang["import_site_success"] = '<span style="color:#009900">Success!</span>';
@@ -408,7 +408,7 @@ $_lang["language_message"] = 'Select the language for the MODx Content Manager.'
 $_lang["language_title"] = 'Language:';
 $_lang["launch_site"] = 'View Site';
 $_lang["link_attributes"] = 'Link Attributes';
-$_lang["link_attributes_help"] = 'Enter optional attributes for a link for this page, such as "target=" or "rel=".';
+$_lang["link_attributes_help"] = 'Enter optional attributes for a link for this page, such as target=&quot;_blank&quot; or rel=&quot;external&quot;.';
 $_lang["list_mode"] = 'Turn on/off list mode - used to list all records in the grid.';
 $_lang["loading_doc_tree"] = 'Loading document tree...';
 $_lang["loading_menu"] = 'Loading menu...';
@@ -510,7 +510,7 @@ $_lang["mgrlog_query"] = 'Query logging';
 $_lang["mgrlog_query_msg"] = 'Please make a selection for viewing the logs. You can select log entries by date, but be aware that the dates you enter are not inclusive - to select every log entry for 01-01-2004, set \'date from\' to 01-01-2004 and \'date to\' to 02-01-2004.<br /><br />Message and action are usually the same. If you\'re searching for a specific message, it\'s best to set action to \'Any/All\'.';
 $_lang["mgrlog_results"] = 'No. of results';
 $_lang["mgrlog_searchlogs"] = 'Search logs';
-$_lang["mgrlog_sortinst"] = 'You can sort the table by clicking on the column headers. If the logs are becoming too large, you can <a href="index.php?a=55">empty</a> the logs. This will remove all log entries up to now, and cannot be undone!';
+$_lang["mgrlog_sortinst"] = 'Sort the table by clicking on the column headers. If the logs are too large, <a href="index.php?a=55">empty the log file</a> to remove all log entries up to now. This cannot be undone!';
 $_lang["mgrlog_time"] = 'Time';
 $_lang["mgrlog_user"] = 'User';
 $_lang["mgrlog_username"] = 'Username';
@@ -539,7 +539,7 @@ $_lang["modx_version"] = 'MODx version';
 $_lang["monday"] = 'Monday';
 $_lang["move"] = 'Move';
 $_lang["move_document"] = 'Move document';
-$_lang["move_document_message"] = 'You can move a document and all its children by selecting a new parent in the tree. If you select a document that is not already a container, it will be changed into one. Please click on the new parent in the tree.';
+$_lang["move_document_message"] = 'Move a document and all its children by selecting a new parent in the tree. If you select a document that is not already a container, it will be changed into one. Please click on the new parent in the tree.';
 $_lang["move_document_new_parent"] = 'Please select a new parent in the document tree.';
 $_lang["move_document_title"] = 'Move document';
 $_lang["name"] = 'Name';
@@ -590,7 +590,7 @@ $_lang["onlineusers_user"] = 'User';
 $_lang["onlineusers_userid"] = 'User\'s ID';
 $_lang["optimize_table"] = 'Click here to optimize this table';
 $_lang["page_data_cacheable"] = 'Cacheable';
-$_lang["page_data_cacheable_help"] = 'Leaving this field checked will allow the document to be saved to cache. If your document contains snippets, make sure this field is unchecked.';
+$_lang["page_data_cacheable_help"] = 'This allows the document to be saved to the site cache, and affects all snippets on the page.';
 $_lang["page_data_cached"] = '<b>Source retrieved from cache:</b>';
 $_lang["page_data_changes"] = 'Changes';
 $_lang["page_data_contentType"] = 'Content Type';
