@@ -51,31 +51,35 @@ Bugfixes & Feature Requests:
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
-* Updates to most manager and installer language file translations
-* Updated RSS feeds to more manageable number of entries for welcome page. 
-* Removed dedicated RTL theme as all RTL issues now driven from pure CSS in all themes
-* Removed legacy Javascript fils from Manager
-* Demo content updates
-* Removed Prototype JS and SLLists.class.php from core distribution, no longer used.
-* Convert manager login page to use mootools.
-* Convert the 'Sort TV by template' and 'Plugin Execution Ordering' functionality to use mootools, also fix the button CSS styling on those pages
-* Refactored DocManager module to remove Prototype dependencies (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions.
-* Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users.
+* Many updates to most manager and installer language file translations
+	- Updating language to be in line with Revo. (Resources -> Elements, resource browser -> File Browser, Documents -> Resources)
+	- Simplify language and remove overly-wordy phrases
+* Remove outdated Javascript files no longer used
+	- Prototype and Scriptaculous JS and SLLists.class.php from core distribution, no longer used 
+	- Update demo content to remove Prototype/Scriptaculous dependencies
+* Convert manager to use Mootools exclusively
+	- Manager Login page
+	- Convert the 'Sort TV by template' and 'Plugin Execution Ordering', also fix the button CSS styling on those pages
+ 	- DocManager module (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions
 * Upgrade Add-on: AjaxSearch 1.8.3
 * Updated Add-on: TinyMCE 3.2.4.1
-* Update English language to have clearer and simpler instructions.
 * Fix the Template Variable "Lock variable for editing" checkbox
 * Removed erroneous parameter in isFrontend() method call
 * Exclude /assets and /manager by default from MODx rewrite and to comment out example.com -> www.example.com rule by default
 * Fix bug when login page language file was missing translation strings. Now falls back to main English file.
-* New installer skin and fixes
-* Updating language to be in line with Revo. (mainly: Resources -> Elements and resource browser -> File Browser)
 * Added additional database diagnostic info to system info page (auto-generated paths)
-* Moving Manager login/welcome/blocked templates into /assets/templates/manager to make upgrades easier
-* Moving Manager Help pages into /assets/templates/help to make upgrades easier
-* Removed deprecated themes for Evo 1.0 release
+* New Installer skin and fixes
 * New MODx Carbon default theme for MODx Evolution 1.0 release
-* Updated snoopy class to version 1.2.4 (used by magpierss).
+	- Removed deprecated themes for Evo 1.0 release
+	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users
+* Make upgrades between versions simpler
+ 	- Moving Manager login/welcome/blocked templates into /assets/templates/manager
+	- Moving Manager Help pages into /assets/templates/help
+* Manager RSS feed improvements
+	- Updated RSS feeds to more manageable number of entries for welcome page. 
+ 	- Updated snoopy class to latest version 1.2.4 (used by magpierss).
+
+
 
 MODx 0.9.6.3 (rev 4565 - December 17, 2008)
 ===================================
