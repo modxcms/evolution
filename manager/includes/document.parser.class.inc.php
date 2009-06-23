@@ -348,7 +348,8 @@ class DocumentParser {
                 } else { /* not a valid id in terms of virtualDir, treat as alias */
                     $this->documentMethod= 'alias';
                     return $q;
-                }            
+                }
+            } else {
                 $this->documentMethod= 'id';
                 return $q;
             }
