@@ -875,7 +875,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('rb_base_dir','{IMAGEPATH}'),
 ('rb_base_url','{IMAGEURL}'),
 ('which_editor','TinyMCE'),
-('fe_editor_lang','english'),
+('fe_editor_lang','{MANAGERLANGUAGE}'),
 ('fck_editor_toolbar','standard'),
 ('fck_editor_autolang','0'),
 ('editor_css_path',''),
