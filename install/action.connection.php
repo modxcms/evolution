@@ -69,30 +69,30 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
   <h2><?php echo $_lang['connection_screen_connection_information']?></h2>
   <h3><?php echo $_lang['connection_screen_server_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_server_connection_note']?></p>
-  <div class="labelHolder"><label for="databasehost"><?php echo $_lang['connection_screen_database_host']?></label>
+  <p class="labelHolder"><label for="databasehost"><?php echo $_lang['connection_screen_database_host']?></label>
     <input id="databasehost" value="<?php echo isset($_POST['databasehost']) ? $_POST['databasehost']: $database_server ?>" name="databasehost" />
-  </div>
-  <div class="labelHolder"><label for="databaseloginname"><?php echo $_lang['connection_screen_database_login']?></label>
+  </p>
+  <p class="labelHolder"><label for="databaseloginname"><?php echo $_lang['connection_screen_database_login']?></label>
     <input id="databaseloginname" name="databaseloginname" value="<?php echo isset($_POST['databaseloginname']) ? $_POST['databaseloginname']: "" ?>" />
-  </div>
-  <div class="labelHolder"><label for="databaseloginpassword"><?php echo $_lang['connection_screen_database_pass']?></label>
+  </p>
+  <p class="labelHolder"><label for="databaseloginpassword"><?php echo $_lang['connection_screen_database_pass']?></label>
     <input id="databaseloginpassword" type="password" name="databaseloginpassword" value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']: "" ?>" />
-  </div>
+  </p>
   <div class="clickHere"><a id="servertest" href="#"><?php echo $_lang['connection_screen_server_test_connection']?></a></div>
   <div class="status" id="serverstatus"></div>
   <br />
   <h3><?php echo $_lang['connection_screen_database_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_database_connection_note']?></p>
-  <div class="labelHolder"><label for="database_name"><?php echo $_lang['connection_screen_database_name']?></label>
+  <p class="labelHolder"><label for="database_name"><?php echo $_lang['connection_screen_database_name']?></label>
     <input id="database_name" value="<?php echo isset($_POST['database_name']) ? $_POST['database_name']: $database_name ?>" name="database_name" />
-  </div>
-  <div class="labelHolder"><label for="tableprefix"><?php echo $_lang['connection_screen_table_prefix']?></label>
+  </p>
+  <p class="labelHolder"><label for="tableprefix"><?php echo $_lang['connection_screen_table_prefix']?></label>
     <input id="tableprefix" value="<?php echo isset($_POST['tableprefix']) ? $_POST['tableprefix']: $table_prefix ?>" name="tableprefix" />
-  </div>
+  </p>
 <?php
   if (($installMode == 0) || ($installMode == 2)) {
 ?>
-  <div class="labelHolder"><label for="database_connection_method"><?php echo $_lang['connection_screen_connection_method']?></label>
+  <p class="labelHolder"><label for="database_connection_method"><?php echo $_lang['connection_screen_connection_method']?></label>
     <div id="connection_method" name="connection_method">
       <select id="database_connection_method" name="database_connection_method">
         <option value="SET CHARACTER SET" <?php echo isset($database_connection_method) && $database_connection_method == 'SET CHARACTER SET' ? 'selected="selected"' : '' ?>>
@@ -103,17 +103,17 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
         </option>
       </select>
     </div>
-  </div>
+  </p>
 <?php
   }
 ?>
-  <div class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
+  <p class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
     <div id="collation" name="collation"><select id="database_collation" name="database_collation">
         <option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected >
           <?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>
         </option>
     </select></div>
-  </div>
+  </p>
   <div class="clickHere"><a id="databasetest" href="#"><?php echo $_lang['connection_screen_database_test_connection']?></a></div>
   <div class="status" id="databasestatus"></div>
 <?php
@@ -122,18 +122,18 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
   <div id="AUH" style="margin-top:1.5em;">
     <h2><?php echo $_lang['connection_screen_default_admin_user']?></h2>
     <p><?php echo $_lang['connection_screen_default_admin_note']?></p>
-    <div class="labelHolder"><label for="cmsadmin"><?php echo $_lang['connection_screen_default_admin_login']?></label>
+    <p class="labelHolder"><label for="cmsadmin"><?php echo $_lang['connection_screen_default_admin_login']?></label>
       <input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" />
-    </div>
-    <div class="labelHolder"><label for="cmsadminemail"><?php echo $_lang['connection_screen_default_admin_email']?></label>
+    </p>
+    <p class="labelHolder"><label for="cmsadminemail"><?php echo $_lang['connection_screen_default_admin_email']?></label>
       <input id="cmsadminemail" value="<?php echo isset($_POST['cmsadminemail']) ? $_POST['cmsadminemail']:"" ?>" name="cmsadminemail" />
-    </div>
-    <div class="labelHolder"><label for="cmspassword"><?php echo $_lang['connection_screen_default_admin_password']?></label>
+    </p>
+    <p class="labelHolder"><label for="cmspassword"><?php echo $_lang['connection_screen_default_admin_password']?></label>
       <input id="cmspassword" type="password" name="cmspassword" value="<?php echo isset($_POST['cmspassword']) ? $_POST['cmspassword']:"" ?>" />
-    </div>
-    <div class="labelHolder"><label for="cmspasswordconfirm"><?php echo $_lang['connection_screen_default_admin_password_confirm']?></label>
+    </p>
+    <p class="labelHolder"><label for="cmspasswordconfirm"><?php echo $_lang['connection_screen_default_admin_password_confirm']?></label>
       <input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" />
-    </div>
+    </p>
   </div>
   <br />
 <?php
