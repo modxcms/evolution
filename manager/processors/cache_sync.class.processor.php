@@ -140,7 +140,7 @@ class synccache{
 
 
 		// get content types
-		$sql = 'SELECT id, contentType FROM '.$modx->getFullTableName('site_content');
+		$sql = 'SELECT id, contentType FROM '.$modx->getFullTableName('site_content')." WHERE contentType != 'text/html'";
 		$rs = $modx->db->query($sql);
 		$limit_tmp = $modx->db->getRecordCount($rs);
 		$tmpPHP .= '$c = &$this->contentTypes;' . "\n";
