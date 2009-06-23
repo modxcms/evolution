@@ -8,7 +8,6 @@ if (!$modx->hasPermission('save_user')) {
 ?>
 <?php
 
-
 // Web alert -  sends an alert to web browser
 function webAlert($msg) {
 	global $id, $modx;
@@ -526,14 +525,14 @@ function saveUserSettings($id) {
 	// get user setting field names
 	$settings= array ();
 	foreach ($_POST as $n => $v) {
-		if (in_array($n, $ignore) || empty($v)) continue; // ignore blacklist and empties
+		if (in_array($n, $ignore) || trim($v) == '') continue; // ignore blacklist and empties
 
 		//if ($config[$n] == $v) continue; // ignore commonalities in base config
 
 		$settings[$n] = $v; // this value should be saved
 	}
 	foreach ($defaults as $k) {
-		if (isset($settings['default_'.$k]) && $_settings['default_'.$k] == '1')
+		if (isset($settings['default_'.$k]) && $settings['default_'.$k] == '1')
 			unset($settings[$k]);
 		unset($settings['default_'.$k]);
 	}

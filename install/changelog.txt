@@ -7,6 +7,7 @@ MODx Evolution 1.0.0 (rev 5185 - June 22, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-655] Correct a sanity check that was preventing the allow_manager_access setting being saved.
 * [#MODX-806] Add option groups to template chooser in Manager
 * [#MODX-571] Fix TV date picker when special characters in TV name
 * [#MODX-588] Missing else in document parser that orphaned a small piece of code
