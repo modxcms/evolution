@@ -10,50 +10,6 @@
  * Language:       French
  * Encoding:       UTF-8
  */
-$_lang["license"] = '<h2>MODx Contrat de Licence.</h2>
-<hr style="text-align:left;height:1px;width:90%;" />
-<h3>Vous devez accepter les termes du contrat de licence avant de poursuivre l\'installation.</h3>
-<p>L\'utilisation de ce logiciel est soumise à la licence GPL. Pour vous aider à comprendre ce qu\'est
-  la licence GPL et de quelle manière elle régit vos droits d\'utilisation de ce logiciel, nous vous en
-  proposons le résumé suivant:</p>
-<h3>La Licence Publique Générale GNU est une licence du logiciel libre.</h3>
-<p>Comme toute licence du logiciel libre, elle vous accorde les quatre libertés suivantes:</p>
-<ul>
-  <li>La liberté d\'utilisation du logiciel.</li>
-  <li>La liberté d\'étudier le fonctionnement du logiciel et de l\'adapter à vos besoins.</li>
-  <li>La liberté d\'en redistribuer des copies.</li>
-  <li>La liberté d\'améliorer le fonctionnement du logiciel et de rendre publiques vos modifications pour que celles-ci
-    profitent à toute la communauté.</li>
-</ul>
-<p>Vous pouvez exercer les libertés mentionnées dans le présent document à condition de respecter rigoureusement les principales
-  conditions de cette licence:</p>
-<ul>
-  <li>Vous devez apposer sur chaque copie, de manière ad hoc et parfaitement visible,
-    l\'avis de droit d\'auteur adéquat et une exonération de garantie ; garder intacts
-    tous les avis faisant référence à la présente Licence et à l\'absence de toute garantie ;
-    et fournir à tout destinataire du Logiciel autre que vous-même un exemplaire de la
-    Licence Générale Publique GNU en même temps que le Logiciel. Toute traduction de la Licence
-    Publique Générale GNU doit être accompagnée de la version originale de la Licence
-    Publique Générale GNU.</li>
-  <li>Si vous modifiez votre copie ou des copies du logiciel, ou n\'importe quelle
-    partie de celui-ci, vous avez le droit de redistribuer le travail dérivé à condition de le faire
-    sous les conditions imposées par la Licence Générale Publique GNU. Toute traduction de la Licence
-    Publique Générale GNU doit être accompagnée de la version originale de la Licence
-    Publique Générale GNU.</li>
-  <li>Si vous copiez ou distribuez le logiciel, vous devez l\'accompagner de l\'intégralité
-    du code source correspondant, sous une forme lisible par un ordinateur, ou de l\'accompagner
-    d\'une proposition écrite, valable pendant au moins trois ans, de fournir à tout tiers, une
-    copie intégrale du code source correspondant sous une forme lisible par un ordinateur.</li>
-  <li>Chacune de ces conditions peut être levée si vous obtenez l\'autorisation du
-    titulaire des droits.</li>
-  <li>Ce qui précède n\'affecte en rien vos droits en tant qu\'utilisateur (exceptions
-    au droit d\'auteur : copies réservées à l\'usage privé du copiste, courtes citations, parodie...)</li>
-</ul>
-<p>Ceci est un récapitulatif des claues principales de la Licence Générale Public GNU. En acceptant le contrat
-  de licence, vous vous engagez à respecter la licence GNU GPL dans son intégralité. Le résumé proposé ci-dessus
-  est uniquement destiné à vous faciliter sa compréhension et complétude n\'est pas garantie. Il est vivement
-  recommandé de lire la version intégrale de la <a href="http://www.gnu.org/copyleft/gpl.html" target=_blank>Licence Générale Publique GNU</a> avant de poursuivre l\'installation. Vous en trouverez également une copie dans le fichier de licence qui accompagne
-  la distribution de ce Logiciel.</p>';
 $_lang["alert_database_test_connection"] = 'Vous devez créer votre base de données ou tester la sélection de votre base de données!';
 $_lang["alert_database_test_connection_failed"] = 'Le test de sélection de votre base de données a échoué!';
 $_lang["alert_enter_adminconfirm"] = 'Le mot de passe administrateur et la confirmation du mot de passe ne correspondent pas!';

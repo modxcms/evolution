@@ -46,7 +46,6 @@ elseif ($installMode == 1) {
 <form name="install" id="install_form" action="index.php?action=summary" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
-    <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
     <input type="hidden" value="<?php echo trim($_POST['database_name'], '`') ?>" name="database_name" />
     <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />

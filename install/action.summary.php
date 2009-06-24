@@ -257,7 +257,6 @@ $nextButton= $errors > 0 ? $_lang['retry'] : $_lang['install'];
 <form name="install" id="install_form" action="index.php?action=<?php echo $nextAction ?>" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
-    <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
     <input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
     <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />
@@ -287,6 +286,9 @@ $modules = isset ($_POST['module']) ? $_POST['module'] : array ();
 foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]\" value=\"$module\" />\n";
 ?>
   </div>
+<p>
+<input type="checkbox" value="1" id="chkagree" name="chkagree" style="line-height:18px" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/><label for="chkagree" style="display:inline;float:none;line-height:18px;"> <?php echo $_lang['iagree_box']?> </label>
+</p>
     <p class="buttonlinks">
         <a href="javascript:document.getElementById('install_form').action='index.php?action=options&language=<?php $install_language?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
         <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $nextButton ?>"><span><?php echo $nextButton ?></span></a>

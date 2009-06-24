@@ -14,48 +14,6 @@
  * Date:           18 april 2009
  */
 setlocale (LC_ALL, 'ru_RU');
-$_lang["license"] = '<h2>Лицензионное соглашение MODx.</h2>
-<hr style="text-align:left;height:1px;width:90%;" />
-<h3>You must agree to the License before continuing installation.</h3>
-<p>Usage of this software is subject to the GPL license. To help you understand
-  what the GPL licence is and how it affects your ability to use the software, we
-  have provided the following summary:</p>
-<h3>The GNU General Public License is a Free Software license.</h3>
-<p>Like any Free Software license, it grants to you the four following freedoms:</p>
-<ul>
-  <li>The freedom to run the program for any purpose.</li>
-  <li>The freedom to study how the program works and adapt it to your needs.</li>
-  <li>The freedom to redistribute copies so you can help your neighbor.</li>
-  <li>The freedom to improve the program and release your improvements to the
-    public, so that the whole community benefits.</li>
-</ul>
-<p>You may exercise the freedoms specified here provided that you comply with
-  the express conditions of this license. The principal conditions are:</p>
-<ul>
-  <li>You must conspicuously and appropriately publish on each copy distributed an
-    appropriate copyright notice and disclaimer of warranty and keep intact all the
-    notices that refer to this License and to the absence of any warranty; and give
-    any other recipients of the Program a copy of the GNU General Public License
-    along with the Program. Any translation of the GNU General Public License must
-    be accompanied by the GNU General Public License.</li>
-  <li>If you modify your copy or copies of the program or any portion of it, or
-    develop a program based upon it, you may distribute the resulting work provided
-    you do so under the GNU General Public License. Any translation of the GNU
-    General Public License must be accompanied by the GNU General Public License.</li>
-  <li>If you copy or distribute the program, you must accompany it with the
-    complete corresponding machine-readable source code or with a written offer,
-    valid for at least three years, to furnish the complete corresponding
-    machine-readable source code.</li>
-  <li>Any of these conditions can be waived if you get permission from the
-    copyright holder.</li>
-  <li>Your fair use and other rights are in no way affected by the above.</li>
-</ul>
-<p>The above is a summary of the GNU General Public License. By proceeding, you
-  are agreeing to the GNU General Public Licence, not the above. The above is
-  simply a summary of the GNU General Public Licence, and its accuracy is not
-  guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public
-  License</a> in full before proceeding, which can also be found in the license
-  file distributed with this package.</p>';
 $_lang["alert_database_test_connection"] = 'Вы должны создать базу данных или проверить указанное значение!';
 $_lang["alert_database_test_connection_failed"] = 'Проверить указанную базу данных не удалось!';
 $_lang["alert_enter_adminconfirm"] = 'Пароль Администратора и подтверждение пароля не сходятся!';

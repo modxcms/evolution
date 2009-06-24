@@ -27,8 +27,8 @@ if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
 }
 
 $moduleName = "MODx";
-$moduleVersion = "Evolution 1.0.0.0";
-$moduleRelease = "2009-05-13";
+$moduleVersion = "Evolution 1.0.0";
+$moduleRelease = "04-Jul-2009";
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 $moduleSQLUpdateFile = "setup.updates.sql";
@@ -49,9 +49,9 @@ $isPostBack = (count($_POST));
 $action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
 
 // make sure they agree to the license
-if (!in_array($action, array ('language', 'welcome', 'license'))) {
-    if (!isset ($_POST['chkagree'])) $action= 'license';
-}
+#if (!in_array($action, array ('language', 'welcome', 'connection', 'options', 'license', 'mode', 'summary'))) {
+#    if (!isset ($_POST['chkagree'])) $action= 'license';
+#}
 
 include ('header.php');
 

@@ -13,27 +13,6 @@
  * Translation: Bj&oslash;rn Erik Sandbakk (Sylvaticus)
  * Date: 2008-05-22
  */
-$_lang["license"] = '<h2>MODx Lisensavtale</h2>
-<hr style="text-align:left;height:1px;width:100%;" />
-<h3>Du m&aring; godkjenne lisensen f&oslash;r installasjonen kan fortsette.</h3>
-<p>Bruk av dette programmet kommer inn under GPL-lisensen. For &aring; hjelpe deg &aring; forst&aring; hva GPL-lisensen er og hvordan den p&aring;virker dine muligheter til &aring; bruke dette programmet, har vi gjort f&oslash;lgende sammenfatning.</p>
-<h3>GNU General Public License (GPL) er en lisens for Fri programvare.</h3>
-<p>Som alle lisenser for Fri programvare gir den deg tilgang til f&oslash;lgende fire friheter:</p>
-<ul>
-  <li>Frihet til &aring; bruke programmet til alle form&aring;l.</li>
-  <li>Frihet til &aring; studere hvordan programmet fungerer og tilpasse det etter dine &oslash;nsker.</li>
-  <li>Frihet til &aring; distribuere kopier s&aring; du kan hjelpe din nabo.</li>
-  <li>Frihet til &aring; forbedre programmet og publisere dine forbedringer til almennheten, slik at hele samfunnet kan dra nyttet av dem.</li>
-</ul>
-<p>Du kan benytte ovenforst&aring;ende spesifiserte friheter forutsatt at du f&oslash;lger de uttrykkelige krav som lisensen uttaler. Kravene er i hovedsak:</p>
-<ul>
-  <li>Du m&aring; p&aring; enhver kopi du distribuerer, tydelig og p&aring; forst&aring;elig vis publisere en melding om copyright og en garantifraskrvning, beholde alle meldinger som referer til den her lisensen og frav&aelig;r av garanti, samt gi hver mottager av programmet en kopi av GNU GPL-lisensen sammen med programmet. Alle oversettelser av GNU GPL-lisensen m&aring; etterf&oslash;lges av originalen.</li>
-  <li>Om du modifiserer din kopi eller kopier av programmet eller deler av det, eller utvikler et program basert p&aring; det, kan du distribuere det resulterende arbeidet forutsatt at du gj&oslash;r det under GNU GPL-lisensen. Alle oversettelser av GNU GPL-lisensen m&aring; etterf&oslash;lges av originalen.</li>
-  <li>Om du kopierer eller distrinuerer programmet, m&aring; det etterf&oslash;lges av den motsvarende maskinlesbare kildekoden eller et skriftlig tilbud, gyldig minst tre &aring;r, om &aring; utlevere den motsvarende maskinlesbare kildekoden.</li>
-  <li>Ovenforst&aring;ende krav kan heves om du gis tillatelse av innehaveren av copyrighten.</li>
-  <li>Din rett til &aring; sitere samt endre andre rettigheter p&aring;virkes ikke av ovenforst&aring;ende.</li>
-</ul>
-<p>Ovenforst&aring;ende er en sammenfattning av GNU GPL-lisensen. Gjennom &aring; fortsette godkjenner du GNU GPL-licensen - ikke ovenforst&aring;ende. Ovenforst&aring;ende er en enkel sammenfattning og dens korrekthet kan ikke garanteres. Det oppfordres sterkt at du leser den fullstendige <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU GPL-licensen</a> f&oslash;r du fortsetter. Den finnes ogs&aring; i filen license.txt som distribueres sammen med det her programmet.</p>';
 $_lang["alert_database_test_connection"] = 'Du m&aring; opprette din database eller teste valget av database!';
 $_lang["alert_database_test_connection_failed"] = 'Testen p&aring; valg av database mislyktes!';
 $_lang["alert_enter_adminconfirm"] = 'Brukernavnet og passordet til administrasjonskontoen stemmer ikke!';

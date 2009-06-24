@@ -20,9 +20,14 @@ if (file_exists("../manager/includes/config.inc.php")) {
 }
 ?>
 <form name="install" id="install_form" action="index.php?action=connection" method="post">
+
+	<?php
+		echo '	<h2>' . $_lang['welcome_message_welcome'] . '</h2>';
+		echo '	<p>' . $_lang['welcome_message_text'] . ' ' . $_lang['welcome_message_start'] . '</p>';
+	?>
+
 	<div>
 		<input type="hidden" value="<?php echo $install_language?>" name="language" />
-		<input type="hidden" value="1" id="chkagree" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
 	</div>
 	<h2><?php echo $_lang['installation_mode']?></h2>
 	<table border="0" width="100%" style="margin-top:1em;">
@@ -59,7 +64,7 @@ if (file_exists("../manager/includes/config.inc.php")) {
 	</table>
 	<br />
     <p class="buttonlinks">
-        <a href="javascript:document.getElementById('install_form').action='index.php?action=license';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
+        <a href="javascript:document.getElementById('install_form').action='index.php?action=language';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
         <a style="display:inline;" href="javascript:if(document.getElementById('installmode2').checked){document.getElementById('install_form').action='index.php?action=options';}document.getElementById('install_form').submit();" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
     </p>
 </form>

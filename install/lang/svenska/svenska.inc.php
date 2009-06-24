@@ -14,53 +14,6 @@
  * Date: 2009-06-08
  */
 
-$_lang['license'] = '<h2>MODx Licensavtal</h2>
-<hr style="text-align:left;height:1px;width:90%;" />
-<h3>Du måste godkänna licensen innan installationen kan fortsätta.</h3>
-<p>Användning av den här mjukvaran lyder under GPL-licensen. För att hjälpa dig förstå
-  vad GPL-licensen är och hur den påverkar dina möjligheter att använda mjukvaran, så
-  har vi gjort följande sammanfattning.</p>
-<h3>GNU General Public License (GPL) är en licens för Fri Mjukvara.</h3>
-<p>Som alla licenser för Fri Mjukvara ger den dig följande fyra friheter:</p>
-<ul>
-  <li>Friheten att köra programmet för alla ändamål.</li>
-  <li>Friheten att studera hur programmet fungerar och anpassa det efter dina önskemål.</li>
-  <li>Friheten att distribuera kopior så att du kan hjälpa din granne. </li>
-  <li>Friheten att förbättra programmet och publicera dina förbättringar till
-    allmänheten, så att hela gemenskapen kan dra nytta av dom.</li>
-</ul>
-<p>Du kan åtnjuta de ovan specificerade friheterna förutsatt att du följer
-  de uttryckliga krav som licensen uttalar. De huvudsakliga kraven är:</p>
-<ul>
-  <li>Du måste på varje kopia du distribuerar, tydligt och på lämpligt sätt
-    publicera ett tillämpligt meddelande om copyright och en garantifriskrivning,
-    behålla alla meddelanden som refererar till den här licensen och frånvaron
-    av garanti samt ge varje mottagare av programmet en kopia av GNU GPL-licensen
-    tillsammans med programmet. Alla översättningar av GNU GPL-licensen måste
-    åtföljas av det oöversatta originalet.</li>
-
-  <li>Om du modifierar din kopia eller kopior av programmet eller någon del av det,
-    eller utvecklar ett program baserat på det, så får du distribuera det resulterande
-    arbetet förutsatt att du gör det under GNU GPL-licensen. Alla översättningar av
-    GNU GPL-licensen måste åtföljas av det oöversatta originalet.</li>
-
-  <li>Om du kopierar eller distribuerar programmet, så måste det åtföljas av den
-    motsvarande kompletta maskinläsbara källkoden eller ett skriftligt erbjudande,
-    giltigt minst tre år, att lämna ut den motsvarande kompletta maskinläsbara
-    källkoden.</li>
-
-  <li>Ovanstående krav kan hävas om du ges tillåtelse av innehavaren av copyrighten.</li>
-
-  <li>Din rätt att citera samt andra rättigheter påverkas inte av ovanstående.</li>
-</ul>
-<p>Ovanstående är en sammanfattning av GNU GPL-licensen. Genom att fortsätta godkänner du
-  GNU GPL-licensen - inte ovanstående. Ovanstående är en enkel sammanfattning och dess korrekthet
-  kan inte garanteras. En stark rekommendation är att du läser den fullständiga <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU GPL-licensen</a> innan du
-  fortsätter. Den återfinns också i filen license.txt som distribueras tillsammans med det här
-  programmet.<br />
-  Det finns en <a href="http://danielnylander.se/gpl/" target="_blank">inofficiell svensk
-  översättning</a>.</p>';
-
 $_lang["alert_database_test_connection"] = 'Du behöver skapa din databas eller testa det databasval du gjort!';
 $_lang["alert_database_test_connection_failed"] = 'Testet av ditt databasval har misslyckats!';
 $_lang["alert_enter_adminconfirm"] = 'Det administrativa lösenordet och bekräftelsen överensstämmer inte!';

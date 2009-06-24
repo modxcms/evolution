@@ -13,7 +13,7 @@ if ($handle = opendir("lang/")) {
 }
 sort($langs);
 ?>
-<form name="install" id="install_form" action="index.php?action=welcome" method="post">
+<form name="install" id="install_form" action="index.php?action=mode" method="post">
     <h2>Choose language:&nbsp;&nbsp;
     <select name="language">
 <?php

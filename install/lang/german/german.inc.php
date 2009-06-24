@@ -10,22 +10,6 @@
  * Language:       German
  * Encoding:       UTF-8
  */
-$_lang["license"] = '<h2>MODx Lizenzvereinbarung.</h2>
-<hr style="text-align:left;height:1px;width:90%;" />
-<h3>Sie m&uuml;ssen der Lizenz zustimmen bevor Sie mit der Installation fortfahren.</h3>
-<p>Die Software ist unter der GPL lizenziert. Das Benutzen der Software unterliegt den bestimmungen der GPL. Die GPL betrifft diese Software sowie Ihre Benutzung in folgender Weise:</p>
-<h3>Die GNU General Public License ist eine freie Software Lizenz.</h3>
-<p>Wie bei jeder freien Softwarelizenz haben Sie folgende Freiheiten:</p>
-<ul>
-  <li>Die Freiheit, das Programm zu jedem Zweck zu benutzen.</li>
-  <li>Die Freiheit das Programm zu studieren und es Ihren Bed&uuml;rfnissen anzupassen.</li>
-  <li>Die Freiheit, Kopien des Programms zu verbreiten und so dem N&auml;chsten zu helfen.</li>
-  <li>Die Freiheit, das Programm zu verbessern, weiter zu verbreiten und so der gesamten Nutzergemeinde zu helfen.</li>
-</ul>
-<p>Sie k&ouml;nnen diese Freiheiten aus&uuml;ben wenn Sie mit den Bedingungen der GNU GPL einverstanden erkl&auml;ren. Die Bedingungen finden Sie <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank">hier</a>.</p>
-<p>Das oben stehende ist eine Zusammenfassung der GNU GPL. Wenn Sie fortfahren, stimmen Sie den Bestimmungen der GNU General Public Licence zu, nicht dem hier beschriebenen. Oben stehendes stellt
-  nur eine Zusammenfassng dar, seine Richtigkeit kann nicht garantiert werden.&nbsp;Es wird dringend empfohlen, die&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General
-  Public License</a> im Original zu lesen bevor Sie fortfahren, diese k&ouml;nnen Sie auch im heruntergeladenen Paket als Textdatei finden.</p>';
 $_lang["alert_database_test_connection"] = 'Sie müssen eine Datenbank erstellen oder die Datenbankverbindung testen!';
 $_lang["alert_database_test_connection_failed"] = 'Der Test der Datenbankauswahl schlug fehl!';
 $_lang["alert_enter_adminconfirm"] = 'Administrator-Passwort und dessen Bestätigung stimmen nicht überein!';
