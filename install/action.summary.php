@@ -66,17 +66,17 @@ if (!is_writable("../assets/cache/sitePublishing.idx.php")) {
 } else {
     echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
-// images exists?
+// File Browser directories exists?
 echo "<p>".$_lang['checking_if_images_exist'];
-if (!file_exists("../assets/images")) {
+if (!file_exists("../assets/images") || !file_exists("../assets/files") || !file_exists("../assets/flash") || !file_exists("../assets/media")) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
     $errors += 1;
 } else {
     echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
-// images writable?
+// File Browser directories writable?
 echo "<p>".$_lang['checking_if_images_writable'];
-if (!is_writable("../assets/images")) {
+if (!is_writable("../assets/images") || !is_writable("../assets/files") || !is_writable("../assets/flash") || !is_writable("../assets/media")) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
     $errors += 1;
 } else {

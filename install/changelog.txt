@@ -7,6 +7,7 @@ MODx Evolution 1.0.0 (rev 5219 - June 24, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-581] Installer doesn't check /assets/media, /assets/flash and /assets/files directories
 * [#MODX-687], [#MODX-589] Fix the TV name fields so that new DatePicker works correctly
 * [#MODX-832] Implement new DatePicker in the MODx Manager.
 * [#MODX-655] Correct a sanity check that was preventing the allow_manager_access setting being saved.
@@ -79,7 +80,9 @@ Additional Improvements & Updates:
 * Exclude /assets and /manager by default from MODx rewrite and to comment out example.com -> www.example.com rule by default
 * Fix bug when login page language file was missing translation strings. Now falls back to main English file.
 * Added additional database diagnostic info to system info page (auto-generated paths)
-* New Installer skin and fixes
+* Updated the MODx installer
+    - New skin
+    - Streamline process by removing two steps
 * New MODx Carbon default theme for MODx Evolution 1.0 release
 	- Removed deprecated themes for Evo 1.0 release
 	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users
