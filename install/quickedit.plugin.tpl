@@ -7,7 +7,7 @@
  *  For: MODx cms (modxcms.com)
  *  Name: QuickEdit
  *  Description: Renders QuickEdit links in the frontend
- *  Shared parameters from: QuickEdit module
+ *  Parameters: &plugin_path=Plugin Path (from site root);string;assets/plugin/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable
  *  Events: OnParseDocument, OnWebPagePrerender
  */
 
@@ -38,13 +38,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 if(isset($_SESSION['mgrValidated']) && $_SESSION['mgrValidated']) {
 
  // Set configuration variables if not already set
- if(!isset($mod_path)) { $mod_path = $modx->config['base_path'].'assets/modules/quick_edit'; }
+ if(!isset($plugin_path)) { $plugin_path = $modx->config['base_path'].'assets/plugins/quick_edit'; }
  if(!isset($show_manager_link)) { $show_manager_link = 1; }
  if(!isset($show_help_link)) { $show_help_link = 1; }
  if(!isset($editable)) { $editable = 'pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable'; }
 
  // If we can't find the module files...
- if(!file_exists($mod_path)) {
+ if(!file_exists($plugin_path)) {
 
   // Only log the error if we haven't already logged it...
   if(!isset($GLOBALS['quick_edit_not_found_sent'])) {
@@ -66,8 +66,8 @@ if(isset($_SESSION['mgrValidated']) && $_SESSION['mgrValidated']) {
   $GLOBALS['qe_editable'] = $editable;
 
   // Set the mod_path as a global variable
-  $GLOBALS['quick_edit_path'] = $mod_path;
-  if (!class_exists('Output')) include_once($mod_path.'/output.class.inc.php');
+  $GLOBALS['quick_edit_path'] = $plugin_path;
+  if (!class_exists('Output')) include_once($plugin_path.'/output.class.inc.php');
 
   $outputObject = new Output;
 
@@ -86,7 +86,7 @@ if(isset($_SESSION['mgrValidated']) && $_SESSION['mgrValidated']) {
 
     $outputObject->output = &$modx->documentOutput;
 
-    include_once($mod_path.'/module.class.inc.php');
+    include_once($plugin_path.'/module.class.inc.php');
     $module = new Module;
     $module->getIdFromDependentPluginName($modx->Event->activePlugin);
 
