@@ -2,11 +2,13 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5185 - June 22, 2009)
+MODx Evolution 1.0.0 (rev 5219 - June 24, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-687], [#MODX-589] Fix the TV name fields so that new DatePicker works correctly
+* [#MODX-832] Implement new DatePicker in the MODx Manager.
 * [#MODX-655] Correct a sanity check that was preventing the allow_manager_access setting being saved.
 * [#MODX-806] Add option groups to template chooser in Manager
 * [#MODX-571] Fix TV date picker when special characters in TV name

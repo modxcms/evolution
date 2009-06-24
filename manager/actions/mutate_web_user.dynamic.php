@@ -112,7 +112,18 @@ if($manager_language!="english" && file_exists($modx->config['base_path']."manag
 }
 
 ?>
+<script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
+window.addEvent('domready', function() {
+	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
+	
+	new DatePicker($('dob'), {'yearOffset': dpOffset});
+
+	if ($('blockeduntil')) {
+		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset});
+		new DatePicker($('blockedafter'), {'yearOffset': dpOffset});
+	}
+});
 
 function changestate(element) {
 	documentDirty=true;
@@ -357,8 +368,7 @@ function showHide(what, onoff){
 			<td><?php echo $_lang['user_dob']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="dob" class="inputBox" style="width:260px" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onClick="documentDirty=false; calDOB.popup();" onMouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>"></a>
+				<input type="text" id="dob" name="dob" class="DatePicker" style="width:260px" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="document.userform.dob.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
 			</td>
 		  </tr>
@@ -404,8 +414,7 @@ function showHide(what, onoff){
 			<td><?php echo $_lang['user_blockeduntil']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="blockeduntil" class="inputBox" style="width:260px" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onClick="documentDirty=false; calBUntil.popup();" onMouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>" /></a>
+				<input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" style="width:260px" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="document.userform.blockeduntil.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
@@ -413,8 +422,7 @@ function showHide(what, onoff){
 			<td><?php echo $_lang['user_blockedafter']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="blockedafter" class="inputBox" style="width:260px" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onClick="documentDirty=false; calBAfter.popup();" onMouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>" /></a>
+				<input type="text" id="blockedafter" name="blockedafter" class="DatePicker" style="width:260px" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="document.userform.blockedafter.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
@@ -562,25 +570,3 @@ if(is_array($_POST['user_groups'])) {
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
-<script language="JavaScript" src="media/script/datefunctions.js"></script>
-<script language="javascript" type="text/javascript">
-	// dob
-	var calDOB = new calendar1(document.userform.dob, new Object);
-	calDOB.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-	calDOB.year_scroll = true;
-	calDOB.time_comp = false;
-
-	if (document.userform.blockeduntil) {
-		// block until
-		var calBUntil = new calendar1(document.userform.blockeduntil, new Object);
-		calBUntil.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-		calBUntil.year_scroll = true;
-		calBUntil.time_comp = true;
-
-		// block after
-		var calBAfter = new calendar1(document.userform.blockedafter, new Object);
-		calBAfter.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-		calBAfter.year_scroll = true;
-		calBAfter.time_comp = true;
-	}
-</script>

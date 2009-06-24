@@ -57,6 +57,14 @@ $logs = array();
 while ($row = $modx->db->getRow($rs)) $logs[] = $row;
 
 ?>
+<script type="text/javascript" src="media/calendar/datepicker.js"></script>
+<script type="text/javascript">
+window.addEvent('domready', function() {
+	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
+	new DatePicker($('datefrom'), {'yearOffset': dpOffset});
+	new DatePicker($('dateto'), {'yearOffset': dpOffset});
+});
+</script>
 <div class="subTitle">
 <span class="right"><?php echo $_lang["mgrlog_view"]?></span>
 </div>
@@ -141,22 +149,18 @@ while ($row = $modx->db->getRow($rs)) $logs[] = $row;
       <input type=text name="message" class="inputbox" style="width:240px" value="<?php echo $_REQUEST['message']; ?>">
     </td>
   </tr>
-  <script language="JavaScript" src="media/script/datefunctions.js"></script>
   <tr bgcolor="#eeeeee">
     <td><b><?php echo $_lang["mgrlog_datefr"]; ?></b></td>
-        <td align="right"><input type="hidden" name="datefrom" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>">
-          <span id="datefrom_show" style="font-weight: bold;"><?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "<i>(not set)</i>" ; ?></span>
-		  <a href="javascript:cal1.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
-		  <a onClick="document.logging.datefrom.value=''; document.getElementById('datefrom_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
+        <td align="right">
+        	<input type="text" id="datefrom" name="datefrom" class="DatePicker" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>">
+		  	<a onClick="document.logging.datefrom.value=''; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
 	  </td>
   </tr>
   <tr bgcolor="#ffffff">
     <td><b><?php echo $_lang["mgrlog_dateto"]; ?></b></td>
     <td align="right">
-		  <input type="hidden" name="dateto" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>">
-          <span id="dateto_show" style="font-weight: bold;"><?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "<i>(not set)</i>" ; ?></span>
-		  <a href="javascript:cal2.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
-		  <a onClick="document.logging.dateto.value=''; document.getElementById('dateto_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
+		  <input type="text" id="dateto" name="dateto" class="DatePicker" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>">
+		  <a onClick="document.logging.dateto.value=''; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
 		 </td>
       </tr>
   </tr>

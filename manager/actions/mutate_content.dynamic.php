@@ -169,8 +169,14 @@ if (isset ($_POST['which_editor'])) {
 	$which_editor = $_POST['which_editor'];
 }
 ?>
-<script type="text/javascript" src="media/script/datefunctions.js"></script>
+<script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
+
+window.addEvent('domready', function(){
+	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
+	new DatePicker($('pub_date'), {'yearOffset': dpOffset});	
+	new DatePicker($('unpub_date'), {'yearOffset': dpOffset});
+});
 
 // save tree folder state
 parent.tree.saveFolderState();
@@ -700,22 +706,18 @@ if (is_array($evtOut))
 				<input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0?>" />
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['document_opt_published_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_publishdate']?></span></td>
-				<td><input name="pub_date" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date'])?>" onblur="documentDirty=true;" />
-				<a onclick="documentDirty=false; cal1.popup();" onmouseover="window.status='<?php echo $_lang['select_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
-				<img src="media/style/<?php echo $manager_theme?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']?>" /></a>
+				<td><input id="pub_date" name="pub_date" class="DatePicker" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date'])?>" onblur="documentDirty=true;" />
 
-				<a onclick="document.mutate.pub_date.value=''; document.getElementById('pub_date_show').innerHTML='(<?php echo $_lang['not_set']?>)'; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
+				<a onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
 				<img src="media/style/<?php echo $manager_theme?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']?>" /></a>
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_publishdate_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				</td></tr>
 			<tr><td></td>
 				<td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_unpublishdate']?></span></td>
-				<td><input name="unpub_date" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date'])?>" onblur="documentDirty=true;" />
-				<a onclick="documentDirty=false; cal2.popup();" onmouseover="window.status='Select a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
-				<img src="media/style/<?php echo $manager_theme?>images/icons/cal.gif" width="16" height="16" border="0" /></a>
+				<td><input id="unpub_date" name="unpub_date" class="DatePicker" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date'])?>" onblur="documentDirty=true;" />
 
-				<a onclick="document.mutate.unpub_date.value=''; document.getElementById('unpub_date_show').innerHTML = '(<?php echo $_lang['not_set']?>)'; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
+				<a onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
 				<img src="media/style/<?php echo $manager_theme?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']?>" /></a>
 				&nbsp;&nbsp;<img src="media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif" onmouseover="this.src='media/style/<?php echo $manager_theme?>images/icons/b02.gif';" onmouseout="this.src='media/style/<?php echo $manager_theme?>images/icons/b02_trans.gif';" alt="<?php echo $_lang['page_data_unpublishdate_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				</td></tr>
@@ -980,17 +982,17 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 		for ($i = 0; $i < $limit; $i++) {
 			// Go through and display all Template Variables
 			$row = mysql_fetch_assoc($rs);
-			$additionalEncodings = array('-' => '%2D', '.' => '%2E', '_' => '%5F');
-			$row['name'] = str_replace(array_keys($additionalEncodings), array_values($additionalEncodings), rawurlencode($row['name']));
+			//$additionalEncodings = array('-' => '%2D', '.' => '%2E', '_' => '%5F');
+			//$row['name'] = str_replace(array_keys($additionalEncodings), array_values($additionalEncodings), rawurlencode($row['name']));
 			if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
 				// Add richtext editor to the list
 				if (is_array($replace_richtexteditor)) {
 					$replace_richtexteditor = array_merge($replace_richtexteditor, array(
-						"tv" . $row['name'],
+						"tv" . $row['id'],
 					));
 				} else {
 					$replace_richtexteditor = array(
-						"tv" . $row['name'],
+						"tv" . $row['id'],
 					);
 				}
 			}
@@ -1002,7 +1004,7 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 			echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
 			     "\t\t\t",'<br /><span class="comment">',$row['description'],"</span></td>\n",
 			     "\t\t\t",'<td valign="top" style="position:relative">',"\n",
-			     "\t\t\t",renderFormElement($row['type'], $row['name'], $row['default_text'], $row['elements'], $tvPBV, ' style="width:300px;"'),"\n";
+			     "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, ' style="width:300px;"'),"\n";
 			     "\t\t</td></tr>\n";
 		}
 		echo "\t</table>\n";
@@ -1186,15 +1188,3 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 		}
 	}
 ?>
-
-<script type="text/javascript">
-var cal1 = new calendar1(document.forms['mutate'].elements['pub_date'], document.getElementById("pub_date_show"));
-cal1.path="<?php echo str_replace('index.php', 'media/', $_SERVER['PHP_SELF'])?>";
-cal1.year_scroll = true;
-cal1.time_comp = true;
-
-var cal2 = new calendar1(document.forms['mutate'].elements['unpub_date'], document.getElementById("unpub_date_show"));
-cal2.path="<?php echo str_replace('index.php', 'media/', $_SERVER['PHP_SELF'])?>";
-cal2.year_scroll = true;
-cal2.time_comp = true;
-</script>
