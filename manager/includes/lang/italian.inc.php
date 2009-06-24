@@ -477,7 +477,7 @@ $_lang["messages_title"] = 'Messaggi';
 $_lang["messages_user"] = 'Un utente';
 $_lang["meta_keywords"] = 'META e parole chiave';
 $_lang["metatag_intro"] = 'In questa pagina potete eliminare, creare o modificare i META tag e le parole chiave. Per collegare le parole chiave ai documenti, modificate il documento in questione e selezionate le parole chiave desiderate dalla lista. Per aggiungere una parola chiave digitate la nuova parola e poi cliccate \'Aggiungi tag\'.';
-$_lang["metatag_notice"] = 'Per ulteriori informazioni, consultate il sito della <a href="http://www.html-reference.com/META.htm" target="_blank">Guida di Riferimento HTML</a>. Questa non &egrave; una lista completa di tutti i possibili META tag.';
+$_lang["metatag_notice"] = 'Per ulteriori informazioni, consultate il sito della <a href="http://www.html-reference.com/META.asp" target="_blank">Guida di Riferimento HTML</a>. Questa non &egrave; una lista completa di tutti i possibili META tag.';
 $_lang["metatags"] = 'META tag';
 $_lang["metatags_and_keywords"] = 'META tag e parole chiave';
 $_lang["mgr_access_permissions"] = 'Gestione permessi di accesso';

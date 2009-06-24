@@ -474,7 +474,7 @@ $_lang["messages_title"] = 'Mensagens';
 $_lang["messages_user"] = 'Um utilizador';
 $_lang["meta_keywords"] = 'Palavras-Chave / META';
 $_lang["metatag_intro"] = 'Nesta página pode apagar, criar ou editar etiquetas (tags) META. Para ligar etiquetas META aos documentos, clique na aba <b>Palavras-Chave / META</b> quando estiver a editar um documento e seleccione as etiquetas META e Palavras-chave relevantes. Para adicionar uma nova etiqueta, digite o nome e valor e clique no botão \'Adicionar Etiqueta\'. Para editar uma etiqueta, clique no seu nome na tabela abaixo.';
-$_lang["metatag_notice"] = 'Poderá querer consultar o site <a href=\'http://www.html-reference.com/META.htm\' target=\'_blank\'>HTML Reference Guide</a> (em inglês) para mais informações. Esta não é uma lista completa de etiquetas (tags) META.';
+$_lang["metatag_notice"] = 'Poderá querer consultar o site <a href=\'http://www.html-reference.com/META.asp\' target=\'_blank\'>HTML Reference Guide</a> (em inglês) para mais informações. Esta não é uma lista completa de etiquetas (tags) META.';
 $_lang["metatags"] = 'Etiquetas (tags) META';
 $_lang["metatags_and_keywords"] = 'Etiquetas (tags) META e Palavras-chave';
 $_lang["mgr_access_permissions"] = 'Permissões de acesso ao Interface de Gestão';

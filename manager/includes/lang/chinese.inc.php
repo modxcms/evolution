@@ -464,7 +464,7 @@ $_lang["messages_title"] = '消息';
 $_lang["messages_user"] = '一个用户';
 $_lang["meta_keywords"] = 'META关键词';
 $_lang["metatag_intro"] = '您可以在该页删除,添加或编辑META标签. 要将META标签指定给文件, 只要在编辑文件时点击<u>META关键词</u>, 并选择好META标签和关键词. 要添加新标签输入名称和值然后点击 \'添加标签\'按钮. 编辑标签只要点击标签名称即可.';
-$_lang["metatag_notice"] = '您可能需要参考 <a href="http://www.html-reference.com/META.htm" target="_blank">HTML 参考指南</a> 的网站了解更多信息. 这里没有列出全部可用的Meta标签.';
+$_lang["metatag_notice"] = '您可能需要参考 <a href="http://www.html-reference.com/META.asp" target="_blank">HTML 参考指南</a> 的网站了解更多信息. 这里没有列出全部可用的Meta标签.';
 $_lang["metatags"] = 'META标签';
 $_lang["metatags_and_keywords"] = 'META标签和关键词';
 $_lang["mgr_access_permissions"] = '管理权限';

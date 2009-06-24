@@ -475,7 +475,7 @@ $_lang["messages_title"] = 'Messages';
 $_lang["messages_user"] = 'Un utilisateur';
 $_lang["meta_keywords"] = 'Mots-clés';
 $_lang["metatag_intro"] = 'Sur cette page, vous pouvez supprimer, créer ou modifier des balises META. Pour associer des balises META à des documents, sélectionnez l\'onglet <strong>Mots clés</u> lors de l\'édition du document, et sélectionnez les balises META et les mots-clés adéquats. Pour ajouter une nouvelle balise, tapez son nom et sa valeur, puis cliquez le bouton «&nbsp;Ajouter balise&nbsp;». Pour modifier une balise, cliquez sur son nom dans la grille de données.';
-$_lang["metatag_notice"] = 'Merci de consulter le <a href="http://www.html-reference.com/META.htm" target="_blank">Guide de réference HTML</a> pour plus d\'informations. Liste non exhaustive.';
+$_lang["metatag_notice"] = 'Merci de consulter le <a href="http://www.html-reference.com/META.asp" target="_blank">Guide de réference HTML</a> pour plus d\'informations. Liste non exhaustive.';
 $_lang["metatags"] = 'Balises META';
 $_lang["metatags_and_keywords"] = 'Balises META et mots-clés';
 $_lang["mgr_access_permissions"] = 'Autorisations d\'accès au gestionnaire';

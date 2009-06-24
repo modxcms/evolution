@@ -492,7 +492,7 @@ $_lang["messages_user"] = 'En bruker';
 $_lang["metatags"] = 'META-tagger';
 $_lang["metatags_and_keywords"] = 'META-tagger og nøkkelord';
 $_lang["metatag_intro"] = 'På denne siden kan du opprette, redigere eller fjerne META-tagger. For å lenke META-tagger til dokumentet klikker du på fanen for META-nøkkelord når du redigerer dokumentet og velger de ønskede META-taggene og nøkkelordene. Hvis du vil legge inn en ny tag skriver du inn  navnet og verdien og klikker på \'Legg til tag\'. Klikk på taggens navn i tabellen for å redigere den.';
-$_lang["metatag_notice"] = 'For mer informasjon om HTML og META-tagger kan du se <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a>. Dette er ikke en komplett liste over mulige META-tagger.';
+$_lang["metatag_notice"] = 'For mer informasjon om HTML og META-tagger kan du se <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a>. Dette er ikke en komplett liste over mulige META-tagger.';
 $_lang["meta_keywords"] = 'META-nøkkelord';
 $_lang["mgr_access_permissions"] = 'Tilgangsrettigheter i håndtereren';
 $_lang["mgr_login_start"] = 'Startside etter innlogging i håndtereren';

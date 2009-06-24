@@ -477,7 +477,7 @@ $_lang["messages_title"] = 'Berichten';
 $_lang["messages_user"] = 'Een gebruiker';
 $_lang["meta_keywords"] = 'META keywords';
 $_lang["metatag_intro"] = 'Op deze pagina kun je \'META tags\' toevoegen, verwijderen en bewerken. De \'META tags\' kun je aan documenten toevoegen op de <u>META keywords</u> tab bij het bewerken van een document. Vul een naam en een waarde in voor een nieuwe tag en klik op de \'Tag toevoegen\' knop om een nieuwe \'tag\' toe te voegen. Klik op de naam van een \'tag\' om deze te bewerken.';
-$_lang["metatag_notice"] = 'Misschien wilt u een <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a> raadplegen voor meer informatie. Dit is geen complete lijst van mogelijke Meta Tags.';
+$_lang["metatag_notice"] = 'Misschien wilt u een <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a> raadplegen voor meer informatie. Dit is geen complete lijst van mogelijke Meta Tags.';
 $_lang["metatags"] = 'META tags';
 $_lang["metatags_and_keywords"] = 'META tags en keywords';
 $_lang["mgr_access_permissions"] = 'Content Beheer Systeem toegangsbeheer';

@@ -486,7 +486,7 @@ $_lang["messages_title"] = 'Viestit';
 $_lang["messages_user"] = 'Käyttäjä';
 $_lang["meta_keywords"] = 'Metatiedot ja avainsanat';
 $_lang["metatag_intro"] = 'Muokkaa metatietoja (META-tag). Lisää metatietoja sivuihin napsauttamalla <u>Metatiedot ja avainsanat</u> -välilehteä sivun muokkaamisen yhteydessä. Valitse välilehdeltä sivuun liitettävät metatiedot ja avainsanat. Lisää uusi metatieto syöttämällä nimi ja arvo sekä valitsemalla metatiedon tyyppi. Muokkaa metatietoa napsauttamalla metatiedon nimeä. Poista metatietoja valitsemalla poistettavat tiedot.';
-$_lang["metatag_notice"] = 'Ohjeita metatiedoista: <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a>.';
+$_lang["metatag_notice"] = 'Ohjeita metatiedoista: <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a>.';
 $_lang["metatags"] = 'Metatiedot';
 $_lang["metatags_and_keywords"] = 'Metatiedot ja avainsanat';
 $_lang["mgr_access_permissions"] = 'Ylläpidon käyttöoikeudet';

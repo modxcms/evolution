@@ -480,7 +480,7 @@ $_lang["messages_title"] = 'Wiadomości';
 $_lang["messages_user"] = 'użytkownika';
 $_lang["meta_keywords"] = 'Słowa kluczowe';
 $_lang["metatag_intro"] = 'Na tej stronie możesz tworzyć, dodawać, edytować i usuwać META tagi. Aby przypisać META tagi do dokumentów, kliknij na zakładce \'META słowa kluczowe\' podczas edycji dokumentu i wybierz potrzebne META tagi i słowa kluczowe. Aby dodać nowy tag wprowadź jego nazwę i wartość, a następnie kliknij przycisk \'Dodaj tag\'. Aby edytować tag kliknij jego nazwę na liście.';
-$_lang["metatag_notice"] = 'Możesz odwiedzić stronę <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a>, aby uzyskać więcej informacji. To nie jest kompletna lista META tagów.';
+$_lang["metatag_notice"] = 'Możesz odwiedzić stronę <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a>, aby uzyskać więcej informacji. To nie jest kompletna lista META tagów.';
 $_lang["metatags"] = 'Tagi META';
 $_lang["metatags_and_keywords"] = 'META tagi i słowa kluczowe';
 $_lang["mgr_access_permissions"] = 'Uprawnienia dostępu menedżera';

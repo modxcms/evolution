@@ -487,7 +487,7 @@ $_lang["messages_title"] = 'Meddelanden';
 $_lang["messages_user"] = 'En användare';
 $_lang["meta_keywords"] = 'META-nyckelord';
 $_lang["metatag_intro"] = 'På den här sidan kan du skapa, redigera eller ta bort META-taggar. För att länka META-taggar till dokument klickar du på fliken för META-nyckelord när du redigerar dokumentet och väljer de önskade META-taggarna och nyckelorden. Om du vill lägga in en ny tagg skriver du in namnet och värdet och klickar på "Lägg till tagg". Klicka på taggens namn i tabellen för att redigera den.';
-$_lang["metatag_notice"] = 'Använd <a href="http://www.html-reference.com/META.htm" target="_blank">HTML-referensguiden</a> för att få mer information. Det här är inte en komplett lista med möjliga META-taggar.';
+$_lang["metatag_notice"] = 'Använd <a href="http://www.html-reference.com/META.asp" target="_blank">HTML-referensguiden</a> för att få mer information. Det här är inte en komplett lista med möjliga META-taggar.';
 $_lang["metatags"] = 'META-taggar';
 $_lang["metatags_and_keywords"] = 'META-taggar och nyckelord';
 $_lang["mgr_access_permissions"] = 'Åtkomsträttigheter i hanteraren';

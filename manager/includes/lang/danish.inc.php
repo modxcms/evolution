@@ -475,7 +475,7 @@ $_lang["messages_title"] = 'Beskeder';
 $_lang["messages_user"] = 'En bruger';
 $_lang["meta_keywords"] = 'META nøgleord';
 $_lang["metatag_intro"] = 'På denne side kan du slette, oprette eller redigere META tags. for at linke META tags til dokumenter, klik på <u>META nøgleord</u> fanebladet når du redigerer dokumentet, og vælg det ønskede META tags og nøgleord. For at tilføje et nyt tag, indtast navnet og værdien og klik \'Tilføj tag\' knappen. For at redigere tagget klik på taggets navn indeni data tabellen.';
-$_lang["metatag_notice"] = 'Du kan refererere til <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a> site for mere information. Dette er ikke en fuldstændig liste af mulige Meta Tags.';
+$_lang["metatag_notice"] = 'Du kan refererere til <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a> site for mere information. Dette er ikke en fuldstændig liste af mulige Meta Tags.';
 $_lang["metatags"] = 'META tags';
 $_lang["metatags_and_keywords"] = 'META tags og nøgleord';
 $_lang["mgr_access_permissions"] = 'Administrér adgangstilladelser';

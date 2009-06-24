@@ -477,7 +477,7 @@ $_lang["messages_title"] = 'Съобщения';
 $_lang["messages_user"] = 'Потребител';
 $_lang["meta_keywords"] = 'META Ключови думи';
 $_lang["metatag_intro"] = 'На тази страница можете да изтривате, създавате или редактирате META тагове. За да свържете META таговете към документи, щракнете на бутона <u>META Ключови думи</u> при редактиране на документа и изберете желаните META тагове и ключови думи. За да добавите нов таг въведете името и стойността и щракнете върху бутона \'Добави таг\' . За да редактирате таг щракнете върху името му в таблицата с данните.';
-$_lang["metatag_notice"] = 'За повече информация можете да направите справка на адрес <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a> . Това не е пълен списък с възможните Meta Тагове.';
+$_lang["metatag_notice"] = 'За повече информация можете да направите справка на адрес <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a> . Това не е пълен списък с възможните Meta Тагове.';
 $_lang["metatags"] = 'META тагове';
 $_lang["metatags_and_keywords"] = 'META тагове и Ключови думи';
 $_lang["mgr_access_permissions"] = 'Права за достъп до Мениджъра';

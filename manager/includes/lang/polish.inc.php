@@ -480,7 +480,7 @@ $_lang["messages_title"] = 'Wiadomo¶ci';
 $_lang["messages_user"] = 'u¿ytkownika';
 $_lang["meta_keywords"] = 'S³owa kluczowe';
 $_lang["metatag_intro"] = 'Na tej stronie mo¿esz tworzyæ, dodawaæ, edytowaæ i usuwaæ META tagi. Aby przypisaæ META tagi do dokumentów, kliknij na zak³adce \'META s³owa kluczowe\' podczas edycji dokumentu i wybierz potrzebne META tagi i s³owa kluczowe. Aby dodaæ nowy tag wprowad¼ jego nazwê i warto¶æ, a nastêpnie kliknij przycisk \'Dodaj tag\'. Aby edytowaæ tag kliknij jego nazwê na li¶cie.';
-$_lang["metatag_notice"] = 'Mo¿esz odwiedziæ stronê <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a>, aby uzyskaæ wiêcej informacji. To nie jest kompletna lista META tagów.';
+$_lang["metatag_notice"] = 'Mo¿esz odwiedziæ stronê <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a>, aby uzyskaæ wiêcej informacji. To nie jest kompletna lista META tagów.';
 $_lang["metatags"] = 'Tagi META';
 $_lang["metatags_and_keywords"] = 'META tagi i s³owa kluczowe';
 $_lang["mgr_access_permissions"] = 'Uprawnienia dostêpu mened¿era';
