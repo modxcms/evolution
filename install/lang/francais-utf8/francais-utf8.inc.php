@@ -2,7 +2,7 @@
 /**
  * MODx language File
  *
- * @author Grégory Pakosz (guardian) - Modifié par Coroico pour la 0.9.6.2
+ * @author Grégory Pakosz (guardian) - Modifié par Coroico pour MODX 1.0
  * @package MODx
  * @version 1.0
  * @translation
@@ -52,6 +52,7 @@ $_lang["config_permissions_note"] = 'Lors des installations Linux/Unix, veuillez
 $_lang["connection_screen_character_set"] = 'Jeu de caractères de la connexion:';
 $_lang["connection_screen_collation"] = 'Collation:';
 $_lang["connection_screen_connection_information"] = 'Paramètres de Connexion';
+$_lang["connection_screen_connection_method"] = 'Méthode de Connexion:';
 $_lang["connection_screen_database_connection_information"] = 'Informations Base de Données';
 $_lang["connection_screen_database_connection_note"] = 'Veuillez saisir le nom de la base de données créée pour MODx. Si la base est inexistante, le programme d\'installation tentera de la créer pour vous. Cette opération est susceptible d\'échouer en fonction de la configuration MySQL ou des droits d\'accès à la base de données pour votre domaine/installation.';
 $_lang["connection_screen_database_host"] = 'Serveur hébergeant la base:';
@@ -144,10 +145,11 @@ $_lang["snippets"] = 'Snippets';
 $_lang["some_tables_not_updated"] = 'Certaines tables n\'ont pas été mises à jour. Ceci peut être du à des modifications précédentes.';
 $_lang["status_checking_database"] = 'Vérification de la base de données: ';
 $_lang["status_connecting"] = 'Connexion à l\'hôte: ';
-$_lang["status_failed"] = 'echec!';
-$_lang["status_failed_could_not_create_database"] = 'echec - impossible de créer la base de données';
-$_lang["status_failed_could_not_select_database"] = 'echec - impossible de sélectionner la base de données';
-$_lang["status_failed_table_prefix_already_in_use"] = 'echec - prefixe de table déjà utilisé!';
+$_lang["status_failed"] = 'échec!';
+$_lang["status_failed_could_not_create_database"] = 'échec - impossible de créer la base de données';
+$_lang["status_failed_could_not_select_database"] = 'échec - impossible de sélectionner la base de données';
+$_lang["status_failed_database_collation_does_not_match"] = 'échec - collation différente; utiliser SET NAMES ou choisir %s';
+$_lang["status_failed_table_prefix_already_in_use"] = 'échec - prefixe de table déjà utilisé!';
 $_lang["status_passed"] = 'succès - base sélectionnée';
 $_lang["status_passed_database_created"] = 'succès - base crée';
 $_lang["status_passed_server"] = 'succès - collations maintenant disponibles';
@@ -170,6 +172,7 @@ $_lang["unable_install_template"] = 'Impossible d\'installer le gabarit.  Fichie
 $_lang["upgrade_note"] = '<strong>Information:</strong> Avant de visiter le site, il vous est conseillé de vous connecter en tant qu\'administrateur au Gestionnaire et de vérifier les paramètres de Configuration Système.';
 $_lang["upgraded"] = 'Mis à jour';
 $_lang["visit_forum"] = ', visitez les <a href="http://www.modxcms.com/forums/" target="_blank">Forums Utilisateurs de MODx</a>.';
+$_lang["warning"] = 'ATTENTION!';
 $_lang["welcome_message_select_begin_button"] = 'Appuyez sur le bouton `Démarrer` pour commencer l\'installation:';
 $_lang["welcome_message_text"] = 'Ce programme vous guidera tout au long de la phase d\'installation.';
 $_lang["welcome_message_welcome"] = 'Bienvenue dans le programme d\'installation de MODx.';
