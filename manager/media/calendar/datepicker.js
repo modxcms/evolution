@@ -234,6 +234,12 @@ var DatePicker = new Class({
         
         /* set the onchange event for the month & year select boxes */
         monthSel.onfocus = function(){ dp.active = true; };
+        monthSel.onblur = function() {
+           dp.active = true;
+           this.remove(dp);
+           this.create(dp);
+           dp.onmouseout();
+        }.bind(this);      
         monthSel.onchange = function(){
             dp.month = monthSel.value;
             dp.year = yearSel.value;
@@ -242,6 +248,12 @@ var DatePicker = new Class({
         }.bind(this);
         
         yearSel.onfocus = function(){ dp.active = true; };
+        yearSel.onblur = function() {
+           dp.active = true;
+           this.remove(dp);
+           this.create(dp);
+           dp.onmouseout();
+        }.bind(this);
         yearSel.onchange = function(){
             dp.month = monthSel.value;
             dp.year = yearSel.value;
@@ -251,12 +263,18 @@ var DatePicker = new Class({
         
         /* set the onchange event for the month & year select boxes */
         timeTextBox.onfocus = function(){ dp.active = true; };
+        timeTextBox.onblur = function() {
+	       dp.active = true;
+	       this.remove(dp);
+           this.create(dp);
+           dp.onmouseout();
+        }.bind(this);
         timeTextBox.onchange = function() {
             var time = $(dp.id + '_timeTextBox').value.split(':');
             if (time[0] < 0 || time[0] > 23) {
                 alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
                 this.remove(dp);
-              this.create(dp);
+                this.create(dp);
           }
             if (time[1] < 0 || time[1] > 59) {
                 alert('Invalid minutes value: ' + time[0] + '\nAllowed range is 00-59');
