@@ -11,7 +11,7 @@
  * Encoding:       utf-8
  *
  * Translation: Bj&oslash;rn Erik Sandbakk (Sylvaticus)
- * Date: 2008-05-22
+ * Date: 2009-05-22
  */
 $_lang["alert_database_test_connection"] = 'Du m&aring; opprette din database eller teste valget av database!';
 $_lang["alert_database_test_connection_failed"] = 'Testen p&aring; valg av database mislyktes!';
@@ -106,7 +106,7 @@ $_lang["installing_demo_site"] = 'Installerer pr&oslash;ve-data: ';
 $_lang["language_code"] = 'no';
 $_lang["loading"] = 'Henter...';
 $_lang["modules"] = 'Moduler';
-$_lang["modx_footer1"] = '&copy; 2005-2008 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. Med enerett. MODx er lisensiert under GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2009 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. Med enerett. MODx er lisensiert under GNU GPL.';
 $_lang["modx_footer2"] = 'MODx er fri programvare. Vi oppmuntrer deg til &aring; v&aelig;re kreativ og bruke MODx p&aring; hvilken m&aring;te du vil. V&aelig;r bare n&oslash;ye med &aring; beholde kildekoden fri om du gj&oslash;r endringer og siden velger &aring; omdistribuere din modifiserte versjon av MODx.';
 $_lang["modx_install"] = 'MODx &raquo; Installasjon';
 $_lang["modx_requires_php"] = ', og MODx krever PHP 4.2.0 eller senere.';
