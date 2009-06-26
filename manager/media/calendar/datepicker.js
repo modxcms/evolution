@@ -73,8 +73,10 @@ var DatePicker = new Class({
     },
     
     close: function(e) {
-        var check = $(this.dp.id + 'dp_container') !== null ? !$(this.dp.id + 'dp_container').hasChild(e.target) : true;
-        var clickOutside = ($chk(e) && e.target != this.dp && e.target != this.dp.container && check);
+        if (!$(this.dp.id + 'dp_container')) return;
+        e = new Event(e);
+
+        var clickOutside = ($chk(e) && e.target != this.dp && e.target != this.dp.container && !$(this.dp.id + 'dp_container').hasChild(e.target));
         if (clickOutside) {
             this.remove(this.dp);
         }
@@ -209,13 +211,13 @@ var DatePicker = new Class({
         calTableTbody.injectInside(calTable);
         
         /* time box */
-        calTimeRow = new Element('tr');
-        calTimeCell = new Element('td', {'class':dp.id + '_calTime', 'colspan':'7'});
-        timeTextBox.injectInside(calTimeCell);
-        calTimeCell.injectInside(calTimeRow);
-        calTimeRow.injectInside(calTable);
+        //calTimeRow = new Element('tr');
+        calTimePara = new Element('p', {'class':dp.id + '_calTime'});
+        timeTextBox.injectInside(calTimePara);
+        //calTimeCell.injectInside(calTimeRow);
         
         calTable.injectInside(dp.calendar);
+        calTimePara.injectInside(dp.calendar);
         
         /* set the onmouseover events for all calendar days */
         $$('td.' + dp.id + '_calDay').each(function(el){
@@ -283,9 +285,9 @@ var DatePicker = new Class({
         /* get time */
         var time = $(dp.id + '_timeTextBox').value.split(':');
         if (time[0] < 0 || time[0] > 23) {
-                alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
-                return '';
-            }
+            alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
+            return '';
+        }
         if (time[1] < 0 || time[1] > 59) {
             alert('Invalid minutes value: ' + time[1] + '\nAllowed range is 00-59');
             return '';

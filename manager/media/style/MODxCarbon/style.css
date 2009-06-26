@@ -351,11 +351,16 @@ input:focus.DatePicker{
     border-spacing: 0;
 }
 
-.dp_cal table tr td input.cal_timeTextBox {
-    margin-top: 3px;
+.dp_cal p {
+    width: 177px;	
+}
+
+.dp_cal input.cal_timeTextBox {
+	display: block;
     text-align: center;
     width: 60px;
     margin: 0 auto;
+    margin-top: 3px;
 }
 
 .dp_cal select{
