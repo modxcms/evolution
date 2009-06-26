@@ -31,7 +31,6 @@ var DatePicker = new Class({
         this.yearStart = (new Date().getFullYear());
         this.yearOffset = -10;
 
-
         // Finds the entered date, or uses the current date
         if(dp.value != '') {
             dp.then = new Date(dp.value);
@@ -72,28 +71,37 @@ var DatePicker = new Class({
         dp.active = false;
         dp.onclick = dp.onfocus = this.create.pass(dp, this);
     },
+    
+    close: function(e) {
+        var check = $(this.dp.id + 'dp_container') !== null ? !$(this.dp.id + 'dp_container').hasChild(e.target) : true;
+        var clickOutside = ($chk(e) && e.target != this.dp && e.target != this.dp.container && check);
+        if (clickOutside) {
+            this.remove(this.dp);
+        }
+    },
 
     /* create the calendar */
     create: function(dp){
+        this.dp = dp;
         if (dp.calendar) return false;
-
         // Hide select boxes while calendar is up
         if(window.ie6){
             $$('select').addClass('dp_hide');
         }
         
         /* create the outer container */
-        dp.container = new Element('div', {'class':'dp_container'}).injectBefore(dp);
+        dp.container = new Element('div', {'class':'dp_container', 'id': dp.id + 'dp_container'}).injectBefore(dp);
         
-        /* create timers */
-        dp.container.onmouseover = dp.onmouseover = function(){
-            $clear(dp.interval);
-        };
-        dp.container.onmouseout = dp.onmouseout = function(){
-            dp.interval = setInterval(function(){
-                if (!dp.active) this.remove(dp);
-            }.bind(this), 500);
-        }.bind(this);
+        document.addEvent('mousedown', this.close.bind(this));
+
+        document.addEvents({
+            'keydown': function(e) {
+                e = new Event(e);
+                if ((e.code== 9 && !e.shift) || e.code == 27) {
+                    this.remove(this.dp);
+                }
+            }.bind(this)
+        });
         
         /* create the calendar */
         dp.calendar = new Element('div', {'class':'dp_cal'}).injectInside(dp.container);
@@ -236,9 +244,6 @@ var DatePicker = new Class({
         monthSel.onfocus = function(){ dp.active = true; };
         monthSel.onblur = function() {
            dp.active = true;
-           this.remove(dp);
-           this.create(dp);
-           dp.onmouseout();
         }.bind(this);      
         monthSel.onchange = function(){
             dp.month = monthSel.value;
@@ -250,9 +255,6 @@ var DatePicker = new Class({
         yearSel.onfocus = function(){ dp.active = true; };
         yearSel.onblur = function() {
            dp.active = true;
-           this.remove(dp);
-           this.create(dp);
-           dp.onmouseout();
         }.bind(this);
         yearSel.onchange = function(){
             dp.month = monthSel.value;
@@ -262,28 +264,14 @@ var DatePicker = new Class({
         }.bind(this);
         
         /* set the onchange event for the month & year select boxes */
-        timeTextBox.onfocus = function(){ dp.active = true; };
-        timeTextBox.onblur = function() {
-	       dp.active = true;
-	       this.remove(dp);
-           this.create(dp);
-           dp.onmouseout();
-        }.bind(this);
-        timeTextBox.onchange = function() {
-            var time = $(dp.id + '_timeTextBox').value.split(':');
-            if (time[0] < 0 || time[0] > 23) {
-                alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
-                this.remove(dp);
-                this.create(dp);
-          }
-            if (time[1] < 0 || time[1] > 59) {
-                alert('Invalid minutes value: ' + time[0] + '\nAllowed range is 00-59');
-                this.remove(dp);
-              this.create(dp);
-          }
-            dp.time = timeTextBox.value;
-            this.remove(dp);
-            this.create(dp);
+        timeTextBox.onfocus = function(){ dp.active = true; };        
+        timeTextBox.onkeypress = function(e) {
+          e = new Event(e);
+          if (e.code == 13) {          
+	            this.dp.value = this.formatValue(this.dp, this.dp.nowYear, parseInt(this.dp.nowMonth) + 1, this.dp.nowDay);
+	            this.remove(this.dp);
+	            return false;
+            }
         }.bind(this);
     },
     
@@ -294,6 +282,14 @@ var DatePicker = new Class({
         
         /* get time */
         var time = $(dp.id + '_timeTextBox').value.split(':');
+        if (time[0] < 0 || time[0] > 23) {
+                alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
+                return '';
+            }
+        if (time[1] < 0 || time[1] > 59) {
+            alert('Invalid minutes value: ' + time[1] + '\nAllowed range is 00-59');
+            return '';
+        }
         
         /* check the length of day */
         if (day < 10) day = '0' + day;
@@ -311,7 +307,6 @@ var DatePicker = new Class({
     
     /* Remove the calendar from the page */
     remove: function(dp){
-        $clear(dp.interval);
         dp.active = false;
         if (window.opera) dp.container.empty();
         else if (dp.container) dp.container.remove();
