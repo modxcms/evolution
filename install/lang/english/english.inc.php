@@ -39,7 +39,7 @@ $_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class=\"mon
 $_lang["checking_if_export_exists"] = 'Checking if <span class=\"mono\">/assets/export</span> directory exists: ';
 $_lang["checking_if_export_writable"] = 'Checking if <span class=\"mono\">/assets/export</span> directory is writable: ';
 $_lang["checking_if_images_exist"] = 'Checking if <span class=\"mono\">/assets/images</span>, <span class=\"mono\">/assets/files</span>, <span class=\"mono\">/assets/flash</span> and <span class=\"mono\">/assets/media</span> directories exists: ';
-$_lang["checking_if_images_writable"] = 'Checking if <span class=\"mono\">/assets/images</span>, <span class=\"mono\">/assets/files</span>, <span class=\"mono\">/assets/flash</span> or <span class=\"mono\">/assets/media</span> directories are writable: ';
+$_lang["checking_if_images_writable"] = 'Checking if <span class=\"mono\">/assets/images</span>, <span class=\"mono\">/assets/files</span>, <span class=\"mono\">/assets/flash</span> and <span class=\"mono\">/assets/media</span> directories are writable: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checking PHP version: ';
