@@ -252,7 +252,8 @@ echo "<p>&nbsp;</p>";
 
 $nextAction= $errors > 0 ? 'summary' : 'install';
 $nextButton= $errors > 0 ? $_lang['retry'] : $_lang['install'];
-
+$nextVisibility= $errors > 0 || isset($_POST['chkagree']) ? 'visible' : 'hidden';
+$agreeToggle= $errors > 0 ? '' : ' onchange="if(document.getElementById(\'chkagree\').checked){document.getElementById(\'nextbutton\').style.visibility=\'visible\';}else{document.getElementById(\'nextbutton\').style.visibility=\'hidden\';}"';
 ?>
 <form name="install" id="install_form" action="index.php?action=<?php echo $nextAction ?>" method="post">
   <div>
@@ -287,10 +288,10 @@ foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]
 ?>
   </div>
 <p>
-<input type="checkbox" value="1" id="chkagree" name="chkagree" style="line-height:18px" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/><label for="chkagree" style="display:inline;float:none;line-height:18px;"> <?php echo $_lang['iagree_box']?> </label>
+<input type="checkbox" value="1" id="chkagree" name="chkagree" style="line-height:18px" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?><?php echo $agreeToggle;?>/><label for="chkagree" style="display:inline;float:none;line-height:18px;"> <?php echo $_lang['iagree_box']?> </label>
 </p>
     <p class="buttonlinks">
         <a href="javascript:document.getElementById('install_form').action='index.php?action=options&language=<?php $install_language?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
-        <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $nextButton ?>"><span><?php echo $nextButton ?></span></a>
+        <a id="nextbutton" href="javascript:document.getElementById('install_form').submit();" title="<?php echo $nextButton ?>" style="visibility:<?php echo $nextVisibility;?>"><span><?php echo $nextButton ?></span></a>
     </p>
 </form>
