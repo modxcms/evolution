@@ -3,8 +3,8 @@
 #:::::::::::::::::::::::::::::::::::::::::
 
 	$moduleName = "MODx";
-	$moduleVersion = "Evolution 1.0.0.0";
-	$moduleRelease = "2009-05-13";
+	$moduleVersion = "Evolution 1.0.0-rc2";
+	$moduleRelease = "2009-06-29";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
@@ -23,7 +23,6 @@
 	$ms[] = array("Jot","<strong>1.1.4</strong> User comments with moderation and email subscription.",0,"$setupPath/snippet.jot.tpl","");
 	$ms[] = array("ListIndexer","<strong>1.0.1</strong> Shows the most recent documents, highly flexible.",0,"$setupPath/snippet.listindexer.tpl","");
 	$ms[] = array("MemberCheck","<strong>1.0</strong> Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
-	$ms[] = array("NewsPublisher","<strong>1.4</strong> Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
 	$ms[] = array("Personalize","<strong>2.0</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
 	$ms[] = array("Reflect","<strong>2.1</strong> Used with Ditto, creates archives of articles, blog entries, image galleries and more.",0,"$setupPath/snippet.reflect.tpl","");
 	$ms[] = array("UltimateParent","<strong>2.0 beta</strong> - Travels up the document tree from a specified document and returns the \"ultimate\" parent.",0,"$setupPath/snippet.ultparent.tpl","");

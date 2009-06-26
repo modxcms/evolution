@@ -70,6 +70,7 @@ Additional Improvements & Updates:
 	- New language strings where appropriate and needed
 * Remove legacy code no longer needed
     - Removed QuickEdit module (instructions only)
+	- Removed News Publisher snippet (did not support TVs)
 	- Prototype and Scriptaculous JS and SLLists.class.php from core distribution, no longer used 
 	- Update demo content to remove Prototype/Scriptaculous dependencies
 * Convert manager to use Mootools exclusively
