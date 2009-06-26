@@ -1,0 +1,60 @@
+#editor {
+    font-family:tahoma,arial; 
+    font-size:11px; 
+    position:fixed; 
+    top:0; 
+    left:0;
+    background-color:white;
+    border:1px solid #ccc;
+    border-top:0;
+    padding:1px 0 1px 1px;
+    z-index:1000;
+    opacity:0.85; 
+    filter:alpha(opacity=85);
+    behavior:url(fixed.htc);
+}
+
+#editor:hover {
+    opacity:1; 
+    filter:alpha(opacity=100);
+}
+
+#editor a {
+    color:black;
+}
+#editor .button {
+    float:left;
+    background:#ffffe1 no-repeat 4px;
+    text-decoration:none;
+    border:1px solid #a7a6aa;
+    border-top-color:#d2d0bc;
+    border-left-color:#d2d0bc;
+    height:16px; 
+    display:block; 
+    padding:4px 8px 4px 24px; 
+    margin-right:1px; 
+    opacity:0.80; 
+    filter:alpha(opacity=80);
+}
+
+#editor .button:hover {
+    opacity:1; 
+    filter:alpha(opacity=100);
+}
+
+#editor .edit {
+    background-image:url('edit.png');
+}
+
+#editor .add {
+    background-image:url('add.png');
+}
+
+#editor .delete{
+    background-image:url('delete.png');
+}
+
+#editor .logout{
+    margin-left:1px; 
+    background-image:url('exit.png');
+}

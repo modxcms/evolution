@@ -7,7 +7,9 @@ MODx Evolution 1.0.0 (rev 5219 - June 24, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-847] Replace QuickEdit with QuickManager+ (includes /assets/js/jQuery 1.3.2.min.js)
 * [#MODX-838] Ensure Datepicker correctly closes when select and textboxes lose focus without being changed.
+* [#MODX-806] fix duplicated option groups in template picker
 * [#MODX-581] Installer doesn't check /assets/media, /assets/flash and /assets/files directories
 * [#MODX-687], [#MODX-589] Fix the TV name fields so that new DatePicker works correctly
 * [#MODX-832] Implement new DatePicker in the MODx Manager.
