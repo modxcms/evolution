@@ -621,6 +621,7 @@ if (is_array($evtOut))
 						else    $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
 					}
 					echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
+					$currentCategory = $thisCategory;
 				}
 				if($thisCategory != '') {
 					echo "\t\t\t\t\t</optgroup>\n";							
