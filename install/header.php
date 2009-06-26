@@ -3,92 +3,12 @@
 <head>
 	<title><?php echo $_lang['modx_install']?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_lang['encoding']?>" />
-    <style type="text/css">
-         @import url("style.css");
-    </style>
-    <style type="text/css">
-        body {
-            background: #F4F4F4 none repeat scroll 0 0;
-        }
-        #content ul li { background: none; list-style: none; }
-        #header {
-            margin-bottom:25px;
-            padding-top:16px;
-        }
-        #mainheader {
-            height:116px;
-            margin-top:25px;
-        }
-        #downloadbar {
-            height:93px;
-        }
-        #downloadbar ul {
-            margin:0 0 1.5em 15px;
-        }
-        #downloadbar li {
-            list-style-type:none;
-            margin:0;
-        }
-        #downloadinfo {
-            background:none;
-            padding-top:0px;
-        }
-        tbody td {
-            text-align:left;
-        }
-        .buttonlinks {
-            float:right;
-        }
-        .labelHolder label {
-            width:200px;
-            float:left;
-        }
-        p.actions a {
-            margin: 0 3px;
-            padding: 1px 4px 2px;
-            border: 1px solid #777;
-            border-top-color: #bbb;
-            border-left-color: #bbb;
-            background: #e4e4e4;
-            display: block;
-            float: left;
-            color: #222;
-        }
-        p.actions a:hover {
-            margin: 1px 2px -1px 4px;
-            border: 1px solid #bbb;
-            border-top-color: #777;
-            border-left-color: #777;
-            text-decoration: none;
-        }
-        p.actions {
-            line-height: 1;
-            margin-top: 3px;
-        }
-        p.actions a:active {
-            background-color: #ccc;
-        }
-        img.options {
-            float:left;
-            margin-right:5px;
-        }
-        span.ok {
-            font-weight:bold;
-            color:green;
-        }
-        span.notok {
-            font-weight:bold;
-            color:red;
-        }
-        #footer-inner {
-            padding:15px 0 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
     <!--[if lt IE 7]>
-    <script src="DD_belatedPNG-min.js"></script>
-    <script>
-        DD_belatedPNG.fix('.pngfix');
-    </script>
+        <style type="text/css">
+            body { behavior: url(/assets/js/csshover3.htc) }
+        </style>
+        <script type="text/javascript" src="/assets/js/frankensleight.js"></sript>
     <![endif]-->
 </head>
 

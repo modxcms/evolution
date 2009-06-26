@@ -1,4 +1,5 @@
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+html body * span.clear, html body * div.clear, html body * li.clear, html body * dd.clear {
 background:transparent none repeat scroll 0 0;
 border:0 none;
 font-size:100%;
@@ -10,8 +11,6 @@ padding:0;
 vertical-align:baseline;
 }
 html body * span.clear, html body * div.clear, html body * li.clear, html body * dd.clear {
-background:transparent none repeat scroll 0 0;
-border:0 none;
 clear:both;
 display:block;
 float:none;
@@ -20,9 +19,7 @@ height:0;
 list-style-image:none;
 list-style-position:outside;
 list-style-type:none;
-margin:0;
 overflow:hidden;
-padding:0;
 visibility:hidden;
 width:0;
 }
@@ -37,7 +34,9 @@ font-style:normal;
 font-variant:normal;
 font-weight:normal;
 line-height:1.5;
+background: #F4F4F4 none repeat scroll 0 0;
 }
+
 html > body {
 font-size:13px;
 }
@@ -224,7 +223,9 @@ display:block;
 height:26px;
 line-height:26px;
 margin-bottom:20px;
+    float:right;
 }
+
 .info .buttonlinks {
 margin:0;
 }
@@ -307,8 +308,10 @@ text-decoration:underline;
 }
 #header {
 background:transparent url(site-ui-gfx.png) repeat-x scroll -23px -23px;
-margin-bottom:38px;
+    margin-bottom:25px;
+    padding-top:16px;
 }
+
 #header a:hover {
 text-decoration:underline;
 }
@@ -317,9 +320,11 @@ height:44px;
 position:relative;
 }
 #mainheader {
-height:131px;
 position:relative;
+    height:116px;
+    margin-top:25px;
 }
+
 #metaheader a.dropdown {
 background:transparent url(site-ui-gfx.png) no-repeat scroll 100% -412px;
 padding-right:16px;
@@ -344,7 +349,7 @@ font-weight:normal;
 
 #downloadbar {
 background:transparent url(installbar.png) no-repeat scroll 0 0;
-height:88px;
+height:93px;
 margin-bottom:20px;
 position:relative;
 width:940px;
@@ -356,6 +361,8 @@ font-weight:bold;
 line-height:66px;
 padding-left:20px;
 text-transform:lowercase;
+    background:none;
+    padding-top:0px;
 }
 
 #footer {
@@ -365,9 +372,10 @@ margin-top:20px;
 padding-top:23px;
 }
 #footer-inner {
-background:#64AB24 none repeat scroll 0 0;
-padding:20px 0 0;
+	background: #64AB24 none repeat scroll 0 0;
+    padding: 15px 0;
 }
+
 #bottom {
 background:#64AB24 url(site-ui-gfx.png) repeat-x scroll 0 0;
 clear:both;
@@ -490,4 +498,58 @@ color:#AAAAAA;
 }
 p.labelHolder {
 margin-bottom:5px;
+}
+
+#content ul li { background: none; list-style: none; }
+
+#downloadbar ul {
+    margin:0 0 1.5em 15px;
+}
+#downloadbar li {
+    list-style-type:none;
+    margin:0;
+}
+tbody td {
+    text-align:left;
+}
+.labelHolder label {
+    width:200px;
+    float:left;
+}
+p.actions {
+    line-height: 1;
+    margin-top: 3px;
+}
+p.actions a {
+    margin: 0 3px;
+    padding: 1px 4px 2px;
+    border: 1px solid #777;
+    border-top-color: #bbb;
+    border-left-color: #bbb;
+    background: #e4e4e4;
+    display: block;
+    float: left;
+    color: #222;
+}
+p.actions a:hover {
+    margin: 1px 2px -1px 4px;
+    border: 1px solid #bbb;
+    border-top-color: #777;
+    border-left-color: #777;
+    text-decoration: none;
+}
+p.actions a:active {
+    background-color: #ccc;
+}
+img.options {
+    float:left;
+    margin-right:5px;
+}
+span.ok {
+    font-weight:bold;
+    color:green;
+}
+span.notok {
+    font-weight:bold;
+    color:red;
 }
