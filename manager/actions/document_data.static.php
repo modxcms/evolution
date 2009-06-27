@@ -165,7 +165,7 @@ if ($numRecords > 0) {
 				'docid' =>  $children['id'],
 				'title' =>  $children['pagetitle'],
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
-				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="media/style/'.$manager_theme.'images/icons/context_view.gif" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="media/style/'.$manager_theme.'images/icons/save.gif" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="media/style/'.$manager_theme.'images/icons/cancel.gif" />'.$_lang['move'].'</a>' : ''),
+				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="<?php echo $_style["icons_preview_document"] ?>" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="<?php echo $_style["icons_save"] ?>" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="<?php echo $_style["icons_move_document"] ?>" />'.$_lang['move'].'</a>' : ''),
 			);
 		}
 
@@ -203,10 +203,10 @@ function movedocument() {
 	<span class="right"><?php echo $_lang['doc_data_title']?></span>
 
 	<table cellpadding="0" cellspacing="0" class="actionButtons"><tr>
-		<td id="Button1"><a href="#" onclick="editdocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['edit']?></a></td>
-		<td id="Button2"><a href="#" onclick="movedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['move']?></a></td>
-		<td id="Button4"><a href="#" onclick="duplicatedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang['duplicate']?></a></td>
-		<td id="Button3"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']?></a></td>
+		<td id="Button1"><a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" align="absmiddle"> <?php echo $_lang['edit']?></a></td>
+		<td id="Button2"><a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" align="absmiddle"> <?php echo $_lang['move']?></a></td>
+		<td id="Button4"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" align="absmiddle"> <?php echo $_lang['duplicate']?></a></td>
+		<td id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']?></a></td>
 	</tr></table>
 </div>
 

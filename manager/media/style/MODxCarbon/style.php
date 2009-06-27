@@ -1,12 +1,12 @@
 <?php
 /**
- * Filename:       media/style/MODx Light/style.php
+ * Filename:       media/style/MODxCarbon/style.php
  * Function:       Manager style variables for images and icons.
  * Encoding:       ISO-Latin-1
- * Author:         Jeff Whitfield
+ * Author:         Jeff Whitfield updates by Jay Gilmore
  * Date:           2006/05/30
  * Version:        1.0
- * MODx version:   0.9.6
+ * MODx version:   1.0.0
 */
 $style_path = "media/style/MODxCarbon/";
 
@@ -49,6 +49,7 @@ $_style["icons_cal_nodate"] = $style_path."images/icons/cal_nodate.gif";
 $_style["icons_cancel"] = $style_path."images/icons/cancel.gif";
 $_style["icons_delete"] = $style_path."images/icons/delete.gif";
 $_style["icons_delete_document"] = $style_path."images/icons/delete.gif";
+$_style["icons_document_overview"] = $style_path."images/icons/page_white_magnify.png";
 $_style["icons_duplicate_document"] = $style_path."images/icons/copy.gif";
 $_style["icons_edit_document"] = $style_path."images/icons/save.gif";
 $_style["icons_email"] = $style_path."images/icons/email.gif";
@@ -57,17 +58,24 @@ $_style["icons_home"] = $style_path."images/icons/home.gif";
 $_style["icons_information"] = $style_path."images/icons/information.png";
 $_style["icons_loading_doc_tree"] = $style_path."images/icons/information.png"; // top bar
 $_style["icons_mail"] = $style_path."images/icons/email.png"; // top bar
-$_style["icons_move_document"] = $style_path."images/icons/cancel.gif";
+$_style["icons_move_document"] = $style_path."images/icons/res_move.gif";
 $_style["icons_new_document"] = $style_path."images/icons/newdoc.gif";
-$_style["icons_publish_document"] = $style_path."images/icons/date.gif";
+$_style["icons_preview_document"] = $style_path."images/icons/layout_go.png";
+$_style["icons_publish_document"] = $style_path."images/icons/clock_play.png";
 $_style["icons_save"] = $style_path."images/icons/save.gif";
 $_style["icons_undelete_document"] = $style_path."images/icons/b092.gif";
-$_style["icons_unpublish_document"] = $style_path."images/icons/date-off.gif";
+$_style["icons_unpublish_document"] = $style_path."images/icons/clock_stop.png";
 $_style["icons_user"] = $style_path."images/icons/user.gif";
 $_style["icons_user_current"] = $style_path."images/icons/user_go.png"; // top bar
-$_style["icons_view_document"] = $style_path."images/icons/context_view.gif";
 $_style["icons_weblink"] = $style_path."images/icons/weblink.gif";
 $_style["icons_working"] = $style_path."images/icons/exclamation.png"; // top bar
+
+// Tabs
+$_style["icons_tab_preview"] = $style_path."images/icons/preview.gif";
+
+// Indicators
+$_style["icons_tooltip"] = $style_path."images/icons/b02.gif";
+$_style["icons_tooltip_over"] = $style_path."images/icons/b02_trans.gif";
 
 // Large Icons
 $_style["icons_backup_large"] = $style_path."images/icons/backup.gif";
@@ -81,6 +89,7 @@ $_style["icons_webusers_large"] = $style_path."images/icons/web_users.gif";
 $_style["ajax_loader"] = "<p>".$_lang['loading_page']."</p><p><img src=\"".$style_path."images/misc/ajax-loader.gif\" alt=\"Please wait\"></p>";
 $_style["modx_logo"] = $style_path."images/misc/logo.png";
 $_style["spacer"] = $style_path."images/misc/spacer.gif";
+
 
 // Credits
 $_style["credits_dTree"] = $style_path."images/credits/dtree.gif";
