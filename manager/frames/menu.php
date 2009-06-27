@@ -358,7 +358,7 @@ if (!empty($resourcemenu)) {
 if (!empty($modulemenu)) {
 	echo "\t",'<li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;">',$_lang['modules'],'</a><ul class="subnav" id="menu9">',"\n\t\t",
 	     implode("\n\t\t", $modulemenu),
-	     "\n\t</ul></l>\n";
+	     "\n\t</ul></li>\n";
 }
 if (!empty($securitymenu)) {
 	echo "\t",'<li id="limenu2"><a href="#menu2" onclick="new NavToggle(this); return false;">',$_lang['users'],'</a><ul class="subnav" id="menu2">',"\n\t\t",
