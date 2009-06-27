@@ -523,31 +523,40 @@ if (is_array($evtOut))
 <input type="hidden" name="refresh_preview" value="0" />
 <input type="hidden" name="newtemplate" value="" />
 
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['edit_document_title']?></span>
+<fieldset id="create_edit">
+	<h2><?php echo $_lang['edit_document_title']?></h2>
 
-	<table cellpadding="0" cellspacing="0" class="actionButtons"><tr>
-		<td id="Button1"><a href="#" onclick="documentDirty=false; document.mutate.save.click();"><img src="<?php echo $_style["icons_save"]; ?>" /> <?php echo $_lang['save']?></a></td>
-		<td id="Button2"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete"]; ?>" /> <?php echo $_lang['delete']?></a></td>
-		<td id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"]; ?>" /> <?php echo $_lang['cancel']?></a></td>
-	</tr></table>
-<?php if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == 72) { ?>
-	<script type="text/javascript">document.getElementById("Button2").className='disabled';</script>
-<?php } ?>
+<div class="actions">
+	  <ul class="actionButtons">
+		  <li id="Button1">
+			<a href="#" onclick="documentDirty=false; document.mutate.save.click();">
+			  <img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" /> <?php echo $_lang['save']?>
+			</a>
+			  &nbsp;
+			  and
+			  &nbsp;				
+			<select id="stay" name="stay">
+			  <?php if ($modx->hasPermission('new_document')) { ?>		
+			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
+			  <?php } ?>
+			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
+			</select>		
+		  </li>
+		  <?php
+			if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == 72) { ?>
+		  <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+		  <?php } else { ?>
+		  <li id="Button2"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+		  <?php } ?>	
+		  <li id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
+		  <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/preview.gif" /> <?php echo $_lang['preview']?></a></li>
+	  </ul>
 
-	<div class="stay">
-	<table border="0" cellspacing="1" cellpadding="1"><tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
-<?php if ($modx->hasPermission('new_document')) { ?>
-		<td><input name="stay" id="stay1" type="radio" class="radio" value="1"<?php echo $_REQUEST['stay']=='1' ? ' checked="checked"' : ''?> /></td><td><label for="stay1" class="comment"><?php echo $_lang['stay_new']?></label></td>
-<?php } ?>
-		<td><input name="stay" id="stay2" type="radio" class="radio" value="2"<?php echo $_REQUEST['stay']=='2' ? ' checked="checked"' : ''?> /></td><td><label for="stay2" class="comment"><?php echo $_lang['stay']?></label></td>
-		<td><input name="stay" id="stay3" type="radio" class="radio" value=""<?php echo $_REQUEST['stay']=='' ? ' checked="checked"' : ''?> /></td><td><label for="stay3" class="comment"><?php echo $_lang['close']?></label></td>
-	</tr></table>
+
+
 	</div>
-</div>
 
-<div class="sectionHeader"><?php echo $_lang['document_setting']?></div>
 <div class="sectionBody">
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 
@@ -879,18 +888,6 @@ if (is_array($evtOut))
 	</div><!-- end #tabMeta -->
 <?php } ?>
 
-<?php if ($_REQUEST['a'] != '4' && $_REQUEST['a'] != 72) { ?>
-	<!-- Preview -->
-	<div class="tab-page" id="tabPreview">
-		<h2 class="tab"><img src="<?php echo $_style["icons_tab_preview"]?>" height="12" /> <?php echo $_lang['preview']?></h2>
-		<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPreview" ), previewdocument );</script>
-
-		<table width="96%" border="0"><tr><td><?php echo $_lang['preview_msg']?></td></tr>
-			<tr><td><iframe name="preview" frameborder="0" width="100%" height="400" id="previewIframe"></iframe></td></tr>
-		</table>
-	</div><!-- end #tabPreview -->
-<?php } ?>
-
 </div><!-- end #documentPane -->
 </div><!-- end .sectionBody -->
 
@@ -1173,6 +1170,7 @@ $evtOut = $modx->invokeEvent('OnDocFormRender', array(
 ));
 if (is_array($evtOut)) echo implode('', $evtOut);
 ?>
+</fieldset>
 </form>
 
 <script type="text/javascript">//setTimeout('showParameters()',10);</script>
