@@ -552,10 +552,7 @@ if (is_array($evtOut))
 		  <li id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
 		  <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/preview.gif" /> <?php echo $_lang['preview']?></a></li>
 	  </ul>
-
-
-
-	</div>
+</div>
 
 <div class="sectionBody">
 <script type="text/javascript" src="media/script/tabpane.js"></script>
