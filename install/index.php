@@ -53,6 +53,7 @@ $action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language
 #    if (!isset ($_POST['chkagree'])) $action= 'license';
 #}
 
+ob_start();
 include ('header.php');
 
 if (!@include ('action.' . $action . '.php')) {
@@ -60,4 +61,5 @@ if (!@include ('action.' . $action . '.php')) {
 }
 
 include ('footer.php');
+ob_end_flush();
 ?>
