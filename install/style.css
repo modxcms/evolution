@@ -10,19 +10,6 @@ outline-width:0;
 padding:0;
 vertical-align:baseline;
 }
-html body * span.clear, html body * div.clear, html body * li.clear, html body * dd.clear {
-clear:both;
-display:block;
-float:none;
-font-size:0;
-height:0;
-list-style-image:none;
-list-style-position:outside;
-list-style-type:none;
-overflow:hidden;
-visibility:hidden;
-width:0;
-}
 
 body {
 -x-system-font:none;
@@ -40,16 +27,15 @@ background: #F4F4F4 none repeat scroll 0 0;
 html > body {
 font-size:13px;
 }
+body {
+background-color: #FFFFFF;
+font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
+}
 
 ol, ul {
 list-style-image:none;
 list-style-position:outside;
 list-style-type:none;
-}
-:focus {
-outline-color:-moz-use-text-color;
-outline-style:none;
-outline-width:0;
 }
 ins {
 text-decoration:none;
@@ -80,12 +66,21 @@ h3 {
 font-size:141.667%;
 line-height:0.823529;
 margin:0.54902em 0 0.27451em;
+font-weight: bold;
 }
 h4 {
 font-size:116.667%;
 line-height:1;
 margin:0.666667em 0 0.333333em;
 }
+h3, h4 {
+color:#585858;
+font-size:1.1em;
+line-height:1.3em;
+margin-bottom:0.75em;
+}
+
+
 h5 {
 font-size:100%;
 font-weight:bold;
@@ -120,6 +115,11 @@ margin-right:auto;
 width:960px;
 }
 
+#rtl {
+	direction: rtl;
+	text-align: right;
+}
+
 .alpha {
 margin-left:0;
 }
@@ -143,10 +143,6 @@ height:1%;
 .clearfix {
 display:block;
 }
-body {
-background-color:#FFFFFF;
-font-family:"Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif;
-}
 strong, em, b, i {
 }
 h1, h2, h3, h4, h5, h6, address {
@@ -155,7 +151,7 @@ margin-top:0;
 p, td, th, dt, dd, li {
 color:#6A6A6A;
 }
-#whatwhyhow p, #footer p {
+#footer p {
 color:#FFFFFF;
 }
 code, pre {
@@ -258,11 +254,11 @@ height:26px;
 margin:0 0 0 10px;
 padding:0 22px 0 0;
 }
-.buttonlinks a:hover, #footer .buttonlinks a:hover, #whatwhyhow .buttonlinks a:hover, #wlpeLogin .buttonlinks a:hover {
+.buttonlinks a:hover {
 background-position:-54px -379px;
 cursor:pointer;
 }
-.buttonlinks a:hover span, #footer .buttonlinks a:hover span, #whatwhyhow .buttonlinks a:hover span, #wlpeLogin .buttonlinks a:hover span {
+.buttonlinks a:hover span {
 background-position:100% -379px;
 cursor:pointer;
 }
@@ -299,13 +295,6 @@ color:#5A5A5A;
 #footer .buttonlinks a span, #whatwhyhow .buttonlinks a span, #wlpeLogin .buttonlinks a span {
 background:#64AB24 url(site-ui-gfx.png) no-repeat scroll 100% -353px;
 }
-.support a {
-margin-left:2.5em;
-text-decoration:none;
-}
-.support a:hover {
-text-decoration:underline;
-}
 #header {
 background:transparent url(site-ui-gfx.png) repeat-x scroll -23px -23px;
     margin-bottom:25px;
@@ -315,36 +304,18 @@ background:transparent url(site-ui-gfx.png) repeat-x scroll -23px -23px;
 #header a:hover {
 text-decoration:underline;
 }
-#header #searchwrapper a:hover, #metaheader {
-height:44px;
-position:relative;
-}
 #mainheader {
 position:relative;
     height:116px;
     margin-top:25px;
 }
 
-#metaheader a.dropdown {
-background:transparent url(site-ui-gfx.png) no-repeat scroll 100% -412px;
-padding-right:16px;
-}
 #contentarea h2 {
 color:#5A8F34;
 font-size:1.7em;
 font-weight:bold;
 line-height:1em;
 margin-bottom:0.5em;
-}
-h3, h4 {
-color:#585858;
-font-size:1.1em;
-font-weight:bold;
-line-height:1.3em;
-margin-bottom:0.75em;
-}
-h4 {
-font-weight:normal;
 }
 
 #downloadbar {
@@ -390,17 +361,6 @@ margin-bottom:10px;
 }
 #footer a {
 color:#FFFFFF;
-}
-
-h3, h4 {
-color:#585858;
-font-size:1.1em;
-font-weight:bold;
-line-height:1.3em;
-margin-bottom:0.75em;
-}
-h4 {
-font-weight:normal;
 }
 #content ul, #content ol {
 margin-left:15px;

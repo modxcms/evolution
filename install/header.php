@@ -12,7 +12,7 @@
     <![endif]-->
 </head>
 
-<body>
+<body<?php echo $textdir ? ' id="rtl"':''?>>
 <!-- start install screen-->
 <div id="header">
     <div class="container_12">
