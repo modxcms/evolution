@@ -121,7 +121,7 @@ oListManager.AddFile = function ( fileName, fileUrl, fileSize, imageEditable )
 					'?Command=Thumbnail&Type=' +
 					oConnector.ResourceType +
 					'&CurrentFolder=' +
-					oConnector.CurrentFolder +
+					escape(oConnector.CurrentFolder) +
 					'&FileName=' + escape(fileName) +
 					'&ExtraParams=' + oConnector.ExtraParams +
 					'" width="96" height="96" border="0"><br />' +
@@ -180,7 +180,7 @@ oListManager.PackRow = function ()
 function OpenFolder( folderPath )
 {
 	// Load the resources list for this folder.
-	window.parent.frames['frmFolders'].LoadFolders( folderPath ) ;
+	window.parent.frames['frmFolders'].LoadFolders(unescape(folderPath)) ;
 }
 
 function OpenFile( fileUrl )

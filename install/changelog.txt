@@ -2,11 +2,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5276 - June 30, 2009)
+MODx Evolution 1.0.0 (rev 5277 - June 30, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-741] Fix MCPUK browser navigation to work with folders that have spaces in them.
 * [#MODX-813] Fix the image editor's src link for the image tag.
 * [#MODX-822], [#MODX-465] Add basic file encoding for the file manager, not a complete solution but consensus is that it's better than what was there previously.
 * [#MODX-847] Replace QuickEdit with QuickManager+ (includes /assets/js/jQuery 1.3.2.min.js)
