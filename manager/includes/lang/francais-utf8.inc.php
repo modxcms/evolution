@@ -1,6 +1,6 @@
 <?php
 /**
- * Filename:       includes/lang/french-utf8.inc.php
+ * Filename:       includes/lang/francais-utf8.inc.php
  * Function:       French language file.
  * Encoding:       UTF8
  * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, JC Brebion (Fairytree) pour Evolution 1.0
@@ -69,9 +69,9 @@ $_lang["blocked_minutes_title"] = 'Durée de blocage (en minutes):';
 $_lang["cache_files_deleted"] = 'Les fichiers suivants ont été supprimés:';
 $_lang["cancel"] = 'Annuler';
 $_lang["captcha_code"] = 'Code de sécurité';
-$_lang["captcha_message"] = 'Activer les codes CAPTCHA permet de renforcer la sécurité en exigeant des utilisateurs d\'écrire un code illisible par des machines (automates).'
+$_lang["captcha_message"] = 'Activer les codes CAPTCHA permet de renforcer la sécurité en exigeant des utilisateurs d\'écrire un code illisible par des machines (automates).';
 $_lang["captcha_title"] = 'Utiliser les codes CAPTCHA:';
-$_lang["captcha_words_message"] = 'Veuillez saisir une liste de mots à utiliser si CAPTCHA est activé. Séparez les mots par des virgules. Ce champ est limité à 255 caractères.'
+$_lang["captcha_words_message"] = 'Veuillez saisir une liste de mots à utiliser si CAPTCHA est activé. Séparez les mots par des virgules. Ce champ est limité à 255 caractères.';
 $_lang["captcha_words_title"] = 'Mots CAPTCHA';
 $_lang["category_heading"] = 'Catégorie';
 $_lang["category_msg"] = 'Vous pouvez consulter ici et éditer toutes les ressources classées par catégorie.';
@@ -112,7 +112,7 @@ $_lang["configcheck_images_msg"] = 'Le répertoire des images n\'est pas accessi
 $_lang["configcheck_installer"] = 'L\'installateur est encore présent';
 $_lang["configcheck_installer_msg"] = 'Le répertoire install/ contient l\'installateur de MODx. Imaginez un instant ce qui pourraît arriver à votre site si une personne mal intentionnée trouve ce répertoire et exécute l\'installateur! Il n\'irait probablement pas bien loin, parce qu\'il devrait saisir les informations de l\'utilisateur de la base de données, mais il est bien plus sûr de supprimer ce répertoire de votre serveur.';
 $_lang["configcheck_lang_difference"] = 'Nombre incorrect de variables dans le fichier de langue';
-$_lang["configcheck_lang_difference_msg"] = 'La langue actuellement choisie a un nombre de variables différent de la langue par défaut. Ceci n\'est pas nécessairement un problème, mais peut signifier que le fichier de langue doit être mis à jour.'
+$_lang["configcheck_lang_difference_msg"] = 'La langue actuellement choisie a un nombre de variables différent de la langue par défaut. Ceci n\'est pas nécessairement un problème, mais peut signifier que le fichier de langue doit être mis à jour.';
 $_lang["configcheck_notok"] = 'Un ou plusieurs détails de configuration ne sont pas valides:';
 $_lang["configcheck_ok"] = 'Le contrôle s\'est bien passé - aucun avertissement rapporté.';
 $_lang["configcheck_register_globals"] = 'register_globals est sur "ON" dans votre fichier de configuration php (php.ini)';
@@ -162,7 +162,7 @@ $_lang["custom_contenttype_title"] = 'Types de contenu personnalisés:';
 $_lang["database_charset"] = 'Jeu de caractères de la BDD';
 $_lang["database_collation"] = 'Collation de la BDD';
 $_lang["database_name"] = 'Nom de la BDD';
-$_lang["database_overhead"] = '<b style=\'color:#990033\'>Note:</b> L\'overhead est un espace réservé par MySQL et qui est inutilisé. Pour libérer cet espace, cliquez sur le chiffre dans la colonne overhead.';
+$_lang["database_overhead"] = '<b style="color:#990033;">Note:</b> L\'overhead est un espace réservé par MySQL et qui est inutilisé. Pour libérer cet espace, cliquez sur le chiffre dans la colonne overhead.';
 $_lang["database_server"] = 'Nom du serveur de la BDD';
 $_lang["database_table_clickbackup"] = 'pour sauveargder &amp; télécharger les tables sélectionnées';
 $_lang["database_table_clickhere"] = 'Cliquez ici';
@@ -277,7 +277,7 @@ $_lang["expand_tree"] = 'Développer l\'arbre';
 $_lang["export_site"] = 'Exporter le site';
 $_lang["export_site_cacheable"] = 'Inclure les fichiers non-cachables:';
 $_lang["export_site_exporting_document"] = 'Exportation du fichier <b>%s</b> sur <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-$_lang["export_site_failed"] = '<span style="color:#990000">Échec !</span>';
+$_lang["export_site_failed"] = '<span style="color:#990000;">Échec !</span>';
 $_lang["export_site_html"] = 'Exporter le site en HTML';
 $_lang["export_site_maxtime"] = 'Durée maximale d\'exportation:';
 $_lang["export_site_maxtime_message"] = 'Indiquez ici la durée maximale (en secondes) dont MODx va disposer pour exporter le site (ceci remplace la configuration PHP). Entrez 0 pour une durée illimitée. Veuillez noter qu\'entrer 0 ou un nombre très élevé n\est pas recommandé et peut entraîner des dysfonctionnements sur votre serveur.';
@@ -285,7 +285,7 @@ $_lang["export_site_message"] = '<p>Cette fonction vous permet d\'exporter la to
 $_lang["export_site_numberdocs"] = '<p><b>%s documents trouvés pour exportation...</b></p>';
 $_lang["export_site_prefix"] = 'Préfixe de fichier:';
 $_lang["export_site_start"] = 'Commencer l\'exportation';
-$_lang["export_site_success"] = '<span style="color:#009900">Succès!</span>';
+$_lang["export_site_success"] = '<span style="color:#009900;">Succès!</span>';
 $_lang["export_site_suffix"] = 'Suffixe de fichier:';
 $_lang["export_site_target_unwritable"] = 'Impossible d\'écrire dans le répertoire cible. Veuillez vous assurer que les autorisations du répertoire sont correctes et essayez à nouveau.';
 $_lang["export_site_time"] = 'L\'exportation est terminée. L\'opération a duré %s secondes.';
@@ -378,15 +378,15 @@ $_lang["import_params"] = 'Importer les paramètres partagés du module';
 $_lang["import_params_msg"] = 'Vous pouvez importer les paramètres ou réglages d\'un module en sélectionnant le nom du module dans le menu déroulant ci-dessus. <b>Remarque:</b> Pour que les modules apparaissent dans le menu, ce plugin ou ce snippet doit faire partie des ressources dont le module dépend et le partage des paramètres doit être activé pour ce module. ';
 $_lang["import_parent_document"] = 'Document parent:';
 $_lang["import_site"] = 'Import HTML';
-$_lang["import_site_failed"] = '<span style="color:#990000">Échec!</span>';
+$_lang["import_site_failed"] = '<span style="color:#990000;">Échec!</span>';
 $_lang["import_site_html"] = 'Importer un site en HTML';
 $_lang["import_site_importing_document"] = 'Importation du fichier <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Durée maximale d\'importation:';
 $_lang["import_site_maxtime_message"] = 'Indiquez ici la durée maximale (en secondes) dont MODx va disposer pour importer le site (ceci remplace la configuration PHP). Entrez 0 pour une durée illimitée. Veuillez noter qu\'entrer 0 ou un nombre très élevé n\est pas recommandé et peut entraîner des dysfonctionnements sur votre serveur.';
 $_lang["import_site_message"] = '<p>L\'utilisation de cette fonction vous permet d\'importer l\'intégralité d\'un site web en HTML dans la base de données. Avant de lancer cette opération, vous devez copier tous vos fichiers et dossier HTML dans le dossier /assets/import.</p><p>Veuillez compléter le formulaire et cliquer sur \'Importer\' pour commencer l\'importation. Les fichiers importés seront enregistrés à l\'emplacement choisi, en utilisant si possible les noms de fichiers comme alias des pages et le titre des pages de façon adéquate.';
-$_lang["import_site_skip"] = '<span style="color:#990000">Ignoré!</span>';
+$_lang["import_site_skip"] = '<span style="color:#990000;">Ignoré!</span>';
 $_lang["import_site_start"] = 'Importer';
-$_lang["import_site_success"] = '<span style="color:#009900">Succès!</span>';
+$_lang["import_site_success"] = '<span style="color:#009900;">Succès!</span>';
 $_lang["import_site_time"] = 'Importation terminée. L\'importation a duré %s secondes.';
 $_lang["inbox"] = 'Boîte de réception';
 $_lang["info"] = 'Info';
