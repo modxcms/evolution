@@ -2,11 +2,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5260 - June 30, 2009)
+MODx Evolution 1.0.0 (rev 5282 - June 30, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-810] Ensure that the web user ID is passed correctly to the OnWUsrFormPrerender and OnWUsrFormRender events.
 * [#MODX-733] Apply fix for multi-byte characters being garbled in 'Site' > 'Search'.
 * [#MODX-719] Small fix to DocManager to prevent parse error when no doc groups are present and an update to doc groups is attempted.
 * [#MODX-741] Fix MCPUK browser navigation to work with folders that have spaces in them.

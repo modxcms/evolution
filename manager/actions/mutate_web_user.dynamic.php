@@ -221,7 +221,7 @@ function showHide(what, onoff){
 <form action="index.php?a=89" method="post" name="userform">
 <?php
 	// invoke OnWUsrFormPrerender event
-	$evtOut = $modx->invokeEvent("OnWUsrFormPrerender",array("id" => $id));
+	$evtOut = $modx->invokeEvent("OnWUsrFormPrerender",array("id" => $user));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="mode" value="<?php echo $_GET['a'] ?>" />
@@ -566,7 +566,7 @@ if(is_array($_POST['user_groups'])) {
 <input type="submit" name="save" style="display:none">
 <?php
 	// invoke OnWUsrFormRender event
-	$evtOut = $modx->invokeEvent("OnWUsrFormRender",array("id" => $id));
+	$evtOut = $modx->invokeEvent("OnWUsrFormRender",array("id" => $user));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
