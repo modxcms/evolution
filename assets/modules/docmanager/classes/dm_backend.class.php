@@ -243,47 +243,51 @@ class DocManagerBackend {
 		$doc_vals = $this->processRange($pids, '', 0);
 		$doc_id = $doc_vals[0];
 		$error = $doc_vals[1];
-
-		switch ($action) {
-			case 'pushDocGroup' :
-				if (count($doc_id) > 0) {
-					foreach ($doc_id as $value) {
-						$docsAdded = 0;
-						$sql = "SELECT * FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
-						$sqlResult = $this->modx->db->query($sql);
-						$NotAMember = ($this->modx->db->getRecordCount($sqlResult) == 0);
-						if ($NotAMember) {
-							$sql = "INSERT INTO " . $this->modx->getFullTableName('document_groups') . " (document_group, document) VALUES (" . $docgroup . "," . $value . ")";
+		
+		if (!empty($docgroup)) {
+			switch ($action) {
+				case 'pushDocGroup' :
+					if (count($doc_id) > 0) {
+						foreach ($doc_id as $value) {
+							$docsAdded = 0;
+							$sql = "SELECT * FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
 							$sqlResult = $this->modx->db->query($sql);
-							$this->secureWebDocument($value);
-							$this->secureMgrDocument($value);
-							$docsAdded += 1;
-						} else {
-							$this->dm->ph['update.message'] .= $this->dm->lang['DM_doc_skip_message1'] . ' ' . $value . ' ' . $this->dm->lang['DM_doc_skip_message2'] . "<br />";
+							$NotAMember = ($this->modx->db->getRecordCount($sqlResult) == 0);
+							if ($NotAMember) {
+								$sql = "INSERT INTO " . $this->modx->getFullTableName('document_groups') . " (document_group, document) VALUES (" . $docgroup . "," . $value . ")";
+								$sqlResult = $this->modx->db->query($sql);
+								$this->secureWebDocument($value);
+								$this->secureMgrDocument($value);
+								$docsAdded += 1;
+							} else {
+								$this->dm->ph['update.message'] .= $this->dm->lang['DM_doc_skip_message1'] . ' ' . $value . ' ' . $this->dm->lang['DM_doc_skip_message2'] . "<br />";
+							}
 						}
 					}
-				}
-				
-				break;
-			case 'pullDocGroup' :
-				if (count($doc_id) > 0) {
-					foreach ($doc_id as $value) {
-						$docsRemoved = 0;
-						$sql = "SELECT * FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
-						$sqlResult = $this->modx->db->query($sql);
-						$AMember = ($this->modx->db->getRecordCount($sqlResult) <> 0);
-						if ($AMember) {
-							$sql = "DELETE FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
+					
+					break;
+				case 'pullDocGroup' :
+					if (count($doc_id) > 0) {
+						foreach ($doc_id as $value) {
+							$docsRemoved = 0;
+							$sql = "SELECT * FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
 							$sqlResult = $this->modx->db->query($sql);
-							$this->secureWebDocument($value);
-							$this->secureMgrDocument($value);
-							$docsRemoved += 1;
-						} else {
-							$this->dm->ph['update.message'] .= $this->dm->lang['DM_doc_skip_message1'] . $value . $this->dm->lang['DM_doc_skip_message2'] . "<br />";
+							$AMember = ($this->modx->db->getRecordCount($sqlResult) <> 0);
+							if ($AMember) {
+								$sql = "DELETE FROM " . $this->modx->getFullTableName('document_groups') . " WHERE document_group = " . $docgroup . " AND document = " . $value;
+								$sqlResult = $this->modx->db->query($sql);
+								$this->secureWebDocument($value);
+								$this->secureMgrDocument($value);
+								$docsRemoved += 1;
+							} else {
+								$this->dm->ph['update.message'] .= $this->dm->lang['DM_doc_skip_message1'] . $value . $this->dm->lang['DM_doc_skip_message2'] . "<br />";
+							}
 						}
 					}
-				}
-				break;
+					break;
+			}
+		} else {
+			$error = $this->dm->lang['DM_doc_no_docs'];
 		}
 	
 		if ($error == '') {
