@@ -102,8 +102,13 @@ if($limit<1) {
     <tr> 
       <td align="center"><a href="index.php?a=3&id=<?php echo $logentry['id']; ?>"onMouseover="status='<?php echo $_lang['search_view_docdata']; ?>';return true;" onmouseout="status='';return true;" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/context_view.gif" border=0></a></td> 
       <td><?php echo $logentry['id']; ?></td> 
-	  <td><?php echo strlen($logentry['pagetitle'])>20 ? substr($logentry['pagetitle'], 0, 20)."..." : $logentry['pagetitle'] ; ?></td> 
-      <td><?php echo strlen($logentry['description'])>35 ? substr($logentry['description'], 0, 35)."..." : $logentry['description'] ;  ?></td>
+	  <?php if (function_exists('mb_strlen') && function_exists('mb_substr')) {?>
+		<td><?php echo mb_strlen($logentry['pagetitle'], $modx->config['modx_charset'])>20 ? mb_substr($logentry['pagetitle'], 0, 20, $modx->config['modx_charset'])."..." : $logentry['pagetitle'] ; ?></td> 
+		<td><?php echo mb_strlen($logentry['description'], $modx->config['modx_charset'])>35 ? mb_substr($logentry['description'], 0, 35, $modx->config['modx_charset'])."..." : $logentry['description'] ; ?></td>
+	  <?php } else { ?>
+		<td><?php echo strlen($logentry['pagetitle'])>20 ? substr($logentry['pagetitle'], 0, 20)."..." : $logentry['pagetitle'] ; ?></td> 
+		<td><?php echo strlen($logentry['description'])>35 ? substr($logentry['description'], 0, 35)."..." : $logentry['description'] ; ?></td>
+	  <?php } ?>
       <td align="center"><?php echo $logentry['deleted']==1 ? "<img align='absmiddle' src='media/style/".($manager_theme ? $manager_theme.'/' : '')."images/icons/trash_full.png' alt='".$_lang['search_item_deleted']."'>" : ""; ?></td>
       <td align="center"><img align='absmiddle' src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/<?php echo $icon; ?>.gif'></td>	  
     </tr> 
