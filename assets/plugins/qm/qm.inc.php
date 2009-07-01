@@ -196,7 +196,7 @@ class Qm {
                     }
 
                     // Manager control class
-                    $mc = new Mcc();
+                    $mc = new Mcc($this->jqpath);
                 
                     // Hide subtitle
                     $mc->addLine('$(".subTitle").hide();');

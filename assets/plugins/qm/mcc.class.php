@@ -16,7 +16,8 @@ if(!class_exists('Mcc')) {
     var $fields;
 
         //_______________________________________________________
-        function Mcc() {
+        function Mcc($jqpath) {
+            $this->jqpath = $jqpath;
             $this->tabs = array(
             'general'       => array('index'=>1,'id'=>'tabGeneral'),
             'settings'      => array('index'=>2,'id'=>'tabSettings'),
@@ -43,9 +44,11 @@ if(!class_exists('Mcc')) {
         
         //_______________________________________________________
         function Output() {
+            global $modx;
             $out = $this->head;
             $this->addLine('document.body.style.display="block";');
-            $out.= '<script type="text/javascript">$(document).ready(function(){'.$this->script.'});</script>';
+            $out.= '<script src="'.$modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
+            $out.= '<script type="text/javascript">jQuery.noConflict(); jQuery(document).ready(function($){'.$this->script.'});</script>';
             return $out;
         }
         
