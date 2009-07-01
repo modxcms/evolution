@@ -95,7 +95,7 @@
 				$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" width="100" '.$field_style.' onchange="documentDirty=true;" /></td></tr></table>';
 				break;
 			case "checkbox": // handles check boxes
-				$field_value = explode("||",$field_value);
+				$field_value = !is_array($field_value) ? explode("||",$field_value) : $field_value;
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id));
 				static $i=0;
 				while (list($item, $itemvalue) = each ($index_list))

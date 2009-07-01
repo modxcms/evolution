@@ -977,8 +977,6 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 		for ($i = 0; $i < $limit; $i++) {
 			// Go through and display all Template Variables
 			$row = mysql_fetch_assoc($rs);
-			//$additionalEncodings = array('-' => '%2D', '.' => '%2E', '_' => '%5F');
-			//$row['name'] = str_replace(array_keys($additionalEncodings), array_values($additionalEncodings), rawurlencode($row['name']));
 			if ($row['type'] == 'richtext' || $row['type'] == 'htmlarea') {
 				// Add richtext editor to the list
 				if (is_array($replace_richtexteditor)) {
@@ -995,7 +993,7 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 			if ($i > 0 && $i < $limit)
 				echo "\t\t",'<tr><td colspan="2"><div class="split"></div></td></tr>',"\n";
 
-			$tvPBV = array_key_exists('tv'.$row['name'], $_POST) ? $_POST['tv'.$row['name']] : $row['value']; // post back value
+			$tvPBV = array_key_exists('tv'.$row['id'], $_POST) ? $_POST['tv'.$row['id']] : $row['value']; // post back value
 			echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
 			     "\t\t\t",'<br /><span class="comment">',$row['description'],"</span></td>\n",
 			     "\t\t\t",'<td valign="top" style="position:relative">',"\n",

@@ -7,6 +7,7 @@ MODx Evolution 1.0.0 (rev 5282 - June 30, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-725] Retain checkbox TV values when changing template, also fix postback rendering of TV values (broken in a recent commit)
 * [#MODX-810] Ensure that the web user ID is passed correctly to the OnWUsrFormPrerender and OnWUsrFormRender events.
 * [#MODX-733] Apply fix for multi-byte characters being garbled in 'Site' > 'Search'.
 * [#MODX-719] Small fix to DocManager to prevent parse error when no doc groups are present and an update to doc groups is attempted.
