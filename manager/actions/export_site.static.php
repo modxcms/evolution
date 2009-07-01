@@ -182,7 +182,7 @@ echo $_lang['export_site_message'];
 		}
 	}
 
-	function exportDir($dirid, $dirpath, $i) {
+	function exportDir($dirid, $dirpath, &$i) {
 		global $_lang;
 		global $base;
 		global $modx;
@@ -224,7 +224,7 @@ echo $_lang['export_site_message'];
 						echo $_lang['export_site_success']." Skip this folder.<br />";
 					}
 				}
-				exportDir($row['id'], $dirname."/", &$i);
+				exportDir($row['id'], $dirname."/", $i);
 				$dircontent[] = $row['alias'];
 			}
 		}
@@ -243,7 +243,7 @@ echo $_lang['export_site_message'];
 		$limit = $row[0];
 		printf($_lang['export_site_numberdocs'], $limit);
 		$n = 1;
-		exportDir(0, $filepath, &$n);
+		exportDir(0, $filepath, $n);
 
 	} else {
 	// Modified for export alias path  2006/3/24 end
