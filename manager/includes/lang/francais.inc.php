@@ -1,6 +1,6 @@
 <?php
 /**
- * Filename:       includes/lang/francais.inc.php
+ * Filename:       includes/lang/francais-utf8.inc.php
  * Function:       French language file.
  * Encoding:       UTF8
  * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, JC Brebion (Fairytree) pour Evolution 1.0
@@ -179,6 +179,8 @@ $_lang["database_tables"] = 'Tables de la BDD';
 $_lang["database_version"] = 'Version de la BDD:';
 $_lang["date"] = 'Date';
 $_lang["datechanged"] = 'Date de modification';
+$_lang["datepicker_offset"] = 'Décalage du contrôle de saisie de la date: ';
+$_lang["datepicker_offset_message"] = 'Le nombre d\'années dans le passé a montré sur le contrôle de saisie de la date.';
 $_lang["defaultcache_message"] = 'Choisissez \'Oui\' pour permettre de mettre en cache les nouveaux documents par défaut.';
 $_lang["defaultcache_title"] = 'À mettre en cache par défaut';
 $_lang["defaultmenuindex_message"] = 'Choisissez \'Oui\' pour activer l\'auto-incrémentation de l\'index de menu par défaut.';
@@ -460,7 +462,7 @@ $_lang["messages_compose"] = 'Écrire un message';
 $_lang["messages_forward"] = 'Transmettre';
 $_lang["messages_from"] = 'De';
 $_lang["messages_group"] = 'Un groupe';
-$_lang["messages_inbox"] = 'Inbox';
+$_lang["messages_message"] = 'Message';
 $_lang["messages_inbox"] = 'Boîte de réception';
 $_lang["messages_no_messages"] = 'Votre boîte ne contient aucun message.';
 $_lang["messages_not_allowed_to_read"] = 'Vous n\'êtes pas autorisé à lire ce message!';
@@ -498,7 +500,7 @@ $_lang["mgrlog_msg"] = 'Message';
 $_lang["mgrlog_noquery"] = 'Aucune recherche effectuée.';
 $_lang["mgrlog_qresults"] = 'Résultats de la recherche';
 $_lang["mgrlog_query"] = 'Enregistrement des requêtes';
-$_lang["mgrlog_query_msg"] = 'Merci d\'effectuer une sélection pour visualiser les logs. Vous pouvez effectuer une sélection par date, mais faites bien attention: les dates saisies ne sont pas inclusives - pour sélectionner les logs du 1/1/2004 vous devez sélectionner les logs du 1/1/2004 au 2/1/2004.<br /><br />Message et action ont habituellement les mêmes valeurs. Si vous recherchez un message spécifique, il vaut mieux sélectionner l\'action sur \'Certaines/Toutes\'.';
+$_lang["mgrlog_query_msg"] = 'Merci d\'effectuer une sélection pour visualiser les logs. Vous pouvez effectuer une sélection par date, mais faites bien attention: les dates saisies ne sont pas inclusives – pour sélectionner les logs du 1/1/2004 vous devez sélectionner les logs du 1/1/2004 au 2/1/2004.<br /><br />Message et action ont habituellement les mêmes valeurs. Si vous recherchez un message spécifique, il vaut mieux sélectionner l\'action sur \'Certaines/Toutes\'.';
 $_lang["mgrlog_results"] = 'Nb. de résultats';
 $_lang["mgrlog_searchlogs"] = 'Rechercher les logs';
 $_lang["mgrlog_sortinst"] = 'Vous pouvez trier les tables en cliquant sur l\'entête de colonne. Si les logs deviennent trop volumineux, vous pouvez <a href="index.php?a=55">les vider</a>. Cela supprimera tous les logs et ne pourra pas être annulé !';
@@ -768,7 +770,7 @@ $_lang["role_web_access_persmissions"] = 'Autorisations d\'accès web';
 $_lang["role_web_user_management"] = 'Gestion des utilisateurs web';
 $_lang["rss_url_news_message"] = 'Entrez l\'URL du flux pour les actualités MODx.';
 $_lang["rss_url_news_title"] = 'Flux RSS des actualités';
-$_lang["rss_url_news_message"] = 'Entrez l\'URL du flux pour les bulletins de sécurité MODx.';
+$_lang["rss_url_security_message"] = 'Entrez l\'URL du flux pour les bulletins de sécurité MODx.';
 $_lang["rss_url_security_title"] = 'Flux RSS des bulletins de sécurité';
 $_lang["run_module"] = 'Lancer le module';
 $_lang["saturday"] = 'Samedi';
@@ -778,13 +780,13 @@ $_lang["save_tag"] = 'Enregistrer la balise';
 $_lang["saving"] = 'En cours d\'enregistrement, veuillez patienter...';
 $_lang["search"] = 'Recherche';
 $_lang["search_criteria"] = 'Critères de recherche';
-$_lang["search_criteria_content"] = 'Rech. par contenu';
+$_lang["search_criteria_content"] = 'Recherche par contenu';
 $_lang["search_criteria_content_msg"] = 'Rechercher les documents dont le contenu contient ce texte';
 $_lang["search_criteria_id"] = 'Recherche par n°';
 $_lang["search_criteria_id_msg"] = 'Entrez le n° d\'un document pour le localiser rapidement';
-$_lang["search_criteria_longtitle"] = 'Rech. par titre long';
-$_lang["search_criteria_title_msg"] = 'Rechercher les documents dont le titre long contient ce texte';
-$_lang["search_criteria_title"] = 'Rech. par titre';
+$_lang["search_criteria_longtitle"] = 'Recherche par titre long';
+$_lang["search_criteria_longtitle_msg"] = 'Rechercher les documents dont le titre long contient ce texte';
+$_lang["search_criteria_title"] = 'Recherche par titre';
 $_lang["search_criteria_title_msg"] = 'Rechercher les documents dont le titre contient ce texte';
 $_lang["search_empty"] = 'Votre recherche n\'a donné aucun résultat. Veuillez essayer de nouveau en élargissant vos critères de recherche.';
 $_lang["search_item_deleted"] = 'Cet élément a été supprimé';
