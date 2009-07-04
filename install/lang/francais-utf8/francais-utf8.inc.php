@@ -168,6 +168,7 @@ $_lang["upgrade_note"] = '<strong>Information:</strong> Avant de visiter le site
 $_lang["upgraded"] = 'Mis à jour';
 $_lang["visit_forum"] = ', visitez les <a href="http://www.modxcms.com/forums/" target="_blank">Forums Utilisateurs de MODx</a>.';
 $_lang["warning"] = 'ATTENTION!';
+$_lang["welcome_message_start"] = 'En premier, choisissez le type d\'installation à réaliser:';
 $_lang["welcome_message_text"] = 'Ce programme vous guidera tout au long de la phase d\'installation.';
 $_lang["welcome_message_welcome"] = 'Bienvenue dans le programme d\'installation de MODx.';
 $_lang["writing_config_file"] = 'Ecriture des fichiers de configuration: ';
