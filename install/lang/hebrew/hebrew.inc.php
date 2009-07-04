@@ -1,4 +1,4 @@
-﻿?<?php
+﻿<?php
 /**
  * MODx language File
  *
