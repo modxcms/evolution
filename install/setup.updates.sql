@@ -11,7 +11,7 @@
 UPDATE `{PREFIX}site_snippets` SET `category` = '2' WHERE `name` IN ('MemberCheck', 'Personalize', 'WebChangePwd', 'WebLogin', 'WebSignup');
 
 
-UPDATE `{PREFIX}site_snippets` SET `category` = '3' WHERE `name` IN ('Ditto', 'Jot', 'ListIndexer', 'NewsPublisher', 'Reflect');
+UPDATE `{PREFIX}site_snippets` SET `category` = '3' WHERE `name` IN ('Ditto', 'Jot', 'ListIndexer', 'Reflect');
 
 
 UPDATE `{PREFIX}site_snippets` SET `category` = '4' WHERE `name` IN ('Breadcrumbs','FirstChildRedirect','UltimateParent','Wayfinder');
@@ -31,10 +31,7 @@ UPDATE `{PREFIX}site_snippets` SET `category` = '10' WHERE `name` IN ('AjaxSearc
 UPDATE `{PREFIX}site_plugins` SET `category` = '10' WHERE `name` IN ('Search Highlighting');
 
 
-UPDATE `{PREFIX}site_plugins` SET `category` = '6' WHERE `name` IN ('Bottom Button Bar', 'Forgot Manager Login', 'Inherit Parent Template', 'TinyMCE', 'QuickEdit');
-
-
-UPDATE `{PREFIX}site_plugins` SET `category` = '9' WHERE `name` IN ('TemplateSwitcher');
+UPDATE `{PREFIX}site_plugins` SET `category` = '6' WHERE `name` IN ('Forgot Manager Login','Inherit Parent Template','TinyMCE','QM+','Transalias','Image TV Preview');
 
 
 #
