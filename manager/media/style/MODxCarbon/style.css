@@ -1243,7 +1243,6 @@ form#mutateContent input.disabled {
 form#mutateContent select.inputBox,
 form#mutateContent input,
 form#mutateContent textarea {
-  width: 300px;
   padding: 5px 3px;
 }
 form#mutateContent textarea.tv_textareamini {
