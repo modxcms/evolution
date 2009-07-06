@@ -168,6 +168,27 @@ $html.= '
 ';
 $modx->setPlaceholder('OnlineInfo',$html);
 
+// invoke event OnManagerWelcomePrerender
+$evtOut = $modx->invokeEvent('OnManagerWelcomePrerender');
+if(is_array($evtOut)) {
+    $output = implode("",$evtOut);
+    $modx->setPlaceholder('OnManagerWelcomePrerender', $output);
+}
+
+// invoke event OnManagerWelcomeHome
+$evtOut = $modx->invokeEvent('OnManagerWelcomeHome');
+if(is_array($evtOut)) {
+    $output = implode("",$evtOut);
+    $modx->setPlaceholder('OnManagerWelcomeHome', $output);
+}
+
+// invoke event OnManagerWelcomeRender
+$evtOut = $modx->invokeEvent('OnManagerWelcomeRender');
+if(is_array($evtOut)) {
+    $output = implode("",$evtOut);
+    $modx->setPlaceholder('OnManagerWelcomeRender', $output);
+}
+
 // load template file
 $tplFile = $base_path.'assets/templates/manager/welcome.html';
 $handle = fopen($tplFile, "r");

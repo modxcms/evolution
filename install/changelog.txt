@@ -2,11 +2,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5282 - June 30, 2009)
+MODx Evolution 1.0.0 (rev 5302 - July 6, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-867] Add system events to Manager log Welcome page to make custom dashboard plugins possible
 * [#MODX-602] Remove the calltime-pass-by-ref errors on the Export Site HTML screen.
 * [#MODX-725] Retain checkbox TV values when changing template, also fix postback rendering of TV values (broken in a recent commit)
 * [#MODX-810] Ensure that the web user ID is passed correctly to the OnWUsrFormPrerender and OnWUsrFormRender events.

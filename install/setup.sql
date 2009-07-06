@@ -1023,6 +1023,9 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('99','OnManagerLoginFormPrerender','2',''),
 ('100','OnStripAlias','1','Documents'),
 ('200','OnCreateDocGroup','1','Documents'),
+('201','OnManagerWelcomePrerender','2',''),
+('202','OnManagerWelcomeHome','2',''),
+('203','OnManagerWelcomeRender','2',''),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');
 
