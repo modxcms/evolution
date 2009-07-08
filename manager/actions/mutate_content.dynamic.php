@@ -506,7 +506,7 @@ function decode(s) {
 
 </script>
 
-<form name="mutate" id="mutateContent" method="post" enctype="multipart/form-data" action="index.php">
+<form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php">
 <?php
 
 // invoke OnDocFormPrerender event
@@ -526,7 +526,7 @@ if (is_array($evtOut))
 <fieldset id="create_edit">
 	<h2><?php echo $_lang['edit_document_title']?></h2>
 
-<div class="actions">
+<div id="actions">
 	  <ul class="actionButtons">
 		  <li id="Button1">
 			<a href="#" onclick="documentDirty=false; document.mutate.save.click();">
@@ -637,11 +637,11 @@ if (is_array($evtOut))
 				<td><input name="menutitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['menutitle']))?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_menu_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['document_opt_menu_index']?></span></td>
-				<td><table border="0" cellspacing="0" cellpadding="0" style="width:325px;"><tr>
+				<td><table border="0" cellspacing="0" cellpadding="0" style="width:333px;"><tr>
 					<td><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex']?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;" /><input type="button" class="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" class="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />
 					&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_menu_index_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 					<td align="right" style="text-align:right;"><span class="warning"><?php echo $_lang['document_opt_show_menu']?></span>&nbsp;<input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu']==1) ? 1 : 0?>" />
-					&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_show_menu_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+					&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_show_menu_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 				</tr></table></td></tr>
 		<tr><td colspan="2"><div class="split"></div></td></tr>
 			<tr style="height: 24px;"><td valign="top"><span class="warning"><?php echo $_lang['document_parent']?></span></td>

@@ -1163,7 +1163,7 @@ fieldset#preview h2.tab {
 /* ppb:
  * Revised Action Buttons
  */
-div.actions {
+div#actions {
 position:fixed;
  top:0;
  right:0;
@@ -1200,19 +1200,19 @@ color: #777;
   opacity: .3;
   filter: alpha(opacity=30);
 }
-form#mutateContent div.actions {
+div#actions {
   margin: 0;
   text-align: right;
   width: 600px;
 }
-form#mutateContent div.actions ul.actionButtons {
+div#actions ul.actionButtons {
   margin: 0;
   padding: 5px 5px 10px;
   background: none;
   height: 101%;
   width: auto;
 }
-form#mutateContent div.actions ul.actionButtons li {
+div#actions ul.actionButtons li{
   display: inline;
   list-style-type: none;
   margin-left: 6px;
@@ -1221,12 +1221,12 @@ form#mutateContent div.actions ul.actionButtons li {
 /*
  * Generic styles for all form elements
  */
-form#mutateContent dt,
-form#mutateContent dd {
+form#mutate dt,
+form#mutate dd {
   margin-bottom: 10px;
 }
-form#mutateContent dt label,
-form#mutateContent dt h3.label {
+form#mutate dt label,
+form#mutate dt h3.label {
   font-size: 12px;
   display: inline;
   float: left;
@@ -1234,43 +1234,43 @@ form#mutateContent dt h3.label {
   color: #821517!important;
   font-weight: bold;
 }
-form#mutateContent dd {
+form#mutate dd {
   margin-left: 210px;
 }
-form#mutateContent input.disabled {
+form#mutate input.disabled {
   background-color: #f4f4f4!important;
 }
 
-form#mutateContent select.inputBox,
-form#mutateContent input,
-form#mutateContent textarea {
+form#mutate select.inputBox,
+form#mutate input,
+form#mutate textarea {
   width: 300px;
   padding: 5px 3px;
 }
-form#mutateContent textarea.tv_textareamini {
+form#mutate textarea.tv_textareamini {
   height: 100px;
  width: 300px;
   overflow-y: scroll;
 }
-form#mutateContent textarea.tv_textarea {
+form#mutate textarea.tv_textarea {
   height: 100px;
  width: 100%;
   overflow-y: scroll;
 }
-form#mutateContent input.checkbox,
-form#mutateContent input.radio,
-form#mutateContent input.button,
-form#mutateContent input[type="checkbox"],
-form#mutateContent input[type="radio"],
-form#mutateContent input[type="button"] {
+form#mutate input.checkbox,
+form#mutate input.radio,
+form#mutate input.button,
+form#mutate input[type="checkbox"],
+form#mutate input[type="radio"],
+form#mutate input[type="button"] {
   width: auto;
 }
 
 /*
  * Styling for datepicker elements in settings and templavars
  */
-form#mutateContent input.date,
-form#mutateContent input.tvdate {
+form#mutate input.date,
+form#mutate input.tvdate {
 margin-right: 10px;
 }
 form#mutateContent img.date,
@@ -1300,36 +1300,36 @@ form#mutateContent fieldset#settings_general select {
 /*
  * Individual Styles for fieldset#settings_page_settings
  */
-form#mutateContent fieldset#settings_page_settings input#pub_date,
-form#mutateContent fieldset#settings_page_settings input#unpub_date {
+form#mutate fieldset#settings_page_settings input#pub_date,
+form#mutate fieldset#settings_page_settings input#unpub_date {
   width: 150px;
 }
-form#mutateContent fieldset#settings_page_settings select {
+form#mutate fieldset#settings_page_settings select {
   width: 155px;
 }
 /*
  * Individual Styles for fieldset#meta_keywords 
  */
-form#mutateContent fieldset#meta_keywords {
+form#mutate fieldset#meta_keywords {
 }
-form#mutateContent fieldset#meta_keywords {
+form#mutate fieldset#meta_keywords {
 }
-form#mutateContent fieldset#meta_keywords select.inputBox {
+form#mutate fieldset#meta_keywords select.inputBox {
   display: block;
   margin-bottom: 0;
   }
-form#mutateContent fieldset#meta_keywords dl.keywords {
+form#mutate fieldset#meta_keywords dl.keywords {
   float: left;
   margin-right: 30px;
 }
-form#mutateContent fieldset#meta_keywords dl.metatags {
+form#mutate fieldset#meta_keywords dl.metatags {
   float: left;
   
 }
-form#mutateContent fieldset#meta_keywords dl dt label {
+form#mutate fieldset#meta_keywords dl dt label {
   width: 100px;
 }
-form#mutateContent fieldset#meta_keywords dl dd {
+form#mutate fieldset#meta_keywords dl dd {
   margin-left: 110px;
 }
 /*
@@ -1382,7 +1382,7 @@ fieldset#settings_templvars dd.tvRadioOptions 	label input {
 fieldset#settings_templvars .tv_date {
   width: 150px;
 }
-form#mutateContent select.tv_url_select {
+form#mutate select.tv_url_select {
   padding: 5px 3px;
   
 }
@@ -1436,7 +1436,7 @@ fieldset.legacy h2 {
 }
 
 /* date picker */
-form#mutateContent input.DatePicker{
+form#mutate input.DatePicker{
     width: 150px;
     padding: 3px 3px 3px 24px;
     border: 1px solid #0070bf;
@@ -1471,7 +1471,7 @@ input:focus.DatePicker{
     width: 177px;	
 }
 
-form#mutateContent .dp_cal input.cal_timeTextBox {
+form#mutate .dp_cal input.cal_timeTextBox {
 	display: block;
     text-align: center;
     width: 60px;

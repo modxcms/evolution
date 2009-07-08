@@ -53,12 +53,11 @@
         </script>
     </head>
     <body>
-        <table cellpadding="0" cellspacing="0" class="actionButtons">
-            <tr>
-                <td id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style/MODxCarbon/images/icons/close.gif" align="absmiddle"> [+lang.DM_close+]</a></td>
-            </tr>
-        </table>
-        
+        <div id="actions">
+            <ul class="actionButtons">
+                <li id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style/MODxCarbon/images/icons/cancel.gif" /> [+lang.DM_close+]</a></li>
+            </ul>
+        </div>        
 	    <div class="sectionHeader">[+lang.DM_action_title+]</div>
 	    <div class="sectionBody"> 
 	        <div class="tab-pane" id="docManagerPane"> 

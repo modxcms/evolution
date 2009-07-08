@@ -318,7 +318,7 @@ function SetUrl(url, width, height, alt) {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css?<?php echo $theme_refresher?>" />
 
-<form name="mutate" method="post" action="index.php?a=109">
+<form name="mutate" id="mutate" class="module" method="post" action="index.php?a=109">
 <?php
     // invoke OnModFormPrerender event
     $evtOut = $modx->invokeEvent('OnModFormPrerender', array('id' => $id));
@@ -329,27 +329,40 @@ function SetUrl(url, width, height, alt) {
 
 <div class="subTitle">
 	<span class="right"><?php echo $_lang['module_title']?></span>
-
-	<table cellpadding="0" cellspacing="0" class="actionButtons"><tr>
-		<td id="Button1"><a href="#" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['save']?></a></td>
-<?php if($_GET['a']=='108') { ?>
-		<td id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>images/icons/copy.gif" align="absmiddle" /> <?php echo $_lang['duplicate']?></a></td>
-		<td id="Button3"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" align="absmiddle" /> <?php echo $_lang['delete']?></a></td>
-<?php echo "\n"; } ?>
-		<td id="Button4"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" align="absmiddle" /> <?php echo $_lang['cancel']?></a></td>
-	</tr></table>
-	<div class="stay">
-		<table border="0" cellspacing="1" cellpadding="1"><tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
-		<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
-		<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
-		<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
-	</tr></table>
-	</div>
+    <div id="actions">
+    	  <ul class="actionButtons">
+    		  <li id="Button1">
+    			<a href="#" onclick="documentDirty=false; document.mutate.save.click();">
+    			  <img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" /> <?php echo $_lang['save']?>
+    			</a>
+    			  &nbsp;
+    			  and
+    			  &nbsp;				
+    			<select id="stay" name="stay">
+    			  <?php if ($modx->hasPermission('new_module')) { ?>		
+    			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
+    			  <?php } ?>
+    			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+    			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
+    			</select>		
+    		  </li>
+    		  <?php
+    			if ($_REQUEST['a'] == '108') { ?>
+    		  <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } else { ?>
+    		  <li id="Button2"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } ?>	
+    		  <li id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
+    		  <?php // In Place for futer extraction of actionbar
+        			if ($_REQUEST['a'] == '27') { ?>
+        			    <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/preview.gif" /> <?php echo $_lang['preview']?></a></li>
+    		  <?php } ?>
+    	  </ul>
+    </div>	
 </div>
 
 <div class="sectionHeader"><?php echo $_lang['module_title']?></div>
-<div class="sectionBody"><p><img src="media/style/<?php echo $manager_theme?>images/icons/modules.gif" alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['module_msg']?></p>
+<div class="sectionBody"><p><img class="icon" src="media/style/<?php echo $manager_theme?>images/icons/modules.gif" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
 
 <div class="tab-pane" id="modulePane">
 	<script type="text/javascript">
@@ -367,7 +380,7 @@ function SetUrl(url, width, height, alt) {
 		<tr><td align="left"><?php echo $_lang['module_desc']?>:&nbsp;&nbsp;</td>
 			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td></tr>
 		<tr><td align="left"><?php echo $_lang['icon']?> <span class="comment">(32x32)</span>:&nbsp;&nbsp;</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input onChange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" style="width:45px;" /></td></tr>
+			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input onChange="documentDirty=true;" type="text" maxlength="255" style="width: 235px;" name="icon" value="<?php echo $content['icon']?>" /> <input type="button" value="<?php echo $_lang['insert']?>" onclick="BrowseServer();" style="width:62px;" /></td></tr>
 		<tr><td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
 			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span>
 			<select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
