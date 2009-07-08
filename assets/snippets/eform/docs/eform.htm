@@ -140,26 +140,21 @@ font-size:14pt;
 		<div class="qe_level_1"><a name="whatsnew"></a>
 <h2>What's New</h2>
 			<div class="qe_level_2">
-			<h3>Version 1.4.4</h3>
-				<ul>
-					<li>Fixed various Select box inconsistencies</li>
-			    <li>Adjusted email validation expression to allow + character.</li>
-			    <li>Line breaks in 'Html' fields will only be replaced in report template if &amp;sendAsText false!</li>
-			    <li>Line breaks in 'Html' fields will be replaced in thankyou template when &amp;sendAsText is true</li>
-			    <li>Properly display session hash name in debug text for &amp;protectsubmit code</li>
-			    <li>Properly escape regular expression in form parser</li>
-			    <li>Fixed 0 (zero) values not being processed in form parser for validating select boxes</li>
-			    <li>Fixed ambiguous variable naming in validation code</li>
-			    <li>Enhanced efLoadTemplate function to also allow snippets as templates</li>
-			    <li>&amp;invalidClass now also works for vericode field</li>
-			    <li>Added &amp;autoSenderName parameter</li>
-			    <li>Added &amp;runSnippet parameter - Call a snippet before main form processing. See parameter documentation for details.</li>
-					<li>Added &amp;snipFolder parameter for those that want to keep different versions of eform in different folders.
- defaults to &quot;eform&quot;.</li>
- 					<li>Added $lang['ef_mail_error'] to the language file and a slightly improved error reporting when sending mail fails</li>
- 					<li>Date formatting for report can now be set in language file: $_lang['ef_date_format']</li>
-					<li>Report output is now more locale aware as far as numbers are concerned. Added $_lang['ef_thousands_separator'] to the language file. If set to an empty string (default) the character defined in the current (php) locale will be used (if any).</li>
-					</ul>
+			<h3>Version 1.4.4.1 - 1.4.4.6</h3>
+			<ul>
+				<li>eForm now retains default values for check boxes and radio buttons</li>
+				<li>text input fields now retain default value set in form template</li>
+				<li>Added pixelchutes' phx workaround (use (()) instead of [++] in snippet call)</li>
+				<li>Added proper ef_validation_message language string</li>
+				<li>FS#960 - removed trimming of $param - values with leading or trailing spaces would always fail validation</li>
+				<li>bugfix: &amp;jScript parameter doesn't accept chunks, only a link to a JS file if more than one chunk is declared (eg &amp;jScript=`chunk1,chunk2)</li>
+				<li>bugfix: &amp;protectSubmit creates hash for all fields instead of fields declared in &amp;protectSubmit</li>
+				<li>bugfix: Auto respond email didn't honour the &amp;sendAsText parameter</li>
+				<li>bugfix: The #FUNCTION validation rule for select boxes never calls the function</li>
+				<li>bugfix: Validation css class isn't being added to labels.</li>
+				<li>Work around for setting required class on check &amp; radio labels</li>
+				<li>bugfix: If eform attibute is set on multiple check boxes only the last value is set in values list</li>
+			</ul>
 		<p><br />You can see a more extensive <a href="eform_history.htm">version history here</a>. </p>
 			</div>
 		</div>

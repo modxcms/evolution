@@ -86,6 +86,7 @@ Additional Improvements & Updates:
 	- Manager Login page
 	- Convert the 'Sort TV by template' and 'Plugin Execution Ordering', also fix the button CSS styling on those pages
  	- DocManager module (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions
+* Upgrade Add-on: eForm 1.4.4.6
 * Upgrade Add-on: AjaxSearch 1.8.3
 * Updated Add-on: TinyMCE 3.2.4.1
 * Fix the Template Variable "Lock variable for editing" checkbox
