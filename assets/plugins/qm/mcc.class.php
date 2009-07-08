@@ -47,7 +47,7 @@ if(!class_exists('Mcc')) {
             global $modx;
             $out = $this->head;
             $this->addLine('document.body.style.display="block";');
-            $this->addLine('$(".actions").hide();');
+            $this->addLine('$("#actions").hide();');
             $out.= '<script src="'.$modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
             $out.= '<script type="text/javascript">jQuery.noConflict(); jQuery(document).ready(function($){'.$this->script.'});</script>';
             return $out;
