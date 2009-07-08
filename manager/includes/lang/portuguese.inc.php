@@ -413,8 +413,8 @@ $_lang["login_allowed_days_message"] = 'Indique os dias em que o utilizador pode
 $_lang["login_allowed_ip"] = 'Endereços IP permitidos';
 $_lang["login_allowed_ip_message"] = 'Digite o(s) endereço(s) IP a partir dos quais este utilizador tem permissão para aceder ao sistema. <b>Importante: Separe múltiplos endereços IP com vírgulas (,)</b>';
 $_lang["login_button"] = 'Entrar';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">A Instalação/actualização deste site encontra-se actualmente a decorrer. <br />Por favor tente aceder novamente dentro de alguns minutos!</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Install/update on this site was executed, please login again!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'A Instalação/actualização deste site encontra-se actualmente a decorrer. <br />Por favor tente aceder novamente dentro de alguns minutos!<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Install/update on this site was executed, please login again!<br />';
 $_lang["login_captcha_message"] = 'Por favor digite o código de segurança mostrado na figura. Se não consegue ler o código, clique na figura para gerar um novo ou contacte o administrador do site.';
 $_lang["login_homepage"] = 'Acesso  - Página Principal';
 $_lang["login_homepage_message"] = 'Digite a ID do documento que deseja que o utilizador veja após aceder ao sistema (login). <b>Importante: Certifique-se que a ID do documento está certa e que o mesmo existe e está publicado para evitar possíveis páginas de erros no site!</b>';

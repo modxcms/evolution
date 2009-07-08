@@ -84,7 +84,7 @@ echo $_lang['export_site_message'];
 
 	$noncache = $_POST['includenoncache']==1 ? "" : "AND $dbase.`".$table_prefix."site_content`.cacheable=1";
 
-	// Modified for export alias path  2006/3/24 start
+	// Support export alias path  
 	function removeDirectoryAll($directory) {
 		// if the path has a slash at the end, remove it
 		if(substr($directory,-1) == '/') {
@@ -124,19 +124,20 @@ echo $_lang['export_site_message'];
 			fclose ($handle);
 			$somecontent = $buffer;
 			if (!$handle = fopen($filepath, 'w')) {
-				echo $_lang['export_site_failed']." Cannot open file ($filepath)<br />";
+				echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_open_filepath"]."</p>";
 				return FALSE;
 			} else {
 				// Write $somecontent to our opened file.
 				if(fwrite($handle, $somecontent) === FALSE) {
-					echo $_lang['export_site_failed']." Cannot write file.<br />";
+					$_lang["export_site_failed_no_open_filepath"] = 'Cannot open file ($filepath).';
+					echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_write"]."</p>";
 					return FALSE;
 				}
 				fclose($handle);
-				echo $_lang['export_site_success']."<br />";
+				echo "<p class="success">".$_lang['export_site_success']."</p>";
 			}
 		} else {
-			echo $_lang['export_site_failed']." Could not retrieve document.<br />";
+			echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_retrieve"]."</p>";
 //			return FALSE;
 		}
 		return TRUE;
@@ -205,7 +206,7 @@ echo $_lang['export_site_message'];
 				if (!file_exists($filename) || (filemtime($filename) < $row['editedon'])) {
 					if (!writeAPage($base, $row['id'], $filename)) exit;
 				} else {
-					echo $_lang['export_site_success']." Skip this document.<br />";
+					echo "<p><span class=\"success\">".$_lang['export_site_success']."</span> ".$_lang["export_site_success_skip_doc"]."</p>";
 				}
 				$dircontent[] = $docname;
 			}
@@ -216,12 +217,12 @@ echo $_lang['export_site_message'];
 					mkdir($dirname);
 					if ($row['wasNull']) {
 						printf($_lang['export_site_exporting_document'], $i++, $limit, $row['pagetitle'], $row['id']);
-						echo $_lang['export_site_success']."<br />";
+						echo "<p class="success">".$_lang['export_site_success']."</p>";
 					}
 				} else {
 					if ($row['wasNull']) {
 						printf($_lang['export_site_exporting_document'], $i++, $limit, $row['pagetitle'], $row['id']);
-						echo $_lang['export_site_success']." Skip this folder.<br />";
+						echo "<p><span class=\"success\">".$_lang['export_site_success'].$_lang["export_site_success_skip_dir"]."</p>";
 					}
 				}
 				exportDir($row['id'], $dirname."/", $i);
@@ -260,8 +261,6 @@ echo $_lang['export_site_message'];
 			printf($_lang['export_site_exporting_document'], $i, $limit, $row['pagetitle'], $id);
 			$alias = $row['alias'];
 		
-			// Modified for .xml extension 2006/1/18
-			//$filename = !empty($alias) ? $prefix.$alias.$suffix : $prefix.$id.$suffix ;
 			if(empty($alias)) {
 				$filename = $prefix.$id.$suffix;
 			} else {
@@ -282,25 +281,25 @@ echo $_lang['export_site_message'];
 				$somecontent = $buffer;
 
 				if(!$handle = fopen($filename, 'w')) {
-					echo $_lang['export_site_failed']." Cannot open file ($filename)<br />";
+					echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_open_filename"]."</p>";
 					exit;
 				} else {
 					// Write $somecontent to our opened file.
 					if(fwrite($handle, $somecontent) === FALSE) {
-						echo $_lang['export_site_failed']." Cannot write file.<br />";
+						echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_writee"]."</p>";
 						exit;
 					}
 					fclose($handle);
-					echo $_lang['export_site_success']."<br />";
+					echo "<p class="success">".$_lang['export_site_success']."</p>";
 				}
 			} else {
-				echo $_lang['export_site_failed']." Could not retrieve document.<br />";
+				echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_retrieve"]."</p>";
 			}
 		}
 	}
 	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $exportend = $mtime;
 	$totaltime = ($exportend - $exportstart);
-	printf ("<p />".$_lang['export_site_time'], round($totaltime, 3));
+	printf ("<p>".$_lang['export_site_time']."</p>", round($totaltime, 3));
 ?>
 <p />
 <table cellpadding="0" cellspacing="0" class="actionButtons">

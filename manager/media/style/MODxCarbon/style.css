@@ -50,6 +50,19 @@ overflow: hidden;
 .clear {
 	clear: both;
 }
+.fail {
+	color: #900;
+	font-weight: bold;
+}
+.warning{
+	color: #821517;
+	font-weight: bold;
+}
+.success{
+	color: #090;
+	font-weight: bold;
+}
+
 .contentPad {
 height: 20px !important;
 clear: both;
@@ -87,14 +100,6 @@ font-size: 86%;
 p.caption, p.comment {
 font-size: 86%;
  color: #888;
-}
-.warning{
-color: #821517;
-font-weight: bold;
-}
-.success{
-color: #090;
-font-weight: bold;
 }
 button {
 color: #821517;

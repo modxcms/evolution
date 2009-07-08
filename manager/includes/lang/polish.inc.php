@@ -420,8 +420,8 @@ $_lang["login_allowed_days_message"] = 'Wybierz dni, w które u¿ytkownik mo¿e siê
 $_lang["login_allowed_ip"] = 'Dozwolone adresy IP';
 $_lang["login_allowed_ip_message"] = 'Wprowad¼ adresy IP z których te¿ u¿ytkownik mo¿e siê logowaæ. <b>Uwaga: oddziel kilka adresów przecinkiem (,)</b>';
 $_lang["login_button"] = 'Zaloguj';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">W tej chwili trwa instalacja/aktualizacja tego serwisu.<br />Spróbuj ponownie za kilka minut!</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Instalacja/aktualizacja tego serwisu zosta³a zakoñczona, zaloguj siê ponownie!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'W tej chwili trwa instalacja/aktualizacja tego serwisu.<br />Spróbuj ponownie za kilka minut!<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Instalacja/aktualizacja tego serwisu zosta³a zakoñczona, zaloguj siê ponownie!<br />';
 $_lang["login_captcha_message"] = ' Administrator w³±czy³ walidacjê kodów Captcha, wiêc bêdziesz musia³ tak¿e wprowadziæ kod bezpieczeñstwa. Je¶li masz problem z odczytaniem kodu, kliknij na nim w celu wygenerowania nowego.';
 $_lang["login_homepage"] = 'Strona po zalogowaniu';
 $_lang["login_homepage_message"] = 'Wprowad¼ ID dokumentu, który chcesz pokazaæ u¿ytkownikowi po jego zalogowaniu. <b>Uwaga! Upewnij siê, ¿e ID, które wprowadzi³e¶ jest przypisane do istniej±cego dokumentu oraz, ¿e jest opublikowane i dostêpne dla danego u¿ytkownika!</b>';

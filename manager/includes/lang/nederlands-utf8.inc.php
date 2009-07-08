@@ -436,8 +436,8 @@ $_lang["login_allowed_days_message"] = 'Selecteer de dagen dat deze gebruiker in
 $_lang["login_allowed_ip"] = 'Toegestane IP Adressen';
 $_lang["login_allowed_ip_message"] = 'Voer de IP adressen in waarvan deze gebruiker mag aanmelden. <b>NB: Meerdere IP adressen worden gescheiden met een komma (,)</b>';
 $_lang["login_button"] = 'Aanmelden';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Installatie / update van deze website is momenteel in gang gezet. <br />Probeer het a.u.b. nogmaals over een paar minuten!</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Installatie / update op deze website is uitgevoerd, meld u a.u.b. nogmaals aan!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'Installatie / update van deze website is momenteel in gang gezet. <br />Probeer het a.u.b. nogmaals over een paar minuten!<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Installatie / update op deze website is uitgevoerd, meld u a.u.b. nogmaals aan!<br />';
 $_lang["login_captcha_message"] = ' De beheerder heeft de Captcha validatie ingeschakeld. Dit betekent dat u deze beveiligingscode hier moet ingeven.\n\nIndien de code slecht leesbaar is, kan u op de code zelf klikken om een nieuwe willekeurige code te laten aanmaken.';
 $_lang["login_homepage"] = 'Login Startpagina';
 $_lang["login_homepage_message"] = 'Voer het ID in van het document waarnaar gebruikers worden verwezen als ze aangemeld zijn. <b>NB: Zorg er voor dat het ID dat u invoert een bestaand, gepubliceerd en voor deze gebruiker toegangkelijk document is!</b>';

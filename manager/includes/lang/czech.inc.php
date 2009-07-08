@@ -279,7 +279,7 @@ $_lang["expand_tree"] = 'Rozbalit';//Expand tree
 $_lang["export_site"] = 'Export do HTML';//Export Static HTML
 $_lang["export_site_cacheable"] = 'Včetně souborů neuložených v zásobníku (cache):';//Include non-cacheable files:
 $_lang["export_site_exporting_document"] = 'Exportuji soubor <b>%s</b> z <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';//Exporting file <b>%s</b> of <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-$_lang["export_site_failed"] = '<span style="color:#990000">Selhalo!</span>';//<span style="color:#990000">Failed!</span>
+$_lang["export_site_failed"] = 'Selhalo!';//Failed!
 $_lang["export_site_html"] = 'Export do HTML';//Export site to HTML
 $_lang["export_site_maxtime"] = 'Max. čas exportu:';//Max export time:
 $_lang["export_site_maxtime_message"] = 'Zde můžete zadat počet sekund, po jakou dobu MODx může exportovat stránky (prvořadé PHP nastavení). Hodnota 0 je určená pro neomezený čas. Pamatujte prosím, že nastavení 0 je velmi vysoké, a proto může způsobovat problémy, proto se nedoporučuje.';//Here you can specify the number of seconds MODx can take to export the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.
@@ -287,7 +287,7 @@ $_lang["export_site_message"] = 'Použitím této funkce můžete exportovat vš
 $_lang["export_site_numberdocs"] = '<p><b>%s nalezených dokumentů k exportu...</b></p>';//<p><b>Found %s documents to export...</b></p>
 $_lang["export_site_prefix"] = 'Předpona souboru:';//File prefix:
 $_lang["export_site_start"] = 'Spustit export';//Start export
-$_lang["export_site_success"] = '<span style="color:#009900">Proběhlo úspěšně!</span>';//<span style="color:#009900">Success!</span>
+$_lang["export_site_success"] = 'Proběhlo úspěšně!';//Success!
 $_lang["export_site_suffix"] = 'Přípona souboru:';//File suffix:
 $_lang["export_site_target_unwritable"] = 'Do cílového adresáře není možné zapisovat. Prosím nastavte možnost zápisu (oprávnění 0777) a zkuste to znovu.';//Target directory isn\'t writable. Please ensure the directory is writable, and try again.
 $_lang["export_site_time"] = 'Export hotov. Trval celkem %s sekund.';//Export finished. Export took %s seconds to complete.
@@ -380,15 +380,15 @@ $_lang["import_params"] = 'Importovat sdílené parametry modulu';//Import modul
 $_lang["import_params_msg"] = 'Můžete importovat parametery nebo nastavení modulu výběrem jména modulu z menu. <b>POZNÁMKA:</b> Aby se moduly objevily v menu, musí být tento plugin/snippet součástí seznam závislostí modulu a modul musí mít povolen parametr sdílení. ';//You can import the parameters or settings of a module by selecting the name of the module from the above dropdown menu. <b>NOTE:</b> In order for modules to appear inside the menu, this plugin/snippet must be a part of the module\'s dependency listing and the module must have parameter sharing enabled.
 $_lang["import_parent_document"] = 'Nadřízený dokument:';//Parent Document:
 $_lang["import_site"] = 'Importovat HTML'; // Import HTML
-$_lang["import_site_failed"] = '<span style="color:#990000">Selhání!</span>';//<span style="color:#990000">Failed!</span>
+$_lang["import_site_failed"] = 'Selhání!';//Failed!
 $_lang["import_site_html"] = 'Import webu z HTML';//Import site from HTML
 $_lang["import_site_importing_document"] = 'Importování souboru <b>%s</b> ';//Importing file <b>%s</b>
 $_lang["import_site_maxtime"] = 'Maximální doba importu:';//Max import time:
 $_lang["import_site_maxtime_message"] = 'Tady můžete určit počet sekund, po které bude moci Správce obsahu importovat stránky (přepsání PHP nastavení). Vložte 0 pro neomezený čas. Pamatujte prosím, že nastavení 0 je velmi vysoké, a proto může způsobovat problémy, proto se nedoporučuje.';//Here you can specify the number of seconds the Content Manager can take to import the site (overriding PHP settings). Enter 0 for unlimited time. Please note, setting 0 or a really high number can do weird things to your server and is not recommended.
 $_lang["import_site_message"] = 'Použitím této funkce můžete vložit celý HTML web do databáze. Prosím všimněte si, že potřebujete nakopírovat vaše html soubory a/nebo složky do složky assets/import.<br />Prosím vyplňte formulář a stiskněte "Spustit import" k zahájení importu. Importované soubory budou uloženy do vybrané pozice, používí, když to bude možné, jména souborů jako aliasy dokumentů, název stránky jako nadpis stránky.';//Using this function you can import an entire HTML site into the database. Please note that you will need to copy your html files and/or folders into the assets/import folder.<p />Please fill out the form and press \'Import\' to start the import process. The files imported will be saved into the selected location, using, where possible, the files name as the document\'s aliases, the page title as the document\'s title.
-$_lang["import_site_skip"] = '<span style="color:#990000">Přeskočeno!</span>';//<span style="color:#990000">Skipped!</span>
+$_lang["import_site_skip"] = 'Přeskočeno!';//Skipped!
 $_lang["import_site_start"] = 'Spustit import';//Start Import
-$_lang["import_site_success"] = '<span style="color:#009900">Proběhlo úspěšně!</span>';//<span style="color:#009900">Success!</span>
+$_lang["import_site_success"] = 'Proběhlo úspěšně!';//Success!
 $_lang["import_site_time"] = 'Import dokončen. Import zabral %s sekund(y).';//Import finished. Import took %s seconds to complete.
 $_lang["inbox"] = 'Příchozí pošta';//Inbox
 $_lang["info"] = 'Informace';//Info
@@ -428,8 +428,8 @@ $_lang["login_allowed_days_message"] = 'Vyberte dny, kdy se může uživatel př
 $_lang["login_allowed_ip"] = 'Povolená IP adresa';//Allowed IP Address
 $_lang["login_allowed_ip_message"] = 'Zadejte IP adresy, ze kterých může uživatel přistupovat. <b>POZNÁMKA: Více IP adres oddělujte čárkou (,).</b>';//Enter the IP addresses that this user is allowed to login from. <b>NOTE: Separate multiple IP addresses with a comma (,)</b>
 $_lang["login_button"] = 'Přihlásit';//Login
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Právě probíhá instalace/aktualizace této stránky. <br />Prosím zkuste to za chvíli znovu!</span><br />'; //<span style="font-weight: bold; color: red;">Install/update of this site is currently in progress. <br />Please retry in a couple of minutes!</span><br />
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Instalace/aktualizace této stránky byla dokončena, prosím přihlašte se znovu!</span><br />'; // <span style="font-weight: bold; color: red;">Install/update on this site was executed, please login again!</span><br />
+$_lang["login_cancelled_install_in_progress"] = 'Právě probíhá instalace/aktualizace této stránky. <br />Prosím zkuste to za chvíli znovu!<br />'; //Install/update of this site is currently in progress. <br />Please retry in a couple of minutes!<br />
+$_lang["login_cancelled_site_was_updated"] = 'Instalace/aktualizace této stránky byla dokončena, prosím přihlašte se znovu!<br />'; // Install/update on this site was executed, please login again!<br />
 $_lang["login_captcha_message"] = 'Prosím vložte bezpečnostní kód zobrazený v kresbě. Jestliže nemůžete kód přečíst, klepněte obrázek s kódem a bude vygenerovát nový nebo kontaktujte administrátora webu.';//Please enter the security code shown in the graphic. If you can\'t read the code, click the image to generate a new one or contact your site admin.
 $_lang["login_homepage"] = 'Domovská přihlašovací stránka';//Login Home Page
 $_lang["login_homepage_message"] = 'Zadejte ID dokumentu, který chcete uživaleti zobrazit po jeho přihlášení. <b>POZNÁMKA: Ujistěte se,že ID dokumentu, které zadáte, patří existojícímu dokumentu, a že byli publikovány a jsou přístupné tomuto uživateli!</b>';//Enter the ID of the document you want to send user to after he/she has logged in. <b>NOTE: make sure the ID you enter belongs to an existing document, and that it has been published and is accessible by this user!</b>

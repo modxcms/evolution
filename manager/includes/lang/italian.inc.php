@@ -417,8 +417,8 @@ $_lang["login_allowed_days_message"] = 'Selezionate i giorni in cui questo utent
 $_lang["login_allowed_ip"] = 'Indirizzo IP autorizzato';
 $_lang["login_allowed_ip_message"] = 'Inserite l\'indirizzo IP autorizzato all\'autenticazione. <b>NB: Separate differenti indirizzi IP con una virgola (,)</b>';
 $_lang["login_button"] = 'Autentica';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Installazione o aggiornamento di questo sitoin corso. <br />Riprova tra qualche minuto</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Installazione o aggiornamento  completata su questo sito, effettuare nuovamente il login!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'Installazione o aggiornamento di questo sitoin corso. <br />Riprova tra qualche minuto<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Installazione o aggiornamento  completata su questo sito, effettuare nuovamente il login!<br />';
 $_lang["login_captcha_message"] = 'Inserite il codice di sicurezza mostrato all\'interno dell\'immagine grafica. Se avete difficolt&agrave; nel leggere il codice, cliccateci sopra per generarne un altro a caso, oppure contattate l\'amministratore del sito.';
 $_lang["login_homepage"] = 'Autenticazione Pagina d\'inizio';
 $_lang["login_homepage_message"] = 'Inserite l\'ID del Documento da inviare all\'utente, dopo che ha eseguito l\'autenticazione. <b>NOTE: assicuratevi che il documento indicato esista, sia pubblicato e accessibile all\'utente!</b>';

@@ -7,6 +7,7 @@ MODx Evolution 1.0.0 (rev 5302 - July 6, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-891] Manager language files contains hard-coded CSS spans
 * [#MODX-867] Add system events to Manager log Welcome page to make custom dashboard plugins possible
 * [#MODX-602] Remove the calltime-pass-by-ref errors on the Export Site HTML screen.
 * [#MODX-725] Retain checkbox TV values when changing template, also fix postback rendering of TV values (broken in a recent commit)
@@ -77,6 +78,7 @@ Additional Improvements & Updates:
 	- Updating language to be in line with Revo. (Resources -> Elements, resource browser -> File Browser, Documents -> Resources)
 	- Simplify language and remove overly-wordy phrases
 	- New language strings where appropriate and needed
+	- Replaced hard coded language strings in Import and Export action pages with new language strings
 * Remove legacy code no longer needed
     - Removed QuickEdit module (instructions only)
 	- Removed News Publisher snippet (did not support TVs)

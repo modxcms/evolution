@@ -426,8 +426,8 @@ $_lang["login_allowed_days_message"] = 'Valitse päivät, jolloin käytäjällä
 $_lang["login_allowed_ip"] = 'Sallitut IP-osoitteet';
 $_lang["login_allowed_ip_message"] = 'Syötä IP-osoitteet, joista käyttäjällä on lupa kirjautua sisään. <strong>HUOMAA:</strong> Erottele useammat IP-osoitteet pilkuilla (,).';
 $_lang["login_button"] = 'Kirjaudu sisään';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Sivuston asennus / päivitys on edelleen käynnissä. <br />Koita uudelleen parin minuutin kuluttua!</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Sivustolle on suoritettu asennus / päivitys. Ole hyvä ja kirjaudu sisään uudelleen!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'Sivuston asennus / päivitys on edelleen käynnissä. <br />Koita uudelleen parin minuutin kuluttua!<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Sivustolle on suoritettu asennus / päivitys. Ole hyvä ja kirjaudu sisään uudelleen!<br />';
 $_lang["login_captcha_message"] = '<strong>Syötä kuvassa näkyvä varmistuskoodi.</strong> Jos et jostain syystä näe kuvaa kunnolla, napsauta kuvan päällä, niin saat uuden varmistuskoodin.';
 $_lang["login_homepage"] = 'Aloitussivu';
 $_lang["login_homepage_message"] = 'Anna sen sivun ID-tunnus, joka näytetään automaattisesti ensimmäisenä käyttäjän kirjauduttua sisään. <strong>HUOMAA:</strong> Tarkista, että ID on olemassa ja kyseisen käyttäjän käytettävissä.';
