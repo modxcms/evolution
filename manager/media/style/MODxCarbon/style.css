@@ -103,6 +103,7 @@ width: 112px;
 margin-right: 5px;
 cursor: pointer;
 }
+
 a, a:active, a:visited, a:link {
 color: #1a32c7;
 text-decoration: underline;
@@ -227,7 +228,7 @@ color: inherit;
 font-size: 130%;
 font-family: monospace;
 }
-form input,
+form input[type=text],
 form textarea {
 border: 1px solid #ddd;
 border-left-color: #c3c3c3;
@@ -292,7 +293,7 @@ margin: 20px 0 0 140px !important;
 input.button, input.submit {
 margin: 0;
 border: 0;
-width: auto;
+width: auto !important;
 height: auto;
 background: transparent;
 vertical-align: middle;
