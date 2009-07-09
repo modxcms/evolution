@@ -174,7 +174,7 @@ if ($numRecords > 0) {
 	}
 } else {
 	// No Child documents
-	$children_output = $_lang['documents_in_container_no'];
+	$children_output = "<p>".$_lang['documents_in_container_no']."</p>";
 }
 
 ?>
@@ -199,16 +199,27 @@ function movedocument() {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <script type="text/javascript" src="media/script/tablesort.js"></script>
 
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['doc_data_title']?></span>
-
-	<table cellpadding="0" cellspacing="0" class="actionButtons"><tr>
-		<td id="Button1"><a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" align="absmiddle"> <?php echo $_lang['edit']?></a></td>
-		<td id="Button2"><a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" align="absmiddle"> <?php echo $_lang['move']?></a></td>
-		<td id="Button4"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" align="absmiddle"> <?php echo $_lang['duplicate']?></a></td>
-		<td id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']?></a></td>
-	</tr></table>
-</div>
+	<h1><?php echo $_lang['doc_data_title']?></h1>
+	
+	<div id="actions">	
+	  <ul class="actionButtons">
+		  <li id="Button1">
+			<a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" align="absmiddle"> <?php echo $_lang['edit']?></a>
+		  </li>
+		  <li id="Button2">
+			<a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" align="absmiddle"> <?php echo $_lang['move']?></a>
+		  </li>
+		  <li id="Button4">
+		    <a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" align="absmiddle"> <?php echo $_lang['duplicate']?></a>
+		  </li>
+		  <li id="Button3">
+		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']?></a>
+		  </li>
+		  <li id="Button6">
+			<a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/preview.gif" /> <?php echo $_lang['preview']?></a>
+		  </li>
+	  </ul>
+	</div>
 
 <div class="sectionHeader"><?php echo $_lang['page_data_title']?></div>
 <div class="sectionBody">

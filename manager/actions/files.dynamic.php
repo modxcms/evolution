@@ -140,8 +140,10 @@ if(substr($webstart_path,0,1)=='/') $webstart_path = '..'.$webstart_path;
 else $webstart_path = '../'.$webstart_path;
 
 ?>
-<br />
-<div class="sectionHeader"><?php echo $_lang['files_files']?></div><div class="sectionBody" style="font-size: 11px;">
+
+<h1><?php echo $_lang['files_files']?></h1>
+
+<div class="sectionBody" style="font-size: 11px;">
 <script type="text/javascript" src="media/script/multifile.js"></script>
 <script type="text/javascript">
 function viewfile(url) {
@@ -547,7 +549,10 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 
 if($_REQUEST['mode']=="edit" || $_REQUEST['mode']=="view") {
 ?>
-<div class="sectionHeader"><?php echo $_REQUEST['mode']=="edit" ? $_lang['files_editfile'] : $_lang['files_viewfile']?></div><div class="sectionBody">
+
+<div class="sectionHeader"><?php echo $_REQUEST['mode']=="edit" ? $_lang['files_editfile'] : $_lang['files_viewfile']?></div>
+
+<div class="sectionBody">
 <?php
 $filename=$_REQUEST['path'];
 $handle = @fopen($filename, "r");

@@ -38,7 +38,7 @@ if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) 
     $icon = '<a class="hometblink" href="index.php?a=99"><img src="media/style/[+theme+]/images/icons/web_users.gif" width="32" height="32" alt="'.$_lang['web_user_management_title'].'" /><br />'.$_lang['web_users'].'</a>';
     $modx->setPlaceholder('WebUserIcon',$icon);
 }
-if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module') || $modx->hasPermission('exec_module')) {
+if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
     $icon = '<a class="hometblink" href="index.php?a=106"><img src="media/style/[+theme+]/images/icons/modules.gif" width="32" height="32" alt="'.$_lang['manage_modules'].'" /><br />'.$_lang['modules'].'</a>';
     $modx->setPlaceholder('ModulesIcon',$icon);
 }

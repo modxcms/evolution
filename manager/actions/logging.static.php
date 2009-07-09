@@ -65,9 +65,7 @@ window.addEvent('domready', function() {
 	new DatePicker($('dateto'), {'yearOffset': dpOffset});
 });
 </script>
-<div class="subTitle">
-<span class="right"><?php echo $_lang["mgrlog_view"]?></span>
-</div>
+<h1><?php echo $_lang["mgrlog_view"]?></h1>
 
 <div class="sectionHeader"><?php echo $_lang["mgrlog_query"]?></div><div class="sectionBody" id="lyr1">
 <p><?php echo $_lang["mgrlog_query_msg"]?></p>

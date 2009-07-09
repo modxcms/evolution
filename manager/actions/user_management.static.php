@@ -86,8 +86,10 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
-<br />
-<div class="sectionHeader"><?php echo $_lang['user_management_title']; ?></div><div class="sectionBody">
+
+<h1><?php echo $_lang['user_management_title']; ?></h1>
+
+<div class="sectionBody">
 	<p><?php echo $_lang['user_management_msg']; ?></p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">

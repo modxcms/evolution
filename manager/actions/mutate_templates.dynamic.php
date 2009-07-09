@@ -95,7 +95,8 @@ function deletedocument() {
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>">
 
-<div class="subTitle">
+	<h1><?php echo $_lang['template_title']; ?></h1>
+
     <div id="actions">
     	  <ul class="actionButtons">
     		  <li id="Button1">
@@ -127,7 +128,6 @@ function deletedocument() {
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <?php } ?>
 
-<div class="sectionHeader"><?php echo $_lang['template_title']; ?></div>
 <div class="sectionBody">
 
 <?php if ($_REQUEST['a'] == 16) { ?>

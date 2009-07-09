@@ -241,10 +241,9 @@ if (is_array($evtOut))
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
 <input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) ? "1":"0" ?>" />
 
-<!-- Navrbar -->
-<div class="subTitle">
-<span class="right"><?php echo $_lang['user_title']; ?></span>
+<h1><?php echo $_lang['user_title']; ?></h1>
 
+<div id="actions">
 	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
 			<td id="Button1"><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
@@ -255,20 +254,21 @@ if (is_array($evtOut))
 			<td id="Button3"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
+	
 	<div class="stay">
-	<table border="0" cellspacing="1" cellpadding="1">
-	<tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
-		<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
-		<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
-		<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
-	</tr>
-	</table>
+		<table border="0" cellspacing="1" cellpadding="1">
+		<tr>
+			<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
+			<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
+			<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
+			<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
+		</tr>
+		</table>
 	</div>
 </div>
 
 <!-- Tab Start -->
-<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div><div class="sectionBody">
+<div class="sectionBody">
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="userPane">

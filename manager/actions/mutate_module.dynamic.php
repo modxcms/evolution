@@ -327,8 +327,8 @@ function SetUrl(url, width, height, alt) {
 <input type="hidden" name="id" value="<?php echo $content['id']?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
 
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['module_title']?></span>
+	<h1><?php echo $_lang['module_title']?></h1>
+	
     <div id="actions">
     	  <ul class="actionButtons">
     		  <li id="Button1">
@@ -358,8 +358,8 @@ function SetUrl(url, width, height, alt) {
         			    <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/preview.gif" /> <?php echo $_lang['preview']?></a></li>
     		  <?php } ?>
     	  </ul>
-    </div>	
-</div>
+    </div>
+	<!-- end #actions -->
 
 <div class="sectionHeader"><?php echo $_lang['module_title']?></div>
 <div class="sectionBody"><p><img class="icon" src="media/style/<?php echo $manager_theme?>images/icons/modules.gif" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>

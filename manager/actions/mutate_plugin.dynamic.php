@@ -259,7 +259,9 @@ function decode(s){
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
-<div class="subTitle">
+
+	<h1><?php echo $_lang['plugin_title']; ?></h1>
+
     <div id="actions">
     	  <ul class="actionButtons">
     		  <li id="Button1">
@@ -287,10 +289,8 @@ function decode(s){
     </div>
 </div>
 
-
-
-<div class="sectionHeader"><?php echo $_lang['plugin_title']; ?></div><div class="sectionBody">
-<?php echo $_lang['plugin_msg']; ?><p />
+<div class="sectionBody">
+<p><?php echo $_lang['plugin_msg']; ?></p>
 <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />   
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">

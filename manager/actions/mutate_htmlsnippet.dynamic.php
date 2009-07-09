@@ -124,7 +124,7 @@ if (is_array($evtOut))
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
 <input type="hidden" name="mode" value="<?php echo $_REQUEST['a']?>" />
 
-<!--<div class="subTitle">-->
+	<h1><?php echo $_lang['htmlsnippet_title']?></h1>
 
     <div id="actions">
     	  <ul class="actionButtons">
@@ -153,7 +153,7 @@ if (is_array($evtOut))
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
-<div class="sectionHeader"><?php echo $_lang['htmlsnippet_title']?></div>
+
 <div class="sectionBody">
 	<p><?php echo $_lang['htmlsnippet_msg']?></p>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">

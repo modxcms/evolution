@@ -17,13 +17,16 @@ function reloadTree() {
 	document.location.href = "index.php?r=1&a=7";
 }
 </script>
-<br />
-<div class="sectionHeader"><?php echo $_lang['export_site_html']; ?></div><div class="sectionBody">
+
+<h1><?php echo $_lang['export_site_html']; ?></h1>
+
+<div class="sectionBody">
 <?php
 
 if(!isset($_POST['export'])) {
-echo $_lang['export_site_message'];
+echo "<p>".$_lang['export_site_message']."</p>";
 ?>
+
 <fieldset style="padding:10px"><legend><?php echo $_lang['export_site']; ?></legend>
 <form action="index.php" method="post" name="exportFrm">
 <input type="hidden" name="export" value="export" />

@@ -91,8 +91,9 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode?>" />
 <input type="hidden" name="op" value="" />
-<br />
-<div class="sectionHeader"><?php echo $_lang['eventlog_viewer']?></div>
+
+<h1><?php echo $_lang['eventlog_viewer']?></h1>
+
 <div class="sectionBody">
 	<!-- load modules -->
 	<p><?php echo $_lang['eventlog_msg']?></p>

@@ -98,9 +98,10 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
-<br />
-<div class="sectionHeader"><?php echo $_lang['module_management']; ?>
-</div><div class="sectionBody">
+
+<h1><?php echo $_lang['module_management']; ?></h1>
+
+<div class="sectionBody">
 	<!-- load modules -->
 	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" hspace="15" vspace="15" style="display:block;float:left;margin-right:10px" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
 	<p>&nbsp;</p>

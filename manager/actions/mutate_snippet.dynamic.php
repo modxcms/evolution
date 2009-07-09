@@ -268,7 +268,6 @@ function decode(s){
 <input type="hidden" name="id" value="<?php echo $content['id']?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
 
-<div class="subTitle">
     <div id="actions">
     	  <ul class="actionButtons">
     		  <li id="Button1">
@@ -294,11 +293,10 @@ function decode(s){
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
-</div>
 
+<h1><?php echo $_lang['snippet_title']?></h1>
 
-
-<div class="sectionHeader"><?php echo $_lang['snippet_title']?></div><div class="sectionBody">
+<div class="sectionBody">
 <?php echo $_lang['snippet_msg']?><p />
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme?>style.css<?php echo '?'.$theme_refresher?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>

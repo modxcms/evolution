@@ -65,8 +65,7 @@ function checkParentChildRelation(pId, pName) {
 
 
 
-<div class="subTitle">
-<span class="right"><?php echo $_lang['move_document_title']; ?></span>
+<h1><?php echo $_lang['move_document_title']; ?></h1>
 
     <table cellpadding="0" cellspacing="0" class="actionButtons">
         <tr>
@@ -74,7 +73,7 @@ function checkParentChildRelation(pId, pName) {
             <td id="Button2"><a href="index.php?a=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
         </tr>
     </table>
-</div>
+
 
 <div class="sectionHeader"><?php echo $_lang['move_document_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['move_document_message']; ?><p />

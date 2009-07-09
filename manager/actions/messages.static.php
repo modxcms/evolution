@@ -5,9 +5,7 @@ if(!$modx->hasPermission('messages')) {
     $e->dumpError();
 }
 ?>
-<div class="subTitle">
-<span class="right"><?php echo $_lang['messages_title']; ?></span>
-</div>
+<h1><?php echo $_lang['messages_title']; ?></h1>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
 <div class="sectionHeader"><?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">

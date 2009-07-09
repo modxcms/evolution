@@ -15,10 +15,12 @@ $rs = mysql_query($sql);
 $num_rows_unpub = mysql_affected_rows($modxDBConn);
 
 ?>
-<br />
-<div class="sectionHeader"><?php echo $_lang['refresh_title']; ?></div><div class="sectionBody">
-<?php printf($_lang["refresh_published"], $num_rows_pub) ?><br />
-<?php printf($_lang["refresh_unpublished"], $num_rows_unpub) ?><br />
+
+<h1><?php echo $_lang['refresh_title']; ?></h1>
+
+<div class="sectionBody">
+<?php printf("<p>".$_lang["refresh_published"]."</p>", $num_rows_pub) ?>
+<?php printf("<p>".$_lang["refresh_unpublished"]."</p>", $num_rows_unpub) ?>
 <?php
 include_once "./processors/cache_sync.class.processor.php";
 $sync = new synccache();

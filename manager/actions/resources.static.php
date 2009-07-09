@@ -44,8 +44,10 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<br />
-<div class="sectionHeader"><?php echo $_lang['resource_management']; ?></div><div class="sectionBody">
+
+<h1><?php echo $_lang['resource_management']; ?></h1>
+
+<div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
 	<script type="text/javascript">
 		tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ) );

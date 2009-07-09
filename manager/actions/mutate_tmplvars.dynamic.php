@@ -245,7 +245,9 @@ function decode(s){
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo htmlspecialchars($content['display_params']);?>">
-<div class="subTitle">
+
+	<h1><?php echo $_lang['tmplvars']; ?></h1>
+
     <div id="actions">
     	  <ul class="actionButtons">
     		  <li id="Button1">
@@ -271,10 +273,9 @@ function decode(s){
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
-</div>
 
-<div class="sectionHeader"><?php echo $_lang['tmplvars']; ?></div><div class="sectionBody">
-<?php echo $_lang['tmplvars_msg']; ?><p />
+<div class="sectionBody">
+<p><?php echo $_lang['tmplvars_msg']; ?></p>
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_name']; ?>:</td>
@@ -359,7 +360,8 @@ function decode(s){
 </div>
 
 <!-- Template Permission -->
-<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
+<div class="sectionBody">
 <?php echo $_lang['tmplvar_tmpl_access_msg']; ?><p />
 <table width="100%" cellspacing="0" cellpadding="0">
 <?php

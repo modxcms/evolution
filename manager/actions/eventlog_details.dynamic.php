@@ -36,8 +36,8 @@ else{
 
 ?>
 
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['eventlog']; ?></span>
+	<h1><?php echo $_lang['eventlog']; ?></h1>
+
 	<table cellpadding="0" cellspacing="0" class="actionButtons">
 		<tr>
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
@@ -46,7 +46,7 @@ else{
 		<td id="Button4"><a href="index.php?a=114"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
 		</tr>
 	</table>
-</div>
+
 <script language="JavaScript" type="text/javascript">
 	function deletelog() {
 		if(confirm("<?php echo $_lang['confirm_delete_eventlog']; ?>")==true) {
@@ -54,6 +54,7 @@ else{
 		}
 	}
 </script> 
+
 <form name="resource" method="get">
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="a" value="<?php echo $_REQUEST['a']; ?>" />
