@@ -191,22 +191,22 @@ if(!empty($_FILES['userfile'])) {
   foreach((array)$userfiles as $userfile) {
 
 	// this seems to be an upload action.
-	printf($_lang['files_uploading'], $userfile['name'], substr($startpath, $len, strlen($startpath)));
-	echo $userfile['error']==0 ? $_lang['files_file_type'].$userfile['type'].", ".fsize($userfile['tmp_name']).'<br />' : '';
+	printf("<p>".$_lang['files_uploading']."</p>", $userfile['name'], substr($startpath, $len, strlen($startpath)));
+	echo $userfile['error']==0 ? "<p>".$_lang['files_file_type'].$userfile['type'].", ".fsize($userfile['tmp_name']).'</p>' : '';
 
 	$userfilename = $userfile['tmp_name'];
 
 	if (is_uploaded_file($userfilename)) {
 	  // file is uploaded file, process it!
 		if(!in_array(getExtension($userfile['name']), $uploadablefiles)) {
-			echo '<br /><span class="warning">'.$_lang['files_filetype_notok'].'</span><br />';
+			echo '<p><span class="warning">'.$_lang['files_filetype_notok'].'</span></p>';
 		} else {
 			if(@move_uploaded_file($userfile['tmp_name'], $_POST['path'].'/'.$userfile['name'])) {
 					// Ryan: Repair broken permissions issue with file manager
 					if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN')
 						@chmod($_POST['path']."/".$userfile['name'], $new_file_permissions);
 					// Ryan: End
-					echo '<br /><span class="success">'.$_lang['files_upload_ok'].'</span><br />';
+					echo '<p><span class="success">'.$_lang['files_upload_ok'].'</span></p>';
 
 					// invoke OnFileManagerUpload event
 					$modx->invokeEvent('OnFileManagerUpload',
@@ -217,7 +217,7 @@ if(!empty($_FILES['userfile'])) {
 					// Log the change
 					logFileChange('upload', $_POST['path'].'/'.$userfile['name']);
 			} else {
-				echo '<br /><span class="warning">'.$_lang['files_upload_copyfailed'].'</span> Possible permission problems - the directory you want to upload to needs to be set to 0777 permissions.<br />';
+				echo '<p><span class="warning">'.$_lang['files_upload_copyfailed'].'</span> '.$_lang["files_upload_permissions_error"].'</p>';
 			}
 		}
 	}else{
@@ -538,7 +538,7 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 
 <?php
 } else {
-	echo $_lang['files_upload_inhibited_msg'];
+	echo "<p>".$_lang['files_upload_inhibited_msg']."</p>";
 }
 ?>
 

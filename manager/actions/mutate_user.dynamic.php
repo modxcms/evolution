@@ -468,7 +468,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 }
 ?>
 		</table>
-		<?php if($_GET['id']==$modx->getLoginUserID()) { ?><b><?php echo $_lang['user_edit_self_msg']; ?><br><?php } ?>
+		<?php if($_GET['id']==$modx->getLoginUserID()) { ?><p><?php echo $_lang['user_edit_self_msg']; ?></p><?php } ?>
 	</div>
 	<!-- Settings -->
     <div class="tab-page" id="tabSettings">

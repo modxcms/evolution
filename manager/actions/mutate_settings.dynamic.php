@@ -136,7 +136,7 @@ function updateContentType(){
     <input type="hidden" name="settings_version" value="<?php echo $version; ?>" />
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
     <?php if(!isset($settings_version) || $settings_version!=$version) { ?>
-    <div class='sectionBody'><?php echo $_lang['settings_after_install']; ?></div>
+    <div class='sectionBody'><p><?php echo $_lang['settings_after_install']; ?></p></div>
     <?php } ?>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <div class="tab-pane" id="settingsPane">

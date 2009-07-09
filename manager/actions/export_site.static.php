@@ -132,7 +132,6 @@ echo "<p>".$_lang['export_site_message']."</p>";
 			} else {
 				// Write $somecontent to our opened file.
 				if(fwrite($handle, $somecontent) === FALSE) {
-					$_lang["export_site_failed_no_open_filepath"] = 'Cannot open file ($filepath).';
 					echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_write"]."</p>";
 					return FALSE;
 				}
