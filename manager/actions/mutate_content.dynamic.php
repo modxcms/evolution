@@ -524,7 +524,7 @@ if (is_array($evtOut))
 <input type="hidden" name="newtemplate" value="" />
 
 <fieldset id="create_edit">
-	<h2><?php echo $_lang['edit_document_title']?></h2>
+	<h2><?php if ($_GET['id']){ echo $_lang['edit_document_title']; } else { echo $_lang['create_resource_title'];}?></h2>
 
 <div id="actions">
 	  <ul class="actionButtons">

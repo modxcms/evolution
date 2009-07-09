@@ -7,6 +7,7 @@ MODx Evolution 1.0.0 (rev 5302 - July 6, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-897] Dynamic title for create/edit Resource action page depending on state
 * [#MODX-891] Manager language files contains hard-coded CSS spans
 * [#MODX-867] Add system events to Manager log Welcome page to make custom dashboard plugins possible
 * [#MODX-602] Remove the calltime-pass-by-ref errors on the Export Site HTML screen.
