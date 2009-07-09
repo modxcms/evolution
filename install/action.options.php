@@ -41,24 +41,6 @@ elseif ($installMode == 1) {
     $_POST['databaseloginname'] = $database_user;
     $_POST['databaseloginpassword'] = $database_password;
 }
-
-// catch browsers who's client-side validation of action=connection may not have triggered (e.g. WebKit)
-if(
-	empty($_POST['databasehost'])
-	|| empty($_POST['databaseloginname'])
-	|| empty($_POST['databaseloginpassword'])
-	|| empty($_POST['database_name'])
-	|| empty($_POST['database_connection_method'])
-	|| empty($_POST['database_connection_charset'])
-	|| ($installMode == 0 && empty($_POST['cmsadmin']))
-	|| ($installMode == 0 && empty($_POST['cmsadminemail']))
-	|| ($installMode == 0 && empty($_POST['cmspassword']))
-) {
-	header("Status: 200");
-	header("Location: {$_SERVER['HTTP_REFERER']}");
-	exit;
-}
-
 ?>
 
 <form name="install" id="install_form" action="index.php?action=summary" method="post">

@@ -59,7 +59,7 @@ installMode ='<?php echo $installMode ?>';
 passed ='<?php echo $_lang["status_passed_server"]?>';
 </script>
 
-<form name="install" id="install_form" action="index.php?action=options" method="post">
+<form name="install" id="install_form" action="index.php?action=options" onsubmit="return validate();" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
     <input type="hidden" value="1" name="chkagree" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?>/>
@@ -142,7 +142,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
     <br />
     <p class="buttonlinks">
         <a href="javascript:document.getElementById('install_form').action='index.php?action=mode';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
-        <a style="display:inline;" href="javascript:if (validate()){document.getElementById('install_form').submit();}" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
+        <a style="display:inline;" href="javascript:if(validate()){document.getElementById('install_form').action='index.php?action=options';document.getElementById('install_form').submit();}" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
     </p>
 </form>
 <script type="text/javascript">
