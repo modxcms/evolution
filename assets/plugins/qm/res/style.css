@@ -1,4 +1,4 @@
-#editor {
+#qmEditor {
     font-family:tahoma,arial; 
     font-size:11px; 
     position:fixed; 
@@ -14,15 +14,15 @@
     behavior:url(fixed.htc);
 }
 
-#editor:hover {
+#qmEditor:hover {
     opacity:1; 
     filter:alpha(opacity=100);
 }
 
-#editor a {
+#qmEditor a {
     color:black;
 }
-#editor .button {
+#qmEditor .qmButton {
     float:left;
     background:#ffffe1 no-repeat 4px;
     text-decoration:none;
@@ -37,24 +37,24 @@
     filter:alpha(opacity=80);
 }
 
-#editor .button:hover {
+#qmEditor .qmButton:hover {
     opacity:1; 
     filter:alpha(opacity=100);
 }
 
-#editor .edit {
+#qmEditor .qmEdit {
     background-image:url('edit.png');
 }
 
-#editor .add {
+#qmEditor .qmAdd {
     background-image:url('add.png');
 }
 
-#editor .delete{
+#qmEditor .qmDelete{
     background-image:url('delete.png');
 }
 
-#editor .logout{
+#qmEditor .qmLogout{
     margin-left:1px; 
     background-image:url('exit.png');
 }
