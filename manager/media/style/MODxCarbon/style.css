@@ -513,76 +513,6 @@ text-decoration: none;
 .protectedNode {
 	color: #aaa;
 }
-/*the old style below adresses version 0962 where the tree icons were misaligned. this problem was fixed in version 0963. by gaborg*/
-/*#treeMenu {
-background: url(images/misc/treebuttonbg.gif);
-border-bottom: 1px solid #ddd;
-}
-#treeMenu * {
-	vertical-align: middle;
-}
-#treeHolder {
-cursor: default;
-height: 100%;
-padding: 5px 10px 0 10px;
-border-top: 2px solid #fff;
-background: #f4f4f4;
-}
-#floater {
-display: none;
-position: absolute;
-width: 200px;
-height: 50px;
-top: 25px;
-left: 4px;
-background: #fff;
-border-bottom: 1px solid #666;
-z-index: 500;
-}
-.rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode {
-color: #000;
-padding: 2px;
-cursor: pointer;
-width: auto;
-border-left:1px solid #F4F4F4;
-border-right:1px solid #F4F4F4;
-}
-.treeNodeHover {
-background-color: #fff;
-border: 1px solid #c8c8d4;
-padding: 1px 3px;
-}
-.treeNodeSelected {
-background-color: #fff;
-color: #000;
-border: 1px solid #c8c8d4;
-padding: 1px 3px;
-border-left-color:#717178;
-border-top-color:#717178;
-}
-.unpublishedNode {
-color: #aaa;
-font-style: italic;
-}
-.deletedNode {
-color: #A52A2A;
-text-decoration: line-through;
-}
-.publishedNode {
-	color: #000;
-}
-.emptyNode {
-color: #aaa;
-cursor: default;
-}
-.notInMenuNode {
-color: #777;
-text-decoration: none;
-}
-.protectedNode {
-	color: #aaa;
-}
-*/
 
 #treeSplitter {
 width:10px;
@@ -1149,16 +1079,7 @@ color: #000;
 color: #060;
 border: 1px solid #060;
 }
-/**
-  * @section ${
-create/edit content frame}
-  *
-  * ${
-Styles related to create/edit content area customized to new structure}
-  * @see     ${
-see}
-  * Last revision: 2009-06-15 - 8:12
-  */
+
 form#mutateContent .sectionBody {
   background: none;
   border: none;
