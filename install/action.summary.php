@@ -287,6 +287,8 @@ $modules = isset ($_POST['module']) ? $_POST['module'] : array ();
 foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]\" value=\"$module\" />\n";
 ?>
   </div>
+
+<h2><?php echo $_lang['agree_to_terms'];?></h2>
 <p>
 <input type="checkbox" value="1" id="chkagree" name="chkagree" style="line-height:18px" <?php echo isset($_POST['chkagree']) ? 'checked="checked" ':""; ?><?php echo $agreeToggle;?>/><label for="chkagree" style="display:inline;float:none;line-height:18px;"> <?php echo $_lang['iagree_box']?> </label>
 </p>

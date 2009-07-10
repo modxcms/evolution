@@ -10,6 +10,7 @@
  * Language:       English
  * Encoding:       iso-8859-1
  */
+$_lang["agree_to_terms"] = 'Agree to the License Terms and Install';
 $_lang["alert_database_test_connection"] = 'You need to create your database or test the selection of your database!';
 $_lang["alert_database_test_connection_failed"] = 'The test of your database selection has failed!';
 $_lang["alert_enter_adminconfirm"] = 'The administrator password and the confirmation don\'t match!';
