@@ -869,7 +869,7 @@ class DocumentParser {
     function makeFriendlyURL($pre, $suff, $alias) {
         $Alias = explode('/',$alias);
         $alias = array_pop($Alias);
-        $dir = $this->config['use_alias_path'] ? '' : implode('/', $Alias);
+        $dir = implode('/', $Alias);
         unset($Alias);
         return ($dir != '.' ? "$dir/" : '') . $pre . $alias . $suff;
     }
