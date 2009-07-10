@@ -24,7 +24,7 @@ function reloadTree() {
 <?php
 
 if(!isset($_POST['export'])) {
-echo "<p>".$_lang['export_site_message']."</p>";
+echo '<p>'.$_lang['export_site_message'].'</p>';
 ?>
 
 <fieldset style="padding:10px"><legend><?php echo $_lang['export_site']; ?></legend>
@@ -127,19 +127,19 @@ echo "<p>".$_lang['export_site_message']."</p>";
 			fclose ($handle);
 			$somecontent = $buffer;
 			if (!$handle = fopen($filepath, 'w')) {
-				echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_open_filepath"]."</p>";
+				echo '<p><span class="fail">'.$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_open_filepath"].'</p>';
 				return FALSE;
 			} else {
 				// Write $somecontent to our opened file.
 				if(fwrite($handle, $somecontent) === FALSE) {
-					echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_write"]."</p>";
+					echo '<p><span class="fail">'.$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_write"].'</p>';
 					return FALSE;
 				}
 				fclose($handle);
-				echo "<p class="success">".$_lang['export_site_success']."</p>";
+				echo '<p class="success">'.$_lang["export_site_success"].'</p>';
 			}
 		} else {
-			echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_retrieve"]."</p>";
+			echo '<p><span class="fail">'.$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_retrieve"].'</p>';
 //			return FALSE;
 		}
 		return TRUE;
@@ -208,7 +208,7 @@ echo "<p>".$_lang['export_site_message']."</p>";
 				if (!file_exists($filename) || (filemtime($filename) < $row['editedon'])) {
 					if (!writeAPage($base, $row['id'], $filename)) exit;
 				} else {
-					echo "<p><span class=\"success\">".$_lang['export_site_success']."</span> ".$_lang["export_site_success_skip_doc"]."</p>";
+					echo '<p><span class="success">'.$_lang['export_site_success']."</span> ".$_lang["export_site_success_skip_doc"].'</p>';
 				}
 				$dircontent[] = $docname;
 			}
@@ -219,12 +219,12 @@ echo "<p>".$_lang['export_site_message']."</p>";
 					mkdir($dirname);
 					if ($row['wasNull']) {
 						printf($_lang['export_site_exporting_document'], $i++, $limit, $row['pagetitle'], $row['id']);
-						echo "<p class="success">".$_lang['export_site_success']."</p>";
+						echo '<p class="success">'.$_lang['export_site_success'].'</p>';
 					}
 				} else {
 					if ($row['wasNull']) {
 						printf($_lang['export_site_exporting_document'], $i++, $limit, $row['pagetitle'], $row['id']);
-						echo "<p><span class=\"success\">".$_lang['export_site_success'].$_lang["export_site_success_skip_dir"]."</p>";
+						echo '<p><span class="success">'.$_lang['export_site_success'].$_lang["export_site_success_skip_dir"].'</p>';
 					}
 				}
 				exportDir($row['id'], $dirname."/", $i);
@@ -283,25 +283,25 @@ echo "<p>".$_lang['export_site_message']."</p>";
 				$somecontent = $buffer;
 
 				if(!$handle = fopen($filename, 'w')) {
-					echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_open_filename"]."</p>";
+					echo '<p><span class="fail">'.$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_open_filename"].'</p>';
 					exit;
 				} else {
 					// Write $somecontent to our opened file.
 					if(fwrite($handle, $somecontent) === FALSE) {
-						echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_writee"]."</p>";
+						echo '<p><span class="fail">'.$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_writee"].'</p>';
 						exit;
 					}
 					fclose($handle);
-					echo "<p class="success">".$_lang['export_site_success']."</p>";
+					echo '<p class="success">'.$_lang['export_site_success'].'</p>';
 				}
 			} else {
-				echo "<p><span class=\"fail\">".$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_retrieve"]."</p>";
+				echo '<p><span class="fail">'.$_lang["export_site_failed"]."</span> ".$_lang["export_site_failed_no_retrieve"].'</p>';
 			}
 		}
 	}
 	$mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $exportend = $mtime;
 	$totaltime = ($exportend - $exportstart);
-	printf ("<p>".$_lang['export_site_time']."</p>", round($totaltime, 3));
+	printf ('<p>'.$_lang["export_site_time"].'</p>', round($totaltime, 3));
 ?>
 <p />
 <table cellpadding="0" cellspacing="0" class="actionButtons">
