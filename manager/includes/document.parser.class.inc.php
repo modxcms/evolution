@@ -867,8 +867,11 @@ class DocumentParser {
     }
 
     function makeFriendlyURL($pre, $suff, $alias) {
-        $dir= dirname($alias);
-        return ($dir != '.' ? "$dir/" : "") . $pre . basename($alias) . $suff;
+        $Alias = explode('/',$alias);
+        $alias = array_pop($Alias);
+        $dir = $this->config['use_alias_path'] ? '' : implode('/', $Alias);
+        unset($Alias);
+        return ($dir != '.' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
     function rewriteUrls($documentSource) {
