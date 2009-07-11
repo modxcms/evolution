@@ -293,7 +293,7 @@ if($modx->hasPermission('edit_web_user')) {
 	// web-users
 	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=99" target="main">'.$_lang['web_user_management_title'].'</a></li>';
 }
-if($modx->hasPermission('edit_user')) {
+if($modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('delete_role')) {
 	// roles
 	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=86" target="main">'.$_lang['role_management_title'].'</a></li>';
 }
