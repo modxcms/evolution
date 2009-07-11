@@ -52,9 +52,14 @@ window.addEvent('domready', function(){
             installMode: installMode
         });
 
-        new Ajax(url, { postBody: pars, update: $('databasestatus') } ).request();
+        new Ajax(url, { postBody: pars, update: $('databasestatus'), onComplete: setDefaults } ).request();
     });
+
+   
+
 });
+
+
 
 function testServer(){
 // get the server test status as soon as collation received
@@ -75,12 +80,24 @@ function testServer(){
     new Ajax(url, { postBody: pars, update: $('serverstatus'), onComplete: setColor } ).request();
 }
 
+function setDefaults(){
+	var def = $('AUH');
+	//	Need to add Yellow Fade Technique or slide-down transition
+	def.setStyle('display','block');
+}
+
 function setColor(){
-    col = $('database_collation');
+    var col = $('database_collation');
+	var sho = $('setCollation');
+	
+	//	Need to add Yellow Fade Technique or slide-down transition
+	sho.setStyle('display','block');
+	
     ss = document.getElementById('serverstatus');
     ssv = ss.innerHTML;
     if (ssv.indexOf(passed) >=0) {
         col.setStyle('background-color', '#9CCD00');
-        col.setStyle('color', '#0000CD');
+//        col.setStyle('color', '#0000CD');
+		col.setStyle('font-weight','bold');
     }
 }

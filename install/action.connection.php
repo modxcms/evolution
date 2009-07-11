@@ -66,9 +66,11 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
     <input type="hidden" value="<?php echo isset($database_connection_method) ? $database_connection_method : ''; ?>" name="database_connection_method" />
   </div>
+
   <h2><?php echo $_lang['connection_screen_connection_information']?></h2>
   <h3><?php echo $_lang['connection_screen_server_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_server_connection_note']?></p>
+
   <p class="labelHolder"><label for="databasehost"><?php echo $_lang['connection_screen_database_host']?></label>
     <input id="databasehost" value="<?php echo isset($_POST['databasehost']) ? $_POST['databasehost']: $database_server ?>" name="databasehost" />
   </p>
@@ -78,9 +80,16 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
   <p class="labelHolder"><label for="databaseloginpassword"><?php echo $_lang['connection_screen_database_pass']?></label>
     <input id="databaseloginpassword" type="password" name="databaseloginpassword" value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']: "" ?>" />
   </p>
-  <div class="clickHere"><a id="servertest" href="#"><?php echo $_lang['connection_screen_server_test_connection']?></a></div>
+
+<!-- connection test action/status message -->
+  <div class="clickHere">
+	&rarr; <a id="servertest" href="#"><?php echo $_lang['connection_screen_server_test_connection']?></a>
+  </div>
   <div class="status" id="serverstatus"></div>
-  <br />
+<!-- end connection test action/status message -->
+
+
+<div id="setCollation">
   <h3><?php echo $_lang['connection_screen_database_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_database_connection_note']?></p>
   <p class="labelHolder"><label for="database_name"><?php echo $_lang['connection_screen_database_name']?></label>
@@ -108,17 +117,28 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
   }
 ?>
   <p class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
-    <div id="collation" name="collation"><select id="database_collation" name="database_collation">
-        <option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected >
-          <?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>
-        </option>
-    </select></div>
+    <div id="collation" name="collation">
+		<select id="database_collation" name="database_collation">
+        	<option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected >
+          	<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>
+        	</option>
+    	</select>
+	</div>
   </p>
-  <div class="clickHere"><a id="databasetest" href="#"><?php echo $_lang['connection_screen_database_test_connection']?></a></div>
+
+
+  <div class="clickHere">
+	&rarr; <a id="databasetest" href="#"><?php echo $_lang['connection_screen_database_test_connection']?></a>
+  </div>
   <div class="status" id="databasestatus"></div>
+</div>
+
+
+
 <?php
   if ($installMode == 0) {
 ?>
+
   <div id="AUH" style="margin-top:1.5em;">
     <h2><?php echo $_lang['connection_screen_default_admin_user']?></h2>
     <p><?php echo $_lang['connection_screen_default_admin_note']?></p>
@@ -135,16 +155,20 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
       <input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" />
     </p>
   </div>
-  <br />
+
 <?php
   }
 ?>
-    <br />
+
+
+
     <p class="buttonlinks">
         <a href="javascript:document.getElementById('install_form').action='index.php?action=mode';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
         <a style="display:inline;" href="javascript:if(validate()){document.getElementById('install_form').action='index.php?action=options';document.getElementById('install_form').submit();}" title="<?php echo $_lang['btnnext_value']?>"><span><?php echo $_lang['btnnext_value']?></span></a>
     </p>
 </form>
+
+
 <script type="text/javascript">
 /* <![CDATA[ */
   // validate

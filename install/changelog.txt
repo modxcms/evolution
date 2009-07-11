@@ -104,6 +104,7 @@ Additional Improvements & Updates:
 * Updated the MODx installer
     - New skin
     - Streamline process by removing two steps
+    - Make Connection/Collation/Default Admin User only show when prior steps are completed first
 * New MODx Carbon default theme for MODx Evolution 1.0 release
 	- Removed deprecated themes for Evo 1.0 release
 	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users

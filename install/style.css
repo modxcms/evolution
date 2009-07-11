@@ -447,17 +447,18 @@ background:#F3F3F3 none repeat scroll 0 0;
 tr.highlight td, tr.highlight th {
 background-color:#78AE20;
 background-image:none;
-color:#FFFFFF;
+color:#fff;
 font-size:1.1em;
 font-weight:bold;
 padding-bottom:5px;
 padding-top:5px;
 }
 td del {
-color:#AAAAAA;
+color:#aaa;
 }
 p.labelHolder {
-margin-bottom:5px;
+	clear: left;
+	margin-bottom:5px;
 }
 
 #content ul li { background: none; list-style: none; }
@@ -469,12 +470,26 @@ margin-bottom:5px;
     list-style-type:none;
     margin:0;
 }
+
+
+#setCollation, 
+#AUH {
+	display: none;
+}
+
+
 tbody td {
     text-align:left;
 }
 .labelHolder label {
-    width:200px;
-    float:left;
+    float: left;
+	margin-bottom: 5px;
+    width: 200px;
+}
+.status {
+	margin: 1em 0 2em;
+	padding: .25em .5em;
+	background: #eee;
 }
 p.actions {
     line-height: 1;
