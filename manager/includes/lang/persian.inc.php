@@ -8,6 +8,8 @@
  * Version:        3.13
  * MODx version:   0.9.6.3 RC-2
 */
+$textdir = 'rtl';
+
 $_lang["about_msg"] = 'مادایکس یک <a href="http://modxcms.com/what-is-modx.html" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
 $_lang["about_title"] = 'درباره مادایکس';
 $_lang["access_permission_denied"] = 'شما دسترسی لازم را برای این پرونده ندارید.';
@@ -437,8 +439,6 @@ $_lang["manage_plugins"] = 'پلاگینها';
 $_lang["manage_snippets"] = 'اسنیپتها';
 $_lang["manage_templates"] = 'قالبها یا پوسته ها';
 $_lang["manager"] = 'مدیر';
-$_lang["manager_direction_message"] = 'جهت نمایش متون را در بخش مدیریت انتخاب کنید, از راست به چپ یا از چپ به راست.';
-$_lang["manager_direction_title"] = 'جهت نمایش متون بخش مدیریت:';
 $_lang["manager_lang_attribute_message"] = 'کد زبانی را که به بهترین وجه با زبان بخش مدیریت شما هماهنگ است وارد کنید, این تضمین کننده ی ارائه ی بهتر محتوا از سوی مرورگر به شماست.';
 $_lang["manager_lang_attribute_title"] = 'تنظیم شاخصه های HTML و XML وبگاه:';
 $_lang["manager_lockout_message"] = 'همکنون شما وارد بخش مدیریت محتوا شده اید. هر زمان که تمایل به خروج از این بخش دارید لطفا روی دکمه ی "خروج" کلیک کنید. <p />برای ارجاع به صفحه ی اصلی خود روی دکمه ی "منزل" کلیک کنید.';

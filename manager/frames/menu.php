@@ -6,7 +6,7 @@ if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mo
 if ($manager_theme) $manager_theme .= '/';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html<?php echo $modx->config['manager_direction'] == 'rtl' ? ' dir="rtl"' : ''?> lang="<?php echo $modx->config['manager_lang_attribute']?>" xml:lang="<?php echo $modx->config['manager_lang_attribute']?>">
+<html<?php echo $textdir ? ' dir="rtl"' : ''?> lang="<?php echo $modx->config['manager_lang_attribute']?>" xml:lang="<?php echo $modx->config['manager_lang_attribute']?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />
 	<title>nav</title>
@@ -17,8 +17,8 @@ if ($manager_theme) $manager_theme .= '/';
 	// TREE FUNCTIONS - FRAME
 	// These functions affect the tree frame and any items that may be pointing to the tree.
 	var currentFrameState = 'open';
-	var defaultFrameWidth = '<?php echo $modx->config['manager_direction']=='ltr' ? '260,*' : '*,260'?>';
-	var userDefinedFrameWidth = '<?php echo $modx->config['manager_direction']=='ltr' ? '260,*' : '*,260'?>';
+	var defaultFrameWidth = '<?php echo !$textdir ? '260,*' : '*,260'?>';
+	var userDefinedFrameWidth = '<?php echo !$textdir ? '260,*' : '*,260'?>';
 
 	var workText;
 	var buildText;
@@ -61,7 +61,7 @@ if ($manager_theme) $manager_theme .= '/';
 		try {
 			var elm = $('tocText');
 			if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']?>' alt='<?php echo $_lang['show_tree']?>' width='16' height='16' /></a>";
-			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo ($modx->config['manager_direction'] == 'ltr' ? '0,*' : '*,0')?>';
+			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo !($textdir ? '0,*' : '*,0')?>';
 			top.__hideTree = true;
 		} catch(oException) {
 			x=window.setTimeout('hideTreeFrame()', 1000);
@@ -195,9 +195,9 @@ if ($manager_theme) $manager_theme .= '/';
 	<![endif]-->
 </head>
 
-<body id="topMenu" class="<?php echo $modx->config['manager_direction'] ?>">
+<body id="topMenu" class="<?php echo $textdir ? 'rtl':'ltr'?>">
 
-<div id="tocText" <?php echo $modx->config['manager_direction'] ? 'class="tocTextRTL"' : '' ?>></div>
+<div id="tocText"<?php echo $textdir ? ' class="tocTextRTL"' : '' ?>></div>
 <div id="topbar">
 <div id="topbar-container">
 	<div id="statusbar">

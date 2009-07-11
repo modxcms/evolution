@@ -8,6 +8,8 @@
  * Version:        2.0.3
  * MODx version:   Evolution 1.0
 */
+$encoding = 'utf8';
+
 $_lang["about_msg"] = 'MODx is a <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'About MODx';
 $_lang["access_permission_denied"] = 'You do not have the correct permissions for this Resource.';
@@ -460,8 +462,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
 $_lang["manager"] = 'Manager';
-$_lang["manager_direction_message"] = 'Choose the direction that the text will be rendered in the Manager, left to right or right to left.';
-$_lang["manager_direction_title"] = 'Manager Text Direction:';
 $_lang["manager_lang_attribute_message"] = 'Enter the language code that best fits with your chosen manager language, this will ensure that the browser can present content in the best format for you.';
 $_lang["manager_lang_attribute_title"] = 'Manager HTML and XML Language Attribute:';
 $_lang["manager_lockout_message"] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';

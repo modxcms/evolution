@@ -7,6 +7,7 @@ MODx Evolution 1.0.0 (rev 5302 - July 10, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-916] Better handling of text direction and encoding for Manager languages
 * [#MODx-882] Specify the default Manager language during installation
 * [#MODX-390] Infinite loop possible during install
 * [#MODX-909] Roles menu item showed even if Manager User did not have Roles permissions
@@ -85,6 +86,7 @@ Additional Improvements & Updates:
 	- Simplify language and remove overly-wordy phrases
 	- New language strings where appropriate and needed
 	- Replaced hard coded language strings in Import and Export action pages with new language strings
+	- Better handling of Manager language encoding and text direction
 * Remove legacy code no longer needed
     - Removed QuickEdit module (instructions only)
 	- Removed News Publisher snippet (did not support TVs)

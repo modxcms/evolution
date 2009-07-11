@@ -2,7 +2,7 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo $modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : '';?> lang="<?php echo $modx->config['manager_lang_attribute'];?>" xml:lang="<?php echo $modx->config['manager_lang_attribute'];?>">
+<html xmlns="http://www.w3.org/1999/xhtml" <?php echo $textdir ? 'dir="rtl"' : '';?> lang="<?php echo $modx->config['manager_lang_attribute'];?>" xml:lang="<?php echo $modx->config['manager_lang_attribute'];?>">
 <head>
     <title>MODx</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
@@ -92,6 +92,6 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     </script>
 </head>
-<body ondragstart="return false" class="<?php echo $modx->config['manager_direction'] ?>">
+<body ondragstart="return false"<?php echo $textdir ? ' id="rtl"':''?>>
 
 <div id="preLoader"><table width="100%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>
