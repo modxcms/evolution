@@ -2,12 +2,14 @@
 /**
  * Filename:       includes/lang/italian.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team, Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif
  * Date:           2 Jan 2009
  * Version:        Version: 2.14
  * MODx version:   MODx version: 0.9.6.3
 */
+$modx_lang_attribute = 'it'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx &egrave; un <a href="http://modxcms.com/what-is-modx.html" target="_blank">framework PHP e un sistema di gestione dei contenuti (CMS)</a> su licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Cos\'&egrave; MODx';
 $_lang["access_permission_denied"] = 'Non avete i permessi per accedere al documento.';
@@ -437,8 +439,6 @@ $_lang["manage_plugins"] = 'Plugin';
 $_lang["manage_snippets"] = 'Snippet';
 $_lang["manage_templates"] = 'Gestione Template';
 $_lang["manager"] = 'Sistema di gestione';
-$_lang["manager_lang_attribute_message"] = 'Seleziona la codifica adatta al linguaggio usato nel manager, per garantire una corretta rappresentazione dei contenuti da parte del browser.';
-$_lang["manager_lang_attribute_title"] = 'Attributi HTML e XML della lingua del Manager:';
 $_lang["manager_lockout_message"] = 'Siete attualmete autenticati nel sistema di gestione dei contenuti. Se desiderate uscire dalla sessione, cliccate sul pulsante "Uscita".<p />Per andare alla pagina di inzio, cliccate sul pulsante "Home".';
 $_lang["manager_permissions"] = 'Gestione permessi';
 $_lang["manager_theme"] = 'Tema del sistema di gestione:';

@@ -2,13 +2,15 @@
 /**
  * Filename:       includes/lang/hebrew.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         Yossi Bengigi (www.MODx.co.il)
  * Date:           17 June 2009
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
 $modx_textdir = 'rtl';
+$modx_lang_attribute = 'he'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 
 $_lang["about_msg"] = 'MODx הינה <a href="http://modxcms.com/what-is-modx.html" target="_blank">מערכת ניהול תוכן מבוססת PHP</a> תחת רשיון <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'אודות MODx';
@@ -456,8 +458,6 @@ $_lang["manage_plugins"] = '(Plugins) התקנים';
 $_lang["manage_snippets"] = '(Snippets) קטעי קוד';
 $_lang["manage_templates"] = 'תבניות עיצוב';
 $_lang["manager"] = 'מנהל';
-$_lang["manager_lang_attribute_message"] = 'Enter the language code that best fits with your chosen manager language, this will ensure that the browser can present content in the best format for you.';
-$_lang["manager_lang_attribute_title"] = 'Manager HTML and XML Language Attribute:';
 $_lang["manager_lockout_message"] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
 $_lang["manager_permissions"] = 'הרשאות מנהל';
 $_lang["manager_theme"] = 'תבנית נושא למנהל:';

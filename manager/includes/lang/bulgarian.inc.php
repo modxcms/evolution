@@ -2,12 +2,15 @@
 /**
  * Filename:       includes/lang/bulgarian.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team
  * Date:           20 Oct 2008
  * Version:        2.01
  * MODx version:   0.9.6.3
 */
+$modx_lang_attribute = 'bg'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
+
 $_lang["about_msg"] = 'MODx is a <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'За Системата MODx';
 $_lang["access_permission_denied"] = 'Нямате Права за Достъп за този Документ.';
@@ -437,8 +440,6 @@ $_lang["manage_plugins"] = 'Плъгини';
 $_lang["manage_snippets"] = 'Снипети';
 $_lang["manage_templates"] = 'Шаблони';
 $_lang["manager"] = 'Мениджър';
-$_lang["manager_lang_attribute_message"] = 'Въведете кода на езика, който най-добре пасва с вече избрания в Мениджъра, това ще да де възможност на браузера да представи съдържанието по най-добрия начин за вас.';
-$_lang["manager_lang_attribute_title"] = 'Атрибути на Езика на Мениджъра - HTML и XML:';
 $_lang["manager_lockout_message"] = 'В момента сте влезли в Мениджъра. Ако желаете да прекратите сесията си, моля щракнете върху бутона "Изход" . <p />За да отидете във Вашата начална страница щракнете върху бутона "Начало" .';
 $_lang["manager_permissions"] = 'Права за достъп до Мениджъра';
 $_lang["manager_theme"] = 'Тема на Мениджъра:';

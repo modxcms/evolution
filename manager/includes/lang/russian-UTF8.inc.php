@@ -2,13 +2,16 @@
 /**
  * Filename:       includes/lang/russian-UTF8.inc.php
  * Function:       Russian language file.
- * Encoding:       UTF8
  * Author:         Russian MODx community
  * Date:           28 June 2008
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'ru'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 setlocale (LC_ALL, 'ru_RU');
+
 $_lang["about_msg"] = 'MODx - это <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'О MODx';
 $_lang["access_permission_denied"] = 'У Вас недостаточно прав на данный документ.';
@@ -445,8 +448,6 @@ $_lang["manage_plugins"] = 'Плагины';
 $_lang["manage_snippets"] = 'Сниппеты';
 $_lang["manage_templates"] = 'Шаблоны';
 $_lang["manager"] = 'Менеджер';
-$_lang["manager_lang_attribute_message"] = 'Введите код языка RFC4647, который больше всего подходит для языка Системы Управления, это должно помочь браузеру выбрать наилучший формат для отображения контента Системы управления. Для России это обычно ru или ru-RU.';
-$_lang["manager_lang_attribute_title"] = 'Язык HTML and XML разметки в системе управления:';
 $_lang["manager_lockout_message"] = 'В данный момент Вы находитесь в режиме управления сайтом. Чтобы закончить сеанс администрирования, нажмите кнопку "Выйти". <p />Чтобы перейти на главную или стартовую страницу, нажмите кнопку "Домой".';
 $_lang["manager_permissions"] = 'Права менеджеров';
 $_lang["manager_theme"] = 'Шаблон Системы Управления:';

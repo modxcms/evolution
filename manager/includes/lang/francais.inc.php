@@ -2,12 +2,14 @@
 /**
  * Filename:       includes/lang/francais-utf8.inc.php
  * Function:       French language file.
- * Encoding:       UTF8
  * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, JC Brebion (Fairytree) pour Evolution 1.0
  * Date:           23 June 2009
  * Version:        2.4
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'fr'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'iso-8859-1';
+
 $_lang["about_msg"] = 'MODx est un <a href="http://modxcms.com/what-is-modx.html" target="_blank">Système de Gestion de Contenu et un Framework applicatif PHP</a> placé sous licence <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'À propos de MODx';
 $_lang["access_permission_denied"] = 'Vous n\'avez pas les autorisations nécessaires pour modifier ce document.';
@@ -448,8 +450,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Modèles';
 $_lang["manager"] = 'Gestionnaire';
-$_lang["manager_lang_attribute_message"] = 'Saisissez le code qui convient le mieux à la langue utilisée par le gestionnaire, ceci garantira que votre navigateur affichera les contenus dans le meilleur format possible.';
-$_lang["manager_lang_attribute_title"] = 'Attribut de langue HTML et XML du gestionnaire:';
 $_lang["manager_lockout_message"] = 'Vous êtes déjà connecté au gestionnaire. Si vous souhaitez fermer votre session, merci de bien vouloir utiliser le bouton "Déconnexion". <br />Pour aller à la page d\'accueil, cliquez sur le bouton "Accueil".';
 $_lang["manager_permissions"] = 'Autorisations du gestionnaire';
 $_lang["manager_theme"] = 'Thème du gestionnaire:';

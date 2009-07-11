@@ -2,12 +2,14 @@
 /**
  * Filename:       includes/lang/finnish.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Authors:        Mikko Lammi, www.maagit.fi. Anssi Rajakallio.
  * Date:           3.7.2009
  * Version:        2.0.2
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'fi'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx on <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP-sovelluskehys ja sisällönhallintajärjestelmä</a>, jonka lisenssinä on avoimen lähdekoodin <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Tietoa MODx:stä';
 $_lang["access_permission_denied"] = 'Ei käyttöoikeuksia tähän sivuun.';
@@ -448,8 +450,6 @@ $_lang["manage_plugins"] = 'Liitännäiset';
 $_lang["manage_snippets"] = 'PHP-palaset';
 $_lang["manage_templates"] = 'Sivupohjat';
 $_lang["manager"] = 'Ylläpito';
-$_lang["manager_lang_attribute_message"] = 'Syötä käytettävän kielen merkistötunniste. Merkistötunnisteella varmistetaan, että selain näyttää sisällön mahdollisimman oikein.';
-$_lang["manager_lang_attribute_title"] = 'Merkistötunniste:';
 $_lang["manager_lockout_message"] = 'Olet kirjautuneena ylläpitoon. Jos haluat kirjautua ulos, napsauta "Kirjaudu ulos" -painiketta.<p />';
 $_lang["manager_permissions"] = 'Ylläpidon käyttöoikeudet';
 $_lang["manager_theme"] = 'Ylläpidon ulkoasu:';

@@ -2,12 +2,15 @@
 /**
 * Filename:       includes/lang/japanese-utf8.inc.php
 * Function:       Language file.
-* Encoding:       UTF8
 * Author:         MODx CMS JAPAN
  * Date:           29 May 2009
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
+//$modx_textdir = 'ltr'; // only needed for RTL langauges
+$modx_lang_attribute = 'ja'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 setlocale (LC_ALL, 'ja_JP.UTF-8');
 define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');
 
@@ -449,8 +452,6 @@ $_lang["manage_plugins"] = 'プラグイン';
 $_lang["manage_snippets"] = 'スニペット';
 $_lang["manage_templates"] = 'テンプレート';
 $_lang["manager"] = '管理画面';
-$_lang["manager_lang_attribute_message"] = '管理画面の HTML 要素の lang属性、xml:lang 属性指定します。「言語」で選択した言語にマッチする言語コードを指定してください。通常、日本語環境では「ja」を指定します。この指定を的確に行うことで、ブラウザは最適なフォーマットでコンテンツを出力するでしょう。';
-$_lang["manager_lang_attribute_title"] = '管理画面の言語コード:';
 $_lang["manager_lockout_message"] = '管理画面にログインしています。セッションを閉じたいときは「ログアウト」ボタンをクリックしてください。<p />管理画面のホームあるいはスタート画面に行きたいときは「ホーム」ボタンをクリックします。';
 $_lang["manager_permissions"] = '管理画面のアクセス許可';
 $_lang["manager_theme"] = '管理画面のテーマ:';

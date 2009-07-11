@@ -506,17 +506,6 @@ $dir->close();
             <td colspan="2"><div class='split'></div></td> 
           </tr>  
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["manager_lang_attribute_title"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='20' size='10' name="manager_lang_attribute" value="<?php echo isset($usersettings['manager_lang_attribute']) ? $usersettings['manager_lang_attribute'] : 'en' ; ?>" /></td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["manager_lang_attribute_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
             <td class="warning"><b><?php echo $_lang["mgr_login_start"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : $usersettings['manager_login_startup']; ?>"></td>
           </tr>

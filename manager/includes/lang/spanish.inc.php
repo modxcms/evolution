@@ -8,7 +8,11 @@
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'es'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 setlocale (LC_ALL, 'es_MX');
+
 $_lang["about_msg"] = 'MODx es un <a href="http://modxcms.com/what-is-modx.html" target="_blank">Sistema de Administración de Contenido y Esquema de PHP</a> bajo licencia <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Acerca de MODx';
 $_lang["access_permission_denied"] = 'No tienes los permisos correctos para este documento.';
@@ -445,8 +449,6 @@ $_lang["manage_metatags"] = 'Admin etiquetas META y Palabras claves';
 $_lang["manage_modules"] = 'Admin Modulos';
 $_lang["manage_plugins"] = 'Plugins';
 $_lang["manager"] = 'Administrador';
-$_lang["manager_lang_attribute_message"] = 'Ingresa el código de idioma que mejor se ajuste con el idioma del admin que elegiste, ésto asegurará que el navegador pueda presentar el contenido en el mejor formato para ti.';
-$_lang["manager_lang_attribute_title"] = 'Atributo del Idioma HTML y XML del Admin:';
 $_lang['manager_lockout_message'] = 'Estás actualmente dentro del Administrador de Contenido.  Si deseas cerrar tu sesión por favor haz clic en el botón de "Salir". <p />Para ir a tu página de inicio o página principal, haz clic en el botón de "Inicio".';
 $_lang["manager_permissions"] = 'Permisos del Administrador';
 $_lang["manager_theme"] = 'Tema del Administrador:';

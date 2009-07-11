@@ -2,12 +2,15 @@
 /**
  * Filename:       includes/lang/chinese.inc.php
  * Function:       Simple Chinese language file.
- * Encoding:       UTF8
  * Author:         changkong.org rerbin@gmail.com
  * Date:           2006/11/10
  * Version:        2.01
  * MODx version:   0.9.5
 */
+//$modx_textdir = 'ltr'; // only needed for RTL langauges
+$modx_lang_attribute = 'zh'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = '镆铘是一个 <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
 $_lang["about_title"] = '关于镆铘';
 $_lang["access_permission_denied"] = '您没有访问这文件的权限。';
@@ -422,8 +425,6 @@ $_lang["manage_plugins"] = '插件';
 $_lang["manage_snippets"] = '代码片段';
 $_lang["manage_templates"] = '模版';
 $_lang["manager"] = '管理员';
-$_lang["manager_lang_attribute_message"] = '输入最适合您所用语言的语言代码, 有助于浏览器用最正确的格式显示内容.';
-$_lang["manager_lang_attribute_title"] = '管理HTML和XML语言标识:';
 $_lang["manager_lockout_message"] = '您已经登录管理后台. 如果想关闭登录进程请点击"退出" . <p />要返回首页请点击 "首页".';
 $_lang["manager_permissions"] = '系统权限';
 $_lang["manager_theme"] = '后台的风格:';

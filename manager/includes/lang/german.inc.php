@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/german.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team
  *                 Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
  *                 Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
@@ -10,6 +9,9 @@
  * Version:        2.13
  * MODx version:   0.9.6.3
 */
+$modx_lang_attribute = 'de'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx ist eine PHP Arbeitsumgebung und ist unter der <a href="../assets/docs/license.txt">GPL</a> Lizenz veröffentlicht.';
 $_lang["about_title"] = 'Über MODx';
 $_lang["access_permission_denied"] = 'Sie sind nicht berechtigt, die Zugriffsrechte für dieses Dokument zu ändern.';
@@ -448,8 +450,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Template-Verwaltung';
 $_lang["manager"] = 'Manager';
-$_lang["manager_lang_attribute_message"] = 'Geben Sie bitte das Sprachkürzel ein, das am besten zu Ihrer gewählten Sprache im Manager passt, dies stellt sicher, dass der Inhalt im für Ihre Sprache am besten passenden Format dargestellt wird.';
-$_lang["manager_lang_attribute_title"] = 'Manager HTML und XML Sprache Attribute:';
 $_lang["manager_lockout_message"] = 'Sie sind gegenwärtig im Content Manager angemeldet. Wenn Sie Ihre Login-Session beenden wollen, klicken Sie bitte den "Abmelden"-Button. <p />Um zu Ihrer Start- oder Home-Seite zu gelangen klicken Sie bitte den "Start"-Button.';
 $_lang["manager_permissions"] = 'Management-Berechtigungen';
 $_lang["manager_theme"] = 'Manager-Thema:';

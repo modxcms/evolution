@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/nederlands.inc.php
  * Function:       Dutch language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team
  *                 Stefan van Zanden (21-03-2009 Update to 0.9.6.3 + large amount of typo / consistency / translation fixes)
  *                 Stefan van Zanden (23-06-2009 Update to Evolution 1.0.0rc1)
@@ -10,6 +9,9 @@
  * Version:        2.3
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'nl'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx is een <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Applicatie Framework en Content Management Systeem</a> gelicentieerd onder de <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Over MODx';
 $_lang["access_permission_denied"] = 'U heeft niet de juiste toegangsrechten tot dit document.';
@@ -456,8 +458,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
 $_lang["manager"] = 'Content Beheer Systeem';
-$_lang["manager_lang_attribute_message"] = 'Kies de taalcode die het beste past bij de Content Beheer Systeem taal, dit zorgt ervoor dat de browser de content het beste kan weergeven.';
-$_lang["manager_lang_attribute_title"] = 'Beheer HTML en XML taalattribuut:';
 $_lang["manager_lockout_message"] = 'U bent momenteel aangemeld bij het Content Beheer Systeem. Als u uw sessie wilt sluiten, klik dan a.u.b. op de knop "Afmelden". <p />Wilt u naar uw start- of homepage klik dan op de knop "Start".';
 $_lang["manager_permissions"] = 'Toegangsbeheer';
 $_lang["manager_theme"] = 'Content Beheer Systeem thema:';

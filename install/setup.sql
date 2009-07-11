@@ -896,7 +896,6 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('auto_menuindex','1'),
 ('session.cookie.lifetime','604800'),
 ('mail_check_timeperiod','60'),
-('manager_lang_attribute','en'),
 ('manager_direction','ltr'),
 ('tinymce_editor_theme','editor'),
 ('tinymce_custom_plugins','style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media'),

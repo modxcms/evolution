@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/polish-utf8.inc.php
  * Function:       Polski plik językowy.
- * Encoding:       UTF8
  * Author:         Piotr Grzeszykowski - piotrek@gawinet.pl
  *                 based on v. 0.9.1/0.9.5 translation by:
  *                    Piotr Łukańko - piotr.lukanko@gmail.com
@@ -11,6 +10,9 @@
  * Version:        1.2
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'pl'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx jest to <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'O MODx';
 $_lang["access_permission_denied"] = 'Nie masz właściwych uprawnień do tego dokumentu.';
@@ -440,8 +442,6 @@ $_lang["manage_plugins"] = 'Pluginy';
 $_lang["manage_snippets"] = 'Snippety';
 $_lang["manage_templates"] = 'Szablony';
 $_lang["manager"] = 'Menedżer';
-$_lang["manager_lang_attribute_message"] = 'Wpisz kod języka, który najlepiej odpowiada wybranemu językowi Menadżera - zapewni to optymalne wyświetlanie treści przez przeglądarkę.';
-$_lang["manager_lang_attribute_title"] = 'Atrybut Language dla HTML i XML Menadżera:';
 $_lang["manager_lockout_message"] = 'Jesteś obecnie zalogowany do Menadżera treści. W celu zakończenia sesji kliknij przycisk "Wyloguj". Aby przejść do strony głównej, kliknij przycisk "Start".';
 $_lang["manager_permissions"] = 'Uprawnienia menedżera';
 $_lang["manager_theme"] = 'Motyw panelu administracji:';

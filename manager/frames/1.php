@@ -7,7 +7,10 @@ $version = $client->property('version');
 $_SESSION['browser_version'] = $version;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-<html<?php echo $modx_textdir ? ' dir="rtl"' : ''?> lang="<?php echo $modx->config['manager_lang_attribute']?>" xml:lang="<?php echo $modx->config['manager_lang_attribute']?>">
+<html<?php
+	echo $modx_textdir ? ' dir="rtl"' : '';
+	echo " lang=".$modx_lang_attribute ? $modx_lang_attribute.'" xml:lang="'.$modx_lang_attribute.'"' : 'en" xml:lang="en"';
+?>>
 <head>
 	<title><?php echo $site_name?> - (MODx CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />

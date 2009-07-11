@@ -2,12 +2,13 @@
 /**
  * Filename:       includes/lang/svenska-utf8.inc.php
  * Function:       Swedish language file
- * Encoding:       UTF-8
  * Author:         Pontus Ågren (Pont) & Johnny Chadda
  * Date:           2009-06-21
  * Version:        1.0
  * MODx version:   Evolution 1.0 rev 5122
 */
+$modx_lang_attribute = 'sv'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx är ett <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP applikationsramverk och system för innehållshantering</a> och är licensierat under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
@@ -447,8 +448,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Mallar';
 $_lang["manager"] = 'Hanterare';
-$_lang["manager_lang_attribute_message"] = 'Ange den språkkod som bäst överensstämmer med din språkinställning för hanteraren. Det här säkerställer att webbläsare kan presentera innehållet i det bästa formatet för dig.';
-$_lang["manager_lang_attribute_title"] = 'Hanterarens språkattribut<br />för HTML och XML';
 $_lang["manager_lockout_message"] = 'Du är för närvarande inloggad i innehållshanteraren. Klicka på "Logga ut" om du vill stänga din session. <p />Klicka på "Hem"-knappen om du vill gå till din start- eller hemsida.';
 $_lang["manager_permissions"] = 'Rättigheter för hanteraren';
 $_lang["manager_theme"] = 'Tema för hanteraren';

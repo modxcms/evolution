@@ -8,6 +8,9 @@
  * Version:        2.1 - updated for MODx 0.9.6 RC3
  * MODx version:   0.9.6 RC3
 */
+$modx_lang_attribute = 'pt'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'iso-8859-1';
+
 $_lang["about_msg"] = 'MODx é um <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>Sistema em PHP para Gestão de Conteúdos</a> (em Inglês).';
 $_lang["about_title"] = 'Àcerca do MODx';
 $_lang["access_permission_denied"] = 'Não tem permissão para ver este documento.';
@@ -433,8 +436,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
 $_lang["manager"] = 'Administrador';
-$_lang["manager_lang_attribute_message"] = 'Introduza o código de língua que melhor se adequa à língua escolhida para o Administrador. Isto irá garantir que o browser apresenta conteúdos no melhor formato possível.';
-$_lang["manager_lang_attribute_title"] = 'Atributo de língua do Administrador (HTML e XML):';
 $_lang["manager_lockout_message"] = 'Está actualmente ligado no Gestor de Conteúdos. Se deseja fechar a sua sessão, por favor clique no botão \'Sair\'. <br />Para ir para a sua página inicial clique no botão \'Início\'';
 $_lang["manager_lockout_message"] = 'You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.';
 $_lang["manager_permissions"] = 'Permissões (no Interface de Gestão)';

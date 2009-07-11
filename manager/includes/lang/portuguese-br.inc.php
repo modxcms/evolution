@@ -2,12 +2,14 @@
 /**
  * Filename:       includes/lang/english.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team  - translated by Babaloo
  * Date:           29 May 2009
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'pt'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'O MODx é um <a href="http://modxcms.com/what-is-modx.html" target="_blank">Aplicativo de Desenvolvimento para PHP e Sistema de Gerenciamento de Conteúdo</a> distribuído sob a licença <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Sobre o MODx';
 $_lang["access_permission_denied"] = 'Você não tem permissão para abrir esse documento.';
@@ -448,8 +450,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
 $_lang["manager"] = 'Manager';
-$_lang["manager_lang_attribute_message"] = 'Digite o código de idioma que mais se adequa seu idioma de escolha par o Manager. Isso vai garantir que o navegador apresente o conteúdo na melhor formatação possível pra você.';
-$_lang["manager_lang_attribute_title"] = 'Atributos de Idiomas de HTML and XML para o Manager:';
 $_lang["manager_lockout_message"] = 'Você está usando o Sistema de Gerenciamento de Conteúdo. Se você quiser encerrar sua sessão, clique no botão "Sair". <p />Para voltar à página de entrada à inicial clique no botão "Inicial".';
 $_lang["manager_permissions"] = 'Permissões do Manager';
 $_lang["manager_theme"] = 'Tema do Manager:';

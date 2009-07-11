@@ -2,12 +2,15 @@
 /**
  * Filename:       includes/lang/czech.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         Hansek, COEX (hansek@coex.cz), původní překlad: rasel^ - http://www.etomite.sk, R - stick, Ajven, golem, stranger, rzelnik
  * Date:           2009/06/30
  * Version:        1.0
  * MODx version:   Evolution 1.0
 */
+//$modx_textdir = 'ltr'; // only needed for RTL langauges
+$modx_lang_attribute = 'cs'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx je <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licencovaný pod <a href="http://www.gnu.cz/article/32/">GNU GPL</a>.';//MODx is a <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.
 $_lang["about_title"] = 'O MODx';//About MODx
 $_lang["access_permission_denied"] = 'Nemáte potřebná oprávnění pro tento dokument.'; // You do not have the correct permissions for this document.
@@ -450,8 +453,6 @@ $_lang["manage_templates"] = 'Šablony';//Templates
 $_lang["manager"] = 'Správce';//Manager
 $_lang["manager_direction_message"] = 'Zvolte směr, kterým bude vykreslován text ve Správci, ltr - z leva do prava, rtl - z prava do leva.'; //Choose the direction that the text will be rendered in the Manager, left to right or right to left.
 $_lang["manager_direction_title"] = 'Správa směru textu:'; //Manager Text Direction:
-$_lang["manager_lang_attribute_message"] = 'Zadejte kód jazyku, který nejvíce vystihuje nastavení jazyku správce, toto zapříčiní, že prohlížeč bude schopen zobrazit nejlepší formu pro vás.'; //Enter the language code that best fits with your chosen manager language, this will ensure that the browser can present content in the best format for you.
-$_lang["manager_lang_attribute_title"] = 'Správce atributů jazyků HTML a XML:'; //Manager HTML and XML Language Attribute:
 $_lang["manager_lockout_message"] = 'Jste přihlášen do Správce obsahu. Pokud chcete opustit MODx, klikněte na tlačítko "Ohlásit".</p>Pro spuštění nebo přechod na domovskou stránku klikněte na tlačítko "Domů".';//You are currently logged into the Content Manager. If you would like to close your login session please click the "Logout" button. <p />To go to your startup or home page click the "Home" button.
 $_lang["manager_permissions"] = 'Správa přístupových práv';//Manager Permissions
 $_lang["manager_theme"] = 'Vzhled správce:';//Manager Theme:

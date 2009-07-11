@@ -11,6 +11,9 @@
  * Version:        1.2
  * MODx version:   0.9.6.3
 */
+$modx_lang_attribute = 'pl'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'iso-8859-2';
+
 $_lang["about_msg"] = 'MODx jest to <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'O MODx';
 $_lang["access_permission_denied"] = 'Nie masz w³a¶ciwych uprawnieñ do tego dokumentu.';
@@ -440,8 +443,6 @@ $_lang["manage_plugins"] = 'Pluginy';
 $_lang["manage_snippets"] = 'Snippety';
 $_lang["manage_templates"] = 'Szablony';
 $_lang["manager"] = 'Mened¿er';
-$_lang["manager_lang_attribute_message"] = 'Wpisz kod jêzyka, który najlepiej odpowiada wybranemu jêzykowi Menad¿era - zapewni to optymalne wy¶wietlanie tre¶ci przez przegl±darkê.';
-$_lang["manager_lang_attribute_title"] = 'Atrybut Language dla HTML i XML Menad¿era:';
 $_lang["manager_lockout_message"] = 'Jeste¶ obecnie zalogowany do Menad¿era tre¶ci. W celu zakoñczenia sesji kliknij przycisk "Wyloguj". Aby przej¶æ do strony g³ównej, kliknij przycisk "Start".';
 $_lang["manager_permissions"] = 'Uprawnienia mened¿era';
 $_lang["manager_theme"] = 'Motyw panelu administracji:';

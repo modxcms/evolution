@@ -2,13 +2,16 @@
 /**
  * Filename:       includes/lang/norsk.inc.php
  * Function:       Language file.
- * Encoding:       ?
  * Author:         The MODx Project Team (originally by Alex Butter)
  * Date:           03 Oct 2006 
  * Version:        2.01
  * MODx version:   0.9.6.3
- * Translated by:  Sylvaticus (Bjørn Erik Sandbakk)  */
-// NOTE: Now alpha-sorted
+ * Translated by:  Sylvaticus (Bjørn Erik Sandbakk)  
+*/
+
+$modx_lang_attribute = 'no'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx er et <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>PHP applikasjonsrammeverk og system for innholdshåndtering</a> og er lisensiert under <a href=\'../assets/docs/license.txt\'>GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
 $_lang["access_permission_denied"] = 'Du ikke rettigheter til dette dokumentet.';
@@ -450,8 +453,6 @@ $_lang["manager_theme_message"] = 'Velg tema for innholdshåntereren.';
 $_lang["manage_depends"] = 'Håndtere avhengigheter';
 $_lang["manage_files"] = 'Håndtere filer';
 $_lang["manage_htmlsnippets"] = 'Htmlstykker';
-$_lang["manager_lang_attribute_message"] = 'Skriv inn språkkoden som passer best til ditt valgte språk i innholdshåndtereren, dette vil sikre at nettleseren kan vise innholdet i best mulig format.';
-$_lang["manager_lang_attribute_title"] = 'Innholdshåndterer HTML og XML språkattributter:';
 $_lang["manage_metatags"] = 'Håndere META-tagger og nøkkelord';
 $_lang["manage_modules"] = 'Håndtere moduler';
 $_lang["manage_plugins"] = 'Plugins';

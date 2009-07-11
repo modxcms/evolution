@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/danish.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         Casper Bang-Udesen
  *                 Andreas Kleist Svendsen(Update to 0.9.6.1)
  *                 Jonas Grau (Update to 0.9.6.2)
@@ -10,6 +9,10 @@
  * Version:        2.02
  * MODx version:   0.9.6.2
 */
+//$modx_textdir = 'ltr'; // only needed for RTL langauges
+$modx_lang_attribute = 'da'; // Manager HTML and XML Language Attribute
+$modx_encoding = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx er et <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework og Content Management System</a> licenseret under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
 $_lang["access_permission_denied"] = 'Du har ikke de rette rettigheder for dette dokument.';
@@ -435,8 +438,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Skabeloner';
 $_lang["manager"] = 'Administration';
-$_lang["manager_lang_attribute_message"] = 'Indtast den sprogkode der bedst passer med dit valgte manager-sprog, dette sikrer at browseren viser indholdet i det bedste format.';
-$_lang["manager_lang_attribute_title"] = 'Manager HTML og XML Sprog-parameter';
 $_lang["manager_lockout_message"] = 'Du er ligenu logget ind i MODx administrationen. Hvis du vil slutte klik på "Log ud" knappen. <p />For at gå til start siden klik på "Hjem" knappen.';
 $_lang["manager_permissions"] = 'Administrer tilladelser';
 $_lang["manager_theme"] = 'Administrer tema:';
