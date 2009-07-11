@@ -7,7 +7,8 @@ MODx Evolution 1.0.0 (rev 5302 - July 10, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
-* [#MODX-909] Roles menu item shows always even if Manager User did not have Roles permissions
+* [#MODX-390] Infinite loop possible during install
+* [#MODX-909] Roles menu item showed even if Manager User did not have Roles permissions
 * [#MODX-851] Manager User and Webuser email messages were always in English despite the language setting
 * [#MODX-830] Friendly URLs can now contain UTF8 characters
 * [#MODX-897] Dynamic title for create/edit Resource action page depending on state

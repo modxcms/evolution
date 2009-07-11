@@ -8,6 +8,7 @@
 
 // start session
 session_start();
+$_SESSION['test'] = 1;
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
@@ -15,20 +16,39 @@ error_reporting(E_ALL & ~E_NOTICE);
 require_once("lang.php");
 
 // session loop-back tester
-if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
-    $_SESSION['session_test'] = 1;
+if (!$_SESSION['test']) {
     $installBaseUrl = (!isset ($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on') ? 'http://' : 'https://';
     $installBaseUrl .= $_SERVER['HTTP_HOST'];
     if ($_SERVER['SERVER_PORT'] != 80)
         $installBaseUrl = str_replace(':' . $_SERVER['SERVER_PORT'], '', $installBaseUrl); // remove port from HTTP_HOST
     $installBaseUrl .= ($_SERVER['SERVER_PORT'] == 80 || isset ($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'on') ? '' : ':' . $_SERVER['SERVER_PORT'];
-    echo "<html><head><title>" . $_lang['loading'] . "</title><script>window.location.href='" . $installBaseUrl . $_SERVER['PHP_SELF'] . "?action=language';</script></head><body></body></html>";
-    exit;
+	$retryURL = $installBaseUrl . $_SERVER['PHP_SELF'] . "?action=language";
+    echo "
+<html>
+<head>
+	<title>Install Problem</title>
+	<style type=\"text/css\">
+		*{margin:0;padding:0}
+		body{margin:50px;background:#eee;}
+		.install{padding:10px;border:5px solid #f22;background:#f99;margin:0 auto;font:120%/1em serif;text-align:center;}
+		p{ margin:20px 0; }
+		a{font-size:200%;color:#f22;text-decoration:underline;margin-top:30px;padding:5px;}
+	</style>
+</head>
+<body>
+	<div class=\"install\">
+		<p>".$_lang["session_problem"]."</p>
+		<p><a href=\"".$retryURL."\">".$_lang["session_problem_try_again"]."</a></p>
+	</div>
+</body>
+</html>";
+	    exit;
+	
 }
 
 $moduleName = "MODx";
-$moduleVersion = "Evolution 1.0.0";
-$moduleRelease = "04-Jul-2009";
+$moduleVersion = "Evolution 1.0-rc2";
+$moduleRelease = "11-Jul-2009";
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 $moduleSQLUpdateFile = "setup.updates.sql";
