@@ -8,7 +8,7 @@
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
-$textdir = 'rtl';
+$modx_textdir = 'rtl';
 
 $_lang["about_msg"] = 'MODx הינה <a href="http://modxcms.com/what-is-modx.html" target="_blank">מערכת ניהול תוכן מבוססת PHP</a> תחת רשיון <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'אודות MODx';

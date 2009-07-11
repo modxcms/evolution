@@ -10,7 +10,7 @@
  * Language:       Persian
  * Encoding:       utf-8
  */
-$textdir="rtl";
+$modx_textdir="rtl";
 
 $_lang["alert_database_test_connection"] = 'شما می بایست پایگاه داده را ایجاد کنید و یا انتخاب شده های پایگاه داده را بررسی کنید!';
 $_lang["alert_database_test_connection_failed"] = 'بررسی انتخاب شده های پایگاه داده موفقیت آمیز نبود!';

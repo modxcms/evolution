@@ -8,7 +8,7 @@
  * Version:        3.13
  * MODx version:   0.9.6.3 RC-2
 */
-$textdir = 'rtl';
+$modx_textdir = 'rtl';
 
 $_lang["about_msg"] = 'مادایکس یک <a href="http://modxcms.com/what-is-modx.html" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
 $_lang["about_title"] = 'درباره مادایکس';
