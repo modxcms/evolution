@@ -120,7 +120,7 @@ if(!class_exists('Mcc')) {
         //_______________________________________________________
         function doSafe($string) {
             global $modx;
-            $string = htmlentities($string, ENT_QUOTES, $modx->config['modx_charset']);
+            $string = htmlentities($string, ENT_QUOTES, $modx_charset);
         }
     }
 }

@@ -31,7 +31,7 @@ class modxDebugConsole{
 			"[+theme+]" => $modx->config["manager_theme"],
 			"[+title+]" => $title,
 			"[+content+]" => $content,
-			"[+charset+]" => $modx->config["modx_charset"],
+			"[+charset+]" => $modx_charset,
 		);
 	
 		return str_replace( array_keys( $placeholders ), array_values( $placeholders ), $this->templates["main"]);
@@ -44,7 +44,7 @@ class modxDebugConsole{
 	// ---------------------------------------------------
 	function save($html,$filename) {
 		global $modx;
-		header('Content-Type: text/html; charset='.$modx->config["modx_charset"]);
+		header('Content-Type: text/html; charset='.$modx_charset);
 		header("Content-Disposition: attachment; filename=\"$filename\"");
 		exit($html);
 	}

@@ -198,9 +198,6 @@ class DocumentParser {
                 }
             }
 
-            // added for backwards compatibility - garry FS#104
-            $this->config['etomite_charset'] = & $this->config['modx_charset'];
-
             // store base_url and base_path inside config array
             $this->config['base_url']= MODX_BASE_URL;
             $this->config['base_path']= MODX_BASE_PATH;
@@ -467,7 +464,7 @@ class DocumentParser {
         // send out content-type and content-disposition headers
         if (IN_PARSER_MODE == "true") {
             $type= !empty ($this->contentTypes[$this->documentIdentifier]) ? $this->contentTypes[$this->documentIdentifier] : "text/html";
-            header('Content-Type: ' . $type . '; charset=' . $this->config['modx_charset']);
+            header('Content-Type: ' . $type . '; charset=' . $modx_charset);
 //            if (($this->documentIdentifier == $this->config['error_page']) || $redirect_error)
 //                header('HTTP/1.0 404 Not Found');
             if (!$this->checkPreview() && $this->documentObject['content_dispo'] == 1) {

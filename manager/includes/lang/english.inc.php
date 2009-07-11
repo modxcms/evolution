@@ -9,7 +9,7 @@
  * MODx version:   Evolution 1.0
 */
 //$modx_textdir = 'ltr'; // only needed for RTL langauges
-$modx_lang_attribute = 'en'; // Manager HTML and XML Language Attribute
+$modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_encoding = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx is a <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
@@ -89,8 +89,6 @@ $_lang["change_password"] = 'Change Password';
 $_lang["change_password_confirm"] = 'Confirm password';
 $_lang["change_password_message"] = 'Please enter your new password, and then enter it again to confirm. Your password needs to be between 6 and 15 characters long.';
 $_lang["change_password_new"] = 'New password';
-$_lang["charset_message"] = 'Please select which character encoding you wish to use in the manager. Please note that MODx has been tested with a number of these encodings, but not all of them. For most languages, the default setting of UTF-8 is preferable.';
-$_lang["charset_title"] = 'Character encoding:';
 $_lang["chunk"] = 'Chunk';
 $_lang["chunk_code"] = 'Chunk code (html)';
 $_lang["chunk_multiple_id"] = 'Error: Multiple Chunks share the same unique ID.';
