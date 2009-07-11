@@ -258,6 +258,7 @@ $agreeToggle= $errors > 0 ? '' : ' onchange="if(document.getElementById(\'chkagr
 <form name="install" id="install_form" action="index.php?action=<?php echo $nextAction ?>" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
+	<input type="hidden" value="<?php echo $manager_language?>" name="managerlanguage" />
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
     <input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
     <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />

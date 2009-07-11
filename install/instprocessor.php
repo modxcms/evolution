@@ -40,7 +40,7 @@ $installData = $_POST['installdata'] ? 1 : 0;
 	$adminname = $_POST['cmsadmin'];
 	$adminemail = $_POST['cmsadminemail'];
 	$adminpass = $_POST['cmspassword'];
-	$managerlanguage = $_POST['language'];
+	$managerlanguage = $_POST['managerlanguage'];
 //}
 
 // set session name variable

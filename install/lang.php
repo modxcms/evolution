@@ -24,6 +24,14 @@ if (isset($_POST['language'])) {
 		$install_language = $_GET['language'];
 }
 
+$manager_language = "english";
+
+if (isset($_POST['managerlanguage'])) {
+	$manager_language = $_POST['managerlanguage'];
+} else {
+	if (isset($_GET['managerlanguage'])) 
+		$manager_language = $_GET['managerlanguage'];
+}
 
 # load language file
 if($install_language!="english" && file_exists("lang/".$install_language."/".$install_language.".inc.php")) {

@@ -67,7 +67,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
     <input type="hidden" value="<?php echo isset($database_connection_method) ? $database_connection_method : ''; ?>" name="database_connection_method" />
   </div>
 
-  <h2><?php echo $_lang['connection_screen_connection_information']?></h2>
+  <h2><?php echo $_lang['connection_screen_database_info']?></h2>
   <h3><?php echo $_lang['connection_screen_server_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_server_connection_note']?></p>
 
@@ -140,7 +140,8 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 ?>
 
   <div id="AUH" style="margin-top:1.5em;">
-    <h2><?php echo $_lang['connection_screen_default_admin_user']?></h2>
+  	<h2><?php echo $_lang['connection_screen_defaults']?></h2>
+    <h3><?php echo $_lang['connection_screen_default_admin_user']?></h3>
     <p><?php echo $_lang['connection_screen_default_admin_note']?></p>
     <p class="labelHolder"><label for="cmsadmin"><?php echo $_lang['connection_screen_default_admin_login']?></label>
       <input id="cmsadmin" value="<?php echo isset($_POST['cmsadmin']) ? $_POST['cmsadmin']:"admin" ?>" name="cmsadmin" />
@@ -154,11 +155,46 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
     <p class="labelHolder"><label for="cmspasswordconfirm"><?php echo $_lang['connection_screen_default_admin_password_confirm']?></label>
       <input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" />
     </p>
-  </div>
+
+	<h3 style="margin-top:2em"><?php echo $_lang["default_language"] ?></h3>
+	<p><?php echo $_lang["default_language_description"] ?></p>
+	<select name="managerlanguage">
+<?php
+	$manager_language = "english";
+	
+	if (isset($_POST['managerlanguage'])) {
+	    $manager_language = $_POST['managerlanguage'];
+	} else {
+	    if (isset($_GET['managerlanguage']))
+	        $manager_language = $_GET['managerlanguage'];
+	}
+	$langs = array();
+	if ($handle = opendir("../manager/includes/lang")) {
+	    while (false !== ($file = readdir($handle))) {
+	        if (!strpos($file, 'inc') === false) {
+	            $langs[] = $file;
+	        }
+	    }
+	    closedir($handle);
+	}
+	sort($langs);
+	
+	foreach ($langs as $language) {
+	    $abrv_language = explode('.', $language);
+	    if ($abrv_language[0] == 'english') {
+	        echo '<option value="' . $abrv_language[0] . '" selected="selected">' . $abrv_language[0] . '</option>' . "\n";
+	    } else {
+	        echo '<option value="' . $abrv_language[0] . '">' . $abrv_language[0] . '</option>' . "\n";
+	    }
+	}
+?>
+  </select>
+</div>
 
 <?php
-  }
+}
 ?>
+
 
 
 
