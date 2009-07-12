@@ -28,7 +28,7 @@ if ($register_globals == '1'){
 }
 // check sessions
 echo "<p>" . $_lang['checking_sessions'];
-if ($_SESSION['session_test'] != 1) {
+if ($_SESSION['test'] != 1) {
     echo "<span class=\"notok\">" . $_lang['failed'].  "</span></p>";
     $errors += 1;
 } else {
