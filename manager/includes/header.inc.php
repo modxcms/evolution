@@ -93,6 +93,6 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
     </script>
 </head>
-<body ondragstart="return false"<?php echo $modx_textdir ? ' id="rtl"':''?>>
+<body ondragstart="return false"<?php echo $modx_textdir ? ' class="rtl"':''?>>
 
 <div id="preLoader"><table width="100%" border="0" cellpadding="0"><tr><td align="center"><div class="preLoaderText"><?php echo $_lang['loading_page']; ?></div></td></tr></table></div>
