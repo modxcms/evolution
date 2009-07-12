@@ -4,9 +4,9 @@
  * Purpose:
  *    The Search class contains all functions common to AjaxSearch functionalities
  *
- *    Version: 1.8.3  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.3a  - Coroico (coroico@wangba.fr)
  *
- *    08/06/2009
+ *    12/07/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)

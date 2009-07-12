@@ -6,9 +6,9 @@
         Ajax-driven & Flexible Search form
 
   Version:
-        1.8.3
+        1.8.3a
 
-  Date: 08/06/2009
+  Date: 12/07/2009
   
   Created by:
       Coroico (coroico@wangba.fr)

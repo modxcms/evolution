@@ -5,14 +5,15 @@
  *    The AjaxSearch class contains all variables and functions
  *    used to display search form and results
  *
- *    Version: 1.8.3  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.3a  - Coroico (coroico@wangba.fr)
  *
- *    09/06/2009
+ *    12/07/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
  *    Ryan Thrash (rthrash - ryan@vertexworks.com)
  *
+ * 12/07/2009 - check of the advSearch parameter added
  * 29/03/2009 - mootools1.2, jquery, maxWords, mbstring parameters, search logs
  * 02/10/2008 - whereSearch, withTvs, new sql query, debug, subSearch
  * 24/07/2008 - Added rank, order & filter, breadcrumbs, tvPhx, cleardefault parameters
