@@ -5,10 +5,10 @@
         Ajax-driven & Flexible Search form
 
   Version:
-        1.8.3
+        1.8.3a
 
-  Date: 08/06/2009
-
+  Date: 12/07/2009
+  
   Created by:
       Coroico (coroico@wangba.fr)
       Jason Coward (opengeek - jason@opengeek.com)
@@ -18,7 +18,7 @@
       Live Search by Thomas (Shadock)
       Fixes & Additions by identity/Perrine/mikkelwe
       Document selection from Ditto by Mark Kaplan
-
+      
   Copyright & Licencing:
   ----------------------
   GNU General Public License (GPL) (http://www.gnu.org/copyleft/gpl.html)
