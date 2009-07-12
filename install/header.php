@@ -16,7 +16,7 @@
 <!-- start install screen-->
 <div id="header">
     <div class="container_12">
-        <span style="color:#fff;"><?php echo $moduleName; ?> <?php echo $moduleVersion; ?> (<?php echo $moduleRelease;?>)</span>
+        <span style="color:#fff;"><?php echo $moduleName; ?> <?php echo $moduleVersion; ?> (<?php echo ($modx_textdir?'&rlm;':'').$moduleRelease;?>)</span>
         <div id="mainheader">
             <div id="downloadbar" class="pngfix installbar">
                 <span id="downloadarrow" title="<?php echo $_lang["install_update"]; ?>"></span>

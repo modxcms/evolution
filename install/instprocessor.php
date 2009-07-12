@@ -563,9 +563,9 @@ $sqlParser->close();
 echo "<p><b>" . $_lang['installation_successful'] . "</b></p>";
 echo "<p>" . $_lang['to_log_into_content_manager'] . "</p>";
 if ($installMode == 0) {
-	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['installation_note'] . "</p>";
+	echo "<p><img src=\"img/ico_info.png\" width=\"40\" height=\"42\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['installation_note'] . "</p>";
 } else {
-	echo "<p><img src=\"img_info.gif\" width=\"32\" height=\"32\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p>";
+	echo "<p><img src=\"img/ico_info.png\" width=\"40\" height=\"42\" align=\"left\" style=\"margin-right:10px;\" />" . $_lang['upgrade_note'] . "</p>";
 }
 
 // Property Update function

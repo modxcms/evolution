@@ -215,11 +215,15 @@ text-align:center;
 color:#888888;
 }
 .buttonlinks {
-display:block;
-height:26px;
-line-height:26px;
-margin-bottom:20px;
+	display:block;
+	height:26px;
+	line-height:26px;
+	margin-bottom:20px;
     float:right;
+	clear: left;
+}
+#rtl .buttonlinks {
+	float: left;
 }
 
 .info .buttonlinks {
@@ -227,33 +231,30 @@ margin:0;
 }
 .buttonlinks a {
 -x-system-font:none;
-background:transparent url(site-ui-gfx.png) no-repeat scroll -54px -353px;
+background:transparent url(img/site-ui-gfx.png) no-repeat scroll -54px -353px;
 color:#5A5A5A;
 display:block;
 float:left;
-font-family:"Lucida Grande",Lucida,Verdana,sans-serif;
-font-size:11px;
-font-size-adjust:none;
-font-stretch:normal;
-font-style:normal;
-font-variant:normal;
-font-weight:bold;
+font: bold 11px/23px "Lucida Grande",Lucida,Verdana,sans-serif;
 height:26px;
-line-height:23px;
 margin:0 20px 0 0;
-max-width:250px;
 padding:0;
+max-width:250px;
 text-decoration:none;
 text-transform:uppercase;
 }
+#rtl .buttonlinks a {
+	margin: 0 0 0 20px;
+}
 .buttonlinks a span {
-background:#FFFFFF url(site-ui-gfx.png) no-repeat scroll 100% -353px;
+background:#FFFFFF url(img/site-ui-gfx.png) no-repeat scroll 100% -353px;
 display:block;
 float:left;
 height:26px;
 margin:0 0 0 10px;
 padding:0 22px 0 0;
 }
+
 .buttonlinks a:hover {
 background-position:-54px -379px;
 cursor:pointer;
@@ -272,12 +273,12 @@ background-position:100% -379px;
 text-decoration:none;
 }
 .buttonlinks a.prev {
-background:transparent url(link_button_prev.jpg) no-repeat scroll right 0;
+background:transparent url(img/link_button_prev.jpg) no-repeat scroll right 0;
 float:left;
 margin:0 20px 0 0;
 }
 .buttonlinks a.prev span {
-background:transparent url(link_button_prev.jpg) no-repeat scroll left 0;
+background:transparent url(img/link_button_prev.jpg) no-repeat scroll left 0;
 float:left;
 margin:0 10px 0 0;
 padding:0 0 0 22px;
@@ -288,19 +289,12 @@ background-position:right -26px;
 .buttonlinks a.prev:hover span {
 background-position:left -26px;
 }
-#footer .buttonlinks a, #whatwhyhow .buttonlinks a, #wlpeLogin .buttonlinks a {
-background:#64AB24 url(site-ui-gfx.png) no-repeat scroll -54px -353px;
-color:#5A5A5A;
-}
-#footer .buttonlinks a span, #whatwhyhow .buttonlinks a span, #wlpeLogin .buttonlinks a span {
-background:#64AB24 url(site-ui-gfx.png) no-repeat scroll 100% -353px;
-}
+
 #header {
-background:transparent url(site-ui-gfx.png) repeat-x scroll -23px -23px;
+background:transparent url(img/site-ui-gfx.png) repeat-x scroll -23px -23px;
     margin-bottom:25px;
     padding-top:16px;
 }
-
 #header a:hover {
 text-decoration:underline;
 }
@@ -319,25 +313,24 @@ margin-bottom:0.5em;
 }
 
 #downloadbar {
-background:transparent url(installbar.png) no-repeat scroll 0 0;
+background:transparent url(img/installbar.png) no-repeat scroll 0 0;
 height:93px;
 margin-bottom:20px;
 position:relative;
 width:940px;
 }
 #downloadinfo {
-color:#FFFFFF;
-font-size:26px;
-font-weight:bold;
-line-height:66px;
-padding-left:20px;
-text-transform:lowercase;
-    background:none;
-    padding-top:0px;
+	color:#FFFFFF;
+	font-size:26px;
+	font-weight:bold;
+	line-height:66px;
+	padding: 0 20px;
+	text-transform:lowercase;
+	background:none;
 }
 
 #footer {
-background:#64AB24 url(site-ui-gfx.png) repeat-x scroll 0 -198px;
+background:#64AB24 url(img/site-ui-gfx.png) repeat-x scroll 0 -198px;
 color:#FFFFFF;
 margin-top:20px;
 padding-top:23px;
@@ -346,21 +339,21 @@ padding-top:23px;
 	background: #64AB24 none repeat scroll 0 0;
     padding: 15px 0;
 }
-
-#bottom {
-background:#64AB24 url(site-ui-gfx.png) repeat-x scroll 0 0;
-clear:both;
-height:23px;
-margin:0;
-overflow:hidden;
-padding:0;
-}
 #footer h6 {
 font-size:1.7em;
 margin-bottom:10px;
 }
 #footer a {
 color:#FFFFFF;
+}
+
+#bottom {
+background:#64AB24 url(img/site-ui-gfx.png) repeat-x scroll 0 0;
+clear:both;
+height:23px;
+margin:0;
+overflow:hidden;
+padding:0;
 }
 #content ul, #content ol {
 margin-left:15px;
@@ -389,6 +382,40 @@ background-color:#F3F3F3;
 }
 #contentarea .notes h3 {
 font-size:1.3em;
+}
+
+.installImg {
+	float: left;
+	width: 120px;
+	min-height: 100px;
+	text-align: center;
+}
+#rtl .installImg {
+	float: right;
+}
+#installChoices {
+	margin:2em 0;
+}
+#installChoices h3 {
+	padding: 0 20px;
+	background: url(img/elements.gif) no-repeat top left;
+}
+#rtl #installChoices h3 {
+	background-position: top right;
+}
+#installChoices hr {
+	height: 1px;
+	border-width: 1px 0 0;
+	border-top: 1px dotted #ddd;
+}
+#installChoices input {
+	margin: 0 10px 10px 0;
+	float: left;
+	display: block;
+}
+#rtl #installChoices input {
+	margin: 0 0 10px 10px;
+	float: right;
 }
 
 table {
@@ -486,6 +513,9 @@ tbody td {
 	margin-bottom: 5px;
     width: 200px;
 }
+#rtl .labelHolder label {
+	float: right;
+}
 .status {
 	margin: 1em 0 2em;
 	padding: .25em .5em;
@@ -496,29 +526,31 @@ p.actions {
     margin-top: 3px;
 }
 p.actions a {
-    margin: 0 3px;
-    padding: 1px 4px 2px;
-    border: 1px solid #777;
-    border-top-color: #bbb;
-    border-left-color: #bbb;
-    background: #e4e4e4;
+    margin: 0 5px 1px;
+    padding: 2px 6px 3px;
+    border-bottom: 1px solid #039;
     display: block;
     float: left;
-    color: #222;
+    color: navy;
+	text-decoration: none;
+}
+#rtl p.actions a {
+	float: right;
 }
 p.actions a:hover {
-    margin: 1px 2px -1px 4px;
-    border: 1px solid #bbb;
-    border-top-color: #777;
-    border-left-color: #777;
-    text-decoration: none;
+	background: #039;
+	color: #fff;
 }
 p.actions a:active {
     background-color: #ccc;
 }
 img.options {
     float:left;
-    margin-right:5px;
+    margin: 0 10px 0 0;
+}
+#rtl img.options {
+	float:right;
+	margin: 0 0 0 10px;
 }
 span.ok {
     font-weight:bold;
