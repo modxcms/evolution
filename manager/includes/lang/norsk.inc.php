@@ -10,7 +10,7 @@
 */
 
 $modx_lang_attribute = 'no'; // Manager HTML and XML Language Attribute
-$modx_encoding = 'UTF-8';
+$modx_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx er et <a href=\'http://modxcms.com/what-is-modx.html\' target=\'_blank\'>PHP applikasjonsrammeverk og system for innholdshåndtering</a> og er lisensiert under <a href=\'../assets/docs/license.txt\'>GPL</a>.';
 $_lang["about_title"] = 'Om MODx';

@@ -108,6 +108,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'" width="18" height="18">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }
 
+		// Make sure to pass in the $modx_textdir variable to the node builder
+		global $modx_textdir;
+
         while(list($id,$pagetitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = mysql_fetch_row($result))
         {
             $pagetitle = htmlspecialchars($pagetitle);
@@ -115,6 +118,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $pagetitleDisplay = $published==0 ? "<span class=\"unpublishedNode\">$pagetitle</span>" : ($hidemenu==1 ? "<span class=\"notInMenuNode$protectedClass\">$pagetitle</span>":"<span class=\"publishedNode$protectedClass\">$pagetitle</span>");
             $pagetitleDisplay = $deleted==1 ? "<span class=\"deletedNode\">$pagetitle</span>" : $pagetitleDisplay;
             $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="'.$_style["tree_linkgo"].'" width="16" height="16">' : '' ;
+			$pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
 
             $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";
             $alt.= "".$_lang['document_opt_menu_index'].": ".$menuindex;
@@ -127,7 +131,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 if($privateweb||$privatemgr) $icon='page-secure';
                 else if(isset($icons[$contenttype])) $icon = $icons[$contenttype];
                 $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="media/style/'.$theme.'images/tree/'.$icon.'.gif" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
-                $output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>'.($modx_textdir ? '&rlm;' : '').'('.$id.')</small></div>';
+                $output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
             }
             else {
                 // expandAll: two type for partial expansion
@@ -137,13 +141,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                        array_push($opened2, $id);
                     }
                     $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_minusnode"].'" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folderopen_secure"] : $_style["tree_folderopen"]).'" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
-                    $output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>'.($modx_textdir ? '&rlm;' : '').'('.$id.')</small><div style="display:block">';
+                    $output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:block">';
                     makeHTML($indent+1,$id,$expandAll,$theme);
                     $output .= '</div></div>';
                 }
                 else {
                     $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.'<img id="s'.$id.'" align="absmiddle" style="cursor: pointer" src="'.$_style["tree_plusnode"].'" width="18" height="18" onclick="toggleNode(this,'.($indent+1).','.$id.',0,'. (($privateweb == 1 || $privatemgr == 1) ? '1' : '0') .'); return false;" oncontextmenu="this.onclick(event); return false;" />&nbsp;<img id="f'.$id.'" title="'.$_lang['click_to_context'].'" align="absmiddle" style="cursor: pointer" src="'.(($privateweb == 1 || $privatemgr == 1) ? $_style["tree_folder_secure"] : $_style["tree_folder"]).'" width="18" height="18" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
-                   	$output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> <small>'.($modx_textdir ? '&rlm;' : '').'('.$id.')</small><div style="display:none"></div></div>';
+                   	$output .= '<span onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'f'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'<div style="display:none"></div></div>';
                     array_push($closed2, $id);
                 }
             }

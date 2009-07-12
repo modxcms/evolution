@@ -4,12 +4,10 @@ if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mo
 	$modx->config['mail_check_timeperiod'] = 5;
 }
 if ($manager_theme) $manager_theme .= '/';
+$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html<?php
-	echo $modx_textdir ? ' dir="rtl"' : '';
-	echo " lang=".$modx_lang_attribute ? $modx_lang_attribute.'" xml:lang="'.$modx_lang_attribute.'"' : 'en" xml:lang="en"';
-?>>
+<html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />
 	<title>nav</title>

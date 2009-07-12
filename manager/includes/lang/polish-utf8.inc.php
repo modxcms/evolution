@@ -11,7 +11,7 @@
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'pl'; // Manager HTML and XML Language Attribute
-$modx_encoding = 'UTF-8';
+$modx_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx jest to <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'O MODx';

@@ -9,7 +9,7 @@
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'ru'; // Manager HTML and XML Language Attribute
-$modx_encoding = 'windows-1251';
+$modx_charset = 'windows-1251';
 
 setlocale (LC_ALL, 'ru_RU');
 

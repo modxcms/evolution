@@ -10,7 +10,7 @@
  * MODx version:   0.9.6.3
 */
 $modx_lang_attribute = 'de'; // Manager HTML and XML Language Attribute
-$modx_encoding = 'UTF-8';
+$modx_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx ist eine PHP Arbeitsumgebung und ist unter der <a href="../assets/docs/license.txt">GPL</a> Lizenz veröffentlicht.';
 $_lang["about_title"] = 'Über MODx';

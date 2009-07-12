@@ -10,7 +10,7 @@
 */
 //$modx_textdir = 'ltr'; // only needed for RTL langauges
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
-$modx_encoding = 'UTF-8';
+$modx_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx is a <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'About MODx';

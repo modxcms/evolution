@@ -9,7 +9,7 @@
 */
 $modx_textdir = 'rtl';
 $modx_lang_attribute = 'fa'; // Manager HTML and XML Language Attribute
-$modx_encoding = 'UTF-8';
+$modx_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'مادایکس یک <a href="http://modxcms.com/what-is-modx.html" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
 $_lang["about_title"] = 'درباره مادایکس';
