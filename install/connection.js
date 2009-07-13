@@ -56,6 +56,12 @@ window.addEvent('domready', function(){
     });
 
    
+	Slider1 = new Fx.Slide('setCollation', {duration:477});//transition:Fx.Sine.easeOut,
+	Slider1.hide();
+	if(document.getElementById('AUH')) {
+		Slider2 = new Fx.Slide('AUH', {duration:477});//transition:Fx.Sine.easeOut,
+		Slider2.hide();
+	}
 
 });
 
@@ -81,23 +87,32 @@ function testServer(){
 }
 
 function setDefaults(){
-	var def = $('AUH');
-	//	Need to add Yellow Fade Technique or slide-down transition
-	def.setStyle('display','block');
+	if($('databasestatus').innerHTML.indexOf(passed_db) >= 0 && document.getElementById('AUH')) {
+		window.Slider2.slideIn();
+		var Slider2FX = new Fx.Styles('AUHMask', {duration: 997,transition: Fx.Transitions.linear});
+		Slider2FX.start({'opacity':[0,1]});
+		window.setTimeout("$('AUH').style.backgroundColor = '#ffffff';", 1000);
+		Slider2Scroll = new Fx.Scroll(window);
+		Slider2Scroll.toElement('managerlanguage_select');
+	}
 }
 
 function setColor(){
-    var col = $('database_collation');
-	var sho = $('setCollation');
-	
-	//	Need to add Yellow Fade Technique or slide-down transition
-	sho.setStyle('display','block');
-	
-    ss = document.getElementById('serverstatus');
-    ssv = ss.innerHTML;
-    if (ssv.indexOf(passed) >=0) {
-        col.setStyle('background-color', '#9CCD00');
+	var col = $('database_collation');
+
+	ss = document.getElementById('serverstatus');
+	ssv = ss.innerHTML;
+	if (ssv.indexOf(passed) >=0) {
+		col.setStyle('background-color', '#9CCD00');
 //        col.setStyle('color', '#0000CD');
 		col.setStyle('font-weight','bold');
+
+		window.Slider1.slideIn(); //toggle the slider up and down.
+		var Slider1FX = new Fx.Styles('collationMask', {duration: 997,transition: Fx.Transitions.linear});
+		Slider1FX.start({'opacity':[0,1]});
+		window.setTimeout("$('setCollation').style.backgroundColor = '#ffffff';", 1000);
+		Slider1Scroll = new Fx.Scroll(window);
+		Slider1Scroll.toElement('databasestatus');
+		$('database_name').focus();
     }
 }

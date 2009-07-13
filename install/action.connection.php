@@ -51,14 +51,6 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 }
 
 ?>
-<script type="text/javascript" src="connection.mootools.1.11.js"></script>
-<script type="text/javascript" src="connection.js"></script>
-<script type="text/javascript">
-language ='<?php echo $install_language?>';
-installMode ='<?php echo $installMode ?>';
-passed ='<?php echo $_lang["status_passed_server"]?>';
-</script>
-
 <form name="install" id="install_form" action="index.php?action=options" onsubmit="return validate();" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
@@ -89,7 +81,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 <!-- end connection test action/status message -->
 
 
-<div id="setCollation">
+<div id="setCollation"><div id="collationMask">
   <h3><?php echo $_lang['connection_screen_database_connection_information']?></h3>
   <p><?php echo $_lang['connection_screen_database_connection_note']?></p>
   <p class="labelHolder"><label for="database_name"><?php echo $_lang['connection_screen_database_name']?></label>
@@ -126,20 +118,18 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 	</div>
   </p>
 
-
   <div class="clickHere">
 	&rarr; <a id="databasetest" href="#"><?php echo $_lang['connection_screen_database_test_connection']?></a>
   </div>
-  <div class="status" id="databasestatus"></div>
-</div>
-
+  <div class="status" id="databasestatus">&nbsp;</div>
+</div></div>
 
 
 <?php
   if ($installMode == 0) {
 ?>
 
-  <div id="AUH" style="margin-top:1.5em;">
+  <div id="AUH" style="margin-top:1.5em;"><div id="AUHMask">
   	<h2><?php echo $_lang['connection_screen_defaults']?></h2>
     <h3><?php echo $_lang['connection_screen_default_admin_user']?></h3>
     <p><?php echo $_lang['connection_screen_default_admin_note']?></p>
@@ -158,7 +148,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 
 	<h3 style="margin-top:2em"><?php echo $_lang["default_language"] ?></h3>
 	<p><?php echo $_lang["default_language_description"] ?></p>
-	<select name="managerlanguage">
+	<select name="managerlanguage" id="managerlanguage_select">
 <?php
 	$manager_language = "english";
 	
@@ -189,7 +179,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 	}
 ?>
   </select>
-</div>
+</div></div>
 
 <?php
 }
@@ -205,6 +195,14 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
 </form>
 
 
+<script type="text/javascript" src="../manager/media/script/mootools/mootools.js"></script>
+<script type="text/javascript" src="connection.js"></script>
+<script type="text/javascript">
+language ='<?php echo $install_language?>';
+installMode ='<?php echo $installMode ?>';
+passed ='<?php echo $_lang["status_passed_server"]?>';
+passed_db = '<?php echo $_lang["status_passed"];?>';
+</script>
 <script type="text/javascript">
 /* <![CDATA[ */
   // validate
@@ -243,7 +241,7 @@ passed ='<?php echo $_lang["status_passed_server"]?>';
     }
     dbs = document.getElementById('databasestatus');
     dbsv = dbs.innerHTML;
-    if(dbsv.length==0) {
+    if(dbsv.length==0 || dbsv == '&nbsp;') {
       alert("<?php echo $_lang['alert_database_test_connection']?>");
       return false;
     }
