@@ -1,11 +1,4 @@
 <?php
-
-	// Modified by Raymond for use with Template Variables
-
-	//added by  Apodigm - DocVars - web@apodigm.com
-	//note... this was lifted from Open-Realty, which is released under GNU GPL.
-	//I have modified it substantially to fit the requirments for Etomite.
-
 	// DISPLAY FORM ELEMENTS
 
 	function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='') {

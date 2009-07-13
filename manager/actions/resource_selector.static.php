@@ -10,7 +10,7 @@ if(!$modx->hasPermission('edit_module')) {
 <html>
 <head>
 	<title><?php echo $content["name"]." ".$_lang['resource_selector_title']; ?></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <?php
 if($_SESSION['browser']=='ie') {

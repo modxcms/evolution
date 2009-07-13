@@ -8,7 +8,7 @@
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'fi'; // Manager HTML and XML Language Attribute
-$modx_charset = 'UTF-8';
+$modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx on <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP-sovelluskehys ja sisällönhallintajärjestelmä</a>, jonka lisenssinä on avoimen lähdekoodin <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Tietoa MODx:stä';
@@ -87,6 +87,8 @@ $_lang["change_password"] = 'Muuta salasana';
 $_lang["change_password_confirm"] = 'Varmista salasana';
 $_lang["change_password_message"] = 'Syötä uusi salasana ja varmista salasana (uusi salasana toiseen kertaan). Salasanan tulee olla 6-15 merkkiä pitkä.';
 $_lang["change_password_new"] = 'Uusi salasana';
+$_lang["charset_message"] = 'Valitse ylläpidossa käytettävä merkistö. MODx on testattu monilla eri merkistöillä mutta ei kaikilla. Suomen kielelle sopivia merkistöjä hieman tilanteesta riipuen ovat esim. iso-8859-1 ja UTF-8.';
+$_lang["charset_title"] = 'Merkistö:';
 $_lang["chunk"] = 'Palanen';
 $_lang["chunk_code"] = 'Lähdekoodi (html)';
 $_lang["cleaningup"] = 'Odota hetki...';

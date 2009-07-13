@@ -51,7 +51,7 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
 <?php
 if(isset($_REQUEST['submitok'])) {
 	$searchid = !empty($_REQUEST['searchid']) ? intval($_REQUEST['searchid']) : 0;
-	$searchtitle = htmlentities($_POST['pagetitle'], ENT_QUOTES, $modx_charset);
+	$searchtitle = htmlentities($_POST['pagetitle'], ENT_QUOTES, $modx_manager_charset);
 	$searchcontent = $modx->db->escape($_REQUEST['content']);
 	$searchlongtitle = $modx->db->escape($_REQUEST['longtitle']);
 
@@ -106,8 +106,8 @@ if($limit<1) {
       <td align="center"><a href="index.php?a=3&id=<?php echo $logentry['id']; ?>"onMouseover="status='<?php echo $_lang['search_view_docdata']; ?>';return true;" onmouseout="status='';return true;" title="<?php echo $_lang['search_view_docdata']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/context_view.gif" border=0></a></td> 
       <td><?php echo $logentry['id']; ?></td> 
 	  <?php if (function_exists('mb_strlen') && function_exists('mb_substr')) {?>
-		<td><?php echo mb_strlen($logentry['pagetitle'], $modx_charset)>20 ? mb_substr($logentry['pagetitle'], 0, 20, $modx_charset)."..." : $logentry['pagetitle'] ; ?></td> 
-		<td><?php echo mb_strlen($logentry['description'], $modx_charset)>35 ? mb_substr($logentry['description'], 0, 35, $modx_charset)."..." : $logentry['description'] ; ?></td>
+		<td><?php echo mb_strlen($logentry['pagetitle'], $modx_manager_charset)>20 ? mb_substr($logentry['pagetitle'], 0, 20, $modx_manager_charset)."..." : $logentry['pagetitle'] ; ?></td> 
+		<td><?php echo mb_strlen($logentry['description'], $modx_manager_charset)>35 ? mb_substr($logentry['description'], 0, 35, $modx_manager_charset)."..." : $logentry['description'] ; ?></td>
 	  <?php } else { ?>
 		<td><?php echo strlen($logentry['pagetitle'])>20 ? substr($logentry['pagetitle'], 0, 20)."..." : $logentry['pagetitle'] ; ?></td> 
 		<td><?php echo strlen($logentry['description'])>35 ? substr($logentry['description'], 0, 35)."..." : $logentry['description'] ; ?></td>

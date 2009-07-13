@@ -51,7 +51,7 @@ $xml_placeholders['[+xml_ttl+]'] = isset($ttl) ? intval($ttl):120;
 	Default:
 	120
 */
-$xml_placeholders['[+xml_charset+]'] = isset($charset) ? $charset : $modx_charset;
+$xml_placeholders['[+xml_charset+]'] = isset($charset) ? $charset : $modx->config['modx_charset'];
 /*
 	Param: charset
 

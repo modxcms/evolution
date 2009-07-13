@@ -9,7 +9,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<title>nav</title>
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css" />
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>

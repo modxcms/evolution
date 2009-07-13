@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Filename:       includes/lang/hebrew.inc.php
  * Function:       Language file.
@@ -89,6 +89,8 @@ $_lang["change_password"] = 'שנה סיסמה';
 $_lang["change_password_confirm"] = 'אימות סיסמה';
 $_lang["change_password_message"] = 'אנא הכנס את הסיסמה החדשה, ולאחר מכן הזן אותה שוב כדי לאשר. הסיסמה שלך צריכה להיות בין 6 ל 15 תווים.';
 $_lang["change_password_new"] = 'סיסמה חדשה';
+$_lang["charset_message"] = 'נא לבחור את קידוד התווים שברצונך להשתמש ב המנהל. לידיעתך, MODx  נבדק עם מספר קידודים אלה, אך לא עם כולם. ברוב השפות, הגדרת ברירת המחדל של UTF-8 היא המועדפת.';
+$_lang["charset_title"] = 'קידוד:';
 $_lang["chunk"] = 'מיני תבנית';
 $_lang["chunk_code"] = 'קוד מיני תבנית (html)';
 $_lang["cleaningup"] = 'מרענן נתונים';

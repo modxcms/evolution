@@ -7,7 +7,6 @@
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
-//$modx_textdir = 'ltr'; // only needed for RTL langauges
 $modx_lang_attribute = 'ja'; // Manager HTML and XML Language Attribute
 $modx_charset = 'UTF-8';
 
@@ -91,6 +90,8 @@ $_lang["change_password"] = 'パスワードの変更';
 $_lang["change_password_confirm"] = 'パスワードをもう一度';
 $_lang["change_password_message"] = 'パスワードの長さは6～15文字の間にしてください。';
 $_lang["change_password_new"] = '新しいパスワード';
+$_lang["charset_message"] = '管理画面で使用したいエンコードを選択できます。utf-8以外のエンコードはほとんど検証されていないためご注意ください。この設定は、各種エンコードの扱いとMODxの言語管理構造に習熟しているGeekなユーザ向けに開放しています。';
+$_lang["charset_title"] = 'エンコード:';
 $_lang["chunk"] = 'チャンク';
 $_lang["chunk_code"] = 'チャンク コード (html)';
 $_lang["cleaningup"] = 'クリーンアップ処理中';

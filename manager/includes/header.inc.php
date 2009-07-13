@@ -6,7 +6,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
     <title>MODx</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
 
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>

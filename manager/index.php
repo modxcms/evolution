@@ -145,7 +145,7 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 include_once "settings.inc.php";
 
 // send the charset header
-header('Content-Type: text/html; charset='.$modx_charset);
+header('Content-Type: text/html; charset='.$modx_manager_charset);
 
 // include version info
 include_once "version.inc.php";

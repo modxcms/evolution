@@ -78,7 +78,7 @@ $header = '
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<title>MODx</title>
-	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_charset.'" />
+	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
 	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>';
 

@@ -575,7 +575,7 @@ if(!$handle) {
 <input type="hidden" name="path" value="<?php echo $_REQUEST['path']?>" />
 <table width="100%"  border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td><textarea dir="ltr" style="width:100%; height:370px;" name="content"><?php echo htmlentities($buffer,ENT_COMPAT,$modx_charset)?></textarea></td>
+    <td><textarea dir="ltr" style="width:100%; height:370px;" name="content"><?php echo htmlentities($buffer,ENT_COMPAT,$modx_manager_charset)?></textarea></td>
   </tr>
 </table>
 </form>

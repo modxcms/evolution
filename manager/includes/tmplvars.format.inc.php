@@ -323,7 +323,7 @@
 					// remove delimiter from checkbox and listbox-multiple TVs
 					$value = str_replace('||','',$value);
 				}
-				$o = htmlentities($value, ENT_NOQUOTES, $modx_charset);
+				$o = htmlentities($value, ENT_NOQUOTES, $modx->config['modx_charset']);
 				break;
 
 			default:

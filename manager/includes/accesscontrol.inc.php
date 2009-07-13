@@ -67,7 +67,7 @@ if(!isset($_SESSION['mgrValidated'])){
 		include_once "lang/english.inc.php";
 	}
 
-	$modx->setPlaceholder('modx_charset',$modx_charset);
+	$modx->setPlaceholder('modx_charset',$modx_manager_charset);
 	$modx->setPlaceholder('theme',$manager_theme);
 
 	// invoke OnManagerLoginFormPrerender event

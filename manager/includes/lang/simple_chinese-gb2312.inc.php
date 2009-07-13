@@ -8,7 +8,6 @@
  * Version:        0.1 (from English Ver1.6)
  * MODx version:   Evoltuion 1.0
 */
-//$modx_textdir = 'ltr'; // only needed for RTL langauges
 $modx_lang_attribute = 'zh'; // Manager HTML and XML Language Attribute
 $modx_charset = 'gb2312';
 
@@ -86,6 +85,8 @@ $_lang["change_password"] = '改密码';
 $_lang["change_password_confirm"] = '重复密码';
 $_lang["change_password_message"] = '输入两次你的密码，你的密码长度限制是6-15位。';
 $_lang["change_password_new"] = '新密码';
+$_lang["charset_message"] = '请选择你的后台管理编码。注意MODX虽然测试了大量的编码类型，但是并非全部测试过了，对于大部分语言来说，编码设置是ido-8859-1。多语言设置是utf-8。简体中文是gb2312。';
+$_lang["charset_title"] = '编码:';
 $_lang["chunk"]= '块元素';
 $_lang["chunk_code"] = '块元素代码 (html)';
 $_lang["cleaningup"] = '清除';

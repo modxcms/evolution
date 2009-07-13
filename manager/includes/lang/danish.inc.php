@@ -10,7 +10,7 @@
  * MODx version:   0.9.6.2
 */
 $modx_lang_attribute = 'da'; // Manager HTML and XML Language Attribute
-$modx_charset = 'UTF-8';
+$modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx er et <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework og Content Management System</a> licenseret under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';

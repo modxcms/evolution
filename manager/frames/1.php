@@ -11,7 +11,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
 	<title><?php echo $site_name?> - (MODx CMS Manager)</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<script type="text/javascript" src="media/script/session.js"></script>
 </head>
 <frameset rows="70,*" border="0">

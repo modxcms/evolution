@@ -24,7 +24,7 @@ $atom_placeholders['atom_lang'] = (isset($abbrLanguage))? $abbrLanguage : $_lang
 	- <language>
 */
 $atom_placeholders['atom_link'] = $modx->config['site_url']."[~".$modx->documentObject['id']."~]";
-$atom_placeholders['atom_charset'] = isset($charset) ? $charset : $modx_charset;
+$atom_placeholders['atom_charset'] = isset($charset) ? $charset : $modx->config['modx_charset'];
 /*
 	Param: charset
 

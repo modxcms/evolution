@@ -51,7 +51,7 @@ $rss_placeholders['rss_ttl'] = isset($ttl) ? intval($ttl):120;
 	Default:
 	120
 */
-$rss_placeholders['rss_charset'] = isset($charset) ? $charset : $modx_charset;
+$rss_placeholders['rss_charset'] = isset($charset) ? $charset : $modx->config['modx_charset'];
 /*
 	Param: charset
 

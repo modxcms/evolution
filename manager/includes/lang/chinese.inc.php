@@ -9,7 +9,7 @@
 */
 //$modx_textdir = 'ltr'; // only needed for RTL langauges
 $modx_lang_attribute = 'zh'; // Manager HTML and XML Language Attribute
-$modx_charset = 'UTF-8';
+$modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = '镆铘是一个 <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
 $_lang["about_title"] = '关于镆铘';
