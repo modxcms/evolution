@@ -146,9 +146,10 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
       <input id="cmspasswordconfirm" type="password" name="cmspasswordconfirm" value="<?php echo isset($_POST['cmspasswordconfirm']) ? $_POST['cmspasswordconfirm']:"" ?>" />
     </p>
 
-	<h3 style="margin-top:2em"><?php echo $_lang["default_language"] ?></h3>
-	<p><?php echo $_lang["default_language_description"] ?></p>
-	<select name="managerlanguage" id="managerlanguage_select">
+    <h3 style="margin-top:2em"><?php echo $_lang["default_language"] ?></h3>
+    <p><?php echo $_lang["default_language_description"] ?></p>
+    <p class="labelHolder"><label for="managerlanguage_select">&nbsp;</label>
+    <select name="managerlanguage" id="managerlanguage_select">
 <?php
 	$manager_language = "english";
 	
@@ -178,7 +179,8 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 	    }
 	}
 ?>
-  </select>
+  </select><br /><br />
+  </p>
 </div></div>
 
 <?php

@@ -58,9 +58,13 @@ window.addEvent('domready', function(){
    
 	Slider1 = new Fx.Slide('setCollation', {duration:477});//transition:Fx.Sine.easeOut,
 	Slider1.hide();
+	$('setCollation').style.backgroundColor = '#ffff00';
+	$('setCollation').style.display = 'block';
 	if(document.getElementById('AUH')) {
 		Slider2 = new Fx.Slide('AUH', {duration:477});//transition:Fx.Sine.easeOut,
 		Slider2.hide();
+		$('AUH').style.display = 'block';
+		$('AUH').style.backgroundColor = '#ffff00';
 	}
 
 });

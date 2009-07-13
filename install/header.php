@@ -8,7 +8,7 @@
         <style type="text/css">
             body { behavior: url(/assets/js/csshover3.htc) }
         </style>
-        <script type="text/javascript" src="/assets/js/frankensleight.js"></sript>
+        <script type="text/javascript" src="/assets/js/frankensleight.js"></script>
     <![endif]-->
 </head>
 

@@ -500,7 +500,8 @@ p.labelHolder {
 
 
 #setCollation, #AUH {
-	background-color:#ff0;
+	background-color:#fff;
+	display:none;
 }
 
 #collationMask, #AUHMask {
