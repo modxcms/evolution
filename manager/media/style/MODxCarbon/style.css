@@ -684,7 +684,7 @@ margin: 3px 1px 3px 28px;
 padding-left: 10px;
 color: #fff;
 }
-ul#nav {
+#nav {
 margin: 0;
 padding: 0;
 height: 25px;
@@ -1104,51 +1104,17 @@ h2#edit_document_title {
 fieldset#preview h2.tab {
 	float: right;
 }
-/* ppb:
- * Revised Action Buttons
- */
+/* -----------------------------[ Action Buttons ]-- */
 div#actions {
 position:fixed;
- top:0;
- right:0;
+ top: 5px;
+ right: 0;
  z-index: 100;
+ margin: 0;
+ text-align: right;
+ width: 600px;
+
  }
-.actionButtons img {
-	vertical-align:top;
-}
-.actionButtons a {
-  color: #000;
-  border: 1px solid #ccc;
-  background:#fff;
-  margin-right:6px;
-  padding: 3px 5px;
-  white-space: nowrap;
-  vertical-align: top;
-  text-decoration: none;
-  }
-.actionButtons a:hover {
-  border: 1px solid #88939E;
-  background: #E7EFF1;
-  }
-.actionButtons a:active {
-  border: 1px solid #000;
-  border-color: #444 #ccc #ccc #444;
-  }
-.actionButtons a.disabled {
-  border: 1px solid #657587;
-  padding: 2px 4px;
-color: #777;
-  border-width: 0;
-}
-.actionButtons a.disabled img {
-  opacity: .3;
-  filter: alpha(opacity=30);
-}
-div#actions {
-  margin: 0;
-  text-align: right;
-  width: 600px;
-}
 div#actions ul.actionButtons {
   margin: 0;
   padding: 5px 5px 10px;
@@ -1161,6 +1127,43 @@ div#actions ul.actionButtons li{
   list-style-type: none;
   margin-left: 6px;
 }
+
+	.actionButtons img {
+		vertical-align: top;
+		margin-top: 1px;
+	}
+	.actionButtons a {
+		color: #fff;
+		font-weight: bold;
+		font-size: 13px;
+		border: 3px solid #6e7f93;
+		background: #7e92a8;
+		margin-right: 6px;
+		padding: 4px;
+		white-space: nowrap;
+		vertical-align: top;
+		text-decoration: none;
+		-moz-border-radius: 6px;
+		-webkit-border-radius: 6px;
+		border-radius: 6px;
+		text-shadow: 0 1px 2px #6e7f93;
+	}
+		.actionButtons a:hover {
+		  background: #6e7f93;
+		  }
+		.actionButtons a:active {
+			background: #576574;
+		  }
+	.actionButtons a.disabled {
+	  border: 1px solid #657587;
+	  padding: 2px 4px;
+	color: #777;
+	  border-width: 0;
+	}
+		.actionButtons a.disabled img {
+		  opacity: .3;
+		  filter: alpha(opacity=30);
+		}
 
 /*
  * Generic styles for all form elements
