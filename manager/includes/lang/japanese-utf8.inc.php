@@ -8,7 +8,7 @@
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'ja'; // Manager HTML and XML Language Attribute
-$modx_charset = 'UTF-8';
+$modx_manager_charset = 'UTF-8';
 
 setlocale (LC_ALL, 'ja_JP.UTF-8');
 define('MAGPIE_OUTPUT_ENCODING', 'UTF-8');

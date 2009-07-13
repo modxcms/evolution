@@ -8,7 +8,7 @@
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'pt'; // Manager HTML and XML Language Attribute
-$modx_charset = 'UTF-8';
+$modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'O MODx é um <a href="http://modxcms.com/what-is-modx.html" target="_blank">Aplicativo de Desenvolvimento para PHP e Sistema de Gerenciamento de Conteúdo</a> distribuído sob a licença <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Sobre o MODx';

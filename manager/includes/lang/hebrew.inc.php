@@ -9,7 +9,7 @@
 */
 $modx_textdir = 'rtl';
 $modx_lang_attribute = 'he'; // Manager HTML and XML Language Attribute
-$modx_charset = 'UTF-8';
+$modx_manager_charset = 'UTF-8';
 
 
 $_lang["about_msg"] = 'MODx הינה <a href="http://modxcms.com/what-is-modx.html" target="_blank">מערכת ניהול תוכן מבוססת PHP</a> תחת רשיון <a href="../assets/docs/license.txt">GNU GPL</a>.';

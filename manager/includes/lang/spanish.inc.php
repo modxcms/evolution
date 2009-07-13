@@ -9,7 +9,7 @@
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'es'; // Manager HTML and XML Language Attribute
-$modx_charset = 'UTF-8';
+$modx_manager_charset = 'UTF-8';
 
 setlocale (LC_ALL, 'es_MX');
 

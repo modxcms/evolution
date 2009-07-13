@@ -8,7 +8,7 @@
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'fr'; // Manager HTML and XML Language Attribute
-$modx_charset = 'iso-8859-1';
+$modx_manager_charset = 'iso-8859-1';
 
 $_lang["about_msg"] = 'MODx est un <a href="http://modxcms.com/what-is-modx.html" target="_blank">Système de Gestion de Contenu et un Framework applicatif PHP</a> placé sous licence <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'À propos de MODx';
