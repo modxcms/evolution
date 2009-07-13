@@ -2,14 +2,13 @@
 /**
  * Filename:       includes/lang/spanish.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team
  * Date:           29 May 2009
  * Version:        2.01
  * MODx version:   Evolution 1.0
 */
 $modx_lang_attribute = 'es'; // Manager HTML and XML Language Attribute
-$modx_manager_charset = 'UTF-8';
+$modx_manager_charset = 'iso-8859-1';
 
 setlocale (LC_ALL, 'es_MX');
 
