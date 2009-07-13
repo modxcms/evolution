@@ -35,9 +35,9 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once $base_path."manager/includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang['view_log'],"js:menuAction(1)","media/style/" . $manager_theme ."images/icons/save.gif");
+$cm->addItem($_lang['view_log'],"js:menuAction(1)","media/style/" . $manager_theme ."images/icons/save.png");
 $cm->addSeparator();
-$cm->addItem($_lang['delete'], "js:menuAction(2)","media/style/" . $manager_theme ."images/icons/delete.gif",(!$modx->hasPermission('delete_eventlog') ? 1:0));
+$cm->addItem($_lang['delete'], "js:menuAction(2)","media/style/" . $manager_theme ."images/icons/delete.png",(!$modx->hasPermission('delete_eventlog') ? 1:0));
 echo $cm->render();
 
 ?>
@@ -100,7 +100,7 @@ echo $cm->render();
 	<div class="searchbar">
 		<table border="0" style="width:100%">
 			<tr>
-			<td><a class="searchtoolbarbtn" href="index.php?a=116&cls=1"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif"  align="absmiddle" /> <?php echo $_lang['clear_log']?></a></td>
+			<td><a class="searchtoolbarbtn" href="index.php?a=116&cls=1"><img src="<?php echo $_style["icons_delete_document"]?>"  align="absmiddle" /> <?php echo $_lang['clear_log']?></a></td>
 			<td nowrap="nowrap">
 				<table border="0" style="float:right">
 				    <tr>

@@ -530,7 +530,7 @@ if (is_array($evtOut))
 	  <ul class="actionButtons">
 		  <li id="Button1">
 			<a href="#" onclick="documentDirty=false; document.mutate.save.click();">
-			  <img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" /> <?php echo $_lang['save']?>
+			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
 			</a>
 			  &nbsp;
 			  and
@@ -545,12 +545,12 @@ if (is_array($evtOut))
 		  </li>
 		  <?php
 			if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == 72) { ?>
-		  <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+		  <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
 		  <?php } else { ?>
-		  <li id="Button2"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+		  <li id="Button2"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
 		  <?php } ?>	
 		  <li id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
-		  <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/preview.gif" /> <?php echo $_lang['preview']?></a></li>
+		  <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/page_white_magnify.png" /> <?php echo $_lang['preview']?></a></li>
 	  </ul>
 </div>
 

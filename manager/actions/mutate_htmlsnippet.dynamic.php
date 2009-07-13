@@ -130,7 +130,7 @@ if (is_array($evtOut))
     	  <ul class="actionButtons">
     		  <li id="Button1">
     			<a href="#" onclick="documentDirty=false; document.mutate.save.click();">
-    			  <img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" /> <?php echo $_lang['save']?>
+    			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
     			</a>
     			  &nbsp;
     			  and
@@ -146,9 +146,9 @@ if (is_array($evtOut))
     		  <?php
     			if ($_REQUEST['a'] == '78') { ?>
     		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>/images/icons/copy.gif" align="absmiddle"> <?php echo $_lang["duplicate"]; ?></a></li>	    
-    		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+    		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } else { ?>
-    		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" /> <?php echo $_lang['delete']?></a></li>
+    		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } ?>	
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>

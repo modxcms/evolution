@@ -40,7 +40,7 @@ if($limit!=1) {
             <td id="Button11"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/reply.gif" align="absmiddle"> <?php echo $_lang['messages_reply']; ?></a></td>
 <?php if($message['sender']==0) { ?>                <script type="text/javascript">document.getElementById("Button11").className='disabled';</script><?php } ?>
             <td id="Button21"><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/forward.gif" align="absmiddle"> <?php echo $_lang['messages_forward']; ?></a></td>
-            <td id="Button31"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
+            <td id="Button31"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
         </tr>
     </table>
     </td>

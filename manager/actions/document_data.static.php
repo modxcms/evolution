@@ -216,7 +216,7 @@ function movedocument() {
 		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']?></a>
 		  </li>
 		  <li id="Button6">
-			<a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="media/style/<?php echo $manager_theme?>images/icons/preview.gif" /> <?php echo $_lang['preview']?></a>
+			<a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_document"]?>" /> <?php echo $_lang['preview']?></a>
 		  </li>
 	  </ul>
 	</div>

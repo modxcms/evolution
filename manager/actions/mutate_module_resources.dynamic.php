@@ -253,7 +253,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		?>
 		</td>
 		<td valign="top" width="120" style="background-color:#eeeeee">
-			<a class="searchtoolbarbtn" style="float:left;width:120px;margin-bottom:10px;" href="#" style="margin-top:2px;width:102px" onclick="removeDependencies();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" align="absmiddle" /> <?php echo $_lang['remove']; ?></a><br />
+			<a class="searchtoolbarbtn" style="float:left;width:120px;margin-bottom:10px;" href="#" style="margin-top:2px;width:102px" onclick="removeDependencies();return false;"><img src="<?php echo $_style["icons_delete_document"]?>" align="absmiddle" /> <?php echo $_lang['remove']; ?></a><br />
 			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addSnippet();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['add_snippet']; ?></a><br />
 			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addDocument();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['add_doc']; ?></a><br />
 			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addChunk();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['add_chunk']; ?></a><br />
