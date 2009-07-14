@@ -18,14 +18,7 @@
     <div class="container_12">
         <span style="color:#fff;"><?php echo $moduleName; ?> <?php echo $moduleVersion; ?> (<?php echo ($modx_textdir?'&rlm;':'').$moduleRelease;?>)</span>
         <div id="mainheader">
-            <div id="downloadbar" class="pngfix installbar">
-                <span id="downloadarrow" title="<?php echo $_lang["install_update"]; ?>"></span>
-                <ul style="margin-left:287px;">
-                    <li id="downloadinfo"> <?php echo $_lang["install_update"]; ?></li>
-                    <li id="downloaddate"> </li>
-                </ul>
-            </div>
-
+        <h1 class="pngfix" id="logo"><span>MODx CMS</span></h1>
         </div>
     </div>
 </div>
