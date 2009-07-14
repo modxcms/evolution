@@ -123,12 +123,18 @@ function updateContentType(){
 	<h1><?php echo $_lang['settings_title']; ?></h1>
 
 	<div id="actions">
-		<table cellpadding="0" cellspacing="0" class="actionButtons">
-			<tr>
-				<td id="Button1"><a href="#" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></a></td>
-				<td id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></a></td>
-			</tr>
-		</table>
+		  <ul class="actionButtons">
+			  <li id="Button1">
+				<a href="#" onclick="documentDirty=false; document.settings.submit();">
+					<img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']; ?>
+				</a>
+			  </li>
+			  <li id="Button5">
+				<a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';">
+					<img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']; ?>
+				</a>
+			  </li>
+		</ul>
 	</div>
 
 <div style="margin: 0 10px 0 20px">
