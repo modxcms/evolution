@@ -35,10 +35,10 @@ unset($_SESSION['itemname']); // clear this, because it's only set for logging p
   </tr>
   <tr>
   	<td colspan="4">
-		<table cellpadding="0" cellspacing="0" border="0" class="actionButtons">
-		    <td id="Button1" align="right"><a href="#" onclick="document.searchform.submitok.click();"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle"> <?php echo $_lang['search']; ?></a></td>
-		    <td id="Button2" align="right"><a href="index.php?a=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
-		</table>
+		<ul class="actionButtons">
+		    <li><a href="#" onclick="document.searchform.submitok.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['search'] ?></a></li>
+		    <li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?></a></li>
+		</ul>
 	</td>
   </tr>
 </table>

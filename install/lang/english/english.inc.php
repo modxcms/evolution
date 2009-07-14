@@ -31,7 +31,7 @@ $_lang["btnclose_value"] = 'Close';
 $_lang["btnnext_value"] = 'Next';
 $_lang["cant_write_config_file"] = 'MODx couldn\'t write the config file. Please copy the following into the file ';
 $_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODx Admin by pointing your browser at YourSiteName.com/manager/.';
-$_lang["checkbox_select_options"] = 'Choose multiple elements:';
+$_lang["checkbox_select_options"] = 'Checkbox select options:';
 $_lang["checking_if_cache_exist"] = 'Checking if <span class=\"mono\">/assets/cache</span> directory exists: ';
 $_lang["checking_if_cache_file2_writable"] = 'Checking if <span class=\"mono\">/assets/cache/sitePublishing.idx.php</span> file is writable: ';
 $_lang["checking_if_cache_file_writable"] = 'Checking if <span class=\"mono\">/assets/cache/siteCache.idx.php</span> file is writable: ';

@@ -501,7 +501,7 @@ echo '<br /><br />';
 ls($startpath);
 echo "\n\n\n\n\n\n\n";
 if($folders==0 && $files==0) {
-	echo '<tr><td colspan="4"><img src="media/style/',$manager_theme,'images/tree/deletedfolder.gif" border="0" align="absmiddle"><span style="color:#888;cursor:default;"> This directory is empty.</span></td></tr>';
+	echo '<tr><td colspan="4"><img src="media/style/',$manager_theme,'images/tree/deletedfolder.gif" border="0" /><span style="color:#888;cursor:default;"> This directory is empty.</span></td></tr>';
 }
 ?></table><?php
 
@@ -584,10 +584,10 @@ if(!$handle) {
 if($_REQUEST['mode']=="edit") {
 ?>
 
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-	<td id="Button1"><a href="#" onclick="document.editFile.submit();"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']?></a></td>
-	<td id="Button2"><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path'])?>"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']?></a></td>
-</table>
+<ul class="actionButtons">
+	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
+	<td id="Button2"><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path'])?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+</ul>
 <?php } ?>
 </div>
 <?php

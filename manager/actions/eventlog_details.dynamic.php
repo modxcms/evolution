@@ -38,14 +38,14 @@ else{
 
 	<h1><?php echo $_lang['eventlog']; ?></h1>
 
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<tr>
+<div id="actions">
+	<ul class="actionButtons">
 <?php if($modx->hasPermission('delete_eventlog')) { ?>
-		<td id="Button3"><a href="#" onclick="deletelog();"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
+		<li id="Button3"><a href="#" onclick="deletelog();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
 <?php } ?>
-		<td id="Button4"><a href="index.php?a=114"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
-		</tr>
-	</table>
+		<li id="Button4"><a href="index.php?a=114"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+	</ul>
+</div>
 
 <script language="JavaScript" type="text/javascript">
 	function deletelog() {

@@ -35,14 +35,14 @@ if($limit!=1) {
 <table width="600" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td colspan="2">
-    <table cellpadding="0" cellspacing="0" class="actionButtons">
-        <tr>
-            <td id="Button11"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/reply.gif" align="absmiddle"> <?php echo $_lang['messages_reply']; ?></a></td>
-<?php if($message['sender']==0) { ?>                <script type="text/javascript">document.getElementById("Button11").className='disabled';</script><?php } ?>
-            <td id="Button21"><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/forward.gif" align="absmiddle"> <?php echo $_lang['messages_forward']; ?></a></td>
-            <td id="Button31"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
-        </tr>
-    </table>
+    <ul class="actionButtons">
+        <li id="btn_reply"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_reply"] ?>" /> <?php echo $_lang['messages_reply']; ?></a></li>
+        <li><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_forward"] ?>" /> <?php echo $_lang['messages_forward']; ?></a></li>
+        <li"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+		<?php if($message['sender']==0) { ?>
+			<script type="text/javascript">document.getElementById("btn_reply").className='disabled';</script>
+		<?php } ?>
+    </ul>
     </td>
   </tr>
   <tr>
@@ -313,14 +313,12 @@ function hideSpans(showSpan) {
     <td></td>
   </tr>
 </table>
-<p>
-    <table cellpadding="0" cellspacing="0" class="actionButtons">
-        <tr>
-            <td id="Button1"><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['messages_send']; ?></a></td>
-            <td id="Button2"><a href="index.php?a=10&t=c"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
-        </tr>
-    </table>
-</p>
+
+<ul class="actionButtons">
+        <li><a href="#" onclick="documentDirty=false; document.messagefrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['messages_send']; ?></a></li>
+        <li><a href="index.php?a=10&t=c"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+</ul>
+
 </fieldset>
 </form>
 </div>

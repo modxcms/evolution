@@ -197,21 +197,20 @@ switch ($_POST['mode']) {
 		} else {
 			include_once "header.inc.php";
 ?>
-			<div class="subTitle">
-			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
-			<table cellpadding="0" cellspacing="0" class="actionButtons">
-				<tr>
-					<td id="Button1"><a href="index.php?a=99&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
-					</td>
-				</tr>
-			</table>
+			<h1><?php echo $_lang['web_user_title']; ?></h1>
+			
+			<div id="actions">
+			<ul class="actionButtons">
+				<li><a href="index.php?a=99&r=2"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+			</ul>
 			</div>
-			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
+			
+			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
-			<p /><br />
+			<p>
 			<?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?>
-			<p />
+			</p>
 			</div>
 			</div>
 		<?php
@@ -370,21 +369,18 @@ switch ($_POST['mode']) {
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
 			include_once "header.inc.php";
 ?>
-			<div class="subTitle">
-			<span class="right"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="1" height="5"><br /><?php echo $_lang['web_user_title']; ?></span>
-			<table cellpadding="0" cellspacing="0" class="actionButtons">
-				<tr>
-					<td id="Button1"><a href="index.php?a=99&r=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
-					</td>
-				</tr>
-			</table>
+			<h1><?php echo $_lang['web_user_title']; ?></h1>
+			
+			<div id="actions">
+			<ul class="actionButtons">
+				<li><a href="index.php?a=99&r=2"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+			</ul>
 			</div>
-			<div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['web_user_title']; ?></div>
+			
+			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
-			<p /><br />
-			<?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?>
-			<p />
+				<p><?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?></p>
 			</div>
 			</div>
 		<?php

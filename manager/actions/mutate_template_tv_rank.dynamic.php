@@ -123,29 +123,28 @@ $header .= '
 $header .= '</head>
 <body ondragstart="return false;">
 
-    <table cellpadding="0" cellspacing="0" class="actionButtons">
-        <tr>
-        	<td id="Button1"><a href="#" onclick="save();"><img src="media/style/'.$manager_theme.'images/icons/save.gif"> '.$_lang['save'].'</a></td>
-			<td id="Button2"><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$_REQUEST['id'].'\';"><img src="media/style/'.$manager_theme.'images/icons/cancel.gif"> '.$_lang['cancel'].'</a></td></div>
-		</tr>
-	</table>
+<h1>'.$_lang["template_tv_edit_title"].'</h1>
 
-<div class="sectionHeader"><img src="media/style/'.$manager_theme.'images/misc/dot.gif" alt="." />&nbsp;';
+<div id="actions">
+    <ul class="actionButtons">
+        <li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
+		<li><a href="#" onclick="document.location.href=\'index.php?a=16&amp;id='.$_REQUEST['id'].'\';"><img src="'.$_style["icons_cancel"].'"> '.$_lang['cancel'].'</a></li>
+	</ul>
+</div>
 
-$middle = '</div><div class="sectionBody">';
+<div class="sectionHeader">'.$_lang['template_tv_edit'].'</div>
+<div class="sectionBody">
+<p>'.$_lang["template_tv_edit_message"].'</p>';
 
-$footer = '
-	</div>
-';
-echo $header.$_lang['template_tv_edit'].$middle;
+echo $header;
 
 echo $updateMsg . "<span class=\"warning\" style=\"display:none;\" id=\"updating\">Updating...<br /><br /> </span>";
 
 echo $evtLists;
 
-echo $footer;
-
-echo '<form action="" method="post" name="sortableListForm" style="display: none;">
+echo '
+</div>
+<form action="" method="post" name="sortableListForm" style="display: none;">
             <input type="hidden" name="listSubmitted" value="true" />
             <input type="text" id="list" name="list" value="" />
 </form>';

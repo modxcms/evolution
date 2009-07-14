@@ -80,11 +80,9 @@ $header = '
 	<title>MODx</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
 	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
-	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>';
+	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
 
-
-$header .= '
-    <style type="text/css">
+	<style type="text/css">
         .topdiv {
 			border: 0;
 		}
@@ -126,6 +124,7 @@ $header .= '
     		
     	window.addEvent(\'domready\', function() {';
 foreach ($sortables as $list) {
+	
 	$header .= 'new Sortables($(\''.$list.'\'), { onComplete: function() {
            	var id = null;
            	var list = this.serialize(function(el) {
@@ -135,27 +134,26 @@ foreach ($sortables as $list) {
            $(\'list_\' + id).value = list;
         }});' ."\n";
 }
-$header .= '});
-</script>';
-
-$header .= '</head>
+	$header .= '});
+</script>
+</head>
 <body ondragstart="return false;">
 
-   <table cellpadding="0" cellspacing="0" class="actionButtons">
-        <tr>
-        	<td id="Button1"><a href="#" onclick="save();"><img src="media/style/'.$manager_theme.'/images/icons/save.gif"> '.$_lang['save'].'</a></td>
-			<td id="Button2"><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="media/style/'.$manager_theme.'/images/icons/cancel.gif"> '.$_lang['cancel'].'</a></td>
-		</tr>
-	</table>
+<h1>'.$_lang['plugin_priority_title'].'</h1>
 
-<div class="sectionHeader"><img src="media/style/'.$useTheme.'images/misc/dot.gif" alt="." />&nbsp;';
+<div id="actions"
+   <ul class="actionButtons">
+       	<li><a href="#" onclick="save();"><img src="'.$_style["icons_save"].'" /> '.$_lang['save'].'</a></li>
+		<li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
+	</ul>
+</div>
 
-$middle = '</div><div class="sectionBody">';
-
-$footer = '
-	</div>
+<div class="sectionHeader">'.$_lang['plugin_priority'].'</div>
+<div class="sectionBody">
+<p>'.$_lang['plugin_priority_instructions'].'</p>
 ';
-echo $header.$_lang['plugin_priority'].$middle;
+
+echo $header;
 
 echo $updateMsg . "<span class=\"warning\" style=\"display:none;\" id=\"updating\">Updating...<br /><br /> </span>";
 
@@ -168,7 +166,7 @@ foreach ($sortables as $list) {
 	echo '<input type="text" id="list_'.$list.'" name="list_'.$list.'" value="" />';
 }
             
-echo '</form>';
-
-echo $footer;
+echo '	</form>
+	</div>
+';
 ?>

@@ -4,6 +4,7 @@
  * Function:       Manager style variables for images and icons.
  * Encoding:       ISO-Latin-1
  * Author:         Jeff Whitfield updates by Jay Gilmore
+ *				   icons by Mark James of FamFamFam http://www.famfamfam.com/lab/icons/
  * Date:           2006/05/30
  * Version:        1.0
  * MODx version:   1.0.0
@@ -46,7 +47,8 @@ $_style["tree_weblink"] = $style_path."images/tree/link_go.png";
 // Icons
 $_style["icons_cal"] = $style_path."images/icons/cal.gif";
 $_style["icons_cal_nodate"] = $style_path."images/icons/cal_nodate.gif";
-$_style["icons_cancel"] = $style_path."images/icons/cancel.png";
+$_style["icons_cancel"] = $style_path."images/icons/stop.png";
+$_style["icons_close"] = $style_path."images/icons/stop.png";
 $_style["icons_delete"] = $style_path."images/icons/delete.png";
 $_style["icons_delete_document"] = $style_path."images/icons/delete.png";
 $_style["icons_document_overview"] = $style_path."images/icons/page_white_magnify.png";
@@ -58,8 +60,11 @@ $_style["icons_home"] = $style_path."images/icons/home.gif";
 $_style["icons_information"] = $style_path."images/icons/information.png";
 $_style["icons_loading_doc_tree"] = $style_path."images/icons/information.png"; // top bar
 $_style["icons_mail"] = $style_path."images/icons/email.png"; // top bar
+$_style["icons_message_forward"] = $style_path."images/icons/forward.gif";
+$_style["icons_message_reply"] = $style_path."images/icons/reply.gif";
 $_style["icons_move_document"] = $style_path."images/icons/page_white_go.png";
-$_style["icons_new_document"] = $style_path."images/icons/newdoc.gif";
+$_style["icons_new_document"] = $style_path."images/icons/page_white_add.png";
+$_style["icons_new_weblink"] = $style_path."images/icons/world_link.png";
 $_style["icons_preview_document"] = $style_path."images/icons/page_white_magnify.png";
 $_style["icons_publish_document"] = $style_path."images/icons/clock_play.png";
 $_style["icons_save"] = $style_path."images/icons/save.png";
@@ -67,7 +72,7 @@ $_style["icons_undelete_document"] = $style_path."images/icons/b092.gif";
 $_style["icons_unpublish_document"] = $style_path."images/icons/clock_stop.png";
 $_style["icons_user"] = $style_path."images/icons/user.gif";
 $_style["icons_user_current"] = $style_path."images/icons/user_go.png"; // top bar
-$_style["icons_weblink"] = $style_path."images/icons/weblink.gif";
+$_style["icons_weblink"] = $style_path."images/icons/world_link.png";
 $_style["icons_working"] = $style_path."images/icons/exclamation.png"; // top bar
 
 // Tabs

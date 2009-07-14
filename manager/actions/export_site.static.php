@@ -57,10 +57,10 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 	</td>
   </tr>
 </table>
-<p />
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-	<td id="Button1"><a href="#" onclick="document.exportFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["export_site_start"]; ?></a></td>
-</table>
+
+<ul class="actionButtons">
+	<li><a href="#" onclick="document.exportFrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["export_site_start"]; ?></a></li>
+</ul>
 </form>
 </fieldset>
 
@@ -304,9 +304,9 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 	printf ('<p>'.$_lang["export_site_time"].'</p>', round($totaltime, 3));
 ?>
 <p />
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-	<td id="Button2"><a href="#" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
-</table>
+<ul class="actionButtons">
+	<li><a href="#" onclick="reloadTree();"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
+</ul>
 <?php
 }
 ?>

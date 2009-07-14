@@ -52,9 +52,9 @@ if(!isset($_POST['import'])) {
   </tr>
 </table>
 <p />
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-    <td id="Button1"><a href="#" onclick="document.importFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["import_site_start"]; ?></a></td>
-</table>
+<ul class="actionButtons">
+    <li><a href="#" onclick="document.importFrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["import_site_start"]; ?></a></li>
+</ul>
 </form>
 </fieldset>
 
@@ -88,9 +88,9 @@ if(!isset($_POST['import'])) {
     printf ("<p />".$_lang['import_site_time'], round($totaltime, 3));
 ?>
 <p />
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-    <td id="Button2"><a href="#" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
-</table>
+<ul class="actionButtons">
+    <li><a href="#" onclick="reloadTree();"><img src="<?php echo $_style["icons_close"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
+</ul>
 <script type="text/javascript">
     parent.tree.ca = "";
 </script>

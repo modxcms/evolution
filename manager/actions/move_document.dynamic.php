@@ -68,11 +68,11 @@ function checkParentChildRelation(pId, pName) {
 <h1><?php echo $_lang['move_document_title']; ?></h1>
 
 <div id="actions">
-<ul class="actionButtons">
-            <li id="Button1"><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle"> <?php echo $_lang['save']; ?></a></li>
-            <li id="Button2"><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"]?>" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></li>
-        </ul>
-    </div>
+	<ul class="actionButtons">
+	    <li><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
+	    <li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?></a></li>
+	</ul>
+</div>
 
 
 <div class="sectionHeader"><?php echo $_lang['move_document_title']; ?></div><div class="sectionBody">

@@ -244,16 +244,14 @@ if (is_array($evtOut))
 <h1><?php echo $_lang['user_title']; ?></h1>
 
 <div id="actions">
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<tr>
-			<td id="Button1"><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
-			<td id="Button2"><a href="#" onclick="deleteuser();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
-				<?php if($_GET['a']!='12') { ?>
-					<script type="text/javascript">document.getElementById("Button2").className='disabled';</script>
-				<?php } ?>
-			<td id="Button3"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
-		</tr>
-	</table>
+	<ul class="actionButtons">
+		<li><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a></li>
+		<li id="btn_delete"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+		<li><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
+	</ul>
+<?php if($_GET['a']!='12') { ?>
+	<script type="text/javascript">document.getElementById("btn_delete").className='disabled';</script>
+<?php } ?>
 	
 	<div class="stay">
 		<table border="0" cellspacing="1" cellpadding="1">

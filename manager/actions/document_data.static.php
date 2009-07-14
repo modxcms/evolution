@@ -204,16 +204,16 @@ function movedocument() {
 	<div id="actions">	
 	  <ul class="actionButtons">
 		  <li id="Button1">
-			<a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" align="absmiddle"> <?php echo $_lang['edit']?></a>
+			<a href="#" onclick="editdocument();"><img src="<?php echo $_style["icons_edit_document"] ?>" /> <?php echo $_lang['edit']?></a>
 		  </li>
 		  <li id="Button2">
-			<a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" align="absmiddle"> <?php echo $_lang['move']?></a>
+			<a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" /> <?php echo $_lang['move']?></a>
 		  </li>
 		  <li id="Button4">
-		    <a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" align="absmiddle"> <?php echo $_lang['duplicate']?></a>
+		    <a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang['duplicate']?></a>
 		  </li>
 		  <li id="Button3">
-		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" align="absmiddle"> <?php echo $_lang['delete']?></a>
+		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a>
 		  </li>
 		  <li id="Button6">
 			<a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_document"]?>" /> <?php echo $_lang['preview']?></a>
@@ -306,10 +306,11 @@ function movedocument() {
 		<h2 class="tab"><?php echo $_lang['view_child_documents_in_container']?></h2>
 		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );</script>
 <?php if ($modx->hasPermission('new_document')) { ?>
-			<table cellpadding="0" cellspacing="0" class="actionButtons"><tr>
-				<td><a href="index.php?a=4&amp;pid=<?php echo $content['id']?>"><img src="media/style/<?php echo $manager_theme?>images/icons/newdoc.gif" align="absmiddle"/> <?php echo $_lang['create_document_here']?></a></td>
-				<td><a href="index.php?a=72&amp;pid=<?php echo $content['id']?>"><img src="media/style/<?php echo $manager_theme?>images/icons/weblink.gif" align="absmiddle"> <?php echo $_lang['create_weblink_here']?></a></td>
-			</tr></table>
+	
+			<ul class="actionButtons"><tr>
+				<li><a href="index.php?a=4&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_document"]; ?>" align="absmiddle" /> <?php echo $_lang['create_document_here']?></a></li>
+				<li><a href="index.php?a=72&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_weblink"]; ?>" align="absmiddle" /> <?php echo $_lang['create_weblink_here']?></a></li>
+			</ul>
 <?php }
 	if ($numRecords > 0)
 		echo '<h4><span class="publishedDoc">'.$numRecords.'</span> '.$_lang['documents_in_container'].' (<strong>'.$content['pagetitle'].'</strong>)</h4>'."\n";
