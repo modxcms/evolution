@@ -84,6 +84,9 @@ $_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
 $_lang["error"] = 'error';
 $_lang["errors"] = 'errors';
 $_lang["failed"] = 'FAILED!';
+$_lang["help"] = 'Help!';
+$_lang["help_link"] = 'http://modxcms.com/forums/';
+$_lang["help_title"] = 'Installation assistance in the MODx forums';
 $_lang["iagree_box"] = 'I agree to the terms of <a href="../assets/docs/license.txt" target="_blank">the MODx license</a>. For translations of the GPL version 2 license, please visit the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System website</a>.';
 $_lang["install"] = 'Install';
 $_lang["install_overwrite"] = 'Install/Overwrite';

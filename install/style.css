@@ -214,6 +214,37 @@ text-align:center;
 .inputtip {
 color:#888888;
 }
+
+.help {
+	float: right;
+}
+.help a {
+	color: #fff;
+	text-decoration: none !important;
+	text-transform: uppercase;
+	-moz-border-radius: 3x;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #ffbc6c;
+	border-right-color: #db831a;
+	border-bottom-color: #db831a;
+	background: #f2901d;
+	font-size: 86%;
+	padding: 2px 4px;
+	letter-spacing: 1px;
+}
+.help a:hover {
+	background: #f8a440;
+}
+.help a:active {
+	border: 1px solid #db831a;
+	border-right-color: #ffbc6c;
+	border-bottom-color: #ffbc6c;
+}
+.version {
+	color: #fff;
+}
+
 .buttonlinks {
 	display:block;
 	height:26px;

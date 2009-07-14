@@ -16,9 +16,10 @@
 <!-- start install screen-->
 <div id="header">
     <div class="container_12">
-        <span style="color:#fff;"><?php echo $moduleName; ?> <?php echo $moduleVersion; ?> (<?php echo ($modx_textdir?'&rlm;':'').$moduleRelease;?>)</span>
+        <span class="help"><a href="<?php echo $_lang["help_link"] ?>" title="<?php echo $_lang["help_title"] ?>"><?php echo $_lang["help"] ?></a></span>
+		<span class="version"><?php echo $moduleName; ?> <?php echo $moduleVersion; ?> (<?php echo ($modx_textdir?'&rlm;':'').$moduleRelease;?>)</span>
         <div id="mainheader">
-        <h1 class="pngfix" id="logo"><span>MODx CMS</span></h1>
+        	<h1 class="pngfix" id="logo"><span>MODx CMS</span></h1>
         </div>
     </div>
 </div>
