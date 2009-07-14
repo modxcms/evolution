@@ -570,7 +570,7 @@ if (is_array($evtOut))
 			echo $_lang['weblink_message']."\n";
 		?>
 
-		<table width="450" border="0" cellspacing="0" cellpadding="0">
+		<table width="99%" border="0" cellspacing="5" cellpadding="0">
 			<tr style="height: 24px;"><td width="100" align="left"><span class="warning"><?php echo $_lang['document_title']?></span></td>
 				<td><input name="pagetitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['pagetitle']))?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" spellcheck="true" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
@@ -692,7 +692,7 @@ if (is_array($evtOut))
 		<h2 class="tab"><?php echo $_lang['settings_page_settings']?></h2>
 		<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabSettings" ) );</script>
 
-		<table width="450" border="0" cellspacing="0" cellpadding="0">
+		<table width="99%" border="0" cellspacing="5" cellpadding="0">
 			<tr style="height: 24px;"><td width="150"><span class="warning"><?php echo $_lang['document_opt_folder']?></span></td>
 				<td><input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : ''?> onclick="changestate(document.mutate.isfolder);" />
 				<input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0?>" onchange="documentDirty=true;" />
@@ -847,7 +847,7 @@ if (is_array($evtOut))
 		<h2 class="tab"><?php echo $_lang['meta_keywords']?></h2>
 		<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabMeta" ) );</script>
 
-		<table width="450" border="0" cellspacing="0" cellpadding="0">
+		<table width="99%" border="0" cellspacing="5" cellpadding="0">
 		<tr style="height: 24px;"><td><?php echo $_lang['document_metatag_help']?><br /><br />
 			<table border="0" style="width:inherit;"><tr>
 			<td><span class="warning"><?php echo $_lang['keywords']?></span><br />
