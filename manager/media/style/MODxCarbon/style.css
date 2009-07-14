@@ -360,7 +360,6 @@ input.button, input.submit {
 	font-weight: bold;
 	color: #000;
 	border-top: 1px solid #fff;
-	text-shadow: 0 1px 0 #fff;
 }
 .sectionHeader {
 	padding: 5px 3px 5px 18px;
@@ -460,7 +459,6 @@ a img {
 	padding: 5px 10px 0 10px;
 	border-top: 2px solid #fff;
 	background: #f4f4f4;
-	text-shadow: 0 1px 0 #fff;
 }
 #treeRoot div img {
 	margin-left: -6px;
@@ -677,7 +675,6 @@ a.hometblink:hover {
 /* Top Navbar of snap in top menu bar layout*/
 #topMenu {
 	background: #e4e4e4 url(images/misc/menubg.jpg);
-	text-shadow: 0 1px 0 #000;
 }
 #msgCounter,#newMail {
 	margin: 0;
@@ -781,7 +778,6 @@ a.hometblink:hover {
 }
 #nav li.active ul.subnav a:active {
 	color: #ccc;
-	text-shadow: 0 1px 0 #000;
 }
 
 
@@ -800,7 +796,6 @@ a.hometblink:hover {
 	border-bottom-color: #dcdcdc;
 	overflow: hidden;
 	line-height: 11px;
-	text-shadow: 0 1px 0 #fff;
 }
 #mx_contextmenu .menuLink {
 	cursor: pointer;
@@ -845,7 +840,6 @@ a.hometblink:hover {
 	border-right-color: #dcdcdc;
 	border-bottom-color: #dcdcdc;
 	background: #86939E;
-	text-shadow: 0 1px 0 #000;
 }
 #mx_contextmenu .seperator {
 	font-size: 0;
@@ -1149,7 +1143,6 @@ ul.actionButtons {
 		-moz-border-radius: 4px;
 		-webkit-border-radius: 4px;
 		border-radius: 4px;
-		text-shadow: 0 1px 1px #333;
 	}
 		.actionButtons a:hover {
 			background: #6e7f93;
