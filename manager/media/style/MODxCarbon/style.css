@@ -1140,17 +1140,16 @@ ul.actionButtons {
 	.actionButtons a {
 		color: #fff;
 		font-weight: bold;
-		font-size: 13px;
-		border: 3px solid #6e7f93;
+		font-size: 12px;
 		background: #7e92a8;
-		padding: 4px;
+		padding: 4px 6px;
 		white-space: nowrap;
 		vertical-align: top;
 		text-decoration: none;
-		-moz-border-radius: 6px;
-		-webkit-border-radius: 6px;
-		border-radius: 6px;
-		text-shadow: 0 1px 2px #6e7f93;
+		-moz-border-radius: 4px;
+		-webkit-border-radius: 4px;
+		border-radius: 4px;
+		text-shadow: 0 1px 1px #333;
 	}
 		.actionButtons a:hover {
 			background: #6e7f93;
