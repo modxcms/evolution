@@ -203,10 +203,10 @@ class Qm {
     
                     // Use with ManagerManager => remove sectionBody
                     if ($this->usemm == 'true') {
-                        $mc->addLine('var controls = "<div style=\"padding: 10px 0 10px 10px;\" class=\'\'><button onclick=\'documentDirty=false;document.mutate.save.click();\'>'.$_lang['save'].'</button><button onclick=\"documentDirty=false;document.location.href=\'index.php?a=3&amp;id='.$_REQUEST['id'].'&amp;quickmanager=cancel\';\">'.$_lang['cancel'].'</button></div>";');
+                        $mc->addLine('var controls = "<div style=\"padding: 10px 0 10px 10px;\" id=\"qmcontrols\" class=\"actionButtons\"><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/MODxCarbon/images/icons/save.png\"/>'.$_lang['save'].'</a> <a href=\"#\" onclick=\"documentDirty=false;document.location.href=\'index.php?a=3&amp;id='.$_REQUEST['id'].'&amp;quickmanager=cancel\';return false;\"><img src=\"media/style/MODxCarbon/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></div>";');
                     }
                     else { 
-                        $mc->addLine('var controls = "<div class=\'sectionBody\'><button onclick=\'documentDirty=false;document.mutate.save.click();\'>'.$_lang['save'].'</button><button onclick=\"documentDirty=false;document.location.href=\'index.php?a=3&amp;id='.$_REQUEST['id'].'&amp;quickmanager=cancel\';\">'.$_lang['cancel'].'</button></div>";');
+                        $mc->addLine('var controls = "<div id=\"qmcontrols\" class=\"sectionBody actionButtons\"><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/MODxCarbon/images/icons/save.png\"/>'.$_lang['save'].'</a> <a href=\"#\" onclick=\"documentDirty=false;document.location.href=\'index.php?a=3&amp;id='.$_REQUEST['id'].'&amp;quickmanager=cancel\';return false;\"><img src=\"media/style/MODxCarbon/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></div>";');
                     }
     
                     // Modify head
