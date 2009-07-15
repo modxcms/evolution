@@ -920,9 +920,9 @@ switch ($action) {
             <div class='subTitle'>
                 <span class='right'>".$_lang['functionnotimpl']."</span>
             </div>
-            <div class='sectionHeader'><img src='media/style/".($manager_theme ? $manager_theme : '')."/images/misc/dot.gif' alt='.' />&nbsp;
-                ".$_lang['functionnotimpl']."</div><div class='sectionBody'>
-                ".$_lang['functionnotimpl_message']."
+            <div class='sectionHeader'>".$_lang['functionnotimpl']."</div>
+			<div class='sectionBody'>
+                <p>".$_lang['functionnotimpl_message']."</p>
             </div>
         ";
         include_once "footer.inc.php";

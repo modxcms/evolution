@@ -363,7 +363,7 @@ input.button, input.submit {
 }
 .sectionHeader {
 	padding: 5px 3px 5px 18px;
-	background: #EFEFEF url(images/misc/greenfade.gif) repeat-x top;
+	background: #EFEFEF url(images/misc/fade.gif) repeat-x top;
 }
 .sectionBody, .layerVisible {
 	position: relative;
@@ -704,7 +704,7 @@ a.hometblink:hover {
 }
 #nav li {
 	list-style: none;
-	background: #d4d4d4 url(images/misc/greentab.gif) 100% 100%;
+	background: #d4d4d4 url(images/misc/tab.gif) 100% 100%;
 	float: left;
 	width: auto;
 	margin: 0 3px 0 0;
@@ -739,7 +739,7 @@ a.hometblink:hover {
 	color: #fff;
 }
 #nav li.active {
-	background: #758ca2 url(images/misc/greentab.gif) 100% 0;
+	background: #758ca2 url(images/misc/tab.gif) 100% 0;
 }
 #nav li.active a {
 	color: #fff;
@@ -1359,7 +1359,7 @@ form#mutate select.tv_url_select {
 	margin: 0;
 	color: #fff;
 	padding: 6px 6px 4px;
-	background: #758CA2 url(images/misc/greentab.gif);
+	background: #758CA2 url(images/misc/tab.gif);
 }
 
 .custom-text {
@@ -1477,3 +1477,13 @@ form#mutate .dp_cal input.cal_timeTextBox {
 	color: #fff;
 	background: #328dcf;
 }
+
+/* System Alert Box
+---------------------------------------------------------- */
+.cbOverlay {background-color: #000;z-index: 50000;}
+.cbContainer {padding:5px;background-color:white;z-index: 50000;}
+.cbBox h3 {color:#000;background: #bee860 url(images/misc/fade.gif) repeat-x top;padding:5px;font-weight:bold;}
+.cbBox p {margin:3px;}
+.cbBox .cbButtons {text-align:center;}	
+.sysAlert {width: 500px;height: 330px;white-space: nowrap;overflow: auto;}
+
