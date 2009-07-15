@@ -75,7 +75,7 @@ class Qm {
                     $sync->setReport(true);
                     $sync->emptyCache();
                     
-                    // Redirect to clearer page which refreshes parent window and closes ThickBox frame
+                    // Redirect to clearer page which refreshes parent window and closes ColorBox frame
                     $this->modx->sendRedirect($this->modx->config['base_url'].'assets/plugins/qm/close.php?id='.$id.'&baseurl='.$this->modx->config['base_url'], 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');               
                 }
                 
@@ -100,14 +100,14 @@ class Qm {
                     $doc = $this->modx->getDocument($docID);
                     
                     // Edit button
-                    $editButton = '<a class="qmButton qmEdit thickbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['edit_document'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=true&amp;TB_iframe=true&amp;width='.$this->tbwidth.'&amp;height='.$this->tbheight.'&amp;modal=true"><img src="' . MODX_BASE_URL. 'assets/plugins/qm/res/edit.png" alt="" />'.$_lang['edit_document'].'</a>';
+                    $editButton = '<a class="qmButton qmEdit colorbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['edit_document'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=true">'.$_lang['edit_document'].'</a>';
                     
                     // Does user have permissions to edit document
                     if($this->modx->hasPermission('edit_document')) $controls.=$editButton;
                     
                     if ($this->addbutton == 'true') {                    
                         // Add button
-                        $addButton  = '<a class="qmButton qmAdd thickbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['create_document_here'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=true&amp;TB_iframe=true&amp;width='.$this->tbwidth.'&amp;height='.$this->tbheight.'&amp;modal=true"><img src="' . MODX_BASE_URL. 'assets/plugins/qm/res/add.png" alt="" />'.$_lang['create_document_here'].'</a>';
+                        $addButton  = '<a class="qmButton qmAdd colorbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['create_document_here'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=true">'.$_lang['create_document_here'].'</a>';
                         
                         // Does user have permissions to add document
                         if($this->modx->hasPermission('new_document')) $controls.=$addButton;        
@@ -126,12 +126,24 @@ class Qm {
                     $editor = '<div id="qmEditor">'.$controls.'</div>';
                     $css = '<link rel="stylesheet" type="text/css" href="assets/plugins/qm/res/style.css" />';
         
-                    // Insert jQuery and Thickbox in head if needed
+                    // Insert jQuery and ColorBox in head if needed
                     if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
                     if ($this->loadtb == 'true') {
                         $head .= '
-                        <script type="text/javascript" src="'.$this->modx->config['site_url'].'assets/js/thickbox.js"></script>
-                        <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/js/thickbox.css" media="screen,projection" />
+                        <script type="text/javascript" src="'.$this->modx->config['site_url'].'assets/js/jquery.colorbox-min.js"></script>
+                        <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/js/colorbox.css" />
+                        <!--[if IE]>
+                        <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/js/colorbox-ie.css" title="example" />
+                        <![endif]-->
+                    	<script type="text/javascript">
+                    	var $j = jQuery.noConflict();
+                    	$j(document).ready(function($){
+                    		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true});
+                    	});
+                		function cb_remove(){
+                            $j.fn.colorbox.close();
+                		}
+                        </script> 
                         ';
                     }
         
@@ -148,7 +160,7 @@ class Qm {
                 
                 break;
             
-            // Edit document in ThickBox frame (MODx manager frame)
+            // Edit document in ColorBox frame (MODx manager frame)
             case 'OnDocFormPrerender':
             
                 // If there is Qm call, add control buttons and modify to edit document page
@@ -242,7 +254,7 @@ class Qm {
             case 'OnManagerPageInit':
                 // Only if cancel editing the document and QuickManager is in use
                 if ($_REQUEST['quickmanager'] == 'cancel') {
-                    // Redirect to clearer page which closes ThickBox frame
+                    // Redirect to clearer page which closes ColorBox frame
                     $this->modx->sendRedirect($this->modx->config['base_url'].'assets/plugins/qm/close.php?action=cancel', 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');
                 }
             
