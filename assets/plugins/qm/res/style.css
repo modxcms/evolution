@@ -43,7 +43,7 @@
 #qmEditor .qmButton img {
 	margin-top:1px;
 	margin-right: 2px;
-	vertical-align:top;
+	vertical-align: text-bottom;
 }
 
 #qmEditor .qmButton:hover {
