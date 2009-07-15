@@ -14,7 +14,7 @@ if (isset($_GET['action'])) $action = $_GET['action'];
 
 // Cancel => Remove ThickBox frame
 if ($action == "cancel") {
-    $body = '<body onload="parent.tb_remove();">';
+    $body = '<body onload="parent.cb_remove();">';
 }
 
 // Save document => Refresh saved document
