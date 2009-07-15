@@ -175,7 +175,7 @@ $_lang["unable_install_snippet"] = 'Unable to install snippet.  File';
 $_lang["unable_install_template"] = 'Unable to install template.  File';
 $_lang["upgrade_note"] = '<strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.';
 $_lang["upgraded"] = 'Upgraded';
-$_lang["visit_forum"] = ', visit the <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.';
+$_lang["visit_forum"] = ', visit the <a href="http://www.modxcms.com/forums/" target="_blank">MODx Forums</a>.';
 $_lang["warning"] = 'WARNING!';
 $_lang["welcome_message_start"] = 'First, choose the type of installation to perform:';
 $_lang["welcome_message_text"] = 'This program will guide you through the rest of the installation.';
