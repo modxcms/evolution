@@ -18,7 +18,7 @@
 	$ms[] = array("AjaxSearch","<strong>1.8.3</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
 	$ms[] = array("Breadcrumbs","<strong>1.0.1</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
 	$ms[] = array("Ditto","<strong>2.1</strong>+ Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more. Includes patches post-2.1 release to fix sorting bug and default display behavior. ",0,"$setupPath/snippet.ditto.tpl","");
-	$ms[] = array("eForm","<strong>1.4.4.5</strong> Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
+	$ms[] = array("eForm","<strong>1.4.4.6</strong> Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
 	$ms[] = array("FirstChildRedirect","<strong>1.0</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
 	$ms[] = array("Jot","<strong>1.1.4</strong> User comments with moderation and email subscription.",0,"$setupPath/snippet.jot.tpl","");
 	$ms[] = array("ListIndexer","<strong>1.0.1</strong> Shows the most recent documents, highly flexible.",0,"$setupPath/snippet.listindexer.tpl","");
