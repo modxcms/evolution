@@ -100,14 +100,14 @@ class Qm {
                     $doc = $this->modx->getDocument($docID);
                     
                     // Edit button
-                    $editButton = '<a class="qmButton qmEdit thickbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['edit_document'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=true&amp;TB_iframe=true&amp;width='.$this->tbwidth.'&amp;height='.$this->tbheight.'&amp;modal=true">'.$_lang['edit_document'].'</a>';
+                    $editButton = '<a class="qmButton qmEdit thickbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['edit_document'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=true&amp;TB_iframe=true&amp;width='.$this->tbwidth.'&amp;height='.$this->tbheight.'&amp;modal=true"><img src="' . MODX_BASE_URL. 'assets/plugins/qm/res/edit.png" alt="" />'.$_lang['edit_document'].'</a>';
                     
                     // Does user have permissions to edit document
                     if($this->modx->hasPermission('edit_document')) $controls.=$editButton;
                     
                     if ($this->addbutton == 'true') {                    
                         // Add button
-                        $addButton  = '<a class="qmButton qmAdd thickbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['create_document_here'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=true&amp;TB_iframe=true&amp;width='.$this->tbwidth.'&amp;height='.$this->tbheight.'&amp;modal=true">'.$_lang['create_document_here'].'</a>';
+                        $addButton  = '<a class="qmButton qmAdd thickbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['create_document_here'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=true&amp;TB_iframe=true&amp;width='.$this->tbwidth.'&amp;height='.$this->tbheight.'&amp;modal=true"><img src="' . MODX_BASE_URL. 'assets/plugins/qm/res/add.png" alt="" />'.$_lang['create_document_here'].'</a>';
                         
                         // Does user have permissions to add document
                         if($this->modx->hasPermission('new_document')) $controls.=$addButton;        
@@ -119,7 +119,7 @@ class Qm {
                     
                     // Logout button
                     $logout = $this->modx->config['site_url'].'manager/index.php?a=8';     
-                    $logoutButton  = '<a class="qmButton qmLogout" title="'.$_lang['logout'].'" href="'.$logout.'" >'.$_lang['logout'].'</a>';
+                    $logoutButton  = '<a class="qmButton qmLogout" title="'.$_lang['logout'].'" href="'.$logout.'" ><img src="' . MODX_BASE_URL. 'assets/plugins/qm/res/exit.png" alt="Edit" />'.$_lang['logout'].'</a>';
         
                     $controls .= $logoutButton;
                     
