@@ -1,4 +1,0 @@
-<?php
-$header = "";
-$footer = "";
-?>
