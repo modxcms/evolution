@@ -71,7 +71,6 @@ $_style["icons_save"] = $style_path."images/icons/save.png";
 $_style["icons_undelete_document"] = $style_path."images/icons/b092.gif";
 $_style["icons_unpublish_document"] = $style_path."images/icons/clock_stop.png";
 $_style["icons_user"] = $style_path."images/icons/user.gif";
-$_style["icons_user_current"] = $style_path."images/icons/user_go.png"; // top bar
 $_style["icons_weblink"] = $style_path."images/icons/world_link.png";
 $_style["icons_working"] = $style_path."images/icons/exclamation.png"; // top bar
 

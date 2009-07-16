@@ -9,6 +9,7 @@ Bugfixes & Feature Requests:
 * [#MODX-898] Improve regClient function so that the same JS file is not loaded twice in one document
 * [#MODX-916] Better handling of text direction and encoding for Manager languages
 * [#MODx-882] Specify the default Manager language during installation
+* [#MODx-815] Users without edit or create module permissions can get to Modules editing screen
 * [#MODX-390] Infinite loop possible during install
 * [#MODX-909] Roles menu item showed even if Manager User did not have Roles permissions
 * [#MODX-851] Manager User and Webuser email messages were always in English despite the language setting
