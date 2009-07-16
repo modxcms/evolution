@@ -24,8 +24,7 @@
 ?>	
 
 <?php // fetch the styles
-	echo '<link rel="stylesheet" type="text/css" href="'.$modx->config['base_path'].'manager/media/style/'.$manager_theme.'/sysalert_style.php'.'" />';
-} 
+	echo '<link rel="stylesheet" type="text/css" href="'.$modx->config['base_path'].'manager/media/style/'.$manager_theme.'/style.css'.'" />';
 ?>
 <script type="text/javascript">
 Window.onDomReady(function() {

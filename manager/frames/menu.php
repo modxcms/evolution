@@ -62,7 +62,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		try {
 			var elm = $('tocText');
 			if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']?>' alt='<?php echo $_lang['show_tree']?>' width='16' height='16' /></a>";
-			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo !($modx_textdir ? '0,*' : '*,0')?>';
+			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo (!$modx_textdir ? '0,*' : '*,0')?>';
 			top.__hideTree = true;
 		} catch(oException) {
 			x=window.setTimeout('hideTreeFrame()', 1000);
