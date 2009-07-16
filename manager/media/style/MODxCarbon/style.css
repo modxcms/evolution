@@ -1,5 +1,4 @@
-/*compacted, adjusted and corrected by Gaborg george@iseom.com , gg@gatart.ro*/
-/* Neutralize styles, fonts and viewport:*/
+/* -------------------------[ Neutralize styles, fonts and viewport ]--- */
 html, body, form, fieldset {
 	margin: 0;
 	padding: 0;
@@ -32,15 +31,20 @@ h1, h2, h3, h4, h5, h6, p, pre, blockquote, ul, ol, dl, address {
 	font-weight: normal;
 }
 li, dd, blockquote {
-	margin-left: 1em;
+	margin: 0 0  0 1em;
 }
+	.rtl li, .rtl dd, .rtl blockquote {
+		margin: 0 1em 0 0;
+	}
+
+
 .file-manager td {
 	border-bottom: 1px solid #d5dfea;
 }
 .ab2 {
 	padding-bottom: 20px;
 }
-/* Miscellaneous conveniences:*/
+/* -------------------------[ Miscellaneous conveniences ]--- */
 .clearfix, .cls {
 	clear: both;
 	height: 0 !important;
@@ -73,7 +77,7 @@ li, dd, blockquote {
 .inline {
 	display: inline;
 }
-/* Headers and Paragraphs:*/
+/* -------------------------[ Headers and Paragraphs ]--- */
 h1, h2, h3, h4, h5, h6, .subTitle {
 	font-weight: normal;
 }
@@ -83,6 +87,9 @@ h1 {
 	line-height: 40px;
 	margin-left: 10px;
 }
+	.rtl h1 {
+		margin-right: 10px;
+	}
 h2 {
 	font-size: 164%;
 }
@@ -108,10 +115,12 @@ button {
 	color: #821517;
 	font-weight: bold;
 	width: 112px;
-	margin-right: 5px;
+	margin: 0 5px 0 0;
 	cursor: pointer;
 }
-
+	.rtl button {
+		margin: 0 0 0 5px;
+	}
 a, a:active, a:visited, a:link {
 	color: #1a32c7;
 	text-decoration: underline;
@@ -139,13 +148,6 @@ hr {
 	width: 100%;
 	height: 400px;
 }
-.stay {
-	border-bottom: 1px solid #F7F7F7;
-	margin-left: 0;
-}
-.stay table {
-	margin-top: 10px!important;
-}
 .messageRead {
 	color: #000;
 }
@@ -153,21 +155,17 @@ hr {
 	color: #3CB371;
 	font-weight: bold;
 }
-.subTitle {
-	width: 100%;
-	height: 44px !important;
-	padding: 0;
-	margin: 0 10px 10px 0;
-}
-.subTitle span {
-}
 .right {
 	font-weight: bold;
 	color: #000;
 	float: left;
 	padding: 0 20px 20px;
 }
-/* Topbar:*/
+	.rtl .right {
+		float: right;
+	}
+
+/* -------------------------[ Topbar ]--- */
 #topbar {
 	margin: 0;
 	color: #000;
@@ -193,6 +191,9 @@ hr {
 	top: 50px;
 	z-index: 1000;
 }
+	.rtl #tocText {
+		right: 3px;
+	}
 .tocTextRTL {
 	right: 3px;
 }
@@ -201,19 +202,22 @@ hr {
 #workText {
 	font-weight: bold;
 	line-height: 16px;
-	margin-right: 15px;
+	margin: 0 15px;
 	color: #FFF;
 }
 #tocText,
 #buildText img,
 #workText img {
-	margin-right: 5px;
+	margin: 0 5px;
 }
 #statusbar {
 	position: absolute;
 	right: 0;
 	top: 27px;
 }
+	.rtl #statusbar { 
+		left: 0; 
+	}
 #supplementalNav {
 	float: right;
 	background: transparent;
@@ -224,12 +228,15 @@ hr {
 	margin: 0;
 	color: #89939E;
 }
+	.rtl #supplementalNav {
+		float: left;
+	}
 #supplementalNav a {
 	line-height: 35px;
 	padding: 0;
 	margin: 0;
 }
-/* Forms:*/
+/* -------------------------[ Forms ]--- */
 form label {
 	cursor: pointer;
 }
@@ -240,6 +247,12 @@ input, select, textarea, td {
 	font: inherit;
 	color: inherit;
 }
+	.rtl input,
+	.rtl select,
+	.rtl textarea,
+	.rtl td {
+		text-align: right;
+	}
 #ta, .tmplvars textarea {
 	font-size: 130%;
 	font-family: monospace;
@@ -252,6 +265,10 @@ form textarea {
 	padding: 2px 0 2px 2px;
 	background: #fff url(images/misc/input-bg.gif) repeat-x top left;
 }
+	.rtl form input[type=text],
+	.rtl form textarea {
+		padding: 2px 2px 2px 0;
+	}
 input.radio, input.checkbox {
 	height: auto !important;
 	width: auto !important;
@@ -284,6 +301,15 @@ form input.hidden {
 	text-align: right;
 	width: 110px;
 }
+	.rtl .form label,
+	.rtl .form input,
+	.rtl .form textarea {
+		float: right;
+	}
+	.rtl .form label {
+		padding-left: 20px;
+		text-align: left;
+	}
 form textarea {
 	height: 100px;
 	width: 300px;
@@ -298,6 +324,9 @@ form textarea {
 	display: inline;
 	float: left;
 }
+	.rtl .form select {
+		float: right;
+	}
 .form br {
 	clear: both;
 }
@@ -306,6 +335,9 @@ input.submit {
 	float: none !important;
 	margin: 20px 0 0 140px !important;
 }
+	.rtl input.submit {
+		margin: 20px 140px 0 0 !important;
+	}
 input.button, input.submit {
 	margin: 0;
 	border: 0;
@@ -315,11 +347,13 @@ input.button, input.submit {
 	vertical-align: middle;
 }
 .form fieldset.list {
-	border: 0;
-	padding: 0 !important;
-	margin: 6px 0 3px 6px;
+	margin: 6px 6px 3px 0;
 }
-/* in case someone adds a legend */
+	.rtl .form fieldset.list {
+		border: 0;
+		padding: 0 !important;
+		margin: 6px 0 3px 6px;
+	}
 .form fieldset.list legend {
 	display: none;
 }
@@ -334,13 +368,17 @@ input.button, input.submit {
 	width: auto;
 	height: auto;
 }
+	.rtl .form fieldset.list label,
+	.rtl .form fieldset.list input {
+		float: right;
+	}
 .form fieldset.list label {
 	padding-left: 5px;
 	text-align: left;
 	width: auto;
 }
 
-/* Misc stuff:*/
+/* -------------------------[ Misc stuff ]--- */
 .sectionBody fieldset {
 	border: 0;
 	background: #fff;
@@ -365,6 +403,10 @@ input.button, input.submit {
 	padding: 5px 3px 5px 18px;
 	background: #EFEFEF url(images/misc/fade.gif) repeat-x top;
 }
+	.rtl .sectionHeader {
+		direction: rtl;
+		padding: 5px 18px 5px 3px;
+	}
 .sectionBody, .layerVisible {
 	position: relative;
 	top: -5px;
@@ -377,6 +419,10 @@ input.button, input.submit {
 	display: block;
 	background: #fff url(images/misc/tabareabg.gif) repeat-x top;
 }
+	.rtl .sectionBody, .layerVisible {
+		direction: rtl;
+		position: inherit;
+	}
 .showHideVisible, .layerVisible {
 	margin: 0 10px 4px 10px;
 }
@@ -407,8 +453,11 @@ li {
 	list-style: disc outside url(images/misc/li.gif);
 }
 ul {
-	margin: 0 10px 0 20px;
+	margin: 0 20px 0 10px;
 }
+	.rtl ul {
+		margin: 0 10px 0 20px;
+	}
 .screen {
 	border: 1px solid #ddd;
 	text-align: center;
@@ -422,7 +471,7 @@ a img {
 .odd {
 	background: #fff;
 }
-/*end sortable table */
+/* -------------------------[ end sortable table ]--- */
 .disabledImage {
 	width: 20px;
 	opacity: 0.3;
@@ -436,6 +485,9 @@ a img {
 	text-align: left;
 	vertical-align: baseline;
 }
+	.rtl .editorCell {
+		text-align: right;
+	}
 .row1, .row2, .row3 {
 	background-color: #fff;
 	color: #000;
@@ -461,8 +513,11 @@ a img {
 	background: #f4f4f4;
 }
 #treeRoot div img {
-	margin-left: -6px;
+	margin: 0 0 0 -6px;
 }
+	.rtl #treeRoot div img {
+		margin: 0 -6px 0 0;
+	}
 #floater {
 	display: none;
 	position: absolute;
@@ -474,6 +529,9 @@ a img {
 	border-bottom: 1px solid #666;
 	z-index: 500;
 }
+	.rtl #floater {
+		right: 4px
+	}
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode {
 	color: #000;
 	padding: 2px;
@@ -520,11 +578,14 @@ a img {
 	position: absolute;
 	right: -10px;
 }
+	.rtl #treeSplitter {
+		left: -10px;
+	}
 .disabledPlugin a {
 	color: #aaa;
 	text-decoration: line-through;
 }
-/* grid style */
+/* -------------------------[ grid style ]--- */
 .grid {
 	width: 100%;
 	background-color: #fff;
@@ -553,7 +614,7 @@ a img {
 	vertical-align: middle;
 	padding-right: 4px;
 }
-/* search bar */
+/* -------------------------[ search bar ]--- */
 .searchbar {
 	width: 100%;
 	border: 1px solid silver;
@@ -596,7 +657,7 @@ a img {
 	border: 1px solid #88939E;
 	background: #fff;
 }
-/* home page main links */
+/* -------------------------[ home page main links ]--- */
 a.hometblink, a.hometblink:active, a.hometblink:visited, a.hometblink:link, .hometblink {
 	text-decoration: underline;
 	color: #000;
@@ -628,7 +689,7 @@ a.hometblink:hover {
 	padding: 50px;
 	border: 1px solid #039;
 }
-/*contextmenu in editing modules*/
+/* -------------------------[ contextmenu in editing modules ]--- */
 .contextMenu {
 	background: #fff;
 	margin: 0;
@@ -644,6 +705,15 @@ a.hometblink:hover {
 	color: #000;
 	padding: 3px 16px 3px 2px;
 }
+	.rtl .cntxMnuItem,
+	.rtl .cntxMnuItemDisabled {
+		padding: 3px 2px 3px 16px;
+	}
+.cntxMnuItemDisabled {
+	cursor: default;
+	padding: 3px 16px 3px 2px;
+	color: #111;
+}
 .cntxMnuItemOver {
 	cursor: pointer;
 	color: #000;
@@ -651,14 +721,18 @@ a.hometblink:hover {
 	padding: 2px 15px 2px 1px;
 	border: 1px solid #c0c0c0;
 }
-.cntxMnuItemDisabled {
-	cursor: default;
-	padding: 3px 16px 3px 2px;
-	color: #111;
-}
+	.rtl .cntxMnuItemOver {
+		padding: 2px 1px 2px 15px;
+	}
 .cntxMnuItem img, .cntxMnuItemOver img, .cntxMnuItemDisabled img {
-	margin-right: 8px;
+	margin: 0 8px 0 0;
 }
+	.rtl .cntxMnuItem img,
+	.rtl .cntxMnuItemOver img,
+	.rtl .cntxMnuItemDisabled img {
+		margin: 0 0 0 8px;
+	}
+
 .cntxMnuItem img, .cntxMnuItemDisabled img {
 	opacity: .3;
 	filter: alpha(opacity=30);
@@ -670,9 +744,11 @@ a.hometblink:hover {
 	overflow: hidden;
 	margin: 3px 1px 3px 28px;
 }
-/*end context*/
+	.rtl .cntxMnuSeparator {
+		margin: 3px 28px 3px 1px;
+	}
 
-/* Top Navbar of snap in top menu bar layout*/
+/* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu {
 	background: #e4e4e4 url(images/misc/menubg.jpg);
 }
@@ -682,7 +758,7 @@ a.hometblink:hover {
 	line-height: 35px;
 }
 #Navcontainer {
-	padding-left: 10px;
+	padding: 0 10px;
 	color: #fff;
 }
 #nav {
@@ -694,14 +770,21 @@ a.hometblink:hover {
 	top: 18px;
 	overflow: visible !important;
 }
+	.rtl #nav {
+		right: 10px;
+	}
 #nav ul {
 	display: none;
 	height: 25px;
 	position: relative;
 	z-index: 500;
 	margin: 0 0 0 -10px;
-	padding: 0 0 0 10px;
+	padding: 0 0 0 20px;
 }
+	.rtl #nav ul {
+		margin: 0 -10px 0 0;
+	    padding: 0 20px 0 0;
+	}
 #nav li {
 	list-style: none;
 	background: #d4d4d4 url(images/misc/tab.gif) 100% 100%;
@@ -710,6 +793,10 @@ a.hometblink:hover {
 	margin: 0 3px 0 0;
 	padding: 0;
 }
+	.rtl #nav li {
+		float: right;
+		margin: 0 0 0 3px;
+	}
 #nav li a {
 	color: #919fae;
 	height: 25px;
@@ -725,13 +812,17 @@ a.hometblink:hover {
 	display: block;
 }
 #nav li ul li a {
-	padding: 0 18px!important;
+	padding: 0 18px !important;
 }
 #nav li ul li a {
 	background: #d4d4d4;
 	float: left;
 	width: auto;
 }
+	.rtl #nav li ul li a {
+	    float: right;
+	}
+
 #nav a:hover {
 	color: #fff;
 }
@@ -761,6 +852,9 @@ a.hometblink:hover {
 	border-top: 1px solid #8B96A0;
 	border-bottom: 1px solid #2c3d50;
 }
+	#nav li.active ul.subnav {
+	    right: 0;
+	}
 #nav li.active ul.subnav a {
 	color: #fff;
 	font-weight: normal;
@@ -781,7 +875,7 @@ a.hometblink:hover {
 }
 
 
-/* Contextual Menu used in the Tree Menu*/
+/* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
 #mx_contextmenu {
 	position: absolute;
 	height: auto;
@@ -848,7 +942,25 @@ a.hometblink:hover {
 	overflow: hidden;
 	margin: 3px 1px 3px 28px;
 }
-/* Settings Table*/
+
+	.rtl #mx_contextmenu .menuLink {
+	    padding: 3px 2px 3px 16px; }
+	.rtl #mx_contextmenu .menuLinkOver,
+	.rtl #mx_contextmenu .menuLinkDisabled {
+	    padding: 2px 1px 2px 15px;}
+	.rtl #mx_contextmenu .menuLink img,
+	.rtl #mx_contextmenu .menuLinkOver img,
+	.rtl #mx_contextmenu .menuLinkDisabled img {
+		margin-right: 8px; }
+	.rtl #mx_contextmenu #nameHolder {
+	    text-align: right;
+	}
+	.rtl #mx_contextmenu .seperator {
+	    margin: 3px 28px 3px 1px;
+	}
+
+
+/* -------------------------[ Settings Table ]--- */
 .settings {
 	width: 600px;
 }
@@ -864,14 +976,18 @@ a.hometblink:hover {
 	color: #555;
 	font-size: 120%;
 }
+	.rtl .settings th {text-align: right;}
 .filelist td {
 	border-bottom: 1px solid #C2C3CF;
 }
-/* Tabs*/
+/* -------------------------[ Tabs ]--- */
 .dynamic-tab-pane-control.tab-pane {
 	position: relative;
 	width: 100%;
 }
+	.rtl .dynamic-tab-pane-control.tab-pane {
+		direction: rtl;
+	}
 .dynamic-tab-pane-control .tab-row .tab {
 	color: #313131;
 	font-weight: bold;
@@ -887,6 +1003,12 @@ a.hometblink:hover {
 	background: #f5f5f5;
 	border: 1px solid #e0e0e0;
 }
+	.rtl .dynamic-tab-pane-control .tab-row .tab {
+	    margin: 3px 5px 1px -3px;
+	    float: right;
+	    padding: 2px 15px 3px;
+	}
+
 .dynamic-tab-pane-control .tab-row .tab.hover {
 	color: #222;
 	background: #fff;
@@ -919,6 +1041,9 @@ a.hometblink:hover {
 	top: -2px;
 	padding: 10px;
 }
+	.rtl .dynamic-tab-pane-control .tab-page {
+	    position: inherit;		/* critical adjustment for IE ul li Proper RTL demonstration */
+	}
 .dynamic-tab-pane-control .tab-row {
 	z-index: 1;
 	white-space: nowrap;
@@ -931,7 +1056,7 @@ a.hometblink:hover {
 	padding-left: 5px;
 	padding-right: 5px;
 }
-/* Tree buttons*/
+/* -------------------------[ Tree buttons ]--- */
 .treeButton {
 	display: block;
 	cursor: default;
@@ -956,52 +1081,7 @@ a.hometblink:hover {
 	opacity: .5;
 	filter: alpha(opacity=50);
 }
-/* WebFX cool buttons... must also remove these...*/
-.coolButton,
-.coolButtonHover,
-.coolButtonActiveHover,
-.coolButtonActive,
-.coolButtonActiveDisabled,
-.coolButtonDisabled,
-.coolButtonUpDisabled {
-	cursor: default;
-	color: #000;
-	border: 1px;
-	border-bottom-color: #809c47;
-	padding: 3px 5px;
-	white-space: nowrap;
-	vertical-align: middle;
-}
-.coolButtonHover {
-	border: 1px solid #657587;
-	padding: 2px 4px;
-	background: #fff;
-}
-.coolButtonActive,
-.coolButtonActiveHover {
-	border: 1px solid #000;
-	border-color: #444 #ccc #ccc #444;
-	padding: 2px 3px 2px 5px;
-}
-.coolButtonUpDisabled,
-.coolButtonActiveDisabled,
-.coolButtonDisabled {
-	border: 1px solid #657587;
-	padding: 2px 4px;
-	color: #777;
-	border-width: 0;
-}
-.coolButtonActiveDisabled {
-	border: 1px solid #657587;
-	padding: 0 4px 3px 4px;
-}
-.coolButtonUpDisabled img,
-.coolButtonActiveDisabled img,
-.coolButtonDisabled img {
-	opacity: .3;
-	filter: alpha(opacity=30);
-}
-/* Welcome Page*/
+/* -------------------------[ Welcome Page ]--- */
 a.hometblink, a.hometblink img {
 	border: 0 !important;
 	text-decoration: none !important;
@@ -1011,7 +1091,12 @@ a.hometblink, a.hometblink img {
 	margin: 0 6px 2px 5px;
 	text-align: center;
 }
-/* Welcome Page*/
+	.rtl .wm_button {
+	    float: right;
+	    margin: 0 5px 2px 6px;
+	}
+
+/* -------------------------[ Welcome Page ]--- */
 #mainActionPages {
 	background: #f4f4f4 url(images/misc/mainbg.gif) repeat-x top;
 }
@@ -1021,7 +1106,7 @@ a.hometblink, a.hometblink img {
 .sectionBody .tab-page {
 	border-width: 1px 0 0;
 }
-/* New sortable table class*/
+/* -------------------------[ New sortable table class ]--- */
 .sortabletable {
 	font: Icon;
 	border: 0 solid ThreeDShadow;
@@ -1045,6 +1130,9 @@ a.hometblink, a.hometblink img {
 	cursor: pointer;
 	color: #000;
 }
+	.rtl .sortabletable th {
+		text-align: right;
+	}
 .sortabletable th a {
 	text-decoration: none;
 	color: #000;
@@ -1053,7 +1141,10 @@ a.hometblink, a.hometblink img {
 	background: #ccc;
 	padding: 3px 4px 1px 6px;
 }
-/* Pagination table*/
+	.rtl .sortabletable th:active {
+		padding: 3px 6px 1px 4px;
+	}
+/* -------------------------[ Pagination table ]--- */
 #max-display-records {
 	margin: 10px 0;
 }
@@ -1105,8 +1196,8 @@ h2#edit_document_title {
 fieldset#preview h2.tab {
 	float: right;
 }
-/* -----------------------------[ Action Buttons ]-- */
-div#actions {
+/* -------------------------[ Action Buttons ]--- */
+#actions {
 	position: fixed;
 	top: 10px;
 	right: 0;
@@ -1115,9 +1206,13 @@ div#actions {
 	text-align: right;
 	width: 600px;
 }
+.rtl #actions {
+	left: 10px;
+	text-align: left;
+}
 ul.actionButtons {
 	margin: 0 0 10px;
-	padding: 3px 0; /* accommodate border on buttons */
+	padding: 3px 0; /* accommodate border on buttons - */
 	background: none;
 	width: auto;
 }
@@ -1388,7 +1483,7 @@ fieldset.legacy h2 {
 	border-bottom: 1px solid #e4e4e4!important;
 }
 
-/* date picker */
+/* -------------------------[ date picker ]--- */
 form#mutate input.DatePicker {
 	width: 150px;
 	padding: 3px 3px 3px 24px;
@@ -1463,7 +1558,7 @@ form#mutate .dp_cal input.cal_timeTextBox {
 	color: #000;
 	background: #fff6bf;
 }
-/* must have this for the IE6 select box hiding */
+/* -------------------------[ must have this for the IE6 select box hiding ]--- */
 .dp_hide {
 	visibility: hidden;
 }
@@ -1484,6 +1579,6 @@ form#mutate .dp_cal input.cal_timeTextBox {
 .cbContainer {padding:5px;background-color:white;z-index: 50000;}
 .cbBox h3 {color:#000;background: #bee860 url(images/misc/fade.gif) repeat-x top;padding:5px;font-weight:bold;}
 .cbBox p {margin:3px;}
-.cbBox .cbButtons {text-align:center;}	
+.cbBox .cbButtons {text-align:center;}
 .sysAlert {width: 500px;height: 330px;white-space: nowrap;overflow: auto;}
 
