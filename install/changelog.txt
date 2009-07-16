@@ -6,6 +6,7 @@ MODx Evolution 1.0.0 (rev 5403 - July 15, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-720] The website name on the Manager login page links back to the front end site
 * [#MODX-898] Improve regClient function so that the same JS file is not loaded twice in one document
 * [#MODX-916] Better handling of text direction and encoding for Manager languages
 * [#MODx-882] Specify the default Manager language during installation
