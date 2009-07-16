@@ -1,8 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-// start session
-startCMSSession();
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 //		if (isset($_COOKIE[session_name()])) {
 //			setcookie(session_name(), '', 0, MODX_BASE_URL);

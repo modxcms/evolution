@@ -141,8 +141,26 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
     @mysql_query("{$database_connection_method} {$database_connection_charset}");
 }
 
+// start session
+startCMSSession();
+
 // get the settings from the database
 include_once "settings.inc.php";
+
+// get the user settings from the database
+include_once "user_settings.inc.php";
+
+// include_once the language file
+if(!isset($manager_language)) {
+    $manager_language = "english"; // if not set, get the english language file.
+}
+$_lang = array();
+include_once "lang/english.inc.php";
+$length_eng_lang = count($_lang);
+
+if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+    include_once "lang/".$manager_language.".inc.php";
+}
 
 // send the charset header
 header('Content-Type: text/html; charset='.$modx_manager_charset);
@@ -157,23 +175,6 @@ include_once "accesscontrol.inc.php";
 if(!isset($_SESSION['mgrValidated'])){
     echo "Not Logged In!";
     exit;
-}
-// get the user settings from the database
-include_once "user_settings.inc.php";
-
-//echo $manager_direction;
-//echo $modx->config['manager_direction'];
-
-// include_once the language file
-if(!isset($manager_language)) {
-    $manager_language = "english"; // if not set, get the english language file.
-}
-$_lang = array();
-include_once "lang/english.inc.php";
-$length_eng_lang = count($_lang);
-
-if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
-    include_once "lang/".$manager_language.".inc.php";
 }
 
 // include_once the style variables file
