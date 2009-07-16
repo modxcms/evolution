@@ -1,0 +1,19 @@
+Dear [+recipient.username+],
+
+A new reply has been posted to a topic you are moderating.
+
+-----
+Name: [+comment.custom.name+]
+Email: [+comment.custom.email+] 
+Subject: [+comment.title+]
+Message:
+
+[+comment.content+]
+-----
+
+View the published replies at: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=1
+View the unpublished replies at: [+siteurl+][+jot.link.view+][+jot.querykey.view+]=0
+
+Regards,
+Site Administrator
+

@@ -1,0 +1,114 @@
+And here's a quick tutorial for the testers. The following is how you would convert the popular Mollio Menu template menus with Wayfinder. I think you'll see how much easier it will be to create dynamic, nested menus compared to DropMenu. This is totally untested, but it should work...
+
+First, reference this [url=http://www.mollio.org/typeC.html]example page[/url]. Nice eh?
+
+For reference, here's the Menu Code:
+[code]<ul id="nav">
+<li class="first"><a href="#">Home</a></li>
+<li class="active"><a href="#">Products</a>
+	<ul>
+	<li class="first"><a href="#">Maecenas</a></li>
+	<li class="active"><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li class="last"><a href="#">Mauris at enim</a></li>
+	</ul>
+</li>
+<li><a href="#">Client list</a>
+	<ul>
+	<li class="first"><a href="#">Maecenas</a></li>
+	<li><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li class="last"><a href="#">Mauris at enim</a></li>
+	</ul>
+</li>
+<li><a href="#">Case Studies &amp; References</a>
+	<ul>
+	<li class="first"><a href="#">Maecenas</a></li>
+	<li><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li class="last"><a href="#">Mauris at enim</a></li>
+	</ul>
+</li>
+<li class="last"><a href="#">Locations</a>
+	<ul>
+	<li class="first"><a href="#">Maecenas</a></li>
+	<li><a href="#">Phasellus</a></li>
+	<li><a href="#">Mauris sollicitudin</a></li>
+	<li class="last"><a href="#">Mauris at enim</a></li>
+	</ul>
+</li>
+</ul>[/code]
+
+Your example call:
+[code][[Wayfinder? &startId=`0` &level=`2` &outerTpl=`wfOuter` &innerTpl=`wfInner` &rowTpl=`wfRow` &hereClass=`active` &firstClass=`first` &lastClass=`last`]][/code]
+
+Your outer template – [b]{{wfOuter}}[/b] :
+[code]<ul id="nav">
+[+wf.wrapper+]
+</ul>[/code]
+
+Your inner template – [b]{{wfInner}}[/b] :
+[code]<ul>
+[+wf.wrapper+]
+</ul>[/code]
+
+Your row template – [b]{{wfRow}}[/b] :
+[code]<li[+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>[/code]
+
+Add the following CSS to your template:
+[code]<style type="text/css">
+
+/*
+LEGAL
+=====
+Copyright: Daemon Pty Limited 2006, http://www.daemon.com.au
+Community: Mollio http://www.mollio.org $
+License: Released Under the "Common Public License 1.0", 
+http://www.opensource.org/licenses/cpl.php
+License: Released Under the "Creative Commons License", 
+http://creativecommons.org/licenses/by/2.5/
+License: Released Under the "GNU Creative Commons License", 
+http://creativecommons.org/licenses/GPL/2.0/
+*/
+
+/* NAV - top horizontal nav */
+#nav, #nav ul {padding: 0;margin: 0;list-style: none}
+#nav {font-weight:bold;height:2.09em;font: bold 96% arial;margin: 0 105px 0 40px}
+#nav li {position:relative;background: #999;float: left;width: 10em;display:block;margin: 0;border-bottom: 3px solid #666;border-right: 3px solid #252525;padding:0}
+#nav a, #nav a:link, #nav a:visited, #nav a:hover, #nav a:active {text-decoration:none;cursor:pointer;color:#fff;display: block;padding: 4px 10px 2px}
+#nav a:hover {color:#000}
+
+#nav li ul {border-left: 1px solid #c00;background: #f6f6f6 url("assets/images/featurebox_bg.gif") no-repeat 100% 100%;width:15.8em;font-size:90%;margin-top:3px;position: absolute;font-weight:normal;left: -999em}
+#nav li:hover ul, #nav li.sfhover ul {left: 0;z-index:99999}
+
+#nav li li {background:none;float:none;border:none;border: 1px solid #999;border-top:1px solid #fff;border-right:none;border-left:none;padding-left:0}
+#nav li li.last {border-bottom:none}
+#nav li li a, #nav li li a:link, #nav li li a:visited, #nav li li a:hover {color:#000;padding: 3px 10px 2px;width:14em}
+#nav li li a:hover {color:#fff;background:#c00}
+
+#nav li.active {background: #c00;border-bottom: 3px solid #c00}
+#nav li.active ul {border:none;background: #c00 url("assets/images/featurebox2_bg.gif") no-repeat 100% 100%}
+#nav li.active a:link, #nav li.active a:visited, #nav li.active a:hover, #nav li.active a:active {}
+#nav li.active a:hover {color:#000}
+
+#nav li.active li {border:none;border-top: 1px solid #c15c5c;border-bottom: 1px solid #870000}
+#nav li.active li.last {border-bottom: none}
+#nav li.active li a:link, #nav li.active li a:visited, #nav li.active li a:hover, #nav li.active li a:active {color:#fff}
+#nav li.active li a:hover {background: #666 url("assets/images/sprites.gif") repeat-x 0 99%;color:#fff}
+
+#nav li.active li.active a:link, #nav li.active li.active a:visited, #nav li.active li.active a:hover, #nav li.active li.active a:active {color:#fff;font-weight:bold;background: #666 url("images/sprites.gif") repeat-x 0 99%}
+
+<style>[/code]
+
+And finally, add the following three attached images to your [b]assets/images/[/b] folders and it should work just fine. :)

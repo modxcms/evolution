@@ -1,0 +1,66 @@
+/* common styling */
+/* set up the overall width of the menu div, the font and the margins */
+
+.menu {
+font-family: arial, sans-serif; 
+width:750px; 
+margin:0; 
+margin:20px 0 60px 0;
+position:relative;
+z-index:100;
+}
+/* remove the bullets and set the margin and padding to zero for the unordered list */
+.menu ul {
+padding:0; 
+margin:0;
+list-style-type: none;
+}
+/* float the list so that the items are in a line and their position relative so that the drop down list will appear in the right place underneath each list item */
+.menu ul li {
+float:left; 
+position:relative;
+}
+/* style the links to be 104px wide by 30px high with a top and right border 1px solid white. Set the background color and the font size. */
+.menu ul li a, .menu ul li a:visited {
+display:block; 
+text-align:center; 
+text-decoration:none; 
+width:106px; 
+height:30px; 
+color:#000; 
+border:1px solid #fff;
+border-width:1px 1px 0 0;
+background:#c9c9a7; 
+line-height:30px; 
+font-size:11px;
+}
+/* make the dropdown ul invisible */
+.menu ul li ul {
+display: none;
+}
+
+/* specific to non IE browsers */
+/* set the background and foreground color of the main menu li on hover */
+.menu ul li:hover a {
+color:#fff; 
+background:#b3ab79;
+}
+/* make the sub menu ul visible and position it beneath the main menu list item */
+.menu ul li:hover ul {
+display:block; 
+position:absolute; 
+top:31px; 
+left:0; 
+width:105px;
+}
+/* style the background and foreground color of the submenu links */
+.menu ul li:hover ul li a {
+display:block; 
+background:#faeec7; 
+color:#000;
+}
+/* style the background and forground colors of the links on hover */
+.menu ul li:hover ul li a:hover {
+background:#dfc184; 
+color:#000;
+}

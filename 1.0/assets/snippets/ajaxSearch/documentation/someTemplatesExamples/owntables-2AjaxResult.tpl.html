@@ -1,0 +1,17 @@
+<div class="[+as.resultClass+]">
+  <a class="[+as.resultLinkClass+]" href="index.php?id=180&product=[+as.id+]" title="[+as.name+]">[+as.name+]</a>
+[+as.extractShow:is=`1`:then=`
+  <div class="[+as.extractClass+]">[+as.extract+]</div>
+`+]
+[+as.imageShow:is=`1`:then=`
+<div class="[+as.imageClass+]" ><img src="assets/images/pda/[+as.image+]" height="150" title="[+as.name+]"></div>
+`+]
+[+as.pvd_nameShow:is=`1`:then=`
+  <strong>Providers: </strong><span class="[+as.pvd_nameClass+]">[+as.pvd_name+]</span><br />
+  <strong>Web sites: </strong><span class="[+as.pvd_webClass+]">[+as.pvd_web+]</span>
+`+]
+[+as.stk_nameShow:is=`1`:then=`<br />
+  <strong>Where to find it: </strong><span class="[+as.stk_nameClass+]">[+as.stk_name+]</span><br />
+`+]
+<hr />
+</div>

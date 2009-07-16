@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>Wayfinder 1.0</title>
+</head>
+
+<body>
+
+<style type="text/css">
+.altrow {
+	background-color: #EEE;
+}
+
+.subhead {
+	background-color: #DDDDDD;
+	font-weight: bold;
+	padding: 5px;
+}
+
+table thead tr {
+	background-color: #DDDDDD;
+	font-weight: bold;
+	text-align: left;
+	padding: 5px;
+	font-size: 110%;
+}
+</style>
+<h1>Wayfinder 1.0</h1>
+<p>Totally refactored from original DropMenu nav builder to make it easier to create custom navigation by using chunks as output templates. By using templates, many of the paramaters are no longer needed for flexible output including tables, unordered- or ordered-lists (ULs or OLs), definition lists (DLs) or in any other format you desire.</p>
+<h2>Install Instructions:</h2>
+<ol>
+    <li>Copy the contents of the file snippet.wayfinder.tpl.php into a new snippet named Wayfinder.</li>
+    <li>Create a new folder under assets/snippets named wayfinder.</li>
+    <li>Copy the file wayfinder.inc.php into the newly created folder.</li>
+</ol>
+<h2>Parameters:</h2>
+<table cellspacing="0" cellpadding="2" border="0">
+	<thead>
+		<tr>
+			<th width="15%">Parameter</th>
+			<th width="70%">Description</th>
+			<th width="15%">Default</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>&amp;startId</td>
+			<td>the starting point for the menu (document ID)</td>
+			<td>current docId</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;level</td>
+			<td>the depth to build the menu (0 goes through all levels)</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>&amp;ignoreHidden</td>
+			<td>ingore the show in menu checkbox for documents and include them in the menu</td>
+			<td>FALSE</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;ph</td>
+			<td>name of a placeholder to set instead of directly retuning the output results</td>
+			<td>FALSE</td>
+		</tr>
+		<tr>
+			<td>&amp;debug</td>
+			<td>turn on debug mode for extra troubleshooting</td>
+			<td>FALSE</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;hideSubMenus</td>
+			<td>set true to only output the active submenu</td>
+			<td>FALSE</td>
+		</tr>
+		<tr>
+			<td>&amp;removeNewLines</td>
+			<td>set true to remove newline characters from output</td>
+			<td>FALSE</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;textOfLinks</td>
+			<td>what database field do you want the actual link text to be? Use the following values: menutitle, id, pagetitle, description, parent, alias, longtitle, introtext</td>
+			<td>menutitle</td>
+		</tr>
+		<tr>
+			<td>&amp;titleOfLinks</td>
+			<td>what database field do you want the title of your links to be? Use the following values: menutitle, id, pagetitle, description, parent, alias, longtitle, introtext</td>
+			<td>pagetitle</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;rowIdPrefix</td>
+			<td>if set, creates a unique id for each item (id is value of rowIdPrefix + docId)</td>
+			<td>FALSE</td>
+		</tr>
+		<tr>
+			<td>&amp;useWeblinkUrl</td>
+			<td>if set to TRUE the link specified in the weblink will be output to the placeholder [<!-- -->+wf.link+<!-- -->]</td>
+			<td>TRUE</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;showSubDocCount</td>
+			<td>if set to TRUE the number of documents in each folder will be output to the placeholder [<!-- -->+wf.subitemcount+<!-- -->]</td>
+			<td>FALSE</td>
+		</tr>
+		<tr>
+			<td>&amp;sortOrder</td>
+			<td>Allows the menu to be sorted in either ascending or descending order.</td>
+			<td>ASC</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;sortBy</td>
+			<td>Specify any of the following fields to sort the menu: id, menutitle, pagetitle, introtext, menuindex, published, hidemenu, parent, isfolder, description, alias, longtitle, type, template</td>
+			<td>menuindex</td>
+		</tr>
+		<tr class="subhead">
+			<td colspan="3">
+				Template Chunks for Menu Layout
+			</td>
+		</tr>
+		<tr>
+			<td>&amp;outerTpl</td>
+			<td>
+				the template chunk for the outer most container<br/>
+				placeholders:<br/>
+				[<!-- -->+wf.classes+<!-- -->] - where classes specifed will be inserted (includes class=" ")<br/>
+				[<!-- -->+wf.classnames+<!-- -->] - outputs the just the class names (without class=" ")<br/>
+		        [<!-- -->+wf.wrapper+<!-- -->] - where inner content will be inserted<br/>
+				example: &lt;ul id=&quot;topnav&quot;[<!-- -->+wf.classes+<!-- -->]&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/ul&gt;
+			</td>
+			<td>&#171 See Example</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;rowTpl</td>
+			<td>
+				the template chunk for the row items<br/>
+				placeholders:<br/>
+				[<!-- -->+wf.classes+<!-- -->] - where classes specifed will be inserted (includes class=" ")<br/>
+				[<!-- -->+wf.classnames+<!-- -->] - outputs the just the class names (without class=" ")<br/>
+				[<!-- -->+wf.link+<!-- -->] - the href value for your link<br/>
+				[<!-- -->+wf.title+<!-- -->] - text for the link title<br/>
+				[<!-- -->+wf.linktext+<!-- -->] - text for the link dispaly<br/>
+				[<!-- -->+wf.wrapper+<!-- -->] - where to insert a submenu<br/>
+				[<!-- -->+wf.id+<!-- -->] - where to insert unique id<br/>
+				[<!-- -->+wf.attributes+<!-- -->] - where to insert link attributes<br/>
+				[<!-- -->+wf.docid+<!-- -->] - the document identifier for the current item<br/>
+				[<!-- -->+wf.subitemcount+<!-- -->] - displays the number of items in a folder<br/>
+				[<!-- -->+wf.description+<!-- -->] - output the description field<br/>
+				[<!-- -->+wf.introtext+<!-- -->] - output the introtext field<br/>
+				example: &lt;li[<!-- -->+wf.id+<!-- -->][<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot; [<!-- -->+wf.attributes+<!-- -->]&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>&#171 See Example</td>
+		</tr>
+		<tr>
+			<td>&amp;parentRowHereTpl</td>
+			<td>
+				the template chunk for the current document if it is a folder<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot;&gt;[<!-- -->+wf.linktext+<!-- -->]&raquo;&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;parentRowTpl</td>
+			<td>
+				the template chunk for any document that is a folder<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot;&gt;[<!-- -->+wf.linktext+<!-- -->]&raquo;&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;hereTpl</td>
+			<td>
+				the template chunk for the current document<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;span&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/span&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;innerTpl</td>
+			<td>
+				the template chunk for the any subfolders listed<br/>
+				placeholders: same as outerTpl<br/>
+				example: &lt;ul[<!-- -->+wf.classes+<!-- -->]&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/ul&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;innerRowTpl</td>
+			<td>
+				the template chunk for the row items in a subfolder<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot;&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;innerHereTpl</td>
+			<td>
+				the template chunk for the current document if in a subfolder<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;span&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/span&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;activeParentRowTpl</td>
+			<td>
+				the template chunk for the items that are folders and are currently active in the tree<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot;&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;categoryFoldersTpl</td>
+			<td>
+				the template chunk for category folders, category folders are determined by setting the template to blank or by setting the link attributes field to rel="category"<br/>
+				placeholders: same as rowTpl<br/>
+				example: &lt;li[<!-- -->+wf.classes+<!-- -->]&gt;&lt;a href=&quot;[<!-- -->+wf.link+<!-- -->]&quot; title=&quot;[<!-- -->+wf.title+<!-- -->]&quot;&gt;[<!-- -->+wf.linktext+<!-- -->]&lt;/a&gt;[<!-- -->+wf.wrapper+<!-- -->]&lt;/li&gt;
+			</td>
+			<td>none</td>
+		</tr>
+		<tr class="subhead">
+			<td colspan="3">
+				Class names to be assigned
+			</td>
+		</tr>
+		<tr>
+			<td>&amp;firstClass</td>
+			<td>CSS class denoting the first item at a given menu level</td>
+			<td>none</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;lastClass</td>
+			<td>CSS class denoting the last item at a given menu level</td>
+			<td>last</td>
+		</tr>
+		<tr>
+			<td>&amp;hereClass</td>
+			<td>CSS class denoting the "you are here" state all the way up the chain</td>
+			<td>here</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;selfClass</td>
+			<td>CSS class denoting the "you are here" state for current doc only</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;parentClass</td>
+			<td>CSS class denoting the menu item is a folder (has children)</td>
+			<td>parent</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;rowClass</td>
+			<td>CSS class denoting each output row</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;levelClass</td>
+			<td>CSS class denoting each output rows level, the level number will be added to the specified class (i.e. level1, level2, level3, etc...)</td>
+			<td>none</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;outerClass</td>
+			<td>CSS class for the outer template</td>
+			<td>none</td>
+		</tr>
+		<tr>
+			<td>&amp;innerClass</td>
+			<td>CSS class for the inner template</td>
+			<td>none</td>
+		</tr>
+		<tr class="altrow">
+			<td>&amp;webLinkClass</td>
+			<td>CSS class for weblinks</td>
+			<td>none</td>
+		</tr>
+		<tr class="subhead">
+			<td colspan="3">
+				CSS &amp; Javascript to include with menu
+			</td>
+		</tr>
+		<tr>
+			<td>*&amp;cssTpl</td>
+			<td>name of a chunk containing css you would like added to the page</td>
+			<td>FALSE</td>
+		</tr>
+		<tr class="altrow">
+			<td>*&amp;jsTpl</td>
+			<td>name of a chunk containing javascript you would like added to the page</td>
+			<td>FALSE</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>* - uses regClientCSS or regClientStartupScript, this may not work correctly unless you have patched the parser with this: <a href="http://modxcms.com/forums/index.php/topic,1942.msg18783.html#msg18783">http://modxcms.com/forums/index.php/topic,1942.msg18783.html#msg18783</a></p>
+
+<hr>
+
+<h2>Example Call:</h2>
+[<!-- -->[Wayfinder? &amp;startId=`0`]<!-- -->]
+<br/><br/>
+[<!-- -->[Wayfinder? &amp;startId=`0` &amp;level=`3` &amp;hideSubMenus=`1` &amp;outerTpl=`wfOuter` &amp;rowTpl=`wfRow` &amp;hereTpl=`wfHere`]<!-- -->]
+
+<hr>
+
+<h2>Change Log</h2>
+<table cellspacing="0" cellpadding="8px" border="0">
+	<thead>
+		<tr>
+			<th>Revision</th>
+			<th>Author</th>
+			<th>Date</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="altrow">
+			<td>1396</td>
+            <td>kjaebker</td>
+            <td>3:45:10 PM, Monday, October 23, 2006</td>
+            <td>
+			- Updated database query so sorting works correctly for MySql 4.1.12 users<br/>
+			- Added parameters for determining sortBy and sortOrder<br/>
+			- Added placeholders for introtext and description<br/>
+			- Added ability to show count of docs in a folder with new placeholder<br/>
+			- Removed some code from snippet into class for easier maintenance
+			</td>
+		</tr>
+		<tr>
+			<td>1396</td>
+            <td>kjaebker</td>
+            <td>3:48:10 PM, Tuesday, September 12, 2006</td>
+            <td>updated to include version checking so it works with releases prior to 0.9.5</td>
+		</tr>
+		<tr class="altrow">
+            <td>1369</td>
+            <td>kjaebker</td>
+            <td>4:30:45 PM, Wednesday, September 06, 2006</td>
+            <td>Removed noClassTag parameter and added separate placeholder for class names
+		</tr>
+		<tr>
+            <td>1368</td>
+            <td>kjaebker</td>
+            <td>4:17:19 PM, Wednesday, September 06, 2006</td>
+            <td>
+            - Added category support, with additional template<br/>
+            - Added active parent template<br/>
+            - Added docid placeholder for output of docid<br/>
+            - Added noClassTag param to allow for output of just class names</td>
+		</tr>
+		<tr class="altrow">
+            <td>1360</td>
+            <td>kjaebker</td>
+            <td>4:12:41 PM, Tuesday, September 05, 2006</td>
+            <td>fix for last item detection</td>
+		</tr>
+		<tr>
+            <td>1327</td>
+            <td>kjaebker</td>
+            <td>10:12:23 PM, Monday, August 21, 2006</td>
+            <td>Updated to add parameter for using content for url or using docId for weblinks.</td>
+		</tr>
+        <tr class="altrow">
+            <td>1300</td>
+            <td>kjaebker</td>
+            <td>3:23:59 PM, Wednesday, August 16, 2006</td>
+            <td>
+            - Added support for link_attributes<br/>
+            - Made custom version of getActiveChildren in class<br/>
+            - Added class for weblinks<br/>
+            - Weblinks will display the content link instead of link to id</td>
+		</tr>
+		<tr>
+            <td>1233</td>
+            <td>kjaebker</td>
+            <td>3:35:58 PM, Friday, August 04, 2006</td>
+            <td>Added parentRowHereTpl template, added selfClass, updated docs</td>
+		</tr>
+		<tr class="altrow">
+            <td>1228</td>
+            <td>kjaebker</td>
+            <td>4:25:55 PM, Thursday, August 03, 2006</td>
+            <td>fixed parent class bug, added unique id param, removed ultimateparent code</td>
+		</tr>
+    </tbody>
+</table>
+</body>
+</html>

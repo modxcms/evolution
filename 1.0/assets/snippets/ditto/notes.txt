@@ -1,0 +1,16 @@
+In the next release:
+Finish PHx truncate extension
+Conditional Templating
+Optimize getKeywords
+Allow config to load extenders
+
+Documentation Changes TODO:
+caseSensitive needs to be added
+&yearSortDir and &monthSortDir in Reflect
+
+
+Fix givenTags = array in debug
+
+Check filtering with tv prefix...
+
+check, first, last, etc. templates

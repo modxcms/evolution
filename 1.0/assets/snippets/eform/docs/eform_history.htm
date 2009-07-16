@@ -1,0 +1,260 @@
+<!doctype html public "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>eForm</title><style type="text/css">*{
+font-family:arial, helvetica, sans-serif;
+font-size:10pt;
+border-width:1px;
+border-color:#003399;
+}
+
+body{
+background-color:#a4d1f9;
+}
+
+h1, h2, h3{
+margin-bottom:0;
+color:#003399;
+}
+
+h1{
+margin-top:0;
+margin-bottom:20px;
+font-size:20pt;
+text-align:center;
+border-bottom-style:solid;
+border-color:#e78900;
+}
+
+h2{
+font-size:12pt;
+}
+
+hr{
+color:#ffffff;
+border-style:none none solid none;
+border-color:#e78900;
+}
+
+p{
+margin-top:0;
+}
+
+ul{
+margin:0 0 0 10px;
+padding:0;
+list-style-type:square;
+}
+
+code{
+font-family:monospace;
+color:#666666;
+}
+
+a{
+color:#e78900;
+text-decoration:none;
+}
+
+a:hover{
+border-bottom-style:dashed;
+}
+
+#qe_logo{
+float:right;
+margin:0 57px 20px 57px;
+}
+
+#qe_toc{
+width:200px;
+margin:0 0 20px 20px;
+padding:20px;
+float:right;
+clear:right;
+border-style:solid;
+background-color:#eaf9ff;
+}
+
+#qe_toc h1{
+margin-top:0;
+font-size:12pt;
+text-align:center;
+}
+
+div.qe_box{
+margin:30px;
+padding:30px;
+border-style:solid;
+background-color:#ffffff;
+}
+
+div.qe_level_2{
+margin-left:20px;
+}
+
+.qe_salutation{
+margin-left:30px;
+}
+
+.qe_signature{
+font-family:cursive;
+font-size:14pt;
+}
+
+.qe_param_list li{
+	margin:2px;
+	color:#333;
+}
+.qe_param_list li strong{
+	color:#036;
+	font-size:1.02em
+}
+.new{ 
+	color:#c00;
+	font-weight:bold;
+}</style>
+</head>
+<body>
+	<div class="qe_box"><h1>eForm - The Electronic Form Snippet </h1><img id="qe_logo" src="logo.png" alt="logo" border="0" title="" />
+		<div id="qe_toc"><h1>Index</h1>
+			<ul>
+				<li><a href="eform.htm#top">Who's responsible</a></li>
+				<li><a href="eform.htm#what">What is eForm</a></li>
+				<li><a href="eform.htm#whatsnew">What' New</a></li>
+				<li><a href="eform.htm#installation">Installation</a></li>
+				<li><a href="eform.htm#params">Snippet Parameters</a></li>
+				<li><a href="eform.htm#events">Events</a></li>
+				<li><a href="eform.htm#placeholders">Placeholders</a></li>
+				<li><a href="eform.htm#datatypes">Data types</a></li>
+				<li><a href="eform.htm#validation">Extended Form Validation</a></li>
+				<li><a href="eform_examples.htm">Examples</a></li>
+			</ul>
+		</div>
+		<div class="qe_level_1"><h2>Version History</h2>
+					<h3>Version 1.4.4</h3>
+					<ul>
+						<li>Fixed various Select box inconsistencies</li>
+				    <li>Adjusted email validation expression to allow + character.</li>
+				    <li>Line breaks in 'Html' fields will only be replaced in report template if &amp;sendAsText false!</li>
+				    <li>Line breaks in 'Html' fields will be replaced in thankyou template when &amp;sendAsText is true</li>
+				    <li>Properly display session hash name in debug text for &amp;protectsubmit code</li>
+				    <li>Properly escape regular expression in form parser</li>
+				    <li>Fixed 0 (zero) values not being processed in form parser for validating select boxes</li>
+				    <li>Fixed ambiguous variable naming in validation code</li>
+				    <li>Enhanced efLoadTemplate function to also allow snippets as templates</li>
+				    <li>&amp;invalidClass now also works for vericode field</li>
+				    <li>Added &amp;autoSenderName parameter</li>
+				    <li>Added &amp;runSnippet parameter - Call a snippet before main form processing. See parameter documentation for details.</li>
+						<li>Added &amp;snipFolder parameter for those that want to keep different versions of eform in different folders. 
+						<li>Added $lang['ef_mail_error'] to the language file and a slightly improved error reporting when sending mail fails</li>
+						<li>Date formatting for report can now be set in language file: $_lang['ef_date_format']</li>
+						<li>Report output is now more locale aware as far as numbers are concerned. Added $_lang['ef_thousands_separator'] to the language file. If set to an empty string (default) the character defined in the current (php) locale will be used (if any).</li>
+ 					</ul>
+					<h3>Version 1.4.3</h3>
+					<ul>
+						<li>FIXED: When using multiple forms on a page all forms are parsed and validated even when only one form is submitted.</li>
+				    <li>FIXED: fields array values were not cleared between forms (resulting in setting validation messages in all forms when any of the forms form doesn't validate)</li>
+				    <li>FIXED: typo in line 78 - thanks to pixelchutes</li>
+				    <li>Some other issues introduced in the last version have also been addressed</li>
+					</ul>
+
+					
+					<h3>Version 1.4.2</h3>
+				<ul>
+					<li>New: In-line validation classes. <a href="eform.htm#classparams">Two new parameters</a> <code>&amp;requiredClass</code> and<code> &amp;invalidClass</code>. You can use these to set classes for fields and their associated labels when they don't validate. Existing classes will be preserved</li>
+				  <li>Updated: <a href="eform.htm#placeholders">Validation messages</a> are now inserted including wrapping elements (set in the language file)</li>
+					<li>New: You can now also set the <code>[+validationmessage+]</code> placeholder outside the form template (eg: in the page template or elsewhere). </li>
+					<li>New: Added debug levels: 0:none, 1:validation rules and configuration, 2:print all arrays 3:show parsed template. Some values are only shown when the form is parsed and vaidated (so not the first time the form is displayed)</li>
+					<li>Updated: Changed the way date values are verified due to differences in php versions (Raymond Irving)</li>
+					<li>Updated: Email character set now follows modx character set (thanks to Gildas)</li>
+					<li>New: Added &amp;cssStyle parameter for adding css styles to the &lt;head&gt; tag of the document.</li>
+					<li>New: Added &amp;jScript parameter for adding javascript to the &lt;head&gt; tag of the document.</li>
+				  <li>New: Added &protectSubmit parameter to protect against multiple submits of similar form data</li>
+					<li>New: Added &submitLimit parameter for setting a time limit in minutes on successive submits of same form</li>
+					<li>Tweak: Now trims the spaces in comma separated sessionVars parameter</li>
+					<li>Some other minor tweaks</li>
+					<li>Version checking: eForm now checks for and reports differences between snippet and eform.inc.php</li>
+				</ul>
+
+			<h3>Version 1.4.1</h3>
+				<ul>
+					<li>Fixed: inconsistent casing in event names. All events params are now in the form &eFormOn... (although the  &eformOn... will still work)</li>
+					<li>Fixed: If subject comes from a form field the value is cleared before merging placeholders</li>
+					<li>Updated: Debug placeholder is now automatically added to form and thankyou template. (It is not auto-added to email message to avoid sending out sensitive info, although you can add the placeholder manually offcourse)</li>
+					<li>Fixed: Missing language file produces fatal error. (Will now generate a debug message if debug is on)</li>	
+					<li>Fixed: Missing 'replyto' in AddAddressToMailer function.</li>
+					<li>Fixed: Erroneous closing slash (/) being added in &lt;option ..&gt tags</li>
+					<li>Fixed: No whitespace before 'selected' and 'checked' attributes</li>
+					<li>New: Extra event parameter <code>&eformOnBeforeFormParse</code> (triggered as soon as templates are loaded)</li>
+					<li>New: Extra event parameter <code>&eFormOnFormValidate</code> (triggered after eForm validation has occurred)</li>
+					<li>New: Extra event parameter <code>&eFormOnBeforeFormMerge</code> (triggered when and before form is displayed)</li>
+					<li>New: Extra event parameter <code>&eFormOnBeforeFormParse</code> (triggered after template(s) are loaded and before they are parsed)</li>
+				</ul>
+			
+			<h3>Version 1.4</h3>
+				<ul>
+					<li>New: Extra parameter
+				<code>&amp;sessionVars</code>- comma delimited list of S_SESSION variable names
+  that can be added to the list of field values.</li>
+					<li>New: Extra parameters
+				<code>&amp;sendAsHtml</code>and
+				<code>&amp;sendAsText</code>- force email messages to be in Html
+    or text only format.</li>
+					<li>Fixed:
+				<code>&amp;debug</code>parameter wasn't doing anything</li>
+					<li>Fixed: changed erroneous
+				<code>&amp;isDebug</code>to correct
+				<code>&amp;debug</code>parameter in documentation</li>
+					<li>Fixed: Returning 'foreach' error when chunk or document not found for form template</li>
+					<li>Fixed: Erroneous error when using multiple forms on a page ($formats persisted between eForm calls)</li>
+					<li>Updated: Events now work using the
+				<code>&amp;eFormOnBeforeMailSent</code>and
+				<code>&amp;eFormOnMailSent</code>paramaters.
+The previous event structure did not appear to work without some tricks (variables were out of scope)</li>
+					<li>Updated:  [+subject+] can now be used in report and thank you templates</li>
+					<li>Updated: When using a document for the templates the document no longer needs to have published set</li>
+					<li>New: Show error if
+				<code>&amp;tpl</code>is set to the same document (id) containing the eForm snippet call</li>
+					<li>New: extended debug messages for validated fields (if
+				<code>&amp;debug</code>is set)</li>
+					<li>New: added some protection against mail injection</li>
+					<li>New: &amp;reportAbuse parameter - send 'abuse alert' mail to [(mailsender)] if mail injection is noticed</li>
+					<li>New: You can now use &lt;form id="formName"...&gt; to match your &formid=`formName`
+instead of &lt;input type="hidden" name="formid" value="formName" /&gt;</li>
+					<li>New: You can now set the description using the label tag instead of in the eform attribute
+eg. &lt;label for="email"&gt;Your Email&lt;/label&gt;&lt;input type="text" name="email" eform=":email:1::"/&gt;
+instead of &lt;label&gt;Your Email&lt;/label&gt;&lt;input type="text" name="email" eform="Your Email:email:1::"/&gt;
+If both are used the eform value takes precedence.</li>
+					<li>New: Added &disclaimer parameter for adding a disclaimer to the email body. Can be chunk name or document id
+Need to manually add [+disclaimer+] placeholder to report template</li>
+					<li>Optimized: moved form parser code so it is only executed when form is posted</li>
+					<li>Updated: You can again use placeholders in &from and &fromname (as you can with &subject and &keywords)</li>
+					<li>Updated: It is now possible to use special placeholders in #SELECT validation rule i.e.
+#SELECT jobnum FROM translation_jobs WHERE client_email={email}</li>
+					<li>New: you can now use the #LIST validation rule for file type checking with file uploads 
+by supplying a list of file extensions eg: #LIST jpg,jpeg,png,gif</li>
+					<li>New Examples:
+					<ul>
+						<li>How to use eform events</li>
+						<li>Multiple forms on one page</li>
+					</ul>
+					</li>
+				</ul>
+				<h3>Version 1.3</h3>
+				<ul>
+					<li><strong>eFormParser included</strong><br/>This version differs from the original in that it incorporates the eFormParser which retrieves part of it's setting and validation information from the form itself by reading the
+				<code>eform</code>pseudo attribute from the form fields. eForm also no longer requires to set placeholders in each form field with the exception of the
+				<code>[+vericode+]</code>,
+				<code>[+verimageurl+]</code>and
+				<code>[+validationmessage+]</code>placeholders.</li>
+					<li><strong>Extended Server validation</strong><br/>It is now possible to set validation rules for each field using a list or range of values, regular expressions an <a name="validation">more</a>.</li>
+					<li><strong>Language Setting</strong>
+All eForm messages are now stored in a separate language file and a new
+				<code>&language</code>parameter has been added.</li>
+					<li><strong>Custom validation messages</strong>
+You can now add custom validation messages to each field. The way messages are displayed has also changed slighty. Empty fields will now be listed in one message instead of using a separate message for each field.</li>
+				</ul>
+			</div>
+	</div>
+</body>
+</html>

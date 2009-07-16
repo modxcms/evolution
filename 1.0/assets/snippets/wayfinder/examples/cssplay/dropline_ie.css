@@ -1,0 +1,18 @@
+table {border-collapse:collapse; margin:0; padding:0;}
+
+.menu ul li a.hide, .menu ul li a:visited.hide {display:none;}
+.menu ul li a:hover ul li a.hide {display:none;}
+.menu ul li a, .menu ul li a:visited {background:#c9c9a7 url(drop.gif) 20px right no-repeat;}
+
+
+.menu ul li a:hover {color:#fff; background:#b3ab79;}
+.menu ul li a:hover ul {display:block; position:absolute; width:749px; top:30px; left:0; background:#b3ab79; color:#fff;}
+.menu ul li a:hover ul.right_side li {float:right; border-width:0 1px 0 0 0;}
+.menu ul li a:hover ul.left_side li {float:left;}
+.menu ul li a:hover ul li a.sub {background:#bd8d5e url(drop2.gif) 20px right no-repeat; color:#fff;}
+.menu ul li a:hover ul li a {display:block; background:#b3ab79; color:#fff;}
+.menu ul li a:hover ul li a ul {visibility:hidden;}
+.menu ul li a:hover ul li a:hover {background:#dfc184; color:#000;}
+.menu ul li a:hover ul li a:hover ul {visibility:visible; position:absolute; left:0; top:30px; color:#000; background:#dfc184;}
+.menu ul li a:hover ul li a:hover ul li a {background:#dfc184; color:#000;}
+.menu ul li a:hover ul li a:hover ul li a:hover {background:#bd8d5e; color:#fff;}

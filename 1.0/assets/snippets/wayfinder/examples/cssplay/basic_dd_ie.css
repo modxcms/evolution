@@ -1,0 +1,35 @@
+/* styling specific to Internet Explorer IE5.5 and IE6. Yet to see if IE7 handles li:hover */
+
+/* Get rid of any default table style */
+table {
+border-collapse:collapse;
+margin:0; 
+padding:0;
+}
+/* ignore the link used by 'other browsers' */
+.menu ul li a.hide, .menu ul li a:visited.hide {
+display:none;
+}
+/* set the background and foreground color of the main menu link on hover */
+.menu ul li a:hover {
+color:#fff; 
+background:#b3ab79;
+}
+/* make the sub menu ul visible and position it beneath the main menu list item */
+.menu ul li a:hover ul {
+display:block; 
+position:absolute; 
+top:32px; 
+left:0; 
+width:105px;
+}
+/* style the background and foreground color of the submenu links */
+.menu ul li a:hover ul li a {
+background:#faeec7; 
+color:#000;
+}
+/* style the background and forground colors of the links on hover */
+.menu ul li a:hover ul li a:hover {
+background:#dfc184; 
+color:#000;
+}

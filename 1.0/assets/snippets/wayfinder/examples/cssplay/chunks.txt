@@ -1,0 +1,63 @@
+***********************************************************************************************************
+Create following chunks for all other than the revisited flyout and dropdown menus (for these, see below) *
+                                                                                                          *
+These chunks are meant for the menus that are in template.html !!                                         *
+                                                                                                          *
+wfOuter:
+--------
+
+<div class="menu">
+    <ul>
+        [+wf.wrapper+]
+    </ul>
+</div>
+
+wfInner:
+--------
+
+<ul>
+    [+wf.wrapper+]
+</ul>
+
+wfParentRow:
+------------
+
+<li><a [+wf.classes+] href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>
+
+    <!--[if lte IE 6]>
+    <a class="sub" href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]
+    <table><tr><td>
+    <![endif]-->
+
+    [+wf.wrapper+]
+
+    <!--[if lte IE 6]>
+	</td></tr></table>
+    </a>
+    <![endif]-->
+
+</li>
+
+wfRow:
+------
+
+<li[+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>
+
+
+***********************************************************************************************************
+For the revisited flyout and dropdown menu, you only need the following chunk                             *
+                                                                                                          *
+This chunk is meant for the menus that are in template_revisited.html !!                                  *
+                                                                                                          *
+wfParentRow:
+------------
+
+<li><a [+wf.classes+] href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]<!--[if IE 7]><!--></a><!--<![endif]-->
+<table><tr><td>
+
+[+wf.wrapper+]
+
+</td></tr></table>
+<!--[if lte IE 6]></a><![endif]-->
+
+</li>

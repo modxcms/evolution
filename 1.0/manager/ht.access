@@ -1,0 +1,9 @@
+# For unexpected logouts in multi-server/cloud environments see:
+# http://svn.modxcms.com/docs/display/MODx096/Friendly+URL+Solutions
+
+RewriteEngine Off
+
+<IfModule mod_security.c>
+# Turn the filtering engine Off
+SecFilterEngine Off
+</IfModule>

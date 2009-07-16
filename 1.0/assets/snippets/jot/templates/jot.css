@@ -1,0 +1,29 @@
+.jot-err {border: 1px solid red;font-weight: bold;color: red;padding: 5px;margin-bottom: 10px;}
+.jot-cfm {border: 1px solid green;font-weight: bold;color: green;padding: 5px;margin-bottom: 10px;}
+.jot-row {border: 1px solid #CCCCCC;margin-bottom: 10px;background-color: #e9e9e9;}
+.jot-row-alt {background-color: #f9f9f9;}
+.jot-row-author {background-color: #FFFFE1;}
+.jot-row-me {background-color: #FFDDDD;}
+.jot-row-up {border: 1px dotted red;}
+.jot-row-new {border: 1px dotted green;}
+.jot-comment {padding: 3px;}
+.jot-comment hr {border: 0px; border-bottom: 1px solid #cccccc;}
+.jot-posticon {float: right;width: 20px;height: 20px;padding-top: 8px;padding-right: 3px;}
+.jot-posticon img {border: 0px;}
+.jot-mod {float: right;width: 100px;text-align: right;color: #666666;font-weight: bold;}
+.jot-mod img {border: 0px;}
+.jot-mod a {float: right;padding: 1px;padding-left: 2px;padding-right: 2px;}
+.jot-mod a:hover {background-color: #666666;color: #666666;}
+.jot-subject {font-weight: bold;font-size: 1.1em;}
+.jot-message {padding: 2px;overflow: auto;}
+.jot-poster {padding: 0px;text-align: left;font-size: 10px;}
+.jot-nav {padding: 0px;text-align: center;margin: 10px;}
+.jot-list ul {padding: 0px;text-align: left;margin-bottom: 10px;list-style-position: inside;}
+.jot-subscribe {margin-bottom: 10px;}
+.jot-form {margin-bottom: 10px;}
+.jot-form fieldset {border: 0px;}
+.jot-form label {display: block;}
+.jot-user {float: left;width: 80px; }
+.jot-content {margin-left: 80px;}
+.jot-extra {text-align: right;}
+.jot-editby {font-size: 10px;color: #666666;font-style: italic;}

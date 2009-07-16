@@ -1,0 +1,13 @@
+html {margin-top: 10px;}
+table { border: 1px solid #C0C0C0; margin: 0; padding: 0; text-align: left; width: 100% !important;}
+table td table {border: 0;}
+table td { background-color:#FFFFFF; padding: 2px;}
+table th { background-color:#ccc; padding: 2px; width: 75px;}
+table td th td th{ background-color:#D9E7C2; border: 1px solid #C0C0C0; }
+table td th { background-color:#F5F5F5; border: 1px solid #C0C0C0;}
+table td {vertical-align: top !important;}
+.ditto_dbg_fields table table table {display: block}
+.ditto_dbg_fields table table table td{display: block; border: none; background: none !important;}
+table table table table td{display: block; border: 0px solid white !important; background: none !important;}
+.ditto_dbg_fields table table table {display: block; float: left; border: 1px solid #C0C0C0;}
+table table tr td tr td{border: 1px solid #C0C0C0; }

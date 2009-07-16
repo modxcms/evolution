@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<title>eForm example</title>
+		<style type="text/css">
+
+*{
+font-family:arial, helvetica, sans-serif;
+font-size:10pt;
+border-width:1px;
+border-color:#003399;
+}
+
+body{
+background-color:#a4d1f9;
+}
+
+h1, h2, h3{
+margin-bottom:0;
+color:#003399;
+}
+
+h1{
+margin-top:0;
+margin-bottom:20px;
+font-size:20pt;
+text-align:center;
+border-bottom-style:solid;
+border-color:#e78900;
+}
+
+h2{
+font-size:12pt;
+}
+
+hr{
+color:#ffffff;
+border-style:none none solid none;
+border-color:#e78900;
+}
+
+p{
+margin-top:0;
+}
+
+ul{
+margin:0 0 0 10px;
+padding:0;
+list-style-type:square;
+}
+
+code{
+font-family:monospace;
+color:#666666;
+}
+
+a{
+color:#e78900;
+text-decoration:none;
+}
+
+a:hover{
+border-bottom-style:dashed;
+}
+
+#qe_logo{
+float:right;
+margin:0 57px 20px 57px;
+}
+
+#qe_toc{
+width:200px;
+margin:0 0 20px 20px;
+padding:20px;
+float:right;
+clear:right;
+border-style:solid;
+background-color:#eaf9ff;
+}
+
+#qe_toc h1{
+margin-top:0;
+font-size:12pt;
+text-align:center;
+}
+
+div.qe_box{
+margin:30px;
+padding:30px;
+border-style:solid;
+background-color:#ffffff;
+}
+
+div.qe_level_2{
+margin-left:20px;
+margin-right:20px;
+}
+
+.qe_salutation{
+margin-left:30px;
+}
+
+.qe_signature{
+font-family:cursive;
+font-size:14pt;
+}
+
+.qe_param_list li{
+	margin:2px;
+	color:#333;
+}
+.qe_param_list li strong{
+	color:#036;
+	font-size:1.02em
+}
+.new{
+	color:#c00;
+	font-weight:bold;
+}
+.codeblock{
+	margin:10px 0;
+	padding:5px;
+	background:#eaeaea;
+	border:1px solid #999;
+	font-family:monospace;
+	white-space: nowrap;
+	overflow: auto;
+	max-height: 24em;
+	clear:right;
+}
+
+.qe_param_list li{
+	margin:2px;
+	color:#333;
+}
+.qe_param_list li strong{
+	color:#036;
+	font-size:1.02em
+}
+.new{
+	color:#c00;
+	font-weight:bold;
+}
+</style>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+function toggleImage(i){
+	var obj = document.getElementById(i);
+	if(obj){ obj.style.display=(obj.style.display=='none')?'block':'none'; }
+}
+//-->
+</SCRIPT>
+</head>
+
+<body>
+<div class="qe_box">
+<h1>eForm - Examples</h1><img id="qe_logo" src="logo.png" alt="logo">
+
+		<div id="qe_toc">
+			<h1>Index</h1>
+				<ul>
+					<li><a href="eform.htm#top">Main index</a></li>
+					<li><a href="eform_examples.htm">Examples</a>
+					<ul>
+						<li><a href="eform_examples.htm#top">Feedback Form</a></li>
+						<li><a href="eform_example_multiple_forms.htm">Multiple forms</a></li>
+						<li><a href="eform_example_events.htm">eForm events</a></li>
+					</ul>
+					</li>
+				</ul>
+
+		</div>
+
+<div class='qe_level_1'>
+<h2>Multiple forms on a page </h2>
+
+<p>This example will show you how to include more then one form onto one page and have eForm deal with them separatedly and how easy it is to add file uploads which appear as attachments to the email. I doubt the form in this example will itself have much practical value to you but it shows that it's not a big job to have multiple forms using eForm. Use it as a starting point.
+
+<p>Here's a scenario to play with. We're setting up a job request form for a translation agency where clients can either type in an article into a text box or attach a text file. As a courtesy we're also providing a second form on the same page where clients can check the progress of a translation job. I've choosen this setup because it's also going to feature in the next example which shows how you can use eForm events to automatically assign extra values (in this case a job number).</p>
+
+<h2>The Job Request Form</h2>
+<p>As you'll see I've kept the form and the report template fairly simple. The only thing of note in the form perhaps is the file upload field.  Notice that we don't have to do anything special, eForm will automatically attach the uploaded file to the email it sends out. With eForm 1.4 you can restrict the types of files that are accepted by the #LIST validation rule. As you can see in the source belwo we're using that to restrict the upload to files that have an extension of 'pdf','txt' and 'doc'.</p>
+
+<p><a href="#" onclick="toggleImage('myImage');">View or hide</a> an image of the form.<br /><img id="myImage" src="example_2_form_1.gif" width="510" height="553" alt="" border="0" title="" style="display:none;" />
+</p>
+
+<h3 style="clear:both">The form Template</h3>
+<div class='codeblock'>
+<pre>
+&lt;form action=&quot;[~[*id*]~]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;newJob&quot; /&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;Your personal details&lt;/legend&gt;
+        &lt;p&gt;
+            &lt;label&gt;Name&lt;/label&gt;
+            &lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;fullName&quot; maxlength=&quot;60&quot; eform=&quot;Your Name:string:1:Your Full Name is required&quot; /&gt;
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;label&gt;Email&lt;/label&gt;
+            &lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;email&quot; size=&quot;40&quot; maxlength=&quot;40&quot; eform=&quot;Email Address:email:1&quot; /&gt;
+        &lt;/p&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;Article Details&lt;/legend&gt;
+        &lt;p class=&quot;explain&quot;&gt;You can provide a summary and the main article below or alternatively supply the material
+        in an attachment. Currently we support the following formats: Ms Word, Adobe Acrobat (pdf) or plain text.&lt;/p&gt;
+        &lt;p&gt;&lt;label&gt;Summary&lt;/label&gt;
+        &lt;textarea class=&quot;field&quot; name=&quot;summary&quot; eform=&quot;Summary:html:0&quot; rows=&quot;3&quot; cols=&quot;30&quot;&gt;&lt;/textarea&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;label&gt;Article&lt;/label&gt;
+        &lt;textarea class=&quot;field&quot; name=&quot;article&quot; eform=&quot;Article:html:0&quot; rows=&quot;10&quot; cols=&quot;30&quot;&gt;&lt;/textarea&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;label for=&quot;attachment&quot;&gt;Attachment&lt;/label&gt;
+        &lt;input class=&quot;field&quot; type=&quot;file&quot; name=&quot;attachment&quot; eform=&quot;Attachment:file:0:Only upload of text documents are supported:#LIST pdf,txt,doc &quot; /&gt;&lt;/p&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;Preferences&lt;/legend&gt;
+        &lt;p&gt;
+            &lt;label&gt;Format&lt;/label&gt;
+            &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;legal&quot; eform=&quot;Return Format::1&quot; &gt;&amp;nbsp;Legal
+            &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;formal&quot;&gt;&amp;nbsp;Formal
+            &lt;input type=&quot;radio&quot; name=&quot;format&quot; value=&quot;loose&quot; checked=&quot;checked&quot;&quot;&gt;&amp;nbsp;Informal
+        &lt;/p&gt;
+        &lt;p&gt;
+            &lt;label&gt;Language&lt;/label&gt;
+            &lt;select name=&quot;language&quot; eform=&quot;language::1&gt;
+                &lt;option value=&quot;&quot;&gt;&lt;/option&gt;
+                &lt;optgroup label=&quot;English&quot;&gt;
+                    &lt;option value=&quot;en-au&quot;&gt;Australian&lt;/option&gt;
+                    &lt;option value=&quot;en-gb&quot;&gt;UK English&lt;/option&gt;
+                    &lt;option value=&quot;en-us&quot;&gt;US English&lt;/option&gt;
+                &lt;/optgroup&gt;
+                &lt;optgroup label=&quot;French&quot;&gt;
+                    &lt;option value=&quot;fr&quot;&gt;France&lt;/option&gt;
+                    &lt;option value=&quot;fr-be&quot;&gt;Belgian French&lt;/option&gt;
+                    &lt;option value=&quot;fr-ca&quot;&gt;Canadien French&lt;/option&gt;
+                    &lt;option value=&quot;fr-ch&quot;&gt;Swiss French&lt;/option&gt;
+                    &lt;option value=&quot;fr-gp&quot;&gt;Guadaloupe French&lt;/option&gt;
+                    &lt;option value=&quot;fr-gy&quot;&gt;Guyana French&lt;/option&gt;
+                    &lt;option value=&quot;fr-mr&quot;&gt;Martinique French&lt;/option&gt;
+                &lt;/optgroup&gt;
+            &lt;/select&gt;
+        &lt;/p&gt;
+        &lt;p class=&quot;explain&quot;&gt;
+            &lt;input type=&quot;submit&quot; name=&quot;frmGo&quot; value=&quot;Send Job&quot; /&gt;
+        &lt;/p&gt;
+    &lt;/fieldset&gt;
+&lt;/form&gt;
+</pre>
+</div>
+
+<p><strong>Note!</strong> In the above template we use the hidden field for the formid: <code>&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;newJob&quot; /&gt;</code><br />
+If you are using eForm 1.4 you can instead use the <strong>id</strong> attribute of the form tag itself and leave out the hidden field: <code>&lt;form id==&quot;newJob&quot; action=&quot;[~[*id*]~]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;</code>. Either way will work
+</p>
+
+<h3>The Report template</h3>
+<div class='codeblock'>
+<pre>
+&lt;p&gt;Here are the details for &lt;strong&gt;[+subject+]&lt;/strong&gt; with Job Number: &lt;strong&gt;[+jobNumber+]&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Client Name:&lt;/td&gt;&lt;td&gt;[+fullName+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Client Email:&lt;/td&gt; &lt;td&gt;[+email+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Summary:&lt;/td&gt; &lt;td&gt;[+summary+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Article:&lt;/td&gt; &lt;td&gt;[+article+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Attachment:&lt;/td&gt; &lt;td&gt;[+attachment+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Create translation in format:&lt;/td&gt; &lt;td&gt;[+format+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Destination language:&lt;/td&gt; &lt;td&gt;[+language+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Job Number:&lt;/td&gt; &lt;td&gt;[+jobNumber+]&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+</div>
+
+<h3>... and the Snippet call</h3>
+
+<div class='codeblock'>
+<pre>
+[!eForm? &formid=`newJob` &subject=`New Translation Job` &tpl=`jobForm` &report=`jobReport` to =`whoever@you.are.com`!]
+</pre>
+</div>
+
+<p>That's it for the first form.</p>
+
+<div class='qe_level_1'>
+<h2>Our second (e)Form - The Status Request Form</h2>
+<p><br />Let's add a second eForm call on the page. Pretty much the same scenario, different form template, report and snippet call. eForm will know which form to process using the <code>&formid</code> parameter which is set in the snippet call and as a hidden field in the forms. As of 1.4 you actually don't have to have a hidden field for this. You can instead assign an id to the form tag itself i.e. <code>&lt;form id=&quot;jobRequest&quot; ... &gt;</code></p>
+<h3>The status request form</h3>
+<p><img src="example_2_form_2.gif" width="510" height="167" alt=""  border="0" title=""/></p>
+
+</div>
+<h3>The form template</h3>
+<div class='codeblock'>
+<pre>
+&lt;form action=&quot;[~[*id*]~]&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+	&lt;input type=&quot;hidden&quot; name=&quot;formid&quot; value=&quot;jobRequest&quot; /&gt;
+	&lt;fieldset&gt;
+		&lt;legend&gt;Job details&lt;/legend&gt;
+		&lt;p&gt;
+			&lt;label&gt;Email&lt;/label&gt;
+			&lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;email&quot; size=&quot;40&quot; maxlength=&quot;40&quot; eform=&quot;Email Address:email:1&quot; /&gt;
+		&lt;/p&gt;
+		&lt;p&gt;
+			&lt;label&gt;Job Number&lt;/label&gt;
+			&lt;input class=&quot;field&quot; type=&quot;text&quot; name=&quot;jobnumber&quot; maxlength=&quot;40&quot; eform=&quot;Job Number:string:1&quot; /&gt;
+		&lt;/p&gt;
+		&lt;p class=&quot;explain&quot;&gt;
+			&lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Send request&quot; /&gt;
+		&lt;/p&gt;
+	&lt;/fieldset&gt;
+&lt;/form&gt;
+</pre>
+</div>
+<h3>The report template</h3>
+<div class='codeblock'>
+<pre>
+&lt;p&gt;[+email+]&lt;/strong&gt; has requested a status report on  Job Number: &lt;strong&gt;[+jobNumber+]&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Client Email:&lt;/td&gt; &lt;td&gt;[+email+]&lt;/td&gt;&lt;/tr&gt;
+	&lt;tr valign=&quot;top&quot;&gt;&lt;td&gt;Job Number:&lt;/td&gt; &lt;td&gt;[+jobNumber+]&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+</div>
+
+<h3>... and again the Snippet call</h3>
+
+<div class='codeblock'>
+<pre>
+[!eForm? &formid=`jobRequest` &subject=`Status request for [+jobnumber+]` &tpl=`requestForm` &report=`requestReport` to =`whoever@you.are.com`!]
+</pre>
+</div>
+
+<p>Pretty simple isn't it?</p>
+
+</div>
+<hr>
+<p ><span class='qe_signature'>Jelle Jager</span><br />
+AKA TobyL<br />
+</body>
+</html>

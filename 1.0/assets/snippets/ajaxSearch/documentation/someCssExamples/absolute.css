@@ -1,0 +1,171 @@
+#ajaxSearch_subSearch{
+	padding: 3px 2px 2px 2px;
+  margin: 5px 0 10px 0;
+  list-style: none;
+}
+#ajaxSearch_radio {
+	background:#FFFFFF;
+	font-size:0.8em;
+	margin:2px 0;
+	padding:3px 1px 2px 1px;
+}
+#ajaxSearch_select {
+	background:#FFFFFF;
+	height:auto;
+	width: 150px;
+	font-size:0.8em;
+	padding: 3px 1px 2px 1px;
+	border: 2px inset gray;
+}
+#search #ajaxSearch_form {
+  position:absolute;
+  top: 10px;
+  right: 0;
+}
+#ajaxSearch_form fieldset{
+float: left;
+}
+
+#searchClose{
+margin:8px 0 0 0;
+}
+
+#ajaxSearch_intro {
+margin: 10px 0 15px 0;
+}
+
+#ajaxSearch_input {
+	width: 280px;
+	background: #FFFFFF;
+	font-size: 0.8em;
+	padding: 3px 1px 2px 1px;
+	border: 2px inset gray;
+}
+
+#ajaxSearch_submit {
+  height: 2em;
+	background: #6F9303;
+	text-transform: lowercase;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+#ajaxSearch_output {
+  font-size: 90%;
+	background-color: #EFEFEF;
+	border: 1px solid #6F9303;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 480px;
+	z-index: 1;
+	padding: 5px;
+	margin: 5px 0 15px 0;
+}
+
+.ajaxSearch_paging {
+  display: block;
+  margin: 5px 0 10px;
+}
+.ajaxSearch_currentPage {
+  color: #6F9303;
+  font-weight: bold;
+}
+.AS_ajax_result {
+  color: #444;
+  margin-bottom: 3px;
+}
+.AS_ajax_resultLink {
+  text-decoration: underline;
+}
+.AS_ajax_resultDescription, .ajaxSearch_resultDescription{
+  color: #555;
+  padding: 2px;
+}
+.AS_ajax_resultsIntroFailure{
+  padding: 3px;
+}
+.AS_ajax_highlight1, .ajaxSearch_highlight1{
+  color : #CC0000;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight2, .ajaxSearch_highlight2{
+  color : #CB53DF;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight3, .ajaxSearch_highlight3{
+  color : #DF53B5;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight4, .ajaxSearch_highlight4{
+  color : #DF5380;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight5, .ajaxSearch_highlight5{
+  color : #A453DF;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_ajax_highlight6, .ajaxSearch_highlight6{
+  color : #53ADDF;
+  padding: 0;
+  font-weight: bold;
+}
+.AS_intro { display: none;}
+
+.AS_ajax_resultImage img{
+  margin:10px 140px 20px 140px;
+}
+.ajaxSearch_resultImage img{
+  margin:10px 20px 20px 20px;
+}
+div .AS_ajax_more{
+  margin: 20px 0;
+}
+.AS_ajax_more a{
+  font-weight: bold;
+}
+.ajaxSearch_hiddenField{
+	position:absolute;
+	text-decoration:underline;
+	background-color:#CC0000;
+	left:0px;
+	top:-500px;
+	width:1px;
+	height:1px;
+	overflow:hidden;
+}
+#ajaxSearch_cmtThks{
+  color: #CC0000;
+  padding: 0;
+  margin: 10px;
+	font-size: 1em;
+	font-weight: bold;
+	height: 2em;
+}
+.ajaxSearch_cmtIntro{
+  color: gray;
+	font-size: 1em;
+	font-weight: bold;
+}
+#ajaxSearch_cmtArea{
+	width: 452px;
+	height: 50px;
+	padding: 3px;
+	margin: 8px 0 3px;
+}
+#ajaxSearch_cmtSubmit, #ajaxSearch_cmtReset{
+	height: 2em;
+	background: #6F9303;
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+#search div .thumbscontainer ul.thumbs li{
+	height: 150px;
+}

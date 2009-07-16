@@ -1,0 +1,529 @@
+[2007-1-06: REVISION 0000]
+
+[NEW] phx capability
+[NEW] summarize extender
+
+[2007-1-06: REVISION 0000]
+
+[FIXED] request config
+[FIXED] randomize
+[FIXED] 1-0 pagination placeholders issue
+[NEW] dateFilter to the extenders
+
+[2007-1-07: REVISION 0000]
+
+[CHANGED] made request a extender
+[NEW] item[x] placeholders which now work with pagination
+[FIXED] sortBy
+[NEW] templates to debug output
+
+[2007-1-12: REVISION 0000]
+
+[FIXED] various minor bugs
+[CHANGED] moved template debug output back to [+tpl+] debug item
+[CHANGED] removed appendTVs method for getTV which allows for fetching of a TV for all needed documents with support for default values
+[CHANGED] determine IDs to use document IDs instead of parents since getTV requires document IDs
+[FIXED] sortBy glitch
+
+[2007-1-14: REVISION 1286]
+
+[FIXED] build URL and pagination
+[CHANGED] changed getTV to appendTV
+[FIXED] fixed document & TV retrieval
+
+[2007-1-14: REVISION 1287]
+
+[NEW] getChildIDs method has been rewritten for raw performance
+[NEW] date extender for date placeholder and related params
+[CHANGED] Moved debug CSS to its own language key and now uses regClientCSS to add to header
+[NEW] Save support added with 0 outputting only content, 1 outputting the remaining content past stop and setting the placeholders, and 2 setting the placeholders with no output.
+[FIXED] Call-time pass-by-reference
+[FIXED] MakeURL nolonger prepends the site_url
+
+[2007-1-16: REVISION 0000]
+
+[FIXED] &tags parameters and tplAlt vs tplFirst assignment
+[CHANGED] first and last templates are now the first and last items on a given page, not of all documents
+
+[2007-1-17: REVISION 0000]
+
+[FIXED] &tags parameter
+[FIXED] &debug output when no documents found
+[FIXED] QE placeholders now correctly add pagetitle field to fields array
+
+[2007-1-18: REVISION 0000]
+
+[FIXED] Advanced sorting
+
+[2007-1-19: REVISION 0000]
+
+[FIXED] Tag filter only enables if tags are specified
+[FIXED] No results display with custom formats
+
+[2007-1-22: REVISION 0000]
+
+[FIXED] Limit = 0 error handling
+[FIXED] Pagination division by 0 error
+[FIXED] Empty $_GET tags
+[NEW] Reflect can now get its own documents by running Ditto
+[NEW] seeThroughUnpub = 0 performance drastically increased
+[CHANGED] $ditto->getDocuments now returns an array with numeric, not string, keys
+
+[2007-2-4: REVISION 0000]
+[CHANGED] Reflect source code order and comments
+
+[2007-2-7: REVISION 0000]
+[NEW] Save option 3
+[CHANGED] Reflect to obey save option 3
+[CHANGED] Added if function exists statements to custom placeholders declarations
+[CHANGED] getDocuments parameters order and fields are now given as an array
+[NEW] prefetch variable now contains the data array fetched by the prefetcher when true
+
+[2007-2-9: REVISION 0000]
+[FIXED] Server offset is now applied to the date placeholder
+
+[2007-2-10: REVISION 0000]
+[CHANGED] Reflect Ditto ID detection
+[REMOVED] Save = 0 restraint on pagination
+[NEW] Data is now saved and reused from the prefetcher
+[FIXED] Prefetcher field parsing error
+[REMOVED] if function exists statements to custom placeholders declarations
+
+[2007-2-11: REVISION 0000]
+[CHANGED] Ditto snippet source code order
+
+[2007-2-12: REVISION 0000]
+[NEW] Server offset is applied to format date placeholders
+[FIXED] Filtering + Prefetch now work correctly together
+[CHANGED] #ID keys are now preserved in the getDocuments function
+[NEW] rel="tags" to tag links
+[NEW] local and global filter delimiter parameters for customization
+[CHANGED] MakeURL function for compliance with TVexplorer (heliotrope @ http://modxcms.com/forums/index.php/topic,12007.msg80206.html#msg80206)
+[FIXED] ;; in source code removed
+[CHANGED] = to == in filter source
+[REMOVED] debug->stored references
+[CHANGED] Parameter comments to reflect recent changes
+
+[2007-2-13: REVISION 0000]
+[FIXED] Missing commas in JSON format file
+[CHANGED] &start in Reflect can now be dynamically set like Ditto
+[REMOVED] &debug parameter in Reflect
+
+[2007-2-14: REVISION 0000]
+[FIXED] &start in Reflect
+[FIXED] Localization support for UTF-8 strings
+[FIXED] Randomize
+[NEW] If getDocuments is 1, Reflect will get its own documents even if given an ID
+[FIXED] Ditto ID can now be fed to ditto->buildURL as a parameter again
+[FIXED] Reflect now sets an empty month URL variable so that Ditto filtering works properly on years
+
+[2007-2-15: REVISION 0000]
+[FIXED] "etomite" string in charset param from older MODx versions
+
+[2007-2-16: REVISION 0000]
+[CHANGED] debug output to clean tables
+[FIXED] Reflect now sets an false month URL variable instead of an empty one
+[REMOVED] utf8_str_replace as it was not necessary
+
+[2007-2-17: REVISION 0000]
+[CHANGED] PHx Pre-Parser version and code
+[REMOVED] &total parameter
+[FIXED] &save=1 now saves the documents not shown to the resource placeholder as intended
+[FIXED] Reflect ordering
+[FIXED] Prefetcher
+[FIXED] Single chunk removal
+[NEW] Allow for multiple chunk removal
+
+[2007-2-18: REVISION 0000]
+[NEW] Ditto class commenting for Natural Docs
+[FIXED] Reflect source code ordering
+[FIXED] &tags=`` extra delimiter
+[FIXED] TV prefix and prefetch issue
+[FIXED] Reflect no documents error
+[FIXED] Reflect custom templates fetching
+[FIXED] Reflect tag closings thanks to new algorithm
+
+[2007-2-19: REVISION 0000]
+[FIXED] is_file error
+[NEW] caseSensitive option for tagging to determine whether or not the tag filter is case sensitive 
+[NEW] Proper display of tags when case sensitive is on AND off
+[FIXED] File retrieval logic to handle different extenders in different calls
+[CHANGED] caseSensitive default to 0
+[FIXED] SortBy pub_date
+[FIXED] include issues
+
+[2007-2-20: REVISION 0000]
+[FIXED] [*field*] support
+[FIXED] No tags error
+[NEW] &yearSortDir and &monthSortDir in Reflect for the direction of the sort of the year and month
+[FIXED] include issues (hopefully for good!)
+[FIXED] template order mixup in language file
+
+[2007-2-21: REVISION 0000]
+[CHANGED] Ditto base path can now be over-ridden so when debugging locally no incorrect paths will be committed to svn
+[NEW] Ditto snippet commenting for Natural Docs (Not Yet Complete)
+[FIXED] Array error when no documents are given
+[FIXED] Tags None Error
+[FIXED] &documents = "" and &parents = "" error handling
+[CHANGED] Cleaned up template processing
+[NEW] Date parameter added back in for UTF-8 compatibility. No-longer an extension as it is needed on sites using the UTF-8 charset.
+
+[2007-2-22: REVISION 0000]
+[CHANGED] More commenting
+[FIXED] $row['contentid'] omitted in appendTVs
+[FIXED] TPL Debug Rendering
+[FIXED] Correct template is now applied to documents
+[FIXED] Reflect no date visible issue
+
+[2007-2-23: REVISION 0000]
+[FIXED] Documentation typos and additions
+[FIXED] [*ph*] style placeholders fixed
+[CHANGED] &total is back in business
+[FIXED] &showInMenuOnly
+[FIXED] &parents = 0
+
+[2007-2-24: REVISION 0000]
+[FIXED] Reflect template issue
+[NEW] &hiddenFields parameter to support things like nested placeholders and [*fields*]
+[FIXED] No documents found with prefetch
+[CHANGED] Build URL function to support passing of arrays
+
+[2007-2-28: REVISION 0000]
+[CHANGED] Build URL now trims ID before building the URL string
+[NEW] Debug View
+[CHANGED] English language file for new debug view
+[CHANGED] Reflect passes months by numbers not by name, should make multi-language compatible
+[CHANGED] Date filter is now its own custom filter as originally planned
+[NEW] Filters can now specify data sources they need (including multiple sources via a comma delimited list)
+[REMOVED] $debug reference in Reflect
+[NEW] Custom Filters can now add hidden Fields
+
+[2007-3-1: REVISION 0000]
+[CHANGED] Minor bug-fixes to debug system
+[CHANGED] Debug templates moved out of language file into new debug templates php file like formats
+[CHANGED] Language file now properly formatted
+
+[2007-3-3: REVISION 0000]
+[FIXED] Tags & RSS
+
+[2007-3-4: REVISION 0000]
+[CHANGED] noResults logic for compatibility with new debug code
+[REMOVED] Non essential ditto->header and ditto->footer variables for local versions
+[NEW] Format files documented
+[REMOVED] Temp file code removed in favor of faster header code
+[FIXED] &sortBy=`pub_date`
+[CHANGED] source,function is now the order for both placeholders and filters
+
+[2007-3-5: REVISION 0000]
+[FIXED] Custom filters being used without a normal filter not functioning
+[FIXED] Wordwrap in debug class
+[FIXED] Titles for Format Files (those were documented in the last commit not language files)
+[CHANGED] Parameter order for parse filters is now logical
+[NEW] tplTrunk which allows the [+link+] parameter to be templated using [+url+] and [+text+] placeholders
+[FIXED] Wordwrap in debug class (again...)
+[NEW] Configs, formats, and extenders can load extenders via adding to the $extenders array
+[CHANGED] Pagination logic to handle &total=0 or &summarize=0
+[CHANGED] RSS now uses [+summary+] placeholder again
+[CHANGED] Debug window now resizeable
+[CHANGED] Version number from RC2 to RC3
+[NEW] install.txt file which doubles as a splash page for the documentation
+
+[2007-3-6: REVISION 0000]
+[FIXED] wordwrap non-string warning
+[FIXED] filter variable overwrite resulting in all filters failing
+[FIXED] wordwrap non-string warning (take 2)
+[FIXED] implode error in debug
+[FIXED] SQL error when start > total
+[CHANGED] Debug output in MODx info to not var_export objects and resource arrays
+[CHANGED] Moved cFilters and extenders initiation arrays to the beginning
+[CHANGED] Documentation to show the only configs and formats can load extenders, not extenders themselves
+[NEW] PHx version 2.1.2
+[FIXED] QE Issues with incorrect ID and custom placeholders
+[FIXED] ksort error
+[REMOVED] Non-neccessary header
+[FIXED] Blank author placeholder with QE
+
+[2007-3-7: REVISION 0000]
+[FIXED] Reflect "@CODE:" prefix moved to correct line
+
+[2007-3-8: REVISION 0000]
+[CHANGED] Links in install.txt to their correct values
+[FIXED] Pre-parsed filters
+[NEW] Example extender for use when creating new extenders
+[NEW] Template and debug classes now documented
+[FIXED] "retrieved" fields array() error
+[REMOVED] notes.txt file in preparation for release
+[FIXED] debug parameters output
+[CHANGED] Version number from RC3 to 2.0.0
+
+[2007-3-9: REVISION 0000]
+[FIXED] Duplicate tuncAt -> truncText in documentation
+[FIXED] include_once for extenders is now include
+
+[2007-3-12: REVISION 0000]
+[NEW] Now uses MODxDebugConsole class as a base for the debug class
+[CHANGED] minor indenting of the debug templates and new tab template
+[FIXED] &start
+[FIXED] missing urlencode on values of makeURL arguments
+[CHANGED] install.txt to include new stable download link
+[FIXED] &randomize
+[NEW] Compatibility config to allow backwards compatibility with Ditto 1.0.2 calls
+
+[2007-3-13: REVISION 0000]
+[NEW] &randomize now uses mySQL's RAND() function for faster parsing and LIMIT support
+[CHANGED] compatibility extender to include emptyText support
+[CHANGED] optimized getParam
+[NEW] Implemented Ticket #20
+[FIXED] Page reload on debug link click
+[FIXED] Ticket #25
+[NEW] Implemented Ticket #26 : Added @EVAL to filtering system. Note that it is only for basic filtering, not custom filtering (tagging, etc).
+[CHANGED] Implemented Ticket #28 : Removed : from @ bindings
+
+[2007-3-14: REVISION 0000]
+[FIXED] Debug error when no documents found
+[CHANGED] &cFilters and $parsedFilters removed in favor of new $filters array. All extenders have been updated for compatibility.
+[NEW] Implemented Ticket #29 so that extenders can be located outside of Ditto folder
+[FIXED] When clicking on a tag link start is reset for proper display of documents
+[CHANGED] Documentation corrections
+[NEW] Weighted Random via &randomize having the value of a tv or field
+[FIXED] Weights are now converted to integer before being used in weighted random
+[FIXED] Weighted Random with &summary = 1
+[FIXED] makeParamTable array error
+[CHANGED] &summarize to &show for simplicity
+
+[2007-3-15: REVISION 0000]
+[NEW] dateFilter extender can now filter down to days
+[CHANGED] Reflect to pass &date=false to dateFilter to not trigger an error
+[CHANGED] &show (which was &summarize) to &display
+[REMOVED] Non-needed $ditto->advSort pass through
+[FIXED] Default template now correctly uses [+date+] again
+[FIXED] CustomReset on display side
+
+[2007-3-17: REVISION 0000]
+[FIXED] Debug "unknown" field type issue
+[NEW] Placeholders can now specify their QE field
+[FIXED] $dittoID prefix missing from [+tags+] MODx placeholder
+[NEW] Added trim to @bindings
+[CHANGED] Improvements to internal QE link renderer
+[FIXED] Summary extender
+[FIXED] Summary extender typo...
+[NEW] urlStart placeholder for referencing the start value in the URL
+[CHANGED] Increment version number to 2.0.1.SVN in preparation for release
+
+[2007-3-18: REVISION 0000]
+[NEW] Added documentation to Reflect
+[CHANGED] Version number to 2.0.1
+
+[2007-3-19: REVISION 0000]
+[CHANGED] Version number to 2.0.2.SVN
+[FIXED] Removed variable referencing as it causes errors in some php versions
+[FIXED] Minor language typo's
+
+[2007-3-20: REVISION 0000]
+[FIXED] Language number typos
+[FIXED] Default template un-needed parsing
+[FIXED] Changelog dates
+
+[2007-3-21: REVISION 0000]
+[REMOVED] Debug Console MODx Tab
+[FIXED] Debug Console fields
+
+[2007-3-22: REVISION 0000]
+[FIXED] URL encoding
+[FIXED] Typo in header --- "Desciption" to "Description"
+
+[2007-3-23: REVISION 0000]
+[FIXED] Bug where * placeholders were parsed before all custom placeholders
+[FIXED] Atom encoding
+[FIXED] Filters array now cleaned first
+[FIXED] Version typo
+[CHANGED] &ditto_base to prepend base_path
+[FIXED] Prefetch no documents found
+[FIXED] Debug data display
+[FIXED] Tagging trim() missing from certain functions
+
+[2007-3-26: REVISION 0000]
+[FIXED] @FILE inclusion error for extenders
+[FIXED] Documentation for Ditto ID
+[NEW] dateFilter $_GET variables secured and sanitized
+[NEW] Request extender now employ's $modx->stripTags for security
+[NEW] Secured start variable via intval in snippet
+[NEW] Added &good to request extender to compliment &bad
+[NEW] Debug generation date and time added as an html comment to the debug console output
+
+[2007-3-27: REVISION 0000]
+[FIXED] Pagination and &start
+[FIXED] &start and &sortDir=`ASC`
+
+[2007-3-28: REVISION 0000]
+[FIXED] &start and createdonReset
+[FIXED] &start and sortDir
+[CHANGED] Whitespace and comments
+[FIXED] item[x] placeholders (Closes #38)
+[FIXED] stripTags in the Request extender
+
+[2007-4-2: REVISION 0000]
+[NEW] Relative URLs are now converted to absolute URLs in the content and introtext fields when in a format other than html
+
+[2007-4-5: REVISION 0000]
+[CHANGED] &limit to &queryLimit (Closes #43)
+[NEW] Additional tag parameters (Closes #39)
+[CHANGED] &trunc behavior (Closes #33)
+[NEW] Extenders and configs can be called outside the Ditto folder (Closes #29)
+[NEW] Reflect configs and Wordpress Reflect config (Closes #31)
+[NEW] Ability to call all documents using &parents=`0` &depth=`0` (Closes #40)
+[CHANGED] Version number to 2.0.2.BETA
+
+[2007-4-8: REVISION 0000]
+[FIXED] Documentation typos
+[CHANGED] Version number to 2.0.2
+
+[2007-4-10: REVISION 0000]
+[CHANGED] Indentation on getDocuments function
+[NEW] Public flag on getDocuments function (Related to #47)
+[NEW] hidePrivate parameter to interface with above (Closes #47)
+[CHANGED] $modx->recordCount to $modx->db->getRecordCount($result); (Related to #30)
+[FIXED] &depth now stops when there are no more levels (Closes #45)
+
+[2007-4-12: REVISION 0000]
+[CHANGED] Documentation corrections
+[CHANGED] Improved performance when getting all documents (References #40)
+
+[2007-4-15: REVISION 0000]
+[CHANGED] Version number to 2.0.3 SVN
+[FIXED] Category tags in RSS, ATOM, and XML output
+[FIXED] Sort order of wordpress config
+
+[2007-4-23: REVISION 0000]
+[FIXED] Shortags issue (Closes #51)
+
+[2007-4-25: REVISION 0000]
+[FIXED] Changelog typo
+[FIXED] Documentation typos
+[NEW] getParam now supports full template fetching (Closes #50)
+[NEW] Reflect now is fully template-able ala Wayfinder (Closes #42)
+[CHANGED] Version number to 2.1.SVN for both Ditto and Reflect
+
+[2007-5-6: REVISION 0000]
+[NEW] dateFilter now can use parameters to get the year, month, or day to filter by
+[REMOVED] Requirement for filter functions to be enclosed in classes
+
+[2007-5-7: REVISION 0000]
+[NEW] noResults function to handle conditions where there are no results (References #53)
+[FIXED] Pagination placeholders now are correctly blank or show zero when no results are found (Closes #53)
+[CHANGED] template->replace now accepts an associative array of name=>value of placeholders (format is no-longer part of the array)
+[NEW] Pagination is now fully templateable for 100% templateability (Closes #41)
+[FIXED] Bug with &limit < &display
+
+[2007-5-10: REVISION 1428]
+[REMOVED] Not needed setSortOrder function
+[CHANGED] main.template.css to debug.template.css for consistancy
+[CHANGED] Many str_replace calls replaced with template->replace (References #30)
+[REMOVED] Not needed str_replace_phx function
+
+[2007-5-15: REVISION 0000]
+[FIXED] hidePrivate now triggers a prefetch
+[FIXED] PHx placeholders are now detected
+------> [REMOVED] Fix until it can be more properly implemented
+------> [FIXED] Repaired using "a greedy plus and a negated character class"
+[FIXED] Placeholder detection is now optimized
+
+[2007-5-17: REVISION 0000]
+[REMOVED] PHx placeholder detection as it causes errors with other placeholder's detection
+[NEW] dateFilter now accepts a single value containing whole date (Closes #55)
+[CHANGED] Version number to 2.1.BETA
+
+[2007-7-06: REVISION 0000]
+[FIXED] &keywords
+
+[2007-07-07: REVISION 0000]
+[NEW] Reflect now passes on Ditto errors to the user
+[NEW] Reflect now natively accepts most Ditto parameters (no more &dittoSnippetParameters!)
+
+[2007-07-10: REVISION 0000]
+[NEW] Placeholders now work in filter arguments (Closes #60)
+
+[2007-07-14: REVISION 0000]
+[NEW] Sort by multiple fields just like MySQL using the new &orderBy parameter (Closes #46)
+
+[2007-7-15: REVISION 0000]
+[NEW] Added credits and documentation to the multiSort function
+[FIXED] Direction arguments are now correctly trimmed in &orderBy by the parseOrderByFunction
+
+[2007-7-15: REVISION 0000]
+[NEW] Default config and language file now always load in both Ditto and Reflect
+[FIXED] Debug console now correctly shows sortBy and sortDir
+[FIXED] &showPublishedOnly now correctly functions
+[FIXED] Removed extra whitespace from request config
+
+[2007-7-18: REVISION 0000]
+[FIXED] xHTML URL setting in the manager no-longer leads to double encoding (Closes #58)
+[FIXED] array_multisort error when no documents found
+
+[2007-7-21: REVISION 0000]
+[NEW] Added Bulgarian, German, Dutch, and Italian language files
+
+[2007-7-24: REVISION 0000]
+[NEW] Added ditto_iteration placeholder for sequence
+[NEW] Added Spanish and Persian language files
+[FIXED] Documentation headers in language files
+
+[2007-7-26: REVISION 0000]
+[CHANGED] Version number to 2.1.SVN
+[FIXED] Url placeholder
+
+[2007-8-03: REVISION 0000]
+[FIXED] Invalid orderBy array error (Closes #63)
+
+[2007-8-05: REVISION 0000]
+[FIXED] RSS, ATOM, and JSON issue with template::replace
+[FIXED] RSS category element indentation
+[FIXED] Custom placeholders over-writing tvs (Closes #52)
+[NEW] tplTagLinks parameter allows tagLinks placeholder to be templated (Closes #56)
+
+[2007-8-06: REVISION 0000]
+[NEW] Sort callbacks for user created sort functions via usort (Closes #61)
+[NEW] New addFields replaces duplicate code loops with addField
+[FIXED] Bug in userSort function
+
+[2007-8-07: REVISION 0000]
+[FIXED] UTF-8 dates
+
+[2007-8-08: REVISION 0000]
+[FIXED] tplTagLinks parameter (References #56)
+[FIXED] Removed non-used parameter from combineTags
+[FIXED] Major bug in addFields when a delimiter is used
+[NEW] Added &tagCallback parameter to allow the user to modify the tag source and how tags are parsed (Closes #68)
+[FIXED] Another major bug in addFields when a delimiter is not used
+[FIXED] Parsed filters glitch where fields were not being added properly
+[NEW] Reflect reset placeholder (prefixed by ID) provides a url which will show all articles (Closes #65)
+
+[2007-8-09: REVISION 0000]
+[NEW] Reflect now uses ditto->template->replace instead of str_replace
+[NEW] Reflect count placeholder shows the number of documents at that level (Closes #69)
+
+[2007-8-15: REVISION 0000]
+[NEW] dateFilterDefault allows you to set a default date filter based on the current date
+[CHANGED] Version number to 2.1.BETA2
+
+[2007-8-20: REVISION 0000]
+[FIXED] RSS category tag bug
+[FIXED] Security Issue (Closes #72)
+[FIXED] buildURL with xHTML urls
+
+[2007-11-12: REVISION 0000]
+[NEW] Added filters 9-11 contributed by highlander (Closes #78)
+[FIXED] Updated filter documentation
+[FIXED] dateFilter and 00:00 on first day of month (Closes #75)
+[CHANGED] Version number to 2.1b3
+
+[2008-1-20: REVISION 0000]
+[FIXED] atom_lastmodified placeholder (Closes #87)
+[NEW] month_numeric placeholder in the dateFilter extender (Closes #88)
+
+[2008-2-01: REVISION 0000]
+[NEW] Server offset now applied to dateSource both in display and filtering (Closes #90)
+[FIXED] Updated documentation for depth
+
+[2008-2-09: REVISION 0000]
+[CHANGED] Version number to 2.1.0

@@ -1,0 +1,590 @@
+/*
+Theme Name: TicTac - Wuhan
+Theme URI: http://wuhan.authenticasian.com/
+
+Description: My lousy attempt to reproduce a masterpiece by <a href="http://www.simplebits.com">Dan Cederholm</a>.
+
+Version: 0.2
+Author: Meng Gao
+Author URI: http://wuhan.authenticasian.com/
+
+	TicTac is a template created by Dan Cederholm for Blogger and it's one of my
+	favorite designs. Therefore, I've created a WordPress theme in which I tried
+	my best to make it look like Dan's original design. As much as I want to use the
+	original graphics, I had to make slight changes to them so as not to run into
+	copyright problems.
+
+	Since this theme is an obvious attempt to reproduce TicTac, I take absolutely
+	no credit in it. If you like this theme, write an email to Dan and let him
+	know.
+																	-- Meng Gao
+*/
+
+/* Main Sections 
+------------------------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: small;
+    text-align: center;
+    color: #333;
+    background: #e0e0e0;
+}
+div, p, img, a, td, ul, ol {
+    font-size: 1em; 
+}
+
+ol {
+    margin-left: 1em;
+    padding-left: 1em;
+}
+ol li {
+    margin-left: 1em;
+    padding: 0 0 .5em.3em;
+    list-style: decimal;
+}
+h1, h2, h3, h4 {
+	font-family: "Trebuchet MS", georgia, helvetica, arial, verdana, sans-serif;
+	font-weight: bold;
+	margin: .5em 0;
+	letter-spacing: .07em;
+}
+h1 { font-size: 218% }
+h2 { font-size: 164%; }
+h3 { font-size: 145%; }
+h4 { font-size: 118%; letter-spacing: .15em }
+
+p { padding: 0 0 1em; }
+
+a, a:link { 
+    text-decoration: none;
+    color: #69c;
+    border-bottom: 1px dotted #69c; 
+}
+a:visited { color: #669; border-color: #669; }
+a:hover { color: #693; border-color: #693; text-decoration: none; }
+a:active { color: #c33; border-color: #c33 }
+
+
+a img, img {
+    border: none;
+}
+
+ul {
+    list-style: none;
+    margin: 0 0 20px 1em;
+}
+li {
+    list-style: none;
+    padding-left: 1em;
+    margin-bottom: 3px;
+}
+
+
+.clear {
+    clear: both;
+    height: 1px;
+    margin: -1px 0 0;
+    font-size: 1px;
+}
+
+
+#page {
+    width: 770px;
+    margin: 0 auto;
+    text-align: left;
+    background: url(images/tile.gif) repeat-y;
+}
+
+#content {
+    float: left;
+    text-align: left;
+    width: 393px;
+    margin: 20px 0 0 52px;
+    padding: 0;
+    line-height: 1.5em;
+}
+
+/* Special text formatting 
+------------------------------------------------------------------------------- */
+h2, h2 a, h2 a:visited, h3, h3 a, h3 a:visited {
+	color: #333;
+}
+
+h2, h2 a, h2 a:hover, h2 a:visited, h3, h3 a, h3 a:hover, h3 a:visited, #sidebar h2, cite {
+	text-decoration: none;
+}
+h2 a:hover, h3 a:hover {
+	color: #06c;
+	border-bottom: 1px dotted #06c;
+}
+
+h2.pagetitle {
+	margin-top: 30px;
+	text-align: center;
+}
+
+h4.date-header {
+    margin-top: 0;
+    padding-left: 14px;
+    font-size: 90%;
+    color: #f93;
+    background: url(images/date_icon.gif) no-repeat 0 50%;
+}
+
+blockquote {
+    margin: 0 0 0 30px;
+    padding: 10px 0 0 20px;
+    font-size: 88%;
+    line-height: 1.5em;
+    color: #666;
+    background: url(images/quotes.gif) no-repeat top left;
+}
+
+blockquote p { margin-top: 0; }
+
+blockquote cite {
+	margin: 5px 0 0;
+	display: block;
+}
+code {
+	font: 1em/2.5em 'Courier New', Courier, monospace;
+	color: #444;
+	white-space: pre; 
+    width: 350px;
+    height: auto;
+	overflow: auto;
+    display: block;
+    border: 1px solid #999;
+    border-width: 2px 0;
+    padding: 1em;
+    margin: 0 0 1em 0;
+    background-color: #fafafa;
+}
+li code { width: 330px }
+
+acronym, abbr, span.caps {
+	font-size: 90%;
+	letter-spacing: .07em;
+	cursor: help;
+	border-bottom: 1px dotted #3f3f3f;
+}
+
+.center { text-align: center;}
+.alignright { float: right; }
+.alignleft { float: left; }
+
+hr { display: none; }
+
+
+.error, .message {
+    padding: 12px;
+    background-color: red;
+    color: #fff;
+}
+.message {
+    background-color: green;
+}
+
+/* Header 
+------------------------------------------------------------------------- */
+
+#header { 
+    background: #e0e0e0 url(images/top_div.gif) no-repeat top left;
+    position: relative;
+}
+
+#header h1 {
+    margin: 0;
+    padding: 45px 60px 45px 75px;
+    color: #fff;
+    text-shadow: #81A75B 2px 2px 2px;
+    background: url(images/top_h1.gif) no-repeat bottom left;
+}
+#header h1 a {
+    text-decoration: none;
+    border-bottom: none;
+    color: #fff;
+}
+#header h1 a:hover { 
+    color: #eee; 
+    text-shadow: #fff 0 0 4px;
+}
+
+
+/* Search Form 
+------------------------------------------------------------------------------- */
+#search {
+    position: absolute;
+    right: 60px;
+    top: 40px;
+    padding: 15px 15px 0;
+}
+form.FSF_form {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    text-align: right !important;
+}
+
+input.FSF_input { 
+    display: inline;
+    height: 17px;
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    background: #fff url(images/input-bg.gif) repeat-x top left;
+    margin: -1px 3px 0;
+    padding: 3px 0 0;
+}
+input.FSF_submit { 
+    display: inline;
+    margin: -1px 0 0;
+    padding: 0;
+    height: 22px;
+    line-height: 22px;
+}
+
+
+/* Post (main content entries)
+------------------------------------------------------------------------- */
+.post {
+    margin: 0 0 1.5em 0;
+    padding: 0 0 1.5em 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+.post h3 {
+    margin-top: 0;
+    color: #f63;
+}
+.post ul li {
+	background: url(images/tictac_orange.gif) no-repeat 0 6px;
+	margin-left: 0em;
+}
+
+
+
+/* Related Links 
+------------------------------------------------------------------------- */
+#navlist li { 
+    display: inline;
+    list-style-type: none;
+    padding-right: 20px;
+}
+
+
+/* UserComments 
+------------------------------------------------------------------------- */                        
+.comment {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    padding: 10px;
+    overflow: hidden;
+}
+.commentAlt {
+    background-color: #f4f4f4;
+}
+.commentAuthor {
+    background-color: #ffc;    
+}
+.commentMe {
+    background-color: #ccf !important;
+    padding-top: 5px;
+}
+.commentNum {
+    font-family: Arial, sans-serif;
+    font-size: 50px;
+    line-height: 30px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #f2f2f2;
+    font-weight: bold;
+    letter-spacing: -4px;
+    z-index: 1;
+}
+.commentAlt .commentNum {
+    color: #eaeaea;
+}
+.commentMe .commentNum {
+    color: #b0b0ff;
+}
+.commentAuthor .commentNum {
+    color: #f3f3bb;
+}
+.commentTitle {
+    position: relative;
+    z-index: 10;
+    color: #999;
+}
+.commentTitle span {
+    text-transform: uppercase;
+    font-size: 86%;
+}
+.commentTitle strong {
+    color: #693;
+    font-size: 110%;
+    text-transform: none;
+    font-weight: normal;
+    margin-right: 6px;
+}
+.comment .content {
+    position: relative;
+    z-index: 10;
+}
+
+
+/* Sidebar 
+------------------------------------------------------------------------- */
+
+#sidebar {
+    margin: 0 30px 0 481px;
+    padding: 23px 0 0 0;
+    font-size: 85%;
+    line-height: 1.4em;
+    color: #999;
+    background: url(images/sidebar_bg.gif) no-repeat 0 0;
+}
+
+#sidebar h2 {
+    padding: 25px 0 0 35px;
+    color: #666;
+    background: url(images/sidebar_icon.gif) no-repeat 5px 15px;
+    height: 32px !important; /* for most browsers */
+    height /**/:57px; /* for IE5/Win */
+}
+
+#sidebar ul, #sidebar p {
+    padding: 5px 15px 1em;
+    margin-left: -5px;
+}
+
+#sidebar ul { margin-bottom: 1em }
+#sidebar ul ul { margin-bottom: 0; border-bottom: 1px solid #ddd; }
+#sidebar ul ul ul { border-bottom: none; margin-bottom: 0; }
+#sidebar ul li ul li { background: url(images/tictac_green.gif) no-repeat 0 6px; }
+
+
+/* Footer 
+------------------------------------------------------------------------- */
+#footer {
+    margin: 0px;
+    padding: 0 0 9px 0;
+    font-size: 85%;
+    color: #ddd;
+    background: url(images/bottom_sill.gif) no-repeat bottom left;
+}
+
+#footer p {
+    padding: 20px 320px 20px 95px;
+    background: url(images/bottom_sash.gif) no-repeat top left;
+}
+
+#footer a {border-bottom: none;}
+
+
+/* Forms 
+------------------------------------------------------------------------------- */
+form {
+	width: 360px;
+	text-align: left;
+	clear: both;
+	padding-bottom: 20px;
+	border: none;
+}
+form.full { width: 100%; }
+
+
+fieldset {
+    border: none;
+}
+
+legend {
+	display: none;
+}
+form h3 {
+	clear: both;
+	padding: 15px 0 5px;
+	font-size: 14px;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #000;
+	font-weight: bold;
+}
+
+form label,
+form p {
+	display: block;
+	clear: both;
+	width: 310px;
+	font-size: 1em;
+	line-height: 1.5em;
+	padding: 0 0 9px;
+}
+
+form input {
+	display: block;
+	margin-top: 3px;
+}
+
+form select {
+	float: left;
+	display: block;
+}
+
+form label.first,
+form label.city {
+    clear: left;
+    margin-right: 10px;
+    width: 150px;
+}
+
+form label.second,
+form label.state {
+	float: left;
+	clear: none;
+	margin: 0 10px 0 0;
+	width: 150px;
+}
+form label.state { width: 60px; }
+
+form label.first input,
+form label.city input,
+form label.second input {
+	float: left;
+	width: 150px;
+	padding: 0;
+}
+
+form label.state select {
+	width: 60px;
+	float: left;
+	margin-top: 3px;
+}
+
+form label.zip,
+form label.zip input {
+	float: left;
+	width: 80px;
+}
+form label.zip { clear: none; }
+
+form label {
+	float: left;
+	clear: left;
+	width: 310px;
+	margin: 0;
+	line-height: 1.5em;
+}
+
+form label input {
+	float: left;
+	width: 310px;
+	padding: 0;
+}
+
+form input.radio,
+form input#radiobutton_1,
+form input#radiobutton_2,
+form input#radiobutton_3,
+form input#radiobutton_4 {
+	clear: left;
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+form label.radio,
+form label.radioitem {
+	clear: none;
+	margin: 0 0 0 25px;
+	padding: 0 0 15px;
+}
+
+form input.checkbox,
+form input#checkbox_1,
+form input#checkbox_2,
+form input#checkbox_3,
+form input#checkbox_4 {
+	clear: both;
+	float: left;
+	padding: 0;
+	margin: 0;
+}
+
+form label.checkbox {
+	clear: none;
+	margin: 0 0 0 25px;
+	padding: 0 0 15px;
+}
+/* style the form elements to look similar across browsers ... emulates Safari */
+form label input,
+form textarea {
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    padding: 0 2px;
+    height: 18px;
+    line-height: 20px;
+    background: #fff url(images/input-bg.gif) repeat-x top left;
+}
+form input.checkbox,
+form select {
+    border: 1px solid #ddd;
+    border-left-color: #c3c3c3;
+    border-top-color: #7c7c7c;
+    background-color: #fff;    
+}
+form textarea {
+	margin-top: 3px;
+	width: 383px;
+	height: auto;
+	display: block;
+}
+
+form label input.calc {
+    text-align: right;
+    width: 100px;
+    clear: left;
+    padding: 0;
+}
+form input.button {
+    clear: left;
+}
+
+/* Special handling for images & alignment 
+------------------------------------------------------------------------------- */
+
+p img {
+	padding: 0;
+	max-width: 100%;
+}
+
+img.centered {
+	display: block;
+	margin: 0 auto;
+}
+img.alignright {
+	padding: 4px;
+	margin: 0 0 2px 7px;
+	display: inline;
+}
+img.alignleft {
+	padding: 4px;
+	margin: 0 7px 2px 0;
+	display: inline;
+}
+
+/* Fixes for RichText widgets
+------------------------------------------------------------------------------- */
+.MODX_RichTextWidget {
+	float: left;
+}
+
+.MODX_RichTextWidget a {
+	border: 0px;
+}
