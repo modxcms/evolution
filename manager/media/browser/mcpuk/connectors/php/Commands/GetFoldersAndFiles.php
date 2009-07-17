@@ -127,7 +127,6 @@ class GetFoldersAndFiles {
 					$editable=$hide=false;
 					for($j=0;$j<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFiles']);$j++)
 						$hide=(preg_match("/".$this->fckphp_config['ResourceAreas'][$this->type]['HideFiles'][$j]."/",$files[$i])?true:$hide);
-error_log("/".$this->fckphp_config['ResourceAreas'][$this->type]['HideFiles'][$j]."/");
 
 					if (!$hide) {
 						if ($this->fckphp_config['ResourceAreas'][$this->type]['AllowImageEditing'])
