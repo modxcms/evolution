@@ -52,7 +52,7 @@ class GetFolders {
 							//check if$fckphp_configured not to show this folder
 							$hide=false;
 							for($i=0;$i<sizeof($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders']);$i++)
-								$hide=(ereg($this->fckphp_config['ResourceAreas'][$this->type]['HideFolders'][$i],$filename)?true:$hide);
+								$hide=(preg_match("/".$this->fckphp_config['ResourceAreas'][$this->type]['HideFolders'][$i]."/",$filename)?true:$hide);
 
                            /**
                             * Dont echo the entry, push it in the array

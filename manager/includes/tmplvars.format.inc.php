@@ -15,10 +15,10 @@
 
 		$param = array();
 		if($paramstring){
-			$cp = split("&",$paramstring);
+			$cp = explode("&",$paramstring);
 			foreach($cp as $p => $v){
 				$v = trim($v); // trim
-				$ar = split("=",$v);
+				$ar = explode("=",$v);
 				if (is_array($ar) && count($ar)==2) {
 					$params[$ar[0]] = decodeParamValue($ar[1]);
 				}
@@ -74,9 +74,9 @@
 				if ($value !='' || $params['default']=='Yes') {
 					$value = parseInput($value);
 					// Check for MySQL style date - Adam Crownoble 8/3/2005
-					$date_match = '^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$';
+					$date_match = '/^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$/';
 					$matches= array();
-					if(strpos($value,'-')!==false && ereg($date_match, $value, $matches)) {
+					if(strpos($value,'-')!==false && preg_match($date_match, $value, $matches)) {
 						$timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[1], $matches[3]);
 					}
 					else { // If it's not a MySQL style date, then use strtotime to figure out the date
@@ -233,9 +233,9 @@
 			case "unixtime":
 				$value = parseInput($value);
 				// Check for MySQL style date - Adam Crownoble 8/3/2005
-				$date_match = '^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$';
+				$date_match = '/^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$/';
 				$matches= array();
-				if(strpos($value,'-')!==false && ereg($date_match, $value, $matches)) {
+				if(strpos($value,'-')!==false && preg_match($date_match, $value, $matches)) {
 					$timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[1], $matches[3]);
 				}
 				else { // If it's not a MySQL style date, then use strtotime to figure out the date

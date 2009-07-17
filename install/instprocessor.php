@@ -303,15 +303,15 @@ if (isset ($_POST['template'])) {
 	$selTemplates = $_POST['template'];
 	foreach ($selTemplates as $si) {
 		$si = (int) trim($si);
-		$name = mysql_escape_string($moduleTemplates[$si][0]);
-		$desc = mysql_escape_string($moduleTemplates[$si][1]);
+		$name = mysql_real_escape_string($moduleTemplates[$si][0]);
+		$desc = mysql_real_escape_string($moduleTemplates[$si][1]);
 		$type = $moduleTemplates[$si][2]; // 0:file, 1:content
 		$filecontent = $moduleTemplates[$si][3];
 		if ($type == 0 && !file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$template = ($type == 1) ? $filecontent : implode('', file($filecontent));
-			$template = mysql_escape_string($template);
+			$template = mysql_real_escape_string($template);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
 				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc' WHERE templatename='$name';", $sqlParser->conn)) {
@@ -338,15 +338,15 @@ if (isset ($_POST['chunk'])) {
 	$selChunks = $_POST['chunk'];
 	foreach ($selChunks as $si) {
 		$si = (int) trim($si);
-		$name = mysql_escape_string($moduleChunks[$si][0]);
-		$desc = mysql_escape_string($moduleChunks[$si][1]);
+		$name = mysql_real_escape_string($moduleChunks[$si][0]);
+		$desc = mysql_real_escape_string($moduleChunks[$si][1]);
 		$type = $moduleChunks[$si][2]; // 0:file, 1:content
 		$filecontent = $moduleChunks[$si][3];
 		if ($type == 0 && !file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_chunk'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$chunk = ($type == 1) ? $filecontent : implode('', file($filecontent));
-			$chunk = mysql_escape_string($chunk);
+			$chunk = mysql_real_escape_string($chunk);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
 				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc' WHERE name='$name';", $sqlParser->conn)) {
@@ -373,18 +373,18 @@ if (isset ($_POST['module'])) {
 	$selPlugs = $_POST['module'];
 	foreach ($selPlugs as $si) {
 		$si = (int) trim($si);
-		$name = mysql_escape_string($moduleModules[$si][0]);
-		$desc = mysql_escape_string($moduleModules[$si][1]);
+		$name = mysql_real_escape_string($moduleModules[$si][0]);
+		$desc = mysql_real_escape_string($moduleModules[$si][1]);
 		$type = $moduleModules[$si][2]; // 0:file, 1:content
 		$filecontent = $moduleModules[$si][3];
-		$properties = mysql_escape_string($moduleModules[$si][4]);
-		$guid = mysql_escape_string($moduleModules[$si][5]);
-		$shared = mysql_escape_string($moduleModules[$si][6]);
+		$properties = mysql_real_escape_string($moduleModules[$si][4]);
+		$guid = mysql_real_escape_string($moduleModules[$si][5]);
+		$shared = mysql_real_escape_string($moduleModules[$si][6]);
 		if ($type == 0 && !file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$module = ($type == 1) ? $filecontent : implode('', file($filecontent));
-			$module = mysql_escape_string($module);
+			$module = mysql_real_escape_string($module);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
 			    $row = mysql_fetch_assoc($rs);
@@ -411,18 +411,18 @@ if (isset ($_POST['plugin'])) {
 	$selPlugs = $_POST['plugin'];
 	foreach ($selPlugs as $si) {
 		$si = (int) trim($si);
-		$name = mysql_escape_string($modulePlugins[$si][0]);
-		$desc = mysql_escape_string($modulePlugins[$si][1]);
+		$name = mysql_real_escape_string($modulePlugins[$si][0]);
+		$desc = mysql_real_escape_string($modulePlugins[$si][1]);
 		$type = $modulePlugins[$si][2]; // 0:file, 1:content
 		$filecontent = $modulePlugins[$si][3];
-		$properties = mysql_escape_string($modulePlugins[$si][4]);
+		$properties = mysql_real_escape_string($modulePlugins[$si][4]);
 		$events = explode(",", $modulePlugins[$si][5]);
-		$guid = mysql_escape_string($modulePlugins[$si][6]);
+		$guid = mysql_real_escape_string($modulePlugins[$si][6]);
 		if ($type == 0 && !file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_plugin'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$plugin = ($type == 1) ? $filecontent : implode('', file($filecontent));
-			$plugin = mysql_escape_string($plugin);
+			$plugin = mysql_real_escape_string($plugin);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
 			    $row = mysql_fetch_assoc($rs);
@@ -472,16 +472,16 @@ if (isset ($_POST['snippet'])) {
 	$selSnips = $_POST['snippet'];
 	foreach ($selSnips as $si) {
 		$si = (int) trim($si);
-		$name = mysql_escape_string($moduleSnippets[$si][0]);
-		$desc = mysql_escape_string($moduleSnippets[$si][1]);
+		$name = mysql_real_escape_string($moduleSnippets[$si][0]);
+		$desc = mysql_real_escape_string($moduleSnippets[$si][1]);
 		$type = $moduleSnippets[$si][2]; // 0:file, 1:content
 		$filecontent = $moduleSnippets[$si][3];
-		$properties = mysql_escape_string($moduleSnippets[$si][4]);
+		$properties = mysql_real_escape_string($moduleSnippets[$si][4]);
 		if ($type == 0 && !file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
 			$snippet = ($type == 1) ? $filecontent : implode('', file($filecontent));
-			$snippet = mysql_escape_string($snippet);
+			$snippet = mysql_real_escape_string($snippet);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
 			    $row = mysql_fetch_assoc($rs);
@@ -577,13 +577,13 @@ function propUpdate($new,$old){
 
     foreach ($newArr as $k => $v) {
         if(!empty($v)){
-	        $tempArr = split("=",trim($v));
+	        $tempArr = explode("=",trim($v));
 	        $returnArr[$tempArr[0]] = $tempArr[1];
         }
     }
     foreach ($oldArr as $k => $v) {
         if(!empty($v)){
-            $tempArr = split("=",trim($v));
+            $tempArr = explode("=",trim($v));
             $returnArr[$tempArr[0]] = $tempArr[1];
         }
     }

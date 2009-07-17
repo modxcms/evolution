@@ -25,7 +25,8 @@
 
     // show javascript alert    
     function webLoginAlert($msg){
-        return "<script>window.setTimeout(\"alert('".addslashes(mysql_escape_string($msg))."')\",10);</script>";
+    	global $modx;
+        return "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);</script>";
     }
 
     // generate new password

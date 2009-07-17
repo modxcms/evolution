@@ -66,7 +66,7 @@ if ($passwordgenmethod == "spec" && $_POST['specifiedpassword'] != $_POST['confi
 }
 
 // verify email
-if ($email == '' || !ereg("^[-!#$%&'*+./0-9=?A-Z^_`a-z{|}~]+", $email)) {
+if ($email == '' || !preg_match("/^[-!#$%&'*+.\/0-9=?A-Z^_`a-z{|}~]+/", $email)) {
 	webAlert("E-mail address doesn't seem to be valid!");
 	exit;
 }

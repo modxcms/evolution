@@ -842,7 +842,7 @@ class DocumentParser {
                     if (strpos($tempSnippetParams, "&amp;") > 0)
                         $tempSnippetParams= str_replace("&amp;", "&", $tempSnippetParams);
                     //$tempSnippetParams = html_entity_decode($tempSnippetParams, ENT_NOQUOTES, $this->config['etomite_charset']); //FS#334 and FS#456
-                    $tempSnippetParams= split($splitter, $tempSnippetParams);
+                    $tempSnippetParams= explode($splitter, $tempSnippetParams);
                     $snippetParamCount= count($tempSnippetParams);
                     for ($x= 0; $x < $snippetParamCount; $x++) {
                         if (strpos($tempSnippetParams[$x], '=', 0)) {
@@ -1981,12 +1981,12 @@ class DocumentParser {
     // deprecated
     function insideManager() {
         $m= false;
-        if (IN_MANAGER_MODE == 'true') {
+        if (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
             $m= true;
-            if (SNIPPET_INTERACTIVE_MODE == 'true')
+            if (defined('SNIPPET_INTERACTIVE_MODE') && SNIPPET_INTERACTIVE_MODE == 'true')
                 $m= "interact";
             else
-                if (SNIPPET_INSTALL_MODE == 'true')
+                if (defined('SNIPPET_INSTALL_MODE') && SNIPPET_INSTALL_MODE == 'true')
                     $m= "install";
         }
         return $m;

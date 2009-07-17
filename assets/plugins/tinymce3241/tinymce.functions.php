@@ -228,7 +228,7 @@ TINY_CALLBACK;
 			$tinymceInit .= "		  plugin_insertdate_dateFormat : \"%Y-%m-%d\",\n";
 			$tinymceInit .= "		  plugin_insertdate_timeFormat : \"%H:%M:%S\",\n";
 			if(!empty($customparams)){
-			    $params = split(",",$customparams);
+			    $params = explode(",",$customparams);
 			    $paramsCount = count($params);
         		for ($i=0;$i<$paramsCount;$i++) {
         			if(!empty($params[$i])){

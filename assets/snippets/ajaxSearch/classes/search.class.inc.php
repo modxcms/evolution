@@ -957,7 +957,7 @@ class Search {
     global $modx;
 
     $tbl = $modx->getFullTableName('site_snippets');
-    $select= "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . mysql_escape_string($snippetName) . "';";
+    $select= "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . $modx->db->escape($snippetName) . "';";
     $rs = $modx->db->query($select);
     return $modx->recordCount($rs);
   }

@@ -110,7 +110,7 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 
 // set the document_root :|
 if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
-    $_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", ereg_replace("[\][\]", "/", $_SERVER["PATH_TRANSLATED"]))."/";
+    $_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", preg_replace("/\\\\/", "/", $_SERVER["PATH_TRANSLATED"]))."/";
 }
 
 define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
@@ -226,8 +226,9 @@ $modx->manager->action = $action;
 if (isset($modx->config['validate_referer']) && $modx->config['validate_referer']) {
     if (isset($_SERVER['HTTP_REFERER'])) {
         $referer = $_SERVER['HTTP_REFERER'];
+
         if (!empty($referer)) {
-            if (!eregi(MODX_SITE_URL, $referer)) {
+            if (!preg_match('/'.preg_quote(MODX_SITE_URL, '/').'/i', $referer)) {
                 echo "A possible CSRF attempt was detected from referer: {$referer}.";
                 exit();
             }
