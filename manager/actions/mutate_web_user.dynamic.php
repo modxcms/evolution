@@ -232,10 +232,7 @@ function showHide(what, onoff){
 
 <div id="actions">
 	<ul class="actionButtons">
-			<li><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a>			
-			  &nbsp;
-			  and
-			  &nbsp;				
+			<li><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a><span class="and"> + </span>
 			<select id="stay" name="stay">
 			  <?php if ($modx->hasPermission('new_web_user')) { ?>		
 			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
