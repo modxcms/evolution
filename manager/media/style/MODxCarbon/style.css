@@ -798,6 +798,7 @@ a.hometblink:hover {
 		margin: 0 0 0 3px;
 	}
 #nav li a {
+	border-left: 1px solid #2c3d50;
 	color: #919fae;
 	height: 25px;
 	font-weight: bold;
@@ -1023,13 +1024,12 @@ a.hometblink:hover {
 	border-color: #e0e0e0 #c0c0c0 #fff #e0e0e0;
 }
 .dynamic-tab-pane-control .tab-row .tab.selected span {
-	font-weight: bold;
+	color: #111;
 }
 .dynamic-tab-pane-control .tab-row .tab span {
 	font-weight: bold;
 	font-size: 11px;
-	color: #4B4B4B;
-	font-weight: normal;
+	color: #999;
 	text-decoration: none;
 }
 .dynamic-tab-pane-control .tab-page {
@@ -1188,7 +1188,7 @@ fieldset.tab-page {
 }
 h2#edit_document_title {
 	font-size: 15px;
-	color: f5f5f5;
+	color: #f5f5f5;
 	width: 100%;
 	border-bottom: none;
 	padding: 5px 10px;
