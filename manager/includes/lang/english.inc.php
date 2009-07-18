@@ -367,7 +367,7 @@ $_lang["friendlyurls_message"] = 'Use Search Engine Friendly URLs on Apache webs
 $_lang["friendlyurls_title"] = 'Use FriendlyURLs:';
 $_lang["friendlyurlsprefix_message"] = 'A prefix setting of "page" will turn the URL /index.php?id=2 to the alias "page2.html" (assuming the suffix is set to .html).';
 $_lang["friendlyurlsprefix_title"] = 'Friendly URL Prefix:';
-$_lang["friendlyurlsuffix_message"] = 'Any suffix you choose will workb, inlcuding no suffix at all. E.g., ".aspx" will append .aspx to all aliases.';
+$_lang["friendlyurlsuffix_message"] = 'Any suffix you choose will work, including no suffix at all. E.g., ".aspx" will append .aspx to all aliases.';
 $_lang["friendlyurlsuffix_title"] = 'Friendly URL Suffix:';
 $_lang["functionnotimpl"] = 'Sorry!';
 $_lang["functionnotimpl_message"] = 'This function has not been implemented yet.';
