@@ -1,11 +1,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5424 - July 18, 2009)
+MODx Evolution 1.0.0 (rev 5425 - July 18, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-905] Fix SQL error in cache_sync processor
 * [#MODX-866] Allow manual editing of the datepicker fields
 * [#MODX-720] The website name on the Manager login page links back to the front end site
 * [#MODX-898] Improve regClient function so that the same JS file is not loaded twice in one document
