@@ -7,8 +7,6 @@
     <input type="save" value="[+lang.DM_save+]" style="display:none" /> 
 </form>
 
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-    <tr>
-        <td id="sort_btn"><a href="#" onclick="save();"><img src="media/style[+theme+]/images/icons/save.gif" align="absmiddle"> [+lang.DM_go+]</a></td>
-    </tr>
-</table>
+<ul class="actionButtons">
+    <li id="sort_btn"><a href="#" onclick="save();"><img src="media/style[+theme+]/images/icons/save.png" align="absmiddle"> [+lang.DM_go+]</a></li>
+</ul>

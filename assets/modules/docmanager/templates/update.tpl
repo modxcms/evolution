@@ -23,13 +23,14 @@
         </style>
         <script type="text/javascript">parent.tree.updateTree();</script>
     </head>
-    <body> 
-	    <table cellpadding="0" cellspacing="0" class="actionButtons">
-	        <tr>
-	           <td id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style/MODxCarbon/images/icons/close.gif" align="absmiddle"> [+lang.DM_close+]</a></td>
-	           <td id="Button4"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/cancel.gif" align="absmiddle"> [+lang.DM_cancel+]</a></td>
-	        </tr>
-	    </table>
+    <body>
+        <h1>[+lang.DM_module_title+]</h1>
+        <div id="actions">
+		    <ul class="actionButtons">
+		           <li id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style[+theme+]/images/icons/stop.png" align="absmiddle"> [+lang.DM_close+]</a></li>
+		           <li id="Button4"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/cancel.png" align="absmiddle"> [+lang.DM_cancel+]</a></li>
+		    </ul>
+	    </div>
 	   
 	    <div class="sectionHeader">[+lang.DM_update_title+]</div> 
 	    <div class="sectionBody"> 

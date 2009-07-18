@@ -53,9 +53,10 @@
         </script>
     </head>
     <body>
+        <h1>[+lang.DM_module_title+]</h1>
         <div id="actions">
             <ul class="actionButtons">
-                <li id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style/MODxCarbon/images/icons/cancel.gif" /> [+lang.DM_close+]</a></li>
+                <li id="Button1"><a href="#" onclick="document.location.href='index.php?a=106';"><img src="media/style[+theme+]/images/icons/stop.png" /> [+lang.DM_close+]</a></li>
             </ul>
         </div>        
 	    <div class="sectionHeader">[+lang.DM_action_title+]</div>

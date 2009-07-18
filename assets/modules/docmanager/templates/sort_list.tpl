@@ -37,17 +37,18 @@
     </style>
 </head>
 <body>
+    <h1>[+lang.DM_module_title+]</h1>
     <form action="" method="post" name="resetform" style="display: none;">
         <input name="actionkey" type="hidden" value="0" />
     </form>
-    <table cellpadding="0" cellspacing="0" class="actionButtons">
-        <tr>
-            <td id="Button1"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/close.gif" align="absmiddle"> [+lang.DM_close+]</a></td>
-            <td id="Button2" style="display:[+sort.save+]"><a href="#" onclick="save();"><img src="media/style[+theme+]/images/icons/save.gif" align="absmiddle"> [+lang.DM_save+]</a></td>
-            <td id="Button4"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/cancel.gif" align="absmiddle"> [+lang.DM_cancel+]</a></td>
-        </tr>
-    </table>
-
+    <div id="actions">
+        <ul class="actionButtons">
+            <li id="Button1"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/stop.png" align="absmiddle"> [+lang.DM_close+]</a></li>
+            <li id="Button2" style="display:[+sort.save+]"><a href="#" onclick="save();"><img src="media/style[+theme+]/images/icons/save.png" align="absmiddle"> [+lang.DM_save+]</a></li>
+            <li id="Button4"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/cancel.png" align="absmiddle"> [+lang.DM_cancel+]</a></li>
+        </ul>
+    </div>
+        
     <div class="sectionHeader">&nbsp;</div>
     <div class="sectionBody">
         [+sort.message+]
