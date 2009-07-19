@@ -290,7 +290,7 @@ function decode(s){
     		  <?php } else { ?>
     		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } ?>	
-    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/cancel.gif" /> <?php echo $_lang['cancel']?></a></li>
+    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/stop.png" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
 

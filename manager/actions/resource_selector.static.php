@@ -171,7 +171,7 @@ if($_SESSION['browser']=='ie') {
 				</table>
 			</td>
 			<td width="200">
-				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></a>
+				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/stop.png" /> <?php echo $_lang['cancel']; ?></a>
 				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['insert']; ?></a>				
 			</td>
 			</tr>
