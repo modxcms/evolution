@@ -10,10 +10,10 @@
  * Language:       Russian
  * Encoding:       UTF-8
  * Translated by:  Pertsev Dmitriy, Safronovich Victor, Russian MODx Community
- * Date:           25 june 2009
+ * Date:           19 july 2009
  */
 setlocale (LC_ALL, 'ru_RU');
-$_lang["agree_to_terms"] = 'Agree to the License Terms and Install';
+$_lang["agree_to_terms"] = 'Согласиться с условиями лицензии и приступить к установке';
 $_lang["alert_database_test_connection"] = 'Вы должны создать базу данных или выбрать базу данных для проверки!';
 $_lang["alert_database_test_connection_failed"] = 'Неудачная проверка выбранной базы данных!';
 $_lang["alert_enter_adminconfirm"] = 'Пароль администратора и подтверждение пароля не совпадают!';
@@ -58,7 +58,7 @@ $_lang["connection_screen_connection_method"] = 'Метод сопоставле
 $_lang["connection_screen_database_connection_information"] = 'Параметры базы данных';
 $_lang["connection_screen_database_connection_note"] = 'Введите имя базы данных, созданной для MODx. Если у вас еще нет базы данных, то программа установки попытается создать базу данных для вас. В зависимости от конфигурации MySQL или прав пользователя базы данных процесс может завершиться неудачей.';
 $_lang["connection_screen_database_host"] = 'Хост базы данных:';
-$_lang["connection_screen_database_info"] = 'Настройка базы данных';
+$_lang["connection_screen_database_info"] = 'Информация базы данных';
 $_lang["connection_screen_database_login"] = 'Имя пользователя:';
 $_lang["connection_screen_database_name"] = 'Имя базы данных:';
 $_lang["connection_screen_database_pass"] = 'Пароль:';
@@ -69,7 +69,7 @@ $_lang["connection_screen_default_admin_note"] = 'Теперь вы должны
 $_lang["connection_screen_default_admin_password"] = 'Пароль администратора:';
 $_lang["connection_screen_default_admin_password_confirm"] = 'Подтвердить пароль:';
 $_lang["connection_screen_default_admin_user"] = 'Администратор по умолчанию';
-$_lang["connection_screen_defaults"] = 'Настройки Панели Управления';
+$_lang["connection_screen_defaults"] = 'Установки по умолчанию менеджера';
 $_lang["connection_screen_server_connection_information"] = 'Параметры подключения и входа на сервер базы данных';
 $_lang["connection_screen_server_connection_note"] = 'Введите данные для входа в базу данных и затем проверьте их.';
 $_lang["connection_screen_server_test_connection"] = 'Нажмите здесь для проверки соединения с вашим сервером базы данных и получения сопоставления кодировки';
@@ -79,9 +79,9 @@ $_lang["database_alerts"] = 'Внимание ошибка!';
 $_lang["database_connection_failed"] = 'Ошибка соединения с базой данных!';
 $_lang["database_connection_failed_note"] = 'Проверьте параметры соединения и попробуйте еще раз.';
 $_lang["database_use_failed"] = 'Невозможно выбрать базу данных!';
-$_lang["database_use_failed_note"] = 'Проверьте, есть ли у Вас необходимые права на доступ к базе данных.';
-$_lang["default_language"] = 'Default Manager Language';
-$_lang["default_language_description"] = 'Выберите язык Панели Управления.';
+$_lang["database_use_failed_note"] = 'Проверьте, есть ли у вас необходимые права на доступ к базе данных.';
+$_lang["default_language"] = 'Язык по умолчанию менеджера';
+$_lang["default_language_description"] = 'Это язык, который будет по умолчанию использоваться менеджером в административной панели MODx.';
 $_lang["during_execution_of_sql"] = ' во время выполнения SQL запроса ';
 $_lang["encoding"] = 'utf-8';
 $_lang["error"] = 'ошибки';
@@ -131,8 +131,8 @@ $_lang["retry"] = 'Повторить';
 $_lang["running_database_updates"] = 'Обновление базы данных: ';
 $_lang["sample_web_site"] = 'Пример веб-сайта';
 $_lang["sample_web_site_note"] = 'Осторожно! Установка этого параметра <b style=\"color:#CC0000\">перепишет</b> существующие документы и ресурсы.';
-$_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
-$_lang["session_problem_try_again"] = 'Попробовать снова?'; 
+$_lang["session_problem"] = 'Была обнаружена проблема в сессии сервера. Свяжитесь, пожалуйста, с администратором сервера для ее устранения.';
+$_lang["session_problem_try_again"] = 'Повторить?'; 
 $_lang["setup_cannot_continue"] = 'К сожалению, установка не может быть продолжена из-за ';
 $_lang["setup_couldnt_install"] = 'Программа установки MODx не смогла установить/изменить некоторые таблицы базы данных.';
 $_lang["setup_database"] = 'Программа установки сейчас попробует установить базу данных:<br />';
