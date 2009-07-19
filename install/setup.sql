@@ -865,7 +865,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('blocked_minutes','60'),
 ('use_captcha','0'),
 ('captcha_words','MODx,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
-('emailsender','you@example.com'),
+('emailsender','{ADMINEMAIL}'),
 ('emailsubject','Your login details'),
 ('number_of_logs','100'),
 ('number_of_messages','30'),
