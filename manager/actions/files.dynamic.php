@@ -143,7 +143,7 @@ else $webstart_path = '../'.$webstart_path;
 
 <h1><?php echo $_lang['files_files']?></h1>
 
-<div class="sectionBody" style="font-size: 11px;">
+<div class="sectionBody">
 <script type="text/javascript" src="media/script/multifile.js"></script>
 <script type="text/javascript">
 function viewfile(url) {
