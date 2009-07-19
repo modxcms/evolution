@@ -221,21 +221,26 @@ hr {
 #supplementalNav {
 	float: right;
 	background: transparent;
-	line-height: 35px;
-	vertical-align: middle;
 	font-size: 11px;
-	padding: 0;
+	padding: 0 0 30px;
 	margin: 0;
 	color: #89939E;
 }
 	.rtl #supplementalNav {
 		float: left;
 	}
+#supplementalNav * {
+	vertical-align: bottom;
+}
 #supplementalNav a {
-	line-height: 35px;
 	padding: 0;
 	margin: 0;
 }
+#msgCounter, #newMail {
+	margin: 0;
+	padding: 0;
+}
+
 /* -------------------------[ Forms ]--- */
 form label {
 	cursor: pointer;
@@ -751,11 +756,6 @@ a.hometblink:hover {
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu {
 	background: #e4e4e4 url(images/misc/menubg.jpg);
-}
-#msgCounter,#newMail {
-	margin: 0;
-	padding: 0;
-	line-height: 35px;
 }
 #Navcontainer {
 	padding: 0 10px;
