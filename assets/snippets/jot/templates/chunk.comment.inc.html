@@ -11,24 +11,24 @@
 			 
 			 <div class="jot-posticon">
 					[+phx:userinfo=`lastlogin`:ifempty=`9999999999`:lt=`[+comment.createdon+]`:then=`
-				 <img src="[(base_url)]manager/media/style/[(manager_theme)]/images/icons/folder_page_add.gif" width="18" height="18" alt="New comment" border="0" />
+				 <img src="[(base_url)]assets/snippets/jot/templates/comment.gif" width="16" height="16" alt="New comment" border="0" />
 				 `:else=`
-				 <img src="[(base_url)]manager/media/style/[(manager_theme)]/images/icons/newdoc.gif" width="16" height="16" alt="Comment" border="0" />
+				 <img src="[(base_url)]assets/snippets/jot/templates/comment_trans.gif" width="16" height="16" alt="Comment" border="0" />
 				 `:strip+]
 			 </div>		 
 			 
 			 <div class="jot-mod">
 			 [+jot.moderation.enabled:is=`1`:then=`
-				<a href="[+jot.link.delete:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Are you sure you wish to delete this comment?')" title="Delete Comment"><img src="[(base_url)]manager/media/style/[(manager_theme)]/images/icons/event3.gif" width="16" height="16" alt="Delete Comment" border="0" /></a>
+				<a href="[+jot.link.delete:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Are you sure you wish to delete this comment?')" title="Delete Comment"><img src="[(base_url)]assets/snippets/jot/templates/delete.gif" width="16" height="16" alt="Delete Comment" border="0" /></a>
 				[+comment.published:is=`0`:then=`
-				<a href="[+jot.link.publish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Are you sure you wish to publish this comment?')" title="Publish Comment"><img src="[(base_url)]manager/media/style/[(manager_theme)]/images/icons/add.png" width="16" height="16" alt="Publish Comment" border="0" /></a>
+				<a href="[+jot.link.publish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Are you sure you wish to publish this comment?')" title="Publish Comment"><img src="[(base_url)]assets/snippets/jot/templates/publish.png" width="16" height="16" alt="Publish Comment" border="0" /></a>
 				`+]
 				[+comment.published:is=`1`:then=`
-				<a href="[+jot.link.unpublish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Are you sure you wish to unpublish this comment?')" title="Unpublish Comment"><img src="[(base_url)]manager/media/style/[(manager_theme)]/images/icons/delete.png" width="16" height="16" alt="Unpublish Comment" border="0" /></a>
+				<a href="[+jot.link.unpublish:esc+][+jot.querykey.id+]=[+comment.id+]#jotmod[+jot.link.id+]" onclick="return confirm('Are you sure you wish to unpublish this comment?')" title="Unpublish Comment"><img src="[(base_url)]assets/snippets/jot/templates/unpublish.png" width="16" height="16" alt="Unpublish Comment" border="0" /></a>
 				`+]
 			 `:strip+]
 			 [+jot.user.canedit:is=`1`:and:if=`[+comment.createdby+]`:is=`[+jot.user.id+]`:or:if=`[+jot.moderation.enabled+]`:is=`1`:then=`
-				 <a href="[+jot.link.edit:esc+][+jot.querykey.id+]=[+comment.id+]#jf[+jot.link.id+]" onclick="return confirm('Are you sure you wish to edit this comment?')" title="Edit Comment"><img src="[(base_url)]manager/media/style/[(manager_theme)]/images/icons/logging.gif" width="16" height="16" alt="Edit Comment" border="0" /></a>
+				 <a href="[+jot.link.edit:esc+][+jot.querykey.id+]=[+comment.id+]#jf[+jot.link.id+]" onclick="return confirm('Are you sure you wish to edit this comment?')" title="Edit Comment"><img src="[(base_url)]assets/snippets/jot/templates/edit.gif" width="16" height="16" alt="Edit Comment" border="0" /></a>
    		 `:strip+]
 			 </div>	
 			  
