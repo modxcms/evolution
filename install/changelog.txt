@@ -6,7 +6,7 @@ MODx Evolution 1.0.0 (rev 5426 - July 18, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
-* [#MODX-908] Fix typo in English language file
+* [#MODX-950] Scroll the File Manager to the editing textarea when clicking the edit button.
 * [#MODX-905] Fix SQL error in cache_sync processor
 * [#MODX-866] Allow manual editing of the datepicker fields
 * [#MODX-720] The website name on the Manager login page links back to the front end site
