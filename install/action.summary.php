@@ -37,7 +37,7 @@ if ($_SESSION['test'] != 1) {
 // check directories
 // cache exists?
 echo "<p>" . $_lang['checking_if_cache_exist'];
-if (!file_exists("../assets/cache")) {
+if (!file_exists("../assets/cache") || !file_exists("../assets/cache/rss")) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
     $errors += 1;
 } else {
@@ -45,7 +45,7 @@ if (!file_exists("../assets/cache")) {
 }
 // cache writable?
 echo "<p>" . $_lang['checking_if_cache_writable'];
-if (!is_writable("../assets/cache")) {
+if (!is_writable("../assets/cache") || !file_exists("../assets/media")) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
     $errors += 1;
 } else {

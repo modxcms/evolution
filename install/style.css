@@ -244,7 +244,9 @@ color:#888888;
 .version {
 	color: #fff;
 }
-
+span.mono {
+	font-family: Courier, monospace;
+}
 .buttonlinks {
 	display:block;
 	height:26px;
