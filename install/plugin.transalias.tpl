@@ -19,8 +19,8 @@ if (!isset ($override_tv)) { $override_tv = ''; }
 
 if (!class_exists('TransAlias')) {
     require_once $plugin_path.'/transalias.class.php';
-    $trans = new TransAlias($modx);
 }
+$trans = new TransAlias($modx);
 
 /*
  * see if TV overrides the table name

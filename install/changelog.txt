@@ -6,6 +6,7 @@ MODx Evolution 1.0.0 (rev 5460 - July 21, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-971] Fix to TransAlias plugin to allow it to work with the Import HTML action.
 * [#MODX-591] Escape the database user and password in config.inc.php during install
 * [#MODX-952] Modified the warning message with MySQL 4.x
 * [#MODX-944] Installer with IE8 does not show final 'Install' button on last page
