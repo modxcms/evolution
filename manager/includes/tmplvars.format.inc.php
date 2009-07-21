@@ -91,8 +91,8 @@
 
 			case "floater":
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
-				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
+				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js", array('name'=>'moodx', 'version'=>'0', 'plaintext'=>false));
 				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
 				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
 				$o .= "\n<div id=\"".$id."\"".$class.$style.">".$value."</div>\n";
@@ -112,8 +112,8 @@
 
 			case "marquee":
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
-				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
+				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js", array('name'=>'moodx', 'version'=>'0', 'plaintext'=>false));
 				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
 				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
 				$o .= "\n<div id=\"".$id."\"".$class.$style."><div id=\"marqueeContent\">".$value."</div></div>\n";
@@ -132,8 +132,8 @@
 				break;
 
 			case "ticker":
-				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
-				$modx->regClientStartupScript("manager/media/script/mootools/moostick.js?init=false");
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
+				$modx->regClientStartupScript("manager/media/script/mootools/moostick.js?init=false", array('name'=>'moostick', 'version'=>'0', 'plaintext'=>false));
 				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
 				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
 				$o .= "\n<div id=\"".$id."\"".$class.$style.">\n";
@@ -271,7 +271,7 @@
 					$autoMode = "2";	//height only
 				}
 
-				$modx->regClientStartupScript("manager/media/script/bin/viewport.js");
+				$modx->regClientStartupScript("manager/media/script/bin/viewport.js", array('name'=>'viewport', 'version'=>'0', 'plaintext'=>false));
 				$o =  $sTag." id='".$params['vpid']."' name='".$params['vpid']."' ";
 				if ($params['class']) $o.= " class='".$params['class']."' ";
 				if ($params['style']) $o.= " style='".$params['style']."' ";

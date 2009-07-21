@@ -6,6 +6,7 @@ MODx Evolution 1.0.0 (rev 5467 - July 21, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-898] Allow passing script names and versions to regClient*, setting stage for more intelligent handling of script inclusion
 * [#MODX-863] Isolate deprecated magic_quotes-related code inside PHP version checks for less than 5.3 to avoid deprecated warnings in 5.3/errors in 6.0
 * [#MODX-941] Add % character to transliteration plugin tables
 * [#MODX-971] Fix to TransAlias plugin to allow it to work with the Import HTML action.
@@ -17,7 +18,6 @@ Bugfixes & Feature Requests:
 * [#MODX-905] Fix SQL error in cache_sync processor
 * [#MODX-866] Allow manual editing of the datepicker fields
 * [#MODX-720] The website name on the Manager login page links back to the front end site
-* [#MODX-898] Improve regClient function so that the same JS file is not loaded twice in one document
 * [#MODX-916] Better handling of text direction and encoding for Manager languages
 * [#MODx-882] Specify the default Manager language during installation
 * [#MODx-815] Users without edit or create module permissions can get to Modules editing screen
