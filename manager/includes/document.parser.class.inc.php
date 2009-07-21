@@ -2206,22 +2206,6 @@ class DocumentParser {
             if (empty($name)) {
                 $useThisVer= false; // if the match was based on identical source code, no need to replace the old one
             } else {
-                // if name is set, then check the versions
-                /*
-                $verA= explode('.',$this->loadedjscripts[$key]['version']);
-                $verB= explode('.',$version);
-                $i=0;
-                // Go beyond last matching position
-                while (isset($verA[$i]) && isset($verB[$i]) && intval($verA[$i])==intval($verB[$i]))
-                    $i++;
-                if (isset($verB[$i])) {
-                    if (isset($verA[$i]))
-                        if (intval($verA[$i]) > intval($verB[$i]))
-                            $useThisVer= false; // version B not better than original
-                }
-                else
-                    $useThisVer= false; // version B not better than original
-                */
                 $useThisVer = version_compare($this->loadedjscripts[$key]['version'], $version, '<');
             }
 
