@@ -84,10 +84,12 @@ if(version_compare(phpversion(), "4.3.0")>=0) {
     ini_set("include_path", $incPath); // include path the old way (note we don't have PATH_SEPARATOR before 4.3.0, so we're not appending to the existing include path.. it's an edge case at this point)
 }
 
-@set_magic_quotes_runtime(0);
+if (version_compare(phpversion(), "5.3") < 0) {
+    @set_magic_quotes_runtime(0);
 
-// include_once the magic_quotes_gpc workaround
-include_once "quotes_stripper.inc.php";
+    // include_once the magic_quotes_gpc workaround
+    include_once "quotes_stripper.inc.php";
+}
 
 // include the html_entity_decode fake function :)
 if (!function_exists('html_entity_decode')) {

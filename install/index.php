@@ -3,8 +3,10 @@
  * MODx Installer
  */
 // do a little bit of environment cleanup if possible
-@ ini_set('magic_quotes_runtime', 0);
-@ ini_set('magic_quotes_sybase', 0);
+if (version_compare(phpversion(), "5.3") < 0) {
+    @ ini_set('magic_quotes_runtime', 0);
+    @ ini_set('magic_quotes_sybase', 0);
+}
 
 // start session
 session_start();
@@ -43,7 +45,7 @@ if (!$_SESSION['test']) {
 </body>
 </html>";
 	    exit;
-	
+
 }
 
 $moduleName = "MODx";

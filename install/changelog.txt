@@ -1,11 +1,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5460 - July 21, 2009)
+MODx Evolution 1.0.0 (rev 5467 - July 21, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-863] Isolate deprecated magic_quotes-related code inside PHP version checks for less than 5.3 to avoid deprecated warnings in 5.3/errors in 6.0
 * [#MODX-941] Add % character to transliteration plugin tables
 * [#MODX-971] Fix to TransAlias plugin to allow it to work with the Import HTML action.
 * [#MODX-591] Escape the database user and password in config.inc.php during install
