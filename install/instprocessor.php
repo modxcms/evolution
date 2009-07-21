@@ -178,8 +178,8 @@ $configString = '<?php
  */
 $database_type = \'mysql\';
 $database_server = \'' . $database_server . '\';
-$database_user = \'' . $database_user . '\';
-$database_password = \'' . $database_password . '\';
+$database_user = \'' . mysql_real_escape_string($database_user) . '\';
+$database_password = \'' . mysql_real_escape_string($database_password) . '\';
 $database_connection_charset = \'' . $database_connection_charset . '\';
 $database_connection_method = \'' . $database_connection_method . '\';
 $dbase = \'`' . str_replace("`", "", $dbase) . '`\';

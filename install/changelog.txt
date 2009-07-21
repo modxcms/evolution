@@ -1,11 +1,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5459 - July 21, 2009)
+MODx Evolution 1.0.0 (rev 5460 - July 21, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-591] Escape the database user and password in config.inc.php during install
 * [#MODX-952] Modified the warning message with MySQL 4.x
 * [#MODX-944] Installer with IE8 does not show final 'Install' button on last page
 * [#MODX-904] Add better email format checking when adding/updating users.
