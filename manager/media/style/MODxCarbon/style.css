@@ -1216,59 +1216,63 @@ ul.actionButtons {
 	background: none;
 	width: auto;
 }
-	.actionButtons li {
-		display: inline;
-		list-style-type: none;
-		margin-right: 10px;
-		padding: 0;
-	}
-	.actionButtons img {
-		vertical-align: top;
-		margin-top: 1px;
-	}
-	.actionButtons a {
-		color: #3b454f;
-		font-weight: bold;
-		font-size: 12px;
-		background: #a0b9d6 url(images/misc/button-gradient.png) repeat-x top left;
-		padding: 4px 6px;
-		white-space: nowrap;
-		vertical-align: top;
-		text-decoration: none;
-		-moz-border-radius: 4px;
-		-webkit-border-radius: 4px;
-		border-radius: 4px;
-		-webkit-text-shadow: 0 1px 1px #fff;
-		-moz-text-shadow: 0 1px 1px #fff;
-		text-shadow: 0 1px 1px #fff;
-		border:1px solid #8ea4be;
-		outline: none;
-	}
-		.actionButtons a:hover {
-			background-position: bottom left;
-			-webkit-box-shadow: 0 0 10px #b8c7d6;
-			-moz-box-shadow: 0 0 10px #b8c7d6;
-			box-shadow:  0 0 10px #b8c7d6;
-			-webkit-transition: -webkit-box-shadow 0.2s linear;
-		}
-		.actionButtons a:active {
-			background-color: #92aac4;
-			background-position: bottom left;
-			-webkit-box-shadow: 0 0 10px #b8c7d6;
-			-moz-box-shadow: 0 0 10px #b8c7d6;
-			box-shadow:  0 0 10px #b8c7d6;
-		}
-	.actionButtons a.disabled {
-		border: 1px solid #657587;
-		padding: 2px 4px;
-		color: #777;
-		border-width: 0;
-	}
-	.actionButtons a.disabled img {
-		opacity: .3;
-		filter: alpha(opacity=30);
-	}
-
+.actionButtons li {
+	display: inline;
+	list-style-type: none;
+	margin-right: 10px;
+	padding: 0;
+}
+.actionButtons img {
+	vertical-align: top;
+	margin-top: 1px;
+}
+.actionButtons a {
+	color: #3b454f;
+	font-weight: bold;
+	font-size: 12px;
+	background: #a0b9d6 url(images/misc/button-gradient.png) repeat-x top left;
+	padding: 4px 6px;
+	white-space: nowrap;
+	vertical-align: top;
+	text-decoration: none;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-text-shadow: 0 1px 1px #fff;
+	-moz-text-shadow: 0 1px 1px #fff;
+	text-shadow: 0 1px 1px #fff;
+	border:1px solid #8ea4be;
+	outline: none;
+}
+.actionButtons a:hover {
+	background-position: bottom left;
+	-webkit-box-shadow: 0 0 10px #b8c7d6;
+	-moz-box-shadow: 0 0 10px #b8c7d6;
+	box-shadow:  0 0 10px #b8c7d6;
+	-webkit-transition: -webkit-box-shadow 0.2s linear;
+}
+.actionButtons a:active {
+	background-color: #92aac4;
+	background-position: bottom left;
+	-webkit-box-shadow: 0 0 10px #b8c7d6;
+	-moz-box-shadow: 0 0 10px #b8c7d6;
+	box-shadow:  0 0 10px #b8c7d6;
+}
+.actionButtons a.disabled {
+	border: 1px solid #657587;
+	padding: 2px 4px;
+	color: #777;
+	border-width: 0;
+}
+.actionButtons a.disabled img {
+	opacity: .3;
+	filter: alpha(opacity=30);
+}
+.actionButtons .and{
+    margin:0 2px 0 5px;
+    color: #3b454f;
+	font-weight: bold;
+}
 /*
 * Generic styles for all form elements
 */
