@@ -239,3 +239,7 @@ position: relative;
   padding: 0;
   font-weight: bold;
 }
+
+div.post label {display:block;width:430px;margin-bottom:8px;}
+div.post label input {position:absolute;left:170px;}
+div.post fieldset {border:none;}
