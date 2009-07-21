@@ -64,6 +64,7 @@ var DatePicker = new Class({
             yearOrder: options.yearOrder || this.yearOrder,
             yearOffset: options.yearOffset || this.yearOffset
         };
+        dp.setProperties({'id':dp.getProperty('name'), 'autocomplete': 'off'});
         dp.container = false;
         dp.calendar = false;
         dp.interval = null;
