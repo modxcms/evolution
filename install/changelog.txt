@@ -1,11 +1,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5467 - July 21, 2009)
+MODx Evolution 1.0.0 (rev 5470 - July 21, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-974] - Fixed missing save icon in files.dynamic.php
 * [#MODX-898] Allow passing script names and versions to regClient*, setting stage for more intelligent handling of script inclusion
 * [#MODX-863] Isolate deprecated magic_quotes-related code inside PHP version checks for less than 5.3 to avoid deprecated warnings in 5.3/errors in 6.0
 * [#MODX-941] Add % character to transliteration plugin tables
