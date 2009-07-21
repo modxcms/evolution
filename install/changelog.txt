@@ -1,11 +1,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5426 - July 18, 2009)
+MODx Evolution 1.0.0 (rev 5456 - July 21, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-904] Add better email format checking when adding/updating users.
 * [#MODX-950] Scroll the File Manager to the editing textarea when clicking the edit button.
 * [#MODX-905] Fix SQL error in cache_sync processor
 * [#MODX-866] Allow manual editing of the datepicker fields
