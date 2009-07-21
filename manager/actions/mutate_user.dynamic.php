@@ -265,28 +265,6 @@ if (is_array($evtOut))
     	  </ul>
     </div>
 </div>
-<!--><div id="actions">
-	<ul class="actionButtons">
-		<li><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a></li>
-		<li id="btn_delete"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
-		<li><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
-	</ul>
-<?php if($_GET['a']!='12') { ?>
-	<script type="text/javascript">document.getElementById("btn_delete").className='disabled';</script>
-<?php } ?>
-	
-	<div class="stay">
-		<table border="0" cellspacing="1" cellpadding="1">
-		<tr>
-			<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
-			<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
-			<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
-			<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
-		</tr>
-		</table>
-	</div>
-</div>-->
-
 <!-- Tab Start -->
 <div class="sectionBody">
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
