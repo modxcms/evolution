@@ -25,17 +25,17 @@ $_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.png\" style=
 
 // Tree Icons
 $_style["tree_deletedpage"] = $style_path."images/tree/deletedpage.gif";
-$_style["tree_folder"] = $style_path."images/tree/tree-folder.gif"; /* folder.gif */
-$_style["tree_folderopen"] = $style_path."images/tree/tree-folder-open.gif"; /* folder-open.gif */
+$_style["tree_folder"] = $style_path."images/tree/page-container.png"; /* folder.gif */
+$_style["tree_folderopen"] = $style_path."images/tree/page-container.png"; /* folder-open.gif */
 $_style["tree_folder_secure"] = $style_path."images/tree/page-secure.gif";
 $_style["tree_folderopen_secure"] = $style_path."images/tree/page-secure.gif";
 $_style["tree_globe"] = $style_path."images/tree/globe.gif";
 $_style["tree_linkgo"] = $style_path."images/tree/link_go.png";
 $_style["tree_minusnode"] = $style_path."images/tree/minusnode.gif";
-$_style["tree_page"] = $style_path."images/tree/page.gif";
+$_style["tree_page"] = $style_path."images/tree/page_text.png";
 $_style["tree_page_blank"] = $style_path."images/tree/page-blank.gif";
 $_style["tree_page_css"] = $style_path."images/tree/page-css.gif";
-$_style["tree_page_html"] = $style_path."images/tree/page-html.gif";
+$_style["tree_page_html"] = $style_path."images/tree/page_text.png";
 $_style["tree_page_js"] = $style_path."images/tree/page-js.gif";
 $_style["tree_page_pdf"] = $style_path."images/tree/page-pdf.gif";
 $_style["tree_page_secure"] = $style_path."images/tree/page-secure.gif";

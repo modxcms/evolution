@@ -37,7 +37,19 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'text/xml' => 'page-xml',
         'text/javascript' => 'page-js'
     );
-
+    // Todo: make this icons from style.php
+    // icons by content type
+    /*
+    $icons = array(
+        'application/pdf' => $_style["tree_page_pdf"],
+        'image/gif' => $_style["tree_page_gif"],
+        'image/jpg' => $_style["tree_page_jpg"],
+        'text/css' => $_style["tree_page_css"],
+        'text/html' => $_style["tree_page_html"],
+        'text/xml' => $_style["tree_page_xml"],
+        'text/javascript' => $_style["tree_page_js"]
+    );
+    */
     if (isset($_SESSION['openedArray'])) {
             $opened = explode("|", $_SESSION['openedArray']);
     } else {
@@ -117,7 +129,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $protectedClass = $hasAccess==0 ? ' protectedNode' : '';
             $pagetitleDisplay = $published==0 ? "<span class=\"unpublishedNode\">$pagetitle</span>" : ($hidemenu==1 ? "<span class=\"notInMenuNode$protectedClass\">$pagetitle</span>":"<span class=\"publishedNode$protectedClass\">$pagetitle</span>");
             $pagetitleDisplay = $deleted==1 ? "<span class=\"deletedNode\">$pagetitle</span>" : $pagetitleDisplay;
-            $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="'.$_style["tree_linkgo"].'" width="16" height="16">' : '' ;
+            $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="'.$_style["tree_linkgo"].'" width="18" height="18">' : '' ;
 			$pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
 
             $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";
