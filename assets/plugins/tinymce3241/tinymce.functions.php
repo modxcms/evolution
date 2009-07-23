@@ -200,7 +200,7 @@ $tinyCallback = <<<TINY_CALLBACK
 		    cmsURL = cmsURL + "&type=" + type;
 		}
 		
-		tinyMCE.activeEditor.windowManager.open({
+		var windowManager = tinyMCE.activeEditor.windowManager.open({
 		    file : cmsURL,
 		    width : screen.width * 0.7,  // Your dimensions may differ - toy around with them!
 		    height : screen.height * 0.7,
@@ -211,6 +211,7 @@ $tinyCallback = <<<TINY_CALLBACK
 		    window : win,
 		    input : field_name
 		});
+		if (window.focus) {windowManager.focus()}
 		return false;
 	}
 TINY_CALLBACK;
