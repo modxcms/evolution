@@ -25,21 +25,21 @@ $_style["sort_tree"] = "<img src=\"".$style_path."images/icons/sort.png\" style=
 
 // Tree Icons
 $_style["tree_deletedpage"] = $style_path."images/tree/deletedpage.gif";
-$_style["tree_folder"] = $style_path."images/tree/page-container.png"; /* folder.gif */
-$_style["tree_folderopen"] = $style_path."images/tree/page-container.png"; /* folder-open.gif */
-$_style["tree_folder_secure"] = $style_path."images/tree/page-secure.gif";
-$_style["tree_folderopen_secure"] = $style_path."images/tree/page-secure.gif";
+$_style["tree_folder"] = $style_path."images/tree/application_double.png"; /* folder.gif */
+$_style["tree_folderopen"] = $style_path."images/tree/application_double.png"; /* folder-open.gif */
+$_style["tree_folder_secure"] = $style_path."images/tree/application_double_key.png";
+$_style["tree_folderopen_secure"] = $style_path."images/tree/application_double_key.png";
 $_style["tree_globe"] = $style_path."images/tree/globe.gif";
 $_style["tree_linkgo"] = $style_path."images/tree/link_go.png";
 $_style["tree_minusnode"] = $style_path."images/tree/minusnode.gif";
-$_style["tree_page"] = $style_path."images/tree/page_white_text.png";
+$_style["tree_page"] = $style_path."images/tree/application.png.png";
 $_style["tree_page_blank"] = $style_path."images/tree/page-blank.gif";
-$_style["tree_page_css"] = $style_path."images/tree/page-css.gif";
-$_style["tree_page_html"] = $style_path."images/tree/page_white_text.png";
-$_style["tree_page_js"] = $style_path."images/tree/page-js.gif";
-$_style["tree_page_pdf"] = $style_path."images/tree/page-pdf.gif";
-$_style["tree_page_secure"] = $style_path."images/tree/page-secure.gif";
-$_style["tree_page_xml"] = $style_path."images/tree/page-xml.gif";
+$_style["tree_page_css"] = $style_path."images/tree/application_css.png";
+$_style["tree_page_html"] = $style_path."images/tree/application.png";
+$_style["tree_page_js"] = $style_path."images/tree/application_js.png";
+$_style["tree_page_pdf"] = $style_path."images/tree/application_pdf.png";
+$_style["tree_page_secure"] = $style_path."images/tree/application_key.png";
+$_style["tree_page_xml"] = $style_path."images/tree/application_rss.png";
 $_style["tree_plusnode"] = $style_path."images/tree/plusnode.gif";
 $_style["tree_showtree"] = '<img src="'.$style_path.'images/tree/sitemap.png" width="16" height="16" align=\"absmiddle\" />';
 $_style["tree_weblink"] = $style_path."images/tree/link_go.png";
