@@ -31,6 +31,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     
     $icons = array(
         'application/pdf' => $_style["tree_page_pdf"],
+        'application/msword' => $_style["tree_page_word"],
+        'applicatoin/excel' => $_style["tree_page_excel"],
         'image/gif' => $_style["tree_page_gif"],
         'image/jpg' => $_style["tree_page_jpg"],
         'text/css' => $_style["tree_page_css"],
