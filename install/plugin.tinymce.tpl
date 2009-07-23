@@ -39,12 +39,12 @@ switch ($e->name) {
 				$frontend_language = isset($modx->config['fe_editor_lang']) ? $modx->config['fe_editor_lang']:"";
 				$tinymce_language = getTinyMCELang($frontend_language);
 				$webuser = (isset($modx->config['rb_webuser']) ? $modx->config['rb_webuser'] : null);
-				$html = getTinyMCEScript($elementList,$webtheme,$width,$height,$tinymce_language,$frontend,$base_url, $webPlugins, $webButtons1, $webButtons2, $webButtons3, $webButtons4, $disabledButtons, $tinyFormats, $entity_encoding, $entities, $tinyPathOptions, $tinyCleanup, $tinyResizing, $modx->config['editor_css_path'], $modx->config['tinymce_css_selectors'], $modx->config['use_browser'], $webAlign, null, null, $tinyLinkList, $customparams, $tinyURL, $webuser);
+				$html = getTinyMCEScript($elementList,$webtheme,$width,$height,$tinymce_language,$frontend,$base_url, $webPlugins, $webButtons1, $webButtons2, $webButtons3, $webButtons4, $disabledButtons, $tinyFormats, $entity_encoding, $entities, $tinyPathOptions, $tinyCleanup, $tinyResizing, $modx->config['editor_css_path'], $modx->config['tinymce_css_selectors'], $modx->config['use_browser'], $webAlign, null, null, $tinyLinkList, $customparams, $site_url, $tinyURL, $webuser);
 			} else {
 				$frontend = 'false';
 				$manager_language = $modx->config['manager_language'];
 				$tinymce_language = getTinyMCELang($manager_language);
-				$html = getTinyMCEScript($elementList, $modx->config['tinymce_editor_theme'], $width='100%', $height='400px', $tinymce_language, $frontend, $modx->config['base_url'], $modx->config['tinymce_custom_plugins'], $modx->config['tinymce_custom_buttons1'], $modx->config['tinymce_custom_buttons2'], $modx->config['tinymce_custom_buttons3'], $modx->config['tinymce_custom_buttons4'], $disabledButtons, $tinyFormats, $entity_encoding, $entities, $tinyPathOptions, $tinyCleanup, $tinyResizing, $modx->config['editor_css_path'], $modx->config['tinymce_css_selectors'], $modx->config['use_browser'], $modx->config['manager_direction'], $advimage_styles, $advlink_styles, $tinyLinkList, $customparams, $tinyURL, null);
+				$html = getTinyMCEScript($elementList, $modx->config['tinymce_editor_theme'], $width='100%', $height='400px', $tinymce_language, $frontend, $modx->config['base_url'], $modx->config['tinymce_custom_plugins'], $modx->config['tinymce_custom_buttons1'], $modx->config['tinymce_custom_buttons2'], $modx->config['tinymce_custom_buttons3'], $modx->config['tinymce_custom_buttons4'], $disabledButtons, $tinyFormats, $entity_encoding, $entities, $tinyPathOptions, $tinyCleanup, $tinyResizing, $modx->config['editor_css_path'], $modx->config['tinymce_css_selectors'], $modx->config['use_browser'], $modx->config['manager_direction'], $advimage_styles, $advlink_styles, $tinyLinkList, $customparams, $modx->config['base_url'], $tinyURL, null);
 			}
 			$e->output($html);
 		}		

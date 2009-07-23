@@ -92,7 +92,7 @@ TINYMCE_HTML;
 
 // getTinyMCEScript function
 if (!function_exists('getTinyMCEScript')) {
-	function getTinyMCEScript($elmList, $theme='simple', $width, $height, $language='en', $frontend, $base_url, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $disabledButtons, $blockFormats, $entity_encoding, $entities, $pathoptions, $cleanup, $resizing, $css_path, $css_selectors, $use_browser, $toolbar_align, $advimage_styles, $advlink_styles, $linklist, $customparams, $tinyURL, $webuser) {
+	function getTinyMCEScript($elmList, $theme='simple', $width, $height, $language='en', $frontend, $base_url, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $disabledButtons, $blockFormats, $entity_encoding, $entities, $pathoptions, $cleanup, $resizing, $css_path, $css_selectors, $use_browser, $toolbar_align, $advimage_styles, $advlink_styles, $linklist, $customparams, $site_url, $tinyURL, $webuser) {
 		// Set theme
 		if($theme == "editor" || $theme == "custom" || $theme == "full"){
 			$tinyTheme = "advanced";
@@ -112,13 +112,15 @@ if (!function_exists('getTinyMCEScript')) {
 		switch($pathoptions){
 			case "rootrelative":
 				$relative_urls = "false";
-				$convert_urls = false;
+				$convert_urls = true;
 				$remove_script_host = "true";
+				$document_base_url = "		  document_base_url : \"".$site_url."\",\n";
 			break;
 			
 			case "docrelative":
 				$relative_urls = "true";
-				$document_base_url = "		  document_base_url : \"".$base_url."\",\n";
+				$convert_urls = true;
+				$document_base_url = "		  document_base_url : \"".$site_url."\",\n";
 				$remove_script_host = "true";
 			break;
 			
@@ -129,7 +131,7 @@ if (!function_exists('getTinyMCEScript')) {
 			
 			default:
 				$relative_urls = "true";
-				$document_base_url = "		  document_base_url : \"".$base_url."\",\n";
+				$document_base_url = "		  document_base_url : \"".$site_url."\",\n";
 				$remove_script_host = "true";
 		}		
         		
