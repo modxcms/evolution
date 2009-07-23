@@ -37,10 +37,10 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'text/css' => $_style["tree_page_css"],
         'text/html' => $_style["tree_page_html"],
         'text/xml' => $_style["tree_page_xml"],
-        'text/javascript' => $_style["tree_page_js"]
+        'text/javascript' => $_style["tree_page_js"],
         'image/gif' => $_style["tree_page_gif"],
         'image/jpg' => $_style["tree_page_jpg"],
-        'image/png' => $_style["tree_page_png"],
+        'image/png' => $_style["tree_page_png"]
     );
     
     if (isset($_SESSION['openedArray'])) {
