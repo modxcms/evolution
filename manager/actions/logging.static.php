@@ -182,19 +182,6 @@ window.addEvent('domready', function() {
 </form>
 </div>
 
-<script type="text/javascript">
-    var cal1 = new calendar1(document.forms['logging'].elements['datefrom'], document.getElementById("datefrom_show"));
-    cal1.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-    cal1.year_scroll = true;
-    cal1.time_comp = false;
-
-    var cal2 = new calendar1(document.forms['logging'].elements['dateto'], document.getElementById("dateto_show"));
-    cal2.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-    cal1.year_scroll = true;
-    cal1.time_comp = false;
-</script>
-
-
 <div class="sectionHeader"><?php echo $_lang["mgrlog_qresults"]; ?></div><div class="sectionBody" id="lyr2">
 <?php
 if(isset($_REQUEST['log_submit'])) {

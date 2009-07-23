@@ -363,7 +363,7 @@ function showHide(what, onoff){
 			<td><?php echo $_lang['user_dob']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" id="dob" name="dob" class="DatePicker" style="width:260px" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo isset($_POST['dob']) ? $_POST['dob'] : ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;'>
 				<a onClick="document.userform.dob.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
 			</td>
 		  </tr>
@@ -409,7 +409,7 @@ function showHide(what, onoff){
 			<td><?php echo $_lang['user_blockeduntil']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" style="width:260px" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo isset($_POST['blockeduntil']) ? $_POST['blockeduntil'] : ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="document.userform.blockeduntil.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
@@ -417,7 +417,7 @@ function showHide(what, onoff){
 			<td><?php echo $_lang['user_blockedafter']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" id="blockedafter" name="blockedafter" class="DatePicker" style="width:260px" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo isset($_POST['blockedafter']) ? $_POST['blockedafter'] : ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onClick="document.userform.blockedafter.value=''; return true;" onMouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>

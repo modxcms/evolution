@@ -1488,7 +1488,7 @@ fieldset.legacy h2 {
 }
 
 /* -------------------------[ date picker ]--- */
-form#mutate input.DatePicker {
+input.DatePicker, #mutate input.DatePicker, #userPane input.DatePicker, #webUserPane input.DatePicker, input#datefrom.DatePicker, input#dateto.DatePicker {
 	width: 150px;
 	padding: 3px 3px 3px 24px;
 	border: 1px solid #0070bf;
@@ -1496,7 +1496,7 @@ form#mutate input.DatePicker {
 	background: #fff url(images/icons/datenofocus.gif) no-repeat top left;
 	cursor: pointer;
 }
-input:focus.DatePicker {
+input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.DatePicker, #webUserPane input:focus.DatePicker, input#datefrom:focus.DatePicker, input#dateto:focus.DatePicker {
 	background: #fffce9 url(images/icons/datefocus.gif) no-repeat top left;
 }
 .dp_container {
@@ -1523,7 +1523,7 @@ input:focus.DatePicker {
 	width: 177px;
 }
 
-form#mutate .dp_cal input.cal_timeTextBox {
+.dp_cal input.cal_timeTextBox {
 	display: block;
 	text-align: center;
 	width: 60px;
