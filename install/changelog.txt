@@ -103,6 +103,7 @@ Additional Improvements & Updates:
 	- New language strings where appropriate and needed
 	- Replaced hard coded language strings in Import and Export action pages with new language strings
 	- Better handling of Manager language encoding and text direction
+    - Now handles RSS, Word, Excel, XML, HTML, CSS, JS, PDF and plain documents with custom icons in the Site Tree
 * Remove legacy code no longer needed
     - Removed QuickEdit module (instructions only)
 	- Removed News Publisher snippet (did not support TVs)
