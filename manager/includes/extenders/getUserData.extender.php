@@ -3,23 +3,23 @@
 	if(IN_MANAGER_MODE!=true && IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
 
 		require_once MODX_BASE_PATH . 'manager/includes/sniff/phpSniff.class.php';
-		$GET_VARS = isset($_GET) ? $_GET : $HTTP_GET_VARS; 
-		$POST_VARS = isset($_POST) ? $_GET : $HTTP_POST_VARS; 
-		if(!isset($GET_VARS['UA'])) $GET_VARS['UA'] = ''; 
-		if(!isset($GET_VARS['cc'])) $GET_VARS['cc'] = ''; 
-		if(!isset($GET_VARS['dl'])) $GET_VARS['dl'] = ''; 
+		$GET_VARS = isset($_GET) ? $_GET : $HTTP_GET_VARS;
+		$POST_VARS = isset($_POST) ? $_GET : $HTTP_POST_VARS;
+		if(!isset($GET_VARS['UA'])) $GET_VARS['UA'] = '';
+		if(!isset($GET_VARS['cc'])) $GET_VARS['cc'] = '';
+		if(!isset($GET_VARS['dl'])) $GET_VARS['dl'] = '';
 		if(!isset($GET_VARS['am'])) $GET_VARS['am'] = '';
-		
+
 		$sniffer_settings = array(	'check_cookies'=>$GET_VARS['cc'],
 									'default_language'=>$GET_VARS['dl'],
 									'allow_masquerading'=>$GET_VARS['am']);
 
-		$client =& new phpSniff($GET_VARS['UA'],$sniffer_settings);
+		$client = new phpSniff($GET_VARS['UA'],$sniffer_settings);
 		$client->get_property('UA');
 		$tmpArray = array();
 		$tmpArray['ip'] = $client->property('ip');
 		$tmpArray['ua'] = $client->property('ua');
-		$tmpArray['browser'] = $client->property('browser'); 
+		$tmpArray['browser'] = $client->property('browser');
 		$tmpArray['long_name'] = $client->property('long_name');
 		$tmpArray['version'] = $client->property('version');
 		$tmpArray['maj_ver'] = $client->property('maj_ver');
@@ -50,6 +50,6 @@
 		$tmpArray['break_disposition_header'] = $client->has_quirk('break_disposition_header')==1 ? "true" : "false" ;
 		$tmpArray['empty_file_input_value'] = $client->has_quirk('empty_file_input_value')==1 ? "true" : "false" ;
 		$tmpArray['scrollbar_in_way'] = $client->has_quirk('scrollbar_in_way')==1 ? "true" : "false" ;
-		
-		
+
+
 ?>
