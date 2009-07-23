@@ -124,8 +124,6 @@
 	text-indent: 8pt;
 }
 #ajaxmenu li ul li a {
-	background-image: url(images/sub_color_4x25.jpg);
-	background-repeat: repeat-x;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	padding-right: 5px;
