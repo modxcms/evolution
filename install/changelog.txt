@@ -96,6 +96,7 @@ Bugfixes & Feature Requests:
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
+* Fix get_func_args() error (evident on PHP 5.3) in Ditto/Reflect
 * Many updates to Manager and Installer language translations
 	- Updating language to be in line with Revo. (Resources -> Elements, resource browser -> File Browser, Documents -> Resources)
 	- Simplify language and remove overly-wordy phrases
