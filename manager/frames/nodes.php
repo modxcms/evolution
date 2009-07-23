@@ -37,7 +37,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'text/xml' => 'page-xml',
         'text/javascript' => 'page-js'
     );
-    // Todo: make this icons from style.php
+    // TODO: make this icons from style.php
     // icons by content type
     /*
     $icons = array(
