@@ -779,11 +779,21 @@ class ditto {
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
 			$row = @$modx->fetchRow($rs);
-			$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
-			foreach ($docIDs as $id) {
-				if (!isset($resourceArray["#".$id])) {
-					$resourceArray["#$id"][$tvname] = $defaultOutput;
-					$resourceArray["#$id"]["tv".$tvname] = $resourceArray["#$id"][$tvname];
+			if (strtoupper($row['default_text']) == '@INHERIT') {
+				foreach ($docIDs as $id) {
+					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
+					if (!isset($resourceArray["#".$id])) {
+						$resourceArray["#$id"][$tvname] = $defaultOutput;
+						$resourceArray["#$id"]["tv".$tvname] = $resourceArray["#$id"][$tvname];
+					}
+				}
+			} else {
+				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
+				foreach ($docIDs as $id) {
+					if (!isset($resourceArray["#".$id])) {
+						$resourceArray["#$id"][$tvname] = $defaultOutput;
+						$resourceArray["#$id"]["tv".$tvname] = $resourceArray["#$id"][$tvname];
+					}
 				}
 			}
 		}
