@@ -163,15 +163,22 @@ if (!function_exists('getTinyMCEScript')) {
 				$tinymceInit .= ($use_browser==1 ? "		  file_browser_callback : \"myFileBrowser\",\n":"");
 
 $tinyCallback = <<<TINY_CALLBACK
-	function myFileBrowser (field_name, url, type, win) {		
+	function myFileBrowser (field_name, url, type, win) {
+	    if (type == 'media') {type = win.document.getElementById('media_type').value;}		
 		var cmsURL = '{$base_url}manager/media/browser/mcpuk/browser.php?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}&editor=tinymce3&editorpath={$tinyURL}';    // script URL - use an absolute path!
 		switch (type) {
 			case "image":
 				type = 'images';
 				break;
 			case "media":
+            case "qt":
+            case "wmp":
+            case "rmp":
+                type = 'media';
 				break;
+            case "shockwave":
 			case "flash": 
+                type = 'flash';
 				break;
 			case "file":
 				type = 'files';
