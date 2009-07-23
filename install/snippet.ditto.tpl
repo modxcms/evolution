@@ -1,3 +1,4 @@
+/*
  * Title: Ditto Snippet
  * 
  * Description:
