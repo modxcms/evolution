@@ -1,28 +1,29 @@
 <?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
     $theme = $manager_theme ? "$manager_theme/":"";
-
+    
     function constructLink($action, $img, $text, $allowed, $theme) {
         if($allowed==1) { ?>
             <div class="menuLink" onmouseover="this.className='menuLinkOver';" onmouseout="this.className='menuLink';" onclick="this.className='menuLink'; menuHandler(<?php echo $action ; ?>); hideMenu();">
-                <img src='media/style/<?php echo $theme; ?>images/icons/<?php echo $img; ?>.gif' /><?php echo $text; ?>
+                <img src='<?php echo $img; ?>' /><?php echo $text; ?>
+                <!--<img src='media/style/<?php echo $theme; ?>images/icons/<?php echo $img; ?>.gif' /><?php echo $text; ?>-->
             </div>
         <?php
         }
         else { ?>
             <div class="menuLinkDisabled">
-                <img src='media/style/<?php echo $theme; ?>images/icons/<?php echo $img; ?>.gif' /><?php echo $text; ?>
+                <img src=src='<?php echo $img; ?>' /><?php echo $text; ?>
             </div>
         <?php
         }
     }
-
+	$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html <?php echo $modx->config['manager_direction'] == 'rtl' ? 'dir="rtl"' : '';?> lang="<?php echo $modx->config['manager_lang_attribute'];?>" xml:lang="<?php echo $modx->config['manager_lang_attribute'];?>">
+<html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
     <title>Document Tree</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
@@ -148,7 +149,7 @@
             selectedObjectName = selectedObjectName.substr(0, 20) + "...";
         }
         var h,context = $('mx_contextmenu');
-        context.style.left= x<?php echo $modx->config['manager_direction']=='rtl' ? '-190' : '';?>+"px"; //offset menu to the left if rtl is selected
+        context.style.left= x<?php echo $modx_textdir ? '-190' : '';?>+"px"; //offset menu to the left if rtl is selected
         context.style.top = y+"px";
         var elm = $("nameHolder");
         elm.innerHTML = selectedObjectName;
@@ -417,8 +418,8 @@
 
 
 </head>
-<!-- Raymond: add onbeforeunload -->
-<body onclick="hideMenu(1);" class="treeframebody">
+<!-- Raymond: add onbeforeunload --><!-- smashingred: added dir class -->
+<body onclick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
 
 <!-- to be improved -->
 <div id="treeSplitter"></div>
@@ -580,27 +581,27 @@ function menuHandler(action) {
 <div id="mx_contextmenu" onselectstart="return false;">
     <div id="nameHolder">&nbsp;</div>
     <?php
-    constructLink(1, "context_view", $_lang["document_overview"], 1,$theme);
-    constructLink(2, "save", $_lang["edit_document"], $modx->hasPermission('edit_document'),$theme);
-    constructLink(5, "cancel", $_lang["move_document"], $modx->hasPermission('save_document'),$theme);
-    constructLink(7, "copy", $_lang["duplicate_document"], $modx->hasPermission('new_document'),$theme);
+    constructLink(1, $_style["icons_document_overview"], $_lang["document_overview"], 1,$theme);
+    constructLink(2, $_style["icons_save"], $_lang["edit_document"], $modx->hasPermission('edit_document'),$theme);
+    constructLink(5, $_style["icons_move_document"] , $_lang["move_document"], $modx->hasPermission('save_document'),$theme);
+    constructLink(7, $_style["icons_duplicate_document"], $_lang["duplicate_document"], $modx->hasPermission('new_document'),$theme);
     // constructLink(11, "folder", $_lang["create_folder_here"], $modx->hasPermission('new_document'),$theme);
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(3, "newdoc", $_lang["create_document_here"], $modx->hasPermission('new_document'),$theme);
-    constructLink(6, "weblink", $_lang["create_weblink_here"], $modx->hasPermission('new_document'),$theme);
+    constructLink(3, $_style["icons_new_document"], $_lang["create_document_here"], $modx->hasPermission('new_document'),$theme);
+    constructLink(6, $_style["icons_weblink"], $_lang["create_weblink_here"], $modx->hasPermission('new_document'),$theme);
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(4, "delete", $_lang["delete_document"], $modx->hasPermission('delete_document'),$theme);
-    constructLink(8, "b092", $_lang["undelete_document"], $modx->hasPermission('delete_document'),$theme);
-    constructLink(9, "date", $_lang["publish_document"], $modx->hasPermission('publish_document'),$theme);
-    constructLink(10, "date", $_lang["unpublish_document"], $modx->hasPermission('publish_document'),$theme);
+    constructLink(4, $_style["icons_delete"], $_lang["delete_document"], $modx->hasPermission('delete_document'),$theme);
+    constructLink(8, $_style["icons_undelete_document"], $_lang["undelete_document"], $modx->hasPermission('delete_document'),$theme);
+    constructLink(9, $_style["icons_publish_document"], $_lang["publish_document"], $modx->hasPermission('publish_document'),$theme);
+    constructLink(10, $_style["icons_unpublish_document"], $_lang["unpublish_document"], $modx->hasPermission('publish_document'),$theme);
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(12, "context_view", $_lang["preview_document"], 1,$theme);
+    constructLink(12, $_style["icons_preview_document"], $_lang["preview_document"], 1,$theme);
     ?>
 </div>
 

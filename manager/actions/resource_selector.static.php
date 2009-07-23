@@ -10,7 +10,7 @@ if(!$modx->hasPermission('edit_module')) {
 <html>
 <head>
 	<title><?php echo $content["name"]." ".$_lang['resource_selector_title']; ?></title>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset; ?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <?php
 if($_SESSION['browser']=='ie') {
@@ -171,8 +171,8 @@ if($_SESSION['browser']=='ie') {
 				</table>
 			</td>
 			<td width="200">
-				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a>
-				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['insert']; ?></a>				
+				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/stop.png" /> <?php echo $_lang['cancel']; ?></a>
+				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['insert']; ?></a>				
 			</td>
 			</tr>
 		</table>

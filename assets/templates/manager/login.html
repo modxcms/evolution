@@ -13,7 +13,7 @@
 	line-height: 1.5; /* http://meyerweb.com/eric/thoughts/2006/02/08/unitless-line-heights/ */
 	font-family: "Lucida Grande", Helvetica, Arial, sans-serif !important; /* IE ignores this and renders Arial better */
 	font-family: Arial, Tahoma, Helvetica, sans-serif;height: 100%;color: #111;}
-    body {font-size: 75%; /* 12px 62.5% for 10px*/height: 100%;margin-bottom: 1px; /* avoid jumping scrollbars */background: #F4F4F4}
+    body {font-size: 75%; /* 12px 62.5% for 10px*/height: 100%;margin-bottom: 1px; /* avoid jumping scrollbars */background: #F4F4F4; text-shadow: 0 1px 0 #fff;}
     img, a img {border: 0 !important;text-decoration: none;padding: 0;margin: 0;}
     h1, h2, h3, h4, h5, h6, p, pre,
     blockquote, ul, ol, dl, address {margin: 0 0 .5em; /* Reset vertical margins on selected elements */padding: 0;}
@@ -34,7 +34,7 @@
     a, a:active, a:visited, a:link {color: #003399;text-decoration: underline;}
     a:hover {color: #000;}
     input, .inputBox {padding: 1px;}
-    .sectionHeader {padding: 5px 3px 5px 18px;font-weight: bold;color: #000;border-top: 1px solid #EAECEE;background: #EAECEE url(media/style/MODxCarbon/images/misc/greenfade.gif) repeat-x top;}
+    .sectionHeader {padding: 5px 3px 5px 18px;font-weight: bold;color: #000;border-top: 1px solid #EAECEE;background: #EAECEE url(media/style/MODxCarbon/images/misc/fade.gif) repeat-x top;}
     .sectionBody {border: 1px solid #e3e3e3;border-top-color: #ccc;padding: 20px 20px 20px;display: block;background: #fff;}
     #mx_loginbox {width: 460px;margin: 30px auto 0;}
     img.loginCaptcha {border: 1px solid #039;width: 148px;height: 60px;}
@@ -51,38 +51,40 @@
 	.loginMessage {font-size:11px;color: #999;padding-top: 20px;}
     </style>
 
-    <script src="media/script/scriptaculous/prototype.js" type="text/javascript"></script>
+    <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 
     <script type="text/javascript">
     /* <![CDATA[ */
         if (top.frames.length!=0) {
             top.location=self.document.location;
         }
+        
+        window.addEvent('domready', function() {
+            $('submitButton').addEvent('click', function(e) {
+                 e = new Event(e).stop();
+                 params = 'ajax=1&' + $('loginfrm').toQueryString();
+                 url = 'processors/login.processor.php';
+                 new Ajax(url,
+                    {
+                        method: 'post',
+                        postBody: params,
+                        onComplete:ajaxReturn
+                    }
+                ).request();
+                $$('input').setProperty('readonly', 'readonly');
+            });     
+        });
 
-        function doLogin() {
-            var f, values;
-            if(!self.Ajax) document.loginfrm.submit();
-            else {
-                f = $('loginfrm');
-                params = 'ajax=1&' + Form.serialize(f);
-                url = 'processors/login.processor.php';
-                new Ajax.Request(url,{method:'post',parameters:params,onComplete:ajaxReturn});
-                Form.disable(f);
-                return false;
-            }
-        }
         function ajaxReturn(response) {
-            var text = response.responseText;
-            var header = text.substr(0,9)
-            if (header.toLowerCase()=='location:') top.location = text.substr(10);
+            var header = response.substr(0,9);
+            if (header.toLowerCase()=='location:') top.location = response.substr(10);
             else {
                 var cimg = $('captcha_image');
-                if (typeof(cimg) != 'undefined') {
+                if (cimg) {
                 	cimg.src = 'includes/veriword.php?rand=' + Math.random();
                 }
-                var f = $('loginfrm');
-                Form.enable(f);
-                alert(text);
+                $$('input').removeProperty('readonly');
+                alert(response);
             }
         }
     /* ]]> */
@@ -94,7 +96,7 @@
     <!-- anything to output before the login box via a plugin? -->
     [+OnManagerLoginFormPrerender+]
 
-        <div class="sectionHeader">[+site_name+]</div>
+        <div class="sectionHeader"><a href="../">[+site_name+]</a></div>
         <div class="sectionBody">
 			<img src="media/style/MODxCarbon/images/misc/logo.png" alt="[+site_name+]" />
             <p class="loginMessage">[+login_message+]</p>
@@ -106,7 +108,7 @@
             <div>[+captcha_image+]</div>
             [+captcha_input+]
             <input type="checkbox" id="rememberme" name="rememberme" tabindex="4" value="1" class="checkbox" [+remember_me+] /><label for="rememberme" style="cursor:pointer">[+remember_username+]</label>
-            <input type="submit" class="login" id="submitButton" value="[+login_button+]" onclick="return doLogin();" />
+            <input type="submit" class="login" id="submitButton" value="[+login_button+]" />
             <!-- anything to output before the login box via a plugin ... like the forgot password link? -->
             [+OnManagerLoginFormRender+]
         </div>
@@ -116,7 +118,7 @@
 
 <!-- convert this to a language include -->
 <p class="loginLicense">
-&copy; 2005-2008 by the <a href="http://modxcms.com/" target="_blank">MODx CMF Team</a>. <strong>MODx</strong>&trade; is licensed under the GPL.
+&copy; 2005-2009 by the <a href="http://modxcms.com/" target="_blank">MODx CMF Team</a>. <strong>MODx</strong>&trade; is licensed under the GPL.
 </p>
 </body>
 </html>

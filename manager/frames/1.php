@@ -5,17 +5,18 @@ $browser = $client->property('browser');
 $_SESSION['browser'] = $browser;
 $version = $client->property('version');
 $_SESSION['browser_version'] = $version;
+$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-<html<?php echo $modx->config['manager_direction'] == 'rtl' ? ' dir="rtl"' : ''?> lang="<?php echo $modx->config['manager_lang_attribute']?>" xml:lang="<?php echo $modx->config['manager_lang_attribute']?>">
+<html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
 	<title><?php echo $site_name?> - (MODx CMS Manager)</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<script type="text/javascript" src="media/script/session.js"></script>
 </head>
 <frameset rows="70,*" border="0">
 	<frame name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize">
-<?php if ($modx->config['manager_direction'] == 'ltr') {
+<?php if (!$modx_textdir) {
 	// Left-to-Right reading (sidebar on left)
 	?>
 	<frameset cols="260,*" border="3" frameborder="3" framespacing="3" bordercolor="#ffffff">

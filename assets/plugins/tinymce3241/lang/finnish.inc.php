@@ -24,4 +24,5 @@ $_lang['tinymce_theme_simple'] = "Yksinkertaistettu";
 $_lang['tinymce_theme_advanced'] = "Edistynyt";
 $_lang['tinymce_theme_editor'] = "Sis&auml;ll&ouml;nmuokkaajalle";
 $_lang['tinymce_theme_custom'] = "Kustomoitu";
+$_lang['tinymce_theme_global_settings'] = "Käytä maailmanlaajuisesti";
 ?>

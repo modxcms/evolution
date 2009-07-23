@@ -10,51 +10,10 @@
  * Language:       English
  * Encoding:       iso-8859-1
  */
-$_lang["license"] = '<h2>MODx License Agreement.</h2>
-<hr style="text-align:left;height:1px;width:90%;" />
-<h3>You must agree to the License before continuing installation.</h3>
-<p>Usage of this software is subject to the GPL license. To help you understand
-  what the GPL licence is and how it affects your ability to use the software, we
-  have provided the following summary:</p>
-<h3>The GNU General Public License is a Free Software license.</h3>
-<p>Like any Free Software license, it grants to you the four following freedoms:</p>
-<ul>
-  <li>The freedom to run the program for any purpose.</li>
-  <li>The freedom to study how the program works and adapt it to your needs.</li>
-  <li>The freedom to redistribute copies so you can help your neighbor.</li>
-  <li>The freedom to improve the program and release your improvements to the
-    public, so that the whole community benefits.</li>
-</ul>
-<p>You may exercise the freedoms specified here provided that you comply with
-  the express conditions of this license. The principal conditions are:</p>
-<ul>
-  <li>You must conspicuously and appropriately publish on each copy distributed an
-    appropriate copyright notice and disclaimer of warranty and keep intact all the
-    notices that refer to this License and to the absence of any warranty; and give
-    any other recipients of the Program a copy of the GNU General Public License
-    along with the Program. Any translation of the GNU General Public License must
-    be accompanied by the GNU General Public License.</li>
-  <li>If you modify your copy or copies of the program or any portion of it, or
-    develop a program based upon it, you may distribute the resulting work provided
-    you do so under the GNU General Public License. Any translation of the GNU
-    General Public License must be accompanied by the GNU General Public License.</li>
-  <li>If you copy or distribute the program, you must accompany it with the
-    complete corresponding machine-readable source code or with a written offer,
-    valid for at least three years, to furnish the complete corresponding
-    machine-readable source code.</li>
-  <li>Any of these conditions can be waived if you get permission from the
-    copyright holder.</li>
-  <li>Your fair use and other rights are in no way affected by the above.</li>
-</ul>
-<p>The above is a summary of the GNU General Public License. By proceeding, you
-  are agreeing to the GNU General Public Licence, not the above. The above is
-  simply a summary of the GNU General Public Licence, and its accuracy is not
-  guaranteed. It is strongly recommended you read the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General Public
-  License</a> in full before proceeding, which can also be found in the license
-  file distributed with this package.</p>';
+$_lang["agree_to_terms"] = 'Agree to the License Terms and Install';
 $_lang["alert_database_test_connection"] = 'You need to create your database or test the selection of your database!';
 $_lang["alert_database_test_connection_failed"] = 'The test of your database selection has failed!';
-$_lang["alert_enter_adminconfirm"] = 'The administrator password and the confirmation don\\\'t match!';
+$_lang["alert_enter_adminconfirm"] = 'The administrator password and the confirmation don\'t match!';
 $_lang["alert_enter_adminlogin"] = 'You need to enter a username for the system admin account!';
 $_lang["alert_enter_adminpassword"] = 'You need to enter a password for the system admin account!';
 $_lang["alert_enter_database_name"] = 'You need to enter a value for database name!';
@@ -73,15 +32,15 @@ $_lang["btnnext_value"] = 'Next';
 $_lang["cant_write_config_file"] = 'MODx couldn\'t write the config file. Please copy the following into the file ';
 $_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODx Admin by pointing your browser at YourSiteName.com/manager/.';
 $_lang["checkbox_select_options"] = 'Checkbox select options:';
-$_lang["checking_if_cache_exist"] = 'Checking if <span class=\"mono\">assets/cache</span> directory exists: ';
-$_lang["checking_if_cache_file2_writable"] = 'Checking if <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> file is writable: ';
-$_lang["checking_if_cache_file_writable"] = 'Checking if <span class=\"mono\">assets/cache/siteCache.idx.php</span> file is writable: ';
-$_lang["checking_if_cache_writable"] = 'Checking if <span class=\"mono\">assets/cache</span> directory is writable: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class=\"mono\">manager/includes/config.inc.php</span> exists and is writable: ';
-$_lang["checking_if_export_exists"] = 'Checking if <span class=\"mono\">assets/export</span> directory exists: ';
-$_lang["checking_if_export_writable"] = 'Checking if <span class=\"mono\">assets/export</span> directory is writable: ';
-$_lang["checking_if_images_exist"] = 'Checking if <span class=\"mono\">assets/images</span> directory exists: ';
-$_lang["checking_if_images_writable"] = 'Checking if <span class=\"mono\">assets/images</span> directory is writable: ';
+$_lang["checking_if_cache_exist"] = 'Checking if <span class="mono">/assets/cache</span> and <span class="mono">/assets/cache/rss</span> directories exist: ';
+$_lang["checking_if_cache_file2_writable"] = 'Checking if <span class="mono">/assets/cache/sitePublishing.idx.php</span> file is writable: ';
+$_lang["checking_if_cache_file_writable"] = 'Checking if <span class="mono">/assets/cache/siteCache.idx.php</span> file is writable: ';
+$_lang["checking_if_cache_writable"] = 'Checking if <span class="mono">/assets/cache</span> and <span class="mono">/assets/cache/rss</span> directories are writable: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class="mono">manager/includes/config.inc.php</span> exists and is writable: ';
+$_lang["checking_if_export_exists"] = 'Checking if <span class="mono">/assets/export</span> directory exists: ';
+$_lang["checking_if_export_writable"] = 'Checking if <span class="mono">/assets/export</span> directory is writable: ';
+$_lang["checking_if_images_exist"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> and <span class="mono">/assets/media</span> directories exists: ';
+$_lang["checking_if_images_writable"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> and <span class="mono">/assets/media</span> directories are writable: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checking PHP version: ';
@@ -90,28 +49,27 @@ $_lang["checking_registerglobals_note"] = 'This configuration makes your site mu
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_table_prefix"] = 'Checking table prefix `';
 $_lang["chunks"] = 'Chunks';
-$_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class=\"mono\">config.inc.php</span> in the <span class=\"mono\">manager/includes/</span> directory with file permissions set to 0666.';
-$_lang["connection_screen_character_set"] = 'Connection character set:';
+$_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class="mono">config.inc.php</span> in the <span class="mono">manager/includes/</span> directory with file permissions set to 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
-$_lang["connection_screen_connection_information"] = 'Connection Information';
 $_lang["connection_screen_connection_method"] = 'Connection method:';
 $_lang["connection_screen_database_connection_information"] = 'Database information';
-$_lang["connection_screen_database_connection_note"] = 'Please enter the name of the database created for MODX. If you there is no database yet, the installer will attempt to create a database for you. This may fail depending on the MySQL configuration or the database user permissions for your domain/installation.';
+$_lang["connection_screen_database_connection_note"] = 'Enter the database name to use or which you wish to create for this MODx install. If no database exists, the installer will attempt to create one. This may fail depending on the MySQL user permissions.';
 $_lang["connection_screen_database_host"] = 'Database host:';
+$_lang["connection_screen_database_info"] = 'Database Information';
 $_lang["connection_screen_database_login"] = 'Database login name:';
 $_lang["connection_screen_database_name"] = 'Database name:';
 $_lang["connection_screen_database_pass"] = 'Database password:';
-$_lang["connection_screen_database_test_connection"] = 'Click here to create your database or to test the selection of your database';
+$_lang["connection_screen_database_test_connection"] = 'Create or test selection of your database.';
 $_lang["connection_screen_default_admin_email"] = 'Administrator email:';
-$_lang["connection_screen_default_admin_information"] = 'Administrator information';
 $_lang["connection_screen_default_admin_login"] = 'Administrator username:';
 $_lang["connection_screen_default_admin_note"] = 'Now you&#39;ll need to enter some details for the main administrator account. You can fill in your own name here, and a password you&#39;re not likely to forget. You&#39;ll need these to log into Admin once setup is complete.';
 $_lang["connection_screen_default_admin_password"] = 'Administrator password:';
 $_lang["connection_screen_default_admin_password_confirm"] = 'Confirm password:';
 $_lang["connection_screen_default_admin_user"] = 'Default Admin User';
+$_lang["connection_screen_defaults"] = 'Default Manager Settings';
 $_lang["connection_screen_server_connection_information"] = 'Server connection and login information';
-$_lang["connection_screen_server_connection_note"] = 'Please enter the name of your server, your login name and your password and then test the connection.';
-$_lang["connection_screen_server_test_connection"] = 'Click here to test your server connection and get the available collations';
+$_lang["connection_screen_server_connection_note"] = 'Enter the database host (server name or IP address), the username and password before testing the connection.';
+$_lang["connection_screen_server_test_connection"] = 'Test database server connection and view collations.';
 $_lang["connection_screen_table_prefix"] = 'Table prefix:';
 $_lang["creating_database_connection"] = 'Creating connection to the database: ';
 $_lang["database_alerts"] = 'Database Alerts!';
@@ -119,12 +77,17 @@ $_lang["database_connection_failed"] = 'Database connection failed!';
 $_lang["database_connection_failed_note"] = 'Please check the database login details and try again.';
 $_lang["database_use_failed"] = 'Database could not be selected!';
 $_lang["database_use_failed_note"] = 'Please check the database permissions for the specified user and try again.';
+$_lang["default_language"] = 'Default Manager Language';
+$_lang["default_language_description"] = 'This is the default language that will be used in the MODx Manager back end control panel.';
 $_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
 $_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
 $_lang["error"] = 'error';
 $_lang["errors"] = 'errors';
 $_lang["failed"] = 'FAILED!';
-$_lang["iagree_box"] = 'I agree to the terms set out in this license.';
+$_lang["help"] = 'Help!';
+$_lang["help_link"] = 'http://modxcms.com/forums/';
+$_lang["help_title"] = 'Installation assistance in the MODx forums';
+$_lang["iagree_box"] = 'I agree to the terms of <a href="../assets/docs/license.txt" target="_blank">the MODx license</a>. For translations of the GPL version 2 license, please visit the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System website</a>.';
 $_lang["install"] = 'Install';
 $_lang["install_overwrite"] = 'Install/Overwrite';
 $_lang["install_results"] = 'Install results';
@@ -136,7 +99,7 @@ $_lang["installation_mode"] = 'Installation Mode';
 $_lang["installation_new_installation"] = 'New Installation';
 $_lang["installation_note"] = '<strong>Note:</strong> After logging into the manager you should edit and save your System Configuration settings before browsing the site by choosing <strong>Tools</strong> -> System Configuration in the MODx Manager.';
 $_lang["installation_successful"] = 'Installation was successful!';
-$_lang["installation_upgrade_advanced"] = 'Advanced Upgrade Install<br /><small>(edit database config)</small>';
+$_lang["installation_upgrade_advanced"] = 'Advanced Upgrade';
 $_lang["installation_upgrade_advanced_note"] = 'For advanced database admins or moving to servers with a different database connection character set. <b>You will need to know your full database name, user, password and connection/collation details.</b>';
 $_lang["installation_upgrade_existing"] = 'Upgrade Existing Install';
 $_lang["installation_upgrade_existing_note"] = 'Upgrade your current files and database.';
@@ -145,7 +108,7 @@ $_lang["installing_demo_site"] = 'Installing demo site: ';
 $_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'Loading...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2008 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. All rights reserved. MODx is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2009 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. All rights reserved. MODx is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODx is free software.  We encourage you to be creative and make use of MODx in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODx, that you keep the source code free!';
 $_lang["modx_install"] = 'MODx &raquo; Install';
 $_lang["modx_requires_php"] = ', and MODx requires PHP 4.2.0 or later';
@@ -166,9 +129,10 @@ $_lang["remove_install_folder_auto"] = 'Remove the install folder and files from
 $_lang["remove_install_folder_manual"] = 'Please remember to remove the &quot;<b>install</b>&quot; folder before you log into the Content Manager.';
 $_lang["retry"] = 'Retry';
 $_lang["running_database_updates"] = 'Running database updates: ';
-$_lang["running_setup_script"] = 'Running setup script... please wait';
 $_lang["sample_web_site"] = 'Sample Web Site';
-$_lang["sample_web_site_note"] = 'Please note that this will <b style=\"color:#CC0000\">overwrite</b> existing documents and resources.';
+$_lang["sample_web_site_note"] = 'Please note that this will <b>overwrite</b> existing documents and resources.';
+$_lang["session_problem"] = 'A problem was detected with your server sessions. Please consult your server admin to correct this problem.';
+$_lang["session_problem_try_again"] = 'Try again?'; 
 $_lang["setup_cannot_continue"] = 'Unfortunately, Setup cannot continue at the moment, due to the above ';
 $_lang["setup_couldnt_install"] = 'MODx setup couldn\'t install/alter some tables inside the selected database.';
 $_lang["setup_database"] = 'Setup will now attempt to setup the database:<br />';
@@ -189,7 +153,6 @@ $_lang["status_checking_database"] = 'Checking database: ';
 $_lang["status_connecting"] = ' Connection to host: ';
 $_lang["status_failed"] = 'failed!';
 $_lang["status_failed_could_not_create_database"] = 'failed - could not create database';
-$_lang["status_failed_could_not_select_database"] = 'failed - could not select database';
 $_lang["status_failed_database_collation_does_not_match"] = 'failed - database collation mismatch; use SET NAMES or choose %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'failed - table prefix already in use!';
 $_lang["status_passed"] = 'passed - database selected';
@@ -203,7 +166,6 @@ $_lang["table_prefix_already_inuse_note"] = 'Setup couldn\'t install into the se
 $_lang["table_prefix_not_exist"] = ' - Table prefix does not exist in this database!';
 $_lang["table_prefix_not_exist_note"] = 'Setup couldn\'t install into the selected database, as it does not contain existing tables with the prefix you specified to be upgraded. Please choose an existing table prefix, and run Setup again.';
 $_lang["templates"] = 'Templates';
-$_lang["testing_connection"] = 'Testing connection...';
 $_lang["to_log_into_content_manager"] = 'To log into the Content Manager (manager/index.php) you can click on the `Close` button.';
 $_lang["toggle"] = 'Toggle';
 $_lang["unable_install_chunk"] = 'Unable to install chunk.  File';
@@ -213,9 +175,9 @@ $_lang["unable_install_snippet"] = 'Unable to install snippet.  File';
 $_lang["unable_install_template"] = 'Unable to install template.  File';
 $_lang["upgrade_note"] = '<strong>Note:</strong> Before browsing your site you should log into the manager with an administrative account, then review and save your System Configuration settings.';
 $_lang["upgraded"] = 'Upgraded';
-$_lang["visit_forum"] = ', visit the <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.';
+$_lang["visit_forum"] = ', visit the <a href="http://www.modxcms.com/forums/" target="_blank">MODx Forums</a>.';
 $_lang["warning"] = 'WARNING!';
-$_lang["welcome_message_select_begin_button"] = 'Please select the `Begin` button to get started:';
+$_lang["welcome_message_start"] = 'First, choose the type of installation to perform:';
 $_lang["welcome_message_text"] = 'This program will guide you through the rest of the installation.';
 $_lang["welcome_message_welcome"] = 'Welcome to the MODx installation program.';
 $_lang["writing_config_file"] = 'Writing configuration file: ';

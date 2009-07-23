@@ -57,9 +57,15 @@ $logs = array();
 while ($row = $modx->db->getRow($rs)) $logs[] = $row;
 
 ?>
-<div class="subTitle">
-<span class="right"><?php echo $_lang["mgrlog_view"]?></span>
-</div>
+<script type="text/javascript" src="media/calendar/datepicker.js"></script>
+<script type="text/javascript">
+window.addEvent('domready', function() {
+	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
+	new DatePicker($('datefrom'), {'yearOffset': dpOffset});
+	new DatePicker($('dateto'), {'yearOffset': dpOffset});
+});
+</script>
+<h1><?php echo $_lang["mgrlog_view"]?></h1>
 
 <div class="sectionHeader"><?php echo $_lang["mgrlog_query"]?></div><div class="sectionBody" id="lyr1">
 <p><?php echo $_lang["mgrlog_query_msg"]?></p>
@@ -141,22 +147,18 @@ while ($row = $modx->db->getRow($rs)) $logs[] = $row;
       <input type=text name="message" class="inputbox" style="width:240px" value="<?php echo $_REQUEST['message']; ?>">
     </td>
   </tr>
-  <script language="JavaScript" src="media/script/datefunctions.js"></script>
   <tr bgcolor="#eeeeee">
     <td><b><?php echo $_lang["mgrlog_datefr"]; ?></b></td>
-        <td align="right"><input type="hidden" name="datefrom" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>">
-          <span id="datefrom_show" style="font-weight: bold;"><?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "<i>(not set)</i>" ; ?></span>
-		  <a href="javascript:cal1.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
-		  <a onClick="document.logging.datefrom.value=''; document.getElementById('datefrom_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
+        <td align="right">
+        	<input type="text" id="datefrom" name="datefrom" class="DatePicker" value="<?php echo isset($_REQUEST['datefrom']) ? $_REQUEST['datefrom'] : "" ; ?>">
+		  	<a onClick="document.logging.datefrom.value=''; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
 	  </td>
   </tr>
   <tr bgcolor="#ffffff">
     <td><b><?php echo $_lang["mgrlog_dateto"]; ?></b></td>
     <td align="right">
-		  <input type="hidden" name="dateto" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>">
-          <span id="dateto_show" style="font-weight: bold;"><?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "<i>(not set)</i>" ; ?></span>
-		  <a href="javascript:cal2.popup();" onMouseover="window.status='Select a date'; return true;" onMouseout="window.status=''; return true;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" align="absimddle"></a>
-		  <a onClick="document.logging.dateto.value=''; document.getElementById('dateto_show').innerHTML='(not set)'; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
+		  <input type="text" id="dateto" name="dateto" class="DatePicker" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>">
+		  <a onClick="document.logging.dateto.value=''; return true;" onMouseover="window.status='Don\'t set a date'; return true;" onMouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date"></a>
 		 </td>
       </tr>
   </tr>
@@ -168,12 +170,10 @@ while ($row = $modx->db->getRow($rs)) $logs[] = $row;
   </tr>
   <tr bgcolor="#FFFFFF">
     <td colspan="2">
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<tr>
-			<td id="Button1"><a href="#" onclick="document.logging.log_submit.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['search']; ?></a></td>
-			<td id="Button2"><a href="index.php?a=13"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></span></a></td>
-		</tr>
-	</table>
+	<ul class="actionButtons">
+		<li><a href="#" onclick="document.logging.log_submit.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['search']; ?></a></li>
+		<li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></span></a></li>
+	</ul>
       <input type="submit" name="log_submit" value="<?php echo $_lang["mgrlog_searchlogs"]?>" style="display:none">
     </td>
   </tr>
@@ -181,19 +181,6 @@ while ($row = $modx->db->getRow($rs)) $logs[] = $row;
 </table>
 </form>
 </div>
-
-<script type="text/javascript">
-    var cal1 = new calendar1(document.forms['logging'].elements['datefrom'], document.getElementById("datefrom_show"));
-    cal1.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-    cal1.year_scroll = true;
-    cal1.time_comp = false;
-
-    var cal2 = new calendar1(document.forms['logging'].elements['dateto'], document.getElementById("dateto_show"));
-    cal2.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-    cal1.year_scroll = true;
-    cal1.time_comp = false;
-</script>
-
 
 <div class="sectionHeader"><?php echo $_lang["mgrlog_qresults"]; ?></div><div class="sectionBody" id="lyr2">
 <?php

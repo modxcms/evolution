@@ -60,7 +60,7 @@ echo $cm->render();
 	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
 	function showContentMenu(id,e){
 		selectedItem=id;
-		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?php echo $modx->config['manager_direction']=='rtl' ? '-190' : '';?>+"px"; //offset menu if RTL is selected
+		contextm.style.left = (e.pageX || (e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)))<?php echo $modx_textdir ? '-190' : '';?>+"px"; //offset menu if RTL is selected
 		contextm.style.top = (e.pageY || (e.clientY + (document.documentElement.scrollTop || document.body.scrollTop)))+"px";
 		contextm.style.visibility = "visible";
 		e.cancelBubble=true;
@@ -98,17 +98,18 @@ echo $cm->render();
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
 <input type="hidden" name="op" value="" />
-<br />
-<div class="sectionHeader"><?php echo $_lang['module_management']; ?>
-</div><div class="sectionBody">
+
+<h1><?php echo $_lang['module_management']; ?></h1>
+
+<div class="sectionBody">
 	<!-- load modules -->
-	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" hspace="15" vspace="15" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
+	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" hspace="15" vspace="15" style="display:block;float:left;margin-right:10px" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
 	<p>&nbsp;</p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">
 			<tr>
-			<td width="18%"><a class="searchtoolbarbtn" href="index.php?a=107"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif"  align="absmiddle" /> <?php echo $_lang['new_module']; ?></a></td>
-			<td width="82%" nowrap="nowrap">
+			<td nowrap="nowrap"><a class="searchtoolbarbtn" href="index.php?a=107"><img src="<?php echo $_style["icons_save"]?>"  align="absmiddle" /> <?php echo $_lang['new_module']; ?></a></td>
+			<td nowrap="nowrap">
 				<table border="0" style="float:right"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
 				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>

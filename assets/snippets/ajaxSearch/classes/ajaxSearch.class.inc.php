@@ -2,31 +2,32 @@
 /*
  * Title: AjaxSearch Class
  * Purpose:
- *    The AjaxSearch class contains all variables and functions 
- *    used to display search form and results 
+ *    The AjaxSearch class contains all variables and functions
+ *    used to display search form and results
  *
- *    Version: 1.8.3  - Coroico (coroico@wangba.fr) 
- * 
- *    09/06/2009
- *  
+ *    Version: 1.8.3a  - Coroico (coroico@wangba.fr)
+ *
+ *    12/07/2009
+ *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
- *    Ryan Thrash (rthrash - ryan@vertexworks.com) 
+ *    Ryan Thrash (rthrash - ryan@vertexworks.com)
  *
+ * 12/07/2009 - check of the advSearch parameter added
  * 29/03/2009 - mootools1.2, jquery, maxWords, mbstring parameters, search logs
  * 02/10/2008 - whereSearch, withTvs, new sql query, debug, subSearch
- * 24/07/2008 - Added rank, order & filter, breadcrumbs, tvPhx, cleardefault parameters    
+ * 24/07/2008 - Added rank, order & filter, breadcrumbs, tvPhx, cleardefault parameters
  * O2/07/2008 - New extract algorithm, search in tv, jot and maxygallery
  * O2/07/2008 - Added Phx templating & chunk parameters
  * 06/03/2008 - Added Hidden from menu and advanced search
  * 01/02/2008 - Added several fixes and a security patch
  * 17/11/2007 - Added IDs document selection
  * 06/11/2007 - Encoding troubles corrected
- * 
+ *
  * 01/22/07 - Added templating/language/mootools support
  * 01/03/07 - Added fixes/updates from forum
  * 09/18/06 - Added user permissions to searching
- * 03/20/06 - All variables are set in the main snippet & snippet call   
+ * 03/20/06 - All variables are set in the main snippet & snippet call
 */
 
 define('FORM_ID','id="ajaxSearch_form" ');    // ajaxSearch form id
@@ -54,7 +55,7 @@ class AjaxSearch extends Search{
 
   var $language;        // language name
   var $_lang;           // language labels
-  
+
   var $searchString;    // term searched
   var $advSearch;       // advanced search option
 
@@ -74,7 +75,7 @@ class AjaxSearch extends Search{
   var $extractNb;                 // maximum number of extracts per document
   var $extractFields = array();   // fields to use for extraction
 
-  // Search context  
+  // Search context
   var $main = array();       // main content table
   var $joined = array();     // joined tables
 
@@ -83,7 +84,7 @@ class AjaxSearch extends Search{
   var $varResults = array();
   var $chkResult;
   var $varResult = array();
-  var $tplRes; 
+  var $tplRes;
   var $chkLayout;
   var $varLayout = array();
 
@@ -93,7 +94,7 @@ class AjaxSearch extends Search{
   // search results
   var $searchResults = array();
 
-  
+
   function AjaxSearch($version,$cfg,$dcfg) {
     // set the AS snippet version
     $this->version = $version;
@@ -112,7 +113,7 @@ class AjaxSearch extends Search{
 
     $this->setDebug();    // set debug levels
     $this->setLog();      // set log level
-    
+
     if ($this->dbg) {
       if ($this->cfg['config']) $this->asDebug->dbgLog($this->readConfigFile($this->cfg['config']),
                                   "AjaxSearch - Custom configuration file " . $this->cfg['config']);   // configuration file
@@ -128,7 +129,7 @@ class AjaxSearch extends Search{
     $validSearch = $this->validSearchString($msg);  // Initialize search string & advanced search mode
 
     $this->initVariables(); // initialize some variables and functions
-    
+
     $searchAction = $this->setResultsPage();    // set searchAction
     $this->setAjaxSearchHeader();               // set header
 
@@ -166,7 +167,7 @@ class AjaxSearch extends Search{
           }
 
           // sort search results by rank if needed
-          $this->sortResultsByRank($this->searchString,$this->advSearch); 
+          $this->sortResultsByRank($this->searchString,$this->advSearch);
           // limit the search results to the current page
           $length = ($this->cfg['grabMax'] > 0)? $this->cfg['grabMax'] : $nbrs;
           $this->searchResults = array_slice($this->searchResults,$this->offset,$length);
@@ -187,7 +188,7 @@ class AjaxSearch extends Search{
 
             // set result TvPhx as PHx
             $this->setResultTvPhx($this->searchResults[$i]);
-                        
+
             // set result fields like id, searchable, date, rank as PHx
             $found .= $this->setResultSearchable($this->searchResults[$i]) . " ";
 
@@ -195,7 +196,7 @@ class AjaxSearch extends Search{
             $this->setResultNumber($this->offset+$i+1);
 
             // parse the template and output the result
-            $this->chkResult->AddVar("as", $this->varResult); 
+            $this->chkResult->AddVar("as", $this->varResult);
             $results .= $this->chkResult->Render()."\n";
             unset($this->varResult);
             unset($this->chkResult);
@@ -212,10 +213,10 @@ class AjaxSearch extends Search{
 
         $this->setLogInfos($nbrs,$found); // set the log infos
         $this->setComment(); // set the comment form
-        
+
         $this->chkResults->AddVar("as", $this->varResults);
         $this->varLayout['showResults'] = 1;
-        $this->varLayout['results'] = $this->chkResults->Render()."\n"; 
+        $this->varLayout['results'] = $this->chkResults->Render()."\n";
         unset($this->varResults);
         unset($this->chkResults);
       } // end if validSearch
@@ -256,20 +257,20 @@ class AjaxSearch extends Search{
 
 /**
  * setCharset : Set the Page and database charset
- * 
+ *
  * @param string $msgErr error message
- * @return validity (true/false)    
+ * @return validity (true/false)
  */
   function setCharset(& $msgErr){
-  
+
     $valid = true;
     $msgErr = '';
     $this->setDatabaseCharset();  // initialize the database charset
     $this->setPageCharset(); // initialize the page charset
-    
+
     // check if the page charset exists
     if (!isset($this->pageCharset[$this->dbCharset])){
-      // if you get this message, simply update the $pageCharset array in search.class.inc.php file 
+      // if you get this message, simply update the $pageCharset array in search.class.inc.php file
       // with the appropriate mapping between Mysql Charset and Html charset
       // eg: 'latin2' => 'ISO-8859-2'
       $msgErr = "AjaxSearch: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the search.class.inc.php file";
@@ -284,10 +285,10 @@ class AjaxSearch extends Search{
   }
 
 /**
- * Check AjaxSearch user params 
+ * Check AjaxSearch user params
  *
  * @param string $msgErr error message
- * @return validity (true/false)    
+ * @return validity (true/false)
  */
   function checkAjaxSearchParams(& $msgErr){
 
@@ -295,7 +296,7 @@ class AjaxSearch extends Search{
 
     if (isset($_POST['subSearch']) || isset($_GET['subsearch'])) {
       // catch the new parameters from config file and overwrite pre-existing parameters
-      if (isset($_POST['subSearch'])) $this->subSearch = $_POST['subSearch']; 
+      if (isset($_POST['subSearch'])) $this->subSearch = $_POST['subSearch'];
       else $this->subSearch = urldecode($_GET['subsearch']);
       // subsearch function name and radio button index
       $sbsch_array = explode(',',$this->subSearch);
@@ -329,7 +330,7 @@ class AjaxSearch extends Search{
     $this->offset = ($this->offset >0) ? $this->offset : 0;
 
     if (!$this->checkParams($this->cfg,$msgErr)) return false;  // Check other user parameters
-    
+
     return true;
   }
 
@@ -343,7 +344,7 @@ class AjaxSearch extends Search{
     $this->initIdGroup();         // Initialize Id groups
 
     $this->initDocGroup();        // Initialize Documents group
-    
+
     $this->initASCall();          // Initialize AS Call
 
     $this->initTvPhx();           // Initialize tvPhx
@@ -375,7 +376,7 @@ class AjaxSearch extends Search{
       // Prefer post to get
       if (isset($_POST['search'])) {
         $this->searchString = $_POST['search'];
-        if (is_array($this->searchString)) $this->searchString = implode(' ',array_values($this->searchString));   // use of searchWordList 
+        if (is_array($this->searchString)) $this->searchString = implode(' ',array_values($this->searchString));   // use of searchWordList
       } elseif (isset($_GET['AS_search'])) {
         $this->searchString = urldecode($_GET['AS_search']);
       } else {
@@ -383,8 +384,11 @@ class AjaxSearch extends Search{
         $this->searchString = $_GET['FSF_search'];
       }
       if (isset($_POST['advSearch'])) $this->advSearch = $_POST['advSearch'];
-      else if (isset($_GET['advsearch'])) $this->advSearch = $_GET['advsearch'];
+      else if (isset($_GET['advsearch'])) $this->advSearch = urldecode($_GET['advsearch']);
     }
+
+	// check advSearch parameter
+	$this->advSearch = (in_array($this->advSearch,$this->advSearchType)) ? $this->advSearch : $this->advSearchType[0];
 
     // check searchString
     $valid = $this->checkSearchString($this->searchString,$msgErr);
@@ -429,7 +433,7 @@ class AjaxSearch extends Search{
       $jsVars =<<<EOD
 <!-- start AjaxSearch header -->
 <script type="text/javascript">
-//<![CDATA[      
+//<![CDATA[
 as_version = '{$this->version}';
 advSearch = '{$this->advSearch}';
 subSearch = {$this->subSearchNb};
@@ -460,11 +464,11 @@ EOD;
     // include chunkie class and read templates once
     if (!class_exists('asChunkie')) include_once AS_PATH . "classes/chunkie.class.inc.php";
     $tplResults = $this->cfg['tplResults'];
-    if ($tplResults == '') $tplResults = "@FILE:" . AS_SPATH . 'templates/results.tpl.html';        
+    if ($tplResults == '') $tplResults = "@FILE:" . AS_SPATH . 'templates/results.tpl.html';
     $this->chkResults = new asChunkie($tplResults);       // results outer
 
     $tplResult = $this->cfg['tplResult'];
-    if ($tplResult == '') $tplResult = "@FILE:" . AS_SPATH . 'templates/result.tpl.html';        
+    if ($tplResult == '') $tplResult = "@FILE:" . AS_SPATH . 'templates/result.tpl.html';
     $this->chkResult = new asChunkie($tplResult);     // result
     $this->tplRes = "@CODE:" . $this->chkResult->template;
 
@@ -493,7 +497,7 @@ EOD;
  */
   function initFormId(){
     if (isset($this->cfg['ajaxSearch'])) $this->searchFormId = FORM_ID;
-    else $this->searchFormId = '';    
+    else $this->searchFormId = '';
   }
 
 /**
@@ -503,14 +507,14 @@ EOD;
 
     $sbsch_array = explode(',',$this->cfg['subSearch']);
     $this->subSearchNb = $sbsch_array[0];
-    if (!isset($this->subSearch)){ 
+    if (!isset($this->subSearch)){
       // init choice selection from snippet call rather than POST or GET variable
       if (isset($sbsch_array[1])) $this->subSearchSel = $sbsch_array[1];
-      else $this->subSearchSel = 1;    
+      else $this->subSearchSel = 1;
     }
     return;
   }
-  
+
 /**
  * setResultsPagination : Set the pagination of results
  */
@@ -536,9 +540,9 @@ EOD;
       $resultPagingText = (($nbrs>$grabMax) || $showPagingAlways) ? $this->_lang['as_paginationTextMultiplePages'] : $this->_lang['as_paginationTextSinglePage'] ;
       $resultPageLinkNumber = 1;
       $resultPageLinks = '';
-      
+
       for ( $nrp = 0; $nrp < $nbrs && (($nbrs > $grabMax) || $showPagingAlways); $nrp += $grabMax ){
-        $chkPaging = new asChunkie($tplPgg); 
+        $chkPaging = new asChunkie($tplPgg);
         $varLink = array();
         if ($this->offset == ($resultPageLinkNumber-1)*$grabMax){
           $varLink['tpl'] = 'pagingLinksCurrent';
@@ -547,12 +551,12 @@ EOD;
           if (!isset($this->subSearch)) $varLink['pagingLink'] = $modx->makeUrl($modx->documentIdentifier,'','AS_offset='.$nrp.'&amp;AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch));
           else $varLink['pagingLink'] = $modx->makeUrl($modx->documentIdentifier,'','AS_offset='.$nrp.'&amp;AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch).'&amp;subsearch='.urlencode($this->subSearch));
         }
-        $varLink['pagingSeparator'] = ($nrp + $grabMax < $nbrs) ? $this->cfg['pageLinkSeparator'] : '' ;          
+        $varLink['pagingSeparator'] = ($nrp + $grabMax < $nbrs) ? $this->cfg['pageLinkSeparator'] : '' ;
         $varLink['pagingText'] = $resultPageLinkNumber;
         $resultPageLinkNumber++;
 
         // parse the template and output the paging link
-        $chkPaging->AddVar("as", $varLink); 
+        $chkPaging->AddVar("as", $varLink);
         $resultPageLinks .= $chkPaging->Render()."\n";
         unset($varLink);
         unset($chkPaging);
@@ -565,7 +569,7 @@ EOD;
 
       // parse the template and output the paging links
       $chkPaging = new asChunkie($tplPgg);
-      $chkPaging->AddVar("as", $varPaging); 
+      $chkPaging->AddVar("as", $varPaging);
       $this->varResults['paging'] = $chkPaging->Render()."\n";
       unset($varPaging);
       unset($chkPaging);
@@ -629,7 +633,7 @@ EOD;
         $this->varLayout['inputValue'] = ($this->searchString == '' && $this->_lang['as_boxText'] != '') ? $this->_lang['as_boxText'] : $this->searchString;
         $this->varLayout['inputOptions'] = ($this->_lang['as_boxText']) ? ' onfocus="this.value=(this.value==\''.$this->_lang['as_boxText'].'\')? \'\' : this.value ;"' : '';
       }
-      $this->varLayout['submitText'] = $this->_lang['as_searchButtonText'];  
+      $this->varLayout['submitText'] = $this->_lang['as_searchButtonText'];
 
       // propagate the hidden input advSearch parameter
       $this->varLayout['advSearch'] = $this->advSearch;
@@ -639,16 +643,16 @@ EOD;
       $this->varLayout['onewordText'] = $this->_lang['oneword'];
       $this->varLayout['onewordChecked'] = ($this->advSearch == 'oneword' ? 'checked ="checked"' : '');
       $this->varLayout['allwords'] = 'allwords';
-      $this->varLayout['allwordsText'] = $this->_lang['allwords'];  
+      $this->varLayout['allwordsText'] = $this->_lang['allwords'];
       $this->varLayout['allwordsChecked'] = ($this->advSearch == 'allwords' ? 'checked ="checked"' : '');
       $this->varLayout['exactphrase'] = 'exactphrase';
-      $this->varLayout['exactphraseText'] = $this->_lang['exactphrase'];  
+      $this->varLayout['exactphraseText'] = $this->_lang['exactphrase'];
       $this->varLayout['exactphraseChecked'] = ($this->advSearch == 'exactphrase' ? 'checked ="checked"' : '');
       $this->varLayout['nowords'] = 'nowords';
-      $this->varLayout['nowordsText'] = $this->_lang['nowords'];  
+      $this->varLayout['nowordsText'] = $this->_lang['nowords'];
       $this->varLayout['nowordsChecked'] = ($this->advSearch == 'nowords' ? 'checked ="checked"' : '');
 
-      // subSearch 
+      // subSearch
       for ($i=1;$i<$this->subSearchNb+1;$i++) {
         $iChecked = "subSearch{$i}Checked";
         $this->varLayout[$iChecked] = ($this->subSearchSel == $i ? 'checked ="checked"' : '');

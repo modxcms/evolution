@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/german.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team
  *                 Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
  *                 Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
@@ -10,6 +9,9 @@
  * Version:        2.13
  * MODx version:   0.9.6.3
 */
+$modx_lang_attribute = 'de'; // Manager HTML and XML Language Attribute
+$modx_manager_charset = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx ist eine PHP Arbeitsumgebung und ist unter der <a href="../assets/docs/license.txt">GPL</a> Lizenz veröffentlicht.';
 $_lang["about_title"] = 'Über MODx';
 $_lang["access_permission_denied"] = 'Sie sind nicht berechtigt, die Zugriffsrechte für dieses Dokument zu ändern.';
@@ -17,6 +19,7 @@ $_lang["access_permission_parent_denied"] = 'Sie sind nicht berechtigt, an diese
 $_lang["access_permissions"] = 'Zugangskontrolle';
 $_lang["access_permissions_add_document_group"] = 'Eine neue Dokumentgruppe erstellen';
 $_lang["access_permissions_add_user_group"] = 'Eine neue Benutzergruppe erstellen';
+$_lang["access_permissions_docs_collision"] = 'Es existiert ein konflikt der Web Benutzer Gruppe and Manager Benutzer Gruppe für diese Rolle, this document will be public. Kontaktieren Sie Ihren Seiten Administrator für weitere Hilfe.';
 $_lang["access_permissions_docs_message"] = 'Hier können Sie auswählen, welcher Dokumentgruppe dieses Dokument zugeordnet ist';
 $_lang["access_permissions_document_groups"] = 'Dokumentgruppen';
 $_lang["access_permissions_documents_in_group"] = '<b>Dokumente in Gruppe:</b> ';
@@ -76,6 +79,11 @@ $_lang["captcha_words_message"] = 'Wenn Captcha aktiviert ist können Sie eine L
 $_lang["captcha_words_title"] = 'Captcha-Wörter';
 $_lang["category_heading"] = 'Category';
 $_lang["category_msg"] = 'Hier können Sie alle Ressourcen nach Kategorien sortiert bearbeiten.';
+$_lang["cfg_base_path"] = 'MODX_BASE_PATH';
+$_lang["cfg_base_url"] = 'MODX_BASE_URL';
+$_lang["cfg_manager_path"] = 'MODX_MANAGER_PATH';
+$_lang["cfg_manager_url"] = 'MODX_MANAGER_URL';
+$_lang["cfg_site_url"] = 'MODX_SITE_URL';
 $_lang["change_name"] = 'Name ändern';
 $_lang["change_password"] = 'Passwort ändern';
 $_lang["change_password_confirm"] = 'Passwort bestätigen';
@@ -152,13 +160,7 @@ $_lang["create_folder_here"] = 'Ordner erstellen';
 $_lang["create_weblink_here"] = 'Weblink erstellen';
 $_lang["createdon"] = 'Erstellungsdatum';
 $_lang["credits"] = 'Danksagungen';
-$_lang["credits_dTree"] = 'MODx benutzt das exzellente dTree-Script von DestroyDrop.com!';
-$_lang["credits_everaldo"] = 'MODx nutzt grafische Symbole von Everaldo\'s \'Crystal Icons\'.';
-$_lang["credits_mysql"] = 'MODx läuft mit MySQL!';
-$_lang["credits_php"] = 'MODx läuft mit PHP!';
 $_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Projekt-Gründer</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
-$_lang["credits_shouts_title"] = '<b>Zusätzlicher Dank an: </b>';
-$_lang["credits_webfx"] = 'MODx benutzt einige JavaScripts von Webfx. Dort findet man tolle Sachen!';
 $_lang["custom_contenttype_message"] = 'Hier können Sie eigene Content-Types hinzufügen bzw. löschen. Geben Sie hierzu den Typ ein und klicken auf hinzufügen bzw. wählen Sie den Typ aus der Liste aus und klicken entfernen.';
 $_lang["custom_contenttype_title"] = 'Eigene Inhaltstypen:';
 $_lang["database_charset"] = 'Datenbank-Charset';
@@ -228,6 +230,7 @@ $_lang["document_opt_trackvisit_help"] = 'Besucherzugriffe auf diese Seite proto
 $_lang["document_overview"] = 'Dokumentübersicht';
 $_lang["document_parent"] = 'Elterndokument';
 $_lang["document_parent_help"] = 'Klicken Sie auf ein Dokument im Baum, um ein übergeordnetes Dokument zu wählen.';
+$_lang["document_permissions_error"] = 'Weisen Sie diese Resource mindestens einer Dokumenten Gruppe zu, zu der Sie Zugriff haben.';
 $_lang["document_setting"] = 'Dokumenteigenschaften';
 $_lang["document_summary"] = 'Zusammenfassung';
 $_lang["document_summary_help"] = 'Geben Sie eine kurze inhaltliche Zusammenfassung des Dokuments ein.';
@@ -242,6 +245,8 @@ $_lang["duplicate_alias_found"] = 'Das Dokument \'%s\' verwendet bereits den Ali
 $_lang["duplicate_alias_message"] = 'Wählen Sie \'ja\', um zweideutige Alias-Namen zu erlauben. <b>Hinweis:</b> Diese Option sollte zusammen mit der Option \'Benutzerfreundliche URLs\' verwendet werden, um etwaige Probleme bei der Dokument-Referenzierung zu vermeiden.';
 $_lang["duplicate_alias_title"] = 'Doppelte Aliase zulassen:';
 $_lang["duplicate_document"] = 'Dokument duplizieren';
+$_lang["duplicate_name_found_general"] = 'Es existiert bereits ein %s mit dem Namen \'%s\'. Bitte geben Sie einen eindeutigen Namen ein.';
+$_lang["duplicate_name_found_module"] = 'Es existiert bereits ein Modul mit dem Namen \'%s\'. Bitte geben Sie einen eindeutigen Namen ein.';
 $_lang["edit"] = 'Bearbeiten';
 $_lang["edit_document"] = 'Bearbeiten';
 $_lang["edit_document_title"] = 'Dokument erstellen/bearbeiten';
@@ -322,7 +327,6 @@ $_lang["files_files"] = 'Dateien';
 $_lang["files_filesize"] = 'Dateigröße';
 $_lang["files_filetype_notok"] = 'Das Hochladen einer Datei von diesem Typ ist nicht erlaubt!';
 $_lang["files_modified"] = 'Datum';
-$_lang["files_title"] = 'Dateimanager';
 $_lang["files_top_level"] = 'Zum Hauptverzeichnis';
 $_lang["files_up_level"] = 'Ein Verzeichnis nach oben wechseln';
 $_lang["files_upload_copyfailed"] = 'Upload fehlgeschlagen - das Kopieren der Datei in den Zielordner ist nicht möglich!';
@@ -378,22 +382,21 @@ $_lang["import_params"] = 'Importieren von gemeinsamen Parametern';
 $_lang["import_params_msg"] = 'Sie können die Parameter und Einstellungen mittels obiger Auswahlliste importieren. <b>Hinweis:</b> Damit Module in dieser Liste erscheinen, muss das jeweilige Plugin/Snippet in der Abhängigkeitsliste des Moduls stehen und das Modul muss die Option \'Gemeinsame Parameter\' aktiviert haben. ';
 $_lang["import_parent_document"] = 'Elterndokument:';
 $_lang["import_site"] = 'Seite importieren';
-$_lang["import_site_failed"] = '<span style="color:#990000">Fehler</span>';
+$_lang["import_site_failed"] = 'Fehler';
 $_lang["import_site_html"] = 'Website aus HTML-Dateien importieren';
 $_lang["import_site_importing_document"] = 'Importiere Datei <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Maximale Importdauer:';
 $_lang["import_site_maxtime_message"] = 'Hier können Sie die Dauer (in Sekunden) angeben, die das System für einen Import maximal benötigen darf. Nach Ablauf dieser Zeit wird der Import abgebrochen. Von der Angabe von 0 Sekunden oder einen extrem hohen Zeitspanne wird dringend abgeraten, da dies zu Komplikationen mit Ihrem Webserver führen kann.';
 $_lang["import_site_message"] = 'Mit dieser Importfunktion können Sie eine bestehende Website im HTML Format in das MODx System importieren. Die zu importierenden HTML Dateien bzw. Verzeichnisse müssen unter \'assets/import\' abgelegt werden.<p />Nach dem ausfüllen des unten stehenden Formulars können Sie den Import starten. Soweit möglich, werden Dateinamen als Dokumenttitel und der HTML-Titel als Dokumenttitel verwendet.';
-$_lang["import_site_skip"] = '<span style="color:#990000">ausgelassen</span>';
+$_lang["import_site_skip"] = 'ausgelassen';
 $_lang["import_site_start"] = 'Import starten';
-$_lang["import_site_success"] = '<span style="color:#009900">OK</span>';
+$_lang["import_site_success"] = 'OK';
 $_lang["import_site_time"] = 'Import in %s Sekunden durchgeführt.';
 $_lang["inbox"] = 'Inbox';
 $_lang["info"] = 'Info';
 $_lang["information"] = 'Information';
 $_lang["inline"] = 'Browserfenster';
 $_lang["insert"] = 'Einfügen';
-$_lang["insert_snippet"] = 'Snippet in Dokument einfügen';
 $_lang["keyword"] = 'Schlüsselwort';
 $_lang["keywords"] = 'Schlüsselwörter';
 $_lang["keywords_intro"] = 'Hier legen Sie die Schlüsselwörter fest, die Ihrem Dokument zugewiesen werden können.';
@@ -427,8 +430,8 @@ $_lang["login_allowed_days_message"] = 'Wählen Sie die Wochentage aus, an denen
 $_lang["login_allowed_ip"] = 'IP Adressbeschränkung';
 $_lang["login_allowed_ip_message"] = 'Geben Sie hier die IP Adressen an, von denen aus der Benutzer eine Zugriffsberechtigung erhält. <b>Hinweis: Mehrere IP Adressen sind mit einem Komma (,) zu trennen.</b>';
 $_lang["login_button"] = 'Anmelden';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Installation/Update der Site läuft. <br />Bitte versuchen Sie es in einigen Minuten erneut!</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Installation/Update der Site wurde abgeschlossen. Bitte loggen Sie sich erneut ein!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'Installation/Update der Site läuft. <br />Bitte versuchen Sie es in einigen Minuten erneut!<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Installation/Update der Site wurde abgeschlossen. Bitte loggen Sie sich erneut ein!<br />';
 $_lang["login_captcha_message"] = ' Der Administrator hat Captcha-Validierung aktiviert, Sie müssen daher auch den Sicherheits-Code eingeben. \n\nWenn der Sicherheits-Code schlecht lesbar ist, klicken Sie bitte auf den Code, damit ein neuer Code generiert wird.';
 $_lang["login_homepage"] = 'Anmeldeseite';
 $_lang["login_homepage_message"] = 'Geben Sie die Dokument-ID an, zu welcher der Webnutzer nach einer erfolgreichen Anmeldung weitergeleitet wird. <b>Hinweis: Stellen Sie sicher, dass das entsprechende Dokument existiert und der jeweilige Benutzer Zugriff darauf hat!</b>';
@@ -447,10 +450,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Template-Verwaltung';
 $_lang["manager"] = 'Manager';
-$_lang["manager_direction_message"] = 'Leserichtung auswählen, von links nach rechts oder von rechts nach links.';
-$_lang["manager_direction_title"] = 'Leserichtung im Manager:';
-$_lang["manager_lang_attribute_message"] = 'Geben Sie bitte das Sprachkürzel ein, das am besten zu Ihrer gewählten Sprache im Manager passt, dies stellt sicher, dass der Inhalt im für Ihre Sprache am besten passenden Format dargestellt wird.';
-$_lang["manager_lang_attribute_title"] = 'Manager HTML und XML Sprache Attribute:';
 $_lang["manager_lockout_message"] = 'Sie sind gegenwärtig im Content Manager angemeldet. Wenn Sie Ihre Login-Session beenden wollen, klicken Sie bitte den "Abmelden"-Button. <p />Um zu Ihrer Start- oder Home-Seite zu gelangen klicken Sie bitte den "Start"-Button.';
 $_lang["manager_permissions"] = 'Management-Berechtigungen';
 $_lang["manager_theme"] = 'Manager-Thema:';
@@ -481,7 +480,6 @@ $_lang["meta_keywords"] = 'META-Angaben';
 $_lang["metatag_intro"] = 'In diesem Bereich verwalten Sie META-Angaben, die Ihren Dokumenten beim Bearbeiten zugewiesen werden können.';
 $_lang["metatag_notice"] = 'Im HTML-Nachschlagewerk <a href="http://de.selfhtml.org/html/kopfdaten/meta.htm" target="_blank">SELFHTML</a> finden Sie eine Zusammenstellung geläufiger META-Angaben, sowie Hinweise zu deren Anwendung.';
 $_lang["metatags"] = 'META-Angaben';
-$_lang["metatags_and_keywords"] = 'META-Angaben und Schlüsselwörter';
 $_lang["mgr_access_permissions"] = 'Management-Zugriffsberechtigungen';
 $_lang["mgr_login_start"] = 'Benutzer-Startbildschirm';
 $_lang["mgr_login_start_message"] = 'Geben Sie die Dokument-ID an, zu welcher der Webnutzer nach einer erfolgreichen Anmeldung weitergeleitet werden soll. <b>Hinweis: stellen Sie sicher, dass das entsprechende Dokument existiert und der jeweilige Benutzer Zugriff darauf hat!';
@@ -524,6 +522,10 @@ $_lang["module_resource_title"] = 'Modulabhängigkeiten';
 $_lang["module_title"] = 'Modul erstellen/bearbeiten';
 $_lang["module_viewdepend_msg"] = 'Hier können Sie die Abhängigkeiten dieses Moduls bearbeiten und verwalten.';
 $_lang["modules"] = 'Module';
+$_lang["modx_news"] = 'MODx Nachrichten';
+$_lang["modx_news_tab"] = 'MODx Nachrichten';
+$_lang["modx_news_title"] = 'MODx Nachrichten';
+$_lang["modx_security_notices"] = 'MODx Sicherheitshinweise';
 $_lang["modx_version"] = 'MODx-Version';
 $_lang["monday"] = 'Montag';
 $_lang["move"] = 'Verschieben';
@@ -635,7 +637,6 @@ $_lang["plugin_config"] = 'Plugin Konfiguration';
 $_lang["plugin_desc"] = 'Beschreibung';
 $_lang["plugin_disabled"] = 'Plugin deaktiviert';
 $_lang["plugin_event_msg"] = 'Wählen Sie hier die Systemereignisse aus bei denen dieses Plugin ausgeführt werden soll.';
-$_lang["plugin_locked_message"] = 'Dieses Plugin ist gesperrt.';
 $_lang["plugin_management_msg"] = 'Hier können Sie auswählen welches Plugin Sie bearbeiten möchten.';
 $_lang["plugin_msg"] = 'Hier können Sie Plugins erstellen und bearbeiten. Plugins sind PHP Quellcode, und werden aufgrund von definierten Systemereignissen ausgeführt.';
 $_lang["plugin_name"] = 'Plugin Name';
@@ -774,8 +775,6 @@ $_lang["save"] = 'Speichern';
 $_lang["save_all_changes"] = 'Änderungen speichern';
 $_lang["save_tag"] = 'Tag speichern';
 $_lang["saving"] = 'Speichern, bitte warten...';
-$_lang["scroll_dn"] = 'Abwärts';
-$_lang["scroll_up"] = 'Aufwärts';
 $_lang["search"] = 'Suchen';
 $_lang["search_criteria"] = 'Suchkriterium';
 $_lang["search_criteria_content"] = 'Suche im Inhalt';
@@ -795,6 +794,8 @@ $_lang["search_results_returned_msg"] = 'Ihre Suchanfrage ergab <b>%s</b> Treffe
 $_lang["search_results_returned_title"] = 'Titel';
 $_lang["search_view_docdata"] = 'Dieses Dokument anzeigen';
 $_lang["security"] = 'Sicherheit';
+$_lang["security_notices_tab"] = 'Security Notices';
+$_lang["security_notices_title"] = 'Security Notices';
 $_lang["select_date"] = 'Datum auswählen';
 $_lang["send"] = 'Senden';
 $_lang["server_protocol_http"] = 'http';
@@ -816,7 +817,6 @@ $_lang["settings_page_settings"] = 'Seiteneinstellungen';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Eigenschaften';
 $_lang["settings_site"] = 'Seiten';
-$_lang["settings_snippets"] = 'Snippets';
 $_lang["settings_strip_image_paths_message"] = 'Wenn diese Einstellung gesetzt wird werden die Bildpfade relativ statt absolut gesetzt. Sehr empfehlenswert wenn die Installation umgezogen wird (z.B. von der Entwicklungsseite zur Produktionsseite). Wenn Sie nicht wissen was gemeint ist - lassen Sie die Einstellung \'Nein\'.';
 $_lang["settings_strip_image_paths_title"] = 'Bild-Pfade \'zurückschreiben\'?';
 $_lang["settings_templvars"] = 'Template-Variablen';
@@ -849,7 +849,6 @@ $_lang["snippet_msg"] = 'Hier können Sie Snippets anlegen und bearbeiten. Beach
 $_lang["snippet_name"] = 'Snippet-Name';
 $_lang["snippet_properties"] = 'Standardeigenschaften';
 $_lang["snippet_title"] = 'Snippet erstellen/bearbeiten';
-$_lang["snippets_available"] = 'Folgende Snippets sind für dieses Dokument verfügbar';
 $_lang["sort_asc"] = 'Aufsteigend';
 $_lang["sort_desc"] = 'Absteigend';
 $_lang["sort_tree"] = 'Baum sortieren';
@@ -872,7 +871,6 @@ $_lang["template_assignedtv_tab"] = 'Zugewiesene Template-Variablen';
 $_lang["template_code"] = 'Template-Code (html)';
 $_lang["template_desc"] = 'Template-Beschreibung';
 $_lang["template_edit_tab"] = 'Template bearbeiten';
-$_lang["template_locked_message"] = 'Dieses Template ist gesperrt.';
 $_lang["template_management_msg"] = 'Hier können Sie ein Template wählen, das Sie bearbeiten möchten.';
 $_lang["template_msg"] = 'Hier können Sie Templates anlegen und bearbeiten. Die Änderung an einem Template wird nur angezeigt, wenn Sie den Cache leeren. Sie können aber die Vorschaufunktion nutzen, um das Template anzuzeigen.';
 $_lang["template_name"] = 'Template-Name';
@@ -985,7 +983,6 @@ $_lang["value"] = 'Wert';
 $_lang["version_codename"] = 'Versions-Codename';
 $_lang["view"] = 'Ansehen';
 $_lang["view_child_documents_in_container"] = 'Dokumente in Container anzeigen';
-$_lang["view_document"] = 'Anzeigen';
 $_lang["view_log"] = 'Protokoll anzeigen';
 $_lang["view_logging"] = 'Benutzerprotokoll';
 $_lang["view_sysinfo"] = 'Systeminfo';

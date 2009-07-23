@@ -11,13 +11,13 @@ if ($manager_theme)
 else    $manager_theme  = '';
 ?>
 
-<div class="subTitle">
-<span class="right"><?php echo $_lang['change_password']?></span>
-	<table cellpadding="0" cellspacing="0" class="actionButtons"><tr>
-		<td id="Button1"><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']?></a></td>
-	</tr></table>
+<h1><?php echo $_lang['change_password']?></h1>
+<div id="actions">
+	<ul class="actionButtons">
+		<li><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?></a></li>
+	  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+	</ul>
 </div>
-
 <div class="sectionHeader"><?php echo $_lang['change_password']?></div>
 <div class="sectionBody">
 	<form action="index.php?a=34" method="post" name="userform">

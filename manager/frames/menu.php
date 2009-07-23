@@ -4,11 +4,12 @@ if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($mo
 	$modx->config['mail_check_timeperiod'] = 5;
 }
 if ($manager_theme) $manager_theme .= '/';
+$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html<?php echo $modx->config['manager_direction'] == 'rtl' ? ' dir="rtl"' : ''?> lang="<?php echo $modx->config['manager_lang_attribute']?>" xml:lang="<?php echo $modx->config['manager_lang_attribute']?>">
+<html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_charset?>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 	<title>nav</title>
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css" />
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
@@ -17,8 +18,8 @@ if ($manager_theme) $manager_theme .= '/';
 	// TREE FUNCTIONS - FRAME
 	// These functions affect the tree frame and any items that may be pointing to the tree.
 	var currentFrameState = 'open';
-	var defaultFrameWidth = '<?php echo $modx->config['manager_direction']=='ltr' ? '260,*' : '*,260'?>';
-	var userDefinedFrameWidth = '<?php echo $modx->config['manager_direction']=='ltr' ? '260,*' : '*,260'?>';
+	var defaultFrameWidth = '<?php echo !$modx_textdir ? '260,*' : '*,260'?>';
+	var userDefinedFrameWidth = '<?php echo !$modx_textdir ? '260,*' : '*,260'?>';
 
 	var workText;
 	var buildText;
@@ -61,7 +62,7 @@ if ($manager_theme) $manager_theme .= '/';
 		try {
 			var elm = $('tocText');
 			if(elm) elm.innerHTML = "<a href='#' onclick='defaultTreeFrame();'><img src='<?php echo $_style['show_tree']?>' alt='<?php echo $_lang['show_tree']?>' width='16' height='16' /></a>";
-			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo ($modx->config['manager_direction'] == 'ltr' ? '0,*' : '*,0')?>';
+			parent.document.getElementsByTagName("FRAMESET").item(1).cols = '<?php echo (!$modx_textdir ? '0,*' : '*,0')?>';
 			top.__hideTree = true;
 		} catch(oException) {
 			x=window.setTimeout('hideTreeFrame()', 1000);
@@ -195,9 +196,9 @@ if ($manager_theme) $manager_theme .= '/';
 	<![endif]-->
 </head>
 
-<body id="topMenu">
+<body id="topMenu" class="<?php echo $modx_textdir ? 'rtl':'ltr'?>">
 
-<div id="tocText" <?php echo $modx->config['manager_direction'] ? 'class="tocTextRTL"' : '' ?>></div>
+<div id="tocText"<?php echo $modx_textdir ? ' class="tocTextRTL"' : '' ?>></div>
 <div id="topbar">
 <div id="topbar-container">
 	<div id="statusbar">
@@ -206,7 +207,7 @@ if ($manager_theme) $manager_theme .= '/';
 	</div>
 
 	<div id="supplementalNav">
-	&nbsp;<img src="<?php echo $_style['icons_user_current']?>" width="16" height="16" /><?php echo $modx->getLoginUserName(). ($modx->hasPermission('change_password') ? ': <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") ?>
+	<?php echo $modx->getLoginUserName(). ($modx->hasPermission('change_password') ? ': <a onclick="this.blur();" href="index.php?a=28" target="main">'.$_lang['change_password'].'</a>'."\n" : "\n") ?>
 <?php if($modx->hasPermission('messages')) { ?>
 	| <span id="newMail"><a href="index.php?a=10" title="<?php echo $_lang['you_got_mail']?>" target="main"> <img src="<?php echo $_style['icons_mail']?>" width="16" height="16" /></a></span>
 	<a onclick="this.blur();" href="index.php?a=10" target="main"><?php echo $_lang['messages']?> <span id="msgCounter">( ? / ? )</span></a>
@@ -293,7 +294,7 @@ if($modx->hasPermission('edit_web_user')) {
 	// web-users
 	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=99" target="main">'.$_lang['web_user_management_title'].'</a></li>';
 }
-if($modx->hasPermission('edit_user')) {
+if($modx->hasPermission('new_role') || $modx->hasPermission('edit_role') || $modx->hasPermission('delete_role')) {
 	// roles
 	$securitymenu[] = '<li><a onclick="this.blur();" href="index.php?a=86" target="main">'.$_lang['role_management_title'].'</a></li>';
 }
@@ -358,7 +359,7 @@ if (!empty($resourcemenu)) {
 if (!empty($modulemenu)) {
 	echo "\t",'<li id="limenu9"><a href="#menu9" onclick="new NavToggle(this); return false;">',$_lang['modules'],'</a><ul class="subnav" id="menu9">',"\n\t\t",
 	     implode("\n\t\t", $modulemenu),
-	     "\n\t</ul></l>\n";
+	     "\n\t</ul></li>\n";
 }
 if (!empty($securitymenu)) {
 	echo "\t",'<li id="limenu2"><a href="#menu2" onclick="new NavToggle(this); return false;">',$_lang['users'],'</a><ul class="subnav" id="menu2">',"\n\t\t",

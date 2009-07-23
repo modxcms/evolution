@@ -118,9 +118,18 @@ if($manager_language!="english" && file_exists($modx->config['base_path']."manag
     include_once "lang/country/".$manager_language."_country.inc.php";
 }
 
-$displayStyle = (($_SESSION['browser'] == 'mz') || ($_SESSION['browser'] == 'op')) ? "table-row" : "block";
+$displayStyle = (($_SESSION['browser'] == 'mz') || ($_SESSION['browser'] == 'op') || ($_SESSION['browser'] == 'sf')) ? "table-row" : "block";
 ?>
-<script language="JavaScript">
+<script type="text/javascript" src="media/calendar/datepicker.js"></script>
+<script type="text/javascript">
+window.addEvent('domready', function() {
+	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
+	new DatePicker($('dob'), {'yearOffset': dpOffset});
+	if ($('blockeduntil')) {
+		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset});
+		new DatePicker($('blockedafter'), {'yearOffset': dpOffset});
+	}
+});
 
 function changestate(element) {
 	documentDirty=true;
@@ -232,34 +241,32 @@ if (is_array($evtOut))
 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
 <input type="hidden" name="blockedmode" value="<?php echo ($userdata['blocked']==1 || ($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)|| ($userdata['blockedafter']<time() && $userdata['blockedafter']!=0) || $userdata['failedlogins']>3) ? "1":"0" ?>" />
 
-<!-- Navrbar -->
-<div class="subTitle">
-<span class="right"><?php echo $_lang['user_title']; ?></span>
-
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<tr>
-			<td id="Button1"><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
-			<td id="Button2"><a href="#" onclick="deleteuser();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']; ?></a></td>
-				<?php if($_GET['a']!='12') { ?>
-					<script type="text/javascript">document.getElementById("Button2").className='disabled';</script>
-				<?php } ?>
-			<td id="Button3"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
-		</tr>
-	</table>
-	<div class="stay">
-	<table border="0" cellspacing="1" cellpadding="1">
-	<tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
-		<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
-		<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
-		<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
-	</tr>
-	</table>
-	</div>
+<h1><?php echo $_lang['user_title']; ?></h1>
+    <div id="actions">
+    	  <ul class="actionButtons">
+    		  <li id="Button1">
+    			<a href="#" onclick="documentDirty=false; document.userform.save.click();">
+    			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+    			</a>
+    			  <span class="and"> + </span>				
+    			<select id="stay" name="stay">
+    			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
+    			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+    			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
+    			</select>		
+    		  </li>
+    		  <?php
+    			if ($_REQUEST['a'] == '12') { ?>
+    		  <li id="Button3" class="disabled"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } else { ?>
+    		  <li id="Button3"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } ?>	
+    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
+    	  </ul>
+    </div>
 </div>
-
 <!-- Tab Start -->
-<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div><div class="sectionBody">
+<div class="sectionBody">
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="userPane">
@@ -396,8 +403,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td><?php echo $_lang['user_dob']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="dob" class="inputBox" style="width:260px" value="<?php echo ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onclick="documentDirty=false; calDOB.popup();" onmouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>"></a>
+				<input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;'>
 				<a onclick="document.userform.dob.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
 			</td>
 		  </tr>
@@ -443,8 +449,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td><?php echo $_lang['user_blockeduntil']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="blockeduntil" class="inputBox" style="width:260px" value="<?php echo ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onclick="documentDirty=false; calBUntil.popup();" onmouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>" /></a>
+				<input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onclick="document.userform.blockeduntil.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
@@ -452,8 +457,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td><?php echo $_lang['user_blockedafter']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" name="blockedafter" class="inputBox" style="width:260px" value="<?php echo ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
-				<a onclick="documentDirty=false; calBAfter.popup();" onmouseover="window.status='<?php echo $_lang['select_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal.gif" width="16" height="16" border="0" alt="<?php echo $_lang['select_date']; ?>" /></a>
+				<input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onclick="document.userform.blockedafter.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
@@ -462,7 +466,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 }
 ?>
 		</table>
-		<?php if($_GET['id']==$modx->getLoginUserID()) { ?><b><?php echo $_lang['user_edit_self_msg']; ?><br><?php } ?>
+		<?php if($_GET['id']==$modx->getLoginUserID()) { ?><p><?php echo $_lang['user_edit_self_msg']; ?></p><?php } ?>
 	</div>
 	<!-- Settings -->
     <div class="tab-page" id="tabSettings">
@@ -499,31 +503,6 @@ $dir->close();
 	  	  <tr> 
             <td colspan="2"><div class='split'></div></td> 
           </tr>  
-           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["manager_direction_title"] ?></b></td>
-            <td><select name="manager_direction" size="1" class="inputBox" style="width:100px;" onchange="documentDirty=true;">
-                <option value="ltr" <?php echo (isset($usersettings['manager_direction']) && $usersettings['manager_direction']=='ltr') ? 'selected' : ''?>>ltr</option>
-                <option value="rtl" <?php echo (isset($usersettings['manager_direction']) && $usersettings['manager_direction']=='rtl') ? 'selected' : ''?>>rtl</option>
-              </select></td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["manager_direction_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["manager_lang_attribute_title"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='20' size='10' name="manager_lang_attribute" value="<?php echo isset($usersettings['manager_lang_attribute']) ? $usersettings['manager_lang_attribute'] : 'en' ; ?>" /></td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["manager_lang_attribute_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
           <tr>
             <td class="warning"><b><?php echo $_lang["mgr_login_start"] ?></b></td>
             <td ><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="manager_login_startup" value="<?php echo isset($_POST['manager_login_startup']) ? $_POST['manager_login_startup'] : $usersettings['manager_login_startup']; ?>"></td>
@@ -861,25 +840,3 @@ if (is_array($evtOut))
 	echo implode("", $evtOut);
 ?>
 </form>
-<script type="text/javascript" src="media/script/datefunctions.js"></script>
-<script type="text/javascript">
-	// dob
-	var calDOB = new calendar1(document.userform.dob, new Object);
-	calDOB.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-	calDOB.year_scroll = true;
-	calDOB.time_comp = false;
-
-	if (document.userform.blockeduntil) {
-		// block until
-		var calBUntil = new calendar1(document.userform.blockeduntil, new Object);
-		calBUntil.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-		calBUntil.year_scroll = true;
-		calBUntil.time_comp = true;
-
-		// block after
-		var calBAfter = new calendar1(document.userform.blockedafter, new Object);
-		calBAfter.path="<?php echo str_replace("index.php", "media/", $_SERVER["PHP_SELF"]); ?>";
-		calBAfter.year_scroll = true;
-		calBAfter.time_comp = true;
-	}
-</script>

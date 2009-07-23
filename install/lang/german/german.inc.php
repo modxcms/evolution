@@ -10,22 +10,6 @@
  * Language:       German
  * Encoding:       UTF-8
  */
-$_lang["license"] = '<h2>MODx Lizenzvereinbarung.</h2>
-<hr style="text-align:left;height:1px;width:90%;" />
-<h3>Sie m&uuml;ssen der Lizenz zustimmen bevor Sie mit der Installation fortfahren.</h3>
-<p>Die Software ist unter der GPL lizenziert. Das Benutzen der Software unterliegt den bestimmungen der GPL. Die GPL betrifft diese Software sowie Ihre Benutzung in folgender Weise:</p>
-<h3>Die GNU General Public License ist eine freie Software Lizenz.</h3>
-<p>Wie bei jeder freien Softwarelizenz haben Sie folgende Freiheiten:</p>
-<ul>
-  <li>Die Freiheit, das Programm zu jedem Zweck zu benutzen.</li>
-  <li>Die Freiheit das Programm zu studieren und es Ihren Bed&uuml;rfnissen anzupassen.</li>
-  <li>Die Freiheit, Kopien des Programms zu verbreiten und so dem N&auml;chsten zu helfen.</li>
-  <li>Die Freiheit, das Programm zu verbessern, weiter zu verbreiten und so der gesamten Nutzergemeinde zu helfen.</li>
-</ul>
-<p>Sie k&ouml;nnen diese Freiheiten aus&uuml;ben wenn Sie mit den Bedingungen der GNU GPL einverstanden erkl&auml;ren. Die Bedingungen finden Sie <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank">hier</a>.</p>
-<p>Das oben stehende ist eine Zusammenfassung der GNU GPL. Wenn Sie fortfahren, stimmen Sie den Bestimmungen der GNU General Public Licence zu, nicht dem hier beschriebenen. Oben stehendes stellt
-  nur eine Zusammenfassng dar, seine Richtigkeit kann nicht garantiert werden.&nbsp;Es wird dringend empfohlen, die&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">GNU General
-  Public License</a> im Original zu lesen bevor Sie fortfahren, diese k&ouml;nnen Sie auch im heruntergeladenen Paket als Textdatei finden.</p>';
 $_lang["alert_database_test_connection"] = 'Sie müssen eine Datenbank erstellen oder die Datenbankverbindung testen!';
 $_lang["alert_database_test_connection_failed"] = 'Der Test der Datenbankauswahl schlug fehl!';
 $_lang["alert_enter_adminconfirm"] = 'Administrator-Passwort und dessen Bestätigung stimmen nicht überein!';
@@ -65,9 +49,9 @@ $_lang["checking_sessions"] = 'Überprüfe ob Sessions sauber definiert sind: ';
 $_lang["checking_table_prefix"] = 'Check Tabellen Prefix `';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Für neue Linux/Unix Installationen bitt eine leere Datei <span class=\"mono\">config.inc.php</span> im Ordner <span class=\"mono\">manager/includes/</span> anlegen und die Dateirechte auf 0666 setzen.';
-$_lang["connection_screen_character_set"] = 'Zeichensatz der Verbindung:';
 $_lang["connection_screen_collation"] = 'Kollation:';
 $_lang["connection_screen_connection_information"] = 'Verbindungsinformation';
+$_lang["connection_screen_connection_method"] = 'Verbindungsmethode:';
 $_lang["connection_screen_database_connection_information"] = 'Datenbankinformationen';
 $_lang["connection_screen_database_connection_note"] = 'Bitte geben Sie den Namen der Datenbank an, die Sie für MODx nutzen wollen. Falls die Datenbank nicht existiert, wird MODx sie erstellen. Dies kann fehlschlagen, falls Sie nicht die nötigen Rechte besitzen, selbst eine Datenbank zu erstellen. Bei Hostingangeboten sind die Datenbanken meist eingerichtet bzw. können in der Administrationsoberfläche des Hostingangebots erstellt werden. Notieren Sie diesen Namen und geben Sie ihn hier ein.';
 $_lang["connection_screen_database_host"] = 'Datenbank host:';
@@ -76,7 +60,6 @@ $_lang["connection_screen_database_name"] = 'Datenbank Name:';
 $_lang["connection_screen_database_pass"] = 'Datenbank Passwort:';
 $_lang["connection_screen_database_test_connection"] = 'Klicken Sie hier, um die Datenbank zu erstellen bzw. die Verbinding zu testen.';
 $_lang["connection_screen_default_admin_email"] = 'Administrator E-Mail:';
-$_lang["connection_screen_default_admin_information"] = 'Administrator Informationen';
 $_lang["connection_screen_default_admin_login"] = 'Administrator Username:';
 $_lang["connection_screen_default_admin_note"] = 'Bitte geben Sie weitere Details für Ihren Administrator-Account an. Sie können Ihren Namen angeben und vergessen Sie bitte nicht das frei wählbare Passwort.Diese Daten benötigen Sie für den Login in die Administrationsoberfläche von MODx, den Manager.';
 $_lang["connection_screen_default_admin_password"] = 'Administrator Passwort:';
@@ -118,7 +101,7 @@ $_lang["installing_demo_site"] = 'Installiere Beispielinhalt: ';
 $_lang["language_code"] = 'de';
 $_lang["loading"] = 'Laden...';
 $_lang["modules"] = 'Module';
-$_lang["modx_footer1"] = '&copy; 2005-2008 <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODx unter der GNU GPL lizenziert.';
+$_lang["modx_footer1"] = '&copy; 2005-2009 <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) Projekt. Alle Rechte vorbehalten. MODx unter der GNU GPL lizenziert.';
 $_lang["modx_footer2"] = 'MODx is freie Software.  Wir ermutigen Sie, kreativ zu sein und MODx so zu nutzen wie es Ihnen am besten passt. Stellen Sie nur sicher, dass Sie bei Veränderungen des Quelltextes und der Weiterverbreitung der modifizierten MODx-Version den Quelltext frei zugänglich belassen!';
 $_lang["modx_install"] = 'MODx &raquo; Installation';
 $_lang["modx_requires_php"] = ', und MODx benötigt PHP 4.2.0. oder höher';
@@ -140,7 +123,6 @@ $_lang["remove_install_folder_auto"] = 'Entferne den Installationsordner von mei
 $_lang["remove_install_folder_manual"] = 'Bitte denken Sie daran den Ordner &quot;<b>install</b>&quot;zu löschen bevor Sie sich das erste Mal im Manager einloggen.';
 $_lang["retry"] = 'Nochmal versuchen';
 $_lang["running_database_updates"] = 'Führe Datenbank Updates aus: ';
-$_lang["running_setup_script"] = 'Starte Setup Script... bitte warten';
 $_lang["sample_web_site"] = 'Beispiel-Website';
 $_lang["sample_web_site_note"] = 'Beachten Sie, dass damit alle Dokumente und Ressourcen <b style=\"color:#CC0000\">überschrieben</b> werden.';
 $_lang["setup_cannot_continue"] = 'Leider kann die Installation nicht fortgesetzt werden wegen oben aufgeführter Gründe. ';
@@ -163,7 +145,7 @@ $_lang["status_checking_database"] = 'Überprüfe Datenbank: ';
 $_lang["status_connecting"] = ' Verbindung zu Host: ';
 $_lang["status_failed"] = 'fehlgeschlagen!';
 $_lang["status_failed_could_not_create_database"] = 'fehlgeschlagen - konnte Datenbank nicht erstellen';
-$_lang["status_failed_could_not_select_database"] = 'failed - could not select database';//translate this
+$_lang["status_failed_database_collation_does_not_match"] = 'fehlgeschlagen - Datenbank Kollation Unterschied; benutzen Sie SET NAMES oder wählen Sie %s';
 $_lang["status_failed_table_prefix_already_in_use"] = 'fehlgeschlagen - Tabellen Prefix bereits verwendet!';
 $_lang["status_passed"] = 'In Ordnung - Datenbank ausgewählt';
 $_lang["status_passed_database_created"] = 'In Ordnung - Datenbank erstellt';
@@ -177,7 +159,6 @@ $_lang["table_prefix_already_inuse_note"] = 'Das Programm konnte nicht in die ge
 $_lang["table_prefix_not_exist"] = ' - Tabellen Präfix existiert nicht in der gewählten Datenbank!';
 $_lang["table_prefix_not_exist_note"] = 'Das Programm konnte nicht in der gewählten Datenbank installiert werden, da keine Tabellen mit dem gewählten Prefix existieren. to be upgraded. Bitte wählen Sie einen exisiterenden Prefix und wiederholen Sie die Installation.';
 $_lang["templates"] = 'Templates';
-$_lang["testing_connection"] = 'Teste Verbindung...';
 $_lang["to_log_into_content_manager"] = 'Um sich im Manager einzuloggen, (manager/index.php) klicken Sie auf den `Schließen` Button.';
 $_lang["toggle"] = 'Umschalten';
 $_lang["unable_install_chunk"] = 'Konnte Chunk nicht installieren.  Datei';
@@ -188,7 +169,7 @@ $_lang["unable_install_template"] = 'Konnte Template nicht installieren.  Datei'
 $_lang["upgrade_note"] = '<strong>Achtung:</strong> Nach dem Einloggen im Manager sollten Sie die Konfigurationseinstellungen überprüfen und speichern, bevor Sie Ihre Seite aufrufen: <strong>Werkzeuge</strong> -> Konfiguration im MODx Manager.';
 $_lang["upgraded"] = 'Aktualisiert';
 $_lang["visit_forum"] = ', besuchen Sie die <a href="http://www.modxcms.com/forums/" target="_blank">MODx Foren</a>.';
-$_lang["welcome_message_select_begin_button"] = 'Bitte klicken Sie auf `Anfang` um zu beginnen:';
+$_lang["warning"] = 'ACHTUNG!';
 $_lang["welcome_message_text"] = 'Dieses Programm wird Sie durch die Installation begleiten.';
 $_lang["welcome_message_welcome"] = 'Willkommen beim MODx Installationsprogramm.';
 $_lang["writing_config_file"] = 'Schreibe Konfigurationsdatei: ';

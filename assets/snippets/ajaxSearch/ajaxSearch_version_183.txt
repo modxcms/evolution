@@ -1,11 +1,14 @@
 
-                              AjaxSearch - version 1.8.3
+                              AjaxSearch - version 1.8.3a
                            
                            Coroico - http://www.modx.wangba.fr
                            
-                                    08th June 2009
+                                    12th of July 2009
+
+The release 1.8.3a solve the AJAXSEARCH-35 issue.
 
 Previous versions : 
+ - 1.8.3 delivered the 08th June 2009
  - 1.8.2 delivered the 21th April 2009
  - 1.8.1 delivered the 13th October 2008 (provided with MODx0.9.6.3)
 
@@ -265,3 +268,6 @@ http://svn.modxcms.com/jira/browse/AJAXSEARCH-32
 
 ==== AJAXSEARCH-33 : preg_match fails with Segmentation Fault on capturing subpattern
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-33
+
+==== AJAXSEARCH-35 : ajaxSearch form not sanitizing input (advSearch parameter)
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-35

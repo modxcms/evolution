@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/danish.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         Casper Bang-Udesen
  *                 Andreas Kleist Svendsen(Update to 0.9.6.1)
  *                 Jonas Grau (Update to 0.9.6.2)
@@ -10,6 +9,9 @@
  * Version:        2.02
  * MODx version:   0.9.6.2
 */
+$modx_lang_attribute = 'da'; // Manager HTML and XML Language Attribute
+$modx_manager_charset = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx er et <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework og Content Management System</a> licenseret under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
 $_lang["access_permission_denied"] = 'Du har ikke de rette rettigheder for dette dokument.';
@@ -78,8 +80,6 @@ $_lang["change_password"] = 'ændre Password';
 $_lang["change_password_confirm"] = 'Accepter password';
 $_lang["change_password_message"] = 'Indtast venligst dit nye password, og indtast det igen for at acceptere det. Dit password skal være mellem 6 og 15 karakter lang.';
 $_lang["change_password_new"] = 'Nyt password';
-$_lang["charset_message"] = 'vælg venligst hvilken character encoding du ønsker at bruge i administrationen. Bemærk venligst at MODx er blevet testet med et antal af disse encodings, men ikke alle af dem. For de fleste sprog, er standard opsætningen med UTF-8 fortrunken.';
-$_lang["charset_title"] = 'Character encoding:';
 $_lang["chunk"] = 'Chunk';
 $_lang["chunk_code"] = 'Chunk kode (html)';
 $_lang["cleaningup"] = 'Rydder op';
@@ -149,13 +149,7 @@ $_lang["create_folder_here"] = 'Opret mappe her';
 $_lang["create_weblink_here"] = 'Opret weblink her';
 $_lang["createdon"] = 'Oprettelsesdato';
 $_lang["credits"] = 'Kredit';
-$_lang["credits_dTree"] = 'MODx bruger det perfekte dTree script fra DestroyDrop.com!';
-$_lang["credits_everaldo"] = 'MODx bruger et antal af ikoner fra Everaldo\'s crystal icon set. Super ikoner!';
-$_lang["credits_mysql"] = 'MODx er styret af MySQL!';
-$_lang["credits_php"] = 'MODx er styret af PHP!';
 $_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
-$_lang["credits_shouts_title"] = '<b>Additional thanks to:</b>';
-$_lang["credits_webfx"] = 'MODx bruger et antal af javascript fra Webfx. Super sejt!';
 $_lang["custom_contenttype_message"] = 'Her kan du tilføje customiserbar indholdstyper som kan bruges i dine dokumenter. For at tilføje en ny type, indtast indholdstypen i tekst boksen og klik \'Tilføj\' knappen.';
 $_lang["custom_contenttype_title"] = 'Customiserbare Indholdstyper:';
 $_lang["database_charset"] = 'Database Charset';
@@ -272,7 +266,7 @@ $_lang["expand_tree"] = 'Udvid filtræ';
 $_lang["export_site"] = 'Eksporter Statisk HTML';
 $_lang["export_site_cacheable"] = 'Inkluder ikke-cacherbare filer:';
 $_lang["export_site_exporting_document"] = 'Eksporterer fil <b>%s</b> af <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-$_lang["export_site_failed"] = '<span style="color:#990000">Mislykkedes!</span>';
+$_lang["export_site_failed"] = 'Mislykkedes!';
 $_lang["export_site_html"] = 'Eksportér website til HTML';
 $_lang["export_site_maxtime"] = 'Max eksport tid:';
 $_lang["export_site_maxtime_message"] = 'Her kan du angive antallet af sekunder MODx skal bruge for at eksportere sitet (ignorerer PHP indstillingerne). Indtast 0 for uanet tid. Vær opmærksom på at ved indstilling på 0 eller et rigtigt højt nummer kan foresage underlige ting på din server og er ikke anbefalingsværdigt.';
@@ -280,7 +274,7 @@ $_lang["export_site_message"] = '<p>Denne funktion bliver brugt til at eksporter
 $_lang["export_site_numberdocs"] = '<p><b>Fundne %s dokumenter til eksport...</b></p>';
 $_lang["export_site_prefix"] = 'fil præfiks:';
 $_lang["export_site_start"] = 'Start eksport';
-$_lang["export_site_success"] = '<span style="color:#009900">Succes!</span>';
+$_lang["export_site_success"] = 'Succes!';
 $_lang["export_site_suffix"] = 'Fil suffiks:';
 $_lang["export_site_target_unwritable"] = 'Slut biblioteket er skrivebeskyttet. Sikrer dig det er skrivbart og prøv igen.';
 $_lang["export_site_time"] = 'Eksport færdig. Eksport tog %s sekunder at færdiggøre.';
@@ -318,7 +312,6 @@ $_lang["files_files"] = 'Filer';
 $_lang["files_filesize"] = 'Fil størrelse';
 $_lang["files_filetype_notok"] = 'Uploading af denne form for fil er ikke tilladt!';
 $_lang["files_modified"] = 'ændret';
-$_lang["files_title"] = 'Fil browser';
 $_lang["files_top_level"] = 'Til øverste niveau';
 $_lang["files_up_level"] = 'Op et niveau';
 $_lang["files_upload_copyfailed"] = 'Mislykkedes at kopierer fil til destinations biblioteket - upload mislykkedes!';
@@ -374,22 +367,21 @@ $_lang["import_params"] = 'Importér moduldelte parametre';
 $_lang["import_params_msg"] = 'Du kan importerer parametre eller indstillinger fra et modul ved at vælge modulets navn fra ovenstående dropdown menu. <b>NOTE:</b> For at modulerne kan vises i menuen, skal dette plugin/snippet være en del af modulets afhængighedsliste og modulet skal have parameter deling aktiveret. ';
 $_lang["import_parent_document"] = 'Hoveddokument:';
 $_lang["import_site"] = 'Importér HTML';
-$_lang["import_site_failed"] = '<span style="color:#990000">Mislykkedes!</span>';
+$_lang["import_site_failed"] = 'Mislykkedes!';
 $_lang["import_site_html"] = 'Importér website fra HTML';
 $_lang["import_site_importing_document"] = 'Importerer fil <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Max import tid:';
 $_lang["import_site_maxtime_message"] = 'Her kan du angive antallet af sekunder som systemet skal bruge for at importere websitet (overskriver PHP indstillingerne). Indtast 0 for uanet tid. Vær opmærksom på at ved indstilling på 0 eller et rigtigt højt nummer kan foresage underlige ting på din server og er ikke anbefalingsværdigt.';
 $_lang["import_site_message"] = '<p>Ved brug af denne funktion kan du importerer et helt HTML website ind i databasen. Vær opmærksom på at du skal kopierer dine html filer og/eller mapper ind i assets/import mappen.<p />Udfyld formularen og tryk \'Import\' for at starte import processen. De importerede filer vil blive gemt i det valgte lokation med filnavnene som dokumentets alias og side titlen som dokumentets titel.';
-$_lang["import_site_skip"] = '<span style="color:#990000">Sprang over!</span>';
+$_lang["import_site_skip"] = 'Sprang over!';
 $_lang["import_site_start"] = 'Start Import';
-$_lang["import_site_success"] = '<span style="color:#009900">Succes!</span>';
+$_lang["import_site_success"] = 'Succes!';
 $_lang["import_site_time"] = 'Import færdig. Import tog %s sekunder at færdiggøre.';
 $_lang["inbox"] = 'Indbakke';
 $_lang["info"] = 'Info';
 $_lang["information"] = 'Information';
 $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Indsæt';
-$_lang["insert_snippet"] = 'Indsæt snippet i dokument';
 $_lang["keyword"] = 'Nøgleord';
 $_lang["keywords"] = 'Nøgleord';
 $_lang["keywords_intro"] = 'For at redigerer et nøgleord, skriv det nye nøgleord i tekstfeltet ved siden af det nøgleord du ønsker at ændre. For at slette et nøgleord, afkryds \'Slet\' feltet for det nøgleord. Hvis du afkrydser nøgleordets Slet felt, og også ændrer dets navn, vil det blive slettet, og omdøbningen af nøgleordet vil ikke finde sted!';
@@ -423,8 +415,8 @@ $_lang["login_allowed_days_message"] = 'Vælg de dage som denne bruger har tilla
 $_lang["login_allowed_ip"] = 'Tilladte IP adresser';
 $_lang["login_allowed_ip_message"] = 'Indtast IP adresserne som denne bruger har tilladelse til at logge ind fra. <b>NOTE: Del flere IP adresser med et komma (,)</b>';
 $_lang["login_button"] = 'Logind';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Installering/opdatering af denne side er i gang i øjeblikket. <br />Prøv venligst igen om et par minutter!</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Installering/opdatering af denne side er udført, log venligst ind igen!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'Installering/opdatering af denne side er i gang i øjeblikket. <br />Prøv venligst igen om et par minutter!<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Installering/opdatering af denne side er udført, log venligst ind igen!<br />';
 $_lang["login_captcha_message"] = 'Indtast venligst sikkerhedskoden vist i grafikken. Hvis du ikke kan læse koden, klik på billedet for at genererer en ny en eller kontakt din site administrator.';
 $_lang["login_homepage"] = 'Logind hjemmeside';
 $_lang["login_homepage_message"] = 'Indtast dokumentets id som du ønsker at sende brugeren til efter de har logget ind. <b>NOTE: Vær sikker på at det ID du indtaster tilhører et eksisterende dokument, og at det er publiseret og er tilgængelig for denne bruger!</b>';
@@ -443,10 +435,6 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Skabeloner';
 $_lang["manager"] = 'Administration';
-$_lang["manager_direction_message"] = 'Vælg hvilken retning tekst skal skrives i manageren, venstre mod højre(ltr) eller højre mod venstre(rtl).';
-$_lang["manager_direction_title"] = 'Manager tekstretning';
-$_lang["manager_lang_attribute_message"] = 'Indtast den sprogkode der bedst passer med dit valgte manager-sprog, dette sikrer at browseren viser indholdet i det bedste format.';
-$_lang["manager_lang_attribute_title"] = 'Manager HTML og XML Sprog-parameter';
 $_lang["manager_lockout_message"] = 'Du er ligenu logget ind i MODx administrationen. Hvis du vil slutte klik på "Log ud" knappen. <p />For at gå til start siden klik på "Hjem" knappen.';
 $_lang["manager_permissions"] = 'Administrer tilladelser';
 $_lang["manager_theme"] = 'Administrer tema:';
@@ -475,9 +463,8 @@ $_lang["messages_title"] = 'Beskeder';
 $_lang["messages_user"] = 'En bruger';
 $_lang["meta_keywords"] = 'META nøgleord';
 $_lang["metatag_intro"] = 'På denne side kan du slette, oprette eller redigere META tags. for at linke META tags til dokumenter, klik på <u>META nøgleord</u> fanebladet når du redigerer dokumentet, og vælg det ønskede META tags og nøgleord. For at tilføje et nyt tag, indtast navnet og værdien og klik \'Tilføj tag\' knappen. For at redigere tagget klik på taggets navn indeni data tabellen.';
-$_lang["metatag_notice"] = 'Du kan refererere til <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a> site for mere information. Dette er ikke en fuldstændig liste af mulige Meta Tags.';
+$_lang["metatag_notice"] = 'Du kan refererere til <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a> site for mere information. Dette er ikke en fuldstændig liste af mulige Meta Tags.';
 $_lang["metatags"] = 'META tags';
-$_lang["metatags_and_keywords"] = 'META tags og nøgleord';
 $_lang["mgr_access_permissions"] = 'Administrér adgangstilladelser';
 $_lang["mgr_login_start"] = 'Administrations Logind Startup';
 $_lang["mgr_login_start_message"] = 'Indtast dokumentets ID som du ønsker at sende dine bruger til efter at de har logget ind i administrationen. <b>NOTE: Vær sikker på at det indtastede ID tilhører et eksisterende dokument, og at det er publiseret og er tilgængelig for denne bruger!</b>';
@@ -631,7 +618,6 @@ $_lang["plugin_config"] = 'Plugin konfiguration';
 $_lang["plugin_desc"] = 'Beskrivelse';
 $_lang["plugin_disabled"] = 'Plugin deaktiveret';
 $_lang["plugin_event_msg"] = 'Vælg de hændelser som dette plugin skal reagere på.';
-$_lang["plugin_locked_message"] = 'Dette plugin er låst.';
 $_lang["plugin_management_msg"] = 'Her kan du vælge hvilke plugin du ønsker at redigere.';
 $_lang["plugin_msg"] = 'Her kan du tilføje/ redigere plugins. Plugins er \'rå\' PHP kode som køre når de valgte systemhændelser kaldes.';
 $_lang["plugin_name"] = 'Plugin navn';
@@ -767,8 +753,6 @@ $_lang["save"] = 'Gem';
 $_lang["save_all_changes"] = 'Gem alle ændringer';
 $_lang["save_tag"] = 'Gem tag';
 $_lang["saving"] = 'Gemmer, vent venligst...';
-$_lang["scroll_dn"] = 'Scroll ned';
-$_lang["scroll_up"] = 'Scroll op';
 $_lang["search"] = 'Søg';
 $_lang["search_criteria"] = 'Søge kriterier';
 $_lang["search_criteria_content"] = 'Søg efter indhold';
@@ -809,7 +793,6 @@ $_lang["settings_page_settings"] = 'Sideindstillinger';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Egenskaber';
 $_lang["settings_site"] = 'Site';
-$_lang["settings_snippets"] = 'Snippets';
 $_lang["settings_strip_image_paths_message"] = 'Hvis denne er sat til \'Nej\', vil MODx  skrive file browser resourcer src\'s (billeder, filer, flash, osv.) som absolutte URLs. Relative URLs er gode at bruge hvis man ønsker at flytte sin MODx installation, f.eks., fra et demo site til et produktions site. Hvis du ikke ved hvad dette betyder, bare sæt den til \'Ja\'.';
 $_lang["settings_strip_image_paths_title"] = 'Omskriv browser stier?';
 $_lang["settings_templvars"] = 'Skabelon Variabler';
@@ -842,7 +825,6 @@ $_lang["snippet_msg"] = 'Her kan du tilføje/ redigere snippets. Husk, snippets 
 $_lang["snippet_name"] = 'Snippet navn';
 $_lang["snippet_properties"] = 'Standard egenskaber';
 $_lang["snippet_title"] = 'Opret/ redigér snippet';
-$_lang["snippets_available"] = 'Snippets som er tilgængelig til brug på din side';
 $_lang["sort_asc"] = 'Stigende';
 $_lang["sort_desc"] = 'Faldende';
 $_lang["sort_tree"] = 'Sortér filtræet';
@@ -865,7 +847,6 @@ $_lang["template_assignedtv_tab"] = 'Tildelte Skabelon variabler';
 $_lang["template_code"] = 'Skabelon kode (html)';
 $_lang["template_desc"] = 'Beskrivelse';
 $_lang["template_edit_tab"] = 'Redigér skabelon';
-$_lang["template_locked_message"] = 'Denne Skabelon er låst.';
 $_lang["template_management_msg"] = 'Her kan du vælge hvilken Skabelon du ønsker at redigere.';
 $_lang["template_msg"] = 'Opret og redigér skabeloner. ændret eller nye skabeloner vil ikke være synlige i dit site\'s cacherede sider indtil cachen er tømt, men du kan bruge preview funktionen på en side for at se skabelonen i aktion.';
 $_lang["template_name"] = 'Skabelon navn';
@@ -978,7 +959,6 @@ $_lang["value"] = 'Værdi';
 $_lang["version_codename"] = 'Version kodenavn';
 $_lang["view"] = 'Vis';
 $_lang["view_child_documents_in_container"] = 'Vis undersider';
-$_lang["view_document"] = 'Vis dokument';
 $_lang["view_log"] = 'Vis log';
 $_lang["view_logging"] = 'Administrer handlinger';
 $_lang["view_sysinfo"] = 'System Info';

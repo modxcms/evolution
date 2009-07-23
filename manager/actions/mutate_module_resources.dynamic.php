@@ -202,17 +202,16 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 <input type="hidden" name="rt" value="" />
 <input type="hidden" name="newids" value="" />
 <input type="hidden" name="id" value="<?php echo $content['id'];?>" />
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['module_resource_title']; ?></span>
+	<h1><?php echo $_lang['module_resource_title']; ?></h1>
 
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<td id="Button4"><a href="index.php?a=106"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['close']; ?></a></td>
-	</table>
+<div id="actions">
+	<ul class="actionButtons">
+		<li><a href="index.php?a=106"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['close']; ?></a></td>
+	</ul>
 </div>
 
-
-
-<div class="sectionHeader"><?php echo $content["name"]." - ".$_lang['module_resource_title']; ?></div><div class="sectionBody">
+<div class="sectionHeader"><?php echo $content["name"]." - ".$_lang['module_resource_title']; ?></div>
+<div class="sectionBody">
 <p><img src="media/style/<?php echo $manager_theme?>images/icons/modules.gif" alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['module_resource_msg']; ?></p>
 <br />
 <!-- Dependencies -->
@@ -257,7 +256,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		?>
 		</td>
 		<td valign="top" width="120" style="background-color:#eeeeee">
-			<a class="searchtoolbarbtn" style="float:left;width:120px;margin-bottom:10px;" href="#" style="margin-top:2px;width:102px" onclick="removeDependencies();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" align="absmiddle" /> <?php echo $_lang['remove']; ?></a><br />
+			<a class="searchtoolbarbtn" style="float:left;width:120px;margin-bottom:10px;" href="#" style="margin-top:2px;width:102px" onclick="removeDependencies();return false;"><img src="<?php echo $_style["icons_delete_document"]?>" align="absmiddle" /> <?php echo $_lang['remove']; ?></a><br />
 			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addSnippet();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['add_snippet']; ?></a><br />
 			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addDocument();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['add_doc']; ?></a><br />
 			<a class="searchtoolbarbtn" style="float:left;width:120px;" href="#" style="margin-top:2px;width:102px" onclick="addChunk();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['add_chunk']; ?></a><br />

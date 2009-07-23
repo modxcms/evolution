@@ -5,9 +5,7 @@ if(!$modx->hasPermission('logs')) {
 	$e->dumpError();
 }
 ?>
-<div class="subTitle">
-<span class="right"><?php echo $_lang["view_sysinfo"]; ?></span>
-</div>
+<h1><?php echo $_lang["view_sysinfo"]; ?></h1>
 
 <script type="text/javascript">
 	function viewPHPInfo() {

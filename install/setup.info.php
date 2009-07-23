@@ -3,8 +3,8 @@
 #:::::::::::::::::::::::::::::::::::::::::
 
 	$moduleName = "MODx";
-	$moduleVersion = "Evolution 1.0.0-RC1";
-	$moduleRelease = "2009-06-11";
+	$moduleVersion = "Evolution 1.0.0-RC2";
+	$moduleRelease = "2009-07-23";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
@@ -18,12 +18,11 @@
 	$ms[] = array("AjaxSearch","<strong>1.8.3</strong> Ajax enabled search form with results highlighting.",0,"$setupPath/snippet.ajaxSearch.tpl","");
 	$ms[] = array("Breadcrumbs","<strong>1.0.1</strong> Configurable breadcrumb page trail navigation.",0,"$setupPath/snippet.breadcrumbs.tpl","");
 	$ms[] = array("Ditto","<strong>2.1</strong>+ Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more. Includes patches post-2.1 release to fix sorting bug and default display behavior. ",0,"$setupPath/snippet.ditto.tpl","");
-	$ms[] = array("eForm","<strong>1.4.4.5</strong> Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
+	$ms[] = array("eForm","<strong>1.4.4.6</strong> Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads.",0,"$setupPath/snippet.eform.tpl","");
 	$ms[] = array("FirstChildRedirect","<strong>1.0</strong> Automatically redirects to the first child of a folder document.",0,"$setupPath/snippet.firstchild.tpl","");
 	$ms[] = array("Jot","<strong>1.1.4</strong> User comments with moderation and email subscription.",0,"$setupPath/snippet.jot.tpl","");
 	$ms[] = array("ListIndexer","<strong>1.0.1</strong> Shows the most recent documents, highly flexible.",0,"$setupPath/snippet.listindexer.tpl","");
 	$ms[] = array("MemberCheck","<strong>1.0</strong> Selectively show chunks based on logged in Web User' group memberships.",0,"$setupPath/snippet.membercheck.tpl","");
-	$ms[] = array("NewsPublisher","<strong>1.4</strong> Publish news articles directly from the web.",0,"$setupPath/snippet.newspublisher.tpl","");
 	$ms[] = array("Personalize","<strong>2.0</strong> Basic personalization for web users.",0,"$setupPath/snippet.personalize.tpl","");
 	$ms[] = array("Reflect","<strong>2.1</strong> Used with Ditto, creates archives of articles, blog entries, image galleries and more.",0,"$setupPath/snippet.reflect.tpl","");
 	$ms[] = array("UltimateParent","<strong>2.0 beta</strong> - Travels up the document tree from a specified document and returns the \"ultimate\" parent.",0,"$setupPath/snippet.ultparent.tpl","");
@@ -34,19 +33,17 @@
 
 	# setup plugins template files - array : name, description, type - 0:file or 1:content, file or content,properties
 	$mp = &$modulePlugins;
-	$mp[] = array("Bottom Button Bar","Adds a set of buttons to the bottom of all manager pages",0,"$setupPath/plugin.bottombuttonbar.tpl","","OnChunkFormRender,OnDocFormRender,OnModFormRender,OnPluginFormRender,OnSnipFormRender,OnTVFormRender,OnTempFormRender,OnUserFormRender,OnWUsrFormRender");
 	$mp[] = array("Forgot Manager Login","Resets your manager login when you forget your password. ",0,"$setupPath/plugin.ForgotManagerPassword.tpl","","OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender");
 	$mp[] = array("Inherit Parent Template","New docs automatically select template of parent folder",0,"$setupPath/plugin.inherit-parent-tpl.tpl","","OnDocFormPrerender");
-	$mp[] = array("QuickEdit","Front-end Content Editor.",0,"$setupPath/quickedit.plugin.tpl","","OnParseDocument,OnWebPagePrerender","f888bac76e1537ca8e0cbec772b4624a");
+	$mp[] = array("QM+","<strong>1.1.1</strong> Enables QuickManager front end content editing support.",0,"$setupPath/plugin.qm.tpl","&jqpath=Path to jQuery;text;assets/js/jquery-1.3.2.min.js &loadmanagerjq=Load jQuery in manager;list;true,false;false &loadfrontendjq=Load jQuery in front-end;list;true,false;true &loadtb=Load ThickBox in front-end;list;true,false;true &usemm=Use with ManagerManager plugin;list;true,false;true &tbwidth=ThickBox window width;int;800 &tbheight=ThickBox window height;int;500 &hidefields=Hide document fields from front-end editors;text;parent &addbutton=Show add document here button;list;true,false;true &tpltype=New document template type;list;parent,id,selected;parent &tplid=New document template id;int;3","OnWebPagePrerender,OnDocFormPrerender,OnDocFormSave,OnManagerPageInit");
 	$mp[] = array("TinyMCE","<strong>3.2.4.1:</strong> TinyMCE RichText Editor Plugin",0,"$setupPath/plugin.tinymce.tpl","&customparams=Custom Parameters;textarea; &tinyFormats=Block Formats;text;p,h1,h2,h3,h4,h5,h6,div,blockquote,code,pre,address &entity_encoding=Entity Encoding;list;named,numeric,raw;named &entities=Entities;text; &tinyPathOptions=Path Options;list;rootrelative,docrelative,fullpathurl;docrelative &tinyCleanup=Cleanup;list;enabled,disabled;enabled &tinyResizing=Advanced Resizing;list;true,false;false &advimage_styles=Advanced Image Styles;text; &advlink_styles=Advanced Link Styles;text; &disabledButtons=Disabled Buttons;text; &tinyLinkList=Link List;list;enabled,disabled;enabled &webtheme=Web Theme;list;simple,advanced,editor,custom;simple &webPlugins=Web Plugins;text;style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media &webButtons1=Web Buttons 1;text;undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help &webButtons2=Web Buttons 2;text;bold,italic,underline,strikethrough,sub,sup,separator,separator,blockquote,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops &webButtons3=Web Buttons 3;text; &webButtons4=Web Buttons 4;text; &webAlign=Web Toolbar Alignment;list;ltr,rtl;ltr","OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender");
 	$mp[] = array("Search Highlighting","<strong>1.4</strong> - Show search terms highlighted on page linked from search results. (Requires AjaxSearch snippet)",0,"$setupPath/plugin.searchhighlight.tpl","","OnWebPagePrerender");
 	$mp[] = array("Image TV Preview","<strong>1.2.0.4</strong> - Show preview of any images loaded into image Template Variables",0,"$setupPath/plugin.imageTVpreview.tpl","","OnDocFormRender");
-    $mp[] = array("TransAlias", "<strong>1.0</strong> - Transliterate document alias",0,"$setupPath/transalias.plugin.tpl","&table_name=Name;text;common &override_tv=Override TV name;string;","OnStripAlias");
+    $mp[] = array("TransAlias", "<strong>1.0</strong> - Transliterate document alias",0,"$setupPath/plugin.transalias.tpl","&table_name=Name;list;common,russian;common &override_tv=Override TV name;string;","OnStripAlias");
 
 	# setup modules - array : name, description, type - 0:file or 1:content, file or content,properties, guid,enable_sharedparams
 	$mm = &$moduleModules;
-	$mm[] = array("Doc Manager","Quickly perform bulk updates to the Documents in your site including templates, publishing details, and permissions.",0,"$setupPath/module.docmanager.tpl","","",1);
-	$mm[] = array("QuickEdit","Renders QuickEdit links in the frontend",0,"$setupPath/quickedit.module.tpl","&mod_path=Module Path (from site root);string;assets/modules/quick_edit &show_manager_link=Show Manager Link;int;1 &show_help_link=Show Help Link;int;1 &editable=Editable Fields;string;pagetitle,longtitle,description,content,alias,introtext,menutitle,published,hidemenu,menuindex,searchable,cacheable,template","f888bac76e1537ca8e0cbec772b4624a",1);
+	$mm[] = array("Doc Manager","<strong>1.0</strong> Quickly perform bulk updates to the Documents in your site including templates, publishing details, and permissions.",0,"$setupPath/module.docmanager.tpl","","",1);
 
 	# setup callback function
 	$callBackFnc = "clean_up";

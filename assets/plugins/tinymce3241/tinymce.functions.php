@@ -5,14 +5,16 @@
 if (!function_exists('getTinyMCESettings')) {
 	function getTinyMCESettings($_lang, $path, $manager_language='english', $use_editor, $theme, $css, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $displayStyle, $action) {
 		// language settings
-		include_once($path.'/lang/'.$manager_language.'.inc.php');
+		if (! @include_once($path.'/lang/'.$manager_language.'.inc.php')){
+		  include_once($path.'/lang/english.inc.php');
+		}
 		// Check for previous 'full' theme setting for backwards compatibility 
 		if($theme == "full"){
 		    $theme == "editor";
 		}
 		
 		if($action == 11 || $action == 12){ 
-		    $themeOptions .= "					<option value=\"\"></option>\n";
+		    $themeOptions .= "					<option value=\"\">".$_lang['tinymce_theme_global_settings']."</option>\n";
 		}
 		$arrThemes[] = array("simple",$_lang['tinymce_theme_simple']);
 		$arrThemes[] = array("advanced",$_lang['tinymce_theme_advanced']);
@@ -90,7 +92,7 @@ TINYMCE_HTML;
 
 // getTinyMCEScript function
 if (!function_exists('getTinyMCEScript')) {
-	function getTinyMCEScript($elmList, $theme='simple', $width, $height, $language='en', $frontend, $base_url, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $disabledButtons, $blockFormats, $entity_encoding, $entities, $pathoptions, $cleanup, $resizing, $css_path, $css_selectors, $use_browser, $toolbar_align, $advimage_styles, $advlink_styles, $linklist, $customparams, $tinyURL, $webuser) {
+	function getTinyMCEScript($elmList, $theme='simple', $width, $height, $language='en', $frontend, $base_url, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $disabledButtons, $blockFormats, $entity_encoding, $entities, $pathoptions, $cleanup, $resizing, $css_path, $css_selectors, $use_browser, $toolbar_align, $advimage_styles, $advlink_styles, $linklist, $customparams, $site_url, $tinyURL, $webuser) {
 		// Set theme
 		if($theme == "editor" || $theme == "custom" || $theme == "full"){
 			$tinyTheme = "advanced";
@@ -110,13 +112,15 @@ if (!function_exists('getTinyMCEScript')) {
 		switch($pathoptions){
 			case "rootrelative":
 				$relative_urls = "false";
-				$convert_urls = false;
+				$convert_urls = true;
 				$remove_script_host = "true";
+				$document_base_url = "		  document_base_url : \"".$site_url."\",\n";
 			break;
 			
 			case "docrelative":
 				$relative_urls = "true";
-				$document_base_url = "		  document_base_url : \"".$base_url."\",\n";
+				$convert_urls = true;
+				$document_base_url = "		  document_base_url : \"".$site_url."\",\n";
 				$remove_script_host = "true";
 			break;
 			
@@ -127,7 +131,7 @@ if (!function_exists('getTinyMCEScript')) {
 			
 			default:
 				$relative_urls = "true";
-				$document_base_url = "		  document_base_url : \"".$base_url."\",\n";
+				$document_base_url = "		  document_base_url : \"".$site_url."\",\n";
 				$remove_script_host = "true";
 		}		
         		
@@ -163,15 +167,22 @@ if (!function_exists('getTinyMCEScript')) {
 				$tinymceInit .= ($use_browser==1 ? "		  file_browser_callback : \"myFileBrowser\",\n":"");
 
 $tinyCallback = <<<TINY_CALLBACK
-	function myFileBrowser (field_name, url, type, win) {		
+	function myFileBrowser (field_name, url, type, win) {
+	    if (type == 'media') {type = win.document.getElementById('media_type').value;}		
 		var cmsURL = '{$base_url}manager/media/browser/mcpuk/browser.php?Connector={$base_url}manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath={$base_url}&editor=tinymce3&editorpath={$tinyURL}';    // script URL - use an absolute path!
 		switch (type) {
 			case "image":
 				type = 'images';
 				break;
 			case "media":
+            case "qt":
+            case "wmp":
+            case "rmp":
+                type = 'media';
 				break;
+            case "shockwave":
 			case "flash": 
+                type = 'flash';
 				break;
 			case "file":
 				type = 'files';
@@ -189,7 +200,7 @@ $tinyCallback = <<<TINY_CALLBACK
 		    cmsURL = cmsURL + "&type=" + type;
 		}
 		
-		tinyMCE.activeEditor.windowManager.open({
+		var windowManager = tinyMCE.activeEditor.windowManager.open({
 		    file : cmsURL,
 		    width : screen.width * 0.7,  // Your dimensions may differ - toy around with them!
 		    height : screen.height * 0.7,
@@ -200,6 +211,7 @@ $tinyCallback = <<<TINY_CALLBACK
 		    window : win,
 		    input : field_name
 		});
+		if (window.focus) {windowManager.focus()}
 		return false;
 	}
 TINY_CALLBACK;
@@ -228,7 +240,7 @@ TINY_CALLBACK;
 			$tinymceInit .= "		  plugin_insertdate_dateFormat : \"%Y-%m-%d\",\n";
 			$tinymceInit .= "		  plugin_insertdate_timeFormat : \"%H:%M:%S\",\n";
 			if(!empty($customparams)){
-			    $params = split(",",$customparams);
+			    $params = explode(",",$customparams);
 			    $paramsCount = count($params);
         		for ($i=0;$i<$paramsCount;$i++) {
         			if(!empty($params[$i])){

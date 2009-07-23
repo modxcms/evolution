@@ -120,7 +120,7 @@ class synccache{
 		$tmpPHP .= '$a = &$this->aliasListing;' . "\n";
 		$tmpPHP .= '$d = &$this->documentListing;' . "\n";
 		$tmpPHP .= '$m = &$this->documentMap;' . "\n";
-		$sql = 'SELECT IF(alias="", id, alias) AS alias, id, contentType, parent FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
+		$sql = 'SELECT IF(alias=\'\', id, alias) AS alias, id, contentType, parent FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
 		$rs = $modx->db->query($sql);
 		$limit_tmp = $modx->db->getRecordCount($rs);
 		for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
@@ -140,7 +140,7 @@ class synccache{
 
 
 		// get content types
-		$sql = 'SELECT id, contentType FROM '.$modx->getFullTableName('site_content');
+		$sql = 'SELECT id, contentType FROM '.$modx->getFullTableName('site_content')." WHERE contentType != 'text/html'";
 		$rs = $modx->db->query($sql);
 		$limit_tmp = $modx->db->getRecordCount($rs);
 		$tmpPHP .= '$c = &$this->contentTypes;' . "\n";

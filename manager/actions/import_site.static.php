@@ -21,14 +21,16 @@ $allowedfiles = array('html','htm','shtml','xml');
         document.location.href = "index.php?r=1&a=7";
     }
 </script>
-<br />
-<div class="sectionHeader"><?php echo $_lang['import_site_html']; ?></div><div class="sectionBody">
+
+<h1><?php echo $_lang['import_site_html']; ?></h1>
+
+<div class="sectionBody">
 <?php
 
 if(!isset($_POST['import'])) {
-    echo $_lang['import_site_message'];
+    echo "<p>".$_lang['import_site_message']."</p>";
 ?>
-<p />
+
 <fieldset style="padding:10px"><legend><?php echo $_lang['import_site']; ?></legend>
 <form action="index.php" method="post" name="importFrm">
 <input type="hidden" name="import" value="import" />
@@ -50,9 +52,9 @@ if(!isset($_POST['import'])) {
   </tr>
 </table>
 <p />
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-    <td id="Button1"><a href="#" onclick="document.importFrm.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang["import_site_start"]; ?></a></td>
-</table>
+<ul class="actionButtons">
+    <li><a href="#" onclick="document.importFrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["import_site_start"]; ?></a></li>
+</ul>
 </form>
 </fieldset>
 
@@ -86,9 +88,9 @@ if(!isset($_POST['import'])) {
     printf ("<p />".$_lang['import_site_time'], round($totaltime, 3));
 ?>
 <p />
-<table cellpadding="0" cellspacing="0" class="actionButtons">
-    <td id="Button2"><a href="#" onclick="reloadTree();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang["close"]; ?></a></td>
-</table>
+<ul class="actionButtons">
+    <li><a href="#" onclick="reloadTree();"><img src="<?php echo $_style["icons_close"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
+</ul>
 <script type="text/javascript">
     parent.tree.ca = "";
 </script>
@@ -118,10 +120,10 @@ function importFiles($parent,$filepath,$files) {
             $rs = mysql_query($sql);
             if($rs) $new_parent = mysql_insert_id(); // get new parent id
             else {
-                echo "A database error occured while trying to clone document: <br /><br />".mysql_error();
+				echo "<p>".$_lang["import_site_failed_db_error"].mysql_error()."</p>";
                 exit;
             }
-            echo $_lang['import_site_success']."<br />";
+            echo "<p class=\"success\">".$_lang["import_site_success"]."</p>";
             importFiles($new_parent,$filepath."/$id/",$value);
         }
         else {
@@ -133,7 +135,7 @@ function importFiles($parent,$filepath,$files) {
             printf($_lang['import_site_importing_document'], $filename);
             $alias = !isset($modx->documentListing[$value]) ? $value:$value.'-'.substr(uniqid(''),-3);
             $modx->documentListing[$alias] = true;
-            if(!in_array($ext,$allowedfiles)) echo $_lang['import_site_skip']."<br />";
+            if(!in_array($ext,$allowedfiles)) echo "<p class=\"success\">".$_lang["import_site_skip"]."</p>";
             else {
                 $file = getFileContent("$filepath/$filename");
                 if (preg_match("/<title>(.*)<\/title>/i",$file,$matches)) {
@@ -149,10 +151,10 @@ function importFiles($parent,$filepath,$files) {
                        ('document', 'text/html', '".mysql_escape_string($pagetitle)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 0, '".mysql_escape_string($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
                 $rs = mysql_query($sql);
                 if(!$rs) {
-                    echo $_lang['import_site_failed']."A database error occured while trying to clone document: <br /><br />".mysql_error();
+                    echo "<p><span class=\"fail\">".$_lang["import_site_failed"]."</span> ".$_lang["import_site_failed_db_error"].mysql_error()."</p>";
                     exit;
                 }
-                echo $_lang['import_site_success']."<br />";
+                echo "<p class=\"success\">".$_lang["import_site_success"]."</p>";
             }
         }
     }
@@ -178,7 +180,7 @@ function getFiles($directory,$listing = array(), $count = 0){
         }
     }
     else {
-        echo $_lang['import_site_failed']." Could not open '$directory'.<br />";
+        echo "<p><span class=\"fail\">".$_lang["import_site_failed"]."</span> ".$_lang["import_site_failed_no_open_dir"].$directory.".</p>";
     }
     @closedir($handle);
     return ($listing);
@@ -195,7 +197,7 @@ function getFileContent($file) {
         fclose ($handle);
     }
     else {
-        echo $_lang['import_site_failed']." Could not retrieve document '$file'.<br />";
+        echo "<p><span class=\"fail\">".$_lang['import_site_failed']."</span> ".$_lang["import_site_failed_no_retrieve_file"].$file.".</p>";
     }
     return $buffer;
 }

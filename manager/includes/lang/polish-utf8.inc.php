@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/polish-utf8.inc.php
  * Function:       Polski plik językowy.
- * Encoding:       UTF8
  * Author:         Piotr Grzeszykowski - piotrek@gawinet.pl
  *                 based on v. 0.9.1/0.9.5 translation by:
  *                    Piotr Łukańko - piotr.lukanko@gmail.com
@@ -11,6 +10,9 @@
  * Version:        1.2
  * MODx version:   Evolution 1.0
 */
+$modx_lang_attribute = 'pl'; // Manager HTML and XML Language Attribute
+$modx_manager_charset = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx jest to <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'O MODx';
 $_lang["access_permission_denied"] = 'Nie masz właściwych uprawnień do tego dokumentu.';
@@ -153,13 +155,7 @@ $_lang["create_folder_here"] = 'Utwórz tutaj folder';
 $_lang["create_weblink_here"] = 'Utwórz odsyłacz tutaj';
 $_lang["createdon"] = 'Data utworzenia';
 $_lang["credits"] = 'Autorzy';
-$_lang["credits_dTree"] = 'MODx używa wspaniałego skryptu dTree od DestroyDrop.com!';
-$_lang["credits_everaldo"] = 'MODx uses a number of icons from Everaldo\'s crystal icon set. Great icons!';
-$_lang["credits_mysql"] = 'MODx jest napędzane przez MySQL!';
-$_lang["credits_php"] = 'MODx jest napędzane przez PHP!';
 $_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
-$_lang["credits_shouts_title"] = '<b>Dodatkowe podziękowania dla:</b>';
-$_lang["credits_webfx"] = 'MODx używa wielu skryptów JavaScript od Webfx. Świetne!';
 $_lang["custom_contenttype_message"] = 'Tutaj możesz dodać własne typy treści, które zostaną użyte w dokumentach. Aby dodać nową pozycję wprowadź typ treści w polu tekstowym i naciśnij przycisk \'Dodaj\'.';
 $_lang["custom_contenttype_title"] = 'Własne typy treści:';
 $_lang["database_charset"] = 'Baza danych - zestaw znaków';
@@ -323,7 +319,6 @@ $_lang["files_files"] = 'Pliki';
 $_lang["files_filesize"] = 'Rozmiar pliku';
 $_lang["files_filetype_notok"] = 'Wgrywanie plików tego typu nie jest dozwolone!';
 $_lang["files_modified"] = 'Zmodyfikowany';
-$_lang["files_title"] = 'Przeglądarka plików';
 $_lang["files_top_level"] = 'Najwyższy poziom';
 $_lang["files_up_level"] = 'Jeden poziom wyżej.';
 $_lang["files_upload_copyfailed"] = 'Błąd w trakcie kopiowania pliku do katalogu docelowego - wgrywanie zakończone niepowodzeniem!';
@@ -394,7 +389,6 @@ $_lang["info"] = 'Info';
 $_lang["information"] = 'Informacja';
 $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Wstaw';
-$_lang["insert_snippet"] = 'Wstaw snippet do dokumentu';
 $_lang["keyword"] = 'Słowo kluczowe';
 $_lang["keywords"] = 'Słowa kluczowe';
 $_lang["keywords_intro"] = 'Aby edytować słowo kluczowe wpisz nowe słowo w polu tekstowym obok słowa, które chcesz zmienić. Aby usunąć słowo kluczowe, zaznacz pole \'usuń\' dla danego słowa. Jeśli zaznaczysz pole usunięcia i zmienisz nazwę pola zostanie ono usunięte!';
@@ -428,8 +422,8 @@ $_lang["login_allowed_days_message"] = 'Wybierz dni, w które użytkownik może 
 $_lang["login_allowed_ip"] = 'Dozwolone adresy IP';
 $_lang["login_allowed_ip_message"] = 'Wprowadź adresy IP z których też użytkownik może się logować. <b>Uwaga: oddziel kilka adresów przecinkiem (,)</b>';
 $_lang["login_button"] = 'Zaloguj';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">W tej chwili trwa instalacja/aktualizacja tego serwisu.<br />Spróbuj ponownie za kilka minut!</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Instalacja/aktualizacja tego serwisu została zakończona, zaloguj się ponownie!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'W tej chwili trwa instalacja/aktualizacja tego serwisu.<br />Spróbuj ponownie za kilka minut!<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Instalacja/aktualizacja tego serwisu została zakończona, zaloguj się ponownie!<br />';
 $_lang["login_captcha_message"] = ' Administrator włączył walidację kodów Captcha, więc będziesz musiał także wprowadzić kod bezpieczeństwa. Jeśli masz problem z odczytaniem kodu, kliknij na nim w celu wygenerowania nowego.';
 $_lang["login_homepage"] = 'Strona po zalogowaniu';
 $_lang["login_homepage_message"] = 'Wprowadź ID dokumentu, który chcesz pokazać użytkownikowi po jego zalogowaniu. <b>Uwaga! Upewnij się, że ID, które wprowadziłeś jest przypisane do istniejącego dokumentu oraz, że jest opublikowane i dostępne dla danego użytkownika!</b>';
@@ -448,10 +442,6 @@ $_lang["manage_plugins"] = 'Pluginy';
 $_lang["manage_snippets"] = 'Snippety';
 $_lang["manage_templates"] = 'Szablony';
 $_lang["manager"] = 'Menedżer';
-$_lang["manager_direction_message"] = 'Wybierz kierunek wyświetlania tekstu w Menadżerze - od lewej do prawej lub od prawej do lewej.';
-$_lang["manager_direction_title"] = 'Kierunek tekstu w Menadżerze:';
-$_lang["manager_lang_attribute_message"] = 'Wpisz kod języka, który najlepiej odpowiada wybranemu językowi Menadżera - zapewni to optymalne wyświetlanie treści przez przeglądarkę.';
-$_lang["manager_lang_attribute_title"] = 'Atrybut Language dla HTML i XML Menadżera:';
 $_lang["manager_lockout_message"] = 'Jesteś obecnie zalogowany do Menadżera treści. W celu zakończenia sesji kliknij przycisk "Wyloguj". Aby przejść do strony głównej, kliknij przycisk "Start".';
 $_lang["manager_permissions"] = 'Uprawnienia menedżera';
 $_lang["manager_theme"] = 'Motyw panelu administracji:';
@@ -480,9 +470,8 @@ $_lang["messages_title"] = 'Wiadomości';
 $_lang["messages_user"] = 'użytkownika';
 $_lang["meta_keywords"] = 'Słowa kluczowe';
 $_lang["metatag_intro"] = 'Na tej stronie możesz tworzyć, dodawać, edytować i usuwać META tagi. Aby przypisać META tagi do dokumentów, kliknij na zakładce \'META słowa kluczowe\' podczas edycji dokumentu i wybierz potrzebne META tagi i słowa kluczowe. Aby dodać nowy tag wprowadź jego nazwę i wartość, a następnie kliknij przycisk \'Dodaj tag\'. Aby edytować tag kliknij jego nazwę na liście.';
-$_lang["metatag_notice"] = 'Możesz odwiedzić stronę <a href="http://www.html-reference.com/META.htm" target="_blank">HTML Reference Guide</a>, aby uzyskać więcej informacji. To nie jest kompletna lista META tagów.';
+$_lang["metatag_notice"] = 'Możesz odwiedzić stronę <a href="http://www.html-reference.com/META.asp" target="_blank">HTML Reference Guide</a>, aby uzyskać więcej informacji. To nie jest kompletna lista META tagów.';
 $_lang["metatags"] = 'Tagi META';
-$_lang["metatags_and_keywords"] = 'META tagi i słowa kluczowe';
 $_lang["mgr_access_permissions"] = 'Uprawnienia dostępu menedżera';
 $_lang["mgr_login_start"] = 'Dokument startowy dla Menedżera';
 $_lang["mgr_login_start_message"] = 'Wprowadź ID dokumentu, który chcesz wyświetlić po zalogowaniu do panelu administracyjnego. <b>Upewnij się, że istnieje dokument o podanym ID, oraz że jest opublikowany i dostępny dla danego użytkownika!</b>';
@@ -640,7 +629,6 @@ $_lang["plugin_config"] = 'Konfiguracja wtyczki';
 $_lang["plugin_desc"] = 'Opis';
 $_lang["plugin_disabled"] = 'Wtyczka wyłączona';
 $_lang["plugin_event_msg"] = 'Wybierz zdarzenia, których chcesz by nasłuchiwała ta wtyczka.';
-$_lang["plugin_locked_message"] = 'Ta wtyczka jest zablokowana.';
 $_lang["plugin_management_msg"] = 'Tutaj możesz wybrać, którą wtyczkę chcesz edytować.';
 $_lang["plugin_msg"] = 'Tutaj możesz dodawać/edytować wtyczki. Wtyczki to porcje kodu PHP, które wykonywane są podczas wybranych zdarzeń systemowych.';
 $_lang["plugin_name"] = 'Nazwa wtyczki';
@@ -780,8 +768,6 @@ $_lang["save"] = 'Zapisz';
 $_lang["save_all_changes"] = 'Zapisz wszystkie zmiany';
 $_lang["save_tag"] = 'Zapisz tag';
 $_lang["saving"] = 'Trwa zapisywanie, proszę czekać...';
-$_lang["scroll_dn"] = 'Przesuń w dół';
-$_lang["scroll_up"] = 'Przesuń w górę';
 $_lang["search"] = 'Szukaj';
 $_lang["search_criteria"] = 'Kryteria wyszukiwania';
 $_lang["search_criteria_content"] = 'Szukaj po zawartości';
@@ -824,7 +810,6 @@ $_lang["settings_page_settings"] = 'Ustawienia strony';
 $_lang["settings_photo"] = 'Zdjęcie';
 $_lang["settings_properties"] = 'Właściwości';
 $_lang["settings_site"] = 'Ustawienia serwisu';
-$_lang["settings_snippets"] = 'Snippety';
 $_lang["settings_strip_image_paths_message"] = 'Włączenie tej opcji spowoduje, że system będzie konwertował źródła do obrazów ze ścieżek bezwzględnych na względne. To użyteczna funkcja, jeśli będziesz chciał kiedyś przenieść instalację systemu w inne miejsce. Jeśli nie masz pojęcia co to oznacza ustaw tą opcję na \'Nie\'.';
 $_lang["settings_strip_image_paths_title"] = 'Konwertować ścieżki obrazów?';
 $_lang["settings_templvars"] = 'Zmienne szablonu';
@@ -857,7 +842,6 @@ $_lang["snippet_msg"] = 'Tutaj możesz dodawać/ edytować snippety. Pamiętaj, 
 $_lang["snippet_name"] = 'Nazwa snippeta';
 $_lang["snippet_properties"] = 'Domyślne właściwości';
 $_lang["snippet_title"] = 'Utwórz/ edytuj snippet';
-$_lang["snippets_available"] = 'Snippety dostępne do włączenia na stronie';
 $_lang["sort_asc"] = 'Rosnąco';
 $_lang["sort_desc"] = 'Malejąco';
 $_lang["sort_tree"] = 'Sortuj drzewo';
@@ -880,7 +864,6 @@ $_lang["template_assignedtv_tab"] = 'Przypisane Zmienne Szablonu';
 $_lang["template_code"] = 'Kod szablonu (html)';
 $_lang["template_desc"] = 'Opis';
 $_lang["template_edit_tab"] = 'Edytuj szablon';
-$_lang["template_locked_message"] = 'Ten szablon jest zablokowany.';
 $_lang["template_management_msg"] = 'Tutaj możesz wybrać, które szablony chcesz edytować.';
 $_lang["template_msg"] = 'Tutaj możesz tworzyć/ edytować szablony. Zmienione/ nowe szablony nie będą widoczne na zbuforowanych stronach Twojej witryny dopóki bufor nie zostanie wyczyszczony, jednakże, możesz użyć funkcji podglądu na stronie, aby zobaczyć szablon w działaniu.';
 $_lang["template_name"] = 'Nazwa szablonu';
@@ -993,7 +976,6 @@ $_lang["value"] = 'Wartość';
 $_lang["version_codename"] = 'Nazwa kodowa wersji';
 $_lang["view"] = 'Pokaż';
 $_lang["view_child_documents_in_container"] = 'Pokaż poddokumenty';
-$_lang["view_document"] = 'Pokaż dokument';
 $_lang["view_log"] = 'Wyświetl log';
 $_lang["view_logging"] = 'Audyt';
 $_lang["view_sysinfo"] = 'Informacje o systemie';

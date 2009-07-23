@@ -75,13 +75,13 @@ class SqlParser {
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
 		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
 
-		$sql_array = split("\n\n", $idata);
+		$sql_array = explode("\n\n", $idata);
 
 		$num = 0;
 		foreach($sql_array as $sql_entry) {
 			$sql_do = trim($sql_entry, "\r\n; ");
 
-			if (ereg('^\#', $sql_do)) continue;
+			if (preg_match('/^\#/', $sql_do)) continue;
 
 			// strip out comments and \n for mysql 3.x
 			if ($this->dbVersion <4.0) {

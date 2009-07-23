@@ -215,8 +215,8 @@ Class Image_Transform_Driver_NetPBM extends Image_Transform
         $cmd = $this->_postProcess('', $quality, $type) . ">$filename";
             
 		//if we have windows server
-        if(isset($_ENV['OS']) && eregi('window',$_ENV['OS']))
-			$cmd = ereg_replace('/','\\',$cmd);
+        if(isset($_ENV['OS']) && preg_match('/window/i',$_ENV['OS']))
+			$cmd = preg_replace('/\//','\\',$cmd);
         //echo $cmd."##";
         $output = system($cmd);
 		error_log('NETPBM: '.$cmd);

@@ -13,16 +13,15 @@ if ($handle = opendir("lang/")) {
 }
 sort($langs);
 ?>
-<form name="install" id="install_form" action="index.php?action=welcome" method="post">
+<form name="install" id="install_form" action="index.php?action=mode" method="post">
     <h2>Choose language:&nbsp;&nbsp;
     <select name="language">
 <?php
 foreach ($langs as $language) {
-    $abrv_language = explode('-',$language); // filter of character set extension
-    if ($abrv_language[0] == 'english') {
-        echo '<option value="' . $language . '" selected="selected">' . $abrv_language[0] . '</option>'."\n";
+    if ($language == 'english') {
+        echo '<option value="' . $language . '" selected="selected">' . $language . '</option>'."\n";
     } else {
-        echo '<option value="' . $language . '">' . $abrv_language[0] . '</option>'."\n";
+        echo '<option value="' . $language . '">' . $language . '</option>'."\n";
     }
 }
 ?>

@@ -79,15 +79,17 @@ if($php_ver_comp < 0) {
 // set some runtime options
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
 if(version_compare(phpversion(), "4.3.0")>=0) {
-    set_include_path($incPath); // this now works, above code did not?
+    set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 } else {
-    ini_set("include_path", $incPath); // include path the old way
+    ini_set("include_path", $incPath); // include path the old way (note we don't have PATH_SEPARATOR before 4.3.0, so we're not appending to the existing include path.. it's an edge case at this point)
 }
 
-@set_magic_quotes_runtime(0);
+if (version_compare(phpversion(), "5.3") < 0) {
+    @set_magic_quotes_runtime(0);
 
-// include_once the magic_quotes_gpc workaround
-include_once "quotes_stripper.inc.php";
+    // include_once the magic_quotes_gpc workaround
+    include_once "quotes_stripper.inc.php";
+}
 
 // include the html_entity_decode fake function :)
 if (!function_exists('html_entity_decode')) {
@@ -110,7 +112,7 @@ if (!defined("ENT_QUOTES")) define("ENT_QUOTES", 3);
 
 // set the document_root :|
 if(!isset($_SERVER["DOCUMENT_ROOT"]) || empty($_SERVER["DOCUMENT_ROOT"])) {
-    $_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", ereg_replace("[\][\]", "/", $_SERVER["PATH_TRANSLATED"]))."/";
+    $_SERVER["DOCUMENT_ROOT"] = str_replace($_SERVER["PATH_INFO"], "", preg_replace("/\\\\/", "/", $_SERVER["PATH_TRANSLATED"]))."/";
 }
 
 define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
@@ -141,28 +143,14 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
     @mysql_query("{$database_connection_method} {$database_connection_charset}");
 }
 
+// start session
+startCMSSession();
+
 // get the settings from the database
 include_once "settings.inc.php";
 
-// send the charset header
-header('Content-Type: text/html; charset='.$modx_charset);
-
-// include version info
-include_once "version.inc.php";
-
-// accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
-include_once "accesscontrol.inc.php";
-
-// double check the session
-if(!isset($_SESSION['mgrValidated'])){
-    echo "Not Logged In!";
-    exit;
-}
 // get the user settings from the database
 include_once "user_settings.inc.php";
-
-//echo $manager_direction;
-//echo $modx->config['manager_direction'];
 
 // include_once the language file
 if(!isset($manager_language)) {
@@ -174,6 +162,21 @@ $length_eng_lang = count($_lang);
 
 if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
     include_once "lang/".$manager_language.".inc.php";
+}
+
+// send the charset header
+header('Content-Type: text/html; charset='.$modx_manager_charset);
+
+// include version info
+include_once "version.inc.php";
+
+// accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
+include_once "accesscontrol.inc.php";
+
+// double check the session
+if(!isset($_SESSION['mgrValidated'])){
+    echo "Not Logged In!";
+    exit;
 }
 
 // include_once the style variables file
@@ -225,8 +228,9 @@ $modx->manager->action = $action;
 if (isset($modx->config['validate_referer']) && $modx->config['validate_referer']) {
     if (isset($_SERVER['HTTP_REFERER'])) {
         $referer = $_SERVER['HTTP_REFERER'];
+
         if (!empty($referer)) {
-            if (!eregi(MODX_SITE_URL, $referer)) {
+            if (!preg_match('/'.preg_quote(MODX_SITE_URL, '/').'/i', $referer)) {
                 echo "A possible CSRF attempt was detected from referer: {$referer}.";
                 exit();
             }
@@ -920,9 +924,9 @@ switch ($action) {
             <div class='subTitle'>
                 <span class='right'>".$_lang['functionnotimpl']."</span>
             </div>
-            <div class='sectionHeader'><img src='media/style/".($manager_theme ? $manager_theme : '')."/images/misc/dot.gif' alt='.' />&nbsp;
-                ".$_lang['functionnotimpl']."</div><div class='sectionBody'>
-                ".$_lang['functionnotimpl_message']."
+            <div class='sectionHeader'>".$_lang['functionnotimpl']."</div>
+			<div class='sectionBody'>
+                <p>".$_lang['functionnotimpl_message']."</p>
             </div>
         ";
         include_once "footer.inc.php";

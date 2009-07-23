@@ -3,7 +3,7 @@ require_once(strtr(realpath(dirname(__FILE__)), '\\', '/').'/../includes/protect
 
 // set the include_once path
 if(version_compare(phpversion(), "4.3.0")>=0) {
-    set_include_path("../includes/"); // include path the new way
+    set_include_path(get_include_path() . PATH_SEPARATOR . "../includes/");
 } else {
     ini_set("include_path", "../includes/"); // include path the old way
 }

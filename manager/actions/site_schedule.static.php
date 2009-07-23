@@ -7,9 +7,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 ?>
 
 <script type="text/javascript" src="media/script/tablesort.js"></script>
-<div class="subTitle">
-<span class="right"><?php echo $_lang["site_schedule"]?></span>
-</div>
+<h1><?php echo $_lang["site_schedule"]?></h1>
 
 <div class="sectionHeader"><?php echo $_lang["publish_events"]?></div><div class="sectionBody" id="lyr1">
 <?php

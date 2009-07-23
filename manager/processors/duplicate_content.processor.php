@@ -18,7 +18,8 @@ $udperms->duplicateDoc = true;
 
 if(!$udperms->checkPermissions()) {
 	include "header.inc.php";
-	?><br /><br /><div class="sectionHeader"><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/misc/dot.gif' alt="." />&nbsp;<?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
+	?><div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div>
+	<div class="sectionBody">
 	<p><?php echo $_lang['access_permission_denied']; ?></p>
 	<?php
 	include("footer.inc.php");

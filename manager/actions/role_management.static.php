@@ -12,7 +12,10 @@ $sqlQuery = mysql_escape_string($query);
 ?>
 <br />
 <!-- User Roles -->
-<div class="sectionHeader"><?php echo $_lang['role_management_title']; ?></div><div class="sectionBody">
+
+<h1><?php echo $_lang['role_management_title']; ?></h1>
+
+<div class="sectionBody">
 <p><?php echo $_lang['role_management_msg']; ?></p>
 
 <ul>

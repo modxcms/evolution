@@ -41,9 +41,9 @@ if (mysql_num_rows($rs) < 1) {
 
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<br />
 
-<div class="sectionHeader"><?php echo $_lang['mgr_access_permissions']?></div>
+<h1><?php echo $_lang['mgr_access_permissions']?></h1>
+
 <div class="sectionBody">
 <p><?php echo $_lang['access_permissions_introtext']?></p><?php echo $use_udperms!=1 ? '<p>'.$_lang['access_permissions_off'].'</p>' : ''?>
 

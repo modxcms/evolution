@@ -13,7 +13,7 @@ $sniffer_settings = array(	'check_cookies'=>$GET_VARS['cc'],
 							'default_language'=>$GET_VARS['dl'],
 							'allow_masquerading'=>$GET_VARS['am']); 
 
-$client =& new phpSniff($GET_VARS['UA'],$sniffer_settings);
+$client = new phpSniff($GET_VARS['UA'],$sniffer_settings);
 
 $client->get_property('UA');
 

@@ -30,7 +30,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
         }
 
 		if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
-		$output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx->config['manager_direction']=='rtl' ? '&rlm;' : '').'</span>';
+		$output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
         $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
         $output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
         $output .= '</li>';
@@ -44,8 +44,10 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<br />
-<div class="sectionHeader"><?php echo $_lang['resource_management']; ?></div><div class="sectionBody">
+
+<h1><?php echo $_lang['resource_management']; ?></h1>
+
+<div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
 	<script type="text/javascript">
 		tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ) );

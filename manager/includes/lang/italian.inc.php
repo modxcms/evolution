@@ -2,12 +2,14 @@
 /**
  * Filename:       includes/lang/italian.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
  * Author:         The MODx Project Team, Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif
  * Date:           2 Jan 2009
  * Version:        Version: 2.14
  * MODx version:   MODx version: 0.9.6.3
 */
+$modx_lang_attribute = 'it'; // Manager HTML and XML Language Attribute
+$modx_manager_charset = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx &egrave; un <a href="http://modxcms.com/what-is-modx.html" target="_blank">framework PHP e un sistema di gestione dei contenuti (CMS)</a> su licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Cos\'&egrave; MODx';
 $_lang["access_permission_denied"] = 'Non avete i permessi per accedere al documento.';
@@ -150,13 +152,7 @@ $_lang["create_folder_here"] = 'Crea una cartella qui';
 $_lang["create_weblink_here"] = 'Crea un link web qui';
 $_lang["createdon"] = 'Data creazione';
 $_lang["credits"] = 'Crediti';
-$_lang["credits_dTree"] = 'MODx utilizza l\'eccellente script per la struttura ramificata di DestroyDrop.com!';
-$_lang["credits_everaldo"] = 'MODx utilizza numerose icone del set Everaldo\'s crystal. Ottime icone!';
-$_lang["credits_mysql"] = 'MODx utilizza MySQL!';
-$_lang["credits_php"] = 'MODx utilizza PHP!';
 $_lang["credits_shouts_msg"] = '<ul><li><b>Raymond Irving, Ryan Thrash</b> - Project Founders</li><li><b>Jason Coward, Victor Brilon, Adam Crownoble, Jeff Whitfield, Remon Sijrier</b> - Core Architecture &amp; Design</li></ul>';
-$_lang["credits_shouts_title"] = '<b>Particolari ringraziamenti a:</b>';
-$_lang["credits_webfx"] = 'MODx usa diversi JavaScripts di Webfx. Grande gruppo!!';
 $_lang["custom_contenttype_message"] = 'qui potete impostare il formato del contenuto dei documenti pubblicati. Per aggiunere un nuovo formato, inserite il tipo di contenuto nel campo e cliccate sul pulsante \'Aggiungi\'.';
 $_lang["custom_contenttype_title"] = 'Tipo di Contenuto personalizzato:';
 $_lang["database_charset"] = 'Set di Caratteri del Database';
@@ -320,7 +316,6 @@ $_lang["files_files"] = 'File';
 $_lang["files_filesize"] = 'Dimensione file';
 $_lang["files_filetype_notok"] = 'Non &egrave; consentito il caricamento di questo tipo di file!';
 $_lang["files_modified"] = 'Modificato';
-$_lang["files_title"] = 'Sistema di gestione file';
 $_lang["files_top_level"] = 'Al livello superiore';
 $_lang["files_up_level"] = 'Su di un livello';
 $_lang["files_upload_copyfailed"] = 'La copia del file nella cartella di destinazione non &egrave; riuscita - caricamento fallito!';
@@ -391,7 +386,6 @@ $_lang["info"] = 'Info';
 $_lang["information"] = 'Informazioni';
 $_lang["inline"] = 'In linea';
 $_lang["insert"] = 'Inserisci';
-$_lang["insert_snippet"] = 'Inserisci uno snippet nel documento';
 $_lang["keyword"] = 'Parola chiave';
 $_lang["keywords"] = 'Parole chiave';
 $_lang["keywords_intro"] = 'Per modificare una parola chiave, digitate semplicemente la nuova parola nel campo di testo a fianco di quella che volete cambiare. Per eliminare una parola chiave, spuntate il box \'Elimina\' per quella parola. Se impostate l\'eliminazione di una parola chiave e allo stesso tempo ne modificate il nome, essa verr&agrave; eliminata vanificando l\'operazione di rinomina!';
@@ -425,8 +419,8 @@ $_lang["login_allowed_days_message"] = 'Selezionate i giorni in cui questo utent
 $_lang["login_allowed_ip"] = 'Indirizzo IP autorizzato';
 $_lang["login_allowed_ip_message"] = 'Inserite l\'indirizzo IP autorizzato all\'autenticazione. <b>NB: Separate differenti indirizzi IP con una virgola (,)</b>';
 $_lang["login_button"] = 'Autentica';
-$_lang["login_cancelled_install_in_progress"] = '<span style="font-weight: bold; color: red;">Installazione o aggiornamento di questo sitoin corso. <br />Riprova tra qualche minuto</span><br />';
-$_lang["login_cancelled_site_was_updated"] = '<span style="font-weight: bold; color: red;">Installazione o aggiornamento  completata su questo sito, effettuare nuovamente il login!</span><br />';
+$_lang["login_cancelled_install_in_progress"] = 'Installazione o aggiornamento di questo sitoin corso. <br />Riprova tra qualche minuto<br />';
+$_lang["login_cancelled_site_was_updated"] = 'Installazione o aggiornamento  completata su questo sito, effettuare nuovamente il login!<br />';
 $_lang["login_captcha_message"] = 'Inserite il codice di sicurezza mostrato all\'interno dell\'immagine grafica. Se avete difficolt&agrave; nel leggere il codice, cliccateci sopra per generarne un altro a caso, oppure contattate l\'amministratore del sito.';
 $_lang["login_homepage"] = 'Autenticazione Pagina d\'inizio';
 $_lang["login_homepage_message"] = 'Inserite l\'ID del Documento da inviare all\'utente, dopo che ha eseguito l\'autenticazione. <b>NOTE: assicuratevi che il documento indicato esista, sia pubblicato e accessibile all\'utente!</b>';
@@ -445,10 +439,6 @@ $_lang["manage_plugins"] = 'Plugin';
 $_lang["manage_snippets"] = 'Snippet';
 $_lang["manage_templates"] = 'Gestione Template';
 $_lang["manager"] = 'Sistema di gestione';
-$_lang["manager_direction_message"] = 'Scegliere la direzione da cui appare il testo nel Manager, da sinistra a destra o da destra a  sinistra';
-$_lang["manager_direction_title"] = 'Direzione del testo nel Manager:';
-$_lang["manager_lang_attribute_message"] = 'Seleziona la codifica adatta al linguaggio usato nel manager, per garantire una corretta rappresentazione dei contenuti da parte del browser.';
-$_lang["manager_lang_attribute_title"] = 'Attributi HTML e XML della lingua del Manager:';
 $_lang["manager_lockout_message"] = 'Siete attualmete autenticati nel sistema di gestione dei contenuti. Se desiderate uscire dalla sessione, cliccate sul pulsante "Uscita".<p />Per andare alla pagina di inzio, cliccate sul pulsante "Home".';
 $_lang["manager_permissions"] = 'Gestione permessi';
 $_lang["manager_theme"] = 'Tema del sistema di gestione:';
@@ -477,9 +467,8 @@ $_lang["messages_title"] = 'Messaggi';
 $_lang["messages_user"] = 'Un utente';
 $_lang["meta_keywords"] = 'META e parole chiave';
 $_lang["metatag_intro"] = 'In questa pagina potete eliminare, creare o modificare i META tag e le parole chiave. Per collegare le parole chiave ai documenti, modificate il documento in questione e selezionate le parole chiave desiderate dalla lista. Per aggiungere una parola chiave digitate la nuova parola e poi cliccate \'Aggiungi tag\'.';
-$_lang["metatag_notice"] = 'Per ulteriori informazioni, consultate il sito della <a href="http://www.html-reference.com/META.htm" target="_blank">Guida di Riferimento HTML</a>. Questa non &egrave; una lista completa di tutti i possibili META tag.';
+$_lang["metatag_notice"] = 'Per ulteriori informazioni, consultate il sito della <a href="http://www.html-reference.com/META.asp" target="_blank">Guida di Riferimento HTML</a>. Questa non &egrave; una lista completa di tutti i possibili META tag.';
 $_lang["metatags"] = 'META tag';
-$_lang["metatags_and_keywords"] = 'META tag e parole chiave';
 $_lang["mgr_access_permissions"] = 'Gestione permessi di accesso';
 $_lang["mgr_login_start"] = 'Gestione accesso autenticazione';
 $_lang["mgr_login_start_message"] = 'Inserite l\'ID del documento che volete mostrare agli utenti dopo l\'accesso al sistema doi gestione. <b>NOTA: assicuratevi che l\'ID appartenga ad un documento esistente, e che sia stato pubblicato!</b>';
@@ -637,7 +626,6 @@ $_lang["plugin_config"] = 'Configura Plugin';
 $_lang["plugin_desc"] = 'Descrizione';
 $_lang["plugin_disabled"] = 'Plugin Disabilitato';
 $_lang["plugin_event_msg"] = 'Selezionate l\'evento per il plugin';
-$_lang["plugin_locked_message"] = 'Questo plugin &egrave; bloccato.';
 $_lang["plugin_management_msg"] = 'Qui potete selezionare i plugin da modificare.';
 $_lang["plugin_msg"] = 'Qui potete aggiungere/modificare i plugin. I Plugin sono \'puro\'codice PHP  che viene richiamato in seguito ad alcuni eventi di sistema.';
 $_lang["plugin_name"] = 'Nome Plugin';
@@ -777,8 +765,6 @@ $_lang["save"] = 'Salva';
 $_lang["save_all_changes"] = 'Salva tutte le modifiche';
 $_lang["save_tag"] = 'Salva tag';
 $_lang["saving"] = 'Sto salvando, per favore attendete...';
-$_lang["scroll_dn"] = 'Scorri verso il basso';
-$_lang["scroll_up"] = 'Scorri verso l\'alto';
 $_lang["search"] = 'Cerca';
 $_lang["search_criteria"] = 'Criteri di ricerca';
 $_lang["search_criteria_content"] = 'Cerca per contenuto';
@@ -821,7 +807,6 @@ $_lang["settings_page_settings"] = 'Impostazioni pagina';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Propriet&agrave;';
 $_lang["settings_site"] = 'Impostazioni sito';
-$_lang["settings_snippets"] = 'Snippet';
 $_lang["settings_strip_image_paths_message"] = 'Se questo valore &egrave; impostato su \'No\', MODx imposter&agrave; il percorso browser dei file (immagini, file, flash, ecc.) su relativo invece che su assoluto. L\'operazione risulta pratica se devi spostare l\'installazione di MODx (ad esempio da un sito di test ad uno di produzione). Se non avete idea di cosa significa, lasciala impostata su \'si\'.';
 $_lang["settings_strip_image_paths_title"] = 'Riscrivere i percorsi immagine?';
 $_lang["settings_templvars"] = 'Template Variabili';
@@ -854,7 +839,6 @@ $_lang["snippet_msg"] = 'Qui potete aggiungere/ modificare gli snippet. Ricordat
 $_lang["snippet_name"] = 'Nome snippet';
 $_lang["snippet_properties"] = 'Propriet&agrave; di default';
 $_lang["snippet_title"] = 'Crea/modifica snippet';
-$_lang["snippets_available"] = 'Snippet disponibili da includere nella pagina';
 $_lang["sort_asc"] = 'Ascendente';
 $_lang["sort_desc"] = 'Discendente';
 $_lang["sort_tree"] = 'Ordina la struttura ramificata';
@@ -877,7 +861,6 @@ $_lang["template_assignedtv_tab"] = 'Variabili di Template Assegnate';
 $_lang["template_code"] = 'Codice Template (html)';
 $_lang["template_desc"] = 'Descrizione';
 $_lang["template_edit_tab"] = 'Modifica Template';
-$_lang["template_locked_message"] = 'Questo template &egrave; bloccato.';
 $_lang["template_management_msg"] = 'Qui potete scegliere il template da modificare.';
 $_lang["template_msg"] = 'Qui potete creare/modificare i template. I template modificati o nuovi non saranno visibili nelle pagine in cache finch√© la cache stessa non verr&agrave; svuotata. Ad ogni modo, potete usare la funzione di anteprima su una pagina per vedere il template in azione.';
 $_lang["template_name"] = 'Nome template';
@@ -990,7 +973,6 @@ $_lang["value"] = 'Valore';
 $_lang["version_codename"] = 'Nome in codice versione';
 $_lang["view"] = 'Mostra';
 $_lang["view_child_documents_in_container"] = 'Vedi i documenti figli';
-$_lang["view_document"] = 'Visualizza documento';
 $_lang["view_log"] = 'Vedi log';
 $_lang["view_logging"] = 'Cronistorie';
 $_lang["view_sysinfo"] = 'Informazioni sistema';

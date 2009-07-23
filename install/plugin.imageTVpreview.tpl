@@ -1,10 +1,10 @@
 // <?php
 //    @name       ShowImageTVs
-//    @version    0.2.2, 24 Nov 2008
+//    @version    0.2.3, 9 Jul 2009
 //
 //
 //    @author     Brett @ The Man Can!
-//                rewritten by Rachael Black, update by pixelchutes
+//                rewritten by Rachael Black, update by pixelchutes and rthrash
 //                now works with MooTools and finds the image tvs itself
 //
 
@@ -40,12 +40,12 @@ if ($e->name == 'OnDocFormRender' && ($template > 0)) {
 	else
 		$style = '';
 
-		// get list of all image template vars
+	// get list of all image template vars using TV ids from Evo
 	$table = $modx->getFullTableName('site_tmplvars');
-	$result = $modx->db->select('name', $table, "type='image'");
+	$result = $modx->db->select('id', $table, "type='image'");
 	$tvs = '';
 	while ($row = $modx->db->getRow($result))
-		$tvs .= ",'" . $row['name'] . "'";
+		$tvs .= ",'" . $row['id'] . "'";
 	$tvs = substr($tvs, 1);		// remove leading ','
 
 	$output = <<< EOT
@@ -74,29 +74,21 @@ if ($e->name == 'OnDocFormRender' && ($template > 0)) {
     }
   }
 
-	window.onDomReady(function() {
+  window.onDomReady(function() {
     for (var i = 0; i < imageNames.length; i++) {
     	var elem = $('tv' + imageNames[i]);
+		if (elem) {
+		  var url = elem.value;
 
-  	// Account for TVs with "underscores" in their name (MODx escapes them to %5F)
-        // Update by pixelchutes
-        if (!elem) {
-            newname = imageNames[i].replace(new RegExp(/_/ig),'%5F');
-            var elem = $('tv' + newname);
-        }
+		  // create div and img to show thumbnail
+		  var div = new Element('div').addClass('tvimage');
+		  var img = new Element('img').setProperty('src', full_url(url)).setStyles($style);
+		  elem.getParent().adopt(div.adopt(img));
 
-      if (elem) {
-        var url = elem.value;
-
-        	// create div and img to show thumbnail
-        var div = new Element('div').addClass('tvimage');
-        var img = new Element('img').setProperty('src', full_url(url)).setStyles($style);
-        elem.getParent().adopt(div.adopt(img));
-
-        elem.thumbnail = img;    // direct access for when need to update
-        elem.oldUrl = url;   		 // oldUrl so change HTML only when necessary
-        pageImages.push(elem);   // save so don't have to search each time
-      }
+		  elem.thumbnail = img;    // direct access for when need to update
+		  elem.oldUrl = url;   	   // oldUrl so change HTML only when necessary
+		  pageImages.push(elem);   // save so don't have to search each time
+		}
     }
     setInterval(checkImages, 1000);
   })

@@ -15,10 +15,10 @@
 
 		$param = array();
 		if($paramstring){
-			$cp = split("&",$paramstring);
+			$cp = explode("&",$paramstring);
 			foreach($cp as $p => $v){
 				$v = trim($v); // trim
-				$ar = split("=",$v);
+				$ar = explode("=",$v);
 				if (is_array($ar) && count($ar)==2) {
 					$params[$ar[0]] = decodeParamValue($ar[1]);
 				}
@@ -74,9 +74,9 @@
 				if ($value !='' || $params['default']=='Yes') {
 					$value = parseInput($value);
 					// Check for MySQL style date - Adam Crownoble 8/3/2005
-					$date_match = '^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$';
+					$date_match = '/^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$/';
 					$matches= array();
-					if(strpos($value,'-')!==false && ereg($date_match, $value, $matches)) {
+					if(strpos($value,'-')!==false && preg_match($date_match, $value, $matches)) {
 						$timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[1], $matches[3]);
 					}
 					else { // If it's not a MySQL style date, then use strtotime to figure out the date
@@ -91,8 +91,8 @@
 
 			case "floater":
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
-				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
+				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js", array('name'=>'moodx', 'version'=>'0', 'plaintext'=>false));
 				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
 				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
 				$o .= "\n<div id=\"".$id."\"".$class.$style.">".$value."</div>\n";
@@ -112,8 +112,8 @@
 
 			case "marquee":
 				$value = parseInput($value," ");
-				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
-				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js");
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
+				$modx->regClientStartupScript("manager/media/script/mootools/moodx.js", array('name'=>'moodx', 'version'=>'0', 'plaintext'=>false));
 				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
 				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
 				$o .= "\n<div id=\"".$id."\"".$class.$style."><div id=\"marqueeContent\">".$value."</div></div>\n";
@@ -132,8 +132,8 @@
 				break;
 
 			case "ticker":
-				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js");
-				$modx->regClientStartupScript("manager/media/script/mootools/moostick.js?init=false");
+				$modx->regClientStartupScript("manager/media/script/mootools/mootools.js", array('name'=>'mootools', 'version'=>'1.1.1', 'plaintext'=>false));
+				$modx->regClientStartupScript("manager/media/script/mootools/moostick.js?init=false", array('name'=>'moostick', 'version'=>'0', 'plaintext'=>false));
 				$class = (!empty($params['class']) ? " class=\"".$params['class']."\"" : "");
 				$style = (!empty($params['style']) ? " style=\"".$params['style']."\"" : "");
 				$o .= "\n<div id=\"".$id."\"".$class.$style.">\n";
@@ -233,9 +233,9 @@
 			case "unixtime":
 				$value = parseInput($value);
 				// Check for MySQL style date - Adam Crownoble 8/3/2005
-				$date_match = '^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$';
+				$date_match = '/^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$/';
 				$matches= array();
-				if(strpos($value,'-')!==false && ereg($date_match, $value, $matches)) {
+				if(strpos($value,'-')!==false && preg_match($date_match, $value, $matches)) {
 					$timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[1], $matches[3]);
 				}
 				else { // If it's not a MySQL style date, then use strtotime to figure out the date
@@ -271,7 +271,7 @@
 					$autoMode = "2";	//height only
 				}
 
-				$modx->regClientStartupScript("manager/media/script/bin/viewport.js");
+				$modx->regClientStartupScript("manager/media/script/bin/viewport.js", array('name'=>'viewport', 'version'=>'0', 'plaintext'=>false));
 				$o =  $sTag." id='".$params['vpid']."' name='".$params['vpid']."' ";
 				if ($params['class']) $o.= " class='".$params['class']."' ";
 				if ($params['style']) $o.= " style='".$params['style']."' ";

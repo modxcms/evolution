@@ -1,8 +1,7 @@
-# eForm 1.4.4.5 - Electronic Form Snippet
+# eForm 1.4.4.6 - Electronic Form Snippet
 # Original created by Raymond Irving 15-Dec-2004.
 # Version 1.3+ extended by Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
-# local version: $Id: eform.snippet.tpl,v 1.2 2006/11/22 14:53:38 jelle Exp $
 # Captcha image support - thanks to Djamoer
 # Multi checkbox, radio, select support - thanks to Djamoer
 # Form Parser and extened validation - by Jelle Jager
@@ -34,7 +33,7 @@ if(isset($eFormCSS)) $cssStyle = $eFormCSS;
 $params = array (
    // Snippet Path
    'snipPath' => $snipPath, //includes $snipFolder
-     'snipFolder' => $snipFolder,
+	 'snipFolder' => $snipFolder,
 
 // eForm Params
    'vericode' => isset($vericode)? $vericode:"",
@@ -86,6 +85,9 @@ $params = array (
    'autoSenderName' => isset($autoSenderName)?$autoSenderName:'',
    'version' => '1.4.4'
 );
+
+// pixelchutes PHx workaround
+foreach( $params as $key=>$val ) $params[ $key ] = str_replace( array('((','))'), array('[+','+]'), $val );
 
 # Start processing
 

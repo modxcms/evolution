@@ -2,7 +2,6 @@
 /**
  * Filename:       includes/lang/english-british.inc.php
  * Function:       Language file.
- * Encoding:       ??
  * Author:         The MODx Project Team (originally by Alex Butter)
  * Date:           2006/09/28
  * Version:        2.1

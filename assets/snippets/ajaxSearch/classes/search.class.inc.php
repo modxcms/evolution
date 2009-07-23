@@ -4,17 +4,17 @@
  * Purpose:
  *    The Search class contains all functions common to AjaxSearch functionalities
  *
- *    Version: 1.8.3  - Coroico (coroico@wangba.fr) 
+ *    Version: 1.8.3a  - Coroico (coroico@wangba.fr)
  *
- *    08/06/2009  
+ *    12/07/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
- *    Ryan Thrash (rthrash - ryan@vertexworks.com) 
+ *    Ryan Thrash (rthrash - ryan@vertexworks.com)
 */
 
 // Default number admitted in case of a wrong &minChars parameter
-define('MIN_CHARS',2);     // minimum number of characters
+define('MIN_CHARS',3);     // minimum number of characters
 define('MAX_CHARS',30);    // maximum number of characters
 define('MIN_WORDS',1);     // minimum number of words
 define('MAX_WORDS',10);    // maximum number of words
@@ -33,6 +33,8 @@ class Search {
     'latin1' => 'ISO-8859-1',
     'latin2' => 'ISO-8859-2'
   );
+
+  var $advSearchType = array('oneword','allwords','exactphrase','nowords');
 
   var $pgCharset;       // page charset
   var $dbCharset;       // database charset
@@ -55,14 +57,14 @@ class Search {
   var $asSelect;
 
 /**
- * Load the configuration file 
+ * Load the configuration file
  */
   function loadConfig(& $msgErr) {
 
     $valid = false;
     $msgErr = '';
 
-    // include configuration file 
+    // include configuration file
     if (substr($this->cfg['config'], 0, 5) != "@FILE") $configFile = AS_PATH."configs/".$this->cfg['config'].".config.php";
     else $configFile = MODX_BASE_PATH . trim(substr($this->cfg['config'], 5));
 
@@ -75,9 +77,9 @@ class Search {
     }
     return $valid;
   }
-  
+
 /**
- * Load the language file 
+ * Load the language file
  */
   function loadLang() {
 
@@ -97,7 +99,7 @@ class Search {
   }
 
 /**
- *  setDatabaseCharset : initialize the dbCharset and the appropriate 
+ *  setDatabaseCharset : initialize the dbCharset and the appropriate
  *                       PCRE modifiers depending of the charset of database
  */
   function setDatabaseCharset(){
@@ -146,30 +148,30 @@ class Search {
 
       // Remove js tags
       $searchString = stripJscripts($searchString);
-      
+
       // Remove modx sensitive tags
       $searchString = stripTags($searchString);
 
       // Strip HTML tags
       $searchString = stripHtml($searchString);
-    
+
       // and finally prevent JS XSS
       // The double_encode  parameter was added with version 5.2.3
       if (version_compare(PHP_VERSION, '5.2.3', '>='))
         $searchString = htmlspecialchars($searchString, ENT_COMPAT, $pgCharset, False);
-      else 
+      else
         $searchString = $this->php_compat_htmlspecialchars($searchString, ENT_COMPAT, $pgCharset, False);
-    }  
+    }
     return $searchString;
   }
 
 /**
  * Do the search
- * 
+ *
  * @param string $searchString term searched
  * @param string $advSearch adanced Search parameter
- * 
- * @author Coroico (www.modx.wangba.fr) 
+ *
+ * @author Coroico (www.modx.wangba.fr)
  */
   function doSearch() {
 
@@ -187,8 +189,8 @@ class Search {
       $orderBy = $this->getOrderBy();
 
       $this->asSelect = "SELECT $fields FROM $from WHERE $where";
-      $this->asSelect .= " GROUP BY $groupBy HAVING $having ORDER BY $orderBy";      
-      
+      $this->asSelect .= " GROUP BY $groupBy HAVING $having ORDER BY $orderBy";
+
       if ($this->dbg) $this->asDebug->dbgLog($this->printSelect($this->asSelect),"Select");
       if (isset($this->joined)) {
         $modx->db->query("SET group_concat_max_len = " . GROUP_CONCAT_LENGTH . ";"); // increase the group_concat
@@ -201,27 +203,27 @@ class Search {
 
 /**
  * get the fields clause of the AS query
- * 
- * @return the fiels clause  
- */  
+ *
+ * @return the fiels clause
+ */
   function getFields(){
- 
-    $fields = array();   
+
+    $fields = array();
     $mpref = $this->main['tb_alias'];  // main table alias
 
     // id of the main table
     $fields[] = $mpref . '.' . $this->main['id'];
 
-    // displayed fields of the main table  
+    // displayed fields of the main table
     if (isset($this->main['displayed']))
       foreach($this->main['displayed'] as $displayed) $fields[] = $mpref . '.' . $displayed;
 
     // date fields of the main table
-    if (isset($this->main['date'])) 
-      foreach($this->main['date'] as $date) $fields[] = $mpref . '.' . $date;    
+    if (isset($this->main['date']))
+      foreach($this->main['date'] as $date) $fields[] = $mpref . '.' . $date;
 
     // id field from joined tables
-    if (isset($this->joined)) 
+    if (isset($this->joined))
       foreach($this->joined as $joined){
         $jpref = $joined['tb_alias'];
           $f = 'GROUP_CONCAT( DISTINCT CAST(n' . $jpref . '.' . $joined['id'] . ' AS CHAR)';
@@ -229,7 +231,7 @@ class Search {
           $fields[] = $f;
       }
     // displayed (concatened) fields from joined tables
-    if (isset($this->joined)) 
+    if (isset($this->joined))
       foreach($this->joined as $joined){
         $jpref = $joined['tb_alias'];
         $nbd = count($joined['displayed']);
@@ -247,13 +249,13 @@ class Search {
 
 /**
  * get the "FROM" clause of the AS query
- * 
+ *
  * @param string $searchString Search terms
  * @param string $advSearch advSearch parameter
- * @return "FROM" clause  
+ * @return "FROM" clause
  */
   function getFrom($searchString,$advSearch){
- 
+
     // from main table
     $from[] =  $this->main['tb_name'] . ' ' . $this->main['tb_alias'];
 
@@ -261,14 +263,14 @@ class Search {
     if (isset($this->main['jfilters'])) foreach($this->main['jfilters'] as $filter){
       $f = 'LEFT JOIN ' . $filter['tb_name'] . ' ' . $filter['tb_alias'];
       $f .= ' ON ' . $this->main['tb_alias'] . '.' . $filter['main'] . ' = ' . $filter['tb_alias'] . '.' . $filter['join'];
-      $from[] = $f;     
+      $from[] = $f;
     }
 
     //left join with joined table
-    if (isset($this->joined)) 
+    if (isset($this->joined))
       foreach($this->joined as $joined){
         $jpref = 'n' . $joined['tb_alias'];
-        $f = 'LEFT JOIN( ' . $this->getSubSelect($joined,$searchString,$advSearch) . ' )' . ' AS ' . $jpref . ' ON '; 
+        $f = 'LEFT JOIN( ' . $this->getSubSelect($joined,$searchString,$advSearch) . ' )' . ' AS ' . $jpref . ' ON ';
         $f .= $this->main['tb_alias'] . '.' . $this->main['id'] . ' = ' . $jpref . '.' . $joined['join'];
         $from[] = $f;
       }
@@ -279,41 +281,41 @@ class Search {
 
 /**
  * get the "WHERE" clause of the AS query
- * 
+ *
  * @param string $searchString Search terms
  * @param string $advSearch advSearch parameter
- * @return "WHERE" clause 
+ * @return "WHERE" clause
  */
   function getWhere(){
 
     // where clauses from the main table (filters)
-    if (isset($this->main['filters'])) 
+    if (isset($this->main['filters']))
       foreach($this->main['filters'] as $filter) $where[]= $this->getFilter($this->main['tb_alias'],$filter);
 
     // where clauses from Main table (joined filters)
-    if (isset($this->main['jfilters'])) 
-      foreach($this->main['jfilters'] as $filter) $where[] = $this->getFilter($filter['tb_alias'],$filter);     
+    if (isset($this->main['jfilters']))
+      foreach($this->main['jfilters'] as $filter) $where[] = $this->getFilter($filter['tb_alias'],$filter);
 
     if (count($where)>0) $whereClause = '(' . implode(' AND ',$where) . ')';
     else $whereClause = '1';
-    return $whereClause;    
+    return $whereClause;
   }
 
 /**
  * get the "GROUP BY" clause of the AS query
- * 
- * @return "GROUP BY" clause  
+ *
+ * @return "GROUP BY" clause
  */
   function getGroupBy(){
 
     $groupByClause = $this->main['tb_alias'] . '.' . $this->main['id'];
-    return $groupByClause;       
+    return $groupByClause;
   }
 
 /**
  * get the "HAVING" clause of the AS query
- * 
- * @return "HAVING" clause  
+ *
+ * @return "HAVING" clause
  */
   function getHaving($searchString,$advSearch){
 
@@ -321,12 +323,12 @@ class Search {
     $whereOper = $this->getWhereOper($advSearch);
     $whereStringOper = $this->getWhereStringOper($advSearch);
 
-    if (isset($this->main['searchable'])) 
+    if (isset($this->main['searchable']))
       foreach($this->main['searchable'] as $searchable) $hvg[] = '(' . $this->main['tb_alias'] . '.' . $searchable . $like .')';
 
     // having clause from joined tables
     if ($advSearch != 'nowords') {
-      if (isset($this->joined)) 
+      if (isset($this->joined))
         foreach($this->joined as $joined){
           $jpref = $joined['tb_alias'];
           foreach($joined['searchable'] as $searchable) $hvg[] = '(' . $jpref . '_' . $searchable . $like .')';
@@ -334,7 +336,7 @@ class Search {
     }
     else {
       // Aggregate queries involving NOT LIKE comparisons with columns containing NULL may yield unexpected results
-      if (isset($this->joined)) 
+      if (isset($this->joined))
         foreach($this->joined as $joined){
           $jpref = $joined['tb_alias'];
           foreach($joined['searchable'] as $searchable) {
@@ -345,13 +347,13 @@ class Search {
 
     if (count($hvg)>0) {
       $havingSubClause = '(' . implode($whereOper,$hvg) .')';
-      
+
       // build of request - where clause regarding the search string
       $search = array();
       if ($advSearch == 'exactphrase') $search[] = $searchString;
-      else $search = explode(' ',$searchString);    
+      else $search = explode(' ',$searchString);
       foreach($search as $searchTerm) $having[]= preg_replace('/word/', $searchTerm, $havingSubClause);
-  
+
       $havingClause = '(' . implode($whereStringOper,$having) .')';
     }
     else $havingClause = '1';
@@ -360,8 +362,8 @@ class Search {
 
 /**
  * get the "GROUP BY" clause of the AS query
- * 
- * @return "GROUP BY" clause  
+ *
+ * @return "GROUP BY" clause
  */
   function getOrderBy(){
 
@@ -370,17 +372,17 @@ class Search {
       $order = explode(',',$this->cfg['order']);
       foreach($order as $ord) $orderBy[] = $this->main['tb_alias'] . '.' . $ord;
       $orderByClause = implode(',',$orderBy);
-    }  
-    return $orderByClause;       
+    }
+    return $orderByClause;
   }
 
 /**
  * get select statement for a joined table
- * 
+ *
  * @param array $joined description of the joined table
  * @param string $searchString Search terms
  * @param string $advSearch advSearch parameter
- * @return select statement for a joined table  
+ * @return select statement for a joined table
  */
   function getSubSelect($joined,$searchString,$advSearch){
 
@@ -389,10 +391,10 @@ class Search {
     $where = array();
     $whl = array();
 
-    // field id of the joined table 
+    // field id of the joined table
     $fields[] = $joined['tb_alias'] . '.' . $joined['id'];
 
-    // fields of the joined table  
+    // fields of the joined table
     if (isset($joined['displayed']))
       foreach($joined['displayed'] as $displayed) $fields[] = $joined['tb_alias'] . '.' . $displayed;
 
@@ -455,19 +457,19 @@ class Search {
     }
     // > (GREAT THAN)
     else if (($filter['oper'] == '>') || ($filter['oper'] == 'GREAT THAN')){
-      $where .= $alias . '.' . $filter['field'] . '>' . $filter['value'];        
+      $where .= $alias . '.' . $filter['field'] . '>' . $filter['value'];
     }
     // > (LESS THAN)
     else if (($filter['oper'] == '<') || ($filter['oper'] == 'LESS THAN')){
-      $where .= $alias . '.' . $filter['field'] . '<' . $filter['value'];        
+      $where .= $alias . '.' . $filter['field'] . '<' . $filter['value'];
     }
     // in (IN)
     else if (($filter['oper'] == 'in') || ($filter['oper'] == 'IN')){
-      $where .= $alias . '.' . $filter['field'] . ' IN (' . $filter['value'] . ')';        
+      $where .= $alias . '.' . $filter['field'] . ' IN (' . $filter['value'] . ')';
     }
     // not in (NOT IN)
     else if (($filter['oper'] == 'not in') || ($filter['oper'] == 'NOT IN')){
-      $where .= $alias . '.' . $filter['field'] . ' NOT IN (' . $filter['value'] . ')';        
+      $where .= $alias . '.' . $filter['field'] . ' NOT IN (' . $filter['value'] . ')';
     }
     if ($where != '') $where = '(' . $where . ')';
     return $where;
@@ -477,7 +479,7 @@ class Search {
     $whereForm = array(
       'like' => " LIKE '%word%'",
       'notlike' => " NOT LIKE '%word%'"
-    ); 
+    );
 
     if ($advSearch == 'nowords') return $whereForm['notlike'];
     else return $whereForm['like'];
@@ -487,17 +489,17 @@ class Search {
     $whereOper = array(
       'or' => " OR ",
       'and' => " AND "
-    ); 
+    );
 
     if ($advSearch == 'nowords') return $whereOper['and'];
     else return $whereOper['or'];
   }
-  
+
   function getWhereStringOper($advSearch){
     $whereStringOper = array(
       'or' => " OR ",
       'and' => " AND "
-    ); 
+    );
 
     if ($advSearch == 'nowords' || $advSearch == 'allwords') return $whereStringOper['and'];
     else if ($advSearch == 'exactphrase') return '';
@@ -506,11 +508,11 @@ class Search {
 
 /**
  * get the "WHERE" clause related to search terms for joined tables
- * 
+ *
  * @param array $joined description of the joined table
  * @param string $searchString Search terms
  * @param string $advSearch advSearch parameter
- * @return where clause 
+ * @return where clause
  */
   function getSearchTermsWhere($joined,$searchString,$advSearch){
 
@@ -526,18 +528,18 @@ class Search {
     // build of request - where clause regarding the search string
     $search = array();
     if ($advSearch == 'exactphrase') $search[] = $searchString;
-    else $search = explode(' ',$searchString);    
+    else $search = explode(' ',$searchString);
 
     foreach($search as $searchTerm) $where[]=   preg_replace('/word/', $searchTerm, $whereSubClause);
 
-    $whereClause = implode($whereStringOper,$where);  
+    $whereClause = implode($whereStringOper,$where);
     return $whereClause;
   }
 
 /**
- * Check and initialize the description of the tables & content fields 
- *   
- * @author Coroico (www.modx.wangba.fr) 
+ * Check and initialize the description of the tables & content fields
+ *
+ * @author Coroico (www.modx.wangba.fr)
  */
   function initSearchContext(){
 
@@ -546,7 +548,7 @@ class Search {
     // unset the variable to reinit the context
     unset($this->main);
     unset($this->joined);
-    
+
     $mainDefined = false;
     $this->withContent = false;
     $part = explode('|',$this->cfg['whereSearch']); // which tables and which fields ?
@@ -557,7 +559,7 @@ class Search {
       $ptable = $p_array[0];
       $pfields = $p_array[1];
 
-      switch ($ptable){      
+      switch ($ptable){
         case 'content':
           // Content ========================================= search in content
           $this->main = array(
@@ -588,19 +590,19 @@ class Search {
           $this->main['filters'][] = array(
               'field' => 'published',
               'oper' => '=',
-              'value' => '1'  
+              'value' => '1'
           );
           // documents should be searchable
           $this->main['filters'][] = array(
               'field' => 'searchable',
               'oper' => '=',
-              'value' => '1'  
+              'value' => '1'
           );
           // documents should'nt be deleted
           $this->main['filters'][] = array(
               'field' => 'deleted',
               'oper' => '=',
-              'value' => '0'  
+              'value' => '0'
           );
           // documents hidden or not from menu
           if (($this->cfg['hideMenu'] == 0 ) || ($this->cfg['hideMenu'] == 1 )) $this->main['filters'][] = array(
@@ -608,7 +610,7 @@ class Search {
               'oper' => '=',
               'value' => $this->cfg['hideMenu']
           );
-          // content of type reference searchable or not 
+          // content of type reference searchable or not
           if ($this->cfg['hideLink'] == 1) $this->main['filters'][] = array(
               'field' => 'type',
               'oper' => '=',
@@ -637,7 +639,7 @@ class Search {
                 'field' => 'privateweb',
                 'oper' => '=',
                 'value' => '0'
-            ); 
+            );
           }
           break;
 
@@ -666,7 +668,7 @@ class Search {
           if ($this->cfg['withTvs']) {
             $wtv = $this->getListTvs($this->cfg['withTvs']);
             $this->joined[$j]['jfilters'][] = array(
-              'tb_name' => $this->getShortTableName('site_tmplvars'),            
+              'tb_name' => $this->getShortTableName('site_tmplvars'),
               'tb_alias' => 'tmpl',
               'main' => 'tmplvarid',
               'join' => 'id',
@@ -702,7 +704,7 @@ class Search {
           $this->joined[$j]['filters'][] = array(
               'field' => 'published',
               'oper' => '=',
-              'value' => '1'  
+              'value' => '1'
           );
           break;
 
@@ -730,8 +732,8 @@ class Search {
           $this->joined[$j]['filters'][] = array(
               'field' => 'hide',
               'oper' => '=',
-              'value' => '0'  
-          );          
+              'value' => '0'
+          );
           break;
 
         // search in your own table
@@ -751,10 +753,10 @@ class Search {
           break;
       }
     }
-    
+
     if ($this->dbg) { // debug of search context
       $this->asDebug->dbgLog($this->main,"Search context main ".$this->main['tb_name']);
-      if (isset($this->joined)) 
+      if (isset($this->joined))
         foreach($this->joined as $joined) $this->asDebug->dbgLog($joined,"Search context joined ".$joined['tb_name']);
     }
 
@@ -786,7 +788,7 @@ class Search {
       $tplRS = $modx->db->select('id', $tplName, 'name="' . $tv . '"');
       if (!$modx->db->getRecordCount($tplRS)) {
         $msgErr = "<br /><h3>AjaxSearch error: tv $tv not defined - Check your withTvs parameter !</h3><br />";
-        return false;       
+        return false;
       }
     }
     return true;
@@ -800,27 +802,27 @@ class Search {
     $wtvSign = $wtv_array[0];
     if ($wtvSign == '+') $wtv['oper'] = 'in';
     else $wtv['oper'] = 'not in';
-    
+
     $tvs = explode(',',$wtv_array[1]);
     $nbtvs = count($tvs);
     for ($i=0;$i<$nbtvs;$i++) $tvs[$i] = "'{$tvs[$i]}'";
     $wtv['list'] = implode(',',$tvs);
-    
+
     return $wtv;
   }
 
 /**
  * Sort results by rank value
- * 
+ *
  * @param string $searchString term searched
- * @param string $advSearch adanced Search parameter    
+ * @param string $advSearch adanced Search parameter
  */
   function sortResultsByRank($searchString,$advSearch){
 
     $rkFields = array();
 
     if ($this->cfg['rank']){
-      $searchString = strtolower($searchString);  
+      $searchString = strtolower($searchString);
       // sort search results by rank (nb extracts)
       $rkParam = explode(',',$this->cfg['rank']);
       foreach($rkParam as $rk){
@@ -849,11 +851,11 @@ class Search {
 
 /**
  * get the rank value
- * 
+ *
  * @param string $searchString term searched
  * @param string $advSearch adanced Search parameter
  * @param string $field field used by ranking
- * @param int $weight weight linked by the user to the field       
+ * @param int $weight weight linked by the user to the field
  */
   function getRank($searchString,$advSearch,$field,$weight){
 
@@ -884,7 +886,7 @@ class Search {
   }
 
 /**
- * cleanText : strip function to clean outputted results  
+ * cleanText : strip function to clean outputted results
  */
   function cleanText($text,$stripOutput) {
 
@@ -894,7 +896,7 @@ class Search {
   }
 
 /**
- * defaultStripOutput : default ouput strip function  
+ * defaultStripOutput : default ouput strip function
  */
   function defaultStripOutput($text){
 
@@ -906,7 +908,7 @@ class Search {
       // strip Jscripts
       $text = stripJscripts($text);
       // strip html tags. Tags should be correctly ended
-      $text = stripHTML($text);  
+      $text = stripHTML($text);
     }
     return $text;
   }
@@ -917,7 +919,7 @@ class Search {
   function getSelectList($searchWordList){
     $list = '';
     $swl = explode(',',$searchWordList);
-    $searchFunction = array_shift($swl); 
+    $searchFunction = array_shift($swl);
     if (function_exists($searchFunction)) $list = $searchFunction($swl);
     return $list;
   }
@@ -927,23 +929,23 @@ class Search {
  */
   function initBreadcrumbs(){
     if ($this->cfg['breadcrumbs']){
-      $bc = explode(',',$this->cfg['breadcrumbs']); 
+      $bc = explode(',',$this->cfg['breadcrumbs']);
       if (function_exists($bc[0])) {
         $this->breadcrumbs['type'] = 'function';
       } elseif ($this->snippet_exists($bc[0])) {
-        $this->breadcrumbs['type'] = 'snippet'; 
+        $this->breadcrumbs['type'] = 'snippet';
       } else {
         $this->cfg['breadcrumbs'] = false;
       }
-      
+
       if ($this->cfg['breadcrumbs']){
         $this->breadcrumbs['name'] = array_shift($bc);
         $this->breadcrumbs['params'] = array();
         foreach($bc as $prm){
           $param = explode(':',$prm);
           $this->breadcrumbs['params'][$param[0]] = (isset($param[1]) ? $param[1] : 0);
-        } 
-      }     
+        }
+      }
     }
   }
 
@@ -953,33 +955,33 @@ class Search {
   function snippet_exists($snippetName){
 
     global $modx;
-  
+
     $tbl = $modx->getFullTableName('site_snippets');
-    $select= "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . mysql_escape_string($snippetName) . "';";
+    $select= "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . $modx->db->escape($snippetName) . "';";
     $rs = $modx->db->query($select);
     return $modx->recordCount($rs);
   }
 
 /**
- * Check user params 
+ * Check user params
  */
   function checkParams($cfg,& $msgErr){
 
     $msgErr = '';
-    
+
     // Check maxWords parameter
     if (isset($cfg['maxWords'])){
       if ($cfg['maxWords'] < MIN_WORDS) $cfg['maxWords'] = MIN_WORDS;
       if ($cfg['maxWords'] > MAX_WORDS) $cfg['maxWords'] = MAX_WORDS;
       $this->cfg['maxWords'] = $cfg['maxWords'];
-    }    
+    }
     // Check minChars parameter
     if (isset($cfg['minChars'])){
       if ($cfg['minChars'] < MIN_CHARS) $cfg['minChars'] = MIN_CHARS;
       if ($cfg['minChars'] > MAX_CHARS) $cfg['minChars'] = MAX_CHARS;
       $this->cfg['minChars'] = $cfg['minChars'];
     }
-    // Check extractLength parameter 
+    // Check extractLength parameter
     if (isset($cfg['extractLength'])){
       if ($cfg['extractLength'] < EXTRACT_MIN) $cfg['extractLength'] = EXTRACT_MIN;
       if ($cfg['extractLength'] > EXTRACT_MAX) $cfg['extractLength'] = EXTRACT_MAX;
@@ -988,7 +990,7 @@ class Search {
     // Check hideMenu parameter
     if (isset($cfg['hideMenu'])){
       if (($cfg['hideMenu'] != 0) && ($cfg['hideMenu'] != 1) && ($cfg['hideMenu'] != 2)) $cfg['hideMenu'] = 2;
-      $this->cfg['hideMenu'] = $cfg['hideMenu'];      
+      $this->cfg['hideMenu'] = $cfg['hideMenu'];
     }
     // check the number of extract and the fields to use with
     if (isset($cfg['hideMenu'])){
@@ -1004,8 +1006,8 @@ class Search {
         if ($cfg['opacity'] < 0.) $cfg['opacity'] = 0.;
         if ($cfg['opacity'] > 1.) $cfg['opacity'] = 1.;
         $this->cfg['opacity'] = $cfg['opacity'];
-    }     
-      
+    }
+
     $this->cfg['ajaxSearch'] = $cfg['ajaxSearch'];
     // check that the tables where to do the search exist
     if (isset($cfg['whereSearch'])){
@@ -1021,8 +1023,8 @@ class Search {
         }
       }
     }
-    
-    // check the list of tvs    
+
+    // check the list of tvs
     if (isset($cfg['withTvs'])){
       if ($cfg['withTvs'] != ''){
         $wtv_array = explode(':',$cfg['withTvs']);
@@ -1037,13 +1039,13 @@ class Search {
       }
       $this->cfg['withTvs'] = $cfg['withTvs'];
     }
-    
+
     // check the table and the tvDisplay function
     if (isset($cfg['tvPhx'])){
       if ($cfg['tvPhx']){
         $tvphx_array = explode(':',$cfg['tvPhx']);
         $tvphx_table = $tvphx_array[0];
-        if (isset($tvphx_array[1])) $tvphx_func = $tvphx_array[1];      
+        if (isset($tvphx_array[1])) $tvphx_func = $tvphx_array[1];
         if (!function_exists($tvphx_func)) {
           $msgErr = "<br /><h3>AjaxSearch error: the function $tvphx_func is not defined in the configuration file: ".$this->cfg['config']." !</h3><br />";
           return false;
@@ -1056,11 +1058,11 @@ class Search {
   }
 
 /**
- * Check search string 
+ * Check search string
  */
   function checkSearchString($searchString,& $msgErr){
 
-    
+
     if ($this->dbg) $this->asDebug->dbgLog($searchString,"AjaxSearch - Search string");   // user search string
     // Search string checking
     $words_array = explode(' ',preg_replace('/\s\s+/', ' ', trim($searchString)));
@@ -1102,7 +1104,7 @@ class Search {
  * updateConfig : update configuration
  */
   function updateConfig($newcfg){
-  
+
     foreach($newcfg as $key => $value) $this->cfg[$key] = $value; //overwriting of previous values
     // Re-initialize id group if needed
     if (isset($newcfg['parents']) || isset($newcfg['documents'])) {
@@ -1110,19 +1112,19 @@ class Search {
       $listIDs = ($this->cfg['idType'] == "parents") ? $newcfg['parents'] : $newcfg['documents'];
       $this->cfg['listIDs'] = $this->cleanIDs($listIDs);
     }
-  }    
+  }
 
 /**
  * initTvPhx : initialize tvPhx variables
  */
   function initTvPhx(){
-  
+
     if ($this->cfg['tvPhx']){
       $tvs = explode(',',$this->cfg['tvPhx']);
       foreach($tvs as $tv) {
         $tvInfo = explode(':',$tv);
         if (isset($tvInfo[1]) && (function_exists($tvInfo[1]))) {
-          $this->tvphx[] = $tvInfo; 
+          $this->tvphx[] = $tvInfo;
         }
       }
     }
@@ -1139,14 +1141,14 @@ class Search {
 
 /**
  * returns extracts with highlighted searchterms
- * 
+ *
  * @param string content to analyse
  * @param string search terms
  * @param string advanced search parameter (oneword,allwords,exactphrase,noword)
  * @param string highlight class
- * @param int number of extracts found 
+ * @param int number of extracts found
  * @return final extract with highlighted searchterms
- * 
+ *
  * @author Coroico (www.modx.wangba.fr)
  */
   function getExtract($text, $searchString, $advSearch, $highlightClass, & $nbExtr) {
@@ -1178,7 +1180,7 @@ class Search {
         $mbStrrpos = 'strrpos';
       }
 
-      $rank = 0;    
+      $rank = 0;
       $textLength = $mbStrlen($text);
 
       $searchList = $this->getSearchWords($searchString,$advSearch);
@@ -1207,7 +1209,7 @@ class Search {
           if ($left <0 ) $left = 0;
           if ($right > $textLength) $right = $textLength;
 
-          $extrLength = $right - $left + 1; 
+          $extrLength = $right - $left + 1;
 
           $extracts[]= array(
               'word' => $searchTerm,
@@ -1221,19 +1223,19 @@ class Search {
           );
           $pos = $wordLeft + $wordLength;
 
-          $wordLeft = $mbStrpos($mbStrtolower($text), $mbStrtolower($searchTerm),$pos);    
+          $wordLeft = $mbStrpos($mbStrtolower($text), $mbStrtolower($searchTerm),$pos);
           $iExtr++;
         }
       }
 
-      // sort the extracts by left and right position  
+      // sort the extracts by left and right position
       $nbExtr = count($extracts); // number of relevant extracts found
       if ($nbExtr > 1){
         for($i=0;$i<$nbExtr;$i++) {
           $lft[$i] = $extracts[$i]['left'];
           $rght[$i] = $extracts[$i]['right'];
-        }         
-        array_multisort($lft, SORT_ASC, $rght, SORT_ASC, $extracts);    
+        }
+        array_multisort($lft, SORT_ASC, $rght, SORT_ASC, $extracts);
 
         // find the closest space character on the left & rigth side (west side story !!)
         for($i=0;$i<$nbExtr;$i++) {
@@ -1257,7 +1259,7 @@ class Search {
           }
           else if ($extracts[$i]['left'] < $extracts[$i-1]['right']) {
             $extracts[$i-1]['right'] = $extracts[$i]['left'];
-            $extracts[$i-1]['etcRight'] = $extracts[$i]['etcLeft'] = '';         
+            $extracts[$i-1]['etcRight'] = $extracts[$i]['etcLeft'] = '';
           }
         }
       }
@@ -1272,20 +1274,20 @@ class Search {
           $searchTerm = $searchList[$rank-1];
           $extract = preg_replace( '/' . preg_quote( $searchTerm, '/' ) . '/' .$this->pcreModifier, '<span class="'.$highlightClass.' '.$highlightClass.$rank.'">\0</span>', $extract);
         }
-        $finalExtract .= $extracts[$i]['etcLeft'] . $extract . $extracts[$i]['etcRight'] . $separation;    
+        $finalExtract .= $extracts[$i]['etcLeft'] . $extract . $extracts[$i]['etcRight'] . $separation;
       }
       $finalExtract = $mbSubstr($finalExtract,0,$mbStrlen($finalExtract)-$mbStrlen($this->cfg['extractSeparator']));
-    }  
+    }
     return $finalExtract;
   }
-  
+
 /**
  *  getSearchWords : depending advSearch, get the search words
  */
   function getSearchWords($search, $advSearch){
 
     $searchList = array();
-    if (($advSearch == 'nowords') || (!$search)) return $searchList; 
+    if (($advSearch == 'nowords') || (!$search)) return $searchList;
 
     if ($advSearch == 'exactphrase') $searchList[] = $search;
     else $searchList = explode(' ',$search);
@@ -1300,11 +1302,11 @@ class Search {
     // prefix for results
     if ($this->cfg['ajaxSearch']) $this->asClass['prefix'] = PREFIX_AJAX_RESULT_CLASS;
     else $this->asClass['prefix'] = PREFIX_RESULT_CLASS;
-    
+
     // highlight Class depending of search words
     $this->asClass['highlight'] = $this->getHighlightClass($this->searchString, $this->advSearch );
   }
-  
+
 /**
  *  getHighlightClass : depending the search words, set up the highlight classes
  */
@@ -1332,7 +1334,7 @@ class Search {
     $this->listIDs = $this->cfg['listIDs'];
     $idType = $this->cfg['idType'];
     $depth = $this->cfg['depth'];
-    
+
     if (!strlen($this->listIDs)) return;     // listIDs ='' means all documents
 
     // get the listIDs from the parents or documents parameter
@@ -1368,7 +1370,7 @@ class Search {
           foreach ($rows as $key => $value) {
             $filteredIDs[] = $value[$this->main['id']];
           }
-          $this->listIDs = implode(',',$filteredIDs);       
+          $this->listIDs = implode(',',$filteredIDs);
         }
       }
     }
@@ -1378,11 +1380,11 @@ class Search {
 
 /**
  *  interpretFilterMetaCharacters : interpret the possible metacharacter of the filter order
- *  
+ *
  *  Take into account of the advSearch parameter
  *  if advSearch = 'oneword','nowords','allwords' then # is replaced by as many filters as searchterms
  *  e.g: &filter=`pagetitle,#,8` with searchString='school child' and advSearch='oneword'
- *  is equivalent to `pagetitle,school,8|pagetitle,child,8`    
+ *  is equivalent to `pagetitle,school,8|pagetitle,child,8`
  */
   function interpretFilterMetaCharacters($searchString,$advSearch) {
     if ($searchString == 'exactphrase') $searchString_array[] = $searchString;
@@ -1480,7 +1482,7 @@ class Search {
     if ($cFilters) {
       foreach ($cFilters as $name=>$value) {
         if (!empty($name) && !empty($value)) {
-          $parsedFilters["custom"][$name] = $value[1];          
+          $parsedFilters["custom"][$name] = $value[1];
         }
       }
     }
@@ -1518,9 +1520,9 @@ class Search {
 
     global $modx;
 
-    $id = $this->main['id']; 
+    $id = $this->main['id'];
     $hClass = $this->asClass['highlight'];
-    
+
     if ($this->cfg['highlightResult'] && $hClass) {
       $resultLink = $modx->makeUrl($row[$id],'','searched='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch).'&amp;highlight='.urlencode($hClass));
     } else {
@@ -1536,11 +1538,11 @@ class Search {
  */
   function setComment(){
     $this->varResults['showCmt'] = $this->logcmt;
-    
+
     if ($this->logcmt && $this->logid){
       $chkCmt = new asChunkie($this->cfg['tplComment']);   // comment
       if ($this->dbgTpl) $this->asDebug->dbgLog($chkCmt->getTemplate($this->cfg['tplComment']),"AjaxSearch - tplComment template " . $this->cfg['tplComment']);
-    
+
       $varCmt = array();
       $varCmt['hiddenFieldIntro'] = $this->_lang['as_cmtHiddenFieldIntro'];
       $varCmt['hiddenField'] = 'ajaxSearch_cmtHField';
@@ -1549,9 +1551,9 @@ class Search {
       $varCmt['cmtSubmitText'] = $this->_lang['as_cmtSubmitText'];
       $varCmt['cmtResetText'] = $this->_lang['as_cmtResetText'];
       $varCmt['cmtThksMessage'] = $this->_lang['as_cmtThksMessage'];
-      
+
       // parse the template and output the comment form
-      $chkCmt->AddVar("as", $varCmt); 
+      $chkCmt->AddVar("as", $varCmt);
       $this->varResults['comment'] = $chkCmt->Render()."\n";
       unset($varCmt);
       unset($chkCmt);
@@ -1576,13 +1578,13 @@ class Search {
       $text = $this->getExtract($text,$this->searchString,$this->advSearch,HIGHLIGHT_CLASS,$nbExtr);
 
     }
-    $row['extract'] = $text; // set the concatened extracts    
+    $row['extract'] = $text; // set the concatened extracts
     return $row;
   }
 
 /**
  *  setResultExtract : set the ResultExtract PHx
- */  
+ */
   function setResultExtract($row){
     if ($this->extractNb) {
       $this->varResult['extractShow'] = 1;
@@ -1595,14 +1597,14 @@ class Search {
 
 /**
  *  setResultBreadcrumbs : set the ResultBreadcrumbs PHx
- */  
+ */
   function setResultBreadcrumbs($row){
     global $modx;
-    
+
     if ($this->cfg['breadcrumbs']) {
       if ($this->breadcrumbs['type'] == 'function'){
         // Breadcrumbs as a custom function
-        $bc = $this->breadcrumbs['name']($this->main,$row,$this->breadcrumbs['params']);        
+        $bc = $this->breadcrumbs['name']($this->main,$row,$this->breadcrumbs['params']);
       }
       elseif ($this->withContent) {
         // Breadcrumb as a snippet with the content as main table
@@ -1623,21 +1625,21 @@ class Search {
         $modx->documentObject['longtitle'] = $row['longtitle'];
         $modx->documentObject['menutitle'] = $row['menutitle'];
         $modx->documentObject['description'] = $row['description'];
-        // run the Breadcrumbs snippet  
+        // run the Breadcrumbs snippet
         $bc = $modx->runSnippet($this->breadcrumbs['name'],$this->breadcrumbs['params']);
         // restore the current document
         $modx->documentObject['id'] = $current_id;
-        $modx->documentObject['parent'] = $current_parent;   
+        $modx->documentObject['parent'] = $current_parent;
         $modx->documentObject['pagetitle'] = $current_pagetitle;
         $modx->documentObject['longtitle'] = $current_longtitle;
         $modx->documentObject['menutitle'] = $current_menutitle;
-        $modx->documentObject['description'] = $current_description;        
+        $modx->documentObject['description'] = $current_description;
       }
       // display result
       $this->varResult['breadcrumbsShow'] = 1;
       $this->varResult['breadcrumbsClass'] = $this->asClass['prefix'] . 'Breadcrumbs';
       $this->varResult['breadcrumbs'] = $bc;
-    } 
+    }
     else {
       $this->varResult['breadcrumbsShow'] = 0;
     }
@@ -1645,11 +1647,11 @@ class Search {
 
 /**
  *  setResultTvPhx : set the resultTvPhx PHx
- */  
+ */
   function setResultTvPhx($row){
     global $modx;
 
-    if ($this->cfg['tvPhx']) {     
+    if ($this->cfg['tvPhx']) {
       foreach($this->tvphx as $tbv){
         $alias = $tbv[0];
         $display = $tbv[1];
@@ -1666,11 +1668,11 @@ class Search {
             // set Phx for each id of tv
             $this->varResult[$name.'Show'] = 1;
             $this->varResult[$name.'Class'] = $this->asClass['prefix'] . ucfirst($name);
-            $this->varResult[$name] = $output;          
+            $this->varResult[$name] = $output;
           }
         }
         else {
-          $this->varResult[$name.'Show'] = 0;              
+          $this->varResult[$name.'Show'] = 0;
         }
       }
     }
@@ -1678,7 +1680,7 @@ class Search {
 
 /**
  *  setResultNumber : set number of result as PHx
- */ 
+ */
   function setResultNumber($no){
   	$this->varResult['resultNumber'] = $no;
   }
@@ -1689,11 +1691,11 @@ class Search {
   function setResultSearchable($row){
 
     // set Phx for the "id" of the main table
-    $id = $this->main['id']; 
+    $id = $this->main['id'];
     $this->varResult[$id] = $row[$id];
 
     // set Phx for date fields of the main table
-    if (isset($this->main['date'])) 
+    if (isset($this->main['date']))
       foreach($this->main['date'] as $field) $this->setPhxField($field,$row,'date');
 
     // set Phx for displayed fields of the main table
@@ -1715,13 +1717,13 @@ class Search {
 
     // if rank requested publish the rank value
     if ($this->cfg['rank']) $this->setPhxField('rank',$row,'int');
-    
+
     return $row[$id];
   }
 
 /**
  *  setPhxField : set a field as PHx
- */ 
+ */
   function setPhxField($field,$row,$type='string'){
 
     $showField = $field . "Show";    // boolean show
@@ -1735,7 +1737,7 @@ class Search {
         $this->varResult[$field] = $this->cleanText($contentField,$this->cfg['stripOutput']);
       }
       elseif ($type =='date'){
-        $this->varResult[$field] = date($this->cfg['formatDate'],$contentField);      
+        $this->varResult[$field] = date($this->cfg['formatDate'],$contentField);
       }
       else {
         $this->varResult[$field] = $contentField;
@@ -1794,7 +1796,7 @@ class Search {
     // set levels
     $this->dbgTpl = (abs($this->dbg) > 1);  // log templates
     $this->dbgRes = (abs($this->dbg) > 2);  // log results
-    
+
     return;
   }
 /**
@@ -1817,7 +1819,7 @@ class Search {
       $this->logcmt = isset($asLog_array[1]) ? (int) $asLog_array[1] : 0;
       if ($this->logcmt) {
         $jsInclude = AS_SPATH . 'js/ajaxSearchCmt.js';
-        $modx->regClientStartupScript($jsInclude);      
+        $modx->regClientStartupScript($jsInclude);
       }
     }
     else {
@@ -1837,8 +1839,8 @@ class Search {
         $logInfo['searchString'] = $this->searchString;
         $logInfo['nbResults'] = $nbrs;
         $logInfo['results'] = $results;
-        $logInfo['asCall'] = $this->asCall; 
-        $logInfo['asSelect'] = mysql_real_escape_string($this->asSelect);                   
+        $logInfo['asCall'] = $this->asCall;
+        $logInfo['asSelect'] = mysql_real_escape_string($this->asSelect);
         $this->logid = $this->asLog->setLogRecord($logInfo);
       }
     }
@@ -1849,7 +1851,7 @@ class Search {
  */
   function getUcfg(){
     $tpl = " &%s=`%s`";
-    $ucfg = ''; 
+    $ucfg = '';
     foreach($this->cfg as $key=>$value){
       if ($value != $this->dcfg[$key]) $ucfg .= sprintf($tpl,$key,$this->cfg[$key]);
     }
@@ -1857,16 +1859,16 @@ class Search {
   }
 /**
  * getAsCall : get the AjaxSearch snippet call
- * 
- * return the AjaxSearch snippet call as a string 
- *  
+ *
+ * return the AjaxSearch snippet call as a string
+ *
  * @param string space separated list of non default configuration parameter keys
- *  
+ *
  */
   function getAsCall($ucfg){
     $call_array = explode(' ',$ucfg);
     $tpl = "&%s=`%s`";
-    
+
     if ($this->advSearch != 'oneword')  $call_array[] = sprintf($tpl,'advSearch',$this->advSearch);
     $asCall = "[!AjaxSearch";
     if (count($call_array)){
@@ -1961,7 +1963,7 @@ class Search {
 /**
  *  displayTV : render TV output.
  *  used by tvPhx parameter for tv
- *    
+ *
  */
   function displayTV($docid){
     global $modx;

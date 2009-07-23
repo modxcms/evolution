@@ -268,30 +268,33 @@ function decode(s){
 <input type="hidden" name="id" value="<?php echo $content['id']?>">
 <input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
 
-<div class="subTitle">
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<td id="Button1"><a href="#" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']?></a></td>
-<?php if($_GET['a']=='22') { ?>
-		<td id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang['duplicate']?></a></td>
-		<td id="Button3"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']?></a></td>
-<?php } ?>
-		<td id="Button4"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']?></a></td>
-	</table>
-	<div class="stay">
-	<table border="0" cellspacing="1" cellpadding="1">
-	<tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
-		<td><input name="stay" id="stay_radio_1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? " checked='checked'":''?> /></td><td><label for="stay_radio_1" class="comment"><?php echo $_lang['stay_new']?></label></td>
-		<td><input name="stay" id="stay_radio_2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? " checked='checked'":''?> /></td><td><label for="stay_radio_2" class="comment"><?php echo $_lang['stay']?></label></td>
-		<td><input name="stay" id="stay_radio_3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? " checked='checked'":''?> /></td><td><label for="stay_radio_3" class="comment"><?php echo $_lang['close']?></label></td>
-	</tr>
-	</table>
-	</div>
-</div>
+    <div id="actions">
+    	  <ul class="actionButtons">
+    		  <li id="Button1">
+    			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
+    			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+    			</a>
+    			  <span class="and"> + </span>				
+    			<select id="stay" name="stay">
+    			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
+    			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+    			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
+    			</select>		
+    		  </li>
+    		  <?php
+    			if ($_GET['a'] == '22') { ?>
+    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>/images/icons/copy.gif" /> <?php echo $_lang["duplicate"]; ?></a></li>
+    		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } else { ?>
+    		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } ?>	
+    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>/images/icons/stop.png" /> <?php echo $_lang['cancel']?></a></li>
+    	  </ul>
+    </div>
 
+<h1><?php echo $_lang['snippet_title']?></h1>
 
-
-<div class="sectionHeader"><?php echo $_lang['snippet_title']?></div><div class="sectionBody">
+<div class="sectionBody">
 <?php echo $_lang['snippet_msg']?><p />
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme?>style.css<?php echo '?'.$theme_refresher?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -310,20 +313,20 @@ function decode(s){
 			<td align="left"><span style="font-family:'Courier New', Courier, mono">[[</span><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onChange="documentDirty=true;"><span style="font-family:'Courier New', Courier, mono">]]</span><span class="warning" id="savingMessage">&nbsp;</span></td>
 		  </tr>
 		  <tr>
-			<td align="left"><?php echo $_lang['snippet_desc']?>:&nbsp;&nbsp;</td>
-			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
+			<td align="left" style="padding-top:10px"><?php echo $_lang['snippet_desc']?>:&nbsp;&nbsp;</td>
+			<td align="left" style="padding-top:10px"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
 		  </tr>
 		  <tr>
-			<td align="left" colspan="2"><input name="runsnippet" type="checkbox" class="inputBox"<?php if($content['runsnippet']) {echo ' checked="checked"';}?> /> <?php echo $_lang['snippet_execonsave']?></td>
+			<td style="padding-top:10px" align="left" colspan="2"><input style="padding:0;margin:0;" name="runsnippet" type="checkbox" class="inputBox"<?php if($content['runsnippet']) {echo ' checked="checked"';}?> /> <?php echo $_lang['snippet_execonsave']?></td>
 		  </tr>
 		  <tr>
-			<td align="left" valign="top" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
+			<td style="padding-top:10px" align="left" valign="top" colspan="2"><input  style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
 			</td>
 		  </tr>
 		</table>
 		<!-- PHP text editor start -->
 		<div style="width:100%;position:relative">
-		    <div style="padding:1px; width:100%; height:16px;background-color:#eeeeee; border-top:1px solid #e0e0e0;margin-top:5px">
+		    <div style="padding:1px 1px 5px 1px; width:100%; height:16px;background-color:#eeeeee; border-top:1px solid #e0e0e0;margin-top:5px">
 		    	<span style="float:left;color:#707070;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['snippet_code']?></span>
 		    	<span style="float:right;color:#707070;"><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : ""?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
 		   	</div>
@@ -352,12 +355,12 @@ function decode(s){
 			</td>
 		  </tr>
           <tr>
-			<td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
-			<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
+			<td align="left" valign="top" style="padding-top:10px;"><?php echo $_lang['new_category']?>:</td>
+			<td align="left" valign="top" style="padding-top:10px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
 		  </tr>
           <tr>
 			<td align="left" style="padding-top:10px;"><?php echo $_lang['import_params']?>:&nbsp;&nbsp;</td>
-			<td align="left" style="padding-top:10px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="moduleguid" style="width:300px;" onChange="documentDirty=true;">
+			<td align="left" valign="top" style="padding-top:10px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="moduleguid" style="width:300px;" onChange="documentDirty=true;">
 			<option>&nbsp;</option>
             <?php
 				$sql = 'SELECT sm.id,sm.name,sm.guid '.
@@ -376,7 +379,7 @@ function decode(s){
 		  </tr>
 		  <tr>
 			<td>&nbsp;</td>
-			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']?></span></span><br /><br /></td>
+			<td align="left" valign="top" style="padding-left:1.3em;"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
 		  </tr>
 		  <tr>
 			<td align="left" valign="top"><?php echo $_lang['snippet_properties']?>:</td>

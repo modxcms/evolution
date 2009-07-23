@@ -1,8 +1,6 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-// start session
-startCMSSession();
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 //		if (isset($_COOKIE[session_name()])) {
 //			setcookie(session_name(), '', 0, MODX_BASE_URL);
@@ -67,7 +65,7 @@ if(!isset($_SESSION['mgrValidated'])){
 		include_once "lang/english.inc.php";
 	}
 
-	$modx->setPlaceholder('modx_charset',$modx_charset);
+	$modx->setPlaceholder('modx_charset',$modx_manager_charset);
 	$modx->setPlaceholder('theme',$manager_theme);
 
 	// invoke OnManagerLoginFormPrerender event
@@ -100,8 +98,8 @@ if(!isset($_SESSION['mgrValidated'])){
 	}
 	if (isset($installGoingOn)) {			
 		switch ($installGoingOn) {
-		 case 1 : $modx->setPlaceholder('login_message',$_lang["login_cancelled_install_in_progress"].$_lang["login_message"]); break;
-		 case 2 : $modx->setPlaceholder('login_message',$_lang["login_cancelled_site_was_updated"].$_lang["login_message"]); break;
+		 case 1 : $modx->setPlaceholder('login_message',"<p><span class=\"fail\">".$_lang["login_cancelled_install_in_progress"]."</p><p>".$_lang["login_message"]."</p>"); break;
+		 case 2 : $modx->setPlaceholder('login_message',"<p><span class=\"fail\">".$_lang["login_cancelled_site_was_updated"]."</p><p>".$_lang["login_message"]."</p>"); break;
 		}
 	}
 

@@ -15,7 +15,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
 
         $sql = "SELECT wu.*
                 FROM $dbase.`".$table_prefix."web_users` wu
-                WHERE wu.id='".mysql_escape_string($id)."'";
+                WHERE wu.id='".$modx->db->escape($id)."'";
         $ds = $modx->db->query($sql);
         $limit = $modx->recordCount($ds);
         if($limit==1) {

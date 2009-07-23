@@ -30,7 +30,7 @@ $number_of_settings = mysql_num_rows($rs);
 while ($row = mysql_fetch_assoc($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 extract($settings, EXTR_OVERWRITE);
 
-$displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') ) ? "table-row" : "block" ;
+$displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') || ($_SESSION['browser']=='sf') ) ? "table-row" : "block" ;
 
 ?>
 
@@ -118,23 +118,31 @@ function updateContentType(){
 }
 
 </script>
-<div class="subTitle">
-	<span class="right"><?php echo $_lang['settings_title']; ?></span>
-
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<tr>
-			<td id="Button1"><a href="#" onclick="documentDirty=false; document.settings.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['save']; ?></a></td>
-			<td id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" /> <?php echo $_lang['cancel']; ?></a></td>
-		</tr>
-	</table>
-</div>
 <form name="settings" action="index.php?a=30" method="post" />
+
+	<h1><?php echo $_lang['settings_title']; ?></h1>
+
+	<div id="actions">
+		  <ul class="actionButtons">
+			  <li id="Button1">
+				<a href="#" onclick="documentDirty=false; document.settings.submit();">
+					<img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']; ?>
+				</a>
+			  </li>
+			  <li id="Button5">
+				<a href="#" onclick="documentDirty=false;document.location.href='index.php?a=2';">
+					<img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']; ?>
+				</a>
+			  </li>
+		</ul>
+	</div>
+
 <div style="margin: 0 10px 0 20px">
     <input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
     <input type="hidden" name="settings_version" value="<?php echo $version; ?>" />
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
     <?php if(!isset($settings_version) || $settings_version!=$version) { ?>
-    <div class='sectionBody'><?php echo $_lang['settings_after_install']; ?></div>
+    <div class='sectionBody'><p><?php echo $_lang['settings_after_install']; ?></p></div>
     <?php } ?>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <div class="tab-pane" id="settingsPane">
@@ -185,7 +193,7 @@ function updateContentType(){
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
-          <tr>
+		  <tr>
             <td nowrap class="warning"><b><?php echo $_lang["charset_title"]?></b></td>
             <td> <select name="modx_charset" size="1" class="inputBox" style="width:250px;" onchange="documentDirty=true;">
                 <?php include "charsets.php"; ?>
@@ -199,30 +207,6 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["manager_direction_title"] ?></b></td>
-            <td><select name="manager_direction" size="1" class="inputBox" style="width:100px;" onchange="documentDirty=true;">
-                <option value="ltr" <?php echo (isset($manager_direction) && $manager_direction=='ltr') ? 'selected' : ''?>>ltr</option>
-                <option value="rtl" <?php echo (isset($manager_direction) && $manager_direction=='rtl') ? 'selected' : ''?>>rtl</option>
-              </select></td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["manager_direction_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["manager_lang_attribute_title"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='20' size='10' name="manager_lang_attribute" value="<?php echo isset($manager_lang_attribute) ? $manager_lang_attribute : 'en' ; ?>" /></td>
-          </tr>
-          <tr>
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["manager_lang_attribute_message"] ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["xhtml_urls_title"] ?></b></td>
             <td><input onchange="documentDirty=true;" type="radio" name="xhtml_urls" value="1" <?php echo $xhtml_urls=='1' ? 'checked="checked"' : "" ; ?> />
@@ -850,6 +834,17 @@ function updateContentType(){
       			 <input onchange="documentDirty=true;" type="radio" name="show_preview" value="0" <?php echo $show_preview=='0' ? 'checked="checked"' : ""; ?> />
       			 <?php echo $_lang["no"]?></td>
       		 </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+             <tr>
+      		   <td nowrap class="warning"><b><?php echo $_lang["datepicker_offset"] ?></b></td>
+      		   <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="datepicker_offset" value="<?php echo isset($datepicker_offset) ? $datepicker_offset : '-10' ; ?>" /></td>
+      		 </tr>
+      		 <tr>
+                   <td width="200">&nbsp;</td>
+                   <td class='comment'><?php echo $_lang["datepicker_offset_message"]?></td>
+             </tr>
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>

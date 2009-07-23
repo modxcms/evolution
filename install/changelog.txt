@@ -1,24 +1,143 @@
-
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0-RC1 (rev 5122 - June 11, 2009)
+MODx Evolution 1.0.0-RC2 (rev 5514 - July 23, 2009)
 ===================================
+--------------------------------------------
+Bugfixes & Feature Requests:
+--------------------------------------------
+* [#MODX-981] Replaced missing event icons.
+* [#MODX-968] Replaced folder icon in tree. (nodes.php)
+* [#MODX-974] Fixed missing save icon in files.dynamic.php
+* [#MODX-898] Allow passing script names and versions to regClient*, setting stage for more intelligent handling of script inclusion
+* [#MODX-863] Isolate deprecated magic_quotes-related code inside PHP version checks for less than 5.3 to avoid deprecated warnings in 5.3/errors in 6.0
+* [#MODX-941] Add % character to transliteration plugin tables
+* [#MODX-971] Fix to TransAlias plugin to allow it to work with the Import HTML action.
+* [#MODX-591] Escape the database user and password in config.inc.php during install
+* [#MODX-952] Modified the warning message with MySQL 4.x
+* [#MODX-944] Installer with IE8 does not show final 'Install' button on last page
+* [#MODX-904] Add better email format checking when adding/updating users.
+* [#MODX-950] Scroll the File Manager to the editing textarea when clicking the edit button.
+* [#MODX-905] Fix SQL error in cache_sync processor
+* [#MODX-866] Allow manual editing of the datepicker fields
+* [#MODX-720] The website name on the Manager login page links back to the front end site
+* [#MODX-916] Better handling of text direction and encoding for Manager languages
+* [#MODx-882] Specify the default Manager language during installation
+* [#MODx-815] Users without edit or create module permissions can get to Modules editing screen
+* [#MODX-390] Infinite loop possible during install
+* [#MODX-909] Roles menu item showed even if Manager User did not have Roles permissions
+* [#MODX-851] Manager User and Webuser email messages were always in English despite the language setting
+* [#MODX-830] Friendly URLs can now contain UTF8 characters
+* [#MODX-897] Dynamic title for create/edit Resource action page depending on state
+* [#MODX-891] Manager language files contains hard-coded CSS spans
+* [#MODX-867] Add system events to Manager log Welcome page to make custom dashboard plugins possible
+* [#MODX-602] Remove the calltime-pass-by-ref errors on the Export Site HTML screen.
+* [#MODX-725] Retain checkbox TV values when changing template, also fix postback rendering of TV values (broken in a recent commit)
+* [#MODX-810] Ensure that the web user ID is passed correctly to the OnWUsrFormPrerender and OnWUsrFormRender events.
+* [#MODX-733] Apply fix for multi-byte characters being garbled in 'Site' > 'Search'.
+* [#MODX-719] Small fix to DocManager to prevent parse error when no doc groups are present and an update to doc groups is attempted.
+* [#MODX-741] Fix MCPUK browser navigation to work with folders that have spaces in them.
+* [#MODX-813] Fix the image editor's src link for the image tag.
+* [#MODX-822], [#MODX-465] Add basic file encoding for the file manager, not a complete solution but consensus that it's better than previous.
+* [#MODX-847] Replace QuickEdit with QuickManager+ (includes /assets/js/jQuery 1.3.2.min.js)
+* [#MODX-838] Ensure Datepicker correctly closes when select and textboxes lose focus without being changed.
+* [#MODX-806] fix duplicated option groups in template picker
+* [#MODX-581] Installer doesn't check /assets/media, /assets/flash and /assets/files directories
+* [#MODX-687], [#MODX-589] Fix the TV name fields so that new DatePicker works correctly
+* [#MODX-832] Implement new DatePicker in the MODx Manager.
+* [#MODX-655] Correct a sanity check that was preventing the allow_manager_access setting being saved.
+* [#MODX-806] Add option groups to template chooser in Manager
+* [#MODX-571] Fix TV date picker when special characters in TV name
+* [#MODX-588] Missing else in document parser that orphaned a small piece of code
+* [#MODX-608] Missing "$this->" in SystemEvent::stopPropagation()
+* [#MODX-592] Site Cache improvement for only storing doctypes that are different from text/html in cache files
+* [#MODX-681] Manager include path fix for occasional errors and working better with third-party libraries
+* [#MODX-449] Incorrect language setting for RTE used in front end instances at install
+* [#MODX-812] Added Hebrew Manager translation
+* [#MODX-209] Amended original patch: remove urlencode() call for viewable files (i.e. images) when generating the preview buttons in the file manager.
+* [#MODX-85]  Removed transliteration code from core and turn into a plugin
+    - Supports multiple languages
+    - Template Variable can override transliteration table (file) per-document/section (supports @INHERIT)
+ 	- Move stripAlias function into parser
+    - Add OnStripAlias parser/system event
+* [#MODX-445] Fix case where deleted docs with the same alias as another document caused a 404 response. Remove deleted docs from site cache.
+* [#MODX-593] Add missing summary/introtext to Weblink manager page
+* [#MODX-220] Manager language updates for sorting and formatting consistency across languages
+* [#MODX-393] Show Protected Pages issue solved by Thomas Leiritz
+* [#MODX-516] and [#MODX-397] 
+    - fix to display of Access Permissions depending on Role permissions
+    - fix to preserve parent after new document save permissions error
+* [#MODX-397] Fix logic: creating documents inside restricted containers
+    - disallow users from creating restricted docs they can't access
+    - disallow  "Create Document Here" and "Create Weblink Here" under restricted parents
+* [#MODX-572] new Elements must be given unique names
+    - applies only to elements created with "New..." buttons
+    - templates, tvs, plugins, snippets, chunks, modules
+	- Removed isNumber function, not needed since PHP < 4
 * [#MODX-620] Add boolean support to Datagrid class
-* [#MODX-446] Implement Soushi's path for large site cache optimizations
-* Updated installer styling
-* [#MODX-410] Fix document permissions inheriting (for users without access to manage document permissions)
-* Updated snoopy class to version 1.2.4 (used by magpierss).
-* [#MODX-320] Updated the logo for 3 default manager themes.
+* [#MODX-446] Committing Soushi's cache sync patch (re: optimizations to cache syncing when the site has a large number of documents)
+* [#MODX-686] Major updates to Dutch language file
+* [#MODX-582] Update and alphabetize default upload-able file types for new installs. (Also removes php files from list)
+* [#MODX-457] Updates to Swedish language file
+* [#MODX-363] Missing URL types for cleaning in save content processor
+* [#MODX-701] Polish updates
+* [#MODX-713] Brazillian Portuguese updates
+* [#MODX-580] Update Italian language files
+* [#MODX-515] Fix non-clickable view unpublished role label
+* [#MODX-724] Reference wiki page for fix for multi-server/cloud deployments and unexpected logoffs
+* [#MODX-734] Typo in language file it's->its
+* [#MODX-410] access permissions will be inherited from parent when user creates new child but and does not have role permission for access permissions
 * [#MODX-724] Create .htaccess template to set the session paths out of shared /tmp/ directories which can lead to loosing sessions from aggressive garbage collection.
-* [#AJAXSEARCH-31] and [#AJAXSEARCH-32] fixed.
-* [#MODX-220] Update language files.
-* [#MODX-394] Update Russian installation file.
+* [#MODx-394] Update Russian installation file per http://modxcms.com/forums/index.php/topic,34998.msg212346/topicseen.html#msg212346
 * [#MODX-715] Fix .jp lang file for incorrect hard-coded link
-* Updated AjaxSearch to release 1.8.2.
-* [#MODX-541] Fix the include statement in getUserData() method.
-* [#MODX-650]  bad reference to csshover.htc (now csshover2.htc).
-* Updated TinyMCE to release 3.2.4.1.
+* [#MODX-541] Fix the include statement in getUserData() method
+* [#MODX-650] bad reference to csshover.htc (now csshover2.htc)
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* Fix get_func_args() error (evident on PHP 5.3) in Ditto/Reflect
+* Many updates to Manager and Installer language translations
+	- Updating language to be in line with Revo. (Resources -> Elements, resource browser -> File Browser, Documents -> Resources)
+	- Simplify language and remove overly-wordy phrases
+	- New language strings where appropriate and needed
+	- Replaced hard coded language strings in Import and Export action pages with new language strings
+	- Better handling of Manager language encoding and text direction
+    - Now handles RSS, Word, Excel, XML, HTML, CSS, JS, PDF and plain documents with custom icons in the Site Tree
+* Remove legacy code no longer needed
+    - Removed QuickEdit module (instructions only)
+	- Removed News Publisher snippet (did not support TVs)
+	- Prototype and Scriptaculous JS and SLLists.class.php from core distribution, no longer used 
+	- Update demo content to remove Prototype/Scriptaculous dependencies
+* Convert manager to use Mootools exclusively
+	- Manager Login page
+	- Convert the 'Sort TV by template' and 'Plugin Execution Ordering', also fix the button CSS styling on those pages
+ 	- DocManager module (also to assist with future updates) - MODULE MUST BE UPDATED when upgrading from previous MODx versions
+* Upgrade Add-on: eForm 1.4.4.6
+* Upgrade Add-on: AjaxSearch 1.8.3
+* Updated Add-on: TinyMCE 3.2.4.1
+* Fix the Template Variable "Lock variable for editing" checkbox
+* Removed erroneous parameter in isFrontend() method call
+* Exclude /assets and /manager by default from MODx rewrite and to comment out example.com -> www.example.com rule by default
+* Fix bug when login page language file was missing translation strings. Now falls back to main English file.
+* Added additional database diagnostic info to system info page (auto-generated paths)
+* Updated the MODx installer
+    - New skin
+    - Streamline process by removing two steps
+    - Make Connection/Collation/Default Admin User only show when prior steps are completed first
+    - Now set the default Manager language during new installs
+* New MODx Carbon default theme for MODx Evolution 1.0 release
+	- Removed deprecated themes for Evo 1.0 release
+	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users
+	- Remove Bottom Button Bar plugin due to new static button bar similar to Revo
+* Make upgrades between versions simpler
+ 	- Moving Manager login/welcome/blocked templates into /assets/templates/manager
+	- Moving Manager Help pages into /assets/templates/help
+* Manager RSS feed improvements
+	- Updated RSS feeds to more manageable number of entries for welcome page. 
+ 	- Updated snoopy class to latest version 1.2.4 (used by magpierss).
+
+
 
 MODx 0.9.6.3 (rev 4565 - December 17, 2008)
 ===================================

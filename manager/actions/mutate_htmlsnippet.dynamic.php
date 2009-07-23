@@ -109,7 +109,7 @@ function deletedocument() {
 }
 </script>
 
-<form name="mutate" method="post" action="index.php">
+<form class="htmlsnippet" id="mutate" name="mutate" method="post" action="index.php">
 <?php
 
 // invoke OnChunkFormPrerender event
@@ -124,29 +124,34 @@ if (is_array($evtOut))
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
 <input type="hidden" name="mode" value="<?php echo $_REQUEST['a']?>" />
 
-<div class="subTitle">
-	<table cellpadding="0" cellspacing="0" class="actionButtons">
-		<td id="Button1"><a href="#" onclick="documentDirty=false; document.mutate.save.click(); saveWait('mutate');"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']?></a></td>
-<?php if ($_REQUEST['a'] == '78') { ?>
-		<td id="Button2"><a href="#" onclick="duplicaterecord();"><img src="media/style/<?php echo $manager_theme?>images/icons/copy.gif" align="absmiddle"> <?php echo $_lang['duplicate']?></a></td>
-		<td id="Button3"><a href="#" onclick="deletedocument();"><img src="media/style/<?php echo $manager_theme?>images/icons/delete.gif" align="absmiddle"> <?php echo $_lang['delete']?></a></td>
-<?php echo "\n"; } ?>
-		<td id="Button4"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="media/style/<?php echo $manager_theme?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']?></a></td>
-	</table>
-	<div class="stay">
-	<table border="0" cellspacing="1" cellpadding="1"><tr>
-		<td><span class="comment">&nbsp;<?php echo $_lang['after_saving']?>:</span></td>
-<?php if ($modx->hasPermission('new_chunk')) { ?>
-		<td><input name="stay" id="stay1" type="radio" class="radio" value="1"<?php echo $_GET['stay']=='1' ? ' checked="checked"' : ''?> /></td><td><label for="stay1" class="comment"><?php echo $_lang['stay_new']?></label></td>
-<?php echo "\n"; } ?>
-		<td><input name="stay" id="stay2" type="radio" class="radio" value="2"<?php echo $_GET['stay']=='2' ? ' checked="checked"' : ''?> /></td><td><label for="stay2" class="comment"><?php echo $_lang['stay']?></label></td>
-		<td><input name="stay" id="stay3" type="radio" class="radio" value=""<?php echo $_GET['stay']=='' ? ' checked="checked"' : ''?> /></td><td><label for="stay3" class="comment"><?php echo $_lang['close']?></label></td>
-	</tr></table>
-	</div>
-</div>
+	<h1><?php echo $_lang['htmlsnippet_title']?></h1>
 
+    <div id="actions">
+    	  <ul class="actionButtons">
+    		  <li id="Button1">
+    			<a href="#" onclick="documentDirty=false; document.mutate.save.click();">
+    			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
+    			</a>
+    			  <span class="and"> + </span>				
+    			<select id="stay" name="stay">
+    			  <?php if ($modx->hasPermission('new_chunk')) { ?>		
+    			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
+    			  <?php } ?>
+    			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
+    			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
+    			</select>		
+    		  </li>
+    		  <?php
+    			if ($_REQUEST['a'] == '78') { ?>
+    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>	    
+    		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } else { ?>
+    		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
+    		  <?php } ?>	
+    		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+    	  </ul>
+    </div>
 
-<div class="sectionHeader"><?php echo $_lang['htmlsnippet_title']?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['htmlsnippet_msg']?></p>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">

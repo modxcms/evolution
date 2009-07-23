@@ -3,13 +3,11 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 $warningspresent = 0;
 
-     
-
 if (is_writable("includes/config.inc.php")){
     // Warn if world writable
     if(@fileperms('includes/config.inc.php') & 0x0002) {
       $warningspresent = 1;
-      $warnings[] = array($_lang['configcheck_configinc']);      
+      $warnings[] = array($_lang['configcheck_configinc']);
     }
 }
 
@@ -79,14 +77,14 @@ clearstatcache();
 
 if ($warningspresent==1) {
 
-$config_check_results = "<h4>".$_lang['configcheck_notok']."</h4>";
+$config_check_results = "<h3>".$_lang['configcheck_notok']."</h3>";
 
 for ($i=0;$i<count($warnings);$i++) {
     switch ($warnings[$i][0]) {
         case $_lang['configcheck_configinc'];
             $warnings[$i][1] = $_lang['configcheck_configinc_msg'];
             if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_configinc']);
-            break;    
+            break;
         case $_lang['configcheck_installer'] :
             $warnings[$i][1] = $_lang['configcheck_installer_msg'];
             if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_installer']);
@@ -120,14 +118,14 @@ for ($i=0;$i<count($warnings);$i++) {
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];
     }
-    
+
     $admin_warning = $_SESSION['mgrRole']!=1 ? $_lang['configcheck_admin'] : "" ;
     $config_check_results .= "
-            <div class='fakefieldset'>
+            <fieldset>
             <p><strong>".$_lang['configcheck_warning']."</strong> '".$warnings[$i][0]."'</p>
             <p style=\"padding-left:1em\"><em>".$_lang['configcheck_what']."</em><br />
             ".$warnings[$i][1]." ".$admin_warning."</p>
-            </div>
+            </fieldset>
     ";
         if ($i!=count($warnings)-1) {
             $config_check_results .= "<br />";

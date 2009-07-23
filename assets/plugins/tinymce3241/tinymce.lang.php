@@ -2,6 +2,7 @@
 global $tinyLang;
 $tinyLang = array();
 
+$tinyLang[] = array("czech","cs");
 $tinyLang[] = array("danish","da");
 $tinyLang[] = array("english","en");
 $tinyLang[] = array("english-british","en");

@@ -59,10 +59,10 @@ display: none;
 .button {width: auto !important; height: auto !important; padding: 2px !important; margin-top: 5px !important; margin-bottom: 5px !important;}
 
 #sidebarlogin #forgotpsswd {
-	font-size: 70%;
+	font-size: 80%;
 	display: block;
 	float: right;
-	margin-top: -25px;
+	margin: 10px 0 0 1px;
 }
 #search select {
 	border-top: 1px solid #75767B;
@@ -239,3 +239,7 @@ position: relative;
   padding: 0;
   font-weight: bold;
 }
+
+div.post label {display:block;width:430px;margin-bottom:8px;}
+div.post label input {position:absolute;left:170px;}
+div.post fieldset {border:none;}

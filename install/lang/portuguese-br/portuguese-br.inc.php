@@ -10,46 +10,6 @@
  * Language:       Português do Brasil
  * Encoding:       iso-8859-1
  */
-$_lang["license"] = '<h2>Licença e Contrato do MODx.</h2>
-<hr style="text-align:left;height:1px;width:90%;" />
-<h3>Você deve concordar com o contrato para continuar a instalação.</h3>
-<p>Este software está licenciado através da licensa GPL. Para te ajudar a entender
-  o que é a licensa GPL e como esta licensa interfere no uso deste software, nós
-  fornecemos o seguinte índice:</p>
-<h3>A GNU "General Public License" é uma licensa de Software Livre.</h3>
-<p>Como qualquer licensa de Software Gratuito, isto garante a sua liberdade de:</p>
-<ul>
-  <li>Usar o programa por qualquer propósito.</li>
-  <li>Estudar como o programa funciona e adaptar-lo à suas necessidades.</li>
-  <li>Poder distribuir o Software à sua rede, para que você possa ajudá-los.</li>
-  <li>Aperfeiçoar o programa e compartilhar suas modificações com o público para que
-    beneficie toda a comunidade.</li>
-</ul>
-<p>Você podera usufruir dos direitos citados acima se você concordar com as
-  condições expressas nesta licensa. As principais condições são:</p>
-<ul>
-  <li>Você deve distribuir o software acompanhado de sua licensa apropiada, incluindo
-    marcas de Direitos de Cópia (Copyright) e os avisos de garantia intactos, referentes
-    à esta Licensa e pela ausência de garantia; e enviar qualquer outros recipientes do
-    Programa, uma copia da licensa GNU General Public License, juntamente com o programa.
-    Qualquer tradução da Licensa GNU deve ser acompanhada da Licensa Pública Geral GNU.</li>
-  <li>Se você modificar suas cópias ou qualquer cópia do programa, ou desenvolver um
-    programa baseado nele, você deverá distribuir o conteúdo dentro da Licensa Pública Geral
-    GNU. Qualquer tradução da Licensa Pública Geral GNU deve ser acompanhada da GNU 
-    General Public License.</li>
-  <li>Se você copiar ou distribuir o programa, você deve acompanhá-lo de uma
-    completa cópia correspondendo a um código-fonte de leitura por máquinas ou com uma oferta escrita,
-    valida por pelomenos 3 (três) anos, à fornecer o código-fonte.</li>
-  <li>Todas estas condições podem ser removidas se você conseguir uma autorização
-    do dono dos Direitos de Cópia (copyright).</li>
-  <li>Seus direitos de utilização e outros direitos não são afetados pelos acima citados.</li>
-</ul>
-<p>O sumário acima pertence à Licensa Pública Geral GNU. Ao proceder, você
-  está concordando com a Licensa Pública Geral GNU, não com o sumário. Acima
-  citamos apenas um índice da Licensa Pública Geral GNU, e sua integridade
-  é garantida. É altamente recomendável que você leia a<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">Licensa Pública
-  Geral GNU</a> por completa antes de prosseguir, que também é encontrada no
-  arquivo de licensa que acompanha este pacote.</p>';
 $_lang["alert_database_test_connection"] = 'Você prescisa criar uma base de dados ou testar a seleção de sua base de dados!';
 $_lang["alert_database_test_connection_failed"] = 'O teste de seleção/conexão da Base de Dados falhou!';
 $_lang["alert_enter_adminconfirm"] = 'A senha e a confirmação de senha não são iguais!';
@@ -87,7 +47,6 @@ $_lang["checking_sessions"] = 'Checando se as seções estão configuradas apropiad
 $_lang["checking_table_prefix"] = 'Verificando Prefixo de Tabela `';
 $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'Para novas instalações de Linux/Unix, crie um arquivo vazio chamado <span class=\"mono\">config.inc.php</span> no diretório <span class=\"mono\">manager/includes/</span> com as permissões de 0666.';
-$_lang["connection_screen_character_set"] = 'Character set da Conexão:';
 $_lang["connection_screen_collation"] = 'Collation:';
 $_lang["connection_screen_connection_information"] = 'Informação de Conexão';
 $_lang["connection_screen_database_connection_information"] = 'Informação da Base de Dados.';
@@ -98,7 +57,6 @@ $_lang["connection_screen_database_name"] = 'Nome da Base de Dados:';
 $_lang["connection_screen_database_pass"] = 'Senha da Base de Dados:';
 $_lang["connection_screen_database_test_connection"] = 'Clique aqui para criar a sua Base de Dados ou testar a conexão';
 $_lang["connection_screen_default_admin_email"] = 'E-mail do Administrador:';
-$_lang["connection_screen_default_admin_information"] = 'Informação de Administrador';
 $_lang["connection_screen_default_admin_login"] = 'Nome de Usuário de administrador:';
 $_lang["connection_screen_default_admin_note"] = 'Agora você ira digitar os dados para a conta principal de administrador. Você pode digitar seu nome aqui, e uma senha que você não irá esquecer. Você prescisará de fazer o login como administrador para terminar a instalação.';
 $_lang["connection_screen_default_admin_password"] = 'Senha do Administrador:';
@@ -158,7 +116,6 @@ $_lang["remove_install_folder_auto"] = 'Remova o diretório e arquivos de instala
 $_lang["remove_install_folder_manual"] = 'Por favor, lembre-se de remover o diretório &quot;<b>install</b>&quot; antes de entrar no Gerenciador de Conteúdo.';
 $_lang["retry"] = 'Tentar Novamente';
 $_lang["running_database_updates"] = 'Rodando atualizações na Base de Dados: ';
-$_lang["running_setup_script"] = 'Rodando script do setup... por favor aguarde...';
 $_lang["sample_web_site"] = 'Web Site Exemplo';
 $_lang["sample_web_site_note"] = 'Atenção: Está irá <b style=\"color:#CC0000\">Sobre-Escrever</b> documentos e recursos existentes.';
 $_lang["setup_cannot_continue"] = 'Infelizmente o Setup não pode continuar pelos motivos acima citados ';
@@ -181,7 +138,6 @@ $_lang["status_checking_database"] = 'Checando Base de Dados: ';
 $_lang["status_connecting"] = ' Conexão ao servidor: ';
 $_lang["status_failed"] = 'falhou!';
 $_lang["status_failed_could_not_create_database"] = 'falhou - não foi possível criar a base de dadose';
-$_lang["status_failed_could_not_select_database"] = 'falhou - não foi possível selecionar a base de dados';
 $_lang["status_failed_table_prefix_already_in_use"] = 'falhou - o table prefix já está em uso!';
 $_lang["status_passed"] = 'sucesso - Base de Dados selecionada';
 $_lang["status_passed_database_created"] = 'sucesso - Base de Dados criada';
@@ -193,7 +149,6 @@ $_lang["table_prefix_already_inuse_note"] = 'Setup não pode instalar porque, a b
 $_lang["table_prefix_not_exist"] = ' - Prefixo de Table não existe nesta Base de Dados!';
 $_lang["table_prefix_not_exist_note"] = 'Não foi possível instalar na base de dados selecionada, como não há tabelas com o prefixo que você inseriu. Por favor, escolha outro prefixo de tabela e re-começe a atualização.';
 $_lang["templates"] = 'Templates';
-$_lang["testing_connection"] = 'Testando conexão...';
 $_lang["to_log_into_content_manager"] = 'Para logar no gerenciador de conteúdo (manager/index.php) você pode clicar no botão Fechar.';
 $_lang["toggle"] = 'Detalhar';
 $_lang["unable_install_chunk"] = 'Não foi possivel instalar o chunk.  Arquivo';
@@ -204,7 +159,6 @@ $_lang["unable_install_template"] = 'Não foi possivel instalar o template.  Arqu
 $_lang["upgrade_note"] = '<strong>Nota:</strong> Antes de navegar em seu site você deve acessar o Gerenciador usando uma conta de Administrador, e depois revisar e gravar suas Configurações de Sistema.';
 $_lang["upgraded"] = 'Atualizado';
 $_lang["visit_forum"] = ', visite o <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.';
-$_lang["welcome_message_select_begin_button"] = 'Please select the `Begin` button to get started:';
 $_lang["welcome_message_text"] = 'Este programa irá te guiar pelo resto da instalação do pacote.';
 $_lang["welcome_message_welcome"] = 'Bem-vindo à instalação do MODx.';
 $_lang["writing_config_file"] = 'Escrevendo arquivo de configuração: ';

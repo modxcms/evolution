@@ -3,11 +3,14 @@
  * MODx Installer
  */
 // do a little bit of environment cleanup if possible
-@ ini_set('magic_quotes_runtime', 0);
-@ ini_set('magic_quotes_sybase', 0);
+if (version_compare(phpversion(), "5.3") < 0) {
+    @ ini_set('magic_quotes_runtime', 0);
+    @ ini_set('magic_quotes_sybase', 0);
+}
 
 // start session
 session_start();
+$_SESSION['test'] = 1;
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
@@ -15,20 +18,39 @@ error_reporting(E_ALL & ~E_NOTICE);
 require_once("lang.php");
 
 // session loop-back tester
-if (!$_SESSION['session_test'] && $_GET['s'] != 'set') {
-    $_SESSION['session_test'] = 1;
+if (!$_SESSION['test']) {
     $installBaseUrl = (!isset ($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) != 'on') ? 'http://' : 'https://';
     $installBaseUrl .= $_SERVER['HTTP_HOST'];
     if ($_SERVER['SERVER_PORT'] != 80)
         $installBaseUrl = str_replace(':' . $_SERVER['SERVER_PORT'], '', $installBaseUrl); // remove port from HTTP_HOST
     $installBaseUrl .= ($_SERVER['SERVER_PORT'] == 80 || isset ($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'on') ? '' : ':' . $_SERVER['SERVER_PORT'];
-    echo "<html><head><title>" . $_lang['loading'] . "</title><script>window.location.href='" . $installBaseUrl . $_SERVER['PHP_SELF'] . "?action=language';</script></head><body></body></html>";
-    exit;
+	$retryURL = $installBaseUrl . $_SERVER['PHP_SELF'] . "?action=language";
+    echo "
+<html>
+<head>
+	<title>Install Problem</title>
+	<style type=\"text/css\">
+		*{margin:0;padding:0}
+		body{margin:50px;background:#eee;}
+		.install{padding:10px;border:5px solid #f22;background:#f99;margin:0 auto;font:120%/1em serif;text-align:center;}
+		p{ margin:20px 0; }
+		a{font-size:200%;color:#f22;text-decoration:underline;margin-top:30px;padding:5px;}
+	</style>
+</head>
+<body>
+	<div class=\"install\">
+		<p>".$_lang["session_problem"]."</p>
+		<p><a href=\"".$retryURL."\">".$_lang["session_problem_try_again"]."</a></p>
+	</div>
+</body>
+</html>";
+	    exit;
+
 }
 
 $moduleName = "MODx";
-$moduleVersion = "Evolution 1.0.0-RC1";
-$moduleRelease = "2009-06-11";
+$moduleVersion = "Evolution 1.0.0-RC2";
+$moduleRelease = "2009-07-23";
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 $moduleSQLUpdateFile = "setup.updates.sql";
@@ -49,10 +71,11 @@ $isPostBack = (count($_POST));
 $action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
 
 // make sure they agree to the license
-if (!in_array($action, array ('language', 'welcome', 'license'))) {
-    if (!isset ($_POST['chkagree'])) $action= 'license';
-}
+#if (!in_array($action, array ('language', 'welcome', 'connection', 'options', 'license', 'mode', 'summary'))) {
+#    if (!isset ($_POST['chkagree'])) $action= 'license';
+#}
 
+ob_start();
 include ('header.php');
 
 if (!@include ('action.' . $action . '.php')) {
@@ -60,4 +83,5 @@ if (!@include ('action.' . $action . '.php')) {
 }
 
 include ('footer.php');
+ob_end_flush();
 ?>

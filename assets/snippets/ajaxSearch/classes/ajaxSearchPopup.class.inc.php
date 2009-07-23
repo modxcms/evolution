@@ -2,31 +2,31 @@
 /*
  * Title: AjaxSearchPopup Class
  * Purpose:
- *    The ajaxSearchPopup class contains all variables and functions 
+ *    The ajaxSearchPopup class contains all variables and functions
  *    used to display search results in a popup window througth an ajax request
  *
- *    Version: 1.8.3  - Coroico (coroico@wangba.fr) 
+ *    Version: 1.8.3  - Coroico (coroico@wangba.fr)
  *
  *    08/06/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
- *    Ryan Thrash (rthrash - ryan@vertexworks.com) 
+ *    Ryan Thrash (rthrash - ryan@vertexworks.com)
  *
- * 29/03/2009 - mootools1.2, jquery, maxWords, mbstring parameters, search logs 
+ * 29/03/2009 - mootools1.2, jquery, maxWords, mbstring parameters, search logs
  * 02/10/2008 - whereSearch, withTvs, new sql query, debug, subSearch
- * 24/07/2008 - Added rank, order & filter, breadcrumbs, tvPhx parameters 
+ * 24/07/2008 - Added rank, order & filter, breadcrumbs, tvPhx parameters
  * O2/07/2008 - New extract algorithm, search in tv, jot and maxygallery
  * O2/07/2008 - Added Phx templating & chunk parameters
  * 06/03/2008 - Added Hidden from menu and advanced search
  * 01/02/2008 - Added several fixes and a security patch
  * 17/11/2007 - Added IDs document selection
  * 06/11/2007 - Encoding troubles corrected
- * 
+ *
  * 01/22/07 - Added templating/language/mootools support
  * 01/03/07 - Added fixes/updates from forum
  * 09/18/06 - Added user permissions to searching
- * 03/20/06 - All variables are set in the main snippet & snippet call  
+ * 03/20/06 - All variables are set in the main snippet & snippet call
 */
 
 // some usefull class definition
@@ -57,26 +57,26 @@ class AjaxSearchPopup extends Search{
   var $subSearch;       // search in a subdomain
   var $subSearchName;   // sub search function name
 
-  var $withContent;     // content as main table 
+  var $withContent;     // content as main table
   var $listIDs;         // list of Id allowed
-  
+
   var $breadcrumbs = array();     // breadcrumbs infos
   var $tvphx = array();           // tvPhx infos
 
   var $extractNb;       // maximum number of extracts per document
   var $extractFields = array();   // fields to use for extraction
 
-  // Search context  
+  // Search context
   var $main = array();       // main content table
   var $joined = array();     // joined tables
 
   // chunkie variables
-  var $chkResults;            
+  var $chkResults;
   var $varResults = array();
   var $chkResult;
   var $varResult = array();
-  var $tplRes; 
-  
+  var $tplRes;
+
   // class variables
   var $asClass = array();
 
@@ -106,7 +106,7 @@ class AjaxSearchPopup extends Search{
     }
     $this->setDebug();    // set debug levels
     $this->setLog();      // set log level
-    
+
     if ($this->dbg) {
       if ($this->cfg['config']) $this->asDebug->dbgLog($this->readConfigFile($this->cfg['config']),
                                     "AjaxSearchPopup - Configuration file " . $this->cfg['config']);   // configuration file
@@ -116,13 +116,13 @@ class AjaxSearchPopup extends Search{
     $this->loadLang();    // load language labels
 
     if (!$this->setCharset($msg)) return $msg;  // set page and database charset
-    
+
     if (!$this->checkAjaxSearchParams($msg)) return $msg;  // Check user parameters
-    
+
     $validSearch = $this->validSearchString($msg); // Initialize search string & advanced search mode
 
     $this->initVariables(); // initialize some variables and functions
-    
+
     if ($validSearch) {
 
       $this->initClassVariables(); // initialize class variables
@@ -149,14 +149,14 @@ class AjaxSearchPopup extends Search{
         }
 
         // sort search results by rank if needed
-        $this->sortResultsByRank($this->searchString,$this->advSearch); 
+        $this->sortResultsByRank($this->searchString,$this->advSearch);
 
         $nbResults = count($this->searchResults);
         for($i=0;$i<$nbResults;$i++){
-        
+
           $this->chkResult = new asChunkie($this->tplRes);
           $this->varResult = array();
-          
+
           // set result link as PHx
           $this->setResultLink($this->searchResults[$i]);
 
@@ -168,7 +168,7 @@ class AjaxSearchPopup extends Search{
 
           // set result TvPhx as PHx
           $this->setResultTvPhx($this->searchResults[$i]);
-                        
+
           // set result fields like id, searchable, date, rank as PHx
           $found .= $this->setResultSearchable($this->searchResults[$i]) . " ";
 
@@ -228,7 +228,7 @@ class AjaxSearchPopup extends Search{
     $ucfg_array = array();
     $cfg = array();
     $matches = array();
-    
+
     preg_match_all("/ &([^=]*)=`([^`]*)`/",$ucfg,$matches);
     $nbc = count($matches[0]);
     if ($nbc > 0){
@@ -249,12 +249,12 @@ class AjaxSearchPopup extends Search{
  * setPageCharset : Set the Page and database charset
  */
   function setCharset(& $msgErr){
-  
+
     $valid = false;
     $msgErr = '';
     $this->setDatabaseCharset();  // initialize the database charset
     $this->setPageCharset(); // initialize the page charset
-    
+
     // Ajax window charset = UTF-8 and should to be coherent with database
     if (isset($this->dbCharset) && isset($this->pageCharset[$this->dbCharset])) {
       // if the charset of database is different of utf8 a mbstring conversion will be required
@@ -267,11 +267,11 @@ class AjaxSearchPopup extends Search{
         $valid = true;
       }
     } elseif (!isset($this->dbCharset)){
-      $msgErr = "AjaxSearch: database_connection_charset not set. Check your config file"; 
+      $msgErr = "AjaxSearch: database_connection_charset not set. Check your config file";
     } elseif (!strlen($this->dbCharset)){
       $msgErr = "AjaxSearch: database_connection_charset is null. Check your config file";
     } else {
-      // if you get this message, simply update the $pageCharset array in search.class.inc.php file 
+      // if you get this message, simply update the $pageCharset array in search.class.inc.php file
       // with the appropriate mapping between Mysql Charset and Html charset
       // eg: 'latin2' => 'ISO-8859-2'
       $msgErr = "AjaxSearch: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the search.class.inc.php file";
@@ -280,10 +280,10 @@ class AjaxSearchPopup extends Search{
   }
 
 /**
- * Check AjaxSearch user params 
+ * Check AjaxSearch user params
  *
  * @param string $msgErr error message
- * @return validity (true/false)    
+ * @return validity (true/false)
  */
   function checkAjaxSearchParams(& $msgErr){
 
@@ -316,9 +316,9 @@ class AjaxSearchPopup extends Search{
   function initVariables(){
 
     $this->initIdGroup();         // Initialize Id groups
-      
+
     $this->initDocGroup();        // Initialize Documents group
-    
+
     $this->asCall = $this->getAsCall($this->ucfg);  // get the AS snippet call
     if ($this->dbg) $this->asDebug->dbgLog($this->asCall,"AjaxSearchPopup - Snippet call");
 
@@ -339,6 +339,8 @@ class AjaxSearchPopup extends Search{
     $valid = false;
     $msgErr = '';
 
+	// check advSearch parameter
+	$this->cfg['advSearch'] = (in_array($this->cfg['advSearch'],$this->advSearchType)) ? $this->cfg['advSearch'] : $this->advSearchType[0];
     $this->advSearch = $this->cfg['advSearch']; // initialize advanced search option
 
     // Initialize search string
@@ -348,7 +350,7 @@ class AjaxSearchPopup extends Search{
     if (($this->pgCharset != 'UTF-8') && (ini_get('mbstring.encoding_translation') == '' || strtolower(ini_get('mbstring.http_input')) == 'pass')) {
       $this->searchString = mb_convert_encoding($this->searchString, $this->pgCharset , "UTF-8");
       $this->needsConvert = true;
-    } 
+    }
     else {
       $this->needsConvert = false;
     }
@@ -356,11 +358,11 @@ class AjaxSearchPopup extends Search{
     // check searchString
     $valid = $this->checkSearchString($this->searchString,$msgErr);
     if (!$valid) return false;
-       
+
     // Clean the searchString
     $valid = $this->stripSearchString($this->searchString,$this->cfg['stripInput'],$this->advSearch);
     if (!$valid) $msgErr = $this->_lang['as_resultsIntroFailure'];
-    
+
     // init searchString as Phx [+as.searchString+]
     if ($valid) $modx->setPlaceholder("as.searchString", $this->searchString);
 
@@ -374,7 +376,7 @@ class AjaxSearchPopup extends Search{
 
     // include chunckie class and read templates once
     if (!class_exists('asChunkie')) include_once AS_PATH . "classes/chunkie.class.inc.php";
-    $tplResults = $this->cfg['tplAjaxResults']; 
+    $tplResults = $this->cfg['tplAjaxResults'];
     $this->chkResults = new asChunkie($tplResults);   // results outer
 
     $tplResult = $this->cfg['tplAjaxResult'];
@@ -397,10 +399,10 @@ class AjaxSearchPopup extends Search{
       $this->varResults['moreClass'] = 'AS_ajax_more';
       if ($this->cfg['subSearch'] != '')
         $this->varResults['moreLink'] = 'index.php?id='.$this->cfg['moreResultsPage'].'&amp;AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch).'&amp;subsearch='.urlencode($this->cfg['subSearch']);
-      else 
+      else
         $this->varResults['moreLink'] = 'index.php?id='.$this->cfg['moreResultsPage'].'&amp;AS_search='.urlencode($this->searchString).'&amp;advsearch='.urlencode($this->advSearch);
       $this->varResults['moreTitle'] = $this->_lang['as_moreResultsTitle'];
-      $this->varResults['moreText'] = $this->_lang['as_moreResultsText'];     
+      $this->varResults['moreText'] = $this->_lang['as_moreResultsText'];
     }
   }
 }

@@ -790,6 +790,9 @@ UPDATE {PREFIX}documentgroup_names AS dgn
   SET dgn.private_memgroup = (mga.membergroup IS NOT NULL),
       dgn.private_webgroup = (wga.webgroup IS NOT NULL);
 
+
+UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
+
 # ]]upgrade-able
 
 
@@ -804,7 +807,7 @@ UPDATE {PREFIX}documentgroup_names AS dgn
 
 
 REPLACE INTO `{PREFIX}site_templates` 
-(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Minimal Template','Default minimal empty template','0','0','','0','<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n\r\n<head>\r\n	<title>[(site_name)] | [*pagetitle*]</title>\r\n\r\n	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n\r\n	<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/default/site.css\" type=\"text/css\" media=\"screen\" />\r\n        <base href=\"[(site_url)]\" />\r\n\r\n<!--[if lte IE 6]>\r\n\r\n  <style type=\"text/css\" media=\"screen, tv, projection\">\r\n        body { behavior: url(assets/js/csshover2.htc); } /* hover:anything support */\r\n        #content { margin-left: 22px; } /* to avoid the BMH */\r\n        a,  a:link { border-bottom-style: solid } /* becuase IE just doesn\'t dot */\r\n  </style>\r\n\r\n  <script type=\"text/javascript\" src=\"assets/js/sleight.js\"></script>\r\n\r\n<![endif]-->\r\n\r\n        </head>\r\n<body>\r\n\r\n<div id=\"page\">\r\n\r\n\r\n<div id=\"header\">\r\n	<div id=\"search\"><a name=\"search\"></a>\r\n		<!-- if you wanted a site search, this would be a good place -->\r\n	</div>\r\n	<h1><a href=\"[~[(site_start)]~]\" title=\"[(site_name)]\">[(site_name)]</a></h1>\r\n</div>\r\n<!-- close #header -->\r\n\r\n	<div id=\"content\">\r\n\r\n		<div class=\"post\">\r\n			<h3 id=\"post-\">[*longtitle*]</h3>\r\n				[*#content*]\r\n		</div>\r\n		<!-- close .post (main column content) -->\r\n\r\n	</div>\r\n	<!-- close #content -->\r\n\r\n	<div id=\"sidebar\">\r\n		<ul>\r\n			<li id=\"dropmenu\"><a name=\"dropmenu\"></a><h2>Pages:</h2>\r\n			[[Wayfinder? &startId=`0`]]\r\n			</li>\r\n\r\n			<li><h2>Meta:</h2>\r\n				<ul>\r\n				    <li><a href=\"http://validator.w3.org/check/referer\" title=\"This page validates as XHTML 1.0 Transitional\">Valid <abbr title=\"eXtensible HyperText Markup Language\">XHTML</abbr></a></li>\r\n                	<li><a href=\"http://jigsaw.w3.org/css-validator/check/referer\" title=\"This page uses valid Cascading Stylesheets\" rel=\"external\">Valid <abbr title=\"W3C Cascading Stylesheets\">css</abbr></a></li>\r\n				    <li><a href=\"http://modxcms.com/\" title=\"Powered by MODx, Do more with less.\">MOD<strong>x</strong></a></li>\r\n		        </ul>\r\n			</li>\r\n\r\n		</ul>\r\n	</div>\r\n	<!-- close #sidebar -->\r\n\r\n<div class=\"clear\">&nbsp;</div>\r\n\r\n<div id=\"footer\">\r\n	<p>\r\n		[(site_name)] is powered by\r\n		<a href=\"http://modxcms.com/\" title=\"Powered by MODx\"><strong>MOD</strong>x Content Management System</a>\r\n		<br /><a href=\"[~11~]\" title=\"Link to our Blog RSS Feeds\">Blog Entries (RSS)</a><br />\r\nMySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved from [^s^].\r\n	</p>\r\n</div>\r\n<!-- close #footer -->\r\n\r\n</div>\r\n<!-- close #page -->\r\n\r\n</body>\r\n</html>','0');
+(id, templatename, description, editor_type, category, icon, template_type, content, locked) VALUES ('3','Minimal Template','Default minimal empty template','0','0','','0','<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n\r\n<head>\r\n	<title>[(site_name)] | [*pagetitle*]</title>\r\n\r\n	<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n\r\n	<link rel=\"stylesheet\" href=\"[(base_url)]assets/templates/default/site.css\" type=\"text/css\" media=\"screen\" />\r\n        <base href=\"[(site_url)]\" />\r\n\r\n<!--[if lte IE 6]>\r\n\r\n  <style type=\"text/css\" media=\"screen, tv, projection\">\r\n        body { behavior: url(assets/js/csshover3.htc); } /* hover:anything support */\r\n        #content { margin-left: 22px; } /* to avoid the BMH */\r\n        a,  a:link { border-bottom-style: solid } /* becuase IE just doesn\'t dot */\r\n  </style>\r\n\r\n  <script type=\"text/javascript\" src=\"assets/js/sleight.js\"></script>\r\n\r\n<![endif]-->\r\n\r\n        </head>\r\n<body>\r\n\r\n<div id=\"page\">\r\n\r\n\r\n<div id=\"header\">\r\n	<div id=\"search\"><a name=\"search\"></a>\r\n		<!-- if you wanted a site search, this would be a good place -->\r\n	</div>\r\n	<h1><a href=\"[~[(site_start)]~]\" title=\"[(site_name)]\">[(site_name)]</a></h1>\r\n</div>\r\n<!-- close #header -->\r\n\r\n	<div id=\"content\">\r\n\r\n		<div class=\"post\">\r\n			<h3 id=\"post-\">[*longtitle*]</h3>\r\n				[*#content*]\r\n		</div>\r\n		<!-- close .post (main column content) -->\r\n\r\n	</div>\r\n	<!-- close #content -->\r\n\r\n	<div id=\"sidebar\">\r\n		<ul>\r\n			<li id=\"dropmenu\"><a name=\"dropmenu\"></a><h2>Pages:</h2>\r\n			[[Wayfinder? &startId=`0`]]\r\n			</li>\r\n\r\n			<li><h2>Meta:</h2>\r\n				<ul>\r\n				    <li><a href=\"http://validator.w3.org/check/referer\" title=\"This page validates as XHTML 1.0 Transitional\">Valid <abbr title=\"eXtensible HyperText Markup Language\">XHTML</abbr></a></li>\r\n                	<li><a href=\"http://jigsaw.w3.org/css-validator/check/referer\" title=\"This page uses valid Cascading Stylesheets\" rel=\"external\">Valid <abbr title=\"W3C Cascading Stylesheets\">css</abbr></a></li>\r\n				    <li><a href=\"http://modxcms.com/\" title=\"Powered by MODx, Do more with less.\">MOD<strong>x</strong></a></li>\r\n		        </ul>\r\n			</li>\r\n\r\n		</ul>\r\n	</div>\r\n	<!-- close #sidebar -->\r\n\r\n<div class=\"clear\">&nbsp;</div>\r\n\r\n<div id=\"footer\">\r\n	<p>\r\n		[(site_name)] is powered by\r\n		<a href=\"http://modxcms.com/\" title=\"Powered by MODx\"><strong>MOD</strong>x Content Management System</a>\r\n		<br /><a href=\"[~11~]\" title=\"Link to our Blog RSS Feeds\">Blog Entries (RSS)</a><br />\r\nMySQL: [^qt^], [^q^] request(s), PHP: [^p^], total: [^t^], document retrieved from [^s^].\r\n	</p>\r\n</div>\r\n<!-- close #footer -->\r\n\r\n</div>\r\n<!-- close #page -->\r\n\r\n</body>\r\n</html>','0');
 
 
 # Default Site Documents
@@ -862,11 +865,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('blocked_minutes','60'),
 ('use_captcha','0'),
 ('captcha_words','MODx,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
-('emailsender','you@example.com'),
+('emailsender','{ADMINEMAIL}'),
 ('emailsubject','Your login details'),
-('signupemail_message','Hello [+uid+] \r\n\r\nHere are your login details for [+sname+] Content Manager:\r\n\r\nUsername: [+uid+]\r\nPassword: [+pwd+]\r\n\r\nOnce you log into the Content Manager at [+surl+], you can change your password.\r\n\r\nRegards,\r\nSite Administrator'),
-('websignupemail_message','Hello [+uid+] \r\n\r\nHere are your login details for [+sname+]:\r\n\r\nUsername: [+uid+]\r\nPassword: [+pwd+]\r\n\r\nOnce you log into [+sname+] at [+surl+], you can change your password.\r\n\r\nRegards,\r\nSite Administrator'),
-('webpwdreminder_message','Hello [+uid+]\r\n\r\nTo active you new password click the following link:\r\n\r\n[+surl+]\r\n\r\nIf successful you can use the following password to login:\r\n\r\nPassword:[+pwd+]\r\n\r\nIf you did not request this email then please ignore it.\r\n\r\nRegards,\r\nSite Administrator'),
 ('number_of_logs','100'),
 ('number_of_messages','30'),
 ('number_of_results','20'),
@@ -875,7 +875,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('rb_base_dir','{IMAGEPATH}'),
 ('rb_base_url','{IMAGEURL}'),
 ('which_editor','TinyMCE'),
-('fe_editor_lang','english'),
+('fe_editor_lang','{MANAGERLANGUAGE}'),
 ('fck_editor_toolbar','standard'),
 ('fck_editor_autolang','0'),
 ('editor_css_path',''),
@@ -892,11 +892,10 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('filemanager_path','{FILEMANAGERPATH}'),
 ('theme_refresher',''),
 ('manager_layout','4'),
-('custom_contenttype','text/css,text/html,text/javascript,text/plain,text/xml'),
+('custom_contenttype','application/rss+xml,application/pdf,application/msword,application/excel,text/html,text/css,text/xml,text/javascript,text/plain'),
 ('auto_menuindex','1'),
 ('session.cookie.lifetime','604800'),
 ('mail_check_timeperiod','60'),
-('manager_lang_attribute','en'),
 ('manager_direction','ltr'),
 ('tinymce_editor_theme','editor'),
 ('tinymce_custom_plugins','style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media'),
@@ -905,11 +904,12 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tree_show_protected', '0'),
 ('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
 ('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
-('validate_referer', '0');
+('validate_referer', '0'),
+('datepicker_offset','-10');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
-(id, name, description, frames, home, view_document, new_document, save_document, publish_document, delete_document, empty_trash, action_ok, logout, help, messages, new_user, edit_user, logs, edit_parser, save_parser, edit_template, settings, credits, new_template, save_template, delete_template, edit_snippet, new_snippet, save_snippet, delete_snippet, edit_chunk, new_chunk, save_chunk, delete_chunk, empty_cache, edit_document, change_password, error_dialog, about, file_manager, save_user, delete_user, save_password, edit_role, save_role, delete_role, new_role, access_permissions, bk_manager, new_plugin, edit_plugin, save_plugin, delete_plugin, new_module, edit_module, save_module, exec_module, delete_module, view_eventlog, delete_eventlog, manage_metatags, edit_doc_metatags, new_web_user, edit_web_user, save_web_user, delete_web_user, web_access_permissions, view_unpublished, import_static, export_static ) VALUES 
+(id,name,description,frames,home,view_document,new_document,save_document,publish_document,delete_document,empty_trash,action_ok,logout,help,messages,new_user,edit_user,logs,edit_parser,save_parser,edit_template,settings,credits,new_template,save_template,delete_template,edit_snippet,new_snippet,save_snippet,delete_snippet,edit_chunk,new_chunk,save_chunk,delete_chunk,empty_cache,edit_document,change_password,error_dialog,about,file_manager,save_user,delete_user,save_password,edit_role,save_role,delete_role,new_role,access_permissions,bk_manager,new_plugin,edit_plugin,save_plugin,delete_plugin,new_module,edit_module,save_module,exec_module,delete_module,view_eventlog,delete_eventlog,manage_metatags,edit_doc_metatags,new_web_user,edit_web_user,save_web_user,delete_web_user,web_access_permissions,view_unpublished,import_static,export_static) VALUES 
 (1, 'Administrator', 'Site administrators have full access to all functions', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 
@@ -1019,6 +1019,9 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('99','OnManagerLoginFormPrerender','2',''),
 ('100','OnStripAlias','1','Documents'),
 ('200','OnCreateDocGroup','1','Documents'),
+('201','OnManagerWelcomePrerender','2',''),
+('202','OnManagerWelcomeHome','2',''),
+('203','OnManagerWelcomeRender','2',''),
 ('999','OnPageUnauthorized','1',''),
 ('1000','OnPageNotFound','1','');
 

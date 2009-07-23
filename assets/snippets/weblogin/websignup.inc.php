@@ -64,7 +64,7 @@ else if ($isPostBack){
     }
     
     // verify email
-    if($email=='' || !ereg("^[-!#$%&'*+./0-9=?A-Z^_`a-z{|}~]+", $email)){
+    if($email=='' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $email)){
         $output = webLoginAlert("E-mail address doesn't seem to be valid!").$tpl;
         return;
     }

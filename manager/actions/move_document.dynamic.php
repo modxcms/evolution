@@ -65,16 +65,15 @@ function checkParentChildRelation(pId, pName) {
 
 
 
-<div class="subTitle">
-<span class="right"><?php echo $_lang['move_document_title']; ?></span>
+<h1><?php echo $_lang['move_document_title']; ?></h1>
 
-    <table cellpadding="0" cellspacing="0" class="actionButtons">
-        <tr>
-            <td id="Button1"><a href="#" onclick="document.newdocumentparent.submit();"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" align="absmiddle"> <?php echo $_lang['save']; ?></a></td>
-            <td id="Button2"><a href="index.php?a=2"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cancel.gif" align="absmiddle"> <?php echo $_lang['cancel']; ?></a></td>
-        </tr>
-    </table>
+<div id="actions">
+	<ul class="actionButtons">
+	    <li><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
+	    <li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?></a></li>
+	</ul>
 </div>
+
 
 <div class="sectionHeader"><?php echo $_lang['move_document_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['move_document_message']; ?><p />

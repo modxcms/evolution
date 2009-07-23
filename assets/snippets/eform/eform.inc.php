@@ -1,9 +1,9 @@
 <?php
-# eForm 1.4.4.5 - Electronic Form Snippet
+# eForm 1.4.4.6 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
-# local revision: $Id: eform.inc.php,v 1.3 2006/11/22 14:48:50 jelle Exp $
+#
 #
 # Captcha image support - thanks to Djamoer
 # Multi checkbox, radio, select support - thanks to Djamoer
@@ -38,11 +38,12 @@
 ##
 
 $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format settings
+$GLOBALS['efPostBack'] = false;
+
 function eForm($modx,$params) {
 global $_lang;
 global $debugText;
-global $formats,$fields;
-
+global $formats,$fields,$efPostBack;
 
 $fields = array(); //reset fields array - needed in case of multiple forms
 
@@ -89,6 +90,7 @@ $_dfnMaxlength = 6;
 	# check for valid form key
 	if ($formid=="") return $_lang['ef_error_formid'];
 
+
 	// try to get formid from <form> tag id
 	preg_match('/<form[^>]*?id=[\'"]([^\'"]*?)[\'"]/i',$tpl,$matches);
 	$form_id = isset($matches[1])?$matches[1]:'';
@@ -98,12 +100,13 @@ $_dfnMaxlength = 6;
 			$tpl = str_replace('</form>',"<input type=\"hidden\" name=\"formid\" value=\"$form_id\" /></form>",$tpl);
 	}
 
-	$validFormId = ($formid==$_POST['formid']);
+	$validFormId = ($formid==$_POST['formid'])?1:0;
 
 	# check if postback mode
-	$isPostBack	= ($validFormId && count($_POST)>0)? true:false;
+	$efPostBack = ($validFormId && count($_POST)>0)? true:false; //retain old variable?
 
-	if($isPostBack){
+
+	if($efPostBack){
 		$report = (($tmp=efLoadTemplate($report))!==false)?$tmp:$_lang['ef_no_doc'] . " '$report'";
 		if($thankyou) $thankyou = (($tmp=efLoadTemplate($thankyou))!==false )?$tmp:$_lang['ef_no_doc'] . " '$thankyou'";
 		if($autotext) $autotext = (($tmp=efLoadTemplate($autotext))!==false )?$tmp:$_lang['ef_no_doc'] . " '$autotext'";
@@ -143,7 +146,7 @@ $_dfnMaxlength = 6;
 # parse form for formats and generate placeholders
 $tpl = eFormParseTemplate($tpl,$isDebug);
 
-	if ($isPostBack) {
+	if ($efPostBack) {
 
 		foreach($formats as $k => $discard)
 			if(!isset($fields[$k])) $fields[$k] = ""; // store dummy value inside $fields
@@ -157,9 +160,7 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 		foreach($_POST as $name => $value){
 			if(is_array($value)){
 				//remove empty values
-				$value = array_flip($value);
-				unset($value['']);
-				$fields[$name] = array_flip($value);
+				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
 			} else
 				$fields[$name]	= stripslashes(($allowhtml || $formats[$name][2]=='html')? $value:$modx->stripTags($value));
 		}
@@ -676,13 +677,11 @@ function AttachFilesToMailer(&$mail,&$attachFiles) {
 
 /*--- Form Parser stuff----------------------*/
 function  eFormParseTemplate($tpl, $isDebug=false ){
-	global $formats,$optionsName,$_lang,$debugText,$fields;
+	global $modx,$formats,$optionsName,$_lang,$debugText,$fields,$validFormId;
+	global $efPostBack;
 
 	$formats =""; //clear formats so values don't persist through multiple snippet calls
 	$labels = "";
-
-	# check if postback mode
-	$isPostBack	= (count($_POST)>0)? 1:0;
 
 	$regExpr = "#(<label[^>]*?>)(.*?)</label>#si";;
 	preg_match_all($regExpr,$tpl,$matches);
@@ -770,10 +769,13 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				$validValues = array();
 				foreach($matches[1] as $option){
 					$attr = attr2array($option);
+//* debug */ print __LINE__.': <pre>'.print_r($attr,true) .'</pre><br />';
 					$value = substr($attr['value'],1,-1); //strip outer quotes
 					if( trim($value)!='' ) $validValues[] = $value;
 					$newTag = buildTagPlaceholder('option',$attr,$name);
 					$newSelect = str_replace($option,$newTag,$newSelect);
+					//if no postback, retain any checked values
+					if(!$efPostBack && !empty($attr['selected'])) $fields[$name][]=$value;
 				}
 				//replace complete select block
 				$tpl = str_replace($select,$newSelect,$tpl);
@@ -797,7 +799,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 				$regExp = "#<textarea [^>]*?name=" . $tagAttributes["name"] . "[^>]*?" . ">(.*?)</textarea>#si";
 				preg_match($regExp,$tpl,$matches);
 				//if nothing Posted retain the content between start/end tags
-				$placeholderValue = ($isPostBack)?"[+$name+]":$matches[1];
+				$placeholderValue = ($efPostBack)?"[+$name+]":$matches[1];
 
 				$tpl = str_replace($matches[0],$newTag.$placeholderValue."</textarea>",$tpl);
 				break;
@@ -809,7 +811,7 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 						$formats[$name][$_dfnMaxlength] == $tagAttributes['maxlength'];
 					}
 					if($formats[$name] && !$formats[$name][2]) $formats[$name][2]=($fieldType=='text')?"string":$fieldType;
-					//populate automatic validation values for hidden, checbox and radio fields
+					//populate automatic validation values for hidden, checkbox and radio fields
 					if($fieldType=='hidden'){
 						if(!$isDebug) $formats[$name][1] = "[undefined]"; //do not want to disclose hidden field names
 						if(!isset($formats[$name][4])) $formats[$name][4]= $_lang['ef_tamper_attempt'];
@@ -820,7 +822,13 @@ function  eFormParseTemplate($tpl, $isDebug=false ){
 						//convert embedded comma's in values!
 						$formats[$name][5] .= str_replace(',','&#44;',stripTagQuotes($tagAttributes['value']));
 						//store the id as well
+						//if no postback, retain any checked values
+						if(!$efPostBack && !empty($tagAttributes['checked'])) $fields[$name][]=stripTagQuotes($tagAttributes['value']);
+						//
 						$formats[$name][6] .= ( isset($formats[$name][6])?",":"").stripTagQuotes($tagAttributes['id']);
+					}elseif(empty($fields[$name])){ //plain old text input field
+						//retain default value set in form template if not already set in code
+						$fields[$name] = stripTagQuotes($tagAttributes['value']);
 					}
 
 				$tpl = str_replace($fieldTags[$i],$newTag,$tpl);
@@ -926,9 +934,10 @@ function validateField($value,$fld,&$vMsg,$isDebug=false){
 
 			case "#LIST":		// List of comma separated values (not case sensitive)
 				//added in 1.4 - file upload filetype test
+//FS#960 - removed trimming of $param - values with leading or trailing spaces would always fail validation
 				if($fld[2]=='file')$value = substr($value,strrpos($value,'.')+1); //file extension
 				if(!isset($vlist)){
-					$vlist = 	explode(',',strtolower(trim($param))); //cached
+					$vlist = 	explode(',',strtolower($param)); //cached
 					foreach($vlist as $k =>$v ) $vlist[$k]=str_replace('&#44;',',',$v);
 
 				} //changes to make sure embedded commma's in values are recognized

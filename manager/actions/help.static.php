@@ -2,8 +2,9 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<br />
-<div class="sectionHeader"><img src="media/style/<?php echo $manager_theme; ?>/images/icons/b02.gif" alt="Help" style="vertical-align: text-bottom;" />&nbsp;&nbsp;<?php echo $_lang['help']; ?></div>
+
+<h1><?php echo $_lang['help']; ?></h1>
+
 <div class="sectionBody">
     <div class="tab-pane" id="resourcesPane">
         <script type="text/javascript">
