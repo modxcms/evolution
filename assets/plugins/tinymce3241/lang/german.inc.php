@@ -24,4 +24,5 @@ $_lang['tinymce_theme_simple'] = "Wenige Plugins";
 $_lang['tinymce_theme_advanced'] = "Mittlere Anzahl Plugins";
 $_lang['tinymce_theme_editor'] = "Alle Plugins";
 $_lang['tinymce_theme_custom'] = "Individuell";
+$_lang['tinymce_theme_global_settings'] = "Verwenden Sie die globale Einstellung";
 ?>

@@ -22,4 +22,5 @@ $_lang['tinymce_theme_simple'] = "ساده";
 $_lang['tinymce_theme_advanced'] = "پیشرفته";
 $_lang['tinymce_theme_editor'] = "ویرایشگر متن";
 $_lang['tinymce_theme_custom'] = "مخصوص";
+$_lang['tinymce_theme_global_settings'] = "با استفاده از محیط های جهانی";
 ?>

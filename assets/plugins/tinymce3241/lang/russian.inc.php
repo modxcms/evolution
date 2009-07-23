@@ -22,4 +22,5 @@ $_lang['tinymce_theme_simple'] = "Простая";
 $_lang['tinymce_theme_advanced'] = "Продвинутая";
 $_lang['tinymce_theme_editor'] = "Редактор контента";
 $_lang['tinymce_theme_custom'] = "Индивидуальная";
+$_lang['tinymce_theme_global_settings'] = "Использовать глобальные настройки";
 ?>

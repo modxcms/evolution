@@ -27,4 +27,5 @@ $_lang['tinymce_theme_simple'] = "Enkelt";
 $_lang['tinymce_theme_advanced'] = "Avancerat";
 $_lang['tinymce_theme_editor'] = "Innehållseditor";
 $_lang['tinymce_theme_custom'] = "Anpassat";
+$_lang['tinymce_theme_global_settings'] = "Använd globalt";
 ?>

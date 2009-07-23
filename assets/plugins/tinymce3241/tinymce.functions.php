@@ -5,14 +5,16 @@
 if (!function_exists('getTinyMCESettings')) {
 	function getTinyMCESettings($_lang, $path, $manager_language='english', $use_editor, $theme, $css, $plugins, $buttons1, $buttons2, $buttons3, $buttons4, $displayStyle, $action) {
 		// language settings
-		include_once($path.'/lang/'.$manager_language.'.inc.php');
+		if (! @include_once($path.'/lang/'.$manager_language.'.inc.php')){
+		  include_once($path.'/lang/english.inc.php');
+		}
 		// Check for previous 'full' theme setting for backwards compatibility 
 		if($theme == "full"){
 		    $theme == "editor";
 		}
 		
 		if($action == 11 || $action == 12){ 
-		    $themeOptions .= "					<option value=\"\"></option>\n";
+		    $themeOptions .= "					<option value=\"\">".$_lang['tinymce_theme_global_settings']."</option>\n";
 		}
 		$arrThemes[] = array("simple",$_lang['tinymce_theme_simple']);
 		$arrThemes[] = array("advanced",$_lang['tinymce_theme_advanced']);

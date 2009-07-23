@@ -14,4 +14,5 @@ $_lang['tinymce_settings'] = "TinyMCE Settings";
 $_lang['tinymce_theme_simple'] = "Simple";
 $_lang['tinymce_theme_advanced'] = "Advanced";
 $_lang['tinymce_theme_editor'] = "Content Editor";
-$_lang['tinymce_theme_custom'] = "Custom";?>
+$_lang['tinymce_theme_custom'] = "Custom";$_lang['tinymce_theme_global_settings'] = "Use the global setting";
+?>

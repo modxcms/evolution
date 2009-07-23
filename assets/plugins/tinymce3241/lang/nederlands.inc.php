@@ -24,5 +24,5 @@ $_lang['tinymce_theme_simple'] = "Eenvoudig";
 $_lang['tinymce_theme_advanced'] = "Geavanceerd";
 $_lang['tinymce_theme_editor'] = "Content Editor";
 $_lang['tinymce_theme_custom'] = "Aangepast";
-
+$_lang['tinymce_theme_global_settings'] = "Gebruik het algemene instelling";
 ?>

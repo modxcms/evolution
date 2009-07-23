@@ -28,4 +28,5 @@ $_lang['tinymce_theme_simple'] = "Simple";
 $_lang['tinymce_theme_advanced'] = "Avancé";
 $_lang['tinymce_theme_editor'] = "Content Editor";
 $_lang['tinymce_theme_custom'] = "Personnalisé";
+$_lang['tinymce_theme_global_settings'] = "Utilisez le paramètre global";
 ?>
