@@ -1,11 +1,12 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0 (rev 5515 - July 23, 2009)
+MODx Evolution 1.0.0 (rev 5517 - July 24, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-993] Fix broken URL rewriting when friendly alias paths are enabled
 * [#MODX-981] Replaced missing event icons.
 * [#MODX-968] Replaced folder icon in tree. (nodes.php)
 * [#MODX-974] Fixed missing save icon in files.dynamic.php
