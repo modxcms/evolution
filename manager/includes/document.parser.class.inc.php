@@ -866,22 +866,18 @@ class DocumentParser {
         return $documentSource;
     }
 
-    function makeFriendlyURL($pre, $suff, $alias, $base='') {
+    function makeFriendlyURL($pre, $suff, $alias) {
         $Alias = explode('/',$alias);
         $alias = array_pop($Alias);
         $dir = implode('/', $Alias);
         unset($Alias);
-        return $base . ($dir != '.' ? "$dir/" : '') . $pre . $alias . $suff;
+        return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
     function rewriteUrls($documentSource) {
         // rewrite the urls
         if ($this->config['friendly_urls'] == 1) {
             $aliases= array ();
-            $base_url = '';
-            if($this->config['base_url'] !== '/') {
-                $base_url = preg_replace(array('/\/$/'), '', $this->config['base_url']);//'/^\//', 
-            }
             foreach ($this->aliasListing as $item) {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
             }
@@ -890,8 +886,8 @@ class DocumentParser {
             $pref= $this->config['friendly_url_prefix'];
             $suff= $this->config['friendly_url_suffix'];
             $thealias= '$aliases[\\1]';
-            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias, '$base_url')";
-            $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "', '$base_url')";
+            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias)";
+            $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
             $documentSource= preg_replace($in, $out, $documentSource);
         } else {

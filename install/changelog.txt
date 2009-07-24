@@ -1,7 +1,15 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0-RC2 (rev 5514 - July 23, 2009)
+MODx Evolution 1.0.0-RC3 (rev 5520 - July 24, 2009)
+===================================
+--------------------------------------------
+Bugfixes & Feature Requests:
+--------------------------------------------
+* [#MODX-989] Fix issue with DatePicker time field styling
+* [#MODX-993] Fix broken URL rewriting when friendly alias paths are enabled
+
+MODx Evolution 1.0.0-RC3 (rev 5514 - July 23, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:

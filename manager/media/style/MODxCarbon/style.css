@@ -1523,7 +1523,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 	width: 177px;
 }
 
-.dp_cal input.cal_timeTextBox {
+#mutate .dp_cal input.cal_timeTextBox, .dp_cal input.cal_timeTextBox {
 	display: block;
 	text-align: center;
 	width: 60px;
