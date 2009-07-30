@@ -48,6 +48,7 @@ $_style["tree_showtree"] = '<img src="'.$style_path.'images/tree/sitemap.png" wi
 $_style["tree_weblink"] = $style_path."images/tree/link_go.png";
 
 // Icons
+$_style["icons_add"] = $style_path."images/icons/save.png";
 $_style["icons_cal"] = $style_path."images/icons/cal.gif";
 $_style["icons_cal_nodate"] = $style_path."images/icons/cal_nodate.gif";
 $_style["icons_cancel"] = $style_path."images/icons/stop.png";
@@ -65,12 +66,16 @@ $_style["icons_loading_doc_tree"] = $style_path."images/icons/information.png"; 
 $_style["icons_mail"] = $style_path."images/icons/email.png"; // top bar
 $_style["icons_message_forward"] = $style_path."images/icons/forward.gif";
 $_style["icons_message_reply"] = $style_path."images/icons/reply.gif";
+$_style["icons_modules"] = $style_path."images/icons/modules.gif";
 $_style["icons_move_document"] = $style_path."images/icons/page_white_go.png";
 $_style["icons_new_document"] = $style_path."images/icons/page_white_add.png";
 $_style["icons_new_weblink"] = $style_path."images/icons/world_link.png";
 $_style["icons_preview_document"] = $style_path."images/icons/page_white_magnify.png";
 $_style["icons_publish_document"] = $style_path."images/icons/clock_play.png";
+$_style["icons_refresh"] = $style_path."images/icons/refresh.png"; 
 $_style["icons_save"] = $style_path."images/icons/save.png";
+$_style["icons_set_parent"] = $style_path."images/icons/layout_go.png";
+$_style["icons_table"] = $style_path."images/icons/table.gif"; 
 $_style["icons_undelete_document"] = $style_path."images/icons/b092.gif";
 $_style["icons_unpublish_document"] = $style_path."images/icons/clock_stop.png";
 $_style["icons_user"] = $style_path."images/icons/user.gif";
@@ -93,9 +98,11 @@ $_style["icons_security_large"] = $style_path."images/icons/security.gif";
 $_style["icons_webusers_large"] = $style_path."images/icons/web_users.gif";
 
 // Miscellaneous
-$_style["ajax_loader"] = "<p>".$_lang['loading_page']."</p><p><img src=\"".$style_path."images/misc/ajax-loader.gif\" alt=\"Please wait\"></p>";
+$_style["ajax_loader"] = "<p>".$_lang['loading_page']."</p><p><img src=\"".$style_path."images/misc/ajax-loader.gif\" alt=\"Please wait\" /></p>";
 $_style["modx_logo"] = $style_path."images/misc/logo.png";
 $_style["spacer"] = $style_path."images/misc/spacer.gif";
+$_style["tx"] = $style_path."images/misc/_tx_.gif";
+$_style["icons_right_arrow"] = $style_path."images/icons/circlerightarrow.gif";
 
 
 // Credits

@@ -1,26 +1,10 @@
-﻿<?php
+<?php
 /*
-japanese-utf8.inc.php - for AjaxSearch 1.8.2
+japanese-utf8.inc.php - for AjaxSearch 1.8.3a
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
 Description: Language strings for AjaxSearch
-
-Modified by: MODx Japanese moderators
-Modified on:07/22/08
-
-Modified by: PMS to include translations for as_resultsFoundTextSingle and as_resultsFoundTextMultiple.
-  $2 is the search text and $1 is the number of search results.
-Modified on: 21/09/08
-
-Modified by: PMS to include additional translations for version 1.8.2.
-Modified on: 29/03/09
 */
-
-//-- JAPANESE LANGUAGE FILE ENCODED IN UTF-8
-include_once(dirname(__FILE__).'/english-utf8.inc.php'); // fall back to English defaults if needed
-/* Set locale to Japanese */
-setlocale (LC_ALL, 'ja_JP');
-
 $_lang['as_resultsIntroFailure'] = '一致する検索結果がありませんでした。類似する別の単語で再度検索してください。';
 $_lang['as_searchButtonText'] = '検索';
 $_lang['as_boxText'] = '検索語を入力してください';

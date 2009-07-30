@@ -9,11 +9,13 @@
  * Filename:       /install/lang/svenska/svenska.inc.php
  * Language:       Svenska
  * Encoding:       utf-8
+ * Revision:       5523
  *
  * Translation: Pontus Ågren (Pont) & Thomas Djärv (Beryl)
- * Date: 2009-06-08
+ * Date: 2009-07-24
  */
 
+$_lang["agree_to_terms"] = 'Godkänn licensvillkoren och installera';
 $_lang["alert_database_test_connection"] = 'Du behöver skapa din databas eller testa det databasval du gjort!';
 $_lang["alert_database_test_connection_failed"] = 'Testet av ditt databasval har misslyckats!';
 $_lang["alert_enter_adminconfirm"] = 'Det administrativa lösenordet och bekräftelsen överensstämmer inte!';
@@ -34,16 +36,16 @@ $_lang["btnclose_value"] = 'Stäng';
 $_lang["btnnext_value"] = 'Nästa';
 $_lang["cant_write_config_file"] = 'MODx kunde inte skriva konfigurationsfilen. Kopiera följande till filen ';
 $_lang["cant_write_config_file_note"] = 'När det är klart kan du logga in i MODx administrationsdel genom att ange adressen DinWebbplats.se/manager/ i din webbläsare.';
-$_lang["checkbox_select_options"] = 'Alternativ för kryssrutor:';
-$_lang["checking_if_cache_exist"] = 'Kontrollerar att katalogen <span class="mono">assets/cache</span> existerar: ';
-$_lang["checking_if_cache_file2_writable"] = 'Kontrollerar att filen <span class="mono">assets/cache/sitePublishing.idx.php</span> är skrivbar: ';
-$_lang["checking_if_cache_file_writable"] = 'Kontrollerar att filen <span class="mono">assets/cache/siteCache.idx.php</span> är skrivbar: ';
-$_lang["checking_if_cache_writable"] = 'Kontrollerar att katalogen <span class="mono">assets/cache</span> är skrivbar: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Kontrollerar att filen <span class="mono">manager/includes/config.inc.php</span> existerar och är skrivbar: ';
-$_lang["checking_if_export_exists"] = 'Kontrollerar att katalogen <span class="mono">assets/export</span> existerar: ';
-$_lang["checking_if_export_writable"] = 'Kontrollerar att katalogen <span class="mono">assets/export</span> är skrivbar: ';
-$_lang["checking_if_images_exist"] = 'Kontrollerar att katalogen <span class="mono">assets/images</span> existerar: ';
-$_lang["checking_if_images_writable"] = 'Kontrollerar att katalogen <span class="mono">assets/images</span> är skrivbar: ';
+$_lang["checkbox_select_options"] = 'Välj flera element:';
+$_lang["checking_if_cache_exist"] = 'Kontrollerar att katalogerna <span class="mono">/assets/cache</span> och <span class="mono">/assets/cache/rss</span> existerar: ';
+$_lang["checking_if_cache_file_writable"] = 'Kontrollerar att filen <span class="mono">/assets/cache/siteCache.idx.php</span> är skrivbar: ';
+$_lang["checking_if_cache_file2_writable"] = 'Kontrollerar att filen <span class="mono">/assets/cache/sitePublishing.idx.php</span> är skrivbar: ';
+$_lang["checking_if_cache_writable"] = 'Kontrollerar att katalogerna <span class="mono">/assets/cache</span> och <span class="mono">/assets/cache/rss</span> är skrivbara: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Kontrollerar att filen <span class="mono">/manager/includes/config.inc.php</span> existerar och är skrivbar: ';
+$_lang["checking_if_export_exists"] = 'Kontrollerar att katalogen <span class="mono">/assets/export</span> existerar: ';
+$_lang["checking_if_export_writable"] = 'Kontrollerar att katalogen <span class="mono">/assets/export</span> är skrivbar: ';
+$_lang["checking_if_images_exist"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> och <span class="mono">/assets/media</span> existerar: ';
+$_lang["checking_if_images_writable"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> och <span class="mono">/assets/media</span> är skrivbara: ';
 $_lang["checking_mysql_strict_mode"] = 'Kontrollerar MySQL för strikt sql_mode: ';
 $_lang["checking_mysql_version"] = 'Kontrollerar MySQL-versionen: ';
 $_lang["checking_php_version"] = 'Kontrollerar PHP-version: ';
@@ -52,26 +54,27 @@ $_lang["checking_registerglobals_note"] = 'Denna konfiguration gör din webbplat
 $_lang["checking_sessions"] = 'Kontrollerar att sessioner är korrekt konfigurerade: ';
 $_lang["checking_table_prefix"] = 'Kontrollerar tabellprefixet `';
 $_lang["chunks"] = 'Chunks';
-$_lang["config_permissions_note"] = 'För nya installationer i Linux/Unix-miljö måste en tom fil med namnet <span class="mono">config.inc.php</span> skapas i katalogen <span class="mono">manager/includes/</span> med åtkomsträttigheterna satta till 0666.';
+$_lang["config_permissions_note"] = 'För nya installationer i Linux/Unix-miljö måste en tom fil med namnet <span class="mono">config.inc.php</span> skapas i katalogen <span class="mono">/manager/includes/</span> med åtkomsträttigheterna satta till 0666.';
 $_lang["connection_screen_collation"] = 'Kollationering:';
-$_lang["connection_screen_connection_information"] = 'Anslutningsuppgifter';
 $_lang["connection_screen_connection_method"] = 'Anslutningsmetod:';
 $_lang["connection_screen_database_connection_information"] = 'Databasuppgifter';
-$_lang["connection_screen_database_connection_note"] = 'Ange namnet på databasen som skapats för MODx. Om det inte finns någon databas än kommer installationsprogrammet att försöka skapa en åt dig. Det här kan komma att misslyckas beroende på MySQL-konfigurationen eller databasens åtkomsträttigheter för din domän/installation.';
+$_lang["connection_screen_database_connection_note"] = 'Ange namnet på den databas som ska användas eller som du vill skapa för denna MODx-installation. Om det inte finns någon databas kommer installationsprogrammet att försöka skapa en. Det här kan misslyckas beroende på hur MySQLs åtkomsträttigheter är konfigurerade.';
 $_lang["connection_screen_database_host"] = 'Databasens värd:';
+$_lang["connection_screen_database_info"] = 'Databasinformation';
 $_lang["connection_screen_database_login"] = 'Databasens inloggningsnamn:';
 $_lang["connection_screen_database_name"] = 'Databasnamn:';
 $_lang["connection_screen_database_pass"] = 'Databasens lösenord:';
-$_lang["connection_screen_database_test_connection"] = 'Klicka här för att skapa din databas eller för att testa ditt databasval';
-$_lang["connection_screen_default_admin_email"] = 'Administratörens epost:';
+$_lang["connection_screen_database_test_connection"] = 'Skapa databas eller testa ditt databasval';
+$_lang["connection_screen_default_admin_email"] = 'Administratörens e-post:';
 $_lang["connection_screen_default_admin_login"] = 'Administratörens användarnamn:';
 $_lang["connection_screen_default_admin_note"] = 'Nu ska du ange ett antal uppgifter för det administrativa kontot. Du kan fylla i ditt eget namn här och ett lösenord som du inte glömmer i första taget. Du kommer att behöva de här uppgifterna när du ska logga in på det administrativa kontot efter att installationen är klar.';
 $_lang["connection_screen_default_admin_password"] = 'Administratörens lösenord:';
 $_lang["connection_screen_default_admin_password_confirm"] = 'Bekräfta lösenord:';
 $_lang["connection_screen_default_admin_user"] = 'Administratörskonto';
+$_lang["connection_screen_defaults"] = 'Standardinställningar för hanteraren';
 $_lang["connection_screen_server_connection_information"] = 'Serverns anslutnings- och inloggningsuppgifter';
-$_lang["connection_screen_server_connection_note"] = 'Ange namnet på din server, ditt inloggningsnamn samt ditt lösenord och testa sedan anslutningen.';
-$_lang["connection_screen_server_test_connection"] = 'Klicka här för att testa anslutningen till servern och för att hämta tillgängliga kollationeringar';
+$_lang["connection_screen_server_connection_note"] = 'Ange databasnamnet (servernamnet eller IP-adressen), användarnamnet och lösenordet innan du testar anslutningen.';
+$_lang["connection_screen_server_test_connection"] = 'Testa anslutningen till databasservern och visa tillgängliga kollationeringar';
 $_lang["connection_screen_table_prefix"] = 'Tabellprefix:';
 $_lang["creating_database_connection"] = 'Skapar en anslutning till databasen: ';
 $_lang["database_alerts"] = 'Databasvarningar!';
@@ -79,26 +82,31 @@ $_lang["database_connection_failed"] = 'Anslutningen till databasen misslyckades
 $_lang["database_connection_failed_note"] = 'Kontrollera databasens inloggningsuppgifter och försök igen.';
 $_lang["database_use_failed"] = 'Databasen kunde inte väljas!';
 $_lang["database_use_failed_note"] = 'Kontrollera databasens åtkomsträttigheter för den angivna användaren och försök igen.';
+$_lang["default_language"] = 'Standardspråk i hanteraren';
+$_lang["default_language_description"] = 'Det här är det standardspråk som kommer att användas i MODx hanterare.';
 $_lang["during_execution_of_sql"] = ' under körningen av SQL-frågan ';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
 $_lang["error"] = 'fel';
 $_lang["errors"] = 'fel';
 $_lang["failed"] = 'MISSLYCKADES!';
-$_lang["iagree_box"] = 'Jag godkänner villkoren i denna licens.';
+$_lang["help"] = 'Hjälp!';
+$_lang["help_link"] = 'http://modxcms.com/forums/';
+$_lang["help_title"] = 'Installationshjälp i MODx forum';
+$_lang["iagree_box"] = 'Jag godkänner <a href="../assets/docs/license.txt" target="_blank">licensvillkoren för MODx</a>.<br />Om du vill läsa en översättning av GPL-licensen, version 2, hittar du den på <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">operativsystemet GNUs webbplats</a>.';
 $_lang["install"] = 'Installera';
 $_lang["install_overwrite"] = 'Installera/skriv över';
 $_lang["install_results"] = 'Installationsresultat';
 $_lang["install_update"] = 'Installera/uppdatera';
 $_lang["installation_error_occured"] = 'Följande fel uppstog under installationen';
 $_lang["installation_install_new_copy"] = 'Installera en ny kopia av ';
-$_lang["installation_install_new_note"] = '<br />Observera att detta valet kan skriva över data som finns i databasen.';
+$_lang["installation_install_new_note"] = 'Observera att detta val kan skriva över data som finns i databasen.';
 $_lang["installation_mode"] = 'Installationstyp';
 $_lang["installation_new_installation"] = 'Ny installation';
 $_lang["installation_note"] = '<strong>Notera:</strong> Efter att ha loggat in i innehållshanteraren bör du redigera och spara dina systeminställningar innan du börjar surfa på din webbplats. Gå till <strong>Verktyg</strong> -> Konfiguration i innehållshanteraren.';
 $_lang["installation_successful"] = 'Installationen lyckades!';
-$_lang["installation_upgrade_advanced"] = 'Avancerad uppgradering<br />av installation<br /><small>(redigera databasens konfiguration)</small>';
-$_lang["installation_upgrade_advanced_note"] = 'För avancerade databasadministratörer eller vid flytt till servrar med en annan teckenuppsättning för anslutning.<br /><b>Du kommer att behöva databasens fullständiga namn, användarenamn, lösenord och anslutnings/kollationeringsdetaljer.</b>';
-$_lang["installation_upgrade_existing"] = 'Uppgradera existerande<br />installation';
+$_lang["installation_upgrade_advanced"] = 'Avancerad uppgradering';
+$_lang["installation_upgrade_advanced_note"] = 'För avancerade databasadministratörer eller vid flytt till servrar med en annan teckenuppsättning för anslutning.<br /><b>Du kommer att behöva databasens fullständiga namn, användarnamn, lösenord och anslutnings/kollationeringsuppgifter.</b>';
+$_lang["installation_upgrade_existing"] = 'Uppgradera befintlig installation';
 $_lang["installation_upgrade_existing_note"] = 'Uppgradera dina nuvarande filer och databas.';
 $_lang["installed"] = 'Installerad';
 $_lang["installing_demo_site"] = 'Installerar prov-webbplats: ';
@@ -127,7 +135,9 @@ $_lang["remove_install_folder_manual"] = 'Kom ihåg att ta bort katalogen &quot;
 $_lang["retry"] = 'Försök igen';
 $_lang["running_database_updates"] = 'Kör uppdateringar för databasen: ';
 $_lang["sample_web_site"] = 'Prov-webbplats';
-$_lang["sample_web_site_note"] = 'Observera att detta kommer att <b style="color:#CC0000;">skriva över</b> existerande dokument och resurser.';
+$_lang["sample_web_site_note"] = 'Observera att detta kommer att <b>skriva över</b> existerande dokument och resurser.';
+$_lang["session_problem"] = 'Ett problem med dina serversessioner upptäcktes. Kontakta din serveradministratör för att rätta till problemet.';
+$_lang["session_problem_try_again"] = 'Försök igen?'; 
 $_lang["setup_cannot_continue"] = 'Installationsprogrammet kan tyvärr inte fortsätta på grund av ovanstående ';
 $_lang["setup_couldnt_install"] = 'MODx installationsprogram kunde inte lägga till/ändra några tabeller i den valda databasen.';
 $_lang["setup_database"] = 'Installationsprogrammet kommer nu att försöka konfigurera databasen:<br />';
@@ -172,8 +182,9 @@ $_lang["upgrade_note"] = '<strong>Notera:</strong> Innan du börjar surfa på di
 $_lang["upgraded"] = 'Uppgraderad';
 $_lang["visit_forum"] = ', så besök <a href="http://www.modxcms.com/forums/" target="_blank">MODx forum</a>.';
 $_lang["warning"] = 'VARNING!';
+$_lang["welcome_message_start"] = 'Välj först vilken sorts installation som ska göras:';
 $_lang["welcome_message_text"] = 'Detta program kommer att vägleda dig genom hela installationen.';
-$_lang["welcome_message_welcome"] = 'Välkommen till MODx installationsprogram.';
+$_lang["welcome_message_welcome"] = 'Välkommen till MODx installationsprogram';
 $_lang["writing_config_file"] = 'Skriver konfigurationsfil: ';
 $_lang["you_running_php"] = ' - Du kör PHP ';
 ?>

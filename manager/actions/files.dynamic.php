@@ -410,7 +410,7 @@ if(strlen(MODX_BASE_PATH) < strlen($filemanager_path)) $len--;
 
 function ls($curpath) {
 	global $_lang;
-	global $excludes, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $manager_theme;
+	global $excludes, $editablefiles, $inlineviewablefiles, $viewablefiles, $enablefileunzip, $enablefiledownload, $uploadablefiles, $folders, $files, $filesizes, $len, $dirs_array, $files_array, $webstart_path, $manager_theme, $modx;
 	$dircounter = 0;
 	$filecounter = 0;
 	$curpath = str_replace('//','/',$curpath.'/');
@@ -459,7 +459,7 @@ function ls($curpath) {
 		$filesizes += $dirs_array[$i]['stats']['7'];
 		echo '<tr style="cursor:default;" onmouseout="setColor(this,0)" onmouseover="setColor(this,1)">';
 		echo '<td>',$dirs_array[$i]['text'],'</td>';
-		echo '<td>',strftime('%d-%m-%y, %H:%M:%S', $dirs_array[$i]['stats']['9']),'</td>';
+		echo '<td>',$modx->toDateFormat($dirs_array[$i]['stats']['9']),'</td>';
 		echo '<td dir="ltr">',ufilesize($dirs_array[$i]['stats']['7']),'</td>';
 		echo '<td>';
 		echo $dirs_array[$i]['delete'];
@@ -474,7 +474,7 @@ function ls($curpath) {
 		$filesizes += $files_array[$i]['stats']['7'];
 		echo '<tr onmouseout="setColor(this,0)" onmouseover="setColor(this,1)">';
 		echo '<td>',$files_array[$i]['text'],'</td>';
-		echo '<td>',strftime('%d-%m-%y, %H:%M:%S', $files_array[$i]['stats']['9']),'</td>';
+		echo '<td>',$modx->toDateFormat($files_array[$i]['stats']['9']),'</td>';
 		echo '<td dir="ltr">',ufilesize($files_array[$i]['stats']['7']),'</td>';
 		echo '<td>';
 		echo $files_array[$i]['unzip'];
@@ -507,7 +507,7 @@ if($folders==0 && $files==0) {
 
 echo $_lang['files_directories'],': <b>',$folders,'</b><br />';
 echo $_lang['files_files'],': <b>',$files,'</b><br />';
-echo $_lang['files_data'],': <b><span dir="ltr">',ufilesize($filesizes),'</span></b><br/>';
+echo $_lang['files_data'],': <b><span dir="ltr">',ufilesize($filesizes),'</span></b><br />';
 echo $_lang['files_dirwritable'],' <b>',is_writable($startpath)==1 ? $_lang['yes'].'.' : $_lang['no'].'.'
 ?></b><br />
 <div align="center">

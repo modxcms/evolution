@@ -32,6 +32,21 @@ extract($settings, EXTR_OVERWRITE);
 
 $displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') || ($_SESSION['browser']=='sf') ) ? "table-row" : "block" ;
 
+// load languages and keys
+$lang_keys = array();
+$dir = dir("includes/lang");
+while ($file = $dir->read()) {
+    if(strpos($file, ".inc.php")>0) {
+        $endpos = strpos ($file, ".");
+        $languagename = substr($file, 0, $endpos);
+        $lang_keys[$languagename] = get_lang_keys($file);
+    }
+}
+$dir->close();
+
+$isDefaultUnavailableMsg = $site_unavailable_message == $_lang['siteunavailable_message_default'];
+$isDefaultUnavailableMsgJs = $isDefaultUnavailableMsg ? 'true' : 'false';
+$site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
 ?>
 
 <script type="text/javascript">
@@ -116,6 +131,32 @@ function updateContentType(){
 	}
 	documentDirty = true;
 }
+/**
+ * @param element el were language selection comes from
+ * @param string lkey language key to look up
+ * @param id elupd html element to update with results
+ * @param string default_str default value of string for loaded manager language - allows some level of confirmation of change from default
+ */
+function confirmLangChange(el, lkey, elupd){
+    lang_current = document.getElementById(elupd).value;
+    lang_default = document.getElementById(lkey+'_hidden').value;
+    changed = lang_current != lang_default;
+    proceed = true;
+    if(changed) {
+        proceed = confirm('<?php echo $_lang['confirm_setting_language_change']; ?>');
+    }
+    if(proceed) {
+        //document.getElementById(elupd).value = '';
+        lang = el.options[el.selectedIndex].value;
+        var myAjax = new Ajax('index.php?a=118', {
+            method: 'post',
+            data: 'action=get&lang='+lang+'&key='+lkey
+        }).request();
+        myAjax.addEvent('onComplete', function(resp){
+            document.getElementById(elupd).value = resp;
+        });
+    }
+}
 
 </script>
 <form name="settings" action="index.php?a=30" method="post" />
@@ -169,21 +210,7 @@ function updateContentType(){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["language_title"]?></b></td>
             <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true;">
-                <?php
-	$dir = dir("includes/lang");
-
-	while ($file = $dir->read()) {
-		if(strpos($file, ".inc.php")>0) {
-			$endpos = strpos ($file, ".");
-			$languagename = substr($file, 0, $endpos);
-			$selectedtext = $languagename==$manager_language ? "selected='selected'" : "" ;
-?>
-                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
-                <?php
-		}
-	}
-	$dir->close();
-?>
+<?php echo get_lang_options(null, $manager_language);?>
               </select> </td>
           </tr>
           <tr>
@@ -280,12 +307,20 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning" valign="top"><b><?php echo $_lang["siteunavailable_title"] ?></b></td>
-            <td> <textarea name="site_unavailable_message" style="width:100%; height: 120px;"><?php echo isset($site_unavailable_message) ? $site_unavailable_message : "The site is currently unavailable" ; ?></textarea> </td>
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["siteunavailable_title"] ?></b>
+              <br />
+              <p><?php echo $_lang["update_settings_from_language"]; ?></p>
+              <select name="reload_site_unavailable" id="reload_site_unavailable_select" onchange="confirmLangChange(this, 'siteunavailable_message_default', 'site_unavailable_message_textarea');">
+<?php echo get_lang_options('siteunavailable_message_default');?>
+              </select>
+            </td>
+            <td> <textarea name="site_unavailable_message" id="site_unavailable_message_textarea" style="width:100%; height: 120px;"><?php echo $site_unavailable_message_view; ?></textarea>
+                <input type="hidden" name="siteunavailable_message_default" id="siteunavailable_message_default_hidden" value="<?php echo addslashes($_lang['siteunavailable_message_default']);?>" />
+            </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["siteunavailable_message"] ?></td>
+            <td class='comment'><?php echo $_lang['siteunavailable_message'];?></td>
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
@@ -424,7 +459,7 @@ function updateContentType(){
           </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["custom_contenttype_title"] ?></b></td>
-            <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /> <input type="button" value="<?php echo $_lang["add"]; ?>" style="width:60px" onclick='addContentType()' /><br />
+            <td><input name="txt_custom_contenttype" type="text" maxlength="100" style="width: 200px;" value="" /> <input type="button" value="<?php echo $_lang["add"]; ?>" onclick='addContentType()' /><br />
             <table border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">
             <select name="lst_custom_contenttype" style="width:200px;" size="5">
             <?php
@@ -436,7 +471,7 @@ function updateContentType(){
             ?>
             </select>
             <input name="custom_contenttype" type="hidden" value="<?php echo $custom_contenttype; ?>" />
-            </td><td valign="top">&nbsp;<input name="removecontenttype" type="button" value="<?php echo $_lang["remove"]; ?>" style="width:60px" onclick='removeContentType()' /></td></tr></table>
+            </td><td valign="top">&nbsp;<input name="removecontenttype" type="button" value="<?php echo $_lang["remove"]; ?>" onclick='removeContentType()' /></td></tr></table>
             </td>
           </tr>
           <tr>
@@ -496,7 +531,7 @@ function updateContentType(){
             </tr>
 			<tr>
               <td nowrap class="warning"><?php echo $_lang["rss_url_news_title"] ?></b></td>
-              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_news" value="<?php echo isset($rss_url_news) ? $rss_url_news : "http://feeds.feedburner.com/modx-announce" ; ?>" /></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_news" value="<?php echo isset($rss_url_news) ? $rss_url_news : $_lang["rss_url_news_default"] ; ?>" /></td>
             </tr>
 			<tr>
               <td width="200">&nbsp;</td>
@@ -507,7 +542,7 @@ function updateContentType(){
             </tr>
 			<tr>
               <td nowrap class="warning"><?php echo $_lang["rss_url_security_title"] ?></b></td>
-              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_security" value="<?php echo isset($rss_url_security) ? $rss_url_security : "http://feeds.feedburner.com/modxsecurity" ; ?>" /></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_security" value="<?php echo isset($rss_url_security) ? $rss_url_security : $_lang["rss_url_security_default"] ; ?>" /></td>
             </tr>
 			<tr>
               <td width="200">&nbsp;</td>
@@ -711,8 +746,16 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["captcha_words_title"] ?></b></td>
-            <td><input name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : "MODx,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote" ; ?>" /></td>
+            <td nowrap class="warning"><b><?php echo $_lang["captcha_words_title"] ?></b>
+              <br />
+              <p><?php echo $_lang["update_settings_from_language"]; ?></p>
+              <select name="reload_captcha_words" id="reload_captcha_words_select" onchange="confirmLangChange(this, 'captcha_words_default', 'captcha_words_input');">
+<?php echo get_lang_options('captcha_words_default');?>
+              </select>
+            </td>
+            <td><input id="captcha_words_input" name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : $_lang["captcha_words_default"] ; ?>" />
+                <input type="hidden" name="captcha_words_default" id="captcha_words_default_hidden" value="<?php echo addslashes($_lang["captcha_words_default"]);?>" />
+            </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -733,8 +776,16 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning"><b><?php echo $_lang["emailsubject_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="emailsubject" value="<?php echo isset($emailsubject) ? $emailsubject : "Your login details" ; ?>" /></td>
+            <td nowrap class="warning"><b><?php echo $_lang["emailsubject_title"] ?></b>
+              <br />
+              <p><?php echo $_lang["update_settings_from_language"]; ?></p>
+              <select name="reload_emailsubject" id="reload_emailsubject_select" onchange="confirmLangChange(this, 'emailsubject_default', 'emailsubject_field');">
+<?php echo get_lang_options('emailsubject_default');?>
+              </select>
+            </td>
+            <td ><input id="emailsubject_field" name="emailsubject" onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" value="<?php echo isset($emailsubject) ? $emailsubject : $_lang["emailsubject_default"] ; ?>" />
+                <input type="hidden" name="emailsubject_default" id="emailsubject_default_hidden" value="<?php echo addslashes($_lang['emailsubject_default']);?>" />
+            </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -744,8 +795,16 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning" valign="top"><b><?php echo $_lang["signupemail_title"] ?></b></td>
-            <td> <textarea name="signupemail_message" style="width:100%; height: 120px;"><?php echo isset($signupemail_message) ? $signupemail_message : $_lang["system_email_signup"] ?></textarea> </td>
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["signupemail_title"] ?></b>
+              <br />
+              <p><?php echo $_lang["update_settings_from_language"]; ?></p>
+              <select name="reload_signupemail_message" id="reload_signupemail_message_select" onchange="confirmLangChange(this, 'system_email_signup', 'signupemail_message_textarea');">
+<?php echo get_lang_options('system_email_signup');?>
+              </select>
+            </td>
+            <td> <textarea id="signupemail_message_textarea" name="signupemail_message" style="width:100%; height: 120px;"><?php echo isset($signupemail_message) ? $signupemail_message : $_lang["system_email_signup"] ?></textarea>
+                <input type="hidden" name="system_email_signup_default" id="system_email_signup_hidden" value="<?php echo addslashes($_lang['system_email_signup']);?>" />
+            </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -755,8 +814,16 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning" valign="top"><b><?php echo $_lang["websignupemail_title"] ?></b></td>
-            <td> <textarea name="websignupemail_message" style="width:100%; height: 120px;"><?php echo isset($websignupemail_message) ? $websignupemail_message : $_lang["system_email_websignup"] ?></textarea> </td>
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["websignupemail_title"] ?></b>
+              <br />
+              <p><?php echo $_lang["update_settings_from_language"]; ?></p>
+              <select name="reload_websignupemail_message" id="reload_websignupemail_message_select" onchange="confirmLangChange(this, 'system_email_websignup', 'websignupemail_message_textarea');">
+<?php echo get_lang_options('system_email_websignup');?>
+              </select>
+            </td>
+            <td> <textarea id="websignupemail_message_textarea" name="websignupemail_message" style="width:100%; height: 120px;"><?php echo isset($websignupemail_message) ? $websignupemail_message : $_lang["system_email_websignup"] ?></textarea>
+                <input type="hidden" name="system_email_websignup_default" id="system_email_websignup_hidden" value="<?php echo addslashes($_lang['system_email_websignup']);?>" />
+            </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -766,8 +833,16 @@ function updateContentType(){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td nowrap class="warning" valign="top"><b><?php echo $_lang["webpwdreminder_title"] ?></b></td>
-            <td> <textarea name="webpwdreminder_message" style="width:100%; height: 120px;"><?php echo isset($webpwdreminder_message) ? $webpwdreminder_message : $_lang["system_email_webreminder"] ?></textarea> </td>
+            <td nowrap class="warning" valign="top"><b><?php echo $_lang["webpwdreminder_title"] ?></b>
+              <br />
+              <p><?php echo $_lang["update_settings_from_language"]; ?></p>
+              <select name="reload_system_email_webreminder_message" id="reload_system_email_webreminder_select" onchange="confirmLangChange(this, 'system_email_webreminder', 'system_email_webreminder_textarea');">
+<?php echo get_lang_options('system_email_webreminder');?>
+              </select>
+            </td>
+            <td> <textarea id="system_email_webreminder_textarea" name="webpwdreminder_message" style="width:100%; height: 120px;"><?php echo isset($webpwdreminder_message) ? $webpwdreminder_message : $_lang["system_email_webreminder"]; ?></textarea>
+                <input type="hidden" name="system_email_webreminder_default" id="system_email_webreminder_hidden" value="<?php echo addslashes($_lang['system_email_webreminder']);?>" />
+            </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -845,6 +920,29 @@ function updateContentType(){
                    <td width="200">&nbsp;</td>
                    <td class='comment'><?php echo $_lang["datepicker_offset_message"]?></td>
              </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+            <tr>
+              <td nowrap class="warning"><b><?php echo $_lang["datetime_format"]?></b></td>
+              <td> <select name="datetime_format" size="1" class="inputBox">
+              <?php
+                  $datetime_format_list = array('dd-mm-YYYY', 'mm/dd/YYYY', 'YYYY/mm/dd');
+                  $str = '';
+                  foreach($datetime_format_list as $value)
+                  {
+                      $selectedtext = ($datetime_format == $value) ? ' selected' : '';
+                      $str .= '<option value="' . $value . '"' . $selectedtext . '>';
+                      $str .= $value . '</option>' . PHP_EOL;
+                  }
+                  echo $str;
+              ?>
+               </select></td>
+            </tr>
+            <tr>
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["datetime_format_message"]?></td>
+            </tr>
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
@@ -1056,21 +1154,7 @@ function updateContentType(){
           <tr id='editorRow4' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["fe_editor_lang_title"]?></b></td>
             <td> <select name="fe_editor_lang" size="1" class="inputBox" onchange="documentDirty=true;">
-                <?php
-	$dir = dir("includes/lang");
-
-	while ($file = $dir->read()) {
-		if(strpos($file, ".inc.php")>0) {
-			$endpos = strpos ($file, ".");
-			$languagename = substr($file, 0, $endpos);
-			$selectedtext = $languagename==$fe_editor_lang ? "selected='selected'" : "" ;
-?>
-                <option value="<?php echo $languagename; ?>" <?php echo $selectedtext; ?>><?php echo ucwords(str_replace("_", " ", $languagename)); ?></option>
-                <?php
-		}
-	}
-	$dir->close();
-?>
+<?php echo get_lang_options(null, $fe_editor_lang);?>
               </select> </td>
           </tr>
           <tr id='editorRow5' class="row3" style="display: <?php echo $use_editor==1 ? $displayStyle : 'none' ; ?>">
@@ -1186,3 +1270,75 @@ function updateContentType(){
     </div>
 </div>
 </form>
+<?php
+/**
+ * get_lang_keys
+ * 
+ * @return array of keys from a language file
+ */
+function get_lang_keys($filename) {
+    $file = 'includes/lang' . DIRECTORY_SEPARATOR . $filename;
+    if(is_file($file) && is_readable($file)) {
+        include($file);
+        return array_keys($_lang);
+    } else {
+        return array();
+    }
+}
+/**
+ * get_langs_by_key
+ * 
+ * @return array of languages that define the key in their file
+ */
+function get_langs_by_key($key) {
+    global $lang_keys;
+    $lang_return = array();
+    foreach($lang_keys as $lang=>$keys) {
+        if(in_array($key, $keys)) {
+            $lang_return[] = $lang;
+        }
+    }
+    return $lang_return;
+}
+
+/**
+ * get_lang_options
+ *
+ * returns html option list of languages
+ * 
+ * @param string $key specify language key to return options of langauges that override it, default return all languages
+ * @param string $selected_lang specify language to select in option list, default none
+ * @return html option list
+ */
+function get_lang_options($key=null, $selected_lang=null) {
+    global $lang_keys;
+    if($key) {
+        $languages = get_langs_by_key($key);
+        sort($languages);
+        ob_start();
+            echo <<<OPTION
+                <option value="">{$_lang['language_title']}</option>
+
+OPTION;
+        foreach($languages as $language_name) {
+            $uclanguage_name = ucwords(str_replace("_", " ", $language_name));
+            echo <<<OPTION
+                <option value="{$language_name}">{$uclanguage_name}</option>
+
+OPTION;
+        }
+        return ob_get_clean();
+    } else {
+        $languages = array_keys($lang_keys);
+        sort($languages);
+        foreach($languages as $language_name) {
+            $uclanguage_name = ucwords(str_replace("_", " ", $language_name));
+            $sel = $language_name == $selected_lang ? ' selected="selected"' : '';
+            echo <<<OPTION
+                <option value="{$language_name}" {$sel}>{$uclanguage_name}</option>
+
+OPTION;
+        }
+        return ob_get_clean();
+    }
+}

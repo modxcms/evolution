@@ -25,7 +25,7 @@ if (isset($_POST) && count($_POST) > 0) {
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
 
-		$savethese[] = '(\''.mysql_escape_string($k).'\', \''.mysql_escape_string($v).'\')';
+		$savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
 	
 	// Run a single query to save all the values

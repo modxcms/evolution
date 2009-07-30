@@ -350,7 +350,7 @@ function SetUrl(url, width, height, alt) {
     		  <?php } else { ?>
     		  <li id="Button2"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } ?>	
-    		  <li id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+    		  <li id="Button5"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=106&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
     		  <?php // In Place for future extraction of actionbar
         			if ($_REQUEST['a'] == '27') { ?>
         			    <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview"]?>" /> <?php echo $_lang['preview']?></a></li>
@@ -438,7 +438,7 @@ function SetUrl(url, width, height, alt) {
 
 	<table width="95%" border="0" cellspacing="0" cellpadding="0">
 	<tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
-		<a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/save.gif" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
+		<a class="searchtoolbarbtn" href="#" style="float:left" onclick="loadDependencies();return false;"><img src="<?php echo $_style["icons_save"]?>" align="absmiddle" /> <?php echo $_lang['manage_depends']?></a><br /><br /></p></td></tr>
 	<tr><td valign="top" align="left">
 <?php
 	$sql = 'SELECT smd.id, COALESCE(ss.name,st.templatename,sv.name,sc.name,sp.name,sd.pagetitle) AS `name`, '.

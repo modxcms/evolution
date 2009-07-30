@@ -35,23 +35,23 @@ function generate_password($length = 10) {
 $id = intval($_POST['id']);
 $oldusername = $_POST['oldusername'];
 $newusername = !empty ($_POST['newusername']) ? $_POST['newusername'] : "New User";
-$fullname = mysql_escape_string($_POST['fullname']);
+$fullname = $modx->db->escape($_POST['fullname']);
 $genpassword = $_POST['newpassword'];
 $passwordgenmethod = $_POST['passwordgenmethod'];
 $passwordnotifymethod = $_POST['passwordnotifymethod'];
 $specifiedpassword = $_POST['specifiedpassword'];
-$email = mysql_escape_string($_POST['email']);
+$email = $modx->db->escape($_POST['email']);
 $oldemail = $_POST['oldemail'];
-$phone = mysql_escape_string($_POST['phone']);
-$mobilephone = mysql_escape_string($_POST['mobilephone']);
-$fax = mysql_escape_string($_POST['fax']);
+$phone = $modx->db->escape($_POST['phone']);
+$mobilephone = $modx->db->escape($_POST['mobilephone']);
+$fax = $modx->db->escape($_POST['fax']);
 $dob = !empty ($_POST['dob']) ? ConvertDate($_POST['dob']) : 0;
 $country = $_POST['country'];
-$state = mysql_escape_string($_POST['state']);
-$zip = mysql_escape_string($_POST['zip']);
+$state = $modx->db->escape($_POST['state']);
+$zip = $modx->db->escape($_POST['zip']);
 $gender = !empty ($_POST['gender']) ? $_POST['gender'] : 0;
-$photo = mysql_escape_string($_POST['photo']);
-$comment = mysql_escape_string($_POST['comment']);
+$photo = $modx->db->escape($_POST['photo']);
+$comment = $modx->db->escape($_POST['comment']);
 $roleid = !empty ($_POST['role']) ? $_POST['role'] : 0;
 $failedlogincount = $_POST['failedlogincount'];
 $blocked = !empty ($_POST['blocked']) ? $_POST['blocked'] : 0;
@@ -311,7 +311,6 @@ switch ($_POST['mode']) {
 			exit;
 		}
 
-		// Removed second mysql_escape_string from fullname - pixelchutes
 		$sql = "UPDATE $dbase.`" . $table_prefix . "user_attributes` SET
 					fullname='" . $fullname . "',
 					role='$roleid',
@@ -439,6 +438,19 @@ switch ($_POST['mode']) {
 		exit;
 }
 
+// in case any plugins include a quoted_printable function
+if(!function_exists('quoted_printable')) {
+	function quoted_printable($string) {
+		$crlf = "\n" ;
+		$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf ;
+		$f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e' ;
+		$r[] = "'=' . sprintf('%02X', ord('\\1'))" ; $f[] = '/([\011\040])' . $crlf . '/e' ;
+		$r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'" ;
+		$string = preg_replace($f, $r, $string) ;
+		return trim(wordwrap($string, 70, ' =' . $crlf)) ;
+	}
+}
+
 // Send an email to the user
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $signupemail_message;
@@ -455,13 +467,22 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+semail+]", $emailsender, $message);
 	$message = str_replace("[+surl+]", $manager_url, $message);
 
+	$headers = "From: " . $emailsender . "\r\n";
+	$headers .= "X-Mailer: Content Manager - PHP/" . phpversion();
+	$headers .= "\r\n";
+	$headers .= "MIME-Version: 1.0\r\n";
+	$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
+	$headers .= "Content-Transfer-Encoding: quoted-printable\r\n";
+	$subject = "=?UTF-8?Q?".$emailsubject."?=";
+	$message = quoted_printable($message);
+
 	if (ini_get('safe_mode') == FALSE) {
-		if (!mail($email, $emailsubject, $message, "From: " . $emailsender . "\r\n" . "X-Mailer: Content Manager - PHP/" . phpversion(), "-f $emailsender")) {
-			webAlert("Error while sending mail to $mailto");
+		if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {
+			webAlert("$email - {$_lang['error_sending_email']}");
 			exit;
 		}
-	} elseif (!mail($email, $emailsubject, $message, "From: " . $emailsender . "\r\n" . "X-Mailer: Content Manager - PHP/" . phpversion())) {
-		webAlert("Error while sending mail to $email");
+	} elseif (!mail($email, $subject, $message, $headers)) {
+		webAlert("$email - {$_lang['error_sending_email']}");
 		exit;
 	}
 }
@@ -542,7 +563,7 @@ function saveUserSettings($id) {
 	$savethese = array();
 	foreach ($settings as $k => $v) {
 	    if(is_array($v)) $v = implode(',', $v);
-	    $savethese[] = '('.$id.', \''.$k.'\', \''.mysql_escape_string($v).'\')';
+	    $savethese[] = '('.$id.', \''.$k.'\', \''.$modx->db->escape($v).'\')';
 	}
 
 	$sql = 'INSERT INTO '.$usrTable.' (user, setting_name, setting_value)
@@ -554,12 +575,8 @@ function saveUserSettings($id) {
 
 // converts date format dd-mm-yyyy to php date
 function ConvertDate($date) {
-	if ($date == "")
-		return "0";
-	list ($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
-	if (!$H && !$M && !$S)
-		return strtotime("$m/$d/$Y");
-	else
-		return strtotime("$m/$d/$Y $H:$M:$S");
+	global $modx;
+	if ($date == "") {return "0";}
+	else {}          {return $modx->toTimeStamp($date);}
 }
 ?>

@@ -118,7 +118,7 @@ $html = '
       <tr>
         <td>'.$_lang["yourinfo_previous_login"].'</td>
         <td>&nbsp;</td>
-        <td><b>'.strftime('%d-%m-%y %H:%M:%S', $_SESSION['mgrLastlogin']+$server_offset_time).'</b></td>
+        <td><b>'.$modx->toDateFormat($_SESSION['mgrLastlogin']+$server_offset_time).'</b></td>
       </tr>
       <tr>
         <td>'.$_lang["yourinfo_total_logins"].'</td>

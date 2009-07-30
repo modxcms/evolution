@@ -166,9 +166,9 @@ for ($i = 0; $i < $limit; $i++) {
 			<tr bgcolor="#CCCCCC">
 				<td valign="top"><b><?php echo $_lang['database_table_totals']?></b></td>
 				<td colspan="2">&nbsp;</td>
-				<td dir="ltr" align="right" valign="top"><?php echo $totaloverhead>0 ? '<b style="color:#990033">'.nicesize($totaloverhead).'</b><br>('.number_format($totaloverhead).' B)' : '-'?></td>
+				<td dir="ltr" align="right" valign="top"><?php echo $totaloverhead>0 ? '<b style="color:#990033">'.nicesize($totaloverhead).'</b><br />('.number_format($totaloverhead).' B)' : '-'?></td>
 				<td colspan="2">&nbsp;</td>
-				<td dir="ltr" align="right" valign="top"><?php echo "<b>".nicesize($total)."</b><br>(".number_format($total)." B)"?></td>
+				<td dir="ltr" align="right" valign="top"><?php echo "<b>".nicesize($total)."</b><br />(".number_format($total)." B)"?></td>
 			</tr>
 		</tbody>
 	</table>

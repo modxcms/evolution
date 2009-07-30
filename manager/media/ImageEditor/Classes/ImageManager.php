@@ -196,7 +196,7 @@ class ImageManager
 
 			while (false !== ($entry = $d->read())) 
 			{
-				//echo $entry."<br>";
+				//echo $entry."<br />";
 				if(substr($entry,0,1) != '.'
 					&& $this->isThumbDir($entry) == false
 					&& $this->isTmpFile($entry) == false

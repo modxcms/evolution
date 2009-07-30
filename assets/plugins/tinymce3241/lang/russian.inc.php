@@ -1,6 +1,6 @@
 <?php
 /*
- * Filename:       assets/plugins/tinymce/lang/russian-UTF8.inc.php
+ * Filename:       assets/plugins/tinymce/lang/russian.inc.php
  * Function:       Russian language file for TinyMCE
  * Encoding:       ISO-Latin-1
  * Author:         Jeff Whitfield / translated by Victor Safronovich

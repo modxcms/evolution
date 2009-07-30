@@ -6,6 +6,7 @@
         <script type="text/javascript" src="media/script/tabpane.js"></script>
         <script type="text/javascript" src="media/script/datefunctions.js"></script>
         <script type="text/javascript" src="media/script/mootools/mootools.js"></script>
+        <script type="text/javascript" src="media/calendar/datepicker.js"></script>
         <script type="text/javascript" src="media/script/mootools/moodx.js"></script>
         <script type="text/javascript" src="../assets/modules/docmanager/js/docmanager.js"></script>
         <script type="text/javascript">
@@ -50,6 +51,15 @@
 			    
 			    return true;
 			}
+			
+			window.addEvent('domready', function() {
+			    var dpOffset = [+datepicker.offset+];
+			    var dpformat = "[+datetime.format+]" + ' hh:mm:00';
+			    new DatePicker($('date_pubdate'), {'yearOffset' : dpOffset, 'format' : dpformat });
+			    new DatePicker($('date_unpubdate'), {'yearOffset' : dpOffset, 'format' : dpformat});
+			    new DatePicker($('date_createdon'), {'yearOffset' : dpOffset, 'format' : dpformat});
+			    new DatePicker($('date_editedon'), {'yearOffset' : dpOffset, 'format' : dpformat});
+			});
         </script>
     </head>
     <body>

@@ -1,82 +1,105 @@
 <?php
 /**
  * Ditto Snippet - language strings for use in the snippet
- *
- * Filename:       assets/snippets/ditto/lang/russian.inc.php
+ * Filename:       assets/snippets/ditto/lang/russian-utf8.inc.php
  * Language:       Russian
- * Encoding:       Windows-1251
- * Translated by:  Jaroslav Sidorkin, based on translation by modx.ru team from 2006/07/13
- * Date:           07 Dec 2006
- * Version:        1.0.3
+ * Encoding:       UTF-8
+ * Translated by:  Russian MODx community, Jaroslav Sidorkin, based on translation by modx.ru
+ * Date:           27 July 2009
+ * Version:        2.1.0
 */
 
-// NOTE: New language keys should added at the bottom of this page
+$_lang['language'] = "russian-utf8";
 
-$_lang['file_does_not_exist'] = " не существует. Пожалуйста, проверьте файл.";
+$_lang['abbr_lang'] = "ru";
 
-$_lang['default_template'] = '
-    <div class="ditto_summaryPost">
-        <h3><a href="[~[+id+]~]">[+title+]</a></h3>
-        <div>[+summary+]</div>
-        <p>[+link+]</p>
-        <div style="text-align:right;">Автор: <strong>[+author+]</strong> Дата: [+date+]</div>
+$_lang['file_does_not_exist'] = "не существует. Пожалуйста, проверьте файл.";
+
+$_lang['extender_does_not_exist'] = "расширение не существует. Пожалуйста, проверьте его.";
+
+$_lang['default_template'] = <<<TPL
+
+    <div class="ditto_item" id="ditto_item_[+id+]">
+        <h3 class="ditto_pageTitle"><a href="[~[+id+]~]">[+pagetitle+]</a></h3>
+        <div class="ditto_documentInfo">Автор: <strong>[+author+]</strong> от [+date+]</div>
+        <div class="ditto_introText">[+introtext+]</div>
     </div>
-';
 
-$_lang['blank_tpl'] = " пуст, или вы допустили ошибку в имени чанка.";
-
+TPL;
 $_lang['missing_placeholders_tpl'] = 'В одном из шаблонов Ditto (чанков) недостает тегов, проверьте следующий шаблон: <br /><br /><hr /><br /><br />';
 
-$_lang['missing_placeholders_tpl_2'] = '<br /><br /><hr /><br />';
+$_lang["bad_tpl"] = "<p>&[+tpl+] или не содержит каких-либо плейсхолдеров, или является неверным названием чанка, блоком кода или именем файла. Пожалуйста, проверьте его.</p>";
 
-$_lang['default_splitter'] = "<!-- splitter -->";
+$_lang['no_documents'] = '<p>Записей не найдено.</p>';
 
-$_lang['more_text'] = "далее...";
-
-$_lang['no_entries'] = '<p>Записей не найдено.</p>';
-
-$_lang['date_format'] = "%d-%b-%y %H:%M";
-
-$_lang['archives'] = "Архивы";
-
+$_lang['resource_array_error'] = 'Ошибка массива ресурсов';
+ 
 $_lang['prev'] = "&lt; назад";
 
 $_lang['next'] = "далее &gt;";
 
 $_lang['button_splitter'] = "|";
 
-$_lang['default_copyright'] = "[(site_name)] 2006";	
+$_lang['default_copyright'] = "[(site_name)] 2009";
 
-$_lang['rss_lang'] = "ru";
+$_lang['invalid_class'] = "Неверный класс Ditto. Пожалуйста, проверьте его.";
 
-$_lang['debug_summarized'] = "Число выводимых записей (summarize):";
+$_lang['none'] = "Нет";
 
-$_lang['debug_returned'] = "<br />Предположительное общее количество возвращенных записей:";
+$_lang['edit'] = "Редактировать";
 
-$_lang['debug_retrieved_from_db'] = "Всего в базе данных:";
+$_lang['dateFormat'] = "%d.%b.%y %H:%M";
 
-$_lang['debug_sort_by'] = "Сортировать по (sortBy):";
+// Debug Tab Names
 
-$_lang['debug_sort_dir'] = "Порядок сортировки (sortDir):";
+$_lang['info'] = "Информация";
 
-$_lang['debug_start_at'] = "Начать с";
+$_lang['modx'] = "MODx";
 
-$_lang['debug_stop_at'] = "закончить на";
+$_lang['fields'] = "Поля";
 
-$_lang['debug_out_of'] = "из";
+$_lang['templates'] = "Шаблоны";
 
-$_lang['debug_document_data'] = "Данные документа ";
+$_lang['filters'] = "Фильтры";
 
-$_lang['default_archive_template'] = "<a href=\"[~[+id+]~]\">[+title+]</a> (<span class=\"ditto_date\">[+date+]</span>)";
+$_lang['prefetch_data'] = "Предварительные данные";
 
-$_lang['invalid_class'] = "Класс Ditto неверный. Проверьте класс.";
+$_lang['retrieved_data'] = "Полученные данные";
 
-// New language key added 2-July-2006 to 5-July-2006
+// Debug Text
 
-// Keys deprecated : $_lang['api_method'] and $_lang['GetAllSubDocs_method'] 
+$_lang['placeholders'] = "Плейсхолдеры";
 
-$_lang['tvs'] = "Параметры (TV):";
+$_lang['params'] = "Параметры";
 
-$_lang['api'] = "Используется новый API (MODx 0.9.2.1)";
+$_lang['basic_info'] = "Основная информация";
+
+$_lang['document_info'] = "Информация о ресурсе";
+
+$_lang['debug'] = "Отладка";
+
+$_lang['version'] = "Версия";
+
+$_lang['summarize'] = "Число выводимых записей (summarize):";
+
+$_lang['total'] = "Всего в базе данных:";
+
+$_lang['sortBy'] = "Сортировать по (sortBy):";
+
+$_lang['sortDir'] = "Порядок сортировки (sortDir):";
+
+$_lang['start'] = "Начать с";
+	 
+$_lang['stop'] = "Закончить на";
+
+$_lang['ditto_IDs'] = "ID";
+
+$_lang['ditto_IDs_selected'] = "Выбранные ID";
+
+$_lang['ditto_IDs_all'] = "Все ID";
+
+$_lang['open_dbg_console'] = "Открыть консоль отладки";
+
+$_lang['save_dbg_console'] = "Скачать отчет отладки";
 
 ?>

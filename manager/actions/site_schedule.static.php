@@ -34,7 +34,7 @@ if($limit<1) {
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle']?></a></td>
 	  <td><?php echo $row['id'] ;?></td>
-      <td><?php echo strftime("%y-%m-%d %H:%M:%S", $row['pub_date']+$server_offset_time)?></td>
+      <td><?php echo $modx->toDateFormat($row['pub_date']+$server_offset_time)?></td>
     </tr>
 <?php
 	}
@@ -73,7 +73,7 @@ if($limit<1) {
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
 	  <td><?php echo $row['id'] ;?></td>
-      <td><?php echo strftime("%y-%m-%d %H:%M:%S", $row['unpub_date']+$server_offset_time) ;?></td>
+      <td><?php echo $modx->toDateFormat($row['unpub_date']+$server_offset_time) ;?></td>
     </tr>
 <?php
 	}
@@ -112,8 +112,8 @@ if($limit<1) {
     <tr class="<?php echo ($i % 2 ? 'even' : '')?>">
 	<td><a href="index.php?a=3&id=<?php echo $row['id']?>"><?php echo $row['pagetitle']?></a></td>
 	<td><?php echo $row['id']?></td>
-	<td><?php echo $row['pub_date']==0 ? "" : strftime("%y-%m-%d %H:%M:%S", $row['pub_date']+$server_offset_time)?></td>
-	<td><?php echo $row['unpub_date']==0 ? "" : strftime("%y-%m-%d %H:%M:%S", $row['unpub_date']+$server_offset_time)?></td>
+	<td><?php echo $row['pub_date']==0 ? "" : $modx->toDateFormat($row['pub_date']+$server_offset_time)?></td>
+	<td><?php echo $row['unpub_date']==0 ? "" : $modx->toDateFormat($row['unpub_date']+$server_offset_time)?></td>
     </tr>
 <?php
 	}

@@ -24,7 +24,7 @@ else {
 		$row = mysql_fetch_assoc($rs);
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvars`
 				(type, name, caption, description, default_text, elements, rank, display, display_params, category) VALUES
-				('".$row['type']."', '".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['caption'])."', '".mysql_escape_string($row['description'])."', '".mysql_escape_string($row['default_text'])."', '".mysql_escape_string($row['elements'])."', '".$row['rank']."', '".$row['display']."', '".mysql_escape_string($row['display_params'])."', ".mysql_escape_string($row['category']).");";
+				('".$row['type']."', '".$modx->db->escape($row['name'])."', '".$modx->db->escape($row['caption'])."', '".$modx->db->escape($row['description'])."', '".$modx->db->escape($row['default_text'])."', '".$modx->db->escape($row['elements'])."', '".$row['rank']."', '".$row['display']."', '".$modx->db->escape($row['display_params'])."', ".$modx->db->escape($row['category']).");";
 		$rs = mysql_query($sql);
 	}
 }

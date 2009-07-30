@@ -696,7 +696,7 @@ class DocumentParser {
                 if (isset ($this->chunkCache[$matches[1][$i]])) {
                     $replace[$i]= $this->chunkCache[$matches[1][$i]];
                 } else {
-                    $sql= "SELECT * FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".name='" . mysql_escape_string($matches[1][$i]) . "';";
+                    $sql= "SELECT * FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".name='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->dbQuery($sql);
                     $limit= $this->recordCount($result);
                     if ($limit < 1) {
@@ -807,7 +807,7 @@ class DocumentParser {
                         $snippets[$i]['properties']= $this->snippetCache[$matches[1][$i] . "Props"];
                 } else {
                     // get from db and store a copy inside cache
-                    $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . mysql_escape_string($matches[1][$i]) . "';";
+                    $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->dbQuery($sql);
                     if ($this->recordCount($result) == 1) {
                         $row= $this->fetchRow($result);
@@ -1259,7 +1259,7 @@ class DocumentParser {
 
     # Displays a javascript alert message in the web browser
     function webAlert($msg, $url= "") {
-        $msg= addslashes(mysql_escape_string($msg));
+        $msg= addslashes($this->db->escape($msg));
         if (substr(strtolower($url), 0, 11) == "javascript:") {
             $act= "__WebAlert();";
             $fnc= "function __WebAlert(){" . substr($url, 11) . "};";
@@ -1285,8 +1285,8 @@ class DocumentParser {
 
     # Add an a alert message to the system event log
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
-        $msg= mysql_escape_string($msg);
-        $source= mysql_escape_string($source);
+        $msg= $this->db->escape($msg);
+        $source= $this->db->escape($source);
         $evtid= intval($evtid);
         if ($type < 1) {
             $type= 1;
@@ -1487,7 +1487,7 @@ class DocumentParser {
     function getSnippetId() {
         if ($this->currentSnippet) {
             $tbl= $this->getFullTableName("site_snippets");
-            $rs= $this->dbQuery("SELECT id FROM $tbl WHERE name='" . mysql_escape_string($this->currentSnippet) . "' LIMIT 1");
+            $rs= $this->dbQuery("SELECT id FROM $tbl WHERE name='" . $this->db->escape($this->currentSnippet) . "' LIMIT 1");
             $row= @ $this->fetchRow($rs);
             if ($row['id'])
                 return $row['id'];
@@ -1697,7 +1697,7 @@ class DocumentParser {
             $snippet= $this->snippetCache[$snippetName];
             $properties= $this->snippetCache[$snippetName . "Props"];
         } else { // not in cache so let's check the db
-            $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . mysql_escape_string($snippetName) . "';";
+            $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . $this->db->escape($snippetName) . "';";
             $result= $this->dbQuery($sql);
             if ($this->recordCount($result) == 1) {
                 $row= $this->fetchRow($result);
@@ -1739,6 +1739,67 @@ class DocumentParser {
     function getUserData() {
         include $this->config["base_path"] . "manager/includes/extenders/getUserData.extender.php";
         return $tmpArray;
+    }
+
+    function toDateFormat($timestamp = 0, $mode = '') {
+        $timestamp = trim($timestamp);
+        $timestamp = intval($timestamp);
+        
+        switch($this->config['datetime_format']) {
+            case 'YYYY/mm/dd':
+                $dateFormat = '%Y/%m/%d';
+                break;
+            case 'dd-mm-YYYY':
+                $dateFormat = '%d-%m-%Y';
+                break;
+            case 'mm/dd/YYYY':
+                $dateFormat = '%m/%d/%Y';
+                break;
+            /*
+            case 'dd-mmm-YYYY':
+                $dateFormat = '%e-%b-%Y';
+                break;
+            */
+        }
+        
+        if (empty($mode)) {
+            $strTime = strftime($dateFormat . " %H:%M:%S", $timestamp);
+        } elseif ($mode == 'dateOnly') {
+            $strTime = strftime($dateFormat, $timestamp);
+        } elseif ($mode == 'formatOnly') {
+        	$strTime = $dateFormat;
+        }
+        return $strTime;
+    }
+
+    function toTimeStamp($str) {
+        $str = trim($str);
+        if (empty($str)) {return '';}
+
+        switch($this->config['datetime_format']) {
+            case 'YYYY/mm/dd':
+            	if (!preg_match('/^[0-9]{4}\/[0-9]{2}\/[0-9]{2}[0-9 :]*$/', $str)) {return '';}
+                list ($Y, $m, $d, $H, $M, $S) = sscanf($str, '%4d/%2d/%2d %2d:%2d:%2d');
+                break;
+            case 'dd-mm-YYYY':
+            	if (!preg_match('/^[0-9]{2}-[0-9]{2}-[0-9]{4}[0-9 :]*$/', $str)) {return '';}
+                list ($d, $m, $Y, $H, $M, $S) = sscanf($str, '%2d-%2d-%4d %2d:%2d:%2d');
+                break;
+            case 'mm/dd/YYYY':
+            	if (!preg_match('/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}[0-9 :]*$/', $str)) {return '';}
+                list ($m, $d, $Y, $H, $M, $S) = sscanf($str, '%2d/%2d/%4d %2d:%2d:%2d');
+                break;
+            /*
+            case 'dd-mmm-YYYY':
+            	if (!preg_match('/^[0-9]{2}-[0-9a-z]+-[0-9]{4}[0-9 :]*$/i', $str)) {return '';}
+            	list ($m, $d, $Y, $H, $M, $S) = sscanf($str, '%2d-%3s-%4d %2d:%2d:%2d');
+                break;
+            */
+        }
+        if (!$H && !$M && !$S) {$H = 0; $M = 0; $S = 0;}
+        $timeStamp = mktime($H, $M, $S, $m, $d, $Y);
+        $timeStamp = intval($timeStamp);
+        return $timeStamp;
     }
 
     #::::::::::::::::::::::::::::::::::::::::

@@ -135,8 +135,8 @@ function getAllPages($id=0, $sort='parent', $dir='ASC', $fields='pagetitle, id, 
 	global $dbase;
 	global $table_prefix;	
 
-    $tblsc = $dbase.".".$table_prefix."site_content";
-    $tbldg = $dbase.".".$table_prefix."document_groups";
+    $tblsc = $dbase.".`".$table_prefix."site_content`";
+    $tbldg = $dbase.".`".$table_prefix."document_groups`";
 
     // modify field names to use sc. table reference
     $fields = 'sc.'.implode(',sc.',preg_replace("/^\s/i","",explode(',',$fields)));
@@ -213,8 +213,7 @@ function doSql($sql) {
 
 	// Connecting, selecting database
 	$link = mysql_connect($database_server, $database_user, $database_password) or die('Could not connect: ' . mysql_error());
-	$dbase = str_replace('`', '', $dbase);
-	mysql_select_db($dbase) or die('Could not select database');
+	mysql_select_db(str_replace('`', '', $dbase)) or die('Could not select database');
 	@mysql_query("{$GLOBALS['database_connection_method']} {$GLOBALS['database_connection_charset']}");
 
     $result = mysql_query($sql) or die('Query failed: ' . mysql_error() . ' / '. $sql);

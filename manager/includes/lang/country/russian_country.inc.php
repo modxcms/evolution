@@ -1,8 +1,7 @@
 <?php
 /**
- * MODx Country List Language File
+ * Country List Language File
  *
- * MODx version:   0.9.5
  * Filename:       includes/lang/country/russian_country.inc.php
  * Language:       Russian
  * Encoding:       Windows-1251

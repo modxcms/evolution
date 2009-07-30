@@ -128,9 +128,6 @@ a, a:active, a:visited, a:link {
 a:hover {
 	color: #0f1e76;
 }
-input, .inputBox {
-	padding: 1px;
-}
 hr {
 	color: #777;
 	background-color: #777;
@@ -242,6 +239,11 @@ hr {
 }
 
 /* -------------------------[ Forms ]--- */
+tbody, thead, tr {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
 form label {
 	cursor: pointer;
 }
@@ -267,19 +269,22 @@ form textarea {
 	border: 1px solid #ddd;
 	border-left-color: #c3c3c3;
 	border-top-color: #7c7c7c;
-	padding: 2px 0 2px 2px;
-	background: #fff url(images/misc/input-bg.gif) repeat-x top left;
+	padding: 3px 3px 2px 2px;
+	background: #fff url(images/misc/input-bg.gif) repeat-x top left
+	vertical-align: baseline;
 }
 	.rtl form input[type=text],
 	.rtl form textarea {
 		padding: 2px 2px 2px 0;
 	}
-input.radio, input.checkbox {
+
+input[type="checkbox"], input.checkbox,
+input[type="radio"], input.radio,
+input[type="submit"], input.submit,
+input[type="button"], input.button {
 	height: auto !important;
 	width: auto !important;
-	background: none !important;
 	vertical-align: middle;
-	border: 0;
 }
 select {
 	border: 1px solid #c3c3c3 !important;
@@ -316,7 +321,7 @@ form input.hidden {
 		text-align: left;
 	}
 form textarea {
-	height: 100px;
+	height: 75px;
 	width: 300px;
 	margin-top: 0;
 }
@@ -343,14 +348,6 @@ input.submit {
 	.rtl input.submit {
 		margin: 20px 140px 0 0 !important;
 	}
-input.button, input.submit {
-	margin: 0;
-	border: 0;
-	width: auto !important;
-	height: auto;
-	background: transparent;
-	vertical-align: middle;
-}
 .form fieldset.list {
 	margin: 6px 6px 3px 0;
 }
@@ -398,28 +395,19 @@ input.button, input.submit {
 	margin-bottom: 0;
 }
 .sectionHeader, .showHideVisible {
-	margin: 0 10px 4px;
+	margin: 0 10px;
 	padding: 5px 3px 5px;
 	font-weight: bold;
 	color: #000;
 	border-top: 1px solid #fff;
 }
-.sectionHeader {
-	padding: 5px 3px 5px 18px;
-	background: #EFEFEF url(images/misc/fade.gif) repeat-x top;
-}
-	.rtl .sectionHeader {
-		direction: rtl;
-		padding: 5px 18px 5px 3px;
-	}
 .sectionBody, .layerVisible {
 	position: relative;
-	top: -5px;
 	display: none;
 	background: #fff;
 	border: 1px solid #e3e3e3;
 	border-top: 2px solid #e3e3e3;
-	margin: 0 10px 20px;
+	margin: 0 10px 10px;
 	padding: 10px;
 	display: block;
 	background: #fff url(images/misc/tabareabg.gif) repeat-x top;
@@ -429,8 +417,16 @@ input.button, input.submit {
 		position: inherit;
 	}
 .showHideVisible, .layerVisible {
-	margin: 0 10px 4px 10px;
+	margin: 0 10px 4px;
 }
+.sectionHeader {
+	padding: 5px 3px 5px 18px;
+	background: #EFEFEF url(images/misc/fade.gif) repeat-x top;
+}
+	.rtl .sectionHeader {
+		direction: rtl;
+		padding: 5px 18px 5px 3px;
+	}
 .comment {
 	font-size: 10px;
 	color: #000;
@@ -1039,7 +1035,7 @@ a.hometblink:hover {
 	z-index: 2;
 	position: relative;
 	top: -2px;
-	padding: 10px;
+	padding: 10px 10px 0;
 }
 	.rtl .dynamic-tab-pane-control .tab-page {
 	    position: inherit;		/* critical adjustment for IE ul li Proper RTL demonstration */
@@ -1300,8 +1296,6 @@ form#mutate select.inputBox,
 form#mutate input,
 form#mutate textarea {
 	width: 300px;
-	padding: 3px 3px 2px;
-	font-size: 12px;
 }
 form#mutate textarea.tv_textareamini {
 	height: 100px;
@@ -1312,14 +1306,6 @@ form#mutate textarea.tv_textarea {
 	height: 100px;
 	width: 100%;
 	overflow-y: scroll;
-}
-form#mutate input.checkbox,
-form#mutate input.radio,
-form#mutate input.button,
-form#mutate input[type="checkbox"],
-form#mutate input[type="radio"],
-form#mutate input[type="button"] {
-	width: auto;
 }
 
 /*

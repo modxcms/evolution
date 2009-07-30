@@ -139,18 +139,12 @@ if ($formRestored == true || isset ($_REQUEST['newtemplate'])) {
 	if (empty ($content['pub_date'])) {
 		unset ($content['pub_date']);
 	} else {
-		$pub_date = $content['pub_date'];
-		list ($d, $m, $Y, $H, $M, $S) = sscanf($pub_date, '%2d-%2d-%4d %2d:%2d:%2d');
-		$pub_date = strtotime("$m/$d/$Y $H:$M:$S");
-		$content['pub_date'] = $pub_date;
+		$content['pub_date'] = $modx->toTimeStamp($content['pub_date']);
 	}
 	if (empty ($content['unpub_date'])) {
 		unset ($content['unpub_date']);
 	} else {
-		$unpub_date = $content['unpub_date'];
-		list ($d, $m, $Y, $H, $M, $S) = sscanf($unpub_date, '%2d-%2d-%4d %2d:%2d:%2d');
-		$unpub_date = strtotime("$m/$d/$Y $H:$M:$S");
-		$content['unpub_date'] = $unpub_date;
+		$content['unpub_date'] = $modx->toTimeStamp($content['unpub_date']);
 	}
 }
 
@@ -174,8 +168,20 @@ if (isset ($_POST['which_editor'])) {
 
 window.addEvent('domready', function(){
 	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
-	new DatePicker($('pub_date'), {'yearOffset': dpOffset});	
-	new DatePicker($('unpub_date'), {'yearOffset': dpOffset});
+	var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
+	new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat});	
+	new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat});
+	
+	if( !window.ie6 ) {
+	    $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
+            help_img.removeProperty('onclick');
+            help_img.removeProperty('onmouseover');
+            help_img.removeProperty('onmouseout');
+            help_img.setProperty('title', help_img.getProperty('alt') );
+            help_img.setProperty('class', 'tooltip' ); 
+	    });
+	    new Tips($$('.tooltip'),{className:'custom'} );
+	}
 });
 
 // save tree folder state
@@ -249,7 +255,7 @@ function setLink(lId) {
 function enableParentSelection(b) {
 	parent.tree.ca = "parent";
 	var closed = "<?php echo $_style["tree_folder"] ?>";
-	var opened = "<?php echo $_style["tree_folderopen"] ?>";
+	var opened = "<?php echo $_style["icons_set_parent"] ?>";
 	if (b) {
 		document.images["plock"].src = opened;
 		allowParentSelection = true;
@@ -524,7 +530,7 @@ if (is_array($evtOut))
 <input type="hidden" name="newtemplate" value="" />
 
 <fieldset id="create_edit">
-	<h1><?php if ($_GET['id']){ echo $_lang['edit_document_title']; } else { echo "Create Resource";}?></h1>
+	<h1><?php if ($_GET['id']){ echo $_lang['edit_document_title']; } else { echo $_lang['create_resource_title'];}?></h1>
 
 <div id="actions">
 	  <ul class="actionButtons">
@@ -677,8 +683,8 @@ if (is_array($evtOut))
 					$parentrs = mysql_fetch_assoc($rs);
 					$parentname = $parentrs['pagetitle'];
 				}
-?>&nbsp;<img name="plock" src="<?php echo $_style["tree_folder"] ?>" width="18" height="18" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /><b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?> (<?php echo $parentname?>)</span></b><br />
-				<span class="comment" style="width:300px;display:block;"><?php echo $_lang['document_parent_help']?></span>
+?>&nbsp;<img name="plock" src="<?php echo $_style["tree_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /> <b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?> (<?php echo $parentname?>)</span></b>
+	&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_parent_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				<input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?>" onchange="documentDirty=true;" />
 				</td></tr>
 		</table>
@@ -710,23 +716,23 @@ if (is_array($evtOut))
 				<input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0?>" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_published_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_publishdate']?></span></td>
-				<td><input id="pub_date" name="pub_date" class="DatePicker" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date'])?>" onblur="documentDirty=true;" />
+				<td><input id="pub_date" name="pub_date" class="DatePicker" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])?>" onblur="documentDirty=true;" />
 
 				<a onclick="document.mutate.pub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
 				<img src="<?php echo $_style["icons_cal_nodate"] ?>" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']?>" /></a>
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_publishdate_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				</td></tr>
 			<tr><td></td>
-				<td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td></tr>
+				<td style="color: #555;font-size:10px"><em> <?php echo $modx->config['datetime_format']; ?> HH:MM:SS</em></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_unpublishdate']?></span></td>
-				<td><input id="unpub_date" name="unpub_date" class="DatePicker" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date'])?>" onblur="documentDirty=true;" />
+				<td><input id="unpub_date" name="unpub_date" class="DatePicker" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])?>" onblur="documentDirty=true;" />
 
 				<a onclick="document.mutate.unpub_date.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand">
 				<img src="<?php echo $_style["icons_cal_nodate"] ?>" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']?>" /></a>
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_unpublishdate_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				</td></tr>
 			<tr><td></td>
-				<td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td></tr>
+				<td style="color: #555;font-size:10px"><em> <?php echo $modx->config['datetime_format']; ?> HH:MM:SS</em></td></tr>
 <?php } else {
 	// No publish permission
 ?>
@@ -734,17 +740,17 @@ if (is_array($evtOut))
 				<td><input disabled="disabled" name="publishedcheck" type="checkbox" class="checkbox" <?php echo (isset($content['published']) && $content['published']==1) ? "checked" : ''?> /><input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) ? 1 : 0?>" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_published_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_publishdate']?></span></td>
-				<td><input disabled="disabled" name="pub_date" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date'])?>" />
+				<td><input disabled="disabled" name="pub_date" value="<?php echo $content['pub_date']=="0" || !isset($content['pub_date']) ? '' : $modx->toDateFormat($content['pub_date'])?>" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_publishdate_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				</td></tr>
 			<tr><td></td>
-				<td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td></tr>
+				<td style="color: #555;font-size:10px"><em> <?php echo $modx->config['datetime_format']; ?> HH:MM:SS</em></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_unpublishdate']?></span></td>
-				<td><input disabled="disabled" name="unpub_date" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? '' : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date'])?>" />
+				<td><input disabled="disabled" name="unpub_date" value="<?php echo $content['unpub_date']=="0" || !isset($content['unpub_date']) ? '' : $modx->toDateFormat($content['unpub_date'])?>" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_unpublishdate_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				</td></tr>
 			<tr><td></td>
-				<td style="color: #555;font-size:10px"><em> dd-mm-YYYY HH:MM:SS</em></td></tr>
+				<td style="color: #555;font-size:10px"><em> <?php echo $modx->config['datetime_format']; ?> HH:MM:SS</em></td></tr>
 <?php } // End publish ?>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_searchable']?></span></td>
 				<td><input name="searchablecheck" type="checkbox" class="checkbox" <?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? "checked" : ''?> onclick="changestate(document.mutate.searchable);" /><input type="hidden" name="searchable" value="<?php echo (isset($content['searchable']) && $content['searchable']==1) || (!isset($content['searchable']) && $search_default==1) ? 1 : 0?>" onchange="documentDirty=true;" />
@@ -969,8 +975,8 @@ if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 	$limit = mysql_num_rows($rs);
 	if ($limit > 0) {
 		echo "\t".'<table style="position:relative;" border="0" cellspacing="0" cellpadding="3" width="96%">'."\n";
-		require(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
-		require(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
+		require_once(MODX_MANAGER_PATH.'includes/tmplvars.inc.php');
+		require_once(MODX_MANAGER_PATH.'includes/tmplvars.commands.inc.php');
 		for ($i = 0; $i < $limit; $i++) {
 			// Go through and display all Template Variables
 			$row = mysql_fetch_assoc($rs);
@@ -1165,7 +1171,9 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 </fieldset>
 </form>
 
-<script type="text/javascript">//setTimeout('showParameters()',10);</script>
+<script type="text/javascript">
+	//setTimeout('showParameters()',10);
+	storeCurTemplate();</script>
 <?php
 	if (($content['richtext'] == 1 || $_REQUEST['a'] == 4 || $_REQUEST['a'] == 72) && $use_editor == 1) {
 		if (is_array($replace_richtexteditor)) {

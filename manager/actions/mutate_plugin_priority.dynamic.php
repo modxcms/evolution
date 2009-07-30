@@ -62,8 +62,8 @@ if($limit>1) {
         $plugins = mysql_fetch_assoc($rs);
         if ($preEvt !== $plugins['evtid']) {
             $sortables[] = $plugins['evtid'];
-            $evtLists .= $insideUl? '</ul><br/>': '';
-            $evtLists .= '<strong>'.$plugins['evtname'].'</strong><br/><ul id="'.$plugins['evtid'].'" class="sortableList">';
+            $evtLists .= $insideUl? '</ul><br />': '';
+            $evtLists .= '<strong>'.$plugins['evtname'].'</strong><br /><ul id="'.$plugins['evtid'].'" class="sortableList">';
             $insideUl = 1;
         }
         $evtLists .= '<li id="item_'.$plugins['pluginid'].'">'.$plugins['name'].'</li>';

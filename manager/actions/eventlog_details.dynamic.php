@@ -62,7 +62,7 @@ else{
 <input type="hidden" name="op" value="" />
 <div class="sectionHeader"><?php echo $content['source']." - ".$_lang['eventlog_viewer']; ?></div><div class="sectionBody">
 <?php
-$date = strftime("%d-%b-%Y %I:%M %p",$content["createdon"]);
+$date = $modx->toDateFormat($content["createdon"]);
 if($content["type"]==1) $msgtype = $_lang["information"];
 else if($content["type"]==2) $msgtype = $_lang["warning"];
 else if($content["type"]==3) $msgtype = $_lang["error"];
@@ -70,7 +70,7 @@ $useTheme = $manager_theme ? "$manager_theme/":"";
 echo <<<HTML
 	<table border="0" width="100%">
 	  <tr><td colspan="4">
-		<div class="warning"><img src="media/style/{$useTheme}images/icons/event{$content["type"]}.gif" align="absmiddle" /> {$msgtype}</div><br />
+		<div class="warning"><img src="media/style/{$useTheme}images/icons/event{$content["type"]}.png" align="absmiddle" /> {$msgtype}</div><br />
 	  </td></tr>
 	  <tr>
 		<td width="25%" valign="top">{$_lang["event_id"]}:</td>

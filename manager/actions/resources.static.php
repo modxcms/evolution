@@ -81,7 +81,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 			<ul>
 				<li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             </ul>
-            <br/>
+            <br />
             <?php echo createResourceList('site_tmplvars',301,$tablePre); ?>
 	</div>
 <?php } ?>

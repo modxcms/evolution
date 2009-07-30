@@ -8,28 +8,28 @@ if(!$modx->hasPermission('save_snippet')) {
 <?php
 
 $id = intval($_POST['id']);
-$name = mysql_escape_string(trim($_POST['name']));
-$description = mysql_escape_string($_POST['description']);
+$name = $modx->db->escape(trim($_POST['name']));
+$description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
-$snippet = trim(mysql_escape_string($_POST['post']));
+$snippet = trim($modx->db->escape($_POST['post']));
 // strip out PHP tags from snippets
 if ( strncmp($snippet, "<?", 2) == 0 ) {
     $snippet = substr($snippet, 2);
     if ( strncmp( $snippet, "php", 3 ) == 0 ) $snippet = substr($snippet, 3);
     if ( substr($snippet, -2, 2) == '?>' ) $snippet = substr($snippet, 0, -2);
 }
-$properties = mysql_escape_string($_POST['properties']);
-$moduleguid = mysql_escape_string($_POST['moduleguid']);
+$properties = $modx->db->escape($_POST['properties']);
+$moduleguid = $modx->db->escape($_POST['moduleguid']);
 $sysevents = $_POST['sysevents'];
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = mysql_escape_string($_POST['categoryid']);
+    $categoryid = $modx->db->escape($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
     include_once "categories.inc.php";
-    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
     if ($catCheck) {
         $categoryid = $catCheck;
     } else {

@@ -17,7 +17,7 @@ if($_REQUEST['op']=='reset') {
 }
 else {
 	$query = isset($_REQUEST['search'])? $_REQUEST['search']:$_PAGE['vs']['search'];
-	$sqlQuery = mysql_escape_string($query);
+	$sqlQuery = $modx->db->escape($query);
 	$_PAGE['vs']['search'] = $query;
 }
 
@@ -29,11 +29,11 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once $base_path."manager/includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang["run_module"],"js:menuAction(1)","media/style/$manager_theme/images/icons/save.gif",(!$modx->hasPermission('exec_module') ? 1:0));
+$cm->addItem($_lang["run_module"],"js:menuAction(1)",$_style['icons_save'],(!$modx->hasPermission('exec_module') ? 1:0));
 $cm->addSeparator();
-$cm->addItem($_lang["edit"],"js:menuAction(2)","media/style/$manager_theme/images/icons/logging.gif",(!$modx->hasPermission('edit_module') ? 1:0));
-$cm->addItem($_lang["duplicate"],"js:menuAction(3)","media/style/$manager_theme/images/icons/newdoc.gif",(!$modx->hasPermission('new_module') ? 1:0));
-$cm->addItem($_lang["delete"], "js:menuAction(4)","media/style/$manager_theme/images/icons/delete.gif",(!$modx->hasPermission('delete_module') ? 1:0));
+$cm->addItem($_lang["edit"],"js:menuAction(2)",$_style['icons_edit_document'],(!$modx->hasPermission('edit_module') ? 1:0));
+$cm->addItem($_lang["duplicate"],"js:menuAction(3)",$_style['icons_duplicate_document'],(!$modx->hasPermission('new_module') ? 1:0));
+$cm->addItem($_lang["delete"], "js:menuAction(4)",$_style['icons_delete'],(!$modx->hasPermission('delete_module') ? 1:0));
 echo $cm->render();
 
 ?>
@@ -103,7 +103,7 @@ echo $cm->render();
 
 <div class="sectionBody">
 	<!-- load modules -->
-	<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/modules.gif' alt="." width="32" height="32" hspace="15" vspace="15" style="display:block;float:left;margin-right:10px" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
+	<p><img src="<?php echo $_style['icons_modules'] ?>" alt="" style="display:block;float:left;margin-right:10px" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
 	<p>&nbsp;</p>
 	<div class="searchbar">
 		<table border="0" style="width:100%">
@@ -112,8 +112,8 @@ echo $cm->render();
 			<td nowrap="nowrap">
 				<table border="0" style="float:right"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/table.gif" width="16" height="16"/></a></td>
+				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh'] ?>" width="16" height="16"/></a></td>
+				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table'] ?>" width="16" height="16"/></a></td>
 				</tr>
 				</table>
 			</td>
@@ -124,7 +124,7 @@ echo $cm->render();
 	<div>
 	<?php
 
-	$sql = "SELECT id,name,description,IF(locked,'Yes','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'media/style/$manager_theme/images/icons/module.gif') as'icon' " .
+	$sql = "SELECT id,name,description,IF(locked,'Yes','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'".$_style['icons_modules']."') as'icon' " .
 			"FROM ".$modx->getFullTableName("site_modules")." ".
 			(!empty($sqlQuery) ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
 			"ORDER BY name";

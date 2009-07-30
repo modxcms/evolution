@@ -314,7 +314,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 							$value=str_replace("00:00:00","",$value);// remove trailing zero time values
 							break;
 						case "html":
-							// convert \n to <br>
+							// convert \n to <br />
 							if(!$sendAsText ) $value = preg_replace('#(\n<br[ /]*?>|<br[ /]*?>\n|\n)#i','<br />',$value);
 							break;
 						case "file":
@@ -521,7 +521,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 
 
 			if($isDebug){
-				$debugText .="<strong>Mail Headers:</strong><br>From: $from ($fromname)<br/>Reply-to:$replyto<br />To: $to<br/>Subject: $subject<br />CC: $cc<br /> BCC:$bcc<br />";
+				$debugText .="<strong>Mail Headers:</strong><br />From: $from ($fromname)<br />Reply-to:$replyto<br />To: $to<br />Subject: $subject<br />CC: $cc<br /> BCC:$bcc<br />";
 			if($isDebug>1){
 				$debugText .= "<br /><strong>Formats array:</strong><pre>". var_export($formats,true).'</pre>';
 				$debugText .= "<br /><strong>Fields array:</strong><pre>". var_export($fields,true).'</pre>';

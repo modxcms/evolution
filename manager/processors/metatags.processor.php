@@ -13,9 +13,9 @@ $opcode = isset($_POST['op']) ? $_POST['op'] : "keys" ;
 if($opcode=="addtag") {
 	list($tag,$http_equiv) = explode(";",$_POST["tag"]);
 	$f = array(
-		name => mysql_escape_string($_POST["tagname"]),
-		tag => mysql_escape_string($tag),
-		tagvalue => mysql_escape_string($_POST["tagvalue"]),
+		name => $modx->db->escape($_POST["tagname"]),
+		tag => $modx->db->escape($tag),
+		tagvalue => $modx->db->escape($_POST["tagvalue"]),
 		http_equiv => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
@@ -27,9 +27,9 @@ else if($opcode=="edttag") {
 	$id = intval($_POST["id"]);
 	list($tag,$http_equiv) = explode(";",$_POST["tag"]);
 	$f = array(
-		name => mysql_escape_string($_POST["tagname"]),
-		tag => mysql_escape_string($tag),
-		tagvalue => mysql_escape_string($_POST["tagvalue"]),
+		name => $modx->db->escape($_POST["tagname"]),
+		tag => $modx->db->escape($tag),
+		tagvalue => $modx->db->escape($_POST["tagvalue"]),
 		http_equiv => intval($http_equiv)
 	);
 	if($f["name"] && $f["tagvalue"]) {
@@ -40,7 +40,7 @@ else if($opcode=="edttag") {
 else if($opcode=="deltag") {
 	$f = $_POST["tag"];
 	if(is_array($f) && count($f)>0) {
-		for($i=0;$i<count($f);$i++) $f[$i]=mysql_escape_string($f[$i]);
+		for($i=0;$i<count($f);$i++) $f[$i]=$modx->db->escape($f[$i]);
 		$modx->db->delete($modx->getFullTableName("site_metatags"),"id IN('".implode("','",$f)."')");
 	}
 }

@@ -44,8 +44,6 @@ $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 include_once "error.class.inc.php";
 $e = new errorHandler;
 
-//$cookieKey = substr(md5($site_id."Admin-User"),0,15);
-
 // initiate the content manager class
 include_once "document.parser.class.inc.php";
 $modx = new DocumentParser;
@@ -53,11 +51,11 @@ $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
 $etomite = &$modx; // for backward compatibility
 
-
 $username = $modx->db->escape($_REQUEST['username']);
 $givenPassword = $modx->db->escape($_REQUEST['password']);
 $captcha_code = $_REQUEST['captcha_code'];
 $rememberme= $_REQUEST['rememberme'];
+$failed_allowed = $modx->config["failed_login_attempts"];
 
 // invoke OnBeforeManagerLogin event
 $modx->invokeEvent("OnBeforeManagerLogin",
@@ -89,47 +87,46 @@ $role                   = $row['role'];
 $lastlogin              = $row['lastlogin'];
 $nrlogins               = $row['logincount'];
 $fullname               = $row['fullname'];
-//$sessionRegistered        = checkSession();
 $email                  = $row['email'];
 
 // get the user settings from the database
-// require_once "user_settings.inc.php"; <<< This doesn't work, because $modx is set and $modx->getLoginUserID() returns NULL
-// netnoise:
 $sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."user_settings` WHERE user='".$internalKey."' AND setting_value!=''";
 $rs = mysql_query($sql);
 while ($row = mysql_fetch_assoc($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
 }
-
-if($failedlogins>=$failed_login_attempts && $blockeduntildate>time()) { // blocked due to number of login errors.
+// blocked due to number of login errors.
+if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
         @session_destroy();
         session_unset();
         jsAlert($e->errors[902]);
         return;
 }
 
-if($failedlogins>=$failed_login_attempts && $blockeduntildate<time()) { // blocked due to number of login errors, but get to try again
+// blocked due to number of login errors, but get to try again
+if($failedlogins>=$failed_allowed && $blockeduntildate<time()) { 
     $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
     $rs = mysql_query($sql);
 }
 
-if($blocked=="1") { // this user has been blocked by an admin, so no way he's loggin in!
+// this user has been blocked by an admin, so no way he's loggin in!
+if($blocked=="1") { 
     @session_destroy();
     session_unset();
     jsAlert($e->errors[903]);
     return;
 }
 
-// blockuntil
-if($blockeduntildate>time()) { // this user has a block until date
+// blockuntil: this user has a block until date
+if($blockeduntildate>time()) {
     @session_destroy();
     session_unset();
     jsAlert("You are blocked and cannot log in! Please try again later.");
     return;
 }
 
-// blockafter
-if($blockedafterdate>0 && $blockedafterdate<time()) { // this user has a block after date
+// blockafter: this user has a block after date
+if($blockedafterdate>0 && $blockedafterdate<time()) {
     @session_destroy();
     session_unset();
     jsAlert("You are blocked and cannot log in! Please try again later.");
@@ -144,7 +141,6 @@ if ($allowed_ip) {
             return;
           }
         }
-
         if(!in_array($_SERVER['REMOTE_ADDR'], explode(',',str_replace(' ','',$allowed_ip)))) {
           jsAlert("You are not allowed to login from this location.");
           return;
@@ -170,8 +166,8 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                             "savedpassword" => $dbasePassword,
                             "rememberme"    => $rememberme
                         ));
-// check if plugin authenticated the user
 
+// check if plugin authenticated the user
 if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
     // check user password - local authentication
     if($dbasePassword != md5($givenPassword)) {
@@ -191,36 +187,31 @@ if($use_captcha==1) {
     }
 }
 
-if($newloginerror==1) {
-    $failedlogins += $newloginerror;
-    if($failedlogins>=$failed_login_attempts) { //increment the failed login counter, and block!
-        $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins', blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
+if($newloginerror) {
+	//increment the failed login counter
+    $failedlogins += 1;
+    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
+    $rs = mysql_query($sql);
+    if($failedlogins>=$failed_allowed) { 
+		//block user for too many fail attempts
+        $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
         $rs = mysql_query($sql);
-    } else { //increment the failed login counter
-        $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-        $rs = mysql_query($sql);
-        // mod by raymond - implement failed login delays
+    } else {
+		//sleep to help prevent brute force attacks
         $sleep = (int)$failedlogins/2;
         if($sleep>5) $sleep = 5;
         sleep($sleep);
     }
 	@session_destroy();
+	session_unset();
+    return;
 }
 
 $currentsessionid = session_id();
 
-if(!isset($_SESSION['mgrValidated'])) {
-    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
-}
-
-# Added by Raymond:
 $_SESSION['usertype'] = 'manager'; // user is a backend user
 
 // get permissions
-//$_SESSION['mgrValid']=base64_encode($givenPassword); //??
-//$_SESSION['mgrUser']=base64_encode($username);        // ??
-//$_SESSION['sessionRegistered']=$sessionRegistered; // to be removed
 $_SESSION['mgrShortname']=$username;
 $_SESSION['mgrFullname']=$fullname;
 $_SESSION['mgrEmail']=$email;
@@ -234,6 +225,12 @@ $sql="SELECT * FROM $dbase.`".$table_prefix."user_roles` WHERE id=".$role.";";
 $rs = mysql_query($sql);
 $row = mysql_fetch_assoc($rs);
 $_SESSION['mgrPermissions'] = $row;
+
+// successful login so reset fail count and update key values
+if(isset($_SESSION['mgrValidated'])) {
+    $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
+    $rs = mysql_query($sql);
+}
 
 // get user's document groups
 $dg='';$i=0;
@@ -281,10 +278,10 @@ else {
 
 // show javascript alert
 function jsAlert($msg){
+	global $modx;
     if($_POST['ajax']==1) echo $msg."\n";
     else {
-        echo "<script>window.setTimeout(\"alert('".addslashes(mysql_escape_string($msg))."')\",10);history.go(-1)</script>";
+        echo "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);history.go(-1)</script>";
     }
 }
-
 ?>

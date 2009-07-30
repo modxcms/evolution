@@ -905,7 +905,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
 ('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
 ('validate_referer', '0'),
-('datepicker_offset','-10');
+('datepicker_offset','-10'),
+('datetime_format','%d-%m-%Y');
 
 
 REPLACE INTO `{PREFIX}user_roles` 

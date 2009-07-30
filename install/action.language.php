@@ -18,10 +18,11 @@ sort($langs);
     <select name="language">
 <?php
 foreach ($langs as $language) {
-    if ($language == 'english') {
-        echo '<option value="' . $language . '" selected="selected">' . $language . '</option>'."\n";
+    $abrv_language = explode('-',$language);
+    if ($abrv_language[0] == 'english') {
+        echo '<option value="' . $language . '" selected="selected">' . $abrv_language[0] . '</option>'."\n";
     } else {
-        echo '<option value="' . $language . '">' . $language . '</option>'."\n";
+        echo '<option value="' . $language . '">' . $abrv_language[0] . '</option>'."\n";
     }
 }
 ?>

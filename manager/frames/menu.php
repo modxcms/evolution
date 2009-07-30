@@ -384,6 +384,6 @@ if (!empty($reportsmenu)) {
 
 <!-- can't find a better name :) should always be fixed -->
 <div id="menuSplitter"></div>
-
+<img id="keepAliveIMG" width="1" height="1" src="media/script/_session.gif?" />
 </body>
 </html>

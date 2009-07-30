@@ -24,7 +24,7 @@ else {
 		$row = mysql_fetch_assoc($rs);
 		$sql = "INSERT INTO $dbase.`".$table_prefix."site_templates`
 				(templatename, description, content, category) VALUES
-				('".mysql_escape_string($row['templatename'])."', '".mysql_escape_string($row['description'])."','".mysql_escape_string($row['content'])."', ".mysql_escape_string($row['category']).");";
+				('".$modx->db->escape($row['templatename'])."', '".$modx->db->escape($row['description'])."','".$modx->db->escape($row['content'])."', ".$modx->db->escape($row['category']).");";
 		$rs = mysql_query($sql);
 	}
 }

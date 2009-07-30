@@ -102,13 +102,9 @@ if ($modx->manager->hasFormValues()) {
 
 // converts date format dd-mm-yyyy to php date
 function ConvertDate($date) {
-	if ($date == "")
-		return "0";
-	list ($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
-	if (!$H && !$M && !$S)
-		return strtotime("$m/$d/$Y");
-	else
-		return strtotime("$m/$d/$Y $H:$M:$S");
+	global $modx;
+	if ($date == "") { return "0"; }
+	else             { return $modx->toTimeStamp($date); }
 }
 
 // include the country list language file
@@ -124,10 +120,11 @@ $displayStyle = (($_SESSION['browser'] == 'mz') || ($_SESSION['browser'] == 'op'
 <script type="text/javascript">
 window.addEvent('domready', function() {
 	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
-	new DatePicker($('dob'), {'yearOffset': dpOffset});
+	var dpformat = "<?php echo $modx->config['datetime_format']; ?>";
+	new DatePicker($('dob'), {'yearOffset': dpOffset,'format':dpformat});
 	if ($('blockeduntil')) {
-		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset});
-		new DatePicker($('blockedafter'), {'yearOffset': dpOffset});
+		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
+		new DatePicker($('blockedafter'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
 	}
 });
 
@@ -299,11 +296,11 @@ if (is_array($evtOut))
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='11' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
 			<td>&nbsp;</td>
-			<td><input name="newpasswordcheck" type="checkbox" onclick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="11" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="11" ? 1 : 0 ; ?>" onchange='documentDirty=true;'><br>
+			<td><input name="newpasswordcheck" type="checkbox" onclick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="11" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="11" ? 1 : 0 ; ?>" onchange='documentDirty=true;'><br />
 				<span style="display:<?php echo $_REQUEST['a']=="11" ? "block": "none" ; ?>" id="passwordBlock">
 				<fieldset style="width:300px">
 				<legend><b><?php echo $_lang['password_gen_method']; ?></b></legend>
-				<input type=radio name="passwordgenmethod" value="g" <?php echo $_POST['passwordgenmethod']=="spec" ? "" : 'checked="checked"'; ?> /><?php echo $_lang['password_gen_gen']; ?><br>
+				<input type=radio name="passwordgenmethod" value="g" <?php echo $_POST['passwordgenmethod']=="spec" ? "" : 'checked="checked"'; ?> /><?php echo $_lang['password_gen_gen']; ?><br />
 				<input type=radio name="passwordgenmethod" value="spec" <?php echo $_POST['passwordgenmethod']=="spec" ? 'checked="checked"' : ""; ?>><?php echo $_lang['password_gen_specify']; ?> <br />
 				<div style="padding-left:20px">
 				<label for="specifiedpassword" style="width:120px"><?php echo $_lang['change_password_new']; ?>:</label>
@@ -316,7 +313,7 @@ if (is_array($evtOut))
 				<br />
 				<fieldset style="width:300px">
 				<legend><b><?php echo $_lang['password_method']; ?></b></legend>
-				<input type=radio name="passwordnotifymethod" value="e" <?php echo $_POST['passwordnotifymethod']=="e" ? 'checked="checked"' : ""; ?> /><?php echo $_lang['password_method_email']; ?><br>
+				<input type=radio name="passwordnotifymethod" value="e" <?php echo $_POST['passwordnotifymethod']=="e" ? 'checked="checked"' : ""; ?> /><?php echo $_lang['password_method_email']; ?><br />
 				<input type=radio name="passwordnotifymethod" value="s" <?php echo $_POST['passwordnotifymethod']=="e" ? "" : 'checked="checked"'; ?> /><?php echo $_lang['password_method_screen']; ?>
 				</fieldset>
 				</span>
@@ -403,7 +400,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td><?php echo $_lang['user_dob']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo ($userdata['dob'] ? strftime("%d-%m-%Y", $userdata['dob']):""); ?>" onblur='documentDirty=true;'>
+				<input type="text" id="dob" name="dob" class="DatePicker" value="<?php echo ($userdata['dob'] ? $modx->toDateFormat($userdata['dob'],'dateOnly'):""); ?>" onblur='documentDirty=true;'>
 				<a onclick="document.userform.dob.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>"></a>
 			</td>
 		  </tr>
@@ -433,7 +430,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 		  <tr>
 			<td><?php echo $_lang['user_prevlogin']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><?php echo strftime('%d-%m-%y %H:%M:%S', $userdata['lastlogin']+$server_offset_time) ?></td>
+			<td><?php echo $modx->toDateFormat($userdata['lastlogin']+$server_offset_time) ?></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_failedlogincount']; ?>:</td>
@@ -449,7 +446,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td><?php echo $_lang['user_blockeduntil']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo ($userdata['blockeduntil'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" id="blockeduntil" name="blockeduntil" class="DatePicker" value="<?php echo ($userdata['blockeduntil'] ? $modx->toDateFormat($userdata['blockeduntil']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onclick="document.userform.blockeduntil.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>
@@ -457,7 +454,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td><?php echo $_lang['user_blockedafter']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo ($userdata['blockedafter'] ? strftime("%d-%m-%Y %H:%M:%S", $userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
+				<input type="text" id="blockedafter" name="blockedafter" class="DatePicker" value="<?php echo ($userdata['blockedafter'] ? $modx->toDateFormat($userdata['blockedafter']):""); ?>" onblur='documentDirty=true;' readonly="readonly">
 				<a onclick="document.userform.blockedafter.value=''; return true;" onmouseover="window.status='<?php echo $_lang['remove_date']; ?>'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img align="absmiddle" src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="<?php echo $_lang['remove_date']; ?>" /></a>
 			</td>
 		  </tr>

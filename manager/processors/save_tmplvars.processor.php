@@ -8,25 +8,25 @@ if(!$modx->hasPermission('save_template')) {
 <?php
 
 $id = intval($_POST['id']);
-$name = mysql_escape_string(trim($_POST['name']));				
-$description = mysql_escape_string($_POST['description']);
-$caption = mysql_escape_string($_POST['caption']);
-$type = mysql_escape_string($_POST['type']);
-$elements = mysql_escape_string($_POST['elements']);
-$default_text = mysql_escape_string($_POST['default_text']);
-$rank = isset ($_POST['rank']) ? mysql_escape_string($_POST['rank']) : 0;
-$display = mysql_escape_string($_POST['display']);
-$params = mysql_escape_string($_POST['params']);
+$name = $modx->db->escape(trim($_POST['name']));				
+$description = $modx->db->escape($_POST['description']);
+$caption = $modx->db->escape($_POST['caption']);
+$type = $modx->db->escape($_POST['type']);
+$elements = $modx->db->escape($_POST['elements']);
+$default_text = $modx->db->escape($_POST['default_text']);
+$rank = isset ($_POST['rank']) ? $modx->db->escape($_POST['rank']) : 0;
+$display = $modx->db->escape($_POST['display']);
+$params = $modx->db->escape($_POST['params']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = mysql_escape_string($_POST['categoryid']);
+    $categoryid = $modx->db->escape($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
     include_once "categories.inc.php";
-    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
     if ($catCheck) {
         $categoryid = $catCheck;
     } else {

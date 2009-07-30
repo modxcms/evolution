@@ -8,28 +8,28 @@ if(!$modx->hasPermission('save_module')) {
 <?php
 
 $id = intval($_POST['id']);
-$name = mysql_escape_string(trim($_POST['name']));
-$description = mysql_escape_string($_POST['description']);
-$resourcefile = mysql_escape_string($_POST['resourcefile']);
+$name = $modx->db->escape(trim($_POST['name']));
+$description = $modx->db->escape($_POST['description']);
+$resourcefile = $modx->db->escape($_POST['resourcefile']);
 $enable_resource = $_POST['enable_resource']=='on' ? 1 : 0 ;
-$icon = mysql_escape_string($_POST['icon']);
+$icon = $modx->db->escape($_POST['icon']);
 //$category = intval($_POST['category']);
 $disabled = $_POST['disabled']=='on' ? 1 : 0 ;
 $wrap = $_POST['wrap']=='on' ? 1 : 0 ;
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
-$modulecode = mysql_escape_string($_POST['post']);
-$properties = mysql_escape_string($_POST['properties']);
+$modulecode = $modx->db->escape($_POST['post']);
+$properties = $modx->db->escape($_POST['properties']);
 $enable_sharedparams = $_POST['enable_sharedparams']=='on' ? 1 : 0 ;
-$guid = mysql_escape_string($_POST['guid']);
+$guid = $modx->db->escape($_POST['guid']);
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = mysql_escape_string($_POST['categoryid']);
+    $categoryid = $modx->db->escape($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
     include_once "categories.inc.php";
-    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
     if ($catCheck) {
         $categoryid = $catCheck;
     } else {

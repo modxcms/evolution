@@ -6,7 +6,7 @@
 function newCategory($newCat) {
     global $modx;
     $useTable = $modx->getFullTableName('categories');
-    $sql = 'insert into ' . $useTable . ' (category) values (\''.mysql_escape_string($newCat).'\')';
+    $sql = 'insert into ' . $useTable . ' (category) values (\''.$modx->db->escape($newCat).'\')';
     $catrs = $modx->dbQuery($sql);
     if(!$catrs) {
         $categoryId = 0;

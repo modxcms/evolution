@@ -1,10 +1,10 @@
 <?php
-#:: MODx Installer Setup file
+#:: MODx Installer Setup file 
 #:::::::::::::::::::::::::::::::::::::::::
 
 	$moduleName = "MODx";
-	$moduleVersion = "Evolution 1.0.0-RC3";
-	$moduleRelease = "2009-07-24";
+	$moduleVersion = "Evolution 1.0.0";
+	$moduleRelease = "30-Jul-2009";
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
 	$moduleSQLUpdateFile = "setup.updates.sql";
@@ -47,18 +47,18 @@
 
 	# setup callback function
 	$callBackFnc = "clean_up";
-
+	
 	function clean_up($sqlParser) {
 		$ids = array();
 		$mysqlVerOk = -1;
 
 		if(function_exists("mysql_get_server_info")) {
 			$mysqlVerOk = (version_compare(mysql_get_server_info(),"4.0.2")>=0);
-		}
-
-		// secure web documents - privateweb
+		}	
+		
+		// secure web documents - privateweb 
 		mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 0 WHERE privateweb = 1",$sqlParser->conn);
-		$sql =  "SELECT DISTINCT sc.id
+		$sql =  "SELECT DISTINCT sc.id 
 				 FROM `".$sqlParser->prefix."site_content` sc
 				 LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
 				 LEFT JOIN `".$sqlParser->prefix."webgroup_access` wga ON wga.documentgroup = dg.document_group
@@ -70,14 +70,14 @@
 		else {
 			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
-				mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");
+				mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privateweb = 1 WHERE id IN (".implode(", ",$ids).")");	
 				unset($ids);
 			}
 		}
-
+		
 		// secure manager documents privatemgr
 		mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 0 WHERE privatemgr = 1");
-		$sql =  "SELECT DISTINCT sc.id
+		$sql =  "SELECT DISTINCT sc.id 
 				 FROM `".$sqlParser->prefix."site_content` sc
 				 LEFT JOIN `".$sqlParser->prefix."document_groups` dg ON dg.document = sc.id
 				 LEFT JOIN `".$sqlParser->prefix."membergroup_access` mga ON mga.documentgroup = dg.document_group
@@ -89,9 +89,9 @@
 		else {
 			while($r = mysql_fetch_assoc($ds)) $ids[]=$r["id"];
 			if(count($ids)>0) {
-				mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");
+				mysql_query("UPDATE `".$sqlParser->prefix."site_content` SET privatemgr = 1 WHERE id IN (".implode(", ",$ids).")");	
 				unset($ids);
-			}
+			}		
 		}
 
 		/**** Add Quick Plugin to Module ***/
@@ -103,7 +103,7 @@
 		else {
 			$row = mysql_fetch_assoc($ds);
 			$moduleid=$row["id"];
-		}
+		}		
 		// get plugin id
 		$ds = mysql_query("SELECT id FROM `".$sqlParser->prefix."site_plugins` WHERE name='QuickEdit'");
 		if(!$ds) {
@@ -112,9 +112,9 @@
 		else {
 			$row = mysql_fetch_assoc($ds);
 			$pluginid=$row["id"];
-		}
+		}		
 		// setup plugin as module dependency
-		$ds = mysql_query("SELECT module FROM `".$sqlParser->prefix."site_module_depobj` WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1");
+		$ds = mysql_query("SELECT module FROM `".$sqlParser->prefix."site_module_depobj` WHERE module='$moduleid' AND resource='$pluginid' AND type='30' LIMIT 1"); 
 		if(!$ds) {
 			echo "An error occurred while executing a query: ".mysql_error();
 		}

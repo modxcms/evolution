@@ -33,7 +33,7 @@ else {
 		$row = mysql_fetch_assoc($rs);
 		$sql ="INSERT INTO ".$modx->getFullTableName("site_modules")." 
 				(name, description, disabled, category, wrap, icon, enable_resource, resourcefile, createdon, editedon, guid, enable_sharedparams, properties, modulecode) VALUES 
-				('".mysql_escape_string($row['name'])."', '".mysql_escape_string($row['description'])."', ".$row['disabled'].", '".$row['category']."', '".$row['wrap']."', '".mysql_escape_string($row['icon'])."', '".mysql_escape_string($row['enable_resource'])."', '".mysql_escape_string($row['resourcefile'])."', '".$row['createdon']."', '".$row['editedon']."', '".createGuid()."', '".mysql_escape_string($row['enable_sharedparams'])."', '".mysql_escape_string($row['properties'])."', '".mysql_escape_string($row['modulecode'])."');";
+				('".$modx->db->escape($row['name'])."', '".$modx->db->escape($row['description'])."', ".$row['disabled'].", '".$row['category']."', '".$row['wrap']."', '".$modx->db->escape($row['icon'])."', '".$modx->db->escape($row['enable_resource'])."', '".$modx->db->escape($row['resourcefile'])."', '".$row['createdon']."', '".$row['editedon']."', '".createGuid()."', '".$modx->db->escape($row['enable_sharedparams'])."', '".$modx->db->escape($row['properties'])."', '".$modx->db->escape($row['modulecode'])."');";
 		$rs = mysql_query($sql);
 	}	
 }
@@ -58,7 +58,7 @@ else {
 	if($ds) while($row = mysql_fetch_assoc($ds)) {
 		$sql ="INSERT INTO ".$modx->getFullTableName("site_module_depobj")." 
 				(module,resource,type) VALUES 
-				('".mysql_escape_string($row['newid'])."', '".mysql_escape_string($row['resource'])."', '".mysql_escape_string($row['type'])."');";
+				('".$modx->db->escape($row['newid'])."', '".$modx->db->escape($row['resource'])."', '".$modx->db->escape($row['type'])."');";
 		$rs = mysql_query($sql);
 	}	
 }
@@ -81,7 +81,7 @@ else {
 	if($ds) while($row = mysql_fetch_assoc($ds)) {
 		$sql ="INSERT INTO ".$modx->getFullTableName("site_module_access")." 
 				(module,usergroup) VALUES 
-				('".mysql_escape_string($row['newid'])."', '".mysql_escape_string($row['usergroup'])."');";
+				('".$modx->db->escape($row['newid'])."', '".$modx->db->escape($row['usergroup'])."');";
 		$rs = mysql_query($sql);
 	}	
 }

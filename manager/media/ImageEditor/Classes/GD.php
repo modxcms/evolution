@@ -410,7 +410,7 @@ Class Image_Transform_Driver_GD extends Image_Transform
 
 
                 while ($left < $right) { 
-                    //echo " j:".$j." l:".$left." r:".$right."\n<br>";
+                    //echo " j:".$j." l:".$left." r:".$right."\n<br />";
                     $t = imagecolorat($this->imageHandle, $left, $j); 
                     imagesetpixel($this->imageHandle, $left, $j, imagecolorat($this->imageHandle, $right, $j)); 
                     imagesetpixel($this->imageHandle, $right, $j, $t); 

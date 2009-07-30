@@ -47,7 +47,7 @@ if($_SESSION['browser']=='ie') {
 
 	// get search string
 	$query = $_REQUEST['search'];
-	$sqlQuery = mysql_escape_string($query);
+	$sqlQuery = $modx->db->escape($query);
 
 	// select SQL
 	switch($rt){
@@ -153,7 +153,7 @@ if($_SESSION['browser']=='ie') {
 <input type="hidden" name="cb" value="<?php echo $cb; ?>" />
 <div class="sectionHeader" style="margin:0px"><?php echo $title." - ".$_lang['resource_selector_title']; ?></div>
 <div class="sectionBody" style="margin-top:5px;margin-right:0px;margin-left:0px;border:0px;">
-<p><img src='media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/circlerightarrow.gif' alt="." width="32" height="32" align="left" hspace="10" /><?php echo $_lang['resource_selector_msg']; ?></p>
+<p><img src="<?php echo $_style["icons_right_arrow"] ?>" alt="." width="32" height="32" align="left" /><?php echo $_lang['resource_selector_msg']; ?></p>
 <br />
 <!-- resources -->
 	 <table width="100%" border="0" cellspacing="1" cellpadding="2">
@@ -165,14 +165,14 @@ if($_SESSION['browser']=='ie') {
 			<td nowrap="nowrap">
 				<table border="0"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
 				<td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16"/></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/table.gif" width="16" height="16"/></a></td>
+				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh']?>" width="16" height="16"/></a></td>
+				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table']?>" width="16" height="16"/></a></td>
 				</tr>
 				</table>
 			</td>
 			<td width="200">
-				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/stop.png" /> <?php echo $_lang['cancel']; ?></a>
-				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/save.gif" /> <?php echo $_lang['insert']; ?></a>				
+				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="window.close()"><img src="<?php echo $_style['icons_cancel']?>" /> <?php echo $_lang['cancel']; ?></a>
+				<a href="#" class="searchtoolbarbtn" style="float:right;margin-left:2px;" onclick="saveSelection()"><img src="<?php echo $_style['icons_add']?>" /> <?php echo $_lang['insert']; ?></a>				
 			</td>
 			</tr>
 		</table>

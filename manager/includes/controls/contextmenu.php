@@ -16,7 +16,7 @@ class ContextMenu {
 
 	function addItem($text,$action="",$img="",$disabled=0){
 		global $base_url, $manager_theme;
-		if(!$img) $img = $base_url."manager/media/styles/".($manager_theme ? $manager_theme : '')."/images/_tx_.gif";
+		if(!$img) $img = $base_url.$_style['tx'];
 		if(substr($action,0,3)=="js:") $action = substr($action,3);
 		else if(substr($action,0,3)=="hl:") $action = "window.location.href='".substr($action,3)."'";
 		else $action = "window.location.href='".$action."'";

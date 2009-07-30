@@ -36,23 +36,23 @@ function generate_password($length = 10) {
 $id = intval($_POST['id']);
 $oldusername = $_POST['oldusername'];
 $newusername = !empty ($_POST['newusername']) ? $_POST['newusername'] : "New User";
-$fullname = mysql_escape_string($_POST['fullname']);
+$fullname = $modx->db->escape($_POST['fullname']);
 $genpassword = $_POST['newpassword'];
 $passwordgenmethod = $_POST['passwordgenmethod'];
 $passwordnotifymethod = $_POST['passwordnotifymethod'];
 $specifiedpassword = $_POST['specifiedpassword'];
-$email = mysql_escape_string($_POST['email']);
+$email = $modx->db->escape($_POST['email']);
 $oldemail = $_POST['oldemail'];
-$phone = mysql_escape_string($_POST['phone']);
-$mobilephone = mysql_escape_string($_POST['mobilephone']);
-$fax = mysql_escape_string($_POST['fax']);
+$phone = $modx->db->escape($_POST['phone']);
+$mobilephone = $modx->db->escape($_POST['mobilephone']);
+$fax = $modx->db->escape($_POST['fax']);
 $dob = !empty ($_POST['dob']) ? ConvertDate($_POST['dob']) : 0;
 $country = $_POST['country'];
-$state = mysql_escape_string($_POST['state']);
-$zip = mysql_escape_string($_POST['zip']);
+$state = $modx->db->escape($_POST['state']);
+$zip = $modx->db->escape($_POST['zip']);
 $gender = !empty($_POST['gender']) ? $_POST['gender'] : 0;
-$photo = mysql_escape_string($_POST['photo']);
-$comment = mysql_escape_string($_POST['comment']);
+$photo = $modx->db->escape($_POST['photo']);
+$comment = $modx->db->escape($_POST['comment']);
 $roleid = !empty($_POST['role']) ? $_POST['role'] : 0;
 $failedlogincount = !empty($_POST['failedlogincount']) ? $_POST['failedlogincount'] : 0;
 $blocked = !empty($_POST['blocked']) ? $_POST['blocked'] : 0;
@@ -288,7 +288,6 @@ switch ($_POST['mode']) {
 			exit;
 		}
 		
-		// Removed second mysql_escape_string from fullname - pixelchutes
 		$sql = "UPDATE $dbase.`" . $table_prefix . "web_user_attributes` SET 
 					fullname='" . $fullname . "', 
 					role='$roleid', 
@@ -429,7 +428,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 
 // Save User Settings
 function saveUserSettings($id) {
-	global $dbase, $table_prefix;
+	global $modx, $dbase, $table_prefix;
 
 	$settings = array (
 		"login_home",
@@ -445,18 +444,14 @@ function saveUserSettings($id) {
 		if (is_array($vl))
 			$vl = implode(",", $vl);
 		if ($vl != '')
-			mysql_query("INSERT INTO $dbase.`" . $table_prefix . "web_user_settings` (webuser,setting_name,setting_value) VALUES($id,'$n','" . mysql_escape_string($vl) . "')");
+			mysql_query("INSERT INTO $dbase.`" . $table_prefix . "web_user_settings` (webuser,setting_name,setting_value) VALUES($id,'$n','" . $modx->db->escape($vl) . "')");
 	}
 }
 
 // converts date format dd-mm-yyyy to php date
 function ConvertDate($date) {
-	if ($date == "")
-		return "0";
-	list ($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
-	if (!$H && !$M && !$S)
-		return strtotime("$m/$d/$Y");
-	else
-		return strtotime("$m/$d/$Y $H:$M:$S");
+	global $modx;
+	if ($date == "") {return "0";}
+	else {}          {return $modx->toTimeStamp($date);}
 }
 ?>

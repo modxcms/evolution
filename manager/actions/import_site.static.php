@@ -116,7 +116,7 @@ function importFiles($parent,$filepath,$files) {
             printf($_lang['import_site_importing_document'], $id);
             $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
                    (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
-                   ('document', 'text/html', '".mysql_escape_string($id)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 1, '', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
+                   ('document', 'text/html', '".$modx->db->escape($id)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 1, '', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
             $rs = mysql_query($sql);
             if($rs) $new_parent = mysql_insert_id(); // get new parent id
             else {
@@ -148,7 +148,7 @@ function importFiles($parent,$filepath,$files) {
                 } else $content = $file;
                 $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
                        (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
-                       ('document', 'text/html', '".mysql_escape_string($pagetitle)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 0, '".mysql_escape_string($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
+                       ('document', 'text/html', '".$modx->db->escape($pagetitle)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 0, '".$modx->db->escape($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
                 $rs = mysql_query($sql);
                 if(!$rs) {
                     echo "<p><span class=\"fail\">".$_lang["import_site_failed"]."</span> ".$_lang["import_site_failed_db_error"].mysql_error()."</p>";

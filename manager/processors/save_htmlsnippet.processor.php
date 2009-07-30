@@ -8,19 +8,19 @@ if(!$modx->hasPermission('save_chunk')) {
 <?php
 
 $id = intval($_POST['id']);
-$snippet = mysql_escape_string($_POST['post']);
-$name = mysql_escape_string(trim($_POST['name']));
-$description = mysql_escape_string($_POST['description']);
+$snippet = $modx->db->escape($_POST['post']);
+$name = $modx->db->escape(trim($_POST['name']));
+$description = $modx->db->escape($_POST['description']);
 $locked = $_POST['locked']=='on' ? 1 : 0 ;
 
 //Kyle Jaebker - added category support
 if (empty($_POST['newcategory']) && $_POST['categoryid'] > 0) {
-    $categoryid = mysql_escape_string($_POST['categoryid']);
+    $categoryid = $modx->db->escape($_POST['categoryid']);
 } elseif (empty($_POST['newcategory']) && $_POST['categoryid'] <= 0) {
     $categoryid = 0;
 } else {
     include_once "categories.inc.php";
-    $catCheck = checkCategory(mysql_escape_string($_POST['newcategory']));
+    $catCheck = checkCategory($modx->db->escape($_POST['newcategory']));
     if ($catCheck) {
         $categoryid = $catCheck;
     } else {

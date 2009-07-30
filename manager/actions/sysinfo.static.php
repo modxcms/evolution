@@ -129,10 +129,10 @@ if(!$modx->hasPermission('logs')) {
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
 			<thead>
 			<tr>
-				<td><b><?php echo $_lang['id']; ?></b></td>
-				<td><b><?php echo $_lang['document_title']; ?></b></td>
+				<td><b><?php echo $_lang["id"]; ?></b></td>
+				<td><b><?php echo $_lang["document_title"]; ?></b></td>
 				<td><b><?php echo $_lang["sysinfo_userid"]; ?></b></td>
-				<td><b><?php echo $_lang['datechanged']; ?></b></td>
+				<td><b><?php echo $_lang["datechanged"]; ?></b></td>
 			</tr>
 			</thead>
 			<tbody>
@@ -141,7 +141,7 @@ if(!$modx->hasPermission('logs')) {
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
-			echo "No edits or creates found.<p />";
+			echo "<p>".$_lang["no_edits_creates"]."</p>";
 		} else {
 			for ($i = 0; $i < $limit; $i++) {
 				$content = mysql_fetch_assoc($rs);
@@ -154,7 +154,7 @@ if(!$modx->hasPermission('logs')) {
 					$user = $r['username'];
 				}
 				$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".strftime('%d-%m-%Y, %H:%M:%S', $content['editedon']+$server_offset_time)."</td></tr>";
+				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
 			}
 		}
 		?>
@@ -239,9 +239,9 @@ if(!$modx->hasPermission('logs')) {
 		  <tr bgcolor="#CCCCCC">
 			<td valign="top"><b><?php echo $_lang['database_table_totals']; ?></b></td>
 			<td colspan="2">&nbsp;</td>
-			<td dir='ltr' align="right" valign="top"><?php echo $totaloverhead>0 ? "<b style='color:#990033'>".nicesize($totaloverhead)."</b><br>(".number_format($totaloverhead)." B)" : "-"; ?></td>
+			<td dir='ltr' align="right" valign="top"><?php echo $totaloverhead>0 ? "<b style='color:#990033'>".nicesize($totaloverhead)."</b><br />(".number_format($totaloverhead)." B)" : "-"; ?></td>
 			<td colspan="2">&nbsp;</td>
-			<td dir='ltr' align="right" valign="top"><?php echo "<b>".nicesize($total)."</b><br>(".number_format($total)." B)"; ?></td>
+			<td dir='ltr' align="right" valign="top"><?php echo "<b>".nicesize($total)."</b><br />(".number_format($total)." B)"; ?></td>
 		  </tr>
 		  </tbody>
 		</table>
@@ -283,7 +283,7 @@ if(!$modx->hasPermission('logs')) {
 				$activeusers = mysql_fetch_assoc($rs);
 				$currentaction = getAction($activeusers['action'], $activeusers['id']);
 				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user'>":"";
-				echo "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td></b>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
+				echo "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
 			}
 		}
 		?>

@@ -7,7 +7,7 @@ if (!$modx->hasPermission('save_role')) {
 }
 
 foreach ($_POST as $n => $v)
-    $_POST[$n] = mysql_escape_string($v); // escape post values 
+    $_POST[$n] = $modx->db->escape($v); // escape post values 
 extract($_POST);
 
 if ($name == '' || !isset ($name)) {

@@ -54,7 +54,7 @@ if($limit!=1) {
   </tr>
   <tr>
     <td><b><?php echo $_lang['messages_sent']; ?>:</b></td>
-    <td><?php echo strftime('%d-%m-%y, %H:%M:%S', $message['postdate']+$server_offset_time); ?></td>
+    <td><?php echo $modx->toDateFormat($message['postdate']+$server_offset_time); ?></td>
   </tr>
   <tr>
     <td><b><?php echo $_lang['messages_subject']; ?>:</b></td>
@@ -67,7 +67,7 @@ if($limit!=1) {
     <td colspan="2">
     <?php
     // format the message :)
-    $message = str_replace ("\n", "<br>", $message['message']);
+    $message = str_replace ("\n", "<br />", $message['message']);
     $dashcount = substr_count($message, "-----");
     $message = str_replace ("-----", "<i style='color:#666;'>", $message);
     for( $i=0; $i<$dashcount; $i++ ){
@@ -130,7 +130,7 @@ $array_row_paging = $p->getPagingRowArray();
 $pager .= $_lang['showing']." ". $array_paging['lower'];
 $pager .=  " ".$_lang['to']." ". $array_paging['upper'];
 $pager .=  " (". $array_paging['total']." ".$_lang['total'].")";
-$pager .=  "<br>". $array_paging['previous_link'] ."<<</a> " ;
+$pager .=  "<br />". $array_paging['previous_link'] ."<<</a> " ;
 for( $i=0; $i<sizeof($array_row_paging); $i++ ){
   $pager .=  $array_row_paging[$i] ."&nbsp;";
 }
@@ -181,7 +181,7 @@ $dotablestuff = 1;
       <td class="<?php echo $messagestyle; ?>" style="cursor: pointer; text-decoration: underline;" onClick="document.location.href='index.php?a=10&id=<?php echo $message['id']; ?>&m=r';"><?php echo $message['subject']; ?></td>
       <td ><?php echo $sendername; ?></td>
       <td ><?php echo $message['private']==0 ? $_lang['no'] : $_lang['yes'] ; ?></td>
-      <td ><?php echo strftime('%d-%m-%y, %H:%M:%S', $message['postdate']+$server_offset_time); ?></td>
+      <td ><?php echo $modx->toDateFormat($message['postdate']+$server_offset_time); ?></td>
     </tr>
     <?php
             }
@@ -219,7 +219,7 @@ if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
             }
             $subjecttext = $_REQUEST['m']=='rp' ? "Re: " : "Fwd: ";
             $subjecttext .= $message['subject'];
-            $messagetext = "\n\n\n-----\n".$_lang['messages_from'].": $sendername\n".$_lang['messages_sent'].": ".strftime('%d-%m-%y, %H:%M:%S', $message['postdate']+$server_offset_time)."\n".$_lang['messages_subject'].": ".$message['subject']."\n\n".$message['message'];
+            $messagetext = "\n\n\n-----\n".$_lang['messages_from'].": $sendername\n".$_lang['messages_sent'].": ".$modx->toDateFormat($message['postdate']+$server_offset_time)."\n".$_lang['messages_subject'].": ".$message['subject']."\n\n".$message['message'];
             if($_REQUEST['m']=='rp') {
                 $recipientindex = $message['sender'];
             }

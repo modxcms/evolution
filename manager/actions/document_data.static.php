@@ -165,7 +165,7 @@ if ($numRecords > 0) {
 				'docid' =>  $children['id'],
 				'title' =>  $children['pagetitle'],
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
-				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="<?php echo $_style["icons_preview_document"] ?>" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="<?php echo $_style["icons_save"] ?>" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="<?php echo $_style["icons_move_document"] ?>" />'.$_lang['move'].'</a>' : ''),
+				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="'. $_style["icons_preview_document"].'" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="' . $_style["icons_save"] .'" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="' . $_style["icons_move_document"] .'" />'.$_lang['move'].'</a>' : ''),
 			);
 		}
 
@@ -264,19 +264,19 @@ function movedocument() {
 		<tr><td colspan="2">&nbsp;</td></tr>
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_changes']?></b></td></tr>
 			<tr><td><?php echo $_lang['page_data_created']?>: </td>
-				<td><?php echo strftime("%d-%m-%Y %H:%M:%S", $content['createdon']+$server_offset_time)?> (<b><?php echo $createdbyname?></b>)</td></tr>
+				<td><?php echo $modx->toDateFormat($content['createdon']+$server_offset_time)?> (<b><?php echo $createdbyname?></b>)</td></tr>
 <?php				if ($editedbyname != '') { ?>
 			<tr><td><?php echo $_lang['page_data_edited']?>: </td>
-				<td><?php echo strftime("%d-%m-%Y %H:%M:%S", $content['editedon']+$server_offset_time)?> (<b><?php echo $editedbyname?></b>)</td></tr>
+				<td><?php echo $modx->toDateFormat($content['editedon']+$server_offset_time)?> (<b><?php echo $editedbyname?></b>)</td></tr>
 <?php				} ?>
 		<tr><td colspan="2">&nbsp;</td></tr>
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_status']?></b></td></tr>
 			<tr><td><?php echo $_lang['page_data_status']?>: </td>
 				<td><?php echo $content['published']==0 ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publisheddoc">'.$_lang['page_data_published'].'</span>'?></td></tr>
 			<tr><td><?php echo $_lang['page_data_publishdate']?>: </td>
-				<td><?php echo $content['pub_date']==0 ? "(<i>".$_lang['not_set']."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['pub_date'])?></td></tr>
+				<td><?php echo $content['pub_date']==0 ? "(<i>".$_lang['not_set']."</i>)" : $modx->toDateFormat($content['pub_date'])?></td></tr>
 			<tr><td><?php echo $_lang['page_data_unpublishdate']?>: </td>
-				<td><?php echo $content['unpub_date']==0 ? "(<i>".$_lang['not_set']."</i>)" : strftime("%d-%m-%Y %H:%M:%S", $content['unpub_date'])?></td></tr>
+				<td><?php echo $content['unpub_date']==0 ? "(<i>".$_lang['not_set']."</i>)" : $modx->toDateFormat($content['unpub_date'])?></td></tr>
 			<tr><td><?php echo $_lang['page_data_cacheable']?>: </td>
 				<td><?php echo $content['cacheable']==0 ? $_lang['no'] : $_lang['yes']?></td></tr>
 			<tr><td><?php echo $_lang['page_data_searchable']?>: </td>

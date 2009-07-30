@@ -47,6 +47,7 @@ foreach ($urls as $section=>$url) {
         $href = $item['link'];
         $title = $item['title'];
         $pubdate = $item['pubdate'];
+        $pubdate = $modx->toDateFormat(strtotime($pubdate));
         $description = strip_tags($item['description']);
         if (strlen($description) > 199) {
             $description = substr($description, 0, 200);

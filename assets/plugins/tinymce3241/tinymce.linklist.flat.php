@@ -29,8 +29,7 @@ function getAllPages($id=0, $sort='menuindex', $dir='ASC', $fields='pagetitle, i
 
 	// Connecting, selecting database
 	$link = mysql_connect($database_server, $database_user, $database_password) or die('Could not connect: ' . mysql_error());
-	$dbase = str_replace('`', '', $dbase);
-	mysql_select_db($dbase) or die('Could not select database');
+	mysql_select_db(str_replace('`', '', $dbase)) or die('Could not select database');
 	@mysql_query("{$GLOBALS['database_connection_method']} {$GLOBALS['database_connection_charset']}");
 
     $sql = "SELECT DISTINCT $fields FROM $tblsc sc

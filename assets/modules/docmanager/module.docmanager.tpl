@@ -9,7 +9,8 @@ $dmb = new DocManagerBackend($dm, $modx);
 $dm->ph = $dm->getLang();
 $dm->ph['theme'] = $dm->getTheme();
 $dm->ph['ajax.endpoint'] = MODX_SITE_URL.'assets/modules/docmanager/tv.ajax.php';
-$dm->ph['calendar.path'] = MODX_SITE_URL.'manager/media/';
+$dm->ph['datepicker.offset'] = $modx->config['datepicker_offset'];
+$dm->ph['datetime.format'] = $modx->config['datetime_format'];
 
 if (isset($_POST['tabAction'])) {
 	$dmb->handlePostback();

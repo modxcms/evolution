@@ -1,19 +1,26 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.0-RC3 (rev 5520 - July 24, 2009)
+MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-1061] Link list fixed in TinyMCE 
+* [#MODX-1060] Escape language string for the recycle bin to fix a problem with disappearing trees
+* [#MODX-1027] Fix broken images with Image TV Preview plugin when no image selected
+* [#MODX-1033] Implement consistent dates throughout the Manager and add a date format setting
+* [#MODX-1045] Replace JS Alert tooltips with Mootools hover tooltips
+* [#MODX-1049] Cancel action when editing a module goes to wrong location
+* [#MODX-1026] Canceling a template change in Manager lost the original template setting
+* [#MODX-1028] Manager did not properly handle failed login attempt counts or block users
+* [#MODX-999] Fixed width buttons break with some languages (setting pages)
+* [#MODX-1023] Date and Image TV changing doesn't work correctly in DocManager.
+* [#MODX-1013] Make DocManager use the new DatePicker
+* [MODX-1009] Fix grammar/spelling error in english language file.
+* [MODX-1008] Fix broken icons in Resource Overview->View Children
 * [#MODX-989] Fix issue with DatePicker time field styling
 * [#MODX-993] Fix broken URL rewriting when friendly alias paths are enabled
-
-MODx Evolution 1.0.0-RC3 (rev 5514 - July 23, 2009)
-===================================
---------------------------------------------
-Bugfixes & Feature Requests:
---------------------------------------------
 * [#MODX-981] Replaced missing event icons.
 * [#MODX-968] Replaced folder icon in tree. (nodes.php)
 * [#MODX-974] Fixed missing save icon in files.dynamic.php
@@ -112,6 +119,7 @@ Additional Improvements & Updates:
 	- Replaced hard coded language strings in Import and Export action pages with new language strings
 	- Better handling of Manager language encoding and text direction
     - Now handles RSS, Word, Excel, XML, HTML, CSS, JS, PDF and plain documents with custom icons in the Site Tree
+    - Able to reload and choose language for key site settings like Signup emails, password reset emails, etc.
 * Remove legacy code no longer needed
     - Removed QuickEdit module (instructions only)
 	- Removed News Publisher snippet (did not support TVs)
@@ -133,7 +141,7 @@ Additional Improvements & Updates:
     - New skin
     - Streamline process by removing two steps
     - Make Connection/Collation/Default Admin User only show when prior steps are completed first
-    - Now set the default Manager language during new installs
+    - Now set the default Manager language during new installs instead of relying on installation language
 * New MODx Carbon default theme for MODx Evolution 1.0 release
 	- Removed deprecated themes for Evo 1.0 release
 	- Added a CSS class (setting of $modx->config['manager_direction']) to Manager pages <body> to automatically address RTL Manager language users

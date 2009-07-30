@@ -125,8 +125,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $weblinkDisplay = $type=="reference" ? '&nbsp;<img src="'.$_style["tree_linkgo"].'">' : '' ;
 			$pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
 
-            $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": - ";
-            $alt.= "".$_lang['document_opt_menu_index'].": ".$menuindex;
+            $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": -";
+            $alt.= " ".$_lang['document_opt_menu_index'].": ".$menuindex;
             $alt.= " ".$_lang['document_opt_show_menu'].": ".($hidemenu==1 ? $_lang['no']:$_lang['yes']);
             $alt.= " ".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
             $alt.= " ".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);

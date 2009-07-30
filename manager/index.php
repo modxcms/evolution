@@ -659,6 +659,11 @@ switch ($action) {
         include_once "actions/mutate_settings.dynamic.php";
         include_once "footer.inc.php";
     break;
+    case "118" :
+        // call settings ajax include
+        ob_clean();
+        include_once "includes/mutate_settings.ajax.php";
+    break;
 /********************************************************************/
 /* save settings                                                    */
 /********************************************************************/
@@ -893,24 +898,24 @@ switch ($action) {
 /********************************************************************/
 /* Event viewer: show event message log                             */
 /********************************************************************/
-    case 114:
+    case "114":
         // get event logs
         include_once "header.inc.php";
         include_once "actions/eventlog.dynamic.php";
         include_once "footer.inc.php";
     break;
-    case 115:
+    case "115":
         // get event log details viewer
         include_once "header.inc.php";
         include_once "actions/eventlog_details.dynamic.php";
         include_once "footer.inc.php";
     break;
-    case 116:
+    case "116":
         // get the event log delete processor
         include_once "processors/delete_eventlog.processor.php";
     break;
 
-    case 501:
+    case "501":
         //delete category
         include_once "processors/delete_category.processor.php";
     break;

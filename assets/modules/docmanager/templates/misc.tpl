@@ -1,28 +1,36 @@
 <br /><h3>[+lang.DM_adjust_dates_header+]</h3><br />
 <p>[+lang.DM_adjust_dates_desc+]</p><br />
-<form style="margin-left:50px;" id="dates" name="dates" method="post" action="">
-    <label for="date_pubdate" id="date_pubdate_label">[+lang.DM_date_pubdate+]</label><input type="hidden" id="date_pubdate" name="date_pubdate" />
-    <span id="date_pubdate_show"> (not set)</span>
-    <a href="#" onclick="caldate1.popup();">[+lang.DM_view_calendar+]</a>&nbsp;&nbsp;
-    <a href="#" onclick="document.forms['dates'].elements['date_pubdate'].value='';document.getElementById('date_pubdate_show').innerHTML='(not set)'; return true;">[+lang.DM_clear_date+]</a>
-    <br /><br />
-
-    <label for="date_unpubdate" id="date_unpubdate_label">[+lang.DM_date_unpubdate+]</label><input type="hidden" id="date_unpubdate" name="date_unpubdate" />
-    <span id="date_unpubdate_show"> (not set)</span>
-    <a href="#" onclick="caldate2.popup();">[+lang.DM_view_calendar+]</a>&nbsp;&nbsp;
-    <a href="#" onclick="document.forms['dates'].elements['date_unpubdate'].value='';document.getElementById('date_unpubdate_show').innerHTML='(not set)'; return true;">[+lang.DM_clear_date+]</a>
-    <br /><br />
-
-    <label for="date" id="date_createdon_label">[+lang.DM_date_createdon+]</label><input type="hidden" id="date_createdon" name="date_createdon" />
-    <span id="date_createdon_show"> (not set)</span>
-    <a href="#" onclick="caldate3.popup();">[+lang.DM_view_calendar+]</a>&nbsp;&nbsp;
-    <a href="#" onclick="document.forms['dates'].elements['date_createdon'].value='';document.getElementById('date_createdon_show').innerHTML='(not set)'; return true;">[+lang.DM_clear_date+]</a>
-    <br /><br />
-
-    <label for="date_editedon" id="date_editedon_label">[+lang.DM_date_editedon+]</label><input type="hidden" id="date_editedon" name="date_editedon" />
-    <span id="date_editedon_show"> (not set)</span>
-    <a href="#" onclick="caldate4.popup();">[+lang.DM_view_calendar+]</a>&nbsp;&nbsp;
-    <a href="#" onclick="document.forms['dates'].elements['date_editedon'].value='';document.getElementById('date_editedon_show').innerHTML='(not set)'; return true;">[+lang.DM_clear_date+]</a>
+<form id="dates" name="dates" method="post" action="">
+    <table style="margin-left: 50px">
+	    <tr>
+	        <td><label for="date_pubdate" id="date_pubdate_label">[+lang.DM_date_pubdate+]</label></td>
+	        <td>
+	            <input type="text" id="date_pubdate" class="DatePicker" name="date_pubdate" />
+	            <a href="#" onclick="document.forms['dates'].elements['date_pubdate'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	        </td>
+	    </tr>
+	    <tr>
+	        <td><label for="date_unpubdate" id="date_unpubdate_label">[+lang.DM_date_unpubdate+]</label></td>
+	        <td>
+	            <input type="text" id="date_unpubdate" class="DatePicker" name="date_unpubdate" />
+	            <a href="#" onclick="document.forms['dates'].elements['date_unpubdate'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	        </td>
+	    </tr>
+	    <tr>
+	        <td><label for="date_createdon" id="date_createdon_label">[+lang.DM_date_createdon+]</label></td>
+	        <td>
+	            <input type="text" id="date_createdon" class="DatePicker" name="date_createdon" />
+	            <a href="#" onclick="document.forms['dates'].elements['date_createdon'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	        </td>
+	    </tr>
+	    <tr>
+	        <td><label for="date_editedon" id="date_editedon_label">[+lang.DM_date_editedon+]</label></td>
+	        <td>
+	            <input type="text" id="date_editedon" class="DatePicker" name="date_editedon" />
+	            <a href="#" onclick="document.forms['dates'].elements['date_editedon'].value=''; return true;">[+lang.DM_clear_date+]</a>
+	        </td>
+	    </tr>
+    </table>
 </form>
 
 
@@ -57,25 +65,3 @@
   <input type="radio" name="choice" value = "1" />&nbsp;<label for="choice" id="choice_label_1">[+lang.DM_other_publish_radio1+]</label>
   <input type="radio" name="choice" value = "0" />&nbsp;<label for="choice" id="choice_label_2">[+lang.DM_other_publish_radio2+]</label>
 </form>
-
-<script type="text/javascript">
-    var caldate1 = new calendar1($('date_pubdate'), $("date_pubdate_show"));
-    caldate1.path="[+calendar.path+]";
-    caldate1.year_scroll = true;
-    caldate1.time_comp = true;
-    
-    var caldate2 = new calendar1($('date_unpubdate'), $("date_unpubdate_show"));
-    caldate2.path="[+calendar.path+]";
-    caldate2.year_scroll = true;
-    caldate2.time_comp = true;
-    
-    var caldate3 = new calendar1($('date_createdon'), $("date_createdon_show"));
-    caldate3.path="[+calendar.path+]";
-    caldate3.year_scroll = true;
-    caldate3.time_comp = true;
-    
-    var caldate4 = new calendar1($('date_editedon'), $("date_editedon_show"));
-    caldate4.path="[+calendar.path+]";
-    caldate4.year_scroll = true;
-    caldate4.time_comp = true;
-</script>

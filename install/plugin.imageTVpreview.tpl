@@ -83,6 +83,7 @@ if ($e->name == 'OnDocFormRender' && ($template > 0)) {
 		  // create div and img to show thumbnail
 		  var div = new Element('div').addClass('tvimage');
 		  var img = new Element('img').setProperty('src', full_url(url)).setStyles($style);
+		  if (url == '') img.setStyle('display', 'none');
 		  elem.getParent().adopt(div.adopt(img));
 
 		  elem.thumbnail = img;    // direct access for when need to update

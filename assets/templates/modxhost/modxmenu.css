@@ -7,7 +7,7 @@
 #ajaxmenu ul li {
 	position: relative;
 	float: left;
-	width:111px;
+	width:129px;
 	display: block;
 	text-decoration: none;
 	text-align: center;
@@ -37,7 +37,7 @@
 	line-height: 28px;
 	padding-right: 0px;
 	padding-left: 0px;
-	background-image: url(images/array_332x28.jpg);
+	background-image: url(images/menu.png);
 	background-repeat: no-repeat;
 	background-position: 0px;
 	margin: 0px;
@@ -50,9 +50,9 @@
 	line-height: 28px;
 	padding-right: 0px;
 	padding-left: 0px;
-	background-image: url(images/array_332x28.jpg);
+	background-image: url(images/menu.png);
 	background-repeat: no-repeat;
-	background-position: -111px;
+	background-position: -129px;
 	margin: 0px;
 
 	}
@@ -63,7 +63,7 @@
 	line-height: 28px;
 	padding-right: 0px;
 	padding-left: 0px;
-	background-image: url(images/array_332x28.jpg);
+	background-image: url(images/menu.png);
 	background-repeat: no-repeat;
 	background-position: -222px;
 	margin: 0px;
@@ -73,16 +73,16 @@
 
 #ajaxmenu ul li.firstcategory:hover, #ajaxmenu ul li.firstcategory.over {
 	color: #fff;
-	background-image: url(images/array_332x28_roll.jpg);
+	background-image: url(images/menu_roll.png);
 }
 
 #ajaxmenu ul li.category:hover, #ajaxmenu ul li.category.over {
 	color: #fff;
-	background-image: url(images/array_332x28_roll.jpg);
+	background-image: url(images/menu_roll.png);
 }
 #ajaxmenu ul li.lastcategory:hover, #ajaxmenu ul li.lastcategory.over {
 	color: #fff;
-	background-image: url(images/array_332x28_roll.jpg);
+	background-image: url(images/menu_roll.png);
 }
 
 /* commented backslash \*/ 
@@ -95,7 +95,7 @@
 /* hovered lists */
 #ajaxmenu li a, #ajaxmenu li.over a {
 	color: #fff;
-	width: 111px;
+	width: 129px;
 	display: block;
 
 }

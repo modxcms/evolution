@@ -399,7 +399,7 @@
 
     function showBinEmpty() {
         var a = $('Button10');
-        var title = '<?php echo $_lang['empty_recycle_bin_empty']; ?>';
+        var title = '<?php echo addslashes($_lang['empty_recycle_bin_empty']); ?>';
         if(!a.setAttibute) a.title = title;
         else a.setAttribute('title',title);
         a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';

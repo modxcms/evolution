@@ -345,13 +345,13 @@ class DocManagerBackend {
 		$dateval = array();
 	
 		if ($_POST['pubdate'] <> '')
-			$dateval['pub_date'] = $this->parseDate($_POST['pubdate']);
+			$dateval['pub_date'] = $this->modx->toTimeStamp($_POST['pubdate']);
 		if ($_POST['unpubdate'] <> '')
-			$dateval['unpub_date'] = $this->parseDate($_POST['unpubdate']);
+			$dateval['unpub_date'] = $this->modx->toTimeStamp($_POST['unpubdate']);
 		if ($_POST['createdon'] <> '')
-			$dateval['createdon'] = $this->parseDate($_POST['createdon']);
+			$dateval['createdon'] = $this->modx->toTimeStamp($_POST['createdon']);
 		if ($_POST['editedon'] <> '')
-			$dateval['editedon'] = $this->parseDate($_POST['editedon']);
+			$dateval['editedon'] = $this->modx->toTimeStamp($_POST['editedon']);
 	
 		/* document author settings */
 		$authorval = array ();
@@ -589,13 +589,6 @@ class DocManagerBackend {
 				$log->initAndWriteLog($this->dm->lang['DM_log_authors']);
 				break;
 		}
-	}
-	
-	function parseDate($date) {
-		list ($d, $m, $Y, $H, $M, $S) = sscanf($date, "%2d-%2d-%4d %2d:%2d:%2d");
-		$date = strtotime("$m/$d/$Y $H:$M:$S");
-
-		return $date;
 	}
 }
 ?>

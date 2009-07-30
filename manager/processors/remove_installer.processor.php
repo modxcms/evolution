@@ -20,7 +20,7 @@ if(isset($_GET["rminstall"])) {
 		if(!rmdirRecursive($pth)) $msg="An error occured while attempting to remove the install folder";
 	}
 }
-if($msg) echo "<script>alert('".mysql_escape_string($msg)."');</script>";
+if($msg) echo "<script>alert('".addslashes($msg)."');</script>";
 echo "<script>window.location='../index.php?a=2';</script>";
 
 // rmdirRecursive - detects symbollic links on unix

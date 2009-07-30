@@ -8,7 +8,7 @@ if(!$modx->hasPermission('edit_user')) {
 
 // get search string
 $query = $_REQUEST['search'];
-$sqlQuery = mysql_escape_string($query);
+$sqlQuery = $modx->db->escape($query);
 ?>
 <br />
 <!-- User Roles -->

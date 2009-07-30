@@ -17,7 +17,7 @@ if($_REQUEST['op']=='reset') {
 }
 else {
 	$query = isset($_REQUEST['search'])? $_REQUEST['search']:$_PAGE['vs']['search'];
-	$sqlQuery = mysql_escape_string($query);
+	$sqlQuery = $modx->db->escape($query);
 	$_PAGE['vs']['search'] = $query;
 }
 

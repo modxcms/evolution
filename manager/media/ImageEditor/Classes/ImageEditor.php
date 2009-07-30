@@ -356,7 +356,7 @@ class ImageEditor
 
 		while (false !== ($entry = $d->read())) 
 		{
-			//echo $entry."<br>";
+			//echo $entry."<br />";
 			if(is_file($path.$entry) && $this->manager->isTmpFile($entry))
 			{
 				if(substr($entry,0,$len)==$prefix && $entry != $file)

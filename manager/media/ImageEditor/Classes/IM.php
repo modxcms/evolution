@@ -196,7 +196,7 @@ Class Image_Transform_Driver_IM extends Image_Transform
 		$cmd .= '"'.($this->image) . '" "' . ($filename) . '" 2>&1';
         
         //$cmd = str_replace('/', '\\', $cmd);
-		//echo($cmd.'<br>');
+		//echo($cmd.'<br />');
         exec($cmd,$retval);
 		//error_log('IM '.print_r($retval,true));
     } // End save

@@ -31,7 +31,7 @@ Window.onDomReady(function() {
 			var sysAlert = new Element('div').setProperties({
 				'class': 'sysAlert'
 			});
-			sysAlert.innerHTML = '<?php echo mysql_escape_string($sysMsgs);?>';
+			sysAlert.innerHTML = '<?php echo $modx->db->escape($sysMsgs);?>';
 			var boxHtml = new MooPrompt('<?php echo $_lang['sys_alert']; ?>', sysAlert, {
 				buttons: 1,
 				button1: 'Ok',

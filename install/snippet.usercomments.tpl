@@ -202,7 +202,7 @@ switch ($isPostBack) {
 			else {
 				// create new comment page
 				$doc = $modx->getDocument($docid);
-				$title = mysql_escape_string($doc['pagetitle']).' - User comments';
+				$title = $modx->db->escape($doc['pagetitle']).' - User comments';
 				$flds = array(
 					'pagetitle'	=> $title,
 					'alias'		=> $alias,

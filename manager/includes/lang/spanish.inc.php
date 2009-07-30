@@ -3,15 +3,14 @@
  * Filename:       includes/lang/spanish.inc.php
  * Function:       Language file.
  * Author:         The MODx Project Team
- * Date:           29 May 2009
- * Version:        2.01
+ * Date:           28 Julio 2009
+ * Version:        2.0.3
  * MODx version:   Evolution 1.0
+ *
 */
-$modx_lang_attribute = 'es'; // Manager HTML and XML Language Attribute
+$modx_lang_attribute = 'es'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'iso-8859-1';
-
 setlocale (LC_ALL, 'es_MX');
-
 $_lang["about_msg"] = 'MODx es un <a href="http://modxcms.com/what-is-modx.html" target="_blank">Sistema de Administración de Contenido y Esquema de PHP</a> bajo licencia <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Acerca de MODx';
 $_lang["access_permission_denied"] = 'No tienes los permisos correctos para este documento.';
@@ -75,6 +74,7 @@ $_lang["cancel"] = 'Cancelar';
 $_lang["captcha_code"] = 'Código de seguridad';
 $_lang["captcha_message"] = 'Activa esto para aumentar la seguridad al requerir a los usuarios el ingreso de un código no legible por maquinas (y scriptkiddy hacking scripts).';
 $_lang["captcha_title"] = 'Usar códigos CAPTCHA:';
+$_lang["captcha_words_default"] = 'MODx,Aceso,Mejor,BitCode,Chunk,Cache,Desc,Diseno,Excel,Disfruta,URLs,TechView,Gerald,Griff,Humphrey,Vacacion,Intel,Integracion,Joystick,Join(),Oscope,Genetico,Luz,Parecido,Marit,Maaike,Nicho,Holanda,Ordinancia,Oscillo,Parser,Fusion,Query,Pregunta,Regalia,Correcto,Snippet,Sentinela,Template,Thespian,Unidad,Enterprise,Verily,Tatuaje,Veri,Website,WideWeb,Yap,Amarillo,Zebra,Zigoto';
 $_lang["captcha_words_message"] = 'Ingresa una lista de palabras CAPTCHA para  usarse si el CAPTCHA está activado. Separa las palabras con comas. Este campo de entrada está limitado a 255 caracteres.';
 $_lang["captcha_words_title"] = 'Palabras CAPTCHA';
 $_lang["category_heading"] = 'Categoría';
@@ -93,6 +93,8 @@ $_lang["charset_message"] = 'Por favor, selecciona qué codificación de caractere
 $_lang["charset_title"] = 'Codificación del caracteres:';
 $_lang["chunk"] = 'Chunk';
 $_lang["chunk_code"] = 'Código de Chunk (html)';
+$_lang["chunk_multiple_id"] = 'Error: Varios Chunks comparten la misma ID única.';
+$_lang["chunk_no_exist"] = 'El Chunk no existe.';
 $_lang["cleaningup"] = 'Limpiando';
 $_lang["clear_log"] = 'Limpiar Bitácora';
 $_lang["click_to_context"] = 'Haz clic para acceder al menú contextual';
@@ -150,6 +152,7 @@ $_lang["confirm_load_depends"] = '¿Estás segura que de quieres cargar la pantall
 $_lang["confirm_name_change"] = 'Cambiar el nombre de usuario puede afectar otras aplicaciones que estén relacionadas con el Administrador de Contenidos.\n\n¿Estás seguro de que quieres cambiar este nombre de usuario?';
 $_lang["confirm_publish"] = '\n\nLa publicación de este documento removerá cualquier fecha de (des)publicación que haya sido configurada. Si deseas configurar o mantener las fechas de publicación o (des)publicación, por favor selecciona \'editar\' el documento en vez de publicar.\n\n¿Continuar publicación?';
 $_lang["confirm_remove_locks"] = 'Los usuarios a veces cierran sus navegadores mientras editan documentos, templates, snippets, o parsers, posiblemente dejando el artículo que estaban editando en estado cerrado. Al presionar OK puedes remover TODOS los estados cerrados que están configurados actualmente.\n\n¿Continuar?';
+$_lang["confirm_setting_language_change"] = 'Has modificado el valor prefijado y perderás los cambios. ¿Proceder?';
 $_lang["confirm_unblock"] = '¿Estás seguro de que quieres desbloquear este usuario?';
 $_lang["confirm_undelete"] = '\n\nCualquier documento hijo borrado al mismo tiempo que este documento también será recuperado, pero los documentos hijos borrados con anterioridad se mantendrán borrados.';
 $_lang["confirm_unpublish"] = '\n\nDespublicar este documento removerá cualquier fecha de (des)publicación que haya sido configurada. Si deseas configurar o mantener las fechas de (des)publicación, por favor elige \'editar\' el documento.\n\n¿Continuar?';
@@ -157,6 +160,7 @@ $_lang["confirm_unzip_file"] = '¿Estás seguro de que quieres descomprimir este a
 $_lang["could_not_find_user"] = 'No se puede encontrar el usuario';
 $_lang["create_document_here"] = 'Crear documento aquí';
 $_lang["create_folder_here"] = 'Crear carpeta aquí';
+$_lang["create_resource_title"] = 'Crear Recurso';
 $_lang["create_weblink_here"] = 'Crear enlace web aquí';
 $_lang["createdon"] = 'Fecha de creación';
 $_lang["credits"] = 'Créditos';
@@ -164,8 +168,9 @@ $_lang["credits_shouts_msg"] = '<p>MODx es administrado y mantenido en <a href="
 $_lang["custom_contenttype_message"] = 'Aquí puedes añadir tipos de contenido personalizados para ser usados en tus documentos. Para añadir una nueva entrada, ingresa el tipo de contenido y presione el botón de \'Añadir\'.';
 $_lang["custom_contenttype_title"] = 'Tipos de contenido personalizados:';
 $_lang["database_charset"] = 'Conjunto de Caracteres de la Base de Datos';
+$_lang["database_collation"] = 'Conjunto de Caracteres de Colación de la Base de Datos';
 $_lang["database_name"] = 'Nombre de la base de datos';
-$_lang["database_overhead"] = '<b style=\'color:#990033\'>Nota:</b> Overhead es un espacio no usado reservado por MySQL. Para liberar este espacio, haz clic en la figura overhead de las tablas.';
+$_lang["database_overhead"] = '<b style="color:#990033;">Nota:</b> Overhead es un espacio no usado reservado por MySQL. Para liberar este espacio, haz clic en la figura overhead de las tablas.';
 $_lang["database_server"] = 'Servidor de BD';
 $_lang["database_table_clickbackup"] = 'para respaldar &amp; descargar las tablas seleccionadas';
 $_lang["database_table_clickhere"] = 'Haz Clic aquí';
@@ -182,6 +187,8 @@ $_lang["database_tables"] = 'Tablas de BD';
 $_lang["database_version"] = 'Versión de BD:';
 $_lang["date"] = 'Fecha';
 $_lang["datechanged"] = 'Fecha de cambio';
+$_lang["datepicker_offset"] = 'Offset del Selector de Fecha: ';
+$_lang["datepicker_offset_message"] = 'El número de años a mostrar en el pasado en el Selector de Fecha.';
 $_lang["defaultcache_message"] = 'Selecciona \'Si\' para hacer todos los documentos nuevos cacheables en forma prefijada.';
 $_lang["defaultcache_title"] = 'Cacheable prefijado';
 $_lang["defaultmenuindex_message"] = 'Selecciona \'Si\' para activar el incremento automático del indexado de menu en forma prefijada.';
@@ -258,6 +265,7 @@ $_lang["email"] = 'Email';
 $_lang["email_sent"] = 'Correo electrónico enviado';
 $_lang["emailsender_message"] = 'Aquí puedes especificar el email usado cuando se le envíe los nombres de usuario y las contraseñas a los usuarios.';
 $_lang["emailsender_title"] = 'Dirección de correo electrónico:';
+$_lang["emailsubject_default"] = 'Tus detalles de entrada';
 $_lang["emailsubject_message"] = 'Aquí puedes especificar el valor del Asunto para el correo electrónico de bienvenida.';
 $_lang["emailsubject_title"] = 'Asunto del correo electrónico:';
 $_lang["empty_folder"] = 'Esta carpeta está vacía';
@@ -280,7 +288,10 @@ $_lang["expand_tree"] = 'Expandir árbol';
 $_lang["export_site"] = 'Exportar HTML estático';
 $_lang["export_site_cacheable"] = 'Incluir archivos no cacheables:';
 $_lang["export_site_exporting_document"] = 'Exportando archivo <b>%s</b> de <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-$_lang["export_site_failed"] = '¡Fallo!';
+$_lang["export_site_failed"] = '¡Falló!';
+$_lang["export_site_failed_no_open"] = 'No se puede abrir el archivo: ';
+$_lang["export_site_failed_no_retrieve"] = 'No se puede traer el documento.';
+$_lang["export_site_failed_no_write"] = 'No se puede escribir el archivo.';
 $_lang["export_site_html"] = 'Exportar sitio a HTML';
 $_lang["export_site_maxtime"] = 'Tiempo máximo de exportación:';
 $_lang["export_site_maxtime_message"] = 'Aquí puedes especificar el número de segundos que MODX puede tardarse en exportar el sitio (por sobre los valores de PHP).  Ingresa 0 para tiempo ilimitado.  Favor de notar, un valor de 0 o un numero realmente alto pueden hacer cosas extrañas a tu servidor y no es recomendado.';
@@ -289,6 +300,8 @@ $_lang["export_site_numberdocs"] = '<p><b>Se encontraron %s documentos para expo
 $_lang["export_site_prefix"] = 'Prefijo de archivo:';
 $_lang["export_site_start"] = 'Comenzar exportación';
 $_lang["export_site_success"] = '¡Éxito!';
+$_lang["export_site_success_skip_dir"] = 'Saltar este directorio.';
+$_lang["export_site_success_skip_doc"] = 'Saltar este documento.';
 $_lang["export_site_suffix"] = 'Sufijo de archivo:';
 $_lang["export_site_target_unwritable"] = 'El directorio objetivo no es escribible.  Favor de asegurarte que el directorio sea escribible e inténtalo otra vez.';
 $_lang["export_site_time"] = 'Exportación finalizada. Ha tomado %s segundos en completarse.';
@@ -338,6 +351,7 @@ $_lang["files_upload_error4"] = 'Debes seleccionar un archivo a subir.';
 $_lang["files_upload_error5"] = 'Hubo un problema con tu subida.';
 $_lang["files_upload_inhibited_msg"] = '<b>Característica de subida deshabilitada</b> - asegúrate de que las subidas están soportadas y que el directorio es escribible por PHP.<br />';
 $_lang["files_upload_ok"] = '¡Archivo subido con éxito!';
+$_lang["files_upload_permissions_error"] = 'Posibles problemas de permiso - el directorio al que quieres subir necesita ser escribible por tu servidor web.';
 $_lang["files_uploadfile"] = 'Subir archivo';
 $_lang["files_uploadfile_msg"] = 'Selecciona archivo a subir:';
 $_lang["files_uploading"] = 'Subiendo <b>%s</b> a <b>%s/</b><br />';
@@ -382,6 +396,9 @@ $_lang["import_params_msg"] = 'Puedes importar los parámetros, o configuraciones
 $_lang["import_parent_document"] = 'Documento padre:';
 $_lang["import_site"] = 'Importar HTML';
 $_lang["import_site_failed"] = '¡Falló!';
+$_lang["import_site_failed_db_error"] = 'Un error de base de datos ocurrió mientras se trataba de clonar el documento: ';
+$_lang["import_site_failed_no_open_dir"] = 'No se pudo abrir el directorio: ';
+$_lang["import_site_failed_no_retrieve_file"] = 'No se pudo traer el archivo: ';
 $_lang["import_site_html"] = 'Importar sitio desde HTML';
 $_lang["import_site_importing_document"] = 'Importando archivo <b>%s</b> ';
 $_lang["import_site_maxtime"] = 'Máximo tiempo de importación:';
@@ -449,6 +466,7 @@ $_lang["manage_plugins"] = 'Plugins';
 $_lang["manage_snippets"] = 'Snippets';
 $_lang["manage_templates"] = 'Templates';
 $_lang["manager"] = 'Administrador';
+$_lang["manager_lockout_message"] = 'Estás actualmente dentro del Administrador de Contenido.  Si deseas cerrar tu sesión por favor haz clic en el botón de "Salir". <p />Para ir a tu página de inicio o página principal, haz clic en el botón de "Inicio".';
 $_lang["manager_permissions"] = 'Permisos del Administrador';
 $_lang["manager_theme"] = 'Tema del Administrador:';
 $_lang["manager_theme_message"] = 'Selecciona el tema para el Administrador de Contenido.';
@@ -549,11 +567,13 @@ $_lang["new_tmplvars"] = 'Variable de template nueva';
 $_lang["new_user"] = 'Usuario nuevo';
 $_lang["new_web_user"] = 'Usuario Web nuevo ';
 $_lang["no"] = 'No';
+$_lang["no_active_users_found"] = 'No se encontraron usuarios activos.';
 $_lang["no_activity_message"] = 'No has creado o editado algún documento todavía.';
 $_lang["no_category"] = 'no categorizado';
 $_lang["no_docs_pending_publishing"] = 'No hay documentos con publicación pendiente.';
 $_lang["no_docs_pending_pubunpub"] = 'No se encontraron Eventos';
 $_lang["no_docs_pending_unpublishing"] = 'No hay documentos con despublicación pendiente.';
+$_lang["no_edits_creates"] = 'No se encontraron ediciones o creaciones.';
 $_lang["no_groups_found"] = 'No se encontraron Grupos.';
 $_lang["no_keywords_found"] = 'Actualmente no hay palabras clave.';
 $_lang["no_records_found"] = 'No se encontraron registros.';
@@ -639,7 +659,9 @@ $_lang["plugin_management_msg"] = 'Elige qué plugin quieres editar.';
 $_lang["plugin_msg"] = 'Añadir/editar plugins.  Los plugins usan código PHP que es invocado cuando los dispara un Evento del Sistema específico.';
 $_lang["plugin_name"] = 'Nombre del plugin';
 $_lang["plugin_priority"] = 'Editar el orden de Ejecución de Plugins por Evento';
-$_lang["plugin_title"] = 'Crear/editar plugin';
+$_lang["plugin_priority_instructions"] = 'Arrastra para re-ordenar los Plugins bajo cada encabezado de Eventos.  El primer plugin en ejecutarse deberá ir hasta arriba.';
+$_lang["plugin_priority_title"] = 'Orden de Ejecución de Plugins';
+$_lang["plugin_title"] = 'Crear/editar Plugin';
 $_lang["preview"] = 'Previsualizar';
 $_lang["preview_document"] = 'Previsualizar documento';
 $_lang["preview_msg"] = 'Esta es una previsualización de tus últimos cambios guardados.  Haz clic aquí para <a href="#" onclick="saveRefreshPreview();">Guardar y Recargar</a> tus cambios actuales';
@@ -764,8 +786,10 @@ $_lang["role_view_logs"] = 'Ver la bitácora del sistema';
 $_lang["role_view_unpublished"] = 'Ver Documentos No Publicados';
 $_lang["role_web_access_persmissions"] = 'Permisos de acceso web';
 $_lang["role_web_user_management"] = 'Administración de usuarios web';
+$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
 $_lang["rss_url_news_message"] = 'Ingresa el URL del Feed de Noticias de MODx.';
 $_lang["rss_url_news_title"] = 'Feed RSS de Noticias';
+$_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
 $_lang["rss_url_security_message"] = 'Ingresa el URL para el Feed de Seguridad MODx.';
 $_lang["rss_url_security_title"] = 'Feed RSS de Seguridad';
 $_lang["run_module"] = 'Correr módulo';
@@ -836,6 +860,7 @@ $_lang["sitestart_title"] = 'Inicio del sitio:';
 $_lang["sitestatus_message"] = 'Selecciona \'En Línea\' para publicar tu sitio en la red.  Si seleccionas \'Fuera de Línea\', tus visitantes verán el mensaje de \'Sitio No Disponible\', y no podrán navegar por el mismo.';
 $_lang["sitestatus_title"] = 'Estado del sitio:';
 $_lang["siteunavailable_message"] = 'Mensaje a mostrar cuando el sitio esté fuera de línea o cuando ocurra un error. <b>Nota: Este mensaje sólo será mostrado si no está activa la página de Sitio no disponible.</b>';
+$_lang["siteunavailable_message_default"] = 'Este sitio no está disponible en este momento.';
 $_lang["siteunavailable_page_message"] = 'Ingresa el ID del documento que quieres usar como página fuera de línea. <b>NOTA: Asegúrate de que el ID ingresado pertenece a un documento existente ¡y que ha sido publicado!</b>';
 $_lang["siteunavailable_page_title"] = 'Página de sitio no disponible:';
 $_lang["siteunavailable_title"] = 'Mensaje de sitio no disponible:';
@@ -859,9 +884,9 @@ $_lang["sunday"] = 'Domingo';
 $_lang["sys_alert"] = 'Alerta de Sistema';
 $_lang["sysinfo_activity_message"] = 'Esta lista muestra qué documentos han sido editados recientemente por tus usuarios.';
 $_lang["sysinfo_userid"] = 'Usuario';
-$_lang["system_email_signup"] = 'Hola [+uid+] \n\nAquí tienes los detalles de inicio de sesión para el Administrador de Contenido de [+sname+]:\n\nNombre de usuario: [+uid+]\nContraseña: [+pwd+]\n\nUna vez que has ingresado al Administrador de Contenido de ([+surl+]), puedes cambiar tu contraseña.\n\nSaludos,\nEl Administrador';
-$_lang["system_email_webreminder"] = 'Hola [+uid+]\n\nPara activar tu contraseña nueva haz clic en el siguiente enlace:\n\n[+surl+]\n\nSi tienes éxito puedes usar la siguiente contraseña para ingresar:\n\nContraseña:[+pwd+]\n\nSi no solicitaste este email entonces por favor ignóralo.\n\nSaludos,\nEl Administrador';
-$_lang["system_email_websignup"] = 'Hola [+uid+] \n\nAquí tienes los detalles de ingreso para [+sname+]:\n\nNombre de usuario: [+uid+]\nContraseña: [+pwd+]\n\nUna vez que ingreses a [+sname+] ([+surl+]), puedes cambiar tu contraseña.\n\nSaludos,\nEl Administrador';
+$_lang["system_email_signup"] = "Hola [+uid+] \n\nAquí tienes los detalles de inicio de sesión para el Administrador de Contenido de [+sname+]:\n\nNombre de usuario: [+uid+]\nContraseña: [+pwd+]\n\nUna vez que has ingresado al Administrador de Contenido de ([+surl+]), puedes cambiar tu contraseña.\n\nSaludos,\nEl Administrador";
+$_lang["system_email_webreminder"] = "Hola [+uid+]\n\nPara activar tu contraseña nueva haz clic en el siguiente enlace:\n\n[+surl+]\n\nSi tienes éxito puedes usar la siguiente contraseña para ingresar:\n\nContraseña:[+pwd+]\n\nSi no solicitaste este email entonces por favor ignóralo.\n\nSaludos,\nEl Administrador";
+$_lang["system_email_websignup"] = "Hola [+uid+] \n\nAquí tienes los detalles de ingreso para [+sname+]:\n\nNombre de usuario: [+uid+]\nContraseña: [+pwd+]\n\nUna vez que ingreses a [+sname+] ([+surl+]), puedes cambiar tu contraseña.\n\nSaludos,\nEl Administrador";
 $_lang["table_hoverinfo"] = 'Pasa el ratón sobre el nombre de la tabla para ver una corta descripción de su función (no todas las tablas tienen <i>comentarios</i> configurados).';
 $_lang["table_prefix"] = 'Prefijo de tabla';
 $_lang["tag"] = 'Etiqueta';
@@ -878,6 +903,8 @@ $_lang["template_reset_all"] = 'Reajusta todas las páginas a usar el template pr
 $_lang["template_reset_specific"] = 'Reajusta solamente \'%s\' páginas';
 $_lang["template_title"] = 'Crear/editar template';
 $_lang["template_tv_edit"] = 'Editar el orden de clasificación de las variables de template';
+$_lang["template_tv_edit_message"] = 'Arrastra para re-ordenar las Variables de Template para este template.';
+$_lang["template_tv_edit_title"] = 'Orden de Clasificación de las Variables de Template';
 $_lang["template_tv_msg"] = 'Las variables de template asignadas a este template están listadas aquí abajo.';
 $_lang["thursday"] = 'Jueves';
 $_lang["tmplvar_access_msg"] = 'Selecciona los grupos de documentos que tienen permitido modificar el contenido o el valor de esta variable';
@@ -929,6 +956,7 @@ $_lang["unpublish_events"] = 'Despublicar Eventos';
 $_lang["untitled_document"] = 'Documento sin título';
 $_lang["untitled_weblink"] = 'Enlace web sin título';
 $_lang["update_params"] = 'Actualizar la muestra de parámetros';
+$_lang["update_settings_from_language"] = 'Reemplazar el actual con:';
 $_lang["upload_maxsize_message"] = 'Ingresa el tamaño máximo de archivo a ser subido por el Administrador de archivos. El tamaño de archivo a subir debe de ser ingresado en bytes. <b>NOTA: ¡Archivos grandes pueden demorar mucho tiempo para subir!</b>';
 $_lang["upload_maxsize_title"] = 'Tamaño máximo de subida';
 $_lang["uploadable_files_message"] = 'Ingresa una lista de archivos que pueden ser subidos a \'assets/files/\' usando el Navegador de Archivos. Por favor ingresa las extensiones para los tipos de archivos, separados por comas.';
@@ -1017,5 +1045,4 @@ $_lang["yourinfo_role"] = 'Tu rol es:';
 $_lang["yourinfo_title"] = 'Tu información';
 $_lang["yourinfo_total_logins"] = 'Número total de ingresos:';
 $_lang["yourinfo_username"] = 'Estás ingresado como:';
-$_lang['manager_lockout_message'] = 'Estás actualmente dentro del Administrador de Contenido.  Si deseas cerrar tu sesión por favor haz clic en el botón de "Salir". <p />Para ir a tu página de inicio o página principal, haz clic en el botón de "Inicio".';
 ?>
