@@ -317,9 +317,6 @@ function decode(s){
 			<td align="left" style="padding-top:10px"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
 		  </tr>
 		  <tr>
-			<td style="padding-top:10px" align="left" colspan="2"><input style="padding:0;margin:0;" name="runsnippet" type="checkbox" class="inputBox"<?php if($content['runsnippet']) {echo ' checked="checked"';}?> /> <?php echo $_lang['snippet_execonsave']?></td>
-		  </tr>
-		  <tr>
 			<td style="padding-top:10px" align="left" valign="top" colspan="2"><input  style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
 			</td>
 		  </tr>

@@ -1,6 +1,14 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0.1 (rev 5732 - September 10, 2009)
+===================================
+--------------------------------------------
+Bugfixes & Security Enhancements:
+--------------------------------------------
+* [#MODX-1216] Remove "execute snippet" from mutate_snippets and mutate_modules
+
+
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
 --------------------------------------------
