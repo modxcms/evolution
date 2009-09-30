@@ -21,6 +21,12 @@ if (ini_get('register_globals')==TRUE) {
     $warnings[] = array($_lang['configcheck_register_globals']);
 }
 
+if ($modx->db->getValue('SELECT setting_value FROM '.$modx->getFullTableName('system_settings').' WHERE setting_name=\'validate_referer\' AND setting_value=\'1\'') == 0) {
+	$warningspresent = 1;
+    //$warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
+    $warnings[] = array('Security Warning');
+}
+
 if ($modx->db->getValue('SELECT published FROM '.$modx->getFullTableName('site_content').' WHERE id='.$unauthorized_page) == 0) {
 	$warningspresent = 1;
     $warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
@@ -115,6 +121,9 @@ for ($i=0;$i<count($warnings);$i++) {
         case $_lang['configcheck_errorpage_unavailable'] :
             $warnings[$i][1] = $_lang['configcheck_errorpage_unavailable_msg'];
             break;
+        case 'Security Warning' :
+        	$warnings[$i][1] = "<p>The configuration setting <strong>Validate HTTP_REFERER headers</strong> is Off. We recommend turning it On. <a href=\"\">Go to Configuration options</a><br /><a href=\"\"><em>Don't show this again.</em></a>\n";
+        	break;
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];
     }
