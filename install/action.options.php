@@ -71,6 +71,23 @@ include "{$setupPath}/setup.info.php";
 
 echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_note'] . "</p>";
 
+// security-related config changes
+if($installMode == 1 || $installMode == 2) {
+	// validate http_referer (only display this if the setting already exists and is turned off)
+	$rsvhr = @ mysql_query("SELECT setting_value FROM {$table_prefix}system_settings WHERE setting_name = 'validate_referer';");
+	if(isset($rsvhr)) {
+		if($settingRow = mysql_fetch_row($rsvhr)) {
+			$vrsetting = $settingRow[0];
+			if($vrsetting == '0') {
+				echo "<h3>Recommended Setting Change</h3>\n";
+				echo "<p><em>&nbsp;Blah blah blah.. security blah blah..</em></p>\n";
+				echo "<p><input type=\"checkbox\" name=\"validate_referer\" id=\"validate_referer_field\" value=\"1\" checked=\"checked\" />&nbsp;<label for=\"validate_referer_field\">" . "Validate HTTP_REFERER header" . "</label></p><hr />\n";
+			}
+		}
+	}
+}
+
+// sample web site
 $chk = isset ($_POST['installdata']) ? 'checked="checked"' : "";
 echo '<img src="img/sample_site.png" class="options" alt="Sample Data" />';
 echo "<h3>" . $_lang['sample_web_site'] . "</h3>";

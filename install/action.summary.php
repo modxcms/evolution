@@ -254,6 +254,7 @@ $nextAction= $errors > 0 ? 'summary' : 'install';
 $nextButton= $errors > 0 ? $_lang['retry'] : $_lang['install'];
 $nextVisibility= $errors > 0 || isset($_POST['chkagree']) ? 'visible' : 'hidden';
 $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagree\').checked){document.getElementById(\'nextbutton\').style.visibility=\'visible\';}else{document.getElementById(\'nextbutton\').style.visibility=\'hidden\';}"';
+$validate_referer = isset($_POST['validate_referer']) && in_array($_POST['validate_referer'], array('0', '1')) ? $_POST['validate_referer'] : '';
 ?>
 <form name="install" id="install_form" action="index.php?action=<?php echo $nextAction ?>" method="post">
   <div>
@@ -275,6 +276,7 @@ $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagre
     <input type="hidden" value="1" name="options_selected" />
     
     <input type="hidden" value="<?php echo $_POST['installdata'] ?>" name="installdata" />
+    <input type="hidden" value="<?php echo $validate_referer ?>" name="validate_referer" />
 <?php
 $templates = isset ($_POST['template']) ? $_POST['template'] : array ();
 foreach ($templates as $i => $template) echo "<input type=\"hidden\" name=\"template[]\" value=\"$template\" />\n";

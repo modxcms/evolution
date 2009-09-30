@@ -297,6 +297,17 @@ if ($installMode == 0) {
 	}
 }
 
+// handle ad-hoc settings changes
+// validate_referer
+if($installMode == 1 || $installMode == 2) {
+	if(isset($_POST['validate_referer']) && $_POST['validate_referer'] == '1') {
+		$result = mysql_query("UPDATE $dbase.`" . $table_prefix . "system_settings` SET setting_value='1' WHERE setting_name='validate_referer' AND setting_value='0'", $sqlParser->conn);
+		if($result !== false) {
+			echo "<p>" . 'Setting change: Validate HTTP_REFERER header turned On: ' . "<span class=\"ok\">{$_lang['ok']}</span></p>\n";
+		}
+	}
+}
+
 // Install Templates
 if (isset ($_POST['template'])) {
 	echo "<p style=\"color:#707070\">" . $_lang['templates'] . ":</p> ";
