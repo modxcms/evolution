@@ -300,12 +300,22 @@ if ($installMode == 0) {
 // handle ad-hoc settings changes
 // validate_referer
 if($installMode == 1 || $installMode == 2) {
-	if(isset($_POST['validate_referer']) && $_POST['validate_referer'] == '1') {
-		$result = mysql_query("UPDATE $dbase.`" . $table_prefix . "system_settings` SET setting_value='1' WHERE setting_name='validate_referer' AND setting_value='0'", $sqlParser->conn);
+	if(isset($_POST['validate_referer']) && $_POST['validate_referer'] === '1') {
+		// turn on validate_referer if it was off and user has chosen to turn it on
+		$result = mysql_query("UPDATE $dbase.`" . $table_prefix . "system_settings` SET setting_value='1' WHERE setting_name='validate_referer' AND (setting_value='0' OR setting_value='00')", $sqlParser->conn);
 		if($result !== false) {
-			echo "<p>" . $_lang['recommend_setting_change_validate_referer_confirmation'] . "<span class=\"ok\">{$_lang['ok']}</span></p>\n";
+			echo "<p>" . $_lang['recommend_setting_change_validate_referer_confirmation'] . "&nbsp;<span class=\"ok\">{$_lang['ok']}</span></p>\n";
+		}
+	} elseif(isset($_POST['validate_referer']) && $_POST['validate_referer'] === '0') {
+		// turn off validate_referer if it was on and user has chosen to turn it off
+		$result = mysql_query("UPDATE $dbase.`" . $table_prefix . "system_settings` SET setting_value='0' WHERE setting_name='validate_referer' AND setting_value='1'", $sqlParser->conn);
+		if($result !== false) {
+			echo "<p>" . $_lang['recommend_setting_change_validate_referer_confirmation'] . "&nbsp;<span class=\"ok\">{$_lang['no']}</span></p>\n";
 		}
 	}
+} elseif($installMode == 0 && (!isset($_SERVER['HTTP_REFERER']) || empty($_SERVER['HTTP_REFERER']))) {
+	// disable the validate_referer check by default if no HTTP_REFERER detected
+	$result = mysql_query("UPDATE $dbase.`" . $table_prefix . "system_settings` SET setting_value='0' WHERE setting_name='validate_referer'", $sqlParser->conn);
 }
 
 // Install Templates

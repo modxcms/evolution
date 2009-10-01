@@ -904,7 +904,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tree_show_protected', '0'),
 ('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
 ('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
-('validate_referer', '0'),
+('validate_referer', '1'),
 ('datepicker_offset','-10'),
 ('datetime_format','%d-%m-%Y');
 

@@ -81,7 +81,11 @@ if($installMode == 1 || $installMode == 2) {
 			if($vrsetting == '0') {
 				echo "<h3>{$_lang['recommend_setting_change_title']}</h3>\n";
 				echo "<p><em>&nbsp;{$_lang['recommend_setting_change_validate_referer_description']}</em></p>\n";
-				echo "<p><input type=\"checkbox\" name=\"validate_referer\" id=\"validate_referer_field\" value=\"1\" checked=\"checked\" />&nbsp;<label for=\"validate_referer_field\">" . $_lang["validate_referer_title"] . "</label></p><hr />\n";
+				echo "<p><label for=\"validate_referer_yes_field\">" . $_lang["validate_referer_title"] . "</label> {$_lang['yes']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_yes_field\" value=\"1\" checked=\"checked\" />&nbsp; {$_lang['no']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_no_field\" value=\"0\" /></p><hr />\n";
+			} else {
+        		echo "<h3>{$_lang['system_configuration']}</h3>\n";
+                echo "<p><em>&nbsp;{$_lang['system_configuration_validate_referer_description']}</em></p>\n";
+                echo "<p><label for=\"validate_referer_yes_field\">" . $_lang["validate_referer_title"] . "</label> {$_lang['yes']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_yes_field\" value=\"1\" checked=\"checked\" />&nbsp; {$_lang['no']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_no_field\" value=\"0\" /></p><hr />\n";
 			}
 		}
 	}
