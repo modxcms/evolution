@@ -79,9 +79,9 @@ if($installMode == 1 || $installMode == 2) {
 		if($settingRow = mysql_fetch_row($rsvhr)) {
 			$vrsetting = $settingRow[0];
 			if($vrsetting == '0') {
-				echo "<h3>Recommended Setting Change</h3>\n";
-				echo "<p><em>&nbsp;Blah blah blah.. security blah blah..</em></p>\n";
-				echo "<p><input type=\"checkbox\" name=\"validate_referer\" id=\"validate_referer_field\" value=\"1\" checked=\"checked\" />&nbsp;<label for=\"validate_referer_field\">" . "Validate HTTP_REFERER header" . "</label></p><hr />\n";
+				echo "<h3>{$_lang['recommend_setting_change_title']}</h3>\n";
+				echo "<p><em>&nbsp;{$_lang['recommend_setting_change_validate_referer_description']}</em></p>\n";
+				echo "<p><input type=\"checkbox\" name=\"validate_referer\" id=\"validate_referer_field\" value=\"1\" checked=\"checked\" />&nbsp;<label for=\"validate_referer_field\">" . $_lang["validate_referer_title"] . "</label></p><hr />\n";
 			}
 		}
 	}

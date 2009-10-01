@@ -21,10 +21,29 @@ if (ini_get('register_globals')==TRUE) {
     $warnings[] = array($_lang['configcheck_register_globals']);
 }
 
-if ($modx->db->getValue('SELECT setting_value FROM '.$modx->getFullTableName('system_settings').' WHERE setting_name=\'validate_referer\' AND setting_value=\'1\'') == 0) {
-	$warningspresent = 1;
-    //$warnings[] = array($_lang['configcheck_unauthorizedpage_unpublished']);
-    $warnings[] = array('Security Warning');
+if(isset($_SESSION['mgrPermissions']['settings']) && $_SESSION['mgrPermissions']['settings'] == '1') {
+	if ($modx->db->getValue('SELECT COUNT(setting_value) FROM '.$modx->getFullTableName('system_settings').' WHERE setting_name=\'validate_referer\' AND setting_value=\'0\'')) {
+		$warningspresent = 1;
+	    $warnings[] = array($_lang['configcheck_validate_referer']);
+	}
+	$script = <<<JS
+<script type="text/javascript">
+function hideHeaderVerificationWarning(){
+	var myAjax = new Ajax('index.php?a=118', {
+		method: 'post',
+		data: 'action=setsetting&key=validate_referer&value=00'
+	});
+	myAjax.addEvent('onComplete', function(resp){
+		fieldset = $('validate_referer_warning_wrapper').getParent().getParent();
+		var sl = new Fx.Slide(fieldset);
+		sl.slideOut();
+	});
+	myAjax.request();
+}
+</script>
+
+JS;
+	$modx->regClientScript($script);
 }
 
 if ($modx->db->getValue('SELECT published FROM '.$modx->getFullTableName('site_content').' WHERE id='.$unauthorized_page) == 0) {
@@ -121,8 +140,8 @@ for ($i=0;$i<count($warnings);$i++) {
         case $_lang['configcheck_errorpage_unavailable'] :
             $warnings[$i][1] = $_lang['configcheck_errorpage_unavailable_msg'];
             break;
-        case 'Security Warning' :
-        	$warnings[$i][1] = "<p>The configuration setting <strong>Validate HTTP_REFERER headers</strong> is Off. We recommend turning it On. <a href=\"\">Go to Configuration options</a><br /><a href=\"\"><em>Don't show this again.</em></a>\n";
+        case $_lang['configcheck_validate_referer'] :
+        	$warnings[$i][1] = "<span id=\"validate_referer_warning_wrapper\">" . $_lang['configcheck_validate_referer_msg'] . "</span>\n";
         	break;
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];

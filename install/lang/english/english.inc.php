@@ -125,6 +125,9 @@ $_lang["please_correct_error"] = '. Please correct the error';
 $_lang["please_correct_errors"] = '. Please correct the errors';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Pre-install validation';
+$_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
+$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Setting change: <em>Validate HTTP_REFERER headers?</em>';
+$_lang["recommend_setting_change_validate_referer_description"] = 'Your site is not configured to validate the HTTP_REFERER of incoming requests to the manager. We recommend this setting be turned on to reduce the risk of CSRF (Cross Site Request Forgery) attack.';
 $_lang["remove_install_folder_auto"] = 'Remove the install folder and files from my website <br />&nbsp;(This operation requires delete permission to the granted to the install folder).';
 $_lang["remove_install_folder_manual"] = 'Please remember to remove the &quot;<b>install</b>&quot; folder before you log into the Content Manager.';
 $_lang["retry"] = 'Retry';
@@ -181,5 +184,6 @@ $_lang["welcome_message_start"] = 'First, choose the type of installation to per
 $_lang["welcome_message_text"] = 'This program will guide you through the rest of the installation.';
 $_lang["welcome_message_welcome"] = 'Welcome to the MODx installation program.';
 $_lang["writing_config_file"] = 'Writing configuration file: ';
+$_lang["yes"] = 'Yes';
 $_lang["you_running_php"] = ' - You are running on PHP ';
 ?>

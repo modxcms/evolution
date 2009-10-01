@@ -198,6 +198,9 @@ fclose($handle);
 // merge placeholders
 $tpl = $modx->mergePlaceholderContent($tpl);
 $tpl = preg_replace('~\[\+(.*?)\+\]~', '', $tpl); //cleanup
+if ($js= $modx->getRegisteredClientScripts()) {
+	$tpl .= $js;
+}
 
 echo $tpl;
 

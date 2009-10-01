@@ -4,9 +4,9 @@
  * Function:       Language file.
  * Encoding:       UTF8
  * Author:         The MODx Project Team
- * Date:           8 July 2009
- * Version:        2.0.3
- * MODx version:   Evolution 1.0
+ * Date:           1 October 2009
+ * Version:        2.0.4
+ * MODx version:   Evolution 1.0.1
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -129,6 +129,8 @@ $_lang["configcheck_unauthorizedpage_unavailable"] = 'Your site\'s Unauthorized 
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'This means that your Unauthorized page is not accessible to normal web surfers or does not exist. This can lead to a recursive looping condition and many errors in your site logs. Make sure there are no Webuser Groups assigned to the page.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'The Unauthorized page defined in the site configuration settings is not published.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'This means that your Unauthorized page is inaccessible to the general public. Publish the page or make sure it is assigned to an existing Resource in your Site Tree in the Tools &gt; Configuration menu.';
+$_lang["configcheck_validate_referer"] = 'Security Warning: HTTP Header Validation';
+$_lang["configcheck_validate_referer_msg"] = "The configuration setting <strong>Validate HTTP_REFERER headers?</strong> is Off. We recommend turning it On. <a href=\"index.php?a=17\">Go to Configuration options</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Don't show this again.</em></a>";
 $_lang["configcheck_warning"] = 'Configuration warning:';
 $_lang["configcheck_what"] = 'What does this mean?';
 $_lang["confirm_block"] = 'Are you sure you want to block this user?';
@@ -682,6 +684,8 @@ $_lang["rb_title"] = 'Enable File Browser:';
 $_lang["rb_webuser_message"] = 'Do you want to allow a web user the ability to use the file browser? <b>WARNING:</b> Allowing web users the use of the file browser exposes the files available to manager users.  Only use this option for trusted web users.';
 $_lang["rb_webuser_title"] = 'Web Users?';
 $_lang["recent_docs"] = 'Recent Resources';
+$_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
+$_lang["recommend_setting_change_description"] = 'Your site is not configured to validate the HTTP_REFERER of incoming requests to the manager. We recommend this setting be turned on to reduce the risk of CSRF (Cross Site Request Forgery) attack.';
 $_lang["refresh_cache"] = 'Cache: Found <b>%s</b> files in cache directory and deleted <b>%d</b> cache files.<p>New cache files will be created when pages are requested.';
 $_lang["refresh_published"] = '<b>%s</b> Resources were published.';
 $_lang["refresh_site"] = 'Clear Cache';
