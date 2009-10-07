@@ -49,8 +49,8 @@ if (!$_SESSION['test']) {
 }
 
 $moduleName = "MODx";
-$moduleVersion = "Evolution 1.0.0";
-$moduleRelease = "30-Jul-2009";
+$moduleVersion = "Evolution 1.0.1";
+$moduleRelease = "7-Oct-2009";
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 $moduleSQLUpdateFile = "setup.updates.sql";

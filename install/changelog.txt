@@ -7,7 +7,9 @@ MODx Evolution 1.0.1 (rev 5732 - September 10, 2009)
 Bugfixes & Security Enhancements:
 --------------------------------------------
 * [#MODX-1216] Remove "execute snippet" from mutate_snippets and mutate_modules
-
+* [#MODX-1227] Add referrer check configuration warning to Manager
+* [#MODX-1218] Enable CSRF check by default for sites that set headers properly
+* [#MODX-1245] Update QM+ to version 1.3.3
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================

@@ -1,280 +1,526 @@
 <?php
 /**
  * Qm+ — QuickManager+
- *
- * @author      Urique Dertlian, urique@unix.am & Mikko Lammi, www.maagit.fi
+ *  
+ * @author      Mikko Lammi, www.maagit.fi (based on QuickManager by Urique Dertlian, urique@unix.am)
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.1.1 updated 21/04/2009
+ * @version     1.3.3 updated 6/10/2009                
  */
 
 if(!class_exists('Qm')) {
 
 class Qm {
   var $modx;
-
+  
     //_______________________________________________________
-    function Qm(&$modx, $jqpath, $loadmanagerjq, $loadfrontendjq, $loadtb, $usemm, $tbwidth, $tbheight, $hidefields, $addbutton, $tpltype, $tplid) {
+    function Qm(&$modx, $jqpath, $loadmanagerjq, $loadfrontendjq, $noconflictjq, $loadtb, $tbwidth, $tbheight, $hidefields, $hidetabs, $hidesections, $addbutton, $tpltype, $tplid, $custombutton, $managerbutton, $logout) {
         $this->modx = $modx;
-
+        
         // Get plugin parameters
         $this->jqpath = $jqpath;
         $this->loadmanagerjq = $loadmanagerjq;
         $this->loadfrontendjq = $loadfrontendjq;
+        $this->noconflictjq = $noconflictjq;  
         $this->loadtb = $loadtb;
-        $this->usemm = $usemm;
         $this->tbwidth = $tbwidth;
         $this->tbheight = $tbheight;
-        $this->hidefields = $hidefields;
-        $this->addbutton = $addbutton;
-        $this->tpltype = $tpltype;
+        $this->usemm = $usemm;
+        $this->hidefields = $hidefields;  
+        $this->hidetabs = $hidetabs;  
+        $this->hidesections = $hidesections;     
+        $this->addbutton = $addbutton;       
+        $this->tpltype = $tpltype;       
         $this->tplid = $tplid;
-
+        $this->custombutton = $custombutton;
+        $this->managerbutton = $managerbutton;
+        $this->logout = $logout;          
+        
         // Includes
         include_once($this->modx->config['base_path'].'assets/plugins/qm/mcc.class.php');
-
+        
         // Run plugin
         $this->Run();
     }
-
+    
     //_______________________________________________________
     function Run() {
-
+        
         // Include MODx manager language file
         global $_lang;
-        include_once($this->modx->config['base_path'].'manager/includes/lang/'.$this->modx->config['manager_language'].'.inc.php');
-
+        
+        include_once($this->modx->config['base_path'].'manager/includes/lang/'.
+			(file_exists(MODX_MANAGER_PATH."includes/lang/".$this->modx->config['manager_language'].".inc.php") ? 
+			$this->modx->config['manager_language'] : 'english').'.inc.php');
+        
         // Get event
         $e = $this->modx->Event;
-
+        
         // Run plugin based on event
         switch ($e->name) {
-
+            
             // Save document
             case 'OnDocFormSave':
-
-                // Saving process for Qm only, confirm HTTP_REFERER
-                if(!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],'quickmanager=true') !== false) {
-
+                
+                // Saving process for Qm only
+                if(intval($_REQUEST['quickmanager']) == 1) {
+            
                     $id = $e->params['id'];
                     $key = $id;
-
+                    
                     // Normal saving document procedure stops to redirect => Before redirecting secure documents and clear cache
-
+                    
                     // Secure web documents - flag as private (code from: manager/processors/save_content.processor.php)
     		        include $this->modx->config['base_path']."manager/includes/secure_web_documents.inc.php";
     		        secureWebDocument($key);
-
+    
             		// Secure manager documents - flag as private (code from: manager/processors/save_content.processor.php)
             		include $this->modx->config['base_path']."manager/includes/secure_mgr_documents.inc.php";
             		secureMgrDocument($key);
-
+                    
                     // Clear cache
                     include_once $this->modx->config['base_path']."manager/processors/cache_sync.class.processor.php";
                     $sync = new synccache();
                     $sync->setCachepath($this->modx->config['base_path']."assets/cache/");
                     $sync->setReport(true);
                     $sync->emptyCache();
-
-                    // Redirect to clearer page which refreshes parent window and closes ColorBox frame
-                    $this->modx->sendRedirect($this->modx->config['base_url'].'assets/plugins/qm/close.php?id='.$id.'&baseurl='.$this->modx->config['base_url'], 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');
+                    
+                    // Redirect to clearer page which refreshes parent window and closes modal box frame
+                    $this->modx->sendRedirect($this->modx->config['base_url'].'assets/plugins/qm/close.php?id='.$id, 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');               
                 }
-
+                
                 break;
-
+            
             // Display page in front-end
             case 'OnWebPagePrerender':
-
+            
                 // If logged in manager but not in manager preview show control buttons
                 if(isset($_SESSION['mgrValidated']) && $_REQUEST['z'] != 'manprev') {
-
+                
                     $output = &$this->modx->documentOutput;
-
+                    
                     // If logout break here
                     if(isset($_REQUEST['logout'])) {
                         $this->Logout();
                         break;
                     }
-
+                    
                     $userID = $_SESSION['mgrInternalKey'];
                     $docID = $this->modx->documentIdentifier;
                     $doc = $this->modx->getDocument($docID);
-
+                    
                     // Edit button
+                    
                     $editButton = '
-						<li>
-							<a class="qmButton qmEdit colorbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['edit_document'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=true">'.$_lang['edit_document'].'</a>
-						</li>';
-
-                    // Does user have permissions to edit document
-                    if($this->modx->hasPermission('edit_document')) $controls.=$editButton;
-
-                    if ($this->addbutton == 'true') {
+                    <li>
+                    <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><img src="'.$this->modx->config['site_url'].'manager/media/style/MODxCarbon/images/icons/save.png" /> '.$_lang['edit_document'].'</a>
+                    </li>
+                    ';
+                    
+                    // Check if user has manager access to current document
+                    $access = $this->checkAccess();
+                    
+                    // Does user have permissions to edit document   
+                    if($access) $controls .= $editButton;
+                    
+                    if ($this->addbutton == 'true' && $access) {                    
                         // Add button
-                        $addButton  = '
-							<li>
-								<a class="qmButton qmAdd colorbox" title="'.$doc['pagetitle'].' &raquo; '.$_lang['create_document_here'].'" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=true">'.$_lang['create_document_here'].'</a>
-							</li>';
-
+                        $addButton = '
+                        <li>
+                        <a class="qmButton colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1">'.$_lang['create_document_here'].'</a>
+                        </li>
+                        ';
+                        
                         // Does user have permissions to add document
-                        if($this->modx->hasPermission('new_document')) $controls.=$addButton;
-                    }
-
+                        if($this->modx->hasPermission('new_document')) $controls .= $addButton;        
+                    }            
+                    
+                    // Custom add buttons if not empty and enough permissions
+                    if ($this->custombutton != '') {  
+                                                            
+                        $buttons = explode("||", $this->custombutton); // Buttons are divided by "#"
+                        
+                        // Parse buttons
+                        foreach($buttons as $key => $field) { 
+                            $field = substr($field, 1, -1); // Trim "'" from beginning and from end
+                            $buttonParams = explode("','", $field); // Button params are divided by "','"
+                            
+                            $buttonTitle = $buttonParams[0];
+                            $buttonAction = $buttonParams[1]; // Contains URL if this is not add button
+                            $buttonParentId = $buttonParams[2]; // Is empty is this is not add button
+                            $buttonTplId = $buttonParams[3];
+                            
+                            // Button visible for all
+                            if ($buttonParams[4] == '') {
+                                $showButton = TRUE;
+                            }
+                            // Button is visible for specific user roles
+                            else {
+                                $showButton = FALSE;
+                            
+                                // Get user roles the button is visible for
+                                $buttonRoles = explode(",", $buttonParams[4]); // Roles are divided by ','
+                                                            
+                                // Check if user role is found
+                                foreach($buttonRoles as $key => $field) { 
+                                    if ($field == $_SESSION['mgrRole']) {
+                                        $showButton = TRUE;
+                                    }
+                                }
+                            }
+                            
+                            // Show custom button
+                            if ($showButton) {
+                                switch ($buttonAction)
+                                {
+                                    case 'new':
+                                        $customButton = '
+                                        <li>
+                                        <a class="qmButton colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$buttonParentId.'&amp;quickmanager=1&amp;customaddtplid='.$buttonTplId.'">'.$buttonTitle.'</a>
+                                        </li>
+                                        ';
+                                    break;
+                                
+                                    case 'link':
+                                        $customButton  = '
+                                        <li>
+                                        <a class="qmButton" href="'.$buttonParentId.'" >'.$buttonTitle.'</a>
+                                        </li>
+                                        ';    
+                                    break;
+                                    
+                                    case 'modal':
+                                        $customButton  = '
+                                        <li>
+                                        <a class="qmButton colorbox" href="'.$buttonParentId.'" >'.$buttonTitle.'</a>
+                                        </li>
+                                        ';   
+                                    break;
+                                }
+                                $controls .= $customButton;  
+                            }                                             
+                        }                                   
+                    } 
+                    
                     // Not implemented yet
                     //$delButton  = '<a class="button delete" title="'.$doc['pagetitle'].'&raquo; '.$_lang['delete_document'].'" href="#" onclick="if(confirm(\'`'.$doc['pagetitle'].'`\n\n'.$_lang['confirm_delete_document'].'\')==true) document.location.href=\''.$this->modx->config['site_url'].'manager/index.php?a=4&id='.$docID.'\';return false;">'.$_lang['delete_document'].'</a>';
                     //if($this->modx->hasPermission('delete_document')) $controls.=$delButton;
-
+                    
+                    // Go to Manager button
+                    if ($this->managerbutton == 'true') {
+                        $managerButton  = '
+                        <li>
+                        <a class="qmButton" title="'.$_lang['manager'].'" href="'.$this->modx->config['site_url'].'manager/" >'.$_lang['manager'].'</a>
+                        </li>
+                        ';
+                        $controls .= $managerButton;
+                    }
+                    
                     // Logout button
-                    $logout = $this->modx->config['site_url'].'manager/index.php?a=8';
+                    $logout = $this->modx->config['site_url'].'manager/index.php?a=8&amp;quickmanager=logout&amp;logoutid='.$docID;     
                     $logoutButton  = '
-						<li>
-							<a class="qmButton qmLogout" title="'.$_lang['logout'].'" href="'.$logout.'" ><!--img src="' . MODX_BASE_URL. 'assets/plugins/qm/res/exit.png" alt="Edit" /-->'.$_lang['logout'].'</a>
-						</li>';
-
+                    <li>
+                    <a id="qmLogout" class="qmButton" title="'.$_lang['logout'].'" href="'.$logout.'" >'.$_lang['logout'].'</a>
+                    </li>
+                    ';
                     $controls .= $logoutButton;
-
+                    
+                    // Add action buttons
                     $editor = '
-						<div id="qmEditor" class="actionButtons">
-							<ul>'.$controls.'
-							</ul>
-						</div>';
-                    $css = '<link rel="stylesheet" type="text/css" href="assets/plugins/qm/res/style.css" />';
-
+                    <div id="qmEditorClosed"></div>
+                    
+					<div id="qmEditor">
+					
+                    <a id="qmClose" class="qmButton qmClose" href="#" onclick="return false;">X</a></li>
+                    
+                    <ul>
+                    <a id="qmLogoClose" class="qmClose" href="#" onclick="return false;"></a>
+                    '.$controls.'
+                    </ul>
+					</div>';
+					
+                    $css = '
+                    <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
+                    <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
+                    ';
+        
                     // Insert jQuery and ColorBox in head if needed
                     if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
                     if ($this->loadtb == 'true') {
                         $head .= '
+                        <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/colorbox.css" />
+                        
+                        <style type="text/css">
+                        .cboxIE #cboxTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopLeft.png, sizingMethod=\'scale\');}
+                        .cboxIE #cboxTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopCenter.png, sizingMethod=\'scale\');}
+                        .cboxIE #cboxTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopRight.png, sizingMethod=\'scale\');}
+                        .cboxIE #cboxBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomLeft.png, sizingMethod=\'scale\');}
+                        .cboxIE #cboxBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomCenter.png, sizingMethod=\'scale\');}
+                        .cboxIE #cboxBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomRight.png, sizingMethod=\'scale\');}
+                        .cboxIE #cboxMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderMiddleLeft.png, sizingMethod=\'scale\');}
+                        .cboxIE #cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderMiddleRight.png, sizingMethod=\'scale\');}
+                        </style>
+                        
                         <script type="text/javascript" src="'.$this->modx->config['site_url'].'assets/js/jquery.colorbox-min.js"></script>
-                        <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/js/colorbox.css" />
-                        <!--[if IE]>
-                        <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/js/colorbox-ie.css" title="example" />
-                        <![endif]-->
-
-                    	<script type="text/javascript">
-	                    	var $j = jQuery.noConflict();
-	                    	$j(document).ready(function($){
-	                    		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true});
-	                    	});
-	                		function cb_remove(){
-	                            $j.fn.colorbox.close();
-	                		}
-                        </script>
                         ';
                     }
+                    
+                    // Insert ColorBox jQuery definitions for QuickManager+
+                    $head .= '
+                    <script type="text/javascript">
+                    ';
+                    
+                    // jQuery in noConflict mode 
+                    if ($this->noconflictjq == 'true')
+                        $head .= '
+                    	var $j = jQuery.noConflict();
+                    	$j(document).ready(function($)
+                    	';
+                    	
+                    // jQuery in normal mode 
+                    else 	
+                        $head .= '$(document).ready(function($)';
+                        
+                    $head .= '    
+                        {                      
+                    		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false});
+                    	
+                        	// Bindings
+                        	$().bind("cbox_open", function(){$("body").css({"overflow":"hidden"}); $("html").css({"overflow":"hidden"}); $("#qmEditor").css({"display":"none"});});
+                        	$().bind("cbox_closed", function(){$("body").css({"overflow":"auto"}); $("html").css({"overflow":"auto"}); $("#qmEditor").css({"display":"block"});});                  
+                            
+                            // Hide QM+ if cookie found
+                            if (getCookie("hideQM") == 1)
+                            {
+                                $("#qmEditor").css({"display":"none"});
+                                $("#qmEditorClosed").css({"display":"block"});    
+                            }
+                            
+                            // Hide QM+
+                            $(".qmClose").click(function () {
+                                $("#qmEditor").hide("normal");
+                                $("#qmEditorClosed").show("normal");
+                                document.cookie = "hideQM=1; path=/;";
+                            });
+                            
+                            // Show QM+
+                            $("#qmEditorClosed").click(function () {
+                                {
+                                    $("#qmEditorClosed").hide("normal");
+                                    $("#qmEditor").show("normal");
+                                    document.cookie = "hideQM=0; path=/;";
+                                }
+                            });
 
-                    // Insert Qm css in head
+                        });
+                        
+                        function getCookie(cookieName)
+                        {
+                            var results = document.cookie.match ( "(^|;) ?" + cookieName + "=([^;]*)(;|$)" );
+    
+                            if (results) return (unescape(results[2]));
+                            else return null;
+                        }
+
+                    </script>
+                    ';
+                    
+                    // Insert QM+ css in head
                     $head .= $css;
-
+        
                     // Place Qm head information in head, just before </head> tag
                     $output = preg_replace('~(</head>)~i', $head . '\1', $output);
-
+        
                     // Insert editor toolbar right after <body> tag
                     $output = preg_replace('~(<body[^>]*>)~i', '\1' . $editor, $output);
-
                 }
-
+                
                 break;
-
-            // Edit document in ColorBox frame (MODx manager frame)
+            
+            // Edit document in ThickBox frame (MODx manager frame)
             case 'OnDocFormPrerender':
-
+                                        
                 // If there is Qm call, add control buttons and modify to edit document page
-                if(!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],'manager') === false) {
-
+                if (intval($_REQUEST['quickmanager']) == 1) {
+                
                     global $content;
-
+                    
                     // Set template for new document, action = 4
-                    if($_GET['a'] == 4) {
-
-                        switch ($this->tpltype) {
-                            // Template type is parent
-                            case 'parent':
-                                // Get parent document id
-                                $pid = $content['parent'] ? $content['parent'] : $_REQUEST['pid'];
-
-                                // Get parent document
-                                $parent = $this->modx->getDocument($pid);
-
-                                // Set parent template
-                                $content['template'] = $parent['template'];
-
-                                break;
-
-                            // Template is specific id
-                            case 'id':
-                                $content['template'] = $this->tplid;
-
-                                break;
-
-                            // Template is inherited by Inherit Selected Template plugin
-                            case 'selected':
-                                // Get parent document id
-                                $pid = $content['parent'] ? $content['parent'] : $_REQUEST['pid'];
-
-                                // Get inheritTpl TV
-                                $tv = $this->modx->getTemplateVar("inheritTpl", "", $pid);
-
-                                // Set template to inherit
-                                if ($tv['value'] != '') $content['template'] = $tv['value'];
-                                else $content['template'] = $this->modx->config['default_template'];
-
-                                break;
+                    if(intval($_GET['a']) == 4) {    
+                        
+                        // Custom add button
+                        if (isset($_GET['customaddtplid'])) {
+                            // Set template
+                            $content['template'] = intval($_GET['customaddtplid']);   
+                        }
+                        
+                        // Normal add button
+                        else {                                     
+                            switch ($this->tpltype) {
+                                // Template type is parent
+                                case 'parent':
+                                    // Get parent document id
+                                    $pid = $content['parent'] ? $content['parent'] : intval($_REQUEST['pid']);
+            
+                                    // Get parent document
+                                    $parent = $this->modx->getDocument($pid);
+                        
+                                    // Set parent template
+                                    $content['template'] = $parent['template'];
+                                
+                                    break;
+                                
+                                // Template is specific id
+                                case 'id':
+                                    $content['template'] = $this->tplid;
+                                
+                                    break;
+                                
+                                // Template is inherited by Inherit Selected Template plugin
+                                case 'selected':
+                                    // Get parent document id
+                                    $pid = $content['parent'] ? $content['parent'] : intval($_REQUEST['pid']);
+                                    
+                                    // Get inheritTpl TV
+                                    $tv = $this->modx->getTemplateVar("inheritTpl", "", $pid);
+                                    
+                                    // Set template to inherit
+                                    if ($tv['value'] != '') $content['template'] = $tv['value'];
+                                    else $content['template'] = $this->modx->config['default_template'];
+                                
+                                    break;
+                            }
                         }
                     }
 
                     // Manager control class
-                    $mc = new Mcc($this->jqpath);
-
-                    // Hide subtitle
-                    $mc->addLine('$(".subTitle").hide();');
-
-                    // Use with ManagerManager => remove sectionBody
+                    $mc = new Mcc();
+                
+                    // Hide default manager action buttons
+                    $mc->addLine('$("#actions").hide();');
+    
+                    // Get MODx theme
 					$qm_theme = $this->modx->config['manager_theme'];
-                    if ($this->usemm == 'true') {
-                        $mc->addLine('var controls = "<div style=\"position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\"/>'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"documentDirty=false;document.location.href=\'index.php?a=3&amp;id='.$_REQUEST['id'].'&amp;quickmanager=cancel\';return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
-                    }
-                    else {
-                        $mc->addLine('var controls = "<div id=\"qmcontrols\" class=\"sectionBody actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\"/>'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"documentDirty=false;document.location.href=\'index.php?a=3&amp;id='.$_REQUEST['id'].'&amp;quickmanager=cancel\';return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
-                    }
-
+					
+					// Get doc id
+					$doc_id = intval($_REQUEST['id']);
+					
+					// Get jQuery conflict mode
+					if ($this->noconflictjq == 'true') $jq_mode = '$j';
+					else $jq_mode = '$';
+					
+					// Add action buttons
+                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"setBaseUrl(\''.$this->modx->config['base_url'].'\'); documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\"/>'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.'.$jq_mode.'.fn.colorbox.close(); return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
+                    
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';
-                    if ($this->loadmanagerjq == 'true') $mc->head .= '<script src="'.$modx->config['site_url'].$jqpath = $this->jqpath.'" type="text/javascript"></script>';
-
+                    if ($this->loadmanagerjq == 'true') $mc->head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
+    
                     // Add control button
                     $mc->addLine('$("body").prepend(controls);');
-                    //$mc->addLine('$("body").append(controls);');
 
-                    // Hide fields to from front-end editors, especially template and parent are problematic
-                    $hideFields = explode(",", $this->hidefields);
-
-                    foreach($hideFields as $key => $field) {
-                        $mc->hideField($field);
+                    // Hide fields to from front-end editors
+                    if ($this->hidefields != '') {
+                        $hideFields = explode(",", $this->hidefields);
+                        
+                        foreach($hideFields as $key => $field) {
+                            $mc->hideField($field); 
+                        }
                     }
-
-                    // Hide templates but not active template => Changing template is not possible with Qm+
-                    $sql = "SELECT id FROM ".$this->modx->getFullTableName('site_templates');
-	                $rs = $this->modx->db->query($sql);
-	                while($row = $this->modx->db->getRow($rs)) {
-	                   if ($content['template'] != $row['id']) $hideTpls[] = $row['id'];
-	                }
-	                $mc->hideTemplates($hideTpls);
-
+                              
+                    // Hide tabs to from front-end editors
+                    if ($this->hidetabs != '') {
+                        $hideTabs = explode(",", $this->hidetabs);
+                        
+                        foreach($hideTabs as $key => $field) {
+                            $mc->hideTab($field); 
+                        }
+                    }
+                    
+                    // Hide sections from front-end editors
+                    if ($this->hidesections != '') {
+                        $hideSections = explode(",", $this->hidesections);
+                        
+                        foreach($hideSections as $key => $field) {
+                            $mc->hideSection($field); 
+                        }
+                    }
+                    
+                    // Set active doc script (needed if alias is changed)
+                    $setActiveDoc = '
+                    <script type="text/javascript">
+                    function setBaseUrl(baseUrl)
+                    {
+                        // Set base url
+                        document.cookie = "baseUrlQM=" + baseUrl + "; path=/;";
+                    }
+                    </script>
+                    ';
+                                              
+                    // Hidden field to verify that QM+ call exists
+                    $hiddenField = '<input type="hidden" name="quickmanager" value="1" />';
+                    
                     // Output
-                    $e->output($mc->Output());
+                    $e->output($mc->Output().$setActiveDoc.$hiddenField);
                 }
-
+                
             break;
-
-            // Remove edit document locks
-            case 'OnManagerPageInit':
+            
+            // Where to logout
+            case 'OnManagerLogout':
                 // Only if cancel editing the document and QuickManager is in use
-                if ($_REQUEST['quickmanager'] == 'cancel') {
-                    // Redirect to clearer page which closes ColorBox frame
-                    $this->modx->sendRedirect($this->modx->config['base_url'].'assets/plugins/qm/close.php?action=cancel', 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');
+                if ($_REQUEST['quickmanager'] == 'logout') {
+                    // Redirect to document id
+                    if ($this->logout != 'manager') {
+                        $this->modx->sendRedirect($this->modx->makeUrl($_REQUEST['logoutid']), 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');
+                    }
                 }
-
+            
             break;
         }
+    }
+    
+    // Check if user has manager access permissions to current document 
+    //_______________________________________________________
+    function checkAccess() {
+        $access = FALSE;
+
+        // If user is admin (role = 1)
+        if ($_SESSION['mgrRole'] == 1) $access = TRUE;
+        
+        else {
+            $docID = $this->modx->documentIdentifier;
+                   
+            // Database table
+            $table= $this->modx->getFullTableName("document_groups");
+            
+            // Check if current document is assigned to one or more doc groups
+            $sql= "SELECT id FROM {$table} WHERE document={$docID}";
+            $result= $this->modx->db->query($sql);
+            $rowCount= $this->modx->recordCount($result);
+            
+            // If document is assigned to one or more doc groups, check access
+            if ($rowCount >= 1) {
+            
+                // Get document groups for current user
+                $mrgDocGroups = $_SESSION['mgrDocgroups'];
+                if (!empty($mrgDocGroups))  {
+                    $docGroup= implode(",", $mrgDocGroups); 
+                    
+                    // Check if user has access to current document 
+                    $sql= "SELECT id FROM {$table} WHERE document = {$docID} AND document_group IN ({$docGroup})";
+                    $result= $this->modx->db->query($sql);
+                    $rowCount = $this->modx->recordCount($result);
+                    
+                    if ($rowCount >= 1) $access = TRUE;
+                }
+                
+                else $access = FALSE;
+            }
+            
+            else $access = TRUE;
+        }
+        
+        return $access;
     }
 }
 }

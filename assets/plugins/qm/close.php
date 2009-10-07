@@ -4,23 +4,11 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.1 updated 15/04/2009                
+ * @version     1.3.3 updated 7/10/2009                
  */
 
 // Get parameters
-if (isset($_GET['id'])) $id = $_GET['id'];
-if (isset($_GET['baseurl'])) $baseurl = $_GET['baseurl'];
-if (isset($_GET['action'])) $action = $_GET['action'];
-
-// Cancel => Remove ThickBox frame
-if ($action == "cancel") {
-    $body = '<body onload="parent.cb_remove();">';
-}
-
-// Save document => Refresh saved document
-else {
-    $body = '<body onload="parent.location.href = \''.$baseurl.'index.php?id='.$id.'\';">';
-}
+if (isset($_GET['id'])) $id = intval($_GET['id']);
 
 print <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -28,8 +16,28 @@ print <<<HTML
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title></title>
+<script type="text/javascript">
+function getCookie(cookieName)
+{
+    var results = document.cookie.match ( "(^|;) ?" + cookieName + "=([^;]*)(;|$)" );
+
+    if (results) return (unescape(results[2]));
+    else return null;
+}
+
+function getUrl()
+{
+    var protocol = window.location.protocol;
+    var host = window.location.host;
+    var baseUrl = getCookie("baseUrlQM");
+    
+    return protocol + "//" + host + baseUrl + "index.php?id={$id}"; 
+}
+
+</script>
+
 </head>
-{$body}
+<body onload="javascript: parent.location.href = getUrl();">
 </body>
 </html>
 HTML;
