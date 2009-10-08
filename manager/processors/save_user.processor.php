@@ -219,7 +219,7 @@ switch ($_POST['mode']) {
 		} else {
 			include_once "header.inc.php";
 ?>
-			<h1><?php echo $_lang['web_user_title']; ?></h1>
+			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 			<ul class="actionButtons">
@@ -227,7 +227,7 @@ switch ($_POST['mode']) {
 			</ul>
 			</div>
 
-			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
+			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 			<p>
@@ -403,7 +403,7 @@ switch ($_POST['mode']) {
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
 			include_once "header.inc.php";
 ?>
-			<h1><?php echo $_lang['web_user_title']; ?></h1>
+			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 			<ul class="actionButtons">
@@ -411,7 +411,7 @@ switch ($_POST['mode']) {
 			</ul>
 			</div>
 
-			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
+			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 			<p>
