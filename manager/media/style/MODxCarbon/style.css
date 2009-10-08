@@ -1,4 +1,5 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
+html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
 html, body, form, fieldset {
 	margin: 0;
 	padding: 0;
@@ -16,7 +17,7 @@ body {
 	font-size: 75%;
 	font-size: 68.75%;
 	height: 100%;
-	margin-bottom: 1px;
+	color:#333333;
 	background: #f7f7f7;
 }
 img, a img {
@@ -60,7 +61,7 @@ li, dd, blockquote {
 	font-weight: bold;
 }
 .warning {
-	color: #821517;
+	color: #444444;
 	font-weight: bold;
 }
 .success {
@@ -86,6 +87,7 @@ h1 {
 	font-size: 164%;
 	line-height: 40px;
 	margin-left: 10px;
+	letter-spacing:1px;
 }
 	.rtl h1 {
 		margin-right: 10px;
@@ -399,14 +401,15 @@ input.submit {
 	padding: 5px 3px 5px;
 	font-weight: bold;
 	color: #000;
-	border-top: 1px solid #fff;
+	border: 1px solid #e3e3e3;
+	border-bottom:none;
 }
 .sectionBody, .layerVisible {
 	position: relative;
 	display: none;
 	background: #fff;
 	border: 1px solid #e3e3e3;
-	border-top: 2px solid #e3e3e3;
+	border-top: 1px solid #e3e3e3;
 	margin: 0 10px 10px;
 	padding: 10px;
 	display: block;
@@ -454,7 +457,7 @@ li {
 	list-style: disc outside url(images/misc/li.gif);
 }
 ul {
-	margin: 0 20px 0 10px;
+	margin: 0 20px 0 20px;
 }
 	.rtl ul {
 		margin: 0 10px 0 20px;
@@ -751,7 +754,7 @@ a.hometblink:hover {
 
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu {
-	background: #e4e4e4 url(images/misc/menubg.jpg);
+	background: #e4e4e4 url(images/misc/menubg.png);
 }
 #Navcontainer {
 	padding: 0 10px;
@@ -847,7 +850,7 @@ a.hometblink:hover {
 	left: 0;
 	background: #657587;
 	border-top: 1px solid #8B96A0;
-	border-bottom: 1px solid #2c3d50;
+	border-bottom: 1px solid #7b8c9f;
 }
 	#nav li.active ul.subnav {
 	    right: 0;
@@ -855,7 +858,7 @@ a.hometblink:hover {
 #nav li.active ul.subnav a {
 	color: #fff;
 	font-weight: normal;
-	border-bottom: 1px solid #2c3d50;
+	border-bottom: 1px solid #7b8c9f;
 	background: #657587;
 	cursor: pointer;
 	border-left: none;
@@ -865,12 +868,16 @@ a.hometblink:hover {
 }
 #nav li.active ul.subnav a:hover {
 	color: #fff;
-	background-color: #748394;
+	background-color: #5d6c7d;
+	background-image:none;
 }
 #nav li.active ul.subnav a:active {
 	color: #ccc;
 }
-
+#nav li.active ul.subnav,
+#nav li.active ul.subnav a {
+	background: #657587 url(images/misc/longbarbg.png) repeat-x top;
+}
 
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
 #mx_contextmenu {
@@ -1203,17 +1210,17 @@ fieldset#preview h2.tab {
 	z-index: 100;
 	margin: 0;
 	text-align: right;
-	width: 600px;
 }
 .rtl #actions {
 	left: 10px;
 	text-align: left;
 }
 ul.actionButtons {
-	margin: 0 0 10px;
+	margin: 2px 0 10px;
 	padding: 3px 0; /* accommodate border on buttons - */
 	background: none;
 	width: auto;
+	white-space: nowrap;
 }
 .actionButtons li {
 	display: inline;
@@ -1226,10 +1233,10 @@ ul.actionButtons {
 	margin-top: 1px;
 }
 .actionButtons a {
-	color: #3b454f;
+	color: #222c36;
 	font-weight: bold;
 	font-size: 12px;
-	background: #a0b9d6 url(images/misc/button-gradient.png) repeat-x top left;
+	background: #c7ced2 url(images/misc/button-gradient.png) repeat-x top left;
 	padding: 4px 6px;
 	white-space: nowrap;
 	vertical-align: top;
@@ -1299,6 +1306,11 @@ form#mutate select.inputBox,
 form#mutate input,
 form#mutate textarea {
 	width: 300px;
+}
+form#mutate input.inputBox,
+form#mutate textarea,
+div.tmplvars input {
+	background: #fff url(images/misc/input-bg.gif) repeat-x top left;
 }
 form#mutate textarea.tv_textareamini {
 	height: 100px;
@@ -1480,13 +1492,14 @@ fieldset.legacy h2 {
 input.DatePicker, #mutate input.DatePicker, #userPane input.DatePicker, #webUserPane input.DatePicker, input#datefrom.DatePicker, input#dateto.DatePicker {
 	width: 150px;
 	padding: 3px 3px 3px 24px;
-	border: 1px solid #0070bf;
+	border: 1px solid #b4cde4;
 	font-size: 13px;
 	background: #fff url(images/icons/datenofocus.gif) no-repeat top left;
 	cursor: pointer;
 }
 input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.DatePicker, #webUserPane input:focus.DatePicker, input#datefrom:focus.DatePicker, input#dateto:focus.DatePicker {
 	background: #fffce9 url(images/icons/datefocus.gif) no-repeat top left;
+	cursor:text;
 }
 .dp_container {
 	position: relative;

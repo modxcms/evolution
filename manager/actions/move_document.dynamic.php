@@ -70,7 +70,7 @@ function checkParentChildRelation(pId, pName) {
 <div id="actions">
 	<ul class="actionButtons">
 	    <li><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
-	    <li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?></a></li>
+	  <li><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
 	</ul>
 </div>
 
