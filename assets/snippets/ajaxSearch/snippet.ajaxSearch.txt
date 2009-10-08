@@ -6,7 +6,7 @@
         Ajax-driven & Flexible Search form
 
   Version:
-        1.8.3a
+        1.8.3b
 
   Date: 12/07/2009
   

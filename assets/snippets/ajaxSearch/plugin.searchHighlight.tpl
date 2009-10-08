@@ -1,6 +1,6 @@
 /*
   ------------------------------------------------------------------------
-  Plugin: Search_Highlight v1.4
+  Plugin: Search_Highlight v1.4a
   ------------------------------------------------------------------------
   Changes:
   29/03/09 - Removed urldecode calls;
@@ -120,7 +120,7 @@ if (isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
       $body[1] = preg_replace($pattern, $replacement, $body[1]);
     }
 
-    $output = implode("<body>", $body);
+    $output = implode("<body", $body);
 
     $removeUrl = $modx->makeUrl($modx->documentIdentifier);
     $highlightText .= '<br /><a href="'.$removeUrl.'" class="ajaxSearch_removeHighlight">'.$removeText.'</a></div>';

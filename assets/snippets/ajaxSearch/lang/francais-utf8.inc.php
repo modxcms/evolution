@@ -1,6 +1,6 @@
 <?php
 /*
-francais.inc.php - for AjaxSearch 1.8.2
+francais-utf8.inc.php - for AjaxSearch 1.8.2
 Created by: KyleJ (kjaebker@muddydogpaws.com), Translated by: David Mollière, Corrected by: Jean-Christophe Brebion
 Created on: 01/22/07  Translated on: 04/10/07  Corrected on: 28/07/09
 Description: UTF8 French Language file for AjaxSearch

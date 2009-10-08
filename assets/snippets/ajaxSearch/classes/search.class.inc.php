@@ -4,7 +4,7 @@
  * Purpose:
  *    The Search class contains all functions common to AjaxSearch functionalities
  *
- *    Version: 1.8.3a  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.3b  - Coroico (coroico@wangba.fr)
  *
  *    12/07/2009
  *
@@ -530,7 +530,7 @@ class Search {
     if ($advSearch == 'exactphrase') $search[] = $searchString;
     else $search = explode(' ',$searchString);
 
-    foreach($search as $searchTerm) $where[]=   preg_replace('/word/', $searchTerm, $whereSubClause);
+    foreach($search as $searchTerm) $where[]=   preg_replace('/word/', preg_quote($searchTerm), $whereSubClause);
 
     $whereClause = implode($whereStringOper,$where);
     return $whereClause;
@@ -1357,7 +1357,7 @@ class Search {
 
       // get the rows linked to the unfiltered listIDs
       $rs = $this->doSearch();
-      if ($modx->getRecordCount($rs) > 0){
+      if ($modx->db->getRecordCount($rs) > 0){
         $rows = array();
         while ($row = mysql_fetch_assoc($rs)) {
           $rows[] = $row;
