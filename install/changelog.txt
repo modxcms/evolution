@@ -25,6 +25,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-353]  Duplicate container cause problems (merge from 1.0 dev branch)
 * [#MODX-1065] quoted_printable function in save_user.processor.php not available in some server configurations (merge from 1.0 dev branch)
 * [#MODX-1184] after creating a manager user the head title show wrong text (merge from 1.0 dev branch)
+* [#MODX-1084] Download path issue in File Manager (merge from 1.0 dev branch)
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
