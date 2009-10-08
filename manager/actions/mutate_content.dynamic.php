@@ -798,8 +798,8 @@ if (is_array($evtOut))
 		</table>
 	</div><!-- end #tabSettings -->
 
-<?php if ($modx->hasPermission('edit_doc_metatags')) {
-	// get list of site keywords - code by stevew! modified by Raymond
+<?php if ($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta']) {
+	// get list of site keywords
 	$keywords = array();
 	$ds = $modx->db->select('*', $tbl_site_keywords, '', 'keyword ASC');
 	$limit = $modx->db->getRecordCount($ds);

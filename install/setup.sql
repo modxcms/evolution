@@ -836,6 +836,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxCarbon'),
 ('settings_version','1.0.1'),
+('show_meta','0'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),

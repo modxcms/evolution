@@ -905,15 +905,20 @@ function confirmLangChange(el, lkey, elupd){
               <td colspan="2"><div class='split'></div></td>
             </tr>
              <tr>
-      		   <td nowrap class="warning"><b><?php echo $_lang["show_preview"] ?></b></td>
-      		   <td> <input onchange="documentDirty=true;" type="radio" name="show_preview" value="1" <?php echo ($show_preview=='1' || !isset($show_preview)) ? 'checked="checked"' : ""; ?> />
+      		   <td nowrap class="warning"><b><?php echo $_lang["show_meta"] ?></b></td>
+      		   <td> <input onchange="documentDirty=true;" type="radio" name="show_meta" value="1" <?php echo $show_meta=='1' ? 'checked="checked"' : ""; ?> />
       			 <?php echo $_lang["yes"]?><br />
-      			 <input onchange="documentDirty=true;" type="radio" name="show_preview" value="0" <?php echo $show_preview=='0' ? 'checked="checked"' : ""; ?> />
+      			 <input onchange="documentDirty=true;" type="radio" name="show_meta" value="0" <?php echo ($show_meta=='0' || !isset($show_meta)) ? 'checked="checked"' : ""; ?> />
       			 <?php echo $_lang["no"]?></td>
       		 </tr>
-            <tr>
-              <td colspan="2"><div class='split'></div></td>
-            </tr>
+             <tr>
+               <td width="200">&nbsp;</td>
+               <td class='comment'><?php echo $_lang["show_meta_message"]?></td>
+             </tr>
+<tr>
+  <td colspan="2"><div class='split'></div></td>
+</tr>
+
              <tr>
       		   <td nowrap class="warning"><b><?php echo $_lang["datepicker_offset"] ?></b></td>
       		   <td><input onchange="documentDirty=true;" type='text' maxlength='50' size="5" name="datepicker_offset" value="<?php echo isset($datepicker_offset) ? $datepicker_offset : '-10' ; ?>" /></td>
@@ -1314,33 +1319,26 @@ function get_langs_by_key($key) {
  */
 function get_lang_options($key=null, $selected_lang=null) {
     global $lang_keys;
+	$lang_options = '';
     if($key) {
         $languages = get_langs_by_key($key);
         sort($languages);
-        ob_start();
-            echo <<<OPTION
-                <option value="">{$_lang['language_title']}</option>
+		$lang_options .= '<option value="">'.$_lang['language_title'].'</option>';
 
-OPTION;
         foreach($languages as $language_name) {
             $uclanguage_name = ucwords(str_replace("_", " ", $language_name));
-            echo <<<OPTION
-                <option value="{$language_name}">{$uclanguage_name}</option>
-
-OPTION;
+			$lang_options .= '<option value="'.$language_name.'">'.$uclanguage_name.'</option>';
         }
-        return ob_get_clean();
+        return $lang_options;
     } else {
         $languages = array_keys($lang_keys);
         sort($languages);
         foreach($languages as $language_name) {
             $uclanguage_name = ucwords(str_replace("_", " ", $language_name));
             $sel = $language_name == $selected_lang ? ' selected="selected"' : '';
-            echo <<<OPTION
-                <option value="{$language_name}" {$sel}>{$uclanguage_name}</option>
-
-OPTION;
+			$lang_options .= '<option value="'.$language_name.'" '.$sel.'>'.$uclanguage_name.'</option>';
         }
-        return ob_get_clean();
+        return $lang_options;
     }
 }
+?>

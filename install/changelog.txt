@@ -1,7 +1,7 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.1 (rev 5732 - September 10, 2009)
+MODx Evolution 1.0.1 ($Rev$ - $Date$)
 ===================================
 --------------------------------------------
 Bugfixes & Security Enhancements:
@@ -13,6 +13,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1244] Add ManagerManager 0.3.5
 * [#MODX-1246] Update AjaxSearch to 1.8.3b
 * [#MODX-206]  Reduce vulnerability to CSRF via referrer check update. Additional protections coming in the future via tokenizing requests in the Manager. 
+* [#MODX-1145] Begin deprecation of META Tags management in the Manager (merge from 1.0 dev branch)
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
@@ -27,7 +28,7 @@ Bugfixes & Feature Requests:
 * [#MODX-1049] Cancel action when editing a module goes to wrong location
 * [#MODX-1026] Canceling a template change in Manager lost the original template setting
 * [#MODX-1028] Manager did not properly handle failed login attempt counts or block users
-* [#MODX-999] Fixed width buttons break with some languages (setting pages)
+* [#MODX-999]  Fixed width buttons break with some languages (setting pages)
 * [#MODX-1023] Date and Image TV changing doesn't work correctly in DocManager.
 * [#MODX-1013] Make DocManager use the new DatePicker
 * [MODX-1009] Fix grammar/spelling error in english language file.
