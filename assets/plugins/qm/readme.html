@@ -6,7 +6,7 @@
 @author&nbsp;Mikko Lammi, <a href="http://www.maagit.fi" target="_blank">www.maagit.fi</a> (based on QuickManager by Urique Dertlian, urique@unix.am)<br>
 @license GNU General Public
 License (GPL v3),&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">www.gnu.org/copyleft/gpl.html</a><br>
-@version 1.3.3 updated 7/10/2009<br>@requirements MODx 1.0.0+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+@version 1.3.3 updated 8/10/2009<br>@requirements MODx 1.0.0+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;<br>
 <h2>Description</h2>
 QuickManager+ is an alternative to QuickEdit to quick access and
@@ -39,7 +39,7 @@ which is normally present in MODx manager.</li>
 <li>OnManagerLogout&nbsp;<br>
 </li>
 </ul>
-5. Copy paste plugin configuration: <br>
+5. Copy paste plugin default configuration: <br>
 &nbsp;&nbsp; &nbsp;<br>
 &amp;jqpath=Path to jQuery;text;assets/js/jquery-1.3.2.min.js
 &amp;loadmanagerjq=Load jQuery in manager;list;true,false;true
@@ -191,14 +191,14 @@ on front-end.</td>
 </table>
 <br>
 <h2>How to use</h2>
-Just login, open frontend and enjoy!<h2>Changelog</h2>1.3.3<br><ul><li>Added:
+Just login, open frontend and enjoy!<h2>Changelog</h2>1.3.3<br><ul><li>Added: A fallback to English if the languages are missing in the Manager/user settings</li><li>Added:
 Little tweaks with QuickManager action buttons: small hide/show
-animations and possibilty to close the menu by clicking the MODx logo</li><li>Added: New option for custom buttons: modal = any link opened in a modal box (color box)</li><li>Changed: &nbsp;Custom buttons separator is now || instead of # (reserved for URL anchors)</li><li>Changed: Rounded modal box is back, finally resolved bugs with&nbsp;ColorBox CSS in IE and friendly urls</li><li>Changed: qm-colorbox.css renamed back&nbsp;to colorbox.css</li><li>Fixed: Satinized possible XSS vulnerabilities</li><li>Removed: OnManagerPageInit plugin event removed</li><li>Removed: IE6 support dropped, QuickManager+ is not tested with IE6 as MODx manager doesn't offially support IE6</li></ul>1.3.2.1<br><ul><li>Fixed: Language file loading</li></ul>1.3.2<br><ul><li>Added: New configuration option - jQuery noConflict mode in front-end</li><li>Added: Check user manager access permissions to current document and show action buttons according to permissions</li><li>Added: It's now possible to hide QM+ action buttons</li><li>Added: Hide parent frame scrollbars and QM+ buttons when modal box is visible (ColorBox bindings)</li><li>Added: Modal box can't be accidentally closed by clicking the overlay</li><li>Changed:
+animations and possibilty to close the menu by clicking the MODx logo</li><li>Added: New option for custom buttons: modal = any link opened in a modal box (ColorBox)</li><li>Changed: &nbsp;Custom buttons separator is now || instead of # (reserved for URL anchors)</li><li>Changed: Rounded modal box is back, finally resolved bugs with&nbsp;ColorBox CSS in IE and friendly urls</li><li>Changed: qm-colorbox.css renamed back&nbsp;to colorbox.css</li><li>Fixed: Satinitized possible XSS vulnerabilities</li><li>Removed: OnManagerPageInit plugin event removed</li><li>Removed: IE6 support dropped, QuickManager+ is not tested with IE6 as MODx manager doesn't offially support IE6</li></ul>1.3.2.1<br><ul><li>Fixed: Language file loading</li></ul>1.3.2<br><ul><li>Added: New configuration option - jQuery noConflict mode in front-end</li><li>Added: Check user manager access permissions to current document and show action buttons according to permissions</li><li>Added: It's now possible to hide QM+ action buttons</li><li>Added: Hide parent frame scrollbars and QM+ buttons when modal box is visible (ColorBox bindings)</li><li>Added: Modal box can't be accidentally closed by clicking the overlay</li><li>Changed:
 Stylish ColorBox CSS style didn't work properly with IE and crashed too
 often with Safari, had to replace it with minimalistic style for better
 cross-browser compatibility</li><li>Changed: Updated ColorBox to version 1.3.1, includes for example IE ClearType fix (no more ugly fonts)</li><li>Changed: colorbox.css renamed to qm-colorbox.css and moved to QM+ css&nbsp;folder</li><li>Fixed:
 All normal MODx manager actions including template and RTE selection
-works now just fine (thank you very much Susan O. for your ideas!)</li><li>Fixed: Multiple small CSS fixes for IE</li><li>Fixed: Alias friendly logout code (thanks Mair!)</li><li>Fixed: Language selection a bit more robust and offer a level of fallback</li><li>Removed: Use with ManagerManager
+works now just fine (thank you very much Susan O. for your ideas!)</li><li>Fixed: Multiple small CSS fixes for IE</li><li>Fixed: Alias friendly logout code (thanks Mar!)</li><li>Fixed: Language selection a bit more robust and offer a level of fallback</li><li>Removed: Use with ManagerManager
 plugin &nbsp;-option deprecated</li></ul>1.3.1<br><ul><li>Added:
 It's now possible to change template once. After that you can't change
 the template again but of course you can press cancel button and try

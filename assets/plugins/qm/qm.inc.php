@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi (based on QuickManager by Urique Dertlian, urique@unix.am)
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.3.3 updated 6/10/2009                
+ * @version     1.3.3 updated 8/10/2009                
  */
 
 if(!class_exists('Qm')) {
@@ -47,10 +47,21 @@ class Qm {
         
         // Include MODx manager language file
         global $_lang;
+		
+		// Get manager language
+        $manager_language = $this->modx->config['manager_language'];
+        	
+		// Include_once the language file
+        if(!isset($manager_language) || !file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+            $manager_language = "english"; // if not set, get the english language file.
+        }
+        // Include default language
+        include_once MODX_MANAGER_PATH."includes/lang/english.inc.php";
         
-        include_once($this->modx->config['base_path'].'manager/includes/lang/'.
-			(file_exists(MODX_MANAGER_PATH."includes/lang/".$this->modx->config['manager_language'].".inc.php") ? 
-			$this->modx->config['manager_language'] : 'english').'.inc.php');
+        // Include user language
+        if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php")) {
+            include_once MODX_MANAGER_PATH."includes/lang/".$manager_language.".inc.php";
+        }
         
         // Get event
         $e = $this->modx->Event;
