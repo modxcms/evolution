@@ -404,6 +404,10 @@ input.submit {
 	border: 1px solid #e3e3e3;
 	border-bottom:none;
 }
+	.rtl .sectionHeader {
+		direction: rtl;
+		padding: 5px 18px 5px 3px;
+	}
 .sectionBody, .layerVisible {
 	position: relative;
 	display: none;
@@ -415,6 +419,9 @@ input.submit {
 	display: block;
 	background: #fff url(images/misc/tabareabg.gif) repeat-x top;
 }
+	.tab-page .sectionBody {
+		margin: 0 -10px 0;
+	}
 	.rtl .sectionBody, .layerVisible {
 		direction: rtl;
 		position: inherit;

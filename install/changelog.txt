@@ -27,6 +27,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1184] after creating a manager user the head title show wrong text (merge from 1.0 dev branch)
 * [#MODX-1084] Download path issue in File Manager (merge from 1.0 dev branch)
 * [#MODX-1077] Login panel updates (merge from 1.0 dev branch)
+* [#MODX-180]  Convert weblink to document (and vice versa) (merge from 1.0 dev branch)
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
