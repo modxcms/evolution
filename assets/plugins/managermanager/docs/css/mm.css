@@ -1,0 +1,56 @@
+#nav {
+	background: #45A826;
+	float: left;
+	width: 200px;
+	font-size: 1.2em;
+	color: #FFF;
+}
+#content {
+	margin-left: 220px;
+}
+body {
+	font: 82.5%/1.2 Tahoma, Geneva, sans-serif;
+}
+#banner {
+	background: url(../images/banner.png) no-repeat left top;
+	height: 57px;
+	margin-bottom: 20px;
+}
+#nav a {
+	color: #FFC;
+}
+h1 {
+	font-size: 1.6em;
+	color: #00670A;
+}
+h2 {
+	font-size: 1em;
+	color: #FFF;
+	background: #219910;
+	padding: 2px 5px;
+	margin-top: 2em;
+}
+h3 {
+	font-size: 0.9em;
+	color: #43A82B;
+}
+#nav ul li {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+.remove {	text-decoration: line-through;
+}
+code {
+	display: block;
+	margin: 5px;
+	background-color: #CCCCCC;
+	padding: 3px;
+}
+th, td {
+	padding: 2px 5px;	
+}
+.warning {
+	font-weight: bold;
+	color: #F00;
+}

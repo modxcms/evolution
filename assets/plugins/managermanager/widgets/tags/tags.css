@@ -1,0 +1,26 @@
+@charset "UTF-8";
+/* CSS Document */
+
+ul.mmTagList {
+	list-style: none;
+	margin:0;
+	padding: 0;
+	max-height: 200px;
+	overflow: auto;
+}
+ul.mmTagList li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-decoration: underline;
+	color: #ff0000;
+	float: left;
+	margin: 0 10px 0 0;
+	cursor:pointer;
+	padding: 0 3px;
+}
+ul.mmTagList li.tagSelected {
+	background-color: #ff0000;
+	color: #fff;
+	text-decoration: none;
+}
