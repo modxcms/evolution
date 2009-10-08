@@ -830,7 +830,6 @@ $_lang["settings_title"] = 'Systeminnstillinger';
 $_lang["settings_ui"] = 'Grensesnitt & editor';
 $_lang["settings_users"] = 'Brukere';
 $_lang["showing"] = 'Viser';
-$_lang["show_preview"] = 'Vis forhåndsvisningsvindu';
 $_lang["show_tree"] = 'Vis tre';
 $_lang["signupemail_message"] = 'Her kan du angi beskjeden som sendes til brukere når du oppretter en konto for dem og lar MODx sende epost til dem med deres brukernavn og passord.<br /><b>Obs!:</b> Følgende begrep erstattes av innholdshåndtereren når melddingen sendes:<br /><br />[+sname+] - Navnet på ditt nettsted<br />[+saddr+] - nettstedets epostadresse<br />[+surl+] - nettstedets adresse<br />[+uid+] - Brukerens login eller ID<br />[+pwd+] - Brukerens passord<br />[+ufn+] - Brukerens navn<br /><br /><b>La [+uid+] og [+pwd+] bli igjen i meldingen, ellers inneholder epostmeldingen ikke brukernavn og passord, som gjør at dine brukere ikke kan logge inn!</b>';
 $_lang["signupemail_title"] = 'Registreringsbeskjed';

@@ -847,7 +847,6 @@ $_lang["settings_templvars"] = 'Sivun sisältö (sivupohjan muokattavat kohdat)'
 $_lang["settings_title"] = 'Järjestelmän asetukset';
 $_lang["settings_ui"] = 'Käyttöliittymän ja editorin asetukset';
 $_lang["settings_users"] = 'Käyttäjäasetukset';
-$_lang["show_preview"] = 'Näytä esikatseluikkuna:';
 $_lang["show_tree"] = 'Näytä sivukartta';
 $_lang["showing"] = 'Näytetään';
 $_lang["signupemail_message"] = 'Määrittele uusille käyttäjille lähetettävän liittymissähköpostin sisältö, esim. uuden käyttäjän käyttäjänimi ja salasana. <br /><strong>HUOMAA:</strong> Sisällönhallintajärjestelmä korvaa seuraavat kohdat, kun viesti on lähetetty: <br /><br />[+sname+] - Sivuston nimi, <br />[+saddr+] - Sivuston sähköpostiosoite, <br />[+surl+] - Sivuston osoite, <br />[+uid+] - Käyttäjän kirjautumisnimi tai id, <br />[+pwd+] - Käyttäjän salasana, <br />[+ufn+] - Käyttäjän koko nimi. <br /><br /><strong>Jätä ainakin [+uid+] ja [+pwd+] sähköpostiviestiin, koska muuten käyttäjä ei saa tietoonsa omaa käyttäjänimeään ja salasanaa!</strong>';

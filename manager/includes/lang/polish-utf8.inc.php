@@ -816,7 +816,6 @@ $_lang["settings_templvars"] = 'Zmienne szablonu';
 $_lang["settings_title"] = 'Konfiguracja systemu';
 $_lang["settings_ui"] = 'Ustawienia interfejsu i edytora';
 $_lang["settings_users"] = 'Ustawienia użytkownika';
-$_lang["show_preview"] = 'Pokaż okno podglądu';
 $_lang["show_tree"] = 'Pokaż drzewo';
 $_lang["showing"] = 'Pokazuje';
 $_lang["signupemail_message"] = 'Tutaj możesz ustawić treść wiadomości wysyłanej użytkownikom w momencie utworzenia im konta, pozwalającej MODx na wysłanie im e-maila z nazwą użytkownika i hasłem. <br /><b>Uwaga:</b> Następujące zmienne są zamieniane przez Panel Administracyjny kiedy wiadomość jest wysyłana: <br /><br />[+sname+] - Nazwa twojej strony, <br />[+saddr+] - Adres e-mail twojej strony, <br />[+surl+] - Adres url strony, <br />[+uid+] - Nazwa lub Id użytkownika, <br />[+pwd+] - Hasło użytkownika, <br />[+ufn+] - Pełna nazwa użytkownika. <br /><br /><b>Pozostaw [+uid+] i [+pwd+] w treści e-maila, ponieważ w przeciwnym wypadku nazwa użytkownika oraz hasło nie zostanie wysłane w wiadomości i użytkownicy nie poznają swojej nazwy lub hasła!</b>';

@@ -791,7 +791,6 @@ $_lang["settings_templvars"] = 'Variáveis de Template (TV\'s)';
 $_lang["settings_title"] = 'Configuração do Sistema';
 $_lang["settings_ui"] = 'Interface e Editores';
 $_lang["settings_users"] = 'Utilizador';
-$_lang["show_preview"] = 'Mostrar janela de pré-visualização';
 $_lang["show_tree"] = 'Mostrar árvore';
 $_lang["showing"] = 'Mostrando';
 $_lang["signupemail_message"] = 'Crie aqui o e-mail que é enviado para um utilizador quando este criar uma conta. O MODx envia o nome de utilizador e a senha. <br /><b>Importante:</b> Os seguintes marcadores serão substituídos quando o sistema MODx enviar o e-mail, use-os da forma que quiser: <br /><br />[+sname+] - O nome do site, <br />[+saddr+] - Endereço de e-mail do site, <br />[+surl+] - O URL do site, <br />[+uid+] - O login ou a identificação \'ID\' do utilizador, <br />[+pwd+] - A senha do utilizador, <br />[+ufn+] - O nome completo do utilizador. <br /><br /><b>Insira SEMPRE o  [+uid+] e a [+pwd+] neste e-mail, senão os seus utilizadores não saberão qual o seu nome de utilizador e senha de acesso!</b>';

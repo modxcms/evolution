@@ -849,7 +849,6 @@ $_lang["settings_templvars"] = 'Mallvariabler';
 $_lang["settings_title"] = 'Systeminställningar';
 $_lang["settings_ui"] = 'Gränssnitt &amp; funktioner';
 $_lang["settings_users"] = 'Användare';
-$_lang["show_preview"] = 'Visa förhandsgranskningsfönster';
 $_lang["show_tree"] = 'Visa webbplatsträd';
 $_lang["showing"] = 'Visande';
 $_lang["signupemail_message"] = 'Ange det meddelande som skickas till användare med deras användarnamn och lösenord när konton skapas.<br /><b>Notera:</b> Följande begrepp ersätts av innehållshanteraren när meddelandet sänds:<br /><br />[+sname+] - Namnet på din webbplats<br />[+saddr+] - Webbplatsens e-postadress<br />[+surl+] - Webbplatsens adress<br />[+uid+] - Användarens login eller ID<br />[+pwd+] - Användarens lösenord<br />[+ufn+] - Användarens namn<br /><br /><b>Låt [+uid+] och [+pwd+] stå kvar i meddelandet, annars innehåller mailet inte användarnamn och lösenord, vilket gör att dina användare inte kan logga in!</b>';

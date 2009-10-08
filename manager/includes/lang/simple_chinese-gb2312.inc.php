@@ -757,7 +757,6 @@ $_lang["settings_templvars"] = '模板变量';
 $_lang["settings_title"] = '系统配置';
 $_lang["settings_ui"] = '面板编辑器设置Interface & editor settings';
 $_lang["settings_users"] = '用户设置User settings';
-$_lang["show_preview"] = '显示预览窗口';
 $_lang["show_tree"] = '显示列表树';
 $_lang["showgraphs_message"] = '当生成访问者访问报告时候, 你希望显示列表数据在图象上吗 ？';
 $_lang["showgraphs_title"] = '显示图象:';

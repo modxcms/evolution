@@ -846,7 +846,6 @@ $_lang["settings_templvars"] = 'Template Variables';
 $_lang["settings_title"] = 'Konfigurace systému';
 $_lang["settings_ui"] = 'Rozhraní & vzhled';
 $_lang["settings_users"] = 'Uživatel';
-$_lang["show_preview"] = 'Ukázat náhledové okno';
 $_lang["show_tree"] = 'Ukázat strom dokumentů';
 $_lang["showing"] = 'Zobrazení';
 $_lang["signupemail_message"] = 'Zde můžete nastavit zprávu odesílanou uživatelům po vytvoření účtu. MODx potom odešle email obsahujíci jejich uživatelské jméno a heslo. <b>Poznámka:</b> Následující rezervovaná místa (placeholders) budou nahrazena Správcem obsahu, když pošle zprávu: <br /><br />[+sname+] - Jméno Vaší webové stránky, <br />[+saddr+] - Emailová adresa Vašich stránek, <br />[+surl+] - URL Vašich stránek, <br />[+uid+] - Uživatelské přihlašovací jméno nebo id, <br />[+pwd+] - Uživatelské heslo, <br />[+ufn+] - Celé uživatelovo jméno. <br /><br /><b>Vynecháním [+uid+] a [+pwd+] v emailu způsobíte, že se uživatel nedozví své uživatelské jméno a heslo!</b>';

@@ -824,7 +824,6 @@ $_lang["settings_templvars"] = 'Variables de modèle';
 $_lang["settings_title"] = 'Configuration du système';
 $_lang["settings_ui"] = 'Interface &amp; Fonctionnalités';
 $_lang["settings_users"] = 'Réglages utilisateur';
-$_lang["show_preview"] = 'Afficher la fenêtre de prévisualisation';
 $_lang["show_tree"] = 'Afficher l\'arbre';
 $_lang["showing"] = 'Affichage';
 $_lang["signupemail_message"] = 'Entrez ici le message envoyé à vos utilisateurs lors de la création de leur compte, y compris le nom d\'utilisateur et le mot de passe. <br /><b>Note:</b> Les placeholders suivants seront remplacés par le gestionnaire de contenu lorsque le message sera envoyé: <br /><br />[+sname+] - Nom du site web, <br />[+saddr+] - L\'adresse email principale du site web, <br />[+surl+] - L\'URL du site, <br />[+uid+] - Nom d\' utilisateur ou ID de l\'utilisateur, <br />[+pwd+] - Mot de passe de l\'utilisateur, <br />[+ufn+] - Nom complet de l\'utilisateur. <br /><br /><b>Ne retirez pas les champs [+uid+] et [+pwd+] du message, sans quoi le nom d\'utilisateur et le mot de passe ne seront pas envoyés et vos utilisateurs ne pourront pas se connecter!</b>';

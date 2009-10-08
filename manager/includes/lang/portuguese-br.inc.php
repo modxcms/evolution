@@ -824,7 +824,6 @@ $_lang["settings_templvars"] = 'Template Variáveis de Template';
 $_lang["settings_title"] = 'Configuração do sistema';
 $_lang["settings_ui"] = 'Interface &amp; Recursos';
 $_lang["settings_users"] = 'Usário';
-$_lang["show_preview"] = 'Exibir Janela de Pré-visualizaçao';
 $_lang["show_tree"] = 'Exibir árvore';
 $_lang["showing"] = 'Exibindo';
 $_lang["signupemail_message"] = 'Essa opção inclui o nome de usuário e senha no email de notificação de cadastro.<br /><b>Nota:</b> Os marcadores são substituídos pelo Sistema de Gerenciamento de COnteúdo quando a mensagem é enviada: <br /><br />[+sname+] - Nome do site, <br />[+saddr+] - O endereço de email do site, <br />[+surl+] - A url do site, <br />[+uid+] - Login de usuário ou id, <br />[+pwd+] - Senha do usuário, <br />[+ufn+] - Nome completo do usuário. <br /><br /><b>Para incluir o [+uid+] e [+pwd+] no email, pois de outro modo o login e senha não serão exibidos na mensagem e os usuários não saberão seus dados de acesso!</b>';

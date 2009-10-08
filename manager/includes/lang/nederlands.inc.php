@@ -855,7 +855,6 @@ $_lang["settings_templvars"] = 'Template Variabelen';
 $_lang["settings_title"] = 'Systeem configuratie';
 $_lang["settings_ui"] = 'Interface &amp; mogelijkheden';
 $_lang["settings_users"] = 'Gebruiker';
-$_lang["show_preview"] = 'Voorbeeld venster weergeven:';
 $_lang["show_tree"] = 'Website boomstructuur weergeven';
 $_lang["showing"] = 'Weergeven';
 $_lang["signupemail_message"] = 'Hier kunt u het bericht instellen die naar uw Gebruikers verstuurd wordt wanneer u voor hun een account heeft aangemaakt en MODx een e-mail laat sturen met hun Gebruikersnaam en wachtwoord. <br /><br /><b>NB:</b> De volgende codes worden door MODx vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - Naam van uw website, <br />[+saddr+] - E-mail adres van uw website, <br />[+surl+] - Adres van de website, <br />[+uid+] - Gebruikersnaam of id, <br />[+pwd+] - Wachtwoord, <br />[+ufn+] - Volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de Gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw Gebruikers daardoor hun aanmeldgegevens niet ontvangen!</b>';

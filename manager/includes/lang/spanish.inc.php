@@ -846,7 +846,6 @@ $_lang["settings_templvars"] = 'Variables de Template';
 $_lang["settings_title"] = 'Configuración de sistema';
 $_lang["settings_ui"] = 'Interfase y Características';
 $_lang["settings_users"] = 'Usuario';
-$_lang["show_preview"] = 'Mostrar Ventana de Previsualización';
 $_lang["show_tree"] = 'Mostrar árbol';
 $_lang["showing"] = 'Mostrando';
 $_lang["signupemail_message"] = 'Configurar el mensaje de email enviado a los usuarios cuando se les cree una cuenta  incluyendo su nombre de usuario y su contraseña. <br /><b>Nota:</b> Los siguiente placeholders son remplazados por el Administrador de Contenido cuando el mensaje es enviado: <br /><br />[+sname+] - Nombre de tu sitio web, <br />[+saddr+] - La dirección electrónica de tu sitio web, <br />[+surl+] - La dirección url de tu sitio, <br />[+uid+] - El nombre o id del usuario, <br />[+pwd+] - La contraseña del usuario, <br />[+ufn+] - El nombre completo del usuario. <br /><br /><b>Deja el [+uid+] y [+pwd+] en el email, o el nombre de usuario y la contraseña no serán enviados en el email ¡y tus usuarios no los conocerán!</b>';

@@ -813,7 +813,6 @@ $_lang["settings_templvars"] = 'Template Variabili';
 $_lang["settings_title"] = 'Impostazioni MODx';
 $_lang["settings_ui"] = 'Impostazioni editor & interfaccia';
 $_lang["settings_users"] = 'Impostazioni utente';
-$_lang["show_preview"] = 'Mostra la finestra di anteprima';
 $_lang["show_tree"] = 'Mostra struttura ramificata';
 $_lang["showing"] = 'Visualizzo';
 $_lang["signupemail_message"] = 'Qui potete impostare il messaggio da inviare agli utenti quando create loro un account e volete che MODx  invii una e-mail contenente nome utente e password. <br /><b>Nota:</b> Il codice %s viene sostituito da MODx all\'invio del messaggio. Il primo %s &egrave; sempre rimpiazzato dall nome utente, il secondo dalla password. <b>Lascia i due codici %s nel corpo della e-mail altrimenti il nome utente e password non saranno inviati e l\'utente non ne verr&agrave; a conoscenza!</b>';

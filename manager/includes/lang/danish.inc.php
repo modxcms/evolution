@@ -799,7 +799,6 @@ $_lang["settings_templvars"] = 'Skabelon Variabler';
 $_lang["settings_title"] = 'System konfiguration';
 $_lang["settings_ui"] = 'Interface &amp; Features';
 $_lang["settings_users"] = 'Bruger';
-$_lang["show_preview"] = 'Vis Preview vindue';
 $_lang["show_tree"] = 'Vis træ';
 $_lang["showing"] = 'Viser';
 $_lang["signupemail_message"] = 'Her kan du indskrive den besked der bliver sendt til dine brugere når du opretter en konto for dem og lader MODx sende dem en e-mail indeholdende deres brugernavn og password. <br /><b>Note:</b> Følgende placeholders bliver erstattet af adminstrationen når beskeden bliver sendt: <br /><br />[+sname+] - Navnet på dit website, <br />[+saddr+] - Dit websites email adresse, <br />[+surl+] - Dit websites url, <br />[+uid+] - Bruger\'s Log ind navn eller id, <br />[+pwd+] - Bruger\'s password, <br />[+ufn+] - Bruger\'s fulde navn. <br /><br /><b>Lad dette [+uid+] og [+pwd+] være i e-mailen, Ellers bliver brugernavn and password ikke sendt med i mailen og dine brugere vil ikke få deres brugernavn or password!</b>';

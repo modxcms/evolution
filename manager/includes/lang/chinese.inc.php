@@ -772,7 +772,6 @@ $_lang["settings_templvars"] = '模版变量';
 $_lang["settings_title"] = '系统设置';
 $_lang["settings_ui"] = '面板&编辑器设置';
 $_lang["settings_users"] = '用户设置';
-$_lang["show_preview"] = '显示预览窗口';
 $_lang["show_tree"] = '显示目录树';
 $_lang["showing"] = '正在显示';
 $_lang["signupemail_message"] = '您可以在这里设置好消息，当您的用户在这里注册的时候，镆铘就会自动将此消息发送给他/她。内容中会包含用户名和密码。 <br /><b>注意：</b> 下面的空格将被程序自动替代: <br /><br />[+sname+] - 您网站的名字 <br />[+saddr+] - 您网站的EMAIL地址， <br />[+surl+] - 您网站的地址，<br />[+uid+] - 用户登录名或ID号，<br />[+pwd+] - 用户的密码， <br />[+ufn+] - 用户的全名。 <br /><br /><b>请在内容里保留 [+uid+] 和 [+pwd+],否则您的注册者将不会知道他的密码!</b>';

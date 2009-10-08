@@ -203,25 +203,6 @@ function deletedocument() {
 	}
 }
 
-function previewdocument() {
-	var win = window.frames['preview'];
-	url = "../index.php?id=" + document.mutate.id.value + "&z=manprev";
-	nQ = "id=" + document.mutate.id.value + "&z=manprev"; // new querysting
-	oQ = (win.location.href.split("?"))[1]; // old querysting
-	if (nQ != oQ) {
-		win.location.href = url;
-		win.alreadyPreviewed = true;
-	}
-}
-
-function saveRefreshPreview() {
-	var f = document.forms['mutate'];
-	documentDirty=false;
-	f.target = "preview";
-	f.refresh_preview.value=1;
-	f.save.click();
-	setTimeout("document.forms['mutate'].target='';document.forms['mutate'].refresh_preview.value=0",100);
-}
 // end modifications
 
 var allowParentSelection = false;

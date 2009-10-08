@@ -849,7 +849,6 @@ $_lang["settings_templvars"] = 'テンプレート変数';
 $_lang["settings_title"] = 'グローバル設定';
 $_lang["settings_ui"] = 'インターフェースとその他の機能';
 $_lang["settings_users"] = '詳細設定';
-$_lang["show_preview"] = 'リソースの詳細にプレビューを表示';
 $_lang["show_tree"] = 'サイトツリーの表示';
 $_lang["showing"] = '表示中';
 $_lang["signupemail_message"] = 'ユーザ管理画面でユーザーアカウントを作成した時に、ユーザー名とパスワードを記載したメールを送信することができます。このメールの内容を設定してください。<br /><strong>参考:</strong> 下記の差し込み文字列は送信時に自動的に置き換えられます。<br /><br />[+sname+] - サイトの名前, <br />[+saddr+] - サイト管理者のメールアドレス, <br />[+surl+] - サイトのURL, <br />[+uid+] - ユーザーのログイン名, <br />[+pwd+] - ユーザーのパスワード, <br />[+ufn+] - ユーザーのフルネーム. ';
