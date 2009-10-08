@@ -390,21 +390,25 @@
     function showBinFull() {
         var a = $('Button10');
         var title = '<?php echo $_lang['empty_recycle_bin']; ?>';
-        if(!a.setAttibute) a.title = title;
-        else a.setAttribute('title',title);
-        a.innerHTML = '<?php echo $_style['empty_recycle_bin']; ?>';
-        a.className = 'treeButton';
-        a.onclick = emptyTrash;
+        if (a) {
+            if(!a.setAttribute) a.title = title;
+            else a.setAttribute('title',title);
+            a.innerHTML = '<?php echo $_style['empty_recycle_bin']; ?>';
+            a.className = 'treeButton';
+            a.onclick = emptyTrash;
+        }
     }
 
     function showBinEmpty() {
         var a = $('Button10');
         var title = '<?php echo addslashes($_lang['empty_recycle_bin_empty']); ?>';
-        if(!a.setAttibute) a.title = title;
-        else a.setAttribute('title',title);
-        a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';
-        a.className = 'treeButtonDisabled';
-        a.onclick = '';
+        if (a) {
+            if(!a.setAttribute) a.title = title;
+            else a.setAttribute('title',title);
+            a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';
+            a.className = 'treeButtonDisabled';
+            a.onclick = '';
+        }
     }
 
 </script>

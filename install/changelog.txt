@@ -14,6 +14,8 @@ Bugfixes & Security Enhancements:
 * [#MODX-1246] Update AjaxSearch to 1.8.3b
 * [#MODX-206]  Reduce vulnerability to CSRF via referrer check update. Additional protections coming in the future via tokenizing requests in the Manager. 
 * [#MODX-1145] Begin deprecation of META Tags management in the Manager (merge from 1.0 dev branch)
+* [#MODX-1099] Typo in the name of language variables in File manager (merge from 1.0 dev branch)
+* [#MODX-1087] JS error when manager don't have rights for trashcan (merge from 1.0 dev branch)
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
