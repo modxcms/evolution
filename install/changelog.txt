@@ -22,6 +22,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1001] Navigation issues when pressing the cancel button (merge from 1.0 dev branch)
 * [#MODX-1025] No alerts on deleting the keywords (merge from 1.0 dev branch)
 * [#MODX-1131] Remove "Show Preview Window" from Site Configuration page (merge from 1.0 dev branch)
+* [#MODX-353]  Duplicate container cause problems (merge from 1.0 dev branch)
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================

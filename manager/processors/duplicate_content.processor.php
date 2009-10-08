@@ -54,6 +54,8 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	if ($_toplevel == 0) {
 		$content['pagetitle'] = 'Duplicate of '.$content['pagetitle'];
 		$content['alias'] = null;
+	} elseif($modx->config['friendly_urls'] == 0 || $modx->config['allow_duplicate_alias'] == 0) {
+		$content['alias'] = null;
 	}
 
 	// change the parent accordingly
