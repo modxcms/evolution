@@ -20,6 +20,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-586]  Cancel button on the move document page does not redirect you to the selected page (merge from 1.0 dev branch)
 * [#MODX-1000] On editing a template variable the right "Cancel" button is positioned weird (merge from 1.0 dev branch)
 * [#MODX-1001] Navigation issues when pressing the cancel button (merge from 1.0 dev branch)
+* [#MODX-1025] No alerts on deleting the keywords (merge from 1.0 dev branch)
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
