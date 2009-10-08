@@ -55,12 +55,9 @@
     var selectedObject = 0;
     var selectedObjectDeleted = 0;
     var selectedObjectName = "";
-    var _rc = 0; // added to fix onclick body event from closing ctx menu - 08/11/08
+    var _rc = 0; // added to fix onclick body event from closing ctx menu
 
 <?php
-    //
-    // Jeroen adds an array
-    //
     echo  "var openedArray = new Array();\n";
     if (isset($_SESSION['openedArray'])) {
             $opened = explode("|", $_SESSION['openedArray']);
@@ -69,9 +66,6 @@
                  printf("openedArray[%d] = 1;\n", $item);
             }
     }
-    //
-    // Jeroen end
-    //
 ?>
 
     // return window dimensions in array
@@ -181,9 +175,6 @@
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folderopen"]; ?>' :'<?php echo $_style["tree_folderopen_secure"]; ?>';
             }
 
-            // Raymond: snippet interface
-            //if (node && node.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolder.gif')>-1) {node.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolderopen.gif'}
-
             rpcNodeText = rpcNode.innerHTML;
 
             if (rpcNodeText=="" || rpcNodeText.indexOf(loadText)>0) {
@@ -208,11 +199,8 @@
                 signImg.src = '<?php echo $_style["tree_plusnode"]; ?>';
                 folderImg.src = (privatenode == '0') ? '<?php echo $_style["tree_folder"]; ?>' : '<?php echo $_style["tree_folder_secure"]; ?>';
             }
-            //Raymond: snippet interface
-            if (node.src.indexOf('media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolderopen.gif')>-1) {node.src = 'media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/tree/snippetfolder.gif'}
             //rpcNode.innerHTML = '';
             rpcNode.style.display = 'none';
-            //Jeroen set closed
             openedArray[parent] = 0 ;
         }
     }
@@ -254,16 +242,11 @@
         new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=0', {method: 'get',onComplete:rpcLoadData}).request();
     }
 
-    //
-    // Jeroen makes new function used in body onload
-    //
+    // new function used in body onload
     function restoreTree() {
         rpcNode = $('treeRoot');
         new Ajax('index.php?a=1&f=nodes&indent=1&parent=0&expandAll=2', {method: 'get',onComplete:rpcLoadData}).request();
     }
-    //
-    // Jeroen end
-    //
 
     function setSelected(elSel) {
         var all = document.getElementsByTagName( "SPAN" );
@@ -334,13 +317,8 @@
                 // do nothing?
                 parent.main.location.href="index.php?a=2";
             } else {
-                //
-                //Jeoren added the parentarray, Modified by Raymond: added getFolderState()
-                //
-                parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
-                //
-                // Jeroen added the parentarray
-                //
+                // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
+                parent.main.location.href="index.php?a=3&id=" + id + "&a=27"; // edit as default action
             }
         }
         if(ca=="parent") {
@@ -361,9 +339,6 @@
 
     //Raymond: added getFolderState,saveFolderState
     function getFolderState(){
-        //
-        //Jeoren added the parentarray
-        //
         if (openedArray != [0]) {
                 oarray = "&opened=";
                 for (key in openedArray) {
@@ -374,17 +349,12 @@
         } else {
                 oarray = "&opened=";
         }
-        //
-        // Jeroen added the parentarray
-        //
         return oarray;
     }
     function saveFolderState() {
     	var folderState = getFolderState();
         new Ajax('index.php?a=1&f=nodes&savestateonly=1'+folderState, {method: 'get'}).request();
     }
-    //Raymond:added getFolderState,saveFolderState
-
 
     // show state of recycle bin
     function showBinFull() {
@@ -422,10 +392,8 @@
 
 
 </head>
-<!-- Raymond: add onbeforeunload --><!-- smashingred: added dir class -->
 <body onclick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
 
-<!-- to be improved -->
 <div id="treeSplitter"></div>
 
 <table id="treeMenu" width="100%"  border="0" cellpadding="0" cellspacing="0">
@@ -501,7 +469,6 @@ if(isset($_REQUEST['tree_sortdir'])) {
 </div>
 
 <script type="text/javascript">
-// pixelchutes - 6/4/2007
 // Set 'treeNodeSelected' class on document node when editing via Context Menu
 function setActiveFromContextMenu( doc_id ){
 	$$('.treeNodeSelected').removeClass('treeNodeSelected');
@@ -512,11 +479,11 @@ function setActiveFromContextMenu( doc_id ){
 function menuHandler(action) {
     switch (action) {
         case 1 :
-			setActiveFromContextMenu( itemToChange ); //  pixelchutes
+			setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=3&id=" + itemToChange;
             break
         case 2 :
-			setActiveFromContextMenu( itemToChange ); //  pixelchutes
+			setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=27&id=" + itemToChange;
             break
         case 3 :
@@ -565,7 +532,7 @@ function menuHandler(action) {
             	alert('Document is linked to site_start variable and cannot be unpublished!');
             }
             break
-        //case 11 : //Raymond: create folder (currently removed)
+        //case 11 : // create folder (currently removed)
         //    top.main.document.location.href="index.php?a=85&pid=" + itemToChange;
         //    break
         case 12 : // TobyL: added  preview document in manager ... comment/uncomment preferred method
