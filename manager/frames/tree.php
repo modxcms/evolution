@@ -1,23 +1,18 @@
 <?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
     $theme = $manager_theme ? "$manager_theme/":"";
-    
+
     function constructLink($action, $img, $text, $allowed, $theme) {
         if($allowed==1) { ?>
-            <div class="menuLink" onmouseover="this.className='menuLinkOver';" onmouseout="this.className='menuLink';" onclick="this.className='menuLink'; menuHandler(<?php echo $action ; ?>); hideMenu();">
-                <img src='<?php echo $img; ?>' /><?php echo $text; ?>
-                <!--<img src='media/style/<?php echo $theme; ?>images/icons/<?php echo $img; ?>.gif' /><?php echo $text; ?>-->
-            </div>
-        <?php
-        }
-        else { ?>
+            <div class="menuLink" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
+        <?php } else { ?>
             <div class="menuLinkDisabled">
-                <img src=src='<?php echo $img; ?>' /><?php echo $text; ?>
+        <?php } ?>
+                <img src="<?php echo $img; ?>" /><?php echo $text; ?>
             </div>
         <?php
-        }
     }
-	$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+    $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
@@ -28,8 +23,7 @@
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">
-    /* including (for the really important bits) code devised and written yb patv */
-	window.addEvent('load', function(){
+    window.addEvent('load', function(){
         resizeTree();
         restoreTree();
         window.addEvent('resize', resizeTree);
@@ -159,7 +153,7 @@
     }
 
     function toggleNode(node,indent,parent,expandAll,privatenode) {
-		privatenode = (!privatenode || privatenode == '0') ? privatenode = '0' : privatenode = '1';
+        privatenode = (!privatenode || privatenode == '0') ? privatenode = '0' : privatenode = '1';
         rpcNode = $(node.parentNode.lastChild);
 
         var rpcNodeText;
@@ -186,7 +180,7 @@
                 //Raymond:added getFolderState()
                 var folderState = getFolderState();
                 rpcNode.innerHTML = "<span class='emptyNode' style='white-space:nowrap;'>"+spacer+"&nbsp;&nbsp;&nbsp;"+loadText+"...<\/span>";
-        		new Ajax('index.php?a=1&f=nodes&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+folderState, {method: 'get',onComplete:rpcLoadData}).request();
+                new Ajax('index.php?a=1&f=nodes&indent='+indent+'&parent='+parent+'&expandAll='+expandAll+folderState, {method: 'get',onComplete:rpcLoadData}).request();
             } else {
                 rpcNode.style.display = 'block';
                 //Jeroen set opened
@@ -318,7 +312,7 @@
                 parent.main.location.href="index.php?a=2";
             } else {
                 // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
-                parent.main.location.href="index.php?a=3&id=" + id + "&a=27"; // edit as default action
+                parent.main.location.href="index.php?a=27&id=" + id; // edit as default action
             }
         }
         if(ca=="parent") {
@@ -352,7 +346,7 @@
         return oarray;
     }
     function saveFolderState() {
-    	var folderState = getFolderState();
+        var folderState = getFolderState();
         new Ajax('index.php?a=1&f=nodes&savestateonly=1'+folderState, {method: 'get'}).request();
     }
 
@@ -362,11 +356,11 @@
         var title = '<?php echo $_lang['empty_recycle_bin']; ?>';
         if (a) {
             if(!a.setAttribute) a.title = title;
-            else a.setAttribute('title',title);
-            a.innerHTML = '<?php echo $_style['empty_recycle_bin']; ?>';
-            a.className = 'treeButton';
-            a.onclick = emptyTrash;
-        }
+        else a.setAttribute('title',title);
+        a.innerHTML = '<?php echo $_style['empty_recycle_bin']; ?>';
+        a.className = 'treeButton';
+        a.onclick = emptyTrash;
+    }
     }
 
     function showBinEmpty() {
@@ -374,11 +368,11 @@
         var title = '<?php echo addslashes($_lang['empty_recycle_bin_empty']); ?>';
         if (a) {
             if(!a.setAttribute) a.title = title;
-            else a.setAttribute('title',title);
-            a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';
-            a.className = 'treeButtonDisabled';
-            a.onclick = '';
-        }
+        else a.setAttribute('title',title);
+        a.innerHTML = '<?php echo $_style['empty_recycle_bin_empty']; ?>';
+        a.className = 'treeButtonDisabled';
+        a.onclick = '';
+    }
     }
 
 </script>
@@ -405,7 +399,7 @@
             <td><a href="#" class="treeButton" id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a></td>
             <?php if ($modx->hasPermission('new_document')) { ?>
 	            <td><a href="#" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
-	            <td><a href="#" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
+                <td><a href="#" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
             <?php } ?>
             <td><a href="#" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
             <td><a href="#" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
@@ -471,25 +465,25 @@ if(isset($_REQUEST['tree_sortdir'])) {
 <script type="text/javascript">
 // Set 'treeNodeSelected' class on document node when editing via Context Menu
 function setActiveFromContextMenu( doc_id ){
-	$$('.treeNodeSelected').removeClass('treeNodeSelected');
-	$$('#node'+doc_id+' span')[0].className='treeNodeSelected';
+    $$('.treeNodeSelected').removeClass('treeNodeSelected');
+    $$('#node'+doc_id+' span')[0].className='treeNodeSelected';
 }
 
 // Context menu stuff
 function menuHandler(action) {
     switch (action) {
-        case 1 :
-			setActiveFromContextMenu( itemToChange );
+        case 1 : // view
+            setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=3&id=" + itemToChange;
             break
-        case 2 :
-			setActiveFromContextMenu( itemToChange );
+        case 2 : // edit
+            setActiveFromContextMenu( itemToChange );
             top.main.document.location.href="index.php?a=27&id=" + itemToChange;
             break
-        case 3 :
+        case 3 : // new Resource
             top.main.document.location.href="index.php?a=4&pid=" + itemToChange;
             break
-        case 4 :
+        case 4 : // delete
             if(selectedObjectDeleted==0) {
                 if(confirm("'" + selectedObjectName + "'\n\n<?php echo $_lang['confirm_delete_document']; ?>")==true) {
                     top.main.document.location.href="index.php?a=6&id=" + itemToChange;
@@ -498,18 +492,18 @@ function menuHandler(action) {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['already_deleted']; ?>");
             }
             break
-        case 5 :
+        case 5 : // move
             top.main.document.location.href="index.php?a=51&id=" + itemToChange;
             break
-        case 6 :
+        case 6 : // new Weblink
             top.main.document.location.href="index.php?a=72&pid=" + itemToChange;
             break
-        case 7 : // Ryan: duplicate document
+        case 7 : // duplicate
             if(confirm("<?php echo $_lang['confirm_duplicate_document'] ?>")==true) {
                    top.main.document.location.href="index.php?a=94&id=" + itemToChange;
                }
             break
-        case 8 :
+        case 8 : // undelete
             if(selectedObjectDeleted==0) {
                 alert("'" + selectedObjectName + "' <?php echo $_lang['not_deleted']; ?>");
             } else {
@@ -518,24 +512,21 @@ function menuHandler(action) {
                 }
             }
             break
-        case 9 :
+        case 9 : // publish
             if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_publish']; ?>")==true) {
                 top.main.document.location.href="index.php?a=61&id=" + itemToChange;
             }
             break
-        case 10 :
-        	if (itemToChange != <?php echo $modx->config['site_start']?>) {
-            	if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
-            		top.main.document.location.href="index.php?a=62&id=" + itemToChange;
-            	}
+        case 10 : // unpublish
+            if (itemToChange != <?php echo $modx->config['site_start']?>) {
+                if(confirm("'" + selectedObjectName + "' <?php echo $_lang['confirm_unpublish']; ?>")==true) {
+                    top.main.document.location.href="index.php?a=62&id=" + itemToChange;
+                }
             } else {
-            	alert('Document is linked to site_start variable and cannot be unpublished!');
+                alert('Document is linked to site_start variable and cannot be unpublished!');
             }
             break
-        //case 11 : // create folder (currently removed)
-        //    top.main.document.location.href="index.php?a=85&pid=" + itemToChange;
-        //    break
-        case 12 : // TobyL: added  preview document in manager ... comment/uncomment preferred method
+        case 12 : // preview (alternate methods commented out)
             window.open("../index.php?id=" + itemToChange,'previeWin'); //re-use 'new' window
             //window.open("../index.php?id=" + itemToChange); //open in new window each time
             //top.main.document.location.href="../index.php?id=" + itemToChange; //open in manager
@@ -552,27 +543,26 @@ function menuHandler(action) {
 <div id="mx_contextmenu" onselectstart="return false;">
     <div id="nameHolder">&nbsp;</div>
     <?php
-    constructLink(1, $_style["icons_document_overview"], $_lang["document_overview"], 1,$theme);
-    constructLink(2, $_style["icons_save"], $_lang["edit_document"], $modx->hasPermission('edit_document'),$theme);
-    constructLink(5, $_style["icons_move_document"] , $_lang["move_document"], $modx->hasPermission('save_document'),$theme);
-    constructLink(7, $_style["icons_duplicate_document"], $_lang["duplicate_document"], $modx->hasPermission('new_document'),$theme);
-    // constructLink(11, "folder", $_lang["create_folder_here"], $modx->hasPermission('new_document'),$theme);
+    constructLink(1, $_style["icons_document_overview"], $_lang["document_overview"], $modx->hasPermission('view_document')); // view
+    constructLink(2, $_style["icons_save"], $_lang["edit_document"], $modx->hasPermission('edit_document')); // edit
+    constructLink(5, $_style["icons_move_document"] , $_lang["move_document"], $modx->hasPermission('save_document')); // move
+    constructLink(7, $_style["icons_duplicate_document"], $_lang["duplicate_document"], $modx->hasPermission('new_document')); // duplicate
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(3, $_style["icons_new_document"], $_lang["create_document_here"], $modx->hasPermission('new_document'),$theme);
-    constructLink(6, $_style["icons_weblink"], $_lang["create_weblink_here"], $modx->hasPermission('new_document'),$theme);
+    constructLink(3, $_style["icons_new_document"], $_lang["create_document_here"], $modx->hasPermission('new_document')); // new Resource
+    constructLink(6, $_style["icons_weblink"], $_lang["create_weblink_here"], $modx->hasPermission('new_document')); // new Weblink
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(4, $_style["icons_delete"], $_lang["delete_document"], $modx->hasPermission('delete_document'),$theme);
-    constructLink(8, $_style["icons_undelete_document"], $_lang["undelete_document"], $modx->hasPermission('delete_document'),$theme);
-    constructLink(9, $_style["icons_publish_document"], $_lang["publish_document"], $modx->hasPermission('publish_document'),$theme);
-    constructLink(10, $_style["icons_unpublish_document"], $_lang["unpublish_document"], $modx->hasPermission('publish_document'),$theme);
+    constructLink(4, $_style["icons_delete"], $_lang["delete_document"], $modx->hasPermission('delete_document')); // delete
+    constructLink(8, $_style["icons_undelete_document"], $_lang["undelete_document"], $modx->hasPermission('delete_document')); // undelete
+    constructLink(9, $_style["icons_publish_document"], $_lang["publish_document"], $modx->hasPermission('publish_document')); // publish
+    constructLink(10, $_style["icons_unpublish_document"], $_lang["unpublish_document"], $modx->hasPermission('publish_document')); // unpublish
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(12, $_style["icons_preview_document"], $_lang["preview_document"], 1,$theme);
+    constructLink(12, $_style["icons_preview_document"], $_lang["preview_document"], 1,$theme); // preview
     ?>
 </div>
 
