@@ -12,6 +12,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1245] Update QM+ to version 1.3.3
 * [#MODX-1244] Add ManagerManager 0.3.5
 * [#MODX-1246] Update AjaxSearch to 1.8.3b
+* [#MODX-206]  Reduce vulnerability to CSRF via referrer check update. Additional protections coming in the future via tokenizing requests in the Manager. 
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 ===================================
