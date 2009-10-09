@@ -5,8 +5,8 @@ class DocManagerFrontend {
 	var $modx = null;
 
     function DocManagerFrontend(&$dm, &$modx) {
-    	$this->dm = $dm;
-    	$this->modx = $modx;
+    	$this->dm = &$dm;
+    	$this->modx = &$modx;
     	include (MODX_BASE_PATH.'manager/includes/controls/datagrid.class.php');
     }
     

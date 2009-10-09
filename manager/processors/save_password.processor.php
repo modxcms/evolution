@@ -30,5 +30,4 @@ if(!$rs){
 
 $header="Location: index.php?a=7";
 header($header);
-
 ?>

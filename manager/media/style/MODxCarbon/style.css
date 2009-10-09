@@ -420,7 +420,7 @@ input.submit {
 	background: #fff url(images/misc/tabareabg.gif) repeat-x top;
 }
 	.tab-page .sectionBody {
-		margin: 0 -10px 0;
+		margin: 0 10px 0;
 	}
 	.rtl .sectionBody, .layerVisible {
 		direction: rtl;
@@ -1052,7 +1052,7 @@ a.hometblink:hover {
 	z-index: 2;
 	position: relative;
 	top: -2px;
-	padding: 10px 10px 0;
+	padding: 10px;
 }
 	.rtl .dynamic-tab-pane-control .tab-page {
 	    position: inherit;		/* critical adjustment for IE ul li Proper RTL demonstration */

@@ -5,8 +5,8 @@ class DocManagerBackend {
 	var $modx = null;
 
     function DocManagerBackend(&$dm, &$modx) {
-    	$this->dm = $dm;
-    	$this->modx = $modx;
+    	$this->dm = &$dm;
+    	$this->modx = &$modx;
     }
     
     function handlePostback() {
@@ -74,7 +74,7 @@ class DocManagerBackend {
     		foreach ($items as $key => $value) {
     			$id = ltrim($value, 'item_');
     			if (is_numeric($id)) {
-	    			$sql = "UPDATE {$this->modx->getFullTableName('site_content')} set menuindex=" . $key . " WHERE id=" . $id;
+	    			$sql = 'UPDATE '.$this->modx->getFullTableName('site_content') .' set menuindex=' . $key . ' WHERE id=' . $id;
 					$this->modx->db->query($sql);
     			}
     		}

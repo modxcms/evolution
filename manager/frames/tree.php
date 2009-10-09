@@ -2,7 +2,7 @@
 
     $theme = $manager_theme ? "$manager_theme/":"";
 
-    function constructLink($action, $img, $text, $allowed, $theme) {
+    function constructLink($action, $img, $text, $allowed) {
         if($allowed==1) { ?>
             <div class="menuLink" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
         <?php } else { ?>
@@ -398,7 +398,7 @@
             <td><a href="#" class="treeButton" id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></a></td>
             <td><a href="#" class="treeButton" id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a></td>
             <?php if ($modx->hasPermission('new_document')) { ?>
-	            <td><a href="#" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_document']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
+                <td><a href="#" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_resource']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
                 <td><a href="#" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
             <?php } ?>
             <td><a href="#" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
@@ -437,7 +437,7 @@ if(isset($_REQUEST['tree_sortdir'])) {
             <option value="isfolder" <?php echo $_SESSION['tree_sortby']=='isfolder' ? "selected='selected'" : "" ?>><?php echo $_lang['folder']; ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
             <option value="id" <?php echo $_SESSION['tree_sortby']=='id' ? "selected='selected'" : "" ?>><?php echo $_lang['id']; ?></option>
-            <option value="menuindex" <?php echo $_SESSION['tree_sortby']=='menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['document_opt_menu_index'] ?></option>
+            <option value="menuindex" <?php echo $_SESSION['tree_sortby']=='menuindex' ? "selected='selected'" : "" ?>><?php echo $_lang['resource_opt_menu_index'] ?></option>
             <option value="createdon" <?php echo $_SESSION['tree_sortby']=='createdon' ? "selected='selected'" : "" ?>><?php echo $_lang['createdon']; ?></option>
             <option value="editedon" <?php echo $_SESSION['tree_sortby']=='editedon' ? "selected='selected'" : "" ?>><?php echo $_lang['editedon']; ?></option>
             <option value="pagetitle" <?php echo $_SESSION['tree_sortby']=='pagetitle' ? "selected='selected'" : "" ?>><?php echo $_lang['pagetitle']; ?></option>
@@ -485,7 +485,7 @@ function menuHandler(action) {
             break
         case 4 : // delete
             if(selectedObjectDeleted==0) {
-                if(confirm("'" + selectedObjectName + "'\n\n<?php echo $_lang['confirm_delete_document']; ?>")==true) {
+                if(confirm("'" + selectedObjectName + "'\n\n<?php echo $_lang['confirm_delete_resource']; ?>")==true) {
                     top.main.document.location.href="index.php?a=6&id=" + itemToChange;
                 }
             } else {
@@ -499,7 +499,7 @@ function menuHandler(action) {
             top.main.document.location.href="index.php?a=72&pid=" + itemToChange;
             break
         case 7 : // duplicate
-            if(confirm("<?php echo $_lang['confirm_duplicate_document'] ?>")==true) {
+            if(confirm("<?php echo $_lang['confirm_resource_duplicate'] ?>")==true) {
                    top.main.document.location.href="index.php?a=94&id=" + itemToChange;
                }
             break
@@ -543,26 +543,26 @@ function menuHandler(action) {
 <div id="mx_contextmenu" onselectstart="return false;">
     <div id="nameHolder">&nbsp;</div>
     <?php
-    constructLink(1, $_style["icons_document_overview"], $_lang["document_overview"], $modx->hasPermission('view_document')); // view
-    constructLink(2, $_style["icons_save"], $_lang["edit_document"], $modx->hasPermission('edit_document')); // edit
-    constructLink(5, $_style["icons_move_document"] , $_lang["move_document"], $modx->hasPermission('save_document')); // move
-    constructLink(7, $_style["icons_duplicate_document"], $_lang["duplicate_document"], $modx->hasPermission('new_document')); // duplicate
+    constructLink(1, $_style["icons_resource_overview"], $_lang["resource_overview"], $modx->hasPermission('view_document')); // view
+    constructLink(2, $_style["icons_save"], $_lang["edit_resource"], $modx->hasPermission('edit_document')); // edit
+    constructLink(5, $_style["icons_move_document"] , $_lang["move_resource"], $modx->hasPermission('save_document')); // move
+    constructLink(7, $_style["icons_resource_duplicate"], $_lang["resource_duplicate"], $modx->hasPermission('new_document')); // duplicate
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(3, $_style["icons_new_document"], $_lang["create_document_here"], $modx->hasPermission('new_document')); // new Resource
+    constructLink(3, $_style["icons_new_document"], $_lang["create_resource_here"], $modx->hasPermission('new_document')); // new Resource
     constructLink(6, $_style["icons_weblink"], $_lang["create_weblink_here"], $modx->hasPermission('new_document')); // new Weblink
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(4, $_style["icons_delete"], $_lang["delete_document"], $modx->hasPermission('delete_document')); // delete
-    constructLink(8, $_style["icons_undelete_document"], $_lang["undelete_document"], $modx->hasPermission('delete_document')); // undelete
-    constructLink(9, $_style["icons_publish_document"], $_lang["publish_document"], $modx->hasPermission('publish_document')); // publish
-    constructLink(10, $_style["icons_unpublish_document"], $_lang["unpublish_document"], $modx->hasPermission('publish_document')); // unpublish
+    constructLink(4, $_style["icons_delete"], $_lang["delete_resource"], $modx->hasPermission('delete_document')); // delete
+    constructLink(8, $_style["icons_undelete_resource"], $_lang["undelete_resource"], $modx->hasPermission('delete_document')); // undelete
+    constructLink(9, $_style["icons_publish_document"], $_lang["publish_resource"], $modx->hasPermission('publish_document')); // publish
+    constructLink(10, $_style["icons_unpublish_resource"], $_lang["unpublish_resource"], $modx->hasPermission('publish_document')); // unpublish
     ?>
     <div class="seperator"></div>
     <?php
-    constructLink(12, $_style["icons_preview_document"], $_lang["preview_document"], 1,$theme); // preview
+    constructLink(12, $_style["icons_preview_resource"], $_lang["preview_resource"], 1); // preview
     ?>
 </div>
 

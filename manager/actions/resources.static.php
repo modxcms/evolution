@@ -45,7 +45,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 
-<h1><?php echo $_lang['resource_management']; ?></h1>
+<h1><?php echo $_lang['element_management']; ?></h1>
 
 <div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
@@ -134,7 +134,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
 <!-- category view -->
     <div class="tab-page" id="tabCategory">
-    	<h2 class="tab"><?php echo $_lang["resource_categories"] ?></h2>
+    	<h2 class="tab"><?php echo $_lang["element_categories"] ?></h2>
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabCategory" ) );</script>
 		<p><?php echo $_lang['category_msg']; ?></p>
 		<br />

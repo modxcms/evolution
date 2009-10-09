@@ -39,6 +39,15 @@ header($header);
 function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	global $modx;
 
+	// invoke OnBeforeDocDuplicate event
+	$evtOut = $modx->invokeEvent('OnBeforeDocDuplicate', array(
+		'id' => $docid
+	));
+
+	// if( !in_array( 'false', array_values( $evtOut ) ) ){}
+	// TODO: Determine necessary handling for duplicateDocument "return $newparent" if OnBeforeDocDuplicate were able to conditially control duplication 
+	// [DISABLED]: Proceed with duplicateDocument if OnBeforeDocDuplicate did not return false via: $event->output('false');
+
 	$myChildren = array();
 	$userID = $modx->getLoginUserID();
 
@@ -95,6 +104,12 @@ function duplicateDocument($docid, $parent=null, $_toplevel=0) {
 	duplicateKeywords($docid, $newparent);
 	duplicateTVs($docid, $newparent);
 	duplicateAccess($docid, $newparent);
+	
+	// invoke OnDocDuplicate event
+	$evtOut = $modx->invokeEvent('OnDocDuplicate', array(
+		'id' => $docid,
+		'new_id' => $newparent
+	));
 
 	// Start duplicating all the child documents that aren't deleted.
 	$_toplevel++;

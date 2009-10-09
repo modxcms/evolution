@@ -1,6 +1,6 @@
 <?php
 /**
- * MODx language File
+ * MODx language File (modifié le 03/08/09)
  *
  * @author Grégory Pakosz (guardian) - Modifié par Coroico et Jean-Christophe Brebion (Fairytree) pour MODx 1.0
  * @package MODx
@@ -33,14 +33,14 @@ $_lang["cant_write_config_file"] = 'MODx n\'a pas pu écrire le fichier de confi
 $_lang["cant_write_config_file_note"] = 'Une fois l\'opération effectuée, vous pouvez vous connecter à l\'interface d\'administration de MODx en utilisant l\'adresse  VotreSite.com/manager/.';
 $_lang["checkbox_select_options"] = 'Cochez pour sélectionner les options:';
 $_lang["checking_if_cache_exist"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/cache</span>: ';
-$_lang["checking_if_cache_file2_writable"] = 'Vérification des droits en écriture du fichier<span class=\"mono\">assets/cache/sitePublishing.idx.php</span>: ';
+$_lang["checking_if_cache_file2_writable"] = 'Vérification des droits en écriture du fichier <span class=\"mono\">assets/cache/sitePublishing.idx.php</span>: ';
 $_lang["checking_if_cache_file_writable"] = 'Vérification des droits en écriture du fichier <span class=\"mono\">assets/cache/siteCache.idx.php</span>: ';
 $_lang["checking_if_cache_writable"] = 'Vérification des droits en écriture du répertoire <span class=\"mono\">assets/cache</span>: ';
 $_lang["checking_if_config_exist_and_writable"] = 'Vérification de l\'existence et des droits en écriture du fichier <span class=\"mono\">manager/includes/config.inc.php</span>: ';
 $_lang["checking_if_export_exists"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Vérification des droits en écriture du répertoire <span class=\"mono\">assets/export</span>: ';
 $_lang["checking_if_images_exist"] = 'Vérification de l\'existence du répertoire <span class=\"mono\">assets/images</span>: ';
-$_lang["checking_if_images_writable"] = 'Vérification des droits en écriture du répertoire <span class=\"mono\">assets/images</span>: ';
+$_lang["checking_if_images_writable"] = 'Vérification des droits en écriture des répertoires <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> et <span class="mono">/assets/media</span>: ';
 $_lang["checking_mysql_strict_mode"] = 'Vérification du mode strict MySQL: ';
 $_lang["checking_mysql_version"] = 'Vérification de la version MySQL: ';
 $_lang["checking_php_version"] = 'Vérification de la version PHP: ';

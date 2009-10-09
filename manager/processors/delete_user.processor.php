@@ -75,5 +75,4 @@ if(!$rs) {
 	$header="Location: index.php?a=75";
 	header($header);
 }
-
 ?>

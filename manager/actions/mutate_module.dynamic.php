@@ -394,7 +394,7 @@ function SetUrl(url, width, height, alt) {
 ?>			</select></td></tr>
 		<tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
 			<td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td></tr>
-		<tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang['resource']?></span>:</td>
+		<tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
 			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="sourcefile" type="text" maxlength="255" value="<?php echo $content['sourcefile']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;" /></td></tr>
 		<tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
 			<span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
@@ -469,7 +469,7 @@ if (!$ds) {
 	$grd->columnHeaderClass = 'gridHeader';
 	$grd->itemClass = 'gridItem';
 	$grd->altItemClass = 'gridAltItem';
-	$grd->columns = $_lang['resource_name']." ,".$_lang['type'];
+	$grd->columns = $_lang['element_name']." ,".$_lang['type'];
 	$grd->fields = "name,type";
 	echo $grd->render();
 } ?>

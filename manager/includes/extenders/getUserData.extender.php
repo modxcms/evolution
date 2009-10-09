@@ -50,6 +50,4 @@
 		$tmpArray['break_disposition_header'] = $client->has_quirk('break_disposition_header')==1 ? "true" : "false" ;
 		$tmpArray['empty_file_input_value'] = $client->has_quirk('empty_file_input_value')==1 ? "true" : "false" ;
 		$tmpArray['scrollbar_in_way'] = $client->has_quirk('scrollbar_in_way')==1 ? "true" : "false" ;
-
-
 ?>

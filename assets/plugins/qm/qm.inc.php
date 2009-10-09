@@ -123,7 +123,7 @@ class Qm {
                     
                     $editButton = '
                     <li>
-                    <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><img src="'.$this->modx->config['site_url'].'manager/media/style/MODxCarbon/images/icons/save.png" /> '.$_lang['edit_document'].'</a>
+                    <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><img src="'.$this->modx->config['site_url'].'manager/media/style/MODxCarbon/images/icons/save.png" /> '.$_lang['edit_resource'].'</a>
                     </li>
                     ';
                     
@@ -137,7 +137,7 @@ class Qm {
                         // Add button
                         $addButton = '
                         <li>
-                        <a class="qmButton colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1">'.$_lang['create_document_here'].'</a>
+                        <a class="qmButton colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid='.$docID.'&amp;quickmanager=1">'.$_lang['create_resource_here'].'</a>
                         </li>
                         ';
                         

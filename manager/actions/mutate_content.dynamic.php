@@ -198,7 +198,7 @@ function changestate(element) {
 }
 
 function deletedocument() {
-	if (confirm("<?php echo $_lang['confirm_delete_document']?>")==true) {
+	if (confirm("<?php echo $_lang['confirm_delete_resource']?>")==true) {
 		document.location.href="index.php?id=" + document.mutate.id.value + "&a=6";
 	}
 }
@@ -511,7 +511,7 @@ if (is_array($evtOut))
 <input type="hidden" name="newtemplate" value="" />
 
 <fieldset id="create_edit">
-	<h1><?php if ($_GET['id']){ echo $_lang['edit_document_title']; } else { echo $_lang['create_resource_title'];}?></h1>
+	<h1><?php if ($_GET['id']){ echo $_lang['edit_resource_title']; } else { echo $_lang['create_resource_title'];}?></h1>
 
 <div id="actions">
 	  <ul class="actionButtons">
@@ -534,7 +534,7 @@ if (is_array($evtOut))
 		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
 		  <?php } ?>	
 		  <li id="Button4"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-		  <li id="Button5"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_document"] ?>" /> <?php echo $_lang['preview']?></a></li>
+		  <li id="Button5"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
 	  </ul>
 </div>
 
@@ -543,7 +543,7 @@ if (is_array($evtOut))
 
 <div class="tab-pane" id="documentPane">
 	<script type="text/javascript">
-	tpSettings = new WebFXTabPane( document.getElementById( "documentPane" ) );
+	tpSettings = new WebFXTabPane( document.getElementById( "documentPane" ), false );
 	</script>
 
 	<!-- General -->
@@ -552,18 +552,18 @@ if (is_array($evtOut))
 		<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabGeneral" ) );</script>
 
 		<table width="99%" border="0" cellspacing="5" cellpadding="0">
-			<tr style="height: 24px;"><td width="100" align="left"><span class="warning"><?php echo $_lang['document_title']?></span></td>
+			<tr style="height: 24px;"><td width="100" align="left"><span class="warning"><?php echo $_lang['resource_title']?></span></td>
 				<td><input name="pagetitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['pagetitle']))?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" spellcheck="true" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td align="left"><span class="warning"><?php echo $_lang['long_title']?></span></td>
 				<td><input name="longtitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['longtitle']))?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" spellcheck="true" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_long_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['document_description']?></span></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_long_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_description']?></span></td>
 				<td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['description']))?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" spellcheck="true" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_description_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['document_alias']?></span></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_description_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_alias']?></span></td>
 				<td><input name="alias" type="text" maxlength="100" value="<?php echo stripslashes($content['alias'])?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_alias_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_alias_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['link_attributes']?></span></td>
 				<td><input name="link_attributes" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['link_attributes']))?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['link_attributes_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
@@ -572,13 +572,13 @@ if (is_array($evtOut))
 
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" width="18" height="18" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
 				<td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://"?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 				
 <?php } ?>
 
-			<tr style="height: 24px;"><td valign="top" width="100" align="left"><span class="warning"><?php echo $_lang['document_summary']?></span></td>
+			<tr style="height: 24px;"><td valign="top" width="100" align="left"><span class="warning"><?php echo $_lang['resource_summary']?></span></td>
 				<td valign="top"><textarea name="introtext" class="inputBox" rows="3" style="width:300px;" onchange="documentDirty=true;"><?php echo htmlspecialchars(stripslashes($content['introtext']))?></textarea>
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_summary_help']?>" onclick="alert(this.alt);" style="cursor:help;" spellcheck="true"/></td></tr>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_summary_help']?>" onclick="alert(this.alt);" style="cursor:help;" spellcheck="true"/></td></tr>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['page_data_template']?></span></td>
 				<td><select id="template" name="template" class="inputBox" onchange="templateWarning();" style="width:308px">
 					<option value="0">(blank)</option>
@@ -616,20 +616,20 @@ if (is_array($evtOut))
 				}
 ?>
 				</select> &nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_template_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-			<tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['document_opt_menu_title']?></span></td>
+			<tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['resource_opt_menu_title']?></span></td>
 				<td><input name="menutitle" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['menutitle']))?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_menu_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-			<tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['document_opt_menu_index']?></span></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_menu_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+			<tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['resource_opt_menu_index']?></span></td>
 				<td><table border="0" cellspacing="0" cellpadding="0" style="width:333px;"><tr>
 					<td><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex']?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;" /><input type="button" class="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" class="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />
-					&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_menu_index_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
-					<td align="right" style="text-align:right;"><span class="warning"><?php echo $_lang['document_opt_show_menu']?></span>&nbsp;<input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu']==1) ? 1 : 0?>" />
-					&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_show_menu_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+					&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_menu_index_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+					<td align="right" style="text-align:right;"><span class="warning"><?php echo $_lang['resource_opt_show_menu']?></span>&nbsp;<input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu']==1) ? 1 : 0?>" />
+					&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_show_menu_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 				</tr></table></td></tr>
 
 			<tr><td colspan="2"><div class="split"></div></td></tr>
 			
-			<tr style="height: 24px;"><td valign="top"><span class="warning"><?php echo $_lang['document_parent']?></span></td>
+			<tr style="height: 24px;"><td valign="top"><span class="warning"><?php echo $_lang['resource_parent']?></span></td>
 				<td valign="top">
 				<?php
 				$parentlookup = false;
@@ -667,14 +667,14 @@ if (is_array($evtOut))
 					$parentname = $parentrs['pagetitle'];
 				}
 				?>&nbsp;<img name="plock" src="<?php echo $_style["tree_folder"] ?>" onclick="enableParentSelection(!allowParentSelection);" style="cursor:pointer;" /> <b><span id="parentName"><?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?> (<?php echo $parentname?>)</span></b>
-	&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_parent_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
+	&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_parent_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
 				<input type="hidden" name="parent" value="<?php echo isset($_REQUEST['pid']) ? $_REQUEST['pid'] : $content['parent']?>" onchange="documentDirty=true;" />
 				</td></tr>
 		</table>
 		
 		<?php if ($content['type'] == 'document' || $_REQUEST['a']==4) { ?>
 		<!-- Content -->
-			<div class="sectionHeader"><?php echo $_lang['document_content']?></div>
+			<div class="sectionHeader"><?php echo $_lang['resource_content']?></div>
 			<div class="sectionBody">
 			<?php
 			if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
@@ -805,10 +805,10 @@ if (is_array($evtOut))
 
 		<?php $mx_can_pub = $modx->hasPermission('publish_document') ? '' : 'disabled="disabled" '; ?>
 			<tr style="height: 24px;">
-				<td><span class="warning"><?php echo $_lang['document_opt_published']?></span></td>
+				<td><span class="warning"><?php echo $_lang['resource_opt_published']?></span></td>
 				<td><input <?php echo $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : ''?> onclick="changestate(document.mutate.published);" />
 				<input type="hidden" name="published" value="<?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? 1 : 0?>" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_published_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_published_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>
 			<tr style="height: 24px;">
 				<td><span class="warning"><?php echo $_lang['page_data_publishdate']?></span></td>
@@ -860,12 +860,12 @@ if (is_array($evtOut))
 			?>
 				</select>
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_contentType_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
-			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['document_opt_contentdispo']?></span></td>
+			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_opt_contentdispo']?></span></td>
 				<td><select name="content_dispo" size="1" onchange="documentDirty=true;" style="width:200px">
 					<option value="0"<?php echo !$content['content_dispo'] ? ' selected="selected"':''?>><?php echo $_lang['inline']?></option>
 					<option value="1"<?php echo $content['content_dispo']==1 ? ' selected="selected"':''?>><?php echo $_lang['attachment']?></option>
 				</select>
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_contentdispo_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_contentdispo_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
 		    <tr>
               <td colspan="2"><div class='split'></div></td>
@@ -875,21 +875,21 @@ if (is_array($evtOut))
 
 
 			<tr style="height: 24px;">
-				<td width="150"><span class="warning"><?php echo $_lang['document_opt_folder']?></span></td>
+				<td width="150"><span class="warning"><?php echo $_lang['resource_opt_folder']?></span></td>
 				<td><input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : ''?> onclick="changestate(document.mutate.isfolder);" />
 				<input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0?>" onchange="documentDirty=true;" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_folder_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_folder_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>
 			<tr style="height: 24px;">
-				<td><span class="warning"><?php echo $_lang['document_opt_richtext']?></span></td>
+				<td><span class="warning"><?php echo $_lang['resource_opt_richtext']?></span></td>
 				<td><input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? '' : "checked"?> onclick="changestate(document.mutate.richtext);" />
 				<input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1?>" onchange="documentDirty=true;" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_richtext_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_richtext_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>			
 			<tr style="height: 24px;">
 				<td width="150"><span class="warning"><?php echo $_lang['track_visitors_title']?></span></td>
 				<td><input name="donthitcheck" type="checkbox" class="checkbox" <?php echo ($content['donthit']!=1) ? 'checked="checked"' : ''?> onclick="changestate(document.mutate.donthit);" /><input type="hidden" name="donthit" value="<?php echo ($content['donthit']==1) ? 1 : 0?>" onchange="documentDirty=true;" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_trackvisit_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_trackvisit_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>
 			<tr style="height: 24px;">
 				<td><span class="warning"><?php echo $_lang['page_data_searchable']?></span></td>
@@ -903,10 +903,10 @@ if (is_array($evtOut))
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['page_data_cacheable_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>
 			<tr style="height: 24px;">
-				<td><span class="warning"><?php echo $_lang['document_opt_emptycache']?></span></td>
+				<td><span class="warning"><?php echo $_lang['resource_opt_emptycache']?></span></td>
 				<td><input name="syncsitecheck" type="checkbox" class="checkbox" checked="checked" onclick="changestate(document.mutate.syncsite);" />
 				<input type="hidden" name="syncsite" value="1" />
-				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['document_opt_emptycache_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
+				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_emptycache_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>
 		</table>
 	</div><!-- end #tabSettings -->
@@ -964,7 +964,7 @@ if (is_array($evtOut))
 		<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabMeta" ) );</script>
 
 		<table width="99%" border="0" cellspacing="5" cellpadding="0">
-		<tr style="height: 24px;"><td><?php echo $_lang['document_metatag_help']?><br /><br />
+		<tr style="height: 24px;"><td><?php echo $_lang['resource_metatag_help']?><br /><br />
 			<table border="0" style="width:inherit;"><tr>
 			<td><span class="warning"><?php echo $_lang['keywords']?></span><br />
 				<select name="keywords[]" multiple="multiple" size="16" class="inputBox" style="width: 200px;" onchange="documentDirty=true;">

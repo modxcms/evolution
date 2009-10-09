@@ -1,16 +1,19 @@
 
-                              AjaxSearch - version 1.8.3a
+                              AjaxSearch - version 1.8.3b
                            
                            Coroico - http://www.modx.wangba.fr
                            
-                                    12th of July 2009
+                                    26th of August 2009
 
-The release 1.8.3a solve the AJAXSEARCH-35 issue.
+The release 1.8.3b:
+ - solve the AJAXSEARCH-38, AJAXSEARCH-39 and AJAXSEARCH-41 issues
+ - add the czech language file
 
 Previous versions : 
- - 1.8.3 delivered the 08th June 2009
- - 1.8.2 delivered the 21th April 2009
- - 1.8.1 delivered the 13th October 2008 (provided with MODx0.9.6.3)
+ - 1.8.3a delivered the 12th of July 2009 (provided with MODx1.0.0)
+ - 1.8.3 delivered the 08th of June 2009
+ - 1.8.2 delivered the 21th of April 2009
+ - 1.8.1 delivered the 13th of October 2008 (provided with MODx0.9.6.3)
 
 
 ==================== NEW OPTIONS / CHANGES (since 1.8.1) =======================
@@ -271,3 +274,12 @@ http://svn.modxcms.com/jira/browse/AJAXSEARCH-33
 
 ==== AJAXSEARCH-35 : ajaxSearch form not sanitizing input (advSearch parameter)
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-35
+
+==== AJAXSEARCH-38 : body>> in Search Highlighting
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-38
+
+==== AJAXSEARCH-39 : Call to undefined method DocumentParser::getRecordCount() 
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-39
+
+==== AJAXSEARCH-41 : Weird behavior versus dollar sign followed by 2 digits / \$\d{2} / 
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-41

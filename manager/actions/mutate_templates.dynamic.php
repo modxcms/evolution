@@ -112,7 +112,7 @@ function deletedocument() {
     		  </li>
     		  <?php
     			if ($_REQUEST['a'] == '16') { ?>
-    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
     		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } else { ?>
     		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
@@ -141,7 +141,7 @@ function deletedocument() {
 	<?php echo $_lang['template_msg']; ?><p />
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	  <tr>
-	    <td align="left"><img src="media/style/<?php echo $manager_theme; ?>images/_tx_.gif" width="100" height="1"></td>
+	    <td align="left"><img src="media/style/<?php echo $manager_theme; ?>/images/_tx_.gif" width="100" height="1"></td>
 	    <td align="left">&nbsp;</td>
 	  </tr>
 	  <tr>

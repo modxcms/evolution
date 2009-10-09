@@ -125,5 +125,4 @@ function evalModule($moduleCode,$params){
 	unset($modx->event->params); 
 	return $mod.$msg;
 }
-
 ?>

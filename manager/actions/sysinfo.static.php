@@ -71,11 +71,11 @@ if(!$modx->hasPermission('logs')) {
 		  <tr>
 			<td><?php echo $_lang['database_charset']?></td>
 			<td>&nbsp;</td>
-			<td><strong><?php 
+			<td><strong><?php
 	$sql1 = "show variables like 'character_set_database'";
     $res = $modx->db->query($sql1);
     $charset = $modx->db->getRow($res, 'num');
-    echo $charset[1];			
+    echo $charset[1];
 			?></strong></td>
 		  </tr>
 		  <tr>
@@ -130,7 +130,7 @@ if(!$modx->hasPermission('logs')) {
 			<thead>
 			<tr>
 				<td><b><?php echo $_lang["id"]; ?></b></td>
-				<td><b><?php echo $_lang["document_title"]; ?></b></td>
+				<td><b><?php echo $_lang["resource_title"]; ?></b></td>
 				<td><b><?php echo $_lang["sysinfo_userid"]; ?></b></td>
 				<td><b><?php echo $_lang["datechanged"]; ?></b></td>
 			</tr>
@@ -196,7 +196,7 @@ if(!$modx->hasPermission('logs')) {
 		}
 	}
 
-	$sql = "SHOW TABLE STATUS FROM $dbase;";
+	$sql = "SHOW TABLE STATUS FROM $dbase LIKE '$table_prefix%';";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for ($i = 0; $i < $limit; $i++) {
@@ -247,7 +247,7 @@ if(!$modx->hasPermission('logs')) {
 		</table>
 <?php
 	if($totaloverhead>0) { ?>
-		<p><?php echo $_lang['database_overhead']; ?></p>	
+		<p><?php echo $_lang['database_overhead']; ?></p>
 		<?php } ?>
 </form>
 </div>
@@ -264,7 +264,7 @@ if(!$modx->hasPermission('logs')) {
 			<td><b><?php echo $_lang['onlineusers_ipaddress']; ?></b></td>
 			<td><b><?php echo $_lang['onlineusers_lasthit']; ?></b></td>
 			<td><b><?php echo $_lang['onlineusers_action']; ?></b></td>
-			<td><b><?php echo $_lang['onlineusers_actionid']; ?></b></td>			
+			<td><b><?php echo $_lang['onlineusers_actionid']; ?></b></td>
 		  </tr>
 		  </thead>
 		  <tbody>

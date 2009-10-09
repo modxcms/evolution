@@ -115,12 +115,12 @@ if (mysql_num_rows($rs) < 1) {
 
 
 <div class="tab-page" id="tabPage2">
-<h2 class="tab"><?php echo $_lang['access_permissions_document_groups'] ?></h2>
+<h2 class="tab"><?php echo $_lang['access_permissions_resource_groups'] ?></h2>
 <script type="text/javascript">tp1.addTabPage( document.getElementById( "tabPage2" ) );</script>
 <?php
 // Document Groups
 
-	echo '<p>'.$_lang['access_permissions_documents_tab'].'</p>';
+	echo '<p>'.$_lang['access_permissions_resources_tab'].'</p>';
 
 	$sql = 'SELECT '.
 		'dgnames.id, '.
@@ -134,7 +134,7 @@ if (mysql_num_rows($rs) < 1) {
 ?>
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
 		<thead>
-		<tr><td><b><?php echo $_lang['access_permissions_add_document_group'] ?></b></td></tr>
+		<tr><td><b><?php echo $_lang['access_permissions_add_resource_group'] ?></b></td></tr>
 		</thead>
 		<tr class="row1"><td>
 			<form method="post" action="index.php" name="accesspermissions" style="margin: 0px;">
@@ -153,7 +153,7 @@ if (mysql_num_rows($rs) < 1) {
 	} else {
 		echo '<table width="600" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">'."\n".
 		'	<thead>'."\n".
-		'	<tr><td><b>'.$_lang['access_permissions_document_groups'].'</b></td></tr>'."\n".
+		'	<tr><td><b>'.$_lang['access_permissions_resource_groups'].'</b></td></tr>'."\n".
 		'	</thead>'."\n";
 		$pid = '';
 		while ($row = mysql_fetch_assoc($rs)) {
@@ -169,11 +169,11 @@ if (mysql_num_rows($rs) < 1) {
 				'	<input type="button" value="'.$_lang['delete'].'" onclick="document.location.href=\'index.php?a=92&documentgroup='.$row['id'].'&operation=delete_document_group\';" />'."\n".
 				'</form>';
 
-				echo '</td></tr><tr><td class="row2">'.$_lang['access_permissions_documents_in_group'].' ';
+				echo '</td></tr><tr><td class="row2">'.$_lang['access_permissions_resources_in_group'].' ';
 			}
 			if (!$row['doc_id']) {
 				// no documents in group
-				echo $_lang['access_permissions_no_documents_in_group'];
+				echo $_lang['access_permissions_no_resources_in_group'];
 				$pid = $row['id'];
 				continue;
 			}

@@ -236,5 +236,4 @@ class Thumbnail {
 		return ($result)?$thumb:false;
 	}
 }
-
 ?>

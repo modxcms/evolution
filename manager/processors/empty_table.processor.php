@@ -10,5 +10,4 @@ $rs = @mysql_query($sql);
 
 $header="Location: index.php?a=13";
 header($header);
-
 ?>

@@ -43,7 +43,7 @@ if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
     $modx->setPlaceholder('ModulesIcon',$icon);
 }
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
-    $icon = '<a class="hometblink" href="index.php?a=76"><img src="media/style/[+theme+]/images/icons/resources.gif" width="32" height="32" alt="'.$_lang['resource_management'].'" /><br />'.$_lang['resources'].'</a>';
+    $icon = '<a class="hometblink" href="index.php?a=76"><img src="media/style/[+theme+]/images/icons/resources.gif" width="32" height="32" alt="'.$_lang['element_management'].'" /><br />'.$_lang['elements'].'</a>';
     $modx->setPlaceholder('ResourcesIcon',$icon);
 }
 if($modx->hasPermission('bk_manager')) {
@@ -67,13 +67,11 @@ else {
 include_once "rss.inc.php"; 
 
 // modx news
-$html = $_lang["modx_news"].'<br /><br />';
 $modx->setPlaceholder('modx_news',$_lang["modx_news_tab"]);
 $modx->setPlaceholder('modx_news_title',$_lang["modx_news_title"]);
 $modx->setPlaceholder('modx_news_content',$feedData['modx_news_content']);
 
 // security notices
-$html = $_lang["modx_security_notices"].'<br /><br />';
 $modx->setPlaceholder('modx_security_notices',$_lang["security_notices_tab"]);
 $modx->setPlaceholder('modx_security_notices_title',$_lang["security_notices_title"]);
 $modx->setPlaceholder('modx_security_notices_content',$feedData['modx_security_notices_content']);
@@ -103,7 +101,7 @@ $modx->setPlaceholder('RecentInfo',$html);
 $modx->setPlaceholder('info',$_lang['info']);
 $modx->setPlaceholder('yourinfo_title',$_lang['yourinfo_title']);
 $html = '
-    '.$_lang["yourinfo_message"].'<br /><br />
+    <p>'.$_lang["yourinfo_message"].'</p>
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td width="150">'.$_lang["yourinfo_username"].'</td>
@@ -153,7 +151,7 @@ $html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
     if($limit<1) {
-        $html.= "No active users found.<br /><br />";
+        $html.= "<p>No active users found.</p>";
     } else {
         for ($i = 0; $i < $limit; $i++) {
             $activeusers = mysql_fetch_assoc($rs);
@@ -203,5 +201,4 @@ if ($js= $modx->getRegisteredClientScripts()) {
 }
 
 echo $tpl;
-
 ?>

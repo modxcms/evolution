@@ -18,5 +18,4 @@ if($sql) $rs = @mysql_query($sql);
 $mode = intval($_REQUEST['mode']);
 $header="Location: index.php?a=".$mode."&s=4";
 header($header);
-
 ?>

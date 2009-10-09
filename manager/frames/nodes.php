@@ -27,13 +27,13 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $_SESSION['tree_sortdir'] = $_REQUEST['tree_sortdir'];
     }
 
-    // icons by content type 
-    
+    // icons by content type
+
     $icons = array(
         'application/rss+xml' => $_style["tree_page_rss"],
         'application/pdf' => $_style["tree_page_pdf"],
-        'application/msword' => $_style["tree_page_word"],
-        'application/excel' => $_style["tree_page_excel"],
+        'application/vnd.ms-word' => $_style["tree_page_word"],
+        'application/vnd.ms-excel' => $_style["tree_page_excel"],
         'text/css' => $_style["tree_page_css"],
         'text/html' => $_style["tree_page_html"],
         'text/xml' => $_style["tree_page_xml"],
@@ -42,7 +42,20 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'image/jpg' => $_style["tree_page_jpg"],
         'image/png' => $_style["tree_page_png"]
     );
-    
+	$iconsPrivate = array(
+	    'application/rss+xml' => $_style["tree_page_rss_secure"],
+	    'application/pdf' => $_style["tree_page_pdf_secure"],
+	    'application/vnd.ms-word' => $_style["tree_page_word_secure"],
+	    'application/vnd.ms-excel' => $_style["tree_page_excel_secure"],
+	    'text/css' => $_style["tree_page_css_secure"],
+	    'text/html' => $_style["tree_page_html_secure"],
+	    'text/xml' => $_style["tree_page_xml_secure"],
+	    'text/javascript' => $_style["tree_page_js_secure"],
+	    'image/gif' => $_style["tree_page_gif_secure"],
+	    'image/jpg' => $_style["tree_page_jpg_secure"],
+	    'image/png' => $_style["tree_page_png_secure"]
+	);
+
     if (isset($_SESSION['openedArray'])) {
             $opened = explode("|", $_SESSION['openedArray']);
     } else {
@@ -65,7 +78,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
     function makeHTML($indent,$parent,$expandAll,$theme) {
     	global $modx;
-        global $icons, $theme, $_style;
+        global $icons, $iconsPrivate, $theme, $_style;
         global $modxDBConn, $output, $dbase, $table_prefix, $_lang, $opened, $opened2, $closed2; //added global vars
 
         $pad = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -126,15 +139,14 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 			$pageIdDisplay = '<small>('.($modx_textdir ? '&rlm;':'').$id.')</small>';
 
             $alt = !empty($alias) ? $_lang['alias'].": ".$alias : $_lang['alias'].": -";
-            $alt.= " ".$_lang['document_opt_menu_index'].": ".$menuindex;
-            $alt.= " ".$_lang['document_opt_show_menu'].": ".($hidemenu==1 ? $_lang['no']:$_lang['yes']);
+            $alt.= " ".$_lang['resource_opt_menu_index'].": ".$menuindex;
+            $alt.= " ".$_lang['resource_opt_show_menu'].": ".($hidemenu==1 ? $_lang['no']:$_lang['yes']);
             $alt.= " ".$_lang['page_data_web_access'].": ".($privateweb ? $_lang['private']:$_lang['public']);
             $alt.= " ".$_lang['page_data_mgr_access'].": ".($privatemgr ? $_lang['private']:$_lang['public']);
 
             if (!$isfolder) {
-                $icon=$_style["tree_page"];
-                if($privateweb||$privatemgr) $icon=$_style["tree_page_secure"];
-                else if(isset($icons[$contenttype])) $icon = $icons[$contenttype];
+                $icon = ($privateweb||$privatemgr) ? $_style["tree_page_secure"] : $_style["tree_page"];
+				$icon = (($privateweb||$privatemgr) && (isset($icons[$contenttype]))) ? $iconsPrivate[$contenttype] : $icons[$contenttype];
                 $output .= '<div id="node'.$id.'" p="'.$parent.'" style="white-space: nowrap;">'.$spacer.$pad.'<img id="p'.$id.'" align="absmiddle" title="'.$_lang['click_to_context'].'" style="cursor: pointer" src="'.$icon.'" onclick="showPopup('.$id.',\''.addslashes($pagetitle).'\',event);return false;" oncontextmenu="this.onclick(event);return false;" onmouseover="setCNS(this, 1)" onmouseout="setCNS(this, 0)" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" />&nbsp;';
                 $output .= '<span p="'.$parent.'" onclick="treeAction('.$id.', \''.addslashes($pagetitle).'\'); setSelected(this);" onmouseover="setHoverClass(this, 1);" onmouseout="setHoverClass(this, 0);" class="treeNode" onmousedown="itemToChange='.$id.'; selectedObjectName=\''.addslashes($pagetitle).'\'; selectedObjectDeleted='.$deleted.';" oncontextmenu="document.getElementById(\'p'.$id.'\').onclick(event);return false;" title="'.addslashes($alt).'">'.$pagetitleDisplay.$weblinkDisplay.'</span> '.$pageIdDisplay.'</div>';
             }
@@ -172,5 +184,4 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             }
         }
     }
-
 ?>

@@ -9,7 +9,7 @@ if(!$modx->hasPermission('edit_module')) {
 ?>
 <html>
 <head>
-	<title><?php echo $content["name"]." ".$_lang['resource_selector_title']; ?></title>
+	<title><?php echo $content["name"]." ".$_lang['element_selector_title']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <?php
@@ -82,7 +82,7 @@ if($_SESSION['browser']=='ie') {
 			break;
 
 		case("doc"):
-			$title = $_lang["document"];
+			$title = $_lang["resource"];
 			$sql="SELECT id,pagetitle as 'name',longtitle as 'description' FROM ".$modx->getFullTableName("site_content").
 			($sqlQuery ? " WHERE (pagetitle LIKE '%$sqlQuery%') OR (longtitle LIKE '%$sqlQuery%')":"")." ORDER BY pagetitle";
 			break;
@@ -151,9 +151,9 @@ if($_SESSION['browser']=='ie') {
 <input type="hidden" name="rt" value="<?php echo $rt; ?>" />
 <input type="hidden" name="sm" value="<?php echo $sm; ?>" />
 <input type="hidden" name="cb" value="<?php echo $cb; ?>" />
-<div class="sectionHeader" style="margin:0px"><?php echo $title." - ".$_lang['resource_selector_title']; ?></div>
+<div class="sectionHeader" style="margin:0px"><?php echo $title." - ".$_lang['element_selector_title']; ?></div>
 <div class="sectionBody" style="margin-top:5px;margin-right:0px;margin-left:0px;border:0px;">
-<p><img src="<?php echo $_style["icons_right_arrow"] ?>" alt="." width="32" height="32" align="left" /><?php echo $_lang['resource_selector_msg']; ?></p>
+<p><img src="<?php echo $_style["icons_right_arrow"] ?>" alt="." width="32" height="32" align="left" /><?php echo $_lang['element_selector_msg']; ?></p>
 <br />
 <!-- resources -->
 	 <table width="100%" border="0" cellspacing="1" cellpadding="2">

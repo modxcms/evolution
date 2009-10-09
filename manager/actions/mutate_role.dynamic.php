@@ -106,7 +106,7 @@ function deletedocument() {
     <td><input name="name" type="text" maxlength=50 value="<?php echo $roledata['name'] ; ?>" onChange="documentDirty=true;"></td>
   </tr>
   <tr>
-    <td><?php echo $_lang['document_description']; ?>:</td>
+    <td><?php echo $_lang['resource_description']; ?>:</td>
     <td>&nbsp;</td>
     <td><input name="description" type="text" maxlength=255 value="<?php echo $roledata['description'] ; ?>" size="60" onChange="documentDirty=true;"></td>
   </tr>

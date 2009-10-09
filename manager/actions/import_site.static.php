@@ -38,7 +38,7 @@ if(!isset($_POST['import'])) {
 <input type="hidden" name="parent" value="0" />
 <table border="0" cellspacing="0" cellpadding="2" width="400">
   <tr>
-    <td nowrap="nowrap"><b><?php echo $_lang['import_parent_document']; ?></b></td>
+    <td nowrap="nowrap"><b><?php echo $_lang['import_parent_resource']; ?></b></td>
     <td>&nbsp;</td>
     <td><b><span id="parentName">0 (<?php echo $site_name; ?>)</span></b></td>
   </tr>
@@ -208,5 +208,4 @@ function getFileContent($file) {
 function stripAlias($alias) {
     return $GLOBALS['modx']->stripAlias($alias);
 }
-
 ?>
