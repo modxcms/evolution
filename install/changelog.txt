@@ -43,6 +43,7 @@ Additional Improvements & Updates:
 * [#MODX-1069] Improve layout/simplify Module Manager page
 * [#MODX-1097] Tweak htaccess rule template and improve wiki documentation of such
 * [#MODX-1137] Change Manager term "alias" to "URL alias"
+* [#MODX-1138] New more flexible and manageable installer
 * [#MODX-1149] Update language string Resource_X and Document_X keys to match actual changes
 * [#MODX-1211] Add configuration option to QM+ - allows user to choose top or bottom placement of toolbar overlay in browser window
 * [#MODX-1244] Add ManagerManager 0.3.5
@@ -56,6 +57,7 @@ MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 --------------------------------------------
 Bugfixes & Feature Requests:
 --------------------------------------------
+* [#MODX-583]  Alter email-related Manager settings by reloading from specific translations
 * [#MODX-1061] Link list fixed in TinyMCE 
 * [#MODX-1060] Escape language string for the recycle bin to fix a problem with disappearing trees
 * [#MODX-1027] Fix broken images with Image TV Preview plugin when no image selected

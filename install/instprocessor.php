@@ -361,12 +361,11 @@ if (isset ($_POST['chunk'])) {
 		$si = (int) trim($si);
 		$name = mysql_real_escape_string($moduleChunks[$si][0]);
 		$desc = mysql_real_escape_string($moduleChunks[$si][1]);
-		$type = $moduleChunks[$si][2]; // 0:file, 1:content
-		$filecontent = $moduleChunks[$si][3];
-		if ($type == 0 && !file_exists($filecontent))
+		$filecontent = $moduleChunks[$si][2];
+		if (!file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_chunk'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
-			$chunk = ($type == 1) ? $filecontent : implode('', file($filecontent));
+			$chunk = preg_replace("/\/\*\*.*\*\//s", '', file_get_contents($filecontent), 1);
 			$chunk = mysql_real_escape_string($chunk);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
@@ -396,15 +395,14 @@ if (isset ($_POST['module'])) {
 		$si = (int) trim($si);
 		$name = mysql_real_escape_string($moduleModules[$si][0]);
 		$desc = mysql_real_escape_string($moduleModules[$si][1]);
-		$type = $moduleModules[$si][2]; // 0:file, 1:content
-		$filecontent = $moduleModules[$si][3];
-		$properties = mysql_real_escape_string($moduleModules[$si][4]);
-		$guid = mysql_real_escape_string($moduleModules[$si][5]);
-		$shared = mysql_real_escape_string($moduleModules[$si][6]);
-		if ($type == 0 && !file_exists($filecontent))
+		$filecontent = $moduleModules[$si][2];
+		$properties = mysql_real_escape_string($moduleModules[$si][3]);
+		$guid = mysql_real_escape_string($moduleModules[$si][4]);
+		$shared = mysql_real_escape_string($moduleModules[$si][5]);
+		if (!file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_module'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
-			$module = ($type == 1) ? $filecontent : implode('', file($filecontent));
+			$module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
 			$module = mysql_real_escape_string($module);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
@@ -434,15 +432,14 @@ if (isset ($_POST['plugin'])) {
 		$si = (int) trim($si);
 		$name = mysql_real_escape_string($modulePlugins[$si][0]);
 		$desc = mysql_real_escape_string($modulePlugins[$si][1]);
-		$type = $modulePlugins[$si][2]; // 0:file, 1:content
-		$filecontent = $modulePlugins[$si][3];
-		$properties = mysql_real_escape_string($modulePlugins[$si][4]);
-		$events = explode(",", $modulePlugins[$si][5]);
-		$guid = mysql_real_escape_string($modulePlugins[$si][6]);
-		if ($type == 0 && !file_exists($filecontent))
+		$filecontent = $modulePlugins[$si][2];
+		$properties = mysql_real_escape_string($modulePlugins[$si][3]);
+		$events = explode(",", $modulePlugins[$si][4]);
+		$guid = mysql_real_escape_string($modulePlugins[$si][5]);
+		if (!file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_plugin'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
-			$plugin = ($type == 1) ? $filecontent : implode('', file($filecontent));
+			$plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
 			$plugin = mysql_real_escape_string($plugin);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
@@ -495,13 +492,12 @@ if (isset ($_POST['snippet'])) {
 		$si = (int) trim($si);
 		$name = mysql_real_escape_string($moduleSnippets[$si][0]);
 		$desc = mysql_real_escape_string($moduleSnippets[$si][1]);
-		$type = $moduleSnippets[$si][2]; // 0:file, 1:content
-		$filecontent = $moduleSnippets[$si][3];
-		$properties = mysql_real_escape_string($moduleSnippets[$si][4]);
-		if ($type == 0 && !file_exists($filecontent))
+		$filecontent = $moduleSnippets[$si][2];
+		$properties = mysql_real_escape_string($moduleSnippets[$si][3]);
+		if (!file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_snippet'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
-			$snippet = ($type == 1) ? $filecontent : implode('', file($filecontent));
+			$snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
 			$snippet = mysql_real_escape_string($snippet);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {

@@ -404,6 +404,9 @@ input.submit {
 	border: 1px solid #e3e3e3;
 	border-bottom:none;
 }
+	.tab-page .sectionHeader {
+		margin: 10px -10px 0;
+	}
 	.rtl .sectionHeader {
 		direction: rtl;
 		padding: 5px 18px 5px 3px;
@@ -1286,13 +1289,13 @@ ul.actionButtons {
     color: #3b454f;
 	font-weight: bold;
 }
-/*
+		/*
 * Generic styles for all form elements
-*/
+		*/
 form#mutate dt,
 form#mutate dd {
 	margin-bottom: 10px;
-}
+	}
 form#mutate dt label,
 form#mutate dt h3.label {
 	font-size: 12px;
@@ -1301,12 +1304,12 @@ form#mutate dt h3.label {
 	width: 200px;
 	color: #821517!important;
 	font-weight: bold;
-}
+	}
 form#mutate dd {
 	margin-left: 210px;
 }
 form#mutate input.disabled {
-	background-color: #f4f4f4!important;
+	background-color: #f4f4f4 !important;
 }
 
 form#mutate select.inputBox,
@@ -1594,4 +1597,3 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .cbBox p {margin:3px;}
 .cbBox .cbButtons {text-align:center;}
 .sysAlert {width: 500px;height: 330px;white-space: nowrap;overflow: auto;}
-

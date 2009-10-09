@@ -278,12 +278,12 @@ function showHide(what, onoff){
 		  <tr id="editname" style="display:<?php echo $_GET['a']=='87'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onChange='documentDirty=true;' maxlength="100" /></td>
+			<td><input type="text" name="newusername" class="inputBox" value="<?php echo htmlspecialchars(isset($_POST['newusername']) ? $_POST['newusername'] : $usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='87' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
 			<td>&nbsp;</td>
-			<td><input name="newpasswordcheck" type="checkbox" onClick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="87" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="87" ? 1 : 0 ; ?>" onChange='documentDirty=true;'><br />
+			<td><input name="newpasswordcheck" type="checkbox" onClick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="87" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="87" ? 1 : 0 ; ?>" onchange="documentDirty=true;" /><br />
 				<span style="display:<?php echo $_REQUEST['a']=="87" ? "block": "none" ; ?>" id="passwordBlock">
 				<fieldset style="width:300px">
 				<legend><b><?php echo $_lang['password_gen_method']; ?></b></legend>
@@ -309,46 +309,46 @@ function showHide(what, onoff){
 		  <tr>
 			<td><?php echo $_lang['user_full_name']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fullname" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="fullname" class="inputBox" value="<?php echo htmlspecialchars(isset($_POST['fullname']) ? $_POST['fullname'] : $userdata['fullname']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_email']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-			<input type="text" name="email" class="inputBox" style="width:300px" value="<?php echo  isset($_POST['email']) ? $_POST['email'] : $userdata['email']; ?>" onChange='documentDirty=true;'>
+			<input type="text" name="email" class="inputBox" value="<?php echo  isset($_POST['email']) ? $_POST['email'] : $userdata['email']; ?>" onchange="documentDirty=true;" />
 			<input type="hidden" name="oldemail" value="<?php echo htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email']); ?>" />
 			</td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_phone']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="phone" class="inputBox" style="width:300px" value="<?php echo isset($_POST['phone']) ? $_POST['phone'] : $userdata['phone']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="phone" class="inputBox" value="<?php echo isset($_POST['phone']) ? $_POST['phone'] : $userdata['phone']; ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_mobile']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="mobilephone" class="inputBox" style="width:300px" value="<?php echo isset($_POST['mobilephone']) ? $_POST['mobilephone'] : $userdata['mobilephone']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="mobilephone" class="inputBox" value="<?php echo isset($_POST['mobilephone']) ? $_POST['mobilephone'] : $userdata['mobilephone']; ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_fax']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fax" class="inputBox" style="width:300px" value="<?php echo isset($_POST['fax']) ? $_POST['fax'] : $userdata['fax']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="fax" class="inputBox" value="<?php echo isset($_POST['fax']) ? $_POST['fax'] : $userdata['fax']; ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_state']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="state" class="inputBox" style="width:300px" value="<?php echo isset($_POST['state']) ? $_POST['state'] : $userdata['state']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="state" class="inputBox" value="<?php echo isset($_POST['state']) ? $_POST['state'] : $userdata['state']; ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_zip']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="zip" class="inputBox" style="width:300px" value="<?php echo isset($_POST['zip']) ? $_POST['zip'] : $userdata['zip']; ?>" onChange='documentDirty=true;'></td>
+			<td><input type="text" name="zip" class="inputBox" value="<?php echo isset($_POST['zip']) ? $_POST['zip'] : $userdata['zip']; ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_country']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-            <select size="1" name="country" style="width:300px" onChange='documentDirty=true;'>
+            <select size="1" name="country" onchange="documentDirty=true;" />
             <?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 			<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 				<?php
@@ -370,7 +370,7 @@ function showHide(what, onoff){
 		  <tr>
 			<td><?php echo $_lang['user_gender']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><select name="gender" style="width:300px" onChange='documentDirty=true;'>
+			<td><select name="gender" onchange="documentDirty=true;" />
 				<option value=""></option>
 				<option value="1" <?php echo ($_POST['gender']=='1'||$userdata['gender']=='1')? "selected='selected'":""; ?>><?php echo $_lang['user_male']; ?></option>
 				<option value="2" <?php echo ($_POST['gender']=='2'||$userdata['gender']=='2')? "selected='selected'":""; ?>><?php echo $_lang['user_female']; ?></option>
@@ -381,7 +381,7 @@ function showHide(what, onoff){
 			<td valign="top"><?php echo $_lang['comment']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<textarea type="text" name="comment" class="inputBox"  rows="5" style="width:300px" onchange='documentDirty=true;'><?php echo htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea>
+				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;" /><?php echo htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea>
 			</td>
 		  </tr>
 		<?php if($_GET['a']=='88') { ?>
@@ -397,7 +397,7 @@ function showHide(what, onoff){
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_failedlogincount']; ?>:</td>
-			<td>&nbsp;<input type="hidden" name="failedlogincount"  onChange='documentDirty=true;' value="<?php echo $userdata['failedlogincount']; ?>"></td>
+			<td>&nbsp;<input type="hidden" name="failedlogincount"  onchange='documentDirty=true;' value="<?php echo $userdata['failedlogincount']; ?>"></td>
 			<td><span id='failed'><?php echo $userdata['failedlogincount'] ?></span>&nbsp;&nbsp;&nbsp;[<a href="javascript:resetFailed()"><?php echo $_lang['reset_failedlogins']; ?></a>]</td>
 		  </tr>
 		  <tr>
@@ -433,7 +433,7 @@ function showHide(what, onoff){
         <table border="0" cellspacing="0" cellpadding="3">
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["login_homepage"] ?></b></td>
-            <td ><input onChange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : $usersettings['login_home']; ?>"></td>
+            <td ><input onchange="documentDirty=true;" type='text' maxlength='50' style="width: 100px;" name="login_home" value="<?php echo isset($_POST['login_home']) ? $_POST['login_home'] : $usersettings['login_home']; ?>"></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -444,7 +444,7 @@ function showHide(what, onoff){
           </tr>
           <tr>
             <td nowrap class="warning"valign="top"><b><?php echo $_lang["login_allowed_ip"] ?></b></td>
-            <td ><input onChange="documentDirty=true;"  type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($_POST['allowed_ip']) ? $_POST['allowed_ip'] : $usersettings['allowed_ip']; ?>" /></td>
+            <td ><input onchange="documentDirty=true;"  type="text" maxlength='255' style="width: 300px;" name="allowed_ip" value="<?php echo isset($_POST['allowed_ip']) ? $_POST['allowed_ip'] : $usersettings['allowed_ip']; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -456,13 +456,13 @@ function showHide(what, onoff){
           <tr>
             <td nowrap class="warning"valign="top"><b><?php echo $_lang["login_allowed_days"] ?></b></td>
             <td>
-            	<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="1" <?php echo strpos($usersettings['allowed_days'],'1')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['sunday']; ?><br />
-            	<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="2" <?php echo strpos($usersettings['allowed_days'],'2')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['monday']; ?><br />
-            	<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="3" <?php echo strpos($usersettings['allowed_days'],'3')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['tuesday']; ?><br />
-            	<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="4" <?php echo strpos($usersettings['allowed_days'],'4')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['wednesday']; ?><br />
-            	<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="5" <?php echo strpos($usersettings['allowed_days'],'5')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['thursday']; ?><br />
-            	<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="6" <?php echo strpos($usersettings['allowed_days'],'6')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['friday']; ?><br />
-            	<input onChange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="7" <?php echo strpos($usersettings['allowed_days'],'7')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['saturday']; ?><br />
+            	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="1" <?php echo strpos($usersettings['allowed_days'],'1')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['sunday']; ?><br />
+            	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="2" <?php echo strpos($usersettings['allowed_days'],'2')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['monday']; ?><br />
+            	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="3" <?php echo strpos($usersettings['allowed_days'],'3')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['tuesday']; ?><br />
+            	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="4" <?php echo strpos($usersettings['allowed_days'],'4')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['wednesday']; ?><br />
+            	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="5" <?php echo strpos($usersettings['allowed_days'],'5')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['thursday']; ?><br />
+            	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="6" <?php echo strpos($usersettings['allowed_days'],'6')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['friday']; ?><br />
+            	<input onchange="documentDirty=true;" type="checkbox" name="allowed_days[]" value="7" <?php echo strpos($usersettings['allowed_days'],'7')!==false ? "checked='checked'":""; ?> /> <?php echo $_lang['saturday']; ?><br />
             </td>
           </tr>
           <tr>
@@ -504,7 +504,7 @@ function showHide(what, onoff){
         <table border="0" cellspacing="0" cellpadding="3">
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["user_photo"] ?></b></td>
-            <td><input onChange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" /> <input type="button" value="<?php echo $_lang['insert']; ?>" onclick="BrowseServer();" /></td>
+            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 150px;" name="photo" value="<?php echo htmlspecialchars(isset($_POST['photo']) ? $_POST['photo'] : $userdata['photo']); ?>" /> <input type="button" value="<?php echo $_lang['insert']; ?>" onclick="BrowseServer();" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>

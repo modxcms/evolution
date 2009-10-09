@@ -13,7 +13,7 @@
 $_lang = array ();
 
 #default fallback language file - english
-require_once("lang/english/english.inc.php");
+require_once("lang/english.inc.php");
 
 $install_language = "english";
 
@@ -34,21 +34,7 @@ if (isset($_POST['managerlanguage'])) {
 }
 
 # load language file
-if($install_language!="english" && file_exists("lang/".$install_language."/".$install_language.".inc.php")) {
-    include_once "lang/".$install_language."/".$install_language.".inc.php";
-}
-/**
- * Multilanguage Image include function with fallback
- *
- */
-function include_image ($image) {
-	global $install_language;
-	$result = "lang/english/images/" . $image;
-	if($install_language!="english" && file_exists("lang/" . $install_language . "/images/" . $image)) {
-    	$result = "lang/" . $install_language . "/images/" . $image;
-	} else {
-    	$result = "lang/english/images/" . $image;
-	}
-	return $result;
+if($install_language!="english" && file_exists("lang/".$install_language.".inc.php")) {
+    include_once "lang/".$install_language.".inc.php";
 }
 ?>

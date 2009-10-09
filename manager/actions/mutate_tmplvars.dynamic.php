@@ -365,7 +365,6 @@ function decode(s){
 <?php echo $_lang['tmplvar_tmpl_access_msg']; ?><p />
 <table width="100%" cellspacing="0" cellpadding="0">
 	<?php
-    // Added by Raymond - based on S.BRENNAN modifications
 	    $tbl = $dbase.".`".$table_prefix."site_templates`" ;
 	    $tblsel = $dbase.".`".$table_prefix."site_tmplvar_templates`";
 	    $sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id";
@@ -388,6 +387,7 @@ function decode(s){
 </table>
 	</div>
 
+<!-- Access Permissions -->
 	<?php
 	if($use_udperms==1) {
 	    $groupsarray = array();

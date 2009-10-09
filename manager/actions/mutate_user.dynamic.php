@@ -291,12 +291,12 @@ if (is_array($evtOut))
 		  <tr id="editname" style="display:<?php echo $_GET['a']=='11'||(isset($usernamedata['oldusername']) && $usernamedata['oldusername']!=$usernamedata['username']) ? $displayStyle : 'none' ; ?>">
 			<td><?php echo $_lang['username']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="newusername" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
+			<td><input type="text" name="newusername" class="inputBox" value="<?php echo htmlspecialchars($usernamedata['username']); ?>" onchange='documentDirty=true;' maxlength="100" /></td>
 		  </tr>
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='11' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
 			<td>&nbsp;</td>
-			<td><input name="newpasswordcheck" type="checkbox" onclick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="11" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="11" ? 1 : 0 ; ?>" onchange='documentDirty=true;'><br />
+			<td><input name="newpasswordcheck" type="checkbox" onclick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="11" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="11" ? 1 : 0 ; ?>" onchange="documentDirty=true;" /><br />
 				<span style="display:<?php echo $_REQUEST['a']=="11" ? "block": "none" ; ?>" id="passwordBlock">
 				<fieldset style="width:300px">
 				<legend><b><?php echo $_lang['password_gen_method']; ?></b></legend>
@@ -322,13 +322,13 @@ if (is_array($evtOut))
 		  <tr>
 			<td><?php echo $_lang['user_full_name']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fullname" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['fullname']); ?>" onchange='documentDirty=true;'></td>
+			<td><input type="text" name="fullname" class="inputBox" value="<?php echo htmlspecialchars($userdata['fullname']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_email']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-			<input type="text" name="email" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['email']); ?>" onchange='documentDirty=true;'>
+			<input type="text" name="email" class="inputBox" value="<?php echo htmlspecialchars($userdata['email']); ?>" onchange="documentDirty=true;" />
 			<input type="hidden" name="oldemail" value="<?php echo htmlspecialchars(!empty($userdata['oldemail']) ? $userdata['oldemail']:$userdata['email']); ?>" />
 			</td>
 		  </tr>
@@ -359,33 +359,33 @@ while ($row = mysql_fetch_assoc($rs)) {
 		  <tr>
 			<td><?php echo $_lang['user_phone']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="phone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['phone']); ?>" onchange='documentDirty=true;'></td>
+			<td><input type="text" name="phone" class="inputBox" value="<?php echo htmlspecialchars($userdata['phone']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_mobile']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="mobilephone" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['mobilephone']); ?>" onchange='documentDirty=true;'></td>
+			<td><input type="text" name="mobilephone" class="inputBox" value="<?php echo htmlspecialchars($userdata['mobilephone']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>		  
 		  <tr>	  
 			<td><?php echo $_lang['user_fax']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="fax" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['fax']); ?>" onchange='documentDirty=true;'></td>
+			<td><input type="text" name="fax" class="inputBox" value="<?php echo htmlspecialchars($userdata['fax']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_state']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="state" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['state']); ?>" onchange='documentDirty=true;'></td>
+			<td><input type="text" name="state" class="inputBox" value="<?php echo htmlspecialchars($userdata['state']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_zip']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input type="text" name="zip" class="inputBox" style="width:300px" value="<?php echo htmlspecialchars($userdata['zip']); ?>" onchange='documentDirty=true;'></td>
+			<td><input type="text" name="zip" class="inputBox" value="<?php echo htmlspecialchars($userdata['zip']); ?>" onchange="documentDirty=true;" /></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_country']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-			<select size="1" name="country" style="width:300px" onChange='documentDirty=true;'>
+			<select size="1" name="country" onchange="documentDirty=true;" />
             <?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 			<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 				<?php
@@ -407,7 +407,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 		  <tr>
 			<td><?php echo $_lang['user_gender']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><select name="gender" style="width:300px" onchange='documentDirty=true;'>
+			<td><select name="gender" onchange="documentDirty=true;" />
 				<option value=""></option>
 				<option value="1" <?php echo ($userdata['gender']=='1')? "selected='selected'":""; ?>><?php echo $_lang['user_male']; ?></option>
 				<option value="2" <?php echo ($userdata['gender']=='2')? "selected='selected'":""; ?>><?php echo $_lang['user_female']; ?></option>
@@ -418,7 +418,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td valign="top"><?php echo $_lang['comment']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<textarea type="text" name="comment" class="inputBox"  rows="5" style="width:300px" onchange='documentDirty=true;'><?php echo htmlspecialchars($userdata['comment']); ?></textarea>
+				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;" /><?php echo htmlspecialchars($userdata['comment']); ?></textarea>
 			</td>
 		  </tr>
 		<?php if($_GET['a']=='12') { ?>
@@ -472,7 +472,7 @@ while ($row = mysql_fetch_assoc($rs)) {
         <table border="0" cellspacing="0" cellpadding="3">
 	  <tr>
 	    <td class='warning'><?php echo $_lang["language_title"] ?></td>
-	    <td> <select name="manager_language" size="1" class="inputBox" onChange="documentDirty=true">
+	    <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true">
 	    <option value=""> </option>
 	    <?php
 $activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : $manager_language;

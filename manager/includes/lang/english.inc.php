@@ -102,6 +102,7 @@ $_lang["click_to_context"] = 'Click to access context menu';
 $_lang["click_to_edit_title"] = 'Click here to edit this record';
 $_lang["click_to_view_details"] = 'Click here to view details';
 $_lang["close"] = 'Close';
+$_lang["code"] = 'Code';
 $_lang["collapse_tree"] = 'Collapse Site Tree';
 $_lang["comment"] = 'Comment';
 $_lang["configcheck_admin"] = 'Please contact a systems administrator and warn them about this message!';
