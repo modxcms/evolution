@@ -43,7 +43,7 @@ Additional Improvements & Updates:
 * [#MODX-1069] Improve layout/simplify Module Manager page
 * [#MODX-1097] Tweak htaccess rule template and improve wiki documentation of such
 * [#MODX-1137] Change Manager term "alias" to "URL alias"
-* [#MODX-1138] New more flexible and manageable installer
+* [#MODX-1138] New more flexible and manageable Installer that enables making custom installer packages for Evo much simpler
 * [#MODX-1149] Update language string Resource_X and Document_X keys to match actual changes
 * [#MODX-1211] Add configuration option to QM+ - allows user to choose top or bottom placement of toolbar overlay in browser window
 * [#MODX-1244] Add ManagerManager 0.3.5

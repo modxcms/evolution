@@ -10,6 +10,7 @@
  * @package 	modx
  * @subpackage	modx.plugins.transalias
  * @author 		Olivier B. Deland, TV override by Mike Schell
+ * @internal	@modx_category Manager and Admin
  */
 
 /*

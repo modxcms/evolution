@@ -1,6 +1,6 @@
 //<?php
 /**
- * eForm
+ * MemberCheck
  * 
  * Show chunks based on a logged in Web User's group membership
  *
@@ -8,6 +8,7 @@
  * @version 	1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
+ * @internal	@modx_category Login
  */
 
 #::::::::::::::::::::::::::::::::::::::::

@@ -8,6 +8,7 @@
  * @version 	2.0
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
+ * @internal	@modx_category Navigation
  */
 
 

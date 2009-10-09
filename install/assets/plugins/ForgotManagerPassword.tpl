@@ -8,6 +8,7 @@
  * @version 	1.0
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@events OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender 
+ * @internal	@modx_category Manager and Admin
  */
 
 if(!class_exists('ForgotManagerPassword')) {

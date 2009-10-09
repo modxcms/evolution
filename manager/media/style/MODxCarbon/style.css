@@ -405,7 +405,7 @@ input.submit {
 	border-bottom:none;
 }
 	.tab-page .sectionHeader {
-		margin: 10px -10px 0;
+		margin: 10px 10px 0;
 	}
 	.rtl .sectionHeader {
 		direction: rtl;

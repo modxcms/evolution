@@ -6,7 +6,7 @@
  * @package MODx
  * @version 2.0
  * @translation
- * Filename:       /install/lang/german/german.inc.php
+ * Filename:       /install/lang/german.inc.php
  * Language:       German
  * Encoding:       UTF-8
  */
@@ -39,8 +39,8 @@
 	$_lang["checking_if_config_exist_and_writable"] = 'Überprüfen ob die Datei <span class="mono">manager/includes/config.inc.php</span> existiert und beschreibbar ist: ';
 	$_lang["checking_if_export_exists"] = 'Überprüfen ob der Ordner <span class="mono">assets/export</span> existiert: ';
 	$_lang["checking_if_export_writable"] = 'Überprüfen ob der Ordner <span class="mono">assets/export</span> beschreibbar ist: ';
-	$_lang["checking_if_images_exist"] = 'Überprüfen ob der Ordner <span class="mono">assets/images</span> existiert: ';
-	$_lang["checking_if_images_writable"] = 'Überprüfen ob der Ordner <span class="mono">assets/images</span> beschreibbar ist: ';
+	$_lang["checking_if_images_exist"] = 'Überprüfen ob der Ordner <span class="mono">assets/images</span>, <span class="mono">assets/files</span>, <span class="mono">assets/flash</span>, <span class="mono">assets/media</span> existiert: ';
+	$_lang["checking_if_images_writable"] = 'Überprüfen ob der Ordner <span class="mono">assets/images</span>, <span class="mono">assets/files</span>, <span class="mono">assets/flash</span>, <span class="mono">assets/media</span>  beschreibbar ist: ';
 	$_lang["checking_mysql_strict_mode"] = 'Überprüfe MySQL Strict-Mode: ';
 	$_lang["checking_mysql_version"] = 'Überprüfe MySQL-Version: ';
 	$_lang["checking_php_version"] = 'Überprüfe PHP-Version: ';

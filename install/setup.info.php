@@ -8,7 +8,6 @@
 	$moduleRelease = $modx_release_date;
 	$moduleSQLBaseFile = "setup.sql";
 	$moduleSQLDataFile = "setup.data.sql";
-	$moduleSQLUpdateFile = "setup.updates.sql";
 	$chunkPath = $setupPath .'/assets/chunks';
 	$snippetPath = $setupPath .'/assets/snippets';
 	$pluginPath = $setupPath .'/assets/plugins';
@@ -24,7 +23,7 @@
 			}
 			$params = parse_docblock($chunkPath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
-				$mc[] = array($params['name'], $params['description'], "$chunkPath/{$params['filename']}");
+				$mc[] = array($params['name'], $params['description'], "$chunkPath/{$params['filename']}", $params['modx_category'] );
 			}
 		}
 		$d->close();
@@ -41,7 +40,7 @@
 			$params = parse_docblock($snippetPath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$ms[] = array($params['name'], $description, "$snippetPath/{$params['filename']}", $params['properties']);
+				$ms[] = array($params['name'], $description, "$snippetPath/{$params['filename']}", $params['properties'], $params['modx_category'] );
 			}
 		}
 		$d->close();
@@ -58,7 +57,7 @@
 			$params = parse_docblock($pluginPath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$mp[] = array($params['name'], $description, "$pluginPath/{$params['filename']}", $params['properties'], $params['events']);
+				$mp[] = array($params['name'], $description, "$pluginPath/{$params['filename']}", $params['properties'], $params['events'], $params['guid'], $params['modx_category'] );
 			}
 		}
 		$d->close();
@@ -75,7 +74,7 @@
 			$params = parse_docblock($modulePath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$mm[] = array($params['name'], $description, "$modulePath/{$params['filename']}", $params['properties'], $params['guid'], intval($params['shareparams']));
+				$mm[] = array($params['name'], $description, "$modulePath/{$params['filename']}", $params['properties'], $params['guid'], intval($params['shareparams']), $params['modx_category'] );
 			}
 		}
 		$d->close();

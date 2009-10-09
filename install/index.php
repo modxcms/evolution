@@ -16,6 +16,7 @@ $_SESSION['test'] = 1;
 error_reporting(E_ALL & ~E_NOTICE);
 
 require_once("lang.php");
+require_once('../manager/includes/version.inc.php');
 
 // session loop-back tester
 if (!$_SESSION['test']) {
@@ -49,11 +50,10 @@ if (!$_SESSION['test']) {
 }
 
 $moduleName = "MODx";
-$moduleVersion = "Evolution 1.0.1";
-$moduleRelease = "7-Oct-2009";
+$moduleVersion = $modx_branch.' '.$modx_version;
+$moduleRelease = $modx_release_date;
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
-$moduleSQLUpdateFile = "setup.updates.sql";
 
 $moduleChunks = array (); // chunks - array : name, description, type - 0:file or 1:content, file or content
 $moduleTemplates = array (); // templates - array : name, description, type - 0:file or 1:content, file or content

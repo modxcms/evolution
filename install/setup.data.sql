@@ -286,40 +286,6 @@ REPLACE INTO `{PREFIX}webgroup_names` VALUES ('1','Site Admins');
 REPLACE INTO `{PREFIX}webgroup_names` VALUES ('2','Registered Users');
 
 
-#
-# Dumping data for table `categories`
-#
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('1','MODx default templates');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('2','User Management');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('3','News, Blogs and Catalogs');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('4','Navigation');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('5','Forms and Mail');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('6','Core and Manager');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('7','Frontend');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('8','MODxHost Menu');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('9','Demo Content');
-
-
-REPLACE INTO `{PREFIX}categories` VALUES ('10','Search');
-
 
 #
 # Table structure for table `jot_content`

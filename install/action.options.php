@@ -71,27 +71,6 @@ include "{$setupPath}/setup.info.php";
 
 echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_note'] . "</p>";
 
-// security-related config changes
-if($installMode == 1 || $installMode == 2) {
-	// validate http_referer (only display this if the setting already exists and is turned off)
-	$rsvhr = @ mysql_query("SELECT setting_value FROM {$table_prefix}system_settings WHERE setting_name = 'validate_referer';");
-	if(isset($rsvhr)) {
-		if($settingRow = mysql_fetch_row($rsvhr)) {
-			$vrsetting = $settingRow[0];
-			if($vrsetting == '0') {
-				echo "<h3>{$_lang['recommend_setting_change_title']}</h3>\n";
-				echo "<p><em>&nbsp;{$_lang['recommend_setting_change_validate_referer_description']}</em></p>\n";
-				echo "<p><label for=\"validate_referer_yes_field\">" . $_lang["validate_referer_title"] . "</label> {$_lang['yes']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_yes_field\" value=\"1\" checked=\"checked\" />&nbsp; {$_lang['no']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_no_field\" value=\"0\" /></p><hr />\n";
-			} else {
-        		echo "<h3>{$_lang['system_configuration']}</h3>\n";
-                echo "<p><em>&nbsp;{$_lang['system_configuration_validate_referer_description']}</em></p>\n";
-                echo "<p><label for=\"validate_referer_yes_field\">" . $_lang["validate_referer_title"] . "</label> {$_lang['yes']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_yes_field\" value=\"1\" checked=\"checked\" />&nbsp; {$_lang['no']} <input type=\"radio\" name=\"validate_referer\" id=\"validate_referer_no_field\" value=\"0\" /></p><hr />\n";
-			}
-		}
-	}
-}
-
-// sample web site
 $chk = isset ($_POST['installdata']) ? 'checked="checked"' : "";
 echo '<img src="img/sample_site.png" class="options" alt="Sample Data" />';
 echo "<h3>" . $_lang['sample_web_site'] . "</h3>";
