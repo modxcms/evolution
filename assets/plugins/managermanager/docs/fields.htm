@@ -82,7 +82,8 @@
       <li><strong>clear_cache</strong> - should &quot;empty cache&quot; be checked? Takes  boolean value.</li>
       <li><strong>is_folder</strong> - should &quot;container&quot; be checked? Takes  boolean value.</li>
       <li><strong>is_richtext</strong> - should &quot;rich text&quot; be checked? If set to false, the page will automatically also set the &quot;which_editor&quot; field to none, and reload the page so this takes effect. Takes  boolean value.</li>
-      <li><strong>log</strong> -   should &quot;log&quot; be checked? Takes  boolean value.    </li>
+      <li><strong>log</strong> -   should &quot;log&quot; be checked? Takes  boolean value.</li>
+      <li><strong>content_type</strong> - default internet media (MIME) type, e.g. 'text/xml'</li>
     </ul>
     <p><strong>$field: </strong>The name(s) of the field this should apply to (from table above). Currently accepts 'pub_date' or 'unpub_date' [Required]<br />
         <strong>$value: </strong>The default value for the field specified. If none is supplied the current date/time will be used. A static value can be supplied as a string, or PHP code (to calculate alternative dates) can be supplied if the eval parameter is set to true [Optional]<br />

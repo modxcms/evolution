@@ -23,6 +23,7 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 	} 
 	
 	if (useThisRule($roles, $templates)) {
+		
 		// What's the new value, and does it include PHP?
 		$new_value = ($eval) ? eval($value) : $value;
 		
@@ -142,6 +143,13 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 					$output .= '$j("input[name=donthitcheck]").removeAttr("checked"); '."\n";
 				}
 			break;
+			
+			
+			case 'content_type':
+				$output .= '$j("select[name=contentType]").val("'.$new_value.'");' . "\n";			
+			break;
+			
+			
 			
 			default:
 				return;
@@ -282,19 +290,14 @@ function mm_synch_fields($fields, $roles='', $templates='') {
 	
 		foreach ($fields as $field) {
 		
-			// If one of the fields is a TV
-			if (substr($field, 0, 2) == 'tv') {
-			
-				$output .= '
-					synch_field[mm_sync_field_count].push($j("#'.$field.'"));
-				';
-			
-			// If a propoer field, what type are the fields?
-			} else if (isset($mm_fields[$field])) { 	
+			if (isset($mm_fields[$field])) { 	
 				$fieldtype = $mm_fields[$field]['fieldtype'];
 				$fieldname = $mm_fields[$field]['fieldname'];
+				
+				$valid_fieldtypes = array('input', 'textarea');
+				
 				// Make sure we're dealing with an input
-				if ($fieldtype != 'input') {
+				if (!in_array($fieldtype, $valid_fieldtypes)) {
 					break;
 				}
 				
@@ -315,7 +318,9 @@ function mm_synch_fields($fields, $roles='', $templates='') {
 			$j.each(synch_field[mm_sync_field_count], function(i,n) {
 				$j.each(synch_field[mm_sync_field_count], function(j,m) {
 					if (i!=j) {
-						n.change( function() { m.val(this.value); } );
+						n.keyup( function() { 
+							m.val($j(this).val());
+						 } );
 					}
 				});
 			});

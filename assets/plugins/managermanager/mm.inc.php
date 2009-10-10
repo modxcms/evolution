@@ -1,7 +1,7 @@
 <?php
 /*
     @name       ManagerManager
-    @version    0.3.5dev
+    @version    0.3.5
     
     @for        MODx Evolution 1.0.0
     
@@ -22,7 +22,7 @@
 	
 */
 
-$mm_version = '0.3.5dev'; 
+$mm_version = '0.3.5'; 
 
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
@@ -124,6 +124,10 @@ $all_tvs = $modx->db->makeArray( $modx->db->select("name,type,id", $modx->db->co
 foreach ($all_tvs as $thisTv) {
 	
 	$n = $thisTv['name']; // What is the field name?
+
+	// Checkboxes place an underscore in the ID, so accommodate this...
+	$fieldname_suffix = '';
+	
 	switch ($thisTv['type']) { // What fieldtype is this TV type?
 		case 'textarea':
 		case 'rawtextarea': 
@@ -134,21 +138,31 @@ foreach ($all_tvs as $thisTv) {
 		
 		case 'dropdown': 
 		case 'listbox':
-		case 'listbox-multiple':  
 			$t = 'select';
 		break;
 		
+		case 'listbox-multiple':  
+			$t = 'select';
+			$fieldname_suffix = '[]';
+		break;
+		
+		case 'checkbox':
+			$t = 'input';
+			$fieldname_suffix = '[]';
+		break;
+		
 		default:
-		$t = 'input';
+			$t = 'input';
 		break;
 	}
-	if (!isset($mm_fields[ $n ])) { // check if there are any name clashes between TVs and default field names? If there is, preserve the default field
-		$mm_fields[ $n ] = array('fieldtype'=>$t, 'fieldname'=>'tv'.$thisTv['id'], 'dbname'=>'', 'tv'=>true);
+	
+	// check if there are any name clashes between TVs and default field names? If there is, preserve the default field
+	if (!isset($mm_fields[ $n ])) { 
+		$mm_fields[ $n ] = array('fieldtype'=>$t, 'fieldname'=>'tv'.$thisTv['id'].$fieldname_suffix, 'dbname'=>'', 'tv'=>true);
 	}
-	$mm_fields[ 'tv'.$n ] = array('fieldtype'=>$t, 'fieldname'=>'tv'.$thisTv['id'], 'dbname'=>'', 'tv'=>true);
+	
+	$mm_fields[ 'tv'.$n ] = array('fieldtype'=>$t, 'fieldname'=>'tv'.$thisTv['id'].$fieldname_suffix, 'dbname'=>'', 'tv'=>true);
 }
-
-
 
 // Get the contents of the config chunk, and put it in the "make changes" function, to be run at the appropriate moment later on
 if (!function_exists("make_changes")) {
@@ -326,8 +340,7 @@ $j(document).ready(function() {
 	try {
 						   					
 	  // Change section index depending on Content History running or not                  
-      var nm = $j("div.sectionBody:eq(1)").attr("id");   
-      var sidx = (nm=="ch-body")?1:0;  //ch-body is the CH id name (currently at least)
+      var sidx = ($j("div.sectionBody:eq(1)").attr("id") == "ch-body")?1:0;  //ch-body is the CH id name (currently at least)
       
       // Give IDs to the sections of the form
       // This assumes they appear in a certain order
@@ -372,7 +385,8 @@ $j(document).ready(function() {
 		// if template variables containers are empty, remove their section
 		if ($j("div.tmplvars :input").length == 0) {
 			$j("div.tmplvars").hide();	// Still contains an empty table and some dividers
-			$j("#sectionTVsHeader").hide(); 
+			$j("div.tmplvars").prev("div").hide();	// Still contains an empty table and some dividers
+			//$j("#sectionTVsHeader").hide(); 
 		}
 		
 		// Re-initiate the tooltips, in order for them to pick up any new help text which has been added
