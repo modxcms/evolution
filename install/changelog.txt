@@ -30,6 +30,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1218] Enable CSRF check by default for sites that set headers properly
 * [#MODX-1227] Add referrer check configuration warning to Manager
 * [#MODX-1145] Begin deprecation of META Tags management in the Manager
+* [#MODX-1262] Security fixes to ForgotManagerPassword plugin
 
 --------------------------------------------
 Additional Improvements & Updates:
