@@ -793,6 +793,8 @@ UPDATE {PREFIX}documentgroup_names AS dgn
 
 UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
 
+UPDATE `{PREFIX}system_settings` SET `setting_value` = '{VERSION}' WHERE `setting_name` = 'settings_version';
+
 # ]]upgrade-able
 
 
@@ -841,7 +843,7 @@ REPLACE INTO `{PREFIX}user_roles`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxCarbon'),
-('settings_version','1.0.1'),
+('settings_version','{VERSION}'),
 ('show_meta','0'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
