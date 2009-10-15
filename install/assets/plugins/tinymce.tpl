@@ -2,7 +2,7 @@
 /**
  * TinyMCE Rich Text Editor
  * 
- * Preview images in the Manager from image Template Variables
+ * TinyMCE RichText Editor Plugin
  *
  * @category 	plugin
  * @version 	3.2.4.1
