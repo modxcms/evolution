@@ -430,10 +430,20 @@ if (isset ($_POST['plugin'])) {
 		$events = explode(",", $modulePlugins[$si][4]);
 		$guid = mysql_real_escape_string($modulePlugins[$si][5]);
 		$category = mysql_real_escape_string($modulePlugins[$si][6]);
+		$leg_names = '';
+		if(array_key_exists(7, $modulePlugins[$si])) {
+		    // parse comma-separated legacy names and prepare them for sql IN clause
+    		$leg_names = "'" . implode("','", preg_split('/\s*,\s*/', mysql_real_escape_string($modulePlugins[$si][7]))) . "'";
+		}
 		if (!file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_plugin'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
 		else {
-			
+
+		    // disable legacy versions based on legacy_names provided
+		    if(!empty($leg_names)) {
+    		    $rs = mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE name IN ($leg_names);", $sqlParser->conn);
+		    }
+
 			// Create the category if it does not already exist
 			if( $category ){				
 				$rs = mysql_query("REPLACE INTO $dbase.`" . $table_prefix . "categories` (`id`,`category`) ( SELECT MIN(`id`), '$category' FROM ( SELECT `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category' UNION SELECT (CASE COUNT(*) WHEN 0 THEN 1 ELSE MAX(`id`)+1 END ) `id` FROM $dbase.`" . $table_prefix . "categories` ) AS _tmp )", $sqlParser->conn);
