@@ -3,9 +3,9 @@
  * Filename:       includes/lang/russian.inc.php
  * Function:       Russian language file.
  * Author:         Russian MODx community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
- * Date:           30 July 2008
- * Version:        2.0.3
- * MODx version:   Evolution 1.0
+ * Date:           11 October 2009
+ * Version:        2.0.4
+ * MODx version:   Evolution 1.0.1
 */
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'windows-1251';
@@ -101,6 +101,7 @@ $_lang["click_to_context"] = 'Контекстное меню';
 $_lang["click_to_edit_title"] = 'Редактировать запись';
 $_lang["click_to_view_details"] = 'Детали';
 $_lang["close"] = 'Закрыть';
+$_lang["code"] = 'Код';
 $_lang["collapse_tree"] = 'Свернуть дерево';
 $_lang["comment"] = 'Комментарий';
 $_lang["configcheck_admin"] = 'Пожалуйста, свяжитесь с системным администратором и сообщите об этой ошибке';
@@ -128,6 +129,8 @@ $_lang["configcheck_unauthorizedpage_unavailable"] = 'Страница сообщения об огра
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Это означает, что она не существует или недоступна обычным посетителям сайта. Это может привести к рекурсивному вызову функции \'сообщения об ошибке\' и большому количеству записей в журнале сайта. Убедитесь, что нет групп веб-пользователей, которым назначена эта страница.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Страница сообщения об ограниченном доступе, указанная в конфигурации сайта, не опубликована.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Это означает, что она недоступна посетителям сайта. Необходимо опубликовать страницу сообщения об ограничении доступа, чтобы эта функция работала правильно.';
+$_lang["configcheck_validate_referer"] = 'Предупреждение безопасности: проверка заголовка HTTP';
+$_lang["configcheck_validate_referer_msg"] = "В конфигурации параметр <strong>Проверять серверные заголовки HTTP_REFERER?</strong> отключен. Мы рекомендуем ее включить. <a href=\"index.php?a=17\">Перейти к настройке конфигурации</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Не показывать больше это сообщение.</em></a>";
 $_lang["configcheck_warning"] = 'Ошибка конфигурации:';
 $_lang["configcheck_what"] = 'Что это значит?';
 $_lang["confirm_block"] = 'Вы уверены, что хотите заблокировать пользователя?';
@@ -253,7 +256,7 @@ $_lang["event_id"] = 'ID события';
 $_lang["eventlog"] = 'Протокол событий';
 $_lang["eventlog_msg"] = 'Протокол событий используется для отображения системных информационных сообщений, предупреждений и сообщений об ошибках. В колонке \'Код\' показан раздел системы управления, где произошло событие.';
 $_lang["eventlog_viewer"] = 'Просмотр событий';
-$_lang["existing_category"] = 'Создать категорию';
+$_lang["existing_category"] = 'Существующие категории';
 $_lang["expand_tree"] = 'Раскрыть дерево';
 $_lang["export_site"] = 'Экспортировать сайт';
 $_lang["export_site_cacheable"] = 'Экспортировать некэшируемые ресурсы:';
@@ -649,6 +652,8 @@ $_lang["rb_title"] = 'Включить файл-менеджер:';
 $_lang["rb_webuser_message"] = 'Хотите ли вы, чтобы web-пользователи использовали файл-менеджер? <b>Предупреждение:</b> Позволяя web-пользователям использовать файл-менеджер, вы делаете доступ для всех файлов, которые доступны менеджерам. Используйте эту настройку только для проверенных web-пользователей.';
 $_lang["rb_webuser_title"] = 'Web-пользователи?';
 $_lang["recent_docs"] = 'Последние изменения';
+$_lang["recommend_setting_change_title"] = 'Рекомендуемое изменение настройки';
+$_lang["recommend_setting_change_description"] = 'Ваш сайт не настроен на проверку серверных заголовков HTTP_REFERER во входящих запросах в систему управления. Мы настоятельно рекомендуем включить этот параметр, чтобы снизить риск CSRF (Cross Site Request Forgery - подделка межсайтовых запросов) атак.';
 $_lang["refresh_cache"] = 'Кэш: найдено <b>%s</b> файлов в папке кэширования и удалено <b>%d</b> кэш-файлов.<p>Новые кэш-файлы будут созданы при запросах страниц.';
 $_lang["refresh_published"] = '<b>%s</b> ресурсов опубликовано.';
 $_lang["refresh_site"] = 'Очистить кэш';
@@ -768,7 +773,7 @@ $_lang["role_new_role"] = 'Создание новых ролей';
 $_lang["role_new_user"] = 'Создание новых пользователей';
 $_lang["role_new_web_user"] = 'Создание веб-пользователей';
 $_lang["role_plugin_management"] = 'Управление плагинами';
-$_lang["role_publish_doc"] = 'Публикация ресурсов.';
+$_lang["role_publish_doc"] = 'Публикация ресурсов';
 $_lang["role_role_management"] = 'Управление ролями';
 $_lang["role_run_module"] = 'Запуск модулей';
 $_lang["role_save_chunk"] = 'Сохранение чанков';
@@ -789,7 +794,7 @@ $_lang["role_user_management"] = 'Управление пользователями';
 $_lang["role_view_docdata"] = 'Просмотр информации о ресурсе';
 $_lang["role_view_eventlog"] = 'Просмотр протокола событий';
 $_lang["role_view_logs"] = 'Просмотр системного протокола';
-$_lang["role_view_unpublished"] = 'Посмотреть неопубликованные ресурсы';
+$_lang["role_view_unpublished"] = 'Просмотр неопубликованных ресурсов';
 $_lang["role_web_access_persmissions"] = 'Права веб-доступа';
 $_lang["role_web_user_management"] = 'Управление веб-пользователями';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
@@ -846,8 +851,8 @@ $_lang["settings_page_settings"] = 'Настройка страницы';
 $_lang["settings_photo"] = 'Фото';
 $_lang["settings_properties"] = 'Свойства';
 $_lang["settings_site"] = 'Сайт';
-$_lang["settings_strip_image_paths_message"] = 'Включите эту функцию, чтобы MODx переписывал адрес в атрибуте src с абсолютного на относительный. Это очень удобно, если вы в будущем собираетесь переместить свой сайт (например, с тестового сервера на конечный). Если вы не знаете, о чем речь, оставьте функцию включенной.';
-$_lang["settings_strip_image_paths_title"] = 'Переписывать путь к изображениям?';
+$_lang["settings_strip_image_paths_message"] = 'Если установлено значение \'Нет\', MODx будет использовать абсолютные ссылки для изображений, файлов, анимация и тому подобного. Относительные ссылки удобнее, если вы в будущем собираетесь переместить свой сайт, например, с тестового сервера на конечный. Если вы не знаете, о чем речь, оставьте значение \'Да\'.';
+$_lang["settings_strip_image_paths_title"] = 'Переписывать пути для браузера?';
 $_lang["settings_templvars"] = 'Параметры (TV)';
 $_lang["settings_title"] = 'Системная конфигурация';
 $_lang["settings_ui"] = 'Интерфейс и представление';
