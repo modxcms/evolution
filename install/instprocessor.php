@@ -396,6 +396,8 @@ if (isset ($_POST['module'])) {
 			}
 			
 			$module = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+			// remove installer docblock
+			$module = preg_replace("/\/\*\*.*?\*\//s", '', $module, 1);
 			$module = mysql_real_escape_string($module);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_modules` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
@@ -441,7 +443,8 @@ if (isset ($_POST['plugin'])) {
 
 		    // disable legacy versions based on legacy_names provided
 		    if(!empty($leg_names)) {
-    		    $rs = mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE name IN ($leg_names);", $sqlParser->conn);
+		        $update_query = "UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE name IN ($leg_names);";
+    		    $rs = mysql_query($update_query, $sqlParser->conn);
 		    }
 
 			// Create the category if it does not already exist
@@ -450,34 +453,41 @@ if (isset ($_POST['plugin'])) {
 			}
 			
 			$plugin = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent), 2));
+			// remove installer docblock
+			$plugin = preg_replace("/\/\*\*.*?\*\//s", '', $plugin, 1);
 			$plugin = mysql_real_escape_string($plugin);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='$name'", $sqlParser->conn);
-			if (mysql_num_rows($rs)) {
-			    $row = mysql_fetch_assoc($rs);
-			    $props = propUpdate($properties,$row['properties']);
-			    if($row['description'] == $desc){
-				    if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props', category=(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category') WHERE name='$name';", $sqlParser->conn)) {
-					    echo "<p>" . mysql_error() . "</p>";
-					    return;
-					}
-			    } else {
-			    	if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE name='$name';", $sqlParser->conn)) {
-						echo "<p>".mysql_error()."</p>";
-						return;
-					}
-			        if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category'));",$sqlParser->conn)) {
-						echo "<p>".mysql_error()."</p>";
-						return;
-			    	}
-			    }
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-			} else {
-				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category) VALUES('$name','$desc','$plugin','$properties','$guid',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category'));", $sqlParser->conn)) {
-					echo "<p>" . mysql_error() . "</p>";
-					return;
-				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
-			}
+            if (mysql_num_rows($rs)) {
+                $insert = true;
+                while($row = mysql_fetch_assoc($rs)) {
+                    $props = propUpdate($properties,$row['properties']);
+                    if($row['description'] == $desc){
+                        if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET plugincode='$plugin', description='$desc', properties='$props', category=(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category') WHERE id={$row['id']};", $sqlParser->conn)) {
+                            echo "<p>" . mysql_error() . "</p>";
+                            return;
+                        }
+                        $insert = false;
+                    } else {
+                        if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_plugins` SET disabled='1' WHERE id={$row['id']};", $sqlParser->conn)) {
+                            echo "<p>".mysql_error()."</p>";
+                            return;
+                        }
+                    }
+                }
+                if($insert === true) {
+                    if(!@mysql_query("INSERT INTO $dbase.`".$table_prefix."site_plugins` (name,description,plugincode,properties,moduleguid,disabled,category) VALUES('$name','$desc','$plugin','$properties','$guid','0',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category'));",$sqlParser->conn)) {
+                        echo "<p>".mysql_error()."</p>";
+                        return;
+                    }
+                }
+                echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
+            } else {
+                if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_plugins` (name,description,plugincode,properties,moduleguid,category) VALUES('$name','$desc','$plugin','$properties','$guid',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category'));", $sqlParser->conn)) {
+                    echo "<p>" . mysql_error() . "</p>";
+                    return;
+                }
+                echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
+            }
 			// add system events
 			if (count($events) > 0) {
 				$ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_plugins` WHERE name='$name' AND description='$desc';",$sqlParser->conn);
@@ -515,6 +525,8 @@ if (isset ($_POST['snippet'])) {
 			}
 			
 			$snippet = end(preg_split("/(\/\/)?\s*\<\?php/", file_get_contents($filecontent)));
+			// remove installer docblock
+			$snippet = preg_replace("/\/\*\*.*?\*\//s", '', $snippet, 1);
 			$snippet = mysql_real_escape_string($snippet);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_snippets` WHERE name='$name'", $sqlParser->conn);
 			if (mysql_num_rows($rs)) {
