@@ -10,7 +10,6 @@ Bugfixes & Security Enhancements:
 * [#MODX-353]  Duplicate container cause problems (merge from 1.0 dev branch)
 * [#MODX-586]  Cancel button on the move document page does not redirect you to the selected page (merge from 1.0 dev branch)
 * [#MODX-842]  Missing Template Variable title in language files
-* [#MODX-929]  Swap default click behavior for the Tree menu (merge from 1.0 dev branch)
 * [#MODX-1000] On editing a template variable the right "Cancel" button is positioned weird (merge from 1.0 dev branch)
 * [#MODX-1001] Navigation issues when pressing the cancel button (merge from 1.0 dev branch)
 * [#MODX-1017] Removed unused code in welcome.static.php
