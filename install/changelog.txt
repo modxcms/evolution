@@ -30,6 +30,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1218] Enable CSRF check by default for sites that set headers properly
 * [#MODX-1227] Add referrer check configuration warning to Manager
 * [#MODX-1145] Begin deprecation of META Tags management in the Manager
+* [#MODX-1190] Installer fix and enhancements
 * [#MODX-1262] Security fixes to ForgotManagerPassword plugin
 
 --------------------------------------------
@@ -50,7 +51,7 @@ Additional Improvements & Updates:
 * [#MODX-1244] Add ManagerManager 0.3.5
 * [#MODX-1245] Update QM+ to version 1.3.3
 * [#MODX-1246] Update AjaxSearch to 1.8.3b
-
+* [#MODX-1276] Reduction in size of site cache file by removing PHP comments
 
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
