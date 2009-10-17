@@ -2,8 +2,9 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo  $mxla . '" lang="' .  $mxla . '"' . ($modx_textdir ? ' dir="rtl"' : ''); ?>>
 <head>
     <title>MODx</title>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
@@ -11,7 +12,8 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
-    <script language="JavaScript" type="text/javascript">
+    <script type="text/javascript">
+		/* <![CDATA[ */
         window.addEvent('load', document_onload);
         window.addEvent('beforeunload', document_onunload);
         
@@ -90,7 +92,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 		} else {
 			window.onbeforeunload = checkDirt;
 		}
-
+		/* ]]> */
     </script>
 </head>
 <body ondragstart="return false"<?php echo $modx_textdir ? ' class="rtl"':''?>>
