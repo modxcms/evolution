@@ -165,20 +165,20 @@ if (isset ($_POST['which_editor'])) {
 ?>
 <script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
-
+/* <![CDATA[ */
 window.addEvent('domready', function(){
 	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
 	var dpformat = "<?php echo $modx->config['datetime_format']; ?>" + ' hh:mm:00';
-	new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat});	
+	new DatePicker($('pub_date'), {'yearOffset': dpOffset,'format':dpformat});
 	new DatePicker($('unpub_date'), {'yearOffset': dpOffset,'format':dpformat});
-	
+
 	if( !window.ie6 ) {
 	    $$('img[src=<?php echo $_style["icons_tooltip_over"]?>]').each(function(help_img) {
             help_img.removeProperty('onclick');
             help_img.removeProperty('onmouseover');
             help_img.removeProperty('onmouseout');
             help_img.setProperty('title', help_img.getProperty('alt') );
-            help_img.setProperty('class', 'tooltip' ); 
+            help_img.setProperty('class', 'tooltip' );
 	    });
 	    new Tips($$('.tooltip'),{className:'custom'} );
 	}
@@ -199,7 +199,7 @@ function changestate(element) {
 
 function deletedocument() {
 	if (confirm("<?php echo $_lang['confirm_delete_resource']?>")==true) {
-		document.location.href="index.php?id=" + document.mutate.id.value + "&a=6";
+		document.location.href="index.php?id=" + document.mutate.id.value + "&amp;a=6";
 	}
 }
 
@@ -490,7 +490,7 @@ function decode(s) {
 	s = s.replace(/\%26/g,'&'); // &
 	return s;
 }
-
+/* ]]> */
 </script>
 
 <form name="mutate" id="mutate" class="content" method="post" enctype="multipart/form-data" action="index.php">
@@ -1099,7 +1099,7 @@ if ($use_udperms == 1) {
 	if($_SESSION['mgrRole'] != 1 && ($permissions_yes == 0 && $permissions_no > 0)) {
 		$permissions = array();
 	}
-	
+
 	// See if the Access Permissions section is worth displaying...
 	if (!empty($permissions)) {
 		// Add the "All Document Groups" item if we have rights in both contexts
@@ -1108,36 +1108,37 @@ if ($use_udperms == 1) {
 		// Output the permissions list...
 ?>
 <!-- Access Permissions -->
-
 <div class="tab-page" id="tabAccess">
 	<h2 class="tab"><?php echo $_lang['access_permissions']?></h2>
 	<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabAccess" ) );</script>
-
 	<script type="text/javascript">
-	function makePublic(b) {
-		var notPublic = false;
-		var f = document.forms['mutate'];
-		var chkpub = f['chkalldocs'];
-		var chks = f['docgroups[]'];
-		if (!chks && chkpub) {
-			chkpub.checked=true;
-			return false;
-		} else if (!b && chkpub) {
-			if (!chks.length) notPublic = chks.checked;
-			else for (i = 0; i < chks.length; i++) if (chks[i].checked) notPublic = true;
-			chkpub.checked = !notPublic;
-		} else {
-			if (!chks.length) chks.checked = (b) ? false : chks.checked;
-			else for (i = 0; i < chks.length; i++) if (b) chks[i].checked = false;
-			chkpub.checked = true;
+		/* <![CDATA[ */
+		function makePublic(b) {
+			var notPublic = false;
+			var f = document.forms['mutate'];
+			var chkpub = f['chkalldocs'];
+			var chks = f['docgroups[]'];
+			if (!chks && chkpub) {
+				chkpub.checked=true;
+				return false;
+			} else if (!b && chkpub) {
+				if (!chks.length) notPublic = chks.checked;
+				else for (i = 0; i < chks.length; i++) if (chks[i].checked) notPublic = true;
+				chkpub.checked = !notPublic;
+			} else {
+				if (!chks.length) chks.checked = (b) ? false : chks.checked;
+				else for (i = 0; i < chks.length; i++) if (b) chks[i].checked = false;
+				chkpub.checked = true;
+			}
 		}
-	}
+		/* ]]> */
 	</script>
 	<p><?php echo $_lang['access_permissions_docs_message']?></p>
-
 	<ul>
 	<?php echo implode("\n", $permissions)."\n"; ?>
 	</ul>
+</div>
+
 </div><!-- end .sectionBody -->
 <?php
 	} // !empty($permissions)
@@ -1146,7 +1147,7 @@ if ($use_udperms == 1) {
 	<p><?php echo $_lang["access_permissions_docs_collision"];?></p>
 </div>
 <?php
-		
+
 	}
 }
 /* End Document Access Permissions *
