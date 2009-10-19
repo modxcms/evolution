@@ -6,8 +6,15 @@
                                     26th of August 2009
 
 The release 1.8.3b:
- - solve the AJAXSEARCH-38, AJAXSEARCH-39 and AJAXSEARCH-41 issues
- - add the czech language file
+
+ - fix the followings issues:
+AJAXSEARCH-38 - body>> in Search Highlighting
+AJAXSEARCH-39 - Call to undefined method DocumentParser::getRecordCount()
+AJAXSEARCH-41 - Weird behavior versus dollar sign followed by 2 digits / \$\d{2} /
+AJAXSEARCH-44 - Parents with a container that doesn't contains any child documents
+AJAXSEARCH-46 - Injection of content when javascript is desactivate
+
+ - add the Czech, Polish and Ukrainian language files
 
 Previous versions : 
  - 1.8.3a delivered the 12th of July 2009 (provided with MODx1.0.0)
@@ -283,3 +290,9 @@ http://svn.modxcms.com/jira/browse/AJAXSEARCH-39
 
 ==== AJAXSEARCH-41 : Weird behavior versus dollar sign followed by 2 digits / \$\d{2} / 
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-41
+
+==== AJAXSEARCH-44 : Parents with a container that doesn't contains any child documents 
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-44
+
+==== AJAXSEARCH-46 : injection of content when javascript is desactivate 
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-46

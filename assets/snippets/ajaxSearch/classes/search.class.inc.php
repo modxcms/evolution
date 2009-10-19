@@ -1342,7 +1342,10 @@ class Search {
       case "parents":
         $arrayIDs = explode(",",$this->listIDs);
         $this->listIDs = implode(',',$this->getChildIDs($arrayIDs, $depth));
-      break;
+        if (!($this->listIDs)) {
+          $this->listIDs = '999999';
+          return;
+        }      break;
 
       case "documents":
       break;

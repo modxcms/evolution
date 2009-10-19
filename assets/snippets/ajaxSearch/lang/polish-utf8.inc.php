@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
 polish-utf8.inc.php - for AjaxSearch 1.8
 Created by: Radosław Włodkowski (radoslaw@artengine.pl)

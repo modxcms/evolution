@@ -5,7 +5,7 @@
  *    The AjaxSearch class contains all variables and functions
  *    used to display search form and results
  *
- *    Version: 1.8.3a  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.3b  - Coroico (coroico@wangba.fr)
  *
  *    12/07/2009
  *
@@ -630,7 +630,7 @@ EOD;
         $this->varLayout['selectList'] = $slist;
       }
       else  {
-        $this->varLayout['inputValue'] = ($this->searchString == '' && $this->_lang['as_boxText'] != '') ? $this->_lang['as_boxText'] : $this->searchString;
+        $this->varLayout['inputValue'] = ((!$validSearch) || (($this->searchString == '') && ($this->_lang['as_boxText'] != ''))) ? $this->_lang['as_boxText'] : $this->searchString;
         $this->varLayout['inputOptions'] = ($this->_lang['as_boxText']) ? ' onfocus="this.value=(this.value==\''.$this->_lang['as_boxText'].'\')? \'\' : this.value ;"' : '';
       }
       $this->varLayout['submitText'] = $this->_lang['as_searchButtonText'];
