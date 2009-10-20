@@ -5,9 +5,9 @@
  *    The AjaxSearch class contains all variables and functions
  *    used to display search form and results
  *
- *    Version: 1.8.3b  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.4  - Coroico (coroico@wangba.fr)
  *
- *    12/07/2009
+ *    20/10/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -192,7 +192,7 @@ class AjaxSearch extends Search{
             // set result fields like id, searchable, date, rank as PHx
             $found .= $this->setResultSearchable($this->searchResults[$i]) . " ";
 
-			      //set result number as PHx
+            //set result number as PHx
             $this->setResultNumber($this->offset+$i+1);
 
             // parse the template and output the result
@@ -387,8 +387,8 @@ class AjaxSearch extends Search{
       else if (isset($_GET['advsearch'])) $this->advSearch = urldecode($_GET['advsearch']);
     }
 
-	// check advSearch parameter
-	$this->advSearch = (in_array($this->advSearch,$this->advSearchType)) ? $this->advSearch : $this->advSearchType[0];
+  // check advSearch parameter
+  $this->advSearch = (in_array($this->advSearch,$this->advSearchType)) ? $this->advSearch : $this->advSearchType[0];
 
     // check searchString
     $valid = $this->checkSearchString($this->searchString,$msgErr);

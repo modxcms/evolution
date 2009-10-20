@@ -1,11 +1,11 @@
-[+as.showForm:is=`1`:then=`
+﻿[+as.showForm:is=`1`:then=`
 <form [+as.formId+] action="[+as.formAction+]" method="post">
     <div id="ajaxSearch_radio">
-  		<input type="radio" id="radio_oneword" name="advSearch" value="[+as.oneword+]" [+as.onewordChecked+] /><label for="radio_oneword">[+as.onewordText+]</label>
-  		<input type="radio" id="radio_allwords" name="advSearch" value="[+as.allwords+]" [+as.allwordsChecked+] /><label for="radio_allwords">[+as.allwordsText+]</label>
-  		<input type="radio" id="radio_exactphrase" name="advSearch" value="[+as.exactphrase+]" [+as.exactphraseChecked+] /><label for="radio_exactphrase">[+as.exactphraseText+]</label>
-  		<input type="radio" id="radio_nowords" name="advSearch" value="[+as.nowords+]" [+as.nowordsChecked+] /><label for="radio_nowords">[+as.nowordsText+]</label>
-		</div>
+      <input type="radio" id="radio_oneword" name="advSearch" value="[+as.oneword+]" [+as.onewordChecked+] /><label for="radio_oneword">[+as.onewordText+]</label>
+      <input type="radio" id="radio_allwords" name="advSearch" value="[+as.allwords+]" [+as.allwordsChecked+] /><label for="radio_allwords">[+as.allwordsText+]</label>
+      <input type="radio" id="radio_exactphrase" name="advSearch" value="[+as.exactphrase+]" [+as.exactphraseChecked+] /><label for="radio_exactphrase">[+as.exactphraseText+]</label>
+      <input type="radio" id="radio_nowords" name="advSearch" value="[+as.nowords+]" [+as.nowordsChecked+] /><label for="radio_nowords">[+as.nowordsText+]</label>
+    </div>
     <select name="search[]" id="ajaxSearch_select" size="3" multiple="multiple">
       [+as.selectList+]
     </select>

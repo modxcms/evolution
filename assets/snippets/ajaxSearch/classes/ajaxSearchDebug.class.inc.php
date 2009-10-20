@@ -5,9 +5,9 @@
  *    The AjaxSearchDebug class contains all functions used to debug AjaxSearch
  *    Based on FirePHP. See http://www.firephp.org 
  *
- *    Version: 1.8.3a  - Coroico (coroico@wangba.fr) 
+ *    Version: 1.8.4  - Coroico (coroico@wangba.fr) 
  *    
- *    12/07/2009  
+ *    20/10/2009  
  *      
 */
 

@@ -4,9 +4,9 @@
  * Purpose:
  *    The Search class contains all functions common to AjaxSearch functionalities
  *
- *    Version: 1.8.3b  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.4  - Coroico (coroico@wangba.fr)
  *
- *    12/07/2009
+ *    20/10/2009
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -567,7 +567,7 @@ class Search {
               'tb_alias' => 'sc',
               'id' => 'id',
               'searchable' => array('pagetitle','longtitle','description','alias','introtext','menutitle','content'),
-              'displayed' => array('pagetitle','longtitle','description','alias','introtext','menutitle','content'),
+              'displayed' => array('pagetitle','longtitle','description','alias','introtext','template','menutitle','content'),
               'date' =>array('publishedon'),
               'filters' => array(),
               'jfilters'  => array()
@@ -1335,7 +1335,7 @@ class Search {
     $idType = $this->cfg['idType'];
     $depth = $this->cfg['depth'];
 
-    if (!strlen($this->listIDs)) return;     // listIDs ='' means all documents
+    if (!strlen($this->listIDs) && !$this->cfg['filter']) return;     //! listIDs ='' means all documents
 
     // get the listIDs from the parents or documents parameter
     switch($idType) {

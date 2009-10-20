@@ -2,24 +2,24 @@
 /* -----------------------------------------------------------------------------
 :: Snippet: AjaxSearch
 --------------------------------------------------------------------------------
-  Short Description: 
-        Ajax-driven & Flexible Search form
+  Short Description:
+        Ajax and non-Ajax search that supports results highlighting
 
   Version:
-        1.8.3b
+        1.8.4
 
-  Date: 12/07/2009
-  
+  Date: 20/10/2009
+
   Created by:
       Coroico (coroico@wangba.fr)
       Jason Coward (opengeek - jason@opengeek.com)
       Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
       Ryan Thrash  (rthrash - ryan@vertexworks.com)
-      
+
       Live Search by Thomas (Shadock)
       Fixes & Additions by identity/Perrine/mikkelwe
       Document selection from Ditto by Mark Kaplan
-      
+
   Copyright & Licencing:
   ----------------------
   GNU General Public License (GPL) (http://www.gnu.org/copyleft/gpl.html)
@@ -31,16 +31,16 @@
 --------------------------------------------------------------------------------
 
     The AjaxSearch snippet is an enhanced version of the original FlexSearchForm
-    snippet for MODx. This snippet adds AJAX functionality on top of the robust 
+    snippet for MODx. This snippet adds AJAX functionality on top of the robust
     content searching.
-    
+
     - search in title, description, content and TVs of documents
     - search in a subset of documents
     - highlighting of searchword in the results returned
 
     It could works in two modes:
 
-    ajaxSearch mode : 
+    ajaxSearch mode :
     - Search results displayed in current page through AJAX request
     - Multiple search options including live search and non-AJAX option
     - Available link to view all results in a new page when only a subset is retuned
@@ -60,7 +60,7 @@ MORE : See the ajaxSearch.readme.txt file for more informations
 global $modx;
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.8.3');
+define('AS_VERSION', '1.8.4');
 
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
@@ -99,7 +99,7 @@ if ($cfg['config']){
 $cfg['debug'] = isset($debug)? $debug : (isset($__debug)? $__debug : $dcfg['debug']);
 
 // &language [ language_name | manager_language ] (optional)
-// Default: $modx->config['manager_language'] - manager language used 
+// Default: $modx->config['manager_language'] - manager language used
 $cfg['language'] = isset($language) ? $language : (isset($__language) ? $__language : $dcfg['language']);
 
 // &ajaxSearch [1 | 0] (as passed in snippet variable ONLY)
@@ -108,23 +108,23 @@ $cfg['language'] = isset($language) ? $language : (isset($__language) ? $__langu
 $cfg['ajaxSearch'] = isset($ajaxSearch) ? $ajaxSearch : (isset($__ajaxSearch) ? $__ajaxSearch : $dcfg['ajaxSearch']);
 
 // &advSearch [ 'exactphrase' | 'allwords' | 'nowords' | 'oneword' ]
-// Advanced search:    
-// - exactphrase : provides the documents which contain the exact phrase 
+// Advanced search:
+// - exactphrase : provides the documents which contain the exact phrase
 // - allwords : provides the documents which contain all the words
 // - nowords : provides the documents which do not contain the words
 // - oneword : provides the document which contain at least one word
 // Default: 'oneword'
 $cfg['advSearch'] = isset($advSearch) ? $advSearch : (isset($__advSearch) ? $__advSearch : $dcfg['advSearch']);
 
-// &whereSearch     
+// &whereSearch
 // Define where should occur the search
 // a separated list of keywords describing the tables where to search
-// keywords allowed : 
+// keywords allowed :
 // "content" for site_content, "tv" for site_tmplvar_contentvalues, "jot" for jot_content, "maxigallery" for maxigallery
 // you could add your own keywords. But the keyword should be a user function which describes the tables to use
 // all the text fields are searchable but you could specify the fields like this:
 // whereSearch=`content:pagetitle,introtext,content|tv:tv_value|maxigallery:gal_title`
-// Default: 'content|tv' 
+// Default: 'content|tv'
 $cfg['whereSearch'] = isset($whereSearch) ? $whereSearch : (isset($__whereSearch) ? $__whereSearch : $dcfg['whereSearch']);
 
 // &subSearch  [ int , int ]
@@ -146,7 +146,7 @@ $cfg['order'] = isset($order) ? $order : (isset($__order) ? $__order : $dcfg['or
 // &rank - Define the rank of search results. Results are sorted by rank value
 // Comma separated list of fields with optionally user defined weight
 // Default: 'pagetitle:100,extract'
-// to suppress the rank sorting, use &rank=``; 
+// to suppress the rank sorting, use &rank=``;
 // &rank sort occurs after the &order sort
 $cfg['rank'] = isset($rank) ? $rank : (isset($__rank) ? $__rank : $dcfg['rank']);
 
@@ -174,7 +174,7 @@ $cfg['AS_showForm'] = isset($AS_showForm ) ? $AS_showForm : (isset($__AS_showFor
 // 2- querystring variable AS_form
 // 3- variable set here
 // 4- use current page
-// This is VERY handy when you want to put the search form in a discrete and/or small place 
+// This is VERY handy when you want to put the search form in a discrete and/or small place
 // on your page - like a side column, but don't want all your results to show up there!
 // Set to results page or leave 0 as default
 $cfg['resultsPage'] = $dcfg['resultsPage'];
@@ -188,7 +188,7 @@ $cfg['grabMax'] = isset($grabMax)? intval($grabMax) : (isset($__grabMax)? intval
 // show the search terms highlighted in a little extract
 // n : maximum number of extracts displayed
 // ordered searchable fields list : separated list of fields define as searchable in the table definition
-// Default: '1:content,description,introtext,tv_value' - One extract from content then description,introtext,tv_value 
+// Default: '1:content,description,introtext,tv_value' - One extract from content then description,introtext,tv_value
 $cfg['extract'] = isset($extract) ? $extract : (isset($__extract) ? $__extract : $dcfg['extract']);
 
 // &extractLength [ 50 < int < 800]
@@ -218,7 +218,7 @@ $cfg['highlightResult'] = isset($highlightResult) ? $highlightResult : (isset($_
 
 // &pageLinkSeparator [ string ]
 // What you want, if anything, between your page link numbers
-// Default: ' | ' 
+// Default: ' | '
 $cfg['pageLinkSeparator'] = isset($pageLinkSeparator) ? $pageLinkSeparator : (isset($__pageLinkSeparator) ? $__pageLinkSeparator : $dcfg['pageLinkSeparator']);
 
 // &showPagingAlways[1 | 0]
@@ -233,12 +233,12 @@ $cfg['AS_landing'] = isset($AS_landing) ? $AS_landing : (isset($__AS_landing) ? 
 // Default: 1
 $cfg['AS_showResults'] = isset($AS_showResults) ? $AS_showResults : (isset($__AS_showResults) ? $__AS_showResults : $dcfg['AS_showResults']);
 
-// &parents [ comma separated list of IDs | '' ]  
+// &parents [ comma separated list of IDs | '' ]
 // IDs of documents to retrieve their children to &depth depth  where to do the search
 // Default: '' - empty list
 $cfg['parents'] = isset($parents) ? $parents : (isset($__parents) ? $__parents : $dcfg['parents']);
 
-// &documents [ comma separated list of IDs | '' ]  
+// &documents [ comma separated list of IDs | '' ]
 // IDs of documents where to do the search
 // Default: '' - empty list
 $cfg['documents'] = isset($documents) ? $documents : (isset($__documents) ? $__documents : $dcfg['documents']);
@@ -254,7 +254,7 @@ $cfg['depth'] = isset($depth) ? intval($depth): (isset($__depth) ? intval($__dep
 // Default: 2
 $cfg['hideMenu'] = isset($hideMenu) ? $hideMenu : (isset($__hideMenu) ? $__hideMenu : $dcfg['hideMenu']);
 
-// &hideLink [0 | 1 ]   Search in content of type reference (link) 
+// &hideLink [0 | 1 ]   Search in content of type reference (link)
 // 0 - search only in content of type document
 // 1 - search in content of type document AND reference
 // Default: 1
@@ -317,7 +317,7 @@ $cfg['tvPhx'] = isset($tvPhx) ? $tvPhx : (isset($__tvPhx) ? $__tvPhx : $cfg['tvP
 // &jsClearDefault - Clearing default text
 // Set this to 1 if you would like to include the clear default js function
 // add the class "cleardefault" to your input text form and set this parameter
-// Default: 0 
+// Default: 0
 $cfg['clearDefault'] = isset($clearDefault) ? $clearDefault : (isset($__clearDefault) ? $__clearDefault : $dcfg['clearDefault']);
 
 // &jsClearDefault - Location of the js library
@@ -337,7 +337,7 @@ $cfg['mbstring'] = isset($mbstring) ? $mbstring : (isset($__mbstring) ? $__mbstr
 //        0 : user comment not allowed (Default)
 //        1 : user comment allowed
 //  purge: number of logs allowed before to do an automatic purge of the table
-//        Default: 200 
+//        Default: 200
 $cfg['asLog'] = isset($asLog) ? $asLog : (isset($__asLog) ? $__asLog : $dcfg['asLog']);
 
 //------------------------------------------------------------------------------
@@ -354,7 +354,7 @@ if ($cfg['ajaxSearch']){  // ajax mode
     // &ajaxMax [int] - The maximum number of results to show for the ajaxsearch
     // Default: 6
     $cfg['ajaxMax'] = isset($ajaxMax) ? $ajaxMax : (isset($__ajaxMax) ? $__ajaxMax : $dcfg['ajaxMax']);
-    
+
     // &showMoreResults [1 | 0]
     // Set this to 1 if you would like a link to show all of the search results
     // Default: 0
@@ -365,7 +365,7 @@ if ($cfg['ajaxSearch']){  // ajax mode
     // Default: 0
     $cfg['moreResultsPage'] = isset($moreResultsPage ) ? $moreResultsPage : (isset($__moreResultsPage ) ? $__moreResultsPage : $dcfg['moreResultsPage']);
 
-    // &opacity - set the opacity of the div ajaxSearch_output 
+    // &opacity - set the opacity of the div ajaxSearch_output
     // Should be a float value: [ 0. < float <= 1. ]
     // Default: 1.
     $cfg['opacity'] = isset($opacity) ? $opacity : (isset($__opacity) ? $__opacity : $dcfg['opacity']);
@@ -392,12 +392,12 @@ if ($cfg['ajaxSearch']){  // ajax mode
     // &jsMooTools - Location of the mootools javascript library (current version of MODx)
     // Default: 'manager/media/script/mootools/mootools.js'
     $cfg['jsMooTools'] = $dcfg['jsMooTools'];
-        
-    // &jsMooTools1.2 - Location of the mootools javascript library (version 1.2) 
+
+    // &jsMooTools1.2 - Location of the mootools javascript library (version 1.2)
     // contains only the mootools functions needed by AjaxSearch
     // Default: AS_SPATH . 'js/mootools1.2/mootools.js'
     $cfg['jsMooTools1.2'] = $dcfg['jsMooTools1.2'];
-        
+
     // &jsQuery - Location of the jquery javascript library
     // Default: AS_SPATH . 'js/jquery/jquery.js'
     $cfg['jsJquery'] = $dcfg['jsJquery'];
