@@ -48,6 +48,9 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
 
   08-june-09 (1.8.3)
     -- Bug fixing
+    -- FirePhp allowed with php4
+  08-june-09 (1.8.3)
+    -- Bug fixing
     -- The number of results is available with the [+as.resultNumber+] placeholder
 
   01-mar-09 (1.8.2)
