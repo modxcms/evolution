@@ -9,10 +9,10 @@
  * Filename:       /install/lang/svenska/svenska.inc.php
  * Language:       Svenska
  * Encoding:       utf-8
- * Revision:       5523
+ * Revision:       5870
  *
  * Translation: Pontus Ågren (Pont) & Thomas Djärv (Beryl)
- * Date: 2009-07-24
+ * Date: 2009-10-17
  */
 
 $_lang["agree_to_terms"] = 'Godkänn licensvillkoren och installera';
@@ -97,7 +97,7 @@ $_lang["install"] = 'Installera';
 $_lang["install_overwrite"] = 'Installera/skriv över';
 $_lang["install_results"] = 'Installationsresultat';
 $_lang["install_update"] = 'Installera/uppdatera';
-$_lang["installation_error_occured"] = 'Följande fel uppstog under installationen';
+$_lang["installation_error_occured"] = 'Följande fel inträffade under installationen';
 $_lang["installation_install_new_copy"] = 'Installera en ny kopia av ';
 $_lang["installation_install_new_note"] = 'Observera att detta val kan skriva över data som finns i databasen.';
 $_lang["installation_mode"] = 'Installationstyp';
@@ -109,7 +109,7 @@ $_lang["installation_upgrade_advanced_note"] = 'För avancerade databasadministr
 $_lang["installation_upgrade_existing"] = 'Uppgradera befintlig installation';
 $_lang["installation_upgrade_existing_note"] = 'Uppgradera dina nuvarande filer och databas.';
 $_lang["installed"] = 'Installerad';
-$_lang["installing_demo_site"] = 'Installerar prov-webbplats: ';
+$_lang["installing_demo_site"] = 'Installerar demo-webbplats: ';
 $_lang["language_code"] = 'sv'; // for html element e.g. <html xml:lang="sv" lang="sv">
 $_lang["loading"] = 'Laddar...';
 $_lang["modules"] = 'Moduler';
@@ -120,6 +120,7 @@ $_lang["modx_requires_php"] = ', och MODx kräver PHP 4.2.0 eller senare.';
 $_lang["mysql_5051"] = ' MySQL-serverns version är 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Det finns kända problem med MySQL 5.0.51. Du rekommenderas att uppgradera innan du fortsätter.';
 $_lang["mysql_version_is"] = ' Din MySQL-version är: ';
+$_lang["no"] = 'Nej';
 $_lang["none"] = 'Inga';
 $_lang["not_found"] = 'hittades inte';
 $_lang["ok"] = 'OK!';
@@ -130,11 +131,14 @@ $_lang["please_correct_error"] = '. Korrigera felet';
 $_lang["please_correct_errors"] = '. Korrigera felen';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Kontroller innan installation';
+$_lang["recommend_setting_change_title"] = 'Rekommenderad inställningsändring';
+$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Inställningsändring: <em>Validera HTTP_REFERER-headers?</em>';
+$_lang["recommend_setting_change_validate_referer_description"] = 'Din webbplats är inte konfigurerad för att validera HTTP_REFERER på inkommande förfrågningar till hanteraren. Vi rekommenderar starkt att du aktiverar den inställningen för att minska risken för CSRF-attacker (Cross Site Request Forgery).';
 $_lang["remove_install_folder_auto"] = 'Ta bort installationskatalogen och -filerna från min webbplats.<br />&nbsp;(Den här operationen kräver att raderingsrättigheter är angivna för installationskatalogen)';
 $_lang["remove_install_folder_manual"] = 'Kom ihåg att ta bort katalogen &quot;<b>install</b>&quot; innan du loggar in i innehållshanteraren.';
 $_lang["retry"] = 'Försök igen';
 $_lang["running_database_updates"] = 'Kör uppdateringar för databasen: ';
-$_lang["sample_web_site"] = 'Prov-webbplats';
+$_lang["sample_web_site"] = 'Demo-webbplats';
 $_lang["sample_web_site_note"] = 'Observera att detta kommer att <b>skriva över</b> existerande dokument och resurser.';
 $_lang["session_problem"] = 'Ett problem med dina serversessioner upptäcktes. Kontakta din serveradministratör för att rätta till problemet.';
 $_lang["session_problem_try_again"] = 'Försök igen?'; 
@@ -166,6 +170,8 @@ $_lang["status_passed_server"] = 'godkänd - kollationeringar finns nu tillgäng
 $_lang["strict_mode"] = ' MySQL-serverns strikt sql_mode är aktiverad!';
 $_lang["strict_mode_error"] = 'Det är möjligt att vissa funktioner i MODx inte kommer att fungera som de ska om inte STRICT_TRANS_TABLES sql_mode är inaktiverat. Du kan ställa in MySQLs läge genom att redigera filen my.cnf eller genom att kontakta din serveradministratör.';
 $_lang["summary_setup_check"] = 'Installationsprogrammet har gjort ett antal test för att kontrollera att allt är klart för att starta installationen.';
+$_lang["system_configuration"] = 'Systemkonfiguration';
+$_lang["system_configuration_validate_referer_description"] = 'Inställningen <strong>Validera HTTP_REFERER-headers</strong> rekommenderas och kan skydda din webbplats från CSRF-attacker. Vid en del serverkonfigurationer kan den dock göra hanteraren oåtkomlig.';
 $_lang["table_prefix_already_inuse"] = ' - Tabellprefixet används redan i den här databasen!';
 $_lang["table_prefix_already_inuse_note"] = 'Installationsprogrammet kunde inte installera i den valda databasen eftersom den redan innehåller tabeller med det prefix du angav. Ange ett nytt prefix och kör sedan installationsprogrammet igen.';
 $_lang["table_prefix_not_exist"] = ' - Tabellprefixet finns inte i den här databasen!';
@@ -180,11 +186,13 @@ $_lang["unable_install_snippet"] = 'Kunde inte installera snippet.  Fil';
 $_lang["unable_install_template"] = 'Kunde inte installera mall.  Fil';
 $_lang["upgrade_note"] = '<strong>Notera:</strong> Innan du börjar surfa på din webbplats bör du logga in i innehållshanteraren på ett administrativt konto och kontrollera och spara dina konfigurationsinställningar.';
 $_lang["upgraded"] = 'Uppgraderad';
+$_lang["validate_referer_title"] = 'Validera HTTP_REFERER-headers?';
 $_lang["visit_forum"] = ', så besök <a href="http://www.modxcms.com/forums/" target="_blank">MODx forum</a>.';
 $_lang["warning"] = 'VARNING!';
 $_lang["welcome_message_start"] = 'Välj först vilken sorts installation som ska göras:';
 $_lang["welcome_message_text"] = 'Detta program kommer att vägleda dig genom hela installationen.';
 $_lang["welcome_message_welcome"] = 'Välkommen till MODx installationsprogram';
 $_lang["writing_config_file"] = 'Skriver konfigurationsfil: ';
+$_lang["yes"] = 'Ja';
 $_lang["you_running_php"] = ' - Du kör PHP ';
 ?>
