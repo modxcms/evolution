@@ -842,8 +842,8 @@ if (is_array($evtOut))
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_type']?></span></td>
 				<td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
 
-					<option name="type" value="document"<?php echo ($content['type'] == "document" ? ' selected="selected"' : "").'>'.$_lang["resource_type_webpage"]."</option>";?> 
-					<option name="type" value="reference"<?php echo ($content['type'] == "reference" ? ' selected="selected"' : "").'>'.$_lang["resource_type_weblink"]."</option>";?> 
+					<option name="type" value="document"<?php echo (($content['type'] == "document" || $_REQUEST['a'] == 85 || $_REQUEST['a'] == 4) ? ' selected="selected"' : "").'>'.$_lang["resource_type_webpage"]."</option>";?> 
+					<option name="type" value="reference"<?php echo (($content['type'] == "reference" || $_REQUEST['a'] == 72) ? ' selected="selected"' : "").'>'.$_lang["resource_type_weblink"]."</option>";?> 
 					</select>
 					&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_type_message']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 

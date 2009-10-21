@@ -31,6 +31,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1145] Begin deprecation of META Tags management in the Manager
 * [#MODX-1190] Installer fix and enhancements
 * [#MODX-1262] Security fixes to ForgotManagerPassword plugin
+* [#MODX-1301] Ensure correct resource type option is selected when adding documents and weblinks
 
 --------------------------------------------
 Additional Improvements & Updates:
