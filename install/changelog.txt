@@ -33,7 +33,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1262] Security fixes to ForgotManagerPassword plugin
 * [#MODX-1301] Ensure correct resource type option is selected when adding documents and weblinks
 * [#MODX-1286] Ensure version is saved to DB when saving configuration settings
-
+* [#MODX-1289] Add 'Remove Periods' config param to TransAlias plugin and remove period substitution from the trans tables (and default MODx stripAlias() function)
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
