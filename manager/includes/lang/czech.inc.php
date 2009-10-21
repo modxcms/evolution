@@ -4,9 +4,9 @@
  * Function:       Language file.
  * Encoding:       UTF8
  * Author:         Hansek, COEX (hansek@coex.cz), původní překlad: rasel^ - http://www.etomite.sk, R - stick, Ajven, golem, stranger, rzelnik
- * Date:           27 July 2009
- * Version:        2.0.3
- * MODx version:   Evolution 1.0
+ * Date:           18 October 2009
+ * Version:        2.0.4
+ * MODx version:   Evolution 1.0.1
 */
 $modx_lang_attribute = 'cs'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
@@ -101,6 +101,7 @@ $_lang["click_to_context"] = 'Kliknutím získáte přístup do kontextového me
 $_lang["click_to_edit_title"] = 'Zde klikněte pro úpravu tohoto záznamu';
 $_lang["click_to_view_details"] = 'Zde klikněte pro zobrazení detailů';
 $_lang["close"] = 'Uzavřít';
+$_lang["code"] = 'Kód';
 $_lang["collapse_tree"] = 'Sbalit';
 $_lang["comment"] = 'Poznámka';
 $_lang["configcheck_admin"] = 'Kontaktujte prosím administrátora systému a upozorněte ho na tuto zprávu!';
@@ -128,6 +129,8 @@ $_lang["configcheck_unauthorizedpage_unavailable"] = 'Stránka o neautorizované
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'To znamená, že Stránka o neautorizovaném přístupu není dostupná normálním internetovým uživatelům nebo neexistuje. To může vést k mnoha chybovým zápisům do logů. Ujistěte se zda žádná ze skupin návštěvníků nemá přístup k této stránce.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Stránka o neautorizovaném přístupu definovaná v nastavení webu není publikována.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'To znamená, že vaše Stránka o neautorizovaném přístupu je nedostupná širolé veřejnosti. Publikujte stránku nebo se přesvědčte, že stránka existuje a je umístěna ve stromu dokumentů v Nástrojích &gt; Konfigurační menu.';
+$_lang["configcheck_validate_referer"] = 'Bezpečnostní upozornění: Validace HTTP hlaviček';
+$_lang["configcheck_validate_referer_msg"] = "Nastavení <strong>Ověřit hlavičky HTTP_REFERER</strong> v konfiguraci systému je vypnuté. Doporučujeme jej zapnout. <a href=\"index.php?a=17\">Přejít na konfiguraci systému</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Nezobrazovat to znovu.</em></a>";
 $_lang["configcheck_warning"] = 'Výstraha konfigurace:';
 $_lang["configcheck_what"] = 'Co to znamená?';
 $_lang["confirm_block"] = 'Opravdu chcete zablokovat tohoto uživatele?';
@@ -189,6 +192,8 @@ $_lang["date"] = 'Datum';
 $_lang["datechanged"] = 'Datum bylo změněno';
 $_lang["datepicker_offset"] = 'Počet let v minulosti: ';
 $_lang["datepicker_offset_message"] = 'Kolik předchozích let má být zobrazeno ve výběru data.';
+$_lang["datetime_format"] = 'Format datumu';
+$_lang["datetime_format_message"] = 'Formát datumu v Manager.';
 $_lang["defaultcache_message"] = 'Označte \'Ano\' pro předvolené načtení dokumentů do zásobníku.';
 $_lang["defaultcache_title"] = 'Ukládání do zásobníku';
 $_lang["defaultmenuindex_message"] = 'Volbou \'Ano\' zapnete automatický menu index přidaný do jádra (základu).';
@@ -647,6 +652,8 @@ $_lang["rb_title"] = 'Povolit prohlížeč zdrojů:';
 $_lang["rb_webuser_message"] = 'Chcete návětevníkům povolit používat Správce souborů? <b>POZOR:</b> Povolením Návštěvníkům používat Správce souborů vystavujete Vaše soubory bezpečnostnímu riziku. Tuto volbu zvolte pouze pro důvěryhodné Návštěvníky.';
 $_lang["rb_webuser_title"] = 'Návštěvník?';
 $_lang["recent_docs"] = 'Poslední dokumenty';
+$_lang["recommend_setting_change_title"] = 'Doporučena změna nastavení';
+$_lang["recommend_setting_change_description"] = 'Váš web není nastaven pro ověřování HTTP_REFERER příchozích dotazů do Manager. Doporučejeme Vám zapnutí tohoto nastavení, předejdete tím možnému CSRF (Cross Site Request Forgery) útoku.';
 $_lang["refresh_cache"] = 'Vyrovnávací paměť (cache): Počet souborů umístěných v adresáři cache <b>%s</b> a smazáno <b>%d</b> vyrovnávacích souborů.<p>Nové vyrovnávací soubory budou vytvořeny až to budou stránky vyžadovat.';
 $_lang["refresh_published"] = 'Počet publikovaných dokumentů: <b>%s</b>';
 $_lang["refresh_site"] = 'Vyrovnávací paměť';
@@ -701,6 +708,10 @@ $_lang["resource_summary_help"] = 'Model stručného souhrnu dokumentu';
 $_lang["resource_title"] = 'Nadpis';
 $_lang["resource_title_help"] = 'Sem napíšte název anebo titulek dokumentu. Pokuste se vyvarovat použití zpětných lomítek v názvu!';
 $_lang["resource_to_be_moved"] = 'Dokument bude přesunut';
+$_lang["resource_type"] = 'Typ zdroje';
+$_lang["resource_type_message"] = 'Webové odkazy odkazují na internetové zdroje jako MODx stránky, externí stránky, obrázky nebo jiné soubory na internetu. Webové odkazy by měli obsahovat text/html Internet Media Type a Inline Content-Disposition.';
+$_lang["resource_type_weblink"] = 'Webový odkaz';
+$_lang["resource_type_webpage"] = 'Webová stránka';
 $_lang["resource_weblink_help"] = 'Vložte adresu objektu, na který chcete odkazovat.';
 $_lang["resources_in_container"] = 'dokumenty v této složce';
 $_lang["resources_in_container_no"] = 'Tato složka nemá potomky';
@@ -846,6 +857,8 @@ $_lang["settings_templvars"] = 'Template Variables';
 $_lang["settings_title"] = 'Konfigurace systému';
 $_lang["settings_ui"] = 'Rozhraní & vzhled';
 $_lang["settings_users"] = 'Uživatel';
+$_lang["show_meta"] = 'Zobrazit záložku META klíčových slov';
+$_lang["show_meta_message"] = 'Zobrazit zastaralou editaci META klíčových slov při editaci dokumentu v Manager.';
 $_lang["show_tree"] = 'Ukázat strom dokumentů';
 $_lang["showing"] = 'Zobrazení';
 $_lang["signupemail_message"] = 'Zde můžete nastavit zprávu odesílanou uživatelům po vytvoření účtu. MODx potom odešle email obsahujíci jejich uživatelské jméno a heslo. <b>Poznámka:</b> Následující rezervovaná místa (placeholders) budou nahrazena Správcem obsahu, když pošle zprávu: <br /><br />[+sname+] - Jméno Vaší webové stránky, <br />[+saddr+] - Emailová adresa Vašich stránek, <br />[+surl+] - URL Vašich stránek, <br />[+uid+] - Uživatelské přihlašovací jméno nebo id, <br />[+pwd+] - Uživatelské heslo, <br />[+ufn+] - Celé uživatelovo jméno. <br /><br /><b>Vynecháním [+uid+] a [+pwd+] v emailu způsobíte, že se uživatel nedozví své uživatelské jméno a heslo!</b>';
@@ -923,6 +936,7 @@ $_lang["tmplvars_name"] = 'Jméno proměnné';
 $_lang["tmplvars_novars"] = 'Žádné Template Variables nenalezeny';
 $_lang["tmplvars_rank"] = 'Uspořádání';
 $_lang["tmplvars_reset_params"] = 'Resetovat parametery';
+$_lang["tmplvars_title"] = 'Vytvořit/upravit Template Variable';
 $_lang["tmplvars_type"] = 'Typ vstupu';
 $_lang["tmplvars_widget"] = 'Výstup';
 $_lang["tmplvars_widget_prop"] = 'Možnosti výstupu';
