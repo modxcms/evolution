@@ -32,6 +32,7 @@ Bugfixes & Security Enhancements:
 * [#MODX-1190] Installer fix and enhancements
 * [#MODX-1262] Security fixes to ForgotManagerPassword plugin
 * [#MODX-1301] Ensure correct resource type option is selected when adding documents and weblinks
+* [#MODX-1286] Ensure version is saved to DB when saving configuration settings
 
 --------------------------------------------
 Additional Improvements & Updates:
