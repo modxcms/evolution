@@ -4,7 +4,6 @@
  */
 return array (
 // File/path punctuation (usually not wanted, but might be wanted in some cases)
-'.'=>'', 
 '/'=>'',
 // Generally unwanted punctuation
 '!'=>'', '('=>'', ')'=>'', '*'=>'', ','=>'', ':'=>'', ';'=>'', '…'=>'', '¡'=>'', '¿'=>'',

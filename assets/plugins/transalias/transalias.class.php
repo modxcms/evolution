@@ -106,7 +106,7 @@ class TransAlias {
      * @param string $name
      * @return bool success
      */
-    function loadTable($name) {
+    function loadTable($name, $remove_periods = 'No') {
         if (empty($name) || !is_string($name)) {
             return false;
         }
@@ -116,7 +116,11 @@ class TransAlias {
         } else {
             $filePath = dirname(__FILE__).'/transliterations/'.$name.'.php';
             if (is_file($filePath)) {
-                $this->_tables[$name] = include $filePath;
+            	$table = include $filePath;
+            	if ($remove_periods == 'Yes') {
+            		$table['.'] = '';
+            	}
+                $this->_tables[$name] = $table;
                 if (is_array($this->_tables[$name]) && !empty($this->_tables[$name])) {
                     $this->_useTable = $name;
                     return true;
