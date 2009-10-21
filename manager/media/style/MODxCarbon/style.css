@@ -280,10 +280,14 @@ form textarea {
 		padding: 2px 2px 2px 0;
 	}
 
-input[type="checkbox"], input.checkbox,
-input[type="radio"], input.radio,
-input[type="submit"], input.submit,
-input[type="button"], input.button {
+input.checkbox,
+input.radio,
+input.submit,
+input.button,
+input[type="checkbox"],
+input[type="radio"],
+input[type="submit"],
+input[type="button"] {
 	height: auto !important;
 	width: auto !important;
 	vertical-align: middle;

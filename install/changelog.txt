@@ -4,42 +4,52 @@ development release, and is only shown to give an idea of what's currently in th
 MODx Evolution 1.0.1 ($Rev$ - $Date$)
 ===================================
 --------------------------------------------
-Bugfixes & Security Enhancements:
+Security:
 --------------------------------------------
 * [#MODX-206]  Reduce vulnerability to CSRF via referrer check update. Additional protections coming in the future via tokenizing requests in the Manager. 
-* [#MODX-353]  Duplicate container cause problems (merge from 1.0 dev branch)
-* [#MODX-586]  Cancel button on the move document page does not redirect you to the selected page (merge from 1.0 dev branch)
+* [#MODX-1216] Remove "execute snippet" from mutate_snippets and mutate_modules
+* [#MODX-1227] Add referrer check configuration warning to Manager
+* [#MODX-1218] Enable CSRF check by default for sites that set headers properly
+* [#MODX-1262] Security enhancement to ForgotManagerPassword plugin
+* [#AJAXSEARCH-46] Prevent content injection with JS disabled (AjaxSearch 1.8.4)
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-353]  Duplicate container cause problems
+* [#MODX-586]  Cancel button on the move document page does not redirect you to the selected page
 * [#MODX-842]  Missing Template Variable title in language files
-* [#MODX-1000] On editing a template variable the right "Cancel" button is positioned weird (merge from 1.0 dev branch)
-* [#MODX-1001] Navigation issues when pressing the cancel button (merge from 1.0 dev branch)
+* [#MODX-1000] On editing a template variable the right "Cancel" button is positioned weird
+* [#MODX-1001] Navigation issues when pressing the cancel button
 * [#MODX-1017] Removed unused code in welcome.static.php
 * [#MODX-1024] Additional check for language files in Manager with graceful fallback to English
 * [#MODX-1025] No alerts on deleting the keywords
-* [#MODX-1065] Quoted_printable function in save_user.processor.php not available in some server configurations (merge from 1.0 dev branch)
+* [#MODX-1065] Quoted_printable function in save_user.processor.php not available in some server configurations
 * [#MODX-1075] String not properly translated in French installer translation
 * [#MODX-1077] Login panel updates
 * [#MODX-1084] Download path issue in File Manager
 * [#MODX-1087] JS error when manager don't have rights for trashcan
 * [#MODX-1096] System info page shows all tables in DB
 * [#MODX-1099] Typo in the name of language variables in File manager
+* [#MODX-1129] Editing form layout broken in IE6
 * [#MODX-1131] Remove "Show Preview Window" from Site Configuration page
+* [#MODX-1145] Begin deprecation of META Tags management in the Manager
 * [#MODX-1160] Missing label on search form for manager logs (Dupes: [#MODX-1041] [#MODX-1083])
 * [#MODX-1184] After creating a manager user the head title show wrong text
-* [#MODX-1216] Remove "execute snippet" from mutate_snippets and mutate_modules
-* [#MODX-1218] Enable CSRF check by default for sites that set headers properly
-* [#MODX-1227] Add referrer check configuration warning to Manager
-* [#MODX-1145] Begin deprecation of META Tags management in the Manager
-* [#MODX-1190] Installer fix and enhancements
-* [#MODX-1262] Security fixes to ForgotManagerPassword plugin
-* [#MODX-1301] Ensure correct resource type option is selected when adding documents and weblinks
+* [#MODX-1188] fix TransAlias installer template, plus other improvements to TransAlias by rfoster
+* [#MODX-1190] Installer fixes and enhancements
+* [#MODX-1095] Fixed Spanish Translation typos and missing labels and convert it to UTF-8
 * [#MODX-1286] Ensure version is saved to DB when saving configuration settings
 * [#MODX-1289] Add 'Remove Periods' config param to TransAlias plugin and remove period substitution from the trans tables (and default MODx stripAlias() function)
+* [#MODX-1301] Ensure correct Resource Type option is selected when adding Resources and Weblinks
+
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
 * [#MODX-180]  Convert weblink to document (and vice versa) (merge from 1.0 dev branch)
 * [#MODX-828]  Need to be able to tell user access permissions by the Site Tree icon/text
 * [#MODX-929]  Swap default click behavior for the Tree menu (edit vs view data)
+* [#MODX-988] automate storage of version number in settings table during install/upgrade
 * [#MODX-1011] Make config language string punctuation consistent for field labels
 * [#MODX-1034] Missed update to version number
 * [#MODX-1038] Remove space after closing ?> tags
@@ -51,8 +61,14 @@ Additional Improvements & Updates:
 * [#MODX-1211] Add configuration option to QM+ - allows user to choose top or bottom placement of toolbar overlay in browser window
 * [#MODX-1244] Add ManagerManager 0.3.5
 * [#MODX-1245] Update QM+ to version 1.3.3
-* [#MODX-1246] Update AjaxSearch to 1.8.3b
+* [#MODX-1246] Update AjaxSearch to 1.8.4
 * [#MODX-1276] Reduction in size of site cache file by removing PHP comments
+* [#MODX-1282] Swedish language files for Evolution 1.0.1
+* [#MODX-1284] Czech language file for Evo 1.0.1
+* [#MODX-1287] New danish language file for Evo 1.01
+* [#MODX-1288] New danish language file for Evo 1.01 install
+* [#MODX-1295] Demo Content categories need to be set
+* [#MDOX-1302] Create demo content defaults for ManagerManager
 
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)

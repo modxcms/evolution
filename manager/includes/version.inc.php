@@ -1,6 +1,6 @@
 <?php
 function getSVNRev() {
-	// $Rev: 5622 $ - SVN property required to be set: $Rev: 5622 $
+	// SVN property required to be set, e.g. $Rev: 5622 $
     $svnrev = '$Rev: 5622 $';
     $svnrev = substr($svnrev, 6);
     return intval(substr($svnrev, 0, strlen($svnrev) - 2));
