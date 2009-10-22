@@ -70,6 +70,7 @@ Additional Improvements & Updates:
 * [#MODX-1295] Demo Content categories need to be set
 * [#MDOX-1302] Create demo content defaults for ManagerManager
 * [#MDOX-1306] Clean up styling on Manager login page
+* [#MDOX-1307] Update styling on QM+ to improve usability
 
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)

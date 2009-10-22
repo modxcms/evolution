@@ -12,7 +12,11 @@
 	text-align: left;
 	opacity:0.5; 
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
-	filter: alpha(opacity=50);		
+	filter: alpha(opacity=50);
+	top: -28px;
+	-webkit-transition-duration: 0.7s;
+	-moz-transition-duration: 0.7s;
+	transition-duration: 0.7s;
 }
 
 #qmEditorClosed
@@ -45,7 +49,11 @@
 {
     opacity:1; 
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; 
-	filter: alpha(opacity=100);	
+	filter: alpha(opacity=100);
+	top: 0px;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-duration: 0.2s;
+	transition-duration: 0.2s;
 }
 
 
@@ -89,7 +97,8 @@
 #qmEditor .qmButton img 
 {
 	vertical-align: top;
-	margin-top: 0px;
+	margin-top: -2px;
+	border: 0;
 }
 
 #qmEditor .qmButton:hover 
