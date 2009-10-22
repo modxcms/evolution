@@ -1,5 +1,5 @@
 /**
- * mm_rules
+ * mm_demo_rules
  * 
  * ManagerManager rules for the demo content. Should be modified for your own sites.
  * 
