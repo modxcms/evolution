@@ -42,6 +42,7 @@ Bugfixes:
 * [#MODX-1286] Ensure version is saved to DB when saving configuration settings
 * [#MODX-1289] Add 'Remove Periods' config param to TransAlias plugin and remove period substitution from the trans tables (and default MODx stripAlias() function)
 * [#MODX-1301] Ensure correct Resource Type option is selected when adding Resources and Weblinks
+* [#MODX-1309] Stop upgrades overwriting the element category
 
 --------------------------------------------
 Additional Improvements & Updates:
