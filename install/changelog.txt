@@ -49,7 +49,7 @@ Additional Improvements & Updates:
 * [#MODX-180]  Convert weblink to document (and vice versa) (merge from 1.0 dev branch)
 * [#MODX-828]  Need to be able to tell user access permissions by the Site Tree icon/text
 * [#MODX-929]  Swap default click behavior for the Tree menu (edit vs view data)
-* [#MODX-988] automate storage of version number in settings table during install/upgrade
+* [#MODX-988]  Automate storage of version number in settings table during install/upgrade
 * [#MODX-1011] Make config language string punctuation consistent for field labels
 * [#MODX-1034] Missed update to version number
 * [#MODX-1038] Remove space after closing ?> tags
@@ -62,13 +62,14 @@ Additional Improvements & Updates:
 * [#MODX-1244] Add ManagerManager 0.3.5
 * [#MODX-1245] Update QM+ to version 1.3.3
 * [#MODX-1246] Update AjaxSearch to 1.8.4
-* [#MODX-1276] Reduction in size of site cache file by removing PHP comments
+* [#MODX-1276] Reduce site cache size by removing PHP comments
 * [#MODX-1282] Swedish language files for Evolution 1.0.1
 * [#MODX-1284] Czech language file for Evo 1.0.1
-* [#MODX-1287] New danish language file for Evo 1.01
-* [#MODX-1288] New danish language file for Evo 1.01 install
+* [#MODX-1287] New Danish language file for Evo 1.01
+* [#MODX-1288] New Danish language file for Evo 1.01 install
 * [#MODX-1295] Demo Content categories need to be set
 * [#MDOX-1302] Create demo content defaults for ManagerManager
+* [#MDOX-1306] Clean up styling on Manager login page
 
 
 MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)

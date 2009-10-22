@@ -34,8 +34,10 @@
     a, a:active, a:visited, a:link {color: #003399;text-decoration: underline;}
     a:hover {color: #000;}
     input, .inputBox {padding: 1px;}
-    .sectionHeader {padding: 5px 3px 5px 18px;font-weight: bold;color: #000;border-top: 1px solid #EAECEE;background: #EAECEE url(media/style/MODxCarbon/images/misc/fade.gif) repeat-x top;}
-    .sectionBody {border: 1px solid #e3e3e3;border-top-color: #ccc;padding: 20px 20px 20px;display: block;background: #fff;}
+    form { border: 5px solid #EAECEE; }
+    #logo { margin-left: -7px }
+    .sectionHeader {padding: 5px 3px 5px 18px;font-weight: bold;color: #000;background: #EAECEE url(media/style/MODxCarbon/images/misc/fade.gif) repeat-x top;}
+    .sectionBody {padding: 20px 20px 20px;display: block;background: #fff;}
     #mx_loginbox {width: 460px;margin: 30px auto 0;}
     img.loginCaptcha {border: 1px solid #039;width: 148px;height: 60px;}
     label {display: block;font-weight: bold;}
@@ -43,8 +45,8 @@
     input.checkbox {float: left;clear: left;margin-right: 3px;}
     input.text {width: 400px;background: #fff url(../assets/templates/manager/images/input-bg.gif) repeat-x top left;border:1px solid #ccc;padding:3px;}
     input.login {float: right;clear: right;margin-right: 25px;}
-    .loginLicense {width: 460px;color: #B2B2B2;margin: 0 auto;font-size: 90%;padding-left: 20px;}
-    .loginLicense a {color: #B2B2B2;font-size: 9px;}
+    .loginLicense {width: 460px;color: #B2B2B2;margin: 0.5em auto;font-size: 90%;padding-left: 20px;}
+    .loginLicense a {color: #B2B2B2;}
     .notice {width: 100%;padding: 5px;border: 1px solid #eee;background-color: #F4F4F4;color: #707070;}
     #preLoader {position: absolute;z-index: 50000;width: 100%;height: 100%;text-align: center;vertical-align: middle;}
     .preLoaderText {background-color: #fff;width: 300px;height: 150px;padding: 50px;border: 1px solid #039;}
@@ -98,7 +100,7 @@
 
         <div class="sectionHeader"><a href="../">[+site_name+]</a></div>
         <div class="sectionBody">
-			<img src="media/style/MODxCarbon/images/misc/logo.png" alt="[+site_name+]" />
+			<img src="media/style/MODxCarbon/images/misc/login-logo.png" alt="[+site_name+]" id="logo" />
             <p class="loginMessage">[+login_message+]</p>
             <label>[+username+] </label>
             <input type="text" class="text" name="username" id="username" tabindex="1" value="[+uid+]" />
