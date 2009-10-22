@@ -1,6 +1,6 @@
 //<?php
 /**
- * Weblogin
+ * WebLogin
  * 
  * Allows webusers to login to protected pages in the website, supporting multiple user groups
  *
