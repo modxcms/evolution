@@ -240,6 +240,6 @@ position: relative;
   font-weight: bold;
 }
 
-#websignupfrm div.post label {display:block;width:430px;margin-bottom:8px;}
-#websignupfrm div.post label input {position:absolute;left:170px;}
-#websignupfrm div.post fieldset {border:none;}
+div.post #websignupfrm label {display:block;width:430px;margin-bottom:8px;}
+div.post #websignupfrm label input {position:absolute;left:170px;}
+div.post #websignupfrm fieldset {border:none;}
