@@ -78,6 +78,5 @@ if(!$modx->hasPermission('delete_template')) {
 	$modx->invokeEvent("OnTVFormDelete",
 							array(
 								"id"	=> $id
-							));	
-							
+							));								
 ?>

@@ -151,7 +151,6 @@ switch ($_POST['mode']) {
 			$sync->setCachepath("../assets/cache/");
 			$sync->setReport(false);
 			$sync->emptyCache(); // first empty the cache
-			if($_POST['runsnippet']) run_snippet($snippet);
 			// finished emptying cache - redirect	
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "108&id=$id":"107";
@@ -199,5 +198,4 @@ function saveUserGroupAccessPermissons(){
 		}
 	}
 }
-
 ?>

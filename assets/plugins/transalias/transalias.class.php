@@ -106,7 +106,7 @@ class TransAlias {
      * @param string $name
      * @return bool success
      */
-    function loadTable($name) {
+    function loadTable($name, $remove_periods = 'No') {
         if (empty($name) || !is_string($name)) {
             return false;
         }
@@ -116,7 +116,11 @@ class TransAlias {
         } else {
             $filePath = dirname(__FILE__).'/transliterations/'.$name.'.php';
             if (is_file($filePath)) {
-                $this->_tables[$name] = include $filePath;
+            	$table = include $filePath;
+            	if ($remove_periods == 'Yes') {
+            		$table['.'] = '';
+            	}
+                $this->_tables[$name] = $table;
                 if (is_array($this->_tables[$name]) && !empty($this->_tables[$name])) {
                     $this->_useTable = $name;
                     return true;
@@ -136,7 +140,7 @@ class TransAlias {
      * @param string $alias
      * @return string alias
      */
-    function stripAlias($alias) {
+    function stripAlias($alias,$char_restrict,$word_separator) {
         // Convert all named HTML entities to numeric entities
         $alias = preg_replace_callback('/&([a-zA-Z][a-zA-Z0-9]{1,7});/', array($this,'convert_entity'), $alias);
         
@@ -149,10 +153,26 @@ class TransAlias {
         }
 
         $alias = strip_tags($alias); // strip HTML
-        $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
-        $alias = preg_replace('/\s+/', '-', $alias); // convert white-space to dash
-        $alias = preg_replace('/-+/', '-', $alias);  // convert multiple dashes to one
-        $alias = trim($alias, '-'); // trim excess
+        if($char_restrict=='lowercase alphanumeric') {
+            $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
+            $alias = strtolower($alias); // make lowercase
+        } elseif($char_restrict=='alphanumeric') {
+            $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
+        } else { // restrict only to legal characters
+            $alias = preg_replace('/[&=+%#<>"~`@\?\[\]\{\}\|\^\'\\\\]/', '', $alias); // remove chars that are illegal/unsafe in a url
+        }
+        switch($word_separator) {
+            case 'dash': $word_separator='-'; break;
+            case 'underscore': $word_separator='_'; break;
+            case 'none': $word_separator=''; break;
+            // default: use the value of $word_separator
+        }
+        $alias = preg_replace('/\s+/', $word_separator, $alias); // convert white-space to word separator
+        $alias = preg_replace('/'.$word_separator.'+/', $word_separator, $alias);  // convert multiple word separators to one
+        if(strlen($word_separator)==1)
+            $alias = trim($alias, $word_separator.'/. '); // trim excess and bad chars
+        else
+            $alias = trim($alias, '/. '); // trim bad chars
         return $alias;
     }
 

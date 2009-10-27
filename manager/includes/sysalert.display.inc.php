@@ -1,15 +1,15 @@
 <?php
 
 	/**
-	 *	System Alert Message Queque Display file
+	 *	System Alert Message Queue Display file
 	 *	Written By Raymond Irving, April, 2005
 	 *
-	 *	Used to display system alert messages inside the browser 
+	 *	Used to display system alert messages inside the browser
 	 *
 	 */
-	
+
 	require_once(dirname(__FILE__).'/protect.inc.php');
-	
+
 	$sysMsgs = "";
 	$limit = count($SystemAlertMsgQueque);
 	for($i=0;$i<$limit;$i++) {
@@ -21,13 +21,14 @@
 	$SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
 
 	if($sysMsgs!="") {
-?>	
+?>
 
 <?php // fetch the styles
-	echo '<link rel="stylesheet" type="text/css" href="'.$modx->config['base_path'].'manager/media/style/'.$manager_theme.'/style.css'.'" />';
+	echo '<link rel="stylesheet" type="text/css" href="'.$modx->config['base_url'].'manager/media/style/'.$manager_theme.'/style.css'.'" />';
 ?>
 <script type="text/javascript">
-Window.onDomReady(function() {
+// <![CDATA[
+window.onDomReady = function() {
 			var sysAlert = new Element('div').setProperties({
 				'class': 'sysAlert'
 			});
@@ -37,7 +38,8 @@ Window.onDomReady(function() {
 				button1: 'Ok',
 				width: 500
 			});
-});
+};
+// ]]>
 </script>
 <?php
 	}

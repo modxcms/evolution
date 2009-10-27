@@ -229,5 +229,4 @@ function saveDocumentAccessPermissons(){
 		}
 	}
 }
-
 ?>

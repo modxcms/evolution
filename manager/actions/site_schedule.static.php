@@ -21,7 +21,7 @@ if($limit<1) {
   <table border="0" cellpadding="2" cellspacing="0"  class="sortabletable sortable-onload-3 rowstyle-even" id="table-1" width="100%">
     <thead>
       <tr bgcolor="#CCCCCC">
-        <th class="sortable"><b><?php echo $_lang['document'];?></b></th>
+        <th class="sortable"><b><?php echo $_lang['resource'];?></b></th>
         <th class="sortable"><b><?php echo $_lang['id'];?></b></th>
         <th class="sortable"><b><?php echo $_lang['publish_date'];?></b></th>
       </tr>
@@ -60,7 +60,7 @@ if($limit<1) {
   <table border="0" cellpadding="2" cellspacing="0"  class="sortabletable sortable-onload-3 rowstyle-even" id="table-2" width="100%">
     <thead>
       <tr bgcolor="#CCCCCC">
-        <th class="sortable"><b><?php echo $_lang['document'];?></b></th>
+        <th class="sortable"><b><?php echo $_lang['resource'];?></b></th>
         <th class="sortable"><b><?php echo $_lang['id'];?></b></th>
         <th class="sortable"><b><?php echo $_lang['unpublish_date'];?></b></th>
       </tr>
@@ -98,7 +98,7 @@ if($limit<1) {
   <table border="0" cellpadding="2" cellspacing="0"  class="sortabletable rowstyle-even" id="table-3" width="100%">
     <thead>
       <tr bgcolor="#CCCCCC">
-        <th class="sortable"><b><?php echo $_lang['document'];?></b></th>
+        <th class="sortable"><b><?php echo $_lang['resource'];?></b></th>
         <th class="sortable"><b><?php echo $_lang['id'];?></b></th>
         <th class="sortable"><b><?php echo $_lang['publish_date'];?></b></th>
         <th class="sortable"><b><?php echo $_lang['unpublish_date'];?></b></th>

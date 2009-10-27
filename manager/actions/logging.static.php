@@ -133,7 +133,7 @@ window.addEvent('domready', function() {
     </td>
   </tr>
   <tr bgcolor="#ffffff">
-    <td><b><?php echo $_lang["message_message"]; ?></b></td>
+    <td><b><?php echo $_lang["mgrlog_msg"]; ?></b></td>
     <td align="right">
       <input type="text" name="message" class="inputbox" style="width:240px" value="<?php echo $_REQUEST['message']; ?>" />
     </td>

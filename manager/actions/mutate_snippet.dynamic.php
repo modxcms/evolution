@@ -265,8 +265,8 @@ function decode(s){
 	$evtOut = $modx->invokeEvent("OnSnipFormPrerender",array("id" => $id));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
-<input type="hidden" name="id" value="<?php echo $content['id']?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
+	<input type="hidden" name="id" value="<?php echo $content['id']?>">
+	<input type="hidden" name="mode" value="<?php echo $_GET['a']?>">
 
     <div id="actions">
     	  <ul class="actionButtons">
@@ -317,9 +317,6 @@ function decode(s){
 			<td align="left" style="padding-top:10px"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
 		  </tr>
 		  <tr>
-			<td style="padding-top:10px" align="left" colspan="2"><input style="padding:0;margin:0;" name="runsnippet" type="checkbox" class="inputBox"<?php if($content['runsnippet']) {echo ' checked="checked"';}?> /> <?php echo $_lang['snippet_execonsave']?></td>
-		  </tr>
-		  <tr>
 			<td style="padding-top:10px" align="left" valign="top" colspan="2"><input  style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
 			</td>
 		  </tr>
@@ -329,12 +326,12 @@ function decode(s){
 		    <div style="padding:1px 1px 5px 1px; width:100%; height:16px;background-color:#eeeeee; border-top:1px solid #e0e0e0;margin-top:5px">
 		    	<span style="float:left;color:#707070;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['snippet_code']?></span>
 		    	<span style="float:right;color:#707070;"><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : ""?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-		   	</div>
+		  	</div>
 			<textarea dir="ltr" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
-		</div>
+			</div>
 		<!-- PHP text editor end -->
-	</div>
-
+		  	</div>
+		
 	<!-- Properties -->
     <div class="tab-page" id="tabProps">
     	<h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
@@ -343,15 +340,15 @@ function decode(s){
           <tr>
 			<td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
 			<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
-			<option>&nbsp;</option>
-			<?php
-				include_once "categories.inc.php";
-				$ds = getCategories();
-				if($ds) foreach($ds as $n=>$v){
-					echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
-				}
-			?>
-			</select>
+					<option>&nbsp;</option>
+				<?php
+					include_once "categories.inc.php";
+					$ds = getCategories();
+					if($ds) foreach($ds as $n=>$v){
+						echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
+					}
+				?>
+				</select>
 			</td>
 		  </tr>
           <tr>
@@ -361,20 +358,20 @@ function decode(s){
           <tr>
 			<td align="left" style="padding-top:10px;"><?php echo $_lang['import_params']?>:&nbsp;&nbsp;</td>
 			<td align="left" valign="top" style="padding-top:10px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="moduleguid" style="width:300px;" onChange="documentDirty=true;">
-			<option>&nbsp;</option>
-            <?php
-				$sql = 'SELECT sm.id,sm.name,sm.guid '.
-				       'FROM '.$tbl_site_modules.' AS sm '.
-				       'INNER JOIN '.$tbl_site_module_depobj.' AS smd ON smd.module=sm.id AND smd.type=40 '.
-				       'INNER JOIN '.$tbl_site_snippets.' AS ss ON ss.id=smd.resource '.
-				       'WHERE smd.resource=\''.$id.'\' AND sm.enable_sharedparams=\'1\' '.
-				       'ORDER BY sm.name';
-				$ds = $modx->dbQuery($sql);
-				if($ds) while($row = $modx->fetchRow($ds)){
-					echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".htmlspecialchars($row['name'])."</option>";
-				}
-			?>
-			</select>
+					<option>&nbsp;</option>
+	            <?php
+					$sql = 'SELECT sm.id,sm.name,sm.guid '.
+					       'FROM '.$tbl_site_modules.' AS sm '.
+					       'INNER JOIN '.$tbl_site_module_depobj.' AS smd ON smd.module=sm.id AND smd.type=40 '.
+					       'INNER JOIN '.$tbl_site_snippets.' AS ss ON ss.id=smd.resource '.
+					       'WHERE smd.resource=\''.$id.'\' AND sm.enable_sharedparams=\'1\' '.
+					       'ORDER BY sm.name';
+					$ds = $modx->dbQuery($sql);
+					if($ds) while($row = $modx->fetchRow($ds)){
+						echo "<option value='".$row['guid']."'".($content['moduleguid']==$row['guid']? " selected='selected'":"").">".htmlspecialchars($row['name'])."</option>";
+					}
+				?>
+				</select>
 			</td>
 		  </tr>
 		  <tr>
@@ -390,16 +387,17 @@ function decode(s){
 			<td align="left" id="displayparams">&nbsp;</td>
 		  </tr>
 		</table>
+		  	</div>
+			</div>
+		<input type="submit" name="save" style="display:none">
 	</div>
-</div>
-<input type="submit" name="save" style="display:none">
-</div>
 <?php
 	// invoke OnSnipFormRender event
 	$evtOut = $modx->invokeEvent("OnSnipFormRender",array("id" => $id));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
+
 <script type="text/javascript">
 	setTimeout('showParameters();',10);
 </script>

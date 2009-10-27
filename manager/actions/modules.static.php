@@ -32,30 +32,12 @@ $cm = new ContextMenu("cntxm", 150);
 $cm->addItem($_lang["run_module"],"js:menuAction(1)",$_style['icons_save'],(!$modx->hasPermission('exec_module') ? 1:0));
 $cm->addSeparator();
 $cm->addItem($_lang["edit"],"js:menuAction(2)",$_style['icons_edit_document'],(!$modx->hasPermission('edit_module') ? 1:0));
-$cm->addItem($_lang["duplicate"],"js:menuAction(3)",$_style['icons_duplicate_document'],(!$modx->hasPermission('new_module') ? 1:0));
+$cm->addItem($_lang["duplicate"],"js:menuAction(3)",$_style['icons_resource_duplicate'],(!$modx->hasPermission('new_module') ? 1:0));
 $cm->addItem($_lang["delete"], "js:menuAction(4)",$_style['icons_delete'],(!$modx->hasPermission('delete_module') ? 1:0));
 echo $cm->render();
 
 ?>
-<script language="JavaScript" type="text/javascript">
-  	function searchResource(){
-		document.resource.op.value="srch";
-		document.resource.submit();
-	};
-
-	function resetSearch(){
-		document.resource.search.value = ''
-		document.resource.op.value="reset";
-		document.resource.submit();
-	};
-
-	function changeListMode(){
-		var m = parseInt(document.resource.listmode.value) ? 1:0;
-		if (m) document.resource.listmode.value=0;
-		else document.resource.listmode.value=1;
-		document.resource.submit();
-	};
-
+<script type="text/javascript">
 	var selectedItem;
 	var contextm = <?php echo $cm->getClientScriptObject(); ?>;
 	function showContentMenu(id,e){
@@ -94,33 +76,19 @@ echo $cm->render();
 		contextm.style.visibility = "hidden";
 	});
 </script>
-<form name="resource" method="post">
-<input type="hidden" name="id" value="<?php echo $id; ?>" />
-<input type="hidden" name="listmode" value="<?php echo $listmode; ?>" />
-<input type="hidden" name="op" value="" />
 
 <h1><?php echo $_lang['module_management']; ?></h1>
 
 <div class="sectionBody">
 	<!-- load modules -->
-	<p><img src="<?php echo $_style['icons_modules'] ?>" alt="" style="display:block;float:left;margin-right:10px" align="left" /><?php echo $_lang['module_management_msg']; ?></p>
-	<p>&nbsp;</p>
-	<div class="searchbar">
-		<table border="0" style="width:100%">
-			<tr>
-			<td nowrap="nowrap"><a class="searchtoolbarbtn" href="index.php?a=107"><img src="<?php echo $_style["icons_save"]?>"  align="absmiddle" /> <?php echo $_lang['new_module']; ?></a></td>
-			<td nowrap="nowrap">
-				<table border="0" style="float:right"><tr><td><?php echo $_lang["search"]; ?></td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query; ?>" /></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["search"];?>" onclick="searchResource();return false;"><?php echo $_lang["go"]; ?></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["reset"];?>" onclick="resetSearch();return false;"><img src="<?php echo $_style['icons_refresh'] ?>" width="16" height="16"/></a></td>
-				<td><a href="#" class="searchbutton" title="<?php echo $_lang["list_mode"];?>" onclick="changeListMode();return false;"><img src="<?php echo $_style['icons_table'] ?>" width="16" height="16"/></a></td>
-				</tr>
-				</table>
-			</td>
-			</tr>
-		</table>
+	<p><?php echo $_lang['module_management_msg']; ?></p>
+
+	<div id="actions">
+		<ul class="actionButtons">
+			<li><a href="index.php?a=107"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['new_module'] ?></a></li>
+		</ul>
 	</div>
-	<br />
+
 	<div>
 	<?php
 
@@ -148,4 +116,3 @@ echo $cm->render();
 	?>
 	</div>
 </div>
-</form>

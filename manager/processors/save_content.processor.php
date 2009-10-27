@@ -41,7 +41,7 @@ if (trim($pagetitle == "")) {
 	if ($type == "reference") {
 		$pagetitle = $_lang['untitled_weblink'];
 	} else {
-		$pagetitle = $_lang['untitled_document'];
+		$pagetitle = $_lang['untitled_resource'];
 	}
 }
 
@@ -166,14 +166,14 @@ if($_SESSION['mgrRole'] != 1 && is_array($document_groups)) {
 				$modx->manager->saveFormValues(27);
 				$url = "index.php?a=27&id=" . $id;
 				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["document_permissions_error"]), $url);
+				$modx->webAlert(sprintf($_lang["resource_permissions_error"]), $url);
 				include_once "footer.inc.php";
 				exit;
 			} else {
 				$modx->manager->saveFormValues(4);
 				$url = "index.php?a=4";
 				include_once "header.inc.php";
-				$modx->webAlert(sprintf($_lang["document_permissions_error"]), $url);
+				$modx->webAlert(sprintf($_lang["resource_permissions_error"]), $url);
 				include_once "footer.inc.php";
 				exit;
 			}

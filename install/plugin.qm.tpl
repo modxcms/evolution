@@ -1,2 +1,0 @@
-include_once($modx->config['base_path'].'assets/plugins/qm/qm.inc.php');
-$qm = new Qm($modx, $jqpath, $loadmanagerjq, $loadfrontendjq, $loadtb, $usemm, $tbwidth, $tbheight, $hidefields, $addbutton, $tpltype, $tplid);

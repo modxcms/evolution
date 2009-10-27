@@ -1,10 +1,10 @@
-[+as.showForm:is=`1`:then=`
+﻿[+as.showForm:is=`1`:then=`
 <form [+as.formId+] action="[+as.formAction+]" method="post">
     <select name="search[]" id="ajaxSearch_select" size="3" multiple="multiple">
       [+as.selectList+]
     </select>
-		<input type="hidden" name="advSearch" value="[+as.advSearch+]" />
-		<fieldset>
+    <input type="hidden" name="advSearch" value="[+as.advSearch+]" />
+    <fieldset>
     <label for="ajaxSearch_submit">
       <input id="ajaxSearch_submit" type="submit" name="sub" value="[+as.submitText+]" />
     </label>

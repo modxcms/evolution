@@ -16,7 +16,7 @@ switch($_REQUEST['a']) {
     break;
   default:
     $e->setError(3);
-    $e->dumpError();  
+    $e->dumpError();
 }
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
@@ -256,9 +256,8 @@ function decode(s){
 	$evtOut = $modx->invokeEvent("OnPluginFormPrerender",array("id" => $id));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
-<input type="hidden" name="id" value="<?php echo $content['id'];?>">
-<input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
-
+	<input type="hidden" name="id" value="<?php echo $content['id'];?>">
+	<input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 
 	<h1><?php echo $_lang['plugin_title']; ?></h1>
 
@@ -268,20 +267,20 @@ function decode(s){
     			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
     			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
     			</a>
-    			  <span class="and"> + </span>				
+    			  <span class="and"> + </span>
     			<select id="stay" name="stay">
     			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
     			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
     			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
-    			</select>		
+    			</select>
     		  </li>
     		  <?php
     			if ($_GET['a'] == '102') { ?>
-    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
     		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } else { ?>
     		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } ?>	
+    		  <?php } ?>
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
@@ -289,17 +288,16 @@ function decode(s){
 
 <div class="sectionBody">
 <p><?php echo $_lang['plugin_msg']; ?></p>
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />   
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">
 	<script type="text/javascript">
 		tpSnippet = new WebFXTabPane( document.getElementById( "snipetPane"),false);
 	</script>
 
-	<!-- General -->
-    <div class="tab-page" id="tabSnippet">
-    	<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
-    	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script>
+<!-- General -->
+<div class="tab-page" id="tabSnippet">
+   	<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
+   	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script>
 		<table border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
@@ -321,28 +319,28 @@ function decode(s){
 		    <div style="padding:1px; width:100%; height:16px;background-color:#eeeeee; border-top:1px solid #e0e0e0;margin-top:5px">
 		    	<span style="float:left;color:#707070;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['plugin_code']; ?></span>
 		    	<span style="float:right;color:#707070;"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
-		   	</div>
+		</div>
 			<textarea dir="ltr" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
 		</div>
 		<!-- PHP text editor end -->
-	</div>
+		</div>
 
-	<!-- Configuration/Properties -->
-    <div class="tab-page" id="tabProps">
-    	<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
-    	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
+<!-- Configuration/Properties -->
+<div class="tab-page" id="tabProps">
+   	<h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
+   	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
           <tr>
 			<td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
 			<td align="left"><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-			<option>&nbsp;</option>
-			<?php
-                include_once "categories.inc.php";
-				$ds = getCategories();
-				if($ds) foreach($ds as $n=>$v){
-					echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-				}
-			?>
+				<option>&nbsp;</option>
+				<?php
+		            include_once "categories.inc.php";
+					$ds = getCategories();
+					if($ds) foreach($ds as $n=>$v){
+						echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+					}
+				?>
 			</select>
 			</td>
 		  </tr>
@@ -353,19 +351,19 @@ function decode(s){
           <tr>
 			<td align="left"><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</td>
 			<td align="left"><select name="moduleguid" style="width:300px;" onChange='documentDirty=true;'>
-			<option>&nbsp;</option>
-			<?php
-				$sql =	"SELECT sm.id,sm.name,sm.guid " .
-						"FROM ".$modx->getFullTableName("site_modules")." sm ".
-						"INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30 ".
-						"INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
-						"WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
-						"ORDER BY sm.name ";
-				$ds = $modx->dbQuery($sql);
-				if($ds) while($row = $modx->fetchRow($ds)){
-					echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
-				}
-			?>
+				<option>&nbsp;</option>
+				<?php
+					$sql =	"SELECT sm.id,sm.name,sm.guid " .
+							"FROM ".$modx->getFullTableName("site_modules")." sm ".
+							"INNER JOIN ".$modx->getFullTableName("site_module_depobj")." smd ON smd.module=sm.id AND smd.type=30 ".
+							"INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
+							"WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
+							"ORDER BY sm.name ";
+					$ds = $modx->dbQuery($sql);
+					if($ds) while($row = $modx->fetchRow($ds)){
+						echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
+					}
+				?>
 			</select>
 			</td>
 		  </tr>
@@ -382,12 +380,12 @@ function decode(s){
 			<td align="left" id="displayparams">&nbsp;</td>
 		  </tr>
 		</table>
-	</div>
+		</div>
 
-	<!-- System Events -->
-    <div class="tab-page" id="tabEvents">
-    	<h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
-    	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabEvents" ) );</script>
+<!-- System Events -->
+<div class="tab-page" id="tabEvents">
+   	<h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
+   	<script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabEvents" ) );</script>
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 			<td align="left" valign="top" colspan="2"><?php echo $_lang['plugin_event_msg']; ?><br />&nbsp;</td>
@@ -398,72 +396,72 @@ function decode(s){
 		  			<tr>
 		  				<td valign="top">&nbsp;&nbsp;</td>
 		  				<td>
-		  				<table width="100%" border="0">
-		  				<?php
+	<table width="100%" border="0">
+	<?php
 
-							// get selected events
-							if(is_numeric($id) && $id > 0) {
-								$sql = "
-									SELECT evtid, pluginid
-									FROM $dbase.`".$table_prefix."site_plugin_events`
-									WHERE pluginid='$id'
-								";
-								$evts = array();
-								$rs = mysql_query($sql);
-								$limit = mysql_num_rows($rs);
-								for ($i=0; $i<$limit; $i++) {
-								   $row = mysql_fetch_assoc($rs);
-								   $evts[] = $row['evtid'];
-								}
-							} else {
-								if(isset($content['sysevents']) && is_array($content['sysevents'])) {
-									$evts = $content['sysevents'];
-								} else {
-									$evts = array();
-								}
-							}
+	// get selected events
+	if(is_numeric($id) && $id > 0) {
+		$sql = "
+			SELECT evtid, pluginid
+			FROM $dbase.`".$table_prefix."site_plugin_events`
+			WHERE pluginid='$id'
+		";
+		$evts = array();
+		$rs = mysql_query($sql);
+		$limit = mysql_num_rows($rs);
+		for ($i=0; $i<$limit; $i++) {
+		   $row = mysql_fetch_assoc($rs);
+		   $evts[] = $row['evtid'];
+		}
+	} else {
+		if(isset($content['sysevents']) && is_array($content['sysevents'])) {
+			$evts = $content['sysevents'];
+		} else {
+			$evts = array();
+		}
+	}
 
-							// display system events
-							$evtnames = array();
-							$services = array(
-								"Parser Service Events",
-								"Manager Access Events",
-								"Web Access Service Events",
-								"Cache Service Events",
-								"Template Service Events",
-								"User Defined Events"
-							);
-		  					$sql = "SELECT * FROM $dbase.`".$table_prefix."system_eventnames` ORDER BY service DESC, groupname, name";
-							$rs = mysql_query($sql);
-							$limit = mysql_num_rows($rs);
-							if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
-							else for ($i=0; $i<$limit; $i++) {
-								$row = mysql_fetch_assoc($rs);
-								// display records
-								if($srv!=$row['service']){
-									$srv=$row['service'];
-									if(count($evtnames)>0) echoEventRows($evtnames);
-	          						echo "<tr><td colspan='2'><div class='split' style='margin-top:10px;'></div></td></tr>";
-									echo "<tr><td colspan='2'><b>".$services[$srv-1]."</b></td></tr>";
-								}
-								// display group name
-								if($grp!=$row['groupname']){
-									$grp=$row['groupname'];
-									if(count($evtnames)>0) echoEventRows($evtnames);
-									echo "<tr><td colspan='2'><hr size='1' style='color:#c0c0c0; border:1px dotted #e0e0e0;' /></td></tr>";
-									echo "<tr><td colspan='2'class='warning' style='color:#a0a0a0' align='left'><b>".$row['groupname']."</b></td></tr>";
-								}
-								$evtnames[] = '<input name="sysevents[]" type="checkbox"'.(in_array($row[id],$evts) ? " checked='checked' " : "").'class="inputBox" value="'.$row['id'].'" />'.$row['name'];
-								if(count($evtnames)==2) echoEventRows($evtnames);
-							}
-							if(count($evtnames)>0) echoEventRows($evtnames);
+	// display system events
+	$evtnames = array();
+	$services = array(
+		"Parser Service Events",
+		"Manager Access Events",
+		"Web Access Service Events",
+		"Cache Service Events",
+		"Template Service Events",
+		"User Defined Events"
+	);
+			$sql = "SELECT * FROM $dbase.`".$table_prefix."system_eventnames` ORDER BY service DESC, groupname, name";
+	$rs = mysql_query($sql);
+	$limit = mysql_num_rows($rs);
+	if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
+	else for ($i=0; $i<$limit; $i++) {
+		$row = mysql_fetch_assoc($rs);
+		// display records
+		if($srv!=$row['service']){
+			$srv=$row['service'];
+			if(count($evtnames)>0) echoEventRows($evtnames);
+     			echo "<tr><td colspan='2'><div class='split' style='margin:10px 0;'></div></td></tr>";
+				echo "<tr><td colspan='2'><b>".$services[$srv-1]."</b></td></tr>";
+		}
+		// display group name
+		if($grp!=$row['groupname']){
+			$grp=$row['groupname'];
+			if(count($evtnames)>0) echoEventRows($evtnames);
+				echo "<tr><td colspan='2'><div class='split' style='margin:10px 0;'></div></td></tr>";
+				echo "<tr><td colspan='2'><b>".$row['groupname']."</b></td></tr>";
+		}
+		$evtnames[] = '<input name="sysevents[]" type="checkbox"'.(in_array($row[id],$evts) ? " checked='checked' " : "").'class="inputBox" value="'.$row['id'].'" />'.$row['name'];
+		if(count($evtnames)==2) echoEventRows($evtnames);
+	}
+	if(count($evtnames)>0) echoEventRows($evtnames);
 
-							function echoEventRows(&$evtnames) {
-								echo "<tr><td>".implode("</td><td>",$evtnames)."</td></tr>";
-								$evtnames = array();
-							}
-		  				?>
-		  				</table>
+	function echoEventRows(&$evtnames) {
+		echo "<tr><td>".implode("</td><td>",$evtnames)."</td></tr>";
+		$evtnames = array();
+	}
+	?>
+	</table>
 		  				</td>
 		  			</tr>
 		  		</table>
@@ -471,7 +469,7 @@ function decode(s){
 		  	</td>
 		  </tr>
 		</table>
-	</div>
+</div>
 </div>
 <input type="submit" name="save" style="display:none">
 </div>

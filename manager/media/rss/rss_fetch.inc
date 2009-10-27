@@ -458,5 +458,4 @@ function is_client_error ($sc) {
 function is_server_error ($sc) { 
     return $sc >= 500 && $sc < 600; 
 }
-
 ?>

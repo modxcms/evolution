@@ -2,9 +2,9 @@
 /**
  * Mc — Manager Control Class for MODx / Qm+
  *  
- * @author      Urique Dertlian, urique@unix.am & Mikko Lammi, www.maagit.fi
+ * @author      Mikko Lammi, www.maagit.fi (based on QuickManager by Urique Dertlian, urique@unix.am)
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.1.1 updated 21/04/2009                
+ * @version     1.3.3 updated 06/08/2009                
  */
 
 if(!class_exists('Mcc')) {
@@ -16,20 +16,18 @@ if(!class_exists('Mcc')) {
     var $fields;
 
         //_______________________________________________________
-        function Mcc($jqpath) {
-            $this->jqpath = $jqpath;
+        function Mcc() {
             $this->tabs = array(
             'general'       => array('index'=>1,'id'=>'tabGeneral'),
             'settings'      => array('index'=>2,'id'=>'tabSettings'),
-            'meta'          => array('index'=>3,'id'=>'tabMeta'),
-            'preview'       => array('index'=>4,'id'=>'tabPreview')
+            'meta'          => array('index'=>3,'id'=>'tabMeta')
             );
             
             $this->sections = array(
-            'docsettings'   => array('index'=>1,'name'=>'DocSettings'),
-            'content'       => array('index'=>2,'name'=>'Content'),
-            'tvs'           => array('index'=>3,'name'=>'TVs'),
-            'access'        => array('index'=>4,'name'=>'Access')
+            'docsettings'   => array('index'=>0,'name'=>'DocSettings'),
+            'content'       => array('index'=>1,'name'=>'Content'),
+            'tvs'           => array('index'=>2,'name'=>'TVs'),
+            'access'        => array('index'=>3,'name'=>'Access')
             );
             
             $this->fields = array('content','pagetitle','longtitle','menuindex','parent','description','alias','link_attributes','introtext','template','menutitle');
@@ -44,12 +42,9 @@ if(!class_exists('Mcc')) {
         
         //_______________________________________________________
         function Output() {
-            global $modx;
             $out = $this->head;
             $this->addLine('document.body.style.display="block";');
-            $this->addLine('$("#actions").hide();');
-            $out.= '<script src="'.$modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
-            $out.= '<script type="text/javascript">jQuery.noConflict(); jQuery(document).ready(function($){'.$this->script.'});</script>';
+            $out.= '<script type="text/javascript">var $j = jQuery.noConflict(); $j(document).ready(function($){'.$this->script.'});</script>';
             return $out;
         }
         
@@ -67,38 +62,31 @@ if(!class_exists('Mcc')) {
                 }
                 $this->hideTemplate(0); // remove blank
             }
+            else {
+                $this->hideTemplate(0); // remove blank
+            }
         }
         
         // Section
         //_______________________________________________________
-        function hideSection($section) { //DocSettings, Content, TVs, Access
+        function hideSection($section) { 
             if(!isset($this->sections[$section])) return;
-            $sectionName = $this->sections[$section]['name'];
-            $this->addLine('$("#section'.$sectionName.'Header").hide();');
-            $this->addLine('$("#section'.$sectionName.'Body").hide();');
-        }
-        //_______________________________________________________
-        function renameSection($section, $newname) {
-        $this->doSafe($newname);
-            //div#documentPane h2:nth-child(1) span
-            //$this->addLine('$("div#section'.$section.'Header").empty().prepend("'.$newname.'");');
-            $this->addLine('$("div#section'.$section.'Header").empty().prepend("'.$newname.'");');
+            $sectionBodyIndex = $this->sections[$section]['index'];
+            $sectionHeaderIndex = $sectionBodyIndex -1;
+            $this->addLine('$("div.sectionHeader:eq('.$sectionHeaderIndex.')").hide()'); 
+            $this->addLine('$("div.sectionBody:eq('.$sectionBodyIndex.')").hide()'); 
         }
         
         // Tab
+        //_______________________________________________________
         function hideTab($tab) {
+            global $modx;
             $tabIndex = $this->tabs[$tab]['index'];
             $tabId = $this->tabs[$tab]['id'];
             $this->addLine('$("div#documentPane h2:nth-child('.($tabIndex).')").hide();');
             $this->addLine('$("#'.$tabId.'").hide();');
-        }
-        //_______________________________________________________
-        function renameTab($tab, $newname) {
-            $this->doSafe($newname);
-            $tabIndex = $this->tabs[$tab]['index'];
-            $this->addLine('$("div#documentPane h2:nth-child('.$tabIndex.') span").empty().prepend("'.$newname.'");');
-        }
-        
+        }  
+            
         // Field
         //_______________________________________________________
         function hideField($field) {

@@ -1,0 +1,310 @@
+
+                              AjaxSearch - version 1.8.4
+
+                           Coroico - http://www.modx.wangba.fr
+
+                                    20th of October 2009
+
+The release 1.8.4
+
+==== FirePhp extension library updated
+    For the FireBug mode, Php4 is now allowed
+
+==== fix the followings issues:
+
+AJAXSEARCH-38 - body>> in Search Highlighting
+AJAXSEARCH-39 - Call to undefined method DocumentParser::getRecordCount()
+AJAXSEARCH-41 - Weird behavior versus dollar sign followed by 2 digits / \$\d{2} /
+AJAXSEARCH-44 - Parents with a container that doesn't contains any child documents
+AJAXSEARCH-46 - Injection of content when javascript is desactivate
+AJAXSEARCH-47 - Filter not working when parents or documents not initialized
+
+
+==== New language files
+    add the Czech, Polish and Ukrainian language files
+
+
+Previous versions :
+ - 1.8.3a delivered the 12th of July 2009 (provided with MODx1.0.0)
+ - 1.8.3 delivered the 08th of June 2009
+ - 1.8.2 delivered the 21th of April 2009
+ - 1.8.1 delivered the 13th of October 2008 (provided with MODx0.9.6.3)
+
+
+ 
+==================== NEW OPTIONS / CHANGES (since 1.8.1) =======================
+
+==== Adding the number of the result - AJAXSEARCH-34
+
+    [+as.resultNumber+] placeholder available to display the number of the search result
+    Use this placeholder inside your result.tpl.html or ajaxResult.tpl.html template
+
+==== LiveSearch
+
+    - ajaxSearchType parameter replaced by liveSearch. e.g: &liveSearch=`1`
+    Now the search starts only when the minimum character is reached
+
+
+==== Initialisation of configuration parameters is modified
+
+    To limit the number of javascript variables, now the default parameters are
+    stored in the default.config.inc.php file. This file is read by the
+    ajaxSearch class and by the ajaxSearchPopup class.
+    The only parameters transmitted by JavaScript to the ajaxSearchPopup class are:
+    - the subSearch and the advSearch parameters
+    - the parameters used in the snippet call
+
+
+==== Mootools (1.11 or 1.2.1) or Jquery js library  - AJAXSEARCH-2
+
+    &jscript ['jquery' | 'mootools1.2' | 'mootools']
+    Set this to jquery if you would like to include the jquery library
+    set this to mootools1.2 to include the mootools 1.2.1 library (limited to JS functions used by AS)
+    by default: mootools. This default include the mootools library provided by MODx
+
+    e.g: &jscript=`jquery` or &jscript=`mootools1.2`
+
+
+==== Capturing failed search criteria and search logs - AJAXSEARCH-3
+
+    &asLog - ajaxSearch log [ level [: comment [: purge]]]
+
+    level:
+      0 : disallow the ajaxSearch log (default)
+      1 : failed search requests are logged
+      2 : all ajaxSearch requests are logged
+
+    comment:
+      0 : user comment not allowed (default)
+      1 : user comment allowed
+
+    purge: number of logs allowed before to do an automatic purge of the table
+      0 : no purge allowed (= illimited number of logs)
+          default: 200
+
+      &asLog=`x` is equivalent to &asLog=`x:0:200`
+      &asLog=`x:y` is equivalent to &asLog=`x:y:200`
+
+      &asLog=`1:1:500` means that 500 failed search requests possibly commented
+                       by the end user could be stored in the ajaxSearch_log table
+
+
+    &tplComment : chunk to style comment form
+        by default: @FILE:".AS_SPATH.'templates/comment.tpl.html'
+
+    The comment form is protected from spamming by the use of a hidden input field.
+    (idea suggested from SPForm by Bob Ray ) This field should be hidden by the
+    CSS styling. If it's filled in (presumably by spammer autobots) nothing is sent.
+    The "hidden" content is not really hidden, just not visible, so no worries
+    about being penalized by Google. Visually challenged users of
+    text-only browsers or audio browsers MAY see the input field and fill it
+    (although the text warns them not to).
+
+    You need to paste the following code into your CSS file. Otherwise
+    the field will not be hidden.
+
+    .ajaxSearch_hiddenField {
+      position:absolute;
+      text-decoration:underline;
+      background-color:#CC0000;
+      left:0px;
+      top:-500px;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+    }
+
+    Keep spammers from pasting too many links into the comment and sending it
+   (counts "http" instances); A maximum of 2 links per comment is allowed otherwise
+    the comment is rejected.
+    You could adjust this value in the file classes/ajaxSearchLog.class.inc by
+    changing the CMT_MAX_LINKS definition.
+
+    The maximum length of the comment is of 100 characters. Otherwise the comment
+    is rejected. Helps short-circuit injection attacks.
+    You could this value in the file classes/ajaxSearchLog.class.inc by
+    changing the CMT_MAX_LENGTH definition.
+
+    The user searches are stored in the database table $modx_table_prefix."ajaxsearch_log"
+    These data are not for the end user only for the site administrator.
+
+    Informations stored per each search are the following:
+
+      id : internal id of the search request looged
+      searchstring : the search terms used for the search
+      nb_results : number of results found
+      results : document ids found
+      comment : comment leave by the user regarding the search results
+      as_call : ajaxSearch snippet call used
+      as_select : select statement used (could be reused thru phpmyadmin)
+      date : date and hour of the request
+      ip : user IP
+
+    The table could be drop without any impacts on the AjaxSearch behaviour. Simply,
+    if the asLog parameter is set and the table inexisting, the table is rebuilt.
+
+    A 'Did you find what you are looking for?' form is available for the user
+    when the option comment is set. In this case the user could leave a comment
+    about the search results.
+    &tplComment parameter define which form template used.
+
+    A module will be provided later to manage these search datas.
+    We could imagine the following features:
+    - drop the table
+    - delete (successfull, unsuccessfull, all) searches executed before a specific date
+    - delete (successfull, unsuccessfull, all) searches executed before N days
+    - give me as meta tag keywords, the N most used (successfull, unsuccessfull) search terms
+    - replay a specific search with a new debug level
+    - delete uncommented (successfull, unsuccessfull, all) searches
+    - filter view with commented (successfull, unsuccessfull, all) searches
+
+    See the Log search requests demo and the AjaxSearch 1.8.2 logs on the demo site
+
+
+==== SearchString metacharacter available with &filter parameter - AJAXSEARCH-4
+
+    The metacharacter '#' is replaced by the search string provided by the web user
+    when used with the filter parameter. The advSearch parameter is also taken into account.
+
+    e.g: &filter=`pagetitle,#,8` with searchString=`school child` and advSearch='oneword'
+    is equivalent to &filter=`pagetitle,school,8|pagetitle,child,8`
+
+    'oneword','allwords','nowords' generate as many clause as searchterms.
+    'exactphrase' generate only one clause with the exactphrase as criterion.
+
+    Multiple clauses have an "OR" relationship. I.e. a document will be excluded
+    if it meets the criterion of any one clause (clause-1 OR clause-2 OR clause-3, etc.).
+    (see http://ditto.modxcms.com/tutorials/basic_filtering.html)
+
+
+==== Limit the amount of keywords that will be queried by a search - AJAXSEARCH-9
+
+    &maxWords [int]
+    Maximum number of words for searching - Default: 5
+
+
+==== php_mbstring extension
+
+    &mbstring [0 | 1]
+      1 - mbstring extension available (default)
+      0 - don't use php_mbstring extension
+
+    The php_mbstring is supposed to be loaded.
+    If html charset page is "UTF-8", php_mbstring extension should be loaded for language which
+    need a multi-byte representation.
+    If the extension is not available for the PHP server, some charset like ISO-8859-1 (latin1) could be used.
+    With UTF-8, a message "Php_mbstring extension is required" when &mbstring=`1` and the extension not loaded.
+    In this case load the extension or set the mbstring parameter to 0 if you couldn't load the extension
+
+
+==== Always display paging - AJAXSEARCH-28
+
+	  &showPagingAlways [1 | 0] (optional)
+
+    always display paging. Even if you get only one page.
+	  Set this to `1` if you would like to always show paging.
+
+    Two use cases: You are using non-ajax search or when you are using ajax search but
+    you have set up showMoreResults to `1` and you have defined moreResultsPage,
+    then it may happen that ajax search result have only one page and pagination isn't showed
+	  by default : 0
+
+
+==== searchString available as placeholder
+
+    Use [+as.searchString+] to get the search string used for the search.
+    For instance use "Search results for [+as.searchString+]" as pagetitle for
+    your landing page.
+
+
+==== FirePhp extension library updated
+
+    Update of FirePhp lib directory from 0.2.b.2 to 0.2.1 version
+    See classes/FirePHPCore
+
+
+==== searchHighlight and advSearchHighlight plugins 1.4
+
+    Removed useless urldecode calls;
+    Added check for magic quotes - if set, remove slashes
+    Highlights terms searched for when target is a HTML entity
+
+    Thanks to Tim (TS) for his contribution.
+
+
+========================= ISSUES CORRECTED (since 1.8.1) =======================
+
+==== AJAXSEARCH-6 : Sort with order and ranking parameters. Results with a wrong order
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-6
+
+==== AJAXSEARCH-12 : Take into account of the &advSearch parameter when the &minChars is checked
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-12
+
+AJAXSEARCH-13 : Wrong Highlighting of search terms
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-13
+
+==== AJAXSEARCH-15 : use $modx->getFullTableName('')
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-15
+
+==== AJAXSEARCH-17 : Livesearch - start of the search only when the minimum character is reached
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-17
+
+==== AJAXSEARCH-18 : function stripHtml incorrectly works
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-18
+
+==== AJAXSEARCH-19 : Parse error if the user enters two or more spaces between words in the query
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-19
+
+==== AJAXSEARCH-21 : search for something like "ecuador span"
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-21
+
+==== AJAXSEARCH-22 : you get a TV value with tvPHX, only if the search has found your term in the TV
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-22
+
+==== AJAXSEARCH-24 : AjaxSearch stops searching through TV content after a certain number of characters
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-24
+
+==== AJAXSEARCH-25 : Security issue with AS_offset
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-25
+
+==== AJAXSEARCH-26 : If the offset exceeds the number of documents retrieved, modx crashes
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-26
+
+==== AJAXSEARCH-27 : AjaxSearch and Document Group permissions
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-27
+
+==== AJAXSEARCH-29 : When using french UTF8 or english UTF8, I get a blank line at the top of the search
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-29
+
+==== AJAXSEARCH-30 : htmlspecialchars() expects at most 3 parameters, 4 given
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-30
+
+==== AJAXSEARCH-31 : parse error with AjaxSearch 1.8.2 when the search has no results and filter parameter used
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-31
+
+==== AJAXSEARCH-32 : pages not to validate as XHTML
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-32
+
+==== AJAXSEARCH-33 : preg_match fails with Segmentation Fault on capturing subpattern
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-33
+
+==== AJAXSEARCH-35 : ajaxSearch form not sanitizing input (advSearch parameter)
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-35
+
+==== AJAXSEARCH-38 : body>> in Search Highlighting
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-38
+
+==== AJAXSEARCH-39 : Call to undefined method DocumentParser::getRecordCount()
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-39
+
+==== AJAXSEARCH-41 : Weird behavior versus dollar sign followed by 2 digits / \$\d{2} /
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-41
+
+==== AJAXSEARCH-44 : Parents with a container that doesn't contains any child documents
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-44
+
+==== AJAXSEARCH-46 : injection of content when javascript is desactivate
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-46
+
+==== AJAXSEARCH-47 : Filter not working when parents or documents not initialized
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-47

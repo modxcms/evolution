@@ -67,7 +67,6 @@ switch ($_POST['mode']) {
 			$content['category'] = $_POST['categoryid'];
 			$content['snippet'] = preg_replace("/^\s*\<\?php/m", '', $_POST['post']);
 			$content['snippet'] = preg_replace("/\?\>\s*/m", '', $content['snippet']);
-			$content['runsnippet'] = isset($_POST['runsnippet']);
 
 			include 'header.inc.php';
 			include(dirname(dirname(__FILE__)).'/actions/mutate_snippet.dynamic.php');
@@ -102,7 +101,6 @@ switch ($_POST['mode']) {
 			$sync->setCachepath("../assets/cache/");
 			$sync->setReport(false);
 			$sync->emptyCache(); // first empty the cache		
-			if($_POST['runsnippet']) run_snippet($snippet);
 			// finished emptying cache - redirect
 			if($_POST['stay']!='') {
 				$a = ($_POST['stay']=='2') ? "22&id=$newid":"23";
@@ -153,25 +151,10 @@ switch ($_POST['mode']) {
 				header($header);
 			}
 		}		
-
-		
-		
         break;
     default:
 	?>	
 		Erm... You supposed to be here now? 	
 	<?php
 }
-
-
-# Runs a Snippet after inserts and updates - added by Raymond
-function run_snippet(&$snippet) {
-	global $modx;
-	// Here we execute to snippet so it can install other stuff
-	if(isset($snippet)){
-		define("SNIPPET_INSTALL_MODE","true");
-		$modx->evalSnippets($snippet);
-	}
-}
-
 ?>

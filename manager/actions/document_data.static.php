@@ -150,7 +150,7 @@ if ($numRecords > 0) {
 		// Table header
 		$listTableHeader = array(
 			'docid' =>  $_lang['id'],
-			'title' =>  $_lang['document_title'],
+			'title' =>  $_lang['resource_title'],
 			'status' => $_lang['page_data_status'],
 			'edit' =>   $_lang['mgrlog_action'],
 		);
@@ -165,7 +165,7 @@ if ($numRecords > 0) {
 				'docid' =>  $children['id'],
 				'title' =>  $children['pagetitle'],
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
-				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="'. $_style["icons_preview_document"].'" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="' . $_style["icons_save"] .'" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="' . $_style["icons_move_document"] .'" />'.$_lang['move'].'</a>' : ''),
+				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="'. $_style["icons_preview_resource"].'" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="' . $_style["icons_save"] .'" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="' . $_style["icons_move_document"] .'" />'.$_lang['move'].'</a>' : ''),
 			);
 		}
 
@@ -174,18 +174,18 @@ if ($numRecords > 0) {
 	}
 } else {
 	// No Child documents
-	$children_output = "<p>".$_lang['documents_in_container_no']."</p>";
+	$children_output = "<p>".$_lang['resources_in_container_no']."</p>";
 }
 
 ?>
 <script type="text/javascript">
 function duplicatedocument(){
-	if(confirm("<?php echo $_lang['confirm_duplicate_document']?>")==true) {
+	if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>")==true) {
 		document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=94";
 	}
 }
 function deletedocument() {
-	if(confirm("<?php echo $_lang['confirm_delete_document']?>")==true) {
+	if(confirm("<?php echo $_lang['confirm_delete_resource']?>")==true) {
 		document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=6";
 	}
 }
@@ -210,13 +210,13 @@ function movedocument() {
 			<a href="#" onclick="movedocument();"><img src="<?php echo $_style["icons_move_document"] ?>" /> <?php echo $_lang['move']?></a>
 		  </li>
 		  <li id="Button4">
-		    <a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang['duplicate']?></a>
+		    <a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang['duplicate']?></a>
 		  </li>
 		  <li id="Button3">
 		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a>
 		  </li>
 		  <li id="Button6">
-			<a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_document"]?>" /> <?php echo $_lang['preview']?></a>
+			<a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
 		  </li>
 	  </ul>
 	</div>
@@ -237,17 +237,17 @@ function movedocument() {
 
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr><td colspan="2"><b><?php echo $_lang['page_data_general']?></b></td></tr>
-			<tr><td width="200" valign="top"><?php echo $_lang['document_title']?>: </td>
+			<tr><td width="200" valign="top"><?php echo $_lang['resource_title']?>: </td>
 				<td><b><?php echo $content['pagetitle']?></b></td></tr>
 			<tr><td width="200" valign="top"><?php echo $_lang['long_title']?>: </td>
 				<td><small><?php echo $content['longtitle']!='' ? $content['longtitle'] : "(<i>".$_lang['not_set']."</i>)"?></small></td></tr>
-			<tr><td valign="top"><?php echo $_lang['document_description']?>: </td>
+			<tr><td valign="top"><?php echo $_lang['resource_description']?>: </td>
 				<td><?php echo $content['description']!='' ? $content['description'] : "(<i>".$_lang['not_set']."</i>)"?></td></tr>
-			<tr><td valign="top"><?php echo $_lang['document_summary']?>: </td>
+			<tr><td valign="top"><?php echo $_lang['resource_summary']?>: </td>
 				<td><?php echo $content['introtext']!='' ? $content['introtext'] : "(<i>".$_lang['not_set']."</i>)"?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['type']?>: </td>
-				<td><?php echo $content['type']=='reference' ? $_lang['weblink'] : $_lang['document']?></td></tr>
-			<tr><td valign="top"><?php echo $_lang['document_alias']?>: </td>
+				<td><?php echo $content['type']=='reference' ? $_lang['weblink'] : $_lang['resource']?></td></tr>
+			<tr><td valign="top"><?php echo $_lang['resource_alias']?>: </td>
 				<td><?php echo $content['alias']!='' ? $content['alias'] : "(<i>".$_lang['not_set']."</i>)"?></td></tr>
 			<tr><td valign="top"><?php echo $_lang['keywords']?>: </td>
 				<td><?php // Keywords
@@ -281,9 +281,9 @@ function movedocument() {
 				<td><?php echo $content['cacheable']==0 ? $_lang['no'] : $_lang['yes']?></td></tr>
 			<tr><td><?php echo $_lang['page_data_searchable']?>: </td>
 				<td><?php echo $content['searchable']==0 ? $_lang['no'] : $_lang['yes']?></td></tr>
-			<tr><td><?php echo $_lang['document_opt_menu_index']?>: </td>
+			<tr><td><?php echo $_lang['resource_opt_menu_index']?>: </td>
 				<td><?php echo $content['menuindex']?></td></tr>
-			<tr><td><?php echo $_lang['document_opt_show_menu']?>: </td>
+			<tr><td><?php echo $_lang['resource_opt_show_menu']?>: </td>
 				<td><?php echo $content['hidemenu']==1 ? $_lang['no'] : $_lang['yes']?></td></tr>
 			<tr><td><?php echo $_lang['page_data_web_access']?>: </td>
 				<td><?php echo $content['privateweb']==0 ? $_lang['public'] : '<b style="color: #821517">'.$_lang['private'].'</b> <img src="media/style/'.$manager_theme.'images/icons/secured.gif" align="absmiddle" width="16" height="16" />'?></td></tr>
@@ -303,17 +303,17 @@ function movedocument() {
 
 	<!-- View Children -->
 	<div class="tab-page" id="tabChildren">
-		<h2 class="tab"><?php echo $_lang['view_child_documents_in_container']?></h2>
+		<h2 class="tab"><?php echo $_lang['view_child_resources_in_container']?></h2>
 		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );</script>
 <?php if ($modx->hasPermission('new_document')) { ?>
 	
 			<ul class="actionButtons"><tr>
-				<li><a href="index.php?a=4&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_document"]; ?>" align="absmiddle" /> <?php echo $_lang['create_document_here']?></a></li>
+				<li><a href="index.php?a=4&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_document"]; ?>" align="absmiddle" /> <?php echo $_lang['create_resource_here']?></a></li>
 				<li><a href="index.php?a=72&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_weblink"]; ?>" align="absmiddle" /> <?php echo $_lang['create_weblink_here']?></a></li>
 			</ul>
 <?php }
 	if ($numRecords > 0)
-		echo '<h4><span class="publishedDoc">'.$numRecords.'</span> '.$_lang['documents_in_container'].' (<strong>'.$content['pagetitle'].'</strong>)</h4>'."\n";
+		echo '<h4><span class="publishedDoc">'.$numRecords.'</span> '.$_lang['resources_in_container'].' (<strong>'.$content['pagetitle'].'</strong>)</h4>'."\n";
 	echo $children_output."\n";
 ?>
 	</div><!-- end tab-page -->

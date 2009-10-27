@@ -37,5 +37,4 @@ else {
 // finish duplicating - redirect to new chunk
 $header="Location: index.php?r=2&a=78&id=$newid";
 header($header);
-
 ?>

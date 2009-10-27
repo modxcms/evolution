@@ -1,6 +1,6 @@
 <?php
 /*
-japanese-utf8.inc.php - for AjaxSearch 1.8.3a
+japanese-utf8.inc.php - for AjaxSearch 1.8.3
 Created by: KyleJ (kjaebker@muddydogpaws.com)
 Created on: 01/22/07
 Description: Language strings for AjaxSearch

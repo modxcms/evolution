@@ -43,5 +43,4 @@ $sync->emptyCache(); // first empty the cache
 
 $header="Location: index.php?r=1&id=$id&a=7";
 header($header);
-
 ?>

@@ -1,4 +1,4 @@
-<?php
+ <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 switch($_REQUEST['a']) {
@@ -103,20 +103,20 @@ function deletedocument() {
     			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
     			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
     			</a>
-    			  <span class="and"> + </span>				
+    			  <span class="and"> + </span>
     			<select id="stay" name="stay">
     			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
     			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
     			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
-    			</select>		
+    			</select>
     		  </li>
     		  <?php
     			if ($_REQUEST['a'] == '16') { ?>
-    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
     		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } else { ?>
     		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
-    		  <?php } ?>	
+    		  <?php } ?>
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
@@ -133,15 +133,16 @@ function deletedocument() {
 	<script type="text/javascript">
 		tpResources = new WebFXTabPane( document.getElementById( "templatesPane" ),false );
 	</script>
+
 	<div class="tab-page" id="tabTemplate">
     	<h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 	<?php } ?>
-	
+
 	<?php echo $_lang['template_msg']; ?><p />
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	  <tr>
-	    <td align="left"><img src="media/style/<?php echo $manager_theme; ?>images/_tx_.gif" width="100" height="1"></td>
+	    <td align="left"><img src="media/style/<?php echo $manager_theme; ?>/images/_tx_.gif" width="100" height="1"></td>
 	    <td align="left">&nbsp;</td>
 	  </tr>
 	  <tr>
@@ -155,15 +156,15 @@ function deletedocument() {
 	  <tr>
 		<td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
 		<td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-		<option>&nbsp;</option>
-        <?php
-            include_once "categories.inc.php";
-			$ds = getCategories();
-			if($ds) foreach($ds as $n=>$v){
-				echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-			}
-		?>
-		</select>
+				<option>&nbsp;</option>
+		        <?php
+		            include_once "categories.inc.php";
+					$ds = getCategories();
+					if($ds) foreach($ds as $n=>$v){
+						echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+					}
+				?>
+			</select>
 		</td>
 	  </tr>
       <tr>
@@ -178,19 +179,19 @@ function deletedocument() {
 	<div style="width:100%;position:relative">
 	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
 	    	<span style="float:left;color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['template_code']; ?></span>
-	   	</div>
+		</div>
 		<textarea dir="ltr" name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['content']); ?></textarea>
-	</div>
+		</div>
 	<!-- HTML text editor end -->
 	<input type="submit" name="save" style="display:none">
-	
-<?php if ($_REQUEST['a'] == 16) { 
+
+<?php if ($_REQUEST['a'] == 16) {
 	$sql = "SELECT tv.name as 'name', tv.id as 'id', tr.templateid, tr.rank, if(isnull(cat.category),'".$_lang['no_category']."',cat.category) as category
 	FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
 	INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
 	LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id
 	WHERE tr.templateid='".$_REQUEST['id']."' ORDER BY tr.rank ASC";
-	
+
 
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
@@ -199,7 +200,7 @@ $limit = $modx->db->getRecordCount($rs);
 	<div class="tab-page" id="tabAssignedTVs">
     	<h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2><p />
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
-    	<p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>	
+    	<p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>
     	<p><?php if($modx->hasPermission('save_template') && $limit > 1) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>
 <?php
 $tvList = '';
@@ -211,7 +212,7 @@ if($limit>0) {
         $tvList .= '<li><strong>'.$row['name'].'</strong> ('.$row['category'].')</li>';
     }
     $tvList .= '</ul>';
-	
+
 } else {
 	echo $_lang['template_no_tv'];
 }

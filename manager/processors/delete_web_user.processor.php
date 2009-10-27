@@ -61,5 +61,4 @@ if(!$rs) {
 	$header="Location: index.php?a=99";
 	header($header);
 }
-
 ?>

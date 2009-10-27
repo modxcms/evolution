@@ -2,19 +2,19 @@
 /*
  * Title: AjaxSearchLog
  * Purpose:
- *    The AjaxSearchLog class contains all functions used to Log AjaxSearch requests 
+ *    The AjaxSearchLog class contains all functions used to Log AjaxSearch requests
  *
- *    Version: 1.8.3  - Coroico (coroico@wangba.fr) 
- *    
- *    08/06/2009  
- *      
+ *    Version: 1.8.4  - Coroico (coroico@wangba.fr)
+ *
+ *    20/10/2009
+ *
 */
 
 // maximum length allowed for the comment. Otherwise the comment is rejected
 define('CMT_MAX_LENGTH',100);
 
 // maximum number of links allowed for the comment. Otherwise the comment is rejected
-define('CMT_MAX_LINKS',3);    
+define('CMT_MAX_LINKS',3);
 
 define('LOG_TABLE_NAME','ajaxsearch_log');     // Name of the log table without modx prefix
 
@@ -40,7 +40,7 @@ class AjaxSearchLog{
     if (!$this->existLogTable($db,$tbn)){
       // creation of the log table
       $SQL_CREATE_TABLE = "CREATE TABLE " . $this->tbName . " (
-          `id` smallint(5) NOT NULL auto_increment,          
+          `id` smallint(5) NOT NULL auto_increment,
           `searchstring` varchar(128) NOT NULL,
           `nb_results` smallint(5) NOT NULL,
           `results` mediumtext,
@@ -69,14 +69,14 @@ class AjaxSearchLog{
   }
 /**
  *  setLogRecord - write a log record in database
- *  
- *  return the id of the record logged  
+ *
+ *  return the id of the record logged
  */
   function setLogRecord($rs){
     global $modx;
 
     if ($this->purge) $this->purgeLogs(); // purge the log table if needed
-    
+
     $asString = $rs['searchString'];
     $asNbResults = $rs['nbResults'];
     $asResults = trim($rs['results']);
@@ -84,18 +84,18 @@ class AjaxSearchLog{
     $asCall = $rs['asCall'];
     $asSelect = $rs['asSelect'];
     $asIp = $_SERVER['REMOTE_ADDR'];
-    
+
     $INSERT_RECORD = "INSERT INTO " . $this->tbName . " (
       searchstring, nb_results, results, comment, as_call, as_select, ip
       ) VALUES ('$asString','$asNbResults','$asResults','$asCmt','$asCall','$asSelect','$asIp')";
     $modx->db->query($INSERT_RECORD);
-    
+
     $lastid = $modx->db->getInsertId();
     return $lastid;
   }
 /**
- *  purgeLogs - purge the log table  
- */  
+ *  purgeLogs - purge the log table
+ */
   function purgeLogs() {
     global $modx;
     // get the number of logs
@@ -114,7 +114,7 @@ class AjaxSearchLog{
  */
   function updateComment($logid,$ascmt){
     global $modx;
-    
+
     $fields['comment'] = $ascmt;
     $where = "id='" . $logid . "'";
     $modx->db->update($fields,$this->tbName,$where);
@@ -124,7 +124,7 @@ class AjaxSearchLog{
 
 //==============================================================================
 
-/* The code below handles comment sent if the $_POST variables are set. 
+/* The code below handles comment sent if the $_POST variables are set.
    Used when the user post comment from the ajaxSearch results window  */
 
 if ( $_POST['logid'] && $_POST['ascmt'] ) {
@@ -132,21 +132,21 @@ if ( $_POST['logid'] && $_POST['ascmt'] ) {
   $ascmt = $_POST['ascmt'];
   $logid = $_POST['logid'];
 
-  $safeCmt = (strlen($ascmt) < CMT_MAX_LENGTH) && (substr_count($ascmt,'http') < CMT_MAX_LINKS); 
-  
+  $safeCmt = (strlen($ascmt) < CMT_MAX_LENGTH) && (substr_count($ascmt,'http') < CMT_MAX_LINKS);
+
   if (($ascmt != '') && ($logid > 0) && $safeCmt){
     // Setup the MODx API
     define('MODX_API_MODE', true);
     // initiate a new document parser
     include_once(MODX_MANAGER_PATH.'/includes/document.parser.class.inc.php');
     $modx = new DocumentParser;
-  
+
     $modx->db->connect();
     $modx->getSettings();
 
     $asLog = new AjaxSearchLog();
     $asLog->updateComment($logid,$ascmt);
-    
+
     echo "comment about record " . $logid . " registered";
   }
   else {

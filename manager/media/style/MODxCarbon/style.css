@@ -1,4 +1,5 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
+html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
 html, body, form, fieldset {
 	margin: 0;
 	padding: 0;
@@ -16,7 +17,7 @@ body {
 	font-size: 75%;
 	font-size: 68.75%;
 	height: 100%;
-	margin-bottom: 1px;
+	color:#333333;
 	background: #f7f7f7;
 }
 img, a img {
@@ -60,7 +61,7 @@ li, dd, blockquote {
 	font-weight: bold;
 }
 .warning {
-	color: #821517;
+	color: #444444;
 	font-weight: bold;
 }
 .success {
@@ -86,6 +87,7 @@ h1 {
 	font-size: 164%;
 	line-height: 40px;
 	margin-left: 10px;
+	letter-spacing:1px;
 }
 	.rtl h1 {
 		margin-right: 10px;
@@ -278,10 +280,14 @@ form textarea {
 		padding: 2px 2px 2px 0;
 	}
 
-input[type="checkbox"], input.checkbox,
-input[type="radio"], input.radio,
-input[type="submit"], input.submit,
-input[type="button"], input.button {
+input.checkbox,
+input.radio,
+input.submit,
+input.button,
+input[type="checkbox"],
+input[type="radio"],
+input[type="submit"],
+input[type="button"] {
 	height: auto !important;
 	width: auto !important;
 	vertical-align: middle;
@@ -399,19 +405,30 @@ input.submit {
 	padding: 5px 3px 5px;
 	font-weight: bold;
 	color: #000;
-	border-top: 1px solid #fff;
+	border: 1px solid #e3e3e3;
+	border-bottom:none;
 }
+	.tab-page .sectionHeader {
+		margin: 10px 10px 0;
+	}
+	.rtl .sectionHeader {
+		direction: rtl;
+		padding: 5px 18px 5px 3px;
+	}
 .sectionBody, .layerVisible {
 	position: relative;
 	display: none;
 	background: #fff;
 	border: 1px solid #e3e3e3;
-	border-top: 2px solid #e3e3e3;
+	border-top: 1px solid #e3e3e3;
 	margin: 0 10px 10px;
 	padding: 10px;
 	display: block;
 	background: #fff url(images/misc/tabareabg.gif) repeat-x top;
 }
+	.tab-page .sectionBody {
+		margin: 0 10px 0;
+	}
 	.rtl .sectionBody, .layerVisible {
 		direction: rtl;
 		position: inherit;
@@ -454,7 +471,7 @@ li {
 	list-style: disc outside url(images/misc/li.gif);
 }
 ul {
-	margin: 0 20px 0 10px;
+	margin: 0 20px 0 20px;
 }
 	.rtl ul {
 		margin: 0 10px 0 20px;
@@ -751,7 +768,7 @@ a.hometblink:hover {
 
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu {
-	background: #e4e4e4 url(images/misc/menubg.jpg);
+	background: #e4e4e4 url(images/misc/menubg.png);
 }
 #Navcontainer {
 	padding: 0 10px;
@@ -847,7 +864,7 @@ a.hometblink:hover {
 	left: 0;
 	background: #657587;
 	border-top: 1px solid #8B96A0;
-	border-bottom: 1px solid #2c3d50;
+	border-bottom: 1px solid #7b8c9f;
 }
 	#nav li.active ul.subnav {
 	    right: 0;
@@ -855,7 +872,7 @@ a.hometblink:hover {
 #nav li.active ul.subnav a {
 	color: #fff;
 	font-weight: normal;
-	border-bottom: 1px solid #2c3d50;
+	border-bottom: 1px solid #7b8c9f;
 	background: #657587;
 	cursor: pointer;
 	border-left: none;
@@ -865,12 +882,16 @@ a.hometblink:hover {
 }
 #nav li.active ul.subnav a:hover {
 	color: #fff;
-	background-color: #748394;
+	background-color: #5d6c7d;
+	background-image:none;
 }
 #nav li.active ul.subnav a:active {
 	color: #ccc;
 }
-
+#nav li.active ul.subnav,
+#nav li.active ul.subnav a {
+	background: #657587 url(images/misc/longbarbg.png) repeat-x top;
+}
 
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
 #mx_contextmenu {
@@ -893,13 +914,13 @@ a.hometblink:hover {
 	color: #222;
 	padding: 3px 16px 3px 2px;
 }
-#mx_contextmenu .menuLinkOver {
+#mx_contextmenu .menuLink:hover {
 	background: #DDE4EB;
 	border: 1px solid #fdfdfd;
 	border-bottom-color: #dcdcdc;
 	color: #000;
 }
-#mx_contextmenu .menuLinkOver,
+#mx_contextmenu .menuLink:hover,
 #mx_contextmenu .menuLinkDisabled {
 	cursor: pointer;
 	padding: 2px 15px 2px 1px;
@@ -909,7 +930,7 @@ a.hometblink:hover {
 	color: #787878;
 }
 #mx_contextmenu .menuLink img,
-#mx_contextmenu .menuLinkOver img,
+#mx_contextmenu .menuLink:hover img,
 #mx_contextmenu .menuLinkDisabled img {
 	margin-right: 8px;
 }
@@ -918,8 +939,11 @@ a.hometblink:hover {
 	opacity: .3;
 	filter: alpha(opacity=30);
 }
-#mx_contextmenu .menuLinkOver img {
+#mx_contextmenu .menuLink:hover img {
+	opacity: 1;
+	filter: alpha(opacity=100);
 }
+
 #mx_contextmenu #nameHolder {
 	color: #fff;
 	text-align: right;
@@ -942,11 +966,11 @@ a.hometblink:hover {
 
 	.rtl #mx_contextmenu .menuLink {
 	    padding: 3px 2px 3px 16px; }
-	.rtl #mx_contextmenu .menuLinkOver,
+	.rtl #mx_contextmenu .menuLink:hover,
 	.rtl #mx_contextmenu .menuLinkDisabled {
 	    padding: 2px 1px 2px 15px;}
 	.rtl #mx_contextmenu .menuLink img,
-	.rtl #mx_contextmenu .menuLinkOver img,
+	.rtl #mx_contextmenu .menuLink:hover img,
 	.rtl #mx_contextmenu .menuLinkDisabled img {
 		margin-right: 8px; }
 	.rtl #mx_contextmenu #nameHolder {
@@ -1035,7 +1059,7 @@ a.hometblink:hover {
 	z-index: 2;
 	position: relative;
 	top: -2px;
-	padding: 10px 10px 0;
+	padding: 10px;
 }
 	.rtl .dynamic-tab-pane-control .tab-page {
 	    position: inherit;		/* critical adjustment for IE ul li Proper RTL demonstration */
@@ -1200,17 +1224,17 @@ fieldset#preview h2.tab {
 	z-index: 100;
 	margin: 0;
 	text-align: right;
-	width: 600px;
 }
 .rtl #actions {
 	left: 10px;
 	text-align: left;
 }
 ul.actionButtons {
-	margin: 0 0 10px;
+	margin: 2px 0 10px;
 	padding: 3px 0; /* accommodate border on buttons - */
 	background: none;
 	width: auto;
+	white-space: nowrap;
 }
 .actionButtons li {
 	display: inline;
@@ -1223,10 +1247,10 @@ ul.actionButtons {
 	margin-top: 1px;
 }
 .actionButtons a {
-	color: #3b454f;
+	color: #222c36;
 	font-weight: bold;
 	font-size: 12px;
-	background: #a0b9d6 url(images/misc/button-gradient.png) repeat-x top left;
+	background: #c7ced2 url(images/misc/button-gradient.png) repeat-x top left;
 	padding: 4px 6px;
 	white-space: nowrap;
 	vertical-align: top;
@@ -1269,13 +1293,13 @@ ul.actionButtons {
     color: #3b454f;
 	font-weight: bold;
 }
-/*
+		/*
 * Generic styles for all form elements
-*/
+		*/
 form#mutate dt,
 form#mutate dd {
 	margin-bottom: 10px;
-}
+	}
 form#mutate dt label,
 form#mutate dt h3.label {
 	font-size: 12px;
@@ -1284,18 +1308,23 @@ form#mutate dt h3.label {
 	width: 200px;
 	color: #821517!important;
 	font-weight: bold;
-}
+	}
 form#mutate dd {
 	margin-left: 210px;
 }
 form#mutate input.disabled {
-	background-color: #f4f4f4!important;
+	background-color: #f4f4f4 !important;
 }
 
 form#mutate select.inputBox,
 form#mutate input,
 form#mutate textarea {
 	width: 300px;
+}
+form#mutate input.inputBox,
+form#mutate textarea,
+div.tmplvars input {
+	background: #fff url(images/misc/input-bg.gif) repeat-x top left;
 }
 form#mutate textarea.tv_textareamini {
 	height: 100px;
@@ -1477,13 +1506,14 @@ fieldset.legacy h2 {
 input.DatePicker, #mutate input.DatePicker, #userPane input.DatePicker, #webUserPane input.DatePicker, input#datefrom.DatePicker, input#dateto.DatePicker {
 	width: 150px;
 	padding: 3px 3px 3px 24px;
-	border: 1px solid #0070bf;
+	border: 1px solid #b4cde4;
 	font-size: 13px;
 	background: #fff url(images/icons/datenofocus.gif) no-repeat top left;
 	cursor: pointer;
 }
 input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.DatePicker, #webUserPane input:focus.DatePicker, input#datefrom:focus.DatePicker, input#dateto:focus.DatePicker {
 	background: #fffce9 url(images/icons/datefocus.gif) no-repeat top left;
+	cursor:text;
 }
 .dp_container {
 	position: relative;
@@ -1571,4 +1601,3 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .cbBox p {margin:3px;}
 .cbBox .cbButtons {text-align:center;}
 .sysAlert {width: 500px;height: 330px;white-space: nowrap;overflow: auto;}
-

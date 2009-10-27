@@ -65,23 +65,23 @@ function checkParentChildRelation(pId, pName) {
 
 
 
-<h1><?php echo $_lang['move_document_title']; ?></h1>
+<h1><?php echo $_lang['move_resource_title']; ?></h1>
 
 <div id="actions">
 	<ul class="actionButtons">
 	    <li><a href="#" onclick="document.newdocumentparent.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save'] ?></a></li>
-	    <li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel'] ?></a></li>
+	  <li><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
 	</ul>
 </div>
 
 
-<div class="sectionHeader"><?php echo $_lang['move_document_title']; ?></div><div class="sectionBody">
-<?php echo $_lang['move_document_message']; ?><p />
+<div class="sectionHeader"><?php echo $_lang['move_resource_title']; ?></div><div class="sectionBody">
+<?php echo $_lang['move_resource_message']; ?><p />
 <form method="post" action="index.php" name='newdocumentparent'>
 <input type="hidden" name="a" value="52">
 <input type="hidden" name="id" value="<?php echo $id; ?>">
-<input type="hidden" name="idshow" value="<?php echo $id; ?>"><?php echo $_lang['document_to_be_moved']; ?>: <b><?php echo $id; ?></b><br />
-<span id="parentName" class="warning"><?php echo $_lang['move_document_new_parent']; ?></span><br />
+<input type="hidden" name="idshow" value="<?php echo $id; ?>"><?php echo $_lang['resource_to_be_moved']; ?>: <b><?php echo $id; ?></b><br />
+<span id="parentName" class="warning"><?php echo $_lang['move_resource_new_parent']; ?></span><br />
 <input type="hidden" name="new_parent" value="" class="inputBox">
 <br />
 <input type='save' value="Move" style="display:none">

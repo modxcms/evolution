@@ -37,5 +37,4 @@ function rmdirRecursive($path,$followLinks=false) {
    closedir($dir);
    return @rmdir($path);
 }
-
 ?>

@@ -216,7 +216,7 @@ if($modx->hasPermission('help')) { ?>
 	| <a href="index.php?a=9" target="main"><?php echo $_lang['help']?></a>
 <?php } ?>
 	| <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
-	| <span title="<?php echo $site_name?> - <?php echo $full_appname?>"><?php echo $version?></span>&nbsp;
+	| <span title="<?php echo $site_name ?> &ndash; <?php echo $modx_full_appname ?>"><?php echo $modx_version ?></span>&nbsp;
 	<!-- close #supplementalNav --></div>
 </div>
 </div>
@@ -240,16 +240,16 @@ $sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=26" target="main"
 $sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=71" target="main">'.$_lang['search'].'</a></li>';
 if ($modx->hasPermission('new_document')) {
 	// new-document
-	$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=4" target="main">'.$_lang['add_document'].'</a></li>';
+	$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=4" target="main">'.$_lang['add_resource'].'</a></li>';
 	// new-weblink
 	$sitemenu[] = '<li><a onclick="this.blur();" href="index.php?a=72" target="main">'.$_lang['add_weblink'].'</a></li>';
 }
 
-// Resources Menu
+// Elements Menu
 $resourcemenu = array();
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_chunk') || $modx->hasPermission('edit_chunk') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin')) {
-	// Resources
-	$resourcemenu[] = '<li><a onclick="this.blur();" href="index.php?a=76" target="main">'.$_lang['resource_management'].'</a></li>';
+	// Elements
+	$resourcemenu[] = '<li><a onclick="this.blur();" href="index.php?a=76" target="main">'.$_lang['element_management'].'</a></li>';
 }
 if($modx->hasPermission('file_manager')) {
 	// Manage-Files
@@ -352,7 +352,7 @@ if (!empty($sitemenu)) {
 	     "\n\t</ul></li>\n";
 }
 if (!empty($resourcemenu)) {
-	echo "\t",'<li id="limenu5"><a href="#menu5" onclick="new NavToggle(this); return false;">',$_lang['resources'],'</a><ul class="subnav" id="menu5">',"\n\t\t",
+	echo "\t",'<li id="limenu5"><a href="#menu5" onclick="new NavToggle(this); return false;">',$_lang['elements'],'</a><ul class="subnav" id="menu5">',"\n\t\t",
 	     implode("\n\t\t", $resourcemenu),
 	     "\n\t</ul></li>\n";
 }

@@ -246,17 +246,14 @@ function decode(s){
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo htmlspecialchars($content['display_params']);?>">
 
-	<h1><?php echo $_lang['tmplvars']; ?></h1>
+	<h1><?php echo $_lang['tmplvars_title']; ?></h1>
 
     <div id="actions">
     	  <ul class="actionButtons">
     		  <li id="Button1">
     			<a href="#" onclick="documentDirty=false; document.mutate.save.click();saveWait('mutate');">
     			  <img src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
-    			</a>
-    			  &nbsp;
-    			  and
-    			  &nbsp;				
+    			</a><span class="and"> + </span>				
     			<select id="stay" name="stay">
     			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
     			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
@@ -265,7 +262,7 @@ function decode(s){
     		  </li>
     		  <?php
     			if ($_GET['a'] == '301') { ?>
-    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
+    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>
     		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } else { ?>
     		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
@@ -294,24 +291,24 @@ function decode(s){
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="type" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;'>
-            <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
-            <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
-            <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
-            <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea (deprecated)</option>
-            <option value="textareamini" <?php  echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
-            <option value="richtext" <?php  echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
-            <option value="dropdown" <?php  echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
-            <option value="listbox" <?php   echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
-            <option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
-            <option value="option" <?php    echo ($content['type']=='option')? "selected='selected'":""; ?>>Radio Options</option>
-            <option value="checkbox" <?php  echo ($content['type']=='checkbox')? "selected='selected'":""; ?>>Check Box</option>
-            <option value="image" <?php     echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
-            <option value="file" <?php      echo ($content['type']=='file')? "selected='selected'":""; ?>>File</option>
-            <option value="url" <?php       echo ($content['type']=='url')? "selected='selected'":""; ?>>URL</option>
-            <option value="email" <?php     echo ($content['type']=='email')? "selected='selected'":""; ?>>Email</option>
-            <option value="number" <?php    echo ($content['type']=='number')? "selected='selected'":""; ?>>Number</option>
-            <option value="date" <?php      echo ($content['type']=='date')? "selected='selected'":""; ?>>Date</option>
-        </select>
+	            <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
+	            <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
+	            <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
+	            <option value="rawtextarea" <?php   echo ($content['type']=='rawtextarea')? "selected='selected'":""; ?>>Raw Textarea (deprecated)</option>
+	            <option value="textareamini" <?php  echo ($content['type']=='textareamini')? "selected='selected'":""; ?>>Textarea (Mini)</option>
+	            <option value="richtext" <?php  echo ($content['type']=='richtext'||$content['type']=='htmlarea')? "selected='selected'":""; ?>>RichText</option>
+	            <option value="dropdown" <?php  echo ($content['type']=='dropdown')? "selected='selected'":""; ?>>DropDown List Menu</option>
+	            <option value="listbox" <?php   echo ($content['type']=='listbox')? "selected='selected'":""; ?>>Listbox (Single-Select)</option>
+	            <option value="listbox-multiple" <?php echo ($content['type']=='listbox-multiple')? "selected='selected'":""; ?>>Listbox (Multi-Select)</option>
+	            <option value="option" <?php    echo ($content['type']=='option')? "selected='selected'":""; ?>>Radio Options</option>
+	            <option value="checkbox" <?php  echo ($content['type']=='checkbox')? "selected='selected'":""; ?>>Check Box</option>
+	            <option value="image" <?php     echo ($content['type']=='image')? "selected='selected'":""; ?>>Image</option>
+	            <option value="file" <?php      echo ($content['type']=='file')? "selected='selected'":""; ?>>File</option>
+	            <option value="url" <?php       echo ($content['type']=='url')? "selected='selected'":""; ?>>URL</option>
+	            <option value="email" <?php     echo ($content['type']=='email')? "selected='selected'":""; ?>>Email</option>
+	            <option value="number" <?php    echo ($content['type']=='number')? "selected='selected'":""; ?>>Number</option>
+	            <option value="date" <?php      echo ($content['type']=='date')? "selected='selected'":""; ?>>Date</option>
+	        </select>
     </td>
   </tr>
   <tr>
@@ -326,23 +323,26 @@ function decode(s){
     <td align="left"><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span>
         <select name="display" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;showParameters(this);'>
-            <option value="" <?php echo ($content['display']=='')? "selected='selected'":""; ?>>&nbsp;</option>
-            <option value="datagrid" <?php echo ($content['display']=='datagrid')? "selected='selected'":""; ?>>Data Grid</option>
-            <option value="floater" <?php echo ($content['display']=='floater')? "selected='selected'":""; ?>>Floater</option>
-            <option value="marquee" <?php echo ($content['display']=='marquee')? "selected='selected'":""; ?>>Marquee</option>
-            <option value="richtext" <?php echo ($content['display']=='richtext')? "selected='selected'":""; ?>>RichText</option>
-            <option value="ticker" <?php echo ($content['display']=='ticker')? "selected='selected'":""; ?>>Ticker</option>
-            <option value="viewport" <?php echo ($content['display']=='viewport')? "selected='selected'":""; ?>>View Port</option>
-            <option value="">----------------------------------------------------------------</option>
-            <option value="htmlentities" <?php echo ($content['display']=='htmlentities')? "selected='selected'":""; ?>>HTML Entities</option>
-            <option value="date" <?php echo ($content['display']=='date')? "selected='selected'":""; ?>>Date Formatter</option>
-            <option value="unixtime" <?php echo ($content['display']=='unixtime')? "selected='selected'":""; ?>>Unixtime</option>
-            <option value="delim" <?php echo ($content['display']=='delim')? "selected='selected'":""; ?>>Delimited List</option>
-            <option value="htmltag" <?php echo ($content['display']=='htmltag')? "selected='selected'":""; ?>>HTML Generic Tag</option>
-            <option value="hyperlink" <?php echo ($content['display']=='hyperlink')? "selected='selected'":""; ?>>Hyperlink</option>
-            <option value="image" <?php echo ($content['display']=='image')? "selected='selected'":""; ?>>Image</option>
-            <option value="string" <?php echo ($content['display']=='string')? "selected='selected'":""; ?>>String Formatter</option>
-        </select>
+	            <option value="" <?php echo ($content['display']=='')? "selected='selected'":""; ?>>&nbsp;</option>
+			<optgroup label="Widgets">
+	            <option value="datagrid" <?php echo ($content['display']=='datagrid')? "selected='selected'":""; ?>>Data Grid</option>
+	            <option value="floater" <?php echo ($content['display']=='floater')? "selected='selected'":""; ?>>Floater</option>
+	            <option value="marquee" <?php echo ($content['display']=='marquee')? "selected='selected'":""; ?>>Marquee</option>
+	            <option value="richtext" <?php echo ($content['display']=='richtext')? "selected='selected'":""; ?>>RichText</option>
+	            <option value="ticker" <?php echo ($content['display']=='ticker')? "selected='selected'":""; ?>>Ticker</option>
+	            <option value="viewport" <?php echo ($content['display']=='viewport')? "selected='selected'":""; ?>>View Port</option>
+			</optgroup>
+			<optgroup label="Formats">
+	            <option value="htmlentities" <?php echo ($content['display']=='htmlentities')? "selected='selected'":""; ?>>HTML Entities</option>
+	            <option value="date" <?php echo ($content['display']=='date')? "selected='selected'":""; ?>>Date Formatter</option>
+	            <option value="unixtime" <?php echo ($content['display']=='unixtime')? "selected='selected'":""; ?>>Unixtime</option>
+	            <option value="delim" <?php echo ($content['display']=='delim')? "selected='selected'":""; ?>>Delimited List</option>
+	            <option value="htmltag" <?php echo ($content['display']=='htmltag')? "selected='selected'":""; ?>>HTML Generic Tag</option>
+	            <option value="hyperlink" <?php echo ($content['display']=='hyperlink')? "selected='selected'":""; ?>>Hyperlink</option>
+	            <option value="image" <?php echo ($content['display']=='image')? "selected='selected'":""; ?>>Image</option>
+	            <option value="string" <?php echo ($content['display']=='string')? "selected='selected'":""; ?>>String Formatter</option>
+			</optgroup>
+	        </select>
     </td>
   </tr>
   <tr id="displayparamrow">
@@ -357,104 +357,104 @@ function decode(s){
     <td align="left" colspan="2"><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
 </table>
-</div>
+    	</div>
 
 <!-- Template Permission -->
-<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
-<div class="sectionBody">
+	<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
+	<div class="sectionBody">
 <?php echo $_lang['tmplvar_tmpl_access_msg']; ?><p />
 <table width="100%" cellspacing="0" cellpadding="0">
-<?php
-    // Added by Raymond - based on S.BRENNAN modifications
-    $tbl = $dbase.".`".$table_prefix."site_templates`" ;
-    $tblsel = $dbase.".`".$table_prefix."site_tmplvar_templates`";
-    $sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id";
-    $rs = mysql_query($sql);
+	<?php
+	    $tbl = $dbase.".`".$table_prefix."site_templates`" ;
+	    $tblsel = $dbase.".`".$table_prefix."site_tmplvar_templates`";
+	    $sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id";
+	    $rs = mysql_query($sql);
 ?>
   <tr>
     <td>
 <?php
-    while ($row = mysql_fetch_assoc($rs)) {
-    	if($id == 0 && is_array($_POST['template'])) {
-    		$checked = in_array($row['id'], $_POST['template']);
-    	} else {
-    		$checked = $row['tmplvarid'];
-    	}
-        echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($checked? "checked='checked'":'')." />".$row['templatename']."<br />";
-    }
-?>
+	    while ($row = mysql_fetch_assoc($rs)) {
+	    	if($id == 0 && is_array($_POST['template'])) {
+	    		$checked = in_array($row['id'], $_POST['template']);
+	    	} else {
+	    		$checked = $row['tmplvarid'];
+	    	}
+	        echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($checked? "checked='checked'":'')." />".$row['templatename']."<br />";
+	    }
+	?>
     </td>
   </tr>
 </table>
-</div>
+	</div>
 
-<?php
-if($use_udperms==1) {
-    $groupsarray = array();
+<!-- Access Permissions -->
+	<?php
+	if($use_udperms==1) {
+	    $groupsarray = array();
 
-    // fetch permissions for the variable
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
-    for ($i = 0; $i < $limit; $i++) {
-        $currentgroup=mysql_fetch_assoc($rs);
-        $groupsarray[$i] = $currentgroup['documentgroup'];
-    }
+	    // fetch permissions for the variable
+	    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
+	    $rs = mysql_query($sql);
+	    $limit = mysql_num_rows($rs);
+	    for ($i = 0; $i < $limit; $i++) {
+	        $currentgroup=mysql_fetch_assoc($rs);
+	        $groupsarray[$i] = $currentgroup['documentgroup'];
+	    }
 
 ?>
 
 <!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-<script type="text/javascript">
-    function makePublic(b){
-        var notPublic=false;
-        var f=document.forms['mutate'];
-        var chkpub = f['chkalldocs'];
-        var chks = f['docgroups[]'];
-        if(!chks && chkpub) {
-            chkpub.checked=true;
-            return false;
-        }
-        else if (!b && chkpub) {
-            if(!chks.length) notPublic=chks.checked;
-            else for(i=0;i<chks.length;i++) if(chks[i].checked) notPublic=true;
-            chkpub.checked=!notPublic;
-        }
-        else {
-            if(!chks.length) chks.checked = (b)? false:chks.checked;
-            else for(i=0;i<chks.length;i++) if (b) chks[i].checked=false;
-            chkpub.checked=true;
-        }
-    }
-</script>
-<?php echo $_lang['tmplvar_access_msg']; ?><p />
-<?php
-    }
-    $chk ='';
-    $sql = "SELECT name, id FROM $dbase.`".$table_prefix."documentgroup_names`";
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
-    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
-    	$groupsarray = $_POST['docgroups'];
-    }
-    for($i=0; $i<$limit; $i++) {
-        $row=mysql_fetch_assoc($rs);
-        $checked = in_array($row['id'], $groupsarray);
-        if($modx->hasPermission('access_permissions')) {
-            if($checked) $notPublic = true;
-            $chks.= "<input type='checkbox' name='docgroups[]' value='".$row['id']."' ".($checked ? "checked='checked'" : '')." onclick=\"makePublic(false)\" />".$row['name']."<br />";
-        }
-        else {
-            if($checked) echo "<input type='hidden' name='docgroups[]'  value='".$row['id']."' />";
-        }
-    }
-    if($modx->hasPermission('access_permissions')) {
-        $chks = "<input type='checkbox' name='chkalldocs' ".(!$notPublic ? "checked='checked'" : '')." onclick=\"makePublic(true)\" /><span class='warning'>".$_lang['all_doc_groups']."</span><br />".$chks;
-    }
-    echo $chks;
-?>
-</div>
+		<script type="text/javascript">
+		    function makePublic(b){
+		        var notPublic=false;
+		        var f=document.forms['mutate'];
+		        var chkpub = f['chkalldocs'];
+		        var chks = f['docgroups[]'];
+		        if(!chks && chkpub) {
+		            chkpub.checked=true;
+		            return false;
+		        }
+		        else if (!b && chkpub) {
+		            if(!chks.length) notPublic=chks.checked;
+		            else for(i=0;i<chks.length;i++) if(chks[i].checked) notPublic=true;
+		            chkpub.checked=!notPublic;
+		        }
+		        else {
+		            if(!chks.length) chks.checked = (b)? false:chks.checked;
+		            else for(i=0;i<chks.length;i++) if (b) chks[i].checked=false;
+		            chkpub.checked=true;
+		        }
+		    }
+		</script>
+<p><?php echo $_lang['tmplvar_access_msg']; ?></p>
+		<?php
+		    }
+		    $chk ='';
+		    $sql = "SELECT name, id FROM $dbase.`".$table_prefix."documentgroup_names`";
+		    $rs = mysql_query($sql);
+		    $limit = mysql_num_rows($rs);
+		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
+		    	$groupsarray = $_POST['docgroups'];
+		    }
+		    for($i=0; $i<$limit; $i++) {
+		        $row=mysql_fetch_assoc($rs);
+		        $checked = in_array($row['id'], $groupsarray);
+		        if($modx->hasPermission('access_permissions')) {
+		            if($checked) $notPublic = true;
+		            $chks.= "<input type='checkbox' name='docgroups[]' value='".$row['id']."' ".($checked ? "checked='checked'" : '')." onclick=\"makePublic(false)\" />".$row['name']."<br />";
+		        }
+		        else {
+		            if($checked) echo "<input type='hidden' name='docgroups[]'  value='".$row['id']."' />";
+		        }
+		    }
+		    if($modx->hasPermission('access_permissions')) {
+		        $chks = "<input type='checkbox' name='chkalldocs' ".(!$notPublic ? "checked='checked'" : '')." onclick=\"makePublic(true)\" /><span class='warning'>".$_lang['all_doc_groups']."</span><br />".$chks;
+		    }
+		    echo $chks;
+		?>
+	</div>
 <?php }?>
 
 <div class="sectionHeader"><?php echo $_lang['category_heading']; ?></div><div class="sectionBody">
@@ -462,15 +462,15 @@ if($use_udperms==1) {
           <tr>
             <td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
             <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-            <option>&nbsp;</option>
-            <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if($ds) foreach($ds as $n=>$v){
-                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-                }
-            ?>
-            </select>
+	            	<option>&nbsp;</option>
+	            <?php
+	                include_once "categories.inc.php";
+	                $ds = getCategories();
+	                if($ds) foreach($ds as $n=>$v){
+	                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+	                }
+	            ?>
+	            </select>
             </td>
           </tr>
           <tr>
@@ -478,9 +478,10 @@ if($use_udperms==1) {
             <td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
           </tr>
         </table>
-</div>
+            </div>
 
-<input type="submit" name="save" style="display:none">
+	<input type="submit" name="save" style="display:none">
+
 <?php
     // invoke OnTVFormRender event
     $evtOut = $modx->invokeEvent("OnTVFormRender",array("id" => $id));

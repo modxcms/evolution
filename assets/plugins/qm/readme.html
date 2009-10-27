@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en"><head>
+<meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>QuickManager+</title></head>
+<body>
+<h1>QuickManager+</h1>
+@author&nbsp;Mikko Lammi, <a href="http://www.maagit.fi" target="_blank">www.maagit.fi</a> (based on QuickManager by Urique Dertlian, urique@unix.am)<br>
+@license GNU General Public
+License (GPL v3),&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">www.gnu.org/copyleft/gpl.html</a><br>
+@version 1.3.3 updated 8/10/2009<br>@requirements MODx 1.0.0+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;<br>
+<h2>Description</h2>
+QuickManager+ is an alternative to QuickEdit to quick access and
+control content from frontend.<br>
+<br>
+This is a heavily modified version of the original QuickManager plugin
+with extensive set of configuration options.<br>
+<br>Known issues:<ul><li>Parent selection doesn't work at all with QuickManager+ due
+missing menu tree frame.</li>
+
+<li>Couple harmless JavaScript errors due missing menu tree
+which is normally present in MODx manager.</li>
+</ul>
+<h2>Installation</h2>If this is an update from earlier version delete first your old QuickManager+ plugin and all files at "assets/plugins/qm/".<br><br>
+1. Extract all files from package to site root.<br>
+<br>
+2. Create plugin with <br>
+<ul>
+<li>Name: QuickManager+ </li>
+<li>Description: &lt;strong&gt;1.3.3&lt;/strong&gt; Enables front end content editing support</li>
+</ul>
+3. Copy paste plugin code from "qm.plugin.txt".<br>
+<br>
+4. Check events:<br>
+<ul>
+<li>OnWebPagePrerender</li>
+<li>OnDocFormPrerender</li>
+<li>OnDocFormSave</li>
+
+<li>OnManagerLogout&nbsp;<br>
+</li>
+</ul>
+5. Copy paste plugin default configuration: <br>
+&nbsp;&nbsp; &nbsp;<br>
+&amp;jqpath=Path to jQuery;text;assets/js/jquery-1.3.2.min.js
+&amp;loadmanagerjq=Load jQuery in manager;list;true,false;true
+&amp;loadfrontendjq=Load jQuery in
+front-end;list;true,false;true&nbsp;&amp;noconflictjq=jQuery noConflict
+mode in front-end;list;true,false;true
+&amp;loadtb=Load modal box in
+front-end;list;true,false;true
+&amp;tbwidth=Modal box
+window&nbsp;width;text;80%&nbsp;&amp;tbheight=Modal box window
+height;text;80%
+&amp;hidefields=Hide document fields from front-end
+editors;text;parent&nbsp;&amp;hidetabs=Hide document tabs from
+front-end
+editors;text; &amp;hidesections=Hide document sections from front-end
+editors;text; &amp;addbutton=Show add document here
+button;list;true,false;true &amp;tpltype=New document template
+type;list;parent,id,selected;parent &amp;tplid=New document
+template id;int;3&nbsp;
+&amp;custombutton=Custom&nbsp;buttons;textarea; &amp;managerbutton=Show
+go to manager
+button;list;true,false;true &amp;logout=Logout
+to;list;manager,front-end;manager &amp;disabled=Plugin disabled on
+documents;text;<br>
+<br>
+6. Save plugin.&nbsp;&nbsp; &nbsp;<br>
+<h2>Configuration</h2>
+Go to plugin configuration tab.<br>
+<br>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td><span style="font-weight: bold;">Configuration
+option</span></td>
+<td><span style="font-weight: bold;">Default
+value</span></td>
+<td><span style="font-weight: bold;">Possible
+values</span></td>
+<td><span style="font-weight: bold;">Instructions</span></td>
+</tr>
+<tr>
+<td>Path to jQuery&nbsp;&nbsp;</td>
+<td>assets/js/jquery-1.3.2.min.js&nbsp;&nbsp;</td>
+<td>text</td>
+<td>Path to your jQuery script.&nbsp;</td>
+</tr>
+<tr>
+<td>Load jQuery in
+manager&nbsp;</td>
+<td>true</td>
+<td>true || false</td>
+<td>Prevent loading jQuery twice if you are already using
+some other plugin
+which loads jQuery such as ManagerManager.</td>
+</tr>
+<tr>
+<td>Load jQuery in
+front-end&nbsp;</td>
+<td>true</td>
+<td>
+true || false &nbsp;</td>
+<td>Prevent loading jQuery twice if you are already using
+it in your site
+template.</td>
+</tr>
+<tr><td>jQuery noConflict mode in front-end</td><td>true</td><td>
+true || false</td><td>Define
+if jQuery should use noConflict mode. NoConflict mode is useful if you
+use other JavaScript libraries in front-end such as Mootools.</td></tr><tr>
+<td>Load modal box in
+front-end&nbsp;</td>
+<td>true</td>
+<td>
+true || false &nbsp;</td>
+<td>Prevent loading modal box (ColorBox) twice if you are already using
+it in your site
+template.</td>
+</tr>
+<tr><td>Modal box window&nbsp;width</td><td>80%</td><td>number || percent</td><td>Define&nbsp;modal box (ColorBox) window width, for example: 800 or 75%. </td></tr><tr><td>Modal box window height</td><td>80%</td><td>number || percent</td><td>Define&nbsp;modal box (ColorBox) window height, for example: 500 or 75%.</td></tr>
+<tr>
+<td>Hide document fields from front-end editors&nbsp;</td>
+<td>parent</td>
+<td>text</td>
+<td>Separate fields with commas, for example:
+parent,template,menuindex<br>
+Parent selection doesn't work at all with&nbsp;QuickManager+ due missing menu tree
+frame, so it should be hidden from front-end editors.<br>
+Possible fields to hide: content, pagetitle,
+longtitle, menuindex, parent, description, alias, link_attributes,
+introtext, template, menutitle<br>NOTICE! Hiding document fields may not work if fields are moved to other tabs with ManagerManager plugin. </td>
+</tr>
+<tr><td>Hide document tabs from front-end
+editors</td><td><br></td><td>text</td><td>Separate&nbsp;tabs with commas, for example:
+meta,settings<br>
+Possible tabs to hide: general, settings, meta<br>NOTICE! Hiding tabs may not work&nbsp;if&nbsp;tab
+order is changed with ManagerManager plugin.</td></tr><tr><td>Hide document sections from front-end
+editors</td><td></td><td>text</td><td>Separate sections with commas, for example:
+content,access<br>Possible sections to hide: docsettings, content, tvs, access<br>NOTICE! Hiding sections may not work if you are&nbsp;hiding sections with ManagerManager plugin</td></tr><tr>
+<td>Show add document here
+button&nbsp;</td>
+<td>true</td>
+<td>
+true || false &nbsp;</td>
+<td>Define if it's possible to add documents with
+QuickManager+.</td>
+</tr>
+<tr>
+<td>New document template
+type&nbsp;</td>
+<td>parent</td>
+<td>
+parent || id || selected&nbsp;</td>
+<td>How to determine a
+new document template: <br>
+- parent: Use parent document template<br>
+- id: Use template based on id number<br>
+- selected: Define template based on parent document "inheritTpl"
+template variable used by "Inherit Selected Template" plugin
+<a href="http://modxcms.com/extras.html?view=package/view&amp;package=214">http://modxcms.com/extras.html?view=package/view&amp;package=214</a>.
+You don't have to install the plugin, but you still have to
+have "inheritTpl" template variable on parent document with correct
+template id number.</td>
+</tr>
+<tr>
+<td>New document template id</td>
+<td>3</td>
+<td>number</td>
+<td>Define which template id to use with new documents.
+Used only if new
+document template type is id.</td>
+</tr>
+<tr><td>Custom&nbsp;buttons</td><td></td><td>text</td><td>Define custom&nbsp;buttons, for example add document to site root or add news document<br>- Define&nbsp;new document button: 'button title','new','parent id','template id','visible for user role ids' <br>- Define link button: 'button title','link','http://www.example.com','','visible for user role ids'<br>- Define modal button: 'button title','modal','http://www.example.com','','visible for user role ids'<br>Visible for user role ids: leave empty to accept all roles, role 1 = Administrator<br>Separate diffrent buttons with ||<br>Example:
+'New root document','new','0','3',''||'Add
+news','new','10','4','4,5,6'||'Site
+statistics','link','http://www.google.com/analytics/','','1,4'||'Site
+statistics','modal','http://www.google.com/analytics/','','1,4'</td></tr><tr><td>Show go to manager
+button</td><td>true</td><td>true || false</td><td>Define is go to manager button visible.</td></tr><tr>
+<td>Logout to</td>
+<td>manager</td>
+<td>
+manager || front-end</td>
+<td>Define where to logout: to manager login screen or to
+active document
+on front-end.</td>
+</tr><tr><td>Plugin disabled on documents</td><td></td><td>text</td><td>Document id numbers where the plugin is disabled.<br>Separate fields with commas, for example:
+34,22,7,19</td></tr>
+
+</tbody>
+</table>
+<br>
+<h2>How to use</h2>
+Just login, open frontend and enjoy!<h2>Changelog</h2>1.3.3<br><ul><li>Added: A fallback to English if the languages are missing in the Manager/user settings</li><li>Added:
+Little tweaks with QuickManager action buttons: small hide/show
+animations and possibilty to close the menu by clicking the MODx logo</li><li>Added: New option for custom buttons: modal = any link opened in a modal box (ColorBox)</li><li>Changed: &nbsp;Custom buttons separator is now || instead of # (reserved for URL anchors)</li><li>Changed: Rounded modal box is back, finally resolved bugs with&nbsp;ColorBox CSS in IE and friendly urls</li><li>Changed: qm-colorbox.css renamed back&nbsp;to colorbox.css</li><li>Fixed: Satinitized possible XSS vulnerabilities</li><li>Removed: OnManagerPageInit plugin event removed</li><li>Removed: IE6 support dropped, QuickManager+ is not tested with IE6 as MODx manager doesn't offially support IE6</li></ul>1.3.2.1<br><ul><li>Fixed: Language file loading</li></ul>1.3.2<br><ul><li>Added: New configuration option - jQuery noConflict mode in front-end</li><li>Added: Check user manager access permissions to current document and show action buttons according to permissions</li><li>Added: It's now possible to hide QM+ action buttons</li><li>Added: Hide parent frame scrollbars and QM+ buttons when modal box is visible (ColorBox bindings)</li><li>Added: Modal box can't be accidentally closed by clicking the overlay</li><li>Changed:
+Stylish ColorBox CSS style didn't work properly with IE and crashed too
+often with Safari, had to replace it with minimalistic style for better
+cross-browser compatibility</li><li>Changed: Updated ColorBox to version 1.3.1, includes for example IE ClearType fix (no more ugly fonts)</li><li>Changed: colorbox.css renamed to qm-colorbox.css and moved to QM+ css&nbsp;folder</li><li>Fixed:
+All normal MODx manager actions including template and RTE selection
+works now just fine (thank you very much Susan O. for your ideas!)</li><li>Fixed: Multiple small CSS fixes for IE</li><li>Fixed: Alias friendly logout code (thanks Mar!)</li><li>Fixed: Language selection a bit more robust and offer a level of fallback</li><li>Removed: Use with ManagerManager
+plugin &nbsp;-option deprecated</li></ul>1.3.1<br><ul><li>Added:
+It's now possible to change template once. After that you can't change
+the template again but of course you can press cancel button and try
+again.<br>Note: ToDo: Investigate if there is a way to detect parent frame in PHP to solve this problem</li></ul>1.3<br><ul><li>Added: Support for MODx Evolution 1.0.0 version,&nbsp;better combatibility with MODx Carbon manager theme</li><li>Added: Support for jQuery in noConflict mode by default</li><li>Added: ColorBox modal box support</li><li>Added: Modal box (ColorBox) window width</li><li>Added: Modal box (ColorBox) window height</li><li>Added: Possibility to add custom link buttons</li><li>Removed: Thickbox&nbsp;window max width</li><li>Removed: MODx versions below 1.0.0 are not&nbsp;supported due manager interface changes</li><li>Removed: ThickBox modal box support</li></ul>
+1.2<br>
+
+<ul><li>Added: Plugin disabled option</li><li>Added: Show go to manager
+button option</li><li>Added:&nbsp;Custom add buttons option</li><li>Added:&nbsp;Hide document sections from front-end
+editors option</li><li>Added: Hide document tabs from front-end
+editors option</li><li>Added: Dynamic ThickBox windows size adjustement, window size is calculated without refreshing the window</li><li>Added: ThickBox window max width option&nbsp;</li><li>Added: Logout to configuration option added, needs event&nbsp;OnManagerLogout&nbsp;</li><li>Fixed: Documentation changed to html file</li><li>Fixed: Clearer plugin folder structure</li><li>Fixed: Hiding templates if only one template</li><li>Fixed: Load jQuery in
+front-end was not working&nbsp;properly</li><li>Fixed: mcc.class.php =&gt; hideTab &amp; hideSection</li><li>Removed:&nbsp;ThickBox windows width and height options removed.</li>
+</ul>
+1.1.1<br>
+<ul>
+<li>Fixed: Logout function changed. Previous version had a problem
+with multiple users resulting document locked issues. Now plugin logs
+user nicely out to the manager login page.</li>
+</ul>
+</body></html>

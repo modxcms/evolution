@@ -143,7 +143,7 @@ if (is_array($evtOut))
     		  </li>
     		  <?php
     			if ($_REQUEST['a'] == '78') { ?>
-    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_duplicate_document"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>	    
+    		  <li id="Button2"><a href="#" onclick="duplicaterecord();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang["duplicate"]; ?></a></li>	    
     		  <li id="Button3" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
     		  <?php } else { ?>
     		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"]?>" /> <?php echo $_lang['delete']?></a></li>
@@ -183,21 +183,21 @@ if (is_array($evtOut))
 			<span style="color:brown; font-weight:bold; padding:3px;">&nbsp;<?php echo $_lang['chunk_code']?></span>
 		</div>
 		<textarea dir="ltr" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet'])?></textarea>
-	</div>
+		</div>
 
 	<span class="warning"><?php echo $_lang['which_editor_title']?></span>
-	<select id="which_editor" name="which_editor" onchange="changeRTE();">
-		<option value="none"<?php echo $which_editor == 'none' ? ' selected="selected"' : ''?>><?php echo $_lang['none']?></option>
-<?php
-	// invoke OnRichTextEditorRegister event
-	$evtOut = $modx->invokeEvent('OnRichTextEditorRegister');
-	if (is_array($evtOut)) {
-		foreach ($evtOut as $i => $editor) {
-			echo "\t".'<option value="'.$editor.'"'.($which_editor == $editor ? ' selected="selected"' : '').'>'.$editor."</option>\n";
-		}
-	}
+			<select id="which_editor" name="which_editor" onchange="changeRTE();">
+				<option value="none"<?php echo $which_editor == 'none' ? ' selected="selected"' : ''?>><?php echo $_lang['none']?></option>
+				<?php
+				// invoke OnRichTextEditorRegister event
+				$evtOut = $modx->invokeEvent('OnRichTextEditorRegister');
+				if (is_array($evtOut)) {
+					foreach ($evtOut as $i => $editor) {
+						echo "\t".'<option value="'.$editor.'"'.($which_editor == $editor ? ' selected="selected"' : '').'>'.$editor."</option>\n";
+					}
+				}
 ?>	</select>
-	</div>
+		</div>
 </div><!-- end .sectionBody -->
 <?php
 
@@ -212,7 +212,6 @@ if (is_array($evtOut))
 <input type="submit" name="save" style="display:none;" />
 </form>
 <?php
-
 // invoke OnRichTextEditorInit event
 if ($use_editor == 1) {
 	$evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(

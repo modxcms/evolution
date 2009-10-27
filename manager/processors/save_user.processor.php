@@ -219,7 +219,7 @@ switch ($_POST['mode']) {
 		} else {
 			include_once "header.inc.php";
 ?>
-			<h1><?php echo $_lang['web_user_title']; ?></h1>
+			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 			<ul class="actionButtons">
@@ -227,7 +227,7 @@ switch ($_POST['mode']) {
 			</ul>
 			</div>
 
-			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
+			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 			<p>
@@ -403,7 +403,7 @@ switch ($_POST['mode']) {
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
 			include_once "header.inc.php";
 ?>
-			<h1><?php echo $_lang['web_user_title']; ?></h1>
+			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 			<ul class="actionButtons">
@@ -411,7 +411,7 @@ switch ($_POST['mode']) {
 			</ul>
 			</div>
 
-			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
+			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 			<p>
@@ -439,16 +439,14 @@ switch ($_POST['mode']) {
 }
 
 // in case any plugins include a quoted_printable function
-if(!function_exists('quoted_printable')) {
-	function quoted_printable($string) {
-		$crlf = "\n" ;
-		$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf ;
-		$f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e' ;
-		$r[] = "'=' . sprintf('%02X', ord('\\1'))" ; $f[] = '/([\011\040])' . $crlf . '/e' ;
-		$r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'" ;
-		$string = preg_replace($f, $r, $string) ;
-		return trim(wordwrap($string, 70, ' =' . $crlf)) ;
-	}
+function save_user_quoted_printable($string) {
+	$crlf = "\n" ;
+	$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf ;
+	$f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e' ;
+	$r[] = "'=' . sprintf('%02X', ord('\\1'))" ; $f[] = '/([\011\040])' . $crlf . '/e' ;
+	$r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'" ;
+	$string = preg_replace($f, $r, $string) ;
+	return trim(wordwrap($string, 70, ' =' . $crlf)) ;
 }
 
 // Send an email to the user
@@ -474,7 +472,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
 	$headers .= "Content-Transfer-Encoding: quoted-printable\r\n";
 	$subject = "=?UTF-8?Q?".$emailsubject."?=";
-	$message = quoted_printable($message);
+	$message = save_user_quoted_printable($message);
 
 	if (ini_get('safe_mode') == FALSE) {
 		if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {

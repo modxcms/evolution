@@ -225,7 +225,6 @@
 		return $field_html;
 	} // end renderFormElement function
 
-
 	function ParseIntputOptions($v) {
 		$a = array();
 		if(is_array($v)) return $v;
@@ -234,6 +233,5 @@
 		}
 		else $a = explode("||", $v);
 		return $a;
-	}
-	
+	}	
 ?>

@@ -1,17 +1,12 @@
 <?php
 $langs = array();
-
-if ($handle = opendir("lang/")) {
-	while (false !== ($file = readdir($handle))) {
-		if (strpos($file, '.') === false) {
-			if (is_dir($setupPath."lang/".$file)) {
-				$langs[] = $file;
-			}
-		}
+if( $handle = opendir('lang/') ) {
+	while( false !== ( $file = readdir( $handle ) ) ) {
+		if( strpos( $file, '.' ) ) $langs[] = str_replace('.inc.php', '', $file);
 	}
-	closedir($handle);
+	closedir( $handle );
 }
-sort($langs);
+sort( $langs );
 ?>
 <form name="install" id="install_form" action="index.php?action=mode" method="post">
     <h2>Choose language:&nbsp;&nbsp;
@@ -19,11 +14,7 @@ sort($langs);
 <?php
 foreach ($langs as $language) {
     $abrv_language = explode('-',$language);
-    if ($abrv_language[0] == 'english') {
-        echo '<option value="' . $language . '" selected="selected">' . $abrv_language[0] . '</option>'."\n";
-    } else {
-        echo '<option value="' . $language . '">' . $abrv_language[0] . '</option>'."\n";
-    }
+	echo '<option value="' . $language . '"'. ( ($abrv_language[0] == 'english') ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ). '</option>'."\n";
 }
 ?>
     </select></h2>

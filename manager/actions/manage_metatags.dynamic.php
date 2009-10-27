@@ -17,9 +17,14 @@ $modx->manager->initPageViewState();
 	function checkForm() {
 		var requireConfirm=false;
 		var deleteList="";
-	<?php for($i=0;$i<$limit;$i++) {
+	<?php 
+		$sql = "SELECT * FROM $dbase.`".$table_prefix."site_keywords` ORDER BY keyword ASC";
+		$rs = mysql_query($sql);
+		$limit = mysql_num_rows($rs); 
+		for($i=0;$i<$limit;$i++) {
 		$row=mysql_fetch_assoc($rs);
 		?>
+
 		if(document.getElementById('delete<?php echo $row['id']; ?>').checked==true) {
 			requireConfirm = true;
 			deleteList = deleteList + "\n - <?php echo addslashes($row['keyword']); ?>";

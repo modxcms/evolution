@@ -30,7 +30,4 @@ function mailSupport($sender,$subject,$message){
 function checkForUpdates() {
 	// to-do:
 }
-
-
-
 ?>

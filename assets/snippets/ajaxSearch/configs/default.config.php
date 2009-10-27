@@ -1,6 +1,6 @@
 <?php
 
-// Default configuration file - AjaxSearch 1.8.3
+// Default configuration file - AjaxSearch 1.8.4
 // Keep care all these values are required
 
 $dcfg['config'] = '';

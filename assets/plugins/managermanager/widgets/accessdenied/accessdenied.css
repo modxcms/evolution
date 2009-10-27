@@ -1,0 +1,22 @@
+#aback{
+	position:absolute; 
+	width: 100%; 
+	z-index: 1000; 
+	background: #F4F4F4;
+
+}
+
+#amessage{
+	margin: 150px auto 0 auto; 
+	width: 320px; 
+	padding: 40px 20px 40px 100px; 
+	border: 6px solid #AAA;
+	background: #FFF url(/assets/plugins/managermanager/widgets/accessdenied/alert.png) no-repeat 15px;
+}
+
+#amessage SPAN{
+	font-weight: bold;
+	margin-bottom: 5px;
+	display: block;
+}
+

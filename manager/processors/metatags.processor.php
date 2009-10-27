@@ -114,5 +114,4 @@ $sync->emptyCache();
 
 $header="Location: index.php?a=81";
 header($header);
-
 ?>

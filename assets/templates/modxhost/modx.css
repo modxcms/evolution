@@ -242,6 +242,11 @@ code {
 	background-color: #EBE9ED;
 }
 
+#EmailForm label input {
+	position: inherit;
+	left: auto;
+}
+
 
 /* Fixes for RichText widgets
 ------------------------------------------------------------------------------- */

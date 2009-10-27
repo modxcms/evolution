@@ -2763,7 +2763,7 @@ class DocumentParser {
         } else {
             // default behavior: strip invalid characters and replace spaces with dashes.
             $alias = strip_tags($alias); // strip HTML
-            $alias = preg_replace('/[^\.%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
+            $alias = preg_replace('/[^%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
             $alias = preg_replace('/\s+/', '-', $alias); // convert white-space to dash
             $alias = preg_replace('/-+/', '-', $alias);  // convert multiple dashes to one
             $alias = trim($alias, '-'); // trim excess
