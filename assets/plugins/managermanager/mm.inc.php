@@ -1,9 +1,9 @@
 <?php
 /*
     @name       ManagerManager
-    @version    0.3.5
+    @version    0.4dev
     
-    @for        MODx Evolution 1.0.0
+    @for        MODx Evolution 1.0.1
     
     @author     Nick Crossland - www.rckt.co.uk
     
@@ -22,7 +22,7 @@
 	
 */
 
-$mm_version = '0.3.5'; 
+$mm_version = '0.4dev'; 
 
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them

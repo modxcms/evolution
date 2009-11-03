@@ -793,7 +793,30 @@ UPDATE {PREFIX}documentgroup_names AS dgn
 
 UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
 
+
 UPDATE `{PREFIX}system_settings` SET `setting_value` = '{VERSION}' WHERE `setting_name` = 'settings_version';
+
+
+# start related to #MODX-1321
+
+
+UPDATE `{PREFIX}site_content` SET `type`='reference', `contentType`='text/html' WHERE `type`='' AND `content` REGEXP '^https?://([-\w\.]+)+(:\d+)?/?';
+
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/xml' WHERE `type`='' AND `alias` REGEXP '[.period.](rss|xml)$';
+
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/javascript' WHERE `type`='' AND `alias` REGEXP '[.period.]js$';
+
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WHERE `type`='' AND `alias` REGEXP '[.period.]css$';
+
+
+UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
+
+
+# end related to #MODX-1321
+
 
 # ]]upgrade-able
 
@@ -843,7 +866,7 @@ REPLACE INTO `{PREFIX}user_roles`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxCarbon'),
-('settings_version',''),
+('settings_version','{VERSION}'),
 ('show_meta','0'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
@@ -914,7 +937,10 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
 ('validate_referer', '1'),
 ('datepicker_offset','-10'),
-('datetime_format','dd-mm-YYYY');
+('xhtml_urls','1'),
+('allow_duplicate_alias','0'),
+('automatic_alias','1'),
+('datetime_format','%d-%m-%Y');
 
 
 REPLACE INTO `{PREFIX}user_roles` 

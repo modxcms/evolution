@@ -6,7 +6,7 @@
  * Author:         Russian MODx community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
  * Date:           11 October 2009
  * Version:        2.0.4
- * MODx version:   Evolution 1.0.1
+ * MODx version:   Evolution 1.0.2
 */
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
@@ -377,7 +377,7 @@ $_lang["import_site_html"] = 'Импортировать сайт из HTML';
 $_lang["import_site_importing_document"] = 'Импортируется файл <b>%s</b>';
 $_lang["import_site_maxtime"] = 'Максимальное время импорта:';
 $_lang["import_site_maxtime_message"] = 'Здесь вы можете указать, сколько секунд может занять процесс импорта (переопределение установок PHP). Введите 0, чтобы задать неограниченное время. Имейте в виду, что 0 или очень большой промежуток времени, заданные для процесса импорта, могут привести к неадекватной работе сервера, поэтому такие значения задавать не рекомендуется.';
-$_lang["import_site_message"] = 'Используя эту функцию, вы можете импортировать сайт из HTML в базу данных. Учтите, что все HTML-файлы нужно скопировать в папку \'assets/import\'. <br /><br />Заполните форму и нажмите \'Начать импорт\' для начала процесса. Файлы будут скопированы в указанное место, используя, где возможно, имена файлов как псевдонимы и заголовки страниц как названия ресурсов. <br /><br />';
+$_lang["import_site_message"] = 'Используя эту функцию, вы можете импортировать сайт из HTML в базу данных. Учтите, что все HTML-файлы нужно скопировать в папку \'assets/import\'. <br /><br />Заполните форму, выберите родительский ресурс в дереве сайта и нажмите \'Начать импорт\' для начала процесса. Файлы будут скопированы в указанное место, используя, где возможно, имена файлов как псевдонимы и заголовки страниц как названия ресурсов. <br /><br />';
 $_lang["import_site_skip"] = 'Пропущен';
 $_lang["import_site_start"] = 'Начать импорт';
 $_lang["import_site_success"] = 'Успешно';
@@ -459,7 +459,7 @@ $_lang["messages_read_message"] = 'Читать сообщение';
 $_lang["messages_reply"] = 'Ответить';
 $_lang["messages_select_group"] = 'Выберите группу';
 $_lang["messages_select_user"] = 'Выберите пользователя';
-$_lang["messages_send"] = 'Послать';
+$_lang["messages_send"] = 'Отправить';
 $_lang["messages_send_to"] = 'Кому';
 $_lang["messages_sent"] = 'Отправлено';
 $_lang["messages_subject"] = 'Тема';
