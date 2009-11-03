@@ -89,7 +89,7 @@ EOD;
 
             $subject = $_lang['password_change_request'];
             $headers  = "MIME-Version: 1.0\\n".
-                "Content-type: text/html; charset=iso-8859-1\\n".
+                "Content-type: text/html; charset={$modx->config['modx_charset']}\n".
                 "From: MODx\\n".
                 "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\\n".
                 "X-Mailer: PHP/".phpversion();
@@ -114,7 +114,7 @@ EOD;
             global $modx, $_lang;
 
             $pre = $modx->db->config['table_prefix'];
-            $modx->db->update(array('blocked'=>'', 'blockeduntil'=>'', 'failedlogincount' => 0), "`{$pre}user_attributes`", "internalKey = '{$user_id}'");
+            $modx->db->update(array('blocked' => 0, 'blockeduntil' => 0, 'failedlogincount' => 0), "`{$pre}user_attributes`", "internalKey = '{$user_id}'");
 
             if(!$modx->db->getAffectedRows()) { $this->errors[] = $_lang['user_doesnt_exist']; return; }
 

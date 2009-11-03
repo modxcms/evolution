@@ -151,7 +151,6 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
     <p class="labelHolder"><label for="managerlanguage_select">&nbsp;</label>
     <select name="managerlanguage" id="managerlanguage_select">
 <?php
-	$manager_language = "english";
 	
 	if (isset($_POST['managerlanguage'])) {
 	    $manager_language = $_POST['managerlanguage'];
@@ -170,13 +169,15 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 	}
 	sort($langs);
 	
+	if ($install_language != "english" && file_exists("../manager/includes/lang/".$install_language.".inc.php")) {
+		$manager_language = $install_language;
+	} else {
+		$manager_language = "english";
+	}
+
 	foreach ($langs as $language) {
 	    $abrv_language = explode('.', $language);
-	    if ($abrv_language[0] == 'english') {
-	        echo '<option value="' . $abrv_language[0] . '" selected="selected">' . $abrv_language[0] . '</option>' . "\n";
-	    } else {
-	        echo '<option value="' . $abrv_language[0] . '">' . $abrv_language[0] . '</option>' . "\n";
-	    }
+	        echo '<option value="' . $abrv_language[0] . '"'. ( (strtolower($abrv_language[0]) == strtolower($manager_language)) ? ' selected="selected"' : null ) .'>' . ucwords( $abrv_language[0] ) . '</option>' . "\n";
 	}
 ?>
   </select><br /><br />
@@ -203,7 +204,8 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 language ='<?php echo $install_language?>';
 installMode ='<?php echo $installMode ?>';
 passed ='<?php echo $_lang["status_passed_server"]?>';
-passed_db = '<?php echo $_lang["status_passed"];?>';
+passed_db = '<?php echo $_lang["status_passed"] . ' ' . $_lang["status_passed_database_created"];?>';
+
 </script>
 <script type="text/javascript">
 /* <![CDATA[ */

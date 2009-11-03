@@ -76,7 +76,7 @@ class SqlParser {
 		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
 		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
-		$idata = str_replace('{VERSION}', $modx_version, $idata);
+		/*$idata = str_replace('{VERSION}', $modx_version, $idata);*/
 
 		$sql_array = explode("\n\n", $idata);
 

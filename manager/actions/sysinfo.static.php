@@ -254,21 +254,23 @@ if(!$modx->hasPermission('logs')) {
 
 <!-- online users -->
 <div class="sectionHeader"><?php echo $_lang['onlineusers_title']; ?></div><div class="sectionBody" id="lyr5">
-		<p><?php echo $_lang['onlineusers_message']; ?>
-		<b><?php echo strftime('%H:%M:%S', time()+$server_offset_time); ?></b>)</p>
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
-		 <thead>
-		  <tr>
-			<td><b><?php echo $_lang['onlineusers_user']; ?></b></td>
-			<td><b><?php echo $_lang['onlineusers_userid']; ?></b></td>
-			<td><b><?php echo $_lang['onlineusers_ipaddress']; ?></b></td>
-			<td><b><?php echo $_lang['onlineusers_lasthit']; ?></b></td>
-			<td><b><?php echo $_lang['onlineusers_action']; ?></b></td>
-			<td><b><?php echo $_lang['onlineusers_actionid']; ?></b></td>
-		  </tr>
-		  </thead>
-		  <tbody>
+
 		<?php
+		$html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
+                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+                  <thead>
+                    <tr>
+                      <td><b>'.$_lang["onlineusers_user"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_userid"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_ipaddress"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_lasthit"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_action"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_actionid"].'</b></td>		
+                    </tr>
+                  </thead>
+                  <tbody>
+        ';
+		
 		$timetocheck = (time()-(60*20));
 
 		include_once "actionlist.inc.php";
@@ -277,15 +279,16 @@ if(!$modx->hasPermission('logs')) {
 		$rs = mysql_query($sql);
 		$limit = mysql_num_rows($rs);
 		if($limit<1) {
-			echo "No active users found.<p />";
+			$html = "<p>".$_lang['no_active_users_found']."</p>";
 		} else {
 			for ($i = 0; $i < $limit; $i++) {
 				$activeusers = mysql_fetch_assoc($rs);
 				$currentaction = getAction($activeusers['action'], $activeusers['id']);
 				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user'>":"";
-				echo "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
+				$html .= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
 			}
 		}
+		echo $html;
 		?>
 		</tbody>
 		</table>

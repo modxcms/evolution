@@ -130,19 +130,6 @@ $modx->setPlaceholder('UserInfo',$html);
 // online users
 $modx->setPlaceholder('online',$_lang['online']);
 $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
-$html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
-    <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
-      <thead>
-      <tr>
-        <td><b>'.$_lang["onlineusers_user"].'</b></td>
-        <td><b>'.$_lang["onlineusers_userid"].'</b></td>
-        <td><b>'.$_lang["onlineusers_ipaddress"].'</b></td>
-        <td><b>'.$_lang["onlineusers_lasthit"].'</b></td>
-        <td><b>'.$_lang["onlineusers_action"].'</b></td>
-      </tr>
-      </thead>
-      <tbody>
-';
     $timetocheck = (time()-(60*20));//+$server_offset_time;
 
     include_once "actionlist.inc.php";
@@ -151,19 +138,32 @@ $html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_
     $rs = mysql_query($sql);
     $limit = mysql_num_rows($rs);
     if($limit<1) {
-        $html.= "<p>No active users found.</p>";
+        $html = "<p>".$_lang['no_active_users_found']."</p>";
     } else {
+        $html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
+                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+                  <thead>
+                    <tr>
+                      <td><b>'.$_lang["onlineusers_user"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_userid"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_ipaddress"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_lasthit"].'</b></td>
+                      <td><b>'.$_lang["onlineusers_action"].'</b></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+        ';
         for ($i = 0; $i < $limit; $i++) {
             $activeusers = mysql_fetch_assoc($rs);
             $currentaction = getAction($activeusers['action'], $activeusers['id']);
             $webicon = ($activeusers['internalKey']<0)? "<img src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user' />":"";
             $html.= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td></tr>";
         }
+        $html.= '
+                </tbody>
+                </table>
+        ';
     }
-$html.= '
-    </tbody>
-    </table>
-';
 $modx->setPlaceholder('OnlineInfo',$html);
 
 // invoke event OnManagerWelcomePrerender

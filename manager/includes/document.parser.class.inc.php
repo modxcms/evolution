@@ -783,7 +783,7 @@ class DocumentParser {
     }
 
     function evalSnippets($documentSource) {
-        preg_match_all('~\[\[(.*?)\]\]~', $documentSource, $matches);
+        preg_match_all('~\[\[(.*?)\]\]~ms', $documentSource, $matches);
 
         $etomite= & $this;
 
@@ -847,6 +847,8 @@ class DocumentParser {
                     for ($x= 0; $x < $snippetParamCount; $x++) {
                         if (strpos($tempSnippetParams[$x], '=', 0)) {
                             if ($parameterTemp= explode("=", $tempSnippetParams[$x])) {
+                                $parameterTemp[0] = trim($parameterTemp[0]);
+                                $parameterTemp[1] = trim($parameterTemp[1]);
                                 $fp= strpos($parameterTemp[1], '`');
                                 $lp= strrpos($parameterTemp[1], '`');
                                 if (!($fp === false && $lp === false))
@@ -2179,7 +2181,7 @@ class DocumentParser {
                     elseif ($newPwd == "") {
                         return "You didn't specify a password for this user!";
                     } else {
-                        $this->dbQuery("UPDATE $tbl SET password = md5('" . $newPwd . "') WHERE id='" . $this->getLoginUserID() . "'");
+                        $this->dbQuery("UPDATE $tbl SET password = md5('" . $this->db->escape($newPwd) . "') WHERE id='" . $this->getLoginUserID() . "'");
                         // invoke OnWebChangePassword event
                         $this->invokeEvent("OnWebChangePassword", array (
                             "userid" => $row["id"],
@@ -2756,14 +2758,14 @@ class DocumentParser {
 	 */
     function stripAlias($alias) {
         // let add-ons overwrite the default behavior
-        $results = $this->invokeEvent('OnStripAlias', array ('alias'=>$alias));
+        //$results = $this->invokeEvent('OnStripAlias', array ('alias'=>$alias));
         if (!empty($results)) {
             // if multiple plugins are registered, only the last one is used
             return end($results);
         } else {
             // default behavior: strip invalid characters and replace spaces with dashes.
             $alias = strip_tags($alias); // strip HTML
-            $alias = preg_replace('/[^%A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
+            $alias = preg_replace('/[^A-Za-z0-9 _-]/', '', $alias); // strip non-alphanumeric characters
             $alias = preg_replace('/\s+/', '-', $alias); // convert white-space to dash
             $alias = preg_replace('/-+/', '-', $alias);  // convert multiple dashes to one
             $alias = trim($alias, '-'); // trim excess

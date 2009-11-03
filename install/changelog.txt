@@ -1,7 +1,47 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.1 ($Rev$ - $Date$)
+MODx Evolution 1.0.2 ($Rev$ - $Date$)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-1391] Fix possible security exploits in WebChangePwd snippet
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-991]  Admin password form not appearing during install
+* [#ADDON-61]  Doc Manager, Template Variables not updated
+* [#MODX-1157] Updating TV order on templates creates error
+* [#MODX-1039] "No active users found" in Welcome and System Info screens hardcoded
+* [#MODX-1321] [#MODX-1329] and [#MODX-1343] When non-admin users modify resource it loses 'type' and 'doc type'
+* [#MODX-1339] Wrong date format for datepicker inserted into DB as part of new install
+* [#MODX-994]  Setting time in datepicker to a single digit gives incorrect formatted date
+* from-forums  Fix problem where resources couldn't be deleted from the Resource Edit screen
+* [#ADDON-49]  Forgot Manager Login bug in sql query which prevents user from completing the password reset
+* [#ADDON-52]  Hardcoded charset in ForgotManagerPassword plugin
+* [#MODX-1092] DocManager - Adding Document Permissions does not properly set privateweb flag in modx_site_content
+* [#MODX-1386] After install, MODx didn't show configuration page
+* [#MODX-1338] Alias field accepts percent character
+* [#MODX-1215] Unixtime widget uses wrong pattern for MySQL date string
+* [#MODX-1364] Add check for tokenizer extension in cache_sync processor
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-1322] New french language file for eForm
+* [#MODX-1071] Auto select manager language during install
+* [#MODX-1097] Tweak htaccess rule template and improve wiki documentation of such
+* [#MODX-1104] Remove width and height attributes on weblink icon on Edit Resource screen
+* [#MODX-1152] Portuguese-br language file update
+* [#MODX-1323] French language file update
+* [#MODX-1336] Italian language file updates
+* [#MODX-1277] Move jquery.colorbox.min.js to QM plugin directory as it's solely intended for use with QM
+* [#MODX-948]  Parser: Snippet calls no longer break with blank characters or when broken across multiple lines
+
+
+MODx Evolution 1.0.1 (rev 5946 - October 22, 2009)
 ===================================
 --------------------------------------------
 Security:
@@ -55,7 +95,6 @@ Additional Improvements & Updates:
 * [#MODX-1034] Missed update to version number
 * [#MODX-1038] Remove space after closing ?> tags
 * [#MODX-1069] Improve layout/simplify Module Manager page
-* [#MODX-1097] Tweak htaccess rule template and improve wiki documentation of such
 * [#MODX-1137] Change Manager term "alias" to "URL alias"
 * [#MODX-1138] New more flexible and manageable Installer that enables making custom installer packages for Evo much simpler
 * [#MODX-1149] Update language string Resource_X and Document_X keys to match actual changes

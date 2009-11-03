@@ -81,7 +81,7 @@ else if ($isPostBack && isset($_SESSION['webValidated'])){
             }
         }
         else {
-            $newpassmsg = "The new password is <b>$newpassword</b>.";
+            $newpassmsg = "The new password is <b>" . htmlspecialchars($newpassword, ENT_QUOTES) . "</b>.";
         }
         
         // save new password to database

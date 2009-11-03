@@ -284,11 +284,12 @@ var DatePicker = new Class({
         
         /* get time */
         var time = $(dp.id + '_timeTextBox').value.split(':');
+
         if (time[0] < 0 || time[0] > 23) {
             alert('Invalid hours value: ' + time[0] + '\nAllowed range is 00-23');
             return '';
         }
-        if (time[1] < 0 || time[1] > 59) {
+        if (time[1] < 0 || time[1] > 59 || time[1].length !== 2) {
             alert('Invalid minutes value: ' + time[1] + '\nAllowed range is 00-59');
             return '';
         }

@@ -199,7 +199,7 @@ function changestate(element) {
 
 function deletedocument() {
 	if (confirm("<?php echo $_lang['confirm_delete_resource']?>")==true) {
-		document.location.href="index.php?id=" + document.mutate.id.value + "&amp;a=6";
+		document.location.href="index.php?id=" + document.mutate.id.value + "&a=6";
 	}
 }
 
@@ -570,7 +570,7 @@ if (is_array($evtOut))
 				
 <?php if ($content['type'] == 'reference' || $_REQUEST['a'] == 72) { // Web Link specific ?>
 
-			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" width="18" height="18" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
+			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
 				<td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://"?>" class="inputBox" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_weblink_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 				
@@ -838,7 +838,13 @@ if (is_array($evtOut))
               <td colspan="2"><div class='split'></div></td>
             </tr>
 		
-		<?php if ($_SESSION['mgrRole'] == 1) { ?>
+<?php
+// proposed policy change: non-admin managers can edit contentType and content_dispo only for resources they create
+// see: http://svn.modxcms.com/jira/browse/MODX-1365
+//if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby']) {
+if ($_SESSION['mgrRole'] == 1) {
+	// admin managers
+?>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_type']?></span></td>
 				<td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
 
@@ -870,9 +876,24 @@ if (is_array($evtOut))
 		    <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
-		<?php } ?>
-
-
+<?php
+} else {
+    if ($content['type'] != 'reference' && $_REQUEST['a'] != '72') {
+    	// non-admin managers creating or editing a document resource
+?>
+            <input type="hidden" name="contentType" value="<?php echo isset($content['contentType']) ? $content['contentType'] : "text/html"?>" />
+            <input type="hidden" name="type" value="document" />
+            <input type="hidden" name="content_dispo" value="<?php echo isset($content['content_dispo']) ? $content['content_dispo'] : '0'?>" />
+<?php
+    } else {
+    	// non-admin managers creating or editing a reference (weblink) resource
+?>
+            <input type="hidden" name="type" value="reference" />
+            <input type="hidden" name="contentType" value="text/html" />
+<?php
+    }
+}//if mgrRole
+?>
 
 			<tr style="height: 24px;">
 				<td width="150"><span class="warning"><?php echo $_lang['resource_opt_folder']?></span></td>

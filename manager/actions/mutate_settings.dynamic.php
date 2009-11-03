@@ -184,7 +184,7 @@ function confirmLangChange(el, lkey, elupd){
     <input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
     <input type="hidden" name="settings_version" value="<?php echo $modx_version; ?>" />
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
-    <?php if(!isset($settings_version) || $settings_version!=$version) { ?>
+    <?php if(!isset($settings_version) || $settings_version!=$modx_version) { ?>
     <div class='sectionBody'><p><?php echo $_lang['settings_after_install']; ?></p></div>
     <?php } ?>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -709,7 +709,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["failed_login_title"] ?></b></td>
-            <td><input name="failed_login_attempts" style="width:50px" value="<?php echo isset($failed_login_attempts) ? $failed_login_attempts : "3" ; ?>" /></td>
+            <td><input type="text" name="failed_login_attempts" style="width:50px" value="<?php echo isset($failed_login_attempts) ? $failed_login_attempts : "3" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -720,7 +720,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["blocked_minutes_title"] ?></b></td>
-            <td><input name="blocked_minutes" style="width:100px" value="<?php echo isset($blocked_minutes) ? $blocked_minutes : "60" ; ?>" /></td>
+            <td><input type="text" name="blocked_minutes" style="width:100px" value="<?php echo isset($blocked_minutes) ? $blocked_minutes : "60" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -755,7 +755,7 @@ function confirmLangChange(el, lkey, elupd){
 <?php echo get_lang_options('captcha_words_default');?>
               </select>
             </td>
-            <td><input id="captcha_words_input" name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : $_lang["captcha_words_default"] ; ?>" />
+            <td><input type="text" id="captcha_words_input" name="captcha_words" style="width:250px" value="<?php echo isset($captcha_words) ? $captcha_words : $_lang["captcha_words_default"] ; ?>" />
                 <input type="hidden" name="captcha_words_default" id="captcha_words_default_hidden" value="<?php echo addslashes($_lang["captcha_words_default"]);?>" />
             </td>
           </tr>
@@ -966,7 +966,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["mail_check_timeperiod_title"] ?></b></td>
-            <td><input name="mail_check_timeperiod" onchange="documentDirty=true;" size="5" value="<?php echo isset($mail_check_timeperiod) ? $mail_check_timeperiod : "60" ; ?>" /></td>
+            <td><input type="text" name="mail_check_timeperiod" onchange="documentDirty=true;" size="5" value="<?php echo isset($mail_check_timeperiod) ? $mail_check_timeperiod : "60" ; ?>" /></td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>

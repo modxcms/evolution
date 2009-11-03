@@ -1,6 +1,11 @@
 # For full documentation and other suggested options, please see
 # http://svn.modxcms.com/docs/display/MODx096/Friendly+URL+Solutions
 # including for unexpected logouts in multi-server/cloud environments
+# and especially for the first three commented out rules
+
+#php_flag register_globals Off
+#AddDefaultCharset utf-8
+#php_value date.timezone Europe/Moscow
 
 Options +FollowSymlinks
 RewriteEngine On
@@ -12,8 +17,8 @@ RewriteRule .* - [F,L]
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
 #RewriteCond %{HTTP_HOST} .
-#RewriteCond %{HTTP_HOST} !^example\.com [NC]
-#RewriteRule (.*) http://example.com/$1 [R=301,L]
+#RewriteCond %{HTTP_HOST} !^www\.example\.com [NC]
+#RewriteRule (.*) http://www.example.com/$1 [R=301,L]
 
 # Exclude /assets and /manager directories from rewrite rules
 RewriteRule ^(manager|assets) - [L]

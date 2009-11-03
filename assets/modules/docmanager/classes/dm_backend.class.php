@@ -131,33 +131,34 @@ class DocManagerBackend {
 			$tmplVars = array ();
 			foreach ($_POST as $key => $value) {
 				if (substr($key, 0, 2) == 'tv') {
+					echo $key;
 					$tvKeyName = substr($key, 2);
-					if ($key == "tv" . $tvKeyName . '_prefix')
+					if (strpos($key,'_prefix') !== false)
 						continue;
 					
-					$typeSQL = $this->modx->db->select('*', $this->modx->getFullTableName('site_tmplvars'), 'name="' . $tvKeyName . '"');
+					$typeSQL = $this->modx->db->select('*', $this->modx->getFullTableName('site_tmplvars'), 'id=' . $tvKeyName . '');
 					$row = $this->modx->db->getRow($typeSQL);
 					if ($row['type'] == 'url') {
-						$tmplvar = $_POST["tv" . $row['name']];
-						if ($_POST["tv" . $row['name'] . '_prefix'] != '--') {
+						$tmplvar = $_POST["tv" . $row['id']];
+						if ($_POST["tv" . $row['id'] . '_prefix'] != '--') {
 							$tmplvar = str_replace(array (
 								"ftp://",
 								"http://"
 							), "", $tmplvar);
-							$tmplvar = $_POST["tv" . $row['name'] . '_prefix'] . $tmplvar;
+							$tmplvar = $_POST["tv" . $row['id'] . '_prefix'] . $tmplvar;
 						}
 					} elseif ($row['type'] == 'file') {
-							$tmplvar = $_POST["tv" . $row['name']];
+							$tmplvar = $_POST["tv" . $row['id']];
 					} else {
 						if (is_array($_POST["tv" . $tvKeyName])) {
 							$feature_insert = array();
-							$lst = $_POST["tv".$row['name']];
+							$lst = $_POST["tv".$row['id']];
 							while (list($featureValue, $feature_item) = each ($lst)) {
 								$feature_insert[count($feature_insert)] = $feature_item;
 							}
 							$tmplvar = implode("||",$feature_insert);
          				} else {
-  	  	    				$tmplvar = $_POST["tv".$row['name']];
+  	  	    				$tmplvar = $_POST["tv".$row['id']];
          				}
 					}
 					$tmplVars["{$tvKeyName}"] = $tmplvar;
@@ -504,7 +505,7 @@ class DocManagerBackend {
 				if (in_array($name,$ignoreList)) {
 					continue;
 				}
-				$sql = $this->modx->db->select('id,default_text', $this->modx->getFullTableName('site_tmplvars'), 'name="' . $name . '"');
+				$sql = $this->modx->db->select('id,default_text', $this->modx->getFullTableName('site_tmplvars'), 'id="' . $name . '"');
 				if ($this->modx->db->getRecordCount($sql) > 0) {
 					$row = $this->modx->db->getRow($sql);
 					if ($value !== $row['default_text'] || trim($value) == '') {
@@ -522,28 +523,30 @@ class DocManagerBackend {
 	}
     
     function secureWebDocument($docId = '') {	
-		$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 0 WHERE " . ($docId > 0 ? "id='$docId'" : "privateweb = 1"));
 		$sql = "SELECT DISTINCT sc.id
 									 FROM " . $this->modx->getFullTableName("site_content") . " sc
 									 LEFT JOIN " . $this->modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
 									 LEFT JOIN " . $this->modx->getFullTableName("webgroup_access") . " wga ON wga.documentgroup = dg.document_group
-									 WHERE " . ($docId > 0 ? " sc.id='$docid' AND " : "") . "wga.id>0";
+									 WHERE " . ($docId > 0 ? " sc.id={$docId} AND " : "") . "wga.id>0";
 		$ids = $this->modx->db->getColumn("id", $sql);
 		if (count($ids) > 0) {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 1 WHERE id IN (" . implode(", ", $ids) . ")");
+			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 1 WHERE id IN (" . implode(",", $ids) . ")");
+		} else {
+			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privateweb = 0 WHERE " . ($docId > 0 ? "id={$docId}" : "privateweb = 1"));
 		}
 	}
 	
 	function secureMgrDocument($docId = '') {	
-		$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 0 WHERE " . ($docId > 0 ? "id='$docId'" : "privatemgr = 1"));
 		$sql = "SELECT DISTINCT sc.id
 									 FROM " . $this->modx->getFullTableName("site_content") . " sc
 									 LEFT JOIN " . $this->modx->getFullTableName("document_groups") . " dg ON dg.document = sc.id
 									 LEFT JOIN " . $this->modx->getFullTableName("membergroup_access") . " mga ON mga.documentgroup = dg.document_group
-									 WHERE " . ($docId > 0 ? " sc.id='$docId' AND " : "") . "mga.id>0";
+									 WHERE " . ($docId > 0 ? " sc.id={$docId} AND " : "") . "mga.id>0";
 		$ids = $this->modx->db->getColumn("id", $sql);
 		if (count($ids) > 0) {
-			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 1 WHERE id IN (" . implode(", ", $ids) . ")");
+			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 1 WHERE id IN (" . implode(",", $ids) . ")");
+		} else {
+			$this->modx->db->query("UPDATE " . $this->modx->getFullTableName("site_content") . " SET privatemgr = 0 WHERE " . ($docId > 0 ? "id={$docId}" : "privatemgr = 1"));
 		}
 	}
 	

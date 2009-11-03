@@ -5,7 +5,7 @@
  * Used with AjaxSearch to show search terms highlighted on page linked from search results
  *
  * @category 	plugin
- * @version 	1.4
+ * @version 	1.4a
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@events OnWebPagePrerender 
@@ -16,14 +16,14 @@
 
 /*
   ------------------------------------------------------------------------
-  Plugin: Search_Highlight v1.4
+  Plugin: Search_Highlight v1.4a
   ------------------------------------------------------------------------
   Changes:
   29/03/09 - Removed urldecode calls;
            - Added check for magic quotes - if set, remove slashes
            - Highlights terms searched for when target is a HTML entity
   18/07/08 - advSearch parameter and pcre modifier added
-  10/02/08 - Strip_tags added to avoid sql injection and XSS. Use of $_REQUEST 
+  10/02/08 - Strip_tags added to avoid sql injection and XSS. Use of $_REQUEST
   01/03/07 - Added fies/updates from forum from users mikkelwe/identity
   (better highlight replacement, additional div around term/removal message)
   ------------------------------------------------------------------------
@@ -32,7 +32,7 @@
   ------------------------------------------------------------------------
   Created By:  Susan Ottwell (sottwell@sottwell.com)
                Kyle Jaebker (kjaebker@muddydogpaws.com)
-               
+
   Refactored by Coroico (www.modx.wangba.fr) and TS
   ------------------------------------------------------------------------
   Based off the the code by Susan Ottwell (www.sottwell.com)
@@ -44,16 +44,16 @@
   Notes:
     To add a link to remove the highlighting and to show the searchterms
     put the following on your page where you would like this to appear:
-    
+
       <!--search_terms-->
-    
+
     Example output for this:
-    
+
       Search Terms: the, template
       Remove Highlighting
-      
+
     Set the following variables to change the text:
-    
+
       $termText - the text before the search terms
       $removeText - the text for the remove link
   ------------------------------------------------------------------------
@@ -85,10 +85,10 @@ if (isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
   if (get_magic_quotes_gpc()){
     $searched = strip_tags(stripslashes($_REQUEST['searched']));
     $highlight = strip_tags(stripslashes($_REQUEST['highlight']));
-    if (isset($_REQUEST['advsearch'])) $advsearch = strip_tags(stripslashes($_REQUEST['advsearch'])); 
-  } 
+    if (isset($_REQUEST['advsearch'])) $advsearch = strip_tags(stripslashes($_REQUEST['advsearch']));
+  }
   else {
-    $searched = strip_tags($_REQUEST['searched']);  
+    $searched = strip_tags($_REQUEST['searched']);
     $highlight = strip_tags($_REQUEST['highlight']);
     if (isset($_REQUEST['advsearch'])) $advsearch = strip_tags($_REQUEST['advsearch']);
   }
@@ -111,10 +111,10 @@ if (isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
       $word_ents[] = htmlentities($searchArray[$i], ENT_QUOTES, $pgCharset);
       // Avoid duplication
       $word_ents = array_unique($word_ents);
-      foreach($word_ents as $word) $searchTerms[]= array('term' => $word, 'class' => $i+1);   
+      foreach($word_ents as $word) $searchTerms[]= array('term' => $word, 'class' => $i+1);
     }
 
-    $output = $modx->documentOutput; // get the parsed document  
+    $output = $modx->documentOutput; // get the parsed document
     $body = explode("<body", $output); // break out the head
 
     $highlightClass = explode(' ',$highlight); // break out the highlight classes
@@ -131,12 +131,12 @@ if (isset($_REQUEST['searched']) && isset($_REQUEST['highlight'])) {
       $highlightText .= ($i > 0) ? ', ' : '';
       $highlightText .= '<span class="'.$class.'">'.$word.'</span>';
 
-      $pattern = $lookBehind . preg_quote($word, '/') . $lookAhead . $pcreModifier;   
+      $pattern = $lookBehind . preg_quote($word, '/') . $lookAhead . $pcreModifier;
       $replacement = '<span class="' . $class . '">${0}</span>';
       $body[1] = preg_replace($pattern, $replacement, $body[1]);
     }
 
-    $output = implode("<body>", $body);
+    $output = implode("<body", $body);
 
     $removeUrl = $modx->makeUrl($modx->documentIdentifier);
     $highlightText .= '<br /><a href="'.$removeUrl.'" class="ajaxSearch_removeHighlight">'.$removeText.'</a></div>';

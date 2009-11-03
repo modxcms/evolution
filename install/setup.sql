@@ -843,7 +843,7 @@ REPLACE INTO `{PREFIX}user_roles`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxCarbon'),
-('settings_version','{VERSION}'),
+('settings_version',''),
 ('show_meta','0'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
@@ -914,7 +914,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
 ('validate_referer', '1'),
 ('datepicker_offset','-10'),
-('datetime_format','%d-%m-%Y');
+('datetime_format','dd-mm-YYYY');
 
 
 REPLACE INTO `{PREFIX}user_roles` 

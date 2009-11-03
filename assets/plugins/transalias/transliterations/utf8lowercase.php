@@ -6,7 +6,7 @@ return array (
 // File/path punctuation (usually not wanted, but might be wanted in some cases) 
 '/'=>'',
 // Generally unwanted punctuation
-'!'=>'', '('=>'', ')'=>'', '*'=>'', ','=>'', ':'=>'', ';'=>'', '…'=>'', '¡'=>'', '¿'=>'',
+'!'=>'', '('=>'', ')'=>'', '*'=>'', ','=>'', ':'=>'', ';'=>'', '…'=>'', '¡'=>'', '¿'=>'', '%' => '',
 // various quotation marks
 '‘'=>'', '’'=>'', '‚'=>'', '‛'=>'', '“'=>'', '”'=>'', '„'=>'', '‟'=>'', '«'=>'', '»'=>'', '‹'=>'', '›'=>'', 
 // replace various spaces with a regular space (or nothing for zero-width spaces)

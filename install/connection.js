@@ -91,7 +91,7 @@ function testServer(){
 }
 
 function setDefaults(){
-	if($('databasestatus').innerHTML.indexOf(passed_db) >= 0 && document.getElementById('AUH')) {
+	if(passed_db.indexOf($('databasestatustext').innerHTML) >= 0 && document.getElementById('AUH')) {
 		window.Slider2.slideIn();
 		var Slider2FX = new Fx.Styles('AUHMask', {duration: 997,transition: Fx.Transitions.linear});
 		Slider2FX.start({'opacity':[0,1]});

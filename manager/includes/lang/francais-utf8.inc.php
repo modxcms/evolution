@@ -3,10 +3,10 @@
  * Filename:       includes/lang/francais-utf8.inc.php
  * Function:       French language file
  * Encoding:       UTF-8
- * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, Jean-Christophe Brebion (Fairytree) pour Evolution 1.0
- * Date:           28/07/09
- * Version:        2.4
- * MODx version:   Evolution 1.0
+ * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, Jean-Christophe Brebion (Fairytree) pour Evolution 1.0.x
+ * Date:           26 Octobre 2009
+ * Version:        2.0.4
+ * MODx version:   Evolution 1.0.1
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langages
 $modx_lang_attribute = 'fr'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -102,6 +102,7 @@ $_lang["click_to_context"] = 'Cliquer pour accéder au menu contextuel';
 $_lang["click_to_edit_title"] = 'Cliquer ici pour modifier cet enregistrement';
 $_lang["click_to_view_details"] = 'Cliquer ici pour afficher les détails';
 $_lang["close"] = 'Fermer';
+$_lang["code"] = 'Code';
 $_lang["collapse_tree"] = 'Réduire l\'Arbre du Site';
 $_lang["comment"] = 'Commentaire';
 $_lang["configcheck_admin"] = 'Veuillez contacter un administrateur et lui communiquer le contenu de ce message!';
@@ -129,6 +130,8 @@ $_lang["configcheck_unauthorizedpage_unavailable"] = 'La page "Accès non autori
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Cela signifie que la page "Accès non autorisé" n\'est pas accessible à vos visiteurs ou n\'existe pas. Cela peut provoquer une boucle infinie, générer des erreurs dans vos logs. Assurez vous qu\'aucun Groupe d\'Utilisateurs Web n\'est associé à cette page.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'La page "Accès non autorisé" définie dans la configuration du site n\'est pas publiée.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Cela signifie que la page "Accès non autorisé" n\'est pas accessible au public. Publiez cette page ou assurez vous qu\'elle est associée à une Ressource existante dans votre Arbre de Site dans le menu Outils &gt; Configuration.';
+$_lang["configcheck_validate_referer"] = 'Avertissement de sécurité: validation des en-têtes HTTP';
+$_lang["configcheck_validate_referer_msg"] = "Le paramètre de configuration <strong>Valider les en-têtes HTTP_REFERER?</strong> est désactivé. Nous vous recommandons de l'activer. <a href=\"index.php?a=17\">Aller aux options de configuration</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Ne plus afficher ce message.</em></a>";
 $_lang["configcheck_warning"] = 'Avertissement de configuration:';
 $_lang["configcheck_what"] = 'Que signifie ceci?';
 $_lang["confirm_block"] = 'Voulez-vous vraiment bloquer cet utilisateur?';
@@ -187,25 +190,6 @@ $_lang["database_table_totalsize"] = 'Taille totale';
 $_lang["database_tables"] = 'Tables de la base de données';
 $_lang["database_version"] = 'Version de la base de données:';
 $_lang["date"] = 'Date';
-$_lang["date_d_fri"] = 'Vendredi';
-$_lang["date_d_mon"] = 'Lundi';
-$_lang["date_d_sat"] = 'Samedi';
-$_lang["date_d_sun"] = 'Dimanche';
-$_lang["date_d_thu"] = 'Jeudi';
-$_lang["date_d_tue"] = 'Mardi';
-$_lang["date_d_wen"] = 'Mercredi';
-$_lang["date_m_apr"] = 'Avril';
-$_lang["date_m_aug"] = 'Août';
-$_lang["date_m_dec"] = 'Décembre';
-$_lang["date_m_feb"] = 'Février';
-$_lang["date_m_jan"] = 'Janvier';
-$_lang["date_m_jul"] = 'Juillet';
-$_lang["date_m_jun"] = 'Juin';
-$_lang["date_m_mar"] = 'Mars';
-$_lang["date_m_may"] = 'Mai';
-$_lang["date_m_nov"] = 'Novembre';
-$_lang["date_m_oct"] = 'Octobre';
-$_lang["date_m_sep"] = 'Septembre';
 $_lang["datechanged"] = 'Date de modification';
 $_lang["datepicker_offset"] = 'Décalage du contrôle de saisie de la date: ';
 $_lang["datepicker_offset_message"] = 'Le nombre d\'années dans le passé à montrer sur le contrôle de saisie de la date.';
@@ -482,7 +466,7 @@ $_lang["messages_subject"] = 'Sujet';
 $_lang["messages_system_user"] = '[System]';
 $_lang["messages_title"] = 'Messages';
 $_lang["messages_user"] = 'Un utilisateur';
-$_lang["meta_keywords"] = 'Mots-clés';
+$_lang["meta_keywords"] = 'Balises META et mots-clés';
 $_lang["metatag_intro"] = 'Sur cette page, vous pouvez supprimer, créer ou modifier des balises META. Pour associer des balises META à des Ressources, sélectionnez l\'onglet <u>Mots-clés</u> lors de l\'édition de la Ressource, et sélectionnez les balises META et les mots-clés adéquats. Pour ajouter une nouvelle balise, entrez son nom et sa valeur, puis cliquez sur le bouton «Ajouter la balise». Pour modifier une balise, cliquez sur son nom dans la grille de données.';
 $_lang["metatag_notice"] = 'Merci de consulter le <a href="http://www.html-reference.com/META.htm" target="_blank">Guide de référence HTML</a> pour plus d\'informations. Liste non exhaustive.';
 $_lang["metatags"] = 'Balises META';
@@ -669,6 +653,8 @@ $_lang["rb_title"] = 'Activer l\'Explorateur de Fichiers:';
 $_lang["rb_webuser_message"] = 'Souhaitez-vous autoriser un Utilisateur Web à utiliser l\'Explorateur de Fichiers? <b>NOTE:</b> Laisser les Utilisateurs Web utiliser l\'Explorateur de Fichiers rend les fichiers disponibles aux Utilisateurs de l\'Explorateur. Utilisez cette option uniquement avec des Utilisateurs Web de confiance.';
 $_lang["rb_webuser_title"] = 'Utilisateurs Web?';
 $_lang["recent_docs"] = 'Ressources récentes';
+$_lang["recommend_setting_change_title"] = 'Changement de configuration recommandé';
+$_lang["recommend_setting_change_description"] = 'Votre site n\'est pas configuré pour valider les en-têtes HTTP_REFERER des requêtes provenant du gestionnaire. Nous vous recommandons vivement d\'activer cette option afin de limiter les risques d\'attaques de type CSRF (Cross Site Request Forgery).';
 $_lang["refresh_cache"] = 'Cache: <b>%s</b> fichier(s) en cache trouvés et <b>%d</b> d\'entre eux ont été supprimés.<p>De nouveaux fichiers seront mis en cache au fur et à mesure que les pages seront visitées.';
 $_lang["refresh_published"] = '<b>%s</b> Ressources ont été publiées.';
 $_lang["refresh_site"] = 'Vider le cache';
@@ -723,9 +709,13 @@ $_lang["resource_summary_help"] = 'Rédigez un bref résumé de la Ressource';
 $_lang["resource_title"] = 'Titre';
 $_lang["resource_title_help"] = 'Entrez ici le nom/titre de la Ressource. Évitez d\'entrer des antislashs (\) dans ce champ.';
 $_lang["resource_to_be_moved"] = 'Ressource à déplacer';
+$_lang["resource_type"] = 'Type de Ressource';
+$_lang["resource_type_message"] = 'Les Liens Web sont des références à des objets sur Internet. Ce peut être une Ressource dans MODx, une page sur un autre site, une image ou tout autre fichier accessible sur Internet. Les Liens Web doivent avoir l\'option Type de contenu réglée sur «text/html» et l\'Affichage du contenu défini comme «Élément en ligne»';
+$_lang["resource_type_weblink"] = 'Lien Web';
+$_lang["resource_type_webpage"] = 'Page Web';
 $_lang["resource_weblink_help"] = 'Entrez ici l\'adresse (URL) de l\'objet que vous souhaitez référencer à ce Lien Web.';
 $_lang["resources_in_container"] = 'Ressources dans ce Conteneur';
-$_lang["resources_in_container_no"] = 'Ce Conteneur n\'a aucune Ressources enfant.';
+$_lang["resources_in_container_no"] = 'Ce Conteneur n\'a aucune Ressource enfant.';
 $_lang["role"] = 'Rôle';
 $_lang["role_about"] = 'Consulter la page «À propos»';
 $_lang["role_access_persmissions"] = 'Autorisations d\'accès';
@@ -868,6 +858,8 @@ $_lang["settings_templvars"] = 'Variables de Modèle';
 $_lang["settings_title"] = 'Configuration du système';
 $_lang["settings_ui"] = 'Interface et fonctionnalités';
 $_lang["settings_users"] = 'Utilisateur';
+$_lang["show_meta"] = 'Afficher l\'onglet Balises META et mots-clés';
+$_lang["show_meta_message"] = 'Afficher l\'onglet de gestion des balises META et des mots-clés lors de l\'édition des Ressources.';
 $_lang["show_tree"] = 'Afficher l\'Arbre du Site';
 $_lang["showing"] = 'Affichage';
 $_lang["signupemail_message"] = 'Entrez ici le message envoyé à vos utilisateurs lors de la création de leur compte, y compris le nom d\'utilisateur et le mot de passe. <br /><b>NOTE:</b> Les Placeholders suivants seront remplacés par le Gestionnaire de Contenu lorsque le message sera envoyé: <br /><br />[+sname+] - Nom du site web, <br />[+saddr+] - L\'adresse email principale du site web, <br />[+surl+] - L\'URL du site, <br />[+uid+] - Nom d\' utilisateur ou ID de l\'utilisateur, <br />[+pwd+] - Mot de passe de l\'utilisateur, <br />[+ufn+] - Nom complet de l\'utilisateur. <br /><br /><b>Ne retirez pas les champs [+uid+] et [+pwd+] du message, sans quoi le nom d\'utilisateur et le mot de passe ne seront pas envoyés et vos utilisateurs ne pourront pas se connecter!</b>';
@@ -905,9 +897,9 @@ $_lang["sunday"] = 'Dimanche';
 $_lang["sys_alert"] = 'Alerte système';
 $_lang["sysinfo_activity_message"] = 'Cette liste affiche les Ressources ayant été récemment éditées par vos utilisateurs.';
 $_lang["sysinfo_userid"] = 'Utilisateur';
-$_lang["system_email_signup"] = "Bonjour [+uid+] \n\nVoici vos paramètres de connexion pour le Gestionnaire de Contenu de [+sname+]:\n\nNom d\'utilisateur: [+uid+]\nMot de passe: [+pwd+]\n\nUne fois connecté au Gestionnaire de Contenu ([+surl+]), vous pourrez changer votre mot de passe.\n\nSalutations, \nL\'administrateur du site";
-$_lang["system_email_webreminder"] = "Bonjour [+uid+]\n\nPour activer votre nouveau mot de passe, cliquez sur le lien suivant:\n\n[+surl+]\n\nSi tout se passe normalement, vous pourrez utiliser le mot de passe suivant pour vous identifier:\n\nMot de passe:[+pwd+]\n\nSi vous n\'aviez pas demandé cet email, alors n\'en tenez pas compte.\n\nSalutations,\nL\'administrateur du site";
-$_lang["system_email_websignup"] = "Bonjour [+uid+] \n\nVoici vos paramètres de connexion pour [+sname+]:\n\nNom d\'utilisateur: [+uid+]\nMot de passe: [+pwd+]\n\nUne fois connecté en tant que [+sname+] ([+surl+]), vous pourrez changer votre mot de passe.\n\nSalutations,\nL\'administrateur du site";
+$_lang["system_email_signup"] = 'Bonjour [+uid+] \n\nVoici vos paramètres de connexion pour le Gestionnaire de Contenu de [+sname+]:\n\nNom d\'utilisateur: [+uid+]\nMot de passe: [+pwd+]\n\nUne fois connecté au Gestionnaire de Contenu ([+surl+]), vous pourrez changer votre mot de passe.\n\nSalutations, \nL\'administrateur du site';
+$_lang["system_email_webreminder"] = 'Bonjour [+uid+]\n\nPour activer votre nouveau mot de passe, cliquez sur le lien suivant:\n\n[+surl+]\n\nSi tout se passe normalement, vous pourrez utiliser le mot de passe suivant pour vous identifier:\n\nMot de passe:[+pwd+]\n\nSi vous n\'aviez pas demandé cet email, alors n\'en tenez pas compte.\n\nSalutations,\nL\'administrateur du site';
+$_lang["system_email_websignup"] = 'Bonjour [+uid+] \n\nVoici vos paramètres de connexion pour [+sname+]:\n\nNom d\'utilisateur: [+uid+]\nMot de passe: [+pwd+]\n\nUne fois connecté en tant que [+sname+] ([+surl+]), vous pourrez changer votre mot de passe.\n\nSalutations,\nL\'administrateur du site';
 $_lang["table_hoverinfo"] = 'Passez le curseur de la souris sur un nom de table pour voir une courte description de sa fonction (toutes les tables n\'en disposent pas).';
 $_lang["table_prefix"] = 'Préfixe de la table';
 $_lang["tag"] = 'Balise';
@@ -945,6 +937,7 @@ $_lang["tmplvars_name"] = 'Nom de la Variable de Modèle';
 $_lang["tmplvars_novars"] = 'Aucune Variable de Modèle trouvée';
 $_lang["tmplvars_rank"] = 'Ordre de tri';
 $_lang["tmplvars_reset_params"] = 'Paramètres à zéro';
+$_lang["tmplvars_title"] = 'Créer/modifier une Variable de Modèle';
 $_lang["tmplvars_type"] = 'Type d\'entrée';
 $_lang["tmplvars_widget"] = 'Widget';
 $_lang["tmplvars_widget_prop"] = 'Propriétés du widget';
@@ -1066,5 +1059,4 @@ $_lang["yourinfo_role"] = 'Votre rôle:';
 $_lang["yourinfo_title"] = 'Vos informations';
 $_lang["yourinfo_total_logins"] = 'Nombre total de connexions:';
 $_lang["yourinfo_username"] = 'Connecté sous le nom:';
-
 ?>

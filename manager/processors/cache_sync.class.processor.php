@@ -171,7 +171,7 @@ class synccache{
             // clean comments from snippet code
             $code = '<?php ' . trim($tmp1['snippet']);
             $code = trim($tmp1['snippet']);
-            $code = strip_tokens($code);
+            $code = extension_loaded('tokenizer') ? strip_tokens($code) : $code;
             $code = str_replace('<?php ', '', $code);
             $tmpPHP .= '$s[\''.$modx->db->escape($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($code)."';\n";
             // Raymond: save snippet properties to cache
@@ -190,7 +190,7 @@ class synccache{
         for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
             $tmp1 = $modx->db->getRow($rs);
             $code =& $tmp1['plugincode'];
-            $code = strip_tokens($code);
+            $code = extension_loaded('tokenizer') ? strip_tokens($code) : $code;
             $tmpPHP .= '$p[\''.$modx->db->escape($tmp1['name']).'\']'." = '".$this->escapeSingleQuotes($code)."';\n";
             if ($tmp1['properties']!=''||$tmp1['sharedproperties']!='') $tmpPHP .= '$p[\''.$tmp1['name'].'Props\']'." = '".$this->escapeSingleQuotes($tmp1['properties'].' '.$tmp1['sharedproperties'])."';\n";
         }

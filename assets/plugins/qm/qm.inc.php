@@ -271,7 +271,7 @@ class Qm {
                         .cboxIE #cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderMiddleRight.png, sizingMethod=\'scale\');}
                         </style>
                         
-                        <script type="text/javascript" src="'.$this->modx->config['site_url'].'assets/js/jquery.colorbox-min.js"></script>
+                        <script type="text/javascript" src="'.$this->modx->config['site_url'].'assets/plugins/qm/js/jquery.colorbox-min.js"></script>
                         ';
                     }
                     
