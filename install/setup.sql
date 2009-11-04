@@ -794,7 +794,7 @@ UPDATE {PREFIX}documentgroup_names AS dgn
 UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
 
 
-UPDATE `{PREFIX}system_settings` SET `setting_value` = '{VERSION}' WHERE `setting_name` = 'settings_version';
+UPDATE `{PREFIX}system_settings` SET `setting_value` = '' WHERE `setting_name` = 'settings_version';
 
 
 # start related to #MODX-1321
@@ -866,7 +866,7 @@ REPLACE INTO `{PREFIX}user_roles`
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
 ('manager_theme','MODxCarbon'),
-('settings_version','{VERSION}'),
+('settings_version',''),
 ('show_meta','0'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
@@ -940,7 +940,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('xhtml_urls','1'),
 ('allow_duplicate_alias','0'),
 ('automatic_alias','1'),
-('datetime_format','%d-%m-%Y');
+('datetime_format','dd-mm-YYYY');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
