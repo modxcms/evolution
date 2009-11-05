@@ -11,6 +11,7 @@ Security:
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
+* [#MODX-1406] Error: Cannot redeclare getsvnrev()
 * [#MODX-991]  Admin password form not appearing during install
 * [#ADDON-61]  Doc Manager, Template Variables not updated
 * [#MODX-1157] Updating TV order on templates creates error
