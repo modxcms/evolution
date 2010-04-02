@@ -579,7 +579,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
-            <td class='comment' width="300"><?php echo $_lang["friendlyurls_message"] ?></td>
+            <td class='comment'><?php echo $_lang["friendlyurls_message"] ?></td>
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
@@ -1044,14 +1044,15 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr id='rbRow4' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td>
-            <td> <?php
-				function getResourceBaseDir() {
-					global $base_path;
-					return $base_path."assets/";
-				}
-				?>
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" value="<?php echo isset($rb_base_dir) ? $rb_base_dir : getResourceBaseDir() ; ?>" />
-              </td>
+            <td><?php
+			function getResourceBaseDir() {
+				global $base_path;
+				return $base_path."assets/";
+			}
+		?>
+                <?php echo $_lang['default']; ?> <span id="default_rb_base_dir"><?php echo getResourceBaseDir()?></span><br />
+                <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" id="rb_base_dir" value="<?php echo isset($rb_base_dir) ? $rb_base_dir : getResourceBaseDir() ; ?>" /> <input type="button" onclick="reset_path('rb_base_dir');" value="<?php echo $_lang["reset"]; ?>" name="reset_rb_base_dir">
+            </td>
           </tr>
           <tr id='rbRow5' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td width="200">&nbsp;</td>
@@ -1202,8 +1203,10 @@ function confirmLangChange(el, lkey, elupd){
         <table border="0" cellspacing="0" cellpadding="3">
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["filemanager_path_title"]?></b></td>
-            <td><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>" />
-              <br /> </td>
+            <td>
+              <?php echo $_lang['default']; ?> <span id="default_filemanager_path"><?php echo $base_path; ?></span><br />
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" id="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>" /> <input type="button" onclick="reset_path('filemanager_path');" value="<?php echo $_lang["reset"]; ?>" name="reset_filemanager_path">
+            </td>
           </tr>
           <tr>
             <td width="200">&nbsp;</td>
@@ -1284,7 +1287,7 @@ function confirmLangChange(el, lkey, elupd){
  * @return array of keys from a language file
  */
 function get_lang_keys($filename) {
-    $file = 'includes/lang' . DIRECTORY_SEPARATOR . $filename;
+    $file = MODX_MANAGER_PATH.'includes/lang' . DIRECTORY_SEPARATOR . $filename;
     if(is_file($file) && is_readable($file)) {
         include($file);
         return array_keys($_lang);
@@ -1318,7 +1321,7 @@ function get_langs_by_key($key) {
  * @return html option list
  */
 function get_lang_options($key=null, $selected_lang=null) {
-    global $lang_keys;
+    global $lang_keys, $_lang;
 	$lang_options = '';
     if($key) {
         $languages = get_langs_by_key($key);

@@ -1,5 +1,5 @@
 
-AjaxSearch Readme version 1.8.4
+AjaxSearch Readme version 1.8.5
 
 ---------------------------------------------------------------
 :: Snippet: AjaxSearch
@@ -8,7 +8,7 @@ AjaxSearch Readme version 1.8.4
         Ajax and non-Ajax search that supports results highlighting
 
   Version:
-        1.8.4  - 20/10/2009
+        1.8.5  - 18/03/2010
 
   Created by:
       Coroico - (coroico@wangba.fr)

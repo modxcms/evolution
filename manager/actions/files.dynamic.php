@@ -305,11 +305,7 @@ if ($enablefileunzip && $_REQUEST['mode']=='unzip' && is_writable($startpath)){
 		$r = substr($path,strlen($path)-1,1);
 		if ($r!='\\'||$r!='/') $path .='/';
 		if (!extension_loaded('zip')) {
-		   if (strtoupper(substr(PHP_OS, 0,3) == 'WIN')) {
-				if(!@dl('php_zip.dll')) return 0;
-		   } else {
-				if(!@dl('zip.so')) return 0;
-		   }
+			return 0;
 		}
 		// end mod
 		$zip = zip_open($file);

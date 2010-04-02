@@ -9,10 +9,10 @@
  * Filename:       /install/lang/svenska/svenska.inc.php
  * Language:       Svenska
  * Encoding:       utf-8
- * Revision:       5870
+ * Revision:       6624
  *
  * Translation: Pontus Ågren (Pont) & Thomas Djärv (Beryl)
- * Date: 2009-10-17
+ * Date: 2010-03-29
  */
 
 $_lang["agree_to_terms"] = 'Godkänn licensvillkoren och installera';
@@ -85,7 +85,7 @@ $_lang["database_use_failed_note"] = 'Kontrollera databasens åtkomsträttighete
 $_lang["default_language"] = 'Standardspråk i hanteraren';
 $_lang["default_language_description"] = 'Det här är det standardspråk som kommer att användas i MODx hanterare.';
 $_lang["during_execution_of_sql"] = ' under körningen av SQL-frågan ';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["encoding"] = 'utf-8';   //charset encoding for html header
 $_lang["error"] = 'fel';
 $_lang["errors"] = 'fel';
 $_lang["failed"] = 'MISSLYCKADES!';
@@ -179,6 +179,7 @@ $_lang["table_prefix_not_exist_note"] = 'Installationsprogrammet kunde inte inst
 $_lang["templates"] = 'Mallar';
 $_lang["to_log_into_content_manager"] = 'Du kan logga in i innehållshanteraren (manager/index.php) genom att klicka på "Stäng"-knappen.';
 $_lang["toggle"] = 'Växla';
+$_lang['tvs'] = 'Mallvariabler';
 $_lang["unable_install_chunk"] = 'Kunde inte installera chunk.  Fil';
 $_lang["unable_install_module"] = 'Kunde inte installera modul.  Fil';
 $_lang["unable_install_plugin"] = 'Kunde inte installera plugin.  Fil';

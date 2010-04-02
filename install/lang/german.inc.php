@@ -168,6 +168,7 @@
 	$_lang["templates"] = 'Templates';
 	$_lang["to_log_into_content_manager"] = 'Um sich im Manager anzumelden, klicken Sie auf den Schließen-Button.';
 	$_lang["toggle"] = 'Umschalten';
+	$_lang['tvs'] = 'Template-Variablen';
 	$_lang["unable_install_chunk"] = 'Konnte Chunk nicht installieren.  Datei';
 	$_lang["unable_install_module"] = 'Konnte Modul nicht installieren.  Datei';
 	$_lang["unable_install_plugin"] = 'Konnte Plugin nicht installieren.  Datei';

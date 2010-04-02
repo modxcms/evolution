@@ -5,13 +5,23 @@
  * Ajax and non-Ajax search that supports results highlighting
  *
  * @category	snippet
- * @version 	1.8.4
+ * @version 	1.8.5
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Search
  */
 
 /* -----------------------------------------------------------------------------
+:: Snippet: AjaxSearch
+--------------------------------------------------------------------------------
+  Short Description:
+        Ajax and non-Ajax search that supports results highlighting
+
+  Version:
+        1.8.5
+
+  Date: 18/03/2010
+
   Created by:
       Coroico (coroico@wangba.fr)
       Jason Coward (opengeek - jason@opengeek.com)
@@ -21,6 +31,10 @@
       Live Search by Thomas (Shadock)
       Fixes & Additions by identity/Perrine/mikkelwe
       Document selection from Ditto by Mark Kaplan
+
+  Copyright & Licencing:
+  ----------------------
+  GNU General Public License (GPL) (http://www.gnu.org/copyleft/gpl.html)
 
   Originally based on the FlexSearchForm snippet created by jaredc (jaredc@honeydewdesign.com)
 
@@ -58,13 +72,16 @@ MORE : See the ajaxSearch.readme.txt file for more informations
 global $modx;
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.8.4');
+define('AS_VERSION', '1.8.5');
 
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 
-//include snippet file
+// include snippet file
 define ('AS_PATH', $modx->config['base_path'].AS_SPATH);
+
+// pcre backtracktrack limit
+define ('PCRE_BACKTRACK_LIMIT', 1600000);
 
 //------------------------------------------------------------------------------
 // Configure - general AjaxSearch snippet setup options
@@ -245,7 +262,7 @@ $cfg['documents'] = isset($documents) ? $documents : (isset($__documents) ? $__d
 // Default: 10
 $cfg['depth'] = isset($depth) ? intval($depth): (isset($__depth) ? intval($__depth) : $dcfg['depth']);
 
-// &hideMenu [0 | 1| 2]  Search in hidden documents from menu.
+// &hideMenu [0 | 1 | 2]  Search in hidden documents from menu.
 // 0 - search only in documents visible from menu
 // 1 - search only in documents hidden from menu
 // 2 - search in hidden or visible documents from menu
@@ -253,8 +270,8 @@ $cfg['depth'] = isset($depth) ? intval($depth): (isset($__depth) ? intval($__dep
 $cfg['hideMenu'] = isset($hideMenu) ? $hideMenu : (isset($__hideMenu) ? $__hideMenu : $dcfg['hideMenu']);
 
 // &hideLink [0 | 1 ]   Search in content of type reference (link)
-// 0 - search only in content of type document
-// 1 - search in content of type document AND reference
+// 0 - search in content of type document AND reference
+// 1 - search only in content of type document
 // Default: 1
 $cfg['hideLink'] = isset($hideLink) ? $hideLink : (isset($__hideLink) ? $__hideLink : $dcfg['hideLink']);
 
@@ -404,9 +421,12 @@ if ($cfg['ajaxSearch']){  // ajax mode
 include_once AS_PATH."classes/ajaxSearch.class.inc.php";
 
 if (class_exists('AjaxSearch')) {
-  $as = new ajaxSearch(AS_VERSION,$cfg,$dcfg);
-  //Process ajaxSearch
-  $output = $as->run();
+    $as = new ajaxSearch(AS_VERSION,$cfg,$dcfg);
+    //Process ajaxSearch
+    $current_pcre_backtrack = ini_get('pcre.backtrack_limit');
+    ini_set( 'pcre.backtrack_limit', PCRE_BACKTRACK_LIMIT);
+    $output = $as->run();
+    ini_set( 'pcre.backtrack_limit', $current_pcre_backtrack);
 } else {
   $output = "<h3>error: AjaxSearch class not found</h3>";
 }

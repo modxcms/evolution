@@ -1,6 +1,6 @@
 //ajaxSearch.js
-//Version: 1.8.4 - refactored by coroico
-//20/10/2009
+//Version: 1.8.5 - refactored by coroico
+//18/03/2010
 //Created by: KyleJ (kjaebker@muddydogpaws.com)
 //Created on: 03/14/2006
 //Description: This code is used to setup the ajax search request
@@ -13,7 +13,7 @@
 var _base = 'assets/snippets/ajaxSearch/';
 
 // AjaxSearch default snippet parameter values
-var _version = '1.8.4';
+var _version = '1.8.5';
 var opacity = 1.;
 var liveSearch = 0;
 var minChars = 3;

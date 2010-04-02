@@ -9,21 +9,6 @@ if($_REQUEST['a']!=8 && isset($_SESSION['mgrValidated'])){
     $modx->setPlaceholder('modx_charset',$modx_manager_charset);
     $modx->setPlaceholder('theme',$manager_theme);
 
-    // support info
-    $html = '';
-    $pth = dirname(__FILE__);
-    $file = "$pth/support.inc.php";
-    $ov_file = "$pth/override.support.inc.php"; // detect override file
-    if(file_exists($ov_file)) $inc = include_once($ov_file);
-    else if(file_exists($file)) $inc = include_once($file);
-    if($inc)  {
-        ob_start();
-            showSupportLink();
-            $html = ob_get_contents();
-        ob_end_clean();
-    }
-    $modx->setPlaceholder('SupportInfo',$html);
-
     $modx->setPlaceholder('site_name',$site_name);
     $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
     $modx->setPlaceholder('manager_lockout_message',$_lang["manager_lockout_message"]);

@@ -244,10 +244,24 @@ $rs = mysql_query($sql);
 while ($row = mysql_fetch_row($rs)) $dg[$i++]=$row[0];
 $_SESSION['mgrDocgroups'] = $dg;
 
-if($rememberme) {
+if($rememberme == '1') {
     $_SESSION['modx.mgr.session.cookie.lifetime']= intval($modx->config['session.cookie.lifetime']);
+	
+	// Set a cookie separate from the session cookie with the username in it. 
+	// Are we using secure connection? If so, make sure the cookie is secure
+	global $https_port;
+	
+	$secure = (  (isset ($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') || $_SERVER['SERVER_PORT'] == $https_port);
+	if ( version_compare(PHP_VERSION, '5.2', '<') ) {
+		setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time()+60*60*24*365, MODX_BASE_URL, '; HttpOnly' , $secure );
+	} else {
+		setcookie('modx_remember_manager', $_SESSION['mgrShortname'], time()+60*60*24*365, MODX_BASE_URL, NULL, $secure, true);
+	}
 } else {
     $_SESSION['modx.mgr.session.cookie.lifetime']= 0;
+	
+	// Remove the Remember Me cookie
+	setcookie ('modx_remember_manager', "", time() - 3600, MODX_BASE_URL);
 }
 
 $log = new logHandler;

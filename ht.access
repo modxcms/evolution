@@ -20,8 +20,9 @@ RewriteRule .* - [F,L]
 #RewriteCond %{HTTP_HOST} !^www\.example\.com [NC]
 #RewriteRule (.*) http://www.example.com/$1 [R=301,L]
 
-# Exclude /assets and /manager directories from rewrite rules
-RewriteRule ^(manager|assets) - [L]
+# Exclude /assets and /manager directories and images from rewrite rules
+RewriteRule ^(manager|assets)/*$ - [L]
+RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]
 
 # For Friendly URLs
 RewriteCond %{REQUEST_FILENAME} !-f

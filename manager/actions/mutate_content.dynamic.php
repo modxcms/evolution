@@ -179,13 +179,14 @@ window.addEvent('domready', function(){
             help_img.removeProperty('onmouseout');
             help_img.setProperty('title', help_img.getProperty('alt') );
             help_img.setProperty('class', 'tooltip' );
+            if (window.ie) help_img.removeProperty('alt');
 	    });
 	    new Tips($$('.tooltip'),{className:'custom'} );
 	}
 });
 
 // save tree folder state
-parent.tree.saveFolderState();
+if (parent.tree) parent.tree.saveFolderState();
 
 function changestate(element) {
 	currval = eval(element).value;
@@ -211,7 +212,7 @@ var allowLinkSelection = false;
 function enableLinkSelection(b) {
 	parent.tree.ca = "link";
 	var closed = "<?php echo $_style["tree_folder"] ?>";
-	var opened = "<?php echo $_style["tree_folderopen"] ?>";
+	var opened = "<?php echo $_style["icons_set_parent"] ?>";
 	if (b) {
 		document.images["llock"].src = opened;
 		allowLinkSelection = true;
@@ -511,7 +512,7 @@ if (is_array($evtOut))
 <input type="hidden" name="newtemplate" value="" />
 
 <fieldset id="create_edit">
-	<h1><?php if ($_GET['id']){ echo $_lang['edit_resource_title']; } else { echo $_lang['create_resource_title'];}?></h1>
+	<h1><?php if ($_REQUEST['id']){ echo $_lang['edit_resource_title']; } else { echo $_lang['create_resource_title'];}?></h1>
 
 <div id="actions">
 	  <ul class="actionButtons">
@@ -621,7 +622,7 @@ if (is_array($evtOut))
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_menu_title_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 			<tr style="height: 24px;"><td align="left" style="width:100px;"><span class="warning"><?php echo $_lang['resource_opt_menu_index']?></span></td>
 				<td><table border="0" cellspacing="0" cellpadding="0" style="width:333px;"><tr>
-					<td><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex']?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;" /><input type="button" class="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" class="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />
+					<td><input name="menuindex" type="text" maxlength="3" value="<?php echo $content['menuindex']?>" class="inputBox" style="width:30px;" onchange="documentDirty=true;" /><input type="button" value="&lt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')-1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" /><input type="button" value="&gt;" onclick="var elm = document.mutate.menuindex;var v=parseInt(elm.value+'')+1;elm.value=v>0? v:0;elm.focus();documentDirty=true;" />
 					&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_menu_index_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 					<td align="right" style="text-align:right;"><span class="warning"><?php echo $_lang['resource_opt_show_menu']?></span>&nbsp;<input name="hidemenucheck" type="checkbox" class="checkbox" <?php echo $content['hidemenu']!=1 ? 'checked="checked"':''?> onclick="changestate(document.mutate.hidemenu);" /><input type="hidden" name="hidemenu" class="hidden" value="<?php echo ($content['hidemenu']==1) ? 1 : 0?>" />
 					&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_show_menu_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
@@ -674,8 +675,8 @@ if (is_array($evtOut))
 		
 		<?php if ($content['type'] == 'document' || $_REQUEST['a']==4) { ?>
 		<!-- Content -->
-			<div class="sectionHeader"><?php echo $_lang['resource_content']?></div>
-			<div class="sectionBody">
+			<div class="sectionHeader" id="content_header"><?php echo $_lang['resource_content']?></div>
+			<div class="sectionBody" id="content_body">
 			<?php
 			if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
 				// replace image path
@@ -733,8 +734,8 @@ if (is_array($evtOut))
 
 		<?php if (($content['type'] == 'document' || $_REQUEST['a'] == 4) || ($content['type'] == 'reference' || $_REQUEST['a'] == 72)) { ?>
 		<!-- Template Variables -->
-			<div class="sectionHeader"><?php echo $_lang['settings_templvars']?></div>
-			<div class="sectionBody tmplvars">
+			<div class="sectionHeader" id="tv_header"><?php echo $_lang['settings_templvars']?></div>
+			<div class="sectionBody tmplvars" id="tv_body">
 			<?php
 				$template = $default_template;
 				if (isset ($_REQUEST['newtemplate'])) {
@@ -780,8 +781,8 @@ if (is_array($evtOut))
 						$tvPBV = array_key_exists('tv'.$row['id'], $_POST) ? $_POST['tv'.$row['id']] : $row['value']; // post back value
 						echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
 						     "\t\t\t",'<br /><span class="comment">',$row['description'],"</span></td>\n",
-						     "\t\t\t",'<td valign="top" style="position:relative">',"\n",
-						     "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, ' style="width:300px;"'),"\n";
+						     "\t\t\t",'<td valign="top" style="position:relative;',($row['type'] == 'date' ? 'z-index:500;' : ''),'">',"\n",
+						     "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, ' style="width:300px;"'),"\n",
 						     "\t\t</td></tr>\n";
 					}
 					echo "\t</table>\n";
@@ -839,11 +840,8 @@ if (is_array($evtOut))
             </tr>
 		
 <?php
-// proposed policy change: non-admin managers can edit contentType and content_dispo only for resources they create
-// see: http://svn.modxcms.com/jira/browse/MODX-1365
-//if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby']) {
-if ($_SESSION['mgrRole'] == 1) {
-	// admin managers
+
+if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInternalKey'] == $content['createdby']) {
 ?>
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_type']?></span></td>
 				<td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
@@ -1015,7 +1013,7 @@ if ($_SESSION['mgrRole'] == 1) {
 				?>
 				</select>
 				<br />
-				<input type="button" class="button" value="<?php echo $_lang['deselect_metatags']?>" onclick="clearMetatagSelection();" />
+				<input type="button" value="<?php echo $_lang['deselect_metatags']?>" onclick="clearMetatagSelection();" />
 			</td>
 			</table>
 			</td>
@@ -1130,7 +1128,7 @@ if ($use_udperms == 1) {
 ?>
 <!-- Access Permissions -->
 <div class="tab-page" id="tabAccess">
-	<h2 class="tab"><?php echo $_lang['access_permissions']?></h2>
+	<h2 class="tab" id="tab_access_header"><?php echo $_lang['access_permissions']?></h2>
 	<script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabAccess" ) );</script>
 	<script type="text/javascript">
 		/* <![CDATA[ */

@@ -31,7 +31,7 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 <form action="index.php" method="post" name="exportFrm">
 <input type="hidden" name="export" value="export" />
 <input type="hidden" name="a" value="83" />
-<table border="0" cellspacing="0" cellpadding="2" width="400">
+<table border="0" cellspacing="0" cellpadding="2">
   <tr>
     <td valign="top"><b><?php echo $_lang['export_site_cacheable']; ?></b></td>
     <td width="30">&nbsp;</td>

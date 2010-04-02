@@ -77,7 +77,7 @@ function makeArray($csv) {
 // Make an output JS safe
 function jsSafe($str) {
 	global $modx;
-	return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset']);
+	return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset'], false); 
 }
 
 

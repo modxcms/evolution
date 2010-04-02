@@ -2,9 +2,9 @@
 /**
  * MODx language File (modifié le 03/08/09)
  *
- * @author Grégory Pakosz (guardian) - Modifié par Coroico et Jean-Christophe Brebion (Fairytree) pour MODx 1.0
+ * @author Grégory Pakosz (guardian) - Modifié par Coroico et Jean-Christophe Brebion (Fairytree) pour EVO 1.0.3
  * @package MODx
- * @version 1.0
+ * @version 1.0.3
  * 
  * Filename:       /install/lang/francais-utf8/francais-utf8.inc.php
  * Language:       French
@@ -115,6 +115,7 @@ $_lang["modx_requires_php"] = ', alors que MODx nécessite PHP 4.2.0 ou supérie
 $_lang["mysql_5051"] = ' la version serveur de MySQL est 5.0.51!';
 $_lang["mysql_5051_warning"] = 'Il existe plusieurs problèmes avec la version MySQL 5.0.51. Il est recommandé de mettre à jour votre version de MySQL avant de continuer.';
 $_lang["mysql_version_is"] = ' Votre version de MySQL est: ';
+$_lang["no"] = 'No';
 $_lang["none"] = 'Aucun';
 $_lang["not_found"] = 'non trouvé';
 $_lang["ok"] = 'OK!';
@@ -125,6 +126,9 @@ $_lang["please_correct_error"] = '. Veuillez corriger l\'erreur';
 $_lang["please_correct_errors"] = '. Veuillez corriger les erreurs';
 $_lang["plugins"] = 'Plugins';
 $_lang["preinstall_validation"] = 'Validation de la phase de pré-installation';
+$_lang["recommend_setting_change_title"] = 'Modification des paramètres de configuration recommendée';
+$_lang["recommend_setting_change_validate_referer_confirmation"] = 'Modification des paramètres de configuration: <em>Autorisation des entêtes HTTP_REFERER?</em>';
+$_lang["recommend_setting_change_validate_referer_description"] = 'Votre site n\'est pas configuré pour autoriser l\'entête HTTP_REFERER des requêtes entrantes dans le Manager. Nous recommandons fortement l\'autorisation de ce paramètre pour réduire le risque d\'attaque CSRF (Cross Site Request Forgery).';
 $_lang["remove_install_folder_auto"] = 'Effacer automatiquement le répertoire «install» de mon site <br />&nbsp;(Cette opération nécessite des droits d\'accès en effacement sur le répertoire «install»).';
 $_lang["remove_install_folder_manual"] = 'Veuillez effacer le répertoire &quot;<b>install</b>&quot; avant de vous connecter au Gestionnaire de Contenu.';
 $_lang["retry"] = 'Réessayer';
@@ -161,6 +165,8 @@ $_lang["status_passed_server"] = 'succès - collations maintenant disponibles';
 $_lang["strict_mode"] = ' MySQL est configuré en mode strict!';
 $_lang["strict_mode_error"] = 'MODx nécessite que le mode strict de MySQL soit désactivé. Vous pouvez changer le mode strict en éditant le fichier my.cnf de MySQL ou alors contacter l\'administrateur de votre serveur.';
 $_lang["summary_setup_check"] = 'Le programme d\'installation a effectué une série de vérifications afin de déterminer si tout est prêt pour démarrer l\'installation.';
+$_lang["system_configuration"] = 'Configuration Système ';
+$_lang["system_configuration_validate_referer_description"] = 'L\'<strong>autorisation des entêtes HTTP_REFERER</strong> est recommandée et peut protéger votre site d\'attaques CSRF, mais avec certaines configurations serveurs peut rendre votre manager inaccessible.';
 $_lang["table_prefix_already_inuse"] = ' - Le préfixe de table est déjà utilisé dans cette base de données!';
 $_lang["table_prefix_already_inuse_note"] = 'Le programme d\'installation n\'a pas pu utiliser la base de données spécifiée parce qu\'elle contient déjà des tables comportant le préfixe que vous avez choisi. Veuillez sélectionner un autre préfixe de table et recommencer l\'installation.';
 $_lang["table_prefix_not_exist"] = ' - Le préfixe de table n\'existe pas dans la base de données!';
@@ -168,6 +174,7 @@ $_lang["table_prefix_not_exist_note"] = 'Le programme d\'installation n\'a pas p
 $_lang["templates"] = 'Modèles';
 $_lang["to_log_into_content_manager"] = 'Pour vous connecter au Gestionnaire de Contenu (manager/index.php), cliquez sur le bouton «Fermer».';
 $_lang["toggle"] = 'Intervertir';
+$_lang['tvs'] = 'Variables de Template';
 $_lang["unable_install_chunk"] = 'Impossible d\'installer le Chunk.  Fichier';
 $_lang["unable_install_module"] = 'Impossible d\'installer le Module.  Fichier';
 $_lang["unable_install_plugin"] = 'Impossible d\'installer le Plugin.  Fichier';
@@ -175,11 +182,13 @@ $_lang["unable_install_snippet"] = 'Impossible d\'installer le Snippet.  Fichier
 $_lang["unable_install_template"] = 'Impossible d\'installer le Modèle.  Fichier';
 $_lang["upgrade_note"] = '<strong>NOTE:</strong> Avant de visiter le site, il est conseillé de vous connecter en tant qu\'administrateur au Gestionnaire et de vérifier les paramètres de configuration système.';
 $_lang["upgraded"] = 'Mis à jour';
+$_lang["validate_referer_title"] = 'Autorisez vous les entêtes HTTP_REFERER?';
 $_lang["visit_forum"] = ', visitez les <a href="http://www.modxcms.com/forums/" target="_blank">forums de MODx</a>.';
 $_lang["warning"] = 'ATTENTION!';
 $_lang["welcome_message_start"] = 'Pour commencer, choisissez le type d\'installation à réaliser:';
 $_lang["welcome_message_text"] = 'Ce programme vous guidera tout au long du processus d\'installation.';
 $_lang["welcome_message_welcome"] = 'Bienvenue dans le programme d\'installation de MODx.';
 $_lang["writing_config_file"] = 'Écriture des fichiers de configuration: ';
+$_lang["yes"] = 'Oui';
 $_lang["you_running_php"] = ' - Vous utilisez PHP ';
 ?>

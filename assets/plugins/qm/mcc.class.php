@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi (based on QuickManager by Urique Dertlian, urique@unix.am)
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.3.3 updated 06/08/2009                
+ * @version     1.3.4 updated 06/08/2009                
  */
 
 if(!class_exists('Mcc')) {

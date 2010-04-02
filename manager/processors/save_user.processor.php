@@ -217,13 +217,20 @@ switch ($_POST['mode']) {
 				header($header);
 			}
 		} else {
+			if ($_POST['stay'] != '') {
+				$a = ($_POST['stay'] == '2') ? "12&id=$key" : "11";
+				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			} else {
+				$stayUrl = "index.php?a=75&r=2";
+			}
+			
 			include_once "header.inc.php";
 ?>
 			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="index.php?a=75&r=2"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
 
@@ -401,13 +408,20 @@ switch ($_POST['mode']) {
 			exit;
 		}
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
+			if ($_POST['stay'] != '') {
+				$a = ($_POST['stay'] == '2') ? "12&id=$id" : "11";
+				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			} else {
+				$stayUrl = "index.php?a=75&r=2";
+			}
+			
 			include_once "header.inc.php";
 ?>
 			<h1><?php echo $_lang['user_title']; ?></h1>
 
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : 'index.php?a=75&r=2'; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['close']; ?></a></li>
+				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['close']; ?></a></li>
 			</ul>
 			</div>
 
@@ -542,15 +556,17 @@ function saveUserSettings($id) {
 	// get user setting field names
 	$settings= array ();
 	foreach ($_POST as $n => $v) {
-		if (in_array($n, $ignore) || trim($v) == '') continue; // ignore blacklist and empties
+		if (in_array($n, $ignore) || (!in_array($n, $defaults) && trim($v) == '')) continue; // ignore blacklist and empties
 
 		//if ($config[$n] == $v) continue; // ignore commonalities in base config
 
 		$settings[$n] = $v; // this value should be saved
 	}
+
 	foreach ($defaults as $k) {
-		if (isset($settings['default_'.$k]) && $settings['default_'.$k] == '1')
+		if (isset($settings['default_'.$k]) && $settings['default_'.$k] == '1') {
 			unset($settings[$k]);
+		}
 		unset($settings['default_'.$k]);
 	}
 

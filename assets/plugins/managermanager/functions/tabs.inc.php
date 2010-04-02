@@ -140,8 +140,7 @@ function mm_createTab($name, $id, $roles='', $templates='', $intro='', $width='6
 		';
 		
 		// Clean up for js output
-		$empty_tab = str_replace("\n", '', $empty_tab);
-		$empty_tab = str_replace("\t", '', $empty_tab);
+		$empty_tab = str_replace( array("\n", "\t", "\r") , '', $empty_tab);
 		$output .='$j';
 		$output .= "('div#'+mm_lastTab).after('".$empty_tab."'); \n";
 		$output .= "mm_lastTab = 'tab".$id."'; \n";

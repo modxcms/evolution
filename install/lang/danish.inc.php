@@ -3,9 +3,9 @@
  * MODx language File
  *
  * @author Henrik Nielsen - Proofreading: Mads Vestmar
- * @package MODx Evolution
- * @date 11/10/09 18.01
- * @version 1.0.1
+ * @package MODx Evolution 1.0.3
+ * @date 26/03/10 22.21
+ * @version 1.0.3
  * 
  * Filename:       /install/lang/danish.inc.php
  * Language:       Danish
@@ -81,7 +81,7 @@ $_lang["database_use_failed_note"] = 'Kontroller databasens rettigheder for den 
 $_lang["default_language"] = 'Standard sprog i CMS\'et';
 $_lang["default_language_description"] = 'Dette er standard sproget der vil blive brugt i CMS\'et.';
 $_lang["during_execution_of_sql"] = ' under eksekvering af SQL kommandoen ';
-$_lang["encoding"] = 'utf-8';	//charset encoding for html header
+$_lang["encoding"] = 'utf-8';   //charset encoding for html header
 $_lang["error"] = 'fejl';
 $_lang["errors"] = 'fejl';
 $_lang["failed"] = 'IKKE GENNEMFØRT!';
@@ -106,7 +106,7 @@ $_lang["installation_upgrade_existing"] = 'Opdater den eksisterende installation
 $_lang["installation_upgrade_existing_note"] = 'Dette opdatere dine nuværende filer samt databasen.';
 $_lang["installed"] = 'Installeret';
 $_lang["installing_demo_site"] = 'Installerer demo website: ';
-$_lang["language_code"] = 'da';	// for html element e.g. <html xml:lang="en" lang="en">
+$_lang["language_code"] = 'da'; // for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'Indlæser...';
 $_lang["modules"] = 'Moduler';
 $_lang["modx_footer1"] = '&copy; 2005-2009 <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) projektet. Alle rettigheder forbeholdes. MODx er licenseret af GNU GPL.';
@@ -175,6 +175,7 @@ $_lang["table_prefix_not_exist_note"] = 'Installationsprogrammet kunne ikke inst
 $_lang["templates"] = 'Skabeloner';
 $_lang["to_log_into_content_manager"] = 'For at logge ind i CMS\'et (manager/index.php) skal du klikke på `Luk` knappen.';
 $_lang["toggle"] = 'Byt om på det valgte';
+$_lang['tvs'] = 'Skabelon variabler';
 $_lang["unable_install_chunk"] = 'Kunne ikke installere chunk.  Fil';
 $_lang["unable_install_module"] = 'Kunne ikke installere modulet.  Fil';
 $_lang["unable_install_plugin"] = 'Kunne ikke installere plugin.  Fil';

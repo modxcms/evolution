@@ -99,7 +99,7 @@ $header .= '
 			padding: 2px 2px;
 			margin: 4px 0px;
 			border: 1px solid #000000;
-			background-image: url("media/style/'.$manager_theme.'images/bg/grid_hdr.gif");
+			background-image: url("media/style/'.$manager_theme.'images/misc/fade.gif");
 			background-repeat: repeat-x;
 		}
 	</style>

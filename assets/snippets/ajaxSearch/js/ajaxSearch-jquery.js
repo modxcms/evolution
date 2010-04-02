@@ -1,7 +1,7 @@
 //ajaxSearch_jquery.js
-//Version: 1.8.4 - refactored by coroico
+//Version: 1.8.5 - refactored by coroico
 
-//20/10/09 - jquery version of ajaxSearch.js (jQuery 1.2.6)
+//18/03/2010 - jquery version of ajaxSearch.js (jQuery 1.2.6)
 
 //set the loading image to the correct location for you
 //set the close image to the correct location for you
@@ -11,7 +11,7 @@
 var _base = 'assets/snippets/ajaxSearch/';
 
 // AjaxSearch Snippet parameter values
-var _version = '1.8.4';
+var _version = '1.8.5';
 var opacity = 1.;
 var liveSearch = 0;
 var minChars = 3;

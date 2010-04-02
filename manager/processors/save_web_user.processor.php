@@ -195,13 +195,20 @@ switch ($_POST['mode']) {
 				header($header);
 			}
 		} else {
+			if ($_POST['stay'] != '') {
+				$a = ($_POST['stay'] == '2') ? "88&id=$key" : "87";
+				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			} else {
+				$stayUrl = "index.php?a=99&r=2";
+			}
+			
 			include_once "header.inc.php";
 ?>
 			<h1><?php echo $_lang['web_user_title']; ?></h1>
 			
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="index.php?a=99&r=2"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
 			
@@ -366,13 +373,20 @@ switch ($_POST['mode']) {
 		/*******************************************************************************/
 
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
+			if ($_POST['stay'] != '') {
+				$a = ($_POST['stay'] == '2') ? "88&id=$id" : "87";
+				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+			} else {
+				$stayUrl = "index.php?a=99&r=2";
+			}
+			
 			include_once "header.inc.php";
 ?>
 			<h1><?php echo $_lang['web_user_title']; ?></h1>
 			
 			<div id="actions">
 			<ul class="actionButtons">
-				<li><a href="index.php?a=99&r=2"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
+				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
 			

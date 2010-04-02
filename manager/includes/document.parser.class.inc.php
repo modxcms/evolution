@@ -1596,10 +1596,10 @@ class DocumentParser {
         include $this->config["base_path"] . "manager/includes/version.inc.php";
         $v= array ();
         $v['code_name']= $code_name;
-        $v['version']= $version;
-        $v['small_version']= $small_version;
-        $v['patch_level']= $patch_level;
-        $v['full_appname']= $full_appname;
+        $v['version']= $modx_version;
+        $v['branch']= $modx_branch;
+        $v['release_date']= $modx_release_date;
+        $v['full_appname']= $modx_full_appname;
         return $v;
     }
 
@@ -2332,7 +2332,7 @@ class DocumentParser {
     function addEventListener($evtName, $pluginName) {
 	    if (!$evtName || !$pluginName)
 		    return false;
-	    if (!array_key_exists($this->pluginEvent[$evtName]))
+	    if (!array_key_exists($evtName,$this->pluginEvent))
 		    $this->pluginEvent[$evtName] = array();
 	    return array_push($this->pluginEvent[$evtName], $pluginName); // return array count
     }

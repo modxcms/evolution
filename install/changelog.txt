@@ -1,7 +1,111 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.2 ($Rev$ - $Date$)
+MODx Evolution 1.0.3 ($Rev$ - $Date$)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-1758] Fix issue described in JVN#46669729, XSS possibility with searchHighlight plugin
+* [#MODX-1793] TinyMCE link lists are not secured if manager session does not exist
+* [#ADDON-136] Prevent SQL injection on Weblogin
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-1472] Bad path to MODxCarbon transparent GIF
+* [#MODX-1396] Add language string on module configuration screen
+* [#MODX-1424] Fix SQL errors when adding user/resource groups with apostrophes in them
+* [#MODX-1589] Remove duplicated pagetitle sort option for tree
+* [#MODX-1608] Fix background image on TV sort list for templates
+* [#MODX-1298] Links exchanged in demo site for Developers and Administration guides
+* [#MODX-1079] "Edit resource" title changes on changing the template
+* [#MODX-1630] Correct modx version reference in System Information screen
+* [#MODX-1537] Weblink internal doc ID selection icon doesn't change
+* [#MODX-1408] getVersionData out of sync with version.inc.php
+* [#MODX-1431] Correct typo in install footer
+* [#MODX-1449] Typo in demo site text
+* [#MODX-1580] PHP typo in mutate_content.dynamic.php
+* [#MODX-1506] QuickManager+ javascript errors when editing a resource
+* [#MODX-1106] Change help icons on TV create/edit screen
+* [#MODX-1103] Element Selector, part of the letters hides in search box
+* [#MODX-1566] Fix problem with Forgot Password confirmation link in WebLogin
+* [#MODX-1659] Stay option for adding another manager/web user not working correctly
+* [#MODX-1164] Unable to set cssStyle when using getHTMLGrid
+* [#MODX-1176] Correct the permissions check when duplicating chunks and plugins
+* [#MODX-1753] Fix help page layout in manager
+* [#MODX-1279] OnUserFormPrerender & OnUserFormRender events weren't receiving the ID of the user
+* [#MODX-1492] Default .htaccess file will prevent some pages being found when using friendly alias
+* [#MODX-1587] For Web or Manager Users, date of birth cannot be set before year 2000 on dropdown list
+* [#MODX-1747] Date TV input: Date Picker Container gets hidden behind other input fields
+* [#MODX-1110] After deleting a template, the assignments "template to tmplvar" are still existing
+* [#MODX-1314] Spanish utf-8 translation problem - install language file had been put in place of manager language file
+* [#MODX-1505] Get 'Missing image' boxes in manager tree
+* [#MODX-1694] Extra backslashes in ForgotManagerPassword.tpl::sendEmail
+* [#MODX-1096] Additional fix, only show MODx tables on backup screen
+* [#MODX-1271] Remove unused chunk from sample site
+* [#MODX-1410] Update MooTools to 1.1.2
+* [#MODX-1429] sysAlert js function not working
+* [#MODX-1168] Double tooltips in IE7
+* [#MODX-1175] User with no create new permissions can duplicate a document
+* [#MODX-1206] Identifying the site root in the manager control panel
+* [#MODX-1141] Mootools Error if logged in with SSL encryption (https)
+* [#MODX-1114] Duplicate name on update template
+* [#MODX-1225] PHP error after install
+* [#MODX-1609] User upload file types unable to be unticked
+* [#MODX-1427] Unexpected character in input error after upgrading
+* [#MODX-863] Throws an error while running under PHP 5.3.0
+* [#MODX-1775] Remove blank line stripping from cache processor, can cause unwanted changes to chunks
+* [#MODX-1460] ManagerManager mm_renameSection for 'tvs' renames the 'content' section instead
+* [#MODX-1462] Date Picker is not displaying the current date 'green box' or correct month when re-editing a date
+* [#MODX-1799] $modx->addEventListener() doesn't operate because of the syntax error
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-1107] Make font-size bigger on tree sort option dropdowns
+* [#MODX-1432] Updated Danish language file
+* [#MODX-1102] Minor layout fixes to import site, export site, and settings screen
+* [#MODX-1078] Stop scrollbar showing on welcome screen
+* [#MODX-1101] Minor styling fix for access permissions screens
+* [#MODX-1333] Add missing credit images to MODxCarbon theme
+* [#MODX-1159] Updated Norsk language file
+* [#MODX-1629] DataGrid control does not have a THEAD
+* [#MODX-1366] Hide "Manage META tags and Keywords" button if show_meta system setting is set to No
+* [#MODX-1464] Make welcome.static.php use style.php for large icons
+* [#MODX-1610] Installer doesn't install templates
+* [#MODX-1098] Add interim solution to the IE8 compatibility issues
+* [#MODX-1365] Non-admin managers to edit contentType and content_dispo for resources they create
+* [#MODX-1622] Remove support.inc.php as same can be achieved by customizing the manager HTML templates provided
+* [#MODX-1452] Show File path defaults in Site Config
+* [#MODX-1127] When creating roles, "View help pages" cannot be deselected
+* [#MODX-1757] File browser CSS tuning
+* [#MODX-1100] Delete unused template files
+* [#MODX-1320] Clean up baseline style.php file
+* [#MODX-1407] Prevent MODx 404-handling for missing images
+* [#MODX-1600] Add unique CSS ids to ease DOM manipulation of content editing Manager pages
+* [#MODX-1105] Minor Manager cleanups to remove deprecated elements
+* [#MODX-1761] Remove Templates from SQL install files
+* [#MODX-1767] Improve Evo installer to remove leading/trailing elements surrounding opening docblock
+* [#MODX-1760] ManagerManager updated to version 0.3.8
+* Allow TV definitions to be installed via the MODx installer
+* [#MODX-1756] mcpuk internal file browser hard coding strings pattern
+* [#MODX-1795] Tuning context menu order
+* [#MODX-1800] Finnish language file for Evolution 1.0.3
+* [#MODX-1803] Swedish language files
+* [#MODX-1808] Spanish language files
+* [#MODX-1804] and [#MODX-1805] Danish language file
+* [#MODX-1760] TinyMCE updated to version 3.3.2
+* [#MODX-1760] QM+ updated to version 1.3.4.1
+* [#MODX-1816] Russian language files
+* [#MODX-1817] German language files
+* [#MODX-1820] Japanese language files
+* [#MODX-1195] Paths reset button for filemanager and assets
+* [#MODX-1821] Use manager language for default language setting in Ditto
+
+
+
+MODx Evolution 1.0.2 (Nov 4, 2009)
 ===================================
 --------------------------------------------
 Security:

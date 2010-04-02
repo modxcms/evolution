@@ -36,7 +36,7 @@ if(!isset($_POST['import'])) {
 <input type="hidden" name="import" value="import" />
 <input type="hidden" name="a" value="95" />
 <input type="hidden" name="parent" value="0" />
-<table border="0" cellspacing="0" cellpadding="2" width="400">
+<table border="0" cellspacing="0" cellpadding="2">
   <tr>
     <td nowrap="nowrap"><b><?php echo $_lang['import_parent_resource']; ?></b></td>
     <td>&nbsp;</td>

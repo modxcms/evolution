@@ -21,12 +21,12 @@ function mm_renameSection($section, $newname, $roles='', $templates='') {
 			
 				
 				case 'content': 
-					$output .= '$j("div#sectionContentHeader").empty().prepend("'.jsSafe($newname).'");' . "\n";
+					$output .= '$j("div#content_header").empty().prepend("'.jsSafe($newname).'");' . "\n";
 				break;
 				
 				case 'tvs': 
 					$output .= '
-						$j("div#sectionTVsHeader").empty().prepend("'.jsSafe($newname).'");	
+						$j("div#tv_header").empty().prepend("'.jsSafe($newname).'");	
 					' ;
 				break;
 				
@@ -69,15 +69,15 @@ function mm_hideSections($sections, $roles='', $templates='') {
 										
 				case 'content': 
 					$output .= '
-					$j("#sectionContentHeader").hide();
-					$j("#sectionContentBody").hide(); 
+					$j("#content_header").hide();
+					$j("#content_body").hide(); 
 					';	
 				break;
 				
 				case 'tvs': 
 					$output .= ' 
-						$j("#sectionTVsHeader").hide(); 
-						$j("#sectionTVsBody").hide();
+						$j("#tv_header").hide(); 
+						$j("#tv_body").hide();
 						';
 				break;
 				

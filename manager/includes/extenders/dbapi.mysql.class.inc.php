@@ -451,7 +451,7 @@ class DBAPI {
          $grd->altItemClass = $params['altItemClass'];
 
          $grd->columnHeaderStyle = $params['columnHeaderStyle'];
-         $grd->tableStyle = $params['tableStyle'];
+         $grd->cssStyle = $params['cssStyle'];
          $grd->itemStyle = $params['itemStyle'];
          $grd->altItemStyle = $params['altItemStyle'];
 

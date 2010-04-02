@@ -255,7 +255,7 @@ if($modx->hasPermission('file_manager')) {
 	// Manage-Files
 	$resourcemenu[] = '<li><a onclick="this.blur();" href="index.php?a=31" target="main">'.$_lang['manage_files'].'</a></li>';
 }
-if($modx->hasPermission('manage_metatags')) {
+if($modx->hasPermission('manage_metatags') && $modx->config['show_meta'] == 1) {
 	// Manage-Metatags
 	$resourcemenu[] = '<li><a onclick="this.blur();" href="index.php?a=81" target="main">'.$_lang['manage_metatags'].'</a></li>';
 }

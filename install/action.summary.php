@@ -278,6 +278,8 @@ $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagre
 <?php
 $templates = isset ($_POST['template']) ? $_POST['template'] : array ();
 foreach ($templates as $i => $template) echo "<input type=\"hidden\" name=\"template[]\" value=\"$template\" />\n";
+$tvs = isset ($_POST['tv']) ? $_POST['tv'] : array ();
+foreach ($tvs as $i => $tv) echo "<input type=\"hidden\" name=\"tv[]\" value=\"$tv\" />\n";
 $chunks = isset ($_POST['chunk']) ? $_POST['chunk'] : array ();
 foreach ($chunks as $i => $chunk) echo "<input type=\"hidden\" name=\"chunk[]\" value=\"$chunk\" />\n";
 $snippets = isset ($_POST['snippet']) ? $_POST['snippet'] : array ();

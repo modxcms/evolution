@@ -25,7 +25,7 @@ switch ($operation) {
 			echo "no group name specified";
 			exit;
 		} else {
-			$sql = 'INSERT INTO '.$tbl_membergroup_names.' (name) VALUES(\''.$newgroup.'\')';
+			$sql = 'INSERT INTO '.$tbl_membergroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
 			if(!$rs = $modx->db->query($sql)) {
 				echo "Failed to insert new group. Possible duplicate group name?";
 				exit;
@@ -47,7 +47,7 @@ switch ($operation) {
 			echo "no group name specified";
 			exit;
 		} else {
-			$sql = 'INSERT INTO '.$tbl_documentgroup_names.' (name) VALUES(\''.$newgroup.'\')';
+			$sql = 'INSERT INTO '.$tbl_documentgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
 			if(!$rs = $modx->db->query($sql)) {
 				echo "Failed to insert new group. Possible duplicate group name?";
 				exit;

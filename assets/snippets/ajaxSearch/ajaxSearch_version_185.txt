@@ -1,30 +1,41 @@
 
-                              AjaxSearch - version 1.8.4
+                              AjaxSearch - version 1.8.5
 
                            Coroico - http://www.modx.wangba.fr
 
-                                    20th of October 2009
+                                    20th of March 2009
 
-The release 1.8.4
+The release 1.8.5 includes:
 
-==== FirePhp extension library updated
-    For the FireBug mode, Php4 is now allowed
+All the template files have been saved with an utf-8 (without BOM) format
+
+==== pcre_backtrack limit
+
+     The backtrack_limit setting sets the maximum number of bytes preg is allowed
+     to search over before it gives up. This limit is automatically set to 1600000
+     at the beginning of the script and then restored to the initial value at the
+     end of the script.
+
+     Should solve  AJAXSEARCH-20 issue
 
 ==== fix the followings issues:
 
-AJAXSEARCH-38 - body>> in Search Highlighting
-AJAXSEARCH-39 - Call to undefined method DocumentParser::getRecordCount()
-AJAXSEARCH-41 - Weird behavior versus dollar sign followed by 2 digits / \$\d{2} /
-AJAXSEARCH-44 - Parents with a container that doesn't contains any child documents
-AJAXSEARCH-46 - Injection of content when javascript is desactivate
-AJAXSEARCH-47 - Filter not working when parents or documents not initialized
+AJAXSEARCH-50 : Filter returns all records when it should return nothing
+
+AJAXSEARCH-57 : CentOS - ajaxsearch 1.8.4 fails with a preg_replace() - lookbehind assertion
+
+AJAXSEARCH-58 : Remove possibility of XSS attempts being passed in the URL of advSearch_Highlight and 
+                Search_Highlight plugins (JVN #46669729)
+
+AJAXSEARCH-43 : Unable to get custom tv content (i.e. image link or other text) in template chunk
 
 
 ==== New language files
-    add the Czech, Polish and Ukrainian language files
+    The Icelandic and Indonesian language files have been added
 
 
 Previous versions :
+ - 1.8.4  delivered the 20th of March 2010 (provided with MODx1.0.2)
  - 1.8.3a delivered the 12th of July 2009 (provided with MODx1.0.0)
  - 1.8.3 delivered the 08th of June 2009
  - 1.8.2 delivered the 21th of April 2009
@@ -308,3 +319,9 @@ http://svn.modxcms.com/jira/browse/AJAXSEARCH-46
 
 ==== AJAXSEARCH-47 : Filter not working when parents or documents not initialized
 http://svn.modxcms.com/jira/browse/AJAXSEARCH-47
+
+==== AJAXSEARCH-50 : Filter returns all records when it should return nothing
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-50
+
+==== AJAXSEARCH-57 : CentOS - ajaxsearch 1.8.4 fails with a preg_replace() - lookbehind assertion
+http://svn.modxcms.com/jira/browse/AJAXSEARCH-57

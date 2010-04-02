@@ -31,21 +31,6 @@ var DatePicker = new Class({
         this.yearStart = (new Date().getFullYear());
         this.yearOffset = -10;
 
-        // Finds the entered date, or uses the current date
-        if(dp.value != '') {
-            dp.then = new Date(dp.value);
-            dp.today = new Date();
-        } else {
-            dp.then = dp.today = new Date();
-        }
-        // Set beginning time and today, remember the original
-        dp.oldYear = dp.year = dp.then.getFullYear();
-        dp.oldMonth = dp.month = dp.then.getMonth();
-        dp.oldDay = dp.then.getDate();
-        dp.nowYear = dp.today.getFullYear();
-        dp.nowMonth = dp.today.getMonth();
-        dp.nowDay = dp.today.getDate();
-
         // Pull the rest of the options
         if(options) {
             options = options;
@@ -64,6 +49,31 @@ var DatePicker = new Class({
             yearOrder: options.yearOrder || this.yearOrder,
             yearOffset: options.yearOffset || this.yearOffset
         };
+        
+        // Finds the entered date, or uses the current date
+        if(dp.value != '') {
+        	// handle dd-mm-YYYY date format as that is invalid for Date()
+        	if (dp.options.format == 'dd-mm-YYYY hh:mm:00' || dp.options.format == 'dd-mm-YYYY') {
+        		var dateVals = dp.value.split(' ');
+        		var dateParts = dateVals[0].split('-');
+        		dp.thenvalue = dateParts[1] + '/' + dateParts[0] + '/' + dateParts[2];
+        		if (dateVals[1]) dp.thenvalue = dp.thenvalue + ' ' + dateVals[1];
+        	} else {
+        		dp.thenvalue = dp.value;
+        	}
+            dp.then = new Date(dp.thenvalue);
+            dp.today = new Date();
+        } else {
+            dp.then = dp.today = new Date();
+        }
+        // Set beginning time and today, remember the original
+        dp.oldYear = dp.year = dp.then.getFullYear();
+        dp.oldMonth = dp.month = dp.then.getMonth();
+        dp.oldDay = dp.then.getDate();
+        dp.nowYear = dp.today.getFullYear();
+        dp.nowMonth = dp.today.getMonth();
+        dp.nowDay = dp.today.getDate();
+        
         dp.setProperties({'id':dp.getProperty('name'), 'autocomplete': 'off'});
         dp.container = false;
         dp.calendar = false;

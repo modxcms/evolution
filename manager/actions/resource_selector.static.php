@@ -6,8 +6,11 @@ if(!$modx->hasPermission('edit_module')) {
 	$e->dumpError();	
 }
 
+$mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+
 ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
 	<title><?php echo $content["name"]." ".$_lang['element_selector_title']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />

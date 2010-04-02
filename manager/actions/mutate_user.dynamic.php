@@ -121,7 +121,7 @@ $displayStyle = (($_SESSION['browser'] == 'mz') || ($_SESSION['browser'] == 'op'
 window.addEvent('domready', function() {
 	var dpOffset = <?php echo $modx->config['datepicker_offset']; ?>;
 	var dpformat = "<?php echo $modx->config['datetime_format']; ?>";
-	new DatePicker($('dob'), {'yearOffset': dpOffset,'format':dpformat});
+	new DatePicker($('dob'), {'yearOffset': -90,'yearRange':1,'format':dpformat});
 	if ($('blockeduntil')) {
 		new DatePicker($('blockeduntil'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
 		new DatePicker($('blockedafter'), {'yearOffset': dpOffset,'format':dpformat + ' hh:mm:00'});
@@ -229,7 +229,7 @@ function showHide(what, onoff){
 
 // invoke OnUserFormPrerender event
 $evtOut = $modx->invokeEvent("OnUserFormPrerender", array (
-	"id" => $id
+	"id" => $user
 ));
 if (is_array($evtOut))
 	echo implode("", $evtOut);
@@ -764,7 +764,7 @@ if (is_array($evtOut))
 			}
 			function SetUrl(url, width, height, alt){
 				document.userform.photo.value = url;
-				document.images['iphoto'].src = url;
+				document.images['iphoto'].src = "<?php echo $base_url; ?>" + url;
 			}
 		</script>
         <table border="0" cellspacing="0" cellpadding="3">
@@ -831,7 +831,7 @@ if ($use_udperms == 1) {
 
 // invoke OnUserFormRender event
 $evtOut = $modx->invokeEvent("OnUserFormRender", array (
-	"id" => $id
+	"id" => $user
 ));
 if (is_array($evtOut))
 	echo implode("", $evtOut);

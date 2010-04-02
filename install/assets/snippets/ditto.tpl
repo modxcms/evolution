@@ -54,7 +54,10 @@ $GLOBALS["dittoID"] = $dittoID;
     Default:
     "" - blank
 */      
-$language = (isset($language))? $language : "english";
+$language = (isset($language))? $language : $modx->config['manager_language'];
+if (!file_exists($ditto_base."lang/".$language.".inc.php")) {
+    $language ="english";
+}
 /*
     Param: language
 

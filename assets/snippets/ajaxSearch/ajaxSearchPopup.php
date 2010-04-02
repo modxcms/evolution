@@ -1,7 +1,7 @@
 <?php
 /*
  * ajaxSearchPopup.php
- * Version: 1.8.4 - refactored by coroico (coroico@wangba.fr)
+ * Version: 1.8.5 - refactored by coroico (coroico@wangba.fr)
  *
  * Created by: KyleJ (kjaebker@muddydogpaws.com)
  * Created on: 01/03/2007
@@ -26,7 +26,7 @@
 
 if ($_POST['search']) {
 
-  define('AS_VERSION' , '1.8.4');
+  define('AS_VERSION' , '1.8.5');
   define ('AS_SPATH' , 'assets/snippets/ajaxSearch/');
   define('AS_PATH' , MODX_BASE_PATH . AS_SPATH);
 

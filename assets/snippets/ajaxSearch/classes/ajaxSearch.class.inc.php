@@ -5,9 +5,9 @@
  *    The AjaxSearch class contains all variables and functions
  *    used to display search form and results
  *
- *    Version: 1.8.4  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.5  - Coroico (coroico@wangba.fr)
  *
- *    20/10/2009
+ *    18/03/2010
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -38,7 +38,7 @@ define('HIGHLIGHT_CLASS','ajaxSearch_highlight');             // token used for 
 define('PREFIX_AJAX_RESULT_CLASS','AS_ajax_result');          // ajax result prefix class
 define('PREFIX_RESULT_CLASS','ajaxSearch_result');            // non-ajax result prefix class
 define('INTROFAILURE_CLASS','AS_ajax_resultsIntroFailure');   // intro failure class
-
+define('ASPHX','||-AJAXSEARCH-||');                           // internal place holder
 
 include_once dirname(__FILE__)."/search.class.inc.php";
 
@@ -203,7 +203,7 @@ class AjaxSearch extends Search{
           }
           // output results
           $this->varResults['noResults'] = 0;
-          $this->varResults['listResults'] = $results;
+          $this->varResults['listResults'] = ASPHX;
         } else {
           // no results found
           $this->varResults['noResults'] = 1;
@@ -249,6 +249,7 @@ class AjaxSearch extends Search{
     }
     $this->chkLayout->AddVar("as", $this->varLayout);
     $output = $this->chkLayout->Render()."\n";
+    $output = str_replace(ASPHX, $results, $output);
     unset($this->varLayout);
     unset($this->chkLayout);
 

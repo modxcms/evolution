@@ -4,9 +4,9 @@
     * Function:     Language file.
     * Encoding:     UTF8
     * Author:       Henrik Nielsen - Proofreading: Mads Vestmar
-    * Date:         11/10/09 18.01 
-    * Version:      1.0.0
-    * MODx version: Evolution 1.0.1
+    * Date:         29/03/10 21.28 
+    * Version:      1.0.1
+    * MODx version: Evolution 1.0.3
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'da'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -123,6 +123,8 @@ $_lang["configcheck_lang_difference"] = 'Sprogfilen indeholder ikke det korrekte
 $_lang["configcheck_lang_difference_msg"] = 'Det nuværende valgte sprog indeholder ikke det samme som indholdet i standard sproget. Dette er ikke nødvendigvis et problem, men betyder bare, at sprogfilen trænger til at blive opdateret.';
 $_lang["configcheck_notok"] = 'Der er en eller flere fejl i konfigurationen: ';
 $_lang["configcheck_ok"] = 'Checket er gennemført korrekt - uden advarsler.';
+$_lang["configcheck_php_gdzip"] = 'GD og/eller Zip udvidelserne i PHP blev ikke fundet';
+$_lang["configcheck_php_gdzip_msg"] = 'MODx behøver GD og Zip udvidelserne i PHP. Selvom MODx vil kunne bruges uden disse, vil du ikke få det fulde udbytte af den indbyggede filbrowser, billede editeringen eller Captcha til brug ved login.';
 $_lang["configcheck_register_globals"] = 'register_globals er sat til ON i din php.ini fil';
 $_lang["configcheck_register_globals_msg"] = 'Det betyder, at websitet kan blive mere udsat for "Cross Site Scripting" (XSS) angreb. Du bør kontakte system administratoren eller hosting firmaet for at deaktivere dette, såfremt du ikke selv kan gøre det.';
 $_lang["configcheck_title"] = 'Konfigurationscheck';
@@ -195,6 +197,7 @@ $_lang["datepicker_offset"] = 'Tidligere år i datovælgeren: ';
 $_lang["datepicker_offset_message"] = 'Antallet af tidligere år som datovælgeren skal vise.';
 $_lang["datetime_format"] = 'Dato format:';
 $_lang["datetime_format_message"] = 'Dato formatet der bruges i CMS\'et.';
+$_lang["default"] = 'Standard:';
 $_lang["defaultcache_message"] = 'Vælg \'Ja\' for at gøre alle ressourcer cache-bare som standard.';
 $_lang["defaultcache_title"] = 'Standard for cache';
 $_lang["defaultmenuindex_message"] = 'Vælg \'Ja\' for at slå automatisk menu indeks forøgelse til.';
@@ -642,8 +645,8 @@ $_lang["preview_resource"] = 'Preview ressourcen';
 $_lang["private"] = 'Privat';
 $_lang["public"] = 'Offentligt';
 $_lang["publish_date"] = 'Publiceringsdato';
-$_lang["publish_resource"] = 'Publicer ressourcen';
 $_lang["publish_events"] = 'Publicer hændelser';
+$_lang["publish_resource"] = 'Publicer ressourcen';
 $_lang["rb_base_dir_message"] = 'Indtast den fysiske sti til brug for filbrowseren. Denne indstilling bliver normalt automatisk indsat. Dog kan IIS ikke finde ud af denne indstilling selv, hvilket medfører, at filbrowseren viser en fejl. Hvis det er tilfældet, kan man indtaste stien til images mappen her (som den vises i Windows Stifinder). <b>Bemærk:</b> Mappen skal indeholde mapperne; images, files, flash og media for at filbrowseren virker korrekt.';
 $_lang["rb_base_dir_title"] = 'Fil base sti:';
 $_lang["rb_base_url_message"] = 'Indtast den virtuelle sti til fil mappen. Denne indstilling bliver normalt automatisk indsat. Dog kan IIS ikke finde ud af denne indstilling selv, hvilket medfører, at filbrowseren viser en fejl. Hvis det er tilfældet, kan man indtaste URL\'en til images mappen her (som den vises i Internet Explorer).';

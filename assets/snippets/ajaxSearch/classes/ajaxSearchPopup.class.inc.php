@@ -5,9 +5,9 @@
  *    The ajaxSearchPopup class contains all variables and functions
  *    used to display search results in a popup window througth an ajax request
  *
- *    Version: 1.8.4  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.5  - Coroico (coroico@wangba.fr)
  *
- *    20/10/2009
+ *    18/03/2010
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -34,6 +34,7 @@ define('HIGHLIGHT_CLASS','ajaxSearch_highlight');             // token used for 
 define('PREFIX_AJAX_RESULT_CLASS','AS_ajax_result');          // ajax result prefix class
 define('PREFIX_RESULT_CLASS','ajaxSearch_result');            // non-ajax result prefix class
 define('INTROFAILURE_CLASS','AS_ajax_resultsIntroFailure');   // intro failure class
+define('ASPHX','||-AJAXSEARCH-||');                           // internal place holder
 
 include_once dirname(__FILE__)."/search.class.inc.php";
 
@@ -191,7 +192,7 @@ class AjaxSearchPopup extends Search{
         // output results
         $nbrs = $i ;
         $this->varResults['noResults'] = 0;
-        $this->varResults['listResults'] = $results;
+        $this->varResults['listResults'] = ASPHX;
       } else {
         // no results found
         $this->varResults['noResults'] = 1;
@@ -211,14 +212,15 @@ class AjaxSearchPopup extends Search{
     }
 
     $this->chkResults->AddVar("as", $this->varResults);
-    $results = $this->chkResults->Render()."\n";
+    $output = $this->chkResults->Render()."\n";
+    $output = str_replace(ASPHX, $results, $output);
     unset($this->varResults);
     unset($this->chkResults);
 
     // UTF-8 conversion is required if mysql character set is different of 'utf8'
-    if ($this->needsConvert) $results = mb_convert_encoding($results,"UTF-8",$this->pgCharset);
+    if ($this->needsConvert) $output = mb_convert_encoding($output,"UTF-8",$this->pgCharset);
 
-    return $results;
+    return $output;
   }
 
 /**

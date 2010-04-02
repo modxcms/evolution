@@ -28,7 +28,7 @@
 ?>
 <script type="text/javascript">
 // <![CDATA[
-window.onDomReady = function() {
+window.addEvent('domready', function() {
 			var sysAlert = new Element('div').setProperties({
 				'class': 'sysAlert'
 			});
@@ -38,7 +38,7 @@ window.onDomReady = function() {
 				button1: 'Ok',
 				width: 500
 			});
-};
+});
 // ]]>
 </script>
 <?php

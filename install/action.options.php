@@ -95,6 +95,17 @@ if ($limit > 0) {
     }
 }
 
+// display template variables
+$tvs = isset ($_POST['tv']) ? $_POST['tv'] : array ();
+$limit = count($moduleTVs);
+if ($limit > 0) {
+    echo "<h3>" . $_lang['tvs'] . "</h3><br />";
+    for ($i = 0; $i < $limit; $i++) {
+        $chk = in_array($i, $tvs) || (!$options_selected) ? 'checked="checked"' : "";
+        echo "<input type=\"checkbox\" name=\"tv[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTVs[$i][0] . "</span> - " . $moduleTVs[$i][2] . "<hr />";
+    }
+}
+
 // display chunks
 $chunks = isset ($_POST['chunk']) ? $_POST['chunk'] : array ();
 $limit = count($moduleChunks);

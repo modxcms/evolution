@@ -177,6 +177,7 @@ $_lang["table_prefix_not_exist_note"] = 'Продолжение установк
 $_lang["templates"] = 'Шаблоны';
 $_lang["to_log_into_content_manager"] = 'Чтобы войти в панель управления (manager/index.php) нажмите на кнопку `Закрыть`.';
 $_lang["toggle"] = 'Переключить';
+$_lang["tvs"] = 'Параметры (TV)';
 $_lang["unable_install_chunk"] = 'Невозможно установить чанк. Файл';
 $_lang["unable_install_module"] = 'Невозможно установить модуль. Файл';
 $_lang["unable_install_plugin"] = 'Невозможно установить плагин. Файл';

@@ -1,9 +1,9 @@
 <?php
 /*
     @name       ManagerManager
-    @version    0.4dev
+    @version    0.3.8dev
     
-    @for        MODx Evolution 1.0.1
+    @for        MODx Evolution 1.0.2
     
     @author     Nick Crossland - www.rckt.co.uk
     
@@ -22,7 +22,7 @@
 	
 */
 
-$mm_version = '0.4dev'; 
+$mm_version = '0.3.8'; 
 
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
@@ -380,7 +380,7 @@ $j(document).ready(function() {
 		// Misc tidying up
 		
 		// General tab table container is too narrow for receiving TVs -- make it a bit wider
-		$j("div#tabGeneral table").attr("width", "680");
+		$j("div#tabGeneral table").attr("width", "100%");
 		
 		// if template variables containers are empty, remove their section
 		if ($j("div.tmplvars :input").length == 0) {
@@ -388,6 +388,15 @@ $j(document).ready(function() {
 			$j("div.tmplvars").prev("div").hide();	// Still contains an empty table and some dividers
 			//$j("#sectionTVsHeader").hide(); 
 		}
+		
+		// If template category is empty, hide the optgroup
+		$j("#template optgroup").each( function() {
+			var $this = $j(this);
+			var $visibleOptions = $this.find("option:visible");
+			if ($visibleOptions.length == 0) {
+				$this.hide();	
+			}
+		});
 		
 		// Re-initiate the tooltips, in order for them to pick up any new help text which has been added
 		// This bit is MooTools, matching code inserted further up the page

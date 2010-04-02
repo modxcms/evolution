@@ -218,8 +218,6 @@ class synccache{
 
         // close and write the file
         $tmpPHP .= '?>';
-        $tmpPHP = preg_replace("/^\s+$/m", '', $tmpPHP);
-        $tmpPHP = preg_replace("/[\n\r]+/", "\n", $tmpPHP);
         $filename = $this->cachePath.'siteCache.idx.php';
         
         // invoke OnBeforeCacheUpdate event
@@ -340,7 +338,7 @@ function strip_tokens($code) {
 
     // set a keyed array of newline characters used to preserve line numbering
     $newlines = array("\n" => true, "\r" => true);
-    $tokens = token_get_all($code);
+    $tokens = @token_get_all($code);
     reset($tokens);
     $return = '';
     $token = current($tokens);

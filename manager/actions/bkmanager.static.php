@@ -113,7 +113,7 @@ if ($mode=='backup') {
 		</tr></thead>
 		<tbody>
 			<?php
-$sql = 'SHOW TABLE STATUS FROM '.$dbase;
+$sql = 'SHOW TABLE STATUS FROM '.$dbase. ' LIKE \''.$table_prefix.'%\'';
 $rs = mysql_query($sql);
 $limit = mysql_num_rows($rs);
 for ($i = 0; $i < $limit; $i++) {

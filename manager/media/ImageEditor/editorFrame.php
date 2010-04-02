@@ -12,16 +12,6 @@ require_once('../../includes/protect.inc.php');
 require_once('config.inc.php');
 require_once('Classes/ImageManager.php');
 require_once('Classes/ImageEditor.php');
-
-// dynamically load GD2 lib
-if (!extension_loaded('gd')) { 
-   if (strtoupper(substr(PHP_OS, 0,3) == 'WIN')) { 
-		@dl('php_gd2.dll');
-   }
-   else { 
-		@dl('gd2.so');
-   } 
-} 	
 		
 $manager = new ImageManager($IMConfig);
 $editor = new ImageEditor($manager);

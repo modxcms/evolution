@@ -33,10 +33,9 @@ foreach($help as $k=>$v) {
     }
 
     $helpname = str_replace('_', ' ', $helpname);
-
+    echo '<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
     echo '<div class="tab-page" id="tab'.$v.'Help">';
     echo '<h2 class="tab">'.$helpname.'</h2>';
-    echo '<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
     include "../assets/templates/help/$v";
     echo '</div>';
 }

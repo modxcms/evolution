@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi (based on QuickManager by Urique Dertlian, urique@unix.am)
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.3.3 updated 8/10/2009                
+ * @version     1.3.4 updated 3/2/2010                
  */
 
 if(!class_exists('Qm')) {
@@ -13,7 +13,7 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function Qm(&$modx, $jqpath, $loadmanagerjq, $loadfrontendjq, $noconflictjq, $loadtb, $tbwidth, $tbheight, $hidefields, $hidetabs, $hidesections, $addbutton, $tpltype, $tplid, $custombutton, $managerbutton, $logout) {
+    function Qm(&$modx, $jqpath, $loadmanagerjq, $loadfrontendjq, $noconflictjq, $loadtb, $tbwidth, $tbheight, $hidefields, $hidetabs, $hidesections, $addbutton, $tpltype, $tplid, $custombutton, $managerbutton, $logout, $autohide) {
         $this->modx = $modx;
         
         // Get plugin parameters
@@ -33,7 +33,8 @@ class Qm {
         $this->tplid = $tplid;
         $this->custombutton = $custombutton;
         $this->managerbutton = $managerbutton;
-        $this->logout = $logout;          
+        $this->logout = $logout;
+        $this->autohide = $autohide;           
         
         // Includes
         include_once($this->modx->config['base_path'].'assets/plugins/qm/mcc.class.php');
@@ -123,7 +124,7 @@ class Qm {
                     
                     $editButton = '
                     <li>
-                    <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><img src="'.$this->modx->config['site_url'].'manager/media/style/MODxCarbon/images/icons/save.png" /> '.$_lang['edit_resource'].'</a>
+                    <a class="qmButton qmEdit colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id='.$docID.'&amp;quickmanager=1"><span> '.$_lang['edit_resource'].'</span></a>
                     </li>
                     ';
                     
@@ -241,10 +242,10 @@ class Qm {
                     
 					<div id="qmEditor">
 					
-                    <a id="qmClose" class="qmButton qmClose" href="#" onclick="return false;">X</a></li>
+                    <a id="qmClose" class="qmButton qmClose" href="#" onclick="javascript: return false;">X</a>
                     
                     <ul>
-                    <a id="qmLogoClose" class="qmClose" href="#" onclick="return false;"></a>
+                    <li><a id="qmLogoClose" class="qmClose" href="#" onclick="javascript: return false;"></a></li>
                     '.$controls.'
                     </ul>
 					</div>';
@@ -252,7 +253,17 @@ class Qm {
                     $css = '
                     <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
                     <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
+                    <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie7.css" /><![endif]-->
                     ';
+        
+                    // Autohide toolbar? Default: true
+                    if ($this->autohide == 'false') {
+                        $css .= '
+                        <style type="text/css">
+                        #qmEditor, #qmEditorClosed { top: 0px; }
+                        </style>
+                        ';
+                    }
         
                     // Insert jQuery and ColorBox in head if needed
                     if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
@@ -282,23 +293,40 @@ class Qm {
                     
                     // jQuery in noConflict mode 
                     if ($this->noconflictjq == 'true')
+                    {
                         $head .= '
                     	var $j = jQuery.noConflict();
                     	$j(document).ready(function($)
                     	';
                     	
+                    	$jvar = 'j';
+                    }
+                    	
                     // jQuery in normal mode 
-                    else 	
+                    else { 	
                         $head .= '$(document).ready(function($)';
+                        
+                        $jvar = '';
+                    }
                         
                     $head .= '    
                         {                      
                     		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false});
                     	
                         	// Bindings
-                        	$().bind("cbox_open", function(){$("body").css({"overflow":"hidden"}); $("html").css({"overflow":"hidden"}); $("#qmEditor").css({"display":"none"});});
-                        	$().bind("cbox_closed", function(){$("body").css({"overflow":"auto"}); $("html").css({"overflow":"auto"}); $("#qmEditor").css({"display":"block"});});                  
-                            
+                        	$().bind("cbox_open", function(){
+                                $("body").css({"overflow":"hidden"});
+                                $("html").css({"overflow":"hidden"});
+                                $("#qmEditor").css({"display":"none"});
+                            });
+                        	$().bind("cbox_closed", function(){
+                                $("body").css({"overflow":"auto"});
+                                $("html").css({"overflow":"auto"});
+                                $("#qmEditor").css({"display":"block"});
+                                // Remove manager lock by going to home page
+                                $'.$jvar.'.ajax({ type: "GET", url: "'.$this->modx->config['site_url'].'manager/index.php?a=2" });
+                            });                  
+                                                        						                            
                             // Hide QM+ if cookie found
                             if (getCookie("hideQM") == 1)
                             {
@@ -420,7 +448,7 @@ class Qm {
 					else $jq_mode = '$';
 					
 					// Add action buttons
-                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"setBaseUrl(\''.$this->modx->config['base_url'].'\'); documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\"/>'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.'.$jq_mode.'.fn.colorbox.close(); return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
+                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"setBaseUrl(\''.$this->modx->config['base_url'].'\'); documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"parent.'.$jq_mode.'.fn.colorbox.close(); return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
                     
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';

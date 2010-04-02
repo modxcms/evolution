@@ -1,22 +1,44 @@
-#qmEditor, #qmEditorClosed 
+#qmEditor, #qmEditorClosed
 {
     height: 28px;
 	font-family: Helvetica, Arial, sans-serif !important;
     top:0; 
     left:0;
-    padding: 3px;
+    padding: 4px 3px 3px 3px;
     position: fixed;
     width: 100%;
+    line-height:1;
     z-index: 9999;
-	background: #657587 url(../images/tinylogo.png) no-repeat -2px 3px;
+	background: #657587 url(images/tinylogo.png) no-repeat -2px 3px;
 	text-align: left;
 	opacity:0.5; 
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
+    ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; 
 	filter: alpha(opacity=50);
 	top: -28px;
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
+}   
+ 
+#qmEditor *:focus, #qmEditor *:active 
+{
+    outline: none !important;
+}
+
+#qmEditor img
+{
+    border: 0;
+}
+
+#qmEditor a
+{
+    display: inline;
+}
+
+.qmEdit span
+{
+    background: transparent url(images/save.png) no-repeat left center;
+    padding-left: 20px;
 }
 
 #qmEditorClosed
@@ -28,9 +50,10 @@
 
 #qmClose
 {
+    display: block;
     float: right; 
     margin-right: 10px;
-    margin-top: 1px;
+    margin-top: 2px;
 }
 
 #qmLogoClose
@@ -43,13 +66,14 @@
     margin-right: 5px;
     text-decoration: none !important;
     border: 0 !important;
+    background: transparent url(images/transparent.gif) repeat;
 }
-
+    
 #qmEditor:hover, #qmEditorClosed:hover 
 {
     opacity:1; 
-    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; 
-	filter: alpha(opacity=100);
+    -ms-filter:"" !important;
+    filter:none !important;
 	top: 0px;
 	-webkit-transition-duration: 0.2s;
 	-moz-transition-duration: 0.2s;
@@ -62,7 +86,7 @@
 #qmEditor ul 
 { /* .actionButtons --> #qmEditor */
 	margin: 0;
-	padding: 6px 10px 6px 0px;
+	padding: 7px 10px 0px 0px;
 }
 
 #qmEditor li 
@@ -79,7 +103,7 @@
 	color: #3b454f;
 	font-weight: bold;
 	font-size: 12px;
-	background: #a0b9d6 url(../images/button-gradient.png) repeat-x top left;
+	background: #c7ced2 url(images/button-gradient.png) repeat-x 0px -6px; 
 	padding: 4px 6px;
 	white-space: nowrap;
 	vertical-align: top;
@@ -101,7 +125,7 @@
 	border: 0;
 }
 
-#qmEditor .qmButton:hover 
+#qmEditor .qmButton:hover
 {
 	background-position: bottom left;
 	-webkit-box-shadow: 0 0 10px #b8c7d6;

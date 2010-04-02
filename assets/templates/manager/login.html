@@ -74,7 +74,15 @@
                     }
                 ).request();
                 $$('input').setProperty('readonly', 'readonly');
-            });     
+            });  
+			
+			// Initial focus
+			if ($('username').value != '') {
+				$('password').focus();
+			} else {
+				$('username').focus();
+			}
+			   
         });
 
         function ajaxReturn(response) {
@@ -92,12 +100,11 @@
     /* ]]> */
     </script>
 </head>
-<body onload="javascript:document.loginfrm.username.focus();" id="login">
+<body id="login">
 <div id="mx_loginbox">
     <form method="post" name="loginfrm" id="loginfrm" action="processors/login.processor.php">
     <!-- anything to output before the login box via a plugin? -->
     [+OnManagerLoginFormPrerender+]
-
         <div class="sectionHeader"><a href="../">[+site_name+]</a></div>
         <div class="sectionBody">
 			<img src="media/style/MODxCarbon/images/misc/login-logo.png" alt="[+site_name+]" id="logo" />
@@ -120,7 +127,7 @@
 
 <!-- convert this to a language include -->
 <p class="loginLicense">
-&copy; 2005-2009 by the <a href="http://modxcms.com/" target="_blank">MODx CMF Team</a>. <strong>MODx</strong>&trade; is licensed under the GPL.
+&copy; 2005-2010 by the <a href="http://modxcms.com/" target="_blank">MODx</a>. <strong>MODx</strong>&trade; is licensed under the GPL.
 </p>
 </body>
 </html>

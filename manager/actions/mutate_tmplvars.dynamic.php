@@ -313,11 +313,11 @@ function decode(s){
   </tr>
   <tr>
 	<td align="left" valign="top"><?php echo $_lang['tmplvars_elements']; ?>:  </td>
-	<td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="elements" maxlength="65535" class="inputBox textarea" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['elements']);?></textarea><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/bkmanager.gif" width="17" height="18" align="absmiddle" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand"/></td>
+	<td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="elements" maxlength="65535" class="inputBox textarea" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['elements']);?></textarea><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif" width="17" height="18" align="absmiddle" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand"/></td>
   </tr>
   <tr>
     <td align="left" valign="top"><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</td>
-    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/bkmanager.gif" width="17" height="18" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand" /></td>
+    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif" width="17" height="18" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand" /></td>
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</td>

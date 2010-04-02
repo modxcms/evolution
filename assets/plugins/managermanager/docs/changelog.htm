@@ -31,12 +31,27 @@
     
   <div id="content">
     <h1>Changelog    </h1>
-    <h3>0.3.6</h3>
+    <h3>0.3.8</h3>
 	<ul>
-<li><a href="http://modxcms.com/forums/index.php/topic,41241.msg248742.html#msg248742">Bugfix</a>: Could not hide content field</li>
-<li>mm_rules.inc.php is now empty by default</li>
+			<li>New: mm_requireFields - makes fields required. Originally by <a href="http://modxcms.com/extras/package/256">tobyl</a>. Modified to take advantage of recent improvements / changes to MM, and to add a visual indication of required fields</li>
+			<li><a href="http://svn.modxcms.com/jira/browse/ADDON-115">Bugfix</a>: Prevent double encoding of HTML entities (thanks David Andrews)</li>
+			<li><a href="http://svn.modxcms.com/jira/browse/MODX-1456">Bugfix</a>: TV's section is broken when there's a URL TV (thanks Jean-Christophe Brebion / Mikko Lammi)</li>
+			<li>Various minor bugfixes</li>
+			<li>Minor documentation updates</li>
 	</ul>
-<h3>0.3.5</h3>
+<h3>0.3.7</h3>
+	<ul>
+			<li>New: If all templates for a category are hidden, the category is removed from the templates dropdown</li>
+			<li>Various other minor bugfixes</li>
+	</ul>
+	<h3>0.3.6</h3>
+	<ul>
+			<li><a href="http://modxcms.com/forums/index.php/topic,41241.msg248742.html#msg248742">Bugfix</a>: Could not hide content field</li>
+			<li>Bugfix: Couldn't create tabs under certain circumstances</li>
+			<li>mm_rules.inc.php is now empty by default</li>
+			<li>Documentation updates</li>
+	</ul>
+	<h3>0.3.5</h3>
 	<ul>
 			<li><a href="http://modxcms.com/forums/index.php?topic=38244.msg244174#msg244174">Bugfix</a>: Fix clash with Content History plugin (thanks TobyL)</li>
 			<li>Bugfix: Tweak to handling spaces in tag widget</li>
@@ -45,7 +60,7 @@
 			<li><a href="http://svn.modxcms.com/jira/browse/ADDON-64">New</a>: mm_default now supports content_type </li>
 			<li><a href="http://svn.modxcms.com/jira/browse/ADDON-66">New</a>: synch fields now works with text areas</li>
 	</ul>
-<h3>0.3.4</h3>
+	<h3>0.3.4</h3>
     <ul>
       <li>Improved configuration - now uses plugin GUI</li>
       <li>You can now specify TV names with or without the TV prefix. If there is a clash with one of the default internal fieldnames, the internal field will take priority.</li>
@@ -68,7 +83,7 @@
       <li><a href="http://modxcms.com/forums/index.php/topic,16948.msg173406.html#msg173406">New</a>: AccessDenied widget - prevents access to specific document IDs (thanks Metaller)</li>
       <li>New: When is_richtext has an mm_default of false, which_editor is also set </li>
     </ul>
-<h3>0.3.1</h3>
+	<h3>0.3.1</h3>
     <ul>
       <li>Bugfix: error when creating documents and using showimagestvs (thanks Rasc)</li>
       <li>Bugfix: tags / colours fail when Modx is installed in a subdir (thanks smiley) </li>

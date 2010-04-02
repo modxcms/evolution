@@ -59,7 +59,7 @@ if (mysql_num_rows($rs) < 1) {
 		'LEFT JOIN '.$modx->getFullTableName('web_users').' AS users ON users.id = groups.webuser '.
 		'ORDER BY groupnames.name';
 ?>
-	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
+	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 		<thead>
 		<tr><td><b><?php echo $_lang['access_permissions_add_user_group'] ?></b></td></tr>
 		</thead>
@@ -132,7 +132,7 @@ if (mysql_num_rows($rs) < 1) {
 		'LEFT JOIN '.$modx->getFullTableName('site_content').' AS sc ON sc.id = dg.document '.
 		'ORDER BY dgnames.name, sc.id';
 ?>
-	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
+	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 		<thead>
 		<tr><td><b><?php echo $_lang['access_permissions_add_resource_group'] ?></b></td></tr>
 		</thead>
@@ -151,7 +151,7 @@ if (mysql_num_rows($rs) < 1) {
 	if (mysql_num_rows($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
-		echo '<table width="600" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">'."\n".
+		echo '<table width="600" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">'."\n".
 		'	<thead>'."\n".
 		'	<tr><td><b>'.$_lang['access_permissions_resource_groups'].'</b></td></tr>'."\n".
 		'	</thead>'."\n";
@@ -208,7 +208,7 @@ if (mysql_num_rows($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
 	} else {
 		?>
-		<table border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
+		<table border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 			<thead>
 			<tr><td><b><?php echo $_lang["access_permissions_group_link"] ?></b></td></tr>
 			</thead>

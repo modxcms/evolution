@@ -89,11 +89,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
                   WHERE id=".$row['id'];
             $modx->db->query($sql);
             // built activation url
+            $xhtmlUrlSetting = $modx->config['xhtml_urls'];
+            $modx->config['xhtml_urls'] = false;
             if($_SERVER['SERVER_PORT']!='80') {
               $url = $modx->config['server_protocol'].'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].$modx->makeURL($modx->documentIdentifier,'',"webloginmode=actp&wli=".$row['id']."&wlk=".$newpwdkey);
             } else {
               $url = $modx->config['server_protocol'].'://'.$_SERVER['SERVER_NAME'].$modx->makeURL($modx->documentIdentifier,'',"webloginmode=actp&wli=".$row['id']."&wlk=".$newpwdkey);
             }
+            $modx->config['xhtml_urls'] = $xhtmlUrlSetting;
             // replace placeholders and send email
             $message = str_replace("[+uid+]",$row['username'],$webpwdreminder_message);
             $message = str_replace("[+pwd+]",$newpwd,$message);

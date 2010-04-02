@@ -3,9 +3,9 @@
  * Filename:       includes/lang/svenska-utf8.inc.php
  * Function:       Swedish language file
  * Author:         Pontus Ågren (Pont) & Johnny Chadda
- * Date:           2009-10-17
+ * Date:           2010-03-22
  * Version:        1.0
- * MODx version:   Evolution 1.0.1 rev 5870
+ * MODx version:   Evolution 1.0.x rev 6600
 */
 
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
@@ -123,6 +123,8 @@ $_lang["configcheck_lang_difference"] = 'Fel antal fraser i språkfilen';
 $_lang["configcheck_lang_difference_msg"] = 'Språket som för närvarande är valt har ett annat antal fraser än standardspråket. Detta behöver inte vara ett problem, men kan betyda att språkfilen behöver uppdateras.';
 $_lang["configcheck_notok"] = 'En eller flera konfigurationsdetaljer är inte korrekta:';
 $_lang["configcheck_ok"] = 'Kontrollen utförd OK - inga varningar att rapportera.';
+$_lang["configcheck_php_gdzip"] = 'GD och/eller Zip PHP-tillägg kunde inte hittas';
+$_lang["configcheck_php_gdzip_msg"] = 'MODx behöver tilläggen GD och Zip aktiverade för PHP. Även om MODx kommer att fungera utan dom, så kommer du inte att kunna utnyttja alla möjligheterna i den inbyggda filhanteraren, bildredigeraren eller captcha för inloggningar.';
 $_lang["configcheck_register_globals"] = 'register_globals är satt till ON i din konfigurationsfil för php - php.ini';
 $_lang["configcheck_register_globals_msg"] = 'Denna konfiguration gör din webbplats betydligt mer sårbar för så kallade serveröverskridande scriptattacker (Cross Site Scripting eller XSS). Du bör ta kontakt med din webbhost och ta reda på vad du kan göra för att stänga av den här inställningen.';
 $_lang["configcheck_title"] = 'Konfigurationskontroll';
@@ -195,6 +197,7 @@ $_lang["datepicker_offset"] = 'Datumväljarens tidsförskjutning';
 $_lang["datepicker_offset_message"] = 'Antal år som visas bakåt i tiden i datumväljaren.';
 $_lang["datetime_format"] = 'Datumformat';
 $_lang["datetime_format_message"] = 'Formatet för datum i hanteraren.';
+$_lang["default"] = 'Standard:';
 $_lang["defaultcache_message"] = 'Välj "Ja" för att göra alla nya resurser cachebara som standard.';
 $_lang["defaultcache_title"] = 'Cachebara som standard';
 $_lang["defaultmenuindex_message"] = 'Välj "Ja" för att aktivera automatisk ökning av menyindex som standard.';

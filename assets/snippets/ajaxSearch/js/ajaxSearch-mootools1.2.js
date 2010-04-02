@@ -1,6 +1,6 @@
 //ajaxSearch-mootools1.2.js
-//Version: 1.8.4 - refactored by coroico
-//20/10/2009 - mootools 1.2 version of ajaxSearch.js
+//Version: 1.8.5 - refactored by coroico
+//18/03/2010 - mootools 1.2 version of ajaxSearch.js
 
 //set the loading and the close image to the correct location for you
 //set the folder location to the correct location of ajaxSearch.php
@@ -10,7 +10,7 @@
 var _base = 'assets/snippets/ajaxSearch/';
 
 // AjaxSearch default snippet parameter values
-var _version = '1.8.4';
+var _version = '1.8.5';
 var opacity = 1.;
 var liveSearch = 0;
 var minChars = 3;

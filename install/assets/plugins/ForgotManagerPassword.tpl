@@ -5,7 +5,7 @@
  * Resets your manager login when you forget your password via email confirmation
  *
  * @category 	plugin
- * @version 	1.1
+ * @version 	1.1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@events OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender 
  * @internal	@modx_category Manager and Admin
@@ -88,10 +88,10 @@ EOD;
             global $modx, $_lang;
 
             $subject = $_lang['password_change_request'];
-            $headers  = "MIME-Version: 1.0\\n".
-                "Content-type: text/html; charset={$modx->config['modx_charset']}\n".
-                "From: MODx\\n".
-                "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\\n".
+            $headers  = "MIME-Version: 1.0\r\n".
+                "Content-type: text/html; charset=\"{$modx->config['modx_charset']}\"\r\n".
+                "From: MODx\r\n".
+                "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\r\n".
                 "X-Mailer: PHP/".phpversion();
 
             $user = $this->getUser(0, '', $to);

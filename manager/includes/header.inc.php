@@ -23,6 +23,10 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
             <?php echo isset($_REQUEST['r']) ? " doRefresh(".$_REQUEST['r'].");" : "" ;?>;
         };
 
+		function reset_path(elementName) {
+	  		document.getElementById(elementName).value = document.getElementById('default_' + elementName).innerHTML;
+		}
+
         var dontShowWorker = false;
         function document_onunload() {
             if(!dontShowWorker) {
@@ -31,11 +35,13 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
         };
 
         // set tree to default action.
-        parent.tree.ca = "open";
+        if (parent.tree) parent.tree.ca = "open";
 
 		// call the updateMail function, updates mail notification in top navigation
-		if(top.mainMenu.updateMail) {
-			top.mainMenu.updateMail(true);
+		if (top.mainMenu) {
+			if(top.mainMenu.updateMail) {
+				top.mainMenu.updateMail(true);
+			}
 		}
 		
         function stopWorker() {

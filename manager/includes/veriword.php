@@ -94,18 +94,7 @@ class VeriWord {
         return (string) $arr_words[array_rand($arr_words)].rand(10,999);
     }   
 
-    function draw_text() {
-
-        // dynamically load GD2 lib
-        if (!extension_loaded('gd')) { 
-           if (strtoupper(substr(PHP_OS, 0,3) == 'WIN')) { 
-                @dl('php_gd2.dll');
-           }
-           else { 
-                @dl('gd2.so');
-           } 
-        }       
-        
+    function draw_text() {        
         $dir = dir($this->dir_font);
         $fontstmp = array();
         while (false !== ($file = $dir->read())) {

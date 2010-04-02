@@ -20,6 +20,13 @@ if (isset($_POST) && count($_POST) > 0) {
 				// Skip these
 				continue 2;
 				break;
+			case 'rb_base_dir':
+			case 'rb_base_url':
+			case 'filemanager_path':
+				if (substr(trim($v), -1) !== '/') {
+					$v = $v .'/';
+				}
+				break;
 			default:
 			break;
 		}

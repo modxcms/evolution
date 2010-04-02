@@ -35,8 +35,8 @@
       </h1>
       <h2>mm_renameField($field, $newlabel, $roles, $templates, $newhelp)</h2>
     <p>Renames one of the default fields or template variables within the manager. </p>
-    <p><strong>$fields: </strong>The name of the fields this should apply to (from table above). Can only accept single field [Required]<br />
-        <strong>$newlabel:</strong> The new text for the label[Required]<br />
+    <p><strong>$fields: </strong>The name of the <a href="field-names.htm">fields</a> this should apply to. Can only accept single field [Required]<br />
+        <strong>$newlabel:</strong> The new text for the label [Required]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]<br />
         <strong>$newhelp:</strong> New text for the help icon with this field. The same restriction apply as when using mm_changeFieldHelp directly [Optional - default is leave unchanged]</p>
@@ -44,27 +44,27 @@
     <h2>mm_hideFields($fields,  $roles, $templates)</h2>
     <p>Hides one or more of the default fields within the manager.</p>
     <p> If a field to be hidden is a template variable, it must be prefixed by 'tv'.</p>
-    <p><strong>$fields: </strong>The name(s) of the fields this should apply to (from table above). Can  accept multiple fields separated by commas [Required]<br />
+    <p><strong>$fields: </strong>The name(s) of the <a href="field-names.htm">fields</a> this should apply to. Can  accept multiple fields separated by commas [Required]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]</p>
     <code>mm_hideFields('link_attributes'); // Hide the link_attributes field for all users</code><code>mm_hideFields('alias', '1', '3'); // Hide the alias field for users with role &quot;1&quot; editing documents using template ID &quot;3&quot;</code><code>mm_hideFields('tvmyVar', '2'); // Hide the template variable &quot;myVar&quot; for users with role &quot;2&quot;</code>
     <h2>mm_changeFieldHelp($field,  $helptext, $roles, $templates)</h2>
     <p>Changes the help text that appears next to each field when the [?] icon is clicked.    </p>
     <p>Note that not all fields have help icons, notably  &quot;content&quot; and &quot;editor to use&quot;. In the future we might insert help icons for these missing ones.</p>
-    <p><strong>$field: </strong>The name of the fields this should apply to (from table above). Can only accept single field [Required]<br />
+    <p><strong>$field: </strong>The name of the <a href="field-names.htm">fields</a> this should apply to. Can only accept single field [Required]<br />
         <strong>$helptext:</strong> The new help text that should appear when the help icon is clicked [Required]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]</p>
     <code>mm_changeFieldHelp('pagetitle', 'This text will appear in the browser title bar and bookmarks'); // Change the help text for pagetitle for all users</code><code>mm_changeFieldHelp('alias', 'How the URL will appear', '1'); // Change the help text for alias only for users with role &quot;1&quot;</code>
     <h2>mm_hideTemplates($tplIds,   $roles, $templates)</h2>
     <p>Hides specified templates from the Templates drop down list</p>
-    <p><strong>$tplIds: </strong>The IDs of the templates which should be hidden from the templates dropdown. Can  accept multiple fields separated by commas [Required]<br />
+    <p><strong>$tplIds: </strong>The IDs of the templates which should be hidden from the templates dropdown. Can  accept multiple <a href="field-names.htm">fields</a> separated by commas [Required]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]</p>
     <p><code>mm_hideTemplates('0'); // Hide template 0 (blank) from all users</code><code>mm_hideTemplates('0,4', '1'); // Hide templates 0 and 4 from users with role &quot;1&quot;</code></p>
     <h2>mm_inherit($fields, $roles, $templates)</h2>
     <p>Tells one or more fields to inherit their parent document's value (if it exists). </p>
-    <p><strong>$fields: </strong>The name(s) of the fields this should apply to (from table above). Can accept multiple fields. [Required]<br />
+    <p><strong>$fields: </strong>The name(s) of the <a href="field-names.htm">fields</a> this should apply to. Can accept multiple fields. [Required]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates: </strong>comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]</p>
     <code>mm_inherit('pagetitle', '0,1'); // Inherit parent's pagetitle when users with role 0 or 1 are editing </code><code>mm_inherit('pagetitle,longtitle'); // Inherit parent's pagetitle and longtitle for all users</code>
@@ -85,7 +85,7 @@
       <li><strong>log</strong> -   should &quot;log&quot; be checked? Takes  boolean value.</li>
       <li><strong>content_type</strong> - default internet media (MIME) type, e.g. 'text/xml'</li>
     </ul>
-    <p><strong>$field: </strong>The name(s) of the field this should apply to (from table above). Currently accepts 'pub_date' or 'unpub_date' [Required]<br />
+    <p><strong>$field: </strong>The name(s) of the <a href="field-names.htm">fields</a> this should apply to. Currently accepts 'pub_date' or 'unpub_date' [Required]<br />
         <strong>$value: </strong>The default value for the field specified. If none is supplied the current date/time will be used. A static value can be supplied as a string, or PHP code (to calculate alternative dates) can be supplied if the eval parameter is set to true [Optional]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]<br />
@@ -94,13 +94,42 @@
     <p></p>
     <h2>mm_synch_fields($fields,  $roles, $templates)</h2>
     <p>Synchronises the values of the specified fields at edit time - e.g. for making sure pagetitle and menutitle automatically read the same, particularly if one value is hidden. Works only with text inputs. </p>
-    <p><strong>$fields: </strong>The name(s) of the fields that should be synched (from table above). Requires a minimum of 2 field names, comma separated [Required]<br />
+    <p><strong>$fields: </strong>The name(s) of the <a href="field-names.htm">fields</a> that should be synched. Requires a minimum of 2 field names, comma separated [Required]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]<br />
     </p>
     <p><code>mm_synch_fields('pagetitle,menutitle,longtitle'); // Make the contents of these three fields always equal for all users and all documents </code></p>
     <p></p>
-    <p>&nbsp;</p>
+	<h2>mm_require_fields($fields,  $roles, $templates)</h2>
+	<p>Makes fields required. Will append a red asterisk to a field to indicate it is required, and alert the user if they save the document without completing all the required fields.</p>
+	<p>This works on all fields EXCEPT </p>
+	<ul>
+			<li>keywords</li>
+			<li>metatags</li>
+			<li>hidemenu</li>
+			<li>which_editor</li>
+			<li>template</li>
+			<li>menuindex</li>
+			<li>show_in_menu</li>
+			<li>parent</li>
+			<li>is_folder</li>
+			<li>is_richtext</li>
+			<li>log</li>
+			<li>searchable</li>
+			<li>cacheable</li>
+			<li>clear_cache</li>
+			<li>content_type</li>
+			<li>content_dispo</li>
+			<li>which_editor</li>
+	</ul>
+	<p><strong>$fields: </strong>The name(s) of the <a href="field-names.htm">fields</a> that are required, comma separated [Required]<br />
+			<strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
+			<strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]<br />
+	</p>
+	<p><code>mm_require_fields('pagetitle,pub_date'); // Make the page title and publication date fields required</code></p>
+	<p></p>
+	<p></p>
+<p>&nbsp;</p>
   </div>
 </div>
 </body>

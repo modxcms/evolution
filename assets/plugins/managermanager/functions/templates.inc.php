@@ -20,7 +20,7 @@ function mm_hideTemplates($tplIds, $roles='', $templates='') {
 
         		foreach ($tplIds as $tpl) {
 					$output .= 'if ($j("select#template").val() != '.$tpl. ') { '. "\n";
-        			$output .= '$j("select#template option[value='.$tpl.']").remove();' . "\n";
+        			$output .= '$j("select#template option[value='.$tpl.']").hide();' . "\n";
 					$output .= '}' . "\n";
         		}
         		$e->output($output . "\n");

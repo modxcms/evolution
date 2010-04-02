@@ -39,7 +39,10 @@ $rs = mysql_query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the template...";
 	exit;
-} else {		
+} else {
+	$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_templates` WHERE $dbase.`".$table_prefix."site_tmplvar_templates`.templateid=".$id.";";
+	$rs = mysql_query($sql);
+			
 	// invoke OnTempFormDelete event
 	$modx->invokeEvent("OnTempFormDelete",
 							array(

@@ -4,9 +4,9 @@
  * Purpose:
  *    The Search class contains all functions common to AjaxSearch functionalities
  *
- *    Version: 1.8.4  - Coroico (coroico@wangba.fr)
+ *    Version: 1.8.5  - Coroico (coroico@wangba.fr)
  *
- *    20/10/2009
+ *    18/03/2010
  *
  *    Jason Coward (opengeek - jason@opengeek.com)
  *    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
@@ -430,11 +430,7 @@ class Search {
       $whl[] = implode(' AND ',$where);
     }
 
-    // where clause for search terms restriction
-    $whl[] = '(' . $this->getSearchTermsWhere($joined,$searchString,$advSearch). ')';
-    $whereClause = '(' . implode(' AND ',$whl). ')';
-
-    $subSelect = 'SELECT DISTINCT ' . $fieldsClause . ' FROM ' . $fromClause . ' WHERE ' . $whereClause;
+    $subSelect = 'SELECT DISTINCT ' . $fieldsClause . ' FROM ' . $fromClause;
     return $subSelect;
   }
 
@@ -504,36 +500,6 @@ class Search {
     if ($advSearch == 'nowords' || $advSearch == 'allwords') return $whereStringOper['and'];
     else if ($advSearch == 'exactphrase') return '';
     else return $whereStringOper['or'];
-  }
-
-/**
- * get the "WHERE" clause related to search terms for joined tables
- *
- * @param array $joined description of the joined table
- * @param string $searchString Search terms
- * @param string $advSearch advSearch parameter
- * @return where clause
- */
-  function getSearchTermsWhere($joined,$searchString,$advSearch){
-
-    $like = $this->getWhereForm($advSearch);
-    $whereOper = $this->getWhereOper($advSearch);
-    $type = ($advSearch == 'allwords') ? 'oneword' : $advSearch;  // required for joined table
-    $whereStringOper = $this->getWhereStringOper($type);
-
-    if (isset($joined['searchable']))
-      foreach($joined['searchable'] as $searchable) $whsc[] = '(' . $joined['tb_alias'] . '.' . $searchable . $like .')';
-    $whereSubClause = implode($whereOper,$whsc);
-
-    // build of request - where clause regarding the search string
-    $search = array();
-    if ($advSearch == 'exactphrase') $search[] = $searchString;
-    else $search = explode(' ',$searchString);
-
-    foreach($search as $searchTerm) $where[]=   preg_replace('/word/', preg_quote($searchTerm), $whereSubClause);
-
-    $whereClause = implode($whereStringOper,$where);
-    return $whereClause;
   }
 
 /**
@@ -1375,6 +1341,7 @@ class Search {
           }
           $this->listIDs = implode(',',$filteredIDs);
         }
+        else $this->listIDs = '0';
       }
     }
 

@@ -38,8 +38,15 @@ a, :link, :active, :visited {
 }	
 
 a img {
-	border-width: 0px;
-	border-style: none;
+    border:none;
+}
+
+a img.item {
+	border-width: 1px;
+	border-style: solid;
+	border-color:#ccc;
+	padding:5px;
+	background-color:#fff;
 }
 
 frame
@@ -47,6 +54,7 @@ frame
 background-color: #e3e9f1;
 border-color: #000000;
 border-collapse: collapse;
+border: none;
 }
 
 frameset
@@ -171,7 +179,8 @@ border-collapse: collapse;
 body.FileArea
 {
 
-	background-color: #ffffff;
+	background: #e3e9f1;
+	padding: 0;
 }
 
 body, td, input, select

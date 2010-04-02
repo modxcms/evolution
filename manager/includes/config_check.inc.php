@@ -21,6 +21,11 @@ if (ini_get('register_globals')==TRUE) {
     $warnings[] = array($_lang['configcheck_register_globals']);
 }
 
+if (!extension_loaded('gd') || !extension_loaded('zip')) {
+	$warningspresent = 1;
+	$warnings[] = array($_lang['configcheck_php_gdzip']);
+}
+
 if(isset($_SESSION['mgrPermissions']['settings']) && $_SESSION['mgrPermissions']['settings'] == '1') {
 	if ($modx->db->getValue('SELECT COUNT(setting_value) FROM '.$modx->getFullTableName('system_settings').' WHERE setting_name=\'validate_referer\' AND setting_value=\'0\'')) {
 		$warningspresent = 1;
@@ -128,6 +133,9 @@ for ($i=0;$i<count($warnings);$i++) {
         case $_lang['configcheck_register_globals'] :
             $warnings[$i][1] = $_lang['configcheck_register_globals_msg'];
             break;
+        case $_lang['configcheck_php_gdzip'] :
+        	$warnings[$i][1] = $_lang['configcheck_php_gdzip_msg'];
+        	break;
         case $_lang['configcheck_unauthorizedpage_unpublished'] :
             $warnings[$i][1] = $_lang['configcheck_unauthorizedpage_unpublished_msg'];
             break;

@@ -3,10 +3,10 @@
  * Filename:       includes/lang/francais-utf8.inc.php
  * Function:       French language file
  * Encoding:       UTF-8
- * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, Jean-Christophe Brebion (Fairytree) pour Evolution 1.0.x
- * Date:           26 Octobre 2009
- * Version:        2.0.4
- * MODx version:   Evolution 1.0.1
+ * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, Jean-Christophe Brebion (Fairytree) et Coroico pour Evolution 1.0.3
+ * Date:           29 Mars 2010
+ * Version:        2.0.5
+ * MODx version:   Evolution 1.0.3
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langages
 $modx_lang_attribute = 'fr'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -123,6 +123,8 @@ $_lang["configcheck_lang_difference"] = 'Nombre incorrect de variables dans le f
 $_lang["configcheck_lang_difference_msg"] = 'La langue actuellement choisie a un nombre de variables différent de la langue par défaut. Ceci n\'est pas nécessairement un problème, mais peut signifier que le fichier de langue doit être mis à jour.';
 $_lang["configcheck_notok"] = 'Un ou plusieurs détails de configuration ne sont pas valides:';
 $_lang["configcheck_ok"] = 'Le contrôle s\'est bien passé - aucun avertissement rapporté.';
+$_lang["configcheck_php_gdzip"] = 'Extensions PHP GD et/ou Zip non trouvées';
+$_lang["configcheck_php_gdzip_msg"] = 'MODx a besoin de l\'extension GD et Zip autorisée pour PHP. Même si MODx sait travailler sans, vous ne tirerez pas pleinement profit du gestionnaire de fichiers, de l\'éditeur d\'images ou de Captcha pour les logins.';
 $_lang["configcheck_register_globals"] = 'register_globals est sur "ON" dans votre fichier de configuration php (php.ini)';
 $_lang["configcheck_register_globals_msg"] = 'Cette configuration rend votre site vulnérable aux attaques <a href="http://www.commentcamarche.net/contents/attaques/cross-site-scripting.php3">XCSS</a> (cross site scripting). Consultez votre hébergeur sur la marche à suivre pour désactiver ce réglage.';
 $_lang["configcheck_title"] = 'Contrôle de configuration';
@@ -195,6 +197,7 @@ $_lang["datepicker_offset"] = 'Décalage du contrôle de saisie de la date: ';
 $_lang["datepicker_offset_message"] = 'Le nombre d\'années dans le passé à montrer sur le contrôle de saisie de la date.';
 $_lang["datetime_format"] = 'Format de la date:';
 $_lang["datetime_format_message"] = 'Le format des dates dans le Gestionnaire.';
+$_lang["default"] = 'Par défaut:'; 
 $_lang["defaultcache_message"] = 'Choisissez «Oui» pour que les nouvelles Ressources soient mises en cache par défaut.';
 $_lang["defaultcache_title"] = 'À mettre en cache par défaut';
 $_lang["defaultmenuindex_message"] = 'Choisissez «Oui» pour activer l\'auto-incrémentation de l\'index de menu par défaut.';

@@ -12,6 +12,67 @@
 	$snippetPath = $setupPath .'/assets/snippets';
 	$pluginPath = $setupPath .'/assets/plugins';
 	$modulePath = $setupPath .'/assets/modules';
+	$templatePath = $setupPath .'/assets/templates';
+	$tvPath = $setupPath .'/assets/tvs';
+
+	// setup Template template files - array : name, description, type - 0:file or 1:content, parameters, category
+	$mt = &$moduleTemplates;
+	if(is_dir($templatePath) && is_readable($templatePath))
+	{
+		$d = dir($templatePath);
+		while (false !== ($tplfile = $d->read()))
+		{
+			if(substr($tplfile, -4) != '.tpl') continue;
+			$params = parse_docblock($templatePath, $tplfile);
+			if(is_array($params) && (count($params)>0))
+			{
+				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
+				$mt[] = array
+				(
+					$params['name'],
+					$description,
+					// Don't think this is gonna be used ... but adding it just in case 'type'
+					$params['type'],
+					"$templatePath/{$params['filename']}",
+					$params['modx_category'],
+					$params['lock_template']
+				);
+			}
+		}
+		$d->close();
+	}
+
+	// setup Template Variable template files
+	$mtv = &$moduleTVs;
+	if(is_dir($tvPath) && is_readable($tvPath))
+	{
+		$d = dir($tvPath);
+		while (false !== ($tplfile = $d->read()))
+		{
+			if(substr($tplfile, -4) != '.tpl') continue;
+			$params = parse_docblock($tvPath, $tplfile);
+			if(is_array($params) && (count($params)>0))
+			{
+				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
+				$mtv[] = array
+				(
+					$params['name'],
+					$params['caption'],
+					$description,
+					$params['input_type'],
+					$params['input_options'],
+					$params['input_default'],
+					$params['output_widget'],
+					$params['output_widget_params'],
+					"$templatePath/{$params['filename']}", /* not currently used */
+					$params['template_assignments'], /* comma-separated list of template names */
+					$params['modx_category'],
+					$params['lock_tv']  /* value should be 1 or 0 */
+				);
+			}
+		}
+		$d->close();
+	}
 
 	// setup chunks template files - array : name, description, type - 0:file or 1:content, file or content
 	$mc = &$moduleChunks;

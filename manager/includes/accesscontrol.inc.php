@@ -73,21 +73,6 @@ if(!isset($_SESSION['mgrValidated'])){
 	$html = is_array($evtOut) ? implode('',$evtOut) : '';
 	$modx->setPlaceholder('OnManagerLoginFormPrerender',$html);
 
-	// support info
-	$html = '';
-	$pth = dirname(__FILE__);
-	$file = "$pth/support.inc.php";
-	$ov_file = "$pth/override.support.inc.php"; // detect override file
-	if(file_exists($ov_file)) $inc = include_once($ov_file);
-	else if(file_exists($file)) $inc = include_once($file);
-	if($inc)  {
-		ob_start();
-		showSupportLink();
-		$html = ob_get_contents();
-		ob_end_clean();
-	}
-	$modx->setPlaceholder('SupportInfo',$html);
-
 	$modx->setPlaceholder('site_name',$site_name);
 	$modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 	$modx->setPlaceholder('login_message',$_lang["login_message"]);
@@ -110,16 +95,17 @@ if(!isset($_SESSION['mgrValidated'])){
 	}
 
 	// login info
+	$uid =  isset($_COOKIE['modx_remember_manager']) ? preg_replace('/[^a-zA-Z0-9\-_]*/', '',  $_COOKIE['modx_remember_manager']) :''; 
 	$modx->setPlaceholder('uid',$uid);
 	$modx->setPlaceholder('username',$_lang["username"]);
 	$modx->setPlaceholder('password',$_lang["password"]);
 
 	// remember me
-	$html =  isset($cookieSet) ? 'checked="checked"' :'';
+	$html =  isset($_COOKIE['modx_remember_manager']) ? 'checked="checked"' :'';
 	$modx->setPlaceholder('remember_me',$html);
 	$modx->setPlaceholder('remember_username',$_lang["remember_username"]);
 	$modx->setPlaceholder('login_button',$_lang["login_button"]);
-
+	
 	// invoke OnManagerLoginFormRender event
 	$evtOut = $modx->invokeEvent('OnManagerLoginFormRender');
 	$html = is_array($evtOut) ? '<div id="onManagerLoginFormRender">'.implode('',$evtOut).'</div>' : '';
