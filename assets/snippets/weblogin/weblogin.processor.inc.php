@@ -313,7 +313,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
     if(isset($newloginerror) && $newloginerror==1) {
         $failedlogins += $newloginerror;
         if($failedlogins>=$modx->config['failed_login_attempts']) { //increment the failed login counter, and block!
-            $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins', blockeduntil='".(time()+($modx->config['blocked_minutes']*60))."' where internalKey=$internalKey";
+            $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins', blocked=1, blockeduntil='".(time()+($modx->config['blocked_minutes']*60))."' where internalKey=$internalKey";
             $ds = $modx->db->query($sql);
         } else { //increment the failed login counter
             $sql = "update $dbase.`".$table_prefix."web_user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
@@ -354,6 +354,14 @@ $table_prefix = $modx->dbConfig['table_prefix'];
     $ds = $modx->db->query($sql);
     while ($row = $modx->db->getRow($ds,'num')) $dg[$i++]=$row[0];
     $_SESSION['webDocgroups'] = $dg;
+    
+    $tblwgn = $this->getFullTableName("webgroup_names");
+    $tblwg = $this->getFullTableName("web_groups");
+    $sql= "SELECT wgn.name
+    FROM $tblwgn wgn
+    INNER JOIN $tblwg wg ON wg.webgroup=wgn.id AND wg.webuser=" . $internalKey;
+    $grpNames= $this->db->getColumn("name", $sql); 
+    $_SESSION['webUserGroupNames']= $grpNames;
 
     if($rememberme) {
         $_SESSION['modx.web.session.cookie.lifetime']= intval($modx->config['session.cookie.lifetime']);
@@ -411,7 +419,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
             $alias = substr($alias, 0, $aliasLength);
             $url = $modx->config['base_url'] . $alias;
         } elseif (intval($targetPageId)) {
-            $url = $modx->makeUrl($targetPageId);
+            $url = preserveUrl($targetPageId);
         } else {
             $url = urldecode($_REQUEST['refurl']);
         }

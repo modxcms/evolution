@@ -80,7 +80,7 @@ $_lang["database_use_failed_note"] = 'データベースのユーザー権限を
 $_lang["default_language"] = '管理画面で使用する言語';
 $_lang["default_language_description"] = '管理画面で使用する言語を選択してください。(※Japanese-eucを選択するとプリインストールされるサンプルコンテンツやアドオンの説明文は文字化けしますのでご注意ください。アドオンの機能は利用できます。)';
 $_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
-$_lang["encoding"] = 'utf-8';   //charset encoding for html header
+$_lang["encoding"] = 'utf-8';	//charset encoding for html header
 $_lang["error"] = 'エラー';
 $_lang["errors"] = 'エラー'; //Plural form
 $_lang["failed"] = '確認してください';
@@ -102,10 +102,10 @@ $_lang["installation_successful"] = '<span style="color:#080;font-size:22px;">�
 $_lang["installation_upgrade_advanced"] = 'カスタムアップデート<br /><small>(データベース設定を変更できます)</small>';
 $_lang["installation_upgrade_advanced_note"] = 'データベース設定の変更を伴うアップデートが必要な場合はこちらを選んでください。<br />';
 $_lang["installation_upgrade_existing"] = '通常アップデート';
-$_lang["installation_upgrade_existing_note"] = 'コアファイル・リソースファイルの両方とデータベースをアップデートします。';
+$_lang["installation_upgrade_existing_note"] = '通常のアップデートはこのオプションを。コアファイル・リソースファイルの両方とデータベースをアップデートします。';
 $_lang["installed"] = 'インストールしました';
 $_lang["installing_demo_site"] = 'サンプルサイトのインストール: ';
-$_lang["language_code"] = 'ja'; // for html element e.g. <html xml:lang="ja" lang="ja">
+$_lang["language_code"] = 'ja';	// for html element e.g. <html xml:lang="ja" lang="ja">
 $_lang["loading"] = '処理中...';
 $_lang["modules"] = 'モジュール';
 $_lang["modx_footer1"] = '&copy; 2005-2010 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Management Framework (CMF) project. All rights reserved. MODx is licensed under the GNU GPL.';

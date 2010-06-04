@@ -50,7 +50,7 @@ switch ($_POST['mode']) {
 			// prepare a few variables prior to redisplaying form...
 			$content = array();
 			$_REQUEST['id'] = 0;
-			$_REQUEST['a'] = 77;
+			$_REQUEST['a'] = '77';
 			$_GET['stay'] = $_POST['stay'];
 			$content['id'] = 0;
 			$content['locked'] = $_POST['locked'] == 'on' ? 1 : 0;

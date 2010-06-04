@@ -1,7 +1,64 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.3 ($Rev$ - $Date$)
+MODx Evolution 1.0.4 ($Rev$ - $Date$)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#MODX-1964] WebLogin does not prevent brute force attack
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#MODX-1865] 1.02 to 1.03 Upgrade Error with mySQL STRICT mode, "Templates: Incorrect integer value"
+* [#MODX-1883] WebLoginSideBar chunk "forget" typo
+* [#MODX-1880] Superfluous single quote in tree.php
+* [#MODX-1878] Wrong path for _tx_.gif image in multiple files
+* [#MODX-1896] Can't properly execute logEvent function when user is not logged in (strict sql mode on)
+* [#MODX-1900] Fixes and tweaks for search.static.php
+* [#MODX-1905] Broken paths to images, non valid xhtml tags, unmatched tags
+* [#MODX-1884] Bug in breadcrumbs 1.0.1
+* [#MODX-1833] Incorrect rendering of module parameters for 'list-multi' type
+* [#MODX-1920] Problem with Ditto and server time offset
+* [#MODX-1925] WebLogin loses GET request elements if you have to login before getting to the page
+* [#MODX-1926] Revert Cache Sync tokenization updates due to inconsistencies across PHP environments
+* [#MODX-1893] Code registered with "regClientHTMLBlock" not inserted in cached documents
+* [#MODX-1906] Put duplicate button on resource edit page
+* [#MODX-1814] Irregular character string in QuickManager class
+* [#MODX-1003] Removed font: Icon; from sortabletable class to let normal font-size view. [#MODX-1818]
+* [#MODX-1874] Minor error in dbapi and debug
+* [#MODX-1487] Error when configuring database on initial install process
+* [#MODX-1882] webUserGroupNames $_SESSION value not set until second page land in WebLogin
+* [#MODX-1510] Add a 'Remove Locks' permission to roles
+* [#MODX-1881] ManagerManager errors when PHP version less than 5.2.3
+* [#MODX-1938] DB backup in Manager fails on IE under https
+* [#MODX-1954] Add system setting to allow configuration warnings to only be shown to Admins
+* [#MODX-1958] tmplvars.format.inc.php missing image property align
+* [#MODX-1959] E_DEPRECATED error in ImageEditor
+* [#MODX-1960] ImageEditor has incorrect location for the image src
+* [#MODX-1962] E_DEPRECATED error in ManagerManager
+* [#MODX-1963] DocManager, after tree sorting, can show document tree JS alert
+* [#MODX-1947] and [#MODX-1956] Allow $modx->getDocumentObject() to get other documents than the currently requested
+* [#MODX-1927] Manager Log fails to display when there are too many log entries
+* [#MODX-1990] Update common transliteration table for TransAlias plugin [#ADDON-152], update InheritTemplate plugin to include Sibling option
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#MODX-1458] Make default click behavior for the Tree menu a system option
+* [#MODX-1879] Mistake in the Netherlands language file
+* [#MODX-1955] Make installer path setting changes required for Web PI installer
+* [#MODX-1957] Update language files
+* [#MODX-1929] Add styling to phpinfo() screen
+* [#MODX-1931] Style update to Mutate Module screen
+* [#MODX-1932] Style update to Template Variable and Plugin Priority Sort screens
+* [#MODX-1935] Style tweaks to table bgcolor in various places
+* [#MODX-1888] Add setting for allowing control over remembering the last tab viewed or not
+* [#MODX-1977] When previewing, use friendly URLs (if enabled)
+* [#MODX-2009] Clean up handling of 'a' variable in Manager (and related type casting changes)
+
+MODx Evolution 1.0.3 (Apr 1, 2010)
 ===================================
 --------------------------------------------
 Security:

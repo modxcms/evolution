@@ -204,7 +204,11 @@ function deletedocument() {
 	}
 }
 
-// end modifications
+function duplicatedocument(){
+    if(confirm("<?php echo $_lang['confirm_resource_duplicate']?>")==true) {
+        document.location.href="index.php?id=<?php echo $_REQUEST['id']?>&a=94";
+    }
+}
 
 var allowParentSelection = false;
 var allowLinkSelection = false;
@@ -506,7 +510,7 @@ if (is_array($evtOut))
 ?>
 <input type="hidden" name="a" value="5" />
 <input type="hidden" name="id" value="<?php echo $content['id']?>" />
-<input type="hidden" name="mode" value="<?php echo $_REQUEST['a']?>" />
+<input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo isset($upload_maxsize) ? $upload_maxsize : 1048576?>" />
 <input type="hidden" name="refresh_preview" value="0" />
 <input type="hidden" name="newtemplate" value="" />
@@ -529,13 +533,14 @@ if (is_array($evtOut))
 			</select>		
 		  </li>
 		  <?php
-			if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == 72) { ?>
+			if ($_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') { ?>
 		  <li id="Button2" class="disabled"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
 		  <?php } else { ?>
+		  <li id="Button6"><a href="#" onclick="duplicatedocument();"><img src="<?php echo $_style["icons_resource_duplicate"] ?>" /> <?php echo $_lang['duplicate']?></a></li>
 		  <li id="Button3"><a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a></li>
 		  <?php } ?>	
 		  <li id="Button4"><a href="#" onclick="documentDirty=false;<?php echo $id==0 ? "document.location.href='index.php?a=2';" : "document.location.href='index.php?a=3&amp;id=$id';"?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
-		  <li id="Button5"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
+		  <li id="Button5"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img src="<?php echo $_style["icons_preview_resource"] ?>" /> <?php echo $_lang['preview']?></a></li>
 	  </ul>
 </div>
 
@@ -544,7 +549,7 @@ if (is_array($evtOut))
 
 <div class="tab-pane" id="documentPane">
 	<script type="text/javascript">
-	tpSettings = new WebFXTabPane( document.getElementById( "documentPane" ), false );
+	tpSettings = new WebFXTabPane( document.getElementById( "documentPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
 
 	<!-- General -->
@@ -569,7 +574,7 @@ if (is_array($evtOut))
 				<td><input name="link_attributes" type="text" maxlength="255" value="<?php echo htmlspecialchars(stripslashes($content['link_attributes']))?>" class="inputBox" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['link_attributes_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 				
-<?php if ($content['type'] == 'reference' || $_REQUEST['a'] == 72) { // Web Link specific ?>
+<?php if ($content['type'] == 'reference' || $_REQUEST['a'] == '72') { // Web Link specific ?>
 
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['weblink']?></span> <img name="llock" src="<?php echo $_style["tree_folder"] ?>" onclick="enableLinkSelection(!allowLinkSelection);" style="cursor:pointer;" /></td>
 				<td><input name="ta" type="text" maxlength="255" value="<?php echo !empty($content['content']) ? stripslashes($content['content']) : "http://"?>" class="inputBox" onchange="documentDirty=true;" />
@@ -594,7 +599,7 @@ if (is_array($evtOut))
 						$thisCategory = $_lang["no_category"];
 					}
 					if($thisCategory != $currentCategory) {
-						if($thisCategory != '') {
+						if($closeOptGroup) {
 							echo "\t\t\t\t\t</optgroup>\n";							
 						}
 						echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
@@ -673,12 +678,12 @@ if (is_array($evtOut))
 				</td></tr>
 		</table>
 		
-		<?php if ($content['type'] == 'document' || $_REQUEST['a']==4) { ?>
+		<?php if ($content['type'] == 'document' || $_REQUEST['a'] == '4') { ?>
 		<!-- Content -->
 			<div class="sectionHeader" id="content_header"><?php echo $_lang['resource_content']?></div>
 			<div class="sectionBody" id="content_body">
 			<?php
-			if (($content['richtext'] == 1 || $_REQUEST['a'] == 4) && $use_editor == 1) {
+			if (($content['richtext'] == 1 || $_REQUEST['a'] == '4') && $use_editor == 1) {
 				// replace image path
 				$htmlContent = $content['content'];
 				if (!empty ($htmlContent)) {
@@ -732,7 +737,7 @@ if (is_array($evtOut))
 			</div><!-- end .sectionBody -->
 		<?php } ?>
 
-		<?php if (($content['type'] == 'document' || $_REQUEST['a'] == 4) || ($content['type'] == 'reference' || $_REQUEST['a'] == 72)) { ?>
+		<?php if (($content['type'] == 'document' || $_REQUEST['a'] == '4') || ($content['type'] == 'reference' || $_REQUEST['a'] == 72)) { ?>
 		<!-- Template Variables -->
 			<div class="sectionHeader" id="tv_header"><?php echo $_lang['settings_templvars']?></div>
 			<div class="sectionBody tmplvars" id="tv_body">
@@ -846,8 +851,8 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
 			<tr style="height: 24px;"><td><span class="warning"><?php echo $_lang['resource_type']?></span></td>
 				<td><select name="type" class="inputBox" onchange="documentDirty=true;" style="width:200px">
 
-					<option name="type" value="document"<?php echo (($content['type'] == "document" || $_REQUEST['a'] == 85 || $_REQUEST['a'] == 4) ? ' selected="selected"' : "").'>'.$_lang["resource_type_webpage"]."</option>";?> 
-					<option name="type" value="reference"<?php echo (($content['type'] == "reference" || $_REQUEST['a'] == 72) ? ' selected="selected"' : "").'>'.$_lang["resource_type_weblink"]."</option>";?> 
+					<option name="type" value="document"<?php echo (($content['type'] == "document" || $_REQUEST['a'] == '85' || $_REQUEST['a'] == '4') ? ' selected="selected"' : "").'>'.$_lang["resource_type_webpage"]."</option>";?> 
+					<option name="type" value="reference"<?php echo (($content['type'] == "reference" || $_REQUEST['a'] == '72') ? ' selected="selected"' : "").'>'.$_lang["resource_type_weblink"]."</option>";?> 
 					</select>
 					&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_type_message']?>" onclick="alert(this.alt);" style="cursor:help;" /></td></tr>
 
@@ -895,14 +900,14 @@ if ($_SESSION['mgrRole'] == 1 || $_REQUEST['a'] != '27' || $_SESSION['mgrInterna
 
 			<tr style="height: 24px;">
 				<td width="150"><span class="warning"><?php echo $_lang['resource_opt_folder']?></span></td>
-				<td><input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? "checked" : ''?> onclick="changestate(document.mutate.isfolder);" />
-				<input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']==85) ? 1 : 0?>" onchange="documentDirty=true;" />
+				<td><input name="isfoldercheck" type="checkbox" class="checkbox" <?php echo ($content['isfolder']==1||$_REQUEST['a']=='85') ? "checked" : ''?> onclick="changestate(document.mutate.isfolder);" />
+				<input type="hidden" name="isfolder" value="<?php echo ($content['isfolder']==1||$_REQUEST['a']=='85') ? 1 : 0?>" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_folder_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>
 			<tr style="height: 24px;">
 				<td><span class="warning"><?php echo $_lang['resource_opt_richtext']?></span></td>
-				<td><input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? '' : "checked"?> onclick="changestate(document.mutate.richtext);" />
-				<input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']==27 ? 0 : 1?>" onchange="documentDirty=true;" />
+				<td><input name="richtextcheck" type="checkbox" class="checkbox" <?php echo $content['richtext']==0 && $_REQUEST['a']=='27' ? '' : "checked"?> onclick="changestate(document.mutate.richtext);" />
+				<input type="hidden" name="richtext" value="<?php echo $content['richtext']==0 && $_REQUEST['a']=='27' ? 0 : 1?>" onchange="documentDirty=true;" />
 				&nbsp;&nbsp;<img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_richtext_help']?>" onclick="alert(this.alt);" style="cursor:help;" /></td>
 			</tr>			
 			<tr style="height: 24px;">
@@ -1189,7 +1194,7 @@ if (is_array($evtOut)) echo implode('', $evtOut);
 	//setTimeout('showParameters()',10);
 	storeCurTemplate();</script>
 <?php
-	if (($content['richtext'] == 1 || $_REQUEST['a'] == 4 || $_REQUEST['a'] == 72) && $use_editor == 1) {
+	if (($content['richtext'] == 1 || $_REQUEST['a'] == '4' || $_REQUEST['a'] == '72') && $use_editor == 1) {
 		if (is_array($replace_richtexteditor)) {
 			// invoke OnRichTextEditorInit event
 			$evtOut = $modx->invokeEvent('OnRichTextEditorInit', array(

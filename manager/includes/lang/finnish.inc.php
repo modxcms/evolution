@@ -2,12 +2,13 @@
 /**
  * Filename:       includes/lang/finnish.inc.php
  * Function:       Language file.
- * Authors:        Mikko Lammi, Anssi Rajakallio
- * Date:           30.7.2009
- * Version:        2.0.3
- * MODx version:   Evolution 1.0
+ * Encoding:       UTF8
+ * Author:         Mikko Lammi, www.maagit.fi
+ * Date:           17.5.2010
+ * Version:        -
+ * MODx version:   Evolution 1.0.4
 */
-
+//$modx_textdir = 'rtl'; // uncomment this line for RTL languages
 $modx_lang_attribute = 'fi';
 $modx_manager_charset = 'UTF-8';
 
@@ -52,6 +53,7 @@ $_lang["add_template"] = 'Lisää sivupohja';
 $_lang["add_tv"] = 'Lisää sivupohjan muuttuja';
 $_lang["add_weblink"] = 'Uusi hyperlinkki';
 $_lang["administrator_role_message"] = 'Pääkäyttäjän roolia ei voi muokata tai poistaa.';
+$_lang['administrators'] = 'Pääkäyttäjät';
 $_lang["after_saving"] = 'Tallennuksen jälkeen';
 $_lang["alert_delete_self"] = 'Et voi poistaa itseäsi!';
 $_lang["alias"] = 'Alias';
@@ -115,7 +117,7 @@ $_lang["configcheck_errorpage_unavailable_msg"] = 'Virhesivulle ei ole käyttöo
 $_lang["configcheck_errorpage_unpublished"] = 'Virhesivua ei ole julkaistu tai se ei ole olemassa.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Virhesivulle ei ole käyttöoikeutta. Julkaise kyseinen sivu ja/tai varmista, että sivun ID on järjestelmän asetuksissa oikein.';
 $_lang["configcheck_images"] = 'Images-kansioon ei voi kirjoittaa';
-$_lang["configcheck_images_msg"] = 'Images-kansioon ei voi kirjoittaa tai kansiota ei ole olemassa. Tämä tarkoittaa sitä, että editorin kuvanhallintafunktiot eivät toimi!';
+$_lang["configcheck_images_msg"] = 'Images-kansioon ei voi kirjoittaa tai kansiota ei ole olemassa. Tämä tarkoittaa sitä, että kuvanhallintatoiminnot eivät toimi!';
 $_lang["configcheck_installer"] = 'asennusohjelma on yhä tallella';
 $_lang["configcheck_installer_msg"] = 'Install-kansio sisältää MODx:n asennusohjelman. Kuvittele, mitä voi tapahtua, jos pahantahtoinen henkilö löytää kansion ja ajaa asennusohjelman! Korjaa ongelma poistamalla kansio palvelimeltasi.';
 $_lang["configcheck_lang_difference"] = 'Virheellinen määrä merkintöjä kielitiedostossa';
@@ -196,7 +198,7 @@ $_lang["datepicker_offset"] = 'Päivämäärävalinnan rajat: ';
 $_lang["datepicker_offset_message"] = 'Kuinka monta vuotta näytetään taaksepäin kalentereissa, kun valitaan päivämääriä.';
 $_lang["datetime_format"] = 'Päivämäärän muoto:';
 $_lang["datetime_format_message"] = 'Päivämäärien muoto ylläpidossa.';
-$_lang["default"] = 'Oletus:'; 
+$_lang["default"] = 'Oletus:';
 $_lang["defaultcache_message"] = 'Määrittele tallennetaanko uudet sivut oletusarvoisesti välimuistiin.';
 $_lang["defaultcache_title"] = 'Välimuisti -oletus:';
 $_lang["defaultmenuindex_message"] = 'Määrittele annetaanko uusille sivuille automaattisesti kasvava valikon järjestysnumero.';
@@ -259,6 +261,7 @@ $_lang["event_id"] = 'Tapahtuman ID';
 $_lang["eventlog"] = 'Tapahtumaloki';
 $_lang["eventlog_msg"] = 'Tapahtumaloki sisältää sisällönhallintajärjestelmän luomia merkintöjä sekä varoitus- ja virheilmoituksia.';
 $_lang["eventlog_viewer"] = 'Tapahtumaloki';
+$_lang["everybody"] = 'Kaikki';
 $_lang["existing_category"] = 'Kategoria';
 $_lang["expand_tree"] = 'Laajenna';
 $_lang["export_site"] = 'Vie sivusto';
@@ -663,6 +666,8 @@ $_lang["refresh_site"] = 'Tyhjennä välimuisti';
 $_lang["refresh_title"] = 'Välimuisti tyhjennetty';
 $_lang["refresh_tree"] = 'Päivitä';
 $_lang["refresh_unpublished"] = '<strong>%s</strong> sivua piilotettiin.';
+$_lang["remember_last_tab"] = 'Muista välilehdet';
+$_lang["remember_last_tab_message"] = 'Viimeksi käytetty välilehti latautuu ensin oletuksena ensimmäisenä olevan välilehden sijaan.';
 $_lang["remember_username"] = 'Muista minut';
 $_lang["remove"] = 'Poista';
 $_lang["remove_date"] = 'Poista päiväys';
@@ -777,6 +782,7 @@ $_lang["role_new_user"] = 'Luo uusi käyttää';
 $_lang["role_new_web_user"] = 'Luo uusi web-käyttäjä';
 $_lang["role_plugin_management"] = 'Liitännäisten hallinta';
 $_lang["role_publish_doc"] = 'Julkaise sivu';
+$_lang['role_remove_locks'] = 'Poista lukot';
 $_lang["role_role_management"] = 'Roolien hallinta';
 $_lang["role_run_module"] = 'Suorita moduuli';
 $_lang["role_save_chunk"] = 'Tallenna HTML-palanen';
@@ -950,6 +956,8 @@ $_lang["top_howmany_title"] = 'Top-listat:';
 $_lang["total"] = 'yhteensä';
 $_lang["track_visitors_message"] = 'MODx ei sisällä oletuksena kävijäseurantaa, joten valinnalla ei ole vaikutusta ellei erillistä kävijäseurantaa ole asennettu.';
 $_lang["track_visitors_title"] = 'Kävijäseuranta:';
+$_lang["tree_page_click"] = 'Sivun napsautus';
+$_lang["tree_page_click_message"] = 'Oletustoiminto napsautettaessa sivua sivukartassa.';
 $_lang["tree_show_protected"] = 'Näytä suojatut sivut:';
 $_lang["tree_show_protected_message"] = 'Näytetäänkö suojatut sivut (ja kaikki alisivut) sivukartassa.';
 $_lang["truncate_table"] = 'Tyhjää taulukko napsauttamalla';
@@ -1031,6 +1039,8 @@ $_lang["view_logging"] = 'Toimintojen jäljitys';
 $_lang["view_sysinfo"] = 'Järjestelmän tiedot';
 $_lang["warning"] = 'Varoitus!';
 $_lang["warning_not_saved"] = 'Muutoksia ei ole vielä tallennettu. Voit pysyä nykyisellä sivulla ja tallentaa muutokset (\'Peruuta\'), tai voit lähteä tältä sivulta, menettäen kaikki tekemäsi muutokset (\'OK\')';
+$_lang["warning_visibility"] = 'Ylläpidon asetusvaroitusten näkyvyys';
+$_lang["warning_visibility_message"] = 'Muuta ylläpidon asetusvaroitusten näkyvyyttä ylläpidon Tervetuloa -sivulla.';
 $_lang["web_access_permissions"] = 'Web-käyttöoikeudet';
 $_lang["web_access_permissions_user_groups"] = 'Web-käyttäjäryhmät';
 $_lang["web_permissions"] = 'Web-käyttöoikeudet';

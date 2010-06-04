@@ -8,7 +8,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <div class="sectionBody">
     <div class="tab-pane" id="resourcesPane">
         <script type="text/javascript">
-            tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ) );
+            tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
         </script>
 <?php
 if ($handle = opendir('../assets/templates/help')) {
@@ -33,9 +33,9 @@ foreach($help as $k=>$v) {
     }
 
     $helpname = str_replace('_', ' ', $helpname);
-    echo '<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
     echo '<div class="tab-page" id="tab'.$v.'Help">';
     echo '<h2 class="tab">'.$helpname.'</h2>';
+    echo '<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
     include "../assets/templates/help/$v";
     echo '</div>';
 }

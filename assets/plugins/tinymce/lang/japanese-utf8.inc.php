@@ -24,4 +24,5 @@ $_lang['tinymce_theme_editor'] = 'MODxデフォルト';
 $_lang['tinymce_theme_custom'] = 'カスタム';
 $_lang['tinymce_theme_creative'] = 'クリエイティブ';
 $_lang['tinymce_theme_logic'] = 'ロジック';
+$_lang['tinymce_theme_legacy'] = '旧タイプ';
 $_lang['tinymce_theme_global_settings'] = 'グローバル設定を利用';

@@ -5,7 +5,7 @@
  * Configurable breadcrumb page-trail navigation
  * 
  * @category	snippet
- * @version 	1.0.1
+ * @version 	1.0.2
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category Navigation
@@ -14,7 +14,7 @@
 /*
  * This snippet shows the path through the various levels of site structure. It
  * is NOT necessarily the path the user took to arrive at a given page.
- * Version: 1.0.1
+ * Version: 1.0.2
  */
 
 /* -----------------------------------------------------------------------------
@@ -187,7 +187,7 @@
 /* $ignoreIds [ string ]
  * Comma separated list of document IDs to explicitly ignore.
  */
-( isset($ignoreIds) ) ? $ignoreids : '';
+( isset($ignoreIds) ) ? $ignoreids : $ignoreids = '';
 
 /* Templates
  * -----------------------------------------------------------------------------

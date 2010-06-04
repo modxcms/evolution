@@ -1,10 +1,10 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
-if(!$modx->hasPermission('edit_template') && $_REQUEST['a']==301) {
+if(!$modx->hasPermission('edit_template') && $_REQUEST['a']=='301') {
     $e->setError(3);
     $e->dumpError();
 }
-if(!$modx->hasPermission('new_template') && $_REQUEST['a']==300) {
+if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
     $e->setError(3);
     $e->dumpError();
 }
@@ -313,11 +313,11 @@ function decode(s){
   </tr>
   <tr>
 	<td align="left" valign="top"><?php echo $_lang['tmplvars_elements']; ?>:  </td>
-	<td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="elements" maxlength="65535" class="inputBox textarea" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['elements']);?></textarea><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif" width="17" height="18" align="absmiddle" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand"/></td>
+	<td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange='documentDirty=true;'><?php echo htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
     <td align="left" valign="top"><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</td>
-    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/b02.gif" width="17" height="18" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt)" style="cursor:hand" /></td>
+    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</td>
@@ -362,7 +362,7 @@ function decode(s){
 <!-- Template Permission -->
 	<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 	<div class="sectionBody">
-<?php echo $_lang['tmplvar_tmpl_access_msg']; ?><p />
+	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
 <table width="100%" cellspacing="0" cellpadding="0">
 	<?php
 	    $tbl = $dbase.".`".$table_prefix."site_templates`" ;

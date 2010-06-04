@@ -507,7 +507,7 @@ echo $_lang['files_data'],': <b><span dir="ltr">',ufilesize($filesizes),'</span>
 echo $_lang['files_dirwritable'],' <b>',is_writable($startpath)==1 ? $_lang['yes'].'.' : $_lang['no'].'.'
 ?></b><br />
 <div align="center">
-<img src="media/style/<?php echo $manager_theme?>images/icons/_tx_.gif" id="imageviewer">
+<img src="<?php echo $_style['tx']; ?>" id="imageviewer" />
 </div>
 <br /><hr />
 <?php
@@ -579,10 +579,10 @@ if(!$handle) {
 
 if($_REQUEST['mode']=="edit") {
 ?>
-
+<br />
 <ul class="actionButtons">
 	<li><a href="#" onclick="document.editFile.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']?></a></li>
-	<td id="Button2"><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path'])?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
+	<li><a href="index.php?a=31&path=<?php echo urlencode($_REQUEST['path'])?>"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
 </ul>
 <?php } ?>
 </div>

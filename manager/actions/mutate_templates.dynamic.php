@@ -1,7 +1,7 @@
  <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-switch($_REQUEST['a']) {
+switch((int) $_REQUEST['a']) {
   case 16:
     if(!$modx->hasPermission('edit_template')) {
       $e->setError(3);
@@ -93,7 +93,7 @@ function deletedocument() {
 ?>
 <input type="hidden" name="a" value="20">
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id'];?>">
-<input type="hidden" name="mode" value="<?php echo $_REQUEST['a'];?>">
+<input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a'];?>">
 
 	<h1><?php echo $_lang['template_title']; ?></h1>
 
@@ -120,18 +120,17 @@ function deletedocument() {
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
-</div>
 
-<?php if ($_REQUEST['a'] == 16) { ?>
+<?php if ($_REQUEST['a'] == '16') { ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <?php } ?>
 
 <div class="sectionBody">
 
-<?php if ($_REQUEST['a'] == 16) { ?>
+<?php if ($_REQUEST['a'] == '16') { ?>
 <div class="tab-pane" id="templatesPane">
 	<script type="text/javascript">
-		tpResources = new WebFXTabPane( document.getElementById( "templatesPane" ),false );
+		tpResources = new WebFXTabPane( document.getElementById( "templatesPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
 
 	<div class="tab-page" id="tabTemplate">
@@ -139,10 +138,10 @@ function deletedocument() {
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 	<?php } ?>
 
-	<?php echo $_lang['template_msg']; ?><p />
+	<?php echo $_lang['template_msg']; ?>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	  <tr>
-	    <td align="left"><img src="media/style/<?php echo $manager_theme; ?>/images/_tx_.gif" width="100" height="1"></td>
+	    <td align="left"><img src="<?php echo $_style['tx']; ?>" width="100" height="1" /></td>
 	    <td align="left">&nbsp;</td>
 	  </tr>
 	  <tr>
@@ -185,7 +184,7 @@ function deletedocument() {
 	<!-- HTML text editor end -->
 	<input type="submit" name="save" style="display:none">
 
-<?php if ($_REQUEST['a'] == 16) {
+<?php if ($_REQUEST['a'] == '16') {
 	$sql = "SELECT tv.name as 'name', tv.id as 'id', tr.templateid, tr.rank, if(isnull(cat.category),'".$_lang['no_category']."',cat.category) as category
 	FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
 	INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
@@ -198,7 +197,7 @@ $limit = $modx->db->getRecordCount($rs);
 	?>
 	</div>
 	<div class="tab-page" id="tabAssignedTVs">
-    	<h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2><p />
+    	<h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2>
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
     	<p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>
     	<p><?php if($modx->hasPermission('save_template') && $limit > 1) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>

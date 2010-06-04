@@ -49,6 +49,12 @@ $isDefaultUnavailableMsgJs = $isDefaultUnavailableMsg ? 'true' : 'false';
 $site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
 $validate_referrer_off_val = $modx->db->getValue('SELECT setting_value FROM '.$modx->getFullTableName('system_settings').' WHERE setting_name=\'validate_referer\'');
 $validate_referrer_off_val = $validate_referrer_off_val === '00' ? '00' : '0'; // storing the double zero is a trick to hide the warning message from the manager
+
+/* check the file paths */
+$settings['filemanager_path'] = $filemanager_path = trim($settings['filemanager_path']) == '' ? MODX_BASE_PATH : $settings['filemanager_path'];
+$settings['rb_base_dir'] = $rb_base_dir = trim($settings['rb_base_dir']) == '' ? MODX_BASE_PATH.'assets/' : $settings['rb_base_dir'];
+$settings['rb_base_url'] =  $rb_base_url = trim($settings['rb_base_url']) == '' ? 'assets/' : $settings['rb_base_url'];
+
 ?>
 
 <script type="text/javascript">
@@ -161,7 +167,7 @@ function confirmLangChange(el, lkey, elupd){
 }
 
 </script>
-<form name="settings" action="index.php?a=30" method="post" />
+<form name="settings" action="index.php?a=30" method="post">
 
 	<h1><?php echo $_lang['settings_title']; ?></h1>
 
@@ -190,7 +196,7 @@ function confirmLangChange(el, lkey, elupd){
     <script type="text/javascript" src="media/script/tabpane.js"></script>
     <div class="tab-pane" id="settingsPane">
       <script type="text/javascript">
-		tpSettings = new WebFXTabPane( document.getElementById( "settingsPane" ) );
+		tpSettings = new WebFXTabPane( document.getElementById( "settingsPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
 
 	<!-- Site Settings -->
@@ -532,7 +538,7 @@ function confirmLangChange(el, lkey, elupd){
               <td colspan="2"><div class='split'></div></td>
             </tr>
 			<tr>
-              <td nowrap class="warning"><?php echo $_lang["rss_url_news_title"] ?></b></td>
+              <td nowrap class="warning"><?php echo $_lang["rss_url_news_title"] ?></td>
               <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_news" value="<?php echo isset($rss_url_news) ? $rss_url_news : $_lang["rss_url_news_default"] ; ?>" /></td>
             </tr>
 			<tr>
@@ -543,7 +549,7 @@ function confirmLangChange(el, lkey, elupd){
               <td colspan="2"><div class='split'></div></td>
             </tr>
 			<tr>
-              <td nowrap class="warning"><?php echo $_lang["rss_url_security_title"] ?></b></td>
+              <td nowrap class="warning"><?php echo $_lang["rss_url_security_title"] ?></td>
               <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="rss_url_security" value="<?php echo isset($rss_url_security) ? $rss_url_security : $_lang["rss_url_security_default"] ; ?>" /></td>
             </tr>
 			<tr>
@@ -887,6 +893,50 @@ function confirmLangChange(el, lkey, elupd){
               <td width="200">&nbsp;</td>
               <td class='comment'><?php echo $_lang["manager_theme_message"]?></td>
             </tr>
+            
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+             <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["warning_visibility"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="warning_visibility" value="0" <?php echo $warning_visibility=='0' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["administrators"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="warning_visibility" value="1" <?php echo (!isset($warning_visibility) || $warning_visibility=='1') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["everybody"]?></td>
+             </tr>
+             <tr>
+               <td width="200">&nbsp;</td>
+               <td class='comment'><?php echo $_lang["warning_visibility_message"]?></td>
+             </tr>
+            
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+             <tr>
+      		   <td nowrap class="warning"><b><?php echo $_lang["tree_page_click"] ?></b></td>
+      		   <td> <input onchange="documentDirty=true;" type="radio" name="tree_page_click" value="27" <?php echo $tree_page_click=='27' ? 'checked="checked"' : ""; ?> />
+      			 <?php echo $_lang["edit_resource"]?><br />
+      			 <input onchange="documentDirty=true;" type="radio" name="tree_page_click" value="3" <?php echo ($tree_page_click=='3' || !isset($tree_page_click)) ? 'checked="checked"' : ""; ?> />
+      			 <?php echo $_lang["doc_data_title"]?></td>
+      		 </tr>
+             <tr>
+               <td width="200">&nbsp;</td>
+               <td class='comment'><?php echo $_lang["tree_page_click_message"]?></td>
+             </tr>
+             <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+             <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["remember_last_tab"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="remember_last_tab" value="1" <?php echo $remember_last_tab=='1' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["yes"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="remember_last_tab" value="0" <?php echo (!isset($remember_last_tab) || $remember_last_tab=='0') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["no"]?></td>
+             </tr>
+             <tr>
+               <td width="200">&nbsp;</td>
+               <td class='comment'><?php echo $_lang["remember_last_tab_message"]?></td>
+             </tr>
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>

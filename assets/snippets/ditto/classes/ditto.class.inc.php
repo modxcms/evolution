@@ -290,7 +290,11 @@ class ditto {
 		}
 
 		if (in_array("date",$this->fields["display"]["custom"])) {
-			$timestamp = ($resource[$dateSource] != "0") ? $resource[$dateSource] : $resource["createdon"];
+			$timestamp = ($resource[$dateSource] != "0") ? $resource[$dateSource] : $resource["createdon"];	
+			if (is_array($timestamp)) {
+			    $timestamp[1] = is_int($timestamp[1]) ? $timestamp[1] : strtotime($timestamp[1]);
+                $timestamp = $timestamp[1] + $timestamp[0];
+            }   
 			$placeholders['date'] = strftime($dateFormat,$timestamp);
 		}
 		

@@ -216,7 +216,7 @@ function movedocument() {
 		    <a href="#" onclick="deletedocument();"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']?></a>
 		  </li>
 		  <li id="Button6">
-			<a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
+			<a href="#" onclick="<?php echo ($modx->config['friendly_urls'] == '1') ? "window.open('".$modx->makeUrl($id)."','previeWin')" : "window.open('../index.php?id=$id','previeWin')"; ?>"><img src="<?php echo $_style["icons_preview_resource"]?>" /> <?php echo $_lang['preview']?></a>
 		  </li>
 	  </ul>
 	</div>
@@ -226,7 +226,7 @@ function movedocument() {
 
 <div class="tab-pane" id="childPane">
 	<script type="text/javascript">
-	docSettings = new WebFXTabPane( document.getElementById( "childPane" ) );
+	docSettings = new WebFXTabPane( document.getElementById( "childPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
 
 	<!-- General -->
@@ -307,7 +307,7 @@ function movedocument() {
 		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );</script>
 <?php if ($modx->hasPermission('new_document')) { ?>
 	
-			<ul class="actionButtons"><tr>
+			<ul class="actionButtons">
 				<li><a href="index.php?a=4&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_document"]; ?>" align="absmiddle" /> <?php echo $_lang['create_resource_here']?></a></li>
 				<li><a href="index.php?a=72&amp;pid=<?php echo $content['id']?>"><img src="<?php echo $_style["icons_new_weblink"]; ?>" align="absmiddle" /> <?php echo $_lang['create_weblink_here']?></a></li>
 			</ul>

@@ -27,7 +27,7 @@ tinyMCE.init({
 	formats : {
 		alignleft   : {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'justifyleft'},
 		alignright  : {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'justifyright'},
-		alignfull   : {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'justifyfull'},
+		alignfull   : {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes : 'justifyfull'}
 	},
 	apply_source_formatting          : true,
 	remove_linebreaks                : false,
@@ -50,7 +50,7 @@ tinyMCE.init({
 	plugin_insertdate_timeFormat     : '[+time_format+]',
 	entity_encoding                  : '[+entity_encoding+]',
 	file_browser_callback            : '[+file_browser_callback+]',
-	onchange_callback                : [+onchange_callback+],
+	onchange_callback                : [+onchange_callback+][+terminate+]
 	[+customparams+]
 })
 </script>

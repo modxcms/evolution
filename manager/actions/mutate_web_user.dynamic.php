@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-switch($_REQUEST['a']) {
+switch((int) $_REQUEST['a']) {
   case 88:
     if(!$modx->hasPermission('edit_web_user')) {
       $e->setError(3);
@@ -38,7 +38,7 @@ if($limit>1) {
 }
 // end check for lock
 
-if($_REQUEST['a']==88) {
+if($_REQUEST['a']=='88') {
 	// get user attributes
 	$sql = "SELECT * FROM $dbase.`".$table_prefix."web_user_attributes` WHERE $dbase.`".$table_prefix."web_user_attributes`.internalKey = ".$user.";";
 	$rs = mysql_query($sql);
@@ -252,7 +252,7 @@ function showHide(what, onoff){
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="webUserPane">
 	<script type="text/javascript">
-		tpUser = new WebFXTabPane(document.getElementById( "webUserPane" ),false);
+		tpUser = new WebFXTabPane(document.getElementById( "webUserPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
     <div class="tab-page" id="tabGeneral">
     	<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
@@ -280,7 +280,7 @@ function showHide(what, onoff){
 		  <tr>
 			<td valign="top"><?php echo $_GET['a']=='87' ? $_lang['password'].":" : $_lang['change_password_new'].":" ; ?></td>
 			<td>&nbsp;</td>
-			<td><input name="newpasswordcheck" type="checkbox" onClick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="87" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="87" ? 1 : 0 ; ?>" onchange="documentDirty=true;" /><br />
+			<td><input name="newpasswordcheck" type="checkbox" onclick="changestate(document.userform.newpassword);changePasswordState(document.userform.newpassword);"<?php echo $_REQUEST['a']=="87" ? " checked disabled": "" ; ?>><input type="hidden" name="newpassword" value="<?php echo $_REQUEST['a']=="87" ? 1 : 0 ; ?>" onchange="documentDirty=true;" /><br />
 				<span style="display:<?php echo $_REQUEST['a']=="87" ? "block": "none" ; ?>" id="passwordBlock">
 				<fieldset style="width:300px">
 				<legend><b><?php echo $_lang['password_gen_method']; ?></b></legend>
@@ -345,7 +345,7 @@ function showHide(what, onoff){
 			<td><?php echo $_lang['user_country']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-            <select size="1" name="country" onchange="documentDirty=true;" />
+			<select size="1" name="country" onchange="documentDirty=true;">
             <?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 			<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 				<?php
@@ -367,7 +367,7 @@ function showHide(what, onoff){
 		  <tr>
 			<td><?php echo $_lang['user_gender']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><select name="gender" onchange="documentDirty=true;" />
+			<td><select name="gender" onchange="documentDirty=true;">
 				<option value=""></option>
 				<option value="1" <?php echo ($_POST['gender']=='1'||$userdata['gender']=='1')? "selected='selected'":""; ?>><?php echo $_lang['user_male']; ?></option>
 				<option value="2" <?php echo ($_POST['gender']=='2'||$userdata['gender']=='2')? "selected='selected'":""; ?>><?php echo $_lang['user_female']; ?></option>
@@ -378,7 +378,7 @@ function showHide(what, onoff){
 			<td valign="top"><?php echo $_lang['comment']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;" /><?php echo htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea>
+				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;"><?php echo htmlspecialchars(isset($_POST['comment']) ? $_POST['comment'] : $userdata['comment']); ?></textarea>
 			</td>
 		  </tr>
 		<?php if($_GET['a']=='88') { ?>
@@ -400,7 +400,7 @@ function showHide(what, onoff){
 		  <tr>
 			<td><?php echo $_lang['user_block']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><input name="blockedcheck" type="checkbox" onClick="changeblockstate(document.userform.blockedmode, document.userform.blockedcheck);"<?php echo ($userdata['blocked']==1||($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)||($userdata['blockedafter']<time() && $userdata['blockedafter']!=0)) ? " checked='checked'": "" ; ?> /><input type="hidden" name="blocked" value="<?php echo ($userdata['blocked']==1||($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0))?1:0; ?>"></td>
+			<td><input name="blockedcheck" type="checkbox" onclick="changeblockstate(document.userform.blockedmode, document.userform.blockedcheck);"<?php echo ($userdata['blocked']==1||($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0)||($userdata['blockedafter']<time() && $userdata['blockedafter']!=0)) ? " checked='checked'": "" ; ?> /><input type="hidden" name="blocked" value="<?php echo ($userdata['blocked']==1||($userdata['blockeduntil']>time() && $userdata['blockeduntil']!=0))?1:0; ?>"></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_blockeduntil']; ?>:</td>
@@ -511,7 +511,7 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? MODX_SITE_URL.$_POST['photo'] : !empty($userdata['photo']) ? MODX_SITE_URL.$userdata['photo']: "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
+            <td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? MODX_SITE_URL.$_POST['photo'] : !empty($userdata['photo']) ? MODX_SITE_URL.$userdata['photo']: $_style['tx']; ?>" /></td>
           </tr>
 		</table>
 	</div>
@@ -542,7 +542,7 @@ if(is_array($_POST['user_groups'])) {
 
 <div class="sectionHeader"><?php echo $_lang['web_access_permissions']; ?></div><div class="sectionBody">
 <?php
-	echo $_lang['access_permissions_user_message']."<p />";
+	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
 	$sql = "SELECT name, id FROM $dbase.`".$table_prefix."webgroup_names` ORDER BY name";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);

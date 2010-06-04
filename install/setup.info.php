@@ -268,7 +268,7 @@ function parse_docblock($element_dir, $filename) {
 									$param = trim($ma[1]);
 									$val = trim($ma[2]);
 								}
-								if(empty($param) || empty($val)) {
+								if($val !== '0' && (empty($param) || empty($val))) {
 									continue;
 								}
 							}

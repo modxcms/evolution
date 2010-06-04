@@ -312,7 +312,7 @@
                 parent.main.location.href="index.php?a=2";
             } else {
                 // parent.main.location.href="index.php?a=3&id=" + id + getFolderState(); //just added the getvar &opened=
-                parent.main.location.href="index.php?a=27&id=" + id; // edit as default action
+                parent.main.location.href="index.php?a=<?php echo (!empty($modx->config['tree_page_click']) ? $modx->config['tree_page_click'] : '27'); ?>&id=" + id; // edit as default action
             }
         }
         if(ca=="parent") {
@@ -386,7 +386,7 @@
 
 
 </head>
-<body onclick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
+<body onClick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
 
 <div id="treeSplitter"></div>
 
@@ -395,16 +395,16 @@
     <td>
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
-            <td><a href="#" class="treeButton" id="Button1" onclick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></a></td>
-            <td><a href="#" class="treeButton" id="Button2" onclick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button1" onClick="expandTree();" title="<?php echo $_lang['expand_tree']; ?>"><?php echo $_style['expand_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button2" onClick="collapseTree();" title="<?php echo $_lang['collapse_tree']; ?>"><?php echo $_style['collapse_tree']; ?></a></td>
             <?php if ($modx->hasPermission('new_document')) { ?>
-                <td><a href="#" class="treeButton" id="Button3a" onclick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_resource']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
-                <td><a href="#" class="treeButton" id="Button3c" onclick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
+                <td><a href="#" class="treeButton" id="Button3a" onClick="top.main.document.location.href='index.php?a=4';" title="<?php echo $_lang['add_resource']; ?>"><?php echo $_style['add_doc_tree']; ?></a></td>
+                <td><a href="#" class="treeButton" id="Button3c" onClick="top.main.document.location.href='index.php?a=72';" title="<?php echo $_lang['add_weblink']; ?>"><?php echo $_style['add_weblink_tree']; ?></a></td>
             <?php } ?>
-            <td><a href="#" class="treeButton" id="Button4" onclick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
-            <td><a href="#" class="treeButton" id="Button5" onclick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button4" onClick="top.mainMenu.reloadtree();" title="<?php echo $_lang['refresh_tree']; ?>"><?php echo $_style['refresh_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button5" onClick="showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_style['sort_tree']; ?></a></td>
             <?php if ($modx->hasPermission('empty_trash')) { ?>
-                <td><a href="#" id="Button10" class="treeButtonDisabled"' title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
+                <td><a href="#" id="Button10" class="treeButtonDisabled" title="<?php echo $_lang['empty_recycle_bin_empty'] ; ?>"><?php echo $_style['empty_recycle_bin_empty'] ; ?></a></td>
             <?php } ?>
             </tr>
         </table>
@@ -412,7 +412,7 @@
     <td align="right">
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
-            <td><a href="#" class="treeButton" id="Button6" onclick="top.mainMenu.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></a></td>
+            <td><a href="#" class="treeButton" id="Button6" onClick="top.mainMenu.hideTreeFrame();" title="<?php echo $_lang['hide_tree']; ?>"><?php echo $_style['hide_tree']; ?></a></td>
             </tr>
         </table>
     </td>
@@ -451,14 +451,14 @@ if(isset($_REQUEST['tree_sortdir'])) {
         </select>
         <input type='hidden' name='dt' value='<?php echo $_REQUEST['dt']; ?>' />
     </td>
-    <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onclick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></td>
+    <td width="1%"><a href="#" class="treeButton" id="button7" style="text-align:right" onClick="updateTree();showSorter();" title="<?php echo $_lang['sort_tree']; ?>"><?php echo $_lang['sort_tree']; ?></a></td>
   </tr>
 </table>
 </form>
 </div>
 
 <div id="treeHolder">
-    <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onclick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+    <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
 </div>
 
 <script type="text/javascript">
@@ -525,10 +525,8 @@ function menuHandler(action) {
                 alert('Document is linked to site_start variable and cannot be unpublished!');
             }
             break
-        case 12 : // preview (alternate methods commented out)
-            window.open("../index.php?id=" + itemToChange,'previeWin'); //re-use 'new' window
-            //window.open("../index.php?id=" + itemToChange); //open in new window each time
-            //top.main.document.location.href="../index.php?id=" + itemToChange; //open in manager
+        case 12 : // preview	
+            window.open(selectedObjectUrl,'previeWin'); //re-use 'new' window
             break
 
         default :

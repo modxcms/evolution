@@ -120,10 +120,12 @@ include "{$setupPath}/setup.info.php";
 include "{$setupPath}/sqlParser.class.php";
 $sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
-//$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
+/* image and file manager paths now handled via settings screen in Manager
+$sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
 $sqlParser->imageUrl = "assets/";
 $sqlParser->imagePath = $base_path . "assets/";
 $sqlParser->fileManagerPath = $base_path;
+*/
 $sqlParser->ignoreDuplicateErrors = true;
 $sqlParser->connect();
 

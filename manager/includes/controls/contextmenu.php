@@ -63,6 +63,3 @@ $ContextMenuScript = <<<BLOCK
 BLOCK;
 
 ?>
-<html>
-<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
-</html>

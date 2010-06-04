@@ -1,14 +1,18 @@
 <?php
 /**
- * Filename:       includes/lang/italian.inc.php
+ * Filename:       includes/lang/english.inc.php
  * Function:       Language file.
  * Encoding:       UTF8
  * Author:         The MODx Project Team
- * Date:           1 October 2009
- * Version:        2.0.4
- * MODx version:   Evolution 1.0.1
- * Translation:    Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif */
-// NOTE: Now alpha-sorted
+ * Date:           13 May 2010
+ * Version:        2.0.5
+ * MODx version:   Evolution 1.0.4
+ * Translation:    Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif 
+*/
+//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
+$modx_lang_attribute = 'it'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+$modx_manager_charset = 'UTF-8';
+
 $_lang["about_msg"] = 'MODx &egrave; un <a href="http://modxcms.com/what-is-modx.html" target="_blank">framework PHP e un sistema di gestione dei contenuti (CMS)</a> su licenza <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang['database_version'] = 'Versione Database:';
 $_lang['manager_lockout_message'] = 'Siete entrati nel sistema di gestione dei contenuti. Se desiderate uscire dalla sessione, cliccate sul pulsante "Uscita".<p />Per andare alla pagina di inzio, cliccate sul pulsante "Home".';
@@ -51,6 +55,7 @@ $_lang["add_template"] = 'Aggiungi Template';
 $_lang["add_tv"] = 'Aggiungi TV';
 $_lang["add_weblink"] = 'Nuovo Link Web';
 $_lang["add"] = 'Aggiungi';
+$_lang['administrators'] = 'Amministratori';
 $_lang["administrator_role_message"] = 'Questo Ruolo non pu&ograve; essere modificato o eliminato.';
 $_lang["after_saving"] = 'Dopo il salvataggio';
 $_lang["alert_delete_self"] = 'Non potete eliminare voi stessi!';
@@ -122,6 +127,8 @@ $_lang["configcheck_lang_difference_msg"] = 'La lingua correntemente selezionata
 $_lang["configcheck_lang_difference"] = 'Numero errato di voci nel file di lingua';
 $_lang["configcheck_notok"] = 'Uno o pi&ugrave; dettagli della configurazione vanno verificati: ';
 $_lang["configcheck_ok"] = 'Controllo OK - nessun avviso da riportare.';
+$_lang["configcheck_php_gdzip"] = 'Estensioni PHP GD e/o Zip PHP non trovate';
+$_lang["configcheck_php_gdzip_msg"] = 'MODx richiede le estensioni PHP GD e Zip. MODx funziona anche senza, ma non potrete utilizzare File Manager, Image Editor e Captcha.';
 $_lang["configcheck_register_globals_msg"] = 'Questa configurazione rende il vostro sito molto pi&ugrave; suscettibile agli attacchi di Cross Site Scripting (XSS). Contattate il vostro fornitore di hosting per trovare cosa si pu&ograve; fare per disabilitare questa impostazione.';
 $_lang["configcheck_register_globals"] = 'Nel vostro file di configurazione php.ini, il valore register_globals &egrave; impostato su ON';
 $_lang["configcheck_title"] = 'Controllo configurazione';
@@ -193,6 +200,7 @@ $_lang["datepicker_offset_message"] = 'Il numero di anni nel passato da mostrare
 $_lang["datepicker_offset"] = 'Offset del Datepicker: ';
 $_lang["datetime_format_message"] = 'Il formato delle date nel Manager.';
 $_lang["datetime_format"] = 'Formato Data:';
+$_lang["default"] = 'Default:'; 
 $_lang["defaultcache_message"] = 'Selezionate \'si\' se volete che tutte le nuove Risorse siano salvabili di default nella cache.';
 $_lang["defaultcache_title"] = 'Inserisci in cache di default';
 $_lang["defaultmenuindex_message"] = 'Selezionate \'si\' per attivare di default l\'incremento automatico dell\'indice del menu.';
@@ -252,9 +260,10 @@ $_lang["error"] = 'Errore';
 $_lang["errorpage_message"] = 'Inserite l\'ID della Risorsa da mostrare agli utenti che hanno richiesto una Risorsa che in realt&agrave; potrebbe non esistere. <b>NOTA: assicuratevi che l\'ID inserito appartenga a una Risorsa esistente e che sia stata pubblicata!</b>';
 $_lang["errorpage_title"] = 'Pagina di errore:';
 $_lang["event_id"] = 'Id Evento';
+$_lang["eventlog"] = 'Log degli Eventi';
 $_lang["eventlog_msg"] = 'Il Log degli Eventi mostra gli avvisi ed i messaggi di errore generati dal sistema di gestione dei contenuti. La colonna \'Sorgente\' mostra la sezione del sistema di gestione dei contenuti in cui il messaggio &egrave; stato mostrato.';
 $_lang["eventlog_viewer"] = 'Visualizzazione Log Eventi';
-$_lang["eventlog"] = 'Log degli Eventi';
+$_lang["everybody"] = 'Tutti';
 $_lang["existing_category"] = 'Categoria attuale';
 $_lang["expand_tree"] = 'Espandi struttura ad albero';
 $_lang["export_site_cacheable"] = 'Includi file non inseribili in cache:';
@@ -658,6 +667,8 @@ $_lang["refresh_site"] = 'Svuota cache';
 $_lang["refresh_title"] = 'Aggiorna sito';
 $_lang["refresh_tree"] = 'Aggiorna struttura ad albero';
 $_lang["refresh_unpublished"] = '<b>%s</b> Risorse sono state ritirate.';
+$_lang["remember_last_tab"] = 'Ricorda i tabs';
+$_lang["remember_last_tab_message"] = 'Le pagine del Manager con tabs mostreranno l\'ultimo tab utilizzato anzich&egrave; il primo tab';
 $_lang["remember_username"] = 'Ricordami';
 $_lang["remove_date"] = 'Rimuovi data';
 $_lang["remove_locks"] = 'Rimuovi blocchi';
@@ -771,6 +782,7 @@ $_lang["role_new_user"] = 'Crea nuovi utenti';
 $_lang["role_new_web_user"] = 'Crea nuovo utete web';
 $_lang["role_plugin_management"] = 'Gestione Plugin';
 $_lang["role_publish_doc"] = 'Pubblica Risorse';
+$_lang["role_remove_locks"] = 'Togli i blocchi';
 $_lang["role_role_management"] = 'Gestione ruolo';
 $_lang["role_run_module"] = 'Esegui modulo';
 $_lang["role_save_chunk"] = 'Salva chunk';
@@ -945,6 +957,8 @@ $_lang["top_howmany_title"] = 'Quanti \'I primi\'';
 $_lang["total"] = 'totale';
 $_lang["track_visitors_message"] = 'La registrazione delle visite vi permette di vedere le statistiche sull\'utilizzo del sito, tuttavia, la registrazione rallenta un po\' il parser del sito. Se non volete essere assillati dalle statistiche sui visitatori, potete tranquillamente disattivarle e godervi l\'aumento di velocit&agrave;.';
 $_lang["track_visitors_title"] = 'Registra visite (statistiche)';
+$_lang["tree_page_click"] = 'Click su una pagina';
+$_lang["tree_page_click_message"] = 'Cosa succede facendo click su una pagina nell\'albero del sito.';
 $_lang["tree_show_protected_message"] = 'Se impostato "No", Le pagine protette (e tutte le pagine figlie) non appariranno nell\'albero delle Risorse. "No" &egrave; l\'impostazione di default di MODx.';
 $_lang["tree_show_protected"] = 'Mostra pagine protette';
 $_lang["truncate_table"] = 'Cliccate qui per troncare questa tabella';
@@ -1024,8 +1038,10 @@ $_lang["view_log"] = 'Vedi log';
 $_lang["view_logging"] = 'Cronistorie';
 $_lang["view_sysinfo"] = 'Informazioni di Sistema';
 $_lang["view"] = 'Mostra';
-$_lang["warning_not_saved"] = 'Le modifiche che avete effettuato non sono state ancora salvate. Potete scegliere di rimanere sulla pagina corrente per salvarle (\'Annulla\'), oppure potete abbandonarla perdendo ogni modifica che avete fatto (\'OK\').';
 $_lang["warning"] = 'Attenzione!';
+$_lang["warning_not_saved"] = 'Le modifiche che avete effettuato non sono state ancora salvate. Potete scegliere di rimanere sulla pagina corrente per salvarle (\'Annulla\'), oppure potete abbandonarla perdendo ogni modifica che avete fatto (\'OK\').';
+$_lang["warning_visibility"] = 'Avvisi di configurazione visibili a';
+$_lang["warning_visibility_message"] = 'Controlla la visualizzazione degli avvisi mostrati nella pagina iniziale del Manager';
 $_lang["web_access_permissions_user_groups"] = 'Gruppi di Utenti Web';
 $_lang["web_access_permissions"] = 'Permessi di accesso Web';
 $_lang["web_permissions"] = 'Permessi Web';

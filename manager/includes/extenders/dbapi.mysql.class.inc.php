@@ -83,7 +83,7 @@ class DBAPI {
       $pwd = $pwd ? $pwd : $this->config['pass'];
       $host = $host ? $host : $this->config['host'];
       $dbase = $dbase ? $dbase : $this->config['dbase'];
-      $charset = $charset ? $charset : $this->config['charset'];
+      $charset = $this->config['charset'];
       $connection_method = $this->config['connection_method'];
       $tstart = $modx->getMicroTime();
       if (!$this->conn = ($persist ? mysql_pconnect($host, $uid, $pwd) : mysql_connect($host, $uid, $pwd, true))) {

@@ -20,6 +20,9 @@ function callBack(&$dumpstring) {
 	$today = date("d_M_y");
 	$today = strtolower($today);
 	if(!headers_sent()) {
+	    header('Expires: 0');
+        header('Cache-Control: private');
+        header('Pragma: cache');
 		header('Content-type: application/download');
 		header('Content-Disposition: attachment; filename='.$today.'_database_backup.sql');
 	}
@@ -101,7 +104,7 @@ if ($mode=='backup') {
 
 	<p style="width:100%;"><a href="#" onclick="submitForm();return false;"><img src="media/style/<?php echo $manager_theme?>images/misc/ed_save.gif" border="0" /><?php echo $_lang['database_table_clickhere']?></a> <?php echo $_lang['database_table_clickbackup']?></p>
 	<p><input type="checkbox" name="droptables"><?php echo $_lang['database_table_droptablestatements']?></p>
-	<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+	<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
 		<thead><tr>
 			<td width="160"><input type="checkbox" name="chkselall" onclick="selectAll()" title="Select All Tables" /><b><?php echo $_lang['database_table_tablename']?></b></td>
 			<td width="40" align="right"><b><?php echo $_lang['database_table_records']?></b></td>
@@ -146,9 +149,9 @@ for ($i = 0; $i < $limit; $i++) {
 
 	if($modx->hasPermission('settings')) {
 		echo "\t\t\t\t".'<td align="right">'.($db_status['Data_free'] > 0 ?
-		     '<a href="index.php?a=54&mode='.$action.'&t='.$db_status['Name'].'" title="'.$_lang['optimize_table'].'"><span dir="ltr">'.nicesize($db_status['Data_free']).'</a>' :
+		     '<a href="index.php?a=54&mode='.$action.'&t='.$db_status['Name'].'" title="'.$_lang['optimize_table'].'">'.nicesize($db_status['Data_free']).'</a>' :
 		     '-').
-		     '</span></td>'."\n";
+		     '</td>'."\n";
 	} else {
 		echo '<td align="right">'.($db_status['Data_free'] > 0 ? nicesize($db_status['Data_free']) : '-').'</td>'."\n";
 	}

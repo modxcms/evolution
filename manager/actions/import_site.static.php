@@ -51,7 +51,6 @@ if(!isset($_POST['import'])) {
     </td>
   </tr>
 </table>
-<p />
 <ul class="actionButtons">
     <li><a href="#" onclick="document.importFrm.submit();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang["import_site_start"]; ?></a></li>
 </ul>
@@ -85,9 +84,8 @@ if(!isset($_POST['import'])) {
 
     $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $importend = $mtime;
     $totaltime = ($importend - $importstart);
-    printf ("<p />".$_lang['import_site_time'], round($totaltime, 3));
+    printf ("<p>".$_lang['import_site_time']."</p>", round($totaltime, 3));
 ?>
-<p />
 <ul class="actionButtons">
     <li><a href="#" onclick="reloadTree();"><img src="<?php echo $_style["icons_close"] ?>" /> <?php echo $_lang["close"]; ?></a></li>
 </ul>
@@ -113,7 +111,7 @@ function importFiles($parent,$filepath,$files) {
             // create folder
             $alias = !isset($modx->documentListing[$id]) ? $id:$id.'-'.substr(uniqid(''),-3);
             $modx->documentListing[$alias] = true;
-            printf($_lang['import_site_importing_document'], $id);
+            printf("<p>".$_lang['import_site_importing_document']."</p>", $id);
             $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
                    (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
                    ('document', 'text/html', '".$modx->db->escape($id)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 1, '', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
@@ -132,7 +130,7 @@ function importFiles($parent,$filepath,$files) {
             $fparts = explode(".",$value);
             $value = $fparts[0];
             $ext = (count($fparts)>1)? $fparts[count($fparts)-1]:"";
-            printf($_lang['import_site_importing_document'], $filename);
+            printf("<p>".$_lang['import_site_importing_document']."</p>", $filename);
             $alias = !isset($modx->documentListing[$value]) ? $value:$value.'-'.substr(uniqid(''),-3);
             $modx->documentListing[$alias] = true;
             if(!in_array($ext,$allowedfiles)) echo "<p class=\"success\">".$_lang["import_site_skip"]."</p>";

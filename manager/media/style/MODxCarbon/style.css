@@ -717,7 +717,7 @@ a.hometblink:hover {
 	z-index: 10000;
 }
 .cntxMnuItem {
-	background-image: url(images/_tx_.gif);
+	background-image: url(images/misc/_tx_.gif);
 	cursor: pointer;
 	color: #000;
 	padding: 3px 16px 3px 2px;
@@ -1127,7 +1127,6 @@ a.hometblink, a.hometblink img {
 }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
-	font: Icon;
 	border: 0 solid ThreeDShadow;
 	color: WindowText;
 }

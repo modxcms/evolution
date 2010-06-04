@@ -187,13 +187,13 @@ class DataGrid {
 			$this->ds = explode((strstr($this->ds,"||")!==false ? "||":","),$this->ds);
 			$this->ds = array_chunk($this->ds, $this->_colcount);
 		}
-		$tblColHdr ="<tr><thead>";
+		$tblColHdr ="<thead><tr>";
 		for($c=0;$c<$this->_colcount;$c++){
 			$name=$this->_colnames[$c];
 			$width=$this->_colwidths[$c];
 			$tblColHdr.="<td $columnHeaderStyle $columnHeaderClass".($width? " width='$width'":"").">$name</td>";
 		}
-		$tblColHdr.="</thead></tr>\n";
+		$tblColHdr.="</tr></thead>\n";
 
 		// build rows 
 		$rowcount = $this->_isDataset ? mysql_num_rows($this->ds):count($this->ds);

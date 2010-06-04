@@ -147,7 +147,7 @@ if($_SESSION['browser']=='ie') {
 </script>
 <form name="selector" method="get">
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
-<input type="hidden" name="a" value="<?php echo $_REQUEST['a']; ?>" />
+<input type="hidden" name="a" value="<?php echo (int) $_REQUEST['a']; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $_REQUEST['listmode']; ?>" />
 <input type="hidden" name="op" value="" />
 <input type="hidden" name="rt" value="<?php echo $rt; ?>" />

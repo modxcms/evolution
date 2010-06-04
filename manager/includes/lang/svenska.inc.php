@@ -3,9 +3,9 @@
  * Filename:       includes/lang/svenska.inc.php
  * Function:       Swedish language file
  * Author:         Pontus Ågren (Pont) & Johnny Chadda
- * Date:           2010-03-22
+ * Date:           2010-05-18
  * Version:        1.0
- * MODx version:   Evolution 1.0.x rev 6600
+ * MODx version:   Evolution 1.0.x rev 6804
 */
 
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
@@ -53,6 +53,7 @@ $_lang["add_template"] = 'Lägg till mall';
 $_lang["add_tv"] = 'Lägg till mallvariabel';
 $_lang["add_weblink"] = 'Ny webblänk';
 $_lang["administrator_role_message"] = 'Denna roll kan inte redigeras eller tas bort.';
+$_lang['administrators'] = 'Administratörer';
 $_lang["after_saving"] = 'Efter sparande';
 $_lang["alert_delete_self"] = 'Du kan inte ta bort dig själv!';
 $_lang["alias"] = 'URL-alias';
@@ -260,6 +261,7 @@ $_lang["event_id"] = 'Händelse-ID';
 $_lang["eventlog"] = 'Händelselogg';
 $_lang["eventlog_msg"] = 'Händelseloggen används för att visa informations-, varnings- och felmeddelanden genererade av innehållshanteraren. Källkolumnen visar i vilken del av informationshanteraren händelsen inträffade.';
 $_lang["eventlog_viewer"] = 'Systemhändelser';
+$_lang["everybody"] = 'Alla';
 $_lang["existing_category"] = 'Existerande kategori';
 $_lang["expand_tree"] = 'Veckla ut webbplatsträd';
 $_lang["export_site"] = 'Exportera statisk HTML';
@@ -367,7 +369,7 @@ $_lang["icon"] = 'Ikon';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Föräldraval:\n\nResursen är ett barn till den valda resursen.';
 $_lang["illegal_parent_self"] = 'Föräldraval:\n\nDen valda resursen kan inte bli tilldelad sig själv.';
-$_lang["import_files_found"] = '<b>Hittade %s resurser för import...</b><p />';
+$_lang["import_files_found"] = '<b>Hittade %s resurser för import...</b>';
 $_lang["import_params"] = 'Importera en moduls delade parametrar';
 $_lang["import_params_msg"] = 'Du kan importera parametrarna eller inställningarna från en modul genom att välja modulens namn i ovanstående meny.<br /><b>Notera:</b> För att moduler ska synas i menyn måste denna plugin/snippet vara med i modulens beroendelista och modulen måste vara inställd för parameterdelning.';
 $_lang["import_parent_resource"] = 'Föräldraresurs';
@@ -664,6 +666,8 @@ $_lang["refresh_site"] = 'Rensa cachen';
 $_lang["refresh_title"] = 'Uppdatera webbplatsen';
 $_lang["refresh_tree"] = 'Uppdatera webbplatsträd';
 $_lang["refresh_unpublished"] = '<b>%s</b> resurser avpublicerades.';
+$_lang["remember_last_tab"] = 'Kom ihåg flikar';
+$_lang["remember_last_tab_message"] = 'Sidor i hanteraren som har flikar öppnas på den flik man senast var på, istället för på den första fliken.';
 $_lang["remember_username"] = 'Kom ihåg mig';
 $_lang["remove"] = 'Ta bort';
 $_lang["remove_date"] = 'Ta bort datum';
@@ -778,6 +782,7 @@ $_lang["role_new_user"] = 'Skapa nya användare';
 $_lang["role_new_web_user"] = 'Skapa nya webbanvändare';
 $_lang["role_plugin_management"] = 'Hantera plugins';
 $_lang["role_publish_doc"] = 'Publicera resurser';
+$_lang['role_remove_locks'] = 'Ta bort lås';
 $_lang["role_role_management"] = 'Roller';
 $_lang["role_run_module"] = 'Kör modul';
 $_lang["role_save_chunk"] = 'Spara chunks';
@@ -951,6 +956,8 @@ $_lang["top_howmany_title"] = 'Hur många i toppen';
 $_lang["total"] = 'totalt';
 $_lang["track_visitors_message"] = 'Erbjuder en krok för analysplugins, för att t&nbsp;ex flagga om besök till en specifik resurs ska loggas eller inte.';
 $_lang["track_visitors_title"] = 'Aktivera insamling av statistik';
+$_lang["tree_page_click"] = 'Beteende vid sidklick';
+$_lang["tree_page_click_message"] = 'Standardbeteendet när man klickar på en sida i webbplatsträdet.';
 $_lang["tree_show_protected"] = 'Visa skyddade sidor';
 $_lang["tree_show_protected_message"] = 'När den här inställningen är satt till "Nej" visas inte skyddade resurser (och deras underresurser) i webbplatsträdet. "Nej" är den traditionella inställningen för MODx.';
 $_lang["truncate_table"] = 'Klicka här för att trunkera den här tabellen';
@@ -1032,6 +1039,8 @@ $_lang["view_logging"] = 'Aktiviteter i hanteraren';
 $_lang["view_sysinfo"] = 'Systeminformation';
 $_lang["warning"] = 'Varning!';
 $_lang["warning_not_saved"] = 'De ändringar du gjort har ännu inte sparats. Du kan välja att stanna kvar på den nuvarande sidan och spara ändringarna (\"Avbryt\"), eller så kan du lämna sidan, och förlora alla ändringar du gjort (\"OK\").';
+$_lang["warning_visibility"] = 'Konfigurationsvarningar synliga för';
+$_lang["warning_visibility_message"] = 'Kontrollera synligheten på de konfigurationsvarningar som visas på hanterarens välkomstsida';
 $_lang["web_access_permissions"] = 'Rättigheter för webbåtkomst';
 $_lang["web_access_permissions_user_groups"] = 'Webbanvändargrupper';
 $_lang["web_permissions"] = 'Rättigheter för webbåtkomst';

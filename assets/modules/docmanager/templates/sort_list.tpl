@@ -26,6 +26,10 @@
 	               $('list').value = list;
 	           }
 	       });
+	       
+	       if ([+sort.disable_tree_select+] == true) {
+	           parent.tree.ca = '';
+	       }
 	    });
 	    
 	    parent.tree.updateTree();

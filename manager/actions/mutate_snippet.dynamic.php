@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-switch($_REQUEST['a']) {
+switch((int) $_REQUEST['a']) {
   case 22:
     if(!$modx->hasPermission('edit_snippet')) {
       $e->setError(3);
@@ -295,12 +295,12 @@ function decode(s){
 <h1><?php echo $_lang['snippet_title']?></h1>
 
 <div class="sectionBody">
-<?php echo $_lang['snippet_msg']?><p />
+<?php echo $_lang['snippet_msg']?>
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme?>style.css<?php echo '?'.$theme_refresher?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">
 	<script type="text/javascript">
-		tpSnippet = new WebFXTabPane( document.getElementById( "snipetPane"),false);
+		tpSnippet = new WebFXTabPane( document.getElementById( "snipetPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
 
 	<!-- General -->
@@ -317,8 +317,7 @@ function decode(s){
 			<td align="left" style="padding-top:10px"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
 		  </tr>
 		  <tr>
-			<td style="padding-top:10px" align="left" valign="top" colspan="2"><input  style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
-			</td>
+			<td style="padding-top:10px" align="left" valign="top" colspan="2"><input style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
 		  </tr>
 		</table>
 		<!-- PHP text editor start -->

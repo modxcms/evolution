@@ -408,7 +408,7 @@ class DocumentParser {
                 }
 				// Grab the Scripts
 				if (isset($docObj['__MODxSJScripts__'])) $this->sjscripts = $docObj['__MODxSJScripts__'];
-				if (isset($docObj['__MODXJScripts__']))  $this->jscripts = $docObj['__MODxJScripts__'];
+				if (isset($docObj['__MODxJScripts__']))  $this->jscripts = $docObj['__MODxJScripts__'];
 
 				// Remove intermediate variables
                 unset($docObj['__MODxDocGroups__'], $docObj['__MODxSJScripts__'], $docObj['__MODxJScripts__']);
@@ -953,7 +953,7 @@ class DocumentParser {
         $sql= "SELECT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
         $sql .= "FROM " . $this->getFullTableName("site_tmplvars") . " tv ";
         $sql .= "INNER JOIN " . $this->getFullTableName("site_tmplvar_templates")." tvtpl ON tvtpl.tmplvarid = tv.id ";
-        $sql .= "LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $this->documentIdentifier . "' ";
+        $sql .= "LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $documentObject['id'] . "' ";
         $sql .= "WHERE tvtpl.templateid = '" . $documentObject['template'] . "'";
         $rs= $this->dbQuery($sql);
         $rowCount= $this->recordCount($rs);
@@ -1289,6 +1289,13 @@ class DocumentParser {
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
         $msg= $this->db->escape($msg);
         $source= $this->db->escape($source);
+	if ($GLOBALS['database_connection_charset'] == 'utf8' && extension_loaded('mbstring')) {
+		$source = mb_substr($source, 0, 50 , "UTF-8");
+	} else {
+		$source = substr($source, 0, 50);
+	}
+	$LoginUserID = $this->getLoginUserID();
+	if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
         if ($type < 1) {
             $type= 1;
@@ -1297,7 +1304,7 @@ class DocumentParser {
             $type= 3; // Types: 1 = information, 2 = warning, 3 = error
         }
         $sql= "INSERT INTO " . $this->getFullTableName("event_log") . " (eventid,type,createdon,source,description,user) " .
-        "VALUES($evtid,$type," . time() . ",'$source','$msg','" . $this->getLoginUserID() . "')";
+	"VALUES($evtid,$type," . time() . ",'$source','$msg','" . $LoginUserID . "')";
         $ds= @$this->db->query($sql);
         if (!$ds) {
             echo "Error while inserting event log into database.";

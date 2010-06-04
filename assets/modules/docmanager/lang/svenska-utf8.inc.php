@@ -8,7 +8,7 @@
  * Date:29/09/2006 Version: 1.6
  *
  * Translation: Pontus Ågren (Pont)
- * Date: 2007-02-19
+ * Date: 2010-04-12
  * 
  */
 
@@ -89,7 +89,7 @@ $_lang['DM_other_dropdown_richtext'] = 'Richtext-/Ej Richtexteditor';
 $_lang['DM_other_dropdown_delete'] = 'Ta bort/Återställ';
 
 //-- radio button text
-$_lang['DM_other_publish_radio1'] = 'Publisera'; 
+$_lang['DM_other_publish_radio1'] = 'Publicera'; 
 $_lang['DM_other_publish_radio2'] = 'Avpublicera';
 $_lang['DM_other_show_radio1'] = 'Dölj i menyn'; 
 $_lang['DM_other_show_radio2'] = 'Visa i menyn';
@@ -116,7 +116,7 @@ $_lang['DM_adjust_authors_editedby'] = 'Redigerad av:';
 $_lang['DM_adjust_authors_noselection'] = 'Ingen ändring';
 
  //-- labels
-$_lang['DM_date_pubdate'] = 'Publiseringsdatum:';
+$_lang['DM_date_pubdate'] = 'Publiceringsdatum:';
 $_lang['DM_date_unpubdate'] = 'Avpubliceringsdatum:';
 $_lang['DM_date_createdon'] = 'Skapad:';
 $_lang['DM_date_editedon'] = 'Redigerad:';
@@ -130,13 +130,13 @@ $_lang['DM_date_dateselect_label'] = 'Välj ett datum: ';
 $_lang['DM_select_submit'] = 'Utför';
 $_lang['DM_select_range'] = 'Växla tillbaka till att specificera ett dokumentintervall';
 $_lang['DM_select_range_text'] = '<p><strong>Nyckel (där n är ett dokumentID):</strong><br /><br />
-							  n* - Ändra inställning på detta dokument och dess närmaste barn<br /> 
-							  n** - Ändra inställning på detta dokument och ALLA dess barn<br /> 
-							  n-n2 - Ändra inställning på detta intervall av dokument<br /> 
-							  n - Ändra inställning på ett enstaka dokument</p> 
-							  <p>Exempel: 1*, 4**, 2-20, 25 - Det här ändrar den valda inställningen
-						      för dokument 1 och dess närmaste barn, dokument 4 och alla dess barn,
-						      dokument 2-20 och dokument 25.</p>';
+                              n* - Ändra inställning på detta dokument och dess närmaste barn<br /> 
+                              n** - Ändra inställning på detta dokument och ALLA dess barn<br /> 
+                              n-n2 - Ändra inställning på detta intervall av dokument<br /> 
+                              n - Ändra inställning på ett enstaka dokument</p> 
+                              <p>Exempel: 1*, 4**, 2-20, 25 - Det här ändrar den valda inställningen
+                              för dokument 1 och dess närmaste barn, dokument 4 och alla dess barn,
+                              dokument 2-20 och dokument 25.</p>';
 $_lang['DM_select_tree'] ='Visa dokumentträdet och välj dokument';
 
 //-- process tree/range messages

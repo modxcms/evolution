@@ -111,7 +111,7 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
   <p class="labelHolder"><label for="database_collation"><?php echo $_lang['connection_screen_collation']?></label>
     <div id="collation" name="collation">
 		<select id="database_collation" name="database_collation">
-        	<option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected >
+        	<option value="<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>" selected="selected">
           	<?php echo isset($_POST['database_collation']) ? $_POST['database_collation']: $database_collation ?>
         	</option>
     	</select>
@@ -203,10 +203,8 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 <script type="text/javascript">
 language ='<?php echo $install_language?>';
 installMode ='<?php echo $installMode ?>';
-passed ='<?php echo $_lang["status_passed_server"]?>';
-passed_db = '<?php echo $_lang["status_passed"] . ' ' . $_lang["status_passed_database_created"];?>';
-
 </script>
+
 <script type="text/javascript">
 /* <![CDATA[ */
   // validate

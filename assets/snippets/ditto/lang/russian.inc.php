@@ -5,17 +5,17 @@
  * Language:       Russian
  * Encoding:       Windows-1251
  * Translated by:  Russian MODx community, Jaroslav Sidorkin, based on translation by modx.ru
- * Date:           27 July 2009
+ * Date:           9 May 2010
  * Version:        2.1.0
 */
-
-$_lang['language'] = "russian-utf8";
+setlocale (LC_ALL, 'ru_RU.CP1251');
+$_lang['language'] = "russian";
 
 $_lang['abbr_lang'] = "ru";
 
 $_lang['file_does_not_exist'] = "не существует. Пожалуйста, проверьте файл.";
 
-$_lang['extender_does_not_exist'] = "расширение не существует. Пожалуйста, проверьте его.";
+$_lang['extender_does_not_exist'] = "- данное расширение отсутствует. Пожалуйста, проверьте его.";
 
 $_lang['default_template'] = <<<TPL
 

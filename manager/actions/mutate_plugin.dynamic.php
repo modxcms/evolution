@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-switch($_REQUEST['a']) {
+switch((int) $_REQUEST['a']) {
   case 102:
     if(!$modx->hasPermission('edit_plugin')) {
       $e->setError(3);
@@ -113,7 +113,7 @@ function showParameters(ctrl) {
 			value = decode((ar[2])? ar[2]:'');
 
 			// store values for later retrieval
-			if (key && dt=='list') currentParams[key] = [desc,dt,value,ar[3]];
+			if (key && (dt=='list' || dt=='list-multi')) currentParams[key] = [desc,dt,value,ar[3]];
 			else if (key) currentParams[key] = [desc,dt,value];
 
 			if (dt) {
@@ -142,20 +142,25 @@ function showParameters(ctrl) {
 					c += '</select>';
 					break;
 				case 'list-multi':
-					value = (ar[3]+'').replace(/^\s|\s$/,"");
-					arrValue = value.split(",")
+					value = typeof ar[3] !== 'undefined' ? (ar[3]+'').replace(/^\s|\s$/,"") : '';
+					arrValue = value.split(",");
 					ls = (ar[2]+'').split(",");
+
 					if(currentParams[key]==ar[2]) currentParams[key] = ls[0]; // use first list item as default
 					c = '<select name="prop_'+key+'" size="'+ls.length+'" multiple="multiple" style="width:168px" onchange="setParameter(\''+key+'\',\''+dt+'\',this)">';
 					for(i=0;i<ls.length;i++){
 						if(arrValue.length){
+							var found = false;
 							for(j=0;j<arrValue.length;j++){
-								if(ls[i]==arrValue[j]){
-									c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
-								}else{
-									c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
+								if (ls[i] == arrValue[j]) {
+								    found = true;
 								}
 							}
+							if(found == true){
+                                c += '<option value="'+ls[i]+'" selected="selected">'+ls[i]+'</option>';
+                            }else{
+                                c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
+                            }
 						}else{
 							c += '<option value="'+ls[i]+'">'+ls[i]+'</option>';
 						}
@@ -284,14 +289,13 @@ function decode(s){
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
-</div>
 
 <div class="sectionBody">
 <p><?php echo $_lang['plugin_msg']; ?></p>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="snipetPane">
 	<script type="text/javascript">
-		tpSnippet = new WebFXTabPane( document.getElementById( "snipetPane"),false);
+		tpSnippet = new WebFXTabPane( document.getElementById( "snipetPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
 
 <!-- General -->

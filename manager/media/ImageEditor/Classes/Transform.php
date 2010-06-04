@@ -130,7 +130,7 @@ Class Image_Transform
         include_once "$driver.php";
 
         $classname = "Image_Transform_Driver_{$driver}";
-        $obj =& new $classname;
+        $obj = new $classname;
         return $obj;
     }
 

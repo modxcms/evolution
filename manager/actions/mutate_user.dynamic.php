@@ -1,7 +1,7 @@
 <?php
 if (IN_MANAGER_MODE != "true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-switch($_REQUEST['a']) {
+switch((int) $_REQUEST['a']) {
   case 12:
     if (!$modx->hasPermission('edit_user')) {
       $e->setError(3);
@@ -37,7 +37,7 @@ if ($limit > 1) {
 }
 // end check for lock
 
-if ($_REQUEST['a'] == 12) {
+if ($_REQUEST['a'] == '12') {
 	// get user attribute
 	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "user_attributes` WHERE $dbase.`" . $table_prefix . "user_attributes`.internalKey = " . $user . ";";
 	$rs = mysql_query($sql);
@@ -261,14 +261,13 @@ if (is_array($evtOut))
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=75';"><img src="<?php echo $_style["icons_cancel"]?>" /> <?php echo $_lang['cancel']?></a></li>
     	  </ul>
     </div>
-</div>
 <!-- Tab Start -->
 <div class="sectionBody">
 <link type="text/css" rel="stylesheet" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="tab-pane" id="userPane">
 	<script type="text/javascript">
-		tpUser = new WebFXTabPane(document.getElementById( "userPane" ),false);
+		tpUser = new WebFXTabPane(document.getElementById( "userPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
     <div class="tab-page" id="tabGeneral">
     	<h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
@@ -385,7 +384,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td><?php echo $_lang['user_country']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-			<select size="1" name="country" onchange="documentDirty=true;" />
+			<select size="1" name="country" onchange="documentDirty=true;">
             <?php $chosenCountry = isset($_POST['country']) ? $_POST['country'] : $userdata['country']; ?>
 			<option value="" <?php (!isset($chosenCountry) ? ' selected' : '') ?> >&nbsp;</option>
 				<?php
@@ -407,7 +406,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 		  <tr>
 			<td><?php echo $_lang['user_gender']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><select name="gender" onchange="documentDirty=true;" />
+			<td><select name="gender" onchange="documentDirty=true;">
 				<option value=""></option>
 				<option value="1" <?php echo ($userdata['gender']=='1')? "selected='selected'":""; ?>><?php echo $_lang['user_male']; ?></option>
 				<option value="2" <?php echo ($userdata['gender']=='2')? "selected='selected'":""; ?>><?php echo $_lang['user_female']; ?></option>
@@ -418,7 +417,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td valign="top"><?php echo $_lang['comment']; ?>:</td>
 			<td>&nbsp;</td>
 			<td>
-				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;" /><?php echo htmlspecialchars($userdata['comment']); ?></textarea>
+				<textarea type="text" name="comment" class="inputBox"  rows="5" onchange="documentDirty=true;"><?php echo htmlspecialchars($userdata['comment']); ?></textarea>
 			</td>
 		  </tr>
 		<?php if($_GET['a']=='12') { ?>
@@ -557,6 +556,7 @@ $dir->close();
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+          <tr>
           <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
             <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date())">
 		<option value=""> </option>
@@ -780,7 +780,7 @@ if (is_array($evtOut))
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-              <td colspan="2" align="center"><img name="iphoto" src="<?php echo !empty($userdata['photo']) ? MODX_SITE_URL.$userdata['photo'] : "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
+              <td colspan="2" align="center"><img name="iphoto" src="<?php echo !empty($userdata['photo']) ? MODX_SITE_URL.$userdata['photo'] : $_style['tx']; ?>" /></td>
           </tr>
 		</table>
 	</div>
@@ -812,7 +812,7 @@ if ($use_udperms == 1) {
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <?php
 
-	echo $_lang['access_permissions_user_message'] . "<p />";
+	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
 	$sql = "SELECT name, id FROM $dbase.`" . $table_prefix . "membergroup_names` ORDER BY name";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);

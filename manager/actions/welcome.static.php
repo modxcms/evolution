@@ -52,15 +52,19 @@ if($modx->hasPermission('bk_manager')) {
 }
 
 // do some config checks
-include_once "config_check.inc.php";
-$modx->setPlaceholder('settings_config',$_lang['settings_config']);
-$modx->setPlaceholder('configcheck_title',$_lang['configcheck_title']);
-if($config_check_results != $_lang['configcheck_ok']) {    
-    $modx->setPlaceholder('config_check_results',$config_check_results);
-    $modx->setPlaceholder('config_display','block');
-}
-else {
-    $modx->setPlaceholder('config_display','none');
+if (($modx->config['warning_visibility'] == 0 && $_SESSION['mgrRole'] == 1) || $modx->config['warning_visibility'] == 1) {
+    include_once "config_check.inc.php";
+    $modx->setPlaceholder('settings_config',$_lang['settings_config']);
+    $modx->setPlaceholder('configcheck_title',$_lang['configcheck_title']);
+    if($config_check_results != $_lang['configcheck_ok']) {    
+        $modx->setPlaceholder('config_check_results',$config_check_results);
+        $modx->setPlaceholder('config_display','block');
+    }
+    else {
+        $modx->setPlaceholder('config_display','none');
+    }
+} else {
+     $modx->setPlaceholder('config_display','none');
 }
 
 // include rss feeds for important forum topics
@@ -141,7 +145,7 @@ $modx->setPlaceholder('onlineusers_title',$_lang['onlineusers_title']);
         $html = "<p>".$_lang['no_active_users_found']."</p>";
     } else {
         $html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
-                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
                   <thead>
                     <tr>
                       <td><b>'.$_lang["onlineusers_user"].'</b></td>

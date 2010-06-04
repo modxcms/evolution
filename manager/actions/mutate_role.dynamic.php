@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-switch($_REQUEST['a']) {
+switch((int) $_REQUEST['a']) {
   case 35:
     if(!$modx->hasPermission('edit_role')) {
       $e->setError(3);
@@ -40,7 +40,7 @@ if($limit>1) {
 
 
 
-if($_REQUEST['a']==35) {
+if($_REQUEST['a']=='35') {
 	$sql = "SELECT * FROM $dbase.`".$table_prefix."user_roles` WHERE $dbase.`".$table_prefix."user_roles`.id=".$role.";";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
@@ -230,6 +230,7 @@ function deletedocument() {
 <input name="manage_metatagscheck" type="checkbox" onClick="changestate(document.userform.manage_metatags)" <?php echo $roledata['manage_metatags']==1 ? "checked" : "" ; ?>><input type="hidden" name="manage_metatags" value="<?php echo $roledata['manage_metatags']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.manage_metatagscheck.click()"><?php echo $_lang['role_manage_metatags']; ?></span><br />
 <input name="importcheck" type="checkbox" onClick="changestate(document.userform.import_static)" <?php echo $roledata['import_static']==1 ? "checked" : "" ; ?>><input type="hidden" name="import_static" value="<?php echo $roledata['import_static']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.importcheck.click()"><?php echo $_lang['role_import_static']; ?></span><br />
 <input name="exportcheck" type="checkbox" onClick="changestate(document.userform.export_static)" <?php echo $roledata['export_static']==1 ? "checked" : "" ; ?>><input type="hidden" name="export_static" value="<?php echo $roledata['export_static']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.exportcheck.click()"><?php echo $_lang['role_export_static']; ?></span><br />
+<input name="removelockscheck" type="checkbox" onClick="changestate(document.userform.remove_locks)" <?php echo $roledata['remove_locks']==1 ? "checked" : "" ; ?>><input type="hidden" name="remove_locks" value="<?php echo $roledata['remove_locks']==1 ? 1 : 0 ; ?>"> <span style="cursor:hand" onClick="document.userform.remove_lockscheck.click()"><?php echo $_lang['role_remove_locks']; ?></span><br />
 </fieldset>
 
 <input type="submit" name="save" style="display:none">

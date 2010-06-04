@@ -3,10 +3,10 @@
  * Filename:       includes/lang/francais-utf8.inc.php
  * Function:       French language file
  * Encoding:       iso-8859-1
- * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, Jean-Christophe Brebion (Fairytree) et Coroico pour Evolution 1.0.3
- * Date:           29 Mars 2010
+ * Author:         Nicolas Martignoni (Nissai), David Mollière (davidm) pour la 0.9.6.2, Jean-Christophe Brebion (Fairytree) et Coroico pour Evolution 1.0.4
+ * Date:           16 Mai 2010
  * Version:        2.0.5
- * MODx version:   Evolution 1.0.3
+ * MODx version:   Evolution 1.0.4
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langages
 $modx_lang_attribute = 'fr'; // Manager HTML and XML Language Attribute
@@ -53,6 +53,7 @@ $_lang["add_template"] = 'Ajouter un Modèle';
 $_lang["add_tv"] = 'Ajouter une Variable de Modèle';
 $_lang["add_weblink"] = 'Nouveau Lien Web';
 $_lang["administrator_role_message"] = 'Ce rôle ne peut être ni modifié, ni supprimé.';
+$_lang['administrators'] = 'Administrateurs';
 $_lang["after_saving"] = 'Après l\'enregistrement';
 $_lang["alert_delete_self"] = 'Vous ne pouvez pas supprimer votre propre compte!';
 $_lang["alias"] = 'Alias';
@@ -197,7 +198,7 @@ $_lang["datepicker_offset"] = 'Décalage du contrôle de saisie de la date: ';
 $_lang["datepicker_offset_message"] = 'Le nombre d\'années dans le passé à montrer sur le contrôle de saisie de la date.';
 $_lang["datetime_format"] = 'Format de la date:';
 $_lang["datetime_format_message"] = 'Le format des dates dans le Gestionnaire.';
-$_lang["default"] = 'Par défaut:'; 
+$_lang["default"] = 'Par défaut:';
 $_lang["defaultcache_message"] = 'Choisissez «Oui» pour que les nouvelles Ressources soient mises en cache par défaut.';
 $_lang["defaultcache_title"] = 'À mettre en cache par défaut';
 $_lang["defaultmenuindex_message"] = 'Choisissez «Oui» pour activer l\'auto-incrémentation de l\'index de menu par défaut.';
@@ -260,6 +261,7 @@ $_lang["event_id"] = 'ID événement';
 $_lang["eventlog"] = 'Historique des événements';
 $_lang["eventlog_msg"] = 'L\'historique des événements est utilisé pour afficher des informations, des messages d\'avertissements ou d\'erreurs générés par le Gestionnaire de Contenu. La colonne «source» indique la section d\'où provient le message.';
 $_lang["eventlog_viewer"] = 'Événements système';
+$_lang["everybody"] = 'Tout le monde';
 $_lang["existing_category"] = 'Catégorie existante';
 $_lang["expand_tree"] = 'Développer l\'Arbre du Site';
 $_lang["export_site"] = 'Export en HTML statique';
@@ -367,7 +369,7 @@ $_lang["icon"] = 'Icône';
 $_lang["id"] = 'ID';
 $_lang["illegal_parent_child"] = 'Choix du parent:\n\nla Ressource est un enfant de la Ressource sélectionnée.';
 $_lang["illegal_parent_self"] = 'Choix du parent:\n\nla Ressource sélectionnée ne peut pas être assignée à elle-même.';
-$_lang["import_files_found"] = '<b>%s Ressources trouvées pour importation...</b><br />';
+$_lang["import_files_found"] = '<b>%s Ressources trouvées pour importation...</b>';
 $_lang["import_params"] = 'Importer les paramètres partagés du Module';
 $_lang["import_params_msg"] = 'Vous pouvez importer les paramètres ou réglages d\'un Module en sélectionnant le nom du Module dans le menu déroulant ci-dessus. <b>NOTE:</b> Pour que les Modules apparaissent dans le menu, ce Plugin/Snippet doit faire partie des dépendances du Module et le partage des paramètres doit être activé pour ce Module. ';
 $_lang["import_parent_resource"] = 'Ressource parente:';
@@ -664,6 +666,8 @@ $_lang["refresh_site"] = 'Vider le cache';
 $_lang["refresh_title"] = 'Recharger le site';
 $_lang["refresh_tree"] = 'Recharger l\'Arbre du Site';
 $_lang["refresh_unpublished"] = '<b>%s</b> Ressources ont été dépubliées.';
+$_lang["remember_last_tab"] = 'Rappel du dernier onglet:';
+$_lang["remember_last_tab_message"] = 'Pages du manager chargées avec le dernier onglet vu plutôt que l\'onglet par défaut';
 $_lang["remember_username"] = 'Se souvenir de moi';
 $_lang["remove"] = 'Retirer';
 $_lang["remove_date"] = 'Retirer la date';
@@ -779,6 +783,7 @@ $_lang["role_new_web_user"] = 'Créer de nouveaux Utilisateurs Web';
 $_lang["role_plugin_management"] = 'Gestion des Plugins';
 $_lang["role_publish_doc"] = 'Publier des Ressources';
 $_lang["role_role_management"] = 'Gestion des rôles';
+$_lang['role_remove_locks'] = 'Supprimer des verrous';
 $_lang["role_run_module"] = 'Lancer des Modules';
 $_lang["role_save_chunk"] = 'Enregistrer des Chunks';
 $_lang["role_save_doc"] = 'Enregistrer des Ressources';
@@ -861,7 +866,7 @@ $_lang["settings_templvars"] = 'Variables de Modèle';
 $_lang["settings_title"] = 'Configuration du système';
 $_lang["settings_ui"] = 'Interface et fonctionnalités';
 $_lang["settings_users"] = 'Utilisateur';
-$_lang["show_meta"] = 'Afficher l\'onglet Balises META et mots-clés';
+$_lang["show_meta"] = 'Afficher l\'onglet Balises META et mots-clés:';
 $_lang["show_meta_message"] = 'Afficher l\'onglet de gestion des balises META et des mots-clés lors de l\'édition des Ressources.';
 $_lang["show_tree"] = 'Afficher l\'Arbre du Site';
 $_lang["showing"] = 'Affichage';
@@ -951,7 +956,9 @@ $_lang["top_howmany_title"] = 'Lignes à afficher';
 $_lang["total"] = 'total';
 $_lang["track_visitors_message"] = 'Cette case à cocher permet d\'activer ou non un hook pour les Plugins de suivi de statistiques. Ceci peut être utilisé pour contrôler si les visites des pages doivent être comptabilisées.';
 $_lang["track_visitors_title"] = 'Activer le Suivi Statistique';
-$_lang["tree_show_protected"] = 'Afficher les pages protégées';
+$_lang["tree_page_click"] = 'Comportement du click sur une page:';
+$_lang["tree_page_click_message"] = 'Comportement par défaut lorsqu\'on clique sur une page de l\'arborescence.';
+$_lang["tree_show_protected"] = 'Afficher les pages protégées:';
 $_lang["tree_show_protected_message"] = 'Lorsque cette option est sur «Non», les Ressources protégées (et toutes leurs Ressources enfants) ne seront pas visibles dans l\'Arbre du Site. «Non» est le réglage par défaut pour MODx.';
 $_lang["truncate_table"] = 'Cliquez ici pour tronquer cette table';
 $_lang["tuesday"] = 'Mardi';
@@ -1032,6 +1039,8 @@ $_lang["view_logging"] = 'Actions du Gestionnaire';
 $_lang["view_sysinfo"] = 'Informations système';
 $_lang["warning"] = 'Attention!';
 $_lang["warning_not_saved"] = 'Les changements que vous avez effectué n\'ont pas encore été enregistrés. Vous pouvez choisir de rester sur cette page pour enregistrer vos modifications («Annuler»), ou vous pouvez quitter cette page, et perdrez ainsi toutes les modifications que vous avez effectuées («OK»).';
+$_lang["warning_visibility"] = 'Visibilité des alertes de configuration:';
+$_lang["warning_visibility_message"] = 'Controle la visibilité des alertes de configuration montrées sur la page d\'acceuil du Manager';
 $_lang["web_access_permissions"] = 'Autorisations d\'accès web';
 $_lang["web_access_permissions_user_groups"] = 'Groupes d\'Utilisateurs Web';
 $_lang["web_permissions"] = 'Autorisations Web';

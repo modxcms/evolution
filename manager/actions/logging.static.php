@@ -40,7 +40,7 @@ function convertdate($date) {
 	return $timestamp;
 }
 
-$sql = 'SELECT * FROM '.$modx->getFullTableName('manager_log');
+$sql = 'SELECT DISTINCT internalKey, username, action, itemid, itemname FROM '.$modx->getFullTableName('manager_log');
 $rs = $modx->db->query($sql);
 
 $logs = array();
@@ -68,7 +68,7 @@ window.addEvent('domready', function() {
     <td align="right"><b><?php echo $_lang["mgrlog_value"]?></b></td>
   </tr>
  </thead>
- </tbody>
+ <tbody>
   <tr>
     <td><b><?php echo $_lang["mgrlog_user"]?></b></td>
     <td align="right">
@@ -151,19 +151,18 @@ window.addEvent('domready', function() {
 		  <input type="text" id="dateto" name="dateto" class="DatePicker" value="<?php echo isset($_REQUEST['dateto']) ? $_REQUEST['dateto'] : "" ; ?>" />
 		  <a onclick="document.logging.dateto.value=''; return true;" onmouseover="window.status='Don\'t set a date'; return true;" onmouseout="window.status=''; return true;" style="cursor:pointer; cursor:hand"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/cal_nodate.gif" width="16" height="16" border="0" alt="No date" /></a>
 		 </td>
-      </tr>
   </tr>
   <tr bgcolor="#eeeeee">
     <td><b><?php echo $_lang["mgrlog_results"]; ?></b></td>
     <td align="right">
-      <input type="text" name="nrresults" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>" /><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/_tx_.gif" width="18" height="16" border="0" />
+      <input type="text" name="nrresults" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>" /><img src="<?php echo $_style['tx']; ?>" width="18" height="16" border="0" />
     </td>
   </tr>
   <tr bgcolor="#FFFFFF">
     <td colspan="2">
 	<ul class="actionButtons">
 		<li><a href="#" onclick="document.logging.log_submit.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['search']; ?></a></li>
-		<li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></span></a></li>
+		<li><a href="index.php?a=2"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']; ?></a></li>
 	</ul>
       <input type="submit" name="log_submit" value="<?php echo $_lang["mgrlog_searchlogs"]?>" style="display:none;" />
     </td>
@@ -204,13 +203,17 @@ if(isset($_REQUEST['log_submit'])) {
 		$_REQUEST['datefrom']."&nrresults=".$int_num_result."&log_submit=".$_REQUEST['log_submit']; // extra argv here (could be anything depending on your page)
 
 	// build the sql
+	$limit = $num_rows = $modx->db->getValue(
+	           'SELECT COUNT(*) FROM '.$modx->getFullTableName('manager_log').
+               (!empty($sqladd) ? ' WHERE '.implode(' AND ', $sqladd) : '')
+    );
+        
 	$sql = 'SELECT * FROM '.$modx->getFullTableName('manager_log').
 		(!empty($sqladd) ? ' WHERE '.implode(' AND ', $sqladd) : '').
-		' ORDER BY timestamp DESC';
-		//' LIMIT '.$int_cur_position.', '.$int_num_result;
+		' ORDER BY timestamp DESC'.
+		' LIMIT '.$int_cur_position.', '.$int_num_result;
 
 	$rs = mysql_query($sql);
-	$limit = $num_rows = mysql_num_rows($rs);
 	if($limit<1) {
 		echo '<p>'.$_lang["mgrlog_emptysrch"].'</p>';
 	} else {
@@ -229,8 +232,8 @@ if(isset($_REQUEST['log_submit'])) {
 		print "<p>". $_lang["paging_showing"]." ". $array_paging['lower'];
 		print " ". $_lang["paging_to"] . " ". $array_paging['upper'];
 		print " (". $array_paging['total'] . " " . $_lang["paging_total"] . ")";
-		print "<br />". $array_paging['first_link'] . $_lang["paging_first"] . "</a> " ;
-		print $array_paging['previous_link'] . $_lang["paging_prev"] . "</a> " ;
+		print "<br />". $array_paging['first_link'] . $_lang["paging_first"] . (isset($array_paging['first_link']) ? "</a> " : " ");
+		print $array_paging['previous_link'] . $_lang["paging_prev"] . (isset($array_paging['previous_link']) ? "</a> " : " ");
 		$pagesfound = sizeof($array_row_paging);
 		if($pagesfound>6) {
 			print $array_row_paging[$current_row-2]; // ."&nbsp;";
@@ -243,15 +246,15 @@ if(isset($_REQUEST['log_submit'])) {
 				print $array_row_paging[$i] ."&nbsp;";
 			}
 		}
-		print $array_paging['next_link'] . $_lang["paging_next"] . "</a> ";
-		print $array_paging['last_link'] . $_lang["paging_last"] . "</a></p>";
+		print $array_paging['next_link'] . $_lang["paging_next"] . (isset($array_paging['next_link']) ? "</a> " : " ") . " ";
+		print $array_paging['last_link'] . $_lang["paging_last"] . (isset($array_paging['last_link']) ? "</a> " : " ") . "</p>";
 		// The above exemple print somethings like:
 		// Results 1 to 20 of 597  <<< 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 >>>
 		// Of course you can now play with array_row_paging in order to print
 		// only the results you would like...
 		?>
 		<script type="text/javascript" src="media/script/tablesort.js"></script>
-		<table border="0" cellpadding="2" cellspacing="1" bgcolor="#707070" class="sortabletable rowstyle-even" id="table-1" width="%100">
+		<table border="0" cellpadding="2" cellspacing="1" bgcolor="#ccc" class="sortabletable rowstyle-even" id="table-1" width="%100">
 		<thead><tr>
 			<th class="sortable"><b><?php echo $_lang["mgrlog_username"]; ?></b></th>
 			<th class="sortable"><b><?php echo $_lang["mgrlog_actionid"]; ?></b></th>
@@ -264,12 +267,8 @@ if(isset($_REQUEST['log_submit'])) {
 		<?php
 		// grab the entire log file...
 		$logentries = array();
-		while ($row = mysql_fetch_assoc($rs)) $logentries[] = $row;
-
-		$start = ($int_cur_position);
-		$end = min($start + $int_num_result, $limit);
-		for ($i = $start; $i < $end; $i++) {
-			$logentry =& $logentries[$i];
+		$i = 0;
+		while ($logentry = mysql_fetch_assoc($rs)) {
 			?><tr class="<?php echo ($i % 2 ? 'even' : ''); ?>">
 			<td><?php echo '<a href="index.php?a=12&amp;id='.$logentry['internalKey'].'">'.$logentry['username'].'</a>'; ?></td>
 			<td><?php echo $logentry['action']; ?></td>
@@ -279,6 +278,7 @@ if(isset($_REQUEST['log_submit'])) {
 			<td><?php echo $modx->toDateFormat($logentry['timestamp']+$server_offset_time); ?></td>
 		</tr>
 		<?php
+		$i++;
 		}
 		?>
 	</tbody>
@@ -295,6 +295,3 @@ if(isset($_REQUEST['log_submit'])) {
     echo $_lang["mgrlog_noquery"];
 }
 ?>
-</div>
-
-</div>

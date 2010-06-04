@@ -1,6 +1,6 @@
 <?php
 /**
- * Mc — Manager Control Class for MODx / Qm+
+ * Mc - Manager Control Class for MODx / Qm+
  *  
  * @author      Mikko Lammi, www.maagit.fi (based on QuickManager by Urique Dertlian, urique@unix.am)
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html

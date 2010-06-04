@@ -1,7 +1,7 @@
 <?php
 if (IN_MANAGER_MODE != 'true') die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-switch ($_REQUEST['a']) {
+switch ((int) $_REQUEST['a']) {
 	case 78:
 		if (!$modx->hasPermission('edit_chunk')) {
 			$e->setError(3);
@@ -122,7 +122,7 @@ if (is_array($evtOut))
 ?>
 <input type="hidden" name="a" value="79" />
 <input type="hidden" name="id" value="<?php echo $_REQUEST['id']?>" />
-<input type="hidden" name="mode" value="<?php echo $_REQUEST['a']?>" />
+<input type="hidden" name="mode" value="<?php echo (int) $_REQUEST['a']?>" />
 
 	<h1><?php echo $_lang['htmlsnippet_title']?></h1>
 
@@ -197,7 +197,6 @@ if (is_array($evtOut))
 					}
 				}
 ?>	</select>
-		</div>
 </div><!-- end .sectionBody -->
 <?php
 

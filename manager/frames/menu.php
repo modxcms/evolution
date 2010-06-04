@@ -313,7 +313,7 @@ if($modx->hasPermission('bk_manager')) {
 	// backup-mgr
 	$toolsmenu[] = '<li><a onclick="this.blur();" href="index.php?a=93" target="main">'.$_lang['bk_manager'].'</a></li>';
 }
-if($modx->hasPermission('bk_manager')) {
+if($modx->hasPermission('remove_locks')) {
 	// unlock-pages
 	$toolsmenu[] = '<li><a onclick="this.blur();" href="javascript:removeLocks();">'.$_lang['remove_locks'].'</a></li>';
 }

@@ -2,7 +2,7 @@
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
 // show debug information
-if($enable_debug==true) {
+if(isset($enable_debug) && $enable_debug==true) {
 	?>
 	<script language="javascript">
 	//document.onload = removeDebug();

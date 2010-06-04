@@ -1,7 +1,7 @@
 <?php
 if(IN_MANAGER_MODE!='true') die('<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.');
 
-switch ($_REQUEST['a']) {
+switch ((int) $_REQUEST['a']) {
 	case 107:
 		if(!$modx->hasPermission('new_module')) {
 			$e->setError(3);
@@ -145,7 +145,7 @@ function showParameters(ctrl) {
 	dp = (f.properties.value) ? f.properties.value.split("&"):"";
 	if(!dp) tr.style.display='none';
 	else {
-		t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter']?></td><td width="50%"><?php echo $_lang['value']?></td></tr></thead>';
+		t='<table style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td><?php echo $_lang['parameter']?></td><td><?php echo $_lang['value']?></td></tr></thead>';
 		for(p = 0; p < dp.length; p++) {
 			dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
 			ar = dp[p].split("=");
@@ -213,7 +213,7 @@ function showParameters(ctrl) {
 						break;
 
 				}
-				t +='<tr><td bgcolor="#FFFFFF" width="50%">'+desc+'</td><td bgcolor="#FFFFFF" width="50%">'+c+'</td></tr>';
+				t +='<tr><td bgcolor="#FFFFFF">'+desc+'</td><td bgcolor="#FFFFFF">'+c+'</td></tr>';
 			};
 		}
 		t+='</table>';
@@ -353,7 +353,7 @@ function SetUrl(url, width, height, alt) {
     		  <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=106';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
     		  <?php // In Place for future extraction of actionbar
         			if ($_REQUEST['a'] == '27') { ?>
-        			    <li id="Button6"><a href="#" onclick="<?php echo "window.open('../index.php?id=$id','previeWin')"?>"><img src="<?php echo $_style["icons_preview"]?>" /> <?php echo $_lang['preview']?></a></li>
+        			    <li id="Button6"><a href="#" onclick="window.open('<?php echo $modx->makeUrl($id); ?>','previeWin');"><img src="<?php echo $_style["icons_preview"]?>" /> <?php echo $_lang['preview']?></a></li>
     		  <?php } ?>
     	  </ul>
     </div>
@@ -364,7 +364,7 @@ function SetUrl(url, width, height, alt) {
 
 <div class="tab-pane" id="modulePane">
 	<script type="text/javascript">
-	tpModule = new WebFXTabPane( document.getElementById( "modulePane"),false);
+	tpModule = new WebFXTabPane( document.getElementById( "modulePane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
 	</script>
 
 	<!-- General -->
@@ -420,7 +420,7 @@ function SetUrl(url, width, height, alt) {
 
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
 			<tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
-				<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="guid" type="text" maxlength="32" value="<?php echo $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
+				<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="guid" type="text" maxlength="32" value="<?php echo (int) $_REQUEST['a'] == 107 ? createGUID() : $content['guid']?>" class="inputBox" onchange="documentDirty=true;" /><br /><br /></td></tr>
 			<tr><td align="left" valign="top"><input name="enable_sharedparams" type="checkbox"<?php echo $content['enable_sharedparams']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_sharedparams.click();"><?php echo $_lang['enable_sharedparams']?>:</span></td>
 				<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><span ><span class="comment"><?php echo $_lang['enable_sharedparams_msg']?></span></span><br /><br /></td></tr>
 			<tr><td align="left" valign="top"><?php echo $_lang['module_config']?>:</td>
@@ -430,7 +430,7 @@ function SetUrl(url, width, height, alt) {
 		</table>
 	</div>
 
-<?php if ($_REQUEST['a'] == 108) { ?>
+<?php if ($_REQUEST['a'] == '108') { ?>
 	<!-- Dependencies -->
 	<div class="tab-page" id="tabDepend">
 	<h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>

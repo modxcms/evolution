@@ -38,7 +38,7 @@ if($limit!=1) {
     <ul class="actionButtons">
         <li id="btn_reply"><a href="index.php?a=10&t=c&m=rp&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_reply"] ?>" /> <?php echo $_lang['messages_reply']; ?></a></li>
         <li><a href="index.php?a=10&t=c&m=f&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_message_forward"] ?>" /> <?php echo $_lang['messages_forward']; ?></a></li>
-        <li"><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
+        <li><a href="index.php?a=65&id=<?php echo $message['id']; ?>"><img src="<?php echo $_style["icons_delete_document"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
 		<?php if($message['sender']==0) { ?>
 			<script type="text/javascript">document.getElementById("btn_reply").className='disabled';</script>
 		<?php } ?>
@@ -130,11 +130,11 @@ $array_row_paging = $p->getPagingRowArray();
 $pager .= $_lang['showing']." ". $array_paging['lower'];
 $pager .=  " ".$_lang['to']." ". $array_paging['upper'];
 $pager .=  " (". $array_paging['total']." ".$_lang['total'].")";
-$pager .=  "<br />". $array_paging['previous_link'] ."<<</a> " ;
+$pager .=  "<br />". $array_paging['previous_link'] ."&lt;&lt;" . (isset($array_paging['previous_link']) ? "</a> " : " ");
 for( $i=0; $i<sizeof($array_row_paging); $i++ ){
   $pager .=  $array_row_paging[$i] ."&nbsp;";
 }
-$pager .=  $array_paging['next_link'] .">></a>";
+$pager .=  $array_paging['next_link'] ."&gt;&gt;". (isset($array_paging['next_link']) ? "</a>" : "");
 
 // The above exemple print somethings like:
 // Results 1 to 20 of 597  <<< 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 >>>

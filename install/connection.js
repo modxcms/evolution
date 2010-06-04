@@ -91,7 +91,7 @@ function testServer(){
 }
 
 function setDefaults(){
-	if(passed_db.indexOf($('databasestatustext').innerHTML) >= 0 && document.getElementById('AUH')) {
+	if($('database_pass') !== null && document.getElementById('AUH')) {
 		window.Slider2.slideIn();
 		var Slider2FX = new Fx.Styles('AUHMask', {duration: 997,transition: Fx.Transitions.linear});
 		Slider2FX.start({'opacity':[0,1]});
@@ -106,7 +106,7 @@ function setColor(){
 
 	ss = document.getElementById('serverstatus');
 	ssv = ss.innerHTML;
-	if (ssv.indexOf(passed) >=0) {
+	if ($('server_pass') !== null) {
 		col.setStyle('background-color', '#9CCD00');
 //        col.setStyle('color', '#0000CD');
 		col.setStyle('font-weight','bold');

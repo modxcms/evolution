@@ -126,7 +126,7 @@ if(!$modx->hasPermission('logs')) {
 <!-- recent documents -->
 <div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
 		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
 			<thead>
 			<tr>
 				<td><b><?php echo $_lang["id"]; ?></b></td>
@@ -165,8 +165,8 @@ if(!$modx->hasPermission('logs')) {
 
 <!-- database -->
 <div class="sectionHeader"><?php echo $_lang['database_tables']; ?></div><div class="sectionBody" id="lyr4">
-		<p><?php echo $_lang['table_hoverinfo']; ?><p />
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+		<p><?php echo $_lang['table_hoverinfo']; ?></p>
+		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
 		 <thead>
 		 <tr>
 			<td width="160"><b><?php echo $_lang["database_table_tablename"]; ?></b></td>
@@ -249,7 +249,6 @@ if(!$modx->hasPermission('logs')) {
 	if($totaloverhead>0) { ?>
 		<p><?php echo $_lang['database_overhead']; ?></p>
 		<?php } ?>
-</form>
 </div>
 
 <!-- online users -->
@@ -257,7 +256,7 @@ if(!$modx->hasPermission('logs')) {
 
 		<?php
 		$html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
-                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#707070">
+                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
                   <thead>
                     <tr>
                       <td><b>'.$_lang["onlineusers_user"].'</b></td>

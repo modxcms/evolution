@@ -1,6 +1,5 @@
         </div><!-- // content -->
-    </div>
-</div><!-- // contentarea -->
+    </div><!-- // contentarea -->
 
 <br />
 <div id="footer">

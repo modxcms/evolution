@@ -138,12 +138,12 @@ if(!isset($_SESSION['mgrValidated'])){
 	
 	$_SESSION['ip'] = $ip;
 
-	$itemid = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
-	$lasthittime = time();
-	$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : '1';
+    $itemid = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : '';
+    $lasthittime = time();
+    $action = isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : 1;
 
-	if($action != '1') {
-		if (!intval($itemid)) $itemid= null;
+    if($action !== 1) {
+			if (!intval($itemid)) $itemid= null;
 		$sql = sprintf('REPLACE INTO %s (internalKey, username, lasthit, action, id, ip)
 			VALUES (%d, \'%s\', \'%d\', \'%s\', %s, \'%s\')',
 			$modx->getFullTableName('active_users'), // Table

@@ -57,7 +57,7 @@ else{
 
 <form name="resource" method="get">
 <input type="hidden" name="id" value="<?php echo $id; ?>" />
-<input type="hidden" name="a" value="<?php echo $_REQUEST['a']; ?>" />
+<input type="hidden" name="a" value="<?php echo (int) $_REQUEST['a']; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $_REQUEST['listmode']; ?>" />
 <input type="hidden" name="op" value="" />
 <div class="sectionHeader"><?php echo $content['source']." - ".$_lang['eventlog_viewer']; ?></div><div class="sectionBody">

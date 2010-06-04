@@ -34,6 +34,7 @@ class DocManagerBackend {
     }
     
     function showSortList($id) {
+        $this->dm->ph['sort.disable_tree_select'] = 'false';
     	$this->dm->ph['sort.options'] = '';
     	$this->dm->ph['sort.save'] = '';
     	$resource = array();
@@ -49,6 +50,7 @@ class DocManagerBackend {
 			}
 		} elseif ($id == '') {
 			$noId = true;
+			$this->dm->ph['sort.disable_tree_select'] = 'true';
 			$this->dm->ph['sort.save'] = 'none';
 			$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_noid'];
 		}
@@ -56,6 +58,7 @@ class DocManagerBackend {
 		if (!$noId) {
 			$cnt = count($resource);
 			if ($cnt < 1) {
+			    $this->dm->ph['sort.disable_tree_select'] = 'true';
 				$this->dm->ph['sort.save'] = 'none';
 				$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_nochildren'];
 			} else {
@@ -82,6 +85,7 @@ class DocManagerBackend {
     	}
     	$this->dm->ph['sort.message'] = $this->dm->lang['DM_sort_updated'];
     	$this->dm->ph['sort.save'] = 'none';
+    	$this->dm->ph['sort.disable_tree_select'] = 'true';
  		return $this->dm->parseTemplate('sort_list.tpl', $this->dm->ph);
     }
     

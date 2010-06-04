@@ -174,6 +174,7 @@ $_lang["table_prefix_not_exist_note"] = 'MODx non ha potuto proseguire con l\'in
 $_lang["templates"] = 'Templates';
 $_lang["to_log_into_content_manager"] = 'Per accedere al Manager (manager/index.php) fate click sul bottone `Chiudi`.';
 $_lang["toggle"] = 'Inverti';
+$_lang['tvs'] = 'Variabili di Template';
 $_lang["unable_install_chunk"] = 'Impossibile installare il chunk.  File';
 $_lang["unable_install_module"] = 'Impossibile installare il modulo.  File';
 $_lang["unable_install_plugin"] = 'Impossibile installare il plugin.  File';

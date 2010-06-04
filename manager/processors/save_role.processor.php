@@ -85,7 +85,8 @@ $fields = array (
     'web_access_permissions' => $web_access_permissions,
     'view_unpublished' => $view_unpublished,
 	'import_static' => $import_static,
-	'export_static' => $export_static
+	'export_static' => $export_static,
+    'remove_locks' => $remove_locks
 );
 
 switch ($_POST['mode']) {
