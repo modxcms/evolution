@@ -1,0 +1,16 @@
+[+as.noResults:is=`1`:then=`
+  <div class="[+as.noResultClass+]">
+    [+as.noResultText+]
+  </div>
+`:else=`
+<p class="AS_ajax_resultsInfos">[+as.resultsFoundText+]<span class="AS_ajax_resultsDisplayed">[+as.resultsDisplayedText+]</span></p>
+[+as.listGrpResults+]
+`+]
+[+as.moreResults:is=`1`:then=`
+  <div class="[+as.moreClass+]">
+    <a href="[+as.moreLink+]" title="[+as.moreTitle+]">[+as.moreText+]</a>
+  </div>
+`+]
+[+as.showCmt:is=`1`:then=`
+[+as.comment+]
+`+]

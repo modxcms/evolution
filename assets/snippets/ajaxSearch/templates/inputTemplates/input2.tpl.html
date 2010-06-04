@@ -1,0 +1,23 @@
+[+as.showInputForm:is=`1`:then=`
+<form id="[+as.formId+]" class="input2" action="[+as.formAction+]" method="post">
+    <div id="[+as.radioId+]">
+      <input id="[+as.onewordId+]" type="radio" name="advsearch" value="[+as.oneword+]" [+as.onewordChecked+] /><label for="[+as.onewordId+]">[+as.onewordText+]</label>
+      <input id="[+as.allwordsId+]" type="radio" name="advsearch" value="[+as.allwords+]" [+as.allwordsChecked+] /><label for="[+as.allwordsId+]">[+as.allwordsText+]</label>
+      <input id="[+as.exactphraseId+]" type="radio" name="advsearch" value="[+as.exactphrase+]" [+as.exactphraseChecked+] /><label for="[+as.exactphraseId+]">[+as.exactphraseText+]</label>
+      <input id="[+as.nowordsId+]" type="radio" name="advsearch" value="[+as.nowords+]" [+as.nowordsChecked+] /><label for="[+as.nowordsId+]">[+as.nowordsText+]</label>
+    </div>
+    <fieldset>[+as.showAsId:is=`1`:then=`<input type="hidden" name="[+as.asName+]" value="[+as.asId+]" />`+]
+    <label>
+      <input id="[+as.inputId+]" class="cleardefault" type="text" name="search" value="[+as.inputValue+]"[+as.inputOptions+] />
+    </label>
+    [+as.liveSearch:is=`0`:then=`
+        <label>
+            <input id="[+as.submitId+]" type="submit" name="sub" value="[+as.submitText+]" />
+        </label>
+    `+]
+    </fieldset>
+</form>
+[+as.showIntro:is=`1`:then=`
+<p class="ajaxSearch_intro" id="ajaxSearch_intro">[+as.introMessage+]</p>
+`+]
+`+]

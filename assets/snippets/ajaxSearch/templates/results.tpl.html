@@ -1,0 +1,11 @@
+[+as.noResults:is=`1`:then=`
+  <div class="[+as.noResultClass+]">
+    [+as.noResultText+]
+  </div>
+`:else=`
+<p class="ajaxSearch_resultsInfos">[+as.resultsFoundText+]<span class="ajaxSearch_resultsDisplayed">[+as.resultsDisplayedText+]</span></p>
+  [+as.listGrpResults+]
+`+]
+[+as.showCmt:is=`1`:then=`
+[+as.comment+]
+`+]

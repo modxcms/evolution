@@ -1,0 +1,11 @@
+[+as.grpResultsDef:is=`1`:then=`
+<div id="[+as.grpResultId+]" class="ajaxSearch_grpResult">
+[+as.headerGrpResult+]
+[+as.footerGrpResult+]
+[+as.listResults+]
+[+as.footerGrpResult+]
+</div>
+`:else=`
+<div class="ajaxSearch_grpResultName">[+as.grpResultNameShow:is=`1`:then=`[+as.grpResultName+]`+]
+<span class="ajaxSearch_grpResultsDisplayed">[+as.grpResultsDisplayedText+]</span></div>
+`+]

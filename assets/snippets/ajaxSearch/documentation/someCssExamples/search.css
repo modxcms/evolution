@@ -1,0 +1,298 @@
+/*
+css style for AjaxSearch
+- tags for ajax mode are prefixed by AS_ajax_
+- common or non-ajax tags are prefixed by ajaxSearch_
+*/
+
+/* Input form
+-------------------------------------------------------------- */
+#ajaxSearch_form , #as2_ajaxSearch_form { width:500px; position:relative;}
+#ajaxSearch_form   fieldset { margin:0; padding:0; width:215px;}
+
+#ajaxSearch_form   fieldset.inputAS { margin:0; padding:0; width:400px;}
+
+#as0_ajaxSearch_input { width:160px; font-size:0.8em; padding:2px 2px; border:#DFDFDF inset 2px;}
+
+#ajaxSearch_input, #as2_ajaxSearch_input {
+  width:160px;
+  background:#FFF;
+  font-size:0.8em;
+  border:2px inset gray;
+  padding:4px 1px 2px 3px;
+  margin:0;
+}
+
+#as0_ajaxSearch_submit {
+  font:bold 1em Arial, Sans-serif;
+  background:#FFF url(images/gradientbg.jpg) repeat-x;
+  border:1px solid #BDBDBD;
+}
+
+#ajaxSearch_submit, #as2_ajaxSearch_submit {
+  margin:0 0 0 5px;
+  font:bold 1em Arial, Sans-serif;
+  background:#FFF url(images/gradientbg.jpg) repeat-x;
+  padding:2px 3px;
+  color:#333;
+  border:1px solid #BDBDBD;
+}
+
+#ajaxSearch_intro { margin:10px 0;}
+
+#searchClose, #as2_searchClose{ position:absolute; left:216px; top:5px; width:16px;}
+#indicator, #as2_indicator{ position:absolute; left:234px; top:5px; width:16px;}
+
+#ajaxSearch_form.input2  #searchClose { position:absolute; left:216px; top:32px; width:16px;}
+#ajaxSearch_form.input2  #indicator{ position:absolute; left:234px; top:32px; width:16px;}
+
+#ajaxSearch_subSearch, #as2_ajaxSearch_subSearch {
+  padding:3px 2px 2px 2px;
+  margin:5px 0 10px 0;
+  list-style:none;
+}
+
+#subSearch_maxigallery, #as2_subSearch_maxigallery {
+  padding:2px 2px 2px 2px;
+  margin:5px 0 10px 0;
+  width:100%;
+  clear:both;
+}
+
+#ajaxSearch_radio, #as2_ajaxSearch_radio {
+  background:#FFFFFF;
+  font-size:0.8em;
+  margin:0 0 5px 0;
+  padding:1px 1px 2px 1px;
+}
+
+#ajaxSearch_select, #as2_ajaxSearch_select {
+  background:#FFFFFF;
+  height:auto;
+  width:150px;
+  font-size:0.9em;
+  padding:3px 1px 2px 1px;
+  border:2px inset gray;
+  float:left;
+}
+
+#asf_form {
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+/* tags form
+-------------------------------------------------------------- */
+#asf_form_tags {
+float: right;
+display: block;
+margin: 20px 0;
+}
+#asf_form_tags ul {
+  width: 105px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#asf_form_tags li {
+  padding: 2px 0;
+}
+.asfTitle {
+  margin: 0 0 5px 0;
+  font-size: 1.1em; 
+  font-weight: bold;
+}
+/* output results
+-------------------------------------------------------------- */
+#ajaxSearch_output.init, #as2_ajaxSearch_output.init {
+  border: none;
+  background-color: #FFFFFF;
+}
+
+#ajaxSearch_output, #as2_ajaxSearch_output  {
+  font-size:90%;
+  background-color:#EFEFEF;
+  border:1px solid #6F9303;
+  color:black;
+  width:450px;
+  z-index:1;
+  padding:5px;
+  margin:10px 0 15px 0;
+}
+
+.ajaxSearch_resultsInfos, .AS_ajax_resultsInfos  {
+  margin:10px 0 10px 0;
+}
+.ajaxSearch_resultsDisplayed, .AS_ajax_resultsDisplayed {
+font-weight:bold;
+color:#CC0000;
+font-size:90%;
+display:block;
+float:right;
+}
+
+.ajaxSearch_paging {
+  display:block;
+  margin:5px 0 10px;
+}
+.paging1, .paging2 {
+  padding:5px 0 10px;
+  margin:0 0 5px;
+}
+.paging1Infos{ margin:0 5px 5px; color:green;}
+.paging1Prev{ width:16px; margin:0 3px 0 0;display:block; float:left; text-indent:-3000px; background:url(images/asprev.png)  0 center no-repeat; }
+.paging1Next{ width:16px;display:inline-block;text-indent:-3000px; background:url(images/asnext.png) 0 center no-repeat; }
+
+.paging2More{ margin:10px 10px; padding:8px;background:url(images/asnext.png) 0 center no-repeat;}
+.paging2Text{ margin:0 0 0 12px; color:green;}
+
+.ajaxSearch_currentPage {
+  color:#6F9303;
+  font-weight:bold;
+}
+
+div .AS_ajax_result, div .ajaxSearch_result {
+  padding:3px;
+  margin:3px 0;
+}
+
+.AS_ajax_result {
+  color:#444;
+  margin-bottom:3px;
+}
+
+.AS_ajax_resultLink, .ajaxSearch_resultLink {
+  text-decoration:underline;
+  color:#6F670D;
+}
+
+.AS_ajax_resultDescription,.ajaxSearch_resultDescription {
+  color:#555;
+  padding:2px;
+}
+
+.AS_ajax_more,.ajaxSearch_more {
+  margin:10px 0;
+  height:30px;
+}
+
+.AS_ajax_more a{
+  font-weight:bold;
+  color:#6F670D;
+}
+
+.AS_ajax_resultsIntroFailure{
+  padding:3px;
+  margin: 5px 0;
+}
+.AS_ajax_resultsIntroFailure h3{
+  color:red;
+}
+
+/* groups of results */
+.grpResultsNb {
+color:#CC0000;
+}
+.tagNb {
+color:#8F49FF;
+}
+.resFiltered {
+color:#007FC1;
+}
+.ajaxSearch_grpResultsDisplayed, .AS_ajax_grpResultsDisplayed {
+font-weight:normal;
+color:#CC0000;
+font-size:90%;
+display:block;
+float:right;
+}
+
+.ajaxSearch_grpResultName, .AS_ajax_grpResultName {
+  background:url(images/img04.jpg) no-repeat left 50%;
+  font:bold 1em Arial, Sans-serif;
+  padding:5px 0 5px 15px;
+  margin:3px 0;
+}
+
+div.imgArticle { margin:5px 0; padding:5px 0; text-align:center;}
+
+/* highlight results */
+.AS_ajax_highlight1,.ajaxSearch_highlight1 {
+  color:#C00;
+  font-weight:700;
+  padding:0;
+}
+
+.AS_ajax_highlight2,.ajaxSearch_highlight2 {
+  color:#DF5380;
+  font-weight:700;
+  padding:0;
+}
+
+.AS_ajax_highlight3, .ajaxSearch_highlight3{
+  color:#DF53B5;
+  padding:0;
+  font-weight:bold;
+}
+
+.AS_ajax_highlight4, .ajaxSearch_highlight4{
+  color:#DF5380;
+  padding:0;
+  font-weight:bold;
+}
+
+.AS_ajax_highlight5, .ajaxSearch_highlight5{
+  color:#A453DF;
+  padding:0;
+  font-weight:bold;
+}
+
+.AS_ajax_highlight6, .ajaxSearch_highlight6{
+  color:#53ADDF;
+  padding:0;
+  font-weight:bold;
+}
+
+/* Comment Area */
+#ajaxSearch_cmtForm fieldset{
+  height:135px;
+}
+.ajaxSearch_hiddenField {
+  position:absolute;
+  text-decoration:underline;
+  background-color:#CC0000;
+  left:0px;
+  top:-500px;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+#ajaxSearch_cmtThks{
+  color:#CC0000;
+  padding:0;
+  margin:10px;
+  font-size:1em;
+  font-weight:bold;
+  height:2em;
+}
+
+.ajaxSearch_cmtIntro{
+  color:gray;
+  font-size:1em;
+  font-weight:bold;
+}
+
+#ajaxSearch_cmtArea{
+  width:440px;
+  height:50px;
+  padding:3px;
+  margin:8px 0 3px;
+}
+
+#ajaxSearch_cmtSubmit, #ajaxSearch_cmtReset{
+  margin:0 0 0 5px;
+  font:bold 1em Arial, Sans-serif;
+  background:#FFF url(images/gradientbg.jpg) repeat-x;
+  padding:2px 3px;
+  color:#333;
+  border:1px solid #BDBDBD;
+}

@@ -1,0 +1,202 @@
+How to migrate from AjaxSearch 1.8.5 to AjaxSearch 1.9.0
+
+1/ ============================  Deprecated parameters
+
+searchWordList
+
+1.8.5 : 
+---- &searchWordList user function   (optional)
+to define a search word list: [user_function_name,params] where params is an optional array of parameters
+
+1.9.0 : The option list should be now set in the input template. 
+For instance you could use a snippet to get some Tv values. Look at the toolbox/snippet.asSelectTv.txt
+
+resultsPage
+
+1.8.5 :
+A very old parameter not really used. If used, Should be replaced by landingPage
+
+
+showMoreResults
+
+1.8.5 :
+---- &showMoreResults [1 | 0] (optional)
+        If you want a link to show all of the results from the ajax search.
+        
+1.9.0 : this parameter is useless as soon as you define a moreResultsPage.
+
+
+2/ ============================  Renamed parameters
+
+For a better and a simpler undertstanding some parameters have been renamed
+
+    AS_showForm       =>      showInputForm
+    AS_landing        =>      landingPage
+    AS_showResults    =>      showResults
+    
+
+3/ ============================  Renamed $_POST and $_GET variables
+
+Some $_POST and $_GET variables have been renamed.
+
+    AS_search   =>    search
+
+    
+4/ ============================  Renamed parameter values
+
+tvPhx
+    
+    If you previously use the tvPhx parameter with &tvPhx=`tv:displayTV`
+    You need now define which Tvs you would like use.
+
+1.8.5:
+&tvPhx : Set placeHolders for TV (template variables)
+
+   0 : disallow the feature
+   'tv:displayTV' : set up placeholders for each TV (named tvName) linked to the documents found (default)
+   
+   
+1.9.0:
+
+    &tvPhx [ [ + | - ] [ : tvlist] ] - by default ''
+
+    The parameter tvPhx define which additional tv will be added as placeholder.
+
+    e.g:
+
+    &tvPhx=`tv1,tv2,tv3`      - tv1, tv2, Tv3 are added as placeholders
+    &tvPhx=`+:tv1,tv2,tv3`    - tv1, tv2, Tv3 are added as placeholders
+    &tvPhx=`+`                - all tvs of the site are added as placeholders
+
+    &tvPhx=`-`                - all tvs of the site are added as placeholders
+    &tvPhx=`-:tv1,tv2,tv3`    - all tvs of the site except tv1, tv2, Tv3 are added as placeholders
+
+    &tvPhx=``                 - no tv defined as placeholders.
+
+    The following placeholders are anabled with the tv:
+
+    [+as.tvname+], [+as.tvnameShow+], [+as.tvnameClass+]
+
+    Where tvname is the MODx name of a TV
+
+    [+as.tvname+] is the HTML output of your TV
+    [+as.tvnameShow+] = 1 if the TV is not NULL
+    [+as.tvnameClass+] :
+        - ajaxSearch_resultTvname for the non ajax results (&tplResult)
+        - AS_ajax_resultTvname for the ajax window (&tplAjaxResult)
+
+    The tv value could be used with the filter parameter (see &filter)
+
+    As withTvs includes the TV as a new field in the select clause of the mysql query,
+    tvPhx append the content of the selected tv after the search and before filer.
+
+
+5/ ============================ Add PagingType 0 to your AjaxSearch snippet calls
+
+The default pagingType is 1. So to keep your previous look & feel you need to add &pagingType=`0`
+
+With the non-ajax mode, this allow the pagination as 1.8.5
+With the ajax mode this disabled the pagination of results for a group of results.
+
+1.9.0:
+
+     &pagingType [ 0 | 1 | 2 | 3 ] : type of pagination
+
+     Default: 1
+
+     0: Results Pages 1 | 2 | 3
+     1: Previous - X-Y /Z - Next
+     2: X-Y /Z - Show more 10 results
+
+     Type 0 for non-ajax mode only
+     Type 1 for non-ajax and ajax mode
+     Type 2 for ajax mode (Jquery only)
+
+
+6/ ============================ define the "init" css class to prevent javascript disabling
+
+When using ajax mode, it's better to plan that javascript could be disabled.
+In this case you need to add a landingPage to see the search results and define the css class "init" to mask the ajaxSearch_output div when javascript is disabled. Simply add in your css file:
+
+    #ajaxSearch_output.init {
+        border: none;
+        background-color: #FFF;
+    }
+    
+7/ ============================ Customize the look & field of your search results display
+
+For a better look & field of your results display define:
+
+.ajaxSearch_resultsDisplayed, .AS_ajax_resultsDisplayed : to style the number of results displayed
+
+.ajaxSearch_resultsDisplayed, .AS_ajax_resultsDisplayed {
+font-weight:bold;
+color:#CC0000;
+font-size:90%;
+display:block;
+float:right;
+}
+
+.ajaxSearch_grpResultsDisplayed.AS_ajax_grpResultsDisplayed : to style the number of results by group displayed
+
+.ajaxSearch_grpResultsDisplayed, .AS_ajax_grpResultsDisplayed {
+font-weight:normal;
+color:#CC0000;
+font-size:90%;
+display:block;
+float:right;
+}
+
+.ajaxSearch_grpResultName, .AS_ajax_grpResultName : to style the group of results
+
+.ajaxSearch_grpResultName, .AS_ajax_grpResultName {
+  background:url(images/img04.jpg) no-repeat left 50%;
+  font:bold 1em Arial, Sans-serif;
+  padding:5px 0 5px 15px;
+  margin:3px 0;
+}
+
+And if you use the pagingType parameter:
+
+.ajaxSearch_paging {
+  display:block;
+  margin:5px 0 10px;
+}
+.paging1, .paging2 {
+  padding:5px 0 10px;
+  margin:0 0 5px;
+}
+.paging1Infos{ margin:0 5px 5px; color:green;}
+.paging1Prev{ width:16px; margin:0 3px 0 0;display:block; float:left; text-indent:-3000px; background:url(images/asprev.png)  0 center no-repeat; }
+.paging1Next{ width:16px;display:inline-block;text-indent:-3000px; background:url(images/asnext.png) 0 center no-repeat; }
+
+.paging2More{ margin:10px 10px; padding:8px;background:url(images/asnext.png) 0 center no-repeat;}
+.paging2Text{ margin:0 0 0 12px; color:green;}
+
+.ajaxSearch_currentPage {
+  color:#6F9303;
+  font-weight:bold;
+}
+
+look at documentation/someCssExamples/search.css for some examples. 
+
+
+8/ ============================ New labels added
+
+Six labels have been added. So may be some labels could be missing for your language.
+
+Used to display the number of results found:
+$_lang['as_resultsTextSingle'] = '%d result found.';
+$_lang['as_resultsTextMultiple'] = '%d results found.';
+
+Used to display the total number of results displayed:
+$_lang['as_resultsDisplayed'] = 'Displayed: %d';
+
+Used to display the number of results displayed by group:
+$_lang['as_grpResultsDisplayedText'] = '(Displaying %d - %d of %d)';
+
+Used by pagingType 1:
+$_lang['as_paging1Text'] = '%d - %d / %d';
+
+Used by pagingType 2:
+$_lang['as_paging2Text'] = 'Show more %d results';

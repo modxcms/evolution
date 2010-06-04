@@ -1,0 +1,21 @@
+[+as.showInputForm:is=`1`:then=`
+<form id="[+as.formId+]" action="[+as.formAction+]" method="post">
+    <fieldset>
+        <select name="search[]" id="ajaxSearch_select" size="3" multiple="multiple">
+          <option value="clash">clash</option>
+          <option value="coroico">coroico</option>
+          <option value="granada">granada</option>
+          <option value="ijen">ijen</option>
+          <option value="villarica">villarica</option>
+        </select>
+        [+as.showAsId:is=`1`:then=`<input type="hidden" name="[+as.asName+]" value="[+as.asId+]" />`+]
+        <input type="hidden" name="advsearch" value="[+as.advSearch+]" />
+        <label>
+            <input id="[+as.submitId+]" type="submit" name="sub" value="[+as.submitText+]" />
+        </label>
+    </fieldset>
+</form>
+[+as.showIntro:is=`1`:then=`
+<p class="ajaxSearch_intro" id="ajaxSearch_intro">[+as.introMessage+]</p>
+`+]
+`+]

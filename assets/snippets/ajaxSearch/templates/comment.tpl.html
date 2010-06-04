@@ -1,0 +1,19 @@
+<hr />
+<form id="ajaxSearch_cmtForm">
+  <div class="ajaxSearch_hiddenField">
+  [+as.hiddenFieldIntro+] <input type="text" id="[+as.hiddenField+]" size="30" />
+  </div>
+  <fieldset>
+    <input id="ajaxSearch_logid" type="hidden" value="[+as.logid+]" />
+    <label for="ajaxSearch_cmtArea"><span class="ajaxSearch_cmtIntro">[+as.cmtIntroMessage+]</span><br />
+    <textarea id="ajaxSearch_cmtArea" cols="54" rows="4"></textarea>
+    </label><br />
+    <label for="ajaxSearch_cmtSubmit">
+      <input id="ajaxSearch_cmtSubmit" type="button" onClick="commentSearch();" value="[+as.cmtSubmitText+]" />
+    </label>
+    <label for="ajaxSearch_cmtReset">
+      <input id="ajaxSearch_cmtReset" type="reset" onClick="resetThksMessage();" value="[+as.cmtResetText+]" />
+    </label>
+    <span id="ajaxSearch_cmtThks" style="visibility:hidden;">[+as.cmtThksMessage+]</span>
+  </fieldset>
+</form>
