@@ -11,6 +11,8 @@ Security:
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
+* [#MODX-1957] Danish language file update
+* [#MODX-2018] Fix Multiple TinyMCE plugins activated after upgrade
 * [#MODX-1865] 1.02 to 1.03 Upgrade Error with mySQL STRICT mode, "Templates: Incorrect integer value"
 * [#MODX-1883] WebLoginSideBar chunk "forget" typo
 * [#MODX-1880] Superfluous single quote in tree.php

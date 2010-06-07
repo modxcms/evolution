@@ -216,11 +216,11 @@ class AjaxSearchInput {
 
             $searchString = stripslashes($searchString);
 
-            $searchString = stripJscripts($searchString);
+            $searchString = $this->_stripJscripts($searchString);
 
-            $searchString = stripTags($searchString);
+            $searchString = $this->_stripTags($searchString);
 
-            $searchString = stripHtml($searchString);
+            $searchString = $this->_stripHtml($searchString);
 
             $searchString = $this->_htmlspecialchars($searchString, ENT_COMPAT, $pgCharset, False);
         }
@@ -229,7 +229,7 @@ class AjaxSearchInput {
     /*
     * Display the input form
     */
-    function _displayInputForm($validSearch, $msgErr) {
+    function _displayInputForm($msgErr) {
         global $modx;
         $varInputForm = array();
         if ($this->asCfg->cfg['showInputForm']) {
@@ -352,6 +352,37 @@ class AjaxSearchInput {
             $searchString = str_replace(array_keys($tf), array_values($tf), $string);
         }
         return $string;
+    }
+    /*
+    *  stripTags : Remove MODx sensitive tags
+    */
+    function _stripTags($text) {
+
+        $modRegExArray[] = '~\[\[(.*?)\]\]~';
+        $modRegExArray[] = '~\[!(.*?)!\]~';
+        $modRegExArray[] = '!\[\~(.*?)\~\]!is';
+        $modRegExArray[] = '~\[\((.*?)\)\]~';
+        $modRegExArray[] = '~{{(.*?)}}~';
+        $modRegExArray[] = '~\[\*(.*?)\*\]~';
+        $modRegExArray[] = '~\[\+(.*?)\+\]~';
+
+        foreach ($modRegExArray as $mReg) $text = preg_replace($mReg, '', $text);
+        return $text;
+    }
+    /*
+    *  stripJscript : Remove jscript
+    */
+    function _stripJscripts($text) {
+
+        $text = preg_replace("'<script[^>]*>.*?</script>'si", "", $text);
+        $text = preg_replace('/{.+?}/', '', $text);
+        return $text;
+    }
+    /*
+    *  stripHtml : Remove HTML sensitive tags
+    */
+    function _stripHtml($text) {
+        return strip_tags($text);
     }
 }
 ?>

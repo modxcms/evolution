@@ -92,18 +92,20 @@ class AjaxSearchCtrl {
         $this->getSearchString();
         $this->subSearch = $this->asCfg->cfg['subSearch'];
         if (isset($_POST['subsearch']) || isset($_GET['subsearch'])) {
+
             if (isset($_POST['subsearch'])) {
                 $ssc = isset($_POST['ssc']) ? ':' : ',';
-                if (is_array($_POST['subsearch'])) $this->subSearch = implode($ssc,$_POST['subsearch']);               
+                if (is_array($_POST['subsearch'])) $this->subSearch = implode($ssc,$_POST['subsearch']);
                 else $this->subSearch = $_POST['subsearch'];
             }
             else {
                 $ssc = isset($_GET['ssc']) ? ':' : ',';
-                if (is_array($_GET['subsearch'])) $this->subSearch = implode($ssc,$_GET['subsearch']);               
+                if (is_array($_GET['subsearch'])) $this->subSearch = implode($ssc,$_GET['subsearch']);
                 else $this->subSearch = $_GET['subsearch'];
             }
         }
         if ($this->dbg) $this->asUtil->dbgRecord($this->subSearch , "getEvents - subsearch");
+
 
         $asfConfig = 'asfConfig';
         if ((isset($_POST['asf']) || isset($_GET['asf'])) &&  function_exists($asfConfig)) {

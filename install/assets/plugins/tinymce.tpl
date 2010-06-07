@@ -1,6 +1,6 @@
 //<?php
 /**
- * TinyMCE
+ * TinyMCE Rich Text Editor
  * 
  * Javascript WYSIWYG Editor
  *

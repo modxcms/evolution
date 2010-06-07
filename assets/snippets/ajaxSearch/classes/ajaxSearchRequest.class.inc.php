@@ -157,8 +157,8 @@ class AjaxSearchRequest {
                 $j = count($this->scJoined) - 1;
                 if ($pfields != '') {
                     unset($this->scJoined[$j]['searchable']);
-                    if ($pfields == 'null' or $pfields == 'NULL') $this->scMain['searchable'] = array();
-                    else $this->scMain['searchable'] = explode(',', $pfields);
+                    if ($pfields == 'null' or $pfields == 'NULL') $this->scJoined[$j]['searchable'] = array();
+                    else $this->scJoined[$j]['searchable'] = explode(',', $pfields);
                 }
                 break;
 
@@ -178,8 +178,8 @@ class AjaxSearchRequest {
                 $j = count($this->scJoined) - 1;
                 if ($pfields != '') {
                     unset($this->scJoined[$j]['searchable']);
-                    if ($pfields == 'null' or $pfields == 'NULL') $this->scMain['searchable'] = array();
-                    else $this->scMain['searchable'] = explode(',', $pfields);
+                    if ($pfields == 'null' or $pfields == 'NULL') $this->scJoined[$j]['searchable'] = array();
+                    else $this->scJoined[$j]['searchable'] = explode(',', $pfields);
                 }
 
                 $j = count($this->scJoined) - 1;
@@ -202,8 +202,8 @@ class AjaxSearchRequest {
                 $j = count($this->scJoined) - 1;
                 if ($pfields != '') {
                     unset($this->scJoined[$j]['searchable']);
-                    if ($pfields == 'null' or $pfields == 'NULL') $this->scMain['searchable'] = array();
-                    else $this->scMain['searchable'] = explode(',', $pfields);
+                    if ($pfields == 'null' or $pfields == 'NULL') $this->scJoined[$j]['searchable'] = array();
+                    else $this->scJoined[$j]['searchable'] = explode(',', $pfields);
                 }
 
                 $j = count($this->scJoined) - 1;
@@ -307,18 +307,18 @@ class AjaxSearchRequest {
         }
 
         if (isset($this->scTvs['tvs'])) foreach($this->scTvs['tvs'] as $scTv) {
-            $f = $scTv['tb_alias'] . '.' . $scTv['value'] . ' AS ' . $scTv['name'];
+            $f = $scTv['tb_alias'] . '.' . $scTv['displayed'] . ' AS ' . $scTv['name'];
             $fields[] = $f;
         }
 
         if (isset($this->scCateg)) {
-            $f = $this->scCateg['tb_alias'] . '.' . $this->scCateg['value'] . ' AS category';
+            $f = $this->scCateg['tb_alias'] . '.' . $this->scCateg['displayed'] . ' AS category';
             $fields[] = $f;
         }
 
 
         if (isset($this->scTags)) {
-            $f = 'GROUP_CONCAT( DISTINCT ' . $this->scTags['tb_alias'] . '.' . $this->scTags['value'];
+            $f = 'GROUP_CONCAT( DISTINCT ' . $this->scTags['tb_alias'] . '.' . $this->scTags['displayed'];
             $f.= ' SEPARATOR "," ) AS tags';
             $fields[] = $f;
         }
@@ -405,6 +405,10 @@ class AjaxSearchRequest {
                     $jpref = $joined['tb_alias'];
                     foreach ($joined['searchable'] as $searchable) $hvg[] = '(' . $jpref . '_' . $searchable . $like . ')';
                 }
+                if (isset($this->scTvs['tvs'])) foreach ($this->scTvs['tvs'] as $scTv) {
+                    $jpref = $scTv['tb_alias'];
+                    $hvg[] = '(' . $scTv['name'] . $like . ')';
+                }
             } else {
 
                 if (isset($this->scJoined)) foreach ($this->scJoined as $joined) {
@@ -412,6 +416,10 @@ class AjaxSearchRequest {
                     foreach ($joined['searchable'] as $searchable) {
                         $hvg[] = '((' . $jpref . '_' . $searchable . $like . ') OR (' . $jpref . '_' . $searchable . ' IS NULL))';
                     }
+                }
+                if (isset($this->scTvs['tvs'])) foreach ($this->scTvs['tvs'] as $scTv) {
+                    $jpref = $scTv['tb_alias'];
+                    $hvg[] = '((' . $scTv['name'] . $like . ') OR (' . $scTv['name'] . ' IS NULL))';
                 }
             }
             if (count($hvg) > 0) {
@@ -585,7 +593,8 @@ class AjaxSearchRequest {
                     'tb_alias' => 'n'.$alias,
                     'main' => 'id',
                     'join' => 'contentid',
-                    'value' => 'value',
+                    'displayed' => 'value',
+                    'searchable' => 'value',
                     'sql' => $subselect,
                     'name' => $nm
                 );
@@ -608,9 +617,10 @@ class AjaxSearchRequest {
                 'tb_alias' => 'n'.$abrev,
                 'main' => 'id',
                 'join' => 'contentid',
-                'value' => 'value',
-                'sql' => $subselect,
-                'name' => $name
+                    'displayed' => 'value',
+                    'searchable' => 'value',
+                    'sql' => $subselect,
+                    'name' => $name
             );
         }
         return $scTvs;

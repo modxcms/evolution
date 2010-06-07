@@ -4,9 +4,9 @@
     * Function:     Language file.
     * Encoding:     UTF8
     * Author:       Henrik Nielsen - Proofreading: Mads Vestmar
-    * Date:         29/03/10 21.28 
-    * Version:      1.0.1
-    * MODx version: Evolution 1.0.3
+    * Date:         23 may 2010 22.50 
+    * Version:      1.0.0
+    * MODx version: Evolution 1.0.4
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'da'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -53,6 +53,7 @@ $_lang["add_template"] = 'Tilføj skabelon';
 $_lang["add_tv"] = 'Tilføj TV';
 $_lang["add_weblink"] = 'Tilføj weblink';
 $_lang["administrator_role_message"] = 'Denne brugerrolle kan ikke redigeres eller slettes.';
+$_lang["administrators"] = 'Administratorer';
 $_lang["after_saving"] = 'Efter ressourcen er gemt';
 $_lang["alert_delete_self"] = 'Du kan ikke slette dig selv!';
 $_lang["alias"] = 'Alias';
@@ -260,6 +261,7 @@ $_lang["event_id"] = 'Hændelse ID';
 $_lang["eventlog"] = 'Hændelsesoversigt';
 $_lang["eventlog_msg"] = 'Hændelsesloggen indeholder information, advarsler og fejlbeskeder genereret af CMS\'et. \'Kilde\' kolonnen viser den del af CMS\'et der har genereret informationen.';
 $_lang["eventlog_viewer"] = 'System handlinger';
+$_lang["everybody"] = 'Alle';
 $_lang["existing_category"] = 'Eksisterende kategori';
 $_lang["expand_tree"] = 'Udvid website træet';
 $_lang["export_site"] = 'Eksporter statisk HTML';
@@ -664,6 +666,8 @@ $_lang["refresh_site"] = 'Nulstil cachen';
 $_lang["refresh_title"] = 'Opdater websitet';
 $_lang["refresh_tree"] = 'Opdater website træet';
 $_lang["refresh_unpublished"] = '<b>%s</b> ressourcer blev afpubliceret.';
+$_lang["remember_last_tab"] = 'Husk fane';
+$_lang["remember_last_tab_message"] = 'Sider i administrationsmodulet med faner, vil blive vist med den sidst brugte fane, i stedent for den første fane som der ellers er standard';
 $_lang["remember_username"] = 'Husk mig på denne computer';
 $_lang["remove"] = 'Fjern';
 $_lang["remove_date"] = 'Fjern dato';
@@ -778,6 +782,7 @@ $_lang["role_new_user"] = 'Oprette nye brugere';
 $_lang["role_new_web_user"] = 'Oprette nye webbrugere';
 $_lang["role_plugin_management"] = 'Plugin administration';
 $_lang["role_publish_doc"] = 'Publicere ressourcer';
+$_lang["role_remove_locks"] = 'Fjern låse';
 $_lang["role_role_management"] = 'Roller';
 $_lang["role_run_module"] = 'Køre moduler';
 $_lang["role_save_chunk"] = 'Gemme chunks';
@@ -951,6 +956,8 @@ $_lang["top_howmany_title"] = 'Antal poster';
 $_lang["total"] = 'totalt';
 $_lang["track_visitors_message"] = 'Dette aktiverer muligheden for at bruge statistik plugins, som giver mulighed for, at informationen om de besøgende bliver logget.';
 $_lang["track_visitors_title"] = 'Aktiver statistik sporing';
+$_lang["tree_page_click"] = 'Side klik hændelse';
+$_lang["tree_page_click_message"] = 'Standard hændelse, når der klikkes på en ressource i website træet.';
 $_lang["tree_show_protected"] = 'Vis beskyttede sider';
 $_lang["tree_show_protected_message"] = 'Hvis \'Nej\' er valgt, vil beskyttede ressoucer (og eventuelle underliggende ressourcer) ikke vises i website træet. \'Nej\' er den normale indstilling i MODx.';
 $_lang["truncate_table"] = 'Klik her for at forkorte tabellen';
@@ -1032,6 +1039,8 @@ $_lang["view_logging"] = 'Bruger handlinger';
 $_lang["view_sysinfo"] = 'System information';
 $_lang["warning"] = 'Advarsel!';
 $_lang["warning_not_saved"] = 'De ændringer, der er foretaget, er endnu ikke gemt. Du kan vælge at blive på nuværende side for at gemme ændringerne (\'Annuller\'), eller du kan forlade siden og miste ændringerne (\'OK\').';
+$_lang["warning_visibility"] = 'Synlighed for konfigurationsadvarsler';
+$_lang["warning_visibility_message"] = 'Kontrollerer synligheden af konfigurationsadvarsler, der bliver vist på velkomst siden i administrationsmodulet';
 $_lang["web_access_permissions"] = 'Web adgangsrettigheder';
 $_lang["web_access_permissions_user_groups"] = 'Webbruger grupper';
 $_lang["web_permissions"] = 'Adgangstilladelser for webbrugere';

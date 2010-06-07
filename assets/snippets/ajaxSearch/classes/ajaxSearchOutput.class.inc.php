@@ -497,7 +497,7 @@ class AjaxSearchOutput {
             $searchStringUrl = '';
             $advSearchUrl = '';
         }
-        $asIdUrl = ($this->asCfg->cfg['asId']) ? '&asId=' . urlencode($this->asCfg->cfg['asId']) : '';
+        $asIdUrl = ($this->asCfg->cfg['asId']) ? '&asid=' . urlencode($this->asCfg->cfg['asId']) : '';
         $subSearchUrl = ($this->asCtrl->subSearch) ? '&amp;subsearch=' . urlencode($this->asCtrl->subSearch) : '';
         if ($this->asCtrl->asf) {
             $asfUrl = '&amp;asf=' . urlencode($this->asCtrl->asf);

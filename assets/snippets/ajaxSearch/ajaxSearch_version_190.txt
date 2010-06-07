@@ -92,29 +92,31 @@ Previous versions :
     Default: 60 - 1 minute.
 
 
-==== Define which TV you would like as search results
+==== withTvs Define which Template Variables will be used for the search and display of results.
 
     &withTvs [ [ + | - ] [ : tvlist] ]  - by default ''
 
-    The parameter withTvs define which Tv will be add as field result.
-    Only text type are enabled
+    The parameter withTvs define which Tv will be added as field result for displaying
+    and in which tv the search will occur. Only text type TV are enabled
 
     e.g:
 
-    &withTvs=`tv1,tv2,tv3`      - tv1, tv2, Tv3 are added as result
-    &withTvs=`+:tv1,tv2,tv3`    - tv1, tv2, Tv3 are added as results
-    &withTvs=`+`                - all tvs of the site are added as results
+    &withTvs=`tv1,tv2,tv3`      - tv1, tv2, Tv3 are added
+    &withTvs=`+:tv1,tv2,tv3`    - tv1, tv2, Tv3 are added
+    &withTvs=`+`                - all tvs of the site are added
 
-    &withTvs=`-`                - all tvs of the site are added as results
-    &withTvs=`-:tv1,tv2,tv3`    - all tvs of the site except tv1, tv2, Tv3 are added as results
+    &withTvs=`-`                - all tvs of the site are added
+    &withTvs=`-:tv1,tv2,tv3`    - all tvs of the site except tv1, tv2, Tv3 are added
 
-    &withTvs=``                 - no tv defined as result. If &whereSearch contains 'tv' then a tv_value field
-                                which contain the concatened values of all tv of the document is set as result
+    &withTvs=``                 - no tv added 
+    
+    If &whereSearch contains 'tv' then a tv_value field which contain the concatened 
+    values of all tv of the document is added
 
-    So the tv value could be used for filtering and with the filter parameter (see &filter)
+    So the tv added could be used for filtering with the filter parameter (see &filter)
 
     Like the default site content parameters (pagetitle, longtitle, ...)  the
-    Tvs enabled as results are available with the following placeholders:
+    Tvs added are available with the following placeholders:
 
     [+as.tvname+], [+as.tvnameShow+], [+as.tvnameClass+]
 

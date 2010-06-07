@@ -346,25 +346,25 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 
 ---- &withTvs : [ [ + | - ] [ : tvlist] ]  (optional)
 
-    Define which TV you would like as search results
-    by default ''
+    The parameter withTvs define which Tv will be added as field result for displaying
+    and in which tv the search will occur. Only text type TV are enabled
+
+    e.g:
+
+    &withTvs=`tv1,tv2,tv3`      - tv1, tv2, Tv3 are added
+    &withTvs=`+:tv1,tv2,tv3`    - tv1, tv2, Tv3 are added
+    &withTvs=`+`                - all tvs of the site are added
+
+    &withTvs=`-`                - all tvs of the site are added
+    &withTvs=`-:tv1,tv2,tv3`    - all tvs of the site except tv1, tv2, Tv3 are added
+
+    &withTvs=``                 - no tv added 
     
-    The parameter withTvs define which Tv will be add as field result.
-    Only text type are enabled
+    If &whereSearch contains 'tv' then a tv_value field which contain the concatened 
+    values of all tv of the document is added
 
-    e.g: 
-    
-    &withTvs=`tv1,tv2,tv3`      - tv1, tv2, Tv3 are added as result
-    &withTvs=`+:tv1,tv2,tv3`    - tv1, tv2, Tv3 are added as results 
-    &withTvs=`+`                - all tvs of the site are added as results 
+    So the tv added could be used for filtering with the filter parameter (see &filter)
 
-    &withTvs=`-`                - all tvs of the site are added as results 
-    &withTvs=`-:tv1,tv2,tv3`    - all tvs of the site except tv1, tv2, Tv3 are added as results 
-
-    &withTvs=``                 - no tv defined as result. If &whereSearch contains 'tv' then a tv_value field
-                                which contain the concatened values of all tv of the document is set as result
-                                
-    So the tv value could be used for filtering and with the filter parameter (see &filter)
     
     Like the default site content parameters (pagetitle, longtitle, ...)  the 
     Tvs enabled as results are available with the following placeholders:
@@ -881,9 +881,6 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
       &asLog=`1:1:500` means that 500 failed search requests possibly commented
                        by the end user could be stored in the ajaxSearch_log table
 
-      The ajaxSearch_log table is created as soon as asLog is used for the first time.
-      So you could remove this table without impacts.
-      
 
 ---- &tplComment
         chunk to style comment form

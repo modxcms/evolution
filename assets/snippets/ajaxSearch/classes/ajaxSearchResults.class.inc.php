@@ -871,12 +871,12 @@ class AjaxSearchResults {
                 if ($searchString !== '') {
                     if (($this->asCfg->dbCharset == 'utf8') && ($this->asCfg->cfg['mbstring'])) {
                         $text = $this->_html_entity_decode($text, ENT_QUOTES, 'UTF-8');
-                        $mbStrpos = 'mb_strpos';
+                        $mbStrpos = 'mb_stripos';
                         mb_internal_encoding('UTF-8');
                     }
                     else {
                         $text = html_entity_decode($text, ENT_QUOTES);
-                        $mbStrpos = 'strpos';
+                        $mbStrpos = 'stripos';
                     }
 
                     $searchList = $this->asCtrl->getSearchWords($searchString, $advSearch);
