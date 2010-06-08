@@ -6,7 +6,7 @@ MODx Evolution 1.0.4 ($Rev$ - $Date$)
 --------------------------------------------
 Security:
 --------------------------------------------
-* [#MODX-1964] WebLogin does not prevent brute force attack
+* [#MODX-1964] WebLogin does not prevent brute force attack 
 
 --------------------------------------------
 Bugfixes:
