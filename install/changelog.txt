@@ -1,7 +1,24 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the 
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
-MODx Evolution 1.0.4 ($Rev$ - $Date$)
+MODx Evolution 1.0.5 (TBD)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+
+
+MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
 --------------------------------------------
 Security:
