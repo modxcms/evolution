@@ -1,0 +1,11 @@
+# ignore any files beginning with .
+\.*
+
+# and any files in the cache directory
+/assets/cache/*
+
+# and the config file
+/manager/includes/config.inc.php
+
+# except do not ignore .gitignore
+!.gitignore
