@@ -87,6 +87,7 @@
 { /* .actionButtons --> #qmEditor */
 	margin: 0;
 	padding: 7px 10px 0px 0px;
+    line-height: 1;
 }
 
 #qmEditor li 
@@ -96,6 +97,7 @@
 	margin-right: 6px;
 	margin-top: 6px;
 	padding: 0;
+    text-transform: none;
 }
 
 #qmEditor .qmButton 
