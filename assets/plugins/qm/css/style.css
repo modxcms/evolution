@@ -1,7 +1,11 @@
+#qmEditor, #qmEditorClosed, #qmEditor li
+{
+	font-family: Helvetica, Arial, sans-serif !important;
+}
+
 #qmEditor, #qmEditorClosed
 {
     height: 28px;
-	font-family: Helvetica, Arial, sans-serif !important;
     top:0; 
     left:0;
     padding: 4px 3px 3px 3px;
@@ -18,8 +22,8 @@
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
-}   
- 
+}
+
 #qmEditor *:focus, #qmEditor *:active 
 {
     outline: none !important;
@@ -68,7 +72,7 @@
     border: 0 !important;
     background: transparent url(images/transparent.gif) repeat;
 }
-    
+
 #qmEditor:hover, #qmEditorClosed:hover 
 {
     opacity:1; 
@@ -87,7 +91,7 @@
 { /* .actionButtons --> #qmEditor */
 	margin: 0;
 	padding: 7px 10px 0px 0px;
-    line-height: 1;
+	line-height: 1;
 }
 
 #qmEditor li 
@@ -97,7 +101,7 @@
 	margin-right: 6px;
 	margin-top: 6px;
 	padding: 0;
-    text-transform: none;
+	text-transform: none;
 }
 
 #qmEditor .qmButton 
