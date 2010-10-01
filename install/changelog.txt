@@ -11,12 +11,14 @@ Security:
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
-
+* [#MODX-2245] 3 events not firing: OnWebChangePassword, OnManagerSaveUser, OnManagerChangePassword 
+* [#MODX-1331] Resources in tree unclickable if pagetitle contains line break 
 
 --------------------------------------------
 Additional Improvements & Updates:
 --------------------------------------------
-
+* [#MODX-1734] Add context parameter to the getLoginUserName() API function
+ 
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
