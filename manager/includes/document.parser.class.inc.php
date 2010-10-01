@@ -2075,8 +2075,11 @@ class DocumentParser {
     }
 
     # Returns current user name
-    function getLoginUserName() {
-        if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
+    function getLoginUserName($context= '') {
+        if (!empty($context) && isset ($_SESSION[$context . 'Validated'])) {
+            return $_SESSION[$context . 'Shortname'];
+        }
+        elseif ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return $_SESSION['webShortname'];
         }
         elseif ($this->isBackend() && isset ($_SESSION['mgrValidated'])) {
