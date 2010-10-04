@@ -12,11 +12,19 @@ if (!$conn = @ mysql_connect($host, $uid, $pwd)) {
     $output .= '<span id="database_fail" style="color:#FF0000;">'.$_lang['status_failed'].'</span>';
 }
 else {
-    $database_name = $_POST['database_name'];
+    if (version_compare(phpversion(), "5.3") >= 0) {
+        if(get_magic_quotes_gpc()) {
+            $_POST['database_name'] = stripslashes($_POST['database_name']);
+            $_POST['tableprefix'] = stripslashes($_POST['tableprefix']);
+            $_POST['database_collation'] = stripslashes($_POST['database_collation']);
+            $_POST['database_connection_method'] = stripslashes($_POST['database_connection_method']);
+        }
+    }
+    $database_name = mysql_real_escape_string($_POST['database_name']);
     $database_name = str_replace("`", "", $database_name);
-    $tableprefix = $_POST['tableprefix'];
-    $database_collation = $_POST['database_collation'];
-    $database_connection_method = $_POST['database_connection_method'];
+    $tableprefix = mysql_real_escape_string($_POST['tableprefix']);
+    $database_collation = mysql_real_escape_string($_POST['database_collation']);
+    $database_connection_method = mysql_real_escape_string($_POST['database_connection_method']);
 
     if (!@ mysql_select_db($database_name, $conn)) {
         // create database
