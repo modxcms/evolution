@@ -12,7 +12,7 @@ if (!$conn = @ mysql_connect($host, $uid, $pwd)) {
     $output .= '<span id="database_fail" style="color:#FF0000;">'.$_lang['status_failed'].'</span>';
 }
 else {
-    if (version_compare(phpversion(), "5.3") >= 0) {
+    if (version_compare(phpversion(), "5.3") < 0) {
         if(get_magic_quotes_gpc()) {
             $_POST['database_name'] = stripslashes($_POST['database_name']);
             $_POST['tableprefix'] = stripslashes($_POST['tableprefix']);
