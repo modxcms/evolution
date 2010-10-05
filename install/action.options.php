@@ -56,9 +56,9 @@ elseif ($installMode == 1) {
     <input type="hidden" value="<?php echo $_POST['databasehost']; ?>" name="databasehost" />
     <input type="hidden" value="<?php echo $_POST['databaseloginname']; ?>" name="databaseloginname" />
     <input type="hidden" value="<?php echo $_POST['databaseloginpassword']; ?>" name="databaseloginpassword" />
-    <input type="hidden" value="<?php echo $_POST['cmsadmin']; ?>" name="cmsadmin" />
-    <input type="hidden" value="<?php echo $_POST['cmsadminemail']; ?>" name="cmsadminemail" />
-    <input type="hidden" value="<?php echo $_POST['cmspassword']; ?>" name="cmspassword" />
+    <input type="hidden" value="<?php echo trim($_POST['cmsadmin']); ?>" name="cmsadmin" />
+    <input type="hidden" value="<?php echo trim($_POST['cmsadminemail']); ?>" name="cmsadminemail" />
+    <input type="hidden" value="<?php echo trim($_POST['cmspassword']); ?>" name="cmspassword" />
     <input type="hidden" value="1" name="options_selected" />
   </div>
 
