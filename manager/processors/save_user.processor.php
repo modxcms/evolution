@@ -34,7 +34,7 @@ function generate_password($length = 10) {
 
 $id = intval($_POST['id']);
 $oldusername = $_POST['oldusername'];
-$newusername = !empty ($_POST['newusername']) ? $_POST['newusername'] : "New User";
+$newusername = !empty ($_POST['newusername']) ? trim($_POST['newusername']) : "New User";
 $fullname = $modx->db->escape($_POST['fullname']);
 $genpassword = $_POST['newpassword'];
 $passwordgenmethod = $_POST['passwordgenmethod'];
