@@ -25,7 +25,7 @@ if(!$isPostBack){
 } 
 else if ($isPostBack){
 
-    $username = $modx->db->escape($modx->stripTags($_POST['username']));
+    $username = $modx->db->escape($modx->stripTags(trim($_POST['username'])));
     $fullname = $modx->db->escape($modx->stripTags($_POST['fullname']));
     $email = $modx->db->escape($modx->stripTags($_POST['email']));
     $password = $modx->db->escape($modx->stripTags($_POST['password']));
