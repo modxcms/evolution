@@ -45,20 +45,20 @@ elseif ($installMode == 1) {
 
 <form name="install" id="install_form" action="index.php?action=summary" method="post">
   <div>
-    <input type="hidden" value="<?php echo $install_language?>" name="language" />
-	<input type="hidden" value="<?php echo $manager_language?>" name="managerlanguage" />
-    <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
-    <input type="hidden" value="<?php echo trim($_POST['database_name'], '`') ?>" name="database_name" />
-    <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />
-    <input type="hidden" value="<?php echo $_POST['database_collation'] ?>" name="database_collation" />
-    <input type="hidden" value="<?php echo $_POST['database_connection_charset'] ?>" name="database_connection_charset" />
-    <input type="hidden" value="<?php echo $_POST['database_connection_method'] ?>" name="database_connection_method" />
-    <input type="hidden" value="<?php echo $_POST['databasehost'] ?>" name="databasehost" />
-    <input type="hidden" value="<?php echo $_POST['databaseloginname'] ?>" name="databaseloginname" />
-    <input type="hidden" value="<?php echo $_POST['databaseloginpassword'] ?>" name="databaseloginpassword" />
-    <input type="hidden" value="<?php echo $_POST['cmsadmin'] ?>" name="cmsadmin" />
-    <input type="hidden" value="<?php echo $_POST['cmsadminemail'] ?>" name="cmsadminemail" />
-    <input type="hidden" value="<?php echo $_POST['cmspassword'] ?>" name="cmspassword" />
+    <input type="hidden" value="<?php echo $install_language;?>" name="language" />
+	<input type="hidden" value="<?php echo $manager_language;?>" name="managerlanguage" />
+    <input type="hidden" value="<?php echo $installMode; ?>" name="installmode" />
+    <input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
+    <input type="hidden" value="<?php echo $_POST['tableprefix']; ?>" name="tableprefix" />
+    <input type="hidden" value="<?php echo $_POST['database_collation']; ?>" name="database_collation" />
+    <input type="hidden" value="<?php echo $_POST['database_connection_charset']; ?>" name="database_connection_charset" />
+    <input type="hidden" value="<?php echo $_POST['database_connection_method']; ?>" name="database_connection_method" />
+    <input type="hidden" value="<?php echo $_POST['databasehost']; ?>" name="databasehost" />
+    <input type="hidden" value="<?php echo $_POST['databaseloginname']; ?>" name="databaseloginname" />
+    <input type="hidden" value="<?php echo $_POST['databaseloginpassword']; ?>" name="databaseloginpassword" />
+    <input type="hidden" value="<?php echo $_POST['cmsadmin']; ?>" name="cmsadmin" />
+    <input type="hidden" value="<?php echo $_POST['cmsadminemail']; ?>" name="cmsadminemail" />
+    <input type="hidden" value="<?php echo $_POST['cmspassword']; ?>" name="cmspassword" />
     <input type="hidden" value="1" name="options_selected" />
   </div>
 
