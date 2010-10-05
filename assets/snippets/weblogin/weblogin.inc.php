@@ -24,7 +24,7 @@ if(!isset($_SESSION['webValidated'])){
 //        $thestring = $rc4->endecrypt($thepasswd,$sitename,'de');
 //        $uid = $thestring;
 //    }else{
-        $uid = isset($_POST['username'])? $modx->db->escape(htmlspecialchars($_POST['username'], ENT_QUOTES)):'';
+        $uid = isset($_POST['username'])? $modx->db->escape(htmlspecialchars(trim($_POST['username']), ENT_QUOTES)):'';
 //    }
     ?>
     <script type="text/JavaScript">
