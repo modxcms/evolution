@@ -98,6 +98,9 @@ var widgetParams = {};          // name = description;datatype;default or list v
     widgetParams['datagrid']    = '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
     widgetParams['richtext']    = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?php echo $RTEditors; ?>';
     widgetParams['image']       = '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
+    /* Changed by ProWebscape for custom widget */
+    widgetParams['custom_widget']       = '&output=Output;string';
+    /* Changed by ProWebscape for custom widget */
 
 // Current Params
 var currentParams = {};
@@ -308,6 +311,9 @@ function decode(s){
 	            <option value="email" <?php     echo ($content['type']=='email')? "selected='selected'":""; ?>>Email</option>
 	            <option value="number" <?php    echo ($content['type']=='number')? "selected='selected'":""; ?>>Number</option>
 	            <option value="date" <?php      echo ($content['type']=='date')? "selected='selected'":""; ?>>Date</option>
+                <!-- Changed by ProWebscape for custom tv -->
+                <option value="custom_tv" <?php      echo ($content['type']=='custom_tv')? "selected='selected'":""; ?>>Custom Input</option>
+                <!-- Changed by ProWebscape for custom tv -->
 	        </select>
     </td>
   </tr>
@@ -331,6 +337,9 @@ function decode(s){
 	            <option value="richtext" <?php echo ($content['display']=='richtext')? "selected='selected'":""; ?>>RichText</option>
 	            <option value="ticker" <?php echo ($content['display']=='ticker')? "selected='selected'":""; ?>>Ticker</option>
 	            <option value="viewport" <?php echo ($content['display']=='viewport')? "selected='selected'":""; ?>>View Port</option>
+                <!-- Changed by ProWebscape for custom widget -->
+                <option value="custom_widget" <?php echo ($content['display']=='custom_widget')? "selected='selected'":""; ?>>Custom Widget</option>
+                <!-- Changed by ProWebscape for custom widget -->
 			</optgroup>
 			<optgroup label="Formats">
 	            <option value="htmlentities" <?php echo ($content['display']=='htmlentities')? "selected='selected'":""; ?>>HTML Entities</option>
