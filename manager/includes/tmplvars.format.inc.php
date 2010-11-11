@@ -327,6 +327,25 @@
 				$o = htmlentities($value, ENT_NOQUOTES, $modx->config['modx_charset']);
 				break;
 
+            /* Changed by ProWebscape for custom widget */
+			case 'custom_widget':
+                $widget_output = '';
+                /* If we are loading a file */
+                if(substr($params['output'], 0, 6) == "@FILE:") {
+                    $file_name = MODX_BASE_PATH.trim(substr($params['output'], 6));
+                    if( !file_exists($file_name) ) {
+                        $widget_output = "$file_name does not exist";
+                    } else {
+                        /* The included file needs to set $widget_output. Can be string, array, object */
+                        include $file_name;
+                    }
+                } else {
+                    $widget_output = str_replace('[+value+]', $value, $params['output']);
+                }
+				$o = $widget_output;
+				break;
+            /* Changed by ProWebscape for custom widget */
+            
 			default:
 				$value = parseInput($value);
 				if($tvtype=='checkbox'||$tvtype=='listbox-multiple') {

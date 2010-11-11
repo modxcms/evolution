@@ -784,11 +784,14 @@ if (is_array($evtOut))
 							echo "\t\t",'<tr><td colspan="2"><div class="split"></div></td></tr>',"\n";
 
 						$tvPBV = array_key_exists('tv'.$row['id'], $_POST) ? $_POST['tv'.$row['id']] : $row['value']; // post back value
+						
+						/* Changed by ProWebscape for custom tv: Added $row to end of function. Give the whole row array to the TV */
 						echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
 						     "\t\t\t",'<br /><span class="comment">',$row['description'],"</span></td>\n",
 						     "\t\t\t",'<td valign="top" style="position:relative;',($row['type'] == 'date' ? 'z-index:500;' : ''),'">',"\n",
-						     "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, ' style="width:300px;"'),"\n",
+						     "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, ' style="width:300px;"', $row),"\n",
 						     "\t\t</td></tr>\n";
+                        /* Changed by ProWebscape for custom tv */
 					}
 					echo "\t</table>\n";
 				} else {
