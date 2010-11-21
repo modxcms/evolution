@@ -1,4 +1,17 @@
 #qmEditor, #qmEditorClosed
 {
-    padding: 2px 3px 3px 3px !important;
+    padding: 3px 3px 1px 3px;
+
+}
+
+#qmEditor #qmClose
+{
+    padding: 6px 4px 5px 6px;
+    margin-bottom: 2px;
+    margin-top: -1px;
+}
+
+#qmEditor li 
+{
+    margin-top: -1px;
 }

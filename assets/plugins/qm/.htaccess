@@ -1,4 +1,0 @@
-# Restrict direct access to script file types and templates
-<FilesMatch "\.(php|tpl|inc)$">
-Allow from all
-</FilesMatch>
