@@ -7,7 +7,7 @@ update:"Mettre \u00E0 jour",
 cancel:"Annuler",
 close:"Fermer",
 browse:"parcourir",
-class_name:"Class",
+class_name:"Classe",
 not_set:"-- non d\u00E9fini --",
 clipboard_msg:"Les fonctions Copier/Couper/Coller ne sont pas valables sur Mozilla et Firefox.\nSouhaitez-vous avoir plus d'informations sur ce sujet ?",
 clipboard_no_support:"Actuellement non support\u00E9 par votre navigateur.\n Veuillez utiliser les raccourcis clavier \u00E0 la place.",
@@ -61,7 +61,9 @@ iespell_desc:"Lancer le v\u00E9rificateur d'orthographe",
 download:"ieSpell n'est pas install\u00E9. Souhaitez-vous l'installer maintenant ?"
 },
 advhr:{
-advhr_desc:"Ins\u00E9rer un trait horizontal"
+advhr_desc:"Ins\u00E9rer un trait horizontal",
+delta_width:"Ecart de largeur",
+delta_height:"Ecart de hauteur"
 },
 emotions:{
 emotions_desc:"\u00C9motic\u00F4nes"
