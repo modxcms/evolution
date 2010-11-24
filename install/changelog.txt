@@ -8,6 +8,7 @@ Security:
 --------------------------------------------
 * [#MODX-1035] fix XSS vulnerability in installer
 
+
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
@@ -18,7 +19,7 @@ Bugfixes:
 Additional Improvements & Updates:
 --------------------------------------------
 * [#MODX-1734] Add context parameter to the getLoginUserName() API function
- 
+* [#443] TinyMCE upgraded to 3.3.9.2
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
