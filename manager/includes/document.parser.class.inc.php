@@ -908,6 +908,15 @@ class DocumentParser {
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
 
+        // allow alias to be full path
+        if($method == 'alias') {
+            $identifier = $this->cleanDocumentIdentifier($identifier);
+            $method = $this->documentMethod;
+        }
+        if($method == 'alias' && $this->config['use_alias_path'] && array_key_exists($identifier, $this->documentListing)) {
+            $method = 'id';
+            $identifier = $this->documentListing[$identifier];
+        }
         // get document groups for current user
         if ($docgrp= $this->getUserDocGroups())
             $docgrp= implode(",", $docgrp);
@@ -923,16 +932,14 @@ class DocumentParser {
         $rowCount= $this->recordCount($result);
         if ($rowCount < 1) {
             if ($this->config['unauthorized_page']) {
-                // Fix for FS #375 - netnoise 2006/08/14
-                if ($method != 'id')
-                    $identifier= $this->cleanDocumentIdentifier($identifier);
-                if (!is_numeric($identifier) && array_key_exists($identifier, $this->documentListing)) {
-                    $identifier= $this->documentListing[$identifier];
-                    $method= 'id';
+                // method may still be alias, while identifier is not full path alias, e.g. id not found above
+                if ($method === 'alias') {
+                    $q = "SELECT dg.id FROM $tbldg dg, $tblsc sc WHERE dg.document = sc.id AND sc.alias = '{$identifier}' LIMIT 1;";
+                } else {
+                    $q = "SELECT id FROM $tbldg WHERE document = '{$identifier}' LIMIT 1;";
                 }
-
                 // check if file is not public
-                $secrs= $this->dbQuery("SELECT id FROM $tbldg WHERE document = '" . $identifier . "' LIMIT 1;");
+                $secrs= $this->dbQuery($q);
                 if ($secrs)
                     $seclimit= mysql_num_rows($secrs);
             }

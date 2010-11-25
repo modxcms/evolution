@@ -20,6 +20,7 @@ Additional Improvements & Updates:
 --------------------------------------------
 * [#MODX-1734] Add context parameter to the getLoginUserName() API function
 * [#443] TinyMCE upgraded to 3.3.9.2
+* [#4] getDocumentObject allows full alias path to be specified
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
