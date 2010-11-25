@@ -7,7 +7,7 @@ MODx Evolution 1.0.5 (TBD)
 Security:
 --------------------------------------------
 * [#MODX-1035] fix XSS vulnerability in installer
-
+* [#2787] fix XSS vuln. in image editor
 
 --------------------------------------------
 Bugfixes:
@@ -20,8 +20,10 @@ Bugfixes:
 Additional Improvements & Updates:
 --------------------------------------------
 * [#MODX-1734] Add context parameter to the getLoginUserName() API function
-* [#443] TinyMCE upgraded to 3.3.9.2
 * [#4] getDocumentObject allows full alias path to be specified
+* [#443] TinyMCE updated to 3.3.9.2
+* [#23] Quick Manager+ updated to 1.5.3-GA
+
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================

@@ -1,14 +1,176 @@
-#qmEditor, #qmEditorClosed, #qmEditor li
+/* Edit buttons in content, e.g. for Ditto listings */
+
+.qm-edit
 {
-	font-family: Helvetica, Arial, sans-serif !important;
+    display: block;
+    float: right;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    margin: 5px 0 5px 5px;
+    line-height: 1em;
+    padding: 0 !important;  
+}
+
+.qm-edit a
+{
+    display: block;
+    color: #3b454f;
+    text-decoration: none;
+    border: none;
+    line-height: 1em;
+    padding: 6px 6px;
+}
+
+
+/* New document buttons in content */
+
+.qm-new, .qm-tv 
+{
+    display: block;
+    float: right;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    margin: 5px 0 5px 5px;
+    line-height: 1em;
+    padding: 0 !important;
+}
+
+.qm-new a, .qm-tv a
+{
+    display: block;
+    color: #3b454f;
+    text-decoration: none;
+    border: none;
+    padding: 6px 6px;
+}
+
+
+/* TV edit form */
+
+#qm-tv-body
+{
+	font-family: Helvetica, Arial, sans-serif;
+	color: #111;
+	font-size: 1em;
+}
+
+#qm-tv-tv
+{
+	font-size: 80%;
+}
+
+.qm-save, .qm-cancel 
+{
+    display: block;
+    float: right;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    margin: 5px 0 5px 5px;
+    line-height: 1em;
+    padding: 0 !important;
+}
+
+.qm-save a, .qm-cancel a
+{
+    display: block;
+    color: #3b454f;
+    text-decoration: none;
+    border: none;
+    padding: 6px 6px;
+}
+
+.qm-cancel span
+{
+    background: transparent url(images/stop.png) no-repeat left center;
+    padding-left: 20px;
+}
+
+.qm-save 
+{
+    margin-right: 5px;
+}
+
+.qm-cancel 
+{
+    margin-right: 20px;
+}
+
+#qm-tv-actions 
+{
+	position: fixed;
+	top: 10px;
+	right: 0;
+	z-index: 100;
+	margin: 0;
+	text-align: right;
+}
+
+#qm-tv-body h1 
+{
+	font-size: 120%;
+	letter-spacing: 1px;
+	color: #333333;
+	font-weight: normal;
+	margin-bottom: 20px;
+}
+
+#qm-tv-description 
+{
+    margin-bottom: 20px;
+    font-size: 80%;
+}
+
+.qm-tv-text input, .qm-tv-textarea textarea, .qm-tv-image input[type=text], .qm-tv-file input[type=text]
+{
+    border: 1px solid #ddd;
+	border-left-color: #c3c3c3;
+	border-top-color: #7c7c7c;
+	padding: 4px 4px 4px 4px;
+	background: #fff url(images/input-bg.gif) repeat-x top left;
+}  
+
+.qm-tv-text input
+{
+    width: 400px !important;
+}
+
+.qm-tv-textarea textarea
+{
+    width: 400px !important;
+    height: 200px;
+	font-family: monospace;
+}
+
+.qm-tv-image input[type=text]
+{
+    width: 400px !important;
+}
+
+#qm-tv-image-preview
+{
+    margin-top: 15px;
+}
+
+#qm-tv-image-preview img
+{
+    max-width: 200px; 
+    max-height: 200px;
+}
+
+
+/* Toolbar */
+
+*:focus, *:active 
+{
+    outline: none !important;
 }
 
 #qmEditor, #qmEditorClosed
 {
-    height: 28px;
+	font-family: Helvetica, Arial, sans-serif !important;
     top:0; 
     left:0;
-    padding: 4px 3px 3px 3px;
+    padding: 3px;
     position: fixed;
     width: 100%;
     line-height:1;
@@ -22,8 +184,8 @@
 	-webkit-transition-duration: 0.7s;
 	-moz-transition-duration: 0.7s;
 	transition-duration: 0.7s;
-}
-
+}   
+ 
 #qmEditor *:focus, #qmEditor *:active 
 {
     outline: none !important;
@@ -36,28 +198,35 @@
 
 #qmEditor a
 {
-    display: inline;
+	display: block;
 }
 
-.qmEdit span
+#qmEditor .qmEdit span, .qm-edit span, .qm-save span, .qm-tv span
 {
     background: transparent url(images/save.png) no-repeat left center;
     padding-left: 20px;
 }
 
+#qmEditor .qmButton span
+{
+
+}
+
 #qmEditorClosed
 {
+    height: 28px;
     display: none;
     width: 40px !important;
     cursor: pointer !important;
 }
 
-#qmClose
+#qmEditor #qmClose
 {
     display: block;
     float: right; 
-    margin-right: 10px;
-    margin-top: 2px;
+    margin-right: 7px;
+    margin-top: 0px;
+    padding: 6px 8px;
 }
 
 #qmLogoClose
@@ -66,13 +235,13 @@
     float: left;
     height: 28px;
     width: 40px;
-    margin-top: -6px;
-    margin-right: 5px;
+    margin-top: 0;
+    margin-right: 0px;
     text-decoration: none !important;
     border: 0 !important;
     background: transparent url(images/transparent.gif) repeat;
 }
-
+    
 #qmEditor:hover, #qmEditorClosed:hover 
 {
     opacity:1; 
@@ -90,29 +259,27 @@
 #qmEditor ul 
 { /* .actionButtons --> #qmEditor */
 	margin: 0;
-	padding: 7px 10px 0px 0px;
-	line-height: 1;
+	padding: 0px 10px 0px 0px;
+	list-style-type: none;
 }
 
 #qmEditor li 
-{ /* .actionButtons --> #qmEditor */
-	display: inline;
-	list-style-type: none;
-	margin-right: 6px;
-	margin-top: 6px;
+{ /* .actionButtons --> #qmEditor */	
+	margin-right: 8px;
+	float: left;
+	height: 15px;
+	line-height: 15px;
 	padding: 0;
-	text-transform: none;
 }
 
-#qmEditor .qmButton 
+#qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel  
 {
 	color: #3b454f;
 	font-weight: bold;
 	font-size: 12px;
 	background: #c7ced2 url(images/button-gradient.png) repeat-x 0px -6px; 
-	padding: 4px 6px;
+    padding: 4px 6px;
 	white-space: nowrap;
-	vertical-align: top;
 	text-decoration: none;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -124,14 +291,7 @@
 	outline: none;
 }
 
-#qmEditor .qmButton img 
-{
-	vertical-align: top;
-	margin-top: -2px;
-	border: 0;
-}
-
-#qmEditor .qmButton:hover
+#qmEditor .qmButton:hover, .qm-edit:hover, .qm-new:hover, .qm-tv:hover, .qm-save:hover, .qm-cancel:hover  
 {
 	background-position: bottom left;
 	-webkit-box-shadow: 0 0 10px #b8c7d6;

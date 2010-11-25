@@ -1,10 +1,10 @@
 <?php
 /**
- * Mc - Manager Control Class for MODx / Qm+
+ * QuickManager+ Manager Control Class
  *  
- * @author      Mikko Lammi, www.maagit.fi (based on QuickManager by Urique Dertlian, urique@unix.am)
+ * @author      Mikko Lammi, www.maagit.fi
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.3.4 updated 06/08/2009                
+ * @version     1.5.3 updated 02/08/2010                
  */
 
 if(!class_exists('Mcc')) {
@@ -20,14 +20,13 @@ if(!class_exists('Mcc')) {
             $this->tabs = array(
             'general'       => array('index'=>1,'id'=>'tabGeneral'),
             'settings'      => array('index'=>2,'id'=>'tabSettings'),
-            'meta'          => array('index'=>3,'id'=>'tabMeta')
+            'access'          => array('index'=>3,'id'=>'tabAccess')
             );
             
             $this->sections = array(
             'docsettings'   => array('index'=>0,'name'=>'DocSettings'),
             'content'       => array('index'=>1,'name'=>'Content'),
-            'tvs'           => array('index'=>2,'name'=>'TVs'),
-            'access'        => array('index'=>3,'name'=>'Access')
+            'tvs'           => array('index'=>2,'name'=>'TVs')
             );
             
             $this->fields = array('content','pagetitle','longtitle','menuindex','parent','description','alias','link_attributes','introtext','template','menutitle');
@@ -73,6 +72,13 @@ if(!class_exists('Mcc')) {
             if(!isset($this->sections[$section])) return;
             $sectionBodyIndex = $this->sections[$section]['index'];
             $sectionHeaderIndex = $sectionBodyIndex -1;
+            
+            // Handle docsettings
+            if ($sectionHeaderIndex == -1) {
+                $this->addLine('$("#tabGeneral table:eq(0)").hide()');                 
+                return;
+            }
+            
             $this->addLine('$("div.sectionHeader:eq('.$sectionHeaderIndex.')").hide()'); 
             $this->addLine('$("div.sectionBody:eq('.$sectionBodyIndex.')").hide()'); 
         }
