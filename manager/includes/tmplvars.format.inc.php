@@ -233,13 +233,20 @@
 
 			case "unixtime":
 				$value = parseInput($value);
-				// Check for MySQL style date - Adam Crownoble 8/3/2005
-				$date_match = '/^([0-9]{4})([0-9]{2})-([0-9]{2})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$/';
+                $timestamp = false;
+				// Check for MySQL or legacy style date
+				$date_match_1 = '/^([0-9]{2})-([0-9]{2})-([0-9]{4})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$/';
+				$date_match_2 = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})\ ([0-9]{2}):([0-9]{2}):([0-9]{2})$/';
 				$matches= array();
-				if(strpos($value,'-')!==false && preg_match($date_match, $value, $matches)) {
-					$timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
+                if(strpos($value,'-')!==false) {
+                    if(preg_match($date_match_1, $value, $matches)) {
+                        $timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[1], $matches[3]);
+                    } elseif(preg_match($date_match_2, $value, $matches)) {
+                        $timestamp = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
+                    }
 				}
-				else { // If it's not a MySQL style date, then use strtotime to figure out the date
+                // If those didn't work, use strtotime to figure out the date
+                if($timestamp === false || $timestamp === -1) {
 					$timestamp = strtotime($value);
 				}
 				$o = $timestamp;

@@ -13,7 +13,8 @@ Security:
 Bugfixes:
 --------------------------------------------
 * [#MODX-2245] 3 events not firing: OnWebChangePassword, OnManagerSaveUser, OnManagerChangePassword 
-* [#MODX-1331] Resources in tree unclickable if pagetitle contains line break 
+* [#MODX-1331] Resources in tree unclickable if pagetitle contains line break
+* [#100] fix TV with Input Type 'Date' and Widget 'Unixtime' returns wrong value
 
 --------------------------------------------
 Additional Improvements & Updates:
