@@ -229,6 +229,9 @@ if (is_writable("../assets/cache")) {
     @ fclose($hnd);
 }
 
+if($installMode > 0 && $_POST['installdata'] == "1") {
+    echo "<p class=\"notes\"><strong>{$_lang['sample_web_site']}:</strong> {$_lang['sample_web_site_note']}</p>\n";
+}
 
 if ($errors > 0) {
 ?>
@@ -289,7 +292,7 @@ foreach ($plugins as $i => $plugin) echo "<input type=\"hidden\" name=\"plugin[]
 $modules = isset ($_POST['module']) ? $_POST['module'] : array ();
 foreach ($modules as $i => $module) echo "<input type=\"hidden\" name=\"module[]\" value=\"$module\" />\n";
 ?>
-  </div>
+</div>
 
 <h2><?php echo $_lang['agree_to_terms'];?></h2>
 <p>

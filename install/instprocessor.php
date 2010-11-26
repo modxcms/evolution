@@ -21,7 +21,7 @@ $create = false;
 echo "<p>{$_lang['setup_database']}</p>\n";
 
 $installMode= intval($_POST['installmode']);
-$installData = $_POST['installdata'] ? 1 : 0;
+$installData = $_POST['installdata'] == "1" ? 1 : 0;
 
 //if ($installMode == 1) {
 //	include "../manager/includes/config.inc.php";

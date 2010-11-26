@@ -71,7 +71,7 @@ include "{$setupPath}/setup.info.php";
 
 echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_note'] . "</p>";
 
-$chk = isset ($_POST['installdata']) ? 'checked="checked"' : "";
+$chk = isset ($_POST['installdata']) && $_POST['installdata'] == "1" ? 'checked="checked"' : "";
 echo '<img src="img/sample_site.png" class="options" alt="Sample Data" />';
 echo "<h3>" . $_lang['sample_web_site'] . "</h3>";
 echo "<p><input type=\"checkbox\" name=\"installdata\" id=\"installdata_field\" value=\"1\" $chk />&nbsp;<label for=\"installdata_field\">" . $_lang['install_overwrite'] . " <span class=\"comname\">" . $_lang['sample_web_site'] . "</span></label></p><p><em>&nbsp;" . $_lang['sample_web_site_note'] . "</em></p><hr />";
