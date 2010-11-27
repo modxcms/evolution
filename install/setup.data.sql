@@ -162,20 +162,6 @@ REPLACE INTO `{PREFIX}site_keywords` VALUES ('4','login');
 
 
 #
-# Dumping data for table `site_tmplvars`
-#
-
-
-REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('1','richtext','blogContent','blogContent','RTE for the new blog entries','0','1','0','','0','richtext','&w=383px&h=450px&edt=TinyMCE','');
-
-
-REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('2','text','loginName','loginName','Conditional name for the Login menu item','0','1','0','','0','','','@EVAL if ($modx->getLoginUserID()) return \'Logout\'; else return \'Login\';');
-
-
-REPLACE INTO `{PREFIX}site_tmplvars` VALUES ('3','text','documentTags','Tags','Space delimited tags for the current document','0','1','0','','0','','','');
-
-
-#
 # Dumping data for table `modx2352_site_tmplvar_contentvalues`
 #
 
@@ -184,41 +170,6 @@ REPLACE INTO `{PREFIX}site_tmplvar_contentvalues` VALUES ('1','3','9','demo mini
 
 
 REPLACE INTO `{PREFIX}site_tmplvar_contentvalues` VALUES ('2','3','18','demo older posting');
-
-
-#
-# Dumping data for table `site_tmplvar_templates`
-#
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('1','1','1');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('1','3','2');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('1','4','3');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','1','1');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','3','2');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('2','4','3');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','3','0');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','4','0');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','1','0');
-
-
-REPLACE INTO `{PREFIX}site_tmplvar_templates` VALUES ('3','5','0');
 
 
 #
