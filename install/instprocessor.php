@@ -396,22 +396,24 @@ if (isset ($_POST['tv'])) {
             echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
         }
       
-        // add template assignements
+        // add template assignments
         $assignments = explode(',', $assignments);
         
         if (count($assignments) > 0) {
+
+            // remove existing tv -> template assignments
+            $ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';",$sqlParser->conn);
+            $row = mysql_fetch_assoc($ds);
+            $id = $row["id"];
+            mysql_query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'');
+
+            // add tv -> template assignments
             foreach ($assignments as $assignment) {
                 $template = mysql_real_escape_string($assignment);
                 $ts = mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_templates` WHERE templatename='$template';",$sqlParser->conn);
-                $ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';",$sqlParser->conn);
                 if ($ds && $ts) {
                     $tRow = mysql_fetch_assoc($ts);
-                    $row = mysql_fetch_assoc($ds);
                     $templateId = $tRow['id'];
-                    $id = $row["id"];
-                    // remove existing tv -> template assignements
-                    mysql_query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'');
-                    // add existing tv -> template assignements
                     mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)");
                }
             }
