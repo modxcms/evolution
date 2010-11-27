@@ -35,7 +35,8 @@
 					$params['type'],
 					"$templatePath/{$params['filename']}",
 					$params['modx_category'],
-					$params['lock_template']
+					$params['lock_template'],
+                    array_key_exists('sample', $params) ? true : false
 				);
 			}
 		}
@@ -67,7 +68,8 @@
 					"$templatePath/{$params['filename']}", /* not currently used */
 					$params['template_assignments'], /* comma-separated list of template names */
 					$params['modx_category'],
-					$params['lock_tv']  /* value should be 1 or 0 */
+					$params['lock_tv'],  /* value should be 1 or 0 */
+                    array_key_exists('sample', $params) ? true : false
 				);
 			}
 		}
@@ -274,7 +276,8 @@ function parse_docblock($element_dir, $filename) {
 									$param = trim($ma[1]);
 									$val = trim($ma[2]);
 								}
-								if($val !== '0' && (empty($param) || empty($val))) {
+								//if($val !== '0' && (empty($param) || empty($val))) {
+                                if(empty($param)) {
 									continue;
 								}
 							}

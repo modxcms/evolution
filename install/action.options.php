@@ -88,10 +88,16 @@ $options_selected = isset ($_POST['options_selected']);
 $templates = isset ($_POST['template']) ? $_POST['template'] : array ();
 $limit = count($moduleTemplates);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['templates'] . "</h3><br />";
+    $tplOutput = '';
     for ($i = 0; $i < $limit; $i++) {
-        $chk = in_array($i, $templates) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr />";
+        if($moduleTemplates[$i][6] === false) {
+            $chk = in_array($i, $templates) || (!$options_selected) ? 'checked="checked"' : "";
+            $tplOutput .= "<input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr />\n";
+        }
+    }
+    if($tplOutput !== '') {
+        echo "<h3>" . $_lang['templates'] . "</h3><br />";
+        echo $tplOutput;
     }
 }
 
@@ -99,10 +105,16 @@ if ($limit > 0) {
 $tvs = isset ($_POST['tv']) ? $_POST['tv'] : array ();
 $limit = count($moduleTVs);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['tvs'] . "</h3><br />";
+    $tvOutput = '';
     for ($i = 0; $i < $limit; $i++) {
-        $chk = in_array($i, $tvs) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"tv[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTVs[$i][0] . "</span> - " . $moduleTVs[$i][2] . "<hr />";
+        if($moduleTVs[$i][12] === false) {
+            $chk = in_array($i, $tvs) || (!$options_selected) ? 'checked="checked"' : "";
+            $tvOutput .= "<input type=\"checkbox\" name=\"tv[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTVs[$i][0] . "</span> - " . $moduleTVs[$i][2] . "<hr />\n";
+        }
+    }
+    if($tvOutput != '') {
+        echo "<h3>" . $_lang['tvs'] . "</h3><br />\n";
+        echo $tvOutput;
     }
 }
 
