@@ -350,53 +350,55 @@ if ($installMode == 0) {
 if (isset ($_POST['template'])) {
 	echo "<p style=\"color:#707070\">" . $_lang['templates'] . ":</p> ";
 	$selTemplates = $_POST['template'];
-	foreach ($selTemplates as $si) {
-		$si = (int) trim($si);
-		$name = mysql_real_escape_string($moduleTemplates[$si][0]);
-		$desc = mysql_real_escape_string($moduleTemplates[$si][1]);
-		$category = mysql_real_escape_string($moduleTemplates[$si][4]);
-		$locked = mysql_real_escape_string($moduleTemplates[$si][5]);
-		$filecontent = $moduleTemplates[$si][3];
-		if (!file_exists($filecontent)) {
-			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
-		} else {
-			// Create the category if it does not already exist
-			if($category) {
-				$rs = mysql_query("REPLACE INTO $dbase.`".$table_prefix."categories` (`id`,`category`) ( SELECT MIN(`id`), '$category' FROM ( SELECT `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category' UNION SELECT (CASE COUNT(*) WHEN 0 THEN 1 ELSE MAX(`id`)+1 END ) `id` FROM $dbase.`" . $table_prefix . "categories` ) AS _tmp )", $sqlParser->conn);
-				
-				$rs = mysql_query("SELECT id FROM $dbase.`".$table_prefix."categories` WHERE category = '".$category."'");
-				if(mysql_num_rows($rs) && ($row = mysql_fetch_assoc($rs))) {
-					$category = $row['id'];
-				} else {
-					$category = 0;
-				}
-			} else {
-				$category = 0;
-			}
-			
-			// Strip the first comment up top
-			$template = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
-			$template = mysql_real_escape_string($template);
-			
-			// See if the template already exists
-			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'", $sqlParser->conn);
-			
-			if (mysql_num_rows($rs)) {
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category='$category', locked='$locked'  WHERE templatename='$name';", $sqlParser->conn)) {
-					$errors += 1;
-					echo "<p>" . mysql_error() . "</p>";
-					return;
-				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-			} else {
-				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template','$category','$locked');", $sqlParser->conn)) {
-					$errors += 1;
-					echo "<p>" . mysql_error() . "</p>";
-					return;
-				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
-			}
-		}
+	foreach ($moduleTemplates as $k=>$moduleTemplate) {
+        $installSample = $moduleTemplate[7] && $installData == 1;
+        if(in_array($k, $selTemplates) || $installSample) {
+            $name = mysql_real_escape_string($moduleTemplate[0]);
+            $desc = mysql_real_escape_string($moduleTemplate[1]);
+            $category = mysql_real_escape_string($moduleTemplate[4]);
+            $locked = mysql_real_escape_string($moduleTemplate[5]);
+            $filecontent = $moduleTemplate[3];
+            if (!file_exists($filecontent)) {
+                echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_template'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
+            } else {
+                // Create the category if it does not already exist
+                if($category) {
+                    $rs = mysql_query("REPLACE INTO $dbase.`".$table_prefix."categories` (`id`,`category`) ( SELECT MIN(`id`), '$category' FROM ( SELECT `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category' UNION SELECT (CASE COUNT(*) WHEN 0 THEN 1 ELSE MAX(`id`)+1 END ) `id` FROM $dbase.`" . $table_prefix . "categories` ) AS _tmp )", $sqlParser->conn);
+
+                    $rs = mysql_query("SELECT id FROM $dbase.`".$table_prefix."categories` WHERE category = '".$category."'");
+                    if(mysql_num_rows($rs) && ($row = mysql_fetch_assoc($rs))) {
+                        $category = $row['id'];
+                    } else {
+                        $category = 0;
+                    }
+                } else {
+                    $category = 0;
+                }
+
+                // Strip the first comment up top
+                $template = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
+                $template = mysql_real_escape_string($template);
+
+                // See if the template already exists
+                $rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_templates` WHERE templatename='$name'", $sqlParser->conn);
+
+                if (mysql_num_rows($rs)) {
+                    if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_templates` SET content='$template', description='$desc', category='$category', locked='$locked'  WHERE templatename='$name';", $sqlParser->conn)) {
+                        $errors += 1;
+                        echo "<p>" . mysql_error() . "</p>";
+                        return;
+                    }
+                    echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
+                } else {
+                    if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_templates` (templatename,description,content,category,locked) VALUES('$name','$desc','$template','$category','$locked');", $sqlParser->conn)) {
+                        $errors += 1;
+                        echo "<p>" . mysql_error() . "</p>";
+                        return;
+                    }
+                    echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
+                }
+            }
+        }
 	}
 }
 
@@ -404,69 +406,70 @@ if (isset ($_POST['template'])) {
 if (isset ($_POST['tv'])) {
     echo "<h3>" . $_lang['tvs'] . ":</h3> ";
     $selTVs = $_POST['tv'];
-    foreach ($selTVs as $si) {
-        $si = (int) trim($si);
-        $name = mysql_real_escape_string($moduleTVs[$si][0]);
-        $caption = mysql_real_escape_string($moduleTVs[$si][1]);
-        $desc = mysql_real_escape_string($moduleTVs[$si][2]);
-        $input_type = mysql_real_escape_string($moduleTVs[$si][3]);
-        $input_options = mysql_real_escape_string($moduleTVs[$si][4]);
-        $input_default = mysql_real_escape_string($moduleTVs[$si][5]);
-        $output_widget = mysql_real_escape_string($moduleTVs[$si][6]);
-        $output_widget_params = mysql_real_escape_string($moduleTVs[$si][7]);
-        $filecontent = $moduleTVs[$si][8];
-        $assignments = $moduleTVs[$si][9];
-        $category = mysql_real_escape_string($moduleTVs[$si][10]);
-        $locked = mysql_real_escape_string($moduleTVs[$si][11]);
-        
+    foreach ($moduleTVs as $k=>$moduleTV) {
+        $installSample = $moduleTV[12] && $installData == 1;
+        if(in_array($k, $selTVs) || $installSample) {
+            $name = mysql_real_escape_string($moduleTV[0]);
+            $caption = mysql_real_escape_string($moduleTV[1]);
+            $desc = mysql_real_escape_string($moduleTV[2]);
+            $input_type = mysql_real_escape_string($moduleTV[3]);
+            $input_options = mysql_real_escape_string($moduleTV[4]);
+            $input_default = mysql_real_escape_string($moduleTV[5]);
+            $output_widget = mysql_real_escape_string($moduleTV[6]);
+            $output_widget_params = mysql_real_escape_string($moduleTV[7]);
+            $filecontent = $moduleTV[8];
+            $assignments = $moduleTV[9];
+            $category = mysql_real_escape_string($moduleTV[10]);
+            $locked = mysql_real_escape_string($moduleTV[11]);
 
-        // Create the category if it does not already exist
-        if( $category ){                
-            $rs = mysql_query("REPLACE INTO $dbase.`" . $table_prefix . "categories` (`id`,`category`) ( SELECT MIN(`id`), '$category' FROM ( SELECT `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category' UNION SELECT (CASE COUNT(*) WHEN 0 THEN 1 ELSE MAX(`id`)+1 END ) `id` FROM $dbase.`" . $table_prefix . "categories` ) AS _tmp )", $sqlParser->conn);
-        }
-        $rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_tmplvars` WHERE name='$name'", $sqlParser->conn);
-        if (mysql_num_rows($rs)) {
-            $insert = true;
-            while($row = mysql_fetch_assoc($rs)) {
-                if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', locked=$locked, elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id={$row['id']};", $sqlParser->conn)) {
+
+            // Create the category if it does not already exist
+            if( $category ){
+                $rs = mysql_query("REPLACE INTO $dbase.`" . $table_prefix . "categories` (`id`,`category`) ( SELECT MIN(`id`), '$category' FROM ( SELECT `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category' UNION SELECT (CASE COUNT(*) WHEN 0 THEN 1 ELSE MAX(`id`)+1 END ) `id` FROM $dbase.`" . $table_prefix . "categories` ) AS _tmp )", $sqlParser->conn);
+            }
+            $rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_tmplvars` WHERE name='$name'", $sqlParser->conn);
+            if (mysql_num_rows($rs)) {
+                $insert = true;
+                while($row = mysql_fetch_assoc($rs)) {
+                    if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_tmplvars` SET type='$input_type', caption='$caption', description='$desc', locked=$locked, elements='$input_options', display='$output_widget', display_params='$output_widget_params', default_text='$input_default' WHERE id={$row['id']};", $sqlParser->conn)) {
+                        echo "<p>" . mysql_error() . "</p>";
+                        return;
+                    }
+                    $insert = false;
+                }
+                echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
+            } else {
+                $q = "INSERT INTO $dbase.`" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category'),$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
+                if (!@ mysql_query($q, $sqlParser->conn)) {
                     echo "<p>" . mysql_error() . "</p>";
                     return;
                 }
-                $insert = false;
+                echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
             }
-            echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-        } else {
-            $q = "INSERT INTO $dbase.`" . $table_prefix . "site_tmplvars` (type,name,caption,description,category,locked,elements,display,display_params,default_text) VALUES('$input_type','$name','$caption','$desc',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category'),$locked,'$input_options','$output_widget','$output_widget_params','$input_default');";
-            if (!@ mysql_query($q, $sqlParser->conn)) {
-                echo "<p>" . mysql_error() . "</p>";
-                return;
-            }
-            echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
-        }
-      
-        // add template assignments
-        $assignments = explode(',', $assignments);
-        
-        if (count($assignments) > 0) {
 
-            // remove existing tv -> template assignments
-            $ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';",$sqlParser->conn);
-            $row = mysql_fetch_assoc($ds);
-            $id = $row["id"];
-            mysql_query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'');
+            // add template assignments
+            $assignments = explode(',', $assignments);
 
-            // add tv -> template assignments
-            foreach ($assignments as $assignment) {
-                $template = mysql_real_escape_string($assignment);
-                $ts = mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_templates` WHERE templatename='$template';",$sqlParser->conn);
-                if ($ds && $ts) {
-                    $tRow = mysql_fetch_assoc($ts);
-                    $templateId = $tRow['id'];
-                    mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)");
-               }
+            if (count($assignments) > 0) {
+
+                // remove existing tv -> template assignments
+                $ds=mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_tmplvars` WHERE name='$name' AND description='$desc';",$sqlParser->conn);
+                $row = mysql_fetch_assoc($ds);
+                $id = $row["id"];
+                mysql_query('DELETE FROM ' . $dbase . '.`' . $table_prefix . 'site_tmplvar_templates` WHERE tmplvarid = \'' . $id . '\'');
+
+                // add tv -> template assignments
+                foreach ($assignments as $assignment) {
+                    $template = mysql_real_escape_string($assignment);
+                    $ts = mysql_query("SELECT id FROM $dbase.`".$table_prefix."site_templates` WHERE templatename='$template';",$sqlParser->conn);
+                    if ($ds && $ts) {
+                        $tRow = mysql_fetch_assoc($ts);
+                        $templateId = $tRow['id'];
+                        mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_tmplvar_templates` (tmplvarid, templateid) VALUES($id, $templateId)");
+                   }
+                }
             }
         }
-        
     }
 }
 

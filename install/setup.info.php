@@ -126,7 +126,17 @@
 			$params = parse_docblock($pluginPath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$mp[] = array($params['name'], $description, "$pluginPath/{$params['filename']}", $params['properties'], $params['events'], $params['guid'], $params['modx_category'], $params['legacy_names'] );
+				$mp[] = array(
+                    $params['name'],
+                    $description,
+                    "$pluginPath/{$params['filename']}",
+                    $params['properties'],
+                    $params['events'],
+                    $params['guid'],
+                    $params['modx_category'],
+                    $params['legacy_names'],
+                    array_key_exists('sample', $params) ? true : false
+                );
 			}
 		}
 		$d->close();
