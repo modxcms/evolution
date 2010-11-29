@@ -16,6 +16,7 @@ Bugfixes:
 * [#MODX-1331] Resources in tree unclickable if pagetitle contains line break
 * [#100] fix TV with Input Type 'Date' and Widget 'Unixtime' returns wrong value
 * [#435] improve installer handling of Sample Site option
+* [#359] published date always set due to ManagerManager demo rules
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -24,7 +25,7 @@ Additional Improvements & Updates:
 * [#4] getDocumentObject allows full alias path to be specified
 * [#443] TinyMCE updated to 3.3.9.2
 * [#23] Quick Manager+ updated to 1.5.3-GA
-
+* [#359] changes and improvements to ManagerManager demo rules (also, rules not enabled by default)
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
