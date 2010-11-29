@@ -6,9 +6,16 @@
  */
 require_once(dirname(__FILE__).'/protect.inc.php');
 
+$ok = false;
 if ($rt = @ include_once('config.inc.php')) {
 // Keep it alive
-  startCMSSession(); 
-
-  header('Location: ' . MODX_BASE_URL . 'manager/media/script/_session.gif?rnd=' . intval($_REQUEST['rnd']));
+  startCMSSession();
+  if($_GET['tok'] == md5(session_id())) {
+      $ok = true;
+  }
+}
+if($ok) {
+    echo '{status:"ok"}';
+} else {
+  echo '{status:"null"}';
 }
