@@ -25,7 +25,7 @@ Additional Improvements & Updates:
 * [#4] getDocumentObject allows full alias path to be specified
 * [#443] TinyMCE updated to 3.3.9.2
 * [#23] Quick Manager+ updated to 1.5.3-GA
-* [#359] changes and improvements to ManagerManager demo rules (also, rules not enabled by default)
+* [#359][#421] Default Chunk for ManagerManager rules now "mm_rules"; Since demo rules are "mm_demo_rules", MM is now disabled on install
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
