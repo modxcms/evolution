@@ -197,27 +197,6 @@ if ($moduleSQLBaseFile) {
 	}
 }
 
-// install data
-if ($installData && $moduleSQLDataFile) {
-	echo "<p>" . $_lang['installing_demo_site'];
-	$sqlParser->process($moduleSQLDataFile);
-	// display database results
-	if ($sqlParser->installFailed == true) {
-		$errors += 1;
-		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
-		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
-		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
-		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
-			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
-		}
-		echo "</p>";
-		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
-		return;
-	} else {
-		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
-	}
-}
-
 // write the config.inc.php file if new installation
 echo "<p>" . $_lang['writing_config_file'];
 $configString = '<?php
@@ -698,6 +677,27 @@ if (isset ($_POST['snippet'])) {
 				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['installed'] . "</span></p>";
 			}
 		}
+	}
+}
+
+// install data
+if ($installData && $moduleSQLDataFile) {
+	echo "<p>" . $_lang['installing_demo_site'];
+	$sqlParser->process($moduleSQLDataFile);
+	// display database results
+	if ($sqlParser->installFailed == true) {
+		$errors += 1;
+		echo "<span class=\"notok\"><b>" . $_lang['database_alerts'] . "</span></p>";
+		echo "<p>" . $_lang['setup_couldnt_install'] . "</p>";
+		echo "<p>" . $_lang['installation_error_occured'] . "<br /><br />";
+		for ($i = 0; $i < count($sqlParser->mysqlErrors); $i++) {
+			echo "<em>" . $sqlParser->mysqlErrors[$i]["error"] . "</em>" . $_lang['during_execution_of_sql'] . "<span class='mono'>" . strip_tags($sqlParser->mysqlErrors[$i]["sql"]) . "</span>.<hr />";
+		}
+		echo "</p>";
+		echo "<p>" . $_lang['some_tables_not_updated'] . "</p>";
+		return;
+	} else {
+		echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 	}
 }
 
