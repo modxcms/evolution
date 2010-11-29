@@ -232,12 +232,16 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 		foreach ($fields as $field) {
 
 			switch ($field) {
+				
+				case 'content':
+                    $output .= '$j("#content_body").appendTo("#tab'.$newtab.'");'. "\n";
+                    $output .= '$j("#content_header").hide();' . "\n";
+				break;	
 			
 				// We can't move these fields because they belong in a particular place
 				case 'keywords':
 				case 'metatags':
 				case 'which_editor':
-				case 'content':
 				case 'hidemenu':
 				case 'show_in_menu':
 				case 'menuindex':

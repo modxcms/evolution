@@ -77,10 +77,15 @@ function makeArray($csv) {
 // Make an output JS safe
 function jsSafe($str) {
 	global $modx;
-	if (version_compare(PHP_VERSION, '5.2.3', '>=')) {
-	   return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset'], false);
+	
+	// Only PHP versions > 5.2.3 allow us to prevent double_encoding
+	// If you are using an older version of PHP, and use characters which require 
+	// HTML entity encoding in new label names, etc you will have to specify the
+	// actual character, not a pre-encoded version
+	if (version_compare(PHP_VERSION, '5.2.3') >= 0) {
+		return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset'], false);
 	} else {
-	   return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset']);
+		return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset']);
 	}
 }
 
@@ -134,12 +139,10 @@ function tplUseTvs($tpl_id, $tvs='', $types='') {
 
 // Create a MySQL-safe list from an array
 function makeSqlList($arr) {
-    global $modx;
-    
 	$arr = makeArray($arr);
 	foreach($arr as $k=>$tv) {
         //if (substr($tv, 0, 2) == 'tv') {$tv=substr($tv,2);}
-		$arr[$k] = "'".$modx->db->escape($tv)."'"; // Escape them for MySQL
+		$arr[$k] = "'".mysql_escape_string($tv)."'"; // Escape them for MySQL
 	}
 	$sql = " (".implode(',',$arr).") ";
 	return $sql;

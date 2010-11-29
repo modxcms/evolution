@@ -27,16 +27,17 @@ function mm_renameTab($tab, $newname, $roles='', $templates='') {
 					$output .= '$j("div#documentPane h2:nth-child(2) span").empty().prepend("'.jsSafe($newname).'");' . "\n";
 				break;
 				
-				// This is 1.0.0 only
+				// This is =<1.0.0 only
 				case 'meta': 
-					if ($modx->hasPermission('edit_doc_metatags')) {
+					if ($modx->hasPermission('edit_doc_metatags')  && $modx->config['show_meta'] != "0") {
 						$output .= '$j("div#documentPane h2:nth-child(3) span").empty().prepend("'.jsSafe($newname).'");' . "\n";
 					}
 				break;
 				
 				// This is 1.0.1 specific
 				case 'access': 
-					$output .= '$j("div#documentPane h2:nth-child(3) span").empty().prepend("'.jsSafe($newname).'");' . "\n";
+					$access_index = ($modx->config['show_meta'] == "0") ? 3 : 4;
+					$output .= '$j("div#documentPane h2:nth-child('.$access_index .') span").empty().prepend("'.jsSafe($newname).'");' . "\n";
 				break;
 				
 
@@ -82,20 +83,26 @@ function mm_hideTabs($tabs, $roles='', $templates='') {
 					$output .= '$j("#tabSettings").hide();';
 				break;
 				
-				// Version 1.0.0 only
+				// =< v1.0.0 only
 				case 'meta': 
-					if($modx->hasPermission('edit_doc_metatags')) {
+					if($modx->hasPermission('edit_doc_metatags') && $modx->config['show_meta'] != "0") {
 						$output .= 'if (tpSettings.getSelectedIndex() == 2) { tpSettings.setSelectedIndex(0); } ' . "\n";
 						$output .= '$j("div#documentPane h2:nth-child(3)").hide(); ' . "\n";
 						$output .= '$j("#tabMeta").hide(); ';
 					}
 				break;
 				
-				// Version 1.0.1 only
+				// Meta tags tab is removed by default in version 1.0.1+ but can still be enabled via a preference.
+				// Access tab was only added in 1.0.1
+				// Since counting the tabs is the only way of determining this, we need to know if this has been activated
+				// If meta tabs are active, the "access" tab is index 4 in the HTML; otherwise index 3. 
+				// If config['show_meta'] is NULL, this is a version before this option existed, e.g. < 1.0.1
+				// For versions => 1.0.1, 0 is the default value to not show them, 1 is the option to show them.
 				case 'access': 
-					$output .= 'if (tpSettings.getSelectedIndex() == 2) { tpSettings.setSelectedIndex(0); } ' . "\n";
-					$output .= '$j("div#documentPane h2:nth-child(3)").hide(); ' . "\n";
-					$output .= '$j("#tabPreview").hide();';
+					$access_index = ($modx->config['show_meta'] == "0") ? 3 : 4;
+					$output .= 'if (tpSettings.getSelectedIndex() == '.($access_index-1).') { tpSettings.setSelectedIndex(0); } ' . "\n";
+					$output .= '$j("div#documentPane h2:nth-child('.$access_index.')").hide(); ' . "\n";
+					$output .= '$j("#tabAccess").hide();';
 				break;
 			} // end switch
 			$e->output($output . "\n");

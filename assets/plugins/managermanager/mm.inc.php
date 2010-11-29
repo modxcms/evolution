@@ -1,9 +1,9 @@
 <?php
 /*
     @name       ManagerManager
-    @version    0.3.8dev
+    @version    0.3.9dev
     
-    @for        MODx Evolution 1.0.2
+    @for        MODx Evolution 1.0.x
     
     @author     Nick Crossland - www.rckt.co.uk
     
@@ -22,7 +22,7 @@
 	
 */
 
-$mm_version = '0.3.8'; 
+$mm_version = '0.3.9dev'; 
 
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
@@ -391,11 +391,12 @@ $j(document).ready(function() {
 		
 		// If template category is empty, hide the optgroup
 		$j("#template optgroup").each( function() {
-			var $this = $j(this);
-			var $visibleOptions = $this.find("option:visible");
-			if ($visibleOptions.length == 0) {
-				$this.hide();	
-			}
+			var $this = $j(this),
+			visibleOptions = 0;
+			$this.find("option").each( function() {
+				if ($j(this).css("display") != "none") 	visibleOptions++ ;
+			});
+			if (visibleOptions == 0) $this.hide();	
 		});
 		
 		// Re-initiate the tooltips, in order for them to pick up any new help text which has been added

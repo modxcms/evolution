@@ -29,14 +29,29 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 		
 		$output = " // ----------- Change defaults -------------- \n";
 		
+		
+		// Work out the correct date time format based on the config setting
+		switch($modx->config['datetime_format']) {
+			case 'dd-mm-YYYY':
+				$date_format = 'd-m-Y';
+			break;	
+			case 'mm/dd/YYYY':
+				$date_format = 'm-d-Y';
+			break;
+			case 'YYYY/mm/dd':
+				$date_format = 'Y-m-d';
+			break;
+		}
+		
+		
 		switch ($field) {
 			case 'pub_date':
-				$new_value = ($new_value=='') ? date("d-m-Y H:i:s") : $new_value;
+				$new_value = ($new_value=='') ? date("$date_format H:i:s") : $new_value;
 				$output .= '$j("input[name=pub_date]").val("'.jsSafe($new_value).'"); '."\n";
 			break;
 			
 			case 'unpub_date':
-				$new_value = ($new_value=='') ? date("d-m-Y H:i:s") : $new_value;
+				$new_value = ($new_value=='') ? date("$date_format H:i:s") : $new_value;
 				$output .= '$j("input[name=unpub_date]").val("'.jsSafe($new_value).'"); '."\n";
 			break;
 			
