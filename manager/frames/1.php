@@ -12,7 +12,6 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <head>
 	<title><?php echo $site_name?> - (MODx CMS Manager)</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
-	<script type="text/javascript" src="media/script/session.js"></script>
 </head>
 <frameset rows="70,*" border="0">
 	<frame name="mainMenu" src="index.php?a=1&amp;f=menu" scrolling="no" frameborder="0" noresize="noresize">

@@ -14,6 +14,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme?>style.css" />
 	<script src="media/script/mootools/mootools.js" type="text/javascript"></script>
 	<script src="media/script/mootools/moodx.js" type="text/javascript"></script>
+    <script type="text/javascript" src="media/script/session.js"></script>
 	<script type="text/javascript">
 	// TREE FUNCTIONS - FRAME
 	// These functions affect the tree frame and any items that may be pointing to the tree.
@@ -382,8 +383,6 @@ if (!empty($reportsmenu)) {
 </div>
 </form>
 
-<!-- can't find a better name :) should always be fixed -->
 <div id="menuSplitter"></div>
-<img id="keepAliveIMG" width="1" height="1" src="media/script/_session.gif?" />
 </body>
 </html>

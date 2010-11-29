@@ -1,17 +1,15 @@
 /*
  * Small script to keep session alive in MODx
  */
-/*
-function keepSessionAlive() {
-	var img = new Image();
-	img.src = "includes/session_keepalive.php?rnd=" + new Date().getTime();
-	window.setTimeout('keepSessionAlive();', 1000 * 60);
-}
-
-keepSessionAlive();
-*/
 function keepMeAlive(imgName) {
-   myImg = self.mainMenu.document.getElementById(imgName);
-   if (myImg) myImg.src = myImg.src.replace(/\?.*$/, '?' + Math.random());
+    var sessionJSON = new Ajax('includes/session_keepalive.php?' + Math.random(), {
+        method: 'get',
+        onComplete: function(sessionResponse) {
+            resp = Json.evaluate(sessionResponse);
+            if(resp.status != 'ok') {
+                window.location.href = 'index.php?a=8';
+            }
+        }
+    }).request();
 }
-window.setInterval("keepMeAlive('keepAliveIMG')", 1000 * 60);
+window.setInterval("keepMeAlive()", 1000 * 60);

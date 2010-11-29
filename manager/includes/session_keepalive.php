@@ -9,6 +9,8 @@ require_once(dirname(__FILE__).'/protect.inc.php');
 if ($rt = @ include_once('config.inc.php')) {
 // Keep it alive
   startCMSSession(); 
-
-  header('Location: ' . MODX_BASE_URL . 'manager/media/script/_session.gif?rnd=' . intval($_REQUEST['rnd']));
+  echo '{status:"ok"}';
+  //header('Location: ' . MODX_BASE_URL . 'manager/media/script/_session.gif?rnd=' . intval($_REQUEST['rnd']));
+} else {
+  echo '{status:"null"}';
 }
