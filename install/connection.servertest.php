@@ -23,7 +23,7 @@ else {
         $modes = mysql_fetch_array($mysqlmode, MYSQL_NUM);
         $strictMode = false;
         foreach ($modes as $mode) {
-    		    if (strtoupper($mode) == "STRICT_TRANS_TABLES") $strictMode = true;
+    		    if (stristr($mode, "STRICT_TRANS_TABLES") !== false || stristr($mode, "STRICT_ALL_TABLES") !== false) $strictMode = true;
         }
         if ($strictMode) $output .= '<br /><span style="color:#FF0000;"> '.$_lang['strict_mode'].'</span>';
     }

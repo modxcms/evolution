@@ -202,7 +202,7 @@ if ($conn) {
         //$modes = array("STRICT_TRANS_TABLES"); // for testing
         // print_r($modes);
         foreach ($modes as $mode) {
-            if (strtoupper($mode) == "STRICT_TRANS_TABLES") {
+            if (stristr($mode, "STRICT_TRANS_TABLES") !== false || stristr($mode, "STRICT_ALL_TABLES") !== false) {
                 echo "<span class=\"notok\">" . $_lang['warning'] . "</span></b> <strong>&nbsp;&nbsp;" . $_lang['strict_mode'] . "</strong></p>";
                 echo "<p><span class=\"notok\">" . $_lang['strict_mode_error'] . "</span></p>";
             } else {
