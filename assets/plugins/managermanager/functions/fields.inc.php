@@ -227,6 +227,9 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 		// Make sure the new tab exists in the DOM
 		$output .= "if ( \$j('#tab".$newtab."').length > 0) { \n";
 		$output .= 'var ruleHtml = \'<tr style="height: 10px"><td colspan="2"><div class="split"></div></td></tr>\'; ';
+		
+		// Try and identify any URL type TVs
+		$output .= '$j("select[id$=_prefix]").each( function() { $j(this).parents("tr:first").addClass("urltv"); }  ); ';
 			
 		// Go through each field that has been supplied
 		foreach ($fields as $field) {
@@ -268,7 +271,7 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 						$fieldtype = $mm_fields[$field]['fieldtype'];
 						$fieldname = $mm_fields[$field]['fieldname'];
 						$output .= '
-						var toMove = $j("'.$fieldtype.'[name='.$fieldname.']").parents("tr"); // Identify the table row to move
+						var toMove = $j("'.$fieldtype.'[name='.$fieldname.']").parents("tr:not(.urltv)"); // Identify the table row to move
 						toMove.next("tr").find("td[colspan=2]").parents("tr").remove(); // Get rid of line after, if there is one
 						var movedTV = toMove.appendTo("#tab'.$newtab.'>table:first"); // Move the table row
 						movedTV.after(ruleHtml); // Insert a rule after 

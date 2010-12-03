@@ -431,7 +431,8 @@ if (isset ($_POST['chunk'])) {
 		$name = mysql_real_escape_string($moduleChunks[$si][0]);
 		$desc = mysql_real_escape_string($moduleChunks[$si][1]);
 		$category = mysql_real_escape_string($moduleChunks[$si][3]);
-		
+		$overwrite = mysql_real_escape_string($moduleChunks[$si][4]);
+
 		$filecontent = $moduleChunks[$si][2];
 		if (!file_exists($filecontent))
 			echo "<p>&nbsp;&nbsp;$name: <span class=\"notok\">" . $_lang['unable_install_chunk'] . " '$filecontent' " . $_lang['not_found'] . ".</span></p>";
@@ -445,14 +446,24 @@ if (isset ($_POST['chunk'])) {
 			$chunk = preg_replace("/^.*?\/\*\*.*?\*\/\s+/s", '', file_get_contents($filecontent), 1);
 			$chunk = mysql_real_escape_string($chunk);
 			$rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$name'", $sqlParser->conn);
-			if (mysql_num_rows($rs)) {
-				if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc' WHERE name='$name';", $sqlParser->conn)) {
-					$errors += 1;
-					echo "<p>" . mysql_error() . "</p>";
-					return;
-				}
-				echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
-			} else {
+            $count_original_name = mysql_num_rows($rs);
+            if($overwrite == 'false') {
+                $newname = $name . '-' . str_replace('.', '_', $modx_version);
+                $rs = mysql_query("SELECT * FROM $dbase.`" . $table_prefix . "site_htmlsnippets` WHERE name='$newname'", $sqlParser->conn);
+                $count_new_name = mysql_num_rows($rs);
+            }
+            $update = $count_original_name > 0 && $overwrite == 'true';
+			if ($update) {
+                if (!@ mysql_query("UPDATE $dbase.`" . $table_prefix . "site_htmlsnippets` SET snippet='$chunk', description='$desc' WHERE name='$name';", $sqlParser->conn)) {
+                    $errors += 1;
+                    echo "<p>" . mysql_error() . "</p>";
+                    return;
+                }
+                echo "<p>&nbsp;&nbsp;$name: <span class=\"ok\">" . $_lang['upgraded'] . "</span></p>";
+			} elseif($count_new_name == 0) {
+                if($count_original_name > 0 && $overwrite == 'false') {
+                    $name = $newname;
+                }
 				if (!@ mysql_query("INSERT INTO $dbase.`" . $table_prefix . "site_htmlsnippets` (name,description,snippet,category) VALUES('$name','$desc','$chunk',(SELECT (CASE COUNT(*) WHEN 0 THEN 0 ELSE `id` END) `id` FROM $dbase.`" . $table_prefix . "categories` WHERE `category` = '$category'));", $sqlParser->conn)) {
 					$errors += 1;
 					echo "<p>" . mysql_error() . "</p>";

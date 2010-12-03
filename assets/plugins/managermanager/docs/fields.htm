@@ -58,7 +58,7 @@
     <code>mm_changeFieldHelp('pagetitle', 'This text will appear in the browser title bar and bookmarks'); // Change the help text for pagetitle for all users</code><code>mm_changeFieldHelp('alias', 'How the URL will appear', '1'); // Change the help text for alias only for users with role &quot;1&quot;</code>
     <h2>mm_hideTemplates($tplIds,   $roles, $templates)</h2>
     <p>Hides specified templates from the Templates drop down list</p>
-    <p><strong>$tplIds: </strong>The IDs of the templates which should be hidden from the templates dropdown. Can  accept multiple <a href="field-names.htm">fields</a> separated by commas [Required]<br />
+    <p><strong>$tplIds: </strong>The IDs of the templates which should be hidden from the templates dropdown. Can  accept multiple values separated by commas [Required]<br />
         <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
         <strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]</p>
     <p><code>mm_hideTemplates('0'); // Hide template 0 (blank) from all users</code><code>mm_hideTemplates('0,4', '1'); // Hide templates 0 and 4 from users with role &quot;1&quot;</code></p>
@@ -100,7 +100,7 @@
     </p>
     <p><code>mm_synch_fields('pagetitle,menutitle,longtitle'); // Make the contents of these three fields always equal for all users and all documents </code></p>
     <p></p>
-	<h2>mm_require_fields($fields,  $roles, $templates)</h2>
+	<h2>mm_requireFields($fields,  $roles, $templates)</h2>
 	<p>Makes fields required. Will append a red asterisk to a field to indicate it is required, and alert the user if they save the document without completing all the required fields.</p>
 	<p>This works on all fields EXCEPT </p>
 	<ul>
@@ -126,7 +126,7 @@
 			<strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
 			<strong>$templates:</strong> comma separated list of template IDs this should be applied to. Leave empty (or omit) for all templates [Optional - default is all]<br />
 	</p>
-	<p><code>mm_require_fields('pagetitle,pub_date'); // Make the page title and publication date fields required</code></p>
+	<p><code>mm_requireFields('pagetitle,pub_date'); // Make the page title and publication date fields required</code></p>
 	<p></p>
 	<p></p>
 <p>&nbsp;</p>

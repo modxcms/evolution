@@ -1,7 +1,7 @@
 <?php
 /*
     @name       ManagerManager
-    @version    0.3.9dev
+    @version    0.3.9
     
     @for        MODx Evolution 1.0.x
     
@@ -22,7 +22,7 @@
 	
 */
 
-$mm_version = '0.3.9dev'; 
+$mm_version = '0.3.9'; 
 
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them

@@ -1,43 +1,20 @@
 /**
  * mm_demo_rules
  * 
- * ManagerManager rules for the demo content. Should be modified for your own sites.
+ * Default ManagerManager rules. Should be modified for your own sites.
  * 
  * @category	chunk
  * @version 	1.0.5
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal 	@modx_category Demo Content
+ * @internal    @overwrite false
  */
 
-// PHP *is* allowed
-// $news_tpl will not apply to demo content but are left as a demonstration of what can be done
+// more example rules are in assets/plugins/managermanager/example_mm_rules.inc.php
 
-// For everyone
-//mm_default('pub_date');
-mm_renameField('introtext','Summary');
-mm_changeFieldHelp('alias', 'The URL that will be used to reach this resource. Only numbers, letters and hyphens can be used');
-mm_widget_tags('documentTags',' '); // Give blog tag editing capabilities to the 'documentTags (3)' TV
+// example of how PHP is allowed - check that a TV named documentTags exists before creating rule
+if($modx->db->getValue("SELECT COUNT(id) FROM " . $modx->getFullTableName('site_tmplvars') . " WHERE name='documentTags'")) {
+    mm_widget_tags('documentTags',' '); // Give blog tag editing capabilities to the 'documentTags (3)' TV
+}
+
 mm_widget_showimagetvs(); // Always give a preview of Image TVs
-// mm_widget_colors('color', '#666666'); // make a color selector widget for the 'colour' TV
-
-// For everyone except administrators
-mm_hideFields('link_attributes', '!1');
-mm_hideFields('loginName ', '!1');
-// mm_renameField('alias','URL alias','!1');
-
-// Demo content Publisher role -- creating a variable makes it easier to manage if this changes in the future
-$publisher_role = '3';
-mm_hideFields('pagetitle,menutitle,link_attributes,template,menuindex,description,show_in_menu,which_editor,is_folder,is_richtext,log,searchable,cacheable,clear_cache', $publisher_role);
-mm_renameTab('settings', 'Publication settings', $publisher_role);
-mm_synch_fields('pagetitle,menutitle,longtitle', $publisher_role);
-mm_renameField('longtitle','Headline', $publisher_role, '', 'This will be displayed at the top of each page');
-
-// News story template example
-$news_tpl = '8';
-// mm_createTab('Categories','HrCats', '', $news_tpl, '', '600');
-// mm_moveFieldsToTab('updateImage1', 'general', '', $news_tpl);
-// mm_hideFields('menuindex,show_in_menu', '', $news_tpl);
-//mm_changeFieldHelp('longtitle', 'The story\'s headline', '', $news_tpl);
-//mm_changeFieldHelp('introtext', 'A short summary of the story', '', $news_tpl);
-//mm_changeFieldHelp('parent', 'To move this story to a different folder: Click this icon to activate, then choose a new folder in the tree on the left.', '', $news_tpl);
-

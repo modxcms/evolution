@@ -55,7 +55,7 @@
             $width:</strong> New width for the content within the tab. If no units are included, they will be assumed to be pixels e.g. &quot;100%&quot; or &quot;450px&quot; [Optional]</p>
       <code>mm_createTab('Categories', 'mycats'); // Create a new tab named &quot;Categories&quot; for all users and templates</code><code>mm_createTab('Categories', 'mycats', '', '3,4', '&lt;p&gt;How should this document be categorised?&lt;/p&gt;', '450'); // Create a new tab 450 pixels wide called categories with an introductory paragraph which is only applied to templates 3 and 4</code>
       <h2>mm_moveFieldsToTab($fields,  $newtab_id, $roles, $templates)</h2>
-      <p>Moves fields (including TVs) to a different tab. However you can't move the following fields: keywords, metatags, which_editor, content, show_in_menu, menuindex</p>
+      <p>Moves fields (including TVs) to a different tab. However you can't move the following fields: keywords, metatags, which_editor,  show_in_menu, menuindex</p>
       <p><strong>$fields: </strong><strong></strong>The name(s) of the <a href="field-names.htm#fields">field(s)</a> this should apply to. Can  accept multiple fields separated by commas [Required]<br />
           <strong>$newtab_id:</strong> The ID of the <a href="field-names.htm#tabs">tab</a> which the fields should be moved to. Can be one of the default tab IDs (from table above) or a new custom tab created with mm_createTab [Required]<br />
           <strong>$roles:</strong> comma separated list of role IDs this should be applied to. Leave empty (or omit) for all roles [Optional - default is all]<br />
