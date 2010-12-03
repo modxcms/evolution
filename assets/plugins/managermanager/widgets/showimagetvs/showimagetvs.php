@@ -53,10 +53,8 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 			$new_html = '';
 			
 			$output .= '// Adding preview for tv'.$tv['id'].'
-			$j("#tv'.$tv['id'].'").bind( "change load", function() {
-				
+			$j("#tv'.$tv['id'].'").addClass("imageField").bind( "change load", function() {
 				// Get the new URL
-				$j(this).addClass("imageField");
 				var url = $j(this).val();
 				url = (url != "" && url.search(/http:\/\//i) == -1) ? ("'.$site.'" + url) : url;
 				
@@ -81,7 +79,7 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 																 });
 				}
 				
-			}).trigger("load"); // Trigger a change event on load
+			}); // Trigger a change event on load
 	
 			
 			';	
@@ -90,14 +88,20 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 		
 		$output .= '
 		
-			// If we have imageTVs on this page, modify the SetUrl function so it triggers a "change" event on the URL field
-			if (typeof(SetUrl) != "undefined") {
-				OriginalSetUrl = SetUrl; // Copy the existing Image browser SetUrl function						
-				SetUrl = function(url, width, height, alt) {	// Redefine it to also tell the preview to update
-					OriginalSetUrl(url, width, height, alt);
-					$j(".imageField").trigger("change");
-				}
-			}
+		
+			// Monitor the image TVs for changes
+			checkImageTVupdates = function () {
+					$j(".imageField").each( function() {
+						var $this = $j(this);
+						if ($this.val() != $this.data("lastvalue") ) {
+							$this.trigger("change").data("lastvalue", $this.val());
+						}						
+					});
+			}	
+			
+			setInterval ( "checkImageTVupdates();", 250 );
+		
+	
 		';
 		
 		
