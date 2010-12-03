@@ -686,28 +686,6 @@ if (is_array($evtOut))
 			if (($content['richtext'] == 1 || $_REQUEST['a'] == '4') && $use_editor == 1) {
 				// replace image path
 				$htmlContent = $content['content'];
-				if (!empty ($htmlContent)) {
-					if (substr($rb_base_url, -1) != '/')
-					        $im_base_url = $rb_base_url . '/';
-					else    $im_base_url = $rb_base_url;
-
-					$elements = parse_url($im_base_url);
-					$image_path = $elements['path'];
-
-					// make sure image path ends with a /
-					if (substr($image_path, -1) != '/')
-						$image_path .= '/';
-
-					$modx_root = dirname(dirname($_SERVER['PHP_SELF']));
-					$image_prefix = substr($image_path, strlen($modx_root));
-					if (substr($image_prefix, -1) != '/')
-						$image_prefix .= '/';
-
-					// escape / in path
-					$image_prefix = str_replace('/', '\/', $image_prefix);
-					$newcontent = preg_replace("/(<img[^>]+src=['\"])($image_prefix)([^'\"]+['\"][^>]*>)/", "\${1}$im_base_url\${3}", $content['content']);
-					$htmlContent = $newcontent;
-				}
 			?>
 				<div style="width:100%">
 					<textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo htmlspecialchars($htmlContent)?></textarea>
