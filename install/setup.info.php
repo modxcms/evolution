@@ -84,7 +84,13 @@
 			}
 			$params = parse_docblock($chunkPath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
-				$mc[] = array($params['name'], $params['description'], "$chunkPath/{$params['filename']}", $params['modx_category'] );
+				$mc[] = array(
+                    $params['name'],
+                    $params['description'],
+                    "$chunkPath/{$params['filename']}",
+                    $params['modx_category'],
+                    array_key_exists('overwrite', $params) ? $params['overwrite'] : 'true'
+                );
 			}
 		}
 		$d->close();
