@@ -23,7 +23,7 @@ if(!function_exists('categConfig')) {
                     break;
                 case 'comics':
                     $config['grpLabel'] = 'Comics';
-                    $config['tplResult'] = 'imgResult';      // allow the display of an image
+                    $config['tplResult'] = 'imgResult';		 // allow the display of an image
                     break;
                 case '':
                     $config['grpLabel'] = 'Site wide';

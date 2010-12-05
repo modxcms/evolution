@@ -5,8 +5,8 @@
 * @package  AjaxSearchRequest
 *
 * @author       Coroico - www.modx.wangba.fr
-* @version      1.9.0
-* @date         18/05/2010
+* @version      1.9.2
+* @date         05/12/2010
 *
 * Purpose:
 *    The AjaxSearchRequest class contains all functions and data used to manage the search SQL Request
@@ -307,7 +307,7 @@ class AjaxSearchRequest {
         }
 
         if (isset($this->scTvs['tvs'])) foreach($this->scTvs['tvs'] as $scTv) {
-            $f = $scTv['tb_alias'] . '.' . $scTv['displayed'] . ' AS ' . $scTv['name'];
+            $f = $scTv['tb_alias'] . '.' . $scTv['displayed'] . ' AS `' . $scTv['name'] . '`';
             $fields[] = $f;
         }
 
@@ -318,8 +318,8 @@ class AjaxSearchRequest {
 
 
         if (isset($this->scTags)) {
-            $f = 'GROUP_CONCAT( DISTINCT ' . $this->scTags['tb_alias'] . '.' . $this->scTags['displayed'];
-            $f.= ' SEPARATOR "," ) AS tags';
+            $f = 'REPLACE( GROUP_CONCAT( DISTINCT ' . $this->scTags['tb_alias'] . '.' . $this->scTags['displayed'];
+            $f.= ' SEPARATOR "," ), "||", ",") AS tags';
             $fields[] = $f;
         }
 
@@ -407,7 +407,7 @@ class AjaxSearchRequest {
                 }
                 if (isset($this->scTvs['tvs'])) foreach ($this->scTvs['tvs'] as $scTv) {
                     $jpref = $scTv['tb_alias'];
-                    $hvg[] = '(' . $scTv['name'] . $like . ')';
+                    $hvg[] = '(`' . $scTv['name'] . '`' . $like . ')';
                 }
             } else {
 
@@ -419,7 +419,7 @@ class AjaxSearchRequest {
                 }
                 if (isset($this->scTvs['tvs'])) foreach ($this->scTvs['tvs'] as $scTv) {
                     $jpref = $scTv['tb_alias'];
-                    $hvg[] = '((' . $scTv['name'] . $like . ') OR (' . $scTv['name'] . ' IS NULL))';
+                    $hvg[] = '((`' . $scTv['name'] . '`' . $like . ') OR (`' . $scTv['name'] . '` IS NULL))';
                 }
             }
             if (count($hvg) > 0) {
@@ -454,8 +454,8 @@ class AjaxSearchRequest {
     function _getOrderBy() {
         if (isset($this->scCateg)) $orderFields[] = 'category ASC';
         if ($this->cfg['order']) {
-            $order = explode(',', $this->cfg['order']);
-            foreach ($order as $ord) $orderBy[] = $this->scMain['tb_alias'] . '.' . $ord;
+            $order = array_map('trim',explode(',', $this->cfg['order']));
+            foreach ($order as $ord) $orderBy[] = $ord;
             $orderFields[] = implode(',', $orderBy);
         }
         if (count($orderFields) > 0) $orderByClause = implode(', ', $orderFields);
@@ -498,7 +498,14 @@ class AjaxSearchRequest {
             $whl[] = implode(' AND ', $where);
         }
 
-        $subSelect = 'SELECT DISTINCT ' . $fieldsClause . ' FROM ' . $fromClause;
+        if (($joined['tb_alias'] != 'tv') && ($searchString)) {
+            $whl[] = '(' . $this->_getSearchTermsWhere($joined,$searchString,$advSearch). ')';
+            $whereClause = '(' . implode(' AND ',$whl). ')';
+            $subSelect = 'SELECT DISTINCT ' . $fieldsClause . ' FROM ' . $fromClause . ' WHERE ' . $whereClause;
+        }
+        else {
+            $subSelect = 'SELECT DISTINCT ' . $fieldsClause . ' FROM ' . $fromClause;
+        }
         return $subSelect;
     }
     function _getFilter($alias, $filter) {
@@ -536,6 +543,27 @@ class AjaxSearchRequest {
         if ($where != '') $where = '(' . $where . ')';
         return $where;
     }
+    function _getSearchTermsWhere($joined,$searchString,$advSearch){
+
+        $like = $this->_getWhereForm($advSearch);
+        $whereOper = $this->_getWhereOper($advSearch);
+        $type = ($advSearch == 'allwords') ? 'oneword' : $advSearch;
+        $whereStringOper = $this->_getWhereStringOper($type);
+
+        if (isset($joined['searchable']))
+          foreach($joined['searchable'] as $searchable) $whsc[] = '(' . $joined['tb_alias'] . '.' . $searchable . $like .')';
+        if (count($whsc)) $whereSubClause = implode($whereOper,$whsc);
+        else $whereSubClause = '';
+
+        $search = array();
+        if ($advSearch == 'exactphrase') $search[] = $searchString;
+        else $search = explode(' ',$searchString);
+
+        foreach($search as $searchTerm) $where[]=   preg_replace('/word/', preg_quote($searchTerm), $whereSubClause);
+
+        $whereClause = implode($whereStringOper,$where);
+        return $whereClause;
+    }
     function _getWhereForm($advSearch) {
         $whereForm = array('like' => " LIKE '%word%'", 'notlike' => " NOT LIKE '%word%'", 'regexp' => " REGEXP '[[:<:]]word[[:>:]]'");
         if ($advSearch == NOWORDS) return $whereForm['notlike'];
@@ -552,9 +580,6 @@ class AjaxSearchRequest {
         if ($advSearch == NOWORDS || $advSearch == ALLWORDS) return $whereStringOper['and'];
         else return $whereStringOper['or'];
     }
-    /*
-    * Get search terms from the input search string
-    */
     function _getSearchTerms($searchString, $advSearch) {
         $search = array();
         if ($advSearch == EXACTPHRASE) $search[] = $searchString;
@@ -617,10 +642,10 @@ class AjaxSearchRequest {
                 'tb_alias' => 'n'.$abrev,
                 'main' => 'id',
                 'join' => 'contentid',
-                    'displayed' => 'value',
-                    'searchable' => 'value',
-                    'sql' => $subselect,
-                    'name' => $name
+                'displayed' => 'value',
+                'searchable' => 'value',
+                'sql' => $subselect,
+                'name' => $name
             );
         }
         return $scTvs;
