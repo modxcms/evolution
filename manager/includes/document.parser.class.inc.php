@@ -809,12 +809,17 @@ class DocumentParser {
                     // get from db and store a copy inside cache
                     $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->dbQuery($sql);
+                    $added = false;
                     if ($this->recordCount($result) == 1) {
                         $row= $this->fetchRow($result);
-                        $snippets[$i]['name']= $row['name'];
-                        $snippets[$i]['snippet']= $this->snippetCache[$row['name']]= $row['snippet'];
-                        $snippets[$i]['properties']= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
-                    } else {
+                        if($row['name'] == $matches[1][$i]) {
+                            $snippets[$i]['name']= $row['name'];
+                            $snippets[$i]['snippet']= $this->snippetCache[$row['name']]= $row['snippet'];
+                            $snippets[$i]['properties']= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
+                            $added = true;
+                        }
+                    }
+                    if(!$added) {
                         $snippets[$i]['name']= $matches[1][$i];
                         $snippets[$i]['snippet']= $this->snippetCache[$matches[1][$i]]= "return false;";
                         $snippets[$i]['properties']= '';

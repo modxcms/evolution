@@ -20,6 +20,7 @@ Bugfixes:
 * [#488] Fix bad check for mysql strict mode
 * [#595] Fix bad path on Resource Editor rich text fields when TMCE in "root relative" mode
 * [#1252] Fix @SELECT multi-select listbox TV losing its value when switching Content field "Editor to use"
+* [#321] stop parser from running case-mismatched snippet calls
 
 --------------------------------------------
 Additional Improvements & Updates:
