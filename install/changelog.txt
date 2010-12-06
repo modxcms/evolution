@@ -21,6 +21,7 @@ Bugfixes:
 * [#595] Fix bad path on Resource Editor rich text fields when TMCE in "root relative" mode
 * [#1252] Fix @SELECT multi-select listbox TV losing its value when switching Content field "Editor to use"
 * [#321] stop parser from running case-mismatched snippet calls
+* [#343] Fix Hiding "Validate Referer" warning messes up the setting itself
 
 --------------------------------------------
 Additional Improvements & Updates:
