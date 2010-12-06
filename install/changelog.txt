@@ -23,6 +23,7 @@ Bugfixes:
 * [#321] stop parser from running case-mismatched snippet calls
 * [#343] Fix Hiding "Validate Referer" warning messes up the setting itself
 * [#432] Fix TV date-layer display problem with multiple datefields in FF 3.6.3
+* [#445] Fix error displaying filenames with non-Latin charsets
 
 --------------------------------------------
 Additional Improvements & Updates:

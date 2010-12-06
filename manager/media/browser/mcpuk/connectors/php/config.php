@@ -77,6 +77,7 @@ $upload_flash = explode(',',$upload_flash);
 // avoid problems when passing strings into CHMOD
 $fckphp_config['modx']['file_permissions'] = octdec($new_file_permissions);
 $fckphp_config['modx']['folder_permissions'] = octdec($new_folder_permissions);
+$fckphp_config['modx']['charset'] = $settings['modx_charset'];
 // ** END FOR MODx
 
 
