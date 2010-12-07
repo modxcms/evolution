@@ -50,7 +50,7 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 <div class="sectionBody">
 <div class="tab-pane" id="resourcesPane">
 	<script type="text/javascript">
-		tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+		tpResources = new WebFXTabPane( document.getElementById( "resourcesPane" ), true);
 	</script>
 
 <!-- Templates -->
