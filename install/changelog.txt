@@ -25,6 +25,7 @@ Bugfixes:
 * [#432] Fix TV date-layer display problem with multiple datefields in FF 3.6.3
 * [#445] Fix error displaying filenames with non-Latin charsets
 * [#577] Fix Spanish UTF8 language file
+* [#760] Fix Document tree not loading in children
 
 --------------------------------------------
 Additional Improvements & Updates:
