@@ -5,8 +5,8 @@
 * @package  AjaxSearch
 *
 * @author       Coroico - www.modx.wangba.fr
-* @version      1.9.0
-* @date         18/05/2010
+* @version      1.9.2
+* @date         05/12/2010
 *
 * Purpose:
 *    The AjaxSearch class contains all functions and data used to manage AjaxSearch
@@ -120,13 +120,13 @@ class AjaxSearch {
 if (!function_exists('stripTags')) {
     function stripTags($text) {
 
-        $modRegExArray[] = '~\[\[(.*?)\]\]~';
-        $modRegExArray[] = '~\[!(.*?)!\]~';
-        $modRegExArray[] = '!\[\~(.*?)\~\]!is';
-        $modRegExArray[] = '~\[\((.*?)\)\]~';
-        $modRegExArray[] = '~{{(.*?)}}~';
-        $modRegExArray[] = '~\[\*(.*?)\*\]~';
-        $modRegExArray[] = '~\[\+(.*?)\+\]~';
+        $modRegExArray[] = '~\[\[(.*?)\]\]~s';
+        $modRegExArray[] = '~\[\!(.*?)\!\]~s';
+        $modRegExArray[] = '#\[\~(.*?)\~\]#s';
+        $modRegExArray[] = '~\[\((.*?)\)\]~s';
+        $modRegExArray[] = '~{{(.*?)}}~s';
+        $modRegExArray[] = '~\[\*(.*?)\*\]~s';
+        $modRegExArray[] = '~\[\+(.*?)\+\]~s';
 
         foreach ($modRegExArray as $mReg) $text = preg_replace($mReg, '', $text);
         return $text;

@@ -23,7 +23,7 @@ if(!function_exists('categConfig')) {
                     break;
                 case 'geography':
                     $config['grpLabel'] = 'Geography';
-                    $config['tplAjaxResult'] = 'imgAjaxResult';      // allow the display of an image
+                    $config['tplAjaxResult'] = 'imgAjaxResult';		// allow the display of an image
                     break;
                 case '':
                     $config['grpLabel'] = 'Site wide';

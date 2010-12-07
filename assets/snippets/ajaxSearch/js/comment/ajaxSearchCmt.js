@@ -1,10 +1,10 @@
 // ajaxSearchCmt.js
-// Version: 1.9.0 - created by Coroico
-// 18/05/2010
+// Version: 1.9.2 - created by Coroico
+// 30/08/2010
 // Description: This code is used to post a comment about ajax search results
 
 // AjaxSearch Snippet folder location
-var _asbase = 'assets/snippets/ajaxSearch/';
+var _asbase = 'assets/snippets/ajaxSearch191/';
 
 var xmlHttp;function GetXmlHttpObject(){var xmlHttp=null;try{xmlHttp=new XMLHttpRequest();}
 catch(e){try{xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");}

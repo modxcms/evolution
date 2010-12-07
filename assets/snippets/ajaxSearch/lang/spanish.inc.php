@@ -25,10 +25,4 @@ $_lang['as_cmtIntroMessage'] = '¿Encontró lo que estaba buscando?  ¡Deje un come
 $_lang['as_cmtSubmitText'] = 'enviar';
 $_lang['as_cmtResetText'] = 'borrar';
 $_lang['as_cmtThksMessage'] = 'Gracias por su comentario';
-$_lang['as_resultsTextSingle'] = '%d resultado encontrado.';
-$_lang['as_resultsTextMultiple'] = '%d resultados encontrados.';
-$_lang['as_grpResultsDisplayedText'] = '(Visualización de %d - %d sobre %d)';
-$_lang['as_resultsDisplayed'] = 'Indicados: %d';
-$_lang['as_paging1Text'] = '%d - %d / %d';
-$_lang['as_paging2Text'] = 'Indicar %d resultados más';
 ?>

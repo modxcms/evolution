@@ -5,8 +5,8 @@
 * @package  AjaxSearchCtrl
 *
 * @author       Coroico - www.modx.wangba.fr
-* @version      1.9.0
-* @date         18/05/2010
+* @version      1.9.2
+* @date         05/12/2010
 *
 * Purpose:
 *    The AjaxSearchCtrl class contains the logic and synchronisation between model and views
@@ -66,7 +66,10 @@ class AjaxSearchCtrl {
         $this->setforThisAs();
         $this->getEvents();     // get $_POST and _GET variables
         $valid = $this->asInput->display($msg);
-        if ($valid) $this->asResults->getSearchResults($msg);
+        if ($valid) {
+            $valid2 = $this->asResults->getSearchResults($msg);
+            if (!$valid2) return $msg;
+        }
         $this->asOutput->setAjaxSearchHeader();
         if (!$this->pagination) $output = $this->asOutput->display($valid, $msg);
         else $output = $this->asOutput->paginate($valid, $msg);
@@ -81,8 +84,8 @@ class AjaxSearchCtrl {
             $id = '';
             if (isset($_POST['asid']) || isset($_GET['asid'])) {
 
-                if (isset($_POST['asid'])) $id = $_POST['asid'];
-                else $id = urldecode($_GET['asid']);
+                if (isset($_POST['asid'])) $id = strip_tags($_POST['asid']);
+                else $id = strip_tags(urldecode($_GET['asid']));
             }
             $this->forThisAs = ($this->asCfg->cfg['asId'] != $id) ? false : true;
         }
@@ -95,13 +98,19 @@ class AjaxSearchCtrl {
 
             if (isset($_POST['subsearch'])) {
                 $ssc = isset($_POST['ssc']) ? ':' : ',';
-                if (is_array($_POST['subsearch'])) $this->subSearch = implode($ssc,$_POST['subsearch']);
-                else $this->subSearch = $_POST['subsearch'];
+                if (is_array($_POST['subsearch'])) {
+                    foreach($_POST['subsearch'] as $key => $value) $_POST['subsearch'][$key] = strip_tags($value);
+                    $this->subSearch = implode($ssc,$_POST['subsearch']);
+                }
+                else $this->subSearch = strip_tags($_POST['subsearch']);
             }
             else {
                 $ssc = isset($_GET['ssc']) ? ':' : ',';
-                if (is_array($_GET['subsearch'])) $this->subSearch = implode($ssc,$_GET['subsearch']);
-                else $this->subSearch = $_GET['subsearch'];
+                if (is_array($_GET['subsearch'])) {
+                    foreach($_GET['subsearch'] as $key => $value) $_GET['subsearch'][$key] = strip_tags($value);
+                    $this->subSearch = implode($ssc,$_GET['subsearch']);
+                }
+                else $this->subSearch = strip_tags($_GET['subsearch']);
             }
         }
         if ($this->dbg) $this->asUtil->dbgRecord($this->subSearch , "getEvents - subsearch");
@@ -109,7 +118,7 @@ class AjaxSearchCtrl {
 
         $asfConfig = 'asfConfig';
         if ((isset($_POST['asf']) || isset($_GET['asf'])) &&  function_exists($asfConfig)) {
-            $this->asf = isset($_POST['asf']) ? $_POST['asf'] : urldecode($_GET['asf']);
+            $this->asf = isset($_POST['asf']) ? strip_tags($_POST['asf']) : strip_tags(urldecode($_GET['asf']));
             $this->fClause = $asfConfig($this->asf, $this->fParams);
             if ($this->dbg) $this->asUtil->dbgRecord($this->fParams , "getEvents - fParams");
             if ($this->dbg) $this->asUtil->dbgRecord($this->fClause , "getEvents - fClause");
@@ -117,10 +126,10 @@ class AjaxSearchCtrl {
         else $this->asf  = '';
         if ($this->dbg) $this->asUtil->dbgRecord($this->asf , "getEvents - asf");
 
-        $this->offset = (isset($_GET['aso'])) ? urldecode($_GET['aso']) : '0,0';
+        $this->offset = (isset($_GET['aso'])) ? strip_tags(urldecode($_GET['aso'])) : '0,0';
         if ($this->dbg) $this->asUtil->dbgRecord($this->offset , "getEvents - offset");
 
-        $this->pagination = (isset($_POST['pgn'])) ? $_POST['pgn'] : '';
+        $this->pagination = (isset($_POST['pgn'])) ? strip_tags($_POST['pgn']) : '';
         if ($this->dbg) $this->asUtil->dbgRecord($this->pagination , "getEvents - pgn");
     }
     function getSearchString() {
@@ -132,19 +141,25 @@ class AjaxSearchCtrl {
 
                 if (isset($_POST['search']) || (isset($_GET['search']) && (!$this->asCfg->cfg['ajaxSearch']))) {
                     if (isset($_POST['search'])) {
-                        $this->searchString = $_POST['search'];
-                        if (is_array($this->searchString)) $this->searchString = implode(' ', array_values($this->searchString));
+                        if (is_array($_POST['search'])) {
+                            foreach($_POST['search'] as $key => $value) $_POST['search'][$key] = strip_tags($value);
+                            $this->searchString = implode(' ', $_POST['search']);
+                        }
+                        else $this->searchString = strip_tags($_POST['search']);
                     } else {
-                        $this->searchString = urldecode($_GET['search']);
+                        $this->searchString = strip_tags(urldecode($_GET['search']));
                     }
-                    if (isset($_POST['advsearch'])) $this->advSearch = $_POST['advsearch'];
-                    else if (isset($_GET['advsearch'])) $this->advSearch = urldecode($_GET['advsearch']);
+                    if (isset($_POST['advsearch'])) $this->advSearch = strip_tags($_POST['advsearch']);
+                    else if (isset($_GET['advsearch'])) $this->advSearch = strip_tags(urldecode($_GET['advsearch']));
                 }
             }
             else {
                 if (isset($_POST['search'])) {
-                    $this->searchString = $_POST['search'];
-                    if (is_array($this->searchString)) $this->searchString = implode(' ', array_values($this->searchString));
+                    if (is_array($_POST['search'])) {
+                        foreach($_POST['search'] as $key => $value) $_POST['search'][$key] = strip_tags($value);
+                        $this->searchString = implode(' ', $_POST['search']);
+                    }
+                    else $this->searchString = strip_tags($_POST['search']);
 
                     if (($this->asCfg->pgCharset != 'UTF-8') && (ini_get('mbstring.encoding_translation') == '' || strtolower(ini_get('mbstring.http_input')) == 'pass')) {
                         $this->searchString = mb_convert_encoding($this->searchString, $this->asCfg->pgCharset, "UTF-8");
@@ -152,7 +167,7 @@ class AjaxSearchCtrl {
                     } else {
                         $this->asOutput->setNeedsConvert(false);
                     }
-                    if (isset($_POST['advsearch'])) $this->advSearch = $_POST['advsearch'];
+                    if (isset($_POST['advsearch'])) $this->advSearch = strip_tags($_POST['advsearch']);
                }
             }
         }
@@ -165,7 +180,7 @@ class AjaxSearchCtrl {
     function getSearchWords($search, $advSearch) {
         $searchList = array();
         if (($advSearch == NOWORDS) || (!$search)) return $searchList;
-        if ($advSearch == EXACTPHRASE) $searchList[] =  " " . $search . " ";
+        if ($advSearch == EXACTPHRASE) $searchList[] = $search;
         else $searchList = explode(' ', $search);
         return $searchList;
     }
