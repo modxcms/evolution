@@ -39,6 +39,7 @@ Additional Improvements & Updates:
 * [#308] Return to active tab for Elements, regardless of "Remember tabs" system setting
 * [#331] Updated Czech language file
 * [#881] Improvements to Template inheritance (moved from plugin into core, added system setting to control behavior)
+* [#592] Adjustment of manager fonts
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
