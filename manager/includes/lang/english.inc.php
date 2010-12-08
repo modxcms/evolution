@@ -207,8 +207,14 @@ $_lang["defaultpublish_message"] = 'Select \'Yes\' to make all new Resources pub
 $_lang["defaultpublish_title"] = 'Published default';
 $_lang["defaultsearch_message"] = 'Select \'Yes\' to make all new Resources searchable by default.';
 $_lang["defaultsearch_title"] = 'Searchable default';
-$_lang["defaulttemplate_message"] = 'Select the default Template you wish to use for new Resources. You can still select a different Template in the Resource editor, this setting just pre-selects one of your Templates for you.';
-$_lang["defaulttemplate_title"] = 'Default Template';
+$_lang["defaulttemplate_message"] = 'Select the Template you wish to use as a system default for new Resources. You can still select a different Template in the Resource editor, this setting just pre-selects one of your Templates for you.';
+$_lang["defaulttemplate_title"] = 'System Default Template';
+$_lang["defaulttemplate_logic_title"] = 'Automatic Template Assignment';
+$_lang["defaulttemplate_logic_general_message"] = 'New Resources will have the following templates, falling back to higher levels if not found:';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: the System Default Template.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Parent</strong>: the same Template as the parent container.';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Sibling</strong>: the same Template as other Resources in the same container.';
+
 $_lang["delete"] = 'Delete';
 $_lang["delete_resource"] = 'Delete Resource';
 $_lang["delete_tags"] = 'Delete tags';

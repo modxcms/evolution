@@ -799,6 +799,9 @@ UPDATE {PREFIX}documentgroup_names AS dgn
 UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
 
 
+UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Inherit Parent Template');
+
+
 UPDATE `{PREFIX}system_settings` SET `setting_value` = '' WHERE `setting_name` = 'settings_version';
 
 
@@ -886,6 +889,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('track_visitors','0'),
 ('resolve_hostnames','0'),
 ('top_howmany','10'),
+('auto_template_logic','{AUTOTEMPLATELOGIC}'),
 ('default_template','3'),
 ('old_template',''),
 ('publish_default','0'),

@@ -114,11 +114,58 @@ if ($installMode == 0) {
 	}
 }
 
+if(!function_exists('parseProperties')) {
+    // parses a resource property string and returns the result as an array
+    // duplicate of method in documentParser class
+    function parseProperties($propertyString) {
+        $parameter= array ();
+        if (!empty ($propertyString)) {
+            $tmpParams= explode("&", $propertyString);
+            for ($x= 0; $x < count($tmpParams); $x++) {
+                if (strpos($tmpParams[$x], '=', 0)) {
+                    $pTmp= explode("=", $tmpParams[$x]);
+                    $pvTmp= explode(";", trim($pTmp[1]));
+                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
+                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
+                    else
+                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "")
+                            $parameter[trim($pTmp[0])]= $pvTmp[2];
+                }
+            }
+        }
+        return $parameter;
+    }
+}
+
+// check status of Inherit Parent Template plugin
+$auto_template_logic = 'parent';
+if ($installMode != 0) {
+    $rs = mysql_query("SELECT properties, disabled FROM $dbase.`" . $table_prefix . "site_plugins` WHERE name='Inherit Parent Template'");
+    $row = mysql_fetch_row($rs);
+    if(!$row) {
+        // not installed
+        $auto_template_logic = 'system';
+    } else {
+        if($row[1] == 1) {
+            // installed but disabled
+            $auto_template_logic = 'system';
+        } else {
+            // installed, enabled .. see how it's configured
+            $properties = parseProperties($row[0]);
+            if(isset($properties['inheritTemplate'])) {
+                if($properties['inheritTemplate'] == 'From First Sibling') {
+                    $auto_template_logic = 'sibling';
+                }
+            }
+        }
+    }
+}
+
 // open db connection
 $setupPath = realpath(dirname(__FILE__));
 include "{$setupPath}/setup.info.php";
 include "{$setupPath}/sqlParser.class.php";
-$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method);
+$sqlParser = new SqlParser($database_server, $database_user, $database_password, str_replace("`", "", $dbase), $table_prefix, $adminname, $adminemail, $adminpass, $database_connection_charset, $managerlanguage, $database_connection_method, $auto_template_logic);
 $sqlParser->mode = ($installMode < 1) ? "new" : "upd";
 /* image and file manager paths now handled via settings screen in Manager
 $sqlParser->imageUrl = 'http://' . $_SERVER['SERVER_NAME'] . $base_url . "assets/";
@@ -724,4 +771,3 @@ function propUpdate($new,$old){
 
     return $return;
 }
-?>

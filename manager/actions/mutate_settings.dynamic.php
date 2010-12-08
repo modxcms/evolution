@@ -373,6 +373,18 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+            <tr>
+                <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaulttemplate_logic_title"];?></b></td>
+                <td>
+                    <p><?php echo $_lang["defaulttemplate_logic_general_message"];?></p>
+                    <input onchange="documentDirty=true;" type="radio" name="auto_template_logic" value="system"<?php if($auto_template_logic == 'system') {echo " checked='checked'";}?>/> <?php echo $_lang["defaulttemplate_logic_system_message"]; ?><br />
+                    <input onchange="documentDirty=true;" type="radio" name="auto_template_logic" value="parent"<?php if($auto_template_logic == 'parent') {echo " checked='checked'";}?>/> <?php echo $_lang["defaulttemplate_logic_parent_message"]; ?><br />
+                    <input onchange="documentDirty=true;" type="radio" name="auto_template_logic" value="sibling"<?php if($auto_template_logic == 'sibling') {echo " checked='checked'";}?>/> <?php echo $_lang["defaulttemplate_logic_sibling_message"]; ?><br />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><div class='split'></div></td>
+            </tr>
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaulttemplate_title"] ?></b></td>
             <td>
@@ -380,7 +392,7 @@ function confirmLangChange(el, lkey, elupd){
 				$sql = "select templatename, id from $dbase.`".$table_prefix."site_templates`";
 				$rs = mysql_query($sql);
 			?>
-			  <select name="default_template" class="inputBox" onchange='documentDirty=true;' style="width:150px">
+			  <select name="default_template" class="inputBox" onchange="documentDirty=true;wrap=document.getElementById('template_reset_options_wrapper');if(this.options[this.selectedIndex].value != '<?php echo $default_template;?>'){wrap.style.display='block';}else{wrap.style.display='none';}" style="width:150px">
 				<?php
 				while ($row = mysql_fetch_assoc($rs)) {
 					$selectedtext = $row['id']==$default_template ? "selected='selected'" : "" ;
@@ -395,9 +407,10 @@ function confirmLangChange(el, lkey, elupd){
 				?>
  			 </select>
  			 	<br />
- 			 	<br />
-				<input onchange="documentDirty=true;" type="radio" name="reset_template" value="1" /> <?php echo $_lang["template_reset_all"]; ?><br />
-				<input onchange="documentDirty=true;" type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang["template_reset_specific"],$oldTmpName); ?>
+                <div id="template_reset_options_wrapper" style="display:none;">
+    				<input onchange="documentDirty=true;" type="radio" name="reset_template" value="1" /> <?php echo $_lang["template_reset_all"]; ?><br />
+	    			<input onchange="documentDirty=true;" type="radio" name="reset_template" value="2" /> <?php echo sprintf($_lang["template_reset_specific"],$oldTmpName); ?>
+                </div>
 				<input type="hidden" name="old_template" value="<?php echo $oldTmpId; ?>" />
 			</td>
           </tr>

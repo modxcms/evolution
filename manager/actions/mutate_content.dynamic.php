@@ -610,9 +610,33 @@ if (is_array($evtOut))
 					if (isset($_REQUEST['newtemplate'])) {
 						$selectedtext = $row['id'] == $_REQUEST['newtemplate'] ? ' selected="selected"' : '';
 					} else {
-						if (isset ($content['template']))
-						        $selectedtext = $row['id'] == $content['template'] ? ' selected="selected"' : '';
-						else    $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
+						if (isset ($content['template'])) {
+						    $selectedtext = $row['id'] == $content['template'] ? ' selected="selected"' : '';
+                        } else {
+                            switch($auto_template_logic) {
+                                case 'sibling':
+
+                                    if ($sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', '', 'menuindex', 'ASC', 1)) {
+                                        $default_template = $sibl[0]['template'];
+                                        break;
+                                    } else if ($sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template', '', 'menuindex', 'ASC', 1)) {
+                                        $default_template = $sibl[0]['template'];
+                                        break;
+                                    }
+
+                                case 'parent':
+
+                                    if ($parent = $modx->getPageInfo($_REQUEST['pid'], 0, 'template')) {
+                                        $default_template = $parent['template'];
+                                        break;
+                                    }
+                                
+                                case 'system':
+                                default:
+                                    // default_template is already set
+                            }
+                            $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
+                        }
 					}
 					echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
 					$currentCategory = $thisCategory;
