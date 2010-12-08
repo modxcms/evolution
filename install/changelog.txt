@@ -79,7 +79,7 @@ Additional Improvements & Updates:
 * [#546] Improve DocManager usability by adding checkboxes to TVs and removing "ignore list", which was hard to use
 * [#3361] Allow custom TemplateVariables and output widgets
 * [#3362] Updated distributed jQuery library to 1.4.4 and updated AjaxSearch, QuickManager+ and ManagerManager to use it
-
+* [#2627] New event allows plugin to inject custom markup into manager's header (header.inc.php)
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
