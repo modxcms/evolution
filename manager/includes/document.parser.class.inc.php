@@ -7,11 +7,44 @@
 class DocumentParser {
     var $db; // db object
     var $event, $Event; // event object
-
     var $pluginEvent;
-
     var $config= null;
-    var $rs, $result, $sql, $table_prefix, $debug, $documentIdentifier, $documentMethod, $documentGenerated, $documentContent, $tstart, $minParserPasses, $maxParserPasses, $documentObject, $templateObject, $snippetObjects, $stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName, $aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache, $snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir, $placeholders, $sjscripts, $jscripts, $loadedjscripts, $documentMap;
+    var $rs;
+    var $result;
+    var $sql;
+    var $table_prefix;
+    var $debug;
+    var $documentIdentifier;
+    var $documentMethod;
+    var $documentGenerated;
+    var $documentContent;
+    var $tstart;
+    var $minParserPasses;
+    var $maxParserPasses;
+    var $documentObject;
+    var $templateObject;
+    var $snippetObjects;
+    var $stopOnNotice;
+    var $executedQueries;
+    var $queryTime;
+    var $currentSnippet;
+    var $documentName;
+    var $aliases;
+    var $visitor;
+    var $entrypage;
+    var $documentListing;
+    var $dumpSnippets;
+    var $chunkCache;
+    var $snippetCache;
+    var $contentTypes;
+    var $dumpSQL;
+    var $queryCode;
+    var $virtualDir;
+    var $placeholders;
+    var $sjscripts;
+    var $jscripts;
+    var $loadedjscripts;
+    var $documentMap;
     var $forwards= 3;
 
     // constructor
