@@ -683,6 +683,7 @@ $_lang["rename"] = 'Rename';
 $_lang["reports"] = 'Reports';
 $_lang["require_tagname"] = 'A tag name is required';
 $_lang["require_tagvalue"] = 'A tag value is required';
+$_lang["reserved_name_warning"] = 'You have used a reserved name.';
 $_lang["reset"] = 'Reset';
 $_lang["reset_failedlogins"] = 'reset';
 $_lang["resolve_hostnames_message"] = 'Do you want MODx to try to resolve your visitors\' hostnames when they visit your site? Resolving hostnames may create some extra server load, although your visitors won\'t notice this in any way.';

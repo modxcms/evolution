@@ -52,9 +52,18 @@ switch ($_POST['mode']) {
 		$sql = "SELECT COUNT(id) FROM {$dbase}.`{$table_prefix}site_tmplvars` WHERE name = '{$name}'";
 		$rs = $modx->db->query($sql);
 		$count = $modx->db->getValue($rs);
+        $nameerror = false;
 		if($count > 0) {
+            $nameerror = true;
 			$modx->event->alert(sprintf($_lang['duplicate_name_found_general'], $_lang['tv'], $name));
-
+        }
+        // disallow reserved names
+        if(in_array($name, array('id', 'type', 'contentType', 'pagetitle', 'longtitle', 'description', 'alias', 'link_attributes', 'published', 'pub_date', 'unpub_date', 'parent', 'isfolder', 'introtext', 'content', 'richtext', 'template', 'menuindex', 'searchable', 'cacheable', 'createdby', 'createdon', 'editedby', 'editedon', 'deleted', 'deletedon', 'deletedby', 'publishedon', 'publishedby', 'menutitle', 'donthit', 'haskeywords', 'hasmetatags', 'privateweb', 'privatemgr', 'content_dispo', 'hidemenu'))) {
+            $nameerror = true;
+            $_POST['name'] = '';
+			$modx->event->alert(sprintf($_lang['reserved_name_warning'], $_lang['tv'], $name));
+        }
+        if($nameerror) {
 			// prepare a few variables prior to redisplaying form...
 			$content = array();
 			$_REQUEST['id'] = 0;
