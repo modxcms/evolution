@@ -43,6 +43,7 @@ Additional Improvements & Updates:
 * [#476] Improvement to New user's default role
 * [#378] Check for and disallow reserved words in Template Variable names
 * [#1360] Better handling of Template Switcher plugin
+* [#833] Manager and Web User comments field no longer limited to 255 characters
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================

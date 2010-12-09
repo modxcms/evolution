@@ -770,7 +770,8 @@ ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text;
 
 ALTER TABLE `{PREFIX}user_attributes` 
   MODIFY COLUMN `state` varchar(25) NOT NULL default '',
-  MODIFY COLUMN `zip` varchar(25) NOT NULL default '';
+  MODIFY COLUMN `zip` varchar(25) NOT NULL default '',
+  MODIFY COLUMN `comment` text;
 
 
 ALTER TABLE `{PREFIX}site_metatags` 
@@ -781,7 +782,8 @@ ALTER TABLE `{PREFIX}site_metatags`
 
 ALTER TABLE `{PREFIX}web_user_attributes`
   MODIFY COLUMN `state` varchar(25) NOT NULL default '',
-  MODIFY COLUMN `zip` varchar(25) NOT NULL default '';
+  MODIFY COLUMN `zip` varchar(25) NOT NULL default '',
+  MODIFY COLUMN `comment` text;
   
 
 ALTER TABLE `{PREFIX}user_roles`
