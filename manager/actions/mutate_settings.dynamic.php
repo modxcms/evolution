@@ -48,7 +48,6 @@ $isDefaultUnavailableMsg = $site_unavailable_message == $_lang['siteunavailable_
 $isDefaultUnavailableMsgJs = $isDefaultUnavailableMsg ? 'true' : 'false';
 $site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
 $validate_referrer_off_val = $modx->db->getValue('SELECT setting_value FROM '.$modx->getFullTableName('system_settings').' WHERE setting_name=\'validate_referer\'');
-$validate_referrer_off_val = $validate_referrer_off_val === '00' ? '00' : '0'; // storing the double zero is a trick to hide the warning message from the manager
 
 /* check the file paths */
 $settings['filemanager_path'] = $filemanager_path = trim($settings['filemanager_path']) == '' ? MODX_BASE_PATH : $settings['filemanager_path'];
