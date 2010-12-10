@@ -23,7 +23,7 @@ class FileUpload {
 	var $cwd;
 	var $actual_cwd;
 	var $newfolder;
-	
+
 	function FileUpload($fckphp_config,$type,$cwd) {
 		$this->fckphp_config=$fckphp_config;
 		$this->type=$type;
@@ -31,17 +31,7 @@ class FileUpload {
 		$this->actual_cwd=str_replace("//","/",($this->fckphp_config['UserFilesPath']."/$type/".$this->raw_cwd));
 		$this->real_cwd=str_replace("//","/",($this->fckphp_config['basedir']."/".$this->actual_cwd));
 	}
-	
-	function cleanFilename($filename) {
-		$n_filename="";
-		
-		//Check that it only contains valid characters
-		for($i=0;$i<strlen($filename);$i++) if (in_array(substr($filename,$i,1),$this->fckphp_config['FileNameAllowedChars'])) $n_filename.=substr($filename,$i,1);
-		
-		//If it got this far all is ok
-		return $n_filename;
-	}
-	
+
 	function run() {
 		//If using CGI Upload script, get file info and insert into $_FILE array
 		if 	(
@@ -58,10 +48,7 @@ class FileUpload {
 				$disp="202,'Incomplete file information from upload CGI'";
 			}
 		}
-		
-// 		if (isset($_FILES['NewFile'])&&isset($_FILES['NewFile']['name'])&&($_FILES['NewFile']['name']!=""))
-// 			$_FILES['NewFile']['name']=$_FILES['NewFile']['name']; //$this->cleanFilename($_FILES['NewFile']['name']);
-		
+
 		$typeconfig=$this->fckphp_config['ResourceAreas'][$this->type];
 		
 		header ("content-type: text/html");
@@ -70,6 +57,11 @@ class FileUpload {
 				if ($_FILES['NewFile']['size']<($typeconfig['MaxSize']*1024)) {
 
 					$filename=basename(str_replace("\\","/",$_FILES['NewFile']['name']));
+					//if($this->modx->config['clean_uploaded_filename']) {
+					//	$nameparts = explode('.', $filename);
+					//	array_map(array($this->modx, 'stripAlias'), $nameparts);
+					//	$filename = implode($nameparts);
+					//}
 					
 					$lastdot=strrpos($filename,".");
 					
