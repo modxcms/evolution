@@ -335,9 +335,9 @@ function confirmLangChange(el, lkey, elupd){
 
           <tr>
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["track_visitors_title"] ?></b></td>
-            <td><input onchange="documentDirty=true;" type="radio" name="track_visitors" value="1" <?php echo ($track_visitors=='1' || !isset($track_visitors)) ? 'checked="checked"' : "" ; ?> onclick='showHide(/logRow/, 1);' />
+            <td><input onchange="documentDirty=true;" type="radio" name="track_visitors" value="1" <?php echo ($track_visitors=='1' || !isset($track_visitors)) ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="track_visitors" value="0" <?php echo $track_visitors=='0' ? 'checked="checked"' : "" ; ?> onclick='showHide(/logRow/, 0);' />
+              <input onchange="documentDirty=true;" type="radio" name="track_visitors" value="0" <?php echo $track_visitors=='0' ? 'checked="checked"' : "" ; ?> />
               <?php echo $_lang["no"]?> </td>
           </tr>
           <tr>
@@ -345,20 +345,6 @@ function confirmLangChange(el, lkey, elupd){
             <td class='comment'><?php echo $_lang["track_visitors_message"] ?></td>
           </tr>
           <tr>
-            <td colspan="2"><div class='split'></div></td>
-          </tr>
-          <tr id='logRow1' class='row1' style="display: <?php echo $track_visitors==1 ? $displayStyle : 'none' ; ?>">
-            <td nowrap class="warning" valign="top"><b><?php echo $_lang["resolve_hostnames_title"] ?></b></td>
-            <td> <input onchange="documentDirty=true;" type="radio" name="resolve_hostnames" value="1" <?php echo ($resolve_hostnames=='1' || !isset($resolve_hostnames)) ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["yes"]?><br />
-              <input onchange="documentDirty=true;" type="radio" name="resolve_hostnames" value="0" <?php echo $resolve_hostnames=='0' ? 'checked="checked"' : "" ; ?> />
-              <?php echo $_lang["no"]?> </td>
-          </tr>
-          <tr id='logRow2' class='row1' style="display: <?php echo $track_visitors==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["resolve_hostnames_message"] ?></td>
-          </tr>
-          <tr id='logRow3' style="display: <?php echo $track_visitors==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>

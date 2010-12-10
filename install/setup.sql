@@ -902,7 +902,6 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('site_status','1'),
 ('site_unavailable_message','The site is currently unavailable'),
 ('track_visitors','0'),
-('resolve_hostnames','0'),
 ('top_howmany','10'),
 ('auto_template_logic','{AUTOTEMPLATELOGIC}'),
 ('default_template','3'),

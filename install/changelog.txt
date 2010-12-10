@@ -46,6 +46,7 @@ Additional Improvements & Updates:
 * [#1360] Better handling of Template Switcher plugin
 * [#833] Manager and Web User comments field no longer limited to 255 characters
 * [#1132] New system setting to strip characters from files uploaded in Manage Files (using same logic configured for aliases)
+* [#190] Resolve hostnames config option deprecated
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
