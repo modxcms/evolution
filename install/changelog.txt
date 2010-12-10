@@ -48,6 +48,7 @@ Additional Improvements & Updates:
 * [#1132] New system setting to strip characters from files uploaded in Manage Files (using same logic configured for aliases)
 * [#190] Resolve hostnames config option deprecated
 * [#1065] Let manager themes have their own welcome.html page
+* [#216] Optimization of core methods (getParentIds & getChildIds)
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
