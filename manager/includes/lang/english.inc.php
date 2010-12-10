@@ -98,6 +98,7 @@ $_lang["chunk_code"] = 'Chunk code (html)';
 $_lang["chunk_multiple_id"] = 'Error: Multiple Chunks share the same unique ID.';
 $_lang["chunk_no_exist"] = 'Chunk does not exist.';
 $_lang["cleaningup"] = 'Cleaning up';
+$_lang["clean_uploaded_filename"] = 'Transliterate uploaded file names';
 $_lang["clear_log"] = 'Clear log';
 $_lang["click_to_context"] = 'Click to access context menu';
 $_lang["click_to_edit_title"] = 'Click here to edit this record';

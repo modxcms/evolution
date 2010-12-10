@@ -1173,9 +1173,19 @@ function confirmLangChange(el, lkey, elupd){
               <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="upload_flash" value="<?php echo isset($upload_flash) ? $upload_flash : "swf,fla" ; ?>" />
             </td>
           </tr>
-          <tr id='rbRow17' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
-            <td width="200">&nbsp;</td>
-            <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
+            <tr id='rbRow17' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["uploadable_flash_message"]?></td>
+            </tr>
+            <tr id='rbRow171' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+          <tr id='rbRow172' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+              <td nowrap class="warning"><b><?php echo $_lang["clean_uploaded_filename"]?></b></td>
+              <td> <input onchange="documentDirty=true;" type="radio" name="clean_uploaded_filename" value="1" <?php echo $clean_uploaded_filename=='1' ? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["yes"]?><br />
+                <input onchange="documentDirty=true;" type="radio" name="clean_uploaded_filename" value="0" <?php echo ($clean_uploaded_filename=='0' || !isset($clean_uploaded_filename)) ? 'checked="checked"' : "" ; ?> />
+                <?php echo $_lang["no"]?> </td>
           </tr>
           <tr id='rbRow18' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
           <td colspan="2"><div class='split'></div></td>
