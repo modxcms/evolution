@@ -1187,6 +1187,10 @@ function confirmLangChange(el, lkey, elupd){
                 <input onchange="documentDirty=true;" type="radio" name="clean_uploaded_filename" value="0" <?php echo ($clean_uploaded_filename=='0' || !isset($clean_uploaded_filename)) ? 'checked="checked"' : "" ; ?> />
                 <?php echo $_lang["no"]?> </td>
           </tr>
+            <tr id='rbRow17' class='row3' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
+              <td width="200">&nbsp;</td>
+              <td class='comment'><?php echo $_lang["clean_uploaded_filename_message"];?></td>
+            </tr>
           <tr id='rbRow18' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
           <td colspan="2"><div class='split'></div></td>
           </tr>
