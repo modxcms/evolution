@@ -26,6 +26,7 @@ Bugfixes:
 * [#445] Fix error displaying filenames with non-Latin charsets
 * [#577] Fix Spanish UTF8 language file
 * [#760] Fix Document tree not loading in children
+* [#609] Fix web_groups and member_groups tables can have duplicate entries
 
 --------------------------------------------
 Additional Improvements & Updates:

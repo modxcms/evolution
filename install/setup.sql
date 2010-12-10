@@ -90,7 +90,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}member_groups` (
   `id` int(10) NOT NULL auto_increment,
   `user_group` int(10) NOT NULL default '0',
   `member` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE INDEX `ix_group_member` (`user_group`,`member`)
 ) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
@@ -480,7 +481,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_groups` (
   `id` int(10) NOT NULL auto_increment,
   `webgroup` int(10) NOT NULL default '0',
   `webuser` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`)
 ) Type=MyISAM COMMENT='Contains data used for web access permissions.';
 
 
@@ -744,7 +746,7 @@ ALTER TABLE `{PREFIX}site_tmplvar_templates` DROP INDEX `idx_tmplvarid`,
  ADD PRIMARY KEY ( `tmplvarid` , `templateid` );
 
 
-ALTER TABLE `{PREFIX}site_content` 
+ALTER TABLE `{PREFIX}site_content`
   MODIFY COLUMN `pagetitle` varchar(255) NOT NULL default '',
   MODIFY COLUMN `alias` varchar(255) default '',
   MODIFY COLUMN `menutitle` varchar(255) NOT NULL DEFAULT '' COMMENT 'Menu title';
@@ -788,6 +790,14 @@ ALTER TABLE `{PREFIX}web_user_attributes`
 
 ALTER TABLE `{PREFIX}user_roles`
   ADD COLUMN `remove_locks` int(1) NOT NULL DEFAULT '0';
+
+
+ALTER TABLE `{PREFIX}member_groups`
+  ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
+
+
+ALTER TABLE `{PREFIX}web_groups`
+  ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
 
 
 # Set the private manager group flag
