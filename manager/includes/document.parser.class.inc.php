@@ -1223,48 +1223,42 @@ class DocumentParser {
     /* API functions																/
     /***************************************************************************************/
 
-    function getParentIds($id, $height= 10, $parents= array ()) {
-        $parentId= 0;
-        foreach ($this->documentMap as $mapEntry) {
-            $parentId= array_search($id, $mapEntry);
-            if ($parentId) {
-                $parentKey= array_search($parentId, $this->documentListing);
-                if (!$parentKey) {
-                    $parentKey= "$parentId";
-                }
-                $parents[$parentKey]= $parentId;
-                break;
-            }
-        }
-        $height--;
-        if ($parentId && $height) {
-            $parents= $parents + $this->getParentIds($parentId, $height, $parents);
+    function getParentIds($id, $height= 10) {
+        $parents= array ();
+        while ( $id && $height-- ) {
+            $thisid = $id;
+            $id = $this->aliasListing[$id]['parent'];
+            if (!$id) break;
+            $pkey = strlen($this->aliasListing[$thisid]['path']) ? $this->aliasListing[$thisid]['path'] : $this->aliasListing[$id]['alias'];
+            if (!strlen($pkey)) $pkey = "{$id}";
+            $parents[$pkey] = $id;
         }
         return $parents;
     }
 
     function getChildIds($id, $depth= 10, $children= array ()) {
-        $c= null;
-        foreach ($this->documentMap as $mapEntry) {
-            if (isset ($mapEntry[$id])) {
-                $childId= $mapEntry[$id];
-                $childKey= array_search($childId, $this->documentListing);
-                if (!$childKey) {
-                    $childKey= "$childId";
+
+        // Initialise a static array to index parents->children
+        static $documentMap_cache = array();
+        if (!count($documentMap_cache)) {
+            foreach ($this->documentMap as $document) {
+                foreach ($document as $p => $c) {
+                    $documentMap_cache[$p][] = $c;
                 }
-                $c[$childKey]= $childId;
             }
         }
-        $depth--;
-        if (is_array($c)) {
-            if (is_array($children)) {
-                $children= $children + $c;
-            } else {
-                $children= $c;
-            }
-            if ($depth) {
-                foreach ($c as $child) {
-                    $children= $children + $this->getChildIds($child, $depth, $children);
+
+        // Get all the children for this parent node
+        if (isset($documentMap_cache[$id])) {
+            $depth--;
+
+            foreach ($documentMap_cache[$id] as $childId) {
+                $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
+                if (!strlen($pkey)) $pkey = "{$childId}";
+                    $children[$pkey] = $childId;
+
+                if ($depth) {
+                    $children += $this->getChildIds($childId, $depth);
                 }
             }
         }
