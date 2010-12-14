@@ -1,5 +1,5 @@
 /**
- * WebLoginSidebar
+ * WebLoginSideBar
  * 
  * WebLogin Tpl
  * 
