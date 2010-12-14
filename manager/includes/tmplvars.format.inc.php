@@ -42,9 +42,11 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
                         'src' => $src,
                         'id' => ($params['id'] ? $params['id'] : ''),
                         'alt' => htmlspecialchars($params['alttext']),
-                        'style' => $params['style'],
-                        'align' => $params['align']
+                        'style' => $params['style']
                     );
+                    if(isset($params['align']) && $params['align'] != 'none') {
+                        $attr['align'] = $params['align'];
+                    }
                     foreach ($attr as $k => $v) $attributes.= ($v ? ' '.$k.'="'.$v.'"' : '');
                     $attributes .= ' '.$params['attrib'];
 
