@@ -7,10 +7,10 @@
  * @category    plugin
  * @version     1.1
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal    @sample true
  * @internal    @properties &inheritTemplate=Inherit Template;list;From Parent,From First Sibling;From Parent
  * @internal    @events OnDocFormPrerender 
  * @internal    @modx_category Manager and Admin
+ * @internal    @installset sample
  */
  
 /*

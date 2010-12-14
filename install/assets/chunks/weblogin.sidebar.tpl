@@ -6,8 +6,8 @@
  * @category	chunk
  * @version 	1.0
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal    @sample true
  * @internal @modx_category Login
+ * @internal    @installset sample
  */
 <!-- #declare:separator <hr> --> 
 <!-- login form section-->

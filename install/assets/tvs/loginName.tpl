@@ -5,7 +5,6 @@
  *
  * @category        tv
  * @name            loginName
- * @internal        @sample true
  * @internal        @caption loginName
  * @internal        @input_type text
  * @internal        @input_options
@@ -15,4 +14,5 @@
  * @internal        @lock_tv 0
  * @internal        @template_assignments MODxHost
  * @internal        @modx_category Demo Content
+ * @internal        @installset sample
  */

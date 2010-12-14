@@ -7,9 +7,9 @@
  * @category 	snippet
  * @version 	1.4.4.6
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal    @sample true
- * @internal	@properties 
+ * @internal	@properties
  * @internal	@modx_category Forms
+ * @internal    @installset sample
  */
 
 # eForm 1.4.4.6 - Electronic Form Snippet

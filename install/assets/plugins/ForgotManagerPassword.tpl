@@ -7,9 +7,9 @@
  * @category 	plugin
  * @version 	1.1.2
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal    @sample true
  * @internal	@events OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender 
  * @internal	@modx_category Manager and Admin
+ * @internal    @installset sample
  */
 
 if(!class_exists('ForgotManagerPassword')) {

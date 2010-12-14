@@ -6,9 +6,9 @@
  * @category	chunk
  * @version 	1.0.5
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
- * @internal    @sample true
  * @internal 	@modx_category Demo Content
  * @internal    @overwrite false
+ * @internal    @installset sample
  */
 
 // more example rules are in assets/plugins/managermanager/example_mm_rules.inc.php

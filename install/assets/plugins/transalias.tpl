@@ -10,10 +10,10 @@
  * @package     modx
  * @subpackage  modx.plugins.transalias
  * @author      Olivier B. Deland, additions by Mike Schell, rfoster
- * @internal    @sample true
  * @internal    @properties &table_name=Trans table;list;common,russian,utf8,utf8lowercase;utf8lowercase &char_restrict=Restrict alias to;list;lowercase alphanumeric,alphanumeric,legal characters;legal characters &remove_periods=Remove Periods;list;Yes,No;No &word_separator=Word Separator;list;dash,underscore,none;dash &override_tv=Override TV name;string;
  * @internal    @events OnStripAlias
  * @internal    @modx_category Manager and Admin
+ * @internal    @installset sample
  */
 
 /*
