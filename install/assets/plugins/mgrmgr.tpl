@@ -7,6 +7,7 @@
  * @category plugin
  * @version 0.3.9
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
+ * @internal    @sample true
  * @internal @properties &config_chunk=Configuration Chunk;text;mm_demo_rules; &remove_deprecated_tv_types_pref=Remove deprecated TV types;list;yes,no;yes &which_jquery=jQuery source;list;local (assets/js),remote (google code),manual url (specify below);local (assets/js) &js_src_type=jQuery URL override;text;
  * @internal @events OnDocFormRender,OnDocFormPrerender,OnPluginFormRender,OnTVFormRender
  * @internal @modx_category Manager and Admin

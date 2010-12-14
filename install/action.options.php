@@ -120,10 +120,15 @@ if ($limit > 0) {
 $chunks = isset ($_POST['chunk']) ? $_POST['chunk'] : array ();
 $limit = count($moduleChunks);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['chunks'] . "</h3>";
+    $chunkOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = $moduleChunks[$i][5] === false ? "toggle" : "toggle demo";
         $chk = in_array($i, $chunks) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr />";
+        $chunkOutput .= "<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr />";
+    }
+    if($chunkOutput != '') {
+        echo "<h3>" . $_lang['chunks'] . "</h3>";
+        echo $chunkOutput;
     }
 }
 
@@ -131,10 +136,15 @@ if ($limit > 0) {
 $modules = isset ($_POST['module']) ? $_POST['module'] : array ();
 $limit = count($moduleModules);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['modules'] . "</h3>";
+    $moduleOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = $moduleModules[$i][7] === false ? "toggle" : "toggle demo";
         $chk = in_array($i, $modules) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr />";
+        $moduleOutput .= "<input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr />";
+    }
+    if($moduleOutput != '') {
+        echo "<h3>" . $_lang['modules'] . "</h3>";
+        echo $moduleOutput;
     }
 }
 
@@ -142,10 +152,15 @@ if ($limit > 0) {
 $plugins = isset ($_POST['plugin']) ? $_POST['plugin'] : array ();
 $limit = count($modulePlugins);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['plugins'] . "</h3>";
+    $pluginOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = $modulePlugins[$i][8] === false ? "toggle" : "toggle demo";
         $chk = in_array($i, $plugins) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr />";
+        $pluginOutput .= "<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr />";
+    }
+    if($pluginOutput != '') {
+        echo "<h3>" . $_lang['plugins'] . "</h3>";
+        echo $pluginOutput;
     }
 }
 
@@ -153,10 +168,15 @@ if ($limit > 0) {
 $snippets = isset ($_POST['snippet']) ? $_POST['snippet'] : array ();
 $limit = count($moduleSnippets);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['snippets'] . "</h3>";
+    $snippetOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = $moduleSnippets[$i][5] === false ? "toggle" : "toggle demo";
         $chk = in_array($i, $snippets) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr />";
+        $snippetOutput .= "<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr />";
+    }
+    if($snippetOutput != '') {
+        echo "<h3>" . $_lang['snippets'] . "</h3>";
+        echo $snippetOutput;
     }
 }
 ?>
@@ -201,7 +221,6 @@ if ($limit > 0) {
                     ;
                 } else {
                     jQuery(this)
-                        .attr('checked', false)
                         .attr('disabled', false)
                     ;
                 }

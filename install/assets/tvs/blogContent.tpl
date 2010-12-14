@@ -14,5 +14,5 @@
  * @internal        @output_widget_params &w=383px&h=450px&edt=TinyMCE
  * @internal        @lock_tv 0
  * @internal        @template_assignments MODxHost
- * @internal        @modx_category
+ * @internal        @modx_category Demo Content
  */

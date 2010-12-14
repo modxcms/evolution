@@ -86,7 +86,8 @@ if(is_dir($chunkPath) && is_readable($chunkPath)) {
                 $params['description'],
                 "$chunkPath/{$params['filename']}",
                 $params['modx_category'],
-                array_key_exists('overwrite', $params) ? $params['overwrite'] : 'true'
+                array_key_exists('overwrite', $params) ? $params['overwrite'] : 'true',
+                array_key_exists('sample', $params) ? true : false
             );
         }
     }
@@ -104,7 +105,14 @@ if(is_dir($snippetPath) && is_readable($snippetPath)) {
         $params = parse_docblock($snippetPath, $tplfile);
         if(is_array($params) && count($params) > 0) {
             $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-            $ms[] = array($params['name'], $description, "$snippetPath/{$params['filename']}", $params['properties'], $params['modx_category'] );
+            $ms[] = array(
+                $params['name'],
+                $description,
+                "$snippetPath/{$params['filename']}",
+                $params['properties'],
+                $params['modx_category'],
+                array_key_exists('sample', $params) ? true : false
+            );
         }
     }
     $d->close();
@@ -148,7 +156,16 @@ if(is_dir($modulePath) && is_readable($modulePath)) {
         $params = parse_docblock($modulePath, $tplfile);
         if(is_array($params) && count($params) > 0) {
             $description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-            $mm[] = array($params['name'], $description, "$modulePath/{$params['filename']}", $params['properties'], $params['guid'], intval($params['shareparams']), $params['modx_category'] );
+            $mm[] = array(
+                $params['name'],
+                $description,
+                "$modulePath/{$params['filename']}",
+                $params['properties'],
+                $params['guid'],
+                intval($params['shareparams']),
+                $params['modx_category'],
+                array_key_exists('sample', $params) ? true : false
+            );
         }
     }
     $d->close();
