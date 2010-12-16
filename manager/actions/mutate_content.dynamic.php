@@ -759,7 +759,7 @@ if (is_array($evtOut))
                        'LEFT JOIN '.$tbl_site_tmplvar_access.' AS tva ON tva.tmplvarid=tv.id '.
                        'WHERE tvtpl.templateid=\''.$template.'\' AND (1=\''.$_SESSION['mgrRole'].'\' OR ISNULL(tva.documentgroup)'.
                        (!$docgrp ? '' : ' OR tva.documentgroup IN ('.$docgrp.')').
-                       ') ORDER BY tvtpl.rank,tv.rank';
+                       ') ORDER BY tvtpl.rank,tv.rank, tv.id';
                 $rs = mysql_query($sql);
                 $limit = mysql_num_rows($rs);
                 if ($limit > 0) {
@@ -800,7 +800,7 @@ if (is_array($evtOut))
                         echo "\t\t",'<tr style="height: 24px;"><td align="left" valign="top" width="150"><span class="warning">',$row['caption'],"</span>\n",
                              "\t\t\t",'<br /><span class="comment">',$row['description'],"</span></td>\n",
                              "\t\t\t",'<td valign="top" style="position:relative;',($row['type'] == 'date' ? 'z-index:{$zindex};' : ''),'">',"\n",
-                             "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV, ' style="width:300px;"'),"\n",
+                             "\t\t\t",renderFormElement($row['type'], $row['id'], $row['default_text'], $row['elements'], $tvPBV),"\n",
                              "\t\t</td></tr>\n";
                     }
                     echo "\t</table>\n";

@@ -189,7 +189,7 @@ $sql = "SELECT tv.name as 'name', tv.id as 'id', tr.templateid, tr.rank, if(isnu
     FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
     INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
     LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id
-    WHERE tr.templateid='".$_REQUEST['id']."' ORDER BY tr.rank ASC";
+    WHERE tr.templateid='{$id}' ORDER BY tr.rank, tv.rank, tv.id";
 
 
 $rs = $modx->db->query($sql);
