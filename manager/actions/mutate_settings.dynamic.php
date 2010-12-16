@@ -47,7 +47,6 @@ $dir->close();
 $isDefaultUnavailableMsg = $site_unavailable_message == $_lang['siteunavailable_message_default'];
 $isDefaultUnavailableMsgJs = $isDefaultUnavailableMsg ? 'true' : 'false';
 $site_unavailable_message_view = isset($site_unavailable_message) ? $site_unavailable_message : $_lang['siteunavailable_message_default'];
-$validate_referrer_off_val = $modx->db->getValue('SELECT setting_value FROM '.$modx->getFullTableName('system_settings').' WHERE setting_name=\'validate_referer\'');
 
 /* check the file paths */
 $settings['filemanager_path'] = $filemanager_path = trim($settings['filemanager_path']) == '' ? MODX_BASE_PATH : $settings['filemanager_path'];
@@ -525,7 +524,7 @@ function confirmLangChange(el, lkey, elupd){
               <td nowrap class="warning"><b><?php echo $_lang["validate_referer_title"] ?></b></td>
               <td><input onchange="documentDirty=true;" type="radio" name="validate_referer" value="1" <?php echo ($validate_referer=='1' || !isset($validate_referer)) ? 'checked="checked"' : "" ; ?> />
                 <?php echo $_lang["yes"]?><br />
-                <input onchange="documentDirty=true;" type="radio" name="validate_referer" value="<?php echo $validate_referrer_off_val;?>" <?php echo $validate_referer=='0' ? 'checked="checked"' : "" ; ?> />
+                <input onchange="documentDirty=true;" type="radio" name="validate_referer" value="0" <?php echo $validate_referer=='0' ? 'checked="checked"' : "" ; ?> />
                 <?php echo $_lang["no"]?> </td>
             </tr>
             <tr>
