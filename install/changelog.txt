@@ -27,6 +27,7 @@ Bugfixes:
 * [#577] Fix Spanish UTF8 language file
 * [#760] Fix Document tree not loading in children
 * [#609] Fix web_groups and member_groups tables can have duplicate entries
+* [#364] Fix W3C validation problem with TV image output widget 
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -49,6 +50,14 @@ Additional Improvements & Updates:
 * [#190] Resolve hostnames config option deprecated
 * [#1065] Let manager themes have their own welcome.html page
 * [#216] Optimization of core methods (getParentIds & getChildIds)
+* [#819] Improvement in config.inc.php file (new installs only) so proper MODX_SITE_URL constant is set in API Mode
+* [#2867] Improvements to installer with respect to handling of Demo Site option and related elements
+* [#2867] Laid foundation for "installsets" or preset groups of installer elements
+* [#2963] New icons in manager resource tree (to reflect site start, error page, site unavailable and unauthorized system settings)
+* [#594] Tweaked Quick Manager window open style
+* [#487] Links updated in demo site content
+* [#3075] Apply monospace font to manager textarea fields
+* [#999] Enhance ordering logic when displaying lists of TVs
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
