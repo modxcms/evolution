@@ -41,7 +41,7 @@
               <h2>Most Recent:</h2>
               <a name="recentdocs"></a>[[ListIndexer?LIn_root=0]] </div>
             <h2>Login:</h2>
-            <div id="sidebarlogin">[!WebLogin? &tpl=`FormLogin` &loginhomeid=`[(site_start)]`!]</div>
+            <div id="sidebarlogin">[!WebLogin? &tpl=`WebLoginSideBar` &loginhomeid=`[(site_start)]`!]</div>
             <h2>Meta:</h2>
             <p><a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional">Valid <abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a></p>
             <p><a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page uses valid Cascading Stylesheets" rel="external">Valid <abbr title="W3C Cascading Stylesheets">css</abbr></a></p>
@@ -54,6 +54,7 @@
       <!-- end right -->
       <div id="left">
         <div id="left-inner">
+          [[Breadcrumbs?]]
           <div id="content">
             <div class="post">
               <h2>[*longtitle*]</h2>

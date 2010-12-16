@@ -11,7 +11,7 @@
  * @internal	@events OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender 
  * @internal	@modx_category Manager and Admin
  * @internal    @legacy_names TinyMCE
- * @internal    @installset sample
+ * @internal    @installset base, sample
  *
  * Written By Jeff Whitfield
  * and Mikko Lammi / updated: 03/09/2010

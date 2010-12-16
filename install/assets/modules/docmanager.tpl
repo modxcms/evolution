@@ -12,7 +12,7 @@
  * @internal	@shareparams 1
  * @internal	@dependencies requires files located at /assets/modules/docmanager/
  * @internal	@modx_category Manager and Admin
- * @internal    @installset sample
+ * @internal    @installset base, sample
  */
 
 include_once(MODX_BASE_PATH.'assets/modules/docmanager/classes/docmanager.class.php');

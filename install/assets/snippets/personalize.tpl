@@ -9,7 +9,7 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Login
- * @internal    @installset sample
+ * @internal    @installset base
  */
 
 #::::::::::::::::::::::::::::::::::::::::
@@ -47,7 +47,7 @@
 #
 # Example Usage:
 #
-#	[[LoggedOrNot? &yesChunk=`Link` &noChunk=`Register` &ph=`name`]]
+#	[[Personalize? &yesChunk=`Link` &noChunk=`Register` &ph=`name`]]
 #
 #	Having Chunks named {{Link}} and another {{Register}}, the first will be
 #	published to registered user, the second to non-registered users.

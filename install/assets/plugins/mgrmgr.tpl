@@ -11,7 +11,7 @@
  * @internal @events OnDocFormRender,OnDocFormPrerender,OnPluginFormRender,OnTVFormRender
  * @internal @modx_category Manager and Admin
  * @internal @legacy_names Image TV Preview, Show Image TVs
- * @internal    @installset sample
+ * @internal    @installset base, sample
  */
 
 // You can put your ManagerManager rules EITHER in a chunk OR in an external file - whichever suits your development style the best

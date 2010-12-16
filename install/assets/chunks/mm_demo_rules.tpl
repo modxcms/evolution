@@ -8,7 +8,7 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal 	@modx_category Demo Content
  * @internal    @overwrite false
- * @internal    @installset sample
+ * @internal    @installset base, sample
  */
 
 // more example rules are in assets/plugins/managermanager/example_mm_rules.inc.php

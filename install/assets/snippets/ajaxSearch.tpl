@@ -8,7 +8,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal    @properties
  * @internal    @modx_category Search
- * @internal    @installset sample
+ * @internal    @installset base, sample
  *
  * @author      Coroico <coroico@wangba.fr>
  * @date        05/12/2010

@@ -9,7 +9,7 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Navigation
- * @internal    @installset sample
+ * @internal    @installset base
  */
 
 // added in 1.0.1: hidePrivate (hide items from unauthorized users)
