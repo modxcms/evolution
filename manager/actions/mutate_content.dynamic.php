@@ -733,7 +733,7 @@ if (is_array($evtOut))
                     'ta',
                 );
             } else {
-                echo "\t".'<div style="width:100%"><textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',htmlspecialchars($content['content']),'</textarea></div>'."\n";
+                echo "\t".'<div style="width:100%"><textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;">',htmlspecialchars($content['content']),'</textarea></div>'."\n";
             }
 ?>
             </div><!-- end .sectionBody -->
