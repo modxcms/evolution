@@ -58,6 +58,7 @@ Additional Improvements & Updates:
 * [#487] Links updated in demo site content
 * [#3075] Apply monospace font to manager textarea fields
 * [#999] Enhance ordering logic when displaying lists of TVs
+* [#2953] Fix QuickManager+ Google Chrome font problem (text-shadow)
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
