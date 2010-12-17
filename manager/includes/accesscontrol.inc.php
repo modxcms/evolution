@@ -95,7 +95,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	}
 
 	// login info
-	$uid =  isset($_COOKIE['modx_remember_manager']) ? preg_replace('/[^a-zA-Z0-9\-_]*/', '',  $_COOKIE['modx_remember_manager']) :''; 
+	$uid =  isset($_COOKIE['modx_remember_manager']) ? preg_replace('/[^a-zA-Z0-9\-_@\.]*/', '',  $_COOKIE['modx_remember_manager']) :''; 
 	$modx->setPlaceholder('uid',$uid);
 	$modx->setPlaceholder('username',$_lang["username"]);
 	$modx->setPlaceholder('password',$_lang["password"]);

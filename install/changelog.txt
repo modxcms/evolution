@@ -62,6 +62,7 @@ Additional Improvements & Updates:
 * [#2953] Fix QuickManager+ Google Chrome font problem (text-shadow)
 * [#3063][#3064][#3065] Replace calls to deprecated db-related parser methods with calls to db class methods
 * [#2961] Wayfinder improvement - allow use of [+wf.alias+]
+* [#3061] 
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
