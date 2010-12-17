@@ -65,6 +65,7 @@ Additional Improvements & Updates:
 * [#3061] Allow @ and . characters in remembered login name
 * [#3062] Corrections to ActionList item names (given that Documents are now Resources and Resources are now Elements)
 * [#3115] Automatically regenerate siteCache if it not found
+* [#835] @INHERIT improved to work with @FILE, and to allow additional data after the @INHERIT
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================

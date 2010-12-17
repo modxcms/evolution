@@ -26,7 +26,8 @@ function ProcessTVCommand($value, $name = '', $docid = '') {
         $cmd = trim($cmd);
         switch ($cmd) {
             case "FILE" :
-                $output = ProcessFile($param);
+                $output = ProcessFile(trim($param));
+                $output = str_replace('@FILE ' . $param, $output, $nvalue);
                 break;
 
             case "CHUNK" : // retrieve a chunk and process it's content
@@ -73,9 +74,12 @@ function ProcessTVCommand($value, $name = '', $docid = '') {
                         continue; // hide unpublished docs if we're not at the top
 
                     $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
-                    if ((string) $tv['value'] !== '' && $tv['value'] { 0 }
-                        != '@') {
+
+                    // Modified @INHERIT binding to allow for @FILE bindings (and others) to be inherited,
+                    // as well as allowing content after the @INHERITed values
+                    if ((string) $tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
                         $output = (string) $tv['value'];
+                        $output = str_replace('@INHERIT', $output, $nvalue);
                         break 2;
                     }
                 }
