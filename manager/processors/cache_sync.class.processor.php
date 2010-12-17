@@ -48,7 +48,7 @@ class synccache{
     }
 
     function emptyCache($modx = null) {
-        if(!((function_exists('is_a') && is_a($modx, 'DocumentParser')) || $modx instanceof DocumentParser)) {
+        if((function_exists('is_a') && is_a($modx, 'DocumentParser') === false) || !($modx instanceof DocumentParser)) {
             $modx = $GLOBALS['modx'];
         }
         if(!isset($this->cachePath)) {
