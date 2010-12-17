@@ -28,6 +28,7 @@ Bugfixes:
 * [#760] Fix Document tree not loading in children
 * [#609] Fix web_groups and member_groups tables can have duplicate entries
 * [#364] Fix W3C validation problem with TV image output widget 
+* [#2957] Allow multibyte strings in QuickManager+ TV buttons
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -59,7 +60,8 @@ Additional Improvements & Updates:
 * [#3075] Apply monospace font to manager textarea fields
 * [#999] Enhance ordering logic when displaying lists of TVs
 * [#2953] Fix QuickManager+ Google Chrome font problem (text-shadow)
-* [#2957] Allow multibyte strings in QuickManager+ TV buttons
+* [#3063][#3064][#3065] Replace calls to deprecated db-related parser methods with calls to db class methods
+* [#2961] Wayfinder improvement - allow use of [+wf.alias+]
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
