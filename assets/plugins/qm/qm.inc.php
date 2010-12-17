@@ -166,7 +166,7 @@ class Qm {
                     if (isset($_POST['save'])) $save = intval($_POST['save']); 
                     
                     // Get TV name
-                    if (preg_match('/^([A-Za-z0-9&:;_\-]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
+                    if (preg_match('/^([^\\"\'\(\)<>!?]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
                     
                     // Get TV array
                     $tv = $this->modx->getTemplateVar($tvName, '*', $docID);
