@@ -698,7 +698,7 @@ class DocumentParser {
                 } else {
                     $sql= "SELECT `snippet` FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".`name`='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->db->query($sql);
-                    $limit= $this->recordCount($result);
+                    $limit= $this->db->getRecordCount($result);
                     if ($limit < 1) {
                         $this->chunkCache[$matches[1][$i]]= "";
                         $replace[$i]= "";
@@ -810,7 +810,7 @@ class DocumentParser {
                     $sql= "SELECT `name`, `snippet`, `properties` FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".`name`='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->db->query($sql);
                     $added = false;
-                    if ($this->recordCount($result) == 1) {
+                    if ($this->db->getRecordCount($result) == 1) {
                         $row= $this->db->getRow($result);
                         if($row['name'] == $matches[1][$i]) {
                             $snippets[$i]['name']= $row['name'];
@@ -934,7 +934,7 @@ class DocumentParser {
               WHERE sc." . $method . " = '" . $identifier . "'
               AND ($access) LIMIT 1;";
         $result= $this->db->query($sql);
-        $rowCount= $this->recordCount($result);
+        $rowCount= $this->db->getRecordCount($result);
         if ($rowCount < 1) {
             if ($this->config['unauthorized_page']) {
                 // method may still be alias, while identifier is not full path alias, e.g. id not found above
@@ -968,7 +968,7 @@ class DocumentParser {
         $sql .= "LEFT JOIN " . $this->getFullTableName("site_tmplvar_contentvalues")." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '" . $documentObject['id'] . "' ";
         $sql .= "WHERE tvtpl.templateid = '" . $documentObject['template'] . "'";
         $rs= $this->db->query($sql);
-        $rowCount= $this->recordCount($rs);
+        $rowCount= $this->db->getRecordCount($rs);
         if ($rowCount > 0) {
             for ($i= 0; $i < $rowCount; $i++) {
                 $row= $this->db->getRow($rs);
@@ -1190,7 +1190,7 @@ class DocumentParser {
             else {
                 $sql= "SELECT `content` FROM " . $this->getFullTableName("site_templates") . " WHERE " . $this->getFullTableName("site_templates") . ".`id` = '" . $this->documentObject['template'] . "';";
                 $result= $this->db->query($sql);
-                $rowCount= $this->recordCount($result);
+                $rowCount= $this->db->getRecordCount($result);
                 if ($rowCount > 1) {
                     $this->messageQuit("Incorrect number of templates returned from database", $sql);
                 }
@@ -1348,7 +1348,7 @@ class DocumentParser {
               ORDER BY $sort $dir;";
         $result= $this->db->query($sql);
         $resourceArray= array ();
-        for ($i= 0; $i < @ $this->recordCount($result); $i++) {
+        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
             array_push($resourceArray, @ $this->db->getRow($result));
         }
         return $resourceArray;
@@ -1375,7 +1375,7 @@ class DocumentParser {
               ORDER BY $sort $dir;";
         $result= $this->db->query($sql);
         $resourceArray= array ();
-        for ($i= 0; $i < @ $this->recordCount($result); $i++) {
+        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
             array_push($resourceArray, @ $this->db->getRow($result));
         }
         return $resourceArray;
@@ -1405,7 +1405,7 @@ class DocumentParser {
          ($sort ? " ORDER BY $sort $dir " : "") . " $limit ";
         $result= $this->db->query($sql);
         $resourceArray= array ();
-        for ($i= 0; $i < @ $this->recordCount($result); $i++) {
+        for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
             array_push($resourceArray, @ $this->db->getRow($result));
         }
         return $resourceArray;
@@ -1436,7 +1436,7 @@ class DocumentParser {
              ($sort ? " ORDER BY $sort $dir" : "") . " $limit ";
             $result= $this->db->query($sql);
             $resourceArray= array ();
-            for ($i= 0; $i < @ $this->recordCount($result); $i++) {
+            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
                 array_push($resourceArray, @ $this->db->getRow($result));
             }
             return $resourceArray;
@@ -1673,7 +1673,7 @@ class DocumentParser {
         $tblKeywordXref= $this->getFullTableName('keyword_xref');
         $sql= "SELECT keywords.keyword FROM " . $tblKeywords . " AS keywords INNER JOIN " . $tblKeywordXref . " AS xref ON keywords.id=xref.keyword_id WHERE xref.content_id = '$id'";
         $result= $this->db->query($sql);
-        $limit= $this->recordCount($result);
+        $limit= $this->db->getRecordCount($result);
         $keywords= array ();
         if ($limit > 0) {
             for ($i= 0; $i < $limit; $i++) {
@@ -1715,7 +1715,7 @@ class DocumentParser {
         } else { // not in cache so let's check the db
             $sql= "SELECT `name`, `snippet`, `properties` FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".`name`='" . $this->db->escape($snippetName) . "';";
             $result= $this->db->query($sql);
-            if ($this->recordCount($result) == 1) {
+            if ($this->db->getRecordCount($result) == 1) {
                 $row= $this->db->getRow($result);
                 $snippet= $this->snippetCache[$row['name']]= $row['snippet'];
                 $properties= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
@@ -1853,7 +1853,7 @@ class DocumentParser {
                 if ($tvsort)
                     $sql .= " ORDER BY $tvsort $tvsortdir ";
                 $rs= $this->db->query($sql);
-                $limit= @ $this->recordCount($rs);
+                $limit= @ $this->db->getRecordCount($rs);
                 for ($x= 0; $x < $limit; $x++) {
                     array_push($tvs, @ $this->db->getRow($rs));
                 }
@@ -1935,7 +1935,7 @@ class DocumentParser {
             if ($sort)
                 $sql .= " ORDER BY $sort $dir ";
             $rs= $this->db->query($sql);
-            for ($i= 0; $i < @ $this->recordCount($rs); $i++) {
+            for ($i= 0; $i < @ $this->db->getRecordCount($rs); $i++) {
                 array_push($result, @ $this->db->getRow($rs));
             }
 
@@ -2035,7 +2035,7 @@ class DocumentParser {
             // Query for the To ID
             $sql= "SELECT id FROM " . $this->getFullTableName("manager_users") . " WHERE username='$to';";
             $rs= $this->db->query($sql);
-            if ($this->recordCount($rs)) {
+            if ($this->db->getRecordCount($rs)) {
                 $rs= $this->db->getRow($rs);
                 $to= $rs['id'];
             }
@@ -2044,7 +2044,7 @@ class DocumentParser {
             // Query for the From ID
             $sql= "SELECT id FROM " . $this->getFullTableName("manager_users") . " WHERE username='$from';";
             $rs= $this->db->query($sql);
-            if ($this->recordCount($rs)) {
+            if ($this->db->getRecordCount($rs)) {
                 $rs= $this->db->getRow($rs);
                 $from= $rs['id'];
             }
@@ -2393,7 +2393,7 @@ class DocumentParser {
                 } else {
                     $sql= "SELECT `name`, `plugincode`, `properties` FROM " . $this->getFullTableName("site_plugins") . " WHERE `name`='" . $pluginName . "' AND `disabled`=0;";
                     $result= $this->db->query($sql);
-                    if ($this->recordCount($result) == 1) {
+                    if ($this->db->getRecordCount($result) == 1) {
                         $row= $this->db->getRow($result);
                         $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
                         $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
@@ -2458,7 +2458,7 @@ class DocumentParser {
             $sql= "SELECT $fields FROM $tbl $where $sort $limit;";
             $result= $this->db->query($sql);
             $resourceArray= array ();
-            for ($i= 0; $i < @ $this->recordCount($result); $i++) {
+            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
                 array_push($resourceArray, @ $this->db->getRow($result));
             }
             return $resourceArray;
@@ -2523,7 +2523,7 @@ class DocumentParser {
             $sql= "SELECT $fields FROM $tbl $where $sort $limit;";
             $result= $this->db->query($sql);
             $resourceArray= array ();
-            for ($i= 0; $i < @ $this->recordCount($result); $i++) {
+            for ($i= 0; $i < @ $this->db->getRecordCount($result); $i++) {
                 array_push($resourceArray, @ $this->db->getRow($result));
             }
             return $resourceArray;
