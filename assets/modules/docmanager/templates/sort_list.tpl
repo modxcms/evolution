@@ -37,6 +37,18 @@
     <style type="text/css">        
         li {
             cursor: pointer;
+            border: 1px solid #666;
+            background: #eee no-repeat 2px center;
+            margin: 2px 0;
+            list-style: none;
+            padding: 1px 4px 1px 24px;
+            min-height: 20px;
+        }
+        li.noChildren {
+            background-image: url(media/style[+theme+]/images/tree/page.gif);
+        }
+        li.hasChildren {
+            background-image: url(media/style[+theme+]/images/tree/folder.gif);
         }
     </style>
 </head>
