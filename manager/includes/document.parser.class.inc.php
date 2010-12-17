@@ -191,7 +191,7 @@ class DocumentParser {
             if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
             }
-            if (!$included) {
+            if (!$included || !is_array($this->config) || empty ($this->config)) {
                 include_once MODX_BASE_PATH . "/manager/processors/cache_sync.class.processor.php";
                 $cache = new synccache();
                 $cache->setCachepath(MODX_BASE_PATH . "/assets/cache/");
@@ -199,7 +199,7 @@ class DocumentParser {
                 $rebuilt = $cache->buildCache($this);
                 $included = false;
                 if($rebuilt && $included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
-                    $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
+                    $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
                 }
                 if(!$included) {
                     $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
