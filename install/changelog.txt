@@ -1,4 +1,4 @@
-This file shows the changes in recent releases of MODx. The most current release is usually the 
+This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 MODx Evolution 1.0.5 (TBD)
@@ -27,10 +27,11 @@ Bugfixes:
 * [#577] Fix Spanish UTF8 language file
 * [#760] Fix Document tree not loading in children
 * [#609] Fix web_groups and member_groups tables can have duplicate entries
-* [#364] Fix W3C validation problem with TV image output widget 
+* [#364] Fix W3C validation problem with TV image output widget
 * [#2957] Allow multibyte strings in QuickManager+ TV buttons
 * [#2711] Re-fix path bug in Image Editor
 * [#3060] Fix message count on Manager welcome page
+* [#1070] Fixed bug in DocManager where it would not create new TV values, only update existing ones
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -71,13 +72,14 @@ Additional Improvements & Updates:
 * [#3092] Remove db user and pw from hidden form fields in installer
 * [#194] Improve and fix bugs in markup on Edit Resource screen
 * [*3168] remove debugging output from DocManager when updating TVs
+* [#546] Improve DocManager usability by adding checkboxes to TVs and removing "ignore list", which was hard to use
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
 --------------------------------------------
 Security:
 --------------------------------------------
-* [#MODX-1964] WebLogin does not prevent brute force attack 
+* [#MODX-1964] WebLogin does not prevent brute force attack
 
 --------------------------------------------
 Bugfixes:
@@ -281,7 +283,7 @@ MODx Evolution 1.0.1 (rev 5946 - October 22, 2009)
 --------------------------------------------
 Security:
 --------------------------------------------
-* [#MODX-206]  Reduce vulnerability to CSRF via referrer check update. Additional protections coming in the future via tokenizing requests in the Manager. 
+* [#MODX-206]  Reduce vulnerability to CSRF via referrer check update. Additional protections coming in the future via tokenizing requests in the Manager.
 * [#MODX-1216] Remove "execute snippet" from mutate_snippets and mutate_modules
 * [#MODX-1227] Add referrer check configuration warning to Manager
 * [#MODX-1218] Enable CSRF check by default for sites that set headers properly
@@ -354,7 +356,7 @@ MODx Evolution 1.0.0 (rev 5601 - July 30, 2009)
 Bugfixes & Feature Requests:
 --------------------------------------------
 * [#MODX-583]  Alter email-related Manager settings by reloading from specific translations
-* [#MODX-1061] Link list fixed in TinyMCE 
+* [#MODX-1061] Link list fixed in TinyMCE
 * [#MODX-1060] Escape language string for the recycle bin to fix a problem with disappearing trees
 * [#MODX-1027] Fix broken images with Image TV Preview plugin when no image selected
 * [#MODX-1033] Implement consistent dates throughout the Manager and add a date format setting
@@ -427,7 +429,7 @@ Bugfixes & Feature Requests:
 * [#MODX-593] Add missing summary/introtext to Weblink manager page
 * [#MODX-220] Manager language updates for sorting and formatting consistency across languages
 * [#MODX-393] Show Protected Pages issue solved by Thomas Leiritz
-* [#MODX-516] and [#MODX-397] 
+* [#MODX-516] and [#MODX-397]
     - fix to display of Access Permissions depending on Role permissions
     - fix to preserve parent after new document save permissions error
 * [#MODX-397] Fix logic: creating documents inside restricted containers
@@ -471,7 +473,7 @@ Additional Improvements & Updates:
 * Remove legacy code no longer needed
     - Removed QuickEdit module (instructions only)
 	- Removed News Publisher snippet (did not support TVs)
-	- Prototype and Scriptaculous JS and SLLists.class.php from core distribution, no longer used 
+	- Prototype and Scriptaculous JS and SLLists.class.php from core distribution, no longer used
 	- Update demo content to remove Prototype/Scriptaculous dependencies
 * Convert manager to use Mootools exclusively
 	- Manager Login page
@@ -498,7 +500,7 @@ Additional Improvements & Updates:
  	- Moving Manager login/welcome/blocked templates into /assets/templates/manager
 	- Moving Manager Help pages into /assets/templates/help
 * Manager RSS feed improvements
-	- Updated RSS feeds to more manageable number of entries for welcome page. 
+	- Updated RSS feeds to more manageable number of entries for welcome page.
  	- Updated snoopy class to latest version 1.2.4 (used by magpierss).
 
 For earlier changelog entries, please see the /install/changelog.txt file included with the MODx 0.9.6.3 distribution: http://modxcms.com/download/#legacy 

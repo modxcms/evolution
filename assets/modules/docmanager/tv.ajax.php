@@ -31,8 +31,8 @@ $dm->getTheme();
 				if($i>0 && $i<$limit) $output .= '<tr><td colspan="2"><div class="split"></div></td></tr>';
 				
 				$output.='<tr style="height: 24px;">
-				<td align="left" valign="top" width="150">
-					<span class=\'warning\'>'.$row['caption'].'</span><br /><span class=\'comment\'>'.$row['description'].'</span>
+				<td align="left" valign="top" width="200">
+					<span class=\'warning\'><input type=\'checkbox\' name=\'update_tv_' . $row['id'] . '\' id=\'cb_update_tv_' . $row['id'] . '\' value=\'yes\' />&nbsp;'.$row['caption'].'</span><br /><span class=\'comment\'>'.$row['description'].'</span>
 				</td>
 				<td valign="top" style="position:relative">';
 				$base_url = str_replace("assets/modules/docmanager/", "", MODX_BASE_URL);
@@ -40,7 +40,7 @@ $dm->getTheme();
 				$output.= '</td></tr>';
 		}
 		$output.='</table>';
-		$output.= '<br />'.$dm->lang['DM_tv_ignore_tv'].' <input type="text" id="ignoreTV" name="ignoreTV" size="50" value="" />';
+		//$output.= '<br />'.$dm->lang['DM_tv_ignore_tv'].' <input type="text" id="ignoreTV" name="ignoreTV" size="50" value="" />';
  	} else {
  		print $dm->lang['DM_tv_no_tv'];
  	}
