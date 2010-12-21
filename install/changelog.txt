@@ -29,6 +29,7 @@ Bugfixes:
 * [#609] Fix web_groups and member_groups tables can have duplicate entries
 * [#364] Fix W3C validation problem with TV image output widget 
 * [#2957] Allow multibyte strings in QuickManager+ TV buttons
+* [#2711] Re-fix path bug in Image Editor
 
 --------------------------------------------
 Additional Improvements & Updates:
