@@ -30,6 +30,7 @@ Bugfixes:
 * [#364] Fix W3C validation problem with TV image output widget 
 * [#2957] Allow multibyte strings in QuickManager+ TV buttons
 * [#2711] Re-fix path bug in Image Editor
+* [#3060] Fix message count on Manager welcome page
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -69,6 +70,7 @@ Additional Improvements & Updates:
 * [#835] @INHERIT improved to work with @FILE, and to allow additional data after the @INHERIT
 * [#3092] Remove db user and pw from hidden form fields in installer
 * [#194] Improve and fix bugs in markup on Edit Resource screen
+* [*3168] remove debugging output from DocManager when updating TVs
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
