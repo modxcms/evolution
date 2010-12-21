@@ -142,7 +142,7 @@ class DocManagerBackend {
 			$tmplVars = array ();
 			foreach ($_POST as $key => $value) {
 				if (substr($key, 0, 2) == 'tv') {
-					echo $key;
+					//echo $key;
 					$tvKeyName = substr($key, 2);
 					if (strpos($key,'_prefix') !== false)
 						continue;
