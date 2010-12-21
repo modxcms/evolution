@@ -66,6 +66,8 @@ Additional Improvements & Updates:
 * [#3062] Corrections to ActionList item names (given that Documents are now Resources and Resources are now Elements)
 * [#3115] Automatically regenerate siteCache if it not found
 * [#835] @INHERIT improved to work with @FILE, and to allow additional data after the @INHERIT
+* [#3092] Remove db user and pw from hidden form fields in installer
+* [#194] Improve and fix bugs in markup on Edit Resource screen
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
