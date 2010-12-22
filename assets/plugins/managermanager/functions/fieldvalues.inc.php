@@ -340,5 +340,42 @@ function mm_synch_fields($fields, $roles='', $templates='') {
 
 
 
+//---------------------------------------------------------------------------------
+// mm_set_clear_cache
+// Sets a default value for a empty cache field when editing a document everything
+//---------------------------------------------------------------------------------
+function mm_set_clear_cache($value='', $roles='', $templates='') {
 
-?>
+	global $mm_fields, $modx;
+	$e = &$modx->Event;
+		
+	// 85 =
+	// 4  =
+	// 27 = Edit resource
+	
+	$allowed_actions = array('85','4','27');
+	if (!in_array($modx->manager->action, $allowed_actions)) {
+		return;
+	} 
+	if (useThisRule($roles, $templates)) {
+		$doc_id = $_REQUEST['id'];
+		
+		$output = " // ----------- mm_set_clear_cache -------------- \n";
+		
+		$new_value = ($value)?'1':'0';
+		$output .= '$j("input[name=syncsite]").val("'.$new_value.'"); '."\n";
+		if ($value) {
+			$output .= '$j("input[name=syncsitecheck]").attr("checked", "checked"); '."\n";
+		} else {
+			$output .= '$j("input[name=syncsitecheck]").removeAttr("checked"); '."\n";
+		}
+		
+		$cache_file = MODX_BASE_PATH . 'assets/cache/docid_' . $doc_id . '.pageCache.php';
+		if(!file_exists($cache_file)) {
+			$output .= '$j("input[name=syncsitecheck]").attr("disabled", "disabled"); '."\n";
+		}
+		
+		$e->output($output . "\n");	
+	} 
+	
+}
