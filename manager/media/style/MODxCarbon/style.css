@@ -768,7 +768,7 @@ a.hometblink:hover {
 
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu {
-	background: #e4e4e4 url(images/misc/menubg.png) repeat scroll 330px -8px;
+	background: #e4e4e4 url(images/misc/menubg.png);
 }
 #Navcontainer {
 	padding: 0 10px;
