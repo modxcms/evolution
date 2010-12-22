@@ -31,27 +31,16 @@ function mm_default($field, $value='', $roles='', $templates='', $eval=false) {
 		
 		
 		// Work out the correct date time format based on the config setting
-		switch($modx->config['datetime_format']) {
-			case 'dd-mm-YYYY':
-				$date_format = 'd-m-Y';
-			break;	
-			case 'mm/dd/YYYY':
-				$date_format = 'm-d-Y';
-			break;
-			case 'YYYY/mm/dd':
-				$date_format = 'Y-m-d';
-			break;
-		}
-		
+		$date_format = $modx->toDateFormat(null, 'formatOnly');
 		
 		switch ($field) {
 			case 'pub_date':
-				$new_value = ($new_value=='') ? date("$date_format H:i:s") : $new_value;
+				$new_value = ($new_value=='') ? strftime($date_format . ' %H:%M:%S') : $new_value;
 				$output .= '$j("input[name=pub_date]").val("'.jsSafe($new_value).'"); '."\n";
 			break;
 			
 			case 'unpub_date':
-				$new_value = ($new_value=='') ? date("$date_format H:i:s") : $new_value;
+				$new_value = ($new_value=='') ? strftime($date_format . ' %H:%M:%S') : $new_value;
 				$output .= '$j("input[name=unpub_date]").val("'.jsSafe($new_value).'"); '."\n";
 			break;
 			
@@ -230,6 +219,7 @@ function mm_inherit($fields, $roles='', $templates='') {
 			// dbname $dbname			
 			// newvalue $newvalue 	
 				";
+			$date_format = $modx->toDateFormat(null, 'formatOnly');
  						 
 			switch ($field) {
 				
@@ -249,7 +239,7 @@ function mm_inherit($fields, $roles='', $templates='') {
 				
 				case 'pub_date':
 				case 'unpub_date':
-					$output .=  '$j("input[name='.$fieldname.']").val("'.date('d-m-Y H:i:s', $newvalue).'"); ';
+					$output .=  '$j("input[name='.$fieldname.']").val("'.strftime($date_format . ' %H:%M:%S', $newvalue).'"); ';
 				break;					
 						
 				default:
