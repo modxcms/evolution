@@ -40,7 +40,7 @@ class DocManagerBackend {
     	$resource = array();
 
     	if (is_numeric($id)) {
-			$query = 'SELECT id , pagetitle , parent , menuindex FROM '. $this->modx->getFullTableName('site_content') .' WHERE parent=' . $id . ' ORDER BY menuindex ASC';
+			$query = 'SELECT id , pagetitle , parent , menuindex, hidemenu, published FROM '. $this->modx->getFullTableName('site_content') .' WHERE parent=' . $id . ' ORDER BY menuindex ASC';
 			if (!$rs = $this->modx->db->query($query)) {
 				return false;
 			}
@@ -63,7 +63,9 @@ class DocManagerBackend {
 				$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_nochildren'];
 			} else {
 				foreach ($resource as $item) {
-					$this->dm->ph['sort.options'] .= '<li id="item_' . $item['id'] . '" class="sort">' . $item['pagetitle'] . '</li>';
+					$hidemenu  = ($item['hidemenu']==1)  ? ' hidemenu'  : '';
+					$published = ($item['published']==0) ? ' unpublished' : '';
+					$this->dm->ph['sort.options'] .= '<li id="item_' . $item['id'] . '" class="sort' . $hidemenu . $published . '">' . $item['pagetitle'] . '</li>';
 	
 				}
 			}

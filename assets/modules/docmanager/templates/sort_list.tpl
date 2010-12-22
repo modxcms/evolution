@@ -36,8 +36,18 @@
     </script>
     <style type="text/css">        
         li {
-            cursor: pointer;
+            cursor:move;font-weight:bold;
+            background-image:url("media/style[+theme+]/images/misc/fade.gif");
+            background-repeat:repeat-x;
+            background-color:#fcfcfc;
+            padding:3px 5px;
+            width:300px;
+            border:1px solid #ccc;
+            margin-bottom:5px;
         }
+        li.hidemenu  {color:#777;font-weight:normal;background-image:none;}
+        li.unpublished {color:#aaa;font-weight:normal;background-image:none;font-style:italic;background-color:#ffffe0;}
+        li:hover     {background-image:none;background-color:#ccc;}
     </style>
 </head>
 <body>
