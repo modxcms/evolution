@@ -130,7 +130,7 @@ class DBAPI {
       }
       elseif ($mysql_var >= '4.1.0')
       {
-        sql_query('SET NAMES ' . $this->config['charset']);
+        $this->query('SET NAMES ' . $this->config['charset']);
         $s = mysql_real_escape_string($s, $this->conn);
       }
       elseif ($this->config['charset']=='utf8' && $conn_charset=='ujis')
