@@ -19,7 +19,7 @@ class Wayfinder {
 	var $parentTree = array();
 	var $hasChildren = array();
 	var $placeHolders = array(
-		'rowLevel' => array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.attributes+]','[+wf.docid+]','[+wf.introtext+]','[+wf.description+]','[+wf.subitemcount+]'),
+		'rowLevel' => array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]','[+wf.link+]','[+wf.title+]','[+wf.linktext+]','[+wf.id+]','[+wf.alias+]','[+wf.attributes+]','[+wf.docid+]','[+wf.introtext+]','[+wf.description+]','[+wf.subitemcount+]'),
 		'wrapperLevel' => array('[+wf.wrapper+]','[+wf.classes+]','[+wf.classnames+]'),
 		'tvs' => array(),
 	);
@@ -178,7 +178,7 @@ class Wayfinder {
             $useId = '';
         }
 		//Load row values into placholder array
-        $phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
+        $phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
 		//If tvs are used add them to the placeholder array
 		if (!empty($this->tvList)) {
 			$usePlaceholders = array_merge($this->placeHolders['rowLevel'],$this->placeHolders['tvs']);
