@@ -4,11 +4,10 @@
     * Function:     Language file.
     * Encoding:     UTF8
     * Author:       Henrik Nielsen - Proofreading: Mads Vestmar
-    * Date:         23 may 2010 22.50 
+    * Date:         23 dec 2010 00.26 
     * Version:      1.0.0
-    * MODx version: Evolution 1.0.4
+    * MODx version: Evolution 1.0.5
 */
-//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'da'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
@@ -98,6 +97,8 @@ $_lang["chunk_code"] = 'Chunk kode (html)';
 $_lang["chunk_multiple_id"] = 'Fejl: Flere chunks har det samme unikke ID.';
 $_lang["chunk_no_exist"] = 'Chunk eksisterer ikke.';
 $_lang["cleaningup"] = 'Rydder op';
+$_lang["clean_uploaded_filename"] = 'Brug omskrivning af filnavne ved upload';
+$_lang["clean_uploaded_filename_message"] = 'Vil du bruge standardindstillingerne eller vil du bruge omskrivningsindstillingerne så filnavne ikke indeholder specialtegn efter upload. (Omskrivningen af filnavne bevare punktummer)';
 $_lang["clear_log"] = 'Slet log';
 $_lang["click_to_context"] = 'Klik for at se menuen';
 $_lang["click_to_edit_title"] = 'Klik for at redigere denne post';
@@ -116,6 +117,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Websitets fejlside er ikke til r�
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Det betyder at fejlsiden enten ikke eksisterer eller, at den ikke kan tilgås af normale besøgende. Det kan medføre, at systemet omstiller uden at stoppe, og vil samtidig resultere i, at websitets logfiler til sidst vil fylde for meget. Husk at kontrollere, at der ikke er nogle web bruger grupper, der er sammenkædet med siden.';
 $_lang["configcheck_errorpage_unpublished"] = 'Websitets fejlside er enten ikke oprettet eller ikke publiceret.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Det betyder, at websitets fejlside ikke kan tilgås af normale besøgende. Publicer siden eller kontroller, at siden er tildelt en eksisterende ressource under Værktøjer &gt; Konfiguration.';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Vis ikke dette igen.</em></a>';
 $_lang["configcheck_images"] = 'Images mappen er ikke skrivbar';
 $_lang["configcheck_images_msg"] = 'Images mappen er ikke oprettet, eller er ikke skrivbar. Det betyder, at du ikke kan indsætte billeder!';
 $_lang["configcheck_installer"] = 'Install mappen eksisterer stadig';
@@ -128,13 +130,17 @@ $_lang["configcheck_php_gdzip"] = 'GD og/eller Zip udvidelserne i PHP blev ikke 
 $_lang["configcheck_php_gdzip_msg"] = 'MODx behøver GD og Zip udvidelserne i PHP. Selvom MODx vil kunne bruges uden disse, vil du ikke få det fulde udbytte af den indbyggede filbrowser, billede editeringen eller Captcha til brug ved login.';
 $_lang["configcheck_register_globals"] = 'register_globals er sat til ON i din php.ini fil';
 $_lang["configcheck_register_globals_msg"] = 'Det betyder, at websitet kan blive mere udsat for "Cross Site Scripting" (XSS) angreb. Du bør kontakte system administratoren eller hosting firmaet for at deaktivere dette, såfremt du ikke selv kan gøre det.';
+$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher Plugin er fundet';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Slet TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Deaktiver TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'TemplateSwitcher plugin\'en er kendt for at forårsage problemer med cashing og hastighed, og bør kun bruges såfremt at funktionaliteten er påkrævet på websitet.';
 $_lang["configcheck_title"] = 'Konfigurationscheck';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Websitets "Ikke autoriseret" side er ikke publiceret eller er ikke oprettet.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Det betyder, at den "ikke autoriseret" side ikke kan tilgås af almindelige besøgende eller ikke eksisterer. Det kan medføre, at systemet omstiller uden at stoppe, og vil samtidigt resultere i, at websitets logfiler til sidst vil fylde for meget. Kontroller også at der ikke er tildelt nogle web bruger grupper til siden.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Den "ikke autoriseret" side, som er defineret i konfigurationsindstillingerne er ikke publiceret.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Det betyder at den "ikke autoriseret" side ikke kan tilgås af normale besøgende. Publicer siden eller tildel den til en eksisterende ressource under Værktøjer &gt; Konfiguration.';
 $_lang["configcheck_validate_referer"] = 'Sikkerhedsadvarsel: HTTP Header validering';
-$_lang["configcheck_validate_referer_msg"] = "Konfigurationsindstillingen for <strong>Valider HTTP_REFERER headers?</strong> er slået fra. Det anbefales at slå den til. <a href=\"index.php?a=17\">Gå til konfigurationsindstillingerne</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Vis ikke denne advarsel igen.</em></a>";
+$_lang["configcheck_validate_referer_msg"] = "Konfigurationsindstillingen for <strong>Valider HTTP_REFERER headers?</strong> er slået fra. Det anbefales at slå den til. <a href=\"index.php?a=17\">Gå til konfigurationsindstillingerne</a>";
 $_lang["configcheck_warning"] = 'Konfigurationsadvarsel:';
 $_lang["configcheck_what"] = 'Hvad betyder dette?';
 $_lang["confirm_block"] = 'Er du sikker på, at du vil blokere denne bruger?';
@@ -678,6 +684,7 @@ $_lang["require_tagname"] = 'Et navn på tag\'et er påkrævet';
 $_lang["require_tagvalue"] = 'En værdi på tag\'et er påkrævet';
 $_lang["reset"] = 'Nulstil';
 $_lang["reset_failedlogins"] = 'nulstil';
+$_lang["reserved_name_warning"] = 'Du har brugt et navn der er reserveret.';
 $_lang["resource"] = 'Ressource';
 $_lang["resource_alias"] = 'URL alias';
 $_lang["resource_alias_help"] = 'Indtast URL aliaset så ressoursen kan ses på f.eks. http://domæne.tld/alias. Dette virker kun såfremt, at søgevenlige URL\'er er aktiveret i websitets konfiguration.';
