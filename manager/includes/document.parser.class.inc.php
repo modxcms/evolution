@@ -193,7 +193,7 @@ class DocumentParser {
             }
             if (!$included) {
                 $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
-                while ($row= $this->fetchRow($result, 'both')) {
+                while ($row= $this->db->getRow($result, 'both')) {
                     $this->config[$row[0]]= $row[1];
                 }
             }
@@ -226,7 +226,7 @@ class DocumentParser {
                     else
                         $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $id . '\'';
                     $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $query);
-                    while ($row= $this->fetchRow($result, 'both'))
+                    while ($row= $this->db->getRow($result, 'both'))
                         $usrSettings[$row[0]]= $row[1];
                     if (isset ($usrType))
                         $_SESSION[$usrType . 'UsrConfigSet']= $usrSettings; // store user settings in session
@@ -239,7 +239,7 @@ class DocumentParser {
                 } else {
                     $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $mgrid . '\'';
                     if ($result= $this->db->query('SELECT setting_name, setting_value FROM ' . $query)) {
-                        while ($row= $this->fetchRow($result, 'both')) {
+                        while ($row= $this->db->getRow($result, 'both')) {
                             $usrSettings[$row[0]]= $row[1];
                         }
                         $_SESSION['mgrUsrConfigSet']= $musrSettings; // store user settings in session
@@ -559,7 +559,7 @@ class DocumentParser {
             if (@ !$result= $this->db->query($sql)) {
                 $this->messageQuit("Failed to find publishing timestamps", $sql);
             }
-            $tmpRow= $this->fetchRow($result);
+            $tmpRow= $this->db->getRow($result);
             $minpub= $tmpRow['minpub'];
             if ($minpub != NULL) {
                 $timesArr[]= $minpub;
@@ -569,7 +569,7 @@ class DocumentParser {
             if (@ !$result= $this->db->query($sql)) {
                 $this->messageQuit("Failed to find publishing timestamps", $sql);
             }
-            $tmpRow= $this->fetchRow($result);
+            $tmpRow= $this->db->getRow($result);
             $minunpub= $tmpRow['minunpub'];
             if ($minunpub != NULL) {
                 $timesArr[]= $minunpub;
@@ -703,7 +703,7 @@ class DocumentParser {
                         $this->chunkCache[$matches[1][$i]]= "";
                         $replace[$i]= "";
                     } else {
-                        $row= $this->fetchRow($result);
+                        $row= $this->db->getRow($result);
                         $this->chunkCache[$matches[1][$i]]= $row['snippet'];
                         $replace[$i]= $row['snippet'];
                     }
@@ -810,7 +810,7 @@ class DocumentParser {
                     $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->db->query($sql);
                     if ($this->recordCount($result) == 1) {
-                        $row= $this->fetchRow($result);
+                        $row= $this->db->getRow($result);
                         $snippets[$i]['name']= $row['name'];
                         $snippets[$i]['snippet']= $this->snippetCache[$row['name']]= $row['snippet'];
                         $snippets[$i]['properties']= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
@@ -954,7 +954,7 @@ class DocumentParser {
         }
 
         # this is now the document :) #
-        $documentObject= $this->fetchRow($result);
+        $documentObject= $this->db->getRow($result);
 
         // load TVs and merge with document - Orig by Apodigm - Docvars
         $sql= "SELECT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
@@ -966,7 +966,7 @@ class DocumentParser {
         $rowCount= $this->recordCount($rs);
         if ($rowCount > 0) {
             for ($i= 0; $i < $rowCount; $i++) {
-                $row= $this->fetchRow($rs);
+                $row= $this->db->getRow($rs);
                 $tmplvars[$row['name']]= array (
                     $row['name'],
                     $row['value'],
@@ -1190,7 +1190,7 @@ class DocumentParser {
                     $this->messageQuit("Incorrect number of templates returned from database", $sql);
                 }
                 elseif ($rowCount == 1) {
-                    $row= $this->fetchRow($result);
+                    $row= $this->db->getRow($result);
                     $this->documentContent= $row['content'];
                 }
             }
@@ -1350,7 +1350,7 @@ class DocumentParser {
         $result= $this->db->query($sql);
         $resourceArray= array ();
         for ($i= 0; $i < @ $this->recordCount($result); $i++) {
-            array_push($resourceArray, @ $this->fetchRow($result));
+            array_push($resourceArray, @ $this->db->getRow($result));
         }
         return $resourceArray;
     }
@@ -1377,7 +1377,7 @@ class DocumentParser {
         $result= $this->db->query($sql);
         $resourceArray= array ();
         for ($i= 0; $i < @ $this->recordCount($result); $i++) {
-            array_push($resourceArray, @ $this->fetchRow($result));
+            array_push($resourceArray, @ $this->db->getRow($result));
         }
         return $resourceArray;
     }
@@ -1407,7 +1407,7 @@ class DocumentParser {
         $result= $this->db->query($sql);
         $resourceArray= array ();
         for ($i= 0; $i < @ $this->recordCount($result); $i++) {
-            array_push($resourceArray, @ $this->fetchRow($result));
+            array_push($resourceArray, @ $this->db->getRow($result));
         }
         return $resourceArray;
     }
@@ -1438,7 +1438,7 @@ class DocumentParser {
             $result= $this->db->query($sql);
             $resourceArray= array ();
             for ($i= 0; $i < @ $this->recordCount($result); $i++) {
-                array_push($resourceArray, @ $this->fetchRow($result));
+                array_push($resourceArray, @ $this->db->getRow($result));
             }
             return $resourceArray;
         }
@@ -1479,7 +1479,7 @@ class DocumentParser {
                     AND ($access)
                     LIMIT 1 ";
             $result= $this->db->query($sql);
-            $pageInfo= @ $this->fetchRow($result);
+            $pageInfo= @ $this->db->getRow($result);
             return $pageInfo;
         }
     }
@@ -1504,7 +1504,7 @@ class DocumentParser {
         if ($this->currentSnippet) {
             $tbl= $this->getFullTableName("site_snippets");
             $rs= $this->db->query("SELECT id FROM $tbl WHERE name='" . $this->db->escape($this->currentSnippet) . "' LIMIT 1");
-            $row= @ $this->fetchRow($rs);
+            $row= @ $this->db->getRow($rs);
             if ($row['id'])
                 return $row['id'];
         }
@@ -1676,7 +1676,7 @@ class DocumentParser {
         $keywords= array ();
         if ($limit > 0) {
             for ($i= 0; $i < $limit; $i++) {
-                $row= $this->fetchRow($result);
+                $row= $this->db->getRow($result);
                 $keywords[]= $row['keyword'];
             }
         }
@@ -1715,7 +1715,7 @@ class DocumentParser {
             $sql= "SELECT * FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . $this->db->escape($snippetName) . "';";
             $result= $this->db->query($sql);
             if ($this->recordCount($result) == 1) {
-                $row= $this->fetchRow($result);
+                $row= $this->db->getRow($result);
                 $snippet= $this->snippetCache[$row['name']]= $row['snippet'];
                 $properties= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
             } else {
@@ -1854,7 +1854,7 @@ class DocumentParser {
                 $rs= $this->db->query($sql);
                 $limit= @ $this->recordCount($rs);
                 for ($x= 0; $x < $limit; $x++) {
-                    array_push($tvs, @ $this->fetchRow($rs));
+                    array_push($tvs, @ $this->db->getRow($rs));
                 }
 
                 // get default/built-in template variables
@@ -1935,7 +1935,7 @@ class DocumentParser {
                 $sql .= " ORDER BY $sort $dir ";
             $rs= $this->db->query($sql);
             for ($i= 0; $i < @ $this->recordCount($rs); $i++) {
-                array_push($result, @ $this->fetchRow($rs));
+                array_push($result, @ $this->db->getRow($rs));
             }
 
             // get default/built-in template variables
@@ -2035,7 +2035,7 @@ class DocumentParser {
             $sql= "SELECT id FROM " . $this->getFullTableName("manager_users") . " WHERE username='$to';";
             $rs= $this->db->query($sql);
             if ($this->recordCount($rs)) {
-                $rs= $this->fetchRow($rs);
+                $rs= $this->db->getRow($rs);
                 $to= $rs['id'];
             }
         }
@@ -2044,7 +2044,7 @@ class DocumentParser {
             $sql= "SELECT id FROM " . $this->getFullTableName("manager_users") . " WHERE username='$from';";
             $rs= $this->db->query($sql);
             if ($this->recordCount($rs)) {
-                $rs= $this->fetchRow($rs);
+                $rs= $this->db->getRow($rs);
                 $from= $rs['id'];
             }
         }
@@ -2117,7 +2117,7 @@ class DocumentParser {
         $rs= $this->db->query($sql);
         $limit= mysql_num_rows($rs);
         if ($limit == 1) {
-            $row= $this->fetchRow($rs);
+            $row= $this->db->getRow($rs);
             if (!$row["usertype"])
                 $row["usertype"]= "manager";
             return $row;
@@ -2135,7 +2135,7 @@ class DocumentParser {
         $rs= $this->db->query($sql);
         $limit= mysql_num_rows($rs);
         if ($limit == 1) {
-            $row= $this->fetchRow($rs);
+            $row= $this->db->getRow($rs);
             if (!$row["usertype"])
                 $row["usertype"]= "web";
             return $row;
@@ -2167,7 +2167,7 @@ class DocumentParser {
                     $dgn= array ();
                     $tbl= $this->getFullTableName("documentgroup_names");
                     $ds= $this->db->query("SELECT name FROM $tbl WHERE id IN (" . implode(",", $dg) . ")");
-                    while ($row= $this->fetchRow($ds))
+                    while ($row= $this->db->getRow($ds))
                         $dgn[count($dgn)]= $row['name'];
                     // cache docgroup names to session
                     if ($this->isFrontend())
@@ -2189,7 +2189,7 @@ class DocumentParser {
             $ds= $this->db->query("SELECT * FROM $tbl WHERE id='" . $this->getLoginUserID() . "'");
             $limit= mysql_num_rows($ds);
             if ($limit == 1) {
-                $row= $this->fetchRow($ds);
+                $row= $this->db->getRow($ds);
                 if ($row["password"] == md5($oldPwd)) {
                     if (strlen($newPwd) < 6) {
                         return "Password is too short!";
@@ -2393,7 +2393,7 @@ class DocumentParser {
                     $sql= "SELECT * FROM " . $this->getFullTableName("site_plugins") . " WHERE name='" . $pluginName . "' AND disabled=0;";
                     $result= $this->db->query($sql);
                     if ($this->recordCount($result) == 1) {
-                        $row= $this->fetchRow($result);
+                        $row= $this->db->getRow($result);
                         $pluginCode= $this->pluginCache[$row['name']]= $row['plugincode'];
                         $pluginProperties= $this->pluginCache[$row['name'] . "Props"]= $row['properties'];
                     } else {
@@ -2458,7 +2458,7 @@ class DocumentParser {
             $result= $this->db->query($sql);
             $resourceArray= array ();
             for ($i= 0; $i < @ $this->recordCount($result); $i++) {
-                array_push($resourceArray, @ $this->fetchRow($result));
+                array_push($resourceArray, @ $this->db->getRow($result));
             }
             return $resourceArray;
         }
@@ -2523,7 +2523,7 @@ class DocumentParser {
             $result= $this->db->query($sql);
             $resourceArray= array ();
             for ($i= 0; $i < @ $this->recordCount($result); $i++) {
-                array_push($resourceArray, @ $this->fetchRow($result));
+                array_push($resourceArray, @ $this->db->getRow($result));
             }
             return $resourceArray;
         }
