@@ -539,7 +539,7 @@ class Qm {
                             
                         $head .= '    
                             {                      
-                        		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false});
+                    		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false, opacity:0.5, transition:"fade", speed:150});
                         	
                             	// Bindings
                             	$().bind("cbox_open", function(){
