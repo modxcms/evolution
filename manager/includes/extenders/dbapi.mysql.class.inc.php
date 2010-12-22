@@ -117,9 +117,29 @@ class DBAPI {
    }
 
    function escape($s) {
-      if (function_exists('mysql_real_escape_string') && $this->conn) {
+      if ($this->isConnected!==true)
+      {
+         $this->connect();
+      }
+      $mysql_var = implode('.', array_map('intval', explode('.', mysql_get_server_info($this->conn))));
+      $conn_charset = mysql_client_encoding($this->conn);
+      if ($mysql_var >= '5.0.7' && function_exists('mysql_set_charset'))
+      {
+        mysql_set_charset($this->config['charset']);
+        $s = mysql_real_escape_string($s, $this->conn);
+      }
+      elseif ($this->config['charset']=='utf8' && $conn_charset=='utf8')
+      {
          $s = mysql_real_escape_string($s, $this->conn);
-      } else {
+      }
+      elseif ($this->config['charset']=='utf8' && $conn_charset=='ujis')
+      {
+        $s = mb_convert_encoding($s, 'eucjp-win', 'utf-8');
+        $s = mysql_real_escape_string($s, $this->conn);
+        $s = mb_convert_encoding($s, 'utf-8', 'eucjp-win');
+      }
+      else
+      {
          $s = mysql_escape_string($s);
       }
       return $s;
