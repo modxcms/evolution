@@ -581,14 +581,9 @@ class DocumentParser {
                 $nextevent= 0;
             }
 
-            $basepath= $this->config["base_path"] . "assets/cache";
-            $fp= @ fopen($basepath . "/sitePublishing.idx.php", "wb");
-            if ($fp) {
-                @ flock($fp, LOCK_EX);
-                @ fwrite($fp, "<?php \$cacheRefreshTime=$nextevent; ?>");
-                @ flock($fp, LOCK_UN);
-                @ fclose($fp);
-            }
+            $cache_path= $this->config["base_path"] . 'assets/cache/sitePublishing.idx.php';
+            $content = '<?php $cacheRefreshTime=' . $nextevent . '; ?>';
+            file_put_contents($cache_path, $content);
         }
     }
 
@@ -598,20 +593,19 @@ class DocumentParser {
             $basepath= $this->config["base_path"] . "assets/cache";
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
-            if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . ".pageCache.php", "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $sql= "SELECT document_group FROM " . $this->getFullTableName("document_groups") . " WHERE document='" . $this->documentIdentifier . "'";
                 $docGroups= $this->db->getColumn("document_group", $sql);
 
 				// Attach Document Groups and Scripts
-				if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(",", $docGroups);
+            if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(',', $docGroups);
 
                 $docObjSerial= serialize($this->documentObject);
                 $cacheContent= $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
-                fputs($fp, "<?php die('Unauthorized access.'); ?>$cacheContent");
-                fclose($fp);
+            $cacheContent = "<?php die('Unauthorized access.'); ?>" . $cacheContent;
+            $page_cache_path = $basepath . '/docid_' . $this->documentIdentifier . '.pageCache.php';
+            file_put_contents($page_cache_path, $cacheContent);
             }
-        }
 
         // Useful for example to external page counters/stats packages
         $this->invokeEvent('OnWebPageComplete');
