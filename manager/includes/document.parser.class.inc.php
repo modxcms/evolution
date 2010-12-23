@@ -4,13 +4,6 @@
  *	Function: This class contains the main document parsing functions
  *
  */
-
-$upgradephp_path = MODX_MANAGER_PATH . 'includes/extenders/upgradephp/';
-if (!version_compare('5.3.0', phpversion(),'<')) include_once $upgradephp_path . 'php0530.php';
-if (!version_compare('5.2.0', phpversion(),'<')) include_once $upgradephp_path . 'php0520.php';
-if (!version_compare('5.1.0', phpversion(),'<')) include_once $upgradephp_path . 'php0510.php';
-if (!version_compare('5.0.0', phpversion(),'<')) include_once $upgradephp_path . 'php0500.php';
-
 class DocumentParser {
     var $db; // db object
     var $event, $Event; // event object
@@ -198,11 +191,22 @@ class DocumentParser {
             if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
             }
+            if (!$included || !is_array($this->config) || empty ($this->config)) {
+                include_once MODX_BASE_PATH . "/manager/processors/cache_sync.class.processor.php";
+                $cache = new synccache();
+                $cache->setCachepath(MODX_BASE_PATH . "/assets/cache/");
+                $cache->setReport(false);
+                $rebuilt = $cache->buildCache($this);
+                $included = false;
+                if($rebuilt && $included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
+                    $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
+                }
             if (!$included) {
                 $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
                 while ($row= $this->db->getRow($result, 'both')) {
                     $this->config[$row[0]]= $row[1];
                 }
+            }
             }
 
             // added for backwards compatibility - garry FS#104
@@ -373,7 +377,7 @@ class DocumentParser {
         $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
         if (file_exists($cacheFile)) {
             $this->documentGenerated= 0;
-            $flContent = file_get_contents($cacheFile, false);
+            $flContent= implode("", file($cacheFile));
             $flContent= substr($flContent, 37); // remove php header
             $a= explode("<!--__MODxCacheSpliter__-->", $flContent, 2);
             if (count($a) == 1)
@@ -588,9 +592,14 @@ class DocumentParser {
                 $nextevent= 0;
             }
 
-            $cache_path= $this->config["base_path"] . 'assets/cache/sitePublishing.idx.php';
-            $content = '<?php $cacheRefreshTime=' . $nextevent . '; ?>';
-            file_put_contents($cache_path, $content);
+            $basepath= $this->config["base_path"] . "assets/cache";
+            $fp= @ fopen($basepath . "/sitePublishing.idx.php", "wb");
+            if ($fp) {
+                @ flock($fp, LOCK_EX);
+                @ fwrite($fp, "<?php \$cacheRefreshTime=$nextevent; ?>");
+                @ flock($fp, LOCK_UN);
+                @ fclose($fp);
+            }
         }
     }
 
@@ -600,19 +609,20 @@ class DocumentParser {
             $basepath= $this->config["base_path"] . "assets/cache";
             // invoke OnBeforeSaveWebPageCache event
             $this->invokeEvent("OnBeforeSaveWebPageCache");
+            if ($fp= @ fopen($basepath . "/docid_" . $this->documentIdentifier . ".pageCache.php", "w")) {
                 // get and store document groups inside document object. Document groups will be used to check security on cache pages
                 $sql= "SELECT document_group FROM " . $this->getFullTableName("document_groups") . " WHERE document='" . $this->documentIdentifier . "'";
                 $docGroups= $this->db->getColumn("document_group", $sql);
 
 				// Attach Document Groups and Scripts
-            if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(',', $docGroups);
+				if (is_array($docGroups)) $this->documentObject['__MODxDocGroups__'] = implode(",", $docGroups);
 
                 $docObjSerial= serialize($this->documentObject);
                 $cacheContent= $docObjSerial . "<!--__MODxCacheSpliter__-->" . $this->documentContent;
-            $cacheContent = "<?php die('Unauthorized access.'); ?>" . $cacheContent;
-            $page_cache_path = $basepath . '/docid_' . $this->documentIdentifier . '.pageCache.php';
-            file_put_contents($page_cache_path, $cacheContent);
+                fputs($fp, "<?php die('Unauthorized access.'); ?>$cacheContent");
+                fclose($fp);
             }
+        }
 
         // Useful for example to external page counters/stats packages
         $this->invokeEvent('OnWebPageComplete');
@@ -697,7 +707,7 @@ class DocumentParser {
                 if (isset ($this->chunkCache[$matches[1][$i]])) {
                     $replace[$i]= $this->chunkCache[$matches[1][$i]];
                 } else {
-                    $sql= "SELECT snippet FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".name='" . $this->db->escape($matches[1][$i]) . "';";
+                    $sql= "SELECT `snippet` FROM " . $this->getFullTableName("site_htmlsnippets") . " WHERE " . $this->getFullTableName("site_htmlsnippets") . ".`name`='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->db->query($sql);
                     $limit= $this->db->getRecordCount($result);
                     if ($limit < 1) {
@@ -770,13 +780,11 @@ class DocumentParser {
         ob_start();
         $snip= eval ($snippet);
         $msg= ob_get_contents();
-        $request_uri = getenv('REQUEST_URI');
-        $request_uri = htmlspecialchars($request_uri, ENT_QUOTES);
         ob_end_clean();
         if ($msg && isset ($php_errormsg)) {
-            if (!stripos($php_errormsg, 'deprecated')) { // ignore php5 strict errors
+            if (!strpos($php_errormsg, 'Deprecated')) { // ignore php5 strict errors
                 // log error
-                $this->logEvent(1, 3, "<b>$php_errormsg</b><br /><br /> $msg<br />REQUEST_URI = $request_uri<br />ID = $this->documentIdentifier", $this->currentSnippet . " - Snippet");
+                $this->logEvent(1, 3, "<b>$php_errormsg</b><br /><br /> $msg", $this->currentSnippet . " - Snippet");
                 if ($this->isBackend())
                     $this->Event->alert("An error occurred while loading. Please see the event log for more information<p />$msg");
             }
@@ -810,14 +818,19 @@ class DocumentParser {
                         $snippets[$i]['properties']= $this->snippetCache[$matches[1][$i] . "Props"];
                 } else {
                     // get from db and store a copy inside cache
-                    $sql= "SELECT name,snippet,properties FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . $this->db->escape($matches[1][$i]) . "';";
+                    $sql= "SELECT `name`, `snippet`, `properties` FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".`name`='" . $this->db->escape($matches[1][$i]) . "';";
                     $result= $this->db->query($sql);
+                    $added = false;
                     if ($this->db->getRecordCount($result) == 1) {
                         $row= $this->db->getRow($result);
+                        if($row['name'] == $matches[1][$i]) {
                         $snippets[$i]['name']= $row['name'];
                         $snippets[$i]['snippet']= $this->snippetCache[$row['name']]= $row['snippet'];
                         $snippets[$i]['properties']= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
-                    } else {
+                            $added = true;
+                        }
+                    }
+                    if(!$added) {
                         $snippets[$i]['name']= $matches[1][$i];
                         $snippets[$i]['snippet']= $this->snippetCache[$matches[1][$i]]= "return false;";
                         $snippets[$i]['properties']= '';
@@ -1186,7 +1199,7 @@ class DocumentParser {
             if (!$this->documentObject['template'])
                 $this->documentContent= "[*content*]"; // use blank template
             else {
-                $sql= "SELECT content FROM " . $this->getFullTableName("site_templates") . " WHERE " . $this->getFullTableName("site_templates") . ".id = '" . $this->documentObject['template'] . "';";
+                $sql= "SELECT `content` FROM " . $this->getFullTableName("site_templates") . " WHERE " . $this->getFullTableName("site_templates") . ".`id` = '" . $this->documentObject['template'] . "';";
                 $result= $this->db->query($sql);
                 $rowCount= $this->db->getRecordCount($result);
                 if ($rowCount > 1) {
@@ -1221,48 +1234,42 @@ class DocumentParser {
     /* API functions																/
     /***************************************************************************************/
 
-    function getParentIds($id, $height= 10, $parents= array ()) {
-        $parentId= 0;
-        foreach ($this->documentMap as $mapEntry) {
-            $parentId= array_search($id, $mapEntry);
-            if ($parentId) {
-                $parentKey= array_search($parentId, $this->documentListing);
-                if (!$parentKey) {
-                    $parentKey= "$parentId";
-                }
-                $parents[$parentKey]= $parentId;
-                break;
-            }
-        }
-        $height--;
-        if ($parentId && $height) {
-            $parents= $parents + $this->getParentIds($parentId, $height, $parents);
+    function getParentIds($id, $height= 10) {
+        $parents= array ();
+        while ( $id && $height-- ) {
+            $thisid = $id;
+            $id = $this->aliasListing[$id]['parent'];
+            if (!$id) break;
+            $pkey = strlen($this->aliasListing[$thisid]['path']) ? $this->aliasListing[$thisid]['path'] : $this->aliasListing[$id]['alias'];
+            if (!strlen($pkey)) $pkey = "{$id}";
+            $parents[$pkey] = $id;
         }
         return $parents;
     }
 
     function getChildIds($id, $depth= 10, $children= array ()) {
-        $c= null;
-        foreach ($this->documentMap as $mapEntry) {
-            if (isset ($mapEntry[$id])) {
-                $childId= $mapEntry[$id];
-                $childKey= array_search($childId, $this->documentListing);
-                if (!$childKey) {
-                    $childKey= "$childId";
+
+        // Initialise a static array to index parents->children
+        static $documentMap_cache = array();
+        if (!count($documentMap_cache)) {
+            foreach ($this->documentMap as $document) {
+                foreach ($document as $p => $c) {
+                    $documentMap_cache[$p][] = $c;
                 }
-                $c[$childKey]= $childId;
             }
         }
+
+        // Get all the children for this parent node
+        if (isset($documentMap_cache[$id])) {
         $depth--;
-        if (is_array($c)) {
-            if (is_array($children)) {
-                $children= $children + $c;
-            } else {
-                $children= $c;
-            }
+
+            foreach ($documentMap_cache[$id] as $childId) {
+                $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
+                if (!strlen($pkey)) $pkey = "{$childId}";
+                    $children[$pkey] = $childId;
+
             if ($depth) {
-                foreach ($c as $child) {
-                    $children= $children + $this->getChildIds($child, $depth, $children);
+                    $children += $this->getChildIds($childId, $depth);
                 }
             }
         }
@@ -1568,7 +1575,6 @@ class DocumentParser {
             elseif ($c != '&') $args= '&' . $args;
         }
         if ($this->config['friendly_urls'] == 1 && $alias != '') {
-        //        if(strstr($alias, '.') !== false) $f_url_suffix = '';//yama
             $url= $f_url_prefix . $alias . $f_url_suffix . $args;
         }
         elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
@@ -1594,7 +1600,7 @@ class DocumentParser {
             }
 
             // to-do: check to make sure that $site_url incudes the url :port (e.g. :8080)
-            $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $this->config['base_url'];
+            $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
         }
 
         if ($this->config['xhtml_urls']) {
@@ -1718,7 +1724,7 @@ class DocumentParser {
             $snippet= $this->snippetCache[$snippetName];
             $properties= $this->snippetCache[$snippetName . "Props"];
         } else { // not in cache so let's check the db
-            $sql= "SELECT name,snippet,properties FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".name='" . $this->db->escape($snippetName) . "';";
+            $sql= "SELECT `name`, `snippet`, `properties` FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".`name`='" . $this->db->escape($snippetName) . "';";
             $result= $this->db->query($sql);
             if ($this->db->getRecordCount($result) == 1) {
                 $row= $this->db->getRow($result);
@@ -2192,7 +2198,7 @@ class DocumentParser {
         $rt= false;
         if ($_SESSION["webValidated"] == 1) {
             $tbl= $this->getFullTableName("web_users");
-            $ds= $this->db->query("SELECT id,username,password FROM $tbl WHERE id='" . $this->getLoginUserID() . "'");
+            $ds= $this->db->query("SELECT `id`, `username`, `password` FROM $tbl WHERE `id`='" . $this->getLoginUserID() . "'");
             $limit= mysql_num_rows($ds);
             if ($limit == 1) {
                 $row= $this->db->getRow($ds);
@@ -2396,7 +2402,7 @@ class DocumentParser {
                     $pluginCode= $this->pluginCache[$pluginName];
                     $pluginProperties= $this->pluginCache[$pluginName . "Props"];
                 } else {
-                    $sql= "SELECT name,plugincode,properties FROM " . $this->getFullTableName("site_plugins") . " WHERE name='" . $pluginName . "' AND disabled=0;";
+                    $sql= "SELECT `name`, `plugincode`, `properties` FROM " . $this->getFullTableName("site_plugins") . " WHERE `name`='" . $pluginName . "' AND `disabled`=0;";
                     $result= $this->db->query($sql);
                     if ($this->db->getRecordCount($result) == 1) {
                         $row= $this->db->getRow($result);
@@ -2649,14 +2655,17 @@ class DocumentParser {
 
         $version= isset ($GLOBALS['version']) ? $GLOBALS['version'] : '';
 		$release_date= isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
-        $request_uri = getenv('REQUEST_URI');
-        $request_uri = htmlspecialchars($request_uri, ENT_QUOTES);
-        $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES);
-        $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES);
         $parsedMessageString= "
               <html><head><title>MODx Content Manager $version &raquo; $release_date</title>
-              <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-              <style>TD, BODY { font-size: 12px; font-family:Verdana; }</style>
+              <style>TD, BODY { font-size: 11px; font-family:verdana; }</style>
+              <script type='text/javascript'>
+              function copyToClip()
+              {
+                holdtext.innerText = sqlHolder.innerText;
+                Copied = holdtext.createTextRange();
+                Copied.execCommand('Copy');
+              }
+            </script>
               </head><body>
               ";
         if ($is_error) {
@@ -2672,8 +2681,8 @@ class DocumentParser {
         }
 
         if (!empty ($query)) {
-            $parsedMessageString .= "<tr><td colspan='3'><b style='color:#999;font-size: 12px;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQL:&nbsp;<span id='sqlHolder'>$query</span></b>
-                    </td></tr>";
+            $parsedMessageString .= "<tr><td colspan='3'><b style='color:#999;font-size: 9px;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQL:&nbsp;<span id='sqlHolder'>$query</span></b>
+                    <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:copyToClip();' style='color:#821517;font-size: 9px; text-decoration: none'>[Copy SQL to ClipBoard]</a><textarea id='holdtext' style='display:none;'></textarea></td></tr>";
         }
 
         if ($text != '') {
@@ -2693,14 +2702,14 @@ class DocumentParser {
 
             );
 
-            $parsedMessageString .= "<tr><td colspan='3'>&nbsp;</td></tr><tr><td colspan='3'><b>PHP error debug</b></td></tr>";
+            $parsedMessageString .= "<tr><td>&nbsp;</td></tr><tr><td colspan='3'><b>PHP error debug</b></td></tr>";
 
             $parsedMessageString .= "<tr><td valign='top'>&nbsp;&nbsp;Error: </td>";
             $parsedMessageString .= "<td colspan='2'>$text</td><td>&nbsp;</td>";
             $parsedMessageString .= "</tr>";
 
             $parsedMessageString .= "<tr><td valign='top'>&nbsp;&nbsp;Error type/ Nr.: </td>";
-            $parsedMessageString .= "<td colspan='2'>" . $errortype[$nr] . " - $nr</td><td>&nbsp;</td>";
+            $parsedMessageString .= "<td colspan='2'>" . $errortype[$nr] . " - $nr</b></td><td>&nbsp;</td>";
             $parsedMessageString .= "</tr>";
 
             $parsedMessageString .= "<tr><td>&nbsp;&nbsp;File: </td>";
@@ -2717,39 +2726,7 @@ class DocumentParser {
             }
         }
 
-        $parsedMessageString .= "<tr><td colspan='3'>&nbsp;</td></tr><tr><td colspan='3'><b>Basic info</b></td></tr>";
-
-        $parsedMessageString .= "<tr><td valign='top'>&nbsp;&nbsp;REQUEST_URI: </td>";
-        $parsedMessageString .= "<td colspan='3'>$request_uri</td>";
-        $parsedMessageString .= "</tr>";
-
-        $parsedMessageString .= "<tr><td valign='top'>&nbsp;&nbsp;ID: </td>";
-        $parsedMessageString .= "<td colspan='3'>" . $this->documentIdentifier . "</td>";
-        $parsedMessageString .= "</tr>";
-
-        if(!empty($this->currentSnippet))
-        {
-            $parsedMessageString .= "<tr><td>&nbsp;&nbsp;Current Snippet: </td>";
-            $parsedMessageString .= '<td colspan="3">' . $this->currentSnippet . '</td>';
-            $parsedMessageString .= "</tr>";
-        }
-
-        if(!empty($this->event->activePlugin))
-        {
-            $parsedMessageString .= "<tr><td>&nbsp;&nbsp;Current Plugin: </td>";
-            $parsedMessageString .= '<td colspan="3">' . $this->event->activePlugin . '(' . $this->event->name . ')' . '</td>';
-            $parsedMessageString .= "</tr>";
-        }
-
-        $parsedMessageString .= "<tr><td>&nbsp;&nbsp;Referer: </td>";
-        $parsedMessageString .= '<td colspan="3">' . $referer . '</td>';
-        $parsedMessageString .= "</tr>";
-
-        $parsedMessageString .= "<tr><td>&nbsp;&nbsp;User Agent: </td>";
-        $parsedMessageString .= '<td colspan="3">' . $ua . '</td>';
-        $parsedMessageString .= "</tr>";
-
-        $parsedMessageString .= '<tr><td colspan="3">&nbsp;</td></tr><tr><td colspan="3"><b>Parser timing</b></td></tr>';
+        $parsedMessageString .= "<tr><td>&nbsp;</td></tr><tr><td colspan='3'><b>Parser timing</b></td></tr>";
 
         $parsedMessageString .= "<tr><td>&nbsp;&nbsp;MySQL: </td>";
         $parsedMessageString .= "<td><i>[^qt^]</i></td><td>(<i>[^q^] Requests</i>)</td>";
