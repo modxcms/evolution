@@ -1540,13 +1540,15 @@ class DocumentParser {
     function makeUrl($id, $alias= '', $args= '', $scheme= '') {
         $url= '';
         $virtualDir= '';
+        $f_url_prefix = $this->config['friendly_url_prefix'];
+        $f_url_suffix = $this->config['friendly_url_suffix'];
         if (!is_numeric($id)) {
             $this->messageQuit('`' . $id . '` is not numeric and may not be passed to makeUrl()');
         }
         if ($args != '' && $this->config['friendly_urls'] == 1) {
             // add ? to $args if missing
             $c= substr($args, 0, 1);
-            if (strpos($this->config['friendly_url_prefix'], '?') === false) {
+            if (strpos($f_url_prefix, '?') === false) {
                 if ($c == '&')
                     $args= '?' . substr($args, 1);
                 elseif ($c != '?') $args= '?' . $args;
@@ -1564,7 +1566,8 @@ class DocumentParser {
             elseif ($c != '&') $args= '&' . $args;
         }
         if ($this->config['friendly_urls'] == 1 && $alias != '') {
-            $url= $this->config['friendly_url_prefix'] . $alias . $this->config['friendly_url_suffix'] . $args;
+        //        if(strstr($alias, '.') !== false) $f_url_suffix = '';//yama
+            $url= $f_url_prefix . $alias . $f_url_suffix . $args;
         }
         elseif ($this->config['friendly_urls'] == 1 && $alias == '') {
             $alias= $id;
@@ -1574,7 +1577,7 @@ class DocumentParser {
                 if ($al && $al['alias'])
                     $alias= $al['alias'];
             }
-            $alias= $alPath . $this->config['friendly_url_prefix'] . $alias . $this->config['friendly_url_suffix'];
+            $alias= $alPath . $f_url_prefix . $alias . $f_url_suffix;
             $url= $alias . $args;
         } else {
             $url= 'index.php?id=' . $id . $args;
