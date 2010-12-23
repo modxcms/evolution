@@ -1047,7 +1047,6 @@ $_lang["web_user_management_msg"] = 'Qui potete selezionare l\'utente web da mod
 $_lang["web_user_management_title"] = 'Gestione Utenti Web';
 $_lang["web_user_title"] = 'Crea/modifica Utenti Web';
 $_lang["web_users"] = 'Utenti web';
-$_lang["weblink_message"] = 'Un Link Web &egrave; un collegamento ad un oggetto su Internet. Questo oggetto pu&ograve; essere una Risorsa interna a MODx, una pagina su un altro sito, un\'immagine o un altro file su Internet.';
 $_lang["weblink"] = 'Link Web';
 $_lang["webpwdreminder_message"] = 'Inserite il messaggio da inviare in mail, quando gli utenti chiedono una nuova password via email. IL sistema di gestione dei contenuti invier&agrave; loro una e-mail contenente la nuova password e le informazioni di attivazione. <br /><b>Nota:</b> I seguenti segnaposto saranno sostituiti dal sistema di gestione del contenuto quando invier&agrave; il messaggio: <br /><br />[+sname+] - Nome del sito, <br />[+saddr+] - Indirizzo email del sito, <br />[+surl+] - Url del sito, <br />[+uid+] - Login o id dell\'utente, <br />[+pwd+] - Password utente, <br />[+ufn+] - Nome completo dell\'utente. <br /><br /><b>Lasciate [+uid+] e [+pwd+] nella e-mail, altrimenti il nome utente e la password non verranno inviati!<</b>';
 $_lang["webpwdreminder_title"] = 'Email recupero dati autenticazione:';
