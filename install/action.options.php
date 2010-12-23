@@ -70,12 +70,23 @@ elseif ($installMode == 1) {
 $setupPath = realpath(dirname(__FILE__));
 include "{$setupPath}/setup.info.php";
 
-echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_note'] . "</p>";
+if($_POST['installmode'] === '0')
+{
+    echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_new_note'] . "</p>";
+}
+else
+{
+    echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_upd_note'] . "</p>";
+}
 
 $chk = isset ($_POST['installdata']) && $_POST['installdata'] == "1" ? 'checked="checked"' : "";
+if($installMode == 0)
+{
 echo '<img src="img/sample_site.png" class="options" alt="Sample Data" />';
 echo "<h3>" . $_lang['sample_web_site'] . "</h3>";
-echo "<p><input type=\"checkbox\" name=\"installdata\" id=\"installdata_field\" value=\"1\" $chk />&nbsp;<label for=\"installdata_field\">" . $_lang['install_overwrite'] . " <span class=\"comname\">" . $_lang['sample_web_site'] . "</span></label></p><p><em>&nbsp;" . $_lang['sample_web_site_note'] . "</em></p><hr />";
+echo "<p><input type=\"checkbox\" name=\"installdata\" id=\"installdata_field\" value=\"1\" $chk />&nbsp;<label for=\"installdata_field\">" . $_lang['install_overwrite'] . " <span class=\"comname\">" . $_lang['sample_web_site'] . "</span></label></p><p><em>&nbsp;" . $_lang['sample_web_site_note'] . "</em></p>";
+}
+echo '<hr />';
 
 // toggle options
 echo "<h4>" . $_lang['checkbox_select_options'] . "</h4>
