@@ -32,6 +32,7 @@ $dbase = '';
 $table_prefix = '';
 $base_url = '';
 $base_path = '';
+define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
 include("../../../../../includes/config.inc.php");
 
 /** 
@@ -54,7 +55,6 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 }
 
 // Override system settings with user settings
-define('IN_MANAGER_MODE', 'true'); // set this so that user_settings will trust us.
 include("../../../../../includes/settings.inc.php");
 include("../../../../../includes/user_settings.inc.php");
 

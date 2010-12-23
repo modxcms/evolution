@@ -19,36 +19,40 @@ function iconLookup($mime,$ext) {
 
 	$mimeIcons=array(
 			"image"=>"image.jpg",
-			"audio"=>"sound.jpg",
-			"video"=>"video.jpg",
-			"text"=>"document2.jpg",
-			"text/html"=>"html.jpg",
+			"audio"=>"sound.png",
+			"video"=>"video.png",
+			"text"=>"document2.png",
+			"text/html"=>"html.png",
 			"application"=>"binary.jpg",
-			"application/pdf"=>"pdf.jpg",
-			"application/msword"=>"document2.jpg",
+			"application/pdf"=>"pdf.png",
+			"application/msword"=>"document2.png",
 			"application/postscript"=>"postscript.jpg",
-			"application/rtf"=>"document2.jpg",
-			"application/vnd.ms-excel"=>"document2.jpg",
-			"application/vnd.ms-powerpoint"=>"document2.jpg",
+			"application/rtf"=>"document2.png",
+			"application/vnd.ms-excel"=>"spreadsheet.png",
+			"application/vnd.ms-powerpoint"=>"document2.png",
 			"application/x-tar"=>"tar.jpg",
 			"application/zip"=>"tar.jpg",
+			"application/x-shockwave-flash"=>"flash.png",
 			"message"=>"email.jpg",
-			"message/html"=>"html.jpg",
+			"message/html"=>"html.png",
 			"model"=>"kmplot.jpg",
 			"multipart"=>"kmultiple.jpg"
 			);
 	
 	$extIcons=array(
-			"pdf"=>"pdf.jpg",
+			"swf"=>"flash.png",
+			"fla"=>"flash.png",
+			"flv"=>"flash.png",
+			"pdf"=>"pdf.png",
 			"ps"=>"postscript.jpg",
 			"eps"=>"postscript.jpg",
 			"ai"=>"postscript.jpg",
 			"ra"=>"real_doc.jpg",
 			"rm"=>"real_doc.jpg",
 			"ram"=>"real_doc.jpg",
-			"wav"=>"sound.jpg",
-			"mp3"=>"sound.jpg",
-			"ogg"=>"sound.jpg",
+			"wav"=>"sound.png",
+			"mp3"=>"sound.png",
+			"ogg"=>"sound.png",
 			"eml"=>"email.jpg",
 			"tar"=>"tar.jpg",
 			"zip"=>"tar.jpg",
@@ -56,25 +60,25 @@ function iconLookup($mime,$ext) {
 			"tgz"=>"tar.jpg",
 			"gz"=>"tar.jpg",
 			"rar"=>"tar.jpg",
-			"avi"=>"video.jpg",
-			"mpg"=>"video.jpg",
-			"mpeg"=>"video.jpg",
+			"avi"=>"video.png",
+			"mpg"=>"video.png",
+			"mpeg"=>"video.png",
 			"jpg"=>"image.jpg",
 			"gif"=>"image.jpg",
 			"png"=>"image.jpg",
 			"jpeg"=>"image.jpg",
 			"nfo"=>"info.jpg",
-			"xls"=>"spreadsheet.jpg",
-			"csv"=>"spreadsheet.jpg",
-			"html"=>"html.jpg",
-			"doc"=>"document2.jpg",
-			"rtf"=>"document2.jpg",
-			"txt"=>"document2.jpg",
-			"xla"=>"document2.jpg",
-			"xlc"=>"document2.jpg",
-			"xlt"=>"document2.jpg",
-			"xlw"=>"document2.jpg",
-			"txt"=>"document2.jpg"
+			"xls"=>"spreadsheet.png",
+			"csv"=>"spreadsheet.png",
+			"html"=>"html.png",
+			"doc"=>"document2.png",
+			"rtf"=>"document2.png",
+			"txt"=>"document2.png",
+			"xla"=>"document2.png",
+			"xlc"=>"document2.png",
+			"xlt"=>"document2.png",
+			"xlw"=>"document2.png",
+			"txt"=>"document2.png"
 			);
 
 
@@ -94,7 +98,7 @@ function iconLookup($mime,$ext) {
 			if (in_array($mimePrefix,$mimes)) {
 				return $icon_basedir.$mimeIcons[$mimePrefix];
 			} else {
-				return $icon_basedir."empty.jpg";	
+				return $icon_basedir."empty.png";	
 			}
 		}
 	} else {
@@ -102,11 +106,11 @@ function iconLookup($mime,$ext) {
 		if (in_array($ext,$extensions)) {
 			return $icon_basedir.$extIcons[$ext];
 		} else {
-			return $icon_basedir."empty.jpg";
+			return $icon_basedir."empty.png";
 		}
 	}
 
-	return $icon_basedir."empty.jpg";
+	return $icon_basedir."empty.png";
 }
 
 ?>

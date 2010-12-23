@@ -25,6 +25,7 @@ class FBROWSER
 			{
 				case 'tinymce' :
 				case 'tinymce3':
+					$editor_path = rtrim($editor_path, '/') . '/';
 					$result = file_get_contents('seturl_js_tinymce.inc');
 					$result = str_replace('[+editor_path+]', $editor_path, $result);
 					break;

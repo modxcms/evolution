@@ -71,8 +71,8 @@ oListManager.AddFolder = function( folderName, folderPath )
 	// Add the file icon cell.
 	var oCell = lastRow.insertCell(-1) ;
 	oCell.vAlign="top";
-	oCell.width = 96 ;
-	oCell.innerHTML = sLink + '<img alt="' + folderName + '" src="images/Folder96.jpg" width="96" height="96" border="0"><br />' + folderName + '</a><br />';
+	oCell.width = 64 ;
+	oCell.innerHTML = sLink + '<img alt="' + folderName + '" src="images/folder64.png" width="64" height="64" border="0"><br />' + folderName + '</a><br />';
 	oCell.innerHTML += dLink + '<img border="0" src="images/delete.gif" width="16" height="16" alt="Delete Folder" title="Delete Folder"></a>&nbsp;';
 	oCell.innerHTML += rLink + '<img border="0" src="images/edit.gif" width="16" height="16" alt="Rename Folder" title="Rename Folder"></a>' ;
 	oCell.noWrap = true ;
@@ -113,7 +113,7 @@ oListManager.AddFile = function ( fileName, fileUrl, fileSize, imageEditable )
 	// Add the file icon cell.
 	var oCell = lastRow.insertCell(-1) ;
 	oCell.vAlign="top";
-	oCell.width = 96 ;
+	oCell.width = 64 ;
 
 	oCell.innerHTML = sLink +
 		'<img alt="' + fileName + '" src="' +
@@ -124,7 +124,7 @@ oListManager.AddFile = function ( fileName, fileUrl, fileSize, imageEditable )
 					escape(oConnector.CurrentFolder) +
 					'&FileName=' + escape(fileName) +
 					'&ExtraParams=' + oConnector.ExtraParams +
-					'" width="96" height="96" border="0" class="item"><br />' +
+					'" width="64" height="64" border="0" class="item"><br />' +
 		fileName + '</a><br />';
 	oCell.innerHTML += dLink + '<img border="0" src="images/delete.gif" width="16" height="16" alt="Delete File" title="Delete File"></a>&nbsp;';
 	oCell.innerHTML += eLink + '<img border="0" src="images/edit.gif" width="16" height="16" alt="Edit/Rename File" title="Rename File"></a>' ;
@@ -167,7 +167,7 @@ oListManager.PackRow = function ()
 		if (lastRow_Cols<maxCols) {
 			for (i=lastRow_Cols;i<maxCols;i++) {
 				var oCell = lastRow.insertCell(-1);
-				oCell.width=96;
+				oCell.width=64;
 				oCell.innerHTML = '&nbsp;';
 				oCell.noWrap=true;
 				oCell.align='center';

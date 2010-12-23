@@ -212,13 +212,13 @@ class Thumbnail {
 	function resizeImage($img) {
 		//Get size for thumbnail
 		$width=imagesx($img); $height=imagesy($img);
-		if ($width>$height) { $n_height=$height*(96/$width); $n_width=96; } else { $n_width=$width*(96/$height); $n_height=96; }
+		if ($width>$height) { $n_height=$height*(64/$width); $n_width=64; } else { $n_width=$width*(64/$height); $n_height=64; }
 		
 		$x=0;$y=0;
-		if ($n_width<96) $x=round((96-$n_width)/2);
-		if ($n_height<96) $y=round((96-$n_height)/2);
+		if ($n_width<64) $x=round((64-$n_width)/2);
+		if ($n_height<64) $y=round((64-$n_height)/2);
 		
-		$thumb=imagecreatetruecolor(96,96);
+		$thumb=imagecreatetruecolor(64,64);
 		
 		#Background colour fix by:
 		#Ben Lancaster (benlanc@ster.me.uk)
