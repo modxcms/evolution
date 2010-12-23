@@ -92,7 +92,7 @@ echo $cm->render();
 	<div>
 	<?php
 
-	$sql = "SELECT id,name,description,IF(locked,'Yes','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'".$_style['icons_modules']."') as'icon' " .
+	$sql = "SELECT id,name,description,IF(locked,'".$_lang['yes']."','-') as 'locked',IF(disabled,'".$_lang['yes']."','-') as 'disabled',IF(icon<>'',icon,'".$_style['icons_modules']."') as'icon' " .
 			"FROM ".$modx->getFullTableName("site_modules")." ".
 			(!empty($sqlQuery) ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
 			"ORDER BY name";
