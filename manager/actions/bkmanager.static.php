@@ -17,7 +17,9 @@ $tbl_event_log    = $modx->getFullTableName('event_log');
 $mode = isset($_POST['mode']) ? $_POST['mode'] : '';
 
 function callBack(&$dumpstring) {
-	$today = date("d_M_y");
+	global $modx;
+	$today = $modx->toDateFormat(time(),'dateOnly');
+	$today = str_replace('/', '-', $today);
 	$today = strtolower($today);
 	if(!headers_sent()) {
 	    header('Expires: 0');
