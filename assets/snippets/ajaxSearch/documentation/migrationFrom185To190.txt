@@ -1,4 +1,4 @@
-How to migrate from AjaxSearch 1.8.5 to AjaxSearch 1.9.0
+How to migrate from AjaxSearch 1.8.5 to AjaxSearch 1.9.0 and upper
 
 1/ ============================  Deprecated parameters
 

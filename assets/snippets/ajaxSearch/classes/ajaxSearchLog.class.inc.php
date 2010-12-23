@@ -5,8 +5,8 @@
 * @package  AjaxSearchLog
 *
 * @author       Coroico - www.modx.wangba.fr
-* @version      1.9.0
-* @date         18/05/2010
+* @version      1.9.2
+* @date         05/12/2010
 *
 * Purpose:
 *    The AjaxSearchLog class contains all functions used to Log AjaxSearch requests
@@ -153,8 +153,8 @@ class AjaxSearchLog {
 /* The code below handles comment sent if the $_POST variables are set.
 Used when the user post comment from the ajaxSearch results window  */
 if ($_POST['logid'] && $_POST['ascmt']) {
-    $ascmt = $_POST['ascmt'];
-    $logid = $_POST['logid'];
+    $ascmt = strip_tags($_POST['ascmt']);
+    $logid = intval($_POST['logid']);
     $safeCmt = (strlen($ascmt) < CMT_MAX_LENGTH) && (substr_count($ascmt, 'http') < CMT_MAX_LINKS);
     if (($ascmt != '') && ($logid > 0) && $safeCmt) {
 

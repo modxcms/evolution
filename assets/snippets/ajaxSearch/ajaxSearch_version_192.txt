@@ -1,11 +1,47 @@
 
-                              AjaxSearch - version 1.9.0
+                              AjaxSearch - version 1.9.2
 
                            Coroico - http://www.modx.wangba.fr
 
-                                18th of May 2010
+                                05th of December 2010
+
+The release 1.9.2 provide the correction of the following issues:
+
+==== AJAXSEARCH-75 : exactphrase doesn't work when the value is passed thru snippet call
+See http://modxcms.com/forums/index.php/topic,55236.0.html
+
+
+==== AJAXSEARCH-76 : TV names not protected in sql request
+See http://modxcms.com/forums/index.php/topic,56696.msg330844.html#msg330844l
+
+
+==== AJAXSEARCH-77 : where clause for search terms restriction when the searchstring is empty
+
+
+==== AJAXSEARCH-78 : failed searched never logged
+See http://modxcms.com/forums/index.php/topic,53897.msg331714.html#msg331714
+
+
+==== AJAXSEARCH-79 : tag list now interpreted as tv input list
+
+
+==== AJAXSEARCH-80 : Incorrect strip function for MODx tags
+See http://modxcms.com/forums/index.php/topic,57332.msg331855.html#msg331855
+
+
+==== AJAXSEARCH-81 : orderBy issue when orderBy field not in sc.content table
+
+
+==== AJAXSEARCH-82 : can't define configuration file name with "@FILE:" prefix
+
+
+No new features are provided with this release.
+
+=====================================================================================
 
 Previous versions :
+ - 1.9.1 delivered the 30th of August 2010
+ - 1.9.0 delivered the 18th of May 2010 (provided with MODx 1.0.4)
  - 1.8.5 delivered the 20th of March 2010 (provided with MODx 1.0.3)
  - 1.8.4 delivered the 20th of October 2009 (provided with MODx1.0.1)
  - 1.8.3a delivered the 12th of July 2009 (provided with MODx1.0.0)
@@ -78,7 +114,7 @@ Previous versions :
 ==== Use Google Analytics to track AjaxSearch
 
     AjaxSearch forms could now use $_POST or $_GET
-    with $_GET, the query parameter in the URL after you search allow you to track the site 
+    with $_GET, the query parameter in the URL after you search allow you to track the site
     search with Google Analytics.
     To do this, simply replace method="post" by method="get" in the input template used
     by your ajaxSearch calls.
@@ -108,9 +144,9 @@ Previous versions :
     &withTvs=`-`                - all tvs of the site are added
     &withTvs=`-:tv1,tv2,tv3`    - all tvs of the site except tv1, tv2, Tv3 are added
 
-    &withTvs=``                 - no tv added 
-    
-    If &whereSearch contains 'tv' then a tv_value field which contain the concatened 
+    &withTvs=``                 - no tv added
+
+    If &whereSearch contains 'tv' then a tv_value field which contain the concatened
     values of all tv of the document is added
 
     So the tv added could be used for filtering with the filter parameter (see &filter)
@@ -447,7 +483,7 @@ Previous versions :
 
 ==== Documentation folder
 
-    in the documentation folder, the cheatSheet ajaxSearch190.pdf give a quick
+    in the documentation folder, the cheatSheet ajaxSearch192.pdf give a quick
     overview of AjaxSearch parameters. Thanks to Goldsky for this contribution.
 
     The someCssExamples folder give the search.css file used on the demo site to
@@ -457,12 +493,6 @@ Previous versions :
     site.
 
     The someTemplatesExamples folder provide some templates used on the demo site.
-    
-    
-========================= ISSUES CORRECTED (since 1.8.5) =======================
 
-==== AJAXSEARCH-61 : Getting no results from search on private pages even when logged in as a web user with access to those pages
-http://svn.modxcms.com/jira/browse/AJAXSEARCH-61
 
-==== AJAXSEARCH-62 : mb_internal_encoding("UTF-8") missing
-http://svn.modxcms.com/jira/browse/AJAXSEARCH-62
+

@@ -1,5 +1,5 @@
 /*
- * AjaxSearch 1.9.0 - clearDefault
+ * AjaxSearch 1.9.2 - clearDefault
  * Copyright (c) 2010 Coroico - www.modx.wangba.fr
  *
  * Licensed under the GPL license: http://www.gnu.org/copyleft/gpl.html

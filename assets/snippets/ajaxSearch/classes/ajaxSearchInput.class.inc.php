@@ -5,8 +5,8 @@
 * @package  AjaxSearchInput
 *
 * @author       Coroico - www.modx.wangba.fr
-* @version      1.9.0
-* @date         18/05/2010
+* @version      1.9.2
+* @date         05/12/2010
 *
 * Purpose:
 *    The AjaxSearchInput class contains all functions and data used to manage Input form
@@ -62,8 +62,9 @@ class AjaxSearchInput {
         $msgErr = '';
         $this->_checkParams();
         $valid = $this->_validSearchString($msgErr);
-        $this->_displayInputForm($valid, $msgErr);
+        $this->_displayInputForm($msgErr);
         $this->_setClearDefaultHeader();
+
         return $valid;
     }
     /*
