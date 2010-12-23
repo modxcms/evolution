@@ -10,7 +10,7 @@ class SqlParser {
 	var $dbVersion;
     var $connection_charset, $connection_method;
 
-	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET') {
+	function SqlParser($host, $user, $password, $db, $prefix='modx_', $adminname, $adminemail, $adminpass, $connection_charset= 'utf8', $managerlanguage='english', $connection_method = 'SET CHARACTER SET', $auto_template_logic = 'parent') {
 		$this->host = $host;
 		$this->dbname = $db;
 		$this->prefix = $prefix;
@@ -23,6 +23,7 @@ class SqlParser {
 		$this->connection_method = $connection_method;
 		$this->ignoreDuplicateErrors = false;
 		$this->managerlanguage = $managerlanguage;
+        $this->autoTemplateLogic = $auto_template_logic;
 	}
 
 	function connect() {
@@ -76,6 +77,7 @@ class SqlParser {
 		$idata = str_replace('{IMAGEURL}', $this->imageUrl, $idata);
 		$idata = str_replace('{FILEMANAGERPATH}', $this->fileManagerPath, $idata);
 		$idata = str_replace('{MANAGERLANGUAGE}', $this->managerlanguage, $idata);
+		$idata = str_replace('{AUTOTEMPLATELOGIC}', $this->autoTemplateLogic, $idata);
 		/*$idata = str_replace('{VERSION}', $modx_version, $idata);*/
 
 		$sql_array = explode("\n\n", $idata);

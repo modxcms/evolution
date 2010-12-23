@@ -11,6 +11,7 @@
  * @internal	@events OnRichTextEditorRegister,OnRichTextEditorInit,OnInterfaceSettingsRender 
  * @internal	@modx_category Manager and Admin
  * @internal    @legacy_names TinyMCE
+ * @internal    @installset base, sample
  *
  * Written By Jeff Whitfield
  * and Mikko Lammi / updated: 03/09/2010
@@ -69,7 +70,7 @@ switch ($e->name)
 		$params['use_browser']     = $modx->config['use_browser'];
 		$params['editor_css_path'] = $modx->config['editor_css_path'];
 		
-		if($modx->isBackend() || (intval($_GET['quickmanagertv']) == 1 && isset($_SESSION['mrgValidated'])))
+		if($modx->isBackend())
 		{
 			$params['theme']           = $modx->config['tinymce_editor_theme'];
 			$params['language']        = getTinyMCELang($modx->config['manager_language']);

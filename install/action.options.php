@@ -4,10 +4,6 @@ if ($installMode == 0 || $installMode == 2) {
     $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8_general_ci';
     $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
     $_POST['database_connection_charset'] = $database_charset;
-    if(empty($_SESSION['databaseloginpassword']))
-        $_SESSION['databaseloginpassword'] = $_POST['databaseloginpassword'];
-    if(empty($_SESSION['databaseloginname']))
-        $_SESSION['databaseloginname'] = $_POST['databaseloginname'];
 }
 elseif ($installMode == 1) {
     include "../manager/includes/config.inc.php";
@@ -42,15 +38,15 @@ elseif ($installMode == 1) {
     $_POST['database_connection_charset'] = $database_connection_charset;
     $_POST['database_connection_method'] = $database_connection_method;
     $_POST['databasehost'] = $database_server;
-    $_SESSION['databaseloginname'] = $database_user;
-    $_SESSION['databaseloginpassword'] = $database_password;
+    $_POST['databaseloginname'] = $database_user;
+    $_POST['databaseloginpassword'] = $database_password;
 }
 ?>
 
 <form name="install" id="install_form" action="index.php?action=summary" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language;?>" name="language" />
-	<input type="hidden" value="<?php echo $manager_language;?>" name="managerlanguage" />
+    <input type="hidden" value="<?php echo $manager_language;?>" name="managerlanguage" />
     <input type="hidden" value="<?php echo $installMode; ?>" name="installmode" />
     <input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
     <input type="hidden" value="<?php echo $_POST['tableprefix']; ?>" name="tableprefix" />
@@ -58,10 +54,11 @@ elseif ($installMode == 1) {
     <input type="hidden" value="<?php echo $_POST['database_connection_charset']; ?>" name="database_connection_charset" />
     <input type="hidden" value="<?php echo $_POST['database_connection_method']; ?>" name="database_connection_method" />
     <input type="hidden" value="<?php echo $_POST['databasehost']; ?>" name="databasehost" />
+    <input type="hidden" value="<?php echo $_POST['databaseloginname']; ?>" name="databaseloginname" />
+    <input type="hidden" value="<?php echo $_POST['databaseloginpassword']; ?>" name="databaseloginpassword" />
     <input type="hidden" value="<?php echo trim($_POST['cmsadmin']); ?>" name="cmsadmin" />
     <input type="hidden" value="<?php echo trim($_POST['cmsadminemail']); ?>" name="cmsadminemail" />
     <input type="hidden" value="<?php echo trim($_POST['cmspassword']); ?>" name="cmspassword" />
-    <input type="hidden" value="<?php echo trim($_POST['cmspasswordconfirm']); ?>" name="cmspasswordconfirm" />
     <input type="hidden" value="1" name="options_selected" />
   </div>
 
@@ -81,9 +78,9 @@ echo "<p><input type=\"checkbox\" name=\"installdata\" id=\"installdata_field\" 
 
 // toggle options
 echo "<h4>" . $_lang['checkbox_select_options'] . "</h4>
-	<p class=\"actions\"><a href=\"javascript:Checkboxes.checkAll('toggle');\">" . $_lang['all'] . "</a> <a href=\"javascript:Checkboxes.uncheckAll('toggle');\">" . $_lang['none'] . "</a> <a href=\"javascript:Checkboxes.toggle('toggle');\">" . $_lang['toggle'] . "</a></p>
-	<br class=\"clear\" />
-	<div id=\"installChoices\">";
+    <p class=\"actions\"><a id=\"toggle_check_all\" href=\"#\">" . $_lang['all'] . "</a> <a id=\"toggle_check_none\" href=\"#\">" . $_lang['none'] . "</a> <a id=\"toggle_check_toggle\" href=\"#\">" . $_lang['toggle'] . "</a></p>
+    <br class=\"clear\" />
+    <div id=\"installChoices\">";
 
 $options_selected = isset ($_POST['options_selected']);
 
@@ -91,10 +88,15 @@ $options_selected = isset ($_POST['options_selected']);
 $templates = isset ($_POST['template']) ? $_POST['template'] : array ();
 $limit = count($moduleTemplates);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['templates'] . "</h3><br />";
+    $tplOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = !in_array('sample', $moduleTemplates[$i][6]) ? 'toggle' : 'toggle demo';
         $chk = in_array($i, $templates) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr />";
+        $tplOutput .= "<input type=\"checkbox\" name=\"template[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTemplates[$i][0] . "</span> - " . $moduleTemplates[$i][1] . "<hr />\n";
+    }
+    if($tplOutput !== '') {
+        echo "<h3>" . $_lang['templates'] . "</h3><br />";
+        echo $tplOutput;
     }
 }
 
@@ -102,10 +104,15 @@ if ($limit > 0) {
 $tvs = isset ($_POST['tv']) ? $_POST['tv'] : array ();
 $limit = count($moduleTVs);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['tvs'] . "</h3><br />";
+    $tvOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = !in_array('sample', $moduleTVs[$i][12]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $tvs) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"tv[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTVs[$i][0] . "</span> - " . $moduleTVs[$i][2] . "<hr />";
+        $tvOutput .= "<input type=\"checkbox\" name=\"tv[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleTVs[$i][0] . "</span> - " . $moduleTVs[$i][2] . "<hr />\n";
+    }
+    if($tvOutput != '') {
+        echo "<h3>" . $_lang['tvs'] . "</h3><br />\n";
+        echo $tvOutput;
     }
 }
 
@@ -113,10 +120,15 @@ if ($limit > 0) {
 $chunks = isset ($_POST['chunk']) ? $_POST['chunk'] : array ();
 $limit = count($moduleChunks);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['chunks'] . "</h3>";
+    $chunkOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = !in_array('sample', $moduleChunks[$i][5]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $chunks) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr />";
+        $chunkOutput .= "<input type=\"checkbox\" name=\"chunk[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleChunks[$i][0] . "</span> - " . $moduleChunks[$i][1] . "<hr />";
+    }
+    if($chunkOutput != '') {
+        echo "<h3>" . $_lang['chunks'] . "</h3>";
+        echo $chunkOutput;
     }
 }
 
@@ -124,10 +136,15 @@ if ($limit > 0) {
 $modules = isset ($_POST['module']) ? $_POST['module'] : array ();
 $limit = count($moduleModules);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['modules'] . "</h3>";
+    $moduleOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = !in_array('sample', $moduleModules[$i][7]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $modules) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr />";
+        $moduleOutput .= "<input type=\"checkbox\" name=\"module[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleModules[$i][0] . "</span> - " . $moduleModules[$i][1] . "<hr />";
+    }
+    if($moduleOutput != '') {
+        echo "<h3>" . $_lang['modules'] . "</h3>";
+        echo $moduleOutput;
     }
 }
 
@@ -135,10 +152,15 @@ if ($limit > 0) {
 $plugins = isset ($_POST['plugin']) ? $_POST['plugin'] : array ();
 $limit = count($modulePlugins);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['plugins'] . "</h3>";
+    $pluginOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = !in_array('sample', $modulePlugins[$i][8]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $plugins) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr />";
+        $pluginOutput .= "<input type=\"checkbox\" name=\"plugin[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $modulePlugins[$i][0] . "</span> - " . $modulePlugins[$i][1] . "<hr />";
+    }
+    if($pluginOutput != '') {
+        echo "<h3>" . $_lang['plugins'] . "</h3>";
+        echo $pluginOutput;
     }
 }
 
@@ -146,74 +168,66 @@ if ($limit > 0) {
 $snippets = isset ($_POST['snippet']) ? $_POST['snippet'] : array ();
 $limit = count($moduleSnippets);
 if ($limit > 0) {
-    echo "<h3>" . $_lang['snippets'] . "</h3>";
+    $snippetOutput = '';
     for ($i = 0; $i < $limit; $i++) {
+        $class = !in_array('sample', $moduleSnippets[$i][5]) ? "toggle" : "toggle demo";
         $chk = in_array($i, $snippets) || (!$options_selected) ? 'checked="checked"' : "";
-        echo "<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"toggle\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr />";
+        $snippetOutput .= "<input type=\"checkbox\" name=\"snippet[]\" value=\"$i\" class=\"{$class}\" $chk />" . $_lang['install_update'] . " <span class=\"comname\">" . $moduleSnippets[$i][0] . "</span> - " . $moduleSnippets[$i][1] . "<hr />";
+    }
+    if($snippetOutput != '') {
+        echo "<h3>" . $_lang['snippets'] . "</h3>";
+        echo $snippetOutput;
     }
 }
 ?>
-	</div>
+    </div>
     <p class="buttonlinks">
         <a href="javascript:document.getElementById('install_form').action='index.php?action=<?php echo (($installMode == 1) ? 'mode' : 'connection'); ?>';document.getElementById('install_form').submit();" class="prev" title="<?php echo $_lang['btnback_value']?>"><span><?php echo $_lang['btnback_value']?></span></a>
         <a href="javascript:document.getElementById('install_form').submit();" title="<?php echo $_lang['install']?>"><span><?php echo $_lang['install']?></span></a>
     </p>
 
 </form>
+<script type="text/javascript" src="../assets/js/jquery-1.3.2.min.js"></script>
 <script type="text/javascript">
-/* <![CDATA[ */
-var Checkboxes = {
-  // checks all the checkboxes of a given class name
-  checkAll: function(className) {
-    Checkboxes.setChecking(className, true);
-  },
+    $(document).ready(function(){
 
-  // unchecks all the checkboxes of a given class name
-  uncheckAll: function(className) {
-    Checkboxes.setChecking(className, false);
-  },
+        jQuery('#toggle_check_all').click(function(evt){
+            evt.preventDefault();
+            demo = jQuery('#installdata_field').attr('checked');
+            jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', true);
+        });
+        jQuery('#toggle_check_none').click(function(evt){
+            evt.preventDefault();
+            demo = jQuery('#installdata_field').attr('checked');
+            jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', false);
+        });
+        jQuery('#toggle_check_toggle').click(function(evt){
+            evt.preventDefault();
+            jQuery('input:checkbox.toggle:not(:disabled)').attr('checked', function(){
+                return !jQuery(this).attr('checked');
+            });
+        });
+        jQuery('#installdata_field').click(function(evt){
+            handleSampleDataCheckbox();
+        });
 
-  // toggles the value of the checkboxes of a given class name
-  toggle: function(className) {
-    Checkboxes.setChecking(className, 'toggle');
-  },
-
-  // sets the checked value of elements of a given class name
-  setChecking: function(className, value) {
-    var boxes = getElementsByClassName(document, "*", className);
-    var cur_value = false;
-    for (var i=0, boxes_len=boxes.length; i<boxes_len; i++) {
-      if (value == 'toggle') {
-        cur_value = boxes[i].checked;
-        if (cur_value == true) {
-          boxes[i].checked = '';
-        } else {
-          boxes[i].checked = 'checked';
+        var handleSampleDataCheckbox = function(){
+            demo = jQuery('#installdata_field').attr('checked');
+            jQuery('input:checkbox.toggle.demo').each(function(ix, el){
+                if(demo) {
+                    jQuery(this)
+                        .attr('checked', true)
+                        .attr('disabled', true)
+                    ;
+                } else {
+                    jQuery(this)
+                        .attr('disabled', false)
+                    ;
+                }
+            });
         }
-      } else {
-        boxes[i].checked = value;
-      }
-    }
-  }
-}
 
-/*
-Written by Jonathan Snook, http://www.snook.ca/jonathan
-Add-ons by Robert Nyman, http://www.robertnyman.com
-*/
-function getElementsByClassName(oElm, strTagName, strClassName){
-  var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName);
-  var arrReturnElements = new Array();
-  strClassName = strClassName.replace(/-/g, "\-");
-  var oRegExp = new RegExp("(^|\s)" + strClassName + "(\s|$)");
-  var oElement;
-  for(var i=0; i<arrElements.length; i++){
-    oElement = arrElements[i];
-    if(oRegExp.test(oElement.className)){
-      arrReturnElements.push(oElement);
-    }
-  }
-  return (arrReturnElements)
-}
-/* ]]> */
+        // handle state of demo content checkbox on page load
+        handleSampleDataCheckbox();
+    });
 </script>

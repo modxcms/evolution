@@ -17,8 +17,7 @@
 
 	// setup Template template files - array : name, description, type - 0:file or 1:content, parameters, category
 	$mt = &$moduleTemplates;
-	if(is_dir($templatePath) && is_readable($templatePath))
-	{
+if(is_dir($templatePath) && is_readable($templatePath)) {
 		$d = dir($templatePath);
 		while (false !== ($tplfile = $d->read()))
 		{
@@ -35,7 +34,8 @@
 					$params['type'],
 					"$templatePath/{$params['filename']}",
 					$params['modx_category'],
-					$params['lock_template']
+                $params['lock_template'],
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
 				);
 			}
 		}
@@ -44,18 +44,14 @@
 
 	// setup Template Variable template files
 	$mtv = &$moduleTVs;
-	if(is_dir($tvPath) && is_readable($tvPath))
-	{
+if(is_dir($tvPath) && is_readable($tvPath)) {
 		$d = dir($tvPath);
-		while (false !== ($tplfile = $d->read()))
-		{
+    while (false !== ($tplfile = $d->read())) {
 			if(substr($tplfile, -4) != '.tpl') continue;
 			$params = parse_docblock($tvPath, $tplfile);
-			if(is_array($params) && (count($params)>0))
-			{
+        if(is_array($params) && (count($params)>0)) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$mtv[] = array
-				(
+            $mtv[] = array(
 					$params['name'],
 					$params['caption'],
 					$description,
@@ -67,7 +63,8 @@
 					"$templatePath/{$params['filename']}", /* not currently used */
 					$params['template_assignments'], /* comma-separated list of template names */
 					$params['modx_category'],
-					$params['lock_tv']  /* value should be 1 or 0 */
+                $params['lock_tv'],  /* value should be 1 or 0 */
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
 				);
 			}
 		}
@@ -89,7 +86,8 @@
                     $params['description'],
                     "$chunkPath/{$params['filename']}",
                     $params['modx_category'],
-                    array_key_exists('overwrite', $params) ? $params['overwrite'] : 'true'
+                array_key_exists('overwrite', $params) ? $params['overwrite'] : 'true',
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
                 );
 			}
 		}
@@ -107,7 +105,14 @@
 			$params = parse_docblock($snippetPath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$ms[] = array($params['name'], $description, "$snippetPath/{$params['filename']}", $params['properties'], $params['modx_category'] );
+            $ms[] = array(
+                $params['name'],
+                $description,
+                "$snippetPath/{$params['filename']}",
+                $params['properties'],
+                $params['modx_category'],
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+            );
 			}
 		}
 		$d->close();
@@ -124,7 +129,17 @@
 			$params = parse_docblock($pluginPath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$mp[] = array($params['name'], $description, "$pluginPath/{$params['filename']}", $params['properties'], $params['events'], $params['guid'], $params['modx_category'], $params['legacy_names'] );
+            $mp[] = array(
+                $params['name'],
+                $description,
+                "$pluginPath/{$params['filename']}",
+                $params['properties'],
+                $params['events'],
+                $params['guid'],
+                $params['modx_category'],
+                $params['legacy_names'],
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+            );
 			}
 		}
 		$d->close();
@@ -141,7 +156,16 @@
 			$params = parse_docblock($modulePath, $tplfile);
 			if(is_array($params) && count($params) > 0) {
 				$description = empty($params['version']) ? $params['description'] : "<strong>{$params['version']}</strong> {$params['description']}";
-				$mm[] = array($params['name'], $description, "$modulePath/{$params['filename']}", $params['properties'], $params['guid'], intval($params['shareparams']), $params['modx_category'] );
+            $mm[] = array(
+                $params['name'],
+                $description,
+                "$modulePath/{$params['filename']}",
+                $params['properties'],
+                $params['guid'],
+                intval($params['shareparams']),
+                $params['modx_category'],
+                array_key_exists('installset', $params) ? preg_split("/\s*,\s*/", $params['installset']) : false
+            );
 			}
 		}
 		$d->close();
@@ -274,7 +298,8 @@ function parse_docblock($element_dir, $filename) {
 									$param = trim($ma[1]);
 									$val = trim($ma[2]);
 								}
-								if($val !== '0' && (empty($param) || empty($val))) {
+                                //if($val !== '0' && (empty($param) || empty($val))) {
+                                if(empty($param)) {
 									continue;
 								}
 							}

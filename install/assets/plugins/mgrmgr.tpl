@@ -11,6 +11,7 @@
  * @internal @events OnDocFormRender,OnDocFormPrerender,OnPluginFormRender,OnTVFormRender
  * @internal @modx_category Manager and Admin
  * @internal @legacy_names Image TV Preview, Show Image TVs
+ * @internal    @installset base, sample
  */
 
 // You can put your ManagerManager rules EITHER in a chunk OR in an external file - whichever suits your development style the best
@@ -30,8 +31,8 @@
 // or specify a URL to a custom location.
 // Here we set some default values, because this is a convenient place to change them if we need to,
 // but you should configure your preference via the Configuration tab.
-$js_default_url_local = $modx->config['site_url'] . 'assets/js/jquery-1.4.2.min.js';
-$js_default_url_remote = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';
+$js_default_url_local = $modx->config['site_url']. '/assets/js/jquery-1.3.2.min.js';
+$js_default_url_remote = 'http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js';
 
 // You don't need to change anything else from here onwards
 //-------------------------------------------------------

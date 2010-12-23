@@ -9,6 +9,7 @@
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties &tpl=Template;string;
  * @internal	@modx_category Login
+ * @internal    @installset base, sample
  */
 
 

@@ -20,6 +20,15 @@ Bugfixes:
 * [#488] Fix bad check for mysql strict mode
 * [#595] Fix bad path on Resource Editor rich text fields when TMCE in "root relative" mode
 * [#1252] Fix @SELECT multi-select listbox TV losing its value when switching Content field "Editor to use"
+* [#321] stop parser from running case-mismatched snippet calls
+* [#343] Fix Hiding "Validate Referer" warning messes up the setting itself
+* [#432] Fix TV date-layer display problem with multiple datefields in FF 3.6.3
+* [#445] Fix error displaying filenames with non-Latin charsets
+* [#577] Fix Spanish UTF8 language file
+* [#760] Fix Document tree not loading in children
+* [#609] Fix web_groups and member_groups tables can have duplicate entries
+* [#364] Fix W3C validation problem with TV image output widget 
+* [#2957] Allow multibyte strings in QuickManager+ TV buttons
 
 --------------------------------------------
 Additional Improvements & Updates:
@@ -30,6 +39,33 @@ Additional Improvements & Updates:
 * [#23] Quick Manager+ updated to 1.5.3-GA
 * [#421] ManagerManager updated to 0.3.9
 * [#359][#421] Default Chunk for ManagerManager rules now "mm_rules"; Since demo rules are "mm_demo_rules", MM is now disabled on install
+* [#308] Return to active tab for Elements, regardless of "Remember tabs" system setting
+* [#331] Updated Czech language file
+* [#881] Improvements to Template inheritance (moved from plugin into core, added system setting to control behavior)
+* [#592] Adjustment of manager fonts
+* [#476] Improvement to New user's default role
+* [#378] Check for and disallow reserved words in Template Variable names
+* [#1360] Better handling of Template Switcher plugin
+* [#833] Manager and Web User comments field no longer limited to 255 characters
+* [#1132] New system setting to strip characters from files uploaded in Manage Files (using same logic configured for aliases)
+* [#190] Resolve hostnames config option deprecated
+* [#1065] Let manager themes have their own welcome.html page
+* [#216] Optimization of core methods (getParentIds & getChildIds)
+* [#819] Improvement in config.inc.php file (new installs only) so proper MODX_SITE_URL constant is set in API Mode
+* [#2867] Improvements to installer with respect to handling of Demo Site option and related elements
+* [#2867] Laid foundation for "installsets" or preset groups of installer elements
+* [#2963] New icons in manager resource tree (to reflect site start, error page, site unavailable and unauthorized system settings)
+* [#594] Tweaked Quick Manager window open style
+* [#487] Links updated in demo site content
+* [#3075] Apply monospace font to manager textarea fields
+* [#999] Enhance ordering logic when displaying lists of TVs
+* [#2953] Fix QuickManager+ Google Chrome font problem (text-shadow)
+* [#3063][#3064][#3065] Replace calls to deprecated db-related parser methods with calls to db class methods
+* [#2961] Wayfinder improvement - allow use of [+wf.alias+]
+* [#3061] Allow @ and . characters in remembered login name
+* [#3062] Corrections to ActionList item names (given that Documents are now Resources and Resources are now Elements)
+* [#3115] Automatically regenerate siteCache if it not found
+* [#835] @INHERIT improved to work with @FILE, and to allow additional data after the @INHERIT
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================

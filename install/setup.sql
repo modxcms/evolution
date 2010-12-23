@@ -90,7 +90,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}member_groups` (
   `id` int(10) NOT NULL auto_increment,
   `user_group` int(10) NOT NULL default '0',
   `member` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE INDEX `ix_group_member` (`user_group`,`member`)
 ) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
@@ -480,7 +481,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_groups` (
   `id` int(10) NOT NULL auto_increment,
   `webgroup` int(10) NOT NULL default '0',
   `webuser` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`)
 ) Type=MyISAM COMMENT='Contains data used for web access permissions.';
 
 
@@ -770,7 +772,8 @@ ALTER TABLE `{PREFIX}web_user_settings` MODIFY COLUMN `setting_value` text;
 
 ALTER TABLE `{PREFIX}user_attributes` 
   MODIFY COLUMN `state` varchar(25) NOT NULL default '',
-  MODIFY COLUMN `zip` varchar(25) NOT NULL default '';
+  MODIFY COLUMN `zip` varchar(25) NOT NULL default '',
+  MODIFY COLUMN `comment` text;
 
 
 ALTER TABLE `{PREFIX}site_metatags` 
@@ -781,11 +784,20 @@ ALTER TABLE `{PREFIX}site_metatags`
 
 ALTER TABLE `{PREFIX}web_user_attributes`
   MODIFY COLUMN `state` varchar(25) NOT NULL default '',
-  MODIFY COLUMN `zip` varchar(25) NOT NULL default '';
+  MODIFY COLUMN `zip` varchar(25) NOT NULL default '',
+  MODIFY COLUMN `comment` text;
   
 
 ALTER TABLE `{PREFIX}user_roles`
   ADD COLUMN `remove_locks` int(1) NOT NULL DEFAULT '0';
+
+
+ALTER TABLE `{PREFIX}member_groups`
+  ADD UNIQUE INDEX `ix_group_member` (`user_group`,`member`);
+
+
+ALTER TABLE `{PREFIX}web_groups`
+  ADD UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`);
 
 
 # Set the private manager group flag
@@ -799,7 +811,13 @@ UPDATE {PREFIX}documentgroup_names AS dgn
 UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Bottom Button Bar');
 
 
+UPDATE `{PREFIX}site_plugins` SET `disabled` = '1' WHERE `name` IN ('Inherit Parent Template');
+
+
 UPDATE `{PREFIX}system_settings` SET `setting_value` = '' WHERE `setting_name` = 'settings_version';
+
+
+UPDATE `{PREFIX}system_settings` SET `setting_value` = '0' WHERE `setting_name` = 'validate_referer' AND `setting_value` = '00';
 
 
 # start related to #MODX-1321
@@ -884,8 +902,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('site_status','1'),
 ('site_unavailable_message','The site is currently unavailable'),
 ('track_visitors','0'),
-('resolve_hostnames','0'),
 ('top_howmany','10'),
+('auto_template_logic','{AUTOTEMPLATELOGIC}'),
 ('default_template','3'),
 ('old_template',''),
 ('publish_default','0'),
