@@ -30,7 +30,7 @@ $number_of_settings = mysql_num_rows($rs);
 while ($row = mysql_fetch_assoc($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 extract($settings, EXTR_OVERWRITE);
 
-$displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') || ($_SESSION['browser']=='sf') ) ? "table-row" : "block" ;
+$displayStyle = ($_SESSION['browser']!=='ie') ? 'table-row' : 'block' ;
 
 // load languages and keys
 $lang_keys = array();
