@@ -138,7 +138,7 @@ function deletedocument() {
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 	<?php } ?>
 
-	<?php echo $_lang['template_msg']; ?>
+<?php echo "\t" . $_lang['template_msg']; ?>
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 	  <tr>
 	    <td align="left"><img src="<?php echo $_style['tx']; ?>" width="100" height="1" /></td>
@@ -179,7 +179,7 @@ function deletedocument() {
 	    <div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0;margin-top:5px">
 	    	<span style="float:left;color:brown;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['template_code']; ?></span>
 		</div>
-		<textarea class="phptextarea" dir="ltr" name="post" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['content']); ?></textarea>
+        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height: 370px;" onChange='documentDirty=true;'><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['content']); ?></textarea>
 		</div>
 	<!-- HTML text editor end -->
 	<input type="submit" name="save" style="display:none">
@@ -189,7 +189,7 @@ function deletedocument() {
 	FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
 	INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
 	LEFT JOIN ".$modx->getFullTableName('categories')." cat ON tv.category = cat.id
-	WHERE tr.templateid='".$_REQUEST['id']."' ORDER BY tr.rank ASC";
+    WHERE tr.templateid='{$id}' ORDER BY tr.rank, tv.rank, tv.id";
 
 
 $rs = $modx->db->query($sql);

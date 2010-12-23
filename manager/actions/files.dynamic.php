@@ -183,7 +183,13 @@ if(!empty($_FILES['userfile'])) {
    if(!empty($_FILES['userfile']['tmp_name'][$i])) {
      $userfiles[$i]['tmp_name'] = $_FILES['userfile']['tmp_name'][$i];
      $userfiles[$i]['error'] = $_FILES['userfile']['error'][$i];
-     $userfiles[$i]['name'] = $_FILES['userfile']['name'][$i];
+            $name = $_FILES['userfile']['name'][$i];
+            if($modx->config['clean_uploaded_filename']) {
+                $nameparts = explode('.', $name);
+                $nameparts = array_map(array($modx, 'stripAlias'), $nameparts);
+                $name = implode('.', $nameparts);
+            }
+            $userfiles[$i]['name'] = $name;
      $userfiles[$i]['type'] = $_FILES['userfile']['type'][$i];
    }
   }
