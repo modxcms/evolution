@@ -36,18 +36,20 @@
     </script>
     <style type="text/css">        
         li {
-            cursor:move;font-weight:bold;
-            background-image:url("media/style[+theme+]/images/misc/fade.gif");
-            background-repeat:repeat-x;
-            background-color:#fcfcfc;
-            padding:3px 5px;
-            width:300px;
-            border:1px solid #ccc;
-            margin-bottom:5px;
+            cursor: pointer;
+            border: 1px solid #666;
+            background: #eee no-repeat 2px center;
+            margin: 2px 0;
+            list-style: none;
+            padding: 1px 4px 1px 24px;
+            min-height: 20px;
         }
-        li.hidemenu  {color:#777;font-weight:normal;background-image:none;}
-        li.unpublished {color:#aaa;font-weight:normal;background-image:none;font-style:italic;background-color:#ffffe0;}
-        li:hover     {background-image:none;background-color:#ccc;}
+        li.noChildren {
+            background-image: url(media/style[+theme+]/images/tree/page.gif);
+        }
+        li.hasChildren {
+            background-image: url(media/style[+theme+]/images/tree/folder.gif);
+        }
     </style>
 </head>
 <body>

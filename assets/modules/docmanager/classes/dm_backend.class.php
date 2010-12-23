@@ -40,7 +40,7 @@ class DocManagerBackend {
     	$resource = array();
 
     	if (is_numeric($id)) {
-			$query = 'SELECT id , pagetitle , parent , menuindex, published, deleted, hidemenu FROM '. $this->modx->getFullTableName('site_content') .' WHERE parent=' . $id . ' ORDER BY menuindex ASC';
+			$query = 'SELECT id , pagetitle , parent , menuindex, published, hidemenu, deleted  FROM '. $this->modx->getFullTableName('site_content') .' WHERE parent=' . $id . ' ORDER BY menuindex ASC';
 			if (!$rs = $this->modx->db->query($query)) {
 				return false;
 			}
@@ -63,17 +63,15 @@ class DocManagerBackend {
 				$this->dm->ph['sort.message'] =  $this->dm->lang['DM_sort_nochildren'];
 			} else {
 				foreach ($resource as $item) {
-                    // deleted, hidden from menu, unpublished
-                    $class = 'sort';
-                    if($item['deleted'] == '1') {
-                        $class .= ' deletedNode';
-                    } elseif($item['published'] == '0') {
-                        $class .= ' unpublishedNode';
-                    } elseif($item['hidemenu'] == '1') {
-                        $class .= ' notInMenuNode';
-                    }
-					$this->dm->ph['sort.options'] .= '<li id="item_' . $item['id'] . '" class="' . $class . '">' . $item['pagetitle'] . '</li>';
-	
+                    // Add classes to determine whether it's published, deleted, not in the menu
+                    // or has children.
+                    // Use class names which match the classes in the document tree
+                    $classes = '';
+                    $classes .= ($item['hidemenu']) ? ' notInMenuNode ' : ' inMenuNode' ;
+                    $classes .= ($item['published']) ? ' publishedNode ' : ' unpublishedNode ' ;
+                    $classes = ($item['deleted']) ? ' deletedNode ' : $classes ;
+                    $classes .= (count($this->modx->getChildIds($item['id'], 1)) > 0) ? ' hasChildren ' : ' noChildren ';
+                    $this->dm->ph['sort.options'] .= '<li id="item_' . $item['id'] . '" class="sort '.$classes.'">' . $item['pagetitle'] . '</li>';
 				}
 			}
 		}
