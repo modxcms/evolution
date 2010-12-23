@@ -132,7 +132,13 @@ class GetFoldersAndFiles {
 						if ($this->fckphp_config['ResourceAreas'][$this->type]['AllowImageEditing'])
 							$editable=$this->isImageEditable($this->real_cwd."/".$files[$i]);
 
-						echo "\t\t<File name=\"".htmlentities($files[$i])."\" size=\"".ceil(filesize($this->real_cwd."/".$files[$i])/1024)."\" editable=\"" . ( $editable?"1":"0" ) . "\" />\n";
+                        if(extension_loaded('mbstring')) {
+                            $name = mb_convert_encoding($files [$i] , 'UTF-8', mb_detect_encoding($files[$i] , 'UTF-8, windows-1251, ASCII, ISO-8859-1'));
+                        } else {
+                            $name = $files[$i];
+                        }
+                        // $this->fckphp_config['modx']['charset'] if needed
+                        echo "\t\t<File name=\"".htmlentities($name, ENT_QUOTES, 'UTF-8')."\" size=\"".ceil(filesize($this->real_cwd."/".$files [$i] )/1024)."\" editable=\"" . ( $editable?"1":"0" ) . "\" />\n";
 					}
 
 				}

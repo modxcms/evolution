@@ -18,67 +18,63 @@
 function iconLookup($mime,$ext) {
 
 	$mimeIcons=array(
-			"image"=>"image.png",
-			"audio"=>"sound.png",
-			"video"=>"video.png",
-			"text"=>"document2.png",
-			"text/html"=>"html.png",
-			"application"=>"binary.png",
-			"application/pdf"=>"pdf.png",
-			"application/msword"=>"document2.png",
-			"application/postscript"=>"postscript.png",
-			"application/rtf"=>"document2.png",
-			"application/vnd.ms-excel"=>"spreadsheet.png",
-			"application/vnd.ms-powerpoint"=>"document2.png",
-			"application/x-tar"=>"tar.png",
-			"application/zip"=>"tar.png",
-			"application/x-shockwave-flash"=>"flash.png",
-			"message"=>"email.png",
-			"message/html"=>"html.png",
-			"model"=>"kmplot.png",
-			"multipart"=>"kmultiple.png"
+			"image"=>"image.jpg",
+			"audio"=>"sound.jpg",
+			"video"=>"video.jpg",
+			"text"=>"document2.jpg",
+			"text/html"=>"html.jpg",
+			"application"=>"binary.jpg",
+			"application/pdf"=>"pdf.jpg",
+			"application/msword"=>"document2.jpg",
+			"application/postscript"=>"postscript.jpg",
+			"application/rtf"=>"document2.jpg",
+			"application/vnd.ms-excel"=>"document2.jpg",
+			"application/vnd.ms-powerpoint"=>"document2.jpg",
+			"application/x-tar"=>"tar.jpg",
+			"application/zip"=>"tar.jpg",
+			"message"=>"email.jpg",
+			"message/html"=>"html.jpg",
+			"model"=>"kmplot.jpg",
+			"multipart"=>"kmultiple.jpg"
 			);
 	
 	$extIcons=array(
-			"swf"=>"flash.png",
-			"fla"=>"flash.png",
-			"flv"=>"flash.png",
-			"pdf"=>"pdf.png",
-			"ps"=>"postscript.png",
-			"eps"=>"postscript.png",
-			"ai"=>"postscript.png",
-			"ra"=>"real_doc.png",
-			"rm"=>"real_doc.png",
-			"ram"=>"real_doc.png",
-			"wav"=>"sound.png",
-			"mp3"=>"sound.png",
-			"ogg"=>"sound.png",
-			"eml"=>"email.png",
-			"tar"=>"tar.png",
-			"zip"=>"tar.png",
-			"bz2"=>"tar.png",
-			"tgz"=>"tar.png",
-			"gz"=>"tar.png",
-			"rar"=>"tar.png",
-			"avi"=>"video.png",
-			"mpg"=>"video.png",
-			"mpeg"=>"video.png",
-			"jpg"=>"image.png",
-			"gif"=>"image.png",
-			"png"=>"image.png",
-			"jpeg"=>"image.png",
-			"nfo"=>"info.png",
-			"xls"=>"spreadsheet.png",
-			"csv"=>"spreadsheet.png",
-			"html"=>"html.png",
-			"doc"=>"document2.png",
-			"rtf"=>"document2.png",
-			"txt"=>"document2.png",
-			"xla"=>"document2.png",
-			"xlc"=>"document2.png",
-			"xlt"=>"document2.png",
-			"xlw"=>"document2.png",
-			"txt"=>"document2.png"
+			"pdf"=>"pdf.jpg",
+			"ps"=>"postscript.jpg",
+			"eps"=>"postscript.jpg",
+			"ai"=>"postscript.jpg",
+			"ra"=>"real_doc.jpg",
+			"rm"=>"real_doc.jpg",
+			"ram"=>"real_doc.jpg",
+			"wav"=>"sound.jpg",
+			"mp3"=>"sound.jpg",
+			"ogg"=>"sound.jpg",
+			"eml"=>"email.jpg",
+			"tar"=>"tar.jpg",
+			"zip"=>"tar.jpg",
+			"bz2"=>"tar.jpg",
+			"tgz"=>"tar.jpg",
+			"gz"=>"tar.jpg",
+			"rar"=>"tar.jpg",
+			"avi"=>"video.jpg",
+			"mpg"=>"video.jpg",
+			"mpeg"=>"video.jpg",
+			"jpg"=>"image.jpg",
+			"gif"=>"image.jpg",
+			"png"=>"image.jpg",
+			"jpeg"=>"image.jpg",
+			"nfo"=>"info.jpg",
+			"xls"=>"spreadsheet.jpg",
+			"csv"=>"spreadsheet.jpg",
+			"html"=>"html.jpg",
+			"doc"=>"document2.jpg",
+			"rtf"=>"document2.jpg",
+			"txt"=>"document2.jpg",
+			"xla"=>"document2.jpg",
+			"xlc"=>"document2.jpg",
+			"xlt"=>"document2.jpg",
+			"xlw"=>"document2.jpg",
+			"txt"=>"document2.jpg"
 			);
 
 
@@ -98,7 +94,7 @@ function iconLookup($mime,$ext) {
 			if (in_array($mimePrefix,$mimes)) {
 				return $icon_basedir.$mimeIcons[$mimePrefix];
 			} else {
-				return $icon_basedir."empty.png";	
+				return $icon_basedir."empty.jpg";	
 			}
 		}
 	} else {
@@ -106,11 +102,11 @@ function iconLookup($mime,$ext) {
 		if (in_array($ext,$extensions)) {
 			return $icon_basedir.$extIcons[$ext];
 		} else {
-			return $icon_basedir."empty.png";
+			return $icon_basedir."empty.jpg";
 		}
 	}
 
-	return $icon_basedir."empty.png";
+	return $icon_basedir."empty.jpg";
 }
 
 ?>
