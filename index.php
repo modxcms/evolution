@@ -89,18 +89,21 @@ if($database_user=="") {
 	$rt = @include_once(dirname(__FILE__).'/manager/includes/config.inc.php');
 	// Be sure config.inc.php is there and that it contains some important values
 	if(!$rt || !$database_type || !$database_server || !$database_user || !$dbase) {
-	echo "
-<style type=\"text/css\">
+header('Content-Type: text/html; charset=UTF-8');
+	echo '
+<style type="text/css">
 *{margin:0;padding:0}
-body{margin:50px;background:#eee;}
-.install{padding:10px;border:5px solid #f22;background:#f99;margin:0 auto;font:120%/1em serif;text-align:center;}
+body{text-align:center;background:#eef0ee;font-size:15px;}
+.install{width:530px;padding:10px;border:1px solid #39b933;background:#f6ffe0;margin:50px auto;font-family:Verdana;text-align:center;}
 p{ margin:20px 0; }
-a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
+a{font-size:180%;color:#39b933;text-decoration:underline;margin-top: 30px;padding: 5px;}
 </style>
-<div class=\"install\">
+<div class="install">
+<p><img src="install/img/install_begin.png" /></p>
 <p>MODx is not currently installed or the configuration file cannot be found.</p>
-<p>Do you want to <a href=\"install/index.php\">install now</a>?</p>
-</div>";
+<p>Do you want to install now?</p>
+<p><a href="install/index.php">Yes</a> / <a href="http://modxcms.com/">No</a></p>
+</div>';
 		exit;
 	}
 }
