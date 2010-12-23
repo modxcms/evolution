@@ -165,7 +165,7 @@ if ($numRecords > 0) {
 				'docid' =>  $children['id'],
 				'title' =>  $children['pagetitle'],
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
-				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="'. $_style["icons_preview_resource"].'" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="' . $_style["icons_save"] .'" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="' . $_style["icons_move_document"] .'" />'.$_lang['move'].'</a>' : ''),
+				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="'. $_style["icons_preview_resource"].'" />'.$_lang['preview'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="' . $_style["icons_save"] .'" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="' . $_style["icons_move_document"] .'" />'.$_lang['move'].'</a>' : ''),
 			);
 		}
 
