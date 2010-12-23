@@ -166,7 +166,7 @@ class Qm {
                     if (isset($_POST['save'])) $save = intval($_POST['save']); 
                     
                     // Get TV name
-                    if (preg_match('/^([A-Za-z0-9&:;_\-]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
+                    if (preg_match('/^([^\\"\'\(\)<>!?]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
                     
                     // Get TV array
                     $tv = $this->modx->getTemplateVar($tvName, '*', $docID);
@@ -539,7 +539,7 @@ class Qm {
                             
                         $head .= '    
                             {                      
-                    		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false, opacity:0.5, transition:"fade", speed:150});
+                        		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false, opacity:0.5, transition:"fade", speed:150});
                         	
                             	// Bindings
                             	$().bind("cbox_open", function(){

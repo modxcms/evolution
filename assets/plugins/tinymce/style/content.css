@@ -1,76 +1,70 @@
 @charset "UTF-8";
 
-/* body.mceContentBody {margin:8px;text-align:left;} */
-
-body,
-td,
-th,
-pre {
+.mceContentBody,
+.mceContentBody td,
+.mceContentBody th,
+.mceContentBody pre {
 /*	font-family: 'メイリオ',Meiryo,'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','ＭＳ Ｐゴシック',sans-serif;*/
 	font-size  : 12px;
 	font-style : normal;
 	}
 
-body {
+.mceContentBody {
 	line-height          : 1.5;
 	color                : #333333;
 	background-color     : #FFFFFF;
 	background-attachment: fixed;
-	background-repeat:repeat-x;
-	background-image     : url(textareabg.gif);
+	background-repeat:repeat-x !important;
+	background-image     : url(textareabg.gif) !important;
 	text-align           : left;
-	margin:8px;
 	}
 
-pre {
+.mceContentBody pre {
 	color                : #555555;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.mceContentBody h1,
+.mceContentBody h2,
+.mceContentBody h3,
+.mceContentBody h4,
+.mceContentBody h5,
+.mceContentBody h6 {
 	color         : #111111;
 	letter-spacing:1px;
 }
 
-h4,
-h5,
-h6 {
+.mceContentBody h4,
+.mceContentBody h5,
+.mceContentBody h6 {
 	font-size  : 12px;
 }
-ul {
+.mceContentBody ul {
 	line-height     : 1.5;
 	margin          : 0 0 0.5em 20px;
 	padding         : 0;
 	}
 
-ol {
+.mceContentBody ol {
 	line-height     : 1.5;
 	margin          : 0 0 0.5em 18px;
 	padding         : 0;
 	color           : black;
 	}
 
-ol li {margin-left:7px;}
+.mceContentBody ol li {margin-left:7px;}
 
-blockquote {
+.mceContentBody blockquote {
 	padding-left    : 7px;
 	margin-left     : 3px;
 	background-color: #fcfcfc;
 }
 
-table {margin-bottom:8px;}
-td,th {padding:4px}
-th    {background-color:#fcfcfc;text-align:left;}
+.mceContentBody table {margin-bottom:8px;}
+.mceContentBody td,th {padding:4px !important;}
+.mceContentBody th    {background-color:#fcfcfc;text-align:left;}
 
-a:hover {
+.mceContentBody a:hover {
 	color: #7fa2ff;
 	}
-
-.justifyleft     {text-align:left;}
-.justifyright    {text-align:right;}
-img.justifyleft  {float:left; margin-right:10px;margin-bottom:5px;}
-img.justifyright {float:right; margin-left:10px;margin-bottom:5px;}
+.justifyleft  {float:left; margin-right:10px;margin-bottom:5px;}
+.justifyright {float:right; margin-left:10px;margin-bottom:5px;}
