@@ -39,6 +39,7 @@ if (file_exists("../manager/includes/config.inc.php")) {
 			<p><strong><?php echo $_lang['installation_install_new_note']?></strong></p>
 		</div>
 	</div>
+	<div style="margin:0;padding:0;<?php if($upgradeable !== 1 && $upgradeable !== 2) echo 'display:none;'; ?>">
 	<hr />
 	<div>
 		<div class="installImg"><img src="img/install_upg.png" alt="upgrade existing install" /></div>
@@ -56,6 +57,7 @@ if (file_exists("../manager/includes/config.inc.php")) {
 			<label for="installmode3" class="nofloat"><?php echo $_lang['installation_upgrade_advanced']?></label></h3>
 			<p><?php echo $_lang['installation_upgrade_advanced_note']?></p>
 		</div>
+	</div>
 	</div>
 
     <p class="buttonlinks">
