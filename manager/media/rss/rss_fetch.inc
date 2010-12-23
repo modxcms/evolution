@@ -359,7 +359,8 @@ function init () {
     }
 
     if ( !defined('MAGPIE_OUTPUT_ENCODING') ) {
-        define('MAGPIE_OUTPUT_ENCODING', 'ISO-8859-1');
+    global $modx_manager_charset;
+        define('MAGPIE_OUTPUT_ENCODING', $modx_manager_charset);
     }
     
     if ( !defined('MAGPIE_INPUT_ENCODING') ) {
