@@ -507,6 +507,7 @@ $evtOut = $modx->invokeEvent('OnDocFormPrerender', array(
 ));
 if (is_array($evtOut))
     echo implode('', $evtOut);
+$_SESSION['itemname'] = htmlspecialchars(stripslashes($content['pagetitle']));
 ?>
 <input type="hidden" name="a" value="5" />
 <input type="hidden" name="id" value="<?php echo $content['id']?>" />
