@@ -53,6 +53,12 @@ if (!is_writable("../assets/cache") || !file_exists("../assets/media")) {
 }
 // cache files writable?
 echo "<p>" . $_lang['checking_if_cache_file_writable'];
+if (!file_exists("../assets/cache/siteCache.idx.php")) {
+    // make an attempt to create the file
+    @ $hnd = fopen("../assets/cache/siteCache.idx.php", 'w');
+    @ fwrite($hnd, "<?php //MODx site cache file ?>");
+    @ fclose($hnd);
+}
 if (!is_writable("../assets/cache/siteCache.idx.php")) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
     $errors += 1;
