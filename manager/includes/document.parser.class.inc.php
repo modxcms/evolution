@@ -6,6 +6,9 @@
  */
 
 $upgradephp_path = MODX_MANAGER_PATH . 'includes/extenders/upgradephp/';
+if (!version_compare('5.3.0', phpversion(),'<')) include_once $upgradephp_path . 'php0530.php';
+if (!version_compare('5.2.0', phpversion(),'<')) include_once $upgradephp_path . 'php0520.php';
+if (!version_compare('5.1.0', phpversion(),'<')) include_once $upgradephp_path . 'php0510.php';
 if (!version_compare('5.0.0', phpversion(),'<')) include_once $upgradephp_path . 'php0500.php';
 
 class DocumentParser {
