@@ -4,6 +4,10 @@
  *	Function: This class contains the main document parsing functions
  *
  */
+
+$upgradephp_path = MODX_MANAGER_PATH . 'includes/extenders/upgradephp/';
+if (!version_compare('5.0.0', phpversion(),'<')) include_once $upgradephp_path . 'php0500.php';
+
 class DocumentParser {
     var $db; // db object
     var $event, $Event; // event object
