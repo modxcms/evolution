@@ -83,7 +83,17 @@ class DataGrid {
 			$value = $row[($this->_isDataset && $fld ? $fld:$c)];
 			if($color && $Style) $colStyle = substr($colStyle,0,-1).";background-color:$color;'";
 			$value = $this->formatColumnValue($row,$value,$type,$align);
-			$o.="<td $colStyle $Class".($align? " align='$align'":"").($color? " bgcolor='$color'":"").($nowrap? " nowrap='$nowrap'":"").($width? " width='$width'":"").">$value</td>";
+			if($align)  $align  = 'align="'   . $align  . '"';
+			if($color)  $color  = 'bgcolor="' . $color  . '"';
+			if($nowrap) $nowrap = 'nowrap="'  . $nowrap . '"';
+			if($width)  $width  = 'width="'   . $width  . '"';
+			$attr = '';
+			foreach(array($colStyle,$Class,$align,$color,$nowrap,$width) as $v)
+			{
+				$v = trim($v);
+				if(!empty($v)) $attr .= ' ' . $v;
+			}
+			$o .= '<td' . $attr . '>' . $value . '</td>';
 		}
 		$o.="</tr>\n";
 		return $o;
@@ -111,10 +121,18 @@ class DataGrid {
 				break;
 				
 			case "date":
+				if(!empty($value))
+				{
 				if($align=="") $align="right";			
 				if(!is_numeric($value)) $value = strtotime($value);
 				if(!$type_format) $type_format = "%A %d, %B %Y";
 				$value = strftime($type_format,$value);
+				}
+				else
+				{
+					if($align=="") $align="center";
+					$value = '-';
+				}
 				break;
 			
 			case "boolean":
@@ -142,28 +160,27 @@ class DataGrid {
 
 	function render(){
 
-		$columnHeaderStyle	= ($this->columnHeaderStyle)? "style='".$this->columnHeaderStyle."'":'';
-		$columnHeaderClass	= ($this->columnHeaderClass)? "class='".$this->columnHeaderClass."'":"";
-		$cssStyle			= ($this->cssStyle)? "style='".$this->cssStyle."'":'';
-		$cssClass			= ($this->cssClass)? "class='".$this->cssClass."'":'';
+		$columnHeaderStyle	= ($this->columnHeaderStyle)? 'style="' .$this->columnHeaderStyle. '"':'';
+		$columnHeaderClass	= ($this->columnHeaderClass)? 'class="' .$this->columnHeaderClass. '"':'';
+		$cssStyle			= ($this->cssStyle)? 'style="' .$this->cssStyle . '"':'';
+		$cssClass			= ($this->cssClass)? 'class="' .$this->cssClass. '"':'';
 		
-		$pagerClass			= ($this->pagerClass)? "class='".$this->pagerClass."'":'';
-		$pagerStyle			= ($this->pagerStyle)? "style='".$this->pagerStyle."'":"style='background-color:#ffffff;'";
+		$pagerClass			= ($this->pagerClass)? 'class="'.$this->pagerClass.'"':'';
+		$pagerStyle			= ($this->pagerStyle)? 'style="'.$this->pagerStyle.'"':'style="background-color:#ffffff;"';
 
-		$this->_itemStyle	= ($this->itemStyle)? "style='".$this->itemStyle."'":'';
-		$this->_itemClass	= ($this->itemClass)? "class='".$this->itemClass."'":'';
-		$this->_altItemStyle= ($this->altItemStyle)? "style='".$this->altItemStyle."'":'';
-		$this->_altItemClass= ($this->altItemClass)? "class='".$this->altItemClass."'":'';
+		$this->_itemStyle	= ($this->itemStyle)?    'style="' . $this->itemStyle . '"':'';
+		$this->_itemClass	= ($this->itemClass)?    'class="' . $this->itemClass . '"':'';
+		$this->_altItemStyle= ($this->altItemStyle)? 'style="' .$this->altItemStyle . '"':'';
+		$this->_altItemClass= ($this->altItemClass)? 'class="' .$this->altItemClass . '"':'';
 
 		$this->_alt = 0;
 		$this->_total = 0;
 				
 		$this->_isDataset = is_resource($this->ds); // if not dataset then treat as array
 
-		if(!$cssStyle && !$cssClass) $cssStyle = "style='width:100%;border:1px solid silver;font-family:verdana,arial; font-size:11px;'";
-		if(!$columnHeaderStyle && !$columnHeaderClass) $columnHeaderStyle = "style='color:black;background-color:silver'";
-		if(!$this->_itemStyle && !$this->_itemClass) $this->_itemStyle = "style='color:black;'";
-		if(!$this->_altItemStyle && !$this->_altItemClass) $this->_altItemStyle = "style='color:black;background-color:#eeeeee'";
+		if(!$cssStyle && !$cssClass) $cssStyle = 'style="width:100%;font-family:verdana,arial; font-size:12px;"';
+		if(!$this->_itemStyle && !$this->_itemClass) $this->_itemStyle = "style='color:#333333;'";
+		if(!$this->_altItemStyle && !$this->_altItemClass) $this->_altItemStyle = "style='color:#333333;background-color:#eeeeee'";
 
 		if($this->_isDataset && !$this->columns) {
 			$cols = mysql_num_fields($this->ds);
@@ -172,8 +189,18 @@ class DataGrid {
 		}
 		
 		// start grid
-		$tblStart	= "<table $cssClass $cssStyle cellpadding='".(isset($this->cellPadding) ? (int)$this->cellPadding :1)."' cellspacing='".(isset($this->cellSpacing) ? (int)$this->cellSpacing:1)."'>";
-		$tblEnd		= "</table>";
+		$cellpadding = '';
+		$cellspacing = '';
+		if(isset($this->cellPadding)) $cellpadding = 'cellpadding="' . (int)$this->cellPadding . '"';
+		if(isset($this->cellSpacing)) $cellspacing = 'cellspacing="' . (int)$this->cellSpacing . '"';
+		$attr = '';
+		foreach(array($cssClass,$cssStyle,$cellpadding,$cellspacing) as $v)
+		{
+			$v = trim($v);
+			if(!empty($v)) $attr .= ' ' . $v;
+		}
+		$tblStart	= '<table' . $attr . '>' . PHP_EOL;
+		$tblEnd		= '</table>' . PHP_EOL;
 		
 		// build column header
 		$this->_colnames = explode((strstr($this->columns,"||")!==false ? "||":","),$this->columns);
@@ -184,14 +211,21 @@ class DataGrid {
 		$this->_coltypes = explode((strstr($this->colTypes,"||")!==false ? "||":","),$this->colTypes);
 		$this->_colcount = count($this->_colnames);
 		if(!$this->_isDataset) {
-			$this->ds = explode((strstr($this->ds,"||")!==false ? "||":","),$this->ds);
+			$this->ds = preg_split((strstr($this->ds,"||")!==false ? "/\|\|/":"/[,\t\n]/"),$this->ds);
 			$this->ds = array_chunk($this->ds, $this->_colcount);
 		}
-		$tblColHdr ="<thead><tr>";
+		$tblColHdr ='<thead>' . PHP_EOL . '<tr>';
 		for($c=0;$c<$this->_colcount;$c++){
 			$name=$this->_colnames[$c];
 			$width=$this->_colwidths[$c];
-			$tblColHdr.="<td $columnHeaderStyle $columnHeaderClass".($width? " width='$width'":"").">$name</td>";
+			if(!empty($width)) $width = 'width="' . $width . '"';
+			$attr = '';
+			foreach(array($columnHeaderStyle,$columnHeaderClass,$width) as $v)
+			{
+				$v = trim($v);
+				if(!empty($v)) $attr .= ' ' . $v;
+			}
+			$tblColHdr .= '<th' . $attr . '>' . $name . '</th>';
 		}
 		$tblColHdr.="</tr></thead>\n";
 
@@ -230,11 +264,11 @@ class DataGrid {
 		$o = $tblStart;	
 		$ptop = (substr($this->pagerLocation,0,3)=="top")||(substr($this->pagerLocation,0,4)=="both");
 		$pbot = (substr($this->pagerLocation,0,3)=="bot")||(substr($this->pagerLocation,0,4)=="both");
-		if($this->header) $o.="<tr><td bgcolor='#ffffff' colspan='".$this->_colcount."'>".$this->header."</td></tr>";
+		if($this->header) $o.="<tr><td colspan='".$this->_colcount."'>".$this->header."</td></tr>";
 		if($tblPager && $ptop) $o.="<tr><td align='".(substr($this->pagerLocation,-4)=="left"? "left":"right")."' $pagerClass $pagerStyle colspan='".$this->_colcount."'>".$tblPager."&nbsp;</td></tr>";		
 		$o.=$tblColHdr.$tblRows;
 		if($tblPager && $pbot) $o.="<tr><td align='".(substr($this->pagerLocation,-4)=="left"? "left":"right")."' $pagerClass $pagerStyle colspan='".$this->_colcount."'>".$tblPager."&nbsp;</td></tr>";		
-		if($this->footer) $o.="<tr><td bgcolor='#ffffff' colspan='".$this->_colcount."'>".$this->footer."</td></tr>";
+		if($this->footer) $o.="<tr><td colspan='".$this->_colcount."'>".$this->footer."</td></tr>";
 		$o.= $tblEnd;		
 		return $o;
 	}
