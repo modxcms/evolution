@@ -37,7 +37,7 @@
 			editor.setMode(current_action);
 
 			//constraints on the scale,
-			//code by Frédéric Klee <fklee@isuisse.com>
+			//code by Frederic Klee <fklee@isuisse.com>
 			if(action == 'scale') 
 			{
 				var theImage = editor.window.document.getElementById('theImage');
@@ -67,7 +67,7 @@
 		}
 	}
 
-	//Togggle constraints, by Frédéric Klee <fklee@isuisse.com>
+	//Togggle constraints, by Frederic Klee <fklee@isuisse.com>
 	function toggleConstraints() 
 	{
 		var lock = document.getElementById("scaleConstImg");
@@ -89,7 +89,7 @@
 		}
 	}
 	
-	//check the constraints, by Frédéric Klee <fklee@isuisse.com>
+	//check the constraints, by Frederic Klee <fklee@isuisse.com>
 	function checkConstrains(changed) 
 	{
 		var constrained = document.getElementById('constProp');
