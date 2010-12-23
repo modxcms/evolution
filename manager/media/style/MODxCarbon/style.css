@@ -1566,3 +1566,5 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .cbBox p {margin:3px;}
 .cbBox .cbButtons {text-align:center;}
 .sysAlert {width: 500px;height: 330px;white-space: nowrap;overflow: auto;}
+
+.phptextarea {font-family: 'Courier New','Courier', monospace;}

@@ -324,7 +324,7 @@ function decode(s){
 		    	<span style="float:left;color:#707070;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['plugin_code']; ?></span>
 		    	<span style="float:right;color:#707070;"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
 		</div>
-			<textarea dir="ltr" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
+			<textarea dir="ltr" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;" class="phptextarea"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
 		</div>
 		<!-- PHP text editor end -->
 		</div>
@@ -377,7 +377,7 @@ function decode(s){
 		  </tr>
 		  <tr>
 			<td align="left" valign="top"><?php echo $_lang['plugin_config']; ?>:</td>
-			<td align="left" valign="top"><textarea name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" value="<?php echo $_lang['update_params']; ?>" /></td>
+			<td align="left" valign="top"><textarea class="phptextarea" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" value="<?php echo $_lang['update_params']; ?>" /></td>
 		  </tr>
 		  <tr id="displayparamrow">
 			<td valign="top" align="left">&nbsp;</td>

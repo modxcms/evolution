@@ -688,7 +688,7 @@ if (is_array($evtOut))
 				$htmlContent = $content['content'];
 			?>
 				<div style="width:100%">
-					<textarea id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo htmlspecialchars($htmlContent)?></textarea>
+					<textarea class="phptextarea" id="ta" name="ta" style="width:100%; height: 400px;" onchange="documentDirty=true;"><?php echo htmlspecialchars($htmlContent)?></textarea>
 					<span class="warning"><?php echo $_lang['which_editor_title']?></span>
 
 					<select id="which_editor" name="which_editor" onchange="changeRTE();">

@@ -326,7 +326,7 @@ function decode(s){
 		    	<span style="float:left;color:#707070;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['snippet_code']?></span>
 		    	<span style="float:right;color:#707070;"><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : ""?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
 		  	</div>
-			<textarea dir="ltr" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
+			<textarea class="phptextarea" dir="ltr" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
 			</div>
 		<!-- PHP text editor end -->
 		  	</div>
@@ -379,7 +379,7 @@ function decode(s){
 		  </tr>
 		  <tr>
 			<td align="left" valign="top"><?php echo $_lang['snippet_properties']?>:</td>
-			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties']?>" class="inputBox" style="width:300px;" onChange="showParameters(this);documentDirty=true;"></td>
+			<td align="left" valign="top"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties']?>" class="inputBox phptextarea" style="width:300px;" onChange="showParameters(this);documentDirty=true;"></td>
 		  </tr>
 		  <tr id="displayparamrow">
 			<td valign="top" align="left">&nbsp;</td>
