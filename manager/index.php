@@ -226,7 +226,7 @@ if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
 $modx->manager->action = $action;
 
 // attempt to foil some simple types of CSRF attacks
-if (isset($modx->config['validate_referer']) && $modx->config['validate_referer']) {
+if (isset($modx->config['validate_referer']) && intval($modx->config['validate_referer'])) {
     if (isset($_SERVER['HTTP_REFERER'])) {
         $referer = $_SERVER['HTTP_REFERER'];
 
