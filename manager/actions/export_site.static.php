@@ -31,26 +31,26 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 <form action="index.php" method="post" name="exportFrm">
 <input type="hidden" name="export" value="export" />
 <input type="hidden" name="a" value="83" />
-<table border="0" cellspacing="0" cellpadding="2">
+<style type="text/css">
+table.settings {width:100%;}
+table.settings td.head {white-space:nowrap;vertical-align:top;padding-right:20px;font-weight:bold;}
+</style>
+<table class="settings" cellspacing="0" cellpadding="2">
   <tr>
-    <td valign="top"><b><?php echo $_lang['export_site_cacheable']; ?></b></td>
-    <td width="30">&nbsp;</td>
+    <td class="head"><?php echo $_lang['export_site_cacheable']; ?></td>
     <td><input type="radio" name="includenoncache" value="1" checked="checked"><?php echo $_lang['yes'];?><br />
 		<input type="radio" name="includenoncache" value="0"><?php echo $_lang['no'];?></td>
   </tr>
   <tr>
-    <td><b><?php echo $_lang['export_site_prefix']; ?></b></td>
-    <td>&nbsp;</td>
+    <td class="head"><?php echo $_lang['export_site_prefix']; ?></td>
     <td><input type="text" name="prefix" value="<?php echo $friendly_url_prefix; ?>" /></td>
   </tr>
   <tr>
-    <td><b><?php echo $_lang['export_site_suffix']; ?></b></td>
-    <td>&nbsp;</td>
+    <td class="head"><?php echo $_lang['export_site_suffix']; ?></td>
     <td><input type="text" name="suffix" value="<?php echo $friendly_url_suffix; ?>" /></td>
   </tr>
   <tr>
-    <td valign="top"><b><?php echo $_lang['export_site_maxtime']; ?></b></td>
-    <td>&nbsp;</td>
+    <td class="head"><?php echo $_lang['export_site_maxtime']; ?></td>
     <td><input type="text" name="maxtime" value="60" />
 		<br />
 		<small><?php echo $_lang['export_site_maxtime_message']; ?></small>
