@@ -126,7 +126,12 @@ if(!$modx->hasPermission('logs')) {
 <!-- recent documents -->
 <div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
 		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
+		<style type="text/css">
+			table.grid {border-collapse:collapse;width:100%;}
+			table.grid td {padding:4px;border:1px solid #ccc;}
+			table.grid a {display:block;}
+		</style>
+		<table class="grid">
 			<thead>
 			<tr>
 				<td><b><?php echo $_lang["id"]; ?></b></td>
@@ -154,7 +159,7 @@ if(!$modx->hasPermission('logs')) {
 					$user = $r['username'];
 				}
 				$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
-				echo "<tr bgcolor='$bgcolor'><td>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
+				echo "<tr bgcolor='$bgcolor'><td style='text-align:right;'>".$content['id']."</td><td><a href='index.php?a=3&id=".$content['id']."'>".$content['pagetitle']."</a></td><td>".$user."</td><td>".$modx->toDateFormat($content['editedon']+$server_offset_time)."</td></tr>";
 			}
 		}
 		?>
@@ -166,7 +171,7 @@ if(!$modx->hasPermission('logs')) {
 <!-- database -->
 <div class="sectionHeader"><?php echo $_lang['database_tables']; ?></div><div class="sectionBody" id="lyr4">
 		<p><?php echo $_lang['table_hoverinfo']; ?></p>
-		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
+		<table class="grid">
 		 <thead>
 		 <tr>
 			<td width="160"><b><?php echo $_lang["database_table_tablename"]; ?></b></td>
@@ -236,7 +241,7 @@ if(!$modx->hasPermission('logs')) {
 		$totaloverhead = $totaloverhead+$log_status['Data_free'];
 	}
 ?>
-		  <tr bgcolor="#CCCCCC">
+		  <tr bgcolor="#e0e0e0">
 			<td valign="top"><b><?php echo $_lang['database_table_totals']; ?></b></td>
 			<td colspan="2">&nbsp;</td>
 			<td dir='ltr' align="right" valign="top"><?php echo $totaloverhead>0 ? "<b style='color:#990033'>".nicesize($totaloverhead)."</b><br />(".number_format($totaloverhead)." B)" : "-"; ?></td>
@@ -256,7 +261,7 @@ if(!$modx->hasPermission('logs')) {
 
 		<?php
 		$html = $_lang["onlineusers_message"].'<b>'.strftime('%H:%M:%S', time()+$server_offset_time).'</b>):<br /><br />
-                <table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
+                <table class="grid">
                   <thead>
                     <tr>
                       <td><b>'.$_lang["onlineusers_user"].'</b></td>
