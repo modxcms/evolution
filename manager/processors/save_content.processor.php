@@ -427,7 +427,8 @@ switch ($actionToTake) {
 			echo "Document is linked to site_start variable and cannot be unpublished!";
 			exit;
 		}
-		if ($id == $site_start && ($pub_date != "0" || $unpub_date != "0")) {
+		$today= time();
+		if ($id == $site_start && ($pub_date > $today || $unpub_date != "0")) {
 			$modx->manager->saveFormValues(27);
 			echo "Document is linked to site_start variable and cannot have publish or unpublish dates set!";
 			exit;
