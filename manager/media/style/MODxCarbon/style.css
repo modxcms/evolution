@@ -604,23 +604,28 @@ a img {
 	text-decoration: line-through;
 }
 /* -------------------------[ grid style ]--- */
-.grid {
+table.grid {
 	width: 100%;
 	background-color: #fff;
-	border: 1px solid silver;
+	border-collapse:collapse;
+	margin-bottom:20px;
 }
-.gridHeader {
-	color: #fff;
+table.grid th, table.grid td {
+	border:1px solid #ccc;
+	padding:4px;
+}
+table.grid th, .gridHeader {
+	color: #333;
 	font-weight: bold;
-	background-color: #88939E;
+	background-color: #d2d2d2;
+	white-space:nowrap;
+	text-align:left;
 }
-.gridItem {
+table.grid td.odd, .gridItem {
 	background-color: #fff;
-	padding: 3px;
 }
-.gridAltItem {
+table.grid td.even, .gridAltItem {
 	background-color: #eeeeee;
-	padding: 3px;
 }
 .gridRowIcon:hover {
 	background-color: #f5f5dc;
@@ -1128,9 +1133,18 @@ a.hometblink, a.hometblink img {
 }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
-	border: 0 solid ThreeDShadow;
-	color: WindowText;
 }
+table.sortabletable {
+border-collapse:collapse;
+width:100%;
+}
+table.sortabletable td,table.sortabletable th {
+border:1px solid #ccc;
+padding:4px;
+}
+.sortabletable a {
+}
+
 .sortabletable thead tr {
 	background-color: #86919e;
 }
@@ -1147,14 +1161,14 @@ a.hometblink, a.hometblink img {
 .sortabletable th {
 	text-align: left;
 	cursor: pointer;
-	color: #333;
+	color: #f3f3f3;
 }
 	.rtl .sortabletable th {
 		text-align: right;
 	}
 .sortabletable th a {
 	text-decoration: none;
-	color: #333;
+	color: #f3f3f3;
 }
 .sortabletable th:active {
 	background: #ccc;
