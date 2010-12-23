@@ -4,9 +4,9 @@
  * Function:       Language file.
  * Encoding:       UTF8
  * Author:         Hansek, COEX (hansek@coex.cz), původní překlad: rasel^ - http://www.etomite.sk, R - stick, Ajven, golem, stranger, rzelnik
- * Date:           18 October 2009
- * Version:        2.0.4
- * MODx version:   Evolution 1.0.1
+ * Date:           20 June 2010
+ * Version:        2.0.5
+ * MODx version:   Evolution 1.0.5
 */
 $modx_lang_attribute = 'cs'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
@@ -52,6 +52,7 @@ $_lang["add_template"] = 'Přidat šablonu';
 $_lang["add_tv"] = 'Přidat TV';
 $_lang["add_weblink"] = 'Nový odkaz';
 $_lang["administrator_role_message"] = 'S vašemi pravomocemi nemůžete upravovat ani mazat.';
+$_lang["administrators"] = 'Administrátoři';
 $_lang["after_saving"] = 'Po uložení';
 $_lang["alert_delete_self"] = 'Nemůžete odstranit sám sebe!';
 $_lang["alias"] = 'Alias';
@@ -122,6 +123,8 @@ $_lang["configcheck_lang_difference"] = 'Nesprávný počet položek v souboru j
 $_lang["configcheck_lang_difference_msg"] = 'Právě vybraný jazyk má rozdílný počet položek než výchozí jazyk (angličtina). Pravděpodobně používate zastaralý nebo nekorektně upravený lokalizační soubor. I když se neobjeví problémy, bude asi potřeba udělat jeho aktualizaci.';
 $_lang["configcheck_notok"] = 'Byly nalezeny následující problémy: ';
 $_lang["configcheck_ok"] = 'Kontola proběhla úspěšně - žádná varovavání nejsou třeba.';
+$_lang["configcheck_php_gdzip"] = 'GD a/nebo Zip PHP extenze nenalezena';
+$_lang["configcheck_php_gdzip_msg"] = 'MODx potřebuje aktivní extenzi GD a Zip v PHP. Dokud bude MODx bežet bez nich, nebude možno používat všech výhod vestavěného správce souborů, editoru obrázků nebo captcha.';
 $_lang["configcheck_register_globals"] = 'register_globals je nastaven na zapnuto (ON) v konfiguračním souboru php.ini';
 $_lang["configcheck_register_globals_msg"] = 'Tato konfigurace dělá Vaše stránky více citlivé na útoky typu Cross Site Scripting (XSS). ';
 $_lang["configcheck_title"] = 'Kontrola konfigurace';
@@ -194,6 +197,7 @@ $_lang["datepicker_offset"] = 'Počet let v minulosti: ';
 $_lang["datepicker_offset_message"] = 'Kolik předchozích let má být zobrazeno ve výběru data.';
 $_lang["datetime_format"] = 'Format datumu';
 $_lang["datetime_format_message"] = 'Formát datumu v Manager.';
+$_lang["default"] = 'Výchozí:';
 $_lang["defaultcache_message"] = 'Označte \'Ano\' pro předvolené načtení dokumentů do zásobníku.';
 $_lang["defaultcache_title"] = 'Ukládání do zásobníku';
 $_lang["defaultmenuindex_message"] = 'Volbou \'Ano\' zapnete automatický menu index přidaný do jádra (základu).';
@@ -256,6 +260,7 @@ $_lang["event_id"] = 'ID události';
 $_lang["eventlog"] = 'Zápis událostí';
 $_lang["eventlog_msg"] = 'Zápis událostí je používán k zobrazení informativních, varovných a chybových zpráv vytvořených správcem obsahu. Sloupec "zdroj" zobrazuje část správce obsahu, kde zpráva nastala.';
 $_lang["eventlog_viewer"] = 'Prohlížeč událostí';
+$_lang["everybody"] = 'Všichni';
 $_lang["existing_category"] = 'Existující kategorie';
 $_lang["expand_tree"] = 'Rozbalit';
 $_lang["export_site"] = 'Export do HTML';
@@ -660,6 +665,8 @@ $_lang["refresh_site"] = 'Vyrovnávací paměť';
 $_lang["refresh_title"] = 'Obnovení stránek';
 $_lang["refresh_tree"] = 'Obnovit adresářový strom';
 $_lang["refresh_unpublished"] = 'Počet dokumentů s ukončenou dobou publikování: <b>%s</b>';
+$_lang["remember_last_tab"] = 'Pamatovat záložky';
+$_lang["remember_last_tab_message"] = 'Stránky manažeru se záložkami se budou nahrávat s naposledy otevřenými záložkami, normálně se zobrazuje první záložka.';
 $_lang["remember_username"] = 'Zapamatovat si heslo';
 $_lang["remove"] = 'Odstranit';
 $_lang["remove_date"] = 'Odstranit datum';
@@ -670,8 +677,6 @@ $_lang["require_tagname"] = 'Je požadován název značky';
 $_lang["require_tagvalue"] = 'Je požadována hodnota tagu';
 $_lang["reset"] = 'Vymazat';
 $_lang["reset_failedlogins"] = 'reset';
-$_lang["resolve_hostnames_message"] = 'Chcete, aby MODx konvertoval hostitelské IP na hostname Vašich návštevníků, když navštíví stránku? Zobrazení názvů mírně zvýší zátěž serveru, Vaši návštěvníci si toho, ale nijak nevšimnou.';
-$_lang["resolve_hostnames_title"] = 'Převod IP na hostname:';
 $_lang["resource"] = 'Dokument';
 $_lang["resource_alias"] = 'Zástupce dokumentu';
 $_lang["resource_alias_help"] = "Zde můžete zvolit zástupce pro tento dokument. Pro lehčí přístup k dokumentu použijte:\n\nhttp://vase_domena/zastupce\n\nZástupce bude pracovat jen při aktivování funkce zjednodušených url adres.";
@@ -774,6 +779,7 @@ $_lang["role_new_user"] = 'Vytvořit nové užívatele';
 $_lang["role_new_web_user"] = 'Vytvořit nového návštěvníka';
 $_lang["role_plugin_management"] = 'Správa pluginů';
 $_lang["role_publish_doc"] = 'Publikované dokumenty';
+$_lang["role_remove_locks"] = 'Odstranit zámky';
 $_lang["role_role_management"] = 'Oprávnění';
 $_lang["role_run_module"] = 'Spustit modul';
 $_lang["role_save_chunk"] = 'Uložit chunky';
@@ -947,6 +953,8 @@ $_lang["top_howmany_title"] = 'Kolik "Nejlepších ...." položek';
 $_lang["total"] = 'celkem';
 $_lang["track_visitors_message"] = 'Toto nastavení nemá žádný efekt, pokud máte nainstalováno sledování návštěvníků nebo statistiky, které podporují toto nastavení. Logování návštěv vám umožní zobrazit uživatelské statistiky vašich stránek.';
 $_lang["track_visitors_title"] = 'Logování návštěv (statistiky)';
+$_lang["tree_page_click"] = 'Chování stránky při kliknutí';
+$_lang["tree_page_click_message"] = 'Výchozí chování při kliknutí na stránku ve stromu dokumentů.';
 $_lang["tree_show_protected"] = 'Ukázat chráněné stránky';
 $_lang["tree_show_protected_message"] = 'Pokud nastavíte "Ne", chráněné stránky (a žádní jejich potomci) se nezobrazí ve stromu dokumentů. "Ne" je výchozím nastavením MODx.';
 $_lang["truncate_table"] = 'Klikněte sem pro vyprázdnění této tabulky';
@@ -1028,6 +1036,8 @@ $_lang["view_logging"] = 'Správce procesů';
 $_lang["view_sysinfo"] = 'Systémové informace';
 $_lang["warning"] = 'Varování!';
 $_lang["warning_not_saved"] = 'Změny, které jste v dokumentu provedli, nebudou uložené. Můžete zvolit zda chcete na stránce setrvat a uložit změny (\'Storno\'), nebo stránku opustit a ztratit všechny změny, které jste udělali (\'OK\').';
+$_lang["warning_visibility"] = 'Varování konfigurace viditelné pro';
+$_lang["warning_visibility_message"] = 'Ovladač viditelnosti varování konfigurace zobrazeného na úvodní stránce manageru';
 $_lang["web_access_permissions"] = 'Webová přístupová práva';
 $_lang["web_access_permissions_user_groups"] = 'Skupiny návštěvníků';
 $_lang["web_permissions"] = 'Webová práva';
