@@ -274,6 +274,7 @@ $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagre
     <input type="hidden" value="<?php echo $_POST['cmsadmin'] ?>" name="cmsadmin" />
     <input type="hidden" value="<?php echo $_POST['cmsadminemail'] ?>" name="cmsadminemail" />
     <input type="hidden" value="<?php echo $_POST['cmspassword'] ?>" name="cmspassword" />
+    <input type="hidden" value="<?php echo $_POST['cmspasswordconfirm'] ?>" name="cmspasswordconfirm" />
     
     <input type="hidden" value="1" name="options_selected" />
     

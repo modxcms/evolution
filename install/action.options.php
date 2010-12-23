@@ -59,6 +59,7 @@ elseif ($installMode == 1) {
     <input type="hidden" value="<?php echo trim($_POST['cmsadmin']); ?>" name="cmsadmin" />
     <input type="hidden" value="<?php echo trim($_POST['cmsadminemail']); ?>" name="cmsadminemail" />
     <input type="hidden" value="<?php echo trim($_POST['cmspassword']); ?>" name="cmspassword" />
+    <input type="hidden" value="<?php echo trim($_POST['cmspasswordconfirm']); ?>" name="cmspasswordconfirm" />
     <input type="hidden" value="1" name="options_selected" />
   </div>
 
