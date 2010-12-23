@@ -7,26 +7,26 @@ Created on: 01/22/07
 Description: Language strings for AjaxSearch
 */
 
-$_lang['as_resultsIntroFailure'] = 'Ã»ÓĞËÑË÷µ½Ïà¹ØµÄÄÚÈİ£¬Çë³¢ÊÔÊäÁíÍâµÄ¹Ø¼ü´Ê';
-$_lang['as_searchButtonText'] = 'ËÑË÷';
-$_lang['as_boxText'] = 'ÊäÈëËÑË÷¹Ø¼ü´Ê...';
-$_lang['as_introMessage'] = 'ÇëÊäÈë¹Ø¼ü´Ê¿ªÊ¼ËÑË÷';
-$_lang['as_resultsFoundTextSingle'] = '%d Ïà¹Ø½á¹û "%s".';
-$_lang['as_resultsFoundTextMultiple'] = '%d Ïà¹Ø½á¹û "%s".';
+$_lang['as_resultsIntroFailure'] = 'çŸ­å—¤æœ´æ²«æ¬ºãƒ»è³¼è­°åªå¦ãƒ»è©æ™¦ç·¨è£œç·ç¿Œè­°è³¼å›šç°¡';
+$_lang['as_searchButtonText'] = 'æœ´æ²«';
+$_lang['as_boxText'] = 'è£œç§˜æœ´æ²«è³¼å›šç°¡...';
+$_lang['as_introMessage'] = 'è©è£œç§˜è³¼å›šç°¡è•å…µæœ´æ²«';
+$_lang['as_resultsFoundTextSingle'] = '%d ãƒ»è³¼æ½¤æƒš "%s".';
+$_lang['as_resultsFoundTextMultiple'] = '%d ãƒ»è³¼æ½¤æƒš "%s".';
 $_lang['as_paginationTextSinglePage'] = '';
-$_lang['as_paginationTextMultiplePages'] = 'ËÑË÷½á¹ûÒ³£º ';
-$_lang['as_moreResultsText'] = 'µã»÷ÕâÀï²é¿´ËùÓĞ½á¹û';
-$_lang['as_moreResultsTitle'] = '¸ü¶à½á¹û';
-$_lang['as_maxWords'] = 'ËÑË÷µÄ¹Ø¼ü´Ê×î´óÏŞ¶È %d ¸ö×Ö·û';
-$_lang['as_minChars'] = 'ËÑË÷µÄ¹Ø¼ü´ÊÖÁÉÙĞèÒª %d ¸ö×Ö·û';
-$_lang['as_maxChars'] = 'ËÑË÷µÄ¹Ø¼ü´Ê×î¶àÔÊĞí %d ¸ö×Ö·û';
-$_lang['oneword'] = 'Ò»¸ö×Ö·û';
-$_lang['allwords'] = 'ËùÓĞ¹Ø¼ü´Ê';
-$_lang['exactphrase'] = 'ÍêÈ«Ò»ÖÂ';
-$_lang['nowords'] = 'Ã»ÓĞ¹Ø¼ü´Ê';
-$_lang['as_cmtHiddenFieldIntro'] = 'Õâ¸öµØ·½Ó¦¸ÃÊÇ¿Õ°×µÄ£¬<br />²»ÒªÊäÈëÈÎºÎÎÄ×Ö¡£';
-$_lang['as_cmtIntroMessage'] = 'ÄãµÄËÑË÷Ä¿±ê²éÕÒµ½ÁËÂğ?ÔÚÕâÀïÁôÏÂÄãµÄÒâ¼û!';
-$_lang['as_cmtSubmitText'] = '·¢ËÍ';
-$_lang['as_cmtResetText'] = 'Çå³ı';
-$_lang['as_cmtThksMessage'] = 'Ğ»Ğ»ÄãµÄÒâ¼û£¡';
+$_lang['as_paginationTextMultiplePages'] = 'æœ´æ²«æ½¤æƒšåŒˆãƒ» ';
+$_lang['as_moreResultsText'] = 'æ³£ä¼¼å®¸æˆ¦è‡¥å¿ƒä¾­å—¤æ½¤æƒš';
+$_lang['as_moreResultsTitle'] = 'åšè¬¹æ½¤æƒš';
+$_lang['as_maxWords'] = 'æœ´æ²«è­°è³¼å›šç°¡æ·å¯„ãƒ»æ¥­ %d å€–å¿–æ†²';
+$_lang['as_minChars'] = 'æœ´æ²«è­°è³¼å›šç°¡å´›å¯Œä¿¶å‹£ %d å€–å¿–æ†²';
+$_lang['as_maxChars'] = 'æœ´æ²«è­°è³¼å›šç°¡æ·è¬¹å¡‹ä¿¯ %d å€–å¿–æ†²';
+$_lang['oneword'] = 'åŒ¯å€–å¿–æ†²';
+$_lang['allwords'] = 'ä¾­å—¤è³¼å›šç°¡';
+$_lang['exactphrase'] = 'é ¼ç• åŒ¯å´‘';
+$_lang['nowords'] = 'çŸ­å—¤è³¼å›šç°¡';
+$_lang['as_cmtHiddenFieldIntro'] = 'å®¸å€–ä»‡åœ­å“˜ä¹é è…æ˜“è­°ãƒ»<br />éŸ³å‹£è£œç§˜è²©æ¡çŒŸå¿–ã€‚';
+$_lang['as_cmtIntroMessage'] = 'ä½è­°æœ´æ²«æœ•ç‚è‡¥å­€æ¬ºé˜»å®…?å£“å®¸æˆ¦è—»å’Œä½è­°å­éœ€!';
+$_lang['as_cmtSubmitText'] = 'çªŸåƒ•';
+$_lang['as_cmtResetText'] = 'è³ èŒ…';
+$_lang['as_cmtThksMessage'] = 'ä»ä»ä½è­°å­éœ€ãƒ»';
 ?>

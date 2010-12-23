@@ -24,4 +24,4 @@ $_lang['tinymce_theme_editor'] = "Sis&auml;ll&ouml;nmuokkaajalle";
 $_lang['tinymce_theme_custom'] = "Kustomoitu";
 $_lang['tinymce_theme_creative'] = 'Creative';
 $_lang['tinymce_theme_logic'] = 'xhtml';
-$_lang['tinymce_theme_global_settings'] = "Käytä maailmanlaajuisesti";
+$_lang['tinymce_theme_global_settings'] = "K辰yt辰 maailmanlaajuisesti";
