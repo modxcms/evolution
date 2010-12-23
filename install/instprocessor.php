@@ -28,8 +28,8 @@ $installData = $_POST['installdata'] == "1" ? 1 : 0;
 //} else {
 	// get db info from post
 	$database_server = $_POST['databasehost'];
-	$database_user = $_POST['databaseloginname'];
-	$database_password = $_POST['databaseloginpassword'];
+	$database_user = $_SESSION['databaseloginname'];
+	$database_password = $_SESSION['databaseloginpassword'];
 	$database_collation = $_POST['database_collation'];
 	$database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
 	$database_connection_charset = $_POST['database_connection_charset'];

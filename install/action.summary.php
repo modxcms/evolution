@@ -119,8 +119,8 @@ if ($installMode == 1) {
 } else {
     // get db info from post
     $database_server = $_POST['databasehost'];
-    $database_user = $_POST['databaseloginname'];
-    $database_password = $_POST['databaseloginpassword'];
+    $database_user = $_SESSION['databaseloginname'];
+    $database_password = $_SESSION['databaseloginpassword'];
     $database_collation = $_POST['database_collation'];
     $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
     $database_connection_charset = $_POST['database_connection_charset'];
@@ -269,11 +269,10 @@ $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagre
     <input type="hidden" value="<?php echo $_POST['database_connection_charset'] ?>" name="database_connection_charset" />
     <input type="hidden" value="<?php echo $_POST['database_connection_method'] ?>" name="database_connection_method" />
     <input type="hidden" value="<?php echo $_POST['databasehost'] ?>" name="databasehost" />
-    <input type="hidden" value="<?php echo $_POST['databaseloginname'] ?>" name="databaseloginname" />
-    <input type="hidden" value="<?php echo $_POST['databaseloginpassword'] ?>" name="databaseloginpassword" />
     <input type="hidden" value="<?php echo $_POST['cmsadmin'] ?>" name="cmsadmin" />
     <input type="hidden" value="<?php echo $_POST['cmsadminemail'] ?>" name="cmsadminemail" />
     <input type="hidden" value="<?php echo $_POST['cmspassword'] ?>" name="cmspassword" />
+    <input type="hidden" value="<?php echo $_POST['cmspasswordconfirm'] ?>" name="cmspasswordconfirm" />
     
     <input type="hidden" value="1" name="options_selected" />
     

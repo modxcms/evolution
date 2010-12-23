@@ -67,10 +67,10 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
     <input id="databasehost" value="<?php echo isset($_POST['databasehost']) ? $_POST['databasehost']: $database_server ?>" name="databasehost" />
   </p>
   <p class="labelHolder"><label for="databaseloginname"><?php echo $_lang['connection_screen_database_login']?></label>
-    <input id="databaseloginname" name="databaseloginname" value="<?php echo isset($_POST['databaseloginname']) ? $_POST['databaseloginname']: "" ?>" />
+    <input id="databaseloginname" name="databaseloginname" value="<?php echo isset($_SESSION['databaseloginname']) ? $_SESSION['databaseloginname']: "" ?>" />
   </p>
   <p class="labelHolder"><label for="databaseloginpassword"><?php echo $_lang['connection_screen_database_pass']?></label>
-    <input id="databaseloginpassword" type="password" name="databaseloginpassword" value="<?php echo isset($_POST['databaseloginpassword']) ? $_POST['databaseloginpassword']: "" ?>" />
+    <input id="databaseloginpassword" type="password" name="databaseloginpassword" value="<?php echo isset($_SESSION['databaseloginpassword']) ? $_SESSION['databaseloginpassword']: "" ?>" />
   </p>
 
 <!-- connection test action/status message -->

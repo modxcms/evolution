@@ -4,6 +4,10 @@ if ($installMode == 0 || $installMode == 2) {
     $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8_general_ci';
     $database_charset = substr($database_collation, 0, strpos($database_collation, '_'));
     $_POST['database_connection_charset'] = $database_charset;
+    if(empty($_SESSION['databaseloginpassword']))
+        $_SESSION['databaseloginpassword'] = $_POST['databaseloginpassword'];
+    if(empty($_SESSION['databaseloginname']))
+        $_SESSION['databaseloginname'] = $_POST['databaseloginname'];
 }
 elseif ($installMode == 1) {
     include "../manager/includes/config.inc.php";
@@ -38,8 +42,8 @@ elseif ($installMode == 1) {
     $_POST['database_connection_charset'] = $database_connection_charset;
     $_POST['database_connection_method'] = $database_connection_method;
     $_POST['databasehost'] = $database_server;
-    $_POST['databaseloginname'] = $database_user;
-    $_POST['databaseloginpassword'] = $database_password;
+    $_SESSION['databaseloginname'] = $database_user;
+    $_SESSION['databaseloginpassword'] = $database_password;
 }
 ?>
 
@@ -54,11 +58,10 @@ elseif ($installMode == 1) {
     <input type="hidden" value="<?php echo $_POST['database_connection_charset']; ?>" name="database_connection_charset" />
     <input type="hidden" value="<?php echo $_POST['database_connection_method']; ?>" name="database_connection_method" />
     <input type="hidden" value="<?php echo $_POST['databasehost']; ?>" name="databasehost" />
-    <input type="hidden" value="<?php echo $_POST['databaseloginname']; ?>" name="databaseloginname" />
-    <input type="hidden" value="<?php echo $_POST['databaseloginpassword']; ?>" name="databaseloginpassword" />
     <input type="hidden" value="<?php echo trim($_POST['cmsadmin']); ?>" name="cmsadmin" />
     <input type="hidden" value="<?php echo trim($_POST['cmsadminemail']); ?>" name="cmsadminemail" />
     <input type="hidden" value="<?php echo trim($_POST['cmspassword']); ?>" name="cmspassword" />
+    <input type="hidden" value="<?php echo trim($_POST['cmspasswordconfirm']); ?>" name="cmspasswordconfirm" />
     <input type="hidden" value="1" name="options_selected" />
   </div>
 
