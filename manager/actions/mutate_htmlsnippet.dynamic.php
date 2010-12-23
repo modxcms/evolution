@@ -181,7 +181,7 @@ if (is_array($evtOut))
 
 	<div style="width:100%; position:relative;">
 		<div style="padding:1px; width:100%; height:16px; background-color:#eeeeee; border:1px solid #e0e0e0; margin-top:5px;">
-			<span style="color:brown; font-weight:bold; padding:3px;">&nbsp;<?php echo $_lang['chunk_code']?></span>
+			<span style="font-weight:bold;">&nbsp;<?php echo $_lang['chunk_code']?></span>
 		</div>
         <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet'])?></textarea>
 		</div>
