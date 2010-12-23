@@ -146,6 +146,8 @@ else $webstart_path = '../'.$webstart_path;
 <div class="sectionBody">
 <script type="text/javascript" src="media/script/multifile.js"></script>
 <script type="text/javascript">
+var current_path = '<?php echo $startpath;?>';
+
 function viewfile(url) {
     document.getElementById('imageviewer').style.border="1px solid #000080";
     document.getElementById('imageviewer').src=url;
@@ -174,6 +176,20 @@ function getFolderName(a){
     f=window.prompt('Enter New Folder Name:','')
     if (f) a.href+=escape(f);
     return (f) ? true:false;
+}
+
+function deleteFolder (curpath,newpath) {
+	if (confirmDeleteFolder()) 
+		window.location.href=	
+		 "index.php?a=31&mode=deletefolder&path="+curpath+"&folderpath="+newpath+'/'+folder;
+	return false;
+}
+
+function deleteFile(file) {
+	if (confirmDelete()) 
+		window.location.href=
+		"index.php?a=31&mode=delete&path="+file;
+	return false;
 }
 </script>
 <?php
@@ -431,7 +447,7 @@ function ls($curpath) {
                 $dirs_array[$dircounter]['dir'] = $newpath;
                 $dirs_array[$dircounter]['stats'] = lstat($newpath);
                 $dirs_array[$dircounter]['text'] = '<img src="media/style/'.$manager_theme.'images/tree/folder.gif" border="0" align="absmiddle" alt="" /> <a href="index.php?a=31&mode=drill&path='.urlencode($newpath).'"><b>'.$file.'</b></a>';
-                $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="index.php?a=31&mode=deletefolder&path='.urlencode($curpath).'&folderpath='.urlencode($newpath).'" onclick="return confirmDeleteFolder();"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></a></span>' : '';
+                $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript: deleteFolder(\''.urlencode($curpath).'\', \''.urlencode($newpath).'\');"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></a></span>' : '';
 
                 // increment the counter
                 $dircounter++;
@@ -445,7 +461,8 @@ function ls($curpath) {
                 $files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=view&path='.urlencode($newpath).'"><img src="media/style/'.$manager_theme.'images/icons/context_view.gif" border="0" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></a></span>' : $files_array[$filecounter]['view'] ;
                 $files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? '<span style="width:20px;"><a href="index.php?a=31&mode=unzip&path='.$curpath.'&file='.urlencode($file).'" onclick="return confirmUnzip();"><img src="media/style/'.$manager_theme.'images/icons/unzip.gif" border="0" align="absmiddle" alt="'.$_lang['file_download_unzip'].'" title="'.$_lang['file_download_unzip'].'" /></a></span>' : '' ;
                 $files_array[$filecounter]['edit'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=edit&path='.urlencode($newpath).'#file_editfile"><img src="media/style/'.$manager_theme.'images/icons/save.png" border="0" align="absmiddle" alt="'.$_lang['files_editfile'].'" title="'.$_lang['files_editfile'].'" /></a></span>' : '<span class="disabledImage"><img src="media/style/'.$manager_theme.'images/icons/save.png" border="0" align="absmiddle" alt="'.$_lang['files_editfile'].'" title="'.$_lang['files_editfile'].'" /></span>';
-                $files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? '<span style="width:20px;"><a href="index.php?a=31&mode=delete&path='.urlencode($newpath).'" onclick="return confirmDelete();"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" border="0" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></a></span>' : '<span class="disabledImage"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" border="0" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></span>';
+                $files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? '<span style="width:20px;"><a href="javascript:deleteFile(\''.urlencode($newpath).'\');"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" border="0" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></a></span>' : '<span class="disabledImage"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" border="0" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></span>';
+
 
                 // increment the counter
                 $filecounter++;

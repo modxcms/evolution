@@ -33,6 +33,7 @@ Bugfixes:
 * [#3060] Fix message count on Manager welcome page
 * [#1070] Fixed bug in DocManager where it would not create new TV values, only update existing ones
 * [#3163] Fix RSS feed encode issue
+* [#1871] Fix for file manager when aggressive caching/pre-fetching is used at the ISP level (e.g. satellite internet)
 
 --------------------------------------------
 Additional Improvements & Updates:
