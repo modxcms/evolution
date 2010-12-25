@@ -123,16 +123,18 @@ class DocManagerBackend {
 		return $this->dm->parseTemplate('update.tpl', $this->dm->ph);
 	}
 	
-	function changeTemplateVariables($pids) {	
+	function changeTemplateVariables($pids) {
 		$updateError = '';
 	
-		$ignoreList = array();
+		/*
+        $ignoreList = array();
 		if (trim($_POST['ignoreTV']) <> '') {
 			$ignoreList = explode(',', $_POST['ignoreTV']);
 			foreach ($ignoreList as $key => $value) {
 				$ignoreList[$key] = trim($value);
 			}
 		}
+		 */
 	
 		$results = $this->processRange($pids, 'id', 0);
 		$pids = $results[0];
@@ -141,11 +143,11 @@ class DocManagerBackend {
 		if (count($pids) > 0) {
 			$tmplVars = array ();
 			foreach ($_POST as $key => $value) {
-				if (substr($key, 0, 2) == 'tv') {
-					echo $key;
-					$tvKeyName = substr($key, 2);
-					if (strpos($key,'_prefix') !== false)
-						continue;
+				if (substr($key, 0, 10) == 'update_tv_' && $value == 'yes') {
+					//echo $key;
+					$tvKeyName = substr($key, 10);
+					//if (strpos($key,'_prefix') !== false)
+					//	continue;
 					
 					$typeSQL = $this->modx->db->select('*', $this->modx->getFullTableName('site_tmplvars'), 'id=' . $tvKeyName . '');
 					$row = $this->modx->db->getRow($typeSQL);
@@ -181,40 +183,43 @@ class DocManagerBackend {
 				if ($this->modx->db->getRecordCount($tempSQL) > 0) {
 					$row = $this->modx->db->getRow($tempSQL);
 					if ($row['template'] == $_POST['template_id']) {
-						$tvID = $this->getTemplateVarIds($tmplVars,$docID,$ignoreList);
+						$tvID = $this->getTemplateVarIds($tmplVars,$docID);
 						if (count($tvID) > 0) {
 							foreach ($tvID as $tvIndex => $tvValue) {
-								$checkSQL = $this->modx->db->select('value', $this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
-								$checkCount = $this->modx->db->getRecordCount($checkSQL);
-								if ($checkCount) {
-									$checkRow = $this->modx->db->getRow($checkSQL);
-									if ($checkRow['value'] == $tmplVars["$tvIndex"]) {
-										$noUpdate = true;
-									}
-									elseif (trim($tmplVars["$tvIndex"]) == '') {
-										$this->modx->db->delete($this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
-										$noUpdate = true;
-									}
-								}
-								
-								if ($checkCount > 0 && !isset ($noUpdate)) {
-									$fields = array (
-										'value' => $this->modx->db->escape($tmplVars["$tvIndex"])
-									);
-	
-									$this->modx->db->update($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
-									$updated = true;
-								} elseif (!isset ($noUpdate) && ltrim($tmplVars["$tvIndex"]) !== '') {
+                                if($_POST['update_tv_' . $tvIndex] == 'yes') {
+                                    $checkSQL = $this->modx->db->select('value', $this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                    $checkCount = $this->modx->db->getRecordCount($checkSQL);
+                                    if ($checkCount) {
+                                        $checkRow = $this->modx->db->getRow($checkSQL);
+                                        if ($checkRow['value'] == $tmplVars["$tvIndex"]) {
+                                            $noUpdate = true;
+                                        }
+                                        elseif (trim($tmplVars["$tvIndex"]) == '') {
+                                            $this->modx->db->delete($this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                            $noUpdate = true;
+                                        }
+                                    }
 
-									$fields = array (
-										'value' => $this->modx->db->escape($tmplVars["$tvIndex"]),
-										'contentid' => $this->modx->db->escape($docID),
-										'tmplvarid' => $this->modx->db->escape($tvValue)
-									);
-	
-									$this->modx->db->insert($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'));
-									$updated = true;
-								}
+                                    if ($checkCount > 0 && !isset ($noUpdate)) {
+                                        $fields = array (
+                                            'value' => $this->modx->db->escape($tmplVars["$tvIndex"])
+                                        );
+
+                                        $this->modx->db->update($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'), 'contentid="' . $docID . '" AND tmplvarid="' . $tvValue . '"');
+                                        $updated = true;
+                                    } elseif (!isset ($noUpdate) && ltrim($tmplVars["$tvIndex"]) !== '') {
+
+                                        $fields = array (
+                                            'value' => $this->modx->db->escape($tmplVars["$tvIndex"]),
+                                            'contentid' => $this->modx->db->escape($docID),
+                                            'tmplvarid' => $this->modx->db->escape($tvValue)
+                                        );
+
+                                        $this->modx->db->insert($fields, $this->modx->getFullTableName('site_tmplvar_contentvalues'));
+                                        $updated = true;
+                                    }
+                                }
+                                unset($noUpdate);
 							}
 						}
 					} else {

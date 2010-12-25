@@ -15,7 +15,7 @@
 //-- titles
 $_lang['DM_module_title'] = 'Doc Manager';
 $_lang['DM_action_title'] = '操作を選択します';
-$_lang['DM_range_title'] = 'リソースIDを指定';
+$_lang['DM_range_title'] = '操作対象(操作元)のリソースIDを指定';
 $_lang['DM_tree_title'] = 'サイトツリーからリソースを選択';
 $_lang['DM_update_title'] = '更新完了';
 $_lang['DM_sort_title'] = 'メニューインデックスエディタ';
@@ -26,13 +26,13 @@ $_lang['DM_template_variables'] = 'テンプレート変数';
 $_lang['DM_sort_menu'] = 'メニュー整列';
 $_lang['DM_change_template'] = 'テンプレート選択';
 $_lang['DM_publish'] = '公開/非公開';
-$_lang['DM_other'] = 'その他のプロパティ';
+$_lang['DM_other'] = 'その他';
 
 //-- buttons
-$_lang['DM_close'] = 'Doc Managerを閉じる';
+$_lang['DM_close'] = '閉じる';
 $_lang['DM_cancel'] = '戻る';
 $_lang['DM_go'] = 'Go';
-$_lang['DM_save'] = '保存';
+$_lang['DM_save'] = '更新';
 $_lang['DM_sort_another'] = '別の整列';
 
 //-- templates tab
@@ -68,16 +68,16 @@ $_lang['DM_doc_skip_message1'] = 'リソースID';
 $_lang['DM_doc_skip_message2'] = 'は選択したリソースグループに既に含まれています。(スキップ)';
 
 //-- sort menu tab
-$_lang['DM_sort_pick_item'] = 'サイトルートか、整列したい範囲の親リソース(コンテナ)をクリックしてください。';
+$_lang['DM_sort_pick_item'] = 'メニューの並び順(menuindex)をマウス操作でまとめて変更できます。<br />サイトルートか、並べ替えたい範囲の親リソース(コンテナ)をクリックしてください。';
 $_lang['DM_sort_updating'] = '更新中 ...';
-$_lang['DM_sort_updated'] = '更新';
+$_lang['DM_sort_updated'] = '更新しました。「閉じる」または「戻る」ボタンをクリックしてください。';
 $_lang['DM_sort_nochildren'] = 'このリソースにはサブリソースがありません。';
 $_lang['DM_sort_noid']='リソースが選択されていません。戻ってリソースを選択してください。';
 
 //-- other tab
 $_lang['DM_other_header'] = 'リソースの各種設定';
 $_lang['DM_misc_label'] = '変更対象の設定:';
-$_lang['DM_misc_desc'] = '変更する設定をドロップダウンメニューから選択してください。そして必要なオプションを指定します。1度に1つの設定しか変更できません。';
+$_lang['DM_misc_desc'] = '変更する設定をドロップダウンメニューから選択してください。そして必要なオプションを指定します。一度にひとつの設定しか変更できません。';
 
 $_lang['DM_other_dropdown_publish'] = '公開/非公開';
 $_lang['DM_other_dropdown_show'] = 'メニューに表示/非表示';
@@ -102,7 +102,7 @@ $_lang['DM_other_delete_radio2'] = '削除から復活';
 
 //-- adjust dates
 $_lang['DM_adjust_dates_header'] = 'リソースの各種日時設定';
-$_lang['DM_adjust_dates_desc'] = '次の日時設定を変更できます。「カレンダーを表示」をお使いください。';
+$_lang['DM_adjust_dates_desc'] = '複数のリソースの日時設定をまとめて変更できます。';
 $_lang['DM_view_calendar'] = 'カレンダーを表示';
 $_lang['DM_clear_date'] = 'リセット';
 
@@ -115,7 +115,7 @@ $_lang['DM_adjust_authors_noselection'] = '変更なし';
 
  //-- labels
 $_lang['DM_date_pubdate'] = '公開日時:';
-$_lang['DM_date_unpubdate'] = '非公開日時:';
+$_lang['DM_date_unpubdate'] = '公開終了日時:';
 $_lang['DM_date_createdon'] = '作成日時:';
 $_lang['DM_date_editedon'] = '編集日時:';
 //$_lang['DM_date_deletedon'] = 'Deleted On Date';
@@ -140,9 +140,9 @@ $_lang['DM_select_tree'] ='ツリー表示からリソースを選択します';
 $_lang['DM_process_noselection'] = '必要な指定がされていません。';
 $_lang['DM_process_novalues'] = '値が指定されていませんでした。';
 $_lang['DM_process_limits_error'] = '上限が下限よりも小さいです:';
-$_lang['DM_process_invalid_error'] = '値が変でした:';
+$_lang['DM_process_invalid_error'] = '値がイレギュラーです ';
 $_lang['DM_process_update_success'] = '変更は無事完了しました。';
-$_lang['DM_process_update_error'] = '変更は完了しましたがエラーがありました:';
+$_lang['DM_process_update_error'] = '変更は完了しましたが、エラーがありました:';
 $_lang['DM_process_back'] = '戻る';
 
 //-- manager access logging

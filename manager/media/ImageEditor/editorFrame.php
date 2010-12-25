@@ -60,7 +60,7 @@ var currentImageFile = "<?php if(count($imageInfo)>0) echo rawurlencode($imageIn
 	<tr>
 		<td>
 <?php if(count($imageInfo) > 0 && is_file($imageInfo['fullpath'])) { ?>
-	<span id="imgCanvas" class="crop"><img src="<?php echo $imageInfo['src']; ?>" <?php echo $imageInfo['dimensions']; ?> alt="" id="theImage" name="theImage"></span>
+	<span id="imgCanvas" class="crop"><img src="<?php echo MODX_BASE_URL . $imageInfo['src']; ?>" <?php echo $imageInfo['dimensions']; ?> alt="" id="theImage" name="theImage"></span>
 <?php } else { ?>
 	<span class="error">No Image Available</span>
 <?php } ?>
