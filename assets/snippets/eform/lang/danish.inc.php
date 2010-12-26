@@ -1,10 +1,16 @@
 <?php
 /**
-* assets/snippets/eform/danish.inc.php
-* Danish language file for eForm
-* Using UTF-8
-* Henrik Nielsen, 25.12.2010
-*/
+ * MODx language File for Eform
+ *
+ * @author Henrik Nielsen
+ * @package Eform 1.0.5
+ * @date 26/12/10 11.37
+ * @version 1.0.4
+ * 
+ * Filename:       /assets/snippets/eform/lang/danish.inc.php
+ * Language:       Danish
+ * Encoding:       UTF-8
+ */
 $_lang["ef_date_format"] = "%d.%b.%Y %H:%M:%S";
 $_lang["ef_debug_info"] = "Debug information: ";
 $_lang["ef_debug_warning"] = "<p style=\"color:red;\"><span style=\"font-size:1.5em;font-weight:bold;\">ADVARSEL - DEBUGGING ER AKTIVERET</span> <br />Husk at deaktivere debug funktionen inden dette website bliver offentliggjort!</p>";
@@ -12,30 +18,30 @@ $_lang["ef_error_filter_rule"] = "Tekst filteret blev ikke genkendt";
 $_lang["ef_error_formid"] = "Ugyldigt Form Id.";
 $_lang["ef_error_list_rule"] = "Fejl i validering af form felt! En #LIST regel er brugt, men der er ikke fundet nogle liste værdier: ";
 $_lang["ef_error_validation_rule"] = "Valideringsreglen blev ikke genkendt";
-$_lang["ef_eval_deprecated"] = "#EVAL reglen er udgået, og vil sandsynligvis ikke virke i fremtidige versioner. Brug istedent for #FUNCTION .";
+$_lang["ef_eval_deprecated"] = "#EVAL reglen er udgået, og vil sandsynligvis ikke virke i fremtidige versioner. Brug i stedent for #FUNCTION .";
 $_lang["ef_failed_default"] = "Ugyldig værdi";
-$_lang["ef_failed_ereg"] = "Værdien kunne ikke valideres";
-$_lang["ef_failed_eval"] = "Værdien kunne ikke valideres";
-$_lang["ef_failed_list"] = "Værdien er ikke i listen af tilladte værdier";
-$_lang["ef_failed_range"] = "Værdien er ikke inden for det tilladte område";
+$_lang["ef_failed_ereg"] = "Det indtastede kunne ikke valideres";
+$_lang["ef_failed_eval"] = "Det indtastede kunne ikke valideres";
+$_lang["ef_failed_list"] = "Det indtastede er ikke i listen af tilladte værdier";
+$_lang["ef_failed_range"] = "Det indtastede er ikke inden for det tilladte område";
 $_lang["ef_failed_upload"] = "Ugyldig filtype.";
 $_lang["ef_failed_vericode"] = "Ugyldig kontrol kode.";
 $_lang["ef_invalid_date"] = " er ikke en gyldig dato";
 $_lang["ef_invalid_email"] = " er ikke en gyldig e-mail adresse";
 $_lang["ef_invalid_number"] = " er ikke et gyldigt nummer";
-$_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Formularens skabelon er sat til samme ID som ressourcen der indeholder kaldet til Eform snippet! Du kan ikke have formularen i samme ressource som snippet kaldet.</span> id=";
-$_lang["ef_mail_abuse_error"] = "<strong>Ugyldige eller usikre indtastninger blev opdaget i din formular.</strong>";
-$_lang["ef_mail_abuse_message"] = "<p>En formular på dit website kan have været udsat for et e-mail injektions forsøg. Detaljerne i de indtastede felter er udskrevet nedenfor. Mistænkteligt tekst er fremhævet med \[..]\ tags.</p>";
+$_lang["ef_is_own_id"] = "<span class=\"ef-form-error\">Formularens skabelon er sat til samme ID som ressourcen der indeholder kaldet til Eform snippet\'en! Du kan ikke have formularen i samme ressource som snippet kaldet.</span> id=";
+$_lang["ef_mail_abuse_error"] = "<strong>Ugyldige eller usikre indtastninger er opdaget i formularen.</strong>";
+$_lang["ef_mail_abuse_message"] = "<p>En formular på dit website kan have været udsat for et e-mail injektions forsøg. Detaljerne i de indtastede felter er udskrevet nedenfor. Den mistænktelige tekst er fremhævet med \[..]\ tags.</p>";
 $_lang["ef_mail_abuse_subject"] = "Potentiel misbrug af e-mail formularen med form id";
-$_lang["ef_mail_error"] = "Mailer var ikke i stand til at afsende e-mailen";
+$_lang["ef_mail_error"] = "Mailer\'en var ikke i stand til at afsende e-mailen";
 $_lang["ef_multiple_submit"] = "<p>Indholdet af formularen er allerede afsendt.</p>";
 $_lang["ef_no_doc"] = "Ressourcen eller Chunk blev ikke fundet med template id=";
-$_lang["ef_regex_error"] = "fejl i regular expression ";
+$_lang["ef_regex_error"] = "fejl i regulære expressions ";
 $_lang["ef_required_message"] = " Følgende påkrævede felt eller felter mangler at blive udfyldt: {fields}<br />";
 $_lang["ef_rule_failed"] = "<span style=\"color:red;\">Fejl</span> ved brug af regler [+rule+] (input=\"[+input+]\")";
 $_lang["ef_rule_passed"] = "Gennemført med brug af reglen [+rule+] (input=\"[+input+]\").";
 $_lang["ef_sql_no_result"] = " blev i stilhed valideret. <span style=\"color:red;\"> SQL returnerede ingen resultater!</span> ";
-$_lang["ef_submit_time_limit"] = "<p>Indholdet af denne formular er allerede afsendt. Afsending fra formularen er derfor deaktiveret i  ".($submitLimit/60)." minutter.</p>";
+$_lang["ef_submit_time_limit"] = "<p>Indholdet af denne formular er allerede afsendt. Afsendelse fra formularen er derfor deaktiveret i  ".($submitLimit/60)." minutter.</p>";
 $_lang["ef_tamper_attempt"] = "Et forsøg på manipulation er blevet opdaget!";
 $_lang["ef_thankyou_message"] = "<h3>Tak!</h3><p>Dine indtastede oplysninger er nu blevet modtaget.</p>";
 $_lang["ef_thousands_separator"] = ""; //leave empty to use (php) locale, only needed if you want to overide locale setting!
