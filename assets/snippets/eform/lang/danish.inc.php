@@ -3,9 +3,9 @@
  * MODx language File for Eform
  *
  * @author Henrik Nielsen
- * @package Eform 1.0.5
- * @date 26/12/10 11.37
- * @version 1.0.4
+ * @package Eform 1.4.4.6
+ * @date 26/12/10 12.08
+ * @version 1.0.1
  * 
  * Filename:       /assets/snippets/eform/lang/danish.inc.php
  * Language:       Danish
