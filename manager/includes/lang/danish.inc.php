@@ -1,13 +1,16 @@
 <?php
 /**
-    * Filename:     includes/lang/danish.inc.php
-    * Function:     Language file.
-    * Encoding:     UTF8
-    * Author:       Henrik Nielsen - Proofreading: Mads Vestmar
-    * Date:         23 dec 2010 00.26 
-    * Version:      1.0.0
-    * MODx version: Evolution 1.0.5
-*/
+ * MODx language File
+ *
+ * @author Henrik Nielsen - Proofreading: Mads Vestmar
+ * @package MODx Evolution 1.0.5
+ * @date 26/12/10 11.57
+ * @version 1.0.5
+ * 
+ * Filename:       /manager/includes/lang/danish.inc.php
+ * Language:       Danish
+ * Encoding:       UTF-8
+ */
 $modx_lang_attribute = 'da'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
@@ -98,7 +101,7 @@ $_lang["chunk_multiple_id"] = 'Fejl: Flere chunks har det samme unikke ID.';
 $_lang["chunk_no_exist"] = 'Chunk eksisterer ikke.';
 $_lang["cleaningup"] = 'Rydder op';
 $_lang["clean_uploaded_filename"] = 'Brug omskrivning af filnavne ved upload';
-$_lang["clean_uploaded_filename_message"] = 'Vil du bruge standardindstillingerne eller vil du bruge omskrivningsindstillingerne så filnavne ikke indeholder specialtegn efter upload. (Omskrivningen af filnavne bevare punktummer)';
+$_lang["clean_uploaded_filename_message"] = 'Vil du bruge standardindstillingerne, eller vil du bruge omskrivningsindstillingerne så filnavne ikke indeholder specialtegn efter upload. (Omskrivningen af filnavne bevare punktummer)';
 $_lang["clear_log"] = 'Slet log';
 $_lang["click_to_context"] = 'Klik for at se menuen';
 $_lang["click_to_edit_title"] = 'Klik for at redigere denne post';
@@ -130,7 +133,7 @@ $_lang["configcheck_php_gdzip"] = 'GD og/eller Zip udvidelserne i PHP blev ikke 
 $_lang["configcheck_php_gdzip_msg"] = 'MODx behøver GD og Zip udvidelserne i PHP. Selvom MODx vil kunne bruges uden disse, vil du ikke få det fulde udbytte af den indbyggede filbrowser, billede editeringen eller Captcha til brug ved login.';
 $_lang["configcheck_register_globals"] = 'register_globals er sat til ON i din php.ini fil';
 $_lang["configcheck_register_globals_msg"] = 'Det betyder, at websitet kan blive mere udsat for "Cross Site Scripting" (XSS) angreb. Du bør kontakte system administratoren eller hosting firmaet for at deaktivere dette, såfremt du ikke selv kan gøre det.';
-$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher Plugin er fundet';
+$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher plugin\'en er fundet';
 $_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Slet TemplateSwitcher</a>';
 $_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Deaktiver TemplateSwitcher</a>';
 $_lang["configcheck_templateswitcher_present_msg"] = 'TemplateSwitcher plugin\'en er kendt for at forårsage problemer med cashing og hastighed, og bør kun bruges såfremt at funktionaliteten er påkrævet på websitet.';
