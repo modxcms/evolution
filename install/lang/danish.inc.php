@@ -3,9 +3,9 @@
  * MODx language File
  *
  * @author Henrik Nielsen - Proofreading: Mads Vestmar
- * @package MODx Evolution 1.0.3
- * @date 26/03/10 22.21
- * @version 1.0.3
+ * @package MODx Evolution 1.0.5
+ * @date 27/12/10 18.02
+ * @version 1.0.4
  * 
  * Filename:       /install/lang/danish.inc.php
  * Language:       Danish
@@ -176,11 +176,11 @@ $_lang["templates"] = 'Skabeloner';
 $_lang["to_log_into_content_manager"] = 'For at logge ind i CMS\'et (manager/index.php) skal du klikke på `Luk` knappen.';
 $_lang["toggle"] = 'Byt om på det valgte';
 $_lang['tvs'] = 'Skabelon variabler';
-$_lang["unable_install_chunk"] = 'Kunne ikke installere chunk.  Fil';
-$_lang["unable_install_module"] = 'Kunne ikke installere modulet.  Fil';
-$_lang["unable_install_plugin"] = 'Kunne ikke installere plugin.  Fil';
-$_lang["unable_install_snippet"] = 'Kunne ikke installere snippet.  Fil';
-$_lang["unable_install_template"] = 'Kunne ikke installere skabelonen.  Fil';
+$_lang["unable_install_chunk"] = 'Kunne ikke installere chunk. Fil';
+$_lang["unable_install_module"] = 'Kunne ikke installere modulet. Fil';
+$_lang["unable_install_plugin"] = 'Kunne ikke installere plugin. Fil';
+$_lang["unable_install_snippet"] = 'Kunne ikke installere snippet. Fil';
+$_lang["unable_install_template"] = 'Kunne ikke installere skabelonen. Fil';
 $_lang["upgrade_note"] = '<strong>Note:</strong> Før du se siderne på dit website, skal du først logge ind i CMS\'et med en administrationskonto, og kontrollere og gemme konfigurationsindstillingerne.';
 $_lang["upgraded"] = 'Opdateret';
 $_lang["validate_referer_title"] = 'Valider HTTP_REFERER headers?';
