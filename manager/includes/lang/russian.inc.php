@@ -3,9 +3,9 @@
  * Filename:       includes/lang/russian.inc.php
  * Function:       Russian language file.
  * Author:         Russian MODx community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
- * Date:           9 May 2010
+ * Date:           30 December 2010
  * Version:        2.0.5
- * MODx version:   Evolution 1.0.4
+ * MODx version:   Evolution 1.0.5
 */
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'windows-1251';
@@ -97,6 +97,8 @@ $_lang["chunk_code"] = 'Код чанка (HTML)';
 $_lang["chunk_multiple_id"] = 'Ошибка: Несколько чанков имеют одинаковый идентификатор.';
 $_lang["chunk_no_exist"] = 'Чанк не найден.';
 $_lang["cleaningup"] = 'Очистка...';
+$_lang["clean_uploaded_filename"] = 'Использовать транслитерацию при загрузке файлов.';
+$_lang["clean_uploaded_filename_message"] = 'Использовать настройки плагина transalias для транслитерации имен загружаемых файлов с сохранением точек и запятых.';
 $_lang["clear_log"] = 'Очистить протокол';
 $_lang["click_to_context"] = 'Контекстное меню';
 $_lang["click_to_edit_title"] = 'Редактировать запись';
@@ -115,6 +117,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Страница сообщения об ошибке, ука
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Это означает, что она не существует или недоступна обычным посетителям сайта. Это может привести к циклическому вызову функции \'сообщения об ошибке\' и большому количеству записей в журнале сайта. Убедитесь, что нет групп веб-пользователей, которым назначена эта страница.';
 $_lang["configcheck_errorpage_unpublished"] = 'Страница сообщения об ошибке, указанная в конфигурации сайта, не опубликована.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Это означает, что она недоступна посетителям сайта. Необходимо опубликовать страницу сообщения об ошибке, чтобы эта функция работала правильно.';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Больше не показывать это сообщение.</em></a>';
 $_lang["configcheck_images"] = 'Папка изображений (images) недоступна для записи';
 $_lang["configcheck_images_msg"] = 'Папка изображений (images) недоступна для записи или не существует на сервере. Из этого следует, что управление изображениями работать не будет';
 $_lang["configcheck_installer"] = 'Не удалена папка с файлами, использовавшимися в процессе установки';
@@ -128,12 +131,16 @@ $_lang["configcheck_php_gdzip_msg"] = 'Для нормальной работы MODx необходимо, чт
 $_lang["configcheck_register_globals"] = 'Параметр \'register_globals\' имеет значение \'ON\' в конфигурационном файле \'php.ini\'.';
 $_lang["configcheck_register_globals_msg"] = 'Такая конфигурация делает ваш сайт значительно более уязвимым для Cross Site Scripting (XSS) атак. Обратитесь в службу поддержки вашего хостинга за информацией, каким образом выключить этот параметр.';
 $_lang["configcheck_title"] = 'Проверка конфигурации';
+$_lang["configcheck_templateswitcher_present"] = 'Обнаружен плагин TemplateSwitcher';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Удалить плагин TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Отключить плагин TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'Обнаружены проблемы c кэшированием и производительностью при использовании плагина TemplateSwitcher';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Страница сообщения об ограниченном доступе, указанная в конфигурации сайта, не опубликована или не существует.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Это означает, что она не существует или недоступна обычным посетителям сайта. Это может привести к рекурсивному вызову функции \'сообщения об ошибке\' и большому количеству записей в журнале сайта. Убедитесь, что нет групп веб-пользователей, которым назначена эта страница.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Страница сообщения об ограниченном доступе, указанная в конфигурации сайта, не опубликована.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Это означает, что она недоступна посетителям сайта. Необходимо опубликовать страницу сообщения об ограничении доступа, чтобы эта функция работала правильно.';
 $_lang["configcheck_validate_referer"] = 'Предупреждение безопасности: проверка заголовка HTTP';
-$_lang["configcheck_validate_referer_msg"] = "В конфигурации параметр <strong>Проверять серверные заголовки HTTP_REFERER?</strong> отключен. Мы рекомендуем ее включить. <a href=\"index.php?a=17\">Перейти к настройке конфигурации</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Не показывать больше это сообщение.</em></a>";
+$_lang["configcheck_validate_referer_msg"] = "В конфигурации параметр <strong>Проверять серверные заголовки HTTP_REFERER?</strong> отключен. Мы рекомендуем ее включить. <a href=\"index.php?a=17\">Перейти к настройке конфигурации</a>";
 $_lang["configcheck_warning"] = 'Ошибка конфигурации:';
 $_lang["configcheck_what"] = 'Что это значит?';
 $_lang["confirm_block"] = 'Вы уверены, что хотите заблокировать пользователя?';
@@ -167,7 +174,7 @@ $_lang["could_not_find_user"] = 'Не могу найти пользователя';
 $_lang["create_folder_here"] = 'Дочерний контейнер';
 $_lang["create_resource_here"] = 'Дочерний ресурс';
 $_lang["create_resource_title"] = 'Создать ресурс';
-$_lang["create_weblink_here"] = 'Дочерняя ссылка';
+$_lang["create_weblink_here"] = 'Дочерняя веб-ссылка';
 $_lang["createdon"] = 'Дата создания';
 $_lang["credits"] = 'MODx использует';
 $_lang["credits_shouts_msg"] = '<p>MODx поддерживается на сайте <a href="http://modxcms.com/about/" target="_blank">MODxCMS.com</a>.</p>';
@@ -208,6 +215,11 @@ $_lang["defaultsearch_message"] = 'Выберите \'Да\', чтобы новые ресурсы после со
 $_lang["defaultsearch_title"] = '\'Доступен для поиска\' по умолчанию:';
 $_lang["defaulttemplate_message"] = 'Выберите шаблон, который будет применяться к новым ресурсам по умолчанию. При редактировании ресурса вы можете установить любой шаблон.';
 $_lang["defaulttemplate_title"] = 'Шаблон по умолчанию:';
+$_lang["defaulttemplate_logic_title"] = 'Автоматическое назначение шаблона';
+$_lang["defaulttemplate_logic_general_message"] = 'Шаблон, назначаемый новым ресурсам:';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>Системный</strong>: такой же шаблон, как в системных настройках.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Родитель</strong>: такой же шаблон, как у родителя (если ресурс в корне сайта, шаблон Системный).';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Соседний</strong>: такой же шаблон, как у соседних ресурсов в этом контейнере (если соседних ресурсов нет, шаблон Родитель).';
 $_lang["delete"] = 'Удалить';
 $_lang["delete_resource"] = 'Удалить';
 $_lang["delete_tags"] = 'Удалить теги';
@@ -229,7 +241,7 @@ $_lang["edit_resource_title"] = 'Создать / редактировать ресурс';
 $_lang["edit_settings"] = 'Конфигурация';
 $_lang["editedon"] = 'Дата редактирования';
 $_lang["editing_file"] = 'Редактируемый файл: ';
-$_lang["editor_css_path_message"] = 'Введите путь к файлу CSS, который вы хотите использовать для редактора. Рекомендуется вводить путь от корня сайта, например: /assets/site/style.css. Если вы не хотите использовать CSS-файл для редактора, оставьте это поле пустым.';
+$_lang["editor_css_path_message"] = 'Введите путь к CSS-файлу, который вы хотите использовать для редактора. Рекомендуется вводить путь от корня сайта, например: /assets/site/style.css. Если вы не хотите использовать CSS-файл для редактора, оставьте это поле пустым.';
 $_lang["editor_css_path_title"] = 'Путь к CSS файлу:';
 $_lang["element"] = 'Элемент';
 $_lang["element_categories"] = 'Общий просмотр';
@@ -654,8 +666,8 @@ $_lang["rb_base_url_message"] = 'Введите адрес (URL) папки файлов. Обычно этот п
 $_lang["rb_base_url_title"] = 'URL к файлам:';
 $_lang["rb_message"] = 'Выберите \'Да\', чтобы включить браузер файлов. Это позволит менеджерам загружать файлы (изображения, медиа-файлы) на сервер.';
 $_lang["rb_title"] = 'Включить файл-менеджер:';
-$_lang["rb_webuser_message"] = 'Хотите ли вы, чтобы web-пользователи использовали файл-менеджер? <b>Предупреждение:</b> Позволяя web-пользователям использовать файл-менеджер, вы делаете доступ для всех файлов, которые доступны менеджерам. Используйте эту настройку только для проверенных web-пользователей.';
-$_lang["rb_webuser_title"] = 'Web-пользователи?';
+$_lang["rb_webuser_message"] = 'Хотите ли вы, чтобы веб-пользователи использовали файл-менеджер? <b>Предупреждение:</b> Позволяя веб-пользователям использовать файл-менеджер, вы делаете доступ для всех файлов, которые доступны менеджерам. Используйте эту настройку только для проверенных веб-пользователей.';
+$_lang["rb_webuser_title"] = 'Веб-пользователи?';
 $_lang["recent_docs"] = 'Последние изменения';
 $_lang["recommend_setting_change_title"] = 'Рекомендуемое изменение настройки';
 $_lang["recommend_setting_change_description"] = 'Ваш сайт не настроен на проверку серверных заголовков HTTP_REFERER во входящих запросах в систему управления. Мы настоятельно рекомендуем включить этот параметр, чтобы снизить риск CSRF (Cross Site Request Forgery - подделка межсайтовых запросов) атак.';
@@ -665,6 +677,7 @@ $_lang["refresh_site"] = 'Очистить кэш';
 $_lang["refresh_title"] = 'Обновить сайт';
 $_lang["refresh_tree"] = 'Обновить дерево';
 $_lang["refresh_unpublished"] = '<b>%s</b> ресурсов снято с публикации.';
+$_lang["release_date"] = 'Дата выпуска';
 $_lang["remember_last_tab"] = 'Запоминать вкладки';
 $_lang["remember_last_tab_message"] = 'Открывается не первая вкладка, а используемая при последнем посещении';
 $_lang["remember_username"] = 'Запомнить меня';
@@ -675,6 +688,7 @@ $_lang["rename"] = 'Переименовать';
 $_lang["reports"] = 'Отчеты';
 $_lang["require_tagname"] = 'Название тега обязательно';
 $_lang["require_tagvalue"] = 'Значение тега обязательно';
+$_lang["reserved_name_warning"] = 'Вы использовали зарезервированное имя.';
 $_lang["reset"] = 'Сброс';
 $_lang["reset_failedlogins"] = 'сброс';
 $_lang["resource"] = 'Ресурс';
@@ -717,7 +731,7 @@ $_lang["resource_type"] = 'Тип ресурса';
 $_lang["resource_type_message"] = 'Веб-ссылка на ресурс в интернете, включая другие ресурсы MODx, внешние веб-страницы, изображения или другие файлы в интернете. Для ресурса должен быть задан тип содержимого text/html, а в местонахождении содержимого - отображаемое.';
 $_lang["resource_type_weblink"] = 'Веб-ссылка';
 $_lang["resource_type_webpage"] = 'Веб-страница';
-$_lang["resource_weblink_help"] = 'Введите адрес (URI) объекта в сети, на который должна указывать вэб-ссылка.';
+$_lang["resource_weblink_help"] = 'Введите адрес (URI) объекта в сети, на который должна указывать веб-ссылка.';
 $_lang["resources_in_container"] = '- количество ресурсов в контейнере';
 $_lang["resources_in_container_no"] = 'Текущий контейнер не содержит дочерних ресурсов.';
 $_lang["role"] = 'Роль';
@@ -975,7 +989,7 @@ $_lang["unpublish_date"] = 'Дата отмены публикации';
 $_lang["unpublish_events"] = 'События, связанные с отменой публикации ресурсов.';
 $_lang["unpublish_resource"] = 'Отменить публикацию';
 $_lang["untitled_resource"] = 'Новый ресурс';
-$_lang["untitled_weblink"] = 'Новая ссылка';
+$_lang["untitled_weblink"] = 'Новая веб-ссылка';
 $_lang["update_params"] = 'Обновить параметры';
 $_lang["update_settings_from_language"] = 'Изменить на:';
 $_lang["upload_maxsize_message"] = 'Задайте максимальный размер загружаемых файлов. Значение должно быть в байтах. <b>ПРИМЕЧАНИЕ:</b> большие файлы загружаются, как правило, ОЧЕНЬ долго';
@@ -1028,7 +1042,6 @@ $_lang["users"] = 'Пользователи';
 $_lang["validate_referer_message"] = 'Проверять серверные заголовки HTTP_REFERER для защиты от уязвимостей CSRF (Cross Site Request Forgery). Если сервер не использует заголовки HTTP_REFERER данная функция не будет работать.';
 $_lang["validate_referer_title"] = 'Проверять серверные заголовки HTTP_REFERER?';
 $_lang["value"] = 'Значение';
-$_lang["version_codename"] = 'Кодовое имя версии';
 $_lang["view"] = 'Просмотр';
 $_lang["view_child_resources_in_container"] = 'Просмотр дочерних ресурсов';
 $_lang["view_log"] = 'Просмотреть протокол';
