@@ -178,18 +178,16 @@ function getFolderName(a){
     return (f) ? true:false;
 }
 
-function deleteFolder (curpath,newpath) {
-	if (confirmDeleteFolder()) 
-		window.location.href=	
-		 "index.php?a=31&mode=deletefolder&path="+curpath+"&folderpath="+newpath+'/'+folder;
-	return false;
+function deleteFolder (folder) {
+    if (confirmDeleteFolder())
+        window.location.href="index.php?a=31&mode=deletefolder&path="+current_path+"&folderpath="+current_path+'/'+folder;
+    return false;
 }
 
 function deleteFile(file) {
-	if (confirmDelete()) 
-		window.location.href=
-		"index.php?a=31&mode=delete&path="+file;
-	return false;
+    if (confirmDelete())
+        window.location.href="index.php?a=31&mode=delete&path="+current_path+'/'+file;
+    return false;
 }
 </script>
 <?php
@@ -447,7 +445,7 @@ function ls($curpath) {
                 $dirs_array[$dircounter]['dir'] = $newpath;
                 $dirs_array[$dircounter]['stats'] = lstat($newpath);
                 $dirs_array[$dircounter]['text'] = '<img src="media/style/'.$manager_theme.'images/tree/folder.gif" border="0" align="absmiddle" alt="" /> <a href="index.php?a=31&mode=drill&path='.urlencode($newpath).'"><b>'.$file.'</b></a>';
-                $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript: deleteFolder(\''.urlencode($curpath).'\', \''.urlencode($newpath).'\');"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></a></span>' : '';
+                $dirs_array[$dircounter]['delete'] = is_writable($curpath) ? '<span style="width:20px"><a href="javascript: deleteFolder(\''.urlencode($file).'\');"><img src="media/style/'.$manager_theme.'images/icons/delete.gif" alt="'.$_lang['file_delete_folder'].'" title="'.$_lang['file_delete_folder'].'" /></a></span>' : '';
 
                 // increment the counter
                 $dircounter++;
