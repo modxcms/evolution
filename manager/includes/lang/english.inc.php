@@ -1,12 +1,12 @@
 <?php
 /**
  * Filename:       includes/lang/english.inc.php
- * Function:       Language file.
+ * Function:       English language file.
  * Encoding:       UTF8
  * Author:         The MODx Project Team
- * Date:           13 May 2010
+ * Date:           23 December 2010
  * Version:        2.0.5
- * MODx version:   Evolution 1.0.4
+ * MODx version:   Evolution 1.0.5
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'en'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -221,7 +221,6 @@ $_lang["defaulttemplate_logic_general_message"] = 'New Resources will have the f
 $_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: the System Default Template.';
 $_lang["defaulttemplate_logic_parent_message"] = '<strong>Parent</strong>: the same Template as the parent container.';
 $_lang["defaulttemplate_logic_sibling_message"] = '<strong>Sibling</strong>: the same Template as other Resources in the same container.';
-
 $_lang["delete"] = 'Delete';
 $_lang["delete_resource"] = 'Delete Resource';
 $_lang["delete_tags"] = 'Delete tags';
