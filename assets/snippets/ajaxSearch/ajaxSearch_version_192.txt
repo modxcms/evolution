@@ -35,6 +35,10 @@ See http://modxcms.com/forums/index.php/topic,57332.msg331855.html#msg331855
 ==== AJAXSEARCH-82 : can't define configuration file name with "@FILE:" prefix
 
 
+==== AJAXSEARCH-83 : Searchstring not escaped when logging search request and results
+See http://modxcms.com/forums/index.php/topic,57916.0.html
+
+
 No new features are provided with this release.
 
 =====================================================================================
