@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.3 updated 12/10/2010                
+ * @version     1.5.4 updated 03/01/2011
  */
 
 if(!class_exists('Qm')) {
@@ -166,7 +166,7 @@ class Qm {
                     if (isset($_POST['save'])) $save = intval($_POST['save']); 
                     
                     // Get TV name
-                    if (preg_match('/^([^\\"\'\(\)<>!?]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
+                    if (preg_match('/^([A-Za-z0-9&:;_\-]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
                     
                     // Get TV array
                     $tv = $this->modx->getTemplateVar($tvName, '*', $docID);
@@ -539,18 +539,19 @@ class Qm {
                             
                         $head .= '    
                             {                      
-                        		$("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false, opacity:0.5, transition:"fade", speed:150});
+                        		$'.$jvar.'("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false});
                         	
                             	// Bindings
-                            	$().bind("cbox_open", function(){
-                                    $("body").css({"overflow":"hidden"});
-                                    $("html").css({"overflow":"hidden"});
-                                    $("#qmEditor").css({"display":"none"});
-                                });
-                            	$().bind("cbox_closed", function(){
-                                    $("body").css({"overflow":"auto"});
-                                    $("html").css({"overflow":"auto"});
-                                    $("#qmEditor").css({"display":"block"});
+                            	$'.$jvar.'(document).bind("cbox_open", function(){
+                                    $'.$jvar.'("body").css({"overflow":"hidden"});
+                                    $'.$jvar.'("html").css({"overflow":"hidden"});
+                                    $'.$jvar.'("#qmEditor").css({"display":"none"});
+                                });  
+                                
+                            	$'.$jvar.'(document).bind("cbox_closed", function(){      
+                                    $'.$jvar.'("body").css({"overflow":"auto"});
+                                    $'.$jvar.'("html").css({"overflow":"auto"});
+                                    $'.$jvar.'("#qmEditor").css({"display":"block"});
                                     // Remove manager lock by going to home page
                                     $'.$jvar.'.ajax({ type: "GET", url: "'.$this->modx->config['site_url'].'manager/index.php?a=2" });
                                 });                  
@@ -558,22 +559,22 @@ class Qm {
                                 // Hide QM+ if cookie found
                                 if (getCookie("hideQM") == 1)
                                 {
-                                    $("#qmEditor").css({"display":"none"});
-                                    $("#qmEditorClosed").css({"display":"block"});    
+                                    $'.$jvar.'("#qmEditor").css({"display":"none"});
+                                    $'.$jvar.'("#qmEditorClosed").css({"display":"block"});    
                                 }
                                 
                                 // Hide QM+
-                                $(".qmClose").click(function () {
-                                    $("#qmEditor").hide("normal");
-                                    $("#qmEditorClosed").show("normal");
+                                $'.$jvar.'(".qmClose").click(function () {
+                                    $'.$jvar.'("#qmEditor").hide("normal");
+                                    $'.$jvar.'("#qmEditorClosed").show("normal");
                                     document.cookie = "hideQM=1; path=/;";
                                 });
                                 
                                 // Show QM+
-                                $("#qmEditorClosed").click(function () {
+                                $'.$jvar.'("#qmEditorClosed").click(function () {
                                     {
-                                        $("#qmEditorClosed").hide("normal");
-                                        $("#qmEditor").show("normal");
+                                        $'.$jvar.'("#qmEditorClosed").hide("normal");
+                                        $'.$jvar.'("#qmEditor").show("normal");
                                         document.cookie = "hideQM=0; path=/;";
                                     }
                                 });
@@ -602,12 +603,12 @@ class Qm {
                         
                         // Search and create edit buttons in to the content
                         if ($this->editbuttons == 'true' && $access) {
-                            $output = preg_replace('/<!-- '.$this->editbclass.' ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->editbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id=$1&amp;quickmanager=1&amp;qmrefresh='.$docID.'"><span>$2</span></a></span>', $output);
+                            $output = preg_replace('/<!-- '.$this->editbclass.' ([0-9]+) \'([A-Za-z0-9&:;_\- ]+)\' -->/', '<span class="'.$this->editbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id=$1&amp;quickmanager=1&amp;qmrefresh='.$docID.'"><span>$2</span></a></span>', $output);
                         }
                         
                         // Search and create new document buttons in to the content
                         if ($this->newbuttons == 'true' && $access) {
-                            $output = preg_replace('/<!-- '.$this->newbclass.' ([0-9]+) ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->newbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid=$1&amp;quickmanager=1&amp;customaddtplid=$2"><span>$3</span></a></span>', $output);
+                            $output = preg_replace('/<!-- '.$this->newbclass.' ([0-9]+) ([0-9]+) \'([A-Za-z0-9&:;_\- ]+)\' -->/', '<span class="'.$this->newbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid=$1&amp;quickmanager=1&amp;customaddtplid=$2"><span>$3</span></a></span>', $output);
                         }
                         
                         // Search and create new document buttons in to the content
@@ -618,7 +619,7 @@ class Qm {
                             if (!empty($mrgDocGroups)) $this->docGroup = implode(",", $mrgDocGroups); 
 
                             // Create TV buttons and check TV permissions
-                            $output = preg_replace_callback('/<!-- '.$this->tvbclass.' ([^\\"\'\(\)<>!?]+) -->/', array(&$this, 'createTvButtons'), $output);
+                            $output = preg_replace_callback('/<!-- '.$this->tvbclass.' ([A-Za-z0-9&:;_\- ]+) -->/', array(&$this, 'createTvButtons'), $output);
                         } 
                     }
                 }
@@ -974,6 +975,9 @@ class Qm {
         $tvContent = isset($_POST['tv'.$tvName]) ? $_POST['tv'.$tvName] : '';
         $tvContentTemp = '';
         
+        // Escape TV content
+        $tvContent = $this->modx->db->escape($tvContent);
+        
         // Invoke OnBeforeDocFormSave event
         $this->modx->invokeEvent('OnBeforeDocFormSave', array('mode'=>'upd', 'id'=>$pageId));
         
@@ -988,9 +992,6 @@ class Qm {
         
         // Save TV
         if ($tvId != '') {
-            // Escape TV content
-            $tvContent = $this->modx->db->escape($tvContent);
-        
             $sql = "SELECT id
                     FROM {$tmplvarContentValuesTable}
                     WHERE `tmplvarid` = '{$tvId}'
@@ -1032,7 +1033,7 @@ class Qm {
         
         // Log possible errors
         if(!$result) {
-            $modx->logEvent(0, 0, "<p>Save failed!</p><strong>SQL:</strong><pre>{$sql}</pre>", 'QuickManager+');     
+            $this->modx->logEvent(0, 0, "<p>Save failed!</p><strong>SQL:</strong><pre>{$sql}</pre>", 'QuickManager+');     
         } 
         
         // No errors
