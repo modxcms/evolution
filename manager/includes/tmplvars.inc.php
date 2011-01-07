@@ -218,7 +218,6 @@
                 
 				break;
 
-            /* Changed by ProWebscape for custom tv */
             case 'custom_tv':
                 $custom_output = '';
                 /* If we are loading a file */
@@ -244,7 +243,6 @@
                 }
                 $field_html .= $custom_output;
                 break;
-            /* Changed by ProWebscape for custom tv */
             
 			default: // the default handler -- for errors, mostly
 				$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
