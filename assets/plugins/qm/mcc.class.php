@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.3 updated 02/08/2010                
+ * @version     1.5.4 updated 02/08/2010
  */
 
 if(!class_exists('Mcc')) {
