@@ -166,7 +166,7 @@ class Qm {
                     if (isset($_POST['save'])) $save = intval($_POST['save']); 
                     
                     // Get TV name
-                    if (preg_match('/^([A-Za-z0-9&:;_\-]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
+                    if (preg_match('/^([^\\"\'\(\)<>!?]+)/i', $_GET['tvname'])) $tvName = $_GET['tvname'];
                     
                     // Get TV array
                     $tv = $this->modx->getTemplateVar($tvName, '*', $docID);
@@ -539,7 +539,7 @@ class Qm {
                             
                         $head .= '    
                             {                      
-                        		$'.$jvar.'("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false});
+                        		$'.$jvar.'("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false, opacity:0.5, transition:"fade", speed:150});
                         	
                             	// Bindings
                             	$'.$jvar.'(document).bind("cbox_open", function(){
@@ -603,12 +603,12 @@ class Qm {
                         
                         // Search and create edit buttons in to the content
                         if ($this->editbuttons == 'true' && $access) {
-                            $output = preg_replace('/<!-- '.$this->editbclass.' ([0-9]+) \'([A-Za-z0-9&:;_\- ]+)\' -->/', '<span class="'.$this->editbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id=$1&amp;quickmanager=1&amp;qmrefresh='.$docID.'"><span>$2</span></a></span>', $output);
+                            $output = preg_replace('/<!-- '.$this->editbclass.' ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->editbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=27&amp;id=$1&amp;quickmanager=1&amp;qmrefresh='.$docID.'"><span>$2</span></a></span>', $output);
                         }
                         
                         // Search and create new document buttons in to the content
                         if ($this->newbuttons == 'true' && $access) {
-                            $output = preg_replace('/<!-- '.$this->newbclass.' ([0-9]+) ([0-9]+) \'([A-Za-z0-9&:;_\- ]+)\' -->/', '<span class="'.$this->newbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid=$1&amp;quickmanager=1&amp;customaddtplid=$2"><span>$3</span></a></span>', $output);
+                            $output = preg_replace('/<!-- '.$this->newbclass.' ([0-9]+) ([0-9]+) \'([^\\"\'\(\)<>!?]+)\' -->/', '<span class="'.$this->newbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'manager/index.php?a=4&amp;pid=$1&amp;quickmanager=1&amp;customaddtplid=$2"><span>$3</span></a></span>', $output);
                         }
                         
                         // Search and create new document buttons in to the content
@@ -619,7 +619,7 @@ class Qm {
                             if (!empty($mrgDocGroups)) $this->docGroup = implode(",", $mrgDocGroups); 
 
                             // Create TV buttons and check TV permissions
-                            $output = preg_replace_callback('/<!-- '.$this->tvbclass.' ([A-Za-z0-9&:;_\- ]+) -->/', array(&$this, 'createTvButtons'), $output);
+                            $output = preg_replace_callback('/<!-- '.$this->tvbclass.' ([^\\"\'\(\)<>!?]+) -->/', array(&$this, 'createTvButtons'), $output);
                         } 
                     }
                 }
