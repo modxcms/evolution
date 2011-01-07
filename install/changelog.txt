@@ -44,6 +44,7 @@ Additional Improvements & Updates:
 * [#443] TinyMCE updated to 3.3.9.2
 * [#23] Quick Manager+ updated to 1.5.4
 * [#421] ManagerManager updated to 0.3.9
+* [#421] AjaxSearch updated to 1.9.2
 * [#359][#421] Default Chunk for ManagerManager rules now "mm_rules"; Since demo rules are "mm_demo_rules", MM is now disabled on install
 * [#308] Return to active tab for Elements, regardless of "Remember tabs" system setting
 * [#331] Updated Czech language file
