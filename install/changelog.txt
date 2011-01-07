@@ -8,6 +8,7 @@ Security:
 --------------------------------------------
 * [#MODX-1035] fix XSS vulnerability in installer
 * [#2787] fix XSS vuln. in image editor
+* [#3352] work around critical PHP bug 53632
 
 --------------------------------------------
 Bugfixes:
@@ -41,7 +42,7 @@ Additional Improvements & Updates:
 * [#MODX-1734] Add context parameter to the getLoginUserName() API function
 * [#4] getDocumentObject allows full alias path to be specified
 * [#443] TinyMCE updated to 3.3.9.2
-* [#23] Quick Manager+ updated to 1.5.3-GA
+* [#23] Quick Manager+ updated to 1.5.4
 * [#421] ManagerManager updated to 0.3.9
 * [#359][#421] Default Chunk for ManagerManager rules now "mm_rules"; Since demo rules are "mm_demo_rules", MM is now disabled on install
 * [#308] Return to active tab for Elements, regardless of "Remember tabs" system setting
