@@ -80,6 +80,7 @@ Additional Improvements & Updates:
 * [#3361] Allow custom TemplateVariables and output widgets
 * [#3362] Updated distributed jQuery library to 1.4.4 and updated AjaxSearch, QuickManager+ and ManagerManager to use it
 * [#2627] New event allows plugin to inject custom markup into manager's header (header.inc.php)
+* [#3385] Wayfinder optimization when hideSubMenus is enabled
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
