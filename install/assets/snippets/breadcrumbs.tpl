@@ -296,7 +296,7 @@ if ( $showCurrentCrumb )
 
 // Iterate through parents till we hit root or a reason to stop
 $loopSafety = 0;
-while ( $parent && $loopSafety < 1000 )
+while ( $parent && $parent!=$modx->config['site_start'] && $loopSafety < 1000 )
 {
     // Get next crumb
     $tempCrumb = $modx->getPageInfo($parent,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu");
