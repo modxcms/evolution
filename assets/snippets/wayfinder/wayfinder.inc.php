@@ -303,9 +303,10 @@ class Wayfinder {
 	//Get all of the documents from the database
 	function getData() {
 		global $modx;
+		$depth = !empty($this->_config['level']) ? $this->_config['level'] : 10;
 		$ids = array();
 		if (!$this->_config['hideSubMenus']) {
-			$ids = $modx->getChildIds($this->_config['id'],$this->_config['level']);
+			$ids = $modx->getChildIds($this->_config['id'],$depth);
 		} else { // then hideSubMenus is checked, we don`t need all children
 			// first we always included the chilren of startId document
 			// this fix problem with site root chidrens,
@@ -324,13 +325,10 @@ class Wayfinder {
 				$parents = array_diff($parents, $startId_parents);
 
 				//remove parents lower than level of startId + level depth
-				$level = $this->_config['level'];
-			if ($level == 0)
-				$level = 10; // constant getted from getParentIds function
-			$parents = array_slice(array_reverse($parents), 0, $level-1);
+				$parents = array_slice(array_reverse($parents), 0, $depth-1);
 
-			foreach($parents as $p)
-				$ids = $modx->getChildIds($p, 1, $ids);
+				foreach($parents as $p)
+					$ids = $modx->getChildIds($p, 1, $ids);
 			}
 		}
 		//Get all of the ids for processing
