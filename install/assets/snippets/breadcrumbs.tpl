@@ -338,7 +338,7 @@ while ( $parent && $parent!=$modx->config['site_start'] && $loopSafety < 1000 )
 
 // Home crumb ------------------------------------------------------------------
 
-if ( $showHomeCrumb && $homeCrumb = $modx->getPageInfo($homeId,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu") )
+if ( $showHomeCrumb && $homeId != $modx->documentObject['id'] && $homeCrumb = $modx->getPageInfo($homeId,0,"id,parent,pagetitle,longtitle,menutitle,description,published,hidemenu") )
 {
     $crumbs[] = array(
     'id' => $homeCrumb['id'],
