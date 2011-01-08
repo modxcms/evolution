@@ -304,7 +304,35 @@ class Wayfinder {
 	function getData() {
 		global $modx;
 		$ids = array();
-		$ids = $modx->getChildIds($this->_config['id'],$this->_config['level']);
+		if (!$this->_config['hideSubMenus']) {
+			$ids = $modx->getChildIds($this->_config['id'],$this->_config['level']);
+		} else { // then hideSubMenus is checked, we don`t need all children
+			// first we always included the chilren of startId document
+			// this fix problem with site root chidrens,
+			// because site root not included in $modx->getParentIds
+			$ids = $modx->getChildIds($this->_config['id'], 1, $ids);
+
+			$parents = array($modx->documentIdentifier);
+			$parents += $modx->getParentIds($modx->documentIdentifier);
+
+			// if startId not in parents, only show children of startId
+			if ($this->_config['id'] == 0 || in_array($this->_config['id'], $parents)){
+
+				//remove parents higher than startId(including startId)
+				$startId_parents = array($this->_config['id']);
+				$startId_parents += $modx->getParentIds($this->_config['id']);
+				$parents = array_diff($parents, $startId_parents);
+
+				//remove parents lower than level of startId + level depth
+				$level = $this->_config['level'];
+			if ($level == 0)
+				$level = 10; // constant getted from getParentIds function
+			$parents = array_slice(array_reverse($parents), 0, $level-1);
+
+			foreach($parents as $p)
+				$ids = $modx->getChildIds($p, 1, $ids);
+			}
+		}
 		//Get all of the ids for processing
 		if ($this->_config['displayStart'] && $this->_config['id'] !== 0) {
 			$ids[] = $this->_config['id'];
