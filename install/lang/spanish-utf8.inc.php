@@ -108,7 +108,7 @@ $_lang["installing_demo_site"] = 'Instalando el sitio de demostraciÛn: ';
 $_lang["language_code"] = 'es'; // for html element e.g. <html xml:lang="es" lang="es">
 $_lang["loading"] = 'Cargando...';
 $_lang["modules"] = 'MÛdulos';
-$_lang["modx_footer1"] = '&copy; 2005-2009 del proyecto de <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a>. Todos los derechos reservados. MODx tiene licencia GPL de GNU.';
+$_lang["modx_footer1"] = '&copy; 2005-2011 del proyecto de <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a>. Todos los derechos reservados. MODx tiene licencia GPL de GNU.';
 $_lang["modx_footer2"] = 'MODx es software gratuito.  Te invitamos a ser creativo y usarlo de cualquier manera que se te antoje. SÛlo asegura que si haces cambios y decides distribuir una versiÛn modificada de MODx que el cÛdigo fuente siga siendo gratis.';
 $_lang["modx_install"] = 'MODx &raquo; Instalar';
 $_lang["modx_requires_php"] = ', y MODx requiere de PHP versiÛn 4.2.0 o mayor';
