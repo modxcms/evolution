@@ -6,9 +6,10 @@
  * Änderungen und Ergänzungen für MODx 0.9.5 Deutsch durch Rainer Bachmaier und Marc Hinse
  * Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
  * Anpassungen für MODx 1.0 durch Bogdan Günther
- * Date: 2010/05/18
- * Version: 3.0
- * MODx version: 1.0.4. (Marc Hinse)
+ * Anpassungen für MODx 1.0.5 durch Anselm Hannemann
+ * Date: 2011/01/11
+ * Version: 4.0
+ * MODx version: 1.0.5
 */
 $modx_lang_attribute = 'de'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'UTF-8';
@@ -99,6 +100,8 @@ $_lang["chunk_code"] = 'Chunk-Code (HTML)';
 $_lang["chunk_multiple_id"] = 'Fehler: Mehrere Chunks benutzen die selbe ID.';
 $_lang["chunk_no_exist"] = 'Chunk existiert nicht.';
 $_lang["cleaningup"] = 'Aufräumen';
+$_lang["clean_uploaded_filename"] = 'Benutzen Sie Transliteration in Datei Uploads';
+$_lang["clean_uploaded_filename_message"] = 'Benutzen Sie die Standard- oder Aliaseinstellungen um Umlaute und Sonderzeichen aus dem Dateinamen zu entfernen. Entfernen Sie nicht die Dateiendung!';
 $_lang["clear_log"] = 'Protokoll löschen';
 $_lang["click_to_context"] = 'Klicken Sie hier, für das Kontextmenü';
 $_lang["click_to_edit_title"] = 'Klicken Sie hier, um den Eintrag zu bearbeiten';
@@ -117,6 +120,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Die Fehlerseite Ihres Webauftritt
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Ihre Fehlerseite ist für normale Besucher nicht abrufbar oder existiert nicht. Dies kann zu einer Endlosschleife und vielen Fehlermeldungen in Ihren Webserver-Statistiken führen. Stellen Sie sicher, dass der Seite keine Benutzergruppen zugeordnet sind.';
 $_lang["configcheck_errorpage_unpublished"] = 'Die Fehlerseite Ihres Webauftrittes wurde nicht veröffentlicht oder noch nicht erstellt.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Ihre Fehlerseite ist der Allgemeinheit nicht zugänglich. Veröffentlichen Sie die Seite oder stellen Sie sicher, dass in der Konfiguration eine vorhandene Seite aus dem Ressourcen-Baum ausgewählt ist.';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Nicht mehr anzeigen.</em></a>';
 $_lang["configcheck_images"] = 'Das Bilderverzeichnis ist nicht beschreibbar';
 $_lang["configcheck_images_msg"] = 'Das Verzeichnis /images/ ist nicht beschreibbar. Die Funktionen des Bilder-Managers im Editor werden nicht funktionieren!';
 $_lang["configcheck_installer"] = 'Installationsverzeichnis ist noch vorhanden';
@@ -130,6 +134,10 @@ $_lang["configcheck_php_gdzip_msg"] = 'MODx benötigt die GD- und ZIP-PHP-Erweit
 $_lang["configcheck_register_globals"] = 'register_globals ist in Ihrer php.ini Konfigurationsdatei auf ON gesetzt';
 $_lang["configcheck_register_globals_msg"] = 'Diese Konfiguration macht Ihre Website wesentlich anfälliger für Cross-Site-Scripting-Attacken (XSS). Sie sollten Ihren Web-Hosting-Provider kontaktieren, um herauszufinden wie Sie diese Einstellung ändern können.';
 $_lang["configcheck_title"] = 'Konfigurationsprüfung';
+$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher Plugin gefunden';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">TemplateSwitcher entfernen</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">TemplateSwitcher deaktivieren</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'Das Plugin TemplateSwitcher wurde gefunden. Es kann Cache und Performanceprobleme hervorrufen und sollte nur benutzt werden, wenn die Funktionalität von der Webseite benötigt wird.';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Die Seite für unautorisierte Zugriffe wurde nicht veröffentlicht oder existiert nicht.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Die Seite für unautorisierte Zugriffe ist für normale Besucher nicht abrufbar oder existiert nicht. Dies kann zu einer Endlosschleife und vielen Fehlermeldungen in Ihren Webserver-Statistiken führen. Stellen Sie sicher, dass der Seite keine Benutzergruppen zugeordnet sind.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Die Seite für unautorisierte Zugriffe aus den Einstellungen Ihrer Konfiguration ist nicht veröffentlicht.';
@@ -210,6 +218,11 @@ $_lang["defaultsearch_message"] = 'Wählen Sie „Ja“, um alle neuen Ressource
 $_lang["defaultsearch_title"] = 'Voreinstellung Durchsuchbar';
 $_lang["defaulttemplate_message"] = 'Wählen Sie das Standard-Template das Sie für neue Ressourcen verwenden möchten. Sie können auch andere Templates im Ressourcen-Editor auswählen, diese Einstellung betrefft nur die Standardeinstellung.';
 $_lang["defaulttemplate_title"] = 'Standard-Template';
+$_lang["defaulttemplate_logic_title"] = 'automatische Template Zuweisung';
+$_lang["defaulttemplate_logic_general_message"] = 'neue Ressourcen erben die folgenden Templates. Wird keins gefunden, wird das nächst Höhere vererbt:';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: das Standard System-Template.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Eltern</strong>: das gleiche Template wie der Eltern-Container.';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Nachbar</strong>: das gleiche Template wie andere Ressourcen im selben Container.';
 $_lang["delete"] = 'Löschen';
 $_lang["delete_resource"] = 'Ressource Löschen';
 $_lang["delete_tags"] = 'Tag löschen';
@@ -667,6 +680,7 @@ $_lang["refresh_site"] = 'Cache leeren';
 $_lang["refresh_title"] = 'Website aktualisieren, Cache leeren';
 $_lang["refresh_tree"] = 'Ressourcen-Baum aktualisieren';
 $_lang["refresh_unpublished"] = '<b>%s</b> Ressourcen wurden zurückgezogen.';
+$_lang["release_date"] = 'Veröffentlichungsdatum';
 $_lang["remember_last_tab"] = 'Tabs merken';
 $_lang["remember_last_tab_message"] = 'Manager Tabs laden den zuletzt geöffneten anstatt dem ersten Tab.';
 $_lang["remember_username"] = 'Benutzername merken';
@@ -677,6 +691,7 @@ $_lang["rename"] = 'Umbenennen';
 $_lang["reports"] = 'Berichte';
 $_lang["require_tagname"] = 'Ein Tag-Name ist zwingend erforderlich';
 $_lang["require_tagvalue"] = 'Ein Tag-Wert ist zwingend erforderlich';
+$_lang["reserved_name_warning"] = 'Sie benutzen einen vorreservierten Namen.';
 $_lang["reset"] = 'Zurücksetzen';
 $_lang["reset_failedlogins"] = 'Zurücksetzen';
 $_lang["resource"] = 'Ressource';
@@ -1030,7 +1045,6 @@ $_lang["users"] = 'Sicherheit';
 $_lang["validate_referer_message"] = 'Die HTTP_REFERER-Header können überprüft werden um das Risiko zu verringern, dass Inhaltsredakteure Opfer eines CSRF-Angriffs (Cross Site Request Forgery) werden und unbeabsichtigte Aktionen im Manager durchführen. Einige Konfigurationen unterstützen diese Option nicht, wenn der Server keine HTTP_REFERER-Header sendet.';
 $_lang["validate_referer_title"] = 'HTTP_REFERER-Header überprüfen?';
 $_lang["value"] = 'Wert';
-$_lang["version_codename"] = 'Versions-Codename';
 $_lang["view"] = 'Ansehen';
 $_lang["view_child_resources_in_container"] = 'Ressourcen in Container anzeigen';
 $_lang["view_log"] = 'Protokoll anzeigen';
