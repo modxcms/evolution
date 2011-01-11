@@ -373,22 +373,41 @@ function confirmLangChange(el, lkey, elupd){
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["defaulttemplate_title"] ?></b></td>
             <td>
 			<?php
-				$sql = "select templatename, id from $dbase.`".$table_prefix."site_templates`";
+				$sql = 'SELECT t.templatename, t.id, c.category FROM '.$table_prefix.'site_templates t LEFT JOIN '.$table_prefix.'categories c ON t.category = c.id ORDER BY c.category, t.templatename ASC';
 				$rs = mysql_query($sql);
 			?>
 			  <select name="default_template" class="inputBox" onchange="documentDirty=true;wrap=document.getElementById('template_reset_options_wrapper');if(this.options[this.selectedIndex].value != '<?php echo $default_template;?>'){wrap.style.display='block';}else{wrap.style.display='none';}" style="width:150px">
 				<?php
+				
+				$currentCategory = '';
 				while ($row = mysql_fetch_assoc($rs)) {
-					$selectedtext = $row['id']==$default_template ? "selected='selected'" : "" ;
+					$thisCategory = $row['category'];
+					if($thisCategory == null) {
+						$thisCategory = $_lang["no_category"];
+					}
+					if($thisCategory != $currentCategory) {
+						if($closeOptGroup) {
+							echo "\t\t\t\t\t</optgroup>\n";							
+						}
+						echo "\t\t\t\t\t<optgroup label=\"$thisCategory\">\n";
+						$closeOptGroup = true;
+					} else {
+						$closeOptGroup = false;
+					}
+					
+					$selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
 					if ($selectedtext) {
 						$oldTmpId = $row['id'];
 						$oldTmpName = $row['templatename'];
 					}
-				?>
-					<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?>><?php echo $row['templatename']; ?></option>
-				<?php
+					
+					echo "\t\t\t\t\t".'<option value="'.$row['id'].'"'.$selectedtext.'>'.$row['templatename']."</option>\n";
+					$currentCategory = $thisCategory;
 				}
-				?>
+				if($thisCategory != '') {
+					echo "\t\t\t\t\t</optgroup>\n";							
+				}
+?>
  			 </select>
  			 	<br />
                 <div id="template_reset_options_wrapper" style="display:none;">
