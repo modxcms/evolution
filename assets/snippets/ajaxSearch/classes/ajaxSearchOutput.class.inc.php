@@ -517,6 +517,8 @@ class AjaxSearchOutput {
     * Initialize common chunks variables
     */
     function _initCommonChunks() {
+        global $modx;
+
         if (!class_exists('AsPhxParser')) include_once AS_PATH . "classes/asPhxParser.class.inc.php";
         if (!$this->asCfg->isAjax) {
 
@@ -525,8 +527,22 @@ class AjaxSearchOutput {
         } else {
 
             $tplResults = $this->asCfg->cfg['tplAjaxResults'];
+            // if @FILE binding was passed in via ajax processor, verify the path is safe
+            if(stristr($tplResults, '@FILE:') !== false) {
+                $path = substr($tplResults, 6);
+                $frombase = $modx->config['base_path'] . $path;
+                $dirname = dirname($frombase);
+                $as_expected_dirname = $modx->config['base_path'] . AS_SPATH . 'templates';
+                if(!strpos($dirname, $as_expected_dirname)) {
+                    $path = str_replace('..', '', $path);
+                    $path = str_replace('\\', '/', $path);
+                    if(substr($path, 0, 1) == '/') $path = substr($path, 1);
+                    $tplResults = '@FILE:templates/' . $path;
+                }
+            }
             if ($tplResults == '') $tplResults = "@FILE:" . AS_SPATH . 'templates/ajaxResults.tpl.html';
         }
+
         $this->chkResults = new AsPhxParser($tplResults);
         if ($this->dbgTpl) {
             $this->asUtil->dbgRecord($this->chkResults->getTemplate($tplResults), "tplResults template" . $tplResults);
