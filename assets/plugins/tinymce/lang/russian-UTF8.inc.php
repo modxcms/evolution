@@ -4,9 +4,8 @@
  * Function:       Russian language file for TinyMCE
  * Encoding:       UTF-8
  * Author:         Jeff Whitfield / translated by Victor Safronovich
- * Date:           29.06.2008
- * Version:        0.9.6.2
- * MODx version:   0.9.6.2
+ * Date:           13.01.2010
+ * MODx version:   1.0.5
  */
 
 $_lang['tinymce_editor_theme_title'] = "Тема WYSIWYG-редактора:";

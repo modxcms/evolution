@@ -2,27 +2,26 @@
 /*
  * Filename:       assets/plugins/tinymce/lang/russian.inc.php
  * Function:       Russian language file for TinyMCE
- * Encoding:       ISO-Latin-1
+ * Encoding:       Windows-1251
  * Author:         Jeff Whitfield / translated by Victor Safronovich
- * Date:           29.06.2008
- * Version:        0.9.6.2
- * MODx version:   0.9.6.2
+ * Date:           13.01.2010
+ * MODx version:   1.0.5
  */
 
-$_lang['tinymce_editor_theme_title'] = "РўРµРјР° WYSIWYG-СЂРµРґР°РєС‚РѕСЂР°:";
-$_lang['tinymce_editor_theme_message'] = "Р’С‹Р±РµСЂРёС‚Рµ РєР°РєСѓСЋ С‚РµРјСѓ РёР»Рё С€Р°Р±Р»РѕРЅ РІС‹ Р±СѓРґРµС‚Рµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ WYSIWYG-СЂРµРґР°РєС‚РѕСЂР°.";
-$_lang['tinymce_editor_custom_plugins_title'] = "РРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рµ РїР»Р°РіРёРЅС‹:";
-$_lang['tinymce_editor_custom_plugins_message'] = "Р’РІРµРґРёС‚Рµ, С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, РїР»Р°РіРёРЅС‹ РґР»СЏ &laquo;РРЅРґРёРІРёРґСѓР°Р»СЊРЅРѕР№&raquo; С‚РµРјС‹.";
-$_lang['tinymce_editor_custom_buttons_title'] = "РРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рµ РєРЅРѕРїРєРё:";
-$_lang['tinymce_editor_custom_buttons_message'] = "Р’РІРµРґРёС‚Рµ, С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, РєРЅРѕРїРєРё РґР»СЏ &laquo;РРЅРґРёРІРёРґСѓР°Р»СЊРЅРѕР№&raquo; С‚РµРјС‹. РЈР±РµРґРёС‚РµСЃСЊ С‡С‚Рѕ РґРѕРїРѕР»РЅРµРЅРёСЏ, Рє РєРѕС‚РѕСЂС‹Рј РѕС‚РЅРѕСЃСЏС‚СЃСЏ РґР°РЅРЅС‹Рµ РєРЅРѕРїРєРё, РїСЂРѕРїРёСЃР°РЅРЅС‹ РІ РЅР°СЃС‚СЂРѕР№РєРµ &laquo;РРЅРґРёРІРёРґСѓР°Р»СЊРЅС‹Рµ РїР»Р°РіРёРЅС‹&raquo;.";
-$_lang['tinymce_editor_css_selectors_title'] = "РЎРµР»РµРєС‚РѕСЂС‹ CSS:";
-$_lang['tinymce_editor_css_selectors_message'] = "Р’РІРµРґРёС‚Рµ СЃРїРёСЃРѕРє СЃРµР»РµРєС‚РѕСЂРѕРІ, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ РґРѕСЃС‚СѓРїРµРЅ РІ WYSIWYG-СЂРµРґР°РєС‚РѕСЂРµ. Р’РІРµРґРёС‚Рµ РёС… СЃР»РµРґСѓСЋС‰РёРј РѕР±СЂР°Р·РѕРј:<br />&laquo;РёРјСЏ, РєРѕС‚РѕСЂРѕРµ Р±СѓРґРµС‚ РїРѕРєР°Р·Р°РЅРѕ РІ WYSIWYG-СЂРµРґР°РєС‚РѕСЂРµ&raquo;=&laquo;РёРјСЏ СЃРµР»РµРєС‚РѕСЂР°&raquo;;displayName2=selectorName2<br />РќР°РїСЂРёРјРµСЂ, РІ РІР°С€РµРј CSS С„Р°Р№Р»Рµ РµСЃС‚СЊ <b>.mono</b> Рё <b>.smallText</b> СЃРµР»РµРєС‚РѕСЂС‹, С‡С‚РѕР±С‹ РёС… РґРѕР±Р°РІРёС‚СЊ РЅР°РґРѕ РїСЂРѕРїРёСЃР°С‚СЊ:<br />'РњРѕРЅРѕС…СЂРѕРјРЅС‹Р№ С‚РµРєСЃС‚=mono;РњРµР»РєРёР№ С‚РµРєСЃС‚=smallText'<br />NB: РЅРµ СЃС‚Р°РІСЊС‚Рµ С‚РѕС‡РєСѓ СЃ Р·Р°РїСЏС‚РѕР№(;) РїРѕСЃР»Рµ РїРѕСЃР»РµРґРЅРµР№ Р·Р°РїРёСЃРё.";
-$_lang['tinymce_settings'] = "РќР°СЃС‚СЂРѕР№РєРё TinyMCE";
-$_lang['tinymce_theme_simple'] = "РџСЂРѕСЃС‚Р°СЏ";
-$_lang['tinymce_theme_advanced'] = "РџСЂРѕРґРІРёРЅСѓС‚Р°СЏ";
-$_lang['tinymce_theme_editor'] = "Р РµРґР°РєС‚РѕСЂ РєРѕРЅС‚РµРЅС‚Р°";
-$_lang['tinymce_theme_custom'] = "РРЅРґРёРІРёРґСѓР°Р»СЊРЅР°СЏ";
+$_lang['tinymce_editor_theme_title'] = "Тема WYSIWYG-редактора:";
+$_lang['tinymce_editor_theme_message'] = "Выберите какую тему или шаблон вы будете использовать для WYSIWYG-редактора.";
+$_lang['tinymce_editor_custom_plugins_title'] = "Индивидуальные плагины:";
+$_lang['tinymce_editor_custom_plugins_message'] = "Введите, через запятую, плагины для &laquo;Индивидуальной&raquo; темы.";
+$_lang['tinymce_editor_custom_buttons_title'] = "Индивидуальные кнопки:";
+$_lang['tinymce_editor_custom_buttons_message'] = "Введите, через запятую, кнопки для &laquo;Индивидуальной&raquo; темы. Убедитесь что дополнения, к которым относятся данные кнопки, прописанны в настройке &laquo;Индивидуальные плагины&raquo;.";
+$_lang['tinymce_editor_css_selectors_title'] = "Селекторы CSS:";
+$_lang['tinymce_editor_css_selectors_message'] = "Введите список селекторов, который будет доступен в WYSIWYG-редакторе. Введите их следующим образом:<br />&laquo;имя, которое будет показано в WYSIWYG-редакторе&raquo;=&laquo;имя селектора&raquo;;displayName2=selectorName2<br />Например, в вашем CSS файле есть <b>.mono</b> и <b>.smallText</b> селекторы, чтобы их добавить надо прописать:<br />'Монохромный текст=mono;Мелкий текст=smallText'<br />NB: не ставьте точку с запятой(;) после последней записи.";
+$_lang['tinymce_settings'] = "Настройки TinyMCE";
+$_lang['tinymce_theme_simple'] = "Простая";
+$_lang['tinymce_theme_advanced'] = "Продвинутая";
+$_lang['tinymce_theme_editor'] = "Редактор контента";
+$_lang['tinymce_theme_custom'] = "Индивидуальная";
 $_lang['tinymce_theme_creative'] = 'Creative';
 $_lang['tinymce_theme_logic'] = 'xhtml';
-$_lang['tinymce_theme_global_settings'] = "РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РіР»РѕР±Р°Р»СЊРЅС‹Рµ РЅР°СЃС‚СЂРѕР№РєРё";
+$_lang['tinymce_theme_global_settings'] = "Использовать глобальные настройки";
 ?>
