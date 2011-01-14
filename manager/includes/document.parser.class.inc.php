@@ -7,11 +7,44 @@
 class DocumentParser {
     var $db; // db object
     var $event, $Event; // event object
-
     var $pluginEvent;
-
     var $config= null;
-    var $rs, $result, $sql, $table_prefix, $debug, $documentIdentifier, $documentMethod, $documentGenerated, $documentContent, $tstart, $minParserPasses, $maxParserPasses, $documentObject, $templateObject, $snippetObjects, $stopOnNotice, $executedQueries, $queryTime, $currentSnippet, $documentName, $aliases, $visitor, $entrypage, $documentListing, $dumpSnippets, $chunkCache, $snippetCache, $contentTypes, $dumpSQL, $queryCode, $virtualDir, $placeholders, $sjscripts, $jscripts, $loadedjscripts, $documentMap;
+    var $rs;
+    var $result;
+    var $sql;
+    var $table_prefix;
+    var $debug;
+    var $documentIdentifier;
+    var $documentMethod;
+    var $documentGenerated;
+    var $documentContent;
+    var $tstart;
+    var $minParserPasses;
+    var $maxParserPasses;
+    var $documentObject;
+    var $templateObject;
+    var $snippetObjects;
+    var $stopOnNotice;
+    var $executedQueries;
+    var $queryTime;
+    var $currentSnippet;
+    var $documentName;
+    var $aliases;
+    var $visitor;
+    var $entrypage;
+    var $documentListing;
+    var $dumpSnippets;
+    var $chunkCache;
+    var $snippetCache;
+    var $contentTypes;
+    var $dumpSQL;
+    var $queryCode;
+    var $virtualDir;
+    var $placeholders;
+    var $sjscripts;
+    var $jscripts;
+    var $loadedjscripts;
+    var $documentMap;
     var $forwards= 3;
 
     // constructor
@@ -201,12 +234,12 @@ class DocumentParser {
                 if($rebuilt && $included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
                     $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
                 }
-            if (!$included) {
-                $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
-                while ($row= $this->db->getRow($result, 'both')) {
-                    $this->config[$row[0]]= $row[1];
+                if(!$included) {
+                    $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
+                    while ($row= $this->db->getRow($result, 'both')) {
+                        $this->config[$row[0]]= $row[1];
+                    }
                 }
-            }
             }
 
             // added for backwards compatibility - garry FS#104
@@ -824,9 +857,9 @@ class DocumentParser {
                     if ($this->db->getRecordCount($result) == 1) {
                         $row= $this->db->getRow($result);
                         if($row['name'] == $matches[1][$i]) {
-                        $snippets[$i]['name']= $row['name'];
-                        $snippets[$i]['snippet']= $this->snippetCache[$row['name']]= $row['snippet'];
-                        $snippets[$i]['properties']= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
+                            $snippets[$i]['name']= $row['name'];
+                            $snippets[$i]['snippet']= $this->snippetCache[$row['name']]= $row['snippet'];
+                            $snippets[$i]['properties']= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
                             $added = true;
                         }
                     }
@@ -1261,14 +1294,14 @@ class DocumentParser {
 
         // Get all the children for this parent node
         if (isset($documentMap_cache[$id])) {
-        $depth--;
+            $depth--;
 
             foreach ($documentMap_cache[$id] as $childId) {
                 $pkey = (strlen($this->aliasListing[$childId]['path']) ? "{$this->aliasListing[$childId]['path']}/" : '') . $this->aliasListing[$childId]['alias'];
                 if (!strlen($pkey)) $pkey = "{$childId}";
                     $children[$pkey] = $childId;
 
-            if ($depth) {
+                if ($depth) {
                     $children += $this->getChildIds($childId, $depth);
                 }
             }

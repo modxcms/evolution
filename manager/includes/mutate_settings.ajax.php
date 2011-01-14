@@ -24,15 +24,15 @@ if($action == 'get') {
         $str = getLangStringFromFile($langfile, $key);
     }
 } elseif($action == 'setsetting') {
-	if(!empty($key) && !empty($value)) {
+    if(!empty($key) && !empty($value)) {
         $sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('{$key}', '{$value}');";
-		$str = "true";
-		if(!@$rs = $modx->db->query($sql)) {
-			$str = "false";
+        $str = "true";
+        if(!@$rs = $modx->db->query($sql)) {
+            $str = "false";
         } else {
             $emptyCache = true;
-		}
-	}
+        }
+    }
 } elseif($action == 'updateplugin') {
 
     if($key == '_delete_' && !empty($lang)) {

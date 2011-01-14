@@ -36,11 +36,9 @@ $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
 
 // setup message info
 if($modx->hasPermission('messages')) {
-	if (!isset($_SESSION['nrtotalmessages']) || !isset($_SESSION['nrnewmessages'])) {
 		include_once MODX_MANAGER_PATH.'includes/messageCount.inc.php';
 		$_SESSION['nrtotalmessages'] = $nrtotalmessages;
 		$_SESSION['nrnewmessages'] = $nrnewmessages;
-	}
 
     $msg = '<a href="index.php?a=10"><img src="'.$_style['icons_mail_large'].'" /></a>
     <span style="color:#909090;font-size:15px;font-weight:bold">&nbsp;'.$_lang["inbox"].($_SESSION['nrnewmessages']>0 ? " (<span style='color:red'>".$_SESSION['nrnewmessages']."</span>)":"").'</span><br />
@@ -215,7 +213,7 @@ $customWelcome = $base_path.'manager/media/style/'.$modx->config['manager_theme'
 if( is_readable($customWelcome) ) {
     $tplFile = $customWelcome;
 } else {
-$tplFile = $base_path.'assets/templates/manager/welcome.html';
+    $tplFile = $base_path.'assets/templates/manager/welcome.html';
 }
 $handle = fopen($tplFile, "r");
 $tpl = fread($handle, filesize($tplFile));

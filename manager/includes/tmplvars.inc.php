@@ -1,7 +1,6 @@
 <?php
 	// DISPLAY FORM ELEMENTS
-
-	function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='') {
+	function renderFormElement($field_type, $field_id, $default_text, $field_elements, $field_value, $field_style='', $row = array()) {
 		global $modx;
 		global $base_url;
 		global $rb_base_url;
@@ -218,6 +217,33 @@
 				$field_html .='<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'"  value="'.$field_value .'" '.$field_style.' onchange="documentDirty=true;" />&nbsp;<input type="button" value="'.$_lang['insert'].'" onclick="BrowseFileServer(\'tv'.$field_id.'\')" />';
                 
 				break;
+
+            case 'custom_tv':
+                $custom_output = '';
+                /* If we are loading a file */
+                if(substr($field_elements, 0, 6) == "@FILE:") {
+                    $file_name = MODX_BASE_PATH.trim(substr($field_elements, 6));
+                    if( !file_exists($file_name) ) {
+                        $custom_output = "$file_name does not exist";
+                    } else {
+                        ob_start();
+                        include $file_name;
+                        $custom_output = ob_get_contents();
+                        ob_end_clean();
+                    }
+                } else {
+                    $replacements = array(
+                        '[+field_type+]'   => $field_type,
+                        '[+field_id+]'     => $field_id,
+                        '[+default_text+]' => $default_text,
+                        '[+field_value+]'  => htmlspecialchars($field_value),
+                        '[+field_style+]'  => $field_style,
+                        );
+                    $custom_output = str_replace(array_keys($replacements), $replacements, $field_elements);
+                }
+                $field_html .= $custom_output;
+                break;
+            
 			default: // the default handler -- for errors, mostly
 				$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' onchange="documentDirty=true;" />';
 

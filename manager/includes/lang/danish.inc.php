@@ -1,14 +1,16 @@
 <?php
 /**
-    * Filename:     includes/lang/danish.inc.php
-    * Function:     Language file.
-    * Encoding:     UTF8
-    * Author:       Henrik Nielsen - Proofreading: Mads Vestmar
-    * Date:         23 may 2010 22.50 
-    * Version:      1.0.0
-    * MODx version: Evolution 1.0.4
-*/
-//$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
+ * MODx language File
+ *
+ * @author Henrik Nielsen - Proofreading: Mads Vestmar
+ * @package MODx Evolution 1.0.5
+ * @date 27/12/10 18.10
+ * @version 1.0.4
+ * 
+ * Filename:       /manager/includes/lang/danish.inc.php
+ * Language:       Danish
+ * Encoding:       UTF-8
+ */
 $modx_lang_attribute = 'da'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 
@@ -98,6 +100,8 @@ $_lang["chunk_code"] = 'Chunk kode (html)';
 $_lang["chunk_multiple_id"] = 'Fejl: Flere chunks har det samme unikke ID.';
 $_lang["chunk_no_exist"] = 'Chunk eksisterer ikke.';
 $_lang["cleaningup"] = 'Rydder op';
+$_lang["clean_uploaded_filename"] = 'Brug omskrivning af filnavne ved upload';
+$_lang["clean_uploaded_filename_message"] = 'Vil du bruge standardindstillingerne, eller vil du bruge omskrivningsindstillingerne så filnavne ikke indeholder specialtegn efter upload. (Omskrivningen af filnavne bevare punktummer)';
 $_lang["clear_log"] = 'Slet log';
 $_lang["click_to_context"] = 'Klik for at se menuen';
 $_lang["click_to_edit_title"] = 'Klik for at redigere denne post';
@@ -116,6 +120,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Websitets fejlside er ikke til r�
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Det betyder at fejlsiden enten ikke eksisterer eller, at den ikke kan tilgås af normale besøgende. Det kan medføre, at systemet omstiller uden at stoppe, og vil samtidig resultere i, at websitets logfiler til sidst vil fylde for meget. Husk at kontrollere, at der ikke er nogle web bruger grupper, der er sammenkædet med siden.';
 $_lang["configcheck_errorpage_unpublished"] = 'Websitets fejlside er enten ikke oprettet eller ikke publiceret.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Det betyder, at websitets fejlside ikke kan tilgås af normale besøgende. Publicer siden eller kontroller, at siden er tildelt en eksisterende ressource under Værktøjer &gt; Konfiguration.';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Vis ikke dette igen.</em></a>';
 $_lang["configcheck_images"] = 'Images mappen er ikke skrivbar';
 $_lang["configcheck_images_msg"] = 'Images mappen er ikke oprettet, eller er ikke skrivbar. Det betyder, at du ikke kan indsætte billeder!';
 $_lang["configcheck_installer"] = 'Install mappen eksisterer stadig';
@@ -128,13 +133,17 @@ $_lang["configcheck_php_gdzip"] = 'GD og/eller Zip udvidelserne i PHP blev ikke 
 $_lang["configcheck_php_gdzip_msg"] = 'MODx behøver GD og Zip udvidelserne i PHP. Selvom MODx vil kunne bruges uden disse, vil du ikke få det fulde udbytte af den indbyggede filbrowser, billede editeringen eller Captcha til brug ved login.';
 $_lang["configcheck_register_globals"] = 'register_globals er sat til ON i din php.ini fil';
 $_lang["configcheck_register_globals_msg"] = 'Det betyder, at websitet kan blive mere udsat for "Cross Site Scripting" (XSS) angreb. Du bør kontakte system administratoren eller hosting firmaet for at deaktivere dette, såfremt du ikke selv kan gøre det.';
+$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher plugin\'en er fundet';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Slet TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Deaktiver TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'TemplateSwitcher plugin\'en er kendt for at forårsage problemer med cashing og hastighed, og bør kun bruges såfremt at funktionaliteten er påkrævet på websitet.';
 $_lang["configcheck_title"] = 'Konfigurationscheck';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Websitets "Ikke autoriseret" side er ikke publiceret eller er ikke oprettet.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Det betyder, at den "ikke autoriseret" side ikke kan tilgås af almindelige besøgende eller ikke eksisterer. Det kan medføre, at systemet omstiller uden at stoppe, og vil samtidigt resultere i, at websitets logfiler til sidst vil fylde for meget. Kontroller også at der ikke er tildelt nogle web bruger grupper til siden.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Den "ikke autoriseret" side, som er defineret i konfigurationsindstillingerne er ikke publiceret.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Det betyder at den "ikke autoriseret" side ikke kan tilgås af normale besøgende. Publicer siden eller tildel den til en eksisterende ressource under Værktøjer &gt; Konfiguration.';
 $_lang["configcheck_validate_referer"] = 'Sikkerhedsadvarsel: HTTP Header validering';
-$_lang["configcheck_validate_referer_msg"] = "Konfigurationsindstillingen for <strong>Valider HTTP_REFERER headers?</strong> er slået fra. Det anbefales at slå den til. <a href=\"index.php?a=17\">Gå til konfigurationsindstillingerne</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Vis ikke denne advarsel igen.</em></a>";
+$_lang["configcheck_validate_referer_msg"] = "Konfigurationsindstillingen for <strong>Valider HTTP_REFERER headers?</strong> er slået fra. Det anbefales at slå den til. <a href=\"index.php?a=17\">Gå til konfigurationsindstillingerne</a>";
 $_lang["configcheck_warning"] = 'Konfigurationsadvarsel:';
 $_lang["configcheck_what"] = 'Hvad betyder dette?';
 $_lang["confirm_block"] = 'Er du sikker på, at du vil blokere denne bruger?';
@@ -170,7 +179,7 @@ $_lang["create_resource_here"] = 'Opret ressource her';
 $_lang["create_resource_title"] = 'Opret ressource';
 $_lang["create_weblink_here"] = 'Opret weblink her';
 $_lang["createdon"] = 'Oprettelsesdato';
-$_lang["credits"] = 'Kredits';
+$_lang["credits"] = 'Krediteringer';
 $_lang["credits_shouts_msg"] = '<p>MODx bliver administreret og vedligeholdt af <a href="http://modxcms.com/about/" target="_blank">MODxCMS.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Opret specielle indholdstype for ressourcer. For at oprette en ny; indtast indholdstypen i tekst feltet og klik på  \'Opret\'.';
 $_lang["custom_contenttype_title"] = 'Specielle indholdstyper:';
@@ -208,7 +217,12 @@ $_lang["defaultpublish_title"] = 'Standard for publicering';
 $_lang["defaultsearch_message"] = 'Vælg \'Ja\' for at gøre alle ressourcer søgbare som standard.';
 $_lang["defaultsearch_title"] = 'Standard for søgbarhed';
 $_lang["defaulttemplate_message"] = 'Vælg den skabelon som skal være standard for nye ressourcer. Man har stadigvæk mulighed for at ændre skabelonen for den enkelte ressource, når den redigeres Denne indstilling forudvælger blot en skabelon.';
-$_lang["defaulttemplate_title"] = 'Standard for skabelon';
+$_lang["defaulttemplate_title"] = 'Standard skabelon';
+$_lang["defaulttemplate_logic_title"] = 'Automatisk tildeling af skabelon';
+$_lang["defaulttemplate_logic_general_message"] = 'Nye ressourcer vil blive tildelt følgende skabelon, såfremt denne findes. Hvis ikke vil en skabelon fra det overstående niveau blive brugt:';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>Systemet</strong>: systemets standard skabelon.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Overstående ressource</strong>: den samme skabelon, som den overstående ressource kontainer.';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Samme niveau</strong>: den samme skabelon som de øvrige ressoucer i samme kontainer bruger.';
 $_lang["delete"] = 'Slet';
 $_lang["delete_resource"] = 'Slet ressourcen';
 $_lang["delete_tags"] = 'Slet tags';
@@ -666,6 +680,7 @@ $_lang["refresh_site"] = 'Nulstil cachen';
 $_lang["refresh_title"] = 'Opdater websitet';
 $_lang["refresh_tree"] = 'Opdater website træet';
 $_lang["refresh_unpublished"] = '<b>%s</b> ressourcer blev afpubliceret.';
+$_lang["release_date"] = 'Udgivelsesdato';
 $_lang["remember_last_tab"] = 'Husk fane';
 $_lang["remember_last_tab_message"] = 'Sider i administrationsmodulet med faner, vil blive vist med den sidst brugte fane, i stedent for den første fane som der ellers er standard';
 $_lang["remember_username"] = 'Husk mig på denne computer';
@@ -676,6 +691,7 @@ $_lang["rename"] = 'Omdøb';
 $_lang["reports"] = 'Rapporter';
 $_lang["require_tagname"] = 'Et navn på tag\'et er påkrævet';
 $_lang["require_tagvalue"] = 'En værdi på tag\'et er påkrævet';
+$_lang["reserved_name_warning"] = 'Du har brugt et navn der er reserveret.';
 $_lang["reset"] = 'Nulstil';
 $_lang["reset_failedlogins"] = 'nulstil';
 $_lang["resource"] = 'Ressource';
@@ -1029,7 +1045,6 @@ $_lang["users"] = 'Sikkerhed';
 $_lang["validate_referer_message"] = 'Valider HTTP_REFERER headers for at formindske risikoen for at CMS\'ets brugere bliver lokket til at udføre uønskede handlinger ved et CSRF (Cross Site Request Forgery) angreb. Nogle serverkonfigurationer understøtter ikke denne funktion, hvis de ikke kan sende HTTP_REFERER headers.';
 $_lang["validate_referer_title"] = 'Valider HTTP_REFERER headers?';
 $_lang["value"] = 'Værdi';
-$_lang["version_codename"] = 'Versions kodenavn';
 $_lang["view"] = 'Se';
 $_lang["view_child_resources_in_container"] = 'Se ressourcer i denne kontainer';
 $_lang["view_log"] = 'Se log';

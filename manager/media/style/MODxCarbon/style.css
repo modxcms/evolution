@@ -17,7 +17,7 @@ body {
 	font-size: 75%;
 	height: 100%;
 	color:#333333;
-	background-color: #f4f7f6;
+	background: #f7f7f7;
 }
 img, a img {
 	border: 0 !important;
@@ -511,13 +511,13 @@ a img {
 	color: #333;
 }
 .row2 {
-	background-color: #ece7dd;
+	background-color: #C8DAA2;
 }
 .row3 {
-	background-color: #f2f4f3;
+	background-color: #F4F4F4;
 }
 .treeframebody {
-	background-color: #f2f4f3;
+	background-color: #f4f4f4;
 }
 
 #treeMenu * {
@@ -528,7 +528,7 @@ a img {
 	height: 100%;
 	padding: 5px 10px 0 10px;
 	border-top: 2px solid #fff;
-	background-color: #f2f4f3;
+	background: #f4f4f4;
 }
 #treeRoot div img {
 	margin: 0 0 0 -6px;
@@ -604,28 +604,23 @@ a img {
 	text-decoration: line-through;
 }
 /* -------------------------[ grid style ]--- */
-table.grid {
+.grid {
 	width: 100%;
 	background-color: #fff;
-	border-collapse:collapse;
-	margin-bottom:20px;
+	border: 1px solid silver;
 }
-table.grid th, table.grid td {
-	border:1px solid #ccc;
-	padding:4px;
-}
-table.grid th, .gridHeader {
-	color: #333;
+.gridHeader {
+	color: #fff;
 	font-weight: bold;
-	background-color: #d2d2d2;
-	white-space:nowrap;
-	text-align:left;
+	background-color: #88939E;
 }
-table.grid td.odd, .gridItem {
+.gridItem {
 	background-color: #fff;
+	padding: 3px;
 }
-table.grid td.even, .gridAltItem {
+.gridAltItem {
 	background-color: #eeeeee;
+	padding: 3px;
 }
 .gridRowIcon:hover {
 	background-color: #f5f5dc;
@@ -694,7 +689,7 @@ a.hometblink:hover {
 	width: 100%;
 	padding: 5px;
 	border: 1px solid #eee;
-	background-color: #f2f4f3;
+	background-color: #F4F4F4;
 	color: #707070;
 }
 #preLoader {
@@ -773,7 +768,7 @@ a.hometblink:hover {
 
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu {
-	background: #e4e4e4 url(images/misc/menubg.png) repeat scroll 330px -8px;
+	background: #e4e4e4 url(images/misc/menubg.png);
 }
 #Navcontainer {
 	padding: 0 10px;
@@ -805,7 +800,7 @@ a.hometblink:hover {
 	}
 #nav li {
 	list-style: none;
-	background: #323c52 url(images/misc/tab.png) 100% 100%;
+	background: #d4d4d4 url(images/misc/tab.gif) 100% 100%;
 	float: left;
 	width: auto;
 	margin: 0 3px 0 0;
@@ -817,7 +812,7 @@ a.hometblink:hover {
 	}
 #nav li a {
 	border-left: 1px solid #2c3d50;
-	color: #8d9e9a;
+	color: #919fae;
 	height: 25px;
 	font-weight: bold;
 	text-decoration: none;
@@ -849,7 +844,7 @@ a.hometblink:hover {
 	color: #fff;
 }
 #nav li.active {
-	background: #758ca2 url(images/misc/tab.png) 100% 0;
+	background: #758ca2 url(images/misc/tab.gif) 100% 0;
 }
 #nav li.active a {
 	color: #fff;
@@ -1123,7 +1118,7 @@ a.hometblink, a.hometblink img {
 
 /* -------------------------[ Welcome Page ]--- */
 #mainActionPages {
-	background: #f2f4f3 url(images/misc/mainbg.gif) repeat-x top;
+	background: #f4f4f4 url(images/misc/mainbg.gif) repeat-x top;
 }
 .tab-page {
 	border: 1px solid #e4e4e4;
@@ -1133,18 +1128,9 @@ a.hometblink, a.hometblink img {
 }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
+	border: 0 solid ThreeDShadow;
+	color: WindowText;
 }
-table.sortabletable {
-border-collapse:collapse;
-width:100%;
-}
-table.sortabletable td,table.sortabletable th {
-border:1px solid #ccc;
-padding:4px;
-}
-.sortabletable a {
-}
-
 .sortabletable thead tr {
 	background-color: #86919e;
 }
@@ -1161,14 +1147,14 @@ padding:4px;
 .sortabletable th {
 	text-align: left;
 	cursor: pointer;
-	color: #f3f3f3;
+	color: #333;
 }
 	.rtl .sortabletable th {
 		text-align: right;
 	}
 .sortabletable th a {
 	text-decoration: none;
-	color: #f3f3f3;
+	color: #333;
 }
 .sortabletable th:active {
 	background: #ccc;
@@ -1315,7 +1301,7 @@ form#mutate dd {
 	margin-left: 210px;
 }
 form#mutate input.disabled {
-	background-color: #f2f4f3 !important;
+	background-color: #f4f4f4 !important;
 }
 
 form#mutate select.inputBox,
@@ -1453,7 +1439,7 @@ form#mutate select.tv_url_select {
 	margin: 0;
 	color: #fff;
 	padding: 6px 6px 4px;
-	background: #758CA2 url(images/misc/tab.png);
+	background: #758CA2 url(images/misc/tab.gif);
 }
 
 .custom-text {

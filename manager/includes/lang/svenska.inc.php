@@ -3,14 +3,14 @@
  * Filename:       includes/lang/svenska.inc.php
  * Function:       Swedish language file
  * Author:         Pontus Ågren (Pont) & Johnny Chadda
- * Date:           2010-05-18
+ * Date:           2010-12-25
  * Version:        1.0
- * MODx version:   Evolution 1.0.x rev 6804
+ * MODx version:   Evolution 1.0.5
 */
 
 //$modx_textdir = 'rtl'; // uncomment this line for RTL langauges
 $modx_lang_attribute = 'sv'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
-$modx_manager_charset = 'ISO-8859-1';
+$modx_manager_charset = 'UTF-8';
 
 $_lang["about_msg"] = 'MODx är ett <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP applikationsramverk och system för innehållshantering</a> och är licensierat under <a href="../assets/docs/license.txt">GNU GPL</a>.';
 $_lang["about_title"] = 'Om MODx';
@@ -98,6 +98,8 @@ $_lang["chunk_code"] = 'Chunk-kod (html)';
 $_lang["chunk_multiple_id"] = 'Fel: Flera chunks har samma unika ID.';
 $_lang["chunk_no_exist"] = 'Chunken existerar inte.';
 $_lang["cleaningup"] = 'Rensar upp';
+$_lang["clean_uploaded_filename"] = 'Använd transliteration vid filuppladdningar';
+$_lang["clean_uploaded_filename_message"] = 'Använd standard- eller transaliasinställningar för filnamnet för att städa bort specialtecken, men bevara punkter, i uppladdade filers namn.';
 $_lang["clear_log"] = 'Rensa logg';
 $_lang["click_to_context"] = 'Klicka för att komma åt snabbmenyn';
 $_lang["click_to_edit_title"] = 'Klicka här för att redigera den här posten';
@@ -116,6 +118,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Felsidan för din webbplats är int
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Detta betyder att din felsida inte är tillgänglig för vanliga användare eller att den inte existerar. Det här kan leda till att ett tillstånd med upprepande loopar skapas och ger upphov till att många fel rapporteras i webbplatsens loggar. Kontrollera att inga webbanvändargrupper är anslutna till sidan.';
 $_lang["configcheck_errorpage_unpublished"] = 'Felsidan för din webbplats är inte publicerad eller existerar inte.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Detta betyder att din felsida inte är tillgänglig för allmänheten. Publicera sidan eller kontrollera under Verktyg &gt; Konfiguration att den angivna sidan är en existerande resurs i webbplatsens resursträd.';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Visa inte detta igen.</em></a>';
 $_lang["configcheck_images"] = 'Bildkatalogen är inte skrivbar';
 $_lang["configcheck_images_msg"] = 'Bildkatalogen är inte skrivbar eller finns inte. Detta betyder att bildhanteringsfunktionerna i editorn inte kommer att fungera!';
 $_lang["configcheck_installer"] = 'Installationsprogrammet är fortfarande kvar';
@@ -129,12 +132,16 @@ $_lang["configcheck_php_gdzip_msg"] = 'MODx behöver tilläggen GD och Zip aktiver
 $_lang["configcheck_register_globals"] = 'register_globals är satt till ON i din konfigurationsfil för php - php.ini';
 $_lang["configcheck_register_globals_msg"] = 'Denna konfiguration gör din webbplats betydligt mer sårbar för så kallade serveröverskridande scriptattacker (Cross Site Scripting eller XSS). Du bör ta kontakt med din webbhost och ta reda på vad du kan göra för att stänga av den här inställningen.';
 $_lang["configcheck_title"] = 'Konfigurationskontroll';
+$_lang["configcheck_templateswitcher_present"] = 'Pluginen TemplateSwitcher upptäckt';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Ta bort TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Inaktivera TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'Pluginen TemplateSwitcher har funnits orsaka cachnings- och preestandaproblem och bör endast användas om den funktionaliteten krävs på din webbplats.';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Din webbplats otillåten-sida är inte publicerad eller existerar inte.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Detta betyder att din webbplats otillåten-sida inte är tillgänglig för vanliga användare eller att den inte existerar. Det här kan leda till att ett tillstånd med upprepande loopar skapas och ger upphov till att många fel rapporteras i webbplatsens loggar. Kontrollera att inga webbanvändargrupper är knutna till sidan.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Den otillåten-sida som angetts i inställningarna är inte publicerad.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Detta betyder att din otillåten-sida är oåtkomlig för allmänheten. Publicera sidan eller kontrollera under Verktyg &gt; Konfiguration att den angivna sidan är en existerande resurs i webbplatsens resursträd.';
 $_lang["configcheck_validate_referer"] = 'Säkerhetsvarning: validering av HTTP-header';
-$_lang["configcheck_validate_referer_msg"] = "Konfigurationsinställningen <strong>Kontrollera HTTP_REFERER-headers?</strong> är inaktiverad. Vi rekommenderar att den aktiveras. <a href=\"index.php?a=17\">Gå till konfigurationssidan</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Visa inte det här igen.</em></a>";
+$_lang["configcheck_validate_referer_msg"] = "Konfigurationsinställningen <strong>Kontrollera HTTP_REFERER-headers?</strong> är inaktiverad. Vi rekommenderar att den aktiveras. <a href=\"index.php?a=17\">Gå till konfigurationssidan</a>.";
 $_lang["configcheck_warning"] = 'Konfigurationsvarning: ';
 $_lang["configcheck_what"] = 'Vad betyder det här?';
 $_lang["confirm_block"] = 'Är du säker på att du vill blockera denna användare?';
@@ -209,6 +216,11 @@ $_lang["defaultsearch_message"] = 'Välj "Ja" för att göra alla nya resurser sökb
 $_lang["defaultsearch_title"] = 'Sökbara som standard';
 $_lang["defaulttemplate_message"] = 'Välj den standarmall du vill använda för nya resurser. Du kan fortfarande välja en annan mall när du redigerar resursen. Denna inställning är bara den förvalda.';
 $_lang["defaulttemplate_title"] = 'Standardmall';
+$_lang["defaulttemplate_logic_title"] = 'Automatisk malltilldelning';
+$_lang["defaulttemplate_logic_general_message"] = 'Nya resurser kommer att använda följande mallar och faller tillbaka på högre nivåer om de inte hittas:';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: systemets standardmall.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Förälder</strong>: samma mall som föräldrabehållaren.';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Syskon</strong>: samma mall som andra resurser i samma behållare.';
 $_lang["delete"] = 'Ta bort';
 $_lang["delete_resource"] = 'Ta bort resurs';
 $_lang["delete_tags"] = 'Ta bort taggar';
@@ -666,6 +678,7 @@ $_lang["refresh_site"] = 'Rensa cachen';
 $_lang["refresh_title"] = 'Uppdatera webbplatsen';
 $_lang["refresh_tree"] = 'Uppdatera webbplatsträd';
 $_lang["refresh_unpublished"] = '<b>%s</b> resurser avpublicerades.';
+$_lang["release_date"] = 'Släppdatum';
 $_lang["remember_last_tab"] = 'Kom ihåg flikar';
 $_lang["remember_last_tab_message"] = 'Sidor i hanteraren som har flikar öppnas på den flik man senast var på, istället för på den första fliken.';
 $_lang["remember_username"] = 'Kom ihåg mig';
@@ -676,6 +689,7 @@ $_lang["rename"] = 'Byt namn';
 $_lang["reports"] = 'Rapporter';
 $_lang["require_tagname"] = 'Ett namn på taggen krävs';
 $_lang["require_tagvalue"] = 'Ett värde på taggen krävs';
+$_lang["reserved_name_warning"] = 'Du har använt ett reserverat namn.';
 $_lang["reset"] = 'Rensa';
 $_lang["reset_failedlogins"] = 'nollställ';
 $_lang["resource"] = 'Resurs';
@@ -1029,7 +1043,6 @@ $_lang["users"] = 'Säkerhet';
 $_lang["validate_referer_message"] = 'Kontrollera HTTP_REFERER-headers för att minska risken för att dina innehållsredaktörer ska kunna luras att utföra oavsiktliga handlingar i redigeraren, pga att de blivit offer för CSRF-attacker (Cross Site Request Forgery). Det är möjligt att vissa konfigurationer inte kan använda denna kontroll om servern inte skickar några HTTP_REFERER-headers.';
 $_lang["validate_referer_title"] = 'Kontrollera HTTP_REFERER-headers?';
 $_lang["value"] = 'Värde';
-$_lang["version_codename"] = 'Versionens kodnamn'; 
 $_lang["view"] = 'Visa';
 $_lang["view_child_resources_in_container"] = 'Underresurser';
 $_lang["view_log"] = 'Visa logg';

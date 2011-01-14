@@ -1,6 +1,10 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
+
+// invoke OnManagerRegClientStartupHTMLBlock event
+$evtOut = $modx->invokeEvent('OnManagerMainFrameHeaderHTMLBlock');
+$onManagerMainFrameHeaderHTMLBlock = is_array($evtOut) ? '<div id="onManagerMainFrameHeaderHTMLBlock">' . implode('', $evtOut) . '</div>' : '';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -10,6 +14,9 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
     <link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css" />
 
+    <!-- OnManagerMainFrameHeaderHTMLBlock -->
+    <?php echo $onManagerMainFrameHeaderHTMLBlock; ?>
+    
     <script src="media/script/mootools/mootools.js" type="text/javascript"></script>
     <script src="media/script/mootools/moodx.js" type="text/javascript"></script>
     <script type="text/javascript">

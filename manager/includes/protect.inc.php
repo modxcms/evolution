@@ -3,6 +3,12 @@
  *    Protect against some common security flaws
  */
 
+// php bug 53632 (php 4 <= 4.4.9 and php 5 <= 5.3.4)
+if (strstr(str_replace('.','',serialize(array_merge($_GET, $_POST, $_COOKIE))), '22250738585072011')) {
+    header('Status: 422 Unprocessable Entity');
+    die();
+}
+
 // Null is evil
 if (isset($_SERVER['QUERY_STRING']) && strpos(urldecode($_SERVER['QUERY_STRING']), chr(0)) !== false)
     die();

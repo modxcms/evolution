@@ -114,7 +114,7 @@ if($manager_language!="english" && file_exists($modx->config['base_path']."manag
     include_once "lang/country/".$manager_language."_country.inc.php";
 }
 
-$displayStyle = ($_SESSION['browser'] !== 'ie') ? 'table-row' : 'block';
+$displayStyle = (($_SESSION['browser'] == 'mz') || ($_SESSION['browser'] == 'op') || ($_SESSION['browser'] == 'sf')) ? "table-row" : "block";
 ?>
 <script type="text/javascript" src="media/calendar/datepicker.js"></script>
 <script type="text/javascript">
@@ -281,7 +281,7 @@ if (is_array($evtOut))
 		  <?php if(!empty($userdata['id'])) { ?>
 		  <tr id="showname" style="display: <?php echo ($_GET['a']=='12' && (!isset($usernamedata['oldusername'])||$usernamedata['oldusername']==$usernamedata['username'])) ? $displayStyle : 'none';?> ">
 			<td colspan="3">
-				<img src="<?php echo $_style['icons_user'] ?>" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="#" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
+				<img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/user.gif" alt="." />&nbsp;<b><?php echo !empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']; ?></b> - <span class="comment"><a href="#" onclick="changeName();return false;"><?php echo $_lang["change_name"]; ?></a></span>
 				<input type="hidden" name="oldusername" value="<?php echo htmlspecialchars(!empty($usernamedata['oldusername']) ? $usernamedata['oldusername']:$usernamedata['username']); ?>" />
 				<hr />
 			</td>
@@ -351,7 +351,7 @@ while ($row = mysql_fetch_assoc($rs)) {
         $selectedtext = $row['id'] == $userdata['role'] ? "selected='selected'" : '';
     }
 ?>
-			<option value="<?php echo $row['id']; ?>" <?php echo $selectedtext; ?>><?php echo $row['name']; ?></option>
+			<option value="<?php echo $row['id']; ?>"<?php echo $selectedtext; ?>><?php echo $row['name']; ?></option>
 		<?php
 
 }
@@ -430,17 +430,10 @@ while ($row = mysql_fetch_assoc($rs)) {
 			<td>&nbsp;</td>
 			<td><?php echo $userdata['logincount'] ?></td>
 		  </tr>
-		  <?php
-		      if(!empty($userdata['lastlogin']))
-		      {
-		           $lastlogin = $modx->toDateFormat($userdata['lastlogin']+$server_offset_time);
-		      }
-		      else $lastlogin = '-';
-		  ?>
 		  <tr>
 			<td><?php echo $_lang['user_prevlogin']; ?>:</td>
 			<td>&nbsp;</td>
-			<td><?php echo $lastlogin ?></td>
+			<td><?php echo $modx->toDateFormat($userdata['lastlogin']+$server_offset_time) ?></td>
 		  </tr>
 		  <tr>
 			<td><?php echo $_lang['user_failedlogincount']; ?>:</td>
@@ -483,7 +476,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 	  <tr>
 	    <td class='warning'><?php echo $_lang["language_title"] ?></td>
 	    <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true">
-	    <option value=""><?php echo $_lang["user_use_config"]; ?></option>
+	    <option value=""> </option>
 	    <?php
 $activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : $manager_language;
 $dir = dir("includes/lang");
@@ -570,7 +563,7 @@ $dir->close();
           <tr>
           <td nowrap class="warning"><b><?php echo $_lang["manager_theme"]?></b></td>
             <td> <select name="manager_theme" size="1" class="inputBox" onchange="documentDirty=true;document.userform.theme_refresher.value = Date.parse(new Date())">
-		<option value=""><?php echo $_lang["user_use_config"]; ?></option>
+		<option value=""> </option>
 <?php
 		$dir = dir("media/style/");
 		while ($file = $dir->read()) {
@@ -679,7 +672,7 @@ $dir->close();
             <td nowrap class="warning"><b><?php echo $_lang["which_editor_title"]?></b></td>
             <td>
 				<select name="which_editor" onchange="documentDirty=true;">
-				<option value=""><?php echo $_lang["user_use_config"]; ?></option>
+				<option value=""> </option>
 					<?php
 
 $edt = isset ($usersettings["which_editor"]) ? $usersettings["which_editor"] : '';
