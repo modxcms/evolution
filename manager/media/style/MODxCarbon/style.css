@@ -17,7 +17,7 @@ body {
 	font-size: 75%;
 	height: 100%;
 	color:#333333;
-	background: #f7f7f7;
+	background-color: #f4f7f6;
 }
 img, a img {
 	border: 0 !important;
@@ -511,13 +511,13 @@ a img {
 	color: #333;
 }
 .row2 {
-	background-color: #C8DAA2;
+	background-color: #ece7dd;
 }
 .row3 {
-	background-color: #F4F4F4;
+	background-color: #f2f4f3;
 }
 .treeframebody {
-	background-color: #f4f4f4;
+	background-color: #f2f4f3;
 }
 
 #treeMenu * {
@@ -528,7 +528,7 @@ a img {
 	height: 100%;
 	padding: 5px 10px 0 10px;
 	border-top: 2px solid #fff;
-	background: #f4f4f4;
+	background-color: #f2f4f3;
 }
 #treeRoot div img {
 	margin: 0 0 0 -6px;
@@ -694,7 +694,7 @@ a.hometblink:hover {
 	width: 100%;
 	padding: 5px;
 	border: 1px solid #eee;
-	background-color: #F4F4F4;
+	background-color: #f2f4f3;
 	color: #707070;
 }
 #preLoader {
@@ -805,7 +805,7 @@ a.hometblink:hover {
 	}
 #nav li {
 	list-style: none;
-	background: #d4d4d4 url(images/misc/tab.gif) 100% 100%;
+	background: #323c52 url(images/misc/tab.png) 100% 100%;
 	float: left;
 	width: auto;
 	margin: 0 3px 0 0;
@@ -817,7 +817,7 @@ a.hometblink:hover {
 	}
 #nav li a {
 	border-left: 1px solid #2c3d50;
-	color: #919fae;
+	color: #8d9e9a;
 	height: 25px;
 	font-weight: bold;
 	text-decoration: none;
@@ -849,7 +849,7 @@ a.hometblink:hover {
 	color: #fff;
 }
 #nav li.active {
-	background: #758ca2 url(images/misc/tab.gif) 100% 0;
+	background: #758ca2 url(images/misc/tab.png) 100% 0;
 }
 #nav li.active a {
 	color: #fff;
@@ -1123,7 +1123,7 @@ a.hometblink, a.hometblink img {
 
 /* -------------------------[ Welcome Page ]--- */
 #mainActionPages {
-	background: #f4f4f4 url(images/misc/mainbg.gif) repeat-x top;
+	background: #f2f4f3 url(images/misc/mainbg.gif) repeat-x top;
 }
 .tab-page {
 	border: 1px solid #e4e4e4;
@@ -1315,7 +1315,7 @@ form#mutate dd {
 	margin-left: 210px;
 }
 form#mutate input.disabled {
-	background-color: #f4f4f4 !important;
+	background-color: #f2f4f3 !important;
 }
 
 form#mutate select.inputBox,
@@ -1453,7 +1453,7 @@ form#mutate select.tv_url_select {
 	margin: 0;
 	color: #fff;
 	padding: 6px 6px 4px;
-	background: #758CA2 url(images/misc/tab.gif);
+	background: #758CA2 url(images/misc/tab.png);
 }
 
 .custom-text {
