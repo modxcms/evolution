@@ -219,19 +219,43 @@
 				break;
 
             case 'custom_tv':
+                global $_lang;
                 $custom_output = '';
                 /* If we are loading a file */
-                if(substr($field_elements, 0, 6) == "@FILE:") {
-                    $file_name = MODX_BASE_PATH.trim(substr($field_elements, 6));
+                if(substr($field_elements, 0, 5) == '@FILE') {
+                    $file_name = MODX_BASE_PATH . trim(substr($field_elements, 6));
                     if( !file_exists($file_name) ) {
-                        $custom_output = "$file_name does not exist";
+                        $custom_output = $file_name . ' does not exist';
+                    } else {
+                        $custom_output = file_get_contents($file_name);
+                    }
+                } elseif(substr($field_elements, 0, 8) == '@INCLUDE') {
+                    $file_name = MODX_BASE_PATH . trim(substr($field_elements, 9));
+                    if( !file_exists($file_name) ) {
+                        $custom_output = $file_name . ' does not exist';
                     } else {
                         ob_start();
-                        include $file_name;
-                        $custom_output = ob_get_contents();
+                        $return = include($file_name);
+                        $echo = ob_get_contents();
                         ob_end_clean();
+                        $custom_output = $echo . $return;
                     }
+                } elseif(substr($field_elements, 0, 6) == "@CHUNK") {
+                    $chunk_name = trim(substr($field_elements, 7));
+                    $chunk_body = $modx->getChunk($chunk_name);
+                    if($chunk_body == false) {
+                        $custom_output = $_lang['chunk_no_exist']
+                                             . '(' . $_lang['htmlsnippet_name']
+                                             . ':' . $chunk_name . ')';
                 } else {
+                        $custom_output = $chunk_body;
+                    }
+                } elseif(substr($field_elements, 0, 5) == "@EVAL") {
+                    $eval_str = trim(substr($field_elements, 6));
+                    $custom_output = eval($eval_str);
+                } else {
+                    $custom_output = $field_elements;
+                }
                     $replacements = array(
                         '[+field_type+]'   => $field_type,
                         '[+field_id+]'     => $field_id,
@@ -239,8 +263,11 @@
                         '[+field_value+]'  => htmlspecialchars($field_value),
                         '[+field_style+]'  => $field_style,
                         );
-                    $custom_output = str_replace(array_keys($replacements), $replacements, $field_elements);
-                }
+                $custom_output = str_replace(array_keys($replacements), $replacements, $custom_output);
+                global $content;
+                $modx->documentObject = $content;
+                $custom_output = $modx->parseDocumentSource($custom_output);
+                
                 $field_html .= $custom_output;
                 break;
             
