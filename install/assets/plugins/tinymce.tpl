@@ -14,7 +14,7 @@
  * @internal    @installset base, sample
  *
  * Written By Jeff Whitfield
- * and Mikko Lammi / updated: 03/09/2010
+ * and Mikko Lammi / updated: 12/01/2011
  * and yama  / updated: 05/19/2010
  */
 
@@ -70,7 +70,7 @@ switch ($e->name)
 		$params['use_browser']     = $modx->config['use_browser'];
 		$params['editor_css_path'] = $modx->config['editor_css_path'];
 		
-		if($modx->isBackend())
+		if($modx->isBackend() || (intval($_GET['quickmanagertv']) == 1 && isset($_SESSION['mgrValidated'])))
 		{
 			$params['theme']           = $modx->config['tinymce_editor_theme'];
 			$params['language']        = getTinyMCELang($modx->config['manager_language']);
