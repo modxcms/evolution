@@ -533,11 +533,14 @@ class AjaxSearchOutput {
                 $frombase = $modx->config['base_path'] . $path;
                 $dirname = dirname($frombase);
                 $as_expected_dirname = $modx->config['base_path'] . AS_SPATH . 'templates';
-                if(!strpos($dirname, $as_expected_dirname)) {
+                if(strpos($dirname, $as_expected_dirname) === false) {
                     $path = str_replace('..', '', $path);
                     $path = str_replace('\\', '/', $path);
                     if(substr($path, 0, 1) == '/') $path = substr($path, 1);
                     $tplResults = '@FILE:templates/' . $path;
+                }
+                if(!file_exists($as_expected_dirname . '/' . $path)) {
+                    $tplResults = '';
                 }
             }
             if ($tplResults == '') $tplResults = "@FILE:" . AS_SPATH . 'templates/ajaxResults.tpl.html';
