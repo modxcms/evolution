@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.4 updated 03/01/2011
+ * @version     1.5.5 updated 12/01/2011
  */
 
 if(!class_exists('Qm')) {
@@ -470,9 +470,8 @@ class Qm {
                         
     					<div id="qmEditor">
     					
-                        <a id="qmClose" class="qmButton qmClose" href="#" onclick="javascript: return false;">X</a>
-                        
                         <ul>
+                        <li id="qmClose"><a class="qmButton qmClose" href="#" onclick="javascript: return false;">X</a></li>
                         <li><a id="qmLogoClose" class="qmClose" href="#" onclick="javascript: return false;"></a></li>
                         '.$controls.'
                         </ul>

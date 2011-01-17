@@ -199,6 +199,12 @@
 #qmEditor a
 {
 	display: block;
+	width: auto;
+	height: auto;
+	margin: 0;
+	padding: 0;
+	line-height: normal;
+	border: 0;
 }
 
 #qmEditor .qmEdit span, .qm-edit span, .qm-save span, .qm-tv span
@@ -214,29 +220,26 @@
 
 #qmEditorClosed
 {
-    height: 28px;
+    height: 26px;
     display: none;
     width: 40px !important;
     cursor: pointer !important;
 }
 
-#qmEditor #qmClose
+#qmClose
 {
     display: block;
-    float: right; 
-    margin-right: 7px;
-    margin-top: 0px;
-    padding: 6px 8px;
+    float: right !important; 
+    margin-right: -2px !important;
 }
 
 #qmLogoClose
 {
     display: block;
     float: left;
-    height: 28px;
-    width: 40px;
-    margin-top: 0;
-    margin-right: 0px;
+    height: 26px !important;
+    width: 40px !important;
+    margin: 0;
     text-decoration: none !important;
     border: 0 !important;
     background: transparent url(images/transparent.gif) repeat;
@@ -264,12 +267,17 @@
 }
 
 #qmEditor li 
-{ /* .actionButtons --> #qmEditor */	
-	margin-right: 8px;
+{
+	margin: 0 8px 0 0;
 	float: left;
 	height: 15px;
 	line-height: 15px;
 	padding: 0;
+    list-style-type: none;
+    height: auto;
+    width: auto;
+    background: none;
+    border: 0;
 }
 
 #qmEditor .qmButton, .qm-edit, .qm-new, .qm-tv, .qm-save, .qm-cancel  
