@@ -4,7 +4,7 @@
 // Description: This code is used to post a comment about ajax search results
 
 // AjaxSearch Snippet folder location
-var _asbase = 'assets/snippets/ajaxSearch191/';
+var _asbase = 'assets/snippets/ajaxSearch/';
 
 var xmlHttp;function GetXmlHttpObject(){var xmlHttp=null;try{xmlHttp=new XMLHttpRequest();}
 catch(e){try{xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");}
