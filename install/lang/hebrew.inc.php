@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * MODx language File
  *
@@ -8,7 +8,7 @@
  * 
  * Filename:       /install/lang/hebrew/hebrew.inc.php
  * Language:       Hebrew
- * Encoding:       iso-8859-1
+ * Encoding:       UTF-8
  */
 $modx_textdir = 'rtl';
 
@@ -80,7 +80,7 @@ $_lang["database_connection_failed_note"] = 'אנא בדוק את פרטי הה�
 $_lang["database_use_failed"] = 'מסד הנתונים לא ניתן לבחירה!';
 $_lang["database_use_failed_note"] = 'Please check the database permissions for the specified user and try again.';
 $_lang["during_execution_of_sql"] = ' during the execution of SQL statement ';
-$_lang["encoding"] = 'iso-8859-1';	//charset encoding for html header
+$_lang["encoding"] = 'UTF-8';	//charset encoding for html header
 $_lang["error"] = 'שגיאה';
 $_lang["errors"] = 'שגיאות';
 $_lang["failed"] = 'נכשל!';
