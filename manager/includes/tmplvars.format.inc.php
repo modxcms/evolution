@@ -344,6 +344,8 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             if(is_string($widget_output)) {
                 $widget_output = str_replace('[+value+]', $value, $widget_output);
                 $o = $modx->parseDocumentSource($widget_output);
+            } else {
+                $o = $widget_output;
             }
             break;
 
