@@ -912,7 +912,7 @@ a.hometblink:hover {
 #mx_contextmenu .menuLink {
 	cursor: pointer;
 	color: #222;
-	padding: 3px 16px 3px 2px;
+	padding: 3px 7px 3px 2px;
 }
 #mx_contextmenu .menuLink:hover {
 	background: #DDE4EB;
@@ -923,7 +923,7 @@ a.hometblink:hover {
 #mx_contextmenu .menuLink:hover,
 #mx_contextmenu .menuLinkDisabled {
 	cursor: pointer;
-	padding: 2px 15px 2px 1px;
+	padding: 2px 6px 2px 1px;
 }
 #mx_contextmenu .menuLinkDisabled {
 	cursor: default;
