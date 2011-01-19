@@ -104,10 +104,10 @@ class AjaxSearchConfig {
 
         if (isset($this->dbCharset) && isset($this->_pageCharset[$this->dbCharset])) {
 
-            if ($this->dbCharset != 'utf8' && !extension_loaded('mbstring')) {
+            if ($this->dbCharset == 'utf8' && !extension_loaded('mbstring')) {
                 $msgErr = "AjaxSearch error: php_mbstring extension required";
             } else {
-                if ($this->cfg['mbstring']) mb_internal_encoding("UTF-8");
+                if ($this->dbCharset == 'utf8' && $this->cfg['mbstring']) mb_internal_encoding("UTF-8");
                 $this->pgCharset = $this->_pageCharset[$this->dbCharset];
                 $valid = true;
             }
