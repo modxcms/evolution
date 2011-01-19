@@ -282,7 +282,7 @@ class asPHxParser {
                     default:
                         if (!array_key_exists($modifier_cmd[$i], $this->cache["cm"])) {
                             $phx_snippet_name = 'phx:' . $modx->db->escape($modifier_cmd[$i]);
-                            $sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='phx:" . $phx_snippet_name . "';";
+                            $sql = "SELECT snippet FROM " . $modx->getFullTableName("site_snippets") . " WHERE " . $modx->getFullTableName("site_snippets") . ".name='" . $phx_snippet_name . "';";
                              $result = $modx->dbQuery($sql);
                              if ($modx->recordCount($result) == 1) {
                                 $row = $modx->fetchRow($result);
