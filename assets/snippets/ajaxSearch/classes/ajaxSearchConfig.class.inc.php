@@ -29,7 +29,7 @@ class AjaxSearchConfig {
     // private variables
     // Conversion code name between html page character encoding and Mysql character encoding
     // Some others conversions should be added if needed. Otherwise Page charset = Database charset
-    var $_pageCharset = array('utf8' => 'UTF-8', 'latin1' => 'ISO-8859-1', 'latin2' => 'ISO-8859-2');
+    var $_pageCharset = array('utf8' => 'UTF-8', 'latin1' => 'ISO-8859-1', 'latin2' => 'ISO-8859-2', 'cp1251' => 'windows-1251');
 
     function AjaxSearchConfig($dcfg, $cfg) {
         global $modx;
@@ -104,10 +104,10 @@ class AjaxSearchConfig {
 
         if (isset($this->dbCharset) && isset($this->_pageCharset[$this->dbCharset])) {
 
-            if ($this->dbCharset != 'utf8' && !extension_loaded('mbstring')) {
+            if ($this->dbCharset == 'utf8' && !extension_loaded('mbstring')) {
                 $msgErr = "AjaxSearch error: php_mbstring extension required";
             } else {
-                if ($this->cfg['mbstring']) mb_internal_encoding("UTF-8");
+                if ($this->dbCharset == 'utf8' && $this->cfg['mbstring']) mb_internal_encoding("UTF-8");
                 $this->pgCharset = $this->_pageCharset[$this->dbCharset];
                 $valid = true;
             }
@@ -119,7 +119,7 @@ class AjaxSearchConfig {
             // if you get this message, simply update the $pageCharset array in search.class.inc.php file
             // with the appropriate mapping between Mysql Charset and Html charset
             // eg: 'latin2' => 'ISO-8859-2'
-            $msgErr = "AjaxSearch error: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the search.class.inc.php file";
+            $msgErr = "AjaxSearch error: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the ajaxSearchConfig.class.inc.php file";
         }
         return $valid;
     }
