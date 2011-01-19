@@ -9,6 +9,8 @@ Security:
 * [#MODX-1035] fix XSS vulnerability in installer
 * [#2787] fix XSS vuln. in image editor
 * [#3352] work around critical PHP bug 53632
+* [#3437] fix vulnerability in AjaxSearch allowing attacker to view arbitrary files (JVN#95385972)
+* [#3429] fix SQL injection vulnerability in AjaxSearch allowing attacker to execute arbitrary PHP code (JVN#54092716)
 
 --------------------------------------------
 Bugfixes:
@@ -82,6 +84,8 @@ Additional Improvements & Updates:
 * [#2627] New event allows plugin to inject custom markup into manager's header (header.inc.php)
 * [#3385] Wayfinder optimization when hideSubMenus is enabled
 * [#3386] Breadcrumbs optimizations
+* [#3543] Personalize updated to 2.1
+
 
 MODx Evolution 1.0.4 (Jun 8, 2010)
 ===================================
