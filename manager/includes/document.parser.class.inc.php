@@ -524,16 +524,42 @@ class DocumentParser {
         @include $this->config["base_path"] . "assets/cache/sitePublishing.idx.php";
         $timeNow= time() + $this->config['server_offset_time'];
         if ($cacheRefreshTime <= $timeNow && $cacheRefreshTime != 0) {
-            // now, check for documents that need publishing
-            $sql = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE ".$this->getFullTableName("site_content").".pub_date <= $timeNow AND ".$this->getFullTableName("site_content").".pub_date!=0 AND published=0";
-            if (@ !$result= $this->dbQuery($sql)) {
-                $this->messageQuit("Execution of a query to the database failed", $sql);
+            // Get documents that need to be published or unpublished
+            $sql   = array();
+            $sql[] = "SELECT id";
+            $sql[] = "FROM {$this->getFullTableName('site_content')}";
+            $sql[] = "WHERE ";
+              $sql[] = "(pub_date <= {$timeNow} AND pub_date != 0 AND published = 0) "; // $unpublished == "";
+              $sql[] = " OR ";
+              $sql[] = " (unpub_date <= $timeNow AND unpub_date != 0 AND published = 1)";  // $published == "";
+            
+            $sql = implode(' ', $sql);
+            
+            $results = $this->db->makeArray($this->db->query($sql));
+            $to_publish   = array();
+            $to_unpublish = array();
+            foreach($results as $result) {
+              if($result['published'] != 1) {
+                $to_publish[] = $result['id'];
+              } else {
+                $to_unpublish[] = $result['id'];
+              }
+            }
+            
+            if( is_array($to_publish) and !empty($to_publish)) {
+              $publish_query = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE id IN (".implode(',', $to_publish).")";
+              $this->db->query($publish_query);
+              foreach($to_publish as $doc) {
+                $this->invokeEvent("OnDocPublished",array("docid"=>$doc['id']));
+              }
             }
 
-            // now, check for documents that need un-publishing
-            $sql= "UPDATE " . $this->getFullTableName("site_content") . " SET published=0, publishedon=0 WHERE " . $this->getFullTableName("site_content") . ".unpub_date <= $timeNow AND " . $this->getFullTableName("site_content") . ".unpub_date!=0 AND published=1";
-            if (@ !$result= $this->dbQuery($sql)) {
-                $this->messageQuit("Execution of a query to the database failed", $sql);
+            if( is_array($to_unpublish) and !empty($to_unpublish)) {
+              $unpublish_query = "UPDATE ".$this->getFullTableName("site_content")." SET published=0, publishedon=0 WHERE id IN (".implode(',', $to_unpublish).")";
+              $this->db->query($unpublish_query);            
+              foreach($to_unpublish as $doc) {
+                $this->invokeEvent("OnDocUnPublished",array("docid"=>$doc['id']));
+              }
             }
 
             // clear the cache
@@ -553,6 +579,7 @@ class DocumentParser {
                 closedir($handle);
             }
 
+            // (TODO: I think we can merge these 2 queries to offeset the added query above)
             // update publish time file
             $timesArr= array ();
             $sql= "SELECT MIN(pub_date) AS minpub FROM " . $this->getFullTableName("site_content") . " WHERE pub_date>$timeNow";
