@@ -312,6 +312,11 @@ switch ($actionToTake) {
 			exit;
 		}
 
+    //Invoke onDocPublished (onDocUnPublished could never be called here)
+		if($published == 1) {
+		  $modx->invokeEvent("OnDocPublished",array("docid"=>$key));
+		}
+
 		$tvChanges = array();
 		foreach ($tmplvars as $field => $value) {
 			if (is_array($value)) {
@@ -488,6 +493,13 @@ switch ($actionToTake) {
 			echo "An error occured while attempting to save the edited document. The generated SQL is: <i> $sql </i>.";
 		}
 
+    // Invoke onDocPublished/onDocUnPublished
+    if($was_published == 1 AND $published == 0) {
+      $modx->invokeEvent("OnDocUnPublished",array("docid"=>$id));
+    } elseif ($was_published == 0 AND $published == 1) {
+      $modx->invokeEvent("OnDocPublished",array("docid"=>$id));
+    }
+    
 		// update template variables
 		$rs = $modx->db->select('id, tmplvarid', $tbl_site_tmplvar_contentvalues, 'contentid='. $id);
 		$tvIds = array ();
