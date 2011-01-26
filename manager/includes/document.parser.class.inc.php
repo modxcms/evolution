@@ -593,7 +593,7 @@ class DocumentParser {
               $publish_query = "UPDATE ".$this->getFullTableName("site_content")." SET published=1, publishedon=".time()." WHERE id IN (".implode(',', $to_publish).")";
               $this->db->query($publish_query);
               foreach($to_publish as $doc) {
-                $this->invokeEvent("OnDocPublished",array("docid"=>$doc['id']));
+                $this->invokeEvent("OnDocPublished",array("docid"=>$doc));
               }
             }
 
@@ -601,7 +601,7 @@ class DocumentParser {
               $unpublish_query = "UPDATE ".$this->getFullTableName("site_content")." SET published=0, publishedon=0 WHERE id IN (".implode(',', $to_unpublish).")";
               $this->db->query($unpublish_query);            
               foreach($to_unpublish as $doc) {
-                $this->invokeEvent("OnDocUnPublished",array("docid"=>$doc['id']));
+                $this->invokeEvent("OnDocUnPublished",array("docid"=>$doc));
               }
             }
 
