@@ -303,7 +303,7 @@ $table_prefix = $modx->dbConfig['table_prefix'];
         }
     }
 
-    if(isset($modx->config['use_captcha']) && $modx->config['use_captcha']==1) {
+    if(isset($modx->config['use_captcha']) && $modx->config['use_captcha']==1 && isset($_POST['cmdwebsignup'])) {
         if($_SESSION['veriword']!=$captcha_code) {
             $output = webLoginAlert("The security code you entered didn't validate! Please try to login again!");
             $newloginerror = 1;
