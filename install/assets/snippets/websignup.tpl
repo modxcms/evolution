@@ -23,11 +23,16 @@
 # Params:    
 #
 #    &tpl        - (Optional) Chunk name or document id to use as a template
+#                  If custom template AND captcha on AND using WebSignup and 
+#                  WebLogin on the same page make sure you have a field named
+#                  cmdwebsignup. In the default template it is the submit button 
+#                  One can use a hidden field.
 #    &groups     - Web users groups to be assigned to users
 #    &useCaptcha - (Optional) Determine to use (1) or not to use (0) captcha
 #                  on signup form - if not defined, will default to system
 #                  setting. GD is required for this feature. If GD is not 
 #                  available, useCaptcha will automatically be set to false;
+#
 #                  
 #    Note: Templats design:
 #        section 1: signup template
