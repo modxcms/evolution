@@ -179,7 +179,7 @@ class Wayfinder {
         }
 		//Load row values into placholder array
         $phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
-        //Add document variables into array
+        //Add document variables to the placeholder array
         foreach ($resource as $dvName => $dvVal) {
             $this->placeHolders['rowLevel'][] = "[+".$dvName."+]";
             $phArray[] = $dvVal;
