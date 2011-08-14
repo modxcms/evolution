@@ -179,6 +179,11 @@ class Wayfinder {
         }
 		//Load row values into placholder array
         $phArray = array($useSub,$useClass,$classNames,$resource['link'],$resource['title'],$resource['linktext'],$useId,$resource['alias'],$resource['link_attributes'],$resource['id'],$resource['introtext'],$resource['description'],$numChildren);
+        //Add document TVs
+        foreach ($resource as $tvName => $tvVal) {
+            $this->placeHolders['rowLevel'][] = "[+".$tvName."+]";
+            $phArray[] = $tvVal;
+        }
 		//If tvs are used add them to the placeholder array
 		if (!empty($this->tvList)) {
 			$usePlaceholders = array_merge($this->placeHolders['rowLevel'],$this->placeHolders['tvs']);
@@ -482,10 +487,19 @@ class Wayfinder {
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
 			$row = @$modx->fetchRow($rs);
-			$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type']);
-			foreach ($docIDs as $id) {
-				if (!isset($resourceArray["#{$id}"])) {
-					$resourceArray["#{$id}"][$tvname] = $defaultOutput;
+			if (strtoupper($row['default_text']) == '@INHERIT') {
+				foreach ($docIDs as $id) {
+					$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
+					if (!isset($resourceArray["#".$id])) {
+						$resourceArray["#$id"][$tvname] = $defaultOutput;
+					}
+				}
+			} else {
+				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'],$row['contentid']);
+				foreach ($docIDs as $id) {
+					if (!isset($resourceArray["#".$id])) {
+						$resourceArray["#$id"][$tvname] = $defaultOutput;
+					}
 				}
 			}
 		}
