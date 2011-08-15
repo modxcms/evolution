@@ -182,12 +182,6 @@ class Wayfinder {
         //Add document variables to the placeholder array
         foreach ($resource as $dvName => $dvVal) {
             $this->placeHolders['rowLevel'][] = "[+".$dvName."+]";
-            $parent = $resource['parent'];
-            while (strtoupper($dvVal) == "@INHERIT") {
-                $dvVal = $modx->getTemplateVarOutput(array($dvName, 'parent'), $parent);
-                $parent = $dvVal['parent'];
-                $dvVal = $dvVal[$dvName];
-            }
             $phArray[] = $dvVal;
         }
 		//If tvs are used add them to the placeholder array
