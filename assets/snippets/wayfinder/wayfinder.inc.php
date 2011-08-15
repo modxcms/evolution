@@ -487,12 +487,20 @@ class Wayfinder {
 			$query .= " WHERE name='".$tvname."' LIMIT 1";
 			$rs = $modx->db->query($query);
 			$row = @$modx->fetchRow($rs);
-			$inherit = (strtoupper($row['default_text']) == '@INHERIT');
-			foreach ($docIDs as $id) {
-				$defaultOutput = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], ($inherit ? $id : $row['contentid']));
-				if (!isset($resourceArray["#".$id])) {
-					$resourceArray["#$id"][$tvname] = $defaultOutput;
-				}
+			if (strtoupper($row['default_text']) == '@INHERIT') {
+			    foreach ($docIDs as $id) {
+				    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $id);
+				    if (!isset($resourceArray["#{$id}"])) {
+					    $resourceArray["#{$id}"][$tvname] = $output;
+				    }
+			    }
+			} else {
+			    $output = getTVDisplayFormat($row['name'], $row['default_text'], $row['display'], $row['display_params'], $row['type'], $row['contentid']);
+			    foreach ($docIDs as $id) {
+				    if (!isset($resourceArray["#{$id}"])) {
+					    $resourceArray["#{$id}"][$tvname] = $output;
+				    }
+			    }
 			}
 		}
 		return $resourceArray;
