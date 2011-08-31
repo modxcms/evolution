@@ -2,17 +2,37 @@
 <html lang="en"><head>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
   <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>QuickManager+</title></head><body style="font-family: verdana,helvetica; line-height: 20px; font-size: 14px;">
 <h1 style="border-bottom: 1px solid rgb(0, 0, 0); padding-bottom: 12px;">QuickManager+</h1>
 
-@author&nbsp;Mikko Lammi, <a href="http://www.maagit.fi" target="_blank">www.maagit.fi</a> (based on QuickManager by Urique
-Dertlian, urique@unix.am)<br>
+@author&nbsp;Mikko Lammi, <a href="http://www.maagit.fi/quickmanager-plus" target="_blank">www.maagit.fi/quickmanager-plus</a><br>
 
 @license GNU General Public
 License (GPL v3),&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_blank">www.gnu.org/copyleft/gpl.html</a><br>
 
-@version 1.3.4.1 updated 4/2/2010<br>
+@version 1.5.3 updated 12/10/2010<br>
 
 @requirements MODx 1.0.0+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -20,25 +40,7 @@ License (GPL v3),&nbsp;<a href="http://www.gnu.org/copyleft/gpl.html" target="_b
 
 <h2>Description</h2>
 
-QuickManager+ is an alternative to QuickEdit to quick access and
-control content from front-end.<br>
-
-<br>
-
-This is a heavily modified version of the original QuickManager plugin
-with extensive set of configuration options.<br>
-
-<br>
-
-Known issues:
-<ul>
-
-  <li>Parent selection doesn't work at all with QuickManager+ due
-missing menu tree frame.</li>
-  <li>Couple harmless JavaScript errors due missing menu tree
-which is normally present in MODx manager.</li>
-</ul>
-
+QuickManager+ enables front-end content editing.<br>
 <h2>Installation</h2>
 
 If this is an update from earlier version delete first your old
@@ -54,61 +56,64 @@ NOTICE: If you are using Mac OS X don't extract files to the site root or you wi
 <ul>
 
   <li>Name: QuickManager+ </li>
-  <li>Description: &lt;strong&gt;1.3.4.1&lt;/strong&gt; Enables front-end
-content editing support</li>
+  <li>Description: &lt;strong&gt;1.5.2&lt;/strong&gt; Enables front-end
+content editing<br>
+</li>
 </ul>
 
 <h3>3. Copy paste plugin code:</h3>
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
   <tbody>
     <tr>
-      <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">$show = TRUE;</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">if
-($disabled&nbsp; != '') {</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
-$arr = explode(",", $disabled );</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
-if (in_array($modx-&gt;documentIdentifier, $arr)) {</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-$show = FALSE;</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
-}</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">}</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">if ($show) {</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
-include_once($modx-&gt;config['base_path'].'assets/plugins/qm/qm.inc.php');</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp;
-$qm = new Qm($modx, $jqpath, $loadmanagerjq, $loadfrontendjq,
+      <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">/**<br>
+&nbsp;* QuickManager+<br>
+&nbsp;*<br>
+&nbsp;* @author Mikko Lammi, www.maagit.fi/quickmanager-plus<br>
+&nbsp;* @license GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html<br>
+&nbsp;* @version 1.5.3 updated 12/10/2010&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;*/<br>
+      <br>
+// In manager<br>
+if (isset($_SESSION['mgrValidated'])) {<br>
+      <br>
+&nbsp;&nbsp;&nbsp; $show = TRUE;<br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; if ($disabled&nbsp; != '') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $arr = explode(",", $disabled );<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (in_array($modx-&gt;documentIdentifier, $arr)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $show = FALSE;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; if ($show) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Replace [*#tv*] with QM+ edit TV button placeholders<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ($tvbuttons == 'true') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $e = $modx-&gt;Event;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ($e-&gt;name == 'OnParseDocument') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+$output =
+&amp;$modx-&gt;documentOutput;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+$output = preg_replace('~\[\*#(.*?)\*\]~', '&lt;!-- '.$tvbclass.' $1
+--&gt;[*$1*]', $output);&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+$modx-&gt;documentOutput = $output;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // In manager<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (isset($_SESSION['mgrValidated'])) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+include_once($modx-&gt;config['base_path'].'assets/plugins/qm/qm.inc.php');<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $qm
+= new Qm($modx, $jqpath, $loadmanagerjq, $loadfrontendjq,
 $noconflictjq, $loadtb, $tbwidth, $tbheight, $hidefields, $hidetabs,
 $hidesections, $addbutton, $tpltype, $tplid, $custombutton,
-$managerbutton, $logout, $autohide);</span><br style="font-family: Courier New,Courier,monospace;">
-
-
-      <span style="font-family: Courier New,Courier,monospace;">}</span></td>
+$managerbutton, $logout, $autohide, $editbuttons, $editbclass,
+$newbuttons, $newbclass, $tvbuttons, $tvbclass);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+}</span><span style="font-family: Courier New,Courier,monospace;"></span><span style="font-family: Courier New,Courier,monospace;"></span></td>
     </tr>
   </tbody>
 </table>
@@ -118,45 +123,114 @@ $managerbutton, $logout, $autohide);</span><br style="font-family: Courier New,C
 
 <ul>
 
+  <li>OnParseDocument<br>
+</li>
   <li>OnWebPagePrerender</li>
+
   <li>OnDocFormPrerender</li>
   <li>OnDocFormSave</li>
+  
   <li>OnManagerLogout&nbsp;<br>
   </li>
+
 </ul>
 
+NOTICE: Make sure QuickManager+ is the first plugin on OnParseDocument
+event: Elements &gt; Manage Elements &gt; Plugins &gt; Edit Plugin
+Execution Order by Event &gt; OnParseDocument
 <h3>5. Copy paste plugin default configuration:</h3>
+
 <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
   <tbody>
     <tr>
       <td style="vertical-align: top;"><span style="font-family: Courier New,Courier,monospace;">&amp;jqpath=Path
-to jQuery;text;assets/js/jquery-1.3.2.min.js
-&amp;loadmanagerjq=Load jQuery in manager;list;true,false;true
-&amp;loadfrontendjq=Load jQuery in
-front-end;list;true,false;true&nbsp;&amp;noconflictjq=jQuery noConflict
-mode in front-end;list;true,false;true
-&amp;loadtb=Load modal box in
-front-end;list;true,false;true
-&amp;tbwidth=Modal box
-window&nbsp;width;text;80%&nbsp;&amp;tbheight=Modal box window
-height;text;90%
-&amp;hidefields=Hide document fields from front-end
-editors;text;parent&nbsp;&amp;hidetabs=Hide document tabs from
-front-end
-editors;text; &amp;hidesections=Hide document sections from front-end
-editors;text; &amp;addbutton=Show add document here
-button;list;true,false;true &amp;tpltype=New document template
-type;list;parent,id,selected;parent &amp;tplid=New document
-template id;int;3&nbsp;
-&amp;custombutton=Custom&nbsp;buttons;textarea; &amp;managerbutton=Show
-go to manager
-button;list;true,false;true &amp;logout=Logout
-to;list;manager,front-end;manager &amp;disabled=Plugin disabled on
-documents;text; </span><span style="font-family: Courier New,Courier,monospace;">&amp;autohide=Autohide toolbar;list;true,false;true</span></td>
+to jQuery;text;assets/js/jquery-1.3.2.min.js &amp;loadmanagerjq=Load
+jQuery in manager;list;true,false;false &amp;loadfrontendjq=Load jQuery
+in front-end;list;true,false;true &amp;noconflictjq=jQuery noConflict
+mode in front-end;list;true,false;false &amp;loadtb=Load modal box in
+front-end;list;true,false;true &amp;tbwidth=Modal box window
+width;text;80% &amp;tbheight=Modal box window height;text;90%
+&amp;hidefields=Hide document fields from front-end editors;text;parent
+&amp;hidetabs=Hide document tabs from front-end editors;text;
+&amp;hidesections=Hide document sections from front-end editors;text;
+&amp;addbutton=Show add document here button;list;true,false;true
+&amp;tpltype=New document template type;list;parent,id,selected;parent
+&amp;tplid=New document template id;int;3&nbsp;
+&amp;custombutton=Custom buttons;textarea; &amp;1=undefined;;
+&amp;managerbutton=Show go to manager button;list;true,false;true
+&amp;logout=Logout to;list;manager,front-end;manager
+&amp;disabled=Plugin disabled on documents;text; &amp;autohide=Autohide
+toolbar;list;true,false;true &amp;editbuttons=Inline edit buttons;list;true,false;false &amp;editbclass=Edit button CSS
+class;text;qm-edit &amp;newbuttons=</span><span style="font-family: Courier New,Courier,monospace;">Inline </span><span style="font-family: Courier New,Courier,monospace;">new
+resource buttons;list;true,false;false &amp;newbclass=New resource
+button CSS
+class;text;qm-new &amp;tvbuttons=Inline template variable
+buttons;list;true,false;false &amp;tvbclass=Template variable button CSS
+class;text;qm-tv </span><span style="font-family: Courier New,Courier,monospace;"></span></td>
     </tr>
   </tbody>
-</table>
-<h3>6. Save plugin.&nbsp;&nbsp; &nbsp;</h3>
+</table><br>
+<h3>6. Save plugin.&nbsp;&nbsp;&nbsp; <br>
+</h3>
+<h3>+ 7. Rich text editors (optional)<br>
+</h3>
+<span style="font-weight: bold;">If you don't need inline template variable buttons you can skip this.</span><br>
+<br>
+You don't need to change anything if your rich text editor version is at least:<br>
+- TinyMCE 3.3.6r2 for MODx<br>
+- CKEditor 3.3 for modx alpha 3 <br>
+
+<br>Now the hardest part. To get rich text editors to work properly
+with
+QuickManager+ inline template variable buttons you will need to edit
+the rich text editor plugin code. If you won't do this change the rich
+text editors will use web theme buttons when editing richtext template
+variables.<br>
+
+<br>
+
+<span style="font-weight: bold;">TinyMCE 3.2.4.1 (MODx 1.0.2 and below): </span><br>
+<br>
+
+
+In MODx manager go to: Elements &gt; Manage Elements &gt; Plugins &gt; TinyMCE<br>
+
+<br>
+
+Replace line: <br>
+
+<span style="font-family: Courier New,Courier,monospace;">if(isset($forfrontend)||$modx-&gt;isFrontend()){</span><br>
+
+<br>
+
+With: <br>
+
+<span style="font-family: Courier New,Courier,monospace;">if(isset($forfrontend)||($modx-&gt;isFrontend()
+&amp;&amp; (intval($_GET['quickmanagertv'] != 1) &amp;&amp;
+!(isset($_SESSION['mgrValidated']))))){</span><br>
+
+<br>
+
+<span style="font-weight: bold;">TinyMCE 3.3.2 (MODx 1.0.3) and 3.3.5.1 (MODX 1.0.4): </span><br>
+<br>
+
+
+In MODx manager go to: Elements &gt; Manage Elements &gt; Plugins &gt; TinyMCE<br>
+
+<br>
+
+Replace line:<br>
+
+<span style="font-family: Courier New,Courier,monospace;">if($modx-&gt;isBackend())</span><br>
+
+
+<br>
+
+
+With:<br>
+
+<span style="font-family: Courier New,Courier,monospace;">if($modx-&gt;isBackend() || (intval($_GET['quickmanagertv']) == 1 &amp;&amp; isset($_SESSION['mgrValidated'])))</span><br>
+
 
 <h2>Configuration</h2>
 
@@ -213,7 +287,7 @@ use other JavaScript libraries in front-end such as Mootools.</td>
 front-end&nbsp;</td>
       <td>true</td>
       <td>true || false &nbsp;</td>
-      <td>Prevent loading modal box (ColorBox) twice if you are already
+      <td>Prevent loading the modal box JavaScript (ColorBox) twice if you are already
 using
 it in your site
 template.</td>
@@ -238,12 +312,15 @@ template.</td>
       <td>text</td>
       <td>Separate fields with commas, for example:
 parent,template,menuindex<br>
+<br>
 Parent selection doesn't work at all with&nbsp;QuickManager+ due
 missing menu tree
 frame, so it should be hidden from front-end editors.<br>
+<br>
 Possible fields to hide: content, pagetitle,
 longtitle, menuindex, parent, description, alias, link_attributes,
 introtext, template, menutitle<br>
+<br>
 NOTICE! Hiding document fields may not work if fields are moved to
 other tabs with ManagerManager plugin. </td>
     </tr>
@@ -253,10 +330,11 @@ editors</td>
       <td><br>
       </td>
       <td>text</td>
-      <td>Separate&nbsp;tabs with commas, for example:
-meta,settings<br>
-Possible tabs to hide: general, settings, meta<br>
-NOTICE! Hiding tabs may not work&nbsp;if&nbsp;tab
+      <td>Separate&nbsp;tabs with commas, for example: settings,access<br>
+<br>
+Possible tabs to hide: general, settings, access<br>
+<br>
+NOTICE! Hiding tabs may not work properly if&nbsp;tab
 order is changed with ManagerManager plugin.</td>
     </tr>
     <tr>
@@ -266,10 +344,12 @@ editors</td>
       </td>
       <td>text</td>
       <td>Separate sections with commas, for example:
-content,access<br>
-Possible sections to hide: docsettings, content, tvs, access<br>
-NOTICE! Hiding sections may not work if you are&nbsp;hiding sections
-with ManagerManager plugin</td>
+content,tvs<br>
+<br>
+Possible sections to hide: docsettings, content, tvs<br>
+<br>
+NOTICE! Hiding sections may not work properly if you are&nbsp;hiding sections
+with ManagerManager plugin.</td>
     </tr>
     <tr>
       <td>Show add document here
@@ -311,22 +391,29 @@ document template type is id.</td>
       <td>Define custom&nbsp;buttons, for example add document to site
 root or add news document<br>
       <br>
-- Define&nbsp;new document button: 'button title','new','parent
-id','template id','visible for user role ids' <br>
-- Define link button: 'button
-title','link','http://www.example.com','','visible for user role ids'<br>
-- Define modal button: 'button
-title','modal','http://www.example.com','','visible for user role ids'<br>
-      <br>
+- New document button: <span style="font-family: Courier New,Courier,monospace;">'button title','new','parent
+id','template id','visible for user role ids' </span><br>
+<br>
+- Link button: <span style="font-family: Courier New,Courier,monospace;">'button
+title','link','http://www.example.com','','visible for user role ids'</span><br>
+<br>
+- Modal button: <span style="font-family: Courier New,Courier,monospace;">'button
+title','modal','http://www.example.com','','visible for user role ids'</span><br>
+      <br>MODx link tag, e.g. [~23~], works for link and modal button links.<br>MODx id tag [*id*] works, e.g. http://www.example.com?refererMODxPageId=[*id*]<br>
+Every custom button has individual CSS class, e.g. qm-custom-"index"<br>
+<br>
 Visible for user role ids: leave empty to accept all roles, role 1 =
 Administrator<br>
+<br>
 Separate different buttons with ||<br>
       <br>
-Example:
+Basic example:<br><span style="font-family: Courier New,Courier,monospace;">
+'Site statistics','link','http://www.google.com/analytics/','',''</span><br>
+<br>Advanced example:
+      <br><span style="font-family: Courier New,Courier,monospace;">
 'New root document','new','0','3',''||'Add
-news','new','10','4','4,5,6'||'Site
-statistics','link','http://www.google.com/analytics/','','1,4'||'Site
-statistics','modal','http://www.google.com/analytics/','','1,4'</td>
+news','new','10','4','4,5,6'||'For admins only','link','[~45~]','','1,4'||'Site
+statistics','modal','http://www.google.com/analytics/','','1,4'</span></td>
     </tr>
     <tr>
       <td>Show go to manager
@@ -360,7 +447,152 @@ Separate fields with commas, for example:
       <td style="vertical-align: top;">true || false</td>
       <td style="vertical-align: top;">Define if toolbar hides automatically or is always visible (manually close the toolbar by clicking MODx logo or X button)<br>
       </td>
+    </tr><tr>
+      <td style="vertical-align: top;">Inline edit buttons<br>
+</td>
+      <td style="vertical-align: top;">false<br>
+      </td>
+      <td style="vertical-align: top;">true || false</td>
+      <td style="vertical-align: top;">Define if special edit buttons are searched inside content. <br>
+      <br>
+Purpose:<br>
+Edit any page from other page, e.g. for editing ditto listings.<br>
+      <br>
+How it works:<br>
+- Add anywhere in to your page: <span style="font-family: Courier New,Courier,monospace;">&lt;!-- "Edit button CSS class" "document id to be edited" </span><span style="font-family: Courier New,Courier,monospace;">'"Button title"'</span><span style="font-family: Courier New,Courier,monospace;"> --&gt;</span><br>
+- This will create an edit button inside your page when logged in manager<br>
+- For regular visitors it will be shown as a regular HTML comment visible only in the HTML source code<br>
+      <br>
+Basic example:<br>
+- Add in to your template <span style="font-family: Courier New,Courier,monospace;">&lt;!-- qm-edit 1 'Edit this' --&gt;</span><br>
+- Creates button to edit page id 1<br>
+      <br>
+Advanced example:<br>
+- Add in to your Ditto template chunk: <span style="font-family: Courier New,Courier,monospace;">&lt;!-- qm-edit [+id+] 'Edit news item' --&gt;</span><br>
+- Creates edit buttons for news listings etc. inside the container page<br>
+      <br>
+NOTICE! Button title will fail if you use accented characters. Use HTML entities instead, for example &amp;auml;<br>
+      </td>
     </tr>
+    <tr>
+      <td style="vertical-align: top;">Edit button CSS class</td>
+      <td style="vertical-align: top;">qm-edit<br>
+      </td>
+      <td style="vertical-align: top;">text<br>
+      </td>
+      <td style="vertical-align: top;">Default qm-edit class can be found at: assets/plugins/qm/css/style.css<br>
+      <br>
+You can use your own class if you want to make your own edit button or for added security measure.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">Inline new resource buttons</td>
+      <td style="vertical-align: top;">false<br>
+      </td>
+      <td style="vertical-align: top;">true || false</td>
+      <td style="vertical-align: top;">Define if special new resource buttons are searched inside content. <br>
+
+      <br>
+
+Purpose:<br>
+
+Create any page from other page, e.g. create new news items.<br>
+
+      <br>
+
+How it works:<br>
+
+- Add anywhere in to your page: <span style="font-family: Courier New,Courier,monospace;">&lt;!-- "New resource button CSS class" "parent id" "template id" '"Button title"' --&gt;</span><br>
+
+- This will create an new resource button inside your page when logged in manager<br>
+
+- For regular visitors it will be shown as a regular HTML comment visible only in the HTML source code<br>
+
+      <br>
+
+Basic example:<br>
+
+- Add in to your template <span style="font-family: Courier New,Courier,monospace;">&lt;!-- qm-new 1 3 'New news item' --&gt;</span><br>
+
+- Creates new resource button<br>
+- Parent id: 1 (new resource will be created under document id 1)<br>
+- Template id: 3 (uses template id 3)<br>
+- Button title: New news item<br>
+      <br>
+NOTICE! Button title will fail if you use accented characters. Use HTML entities instead, for example &amp;auml;<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">New resource button CSS class</td>
+      <td style="vertical-align: top;">qm-new<br>
+      </td>
+      <td style="vertical-align: top;">text<br>
+      </td>
+      <td style="vertical-align: top;">Default qm-new class can be found at: assets/plugins/qm/css/style.css<br>
+
+      <br>
+
+You can use your own class if you want to make your own new resource button or for added security measure.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">Inline template variable buttons</td>
+      <td style="vertical-align: top;">false<br>
+      </td>
+      <td style="vertical-align: top;">true || false</td>
+      <td style="vertical-align: top;">Define if special template variable buttons are searched inside content. <br>
+
+      <br>
+
+Purpose:<br>
+
+Edit any template variable.<br>
+
+      <br>
+Editable default MODx fields:<br>
+      <span style="font-family: Courier New,Courier,monospace;">pagetitle, longtitle, description, content, menutitle, introtext</span><br>
+<br>
+
+How it works:<br>
+
+- Add anywhere in to your page: <span style="font-family: Courier New,Courier,monospace;">[*#tvName*],</span> notice the "#"<br>
+&nbsp; OR<br>
+
+- Add anywhere in to your page: <span style="font-family: Courier New,Courier,monospace;">&lt;!-- "Template variable button CSS class" "tvName"</span><span style="font-family: Courier New,Courier,monospace;"></span><span style="font-family: Courier New,Courier,monospace;"> --&gt;</span><br>
+
+- This will create a template variable button inside your page when logged in manager<br>
+
+- For regular visitors it will be shown as a regular HTML comment visible only in the HTML source code<br>
+
+      <br>
+
+Basic example:<br>
+
+- Add in to your template <span style="font-family: Courier New,Courier,monospace;">[*#tvName*]</span><span style="font-family: Courier New,Courier,monospace;"></span><br>
+
+- Creates button to edit tvName template variable (and outputs the template variable)<br>
+
+      <br>
+
+Advanced example:<br>
+
+- Add in to your template<span style="font-family: Courier New,Courier,monospace;"></span><span style="font-family: Courier New,Courier,monospace;"></span>: <span style="font-family: Courier New,Courier,monospace;">&lt;!-- qm-tv tvName --&gt;</span><br>
+
+- Creates button to edit tvName template variable<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">Template variable button CSS class</td>
+      <td style="vertical-align: top;">qm-tv</td>
+      <td style="vertical-align: top;">text<br>
+      </td>
+      <td style="vertical-align: top;">Default qm-tv class can be found at: assets/plugins/qm/css/style.css<br>
+
+      <br>
+
+You can use your own class if you want to make your own template variable button or for added security measure.</td>
+    </tr>
+
+
 
   </tbody>
 </table>
@@ -369,8 +601,103 @@ Separate fields with commas, for example:
 
 <h2>How to use</h2>
 
-Just login, open frontend and enjoy!
-<h2>Changelog</h2>1.3.4.1<br>
+Just login, open frontend and enjoy!<br>
+<h2>
+
+Known issues
+</h2>
+<ul>
+<li>Parent selection is hidden and doesn't work at all with QuickManager+ due
+missing menu tree frame.</li>
+</ul>
+<h2>Special thanks</h2>
+<ul>
+  <li>QuickManager+ is orginally based on QuickManager by Urique
+Dertlian</li>
+  <li>Template variable editing ideas from QuickEdit by Adam Crownoble<br>
+  </li>
+</ul>
+
+
+<h2><a name="changelog"></a>Changelog</h2>1.5.3 - 12/10/2010<br>
+
+
+<ul>
+<li>Changed: Plugin code checks immeditally at start if user is in manager to save processing time<br>
+</li>
+  <li>Fixed: Inline template variable edit/save was causing error if "'" mark was used<br>
+  </li>
+
+</ul>
+1.5.2 - 14/09/2010<br>
+
+<ul>
+<li>Added: CSS classes to toolbar buttons, also li elements: qmCustom, qmManager, qmLogout</li>
+  <li>Changed: Inline buttons div =&gt; span, validates correctly<br>
+  </li>
+<li>Fixed: Inline template variable editing when TV type is checkbox<br>
+</li>
+</ul>
+1.5.1 - 02/08/2010<br>
+<ul>
+  <li>Added: CSS classes to toolbar buttons: qmCustom, qmManager, qmLogout<br>
+  </li>
+  <li>Fixed: Updated ColorBox to 1.3.9 that solves TinyMCE image align problems with IE6 and IE7<br>
+  </li>
+</ul>
+1.5<br>
+
+<ul>
+  <li>Added: Inline template variable buttons!!! Edit template variables with QuickEdit style. Off by default though.<br>
+  </li>
+
+  <li>Added: OnParseDocument plugin event</li>
+  <li>Added: Image TV preview</li>
+  <li>Added: Preserve alias on save</li>
+  <li>Added: "documentDirty=false;" to cancel button to prevent unnecessary MODx manager alert message</li>
+  <li>Added: Custom buttons now support standard MODx [*id*] tag, e.g. http://www.example.com?refererMODxPageId=[*id*]</li>
+  <li>Added: Individual CSS class for every custom button, e.g. qm-custom-"index"<br>
+  </li>
+
+
+
+
+
+<li>Changed: Plugin content</li>
+  <li>Changed: TV access routine<br>
+  </li>
+  <li>Fixed: TV edit form button labels</li>
+  <li>Removed: close.php =&gt; now implemented with OnWebPagePrerender event to preserve alias<br>
+  </li>
+
+
+</ul>
+1.4.1<br>
+<ul>
+  <li>Added: Individual user language check, previously QM+ used global language setting for all users<br>
+  </li>
+  <li>Changed: Edit buttons in content =&gt; Inline edit buttons, New resource buttons in content =&gt; Inline new resource buttons</li>
+  <li>Changed: Inline edit buttons "placeholder markup" changed to: <span style="font-family: Courier New,Courier,monospace;">&lt;!-- "Edit button CSS class" "document id to be edited" </span><span style="font-family: Courier New,Courier,monospace;">'"Button title"'</span><span style="font-family: Courier New,Courier,monospace;"> --&gt;</span></li>
+  <li>Fixed: Inline edit/new buttons access control<br>
+  </li>
+</ul>
+1.4<br>
+<ul>
+  <li>Added: Edit buttons inside content. Edit any page from other page, e.g. for editing ditto listings.</li>
+  <li>Added: New resource buttons inside content. Create any page from other page, e.g. create new news item.</li>
+  <li>Added: Custom buttons works now with default MODx links, e.g. [~23~]<br>
+  </li>
+  <li>Added: Show friendly alias after saving the document. Notice: This is still an experimental feature in is off by default.<br>
+  </li>
+  <li>Changed: Multiple CSS tweaks mainly for IE</li>
+  <li>Changed: close.php uses now sessions instead of JavaScript cookies<br>
+  </li>
+  <li>Fixed: PHP4 support fixed (Thanks yama!)</li>
+  <li>Fixed: Hiding tabs and sections fixed (access -tab and docsettings -section)</li>
+  <li>Removed: .htaccess file under qm -folder that was accidentally left there is not needed at all.<br>
+  </li>
+</ul>
+1.3.4.1<br>
 <ul>
   <li>Changed: CSS tweaks for IE, opacity now works fine with IE8 but unfortunately with IE7 ugly fonts remain (Thanks again uxello!)</li>
 </ul>
