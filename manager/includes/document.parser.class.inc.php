@@ -1862,6 +1862,25 @@ class DocumentParser {
         return $timeStamp;
     }
 
+	// This is simply method.
+	function sendmail($email, $subject='', $body='', $params=array())
+	{
+		if(empty($email)) $email = $this->config['emailsender'];
+		include_once MODX_MANAGER_PATH . 'includes/controls/modxmailer.inc.php';
+		$mail = new MODxMailer();
+		$mail->IsMail();
+		$mail->IsHTML(false);
+		$mail->From     = (!$params['From'])     ? $this->config['emailsender'] : $params['From'];
+		$mail->FromName = (!$params['FromName']) ? $this->config['site_name']   : $params['FromName'];
+		$mail->Subject  = $subject;
+		$mail->Body     = $body;
+		$mail->AddAddress($email);
+		
+		$result = $mail->Send();
+		
+		return $result;
+	}
+
     #::::::::::::::::::::::::::::::::::::::::
     # Added By: Raymond Irving - MODx
     #
