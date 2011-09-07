@@ -69,42 +69,23 @@ header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
 
-// check PHP version. MODx is compatible with php 4 (4.1.0 up), extra/ improved features are planned for 5
-$php_ver_comp =  version_compare(phpversion(), "4.1.0");
+// check PHP version. MODX Evolution is compatible with php 4 (4.3.3+)
+$php_ver_comp =  version_compare(phpversion(), "4.3.3");
         // -1 if left is less, 0 if equal, +1 if left is higher
 if($php_ver_comp < 0) {
-    echo "Wrong php version! You're using PHP version '".phpversion()."', and MODx only works on 4.1.0 or higher."; // $_lang['php_version_check'];
+    echo sprintf($_lang['php_version_check'], phpversion());
     exit;
 }
 
 // set some runtime options
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
-if(version_compare(phpversion(), "4.3.0")>=0) {
-    set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
-} else {
-    ini_set("include_path", $incPath); // include path the old way (note we don't have PATH_SEPARATOR before 4.3.0, so we're not appending to the existing include path.. it's an edge case at this point)
-}
+set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 
 if (version_compare(phpversion(), "5.3") < 0) {
     @set_magic_quotes_runtime(0);
 
     // include_once the magic_quotes_gpc workaround
     include_once "quotes_stripper.inc.php";
-}
-
-// include the html_entity_decode fake function :)
-if (!function_exists('html_entity_decode')) {
-    function html_entity_decode ($string, $opt = ENT_COMPAT) {
-        $trans_tbl = get_html_translation_table (HTML_ENTITIES);
-        $trans_tbl = array_flip ($trans_tbl);
-        if ($opt & 1) {
-            $trans_tbl["&apos;"] = "'";
-        }
-        if (!($opt & 2)) {
-            unset($trans_tbl["&quot;"]);
-        }
-        return strtr ($string, $trans_tbl);
-    }
 }
 
 if (!defined("ENT_COMPAT")) define("ENT_COMPAT", 2);
