@@ -1,11 +1,12 @@
+<?php
 //<?php
 /**
  * Breadcrumbs
  *
  * Configurable breadcrumb page-trail navigation
  * 
- * @category	snippet
- * @version 	1.0.3
+ * @category    snippet
+ * @version 	1.0.5
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Navigation
@@ -86,7 +87,9 @@
  * will default to defaultString which replicates the output of previous
  * versions.
  */
-( isset($templateSet) ) ? $templateSet : $templateSet = 'defaultString';
+if(isset($tpl)) {$templateSet = $tpl; unset($tpl);}
+
+$templateSet = (!isset($templateSet) ) ? 'defaultString' : $templateSet;
 
 /* $crumbGap [ string ]
  * String to be shown to represent gap if there are more crumbs in trail than
@@ -196,23 +199,17 @@
  * prefixed with defaultString, and defaultList. You can create as many more as
  * you like, each set with it's own prefix
  */
-$templates = array(
-    'defaultString' => array(
-        'crumb' => '[+crumb+]',
-        'separator' => ' &raquo; ',
-        'crumbContainer' => '<span class="[+crumbBoxClass+]">[+crumbs+]</span>',
-        'lastCrumbWrapper' => '<span class="[+lastCrumbClass+]">[+lastCrumbSpanA+]</span>',
-        'firstCrumbWrapper' => '<span class="[+firstCrumbClass+]">[+firstCrumbSpanA+]</span>'
-    ),
-    'defaultList' => array(
-        'crumb' => '<li>[+crumb+]</li>',
-        'separator' => '',
-        'crumbContainer' => '<ul class="[+crumbBoxClass+]">[+crumbs+]</ul>',
-        'lastCrumbWrapper' => '<span class="[+lastCrumbClass+]">[+lastCrumbSpanA+]</span>',
-        'firstCrumbWrapper' => '<span class="[+firstCrumbClass+]">[+firstCrumbSpanA+]</span>'
-    ),
-);
+$tpl = get_tpl($templateSet);
+if($templateSet !== 'defaultString' && $templateSet !== 'defaultList')
+{
+	$tpl = get_chunk_tpl($templateSet);
+}
 
+if(isset($crumb))             $tpl['crumb']             = $crumb;
+if(isset($separator))         $tpl['separator']         = $separator;
+if(isset($crumbContainer))    $tpl['crumbContainer']    = $crumbContainer;
+if(isset($lastCrumbWrapper))  $tpl['lastCrumbWrapper']  = $lastCrumbWrapper;
+if(isset($firstCrumbWrapper)) $tpl['firstCrumbWrapper'] = $firstCrumbWrapper;
 
 /* -----------------------------------------------------------------------------
  * END CONFIGURATION
@@ -456,30 +453,79 @@ $pretemplateCrumbs = array_reverse($pretemplateCrumbs);
 $pretemplateCrumbs[0] = str_replace(
     array('[+firstCrumbClass+]','[+firstCrumbSpanA+]'),
     array($stylePrefix.'firstCrumb',$pretemplateCrumbs[0]),
-    $templates[$templateSet]['firstCrumbWrapper']
+    $tpl['firstCrumbWrapper']
 );
 $pretemplateCrumbs[(count($pretemplateCrumbs)-1)] = str_replace(
     array('[+lastCrumbClass+]','[+lastCrumbSpanA+]'),
     array($stylePrefix.'lastCrumb',$pretemplateCrumbs[(count($pretemplateCrumbs)-1)]),
-    $templates[$templateSet]['lastCrumbWrapper']
+    $tpl['lastCrumbWrapper']
 );
 
 // Insert crumbs into crumb template
 $processedCrumbs = array();
 foreach ( $pretemplateCrumbs as $pc )
 {
-    $processedCrumbs[] = str_replace('[+crumb+]',$pc,$templates[$templateSet]['crumb']);
+    $processedCrumbs[] = str_replace('[+crumb+]',$pc,$tpl['crumb']);
 }
 
 // Combine crumbs together into one string with separator
-$processedCrumbs = implode($templates[$templateSet]['separator'],$processedCrumbs);
+$processedCrumbs = implode($tpl['separator'],$processedCrumbs);
 
 // Put crumbs into crumb container template
 $container = str_replace(
     array('[+crumbBoxClass+]','[+crumbs+]'),
     array($stylePrefix.'crumbBox',$processedCrumbs),
-    $templates[$templateSet]['crumbContainer']
+    $tpl['crumbContainer']
     );
 
 // Return crumbs
 return $container;
+
+
+
+function get_tpl($templateSet)
+{
+	switch($templateSet)
+	{
+		case 'defaultList':
+		case 'list':
+		case 'li':
+		{
+			$tpl['crumb']             = '<li>[+crumb+]</li>';
+			$tpl['separator']         = '';
+			$tpl['crumbContainer']    = '<ul class="[+crumbBoxClass+]">[+crumbs+]</ul>';
+			$tpl['lastCrumbWrapper']  = '<span class="[+lastCrumbClass+]">[+lastCrumbSpanA+]</span>';
+			$tpl['firstCrumbWrapper'] = '<span class="[+firstCrumbClass+]">[+firstCrumbSpanA+]</span>';
+			break;
+		}
+		default:
+		{
+			$tpl['crumb']             = '[+crumb+]';
+			$tpl['separator']         = ' &raquo; ';
+			$tpl['crumbContainer']    = '<span class="[+crumbBoxClass+]">[+crumbs+]</span>';
+			$tpl['lastCrumbWrapper']  = '<span class="[+lastCrumbClass+]">[+lastCrumbSpanA+]</span>';
+			$tpl['firstCrumbWrapper'] = '<span class="[+firstCrumbClass+]">[+firstCrumbSpanA+]</span>';
+		}
+	}
+	return $tpl;
+}
+
+function get_chunk_tpl($templateSet)
+{
+	global $modx;
+	$src = $modx->getChunk($templateSet);
+	$lines = explode("\n", $src);
+	foreach($lines as $line)
+	{
+		$line = ltrim($line);
+		if(!empty($line) && $line[0] == '&' && strpos($line,'=')!==false)
+		{
+			list($key,$value) = explode('=',$line,2);
+			$key   = trim($key,'& ');
+			$value = trim($value,'`');
+			$tpl[$key] = $value;
+		}
+	}
+	return $tpl;
+}
+?>
