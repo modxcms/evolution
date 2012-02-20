@@ -1,6 +1,8 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+* [#7175] Fix sanitization to strip tags recursively
+
 MODx Evolution 1.0.5 (Jan 19, 2011)
 ===================================
 --------------------------------------------
