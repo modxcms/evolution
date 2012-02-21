@@ -33,7 +33,7 @@ $modxtags = array (
 );
 if (!function_exists('modx_sanitize_gpc')) {
     function modx_sanitize_gpc(& $target, $modxtags, $limit= 3) {
-        foreach ($target as $key => $value) {
+        foreach ($target as $key => &$value) {
             if (is_array($value) && $limit > 0) {
                 modx_sanitize_gpc($value, $modxtags, $limit - 1);
             } else {
