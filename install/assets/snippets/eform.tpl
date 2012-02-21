@@ -5,14 +5,14 @@
  * Robust form parser/processor with validation, multiple sending options, chunk/page support for forms and reports, and file uploads
  *
  * @category 	snippet
- * @version 	1.4.4.6
+ * @version 	1.4.4.7
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties
  * @internal	@modx_category Forms
  * @internal    @installset base, sample
  */
 
-# eForm 1.4.4.6 - Electronic Form Snippet
+# eForm 1.4.4.7 - Electronic Form Snippet
 # Original created by Raymond Irving 15-Dec-2004.
 # Version 1.3+ extended by Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
