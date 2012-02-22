@@ -27,6 +27,13 @@ if (isset($_POST) && count($_POST) > 0) {
 					$v = $v .'/';
 				}
 				break;
+            case 'manager_language':
+                $langDir = realpath(MODX_BASE_PATH . 'manager/includes/lang');
+                $langFile = realpath(MODX_BASE_PATH . '/manager/includes/lang/' . $v . '.inc.php');
+                $langFileDir = dirname($langFile);
+                if($langDir !== $langFileDir || !file_exists($langFile)) {
+                    $v = 'english';
+                }
 			default:
 			break;
 		}
