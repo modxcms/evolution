@@ -292,19 +292,19 @@ class ditto {
 		if (in_array("date",$this->fields["display"]["custom"])) {
 			$timestamp = ($resource[$dateSource] != "0") ? $resource[$dateSource] : $resource["createdon"];	
 			if (is_array($timestamp)) {
-			    $timestamp[1] = is_int($timestamp[1]) ? $timestamp[1] : strtotime($timestamp[1]);
-                $timestamp = $timestamp[1] + $timestamp[0];
+			    	$timestamp[1] = is_int($timestamp[1]) ? $timestamp[1] : strtotime($timestamp[1]);
+                		$timestamp = $timestamp[1] + $timestamp[0];
             }   
 			$placeholders['date'] = strftime($dateFormat,$timestamp);
 		}
 		
 		if (in_array("content",$this->fields["display"]["db"]) && $this->format != "html") {
-			$resource['content'] = $this->relToAbs($resource['content'], $modx->config['site_url']);
-		}
-		
-		if (in_array("introtext",$this->fields["display"]["db"]) && $this->format != "html") {
-			$resource['introtext'] = $this->relToAbs($resource['introtext'], $modx->config['site_url']);
-		}
+            		$placeholders['content'] = $this->relToAbs($resource['content'], $modx->config['site_url']);
+        	}
+         
+        	if (in_array("introtext",$this->fields["display"]["db"]) && $this->format != "html") {
+            		$placeholders['introtext'] = $this->relToAbs($resource['introtext'], $modx->config['site_url']);
+        	}
 		
 		$customPlaceholders = $ph;
 		// set custom placeholder
