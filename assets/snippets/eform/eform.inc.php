@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.6 - Electronic Form Snippet
+# eForm 1.4.4.7 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -35,6 +35,8 @@
 # bugfix: Auto respond email didn't honour the &sendAsText parameter
 # bugfix: The #FUNCTION validation rule for select boxes never calls the function
 # bugfix: Validation css class isn't being added to labels.
+#
+# SECURITY FIX: add additional sanitization to fields after stripping slashes to avoid remote tag execution
 ##
 
 $GLOBALS['optionsName'] = "eform"; //name of pseudo attribute used for format settings
@@ -161,8 +163,13 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 			if(is_array($value)){
 				//remove empty values
 				$fields[$name] = array_filter($value,create_function('$v','return (!empty($v));'));
-			} else
-				$fields[$name]	= stripslashes(($allowhtml || $formats[$name][2]=='html')? $value:$modx->stripTags($value));
+			} else {
+                if ($allowhtml || $formats[$name][2]=='html') {
+                    $fields[$name] = stripslashes($value);
+                } else {
+                    $fields[$name] = strip_tags(stripslashes($value));
+                }
+            }
 		}
 
 		# get uploaded files
@@ -179,6 +186,19 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 				$rClass['vericode']=$invalidClass; //added in 1.4.4
 			}
 		}
+
+        # sanitize the values with slashes stripped to avoid remote execution of Snippets
+        modx_sanitize_gpc($fields, array (
+            '@<script[^>]*?>.*?</script>@si',
+            '@&#(\d+);@e',
+            '@\[\~(.*?)\~\]@si',
+            '@\[\((.*?)\)\]@si',
+            '@{{(.*?)}}@si',
+            '@\[\+(.*?)\+\]@si',
+            '@\[\*(.*?)\*\]@si',
+            '@\[\[(.*?)\]\]@si',
+            '@\[!(.*?)!\]@si'
+        ));
 
 		# validate fields
 		foreach($fields as $name => $value) {
