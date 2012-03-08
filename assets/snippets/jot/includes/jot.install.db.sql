@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}jot_content` (
   KEY `secip` (`secip`),
   KEY `tagidx` (`tagid`),
   KEY `uparent` (`uparent`)
-) {DBENGINESPEC}=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}jot_subscriptions` (
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}jot_subscriptions` (
   KEY `uparent` (`uparent`),
   KEY `tagid` (`tagid`),
   KEY `userid` (`userid`)
-) {DBENGINESPEC}=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}jot_fields` (
@@ -45,4 +45,4 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}jot_fields` (
   `content` text,
   KEY `id` (`id`),
   KEY `label` (`label`)
-) {DBENGINESPEC}=MyISAM;
+) ENGINE=MyISAM;

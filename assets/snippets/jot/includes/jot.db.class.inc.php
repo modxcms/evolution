@@ -51,14 +51,6 @@ class CJotDataDb {
 			}
 			fclose($fh);
 			$idata = str_replace("\r", '', $idata);
-            $dbVersion = 3.23; // assume version 3.23
-            if(function_exists("mysql_get_server_info")) {
-                $ver = mysql_get_server_info();
-                $dbVersion = (float) $ver; // Typecasting (float) instead of floatval() [PHP < 4.2]
-            }
-            $dbenginespec = version_compare($dbVersion, 5) >= 0 ? 'TYPE' : 'ENGINE';
-            $idata = str_replace('{DBENGINESPEC}', $dbenginespec, $idata);
-
 			$idata = str_replace('{PREFIX}',$GLOBALS['table_prefix'], $idata);
 			$sql_array = explode("\n\n", $idata);
 			foreach($sql_array as $sql_entry) {
