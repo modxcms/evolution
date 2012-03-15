@@ -1,11 +1,10 @@
-//<?php
 /**
  * Forgot Manager Login
  * 
  * Resets your manager login when you forget your password via email confirmation
  *
  * @category 	plugin
- * @version 	1.1.2
+ * @version 	1.1.3
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@events OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender 
  * @internal	@modx_category Manager and Admin
@@ -89,25 +88,55 @@ EOD;
             global $modx, $_lang;
 
             $subject = $_lang['password_change_request'];
-            $headers  = "MIME-Version: 1.0\r\n".
-                "Content-type: text/html; charset=\"{$modx->config['modx_charset']}\"\r\n".
-		"From: MODx <{$modx->config['emailsender']}>\r\n".
-                "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\r\n".
-                "X-Mailer: PHP/".phpversion();
 
             $user = $this->getUser(0, '', $to);
   
             if($user['username']) {
+	
                 $body = <<<EOD
 <p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_url']}manager/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}">{$_lang['forgot_password_email_link']}</a></p>
 <p>{$_lang['forgot_password_email_instructions']}</p>
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
 
-                $mail = mail($to, $subject, $body, $headers);
-                if(!$mail) { $this->errors[] = $_lang['error_sending_email']; }
-   
-                return $mail;  
+				$altbody = <<<EOD
+{$_lang['forgot_password_email_intro']} 
+{$_lang['forgot_password_email_link']}
+
+{$modx->config['site_url']}manager/processors/login.processor.php?username={$user['username']}&hash={$user['hash']}
+
+{$_lang['forgot_password_email_instructions']}
+{$_lang['forgot_password_email_fine_print']}
+EOD;
+
+				/* use phpmailer to send */
+			 	require_once($modx->config['base_path'] ."manager/includes/controls/class.phpmailer.php");
+			 	$mail = new PHPMailer();
+				// if required, enter SMTP settings here or (more preferably) in the phpmailer class
+//				$mail->IsSMTP();
+//				$mail->Host 	= "smtp1.host.com,smtp2.host.com";
+//				$mail->Port     = 25;
+//				$mail->SMTPAuth = false;
+//				$mail->Username = 'smtp_username';
+//				$mail->Password = 'smtp_password';
+				$mail->CharSet	= $modx->config['modx_charset'];	            
+				$mail->From 	= $modx->config['emailsender'];
+				$mail->FromName	= $modx->config['site_name'];
+				$mail->AddReplyTo("no-reply@{$_SERVER['HTTP_HOST']}");
+			 	$mail->AddAddress( $to );
+			 	$mail->Subject	= $subject;
+			 	$mail->IsHTML(true);
+			 	$mail->Body 	= $body;
+				$mail->AltBody	= $altbody;
+
+				 if(!$mail->Send())
+				 {
+					$this->errors[] = $_lang['error_sending_email'];
+					$modx->logEvent(8, 3, $mail->ErrorInfo, 'Forgot Manager Password plugin');
+				 }
+				                
+				 return $mail;
+				
             }
         }
 
