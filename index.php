@@ -111,7 +111,11 @@ startCMSSession();
 // initiate a new document parser
 include_once(MODX_MANAGER_PATH.'/includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
+$modx->getSettings();
 $etomite = &$modx; // for backward compatibility
+
+// Sanitise UTF-8 GPC (needs to be done after $modx->getSettings)
+require(MODX_MANAGER_PATH.'/includes/utf8.sanitise.php');
 
 // set some parser options
 $modx->minParserPasses = 1; // min number of parser recursive loops or passes

@@ -117,6 +117,9 @@ $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
 $etomite = &$modx; // for backward compatibility
 
+// Sanitise UTF-8 GPC (needs to be done after $modx->getSettings)
+require('utf8.sanitise.php');
+
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
     die("<h2>Failed to create the database connection!</h2>. Please run the MODx <a href='../install'>install utility</a>");
