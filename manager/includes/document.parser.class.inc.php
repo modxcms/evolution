@@ -176,7 +176,8 @@ class DocumentParser {
         } else {
             $unauthorizedPage= $this->config['site_start'];
         }
-        $this->sendForward($unauthorizedPage, 'HTTP/1.1 401 Unauthorized');
+        $this->sendForward($dist , 'HTTP/1.1 403 Forbidden');	// Changed by TimGS 22/6/2012. Originally was a 401 but this HTTP code appears intended for situations
+        							// where the client can authenticate via HTTP authentication and send a www-authenticate header.
         exit();
     }
 
