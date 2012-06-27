@@ -315,6 +315,9 @@ class DocumentParser {
         $docIdentifier= $this->config['site_start'];
         switch ($method) {
             case 'alias' :
+            	if (!is_string($_REQUEST['q'])) { // If an array is passed (TimGS)
+            		$this->sendErrorPage();
+            	}
                 $docIdentifier= $this->db->escape($_REQUEST['q']);
                 break;
             case 'id' :
