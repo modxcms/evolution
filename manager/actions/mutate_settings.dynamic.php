@@ -579,12 +579,26 @@ function confirmLangChange(el, lkey, elupd){
                <td nowrap class="warning"><?php echo $_lang['error_handling_depracated_label'] ?></td>
                <td>
                	  <select onchange="documentDirty=true;" name="error_handling_depracated">
+               	         <?php if (!isset($error_handling_depracated)) $error_handling_depracated = 0; ?>
                	  	<option<?php if($error_handling_depracated == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_depracated_0']; ?></option>
                	  	<option<?php if($error_handling_depracated == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_depracated_1']; ?></option>
                	  	<option<?php if($error_handling_depracated == 2) echo ' selected="selected"'; ?> value="2"><?php echo $_lang['error_handling_depracated_2']; ?></option>
                	  </select>
                </td>
             </tr>
+			<tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+            <tr>
+               <td nowrap class="warning"><?php echo $_lang['error_handling_silent_label'] ?></td>
+               <td>
+              	  <select onchange="documentDirty=true;" name="error_handling_silent">
+               	         <?php if (!isset($error_handling_silent)) $error_handling_silent = 0; ?>
+               	  	<option<?php if($error_handling_silent == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_silent_0']; ?></option>
+               	  	<option<?php if($error_handling_silent == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_silent_1']; ?></option>
+               	  </select>
+                </td>
+             </tr>
 			<tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>

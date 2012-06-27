@@ -1085,4 +1085,7 @@ $_lang['error_handling_depracated_label'] = 'Depracated PHP functions';
 $_lang['error_handling_depracated_0'] = 'No error reporting';
 $_lang['error_handling_depracated_1'] = 'Log under Reports,System Events';
 $_lang['error_handling_depracated_2'] = 'Throw an error and halt';
+$_lang['error_handling_silent_label'] = 'PHP error messages';
+$_lang['error_handling_silent_0'] = 'Shown on screen';
+$_lang['error_handling_silent_1'] = 'Not displayed';
 

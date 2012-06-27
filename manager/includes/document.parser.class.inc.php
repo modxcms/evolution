@@ -2800,7 +2800,9 @@ class DocumentParser {
         header('HTTP/1.1 500 Internal Server Error');
 
         // Display error
-        echo $parsedMessageString;
+        if (!$this->config['error_handling_silent']) {
+        	echo $parsedMessageString;
+        }
         ob_end_flush();
 
         // Log error
