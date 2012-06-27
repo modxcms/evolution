@@ -1,0 +1,262 @@
+body {
+	background: #069 url(../images/bg.jpg) repeat-x;
+	color: #333;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	font-size:13px;
+	line-height: 1.4;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Arial, sans-serif;
+}
+
+a {
+	color: #39f;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #06c;
+	border-bottom: 1px dotted #aaa;
+}
+
+a:visited {
+	color: #06c;
+}
+
+#wrapper {
+	text-align: left;
+	margin: 0 auto;
+	width: 788px;
+	background: url(../images/content.jpg) repeat-y;
+}
+
+#head {
+	height: 375px;
+	background: url(../images/head.jpg) no-repeat;
+	margin: 0;
+	padding: 0;
+	
+}
+
+#head h1 {
+	display: none;
+}
+
+#head h2 {
+	position: absolute;
+	padding: 0;
+	margin: 90px 0 0 180px;
+	color: #ccc;
+}
+
+#head h3 {
+	position: absolute;
+	padding: 0;
+	font-size: 10pt;
+	color: #39f;
+	margin: 95px 0 0 460px;
+}
+
+#select {
+	margin-top: -195px;
+}
+
+#menu {
+	margin: 0;
+	padding: 0 35px;
+	text-align: center;
+	list-style: none;
+}
+
+#menu li a span {
+/*	font-size: 1%;*/
+}
+
+#menu li {
+	display: inline;
+	padding: 0;
+	margin: 0px;
+}
+
+#menu li a {
+	padding: 4px 10px;
+	background: #ccc;
+	border: 2px solid #69c;
+	text-decoration: none;
+	color: #39f;
+}
+
+#menu li a:hover, #menu li a.here:hover {
+	background: #39f;
+	color: #ddd;
+	border: 2px solid #ddd;
+}
+
+#menu li a.here {
+	background: #69c;
+	color: #ddd;
+	border: 2px solid #ddd;
+}
+
+#content {
+	padding: 0px 30px 0px 30px;
+}
+
+#content h4 {
+	font-size: 16pt;
+	padding: 0;
+	margin: 20px 0 0 0;
+	border-bottom: 2px solid #aaa;
+}
+
+#content h5 {
+	font-size: 13pt;
+	margin: 20px 0 10px 0px;
+	border-bottom: #aaa solid 1px;
+	color: #666;
+}
+
+#content ol h5 {
+	margin: 20px 10px 10px -30px;
+}
+
+#content .parameter h5 {
+	font-size: 12pt;
+	padding: 5px 10px;
+	margin: -10px -10px 5px -10px;
+	border-bottom: 1px solid #ccc;
+	background: #666;
+	color: #ccc;
+}
+
+#content .example h6 {
+	font-size: 11pt;
+	padding: 0;
+	margin: -5px 0 5px 0;
+	border-bottom: 1px dotted #aaa;
+}
+
+#content p {
+	text-indent: 20px;
+	text-align: justify;
+}
+
+#content #services li {
+	list-style: disc;
+	font-weight: bold;
+	color: #444;
+	font-size: 12pt;
+}
+
+#foot {
+	height: 100px;
+	background: url(../images/foot.jpg) no-repeat;
+}
+
+#footmenu {
+	text-align: center;
+}
+
+#footmenu a {
+	padding: 0 10px;
+	color: #39f;
+}
+
+#footmenu a:hover,
+#footmenu a:visited
+{
+	color: #06c;
+}
+
+#credits {
+	padding: 10px 0 0 0;
+	text-align: center;
+	color: #eee;
+	font-size: 12pt;
+	margin: 25px 0 0 0;
+}
+
+#paramList1 {
+	background: #ddd;
+	margin-top: 20px;
+}
+
+#paramList, .paramList {
+	background: #eee;
+}
+
+.parameter {
+	background: #999;
+	padding: 0px 10px 5px 10px;
+	margin-bottom: 25px;
+}
+
+.details {
+	margin-top: 4px;
+}
+
+.example {
+	margin: 0;
+	padding: 10px 5px;
+	background: #bbb;
+	margin-bottom: 5px;
+}
+
+#content .code {
+	background: #eee;
+	margin: 10px;
+}
+
+#content .code .parameter {
+	padding: 20px;
+	font-family: courier;
+	font-size: 9pt;
+}
+
+.warning {
+	color: #900;
+	font-size: 80%;
+}
+
+.sidenote {
+	font-size: 75%;
+	color: #666;
+	font-weight: normal;
+}
+
+.hr {
+	padding: 0;
+	margin: 0;
+	height: 1px;
+	background: #aaa;
+	border: none;
+}
+
+#servicesTable {
+	width: 100%;
+	background: #eee;
+}
+
+#servicesTable tr {
+	background: #eee;
+}
+
+#servicesTable td {
+	border: 1px solid #aaa;
+	width: 33%;
+}
+
+.servicesHead {
+	text-align: center;
+	font-weight: bold;
+	font-size: 12pt;
+	background: #666;
+	color: #ccc;
+	margin-top: 10px;
+}
+
+.servicesList {
+	background: #ddd;
+	vertical-align: top;
+}

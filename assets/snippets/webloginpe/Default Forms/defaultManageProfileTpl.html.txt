@@ -1,0 +1,85 @@
+[+wlpe.message+]
+<div id="wlpeUser">
+	<form enctype="multipart/form-data" id="wlpeUserProfileForm" action="[~[*id*]~]" method="POST">
+		<fieldset id="wlpeUserProfileInput">
+			<div id="wlpeUserInfo">
+				<h3 id="wlpeProfileWelcome">Editing the profile of [+view.username+] ([+view.fullname+])!</h3>
+				<p id="wlpeProfileInfo" class="info">Use this form to edit [+view.username+]'s profile information</p>
+			</div>
+
+			<legend>[+view.username+]'s User Profile</legend>
+			
+			<!-- These hidden fields are IMPORTANT! -->
+			<input type="hidden" name="internalKey" value="[+view.internalKey+]" />
+			<input type="hidden" name="username" value="[+view.username+]" />
+			
+			<label for="wlpeUserProfileFullName">Full Name
+			<input id="wlpeUserProfileFullName" type="text" name="fullname" value="[+view.fullname+]" />
+			</label>
+
+			<label for="wlpeUserProfileEmail">Email
+			<input id="wlpeUserProfileEmail" type="text" name="email" value="[+view.email+]" />
+			</label>
+
+			<label for="wlpeUserProfilePhone">Phone number
+			<input id="wlpeUserProfilePhone" type="text" name="phone" value="[+view.phone+]" />
+			</label>
+
+			<label for="wlpeUserProfileMobile">Mobile number
+			<input id="wlpeUserProfileMobile" type="text" name="mobilephone" value="[+view.mobilephone+]" />
+			</label>
+
+			<label for="wlpeUserProfileFax">Fax number
+			<input id="wlpeUserProfileFax" type="text" name="fax" value="[+view.fax+]" />
+			</label>
+
+			<label for="wlpeUserProfileState">State
+			<input id="wlpeUserProfileState" type="text" name="state" value="[+view.state+]" />
+			</label>
+
+			<label for="wlpeUserProfileZip">Zip Code
+			<input id="wlpeUserProfileZip" type="text" name="zip" value="[+view.zip+]" />
+			</label>
+
+			[+form.country+]
+
+			<label for="wlpeUserProfileDob">Date of birth <span class="info">(DD-MM-YYYY)</span>
+			<input id="wlpeUserProfileDob" type="text" name="dob" value="[+view.dob+]" />
+			</label>
+
+			[+form.gender+]
+
+			<label for="wlpeUserProfileComment">Comment/Signature
+			<textarea id="wlpeUserProfileComment" name="comment">[+view.comment+]</textarea>
+			</label>
+
+			<img id="wlpeUserProfilePhotoImg" src="[+view.photo+]" alt="[+view.username+]" title="[+view.fullname+]" height="100" width="100" />
+
+			<label for="wlpeUserProfilePhoto" id="wlpeUserPhotoLabel">User Photo
+			<input type="hidden" id="wlpeUserHiddenPhoto" name="userphoto" value="[+view.photo+]" />
+			<input id="wlpeUserProfilePhoto" type="file" name="photo" value="" />
+			</label>
+
+			<p id="wlpeUserProfilePhotoInfo" class="info">No bigger than 100kb. will be resized to 100 x 100.</p>
+
+			<fieldset id="wlpeNewPasswordArea">
+				<legend id="wlpeNewPasswordAreaLegend">Change your password</legend>
+				<p id="wlpeNewPasswordInfo">Change your password <br /><span class="info">(leave blank if you do not want to set a new password for this user).</span></p>
+
+				<label for="wlpeUserProfilePassword">New Password
+				<input id="wlpeUserProfilePassword" type="password" name="password" value="" />
+				</label>
+
+				<label for="wlpeUserProfilePasswordConfirm">New Password (confirm)
+				<input id="wlpeUserProfilePasswordConfirm" type="password" name="password.confirm" value="" />
+				</label>
+			</fieldset>
+
+		</fieldset>
+		<fieldset id="wlpeUserProfileButtons">
+			<button type="submit" id="wlpeSaveProfileButton" name="service" value="saveuserprofile">Save</button>
+			<button type="submit" id="wlpeProfileDoneButton" name="service" value="cancel">Done</button>
+			<button type="submit" id="wlpeProfileDeleteButton" name="service" value="deleteuserprofile">Delete This Profile</button>
+		</fieldset>
+	</form>
+</div>

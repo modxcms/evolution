@@ -1,0 +1,18 @@
+<taconite>
+	<replaceContent select="#wlpeLoginFieldset">
+		<p class="wlpeRegisterInfo">Enter your email address, your name, and your desired username in the fields below.</p>
+		<p class="wlpeRegisterInfo">A password will be emailed to you with instructions on how to activate Your account.</p>
+		
+		<label for="wlpeRegisterEmail">Your Email Address
+		<input type="text" id="wlpeRegisterEmail" name="email" />
+		</label>
+		
+		<label for="wlpeRegisterFullName">Your Full Name
+		<input type="text" id="wlpeRegisterFullName" name="fullname" />
+		</label>
+		
+		<label for="wlpeRegisterUserName">Your desired username
+		<input type="text" id="wlpeRegisterUserName" name="username" />
+		</label>
+	</replaceContent>
+</taconite>

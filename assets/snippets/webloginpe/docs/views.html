@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>WebLoginPE: Documentation</title>
+	<script type="text/javascript" src="../js/jquery-1.1.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery.corner2.js"></script>
+	<script type="text/javascript" src="style/webloginpe.js"></script>
+	<link rel="stylesheet" href="style/webloginpe.css" type="text/css" media="screen" title="WebLoginPE [Screen]" charset="utf-8">
+	<link rel="alternate stylesheet" href="style/webloginpe.print.css" type="text/css" media="print,all" title="WebLoginPE [Print]" charset="utf-8">
+	
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="head">
+			<h1>WebLoginPE: Advanced User Management.</h1>
+			<h2>Version 1.3.0</h2>
+			<h3>By Dr. Scotty Delicious, Scientist DFPA.</h3>
+		</div>
+		<div id="select">
+			<ul id="menu">
+				<li><a href="index.html"><span>Home</span>:</a></li>
+				<li><a href="parameters.html"><span>Parameters</span></a></li>
+				<li><a class="here" href="views.html"><span>Views (Templates)</span></a></li>
+				<li><a href="forms.html"><span>Working with Forms</span></a></li>
+				<li><a href="placeholders.html"><span>Placeholders</span></a></li>
+				<li><a href="api.html"><span>API</span></a></li>
+			</ul>
+		</div>
+		<div id="content">
+			<h4>Using custom views / templates</h4>
+			<p>Every view that is presented to the user can be customized using MODx chunks.</p>
+			<p>The snippet changes between views based on a post-back system. It looks for the value of $_POST['service'] to determine which view to display. In the case of the default view for a logged in user, a form is presented with two submit buttons. The buttons each have the name attribute set to "service", but a different value</p>
+			<div class="code"><div class="parameter">
+				&lt;button type=&quot;submit&quot; id=&quot;wlpeLogoutButton&quot; name=&quot;service&quot; value=&quot;logout&quot;&gt;Log Out&lt;/button&gt; <br />
+				&lt;button type=&quot;submit&quot; id=&quot;wlpeProfileButton&quot; name=&quot;service&quot; value=&quot;profile&quot;&gt;Profile&lt;/button&gt;
+			</div></div>
+			<p>If the "Log Out" button is pressed, the $_POST['service'] value is "logout" and WebLoginPE executes the code in the case 'logout': block.</p>
+			<h5>The services in WebLoginPE are:</h5>
+			<table id="servicesTable">
+				<tr>
+					<td class="servicesHead">Simple</td>
+					<td class="servicesHead">Register</td>
+					<td class="servicesHead">Profile</td>
+				</tr>
+				<tr>
+					<td class="servicesList">
+						<ul>
+							<li>login</li>
+							<li>logout</li>
+							<li>profile</li>
+							<li>saveprofilesimple</li>
+							<li>deleteprofilesimple</li>
+							<li>confirmdeleteprofilesimple</li>
+							<li>registernew</li>
+							<li>register</li>
+							<li>forgot</li>
+							<li>resetpassword</li>
+							<li>activate</li>
+							<li>activated</li>
+							<li>default <span class="sidenote">(display login form or welcome message if user is logged in)</span></li>
+						</ul>
+					</td>
+					<td class="servicesList">
+						<ul>
+							<li>register</li>
+							<li>cancel</li>
+							<li>login</li>
+							<li>logout</li>
+							<li>default <span class="sidenote">(display registration form)</span></li>
+						</ul>
+					</td>
+					<td class="servicesList">
+						<ul>
+							<li>saveprofile</li>
+							<li>cancel</li>
+							<li>logout</li>
+							<li>deleteprofile</li>
+							<li>confirmdeleteprofile</li>
+							<li>default <span class="sidenote">(display your profile for editing)</span></li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td class="servicesHead">Manager</td>
+					<td class="servicesHead">Users</td>
+					<td class="servicesHead">Taconite</td>
+				</tr>
+				<tr>
+					<td class="servicesList">
+						<ul>
+							<li>editprofile</li>
+							<li>saveuserprofile</li>
+							<li>messageuser</li>
+							<li>deleteuser</li>
+							<li>confirmdeleteuser</li>
+							<li>default <span class="sidenote">(display a list of all the site users)</span></li>
+						</ul>
+					</td>
+					<td class="servicesList">
+						<ul>
+							<li>viewprofile</li>
+							<li>messageuser</li>
+							<li>default <span class="sidenote">(display all users)</span></li>
+						</ul>
+					</td>
+					<td class="servicesList">
+						<ul>
+							<li>login</li>
+							<li>logout</li>
+							<li>register</li>
+							<li>resetpassword</li>
+							<li>activated</li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+				
+			<br />	
+			<div id="paramList">
+					
+				<div class="parameter">
+					<h5>&amp;messageTpl</h5>
+					<p class="details">
+						WebLoginPE will display many messages, either confirmations or errors. The message will be placed in a placeholder ([+wlpe.message+]) which you can put anywhere in your custom form or anywhere on the page.
+					</p>
+					<p class="details">
+						When creating the chunk for &amp;messageTpl you should place "[+wlpe.message.text+]" wherever you want the actual message to show up in the template.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						&lt;div class=&quot;wlpeMessage&quot;&gt;&lt;p class=&quot;wlpeMessageText&quot;&gt;[+wlpe.message.text+]&lt;/p&gt;&lt;/div&gt;
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;loginFormTpl</h5>
+					<p class="details">
+						The view presented to the user asking for their "username" and "password". Required form field names are "username" and "password". Optional inputs are a checkbox named "rememberme" which sets a 5 year cookie, or a select named "stayloggedin" which sets a cookie for the number of seconds specified in each options value. The cookie name is "WebLoginPE" and the value is a MD5 hash of the username and password (usernames and passwords should never be set in the open because cookies are saved in plain text. That is why WebLoginPE converts them to a hash). When the user returns to your site, WebLoginPE grabs the cookie, uses an algorithm to decode the username and password, then automatically logs the user in.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultLoginFormTpl')">defaultLoginFormTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultLoginFormTpl')">defaultLoginFormTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;successTpl</h5>
+					<p class="details">
+						The view presented to the user asking for their "username" and "password". Required form field names are "username" and "password". Optional inputs are a checkbox named "rememberme" which sets a 5 year cookie, or a select named "stayloggedin" which sets a cookie for the number of seconds specified in each options value. The cookie name is "WebLoginPE" and the value is a MD5 hash of the username and password (usernames and passwords should never be set in the open because cookies are saved in plain text. That is why WebLoginPE converts them to a hash). When the user returns to your site, WebLoginPE grabs the cookie, uses an algorythm to decode the username and password, then automatically logs the user in.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultLoginSuccessTpl')">defaultLoginSuccessTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultLoginSuccessTpl')">defaultLoginSuccessTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;registerTpl</h5>
+					<p class="details">
+						The view presented to the user to register for a new account. You can have a form input for every field in the database table "web_user_attributes" and all the fields set in <strong>&amp;customFields</strong><span class="warning">*</span>. When setting up your form, the input name attribute should be the same as the field name in the table. For example, the form input asking for the users mobile phone number (table field "mobilephone") should be:</p>
+						<div class="example">
+							&lt;input type=&quot;text&quot; name=&quot;mobilephone&quot; value=&quot;[+post.mobilephone+]&quot; /&gt;
+						</div>
+						<p class="details">
+							Placeholders for values in the <strong>$_POST array</strong> are available for use in your forms so that if there is an error, all the information that the user entered in your form is not lost. As you can see in the example for "mobilephone" above, the placeholder "<strong>[+post.<em>inputname</em>+]</strong>" is set for each input name attribute.
+						</p>
+						<p class="details">
+							If you specified form fields in <strong>&amp;inputHandler</strong>, you could also use the <strong>[+form.<em>fieldname</em>+]</strong> placeholder here.
+						</p>
+					<p class="warning">
+						<strong>*</strong>It is advised against providing inputs for id, internalKey, role, blocked, blockedunitl, blockedafter, failedlogincount, and sessionid as that can SERIOUSLY corrupt your entire MODx installation. Those fields should only be edited by the web master from the back end.
+					</p>
+					<div class="example">
+						<h6>Default Instant:</h6>
+						See: <a href="javascript:viewTemplate('defaultRegisterInstantFormTpl')">defaultRegisterInstantFormTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultRegisterInstantFormTpl')">defaultRegisterInstantFormTpl</a> as plain text.<br /><br />
+						<h6>Default Verify:</h6>
+						See: <a href="javascript:viewTemplate('defaultRegisterVerifyFormTpl')">defaultRegisterVerifyFormTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultRegisterVerifyFormTpl')">defaultRegisterVerifyFormTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;registerSuccessTpl</h5>
+					<p class="details">
+						The view presented to the user to after successfully registering for a new account. If you want this custom view to be displayed after registration, DO NOT put the <strong>&amp;regSuccessId</strong> parameter in your call. The default is the whatever is specified in <strong>&amp;loginFormTpl</strong> so the user can log in after registering.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultLoginFormTpl')">defaultLoginFormTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultLoginFormTpl')">defaultLoginFormTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;tosChunk</h5>
+					<p class="details">
+						In your registration form, you may want your users to agree to your "<strong>Terms Of Service / Privacy Policy</strong>" before you accept their registration. You specify your terms of service chunk with this parameter, then in your registration form, use the placeholder <strong>[+tos+]</strong> (which is set by WebLoginPE to hold your tosChunk) where you want your Terms of Service to be displayed and put a checkbox with the name attribute set to "<strong>tos</strong>". You should also specify "<strong>tos</strong>" in the <strong>&amp;regRequired</strong> parameter to make sure that if they don't check it (signifying that they agree) they will not be allowed to register.
+					</p>
+					<div class="example">
+						&lt;p id=&quot;wlpeTermsOfServiceLabel&quot;&gt;Terms of Service/Privacy Policy&lt;/p&gt;<br />
+						&lt;div id=&quot;wlpeTermsOfService&quot;&gt;[+tos+]&lt;/div&gt;<br />
+						&lt;label for=&quot;wlpeTosCheckbox&quot; id=&quot;wlpeTosCheckboxLabel&quot;&gt;&lt;span class=&quot;required&quot;&gt;*&lt;/span&gt;I accept the Terms of Service<br />
+							&lt;input type=&quot;checkbox&quot; id=&quot;wlpeTosCheckbox&quot; name=&quot;tos&quot; /&gt;<br />
+						&lt;/label&gt;<br />
+					</div><br />
+					<p class="details">
+						The default terms of service were generated by <strong>Kinky Solution's</strong> <a href="http://www.bennadel.com/blog/819-Terms-Of-Service-Privacy-Policy-Document-Generator.htm">Terms Of Service / Privacy Policy Document Generator</a>.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultTosTpl')">defaultTosTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultTosTpl')">defaultTosTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;profileTpl</h5>
+					<p class="details">
+						The form presented to the user which allows them to modify their attributes stored in the databse. Like <strong>&amp;registerTpl</strong>, this form can contain as many or as few of the table fields from web_user_attributes AND the extended user attributes table as you want. The difference in this form is that you can set the value of the form fields to one of the placeholders. For example the "Full Name" input would look like:
+					</p>
+					<div class="example">
+						&lt;input type=&quot;text&quot; name=&quot;fullname&quot; value=&quot;[+user.fullname+]&quot; /&gt;
+					</div>
+					<p class="details">
+						If you specified form fields in <strong>&amp;inputHandler</strong>, you could also use the <strong>[+form.<em>fieldname</em>+]</strong> placeholder here and the users selections and checks would be remembered and pre-selected or pre-checked.
+					</p>
+					
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultProfileTpl')">defaultProfileTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultProfileTpl')">defaultProfileTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;userOuterTpl</h5>
+					<p class="details">
+						The template that works as a "wrapper" for each of your lists in type=`users`.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultUserOuterTpl')">defaultUserOuterTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultUserOuterTpl')">defaultUserOuterTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;usersTpl</h5>
+					<p class="details">
+						When you have called WebLoginPE with <strong>&amp;type=`users`</strong>, each user in the databases is listed and (in the default template) their user image and username are links to a separate area that can list more details about the user and give other users a form to contact that user. Since this view may contain privileged data, you may want to use "Access Permissions" on this page. The <strong>&amp;usersTpl</strong> paramter chunk should define the structure of the block for <strong>EACH</strong> user on this page. It will loop through each user, one at a time, exchange the placeholders for their info, add it to the que, then go to the next user. When it has finished looping over each user, it will return the entire que to the page. This view has access to the <strong>[+user.age+]</strong> placeholder that calculates the user's age based on their DOB.
+					</p>
+					<p class="details">
+						If you specified form fields in <strong>&amp;customFields</strong> parameter for register and profile, you should also specify them here to make sure placeholders are set for them.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultUsersTpl')">defaultUsersTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultUsersTpl')">defaultUsersTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;viewProfileTpl</h5>
+					<p class="details">
+						When you have called WebLoginPE with <strong>&amp;type=`users`</strong>, each user in the databases is listed and (in the default template) their user image and username are links to a separate area that can list more details about the user and give other users a form to contact that user. As with <strong>&amp;usersTpl</strong>, this view may contain privileged data, you may want to use "Access Permissions" on the calling page. The <strong>&amp;viewProfileTpl</strong> paramter chunk should define the structure of this separate area to view more details on an individual user. This view has access to the <strong>[+view.age+]</strong> placeholder that calculates the user's age based on their DOB.
+					</p>
+					<p class="details">
+						If you specified form fields in <strong>&amp;customFields</strong> parameter for register and profile, you should also specify them here to make sure placeholders are set for them.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultViewProfileTpl')">defaultViewProfileTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultViewProfileTpl')">defaultViewProfileTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;profileDeleteTpl</h5>
+					<p class="details">
+						The form presented to the user to confirm that they actually want to delete their account. This is presented after the user has clicked the "<strong>Delete My Profile</strong>" button on the profile page. We want to make sure they didn't click it by accident!
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultProfileDeleteTpl')">defaultProfileDeleteTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultProfileDeleteTpl')">defaultProfileDeleteTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;manageOuterTpl</h5>
+					<p class="details">
+						The template that works as a "wrapper" for each of your lists in type=`manager`. The default is the same as the default &amp;userOuterTpl.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultUserOuterTpl')">defaultUserOuterTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultUserOuterTpl')">defaultUserOuterTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;manageTpl</h5>
+					<p class="details">
+						The template (chunk) that will be applied to each user in type=`manager`.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultManageTpl')">defaultManageTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultManageTpl')">defaultManageTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;manageProfileTpl</h5>
+					<p class="details">
+						The Form (chunk) that will be displayed when editing a user's attributes in type=`manager`.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultManageProfileTpl')">defaultManageProfileTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultManageProfileTpl')">defaultManageProfileTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;manageDeleteTpl</h5>
+					<p class="details">
+						The Form (chunk) that will be displayed asking for confirmation of intention to delete after clicking the "Delete Profile" button for a user in type=`manager`.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultManageDeleteTpl')">defaultManageDeleteTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultManageDeleteTpl')">defaultManageDeleteTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;resetTpl</h5>
+					<p class="details">
+						The form presented when a user clicks the "Forgot Password" button. This form has only one input ("email"). They enter their email address, WebLoginPE sets a random password and key in the <strong>web_users</strong> table's <strong>cachepwd</strong> field and sends them a link to the URL of the page that this was called from with the string "<strong>?service=activate&amp;userid=3&amp;activationkey=kl3tW5rtDi</strong> where "<strong>3</strong>" would be the users <strong>internalKey</strong> and "<strong>kl3tW5rtDi</strong>" would be the randomly generated activation key which is a 10 character string.
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultResetFormTpl')">defaultResetFormTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultResetFormTpl')">defaultResetFormTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;activateTpl</h5>
+					<p class="details">
+						This form is presented when the user clicks the link in the email that was sent from the <strong>&amp;resetTpl</strong> form. It is the view for <strong>service=activate</strong>. The user is asked for the temporary password that was emailed to them and they are given the option to set a new password. WebLoginPE then checks that the <strong>temporary password</strong> and the <strong>activationkey</strong> match what was stored in the <strong>cachepwd</strong> field for the <strong>internalKey</strong> in the <strong>web_users</strong> table. If everything checks out, the new password that the user entered is activated. The default form has three input fields with the name attributes "<strong>activationpassword</strong>", "<strong>newpassword</strong>", and "<strong>newpassword.confirm</strong>".
+					</p>
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplate('defaultActivationFormTpl')">defaultActivationFormTpl</a> as HTML<br />
+						See: <a href="javascript:viewTemplateAsText('defaultActivationFormTpl')">defaultActivationFormTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;notifyTpl</h5>
+					<p class="details">
+						This is not a view presented to the user, but a template format for the email message that will be sent to the addresses in <strong>&amp;notify</strong>. It uses all the placeholders that are available in the Tools > Configuration > User > Web signup email template, with the addition of [+uem+] for the user's email address. The user's password will NOT be available in this template.
+					<div class="example">
+						<h6>Default:</h6>
+						See: <a href="javascript:viewTemplateAsText('defaultNotifyTpl')">defaultNotifyTpl</a> as plain text.
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;notifySubject</h5>
+					<p class="details">
+						This is also not a view presented to the user, but a definition of the subject line for the email message that will be sent to the addresses in <strong>&amp;notify</strong>.
+					<div class="example">
+						<h6>Default:</h6>
+						New Web User for [(site_name)].
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		<div id="foot">
+			<p id="footmenu">
+				<a href="index.html">Home</a>
+				<a href="parameters.html">Parameters</a>
+				<a href="views.html">Views (Templates)</a>
+				<a href="forms.html">Working with Forms</a>
+				<a href="placeholders.html">Placeholders</a>
+				<a href="api.html">API</a>
+			</p>
+			<p id="credits">&copy; 2007 Scotty Delicious.</p>
+		</div>
+	</div>
+</body>
+</html>

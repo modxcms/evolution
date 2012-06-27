@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>WebLoginPE: Documentation</title>
+	<script type="text/javascript" src="../js/jquery-1.1.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery.corner2.js"></script>
+	<script type="text/javascript" src="style/webloginpe.js"></script>
+	<link rel="stylesheet" href="style/webloginpe.css" type="text/css" media="screen" title="WebLoginPE [Screen]" charset="utf-8">
+	<link rel="alternate stylesheet" href="style/webloginpe.print.css" type="text/css" media="print,all" title="WebLoginPE [Print]" charset="utf-8">
+	
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="head">
+			<h1>WebLoginPE: Advanced User Management.</h1>
+			<h2>Version 1.3.0</h2>
+			<h3>By Dr. Scotty Delicious, Scientist DFPA.</h3>
+		</div>
+		<div id="select">
+			<ul id="menu">
+				<li><a href="index.html"><span>Home</span>:</a></li>
+				<li><a href="parameters.html"><span>Parameters</span></a></li>
+				<li><a href="views.html"><span>Views (Templates)</span></a></li>
+				<li><a class="here" href="forms.html"><span>Working with Forms</span></a></li>
+				<li><a href="placeholders.html"><span>Placeholders</span></a></li>
+				<li><a href="api.html"><span>API</span></a></li>
+			</ul>
+		</div>
+		<div id="content">
+			<h4>Working With Forms</h4>
+			<p>
+				WebLoginPE makes customizing your web user management easy. Many placeholders are set so that your form inputs can be automatically set with useful, pertinent user information.
+			</p>
+			<p>
+				The power of WebLoginPE's functionality comes from the concept of "<strong>services</strong>". A WebLoginPE <strong>service</strong> is a block of code that is executed on command from a user. It is passed to WebLoginPE through <strong>$_REQUEST</strong> (either POST or GET).
+			</p>
+			<p>
+				WebLoginPE has made extensive use of the &lt;button&gt; element<span class="warning">*</span> as it's <strong>value</strong> can differ from the text on the button where as with &lt;input type=&quot;submit&quot;&gt;, the value dictates not only the $_REQUEST value of the button, but the text written on it.
+			</p>
+			<div class="paramList">
+				<div class="parameter">
+					<h5>Example:</h5>
+					&lt;button type=&quot;submit&quot; name=&quot;service&quot; value=&quot;login&quot;&gt;Click Here To Login&lt;/button&gt;<br />
+					Will display <button type="submit" name="service" value="login">Click Here To Login</button><br /><br />
+					&lt;input type=&quot;submit&quot; name=&quot;service&quot; value=&quot;Click Here To Login&quot; /&gt;<br />
+					Will display <input type="submit" name="service" value="Click Here To Login" /> but there is no WebLoginPE service called "<strong>Click Here To Login</strong>", so nothing will happen.<br /><br />
+					We could use &lt;input type=&quot;submit&quot; name=&quot;service&quot; value=&quot;login&quot; /&gt;, which will work,<br />
+					but <input type="submit" name="service" value="login" /> is ugly and does not lead to user friendliness.
+				</div>
+			</div>
+			<p class="warning">
+				* Internet Explorer has a bug where the value of a submit &lt;button&gt; is read as the innerText of the button. WebLoginPE uses JavaScript to correct this malfunction in Internet Explorer.
+			</p>
+			<hr class="hr" />
+			<p>
+				Inevitably, you are going to want to use <strong>&amp;customFields</strong> to add user attributes to your registration and profile forms, but this information also pertains to the stander <strong>web_user_attributes</strong> table columns as well.
+			</p>
+			<p>
+				In your forms, any data that you wish to collect for registration or saving in the user's profile should be done with standard HTML &lt;input /&gt; tags. The key here is the &lt;input /&gt; tag's <strong>name</strong> attribute. When a form is submitted, it is collected by PHP and put in an associative array <span class="sidenote">($_POST / $_REQUEST)</span> and each form input gives a <strong>key</strong> (it's name attribute) and a <strong>value</strong> (it's content), so any value that you wish to save to the database <strong>MUST</strong> have a form input with a name attribute that matches that database table column's name.
+			</p>
+			<div class="paramList">
+				<div class="parameter">
+					<h5>Example:</h5>
+					In the default <strong>web_user_attributes</strong> table there is a column named <strong>email</strong>. If you wish to collect this information from a user to be stored in the database, you need to have an input like this in your form:<br/><br/>
+					&lt;input type=&quot;text&quot; id=&quot;myRegistrationFormEmail&quot; <strong>name=&quot;email&quot;</strong> value=&quot;[+post.email+]&quot; /&gt;
+				</div>
+			</div>
+			<p>
+				It is also handy with registration forms to make use of the <strong>[+post.<em>inputname</em>+]</strong> placeholders so the user does not have to re-enter information if WebLoginPE rejects their registration for some reason.
+			</p>
+			<a name="inputHandler" id="inputHandler"></a>
+			<hr class="hr" />
+			<p>
+				So what happens if you want to collect information in a &lt;select&gt;, &lt;select multiple&gt;, &lt;input type=&quot;checkbox&quot; /&gt;, or &lt;input type=&quot;radio&quot; /&gt; form element and have the users selection "remembered" <span class="sidenote">(checked for checkboxes and radios and selected for &lt;select&gt;'s)</span>?
+			</p>
+			<p>
+				This is where the <strong>&amp;inputHandler</strong> parameter becomes very useful. The <strong>&amp;inputHandler</strong> lets you specify one of the form elements above and when the form is presented to the user, for example while editing their profile, their selections and checks are "rememberd".
+			</p>
+			<p>
+				The basic syntax is:
+			</p>
+			<div class="paramList">
+				<div class="parameter">
+					<h5>&amp;inputHandler</h5>
+					&amp;inputHandler=`LABEL:DOM_ID:FIELDNAME:FIELD_TYPE:Option(value),Option2(value2)`
+				</div>
+			</div>
+			<p>
+				Multiple form elements should be separated by double pipes (||). For inputs that are not in the standard web_user_attributes table, remember to specify them in <strong>&amp;customFields</strong>.
+			</p>
+			
+			<div class="paramList">
+				<div class="parameter">
+					<h5>&amp;inputHandler [&lt;select&gt;]</h5>
+					A &lt;select&gt; input for type of vehicle:<br/><br/>
+					&amp;customFields=`vehicletype`<br/>
+					&amp;inputHandler=`Your Vehicle Type:userVehicle:vehicletype:select:Compact(compact),Van(van),Light Truck(light_truck),SUV(suv)`<br/><br/>
+					This would output:<br />
+					<label for="userVehicle" id="userVehicleLabel">Your Vehicle Type
+						<select id="userVehicle" name="vehicletype">
+							<option value="compact">Compact</option>
+							<option value="van">Van</option>
+							<option value="light_truck">Light Truck</option>
+							<option value="suv">SUV</option>
+						</select>
+					</label>
+					<br/><br/>
+					<div class="example">
+						&lt;label for=&quot;userVehicle&quot; id=&quot;userVehicleLabel&quot;&gt;Your Vehicle Type<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;select id=&quot;userVehicle&quot; name=&quot;vehicletype&quot;&gt;<br />
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;compact&quot;&gt;Compact&lt;/option&gt;<br />
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;van&quot;&gt;Van&lt;/option&gt;<br />
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;light_truck&quot;&gt;Light Truck&lt;/option&gt;<br />
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;suv&quot;&gt;SUV&lt;/option&gt;<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/select&gt;<br />
+						&lt;/label&gt;<br />
+					</div>
+					The code above would be stored in the placeholder <strong>[+form.vehicletype+]</strong>. You should put this placeholder in your form where you want the select element to appear. In order for WebLoginPE to "remember" the user's saved value, you <strong>must</strong> use this placeholder.
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;inputHandler [&lt;select multible&gt;]</h5>
+					A &lt;select multiple&gt; input for favorite colors:<br/><br/>
+					&amp;customFields=`favorite_colors`<br/>
+					&amp;inputHandler=`Favorite Colors:userFavoriteColors:favorite_colors:select multiple:Red(ff0000),Orange(ff9900),Green(66ff00),Black(000000)`<br/><br/>
+					This would output:<br />
+					<label for="userFavoriteColors" id="userFavoriteColorsLabel">Favorite Colors<br/>
+						<select multiple id="userFavoriteColors" name="favorite_colors">
+							<option value="ff0000">Red</option>
+							<option value="ff9900">Orange</option>
+							<option value="66ff00">Green</option>
+							<option value="000000">Black</option>
+						</select>
+					</label>
+					<br/><br/>
+					<div class="example">
+						&lt;label for=&quot;userFavoriteColors&quot; id=&quot;userFavoriteColorsLabel&quot;&gt;Favorite Colors<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;select multiple id=&quot;userFavoriteColors&quot; name=&quot;favorite_colors&quot;&gt;<br/>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;ff0000&quot;&gt;Red&lt;/option&gt;<br/>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;ff9900&quot;&gt;Orange&lt;/option&gt;<br/>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;66ff00&quot;&gt;Green&lt;/option&gt;<br/>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value=&quot;000000&quot;&gt;Black&lt;/option&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/select&gt;<br/>
+						&lt;/label&gt;<br/>
+					</div>
+					The code above would be stored in the placeholder <strong>[+form.favorite_colors+]</strong>. You should put this placeholder in your form where you want the multiple select to appear. In order for WebLoginPE to "remember" the user's saved value, you <strong>must</strong> use this placeholder.
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;inputHandler [&lt;input type=&quot;radio&quot; /&gt;]</h5>
+					An &lt;input type=&quot;radio&quot; /&gt; for best time to contact:<br/><br/>
+					&amp;customFields=`contact_time`<br/>
+					&amp;inputHandler=`Best time to contact you:userContactRadios:contact_time:radio:Morning(morning),Afternoon(afternoon),Evening(Evening)`<br/><br/>
+					This would output:<br />
+					<label for="userContactRadios" id="userContactRadiosLabel">Best time to contact you<br/>
+						<div id="userContactRadiosDiv">
+							<input type="radio" name="contact_time" id="userContactRadiosMorning" value="morning" />
+							<span class="userContactRadiosSpan">Morning</span>
+							<input type="radio" name="contact_time" id="userContactRadiosAfternoon" value="afternoon" />
+							<span class="userContactRadiosSpan">Afternoon</span>
+							<input type="radio" name="contact_time" id="userContactRadiosEvening" value="evening" />
+							<span class="userContactRadiosSpan">Evening</span>
+						</div>
+					</label>
+					<br/>
+					<div class="example">
+						&lt;label for=&quot;userContactRadios&quot; id=&quot;userContactRadiosLabel&quot;&gt;Best time to contact you<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;	&lt;div id=&quot;userContactRadiosDiv&quot;&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&lt;input type=&quot;radio&quot; name=&quot;contact_time&quot; id=&quot;userContactRadiosMorning&quot; value=&quot;morning&quot; /&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&lt;span class=&quot;userContactRadiosSpan&quot;&gt;Morning&lt;/span&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&lt;input type=&quot;radio&quot; name=&quot;contact_time&quot; id=&quot;userContactRadiosAfternoon&quot; value=&quot;afternoon&quot; /&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&lt;span class=&quot;userContactRadiosSpan&quot;&gt;Afternoon&lt;/span&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&lt;input type=&quot;radio&quot; name=&quot;contact_time&quot; id=&quot;userContactRadiosEvening&quot; value=&quot;evening&quot; /&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&lt;span class=&quot;userContactRadiosSpan&quot;&gt;Evening&lt;/span&gt;<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br/>
+						&lt;/label&gt;<br/>
+					</div>
+					The code above would be stored in the placeholder <strong>[+form.contact_time+]</strong>. You should put this placeholder in your form where you want the radio buttons to appear. In order for WebLoginPE to "remember" the user's saved value, you <strong>must</strong> use this placeholder.
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;inputHandler [&lt;input type=&quot;checkbox&quot; /&gt;]</h5>
+					<p>
+						For any database field that you have displayed in your <strong>&amp;usersTpl</strong> or <strong>&amp;viewUsersTpl</strong> templates you may give the user the option on their profile editing page to keep an attribute private. As an example, we will use the <strong>email</strong> table column.
+					</p>
+					<p>
+						For every column that you wish to make optionally private you need to specify its name followed by private in <strong>&amp;customFields</strong>. To keep the <strong>email</strong> private you would need a custom field called <strong>emailprivate</strong>
+					</p>
+					An &lt;input type=&quot;checkbox&quot; /&gt; email privacy:<br/><br/>
+					&amp;customFields=`emailprivate`<br/>
+					&amp;inputHandler=`Keep my email private:userPrivateEmail:emailprivate:checkbox:()`<br/><br/>
+					This would output:<br />
+					<label for="userPrivateEmail" id="userPrivateEmailLabel">Keep my email private
+						<input type="checkbox" name="emailprivate" id="userPrivateEmail" />
+					</label>
+					<br/><br/>
+					<div class="example">
+						&lt;label for=&quot;userPrivateEmail&quot; id=&quot;userPrivateEmailLabel&quot;&gt;Keep my email private<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type=&quot;checkbox&quot; name=&quot;emailprivate&quot; id=&quot;userPrivateEmail&quot; /&gt;<br/>
+						&lt;/label&gt;<br/>
+					</div>
+					The code above would be stored in the placeholder <strong>[+form.emailprivate+]</strong>. You should put this placeholder in your form where you want the checkbox to appear. In order for WebLoginPE to "remember" the user's saved value, you <strong>must</strong> use this placeholder.
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;inputHandler [Putting it all together]</h5>
+					<p>
+						It is easy to get all these input handlers together in one WebLoginPE call.
+					</p>
+					[!WebLoginPE? &amp;type=`profile` &amp;customFields=`vehicletype,favorite_colors,contact_time,emailprivate` &amp;inputHandler=`Your Vehicle Type:userVehicle:vehicletype:select:Compact(compact),Van(van),Light Truck(light_truck),SUV(suv) ||Favorite Colors:userFavoriteColors:favorite_colors:select multiple:Red(ff0000),Orange(ff9900),Green(66ff00),Black(000000) ||Best time to contact you:userContactRadios:contact_time:radio:Morning(morning),Afternoon(afternoon),Evening(Evening) ||Keep my email private:userPrivateEmail:emailprivate:checkbox:()`!]<br/>
+					<p>The WebLoginPE call above would be generate the placeholders<strong>[+form.vehicletype+]</strong>, <strong>[+form.favorite_colors+]</strong>, <strong>[+form.contact_time+]</strong>, and <strong>[+form.emailprivate+]</strong>. You should put these placeholders in your form where you want the respective form inputs to appear. In order for WebLoginPE to "remember" the user's saved values, you <strong>must</strong> use these placeholder.</p>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+		
+		<div id="foot">
+			<p id="footmenu">
+				<a href="index.html">Home</a>
+				<a href="parameters.html">Parameters</a>
+				<a href="views.html">Views (Templates)</a>
+				<a href="forms.html">Working with Forms</a>
+				<a href="placeholders.html">Placeholders</a>
+				<a href="api.html">API</a>
+			</p>
+			<p id="credits">&copy; 2007 Scotty Delicious.</p>
+		</div>
+	</div>
+</body>
+</html>

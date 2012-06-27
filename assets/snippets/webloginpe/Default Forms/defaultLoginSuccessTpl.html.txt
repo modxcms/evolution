@@ -1,0 +1,21 @@
+[+wlpe.message+]
+<div id="wlpeUser">
+	<div id="wlpeUserInfo">
+		<div id="wlpeWelcome">
+			<img id="wlpeMyProfileImg" src="[+user.photo+]" alt="[+user.username+]" title="[+user.username+]" height="30" width="30" />
+			<p id="wlpeWelcomeParagraph">Welcome back [+user.username+]!</p>
+		</div>
+		<p id="wlpeLoginCount">You have logged into [(site_name)] [+user.logincount+] times now.<br />
+		Your last login was [+user.lastlogin+]</p>
+		<blockquote>
+			[+user.comment+]
+		</blockquote>
+		
+	</div>
+	<form id="wlpeUserForm" action="[~[*id*]~]" method="POST">
+		<fieldset id="wlpeUserButtons">
+			<button type="submit" id="wlpeLogoutButton" name="service" value="logout">Log Out</button>
+			<button type="submit" id="wlpeProfileButton" name="service" value="profile">Profile</button>
+		</fieldset>
+	</form>
+</div>

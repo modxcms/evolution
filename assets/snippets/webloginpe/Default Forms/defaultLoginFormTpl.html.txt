@@ -1,0 +1,32 @@
+[+wlpe.message+]
+<div id="wlpeLogin">
+	<form id="wlpeLoginForm" action="[~[*id*]~]" method="POST">
+		<fieldset id="wlpeLoginFieldset">
+			<legend id="wlpeLegend">Web User Login Form</legend>
+			<label id="wlpeUsernameLabel" for="wlpeUsername">Username
+				<input id="wlpeUsername" type="text" name="username" />
+			</label>
+			
+			<label id="wlpePasswordLabel" for="wlpePassword">Password
+				<input id="wlpePassword" type="password" name="password" />
+			</label>
+			
+			<label id="wlpeStayLoggedInLabel" for="wlpeStayLoggedIn">Stay Logged In
+				<select id="wlpeStayLoggedIn" name="stayloggedin">
+					<option value="">No</option>
+					<option value="3600">1 Hour</option>
+					<option value="86400">1 Day</option>
+					<option value="604800">1 Week</option>
+					<option value="2678400">1 Month</option>
+					<option value="315569260">Forever</option>
+				</select>
+			</label>
+			
+		</fieldset>
+		<fieldset id="wlpeLoginButtons">
+			<button type="submit" id="wlpeLoginButton" name="service" value="login">Login</button>
+			<button type="submit" id="wlpeReminderButton" name="service" value="forgot">Forgot Password</button>
+			<button type="submit" id="wlpeRegisterButton" name="service" value="registernew">Register</button>
+		</fieldset>
+	</form>
+</div>

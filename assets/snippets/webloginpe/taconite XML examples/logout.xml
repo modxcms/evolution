@@ -1,0 +1,31 @@
+[!UserPlaceholders!]
+[!Jot? &customfields=`name,email` &sortby=`createdon:a` &subscribe=`1` &pagination=`0` &placeholders=`1` &output=`0` &guestname=`An anonymous coward` &subscribe=`1` &notify=`2` &tplComments=`commentTpl` &tplSubscribe=`commentSubscribe` &tplForm=`commentForm`  &subjectSubscribe=`A blog you are watching at scottydelicious.com has been updated`&numdir=`0` &canmoderate=`Admins` &canedit=`Registered Users`!]
+<taconite>
+	<replaceContent select="#wlpeLoginFieldset">
+		<legend id="wlpeLegend">Web User Login Form</legend>
+		<label id="wlpeUsernameLabel" for="wlpeUsername">Username
+			<input id="wlpeUsername" type="text" name="username" />
+		</label>
+		
+		<label id="wlpePasswordLabel" for="wlpePassword">Password
+			<input id="wlpePassword" type="password" name="password" />
+		</label>
+		
+		<label id="wlpeCheckBoxLabel" for="wlpeCheckBox">Remember Me?
+			<input id="wlpeCheckBox" type="checkbox" name="rememberme" />
+		</label>
+	</replaceContent>
+
+	<slideUp select="jotForm" />
+
+	<replaceContent select="#sitemenu">
+		[!Wayfinder? &startId=`0` &hereClass=`current` &outerClass=`topnav`!]
+	</replaceContent>
+		
+	<replaceContent select="#jotForm">
+		[+jot.html.form+]
+	</replaceContent>
+	
+	<slideDown select="jotForm" />
+	
+</taconite>

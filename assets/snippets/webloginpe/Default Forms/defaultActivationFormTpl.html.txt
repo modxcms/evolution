@@ -1,0 +1,23 @@
+[+wlpe.message+]
+<div id="wlpeActivate">
+	<form id="wlpeActivateForm" name="wlpeActivateForm" action="[~[*id*]~]" method="POST">
+		<fieldset id="wlpeActivateFieldset">
+			<input type="hidden" name="userid" value="[+request.userid+]" />
+			<input type="hidden" name="activationkey" value="[+request.activationkey+]" />
+			
+			<label for="wlpeActivationPassword">Activation password
+			<input type="text" id="wlpeActivationPassword" name="activationpassword" />
+			</label>
+			<label for="wlpeNewPassword">New password
+			<input type="password" id="wlpeNewPassword" name="newpassword" />
+			</label>
+			<label for="wlpeNewPasswordConfirm">New password (Confirm)
+			<input type="password" id="wlpeNewPasswordConfirm" name="newpassword.confirm" />
+			</label>
+			
+		</fieldset>
+		<fieldset id="wlpeActivateButtonFieldset">
+			<button type="submit" id="wlpeActivateButton" name="service" value="activated">Activate</button>
+		</fieldset>
+	</form>
+</div>

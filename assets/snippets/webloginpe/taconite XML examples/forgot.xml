@@ -1,0 +1,10 @@
+<taconite>
+	<replaceContent select="#wlpeLoginFieldset">
+		<h3 id="wlpeResetInfo">Don't Worry, it happens to everyone.</h3>
+		<p>Enter your email address in the field below and we will set a temporary password for your account.</p>
+		<p>This temporary password will be emailed to you with instructions on how to activate it.</p>
+		<label for="wlpeResetEmail">Your Email Address
+		<input type="text" id="wlpeResetEmail" name="email" />
+		</label>
+	</replaceContent>
+</taconite>

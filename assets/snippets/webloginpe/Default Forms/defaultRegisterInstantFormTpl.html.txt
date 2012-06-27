@@ -1,0 +1,89 @@
+[+wlpe.message+]
+<div id="wlpeNewUser">
+	<form id="wlpeUserRegisterForm" action="[~[*id*]~]" method="POST" enctype="multipart/form-data">
+		<fieldset id="wlpeUserRegisterInput">
+			<div id="wlpeNewUserInfo">
+				<p id="wlpeRegisterInfo">Use this form to register for a new user account.<br />
+					<span class="info">Filds marked with <span class="required">*</span> are required.</span>
+				</p>
+			</div>
+			<legend>Register for a new user account</legend>
+			<label for="wlpeUserRegisterEmail"><span class="required">*</span> Email
+			<input id="wlpeUserRegisterEmail" type="text" name="email" value="[+post.email+]" />
+			</label>
+
+			<label for="wlpeUserRegisterUserName"><span class="required">*</span> Desired User Name
+			<input id="wlpeUserRegisterUserName" type="text" name="username" value="[+post.username+]" />
+			</label>
+
+			<label for="wlpeUserRegisterFullName"><span class="required">*</span> Full Name
+			<input id="wlpeUserRegisterFullName" type="text" name="fullname" value="[+post.fullname+]" />
+			</label>
+
+			<label for="wlpeUserRegisterPassword"><span class="required">*</span> Password
+			<input id="wlpeUserRegisterPassword" type="password" name="password" value="[+post.password+]" />
+			</label>
+
+			<label for="wlpeUserRegisterPasswordConfirm"><span class="required">*</span> Password (confirm)
+			<input id="wlpeUserRegisterPasswordConfirm" type="password" name="passwordconfirm" value="[+post.passwordconfirm+]" />
+			</label>
+
+			<label for="wlpeUserRegisterPhone">Phone number
+			<input id="wlpeUserRegisterPhone" type="text" name="phone" />
+			</label>
+
+			<label for="wlpeUserRegisterMobile">Mobile number
+			<input id="wlpeUserRegisterMobile" type="text" name="mobilephone" value="[+post.mobilephone+]" />
+			</label>
+
+			<label for="wlpeUserRegisterFax">Fax number
+			<input id="wlpeUserRegisterFax" type="text" name="fax" value="[+post.fax+]" />
+			</label>
+
+			<label for="wlpeUserRegisterState">State
+			<input id="wlpeUserRegisterState" type="text" name="state" value="[+post.state+]" />
+			</label>
+
+			<label for="wlpeUserRegisterZip">Zip Code
+			<input id="wlpeUserRegisterZip" type="text" name="zip" value="[+post.zip+]" />
+			</label>
+
+			[+form.country+]
+
+			<label for="wlpeUserRegisterDob">Date of birth <span class="info">(DD-MM-YYYY)</span>
+			<input id="wlpeUserRegisterDob" type="text" name="dob" value="[+post.dob+]" />
+			</label>
+
+			[+form.gender+]
+			
+			<img id="wlpeUserDefaultImage" src="[+user.defaultphoto+]" alt="Default User Image" title="Default User Image" height="100" width="100" />
+			
+			<label for="wlpeUserProfilePhoto" id="photolabel">User Photo
+			<input id="wlpeUserProfilePhoto" type="file" name="photo" />
+			</label>
+			<p id="wlpeUserProfilePhotoInfo" class="info">No bigger than 100kb. will be resized to 100 x 100.</p>
+			
+			<label for="wlpeUserRegisterComment">Comment/Signature
+			<textarea id="wlpeUserRegisterComment" name="comment">[+post.comment+]</textarea>
+			</label>
+			
+			<img id="wlpeCaptchaImage" src="[+form.captcha+]" width="148" height="60" alt="If you have trouble reading the code, click on the code itself to generate a new random code." />
+			
+			<label for="wlpeUserRegisterCaptcha" id="wlpeCaptchaLabel"><span class="required">*</span>Please enter the code in the image.
+			<input type="text" id="wlpeUserRegisterCaptcha" name="formcode" >
+			</label>
+			
+			<p id="wlpeTermsOfServiceLabel">Terms of Service/Privacy Policy</p>
+			<div id="wlpeTermsOfService">[+tos+]</div>
+			
+			<label for="wlpeTosCheckbox" id="wlpeTosCheckboxLabel"><span class="required">*</span>I accept the Terms of Service
+				<input type="checkbox" id="wlpeTosCheckbox" name="tos" />
+			</label>
+			
+		</fieldset>
+		<fieldset id="wlpeUserRegisterButtons">
+			<button type="submit" id="wlpeSaveRegisterButton" name="service" value="register">Register</button>
+			<button type="submit" id="wlpeCancelRegisterButton" name="service" value="cancel">Cancel</button>
+		</fieldset>
+	</form>
+</div>

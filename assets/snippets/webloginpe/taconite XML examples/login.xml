@@ -1,0 +1,32 @@
+[!UserPlaceholders!]
+[!Jot? &customfields=`name,email` &sortby=`createdon:a` &subscribe=`1` &pagination=`0` &placeholders=`1` &output=`0` &guestname=`An anonymous coward` &subscribe=`1` &notify=`2` &tplComments=`commentTpl` &tplSubscribe=`commentSubscribe` &tplForm=`commentForm`  &subjectSubscribe=`A blog you are watching at scottydelicious.com has been updated`&numdir=`0` &canmoderate=`Admins` &canedit=`Registered Users`!]
+<taconite>
+	<replaceContent select="#wlpeLoginFieldset">
+		<div id="wlpeUserInfo">
+			<div id="wlpeWelcome">
+				<img id="wlpeMyProfileImg" src="[+user.photo+]" alt="[+user.username+]" title="[+user.username+]" height="30" width="30" />
+				<p id="wlpeWelcomeParagraph">Welcome back [+user.username+]!</p>
+			</div>
+			<p id="wlpeLoginCount">You have logged into [(site_name)] [+user.logincount+] times now.<br />
+			Your last login was [+user.lastlogin+]</p>
+			<blockquote>
+				[+user.comment+]
+			</blockquote>
+		</div>
+	</replaceContent>
+
+	<slideUp select="jotForm" />
+
+	<replaceContent select="#sitemenu">
+		[!Wayfinder? &startId=`0` &hereClass=`current` &outerClass=`topnav`!]
+	</replaceContent>
+	
+	<remove select="#jotPleaseLogInToPost"/>
+	
+	<replaceContent select="#jotForm">
+		[+jot.html.form+]
+	</replaceContent>
+	
+	<slideDown select="jotForm" />
+	
+</taconite>

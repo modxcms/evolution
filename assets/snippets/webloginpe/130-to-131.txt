@@ -1,0 +1,91 @@
+THIS IS ONLY IMPORTANT IF YOU ARE A CODER AND WISH TO LOOK AT THE BUG FIXES (PARTIAL LIST) THAT WERE IMPLEMENTED
+
+------------------------
+
+http://modxcms.com/forums/index.php/topic,18271.msg114872.html#msg114872
+// Fixes: 3
+
+http://modxcms.com/forums/index.php/topic,18271.msg115384.html#msg115384
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg117707.html#msg117707
+// Fixes: 6	(Bug 2, 3b, 4, 5, 6, 7)
+// Outstanding Bugs: 2	(Bug 1, 3a)
+// Comments: Need to find out about Bug #3a. Also check templates to see if they use newpassword_confirm instead of newpasswordconfirm (#5). Test to see if attached IE JS works as expected (#6). Check to see if #7 was the right fix.
+
+http://modxcms.com/forums/index.php/topic,18271.msg118029.html#msg118029
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg118060.html#msg118060
+// Fixes: 1 ($paramaters)
+// Outstanding Bugs: 1 (#9)
+// Comments: I didn't know if #9 was really a "bug", or just a way to extend the script's capabilities. Also, need to check to see if the $paramaters mispelling causes issues (i..e, still be refrenced the "old" way in some parts of the script).
+
+http://modxcms.com/forums/index.php/topic,18271.msg119154.html#msg119154
+http://modxcms.com/forums/index.php/topic,18271.msg120525.html#msg120525
+// Fixes: 2
+// Comments: Added a // comment for the filetype fix, so people know it's a IE6-specific issue, & added a // comment for the extra .jpg filetype fix, so people would understand it's just adding the ability for WLPE to "accept" the alternate filetype. Since they all use the same function, I combined them together.
+
+http://modxcms.com/forums/index.php/topic,18271.msg120578.html#msg120578
+// Fixes: 2
+
+http://modxcms.com/forums/index.php/topic,18271.msg120770.html#msg120770
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg124306.html#msg124306
+// Comments: Not sure if this is a bug, or just affects SMF-connectivity. If it's the latter, maybe we should have a SMF version of the script?
+
+http://modxcms.com/forums/index.php/topic,18271.msg128249.html#msg128249
+// Comments: Does this get applied ONLY to special fields, or in the other two instances in the script?
+
+http://modxcms.com/forums/index.php/topic,18271.msg131965.html#msg131965
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg132998.html#msg132998
+// Fixes: 2 (replaced his fix w/ pixelchutes later on...)
+// Comments: I think I applied the charset fix alirhgt. I need some to check this, though...
+
+http://modxcms.com/forums/index.php/topic,18271.msg138893.html#msg138893
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg140512.html#msg140512
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg142256.html#msg142256
+// Comments: Need to apply fixes to default templates. Also, where does the new-password activation fix get implemented, as well as the UTF-8 fixes?
+
+http://modxcms.com/forums/index.php/topic,18271.msg145070.html#msg145070
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg146738.html#msg146738
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg152668.html#msg152668
+// Fixes: 2 (1, 2, 3)
+// Outstanding Bugs: 1 (4)
+// Comments: Is the fourth fix needed?
+
+http://modxcms.com/forums/index.php/topic,18271.msg153071.html#msg153071
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg153081.html#msg153081
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg153219.html#msg153219
+// Fixes: 1
+
+http://modxcms.com/forums/index.php/topic,18271.msg153497.html#msg153497
+http://modxcms.com/forums/index.php/topic,18271.msg153499.html#msg153499
+// Fixes: 3 (1 for 1st, 2 for 2nd)
+// Comments: Apply change from 20->100 to language file for username length.
+
+http://modxcms.com/forums/index.php/topic,18271.msg153673.html#msg153673
+// Fixes: 1 (partially)
+// Comments: How does the second part of this fix get implemented?
+
+http://modxcms.com/forums/index.php/topic,18271.msg153696.html#msg153696
+// Fixes: 1 (a fix of Elander's fix)
+
+http://modxcms.com/forums/index.php/topic,25821.0.html
+// I'm too lazy to list all of the changes here, but the bugs I created trying to fix earlier reported bugs has been incorporated.
+// vhollo's fix for image resizing was also applied. As for the pagenation hack, that's on the backburner for a v1.3.2 release, since there's been some minor issues with it.

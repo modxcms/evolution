@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>WebLoginPE: Documentation</title>
+	<link rel="stylesheet" href="style/webloginpe.css" type="text/css" media="screen" title="WebLoginPE [Screen]" charset="utf-8">
+	<link rel="alternate stylesheet" href="style/webloginpe.print.css" type="text/css" media="print,all" title="WebLoginPE [Print]" charset="utf-8">
+	
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="head">
+			<h1>WebLoginPE: Advanced User Management.</h1>
+			<h2>Version 1.3.0</h2>
+			<h3>By Dr. Scotty Delicious, Scientist DFPA.</h3>
+		</div>
+		<div id="select">
+			<ul id="menu">
+				<li><a class="here" href="index.html"><span>Home</span>:</a></li>
+				<li><a href="parameters.html"><span>Parameters</span></a></li>
+				<li><a href="views.html"><span>Views (Templates)</span></a></li>
+				<li><a href="forms.html"><span>Working with Forms</span></a></li>
+				<li><a href="placeholders.html"><span>Placeholders</span></a></li>
+				<li><a href="api.html"><span>API</span></a></li>
+			</ul>
+		</div>
+		<div id="content">
+			<h4>WebLoginPE v. 1.3.0</h4>
+			<p>
+				WebLoginPE is a progressively enhanced (PE), advanced web user management snippet for MODx. WebLoginPE manages user registration, activation, login, logout, password recovery, extended profiling, profile editing, viewing and contacting other users, and user profile removal. WebLoginPE started off as a rewrite of the MODx weblogin snippet so I could make an AJAX login for my site.
+			</p>
+			<p>
+				WebLoginPE is easy to setup and use, but extremely customizable. You can let WebLoginPE provide the forms and display templates for every view the user might see, or you can use a chunk to customize ANY view. If you are so inclined, you can manage how WebLoginPE will handle selects, radios and checkboxes so that the user's choice is remembered and already selected/checked when they view or edit their profile.
+			</p>
+			<p>
+				WebLoginPE strives to be standards compliant. The default forms and views are valid XHTML 1.1, however, you can create your own forms and views to use with WebLoginPE in any format you like. WebLoginPE provides the processing and the basic structure. You can use CSS and JavaScript to enhance your forms and views any way you can imagine. Even the sky is no limit for what you can do.
+			</p>
+			<p>
+				The latest version can always be downloaded from the <a href="http://modxcms.com/WebLoginPE-1593.html">MODx Repository</a>.
+			</p>
+			<p>
+				Questions, suggestions, bug reports and feature requests should be posted in the <a href="http://modxcms.com/forums/index.php/topic,17359.0.html">official support thread</a> at the MODx community forums.
+			</p>
+			<h4>Installation/Upgrade</h4>
+			<ol><h5>New Installation</h5>
+				<li>Upload the "webloginpe" folder and all it's contents to /assets/snippets/ in your MODx installation.</li>
+				<li>Log into the MODx Manager.</li>
+				<li>Go to "Resources" &gt; "Manage Resources" &gt; "snippets" and click "New snippet"</li>
+				<li>Give this snippet a name of <code>WebLoginPE</code> and a description of <code>&lt;strong&gt;1.2.0&lt;/strong&gt; A progressively enhanced, complete Web User management snippet.</code></li>
+				<li>Open the file "webloginpe.snippet.php" and copy it's contents to the "Snippet code" area back in the manager.</li>
+				<li>Save the snippet.</li>
+			</ol>
+			<ol><h5>Upgrade from 1.0 - 1.2.0</h5>
+				<li>Upload "webloginpe.class.php", "webloginpe.templates.php", the "js" folder, the "lang" folder and the "Default Forms" folder to "/assets/snippets/webloginpe" in your MODx installation and OVERWRITE or REPLACE the existing files.</li>
+				<li>Paste the NEW contents of webloginpe.snippets.php into the existing WebLoginPE snippet as described above in "New Installation".</li>
+			</ol>
+			
+			<h4>Change Log</h4>
+			
+			<ol><h5>09/13/2007 v. 1.3.0</h5>
+				<li><strong>New Parameter:<a href="parameters.html#disableServices"> &amp;disableServices</a></strong> which will accept a comma separated list of services to disable. You can disable individual services like "deleteprofile" and "viewprofile" as well as entire types like "register" and "users".</li>
+				<li><strong>New Parameter: <a href="parameters.html#prefixTable">&amp;prefixTable</a></strong> If your custom table does not use the MODx table prefix, you can use &amp;prefixTable=`0` (default is 1).</li>
+				<li><strong>New Parameter: <a href="parameters.html#usersList">&amp;usersList</a></strong> lets you specify multiple lists of users and a format for each list on &amp;type=`users` and &amp;type=`manager`.</li>
+				<li><strong>New Parameter: <a href="parameters.html#tableCheck">&amp;tableCheck</a></strong> When you run WebLoginPE, it checks for the existence of the extra user attributes table and creates it if it does not exist. In 1.3.0 it also creates some new Web Access Service Events for plugins if they do not already exist. By setting &amp;tableCheck to 0 (default is 1) you can skip these checks for a little speed bump.</li>
+				<li><strong>New Type: <a href="parameters.html#type">&amp;type=`manager`</a></strong> displays a list of web users with links to edit their profile or delete their profile. Definitely use Access Permissions on this page!</li>
+				<li>Added MODx System Events for most services. See the <a href="api.html#events">API documentation</a> for full details.</li>
+				<li>Print CSS by Dimitri Hilverda (Dimmy) added to documentation</li>
+			</ol>
+			
+			<ol><h5>09/02/2007 v. 1.2.0</h5>
+				<li>WebLoginPE will now function under PHP4. No functions or services were lost.</li>
+				<li>Case insensitive login.</li>
+				<li>Added <strong>&amp;type=`users`</strong> to view all web users and individual user profiles.</li>
+				<li>Added form input confirmation by with the use of <strong>name="<em>inputname.confirm</em>"</strong>.</li>
+				<li>WebLoginPE messages/errors are now templateable and set in a placeholder so you can display them anywhere on your page or in your forms.</li>
+				<li>email address are verified against a simple regular expression to see if they match a standard email address format.</li>
+				<li>New parameter <strong>&amp;inputHandler</strong> for super-fine control of your form's <strong>&lt;select&gt;</strong>, <strong>&lt;select multiple&gt;</strong>, <strong>&lt;input type=&quot;radio&quot; /&gt;</strong> and <strong>&lt;input type=&quot;checkbox&quot; /&gt;</strong> form elements.</li>
+			</ol>
+			
+			<ol><h5>08/23/2007 v. 1.1.1</h5>
+				<li>Added parameter <strong>&amp;pruneDays</strong> to specify number of days to wait before deleting non-activated user accounts (users who have registered but never logged in).</li>
+				<li>Modified &amp;regRequired to eliminate the need for the &amp;captcha parameter.</li>
+				<li>&amp;captcha is now depreciated.</li>
+				<li>Added extended user profile fields with the parameter &amp;customFields.</li>
+				<li>Extended profile table defaults to `web_user_attributes_extended`, but can be overridden with the &amp;customTable parameter.</li>
+				<li>Added parameter &amp;regSuccessId to redirect after successful registration.</li>
+				<li>Added parameter &amp;regSuccessPause to specify a delay (in seconds) before redirecting. Defaults to 5 seconds to give the user time to read the confirmation message.</li>
+				<li>Added parameter &amp;registerSuccessTpl to display a custom chunk instead of redirecting. (only works if &amp;regSuccessId is not set).</li>
+				<li>Added new service "viewprofile" for &amp;type=`profile` to allow users to view the profile of other users.<br />(?service=viewprofile&amp;username=Scotty%20Delicious)</li>
+				<li>Added parameter &amp;viewProfileTpl to specify a template for the new "viewprofile" service.</li>
+				<li>Added a simple JavaScript file to force IE compliance with HTML element &lt;button&gt;</li>
+				<li>I think there is more that I am forgetting.</li>
+			</ol>
+
+			<ol><h5>08/20/2007 v. 1.0.2</h5>
+				<li>Added parameter <strong>&amp;notify</strong> to specify email addresses to be notified of new user registrations.</li>
+				<li>Added parameter <strong>&amp;notifyTpl</strong> to specify notification email message body.</li>
+				<li>Added parameter <strong>&amp;notifySubject</strong> to specify notification email subject line.</li>
+				<li>Converted all PHP mail() function calls to use the PHPMailer class included with MODx.</li>
+				<li>Added "Terms of Service" agreement and checkbox to the default instant registration template.</li>
+				<li>Fixed placeholders [+user.dob+] and [+user.lastlogin+]. If they are empty or "0", the placeholder is set to "Unknown".</li>
+				<li>Fixed the Instant Login Form so that if there is an error, the fields are filled with the $_POST values so the user doesn't have to fill in all the fields again.</li>
+			</ol>
+
+			<ol><h5>08/19/2007 v. 1.0.1</h5>
+				<li>Added parameter <strong>&amp;regRequired</strong> to specify required input fields by name attribute.</li>
+				<li>Added sanity checks for chunk templates.</li>
+				<li>Added file_exists check for language file. Falls back to English (default) if language file is not found.</li>
+				<li>Added a cookie for persistent login. can be a checkbox named "rememberme" or a select named "stayloggedin".</li>
+			</ol>
+
+			<ol><h5>08/14/2007 v. 1.0</h5>
+				<li>Initial Public Release.</li>
+			</ol>
+		</div>
+		<div id="foot">
+			<p id="footmenu">
+				<a href="index.html">Home</a>
+				<a href="parameters.html">Parameters</a>
+				<a href="views.html">Views (Templates)</a>
+				<a href="forms.html">Working with Forms</a>
+				<a href="placeholders.html">Placeholders</a>
+				<a href="api.html">API</a>
+			</p>
+			<p id="credits">&copy; 2007 Scotty Delicious.</p>
+		</div>
+	</div>
+</body>
+</html>

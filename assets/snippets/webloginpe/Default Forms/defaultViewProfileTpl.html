@@ -1,0 +1,73 @@
+[+wlpe.message+]
+<table id="wlpeViewProfileTable">
+	<tr>
+		<td colspan=2 class="wlpeViewProfileHeader"><h3>Viewing the profile of "[+view.username+]":</h3></td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Username:</td>
+		<td class="wlpeViewAttributeValue">[+view.username+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Full Name:</td>
+		<td class="wlpeViewAttributeValue">[+view.fullname+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Email:</td>
+		<td class="wlpeViewAttributeValue">[+view.email+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Phone Number:</td>
+		<td class="wlpeViewAttributeValue">[+view.phone+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Mobile Phone Number:</td>
+		<td class="wlpeViewAttributeValue">[+view.mobilephone+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Fax Number:</td>
+		<td class="wlpeViewAttributeValue">[+view.fax+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">State:</td>
+		<td class="wlpeViewAttributeValue">[+view.state+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Country:</td>
+		<td class="wlpeViewAttributeValue">[+view.country+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Age:</td>
+		<td class="wlpeViewAttributeValue">[+view.age+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Gender:</td>
+		<td class="wlpeViewAttributeValue">[+view.gender+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Signature:</td>
+		<td class="wlpeViewAttributeValue">[+view.comment+]</td>
+	</tr>
+	<tr>
+		<td class="wlpeViewAttribute">Photo:</td>
+		<td class="wlpeViewAttributeValue"><img src="[+view.photo+]" alt="[+view.photo+]" title="[+view.username+]" /></td>
+	</tr>
+	<tr>
+		<td colspan="2" class="wlpeViewContact">
+			<form name="wlpeViewContactForm" method="post" action="[~[*id*]~]">
+				<fieldset id="wlpeViewContactFormFieldset">
+					<h4>Contact [+view.username+]</h4>
+					<label for"wlpeViewContactSubject" id="wlpeViewContactSubjectLabel">Subject:
+						<input type="text" id="wlpeViewContactSubject" name="subject" />
+					</label>
+					
+					<label for"wlpeViewContactMessage" id="wlpeViewContactMessageLabel">Message:
+						<textarea id="wlpeViewContactMessage" name="message"></textarea>
+					</label>
+				</fieldset>
+				<fieldset id="wlpeViewContactButtons">
+					<button type="submit" id="wlpeContactSend" name="service" value="messageuser">Send Message to [+view.username+]</button>
+				</fieldset>
+			</form>
+		</td>
+	</tr>
+</table>

@@ -1,0 +1,16 @@
+<div class="wlpeUserPage">
+	<div class="wlpeUserPagePhoto">
+		<a href = "[~[*id*]~]?service=viewprofile&username=[+view.username+]">
+			<img src="[+view.photo+]" alt="[+view.photo+]" title="[+view.username+]" height="100" width="100" />
+		</a>
+		<a href = "[~[*id*]~]?service=viewprofile&username=[+view.username+]">
+			<p class="wlpeUserPageUsername">[+view.username+]</p>
+		</a>
+	</div>
+	<div class="wlpeUserPageUserContent">           
+		<p class="wlpeUserPageAttrUsername"><span class="wlpeViewUsersUsername">Username</span>: [+view.username+]</p>
+		<p class="wlpeUserPageAttrAge"><span class="wlpeViewUsersAge">Age</span>: [+view.age+]</p>
+		<p class="wlpeUserPageAttrLastLogin"><span class="wlpeViewUsersLastLogin">Current Status</span>: [+view.status+]</p>
+		<blockquote class="wlpeUserPageAttrComment">[+view.comment+]</blockquote>
+	</div>
+</div>

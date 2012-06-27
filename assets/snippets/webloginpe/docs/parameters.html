@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>WebLoginPE: Documentation</title>
+	<script type="text/javascript" src="../js/jquery-1.1.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery.corner2.js"></script>
+	<script type="text/javascript" src="style/webloginpe.js"></script>
+	<link rel="stylesheet" href="style/webloginpe.css" type="text/css" media="screen" title="WebLoginPE [Screen]" charset="utf-8">
+	<link rel="alternate stylesheet" href="style/webloginpe.print.css" type="text/css" media="print,all" title="WebLoginPE [Print]" charset="utf-8">
+	
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="head">
+			<h1>WebLoginPE: Advanced User Management.</h1>
+			<h2>Version 1.3.0</h2>
+			<h3>By Dr. Scotty Delicious, Scientist DFPA.</h3>
+		</div>
+		<div id="select">
+			<ul id="menu">
+				<li><a href="index.html"><span>Home</span>:</a></li>
+				<li><a class="here" href="parameters.html"><span>Parameters</span></a></li>
+				<li><a href="views.html"><span>Views (Templates)</span></a></li>
+				<li><a href="forms.html"><span>Working with Forms</span></a></li>
+				<li><a href="placeholders.html"><span>Placeholders</span></a></li>
+				<li><a href="api.html"><span>API</span></a></li>
+			</ul>
+		</div>
+		<div id="content">
+			<h4>Control Parameters</h4>
+			<div id="paramList1">
+				
+				<div class="parameter">
+					<h5>&amp;lang</h5>
+					<p class="details">
+					WebLoginPE separates all language specific strings into a separate file stored in /webloginpe/lang/ (the default is english "en.php"). You can help by translating en.php into another language if you are multi-lingual.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;lang=`fr`!]
+					</div>
+				</div>
+				
+			</div>
+			<div id="paramList">
+				
+				<a name="type"></a>	
+				<div class="parameter">
+					<h5>&amp;type</h5>
+					<p class="details">
+						WebLoginPE has many functions (and each of those functions has many functions). There are six basic types. They are 'simple', 'register', 'profile', 'users', 'manager' and 'taconite'.</p>
+						<p class="details">The 'simple' WebLoginPE can handle most of the tasks involved in user management (Login, Logout, Registration, Profile editing, etc...).</p>
+						<p class="details">Type 'register' handles all the functions of creating new users. Type 'profile' allows a user to manage the details of their account (their attributes).</p>
+						<p class="details">Type 'users' displays a list of all registered users (customizable and templateable) and provides links to view the user attributes individually as well as message the user.</p>
+						<p class="details">Type 'manager' much like 'users' displays a list of the web users, but adds the ability to edit or delete any users. This should be accessible to Admins only
+					</p>
+						<p class="details">Type 'taconite' provides the functionality of WebLoginPE but squelches the output so you can handle those functions asynchronously (AJAX). The default type is 'simple'
+					</p>
+					<div class="example">
+						[!WebLoginPE? &type=`users`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;regType</h5>
+					<p class="details">
+						WebLoginPE has two types of registration, 'instant' and 'verify'. The main difference is that an 'instant' registration allows a user to choose their password and log in... well, instantly with the username and password they just chose. In regType 'verify', the applicant provides an email address and chooses a username and WebLoginPE generates a password for them, then emails it to them (using the web signup email template in the manager configuration), in effect forcing them to 'verify' that they are using a REAL email address.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`register` &amp;regType=`verify`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;regRequired</h5>
+					<p class="details">
+						WebLoginPE allows you to specify which inputs in your form are required for registration. The regRequired parameter is a comma separated list of form field "name" attributes that the user MUST fill out. If the form is submitted and one of your required fields is blank, WebLoginPE will display a message notifying the user of which required fields they left blank. If you want to verify/confirm form fields (e.g. a password field or email field), give the field a name attribute of the field name you want to confirm plus ".confirm". To confirm a password:
+					</p>
+					<div class="example">
+						&lt;input type=&quot;password&quot; name=&quot;password&quot; /&gt;<br />
+						&lt;input type=&quot;password&quot; name=&quot;password.confirm&quot; /&gt;
+					</div>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`register` &amp;regRequired=`email,username,fullname,password,formcode,tos`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;customTable, &amp;customFields</h5>
+					<p class="details">
+						For total control, WebLoginPE creates a table in your MODx database to store as many user attributes as you want. The default name for this table is 'web_user_attributes_extended', but you can override that with the customTable parameter. You can specify an unlimited amount of column names for this table using the customFields parameter.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;customTable=`my_web_users` &amp;customFields=`website,aim,msn,city,address1`!]
+					</div>
+				</div>
+				
+				<a name="prefixTable"></a>
+				<div class="parameter">
+					<h5>&amp;prefixTable</h5>
+					<p class="details">
+						WebLoginPE will create a table for storing extended user attributes, but if you have already created your own table (and specified it in &amp;customTable) and it does not use the table prefix you entered when you installed MODx, you can use &amp;prefixTable=`0` (default is 1) and WebLoginPE will not auto append the MODx table prefix to the table when it searches for it.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;customTable=`a_table_i_created` &amp;prefixTable=`0`!]
+					</div>
+				</div>
+				
+				<a name="disableServices"></a>
+				<div class="parameter">
+					<h5>&amp;disableServices</h5>
+					<p class="details">
+						This parameter will accept a comma separated list of services to disable.You can disable individual services like "deleteprofile" and "viewprofile" as well as entire types like "register" and "users".
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;disableServices=`deleteprofile,users` !]
+					</div>
+					<p class="details">
+						If you want to disable front end registration (only the admin can add users)
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;disableServices=`register` !]
+					</div>
+				</div>
+				
+				<a name="tableCheck"></a>
+				<div class="parameter">
+					<h5>&amp;tableCheck</h5>
+					<p class="details">
+						When you run WebLoginPE, it checks for the existence of the extra user attributes table and creates it if it does not exist. In 1.3.0 it also creates some new Web Access Service Events for plugins if they do not already exist. By setting &amp;tableCheck to 0 (default is 1) you can skip these checks for a little speed bump. <span class="warning">If you have not let WebLoginPE create your table and System Events yet, they will not be created.</span>
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;tableCheck=`0`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;groups</h5>
+					<p class="details">
+						You can specify which document user group your new applicants will be added to on successful registration. The parameter &amp;groups is a comma separated list of 'Web User Groups' (See "Security > Web Permissions" in the manager).
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`register` &amp;groups=`Registered Users`!]<br />
+						or, to add them to more than one group...<br />
+						[!WebLoginPE? &amp;type=`register` &amp;groups=`Cadets,New Applicants,Limited`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;notify</h5>
+					<p class="details">
+						A comma separated list of email addresses to be notified on new user registration.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`register` &amp;notify=`webmaster@yoursite.com, admin@mysite.url`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;liHomeId (the login home id)</h5>
+					<p class="details">
+						A comma separated list of document ID's to redirect the user to after successful login. WebLoginPE will loop through the list and attempt to load each page for the user. If the user does not have permission for that page WebLoginPE will try the next and so on. The user is redirected to the first document in the list that they have permission to access.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;liHomeId=`51,44,37,15`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;loHomeId (the log out home id)</h5>
+					<p class="details">
+						The document ID of the page the user should be redirected to after logging out.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;loHomeId=`4`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;regHomeId</h5>
+					<p class="details">
+						The document ID of the page containing the WebLoginPE snippet call for type register. This is useful if you have WebLoginPE in the sidebar but you want to use a full page of input forms, etc... that will not fit in a narrow side bar.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;regHomeId=`66`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;profileHomeId</h5>
+					<p class="details">
+						The document ID of the page containing the WebLoginPE snippet call for type profile. This is useful if you have WebLoginPE in the sidebar but you want to use a full page of input forms, etc... that will not fit in a narrow side bar.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;profileHomeID=`67`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;regSuccessId, &amp;regSuccessPause</h5>
+					<p class="details">
+						The document ID of the page you want the user to be redirected to after successfully registering for a new account. If unset, this is ignored and the user stays at the registration confirmation. You can specify the amount of time (in seconds) to delay before redirection using &amp;regSuccessPause. The default pause is 5 seconds.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`register` &amp;regSuccessId=`71` &amp;regSuccessPause=`3`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;userImage</h5>
+					<p class="details">
+						WebLoginPE can upload and resize an image to identify a user, kind of like an avatar. You can specify the maximum allowable file size of this image (in bytes) and its width and height (in pixels). The default is '105000,100,100' (100kb, 100px X 100px).
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`profile` &amp;userImage=`500000,250,250`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;dateFormat</h5>
+					<p class="details">
+						You can specify the string format for the date in the placeholders set by WebLoginPE. please see <a href="http://php.net/strftime">php.net/strftime</a> for details on the format. The default is '%A %B %d, %Y at %I:%M %p'.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;dateFormat=`%m-%d-%Y`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;loadJquery</h5>
+					<p class="details">
+						WebLoginPE was designed to work with jQuery and the jQuery taconite plugin, but, if you prefer to use another JavaScript library... well, that's fine too. WebLoginPE works the way you want to. If you would like to have the jQuery files loaded into the head of your template automatically, set this parameter to 'true'.  The default is 'false'
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;loadJquery=`true`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;customJs</h5>
+					<p class="details">
+						The URL to the custom JavaScript file you are using with the jQuery package. See 'example.js' to get an idea of how it works.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;customJs=`assets/snippets/webloginpe/js/example.js`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;pruneDays</h5>
+					<p class="details">
+						The number of days after which non-activated user accounts will be deleted. When a new user registers, a time stamp for the current date/time is placed in the `cachepwd` column of the `web_users` table. When they log in, the timestamp is deleted. If a user passes a false email address, or they register and never log in, the account is stale, useless, and takes up space in your database.</p>
+					<p class="details">For example: &amp;pruneDays=`30` will check the database for all accounts that have a time stamp in the cachepwd column, then check those accounts to see if the time stamp in cachepwd is older than the number of days we set in the &amp;pruneDays parameter (in this case, 30 days). If it IS older, the account is deleted and a notification is sent to the address of [(emailsender)].</p>
+					<p class="details">If this parameter is not set in your snippet call, no user pruning action will ever be taken
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;pruneDays=`7`!]
+					</div>
+				</div>
+				
+				<div class="parameter">
+					<h5>&amp;inputHandler</h5>
+					<p class="details">
+						A parameter for super-fine control of form inputs. More details and examples can be found in <a href="forms.html#inputHandler">Working with forms</a>.</p>
+					<p class="details">
+						The syntax is &amp;inputHandler=`LABEL:DOM_ID:FIELDNAME:FIELD_TYPE:Option(value),Option2(value2)`. Use double bars to separate inputs (for inputs that are not in the standard web_user_attributes table, remember to specify them in &amp;customFields.
+					</p>
+					<p class="details">
+						&amp;inputHandler loops over every option in the form field (select, select multiple, radio, or checkbox) and compares it to the entries stored in the user's table. If the user has any of the options, radios or checkboxes selected, it will output selected="selected" or checked="checked" in the fields. &amp;inputHander also sets a placeholder [+form.fieldname+] (example [+form.favorite_color+]) which includes the entire label, field, options and all.
+					</p>
+					<p class="details">
+						So in your form where you would put your label->input->etc... you just put the form placeholder. You have to use this placeholder if you want the checks checked and the selects selected.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;customFields=`website,aim,msn,address1,city,favorite_color,demographic,emailprivate,aimprivate,msnprivate` &amp;inputHandler=`Favorite Colors:userProfileFavoriteColor:favorite_color:select multiple:Red(red),Blue(blue),Green(green),Black(black),Orange(orange),Yellow(yellow)||Age Group:userDemographic:demographic:radio:Less than 13(1),14 - 18(2),19 - 30(3),31 - 40(4),41-50(5),51-65(6),65 or older(7)||Keep my email private:userProfileEmailPrivate:emailprivate:checkbox:()||Keep my AIM account private:userProfileAIMPrivate:aimprivate:checkbox:()||Keep my MSN account private:userProfileMSNPrivate:msnprivate:checkbox:()`!]
+					</div>
+					<p class="details">
+						You may have noticed the xxxprivate fields above. That is also a new feature. Lets take the email column in the attributes table for example. if you put `emailprivate` in your &amp;customFields and then assign it a checkbox in &amp;inputHandler, when a user checks that checkbox on their profile, any time another user views their profile, it will say "Private" instead of their actual email. You can do this for ANY field.
+					</p>
+				</div>
+				
+				<a name="usersList"></a>
+				<div class="parameter">
+					<h5>&amp;usersList</h5>
+					<p><strong>For use with both `user` and `manager` types.</strong></p>
+					<p class="details">
+						A parameter for controlling the list(s) of users in a WebLoginPE `users` page (formerly "View all users"). This allows you to display multiple lists of your web users (all on the same page) filtered by certain values, sorted in the order of a certain field in ascending or descending format. It is really quite flexible. The Format is as follows.
+					</p>
+					<div class="example">
+						&amp;usersList=`List Name:outerTplChunk:userTplChunk:sortField:sortOrder:filter(value),filter2()`
+					</div>
+					<p class="details">
+						Ok, let's break that down. This snippet parameter has seven distinct areas. I'll explain them one at a time.
+						<ul>
+							<li><strong>List Name</strong>: The name of the list. Should be descriptive, like "Administrators", or "Female users"</li>
+							<li><strong>outerTplChunk</strong>: The chunk name of an outer template. Basically a "List wrapper". See <a href="javascript:viewTemplateAsText('defaultUserOuterTpl')">defaultUserOuterTpl</a> as plain text.</li>
+							<li><strong>userTplChunk</strong>: The chunk name of a template to display each user. This will be repeated for every user in this list. See <a href="javascript:viewTemplateAsText('defaultUserTpl')">defaultUserTpl</a> as plain text.</li>
+							<li><strong>sortField</strong>: Any of the user attributes (including customFields) that you want to sort your list by, such as username, fullname, internalKey, etc...</li>
+							<li><strong>sortOrder</strong>: The order to display the sorted list in (ASC for ascending | DESC for descending).</li>
+							<li><strong>filter(value)</strong>: The filter section looks complex, but let me simplify. The filter can be any field in the user attributes or customTable (or the word "webgroup" or the word "online"). For the database fields, it will loop through your users and eliminate anyone who does not have data in that field.</li>
+						</ul>
+					</p>
+					<p class="details">
+						But filter(value) goes on deeper than that. It can search for a particular value too. If you used email(hotmail), it would return a list of everyone who has the string "hotmail" in their `email` column. if you used just email(), it would return everyone with ANY value in their `email` column (should be everyone, right?). Instead of providing a column to filter by, you can use the word "webgroup" and pass a web group name as it's value. For example webgroup(Registered Users) would return only people in the group "Registered Users". You could make a list of the administrators by using webgroup(Site Admins). You can also pass "online()" as a filter value and it will return a list of the users who are currently online (within the last 15 minutes). You can string these together to really filter them down too! Lets make a list called "Online Admins with Gmail accounts" using the default templates, sorted by internalKey in ascending order and filtered by, of course, must be online, must be an admin, and must have gmail in their email address
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`users` &amp;usersList=`Online Admins with Gmail accounts:default:default:internalKey:ASC:online(),webgroup(Site Admins),email(gmail)`!]
+					</div>
+					<p class="details">
+						For multiple lists on a page, you separate the lists in &amp;usersList with double pipes (||). In the first list below, I have left the entire filter area blank because I want ALL USERS, but notice that I have left the colon (:) after the sort order. This is important.
+					</p>
+					<div class="example">
+						[!WebLoginPE? &amp;type=`users` &amp;usersList=`All Users:default:default:username:ASC:||usersList=`Female Users:default:default:username:ASC:gender(2)`!]
+					</div>
+					<p class="details">
+						If you do not want to specify all this list stuff and just want to use [!WebLoginPE? &amp;type=`users`] to get a list of web users, WebLoginPE has a default list format. This is overridden when you specify &amp;usersList.
+					</p>
+					<div class="example">
+						[(site_name)] Members:default:default:username:ASC:
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		<div id="foot">
+			<p id="footmenu">
+				<a href="index.html">Home</a>
+				<a href="parameters.html">Parameters</a>
+				<a href="views.html">Views (Templates)</a>
+				<a href="forms.html">Working with Forms</a>
+				<a href="placeholders.html">Placeholders</a>
+				<a href="api.html">API</a>
+			</p>
+			<p id="credits">&copy; 2007 Scotty Delicious.</p>
+		</div>
+	</div>
+</body>
+</html>

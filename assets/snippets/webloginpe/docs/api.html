@@ -1,0 +1,627 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>WebLoginPE: Documentation</title>
+	<script type="text/javascript" src="../js/jquery-1.1.3.1.js"></script>
+	<script type="text/javascript" src="../js/jquery.corner2.js"></script>
+	<script type="text/javascript" src="style/webloginpe.js"></script>
+	<link rel="stylesheet" href="style/webloginpe.css" type="text/css" media="screen" title="WebLoginPE [Screen]" charset="utf-8">
+	<link rel="alternate stylesheet" href="style/webloginpe.print.css" type="text/css" media="print,all" title="WebLoginPE [Print]" charset="utf-8">
+	
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="head">
+			<h1>WebLoginPE: Advanced User Management.</h1>
+			<h2>Version 1.3.0</h2>
+			<h3>By Dr. Scotty Delicious, Scientist DFPA.</h3>
+		</div>
+		<div id="select">
+			<ul id="menu">
+				<li><a href="index.html"><span>Home</span>:</a></li>
+				<li><a href="parameters.html"><span>Parameters</span></a></li>
+				<li><a href="views.html"><span>Views (Templates)</span></a></li>
+				<li><a href="forms.html"><span>Working with Forms</span></a></li>
+				<li><a href="placeholders.html"><span>Placeholders</span></a></li>
+				<li><a class="here" href="api.html"><span>API</span></a></li>
+			</ul>
+		</div>
+		<div id="content">
+			<h4>The WebLoginPE API <span class="sidenote">(Application Programming Interface)</span></h4>
+			<p>
+				WebLoginPE is an Object Oriented PHP script. If you would like to extend WebLoginPE please use this document as a reference to it's API. If you are interested in extending the function of WebLoginPE through MODx Plugins, WebLoginPE invokes a <a href="#events">suite of events</a> throughout it's services that you can take advantage of.
+			</p>
+			<p>
+				Instantiation of the WebLoginPE object has 4 parameters, a Language array (required), a date format (optional), user image settings (optional), and type (optional).
+			</p>
+			
+			
+			<div class="paramList">
+				<div class="parameter">
+					<h5>Instance Variables</h5>
+					<div class="example">
+						<h6>LanguageArray</h6>
+						An array of language specific phrases.<br/>
+						<br/>
+						@var array<br/>
+						@access public<br />
+						@see __construct()<br />
+					</div>
+					
+					<div class="example">
+						<h6>Report</h6>
+						Holds a message if one was generated.
+						<br/>
+						<br/>@var string
+						<br/>@access public
+						<br/>@see FormatMessage()
+					</div>
+					
+					<div class="example">
+						<h6>liHomeId</h6>
+						A comma separated list of MODx document IDs to attempt to redirect the user to after login.
+						<br/>
+						<br/>@var string
+						<br/>@access public
+						<br/>@see login()
+						<br/>@see LoginHomePage()
+					</div>
+					
+					<div class="example">
+						<h6>loHomeId</h6>
+						The MODx document ID to redirect the user to after logout.
+						<br/>
+						<br/>@var string
+						<br/>@access public
+						<br/>@see logout()
+						<br/>@see LogoutHomePage()
+					</div>
+					
+					<div class="example">
+						<h6>Type</h6>
+						the type of WebLoginPE (simple, register, profile, or taconite)
+						<br/>
+						<br/>@var string
+						<br/>@access protected
+					</div>
+					
+					<div class="example">
+						<h6>Username</h6>
+						Value of $_POST['username'].
+						<br/>
+						<br/>@var string
+						<br/>@access protected
+					</div>
+					
+					<div class="example">
+						<h6>Password</h6>
+						Value of $_POST['password'].
+						<br/>
+						<br/>@var string
+						<br/>@access protected
+					</div>
+					
+					<div class="example">
+						<h6>User</h6>
+						The user object assembled from data queried from the web user tables
+						<br/>
+						<br/>@var array
+						<br/>@access protected
+						<br/>@see QueryDbForUser()
+					</div>
+					
+					<div class="example">
+						<h6>UserImageSettings</h6>
+						Dimensions for the user image
+						<br/>
+						<br/>@var string
+						<br/>@access protected
+						<br/>@see CreateUserImage
+					</div>
+					
+					<div class="example">
+						<h6>MessageTemplate</h6>
+						Template for messages returned by WebLoginPE
+						<br/>
+						<br/>@var string;
+						<br/>@access public
+						<br/>@see FormatMessage;
+					</div>
+					
+					<div class="example">
+						<h6>LoginErrorCount</h6>
+						Number of failed logins
+						<br/>
+						<br/>@var string
+						<br/>@access protected
+						<br/>@see Authenticate
+					</div>
+					
+					<div class="example">
+						<h6>CustomTable</h6>
+						Full table name of the custom extended user attributes table.
+						<br/>
+						<br/>@var string
+						<br/>@access protected
+						<br/>@see CustomTable
+					</div>
+					
+					<div class="example">
+						<h6>CustomFields</h6>
+						An array of column names for the extended user attributes table.
+						<br/>
+						<br/>@var array
+						<br/>@access protected
+						<br/>@see CustomTable
+					</div>
+					
+					<div class="example">
+						<h6>DateFormat</h6>
+						PHP strftime() format for dates in placeholders
+						<br/>
+						<br/>@var string
+						<br/>@access protected
+						<br/>@see PlaceHolders
+					</div>
+					
+				</div>
+			</div>
+			
+			<a name="events" id="events"></a>
+			<div class="paramList">
+				<div class="parameter">
+					
+					<h5>Web Access Service Events</h5>
+					
+					<div class="example">
+						<h6>OnBeforeAddToGroup</h6>
+						<div class="example">
+							Invoked immediately BEFORE a registrant is added to the groups specified in &amp;groups. This event is useful if you need to add the user to an additional group, perhaps a mailing list group based on the value of a checkbox. The parameter passed in this event is an array, $GLOBAL['groups'], which you can modify with a plugin before the user is added.
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnBeforeWebLogin</h6>
+						<div class="example">
+							Invoked immediately BEFORE a user logs in. The parameters in this event are 'username', 'password', 'rememberme' and 'stayloggedin'.
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnWebAuthentication</h6>
+						<div class="example">
+							Invoked DURING login when authentication is verified. WebLoginPE uses industry standard techniques to authenticate a user, but, if you have your own authentication schematic, or you want to verify more than just "username" and "password" (for example CAPTCHA or retina scan... j/k), you can use a plugin tied to this event. WebLoginPE will first try to pass authentication to this plugin. If there is no response, it will use it's own authentication. Parameters are 'internalKey', 'username', 'form_password', 'db_password', 'rememberme', and 'stayloggedin'.
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnWebLogin</h6>
+						<div class="example">
+							Invoked immediately AFTER a user logs in. The parameter is an array including ALL the users attributes and extended attributes.
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnBeforeWebSaveUser</h6>
+						<div class="example">
+							Invoked BEFORE user attributes are saved to the DB. This is invoked in both Register() AND SaveUserProfile(). Parameters are 'Attributes' and 'ExtendedFields', so... all the users info.
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnWebSaveUser</h6>
+						<div class="example">
+							Invoked AFTER a user is saved to the DB. This is invoked in both Register() AND SaveUserProfile(). Parameters are 'mode' (new | update) and 'user' (an array of ALL the users attributes).
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnWebChangePassword</h6>
+						<div class="example">
+							Invoked AFTER a user changes their password. This is invoked in ActivateUser() (when a user forgot their password, gets it reset and sets a new one.), and in SaveUserProfile() IF the user's password is changed. Parameters are 'internalKey', 'username', and 'password' (the NEW password).
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnViewUserProfile</h6>
+						<div class="example">
+							Invoked EACH TIME a user's profile is viewed. This event could be useful for tracking profile hits. Parameters are 'internalKey' (the internalKey of the user who's profile is being viewed), 'username' (that user's username), 'viewerKey' (the internalKey of the viewer), 'viewername' (the username of the viewer).
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnWebDeleteUser</h6>
+						<div class="example">
+							Invoked When a user account/profile is deleted. You could have a plugin bound to this event that emails the administrator when a user is deleted??? Parameters are 'internalKey', 'username', and 'timestamp'.
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnBeforeWebLogout</h6>
+						<div class="example">
+							Invoked BEFORE a logged in user logs out. Parameters are 'userid' (the internalKey, kept for backwards compatibility with Raymond's original weblogin snippet), 'internalKey' (duh...), and 'username'.
+						</div>
+					</div>
+					
+					<div class="example">
+						<h6>OnWebLogout</h6>
+						<div class="example">
+							Invoked AFTER a logged in user logs out. Same parameters as "OnBeforeWebLogout", just fired AFTER logout.
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="paramList">
+				<div class="parameter">
+					<h5>Public Methods</h5>
+					
+					<div class="example">
+						<h6>__construct( array $LanguageArray ) <span class="sidenote">&amp; WebLoginPE()</span></h6>
+						WebLoginPE Class Constructor
+						<br/>
+						<br/>@param array $LanguageArray An array of language specific strings.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>FormatMessage( string $message )</h6>
+						Sets a value for $this->Report which is set in the placeholder [+wlpe.message+].
+						<br/>This function is public and can be used to format a message for the calling script.
+						<br/>
+						<br/>@param string $message 
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>Login( string $type, string $liHomeId )</h6>
+						Perform all the necessary functions to establish a secure user session with permissions
+						<br/>
+						<br/>@param string $type If type = 'taconite' do not call $this->LoginHomePage().
+						<br/>@param string $liHomeId Comma separated list of MODx document ID's to attempt to redirect to after login.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>AutoLogin()</h6>
+						AutoLogin checks for a user cookie and logs the user in automatically
+						<br/>
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>Logout()</h6>
+						Destroy the user session and redirect or refresh.
+						<br/>
+						<br/>@param string $type If type = 'taconite' do not call $this->LogoutHomePage().
+						<br/>@param int $loHomeId MODx document ID to redirect to after logout.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>CustomTable( string $table, string $fields )</h6>
+						Custom table checks for the specified extended user attributes table and creates it if it does not exist.
+						<br/>It also checks for custom column names and inserts them into the extended user attributes table if they do not exist.
+						<br/>
+						<br/>@param string $table The name of the custom table (Default is "web_user_attributes_extended")
+						<br/>@param string $fields A comma separated list of column names for the custom table.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>Register( string $regType, string $groups, string $regRequired, string $notify, string $notifyTpl, string $notifySubject )</h6>
+						Inserts a new user into the database.
+						<br/>
+						<br/>@param string $regType 'instant' or 'verify'
+						<br/>@param string $groups which webgroup('s) should the new user be added to.
+						<br/>@param string $regRequired Comma separated list of required fields.
+						<br/>@param string $notify Comma separated list of emails to notify of new registrations.
+						<br/>@param string $notifyTpl Template for email notification message.
+						<br/>@param string $notifySubject Subject line for email notification.
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>PruneUsers( int $pruneDays )</h6>
+						Removes non-activated user accounts older than the number of days specified in $pruneDays.
+						<br/>
+						<br/>@param int $pruneDays The number of days to wait before removing non-activated users.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>Template( string $chunk )</h6>
+						Template takes a template parameter and checks to see if it is a chunk.
+						<br/>If it is a chunk, returns the contents of the chunk, if it is not a chunk,
+						<br/>tries to find a file of that name (or path) and gets its contents. If it
+						<br/>is not a chunk or a file, returns the value passed as the parameter $chunk.
+						<br/>
+						<br/>@param string $chunk The name of a chunk to get.
+						<br/>@return string HTML block.
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>SaveUserProfile()</h6>
+						Updates the relevant tables for a given internalKey.
+						<br/>
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>RemoveUserProfile()</h6>
+						Deletes the table entries in the relevant tables for a given internalKey.
+						<br/>
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>ViewAllUsers( string $userTemplate )</h6>
+						View all users stored in the web_users table.
+						<br/>
+						<br/>@param string $userTemplate HTML template to display each web user.
+						<br/>@return string HTML block containing all the users
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>ViewUserProfile( string $username )</h6>
+						ViewUserProfile displays sets the placeholders for the attributes of another site user
+						<br/>
+						<br/>@param string $username The username of the other user's profile to view
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>SendMessageToUser()</h6>
+						SendMessageToUser allows site users to send email messages to each other.
+						<br/>
+						<br/>@return void.
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>ResetPassword()</h6>
+						Sets a random password | random key in the web_users.cachepwd field,
+						<br/>then sends an email to the user with instructions and a URL to activate.
+						<br/>
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>ActivateUser()</h6>
+						Activates the user after they have requested to have their password reset.
+						<br/>
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>PlaceHolders( string $dateFormat, array $inputHandler, string $UserImageSettings, string $MessageTemplate )</h6>
+						Sets place holders using the MODx method setPlaceholder() for fields in web_user_attributes.
+						<br/>
+						<br/>@param string $dateFormat The strftime() format set in the calling script.
+						<br/>@param array $inputHandler An array of inputs to... uhh... handle?
+						<br/>@param string $UserImageSettings The specifications for the user image.
+						<br/>@param string $MessageTemplate The template for $this->Report.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>RegisterScripts( string $customJs )</h6>
+						Uses the MODx regClientStartupScript() method to load the jQuery scripts for taconite.
+						<br/>Optionally, it can load a custom js file (passed as a parameter.) if needed.
+						<br/>
+						<br/>@param string $customJs URL to a custom javascript file to be loaded.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+				</div>
+			</div>
+			
+			<div class="paramList">
+				<div class="parameter">
+					<h5>Protected Methods</h5>
+					
+					<div class="example">
+						<h6>OnBeforeWebLogin()</h6>
+						Invokes the MODx event OnBeforeWebLogin.
+						<br/>
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>Authenticate()</h6>
+						Authenticates the user or sets failure counts on error.
+						<br/>
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>OnBeforeWebLogout()</h6>
+						Invokes the MODx event OnBeforeWebLogout
+						<br/>
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>OnWebLogout()</h6>
+						Invokes the MODx event OnWebLogout
+						<br/>
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>UserDocumentGroups()</h6>
+						Find the web groups that this user is a member of.
+						<br/>
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>LoginHomePage()</h6>
+						 Redirect user to specified login page ($this->liHomeId).
+						<br/>$this->liHomeId is an array, each document ID is queried.
+						<br/>The user is redirected to the first page that they have permission to view.
+						<br/> 
+						<br/>If $this->liHomeId is empty, refresh the current page.
+						<br/>
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>LogoutHomePage()</h6>
+						 Redirect user to specified logout page ($this->loHomeId).
+						<br/>If $this->loHomeId is empty, refresh the current page.
+						<br/>
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>SessionHandler( string $directive )</h6>
+						 Starts the user session on login success. Destroys session on error or logout.
+						<br/>
+						<br/>@param string $directive ('start' or 'destroy')
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>QueryDbForUser( string $Username )</h6>
+						 Queries the web_users table for $_POST['username'].
+						<br/>
+						<br/>@param string $Username The username of the user to query for.
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>UserIsBlocked()</h6>
+						Queries the web_user_attributes table to see if this user should
+						<br/>be blocked. If the user IS blocked, prevent them from logging in.
+						<br/>
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>MakeDateForDb( string $date )</h6>
+						Returns a UNIX timestamp for the string provided.
+						<br/>
+						<br/>@param string $date A date in the format MM-DD-YYY
+						<br/>@return int Returns a UNIX timestamp for the date provided.
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>CreateUserImage()</h6>
+						Creates an image for the user profile from a user uploaded image.
+						<br/>This image is renamed to the username and moved to the webloginpe/userimages/ folder.
+						<br/>The URL to this image is returned to be stored in the web_user_attributes table.
+						<br/>
+						<br/>@return string A URL to the user image created.
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>StringForGenderInt( int $genderInt )</h6>
+						Returns a string ('Male', 'Female', or 'Unknown') for the integer $genderInt (integer stored in web_user_attributes).
+						<br/>
+						<br/>@param int $genderInt (0, 1, or 2)
+						<br/>@return string (0 = 'Unknown', 1 = 'Male', 2 = 'Female') 
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>StringForCountryInt( int $countryInt )</h6>
+						Returns a string (the name of the country) for the integer $countryInt (integer stored in web_user_attributes).
+						<br/>
+						<br/>@param int $countryInt 
+						<br/>@return string The name of the country
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>ValidateEmail( string $Email )</h6>
+						Validate an email address by regex and MX reccord
+						<br/>
+						<br/>@param string $Email An email address.
+						<br/>@return void
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>GeneratePassword( int $length )</h6>
+						Generate a random password of a specified number of characters. [a-z][A-Z][2-9].
+						<br/>
+						<br/>@param int $length 
+						<br/>@return void
+						<br/>@author Raymond Irving
+						<br/>@author Scotty Delicious
+					</div>
+					
+					<div class="example">
+						<h6>FetchAll( data source $ds )</h6>
+						Fetch all rows in a data source recursively
+						<br/>
+						<br/>@param string $ds A data source.
+						<br/>@return array $all An array of the data source
+						<br/>@author Scotty Delicious
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+		
+		
+		<div id="foot">
+			<p id="footmenu">
+				<a href="index.html">Home</a>
+				<a href="parameters.html">Parameters</a>
+				<a href="views.html">Views (Templates)</a>
+				<a href="forms.html">Working with Forms</a>
+				<a href="placeholders.html">Placeholders</a>
+				<a href="api.html">API</a>
+			</p>
+			<p id="credits">&copy; 2007 Scotty Delicious.</p>
+		</div>
+	</div>
+</body>
+</html>
