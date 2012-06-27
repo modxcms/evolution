@@ -1082,17 +1082,8 @@ class DocumentParser {
     }
 
     function executeParser() {
-        //error_reporting(0);
-        if (version_compare(phpversion(), "5.0.0", ">="))
-            set_error_handler(array (
-                & $this,
-                "phpError"
-            ), E_ALL);
-        else
-            set_error_handler(array (
-                & $this,
-                "phpError"
-            ));
+
+	set_error_handler(array (&$this, 'phpError'), error_reporting());
 
         $this->db->connect();
 
@@ -2683,6 +2674,14 @@ class DocumentParser {
         if (error_reporting() == 0 || $nr == 0 || ($nr == 8 && $this->stopOnNotice == false)) {
             return true;
         }
+        if ($nr & (E_DEPRECATED | E_USER_DEPRECATED)) { // TimGS. Handle depracated functions according to config.
+                switch ($this->config['error_handling_depracated']) {
+                        case 1:
+                        	$this->logEvent(29,2,$text.'; File: '.$file.'; Line: '.$line);
+                        case 0:
+                                return true;
+                }
+        }
         if (is_readable($file)) {
             $source= file($file);
             $source= htmlspecialchars($source[$line -1]);
@@ -2695,7 +2694,7 @@ class DocumentParser {
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '') {
 
         $version= isset ($GLOBALS['version']) ? $GLOBALS['version'] : '';
-		$release_date= isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
+        $release_date= isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
         $parsedMessageString= "
               <html><head><title>MODx Content Manager $version &raquo; $release_date</title>
               <style>TD, BODY { font-size: 11px; font-family:verdana; }</style>

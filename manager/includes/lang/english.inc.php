@@ -1081,4 +1081,8 @@ $_lang["yourinfo_role"] = 'Your role is:';
 $_lang["yourinfo_title"] = 'Your info';
 $_lang["yourinfo_total_logins"] = 'Total number of logins:';
 $_lang["yourinfo_username"] = 'You are logged in as:';
-?>
+$_lang['error_handling_depracated_label'] = 'Depracated PHP functions';
+$_lang['error_handling_depracated_0'] = 'No error reporting';
+$_lang['error_handling_depracated_1'] = 'Log under Reports,System Events';
+$_lang['error_handling_depracated_2'] = 'Throw an error and halt';
+
