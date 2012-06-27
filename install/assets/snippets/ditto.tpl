@@ -5,7 +5,7 @@
  * Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more
  *
  * @category 	snippet
- * @version 	2.1.0
+ * @version 	2.1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
  * @internal	@modx_category Content
@@ -18,6 +18,7 @@
  * 
  * Author: 
  *      Mark Kaplan for MODx CMF
+ *	This version modified by Tim Spencer in 2012 (see changelog.txt)
 */
 
 //---Core Settings---------------------------------------------------- //

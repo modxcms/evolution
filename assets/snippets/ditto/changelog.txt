@@ -527,3 +527,8 @@
 
 [2008-2-09: REVISION 0000]
 [CHANGED] Version number to 2.1.0
+
+[2012-6-26]
+[FIXED] ditto::BuildURL improved
+[CHANGED] Version number to 2.1.1
+

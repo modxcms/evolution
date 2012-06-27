@@ -1035,24 +1035,32 @@ class ditto {
 	// Build a URL with regard to Ditto ID
 	// ---------------------------------------------------
 	
+	// Updated by TimGS 27/6/2012 to
+	//	a) handle magic quotes
+	//	b) not crash if an array is in the URL (but arrays will still not be reproduced in the new URL - that is still a todo)
+	//	c) use rawurlencode()
+	
 	function buildURL($args,$id=false,$dittoIdentifier=false) {
 		global $modx, $dittoID;
 			$dittoID = ($dittoIdentifier !== false) ? $dittoIdentifier : $dittoID;
 			$query = array();
 			foreach ($_GET as $param=>$value) {
-				if ($param != 'id' && $param != 'q') {
-					$query[htmlspecialchars($param, ENT_QUOTES)] = htmlspecialchars($value, ENT_QUOTES);
+				if ($param != 'id' && $param != 'q' && is_string($value)) {
+					if (get_magic_quotes_gpc()) {
+						$value = stripslashes($value);
+					}
+					$query[htmlspecialchars($param, ENT_QUOTES)] = rawurlencode($value);
 				}
 			}
 			if (!is_array($args)) {
 				$args = explode("&",$args);
 				foreach ($args as $arg) {
 					$arg = explode("=",$arg);
-					$query[$dittoID.$arg[0]] = urlencode(trim($arg[1]));
+					$query[$dittoID.$arg[0]] = rawurlencode(trim($arg[1]));
 				}
 			} else {
 				foreach ($args as $name=>$value) {
-					$query[$dittoID.$name] = urlencode(trim($value));
+					$query[$dittoID.$name] = rawurlencode(trim($value));
 				}
 			}
 			$queryString = "";
