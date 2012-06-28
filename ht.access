@@ -25,6 +25,8 @@ Order allow,deny
 Deny from all
 </Files>
 
+# Block *~ backup files
+RewriteRule ^(.*)~+$ $1
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
 #RewriteCond %{HTTP_HOST} .
