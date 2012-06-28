@@ -5,6 +5,9 @@
 #php_flag zlib.output_compression On
 #php_value zlib.output_compression_level 5
 
+# Block directory listings
+IndexIgnore *
+
 Options +FollowSymlinks
 RewriteEngine On
 RewriteBase /
@@ -21,6 +24,7 @@ RewriteRule \.git - [F,L]
 Order allow,deny
 Deny from all
 </Files>
+
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
 #RewriteCond %{HTTP_HOST} .
