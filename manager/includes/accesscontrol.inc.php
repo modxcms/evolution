@@ -112,10 +112,11 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
 	// load template file
-    $tplFile = $base_path.'assets/templates/manager/login.html';
-    $handle = fopen($tplFile, "r");
+	$tplFile = $base_path.'manager/media/style/'.$modx->config['manager_theme'].'/html/login.html'; // Moved out of assets/templates/manager (TimGS)
+	$handle = fopen($tplFile, 'r');
 	$tpl = fread($handle, filesize($tplFile));
 	fclose($handle);
+	$tpl = str_replace('[+manager_theme_url+]', "media/style/{$modx->config['manager_theme']}/", $tpl);
 
     // merge placeholders
     $tpl = $modx->mergePlaceholderContent($tpl);

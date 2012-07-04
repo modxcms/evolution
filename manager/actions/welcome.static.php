@@ -209,15 +209,17 @@ if(is_array($evtOut)) {
 }
 
 // load template file
-$customWelcome = $base_path.'manager/media/style/'.$modx->config['manager_theme'] .'/welcome.html';
-if( is_readable($customWelcome) ) {
-    $tplFile = $customWelcome;
+$customWelcome = $base_path.'manager/media/style/'.$modx->config['manager_theme'] .'/welcome.html'; // WARNING: Retained for backwards compatability but DEPRACATED.
+if (is_readable($customWelcome)) {
+	$tplFile = $customWelcome;
 } else {
-    $tplFile = $base_path.'assets/templates/manager/welcome.html';
+	$tplFile = $base_path.'manager/media/style/'.$modx->config['manager_theme'].'/html/welcome.html'; // Moved out of assets/templates/manager (TimGS)
 }
+
 $handle = fopen($tplFile, "r");
 $tpl = fread($handle, filesize($tplFile));
 fclose($handle);
+$tpl = str_replace('[+manager_theme_url+]', "media/style/{$modx->config['manager_theme']}/", $tpl);
 
 // merge placeholders
 $tpl = $modx->mergePlaceholderContent($tpl);

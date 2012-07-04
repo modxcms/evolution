@@ -19,10 +19,11 @@ if($_REQUEST['a']!='8' && isset($_SESSION['mgrValidated'])){
     $modx->setPlaceholder('logouturl',$logouturl);
 
     // load template file
-    $tplFile = $base_path.'assets/templates/manager/manager.lockout.html';
+    $tplFile = $base_path.'manager/media/style/'.$modx->config['manager_theme'].'/html/manager.lockout.html';  // Moved out of assets/templates/manager (TimGS)
     $handle = fopen($tplFile, "r");
     $tpl = fread($handle, filesize($tplFile));
     fclose($handle);
+    $tpl = str_replace('[+manager_theme_url+]', "media/style/{$modx->config['manager_theme']}/", $tpl);
 
     // merge placeholders
     $tpl = $modx->mergePlaceholderContent($tpl);
