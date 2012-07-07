@@ -3,7 +3,8 @@
  * Message Quit Template
  * 
  */
-if(IN_MANAGER_MODE!=true && IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 
 $parsedMessageString = "
 <html><head><title>MODx Content Manager $version &raquo; $release_date</title>
