@@ -55,6 +55,11 @@ $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
 
+define('CMS_DOMAIN', 'clippercms.org');
+define('CMS_NAME', 'ClipperCMS');
+define('CMS_RELEASE_CODE', '12.09');
+define('CMS_RELEASE_NAME', 'Rainbow');
+
 // harden it
 require_once('./includes/protect.inc.php');
 
