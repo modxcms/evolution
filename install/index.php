@@ -49,9 +49,9 @@ if (!$_SESSION['test']) {
 
 }
 
-$moduleName = "MODx";
-$moduleVersion = $modx_branch.' '.$modx_version;
-$moduleRelease = $modx_release_date;
+$moduleName = CMS_NAME;
+$moduleVersion = CMS_RELEASE_VERSION;
+$moduleRelease = CMS_RELEASE_DATE;
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 
