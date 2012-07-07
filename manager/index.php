@@ -107,8 +107,8 @@ define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
 // include_once config file
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
-    echo "<h3>Unable to load configuration settings</h3>";
-    echo "Please run the MODx <a href='../install'>install utility</a>";
+    echo '<h3>Unable to load configuration settings</h3>';
+    echo 'Please run the '.CMS_NAME.' <a href="../install">install utility</a>';
     exit;
 }
 
