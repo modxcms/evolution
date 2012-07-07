@@ -201,7 +201,7 @@ if ($moduleSQLBaseFile) {
 echo "<p>" . $_lang['writing_config_file'];
 $configString = '<?php
 /**
- * MODx Configuration file
+ * ClipperCMS Configuration file
  */
 $database_type = \'mysql\';
 $database_server = \'' . $database_server . '\';

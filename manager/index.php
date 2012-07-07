@@ -55,11 +55,8 @@ $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
 
-define('CMS_DOMAIN', 'clippercms.org');
-define('CMS_NAME', 'ClipperCMS');
-define('CMS_RELEASE_VERSION', '1.1');
-define('CMS_RELEASE_NAME', 'Rainbow');
-define('CMS_RELEASE_DATE', '30th September 2012');
+// include version info
+include_once "version.inc.php";
 
 // harden it
 require_once('./includes/protect.inc.php');
@@ -157,9 +154,6 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 
 // send the charset header
 header('Content-Type: text/html; charset='.$modx_manager_charset);
-
-// include version info
-include_once "version.inc.php";
 
 // accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
 include_once "accesscontrol.inc.php";

@@ -103,7 +103,7 @@ echo "<p>".$_lang['checking_if_config_exist_and_writable'];
 if (!file_exists("../manager/includes/config.inc.php")) {
     // make an attempt to create the file
     @ $hnd = fopen("../manager/includes/config.inc.php", 'w');
-    @ fwrite($hnd, "<?php //MODx configuration file ?>");
+    @ fwrite($hnd, "<?php //Clipper configuration file ?>");
     @ fclose($hnd);
 }
 $isWriteable = is_writable("../manager/includes/config.inc.php");
