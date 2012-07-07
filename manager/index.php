@@ -57,8 +57,9 @@ define("IN_MANAGER_MODE", "true");  // we use this to make sure files are access
 
 define('CMS_DOMAIN', 'clippercms.org');
 define('CMS_NAME', 'ClipperCMS');
-define('CMS_RELEASE_CODE', '12.09');
+define('CMS_RELEASE_VERSION', '1.1');
 define('CMS_RELEASE_NAME', 'Rainbow');
+define('CMS_RELEASE_DATE', '30th September 2012');
 
 // harden it
 require_once('./includes/protect.inc.php');
