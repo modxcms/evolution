@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != 'true') exit();
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 if (!$modx->hasPermission('edit_module')) {
 	$e->setError(3);

@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != 'true') exit();
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 

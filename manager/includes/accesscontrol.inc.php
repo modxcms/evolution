@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != 'true') exit();
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 //		if (isset($_COOKIE[session_name()])) {

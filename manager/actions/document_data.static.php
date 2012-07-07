@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE != 'true') exit();
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 if (isset($_REQUEST['id']))
         $id = (int)$_REQUEST['id'];
