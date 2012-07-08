@@ -23,7 +23,7 @@ if($_REQUEST['a']!='8' && isset($_SESSION['mgrValidated'])){
     $handle = fopen($tplFile, "r");
     $tpl = fread($handle, filesize($tplFile));
     fclose($handle);
-    $tpl = str_replace('[+manager_theme_url+]', "media/style/{$modx->config['manager_theme']}/", $tpl);
+    $modx->setPlaceholder('manager_theme_url', "media/style/{$modx->config['manager_theme']}/");
 
     // merge placeholders
     $tpl = $modx->mergePlaceholderContent($tpl);
