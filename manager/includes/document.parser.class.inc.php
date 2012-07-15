@@ -1650,10 +1650,10 @@ class DocumentParser {
     function getVersionData() {
         include $this->config["base_path"] . "manager/includes/version.inc.php";
         $v= array ();
-        $v['version']= $modx_version;
-        $v['branch']= $modx_branch;
-        $v['release_date']= $modx_release_date;
-        $v['full_appname']= $modx_full_appname;
+        $v['version']= CMS_RELEASE_VERSION;
+        $v['branch']= CMS_NAME;
+        $v['release_date']= CMS_RELEASE_DATE;
+        $v['full_appname']= CMS_FULL_APPNAME;
         return $v;
     }
 
