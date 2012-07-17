@@ -277,7 +277,7 @@ switch ($_POST['mode']) {
 			require ('hash.inc.php');
 			$HashHandler = new HashHandler(CLIPPER_HASH_PREFERRED, $modx);
 			$Hash = $HashHandler->generate($newpassword);
-			$updatepasswordsql = ', hashtype='.CLIPPER_HASH_PREFERRED.', salt=\''.$Hash->salt.'\', password=\''.$Hash->hash.'\'';
+			$updatepasswordsql = ', hashtype='.CLIPPER_HASH_PREFERRED.', salt=\''.$modx->db->escape($Hash->salt).'\', password=\''.$modx->db->escape($Hash->hash).'\'';
 		}
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
