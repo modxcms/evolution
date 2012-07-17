@@ -77,7 +77,9 @@ if($limit==0 || $limit>1) {
 $row = mysql_fetch_assoc($rs);
 
 $internalKey            = $row['internalKey'];
-$dbasePassword          = $row['password'];
+$hashtype               = $row['hashtype'];
+$salt                   = $row['salt'];
+$hash                   = $row['password'];
 $failedlogins           = $row['failedlogincount'];
 $blocked                = $row['blocked'];
 $blockeduntildate       = $row['blockeduntil'];
@@ -163,14 +165,16 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                             "userid"        => $internalKey,
                             "username"      => $username,
                             "userpassword"  => $givenPassword,
-                            "savedpassword" => $dbasePassword,
+                            "savedpassword" => $hash,
                             "rememberme"    => $rememberme
                         ));
 
 // check if plugin authenticated the user
 if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
     // check user password - local authentication
-    if($dbasePassword != md5($givenPassword)) {
+    require('hash.inc.php');
+    $HashHandler = new HashHandler($hashtype, $modx);
+    if(!$HashHandler->check($givenPassword, $salt, $hash)) {
             jsAlert($e->errors[901]);
             $newloginerror = 1;
     }
