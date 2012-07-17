@@ -76,6 +76,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
 CREATE TABLE IF NOT EXISTS `{PREFIX}manager_users` (
   `id` int(10) NOT NULL auto_increment,
   `username` varchar(100) NOT NULL default '',
+  `hashtype` smallint NOT NULL default 0,
+  `salt` varchar(40) NOT NULL default '',
   `password` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
