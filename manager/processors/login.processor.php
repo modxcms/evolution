@@ -36,6 +36,9 @@ include_once "log.class.inc.php";
 // include the crypto thing
 include_once "crypt.class.inc.php";
 
+// include the hashing classes
+require('hash.inc.php');
+
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
@@ -77,7 +80,7 @@ if($limit==0 || $limit>1) {
 $row = mysql_fetch_assoc($rs);
 
 $internalKey            = $row['internalKey'];
-$hashtype               = $row['hashtype'];
+$hashtype               = (int)$row['hashtype'];
 $salt                   = $row['salt'];
 $hash                   = $row['password'];
 $failedlogins           = $row['failedlogincount'];
@@ -172,7 +175,6 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
 // check if plugin authenticated the user
 if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
     // check user password - local authentication
-    require('hash.inc.php');
     $HashHandler = new HashHandler($hashtype, $modx);
     if(!$HashHandler->check($givenPassword, $salt, $hash)) {
             jsAlert($e->errors[901]);
@@ -220,6 +222,7 @@ $_SESSION['mgrShortname']=$username;
 $_SESSION['mgrFullname']=$fullname;
 $_SESSION['mgrEmail']=$email;
 $_SESSION['mgrValidated']=1;
+$_SESSION['mgrHashtype']=$hashtype;
 $_SESSION['mgrInternalKey']=$internalKey;
 $_SESSION['mgrFailedlogins']=$failedlogins;
 $_SESSION['mgrLastlogin']=$lastlogin;
@@ -287,8 +290,7 @@ if(isset($id) && $id>0) {
     $header = 'Location: '.$modx->makeUrl($id,'','','full');
     if($_POST['ajax']==1) echo $header;
     else header($header);
-}
-else {
+} else {
     $header = 'Location: '.$modx->config['site_url'].'manager/';
     if($_POST['ajax']==1) echo $header;
     else header($header);

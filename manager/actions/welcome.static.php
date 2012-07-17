@@ -229,5 +229,10 @@ if ($js= $modx->getRegisteredClientScripts()) {
 	$tpl .= $js;
 }
 
+require('hash.inc.php');
+if ($_SESSION['mgrHashtype'] != CLIPPER_HASH_PREFERRED) {
+	echo '<p style="padding: 2em; color: #dd1d1d" class="warning"><strong>We recommend that you <a href="index.php?a=28">change your password now</a> to take advantage of our security improvements.</p>';
+}
+
 echo $tpl;
 ?>
