@@ -205,7 +205,7 @@ function confirmLangChange(el, lkey, elupd){
         <table border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td>
-              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : 'My '.CMS_NAME.' Site'; ?>" /></td>
             </tr>
             <tr>
               <td width="200">&nbsp;</td>

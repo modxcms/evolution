@@ -55,6 +55,9 @@ $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
 
+// include version info
+include_once ('./includes/version.inc.php');
+
 // harden it
 require_once('./includes/protect.inc.php');
 
@@ -102,8 +105,8 @@ define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
 // include_once config file
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
-    echo "<h3>Unable to load configuration settings</h3>";
-    echo "Please run the MODx <a href='../install'>install utility</a>";
+    echo '<h3>Unable to load configuration settings</h3>';
+    echo 'Please run the '.CMS_NAME.' <a href="../install">install utility</a>';
     exit;
 }
 
@@ -151,9 +154,6 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 
 // send the charset header
 header('Content-Type: text/html; charset='.$modx_manager_charset);
-
-// include version info
-include_once "version.inc.php";
 
 // accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
 include_once "accesscontrol.inc.php";

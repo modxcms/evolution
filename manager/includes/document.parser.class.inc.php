@@ -1,6 +1,6 @@
 <?php
 /**
- *	MODx Document Parser
+ *	ClipperCMS Document Parser
  *	Function: This class contains the main document parsing functions
  *
  */
@@ -1650,10 +1650,10 @@ class DocumentParser {
     function getVersionData() {
         include $this->config["base_path"] . "manager/includes/version.inc.php";
         $v= array ();
-        $v['version']= $modx_version;
-        $v['branch']= $modx_branch;
-        $v['release_date']= $modx_release_date;
-        $v['full_appname']= $modx_full_appname;
+        $v['version']= CMS_RELEASE_VERSION;
+        $v['branch']= CMS_NAME;
+        $v['release_date']= CMS_RELEASE_DATE;
+        $v['full_appname']= CMS_FULL_APPNAME;
         return $v;
     }
 
@@ -2696,7 +2696,7 @@ class DocumentParser {
         $version= isset ($GLOBALS['version']) ? $GLOBALS['version'] : '';
         $release_date= isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
         $parsedMessageString= "
-              <html><head><title>MODx Content Manager $version &raquo; $release_date</title>
+              <html><head><title>".CMS_NAME." Content Manager $version &raquo; $release_date</title>
               <style>TD, BODY { font-size: 11px; font-family:verdana; }</style>
               <script type='text/javascript'>
               function copyToClip()
@@ -2709,14 +2709,14 @@ class DocumentParser {
               </head><body>
               ";
         if ($is_error) {
-            $parsedMessageString .= "<h3 style='color:red'>&laquo; MODx Parse Error &raquo;</h3>
+            $parsedMessageString .= "<h3 style='color:red'>&laquo; ".CMS_NAME." Parse Error &raquo;</h3>
                     <table border='0' cellpadding='1' cellspacing='0'>
-                    <tr><td colspan='3'>MODx encountered the following error while attempting to parse the requested resource:</td></tr>
+                    <tr><td colspan='3'>".CMS_NAME." encountered the following error while attempting to parse the requested resource:</td></tr>
                     <tr><td colspan='3'><b style='color:red;'>&laquo; $msg &raquo;</b></td></tr>";
         } else {
-            $parsedMessageString .= "<h3 style='color:#003399'>&laquo; MODx Debug/ stop message &raquo;</h3>
+            $parsedMessageString .= "<h3 style='color:#003399'>&laquo; ".CMS_NAME." Debug/ stop message &raquo;</h3>
                     <table border='0' cellpadding='1' cellspacing='0'>
-                    <tr><td colspan='3'>The MODx parser recieved the following debug/ stop message:</td></tr>
+                    <tr><td colspan='3'>The ".CMS_NAME." parser recieved the following debug/ stop message:</td></tr>
                     <tr><td colspan='3'><b style='color:#003399;'>&laquo; $msg &raquo;</b></td></tr>";
         }
 

@@ -50,7 +50,7 @@ if (file_exists("../manager/includes/config.inc.php")) {
 	</div>
 	<hr />
   	<div>
-		<div class="installImg"><img src="img/install_adv.png" alt="advanced MODx upgrade" /></div>
+		<div class="installImg"><img src="img/install_adv.png" alt="advanced upgrade" /></div>
 		<div class="installDetails">
 			<h3><input type="radio" name="installmode" id="installmode3" value="2" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='2' || $upgradeable === 2) ? 'checked="checked"':'' ?> />
 			<label for="installmode3" class="nofloat"><?php echo $_lang['installation_upgrade_advanced']?></label></h3>
