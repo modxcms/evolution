@@ -577,13 +577,13 @@ function confirmLangChange(el, lkey, elupd){
               <td colspan="2"><div class='split'></div></td>
             </tr>
             <tr>
-               <td nowrap class="warning"><?php echo $_lang['error_handling_depracated_label'] ?></td>
+               <td nowrap class="warning"><?php echo $_lang['error_handling_deprecated_label'] ?></td>
                <td>
-               	  <select onchange="documentDirty=true;" name="error_handling_depracated">
-               	         <?php if (!isset($error_handling_depracated)) $error_handling_depracated = 0; ?>
-               	  	<option<?php if($error_handling_depracated == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_depracated_0']; ?></option>
-               	  	<option<?php if($error_handling_depracated == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_depracated_1']; ?></option>
-               	  	<option<?php if($error_handling_depracated == 2) echo ' selected="selected"'; ?> value="2"><?php echo $_lang['error_handling_depracated_2']; ?></option>
+               	  <select onchange="documentDirty=true;" name="error_handling_deprecated">
+               	         <?php if (!isset($error_handling_deprecated)) $error_handling_deprecated = 0; ?>
+               	  	<option<?php if($error_handling_deprecated == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_deprecated_0']; ?></option>
+               	  	<option<?php if($error_handling_deprecated == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_deprecated_1']; ?></option>
+               	  	<option<?php if($error_handling_deprecated == 2) echo ' selected="selected"'; ?> value="2"><?php echo $_lang['error_handling_deprecated_2']; ?></option>
                	  </select>
                </td>
             </tr>
