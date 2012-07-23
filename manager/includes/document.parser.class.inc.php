@@ -47,8 +47,12 @@ class DocumentParser {
     var $documentMap;
     var $forwards= 3;
 
-    // constructor
-    function DocumentParser() {
+    /**
+     * Document constructor
+     *
+     * @return DocumentParser
+     */
+    function __construct() {
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
         $this->dbConfig= & $this->db->config; // alias for backward compatibility
         $this->jscripts= array ();
@@ -62,7 +66,14 @@ class DocumentParser {
         @ ini_set("track_errors", "1"); // enable error tracking in $php_errormsg
     }
 
-    // loads an extension from the extenders folder
+    /**
+     * Loads an extension from the extenders folder.
+     * Currently of limited use - can only load the DBAPI and ManagerAPI.
+     *
+     * @global string $database_type
+     * @param string $extnamegetAllChildren
+     * @return boolean
+     */
     function loadExtension($extname) {
         global $database_type;
 
@@ -88,11 +99,27 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Returns the current micro time
+     *
+     * @return float
+     */
     function getMicroTime() {
         list ($usec, $sec)= explode(' ', microtime());
         return ((float) $usec + (float) $sec);
     }
 
+    /**
+     * Redirect
+     *
+     * @global string $base_url
+     * @global string $site_url
+     * @param string $url
+     * @param int $count_attempts
+     * @param type $type
+     * @param type $responseCode
+     * @return boolean
+     */
     function sendRedirect($url, $count_attempts= 0, $type= '', $responseCode= '') {
         if (empty ($url)) {
             return false;
@@ -140,6 +167,12 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Forward to another page
+     *
+     * @param int $id
+     * @param string $responseCode
+     */
     function sendForward($id, $responseCode= '') {
         if ($this->forwards > 0) {
             $this->forwards= $this->forwards - 1;
@@ -157,6 +190,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Redirect to the error page, by calling sendForward(). This is called for example when the page was not found.
+     */
     function sendErrorPage() {
         // invoke OnPageNotFound event
         $this->invokeEvent('OnPageNotFound');
@@ -165,6 +201,9 @@ class DocumentParser {
         exit();
     }
 
+    /**
+     * Redirect to the unauthorized page, for example on calling a page without having the permissions to see this page.
+     */
     function sendUnauthorizedPage() {
         // invoke OnPageUnauthorized event
         $_REQUEST['refurl'] = $this->documentIdentifier;
@@ -181,45 +220,84 @@ class DocumentParser {
         exit();
     }
 
-    // function to connect to the database
-    // - deprecated use $modx->db->connect()
+    /**
+     * Connect to the database
+     *
+     * @deprecated use $modx->db->connect()
+     */
     function dbConnect() {
         $this->db->connect();
         $this->rs= $this->db->conn; // for compatibility
     }
 
-    // function to query the database
-    // - deprecated use $modx->db->query()
+    /**
+     * Query the database
+     *
+     * @deprecated use $modx->db->query()
+     * @param string $sql The SQL statement to execute
+     * @return resource|bool
+     */
     function dbQuery($sql) {
         return $this->db->query($sql);
     }
 
-    // function to count the number of rows in a record set
+    /**
+     * Count the number of rows in a record set
+     *
+     * @deprecated use $modx->db->getRecordCount($rs)
+     * @param resource
+     * @return int
+     */
     function recordCount($rs) {
         return $this->db->getRecordCount($rs);
     }
 
-    // - deprecated, use $modx->db->getRow()
+    /**
+     * Get a result row
+     * 
+     * @deprecated use $modx->db->getRow()
+     * @param array $rs
+     * @param string $mode
+     * @return array
+     */
     function fetchRow($rs, $mode= 'assoc') {
         return $this->db->getRow($rs, $mode);
     }
 
-    // - deprecated, use $modx->db->getAffectedRows()
+    /**
+     * Get the number of rows affected in the last db operation
+     * 
+     * @deprecated use $modx->db->getAffectedRows()
+     * @param array $rs
+     * @return int
+     */
     function affectedRows($rs) {
         return $this->db->getAffectedRows($rs);
     }
 
-    // - deprecated, use $modx->db->getInsertId()
+    /**
+     * Get the ID generated in the last query
+     * 
+     * @deprecated use $modx->db->getInsertId()
+     * @param array $rs
+     * @return int
+     */
     function insertId($rs) {
         return $this->db->getInsertId($rs);
     }
 
-    // function to close a database connection
-    // - deprecated, use $modx->db->disconnect()
+    /**
+     * Close a database connection
+     *
+     * @deprecated use $modx->db->disconnect()
+     */
     function dbClose() {
         $this->db->disconnect();
     }
 
+    /**
+     * Get MODx settings including, but not limited to, the system_settings table
+     */
     function getSettings() {
         if (!is_array($this->config) || empty ($this->config)) {
             if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
@@ -298,6 +376,11 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Get the method by which the current document/resource was requested
+     *
+     * @return string 'alias' (friendly url alias) or 'id'
+     */
     function getDocumentMethod() {
         // function to test the query and find the retrieval method
         if (isset ($_REQUEST['q'])) {
@@ -310,6 +393,12 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Returns the document identifier of the current request
+     *
+     * @param string $method id and alias are allowed
+     * @return int
+     */
     function getDocumentIdentifier($method) {
         // function to test the query and find the retrieval method
         $docIdentifier= $this->config['site_start'];
@@ -331,7 +420,11 @@ class DocumentParser {
         return $docIdentifier;
     }
 
-    // check for manager login session
+    /**
+     * Check for manager login session
+     *
+     * @return boolean
+     */
     function checkSession() {
         if (isset ($_SESSION['mgrValidated'])) {
             return true;
@@ -340,6 +433,11 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Checks, if a the result is a preview
+     *
+     * @return boolean
+     */
     function checkPreview() {
         if ($this->checkSession() == true) {
             if (isset ($_REQUEST['z']) && $_REQUEST['z'] == 'manprev') {
@@ -352,7 +450,11 @@ class DocumentParser {
         }
     }
 
-    // check if site is offline
+    /**
+     * check if site is offline
+     *
+     * @return boolean
+     */
     function checkSiteStatus() {
         $siteStatus= $this->config['site_status'];
         if ($siteStatus == 1) {
@@ -368,6 +470,12 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Create a 'clean' document identifier with path information, friendly URL suffix and prefix.
+     *
+     * @param string $qOrig
+     * @return string
+     */
     function cleanDocumentIdentifier($qOrig) {
         (!empty($qOrig)) or $qOrig = $this->config['site_start'];
         $q= $qOrig;
@@ -410,6 +518,12 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Check the cache for a specific document/resource
+     *
+     * @param int $id
+     * @return string
+     */
     function checkCache($id) {
         $cacheFile= "assets/cache/docid_" . $id . ".pageCache.php";
         if (file_exists($cacheFile)) {
@@ -470,6 +584,16 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Final processing and output of the document/resource.
+     * 
+     * - runs uncached snippets
+     * - add javascript to <head>
+     * - removes unused placeholders
+     * - converts URL tags [~...~] to URLs
+     *
+     * @param boolean $noEvent Default: false
+     */
     function outputContent($noEvent= false) {
 
         $this->documentOutput= $this->documentContent;
@@ -567,6 +691,9 @@ class DocumentParser {
         ob_end_flush();
     }
 
+    /**
+     * Checks the publish state of page
+     */
     function checkPublishStatus() {
         $cacheRefreshTime= 0;
         @include $this->config["base_path"] . "assets/cache/sitePublishing.idx.php";
@@ -640,6 +767,11 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Final jobs.
+     *
+     * - cache page
+     */
     function postProcess() {
         // if the current document was generated, cache it!
         if ($this->documentGenerated == 1 && $this->documentObject['cacheable'] == 1 && $this->documentObject['type'] == 'document' && $this->documentObject['published'] == 1) {
@@ -667,6 +799,12 @@ class DocumentParser {
         // end post processing
     }
 
+    /**
+     * Merge meta tags
+     *
+     * @param string $template
+     * @return string
+     */
     function mergeDocumentMETATags($template) {
         if ($this->documentObject['haskeywords'] == 1) {
             // insert keywords
@@ -696,7 +834,12 @@ class DocumentParser {
         return $template;
     }
 
-    // mod by Raymond
+    /**
+     * Merge content fields and TVs
+     *
+     * @param string $template
+     * @return string
+     */
     function mergeDocumentContent($template) {
         $replace= array ();
         preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
@@ -720,6 +863,12 @@ class DocumentParser {
         return $template;
     }
 
+    /**
+     * Merge system settings
+     *
+     * @param string $template
+     * @return string
+     */
     function mergeSettingsContent($template) {
         $replace= array ();
         $matches= array ();
@@ -735,6 +884,12 @@ class DocumentParser {
         return $template;
     }
 
+    /**
+     * Merge chunks
+     *
+     * @param string $content
+     * @return string
+     */
     function mergeChunkContent($content) {
         $replace= array ();
         $matches= array ();
@@ -762,7 +917,12 @@ class DocumentParser {
         return $content;
     }
 
-    // Added by Raymond
+    /**
+     * Merge placeholder values
+     *
+     * @param string $content
+     * @return string
+     */
     function mergePlaceholderContent($content) {
         $replace= array ();
         $matches= array ();
@@ -783,7 +943,12 @@ class DocumentParser {
         return $content;
     }
 
-    // evalPlugin
+    /**
+     * Run a plugin
+     *
+     * @param string $pluginCode Code to run
+     * @param array $params
+     */
     function evalPlugin($pluginCode, $params) {
         $etomite= $modx= & $this;
         $modx->event->params= & $params; // store params inside event object
@@ -807,6 +972,13 @@ class DocumentParser {
         unset ($modx->event->params);
     }
 
+    /**
+     * Run a snippet
+     *
+     * @param string $snippet Code to run
+     * @param array $params
+     * @return string
+     */
     function evalSnippet($snippet, $params) {
         $etomite= $modx= & $this;
 
@@ -830,6 +1002,12 @@ class DocumentParser {
         return $msg . $snip;
     }
 
+    /**
+     * Run snippets as per the tags in $documentSource and replace the tags with the returned values.
+     *
+     * @param string $documentSource
+     * @return string
+     */
     function evalSnippets($documentSource) {
         // preg_match_all('~\[\[(.*?)\]\]~ms', $documentSource, $matches);
 	preg_match_all('~\[\[((.(?!\[[[!]))*?)\]\]~ms', $documentSource, $matches); // Nested snippets now possible (TimGS)
@@ -922,6 +1100,14 @@ class DocumentParser {
         return $documentSource;
     }
 
+    /**
+     * Create a friendly URL
+     *
+     * @param string $pre
+     * @param string $suff
+     * @param string $alias
+     * @return string
+     */
     function makeFriendlyURL($pre, $suff, $alias) {
         $Alias = explode('/',$alias);
         $alias = array_pop($Alias);
@@ -930,6 +1116,12 @@ class DocumentParser {
         return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
+    /** 
+     * Convert URL tags [~...~] to URLs
+     *
+     * @param string $documentSource
+     * @return string
+     */
     function rewriteUrls($documentSource) {
         // rewrite the urls
         if ($this->config['friendly_urls'] == 1) {
@@ -955,8 +1147,11 @@ class DocumentParser {
     }
 
     /**
-     * name: getDocumentObject  - used by parser
-     * desc: returns a document object - $method: alias, id
+     * Get all db fields and TVs for a document/resource
+     *
+     * @param type $method
+     * @param type $identifier
+     * @return array
      */
     function getDocumentObject($method, $identifier) {
         $tblsc= $this->getFullTableName("site_content");
@@ -1035,8 +1230,14 @@ class DocumentParser {
     }
 
     /**
-     * name: parseDocumentSource - used by parser
-     * desc: return document source aftering parsing tvs, snippets, chunks, etc.
+     * Parse a source string.
+     *
+     * Handles most MODx tags. Exceptions include:
+     *   - uncached snippet tags [!...!]
+     *   - URL tags [~...~]
+     *
+     * @param string $source
+     * @return string
      */
     function parseDocumentSource($source) {
         // set the number of times we are to parse the document source
@@ -1081,6 +1282,14 @@ class DocumentParser {
         return $source;
     }
 
+    /**
+     * Starts the parsing operations.
+     * 
+     * - connects to the db
+     * - gets the settings (including system_settings)
+     * - gets the document/resource identifier as in the query string
+     * - finally calls prepareResponse()
+     */
     function executeParser() {
 
 	set_error_handler(array (&$this, 'phpError'), error_reporting());
@@ -1167,6 +1376,15 @@ class DocumentParser {
         $this->prepareResponse();
     }
 
+    /**
+     * The next step called at the end of executeParser()
+     *
+     * - checks cache
+     * - checks if document/resource is deleted/unpublished
+     * - checks if resource is a weblink and redirects if so
+     * - gets template and parses it
+     * - ensures that postProcess is called when PHP is finished
+     */
     function prepareResponse() {
         // we now know the method and identifier, let's check the cache
         $this->documentContent= $this->checkCache($this->documentIdentifier);
