@@ -1481,6 +1481,13 @@ class DocumentParser {
     /* API functions																/
     /***************************************************************************************/
 
+    /**
+     * Returns an array of all parent record IDs for the id passed.
+     *
+     * @param int $id Docid to get parents for.
+     * @param int $height The maximum number of levels to go up, default 10.
+     * @return array
+     */
     function getParentIds($id, $height= 10) {
         $parents= array ();
         while ( $id && $height-- ) {
@@ -1494,6 +1501,14 @@ class DocumentParser {
         return $parents;
     }
 
+    /**
+     * Returns an array of child IDs belonging to the specified parent.
+     *
+     * @param int $id The parent resource/document to start from
+     * @param int $depth How many levels deep to search for children, default: 10
+     * @param array $children Optional array of docids to merge with the result.
+     * @return array Contains the document Listing (tree) like the sitemap
+     */
     function getChildIds($id, $depth= 10, $children= array ()) {
 
         // Initialise a static array to index parents->children
@@ -1523,7 +1538,12 @@ class DocumentParser {
         return $children;
     }
 
-    # Displays a javascript alert message in the web browser
+    /**
+     * Displays a javascript alert message in the web browser
+     *
+     * @param string $msg Message to show
+     * @param string $url URL to redirect to
+     */
     function webAlert($msg, $url= "") {
         $msg= addslashes($this->db->escape($msg));
         if (substr(strtolower($url), 0, 11) == "javascript:") {
@@ -1540,7 +1560,12 @@ class DocumentParser {
         }
     }
 
-    # Returns true if user has the currect permission
+    /**
+     * Returns true if user has the currect permission
+     *
+     * @param string $pm Permission name
+     * @return int
+     */
     function hasPermission($pm) {
         $state= false;
         $pms= $_SESSION['mgrPermissions'];
@@ -1549,7 +1574,15 @@ class DocumentParser {
         return $state;
     }
 
-    # Add an a alert message to the system event log
+    /**
+     * Add an a alert message to the system event log
+     *
+     * @param int $evtid Event ID
+     * @param int $type Types: 1 = information, 2 = warning, 3 = error
+     * @param string $msg Message to be logged
+     * @param string $source source of the event (module, snippet name, etc.)
+     *                       Default: Parser
+     */
     function logEvent($evtid, $type, $msg, $source= 'Parser') {
         $msg= $this->db->escape($msg);
         $source= $this->db->escape($source);
@@ -1576,16 +1609,35 @@ class DocumentParser {
         }
     }
 
-    # Returns true if parser is executed in backend (manager) mode
+    /**
+     * Returns true if we are currently in the manager/backend
+     *
+     * @return boolean
+     */
     function isBackend() {
         return $this->insideManager() ? true : false;
     }
 
-    # Returns true if parser is executed in frontend mode
+    /**
+     * Returns true if we are currently in the frontend
+     *
+     * @return boolean
+     */
     function isFrontend() {
         return !$this->insideManager() ? true : false;
     }
 
+    /**
+     * Gets all child documents of the specified document, including those which are unpublished or deleted.
+     *
+     * @param int $id The Document identifier to start with
+     * @param string $sort Sort field
+     *                     Default: menuindex
+     * @param string $dir Sort direction, ASC and DESC is possible
+     *                    Default: ASC
+     * @param string $fields Default: id, pagetitle, description, parent, alias, menutitle
+     * @return array
+     */
     function getAllChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
@@ -1612,6 +1664,17 @@ class DocumentParser {
         return $resourceArray;
     }
 
+    /**
+     * Gets all active child documents of the specified document, i.e. those which published and not deleted.
+     *
+     * @param int $id The Document identifier to start with
+     * @param string $sort Sort field
+     *                     Default: menuindex
+     * @param string $dir Sort direction, ASC and DESC is possible
+     *                    Default: ASC
+     * @param string $fields Default: id, pagetitle, description, parent, alias, menutitle
+     * @return array
+     */
     function getActiveChildren($id= 0, $sort= 'menuindex', $dir= 'ASC', $fields= 'id, pagetitle, description, parent, alias, menutitle') {
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
@@ -1639,6 +1702,27 @@ class DocumentParser {
         return $resourceArray;
     }
 
+    /**
+     * Returns the children of the selected document/folder.
+     *
+     * @param int $parentid The parent document identifier
+     *                      Default: 0
+     * @param int $published Whether only published or unpublished documents are in the result
+     *                      Default: 1
+     * @param int $deleted Whether deleted or undeleted documents are in the result
+     *                      Default: 0 (undeleted)
+     * @param string $fields List of fields
+     *                       Default: * (all fields)
+     * @param string $where Where condition in SQL style. Should include a leading 'AND '.
+     *                      Default: Empty string
+     * @param type $sort Should be a comma-separated list of field names on which to sort
+     *                    Default: menuindex
+     * @param string $dir Sort direction, ASC and DESC is possible
+     *                    Default: ASC
+     * @param string|int $limit Should be a valid SQL LIMIT clause without the 'LIMIT' i.e. just include the numbers as a string.
+     *                          Default: Empty string (no limit)
+     * @return array
+     */
     function getDocumentChildren($parentid= 0, $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
         $limit= ($limit != "") ? "LIMIT $limit" : "";
         $tblsc= $this->getFullTableName("site_content");
@@ -1669,6 +1753,28 @@ class DocumentParser {
         return $resourceArray;
     }
 
+    /**
+     * Returns multiple documents/resources
+     *
+     * @category API-Function
+     * @param array $ids Documents to fetch by docid
+     *                   Default: Empty array
+     * @param int $published Whether only published or unpublished documents are in the result
+     *                      Default: 1
+     * @param int $deleted Whether deleted or undeleted documents are in the result
+     *                      Default: 0 (undeleted)
+     * @param string $fields List of fields
+     *                       Default: * (all fields)
+     * @param string $where Where condition in SQL style. Should include a leading 'AND '.
+     *                      Default: Empty string
+     * @param type $sort Should be a comma-separated list of field names on which to sort
+     *                    Default: menuindex
+     * @param string $dir Sort direction, ASC and DESC is possible
+     *                    Default: ASC
+     * @param string|int $limit Should be a valid SQL LIMIT clause without the 'LIMIT' i.e. just include the numbers as a string.
+     *                          Default: Empty string (no limit)
+     * @return array|boolean Result array with documents, or false
+     */
     function getDocuments($ids= array (), $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
         if (count($ids) == 0) {
             return false;
@@ -1701,6 +1807,20 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Returns one document/resource
+     *
+     * @category API-Function
+     * @param int $id docid
+     *                Default: 0 (no documents)
+     * @param string $fields List of fields
+     *                       Default: * (all fields)
+     * @param int $published Whether only published or unpublished documents are in the result
+     *                      Default: 1
+     * @param int $deleted Whether deleted or undeleted documents are in the result
+     *                      Default: 0 (undeleted)
+     * @return boolean|string
+     */
     function getDocument($id= 0, $fields= "*", $published= 1, $deleted= 0) {
         if ($id == 0) {
             return false;
@@ -1715,6 +1835,19 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Returns the page information as database row, the type of result is
+     * defined with the parameter $rowMode
+     *
+     * @param int $pageid The parent document identifier
+     *                    Default: -1 (no result)
+     * @param int $active Should we fetch only published and undeleted documents/resources?
+     *                     1 = yes, 0 = no
+     *                     Default: 1
+     * @param string $fields List of fields
+     *                       Default: id, pagetitle, description, alias
+     * @return boolean|array
+     */
     function getPageInfo($pageid= -1, $active= 1, $fields= 'id, pagetitle, description, alias') {
         if ($pageid == 0) {
             return false;
@@ -1741,6 +1874,18 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Returns the parent document/resource of the given docid
+     *
+     * @param int $pid The parent docid. If -1, then fetch the current document/resource's parent
+     *                 Default: -1
+     * @param int $active Should we fetch only published and undeleted documents/resources?
+     *                     1 = yes, 0 = no
+     *                     Default: 1
+     * @param string $fields List of fields
+     *                       Default: id, pagetitle, description, alias
+     * @return boolean|array
+     */
     function getParent($pid= -1, $active= 1, $fields= 'id, pagetitle, description, alias, parent') {
         if ($pid == -1) {
             $pid= $this->documentObject['parent'];
@@ -1757,6 +1902,11 @@ class DocumentParser {
             }
     }
 
+    /**
+     * Returns the id of the current snippet.
+     *
+     * @return int
+     */
     function getSnippetId() {
         if ($this->currentSnippet) {
             $tbl= $this->getFullTableName("site_snippets");
@@ -1768,10 +1918,20 @@ class DocumentParser {
         return 0;
     }
 
+    /**
+     * Returns the name of the current snippet.
+     *
+     * @return string
+     */
     function getSnippetName() {
         return $this->currentSnippet;
     }
 
+    /**
+     * Clear the cache of MODX.
+     *
+     * @return boolean 
+     */
     function clearCache() {
         $basepath= $this->config["base_path"] . "assets/cache";
         if (@ $handle= opendir($basepath)) {
@@ -1793,7 +1953,21 @@ class DocumentParser {
         }
     }
 
-    function makeUrl($id, $alias= '', $args= '', $scheme= '') {
+    /**
+     * Create an URL for the given document identifier. The url prefix and
+     * postfix are used, when friendly_url is active.
+     *
+     * @param int $id The document identifier
+     * @param string $alias The alias name for the document
+     *                      Default: Empty string
+     * @param string $args The paramaters to add to the URL
+     *                     Default: Empty string
+     * @param string $scheme With full as valus, the site url configuration is
+     *                       used
+     *                       Default: Empty string
+     * @return string
+     */
+     function makeUrl($id, $alias= '', $args= '', $scheme= '') {
         $url= '';
         $virtualDir= '';
         $f_url_prefix = $this->config['friendly_url_prefix'];
@@ -1857,6 +2031,13 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Returns an entry from the config
+     *
+     * Note: most code accesses the config array directly and we will continue to support this.
+     *
+     * @return boolean|string
+     */
     function getConfig($name= '') {
         if (!empty ($this->config[$name])) {
             return $this->config[$name];
@@ -1865,6 +2046,11 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Returns the ClipperCMS version information as version, branch, release date and full application name.
+     *
+     * @return array
+     */
     function getVersionData() {
         include $this->config["base_path"] . "manager/includes/version.inc.php";
         $v= array ();
@@ -1875,6 +2061,17 @@ class DocumentParser {
         return $v;
     }
 
+    /**
+     * Returns an ordered or unordered HTML list.
+     *
+     * @param array $array
+     * @param string $ulroot Default: root
+     * @param string $ulprefix Default: sub_
+     * @param string $type Default: Empty string
+     * @param boolean $ordered Default: false
+     * @param int $tablevel Default: 0
+     * @return string
+     */
     function makeList($array, $ulroot= 'root', $ulprefix= 'sub_', $type= '', $ordered= false, $tablevel= 0) {
         // first find out whether the value passed is an array
         if (!is_array($array)) {
@@ -1901,6 +2098,11 @@ class DocumentParser {
         return $listhtml;
     }
 
+    /**
+     * Returns user login information, as loggedIn (true or false), internal key, username and usertype (web or manager).
+     *
+     * @return boolean|array
+     */
     function userLoggedIn() {
         $userdetails= array ();
         if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
@@ -1923,6 +2125,13 @@ class DocumentParser {
             }
     }
 
+    /**
+     * Returns an array with keywords for the current document, or a document with a given docid
+     *
+     * @param int $id The docid, 0 means the current document
+     *                Default: 0
+     * @return array
+     */
     function getKeywords($id= 0) {
         if ($id == 0) {
             $id= $this->documentObject['id'];
@@ -1942,6 +2151,13 @@ class DocumentParser {
         return $keywords;
     }
 
+    /**
+     * Returns an array with meta tags for the current document, or a document with a given docid.
+     *
+     * @param int $id The document identifier, 0 means the current document
+     *                Default: 0
+     * @return array
+     */
     function getMETATags($id= 0) {
         if ($id == 0) {
             $id= $this->documentObject['id'];
@@ -1966,6 +2182,13 @@ class DocumentParser {
         return $metatags;
     }
 
+    /**
+     * Executes a snippet.
+     *
+     * @param string $snippetName
+     * @param array $params Default: Empty array
+     * @return string
+     */
     function runSnippet($snippetName, $params= array ()) {
         if (isset ($this->snippetCache[$snippetName])) {
             $snippet= $this->snippetCache[$snippetName];
@@ -1989,12 +2212,24 @@ class DocumentParser {
         return $this->evalSnippet($snippet, $parameters);
     }
 
-    function getChunk($chunkName) {
+    /**
+     * Returns the chunk content for the given chunk name
+     * 
+     * @param string $chunkName
+     * @return boolean|string
+     */
+   function getChunk($chunkName) {
         $t= $this->chunkCache[$chunkName];
         return $t;
     }
 
-    // deprecated
+    /**
+     * Old method that just calls getChunk()
+     * 
+     * @deprecated Use getChunk
+     * @param string $chunkName
+     * @return boolean|string
+     */
     function putChunk($chunkName) { // alias name >.<
         return $this->getChunk($chunkName);
     }
@@ -2010,11 +2245,24 @@ class DocumentParser {
         return $chunk;
     }
 
+    /**
+     * Get data from phpSniff
+     *
+     * @category API-Function
+     * @return array
+     */
     function getUserData() {
         include $this->config["base_path"] . "manager/includes/extenders/getUserData.extender.php";
         return $tmpArray;
     }
 
+    /**
+     * Returns the timestamp in the date format defined in $this->config['datetime_format']
+     *
+     * @param int $timestamp Default: 0
+     * @param string $mode Default: Empty string (adds the time as below). Can also be 'dateOnly' for no time or 'formatOnly' to get the datetime_format string.
+     * @return string
+     */
     function toDateFormat($timestamp = 0, $mode = '') {
         $timestamp = trim($timestamp);
         $timestamp = intval($timestamp);
@@ -2046,6 +2294,12 @@ class DocumentParser {
         return $strTime;
     }
 
+    /**
+     * Make a timestamp from a string corresponding to the format in $this->config['datetime_format']
+     *
+     * @param string $str
+     * @return string
+     */
     function toTimeStamp($str) {
         $str = trim($str);
         if (empty($str)) {return '';}
