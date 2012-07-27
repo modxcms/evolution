@@ -1707,13 +1707,13 @@ class DocumentParser {
      *
      * @param int $parentid The parent document identifier
      *                      Default: 0
-     * @param int $published Whether only published or unpublished documents are in the result
+     * @param int $published Whether published or unpublished documents are in the result
      *                      Default: 1
      * @param int $deleted Whether deleted or undeleted documents are in the result
      *                      Default: 0 (undeleted)
      * @param string $fields List of fields
      *                       Default: * (all fields)
-     * @param string $where Where condition in SQL style. Should include a leading 'AND '.
+     * @param string $where Where condition in SQL style. Should include a leading 'AND '
      *                      Default: Empty string
      * @param type $sort Should be a comma-separated list of field names on which to sort
      *                    Default: menuindex
@@ -1759,7 +1759,7 @@ class DocumentParser {
      * @category API-Function
      * @param array $ids Documents to fetch by docid
      *                   Default: Empty array
-     * @param int $published Whether only published or unpublished documents are in the result
+     * @param int $published Whether published or unpublished documents are in the result
      *                      Default: 1
      * @param int $deleted Whether deleted or undeleted documents are in the result
      *                      Default: 0 (undeleted)
@@ -1815,7 +1815,7 @@ class DocumentParser {
      *                Default: 0 (no documents)
      * @param string $fields List of fields
      *                       Default: * (all fields)
-     * @param int $published Whether only published or unpublished documents are in the result
+     * @param int $published Whether published or unpublished documents are in the result
      *                      Default: 1
      * @param int $deleted Whether deleted or undeleted documents are in the result
      *                      Default: 0 (undeleted)
