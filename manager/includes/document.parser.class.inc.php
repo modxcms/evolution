@@ -1706,7 +1706,7 @@ class DocumentParser {
      * Returns the children of the selected document/folder.
      *
      * @param int $parentid The parent document identifier
-     *                      Default: 0
+     *                      Default: 0 (site root)
      * @param int $published Whether published or unpublished documents are in the result
      *                      Default: 1
      * @param int $deleted Whether deleted or undeleted documents are in the result
@@ -2330,10 +2330,30 @@ class DocumentParser {
         return $timeStamp;
     }
 
-    #::::::::::::::::::::::::::::::::::::::::
-    # Added By: Raymond Irving - MODx
-    #
-
+    /**
+     * Get the TVs of a document's children. Returns an array where each element represents one child doc.
+     *
+     * Ignores deleted children. Gets all children - there is no where clause available.
+     *
+     * @param int $parentid The parent docid
+     *                 Default: 0 (site root)
+     * @param array $tvidnames. Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only)
+     *                                               or the TV names (array elements should be names only)
+     *                      Default: Empty array
+     * @param int $published Whether published or unpublished documents are in the result
+     *                      Default: 1
+     * @param string $docsort How to sort the result array (field)
+     *                      Default: menuindex
+     * @param ASC $docsortdir How to sort the result array (direction)
+     *                      Default: ASC
+     * @param string $tvfields Fields to fetch from site_tmplvars, default '*'
+     *                      Default: *
+     * @param string $tvsort How to sort each element of the result array i.e. how to sort the TVs (field)
+     *                      Default: rank
+     * @param string  $tvsortdir How to sort each element of the result array i.e. how to sort the TVs (direction)
+     *                      Default: ASC
+     * @return boolean|array
+     */
     function getDocumentChildrenTVars($parentid= 0, $tvidnames= array (), $published= 1, $docsort= "menuindex", $docsortdir= "ASC", $tvfields= "*", $tvsort= "rank", $tvsortdir= "ASC") {
         $docs= $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir);
         if (!$docs)
@@ -2387,6 +2407,25 @@ class DocumentParser {
         }
     }
 
+    /**
+     * Get the TV outputs of a document's children.
+     * 
+     * Returns an array where each element represents one child doc and contains the result from getTemplateVarOutput()
+     *
+     * Ignores deleted children. Gets all children - there is no where clause available.
+     *
+     * @param int $parentid The parent docid
+     *                        Default: 0 (site root)
+     * @param array $tvidnames. Which TVs to fetch. In the form expected by getTemplateVarOutput().
+     *                        Default: Empty array
+     * @param int $published Whether published or unpublished documents are in the result
+     *                        Default: 1
+     * @param string $docsort How to sort the result array (field)
+     *                        Default: menuindex
+     * @param ASC $docsortdir How to sort the result array (direction)
+     *                        Default: ASC
+     * @return boolean|array
+     */
     function getDocumentChildrenTVarOutput($parentid= 0, $tvidnames= array (), $published= 1, $docsort= "menuindex", $docsortdir= "ASC") {
         $docs= $this->getDocumentChildren($parentid, $published, 0, '*', '', $docsort, $docsortdir);
         if (!$docs)
@@ -2402,8 +2441,21 @@ class DocumentParser {
         }
     }
 
-    // Modified by Raymond for TV - Orig Modified by Apodigm - DocVars
-    # returns a single TV record. $idnames - can be an id or name that belongs the template that the current document is using
+    /**
+     * Modified by Raymond for TV - Orig Modified by Apodigm - DocVars
+     * Returns a single site_content field or TV record from the db.
+     *
+     * If a site content field the result is an associative array of 'name' and 'value'.
+     *
+     * If a TV the result is an array representing a db row including the fields specified in $fields.
+     *
+     * @param string $idname Can be a TV id or name
+     * @param string $fields Fields to fetch from site_tmplvars. Default: *
+     * @param type $docid Docid. Defaults to empty string which indicates the current document.
+     * @param int $published Whether published or unpublished documents are in the result
+     *                        Default: 1
+     * @return boolean
+     */
     function getTemplateVar($idname= "", $fields= "*", $docid= "", $published= 1) {
         if ($idname == "") {
             return false;
@@ -2413,7 +2465,27 @@ class DocumentParser {
         }
     }
 
-    # returns an array of TV records. $idnames - can be an id or name that belongs the template that the current document is using
+    /**
+     * Returns an array of site_content field fields and/or TV records from the db
+     *
+     * Elements representing a site content field consist of an associative array of 'name' and 'value'.
+     *
+     * Elements representing a TV consist of an array representing a db row including the fields specified in $fields.
+     *
+     * @param array $idnames Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only)
+     *                                               or the TV names (array elements should be names only)
+     *                        Default: Empty array
+     * @param string $fields Fields to fetch from site_tmplvars.
+     *                        Default: *
+     * @param string $docid Docid. Defaults to empty string which indicates the current document.
+     * @param int $published Whether published or unpublished documents are in the result
+     *                        Default: 1
+     * @param string $sort How to sort the result array (field)
+     *                        Default: rank
+     * @param string $dir How to sort the result array (direction)
+     *                        Default: ASC
+     * @return boolean|array
+     */
     function getTemplateVars($idnames= array (), $fields= "*", $docid= "", $published= 1, $sort= "rank", $dir= "ASC") {
         if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0) {
             return false;
@@ -2430,7 +2502,7 @@ class DocumentParser {
                     return false;
             }
 
-            // get user defined template variables
+            // Get TVs
             $fields= ($fields == "") ? "tv.*" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $fields)));
             $sort= ($sort == "") ? "" : 'tv.' . implode(',tv.', preg_replace("/^\s/i", "", explode(',', $sort)));
             if ($idnames == "*")
@@ -2451,7 +2523,7 @@ class DocumentParser {
                 array_push($result, @ $this->db->getRow($rs));
             }
 
-            // get default/built-in template variables
+            // Get fields from site_content
             ksort($docRow);
             foreach ($docRow as $key => $value) {
                 if ($idnames == "*" || in_array($key, $idnames))
@@ -2465,7 +2537,18 @@ class DocumentParser {
         }
     }
 
-    # returns an associative array containing TV rendered output values. $idnames - can be an id or name that belongs the template that the current document is using
+    /**
+     * Returns an associative array containing TV rendered output values.
+     *
+     * @param type $idnames Which TVs to fetch - Can relate to the TV ids in the db (array elements should be numeric only)
+     *                                               or the TV names (array elements should be names only)
+     *                        Default: Empty array
+     * @param string $docid Docid. Defaults to empty string which indicates the current document.
+     * @param int $published Whether published or unpublished documents are in the result
+     *                        Default: 1
+     * @param string $sep
+     * @return boolean|array
+     */
     function getTemplateVarOutput($idnames= array (), $docid= "", $published= 1, $sep='') {
         if (count($idnames) == 0) {
             return false;
@@ -2491,22 +2574,42 @@ class DocumentParser {
         }
     }
 
-    # returns the full table name based on db settings
+     /**
+     * Returns the full table name based on db settings
+     *
+     * @param string $tbl Table name
+     * @return string Table name with prefix
+     */
     function getFullTableName($tbl) {
         return $this->db->config['dbase'] . ".`" . $this->db->config['table_prefix'] . $tbl . "`";
     }
 
-    # return placeholder value
+    /**
+     * Returns the placeholder value
+     *
+     * @param string $name Placeholder name
+     * @return string Placeholder value
+     */
     function getPlaceholder($name) {
         return $this->placeholders[$name];
     }
 
-    # sets a value for a placeholder
+    /**
+     * Sets a value for a placeholder
+     *
+     * @param string $name The name of the placeholder
+     * @param string $value The value of the placeholder
+     */
     function setPlaceholder($name, $value) {
         $this->placeholders[$name]= $value;
     }
 
-    # set arrays or object vars as placeholders
+    /**
+     * Set placeholders en masse via an array or object.
+     *
+     * @param object|array $subject
+     * @param string $prefix
+     */
     function toPlaceholders($subject, $prefix= '') {
         if (is_object($subject)) {
             $subject= get_object_vars($subject);
@@ -2518,6 +2621,13 @@ class DocumentParser {
         }
     }
 
+    /**
+     * For use by toPlaceholders(); For setting an array or object element as placeholder.
+     *
+     * @param string $key
+     * @param object|array $value
+     * @param string $prefix
+     */
     function toPlaceholder($key, $value, $prefix= '') {
         if (is_array($value) || is_object($value)) {
             $this->toPlaceholders($value, "{$prefix}{$key}.");
@@ -2526,21 +2636,41 @@ class DocumentParser {
         }
     }
 
-    # returns the virtual relative path to the manager folder
+    /**
+     * Returns the manager relative URL/path with respect to the site root.
+     *
+     * @global string $base_url
+     * @return string The complete URL to the manager folder
+     */
     function getManagerPath() {
         global $base_url;
         $pth= $base_url . 'manager/';
         return $pth;
     }
 
-    # returns the virtual relative path to the cache folder
+    /**
+     * Returns the cache relative URL/path with respect to the site root.
+     *
+     * @global string $base_url
+     * @return string The complete URL to the cache folder
+     */
     function getCachePath() {
         global $base_url;
         $pth= $base_url . 'assets/cache/';
         return $pth;
     }
 
-    # sends a message to a user's message box
+    /**
+     * Sends a message to a user's message box.
+     *
+     * @param string $type Type of the message
+     * @param string $to The recipient of the message
+     * @param string $from The sender of the message
+     * @param string $subject The subject of the message
+     * @param string $msg The message body
+     * @param int $private Whether it is a private message, or not
+     *                     Default : 0
+     */
     function sendAlert($type, $to, $from, $subject, $msg, $private= 0) {
         $private= ($private) ? 1 : 0;
         if (!is_numeric($to)) {
@@ -2566,8 +2696,12 @@ class DocumentParser {
         $rs= $this->db->query($sql);
     }
 
-    # Returns true, install or interact when inside manager
-    // deprecated
+    /**
+     * Returns true, install or interact when inside manager.
+     *
+     * @deprecated
+     * @return string
+     */
     function insideManager() {
         $m= false;
         if (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
@@ -2581,7 +2715,12 @@ class DocumentParser {
         return $m;
     }
 
-    # Returns current user id
+    /**
+     * Returns current user id.
+     *
+     * @param string $context. Default is an empty string which indicates the method should automatically pick 'web (frontend) or 'mgr' (backend)
+     * @return string
+     */
     function getLoginUserID($context= '') {
         if ($context && isset ($_SESSION[$context . 'Validated'])) {
             return $_SESSION[$context . 'InternalKey'];
@@ -2594,7 +2733,12 @@ class DocumentParser {
         }
     }
 
-    # Returns current user name
+    /**
+     * Returns current user name
+     *
+     * @param string $context. Default is an empty string which indicates the method should automatically pick 'web (frontend) or 'mgr' (backend)
+     * @return string
+     */
     function getLoginUserName($context= '') {
         if (!empty($context) && isset ($_SESSION[$context . 'Validated'])) {
             return $_SESSION[$context . 'Shortname'];
@@ -2607,7 +2751,11 @@ class DocumentParser {
         }
     }
 
-    # Returns current login user type - web or manager
+    /**
+     * Returns current login user type - web or manager
+     *
+     * @return string
+     */
     function getLoginUserType() {
         if ($this->isFrontend() && isset ($_SESSION['webValidated'])) {
             return 'web';
@@ -2619,7 +2767,12 @@ class DocumentParser {
         }
     }
 
-    # Returns a record for the manager user
+    /**
+     * Returns a user info record for the given manager user
+     *
+     * @param int $uid
+     * @return boolean|string
+     */
     function getUserInfo($uid) {
         $sql= "
               SELECT mu.username, mu.password, mua.*
@@ -2637,7 +2790,12 @@ class DocumentParser {
         }
     }
 
-    # Returns a record for the web user
+    /**
+     * Returns a record for the web user
+     *
+     * @param int $uid
+     * @return boolean|string
+     */
     function getWebUserInfo($uid) {
         $sql= "
               SELECT wu.username, wu.password, wua.*
@@ -2655,10 +2813,16 @@ class DocumentParser {
         }
     }
 
-    # Returns an array of document groups that current user is assigned to.
-    # This function will first return the web user doc groups when running from frontend otherwise it will return manager user's docgroup
-    # Set $resolveIds to true to return the document group names
-    function getUserDocGroups($resolveIds= false) {
+    /**
+     * Returns an array of document groups that current user is assigned to.
+     * This function will first return the web user doc groups when running from
+     * frontend otherwise it will return manager user's docgroup.
+     *
+     * @param boolean $resolveIds Set to true to return the document group names
+     *                            Default: false
+     * @return string|array
+     */
+     function getUserDocGroups($resolveIds= false) {
         if ($this->isFrontend() && isset ($_SESSION['webDocgroups']) && isset ($_SESSION['webValidated'])) {
             $dg= $_SESSION['webDocgroups'];
             $dgn= isset ($_SESSION['webDocgrpNames']) ? $_SESSION['webDocgrpNames'] : false;
@@ -2690,11 +2854,28 @@ class DocumentParser {
                     return $dgn;
                 }
     }
+
+    /**
+     * Returns an array of document groups that current user is assigned to.
+     * This function will first return the web user doc groups when running from
+     * frontend otherwise it will return manager user's docgroup.
+     *
+     * @deprecated
+     * @return string|array
+     */
     function getDocGroups() {
         return $this->getUserDocGroups();
     } // deprecated
 
-    # Change current web user's password - returns true if successful, oterhwise return error message
+    /**
+     * Change current web user's password
+     *
+     * @todo Make password length configurable, allow rules for passwords and translation of messages
+     * @param string $oldPwd
+     * @param string $newPwd
+     * @return string|boolean Returns true if successful, oterhwise return error
+     *                        message
+     */
     function changeWebUserPassword($oldPwd, $newPwd) {
         $rt= false;
         if ($_SESSION["webValidated"] == 1) {
@@ -2725,11 +2906,25 @@ class DocumentParser {
             }
         }
     }
+
+    /**
+     * Change current web user's password
+     *
+     * @deprecated
+     * @param string $o
+     * @param string $n
+     * @return string|boolean
+     */
     function changePassword($o, $n) {
         return changeWebUserPassword($o, $n);
     } // deprecated
 
-    # returns true if the current web user is a member the specified groups
+    /**
+     * Returns true if the current web user is a member the specified groups
+     *
+     * @param array $groupNames
+     * @return boolean
+     */
     function isMemberOfWebGroup($groupNames= array ()) {
         if (!is_array($groupNames))
             return false;
@@ -2751,7 +2946,13 @@ class DocumentParser {
         return false;
     }
 
-    # Registers Client-side CSS scripts - these scripts are loaded at inside the <head> tag
+    /**
+     * Registers Client-side CSS scripts - these scripts are loaded at inside
+     * the <head> tag
+     *
+     * @param string $src
+     * @param string $media Default: Empty string
+     */
     function regClientCSS($src, $media='') {
         if (empty($src) || isset ($this->loadedjscripts[$src]))
             return '';
@@ -2766,12 +2967,24 @@ class DocumentParser {
         }
     }
 
-    # Registers Startup Client-side JavaScript - these scripts are loaded at inside the <head> tag
+    /**
+     * Registers Startup Client-side JavaScript - these scripts are loaded at inside the <head> tag
+     *
+     * @param string $src
+     * @param array $options Default: 'name'=>'', 'version'=>'0', 'plaintext'=>false
+     */
     function regClientStartupScript($src, $options= array('name'=>'', 'version'=>'0', 'plaintext'=>false)) {
         $this->regClientScript($src, $options, true);
     }
 
-    # Registers Client-side JavaScript 	- these scripts are loaded at the end of the page unless $startup is true
+    /**
+     * Registers Client-side JavaScript these scripts are loaded at the end of the page unless $startup is true
+     *
+     * @param string $src
+     * @param array $options Default: 'name'=>'', 'version'=>'0', 'plaintext'=>false
+     * @param boolean $startup Default: false
+     * @return string
+     */
     function regClientScript($src, $options= array('name'=>'', 'version'=>'0', 'plaintext'=>false), $startup= false) {
         if (empty($src))
             return ''; // nothing to register
@@ -2835,17 +3048,31 @@ class DocumentParser {
         $this->loadedjscripts[$key]['pos']= $pos;
     }
 
-    # Registers Client-side Startup HTML block
+    /**
+     * Registers Client-side Startup HTML block
+     *
+     * @param string $html
+     */
     function regClientStartupHTMLBlock($html) {
         $this->regClientScript($html, true, true);
     }
 
-    # Registers Client-side HTML block
+    /**
+     * Registers Client-side HTML block
+     *
+     * @param string $html
+     */
     function regClientHTMLBlock($html) {
         $this->regClientScript($html, true);
     }
 
-    # Remove unwanted html tags and snippet, settings and tags
+    /**
+     * Remove unwanted html tags and snippet, settings and tags
+     *
+     * @param string $html
+     * @param string $allowed Default: Empty string
+     * @return string
+     */
     function stripTags($html, $allowed= "") {
         $t= strip_tags($html, $allowed);
         $t= preg_replace('~\[\*(.*?)\*\]~', "", $t); //tv
@@ -2860,7 +3087,13 @@ class DocumentParser {
         return $t;
     }
 
-    # add an event listner to a plugin - only for use within the current execution cycle
+    /**
+     * Add an event listner to a plugin - only for use within the current execution cycle
+     *
+     * @param string $evtName
+     * @param string $pluginName
+     * @return boolean|int
+     */
     function addEventListener($evtName, $pluginName) {
 	    if (!$evtName || !$pluginName)
 		    return false;
@@ -2869,20 +3102,33 @@ class DocumentParser {
 	    return array_push($this->pluginEvent[$evtName], $pluginName); // return array count
     }
 
-    # remove event listner - only for use within the current execution cycle
+    /**
+     * Remove event listner - only for use within the current execution cycle
+     *
+     * @param string $evtName
+     * @return boolean
+     */
     function removeEventListener($evtName) {
         if (!$evtName)
             return false;
         unset ($this->pluginEvent[$evtName]);
     }
 
-    # remove all event listners - only for use within the current execution cycle
+    /**
+     * Remove all event listners - only for use within the current execution cycle
+     */
     function removeAllEventListener() {
         unset ($this->pluginEvent);
         $this->pluginEvent= array ();
     }
 
-    # invoke an event. $extParams - hash array: name=>value
+    /**
+     * Invoke an event.
+     *
+     * @param string $evtName
+     * @param array $extParams Parameters available to plugins. Each array key will be the PHP variable name, and the array value will be the variable value.
+     * @return boolean|array
+     */
     function invokeEvent($evtName, $extParams= array ()) {
         if (!$evtName)
             return false;
@@ -2934,7 +3180,12 @@ class DocumentParser {
         return $results;
     }
 
-    # parses a resource property string and returns the result as an array
+    /**
+     * Parses a resource property string and returns the result as an array
+     *
+     * @param string $propertyString
+     * @return type
+     */
     function parseProperties($propertyString) {
         $parameter= array ();
         if (!empty ($propertyString)) {
