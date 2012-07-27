@@ -1,7 +1,8 @@
 <?php
 /**
- *	ClipperCMS Document Parser
- *	Function: This class contains the main document parsing functions
+ * ClipperCMS Document Parser
+ *
+ * This class contains the main document parsing functions.
  *
  */
 class DocumentParser {
@@ -3628,20 +3629,31 @@ class DocumentParser {
 
 }
 
-// SystemEvent Class
+/**
+ * System Event Class
+ */
 class SystemEvent {
+
     var $name;
     var $_propagate;
     var $_output;
     var $activated;
     var $activePlugin;
 
-    function SystemEvent($name= "") {
+    /**
+     * @param string $name Name of the event
+     */
+    function __construct($name= '') {
         $this->_resetEventObject();
         $this->name= $name;
     }
 
-    // used for displaying a message to the user
+    /**
+     * Display a message to the user
+     *
+     * @global array $SystemAlertMsgQueque
+     * @param string $msg The message
+     */
     function alert($msg) {
         global $SystemAlertMsgQueque;
         if ($msg == "")
@@ -3653,11 +3665,19 @@ class SystemEvent {
         }
     }
 
-    // used for rendering an out on the screen
+    /**
+     * Output
+     * 
+     * @param string $msg 
+     */
     function output($msg) {
         $this->_output .= $msg;
     }
 
+
+    /** 
+     * Stop event propogation
+     */
     function stopPropagation() {
         $this->_propagate= false;
     }
@@ -3670,4 +3690,4 @@ class SystemEvent {
         $this->activated= false;
     }
 }
-?>
+
