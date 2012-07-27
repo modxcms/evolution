@@ -1477,10 +1477,6 @@ class DocumentParser {
         //$this->postProcess();
     }
 
-    /***************************************************************************************/
-    /* API functions																/
-    /***************************************************************************************/
-
     /**
      * Returns an array of all parent record IDs for the id passed.
      *
@@ -3208,10 +3204,14 @@ class DocumentParser {
     /*############################################
       Etomite_dbFunctions.php
       New database functions for Etomite CMS
-    Author: Ralph A. Dahlgren - rad14701@yahoo.com
-    Etomite ID: rad14701
-    See documentation for usage details
-    ############################################*/
+      Author: Ralph A. Dahlgren - rad14701@yahoo.com
+      Etomite ID: rad14701
+      See documentation for usage details
+      ############################################*/
+      
+    /**
+     * @depracted Etomite db method
+     */
     function getIntTableRows($fields= "*", $from= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
         // function to get rows from ANY internal database table
         if ($from == "") {
@@ -3231,6 +3231,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * @depracted Etomite db method
+     */
     function putIntTableRow($fields= "", $into= "") {
         // function to put a row into ANY internal database table
         if (($fields == "") || ($into == "")) {
@@ -3252,6 +3255,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * @depracted Etomite db method
+     */
     function updIntTableRow($fields= "", $into= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
         // function to update a row into ANY internal database table
         if (($fields == "") || ($into == "")) {
@@ -3276,6 +3282,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * @depracted Etomite db method
+     */
     function getExtTableRows($host= "", $user= "", $pass= "", $dbase= "", $fields= "*", $from= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
         // function to get table rows from an external MySQL database
         if (($host == "") || ($user == "") || ($pass == "") || ($dbase == "") || ($from == "")) {
@@ -3296,6 +3305,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * @depracted Etomite db method
+     */
     function putExtTableRow($host= "", $user= "", $pass= "", $dbase= "", $fields= "", $into= "") {
         // function to put a row into an external database table
         if (($host == "") || ($user == "") || ($pass == "") || ($dbase == "") || ($fields == "") || ($into == "")) {
@@ -3318,6 +3330,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * @depracted Etomite db method
+     */
     function updExtTableRow($host= "", $user= "", $pass= "", $dbase= "", $fields= "", $into= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
         // function to update a row into an external database table
         if (($fields == "") || ($into == "")) {
@@ -3343,6 +3358,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * @depracted Etomite db method
+     */
     function dbExtConnect($host, $user, $pass, $dbase) {
         // function to connect to external database
         $tstart= $this->getMicroTime();
@@ -3359,6 +3377,9 @@ class DocumentParser {
         }
     }
 
+    /**
+     * @depracted Etomite db method
+     */
     function getFormVars($method= "", $prefix= "", $trim= "", $REQUEST_METHOD) {
         //  function to retrieve form results into an associative array
         $results= array ();
@@ -3385,14 +3406,24 @@ class DocumentParser {
         return $results;
     }
 
-    ########################################
-    // END New database functions - rad14701
-    ########################################
+    ####################################
+    // END Etomite database functions //
+    ####################################
 
-    /***************************************************************************************/
-    /* End of API functions								       */
-    /***************************************************************************************/
-
+    /**
+     * PHP error handler set by http://www.php.net/manual/en/function.set-error-handler.php
+     *
+     * Checks the PHP error and calls messageQuit() unless:
+     *	- error_reporting() returns 0, or
+     *  - the PHP error level is 0, or
+     *  - the PHP error level is 8 (E_NOTICE) and stopOnNotice is false
+     *
+     * @param int $nr The PHP error level as per http://www.php.net/manual/en/errorfunc.constants.php
+     * @param string $text Error message
+     * @param string $file File where the error was detected
+     * @param string $line Line number within $file
+     * @return boolean
+     */
     function phpError($nr, $text, $file, $line) {
         if (error_reporting() == 0 || $nr == 0 || ($nr == 8 && $this->stopOnNotice == false)) {
             return true;
@@ -3414,6 +3445,21 @@ class DocumentParser {
         $this->messageQuit("PHP Parse Error", '', true, $nr, $file, $source, $text, $line);
     }
 
+    /**
+     * Error logging and output.
+     * 
+     * If error_handling_silent is 0, outputs an error page with detailed informations about the error.
+     * Always logs the error using logEvent()
+     *
+     * @param string $msg Default: unspecified error
+     * @param string $query Default: Empty string
+     * @param boolean $is_error Default: true
+     * @param string $nr Default: Empty string
+     * @param string $file Default: Empty string
+     * @param string $source Default: Empty string
+     * @param string $text Default: Empty string
+     * @param string $line Default: Empty string
+     */
     function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '') {
 
         $version= isset ($GLOBALS['version']) ? $GLOBALS['version'] : '';
@@ -3535,20 +3581,30 @@ class DocumentParser {
         exit();
     }
 
+    /**
+     * Returns all registered JavaScripts
+     *
+     * @return string
+     */
     function getRegisteredClientScripts() {
         return implode("\n", $this->jscripts);
     }
 
+    /**
+     * Returns all registered startup scripts
+     *
+     * @return string
+     */
     function getRegisteredClientStartupScripts() {
         return implode("\n", $this->sjscripts);
     }
     
-	/**
-	 * Format alias to be URL-safe. Strip invalid characters.
-	 *
-	 * @param string Alias to be formatted
-	 * @return string Safe alias
-	 */
+    /**
+     * Format alias to be URL-safe. Strip invalid characters.
+     *
+     * @param string Alias to be formatted
+     * @return string Safe alias
+     */
     function stripAlias($alias) {
         // let add-ons overwrite the default behavior
         $results = $this->invokeEvent('OnStripAlias', array ('alias'=>$alias));
