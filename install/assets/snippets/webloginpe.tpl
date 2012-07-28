@@ -1,11 +1,11 @@
 <?php
 	/**
-	 * WebLoginPE
-	 * Enhanced web login/register snippet 
+	 * WebUsers
+	 * Enhanced web login/register snippet derived from WebLoginPE 1.3.1
 	 *
-	 * @package WebLoginPE
-	 * @author Scotty Delicious
-	 * @version 1.3.1+
+	 * @package WebUsers
+	 * @author Scotty Delicious; the MODx community; the Clipper community.
+	 * @version 1.3.2
 	 *
 	 * See the "docs" folder for detailed usage and parameter instructions.
 	 */

@@ -1,8 +1,9 @@
 //<?php
 /**
- * Ditto
+ * List
  * 
  * Summarizes and lists pages to create blogs, catalogs, PR archives, bio listings and more
+ * Derived from Ditto 2.1.0
  *
  * @category 	snippet
  * @version 	2.1.1
@@ -17,7 +18,7 @@
  *      collections, and more,with full support for templating.
  * 
  * Author: 
- *      Mark Kaplan for MODx CMF
+ *      Mark Kaplan for MODx CMF (up to 2.1.0).
  *	This version modified by Tim Spencer in 2012 (see changelog.txt)
 */
 
