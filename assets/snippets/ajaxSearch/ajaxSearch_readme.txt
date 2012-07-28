@@ -1,26 +1,26 @@
 
-AjaxSearch Readme version 1.9.2
+ASearch Readme version 1.9.3
 
 ---------------------------------------------------------------
-:: Snippet: AjaxSearch
+:: Snippet: ASearch
 ----------------------------------------------------------------
   Short Description:
         Ajax-driven & Flexible Search form
 
   Version:
-        1.9.2  - 05/12/2010
-
-  Created by:  Coroico - (coroico@wangba.fr)
-  
-	    Jason Coward (opengeek - jason@opengeek.com)
-	    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
-	    Ryan Thrash  (rthrash - ryan@vertexworks.com)
+        1.9.3  - 28/7/2012
 
 ----------------------------------------------------------------
 :: Credits
 ----------------------------------------------------------------
 
-   Based on Flex Search Form by jardc@honeydewdsign.com
+   Derived from AjaxSearch 1.9.2 by the following contributors:
+            Created by:  Coroico - (coroico@wangba.fr)
+	    Jason Coward (opengeek - jason@opengeek.com)
+	    Kyle Jaebker (kylej - kjaebker@muddydogpaws.com)
+	    Ryan Thrash  (rthrash - ryan@vertexworks.com)
+
+   AjaxSearch in turn based on Flex Search Form by jardc@honeydewdsign.com
    as modified by KyleJ (kjaebker@muddydogpaws.com)
    and then refactored by Coroico (coroico@wangba.fr)
 
@@ -43,8 +43,12 @@ Many fixes/additions were contributed by mikkelwe/identity/Perrine
   Originally based on the FlexSearchForm snippet created by jaredc (jaredc@honeydewdesign.com)
 
 ----------------------------------------------------------------
-:: Changelog:  for more details see www.modx.wangba.fr
+:: Changelog:
 ----------------------------------------------------------------
+  28-july-2012 (1.9.3)
+    -- Removed ajaxsearch's own striptags functions and substituted the use of
+       $modx->stripTags(). By Tim Spencer timspe@gmail.com
+
   05-december-10 (1.9.2)
     -- Bug fixing
   30-august-10 (1.9.2)

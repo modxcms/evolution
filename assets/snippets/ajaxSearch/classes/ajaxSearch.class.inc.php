@@ -115,24 +115,6 @@ class AjaxSearch {
 //
 // Below functions could be used in end-user fonctions
 /*
-*  stripTags : Remove modx sensitive tags
-*/
-if (!function_exists('stripTags')) {
-    function stripTags($text) {
-
-        $modRegExArray[] = '~\[\[(.*?)\]\]~s';
-        $modRegExArray[] = '~\[\!(.*?)\!\]~s';
-        $modRegExArray[] = '#\[\~(.*?)\~\]#s';
-        $modRegExArray[] = '~\[\((.*?)\)\]~s';
-        $modRegExArray[] = '~{{(.*?)}}~s';
-        $modRegExArray[] = '~\[\*(.*?)\*\]~s';
-        $modRegExArray[] = '~\[\+(.*?)\+\]~s';
-
-        foreach ($modRegExArray as $mReg) $text = preg_replace($mReg, '', $text);
-        return $text;
-    }
-}
-/*
 *  stripHtml : Remove HTML sensitive tags
 */
 if (!function_exists('stripHtml')) {
