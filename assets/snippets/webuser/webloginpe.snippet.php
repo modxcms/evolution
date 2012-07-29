@@ -24,15 +24,15 @@
 	$disableServices = isset($disableServices) ? explode(',', str_replace(', ',',',$disableServices)) : array();
 	$tableCheck = isset($tableCheck) ? $tableCheck : 1;
 	
-	include_once MODX_BASE_PATH.'assets/snippets/webloginpe/webloginpe.class.php';
-	include MODX_BASE_PATH.'assets/snippets/webloginpe/webloginpe.templates.php';
-	if (file_exists(MODX_BASE_PATH.'assets/snippets/webloginpe/lang/'.$lang.'.php'))
+	include_once MODX_BASE_PATH.'assets/snippets/webuser/webloginpe.class.php';
+	include MODX_BASE_PATH.'assets/snippets/webuser/webloginpe.templates.php';
+	if (file_exists(MODX_BASE_PATH.'assets/snippets/webuser/lang/'.$lang.'.php'))
 	{
-		include_once MODX_BASE_PATH.'assets/snippets/webloginpe/lang/'.$lang.'.php';
+		include_once MODX_BASE_PATH.'assets/snippets/webuser/lang/'.$lang.'.php';
 	}
 	else
 	{
-		include_once MODX_BASE_PATH.'assets/snippets/webloginpe/lang/en.php';
+		include_once MODX_BASE_PATH.'assets/snippets/webuser/lang/en.php';
 		$modx->setPlaceholder('wlpe.message', $wlpe_lang[105]);
 		print '[+wlpe.message+]';
 	}
@@ -92,7 +92,7 @@
 	$wlpe->ActiveUsers();
 	$wlpe->PlaceHolders($inputHandler, $messageTpl);
 	
-	$modx->regClientStartupScript('assets/snippets/webloginpe/js/ieButtonFix.js');
+	$modx->regClientStartupScript('assets/snippets/webuser/js/ieButtonFix.js');
 
 	$service = $_REQUEST['service'];
 	if (empty($service) || $service == '')

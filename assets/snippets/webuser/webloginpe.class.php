@@ -588,7 +588,7 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 		}
 		else
 		{
-			$photo = $modx->config['site_url'].'assets/snippets/webloginpe/userimages/default_user.jpg';
+			$photo = $modx->config['site_url'].'assets/snippets/webuser/userimages/default_user.jpg';
 		}
 		
 		// EVENT: OnBeforeWebSaveUser
@@ -1413,7 +1413,7 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 		$modx->setPlaceholder('view.country', $this->StringForCountryInt($viewUser['country']));
 		
 		// Handle Special input placeholders.
-		include 'assets/snippets/webloginpe/Default Forms/countryCodes.php';
+		include 'assets/snippets/webuser/Default Forms/countryCodes.php';
 		$inputHandler[9998] = str_replace('[+COUNTRYLABEL+]', $this->LanguageArray[39], $countryCodes);
 		$inputHandler[9999] = str_replace('[+GENDERLABEL+]', $this->LanguageArray[40], $genderCodes);
 
@@ -1836,13 +1836,13 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 				}
 			}
 		}
-		$modx->setPlaceholder('user.defaultphoto', 'assets/snippets/webloginpe/userimages/default_user.jpg');
+		$modx->setPlaceholder('user.defaultphoto', 'assets/snippets/webuser/userimages/default_user.jpg');
 		$modx->setPlaceholder('request.userid', $_REQUEST['userid']);
 		$modx->setPlaceholder('request.activationkey', $_REQUEST['activationkey']);
 		$modx->setPlaceholder('form.captcha', 'manager/includes/veriword.php');
 		
 		// Handle Special input placeholders.
-		include_once 'assets/snippets/webloginpe/Default Forms/countryCodes.php';
+		include_once 'assets/snippets/webuser/Default Forms/countryCodes.php';
 		$inputHandler[9998] = str_replace('[+COUNTRYLABEL+]', $this->LanguageArray[39], $countryCodes);
 		$inputHandler[9999] = str_replace('[+GENDERLABEL+]', $this->LanguageArray[40], $genderCodes);
 
@@ -2001,9 +2001,9 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 	{
 		global $modx;
 		
-		$jQuery = $modx->config['site_url'].'assets/snippets/webloginpe/js/jquery.packed.js';
-		$jQueryForm = $modx->config['site_url'].'assets/snippets/webloginpe/js/jquery.form.js';
-		$jQueryTaconite = $modx->config['site_url'].'assets/snippets/webloginpe/js/jquery.taconite.js';
+		$jQuery = $modx->config['site_url'].'assets/snippets/webuser/js/jquery.packed.js';
+		$jQueryForm = $modx->config['site_url'].'assets/snippets/webuser/js/jquery.form.js';
+		$jQueryTaconite = $modx->config['site_url'].'assets/snippets/webuser/js/jquery.taconite.js';
 		$modx->regClientStartupScript($jQuery);
 		$modx->regClientStartupScript($jQueryForm);
 		$modx->regClientStartupScript($jQueryTaconite);
@@ -2536,7 +2536,7 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 	/**
 	 * CreateUserImage
 	 * Creates a 100px by 100px image for the user profile from a user uploaded image.
-	 * This image is renamed to the username and moved to the webloginpe/userimages/ folder.
+	 * This image is renamed to the username and moved to the webuser/userimages/ folder.
 	 * The URL to this image is returned to be stored in the web_user_attributes table.
 	 *
 	 * @return string A URL to the user image created.
@@ -2631,9 +2631,9 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 		imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
 		// Output
-		$userImageFilePath = $modx->config['base_path'].'assets/snippets/webloginpe/userimages/'.str_replace(' ', '_', strtolower($currentWebUser['username'])).$ext;
-		//$userImageFileURL = $modx->config['site_url'].'assets/snippets/webloginpe/userimages/'.str_replace(' ', '_', strtolower($currentWebUser['username'])).$ext;
-		$userImageFileURL = 'assets/snippets/webloginpe/userimages/'.str_replace(' ', '_', strtolower($currentWebUser['username'])).$ext;
+		$userImageFilePath = $modx->config['base_path'].'assets/snippets/webuser/userimages/'.str_replace(' ', '_', strtolower($currentWebUser['username'])).$ext;
+		//$userImageFileURL = $modx->config['site_url'].'assets/snippets/webuser/userimages/'.str_replace(' ', '_', strtolower($currentWebUser['username'])).$ext;
+		$userImageFileURL = 'assets/snippets/webuser/userimages/'.str_replace(' ', '_', strtolower($currentWebUser['username'])).$ext;
 		
 		switch ($_FILES['photo']['type'])
 		{
