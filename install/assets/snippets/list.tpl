@@ -27,7 +27,7 @@
 $ditto_version = "2.1.0";
     // Ditto version being executed
 
-$ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
+$ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/list/";
 /*
     Param: ditto_base
     
@@ -38,7 +38,7 @@ $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $mod
     Any valid folder location containing the Ditto source code with a trailing slash
 
     Default:
-    [(base_path)]assets/snippets/ditto/
+    [(base_path)]assets/snippets/list/
 */
 $dittoID = (!isset($id)) ? "" : $id."_";
 $GLOBALS["dittoID"] = $dittoID;

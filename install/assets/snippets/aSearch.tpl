@@ -73,7 +73,7 @@ MORE : See the ajaxSearch.readme.txt file for more informations.
 // ajaxSearch version being executed
 define('AS_VERSION', '1.9.2');
 // Path where ajaxSearch is installed
-define('AS_SPATH', 'assets/snippets/ajaxSearch/');
+define('AS_SPATH', 'assets/snippets/aSearch/');
 //include snippet file
 define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 
@@ -115,7 +115,7 @@ if ($cfg['config']) {
 }
 
 // &debug = [ 0 | 1 | 2 | 3 ]
-// 1,2,3 : File mode - Output logged into a file named ajaxSearch_log.txt in ajaxSearch/debug/ directory.
+// 1,2,3 : File mode - Output logged into a file named ajaxSearch_log.txt in aSearch/debug/ directory.
 // this directory should be writable.
 // Default: 0 - no logs
 $cfg['debug'] = isset($debug) ? $debug : (isset($__debug) ? $__debug : $dcfg['debug']);
@@ -460,7 +460,7 @@ if ($cfg['ajaxSearch']) {
 
     // &jsMooTools2 - Location of an alternative mootools javascript library
     // Default: AS_SPATH . 'js/mootools1.2/mootools.js' - contains only the required functions for AS
-    // to use an another library, use this parameter and change the ajaxSearch/js/ajaxSearch1/ajaxSearch-mootools2.js file
+    // to use an another library, use this parameter and change the aSearch/js/ajaxSearch1/ajaxSearch-mootools2.js file
     $cfg['jsMooTools2'] = isset($jsMooTools2) ? $jsMooTools2 : (isset($__jsMooTools2) ? $__jsMooTools2 : $dcfg['jsMooTools2']);
 
     // &jsQuery - Location of the jquery javascript library
