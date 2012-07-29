@@ -3222,7 +3222,7 @@ class DocumentParser {
      * Parses a resource property string and returns the result as an array
      *
      * @param string $propertyString
-     * @return type
+     * @return array Associative array in the form property name => property value
      */
     function parseProperties($propertyString) {
         $parameter= array ();
