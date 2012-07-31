@@ -3,7 +3,7 @@ Changelog
 
 WebUser 1.3.2
 -------------
-	July 2012 - changed filenames and snippet names to WebUser
+	July 2012 - changed filenames to webusers*, changed snippet name to WebUsers.
 
 
 
