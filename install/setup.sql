@@ -862,9 +862,9 @@ REPLACE INTO `{PREFIX}site_templates`
 REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','ClipperCMS Install Success','Welcome to the Clipper Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed ClipperCMS.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://clippercms.com/forums/\" target=\"_blank\">ClipperCMS Community</a> provides a great starting point to learn all things Clipper, or you can also <a href=\"http://modxcms.com/learn/it.html\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to ClipperCMS!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0);
 
 
-REPLACE INTO `{PREFIX}manager_users` 
-(id, username, password)VALUES 
-(1, '{ADMIN}', MD5('{ADMINPASS}'));
+#REPLACE INTO `{PREFIX}manager_users` 
+#(id, username, password)VALUES 
+#(1, '{ADMIN}', MD5('{ADMINPASS}'));
 
 
 REPLACE INTO `{PREFIX}user_attributes` 

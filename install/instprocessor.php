@@ -197,27 +197,47 @@ if ($moduleSQLBaseFile) {
     }
 }
 
-// Add new columns for salted password hashing
+// Add new columns for salted password hashing and set admin user
 $rs_mu = mysql_query('SELECT * FROM '.$dbase.'.'.$table_prefix.'manager_users LIMIT 1', $conn);
-$row_mu = mysql_fetch_assoc($rs_mu);
-if (isset($row_mu['hashtype'])) {
-	$mu_hashtype = true;
-} else {
-	$mu_hashtype = mysql_query('ALTER TABLE '.$dbase.'.'.$table_prefix.'manager_users ADD COLUMN hashtype smallint NOT NULL DEFAULT 0 AFTER username', $conn);
+if (mysql_num_rows($rs_mu)) {
+	$row_mu = mysql_fetch_assoc($rs_mu);
+	if (isset($row_mu['hashtype'])) {
+		$mu_hashtype = true;
+	} else {
+		$mu_hashtype = mysql_query('ALTER TABLE '.$dbase.'.'.$table_prefix.'manager_users ADD COLUMN hashtype smallint NOT NULL DEFAULT 0 AFTER username', $conn);
+	}
+	if (isset($row_mu['salt'])) {
+		$mu_salt = true;
+	} else {
+		$mu_salt = ($mu_hashtype && mysql_query('ALTER TABLE '.$dbase.'.'.$table_prefix.'manager_users ADD COLUMN salt varchar(40) NOT NULL DEFAULT \'\' AFTER hashtype', $conn));
+	}
+	if (!$mu_hashtype || !$mu_salt) {
+		$errors += 1;
+		echo '<span class="notok"><b>'.$_lang['database_alerts'].'</span></p>';
+		echo '<p>'.$_lang['installation_error_occured'].'<br /><br /></p>';
+		echo '<p>'.$_lang['some_tables_not_updated'].'</p>';
+		echo '<p>'.$dbase.'.'.$table_prefix.'manager_users: columns hashtype and salt.</p>';
+		return;
+	}
 }
-if (isset($row_mu['salt'])) {
-	$mu_salt = true;
-} else {
-	$mu_salt = ($mu_hashtype && mysql_query('ALTER TABLE '.$dbase.'.'.$table_prefix.'manager_users ADD COLUMN salt varchar(40) NOT NULL DEFAULT \'\' AFTER hashtype', $conn));
-}
-if (!$mu_hashtype || !$mu_salt) {
-        $errors += 1;
+
+// Admin user
+require_once('../manager/includes/hash.inc.php');
+$HashHandler = new HashHandler(CLIPPER_HASH_PREFERRED);
+$Hash = $HashHandler->generate($adminpass);
+$rs_hash = mysql_query('REPLACE INTO '.$dbase.'.'.$table_prefix.'manager_users
+				(id, username, hashtype, salt, password)
+				VALUES 
+				(1, "'.$adminname.'", '.(string)CLIPPER_HASH_PREFERRED.', "'.$Hash->salt.'", "'.$Hash->hash.'")', $conn);
+if (!$rs_hash) {
+	$errors += 1;
         echo '<span class="notok"><b>'.$_lang['database_alerts'].'</span></p>';
         echo '<p>'.$_lang['installation_error_occured'].'<br /><br /></p>';
         echo '<p>'.$_lang['some_tables_not_updated'].'</p>';
-        echo '<p>'.$dbase.'.'.$table_prefix.'manager_users: columns hashtype and salt.</p>';
+        echo '<p>'.$dbase.'.'.$table_prefix.'manager_users: admin user row not set.</p>';
         return;
 }
+
 
 // write the config.inc.php file if new installation
 echo "<p>" . $_lang['writing_config_file'];
