@@ -141,6 +141,8 @@ $_lang["configcheck_unauthorizedpage_unpublished"] = 'The Unauthorized page defi
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'This means that your Unauthorized page is inaccessible to the general public. Publish the page or make sure it is assigned to an existing Resource in your Site Tree in the Tools &gt; Configuration menu.';
 $_lang["configcheck_validate_referer"] = 'Security Warning: HTTP Header Validation';
 $_lang["configcheck_validate_referer_msg"] = "The configuration setting <strong>Validate HTTP_REFERER headers?</strong> is Off. We recommend turning it On. <a href=\"index.php?a=17\">Go to Configuration options</a>";
+$_lang['configcheck_error_handling_silent'] = 'Parser errors are to be shown on the screen';
+$_lang['configcheck_error_handling_silent_msg'] = 'The configuration setting <strong>PHP error messages</strong> is set so that errors are displayed on the page. This is recommended for development, but not for live sites.';
 $_lang["configcheck_warning"] = 'Configuration warning: ';
 $_lang["configcheck_what"] = 'What does this mean?';
 $_lang["confirm_block"] = 'Are you sure you want to block this user?';
