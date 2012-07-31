@@ -51,7 +51,7 @@ class AjaxSearchLog {
 
             $this->logcmt = isset($asLog_array[1]) ? (int)$asLog_array[1] : 0;
             if ($this->logcmt) {
-                $jsInclude = AS_SPATH . COMMENT_JSDIR . '/ajaxSearchCmt.js';
+                $jsInclude = AS_SPATH . COMMENT_JSDIR . '/aSearchCmt.js';
                 $modx->regClientStartupScript($jsInclude);
             }
         } else {

@@ -82,7 +82,7 @@ class AjaxSearchResults {
     function getSearchResults(&$msgErr) {
         global $modx;
         $results = array();
-        include_once AS_PATH . "classes/ajaxSearchRequest.class.inc.php";
+        include_once AS_PATH . "classes/aSearchRequest.class.inc.php";
         if (class_exists('AjaxSearchRequest')) {
             $this->_asRequest = new AjaxSearchRequest($this->asUtil,$this->asCfg->pgCharset);
         }
@@ -104,9 +104,9 @@ class AjaxSearchResults {
         }
         $this->asCfg->restoreConfig(DEFAULT_SITE, DEFAULT_SUBSITE);
         $this->_sortMixedResults();
-        if ($this->dbgRes) $this->asUtil->dbgRecord($this->asCfg->scfg, "AjaxSearch - scfg");
-        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults, "AjaxSearch - group results");
-        if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults, "AjaxSearch - group mixed results");
+        if ($this->dbgRes) $this->asUtil->dbgRecord($this->asCfg->scfg, "ASearch - scfg");
+        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults, "ASearch - group results");
+        if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults, "ASearch - group mixed results");
 
         return true;
     }
@@ -145,13 +145,13 @@ class AjaxSearchResults {
         if ($site != DEFAULT_SITE) {
             $siteConfigFunction = SITE_CONFIG;
             if (!function_exists($siteConfigFunction)) {
-                $msgErr = '<br /><h3>AjaxSearch error: search function ' . $siteConfigFunction .  ' not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
+                $msgErr = '<br /><h3>ASearch error: search function ' . $siteConfigFunction .  ' not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
                 return false;
             }
             else {
                 $sitecfg = $siteConfigFunction($site);
                 if (!count($sitecfg)) {
-                    $msgErr = '<br /><h3>AjaxSearch error: Site ' .$site .  ' not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
+                    $msgErr = '<br /><h3>ASearch error: Site ' .$site .  ' not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
                     return false;
                 }
             }
@@ -160,13 +160,13 @@ class AjaxSearchResults {
         if ($subsite != DEFAULT_SUBSITE) {
             $subsiteConfigFunction = SUBSITE_CONFIG;
             if (!function_exists($subsiteConfigFunction)) {
-                $msgErr = '<br /><h3>AjaxSearch error: search function ' . $subsiteConfigFunction .  ' not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
+                $msgErr = '<br /><h3>ASearch error: search function ' . $subsiteConfigFunction .  ' not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
                 return false;
             }
             else {
                 $subsitecfg = $subsiteConfigFunction($site,$subsite);
                 if (!count($subsitecfg)) {
-                    $msgErr = '<br /><h3>AjaxSearch error: Subsite ' .$subsite .  ' of ' . $site . 'not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
+                    $msgErr = '<br /><h3>ASearch error: Subsite ' .$subsite .  ' of ' . $site . 'not defined in the configuration file: ' . $this->asCfg->cfg['config'] . ' !</h3><br />';
                     return false;
                 }
             }
@@ -205,7 +205,7 @@ class AjaxSearchResults {
                     $fields_array = explode(':', $table);
                     $tbcode = $fields_array[0];
                     if (($tbcode != 'content') && ($tbcode != 'tv') && ($tbcode != 'jot') && ($tbcode != 'maxigallery') && !function_exists($tbcode)) {
-                        $msgErr = "<br /><h3>AjaxSearch error: table $tbcode not defined in the configuration file: " . $this->asCfg->cfg['config'] . " !</h3><br />";
+                        $msgErr = "<br /><h3>ASearch error: table $tbcode not defined in the configuration file: " . $this->asCfg->cfg['config'] . " !</h3><br />";
                         return false;
                     }
                 }
@@ -291,7 +291,7 @@ class AjaxSearchResults {
                 $rs[$i]['order'] = $rs[$i][$order];
                 $this->_groupMixedResults['results'][] = $rs[$i];
             }
-            if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults[$ig], "AjaxSearch - group mixed results");
+            if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults[$ig], "ASearch - group mixed results");
 
         }
         else {
@@ -342,7 +342,7 @@ class AjaxSearchResults {
                         $this->nbGroups = $ig + 1;
                         $this->asCfg->restoreConfig($site, DEFAULT_SUBSITE);
 
-                        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults[$ig], "AjaxSearch - group results");
+                        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults[$ig], "ASearch - group results");
 
                     }
                     else {
@@ -356,7 +356,7 @@ class AjaxSearchResults {
                             $this->_groupMixedResults['results'][] = $rs[$j];
                         }
 
-                        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults[$ig], "AjaxSearch - group results");
+                        if ($this->dbgRes) $this->asUtil->dbgRecord($this->groupResults[$ig], "ASearch - group results");
                     }
                 }
             }
@@ -365,7 +365,7 @@ class AjaxSearchResults {
                 $ucfg = $this->asCfg->setAsCall($this->asCfg->getUserConfig());
                 $this->groupResults[$ig] = $this->_setHeaderGroupResults($site, $subsite, $display, $ucfg, $select, $nbrs);
                 $row = array();
-                if ($this->dbgRes) $this->asUtil->dbgRecord($rs, "AjaxSearch - rs");
+                if ($this->dbgRes) $this->asUtil->dbgRecord($rs, "ASearch - rs");
                 $rs = $this->_sortResultsByRank($this->asCtrl->searchString, $this->asCtrl->advSearch, $rs, $nbrs);
                 $this->groupResults[$ig]['results'] = $rs;
                 $this->nbGroups = $ig + 1;
@@ -472,7 +472,7 @@ class AjaxSearchResults {
             array_multisort($order, SORT_ASC, $this->_groupMixedResults['results']);
             $this->groupResults[] = $this->_groupMixedResults;
             $this->nbGroups++;
-            if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults['results'], "AjaxSearch - sorted noName results");
+            if ($this->dbgRes) $this->asUtil->dbgRecord($this->_groupMixedResults['results'], "ASearch - sorted noName results");
         }
     }
     /*
@@ -486,7 +486,7 @@ class AjaxSearchResults {
             foreach ($tvs as $tv) {
                 $tplRS = $modx->db->select('id', $tblName, 'name="' . $tv . '"');
                 if (!$modx->db->getRecordCount($tplRS)) {
-                    $msgErr = "<br /><h3>AjaxSearch error: tv $tv not defined - Check your withTvs parameter !</h3><br />";
+                    $msgErr = "<br /><h3>ASearch error: tv $tv not defined - Check your withTvs parameter !</h3><br />";
                     return false;
                 }
             }

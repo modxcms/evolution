@@ -23,7 +23,7 @@ define('INTROFAILURE_CLASS', 'AS_ajax_resultsIntroFailure');
 
 define('RESULTS_DIV', '<div id="%sajaxSearch_output" class="init"></div>');
 
-define('AJAXSEARCH_JSDIR','js/ajaxSearch');
+define('AJAXSEARCH_JSDIR','js/aSearch');
 
 define('ASPHX','||-AJAXSEARCH-||');
 
@@ -888,13 +888,13 @@ class AjaxSearchOutput {
 
             if ($this->asCfg->cfg['jscript'] == 'jquery') {
                 if ($this->asCfg->cfg['addJscript']) $modx->regClientStartupScript($this->asCfg->cfg['jsJquery']);
-                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch-jquery.js';
+                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/aSearch-jquery.js';
             } elseif ($this->asCfg->cfg['jscript'] == 'mootools2') {
                 if ($this->asCfg->cfg['addJscript']) $modx->regClientStartupScript($this->asCfg->cfg['jsMooTools2']);
-                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch-mootools2.js';
+                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/aSearch-mootools2.js';
             } else {
                 if ($this->asCfg->cfg['addJscript']) $modx->regClientStartupScript($this->asCfg->cfg['jsMooTools']);
-                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/ajaxSearch.js';
+                $jsInclude = AS_SPATH . AJAXSEARCH_JSDIR . $typeAs . '/aSearch.js';
             }
             $modx->regClientStartupScript($jsInclude);
 
@@ -905,13 +905,13 @@ class AjaxSearchOutput {
             $json.= ',"cfg":"' . addslashes($this->asCfg->setAsCall($this->asCfg->ucfg)) . '"}';
             $line = (!$this->asCfg->cfg['asId']) ? "asvar=new Array();asvar[0]='{$json}';" : "asvar[asvar.length]='{$json}';";
             $jsVars = <<<EOD
-<!-- start AjaxSearch header -->
+<!-- start ASearch header -->
 <script type="text/javascript">
 //<![CDATA[
 {$line}
 //]]>
 </script>
-<!-- end AjaxSearch header -->
+<!-- end ASearch header -->
 EOD;
             $modx->regClientStartupScript($jsVars);
         }

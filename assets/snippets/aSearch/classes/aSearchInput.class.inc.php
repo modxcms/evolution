@@ -200,7 +200,7 @@ class AjaxSearchInput {
             if ($stripInput != 'defaultStripInput') {
                 if (function_exists($stripInput)) $searchString = $stripInput($searchString, $advSearch);
                 else {
-                    $msgErr = "<br /><h3>AjaxSearch error: strip input function $stripInput not defined in the configuration file: " . $this->asCfg->cfg['config'] . " !</h3><br />";
+                    $msgErr = "<br /><h3>ASearch error: strip input function $stripInput not defined in the configuration file: " . $this->asCfg->cfg['config'] . " !</h3><br />";
                     return false;
                 }
             } else $searchString = $this->_defaultStripInput($searchString, $this->asCfg->pgCharset);

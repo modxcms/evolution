@@ -64,27 +64,27 @@ class AjaxSearch {
     function run($tstart, $dcfg, $cfg = null) {
         global $modx;
 
-        include_once AS_PATH . "classes/ajaxSearchConfig.class.inc.php";
-        if (!class_exists('AjaxSearchConfig')) return "<h3>error: AjaxSearchConfig classe not found</h3>";
+        include_once AS_PATH . "classes/aSearchConfig.class.inc.php";
+        if (!class_exists('AjaxSearchConfig')) return "<h3>error: ASearchConfig classe not found</h3>";
         $asCfg = new AjaxSearchConfig($dcfg,$cfg);
         if (!$asCfg->initConfig($msgErr)) return $msgErr;
 
-        include_once AS_PATH . "classes/ajaxSearchUtil.class.inc.php";
-        if (!class_exists('AjaxSearchUtil')) return "<h3>error: AjaxSearchUtil classe not found</h3>";
+        include_once AS_PATH . "classes/aSearchUtil.class.inc.php";
+        if (!class_exists('AjaxSearchUtil')) return "<h3>error: ASearchUtil classe not found</h3>";
         $asUtil = new AjaxSearchUtil($asCfg->cfg['debug'],$asCfg->cfg['version'],$tstart,$msgErr);
         if ($msgErr) return $msgErr;
 
         $dbg = $asUtil->dbg; // first level of debug log
         set_time_limit($asCfg->cfg['timeLimit']);
 
-        include_once AS_PATH . "classes/ajaxSearchCtrl.class.inc.php";
-        include_once AS_PATH . "classes/ajaxSearchInput.class.inc.php";
-        include_once AS_PATH . "classes/ajaxSearchResults.class.inc.php";
-        include_once AS_PATH . "classes/ajaxSearchOutput.class.inc.php";
+        include_once AS_PATH . "classes/aSearchCtrl.class.inc.php";
+        include_once AS_PATH . "classes/aSearchInput.class.inc.php";
+        include_once AS_PATH . "classes/aSearchResults.class.inc.php";
+        include_once AS_PATH . "classes/aSearchOutput.class.inc.php";
 
         if (class_exists('AjaxSearchCtrl') && class_exists('AjaxSearchInput') && class_exists('AjaxSearchResults') && class_exists('AjaxSearchOutput')) {
             if ($asCfg->cfg['asLog']) {
-                include_once AS_PATH . "classes/ajaxSearchLog.class.inc.php";
+                include_once AS_PATH . "classes/aSearchLog.class.inc.php";
                 $asLog = new AjaxSearchLog($asCfg->cfg['asLog']);
             }
             if ($dbg) $asCfg->displayConfig($asUtil);
@@ -103,9 +103,9 @@ class AjaxSearch {
             $asUtil->restoreBacktrackLimit();
 
             $etime = $asUtil->getElapsedTime();
-            if ($dbg) $asUtil->dbgRecord($etime, "AjaxSearch - Elapsed Time");
+            if ($dbg) $asUtil->dbgRecord($etime, "aSearch - Elapsed Time");
         } else {
-            $output = "<h3>error: AjaxSearch classes not found</h3>";
+            $output = "<h3>error: aSearch classes not found</h3>";
         }
         return $output;
     }
