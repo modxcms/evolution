@@ -24,15 +24,18 @@
 	$disableServices = isset($disableServices) ? explode(',', str_replace(', ',',',$disableServices)) : array();
 	$tableCheck = isset($tableCheck) ? $tableCheck : 1;
 	
-	include_once MODX_BASE_PATH.'assets/snippets/webuser/webloginpe.class.php';
-	include MODX_BASE_PATH.'assets/snippets/webuser/webloginpe.templates.php';
-	if (file_exists(MODX_BASE_PATH.'assets/snippets/webuser/lang/'.$lang.'.php'))
+	define('WEBUSER_PATH', MODX_BASE_PATH.'assets/snippets/webuser/');
+	
+	require_once(WEBUSER_PATH.'webuser.class.php');
+	require_once(WEBUSER_PATH.'webuser.templates.php');
+
+	if (file_exists(WEBUSER_PATH.'lang/'.$lang.'.php'))
 	{
-		include_once MODX_BASE_PATH.'assets/snippets/webuser/lang/'.$lang.'.php';
+		require_once(WEBUSER_PATH.'lang/'.$lang.'.php');
 	}
 	else
 	{
-		include_once MODX_BASE_PATH.'assets/snippets/webuser/lang/en.php';
+		require_once(WEBUSER_PATH.'lang/en.php');
 		$modx->setPlaceholder('wlpe.message', $wlpe_lang[105]);
 		print '[+wlpe.message+]';
 	}

@@ -1,4 +1,16 @@
-WLPE 1.3.1+ (TimGS)
+Changelog
+=========
+
+WebUser 1.3.2
+-------------
+	July 2012 - changed filenames and snippet names to WebUser
+
+
+
+
+
+
+WLPE 1.3.1+ (TimGS)	c. 2009-2011
 ===========
 
  = WLPE 1.3.1 plus bugfixes and ability to cohabit with the SMF connector
