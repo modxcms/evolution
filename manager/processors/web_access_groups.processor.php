@@ -26,7 +26,7 @@ switch ($operation) {
 			echo "no group name specified";
 			exit;
 		} else {
-			$sql = 'INSERT INTO '.$tbl_webgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
+			$sql = 'INSERT IGNORE INTO '.$tbl_webgroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')'; // Temporary solution pending DBAPI::replace
 			if(!$rs = $modx->db->query($sql)) {
 				echo "Failed to insert new group. Possible duplicate group name?";
 				exit;
