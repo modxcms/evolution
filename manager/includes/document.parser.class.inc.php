@@ -49,6 +49,14 @@ class DocumentParser {
     var $forwards= 3;
 
     /**
+     * @var array Map forked snippet names to names of earlier compatible snippets.
+     * Note that keys are all lowercase.
+     *
+     * @todo Construct an API and/or config system for this. Currently only applies to core/bundled snippets.
+     */
+    var $snippetMap = array('ditto'=>'List', 'webloginpe'=>'WebUsers', 'AjaxSearch'=>'ASearch'); 
+
+    /**
      * Document constructor
      *
      * @return DocumentParser
@@ -1024,6 +1032,11 @@ class DocumentParser {
                     $params= '';
                 }
                 $matches[1][$i]= str_replace($params, '', $matches[1][$i]);
+
+                if (isset($this->snippetMap[strtolower($matches[1][$i])])) {
+                     $matches[1][$i] = $this->snippetMap[strtolower($matches[1][$i])];
+                }
+
                 $snippetParams[$i]= $params;
             }
             $nrSnippetsToGet= $matchCount;
@@ -2187,6 +2200,11 @@ class DocumentParser {
      * @return string
      */
     function runSnippet($snippetName, $params= array ()) {
+
+        if (isset($this->snippetMap[strtolower($snippetName)])) {
+             $snippetName = $this->snippetMap[strtolower($snippetName)];
+        }
+
         if (isset ($this->snippetCache[$snippetName])) {
             $snippet= $this->snippetCache[$snippetName];
             $properties= $this->snippetCache[$snippetName . "Props"];
