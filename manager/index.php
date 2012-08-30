@@ -216,7 +216,7 @@ if (isset($modx->config['validate_referer']) && intval($modx->config['validate_r
 
         if (!empty($referer)) {
             if (!preg_match('/^'.preg_quote(MODX_SITE_URL, '/').'/i', $referer)) {
-                echo "A possible CSRF attempt was detected from referer: {$referer}.";
+                echo 'A possible CSRF attempt was detected from referer: '.strip_tags($referer);
                 exit();
             }
         } else {
