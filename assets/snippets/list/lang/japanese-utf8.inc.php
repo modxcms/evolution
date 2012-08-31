@@ -32,7 +32,7 @@ $_lang['dateFormat'] = "%Y/%m/%d %H:%M";
 
 // Debug Tab Names
 $_lang['info'] = "情報";
-$_lang['modx'] = "MODx";
+$_lang['modx'] = "ClipperCMS";
 $_lang['fields'] = "フィールド";
 $_lang['templates'] = "テンプレート";
 $_lang['filters'] = "フィルタ";

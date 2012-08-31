@@ -55,7 +55,7 @@ $_lang['dateFormat'] = "%d-%b-%y %H:%M";
 
 $_lang['info'] = "Инфо";
 
-$_lang['modx'] = "MODx";
+$_lang['modx'] = "ClipperCMS";
 
 $_lang['fields'] = "Полета";
 
