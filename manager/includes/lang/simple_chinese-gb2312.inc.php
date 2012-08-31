@@ -3,17 +3,16 @@
  * Filename:       includes/lang/simple_chinese-gb2312.inc.php
  * Function:       Simple Chinese language file.
  * Encoding:       gb2312
- * Author:         modx.cn leepoooo@163.com
- * Date:           Jun 8, 2009
- * Version:        0.1 (from English Ver1.6)
- * MODx version:   Evoltuion 1.0
+ * Author:         modx.cn leepoooo@163.com, The ClipperCMS Project Team
+ * Date:                   31st Aug 2012
+ * ClipperCMS version:     1.1
 */
 $modx_lang_attribute = 'zh'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'gb2312';
 
 $_lang["about"] = '关于MODX';
-$_lang["about_msg"] = 'MODx is a <a href= "http://modxcms.com/what-is-modx.html" target= "_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
-$_lang["about_title"] = '关于MODx';
+$_lang["about_msg"] = CMS_NAME.' is a <a href= "http://'.CMS_DOMAIN.'" target= "_blank">PHP Application Framework and Content Management System</a> licensed under the <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_title"] = '关于'.CMS_NAME;
 $_lang["access_permission_denied"] = '你没有访问这文档的权限。'; 
 $_lang["access_permission_parent_denied"] = '你不允许在这里建立文档！';
 $_lang["access_permissions"] = '访问许可';
@@ -106,7 +105,7 @@ $_lang["configcheck_default_msg"] = '发生不知名的错误.';
 $_lang["configcheck_images"] = '图象目录不可写';
 $_lang["configcheck_images_msg"] = '图象目录不可写或不存在，图象管理功能将不能运行！';
 $_lang["configcheck_installer"] = '安装程序没删除';
-$_lang["configcheck_installer_msg"] = 'The install/ directory contains the installer for MODx. Just imagine what might happen if an evil person finds this folder and runs the installer! He\'d probably not get too far, because he\'ll need to enter some user information for the database, but it\'s still best to remove this folder from your server.';
+$_lang["configcheck_installer_msg"] = 'The install/ directory contains the installer for '.CMS_NAME.'. Just imagine what might happen if an evil person finds this folder and runs the installer! He\'d probably not get too far, because he\'ll need to enter some user information for the database, but it\'s still best to remove this folder from your server.';
 $_lang["configcheck_lang_difference"] = '语言文件行数不正确';
 $_lang["configcheck_lang_difference_msg"] = '当前选择的文件和默认的文件的语言行数不一样，这虽然不构成什么问题，但以为着你的语言文件需要更新了。';
 $_lang["configcheck_notok"] = '一个或多个配置未通过设置: ';
@@ -233,8 +232,8 @@ $_lang["export_site_exporting_document"] = '输出文档 <b>%s</b> of <b>%s</b><br /
 $_lang["export_site_failed"] = '失败！';
 $_lang["export_site_html"] = '输出整个站点成为HTML文档';
 $_lang["export_site_maxtime"] = '最大输出时间：';
-$_lang["export_site_maxtime_message"] = '你可以在这里设置MODx输出整个站点的最大时间，(覆盖PHP的设置).输入0表示时间无限制. 不过请注意，如果你输入0或时间过大，你的服务器或许会发生很奇怪的现象而不能访问，因此我们不建议设置0，最好把时间控制在你的服务器允许范围内。';
-$_lang["export_site_message"] = '使用这个功能，你可以将整个站点转化为HTML文件.注意：无论如何你都将失去MODX所提供的很多功能:<p><ul><li>Page reads on the exported files will not be recorded.</li><li>切片功能将不能工作。</li><li>只有普通文件能够被输出，网站连接也不能输出。</li><li>如果你的文档中有切片使用了重定向功能，那文档也不能输出。</li><li>Depending on how you\'ve written your documents, style sheets and images, the design of your site may be broken. To fix this, you can save/move your exported files to the same directory where the main MODx index.php file is located.</li></ul></p><p>Please fill out the form and press \'Export\' to start the export process. The files created will be saved in the location you specify, using, where possible, the document\'s aliases as filenames. While exporting your site, it\'s best to have the MODx configuration item \'Friendly aliases\' set to \'yes\'. Depending on the size of your site, the export may take a while.</p><p><b>Any existing files will be overwritten by the new files if their names are identical!</b></p>';
+$_lang["export_site_maxtime_message"] = '你可以在这里设置'.CMS_NAME.'输出整个站点的最大时间，(覆盖PHP的设置).输入0表示时间无限制. 不过请注意，如果你输入0或时间过大，你的服务器或许会发生很奇怪的现象而不能访问，因此我们不建议设置0，最好把时间控制在你的服务器允许范围内。';
+$_lang["export_site_message"] = '使用这个功能，你可以将整个站点转化为HTML文件.注意：无论如何你都将失去MODX所提供的很多功能:<p><ul><li>Page reads on the exported files will not be recorded.</li><li>切片功能将不能工作。</li><li>只有普通文件能够被输出，网站连接也不能输出。</li><li>如果你的文档中有切片使用了重定向功能，那文档也不能输出。</li><li>Depending on how you\'ve written your documents, style sheets and images, the design of your site may be broken. To fix this, you can save/move your exported files to the same directory where the main '.CMS_NAME.' index.php file is located.</li></ul></p><p>Please fill out the form and press \'Export\' to start the export process. The files created will be saved in the location you specify, using, where possible, the document\'s aliases as filenames. While exporting your site, it\'s best to have the '.CMS_NAME.' configuration item \'Friendly aliases\' set to \'yes\'. Depending on the size of your site, the export may take a while.</p><p><b>Any existing files will be overwritten by the new files if their names are identical!</b></p>';
 $_lang["export_site_numberdocs"] = '<p>发现<b> %s文档要输出...</b></p>';
 $_lang["export_site_prefix"] = '文档前缀:';
 $_lang["export_site_start"] = '开始输出';
@@ -254,7 +253,7 @@ $_lang["file_not_saved"] = '文件不能保存，请确认目的文件目录是否可写！';
 $_lang["file_saved"] = '文件上传成功！';
 $_lang["file_unzip"] = '解压成功！';
 $_lang["file_unzip_fail"] = '解压失败！';
-$_lang["filemanager_path_message"] = 'IIS often does not populate the document_root setting properly, which is used by the file manager to determine what you can look at. If you\'re having problems using the file manager, make sure this path points to the root of your MODx installation.';
+$_lang["filemanager_path_message"] = 'IIS often does not populate the document_root setting properly, which is used by the file manager to determine what you can look at. If you\'re having problems using the file manager, make sure this path points to the root of your '.CMS_NAME.' installation.';
 $_lang["filemanager_path_title"] = '文件管理路径:';
 $_lang["files_access_denied"] = '拒绝访问！';
 $_lang["files_data"] = '数据';
@@ -289,7 +288,7 @@ $_lang["files_viewfile"] = '查阅文件';
 $_lang["folder"] = '文件夹';
 $_lang["forward"] = '向前';
 $_lang["friday"] = '星期五';
-$_lang["friendly_alias_message"] = '如果你在使用friendly URLs， 并且文件有别名， the alias will always have precedence over the friendly URL. By setting this option to \'yes\', the friendly URL prefix and suffix will also be applied to the alias. For example, if your document with ID 1 has an alias of `introduction`, and you\'ve set a prefix of `` and a suffix of `.html`, setting this option to `yes` will generate `introduction.html`. If there\'s no alias, MODx will generate `1.html` as link.';
+$_lang["friendly_alias_message"] = '如果你在使用friendly URLs， 并且文件有别名， the alias will always have precedence over the friendly URL. By setting this option to \'yes\', the friendly URL prefix and suffix will also be applied to the alias. For example, if your document with ID 1 has an alias of `introduction`, and you\'ve set a prefix of `` and a suffix of `.html`, setting this option to `yes` will generate `introduction.html`. If there\'s no alias, '.CMS_NAME.' will generate `1.html` as link.';
 $_lang["friendly_alias_title"] = '使用友好别名friendly aliases:';
 $_lang["friendlyurls_message"] = '这个设置将允许使用友好URL以便于搜索引擎的工作，这个设置只工作在Apache服务器下, 另外你将需要写一个.htaccess. 详细情况请查阅.htaccess文件。';
 $_lang["friendlyurls_title"] = '起用友好URLs:';
@@ -304,7 +303,7 @@ $_lang["graphtype_title"] = '图表类型:';
 $_lang["group_access_permissions"] = '用户组访问';
 $_lang["guid"]= 'GUID';
 $_lang["help"] = '帮助';
-$_lang["help_msg"] = '<p>你可以在这里寻求支持 <a href="http://modxcms.com/" target="_blank">访问中文MODx网站</a>如果你有兴趣，.';
+$_lang["help_msg"] = '<p>你可以在这里寻求支持 <a href="http://'.CMS_DOMAIN.'/" target="_blank">访问中文'.CMS_NAME.'网站</a>如果你有兴趣，.';
 $_lang["help_title"] = '帮助';
 $_lang["hide_tree"] = '隐藏树';
 $_lang["home"] = '主页';
@@ -345,7 +344,7 @@ $_lang["keywords_intro"] = 'To edit a keyword, simply type in the new keyword in
 $_lang["language_message"] = '选择后台管理语言.';
 $_lang["language_title"] = '语言:';
 $_lang["launch_site"] = '浏览站点';
-$_lang["layout_message"] = '利用这个选项来设置MODx的管理布局设置';
+$_lang["layout_message"] = '利用这个选项来设置'.CMS_NAME.'的管理布局设置';
 $_lang["layout_settings_1"] = '基本边栏设置 <br /><span class="comment">导航在文件目录树的上方</span>';
 $_lang["layout_settings_2"] = '顶部是菜单(只针对IE) <br /><span class="comment">导航条在屏幕的上方。 本布局只在IE下起效</span>';
 $_lang["layout_settings_3"] = '三行布局 <br /><span class="comment">导航条在文档的左边。</span>';
@@ -356,7 +355,7 @@ $_lang["list_mode"]= '关闭打开列表模式 - 用来显示所有在格子中的数据.';
 $_lang["loading_doc_tree"] = 'Loading document tree...';
 $_lang["loading_menu"] = '加载菜单......';
 $_lang["loading_menu_tree"] = '加载菜单和文件树...';
-$_lang["loading_page"] = '请等待MODx加载页面...';
+$_lang["loading_page"] = '请等待'.CMS_NAME.'加载页面...';
 $_lang["lock_htmlsnippet"] = '锁住块的编辑';
 $_lang["lock_htmlsnippet_msg"] = '只有超级管理员(ID 是1的角色)可以编辑这块';
 $_lang["lock_module"] = '锁定模块的编辑';
@@ -381,7 +380,7 @@ $_lang["login_captcha_message"] = '管理员设置了安全模式，因此你需要输入安全码。\
 $_lang["login_homepage"] = '登陆页面';
 $_lang["login_homepage_message"] = '输入当他/她登陆网站后需要呈现给他/她的页面的ID号 。<b>注意：你需要保证你输入的ID号是有效的，并且这个ID代表的文档是可以被他/她访问的!</b>';
 $_lang["login_message"] = '请输入你的管理帐号，注意，大小写';
-$_lang["logo_slogan"] = '简易而不简单 - \nMODx内容管理';
+$_lang["logo_slogan"] = '简易而不简单 - \n'.CMS_NAME.'内容管理';
 $_lang["logout"] = '退出';
 $_lang["logout_message"] = '<p>你现在已经登陆了站点管理. 如果你要退出，请按\'退出Logout\'.</p><p>要到管理首页请按 \'主页Home\'.</p>';
 $_lang["long_title"] = '长标题';
@@ -475,11 +474,11 @@ $_lang["no_activity_message"] = 'You have not yet created or edited any document
 $_lang["no_date"] = '没有时间';
 $_lang["no_groups_found"] = '没发现组。';
 $_lang["no_keywords_found"] = '这里通常没有关键词.';
-$_lang["no_logging_found"] = 'MODx没发现登陆数据，这意味着你站点关闭了登陆或到现在还没有访问者。';
+$_lang["no_logging_found"] = CMS_NAME.'没发现登陆数据，这意味着你站点关闭了登陆或到现在还没有访问者。';
 $_lang["no_online_users"] = '没有正浏览网站的访问者。';
 $_lang["no_records_found"] = '没有记录.';
 $_lang["no_results"] = '没有结果';
-$_lang["no_stats_message"] = '这里显示你站点的访问者状态，但是，当你在MODx配置里设置`访问日志日志Log visits`为`否no`的话这里将不收集任何信息。';
+$_lang["no_stats_message"] = '这里显示你站点的访问者状态，但是，当你在'.CMS_NAME.'配置里设置`访问日志日志Log visits`为`否no`的话这里将不收集任何信息。';
 $_lang["nojava"] = 'Java seems to be disabled. Click <a href="index.php?a=1&f=9&javaDis=1">here</a> to load the non-java menu.';
 $_lang["nologentries_message"] = '输入每页显示的索引数量.';
 $_lang["nologentries_title"] = '日志条目数:';
@@ -542,7 +541,7 @@ $_lang["password_method"] = '密码确认方法';
 $_lang["password_method_email"] = '通过e-mail发送密码.';
 $_lang["password_method_screen"] = '在屏幕上显示密码.';
 $_lang["password_msg"] = ' <b>%s</b>的新密码是 <b>%s</b>.';
-$_lang["php_version_check"] = 'MODx兼容PHP 4.0.3 和更高的版本，请升级PHP版本！';
+$_lang["php_version_check"] = CMS_NAME.'兼容PHP 4.0.3 和更高的版本，请升级PHP版本！';
 $_lang["plugin"] = '插件';
 $_lang["plugin_code"] = '插件代码 (php)';
 $_lang["plugin_config"] = '插件配置';
@@ -563,9 +562,9 @@ $_lang["published_folder"] = 'This is a published folder.';
 $_lang["published_weblink"] = 'This is a published weblink.';
 $_lang["published_weblink_folder"] = 'This is a published weblink folder.';
 $_lang["rank"] = '评级';
-$_lang["rb_base_dir_message"] = 'Enter the physical path to the resource directory. This setting is usually automatically generated. If you\'re using IIS, however, MODx may not be able to work the path out on it\'s own, causing the Resource Browser to show an error. In that case, you can enter the path to the images directory here (the path as you\'d see it in Windows Explorer). <b>NOTE:</b> The resource directory must contain the subfolders images, files, flash and media in order for the resource browser to function correctly.';
+$_lang["rb_base_dir_message"] = 'Enter the physical path to the resource directory. This setting is usually automatically generated. If you\'re using IIS, however, '.CMS_NAME.' may not be able to work the path out on it\'s own, causing the Resource Browser to show an error. In that case, you can enter the path to the images directory here (the path as you\'d see it in Windows Explorer). <b>NOTE:</b> The resource directory must contain the subfolders images, files, flash and media in order for the resource browser to function correctly.';
 $_lang["rb_base_dir_title"] = '资源路径:';
-$_lang["rb_base_url_message"] = 'Enter the virtual path to resource directory. This setting is usually automatically generated. If you\'re using IIS, however, MODx may not be able to work the URL out on it\'s own, causing the Resource Browser to show an error. In that case, you can enter the URL to the images directory here (the URL as you\'d enter it on Internet Explorer).';
+$_lang["rb_base_url_message"] = 'Enter the virtual path to resource directory. This setting is usually automatically generated. If you\'re using IIS, however, '.CMS_NAME.' may not be able to work the URL out on it\'s own, causing the Resource Browser to show an error. In that case, you can enter the URL to the images directory here (the URL as you\'d enter it on Internet Explorer).';
 $_lang["rb_base_url_title"] = '资源的URL:';
 $_lang["rb_message"] = 'Select yes to enable the resource browser. This will allow your users to browse and upload resources such as images, flash and media files on the server.';
 $_lang["rb_title"] = '激活资源浏览器:';
@@ -606,7 +605,7 @@ $_lang["resource_opt_contentdispo_help"] = 'Use the content disposition field to
 $_lang["resource_opt_emptycache"] = '清除高速缓存吗？';
 $_lang["resource_opt_emptycache_help"] = '选择这个选择，将让MODX在保存你的文档的时候清空CACHE，这样你的访问者就看不到这个文档的老版本了。';
 $_lang["resource_opt_folder"] = '作为文件夹吗？';
-$_lang["resource_opt_folder_help"] = '选择这个选项就是让本文档作为一个文件夹来发布，你不需要为此过多的担心，因为MODx 会为你自动设置好这些。';
+$_lang["resource_opt_folder_help"] = '选择这个选项就是让本文档作为一个文件夹来发布，你不需要为此过多的担心，因为'.CMS_NAME.' 会为你自动设置好这些。';
 $_lang["resource_opt_menu_index"] = '菜单索引号';
 $_lang["resource_opt_menu_index_help"] = '菜单索引就是你菜单的序号，你可以在你的切片snippet(s)中利用他来实现排序选择等功能。';
 $_lang["resource_opt_menu_title"] = '菜单标题';
@@ -749,7 +748,7 @@ $_lang["settings_page_settings"] = '页面设置';
 $_lang["settings_photo"] = '图片';
 $_lang["settings_properties"] = '属性';
 $_lang["settings_site"] = '站点设置';
-$_lang["settings_strip_image_paths_message"] = '开启这个选项后，MODx将把图象的路径由绝对定位改为相对的定位。这个功能将方便你的站点变迁移动或域名变换等，如果你不知道它代表什么意思的话，那你就选择\'否No\'。';
+$_lang["settings_strip_image_paths_message"] = '开启这个选项后，'.CMS_NAME.'将把图象的路径由绝对定位改为相对的定位。这个功能将方便你的站点变迁移动或域名变换等，如果你不知道它代表什么意思的话，那你就选择\'否No\'。';
 $_lang["settings_strip_image_paths_title"] = '重写图象路径？';
 $_lang["settings_templvars"] = '模板变量';
 $_lang["settings_title"] = '系统配置';
@@ -946,9 +945,9 @@ $_lang["websignupemail_message"] = '当用户注册后，系统将给他们发一封注册信，信的
 $_lang["websignupemail_title"] = '网站注册信:';
 $_lang["wednesday"] = '星期三';
 $_lang["welcome_messages"] = '你有 <b>%d</b> 消息,  <b>%s</b>没读';
-$_lang["welcome_title"] = '欢迎来到MODx内容管理';
+$_lang["welcome_title"] = '欢迎来到'.CMS_NAME.'内容管理';
 $_lang["welcome_visitor_stats"] = '这里显示了一些站点访问者的状态，如果你希望得到更多的信息，请访问`访问者状态Visitor Stats`页面.<br /><br />';
-$_lang["which_editor_message"] = '你可以在这里选择你要使用哪一个编辑器。你可以在<a href="http://modxcms.com/">MODX的中文网站</a>下载文本编辑器。';
+$_lang["which_editor_message"] = '你可以在这里选择你要使用哪一个编辑器。你可以在<a href="http://'.CMS_DOMAIN.'/">MODX的中文网站</a>下载文本编辑器。';
 $_lang["which_editor_title"] = '选用编辑器:';
 $_lang["working"] = '工作中...';
 $_lang["wrap_lines"] = 'Wrap lines';

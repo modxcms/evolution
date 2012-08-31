@@ -3,28 +3,16 @@
  * Filename:       includes/lang/polish.inc.php
  * Function:       Language file.
  * Encoding:       ISO-8859-2
- * Author:         The MODx Project Team
- * 
- * Translation and revision for MODx v. 1.0.4 by:
- *					Rados³aw W³odkowski - radoslaw@wlodkowski.net
- * 
- * Translation for MODx v. 1.0 by:
- *					Piotr Grzeszykowski - piotrek@gawinet.pl 
- *
- * based on v. 0.9.1/0.9.5 translation by:
- *					Piotr £ukañko - piotr.lukanko@gmail.com
- *                	£ukasz Kowalczyk - lukasz@pixeligence.com
- *
- * Date:           14 May 2010
- * Version:        1.3
- * MODx version:   Evolution 1.0.4
+ * Author:         The MODx Project Team, Rados³aw W³odkowski - radoslaw@wlodkowski.net, Piotr Grzeszykowski - piotrek@gawinet.pl, Piotr £ukañko - piotr.lukanko@gmail.com, Lukasz Kowalczyk - lukasz@pixeligence.com, , The ClipperCMS Project Team
+ * Date:                   31st Aug 2012
+ * ClipperCMS version:     1.1
 */
 
 $modx_lang_attribute = 'pl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'iso-8859-2';
 
-$_lang["about_msg"] = 'MODx jest to <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
-$_lang["about_title"] = 'O MODx';
+$_lang["about_msg"] = CMS_NAME.' jest to <a href="http://'.CMS_DOMAIN.'" target="_blank">PHP Application Framework i Content Management System</a> na licencji <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_title"] = 'O '.CMS_NAME;
 $_lang["access_permission_denied"] = 'Nie masz w³a¶ciwych uprawnieñ do tego dokumentu.';
 $_lang["access_permission_parent_denied"] = 'Nie masz uprawnieñ do tworzenia dokumentu w tym miejscu!';
 $_lang["access_permissions"] = 'Uprawnienia dostêpu';
@@ -49,7 +37,7 @@ $_lang["access_permissions_user_message"] = 'Tu mo¿esz wybraæ, do których grup n
 $_lang["access_permissions_users_in_group"] = '<b>U¿ytkownicy w grupie:</b> ';
 $_lang["access_permissions_users_tab"] = 'Tutaj mo¿esz zobaczyæ jakie grupy u¿ytkowników zosta³y stworzone. Mo¿esz tak¿e stworzyæ nowe grupy, zmieniaæ nazwy, usuwaæ i sprawdzaæ którzy u¿ytkownicy nale¿± do danej grupy. Aby dodaæ nowego u¿ytkownika do grupy albo usunaæ go z grupy, edytuj tego u¿ytkownika bezpo¶rednio. Administratorzy (ID Roli 1) zawsze maj± dostêp do wszystkich dokumentów, wiêc nie musz± byæ przypisani do ¿adnej grupy.';
 $_lang["account_email"] = 'Konto e-mail';
-$_lang["actioncomplete"] = '<b>Akcja zakoñczona powodzeniem!</b><br /> - Proszê zaczekaæ, a¿ MODx zakoñczy porz±dkowanie.';
+$_lang["actioncomplete"] = '<b>Akcja zakoñczona powodzeniem!</b><br /> - Proszê zaczekaæ, a¿ '.CMS_NAME.' zakoñczy porz±dkowanie.';
 $_lang["activity_message"] = 'Ta lista pokazuje ostatnie dokumenty, jakie utworzy³e¶ lub edytowa³e¶:';
 $_lang["activity_title"] = 'Ostatnio edytowane/utworzone dokumenty';
 $_lang["add"] = 'Dodaj';
@@ -87,7 +75,7 @@ $_lang["cancel"] = 'Anuluj';
 $_lang["captcha_code"] = 'Kod bezpieczeñstwa';
 $_lang["captcha_message"] = 'W³±cz tê opcjê, aby wzmocniæ zabezpieczenia i wymóc na u¿ytkownikach wprowadzanie kodu, który jest nieczytelny dla maszyn (i innych niebezpiecznych skryptów).';
 $_lang["captcha_title"] = 'U¿ywaj kodów CAPTCHA:';
-$_lang["captcha_words_default"] = 'MODx,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote';
+$_lang["captcha_words_default"] = CMS_NAME.',Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Tattoo,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote';
 $_lang["captcha_words_message"] = 'Tutaj mo¿esz wprowadziæ listê s³ów CAPTCHA do u¿ycia je¶li system CAPTCHA jest w³±czony. Oddziel s³owa przecinkiem. Mo¿esz wprowadziæ maksymalnie 255 znaków.';
 $_lang["captcha_words_title"] = 'S³owa CAPTCHA';
 $_lang["category_heading"] = 'Kategoria';
@@ -102,7 +90,7 @@ $_lang["change_password"] = 'Zmieñ has³o';
 $_lang["change_password_confirm"] = 'Potwierd¼ has³o';
 $_lang["change_password_message"] = 'Proszê wprowadziæ nowe has³o a nastêpnie potwierdziæ je poprzez ponowne wpisanie. Has³o powinno sk³adaæ siê z 6-15 znaków.';
 $_lang["change_password_new"] = 'Nowe has³o';
-$_lang["charset_message"] = 'Proszê wybraæ, którego kodowania znaków chcesz u¿ywaæ w menad¿erze. MODx by³ testowany z wieloma zestawami znaków, ale nie ze wszystkimi. Dla wiêkszo¶ci jêzyków, wystarczaj±ce jest domy¶lne kodowanie ISO-8859-1.';
+$_lang["charset_message"] = 'Proszê wybraæ, którego kodowania znaków chcesz u¿ywaæ w menad¿erze. '.CMS_NAME.' by³ testowany z wieloma zestawami znaków, ale nie ze wszystkimi. Dla wiêkszo¶ci jêzyków, wystarczaj±ce jest domy¶lne kodowanie ISO-8859-1.';
 $_lang["charset_title"] = 'Kodowanie znaków:';
 $_lang["chunk"] = 'Chunk';
 $_lang["chunk_code"] = 'Kod chunka (html)';
@@ -119,7 +107,7 @@ $_lang["collapse_tree"] = 'Zwiñ drzewo';
 $_lang["comment"] = 'Komentarz';
 $_lang["configcheck_admin"] = 'Proszê skontaktowaæ siê z administratorem systemu, aby powiadomiæ go o tym komunikacie!';
 $_lang["configcheck_cache"] = 'katalog cache\'u nie jest zapisywalny';
-$_lang["configcheck_cache_msg"] = 'MODx nie mo¿e zapisaæ do katalogu cache\'u. MODx bêdzie wci±¿ dzia³a³ poprawnie, ale strony nie bêd± cache\'owane. Aby rozwi±zaæ ten problem, nadaj uprawnienia do zapisu dla katalogu /_cache/.';
+$_lang["configcheck_cache_msg"] = CMS_NAME.' nie mo¿e zapisaæ do katalogu cache\'u. '.CMS_NAME.' bêdzie wci±¿ dzia³a³ poprawnie, ale strony nie bêd± cache\'owane. Aby rozwi±zaæ ten problem, nadaj uprawnienia do zapisu dla katalogu /_cache/.';
 $_lang["configcheck_configinc"] = 'Plik konfiguracyjny jest zapisywalny';
 $_lang["configcheck_configinc_msg"] = 'Dla wiêkszego bezpieczeñstwa ustaw prawa dostêpu do pliku konfiguracji (/manager/includes/config.inc.php) na tylko do odczytu.';
 $_lang["configcheck_default_msg"] = 'Wyst±pi³ nieokre¶lony b³±d.';
@@ -130,13 +118,13 @@ $_lang["configcheck_errorpage_unpublished_msg"] = 'Oznacza to, ¿e strona b³êdu T
 $_lang["configcheck_images"] = 'Katalog z obrazkami - Images - nie ma praw do zapisu';
 $_lang["configcheck_images_msg"] = 'Katalog z obrazkami nie jest zapisywalny, lub nie istnieje. Oznacza to, ¿e funkcje menad¿era obrazków w edytorze nie bêd± dzia³aæ!';
 $_lang["configcheck_installer"] = 'instalator wci±¿ obecny';
-$_lang["configcheck_installer_msg"] = 'Katalog install/ zawiera instalator MODx. Wyobra¼ sobie co mo¿e nast±piæ je¶li niepowo³ana osoba odkryje ten folder i uruchomi instalator! Prawdopodobnie nie zajdzie za daleko, poniewa¿ bêdzie musia³a wprowad¼ informacje dostêpu do bazy danych, ale wci±¿ najlepszym rozwi±zaniem jest usuniêcie tego folderu z serwera.';
+$_lang["configcheck_installer_msg"] = 'Katalog install/ zawiera instalator '.CMS_NAME.'. Wyobra¼ sobie co mo¿e nast±piæ je¶li niepowo³ana osoba odkryje ten folder i uruchomi instalator! Prawdopodobnie nie zajdzie za daleko, poniewa¿ bêdzie musia³a wprowad¼ informacje dostêpu do bazy danych, ale wci±¿ najlepszym rozwi±zaniem jest usuniêcie tego folderu z serwera.';
 $_lang["configcheck_lang_difference"] = 'niepoprawna ilo¶æ wpisów w pliku jêzykowym';
 $_lang["configcheck_lang_difference_msg"] = 'Aktualnie wybrany jêzyk posiada inn± liczbê wpisów ni¿ jêzyk domy¶lny. Niekoniecznie stanowi to problem, jednak¿e mo¿e to oznaczaæ, ¿e plik jêzyka wymaga aktualizacji.';
 $_lang["configcheck_notok"] = 'Jedno lub wiêcej z ustawieñ konfiguracyjnych nie zosta³o zweryfikowane: ';
 $_lang["configcheck_ok"] = 'Sprawdzanie przebieg³o pomy¶lnie - brak ostrze¿eñ.';
 $_lang["configcheck_php_gdzip"] = 'Rozszerzenia GD i/albo Zip PHP nie zosta³y znalezione.';
-$_lang["configcheck_php_gdzip_msg"] = 'Do poprawnego dzia³ania MODx potrzebuje w³±czonych w konfiguracji PHP rozszerzeñ GD oraz Zip. MODx bêdzie wci±¿ dzia³a³ poprawnie, jednak nie bêdzie mo¿liwe korzystanie z wszystkich jego funkcji: managera plików, edytora obrazów oraz Captcha przy logowaniu.';
+$_lang["configcheck_php_gdzip_msg"] = 'Do poprawnego dzia³ania '.CMS_NAME.' potrzebuje w³±czonych w konfiguracji PHP rozszerzeñ GD oraz Zip. '.CMS_NAME.' bêdzie wci±¿ dzia³a³ poprawnie, jednak nie bêdzie mo¿liwe korzystanie z wszystkich jego funkcji: managera plików, edytora obrazów oraz Captcha przy logowaniu.';
 $_lang["configcheck_register_globals"] = 'register_globals jest w³±czona w konfiguracji PHP';
 $_lang["configcheck_register_globals_msg"] = 'Taka konfiguracja mo¿e zagroziæ bezpieczeñstwu strony, poniewa¿ powoduje wiêksz± wra¿liwo¶æ na ataki typu XSS.';
 $_lang["configcheck_title"] = 'Sprawdzenie konfiguracji';
@@ -285,7 +273,7 @@ $_lang["export_site_failed_no_write"] = 'Nie mo¿na zapisaæ pliku.';
 $_lang["export_site_html"] = 'Eksportuj stronê do HTML';
 $_lang["export_site_maxtime"] = 'Maksymalny czas eksportu:';
 $_lang["export_site_maxtime_message"] = 'Tutaj mo¿esz ustawiæ ilo¶æ sekund, które system mo¿e przeznaczyæ na eksportowanie serwisu (pomijaj±c ustawienie PHP). Wprowad¼ 0 dla nieograniczonego czasu, jednak takie ustawienie mo¿e prowadziæ do niestabilno¶ci serwera i jest niezalecane.';
-$_lang["export_site_message"] = 'U¿ywaj±c tej funkcji mo¿esz wyeksportowaæ ca³y serwis do statycznego HTML. Pamiêtaj, ¿e stracisz wiele funkcjonalno¶ci systemu MODx:<p /><ul><li>Wy¶wietlenia stron, które zosta³y wyeksportowane nie zostan± zapisane.</li><li>Interaktywne snippety nie bêd± dzia³aæ w wyeksportowanych plikach</li><li>Tylko zwyk³e dokumenty zostan± wyeksportowane, odno¶niki web nie.</li><li>Proces eksportu mo¿e siê nie udaæ je¶li Twoje dokumenty zawieraj± snippety z nag³ówkiem przekierowania.</li><li>Uk³ad i wygl±d strony mo¿e siê ró¿niæ od zak³adanego, w zale¿no¶ci od tego jak skonstruowa³e¶ swoje dokumenty, arkusze stylów, obrazki. Aby to naprawiæ mo¿esz spróbowaæ przenie¶æ wyeksportowane pliki do katalogu g³ównego (tam gdzie jest umieszczony g³ówny plik MODx-a \'index.php\'.</li></ul><p />Proszê wype³niæ formularz i nacisn±æ \'Eksport\' aby rozpocz±æ proces eksportu. Pliki zostan± zapisane w lokalizacji, któr± poda³e¶ u¿ywaj±c aliasu dokumentu jako nazwy pliku. Podczas eksportu dobrze jest ustawiæ opcjê konfiguracji MODx-a \'Przyjazne aliasy\' na \'Tak\'. <br />W zale¿no¶ci od rozmiaru serwisu eksport mo¿e trochê potrwaæ. <br /><b>Wszystkie istniej±ce pliki zostan± nadpisane nowymi, je¶li ich nazwy bêd± identyczne!</b><p />';
+$_lang["export_site_message"] = 'U¿ywaj±c tej funkcji mo¿esz wyeksportowaæ ca³y serwis do statycznego HTML. Pamiêtaj, ¿e stracisz wiele funkcjonalno¶ci systemu '.CMS_NAME.':<p /><ul><li>Wy¶wietlenia stron, które zosta³y wyeksportowane nie zostan± zapisane.</li><li>Interaktywne snippety nie bêd± dzia³aæ w wyeksportowanych plikach</li><li>Tylko zwyk³e dokumenty zostan± wyeksportowane, odno¶niki web nie.</li><li>Proces eksportu mo¿e siê nie udaæ je¶li Twoje dokumenty zawieraj± snippety z nag³ówkiem przekierowania.</li><li>Uk³ad i wygl±d strony mo¿e siê ró¿niæ od zak³adanego, w zale¿no¶ci od tego jak skonstruowa³e¶ swoje dokumenty, arkusze stylów, obrazki. Aby to naprawiæ mo¿esz spróbowaæ przenie¶æ wyeksportowane pliki do katalogu g³ównego (tam gdzie jest umieszczony g³ówny plik '.CMS_NAME.'-a \'index.php\'.</li></ul><p />Proszê wype³niæ formularz i nacisn±æ \'Eksport\' aby rozpocz±æ proces eksportu. Pliki zostan± zapisane w lokalizacji, któr± poda³e¶ u¿ywaj±c aliasu dokumentu jako nazwy pliku. Podczas eksportu dobrze jest ustawiæ opcjê konfiguracji '.CMS_NAME.'-a \'Przyjazne aliasy\' na \'Tak\'. <br />W zale¿no¶ci od rozmiaru serwisu eksport mo¿e trochê potrwaæ. <br /><b>Wszystkie istniej±ce pliki zostan± nadpisane nowymi, je¶li ich nazwy bêd± identyczne!</b><p />';
 $_lang["export_site_numberdocs"] = '<b>Znaleziono %s dokumentów do eksportu...</b><p />';
 $_lang["export_site_prefix"] = 'Prefix pliku:';
 $_lang["export_site_start"] = 'Rozpocznij eksport';
@@ -304,7 +292,7 @@ $_lang["file_delete_folder"] = 'Usuñ folder';
 $_lang["file_deleted"] = 'Powodzenie!';
 $_lang["file_download_file"] = '¦ci±gnij plik';
 $_lang["file_download_unzip"] = 'Rozpakuj plik';
-$_lang["file_folder_chmod_error"] = 'Nie mo¿na zmieniæ uprawnieñ; musisz je zmieniæ poza MODx.';
+$_lang["file_folder_chmod_error"] = 'Nie mo¿na zmieniæ uprawnieñ; musisz je zmieniæ poza '.CMS_NAME.'.';
 $_lang["file_folder_created"] = 'Folder zosta³ stworzony pomy¶lnie!';
 $_lang["file_folder_deleted"] = 'Folder zosta³ usuniêty!';
 $_lang["file_folder_not_created"] = 'Nie mo¿na utworzyæ folderu';
@@ -314,7 +302,7 @@ $_lang["file_not_saved"] = 'Nie mo¿na zapisaæ pliku, upewnij siê, ¿e plik docelo
 $_lang["file_saved"] = 'Plik uaktualniony pomy¶lnie!';
 $_lang["file_unzip"] = 'Rozpakowanie zakoñczone sukcesem!';
 $_lang["file_unzip_fail"] = 'B³±d podczas rozpakowywania!';
-$_lang["filemanager_path_message"] = 'IIS czêsto b³êdnie okre¶la ustawienie document_root, które jest u¿ywane przez mened¿er plików do okre¶lenia co mo¿e byæ widoczne dla ciebie. Je¶li masz problemy z menad¿erem plików, upewnij siê, ¿e ta ¶cie¿ka wskazuje na katalog g³ówny instalacji MODx.';
+$_lang["filemanager_path_message"] = 'IIS czêsto b³êdnie okre¶la ustawienie document_root, które jest u¿ywane przez mened¿er plików do okre¶lenia co mo¿e byæ widoczne dla ciebie. Je¶li masz problemy z menad¿erem plików, upewnij siê, ¿e ta ¶cie¿ka wskazuje na katalog g³ówny instalacji '.CMS_NAME.'.';
 $_lang["filemanager_path_title"] = '¦cie¿ka menad¿era plików:';
 $_lang["files_access_denied"] = 'Brak dostêpu!';
 $_lang["files_data"] = 'Dane';
@@ -353,9 +341,9 @@ $_lang["forgot_password_email_intro"] = 'Zg³oszono ¿±danie zmiany has³a do Twoje
 $_lang["forgot_password_email_link"] = 'Kliknij tutaj, aby zakoñczyæ proces.';
 $_lang["forgot_your_password"] = 'Zapomniane has³o?';
 $_lang["friday"] = 'Pi±tek';
-$_lang["friendly_alias_message"] = 'Je¿eli u¿ywasz przyjaznych URL\'i i dokument posiada alias, bêdzie on mia³ zawsze pierwszeñstwo przed przyjaznym adresem URL. Ustawiaj±c tê opcjê na \'tak\', prefiks i sufiks przyjaznego URL\'u zostanie równie¿ u¿yty z aliasem dokumentu. Na przyk³ad, je¿eli dokument z ID 1 ma alias `wprowadzenie` i prefiks ustawiony na `` oraz sufiks na `.html`, ustawiaj±c tê opcjê na `tak` otrzymamy `wprowadzenie.html`. Je¿eli nie bêdzie aliasu, MODx wygeneruje `1.html` jako odsy³acz.';
+$_lang["friendly_alias_message"] = 'Je¿eli u¿ywasz przyjaznych URL\'i i dokument posiada alias, bêdzie on mia³ zawsze pierwszeñstwo przed przyjaznym adresem URL. Ustawiaj±c tê opcjê na \'tak\', prefiks i sufiks przyjaznego URL\'u zostanie równie¿ u¿yty z aliasem dokumentu. Na przyk³ad, je¿eli dokument z ID 1 ma alias `wprowadzenie` i prefiks ustawiony na `` oraz sufiks na `.html`, ustawiaj±c tê opcjê na `tak` otrzymamy `wprowadzenie.html`. Je¿eli nie bêdzie aliasu, '.CMS_NAME.' wygeneruje `1.html` jako odsy³acz.';
 $_lang["friendly_alias_title"] = 'U¿ywaj przyjaznych aliasów:';
-$_lang["friendlyurls_message"] = 'Opcja ta pozwala na u¿ywanie przyjaznych dla wyszukiwarek adresów URL z MODx. Proszê zwróciæ uwagê, ¿e opcja ta dzia³a jedynie dla instalacji MODx na serwerze Apache i wymaga odpowiednio przygotowanego pliku .htaccess. Zapoznaj siê z plikiem .htaccess zawartym w dystrybucji, aby uzyskaæ dodatkowe informacje.';
+$_lang["friendlyurls_message"] = 'Opcja ta pozwala na u¿ywanie przyjaznych dla wyszukiwarek adresów URL z '.CMS_NAME.'. Proszê zwróciæ uwagê, ¿e opcja ta dzia³a jedynie dla instalacji '.CMS_NAME.' na serwerze Apache i wymaga odpowiednio przygotowanego pliku .htaccess. Zapoznaj siê z plikiem .htaccess zawartym w dystrybucji, aby uzyskaæ dodatkowe informacje.';
 $_lang["friendlyurls_title"] = 'U¿yj przyjaznych URLi:';
 $_lang["friendlyurlsprefix_message"] = 'Opcja ta umo¿liwia okre¶lenie prefiksu dla przyjaznych adresów URL. Na przyk³ad, prefiks ustawiony na \'strona\' zmieni adres URL /index.php?id=2 na przyjazny adres URL /strona2.html (zak³adaj±c, ¿e sufiks jest ustawiony na .html). W ten sposób mo¿esz okre¶liæ co u¿ytkownicy (i wyszukiwarki) widz± jako odsy³acze na Twojej stronie.';
 $_lang["friendlyurlsprefix_title"] = 'Prefiks dla przyjaznych URLi:';
@@ -367,7 +355,7 @@ $_lang["go"] = 'Dalej';
 $_lang["group_access_permissions"] = 'Dostêp grup u¿ytkowników';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Pomoc';
-$_lang["help_msg"] = '<p>Mo¿esz uzyskaæ darmow± pomoc poprzez <a href="http://modxcms.com/forums" target="_blank">odwiedzenie Forum MODx</a>. Istnieje równie¿ wci±¿ rozwijana <a href="http://modxcms.com/documentation" target="_blank">Dokumentacja i Instrukcje dla MODx\'a</a>, dotycz±ce praktycznie wszystkich aspektów pracy z MODx\'em.</p><p>Planujemy równie¿ us³ugê wsparcia komercyjnego dla MODx\'a. <a href=\'mailto:modx@vertexworks.com?subject=MODx Commercial Support Inquiry\'>Zainteresowanych prosimy o kontakt mailowy</a>.';
+$_lang["help_msg"] = '<p>Mo¿esz uzyskaæ darmow± pomoc poprzez <a href="http://'.CMS_DOMAIN.'/forums" target="_blank">odwiedzenie Forum '.CMS_NAME.'</a>. Istnieje równie¿ wci±¿ rozwijana <a href="http://'.CMS_DOMAIN.'/documentation" target="_blank">Dokumentacja i Instrukcje dla '.CMS_NAME.'\'a</a>, dotycz±ce praktycznie wszystkich aspektów pracy z '.CMS_NAME.'\'em.</p><p>Planujemy równie¿ us³ugê wsparcia komercyjnego dla '.CMS_NAME.'\'a. <a href=\'mailto:modx@vertexworks.com?subject='.CMS_NAME.' Commercial Support Inquiry\'>Zainteresowanych prosimy o kontakt mailowy</a>.';
 $_lang["help_title"] = 'Pomoc';
 $_lang["hide_tree"] = 'Ukryj drzewo';
 $_lang["home"] = 'Start';
@@ -406,7 +394,7 @@ $_lang["insert"] = 'Wstaw';
 $_lang["keyword"] = 'S³owo kluczowe';
 $_lang["keywords"] = 'S³owa kluczowe';
 $_lang["keywords_intro"] = 'Aby edytowaæ s³owo kluczowe wpisz nowe s³owo w polu tekstowym obok s³owa, które chcesz zmieniæ. Aby usun±æ s³owo kluczowe, zaznacz pole \'usuñ\' dla danego s³owa. Je¶li zaznaczysz pole usuniêcia i zmienisz nazwê pola zostanie ono usuniête!';
-$_lang["language_message"] = 'Wybierz jêzyk dla MODx Content Manager.';
+$_lang["language_message"] = 'Wybierz jêzyk dla '.CMS_NAME.' Content Manager.';
 $_lang["language_title"] = 'Jêzyk:';
 $_lang["launch_site"] = 'Uruchom stronê';
 $_lang["link_attributes"] = 'Atrybuty ³±cza';
@@ -414,7 +402,7 @@ $_lang["link_attributes_help"] = 'Tu mo¿esz wprowadziæ atrybuty ³±cza, takie jak
 $_lang["list_mode"] = 'W³±cz/wy³±cz tryb listy - u¿ywany to wy¶wietlenia listy wszystkich rekordów w tabeli.';
 $_lang["loading_doc_tree"] = '£adowanie drzewa dokumentów...';
 $_lang["loading_menu"] = '£adowanie menu...';
-$_lang["loading_page"] = 'Proszê zaczekaæ, a¿ MODx za³aduje stronê...';
+$_lang["loading_page"] = 'Proszê zaczekaæ, a¿ '.CMS_NAME.' za³aduje stronê...';
 $_lang["localtime"] = 'Czas lokalny';
 $_lang["lock_htmlsnippet"] = 'Zablokuj mo¿liwo¶æ edycji chunka';
 $_lang["lock_htmlsnippet_msg"] = 'Tylko Administrator (ID Roli 1) mo¿e edytowaæ tego chunka.';
@@ -442,7 +430,7 @@ $_lang["login_captcha_message"] = ' Administrator w³±czy³ walidacjê kodów Captch
 $_lang["login_homepage"] = 'Strona po zalogowaniu';
 $_lang["login_homepage_message"] = 'Wprowad¼ ID dokumentu, który chcesz pokazaæ u¿ytkownikowi po jego zalogowaniu. <b>Uwaga! Upewnij siê, ¿e ID, które wprowadzi³e¶ jest przypisane do istniej±cego dokumentu oraz, ¿e jest opublikowane i dostêpne dla danego u¿ytkownika!</b>';
 $_lang["login_message"] = 'Proszê podaæ swoje dane uwierzytelniaj±ce, aby siê zalogowaæ. Podaj±c nazwê u¿ytkownika oraz has³o zwróæ szczególn± uwagê na wielko¶æ znaków!';
-$_lang["logo_slogan"] = 'MODx Content Manager';
+$_lang["logo_slogan"] = CMS_NAME.' Content Manager';
 $_lang["logout"] = 'Wyloguj siê';
 $_lang["long_title"] = 'D³ugi tytu³';
 $_lang["mail_check_timeperiod_message"] = 'Jak czêsto sprawdzaæ, czy w Menad¿erze s± nowe wiadomo¶ci, w sekundach';
@@ -528,11 +516,11 @@ $_lang["module_resource_title"] = 'Zale¿no¶ci modu³u';
 $_lang["module_title"] = 'Utwórz/edytuj modu³';
 $_lang["module_viewdepend_msg"] = 'Tutaj mo¿esz przejrzeæ zasoby, z których korzysta modu³. Kliknij na przycisk \'Mened¿era zale¿no¶ci\' aby zmodyfikowaæ te powi±zania.';
 $_lang["modules"] = 'Modu³y';
-$_lang["modx_news"] = 'Wiadomo¶ci MODx';
-$_lang["modx_news_tab"] = 'Wiadomo¶ci MODx';
-$_lang["modx_news_title"] = 'Wiadomo¶ci MODx';
-$_lang["modx_security_notices"] = 'Biuletyn bezpieczeñstwa MODx';
-$_lang["modx_version"] = 'Wersja MODx';
+$_lang["modx_news"] = 'Wiadomo¶ci '.CMS_NAME;
+$_lang["modx_news_tab"] = 'Wiadomo¶ci '.CMS_NAME;
+$_lang["modx_news_title"] = 'Wiadomo¶ci '.CMS_NAME;
+$_lang["modx_security_notices"] = 'Biuletyn bezpieczeñstwa '.CMS_NAME;
+$_lang["modx_version"] = 'Wersja '.CMS_NAME;
 $_lang["monday"] = 'Poniedzia³ek';
 $_lang["move"] = 'Przenie¶';
 $_lang["move_resource"] = 'Przenie¶ dokument';
@@ -630,7 +618,7 @@ $_lang["paging_total"] = 'wszystkich';
 $_lang["parameter"] = 'Parametr';
 $_lang["password"] = 'Has³o';
 $_lang["password_change_request"] = '¯±danie zmiany has³a';
-$_lang["password_gen_gen"] = 'Pozwól MODx wygenerowaæ has³o.';
+$_lang["password_gen_gen"] = 'Pozwól '.CMS_NAME.' wygenerowaæ has³o.';
 $_lang["password_gen_length"] = 'Has³o, które poda³e¶ musi mieæ przynajmniej 6 znaków.';
 $_lang["password_gen_method"] = 'Metoda generowania nowego has³a';
 $_lang["password_gen_specify"] = 'Pozwól mi wprowadziæ has³o:';
@@ -638,7 +626,7 @@ $_lang["password_method"] = 'Metoda powiadamiania o ha¶le';
 $_lang["password_method_email"] = 'Wy¶lij nowe has³o emailem.';
 $_lang["password_method_screen"] = 'Poka¿ nowe has³o na ekranie.';
 $_lang["password_msg"] = 'Nowym has³em dla <b>%s</b> jest <b>%s</b>.';
-$_lang["php_version_check"] = 'MODx jest kompatybilny z PHP wersj± 4.0.3 i wy¿sz±. Zaktualizuj swoj± instalacjê PHP!';
+$_lang["php_version_check"] = CMS_NAME.' jest kompatybilny z PHP wersj± 4.0.3 i wy¿sz±. Zaktualizuj swoj± instalacjê PHP!';
 $_lang["plugin"] = 'Wtyczka';
 $_lang["plugin_code"] = 'Kod wtyczki (php)';
 $_lang["plugin_config"] = 'Konfiguracja wtyczki';
@@ -703,7 +691,7 @@ $_lang["resource_opt_contentdispo_help"] = 'U¿yj pola przetwarzania tre¶ci, aby 
 $_lang["resource_opt_emptycache"] = 'Opró¿niæ cache?';
 $_lang["resource_opt_emptycache_help"] = 'Zaznaczenie tego pola spowoduje opró¿nienie cache\'u po zapisaniu dokumentu. W ten sposób odwiedzaj±cy nie bêd± widzieli starszej wersji dokumentu.';
 $_lang["resource_opt_folder"] = 'Folder?';
-$_lang["resource_opt_folder_help"] = 'Zaznacz tê opcjê, aby dokument pe³ni³ równie¿ funkcjê folderu dla innych dokumentów. Nie musisz siê przejmowaæ t± opcj±, gdy¿ MODx z regu³y zajmuje siê ustawieniami folderów automatycznie.';
+$_lang["resource_opt_folder_help"] = 'Zaznacz tê opcjê, aby dokument pe³ni³ równie¿ funkcjê folderu dla innych dokumentów. Nie musisz siê przejmowaæ t± opcj±, gdy¿ '.CMS_NAME.' z regu³y zajmuje siê ustawieniami folderów automatycznie.';
 $_lang["resource_opt_menu_index"] = 'Indeks w menu';
 $_lang["resource_opt_menu_index_help"] = 'Indeks menu to pole, którego mo¿esz u¿yæ do sortowania dokumentów w snippecie menu. Mo¿esz je równie¿ wykorzystaæ do innych celów w swoich snipetach.';
 $_lang["resource_opt_menu_title"] = 'Tytu³ menu';
@@ -733,7 +721,7 @@ $_lang["resource_weblink_help"] = 'Wprowad¼ adres obiektu, do którego chcesz siê
 $_lang["resources_in_container"] = 'dokument(-y/-ów) w tym folderze';
 $_lang["resources_in_container_no"] = 'Ten folder nie ma dokumentów podrzêdnych.';
 $_lang["role"] = 'Rola';
-$_lang["role_about"] = 'Pokazuj stronê \'O MODx\'';
+$_lang["role_about"] = 'Pokazuj stronê \'O '.CMS_NAME.'\'';
 $_lang["role_access_persmissions"] = 'Uprawnienia dostêpu';
 $_lang["role_actionok"] = 'Pokazuj ekran zakoñczenia zadania';
 $_lang["role_bk_manager"] = 'U¿yj mened¿era backup-u';
@@ -816,10 +804,10 @@ $_lang["role_view_unpublished"] = 'Poka¿ nieopublikowane dokumenty';
 $_lang["role_web_access_persmissions"] = 'Uprawnienia dostêpu do czê¶ci frontowej';
 $_lang["role_web_user_management"] = 'Zarz±dzanie u¿ytkownikami web';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
-$_lang["rss_url_news_message"] = 'Wprowad¼ URL ¼ród³a wiadomo¶ci MODx';
+$_lang["rss_url_news_message"] = 'Wprowad¼ URL ¼ród³a wiadomo¶ci '.CMS_NAME;
 $_lang["rss_url_news_title"] = '¯ród³o RSS wiadomo¶ci';
 $_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
-$_lang["rss_url_security_message"] = 'Wprowad¼ URL ¼ród³a biuletynu bezpieczeñstwa MODx';
+$_lang["rss_url_security_message"] = 'Wprowad¼ URL ¼ród³a biuletynu bezpieczeñstwa '.CMS_NAME;
 $_lang["rss_url_security_title"] = '¬ród³o RSS biuletynu bezpieczeñstwa';
 $_lang["run_module"] = 'Uruchom modu³';
 $_lang["saturday"] = 'Sobota';
@@ -879,7 +867,7 @@ $_lang["show_meta"] = 'Pokazuj zak³adkê META tagów i s³ów kluczowych';
 $_lang["show_meta_message"] = 'Pokazuj zak³adkê META tagów i s³ów kluczowych podczas edycji dokumentu.';
 $_lang["show_tree"] = 'Poka¿ drzewo';
 $_lang["showing"] = 'Pokazuje';
-$_lang["signupemail_message"] = 'Tutaj mo¿esz ustawiæ tre¶æ wiadomo¶ci wysy³anej u¿ytkownikom w momencie utworzenia im konta, pozwalaj±cej MODx na wys³anie im e-maila z nazw± u¿ytkownika i has³em. <br /><b>Uwaga:</b> Nastêpuj±ce zmienne s± zamieniane przez Panel Administracyjny kiedy wiadomo¶æ jest wysy³ana: <br /><br />[+sname+] - Nazwa twojej strony, <br />[+saddr+] - Adres e-mail twojej strony, <br />[+surl+] - Adres url strony, <br />[+uid+] - Nazwa lub Id u¿ytkownika, <br />[+pwd+] - Has³o u¿ytkownika, <br />[+ufn+] - Pe³na nazwa u¿ytkownika. <br /><br /><b>Pozostaw [+uid+] i [+pwd+] w tre¶ci e-maila, poniewa¿ w przeciwnym wypadku nazwa u¿ytkownika oraz has³o nie zostanie wys³ane w wiadomo¶ci i u¿ytkownicy nie poznaj± swojej nazwy lub has³a!</b>';
+$_lang["signupemail_message"] = 'Tutaj mo¿esz ustawiæ tre¶æ wiadomo¶ci wysy³anej u¿ytkownikom w momencie utworzenia im konta, pozwalaj±cej '.CMS_NAME.' na wys³anie im e-maila z nazw± u¿ytkownika i has³em. <br /><b>Uwaga:</b> Nastêpuj±ce zmienne s± zamieniane przez Panel Administracyjny kiedy wiadomo¶æ jest wysy³ana: <br /><br />[+sname+] - Nazwa twojej strony, <br />[+saddr+] - Adres e-mail twojej strony, <br />[+surl+] - Adres url strony, <br />[+uid+] - Nazwa lub Id u¿ytkownika, <br />[+pwd+] - Has³o u¿ytkownika, <br />[+ufn+] - Pe³na nazwa u¿ytkownika. <br /><br /><b>Pozostaw [+uid+] i [+pwd+] w tre¶ci e-maila, poniewa¿ w przeciwnym wypadku nazwa u¿ytkownika oraz has³o nie zostanie wys³ane w wiadomo¶ci i u¿ytkownicy nie poznaj± swojej nazwy lub has³a!</b>';
 $_lang["signupemail_title"] = 'E-mail rejestracyjny:';
 $_lang["site"] = 'Strona';
 $_lang["site_schedule"] = 'Harmonogram strony';
@@ -968,7 +956,7 @@ $_lang["track_visitors_title"] = 'Loguj wizyty';
 $_lang["tree_page_click"] = 'Akcja po klikniêciu na dokument';
 $_lang["tree_page_click_message"] = 'Domy¶lna akcja wykonywana po klikniêciu na dokument w drzewie dokumentów.';
 $_lang["tree_show_protected"] = 'Pokazuj chronione dokumenty';
-$_lang["tree_show_protected_message"] = 'Kiedy ta opcja jest ustawiona na "Nie", chronione dokumenty (i wszystkie ich poddokumenty) nie bêd± wy¶wietlane na drzewie dokumentów. "Nie" jest ustawieniem zgodnym z wcze¶niejszymi wersjami MODx.';
+$_lang["tree_show_protected_message"] = 'Kiedy ta opcja jest ustawiona na "Nie", chronione dokumenty (i wszystkie ich poddokumenty) nie bêd± wy¶wietlane na drzewie dokumentów. "Nie" jest ustawieniem zgodnym z wcze¶niejszymi wersjami '.CMS_NAME.'.';
 $_lang["truncate_table"] = 'Kliknij tu, aby skróciæ tabelê';
 $_lang["tuesday"] = 'Wtorek';
 $_lang["tv"] = 'Zmienna Szablonu';
@@ -1064,12 +1052,12 @@ $_lang["websignupemail_message"] = 'Tutaj mo¿esz ustawiæ tre¶æ wiadomo¶ci wysy³a
 $_lang["websignupemail_title"] = 'E-mail rejestracyjny:';
 $_lang["wednesday"] = '¦roda';
 $_lang["welcome_messages"] = 'Twoja skrzynka wiadomo¶ci zawiera <b>%d</b> wiadomo¶æ(-ci), z których <b>%s</b> jest nieprzeczytane.';
-$_lang["welcome_title"] = 'Witamy w panelu administracyjnym MODx';
-$_lang["which_editor_message"] = 'Tutaj mo¿esz wybraæ który edytor WYSIWYG chcesz u¿ywaæ. Mo¿esz ¶ci±gn±æ i zainstalowaæ dodatkowe edytory ze strony MODx-a.';
+$_lang["welcome_title"] = 'Witamy w panelu administracyjnym '.CMS_NAME;
+$_lang["which_editor_message"] = 'Tutaj mo¿esz wybraæ który edytor WYSIWYG chcesz u¿ywaæ. Mo¿esz ¶ci±gn±æ i zainstalowaæ dodatkowe edytory ze strony '.CMS_NAME.'-a.';
 $_lang["which_editor_title"] = 'Edytor:';
 $_lang["working"] = 'Przetwarzanie...';
 $_lang["wrap_lines"] = 'Zawijaj wiersze';
-$_lang["xhtml_urls_message"] = 'Zamienia znaki ampersand (&amp;) w URLach generowanych przez MODx na waliduj±ce encje &amp;amp;';
+$_lang["xhtml_urls_message"] = 'Zamienia znaki ampersand (&amp;) w URLach generowanych przez '.CMS_NAME.' na waliduj±ce encje &amp;amp;';
 $_lang["xhtml_urls_title"] = 'URLe zgodne z XHTML';
 $_lang["yes"] = 'Tak';
 $_lang["you_got_mail"] = 'Masz wiadomo¶æ';

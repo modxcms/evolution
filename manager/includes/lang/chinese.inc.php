@@ -2,16 +2,15 @@
 /**
  * Filename:       includes/lang/chinese.inc.php
  * Function:       Simple Chinese language file.
- * Author:         changkong.org rerbin@gmail.com
- * Date:           2006/11/10
- * Version:        2.01
- * MODx version:   0.9.5
+ * Author:         changkong.org rerbin@gmail.com, The ClipperCMS Project Team
+ * Date:                   31st Aug 2012
+ * ClipperCMS version:     1.1
 */
 //$modx_textdir = 'ltr'; // only needed for RTL langauges
 $modx_lang_attribute = 'zh'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = '镆铘是一个 <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
+$_lang["about_msg"] = '镆铘是一个 <a href="http://'.CMS_DOMAIN.'" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
 $_lang["about_title"] = '关于镆铘';
 $_lang["access_permission_denied"] = '您没有访问这文件的权限。';
 $_lang["access_permission_parent_denied"] = '您不允许在这里创建文件！';
@@ -309,7 +308,7 @@ $_lang["go"] = '确定';
 $_lang["group_access_permissions"] = '管理权限';
 $_lang["guid"] = '唯一标识符';
 $_lang["help"] = '关于';
-$_lang["help_msg"] = '<p>您可以在这里寻求支持：<a href="http://modxcms.com" target="_blank">访问镆铘网站</a>或者<a href="http://www.changkong.org" target="_blank">访问镆铘汉化者的网站</a>.如果您有兴趣， <a href="mailto:rerbin@gmail.com?subject=镆铘中文支持">可以写信给我们</a>.';
+$_lang["help_msg"] = '<p>您可以在这里寻求支持：<a href="http://'.CMS_DOMAIN.'" target="_blank">访问镆铘网站</a>或者<a href="http://www.changkong.org" target="_blank">访问镆铘汉化者的网站</a>.如果您有兴趣， <a href="mailto:rerbin@gmail.com?subject=镆铘中文支持">可以写信给我们</a>.';
 $_lang["help_title"] = '关于';
 $_lang["hide_tree"] = '隐藏目录树';
 $_lang["home"] = '首页';
@@ -464,7 +463,7 @@ $_lang["module_resource_title"] = '模块依赖性';
 $_lang["module_title"] = '创建/编辑模块';
 $_lang["module_viewdepend_msg"] = '在这里您可以查看分配给模块的资源，在\'倚赖性管理\'上点击就可以修改它的依赖性了。';
 $_lang["modules"] = '模块';
-$_lang["modx_version"] = 'MODx版本';
+$_lang["modx_version"] = CMS_NAME.'版本';
 $_lang["monday"] = '星期一';
 $_lang["move"] = '移动';
 $_lang["move_resource"] = '移动文件';
@@ -947,7 +946,7 @@ $_lang["websignupemail_title"] = '网站注册信:';
 $_lang["wednesday"] = '星期三';
 $_lang["welcome_messages"] = '您有<b>%d</b>条消息,<b>%s</b>条没读';
 $_lang["welcome_title"] = '欢迎使用镆铘内容管理系统！';
-$_lang["which_editor_message"] = '您可以在这里选择您要使用哪一个编辑器。您可以在<a href="http://www.modxcms.com" target="_blank">镆铘网站</a>下载文本编辑器。';
+$_lang["which_editor_message"] = '您可以在这里选择您要使用哪一个编辑器。您可以在<a href="http://www.'.CMS_DOMAIN.'" target="_blank">镆铘网站</a>下载文本编辑器。';
 $_lang["which_editor_title"] = '选择编辑器:';
 $_lang["working"] = '加载中...';
 $_lang["wrap_lines"] = '换行';
