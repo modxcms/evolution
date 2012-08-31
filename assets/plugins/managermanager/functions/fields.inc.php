@@ -14,7 +14,7 @@ function mm_renameField($field, $newlabel, $roles='', $templates='', $newhelp=''
 	$e = &$modx->Event;
 		
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
-	if (useThisRule($roles, $templates)) {
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
 	
 	$output = " // ----------- Rename field -------------- \n";
 		
@@ -78,7 +78,7 @@ function mm_hideFields($fields, $roles='', $templates='') {
 	$fields = makeArray($fields);
 		
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
-	if (useThisRule($roles, $templates)) {
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
 	
 	$e->output(" // ----------- Hide fields -------------- \n");
 	
@@ -158,7 +158,7 @@ function mm_changeFieldHelp($field, $helptext='', $roles='', $templates='') {
 	}
 	
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
-	if (useThisRule($roles, $templates)) {
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
 	
 	$output = " // ----------- Change field help -------------- \n";
 	
@@ -210,7 +210,7 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 	$fields = makeArray($fields);
 			
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
-	if (useThisRule($roles, $templates)) {
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
 	
 	$output = " // ----------- Move field to tab -------------- \n";
 	
@@ -271,7 +271,7 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 						$fieldtype = $mm_fields[$field]['fieldtype'];
 						$fieldname = $mm_fields[$field]['fieldname'];
 						$output .= '
-						var toMove = $j("'.$fieldtype.'[name='.$fieldname.']").parents("tr:not(.urltv)"); // Identify the table row to move
+						var toMove = $j(\''.$fieldtype.'[name="'.$fieldname.'"]\').parents("tr:not(.urltv)"); // Identify the table row to move
 						toMove.next("tr").find("td[colspan=2]").parents("tr").remove(); // Get rid of line after, if there is one
 						var movedTV = toMove.appendTo("#tab'.$newtab.'>table:first"); // Move the table row
 						movedTV.after(ruleHtml); // Insert a rule after 
@@ -315,7 +315,7 @@ function mm_requireFields($fields, $roles='', $templates=''){
 	$fields = makeArray($fields);
 
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
-	if (useThisRule($roles, $templates)) {
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)) {
 
 		$output = " // ----------- Require field -------------- \n";
 		$output .= '		
