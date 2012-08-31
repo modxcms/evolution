@@ -3,7 +3,7 @@
  * Filename:       includes/lang/italian.inc.php
  * Function:       Language file.
  * Encoding:       UTF8
- * Author:         Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif, The MODx Project Team, The ClipperCMS Project Team
+ * Author:         Nicola Lambathakis (Banzai), Kudolink, Diego Meozzi, Luigif, The '.CMS_NAME.' Project Team, The ClipperCMS Project Team
  * Date:                   31st Aug 2012
  * ClipperCMS version:     1.1
 */
@@ -529,7 +529,7 @@ $_lang["module_resource_title"] = 'Dipendenze Moduli';
 $_lang["module_title"] = 'Crea/modifica Moduli';
 $_lang["module_viewdepend_msg"] = 'Qui potete vedere gli Elementi dai quali dipende il modulo. Cliccate sul pulsante \'Configurazione Dipendenze\' per modificare le dipendenze';
 $_lang["modules"] = 'Moduli';
-$_lang["modx_news"] =CMS_NAME.' News Notices';
+$_lang["modx_news"] =''.CMS_NAME.' News Notices';
 $_lang["modx_news_tab"] ='Novit&agrave; '.CMS_NAME;
 $_lang["modx_news_title"] ='Novit&agrave; '.CMS_NAME;
 $_lang["modx_security_notices"] ='Avvisi di Protezione '.CMS_NAME;
@@ -704,9 +704,9 @@ $_lang["resource_metatag_help"] = 'Selezionate i META tag e le parole chiave che
 $_lang["resource_opt_contentdispo"] = 'Pubblicazione del contenuto';
 $_lang["resource_opt_contentdispo_help"] = 'Utilizzate il campo pubblicazione contenuto per impostare come il browser avr&agrave; accesso al contenuto della Risorsa. Per file da scaricare selezionare come opzione Allegato.';
 $_lang["resource_opt_emptycache"] = 'Svuota cache?';
-$_lang["resource_opt_emptycache_help"]'.CMS_NAME.'Lasciando questo campo selezionato permetterete a MODx di svuotare la cache dopo che avrete salvato la Risorsa. Cos&igrave; i visitatori non vedranno pi&ugrave; la vecchia versione della Risorsa.';
+$_lang["resource_opt_emptycache_help"] = 'Lasciando questo campo selezionato permetterete a '.CMS_NAME.' di svuotare la cache dopo che avrete salvato la Risorsa. Cos&igrave; i visitatori non vedranno pi&ugrave; la vecchia versione della Risorsa.';
 $_lang["resource_opt_folder"] = 'Cartella?';
-$_lang["resource_opt_folder_help"] = 'Spuntate la casella se volete che la Risorsa faccia anche da cartella per altre Risorse. Non av'.CMS_NAME.'bisogno di preoccuparvi troppo di questo, MODx generalmente si occupa automaticamente delle impostazioni delle cartelle.';
+$_lang["resource_opt_folder_help"] = 'Spuntate la casella se volete che la Risorsa faccia anche da cartella per altre Risorse. Non avete bisogno di preoccuparvi troppo di questo, '.CMS_NAME.' generalmente si occupa automaticamente delle impostazioni delle cartelle.';
 $_lang["resource_opt_menu_index"] = 'Indice menu';
 $_lang["resource_opt_menu_index_help"] = 'Indice menu &egrave; un campo che potete usare per ordinare le Risorse nei menu. Potete anche usare il campo per altri scopi nei vostri snippet.';
 $_lang["resource_opt_menu_title"] = 'Titolo nel menu';
@@ -729,7 +729,7 @@ $_lang["resource_title"] = 'Titolo';
 $_lang["resource_title_help"] = 'Digitate qui il nome/titolo della Risorsa. Evitate l\'uso del backslash (\) !';
 $_lang["resource_to_be_moved"] = 'Risorsa da spostare';
 $_lang["resource_type"] = 'Tipo di Risorsa';
-$_lang["resource_type_message"] = 'Un Link Web &egrave; un collegamento ad una Risorsa su Interne'.CMS_NAME.'uesta Risorsa pu&ograve; essere interna a MODx, una pagina su un altro sito, un\'immagine o un altro file su Internet. I Link Web dovrebbero avere Media Type text/html e Inline Content-Disposition.';
+$_lang["resource_type_message"] = 'Un Link Web &egrave; un collegamento ad una Risorsa su Internet. Questa Risorsa pu&ograve; essere interna a '.CMS_NAME.', una pagina su un altro sito, un\'immagine o un altro file su Internet. I Link Web dovrebbero avere Media Type text/html e Inline Content-Disposition.';
 $_lang["resource_type_weblink"] = 'Link Web';
 $_lang["resource_type_webpage"] = 'Pagina Web';
 $_lang["resource_weblink_help"] = 'Digitate qui l\'indirizzo dell\'oggetto a cui volete collegare questo Link Web.';
@@ -818,10 +818,11 @@ $_lang["role_view_logs"] = 'Visualizza i log di sistema';
 $_lang["role_view_unpublished"] = 'Vedi le Risorse non pubblicate';
 $_lang["role_web_access_persmissions"] = 'Permessi di accesso Web';
 $_lang["role_web_user_management"] = 'Gestione utente web';
-$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announceCMS_NAME.'_lang["rss_url_news_message"] = 'Inserire l\'URL per il Feed Novit&agrave; MODx.';
+$_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
+$_lang["rss_url_news_message"] = 'Inserire l\'URL per il Feed Novit&agrave; '.CMS_NAME.'.';
 $_lang["rss_url_news_title"] = 'RSS News Feed';
 $_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
-$_lan'.CMS_NAME.'ss_url_security_message"] = 'Inserire l\'URL per il Feed Avvisi di Protezione MODx.';
+$_lang["rss_url_security_message"] = 'Inserire l\'URL per il Feed Avvisi di Protezione '.CMS_NAME.'.';
 $_lang["rss_url_security_title"] = 'RSS Security Feed';
 $_lang["run_module"] = 'Esegui modulo';
 $_lang["saturday"] = 'Sabato';
@@ -871,17 +872,17 @@ $_lang["settings_page_settings"] = 'Impostazioni pagina';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Propriet&agrave;';
 $_lang["settings_site"] = 'Impostazioni sito';
-$_lang["settings_strip_image_paths_message"] = '.CMS_NAME.'questo valore &egrave; impostato su \'No\', MODx imposter&agrave; il percorso del browser dei file (immagini, file, flash, ecc.) su relativo invece che su assoluto. Questa opzione risul'.CMS_NAME.'tile se dovete spostare l\'installazione di MODx (ad esempio da un sito di test ad uno di produzione). Se non avete idea di cosa significa, lasciala impostata su \'si\'.';
+$_lang["settings_strip_image_paths_message"] = 'Se questo valore &egrave; impostato su \'No\', '.CMS_NAME.' imposter&agrave; il percorso del browser dei file (immagini, file, flash, ecc.) su relativo invece che su assoluto. Questa opzione risulta utile se dovete spostare l\'installazione di '.CMS_NAME.' (ad esempio da un sito di test ad uno di produzione). Se non avete idea di cosa significa, lasciala impostata su \'si\'.';
 $_lang["settings_strip_image_paths_title"] = 'Riscrivere i percorsi immagine?';
-$_lang["settings_templvars"] = 'Variabili'.CMS_NAME.'Template';
-$_lang["settings_title"] = 'Impostazioni MODx';
+$_lang["settings_templvars"] = 'Variabili di Template';
+$_lang["settings_title"] = 'Impostazioni '.CMS_NAME;
 $_lang["settings_ui"] = 'Impostazioni editor & interfaccia';
 $_lang["settings_users"] = 'Impostazioni utente';
 $_lang["show_meta"] = 'Mostra le META Keywords';
 $_lang["show_meta_message"] = 'Mostra META Keywords (deprecato) quando si modificano le Risorse nel Manager.';
 $_lang["show_tree"] = 'Mostra struttura ad albero';
 $_lang["showing"] = 'Visualizzo';
-$_lang["signupemail_message"] = 'Qui potete impostare il messaggio da inviare agli utenti quando c'.CMS_NAME.'e loro un account e volete che MODx  invii una e-mail contenente nome utente e password. <br /><b>Nota:</b'.CMS_NAME.' codice %s viene sostituito da MODx all\'invio del messaggio. Il primo %s &egrave; sempre rimpiazzato dal nome utente, il secondo dalla password. <b>Lascia i due codici %s nel corpo della e-mail altrimenti il nome utente e password non saranno inviati e l\'utente non ne verr&agrave; a conoscenza!</b>';
+$_lang["signupemail_message"] = 'Qui potete impostare il messaggio da inviare agli utenti quando create loro un account e volete che '.CMS_NAME.'  invii una e-mail contenente nome utente e password. <br /><b>Nota:</b> Il codice %s viene sostituito da '.CMS_NAME.' all\'invio del messaggio. Il primo %s &egrave; sempre rimpiazzato dal nome utente, il secondo dalla password. <b>Lascia i due codici %s nel corpo della e-mail altrimenti il nome utente e password non saranno inviati e l\'utente non ne verr&agrave; a conoscenza!</b>';
 $_lang["signupemail_title"] = 'E-mail per l\'iscrizione:';
 $_lang["site"] = 'Sito';
 $_lang["site_schedule"] = 'Pianificazione sito';
@@ -970,7 +971,7 @@ $_lang["track_visitors_title"] = 'Registra visite (statistiche)';
 $_lang["tree_page_click"] = 'Click su una pagina';
 $_lang["tree_page_click_message"] = 'Cosa succede facendo click su una pagina nell\'albero del sito.';
 $_lang["tree_show_protected"] = 'Mostra pagine protette';
-$_lang["tree_show_protected_message"] = 'Se impostato "No", Le pagine protette (e tutte le pagine figlie) non appariranno nell\'albero '.CMS_NAME.'e Risorse. "No" &egrave; l\'impostazione di default di MODx.';
+$_lang["tree_show_protected_message"] = 'Se impostato "No", Le pagine protette (e tutte le pagine figlie) non appariranno nell\'albero delle Risorse. "No" &egrave; l\'impostazione di default di '.CMS_NAME.'.';
 $_lang["truncate_table"] = 'Cliccate qui per troncare questa tabella';
 $_lang["tuesday"] = 'Marted&igrave;';
 $_lang["tv"] = 'TV';
@@ -1061,16 +1062,16 @@ $_lang["web_users"] = 'Utenti web';
 $_lang["weblink"] = 'Link Web';
 $_lang["webpwdreminder_message"] = 'Inserite il messaggio da inviare in mail, quando gli utenti chiedono una nuova password via email. IL sistema di gestione dei contenuti invier&agrave; loro una e-mail contenente la nuova password e le informazioni di attivazione. <br /><b>Nota:</b> I seguenti segnaposto saranno sostituiti dal sistema di gestione del contenuto quando invier&agrave; il messaggio: <br /><br />[+sname+] - Nome del sito, <br />[+saddr+] - Indirizzo email del sito, <br />[+surl+] - Url del sito, <br />[+uid+] - Login o id dell\'utente, <br />[+pwd+] - Password utente, <br />[+ufn+] - Nome completo dell\'utente. <br /><br /><b>Lasciate [+uid+] e [+pwd+] nella e-mail, altrimenti il nome utente e la password non verranno inviati!<</b>';
 $_lang["webpwdreminder_title"] = 'Email recupero dati autenticazione:';
-$_lang["websignupemail_message"] = 'Qui potete impostare il messa'.CMS_NAME.' da inviare agli utenti quando creerete loro un account e volete che MODx invii una e-mail contenente nome utente e password. <br />Nota:</b> I seguenti segnaposto saranno sostituiti dal sistema di gestione del contenuto quando invier&agrave; il messaggio: <br /><br />[+sname+] - Nome del sito, <br />[+saddr+] - Indirizzo email del sito, <br />[+surl+] - Url del sito, <br />[+uid+] - Login o id dell\'utente, <br />[+pwd+] - Password utente, <br />[+ufn+] - Nome completo dell\'utente. <br /><br /><b>Lasciate [+uid+] e [+pwd+] nella e-mail, altrimenti il nome utente e la password non verranno inviati!<</b>';
+$_lang["websignupemail_message"] = 'Qui potete impostare il messaggio da inviare agli utenti quando creerete loro un account e volete che '.CMS_NAME.' invii una e-mail contenente nome utente e password. <br />Nota:</b> I seguenti segnaposto saranno sostituiti dal sistema di gestione del contenuto quando invier&agrave; il messaggio: <br /><br />[+sname+] - Nome del sito, <br />[+saddr+] - Indirizzo email del sito, <br />[+surl+] - Url del sito, <br />[+uid+] - Login o id dell\'utente, <br />[+pwd+] - Password utente, <br />[+ufn+] - Nome completo dell\'utente. <br /><br /><b>Lasciate [+uid+] e [+pwd+] nella e-mail, altrimenti il nome utente e la password non verranno inviati!<</b>';
 $_lang["websignupemail_title"] = 'Indirizzo E-mail di registrazione:';
 $_lang["wednesday"] = 'Mercoled&igrave;';
-$_lang["welcome_messages"] = 'La vostra inbox contiene <b>%d</b> messaggi(o'.CMS_NAME.'i cui <b>%s</b> non letto/i.';
-$_lang["welcome_title"] = 'Benvenuto nel sistema di gestione dei contenuti MODx';
-$_lang["which_editor_message"] = 'Qui potete selezionare l\'editor rich text da usare. Pote'.CMS_NAME.'caricare ed installare altri RichText editor dal sezione downloads del sito di MODx ';
+$_lang["welcome_messages"] = 'La vostra inbox contiene <b>%d</b> messaggi(o), di cui <b>%s</b> non letto/i.';
+$_lang["welcome_title"] = 'Benvenuto nel sistema di gestione dei contenuti '.CMS_NAME;
+$_lang["which_editor_message"] = 'Qui potete selezionare l\'editor rich text da usare. Potete scaricare ed installare altri RichText editor dal sezione downloads del sito di '.CMS_NAME.' ';
 $_lang["which_editor_title"] = 'Editor da usare:';
 $_lang["working"] = 'Sto elaborando...';
 $_lang["wrap_lines"] = 'Manda le linee a capo automaticamente';
-$_lang["xhtml_urls_message"] = 'Sostituisce l'.CMS_NAME.'commerciale (ampersand (&amp;)) negli indirizzi generati da  MODx con l\' entit&agrave; HTML &<!-- -->amp;';
+$_lang["xhtml_urls_message"] = 'Sostituisce la e commerciale (ampersand (&amp;)) negli indirizzi generati da  '.CMS_NAME.' con l\' entit&agrave; HTML &<!-- -->amp;';
 $_lang["xhtml_urls_title"] = 'URL XHTML';
 $_lang["yes"] = 'Si';
 $_lang["you_got_mail"] = 'Avete una mail';
