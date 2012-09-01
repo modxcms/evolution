@@ -2,7 +2,7 @@
 $langs = array();
 if( $handle = opendir('lang/') ) {
 	while( false !== ( $file = readdir( $handle ) ) ) {
-		if( strpos( $file, '.' ) ) $langs[] = str_replace('.inc.php', '', $file);
+		if( strpos( $file, '.inc.php' ) ) $langs[] = str_replace('.inc.php', '', $file);
 	}
 	closedir( $handle );
 }
