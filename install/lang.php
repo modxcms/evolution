@@ -20,6 +20,7 @@ if (isset($_POST['language'])) {
 	$install_language = 'english';
 }	
 
+// Only allow alphanumeric characters, dashes '-' and underscores (minor security issue)
 $install_language = preg_replace('/[^a-z0-9-_]+/i', '', $install_language);
 
 if (isset($_POST['managerlanguage'])) {
@@ -30,6 +31,7 @@ if (isset($_POST['managerlanguage'])) {
 	$manager_language = 'english';
 }
 
+// Only allow alphanumeric characters, dashes '-' and underscores (minor security issue)
 $manager_language = preg_replace('/[^a-z0-9-_]+/i', '', $manager_language);
 
 // load language file(s)
@@ -40,6 +42,6 @@ $manager_language = preg_replace('/[^a-z0-9-_]+/i', '', $manager_language);
 require_once('lang/english.inc.php');
 
 if($install_language != 'english' && file_exists('lang/'.$install_language.'.inc.php')) {
-	include_once 'lang/'.$install_language.'.inc.php';
+	include_once('lang/'.$install_language.'.inc.php');
 }
 
