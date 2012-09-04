@@ -56,7 +56,7 @@ define("IN_MANAGER_MODE", "true");  // we use this to make sure files are access
                                     // the manager instead of seperately.
 
 // include version info
-include_once ('./includes/version.inc.php');
+require_once ('./includes/version.inc.php');
 
 // harden it
 require_once('./includes/protect.inc.php');

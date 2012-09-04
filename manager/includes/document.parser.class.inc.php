@@ -2062,7 +2062,7 @@ class DocumentParser {
      * @return array
      */
     function getVersionData() {
-        include $this->config["base_path"] . "manager/includes/version.inc.php";
+        require_once($this->config["base_path"] . "manager/includes/version.inc.php");
         $v= array ();
         $v['version']= CMS_RELEASE_VERSION;
         $v['branch']= CMS_NAME;

@@ -48,6 +48,9 @@
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 
+// include version info
+require_once (dirname(__FILE__).'/manager/includes/version.inc.php');
+
 // harden it
 require_once(dirname(__FILE__).'/manager/includes/protect.inc.php');
 
