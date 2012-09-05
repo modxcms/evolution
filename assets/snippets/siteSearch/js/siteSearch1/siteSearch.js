@@ -6,7 +6,7 @@
  */
 
 // set the folder location to the correct location of ajaxSearch.php
-var _base='assets/snippets/aSearch/';
+var _base='assets/snippets/siteSearch/';
 
 // set the loading and the close image to the correct location for you
 var _close=_base + 'images/cross.png';  // close image

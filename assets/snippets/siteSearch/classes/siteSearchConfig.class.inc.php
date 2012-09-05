@@ -105,21 +105,21 @@ class AjaxSearchConfig {
         if (isset($this->dbCharset) && isset($this->_pageCharset[$this->dbCharset])) {
 
             if ($this->dbCharset == 'utf8' && !extension_loaded('mbstring')) {
-                $msgErr = "ASearch error: php_mbstring extension required";
+                $msgErr = "SiteSearch error: php_mbstring extension required";
             } else {
                 if ($this->dbCharset == 'utf8' && $this->cfg['mbstring']) mb_internal_encoding("UTF-8");
                 $this->pgCharset = $this->_pageCharset[$this->dbCharset];
                 $valid = true;
             }
         } elseif (!isset($this->dbCharset)) {
-            $msgErr = "ASearch error: database_connection_charset not set. Check your MODx config file";
+            $msgErr = "SiteSearch error: database_connection_charset not set. Check your MODx config file";
         } elseif (!strlen($this->dbCharset)) {
-            $msgErr = "ASearch error: database_connection_charset is null. Check your MODx config file";
+            $msgErr = "SiteSearch error: database_connection_charset is null. Check your MODx config file";
         } else {
             // if you get this message, simply update the $pageCharset array in search.class.inc.php file
             // with the appropriate mapping between Mysql Charset and Html charset
             // eg: 'latin2' => 'ISO-8859-2'
-            $msgErr = "ASearch error: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the aSearchConfig.class.inc.php file";
+            $msgErr = "SiteSearch error: unknown database_connection_charset = {$this->dbCharset}<br />Add the appropriate Html charset mapping in the siteSearchConfig.class.inc.php file";
         }
         return $valid;
     }

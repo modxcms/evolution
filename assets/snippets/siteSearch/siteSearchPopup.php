@@ -23,7 +23,7 @@ if (!function_exists('parseUserConfig')) {
 if (isset($_POST['search'])) {
 
     define('AS_VERSION', '1.9.2');
-    define('AS_SPATH', 'assets/snippets/aSearch/');
+    define('AS_SPATH', 'assets/snippets/siteSearch/');
     define('AS_PATH', MODX_BASE_PATH . AS_SPATH);
 
     require_once (MODX_MANAGER_PATH . '/includes/protect.inc.php');
@@ -31,7 +31,7 @@ if (isset($_POST['search'])) {
         $output = "AjaxSearch version obsolete. <br />Please check the snippet code in MODx manager.";
     }
     else {
-        include_once AS_PATH . "classes/aSearch.class.inc.php";
+        include_once AS_PATH . "classes/siteSearch.class.inc.php";
 
         define('MODX_API_MODE', true);
         include_once (MODX_MANAGER_PATH . '/includes/document.parser.class.inc.php');

@@ -1,8 +1,8 @@
 
-ASearch Readme version 1.9.3
+SiteSearch Readme version 1.9.3
 
 ---------------------------------------------------------------
-:: Snippet: ASearch
+:: Snippet: SiteSearch
 ----------------------------------------------------------------
   Short Description:
         Ajax-driven & Flexible Search form
