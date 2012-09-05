@@ -54,7 +54,7 @@ class DocumentParser {
      *
      * @todo Construct an API and/or config system for this. Currently only applies to core/bundled snippets.
      */
-    var $snippetMap = array('ditto'=>'List', 'webloginpe'=>'WebUsers', 'AjaxSearch'=>'SiteSearch'); 
+    var $snippetMap = array('ditto'=>'List', 'webloginpe'=>'WebUsers', 'ajaxsearch'=>'SiteSearch'); 
 
     /**
      * Document constructor
@@ -1023,6 +1023,8 @@ class DocumentParser {
 
         $etomite= & $this;
 
+	$snippets = array();
+
         if ($matchCount= count($matches[1])) {
             for ($i= 0; $i < $matchCount; $i++) {
                 $spos= strpos($matches[1][$i], '?', 0);
@@ -1034,7 +1036,8 @@ class DocumentParser {
                 $matches[1][$i]= str_replace($params, '', $matches[1][$i]);
 
                 if (isset($this->snippetMap[strtolower($matches[1][$i])])) {
-                     $matches[1][$i] = $this->snippetMap[strtolower($matches[1][$i])];
+                     $snippets[$i]['oldname'] = $matches[1][$i]; // Store old name as it appears in the source
+                     $matches[1][$i] = $this->snippetMap[strtolower($matches[1][$i])]; // Map old name to new
                 }
 
                 $snippetParams[$i]= $params;
@@ -1108,7 +1111,15 @@ class DocumentParser {
                 if ($this->dumpSnippets == 1) {
                     echo "<fieldset><legend><b>$snippetName</b></legend><textarea style='width:60%; height:200px'>" . htmlentities($executedSnippets[$i]) . "</textarea></fieldset><br />";
                 }
+                
+                // Replace snippet call with snippet return value
                 $documentSource= str_replace("[[" . $snippetName . $currentSnippetParams . "]]", $executedSnippets[$i], $documentSource);
+                
+                if (isset($snippets[$i]['oldname'])) {
+                    // And again for old mapped snippets
+                    $documentSource= str_replace("[[" . $snippets[$i]['oldname'] . $currentSnippetParams . "]]", $executedSnippets[$i], $documentSource);
+                    }
+
             }
         }
         return $documentSource;
