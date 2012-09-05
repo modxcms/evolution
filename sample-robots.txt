@@ -1,4 +1,4 @@
-# Default modx exclusions
+# Default clipper exclusions
 User-agent: *
 Disallow: /assets/cache/
 Disallow: /assets/docs/
