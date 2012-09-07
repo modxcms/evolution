@@ -18,25 +18,7 @@
 
 $mm_version = '0.3.11'; 
 
-
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
-
-
-
-// JS URL
-switch ($which_jquery) {
- case 'local (assets/js)':
-  $js_url  = $js_default_url_local; 
- break;
-
- case 'remote (google code)':
-  $js_url  = $js_default_url_remote;
- break;
-
- case 'manual url (specify below)':
-  $js_url  = $js_src_override;
- break;
-}
 
 // Should we remove deprecated Template variable types from the TV creation list?
 $remove_deprecated_tv_types = ($remove_deprecated_tv_types_pref == 'yes') ? true : false;
@@ -252,7 +234,7 @@ case 'OnPluginFormRender':
 		
 		// Load the jquery library
 		$output = '<!-- Begin ManagerManager output -->' . "\n";
-		$output .= includeJs($js_url, 'html');
+		$output .= $modx->getJqueryTag();
 		
 		$output .= '<script type="text/javascript">' . "\n";
 		$output .= "var \$j = jQuery.noConflict(); \n"; //produces var  $j = jQuery.noConflict();
@@ -294,7 +276,7 @@ case 'OnDocFormPrerender':
 
 	// Load the jquery library
 	echo '<!-- Begin ManagerManager output -->';
-	echo includeJs($js_url, 'html');	
+	echo $modx->getJqueryTag();
 
 	// Create a mask to cover the page while the fields are being rearranged
 	echo '		
@@ -427,7 +409,7 @@ case 'OnTVFormRender':
 
 		// Load the jquery library
 		echo '<!-- Begin ManagerManager output -->';
-		echo includeJs($js_url, 'html');	
+		echo $modx->getJqueryTag();
 	
 		// Create a mask to cover the page while the fields are being rearranged
 		echo '		
