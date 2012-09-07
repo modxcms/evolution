@@ -2000,14 +2000,11 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 	function RegisterScripts($customJs = '')
 	{
 		global $modx;
-		
-		$jQuery = $modx->config['site_url'].'assets/snippets/webusers/js/jquery.packed.js';
-		$jQueryForm = $modx->config['site_url'].'assets/snippets/webusers/js/jquery.form.js';
-		$jQueryTaconite = $modx->config['site_url'].'assets/snippets/webusers/js/jquery.taconite.js';
-		$modx->regClientStartupScript($jQuery);
-		$modx->regClientStartupScript($jQueryForm);
-		$modx->regClientStartupScript($jQueryTaconite);
-		//$modx->regClientStartupScript($customJs);
+
+		$modx->regClientJquery();
+		$modx->regClientJqueryPlugin('form', 'jquery.form.js');
+		$modx->regClientJqueryPlugin('taconite', 'jquery.taconite.js');
+
 		if (isset($customJs))
 		{
 			$modx->regClientStartupScript($customJs);

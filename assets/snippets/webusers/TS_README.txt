@@ -3,6 +3,7 @@ Changelog
 
 WebUser 1.3.2
 -------------
+	Sept 2012 - changed to use DocumentParser's jquery methods
 	July 2012 - changed filenames to webusers*, changed snippet name to WebUsers.
 
 
