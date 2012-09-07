@@ -1089,4 +1089,6 @@ $_lang['error_handling_deprecated_2'] = 'Throw an error and halt';
 $_lang['error_handling_silent_label'] = 'PHP error messages';
 $_lang['error_handling_silent_0'] = 'Shown on screen';
 $_lang['error_handling_silent_1'] = 'Not displayed';
+$_lang['jquery_url_label'] = 'jQuery URL';
+$_lang['jquery_url_label'] = 'jQuery plugin directory';
 

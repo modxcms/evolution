@@ -603,6 +603,18 @@ function confirmLangChange(el, lkey, elupd){
 			<tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["jquery_url_label"] ?></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="jquery_url" value="<?php echo isset($jquery_url) ? $jquery_url : 'assets/js/jquery.min.js'; ?>" /></td>
+            </tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["jquery_plugin_dir"] ?></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="jquery_plugin_dir" value="<?php echo isset($jquery_plugin_dir) ? $jquery_plugin_dir : 'assets/js/'; ?>" /></td>
+            </tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php
@@ -1374,6 +1386,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
+          </tr>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php

@@ -3073,6 +3073,34 @@ class DocumentParser {
         $this->loadedjscripts[$key]['startup']= $startup;
         $this->loadedjscripts[$key]['pos']= $pos;
     }
+    
+    /**
+     * Register jQuery core script
+     */
+    function regClientJquery() {
+    
+    	static $jquery_included = false;
+    	
+    	if (!$jquery_included) {	
+ 			$this->regClientStartupScript($this->config['jquery_url']);
+ 			$jquery_included = true;
+ 		}
+    }
+    
+    /**
+     * Register jquery plugin
+     *
+     * @param string $plugin_name Plugin name, use the name most likely to be used by other scripts (case insensitive)
+     * @param string $plugin_file Plugin filename. Relative to plugin directory if $use_plugin_dir is true
+     * @param string $plugin_version
+     * @param bool $use_plugin_dir See above, defaults to true
+     */
+   function regClientJqueryPlugin($plugin_name, $plugin_file, $plugin_version = 0, $use_plugin_dir = true) {
+   		if ($use_plugin_dir) {
+   			$plugin_file = $this->config['jquery_plugin_dir'].$plugin_file;
+   		}
+       	$this->regClientStartupScript($plugin_file, array('name'=>$plugin_name, $plugin_version, 'plaintext'=>false));
+   }
 
     /**
      * Registers Client-side Startup HTML block
