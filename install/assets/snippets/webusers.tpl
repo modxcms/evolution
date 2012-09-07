@@ -24,10 +24,10 @@
 	$disableServices = isset($disableServices) ? explode(',', str_replace(', ',',',$disableServices)) : array();
 	$tableCheck = isset($tableCheck) ? $tableCheck : 1;
 	
-	define('WEBUSER_PATH', MODX_BASE_PATH.'assets/snippets/webuser/');
+	define('WEBUSER_PATH', MODX_BASE_PATH.'assets/snippets/webusers/');
 	
-	require_once(WEBUSER_PATH.'webuser.class.php');
-	require_once(WEBUSER_PATH.'webuser.templates.php');
+	require_once(WEBUSER_PATH.'webusers.class.php');
+	require_once(WEBUSER_PATH.'webusers.templates.php');
 
 	if (file_exists(WEBUSER_PATH.'lang/'.$lang.'.php'))
 	{
@@ -95,7 +95,7 @@
 	$wlpe->ActiveUsers();
 	$wlpe->PlaceHolders($inputHandler, $messageTpl);
 	
-	$modx->regClientStartupScript('assets/snippets/webuser/js/ieButtonFix.js');
+	$modx->regClientStartupScript('assets/snippets/webusers/js/ieButtonFix.js');
 
 	$service = $_REQUEST['service'];
 	if (empty($service) || $service == '')
