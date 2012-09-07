@@ -13,11 +13,10 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function Qm(&$modx, $jqpath='', $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
+    function Qm(&$modx, $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
         $this->modx = $modx;
         
         // Get plugin parameters
-        $this->jqpath = $jqpath;
         $this->loadmanagerjq = $loadmanagerjq;
         $this->loadfrontendjq = $loadfrontendjq;
         $this->noconflictjq = $noconflictjq;  
@@ -41,7 +40,8 @@ class Qm {
         $this->newbclass = $newbclass;
         $this->tvbuttons = $tvbuttons;
         $this->tvbclass = $tvbclass;      
-        
+       
+       $modx->logEvent(2,1,$this->noconflictjq);
         // Includes
         include_once($this->modx->config['base_path'].'assets/plugins/qm/mcc.class.php');
         
@@ -233,7 +233,7 @@ class Qm {
                         <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
                         <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
                         <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie7.css" /><![endif]-->
-                        <script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>
+                        '.$modx->getJqueryTag().'
                         </head>
                         ';
                         
@@ -493,7 +493,7 @@ class Qm {
                         }
             
                         // Insert jQuery and ColorBox in head if needed
-                        if ($this->loadfrontendjq == 'true') $head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
+                        if ($this->loadfrontendjq == 'true') $head .= $this->modx->getJqueryTag();
                         if ($this->loadtb == 'true') {
                             $head .= '
                             <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/colorbox.css" />
@@ -702,7 +702,7 @@ class Qm {
                     
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';
-                    if ($this->loadmanagerjq == 'true') $mc->head .= '<script src="'.$this->modx->config['site_url'].$this->jqpath.'" type="text/javascript"></script>';
+                    if ($this->loadmanagerjq == 'true') $mc->head .= $this->modx->getJqueryTag();
     
                     // Add control button
                     $mc->addLine('$("body").prepend(controls);');
