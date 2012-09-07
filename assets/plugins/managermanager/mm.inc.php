@@ -1,13 +1,13 @@
 <?php
 /**
  * @name ManagerManager
- * @version 0.3.11 (2012-02-15)
+ * @version clipper-0.3.12 (2012-09-07)
  * 
- * @for MODx Evolution 1.0.x
+ * @for Clipper 1.1
  * 
- * @author Nick Crossland - www.rckt.co.uk, studio DivanDesign - www.DivanDesign.biz
+ * @author Nick Crossland - www.rckt.co.uk, studio DivanDesign - www.DivanDesign.biz, the ClipperCMS team
  * 
- * @description Used to manipulate the display of document fields in the manager.
+ * @description Used to manipulate the display of document fields in the manager. Derived from ManagerManager 0.3.11 for MODx Evo.
  * 
  * @installation See /docs/install.htm
  * 

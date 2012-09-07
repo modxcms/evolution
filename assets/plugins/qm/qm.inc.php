@@ -2,9 +2,9 @@
 /**
  * QuickManager+
  *  
- * @author      Mikko Lammi, www.maagit.fi 
+ * @author      Mikko Lammi, www.maagit.fi, the ClipperCMS team.
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.5 updated 12/01/2011
+ * @version     clipper-1.5.6 updated 7/9/2012
  */
 
 if(!class_exists('Qm')) {
