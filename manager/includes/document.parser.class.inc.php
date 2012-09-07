@@ -3091,7 +3091,7 @@ class DocumentParser {
      * Register jquery plugin
      *
      * @param string $plugin_name Plugin name, use the name most likely to be used by other scripts (case insensitive)
-     * @param string $plugin_file Plugin filename. Relative to plugin directory if $use_plugin_dir is true
+     * @param string $plugin_file Plugin URL. Relative to plugin directory if $use_plugin_dir is true
      * @param string $plugin_version
      * @param bool $use_plugin_dir See above, defaults to true
      */
@@ -3100,6 +3100,36 @@ class DocumentParser {
    			$plugin_file = $this->config['jquery_plugin_dir'].$plugin_file;
    		}
        	$this->regClientStartupScript($plugin_file, array('name'=>$plugin_name, $plugin_version, 'plaintext'=>false));
+   }
+   
+   /**
+    * Get jquery <script> tag as HTML.
+    *
+    * Intended for use in the backend. Use the above methods for the frontend.
+    *
+    * Returns script tag with full absolute URL, so suitable for all manager pages including any without a <base> tag.
+    *
+    * @param bool $only_once If true, only return the script tag if we haven't already done so
+    */
+   function getJqueryTag($only_once = true) {
+   
+   		static $run_once = false;
+   		
+   		if (!$run_once || !$only_once) {
+   			$jq_url = $this->config['jquery_url'];
+   			if ($jq_url[0] == '/') {
+   				$jq_url = $this->config['site_url'].substr($this->config['jquery_url'], 1);
+   			} elseif (substr($jq_url, 0, 4) != 'http') {
+   				$jq_url = $this->config['site_url'].$jq_url;
+   			}
+   			$script_tag = '<script type="text/javascript" src="'.str_replace('&', '&amp;', $jq_url)."\"></script>\n";
+   		} else {
+   			$script_tag = '';
+   		}
+
+		$run_once = true;
+		
+		return $script_tag; 		
    }
 
     /**
