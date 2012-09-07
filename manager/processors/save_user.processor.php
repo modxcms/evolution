@@ -153,7 +153,7 @@ switch ($_POST['mode']) {
 		require ('hash.inc.php');
 		$HashHandler = new HashHandler(CLIPPER_HASH_PREFERRED, $modx);
 		$Hash = $HashHandler->generate($newpassword);
-		$sql = 'INSERT INTO '.$dbase.'`'.$table_prefix.'manager_users` (username, hashtype, salt, password)
+		$sql = 'INSERT INTO '.$dbase.'.`'.$table_prefix.'manager_users` (username, hashtype, salt, password)
 						VALUES(\''.$newusername_esc.'\', '.CLIPPER_HASH_PREFERRED.', \''.$modx->db->escape($Hash->salt).'\', \''.$modx->db->escape($Hash->hash).'\')';
 		$rs = $modx->db->query($sql);
 		if (!$rs) {
