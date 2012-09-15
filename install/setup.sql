@@ -965,7 +965,9 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('warning_visibility', '1'),
 ('remember_last_tab', '0'),
 ('error_handling_deprecated', 0),
-('error_handling_silent', 0);
+('error_handling_silent', 0),
+('jquery_url', 'assets/js/jquery.min.js'),
+('jquery_plugin_dir', 'assets/js/');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
