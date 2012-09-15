@@ -581,9 +581,9 @@ function confirmLangChange(el, lkey, elupd){
                <td>
                	  <select onchange="documentDirty=true;" name="error_handling_deprecated">
                	         <?php if (!isset($error_handling_deprecated)) $error_handling_deprecated = 0; ?>
-               	  	<option<?php if($error_handling_deprecated == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_deprecated_0']; ?></option>
-               	  	<option<?php if($error_handling_deprecated == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_deprecated_1']; ?></option>
-               	  	<option<?php if($error_handling_deprecated == 2) echo ' selected="selected"'; ?> value="2"><?php echo $_lang['error_handling_deprecated_2']; ?></option>
+               	  	<option<?php if($error_handling_deprecated == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_deprecated_0']; /* No error reporting */ ?></option>
+               	  	<option<?php if($error_handling_deprecated == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_deprecated_1']; /* Log */ ?></option>
+               	  	<option<?php if($error_handling_deprecated == 2) echo ' selected="selected"'; ?> value="2"><?php echo $_lang['error_handling_deprecated_2']; /* Halt */ ?></option>
                	  </select>
                </td>
             </tr>
@@ -595,8 +595,8 @@ function confirmLangChange(el, lkey, elupd){
                <td>
               	  <select onchange="documentDirty=true;" name="error_handling_silent">
                	         <?php if (!isset($error_handling_silent)) $error_handling_silent = 0; ?>
-               	  	<option<?php if($error_handling_silent == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_silent_0']; ?></option>
-               	  	<option<?php if($error_handling_silent == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_silent_1']; ?></option>
+               	  	<option<?php if($error_handling_silent == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_silent_0']; /* screen */ ?></option>
+               	  	<option<?php if($error_handling_silent == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_silent_1']; /* no display */ ?></option>
                	  </select>
                 </td>
              </tr>
