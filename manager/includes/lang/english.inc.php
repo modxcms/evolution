@@ -1091,4 +1091,5 @@ $_lang['error_handling_silent_0'] = 'Shown on screen';
 $_lang['error_handling_silent_1'] = 'Not displayed';
 $_lang['jquery_url_label'] = 'jQuery URL';
 $_lang['jquery_plugin_dir'] = 'jQuery plugin directory';
+$_lang['jquery_noconflict'] = 'Use jQuery.noConflict()';
 

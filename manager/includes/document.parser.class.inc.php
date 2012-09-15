@@ -3083,6 +3083,9 @@ class DocumentParser {
     	
     	if (!$jquery_included) {	
  			$this->regClientStartupScript($this->config['jquery_url']);
+ 			if ($this->config['jquery_noconflict']) {
+ 				$this->regClientStartupScript('<script type="text/javascript">jQuery.noConflict()</script>');
+ 			}
  			$jquery_included = true;
  		}
     }

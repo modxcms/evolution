@@ -611,7 +611,17 @@ function confirmLangChange(el, lkey, elupd){
               <td nowrap class="warning"><?php echo $_lang["jquery_plugin_dir"] ?></td>
               <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="jquery_plugin_dir" value="<?php echo isset($jquery_plugin_dir) ? $jquery_plugin_dir : 'assets/js/'; ?>" /></td>
             </tr>
-            <tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["jquery_noconflict"] ?></td>
+               <td>
+              	  <select onchange="documentDirty=true;" name="jquery_noconflict">
+               	         <?php if (!isset($jquery_noconflict)) $jquery_noconflict = 0; ?>
+               	  	<option<?php if($jquery_noconflict == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['no']; ?></option>
+               	  	<option<?php if($jquery_noconflict == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['yes']; ?></option>
+               	  </select>
+                </td>
+            </tr>
+             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
 
