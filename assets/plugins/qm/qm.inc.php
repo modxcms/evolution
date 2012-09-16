@@ -218,7 +218,7 @@ class Qm {
                             $tvHtml = renderFormElement($tv['type'], $tv['name'], $tv['default_text'], $tv['elements'], $tv['value']);
                             
                             // Get jQuery conflict mode
-    					    if ($this->noconflictjq == 'true') $jq_mode = 'jQuery';
+    					    if ($this->noconflictjq) $jq_mode = 'jQuery';
     					    else $jq_mode = '$';
 					    }
                         
@@ -506,7 +506,7 @@ class Qm {
                         ';
                         
                         // jQuery in noConflict mode 
-                        if ($this->noconflictjq == 'true')
+                        if ($this->noconflictjq)
                         {
                             $head .= '
                         	jQuery(document).ready(function($)
@@ -680,7 +680,7 @@ class Qm {
 					$doc_id = intval($_REQUEST['id']);
 					
 					// Get jQuery conflict mode
-					if ($this->noconflictjq == 'true') $jq_mode = '$j';
+					if ($this->noconflictjq) $jq_mode = '$j';
 					else $jq_mode = '$';
 					
 					// Add action buttons
