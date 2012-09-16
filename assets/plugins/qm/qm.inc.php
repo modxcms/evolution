@@ -4,7 +4,7 @@
  *  
  * @author      Mikko Lammi, www.maagit.fi, the ClipperCMS team.
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     clipper-1.5.6 updated 7/9/2012
+ * @version     clipper-1.5.6 updated 15/9/2012
  */
 
 if(!class_exists('Qm')) {
@@ -13,12 +13,11 @@ class Qm {
   var $modx;
   
     //_______________________________________________________
-    function Qm(&$modx, $loadmanagerjq='', $loadfrontendjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
+    function Qm(&$modx, $loadmanagerjq='', $noconflictjq='', $loadtb='', $tbwidth='', $tbheight='', $hidefields='', $hidetabs='', $hidesections='', $addbutton='', $tpltype='', $tplid='', $custombutton='', $managerbutton='', $logout='', $autohide='', $editbuttons='', $editbclass='', $newbuttons='', $newbclass='', $tvbuttons='', $tvbclass='') {
         $this->modx = $modx;
         
         // Get plugin parameters
         $this->loadmanagerjq = $loadmanagerjq;
-        $this->loadfrontendjq = $loadfrontendjq;
         $this->noconflictjq = $noconflictjq;  
         $this->loadtb = $loadtb;
         $this->tbwidth = $tbwidth;
@@ -41,7 +40,6 @@ class Qm {
         $this->tvbuttons = $tvbuttons;
         $this->tvbclass = $tvbclass;      
        
-       $modx->logEvent(2,1,$this->noconflictjq);
         // Includes
         include_once($this->modx->config['base_path'].'assets/plugins/qm/mcc.class.php');
         
@@ -118,6 +116,16 @@ class Qm {
                 break;
             
             // Display page in front-end
+
+            case 'OnWebPageInit':
+	         // Insert jQuery and ColorBox in head if needed
+		 $this->modx->regClientJquery();
+                 if ($this->loadtb == 'true') {
+                     $this->modx->regClientCSS($this->modx->config['site_url'].'assets/js/css/colorbox.css', 'screen');
+                     $this->modx->regClientJqueryPlugin('colorbox', 'jquery.colorbox-min.js');
+                 }
+                 break;
+
             case 'OnWebPagePrerender':
     
                 // Get document id
@@ -210,7 +218,7 @@ class Qm {
                             $tvHtml = renderFormElement($tv['type'], $tv['name'], $tv['default_text'], $tv['elements'], $tv['value']);
                             
                             // Get jQuery conflict mode
-    					    if ($this->noconflictjq == 'true') $jq_mode = '$j';
+    					    if ($this->noconflictjq) $jq_mode = 'jQuery';
     					    else $jq_mode = '$';
 					    }
                         
@@ -233,7 +241,7 @@ class Qm {
                         <link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/style.css" />
                         <!--[if IE]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie.css" /><![endif]-->
                         <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/ie7.css" /><![endif]-->
-                        '.$modx->getJqueryTag().'
+			'.$this->modx->getJqueryTag(false).'
                         </head>
                         ';
                         
@@ -492,88 +500,66 @@ class Qm {
                             ';
                         }
             
-                        // Insert jQuery and ColorBox in head if needed
-                        if ($this->loadfrontendjq == 'true') $head .= $this->modx->getJqueryTag();
-                        if ($this->loadtb == 'true') {
-                            $head .= '
-                            <link type="text/css" media="screen" rel="stylesheet" href="'.$this->modx->config['site_url'].'assets/plugins/qm/css/colorbox.css" />
-                            
-                            <style type="text/css">
-                            .cboxIE #cboxTopLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopLeft.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxTopCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopCenter.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxTopRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderTopRight.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxBottomLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomLeft.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxBottomCenter{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomCenter.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxBottomRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderBottomRight.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxMiddleLeft{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderMiddleLeft.png, sizingMethod=\'scale\');}
-                            .cboxIE #cboxMiddleRight{background:transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.$this->modx->config['site_url'].'assets/plugins/qm/css/images/internet_explorer/borderMiddleRight.png, sizingMethod=\'scale\');}
-                            </style>
-                            
-                            <script type="text/javascript" src="'.$this->modx->config['site_url'].'assets/plugins/qm/js/jquery.colorbox-min.js"></script>
-                            ';
-                        }
-                        
                         // Insert ColorBox jQuery definitions for QuickManager+
                         $head .= '
                         <script type="text/javascript">
                         ';
                         
                         // jQuery in noConflict mode 
-                        if ($this->noconflictjq == 'true')
+                        if ($this->noconflictjq)
                         {
                             $head .= '
-                        	var $j = jQuery.noConflict();
-                        	$j(document).ready(function($)
+                        	jQuery(document).ready(function($)
                         	';
                         	
-                        	$jvar = 'j';
+                        	$jvar = 'jQuery';
                         }
                         	
                         // jQuery in normal mode 
                         else { 	
                             $head .= '$(document).ready(function($)';
                             
-                            $jvar = '';
+                            $jvar = '$';
                         }
                             
                         $head .= '    
                             {                      
-                        		$'.$jvar.'("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false, opacity:0.5, transition:"fade", speed:150});
+                        		'.$jvar.'("a.colorbox").colorbox({width:"'.$this->tbwidth.'", height:"'.$this->tbheight.'", iframe:true, overlayClose:false, opacity:0.5, transition:"fade", speed:150});
                         	
                             	// Bindings
-                            	$'.$jvar.'(document).bind("cbox_open", function(){
-                                    $'.$jvar.'("body").css({"overflow":"hidden"});
-                                    $'.$jvar.'("html").css({"overflow":"hidden"});
-                                    $'.$jvar.'("#qmEditor").css({"display":"none"});
+                            	'.$jvar.'(document).bind("cbox_open", function(){
+                                    '.$jvar.'("body").css({"overflow":"hidden"});
+                                    '.$jvar.'("html").css({"overflow":"hidden"});
+                                    '.$jvar.'("#qmEditor").css({"display":"none"});
                                 });  
                                 
-                            	$'.$jvar.'(document).bind("cbox_closed", function(){      
-                                    $'.$jvar.'("body").css({"overflow":"auto"});
-                                    $'.$jvar.'("html").css({"overflow":"auto"});
-                                    $'.$jvar.'("#qmEditor").css({"display":"block"});
+                            	'.$jvar.'(document).bind("cbox_closed", function(){      
+                                    '.$jvar.'("body").css({"overflow":"auto"});
+                                    '.$jvar.'("html").css({"overflow":"auto"});
+                                    '.$jvar.'("#qmEditor").css({"display":"block"});
                                     // Remove manager lock by going to home page
-                                    $'.$jvar.'.ajax({ type: "GET", url: "'.$this->modx->config['site_url'].'manager/index.php?a=2" });
+                                    '.$jvar.'.ajax({ type: "GET", url: "'.$this->modx->config['site_url'].'manager/index.php?a=2" });
                                 });                  
                                                             						                            
                                 // Hide QM+ if cookie found
                                 if (getCookie("hideQM") == 1)
                                 {
-                                    $'.$jvar.'("#qmEditor").css({"display":"none"});
-                                    $'.$jvar.'("#qmEditorClosed").css({"display":"block"});    
+                                    '.$jvar.'("#qmEditor").css({"display":"none"});
+                                    '.$jvar.'("#qmEditorClosed").css({"display":"block"});    
                                 }
                                 
                                 // Hide QM+
-                                $'.$jvar.'(".qmClose").click(function () {
-                                    $'.$jvar.'("#qmEditor").hide("normal");
-                                    $'.$jvar.'("#qmEditorClosed").show("normal");
+                                '.$jvar.'(".qmClose").click(function () {
+                                    '.$jvar.'("#qmEditor").hide("normal");
+                                    '.$jvar.'("#qmEditorClosed").show("normal");
                                     document.cookie = "hideQM=1; path=/;";
                                 });
                                 
                                 // Show QM+
-                                $'.$jvar.'("#qmEditorClosed").click(function () {
+                                '.$jvar.'("#qmEditorClosed").click(function () {
                                     {
-                                        $'.$jvar.'("#qmEditorClosed").hide("normal");
-                                        $'.$jvar.'("#qmEditor").show("normal");
+                                        '.$jvar.'("#qmEditorClosed").hide("normal");
+                                        '.$jvar.'("#qmEditor").show("normal");
                                         document.cookie = "hideQM=0; path=/;";
                                     }
                                 });
@@ -694,7 +680,7 @@ class Qm {
 					$doc_id = intval($_REQUEST['id']);
 					
 					// Get jQuery conflict mode
-					if ($this->noconflictjq == 'true') $jq_mode = '$j';
+					if ($this->noconflictjq) $jq_mode = '$j';
 					else $jq_mode = '$';
 					
 					// Add action buttons

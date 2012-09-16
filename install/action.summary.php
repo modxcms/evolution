@@ -53,14 +53,14 @@ if (!is_writable("../assets/cache") || !file_exists("../assets/media")) {
 }
 // cache files writable?
 echo "<p>" . $_lang['checking_if_cache_file_writable'];
-if (!is_writable("../assets/cache/siteCache.idx.php")) {
+if (file_exists("../assets/cache/siteCache.idx.php") && !is_writable("../assets/cache/siteCache.idx.php")) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
     $errors += 1;
 } else {
     echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
 echo "<p>".$_lang['checking_if_cache_file2_writable'];
-if (!is_writable("../assets/cache/sitePublishing.idx.php")) {
+if (file_exists("../assets/cache/sitePublishing.idx.php") && !is_writable("../assets/cache/sitePublishing.idx.php")) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
     $errors += 1;
 } else {
