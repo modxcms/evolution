@@ -1,4 +1,4 @@
-# MODx Database Script for New/Upgrade Installations
+# ClipperCMS Database Script for sample website
 #
 # Each sql command is separated by double lines
 
