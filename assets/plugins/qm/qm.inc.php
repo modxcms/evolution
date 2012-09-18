@@ -118,9 +118,9 @@ class Qm {
             // Display page in front-end
 
             case 'OnWebPageInit':
-	         // Insert jQuery and ColorBox in head if needed
-		 $this->modx->regClientJquery();
-                 if ($this->loadtb == 'true') {
+                 // Insert jQuery and ColorBox in head if needed
+                 $this->modx->regClientJquery();
+                 if ($this->loadtb) {
                      $this->modx->regClientCSS($this->modx->config['site_url'].'assets/js/css/colorbox.css', 'screen');
                      $this->modx->regClientJqueryPlugin('colorbox', 'jquery.colorbox-min.js');
                  }
@@ -216,10 +216,6 @@ class Qm {
                             
                             // Render TV html
                             $tvHtml = renderFormElement($tv['type'], $tv['name'], $tv['default_text'], $tv['elements'], $tv['value']);
-                            
-                            // Get jQuery conflict mode
-    					    if ($this->noconflictjq) $jq_mode = 'jQuery';
-    					    else $jq_mode = '$';
 					    }
                         
                         // Save TV
@@ -299,7 +295,7 @@ class Qm {
                                 <input id="save" type="hidden" name="save" value="1" />
                                     
                                 <div id="qm-tv-actions">
-                                <div class="qm-cancel"><a href="#" onclick="parent.'.$jq_mode.'.fn.colorbox.close(); return false;"><span>'.$_lang['cancel'].'</span></a></div>
+                                <div class="qm-cancel"><a href="#" onclick="parent.'.($this->noconflictjq ? 'jQuery' : '$').'.fn.colorbox.close(); return false;"><span>'.$_lang['cancel'].'</span></a></div>
                                 <div class="qm-save"><a href="#" onclick="document.forms[\'mutate\'].submit(); return false;"><span>'.$_lang['save'].'</span></a></div>
                                 </div>
                                 
@@ -679,12 +675,8 @@ class Qm {
 					// Get doc id
 					$doc_id = intval($_REQUEST['id']);
 					
-					// Get jQuery conflict mode
-					if ($this->noconflictjq) $jq_mode = '$j';
-					else $jq_mode = '$';
-					
 					// Add action buttons
-                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"documentDirty=false; parent.'.$jq_mode.'.fn.colorbox.close(); return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
+                    $mc->addLine('var controls = "<div style=\"padding:4px 0;position:fixed;top:10px;right:-10px;z-index:1000\" id=\"qmcontrols\" class=\"actionButtons\"><ul><li><a href=\"#\" onclick=\"documentDirty=false;document.mutate.save.click();return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/save.png\" />'.$_lang['save'].'</a></li><li><a href=\"#\" onclick=\"documentDirty=false; parent.'.($this->noconflictjq ? 'jQuery' : '$').'.fn.colorbox.close(); return false;\"><img src=\"media/style/'.$qm_theme.'/images/icons/stop.png\"/>'.$_lang['cancel'].'</a></li></ul></div>";');
                     
                     // Modify head
                     $mc->head = '<script type="text/javascript">document.body.style.display="none";</script>';
