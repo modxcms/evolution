@@ -67,7 +67,7 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
+header("X-UA-Compatible: IE=IE8;FF=3;OtherUA=4"); // Datepicker needs fixing
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
