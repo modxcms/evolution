@@ -69,8 +69,8 @@ elseif ($installMode == 1) {
 
 
 # load setup information file
-$setupPath = realpath(dirname(__FILE__));
-include "{$setupPath}/setup.info.php";
+$setupPath = realpath(dirname(__FILE__) . '/../');
+require("{$setupPath}/setup.info.php");
 
 echo "<h2>" . $_lang['optional_items'] . "</h2><p>" . $_lang['optional_items_note'] . "</p>";
 
