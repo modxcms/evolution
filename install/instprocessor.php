@@ -244,7 +244,7 @@ if ($installMode == 0) {
 echo "<p>" . $_lang['writing_config_file'];
 $configString = '<?php
 /**
- * ClipperCMS Configuration file
+ * CMS Configuration file
  */
 $database_type = \'mysql\';
 $database_server = \'' . $database_server . '\';
