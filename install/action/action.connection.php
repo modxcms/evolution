@@ -23,7 +23,7 @@ if ($installMode > 0) {
       }
   }
 } else {
-    $database_name= 'modx';
+    $database_name= 'clipper';
     $database_server= 'localhost';
     $table_prefix= 'clpr_';
 }
