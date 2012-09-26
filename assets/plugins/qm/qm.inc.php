@@ -121,7 +121,7 @@ class Qm {
                  // Insert jQuery and ColorBox in head if needed
                  $this->modx->regClientJquery();
                  if ($this->loadtb) {
-                     $this->modx->regClientCSS($this->modx->config['site_url'].'assets/js/css/colorbox.css', 'screen');
+                     $this->modx->regClientCSS($this->modx->config['site_url'].'assets/plugins/qm/css/colorbox.css', 'screen');
                      $this->modx->regClientJqueryPlugin('colorbox', 'jquery.colorbox-min.js');
                  }
                  break;
