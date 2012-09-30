@@ -954,8 +954,6 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tinymce_custom_buttons1','undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help'),
 ('tinymce_custom_buttons2','bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops'),
 ('tree_show_protected', '0'),
-('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
-('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
 ('validate_referer', '1'),
 ('datepicker_offset','-10'),
 ('xhtml_urls','1'),
@@ -969,6 +967,11 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('jquery_url', 'assets/js/jquery.min.js'),
 ('jquery_plugin_dir', 'assets/js/'),
 ('jquery_noconflict', 0);
+
+REPLACE INTO `{PREFIX}system_settings`
+(setting_name, setting_value) VALUES
+('rss_url_news', 'http://www.clippercms.com/forum/index.php?board=3;type=rss;action=.xml;sa=news;limit=20'),
+('rss_url_security', 'http://www.clippercms.com/forum/index.php?board=22;type=rss;action=.xml;sa=news;limit=20');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
