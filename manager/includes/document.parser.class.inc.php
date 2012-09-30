@@ -54,7 +54,7 @@ class DocumentParser {
      *
      * @todo Construct an API and/or config system for this. Currently only applies to core/bundled snippets.
      */
-    var $snippetMap = array('ditto'=>'List', 'webloginpe'=>'WebUsers', 'ajaxsearch'=>'SiteSearch'); 
+    var $snippetMap = array('ditto'=>'List', 'webloginpe'=>'WebUsers');
 
     /**
      * Document constructor
