@@ -1133,7 +1133,7 @@ class ditto {
 			$inc = $x * $summarize;
 			$display = $x +1;
 			if ($inc != $start) {
-				$pages .= $this->template->replace(array('url'=>($inc>0)?$this->buildURL("start=$inc"):$modx->makeURL($modx->documentIdentifier),'page'=>$display),$tplPaginatePage);
+				$pages .= $this->template->replace(array('url'=>$this->buildURL("start=$inc"),'page'=>$display),$tplPaginatePage);
 			} else {
 				$modx->setPlaceholder($dittoID."currentPage", $display);
 				$pages .= $this->template->replace(array('page'=>$display),$tplPaginateCurrentPage);
