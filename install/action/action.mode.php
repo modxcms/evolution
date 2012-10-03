@@ -31,7 +31,6 @@ if (file_exists("../manager/includes/config.inc.php")) {
 	</div>
 	<h2 style="margin:1em 0"><?php echo $_lang['installation_mode']?></h2>
 	<div>
-		<div class="installImg"><img src="img/install_new.png" alt="new install" /></div>
 		<div class="installDetails">
 			<h3><input type="radio" name="installmode" id="installmode1" value="0" <?php echo !$upgradeable ? 'checked="checked"':'' ?> />
 			<label for="installmode1" class="nofloat"><?php echo $_lang['installation_new_installation']?></label></h3>
@@ -41,7 +40,6 @@ if (file_exists("../manager/includes/config.inc.php")) {
 	</div>
 	<hr />
 	<div>
-		<div class="installImg"><img src="img/install_upg.png" alt="upgrade existing install" /></div>
 		<div class="installDetails">
 			<h3><input type="radio" name="installmode" id="installmode2" value="1" <?php echo $upgradeable !== 1 ? 'disabled="disabled"' : '' ?> <?php echo ($_POST['installmode']=='1' || $upgradeable === 1) ? 'checked="checked"':'' ?> />
 			<label for="installmode2" class="nofloat"><?php echo $_lang['installation_upgrade_existing']?></label></h3>
@@ -50,7 +48,6 @@ if (file_exists("../manager/includes/config.inc.php")) {
 	</div>
 	<hr />
   	<div>
-		<div class="installImg"><img src="img/install_adv.png" alt="advanced upgrade" /></div>
 		<div class="installDetails">
 			<h3><input type="radio" name="installmode" id="installmode3" value="2" <?php echo !$upgradeable ? 'disabled="disabled"':'' ?> <?php echo ($_POST['installmode']=='2' || $upgradeable === 2) ? 'checked="checked"':'' ?> />
 			<label for="installmode3" class="nofloat"><?php echo $_lang['installation_upgrade_advanced']?></label></h3>

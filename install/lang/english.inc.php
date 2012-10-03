@@ -1,9 +1,8 @@
 <?php
 /**
- * MODx language File
+ * ClipperCMS installation language file
  *
  * @author davaeron
- * @package MODx
  * @version 1.0
  * 
  * Filename:       /install/lang/english/english.inc.php
@@ -108,7 +107,7 @@ $_lang["installing_demo_site"] = 'Installing demo site: ';
 $_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'Loading...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2012 the <a href="http://www.clippercms.org/" target="_blank" style="color: green; text-decoration:underline">ClipperCMS</a> Content Management Framework (CMF) project. All rights reserved. ClipperCMS is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2012 the <a href="http://www.clippercms.org/" target="_blank" >ClipperCMS</a> Content Management Framework (CMF) project. All rights reserved. ClipperCMS is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'ClipperCMS is free software.  We encourage you to be creative and make use of ClipperCMS in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified ClipperCMS, that you keep the source code free!';
 $_lang["modx_install"] = 'ClipperCMS &raquo; Install';
 $_lang["modx_requires_php"] = ', and ClipperCMS requires PHP 5 or later';
