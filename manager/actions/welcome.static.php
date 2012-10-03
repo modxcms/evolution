@@ -34,6 +34,7 @@ $modx->setPlaceholder('home', $_lang["home"]);
 $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 $modx->setPlaceholder('site_name',$site_name);
 $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
+$modx->setPlaceholder('cms_version_info', CMS_NAME.' '.CMS_RELEASE_VERSION.' '.CMS_RELEASE_NAME);
 
 // setup message info
 if($modx->hasPermission('messages')) {
