@@ -17,7 +17,7 @@
 <div id="header">
     <div class="container_12">
         <span class="help"><a href="<?php echo $_lang["help_link"] ?>" target="_blank" title="<?php echo $_lang["help_title"] ?>"><?php echo $_lang["help"] ?></a></span>
-		<span class="version"><?php echo $moduleName.' '.$moduleVersion.' ('.($modx_textdir?'&rlm;':'').CMS_RELEASE_DATE; ?>)</span>
+		<span class="version"><a href="http://<?php echo CMS_DOMAIN; ?>"><?php echo $moduleName.'</a> '.$moduleVersion.' ('.($modx_textdir?'&rlm;':'').CMS_RELEASE_DATE; ?>)</span>
         <div id="mainheader">
         	<h1 class="pngfix" id="logo"><span><?php echo CMS_NAME; ?></span></h1>
         </div>
