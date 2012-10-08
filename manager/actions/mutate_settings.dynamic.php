@@ -580,7 +580,7 @@ function confirmLangChange(el, lkey, elupd){
                <td nowrap class="warning"><?php echo $_lang['error_handling_deprecated_label'] ?></td>
                <td>
                	  <select onchange="documentDirty=true;" name="error_handling_deprecated">
-               	         <?php if (!isset($error_handling_deprecated)) $error_handling_deprecated = 0; ?>
+               	         <?php if (!isset($error_handling_deprecated)) $error_handling_deprecated = 1; ?>
                	  	<option<?php if($error_handling_deprecated == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_deprecated_0']; /* No error reporting */ ?></option>
                	  	<option<?php if($error_handling_deprecated == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_deprecated_1']; /* Log */ ?></option>
                	  	<option<?php if($error_handling_deprecated == 2) echo ' selected="selected"'; ?> value="2"><?php echo $_lang['error_handling_deprecated_2']; /* Halt */ ?></option>
