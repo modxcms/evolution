@@ -977,7 +977,7 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 		}
 		
 		$this->User = $this->QueryDbForUser($currentWebUser['username']);
-		$this->OnWebSaveUser('update', $this->User);
+		$this->OnWebSaveUser('upd', $this->User); // Bugfix 7/10/2012 'update' should be 'upd' (see also save_web_user.processor.php)
 		
 		if ($refreshSession === true)
 		{
@@ -3098,8 +3098,14 @@ if ($_POST['username'] == '' || empty($_POST['username']) || trim($_POST['userna
 
 		$parameters = array(
 			'mode'	=> $mode,
-			'user'	=> $user,
-			'username'=>$user['username']  // (TS) SMF connector fix http://modxcms.com/forums/index.php?topic=26565.0
+			
+			'user'	=> $user, // Use of this parameter is discouraged. It is non-standard.
+
+			'username'		=> $user['username'],  // 1) SMF connector fix http://modxcms.com/forums/index.php?topic=26565.0
+			'userpassword'	=> $user['password'],  // 2) Further items to bring this into line with save_web_user.processor.php
+			'useremail'		=> $user['email'],
+			'userfullname'	=> $user['fullname'],
+			'userid'		=> $user['internalKey']
 			);
 		$modx->invokeEvent('OnWebSaveUser', $parameters);
 	}
