@@ -84,7 +84,7 @@ $_lang["error"] = 'エラー';
 $_lang["errors"] = 'エラー'; //Plural form
 $_lang["failed"] = '確認してください';
 $_lang["help"] = 'Help!';
-$_lang["help_link"] = 'http://ClipperCMScms-jp.com/howto/rserver.html';
+$_lang["help_link"] = 'http://clippercms.com/forum/';
 $_lang["help_title"] = 'インストールで困ったらココをチェック(ClipperCMSフォーラム)';
 $_lang["iagree_box"] = '<b><a href="../assets/docs/license.txt" target="_blank">このライセンス(GPL2)</a>で規定される諸条件に同意します。</b></p><p><a href="http://www.opensource.jp/gpl/gpl.ja.html" target="_blank">GPL2ライセンスの日本語訳はこちらにあります。</a>この翻訳には法的効力はないため、<b>厳密な法的検証が必要な場合</b>は必ず英語の原文をご確認ください。';
 $_lang["install"] = 'インストール';
@@ -182,7 +182,6 @@ $_lang["unable_install_template"] = 'テンプレートをインストールで�
 $_lang["upgrade_note"] = '<strong>注意:</strong>管理画面に無事にログインできたら、リソース(旧称・ドキュメント)および各種設定を日本語を含めて編集・保存し、文字化けが起きないかどうかを必ず確認してください。また管理画面内の「イベントログ」を開き、エラーの有無をご確認ください。';
 $_lang["upgraded"] = 'アップデートしました';
 $_lang["validate_referer_title"] = 'Validate HTTP_REFERER headers?';
-$_lang["visit_forum"] = '';
 $_lang["warning"] = '注意 ';
 $_lang["welcome_message_start"] = '';
 $_lang["welcome_message_text"] = '心踊る、未知の領域へようこそ。ガイドに従ってインストールを進めましょう。ClipperCMSのインストールは簡単。インストーラの説明に従って、次へ次へと進めてください。<br /><br />このインストーラの手順に従うことにより、他のCMSとのデータベースの共有設定(Tableプリフィクス)や、サンプルコンテンツ及び、推奨される拡張機能のインストールを個別に選択できます。何も選択せずシンプルにコアのみをインストールすることもできます。また、すでに運用中のClipperCMSをアップデートしたり、データベースの設定を変更することもできます。';

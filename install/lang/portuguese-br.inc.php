@@ -158,7 +158,7 @@ $_lang["unable_install_snippet"] = 'Não foi possivel instalar o snippet.  Arquiv
 $_lang["unable_install_template"] = 'Não foi possivel instalar o template.  Arquivo';
 $_lang["upgrade_note"] = '<strong>Nota:</strong> Antes de navegar em seu site você deve acessar o Gerenciador usando uma conta de Administrador, e depois revisar e gravar suas Configurações de Sistema.';
 $_lang["upgraded"] = 'Atualizado';
-$_lang["visit_forum"] = ', visite o <a href="http://clippercms.comforums/" target="_blank">Operation ClipperCMS Forums</a>.';
+$_lang["visit_forum"] = ', visite o <a href="http://clippercms.com/forum/" target="_blank">Operation ClipperCMS Forums</a>.';
 $_lang["welcome_message_text"] = 'Este programa irá te guiar pelo resto da instalação do pacote.';
 $_lang["welcome_message_welcome"] = 'Bem-vindo à instalação do ClipperCMS.';
 $_lang["writing_config_file"] = 'Escrevendo arquivo de configuração: ';

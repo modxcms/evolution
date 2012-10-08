@@ -86,7 +86,7 @@ $_lang["error"] = 'chyba';
 $_lang["errors"] = 'chyby';
 $_lang["failed"] = 'SELHALO!';
 $_lang["help"] = 'Nápověda!';
-$_lang["help_link"] = 'http://www.ClipperCMScms.cz/forums/';
+$_lang["help_link"] = 'http://clippercms.com/forum/';
 $_lang["help_title"] = 'Pomoc při instalaci využitím ClipperCMS diskuse';
 $_lang["iagree_box"] = 'Souhlasím s podmínkami <a href="../assets/docs/license.txt" target="_blank">ClipperCMS licence</a>. Pro překlady GPL verze 2 licence, navštivte prosím <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">stránku GNU Operating System</a>.';
 $_lang["install"] = 'Instalovat';
@@ -184,7 +184,7 @@ $_lang["unable_install_template"] = 'Nepodařilo se nainstalovat šablonu.  Soub
 $_lang["upgrade_note"] = '<strong>Poznámka:</strong> Před tím než začnete procházet web by jste se měl přihlásit do ClipperCMS správce obsahu pod administrátorským účtem a zkontrolovat Konfiguraci systému.';
 $_lang["upgraded"] = 'Aktualizováno';
 $_lang["validate_referer_title"] = 'Ověřit hlavičky HTTP_REFERER?';
-$_lang["visit_forum"] = ', navštivte <a href="http://clippercms.comforums/" target="_blank">ClipperCMS diskusi</a>.';
+$_lang["visit_forum"] = ', navštivte <a href="http://clippercms.com/forum/" target="_blank">ClipperCMS diskusi</a>.';
 $_lang["warning"] = 'VAROVÁNÍ!';
 $_lang["welcome_message_start"] = 'Nejdříve si vyberte typ instalace:';
 $_lang["welcome_message_text"] = 'Tento program Vás provede zbytkem instalace.';

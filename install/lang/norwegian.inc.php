@@ -169,7 +169,7 @@ $_lang["unable_install_snippet"] = 'Kunne ikke installere snippet.  Fil';
 $_lang["unable_install_template"] = 'Kunne ikke installere template.  Fil';
 $_lang["upgrade_note"] = '<strong>Notér:</strong> F&oslash;r du begynner &aring; bruke ditt nettsted b&oslash;r du logge inn i inneholdsh&aring;ndtereren via en administrasjonskonto og kontrollere og lagre dine konfigurasjonsinstillingar.';
 $_lang["upgraded"] = 'Oppgradert';
-$_lang["visit_forum"] = ', s&aring; bes&oslash;k <a href="http://clippercms.comforums/" target="_blank">ClipperCMS forum</a>.';
+$_lang["visit_forum"] = ', s&aring; bes&oslash;k <a href="http://clippercms.com/forum/" target="_blank">ClipperCMS forum</a>.';
 $_lang["warning"] = 'ADVARSEL!';
 $_lang["welcome_message_text"] = 'Dette programmet vil guide deg gjennom hele installasjonen.';
 $_lang["welcome_message_welcome"] = 'Velkommen til installasjonsprogrammet for ClipperCMS.';

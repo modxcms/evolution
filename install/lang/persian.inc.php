@@ -166,7 +166,7 @@ $_lang["unable_install_snippet"] = 'نصب اسنیپت با مشکل روبرو
 $_lang["unable_install_template"] = 'نصب قالب با مشکل روبرو شد.  فایل';
 $_lang["upgrade_note"] = '<strong>یادداشت:</strong> قبل از ورد به سایت شما می بایست به قسمت مدیریت بروید و پیکربندی را مرور و ویرایش کنید .';
 $_lang["upgraded"] = 'به روز شد';
-$_lang["visit_forum"] = ', به <a href="http://clippercms.comforums/" target="_blank">انجمن پشتیبانی مادایکس</a> بروید.';
+$_lang["visit_forum"] = ', به <a href="http://clippercms.com/forum/" target="_blank">انجمن پشتیبانی مادایکس</a> بروید.';
 $_lang["welcome_message_text"] = 'این برنامه تا آخرین مرحله ی نصب مادایکس راهنمای شماست.';
 $_lang["welcome_message_welcome"] = ' به برنامه ی نصب ClipperCMS فارسی خوش آمدید.';
 $_lang["writing_config_file"] = 'نگارش فایل پیکر بندی: ';

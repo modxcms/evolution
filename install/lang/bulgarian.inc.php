@@ -165,7 +165,7 @@ $_lang["unable_install_snippet"] = 'Не успя да инсталира Сни
 $_lang["unable_install_template"] = 'Не успя да инсталира Шаблон.  Файл';
 $_lang["upgrade_note"] = '<strong>Забележка:</strong> Преди да преглеждате сайта си, трябва да се логнете в Мениджъра с администраторския акаунт, след това да прегледате и съхраните настройките на Системната Конфигурация.';
 $_lang["upgraded"] = 'Обновен';
-$_lang["visit_forum"] = ', посетете <a href="http://clippercms.comforums/" target="_blank">ClipperCMS Форумите</a>.';
+$_lang["visit_forum"] = ', посетете <a href="http://clippercms.com/forum/" target="_blank">ClipperCMS Форумите</a>.';
 $_lang["welcome_message_text"] = 'Тази програма ще ви води през останалата част от инсталацията.';
 $_lang["welcome_message_welcome"] = 'Добре дошли в Инсталатора на ClipperCMS.';
 $_lang["writing_config_file"] = 'Записване на конфигурационния файл: ';

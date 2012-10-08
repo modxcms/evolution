@@ -84,7 +84,7 @@
 	$_lang["errors"] = 'Fehler';
 	$_lang["failed"] = 'fehlgeschlagen!';
 	$_lang["help"] = 'Hilfe!';
-	$_lang["help_link"] = 'http://www.ClipperCMScms.de/forum/';
+	$_lang["help_link"] = 'http://clippercms.com/forum/';
 	$_lang["help_title"] = 'Unterstützung zur Installation finden Sie in den ClipperCMS-Foren';
 	$_lang["iagree_box"] = 'Ich stimme den Lizenzbedingungen zu.';
 	$_lang["install"] = 'Installieren';
@@ -175,7 +175,7 @@
 	$_lang["unable_install_template"] = 'Konnte Template nicht installieren.  Datei';
 	$_lang["upgrade_note"] = '<b>Achtung:</b> Nach dem Anmelden im Manager sollten Sie die Konfigurationseinstellungen unter <b>Werkzeuge &gt; Konfiguration</b> überprüfen und speichern bevor Sie Ihre Seite aufrufen.';
 	$_lang["upgraded"] = 'Aktualisiert';
-	$_lang["visit_forum"] = ', besuchen Sie die <a href="http://www.ClipperCMScms.de/forum/" target="_blank">ClipperCMS-Foren</a>.';
+	$_lang["visit_forum"] = ', besuchen Sie die <a href="http://clippercms.com/forum/" target="_blank">ClipperCMS-Foren</a>.';
 	$_lang["warning"] = 'ACHTUNG!';
 	$_lang["welcome_message_start"] = 'Wählen Sie zunächst den Intallationstyp aus:';
 	$_lang["welcome_message_text"] = 'Dieses Programm wird Sie durch die Installation begleiten.';
