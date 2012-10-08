@@ -196,8 +196,12 @@ if(isset($_GET['a']) && isset($_POST['a'])) {
     // we know that if an error occurs here, something's wrong,
     // so we dump the error, thereby stopping the script.
 
+} elseif($_REQUEST['a'] != '1' && $_REQUEST['a'] != '30' && $modx->hasPermission('settings') && (!isset($settings_version) || $settings_version != CMS_RELEASE_VERSION)) {
+	// seems to be a new install - send the user to the configuration page
+	$action = 17;
 } else {
-    $action= (int) $_REQUEST['a'];
+	// Normal action
+    $action= (int)$_REQUEST['a'];
 }
 
 if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
