@@ -61,6 +61,14 @@ if ($upgradeable && (!isset($database_connection_method) || empty($database_conn
 
   <h2><?php echo $_lang['connection_screen_database_info']?></h2>
   <h3><?php echo $_lang['connection_screen_server_connection_information']?></h3>
+  <p><a href="#" onclick="document.getElementById('creation-sql').style.display = 'block'; return false"><?php echo $_lang["connection_screen_database_creation"]; ?></a>
+  		<div id="creation-sql" style="display: none";>
+  			<p><?php echo $_lang["connection_screen_database_creation_note"]; ?>
+	  		<pre>
+	  			CREATE DATABASE clipper CHARACTER SET utf8 COLLATE utf8_general_ci
+				GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP ON clipper.* TO 'clipper'@'localhost' IDENTIFIED BY '********'
+	  		</pre>
+	  	</div>
   <p><?php echo $_lang['connection_screen_server_connection_note']?></p>
 
   <p class="labelHolder"><label for="databasehost"><?php echo $_lang['connection_screen_database_host']?></label>
