@@ -18,6 +18,7 @@
 	 * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
 	-->
 		<title>FCKeditor - Resources Browser</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />
 		<link href="browser.css" type="text/css" rel="stylesheet">
 		[+seturl_js+]
 	</head>
