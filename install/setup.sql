@@ -962,8 +962,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('datetime_format','dd-mm-YYYY'),
 ('warning_visibility', '1'),
 ('remember_last_tab', '0'),
-('error_handling_deprecated', 0),
-('error_handling_silent', 0),
+('error_handling_deprecated', '1'),
+('error_handling_silent', '0'),
 ('jquery_url', 'assets/js/jquery.min.js'),
 ('jquery_plugin_dir', 'assets/js/'),
 ('jquery_noconflict', 0);
