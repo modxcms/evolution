@@ -86,6 +86,7 @@
         });
 
         function ajaxReturn(response) {
+	    var response = response.replace(/^\s+|\s+$/g,'');
             var header = response.substr(0,9);
             if (header.toLowerCase()=='location:') top.location = response.substr(10);
             else {
