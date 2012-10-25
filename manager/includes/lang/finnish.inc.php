@@ -2,18 +2,17 @@
 /**
  * Filename:       includes/lang/finnish.inc.php
  * Function:       Language file.
- * Encoding:       UTF8
- * Author:         Mikko Lammi, www.maagit.fi
- * Date:           17.5.2010
- * Version:        -
- * MODx version:   Evolution 1.0.4
+ * Encoding:               UTF8
+ * Author:                 Mikko Lammi, www.maagit.fi, The ClipperCMS Project Team
+ * Date:                   31st August 2012
+ * ClipperCMS version:     1.1
 */
 //$modx_textdir = 'rtl'; // uncomment this line for RTL languages
 $modx_lang_attribute = 'fi';
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODx on <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP-sovelluskehys ja sisällönhallintajärjestelmä</a>, jonka lisenssinä on avoimen lähdekoodin <a href="../assets/docs/license.txt">GNU GPL</a>.';
-$_lang["about_title"] = 'Tietoa MODx:stä';
+$_lang["about_msg"] = CMS_NAME.' on <a href="http://'.CMS_DOMAIN.'" target="_blank">PHP-sovelluskehys ja sisällönhallintajärjestelmä</a>, jonka lisenssinä on avoimen lähdekoodin <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_title"] = 'Tietoa '.CMS_NAME.':stä';
 $_lang["access_permission_denied"] = 'Ei käyttöoikeuksia tähän sivuun.';
 $_lang["access_permission_parent_denied"] = 'Ei käyttöoikeuksia luoda sivua tähän!';
 $_lang["access_permissions"] = 'Käyttöoikeudet';
@@ -76,7 +75,7 @@ $_lang["cancel"] = 'Peruuta';
 $_lang["captcha_code"] = 'Varmistuskoodi';
 $_lang["captcha_message"] = 'Ota varmistuskoodit (CAPTCHA) käyttöön turvallisuuden parantamiseksi. Tällöin ylläpitoon kirjautumisen yhteydessä on syötettävä myös kuvassa näkyvä varmistukoodi.';
 $_lang["captcha_title"] = 'Käytä varmistuskoodeja:';
-$_lang["captcha_words_default"] = 'MODx,Todellisuus,Oikeus,Turvallisuus,Koodi,Palanen,Parempi,Kuvaus,Voitto,Edistynyt,Nauti,Osoite,Ohjain,Geneettinen,Valo,Kevyt,Mukavuus,Suomi,Internet,Kysely,Sivupohja,Usein,Nettisivut,Tatuointi,Keltainen,Punainen,Sininen,Ruskea,Musta,Valkoinen,Oranssi,Nauru,Mukana,Laskuvarjo,Uinti,Fantasia,Palindromi,Rehellisyys,Nopea,Ihminen,Tietokone,Palapeli,Monitori,Ikkuna,Valinta,Painike';
+$_lang["captcha_words_default"] = CMS_NAME.',Todellisuus,Oikeus,Turvallisuus,Koodi,Palanen,Parempi,Kuvaus,Voitto,Edistynyt,Nauti,Osoite,Ohjain,Geneettinen,Valo,Kevyt,Mukavuus,Suomi,Internet,Kysely,Sivupohja,Usein,Nettisivut,Tatuointi,Keltainen,Punainen,Sininen,Ruskea,Musta,Valkoinen,Oranssi,Nauru,Mukana,Laskuvarjo,Uinti,Fantasia,Palindromi,Rehellisyys,Nopea,Ihminen,Tietokone,Palapeli,Monitori,Ikkuna,Valinta,Painike';
 $_lang["captcha_words_message"] = 'Lista varmistuskoodeina (CAPTCHA) käytetävistä sanoista. Erottele sanat pilkuilla. Kenttään mahtuu enintään 255 merkkiä.';
 $_lang["captcha_words_title"] = 'Varmistuskoodi -sanat (CAPTCHA):';
 $_lang["category_heading"] = 'Kategoria';
@@ -91,7 +90,7 @@ $_lang["change_password"] = 'Muuta salasana';
 $_lang["change_password_confirm"] = 'Varmista salasana';
 $_lang["change_password_message"] = 'Syötä uusi salasana ja varmista salasana (uusi salasana toiseen kertaan). Salasanan tulee olla 6-15 merkkiä pitkä.';
 $_lang["change_password_new"] = 'Uusi salasana';
-$_lang["charset_message"] = 'Valitse käytettävä merkistö [(modx_charset)] asetukselle. Tällä valinnalla ei ole merkitystä MODx ylläpidon merkistökoodaukseen. Monet kolmannen osapuolen resurssit käyttävät [(modx_charset)] asetusta oletusmerkistönä.';
+$_lang["charset_message"] = 'Valitse käytettävä merkistö [(modx_charset)] asetukselle. Tällä valinnalla ei ole merkitystä '.CMS_NAME.' ylläpidon merkistökoodaukseen. Monet kolmannen osapuolen resurssit käyttävät [(modx_charset)] asetusta oletusmerkistönä.';
 $_lang["charset_title"] = 'Merkistö:';
 $_lang["chunk"] = 'Palanen';
 $_lang["chunk_code"] = 'Lähdekoodi (html)';
@@ -108,7 +107,7 @@ $_lang["collapse_tree"] = 'Kutista';
 $_lang["comment"] = 'Kommentti';
 $_lang["configcheck_admin"] = 'Ole ystävällinen ja ota yhteyttä sivuston pääkäyttäjään ja varoita häntä tästä viestistä!';
 $_lang["configcheck_cache"] = 'Välimuisti-kansioon (cache) ei voi kirjoittaa';
-$_lang["configcheck_cache_msg"] = 'MODx ei voi kirjoittaa välimuistikansioon (cache). MODx toimii yhä kuten pitääkin, mutta mitään ei ladata välimuistiin. Ratkaise ongelma antamalla /_cache/ kansioon kirjoitusoikeudet.';
+$_lang["configcheck_cache_msg"] = CMS_NAME.' ei voi kirjoittaa välimuistikansioon (cache). '.CMS_NAME.' toimii yhä kuten pitääkin, mutta mitään ei ladata välimuistiin. Ratkaise ongelma antamalla /_cache/ kansioon kirjoitusoikeudet.';
 $_lang["configcheck_configinc"] = 'Asetustiedostoon voi yhä kirjoittaa';
 $_lang["configcheck_configinc_msg"] = 'Pahantahtoiset henkilöt voivat hyödyntää tätä murtautuakseen sivustollesi. Korjaa ongelma poistamalla tiedostosta (/manager/includes/config.inc.php) kirjoitusoikeudet!';
 $_lang["configcheck_default_msg"] = 'Määrittelemätön varoitus on löytynyt. Outoa.';
@@ -119,13 +118,13 @@ $_lang["configcheck_errorpage_unpublished_msg"] = 'Virhesivulle ei ole käyttöo
 $_lang["configcheck_images"] = 'Images-kansioon ei voi kirjoittaa';
 $_lang["configcheck_images_msg"] = 'Images-kansioon ei voi kirjoittaa tai kansiota ei ole olemassa. Tämä tarkoittaa sitä, että kuvanhallintatoiminnot eivät toimi!';
 $_lang["configcheck_installer"] = 'asennusohjelma on yhä tallella';
-$_lang["configcheck_installer_msg"] = 'Install-kansio sisältää MODx:n asennusohjelman. Kuvittele, mitä voi tapahtua, jos pahantahtoinen henkilö löytää kansion ja ajaa asennusohjelman! Korjaa ongelma poistamalla kansio palvelimeltasi.';
+$_lang["configcheck_installer_msg"] = 'Install-kansio sisältää '.CMS_NAME.':n asennusohjelman. Kuvittele, mitä voi tapahtua, jos pahantahtoinen henkilö löytää kansion ja ajaa asennusohjelman! Korjaa ongelma poistamalla kansio palvelimeltasi.';
 $_lang["configcheck_lang_difference"] = 'Virheellinen määrä merkintöjä kielitiedostossa';
 $_lang["configcheck_lang_difference_msg"] = 'Tällä hetkellä valittuna oleva kieli sisältää eri määrän merkintöjä kuin oletuskieli. Tämä ei välttämättä ole ongelma, mutta voi tarkoittaa sitä, että kielitiedosto pitäisi päivittää.';
 $_lang["configcheck_notok"] = 'Varoitukset: ';
 $_lang["configcheck_ok"] = 'Tarkistus onnistui - ei varoituksia.';
 $_lang["configcheck_php_gdzip"] = 'GD ja/tai Zip PHP-laajennuksia ei löytynyt';
-$_lang["configcheck_php_gdzip_msg"] = 'MODx vaatii GD ja Zip PHP-laajennukset toimiakseen täydellisesti. MODx toimii ilmankin kyseisiä laajennuksia, mutta tiedostoselaimen, kuvaeditorin ja Captcha -varmistuskoodien kaikki ominaisuudet eivät ole käytettävissä.';
+$_lang["configcheck_php_gdzip_msg"] = CMS_NAME.' vaatii GD ja Zip PHP-laajennukset toimiakseen täydellisesti. '.CMS_NAME.' toimii ilmankin kyseisiä laajennuksia, mutta tiedostoselaimen, kuvaeditorin ja Captcha -varmistuskoodien kaikki ominaisuudet eivät ole käytettävissä.';
 $_lang["configcheck_register_globals"] = 'Palvelimen php.ini-tiedossa register_globals on asetettu päälle ';
 $_lang["configcheck_register_globals_msg"] = 'Tämä asetus tekee sivuston alttiiksi Cross Site Scripting- eli XSS-hyökkäyksille. Kysy palveluntarjoajaltasi, miten asia voitaisiin ratkaista.';
 $_lang["configcheck_title"] = 'Asetusten tarkistus';
@@ -171,7 +170,7 @@ $_lang["create_resource_title"] = 'Uusi sivu';
 $_lang["create_weblink_here"] = 'Uusi hyperlinkki tähän';
 $_lang["createdon"] = 'Luonti päivämäärä';
 $_lang["credits"] = 'Kunniamaininnat';
-$_lang["credits_shouts_msg"] = '<p>MODx:n kehittäjät ja ylläpitäjät: <a href="http://modxcms.com/about/" target="_blank">MODxCMS.com</a>.</p>';
+$_lang["credits_shouts_msg"] = '<p>'.CMS_NAME.':n kehittäjät ja ylläpitäjät: <a href="http://'.CMS_DOMAIN.'/about/" target="_blank">'.CMS_NAME.'CMS.com</a>.</p>';
 $_lang["custom_contenttype_message"] = 'Muokkaa sivuissa käytettäviä sisältötyyppejä.';
 $_lang["custom_contenttype_title"] = 'Sisältötyypit:';
 $_lang["database_charset"] = 'Tietokannan merkistö';
@@ -274,7 +273,7 @@ $_lang["export_site_failed_no_write"] = 'Tiedostoon ei voi kirjoittaa.';
 $_lang["export_site_html"] = 'Vie sivusto';
 $_lang["export_site_maxtime"] = 'Suurin vientiaika:';
 $_lang["export_site_maxtime_message"] = 'Määrittele sivuston vientiin enintään käytettävä aika (syrjäyttää PHP:n asetukset). Arvo 0 tarkoittaa rajoittamatonta aikaa, jonka käyttäminen voi kuitenkin saada aikaan outoja asioita palvelimella. Siksi arvon nolla tai muun erittäin suuren arvon käyttö ei ole suositeltavaa.';
-$_lang["export_site_message"] = 'Toiminnon avulla voi viedä koko sivuston stattisiksi HTML-tiedostoiksi. Viemisen yhteydessä katoaa kuitenkin iso osa MODx:n toiminnallisuudesta:<p /><ul><li>Vietyjen sivujen käyttöä ei seurata</li><li>Interaktiiviset toiminnot (esim. PHP-palaset) eivät toimi</li><li>Vain tavalliset sivut viedään, hyperlinkkejä ei viedä</li><li>Vientiprosessi voi epäonnistua, jos sivut sisältävät uudelleenohjaavia otsikkotietoja sisältävää lähdekoodia</li><li>Tyylisivut ja kuvat sekä sivuston suunnittelu eivät ehkä toimi viennin jälkeen odotetusti. Tämän korjaamiseksi tallenna tai siirrä viedyt tiedostot MODx:n juureen eli kansioon, jossa index.php sijaitsee.</li></ul><br /><p />Luodut tiedostot tallennetaan käyttäen sivun aliaksia tiedostoniminä. Tämän vuoksi järjestelmän asetuksista kannattaa ottaa käyttöön selkokieliset osoitteet -asetus. Sivustosi koosta riippuen, vienti voi kestää jonkin aikaa.<p /><strong>Saman nimisistä sivuista tallentuu vain viimeiseksi viety sivu.</strong><p />';
+$_lang["export_site_message"] = 'Toiminnon avulla voi viedä koko sivuston stattisiksi HTML-tiedostoiksi. Viemisen yhteydessä katoaa kuitenkin iso osa '.CMS_NAME.':n toiminnallisuudesta:<p /><ul><li>Vietyjen sivujen käyttöä ei seurata</li><li>Interaktiiviset toiminnot (esim. PHP-palaset) eivät toimi</li><li>Vain tavalliset sivut viedään, hyperlinkkejä ei viedä</li><li>Vientiprosessi voi epäonnistua, jos sivut sisältävät uudelleenohjaavia otsikkotietoja sisältävää lähdekoodia</li><li>Tyylisivut ja kuvat sekä sivuston suunnittelu eivät ehkä toimi viennin jälkeen odotetusti. Tämän korjaamiseksi tallenna tai siirrä viedyt tiedostot '.CMS_NAME.':n juureen eli kansioon, jossa index.php sijaitsee.</li></ul><br /><p />Luodut tiedostot tallennetaan käyttäen sivun aliaksia tiedostoniminä. Tämän vuoksi järjestelmän asetuksista kannattaa ottaa käyttöön selkokieliset osoitteet -asetus. Sivustosi koosta riippuen, vienti voi kestää jonkin aikaa.<p /><strong>Saman nimisistä sivuista tallentuu vain viimeiseksi viety sivu.</strong><p />';
 $_lang["export_site_numberdocs"] = '<strong>Löytyi %s sivua vietäväksi...</strong><p/>';
 $_lang["export_site_prefix"] = 'Tiedoston etuliite:';
 $_lang["export_site_start"] = 'Aloita vienti';
@@ -303,7 +302,7 @@ $_lang["file_not_saved"] = 'Tiedostoa ei voi tallentaa, varmista että kohde hak
 $_lang["file_saved"] = 'Tiedoston päivitys onnistui!';
 $_lang["file_unzip"] = 'Purku onnistui!';
 $_lang["file_unzip_fail"] = 'Purku epäonnistui!';
-$_lang["filemanager_path_message"] = 'IIS ei useinkaan muokkaa tiedostonhallintajärjestelmän käyttämää document_root asetusta oikein. Tätä asetusta käytetään määrittämään, mitä tiedostoja käyttäjä voi katsella. Jos tiedostonhallintajärjestelmän käytössä on vaikeuksia, huolehdi siitä, että polku osoittaa MODx-asennuksen juureen.';
+$_lang["filemanager_path_message"] = 'IIS ei useinkaan muokkaa tiedostonhallintajärjestelmän käyttämää document_root asetusta oikein. Tätä asetusta käytetään määrittämään, mitä tiedostoja käyttäjä voi katsella. Jos tiedostonhallintajärjestelmän käytössä on vaikeuksia, huolehdi siitä, että polku osoittaa '.CMS_NAME.'-asennuksen juureen.';
 $_lang["filemanager_path_title"] = 'Ylläpidon tiedostoselaimen polku:';
 $_lang["files_access_denied"] = 'Pääsy estetty!';
 $_lang["files_data"] = 'Ominaisuudet';
@@ -356,7 +355,7 @@ $_lang["go"] = 'OK';
 $_lang["group_access_permissions"] = 'Käyttäjäryhmän oikeudet';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Ohjeet';
-$_lang["help_msg"] = '<p>Ongelmatilanteissa tutustu <a href="http://modxcms.com/forums" target="_blank">MODx:n keskustelufoorumeihin</a>. Lisäksi kannattaa tutustua <a href="http://modxcms.com/documentation" target="_blank">MODx:n ohjeisiin ja oppaisiin</a> sekä <a href="http://wiki.modxcms.com/index.php/Main_Page" target="_blank">MODx Wikiin</a>.</p><p>Suunnitteilla on myös kaupallisen MODx-tuen tarjoaminen - ota <a href="mailto:modx@vertexworks.com?subject=MODx Commercial Support Inquiry">yhteyttä</a>, jos olet kiinnostunut.</p>';
+$_lang["help_msg"] = '<p>Ongelmatilanteissa tutustu <a href="http://'.CMS_DOMAIN.'/forums" target="_blank">'.CMS_NAME.':n keskustelufoorumeihin</a>. Lisäksi kannattaa tutustua <a href="http://'.CMS_DOMAIN.'/documentation" target="_blank">'.CMS_NAME.':n ohjeisiin ja oppaisiin</a> sekä <a href="http://wiki.'.CMS_DOMAIN.'/index.php/Main_Page" target="_blank">'.CMS_NAME.' Wikiin</a>.</p><p>Suunnitteilla on myös kaupallisen '.CMS_NAME.'-tuen tarjoaminen - ota <a href="mailto:modx@vertexworks.com?subject='.CMS_NAME.' Commercial Support Inquiry">yhteyttä</a>, jos olet kiinnostunut.</p>';
 $_lang["help_title"] = 'Ohjeet';
 $_lang["hide_tree"] = 'Piilota sivukartta';
 $_lang["home"] = 'Alkuun';
@@ -431,7 +430,7 @@ $_lang["login_captcha_message"] = '<strong>Syötä kuvassa näkyvä varmistuskoo
 $_lang["login_homepage"] = 'Aloitussivu';
 $_lang["login_homepage_message"] = 'Anna sen sivun ID-tunnus, joka näytetään automaattisesti ensimmäisenä käyttäjän kirjauduttua sisään. <strong>HUOMAA:</strong> Tarkista, että ID on olemassa ja kyseisen käyttäjän käytettävissä.';
 $_lang["login_message"] = 'Kirjaudu ylläpitoon. Isoilla ja pienillä kirjaimilla on merkitystä, joten kirjoita käyttäjänimi ja salasana huolella.';
-$_lang["logo_slogan"] = 'MODx Sisällönhallintajärjestelmä - \nLuo ja tee enemmän vähemmällä';
+$_lang["logo_slogan"] = CMS_NAME.' Sisällönhallintajärjestelmä - \nLuo ja tee enemmän vähemmällä';
 $_lang["logout"] = 'Kirjaudu ulos';
 $_lang["long_title"] = 'Pitkä otsikko';
 $_lang["mail_check_timeperiod_message"] = 'Kuinka usein uusia posteja tarkistetaan, aika sekunneissa.';
@@ -517,11 +516,11 @@ $_lang["module_resource_title"] = 'Moduulin Riippuvuudet';
 $_lang["module_title"] = 'Muokkaa moduulia';
 $_lang["module_viewdepend_msg"] = 'Moduulista riippuvaiset elementit.';
 $_lang["modules"] = 'Moduulit';
-$_lang["modx_news"] = 'MODx Uutiset';
+$_lang["modx_news"] = CMS_NAME.' Uutiset';
 $_lang["modx_news_tab"] = 'Uutiset';
-$_lang["modx_news_title"] = 'MODx Uutiset';
-$_lang["modx_security_notices"] = 'MODx Tietoturvatiedotteet';
-$_lang["modx_version"] = 'MODx:n versio';
+$_lang["modx_news_title"] = CMS_NAME.' Uutiset';
+$_lang["modx_security_notices"] = CMS_NAME.' Tietoturvatiedotteet';
+$_lang["modx_version"] = CMS_NAME.':n versio';
 $_lang["monday"] = 'Maanantai';
 $_lang["move"] = 'Siirrä';
 $_lang["move_resource"] = 'Siirrä';
@@ -627,7 +626,7 @@ $_lang["password_method"] = 'Salasanan tiedonanto';
 $_lang["password_method_email"] = 'Lähetä uusi salasana sähköpostilla.';
 $_lang["password_method_screen"] = 'Näytä uusi salasana ruudulla.';
 $_lang["password_msg"] = 'Uusi salasana käyttäjälle <strong>%s</strong> on <strong>%s</strong>.';
-$_lang["php_version_check"] = 'MODx on yhteensopiva PHP versio 4.0.3 tai paremman kanssa. Ole hyvä ja päivitä PHP asennuksesi!';
+$_lang["php_version_check"] = CMS_NAME.' on yhteensopiva PHP versio 4.0.3 tai paremman kanssa. Ole hyvä ja päivitä PHP asennuksesi!';
 $_lang["plugin"] = 'Liitännäinen';
 $_lang["plugin_code"] = 'Lähdekoodi (php)';
 $_lang["plugin_config"] = 'Liitännäisen asetukset';
@@ -649,9 +648,9 @@ $_lang["public"] = 'Julkinen';
 $_lang["publish_date"] = 'Julkaisupäiväys';
 $_lang["publish_events"] = 'Julkaistavien sivujen aikataulu';
 $_lang["publish_resource"] = 'Julkaise';
-$_lang["rb_base_dir_message"] = 'Syötä tiedostoselaimen kansion todellinen (physical path) osoite. Osoite luodaan yleensä automaattisesti. Poikkeuksena on esim. IIS. Jos MODx ei onnistu löytämään oikeaa osoitetta ilman apua ja tiedostoselain ilmoittaa virheestä, korjaa virhe syöttämällä images-kansion osoite. <strong>HUOMAA:</strong> Tiedostoselaimen kansion täytyy sisältää alikansiot: images, files, flash ja media, jotta tiedostoselain toimii oikein.';
+$_lang["rb_base_dir_message"] = 'Syötä tiedostoselaimen kansion todellinen (physical path) osoite. Osoite luodaan yleensä automaattisesti. Poikkeuksena on esim. IIS. Jos '.CMS_NAME.' ei onnistu löytämään oikeaa osoitetta ilman apua ja tiedostoselain ilmoittaa virheestä, korjaa virhe syöttämällä images-kansion osoite. <strong>HUOMAA:</strong> Tiedostoselaimen kansion täytyy sisältää alikansiot: images, files, flash ja media, jotta tiedostoselain toimii oikein.';
 $_lang["rb_base_dir_title"] = 'Tiedostoselaimen osoite:';
-$_lang["rb_base_url_message"] = 'Syötä tiedostoselaimen kansion suhteellinen (virtual path) osoite. Osoite luodaan yleensä automaattisesti. Poikkeuksena on esim. IIS. Jos MODx ei onnistu löytämään oikeaa osoitetta ilman apua ja tiedostoselain ilmoittaa virheestä, korjaa virhe syöttämällä images-kansion osoite.';
+$_lang["rb_base_url_message"] = 'Syötä tiedostoselaimen kansion suhteellinen (virtual path) osoite. Osoite luodaan yleensä automaattisesti. Poikkeuksena on esim. IIS. Jos '.CMS_NAME.' ei onnistu löytämään oikeaa osoitetta ilman apua ja tiedostoselain ilmoittaa virheestä, korjaa virhe syöttämällä images-kansion osoite.';
 $_lang["rb_base_url_title"] = 'Tiedostoselaimen osoite (URL):';
 $_lang["rb_message"] = 'Tiedostoselain antaa käyttäjille mahdollisuuden selata ja siirtää palvelimelle tiedostoja kuten kuvia, flash- ja muita mediatiedostoja.';
 $_lang["rb_title"] = 'Ota käyttöön tiedostoselain:';
@@ -805,10 +804,10 @@ $_lang["role_view_unpublished"] = 'Näytä julkaisemattomat / piilotetut sivut';
 $_lang["role_web_access_persmissions"] = 'Web-käyttöoikeudet';
 $_lang["role_web_user_management"] = 'Web-käyttäjän hallinta';
 $_lang["rss_url_news_default"] = 'http://feeds.feedburner.com/modx-announce';
-$_lang["rss_url_news_message"] = 'Anna MODx-uutisten osoite (RSS-syöte).';
+$_lang["rss_url_news_message"] = 'Anna '.CMS_NAME.'-uutisten osoite (RSS-syöte).';
 $_lang["rss_url_news_title"] = 'RSS / Uutiset';
 $_lang["rss_url_security_default"] = 'http://feeds.feedburner.com/modxsecurity';
-$_lang["rss_url_security_message"] = 'Anna MODx-tietoturvatiedotteiden osoite (RSS-syöte).';
+$_lang["rss_url_security_message"] = 'Anna '.CMS_NAME.'-tietoturvatiedotteiden osoite (RSS-syöte).';
 $_lang["rss_url_security_title"] = 'RSS / Tietoturvatiedotteet';
 $_lang["run_module"] = 'Suorita moduuli';
 $_lang["saturday"] = 'Lauantai';
@@ -836,7 +835,7 @@ $_lang["search_results_returned_title"] = 'Otsikko';
 $_lang["search_view_docdata"] = 'Näytä tämä kohde';
 $_lang["security"] = 'Käyttäjät';
 $_lang["security_notices_tab"] = 'Tietoturvatiedotteet';
-$_lang["security_notices_title"] = 'MODx Tietoturvatiedotteet';
+$_lang["security_notices_title"] = CMS_NAME.' Tietoturvatiedotteet';
 $_lang["select_date"] = 'Valitse päiväys';
 $_lang["send"] = 'Lähetä';
 $_lang["server_protocol_http"] = 'http';
@@ -952,7 +951,7 @@ $_lang["tools"] = 'Työkalut';
 $_lang["top_howmany_message"] = 'Aseta "Top..." -listojen pituus.';
 $_lang["top_howmany_title"] = 'Top-listat:';
 $_lang["total"] = 'yhteensä';
-$_lang["track_visitors_message"] = 'MODx ei sisällä oletuksena kävijäseurantaa, joten valinnalla ei ole vaikutusta ellei erillistä kävijäseurantaa ole asennettu.';
+$_lang["track_visitors_message"] = CMS_NAME.' ei sisällä oletuksena kävijäseurantaa, joten valinnalla ei ole vaikutusta ellei erillistä kävijäseurantaa ole asennettu.';
 $_lang["track_visitors_title"] = 'Kävijäseuranta:';
 $_lang["tree_page_click"] = 'Sivun napsautus';
 $_lang["tree_page_click_message"] = 'Oletustoiminto napsautettaessa sivua sivukartassa.';
@@ -1058,7 +1057,7 @@ $_lang["which_editor_message"] = 'Valitse käytettävä sisältöeditori (rich t
 $_lang["which_editor_title"] = 'Käytettävä sisältöeditori:';
 $_lang["working"] = 'Odota hetki...';
 $_lang["wrap_lines"] = 'Automaattinen rivitys';
-$_lang["xhtml_urls_message"] = 'Korvaa MODx:n luomat &amp; -merkkijonot osoitteissa validilla &amp;<!-- -->amp; html-entiteetillä';
+$_lang["xhtml_urls_message"] = 'Korvaa '.CMS_NAME.':n luomat &amp; -merkkijonot osoitteissa validilla &amp;<!-- -->amp; html-entiteetillä';
 $_lang["xhtml_urls_title"] = 'XHTML-osoitteet';
 $_lang["yes"] = 'Kyllä';
 $_lang["you_got_mail"] = 'Sinulle on viesti / viestejä';

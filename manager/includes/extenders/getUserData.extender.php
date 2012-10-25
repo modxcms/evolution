@@ -1,6 +1,5 @@
 <?php
-
-	if(IN_MANAGER_MODE!=true && IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 		require_once MODX_BASE_PATH . 'manager/includes/sniff/phpSniff.class.php';
 		$GET_VARS = isset($_GET) ? $_GET : $HTTP_GET_VARS;

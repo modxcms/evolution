@@ -1,0 +1,18 @@
+[+wlpe.message+]
+<div id="wlpeReset">
+	<form id="wlpeResetForm" name="wlpeResetForm" action="[~[*id*]~]" method="POST">
+		<fieldset id="wlpeResetFieldset">
+			<h3 id="wlpeResetInfo">Don't Worry, it happens to everyone.</h3>
+			<p>Enter your email address in the field below and we will set a temporary password for your account.</p>
+			<p>This temporary password will be emailed to you with instructions on how to activate it.</p>
+			<label for="wlpeResetEmail">Your Email Address
+			<input type="text" id="wlpeResetEmail" name="email" />
+			</label>
+			
+		</fieldset>
+		<fieldset id="wlpeResetButtonFieldset">
+			<button type="submit" id="wlpeResetButton" name="service" value="resetpassword">Send Password</button>
+			<button type="submit" id="wlpeResetCancelButton" name="service" value="cancel">Cancel</button>
+		</fieldset>
+	</form>
+</div>

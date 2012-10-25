@@ -55,6 +55,9 @@ $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
 
+// include version info
+require_once ('./includes/version.inc.php');
+
 // harden it
 require_once('./includes/protect.inc.php');
 
@@ -64,15 +67,13 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
+header("X-UA-Compatible: IE=IE8"); // Datepicker needs fixing
 
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
 
-// check PHP version. MODX Evolution is compatible with php 4 (4.3.3+)
-$php_ver_comp =  version_compare(phpversion(), "4.3.3");
-        // -1 if left is less, 0 if equal, +1 if left is higher
-if($php_ver_comp < 0) {
+// check PHP version. ClipperCMS requires PHP 5.
+if(version_compare(phpversion(), '5') < 0) {
     echo sprintf($_lang['php_version_check'], phpversion());
     exit;
 }
@@ -102,8 +103,8 @@ define("IN_ETOMITE_SYSTEM", "true"); // for backward compatibility with 0.6
 // include_once config file
 $config_filename = "./includes/config.inc.php";
 if (!file_exists($config_filename)) {
-    echo "<h3>Unable to load configuration settings</h3>";
-    echo "Please run the MODx <a href='../install'>install utility</a>";
+    echo '<h3>Unable to load configuration settings</h3>';
+    echo 'Please run the '.CMS_NAME.' <a href="../install">install utility</a>';
     exit;
 }
 
@@ -116,6 +117,9 @@ $modx = new DocumentParser;
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
 $etomite = &$modx; // for backward compatibility
+
+// Sanitise UTF-8 GPC (needs to be done after $modx->getSettings)
+require('utf8.sanitise.php');
 
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
@@ -148,9 +152,6 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 
 // send the charset header
 header('Content-Type: text/html; charset='.$modx_manager_charset);
-
-// include version info
-include_once "version.inc.php";
 
 // accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
 include_once "accesscontrol.inc.php";
@@ -195,8 +196,12 @@ if(isset($_GET['a']) && isset($_POST['a'])) {
     // we know that if an error occurs here, something's wrong,
     // so we dump the error, thereby stopping the script.
 
+} elseif($_REQUEST['a'] != '1' && $_REQUEST['a'] != '30' && $modx->hasPermission('settings') && (!isset($settings_version) || $settings_version != CMS_RELEASE_VERSION)) {
+	// seems to be a new install - send the user to the configuration page
+	$action = 17;
 } else {
-    $action= (int) $_REQUEST['a'];
+	// Normal action
+    $action= (int)$_REQUEST['a'];
 }
 
 if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {
@@ -213,7 +218,7 @@ if (isset($modx->config['validate_referer']) && intval($modx->config['validate_r
 
         if (!empty($referer)) {
             if (!preg_match('/^'.preg_quote(MODX_SITE_URL, '/').'/i', $referer)) {
-                echo "A possible CSRF attempt was detected from referer: {$referer}.";
+                echo 'A possible CSRF attempt was detected from referer: '.strip_tags($referer);
                 exit();
             }
         } else {

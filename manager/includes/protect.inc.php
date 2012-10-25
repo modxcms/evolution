@@ -23,21 +23,32 @@ if (@ ini_get('register_globals')) {
 $modxtags = array (
     '@<script[^>]*?>.*?</script>@si',
     '@&#(\d+);@e',
-    '@\[\[(.*?)\]\]@si',
-    '@\[!(.*?)!\]@si',
     '@\[\~(.*?)\~\]@si',
     '@\[\((.*?)\)\]@si',
     '@{{(.*?)}}@si',
     '@\[\+(.*?)\+\]@si',
-    '@\[\*(.*?)\*\]@si'
+    '@\[\*(.*?)\*\]@si',
+    '@\[\[(.*?)\]\]@si',
+    '@\[!(.*?)!\]@si'
 );
 if (!function_exists('modx_sanitize_gpc')) {
     function modx_sanitize_gpc(& $target, $modxtags, $limit= 3) {
-        foreach ($target as $key => $value) {
+        foreach ($target as $key => &$value) {
             if (is_array($value) && $limit > 0) {
                 modx_sanitize_gpc($value, $modxtags, $limit - 1);
             } else {
-                $target[$key] = preg_replace($modxtags, "", $value);
+                while (true) {
+                    $matched = 0;
+                    $value = preg_replace($modxtags, "", $value);
+                    foreach ($modxtags as $tagPattern) {
+                        if ($matched = preg_match($tagPattern, $value)) {
+                            break;
+                        }
+                    }
+                    if ($matched > 0) continue;
+                    break;
+                }
+                $target[$key] = $value;
             }
         }
         return $target;

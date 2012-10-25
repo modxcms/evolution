@@ -2,16 +2,15 @@
 /**
  * Filename:       includes/lang/persian.inc.php
  * Function:       Persian Language file
- * Author:         Mohsen Zare (MotSmart ~ www.modxcms.ir)
- * Date:           15 Oct 2008
- * Version:        3.13
- * MODx version:   0.9.6.3 RC-2
+ * Author:         Mohsen Zare (MotSmart ~ www.modxcms.ir), The ClipperCMS Project Team
+ * Date:                   31st Aug 2012
+ * ClipperCMS version:     1.1
 */
 $modx_textdir = 'rtl';
 $modx_lang_attribute = 'fa'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'مادایکس یک <a href="http://modxcms.com/what-is-modx.html" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
+$_lang["about_msg"] = 'مادایکس یک <a href="http://'.CMS_DOMAIN.'" target="_blank">سیستم مدیریت محتوای ساختار یافته و پیشرفته  توسط PHP میباشد</a> که  تحت لیسانس <a href="../assets/docs/license.txt">GNU-GPL</a> منتشر شده است';
 $_lang["about_title"] = 'درباره مادایکس';
 $_lang["access_permission_denied"] = 'شما دسترسی لازم را برای این پرونده ندارید.';
 $_lang["access_permission_parent_denied"] = 'شما اجازه یا دسترسی ایجاد یا انتقال پرونده ای جدید در این مکان را ندارید!. لطفا مکان دیگری را انتخاب کنید.';
@@ -323,7 +322,7 @@ $_lang["go"] = 'برو';
 $_lang["group_access_permissions"] = 'سطح دسترسی گروه کاربری';
 $_lang["guid"] = 'شناسه ی خاص';
 $_lang["help"] = 'راهنمای استفاده';
-$_lang["help_msg"] = '<p>شما میتوانید بصورت رایگان  عضو <a href="http://modxcms.com/forums" target="_blank">انجمنهای رفع اشکال و راهنمایی مادایکس</a> شوید و به کمک سایر دوستان باتجربه در این زمینه پاسخ سوالات خود را در مورد مادایکس بیابید.<br />ضمنا میتوانید حجم بزرگی از <a href="http://modxcms.com/documentation" target="_blank">راهنمایی ها و نحوه استفاده و پشتیبانی مادایکس </a> را در بخش راهنمایی و پشتیبانی استفاده از مادایکس بیابید</p><p>شما با پرداخت هزینه میتوانید از پشتیبانی و راهنمای اختصاصی و حرفه ای برای وبگاه (سایت) خود بهرهمند شوید برای این منظور لطفا از طریق پست الکترونیک با آدرس زیر تماس حاصل کنید<br />support@vertexworks.com';
+$_lang["help_msg"] = '<p>شما میتوانید بصورت رایگان  عضو <a href="http://'.CMS_DOMAIN.'/forums" target="_blank">انجمنهای رفع اشکال و راهنمایی مادایکس</a> شوید و به کمک سایر دوستان باتجربه در این زمینه پاسخ سوالات خود را در مورد مادایکس بیابید.<br />ضمنا میتوانید حجم بزرگی از <a href="http://'.CMS_DOMAIN.'/documentation" target="_blank">راهنمایی ها و نحوه استفاده و پشتیبانی مادایکس </a> را در بخش راهنمایی و پشتیبانی استفاده از مادایکس بیابید</p><p>شما با پرداخت هزینه میتوانید از پشتیبانی و راهنمای اختصاصی و حرفه ای برای وبگاه (سایت) خود بهرهمند شوید برای این منظور لطفا از طریق پست الکترونیک با آدرس زیر تماس حاصل کنید<br />support@vertexworks.com';
 $_lang["help_title"] = ' راهنما و توضیحات';
 $_lang["hide_tree"] = 'مخفی کردن درختی';
 $_lang["home"] = 'منزل';

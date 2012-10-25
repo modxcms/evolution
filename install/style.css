@@ -242,7 +242,7 @@ color:#888888;
 	border-bottom-color: #ffbc6c;
 }
 .version {
-	color: #fff;
+	color: #4E7B91;
 }
 span.mono {
 	font-family: Courier, monospace;
@@ -338,7 +338,7 @@ position:relative;
 }
 
 #contentarea h2 {
-color:#5A8F34;
+color:#4E7B91;
 font-size:1.7em;
 font-weight:bold;
 line-height:1em;
@@ -363,21 +363,18 @@ width:940px;
 }
 
 #footer {
-background:#64AB24 url(img/site-ui-gfx.png) repeat-x scroll 0 -198px;
-color:#FFFFFF;
+background:#A5C0D8 url(img/site-ui-gfx.png) repeat-x scroll 0 -198px;
+color:#4E7B91;
 margin-top:20px;
 padding-top:23px;
 }
 #footer-inner {
-	background: #64AB24 none repeat scroll 0 0;
+	background: #A5C0D8 none repeat scroll 0 0;
     padding: 15px 0;
 }
 #footer h6 {
 font-size:1.7em;
 margin-bottom:10px;
-}
-#footer a {
-color:#FFFFFF;
 }
 
 #bottom {
@@ -598,7 +595,7 @@ span.notok {
     color:red;
 }
 #logo {
-background:transparent url(img/site-ui-gfx.png) repeat -10px -289px;
+background:transparent url(img/site-ui-gfx.png) repeat -48px -289px;
 display:block;
 height:63px;
 left:0;

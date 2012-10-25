@@ -1,5 +1,6 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 if(!$modx->hasPermission('logs')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -21,12 +22,12 @@ if(!$modx->hasPermission('logs')) {
 		  <tr>
 			<td width="150"><?php echo $_lang['modx_version']?></td>
 			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx_version ?></b><?php echo $newversiontext ?></td>
+			<td><b><?php echo CMS_RELEASE_VERSION.' '.CMS_RELEASE_NAME; ?></b><?php echo $newversiontext ?></td>
 		  </tr>
 		  <tr>
 			<td width="150"><?php echo $_lang['release_date']?></td>
 			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx_release_date ?></b></td>
+			<td><b><?php echo CMS_RELEASE_DATE; ?></b></td>
 		  </tr>
 		  <tr>
 			<td>phpInfo()</td>

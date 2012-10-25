@@ -49,9 +49,9 @@ if (!$_SESSION['test']) {
 
 }
 
-$moduleName = "MODx";
-$moduleVersion = $modx_branch.' '.$modx_version;
-$moduleRelease = $modx_release_date;
+$moduleName = CMS_NAME;
+$moduleVersion = CMS_RELEASE_VERSION;
+$moduleRelease = CMS_RELEASE_DATE;
 $moduleSQLBaseFile = "setup.sql";
 $moduleSQLDataFile = "setup.data.sql";
 
@@ -70,15 +70,10 @@ $isPostBack = (count($_POST));
 
 $action= isset ($_GET['action']) ? trim(strip_tags($_GET['action'])) : 'language';
 
-// make sure they agree to the license
-#if (!in_array($action, array ('language', 'welcome', 'connection', 'options', 'license', 'mode', 'summary'))) {
-#    if (!isset ($_POST['chkagree'])) $action= 'license';
-#}
-
 ob_start();
 include ('header.php');
 
-if (!@include ('action.' . $action . '.php')) {
+if (!@include ('action/action.' . $action . '.php')) {
     die ('Invalid install action attempted. [action=' . $action . ']');
 }
 

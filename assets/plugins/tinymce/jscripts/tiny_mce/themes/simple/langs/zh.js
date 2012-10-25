@@ -1,11 +1,1 @@
-tinyMCE.addI18n('zh.simple',{
-bold_desc:"\u7C97\u9AD4(Ctrl+B)",
-italic_desc:"\u659C\u9AD4 (Ctrl+I)",
-underline_desc:"\u5E95\u7DDA (Ctrl+U)",
-striketrough_desc:"\u522A\u9664\u7DDA",
-bullist_desc:"\u9805\u76EE\u5217\u8868",
-numlist_desc:"\u7DE8\u865F\u5217\u8868",
-undo_desc:"\u5FA9\u539F (Ctrl+Z)",
-redo_desc:"\u53D6\u6D88\u5FA9\u539F (Ctrl+Y)",
-cleanup_desc:"\u6E05\u9664\u683C\u5F0F"
-});
+tinyMCE.addI18n('zh.simple',{"cleanup_desc":"\u51c0\u5316\u4ee3\u7801","redo_desc":"\u6062\u590d(Ctrl Y)","undo_desc":"\u64a4\u6d88(Ctrl Z)","numlist_desc":"\u7f16\u53f7\u5217\u8868","bullist_desc":"\u9879\u76ee\u5217\u8868","striketrough_desc":"\u5220\u9664\u7ebf","underline_desc":"\u4e0b\u5212\u7ebf(Ctrl U)","italic_desc":"\u659c\u4f53(Ctrl I)","bold_desc":"\u7c97\u4f53(Ctrl B)"});

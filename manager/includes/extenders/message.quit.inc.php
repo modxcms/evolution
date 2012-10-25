@@ -3,10 +3,11 @@
  * Message Quit Template
  * 
  */
-if(IN_MANAGER_MODE!=true && IN_PARSER_MODE!="true") die("<b>INCLUDE ACCESS ERROR</b><br /><br />Direct access to this file prohibited.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 
 $parsedMessageString = "
-<html><head><title>MODx Content Manager $version &raquo; $release_date</title>
+<html><head><title>".CMS_NAME." Content Manager $version &raquo; $release_date</title>
 <style>TD, BODY { font-size: 11px; font-family:verdana; }</style>
 <script type='text/javascript'>
 	function copyToClip()
@@ -19,14 +20,14 @@ $parsedMessageString = "
 </head><body>
 ";
 if($is_error) {
-	$parsedMessageString .= "<h3 style='color:red;background:#e0e0e0;padding:2px;'>&nbsp;MODx Parse Error </h3>
+	$parsedMessageString .= "<h3 style='color:red;background:#e0e0e0;padding:2px;'>&nbsp;".CMS_NAME." Parse Error </h3>
 	<table border='0' cellpadding='1' cellspacing='0'>
-	<tr><td colspan='3'>MODx encountered the following error while attempting to parse the requested resource:</td></tr>
+	<tr><td colspan='3'>".CMS_NAME." encountered the following error while attempting to parse the requested resource:</td></tr>
 	<tr><td colspan='3'><b style='color:red;'>&laquo; $msg &raquo;</b></td></tr>";
 } else {
-	$parsedMessageString .= "<h3 style='color:#003399; background:#eeeeee;padding:2px;'>&nbsp;MODx Debug/ stop message </h3>
+	$parsedMessageString .= "<h3 style='color:#003399; background:#eeeeee;padding:2px;'>&nbsp;".CMS_NAME." Debug/ stop message </h3>
 	<table border='0' cellpadding='1' cellspacing='0'>
-	<tr><td colspan='3'>The MODx parser recieved the following debug/ stop message:</td></tr>
+	<tr><td colspan='3'>The ".CMS_NAME." parser recieved the following debug/ stop message:</td></tr>
 	<tr><td colspan='3'><b style='color:#003399;'>&laquo; $msg &raquo;</b></td></tr>";
 }
 

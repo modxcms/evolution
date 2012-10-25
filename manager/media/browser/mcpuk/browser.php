@@ -11,6 +11,8 @@ class FBROWSER
 {
 	function seturl_js()
 	{
+		/* This code commented out for security. It appears unused by core code and Extras within the MODx repo.
+		
 		$seturl_js_filename = 'seturl_js_'  . htmlspecialchars($_GET['editor']) . '.inc';
 		$seturl_js_path = MODX_BASE_PATH . 'assets/plugins/';
 		
@@ -20,18 +22,21 @@ class FBROWSER
 		}
 		else
 		{
-			$editor_path = htmlspecialchars($_GET['editorpath'], ENT_QUOTES);
-			switch($_GET['editor'])
-			{
-				case 'tinymce' :
-				case 'tinymce3':
-					$result = file_get_contents('seturl_js_tinymce.inc');
-					$result = str_replace('[+editor_path+]', $editor_path, $result);
-					break;
-				default:
-				$result = '<script src="seturl.js" type="text/javascript"></script>' . PHP_EOL;
-			}
+		*/
+
+		$editor_path = htmlspecialchars($_GET['editorpath'], ENT_QUOTES);
+		switch($_GET['editor'])
+		{
+			case 'tinymce' :
+			case 'tinymce3':
+				$result = file_get_contents('seturl_js_tinymce.inc');
+				$result = str_replace('[+editor_path+]', $editor_path, $result);
+				break;
+			default:
+			$result = '<script src="seturl.js" type="text/javascript"></script>' . PHP_EOL;
 		}
+		
+		//}
 		return $result;
 	}
 	

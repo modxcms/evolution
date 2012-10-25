@@ -13,7 +13,7 @@ include "../../includes/config.inc.php";
  */
 startCMSSession();  
 if(!isset($_SESSION['mgrValidated'])) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+	exit();
 }
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {

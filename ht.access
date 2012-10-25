@@ -1,11 +1,12 @@
-# For full documentation and other suggested options, please see
-# http://svn.modxcms.com/docs/display/MODx096/Friendly+URL+Solutions
-# including for unexpected logouts in multi-server/cloud environments
-# and especially for the first three commented out rules
-
 #php_flag register_globals Off
 #AddDefaultCharset utf-8
-#php_value date.timezone Europe/Moscow
+
+#Reduce server overhead by enabling output compression if supported.
+#php_flag zlib.output_compression On
+#php_value zlib.output_compression_level 5
+
+# Block directory listings
+IndexIgnore *
 
 Options +FollowSymlinks
 RewriteEngine On
@@ -14,6 +15,18 @@ RewriteBase /
 # Fix Apache internal dummy connections from breaking [(site_url)] cache
 RewriteCond %{HTTP_USER_AGENT} ^.*internal\ dummy\ connection.*$ [NC]
 RewriteRule .* - [F,L]
+
+# Deny access to git
+RewriteRule \.git - [F,L]
+
+# Deny access to any sql file
+<Files ~ "\.sql$">
+Order allow,deny
+Deny from all
+</Files>
+
+# Block *~ backup files
+RewriteRule ^(.*)~+$ $1
 
 # Rewrite domain.com -> www.domain.com -- used with SEO Strict URLs plugin
 #RewriteCond %{HTTP_HOST} .
@@ -28,7 +41,3 @@ RewriteRule \.(jpg|jpeg|png|gif|ico)$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
-
-# Reduce server overhead by enabling output compression if supported.
-#php_flag zlib.output_compression On
-#php_value zlib.output_compression_level 5

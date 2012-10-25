@@ -36,6 +36,9 @@ include_once "log.class.inc.php";
 // include the crypto thing
 include_once "crypt.class.inc.php";
 
+// include the hashing classes
+require('hash.inc.php');
+
 // Initialize System Alert Message Queque
 if (!isset($_SESSION['SystemAlertMsgQueque'])) $_SESSION['SystemAlertMsgQueque'] = array();
 $SystemAlertMsgQueque = &$_SESSION['SystemAlertMsgQueque'];
@@ -77,7 +80,9 @@ if($limit==0 || $limit>1) {
 $row = mysql_fetch_assoc($rs);
 
 $internalKey            = $row['internalKey'];
-$dbasePassword          = $row['password'];
+$hashtype               = (int)$row['hashtype'];
+$salt                   = $row['salt'];
+$hash                   = $row['password'];
 $failedlogins           = $row['failedlogincount'];
 $blocked                = $row['blocked'];
 $blockeduntildate       = $row['blockeduntil'];
@@ -163,14 +168,15 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                             "userid"        => $internalKey,
                             "username"      => $username,
                             "userpassword"  => $givenPassword,
-                            "savedpassword" => $dbasePassword,
+                            "savedpassword" => $hash,
                             "rememberme"    => $rememberme
                         ));
 
 // check if plugin authenticated the user
 if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
     // check user password - local authentication
-    if($dbasePassword != md5($givenPassword)) {
+    $HashHandler = new HashHandler($hashtype, $modx);
+    if(!$HashHandler->check($givenPassword, $salt, $hash)) {
             jsAlert($e->errors[901]);
             $newloginerror = 1;
     }
@@ -216,6 +222,7 @@ $_SESSION['mgrShortname']=$username;
 $_SESSION['mgrFullname']=$fullname;
 $_SESSION['mgrEmail']=$email;
 $_SESSION['mgrValidated']=1;
+$_SESSION['mgrHashtype']=$hashtype;
 $_SESSION['mgrInternalKey']=$internalKey;
 $_SESSION['mgrFailedlogins']=$failedlogins;
 $_SESSION['mgrLastlogin']=$lastlogin;
@@ -265,7 +272,7 @@ if($rememberme == '1') {
 }
 
 $log = new logHandler;
-$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", "MODx");
+$log->initAndWriteLog("Logged in", $modx->getLoginUserID(), $_SESSION['mgrShortname'], "58", "-", CMS_NAME);
 
 // invoke OnManagerLogin event
 $modx->invokeEvent("OnManagerLogin",
@@ -283,8 +290,7 @@ if(isset($id) && $id>0) {
     $header = 'Location: '.$modx->makeUrl($id,'','','full');
     if($_POST['ajax']==1) echo $header;
     else header($header);
-}
-else {
+} else {
     $header = 'Location: '.$modx->config['site_url'].'manager/';
     if($_POST['ajax']==1) echo $header;
     else header($header);

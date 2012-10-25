@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 $warningspresent = 0;
 
@@ -132,6 +132,11 @@ if (count($_lang)!=$length_eng_lang) {
     $warnings[] = array($_lang['configcheck_lang_difference']);
 }
 
+if (!$modx->config['error_handling_silent']) {
+    $warningspresent = 1;
+    $warnings[] = array($_lang['configcheck_error_handling_silent']);
+}
+
 // clear file info cache
 clearstatcache();
 
@@ -194,17 +199,20 @@ for ($i=0;$i<count($warnings);$i++) {
             $msg .= '<br />' . sprintf($_lang["configcheck_hide_warning"], 'templateswitcher_present');
             $warnings[$i][1] = "<span id=\"templateswitcher_present_warning_wrapper\">{$msg}</span>\n";
             break;
+        case $_lang['configcheck_error_handling_silent'] :
+            $warnings[$i][1] = $_lang['configcheck_error_handling_silent_msg'];
+            break;
         default :
             $warnings[$i][1] = $_lang['configcheck_default_msg'];
     }
 
     $admin_warning = $_SESSION['mgrRole']!=1 ? $_lang['configcheck_admin'] : "" ;
     $config_check_results .= "
-            <fieldset>
+            <div>
             <p><strong>".$_lang['configcheck_warning']."</strong> '".$warnings[$i][0]."'</p>
             <p style=\"padding-left:1em\"><em>".$_lang['configcheck_what']."</em><br />
             ".$warnings[$i][1]." ".$admin_warning."</p>
-            </fieldset>
+            </div>
 ";
         if ($i!=count($warnings)-1) {
             $config_check_results .= "<br />";

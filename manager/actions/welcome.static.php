@@ -1,12 +1,7 @@
-<?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+<?php
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
-
-if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_version!=$modx_version)) {
-    // seems to be a new install - send the user to the configuration page
-    echo '<script type="text/javascript">document.location.href="index.php?a=17";</script>';
-    exit;
-}
 
 $script = <<<JS
         <script type="text/javascript">
@@ -33,6 +28,7 @@ $modx->setPlaceholder('home', $_lang["home"]);
 $modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 $modx->setPlaceholder('site_name',$site_name);
 $modx->setPlaceholder('welcome_title',$_lang['welcome_title']);
+$modx->setPlaceholder('cms_version_info', CMS_NAME.' '.CMS_RELEASE_VERSION.' '.CMS_RELEASE_NAME);
 
 // setup message info
 if($modx->hasPermission('messages')) {
@@ -209,21 +205,28 @@ if(is_array($evtOut)) {
 }
 
 // load template file
-$customWelcome = $base_path.'manager/media/style/'.$modx->config['manager_theme'] .'/welcome.html';
-if( is_readable($customWelcome) ) {
-    $tplFile = $customWelcome;
+$customWelcome = $base_path.'manager/media/style/'.$modx->config['manager_theme'] .'/welcome.html'; // WARNING: Retained for backwards compatability but DEPRACATED.
+if (is_readable($customWelcome)) {
+	$tplFile = $customWelcome;
 } else {
-    $tplFile = $base_path.'assets/templates/manager/welcome.html';
+	$tplFile = $base_path.'manager/media/style/'.$modx->config['manager_theme'].'/html/welcome.html'; // Moved out of assets/templates/manager (TimGS)
 }
+
 $handle = fopen($tplFile, "r");
 $tpl = fread($handle, filesize($tplFile));
 fclose($handle);
+$modx->setPlaceholder('manager_theme_url', "media/style/{$modx->config['manager_theme']}/");
 
 // merge placeholders
 $tpl = $modx->mergePlaceholderContent($tpl);
 $tpl = preg_replace('~\[\+(.*?)\+\]~', '', $tpl); //cleanup
 if ($js= $modx->getRegisteredClientScripts()) {
 	$tpl .= $js;
+}
+
+require('hash.inc.php');
+if ($_SESSION['mgrHashtype'] != CLIPPER_HASH_PREFERRED) {
+	echo '<p style="padding: 2em; color: #dd1d1d" class="warning"><strong>We recommend that you <a href="index.php?a=28">change your password now</a> to take advantage of our security improvements.</p>';
 }
 
 echo $tpl;

@@ -1,17 +1,17 @@
-﻿<?php
-/**
+﻿/**
  * AjaxSearch
  *
  * Ajax and non-Ajax search that supports results highlighting
  *
  * @category    snippet
- * @version     1.9.2
+ * @version     1.9.3
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal    @properties
  * @internal    @modx_category Search
+ * @internal    @installset base, sample
  *
  * @author      Coroico <coroico@wangba.fr>
- * @date        05/12/2010
+ * @date        26/09/2012
  * -----------------------------------------------------------------------------
  */
 /**
@@ -71,7 +71,7 @@ MORE : See the ajaxSearch.readme.txt file for more informations.
 ----------------------------------------------------------------------------- */
 
 // ajaxSearch version being executed
-define('AS_VERSION', '1.9.2');
+define('AS_VERSION', '1.9.3');
 // Path where ajaxSearch is installed
 define('AS_SPATH', 'assets/snippets/ajaxSearch/');
 //include snippet file
@@ -95,7 +95,7 @@ if (!isset($dcfg)) return "<h3>AjaxSearch error: default configuration array not
 if ($dcfg['version'] != AS_VERSION) return "<h3>AjaxSearch error: Version number mismatch. Check the content of the default configuration file!</h3>";
 
 // check the possible use of deprecated parameters (since 1.8.5)
-$readme = "ajaxSearch_version_192.txt";
+$readme = "ajaxSearch_version_193.txt";
 if (isset($searchWordList)) return "<h3>AjaxSearch error: searchWordList is a deprecated parameter. Read " . $readme . " file.</h3>";
 if (isset($resultsPage)) return "<h3>AjaxSearch error: resultsPage is a deprecated parameter. Read " . $readme . " file.</h3>";
 if (isset($AS_showForm)) return "<h3>AjaxSearch error: AS_showForm parameter has been renamed showInputForm. Read " . $readme . " file.</h3>";
@@ -480,4 +480,3 @@ $elapsedTime = $modx->getMicroTime() - $tstart;
 $etime = sprintf("%.4fs",$elapsedTime);
 //$f=fopen('test.txt','a+');fwrite($f,"etime=".$etime."\n\n");
 return $output;
-?>

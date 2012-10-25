@@ -1,5 +1,6 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 if(!$modx->hasPermission('save_plugin')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -77,7 +78,7 @@ $header = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>MODx</title>
+	<title>'.CMS_NAME.'</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
 	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>

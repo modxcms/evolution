@@ -1,9 +1,8 @@
 <?php
 /**
- * MODx language File
+ * ClipperCMS installation language file
  *
- * @author MotSmart ~ Mohsen Zare [MotSmart@Gmail.com]| www.modxcms.ir
- * @package MODx
+ * @author MotSmart ~ Mohsen Zare [MotSmart@Gmail.com]| www.ClipperCMScms.ir
  * @version 1.0
  * @Update by AliAqua
  * Filename:       /install/lang/persian/persian.inc.php
@@ -102,10 +101,10 @@ $_lang["installing_demo_site"] = 'نصب محتوای سایت پیشفرض (د�
 $_lang["language_code"] = 'fa';
 $_lang["loading"] = 'در حال بارگذاری ...';
 $_lang["modules"] = 'ماژولها';
-$_lang["modx_footer1"] = '&copy; 2005-2009 کلیه ی حقوق برای پروژه ی سیستم مدیریت محتوای <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">مادایکس</a> محفوظ است. مادایکس تحت لیسانس GNU-GPL است.';
+$_lang["modx_footer1"] = '&copy; 2012 کلیه ی حقوق برای پروژه ی سیستم مدیریت محتوای <a href="http://clippercms.com" target="_blank" >مادایکس</a> محفوظ است. مادایکس تحت لیسانس GNU-GPL است.';
 $_lang["modx_footer2"] = 'مادایکس نرم افزاری رایگان است، ما شما را تشویق به خلاقیت می کنیم، شما می توانید به منظور هماهنگی مادایکس با نیازهای خود، هر تغییری را در آن اعمال کنید. چنانچه قصد ارائه نسخه مادایکس ویژه خود به دیگران را دارید حتما آن را رایگان ارائه کنید!';
-$_lang["modx_install"] = 'MODx &raquo; برنامه نصب';
-$_lang["modx_requires_php"] = ', است, و مادایکس به نسخه ی PHP 4.2.0 و یا بالاتر نیاز دار';
+$_lang["modx_install"] = 'ClipperCMS &raquo; برنامه نصب';
+$_lang["modx_requires_php"] = ', است, و مادایکس به نسخه ی PHP 5 و یا بالاتر نیاز دار';
 $_lang["mysql_5051"] = ' نسخه MySQL سرور 5.0.51 می باشد!';
 $_lang["mysql_5051"] = 'Warning : MySQL server version is 5.0.51';
 $_lang["mysql_5051_warning"] = 'مشکلاتی با نسخه MySQL 5.0.51 کشف شده. پیشنهاد می کنیم نسخه MySQL خود را ارتقا دهید.';
@@ -167,9 +166,9 @@ $_lang["unable_install_snippet"] = 'نصب اسنیپت با مشکل روبرو
 $_lang["unable_install_template"] = 'نصب قالب با مشکل روبرو شد.  فایل';
 $_lang["upgrade_note"] = '<strong>یادداشت:</strong> قبل از ورد به سایت شما می بایست به قسمت مدیریت بروید و پیکربندی را مرور و ویرایش کنید .';
 $_lang["upgraded"] = 'به روز شد';
-$_lang["visit_forum"] = ', به <a href="http://www.modxcms.com/forums/" target="_blank">انجمن پشتیبانی مادایکس</a> بروید.';
+$_lang["visit_forum"] = ', به <a href="http://clippercms.com/forum/" target="_blank">انجمن پشتیبانی مادایکس</a> بروید.';
 $_lang["welcome_message_text"] = 'این برنامه تا آخرین مرحله ی نصب مادایکس راهنمای شماست.';
-$_lang["welcome_message_welcome"] = ' به برنامه ی نصب MODx فارسی خوش آمدید.';
+$_lang["welcome_message_welcome"] = ' به برنامه ی نصب ClipperCMS فارسی خوش آمدید.';
 $_lang["writing_config_file"] = 'نگارش فایل پیکر بندی: ';
 $_lang["you_running_php"] = ' -  نسخه فعلی PHP شما ';
 ?>

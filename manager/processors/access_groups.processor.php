@@ -1,5 +1,6 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 if(!$modx->hasPermission('access_permissions')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -25,8 +26,12 @@ switch ($operation) {
 			echo "no group name specified";
 			exit;
 		} else {
-			$sql = 'INSERT INTO '.$tbl_membergroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')';
-			if(!$rs = $modx->db->query($sql)) {
+			$sql = 'INSERT IGNORE INTO '.$tbl_membergroup_names.' (name) VALUES(\''.$modx->db->escape($newgroup).'\')'; // Temporary solution pending DBAPI::replace
+			if (!$modx->db->query($sql)) {
+				echo "Failed to insert new group.";
+				exit;
+			}
+			elseif(!$modx->db->getAffectedRows()) {
 				echo "Failed to insert new group. Possible duplicate group name?";
 				exit;
 			}

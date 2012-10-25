@@ -1,5 +1,6 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 if(!$modx->hasPermission('settings')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -188,7 +189,7 @@ function confirmLangChange(el, lkey, elupd){
     <input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
     <input type="hidden" name="settings_version" value="<?php echo $modx_version; ?>" />
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
-    <?php if(!isset($settings_version) || $settings_version!=$modx_version) { ?>
+    <?php if(!isset($settings_version) || $settings_version != CMS_RELEASE_VERSION) { ?>
     <div class='sectionBody'><p><?php echo $_lang['settings_after_install']; ?></p></div>
     <?php } ?>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -204,7 +205,7 @@ function confirmLangChange(el, lkey, elupd){
         <table border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td>
-              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : 'My '.CMS_NAME.' Site'; ?>" /></td>
             </tr>
             <tr>
               <td width="200">&nbsp;</td>
@@ -575,6 +576,55 @@ function confirmLangChange(el, lkey, elupd){
 			<tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
+            <tr>
+               <td nowrap class="warning"><?php echo $_lang['error_handling_deprecated_label'] ?></td>
+               <td>
+               	  <select onchange="documentDirty=true;" name="error_handling_deprecated">
+               	         <?php if (!isset($error_handling_deprecated)) $error_handling_deprecated = 1; ?>
+               	  	<option<?php if($error_handling_deprecated == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_deprecated_0']; /* No error reporting */ ?></option>
+               	  	<option<?php if($error_handling_deprecated == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_deprecated_1']; /* Log */ ?></option>
+               	  	<option<?php if($error_handling_deprecated == 2) echo ' selected="selected"'; ?> value="2"><?php echo $_lang['error_handling_deprecated_2']; /* Halt */ ?></option>
+               	  </select>
+               </td>
+            </tr>
+			<tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+            <tr>
+               <td nowrap class="warning"><?php echo $_lang['error_handling_silent_label'] ?></td>
+               <td>
+              	  <select onchange="documentDirty=true;" name="error_handling_silent">
+               	         <?php if (!isset($error_handling_silent)) $error_handling_silent = 0; ?>
+               	  	<option<?php if($error_handling_silent == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['error_handling_silent_0']; /* screen */ ?></option>
+               	  	<option<?php if($error_handling_silent == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['error_handling_silent_1']; /* no display */ ?></option>
+               	  </select>
+                </td>
+             </tr>
+			<tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["jquery_url_label"] ?></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="jquery_url" value="<?php echo isset($jquery_url) ? $jquery_url : 'assets/js/jquery.min.js'; ?>" /></td>
+            </tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["jquery_plugin_dir"] ?></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='350' style="width: 350px;" name="jquery_plugin_dir" value="<?php echo isset($jquery_plugin_dir) ? $jquery_plugin_dir : 'assets/js/'; ?>" /></td>
+            </tr>
+			<tr>
+              <td nowrap class="warning"><?php echo $_lang["jquery_noconflict"] ?></td>
+               <td>
+              	  <select onchange="documentDirty=true;" name="jquery_noconflict">
+               	         <?php if (!isset($jquery_noconflict)) $jquery_noconflict = 0; ?>
+               	  	<option<?php if($jquery_noconflict == 0) echo ' selected="selected"'; ?> value="0"><?php echo $_lang['no']; ?></option>
+               	  	<option<?php if($jquery_noconflict == 1) echo ' selected="selected"'; ?> value="1"><?php echo $_lang['yes']; ?></option>
+               	  </select>
+                </td>
+            </tr>
+             <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php
@@ -1346,6 +1396,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
+          </tr>
 		  <tr class='row1'>
             <td colspan="2">
 		        <?php

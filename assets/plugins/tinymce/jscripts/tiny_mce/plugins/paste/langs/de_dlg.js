@@ -1,5 +1,1 @@
-tinyMCE.addI18n('de.paste_dlg',{
-text_title:"Dr\u00FCcken Sie auf Ihrer Tastatur Strg+V, um den Text einzuf\u00FCgen.",
-text_linebreaks:"Zeilenumbr\u00FCche beibehalten",
-word_title:"Dr\u00FCcken Sie auf Ihrer Tastatur Strg+V, um den Text einzuf\u00FCgen."
-});
+tinyMCE.addI18n('de.paste_dlg',{"word_title":"Strg V auf der Tastatur dr\u00fccken, um den Text einzuf\u00fcgen.","text_linebreaks":"Zeilenumbr\u00fcche beibehalten","text_title":"Strg V auf der Tastatur dr\u00fccken, um den Text einzuf\u00fcgen."});

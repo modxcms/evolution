@@ -1,8 +1,4 @@
-# MODx Database Script for New/Upgrade Installations
-# MODx was created By Raymond Irving - Nov 2004 
-#
-# Each sql command is separated by double lines \n\n 
-
+# ClipperCMS Database Script for New/Upgrade Installations
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
   `internalKey` int(9) NOT NULL default '0',
@@ -12,14 +8,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
   `action` varchar(10) NOT NULL default '',
   `ip` varchar(20) NOT NULL default '',
   PRIMARY KEY  (`internalKey`)
-) TYPE=MyISAM COMMENT='Contains data about active users.';
+) ENGINE=MyISAM COMMENT='Contains data about active users.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}categories` (
   `id` integer NOT NULL AUTO_INCREMENT,
   `category` varchar(45) NOT NULL DEFAULT '',
   PRIMARY KEY(`id`)
-) Type=MyISAM COMMENT='Categories to be used snippets,tv,chunks, etc';
+) ENGINE=MyISAM COMMENT='Categories to be used snippets,tv,chunks, etc';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
@@ -29,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}document_groups` (
   PRIMARY KEY  (`id`),
   KEY `document` (document),
   KEY `document_group` (document_group)
-) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
@@ -39,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}documentgroup_names` (
   `private_webgroup` tinyint DEFAULT 0 COMMENT 'determines whether the document is private to web users',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
@@ -53,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}event_log` (
   `description` text,
   PRIMARY KEY(`id`),
   KEY `user`(`user`)
-) TYPE=MYISAM COMMENT='Stores event and error logs';
+) ENGINE=MyISAM COMMENT='Stores event and error logs';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}keyword_xref` (
@@ -61,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}keyword_xref` (
   `keyword_id` int(11) NOT NULL default '0',
   KEY `content_id` (`content_id`),
   KEY `keyword_id` (`keyword_id`)
-) TYPE=MyISAM COMMENT='Cross reference bewteen keywords and content';
+) ENGINE=MyISAM COMMENT='Cross reference bewteen keywords and content';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
@@ -74,16 +70,18 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}manager_log` (
   `itemname` varchar(255) default NULL,
   `message` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains a record of user interaction.';
+) ENGINE=MyISAM COMMENT='Contains a record of user interaction.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}manager_users` (
   `id` int(10) NOT NULL auto_increment,
   `username` varchar(100) NOT NULL default '',
+  `hashtype` smallint NOT NULL default 0,
+  `salt` varchar(40) NOT NULL default '',
   `password` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) TYPE=MyISAM COMMENT='Contains login information for backend users.';
+) ENGINE=MyISAM COMMENT='Contains login information for backend users.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}member_groups` (
@@ -92,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}member_groups` (
   `member` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE INDEX `ix_group_member` (`user_group`,`member`)
-) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_access` (
@@ -100,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_access` (
   `membergroup` int(10) NOT NULL default '0',
   `documentgroup` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_names` (
@@ -108,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}membergroup_names` (
   `name` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) TYPE=MyISAM COMMENT='Contains data used for access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
@@ -154,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   KEY `parent` (`parent`),
   KEY aliasidx (alias),
   FULLTEXT KEY `content_ft_idx` (`pagetitle`,`description`,`content`)
-) TYPE=MyISAM COMMENT='Contains the site document tree.';
+) ENGINE=MyISAM COMMENT='Contains the site document tree.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_content_metatags` (
@@ -162,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content_metatags` (
   `metatag_id` int(11) NOT NULL default '0',
   KEY `content_id` (`content_id`),
   KEY `metatag_id` (`metatag_id`)
-) TYPE=MyISAM COMMENT='Reference table between meta tags and content';
+) ENGINE=MyISAM COMMENT='Reference table between meta tags and content';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
@@ -175,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_htmlsnippets` (
   `snippet` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains the site chunks.';
+) ENGINE=MyISAM COMMENT='Contains the site chunks.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_keywords` (
@@ -183,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_keywords` (
   `keyword` varchar(40) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `keyword` (`keyword`)
-) TYPE=MyISAM COMMENT='Site keyword list';
+) ENGINE=MyISAM COMMENT='Site keyword list';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_metatags` (
@@ -193,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_metatags` (
   `tagvalue` varchar(255) NOT NULL DEFAULT '',
   `http_equiv` tinyint NOT NULL DEFAULT 0 COMMENT '1 - use http_equiv tag style, 0 - use name',
   PRIMARY KEY(`id`)
-) TYPE=MYISAM COMMENT='Site meta tags';
+) ENGINE=MyISAM COMMENT='Site meta tags';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
@@ -215,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_modules` (
   `properties` text,
   `modulecode` mediumtext COMMENT 'module boot up code',
   PRIMARY KEY(`id`)
-) TYPE=MyISAM COMMENT='Site Modules';
+) ENGINE=MyISAM COMMENT='Site Modules';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_depobj` (
@@ -224,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_depobj` (
   `resource` integer NOT NULL DEFAULT 0,
   `type` integer(2) NOT NULL DEFAULT 0 COMMENT '10-chunks, 20-docs, 30-plugins, 40-snips, 50-tpls, 60-tvs',
   PRIMARY KEY(`id`)
-) TYPE=MYISAM COMMENT='Module Dependencies';
+) ENGINE=MyISAM COMMENT='Module Dependencies';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_access` (
@@ -232,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_module_access` (
   `module` integer NOT NULL DEFAULT 0,
   `usergroup` integer NOT NULL DEFAULT 0,
   PRIMARY KEY(`id`)
-) TYPE=MYISAM COMMENT='Module users group access permission';
+) ENGINE=MyISAM COMMENT='Module users group access permission';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
@@ -248,14 +246,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugins` (
   `disabled` tinyint NOT NULL DEFAULT '0' COMMENT 'Disables the plugin',
   `moduleguid` varchar(32) NOT NULL default '' COMMENT 'GUID of module from which to import shared parameters',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains the site plugins.';
+) ENGINE=MyISAM COMMENT='Contains the site plugins.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_plugin_events` (
   `pluginid` INT(10) NOT NULL,
   `evtid` INT(10) NOT NULL default 0,
   `priority` INT(10) NOT NULL default 0 COMMENT 'determines plugin run order'
-) TYPE=MyISAM COMMENT='Links to system events';
+) ENGINE=MyISAM COMMENT='Links to system events';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
@@ -270,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_snippets` (
   `properties` text COMMENT 'Default Properties',  
   `moduleguid` varchar(32) NOT NULL default '' COMMENT 'GUID of module from which to import shared parameters',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains the site snippets.';
+) ENGINE=MyISAM COMMENT='Contains the site snippets.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
@@ -284,7 +282,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_templates` (
   `content` mediumtext,
   `locked` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains the site templates.';
+) ENGINE=MyISAM COMMENT='Contains the site templates.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}system_eventnames` (
@@ -293,14 +291,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}system_eventnames` (
   `service` tinyint NOT NULL default '0' COMMENT 'System Service number',
   `groupname` varchar(20) NOT NULL default '',
   PRIMARY KEY(`id`)
-) TYPE=MYISAM COMMENT='System Event Names.';
+) ENGINE=MyISAM COMMENT='System Event Names.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}system_settings` (
   `setting_name` varchar(50) NOT NULL default '',
   `setting_value` text,
   UNIQUE KEY `setting_name` (`setting_name`)
-) TYPE=MyISAM COMMENT='Contains Content Manager settings.';
+) ENGINE=MyISAM COMMENT='Contains Content Manager settings.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_access` (
@@ -308,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_access` (
   `tmplvarid` int(10) NOT NULL default '0',
   `documentgroup` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) Type=MyISAM COMMENT='Contains data used for template variable access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for template variable access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
@@ -319,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
 	PRIMARY KEY  (id),
 	KEY idx_tmplvarid (tmplvarid),
 	KEY idx_id (contentid)
-) TYPE=MyISAM COMMENT='Site Template Variables Content Values Link Table';
+) ENGINE=MyISAM COMMENT='Site Template Variables Content Values Link Table';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
@@ -327,7 +325,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
 	`templateid` int(11) NOT NULL default '0',
 	`rank` int(11) NOT NULL default '0',
 	PRIMARY KEY (`tmplvarid`, `templateid`)
-) TYPE=MyISAM COMMENT='Site Template Variables Templates Link Table';
+) ENGINE=MyISAM COMMENT='Site Template Variables Templates Link Table';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
@@ -346,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvars` (
 	`default_text` text,
 	PRIMARY KEY  (id),
 	KEY `indx_rank`(`rank`)	
-) TYPE=MyISAM COMMENT='Site Template Variables';
+) ENGINE=MyISAM COMMENT='Site Template Variables';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
@@ -375,7 +373,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
   `comment` varchar(255) NOT NULL default '' COMMENT 'short comment',  
   PRIMARY KEY  (`id`),
   KEY `userid` (`internalKey`)
-) TYPE=MyISAM COMMENT='Contains information about the backend users.';
+) ENGINE=MyISAM COMMENT='Contains information about the backend users.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_messages` (
@@ -389,7 +387,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_messages` (
   `postdate` int(20) NOT NULL default '0',
   `messageread` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains messages for the Content Manager messaging system.';
+) ENGINE=MyISAM COMMENT='Contains messages for the Content Manager messaging system.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
@@ -465,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_roles` (
   `export_static` int(1) NOT NULL default '0',
   `remove_locks` int(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM COMMENT='Contains information describing the user roles.';
+) ENGINE=MyISAM COMMENT='Contains information describing the user roles.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
@@ -474,7 +472,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_settings` (
   `setting_value` text,
   KEY `setting_name` (`setting_name`),
   KEY `user` (`user`)
-) Type=MyISAM COMMENT='Contains backend user settings.';
+) ENGINE=MyISAM COMMENT='Contains backend user settings.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_groups` (
@@ -483,7 +481,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_groups` (
   `webuser` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE INDEX `ix_group_user` (`webgroup`,`webuser`)
-) Type=MyISAM COMMENT='Contains data used for web access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_access` (
@@ -491,7 +489,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_access` (
   `webgroup` int(10) NOT NULL default '0',
   `documentgroup` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) Type=MyISAM COMMENT='Contains data used for web access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_names` (
@@ -499,7 +497,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}webgroup_names` (
   `name` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) Type=MyISAM COMMENT='Contains data used for web access permissions.';
+) ENGINE=MyISAM COMMENT='Contains data used for web access permissions.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
@@ -528,7 +526,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
   `comment` varchar(255) NOT NULL default '' COMMENT 'short comment',  
   PRIMARY KEY  (`id`),
   KEY `userid` (`internalKey`)
-) Type=MyISAM COMMENT='Contains information for web users.';
+) ENGINE=MyISAM COMMENT='Contains information for web users.';
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
@@ -538,7 +536,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_users` (
   `cachepwd` varchar(100) NOT NULL default '' COMMENT 'Store new unconfirmed password',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`)
-) Type=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
@@ -547,7 +545,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_settings` (
   `setting_value` text,
   KEY `setting_name` (`setting_name`),
   KEY `webuserid` (`webuser`)
-) Type=MyISAM COMMENT='Contains web user settings.';
+) ENGINE=MyISAM COMMENT='Contains web user settings.';
 
 
 # upgrade-able[[ - This block of code will be executed during upgrades
@@ -861,12 +859,12 @@ REPLACE INTO `{PREFIX}site_templates`
 # Default Site Documents
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','MODx CMS Install Success','Welcome to the MODx Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed MODx.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://modxcms.com/forums/\" target=\"_blank\">MODx Community</a> provides a great starting point to learn all things MODx, or you can also <a href=\"http://modxcms.com/learn/it.html\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to MODx!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0);
+REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','ClipperCMS Install Success','Welcome to the Clipper Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed ClipperCMS.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://clippercms.com/forums/\" target=\"_blank\">ClipperCMS Community</a> provides a great starting point to learn all things Clipper, or you can also <a href=\"http://modxcms.com/learn/it.html\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to ClipperCMS!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0);
 
 
-REPLACE INTO `{PREFIX}manager_users` 
-(id, username, password)VALUES 
-(1, '{ADMIN}', MD5('{ADMINPASS}'));
+#REPLACE INTO `{PREFIX}manager_users` 
+#(id, username, password)VALUES 
+#(1, '{ADMIN}', MD5('{ADMINPASS}'));
 
 
 REPLACE INTO `{PREFIX}user_attributes` 
@@ -888,14 +886,14 @@ REPLACE INTO `{PREFIX}user_roles`
 
 INSERT IGNORE INTO `{PREFIX}system_settings` 
 (setting_name, setting_value) VALUES 
-('manager_theme','MODxCarbon'),
+('manager_theme','ClipperCarbon'),
 ('settings_version',''),
 ('show_meta','0'),
 ('server_offset_time','0'),
 ('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
-('site_name','My MODx Site'),
+('site_name','My Clipper Site'),
 ('site_start','1'),
 ('error_page','1'),
 ('unauthorized_page','1'),
@@ -919,7 +917,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('failed_login_attempts','3'),
 ('blocked_minutes','60'),
 ('use_captcha','0'),
-('captcha_words','MODx,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
+('captcha_words','Clipper,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
 ('emailsender','{ADMINEMAIL}'),
 ('emailsubject','Your login details'),
 ('number_of_logs','100'),
@@ -956,8 +954,6 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('tinymce_custom_buttons1','undo,redo,selectall,separator,pastetext,pasteword,separator,search,replace,separator,nonbreaking,hr,charmap,separator,image,link,unlink,anchor,media,separator,cleanup,removeformat,separator,fullscreen,print,code,help'),
 ('tinymce_custom_buttons2','bold,italic,underline,strikethrough,sub,sup,separator,bullist,numlist,outdent,indent,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect,separator,styleprops'),
 ('tree_show_protected', '0'),
-('rss_url_news', 'http://feeds.feedburner.com/modx-announce'),
-('rss_url_security', 'http://feeds.feedburner.com/modxsecurity'),
 ('validate_referer', '1'),
 ('datepicker_offset','-10'),
 ('xhtml_urls','1'),
@@ -965,7 +961,17 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('automatic_alias','1'),
 ('datetime_format','dd-mm-YYYY'),
 ('warning_visibility', '1'),
-('remember_last_tab', '0');
+('remember_last_tab', '0'),
+('error_handling_deprecated', '1'),
+('error_handling_silent', '0'),
+('jquery_url', 'assets/js/jquery.min.js'),
+('jquery_plugin_dir', 'assets/js/'),
+('jquery_noconflict', 0);
+
+REPLACE INTO `{PREFIX}system_settings`
+(setting_name, setting_value) VALUES
+('rss_url_news', 'http://www.clippercms.com/forum/index.php?board=3;type=rss;action=.xml;sa=news;limit=20'),
+('rss_url_security', 'http://www.clippercms.com/forum/index.php?board=22;type=rss;action=.xml;sa=news;limit=20');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -1133,8 +1139,8 @@ UPDATE `{PREFIX}user_roles` SET
 
 
 UPDATE `{PREFIX}user_settings` SET
-  `setting_value`='MODxCarbon'
+  `setting_value`='ClipperModern'
   WHERE `setting_name`='manager_theme';
 
 
-REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxCarbon');
+REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','ClipperModern');

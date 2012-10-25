@@ -1,5 +1,6 @@
 <?php
-if (IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 include_once ("browsercheck.inc.php");
 $browser = $client->property('browser');
 $_SESSION['browser'] = $browser;
@@ -10,7 +11,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
 <head>
-	<title><?php echo $site_name?> - (MODx CMS Manager)</title>
+	<title><?php echo $site_name.' - '.CMS_NAME; ?> manager</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset?>" />
 </head>
 <frameset rows="70,*" border="0">

@@ -1,5 +1,6 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 if(!$modx->hasPermission('settings')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -27,6 +28,13 @@ if (isset($_POST) && count($_POST) > 0) {
 					$v = $v .'/';
 				}
 				break;
+            case 'manager_language':
+                $langDir = realpath(MODX_BASE_PATH . 'manager/includes/lang');
+                $langFile = realpath(MODX_BASE_PATH . '/manager/includes/lang/' . $v . '.inc.php');
+                $langFileDir = dirname($langFile);
+                if($langDir !== $langFileDir || !file_exists($langFile)) {
+                    $v = 'english';
+                }
 			default:
 			break;
 		}

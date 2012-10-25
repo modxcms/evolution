@@ -4,12 +4,12 @@
 // mm_widget_tags
 // Adds a tag selection widget to the specified TVs
 //---------------------------------------------------------------------------------
-function mm_widget_tags($fields, $delimiter=',', $source='', $display_count=false, $roles='', $templates='') {
+function mm_widget_tags($fields, $delimiter=',', $source='', $display_count=false, $roles='', $templates=''){
 
 	global $modx, $content, $mm_fields;
 	$e = &$modx->Event;
 
-	if (useThisRule($roles, $templates)) {
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
 
 		$output = '';
 
@@ -95,7 +95,7 @@ function mm_widget_tags($fields, $delimiter=',', $source='', $display_count=fals
 				$output .= 'var '.$tv_id.'_tags = new TagCompleter("'.$tv_id.'", "'.$tv_id.'_tagList", "'.$delimiter.'"); ';
 
 		}
+		$e->output($output . "\n");
 	}
-	$e->output($output . "\n");
 }
 ?>

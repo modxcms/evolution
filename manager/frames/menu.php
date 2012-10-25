@@ -1,5 +1,6 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($modx->config['mail_check_timeperiod'])) {
 	$modx->config['mail_check_timeperiod'] = 5;
 }
@@ -217,7 +218,7 @@ if($modx->hasPermission('help')) { ?>
 	| <a href="index.php?a=9" target="main"><?php echo $_lang['help']?></a>
 <?php } ?>
 	| <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
-	| <span title="<?php echo $site_name ?> &ndash; <?php echo $modx_full_appname ?>"><?php echo $modx_version ?></span>&nbsp;
+	| <span title="<?php echo $site_name ?> &ndash; <?php echo CMS_FULL_APPNAME; ?>"><?php echo $modx_version ?></span>&nbsp;
 	<!-- close #supplementalNav --></div>
 </div>
 </div>

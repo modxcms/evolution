@@ -1,6 +1,27 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0.6 (Mar 08, 2012)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#7175] Fix sanitization to strip tags recursively in parser and in eForm
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#3799] Fix table creation on MySQL databases that no longer support TYPE keyword
+* [#3699] Fix fatal error using default value on a Template Variable with @INHERIT binding
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#3796] Fix manager_language not being sanitized
+* [JA879] improvement to pageCache read logic
+* Update minimum PHP version for manager to 4.3.3
+
+
 MODx Evolution 1.0.5 (Jan 19, 2011)
 ===================================
 --------------------------------------------

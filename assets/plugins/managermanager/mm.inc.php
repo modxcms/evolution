@@ -1,48 +1,24 @@
 <?php
-/*
-    @name       ManagerManager
-    @version    0.3.9
-    
-    @for        MODx Evolution 1.0.x
-    
-    @author     Nick Crossland - www.rckt.co.uk
-    
-    @DESCRIPTION
-    Used to manipulate the display of document fields in the manager.
-    
-    @INSTALLATION:
-    See /docs/install.htm
-    
-    @INSPIRATION:
-    HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
-	
-	@LICENSE:
-	(c) Rocket Science Solutions Ltd - www.rckt.co.uk	
-	Released under the GNU General Public License: http://creativecommons.org/licenses/GPL/2.0/
-	
-*/
+/**
+ * @name ManagerManager
+ * @version clipper-0.3.12 (2012-09-07)
+ * 
+ * @for Clipper 1.1
+ * 
+ * @author Nick Crossland - www.rckt.co.uk, studio DivanDesign - www.DivanDesign.biz, the ClipperCMS team
+ * 
+ * @description Used to manipulate the display of document fields in the manager. Derived from ManagerManager 0.3.11 for MODx Evo.
+ * 
+ * @installation See /docs/install.htm
+ * 
+ * @inspiration HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
+ * 
+ * @license Released under the GNU General Public License: http://creativecommons.org/licenses/GPL/2.0/
+ */
 
-$mm_version = '0.3.9'; 
-
+$mm_version = '0.3.11'; 
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
-
-
-
-// JS URL
-switch ($which_jquery) {
- case 'local (assets/js)':
-  $js_url  = $js_default_url_local; 
- break;
-
- case 'remote (google code)':
-  $js_url  = $js_default_url_remote;
- break;
-
- case 'manual url (specify below)':
-  $js_url  = $js_src_override;
- break;
-}
 
 // Should we remove deprecated Template variable types from the TV creation list?
 $remove_deprecated_tv_types = ($remove_deprecated_tv_types_pref == 'yes') ? true : false;
@@ -258,7 +234,7 @@ case 'OnPluginFormRender':
 		
 		// Load the jquery library
 		$output = '<!-- Begin ManagerManager output -->' . "\n";
-		$output .= includeJs($js_url, 'html');
+		$output .= $modx->getJqueryTag();
 		
 		$output .= '<script type="text/javascript">' . "\n";
 		$output .= "var \$j = jQuery.noConflict(); \n"; //produces var  $j = jQuery.noConflict();
@@ -300,7 +276,7 @@ case 'OnDocFormPrerender':
 
 	// Load the jquery library
 	echo '<!-- Begin ManagerManager output -->';
-	echo includeJs($js_url, 'html');	
+	echo $modx->getJqueryTag();
 
 	// Create a mask to cover the page while the fields are being rearranged
 	echo '		
@@ -421,7 +397,7 @@ $j(document).ready(function() {
 </script>
 <!-- ManagerManager Plugin :: End -->
 		');
-	break;
+break;
 
 
 
@@ -433,7 +409,7 @@ case 'OnTVFormRender':
 
 		// Load the jquery library
 		echo '<!-- Begin ManagerManager output -->';
-		echo includeJs($js_url, 'html');	
+		echo $modx->getJqueryTag();
 	
 		// Create a mask to cover the page while the fields are being rearranged
 		echo '		
@@ -453,6 +429,13 @@ case 'OnTVFormRender':
 break;
 
 
+case 'OnBeforeDocFormSave':
+	global $template;
+	
+	$mm_current_page['template'] = $template;
+	
+	make_changes($config_chunk);
+break;
 
 } // end switch
 

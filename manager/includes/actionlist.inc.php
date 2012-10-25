@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 // action list
 $GLOBALS['action_list'] = array(
@@ -9,7 +9,7 @@ $GLOBALS['action_list'] = array(
 	'4'	=> 'Creating a resource',
 	'5'	=> 'Saving resource',
 	'6'	=> 'Deleting resource',
-	'7'	=> 'Waiting while MODx cleans up',
+	'7'	=> 'Waiting while '.CMS_NAME.' cleans up',
 	'8'	=> 'Logged out',
 	'9'	=> 'Viewing help',
 	'10'	=> 'Viewing/ composing messages',
@@ -60,7 +60,7 @@ $GLOBALS['action_list'] = array(
 	'56'	=> 'Refresh resource tree',
 	'57'	=> 'Refresh menu',
 	'58'	=> 'Logged in',
-	'59'	=> 'About MODx',
+	'59'	=> 'About '.CMS_NAME,
 	'60'	=> 'Emptying Recycle Bin',
 	'61'	=> 'Publishing a resource',
 	'62'	=> 'Un-publishing a resource',

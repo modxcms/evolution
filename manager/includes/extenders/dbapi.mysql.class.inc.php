@@ -209,6 +209,26 @@ class DBAPI {
     * @desc:  returns either last id inserted or the result from the query
     */
    function insert($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
+   	return $this->__insert('INSERT', $fields, $intotable, $fromfields, $fromtable, $where, $limit);
+   }
+
+   /**
+    * @name:  insert ignore
+    * @desc:  returns either last id inserted or the result from the query
+    */
+   function insert_ignore($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
+   	return $this->__insert('INSERT IGNORE', $fields, $intotable, $fromfields, $fromtable, $where, $limit);
+   }   
+   
+   /**
+    * @name:  replace
+    * @desc:  returns either last id inserted or the result from the query
+    */
+   function replace($fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
+   	return $this->__insert('REPLACE', $fields, $intotable, $fromfields, $fromtable, $where, $limit);
+   }   
+
+   private function __insert($insert_method, $fields, $intotable, $fromfields = "*", $fromtable = "", $where = "", $limit = "") {
       if (!$intotable)
          return false;
       else {
@@ -225,7 +245,7 @@ class DBAPI {
                $sql = "SELECT $fromfields FROM $fromtable $where $limit";
             }
          }
-         $rt = $this->query("INSERT INTO $intotable $flds $sql");
+         $rt = $this->query("$insert_method $intotable $flds $sql");
          $lid = $this->getInsertId();
          return $lid ? $lid : $rt;
       }

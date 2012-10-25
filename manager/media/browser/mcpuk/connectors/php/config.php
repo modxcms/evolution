@@ -41,7 +41,7 @@ include("../../../../../includes/config.inc.php");
 startCMSSession(); 
 if(!isset($_SESSION['mgrValidated'])) {
 	if(!isset($_SESSION['webValidated'])){
-		die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+		exit();
 	}
 }
 

@@ -1,6 +1,6 @@
 <?php
-if (IN_MANAGER_MODE != "true")
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
+
 if (!$modx->hasPermission('save_user')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -35,6 +35,7 @@ function generate_password($length = 10) {
 $id = intval($_POST['id']);
 $oldusername = $_POST['oldusername'];
 $newusername = !empty ($_POST['newusername']) ? trim($_POST['newusername']) : "New User";
+$newusername_esc = $modx->db->escape($newusername);
 $fullname = $modx->db->escape($_POST['fullname']);
 $genpassword = $_POST['newpassword'];
 $passwordgenmethod = $_POST['passwordgenmethod'];
@@ -96,7 +97,7 @@ if ($_SESSION['mgrRole'] != 1) {
 switch ($_POST['mode']) {
 	case '11' : // new user
 		// check if this user name already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername'";
+		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername_esc'";
 		if (!$rs = $modx->db->query($sql)) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
@@ -149,8 +150,11 @@ switch ($_POST['mode']) {
 		));
 
 		// build the SQL
-		$sql = "INSERT INTO $dbase.`" . $table_prefix . "manager_users` (username, password)
-						VALUES('" . $newusername . "', md5('" . $newpassword . "'));";
+		require ('hash.inc.php');
+		$HashHandler = new HashHandler(CLIPPER_HASH_PREFERRED, $modx);
+		$Hash = $HashHandler->generate($newpassword);
+		$sql = 'INSERT INTO '.$dbase.'.`'.$table_prefix.'manager_users` (username, hashtype, salt, password)
+						VALUES(\''.$newusername_esc.'\', '.CLIPPER_HASH_PREFERRED.', \''.$modx->db->escape($Hash->salt).'\', \''.$modx->db->escape($Hash->hash).'\')';
 		$rs = $modx->db->query($sql);
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user.");
@@ -269,14 +273,18 @@ switch ($_POST['mode']) {
 				webAlert("No password generation method specified!");
 				exit;
 			}
-			$updatepasswordsql = ", password=MD5('$newpassword') ";
+			
+			require ('hash.inc.php');
+			$HashHandler = new HashHandler(CLIPPER_HASH_PREFERRED, $modx);
+			$Hash = $HashHandler->generate($newpassword);
+			$updatepasswordsql = ', hashtype='.CLIPPER_HASH_PREFERRED.', salt=\''.$modx->db->escape($Hash->salt).'\', password=\''.$modx->db->escape($Hash->hash).'\'';
 		}
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
 		}
 
 		// check if the username already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername'";
+		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "manager_users` WHERE username='$newusername_esc'";
 		if (!$rs = $modx->db->query($sql)) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
@@ -577,7 +585,7 @@ function saveUserSettings($id) {
 	$savethese = array();
 	foreach ($settings as $k => $v) {
 	    if(is_array($v)) $v = implode(',', $v);
-	    $savethese[] = '('.$id.', \''.$k.'\', \''.$modx->db->escape($v).'\')';
+	    $savethese[] = '('.$id.', \''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
 
 	$sql = 'INSERT INTO '.$usrTable.' (user, setting_name, setting_value)

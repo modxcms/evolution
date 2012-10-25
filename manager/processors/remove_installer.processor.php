@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Installer remover processor
  * --------------------------------

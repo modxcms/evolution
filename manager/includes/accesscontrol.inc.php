@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(!defined('IN_MANAGER_MODE') || IN_MANAGER_MODE != 'true') exit();
 
 if (isset($_SESSION['mgrValidated']) && $_SESSION['usertype']!='manager'){
 //		if (isset($_COOKIE[session_name()])) {
@@ -112,10 +112,11 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
 	// load template file
-    $tplFile = $base_path.'assets/templates/manager/login.html';
-    $handle = fopen($tplFile, "r");
+	$tplFile = $base_path.'manager/media/style/'.$modx->config['manager_theme'].'/html/login.html'; // Moved out of assets/templates/manager (TimGS)
+	$handle = fopen($tplFile, 'r');
 	$tpl = fread($handle, filesize($tplFile));
 	fclose($handle);
+	$modx->setPlaceholder('manager_theme_url', "media/style/{$modx->config['manager_theme']}/");
 
     // merge placeholders
     $tpl = $modx->mergePlaceholderContent($tpl);
