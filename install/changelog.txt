@@ -6,6 +6,7 @@ MODx Evolution 1.0.7 (Nov 26, 2012)
 --------------------------------------------
 Security:
 --------------------------------------------
+* Prevent users from unblocking themselves in Forgot Manager Login plugin
 * [#9175] Escape $hash in Forgot Manager Login plugin
 
 
