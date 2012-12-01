@@ -1,6 +1,15 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0.7 (Nov 26, 2012)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* Prevent users from unblocking themselves in Forgot Manager Login plugin
+* [#9175] Escape $hash in Forgot Manager Login plugin
+
+
 MODx Evolution 1.0.6 (Mar 08, 2012)
 ===================================
 --------------------------------------------

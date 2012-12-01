@@ -5,7 +5,7 @@
  * Resets your manager login when you forget your password via email confirmation
  *
  * @category 	plugin
- * @version 	1.1.2
+ * @version 	1.1.4
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@events OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender 
  * @internal	@modx_category Manager and Admin
@@ -48,7 +48,7 @@ EOD;
             $user_id = $user_id == false ? false : $modx->db->escape($user_id);
             $username = $modx->db->escape($username);
             $email = $modx->db->escape($email);
-            $emaail = $modx->db->escape($hash);
+            $hash = $modx->db->escape($hash);
 
 			$pre = $modx->db->config['table_prefix'];
 			$site_id = $modx->config['site_id'];
@@ -182,7 +182,7 @@ if($event_name == 'OnManagerLoginFormRender') {
     if($forgot->errors) { $output = $forgot->getErrorOutput() . $forgot->getLink(); }
 }
 
-if($event_name == 'OnBeforeManagerLogin') {
+if($event_name == 'OnBeforeManagerLogin' && $hash && $username) {
     $user = $forgot->getUser(false, $username, '', $hash);
     if($user && is_array($user) && !$forgot->errors) {
         $forgot->unblockUser($user['id']);
