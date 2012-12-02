@@ -743,13 +743,13 @@ function propUpdate($new,$old){
 
     foreach ($newArr as $k => $v) {
         if(!empty($v)){
-            $tempArr = explode("=",trim($v));
+            $tempArr = explode("=",mysql_real_escape_string(trim($v)));
             $returnArr[$tempArr[0]] = $tempArr[1];
         }
     }
     foreach ($oldArr as $k => $v) {
         if(!empty($v)){
-            $tempArr = explode("=",trim($v));
+            $tempArr = explode("=",mysql_real_escape_string(trim($v)));
             $returnArr[$tempArr[0]] = $tempArr[1];
         }
     }
