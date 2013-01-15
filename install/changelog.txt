@@ -1,6 +1,13 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0.8 (Jan 08, 2013)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#9391] Prevent hash array exploit in Forgot Manager Login plugin
+
 MODx Evolution 1.0.7 (Nov 26, 2012)
 ===================================
 --------------------------------------------
