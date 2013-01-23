@@ -78,6 +78,8 @@ $upload_flash = explode(',',$upload_flash);
 $fckphp_config['modx']['file_permissions'] = octdec($new_file_permissions);
 $fckphp_config['modx']['folder_permissions'] = octdec($new_folder_permissions);
 $fckphp_config['modx']['charset'] = $settings['modx_charset'];
+// use Transliteration for File Uploads
+$fckphp_config['modx']['clean_uploaded_filename'] = $settings['clean_uploaded_filename'];
 // ** END FOR MODx
 
 
