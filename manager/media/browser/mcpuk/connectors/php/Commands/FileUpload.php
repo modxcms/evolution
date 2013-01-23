@@ -23,6 +23,25 @@ class FileUpload {
 	var $cwd;
 	var $actual_cwd;
 	var $newfolder;
+	
+	function cleanFilename($filename) {		
+		$pathinfo = pathinfo($filename);
+		$filename = strip_tags($pathinfo['filename']); // strip HTML
+		if ($this->fckphp_config['modx']['clean_uploaded_filename']) {
+			$tl_path = $this->fckphp_config['basedir'].'/plugins/transalias/transliterations/common.php';
+			if (is_file($tl_path)) {
+				$tl_table = include $tl_path;
+				$filename = strtr($filename, $tl_table);
+			}
+			$filename = preg_replace('/[^\.A-Za-z0-9 _-]/', '', $filename); // strip non-alphanumeric characters
+			$filename = preg_replace('/\s+/', '_', $filename); // convert white-space to underscore
+			$filename = preg_replace('/_+/', '_', $filename);  // convert multiple underscores to one
+			$filename = preg_replace('/-+/', '-', $filename);  // convert multiple dashes to one
+			$filename = trim($filename, '_-'); // trim excess
+			$filename = strtolower($filename); // lowercase
+		}
+		return "{$filename}.{$pathinfo['extension']}";
+	}
 
 	function FileUpload($fckphp_config,$type,$cwd) {
 		$this->fckphp_config=$fckphp_config;
@@ -47,6 +66,10 @@ class FileUpload {
 			} else {
 				$disp="202,'Incomplete file information from upload CGI'";
 			}
+		}
+		
+		if (isset($_FILES['NewFile']) && isset($_FILES['NewFile']['name']) && !empty($_FILES['NewFile']['name'])) {
+			$_FILES['NewFile']['name'] = $this->cleanFilename($_FILES['NewFile']['name']);
 		}
 
 		$typeconfig=$this->fckphp_config['ResourceAreas'][$this->type];
