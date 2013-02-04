@@ -168,6 +168,12 @@ class Wayfinder {
     function renderRow(&$resource,$numChildren) {
         global $modx;
         $output = '';
+
+      // Addet by MrSwed. Set id of reference to original document ID if it is inner doc
+      if (($this->_config['referenceUseOriginalID'] !== 'FALSE') && $resource['type'] == 'reference' && is_numeric($resource['content'])) {
+       $resource['id'] = $resource['content'];
+      }
+
 		//Determine which template to use
         if ($this->_config['displayStart'] && $resource['level'] == 0) {
 			$usedTemplate = 'startItemTpl';
