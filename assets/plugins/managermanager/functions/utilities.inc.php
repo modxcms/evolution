@@ -142,7 +142,7 @@ function makeSqlList($arr) {
 	$arr = makeArray($arr);
 	foreach($arr as $k=>$tv) {
         //if (substr($tv, 0, 2) == 'tv') {$tv=substr($tv,2);}
-		$arr[$k] = "'".mysql_escape_string($tv)."'"; // Escape them for MySQL
+		$arr[$k] = "'".mysql_real_escape_string($tv)."'"; // Escape them for MySQL
 	}
 	$sql = " (".implode(',',$arr).") ";
 	return $sql;
