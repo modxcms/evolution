@@ -153,7 +153,7 @@ class template{
 	// Function: replace
 	// Replcae placeholders with their values
 	// ---------------------------------------------------
-    function replace( $placeholders, $tpl ) {
+    public static function replace( $placeholders, $tpl ) {
 		$keys = array();
 		$values = array();
 		foreach ($placeholders as $key=>$value) {
