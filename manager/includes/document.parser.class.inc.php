@@ -542,7 +542,7 @@ class DocumentParser {
         $phpTime= sprintf("%2.4f s", $phpTime);
         $source= $this->documentGenerated == 1 ? "database" : "cache";
         $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " МБ";
+        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " mb";
 
         $out =& $this->documentOutput;
         if ($this->dumpSQL) {
