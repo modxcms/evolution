@@ -501,7 +501,7 @@ class DocumentParser {
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+') > -1) {
             $matches= array ();
-            preg_match_all('~\[\+(.*?)\+\]~', $this->documentOutput, $matches);
+            preg_match_all('~\[\+(.*?)\+\]~s', $this->documentOutput, $matches);
             if ($matches[0])
                 $this->documentOutput= str_replace($matches[0], '', $this->documentOutput);
         }
