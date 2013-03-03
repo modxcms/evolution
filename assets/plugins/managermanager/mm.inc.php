@@ -133,7 +133,6 @@ foreach ($all_tvs as $thisTv) {
 		case 'rawtextarea': 
 		case 'textareamini':
 		case 'richtext':
-		case 'custom_tv':
 			$t = 'textarea';
 		break;
 		
