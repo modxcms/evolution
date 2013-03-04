@@ -319,14 +319,14 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
 					switch ($datatype)  {
 
 						case "integer":
-							$value = number_format($value);
+							$value = number_format( (float) $value);	//EM~
 							break;
 						case "float":
 							$localeInfo = localeconv();
 							$th_sep = empty($_lang['ef_thousands_separator'])?$localeInfo['thousands_sep']:$_lang['ef_thousands_separator'];
 							$dec_point= $localeInfo['decimal_point'];
 $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
-							$value = number_format($value, 2, $dec_point, $th_sep);
+							$value = number_format((float) $value, 2, $dec_point, $th_sep);	//EM~
 							break;
 						case "date":
 							$format_string = isset($_lang['ef_date_format']) ? $_lang['ef_date_format'] : '%d-%b-%Y %H:%M:%S';
