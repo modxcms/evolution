@@ -6,7 +6,7 @@ function daysInMonth($month, $year) {
 } 
 
 function convertdate($date) {
-	list ($day, $month, $year) = split ("-", $date);
+	list ($day, $month, $year) = explode ("-", $date);
 	$date_valid = checkdate($month, $day, $year);
 	if($date_valid==false) {
 		echo "checkdate() returned false.";
