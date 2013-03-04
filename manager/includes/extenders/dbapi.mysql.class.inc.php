@@ -501,5 +501,30 @@ class DBAPI {
    function getVersion() {
        return mysql_get_server_info();
    }
+   
+   /**
+    * @name replaceFullTableName
+    * @desc  Get full table name. Append table name and table prefix.
+    * 
+    * @param string $str
+    * @return string 
+    */
+   function replaceFullTableName($str,$force=null) {
+       
+       $str = trim($str);
+       $dbase  = trim($this->config['dbase'],'`');
+       $prefix = $this->config['table_prefix'];
+       if(!empty($force))
+       {
+           $result = "`{$dbase}`.`{$prefix}{$str}`";
+       }
+       elseif(strpos($str,'[+prefix+]')!==false)
+       {
+           $result = preg_replace('@\[\+prefix\+\]([0-9a-zA-Z_]+)@', "`{$dbase}`.`{$prefix}$1`", $str);
+       }
+       else $result = $str;
+       
+       return $result;
+   }
 }
 ?>
