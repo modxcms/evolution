@@ -271,6 +271,7 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 						$fieldname = $mm_fields[$field]['fieldname'];
 						$output .= '
 						var toMove = $j(":input[name=\''.$fieldname.'\']").parents("tr:not(.urltv)"); // Identify the table row to move
+						toMove.find("script").remove();
 						toMove.next("tr").find("td[colspan=2]").parents("tr").remove(); // Get rid of line after, if there is one
 						var movedTV = toMove.appendTo("#tab'.$newtab.'>table:first"); // Move the table row
 						movedTV.after(ruleHtml); // Insert a rule after 
