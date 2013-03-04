@@ -699,9 +699,9 @@ function AttachFilesToMailer(&$mail,&$attachFiles) {
 function  eFormParseTemplate($tpl, $isDebug=false ){
 	global $modx,$formats,$optionsName,$_lang,$debugText,$fields,$validFormId;
 	global $efPostBack;
-
-	$formats =""; //clear formats so values don't persist through multiple snippet calls
-	$labels = "";
+    	
+    $formats = array();  //clear formats so values don't persist through multiple snippet calls
+    $labels = array();
 
 	$regExpr = "#(<label[^>]*?>)(.*?)</label>#si";;
 	preg_match_all($regExpr,$tpl,$matches);
