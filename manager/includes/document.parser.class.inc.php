@@ -794,7 +794,7 @@ class DocumentParser {
 			$error_info = error_get_last();
 			if($error_info['type']===2048 || $error_info['type']===8192) $error_type = 2;
 			else                                                         $error_type = 3;
-			if(2<$error_type) {
+			if(1<$this->config['error_reporting'] || 2<$error_type) {
 				extract($error_info);
 				if($msg===false) $msg = 'ob_get_contents() error';
 				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
@@ -819,12 +819,12 @@ class DocumentParser {
         $snip= eval ($snippet);
         $msg= ob_get_contents();
         ob_end_clean();
-		if (isset($php_errormsg))
+		if ((0<$this->config['error_reporting']) && isset($php_errormsg))
 		{
 			$error_info = error_get_last();
 			if($error_info['type']===2048 || $error_info['type']===8192) $error_type = 2;
 			else                                                         $error_type = 3;
-			if(2<$error_type)
+			if(1<$this->config['error_reporting'] || 2<$error_type)
 			{
 				extract($error_info);
 				if($msg===false) $msg = 'ob_get_contents() error';

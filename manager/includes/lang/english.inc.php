@@ -1081,4 +1081,11 @@ $_lang["yourinfo_role"] = 'Your role is:';
 $_lang["yourinfo_title"] = 'Your info';
 $_lang["yourinfo_total_logins"] = 'Total number of logins:';
 $_lang["yourinfo_username"] = 'You are logged in as:';
-?>
+
+$_lang['a17_error_reporting_title'] = 'Detection level of the PHP error';
+$_lang['a17_error_reporting_msg'] = 'Set the detection level of the PHP error.';
+$_lang['a17_error_reporting_opt0'] = 'Ignore all';
+$_lang['a17_error_reporting_opt1'] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang['a17_error_reporting_opt2'] = 'Detect all errors except E_NOTICE';
+$_lang['a17_error_reporting_opt99'] = 'Detect all';
+

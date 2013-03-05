@@ -751,6 +751,19 @@ function confirmLangChange(el, lkey, elupd){
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+		<tr>
+		<?php if(!isset($error_reporting)) $error_reporting = '1'; ?>
+		<th><?php echo $_lang['a17_error_reporting_title']; ?></th>
+		<td>
+			<?php echo wrap_label($_lang['a17_error_reporting_opt0'], form_radio('error_reporting','0' , $error_reporting==='0'));?><br />
+			<?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting','1' , $error_reporting==='1'));?><br />
+			<?php echo wrap_label($_lang['a17_error_reporting_opt2'], form_radio('error_reporting','2' , $error_reporting==='2'));?><br />
+			<?php echo wrap_label($_lang['a17_error_reporting_opt99'],form_radio('error_reporting','99', $error_reporting==='99'));?><br />
+		<?php echo $_lang['a17_error_reporting_msg'];?></td>
+		</tr>
+           <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
           <?php
               // Check for GD before allowing captcha to be enabled
               $gdAvailable = extension_loaded('gd');
