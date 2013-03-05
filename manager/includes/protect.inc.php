@@ -23,26 +23,35 @@ if (@ ini_get('register_globals')) {
 
 // sanitize array
 if (!function_exists('modx_sanitize_gpc')) {
-    function modx_sanitize_gpc(&$target, $dummy = array(), $count = 0) {
+	function modx_sanitize_gpc(&$target, $dummy = array(), $count = 0) {
 		$tags = array('[', ']', '{', '}');
 		$replaced = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
-		foreach ($target as $key => $value) {
-			if (is_array($value)) {
+
+		$keys = array_keys($target);
+		$values = array_values($target);
+
+		for ($i = 0; $i < count($values); $i++) {
+			$key = str_replace($tags, $replaced, $keys[$i]);
+			$key = preg_replace('/<script/i', 'sanitized<s cript', $key);
+			$key = preg_replace('/&#(\d{1,4});?/', 'sanitized& #$1', $key);
+			$keys[$i] = $key;
+			if (is_array($values[$i])) {
 				$count++;
 				if (10 < $count) {
 					echo '<h1>Error: array nested too deep!</h1>';
 					exit;
 				}
-				modx_sanitize_gpc($value, $tags, $count);
+				modx_sanitize_gpc($values[$i], $tags, $count);
 			} else {
-				$value = str_replace($tags, $replaced, $value);
+				$value = str_replace($tags, $replaced, $values[$i]);
 				$value = preg_replace('/<script/i', 'sanitized<s cript', $value);
 				$value = preg_replace('/&#(\d{1,4});?/', 'sanitized& #$1', $value);
-				$target[$key] = $value;
+				$values[$i] = $value;
 			}
 			$count = 0;
 		}
-		return $target;
+
+		$target = array_combine($keys, $values);
 	}
 }
 
