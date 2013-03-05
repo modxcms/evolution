@@ -1424,4 +1424,14 @@ function get_lang_options($key=null, $selected_lang=null) {
         return $lang_options;
     }
 }
-?>
+
+function form_radio($name,$value,$checked=false,$add='',$disabled=false) {
+	if($checked)  $checked  = ' checked="checked"';
+	if($disabled) $disabled = ' disabled';
+	if($add)     $add = ' ' . $add;
+	return '<input type="radio" name="' . $name . '" value="' . $value . '"' . $checked . $disabled . $add . ' />';
+}
+
+function wrap_label($str='',$object) {
+	return "<label>{$object}\n{$str}</label>";
+}
