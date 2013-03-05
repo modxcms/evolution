@@ -112,10 +112,15 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
 	// load template file
-    $tplFile = $base_path.'assets/templates/manager/login.html';
-    $handle = fopen($tplFile, "r");
-	$tpl = fread($handle, filesize($tplFile));
-	fclose($handle);
+	$tplFile = $base_path.'assets/templates/manager/login.html';
+	if (file_exists($tplFile) ) {
+    	$handle = fopen($tplFile, "r");
+    	$tpl = fread($handle, filesize($tplFile));
+    	fclose($handle);
+	}
+	else {
+    	trigger_error('The manager template file was not found: '.$tplFile);
+	}
 
     // merge placeholders
     $tpl = $modx->mergePlaceholderContent($tpl);
