@@ -669,9 +669,19 @@ class Qm {
                                     // Get parent document id
                                     $pid = $content['parent'] ? $content['parent'] : intval($_REQUEST['pid']);
                                     
-                                    // Get inheritTpl TV
-                                    $tv = $this->modx->getTemplateVar("inheritTpl", "", $pid);
-                                    
+                                    if ($this->modx->config['auto_template_logic'] == "sibling") {
+                                      // Eoler: template_autologic in Evolution 1.0.5+
+                                      $tv = array();
+                                      if ($sibl = $this->modx->getDocumentChildren($pid, 1, 0, 'template', '', 'menuindex', 'ASC', 1)) {
+                                        $tv['value'] = $sibl[0]['template'];
+                                      } elseif ($sibl = $this->modx->getDocumentChildren($pid, 0, 0, 'template', '', 'menuindex', 'ASC', 1)) {
+                                        $tv['value'] = $sibl[0]['template'];
+                                      }
+                                    } else {
+                                      // Get inheritTpl TV
+                                      $tv = $this->modx->getTemplateVar("inheritTpl", "", $pid);
+                                    }
+
                                     // Set template to inherit
                                     if ($tv['value'] != '') $content['template'] = $tv['value'];
                                     else $content['template'] = $this->modx->config['default_template'];
