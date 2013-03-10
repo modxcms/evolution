@@ -8,7 +8,7 @@ var mce_valid_elements = "@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|oncl
 + "name|href|target|title|class|onfocus|onblur],strong/b,em/i,strike,u,"
 + "#p[align],-ol[type|compact],-ul[type|compact],-li,br,img[longdesc|usemap|"
 + "src|border|alt=|title|hspace|vspace|width|height|align],-sub,-sup,"
-+ "-blockquote,-table[border=0|cellspacing|cellpadding|width|frame|rules|"
++ "-blockquote,-table[border|cellspacing|cellpadding|width|frame|rules|"
 + "height|align|summary|bgcolor|background|bordercolor],-tr[rowspan|width|"
 + "height|align|valign|bgcolor|background|bordercolor],tbody,thead,tfoot,"
 + "#td[colspan|rowspan|width|height|align|valign|bgcolor|background|bordercolor"
