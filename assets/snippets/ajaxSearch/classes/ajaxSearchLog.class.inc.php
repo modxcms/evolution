@@ -143,7 +143,7 @@ class AjaxSearchLog {
     */
     function updateComment($logid, $ascmt) {
         global $modx;
-        $fields['comment'] = $ascmt;
+        $fields['comment'] = $modx->db->escape($ascmt);
         $where = "id='" . $logid . "'";
         $modx->db->update($fields, $this->_tbName, $where);
         return true;
