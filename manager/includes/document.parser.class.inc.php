@@ -1347,6 +1347,7 @@ class DocumentParser {
 	$LoginUserID = $this->getLoginUserID();
 	if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
+		$type=(int)$type;
         if ($type < 1) {
             $type= 1;
         }
