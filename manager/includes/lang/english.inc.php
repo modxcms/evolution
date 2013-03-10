@@ -1089,3 +1089,5 @@ $_lang['a17_error_reporting_opt1'] = 'Ignore the warning of a slight notice leve
 $_lang['a17_error_reporting_opt2'] = 'Detect all errors except E_NOTICE';
 $_lang['a17_error_reporting_opt99'] = 'Detect all';
 
+$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
+$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
