@@ -796,6 +796,17 @@ function confirmLangChange(el, lkey, elupd){
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+		<tr>
+			<th><?php echo $_lang["enable_bindings_title"] ?></th>
+			<td>
+				<?php echo wrap_label($_lang["yes"],form_radio('enable_bindings','1',$enable_bindings=='1' || !isset($enable_bindings)));?><br />
+				<?php echo wrap_label($_lang["no"], form_radio('enable_bindings','0',$enable_bindings=='0'));?><br />
+				<?php echo $_lang["enable_bindings_message"] ?>
+		</td>
+		</tr>
+           <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
           <?php
               // Check for GD before allowing captcha to be enabled
               $gdAvailable = extension_loaded('gd');

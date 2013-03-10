@@ -1091,3 +1091,6 @@ $_lang['a17_error_reporting_opt99'] = 'Detect all';
 
 $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+
+$_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
+$_lang['enable_bindings_message'] = 'Enable <a href="https://www.google.co.jp/search?q=modx+Bindings" target="_blank">@Bindings commands</a>. Describe any command in the entry field (template variable) on the contribution screen and carry out this function. When manage a site in plural members because the practice of the PHP sentence is possible, attention is necessary for the use of this function.';
