@@ -1,0 +1,11 @@
+input.size,
+input.number,
+input#style,
+input#id,
+input#lang,
+input#usemap,
+input#longdesc,
+input#classes,
+input#class_custom,
+input#class_list_custom
+	{ ime-mode:disabled; }
