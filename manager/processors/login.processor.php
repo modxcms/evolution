@@ -168,12 +168,49 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                         ));
 
 // check if plugin authenticated the user
-if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
-    // check user password - local authentication
-    if($dbasePassword != md5($givenPassword)) {
-            jsAlert($e->errors[901]);
-            $newloginerror = 1;
-    }
+
+if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
+{
+	// check user password - local authentication
+	$tbl_manager_users = $modx->getFullTableName('manager_users');
+	if(strpos($dbasePassword,'>')!==false)
+	{
+		if(!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) $modx->config['pwd_hash_algo'] = 'UNCRYPT';
+		$user_algo = $modx->manager->getUserHashAlgorithm($internalKey);
+		
+		if($user_algo !== $modx->config['pwd_hash_algo'])
+		{
+			$bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
+			$modx->config['pwd_hash_algo'] = $user_algo;
+		}
+		
+		if($dbasePassword != $modx->manager->genHash($givenPassword, $internalKey))
+		{
+			jsAlert($e->errors[901]);
+			$newloginerror = 1;
+		}
+		elseif(isset($bk_pwd_hash_algo))
+		{
+			$modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
+			$field = array();
+			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+			$modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+		}
+	}
+	else
+	{
+		if($dbasePassword != md5($givenPassword))
+		{
+			jsAlert($e->errors[901]);
+			$newloginerror = 1;
+		}
+		else
+		{
+			$field = array();
+			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+			$modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+		}
+	}
 }
 
 if($use_captcha==1) {
