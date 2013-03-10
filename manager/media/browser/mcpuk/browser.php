@@ -1,5 +1,4 @@
 <?php
-
 define('MODX_BASE_PATH', realpath('../../../../'));
 $rb = new FBROWSER();
 $ph = array();
@@ -11,20 +10,20 @@ class FBROWSER
 {
 	function seturl_js()
 	{
-		$seturl_js_filename = 'seturl_js_'  . htmlspecialchars($_GET['editor']) . '.inc';
+		$seturl_js_filename = (isset($_GET['editor']) && !stristr($_GET['editor'],"..")) ? 'seturl_js_'  . htmlspecialchars($_GET['editor']) . '.inc' : '';
 		$seturl_js_path = MODX_BASE_PATH . 'assets/plugins/';
 		
-		if(file_exists($seturl_js_path . $seturl_js_filename))
+		if($seturl_js_filename!='' && file_exists($seturl_js_path . $seturl_js_filename))
 		{
 			$result = file_get_contents($seturl_js_path . $seturl_js_filename);
 		}
 		else
 		{
-			$editor_path = htmlspecialchars($_GET['editorpath'], ENT_QUOTES);
 			switch($_GET['editor'])
 			{
 				case 'tinymce' :
 				case 'tinymce3':
+					$editor_path = isset($_GET['editorpath']) ? htmlspecialchars($_GET['editorpath'], ENT_QUOTES) : '';
 					$result = file_get_contents('seturl_js_tinymce.inc');
 					$result = str_replace('[+editor_path+]', $editor_path, $result);
 					break;
