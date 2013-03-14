@@ -21,9 +21,11 @@ if(strlen($pass1)<6){
 	exit;
 }
 
-$sql = "UPDATE $dbase.`".$table_prefix."manager_users` SET password=md5('".$pass1."') where id=".$modx->getLoginUserID().";";
-$rs = mysql_query($sql);
-if(!$rs){
+	$tbl_manager_users = $modx->getFullTableName('manager_users');
+	$uid = $modx->getLoginUserID();
+	$f['password'] = $modx->manager->genHash($pass1, $uid);
+	$rs = $modx->db->update($f,$tbl_manager_users,"id='{$uid}'");
+	if(!$rs){
 	echo "An error occured while attempting to save the new password.";
 	exit;
 }
