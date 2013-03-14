@@ -296,6 +296,10 @@ class synccache{
              exit;
         }
 
+		if(!is_file($this->cachePath . '/.htaccess')) {
+			file_put_contents($this->cachePath . '/.htaccess', "order deny,allow\ndeny from all\n");
+		}
+
         // Write $somecontent to our opened file.
         if (fwrite($handle, $somecontent) === FALSE) {
            echo 'Cannot write main MODx cache file! Make sure the assets/cache directory is writable!';
