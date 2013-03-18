@@ -1,4 +1,4 @@
-document.write('<script language="javascript" type="text/javascript" src="jscripts/tiny_mce/tiny_mce_popup.js"></script>');
+document.write('<script language="javascript" type="text/javascript" src="tiny_mce/tiny_mce_popup.js"></script>');
 
 var FileBrowserDialogue = {
     init : function () {

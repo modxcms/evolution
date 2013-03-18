@@ -415,6 +415,17 @@ switch ($_POST['mode']) {
 		exit;
 }
 
+// in case any plugins include a quoted_printable function
+function save_user_quoted_printable($string) {
+	$crlf = "\n" ;
+	$string = preg_replace('!(\r\n|\r|\n)!', $crlf, $string) . $crlf ;
+	$f[] = '/([\000-\010\013\014\016-\037\075\177-\377])/e' ;
+	$r[] = "'=' . sprintf('%02X', ord('\\1'))" ; $f[] = '/([\011\040])' . $crlf . '/e' ;
+	$r[] = "'=' . sprintf('%02X', ord('\\1')) . '" . $crlf . "'" ;
+	$string = preg_replace($f, $r, $string) ;
+	return trim(wordwrap($string, 70, ' =' . $crlf)) ;
+}
+
 // Send an email to the user
 function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $websignupemail_message;
@@ -429,16 +440,27 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+saddr+]", $emailsender, $message);
 	$message = str_replace("[+semail+]", $emailsender, $message);
 	$message = str_replace("[+surl+]", $site_url, $message);
+	
+	$headers = "From: " . $emailsender . "\r\n";
+	$headers .= "X-Mailer: Content Manager - PHP/" . phpversion();
+	$headers .= "\r\n";
+	$headers .= "MIME-Version: 1.0\r\n";
+	$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
+	$headers .= "Content-Transfer-Encoding: quoted-printable\r\n";
+	$subject = "=?UTF-8?Q?".$emailsubject."?=";
+	$message = save_user_quoted_printable($message);
+
 	if (ini_get('safe_mode') == FALSE) {
-		if (!mail($email, $emailsubject, $message, "From: " . $emailsender . "\r\n" . "X-Mailer: Content Manager - PHP/" . phpversion(), "-f $emailsender")) {
-			webAlert("Error while sending mail to $mailto");
+		if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {
+			webAlert("$email - {$_lang['error_sending_email']}");
 			exit;
 		}
-	} elseif (!mail($email, $emailsubject, $message, "From: " . $emailsender . "\r\n" . "X-Mailer: Content Manager - PHP/" . phpversion())) {
-		webAlert("Error while sending mail to $email");
+	} elseif (!mail($email, $subject, $message, $headers)) {
+		webAlert("$email - {$_lang['error_sending_email']}");
 		exit;
 	}
 }
+
 
 // Save User Settings
 function saveUserSettings($id) {

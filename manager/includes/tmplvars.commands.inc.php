@@ -75,11 +75,15 @@ function ProcessTVCommand($value, $name = '', $docid = '') {
 
                     $tv = $modx->getTemplateVar($name, '*', $doc['id'], $doc['published']);
 
-                    // Modified @INHERIT binding to allow for @FILE bindings (and others) to be inherited,
-                    // as well as allowing content after the @INHERITed values
+                    // inheritance allows other @ bindings to be inherited
+                    // if no value is inherited and there is content following the @INHERIT binding,
+                    // that content will be used as the output
+                    // @todo consider reimplementing *appending* the output the follows an @INHERIT as opposed
+                    //       to using it as a default/fallback value; perhaps allow choice in behavior with
+                    //       system setting
                     if ((string) $tv['value'] !== '' && !preg_match('%^@INHERIT[\s\n\r]*$%im', $tv['value'])) {
                         $output = (string) $tv['value'];
-                        $output = str_replace('@INHERIT', $output, $nvalue);
+                        //$output = str_replace('@INHERIT', $output, $nvalue);
                         break 2;
                     }
                 }
