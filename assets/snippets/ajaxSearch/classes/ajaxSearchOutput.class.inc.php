@@ -501,14 +501,25 @@ class AjaxSearchOutput {
             else $url = $firstarg . 'search=' . urlencode($this->asCtrl->searchString) . '&amp;advsearch=' . urlencode($this->asCtrl->advSearch);
         }
         if ($this->asCtrl->subSearch) {
-            if ($url) $url .=  '&amp;subsearch=' . urlencode($this->asCtrl->subSearch);
-            else $url = $firstarg . 'subsearch=' . urlencode($this->asCtrl->subSearch);
+            if (is_array($this->asCtrl->subSearch)) {
+                foreach($this->asCtrl->subSearch as $k => $v) {
+                    if ($url) $url .=  '&amp;subsearch=' . urlencode($v);
+                    else $url = $firstarg . 'subsearch=' . urlencode($v);
+                }
+            }
+            else {
+                if ($url) $url .=  '&amp;subsearch=' . urlencode($this->asCtrl->subSearch);
+                else $url = $firstarg . 'subsearch=' . urlencode($this->asCtrl->subSearch);
+            }
         }
         if ($this->asCtrl->asf) {
             if ($url) $url .=  '&amp;asf=' . urlencode($this->asCtrl->asf);
             else $url = $firstarg . 'asf=' . urlencode($this->asCtrl->asf);
             foreach($this->asCtrl->fParams as $key =>$value) {
-                $url .= '&amp;' . $key . '=' . urlencode($value);
+                if (is_array($value)) {
+                    foreach($value as $k => $v) $url .= '&amp;' . $key . '[]=' . urlencode($v);
+                }
+                else $url .= '&amp;' . $key . '=' . urlencode($value);
             }
         }
         return $url;
