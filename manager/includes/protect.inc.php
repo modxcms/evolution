@@ -51,7 +51,9 @@ if (!function_exists('modx_sanitize_gpc')) {
 			$count = 0;
 		}
 
-		$target = array_combine($keys, $values);
+		if(!empty($keys)){ //for compability php < 5.4.0
+			$target = array_combine($keys, $values);
+		}
 	}
 }
 
