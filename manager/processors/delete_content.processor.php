@@ -37,7 +37,7 @@ function getChildren($parent) {
 	global $site_start;
 	global $site_unavailable_page;
 
-	$db->debug = true;
+	//$db->debug = true;
 
 	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=0;";
 	$rs = mysql_query($sql);

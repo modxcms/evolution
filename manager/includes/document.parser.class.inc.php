@@ -501,7 +501,7 @@ class DocumentParser {
         // remove all unused placeholders
         if (strpos($this->documentOutput, '[+') > -1) {
             $matches= array ();
-            preg_match_all('~\[\+(.*?)\+\]~', $this->documentOutput, $matches);
+            preg_match_all('~\[\+(.*?)\+\]~s', $this->documentOutput, $matches);
             if ($matches[0])
                 $this->documentOutput= str_replace($matches[0], '', $this->documentOutput);
         }
@@ -542,7 +542,8 @@ class DocumentParser {
         $phpTime= sprintf("%2.4f s", $phpTime);
         $source= $this->documentGenerated == 1 ? "database" : "cache";
         $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-
+        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " mb";
+        
         $out =& $this->documentOutput;
         if ($this->dumpSQL) {
             $out .= $this->queryCode;
@@ -552,6 +553,7 @@ class DocumentParser {
         $out= str_replace("[^p^]", $phpTime, $out);
         $out= str_replace("[^t^]", $totalTime, $out);
         $out= str_replace("[^s^]", $source, $out);
+        $out= str_replace("[^m^]", $phpMemory, $out);
         //$this->documentOutput= $out;
 
         // invoke OnWebPagePrerender event
@@ -790,13 +792,18 @@ class DocumentParser {
         eval ($pluginCode);
         $msg= ob_get_contents();
         ob_end_clean();
-        if ($msg && isset ($php_errormsg)) {
-            if (!strpos($php_errormsg, 'Deprecated')) { // ignore php5 strict errors
-                // log error
-                $this->logEvent(1, 3, "<b>$php_errormsg</b><br /><br /> $msg", $this->Event->activePlugin . " - Plugin");
-                if ($this->isBackend())
-                    $this->Event->alert("An error occurred while loading. Please see the event log for more information.<p />$msg");
-            }
+		if ($msg && isset ($php_errormsg)) {
+			$error_info = error_get_last();
+			if($error_info['type']===2048 || $error_info['type']===8192) $error_type = 2;
+			else                                                         $error_type = 3;
+			if(1<$this->config['error_reporting'] || 2<$error_type) {
+				extract($error_info);
+				if($msg===false) $msg = 'ob_get_contents() error';
+				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
+				if ($this->isBackend()) {
+					$this->event->alert("An error occurred while loading. Please see the event log for more information.<p>{$msg}</p>");
+				}
+			}
         } else {
             echo $msg;
         }
@@ -814,107 +821,215 @@ class DocumentParser {
         $snip= eval ($snippet);
         $msg= ob_get_contents();
         ob_end_clean();
-        if ($msg && isset ($php_errormsg)) {
-            if (!strpos($php_errormsg, 'Deprecated')) { // ignore php5 strict errors
-                // log error
-                $this->logEvent(1, 3, "<b>$php_errormsg</b><br /><br /> $msg", $this->currentSnippet . " - Snippet");
+        if ((0<$this->config['error_reporting']) && isset($php_errormsg))
+        {
+            $error_info = error_get_last();
+            if($error_info['type']===2048 || $error_info['type']===8192) $error_type = 2;
+            else                                                         $error_type = 3;
+            if(1<$this->config['error_reporting'] || 2<$error_type)
+            {
+                extract($error_info);
+                if($msg===false) $msg = 'ob_get_contents() error';
+                $result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
                 if ($this->isBackend())
-                    $this->Event->alert("An error occurred while loading. Please see the event log for more information<p />$msg");
+                {
+                    $this->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}{$snip}</p>");
+                }
             }
         }
         unset ($modx->event->params);
         return $msg . $snip;
     }
 
-    function evalSnippets($documentSource) {
-        preg_match_all('~\[\[(.*?)\]\]~ms', $documentSource, $matches);
-
+   function evalSnippets($documentSource) {
         $etomite= & $this;
-
-        if ($matchCount= count($matches[1])) {
-            for ($i= 0; $i < $matchCount; $i++) {
-                $spos= strpos($matches[1][$i], '?', 0);
-                if ($spos !== false) {
-                    $params= substr($matches[1][$i], $spos, strlen($matches[1][$i]));
-                } else {
-                    $params= '';
-                }
-                $matches[1][$i]= str_replace($params, '', $matches[1][$i]);
-                $snippetParams[$i]= $params;
+        
+        $stack = $documentSource;
+        unset($documentSource);
+        
+        
+        $passes = $this->minParserPasses;
+        
+        for($i= 0; $i < $passes; $i++)
+        {
+            $stack=$this->mergeSettingsContent($stack);
+            if($i == ($passes -1)) $bt = md5($stack);
+            $pieces = array();
+            $pieces = explode('[[', $stack);
+            $stack = '';
+            $loop_count = 0;
+            
+            foreach($pieces as $piece)
+            {
+                if($loop_count < 1)                 $result = $piece;
+                elseif(strpos($piece,']]')===false) $result = '[[' . $piece;
+                else                                $result = $this->_get_snip_result($piece);
+                
+                $stack .= $result;
+                $loop_count++; // End of foreach loop
             }
-            $nrSnippetsToGet= $matchCount;
-            for ($i= 0; $i < $nrSnippetsToGet; $i++) { // Raymond: Mod for Snippet props
-                if (isset ($this->snippetCache[$matches[1][$i]])) {
-                    $snippets[$i]['name']= $matches[1][$i];
-                    $snippets[$i]['snippet']= $this->snippetCache[$matches[1][$i]];
-                    if (array_key_exists($matches[1][$i] . "Props", $this->snippetCache))
-                        $snippets[$i]['properties']= $this->snippetCache[$matches[1][$i] . "Props"];
-                } else {
-                    // get from db and store a copy inside cache
-                    $sql= "SELECT `name`, `snippet`, `properties` FROM " . $this->getFullTableName("site_snippets") . " WHERE " . $this->getFullTableName("site_snippets") . ".`name`='" . $this->db->escape($matches[1][$i]) . "';";
-                    $result= $this->db->query($sql);
-                    $added = false;
-                    if ($this->db->getRecordCount($result) == 1) {
-                        $row= $this->db->getRow($result);
-                        if($row['name'] == $matches[1][$i]) {
-                            $snippets[$i]['name']= $row['name'];
-                            $snippets[$i]['snippet']= $this->snippetCache[$row['name']]= $row['snippet'];
-                            $snippets[$i]['properties']= $this->snippetCache[$row['name'] . "Props"]= $row['properties'];
-                            $added = true;
-                        }
-                    }
-                    if(!$added) {
-                        $snippets[$i]['name']= $matches[1][$i];
-                        $snippets[$i]['snippet']= $this->snippetCache[$matches[1][$i]]= "return false;";
-                        $snippets[$i]['properties']= '';
-                    }
-                }
-            }
-
-            for ($i= 0; $i < $nrSnippetsToGet; $i++) {
-                $parameter= array ();
-                $snippetName= $this->currentSnippet= $snippets[$i]['name'];
-                // FIXME Undefined index: properties
-                if (array_key_exists('properties', $snippets[$i])) {
-                    $snippetProperties= $snippets[$i]['properties'];
-                } else {
-                    $snippetProperties= '';
-                }
-                // load default params/properties - Raymond
-                // FIXME Undefined variable: snippetProperties
-                $parameter= $this->parseProperties($snippetProperties);
-                // current params
-                $currentSnippetParams= $snippetParams[$i];
-                if (!empty ($currentSnippetParams)) {
-                    $tempSnippetParams= str_replace("?", "", $currentSnippetParams);
-                    $splitter= "&";
-                    if (strpos($tempSnippetParams, "&amp;") > 0)
-                        $tempSnippetParams= str_replace("&amp;", "&", $tempSnippetParams);
-                    //$tempSnippetParams = html_entity_decode($tempSnippetParams, ENT_NOQUOTES, $this->config['etomite_charset']); //FS#334 and FS#456
-                    $tempSnippetParams= explode($splitter, $tempSnippetParams);
-                    $snippetParamCount= count($tempSnippetParams);
-                    for ($x= 0; $x < $snippetParamCount; $x++) {
-                        if (strpos($tempSnippetParams[$x], '=', 0)) {
-                            if ($parameterTemp= explode("=", $tempSnippetParams[$x])) {
-                                $parameterTemp[0] = trim($parameterTemp[0]);
-                                $parameterTemp[1] = trim($parameterTemp[1]);
-                                $fp= strpos($parameterTemp[1], '`');
-                                $lp= strrpos($parameterTemp[1], '`');
-                                if (!($fp === false && $lp === false))
-                                    $parameterTemp[1]= substr($parameterTemp[1], $fp +1, $lp -1);
-                                $parameter[$parameterTemp[0]]= $parameterTemp[1];
-                            }
-                        }
-                    }
-                }
-                $executedSnippets[$i]= $this->evalSnippet($snippets[$i]['snippet'], $parameter);
-                if ($this->dumpSnippets == 1) {
-                    echo "<fieldset><legend><b>$snippetName</b></legend><textarea style='width:60%; height:200px'>" . htmlentities($executedSnippets[$i]) . "</textarea></fieldset><br />";
-                }
-                $documentSource= str_replace("[[" . $snippetName . $currentSnippetParams . "]]", $executedSnippets[$i], $documentSource);
+            if($i == ($passes -1) && $i < ($this->maxParserPasses - 1))
+            {
+                if($bt != md5($stack)) $passes++;
             }
         }
-        return $documentSource;
+        return $stack;
+    }
+    
+    private function _get_snip_result($piece)
+    {
+        $snip_call        = $this->_split_snip_call($piece);
+        $snip_name        = $snip_call['name'];
+        $except_snip_call = $snip_call['except_snip_call'];
+        
+        $key = $snip_call['name'];
+        if(strpos($key,':')!==false && $this->config['enable_phx']==='1')
+        {
+            list($key,$modifiers) = explode(':', $key, 2);
+            $snip_call['name'] = $key;
+        }
+        else $modifiers = false;
+        
+        $snippetObject = $this->_get_snip_properties($snip_call);
+        
+        $params   = array ();
+        $this->currentSnippet = $snippetObject['name'];
+        
+        if(isset($snippetObject['properties'])) $params = $this->parseProperties($snippetObject['properties']);
+        else                                    $params = '';
+        // current params
+        if(!empty($snip_call['params']))
+        {
+            $snip_call['params'] = ltrim($snip_call['params'], '?');
+            
+            $i = 0;
+            $limit = 50;
+            $params_stack = $snip_call['params'];
+            while(!empty($params_stack) && $i < $limit)
+            {
+                list($pname,$params_stack) = explode('=',$params_stack,2);
+                $params_stack = trim($params_stack);
+                $delim = substr($params_stack, 0, 1);
+                $temp_params = array();
+                switch($delim)
+                {
+                    case '`':
+                    case '"':
+                    case "'":
+                        $params_stack = substr($params_stack,1);
+                        list($pvalue,$params_stack) = explode($delim,$params_stack,2);
+                        $params_stack = trim($params_stack);
+                        if(substr($params_stack, 0, 2)==='//')
+                        {
+                            $params_stack = strstr($params_stack, "\n");
+                        }
+                        break;
+                    default:
+                        if(strpos($params_stack, '&')!==false)
+                        {
+                            list($pvalue,$params_stack) = explode('&',$params_stack,2);
+                        }
+                        else $pvalue = $params_stack;
+                        $pvalue = trim($pvalue);
+                }
+                if($delim !== "'")
+                {
+                    $pvalue = (strpos($pvalue,'[*')!==false) ? $this->mergeDocumentContent($pvalue) : $pvalue;
+                }
+                
+                $pname  = str_replace('&amp;', '', $pname);
+                $pname  = trim($pname);
+                $pname  = trim($pname,'&');
+                $params[$pname] = $pvalue;
+                $params_stack = trim($params_stack);
+                if($params_stack!=='') $params_stack = '&' . ltrim($params_stack,'&');
+                $i++;
+            }
+            unset($temp_params);
+        }
+        $value = $this->evalSnippet($snippetObject['content'], $params);
+        if($modifiers!==false) $value = $this->phx->phxFilter($key,$value,$modifiers);
+        
+        if($this->dumpSnippets == 1)
+        {
+            $this->snipCode .= '<fieldset><legend><b>' . $snippetObject['name'] . '</b></legend><textarea style="width:60%;height:200px">' . htmlentities($value,ENT_NOQUOTES,$this->config['modx_charset']) . '</textarea></fieldset>';
+        }
+        return $value . $except_snip_call;
+    }
+    
+    private function _split_snip_call($src)
+    {
+        list($call,$snip['except_snip_call']) = explode(']]', $src, 2);
+        if(strpos($call, '?') !== false && strpos($call, "\n")!==false && strpos($call, '?') < strpos($call, "\n"))
+        {
+            list($name,$params) = explode('?',$call,2);
+        }
+        elseif(strpos($call, '?') !== false && strpos($call, "\n")!==false && strpos($call, "\n") < strpos($call, '?'))
+        {
+            list($name,$params) = explode("\n",$call,2);
+        }
+        elseif(strpos($call, '?') !== false)
+        {
+            list($name,$params) = explode('?',$call,2);
+        }
+        elseif((strpos($call, '&') !== false) && (strpos($call, '=') !== false) && (strpos($call, '?') === false))
+        {
+            list($name,$params) = explode('&',$call,2);
+            $params = "&{$params}";
+        }
+        elseif(strpos($call, "\n") !== false)
+        {
+            list($name,$params) = explode("\n",$call,2);
+        }
+        else
+        {
+            $name   = $call;
+            $params = '';
+        }
+        $snip['name']   = trim($name);
+        $snip['params'] = $params;
+        return $snip;
+    }
+    
+    private function _get_snip_properties($snip_call)
+    {
+        $snip_name  = $snip_call['name'];
+        
+        if(isset($this->snippetCache[$snip_name]))
+        {
+            $snippetObject['name']    = $snip_name;
+            $snippetObject['content'] = $this->snippetCache[$snip_name];
+            if(isset($this->snippetCache[$snip_name . 'Props']))
+            {
+                $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'];
+            }
+        }
+        else
+        {
+            $tbl_snippets  = $this->getFullTableName('site_snippets');
+            $esc_snip_name = $this->db->escape($snip_name);
+            // get from db and store a copy inside cache
+            $result= $this->db->select('name,snippet,properties',$tbl_snippets,"name='{$esc_snip_name}'");
+            $added = false;
+            if($this->db->getRecordCount($result) == 1)
+            {
+                $row = $this->db->getRow($result);
+                if($row['name'] == $snip_name)
+                {
+                    $snippetObject['name']       = $row['name'];
+                    $snippetObject['content']    = $this->snippetCache[$snip_name]           = $row['snippet'];
+                    $snippetObject['properties'] = $this->snippetCache[$snip_name . 'Props'] = $row['properties'];
+                    $added = true;
+                }
+            }
+            if($added === false)
+            {
+                $snippetObject['name']       = $snip_name;
+                $snippetObject['content']    = $this->snippetCache[$snip_name] = 'return false;';
+                $snippetObject['properties'] = '';
+            }
+        }
+        return $snippetObject;
     }
 
     function makeFriendlyURL($pre, $suff, $alias) {
@@ -1347,6 +1462,7 @@ class DocumentParser {
 	$LoginUserID = $this->getLoginUserID();
 	if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
+            $type=(int)$type;
         if ($type < 1) {
             $type= 1;
         }
@@ -2684,124 +2800,237 @@ class DocumentParser {
         $this->messageQuit("PHP Parse Error", '', true, $nr, $file, $source, $text, $line);
     }
 
-    function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '') {
-
-        $version= isset ($GLOBALS['version']) ? $GLOBALS['version'] : '';
+	function messageQuit($msg= 'unspecified error', $query= '', $is_error= true, $nr= '', $file= '', $source= '', $text= '', $line= '', $output='') {
+		
+	    $version= isset ($GLOBALS['modx_version']) ? $GLOBALS['modx_version'] : '';
 		$release_date= isset ($GLOBALS['release_date']) ? $GLOBALS['release_date'] : '';
-        $parsedMessageString= "
-              <html><head><title>MODx Content Manager $version &raquo; $release_date</title>
-              <style>TD, BODY { font-size: 11px; font-family:verdana; }</style>
-              <script type='text/javascript'>
-              function copyToClip()
-              {
-                holdtext.innerText = sqlHolder.innerText;
-                Copied = holdtext.createTextRange();
-                Copied.execCommand('Copy');
-              }
-            </script>
-              </head><body>
-              ";
-        if ($is_error) {
-            $parsedMessageString .= "<h3 style='color:red'>&laquo; MODx Parse Error &raquo;</h3>
-                    <table border='0' cellpadding='1' cellspacing='0'>
-                    <tr><td colspan='3'>MODx encountered the following error while attempting to parse the requested resource:</td></tr>
-                    <tr><td colspan='3'><b style='color:red;'>&laquo; $msg &raquo;</b></td></tr>";
-        } else {
-            $parsedMessageString .= "<h3 style='color:#003399'>&laquo; MODx Debug/ stop message &raquo;</h3>
-                    <table border='0' cellpadding='1' cellspacing='0'>
-                    <tr><td colspan='3'>The MODx parser recieved the following debug/ stop message:</td></tr>
-                    <tr><td colspan='3'><b style='color:#003399;'>&laquo; $msg &raquo;</b></td></tr>";
-        }
-
-        if (!empty ($query)) {
-            $parsedMessageString .= "<tr><td colspan='3'><b style='color:#999;font-size: 9px;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SQL:&nbsp;<span id='sqlHolder'>$query</span></b>
-                    <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:copyToClip();' style='color:#821517;font-size: 9px; text-decoration: none'>[Copy SQL to ClipBoard]</a><textarea id='holdtext' style='display:none;'></textarea></td></tr>";
-        }
-
-        if ($text != '') {
-
-            $errortype= array (
-                E_ERROR => "Error",
-                E_WARNING => "Warning",
-                E_PARSE => "Parsing Error",
-                E_NOTICE => "Notice",
-                E_CORE_ERROR => "Core Error",
-                E_CORE_WARNING => "Core Warning",
-                E_COMPILE_ERROR => "Compile Error",
-                E_COMPILE_WARNING => "Compile Warning",
-                E_USER_ERROR => "User Error",
-                E_USER_WARNING => "User Warning",
-                E_USER_NOTICE => "User Notice",
-
-            );
-
-            $parsedMessageString .= "<tr><td>&nbsp;</td></tr><tr><td colspan='3'><b>PHP error debug</b></td></tr>";
-
-            $parsedMessageString .= "<tr><td valign='top'>&nbsp;&nbsp;Error: </td>";
-            $parsedMessageString .= "<td colspan='2'>$text</td><td>&nbsp;</td>";
-            $parsedMessageString .= "</tr>";
-
-            $parsedMessageString .= "<tr><td valign='top'>&nbsp;&nbsp;Error type/ Nr.: </td>";
-            $parsedMessageString .= "<td colspan='2'>" . $errortype[$nr] . " - $nr</b></td><td>&nbsp;</td>";
-            $parsedMessageString .= "</tr>";
-
-            $parsedMessageString .= "<tr><td>&nbsp;&nbsp;File: </td>";
-            $parsedMessageString .= "<td colspan='2'>$file</td><td>&nbsp;</td>";
-            $parsedMessageString .= "</tr>";
-
-            $parsedMessageString .= "<tr><td>&nbsp;&nbsp;Line: </td>";
-            $parsedMessageString .= "<td colspan='2'>$line</td><td>&nbsp;</td>";
-            $parsedMessageString .= "</tr>";
-            if ($source != '') {
-                $parsedMessageString .= "<tr><td valign='top'>&nbsp;&nbsp;Line $line source: </td>";
-                $parsedMessageString .= "<td colspan='2'>$source</td><td>&nbsp;</td>";
-                $parsedMessageString .= "</tr>";
-            }
-        }
-
-        $parsedMessageString .= "<tr><td>&nbsp;</td></tr><tr><td colspan='3'><b>Parser timing</b></td></tr>";
-
-        $parsedMessageString .= "<tr><td>&nbsp;&nbsp;MySQL: </td>";
-        $parsedMessageString .= "<td><i>[^qt^]</i></td><td>(<i>[^q^] Requests</i>)</td>";
-        $parsedMessageString .= "</tr>";
-
-        $parsedMessageString .= "<tr><td>&nbsp;&nbsp;PHP: </td>";
-        $parsedMessageString .= "<td><i>[^p^]</i></td><td>&nbsp;</td>";
-        $parsedMessageString .= "</tr>";
-
-        $parsedMessageString .= "<tr><td>&nbsp;&nbsp;Total: </td>";
-        $parsedMessageString .= "<td><i>[^t^]</i></td><td>&nbsp;</td>";
-        $parsedMessageString .= "</tr>";
-
-        $parsedMessageString .= "</table>";
-        $parsedMessageString .= "</body></html>";
-
-        $totalTime= ($this->getMicroTime() - $this->tstart);
-        $queryTime= $this->queryTime;
-        $phpTime= $totalTime - $queryTime;
-        $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-        $queryTime= sprintf("%2.4f s", $queryTime);
-        $totalTime= sprintf("%2.4f s", $totalTime);
-        $phpTime= sprintf("%2.4f s", $phpTime);
-
-        $parsedMessageString= str_replace("[^q^]", $queries, $parsedMessageString);
-        $parsedMessageString= str_replace("[^qt^]", $queryTime, $parsedMessageString);
-        $parsedMessageString= str_replace("[^p^]", $phpTime, $parsedMessageString);
-        $parsedMessageString= str_replace("[^t^]", $totalTime, $parsedMessageString);
-
-        // Set 500 response header
-        header('HTTP/1.1 500 Internal Server Error');
-
-        // Display error
-        echo $parsedMessageString;
-        ob_end_flush();
-
-        // Log error
-        $this->logEvent(0, 3, $parsedMessageString, $source= 'Parser');
-
-        // Make sure and die!
-        exit();
-    }
+	    $request_uri = $_SERVER['REQUEST_URI'];
+	    $request_uri = htmlspecialchars($request_uri, ENT_QUOTES, $this->config['modx_charset']);
+	    $ua          = htmlspecialchars($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, $this->config['modx_charset']);
+	    $referer     = htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, $this->config['modx_charset']);
+	    if ($is_error) {
+	        $str = '<h3 style="color:red">&laquo; MODX Parse Error &raquo;</h3>
+	                <table border="0" cellpadding="1" cellspacing="0">
+	                <tr><td colspan="2">MODX encountered the following error while attempting to parse the requested resource:</td></tr>
+	                <tr><td colspan="2"><b style="color:red;">&laquo; ' . $msg . ' &raquo;</b></td></tr>';
+	    } else {
+	        $str = '<h3 style="color:#003399">&laquo; MODX Debug/ stop message &raquo;</h3>
+	                <table border="0" cellpadding="1" cellspacing="0">
+	                <tr><td colspan="2">The MODX parser recieved the following debug/ stop message:</td></tr>
+	                <tr><td colspan="2"><b style="color:#003399;">&laquo; ' . $msg . ' &raquo;</b></td></tr>';
+	    }
+	
+	    if (!empty ($query)) {
+	        $str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:5px;color:#333;background-color:#ffffcd;">SQL &gt; <span id="sqlHolder">' . $query . '</span></div>
+	                </td></tr>';
+	    }
+	
+	    $errortype= array (
+	        E_ERROR             => "ERROR",
+	        E_WARNING           => "WARNING",
+	        E_PARSE             => "PARSING ERROR",
+	        E_NOTICE            => "NOTICE",
+	        E_CORE_ERROR        => "CORE ERROR",
+	        E_CORE_WARNING      => "CORE WARNING",
+	        E_COMPILE_ERROR     => "COMPILE ERROR",
+	        E_COMPILE_WARNING   => "COMPILE WARNING",
+	        E_USER_ERROR        => "USER ERROR",
+	        E_USER_WARNING      => "USER WARNING",
+	        E_USER_NOTICE       => "USER NOTICE",
+	        E_STRICT            => "STRICT NOTICE",
+	        E_RECOVERABLE_ERROR => "RECOVERABLE ERROR",
+	        E_DEPRECATED        => "DEPRECATED",
+	        E_USER_DEPRECATED   => "USER DEPRECATED"
+	    );
+	
+		if(!empty($nr) || !empty($file))
+		{
+			$str .= '<tr><td colspan="2"><b>PHP error debug</b></td></tr>';
+			if ($text != '')
+			{
+				$str .= '<tr><td valign="top">' . "Error : </td><td>{$text}</td></tr>";
+			}
+			$str .= '<tr><td valign="top">ErrorType[num] : </td>';
+			$str .= '<td>' . $errortype [$nr] . "[{$nr}]</td>";
+			$str .= '</tr>';
+			$str .= "<tr><td>File : </td><td>{$file}</td></tr>";
+			$str .= "<tr><td>Line : </td><td>{$line}</td></tr>";
+		}
+	    
+	    if ($source != '')
+	    {
+	        $str .= "<tr><td>Source : </td><td>{$source}</td></tr>";
+	    }
+	
+	    $str .= '<tr><td colspan="2"><b>Basic info</b></td></tr>';
+	
+	    $str .= '<tr><td valign="top" style="white-space:nowrap;">REQUEST_URI : </td>';
+	    $str .= "<td>{$request_uri}</td>";
+	    $str .= '</tr>';
+	    
+	    if(isset($_GET['a']))      $action = $_GET['a'];
+	    elseif(isset($_POST['a'])) $action = $_POST['a'];
+	    if(isset($action) && !empty($action))
+	    {
+	    	include_once($this->config['core_path'] . 'actionlist.inc.php');
+	    	global $action_list;
+	    	if(isset($action_list[$action])) $actionName = " - {$action_list[$action]}";
+	    	else $actionName = '';
+			$str .= '<tr><td valign="top">Manager action : </td>';
+			$str .= "<td>{$action}{$actionName}</td>";
+			$str .= '</tr>';
+	    }
+	    
+	    if(preg_match('@^[0-9]+@',$this->documentIdentifier))
+	    {
+	    	$resource  = $this->getDocumentObject('id',$this->documentIdentifier);
+	    	$url = $this->makeUrl($this->documentIdentifier,'','','full');
+	    	$link = '<a href="' . $url . '" target="_blank">' . $resource['pagetitle'] . '</a>';
+			$str .= '<tr><td valign="top">Resource : </td>';
+			$str .= '<td>[' . $this->documentIdentifier . ']' . $link . '</td></tr>';
+	    }
+	
+	    if(!empty($this->currentSnippet))
+	    {
+	        $str .= "<tr><td>Current Snippet : </td>";
+	        $str .= '<td>' . $this->currentSnippet . '</td></tr>';
+	    }
+	
+	    if(!empty($this->event->activePlugin))
+	    {
+	        $str .= "<tr><td>Current Plugin : </td>";
+	        $str .= '<td>' . $this->event->activePlugin . '(' . $this->event->name . ')' . '</td></tr>';
+	    }
+	
+	    $str .= "<tr><td>Referer : </td><td>{$referer}</td></tr>";
+	    $str .= "<tr><td>User Agent : </td><td>{$ua}</td></tr>";
+	
+	    $str .= "<tr><td>IP : </td>";
+	    $str .= '<td>' . $_SERVER['REMOTE_ADDR'] . '</td>';
+	    $str .= '</tr>';
+	
+	    $str .= '<tr><td colspan="2"><b>Parser timing</b></td></tr>';
+	
+	    $str .= "<tr><td>MySQL : </td>";
+	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
+	    $str .= '</tr>';
+	
+	    $str .= "<tr><td>PHP : </td>";
+	    $str .= '<td>[^p^]</td>';
+	    $str .= '</tr>';
+	
+	    $str .= "<tr><td>Total : </td>";
+	    $str .= '<td>[^t^]</td>';
+	    $str .= '</tr>';
+	
+	    $str .= "</table>\n";
+	
+	    $totalTime= ($this->getMicroTime() - $this->tstart);
+	
+		$mem = memory_get_peak_usage(true);
+		$total_mem = $mem - $this->mstart;
+		$total_mem = ($total_mem / 1024 / 1024) . ' mb';
+		
+	    $queryTime= $this->queryTime;
+	    $phpTime= $totalTime - $queryTime;
+	    $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
+	    $queryTime= sprintf("%2.4f s", $queryTime);
+	    $totalTime= sprintf("%2.4f s", $totalTime);
+	    $phpTime= sprintf("%2.4f s", $phpTime);
+	
+	    $str= str_replace('[^q^]', $queries, $str);
+	    $str= str_replace('[^qt^]',$queryTime, $str);
+	    $str= str_replace('[^p^]', $phpTime, $str);
+	    $str= str_replace('[^t^]', $totalTime, $str);
+	    $str= str_replace('[^m^]', $total_mem, $str);
+	
+	    if(isset($php_errormsg) && !empty($php_errormsg)) $str = "<b>{$php_errormsg}</b><br />\n{$str}";
+		$str .= '<br />' . $this->get_backtrace(debug_backtrace()) . "\n";
+		
+		if(!empty($output))
+		{
+			$str .= '<div style="margin-top:25px;padding:15px;border:1px solid #ccc;"><p><b>Output:</b></p>' . $output . '</div>';
+		}
+	
+	    // Log error
+	    if(!empty($this->currentSnippet)) $source = 'Snippet - ' . $this->currentSnippet;
+	    elseif(!empty($this->event->activePlugin)) $source = 'Plugin - ' . $this->event->activePlugin;
+	    elseif($source!=='') $source = 'Parser - ' . $source;
+	    elseif($query!=='')  $source = 'SQL Query';
+	    else             $source = 'Parser';
+	    if(isset($actionName) && !empty($actionName)) $source .= $actionName;
+	    switch($nr)
+	    {
+	    	case E_DEPRECATED :
+	    	case E_USER_DEPRECATED :
+	    	case E_STRICT :
+	    	case E_NOTICE :
+	    	case E_USER_NOTICE :
+	    		$error_level = 2;
+	    		break;
+	    	default:
+	    		$error_level = 3;
+	    }
+	    $this->logEvent(0, $error_level, $str,$source);
+	    if($error_level === 2) return true;
+	
+	    // Set 500 response header
+	    header('HTTP/1.1 500 Internal Server Error');
+	
+	    // Display error
+	    if (isset($_SESSION['mgrValidated']))
+	    {
+	        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head><title>MODX Content Manager ' . $version . ' &raquo; ' . $release_date . '</title>
+	             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	             <link rel="stylesheet" type="text/css" href="' . $this->config['site_url'] . 'manager/media/style/' . $this->config['manager_theme'] . '/style.css" />
+	             <style type="text/css">body { padding:10px; } td {font:inherit;}</style>
+	             </head><body>
+	             ' . $str . '</body></html>';
+	    
+	    }
+	    else  echo 'Error';
+	    ob_end_flush();
+		exit;
+	}
+	
+	function get_backtrace($backtrace) {
+	
+		$str = "<p><b>Backtrace</b></p>\n";
+		$str  .= '<table>';
+		$backtrace = array_reverse($backtrace);
+		foreach ($backtrace as $key => $val)
+		{
+			$key++;
+			if(substr($val['function'],0,11)==='messageQuit') break;
+			elseif(substr($val['function'],0,8)==='phpError') break;
+			$path = str_replace('\\','/',$val['file']);
+			if(strpos($path,MODX_BASE_PATH)===0) $path = substr($path,strlen(MODX_BASE_PATH));
+			if(!empty($val['args']) && 0 < count($val['args']))
+			{
+				foreach($val['args'] as $v)
+				{
+					if(is_array($v)) $v = 'array()';
+					elseif(is_object($v))
+					{
+					    $v = get_class($v);
+					}
+					else
+					{
+						$v = str_replace('"', '', $v);
+						$v = htmlspecialchars($v,ENT_QUOTES,$this->config['modx_charset']);
+						if(32 < strlen($v)) $v = mb_substr($v,0,32,$this->config['modx_charset']) . '...';
+						$a[] = '"' . $v . '"';
+					}
+				}
+				$args = join(', ', $a);
+			}
+			else $args = '';
+			$str .= "<tr><td valign=\"top\">{$key}</td>";
+			$str .= "<td>{$val['function']}({$args})<br />{$path} on line {$val['line']}</td>";
+		}
+		$str .= '</table>';
+		return $str;
+	}
 
     function getRegisteredClientScripts() {
         return implode("\n", $this->jscripts);
@@ -2834,6 +3063,15 @@ class DocumentParser {
         }
     }
     
+	function nicesize($size) {
+		$a = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+		$pos = 0;
+		while ($size >= 1024) {
+			   $size /= 1024;
+			   $pos++;
+		}
+		return round($size,2).' '.$a[$pos];
+	}
 
     // End of class.
 

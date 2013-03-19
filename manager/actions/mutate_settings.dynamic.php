@@ -54,7 +54,9 @@ $settings['rb_base_dir'] = $rb_base_dir = trim($settings['rb_base_dir']) == '' ?
 $settings['rb_base_url'] =  $rb_base_url = trim($settings['rb_base_url']) == '' ? 'assets/' : $settings['rb_base_url'];
 
 ?>
-
+<style type="text/css">
+	table th {text-align:left; vertical-align:top;}
+</style>
 <script type="text/javascript">
 function checkIM() {
 	im_on = document.settings.im_plugin[0].checked; // check if im_plugin is on
@@ -751,6 +753,60 @@ function confirmLangChange(el, lkey, elupd){
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
+		<tr>
+		<?php if(!isset($error_reporting)) $error_reporting = '1'; ?>
+		<th><?php echo $_lang['a17_error_reporting_title']; ?></th>
+		<td>
+			<?php echo wrap_label($_lang['a17_error_reporting_opt0'], form_radio('error_reporting','0' , $error_reporting==='0'));?><br />
+			<?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting','1' , $error_reporting==='1'));?><br />
+			<?php echo wrap_label($_lang['a17_error_reporting_opt2'], form_radio('error_reporting','2' , $error_reporting==='2'));?><br />
+			<?php echo wrap_label($_lang['a17_error_reporting_opt99'],form_radio('error_reporting','99', $error_reporting==='99'));?><br />
+		<?php echo $_lang['a17_error_reporting_msg'];?></td>
+		</tr>
+            <tr>
+              <td colspan="2"><div class='split'></div></td>
+            </tr>
+			<tr>
+			<th><?php echo $_lang["pwd_hash_algo_title"] ?></th>
+			<td>
+			<?php
+				$phm['sel']['BLOWFISH_Y'] = $pwd_hash_algo=='BLOWFISH_Y' ?  1 : 0;
+				$phm['sel']['BLOWFISH_A'] = $pwd_hash_algo=='BLOWFISH_A' ?  1 : 0;
+				$phm['sel']['SHA512']     = $pwd_hash_algo=='SHA512' ?  1 : 0;
+				$phm['sel']['SHA256']     = $pwd_hash_algo=='SHA256' ?  1 : 0;
+				$phm['sel']['MD5']        = $pwd_hash_algo=='MD5' ?  1 : 0;
+				$phm['sel']['UNCRYPT']    = $pwd_hash_algo=='UNCRYPT' ?  1 : 0;
+				if(!isset($pwd_hash_algo) || empty($pwd_hash_algo)) $phm['sel']['UNCRYPT'] = 1;
+				$phm['e']['BLOWFISH_Y'] = $modx->manager->checkHashAlgorithm('BLOWFISH_Y') ? 0:1;
+				$phm['e']['BLOWFISH_A'] = $modx->manager->checkHashAlgorithm('BLOWFISH_A') ? 0:1;
+				$phm['e']['SHA512']     = $modx->manager->checkHashAlgorithm('SHA512') ? 0:1;
+				$phm['e']['SHA256']     = $modx->manager->checkHashAlgorithm('SHA256') ? 0:1;
+				$phm['e']['MD5']        = $modx->manager->checkHashAlgorithm('MD5') ? 0:1;
+				$phm['e']['UNCRYPT']    = $modx->manager->checkHashAlgorithm('UNCRYPT') ? 0:1;
+			?>
+				<?php echo wrap_label('CRYPT_BLOWFISH_Y (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_Y',$phm['sel']['BLOWFISH_Y'], '', $phm['e']['BLOWFISH_Y']));?><br />
+				<?php echo wrap_label('CRYPT_BLOWFISH_A (salt &amp; stretch)',form_radio('pwd_hash_algo','BLOWFISH_A',$phm['sel']['BLOWFISH_A'], '', $phm['e']['BLOWFISH_A']));?><br />
+				<?php echo wrap_label('CRYPT_SHA512 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA512'    ,$phm['sel']['SHA512']    , '', $phm['e']['SHA512']));?><br />
+				<?php echo wrap_label('CRYPT_SHA256 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA256'    ,$phm['sel']['SHA256']    , '', $phm['e']['SHA256']));?><br />
+				<?php echo wrap_label('CRYPT_MD5 (salt &amp; stretch)'       ,form_radio('pwd_hash_algo','MD5'       ,$phm['sel']['MD5']       , '', $phm['e']['MD5']));?><br />
+				<?php echo wrap_label('UNCRYPT(32 chars salt + SHA-1 hash)'   ,form_radio('pwd_hash_algo','UNCRYPT'   ,$phm['sel']['UNCRYPT']   , '', $phm['e']['UNCRYPT']));?><br />
+				<?php echo $_lang["pwd_hash_algo_message"]?>
+			</td>
+			</tr>
+           <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+		<tr>
+			<th><?php echo $_lang["enable_bindings_title"] ?></th>
+			<td>
+				<?php echo wrap_label($_lang["yes"],form_radio('enable_bindings','1',$enable_bindings=='1' || !isset($enable_bindings)));?><br />
+				<?php echo wrap_label($_lang["no"], form_radio('enable_bindings','0',$enable_bindings=='0'));?><br />
+				<?php echo $_lang["enable_bindings_message"] ?>
+		</td>
+		</tr>
+           <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
           <?php
               // Check for GD before allowing captcha to be enabled
               $gdAvailable = extension_loaded('gd');
@@ -1424,4 +1480,14 @@ function get_lang_options($key=null, $selected_lang=null) {
         return $lang_options;
     }
 }
-?>
+
+function form_radio($name,$value,$checked=false,$add='',$disabled=false) {
+	if($checked)  $checked  = ' checked="checked"';
+	if($disabled) $disabled = ' disabled';
+	if($add)     $add = ' ' . $add;
+	return '<input type="radio" name="' . $name . '" value="' . $value . '"' . $checked . $disabled . $add . ' />';
+}
+
+function wrap_label($str='',$object) {
+	return "<label>{$object}\n{$str}</label>";
+}

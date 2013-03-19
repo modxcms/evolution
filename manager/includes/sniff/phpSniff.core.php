@@ -246,7 +246,7 @@ class phpSniff_core
         $regex_irix     = '/(irix)[\s]*([0-9]*)/i';
         $regex_hpux     = '/(hp-ux)[\s]*([0-9]*)/i';
         $regex_aix      = '/aix([0-9]*)/i';
-        $regex_dec      = '/dec|osfl|aletomiterver|ultrix|alphastation/i';
+        $regex_dec      = '/dec|osfl|alphaserver|ultrix|alphastation/i';
         $regex_vms      = '/vax|openvms/i';
         $regex_sco      = '/sco|unix_sv/i';
         $regex_linux    = '/x11|inux/i';

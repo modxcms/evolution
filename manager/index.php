@@ -81,7 +81,7 @@ if($php_ver_comp < 0) {
 $incPath = str_replace("\\","/",dirname(__FILE__)."/includes/"); // Mod by Raymond
 set_include_path(get_include_path() . PATH_SEPARATOR . $incPath);
 
-if (version_compare(phpversion(), "5.3") < 0) {
+if (version_compare(phpversion(), "5.4") < 0) {
     @set_magic_quotes_runtime(0);
 
     // include_once the magic_quotes_gpc workaround
