@@ -189,6 +189,11 @@
  */
 ( isset($ignoreIds) ) ? $ignoreids : $ignoreids = '';
 
+/* $crumbSeparator [ string ]
+ * The set of templates you'd like to use for crumbSeparator.
+ */
+( isset($crumbSeparator) ) ? $crumbSeparator : $crumbSeparator = '&raquo;';
+
 /* Templates
  * -----------------------------------------------------------------------------
  * In an effort to keep the MODx chunks manager from getting mired down in lots
@@ -199,7 +204,7 @@
 $templates = array(
     'defaultString' => array(
         'crumb' => '[+crumb+]',
-        'separator' => ' &raquo; ',
+        'separator' => ' '.$crumbSeparator.' ',
         'crumbContainer' => '<span class="[+crumbBoxClass+]">[+crumbs+]</span>',
         'lastCrumbWrapper' => '<span class="[+lastCrumbClass+]">[+lastCrumbSpanA+]</span>',
         'firstCrumbWrapper' => '<span class="[+firstCrumbClass+]">[+firstCrumbSpanA+]</span>'

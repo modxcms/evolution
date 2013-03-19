@@ -478,7 +478,7 @@ while ($row = mysql_fetch_assoc($rs)) {
 	    <td> <select name="manager_language" size="1" class="inputBox" onchange="documentDirty=true">
 	    <option value=""> </option>
 	    <?php
-$activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : $manager_language;
+$activelang = !empty($usersettings['manager_language']) ? $usersettings['manager_language'] : '';
 $dir = dir("includes/lang");
 while ($file = $dir->read()) {
 	if (strpos($file, ".inc.php") > 0) {

@@ -12,7 +12,7 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 	global $modx, $content;
 	$e = &$modx->Event;
 	
-	if (useThisRule($roles, $templates)) {
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
 		
 		$output = '';	
 				
@@ -79,7 +79,8 @@ function mm_widget_showimagetvs($tvs='', $w=300, $h=100, $thumbnailerUrl='', $ro
 																 });
 				}
 				
-			}); // Trigger a change event on load
+			$j.data(this,"lastvalue", $j(this).val());
+            }).trigger("load"); // Trigger a change event on load
 	
 			
 			';	

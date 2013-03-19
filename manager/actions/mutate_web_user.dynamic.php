@@ -99,7 +99,8 @@ if($modx->manager->hasFormValues()) {
 function ConvertDate($date) {
 	global $modx;
 	if ($date == "") {return "0";}
-	else {}          {return $modx->toTimeStamp($date);}
+        //else {}          {return $modx->toTimeStamp($date);}
+        else          {return $modx->toTimeStamp($date);}
 }
 
 // include the country list language file
@@ -515,9 +516,6 @@ function showHide(what, onoff){
           </tr>
 		</table>
 	</div>
-</div>
-
-</div>
 
 <?php
 if($use_udperms==1) {
@@ -538,27 +536,30 @@ if(is_array($_POST['user_groups'])) {
 	foreach($_POST['user_groups'] as $n => $v) $groupsarray[] = $v;
 }
 
-?>
-
-<div class="sectionHeader"><?php echo $_lang['web_access_permissions']; ?></div><div class="sectionBody">
-<?php
-	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
+    echo '<div class="tab-page" id="tabPermissions">
+              <h2 class="tab">'.$_lang['web_access_permissions'].'</h2>
+              <script type="text/javascript">tpUser.addTabPage( document.getElementById( "tabPermissions" ) );</script>
+            ';
+    echo '<p>'. $_lang['access_permissions_user_message'] . '</p>';
 	$sql = "SELECT name, id FROM $dbase.`".$table_prefix."webgroup_names` ORDER BY name";
 	$rs = mysql_query($sql);
 	$limit = mysql_num_rows($rs);
 	for($i=0; $i<$limit; $i++) {
 		$row=mysql_fetch_assoc($rs);
-		echo "<input type='checkbox' name='user_groups[]' value='".$row['id']."'".(in_array($row['id'], $groupsarray) ? " checked='checked'" : "")." />".$row['name']."<br />";
+        echo '<input type="checkbox" name="user_groups[]" value="'.$row['id'].'"'.(in_array($row['id'], $groupsarray) ? ' checked="checked"' : '').' />'.$row['name'].'<br />';
 	}
-?>
-</div>
-<?php
+    
+    echo '</div>';
+
 }
-?>
-<input type="submit" name="save" style="display:none">
-<?php
+
+    echo '<input type="submit" name="save" style="display:none">';
+
 	// invoke OnWUsrFormRender event
 	$evtOut = $modx->invokeEvent("OnWUsrFormRender",array("id" => $user));
 	if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
+
+    </div>
+</div>
 </form>
