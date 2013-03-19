@@ -161,9 +161,12 @@ switch ($_POST['mode']) {
 			//get the key by sql
 		}
 
-		$sql = "INSERT INTO $dbase.`" . $table_prefix . "user_attributes` (internalKey, fullname, role, email, phone, mobilephone, fax, zip, state, country, gender, dob, photo, comment, blocked, blockeduntil, blockedafter)
-						VALUES($key, '$fullname', '$roleid', '$email', '$phone', '$mobilephone', '$fax', '$zip', '$state', '$country', '$gender', '$dob', '$photo', '$comment', '$blocked', '$blockeduntil', '$blockedafter');";
-		$rs = $modx->db->query($sql);
+		$field['password'] = $modx->manager->genHash($newpassword, $key);
+		$modx->db->update($field,'[+prefix+]manager_users',"id='{$key}'");
+		
+		$field = array();
+		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
+		$rs = $modx->db->insert($field,'[+prefix+]user_attributes');
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;
@@ -269,7 +272,7 @@ switch ($_POST['mode']) {
 				webAlert("No password generation method specified!");
 				exit;
 			}
-			$updatepasswordsql = ", password=MD5('$newpassword') ";
+			$updatepasswordsql = ", password='" . $modx->manager->genHash($newpassword, $id) . "' ";
 		}
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);

@@ -74,7 +74,7 @@ if($limit==0 || $limit>1) {
     return;
 }
 
-$row = mysql_fetch_assoc($rs);
+$row = $modx->db->getRow($rs);
 
 $internalKey            = $row['internalKey'];
 $dbasePassword          = $row['password'];
@@ -90,9 +90,8 @@ $fullname               = $row['fullname'];
 $email                  = $row['email'];
 
 // get the user settings from the database
-$sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."user_settings` WHERE user='".$internalKey."' AND setting_value!=''";
-$rs = mysql_query($sql);
-while ($row = mysql_fetch_assoc($rs)) {
+$rs = $modx->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$internalKey}' AND setting_value!=''");
+while ($row = $modx->db->getRow($rs)) {
     ${$row['setting_name']} = $row['setting_value'];
 }
 // blocked due to number of login errors.
@@ -106,7 +105,7 @@ if($failedlogins>=$failed_allowed && $blockeduntildate>time()) {
 // blocked due to number of login errors, but get to try again
 if($failedlogins>=$failed_allowed && $blockeduntildate<time()) { 
     $sql = "UPDATE $dbase.`".$table_prefix."user_attributes` SET failedlogincount='0', blockeduntil='".(time()-1)."' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
+    $rs = $modx->db->query($sql);
 }
 
 // this user has been blocked by an admin, so no way he's loggin in!
@@ -168,12 +167,49 @@ $rt = $modx->invokeEvent("OnManagerAuthentication",
                         ));
 
 // check if plugin authenticated the user
-if (!$rt||(is_array($rt) && !in_array(TRUE,$rt))) {
-    // check user password - local authentication
-    if($dbasePassword != md5($givenPassword)) {
-            jsAlert($e->errors[901]);
-            $newloginerror = 1;
-    }
+
+if (!isset($rt)||!$rt||(is_array($rt) && !in_array(TRUE,$rt)))
+{
+	// check user password - local authentication
+	$tbl_manager_users = $modx->getFullTableName('manager_users');
+	if(strpos($dbasePassword,'>')!==false)
+	{
+		if(!isset($modx->config['pwd_hash_algo']) || empty($modx->config['pwd_hash_algo'])) $modx->config['pwd_hash_algo'] = 'UNCRYPT';
+		$user_algo = $modx->manager->getUserHashAlgorithm($internalKey);
+		
+		if($user_algo !== $modx->config['pwd_hash_algo'])
+		{
+			$bk_pwd_hash_algo = $modx->config['pwd_hash_algo'];
+			$modx->config['pwd_hash_algo'] = $user_algo;
+		}
+		
+		if($dbasePassword != $modx->manager->genHash($givenPassword, $internalKey))
+		{
+			jsAlert($e->errors[901]);
+			$newloginerror = 1;
+		}
+		elseif(isset($bk_pwd_hash_algo))
+		{
+			$modx->config['pwd_hash_algo'] = $bk_pwd_hash_algo;
+			$field = array();
+			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+			$modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+		}
+	}
+	else
+	{
+		if($dbasePassword != md5($givenPassword))
+		{
+			jsAlert($e->errors[901]);
+			$newloginerror = 1;
+		}
+		else
+		{
+			$field = array();
+			$field['password'] = $modx->manager->genHash($givenPassword, $internalKey);
+			$modx->db->update($field, "{$tbl_manager_users}manager_users", "username='{$username}'");
+		}
+	}
 }
 
 if($use_captcha==1) {
@@ -195,7 +231,7 @@ if($newloginerror) {
     if($failedlogins>=$failed_allowed) { 
 		//block user for too many fail attempts
         $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
-        $rs = mysql_query($sql);
+        $rs = $modx->db->query($sql);
     } else {
 		//sleep to help prevent brute force attacks
         $sleep = (int)$failedlogins/2;
@@ -298,4 +334,3 @@ function jsAlert($msg){
         echo "<script>window.setTimeout(\"alert('".addslashes($modx->db->escape($msg))."')\",10);history.go(-1)</script>";
     }
 }
-?>
