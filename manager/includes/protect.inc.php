@@ -27,9 +27,7 @@ if (!function_exists('modx_sanitize_gpc')) {
 		$tags = array('[', ']', '{', '}');
 		$replaced = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
 
-		if(!empty($keys)){
-	      $target = array_combine($keys, $values);
-        }
+		$keys = array_keys($target);
 		$values = array_values($target);
 
 		for ($i = 0; $i < count($values); $i++) {
@@ -53,7 +51,9 @@ if (!function_exists('modx_sanitize_gpc')) {
 			$count = 0;
 		}
 
-		$target = array_combine($keys, $values);
+		if(!empty($keys)){ //for compability php < 5.4.0
+			$target = array_combine($keys, $values);
+		}
 	}
 }
 
