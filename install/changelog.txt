@@ -1,6 +1,69 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0.9 (Mar 19, 2013)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#3796] MODx security issues
+* [#8338] LFI in browser.php
+* [#8339] LFI in install
+* [#9621] SQL-injection in logEvent
+* [#471] Show custom error page if mysql is down
+* [#9624] Add .htaccess into assets/cache/
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [2893] document parser crop value of param when contain ?&=
+* [3495] Mistake in phpSniff.core.php
+* [3582] [ManagerManager] showimagetvs widget TV dirty check issue
+* [3676] Ditto: german language file is corrupt
+* [3689] Ditto relative to absolute url bug (with possible fix)
+* [3724] Magic GPC Quotes issue in PHP 5.3.*
+* [3835] Multiple call wayfinder with config, not load config in second call
+* [4484] bug in wait.static.php
+* [5403] Maximum upload size not honoured
+* [5807] manager.lockout not styled properly
+* [6119] sendMailMessage in save_web_user.processor.php
+* [7204] eForm in eFormParseTemplate $formats and $labels are declared as string but they are used as array
+* [7459] Deprecated function 'split' used in manager/includes/datefunctions.inc.php
+* [9398] eForm & php 5.3
+* [9547] ManagerManager Tv-transfer options with multiple choice in a new tab
+* [9548] cant modify the customTV(multiTv or other without type input) with ManagerManager
+* [9549] page not index in yandex if use FirstChildRedirect
+* [9550] Breadcrumbs not have crumbSeparator
+* [9563] onManagerMainFrameHeaderHTMLBlock event issue
+* [9580] Bug in manager/processors/delete_content.processor.php on line 40
+* [9586] Quick Manager and system setting Automatic Template Assignment
+* [9620] Set Manager language in Create/Edit User
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#9570] Detailed log message
+* [#9554] add Snippet IF
+* [#9566] Improvement to full table name call
+* [#9567] Add "limit" option to $modx->db->delete()
+* [#9568] @Bindings enable/disable option in System configuration
+* [#9569] Password hash algorithm
+* [#9582] Add new config "Detection level of the PHP error"
+* [#9615] Add new function for documentParser "$modx->nicesize()"
+* [#4051] german transliteration for transalias plugin
+* [#5971] Check whether manager template exists during manager login
+* [#9545] PHP 5.4 compatibility
+* [#9556] add memomy view to statistics for the modx parser [^m^]
+* [#9557] DocumentParser - remove all unused multiline placeholders
+* [#9564] OnWUsrFormRender event adjustment
+* [#9583] Refactoring System configuration in manager screen
+* [#9616] Update TinyMCE (3.3.9.2 -> 3.5.8)
+* [#9617] Refactoring backup manage
+* [#9622] Refactor "Manage Files"
+* [#9623] Refactor MODxCarbon theme
+
+
+
 MODx Evolution 1.0.8 (Jan 08, 2013)
 ===================================
 --------------------------------------------

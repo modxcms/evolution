@@ -10,7 +10,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <script type="text/javascript">
 function goHome() {
 <?php if($_REQUEST['r']==10) {?>
-	top.location.startrefresh(10);
+	top.mainMenu.startrefresh(10);
 <?php } elseif($_REQUEST['dv']==1 && $_REQUEST['id']!='') { ?>
 	document.location.href="index.php?a=3&id=<?php echo $_REQUEST['id']; ?>";
 <?php } else { ?>

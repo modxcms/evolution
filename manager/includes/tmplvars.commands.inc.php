@@ -14,13 +14,16 @@ $BINDINGS = array (
     'DIRECTORY'
 );
 
-function ProcessTVCommand($value, $name = '', $docid = '') {
+function ProcessTVCommand($value, $name = '', $docid = '', $src='docform') {
     global $modx;
     $etomite = & $modx;
     $docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
     $nvalue = trim($value);
     if (substr($nvalue, 0, 1) != '@')
         return $value;
+    elseif(isset($modx->config['enable_bindings']) && $modx->config['enable_bindings']!=1 && $src==='docform') {
+        return '@Bindings is disabled.';
+    }
     else {
         list ($cmd, $param) = ParseCommand($nvalue);
         $cmd = trim($cmd);
@@ -115,7 +118,7 @@ function ProcessTVCommand($value, $name = '', $docid = '') {
 
         }
         // support for nested bindings
-        return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid) : $output;
+        return is_string($output) && ($output != $value) ? ProcessTVCommand($output, $name, $docid, $src) : $output;
     }
 }
 

@@ -268,16 +268,14 @@ function mm_moveFieldsToTab($fields, $newtab, $roles='', $templates='') {
 				
 					// What type is this field?
 					if (isset($mm_fields[$field])) {
-						$fieldtype = $mm_fields[$field]['fieldtype'];
 						$fieldname = $mm_fields[$field]['fieldname'];
 						$output .= '
-						var toMove = $j("'.$fieldtype.'[name=\''.$fieldname.'\']").parents("tr:not(.urltv)");
+						var toMove = $j(":input[name=\''.$fieldname.'\']").parents("tr:not(.urltv)"); // Identify the table row to move
 						toMove.find("script").remove();
 						toMove.next("tr").find("td[colspan=2]").parents("tr").remove(); // Get rid of line after, if there is one
 						var movedTV = toMove.appendTo("#tab'.$newtab.'>table:first"); // Move the table row
 						movedTV.after(ruleHtml); // Insert a rule after 
-						movedTV.find("td[width]").attr("width","");  // Remove widths from label column
-						$j("[name^='.$fieldname.']:first").parents("td").removeAttr( "style" );  // This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
+						$j("[name=\''.$fieldname.'\']:first").parents("td").removeAttr( "style" );  // This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
 						';
 					}	
 								
