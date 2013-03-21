@@ -191,7 +191,7 @@ class AjaxSearchConfig {
     */
     function readConfigFile($config) {
         global $modx;
-        $configFile = (substr($config, 0, 5) != "@FILE") ? AS_PATH . "configs/$config.config.php" : $modx->config['base_path'] . trim(substr($config, 5));
+        $configFile = (substr($config, 0, 5) != "@FILE") ? AS_PATH . "configs/$config.config.php" : $modx->config['base_path'] . trim(trim(substr($config, 5), ':'));
         $fh = fopen($configFile, 'r');
         $output = fread($fh, filesize($configFile));
         fclose($fh);
