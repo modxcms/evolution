@@ -2502,6 +2502,12 @@ class DocumentParser {
         $t= preg_replace('~\[\((.*?)\)\]~', "", $t); //settings
         $t= preg_replace('~\[\+(.*?)\+\]~', "", $t); //placeholders
         $t= preg_replace('~{{(.*?)}}~', "", $t); //chunks
+        $t= preg_replace('~&#x005B;\*(.*?)\*&#x005D;~', "", $t); //encoded tv
+        $t= preg_replace('~&#x005B;&#x005B;(.*?)&#x005D;&#x005D;~', "", $t); //encoded snippet
+        $t= preg_replace('~&#x005B;\!(.*?)\!&#x005D;~', "", $t); //encoded snippet
+        $t= preg_replace('~&#x005B;\((.*?)\)&#x005D;~', "", $t); //encoded settings
+        $t= preg_replace('~&#x005B;\+(.*?)\+&#x005D;~', "", $t); //encoded placeholders
+        $t= preg_replace('~&#x007B;&#x007B;(.*?)&#x007D;&#x007D;~', "", $t); //encoded chunks
         return $t;
     }
 
