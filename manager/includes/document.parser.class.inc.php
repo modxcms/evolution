@@ -2085,8 +2085,6 @@ class DocumentParser {
                 $query= "tv.id<>0";
             else
                 $query= (is_numeric($idnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $idnames) . "')";
-            if ($docgrp= $this->getUserDocGroups())
-                $docgrp= implode(",", $docgrp);
             $sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
             $sql .= "FROM " . $this->getFullTableName('site_tmplvars')." tv ";
             $sql .= "INNER JOIN " . $this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id ";
