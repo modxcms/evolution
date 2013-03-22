@@ -1093,7 +1093,7 @@ $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 
 $_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
-$_lang['enable_bindings_message'] = 'Enable <a href="https://www.google.co.jp/search?q=modx+Bindings" target="_blank">@Bindings commands</a>. Describe any command in the entry field (template variable) on the contribution screen and carry out this function. When manage a site in plural members because the practice of the PHP sentence is possible, attention is necessary for the use of this function.';
+$_lang['enable_bindings_message'] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
