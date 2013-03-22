@@ -1,6 +1,46 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+
+MODx Evolution 1.0.10 (Mar 22, 2013)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#3449] Datepicker bug in Opera
+* [#3493] unnecessary slash in MAGPIE_CACHE_DIR
+* [#3533] AJAXSEARCH-82 : can't define configuration file name with "@FILE:" prefix
+* [#3698] AJAXSEARCH-85 : Wrong URL construction when using an array of values (checkboxes)
+* [#3783] Superfluous code in getTemplateVars
+* [#3847] Wayfinder does not apply lastClass if there is only one item
+* [#4088] web user photo from other site not correct
+* [#7033] incorrect unzip in file manager
+* [#7541] Upgrade of Existing Site - Error due to single quote in plugin properties
+* [#8909] Publication schedule don't use server_offset_time setting
+* [#9670] Can't log into upgrade install
+* [#9671] TinyMCE - Rewrite Japanese string
+* [#9678] eForm documentation
+* [#9679] Warning during Installation
+* [#9687] Dashboard logo background is not transparent
+* [#9688] Can not make new manager user
+* [#9694] Undefined property: DocumentParser::$mstart
+* [#9695] bug with add images from FCKeditor
+* [#9696] ImageEditor fix for php5.4
+* [#9697] seturl_js_tinymce incorrect path
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#9684] Remove entity encoded MODX tags in stripTags
+* [#3730] Entity encode Wayfinder placeholders
+* [#3746] don't show New Module button when user's role lacks that permission
+* [#9613] MODX Carbon Login page
+* [#9673] Improvement some translations
+* [#9692] Escape strings in array data
+* [#9693] When use mysql_real_escape_string, execute mysql_set_charset beforehand
+
+
+
 MODx Evolution 1.0.9 (Mar 19, 2013)
 ===================================
 --------------------------------------------
@@ -16,28 +56,28 @@ Security:
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
-* [2893] document parser crop value of param when contain ?&=
-* [3495] Mistake in phpSniff.core.php
-* [3582] [ManagerManager] showimagetvs widget TV dirty check issue
-* [3676] Ditto: german language file is corrupt
-* [3689] Ditto relative to absolute url bug (with possible fix)
-* [3724] Magic GPC Quotes issue in PHP 5.3.*
-* [3835] Multiple call wayfinder with config, not load config in second call
-* [4484] bug in wait.static.php
-* [5403] Maximum upload size not honoured
-* [5807] manager.lockout not styled properly
-* [6119] sendMailMessage in save_web_user.processor.php
-* [7204] eForm in eFormParseTemplate $formats and $labels are declared as string but they are used as array
-* [7459] Deprecated function 'split' used in manager/includes/datefunctions.inc.php
-* [9398] eForm & php 5.3
-* [9547] ManagerManager Tv-transfer options with multiple choice in a new tab
-* [9548] cant modify the customTV(multiTv or other without type input) with ManagerManager
-* [9549] page not index in yandex if use FirstChildRedirect
-* [9550] Breadcrumbs not have crumbSeparator
-* [9563] onManagerMainFrameHeaderHTMLBlock event issue
-* [9580] Bug in manager/processors/delete_content.processor.php on line 40
-* [9586] Quick Manager and system setting Automatic Template Assignment
-* [9620] Set Manager language in Create/Edit User
+* [#2893] document parser crop value of param when contain ?&=
+* [#3495] Mistake in phpSniff.core.php
+* [#3582] [ManagerManager] showimagetvs widget TV dirty check issue
+* [#3676] Ditto: german language file is corrupt
+* [#3689] Ditto relative to absolute url bug (with possible fix)
+* [#3724] Magic GPC Quotes issue in PHP 5.3.*
+* [#3835] Multiple call wayfinder with config, not load config in second call
+* [#4484] bug in wait.static.php
+* [#5403] Maximum upload size not honoured
+* [#5807] manager.lockout not styled properly
+* [#6119] sendMailMessage in save_web_user.processor.php
+* [#7204] eForm in eFormParseTemplate $formats and $labels are declared as string but they are used as array
+* [#7459] Deprecated function 'split' used in manager/includes/datefunctions.inc.php
+* [#9398] eForm & php 5.3
+* [#9547] ManagerManager Tv-transfer options with multiple choice in a new tab
+* [#9548] cant modify the customTV(multiTv or other without type input) with ManagerManager
+* [#9549] page not index in yandex if use FirstChildRedirect
+* [#9550] Breadcrumbs not have crumbSeparator
+* [#9563] onManagerMainFrameHeaderHTMLBlock event issue
+* [#9580] Bug in manager/processors/delete_content.processor.php on line 40
+* [#9586] Quick Manager and system setting Automatic Template Assignment
+* [#9620] Set Manager language in Create/Edit User
 
 --------------------------------------------
 Additional Improvements & Updates:
