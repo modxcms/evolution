@@ -217,7 +217,7 @@ if($modx->hasPermission('help')) { ?>
 	| <a href="index.php?a=9" target="main"><?php echo $_lang['help']?></a>
 <?php } ?>
 	| <a href="index.php?a=8" target="_top"><?php echo $_lang['logout']?></a>
-	| <span title="<?php echo $site_name ?> &ndash; <?php echo $modx_full_appname ?>"><?php echo $modx_version ?></span>&nbsp;
+	| <span title="<?php echo $site_name ?> &ndash; <?php echo $modx->getVersionData('full_appname') ?>"><?php echo $modx->getVersionData('version') ?></span>&nbsp;
 	<!-- close #supplementalNav --></div>
 </div>
 </div>
