@@ -1,8 +1,8 @@
 <style type="text/css">
 textarea.mce {width:95%;height:53px;display:block;}
-.settings {width:99%;}
-.settings th {width:220px;margin-left:25px;}
-.settings td,th {border-bottom:1px dotted #ccc;}
+#editorRow_TinyMCE {width:99%;}
+#editorRow_TinyMCE #editorRow_TinyMCE th {width:220px;margin-left:25px;}
+#editorRow_TinyMCE td,#editorRow_TinyMCE th {border-bottom:1px dotted #ccc;}
 
 </style>
 <table id="editorRow_TinyMCE" class="settings editorRow">
