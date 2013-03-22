@@ -19,6 +19,7 @@ class DocumentParser {
     var $documentGenerated;
     var $documentContent;
     var $tstart;
+    var $mstart;
     var $minParserPasses;
     var $maxParserPasses;
     var $documentObject;

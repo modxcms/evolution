@@ -51,6 +51,7 @@
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
+$mstart = memory_get_usage();
 
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.
@@ -116,6 +117,8 @@ $modx = new DocumentParser;
 $modx->loadExtension("ManagerAPI");
 $modx->getSettings();
 $etomite = &$modx; // for backward compatibility
+$modx->tstart = $tstart;
+$modx->mstart = $mstart;
 
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {

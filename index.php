@@ -47,6 +47,7 @@
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
+$mstart = memory_get_usage();
 
 // harden it
 require_once(dirname(__FILE__).'/manager/includes/protect.inc.php');
@@ -119,6 +120,7 @@ $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->tstart = $tstart;
+$modx->mstart = $mstart;
 
 // Debugging mode:
 $modx->stopOnNotice = false;
