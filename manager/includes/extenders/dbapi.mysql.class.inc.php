@@ -122,6 +122,15 @@ class DBAPI {
    }
 
    function escape($s) {
+      if(is_array($s)) {
+          if(count($s) > 0) {
+              foreach($s as $i=>$v) {
+                  $s[$i] = $this->escape($v);
+              }
+          }
+          return $s;
+      }
+      
       if (empty ($this->conn) || !is_resource($this->conn)) {
          $this->connect();
        }
