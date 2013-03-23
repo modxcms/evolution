@@ -2,8 +2,14 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx Evolution 1.0.10 (Mar 22, 2013)
+MODx Evolution 1.0.10 (Mar 23, 2013)
 ===================================
+
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#9704] LFI in mutate_settings.ajax.php
+
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
@@ -38,6 +44,10 @@ Additional Improvements & Updates:
 * [#9673] Improvement some translations
 * [#9692] Escape strings in array data
 * [#9693] When use mysql_real_escape_string, execute mysql_set_charset beforehand
+* [#9682] modx::getVersionData()
+* [#9703] fake settings_version
+* [#9665] add more content type (json)
+* [#9683] trusted folder/file in index-ajax.php
 
 
 
