@@ -946,7 +946,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('filemanager_path',''),
 ('theme_refresher',''),
 ('manager_layout','4'),
-('custom_contenttype','application/rss+xml,application/pdf,application/vnd.ms-word,application/vnd.ms-excel,text/html,text/css,text/xml,text/javascript,text/plain'),
+('custom_contenttype','application/rss+xml,application/pdf,application/vnd.ms-word,application/vnd.ms-excel,text/html,text/css,text/xml,text/javascript,text/plain,application/json'),
 ('auto_menuindex','1'),
 ('session.cookie.lifetime','604800'),
 ('mail_check_timeperiod','60'),
@@ -1139,3 +1139,5 @@ UPDATE `{PREFIX}user_settings` SET
 
 
 REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxCarbon');
+
+UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype'

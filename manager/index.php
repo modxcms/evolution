@@ -152,8 +152,9 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
 // send the charset header
 header('Content-Type: text/html; charset='.$modx_manager_charset);
 
-// include version info
-include_once "version.inc.php";
+/*
+ * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()
+ */
 
 // accesscontrol.php checks to see if the user is logged in. If not, a log in form is shown
 include_once "accesscontrol.inc.php";

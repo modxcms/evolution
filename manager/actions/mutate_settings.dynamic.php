@@ -188,9 +188,9 @@ function confirmLangChange(el, lkey, elupd){
 
 <div style="margin: 0 10px 0 20px">
     <input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
-    <input type="hidden" name="settings_version" value="<?php echo $modx_version; ?>" />
+    <input type="hidden" name="settings_version" value="<?php echo $modx->getVersionData('version'); ?>" />
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
-    <?php if(!isset($settings_version) || $settings_version!=$modx_version) { ?>
+    <?php if(!isset($settings_version) || $settings_version!=$modx->getVersionData('version')) { ?>
     <div class='sectionBody'><p><?php echo $_lang['settings_after_install']; ?></p></div>
     <?php } ?>
     <script type="text/javascript" src="media/script/tabpane.js"></script>

@@ -1109,4 +1109,11 @@ $_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
 $_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
 $_lang["bkmgr_snapshot_nothing"] = 'Нет бекапов';
 
+$_lang['not_readable_dir'] = 'Директория недоступна для записи';
+$_lang['files.dynamic.php1'] = 'Создать PHP-файл';
+$_lang['confirm_delete_dir'] = 'Вы уверены, что хотите удалить папку? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
+$_lang['confirm_delete_dir_recursive'] = 'Вы уверены, что хотите удалить папку со всем ее содержимым? \n\nЭто может вызвать проблемы с работой сайта. Удаляйте папку, только если вы на 100% уверены, что работа сайта не пострадает.';
+$_lang['files.dynamic.php2']='files.dynamic.php2';
+$_lang['files.dynamic.php3'] = 'files.dynamic.php3';
+$_lang['files.dynamic.php4'] = 'files.dynamic.php4';
 ?>

@@ -2,7 +2,7 @@
 
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 
-if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_version!=$modx_version)) {
+if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_version!=$modx->getVersionData('version'))) {
     // seems to be a new install - send the user to the configuration page
     echo '<script type="text/javascript">document.location.href="index.php?a=17";</script>';
     exit;
