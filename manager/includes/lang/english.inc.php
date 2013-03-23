@@ -1110,3 +1110,11 @@ $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+
+$_lang["files.dynamic.php1"] = 'create text file';
+$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
+$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
+$_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["not_readable_dir"] = 'Can not read this directory.';
+$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
+$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
