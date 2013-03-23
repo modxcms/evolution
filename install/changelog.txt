@@ -33,6 +33,8 @@ Bugfixes:
 * [#9695] bug with add images from FCKeditor
 * [#9696] ImageEditor fix for php5.4
 * [#9697] seturl_js_tinymce incorrect path
+* [#9708] Improvement event log message
+* [#9709] Undefined variable error
 
 --------------------------------------------
 Additional Improvements & Updates:
