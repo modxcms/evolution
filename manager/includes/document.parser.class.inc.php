@@ -2887,7 +2887,7 @@ class DocumentParser {
 	    elseif(isset($_POST['a'])) $action = $_POST['a'];
 	    if(isset($action) && !empty($action))
 	    {
-	    	include_once($this->config['core_path'] . 'actionlist.inc.php');
+	    	include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
 	    	global $action_list;
 	    	if(isset($action_list[$action])) $actionName = " - {$action_list[$action]}";
 	    	else $actionName = '';
