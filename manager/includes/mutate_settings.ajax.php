@@ -20,13 +20,13 @@ $value = $modx->db->escape($value);
 $str = '';
 $emptyCache = false;
 
-if($action == 'get') {
-    $langfile = dirname(__FILE__) . '/lang/'.$lang.'.inc.php';
-    if(file_exists($langfile)) {
-        $str = getLangStringFromFile($langfile, $key);
+switch(true){
+    case ($action == 'get' && preg_match('/^[A-z0-9_-]+$/',$lang) && file_exists(dirname(__FILE__) . '/lang/'.$lang.'.inc.php')):{
+        include(dirname(__FILE__) . '/lang/'.$lang.'.inc.php');
+        $str = isset($key,$_lang,$_lang[$key]) ? $_lang[$key] : "" ;
+        break;
     }
-} elseif($action == 'setsetting') {
-    if(!empty($key) && !empty($value)) {
+    case ($action == 'setsetting' && !empty($key) && !empty($value)):{
         $sql = "REPLACE INTO ".$modx->getFullTableName("system_settings")." (setting_name, setting_value) VALUES('{$key}', '{$value}');";
         $str = "true";
         if(!@$rs = $modx->db->query($sql)) {
@@ -34,10 +34,9 @@ if($action == 'get') {
         } else {
             $emptyCache = true;
         }
+        break;
     }
-} elseif($action == 'updateplugin') {
-
-    if($key == '_delete_' && !empty($lang)) {
+    case ($action == 'updateplugin' && ($key == '_delete_' && !empty($lang))):{
         $sql = "DELETE FROM " . $modx->getFullTableName("site_plugins") . " WHERE name='{$lang}'";
         $str = "true";
         if(!@$rs = $modx->db->query($sql)) {
@@ -45,7 +44,9 @@ if($action == 'get') {
         } else {
             $emptyCache = true;
         }
-    } elseif(!empty($key) && !empty($lang) && !empty($value)) {
+        break;
+    }
+    case ($action == 'updateplugin' && (!empty($key) && !empty($lang) && !empty($value))):{
         $sql = "UPDATE ".$modx->getFullTableName("site_plugins")." SET {$key}='{$value}' WHERE name = '{$lang}';";
         $str = "true";
         if(!@$rs = $modx->db->query($sql)) {
@@ -53,6 +54,10 @@ if($action == 'get') {
         } else {
             $emptyCache = true;
         }
+        break;
+    }
+    default: {
+    break;
     }
 }
 
@@ -65,8 +70,3 @@ if($emptyCache) {
 }
 
 echo $str;
-
-function getLangStringFromFile($file, $key) {
-    include($file);
-    return $_lang[$key];
-}
