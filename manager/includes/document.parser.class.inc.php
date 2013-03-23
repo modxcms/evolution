@@ -2832,7 +2832,7 @@ class DocumentParser {
 	    }
 	
 	    if (!empty ($query)) {
-	        $str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:5px;color:#333;background-color:#ffffcd;">SQL &gt; <span id="sqlHolder">' . $query . '</span></div>
+	        $str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;">SQL &gt; <span id="sqlHolder">' . $query . '</span></div>
 	                </td></tr>';
 	    }
 	
@@ -2859,7 +2859,11 @@ class DocumentParser {
 			$str .= '<tr><td colspan="2"><b>PHP error debug</b></td></tr>';
 			if ($text != '')
 			{
-				$str .= '<tr><td valign="top">' . "Error : </td><td>{$text}</td></tr>";
+				$str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;">Error : ' . $text . '</div></td></tr>';
+			}
+			if($output!='')
+			{
+				$str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;">' . $output . '</div></td></tr>';
 			}
 			$str .= '<tr><td valign="top">ErrorType[num] : </td>';
 			$str .= '<td>' . $errortype [$nr] . "[{$nr}]</td>";
@@ -2883,7 +2887,7 @@ class DocumentParser {
 	    elseif(isset($_POST['a'])) $action = $_POST['a'];
 	    if(isset($action) && !empty($action))
 	    {
-	    	include_once($this->config['core_path'] . 'actionlist.inc.php');
+	    	include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
 	    	global $action_list;
 	    	if(isset($action_list[$action])) $actionName = " - {$action_list[$action]}";
 	    	else $actionName = '';
@@ -2920,7 +2924,11 @@ class DocumentParser {
 	    $str .= '<td>' . $_SERVER['REMOTE_ADDR'] . '</td>';
 	    $str .= '</tr>';
 	
-	    $str .= '<tr><td colspan="2"><b>Parser timing</b></td></tr>';
+	    $str .= '<tr><td colspan="2"><b>Benchmarks</b></td></tr>';
+	
+	    $str .= "<tr><td>MySQL : </td>";
+	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
+	    $str .= '</tr>';
 	
 	    $str .= "<tr><td>MySQL : </td>";
 	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
@@ -2934,6 +2942,10 @@ class DocumentParser {
 	    $str .= '<td>[^t^]</td>';
 	    $str .= '</tr>';
 	
+	    $str .= "<tr><td>Memory : </td>";
+	    $str .= '<td>[^m^]</td>';
+	    $str .= '</tr>';
+	    
 	    $str .= "</table>\n";
 	
 	    $totalTime= ($this->getMicroTime() - $this->tstart);
@@ -2958,11 +2970,6 @@ class DocumentParser {
 	    if(isset($php_errormsg) && !empty($php_errormsg)) $str = "<b>{$php_errormsg}</b><br />\n{$str}";
 		$str .= '<br />' . $this->get_backtrace(debug_backtrace()) . "\n";
 		
-		if(!empty($output))
-		{
-			$str .= '<div style="margin-top:25px;padding:15px;border:1px solid #ccc;"><p><b>Output:</b></p>' . $output . '</div>';
-		}
-	
 	    // Log error
 	    if(!empty($this->currentSnippet)) $source = 'Snippet - ' . $this->currentSnippet;
 	    elseif(!empty($this->event->activePlugin)) $source = 'Plugin - ' . $this->event->activePlugin;
@@ -3016,28 +3023,17 @@ class DocumentParser {
 			elseif(substr($val['function'],0,8)==='phpError') break;
 			$path = str_replace('\\','/',$val['file']);
 			if(strpos($path,MODX_BASE_PATH)===0) $path = substr($path,strlen(MODX_BASE_PATH));
-			if(!empty($val['args']) && 0 < count($val['args']))
+			switch($val['type'])
 			{
-				foreach($val['args'] as $v)
-				{
-					if(is_array($v)) $v = 'array()';
-					elseif(is_object($v))
-					{
-					    $v = get_class($v);
-					}
-					else
-					{
-						$v = str_replace('"', '', $v);
-						$v = htmlspecialchars($v,ENT_QUOTES,$this->config['modx_charset']);
-						if(32 < strlen($v)) $v = mb_substr($v,0,32,$this->config['modx_charset']) . '...';
-						$a[] = '"' . $v . '"';
-					}
-				}
-				$args = join(', ', $a);
+				case '->':
+				case '::':
+					$functionName = $val['function'] = $val['class'] . $val['type'] . $val['function'];
+					break;
+				default:
+					$functionName = $val['function'];
 			}
-			else $args = '';
 			$str .= "<tr><td valign=\"top\">{$key}</td>";
-			$str .= "<td>{$val['function']}({$args})<br />{$path} on line {$val['line']}</td>";
+			$str .= "<td>{$functionName}()<br />{$path} on line {$val['line']}</td>";
 		}
 		$str .= '</table>';
 		return $str;
