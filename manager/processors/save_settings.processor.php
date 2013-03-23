@@ -11,7 +11,7 @@ if (isset($_POST) && count($_POST) > 0) {
             case 'settings_version':{
                 if($modx->getVersionData()!=$_POST['settings_version']){
                     $modx->logEvent(17,2,'<pre>'.var_export($_POST['settings_version'],true).'</pre>','fake settings_version');
-                    continue;  //Maybe other logic?
+                    $v = $modx->getVersionData('version');
                 }
                 break;
             }
