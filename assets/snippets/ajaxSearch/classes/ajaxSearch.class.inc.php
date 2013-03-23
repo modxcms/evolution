@@ -75,7 +75,7 @@ class AjaxSearch {
         if ($msgErr) return $msgErr;
 
         $dbg = $asUtil->dbg; // first level of debug log
-        set_time_limit($asCfg->cfg['timeLimit']);
+        if(!ini_get('safe_mode')) set_time_limit($asCfg->cfg['timeLimit']);
 
         include_once AS_PATH . "classes/ajaxSearchCtrl.class.inc.php";
         include_once AS_PATH . "classes/ajaxSearchInput.class.inc.php";
