@@ -35,6 +35,7 @@ Bugfixes:
 * [#9697] seturl_js_tinymce incorrect path
 * [#9708] Improvement event log message
 * [#9709] Undefined variable error
+* [#9711] TinyMCE - two editor's plugins missing
 
 --------------------------------------------
 Additional Improvements & Updates:
