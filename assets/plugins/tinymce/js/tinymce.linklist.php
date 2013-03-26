@@ -51,7 +51,7 @@ if ($modx->getLoginUserType() !== 'manager')
     exit();
 }
 
-$cache_path = $modx->config['base_path'] . 'assets/cache/mce_linklist.pageCache.php';
+$cache_path = $base_path . 'assets/cache/mce_linklist.pageCache.php';
 if(file_exists($cache_path))
 {
 	$output = file_get_contents($cache_path);
@@ -168,7 +168,7 @@ else
 }
 
 // Make output a real JavaScript file!
-header("Content-type: text/javascript; charset={$modx->config['modx_charset']}"); // browser will now recognize the file as a valid JS file
+header("Content-type: text/javascript; charset={$modx_charset}"); // browser will now recognize the file as a valid JS file
 
 // prevent browser from caching
 header('pragma: no-cache');
