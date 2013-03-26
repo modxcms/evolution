@@ -1608,7 +1608,7 @@ form#mutate textarea {width:90%;height:240px;}
 form#mutate textarea.textareamini {height:120px;}
 form#mutate input.number,input.email {ime-mode:disabled;}
 form#mutate input.number {width:60px !important;padding-right:10px;text-align:right;}
-form#mutate div.tmplvars label {display:block;}
+/*form#mutate div.tmplvars label {display:block;}*/
 
 .phptextarea {font-family: 'Courier New','Courier', monospace;}
 optgroup {font-style:normal;}

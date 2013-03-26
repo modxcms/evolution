@@ -36,6 +36,8 @@ Bugfixes:
 * [#9708] Improvement event log message
 * [#9709] Undefined variable error
 * [#9711] TinyMCE - two editor's plugins missing
+* [#9729] new tinylogo for qm plugin
+* [#9732] Template Var label CSS display:block
 
 --------------------------------------------
 Additional Improvements & Updates:
