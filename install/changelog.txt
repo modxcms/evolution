@@ -39,6 +39,7 @@ Bugfixes:
 * [#9729] new tinylogo for qm plugin
 * [#9732] Template Var label CSS display:block
 * [#9730] PHP error causes Tiny MCE Link List v1.0.3 to fail
+* [#9733] mutate_web_user.dynamic.php fails to sanitize user entry
 
 --------------------------------------------
 Additional Improvements & Updates:
