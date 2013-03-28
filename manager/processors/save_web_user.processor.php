@@ -126,7 +126,7 @@ switch ($_POST['mode']) {
         $f = array();
         $f = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
         $f = $modx->db->escape($f);
-		$rs = $modx->db->insert($sql);
+		$rs = $modx->db->insert($f, '[+prefix+]web_user_attributes');
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;

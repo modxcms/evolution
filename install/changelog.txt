@@ -2,7 +2,7 @@ This file shows the changes in recent releases of MODx. The most current release
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
 
-MODx Evolution 1.0.10 (Mar 23, 2013)
+MODx Evolution 1.0.10 (Mar 29, 2013)
 ===================================
 
 --------------------------------------------
@@ -40,6 +40,7 @@ Bugfixes:
 * [#9732] Template Var label CSS display:block
 * [#9730] PHP error causes Tiny MCE Link List v1.0.3 to fail
 * [#9733] mutate_web_user.dynamic.php fails to sanitize user entry
+* [#9745] cant create and edit web_users
 
 --------------------------------------------
 Additional Improvements & Updates:
