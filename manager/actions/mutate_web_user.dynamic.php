@@ -512,7 +512,7 @@ function showHide(what, onoff){
             <td colspan="2"><div class='split'></div></td>
           </tr>
           <tr>
-            <td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? (strpos($_POST['photo'],"http://")===false?MODX_SITE_URL:"").$_POST['photo'] : !empty($userdata['photo']) ? (strpos($userdata['photo'],"http://")===false?MODX_SITE_URL:"").$userdata['photo']: "media/style/$manager_theme/images/_tx_.gif"; ?>" /></td>
+            <td colspan="2" align="center"><img name="iphoto" src="<?php echo isset($_POST['photo']) ? (strpos($_POST['photo'],"http://")===false?MODX_SITE_URL:"").$_POST['photo'] : !empty($userdata['photo']) ? (strpos($userdata['photo'],"http://")===false?MODX_SITE_URL:"").$userdata['photo']: "media/style/$manager_theme/images/misc/_tx_.gif"; ?>" /></td>
           </tr>
 		</table>
 	</div>
