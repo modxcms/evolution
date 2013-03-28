@@ -121,20 +121,25 @@ class DBAPI {
       @ mysql_close($this->conn);
    }
 
-   function escape($s) {
-      if(is_array($s)) {
-          if(count($s) > 0) {
-              foreach($s as $i=>$v) {
-                  $s[$i] = $this->escape($v);
-              }
-          }
-          return $s;
-      }
+   function escape($s, $safecount=0) {
+      
+      $safecount++;
+      if(1000<$safecount) exit("Too many loops '{$safecount}'");
       
       if (empty ($this->conn) || !is_resource($this->conn)) {
          $this->connect();
        }
-      return mysql_real_escape_string($s, $this->conn);
+       
+      if(is_array($s)) {
+          if(count($s) === 0) $s = '';
+          else {
+              foreach($s as $i=>$v) {
+                  $s[$i] = $this->escape($v);
+              }
+          }
+      }
+      else $s = mysql_real_escape_string($s, $this->conn);
+          return $s;
    }
 
    /**
