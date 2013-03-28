@@ -11,8 +11,7 @@ if (!$modx->hasPermission('save_web_user')) {
 $input = $_POST;
 foreach($input as $k=>$v) {
     if($k!=='comment') {
-        $v = strip_tags($v);
-        $v = htmlspecialchars($v, ENT_NOQUOTES, $modx->config['modx_charset']);
+        $v = sanitize($v);
         $input[$k] = $v;
     }
 }
@@ -126,7 +125,7 @@ switch ($_POST['mode']) {
         $f = array();
         $f = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
         $f = $modx->db->escape($f);
-		$rs = $modx->db->insert($sql);
+		$rs = $modx->db->insert($f, '[+prefix+]web_user_attributes');
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;
@@ -253,11 +252,12 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-		if (!$rs = $modx->db->select('internalKey', '[+prefix+]web_user_attributes', "email='{$esc_email}'")) {
+		$rs = $modx->db->select('internalKey', '[+prefix+]web_user_attributes', "email='{$esc_email}'");
+		$limit = $modx->db->getRecordCount($rs);
+		if (!$limit) {
 			webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
 			exit;
 		}
-		$limit = $modx->db->escape($rs);
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
 			if ($row['internalKey'] != $id) {
@@ -486,4 +486,21 @@ function webAlert($msg) {
 // Generate password
 function generate_password($length = 10) {
 	return substr(str_shuffle('abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, $length);
+}
+
+function sanitize($str='',$safecount=0) {
+	global $modx;
+	$safecount++;
+	if(1000<$safecount) exit("error too many loops '{$safecount}'");
+	if(is_array($str)) {
+		foreach($str as $i=>$v) {
+			$str[$i] = sanitize($str[$i],$safecount);
+			$str[$i] = htmlspecialchars($str[$i], ENT_NOQUOTES, $modx->config['modx_charset']);
+		}
+	}
+	else {
+		$str = strip_tags($str);
+		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
+	}
+	return $str;
 }
