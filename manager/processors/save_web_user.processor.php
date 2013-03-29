@@ -282,10 +282,10 @@ switch ($_POST['mode']) {
 			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		}
-		
+		$f = array();
 		$f = compact('fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
 		$f = $modx->db->escape($f);
-		if (!$rs = $modx->db->update($f, '[+prefix+]web_user_attributes', "id='{$esc_id}'")) {
+		if (!$rs = $modx->db->update($f, '[+prefix+]web_user_attributes', "internalKey='{$esc_id}'")) {
 			webAlert("An error occurred while attempting to update the user's attributes.");
 			exit;
 		}
@@ -495,7 +495,7 @@ function sanitize($str='',$safecount=0) {
 	if(is_array($str)) {
 		foreach($str as $i=>$v) {
 			$str[$i] = sanitize($str[$i],$safecount);
-			$str[$i] = htmlspecialchars($str[$i], ENT_NOQUOTES, $modx->config['modx_charset']);
+			//$str[$i] = htmlspecialchars($str[$i], ENT_NOQUOTES, $modx->config['modx_charset']);
 		}
 	}
 	else {

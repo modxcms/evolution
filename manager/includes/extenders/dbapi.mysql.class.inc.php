@@ -134,7 +134,7 @@ class DBAPI {
           if(count($s) === 0) $s = '';
           else {
               foreach($s as $i=>$v) {
-                  $s[$i] = $this->escape($v);
+                  $s[$i] = $this->escape($v,$safecount);
               }
           }
       }
