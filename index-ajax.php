@@ -29,7 +29,7 @@ if($axhandler = (strtoupper($_SERVER['REQUEST_METHOD'])=='GET') ? $_GET['q'] : $
     // Get realpath
     $axhandler = realpath(MODX_BASE_PATH.$axhandler) or die(); // full
     $axhandler_rel = substr($axhandler, strlen(MODX_BASE_PATH)); // relative
-    $axhandler = realpath($directory.str_replace($directory, '', $axhandler));
+    //$axhandler = realpath($directory.str_replace($directory, '', $axhandler));
 
     if ($axhandler_rel && strtolower(substr($axhandler_rel, -4)) == '.php') {
     // permission check

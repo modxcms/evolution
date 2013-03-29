@@ -276,7 +276,7 @@ switch ($_POST['mode']) {
 		$f = array();
 		$f['username'] = $newusername;
 		if($genpassword == 1)
-		    $f['password'] = $newpassword;
+		    $f['password'] = md5($newpassword);
 		$f = $modx->db->escape($f);
 		if (!$rs = $modx->db->update($f, '[+prefix+]web_users', "id='{$esc_id}'")) {
 			webAlert("An error occurred while attempting to update the user's data.");
