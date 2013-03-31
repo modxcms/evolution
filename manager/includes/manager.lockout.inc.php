@@ -19,12 +19,7 @@ if($_REQUEST['a']!='8' && isset($_SESSION['mgrValidated'])){
     $modx->setPlaceholder('logouturl',$logouturl);
 
     // load template file
-	$customLockout = $base_path.'manager/media/style/'.$modx->config['manager_theme'] .'/manager.lockout.html';
-	if( is_readable($customLockout) ) {
-		$tplFile = $customLockout;
-	} else {
     $tplFile = $base_path.'assets/templates/manager/manager.lockout.html';
-	}
     $handle = fopen($tplFile, "r");
     $tpl = fread($handle, filesize($tplFile));
     fclose($handle);
