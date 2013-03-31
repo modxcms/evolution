@@ -49,6 +49,8 @@
  *          content
  */
 
+define("MGR_DIR", "manager");
+
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();

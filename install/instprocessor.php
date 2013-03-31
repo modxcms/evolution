@@ -218,6 +218,8 @@ $lastInstallTime = '.time().';
 $site_sessionname = \'' . $site_sessionname . '\';
 $https_port = \'443\';
 
+define("MGR_DIR", "manager");
+
 // automatically assign base_path and base_url
 if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'base_url\']) {
     $sapi= \'undefined\';
