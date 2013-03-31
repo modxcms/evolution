@@ -15,6 +15,7 @@ $_SESSION['test'] = 1;
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
 
+define("MGR_DIR", "manager");
 require_once("lang.php");
 require_once('../manager/includes/version.inc.php');
 
