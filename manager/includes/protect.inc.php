@@ -27,7 +27,7 @@ if (!function_exists('modx_sanitize_gpc')) {
 		$tags = array('[', ']', '{', '}');
 		$replaced = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
 
-		if (is_array($tags) && !empty($target)) {
+		if (is_array($target) && !empty($target)) {
 			$keys = array_keys($target);
 			$values = array_values($target);
 
