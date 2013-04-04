@@ -271,13 +271,32 @@ input, select, textarea, td {
 #ta, .tmplvars textarea {
 }
 form input[type=text],
+form input[type=password],
 form textarea {
 	border: 1px solid #ddd;
 	border-left-color: #c3c3c3;
 	border-top-color: #acacac;
-	padding: 3px 3px 2px 2px;
+	padding: 3px 5px;
 	background: #fff url(images/misc/input-bg.gif) repeat-x top left;
 	vertical-align: baseline;
+	border-radius : 3px;
+	-moz-border-radius : 3px;
+	-webkit-border-radius:3px;
+}
+form input[type=checkbox],form input[type=radio] {
+    cursor:pointer;cursor:hand;
+}
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+form select:focus
+{
+	outline: none;
+	background: #fff;
+	border: 1px solid #73829a;
 }
 form input[type=text] {
 	line-height:1;
@@ -547,6 +566,11 @@ a img {
 	border-top: 1px solid #fff;
 	background: #f7f7f7;
 }
+
+#treeRoot {
+    margin-left:-10px;
+}
+
 #treeRoot div img {
 	margin: 0 0 0 -6px;
 }
@@ -1008,7 +1032,7 @@ a.hometblink:hover {
 	width: 200px !important;
 	text-align: left;
 	color: #555;
-	font-size: 120%;
+	font-size: inherit;
 }
 	.rtl .settings th {text-align: right;}
 .filelist td {
