@@ -41,6 +41,7 @@ Bugfixes:
 * [#9730] PHP error causes Tiny MCE Link List v1.0.3 to fail
 * [#9733] mutate_web_user.dynamic.php fails to sanitize user entry
 * [#9745] cant create and edit web_users
+* [#9779] Trouble with site after upgrade JSON no longer working
 
 --------------------------------------------
 Additional Improvements & Updates:
