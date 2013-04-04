@@ -630,6 +630,18 @@ function confirmLangChange(el, lkey, elupd){
           <tr id='furlRow6' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
+<?php if(!isset($make_folders)) $make_folders = '1';?>
+<tr id="furlRow51" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <th><?php echo $_lang['make_folders_title'] ?></th>
+  <td>
+    <?php echo wrap_label($_lang["yes"],form_radio('make_folders','1', $make_folders=='1'));?><br />
+    <?php echo wrap_label($_lang["no"],form_radio('make_folders','0', $make_folders=='0'));?><br />
+    <?php echo $_lang["make_folders_message"] ?></td>
+</tr> 
+<tr id='furlRow52' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+<td colspan="2"><div class='split'></div></td>
+</tr>
+      	
           <tr id='furlRow7' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendly_alias_title"] ?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="1" <?php echo $friendly_alias_urls=='1' ? 'checked="checked"' : "" ; ?> />
