@@ -58,6 +58,7 @@ Additional Improvements & Updates:
 * [#9683] trusted folder/file in index-ajax.php
 * [#9764] german translation (german.inc.php) string: udperms_message
 * [#9776] Adding seo strict urls functionality to parser
+* [#9778] Added ability to use custom templates to login and manager lockout pages
 
 
 MODx Evolution 1.0.9 (Mar 19, 2013)
