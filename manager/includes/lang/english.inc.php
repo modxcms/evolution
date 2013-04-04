@@ -1118,3 +1118,6 @@ $_lang["files.dynamic.php4"] = 'The text file was created.';
 $_lang["not_readable_dir"] = 'Can not read this directory.';
 $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+
+$_lang['make_folders_title'] = 'Make end slash URL at the container';
+$_lang['make_folders_message'] = 'The slash to append to Resources set as containers when using FURLs.'; 
