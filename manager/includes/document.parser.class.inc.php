@@ -2521,6 +2521,15 @@ class DocumentParser {
         return $t;
     }
 
+	# Decode JSON regarding hexadecimal entity encoded MODX tags
+    function jsonDecode($json, $assoc = false) {
+		// unmask MODX tags
+		$masked = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
+		$unmasked = array('[', ']', '{', '}');
+		$json = str_replace($masked, $unmasked, $json);
+		return json_decode($json, $assoc);
+    }
+
     # add an event listner to a plugin - only for use within the current execution cycle
     function addEventListener($evtName, $pluginName) {
 	    if (!$evtName || !$pluginName)
