@@ -21,16 +21,6 @@ if (@ ini_get('register_globals')) {
     }
 }
 
-if (!function_exists('array_combine')) {
-    function array_combine($arr1, $arr2) {
-        $out = array();
-        foreach($arr1 as $key1 => $value1) {
-            $out[$value1] = $arr2[$key1];
-        }
-        return $out;
-    }
-}
-
 // sanitize array
 if (!function_exists('modx_sanitize_gpc')) {
 	function modx_sanitize_gpc(&$target, $dummy = array(), $count = 0) {
