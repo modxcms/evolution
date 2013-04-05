@@ -111,28 +111,53 @@ if(!isset($_SESSION['mgrValidated'])){
 	$html = is_array($evtOut) ? '<div id="onManagerLoginFormRender">'.implode('',$evtOut).'</div>' : '';
 	$modx->setPlaceholder('OnManagerLoginFormRender',$html);
 
-	// load template file
-	$customLogin = $base_path.'manager/media/style/'.$modx->config['manager_theme'] .'/login.html';
-	if( is_readable($customLogin) ) {
-		$tplFile = $customLogin;
+	// load template
+    if(!isset($modx->config['manager_login_tpl']) || empty($modx->config['manager_login_tpl'])) {
+    	$modx->config['manager_login_tpl'] = MODX_MANAGER_PATH . 'media/style/common/login.tpl'; 
+    }
+    
+    $target = $modx->config['manager_login_tpl'];
+    if(substr($target,0,1)==='@') {
+    	if(substr($target,0,6)==='@CHUNK') {
+    		$target = trim(substr($target,7));
+    		$login_tpl = $modx->getChunk($target);
+    	}
+    	elseif(substr($target,0,5)==='@FILE') {
+    		$target = trim(substr($target,6));
+    		$login_tpl = file_get_contents($target);
+    	}
 	} else {
-		$tplFile = $base_path.'manager/media/style/'.$manager_theme.'/login.html';
+    	$chunk = $modx->getChunk($target);
+    	if($chunk!==false && !empty($chunk)) {
+    		$login_tpl = $chunk;
 	}
-	if (file_exists($tplFile) ) {
-    	$handle = fopen($tplFile, "r");
-    	$tpl = fread($handle, filesize($tplFile));
-    	fclose($handle);
+    	elseif(is_file($target)) {
+    		$login_tpl = file_get_contents($target);
+    	}
+    	elseif(is_file(MODX_BASE_PATH . $target)) {
+    		$target = MODX_BASE_PATH . $target;
+    		$login_tpl = file_get_contents($target);
+    	}
+    	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl')) {
+    		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/login.tpl';
+    		$login_tpl = file_get_contents($target);
+    	}
+    	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html')) { // ClipperCMS compatible
+    		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/login.html';
+    		$login_tpl = file_get_contents($target);
 	}
 	else {
-    	trigger_error('The manager template file was not found: '.$tplFile);
+    		$target = MODX_MANAGER_PATH . 'media/style/common/login.tpl';
+    		$login_tpl = file_get_contents($target);
+    	}
 	}
 
     // merge placeholders
-    $tpl = $modx->mergePlaceholderContent($tpl);
-    $regx = strpos($tpl,'[[+')!==false ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~'; // little tweak for newer parsers
-    $tpl = preg_replace($regx, '', $tpl); //cleanup
+    $login_tpl = $modx->mergePlaceholderContent($login_tpl);
+    $regx = strpos($login_tpl,'[[+')!==false ? '~\[\[\+(.*?)\]\]~' : '~\[\+(.*?)\+\]~'; // little tweak for newer parsers
+    $login_tpl = preg_replace($regx, '', $login_tpl); //cleanup
 
-    echo $tpl;
+    echo $login_tpl;
 
     exit;
 
