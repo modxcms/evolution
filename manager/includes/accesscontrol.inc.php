@@ -131,9 +131,6 @@ if(!isset($_SESSION['mgrValidated'])){
     	if($chunk!==false && !empty($chunk)) {
     		$login_tpl = $chunk;
 	}
-    	elseif(is_file($target)) {
-    		$login_tpl = file_get_contents($target);
-    	}
     	elseif(is_file(MODX_BASE_PATH . $target)) {
     		$target = MODX_BASE_PATH . $target;
     		$login_tpl = file_get_contents($target);

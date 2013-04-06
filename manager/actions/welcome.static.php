@@ -228,9 +228,6 @@ if(substr($target,0,1)==='@') {
 	if($chunk!==false && !empty($chunk)) {
 		$welcome_tpl = $chunk;
 	}
-	elseif(is_file($target)) {
-		$welcome_tpl = file_get_contents($target);
-	}
 	elseif(is_file(MODX_BASE_PATH . $target)) {
 		$target = MODX_BASE_PATH . $target;
 		$welcome_tpl = file_get_contents($target);
