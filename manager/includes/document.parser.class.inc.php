@@ -840,6 +840,7 @@ class DocumentParser {
             }
         }
         unset ($modx->event->params);
+        $this->currentSnippet = '';
         return $msg . $snip;
     }
 
