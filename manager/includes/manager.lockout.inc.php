@@ -17,6 +17,8 @@ if($_REQUEST['a']!='8' && isset($_SESSION['mgrValidated'])){
     $modx->setPlaceholder('homeurl',$homeurl);
     $modx->setPlaceholder('logout',$_lang["logout"]);
     $modx->setPlaceholder('logouturl',$logouturl);
+    $modx->setPlaceholder('manager_theme_url',MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
+    $modx->setPlaceholder('year',date('Y'));
 
     // load template
     if(!isset($modx->config['manager_lockout_tpl']) || empty($modx->config['manager_lockout_tpl'])) {
