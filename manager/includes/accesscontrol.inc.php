@@ -76,6 +76,8 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('site_name',$site_name);
 	$modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 	$modx->setPlaceholder('login_message',$_lang["login_message"]);
+	$modx->setPlaceholder('manager_theme_url',MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
+	$modx->setPlaceholder('year',date('Y'));
 
 	// andrazk 20070416 - notify user of install/update
 	if (isset($_GET['installGoingOn'])) {
@@ -131,9 +133,6 @@ if(!isset($_SESSION['mgrValidated'])){
     	if($chunk!==false && !empty($chunk)) {
     		$login_tpl = $chunk;
 	}
-    	elseif(is_file($target)) {
-    		$login_tpl = file_get_contents($target);
-    	}
     	elseif(is_file(MODX_BASE_PATH . $target)) {
     		$target = MODX_BASE_PATH . $target;
     		$login_tpl = file_get_contents($target);

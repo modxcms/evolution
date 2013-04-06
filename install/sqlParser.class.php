@@ -29,6 +29,7 @@ class SqlParser {
 	function connect() {
 		$this->conn = mysql_connect($this->host, $this->user, $this->password);
 		mysql_select_db($this->dbname, $this->conn);
+		if (function_exists('mysql_set_charset')) mysql_set_charset($this->connection_charset);
 
 		$this->dbVersion = 3.23; // assume version 3.23
 		if(function_exists("mysql_get_server_info")) {

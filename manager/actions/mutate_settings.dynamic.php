@@ -206,7 +206,7 @@ function confirmLangChange(el, lkey, elupd){
         <table border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td>
-              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODX Site" ; ?>" /></td>
             </tr>
             <tr>
               <td width="200">&nbsp;</td>
@@ -964,6 +964,7 @@ function confirmLangChange(el, lkey, elupd){
       			$dir = dir("media/style/");
       			while ($file = $dir->read()) {
       				if($file!="." && $file!=".." && is_dir("media/style/$file") && substr($file,0,1) != '.') {
+      					if($file==='common') continue;
       					$themename = $file;
       					$selectedtext = $themename==$manager_theme ? "selected='selected'" : "" ;
       	            	echo "<option value='$themename' $selectedtext>".ucwords(str_replace("_", " ", $themename))."</option>";

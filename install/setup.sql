@@ -895,7 +895,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
-('site_name','My MODx Site'),
+('site_name','My MODX Site'),
 ('site_start','1'),
 ('error_page','1'),
 ('unauthorized_page','1'),
