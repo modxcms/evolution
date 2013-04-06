@@ -76,6 +76,7 @@ if (!@ mysql_select_db(str_replace("`", "", $dbase), $conn)) {
     echo "<span class=\"notok\" style='color:#707070'>".$_lang['setup_database_selection_failed']."</span>".$_lang['setup_database_selection_failed_note']."</p>";
     $create = true;
 } else {
+	if (function_exists('mysql_set_charset')) mysql_set_charset($database_charset);
     @ mysql_query("{$database_connection_method} {$database_connection_charset}");
     echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
 }
