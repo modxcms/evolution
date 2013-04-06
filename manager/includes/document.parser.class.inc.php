@@ -885,12 +885,6 @@ class DocumentParser {
         $except_snip_call = $snip_call['except_snip_call'];
         
         $key = $snip_call['name'];
-        if(strpos($key,':')!==false && $this->config['enable_phx']==='1')
-        {
-            list($key,$modifiers) = explode(':', $key, 2);
-            $snip_call['name'] = $key;
-        }
-        else $modifiers = false;
         
         $snippetObject = $this->_get_snip_properties($snip_call);
         
@@ -950,7 +944,6 @@ class DocumentParser {
             unset($temp_params);
         }
         $value = $this->evalSnippet($snippetObject['content'], $params);
-        if($modifiers!==false) $value = $this->phx->phxFilter($key,$value,$modifiers);
         
         if($this->dumpSnippets == 1)
         {
