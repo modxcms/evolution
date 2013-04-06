@@ -100,7 +100,7 @@ p{ margin:20px 0; }
 a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
 </style>
 <div class=\"install\">
-<p>MODx is not currently installed or the configuration file cannot be found.</p>
+<p>MODX is not currently installed or the configuration file cannot be found.</p>
 <p>Do you want to <a href=\"install/index.php\">install now</a>?</p>
 </div>";
 		exit;
