@@ -119,6 +119,8 @@ if(!isset($_SESSION['mgrValidated'])){
     }
     
     $target = $modx->config['manager_login_tpl'];
+    $target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
+    
     if(substr($target,0,1)==='@') {
     	if(substr($target,0,6)==='@CHUNK') {
     		$target = trim(substr($target,7));
