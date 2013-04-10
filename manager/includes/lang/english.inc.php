@@ -1120,4 +1120,10 @@ $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
 
 $_lang['make_folders_title'] = 'Make end slash URL at the container';
-$_lang['make_folders_message'] = 'The slash to append to Resources set as containers when using FURLs.'; 
+$_lang['make_folders_message'] = 'The slash to append to Resources set as containers when using FURLs.';
+
+$_lang['check_files_onlogin_title'] = 'Check core files on login';
+$_lang['check_files_onlogin_message'] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+
+$_lang['configcheck_sysfiles_mod'] = 'Important System Files have been modified.';
+$_lang['configcheck_sysfiles_mod_msg'] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, manager/index.php, manager/includes/config.inc.php)';

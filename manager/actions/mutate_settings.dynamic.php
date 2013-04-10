@@ -715,6 +715,20 @@ function confirmLangChange(el, lkey, elupd){
         <h2 class="tab"><?php echo $_lang["settings_users"] ?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage4" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
+        <?php
+          if(!isset($check_files_onlogin))
+            $check_files_onlogin="index.php\n.htaccess\nmanager/index.php\nmanager/includes/config.inc.php";
+        ?>
+        <tr>
+            <th><?php echo $_lang["check_files_onlogin_title"] ?></th>
+            <td>
+              <textarea name="check_files_onlogin"><?php echo $check_files_onlogin;?></textarea><br />
+                <?php echo $_lang["check_files_onlogin_message"] ?>
+        </td>
+        </tr>
+        <tr>
+          <td colspan="2"><div class='split'></div></td>
+        </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["udperms_title"] ?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="use_udperms" value="1" <?php echo $use_udperms=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/udPerms/, 1);' />
