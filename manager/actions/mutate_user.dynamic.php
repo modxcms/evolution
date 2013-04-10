@@ -569,6 +569,7 @@ $dir->close();
 		while ($file = $dir->read()) {
 			if ($file != "." && $file != ".." && is_dir("media/style/$file") && substr($file,0,1) != '.') {
 				$themename = $file;
+				if($themename==='common') continue;
 				$attr = 'value="'.$themename.'" ';
 				if (isset($usersettings['manager_theme']) && $themename == $usersettings['manager_theme'])
 					$attr .= 'selected="selected" ';
