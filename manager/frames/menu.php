@@ -223,7 +223,7 @@ if($modx->hasPermission('help')) { ?>
 </div>
 
 <form name="menuForm" action="l4mnu.php" class="clear">
-    <input name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id());?>" />
+    <input type="hidden" name="sessToken" id="sessTokenInput" value="<?php echo md5(session_id());?>" />
 <div id="Navcontainer">
 <div id="divNav">
 	<ul id="nav">
