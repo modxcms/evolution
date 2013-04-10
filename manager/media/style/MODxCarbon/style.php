@@ -8,6 +8,11 @@
  * Version:        1.1
  * MODx version:   1.0.3
 */
+
+// $modx->config['manager_menu_height'] = '70';
+// $modx->config['manager_tree_width']  = '260';
+// $modx->config['mce_editor_skin'] = 'o2k7:silver';
+
 $style_path = 'media/style/' . $modx->config['manager_theme'] . '/images/';
 
 // Tree Menu Toolbar

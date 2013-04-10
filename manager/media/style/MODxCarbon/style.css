@@ -258,8 +258,9 @@ margin:0;
 fieldset {
 	border: none;
 }
-input, select, textarea, td {
-	font: inherit;
+input, select, textarea, option, optgroup, td {
+	font-size: inherit;
+	font-family: inherit;
 	color: inherit;
 }
 	.rtl input,
@@ -268,6 +269,7 @@ input, select, textarea, td {
 	.rtl td {
 		text-align: right;
 	}
+
 #ta, .tmplvars textarea {
 }
 form input[type=text],

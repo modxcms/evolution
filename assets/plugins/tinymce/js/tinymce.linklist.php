@@ -32,10 +32,19 @@ $recent              = 0;
 /* That's it to config! */
 $tree_styles = array('|--', '&#9494;&nbsp;', '&#9658;&nbsp;', 'L&nbsp;');
 define('MODX_API_MODE', true);
-define('IN_MANAGER_MODE', true);
+define("IN_MANAGER_MODE", "true");
 $self = 'assets/plugins/tinymce/js/tinymce.linklist.php';
 $base_path = str_replace($self,'',str_replace('\\','/',__FILE__));
-include_once("{$base_path}index.php");
+$mtime = microtime();
+include_once("{$base_path}manager/includes/config.inc.php");
+include_once("{$base_path}manager/includes/document.parser.class.inc.php");
+$modx = new DocumentParser;
+$modx->tstart = $mtime[1] + $mtime[0];;
+$modx->mstart = memory_get_usage();
+startCMSSession();
+$modx->db->connect();
+$modx->getSettings();
+$mtime = explode(" ",$mtime);
 
 /* only display if manager user is logged in */
 if ($modx->getLoginUserType() !== 'manager')
@@ -168,7 +177,7 @@ else
 }
 
 // Make output a real JavaScript file!
-header("Content-type: text/javascript; charset={$modx_charset}"); // browser will now recognize the file as a valid JS file
+header("Content-type: text/javascript; charset=".$modx->config['modx_charset']); // browser will now recognize the file as a valid JS file
 
 // prevent browser from caching
 header('pragma: no-cache');

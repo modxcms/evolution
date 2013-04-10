@@ -15,6 +15,7 @@ if(!$modx->hasPermission('logs')) {
 </script>
 
 <!-- server -->
+<div class="section">
 <div class="sectionHeader">Server</div><div class="sectionBody" id="lyr2">
 
 		<table border="0" cellspacing="2" cellpadding="2">
@@ -121,7 +122,7 @@ if(!$modx->hasPermission('logs')) {
 		</table>
 
    </div>
-
+</div>
 
 <!-- recent documents -->
 <div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">

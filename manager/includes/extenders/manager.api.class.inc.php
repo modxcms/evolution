@@ -153,4 +153,44 @@ class ManagerAPI {
 		
 		return $result;
 	}
+
+	function getSystemSnapshot() {
+		global $modx;
+		
+        $modx->config['check_files_onlogin'] = "index.php\n.htaccess\nmanager/index.php";
+        if(!isset($modx->config['check_files_onlogin']) || empty($modx->config['check_files_onlogin'])) return;
+        
+		$check_files = trim($modx->config['check_files_onlogin']);
+		$check_files = explode("\n", $check_files);
+		foreach($check_files as $file) {
+			$file = MODX_BASE_PATH . $file;
+			if(!is_file($file)) continue;
+			$_[$file]= md5_file($file);
+		}
+		return serialize($_);
+	}
+	
+	function setSystemSnapshot($snapshot) {
+		global $modx;
+		$tbl_system_settings = $modx->getFullTableName('system_settings');
+		$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_snapshot','{$snapshot}')";
+        $rs = $modx->db->query($sql);
+        $rs = $rs ? '1' : '0';
+        return $rs;
+	}
+	
+	function checkSystemSnapshot() {
+		global $modx;
+		
+		$current = $this->getSystemSnapshot();
+		if(!isset($modx->config['sys_files_snapshot']) || empty($modx->config['sys_files_snapshot']))
+		{
+			return $this->setSystemSnapshot($snapshot);
+		}
+		$snapshot = $this->getSystemSnapshot();
+		if($current===$modx->config['sys_files_snapshot']) $result = '1';
+		else                                               $result = '0';
+
+		return $result;
+	}
 }
