@@ -125,7 +125,7 @@ if ($installMode == 1) {
     $database_charset = substr($database_collation, 0, strpos($database_collation, '_') - 1);
     $database_connection_charset = $_POST['database_connection_charset'];
     $database_connection_method = $_POST['database_connection_method'];
-    $dbase = $_POST['database_name'];
+    $dbase = '`' . $_POST['database_name'] . '`';
     $table_prefix = $_POST['tableprefix'];
 }
 echo "<p>".$_lang['creating_database_connection'];
