@@ -30,9 +30,24 @@ class FileUpload {
 		$this->raw_cwd=$cwd;
 		$this->actual_cwd=str_replace("//","/",($this->fckphp_config['UserFilesPath']."/$type/".$this->raw_cwd));
 		$this->real_cwd=str_replace("//","/",($this->fckphp_config['basedir']."/".$this->actual_cwd));
+        define('MODX_API_MODE', true);
+        define("IN_MANAGER_MODE", "true");
+        $self = 'manager/media/browser/mcpuk/connectors/php/Commands/FileUpload.php';
+        global $modx;
+        $base_path = str_replace($self,'',str_replace('\\','/',__FILE__));
+        $mtime = microtime();
+        include_once("{$base_path}manager/includes/config.inc.php");
+        include_once("{$base_path}manager/includes/document.parser.class.inc.php");
+        $modx = new DocumentParser;
+        $mtime = explode(" ",$mtime);
+        $modx->tstart = $mtime[1] + $mtime[0];;
+        $modx->mstart = memory_get_usage();
+        startCMSSession();
+        $modx->getSettings();
 	}
 
 	function run() {
+		global $modx;
 		//If using CGI Upload script, get file info and insert into $_FILE array
 		if 	(
 				(sizeof($_FILES)==0) && 
@@ -57,11 +72,11 @@ class FileUpload {
 				if ($_FILES['NewFile']['size']<$typeconfig['MaxSize']) {
 
 					$filename=basename(str_replace("\\","/",$_FILES['NewFile']['name']));
-					//if($this->modx->config['clean_uploaded_filename']) {
-					//	$nameparts = explode('.', $filename);
-					//	array_map(array($this->modx, 'stripAlias'), $nameparts);
-					//	$filename = implode($nameparts);
-					//}
+					if($modx->config['clean_uploaded_filename']==1) {
+						$nameparts = explode('.', $filename);
+						$nameparts = array_map(array($modx, 'stripAlias'), $nameparts, array('file_browser'));
+						$filename = implode('.', $nameparts);
+					}
 					
 					$lastdot=strrpos($filename,".");
 					
