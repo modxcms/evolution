@@ -39,12 +39,12 @@ $mtime = microtime();
 include_once("{$base_path}manager/includes/config.inc.php");
 include_once("{$base_path}manager/includes/document.parser.class.inc.php");
 $modx = new DocumentParser;
+$mtime = explode(" ",$mtime);
 $modx->tstart = $mtime[1] + $mtime[0];;
 $modx->mstart = memory_get_usage();
 startCMSSession();
 $modx->db->connect();
 $modx->getSettings();
-$mtime = explode(" ",$mtime);
 
 /* only display if manager user is logged in */
 if ($modx->getLoginUserType() !== 'manager')
