@@ -10,7 +10,7 @@ unset($_POST);
 
 if (isset($data) && count($data) > 0) {
 	$savethese = array();
-	$data['sys_files_snapshot'] = $modx->manager->getSystemSnapshot();
+	$data['sys_files_checksum'] = $modx->manager->getSystemSnapshot();
 	foreach ($data as $k => $v) {
 		switch ($k) {
             case 'settings_version':{
