@@ -173,7 +173,7 @@ class ManagerAPI {
 	function setSystemSnapshot($snapshot) {
 		global $modx;
 		$tbl_system_settings = $modx->getFullTableName('system_settings');
-		$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_snapshot','{$snapshot}')";
+		$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','{$snapshot}')";
         $rs = $modx->db->query($sql);
         $rs = $rs ? '1' : '0';
         return $rs;
@@ -183,12 +183,12 @@ class ManagerAPI {
 		global $modx;
 		
 		$current = $this->getSystemSnapshot();
-		if(!isset($modx->config['sys_files_snapshot']) || empty($modx->config['sys_files_snapshot']))
+		if(!isset($modx->config['sys_files_checksum']) || empty($modx->config['sys_files_checksum']))
 		{
 			return $this->setSystemSnapshot($snapshot);
 		}
 		$snapshot = $this->getSystemSnapshot();
-		if($current===$modx->config['sys_files_snapshot']) $result = '1';
+		if($current===$modx->config['sys_files_checksum']) $result = '1';
 		else                                               $result = '0';
 
 		return $result;
