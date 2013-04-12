@@ -3021,6 +3021,9 @@ class DocumentParser {
 	    }
 	    $this->logEvent(0, $error_level, $str,$source);
 	
+        if($error_level === 2 && $this->error_reporting!=='99') return true;
+        if($this->error_reporting==='99' && !isset($_SESSION['mgrValidated'])) return true;
+    
 	    // Set 500 response header
 	    if($error_level !== 2) header('HTTP/1.1 500 Internal Server Error');
 	
