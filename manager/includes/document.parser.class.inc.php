@@ -907,7 +907,11 @@ class DocumentParser {
             $params_stack = $snip_call['params'];
             while(!empty($params_stack) && $i < $limit)
             {
-                list($pname,$params_stack) = explode('=',$params_stack,2);
+				if(strpos($params_stack,'=')!==false) list($pname,$params_stack) = explode('=',$params_stack,2);
+				else {
+					$pname=$params_stack;
+					$params_stack = '';
+				}
                 $params_stack = trim($params_stack);
                 $delim = substr($params_stack, 0, 1);
                 $temp_params = array();
