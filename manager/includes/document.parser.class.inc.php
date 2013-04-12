@@ -47,6 +47,7 @@ class DocumentParser {
     var $loadedjscripts;
     var $documentMap;
     var $forwards= 3;
+    var $error_reporting;
     private $version=array();
 
     // constructor
@@ -62,6 +63,7 @@ class DocumentParser {
         $this->pluginEvent= array ();
         // set track_errors ini variable
         @ ini_set("track_errors", "1"); // enable error tracking in $php_errormsg
+        $this->error_reporting = 1;
     }
 
     // loads an extension from the extenders folder
@@ -295,6 +297,7 @@ class DocumentParser {
                     $usrSettings= array_merge($musrSettings, $usrSettings);
                 }
             }
+            $this->error_reporting = $this->config['error_reporting'];
             $this->config= array_merge($this->config, $usrSettings);
         }
     }
@@ -904,7 +907,11 @@ class DocumentParser {
             $params_stack = $snip_call['params'];
             while(!empty($params_stack) && $i < $limit)
             {
-                list($pname,$params_stack) = explode('=',$params_stack,2);
+				if(strpos($params_stack,'=')!==false) list($pname,$params_stack) = explode('=',$params_stack,2);
+				else {
+					$pname=$params_stack;
+					$params_stack = '';
+				}
                 $params_stack = trim($params_stack);
                 $delim = substr($params_stack, 0, 1);
                 $temp_params = array();
@@ -2807,8 +2814,23 @@ class DocumentParser {
     /***************************************************************************************/
 
     function phpError($nr, $text, $file, $line) {
-        if (error_reporting() == 0 || $nr == 0 || ($nr == 8 && $this->stopOnNotice == false)) {
+        if (error_reporting() == 0 || $nr == 0) {
             return true;
+        }
+        if($this->stopOnNotice == false)
+        {
+            switch($nr)
+            {
+                case E_NOTICE:
+                    if($this->error_reporting <= 2) return true;
+                    break;
+                case E_STRICT:
+                case E_DEPRECATED:
+                    if($this->error_reporting <= 1) return true;
+                    break;
+                default:
+                    if($this->error_reporting === 0) return true;
+            }
         }
         if (is_readable($file)) {
             $source= file($file);
@@ -2938,10 +2960,6 @@ class DocumentParser {
 	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
 	    $str .= '</tr>';
 	
-	    $str .= "<tr><td>MySQL : </td>";
-	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
-	    $str .= '</tr>';
-	
 	    $str .= "<tr><td>PHP : </td>";
 	    $str .= '<td>[^p^]</td>';
 	    $str .= '</tr>';
@@ -2998,10 +3016,12 @@ class DocumentParser {
 	    		$error_level = 3;
 	    }
 	    $this->logEvent(0, $error_level, $str,$source);
-	    if($error_level === 2) return true;
 	
+        if($error_level === 2 && $this->error_reporting!=='99') return true;
+        if($this->error_reporting==='99' && !isset($_SESSION['mgrValidated'])) return true;
+    
 	    // Set 500 response header
-	    header('HTTP/1.1 500 Internal Server Error');
+	    if($error_level !== 2) header('HTTP/1.1 500 Internal Server Error');
 	
 	    // Display error
 	    if (isset($_SESSION['mgrValidated']))
