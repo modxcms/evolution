@@ -2960,10 +2960,6 @@ class DocumentParser {
 	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
 	    $str .= '</tr>';
 	
-	    $str .= "<tr><td>MySQL : </td>";
-	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
-	    $str .= '</tr>';
-	
 	    $str .= "<tr><td>PHP : </td>";
 	    $str .= '<td>[^p^]</td>';
 	    $str .= '</tr>';
