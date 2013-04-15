@@ -1168,6 +1168,9 @@ a.hometblink, a.hometblink img {
 .sectionBody .tab-page {
 	border-width: 1px 0 0;
 }
+.tab strong {
+    color:#EF1D1D;
+}
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
 }
