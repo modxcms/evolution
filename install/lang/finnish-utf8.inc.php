@@ -85,7 +85,7 @@ $_lang["error"] = 'virhe';
 $_lang["errors"] = 'virheet';
 $_lang["failed"] = 'EPÄONNISTUI!';
 $_lang["help"] = 'Tuki';
-$_lang["help_link"] = 'http://modxcms.com/forums/';
+$_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Asennustukea MODx keskustelufoorumilla';
 $_lang["iagree_box"] = 'Hyväksyn <a href="../assets/docs/license.txt" target="_blank">MODx lisenssin</a> ehdot. GPL lisenssin versio 2:en käännökset löytyvät <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System internetsivuilta</a>.';
 $_lang["install"] = 'Asenna';

@@ -88,7 +88,7 @@ $_lang["error"] = 'ошибки';
 $_lang["errors"] = 'ошибок';
 $_lang["failed"] = 'ОШИБКА!';
 $_lang["help"] = 'Помощь!';
-$_lang["help_link"] = 'http://MODXcms.com/forums/index.php/board,42.0.html';
+$_lang["help_link"] = 'http://forums.modx.com/board/230/russian';
 $_lang["help_title"] = 'Помощь в установке на форумах MODX';
 $_lang["iagree_box"] = 'Я согласен с условиями <a href="../assets/docs/license.txt" target="_blank">лицензии</a>. С русским переводом текста лицензии можно познакомиться на странице <a href="http://ru.wikipedia.org/wiki/GPL" target="_blank">GNU General Public License</a>.';
 $_lang["install"] = 'Установить';
@@ -186,7 +186,7 @@ $_lang["unable_install_template"] = 'Невозможно установить �
 $_lang["upgrade_note"] = '<strong>Внимание:</strong> Прежде чем открыть ваш сайт, вам необходимо войти в панель управления, затем просмотреть и сохранить системную конфигурацию.';
 $_lang["upgraded"] = 'Обновлен';
 $_lang["validate_referer_title"] = 'Проверять серверные заголовки HTTP_REFERER?';
-$_lang["visit_forum"] = ', посетите <a href="http://www.MODXcms.com/forums/" target="_blank">форум MODX</a>.';
+$_lang["visit_forum"] = ', посетите <a href="http://forums.modx.com/board/230/russian" target="_blank">форум MODX</a>.';
 $_lang["warning"] = 'Предупреждение!';
 $_lang["welcome_message_start"] = 'Выберите тип установки:';
 $_lang["welcome_message_text"] = 'Эта программа проведет вас через весь процесс установки.';

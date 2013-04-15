@@ -86,7 +86,7 @@ $_lang["error"] = 'fejl';
 $_lang["errors"] = 'fejl';
 $_lang["failed"] = 'IKKE GENNEMFØRT!';
 $_lang["help"] = 'Hjælp!';
-$_lang["help_link"] = 'http://modxcms.com/forums/';
+$_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Hjælp til installation i MODx\'s fora';
 $_lang["iagree_box"] = 'Jeg er enig i betingelserne for <a href="../assets/docs/license.txt" target="_blank">MODx licensen</a>. For at se oversættelser af GPL version 2 licensen, besøg venligst <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Operating System websitet</a>.';
 $_lang["install"] = 'Installer';
