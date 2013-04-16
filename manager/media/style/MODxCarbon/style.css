@@ -483,6 +483,9 @@ input.submit {
 	font-size: 12px;
 	color: #333;
 }
+.inherited {
+	font-style: italic;
+}
 thead, .fancyrow {
 	color: #333;
 	height: 18px !important;
