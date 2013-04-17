@@ -3,8 +3,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 $warningspresent = 0;
 
-$sysfiles_check = $modx->manager->checkSystemSnapshot();
-if ($sysfiles_check==='0'){
+$sysfiles_check = $modx->manager->checkSystemChecksum();
+if ($sysfiles_check==='modified'){
       $warningspresent = 1;
       $warnings[] = array($_lang['configcheck_sysfiles_mod']);
     }

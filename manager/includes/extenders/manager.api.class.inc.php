@@ -154,15 +154,13 @@ class ManagerAPI {
 		return $result;
 	}
 
-	function getSystemSnapshot() {
+	function getSystemChecksum($check_files) {
 		global $modx;
 		
-        $modx->config['check_files_onlogin'] = "index.php\n.htaccess\nmanager/index.php";
-        if(!isset($modx->config['check_files_onlogin']) || empty($modx->config['check_files_onlogin'])) return;
-        
-		$check_files = trim($modx->config['check_files_onlogin']);
+		$check_files = trim($check_files);
 		$check_files = explode("\n", $check_files);
 		foreach($check_files as $file) {
+			$file = trim($file);
 			$file = MODX_BASE_PATH . $file;
 			if(!is_file($file)) continue;
 			$_[$file]= md5_file($file);
@@ -170,26 +168,28 @@ class ManagerAPI {
 		return serialize($_);
 	}
 	
-	function setSystemSnapshot($snapshot) {
+	function setSystemChecksum($checksum) {
 		global $modx;
 		$tbl_system_settings = $modx->getFullTableName('system_settings');
-		$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','{$snapshot}')";
-        $rs = $modx->db->query($sql);
-        $rs = $rs ? '1' : '0';
-        return $rs;
+		$sql = "REPLACE INTO {$tbl_system_settings} (setting_name, setting_value) VALUES ('sys_files_checksum','{$checksum}')";
+        $modx->db->query($sql);
 	}
 	
-	function checkSystemSnapshot() {
+	function checkSystemChecksum() {
 		global $modx;
+
+		if(!isset($modx->config['check_files_onlogin']) || empty($modx->config['check_files_onlogin'])) return '0';
 		
-		$current = $this->getSystemSnapshot();
+		$current = $this->getSystemChecksum($modx->config['check_files_onlogin']);
+		if(empty($current)) return;
+		
 		if(!isset($modx->config['sys_files_checksum']) || empty($modx->config['sys_files_checksum']))
 		{
-			return $this->setSystemSnapshot($snapshot);
+			$this->setSystemChecksum($current);
+			return;
 		}
-		$snapshot = $this->getSystemSnapshot();
-		if($current===$modx->config['sys_files_checksum']) $result = '1';
-		else                                               $result = '0';
+		if($current===$modx->config['sys_files_checksum']) $result = '0';
+		else                                               $result = 'modified';
 
 		return $result;
 	}
