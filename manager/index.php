@@ -72,8 +72,8 @@ header("X-UA-Compatible: IE=edge;FF=3;OtherUA=4");
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
 
-// check PHP version. MODX Evolution is compatible with php 4 (4.3.3+)
-$php_ver_comp =  version_compare(phpversion(), "4.3.3");
+// check PHP version. MODX Evolution is compatible with php 5 (5.0.0+)
+$php_ver_comp =  version_compare(phpversion(), "5.0.0");
         // -1 if left is less, 0 if equal, +1 if left is higher
 if($php_ver_comp < 0) {
     echo sprintf($_lang['php_version_check'], phpversion());
