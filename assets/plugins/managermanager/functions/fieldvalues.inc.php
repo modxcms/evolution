@@ -217,9 +217,10 @@ function mm_inherit($fields, $roles='', $templates='') {
 						$fieldtype = $mm_fields[$field]['fieldtype'];
 						$fieldname = $mm_fields[$field]['fieldname'];
 						$dbname = $mm_fields[$field]['dbname'];
+						if(!empty($mm_fields[$field]['tv'])) $dbname = $field;
 						
 						// Get this field data from the parent
-						$newArray = $modx->getDocument($parentID, $dbname);
+						$newArray = $modx->getTemplateVarOutput($dbname, $parentID);
 						$newvalue = $newArray[$dbname];
 			} else {
 				break;	 // If it's not something stored in the database, don't get the value
