@@ -951,6 +951,7 @@ $_lang["tmplvars_caption"] = 'Caption';
 $_lang["tmplvars_default"] = 'Default Value';
 $_lang["tmplvars_description"] = 'Description';
 $_lang["tmplvars_elements"] = 'Input Option Values';
+$_lang["tmplvars_inherited"] = 'Value inherited';
 $_lang["tmplvars_management_msg"] = 'Manage additional Template Variables for your Resources.';
 $_lang["tmplvars_msg"] = 'Add or edit Template Variables here. Template Variables must be assigned to Templates in order to access them from Snippets and Resources.';
 $_lang["tmplvars_name"] = 'Template Variable Name';
