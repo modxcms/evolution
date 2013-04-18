@@ -1326,10 +1326,24 @@ ul.actionButtons {
 	box-shadow:  0 0 10px #b8c7d6;
 }
 .actionButtons a.disabled,
-.actionButtons .disabled a {
+.actionButtons li.disabled a {
+	border: 1px solid #c7ced2;
+	color: #777;
+    cursor:default;
 }
+
 .actionButtons a.disabled img,
-.actionButtons .disabled img {
+.actionButtons li.disabled img{
+    opacity: .3;
+    filter: alpha(opacity=30);
+}
+.actionButtons a:hover.disabled,
+.actionButtons li.disabled a:hover {
+	background-position: top;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow:  none;
+	-webkit-transition: none;
 }
 .actionButtons .and{
     margin:0 2px 0 5px;
