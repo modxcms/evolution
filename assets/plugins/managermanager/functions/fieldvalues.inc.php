@@ -220,8 +220,8 @@ function mm_inherit($fields, $roles='', $templates='') {
 						if(!empty($mm_fields[$field]['tv'])) $dbname = $field;
 						
 						// Get this field data from the parent
-						$newArray = $modx->getTemplateVarOutput($dbname, $parentID);
-						$newvalue = $newArray[$dbname];
+						$newArray = !empty($parentID) ? $modx->getTemplateVarOutput($dbname, $parentID) : false;
+						$newvalue = !empty($parentID) ? $newArray[$dbname] : '';
 			} else {
 				break;	 // If it's not something stored in the database, don't get the value
 			}
@@ -261,7 +261,7 @@ function mm_inherit($fields, $roles='', $templates='') {
 						break;
 						
 						default: 
-							$output .=  '$j("'.$fieldtype.'[name='.$fieldname.']").val("' . jsSafe($newvalue) . '"); ';
+							if(!empty($newvalue)) $output .=  '$j("'.$fieldtype.'[name='.$fieldname.']").val("' . jsSafe($newvalue) . '"); ';
 						break;	
 					}
 				break;	
