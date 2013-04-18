@@ -7,19 +7,21 @@ require_once('../../includes/protect.inc.php');
 // load configuration file
 include "../../includes/config.inc.php";
 
+error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
+
 /** 
  * Security check user MUST be logged into manager 
  * before being able to run this script
  */
 startCMSSession();  
 if(!isset($_SESSION['mgrValidated'])) {
-	die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+  die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
 // connect to the database
 if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
-	die("Failed to create the database connection!");
+  die("Failed to create the database connection!");
 } else {
-	mysql_select_db($dbase);
+  mysql_select_db($dbase);
     @mysql_query("{$database_connection_method} {$database_connection_charset}");
 }
 
@@ -31,7 +33,7 @@ include("../../includes/user_settings.inc.php");// Override system settings with
 $IMConfig['modx']['folder_permissions'] = octdec($new_folder_permissions);
 
 // ** END FOR MODx
-	
+  
 /**
  * Image Manager configuration file.
  * @author $Author: Wei Zhuo $
@@ -46,7 +48,7 @@ $IMConfig['modx']['folder_permissions'] = octdec($new_folder_permissions);
 
  NOTE: This directory requires write access by PHP. That is, 
        PHP must be able to create files in this directory.
-	   Able to create directories is nice, but not necessary.
+     Able to create directories is nice, but not necessary.
 */
 $IMConfig['base_dir'] = $rb_base_dir;
 
@@ -67,8 +69,8 @@ $IMConfig['base_url'] = $rb_base_url;
 
   TRUE - If PHP on the web server is in safe mode, set this to true.
          SAFE MODE restrictions: directory creation will not be possible,
-		 only the GD library can be used, other libraries require
-		 Safe Mode to be off.
+     only the GD library can be used, other libraries require
+     Safe Mode to be off.
 
   FALSE - Set to false if PHP on the web server is not in safe mode.
 */

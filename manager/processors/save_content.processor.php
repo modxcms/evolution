@@ -120,7 +120,7 @@ elseif ($alias) {
 }
 
 // determine published status
-$currentdate = time();
+$currentdate = time() + $modx->config['server_offset_time'];
 
 if (empty ($pub_date)) {
 	$pub_date = 0;
@@ -293,11 +293,11 @@ switch ($actionToTake) {
 			$published = 0;
 		}
 
-		$publishedon = ($published ? time() : 0);
+		$publishedon = ($published ? $currentdate : 0);
 		$publishedby = ($published ? $modx->getLoginUserID() : 0);
 
 		$sql = "INSERT INTO $tbl_site_content (introtext,content, pagetitle, longtitle, type, description, alias, link_attributes, isfolder, richtext, published, parent, template, menuindex, searchable, cacheable, createdby, createdon, editedby, editedon, publishedby, publishedon, pub_date, unpub_date, contentType, content_dispo, donthit, menutitle, hidemenu)
-						VALUES('" . $introtext . "','" . $content . "', '" . $pagetitle . "', '" . $longtitle . "', '" . $type . "', '" . $description . "', '" . $alias . "', '" . $link_attributes . "', '" . $isfolder . "', '" . $richtext . "', '" . $published . "', '" . $parent . "', '" . $template . "', '" . $menuindex . "', '" . $searchable . "', '" . $cacheable . "', '" . $modx->getLoginUserID() . "', " . time() . ", '" . $modx->getLoginUserID() . "', " . time() . ", " . $publishedby . ", " . $publishedon . ", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
+						VALUES('" . $introtext . "','" . $content . "', '" . $pagetitle . "', '" . $longtitle . "', '" . $type . "', '" . $description . "', '" . $alias . "', '" . $link_attributes . "', '" . $isfolder . "', '" . $richtext . "', '" . $published . "', '" . $parent . "', '" . $template . "', '" . $menuindex . "', '" . $searchable . "', '" . $cacheable . "', '" . $modx->getLoginUserID() . "', " . $currentdate . ", '" . $modx->getLoginUserID() . "', " . $currentdate . ", " . $publishedby . ", " . $publishedon . ", '$pub_date', '$unpub_date', '$contentType', '$contentdispo', '$donthit', '$menutitle', '$hidemenu')";
 
 		$rs = $modx->db->query($sql);
 		if (!$rs) {
@@ -461,7 +461,7 @@ switch ($actionToTake) {
 
 		// if it was changed from unpublished to published
 		if (!$was_published && $published) {
-			$publishedon = time();
+			$publishedon = $currentdate;
 			$publishedby = $modx->getLoginUserID();
 		}
 		elseif ($was_published && !$published) {
@@ -481,7 +481,7 @@ switch ($actionToTake) {
 		// update the document
 		$sql = "UPDATE $tbl_site_content SET introtext='$introtext', content='$content', pagetitle='$pagetitle', longtitle='$longtitle', type='$type', description='$description', alias='$alias', link_attributes='$link_attributes',
 				isfolder=$isfolder, richtext=$richtext, published=$published, pub_date=$pub_date, unpub_date=$unpub_date, parent=$parent, template=$template, menuindex='$menuindex',
-				searchable=$searchable, cacheable=$cacheable, editedby=" . $modx->getLoginUserID() . ", editedon=" . time() . ", publishedon=$publishedon, publishedby=$publishedby, contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu'  WHERE id=$id;";
+				searchable=$searchable, cacheable=$cacheable, editedby=" . $modx->getLoginUserID() . ", editedon=" . $currentdate . ", publishedon=$publishedon, publishedby=$publishedby, contentType='$contentType', content_dispo='$contentdispo', donthit='$donthit', menutitle='$menutitle', hidemenu='$hidemenu'  WHERE id=$id;";
 
 		$rs = $modx->db->query($sql);
 		if (!$rs) {

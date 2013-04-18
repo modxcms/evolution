@@ -188,9 +188,9 @@ function confirmLangChange(el, lkey, elupd){
 
 <div style="margin: 0 10px 0 20px">
     <input type="hidden" name="site_id" value="<?php echo $site_id; ?>" />
-    <input type="hidden" name="settings_version" value="<?php echo $modx_version; ?>" />
+    <input type="hidden" name="settings_version" value="<?php echo $modx->getVersionData('version'); ?>" />
     <!-- this field is used to check site settings have been entered/ updated after install or upgrade -->
-    <?php if(!isset($settings_version) || $settings_version!=$modx_version) { ?>
+    <?php if(!isset($settings_version) || $settings_version!=$modx->getVersionData('version')) { ?>
     <div class='sectionBody'><p><?php echo $_lang['settings_after_install']; ?></p></div>
     <?php } ?>
     <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -206,7 +206,7 @@ function confirmLangChange(el, lkey, elupd){
         <table border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td nowrap class="warning"><b><?php echo $_lang["sitename_title"] ?></b></td>
-              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODx Site" ; ?>" /></td>
+              <td ><input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 200px;" name="site_name" value="<?php echo isset($site_name) ? $site_name : "My MODX Site" ; ?>" /></td>
             </tr>
             <tr>
               <td width="200">&nbsp;</td>
@@ -630,6 +630,18 @@ function confirmLangChange(el, lkey, elupd){
           <tr id='furlRow6' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
+<?php if(!isset($make_folders)) $make_folders = '1';?>
+<tr id="furlRow51" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <th><?php echo $_lang['make_folders_title'] ?></th>
+  <td>
+    <?php echo wrap_label($_lang["yes"],form_radio('make_folders','1', $make_folders=='1'));?><br />
+    <?php echo wrap_label($_lang["no"],form_radio('make_folders','0', $make_folders=='0'));?><br />
+    <?php echo $_lang["make_folders_message"] ?></td>
+</tr> 
+<tr id='furlRow52' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+<td colspan="2"><div class='split'></div></td>
+</tr>
+      	
           <tr id='furlRow7' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendly_alias_title"] ?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="1" <?php echo $friendly_alias_urls=='1' ? 'checked="checked"' : "" ; ?> />
@@ -703,6 +715,20 @@ function confirmLangChange(el, lkey, elupd){
         <h2 class="tab"><?php echo $_lang["settings_users"] ?></h2>
         <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage4" ) );</script>
         <table border="0" cellspacing="0" cellpadding="3">
+        <?php
+          if(!isset($check_files_onlogin))
+            $check_files_onlogin="index.php\n.htaccess\nmanager/index.php\nmanager/includes/config.inc.php";
+        ?>
+        <tr>
+            <th><?php echo $_lang["check_files_onlogin_title"] ?></th>
+            <td>
+              <textarea name="check_files_onlogin"><?php echo $check_files_onlogin;?></textarea><br />
+                <?php echo $_lang["check_files_onlogin_message"] ?>
+        </td>
+        </tr>
+        <tr>
+          <td colspan="2"><div class='split'></div></td>
+        </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["udperms_title"] ?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="use_udperms" value="1" <?php echo $use_udperms=='1' ? 'checked="checked"' : "" ; ?> onclick='showHide(/udPerms/, 1);' />
@@ -952,6 +978,7 @@ function confirmLangChange(el, lkey, elupd){
       			$dir = dir("media/style/");
       			while ($file = $dir->read()) {
       				if($file!="." && $file!=".." && is_dir("media/style/$file") && substr($file,0,1) != '.') {
+      					if($file==='common') continue;
       					$themename = $file;
       					$selectedtext = $themename==$manager_theme ? "selected='selected'" : "" ;
       	            	echo "<option value='$themename' $selectedtext>".ucwords(str_replace("_", " ", $themename))."</option>";

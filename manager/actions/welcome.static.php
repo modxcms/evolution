@@ -2,7 +2,7 @@
 
 unset($_SESSION['itemname']); // clear this, because it's only set for logging purposes
 
-if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_version!=$modx_version)) {
+if($modx->hasPermission('settings') && (!isset($settings_version) || $settings_version!=$modx->getVersionData('version'))) {
     // seems to be a new install - send the user to the configuration page
     echo '<script type="text/javascript">document.location.href="index.php?a=17";</script>';
     exit;
@@ -48,23 +48,23 @@ if($modx->hasPermission('messages')) {
 
 // setup icons
 if($modx->hasPermission('new_user')||$modx->hasPermission('edit_user')) { 
-    $icon = '<a class="hometblink" href="index.php?a=75"><img src="'.$_style['icons_security_large'].'" width="32" height="32" alt="'.$_lang['user_management_title'].'" /><br />'.$_lang['security'].'</a>';     
+    $icon = '<a class="hometblink" href="index.php?a=75"><img src="'.$_style['icons_security_large'].'" alt="'.$_lang['user_management_title'].'" /><br />'.$_lang['security'].'</a>';     
     $modx->setPlaceholder('SecurityIcon',$icon);
 }
 if($modx->hasPermission('new_web_user')||$modx->hasPermission('edit_web_user')) { 
-    $icon = '<a class="hometblink" href="index.php?a=99"><img src="'.$_style['icons_webusers_large'].'" width="32" height="32" alt="'.$_lang['web_user_management_title'].'" /><br />'.$_lang['web_users'].'</a>';
+    $icon = '<a class="hometblink" href="index.php?a=99"><img src="'.$_style['icons_webusers_large'].'" alt="'.$_lang['web_user_management_title'].'" /><br />'.$_lang['web_users'].'</a>';
     $modx->setPlaceholder('WebUserIcon',$icon);
 }
 if($modx->hasPermission('new_module') || $modx->hasPermission('edit_module')) {
-    $icon = '<a class="hometblink" href="index.php?a=106"><img src="'.$_style['icons_modules_large'].'" width="32" height="32" alt="'.$_lang['manage_modules'].'" /><br />'.$_lang['modules'].'</a>';
+    $icon = '<a class="hometblink" href="index.php?a=106"><img src="'.$_style['icons_modules_large'].'" alt="'.$_lang['manage_modules'].'" /><br />'.$_lang['modules'].'</a>';
     $modx->setPlaceholder('ModulesIcon',$icon);
 }
 if($modx->hasPermission('new_template') || $modx->hasPermission('edit_template') || $modx->hasPermission('new_snippet') || $modx->hasPermission('edit_snippet') || $modx->hasPermission('new_plugin') || $modx->hasPermission('edit_plugin') || $modx->hasPermission('manage_metatags')) {
-    $icon = '<a class="hometblink" href="index.php?a=76"><img src="'.$_style['icons_resources_large'].'" width="32" height="32" alt="'.$_lang['element_management'].'" /><br />'.$_lang['elements'].'</a>';
+    $icon = '<a class="hometblink" href="index.php?a=76"><img src="'.$_style['icons_resources_large'].'" alt="'.$_lang['element_management'].'" /><br />'.$_lang['elements'].'</a>';
     $modx->setPlaceholder('ResourcesIcon',$icon);
 }
 if($modx->hasPermission('bk_manager')) {
-    $icon = '<a class="hometblink" href="index.php?a=93"><img src="'.$_style['icons_backup_large'].'" width="32" height="32" alt="'.$_lang['bk_manager'].'" /><br />'.$_lang['backup'].'</a>';
+    $icon = '<a class="hometblink" href="index.php?a=93"><img src="'.$_style['icons_backup_large'].'" alt="'.$_lang['bk_manager'].'" /><br />'.$_lang['backup'].'</a>';
     $modx->setPlaceholder('BackupIcon',$icon);
 }
 
@@ -208,23 +208,52 @@ if(is_array($evtOut)) {
     $modx->setPlaceholder('OnManagerWelcomeRender', $output);
 }
 
-// load template file
-$customWelcome = $base_path.'manager/media/style/'.$modx->config['manager_theme'] .'/welcome.html';
-if( is_readable($customWelcome) ) {
-    $tplFile = $customWelcome;
-} else {
-    $tplFile = $base_path.'assets/templates/manager/welcome.html';
+// load template
+if(!isset($modx->config['manager_welcome_tpl']) || empty($modx->config['manager_welcome_tpl'])) {
+	$modx->config['manager_welcome_tpl'] = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl'; 
 }
-$handle = fopen($tplFile, "r");
-$tpl = fread($handle, filesize($tplFile));
-fclose($handle);
+
+$target = $modx->config['manager_welcome_tpl'];
+$target = str_replace('[+base_path+]', MODX_BASE_PATH, $target);
+$target = $modx->mergeSettingsContent($target);
+
+if(substr($target,0,1)==='@') {
+	if(substr($target,0,6)==='@CHUNK') {
+		$target = trim(substr($target,7));
+		$welcome_tpl = $modx->getChunk($target);
+	}
+	elseif(substr($target,0,5)==='@FILE') {
+		$target = trim(substr($target,6));
+		$welcome_tpl = file_get_contents($target);
+	}
+} else {
+	$chunk = $modx->getChunk($target);
+	if($chunk!==false && !empty($chunk)) {
+		$welcome_tpl = $chunk;
+	}
+	elseif(is_file(MODX_BASE_PATH . $target)) {
+		$target = MODX_BASE_PATH . $target;
+		$welcome_tpl = file_get_contents($target);
+	}
+	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl')) {
+		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/welcome.tpl';
+		$welcome_tpl = file_get_contents($target);
+	}
+	elseif(is_file(MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html')) { // ClipperCMS compatible
+		$target = MODX_MANAGER_PATH . 'media/style/' . $modx->config['manager_theme'] . '/html/welcome.html';
+		$welcome_tpl = file_get_contents($target);
+	}
+	else {
+		$target = MODX_MANAGER_PATH . 'media/style/common/welcome.tpl';
+		$welcome_tpl = file_get_contents($target);
+	}
+}
 
 // merge placeholders
-$tpl = $modx->mergePlaceholderContent($tpl);
-$tpl = preg_replace('~\[\+(.*?)\+\]~', '', $tpl); //cleanup
+$welcome_tpl = $modx->mergePlaceholderContent($welcome_tpl);
+$welcome_tpl = preg_replace('~\[\+(.*?)\+\]~', '', $welcome_tpl); //cleanup
 if ($js= $modx->getRegisteredClientScripts()) {
-	$tpl .= $js;
+	$welcome_tpl .= $js;
 }
 
-echo $tpl;
-?>
+echo $welcome_tpl;

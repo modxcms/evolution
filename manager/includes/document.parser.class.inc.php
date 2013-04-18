@@ -19,6 +19,7 @@ class DocumentParser {
     var $documentGenerated;
     var $documentContent;
     var $tstart;
+    var $mstart;
     var $minParserPasses;
     var $maxParserPasses;
     var $documentObject;
@@ -46,9 +47,13 @@ class DocumentParser {
     var $loadedjscripts;
     var $documentMap;
     var $forwards= 3;
+    var $error_reporting;
+    private $version=array();
 
     // constructor
     function DocumentParser() {
+        global $database_server;
+        if(substr(PHP_OS,0,3) === 'WIN' && $database_server==='localhost') $database_server = '127.0.0.1';
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
         $this->dbConfig= & $this->db->config; // alias for backward compatibility
         $this->jscripts= array ();
@@ -60,6 +65,7 @@ class DocumentParser {
         $this->pluginEvent= array ();
         // set track_errors ini variable
         @ ini_set("track_errors", "1"); // enable error tracking in $php_errormsg
+        $this->error_reporting = 1;
     }
 
     // loads an extension from the extenders folder
@@ -293,6 +299,7 @@ class DocumentParser {
                     $usrSettings= array_merge($musrSettings, $usrSettings);
                 }
             }
+            $this->error_reporting = $this->config['error_reporting'];
             $this->config= array_merge($this->config, $usrSettings);
         }
     }
@@ -838,6 +845,7 @@ class DocumentParser {
             }
         }
         unset ($modx->event->params);
+        $this->currentSnippet = '';
         return $msg . $snip;
     }
 
@@ -883,12 +891,6 @@ class DocumentParser {
         $except_snip_call = $snip_call['except_snip_call'];
         
         $key = $snip_call['name'];
-        if(strpos($key,':')!==false && $this->config['enable_phx']==='1')
-        {
-            list($key,$modifiers) = explode(':', $key, 2);
-            $snip_call['name'] = $key;
-        }
-        else $modifiers = false;
         
         $snippetObject = $this->_get_snip_properties($snip_call);
         
@@ -907,7 +909,11 @@ class DocumentParser {
             $params_stack = $snip_call['params'];
             while(!empty($params_stack) && $i < $limit)
             {
-                list($pname,$params_stack) = explode('=',$params_stack,2);
+				if(strpos($params_stack,'=')!==false) list($pname,$params_stack) = explode('=',$params_stack,2);
+				else {
+					$pname=$params_stack;
+					$params_stack = '';
+				}
                 $params_stack = trim($params_stack);
                 $delim = substr($params_stack, 0, 1);
                 $temp_params = array();
@@ -948,7 +954,6 @@ class DocumentParser {
             unset($temp_params);
         }
         $value = $this->evalSnippet($snippetObject['content'], $params);
-        if($modifiers!==false) $value = $this->phx->phxFilter($key,$value,$modifiers);
         
         if($this->dumpSnippets == 1)
         {
@@ -1032,11 +1037,12 @@ class DocumentParser {
         return $snippetObject;
     }
 
-    function makeFriendlyURL($pre, $suff, $alias) {
+    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0) {
         $Alias = explode('/',$alias);
         $alias = array_pop($Alias);
         $dir = implode('/', $Alias);
         unset($Alias);
+        if($this->config['make_folders']==='1' && $isfolder==1) $suff = '/';
         return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
@@ -1046,13 +1052,15 @@ class DocumentParser {
             $aliases= array ();
             foreach ($this->aliasListing as $item) {
                 $aliases[$item['id']]= (strlen($item['path']) > 0 ? $item['path'] . '/' : '') . $item['alias'];
+                $isfolder[$item['id']]= $item['isfolder'];
             }
             $in= '!\[\~([0-9]+)\~\]!ise'; // Use preg_replace with /e to make it evaluate PHP
             $isfriendly= ($this->config['friendly_alias_urls'] == 1 ? 1 : 0);
             $pref= $this->config['friendly_url_prefix'];
             $suff= $this->config['friendly_url_suffix'];
             $thealias= '$aliases[\\1]';
-            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias)";
+            $thefolder= '$isfolder[\\1]';
+            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder)";
             $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
             $documentSource= preg_replace($in, $out, $documentSource);
@@ -1462,7 +1470,7 @@ class DocumentParser {
 	$LoginUserID = $this->getLoginUserID();
 	if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
-            $type=(int)$type;
+        $type=(int)$type;
         if ($type < 1) {
             $type= 1;
         }
@@ -1730,6 +1738,8 @@ class DocumentParser {
             $alias= $id;
             if ($this->config['friendly_alias_urls'] == 1) {
                 $al= $this->aliasListing[$id];
+                if($al['isfolder']===1 && $this->config['make_folders']==='1')
+                    $f_url_suffix = '/';
                 $alPath= !empty ($al['path']) ? $al['path'] . '/' : '';
                 if ($al && $al['alias'])
                     $alias= $al['alias'];
@@ -1767,14 +1777,19 @@ class DocumentParser {
         }
     }
 
-    function getVersionData() {
-        include $this->config["base_path"] . "manager/includes/version.inc.php";
-        $v= array ();
-        $v['version']= $modx_version;
-        $v['branch']= $modx_branch;
-        $v['release_date']= $modx_release_date;
-        $v['full_appname']= $modx_full_appname;
-        return $v;
+    function getVersionData($data=null) {
+        $out=array();
+        if(empty($this->version) || !is_array($this->version)){
+            //include for compatibility modx version < 1.0.10
+            include $this->config["base_path"] . "manager/includes/version.inc.php";
+            $this->version=array();
+            $this->version['version']= isset($modx_version) ? $modx_version : '';
+            $this->version['branch']= isset($modx_branch) ? $modx_branch : '';
+            $this->version['release_date']= isset($modx_release_date) ? $modx_release_date : '';
+            $this->version['full_appname']= isset($modx_full_appname) ? $modx_full_appname : '';
+            $this->version['new_version'] = isset($this->config['newversiontext']) ? $this->config['newversiontext'] : '';
+        }
+        return (!is_null($data) && is_array($this->version) && isset($this->version[$data])) ? $this->version[$data] : $this->version;
     }
 
     function makeList($array, $ulroot= 'root', $ulprefix= 'sub_', $type= '', $ordered= false, $tablevel= 0) {
@@ -2085,8 +2100,6 @@ class DocumentParser {
                 $query= "tv.id<>0";
             else
                 $query= (is_numeric($idnames[0]) ? "tv.id" : "tv.name") . " IN ('" . implode("','", $idnames) . "')";
-            if ($docgrp= $this->getUserDocGroups())
-                $docgrp= implode(",", $docgrp);
             $sql= "SELECT $fields, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
             $sql .= "FROM " . $this->getFullTableName('site_tmplvars')." tv ";
             $sql .= "INNER JOIN " . $this->getFullTableName('site_tmplvar_templates')." tvtpl ON tvtpl.tmplvarid = tv.id ";
@@ -2502,7 +2515,22 @@ class DocumentParser {
         $t= preg_replace('~\[\((.*?)\)\]~', "", $t); //settings
         $t= preg_replace('~\[\+(.*?)\+\]~', "", $t); //placeholders
         $t= preg_replace('~{{(.*?)}}~', "", $t); //chunks
+        $t= preg_replace('~&#x005B;\*(.*?)\*&#x005D;~', "", $t); //encoded tv
+        $t= preg_replace('~&#x005B;&#x005B;(.*?)&#x005D;&#x005D;~', "", $t); //encoded snippet
+        $t= preg_replace('~&#x005B;\!(.*?)\!&#x005D;~', "", $t); //encoded snippet
+        $t= preg_replace('~&#x005B;\((.*?)\)&#x005D;~', "", $t); //encoded settings
+        $t= preg_replace('~&#x005B;\+(.*?)\+&#x005D;~', "", $t); //encoded placeholders
+        $t= preg_replace('~&#x007B;&#x007B;(.*?)&#x007D;&#x007D;~', "", $t); //encoded chunks
         return $t;
+    }
+
+	# Decode JSON regarding hexadecimal entity encoded MODX tags
+    function jsonDecode($json, $assoc = false) {
+		// unmask MODX tags
+		$masked = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
+		$unmasked = array('[', ']', '{', '}');
+		$json = str_replace($masked, $unmasked, $json);
+		return json_decode($json, $assoc);
     }
 
     # add an event listner to a plugin - only for use within the current execution cycle
@@ -2788,8 +2816,23 @@ class DocumentParser {
     /***************************************************************************************/
 
     function phpError($nr, $text, $file, $line) {
-        if (error_reporting() == 0 || $nr == 0 || ($nr == 8 && $this->stopOnNotice == false)) {
+        if (error_reporting() == 0 || $nr == 0) {
             return true;
+        }
+        if($this->stopOnNotice == false)
+        {
+            switch($nr)
+            {
+                case E_NOTICE:
+                    if($this->error_reporting <= 2) return true;
+                    break;
+                case E_STRICT:
+                case E_DEPRECATED:
+                    if($this->error_reporting <= 1) return true;
+                    break;
+                default:
+                    if($this->error_reporting === 0) return true;
+            }
         }
         if (is_readable($file)) {
             $source= file($file);
@@ -2821,7 +2864,7 @@ class DocumentParser {
 	    }
 	
 	    if (!empty ($query)) {
-	        $str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:5px;color:#333;background-color:#ffffcd;">SQL &gt; <span id="sqlHolder">' . $query . '</span></div>
+	        $str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;">SQL &gt; <span id="sqlHolder">' . $query . '</span></div>
 	                </td></tr>';
 	    }
 	
@@ -2848,7 +2891,11 @@ class DocumentParser {
 			$str .= '<tr><td colspan="2"><b>PHP error debug</b></td></tr>';
 			if ($text != '')
 			{
-				$str .= '<tr><td valign="top">' . "Error : </td><td>{$text}</td></tr>";
+				$str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;">Error : ' . $text . '</div></td></tr>';
+			}
+			if($output!='')
+			{
+				$str .= '<tr><td colspan="2"><div style="font-weight:bold;border:1px solid #ccc;padding:8px;color:#333;background-color:#ffffcd;">' . $output . '</div></td></tr>';
 			}
 			$str .= '<tr><td valign="top">ErrorType[num] : </td>';
 			$str .= '<td>' . $errortype [$nr] . "[{$nr}]</td>";
@@ -2872,7 +2919,7 @@ class DocumentParser {
 	    elseif(isset($_POST['a'])) $action = $_POST['a'];
 	    if(isset($action) && !empty($action))
 	    {
-	    	include_once($this->config['core_path'] . 'actionlist.inc.php');
+	    	include_once(MODX_MANAGER_PATH . 'includes/actionlist.inc.php');
 	    	global $action_list;
 	    	if(isset($action_list[$action])) $actionName = " - {$action_list[$action]}";
 	    	else $actionName = '';
@@ -2909,7 +2956,7 @@ class DocumentParser {
 	    $str .= '<td>' . $_SERVER['REMOTE_ADDR'] . '</td>';
 	    $str .= '</tr>';
 	
-	    $str .= '<tr><td colspan="2"><b>Parser timing</b></td></tr>';
+	    $str .= '<tr><td colspan="2"><b>Benchmarks</b></td></tr>';
 	
 	    $str .= "<tr><td>MySQL : </td>";
 	    $str .= '<td>[^qt^] ([^q^] Requests)</td>';
@@ -2923,6 +2970,10 @@ class DocumentParser {
 	    $str .= '<td>[^t^]</td>';
 	    $str .= '</tr>';
 	
+	    $str .= "<tr><td>Memory : </td>";
+	    $str .= '<td>[^m^]</td>';
+	    $str .= '</tr>';
+	    
 	    $str .= "</table>\n";
 	
 	    $totalTime= ($this->getMicroTime() - $this->tstart);
@@ -2947,11 +2998,6 @@ class DocumentParser {
 	    if(isset($php_errormsg) && !empty($php_errormsg)) $str = "<b>{$php_errormsg}</b><br />\n{$str}";
 		$str .= '<br />' . $this->get_backtrace(debug_backtrace()) . "\n";
 		
-		if(!empty($output))
-		{
-			$str .= '<div style="margin-top:25px;padding:15px;border:1px solid #ccc;"><p><b>Output:</b></p>' . $output . '</div>';
-		}
-	
 	    // Log error
 	    if(!empty($this->currentSnippet)) $source = 'Snippet - ' . $this->currentSnippet;
 	    elseif(!empty($this->event->activePlugin)) $source = 'Plugin - ' . $this->event->activePlugin;
@@ -2972,10 +3018,12 @@ class DocumentParser {
 	    		$error_level = 3;
 	    }
 	    $this->logEvent(0, $error_level, $str,$source);
-	    if($error_level === 2) return true;
 	
+        if($error_level === 2 && $this->error_reporting!=='99') return true;
+        if($this->error_reporting==='99' && !isset($_SESSION['mgrValidated'])) return true;
+    
 	    // Set 500 response header
-	    header('HTTP/1.1 500 Internal Server Error');
+	    if($error_level !== 2) header('HTTP/1.1 500 Internal Server Error');
 	
 	    // Display error
 	    if (isset($_SESSION['mgrValidated']))
@@ -3005,28 +3053,17 @@ class DocumentParser {
 			elseif(substr($val['function'],0,8)==='phpError') break;
 			$path = str_replace('\\','/',$val['file']);
 			if(strpos($path,MODX_BASE_PATH)===0) $path = substr($path,strlen(MODX_BASE_PATH));
-			if(!empty($val['args']) && 0 < count($val['args']))
+			switch($val['type'])
 			{
-				foreach($val['args'] as $v)
-				{
-					if(is_array($v)) $v = 'array()';
-					elseif(is_object($v))
-					{
-					    $v = get_class($v);
-					}
-					else
-					{
-						$v = str_replace('"', '', $v);
-						$v = htmlspecialchars($v,ENT_QUOTES,$this->config['modx_charset']);
-						if(32 < strlen($v)) $v = mb_substr($v,0,32,$this->config['modx_charset']) . '...';
-						$a[] = '"' . $v . '"';
-					}
-				}
-				$args = join(', ', $a);
+				case '->':
+				case '::':
+					$functionName = $val['function'] = $val['class'] . $val['type'] . $val['function'];
+					break;
+				default:
+					$functionName = $val['function'];
 			}
-			else $args = '';
 			$str .= "<tr><td valign=\"top\">{$key}</td>";
-			$str .= "<td>{$val['function']}({$args})<br />{$path} on line {$val['line']}</td>";
+			$str .= "<td>{$functionName}()<br />{$path} on line {$val['line']}</td>";
 		}
 		$str .= '</table>';
 		return $str;

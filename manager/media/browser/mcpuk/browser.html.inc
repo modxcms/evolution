@@ -17,7 +17,7 @@
 	 * File Authors:
 	 * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
 	-->
-		<title>FCKeditor - Resources Browser</title>
+		<title>File Browser</title>
 		<link href="browser.css" type="text/css" rel="stylesheet">
 		[+seturl_js+]
 	</head>

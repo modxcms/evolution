@@ -2,7 +2,7 @@
 
 if($modx->manager->action == 17)
 {
-	$css_selectors   = '左寄せ=justifyleft;右寄せ=justifyright';
+	$css_selectors   = 'left=justifyleft;right=justifyright';
 	$params['theme']       = (empty($params['theme']))          ? 'editor' : $params['theme'];
 	$ph['custom_plugins']  = $params['custom_plugins'];
 	$ph['custom_buttons1'] = $params['custom_buttons1'];
