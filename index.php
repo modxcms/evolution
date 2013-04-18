@@ -44,9 +44,11 @@
  * Initialize Document Parsing
  * -----------------------------
  */
+define("MGR_DIR", "manager");
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
+$mstart = memory_get_usage();
 
 // harden it
 require_once(dirname(__FILE__).'/manager/includes/protect.inc.php');
@@ -98,7 +100,7 @@ p{ margin:20px 0; }
 a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 5px;}
 </style>
 <div class=\"install\">
-<p>MODx is not currently installed or the configuration file cannot be found.</p>
+<p>MODX is not currently installed or the configuration file cannot be found.</p>
 <p>Do you want to <a href=\"install/index.php\">install now</a>?</p>
 </div>";
 		exit;
@@ -119,6 +121,7 @@ $modx->maxParserPasses = 10; // max number of parser recursive loops or passes
 $modx->dumpSQL = false;
 $modx->dumpSnippets = false; // feed the parser the execution start time
 $modx->tstart = $tstart;
+$modx->mstart = $mstart;
 
 // Debugging mode:
 $modx->stopOnNotice = false;

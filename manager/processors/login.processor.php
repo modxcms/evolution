@@ -27,8 +27,9 @@ if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_pas
 // get the settings from the database
 include_once "settings.inc.php";
 
-// include version info
-include_once "version.inc.php";
+/*
+ * include_once "version.inc.php"; //include version info. Use $modx->getVersionData()
+ */
 
 // include the logger
 include_once "log.class.inc.php";

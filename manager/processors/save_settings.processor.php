@@ -4,14 +4,26 @@ if(!$modx->hasPermission('settings')) {
 	$e->setError(3);
 	$e->dumpError();
 }
-if (isset($_POST) && count($_POST) > 0) {
+$data = $_POST;
+// lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
+unset($_POST);
+
+if (isset($data) && count($data) > 0) {
 	$savethese = array();
-	foreach ($_POST as $k => $v) {
+	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
+	foreach ($data as $k => $v) {
 		switch ($k) {
+            case 'settings_version':{
+                if($modx->getVersionData()!=$data['settings_version']){
+                    $modx->logEvent(17,2,'<pre>'.var_export($data['settings_version'],true).'</pre>','fake settings_version');
+                    $v = $modx->getVersionData('version');
+                }
+                break;
+            }
 			case 'error_page':
 			case 'unauthorized_page':
 			if (trim($v) == '' || !is_numeric($v)) {
-				$v = $_POST['site_start'];
+				$v = $data['site_start'];
 			}
 			break;
 	
@@ -51,16 +63,14 @@ if (isset($_POST) && count($_POST) > 0) {
 	}
 	
 	// Reset Template Pages
-	if (isset($_POST['reset_template'])) {
-		$template = $_POST['default_template'];
-		$oldtemplate = $_POST['old_template'];
+	if (isset($data['reset_template'])) {
+		$template = $data['default_template'];
+		$oldtemplate = $data['old_template'];
 		$tbl = $dbase.".`".$table_prefix."site_content`";
-		$reset = $_POST['reset_template'];
+		$reset = $data['reset_template'];
 		if($reset==1) mysql_query("UPDATE $tbl SET template = '$template' WHERE type='document'");
 		else if($reset==2) mysql_query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");
 	}
-	// lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
-	unset($_POST);
 	
 	// empty cache
 	include_once "cache_sync.class.processor.php";
@@ -71,4 +81,3 @@ if (isset($_POST) && count($_POST) > 0) {
 }
 $header="Location: index.php?a=7&r=10";
 header($header);
-?>

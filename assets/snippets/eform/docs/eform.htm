@@ -204,7 +204,7 @@ font-size:14pt;
 				<li><strong>&amp;ccsender</strong> (Optional)<br/>Set to 1 to send the user a copy of the submitted form. Defaults to 0
 	eForm will look for the user's email address inside a field called email.</li>
 				<li><strong>&amp;subject</strong> (Optional)<br/>Subject to appear in email
-	Can include [.form fields.]. E.g. Purcase Order for [.firstname.] [.lastname.]</li>
+	Can include ((form fields)). E.g. Purcase Order for ((firstname)) ((lastname))</li>
 				<li><strong>&amp;noemail</strong> (Optional)<br/>Prevents eform from sending emails e.g. no-reply@mydomain.com
 	Set to 1 to disable emails. Defaults to 0</li>
 				<li><strong>&amp;mailselector</strong> (Optional)<br/>Sets the name of the form field to use as a selector to select a single email from the comma (,) delimited emails assigned
@@ -217,8 +217,8 @@ font-size:14pt;
 	be sent to eForm which will then be used to select one of the	three emails assigned to the
 			<code>&amp;to</code>parameter. This email address will be the address used to send the email to.</li>
 				<li><strong>&amp;mobile</strong> (Optional)<br/>Mobile email address. This email is used to send a short notification message to a mobile device.</li>
-				<li><strong>&amp;mobiletext</strong> (Optional)<br/>Text message to send to mobile device Can include [.form fields.]. E.g. Order for
-			<code>[.firstname.]</code></li>
+				<li><strong>&amp;mobiletext</strong> (Optional)<br/>Text message to send to mobile device Can include ((form fields)). E.g. Order for
+			<code>((firstname))</code></li>
 				<li><strong>&amp;thankyou</strong>  (Optional)<br/>chunk name (non-numeric) or document id (numeric) to use as a thank you message displayed to the user after a successful submit. 
 	Tags: same as for
 			<code>&amp;tpl</code></li>

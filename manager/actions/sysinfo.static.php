@@ -15,18 +15,19 @@ if(!$modx->hasPermission('logs')) {
 </script>
 
 <!-- server -->
+<div class="section">
 <div class="sectionHeader">Server</div><div class="sectionBody" id="lyr2">
 
 		<table border="0" cellspacing="2" cellpadding="2">
 		  <tr>
 			<td width="150"><?php echo $_lang['modx_version']?></td>
 			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx_version ?></b><?php echo $newversiontext ?></td>
+			<td><b><?php echo $modx->getVersionData('version') ?></b><?php echo $newversiontext ?></td>
 		  </tr>
 		  <tr>
 			<td width="150"><?php echo $_lang['release_date']?></td>
 			<td width="20">&nbsp;</td>
-			<td><b><?php echo $modx_release_date ?></b></td>
+			<td><b><?php echo $modx->getVersionData('release_date') ?></b></td>
 		  </tr>
 		  <tr>
 			<td>phpInfo()</td>
@@ -121,7 +122,7 @@ if(!$modx->hasPermission('logs')) {
 		</table>
 
    </div>
-
+</div>
 
 <!-- recent documents -->
 <div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">

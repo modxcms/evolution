@@ -57,6 +57,7 @@ $upload_images = explode(',',$upload_images);
 $upload_media = explode(',',$upload_media);
 $upload_flash = explode(',',$upload_flash);
 // now merge them
+$uploadablefiles = array();
 $uploadablefiles = array_merge($upload_files,$upload_images,$upload_media,$upload_flash);
 $uploadablefiles = add_dot($uploadablefiles);
 function add_dot($array)
@@ -158,6 +159,14 @@ function confirmUnzip() {
 	return confirm("<?php echo $_lang['confirm_unzip_file'] ?>");
 }
 
+function unzipFile(file) {
+    if (confirmUnzip())
+    {
+        window.location.href="index.php?a=31&mode=unzip&path="+current_path+'/&file='+file+"&token=<?php echo $newToken;?>";
+        return false;
+    }
+}
+
 function getFolderName(a){
 	var f;
 	f=window.prompt('Enter New Folder Name:','')
@@ -253,7 +262,7 @@ if(substr(strtolower(str_replace('//','/',$startpath."/")), 0, $len)!=strtolower
 // Unzip .zip files - by Raymond
 if ($enablefileunzip && $_REQUEST['mode']=='unzip' && is_writable($startpath))
 {
-	if(!$err=@unzip(realpath("{$startpath}/".$_REQUEST['file']),realpath($startpath)))
+	if(!$err = unzip(realpath("{$startpath}/".$_REQUEST['file']),realpath($startpath)))
 	{
 		echo '<span class="warning"><b>'.$_lang['file_unzip_fail'].($err===0? 'Missing zip library (php_zip.dll / zip.so)':'').'</b></span><br /><br />';
 	}
@@ -272,11 +281,7 @@ if (is_writable($startpath))
 	if($_REQUEST['mode']=='deletefolder')
 	{
 		$folder = $_REQUEST['folderpath'];
-		if(!$token_check)
-		{
-		   echo '<span class="warning"><b>'.$_lang['file_folder_not_deleted'].'</b></span><br /><br />';
-		}
-		elseif(!@rrmdir($folder))
+		if(!$token_check || !@rrmdir($folder))
 		{
 			echo '<span class="warning"><b>'.$_lang['file_folder_not_deleted'].'</b></span><br /><br />';
 		}
@@ -315,7 +320,7 @@ if (is_writable($startpath))
 		$filename = str_replace('..\\','',str_replace('../','',$_REQUEST['name']));
 		$filename = $modx->db->escape($filename);
 		
-		if(!in_array(getExtension($filename), $uploadablefiles))
+		if(!checkExtension($filename))
 		{
 			echo '<span class="warning"><b>'.$_lang['files_filetype_notok'].'</b></span><br /><br />';
 		}
@@ -506,7 +511,7 @@ function ls($curpath)
 			$files_array[$filecounter]['view'] = (in_array($type, $viewablefiles)) ?
 			'<span style="cursor:pointer; width:20px;" onclick="viewfile(\''.$webstart_path.substr($newpath, $len, strlen($newpath)).'\');"><img src="'.$theme_image_path.'icons/context_view.gif" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></span> ' : (($enablefiledownload && in_array($type, $uploadablefiles))? '<a href="'.$webstart_path.implode('/', array_map('rawurlencode', explode('/', substr($newpath, $len, strlen($newpath))))).'" style="cursor:pointer; width:20px;"><img src="'.$theme_image_path . 'misc/ed_save.gif" align="absmiddle" alt="'.$_lang['file_download_file'].'" title="'.$_lang['file_download_file'].'" /></a> ':'<span class="disabledImage"><img src="'.$theme_image_path . 'icons/context_view.gif" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></span> ');
 			$files_array[$filecounter]['view'] = (in_array($type, $inlineviewablefiles)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=view&path='.urlencode($newpath).'"><img src="'.$theme_image_path . 'icons/context_view.gif" align="absmiddle" alt="'.$_lang['files_viewfile'].'" title="'.$_lang['files_viewfile'].'" /></a></span> ' : $files_array[$filecounter]['view'] ;
-			$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? '<span style="width:20px;"><a href="index.php?a=31&mode=unzip&path='.$curpath.'&file='.urlencode($file).'" onclick="return confirmUnzip();"><img src="'.$theme_image_path . 'icons/unzip.gif" align="absmiddle" alt="'.$_lang['file_download_unzip'].'" title="'.$_lang['file_download_unzip'].'" /></a></span> ' : '' ;
+			$files_array[$filecounter]['unzip'] = ($enablefileunzip && $type=='.zip') ? '<span style="width:20px;"><a href="javascript:unzipFile(\''.urlencode($file).'\');"><img src="'.$theme_image_path . 'icons/unzip.gif" align="absmiddle" alt="'.$_lang['file_download_unzip'].'" title="'.$_lang['file_download_unzip'].'" /></a></span> ' : '' ;
 			$files_array[$filecounter]['edit'] = (in_array($type, $editablefiles) && is_writable($curpath) && is_writable($newpath)) ? '<span style="width:20px;"><a href="index.php?a=31&mode=edit&path='.urlencode($newpath).'#file_editfile"><img src="'.$_style['icons_edit_document'] . '" align="absmiddle" alt="'.$_lang['files_editfile'].'" title="'.$_lang['files_editfile'].'" /></a></span> ' : '<span class="disabledImage"><img src="'.$_style['icons_edit_document'] . '" align="absmiddle" alt="'.$_lang['files_editfile'].'" title="'.$_lang['files_editfile'].'" /></span> ';
             $files_array[$filecounter]['delete'] = is_writable($curpath) && is_writable($newpath) ? '<span style="width:20px;"><a href="javascript:deleteFile(\''.urlencode($file).'\');"><img src="'.$theme_image_path . 'icons/delete.gif" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></a></span> ' : '<span class="disabledImage"><img src="'.$theme_image_path . 'icons/delete.gif" align="absmiddle" alt="'.$_lang['file_delete_file'].'" title="'.$_lang['file_delete_file'].'" /></span> ';
 
@@ -573,6 +578,14 @@ function getExtension($string) {
 	return $ext;
 }
 
+function checkExtension($path='')
+{
+	global $uploadablefiles;
+	
+	if(in_array(getExtension($path), $uploadablefiles)) return true;
+	else                                                return false;
+}
+
 function mkdirs($strPath, $mode){ // recursive mkdir function
 	if (is_dir($strPath)) return true;
 	$pStrPath = dirname($strPath);
@@ -606,43 +619,38 @@ function logFileChange($type, $filename)
 // by patrick_allaert - php user notes
 function unzip($file, $path)
 {
-	global $newfolderaccessmode;
+	global $newfolderaccessmode, $token_check;
+	
+	if(!$token_check) return false;
+	
 	// added by Raymond
-	$r = substr($path,strlen($path)-1,1);
-	if ($r!='\\'||$r!='/') $path .='/';
-	if (!extension_loaded('zip'))
-	{
-		return 0;
-	}
+	if (!extension_loaded('zip')) return 0;
 	// end mod
 	$zip = zip_open($file);
 	if ($zip)
 	{
 		$old_umask = umask(0);
+		$path = rtrim($path,'/') . '/';
 		while ($zip_entry = zip_read($zip))
 		{
 			if (zip_entry_filesize($zip_entry) > 0)
 			{
 				// str_replace must be used under windows to convert "/" into "\"
-				$complete_path = $path.str_replace('/','\\',dirname(zip_entry_name($zip_entry)));
-				$complete_name = $path.str_replace ('/','\\',zip_entry_name($zip_entry));
+				$zip_entry_name = zip_entry_name($zip_entry);
+				$complete_path = $path.str_replace('\\', '/', dirname($zip_entry_name));
+				$complete_name = $path.str_replace('\\', '/', $zip_entry_name);
 				if(!file_exists($complete_path))
 				{
 					$tmp = '';
-					foreach(explode('\\',$complete_path) AS $k)
+					foreach(explode('/', $complete_path) AS $k)
 					{
-						$tmp .= $k.'\\';
-						if(!file_exists($tmp))
-						{
-							@mkdir($tmp, 0777);
-						}
+						$tmp .= $k.'/';
+						if(!is_dir($tmp)) mkdir($tmp, 0777);
 					}
 				}
 				if (zip_entry_open($zip, $zip_entry, 'r'))
 				{
-					$fd = fopen($complete_name, 'w');
-					fwrite($fd, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)));
-					fclose($fd);
+					file_put_contents($complete_name, zip_entry_read($zip_entry, zip_entry_filesize($zip_entry)));
 					zip_entry_close($zip_entry);
 				}
 			}
@@ -699,7 +707,7 @@ function fileupload()
 	if (is_uploaded_file($userfilename))
 	{
 		// file is uploaded file, process it!
-		if(!in_array(getExtension($userfile['name']), $uploadablefiles))
+		if(!checkExtension($userfile['name']))
 		{
 			$msg .=  '<p><span class="warning">'.$_lang['files_filetype_notok'].'</span></p>';
 		}
@@ -787,11 +795,7 @@ function delete_file()
 	$msg = sprintf($_lang['deleting_file'], str_replace('\\', '/', $_REQUEST['path']));
 	
 	$file = $_REQUEST['path'];
-	if(!$token_check)
-	{
-		$msg .= '<span class="warning"><b>'.$_lang['file_not_deleted'].'</b></span><br /><br />';
-	}
-	elseif(!@unlink($file))
+	if(!$token_check || !@unlink($file))
 	{
 		$msg .= '<span class="warning"><b>'.$_lang['file_not_deleted'].'</b></span><br /><br />';
 	}

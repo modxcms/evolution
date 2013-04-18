@@ -155,7 +155,7 @@ window.addEvent('domready', function() {
   <tr bgcolor="#eeeeee">
     <td><b><?php echo $_lang["mgrlog_results"]; ?></b></td>
     <td align="right">
-      <input type="text" name="nrresults" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>" /><img src="<?php echo $_style['tx']; ?>" width="18" height="16" border="0" />
+      <input type="text" name="nrresults" class="inputbox" style="width:100px" value="<?php echo isset($_REQUEST['nrresults']) ? $_REQUEST['nrresults'] : $number_of_logs; ?>" /><img src="<?php echo $_style['tx']; ?>" border="0" />
     </td>
   </tr>
   <tr bgcolor="#FFFFFF">
