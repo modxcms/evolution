@@ -181,4 +181,195 @@ class OldFunctions {
         return ($dir != '' ? "$dir/" : '') . $pre . $alias . $suff;
     }
 
+    /*############################################
+      Etomite_dbFunctions.php
+      New database functions for Etomite CMS
+    Author: Ralph A. Dahlgren - rad14701@yahoo.com
+    Etomite ID: rad14701
+    See documentation for usage details
+    ############################################*/
+    function getIntTableRows($fields= "*", $from= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
+        // function to get rows from ANY internal database table
+    	global $modx;
+        if ($from == "") {
+            return false;
+        } else {
+            $where= ($where != "") ? "WHERE $where" : "";
+            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
+            $limit= ($limit != "") ? "LIMIT $limit" : "";
+            $tbl= $modx->getFullTableName($from);
+            $sql= "SELECT $fields FROM $tbl $where $sort $limit;";
+            $result= $modx->db->query($sql);
+            $resourceArray= array ();
+            for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
+                array_push($resourceArray, @ $modx->db->getRow($result));
+            }
+            return $resourceArray;
+        }
+    }
+
+    function putIntTableRow($fields= "", $into= "") {
+        // function to put a row into ANY internal database table
+    	global $modx;
+        if (($fields == "") || ($into == "")) {
+            return false;
+        } else {
+            $tbl= $modx->getFullTableName($into);
+            $sql= "INSERT INTO $tbl SET ";
+            foreach ($fields as $key => $value) {
+                $sql .= $key . "=";
+                if (is_numeric($value))
+                    $sql .= $value . ",";
+                else
+                    $sql .= "'" . $value . "',";
+            }
+            $sql= rtrim($sql, ",");
+            $sql .= ";";
+            $result= $modx->db->query($sql);
+            return $result;
+        }
+    }
+
+    function updIntTableRow($fields= "", $into= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
+        // function to update a row into ANY internal database table
+    	global $modx;
+        if (($fields == "") || ($into == "")) {
+            return false;
+        } else {
+            $where= ($where != "") ? "WHERE $where" : "";
+            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
+            $limit= ($limit != "") ? "LIMIT $limit" : "";
+            $tbl= $modx->getFullTableName($into);
+            $sql= "UPDATE $tbl SET ";
+            foreach ($fields as $key => $value) {
+                $sql .= $key . "=";
+                if (is_numeric($value))
+                    $sql .= $value . ",";
+                else
+                    $sql .= "'" . $value . "',";
+            }
+            $sql= rtrim($sql, ",");
+            $sql .= " $where $sort $limit;";
+            $result= $modx->db->query($sql);
+            return $result;
+        }
+    }
+
+    function getExtTableRows($host= "", $user= "", $pass= "", $dbase= "", $fields= "*", $from= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
+        // function to get table rows from an external MySQL database
+    	global $modx;
+        if (($host == "") || ($user == "") || ($pass == "") || ($dbase == "") || ($from == "")) {
+            return false;
+        } else {
+            $where= ($where != "") ? "WHERE  $where" : "";
+            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
+            $limit= ($limit != "") ? "LIMIT $limit" : "";
+            $tbl= $dbase . "." . $from;
+            $this->dbExtConnect($host, $user, $pass, $dbase);
+            $sql= "SELECT $fields FROM $tbl $where $sort $limit;";
+            $result= $modx->db->query($sql);
+            $resourceArray= array ();
+            for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
+                array_push($resourceArray, @ $modx->db->getRow($result));
+            }
+            return $resourceArray;
+        }
+    }
+
+    function putExtTableRow($host= "", $user= "", $pass= "", $dbase= "", $fields= "", $into= "") {
+        // function to put a row into an external database table
+    	global $modx;
+        if (($host == "") || ($user == "") || ($pass == "") || ($dbase == "") || ($fields == "") || ($into == "")) {
+            return false;
+        } else {
+            $this->dbExtConnect($host, $user, $pass, $dbase);
+            $tbl= $dbase . "." . $into;
+            $sql= "INSERT INTO $tbl SET ";
+            foreach ($fields as $key => $value) {
+                $sql .= $key . "=";
+                if (is_numeric($value))
+                    $sql .= $value . ",";
+                else
+                    $sql .= "'" . $value . "',";
+            }
+            $sql= rtrim($sql, ",");
+            $sql .= ";";
+            $result= $modx->db->query($sql);
+            return $result;
+        }
+    }
+
+    function updExtTableRow($host= "", $user= "", $pass= "", $dbase= "", $fields= "", $into= "", $where= "", $sort= "", $dir= "ASC", $limit= "") {
+        // function to update a row into an external database table
+    	global $modx;
+        if (($fields == "") || ($into == "")) {
+            return false;
+        } else {
+            $this->dbExtConnect($host, $user, $pass, $dbase);
+            $tbl= $dbase . "." . $into;
+            $where= ($where != "") ? "WHERE $where" : "";
+            $sort= ($sort != "") ? "ORDER BY $sort $dir" : "";
+            $limit= ($limit != "") ? "LIMIT $limit" : "";
+            $sql= "UPDATE $tbl SET ";
+            foreach ($fields as $key => $value) {
+                $sql .= $key . "=";
+                if (is_numeric($value))
+                    $sql .= $value . ",";
+                else
+                    $sql .= "'" . $value . "',";
+            }
+            $sql= rtrim($sql, ",");
+            $sql .= " $where $sort $limit;";
+            $result= $modx->db->query($sql);
+            return $result;
+        }
+    }
+
+    function dbExtConnect($host, $user, $pass, $dbase) {
+        // function to connect to external database
+    	global $modx;
+        $tstart= $modx->getMicroTime();
+        if (@ !$modx->rs= mysql_connect($host, $user, $pass)) {
+            $modx->messageQuit("Failed to create connection to the $dbase database!");
+        } else {
+            mysql_select_db($dbase);
+            $tend= $modx->getMicroTime();
+            $totaltime= $tend - $tstart;
+            if ($modx->dumpSQL) {
+                $modx->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection to %s was created in %2.4f s", $dbase, $totaltime) . "</fieldset><br />";
+            }
+            $modx->queryTime= $modx->queryTime + $totaltime;
+        }
+    }
+
+    function getFormVars($method= "", $prefix= "", $trim= "", $REQUEST_METHOD) {
+        //  function to retrieve form results into an associative array
+    	global $modx;
+        $results= array ();
+        $method= strtoupper($method);
+        if ($method == "")
+            $method= $REQUEST_METHOD;
+        if ($method == "POST")
+            $method= & $_POST;
+        elseif ($method == "GET") $method= & $_GET;
+        else
+            return false;
+        reset($method);
+        foreach ($method as $key => $value) {
+            if (($prefix != "") && (substr($key, 0, strlen($prefix)) == $prefix)) {
+                if ($trim) {
+                    $pieces= explode($prefix, $key, 2);
+                    $key= $pieces[1];
+                    $results[$key]= $value;
+                } else
+                    $results[$key]= $value;
+            }
+            elseif ($prefix == "") $results[$key]= $value;
+        }
+        return $results;
+    }
+
+    ########################################
+    // END New database functions - rad14701
+    ########################################
 }
