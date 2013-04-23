@@ -103,7 +103,7 @@ class synccache{
 
         // update publish time file
         $timesArr = array();
-        $sql = 'SELECT MIN(pub_date) AS minpub FROM '.$modx->getFullTableName('site_content').' WHERE pub_date>'.time();
+        $sql = 'SELECT MIN(pub_date) AS minpub FROM '.$modx->getFullTableName('site_content').' WHERE pub_date>'.(time() + $modx->config['server_offset_time']);
         if(@!$result = $modx->db->query($sql)) {
             echo 'Couldn\'t determine next publish event!';
         }
@@ -114,7 +114,7 @@ class synccache{
             $timesArr[] = $minpub;
         }
 
-        $sql = 'SELECT MIN(unpub_date) AS minunpub FROM '.$modx->getFullTableName('site_content').' WHERE unpub_date>'.time();
+        $sql = 'SELECT MIN(unpub_date) AS minunpub FROM '.$modx->getFullTableName('site_content').' WHERE unpub_date>'.(time() + $modx->config['server_offset_time']);
         if(@!$result = $modx->db->query($sql)) {
             echo 'Couldn\'t determine next unpublish event!';
         }
@@ -194,7 +194,7 @@ class synccache{
         $tmpPHP .= '$a = &$this->aliasListing;' . "\n";
         $tmpPHP .= '$d = &$this->documentListing;' . "\n";
         $tmpPHP .= '$m = &$this->documentMap;' . "\n";
-        $sql = 'SELECT IF(alias=\'\', id, alias) AS alias, id, contentType, parent FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
+        $sql = 'SELECT IF(alias=\'\', id, alias) AS alias, id, parent, isfolder FROM '.$modx->getFullTableName('site_content').' WHERE deleted=0 ORDER BY parent, menuindex';
         $rs = $modx->db->query($sql);
         $limit_tmp = $modx->db->getRecordCount($rs);
         for ($i_tmp=0; $i_tmp<$limit_tmp; $i_tmp++) {
@@ -208,7 +208,7 @@ class synccache{
             else {
                 $tmpPHP .= '$d[\''.$modx->db->escape($tmp1['alias']).'\']'." = ".$tmp1['id'].";\n";
             }
-            $tmpPHP .= '$a[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".$modx->db->escape($tmp1['alias'])."', 'path' => '" . $modx->db->escape($tmpPath)."', 'parent' => " . $tmp1['parent']. ");\n";
+            $tmpPHP .= '$a[' . $tmp1['id'] . ']'." = array('id' => ".$tmp1['id'].", 'alias' => '".$modx->db->escape($tmp1['alias'])."', 'path' => '" . $modx->db->escape($tmpPath)."', 'parent' => " . $tmp1['parent']. ", 'isfolder' => " . $modx->db->escape($tmp1['isfolder']) . ");\n";
             $tmpPHP .= '$m[]'." = array('".$tmp1['parent']."' => '".$tmp1['id']."');\n";
         }
 

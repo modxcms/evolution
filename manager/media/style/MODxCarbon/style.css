@@ -258,8 +258,9 @@ margin:0;
 fieldset {
 	border: none;
 }
-input, select, textarea, td {
-	font: inherit;
+input, select, textarea, option, optgroup, td {
+	font-size: inherit;
+	font-family: inherit;
 	color: inherit;
 }
 	.rtl input,
@@ -268,16 +269,36 @@ input, select, textarea, td {
 	.rtl td {
 		text-align: right;
 	}
+
 #ta, .tmplvars textarea {
 }
 form input[type=text],
+form input[type=password],
 form textarea {
 	border: 1px solid #ddd;
 	border-left-color: #c3c3c3;
 	border-top-color: #acacac;
-	padding: 3px 3px 2px 2px;
+	padding: 3px 5px;
 	background: #fff url(images/misc/input-bg.gif) repeat-x top left;
 	vertical-align: baseline;
+	border-radius : 3px;
+	-moz-border-radius : 3px;
+	-webkit-border-radius:3px;
+}
+form input[type=checkbox],form input[type=radio] {
+    cursor:pointer;cursor:hand;
+}
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+form select:focus
+{
+	outline: none;
+	background: #fff;
+	border: 1px solid #73829a;
 }
 form input[type=text] {
 	line-height:1;
@@ -462,6 +483,9 @@ input.submit {
 	font-size: 12px;
 	color: #333;
 }
+.inherited {
+	font-style: italic;
+}
 thead, .fancyrow {
 	color: #333;
 	height: 18px !important;
@@ -547,6 +571,11 @@ a img {
 	border-top: 1px solid #fff;
 	background: #f7f7f7;
 }
+
+#treeRoot {
+    margin-left:-10px;
+}
+
 #treeRoot div img {
 	margin: 0 0 0 -6px;
 }
@@ -1008,7 +1037,7 @@ a.hometblink:hover {
 	width: 200px !important;
 	text-align: left;
 	color: #555;
-	font-size: 120%;
+	font-size: inherit;
 }
 	.rtl .settings th {text-align: right;}
 .filelist td {
@@ -1141,6 +1170,9 @@ a.hometblink, a.hometblink img {
 }
 .sectionBody .tab-page {
 	border-width: 1px 0 0;
+}
+.tab strong {
+    color:#EF1D1D;
 }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
@@ -1294,10 +1326,24 @@ ul.actionButtons {
 	box-shadow:  0 0 10px #b8c7d6;
 }
 .actionButtons a.disabled,
-.actionButtons .disabled a {
+.actionButtons li.disabled a {
+	border: 1px solid #c7ced2;
+	color: #777;
+    cursor:default;
 }
+
 .actionButtons a.disabled img,
-.actionButtons .disabled img {
+.actionButtons li.disabled img{
+    opacity: .3;
+    filter: alpha(opacity=30);
+}
+.actionButtons a:hover.disabled,
+.actionButtons li.disabled a:hover {
+	background-position: top;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow:  none;
+	-webkit-transition: none;
 }
 .actionButtons .and{
     margin:0 2px 0 5px;
@@ -1608,7 +1654,7 @@ form#mutate textarea {width:90%;height:240px;}
 form#mutate textarea.textareamini {height:120px;}
 form#mutate input.number,input.email {ime-mode:disabled;}
 form#mutate input.number {width:60px !important;padding-right:10px;text-align:right;}
-form#mutate div.tmplvars label {display:block;}
+/*form#mutate div.tmplvars label {display:block;}*/
 
 .phptextarea {font-family: 'Courier New','Courier', monospace;}
 optgroup {font-style:normal;}

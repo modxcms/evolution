@@ -32,6 +32,7 @@ elseif ($installMode == 1) {
 
     if (!isset ($database_connection_method) || empty ($database_connection_method)) {
         $database_connection_method = 'SET CHARACTER SET';
+        if (function_exists('mysql_set_charset')) mysql_set_charset($database_connection_charset);
     }
     if ($database_connection_method != 'SET NAMES' && $database_connection_charset != $database_charset) {
         $database_connection_method = 'SET NAMES';

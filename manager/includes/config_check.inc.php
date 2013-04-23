@@ -3,6 +3,12 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 
 $warningspresent = 0;
 
+$sysfiles_check = $modx->manager->checkSystemChecksum();
+if ($sysfiles_check==='modified'){
+      $warningspresent = 1;
+      $warnings[] = array($_lang['configcheck_sysfiles_mod']);
+    }
+
 if (is_writable("includes/config.inc.php")){
     // Warn if world writable
     if(@fileperms('includes/config.inc.php') & 0x0002) {
@@ -156,6 +162,10 @@ for ($i=0;$i<count($warnings);$i++) {
         case $_lang['configcheck_images'] :
             $warnings[$i][1] = $_lang['configcheck_images_msg'];
             if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_images']);
+            break;
+        case $_lang['configcheck_sysfiles_mod']:
+            $warnings[$i][1] = $_lang["configcheck_sysfiles_mod_msg"];
+            if(!$_SESSION["mgrConfigCheck"]) $modx->logEvent(0,2,$warnings[$i][1],$_lang['configcheck_sysfiles_mod']);
             break;
         case $_lang['configcheck_lang_difference'] :
             $warnings[$i][1] = $_lang['configcheck_lang_difference_msg'];

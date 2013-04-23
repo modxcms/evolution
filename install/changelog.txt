@@ -1,6 +1,94 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+
+MODx Evolution 1.0.10 (Apr 18, 2013)
+===================================
+--------------------------------------------
+Security:
+--------------------------------------------
+* [#9704] LFI in mutate_settings.ajax.php
+* [#9802] Security feature - Check falsification of system files
+
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#3449] Datepicker bug in Opera
+* [#3493] unnecessary slash in MAGPIE_CACHE_DIR
+* [#3533] AJAXSEARCH-82 : can't define configuration file name with "@FILE:" prefix
+* [#3698] AJAXSEARCH-85 : Wrong URL construction when using an array of values (checkboxes)
+* [#3783] Superfluous code in getTemplateVars
+* [#3847] Wayfinder does not apply lastClass if there is only one item
+* [#4088] web user photo from other site not correct
+* [#7033] incorrect unzip in file manager
+* [#7541] Upgrade of Existing Site - Error due to single quote in plugin properties
+* [#8909] Publication schedule don't use server_offset_time setting
+* [#9670] Can't log into upgrade install
+* [#9671] TinyMCE - Rewrite Japanese string
+* [#9678] eForm documentation
+* [#9679] Warning during Installation
+* [#9687] Dashboard logo background is not transparent
+* [#9688] Can not make new manager user
+* [#9694] Undefined property: DocumentParser::$mstart
+* [#9695] bug with add images from FCKeditor
+* [#9696] ImageEditor fix for php5.4
+* [#9697] seturl_js_tinymce incorrect path
+* [#9702] no string in language pack
+* [#9703] fake settings_version
+* [#9705] Snoopy.class.inc - File encode issue
+* [#9708] Improvement event log message
+* [#9709] Undefined variable error
+* [#9711] TinyMCE - two editor's plugins missing
+* [#9729] new tinylogo for qm plugin
+* [#9730] PHP error causes Tiny MCE Link List v1.0.3 to fail [Fix included]
+* [#9732] Template Var label CSS display:block [Includes FIX]
+* [#9733] mutate_web_user.dynamic.php fails to sanitize user entry
+* [#9745] cant create and edit web_users
+* [#9755] @INHERIT being output in page code
+* [#9760] Style issue
+* [#9762] MODX Installer foiled by single quotes in TinyMCE Custom Parameters?
+* [#9779] Trouble with site after upgrade JSON no longer working
+* [#9791] File browser - Undefined index error
+* [#9803] Error call datepicker in IE9 on Date Publication
+* [#9812] Issue of manager theme setting in user
+* [#9813] Error during Advanced Upgrade
+* [#9817] File browser file name issue
+* [#9822] Constant MGR_DIR already defined in config.inc.php
+* [#9823] IE 10 -> FCK editor is blank
+* [#9829] hardcoded style
+
+--------------------------------------------
+Additional Improvements & Updates:
+--------------------------------------------
+* [#3151] @Bindings commands enable/disable
+* [#3730] Entity encode Wayfinder placeholders
+* [#3746] don't show New Module button when user's role lacks that permission
+* [#9582] Add new config "Detection level of the PHP error"
+* [#9613] MODX Carbon Login page
+* [#9665] add more content type (json)
+* [#9673] Improvement some translations
+* [#9682] modx::getVersionData()
+* [#9683] trusted folder/file in index-ajax.php
+* [#9684] Remove entity encoded MODX tags in stripTags
+* [#9692] Escape strings in array data
+* [#9693] When use mysql_real_escape_string, execute mysql_set_charset beforehand
+* [#9764] german translation (german.inc.php) string: udperms_message
+* [#9766] Icon size hardcoded in welcome.static.php
+* [#9767] Files in assets/templates/manager should get moved into the theme folder
+* [#9776] Adding seo strict urls functionality to parser
+* [#9778] Added ability to use custom templates to login and manager lockout pages
+* [#9785] Add new placeholder to manager theme
+* [#9786] Change MODx -> MODX
+* [#9787] Add new config for manager layout
+* [#9790] Rename - title of mcpuk file browser
+* [#9810] Change new logo
+* [#9818] TransAlias plugin - Add property values
+* [#9819] TransAlias plugin - Add translation table
+* [#9831] Change MODx -> MODX in installer and sample contents
+* [#9832] Change forum url
+* [#9837] Indicate inheritanced template variable
+
+
 MODx Evolution 1.0.9 (Mar 19, 2013)
 ===================================
 --------------------------------------------
@@ -16,28 +104,28 @@ Security:
 --------------------------------------------
 Bugfixes:
 --------------------------------------------
-* [2893] document parser crop value of param when contain ?&=
-* [3495] Mistake in phpSniff.core.php
-* [3582] [ManagerManager] showimagetvs widget TV dirty check issue
-* [3676] Ditto: german language file is corrupt
-* [3689] Ditto relative to absolute url bug (with possible fix)
-* [3724] Magic GPC Quotes issue in PHP 5.3.*
-* [3835] Multiple call wayfinder with config, not load config in second call
-* [4484] bug in wait.static.php
-* [5403] Maximum upload size not honoured
-* [5807] manager.lockout not styled properly
-* [6119] sendMailMessage in save_web_user.processor.php
-* [7204] eForm in eFormParseTemplate $formats and $labels are declared as string but they are used as array
-* [7459] Deprecated function 'split' used in manager/includes/datefunctions.inc.php
-* [9398] eForm & php 5.3
-* [9547] ManagerManager Tv-transfer options with multiple choice in a new tab
-* [9548] cant modify the customTV(multiTv or other without type input) with ManagerManager
-* [9549] page not index in yandex if use FirstChildRedirect
-* [9550] Breadcrumbs not have crumbSeparator
-* [9563] onManagerMainFrameHeaderHTMLBlock event issue
-* [9580] Bug in manager/processors/delete_content.processor.php on line 40
-* [9586] Quick Manager and system setting Automatic Template Assignment
-* [9620] Set Manager language in Create/Edit User
+* [#2893] document parser crop value of param when contain ?&=
+* [#3495] Mistake in phpSniff.core.php
+* [#3582] [ManagerManager] showimagetvs widget TV dirty check issue
+* [#3676] Ditto: german language file is corrupt
+* [#3689] Ditto relative to absolute url bug (with possible fix)
+* [#3724] Magic GPC Quotes issue in PHP 5.3.*
+* [#3835] Multiple call wayfinder with config, not load config in second call
+* [#4484] bug in wait.static.php
+* [#5403] Maximum upload size not honoured
+* [#5807] manager.lockout not styled properly
+* [#6119] sendMailMessage in save_web_user.processor.php
+* [#7204] eForm in eFormParseTemplate $formats and $labels are declared as string but they are used as array
+* [#7459] Deprecated function 'split' used in manager/includes/datefunctions.inc.php
+* [#9398] eForm & php 5.3
+* [#9547] ManagerManager Tv-transfer options with multiple choice in a new tab
+* [#9548] cant modify the customTV(multiTv or other without type input) with ManagerManager
+* [#9549] page not index in yandex if use FirstChildRedirect
+* [#9550] Breadcrumbs not have crumbSeparator
+* [#9563] onManagerMainFrameHeaderHTMLBlock event issue
+* [#9580] Bug in manager/processors/delete_content.processor.php on line 40
+* [#9586] Quick Manager and system setting Automatic Template Assignment
+* [#9620] Set Manager language in Create/Edit User
 
 --------------------------------------------
 Additional Improvements & Updates:

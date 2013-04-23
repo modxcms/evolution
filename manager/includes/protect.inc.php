@@ -27,31 +27,33 @@ if (!function_exists('modx_sanitize_gpc')) {
 		$tags = array('[', ']', '{', '}');
 		$replaced = array('&#x005B;', '&#x005D;', '&#x007B;', '&#x007D;');
 
-		$keys = array_keys($target);
-		$values = array_values($target);
+		if (is_array($target) && !empty($target)) {
+			$keys = array_keys($target);
+			$values = array_values($target);
 
-		for ($i = 0; $i < count($values); $i++) {
-			$key = str_replace($tags, $replaced, $keys[$i]);
-			$key = preg_replace('/<script/i', 'sanitized<s cript', $key);
-			$key = preg_replace('/&#(\d{1,4});?/', 'sanitized& #$1', $key);
-			$keys[$i] = $key;
-			if (is_array($values[$i])) {
-				$count++;
-				if (10 < $count) {
-					echo '<h1>Error: array nested too deep!</h1>';
-					exit;
+			for ($i = 0; $i < count($values); $i++) {
+				$key = str_replace($tags, $replaced, $keys[$i]);
+				$key = preg_replace('/<script/i', 'sanitized<s cript', $key);
+				$key = preg_replace('/&#(\d{1,4});?/', 'sanitized& #$1', $key);
+				$keys[$i] = $key;
+				if (is_array($values[$i])) {
+					$count++;
+					if (10 < $count) {
+						echo '<h1>Error: array nested too deep!</h1>';
+						exit;
+					}
+					modx_sanitize_gpc($values[$i], $dummy, $count);
+				} else {
+					$value = str_replace($tags, $replaced, $values[$i]);
+					$value = preg_replace('/<script/i', 'sanitized<s cript', $value);
+					$value = preg_replace('/&#(\d{1,4});?/', 'sanitized& #$1', $value);
+					$values[$i] = $value;
 				}
-				modx_sanitize_gpc($values[$i], $tags, $count);
-			} else {
-				$value = str_replace($tags, $replaced, $values[$i]);
-				$value = preg_replace('/<script/i', 'sanitized<s cript', $value);
-				$value = preg_replace('/&#(\d{1,4});?/', 'sanitized& #$1', $value);
-				$values[$i] = $value;
+				$count = 0;
 			}
-			$count = 0;
-		}
 
-		$target = array_combine($keys, $values);
+			$target = array_combine($keys, $values);
+		}
 	}
 }
 

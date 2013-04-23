@@ -101,6 +101,11 @@ class DBAPI {
          if ($modx->dumpSQL) {
             $modx->queryCode .= "<fieldset style='text-align:left'><legend>Database connection</legend>" . sprintf("Database connection was created in %2.4f s", $totaltime) . "</fieldset><br />";
          }
+            if (function_exists('mysql_set_charset')) {
+                mysql_set_charset($this->config['charset']);
+            } else {
+                @mysql_query("SET NAMES {$this->config['charset']}", $this->conn);
+            }
          $this->isConnected = true;
          // FIXME (Fixed by line below):
          // this->queryTime = this->queryTime + $totaltime;
@@ -116,11 +121,25 @@ class DBAPI {
       @ mysql_close($this->conn);
    }
 
-   function escape($s) {
+   function escape($s, $safecount=0) {
+      
+      $safecount++;
+      if(1000<$safecount) exit("Too many loops '{$safecount}'");
+      
       if (empty ($this->conn) || !is_resource($this->conn)) {
          $this->connect();
        }
-      return mysql_real_escape_string($s, $this->conn);
+       
+      if(is_array($s)) {
+          if(count($s) === 0) $s = '';
+          else {
+              foreach($s as $i=>$v) {
+                  $s[$i] = $this->escape($v,$safecount);
+              }
+          }
+      }
+      else $s = mysql_real_escape_string($s, $this->conn);
+          return $s;
    }
 
    /**

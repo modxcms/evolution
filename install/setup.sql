@@ -861,7 +861,7 @@ REPLACE INTO `{PREFIX}site_templates`
 # Default Site Documents
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','MODx CMS Install Success','Welcome to the MODx Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed MODx.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://modxcms.com/forums/\" target=\"_blank\">MODx Community</a> provides a great starting point to learn all things MODx, or you can also <a href=\"http://modxcms.com/learn/it.html\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to MODx!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0);
+REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','MODX CMS Install Success','Welcome to the MODX Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed MODX.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://forums.modx.com/\" target=\"_blank\">MODX Community</a> provides a great starting point to learn all things MODX, or you can also <a href=\"http://modxcms.com/learn/it.html\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to MODX!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0);
 
 
 REPLACE INTO `{PREFIX}manager_users` 
@@ -895,7 +895,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('server_protocol','http'),
 ('manager_language','{MANAGERLANGUAGE}'),
 ('modx_charset','UTF-8'),
-('site_name','My MODx Site'),
+('site_name','My MODX Site'),
 ('site_start','1'),
 ('error_page','1'),
 ('unauthorized_page','1'),
@@ -919,7 +919,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('failed_login_attempts','3'),
 ('blocked_minutes','60'),
 ('use_captcha','0'),
-('captcha_words','MODx,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
+('captcha_words','MODX,Access,Better,BitCode,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Tattoo,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote'),
 ('emailsender','{ADMINEMAIL}'),
 ('emailsubject','Your login details'),
 ('number_of_logs','100'),
@@ -946,7 +946,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('filemanager_path',''),
 ('theme_refresher',''),
 ('manager_layout','4'),
-('custom_contenttype','application/rss+xml,application/pdf,application/vnd.ms-word,application/vnd.ms-excel,text/html,text/css,text/xml,text/javascript,text/plain'),
+('custom_contenttype','application/rss+xml,application/pdf,application/vnd.ms-word,application/vnd.ms-excel,text/html,text/css,text/xml,text/javascript,text/plain,application/json'),
 ('auto_menuindex','1'),
 ('session.cookie.lifetime','604800'),
 ('mail_check_timeperiod','60'),
@@ -966,7 +966,8 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('datetime_format','dd-mm-YYYY'),
 ('warning_visibility', '1'),
 ('remember_last_tab', '0'),
-('enable_bindings', '1');
+('enable_bindings', '1'),
+('make_folders', '1');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
@@ -1139,3 +1140,5 @@ UPDATE `{PREFIX}user_settings` SET
 
 
 REPLACE INTO `{PREFIX}system_settings` (setting_name, setting_value) VALUES ('manager_theme','MODxCarbon');
+
+UPDATE `{PREFIX}system_settings` set setting_value = if(setting_value REGEXP 'application/json',setting_value,concat_ws(",",setting_value,"application/json")) WHERE setting_name='custom_contenttype'

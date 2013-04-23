@@ -8,60 +8,46 @@ if (!$modx->hasPermission('save_web_user')) {
 ?>
 <?php
 
-
-// Web alert -  sends an alert to web browser
-function webAlert($msg) {
-	global $id, $modx;
-	global $dbase, $table_prefix;
-	$mode = $_POST['mode'];
-	$url = "index.php?a=$mode" . ($mode == '88' ? "&id=" . $id : "");
-	$modx->manager->saveFormValues($mode);
-	include_once "header.inc.php";
-	$modx->webAlert($msg, $url);
-	include_once "footer.inc.php";
+$input = $_POST;
+foreach($input as $k=>$v) {
+    if($k!=='comment') {
+        $v = sanitize($v);
+        $input[$k] = $v;
+    }
 }
 
-// Generate password
-function generate_password($length = 10) {
-	$allowable_characters = "abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-	$ps_len = strlen($allowable_characters);
-	mt_srand((double) microtime() * 1000000);
-	$pass = "";
-	for ($i = 0; $i < $length; $i++) {
-		$pass .= $allowable_characters[mt_rand(0, $ps_len -1)];
-	}
-	return $pass;
-}
-
-$id = intval($_POST['id']);
-$oldusername = $_POST['oldusername'];
-$newusername = !empty ($_POST['newusername']) ? trim($_POST['newusername']) : "New User";
-$fullname = $modx->db->escape($_POST['fullname']);
-$genpassword = $_POST['newpassword'];
-$passwordgenmethod = $_POST['passwordgenmethod'];
-$passwordnotifymethod = $_POST['passwordnotifymethod'];
-$specifiedpassword = $_POST['specifiedpassword'];
-$email = $modx->db->escape($_POST['email']);
-$oldemail = $_POST['oldemail'];
-$phone = $modx->db->escape($_POST['phone']);
-$mobilephone = $modx->db->escape($_POST['mobilephone']);
-$fax = $modx->db->escape($_POST['fax']);
-$dob = !empty ($_POST['dob']) ? ConvertDate($_POST['dob']) : 0;
-$country = $_POST['country'];
-$state = $modx->db->escape($_POST['state']);
-$zip = $modx->db->escape($_POST['zip']);
-$gender = !empty($_POST['gender']) ? $_POST['gender'] : 0;
-$photo = $modx->db->escape($_POST['photo']);
-$comment = $modx->db->escape($_POST['comment']);
-$roleid = !empty($_POST['role']) ? $_POST['role'] : 0;
-$failedlogincount = !empty($_POST['failedlogincount']) ? $_POST['failedlogincount'] : 0;
-$blocked = !empty($_POST['blocked']) ? $_POST['blocked'] : 0;
-$blockeduntil = !empty($_POST['blockeduntil']) ? ConvertDate($_POST['blockeduntil']) : 0;
-$blockedafter = !empty($_POST['blockedafter']) ? ConvertDate($_POST['blockedafter']) : 0;
-$user_groups = $_POST['user_groups'];
+$id                   = intval($input['id']);
+    $esc_id = $modx->db->escape($id);
+$oldusername          = $input['oldusername'];
+$newusername          = !empty ($input['newusername']) ? trim($input['newusername']) : "New User";
+    $esc_newusername = $modx->db->escape($newusername);
+$fullname             = $input['fullname'];
+$genpassword          = $input['newpassword'];
+$passwordgenmethod    = $input['passwordgenmethod'];
+$passwordnotifymethod = $input['passwordnotifymethod'];
+$specifiedpassword    = $input['specifiedpassword'];
+$email                = $input['email'];
+    $esc_email = $modx->db->escape($email);
+$oldemail             = $input['oldemail'];
+$phone                = $input['phone'];
+$mobilephone          = $input['mobilephone'];
+$fax                  = $input['fax'];
+$dob                  = !empty ($input['dob']) ? ConvertDate($input['dob']) : 0;
+$country              = $input['country'];
+$state                = $input['state'];
+$zip                  = $input['zip'];
+$gender               = !empty($input['gender']) ? $input['gender'] : 0;
+$photo                = $input['photo'];
+$comment              = $input['comment'];
+$role                 = !empty($input['role']) ? $input['role'] : 0;
+$failedlogincount     = !empty($input['failedlogincount']) ? $input['failedlogincount'] : 0;
+$blocked              = !empty($input['blocked']) ? $input['blocked'] : 0;
+$blockeduntil         = !empty($input['blockeduntil']) ? ConvertDate($input['blockeduntil']) : 0;
+$blockedafter         = !empty($input['blockedafter']) ? ConvertDate($input['blockedafter']) : 0;
+$user_groups          = $input['user_groups'];
 
 // verify password
-if ($passwordgenmethod == "spec" && $_POST['specifiedpassword'] != $_POST['confirmpassword']) {
+if ($passwordgenmethod == "spec" && $input['specifiedpassword'] != $input['confirmpassword']) {
 	webAlert("Password typed is mismatched");
 	exit;
 }
@@ -75,26 +61,24 @@ if ($email == '' || !preg_match("/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i", $
 switch ($_POST['mode']) {
 	case '87' : // new user
 		// check if this user name already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "web_users` WHERE username='$newusername'";
-		if (!$rs = $modx->db->query($sql)) {
-			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
+		if (!$rs = $modx->db->select('id','[+prefix+]web_users',"username='{$esc_newusername}'")) {
+			webAlert("An error occurred while attempting to retrieve all users with username {$newusername}.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			webAlert("User name is already in use!");
 			exit;
 		}
 
 		// check if the email address already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "web_user_attributes` WHERE email='$email'";
-		if (!$rs = $modx->db->query($sql)) {
-			webAlert("An error occurred while attempting to retrieve all users with email $email.");
+		if (!$rs = $modx->db->select('id','[+prefix+]web_user_attributes', "email='{$esc_email}'")) {
+			webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
 				webAlert("Email is already in use!");
 				exit;
@@ -128,33 +112,32 @@ switch ($_POST['mode']) {
 		));
 
 		// create the user account
-		$sql = "INSERT INTO $dbase.`" . $table_prefix . "web_users` (username, password)
-						VALUES('" . $newusername . "', md5('" . $newpassword . "'));";
-		$rs = $modx->db->query($sql);
-		if (!$rs) {
+		$f = array();
+		$f['username'] = $newusername;
+		$f['password'] = md5($newpassword);
+		$f = $modx->db->escape($f);
+		$internalKey = $modx->db->insert($f, '[+prefix+]web_users');
+		if (!$internalKey) {
 			webAlert("An error occurred while attempting to save the user.");
 			exit;
 		}
-		// now get the id
-		if (!$key = mysql_insert_id()) {
-			//get the key by sql
-		}
 
-		$sql = "INSERT INTO $dbase.`" . $table_prefix . "web_user_attributes` (internalKey, fullname, role, email, phone, mobilephone, fax, zip, state, country, gender, dob, photo, comment, blocked, blockeduntil, blockedafter)
-						VALUES($key, '$fullname', '$roleid', '$email', '$phone', '$mobilephone', '$fax', '$zip', '$state', '$country', '$gender', '$dob', '$photo', '$comment', '$blocked', '$blockeduntil', '$blockedafter');";
-		$rs = $modx->db->query($sql);
+        $f = array();
+        $f = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
+        $f = $modx->db->escape($f);
+		$rs = $modx->db->insert($f, '[+prefix+]web_user_attributes');
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
 			exit;
 		}
 
 		// Save User Settings
-		saveUserSettings($key);
+		saveUserSettings($internalKey);
 
 		// invoke OnWebSaveUser event
 		$modx->invokeEvent("OnWebSaveUser", array (
 			"mode" => "new",
-			"userid" => $key,
+			"userid" => $internalKey,
 			"username" => $newusername,
 			"userpassword" => $newpassword,
 			"useremail" => $email,
@@ -164,7 +147,7 @@ switch ($_POST['mode']) {
 		// invoke OnWUsrFormSave event
 		$modx->invokeEvent("OnWUsrFormSave", array (
 			"mode" => "new",
-			"id" => $key
+			"id" => $internalKey
 		));
 
 		/*******************************************************************************/
@@ -173,8 +156,11 @@ switch ($_POST['mode']) {
 		if ($use_udperms == 1) {
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$sql = "INSERT INTO $dbase.`" . $table_prefix . "web_groups` (webgroup, webuser) values('" . intval($user_groups[$i]) . "', '" . $key . "')";
-					$rs = $modx->db->query($sql);
+					$f = array();
+					$f['webgroup'] = intval($user_groups[$i]);
+					$f['webuser']  = $internalKey;
+					$f = $modx->db->escape($f);
+					$rs = $modx->db->insert($f, '[+prefix+]web_groups');
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a web group.");
 						exit;
@@ -187,8 +173,8 @@ switch ($_POST['mode']) {
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
 			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "88&id=$id" : "87";
-				$header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+				$a = ($_POST['stay'] == '2') ? "88&id={$id}" : "87";
+				$header = "Location: index.php?a={$a}&r=2&stay=" . $_POST['stay'];
 				header($header);
 			} else {
 				$header = "Location: index.php?a=99&r=2";
@@ -196,8 +182,8 @@ switch ($_POST['mode']) {
 			}
 		} else {
 			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "88&id=$key" : "87";
-				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+				$a = ($_POST['stay'] == '2') ? "88&id={$internalKey}" : "87";
+				$stayUrl = "index.php?a={$a}&r=2&stay=" . $_POST['stay'];
 			} else {
 				$stayUrl = "index.php?a=99&r=2";
 			}
@@ -246,21 +232,19 @@ switch ($_POST['mode']) {
 				webAlert("No password generation method specified!");
 				exit;
 			}
-			$updatepasswordsql = ", password=MD5('$newpassword') ";
 		}
 		if ($passwordnotifymethod == 'e') {
 			sendMailMessage($email, $newusername, $newpassword, $fullname);
 		}
 
 		// check if the username already exist
-		$sql = "SELECT id FROM $dbase.`" . $table_prefix . "web_users` WHERE username='$newusername'";
-		if (!$rs = $modx->db->query($sql)) {
+		if (!$rs = $modx->db->select('id', '[+prefix+]web_users', "username='{$esc_newusername}'")) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
 				webAlert("User name is already in use!");
 				exit;
@@ -268,14 +252,14 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-		$sql = "SELECT internalKey FROM $dbase.`" . $table_prefix . "web_user_attributes` WHERE email='$email'";
-		if (!$rs = $modx->db->query($sql)) {
-			webAlert("An error occurred while attempting to retrieve all users with email $email.");
+		$rs = $modx->db->select('internalKey', '[+prefix+]web_user_attributes', "email='{$esc_email}'");
+		$limit = $modx->db->getRecordCount($rs);
+		if (!$limit) {
+			webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['internalKey'] != $id) {
 				webAlert("Email is already in use!");
 				exit;
@@ -289,32 +273,19 @@ switch ($_POST['mode']) {
 		));
 
 		// update user name and password
-		$sql = "UPDATE $dbase.`" . $table_prefix . "web_users` SET username='$newusername'" . $updatepasswordsql . " WHERE id=$id";
-		if (!$rs = $modx->db->query($sql)) {
+		$f = array();
+		$f['username'] = $newusername;
+		if($genpassword == 1)
+		    $f['password'] = md5($newpassword);
+		$f = $modx->db->escape($f);
+		if (!$rs = $modx->db->update($f, '[+prefix+]web_users', "id='{$esc_id}'")) {
 			webAlert("An error occurred while attempting to update the user's data.");
 			exit;
 		}
-		
-		$sql = "UPDATE $dbase.`" . $table_prefix . "web_user_attributes` SET 
-					fullname='" . $fullname . "', 
-					role='$roleid', 
-					email='$email', 
-					phone='$phone',
-					mobilephone='$mobilephone', 
-					fax='$fax', 
-					zip='$zip' , 
-					state='$state', 
-					country='$country', 
-					gender='$gender', 
-					dob='$dob', 
-					photo='$photo', 
-					comment='$comment',
-					failedlogincount='$failedlogincount', 
-					blocked=$blocked, 
-					blockeduntil='$blockeduntil', 
-					blockedafter='$blockedafter' 
-					WHERE internalKey=$id";
-		if (!$rs = $modx->db->query($sql)) {
+		$f = array();
+		$f = compact('fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
+		$f = $modx->db->escape($f);
+		if (!$rs = $modx->db->update($f, '[+prefix+]web_user_attributes', "internalKey='{$esc_id}'")) {
 			webAlert("An error occurred while attempting to update the user's attributes.");
 			exit;
 		}
@@ -334,7 +305,7 @@ switch ($_POST['mode']) {
 		) ? $oldusername : ""), "olduseremail" => (($oldemail != $email) ? $oldemail : "")));
 
 		// invoke OnWebChangePassword event
-		if ($updatepasswordsql)
+		if ($genpassword == 1)
 			$modx->invokeEvent("OnWebChangePassword", array (
 				"userid" => $id,
 				"username" => $newusername,
@@ -352,16 +323,18 @@ switch ($_POST['mode']) {
 		// first, check that up_perms are switched on!
 		if ($use_udperms == 1) {
 			// as this is an existing user, delete his/ her entries in the groups before saving the new groups
-			$sql = "DELETE FROM $dbase.`" . $table_prefix . "web_groups` WHERE webuser=$id;";
-			$rs = $modx->db->query($sql);
+			$rs = $modx->db->delete('[+prefix+]web_groups', "webuser='{$esc_id}'");
 			if (!$rs) {
 				webAlert("An error occurred while attempting to delete previous user_groups entries.");
 				exit;
 			}
 			if (count($user_groups) > 0) {
 				for ($i = 0; $i < count($user_groups); $i++) {
-					$sql = "INSERT INTO $dbase.`" . $table_prefix . "web_groups` (webgroup, webuser) VALUES('" . intval($user_groups[$i]) . "', '$id')";
-					$rs = $modx->db->query($sql);
+					$f = array();
+					$f['webgroup'] = intval($user_groups[$i]);
+					$f['webuser']  = $id;
+					$f = $modx->db->escape($f);
+					$rs = $modx->db->insert($f, '[+prefix+]web_groups');
 					if (!$rs) {
 						webAlert("An error occurred while attempting to add the user to a user_group.<br />$sql;");
 						exit;
@@ -374,8 +347,8 @@ switch ($_POST['mode']) {
 
 		if ($genpassword == 1 && $passwordnotifymethod == 's') {
 			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "88&id=$id" : "87";
-				$stayUrl = "index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+				$a = ($_POST['stay'] == '2') ? "88&id={$id}" : "87";
+				$stayUrl = "index.php?a={$a}&r=2&stay=" . $_POST['stay'];
 			} else {
 				$stayUrl = "index.php?a=99&r=2";
 			}
@@ -401,8 +374,8 @@ switch ($_POST['mode']) {
 			include_once "footer.inc.php";
 		} else {
 			if ($_POST['stay'] != '') {
-				$a = ($_POST['stay'] == '2') ? "88&id=$id" : "87";
-				$header = "Location: index.php?a=" . $a . "&r=2&stay=" . $_POST['stay'];
+				$a = ($_POST['stay'] == '2') ? "88&id={$id}" : "87";
+				$header = "Location: index.php?a={$a}&r=2&stay=" . $_POST['stay'];
 				header($header);
 			} else {
 				$header = "Location: index.php?a=99&r=2";
@@ -472,15 +445,22 @@ function saveUserSettings($id) {
 		"allowed_days"
 	);
 
-	mysql_query("DELETE FROM $dbase.`" . $table_prefix . "web_user_settings` WHERE webuser='$id'");
+    $esc_id = $modx->db->escape($id);
+	$modx->db->delete('[+prefix+]web_user_settings',"webuser='{$esc_id}'");
 
 	for ($i = 0; $i < count($settings); $i++) {
 		$n = $settings[$i];
 		$vl = $_POST[$n];
 		if (is_array($vl))
 			$vl = implode(",", $vl);
-		if ($vl != '')
-			mysql_query("INSERT INTO $dbase.`" . $table_prefix . "web_user_settings` (webuser,setting_name,setting_value) VALUES($id,'$n','" . $modx->db->escape($vl) . "')");
+		if ($vl != '') {
+		    $f = array();
+		    $f['webuser']       = $id;
+		    $f['setting_name']  = $n;
+		    $f['setting_value'] = $vl;
+		    $f = $modx->db->escape($f);
+		    $modx->db->insert($f, '[+prefix+]web_user_settings');
+		}
 	}
 }
 
@@ -490,4 +470,37 @@ function ConvertDate($date) {
 	if ($date == "") {return "0";}
 	else {}          {return $modx->toTimeStamp($date);}
 }
-?>
+
+// Web alert -  sends an alert to web browser
+function webAlert($msg) {
+	global $id, $modx;
+	global $dbase, $table_prefix;
+	$mode = $_POST['mode'];
+	$url = "index.php?a=$mode" . ($mode == '88' ? "&id={$id}" : '');
+	$modx->manager->saveFormValues($mode);
+	include_once "header.inc.php";
+	$modx->webAlert($msg, $url);
+	include_once "footer.inc.php";
+}
+
+// Generate password
+function generate_password($length = 10) {
+	return substr(str_shuffle('abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, $length);
+}
+
+function sanitize($str='',$safecount=0) {
+	global $modx;
+	$safecount++;
+	if(1000<$safecount) exit("error too many loops '{$safecount}'");
+	if(is_array($str)) {
+		foreach($str as $i=>$v) {
+			$str[$i] = sanitize($str[$i],$safecount);
+			//$str[$i] = htmlspecialchars($str[$i], ENT_NOQUOTES, $modx->config['modx_charset']);
+		}
+	}
+	else {
+		$str = strip_tags($str);
+		$str = htmlspecialchars($str, ENT_NOQUOTES, $modx->config['modx_charset']);
+	}
+	return $str;
+}
