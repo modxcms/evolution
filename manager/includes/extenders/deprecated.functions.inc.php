@@ -38,9 +38,9 @@ class OldFunctions {
 
     
     function getUserData() {
-    	global $modx;
-        include $modx->config["base_path"] . "manager/includes/extenders/getUserData.extender.php";
-        return $tmpArray;
+        $client['ip'] = $_SERVER['REMOTE_ADDR'];
+        $client['ua'] = $_SERVER['HTTP_USER_AGENT'];
+    	return $client;
     }
     
     # Returns true, install or interact when inside manager

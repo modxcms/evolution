@@ -233,12 +233,7 @@ function getTVDisplayFormat($name,$value,$format,$paramstring="",$tvtype="",$doc
             $value = parseInput($value);
             $id = '_'.time();
             if(!$params['vpid']) $params['vpid'] = $id;
-            if($_SESSION['browser']=='ns' && $_SESSION['browser_version']<'5.0') {
-                $sTag = "<ilayer"; $eTag = "</ilayer>";
-            }
-            else {
-                $sTag = "<iframe"; $eTag = "</iframe>";
-            }
+            $sTag = "<iframe"; $eTag = "</iframe>";
             $autoMode = "0";
             $w = $params['width'];
             $h = $params['height'];

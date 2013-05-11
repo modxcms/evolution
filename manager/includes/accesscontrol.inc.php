@@ -53,8 +53,6 @@ if (isset($lastInstallTime)) {
 }
 
 if(!isset($_SESSION['mgrValidated'])){
-	include_once("browsercheck.inc.php");
-
 	if(isset($manager_language)) {
 		// establish fallback to English default
 		include_once "lang/english.inc.php";
