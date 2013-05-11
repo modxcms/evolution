@@ -638,10 +638,56 @@ class DocumentParser {
         // end post processing
     }
 
+    function getTagsFromContent($content,$left='[+',$right='+]') {
+        $hash = explode($left,$content);
+        foreach($hash as $i=>$v) {
+          if(0<$i) $hash[$i] = $left.$v;
+        }
+        
+        $i=0;
+        $count = count($hash);
+        $safecount = 0;
+        $temp_hash = array();
+        while(0<$count) {
+            $open  = 1;
+            $close = 0;
+            $safecount++;
+            if(1000<$safecount) break;
+            while($close < $open && 0 < $count) {
+                $safecount++;
+                if(!isset($temp_hash[$i])) $temp_hash[$i] = '';
+                if(1000<$safecount) break;
+                $temp_hash[$i] .= array_shift($hash);
+                $count = count($hash);
+                if($i===0) {
+                    $i++;
+                    continue;
+                }
+                if(strpos($temp_hash[$i],$right)===false) $open++;
+                else {
+                    $right_count = substr_count($temp_hash[$i],$right);
+                    $close += $right_count;
+                }
+            }
+            $i++;
+        }
+        $matches=array();
+        $i = 0;
+        foreach($temp_hash as $v) {
+            if(strpos($v,$left)!==false) {
+                $v = substr($v,0,strrpos($v,$right));
+                $matches[0][$i] = $v . $right;
+                $matches[1][$i] = substr($v,strlen($left));
+                $i++;
+            }
+        }
+        return $matches;
+    }
+    
     // mod by Raymond
-    function mergeDocumentContent($template) {
+    function mergeDocumentContent($content) {
         $replace= array ();
-        preg_match_all('~\[\*(.*?)\*\]~', $template, $matches);
+        $matches = $this->getTagsFromContent($content,'[*','*]');
         $variableCount= count($matches[1]);
         $basepath= $this->config["base_path"] . "manager/includes";
         for ($i= 0; $i < $variableCount; $i++) {
@@ -657,30 +703,30 @@ class DocumentParser {
             }
             $replace[$i]= $value;
         }
-        $template= str_replace($matches[0], $replace, $template);
+        $content= str_replace($matches[0], $replace, $content);
 
-        return $template;
+        return $content;
     }
 
-    function mergeSettingsContent($template) {
+    function mergeSettingsContent($content) {
         $replace= array ();
-        $matches= array ();
-        if (preg_match_all('~\[\(([a-z\_]*?)\)\]~', $template, $matches)) {
+        $matches = $this->getTagsFromContent($content,'[(',')]');
+        if($matches) {
             $settingsCount= count($matches[1]);
             for ($i= 0; $i < $settingsCount; $i++) {
                 if (array_key_exists($matches[1][$i], $this->config))
                     $replace[$i]= $this->config[$matches[1][$i]];
             }
 
-            $template= str_replace($matches[0], $replace, $template);
+            $content= str_replace($matches[0], $replace, $content);
         }
-        return $template;
+        return $content;
     }
 
     function mergeChunkContent($content) {
         $replace= array ();
-        $matches= array ();
-        if (preg_match_all('~{{(.*?)}}~', $content, $matches)) {
+        $matches = $this->getTagsFromContent($content,'{{','}}');
+        if ($matches) {
             $settingsCount= count($matches[1]);
             for ($i= 0; $i < $settingsCount; $i++) {
                 if (isset ($this->chunkCache[$matches[1][$i]])) {
@@ -707,8 +753,8 @@ class DocumentParser {
     // Added by Raymond
     function mergePlaceholderContent($content) {
         $replace= array ();
-        $matches= array ();
-        if (preg_match_all('~\[\+(.*?)\+\]~', $content, $matches)) {
+        $matches = $this->getTagsFromContent($content,'[+','+]');
+        if($matches) {
             $cnt= count($matches[1]);
             for ($i= 0; $i < $cnt; $i++) {
                 $v= '';
