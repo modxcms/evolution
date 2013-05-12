@@ -920,10 +920,13 @@ class DocumentParser {
                         }
                         else $pvalue = $params_stack;
                         $pvalue = trim($pvalue);
+                        $delim = '';
                 }
                 if($delim !== "'")
                 {
                     $pvalue = (strpos($pvalue,'[*')!==false) ? $this->mergeDocumentContent($pvalue) : $pvalue;
+                    $pvalue = (strpos($pvalue,'[(')!==false) ? $this->mergeSettingsContent($pvalue) : $pvalue;
+                    $pvalue = (strpos($pvalue,'{{')!==false) ? $this->mergeChunkContent($pvalue)    : $pvalue;
                 }
                 
                 $pname  = str_replace('&amp;', '', $pname);
