@@ -1087,6 +1087,8 @@ $_lang["yourinfo_title"] = 'あなたの情報';
 $_lang["yourinfo_total_logins"] = '合計ログイン回数';
 $_lang["yourinfo_username"] = 'ログイン名';
 
+$_lang['setting_resource_tree_node_name'] = 'リソースツリーのノード名';
+$_lang['setting_resource_tree_node_name_desc'] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 // bkmanager.static.php
 $_lang["bkmgr_alert_mkdir"] = 'ディレクトリにファイルを作成できません。[+snapshot_path+]のパーミッションを確認してください。';
 $_lang["bkmgr_restore_msg"] = '<p>「バックアップ」で取得したSQLファイルを用いて、サイトをリストアできます。<br />※SQL文を実行するだけなので、他の用途にも使えます(拡張機能のインストールなど)。</p>';
