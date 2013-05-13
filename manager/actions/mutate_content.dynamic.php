@@ -614,28 +614,7 @@ if (is_array($evtOut))
                         if (isset ($content['template'])) {
                             $selectedtext = $row['id'] == $content['template'] ? ' selected="selected"' : '';
                         } else {
-                            switch($auto_template_logic) {
-                                case 'sibling':
-
-                                    if ($sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', '', 'menuindex', 'ASC', 1)) {
-                                        $default_template = $sibl[0]['template'];
-                                        break;
-                                    } else if ($sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template', '', 'menuindex', 'ASC', 1)) {
-                                        $default_template = $sibl[0]['template'];
-                                        break;
-                                    }
-
-                                case 'parent':
-
-                                    if ($parent = $modx->getPageInfo($_REQUEST['pid'], 0, 'template')) {
-                                        $default_template = $parent['template'];
-                                        break;
-                                    }
-
-                                case 'system':
-                                default:
-                                    // default_template is already set
-                            }
+                            $default_template = getDefaultTemplate();
                             $selectedtext = $row['id'] == $default_template ? ' selected="selected"' : '';
                         }
                     }
@@ -1219,4 +1198,45 @@ if (is_array($evtOut)) echo implode('', $evtOut);
                 echo implode('', $evtOut);
         }
     }
-?>
+
+function getDefaultTemplate()
+{
+	global $modx;
+	
+	switch($modx->config['auto_template_logic'])
+	{
+		case 'sibling':
+			if(!isset($_GET['pid']) || empty($_GET['pid']))
+		    {
+		    	$site_start = $modx->config['site_start'];
+		    	$where = "sc.isfolder=0 AND sc.id!='{$site_start}'";
+		    	$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', $where, 'menuindex', 'ASC', 1);
+		    	if(!empty($sibl[0]['template'])) $default_template = $sibl[0]['template'];
+			}
+				
+			else
+			{
+				$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', 'isfolder=0', 'menuindex', 'ASC', 1);
+				if(!empty($sibl[0]['template'])) $default_template = $sibl[0]['template'];
+				else
+				{
+					$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template', 'isfolder=0', 'menuindex', 'ASC', 1);
+					if(!empty($sibl[0]['template'])) $default_template = $sibl[0]['template'];
+				}
+			}
+			break;
+		case 'parent':
+			if (isset($_REQUEST['pid']) && !empty($_REQUEST['pid']))
+			{
+				$parent = $modx->getPageInfo($_REQUEST['pid'], 0, 'template');
+				if(isset($parent['template'])) $default_template = $parent['template'];
+			}
+			break;
+		case 'system':
+		default: // default_template is already set
+			$default_template = $modx->config['default_template'];
+	}
+	if(!isset($default_template)) $default_template = $modx->config['default_template']; // default_template is already set
+	
+	return $default_template;
+}
