@@ -506,27 +506,18 @@ class DocumentParser {
             }
         }
 
-        $totalTime= ($this->getMicroTime() - $this->tstart);
-        $queryTime= $this->queryTime;
-        $phpTime= $totalTime - $queryTime;
-
-        $queryTime= sprintf("%2.4f s", $queryTime);
-        $totalTime= sprintf("%2.4f s", $totalTime);
-        $phpTime= sprintf("%2.4f s", $phpTime);
-        $source= $this->documentGenerated == 1 ? "database" : "cache";
-        $queries= isset ($this->executedQueries) ? $this->executedQueries : 0;
-        $phpMemory = (memory_get_peak_usage(true) / 1024 / 1024) . " mb";
+        $stats = $this->getTimerStats($this->tstart);
         
         $out =& $this->documentOutput;
         if ($this->dumpSQL) {
             $out .= $this->queryCode;
         }
-        $out= str_replace("[^q^]", $queries, $out);
-        $out= str_replace("[^qt^]", $queryTime, $out);
-        $out= str_replace("[^p^]", $phpTime, $out);
-        $out= str_replace("[^t^]", $totalTime, $out);
-        $out= str_replace("[^s^]", $source, $out);
-        $out= str_replace("[^m^]", $phpMemory, $out);
+        $out= str_replace("[^q^]", $stats['queries'] , $out);
+        $out= str_replace("[^qt^]", $stats['queryTime'] , $out);
+        $out= str_replace("[^p^]", $stats['phpTime'] , $out);
+        $out= str_replace("[^t^]", $stats['totalTime'] , $out);
+        $out= str_replace("[^s^]", $stats['source'] , $out);
+        $out= str_replace("[^m^]", $stats['phpMemory'], $out);
         //$this->documentOutput= $out;
 
         // invoke OnWebPagePrerender event
@@ -536,6 +527,23 @@ class DocumentParser {
 
         echo $this->documentOutput;
         ob_end_flush();
+    }
+
+    function getTimerStats($tstart) {
+        $stats = array();
+
+        $stats['totalTime'] = ($this->getMicroTime() - $tstart);
+        $stats['queryTime'] = $this->queryTime;
+        $stats['phpTime'] = $stats['totalTime'] - $stats['queryTime'];
+
+        $stats['queryTime'] = sprintf("%2.4f s", $stats['queryTime']);
+        $stats['totalTime'] = sprintf("%2.4f s", $stats['totalTime']);
+        $stats['phpTime'] = sprintf("%2.4f s", $stats['phpTime']);
+        $stats['source'] = $this->documentGenerated == 1 ? "database" : "cache";
+        $stats['queries'] = isset ($this->executedQueries) ? $this->executedQueries : 0;
+        $stats['phpMemory'] = (memory_get_peak_usage(true) / 1024 / 1024) . " mb";
+
+        return $stats;
     }
 
     function checkPublishStatus() {
