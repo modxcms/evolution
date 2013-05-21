@@ -1671,18 +1671,16 @@ class DocumentParser {
      * @return boolean
      */
     function isBackend() {
-        if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
-            return true;
-        }
-        else return false;
+        return $this->insideManager() ? true : false;
     }
 
-    # Returns true if parser is executed in frontend mode
+    /**
+     * Returns true if we are currently in the frontend
+     *
+     * @return boolean
+     */
     function isFrontend() {
-        if(defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
-            return false;
-        }
-        else return true;
+        return !$this->insideManager() ? true : false;
     }
 
     /**
@@ -2613,6 +2611,25 @@ class DocumentParser {
         // insert a new message into user_messages
         $sql= "INSERT INTO " . $this->getFullTableName("user_messages") . " ( id , type , subject , message , sender , recipient , private , postdate , messageread ) VALUES ( '', '$type', '$subject', '$msg', '$from', '$to', '$private', '" . time() . "', '0' );";
         $rs= $this->db->query($sql);
+    }
+
+    /**
+     * Returns true, install or interact when inside manager.
+     *
+     * @deprecated
+     * @return string
+     */
+    function insideManager() {
+        $m= false;
+        if (defined('IN_MANAGER_MODE') && IN_MANAGER_MODE == 'true') {
+            $m= true;
+            if (defined('SNIPPET_INTERACTIVE_MODE') && SNIPPET_INTERACTIVE_MODE == 'true')
+                $m= "interact";
+            else
+                if (defined('SNIPPET_INSTALL_MODE') && SNIPPET_INSTALL_MODE == 'true')
+                    $m= "install";
+        }
+        return $m;
     }
 
     /**
