@@ -1,9 +1,9 @@
 <?php
 if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
-if(!$modx->hasPermission('edit_module')) {	
+if(!$modx->hasPermission('edit_module')) {
 	$e->setError(3);
-	$e->dumpError();	
+	$e->dumpError();
 }
 
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
@@ -16,7 +16,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <?php
-if($_SESSION['browser']=='ie') {
+if($_SESSION['browser']==='ie') {
 ?>   
 	<style>
 	/* stupid box model hack for equally stupid MSIE */

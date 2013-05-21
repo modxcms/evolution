@@ -30,7 +30,7 @@ $number_of_settings = mysql_num_rows($rs);
 while ($row = mysql_fetch_assoc($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 extract($settings, EXTR_OVERWRITE);
 
-$displayStyle = ( ($_SESSION['browser']=='mz') || ($_SESSION['browser']=='op') || ($_SESSION['browser']=='sf') ) ? "table-row" : "block" ;
+$displayStyle = ($_SESSION['browser']!=='ie') ? 'table-row' : 'block' ;
 
 // load languages and keys
 $lang_keys = array();
@@ -1039,7 +1039,34 @@ function confirmLangChange(el, lkey, elupd){
             <tr>
               <td colspan="2"><div class='split'></div></td>
             </tr>
-             <tr>
+<?php
+    if(!isset($resource_tree_node_name)) $resource_tree_node_name = 'pagetitle';
+?>
+<tr>
+<th><?php echo $_lang["setting_resource_tree_node_name"] ?></th>
+<td>
+	<select name="resource_tree_node_name" size="1" class="inputBox">
+<?php
+	$tpl = '<option value="[+value+]" [+selected+]>[*[+value+]*]</option>' . "\n";
+	$option = array('pagetitle','menutitle','alias','createdon','editedon','publishedon');
+	$output = array();
+	foreach($option as $v)
+	{
+		$selected = ($v==$resource_tree_node_name) ? 'selected' : '';
+		$s = array('[+value+]','[+selected+]');
+		$r = array($v,$selected);
+		$output[] = str_replace($s,$r,$tpl);
+	}
+	echo join("\n",$output)
+?>
+	</select><br />
+	<?php echo $_lang["setting_resource_tree_node_name_desc"]?>
+</td>
+</tr>
+<tr>
+  <td colspan="2"><div class='split'></div></td>
+</tr>
+            	<tr>
       		   <td nowrap class="warning"><b><?php echo $_lang["tree_show_protected"] ?></b></td>
       		   <td> <input onchange="documentDirty=true;" type="radio" name="tree_show_protected" value="1" <?php echo (!isset($tree_show_protected) || $tree_show_protected=='0') ? '' : 'checked="checked" '; ?>/>
       			 <?php echo $_lang["yes"]?><br />
