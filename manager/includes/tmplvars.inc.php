@@ -15,12 +15,13 @@
 
 			case "text": // handler for regular text boxes
 			case "rawtext"; // non-htmlentity converted text boxes
-			case "email": // handles email input fields
-			case "number": // handles the input of numbers
 				$field_html .=  '<input type="text" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:100%" />';
 				break;
-			case "textareamini": // handler for textarea mini boxes
-				$field_html .=  '<textarea id="tv'.$field_id.'" name="tv'.$field_id.'" cols="40" rows="5" onchange="documentDirty=true;" style="width:100%">' . htmlspecialchars($field_value) .'</textarea>';
+			case "email": // handles email input fields
+				$field_html .=  '<input type="email" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" />';
+				break;
+			case "number": // handles the input of numbers
+				$field_html .=  '<input type="number" id="tv'.$field_id.'" name="tv'.$field_id.'" value="'.htmlspecialchars($field_value).'" '.$field_style.' tvtype="'.$field_type.'" onchange="documentDirty=true;" style="width:50%" onkeyup="this.value=this.value.replace(/[^\d-,.+]/,\'\')"/>';
 				break;
 			case "textarea": // handler for textarea boxes
 			case "rawtextarea": // non-htmlentity convertex textarea boxes
@@ -65,7 +66,7 @@
 				break;
 			case "listbox-multiple": // handler for select boxes where you can choose multiple items
 				$field_value = explode("||",$field_value);
-				$field_html .=  '<select id="tv'.$field_id.'[]" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
+				$field_html .=  '<select id="tv'.$field_id.'" name="tv'.$field_id.'[]" multiple="multiple" onchange="documentDirty=true;" size="8">';
 				$index_list = ParseIntputOptions(ProcessTVCommand($field_elements, $field_id,'','tvform'));
 				while (list($item, $itemvalue) = each ($index_list))
 				{
