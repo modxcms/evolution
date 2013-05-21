@@ -1251,7 +1251,7 @@ class DocumentParser {
 
         # this is now the document :) #
         $documentObject= $this->db->getRow($result);
-
+    	if ($documentObject['template']) {
         // load TVs and merge with document - Orig by Apodigm - Docvars
         $sql= "SELECT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";
         $sql .= "FROM " . $this->getFullTableName("site_tmplvars") . " tv ";
@@ -1273,6 +1273,7 @@ class DocumentParser {
             }
             $documentObject= array_merge($documentObject, $tmplvars);
         }
+		}
         return $documentObject;
     }
 
