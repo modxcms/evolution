@@ -10,8 +10,18 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     $output = '<ul>';
 	
 	$pluginsql = $resourceTable == 'site_plugins' ? $tablePre.$resourceTable.'`.disabled, ' : '';
-	$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
-    $sql = 'SELECT '.$pluginsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY '.$orderby;
+    $tvsql = $resourceTable == 'site_tmplvars' ? $tablePre.$resourceTable.'`.caption, ' : '';
+    
+    //$orderby = $resourceTable == 'site_plugins' ? '6,2' : '5,1';
+
+    if ($resourceTable == 'site_plugins' || $resourceTable == 'site_tmplvars') {
+        $orderby= '6,2';
+    }else{
+        $orderby= '5,1';
+    }
+
+    
+    $sql = 'SELECT '.$pluginsql.$tvsql.$tablePre.$resourceTable.'`.'.$nameField.' as name, '.$tablePre.$resourceTable.'`.id, '.$tablePre.$resourceTable.'`.description, '.$tablePre.$resourceTable.'`.locked, if(isnull('.$tablePre.'categories`.category),\''.$_lang['no_category'].'\','.$tablePre.'categories`.category) as category FROM '.$tablePre.$resourceTable.'` left join '.$tablePre.'categories` on '.$tablePre.$resourceTable.'`.category = '.$tablePre.'categories`.id ORDER BY '.$orderby;
 
 	$rs = $modx->db->query($sql);
 	$limit = mysql_num_rows($rs);
@@ -31,7 +41,12 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 
 		if ($resourceTable == 'site_plugins') $class = $row['disabled'] ? ' class="disabledPlugin"' : '';
 		$output .= '<li><span'.$class.'><a href="index.php?id='.$row['id'].'&amp;a='.$action.'">'.$row['name'].' <small>(' . $row['id'] . ')</small></a>'.($modx_textdir ? '&rlm;' : '').'</span>';
+        
+        if ($resourceTable == 'site_tmplvars') {
+             $output .= !empty($row['description']) ? ' - '.$row['caption'].' &nbsp; <small>  ('.$row['description'].')</small>' : ' - '.$row['caption'];
+        }else{
         $output .= !empty($row['description']) ? ' - '.$row['description'] : '' ;
+        }
         $output .= $row['locked'] ? ' <em>('.$_lang['locked'].')</em>' : "" ;
         $output .= '</li>';
 
