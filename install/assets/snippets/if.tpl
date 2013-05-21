@@ -119,7 +119,7 @@ for ($i=1;$i<count($opers);$i++){
 					break;
 				case '!empty':
 				case 'notempty':
-				case 'isnotempty':$output = !empty($subject) && $subject != '' ? true : false;
+				case 'isnotempty':$output = empty($subject) || $subject == '' ? false : true;
 					break;
 				case 'isnull':
 				case 'null':$output = $subject == null || strtolower($subject) == 'null' ? true : false;
