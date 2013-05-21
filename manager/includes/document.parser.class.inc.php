@@ -2511,7 +2511,7 @@ class DocumentParser {
      * @return string Placeholder value
      */
     function getPlaceholder($name) {
-        return $this->placeholders[$name];
+        return isset($this->placeholders[$name]) ? $this->placeholders[$name] : null;
     }
 
     /**
