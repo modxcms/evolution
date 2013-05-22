@@ -465,7 +465,7 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	global $signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
-	$manager_url = $site_url . "manager/";
+	$manager_url = MODX_MANAGER_URL;
 	$message = sprintf($signupemail_message, $uid, $pwd); // use old method
 	// replace placeholders
 	$message = str_replace("[+uid+]", $uid, $message);

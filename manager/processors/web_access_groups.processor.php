@@ -176,7 +176,7 @@ switch ($operation) {
 
 // secure web documents - flag as private
 if($updategroupaccess==true){
-	include $base_path."manager/includes/secure_web_documents.inc.php";
+	include MODX_MANAGER_PATH."includes/secure_web_documents.inc.php";
 	secureWebDocument();
 
 	// Update the private group column

@@ -42,7 +42,7 @@
 
 
 /**
- *  Filename: manager/index.php
+ *  Filename: index.php
  *  Function: This file is the main root file for MODx. It is
  *          only file that will be directly requested, and
  *          depending on the request, will branch different

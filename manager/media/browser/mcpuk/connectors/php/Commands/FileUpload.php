@@ -31,13 +31,14 @@ class FileUpload {
 		$this->actual_cwd=str_replace("//","/",($this->fckphp_config['UserFilesPath']."/$type/".$this->raw_cwd));
 		$this->real_cwd=str_replace("//","/",($this->fckphp_config['basedir']."/".$this->actual_cwd));
         define('MODX_API_MODE', true);
+        define("MGR_DIR", "manager");
         define("IN_MANAGER_MODE", "true");
-        $self = 'manager/media/browser/mcpuk/connectors/php/Commands/FileUpload.php';
+        $self = MGR_DIR.'/media/browser/mcpuk/connectors/php/Commands/FileUpload.php';
         global $modx;
         $base_path = str_replace($self,'',str_replace('\\','/',__FILE__));
         $mtime = microtime();
-        include_once("{$base_path}manager/includes/config.inc.php");
-        include_once("{$base_path}manager/includes/document.parser.class.inc.php");
+        include_once($base_path.MGR_DIR."/includes/config.inc.php");
+        include_once($base_path.MGR_DIR."/includes/document.parser.class.inc.php");
         $modx = new DocumentParser;
         $mtime = explode(" ",$mtime);
         $modx->tstart = $mtime[1] + $mtime[0];;

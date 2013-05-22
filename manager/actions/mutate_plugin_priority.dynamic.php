@@ -34,7 +34,7 @@ if(isset($_POST['listSubmitted'])) {
     	}
     }
     // empty cache
-	include_once ($basePath.'manager/processors/cache_sync.class.processor.php');
+	include_once (MODX_MANAGER_PATH.'processors/cache_sync.class.processor.php');
 	$sync = new synccache();
 	$sync->setCachepath($basePath.'/assets/cache/');
 	$sync->setReport(false);

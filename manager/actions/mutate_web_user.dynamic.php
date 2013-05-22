@@ -105,7 +105,7 @@ function ConvertDate($date) {
 
 // include the country list language file
 $_country_lang = array();
-if($manager_language!="english" && file_exists($modx->config['base_path']."manager/includes/lang/country/".$manager_language."_country.inc.php")){
+if($manager_language!="english" && file_exists($modx->config['site_manager_path']."includes/lang/country/".$manager_language."_country.inc.php")){
     include_once "lang/country/".$manager_language."_country.inc.php";
 } else {
     include_once "lang/country/english_country.inc.php";
@@ -233,10 +233,10 @@ function showHide(what, onoff){
 			<li><a href="#" onclick="documentDirty=false; document.userform.save.click();"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['save']; ?></a><span class="and"> + </span>
 			<select id="stay" name="stay">
 			  <?php if ($modx->hasPermission('new_web_user')) { ?>		
-			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
+			  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
 			  <?php } ?>
 			  <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
-			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
+			  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
 			</select>		
 			</li>
 			<li id="btn_del"><a href="#" onclick="deleteuser();"><img src="<?php echo $_style["icons_delete"] ?>" /> <?php echo $_lang['delete']; ?></a></li>
@@ -492,7 +492,7 @@ function showHide(what, onoff){
 			function BrowseServer() {
 				var w = screen.width * 0.7;
 				var h = screen.height * 0.7;
-				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo $base_url; ?>manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url; ?>", w, h);
+				OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url; ?>", w, h);
 			}
 			function SetUrl(url, width, height, alt){
 				document.userform.photo.value = url;

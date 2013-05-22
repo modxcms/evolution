@@ -167,7 +167,7 @@ $modx->manager->initPageViewState();
 				"FROM ".$modx->getFullTableName("site_metatags")." st ".
 				"ORDER BY name";
 		$ds = mysql_query($sql);
-		include_once $base_path."manager/includes/controls/datagrid.class.php";
+		include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 		$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 		$grd->noRecordMsg = $_lang["no_records_found"];
 		$grd->cssClass="grid";

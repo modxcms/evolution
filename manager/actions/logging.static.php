@@ -289,7 +289,7 @@ if(isset($_REQUEST['log_submit'])) {
 	</div>
 	<?php
 	// HACK: prevent multiple "Viewing logging" entries after a search has taken place.
-	// @see manager/index.php @ 915
+	// @see index.php @ 915
 	global $action; $action = 1;
 } else {
     echo $_lang["mgrlog_noquery"];

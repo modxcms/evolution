@@ -365,7 +365,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					foreach($fields as $key => $value)
 						$body .= "<tr><td>$key</td><td><pre>$value</pre></td></tr>";
 					$body .="</table>";
-					include_once "manager/includes/controls/class.phpmailer.php";
+					include_once MODX_MANAGER_PATH."includes/controls/class.phpmailer.php";
 				# send abuse alert
 					$mail = new PHPMailer();
 					$mail->IsMail();
@@ -451,7 +451,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$replyto = ( $fields[$replyto] && strstr($fields[$replyto],'@') )?$fields[$replyto]:$from;
 
 				# include PHP Mailer
-				include_once "manager/includes/controls/class.phpmailer.php";
+				include_once MODX_MANAGER_PATH."includes/controls/class.phpmailer.php";
 
 				# send form
 				//defaults to html so only test sendasText
@@ -587,7 +587,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 	// set vericode
 	if($vericode) {
 		$_SESSION['eForm.VeriCode'] = $fields['vericode'] = substr(uniqid(''),-5);
-		$fields['verimageurl'] = $modx->config['base_url'].'manager/includes/veriword.php?rand='.rand();
+		$fields['verimageurl'] = MODX_MANAGER_URL.'includes/veriword.php?rand='.rand();
 	}
 
 	# get SESSION data - thanks to sottwell

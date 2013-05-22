@@ -8,7 +8,7 @@ $token_check = checkToken();
 $newToken = makeToken();
 
 // settings
-$theme_image_path = $modx->config['site_url'] . 'manager/media/style/' . $modx->config['manager_theme'] . '/images/';
+$theme_image_path = $modx->config['site_manager_url'] . 'media/style/' . $modx->config['manager_theme'] . '/images/';
 $excludes = array('.', '..', '.svn');
 $alias_suffix = (!empty($friendly_url_suffix)) ? ','.ltrim($friendly_url_suffix,'.') : '';
 $editablefiles       = explode(',', 'txt,php,shtml,html,htm,xml,js,css,pageCache,htaccess'.$alias_suffix);
@@ -612,7 +612,7 @@ function logFileChange($type, $filename)
 	$log->initAndWriteLog($string, '', '', '', $type, $filename);
 
 	// HACK: change the global action to prevent double logging
-	// @see manager/index.php @ 915
+	// @see index.php @ 915
 	global $action; $action = 1;
 }
 

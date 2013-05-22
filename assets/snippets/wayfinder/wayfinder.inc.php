@@ -459,7 +459,7 @@ class Wayfinder {
 	function appendTV($tvname,$docIDs){
 		global $modx;
 		
-		$baspath= $modx->config["base_path"] . "manager/includes";
+		$baspath= $modx->config["site_manager_path"] . "includes";
 	    include_once $baspath . "/tmplvars.format.inc.php";
 	    include_once $baspath . "/tmplvars.commands.inc.php";
 

@@ -33,5 +33,5 @@ $modx->invokeEvent("OnManagerLogout",
 						));
 
 // show login screen
-header('Location: ' . MODX_BASE_URL . 'manager/');
+header('Location: ' . MODX_MANAGER_URL);
 ?>

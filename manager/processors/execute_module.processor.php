@@ -100,7 +100,7 @@ $_SESSION['itemname'] = $content['name'];
 
 $output = evalModule($content["modulecode"],$parameter);
 echo $output;
-include $base_path."manager/includes/sysalert.display.inc.php";
+include MODX_MANAGER_PATH."includes/sysalert.display.inc.php";
 
 // evalModule
 function evalModule($moduleCode,$params){

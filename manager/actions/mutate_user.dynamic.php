@@ -110,7 +110,7 @@ function ConvertDate($date) {
 // include the country list language file
 $_country_lang = array();
 include_once "lang/country/english_country.inc.php";
-if($manager_language!="english" && file_exists($modx->config['base_path']."manager/includes/lang/country/".$manager_language."_country.inc.php")){
+if($manager_language!="english" && file_exists($modx->config['site_manager_path']."includes/lang/country/".$manager_language."_country.inc.php")){
     include_once "lang/country/".$manager_language."_country.inc.php";
 }
 
@@ -765,7 +765,7 @@ if (is_array($evtOut))
 			function BrowseServer() {
 				var w = screen.width * 0.7;
 				var h = screen.height * 0.7;
-				OpenServerBrowser("<?php echo $base_url; ?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo $base_url; ?>manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url; ?>", w, h);
+				OpenServerBrowser("<?php echo MODX_MANAGER_URL; ?>media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo MODX_MANAGER_URL; ?>media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url; ?>", w, h);
 			}
 			function SetUrl(url, width, height, alt){
 				document.userform.photo.value = url;

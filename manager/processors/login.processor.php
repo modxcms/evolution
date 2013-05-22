@@ -322,7 +322,7 @@ if(isset($id) && $id>0) {
     else header($header);
 }
 else {
-    $header = 'Location: '.$modx->config['site_url'].'manager/';
+    $header = 'Location: '.$modx->config['site_manager_url'];
     if($_POST['ajax']==1) echo $header;
     else header($header);
 }

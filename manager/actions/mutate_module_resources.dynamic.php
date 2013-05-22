@@ -104,7 +104,7 @@ switch ($_REQUEST['op']) {
 				if ($cp) $modx->dbQuery('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
 				if ($cs) $modx->dbQuery('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
 				// reset cache
-				include_once $base_path."/manager/processors/cache_sync.class.processor.php";
+				include_once MODX_MANAGER_PATH."processors/cache_sync.class.processor.php";
 				$sync = new synccache();
 				$sync->setCachepath("../assets/cache/");
 				$sync->setReport(false);
@@ -241,7 +241,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 				echo "An error occured while loading module dependencies.";
 			}
 			else {
-				include_once $base_path."manager/includes/controls/datagrid.class.php";
+				include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 				$grd = new DataGrid('',$ds,0); // set page size to 0 t show all items
 				$grd->noRecordMsg = $_lang["no_records_found"];
 				$grd->cssClass="grid";

@@ -40,8 +40,8 @@ if (isset($data) && count($data) > 0) {
 				}
 				break;
             case 'manager_language':
-                $langDir = realpath(MODX_BASE_PATH . 'manager/includes/lang');
-                $langFile = realpath(MODX_BASE_PATH . '/manager/includes/lang/' . $v . '.inc.php');
+                $langDir = realpath(MODX_MANAGER_PATH . 'includes/lang');
+                $langFile = realpath(MODX_MANAGER_PATH . 'includes/lang/' . $v . '.inc.php');
                 $langFileDir = dirname($langFile);
                 if($langDir !== $langFileDir || !file_exists($langFile)) {
                     $v = 'english';

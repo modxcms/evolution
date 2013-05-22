@@ -308,7 +308,7 @@ function OpenServerBrowser(url, width, height ) {
 function BrowseServer() {
     var w = screen.width * 0.7;
     var h = screen.height * 0.7;
-    OpenServerBrowser("<?php echo $base_url?>manager/media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo $base_url?>manager/media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url?>", w, h);
+    OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url?>", w, h);
 }
 
 function SetUrl(url, width, height, alt) {
@@ -463,7 +463,7 @@ $ds = $modx->dbQuery($sql);
 if (!$ds) {
     echo "An error occured while loading module dependencies.";
 } else {
-    include_once $base_path."manager/includes/controls/datagrid.class.php";
+    include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
     $grd = new DataGrid('', $ds, 0); // set page size to 0 t show all items
     $grd->noRecordMsg = $_lang['no_records_found'];
     $grd->cssClass = 'grid';

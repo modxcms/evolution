@@ -20,7 +20,7 @@
  * File Authors:
  * 		Grant French (grant@mcpuk.net)
  */
-include  MODX_BASE_PATH."manager/media/browser/mcpuk/connectors/php/Commands/helpers/iconlookup.php";
+include  MODX_MANAGER_PATH."media/browser/mcpuk/connectors/php/Commands/helpers/iconlookup.php";
 
 class Thumbnail {
 	var $fckphp_config;
