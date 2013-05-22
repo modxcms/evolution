@@ -33,7 +33,7 @@ $listmode = isset($_REQUEST['listmode']) ? $_REQUEST['listmode']:$_PAGE['vs']['l
 $_PAGE['vs']['lm'] = $listmode;
 
 // context menu
-include_once $base_path."manager/includes/controls/contextmenu.php";
+include_once MODX_MANAGER_PATH."includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
 $cm->addItem($_lang['view_log'],"js:menuAction(1)","media/style/" . $manager_theme ."images/icons/save.png");
 $cm->addSeparator();
@@ -125,7 +125,7 @@ echo $cm->render();
 	       ($sqlQuery ? " WHERE ".(is_numeric($sqlQuery)?"(eventid='$sqlQuery') OR ":'')."(source LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
 	       "ORDER BY createdon DESC";
 	$ds = mysql_query($sql);
-	include_once $base_path."manager/includes/controls/datagrid.class.php";
+	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang['no_records_found'];
 	$grd->cssClass="grid";

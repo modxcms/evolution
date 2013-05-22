@@ -103,7 +103,7 @@ if ($limit > 0) {
 $maxpageSize = $modx->config['number_of_results'];
 define('MAX_DISPLAY_RECORDS_NUM',$maxpageSize);
 
-if (!class_exists('makeTable')) include_once $modx->config['base_path'].'manager/includes/extenders/maketable.class.php';
+if (!class_exists('makeTable')) include_once $modx->config['site_manager_path'].'includes/extenders/maketable.class.php';
 $childsTable = new makeTable();
 
 // Get child document count
@@ -128,7 +128,7 @@ if ($numRecords > 0) {
 		// sql error
 		$e->setError(1);
 		$e->dumpError();
-		include($modx->config['base_path'].'manager/includes/footer.inc.php');
+		include($modx->config['site_manager_path'].'includes/footer.inc.php');
 		exit;
 	} else {
 		$resource = array();

@@ -1666,7 +1666,7 @@ class DocumentParser {
     }
 
     /**
-     * Returns true if we are currently in the manager/backend
+     * Returns true if we are currently in the manager backend
      *
      * @return boolean
      */
