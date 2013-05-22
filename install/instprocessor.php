@@ -203,7 +203,14 @@ if ($moduleSQLBaseFile) {
         echo "<span class=\"ok\">".$_lang['ok']."</span></p>";
     }
 }
+
+// custom or not
+if (file_exists(dirname(__FILE__)."/../../assets/cache/siteManager.php")) {
+    $mgrdir = 'include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");';
+}else{
 $mgrdir = 'define(\'MGR_DIR\', \'manager\');';
+}
+
 // write the config.inc.php file if new installation
 echo "<p>" . $_lang['writing_config_file'];
 $configString = '<?php

@@ -111,7 +111,7 @@ if(!$rs) {
 	$sync->setReport(false);
 	$sync->emptyCache(); // first empty the cache
 	// finished emptying cache - redirect
-	$header="Location: index.php?r=1&a=7";
+	$header="Location: index.php?r=1&a=7&id=$id&dv=1";
 	header($header);
 }
 ?>

@@ -184,7 +184,7 @@ function duplicateTVs($oldid,$newid){
 		while($row = mysql_fetch_assoc($ds)) {
 			$sql = "INSERT INTO $tbltvc
 					(contentid, tmplvarid,value) VALUES
-					(".$row['newid'].", '".$row['tmplvarid']."','".mysql_escape_string($row['value'])."');";
+					(".$row['newid'].", '".$row['tmplvarid']."','".mysql_real_escape_string($row['value'])."');";
 			$rs = mysql_query($sql);
 		} /**/
 	}

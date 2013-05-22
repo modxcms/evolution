@@ -136,7 +136,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			y=window.setTimeout('reloadtree()',500);
 		}
 		if(rFrame==10) {
-			window.top.location.href = "../manager";
+			window.top.location.href = "../<?php echo MGR_DIR;?>";
 		}
 	}
 

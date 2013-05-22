@@ -403,7 +403,7 @@ switch ($actionToTake) {
 				$a = ($_POST['stay'] == '2') ? "27&id=$key" : "4&pid=$parent";
 			$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
 		} else {
-			$header = "Location: index.php?r=1&id=$id&a=7&dv=1";
+			$header = "Location: index.php?r=1&id=$key&a=7&dv=1";
 		}
 		header($header);
 
