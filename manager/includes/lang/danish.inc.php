@@ -7,7 +7,7 @@
  * @date 27/12/10 18.10
  * @version 1.0.4
  * 
- * Filename:       /manager/includes/lang/danish.inc.php
+ * Filename:       includes/lang/danish.inc.php
  * Language:       Danish
  * Encoding:       UTF-8
  */
@@ -114,7 +114,7 @@ $_lang["configcheck_admin"] = 'Kontakt en system administrator, og advar om denn
 $_lang["configcheck_cache"] = 'Cache mappen er ikke skrivbar';
 $_lang["configcheck_cache_msg"] = 'MODx Evolution kan ikke skrive til cache mappen. MODx Evolution vil dog stadig fungere men uden caching. For at rette dette, skal  /_cache/ mappen gøres skrivbar.';
 $_lang["configcheck_configinc"] = 'Konfigurationsfilen er stadigvæk skrivbar';
-$_lang["configcheck_configinc_msg"] = 'Det betyder at hackere kan ødelægge alt indholdet i websitet. Du <strong>skal</strong> ændre (/manager/includes/config.inc.php) så den kun er read-only!';
+$_lang["configcheck_configinc_msg"] = 'Det betyder at hackere kan ødelægge alt indholdet i websitet. Du <strong>skal</strong> ændre (/'.MGR_DIR.'/includes/config.inc.php) så den kun er read-only!';
 $_lang["configcheck_default_msg"] = 'Der er opstået en uspecificeret fejl. Dette er så underligt at du bør informere en system administrator.';
 $_lang["configcheck_errorpage_unavailable"] = 'Websitets fejlside er ikke til rådighed.';
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Det betyder at fejlsiden enten ikke eksisterer eller, at den ikke kan tilgås af normale besøgende. Det kan medføre, at systemet omstiller uden at stoppe, og vil samtidig resultere i, at websitets logfiler til sidst vil fylde for meget. Husk at kontrollere, at der ikke er nogle web bruger grupper, der er sammenkædet med siden.';

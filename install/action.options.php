@@ -1,4 +1,5 @@
 <?php
+define('MGR_DIR', 'manager');
 $installMode = intval($_POST['installmode']);
 if ($installMode == 0 || $installMode == 2) {
     $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8_general_ci';
@@ -10,7 +11,7 @@ if ($installMode == 0 || $installMode == 2) {
         $_SESSION['databaseloginname'] = $_POST['databaseloginname'];
 }
 elseif ($installMode == 1) {
-    include "../manager/includes/config.inc.php";
+    include "../".MGR_DIR."/includes/config.inc.php";
 
     if (@ $conn = mysql_connect($database_server, $database_user, $database_password)) {
         if (@ mysql_query("USE {$dbase}")) {

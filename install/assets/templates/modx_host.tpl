@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="assets/templates/modxhost/modx.css" type="text/css" media="screen" />
   <link rel="stylesheet" href="assets/templates/modxhost/print.css" type="text/css" media="print" />
   <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="[(site_url)][~11~]" />
-  <script src="manager/media/script/mootools/mootools.js" type="text/javascript"></script>
+  <script src="[(site_manager_url)]media/script/mootools/mootools.js" type="text/javascript"></script>
   <script src="assets/templates/modxhost/drop_down_menu.js" type="text/javascript"></script>
 </head>
 <body>

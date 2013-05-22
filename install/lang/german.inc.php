@@ -30,13 +30,13 @@
 	$_lang["btnclose_value"] = 'Schließen';
 	$_lang["btnnext_value"] = 'Weiter';
 	$_lang["cant_write_config_file"] = 'MODx konnte die Konfigurationsdatei nicht erstellen. Bitte fügen Sie folgendes in eine leere Datei ein:';
-	$_lang["cant_write_config_file_note"] = 'Sobald dieser Vorgang beendet ist, können Sie sich im MODx-Manager anmelden unter http://ihredomain.de/manager/.';
+	$_lang["cant_write_config_file_note"] = 'Sobald dieser Vorgang beendet ist, können Sie sich im MODx-Manager anmelden unter http://ihredomain.de/'.MGR_DIR.'/.';
 	$_lang["checkbox_select_options"] = 'Checkbox-Auswahlmöglichkeiten:';
 	$_lang["checking_if_cache_exist"] = 'Überprüfen ob Ordner <span class="mono">assets/cache</span> existiert: ';
 	$_lang["checking_if_cache_file2_writable"] = 'Überprüfen ob die Datei <span class="mono">assets/cache/sitePublishing.idx.php</span> beschreibbar ist: ';
 	$_lang["checking_if_cache_file_writable"] = 'Überprüfen ob die Datei <span class="mono">assets/cache/siteCache.idx.php</span> beschreibbar ist: ';
 	$_lang["checking_if_cache_writable"] = 'Überprüfen ob der Ordner <span class="mono">assets/cache</span> beschreibbar ist: ';
-	$_lang["checking_if_config_exist_and_writable"] = 'Überprüfen ob die Datei <span class="mono">manager/includes/config.inc.php</span> existiert und beschreibbar ist: ';
+	$_lang["checking_if_config_exist_and_writable"] = 'Überprüfen ob die Datei <span class="mono">'.MGR_DIR.'/includes/config.inc.php</span> existiert und beschreibbar ist: ';
 	$_lang["checking_if_export_exists"] = 'Überprüfen ob der Ordner <span class="mono">assets/export</span> existiert: ';
 	$_lang["checking_if_export_writable"] = 'Überprüfen ob der Ordner <span class="mono">assets/export</span> beschreibbar ist: ';
 	$_lang["checking_if_images_exist"] = 'Überprüfen ob der Ordner <span class="mono">assets/images</span>, <span class="mono">assets/files</span>, <span class="mono">assets/flash</span>, <span class="mono">assets/media</span> existiert: ';
@@ -49,7 +49,7 @@
 	$_lang["checking_sessions"] = 'Überprüfe ob die Sessions sauber definiert sind: ';
 	$_lang["checking_table_prefix"] = 'Überprüfe Tabellen-Präfixe `';
 	$_lang["chunks"] = 'Chunks';
-	$_lang["config_permissions_note"] = 'Für neue Linux/Unix Installationen bitt eine leere Datei <span class="mono">config.inc.php</span> im Ordner <span class="mono">manager/includes/</span> anlegen und die Dateirechte auf 0666 setzen.';
+	$_lang["config_permissions_note"] = 'Für neue Linux/Unix Installationen bitt eine leere Datei <span class="mono">config.inc.php</span> im Ordner <span class="mono">'.MGR_DIR.'/includes/</span> anlegen und die Dateirechte auf 0666 setzen.';
 	$_lang["connection_screen_collation"] = 'Kollation:';
 	$_lang["connection_screen_connection_method"] = 'Verbindungsmethode:';
 	$_lang["connection_screen_database_connection_information"] = 'Datenbankinformationen';

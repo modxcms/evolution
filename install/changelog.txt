@@ -116,14 +116,14 @@ Bugfixes:
 * [#5807] manager.lockout not styled properly
 * [#6119] sendMailMessage in save_web_user.processor.php
 * [#7204] eForm in eFormParseTemplate $formats and $labels are declared as string but they are used as array
-* [#7459] Deprecated function 'split' used in manager/includes/datefunctions.inc.php
+* [#7459] Deprecated function 'split' used in includes/datefunctions.inc.php
 * [#9398] eForm & php 5.3
 * [#9547] ManagerManager Tv-transfer options with multiple choice in a new tab
 * [#9548] cant modify the customTV(multiTv or other without type input) with ManagerManager
 * [#9549] page not index in yandex if use FirstChildRedirect
 * [#9550] Breadcrumbs not have crumbSeparator
 * [#9563] onManagerMainFrameHeaderHTMLBlock event issue
-* [#9580] Bug in manager/processors/delete_content.processor.php on line 40
+* [#9580] Bug in processors/delete_content.processor.php on line 40
 * [#9586] Quick Manager and system setting Automatic Template Assignment
 * [#9620] Set Manager language in Create/Edit User
 
@@ -363,7 +363,7 @@ Bugfixes:
 * [#MODX-1106] Change help icons on TV create/edit screen
 * [#MODX-1103] Element Selector, part of the letters hides in search box
 * [#MODX-1566] Fix problem with Forgot Password confirmation link in WebLogin
-* [#MODX-1659] Stay option for adding another manager/web user not working correctly
+* [#MODX-1659] Stay option for adding another manager web user not working correctly
 * [#MODX-1164] Unable to set cssStyle when using getHTMLGrid
 * [#MODX-1176] Correct the permissions check when duplicating chunks and plugins
 * [#MODX-1753] Fix help page layout in manager

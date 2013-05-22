@@ -799,7 +799,7 @@ The simplest snippet call is [!Ajaxsearch!] without any parameters.
 
 ---- &jsMooTools
         Location of the mootools javascript library
-        by default: 'manager/media/script/mootools/mootools.js'
+        by default: MGR_DIR.'/media/script/mootools/mootools.js'
 
 
 ---- &jsMooTools2
@@ -1291,7 +1291,7 @@ means that the Php mbstring extension should be set
 === AjaxSearch error: database_connection_charset not set. Check your MODx config file
 
 === AjaxSearch error: database_connection_charset is null. Check your MODx config file
-means that your $database_connection_charset variable of your /manager/includes/config.inc.php file is an empty value 
+means that your $database_connection_charset variable of your /'.MGR_DIR.'/includes/config.inc.php file is an empty value 
 
 === AjaxSearch error: unknown database_connection_charset = xxxx  Add the appropriate Html charset mapping in the classes/ajaxSearch.php file
 is not really an error but need that you add in the classes/ajaxSearch.php file the mapping 

@@ -17,7 +17,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 define("MGR_DIR", "manager");
 require_once("lang.php");
-require_once('../manager/includes/version.inc.php');
+require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
 // start session
 session_start();

@@ -95,11 +95,11 @@ class Qm {
                     
                     // Normal saving document procedure stops to redirect => Before redirecting secure documents and clear cache
                     
-                    // Secure web documents - flag as private (code from: manager/processors/save_content.processor.php)
+                    // Secure web documents - flag as private (code from: processors/save_content.processor.php)
     		        include $this->modx->config['site_manager_path']."includes/secure_web_documents.inc.php";
     		        secureWebDocument($key);
     
-            		// Secure manager documents - flag as private (code from: manager/processors/save_content.processor.php)
+            		// Secure manager documents - flag as private (code from: processors/save_content.processor.php)
             		include $this->modx->config['site_manager_path']."includes/secure_mgr_documents.inc.php";
             		secureMgrDocument($key);
                     
@@ -822,7 +822,7 @@ class Qm {
         return $access;
     }
     
-    // Function from: manager/processors/cache_sync.class.processor.php 
+    // Function from: processors/cache_sync.class.processor.php 
     //_____________________________________________________
     function getParents($id, $path = '') { // modx:returns child's parent
 		global $modx;
