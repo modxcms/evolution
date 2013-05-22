@@ -1,5 +1,10 @@
 <?php
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
 define('MGR_DIR', 'manager');
+}
+
 global $moduleName;
 global $moduleVersion;
 global $moduleSQLBaseFile;

@@ -1,5 +1,11 @@
 <?php
+
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
 define('MGR_DIR', 'manager');
+}
+
 // Determine upgradeability
 $upgradeable = 0;
 if (file_exists("../".MGR_DIR."/includes/config.inc.php")) {

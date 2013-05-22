@@ -3,7 +3,7 @@
  * This file includes slightly modified code from the MODx core distribution.
  */
 
-define("MGR_DIR", "manager");
+include_once("../../cache/siteManager.php");
 
 require_once '../../../'.MGR_DIR.'/includes/protect.inc.php';
 include_once ('../../../'.MGR_DIR.'/includes/config.inc.php');

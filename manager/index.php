@@ -49,11 +49,28 @@
  *          content
  */
 
-define("MGR_DIR", "manager");
-
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
 $mstart = memory_get_usage();
+
+$self      = str_replace('\\','/',__FILE__);
+$self_dir  = str_replace('/index.php','',$self);
+$mgr_dir   = substr($self_dir,strrpos($self_dir,'/')+1);
+$base_path = str_replace($mgr_dir . '/index.php','',$self);
+$site_mgr_path = $base_path . 'assets/cache/siteManager.php';
+if(is_file($site_mgr_path)) include_once($site_mgr_path);
+if(!defined('MGR_DIR') || MGR_DIR!==$mgr_dir) {
+	$src = "<?php\n";
+	$src .= "define('MGR_DIR', '{$mgr_dir}');\n";
+	$rs = file_put_contents($site_mgr_path,$src);
+	if(!$rs) {
+		echo 'siteManager.php write error';
+		exit;
+	}
+	sleep(1);
+	header('Location:' . $_SERVER['REQUEST_URI']);
+	exit;
+}
 
 define("IN_MANAGER_MODE", "true");  // we use this to make sure files are accessed through
                                     // the manager instead of seperately.

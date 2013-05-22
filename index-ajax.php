@@ -4,7 +4,8 @@
 // Any PHP files in these directories can be executed by any user.
 $allowed_dirs = array('assets/snippets/ajaxSearch/');
 
-define("MGR_DIR", "manager");
+include_once(dirname(__FILE__)."/assets/cache/siteManager.php");
+
 // harden it
 require_once('./'.MGR_DIR.'/includes/protect.inc.php');
 

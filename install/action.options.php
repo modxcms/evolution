@@ -1,5 +1,11 @@
 <?php
-define('MGR_DIR', 'manager');
+
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+    define('MGR_DIR', 'manager');
+}
+
 $installMode = intval($_POST['installmode']);
 if ($installMode == 0 || $installMode == 2) {
     $database_collation = isset($_POST['database_collation']) ? $_POST['database_collation'] : 'utf8_general_ci';

@@ -1,8 +1,11 @@
 <?php
 //:: MODx Installer Setup file 
 //:::::::::::::::::::::::::::::::::::::::::
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+    include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
 define('MGR_DIR', 'manager');
-
+}
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
 $moduleName = "MODX";

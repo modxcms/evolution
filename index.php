@@ -44,7 +44,7 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-define("MGR_DIR", "manager");
+include_once(dirname(__FILE__)."/assets/cache/siteManager.php");
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
@@ -111,7 +111,7 @@ a{font-size:200%;color:#f22;text-decoration:underline;margin-top: 30px;padding: 
 startCMSSession();
 
 // initiate a new document parser
-include_once(MODX_MANAGER_PATH.'/includes/document.parser.class.inc.php');
+include_once(MODX_MANAGER_PATH.'includes/document.parser.class.inc.php');
 $modx = new DocumentParser;
 $etomite = &$modx; // for backward compatibility
 

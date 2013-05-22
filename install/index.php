@@ -15,7 +15,13 @@ require_once("{$base_path}install/functions.php");
 // set error reporting
 error_reporting(E_ALL & ~E_NOTICE);
 
-define("MGR_DIR", "manager");
+if (file_exists(dirname(__FILE__)."/../assets/cache/siteManager.php")) {
+	include_once(dirname(__FILE__)."/../assets/cache/siteManager.php");
+}else{
+	define('MGR_DIR', 'manager');
+}
+
+
 require_once("lang.php");
 require_once('../'.MGR_DIR.'/includes/version.inc.php');
 
