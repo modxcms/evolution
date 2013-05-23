@@ -55,7 +55,7 @@ oConnector.CurrentFolder	= '/' ;
 oConnector.UploadHandler	= GetUrlParam( 'UploadHandler' );
 oConnector.ConnectorUrl		= GetUrlParam( 'Connector' ) ;
 oConnector.ResourceType		= GetUrlParam( 'Type' ) ;
-oConnector.ServerPath		= GetUrlParam( 'ServerPath' ) ;
+oConnector.manager_url		= GetUrlParam( 'manager_url' ) ;
 oConnector.ExtraParams		= GetUrlParam( 'ExtraParams' ) ;
 oConnector.Editor			= GetUrlParam( 'editor' ) ;
 
