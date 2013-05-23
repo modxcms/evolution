@@ -107,16 +107,16 @@ REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (9, 'footer', 'Site Template Foo
 REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (10, 'meta', 'Site Template Meta', 0, 1, 0, '<p><a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional">Valid <abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a></p>                	<p><a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page uses valid Cascading Stylesheets" rel="external">Valid <abbr title="W3C Cascading Stylesheets">css</abbr></a></p>				    <p><a href="http://modx.com/" title="Powered by MODX, Do more with less.">MOD<strong>x</strong></a></p>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (11, 'mh.InnerRowTpl', 'Inner row template for ModxHost top menu', 0, 1, 0, '<li[+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (11, 'mh.InnerRowTpl', 'Inner row template for MODXHost top menu', 0, 1, 0, '<li[+wf.classes+]><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (12, 'mh.InnerTpl', 'Inner nesting template for ModxHost top menu', 0, 1, 0, '<ul style="display:none">\r\n  [+wf.wrapper+]\r\n</ul>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (12, 'mh.InnerTpl', 'Inner nesting template for MODXHost top menu', 0, 1, 0, '<ul style="display:none">\r\n  [+wf.wrapper+]\r\n</ul>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (13, 'mh.OuterTpl', 'Outer nesting template for ModxHost top menu', 0, 1, 0, '  <ul id="myajaxmenu">\r\n    [+wf.wrapper+]\r\n  </ul>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (13, 'mh.OuterTpl', 'Outer nesting template for MODXHost top menu', 0, 1, 0, '  <ul id="myajaxmenu">\r\n    [+wf.wrapper+]\r\n  </ul>', 0);
 
 
-REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (14, 'mh.RowTpl', 'Row template for ModxHost top menu', 0, 1, 0, '<li class="category [+wf.classnames+]"><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
+REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (14, 'mh.RowTpl', 'Row template for MODXHost top menu', 0, 1, 0, '<li class="category [+wf.classnames+]"><a href="[+wf.link+]" title="[+wf.title+]">[+wf.linktext+]</a>[+wf.wrapper+]</li>', 0);
 
 
 REPLACE INTO `{PREFIX}site_htmlsnippets` VALUES (15, 'Comments', 'Comments (Jot) showing beneath a blog entry.', 0, 1, 0, '<div id="commentsAnchor">\r\n[!Jot? &customfields=`name,email` &subscribe=`1` &pagination=`4` &badwords=`dotNet` &canmoderate=`Site Admins` !]\r\n</div>', 0);
@@ -153,7 +153,7 @@ REPLACE INTO `{PREFIX}site_keywords` VALUES ('4','login');
 
 
 #
-# Dumping data for table `modx2352_site_tmplvar_contentvalues`
+# Dumping data for table `MODX2352_site_tmplvar_contentvalues`
 #
 
 
