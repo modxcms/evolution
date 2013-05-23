@@ -200,7 +200,7 @@ class template{
 		if ($modx->getChunk($tpl) != "") {
 			$template = $modx->getChunk($tpl);
 		} else if(substr($tpl, 0, 6) == "@FILE:") {
-			$template = $this->get_file_contents(substr($tpl, 6));
+			$template = $this->get_file_contents(MODX_BASE_PATH.substr($tpl, 6));
 		} else if(substr($tpl, 0, 6) == "@CODE:") {
 			$template = substr($tpl, 6);
 		} else if(substr($tpl, 0, 5) == "@FILE") {

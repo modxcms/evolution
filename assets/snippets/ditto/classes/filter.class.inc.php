@@ -67,12 +67,12 @@ class filter {
 					break;
 				case "<=" :
 				case 5 :
-					if (!($value[$this->array_key] < $this->filterValue))
+					if (!($value[$this->array_key] <= $this->filterValue))
 						$unset = 0;
 					break;
 				case ">=" :
 				case 6 :
-					if (!($value[$this->array_key] > $this->filterValue))
+					if (!($value[$this->array_key] >= $this->filterValue))
 						$unset = 0;
 					break;
 					

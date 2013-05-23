@@ -27,7 +27,7 @@ class modxDebugConsole{
 		}
 		$placeholders = array(
 			"[+ditto_base_url+]" => $base_path,
-			"[+base_url+]" => $modx->config["site_url"]."manager",
+			"[+base_url+]" => MODX_MANAGER_URL,			
 			"[+theme+]" => $modx->config["manager_theme"],
 			"[+title+]" => $title,
 			"[+content+]" => $content,
