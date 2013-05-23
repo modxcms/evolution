@@ -145,7 +145,7 @@ function showParameters(ctrl) {
     dp = (f.properties.value) ? f.properties.value.split("&"):"";
     if(!dp) tr.style.display='none';
     else {
-        t='<table style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td><?php echo $_lang['parameter']?></td><td><?php echo $_lang['value']?></td></tr></thead>';
+        t='<table width="300" style="margin-bottom:3px;margin-left:14px;background-color:#EEEEEE" cellpadding="2" cellspacing="1"><thead><tr><td width="50%"><?php echo $_lang['parameter'];?></td><td width="50%"><?php echo $_lang['value'];?></td></tr></thead>';
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
@@ -213,7 +213,7 @@ function showParameters(ctrl) {
                         break;
 
                 }
-                t +='<tr><td bgcolor="#FFFFFF">'+desc+'</td><td bgcolor="#FFFFFF">'+c+'</td></tr>';
+                t +='<tr><td bgcolor="#FFFFFF" width="50%">'+desc+'</td><td bgcolor="#FFFFFF" width="50%">'+c+'</td></tr>';
             };
         }
         t+='</table>';
@@ -338,10 +338,10 @@ function SetUrl(url, width, height, alt) {
                   <span class="and"> + </span>
                 <select id="stay" name="stay">
                   <?php if ($modx->hasPermission('new_module')) { ?>
-                  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected=""' : ''?> ><?php echo $_lang['stay_new']?></option>
+                  <option id="stay1" value="1" <?php echo $_REQUEST['stay']=='1' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay_new']?></option>
                   <?php } ?>
                   <option id="stay2" value="2" <?php echo $_REQUEST['stay']=='2' ? ' selected="selected"' : ''?> ><?php echo $_lang['stay']?></option>
-                  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected=""' : ''?>  ><?php echo $_lang['close']?></option>
+                  <option id="stay3" value=""  <?php echo $_REQUEST['stay']=='' ? ' selected="selected"' : ''?>  ><?php echo $_lang['close']?></option>
                 </select>
               </li>
               <?php
@@ -396,7 +396,7 @@ function SetUrl(url, width, height, alt) {
         <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
             <td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" onchange="documentDirty=true;"></td></tr>
         <tr><td align="left"><input name="enable_resource" title="<?php echo $_lang['enable_resource']?>" type="checkbox"<?php echo $content['enable_resource']==1 ? ' checked="checked"' : ''?> class="inputBox" onclick="documentDirty=true;" /> <span style="cursor:pointer" onclick="document.mutate.enable_resource.click();" title="<?php echo $_lang['enable_resource']?>"><?php echo $_lang["element"]?></span>:</td>
-            <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="sourcefile" type="text" maxlength="255" value="<?php echo $content['sourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
+            <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="resourcefile" type="text" maxlength="255" value="<?php echo $content['resourcefile']?>" class="inputBox" onchange="documentDirty=true;" /></td></tr>
         <tr><td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled'] == 1 ? 'checked="checked"' : ''?> value="on" class="inputBox" />
             <span style="cursor:pointer" onclick="document.mutate.disabled.click();"><?php echo  $content['disabled'] == 1 ? '<span class="warning">'.$_lang['module_disabled'].'</span>' : $_lang['module_disabled']?></span></td></tr>
         <tr><td align="left" valign="top" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 ? ' checked="checked"' : ''?> class="inputBox" />

@@ -3,17 +3,17 @@
  * Filename:       includes/lang/russian-UTF8.inc.php
  * Function:       Russian language file.
  * Encoding:       UTF8
- * Author:         Russian MODx community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
+ * Author:         Russian MODX community, gabdullin, Jaroslav Sidorkin, Safronovich Victor, MARDEN
  * Date:           30 December 2010
  * Version:        2.0.5
- * MODx version:   Evolution 1.0.5
+ * MODX version:   Evolution 1.0.10
 */
 $modx_lang_attribute = 'ru'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
 $modx_manager_charset = 'UTF-8';
 setlocale (LC_ALL, 'ru_RU.UTF-8');
 
-$_lang["about_msg"] = 'MODx - это <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
-$_lang["about_title"] = 'О MODx';
+$_lang["about_msg"] = 'MODX - это <a href="http://MODX.com/what-is-MODX.html" target="_blank">PHP Application Framework и Content Management System</a>, распространяемая по лицензии <a href="../assets/docs/license.txt">GNU GPL</a>.';
+$_lang["about_title"] = 'О MODX';
 $_lang["access_permission_denied"] = 'У вас недостаточно прав для просмотра данного ресурса.';
 $_lang["access_permission_parent_denied"] = 'У вас недостаточно прав для создания ресурса в данном разделе';
 $_lang["access_permissions"] = 'Права доступа';
@@ -951,7 +951,7 @@ $_lang["tmplvars_caption"] = 'Заголовок';
 $_lang["tmplvars_default"] = 'Значение по умолчанию';
 $_lang["tmplvars_description"] = 'Описание';
 $_lang["tmplvars_elements"] = 'Возможные значения';
-$_lang["tmplvars_management_msg"] = '<b>Параметры (TV)</b> - это динамические элементы шаблона, которые получают своё значение из некоего <i>источника данных</i>. Существуют также параметры, предопределённые для каждого конкретного ресурса (например, предопределённый параметр <code>[*pagetitle*]</code> содержит заголовок страницы). Параметры могут иметь различный тип данных и разное значение на различных страницах сайта.<p><b>Использование:</b> вставьте где-либо в <i>шаблоне</i> или в <i>области контента</i> выражение <code>[*tvName*]</code></p> <p><b>Вызов через MODx API:</b> <code>$modx-&gt;documentObject[\'variable-name\']</code></p><p><br />Выберите параметр для редактирования или создайте новый.';
+$_lang["tmplvars_management_msg"] = '<b>Параметры (TV)</b> - это динамические элементы шаблона, которые получают своё значение из некоего <i>источника данных</i>. Существуют также параметры, предопределённые для каждого конкретного ресурса (например, предопределённый параметр <code>[*pagetitle*]</code> содержит заголовок страницы). Параметры могут иметь различный тип данных и разное значение на различных страницах сайта.<p><b>Использование:</b> вставьте где-либо в <i>шаблоне</i> или в <i>области контента</i> выражение <code>[*tvName*]</code></p> <p><b>Вызов через MODX API:</b> <code>$modx-&gt;documentObject[\'variable-name\']</code></p><p><br />Выберите параметр для редактирования или создайте новый.';
 $_lang["tmplvars_msg"] = 'Здесь вы можете создать / отредактировать параметр (TV). <br /> Помните, параметры должны быть доступны для выбранных шаблонов, чтобы их можно было использовать. <br /><br /> ';
 $_lang["tmplvars_name"] = 'Имя параметра';
 $_lang["tmplvars_novars"] = 'Параметров (TV) не найдено';
@@ -1100,10 +1100,6 @@ $_lang["bkmgr_run_sql_submit"] = 'Отправить';
 $_lang["bkmgr_run_sql_result"] = 'Результат';
 $_lang["bkmgr_snapshot_title"] = 'Резервное копирование';
 $_lang["bkmgr_snapshot_msg"] = '<p>Содержимое базы данных сохраняются и восстанавливаются на сервер.<br />Путь для бекапов : /assets/backup/</p>';
-$_lang["bkmgr_snapshot_submit"] = 'Создать бекап';
-$_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
-$_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';
-$_lang["bkmgr_snapshot_nothing"] = 'Нет бекапов';
 $_lang["bkmgr_snapshot_submit"] = 'Создать бекап';
 $_lang["bkmgr_snapshot_list_title"] = 'Список бекапов';
 $_lang["bkmgr_restore_submit"] = 'Восстановить эти данные';

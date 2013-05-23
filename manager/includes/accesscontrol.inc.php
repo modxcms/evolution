@@ -72,6 +72,7 @@ if(!isset($_SESSION['mgrValidated'])){
 	$modx->setPlaceholder('OnManagerLoginFormPrerender',$html);
 
 	$modx->setPlaceholder('site_name',$site_name);
+	$modx->setPlaceholder('manager_path',MGR_DIR);
 	$modx->setPlaceholder('logo_slogan',$_lang["logo_slogan"]);
 	$modx->setPlaceholder('login_message',$_lang["login_message"]);
 	$modx->setPlaceholder('manager_theme_url',MODX_MANAGER_URL . 'media/style/' . $modx->config['manager_theme'] . '/');
