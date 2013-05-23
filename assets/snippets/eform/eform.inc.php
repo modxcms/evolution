@@ -130,15 +130,21 @@ function eForm($modx,$params) {
 	}
 
 	# invoke onBeforeFormParse event set by another script
+	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormParse) {
-		if( $isDebug && !function_exists($eFormOnBeforeFormParse))
-			$fields['debug'] .= "eFormOnBeforeFormParse event: Could not find the function " . $eFormOnBeforeFormParse;
-		else{
-			$templates = array('tpl'=>$tpl,'report'=>$report,'thankyou'=>$thankyou,'autotext'=>$autotext);
-			if( $eFormOnBeforeFormParse($fields,$templates)===false )
-				return "";
-			elseif(is_array($templates))
-				extract($templates); // extract back into original variables
+		$eFormOnBeforeFormParse = explode(',', $eFormOnBeforeFormParse);
+		foreach ($eFormOnBeforeFormParse as $beforeFormParse) {
+			$beforeFormParse = trim($beforeFormParse);
+			if ($isDebug && !function_exists($beforeFormParse)) {
+				$fields['debug'] .= 'eFormOnBeforeFormParse event: Could not find the function ' . $beforeFormParse;
+			} else {
+				$templates = array('tpl' => $tpl, 'report' => $report, 'thankyou' => $thankyou, 'autotext' => $autotext);
+				if ($beforeFormParse($fields, $templates) === false) {
+					return '';
+				} elseif (is_array($templates)) {
+					extract($templates); // extract back into original variables
+				}
+			}
 		}
 	}
 
@@ -265,12 +271,20 @@ function eForm($modx,$params) {
 			}
 		}
 
-		// Changed in 1.4.4.5  - now expects 4 parameters
+		// Changed in 1.4.4.5 - now expects 4 parameters
+		// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 		if ($eFormOnValidate) {
-			if( $isDebug && !function_exists($eFormOnValidate))
-				$fields['debug'] .= "eformOnValidate event: Could not find the function " . $eFormOnValidate;
-			else
-				if ($eFormOnValidate($fields,$vMsg,$rMsg,$rClass)===false) return;
+			$eFormOnValidate = explode(',', $eFormOnValidate);
+			foreach ($eFormOnValidate as $onValidate) {
+				$onValidate = trim($onValidate);
+				if ($isDebug && !function_exists($onValidate)) {
+					$fields['debug'] .= 'eformOnValidate event: Could not find the function ' . $onValidate;
+				} else {
+					if ($onValidate($fields, $vMsg, $rMsg, $rClass) === false) {
+						return;
+					}
+				}
+			}
 		}
 
 
@@ -389,17 +403,24 @@ function eForm($modx,$params) {
 			}
 
 			# invoke OnBeforeMailSent event set by another script
+			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 			if ($eFormOnBeforeMailSent) {
-				if( $isDebug && !function_exists($eFormOnBeforeMailSent))
-					$fields['debug'] .= "eFormOnBeforeMailSent event: Could not find the function " . $eFormOnBeforeMailSent;
-				elseif ($eFormOnBeforeMailSent($fields)===false) {
-					if( isset($fields['validationmessage']) && !empty($fields['validationmessage']) ){
-						//register css and/or javascript
-						if( isset($startupSource) ) efRegisterStartupBlock($startupSource);
-						return formMerge($tpl,$fields);
+				$eFormOnBeforeMailSent = explode(',', $eFormOnBeforeMailSent);
+				foreach ($eFormOnBeforeMailSent as $beforeMailSent) {
+					$beforeMailSent = trim($beforeMailSent);
+					if ($isDebug && !function_exists($beforeMailSent)) {
+						$fields['debug'] .= 'eFormOnBeforeMailSent event: Could not find the function ' . $beforeMailSent;
+					} elseif ($beforeMailSent($fields) === false) {
+						if (isset($fields['validationmessage']) && !empty($fields['validationmessage'])) {
+							//register css and/or javascript
+							if (isset($startupSource)) {
+								efRegisterStartupBlock($startupSource);
+							}
+							return formMerge($tpl, $fields);
+						} else {
+							return;
+						}
 					}
-					else
-						return;
 				}
 			}
 
@@ -529,19 +550,27 @@ function eForm($modx,$params) {
 				}
 
 			}//end test nomail
-			 # added in 1.4.2 - Protection against multiple submit with same form data
-			 if($protectSubmit) $_SESSION[$formid.'_hash'] = $hash; //hash is set earlier
+			# added in 1.4.2 - Protection against multiple submit with same form data
+			if($protectSubmit) $_SESSION[$formid.'_hash'] = $hash; //hash is set earlier
 
-			 # added in 1.4.2 - Limit the time between form submissions
-			 if($submitLimit>0) $_SESSION[$formid.'_limit'] = time();
+			# added in 1.4.2 - Limit the time between form submissions
+			if($submitLimit>0) $_SESSION[$formid.'_limit'] = time();
 
-				# invoke OnMailSent event set by another script
-				if ($eFormOnMailSent) {
-					if( $isDebug && !function_exists($eFormOnMailSent) )
-						$fields['debug'] .= "eFormOnMailSent event: Could not find the function" . $eFormOnMailSent;
-					else
-						if ($eFormOnMailSent($fields)===false) return;
+			# invoke OnMailSent event set by another script
+			// Changed in 1.4.4.8 - Multiple event functions separated by comma.
+			if ($eFormOnMailSent) {
+				$eFormOnMailSent = explode(',', $eFormOnMailSent);
+				foreach ($eFormOnMailSent as $mailSent) {
+					$mailSent = trim($mailSent);
+					if ($isDebug && !function_exists($mailSent)) {
+						$fields['debug'] .= 'eFormOnMailSent event: Could not find the function' . $mailSent;
+					} else {
+						if ($mailSent($fields) === false) {
+							return;
+						}
+					}
 				}
+			}
 
 
 			if($isDebug){
@@ -606,11 +635,19 @@ function eForm($modx,$params) {
 	}
 
 	# invoke OnBeforeFormMerge event set by another script
+	// Changed in 1.4.4.8 - Multiple event functions separated by comma.
 	if ($eFormOnBeforeFormMerge) {
-		if( $isDebug && !function_exists($eFormOnBeforeFormMerge))
-				$fields['debug'] .= "eFormOnBeforeFormMerge event: Could not find the function " . $eFormOnBeforeFormMerge;
-			else
-				if ($eFormOnBeforeFormMerge($fields)===false) return;
+		$eFormOnBeforeFormMerge = explode(',', $eFormOnBeforeFormMerge);
+		foreach ($eFormOnBeforeFormMerge as $beforeFormMerge) {
+			$beforeFormMerge = trim($beforeFormMerge);
+			if ($isDebug && !function_exists($beforeFormMerge)) {
+				$fields['debug'] .= 'eFormOnBeforeFormMerge event: Could not find the function ' . $beforeFormMerge;
+			} else {
+				if ($beforeFormMerge($fields) === false) {
+					return;
+				}
+			}
+		}
 	}
 
 	# build form
