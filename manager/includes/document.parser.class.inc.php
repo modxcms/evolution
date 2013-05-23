@@ -48,6 +48,7 @@ class DocumentParser {
     var $documentMap;
     var $forwards= 3;
     var $error_reporting;
+    var $aliasListing;
     private $version=array();
 
     /**
@@ -787,7 +788,12 @@ class DocumentParser {
         return $matches;
     }
     
-    // mod by Raymond
+    /**
+     * Merge content fields and TVs
+     *
+     * @param string $template
+     * @return string
+     */
     function mergeDocumentContent($content) {
         $replace= array ();
         $matches = $this->getTagsFromContent($content,'[*','*]');
@@ -861,6 +867,7 @@ class DocumentParser {
                 }
             }
             $content= str_replace($matches[0], $replace, $content);
+            $content=$this->mergeSettingsContent($content);
         }
         return $content;
     }
@@ -873,6 +880,7 @@ class DocumentParser {
      */
     function mergePlaceholderContent($content) {
         $replace= array ();
+        $content=$this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content,'[+','+]');
         if($matches) {
             $cnt= count($matches[1]);
@@ -1304,7 +1312,9 @@ class DocumentParser {
             $this->documentOutput= $source; // store source code so plugins can
             $this->invokeEvent("OnParseDocument"); // work on it via $modx->documentOutput
             $source= $this->documentOutput;
-
+            
+            $source = $this->mergeSettingsContent($source);
+            
             // combine template and document variables
             $source= $this->mergeDocumentContent($source);
             // replace settings referenced in document
@@ -1319,6 +1329,9 @@ class DocumentParser {
             $source= $this->evalSnippets($source);
             // find and replace Placeholders (must be parsed last) - Added by Raymond
             $source= $this->mergePlaceholderContent($source);
+            
+            $source = $this->mergeSettingsContent($source);
+            
             if ($this->dumpSnippets == 1) {
                 echo "</div></fieldset><br />";
             }
