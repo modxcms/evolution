@@ -1,5 +1,5 @@
 <?php
-# eForm 1.4.4.7 - Electronic Form Snippet
+# eForm 1.4.4.8 - Electronic Form Snippet
 # Original created by: Raymond Irving 15-Dec-2004.
 # Extended by: Jelle Jager (TobyL) September 2006
 # -----------------------------------------------------
@@ -475,8 +475,15 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					if(!$mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
 				}
 
+				# added in 1.4.4.8 - Send ccsender and autotext mails only to the first mail address of the comma separated list.
+				if ($fields['email']) {
+					$firstEmail = array_shift(explode(',', $fields['email']));
+				} else {
+					$firstEmail = FALSE;
+				}
+
 				# send user a copy of the report
-				if($ccsender && $fields['email']) {
+				if($ccsender && $firstEmail) {
 					$mail = new PHPMailer();
 					$mail->IsMail();
 					$mail->CharSet = $modx->config['modx_charset'];
@@ -485,7 +492,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$mail->FromName	= $fromname;
 					$mail->Subject	= $subject;
 					$mail->Body		= $report;
-					AddAddressToMailer($mail,"to",$fields['email']);
+					AddAddressToMailer($mail,"to",$firstEmail);
 					AttachFilesToMailer($mail,$attachments);
 					if(!$mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
 				}
@@ -493,7 +500,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 				# send auto-respond email
 				//defaults to html so only test sendasText
 				$isHtml = ($sendAsText==1 || strstr($sendAsText,'autotext'))?false:true;
-				if ($autotext && $fields['email']!='') {
+				if ($autotext && $firstEmail) {
 					$autotext = formMerge($autotext,$fields);
 					$mail = new PHPMailer();
 					$mail->IsMail();
@@ -503,7 +510,7 @@ $debugText .= 'Locale<pre>'.var_export($localeInfo,true).'</pre>';
 					$mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
 					$mail->Subject	= $subject;
 					$mail->Body		= $autotext;
-					AddAddressToMailer($mail,"to",$fields['email']);
+					AddAddressToMailer($mail,"to",$firstEmail);
 					if(!$mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
 				}
 
