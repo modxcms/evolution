@@ -308,7 +308,7 @@ function OpenServerBrowser(url, width, height ) {
 function BrowseServer() {
     var w = screen.width * 0.7;
     var h = screen.height * 0.7;
-    OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/connectors/php/connector.php&ServerPath=<?php echo $base_url?>", w, h);
+    OpenServerBrowser("<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/browser.html?Type=images&Connector=<?php echo MODX_MANAGER_URL;?>media/browser/mcpuk/connectors/php/connector.php&manager_url=<?php echo MODX_MANAGER_URL; ?>", w, h);
 }
 
 function SetUrl(url, width, height, alt) {

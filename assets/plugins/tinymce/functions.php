@@ -409,8 +409,8 @@ class TinyMCE
 	function build_tiny_callback($params)
 	{
 		$ph['cmsurl']  = MODX_MANAGER_URL . 'media/browser/mcpuk/browser.php?Connector=';
-		$ph['cmsurl'] .= MODX_MANAGER_URL . 'media/browser/mcpuk/connectors/php/connector.php&ServerPath=';
-		$ph['cmsurl'] .= MODX_BASE_URL . '&editor=tinymce&editorpath=' . $params['mce_url'];
+		$ph['cmsurl'] .= MODX_MANAGER_URL . 'media/browser/mcpuk/connectors/php/connector.php&manager_url=';
+		$ph['cmsurl'] .= MODX_MANAGER_URL . '&editor=tinymce&editorpath=' . $params['mce_url'];
 		$modx_fb = file_get_contents($params['mce_path'] . 'js/modx_fb.js.inc');
 		
 		foreach($ph as $name => $value)

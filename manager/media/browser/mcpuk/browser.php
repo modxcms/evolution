@@ -1,4 +1,5 @@
 <?php
+include_once("../../../../assets/cache/siteManager.php");
 $selfpos = strlen(MGR_DIR.'media/browser/mcpuk/browser.php');
 $base_path = substr(str_replace('\\','/',__FILE__), 0, $selfpos * -1);
 define('MODX_BASE_PATH', $base_path);
