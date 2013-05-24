@@ -156,6 +156,7 @@ font-size:14pt;
 				<li>bugfix: If eform attibute is set on multiple check boxes only the last value is set in values list</li>
                 <li>Security fix: Additional sanitization applied after stripslashes is used on fields</li>
                 <li>Security fix: Send sendirect, ccsender and autotext mails only to the first mail address of the comma separated list.</li>
+                <li>Added: Multiple event functions separated by comma.</li>
 			</ul>
 		<p><br />You can see a more extensive <a href="eform_history.htm">version history here</a>. </p>
 			</div>
@@ -294,26 +295,30 @@ Chunks (and documents if a doc id is given) can return a values in the form of:
 			<h4>PHP Event Functions:</h4>
 <p>The eForm event functions are now incorporated into the parameters. They are:</p>
 			<ul class="qe_param_list">
-				<li><strong>&amp;eFormOnBeforeMailSent</strong> (optional)<br/>Expects a function name. This function will be called after the form has been validated and before the report and thankyou templates have been parsed and any emails have been sent out.
-				See <a href="eform_example_events.htm">this example</a> on how to use the events.</li>
-				<li><strong>&amp;eFormOnMailSent</strong> (optional)<br/>Expects a function name. This function is called after all templates have been parsed and any emails were sent.</li>
-				<li><strong>&amp;eformOnBeforeFormParse</strong>  (optional)<br/>
-				Expects a function name. The function is called after the templates are loaded and the formid is found valid. The function should accomodate the following parameter: &amp;$templates - (as reference) an associative array of loaded templates with indexes 'tpl', 'report','thankyou' &amp; 'autotext'. Be aware that the latter three will only have a value if the form has been posted! 
-</li>
-				<li><strong>&amp;eFormOnBeforeFormMerge</strong>  (optional)<br/>Expects a function name. This function will <strong>only</strong> be
-        	called whenever the form is displayed and just before all placeholders
-        	are merged. The function should accomodate the following parameter: &amp;$fields
-        	- (as reference) an associative array of field and placeholder values.</li>
-				<li><strong>&amp;eFormOnValidate</strong>  (optional)<br/>Expects a function name. This function will be called directly after
-        		the form validation has taken place. You can use this event to add
-        		your own extra validation logic. The function should accomodate the
-        		following parameters
+				<li><strong>&amp;eFormOnBeforeMailSent</strong> (optional)<br/>Expects a list of comma separated function names. These functions will be called after the form has been validated and before the report and thankyou templates have been parsed and any emails have been sent out.
+				See <a href="eform_example_events.htm">this example</a> on how to use the events.
 				<ul>
-					<li>&amp;$fields - (as reference) an associative array of field and placeholder
-        				values.</li>
+					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
+				</ul></li>
+				<li><strong>&amp;eFormOnMailSent</strong> (optional)<br/>Expects a list of comma separated function names. These functions are called after all templates have been parsed and any emails were sent.
+				<ul>
+					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
+				</ul></li>
+				<li><strong>&amp;eformOnBeforeFormParse</strong> (optional)<br/>Expects a list of comma separated function names. These functions are called after the templates are loaded and the formid is found valid. The function should accomodate the following parameter:
+				<ul>
+					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
+					<li>&amp;$templates - (as reference) an associative array of loaded templates with indexes 'tpl', 'report','thankyou' &amp; 'autotext'. Be aware that the latter three will only have a value if the form has been posted!</li>
+				</ul></li>
+				<li><strong>&amp;eFormOnBeforeFormMerge</strong> (optional)<br/>Expects a list of comma separated function names. These functions will <strong>only</strong> be called whenever the form is displayed and just before all placeholders are merged. The function should accomodate the following parameter:
+				<ul>
+					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
+				</ul></li>
+				<li><strong>&amp;eFormOnValidate</strong>  (optional)<br/>Expects a function name. This function will be called directly after the form validation has taken place. You can use this event to add your own extra validation logic. The function should accomodate the following parameters
+				<ul>
+					<li>&amp;$fields - (as reference) an associative array of field and placeholder values.</li>
 					<li>&amp;$vMsg - (as reference) a numeric array of validation error messages.</li>
-					<li>&amp;$rMsg - (as Reference) a numeric array of missing required
-       		    	fields.</li>
+					<li>&amp;$rMsg - (as Reference) a numeric array of missing required fields.</li>
+					<li>&amp;$rClass - (as Reference) an associative array of fieldnames and classes assigned.</li>
 				</ul></li>
 			</ul><h3>Examples:</h3>
 <p>
