@@ -630,7 +630,7 @@ function confirmLangChange(el, lkey, elupd){
           <tr id='furlRow6' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td colspan="2"><div class='split'></div></td>
           </tr>
-<?php if(!isset($make_folders)) $make_folders = '1';?>
+<?php if(!isset($make_folders)) $make_folders = '0';?>
 <tr id="furlRow51" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
   <th><?php echo $_lang['make_folders_title'] ?></th>
   <td>
