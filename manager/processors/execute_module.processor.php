@@ -5,8 +5,8 @@ if(!$modx->hasPermission('exec_module')) {
 	$e->dumpError();	
 }
 
-if(isset($_REQUEST['id'])) {
-	$id = intval($_REQUEST['id']);
+if(isset($_GET['id'])) {
+	$id = intval($_GET['id']);
 } else {
 	$id=0;
 }
