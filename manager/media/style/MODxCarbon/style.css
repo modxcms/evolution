@@ -1660,3 +1660,6 @@ form#mutate input.number {width:60px !important;padding-right:10px;text-align:ri
 optgroup {font-style:normal;}
 
 #mainpane table th {vertical-align:top;}
+/*Refactor #4440*/
+table.fields {border: 0px solid #fff;}
+table.fields td {border: 0px solid #fff;}
