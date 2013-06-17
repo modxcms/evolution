@@ -50,8 +50,8 @@ $sql = "
 	ORDER BY sysevt.name,pe.priority
 ";
 
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 
 $insideUl = 0;
 $preEvt = '';
@@ -59,7 +59,7 @@ $evtLists = '';
 $sortables = array();
 if($limit>1) {
     for ($i=0;$i<$limit;$i++) {
-        $plugins = mysql_fetch_assoc($rs);
+        $plugins = $modx->db->getRow($rs);
         if ($preEvt !== $plugins['evtid']) {
             $sortables[] = $plugins['evtid'];
             $evtLists .= $insideUl? '</ul><br />': '';

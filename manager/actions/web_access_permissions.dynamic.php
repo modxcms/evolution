@@ -7,24 +7,24 @@ if(!$modx->hasPermission('web_access_permissions')) {
 
 // find all document groups, for the select :)
 $sql = 'SELECT * FROM '.$modx->getFullTableName('documentgroup_names').' ORDER BY name';
-$rs = mysql_query($sql);
-if (mysql_num_rows($rs) < 1) {
+$rs = $modx->db->query($sql);
+if ($modx->db->getRecordCount($rs) < 1) {
 	$docgroupselector = "[no groups to add]";
 } else {
 	$docgroupselector = '<select name="docgroup">'."\n";
-	while ($row = mysql_fetch_assoc($rs)) {
+	while ($row = $modx->db->getRow($rs)) {
 		$docgroupselector .= "\t".'<option value="'.$row['id'].'">'.$row['name']."</option>\n";
 	}
 	$docgroupselector .= "</select>\n";
 }
 
 $sql = 'SELECT * FROM '.$modx->getFullTableName('webgroup_names').' ORDER BY name';
-$rs = mysql_query($sql);
-if (mysql_num_rows($rs) < 1) {
+$rs = $modx->db->query($sql);
+if ($modx->db->getRecordCount($rs) < 1) {
 	$usrgroupselector = '[no user groups]';
 } else {
 	$usrgroupselector = '<select name="usergroup">'."\n";
-	while ($row = mysql_fetch_assoc($rs)) {
+	while ($row = $modx->db->getRow($rs)) {
 		$usrgroupselector .= "\t".'<option value="'.$row['id'].'">'.$row['name']."</option>\n";
 	}
 	$usrgroupselector .= "</select>\n";
@@ -74,13 +74,13 @@ if (mysql_num_rows($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$rs = mysql_query($sql);
-	if (mysql_num_rows($rs) < 1) {
+	$rs = $modx->db->query($sql);
+	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
 		echo "<ul>\n";
 		$pid = '';
-		while ($row = mysql_fetch_assoc($rs)) {
+		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] !== $pid) {
 				if ($pid != '') echo "</li></ul></li>\n"; // close previous one
 
@@ -147,8 +147,8 @@ if (mysql_num_rows($rs) < 1) {
 	</table>
 	<br />
 <?php
-	$rs = mysql_query($sql);
-	if (mysql_num_rows($rs) < 1) {
+	$rs = $modx->db->query($sql);
+	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
 	} else {
 		echo '<table width="600" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">'."\n".
@@ -156,7 +156,7 @@ if (mysql_num_rows($rs) < 1) {
 		'	<tr><td><b>'.$_lang['access_permissions_resource_groups'].'</b></td></tr>'."\n".
 		'	</thead>'."\n";
 		$pid = '';
-		while ($row = mysql_fetch_assoc($rs)) {
+		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] !== $pid) {
 				if ($pid != '') echo "</td></tr>\n"; // close previous one
 
@@ -203,8 +203,8 @@ if (mysql_num_rows($rs) < 1) {
 		"LEFT JOIN ".$modx->getFullTableName('webgroup_access')." AS groupacc ON groupacc.webgroup = groupnames.id ".
 		"LEFT JOIN ".$modx->getFullTableName('documentgroup_names')." AS dgnames ON dgnames.id = groupacc.documentgroup ".
 		"ORDER BY name";
-	$rs = mysql_query($sql);
-	if (mysql_num_rows($rs) < 1) {
+	$rs = $modx->db->query($sql);
+	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span><br />';
 	} else {
 		?>
@@ -230,7 +230,7 @@ if (mysql_num_rows($rs) < 1) {
 		<?php
 		echo "<ul>\n";
 		$pid = '';
-		while ($row = mysql_fetch_assoc($rs)) {
+		while ($row = $modx->db->getRow($rs)) {
 			if ($row['id'] != $pid) {
 				if ($pid != '') echo "</ul></li>\n"; // close previous one
 				echo '<li><b>'.$row['name'].'</b>';

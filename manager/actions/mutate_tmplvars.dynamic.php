@@ -20,11 +20,11 @@ if(isset($_REQUEST['id'])) {
 
 // check to see the variable editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE action=301 AND id=$id";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
     for ($i=0;$i<$limit;$i++) {
-        $lock = mysql_fetch_assoc($rs);
+        $lock = $modx->db->getRow($rs);
         if($lock['internalKey']!=$modx->getLoginUserID()) {
             $msg = sprintf($_lang["lock_msg"],$lock['username']," template variable");
             $e->setError(5, $msg);
@@ -43,8 +43,8 @@ if(!is_numeric($id)) {
 
 if(isset($_GET['id'])) {
     $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id = $id;";
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+    $rs = $modx->db->query($sql);
+    $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         echo "Oops, Multiple variables sharing same unique id. Not good.<p>";
         exit;
@@ -52,7 +52,7 @@ if(isset($_GET['id'])) {
     if($limit<1) {
         header("Location: /index.php?id=".$site_start);
     }
-    $content = mysql_fetch_assoc($rs);
+    $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['caption'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
         $e->setError(3);
@@ -377,12 +377,12 @@ function decode(s){
 	    $tbl = $dbase.".`".$table_prefix."site_templates`" ;
 	    $tblsel = $dbase.".`".$table_prefix."site_tmplvar_templates`";
 	    $sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id";
-	    $rs = mysql_query($sql);
+	    $rs = $modx->db->query($sql);
 ?>
   <tr>
     <td>
 <?php
-	    while ($row = mysql_fetch_assoc($rs)) {
+	    while ($row = $modx->db->getRow($rs)) {
 	    	if($id == 0 && is_array($_POST['template'])) {
 	    		$checked = in_array($row['id'], $_POST['template']);
 	    	} else {
@@ -403,10 +403,10 @@ function decode(s){
 
 	    // fetch permissions for the variable
 	    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvar_access` where tmplvarid=".$id;
-	    $rs = mysql_query($sql);
-	    $limit = mysql_num_rows($rs);
+	    $rs = $modx->db->query($sql);
+	    $limit = $modx->db->getRecordCount($rs);
 	    for ($i = 0; $i < $limit; $i++) {
-	        $currentgroup=mysql_fetch_assoc($rs);
+	        $currentgroup=$modx->db->getRow($rs);
 	        $groupsarray[$i] = $currentgroup['documentgroup'];
 	    }
 
@@ -442,13 +442,13 @@ function decode(s){
 		    }
 		    $chk ='';
 		    $sql = "SELECT name, id FROM $dbase.`".$table_prefix."documentgroup_names`";
-		    $rs = mysql_query($sql);
-		    $limit = mysql_num_rows($rs);
+		    $rs = $modx->db->query($sql);
+		    $limit = $modx->db->getRecordCount($rs);
 		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
 		    	$groupsarray = $_POST['docgroups'];
 		    }
 		    for($i=0; $i<$limit; $i++) {
-		        $row=mysql_fetch_assoc($rs);
+		        $row=$modx->db->getRow($rs);
 		        $checked = in_array($row['id'], $groupsarray);
 		        if($modx->hasPermission('access_permissions')) {
 		            if($checked) $notPublic = true;

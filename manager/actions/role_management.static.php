@@ -26,15 +26,15 @@ $sqlQuery = $modx->db->escape($query);
 <?php
 
 $sql = "select name, id, description from $dbase.`".$table_prefix."user_roles` order by name";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit<1){
 	echo "The request returned no roles!</div>";
 	exit;
 	include_once "footer.inc.php";
 }
 for($i=0; $i<$limit; $i++) {
-	$row = mysql_fetch_assoc($rs);
+	$row = $modx->db->getRow($rs);
 	if($row['id']==1) {
 ?>
 	<li><span style="width: 200px"><i><?php echo $row['name']; ?></i></span> - <i><?php echo $_lang['administrator_role_message']; ?></i></li>

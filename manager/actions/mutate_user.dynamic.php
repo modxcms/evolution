@@ -23,11 +23,11 @@ $user = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 // check to see the snippet editor isn't locked
 $sql = "SELECT internalKey, username FROM $dbase.`" . $table_prefix . "active_users` WHERE $dbase.`" . $table_prefix . "active_users`.action=12 AND $dbase.`" . $table_prefix . "active_users`.id=$user";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
 	for ($i = 0; $i < $limit; $i++) {
-		$lock = mysql_fetch_assoc($rs);
+		$lock = $modx->db->getRow($rs);
 		if ($lock['internalKey'] != $modx->getLoginUserID()) {
 			$msg = sprintf($_lang["lock_msg"], $lock['username'], "user");
 			$e->setError(5, $msg);
@@ -40,8 +40,8 @@ if ($limit > 1) {
 if ($_REQUEST['a'] == '12') {
 	// get user attribute
 	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "user_attributes` WHERE $dbase.`" . $table_prefix . "user_attributes`.internalKey = " . $user . ";";
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
+	$rs = $modx->db->query($sql);
+	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
 		echo "More than one user returned!<p>";
 		exit;
@@ -50,13 +50,13 @@ if ($_REQUEST['a'] == '12') {
 		echo "No user returned!<p>";
 		exit;
 	}
-	$userdata = mysql_fetch_assoc($rs);
+	$userdata = $modx->db->getRow($rs);
 
 	// get user settings
 	$sql = "SELECT us.* FROM $dbase.`" . $table_prefix . "user_settings` us WHERE us.user = " . $user . ";";
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	$usersettings = array ();
-	while ($row = mysql_fetch_assoc($rs))
+	while ($row = $modx->db->getRow($rs))
 		$usersettings[$row['setting_name']] = $row['setting_value'];
 	// manually extract so that user display settings are not overwritten
 	foreach ($usersettings as $k => $v) {
@@ -67,8 +67,8 @@ if ($_REQUEST['a'] == '12') {
 	
 	// get user name
 	$sql = "SELECT * FROM $dbase.`" . $table_prefix . "manager_users` WHERE $dbase.`" . $table_prefix . "manager_users`.id = " . $user . ";";
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
+	$rs = $modx->db->query($sql);
+	$limit = $modx->db->getRecordCount($rs);
 	if ($limit > 1) {
 		echo "More than one user returned while getting username!<p>";
 		exit;
@@ -77,7 +77,7 @@ if ($_REQUEST['a'] == '12') {
 		echo "No user returned while getting username!<p>";
 		exit;
 	}
-	$usernamedata = mysql_fetch_assoc($rs);
+	$usernamedata = $modx->db->getRow($rs);
 	$_SESSION['itemname'] = $usernamedata['username'];
 } else {
 	$userdata = array ();
@@ -799,10 +799,10 @@ if ($use_udperms == 1) {
 
 	if ($_GET['a'] == '12') { // only do this bit if the user is being edited
 		$sql = "SELECT * FROM $dbase.`" . $table_prefix . "member_groups` where member=" . $_GET['id'] . "";
-		$rs = mysql_query($sql);
-		$limit = mysql_num_rows($rs);
+		$rs = $modx->db->query($sql);
+		$limit = $modx->db->getRecordCount($rs);
 		for ($i = 0; $i < $limit; $i++) {
-			$currentgroup = mysql_fetch_assoc($rs);
+			$currentgroup = $modx->db->getRow($rs);
 			$groupsarray[$i] = $currentgroup['user_group'];
 		}
 	}
@@ -819,10 +819,10 @@ if ($use_udperms == 1) {
 
 	echo "<p>" . $_lang['access_permissions_user_message'] . "</p>";
 	$sql = "SELECT name, id FROM $dbase.`" . $table_prefix . "membergroup_names` ORDER BY name";
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
+	$rs = $modx->db->query($sql);
+	$limit = $modx->db->getRecordCount($rs);
 	for ($i = 0; $i < $limit; $i++) {
-		$row = mysql_fetch_assoc($rs);
+		$row = $modx->db->getRow($rs);
 		echo "<input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "<br />";
 	}
 ?>

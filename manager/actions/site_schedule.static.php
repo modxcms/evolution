@@ -12,8 +12,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 <div class="sectionHeader"><?php echo $_lang["publish_events"]?></div><div class="sectionBody" id="lyr1">
 <?php
 $sql = "SELECT id, pagetitle, pub_date FROM $dbase.`".$table_prefix."site_content` WHERE pub_date > ".time()." ORDER BY pub_date ASC";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
 	echo "<p>".$_lang["no_docs_pending_publishing"]."</p>";
 } else {
@@ -29,7 +29,7 @@ if($limit<1) {
     <tbody>
 <?php
 	for ($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
+		$row = $modx->db->getRow($rs);
 ?>
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle']?></a></td>
@@ -51,8 +51,8 @@ if($limit<1) {
 <div class="sectionHeader"><?php echo $_lang["unpublish_events"];?></div><div class="sectionBody" id="lyr2"><?php
 //$db->debug = true;
 $sql = "SELECT id, pagetitle, unpub_date FROM $dbase.`".$table_prefix."site_content` WHERE unpub_date > ".time()." ORDER BY unpub_date ASC";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
 	echo "<p>".$_lang["no_docs_pending_unpublishing"]."</p>";
 } else {
@@ -68,7 +68,7 @@ if($limit<1) {
     <tbody>
 <?php
 	for ($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
+		$row = $modx->db->getRow($rs);
 ?>
     <tr>
       <td><a href="index.php?a=3&id=<?php echo $row['id'] ;?>"><?php echo $row['pagetitle'] ;?></a></td>
@@ -89,8 +89,8 @@ if($limit<1) {
 
 <div class="sectionHeader"><?php echo $_lang["all_events"];?></div><div class="sectionBody"><?php
 $sql = "SELECT id, pagetitle, pub_date, unpub_date FROM $dbase.`".$table_prefix."site_content` WHERE pub_date > 0 OR unpub_date > 0 ORDER BY pub_date DESC";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit<1) {
 	echo "<p>".$_lang["no_docs_pending_pubunpub"]."</p>";
 } else {
@@ -107,7 +107,7 @@ if($limit<1) {
     <tbody>
 <?php
 	for ($i=0;$i<$limit;$i++) {
-		$row = mysql_fetch_assoc($rs);
+		$row = $modx->db->getRow($rs);
 ?>
     <tr class="<?php echo ($i % 2 ? 'even' : '')?>">
 	<td><a href="index.php?a=3&id=<?php echo $row['id']?>"><?php echo $row['pagetitle']?></a></td>

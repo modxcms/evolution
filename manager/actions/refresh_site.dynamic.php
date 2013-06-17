@@ -7,12 +7,12 @@ $ctime = time();
 $sctable = $modx->getFullTableName('site_content');
 
 $sql = "UPDATE $sctable SET published=1 WHERE pub_date < ".$ctime." AND pub_date!=0 AND unpub_date > ".$ctime;
-$rs = mysql_query($sql);
-$num_rows_pub = mysql_affected_rows($modxDBConn);
+$rs = $modx->db->query($sql);
+$num_rows_pub = $modx->db->getAffectedRows($modxDBConn);
 
 $sql = "UPDATE $sctable SET published=0 WHERE unpub_date < ".$ctime." AND unpub_date!=0 AND published=1";
-$rs = mysql_query($sql);
-$num_rows_unpub = mysql_affected_rows($modxDBConn);
+$rs = $modx->db->query($sql);
+$num_rows_unpub = $modx->db->getAffectedRows($modxDBConn);
 
 ?>
 

@@ -51,11 +51,11 @@ function createGUID(){
 
 // Check to see the editor isn't locked
 $sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=108 AND id=\''.$id.'\'';
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
     for ($i = 0; $i < $limit; $i++) {
-        $lock = mysql_fetch_assoc($rs);
+        $lock = $modx->db->getRow($rs);
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
             $msg = sprintf($_lang['lock_msg'], $lock['username'], 'module');
             $e->setError(5, $msg);
@@ -73,8 +73,8 @@ if (!is_numeric($id)) {
 
 if (isset($_GET['id'])) {
     $sql = 'SELECT * FROM '.$tbl_site_modules.' WHERE id=\''.$id.'\'';
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+    $rs = $modx->db->query($sql);
+    $limit = $modx->db->getRecordCount($rs);
     if ($limit > 1) {
         echo '<p>Multiple modules sharing same unique id. Not good.<p>';
         exit;
@@ -83,7 +83,7 @@ if (isset($_GET['id'])) {
         echo '<p>No record found for id: '.$id.'.</p>';
         exit;
     }
-    $content = mysql_fetch_assoc($rs);
+    $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
         $e->setError(3);
@@ -486,10 +486,10 @@ if ($use_udperms == 1) {
     // fetch user access permissions for the module
     $groupsarray = array();
     $sql = 'SELECT * FROM '.$tbl_site_module_access.' WHERE module=\''.$id.'\'';
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+    $rs = $modx->db->query($sql);
+    $limit = $modx->db->getRecordCount($rs);
     for ($i = 0; $i < $limit; $i++) {
-        $currentgroup = mysql_fetch_assoc($rs);
+        $currentgroup = $modx->db->getRow($rs);
         $groupsarray[$i] = $currentgroup['usergroup'];
     }
 
@@ -522,10 +522,10 @@ if ($use_udperms == 1) {
     }
     $chk = '';
     $sql = "SELECT name, id FROM ".$tbl_membergroup_names;
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+    $rs = $modx->db->query($sql);
+    $limit = $modx->db->getRecordCount($rs);
     for ($i = 0; $i < $limit; $i++) {
-        $row = mysql_fetch_assoc($rs);
+        $row = $modx->db->getRow($rs);
         $groupsarray = is_numeric($id) && $id > 0 ? $groupsarray : array();
         $checked = in_array($row['id'], $groupsarray);
         if($modx->hasPermission('access_permissions')) {

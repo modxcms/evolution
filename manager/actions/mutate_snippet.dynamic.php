@@ -33,11 +33,11 @@ $tbl_site_snippets      = $modx->getFullTableName('site_snippets');
 
 // check to see the snippet editor isn't locked
 $sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=22 AND id='.$id;
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
     for ($i=0;$i<$limit;$i++) {
-        $lock = mysql_fetch_assoc($rs);
+        $lock = $modx->db->getRow($rs);
         if($lock['internalKey']!=$modx->getLoginUserID()) {
             $msg = sprintf($_lang['lock_msg'],$lock['username'],"snippet");
             $e->setError(5, $msg);
@@ -50,8 +50,8 @@ if($limit>1) {
 
 if(isset($_GET['id'])) {
     $sql = 'SELECT * FROM '.$tbl_site_snippets.' WHERE id='.$id;
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+    $rs = $modx->db->query($sql);
+    $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         echo "Oops, Multiple snippets sharing same unique id. Not good.<p>";
         exit;
@@ -59,7 +59,7 @@ if(isset($_GET['id'])) {
     if($limit<1) {
         header("Location: /index.php?id=".$site_start);
     }
-    $content = mysql_fetch_assoc($rs);
+    $content = $modx->db->getRow($rs);
     $_SESSION['itemname']=$content['name'];
     if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
         $e->setError(3);
