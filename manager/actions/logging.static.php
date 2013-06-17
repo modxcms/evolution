@@ -213,7 +213,7 @@ if(isset($_REQUEST['log_submit'])) {
 		' ORDER BY timestamp DESC'.
 		' LIMIT '.$int_cur_position.', '.$int_num_result;
 
-	$rs = mysql_query($sql);
+	$rs = $modx->db->query($sql);
 	if($limit<1) {
 		echo '<p>'.$_lang["mgrlog_emptysrch"].'</p>';
 	} else {
@@ -268,7 +268,7 @@ if(isset($_REQUEST['log_submit'])) {
 		// grab the entire log file...
 		$logentries = array();
 		$i = 0;
-		while ($logentry = mysql_fetch_assoc($rs)) {
+		while ($logentry = $modx->db->getRow($rs)) {
 			?><tr class="<?php echo ($i % 2 ? 'even' : ''); ?>">
 			<td><?php echo '<a href="index.php?a=12&amp;id='.$logentry['internalKey'].'">'.$logentry['username'].'</a>'; ?></td>
 			<td><?php echo $logentry['action']; ?></td>

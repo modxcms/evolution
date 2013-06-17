@@ -96,7 +96,7 @@ echo $cm->render();
 			"FROM ".$modx->getFullTableName("site_modules")." ".
 			(!empty($sqlQuery) ? " WHERE (name LIKE '%$sqlQuery%') OR (description LIKE '%$sqlQuery%')":"")." ".
 			"ORDER BY name";
-	$ds = mysql_query($sql);
+	$ds = $modx->db->query($sql);
 	include_once MODX_MANAGER_PATH."includes/controls/datagrid.class.php";
 	$grd = new DataGrid('',$ds,$number_of_results); // set page size to 0 t show all items
 	$grd->noRecordMsg = $_lang["no_records_found"];

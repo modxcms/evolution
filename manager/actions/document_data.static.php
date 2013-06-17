@@ -34,8 +34,8 @@ $sql = 'SELECT DISTINCT sc.* '.
        'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
        'WHERE sc.id =\''.$id.'\' '.
        'AND ('.$access.')';
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
 	echo "<p>Internal System Error...</p>",
 	     "<p>More results returned than expected. </p>",
@@ -45,24 +45,24 @@ if ($limit > 1) {
 	$e->setError(3);
 	$e->dumpError();
 }
-$content = mysql_fetch_assoc($rs);
+$content = $modx->db->getRow($rs);
 
 /**
  * "General" tab setup
  */
 // Get Creator's username
-$rs = mysql_query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['createdby'].'\'');
-if ($row = mysql_fetch_assoc($rs))
+$rs = $modx->db->query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['createdby'].'\'');
+if ($row = $modx->db->getRow($rs))
 	$createdbyname = $row['username'];
 
 // Get Editor's username
-$rs = mysql_query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['editedby'].'\'');
-if ($row = mysql_fetch_assoc($rs))
+$rs = $modx->db->query('SELECT username FROM '.$tbl_manager_users.' WHERE id=\''.$content['editedby'].'\'');
+if ($row = $modx->db->getRow($rs))
 	$editedbyname = $row['username'];
 
 // Get Template name
-$rs = mysql_query('SELECT templatename FROM '.$tbl_site_templates.' WHERE id=\''.$content['template'].'\'');
-if ($row = mysql_fetch_assoc($rs))
+$rs = $modx->db->query('SELECT templatename FROM '.$tbl_site_templates.' WHERE id=\''.$content['template'].'\'');
+if ($row = $modx->db->getRow($rs))
 	$templatename = $row['templatename'];
 
 // Set the item name for logging

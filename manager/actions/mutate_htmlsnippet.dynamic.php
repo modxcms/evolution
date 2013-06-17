@@ -33,11 +33,11 @@ $tbl_site_htmlsnippets = $modx->getFullTableName('site_htmlsnippets');
 
 // Check to see the snippet editor isn't locked
 $sql = 'SELECT internalKey, username FROM '.$tbl_active_users.' WHERE action=78 AND id=\''.$id.'\'';
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if ($limit > 1) {
     for ($i = 0; $i < $limit; $i++) {
-        $lock = mysql_fetch_assoc($rs);
+        $lock = $modx->db->getRow($rs);
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
             $msg = sprintf($_lang['lock_msg'], $lock['username'], 'chunk');
             $e->setError(5, $msg);
@@ -49,8 +49,8 @@ if ($limit > 1) {
 $content = array();
 if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
     $sql = 'SELECT * FROM '.$tbl_site_htmlsnippets.' WHERE id=\''.$id.'\'';
-    $rs = mysql_query($sql);
-    $limit = mysql_num_rows($rs);
+    $rs = $modx->db->query($sql);
+    $limit = $modx->db->getRecordCount($rs);
     if ($limit > 1) {
         echo '<p>Error: Multiple Chunk sharing same unique ID.</p>';
         exit;
@@ -59,7 +59,7 @@ if (isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])
         echo '<p>Chunk doesn\'t exist.</p>';
         exit;
     }
-    $content = mysql_fetch_assoc($rs);
+    $content = $modx->db->getRow($rs);
     $_SESSION['itemname'] = $content['name'];
     if ($content['locked'] == 1 && $_SESSION['mgrRole'] != 1) {
         $e->setError(3);

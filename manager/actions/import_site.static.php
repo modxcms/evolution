@@ -115,12 +115,9 @@ function importFiles($parent,$filepath,$files) {
             $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
                    (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
                    ('document', 'text/html', '".$modx->db->escape($id)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 1, '', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
-            $rs = mysql_query($sql);
-            if($rs) $new_parent = mysql_insert_id(); // get new parent id
-            else {
-				echo "<p>".$_lang["import_site_failed_db_error"].mysql_error()."</p>";
-                exit;
-            }
+            $rs = $modx->db->query($sql);
+            $new_parent = $modx->db->getInsertId();
+
             echo "<p class=\"success\">".$_lang["import_site_success"]."</p>";
             importFiles($new_parent,$filepath."/$id/",$value);
         }
