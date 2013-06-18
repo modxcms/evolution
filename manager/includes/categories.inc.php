@@ -11,7 +11,7 @@ function newCategory($newCat) {
     if(!$catrs) {
         $categoryId = 0;
     } else {
-        if(!$newCatid=mysql_insert_id()) {
+        if(!$newCatid=$modx->db->getInsertId()) {
             $categoryId = 0;
 		} else {
             $categoryId = $newCatid;
