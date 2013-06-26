@@ -141,7 +141,7 @@ class DataGrid {
 	}
 
 	function render(){
-
+		global $modx;
 		$columnHeaderStyle	= ($this->columnHeaderStyle)? "style='".$this->columnHeaderStyle."'":'';
 		$columnHeaderClass	= ($this->columnHeaderClass)? "class='".$this->columnHeaderClass."'":"";
 		$cssStyle			= ($this->cssStyle)? "style='".$this->cssStyle."'":'';

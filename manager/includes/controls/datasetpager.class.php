@@ -83,7 +83,7 @@ class DataSetPager {
 	}
 
 	function render(){
-		global $_PAGE;
+		global $modx,$_PAGE;
 			
 		$isDataset = is_resource($this->ds);
 		
