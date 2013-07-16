@@ -901,7 +901,7 @@ function buildTagPlaceholder($tag,$attributes,$name){
 }
 
 function attr2array($tag){
-	$expr = "#([a-z0-9_]*?)=(([\"'])[^\\3]*?\\3)#si";
+	$expr = "#([a-z0-9_-]*?)=(([\"'])[^\\3]*?\\3)#si";
 	preg_match_all($expr,$tag,$matches);
 	foreach($matches[1] as $i => $key)
 		$rt[$key]= $matches[2][$i];
