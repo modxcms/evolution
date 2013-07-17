@@ -14,7 +14,7 @@
 $modx_lang_attribute = 'de'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = 'MODx ist ein <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP-Framework und Content Management System</a> und unter der <a href="../assets/docs/license.txt">GNU-GPL-Lizenz</a> veröffentlicht.';
+$_lang["about_msg"] = 'MODx ist ein unter der <a href="../assets/docs/license.txt">GNU-GPL-Lizenz</a> veröffentlichtes <a href="http://modx.com/software/open-source-cms/modx-evolution/" target="_blank">PHP-Framework und Content Management System</a>.';
 $_lang["about_title"] = 'Über MODx';
 $_lang["access_permission_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung für diese Ressource.';
 $_lang["access_permission_parent_denied"] = 'Sie haben nicht die notwendige Zugriffsberechtigung, um eine Ressource an dieser Stelle zu erstellen oder hierher zu verschieben.';
@@ -370,7 +370,7 @@ $_lang["go"] = 'Los';
 $_lang["group_access_permissions"] = 'Benutzergruppenberechtigungen';
 $_lang["guid"] = 'Eindeutige Identifikationsnummer (GUID)';
 $_lang["help"] = 'Hilfe';
-$_lang["help_msg"] = 'Wenn Sie Hilfe bei der Nutzung von MODx benötigen besuchen Sie am besten das deutsche <a href="http://modxcms.de/forum/" target="_blank">MODx-Forum</a>. Falls Sie dort keine Lösung zu Ihrem Problem oder Ihrer Frage finden, stellen Sie Ihre Frage in dem entsprechendem Unterforum. Das Team wird versuchen Ihre Frage so schnell wie möglich zu beantworten.';
+$_lang["help_msg"] = 'Wenn Sie Hilfe bei der Nutzung von MODx benötigen, finden Sie Rat und Unterstützung in folgenden Foren:<br><a href="http://modxcms.de/forum/" target="_blank">MODx-Forum Deutschland</a><br><a href="http://forums.modx.com/" target="_blank">Internationales MODx-Forum</a><br>Auch immer hilfreich: ein Blick in die <a href="http://rtfm.modx.com/display/Evo1/Home" target="_blank">Dokumentation</a>.';
 $_lang["help_title"] = 'Hilfe';
 $_lang["hide_tree"] = 'Baum verbergern';
 $_lang["home"] = 'Start';
