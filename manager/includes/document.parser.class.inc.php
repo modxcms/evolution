@@ -3447,6 +3447,38 @@ class DocumentParser {
 		return round($size,2).' '.$a[$pos];
 	}
 
+	function getIdFromAlias($alias)
+	{
+		$children = array();
+		
+		if($this->config['use_alias_path']==1)
+		{
+			if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
+			else                           $_a[] = $alias;
+			$id= 0;
+			
+			foreach($_a as $alias)
+			{
+				if($id===false) break;
+				$alias = $this->db->escape($alias);
+				$rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and alias='{$alias}'");
+				if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and id='{$alias}'");
+				$row = $this->db->getRow($rs);
+				
+				if($row) $id = $row['id'];
+				else     $id = false;
+			}
+		}
+		else
+		{
+			$rs = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and alias='{$alias}'", 'parent, menuindex');
+			$row = $this->db->getRow($rs);
+			
+			if($row) $id = $row['id'];
+			else     $id = false;
+		}
+		return $id;
+	}
     // End of class.
 
 }
