@@ -144,9 +144,9 @@ function importFiles($parent,$filepath,$files) {
                 $sql = "INSERT INTO $dbase.`".$table_prefix."site_content`
                        (type, contentType, pagetitle, alias, published, parent, isfolder, content, template, menuindex, searchable, cacheable, createdby, createdon) VALUES
                        ('document', 'text/html', '".$modx->db->escape($pagetitle)."', '".$modx->stripAlias($alias)."', ".$publish_default.", '$parent', 0, '".$modx->db->escape($content)."', '".$default_template."', 0, ".$search_default.", ".$cache_default.", $createdby, $createdon);";
-                $rs = mysql_query($sql);
+                $rs = $modx->db->query($sql);
                 if(!$rs) {
-                    echo "<p><span class=\"fail\">".$_lang["import_site_failed"]."</span> ".$_lang["import_site_failed_db_error"].mysql_error()."</p>";
+                    echo "<p><span class=\"fail\">".$_lang["import_site_failed"]."</span> ".$_lang["import_site_failed_db_error"].$modx->db->getLastError()."</p>";
                     exit;
                 }
                 echo "<p class=\"success\">".$_lang["import_site_success"]."</p>";

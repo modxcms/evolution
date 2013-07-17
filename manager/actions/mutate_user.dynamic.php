@@ -339,12 +339,12 @@ if (is_array($evtOut))
 
 $notAdmin = ($_SESSION['mgrRole'] == 1) ? "" : "WHERE id != 1";
 $sql = "select name, id from $dbase.`" . $table_prefix . "user_roles` $notAdmin";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 ?>
 		<select name="role" class="inputBox" onchange='documentDirty=true;' style="width:300px">
 		<?php
 
-while ($row = mysql_fetch_assoc($rs)) {
+while ($row = $modx->db->getRow($rs)) {
     if ($_REQUEST['a']=='11') {
         $selectedtext = $row['id'] == '1' ? ' selected="selected"' : '';
     } else {

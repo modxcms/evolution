@@ -195,9 +195,9 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 		global $sqlcond;
 
 		$sql = "SELECT id, alias, pagetitle, isfolder, (content = '' AND template = 0) AS wasNull, editedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbname.`".$table_prefix."site_content`.parent = ".$dirid." AND ".$sqlcond;
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		$dircontent = array();
-		while($row = mysql_fetch_assoc($rs)) {
+		while($row = $modx->db->getRow($rs)) {
 			if (!$row['wasNull']) { // needs writing a document
 				$docname = getPageName($row['id'], $row['alias'], $modx->config['friendly_url_prefix'], $suffix = $modx->config['friendly_url_suffix']);
 				printf($_lang['export_site_exporting_document'], $i++, $limit, $row['pagetitle'], $row['id']);
@@ -239,8 +239,8 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 	if($modx->config['friendly_urls']==1 && $modx->config['use_alias_path']==1) {
 		$sqlcond = "$dbase.`".$table_prefix."site_content`.deleted=0 AND (($dbase.`".$table_prefix."site_content`.published=1 AND $dbase.`".$table_prefix."site_content`.type='document') OR ($dbase.`".$table_prefix."site_content`.isfolder=1)) $noncache";
 		$sql = "SELECT count(*) as count1 FROM $dbase.`".$table_prefix."site_content` WHERE ".$sqlcond;
-		$rs = mysql_query($sql);
-		$row = mysql_fetch_row($rs);
+		$rs = $modx->db->query($sql);
+		$row = $modx->db->getRow($rs,'num');
 		$prefix = $modx->config['friendly_url_prefix'];
 		$suffix = $modx->config['friendly_url_suffix'];
 		$limit = $row[0];
@@ -251,13 +251,13 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 	} else {
 	// Modified for export alias path  2006/3/24 end
 		$sql = "SELECT id, alias, pagetitle FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.deleted=0 AND $dbase.`".$table_prefix."site_content`.published=1 AND $dbase.`".$table_prefix."site_content`.type='document' $noncache";
-		$rs = mysql_query($sql);
-		$limit = mysql_num_rows($rs);
+		$rs = $modx->db->query($sql);
+		$limit = $modx->db->getRecordCount($rs);
 		printf($_lang['export_site_numberdocs'], $limit);
 
 		for($i=0; $i<$limit; $i++) {
 
-			$row=mysql_fetch_assoc($rs);
+			$row=$modx->db->getRow($rs);
 
 			$id = $row['id'];
 			printf($_lang['export_site_exporting_document'], $i, $limit, $row['pagetitle'], $id);

@@ -73,11 +73,11 @@ $keywords = array();
 $sql = 'SELECT k.keyword FROM '.$tbl_site_keywords.' AS k, '.$tbl_keyword_xref.' AS x '.
        'WHERE k.id = x.keyword_id AND x.content_id = \''.$id.'\' '.
        'ORDER BY k.keyword ASC';
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if ($limit > 0) {
 	for ($i = 0; $i < $limit; $i++) {
-		$row = mysql_fetch_assoc($rs);
+		$row = $modx->db->getRow($rs);
 		$keywords[$i] = $row['keyword'];
 	}
 }
@@ -88,11 +88,11 @@ $sql = 'SELECT meta.id, meta.name, meta.tagvalue '.
        'FROM '.$tbl_site_metatags.' AS meta '.
        'LEFT JOIN '.$tbl_site_content_metatags.' AS sc ON sc.metatag_id = meta.id '.
        'WHERE sc.content_id=\''.$content['id'].'\'';
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if ($limit > 0) {
 	for ($i = 0; $i < $limit; $i++) {
-		$row = mysql_fetch_assoc($rs);
+		$row = $modx->db->getRow($rs);
 		$metatags_selected[] = $row['name'].': <i>'.$row['tagvalue'].'</i>';
 	}
 }

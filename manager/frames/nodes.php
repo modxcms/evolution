@@ -72,8 +72,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
     // check for deleted documents on reload
     if ($expandAll==2) {
         $sql = "SELECT COUNT(*) FROM $dbase.`".$table_prefix."site_content` WHERE deleted=1";
-        $rs = mysql_query($sql);
-        $row = mysql_fetch_row($rs);
+        $rs = $modx->db->query($sql);
+        $row = $modx->db->getRow($rs,'num');
         $count = $row[0];
         if ($count>0) echo '<span id="binFull"></span>'; // add a special element to let system now that the bin is full
     }
@@ -123,8 +123,8 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 $access
                 GROUP BY sc.id
                 ORDER BY {$orderby}";
-        $result = mysql_query($sql, $modxDBConn);
-        if(mysql_num_rows($result)==0) {
+        $result = $modx->db->query($sql, $modxDBConn);
+        if($modx->db->getRecordCount($result)==0) {
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }
 
@@ -132,7 +132,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		global $modx_textdir;
 
 		$node_name_source = $modx->config['resource_tree_node_name'];
-        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = mysql_fetch_row($result))
+        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
         {
 			switch($node_name_source)
 			{

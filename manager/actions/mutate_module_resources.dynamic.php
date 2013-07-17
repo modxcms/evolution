@@ -73,7 +73,7 @@ switch ($_REQUEST['op']) {
 			$ds = $modx->dbQuery($sql);
 			if(!$ds){
 				echo '<script type="text/javascript">'.
-				     'function jsalert(){ alert(\'An error occured while trying to update the database. \''.mysql_error().');'.
+				     'function jsalert(){ alert(\'An error occured while trying to update the database. \''.$modx->db->getLastError().');'.
 				     'setTimeout(\'jsalert()\',100)'.
 				     '</script>';
 			}

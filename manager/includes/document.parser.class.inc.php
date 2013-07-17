@@ -488,7 +488,7 @@ class DocumentParser {
                             $tbldg= $this->getFullTableName("document_groups");
                             $secrs= $this->db->query("SELECT id FROM $tbldg WHERE document = '" . $id . "' LIMIT 1;");
                             if ($secrs)
-                                $seclimit= mysql_num_rows($secrs);
+                                $seclimit= $this->db->getRecordCount($secrs);
                         }
                         if ($seclimit > 0) {
                             // match found but not publicly accessible, send the visitor to the unauthorized_page
@@ -1245,7 +1245,7 @@ class DocumentParser {
                 // check if file is not public
                 $secrs= $this->db->query($q);
                 if ($secrs)
-                    $seclimit= mysql_num_rows($secrs);
+                    $seclimit= $this->db->getRecordCount($secrs);
             }
             if ($seclimit > 0) {
                 // match found but not publicly accessible, send the visitor to the unauthorized_page
@@ -2711,7 +2711,7 @@ class DocumentParser {
               WHERE mu.id = '$uid'
               ";
         $rs= $this->db->query($sql);
-        $limit= mysql_num_rows($rs);
+        $limit= $this->db->getRecordCount($rs);
         if ($limit == 1) {
             $row= $this->db->getRow($rs);
             if (!$row["usertype"])
@@ -2734,7 +2734,7 @@ class DocumentParser {
               WHERE wu.id='$uid'
               ";
         $rs= $this->db->query($sql);
-        $limit= mysql_num_rows($rs);
+        $limit= $this->db->getRecordCount($rs);
         if ($limit == 1) {
             $row= $this->db->getRow($rs);
             if (!$row["usertype"])
@@ -2799,7 +2799,7 @@ class DocumentParser {
         if ($_SESSION["webValidated"] == 1) {
             $tbl= $this->getFullTableName("web_users");
             $ds= $this->db->query("SELECT `id`, `username`, `password` FROM $tbl WHERE `id`='" . $this->getLoginUserID() . "'");
-            $limit= mysql_num_rows($ds);
+            $limit= $this->db->getRecordCount($ds);
             if ($limit == 1) {
                 $row= $this->db->getRow($ds);
                 if ($row["password"] == md5($oldPwd)) {

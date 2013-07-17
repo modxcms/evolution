@@ -197,11 +197,11 @@ if(!$modx->hasPermission('logs')) {
 		}
 	}
 
-	$sql = "SHOW TABLE STATUS FROM $dbase LIKE '$table_prefix%';";
-	$rs = mysql_query($sql);
-	$limit = mysql_num_rows($rs);
+	$sql = "SHOW TABLE STATUS FROM $dbase LIKE '{$table_prefix}%';";
+	$rs = $modx->db->query($sql);
+	$limit = $modx->db->getRecordCount($rs);
 	for ($i = 0; $i < $limit; $i++) {
-		$log_status = mysql_fetch_assoc($rs);
+		$log_status = $modx->db->getRow($rs);
 		$bgcolor = ($i % 2) ? '#EEEEEE' : '#FFFFFF';
 ?>
 		  <tr bgcolor="<?php echo $bgcolor; ?>" title="<?php echo $log_status['Comment']; ?>" style="cursor:default">
@@ -282,7 +282,7 @@ if(!$modx->hasPermission('logs')) {
 			$html = "<p>".$_lang['no_active_users_found']."</p>";
 		} else {
 			for ($i = 0; $i < $limit; $i++) {
-				$activeusers = mysql_fetch_assoc($rs);
+				$activeusers = $modx->db->getRow($rs);
 				$currentaction = getAction($activeusers['action'], $activeusers['id']);
 				$webicon = ($activeusers['internalKey']<0)? "<img align='absmiddle' src='media/style/{$manager_theme}/images/tree/globe.gif' alt='Web user'>":"";
 				$html .= "<tr bgcolor='#FFFFFF'><td><b>".$activeusers['username']."</b></td><td>$webicon&nbsp;".abs($activeusers['internalKey'])."</td><td>".$activeusers['ip']."</td><td>".strftime('%H:%M:%S', $activeusers['lasthit']+$server_offset_time)."</td><td>$currentaction</td><td align='right'>".$activeusers['action']."</td></tr>";
