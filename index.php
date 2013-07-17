@@ -44,7 +44,11 @@
  * Initialize Document Parsing
  * -----------------------------
  */
-include_once(dirname(__FILE__)."/assets/cache/siteManager.php");
+$base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
+if(is_file($base_path . 'assets/cache/siteManager.php'))
+    include_once($base_path . 'assets/cache/siteManager.php');
+if(!defined('MGR_DIR') && is_dir("{$base_path}manager"))
+	define('MGR_DIR','manager');
 
 // get start time
 $mtime = microtime(); $mtime = explode(" ",$mtime); $mtime = $mtime[1] + $mtime[0]; $tstart = $mtime;
