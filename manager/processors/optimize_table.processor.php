@@ -13,7 +13,7 @@ if(($_REQUEST['t']=="" || !isset($_REQUEST['t'])) && ($_REQUEST['u']=="" || !iss
 if (isset($_REQUEST['t'])) $sql = "OPTIMIZE TABLE $dbase.".$_REQUEST['t'].";";
 elseif (isset($_REQUEST['u'])) $sql = "TRUNCATE TABLE $dbase.".$_REQUEST['u'].";";
 
-if($sql) $rs = @mysql_query($sql);
+if($sql) $rs = $modx->db->query($sql);
 
 $mode = intval($_REQUEST['mode']);
 $header="Location: index.php?a=".$mode."&s=4";

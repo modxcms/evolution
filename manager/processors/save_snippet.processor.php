@@ -84,7 +84,7 @@ switch ($_POST['mode']) {
 		} 
 		else {	
 			// get the id
-			if(!$newid=mysql_insert_id()) {
+			if(!$newid=$modx->db->getInsertId()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}

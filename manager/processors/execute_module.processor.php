@@ -55,8 +55,8 @@ if($_SESSION['mgrRole']!=1){
 $sql = "SELECT * " .
 		"FROM ".$modx->getFullTableName("site_modules")." " .
 		"WHERE id = $id;";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
 	echo "<script type='text/javascript'>" .
 			"function jsalert(){ alert('Multiple modules sharing same unique id $id. Please contact the Site Administrator');" .
@@ -73,7 +73,7 @@ if($limit<1) {
 			"</script>";
 	exit;
 }
-$content = mysql_fetch_assoc($rs);
+$content = $modx->db->getRow($rs);
 if($content['disabled']) {
 	echo "<script type='text/javascript'>" .
 			"function jsalert(){ alert('This module is disabled and cannot be executed.');" .

@@ -68,8 +68,8 @@ if (isset($data) && count($data) > 0) {
 		$oldtemplate = $data['old_template'];
 		$tbl = $dbase.".`".$table_prefix."site_content`";
 		$reset = $data['reset_template'];
-		if($reset==1) mysql_query("UPDATE $tbl SET template = '$template' WHERE type='document'");
-		else if($reset==2) mysql_query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");
+		if($reset==1) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE type='document'");
+		else if($reset==2) $modx->db->query("UPDATE $tbl SET template = '$template' WHERE template = $oldtemplate");
 	}
 	
 	// empty cache
