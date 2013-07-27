@@ -29,7 +29,7 @@ else {
 	}
 }
 if($rs) {
-	$newid = mysql_insert_id(); // get new id
+	$newid = $modx->db->getInsertId(); // get new id
 	// duplicate TV values
 	$tvs = $modx->db->select('*', $modx->getFullTableName('site_tmplvar_templates'), 'templateid='.$id);
 	if ($modx->db->getRecordCount($tvs) > 0) {

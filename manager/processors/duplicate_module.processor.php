@@ -37,7 +37,7 @@ else {
 		$rs = mysql_query($sql);
 	}	
 }
-if($rs) $newid = mysql_insert_id(); // get new id
+if($rs) $newid = $modx->db->getInsertId(); // get new id
 else {
 	echo "A database error occured while trying to duplicate module: <br /><br />".mysql_error();
 	exit;

@@ -69,7 +69,7 @@ switch ($_POST['mode']) {
 			echo "\$rs not set! New Chunk not saved!";
 		} else {	
 			// get the id
-			if(!$newid=mysql_insert_id()) {
+			if(!$newid=$modx->db->getInsertId()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}
