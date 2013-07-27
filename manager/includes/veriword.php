@@ -71,19 +71,19 @@ class VeriWord {
     }
 
     function pick_word() {
-        global $database_server, $database_user, $database_password, $dbase, $table_prefix, $database_connection_charset, $database_connection_method;
+        global $modx,$database_server, $database_user, $database_password, $dbase, $table_prefix, $database_connection_charset, $database_connection_method;
         // set default words
         $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
 
         // connect to the database
         if(@$dbConn = mysql_connect($database_server, $database_user, $database_password)) {
             mysql_select_db($dbase);
-            @mysql_query("{$database_connection_method} {$database_connection_charset}");
+            $modx->db->query("{$database_connection_method} {$database_connection_charset}");
             $sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings` WHERE setting_name='captcha_words'";
-            $rs = mysql_query($sql);
-            $limit = mysql_num_rows($rs);
+            $rs = $modx->db->query($sql);
+            $limit = $modx->db->getRecordCount($rs);
             if($limit==1) {
-                $row = mysql_fetch_assoc($rs);
+                $row = $modx->db->getRow($rs);
                 $words = $row['setting_value'];
             }
         }

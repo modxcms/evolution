@@ -17,7 +17,7 @@ $modx->invokeEvent("OnBeforeChunkFormDelete",
 
 //ok, delete the chunk.
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_htmlsnippets` WHERE $dbase.`".$table_prefix."site_htmlsnippets`.id=".$id.";";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the htmlsnippet...";
 	exit;

@@ -564,8 +564,9 @@ class Mysqldumper {
 
 	// Private function result2Array.
 	function result2Array($numinarray = 0, $resource) {
+		global $modx;
 		$array = array();
-		while ($row = mysql_fetch_row($resource)) {
+		while ($row = $modx->db->getRow($resource,'num')) {
 			$array[] = $row[$numinarray];
 		}
 		mysql_free_result($resource);

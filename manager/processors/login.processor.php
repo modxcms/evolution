@@ -68,8 +68,8 @@ $modx->invokeEvent("OnBeforeManagerLogin",
                         ));
 
 $sql = "SELECT $dbase.`".$table_prefix."manager_users`.*, $dbase.`".$table_prefix."user_attributes`.* FROM $dbase.`".$table_prefix."manager_users`, $dbase.`".$table_prefix."user_attributes` WHERE BINARY $dbase.`".$table_prefix."manager_users`.username = '".$username."' and $dbase.`".$table_prefix."user_attributes`.internalKey=$dbase.`".$table_prefix."manager_users`.id;";
-$rs = mysql_query($sql);
-$limit = mysql_num_rows($rs);
+$rs = $modx->db->query($sql);
+$limit = $modx->db->getRecordCount($rs);
 
 if($limit==0 || $limit>1) {
     jsAlert($e->errors[900]);
@@ -229,7 +229,7 @@ if($newloginerror) {
 	//increment the failed login counter
     $failedlogins += 1;
     $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount='$failedlogins' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
+    $rs = $modx->db->query($sql);
     if($failedlogins>=$failed_allowed) { 
 		//block user for too many fail attempts
         $sql = "update $dbase.`".$table_prefix."user_attributes` SET blockeduntil='".(time()+($blocked_minutes*60))."' where internalKey=$internalKey";
@@ -260,14 +260,14 @@ $_SESSION['mgrLastlogin']=$lastlogin;
 $_SESSION['mgrLogincount']=$nrlogins; // login count
 $_SESSION['mgrRole']=$role;
 $sql="SELECT * FROM $dbase.`".$table_prefix."user_roles` WHERE id=".$role.";";
-$rs = mysql_query($sql);
-$row = mysql_fetch_assoc($rs);
+$rs = $modx->db->query($sql);
+$row = $modx->db->getRow($rs);
 $_SESSION['mgrPermissions'] = $row;
 
 // successful login so reset fail count and update key values
 if(isset($_SESSION['mgrValidated'])) {
     $sql = "update $dbase.`".$table_prefix."user_attributes` SET failedlogincount=0, logincount=logincount+1, lastlogin=thislogin, thislogin=".time().", sessionid='$currentsessionid' where internalKey=$internalKey";
-    $rs = mysql_query($sql);
+    $rs = $modx->db->query($sql);
 }
 
 // get user's document groups
@@ -278,8 +278,8 @@ $sql = "SELECT uga.documentgroup
         FROM $tblug ug
         INNER JOIN $tbluga uga ON uga.membergroup=ug.user_group
         WHERE ug.member =".$internalKey;
-$rs = mysql_query($sql);
-while ($row = mysql_fetch_row($rs)) $dg[$i++]=$row[0];
+$rs = $modx->db->query($sql);
+while ($row = $modx->db->getRow($rs,'num')) $dg[$i++]=$row[0];
 $_SESSION['mgrDocgroups'] = $dg;
 
 if($rememberme == '1') {

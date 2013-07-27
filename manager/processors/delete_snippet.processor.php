@@ -16,7 +16,7 @@ $modx->invokeEvent("OnBeforeSnipFormDelete",
 
 //ok, delete the snippet.
 $sql = "DELETE FROM $dbase.`".$table_prefix."site_snippets` WHERE $dbase.`".$table_prefix."site_snippets`.id=".$id.";";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to delete the snippet...";
 	exit;

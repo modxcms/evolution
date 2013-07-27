@@ -140,12 +140,7 @@ $modx->tstart = $tstart;
 $modx->mstart = $mstart;
 
 // connect to the database
-if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
-    die("<h2>Failed to create the database connection!</h2>. Please run the MODx <a href='../install'>install utility</a>");
-} else {
-    mysql_select_db(str_replace('`', '', $dbase));
-    @mysql_query("{$database_connection_method} {$database_connection_charset}");
-}
+$modx->db->connect();
 
 // start session
 startCMSSession();

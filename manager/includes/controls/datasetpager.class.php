@@ -90,7 +90,7 @@ class DataSetPager {
 		if (!$this->selPageStyle) $this->selPageStyle = "font-weight:bold";
 		
 		// get total number of rows		
-		$tnr = ($isDataset)? mysql_num_rows($this->ds):count($this->ds); 
+		$tnr = ($isDataset)? $modx->db->getRecordCount($this->ds):count($this->ds); 
 
 		// render: no records found
 		if($tnr<=0) {

@@ -7,7 +7,7 @@ if(!$modx->hasPermission('remove_locks')) {
 
 // Remove locks
 $sql = "TRUNCATE $dbase.`".$table_prefix."active_users`";
-$rs = mysql_query($sql);
+$rs = $modx->db->query($sql);
 if(!$rs) {
 	echo "Something went wrong while trying to remove the locks!";
 	exit;
