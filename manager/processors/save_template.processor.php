@@ -66,7 +66,7 @@ switch ($_POST['mode']) {
 			echo "\$rs not set! New template not saved!";
 		} else {
 			// get the id
-			if(!$newid=$modx->db->getInsertId()) {
+			if(!$newid=mysql_insert_id()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}

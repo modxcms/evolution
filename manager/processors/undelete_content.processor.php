@@ -26,13 +26,13 @@ if(!$udperms->checkPermissions()) {
 
 // get the timestamp on which the document was deleted.
 $sql = "SELECT deletedon FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.id=".$id." AND deleted=1;";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
+$rs = mysql_query($sql);
+$limit = mysql_num_rows($rs);
 if($limit!=1) {
 	echo "Couldn't find document to determine it's date of deletion!";
 	exit;
 } else {
-	$row = $modx->db->getRow($rs);
+	$row=mysql_fetch_assoc($rs);
 	$deltime = $row['deletedon'];
 }
 
@@ -48,12 +48,12 @@ function getChildren($parent) {
 	$db->debug = true;
 	
 	$sql = "SELECT id FROM $dbase.`".$table_prefix."site_content` WHERE $dbase.`".$table_prefix."site_content`.parent=".$parent." AND deleted=1 AND deletedon=$deltime;";
-        $rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
+	$rs = mysql_query($sql);
+	$limit = mysql_num_rows($rs);
 	if($limit>0) {
 		// the document has children documents, we'll need to delete those too
 		for($i=0;$i<$limit;$i++) {
-		$row=$modx->db->getRow($rs);
+		$row=mysql_fetch_assoc($rs);
 			$children[] = $row['id'];
 			getChildren($row['id']);
 			//echo "Found childNode of parentNode $parent: ".$row['id']."<br />";
