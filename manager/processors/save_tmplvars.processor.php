@@ -88,7 +88,7 @@ switch ($_POST['mode']) {
 			echo "\$rs not set! New variable not saved!";
 		} else {	
 			// get the id
-			if(!$newid=mysql_insert_id()) {
+			if(!$newid=$modx->db->getInsertId()) {
 				echo "Couldn't get last insert key!";
 				exit;
 			}			
@@ -203,16 +203,17 @@ function saveTemplateAccess() {
     }
    
 	
-	mysql_query("DELETE FROM $tbl WHERE tmplvarid = $id");
+	$modx->db->query("DELETE FROM $tbl WHERE tmplvarid = $id");
 	for($i=0;$i<count($templates);$i++){
 	    $setRank = ($getRankArray[$templates[$i]]) ? $getRankArray[$templates[$i]] : 0;
-		mysql_query("INSERT INTO $tbl (tmplvarid,templateid,rank) VALUES($id,".$templates[$i].",$setRank);");
+		$modx->db->query("INSERT INTO $tbl (tmplvarid,templateid,rank) VALUES($id,".$templates[$i].",$setRank);");
 	}	
 }
 
 function saveDocumentAccessPermissons(){
 	global $id,$newid;
 	global $dbase,$table_prefix,$use_udperms;
+	global $modx;
 
 	if($newid) $id = $newid;
 	$docgroups = $_POST['docgroups'];
@@ -221,7 +222,7 @@ function saveDocumentAccessPermissons(){
 	if($use_udperms==1) {
 		// delete old permissions on the tv
 		$sql = "DELETE FROM $dbase.`".$table_prefix."site_tmplvar_access` WHERE tmplvarid=$id;";
-		$rs = mysql_query($sql);
+		$rs = $modx->db->query($sql);
 		if(!$rs){
 			echo "An error occurred while attempting to delete previous template variable access permission entries.";
 			exit;
@@ -229,7 +230,7 @@ function saveDocumentAccessPermissons(){
 		if(is_array($docgroups)) {
 			foreach ($docgroups as $dgkey=>$value) {
 				$sql = "INSERT INTO $dbase.`".$table_prefix."site_tmplvar_access` (tmplvarid,documentgroup) values($id,".stripslashes($value).")";
-				$rs = mysql_query($sql);
+				$rs = $modx->db->query($sql);
 				if(!$rs){
 					echo "An error occured while attempting to save template variable acess permissions.";
 					exit;

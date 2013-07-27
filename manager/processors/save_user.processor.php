@@ -81,9 +81,10 @@ if ($_SESSION['mgrRole'] != 1) {
 	// Verify that the user being edited wasn't an admin and the user ID got spoofed
 	$sql = "SELECT role FROM $dbase.`" . $table_prefix . "user_attributes` AS mua WHERE internalKey = $id";
 	if ($rs = $modx->db->query($sql)) {
-		if ($rsQty = mysql_num_rows($rs)) {
+		if ($rsQty = $modx->db->getRecordCount($rs)) {
 			// There should only be one if there is one
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
+
 			if ($row['role'] == 1) {
 				webAlert("You cannot alter an administrative user.");
 				exit;
@@ -100,7 +101,7 @@ switch ($_POST['mode']) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
 			webAlert("User name is already in use!");
 			exit;
@@ -112,9 +113,9 @@ switch ($_POST['mode']) {
 			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
 				webAlert("Email is already in use!");
 				exit;
@@ -278,9 +279,9 @@ switch ($_POST['mode']) {
 			webAlert("An error occurred while attempting to retrieve all users with username $newusername.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
 			if ($row['id'] != $id) {
 				webAlert("User name is already in use!");
 				exit;
@@ -293,9 +294,10 @@ switch ($_POST['mode']) {
 			webAlert("An error occurred while attempting to retrieve all users with email $email.");
 			exit;
 		}
-		$limit = mysql_num_rows($rs);
+		$limit = $modx->db->getRecordCount($rs);
 		if ($limit > 0) {
-			$row = mysql_fetch_assoc($rs);
+			$row = $modx->db->getRow($rs);
+
 			if ($row['internalKey'] != $id) {
 				webAlert("Email is already in use!");
 				exit;
@@ -569,7 +571,7 @@ function saveUserSettings($id) {
 
 	$usrTable = $modx->getFullTableName('user_settings');
 
-	mysql_query('DELETE FROM '.$usrTable.' WHERE user='.$id);
+	$modx->db->query('DELETE FROM '.$usrTable.' WHERE user='.$id);
 
 	$savethese = array();
 	foreach ($settings as $k => $v) {
