@@ -14,7 +14,7 @@ if (isset($data) && count($data) > 0) {
 	foreach ($data as $k => $v) {
 		switch ($k) {
             case 'settings_version':{
-                if($modx->getVersionData()!=$data['settings_version']){
+                if($modx->getVersionData('version')!=$data['settings_version']){
                     $modx->logEvent(17,2,'<pre>'.var_export($data['settings_version'],true).'</pre>','fake settings_version');
                     $v = $modx->getVersionData('version');
                 }
