@@ -329,10 +329,10 @@ class OldFunctions {
         // function to connect to external database
     	global $modx;
         $tstart= $modx->getMicroTime();
-        if (@ !$modx->rs= mysql_connect($host, $user, $pass)) {
+        if (@ !$modx->rs= $modx->db->connect($host, $user, $pass)) {
             $modx->messageQuit("Failed to create connection to the $dbase database!");
         } else {
-            mysql_select_db($dbase);
+            $modx->db->selectDb($dbase);
             $tend= $modx->getMicroTime();
             $totaltime= $tend - $tstart;
             if ($modx->dumpSQL) {

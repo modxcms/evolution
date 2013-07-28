@@ -123,7 +123,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
                 $access
                 GROUP BY sc.id
                 ORDER BY {$orderby}";
-        $result = $modx->db->query($sql, $modxDBConn);
+        $result = $modx->db->query($sql);
         if($modx->db->getRecordCount($result)==0) {
             $output .= '<div style="white-space: nowrap;">'.$spacer.$pad.'<img align="absmiddle" src="'.$_style["tree_deletedpage"].'">&nbsp;<span class="emptyNode">'.$_lang['empty_folder'].'</span></div>';
         }

@@ -76,8 +76,8 @@ class VeriWord {
         $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
 
         // connect to the database
-        if(@$dbConn = mysql_connect($database_server, $database_user, $database_password)) {
-            mysql_select_db($dbase);
+        if(@$dbConn = $modx->db->connect($database_server, $database_user, $database_password)) {
+            $modx->db->selectDb($dbase);
             $modx->db->query("{$database_connection_method} {$database_connection_charset}");
             $sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings` WHERE setting_name='captcha_words'";
             $rs = $modx->db->query($sql);

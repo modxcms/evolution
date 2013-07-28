@@ -17,13 +17,12 @@ include_once "config.inc.php";
 // start session
 startCMSSession();
 
-// connect to the database
-if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
-    die("Failed to create the database connection!");
-} else {
-    mysql_select_db($dbase);
-    @mysql_query("{$database_connection_method} {$database_connection_charset}");
-}
+
+include_once "document.parser.class.inc.php";
+$modx = new DocumentParser;
+$modx->loadExtension("ManagerAPI");
+$modx->getSettings();
+$etomite = &$modx;
 
 // get the settings from the database
 include_once "settings.inc.php";
@@ -47,11 +46,7 @@ include_once "error.class.inc.php";
 $e = new errorHandler;
 
 // initiate the content manager class
-include_once "document.parser.class.inc.php";
-$modx = new DocumentParser;
-$modx->loadExtension("ManagerAPI");
-$modx->getSettings();
-$etomite = &$modx; // for backward compatibility
+ // for backward compatibility
 
 $username = $modx->db->escape($_REQUEST['username']);
 $givenPassword = $modx->db->escape($_REQUEST['password']);

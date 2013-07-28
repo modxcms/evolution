@@ -525,7 +525,6 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td colspan="2"><div class='split'></div></td>
             </tr>
-           
             <tr>
               <td nowrap class="warning"><b><?php echo $_lang["serveroffset_title"] ?></b></td>
               <td> <select name="server_offset_time" size="1" class="inputBox">
@@ -656,7 +655,11 @@ function confirmLangChange(el, lkey, elupd){
   <td>
     <?php echo wrap_label($_lang["yes"],form_radio('make_folders','1', $make_folders=='1'));?><br />
     <?php echo wrap_label($_lang["no"],form_radio('make_folders','0', $make_folders=='0'));?><br />
-    <?php echo $_lang["make_folders_message"] ?></td>
+</td>
+  </tr>
+  <tr id='furlRow56' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["make_folders_message"] ?></td>
 </tr> 
 <tr id='furlRow52' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
 <td colspan="2"><div class='split'></div></td>
@@ -743,9 +746,13 @@ function confirmLangChange(el, lkey, elupd){
             <th><?php echo $_lang["check_files_onlogin_title"] ?></th>
             <td>
               <textarea name="check_files_onlogin"><?php echo $check_files_onlogin;?></textarea><br />
-                <?php echo $_lang["check_files_onlogin_message"] ?>
+                
         </td>
         </tr>
+        <tr  class='row1' >
+            <td width="200">&nbsp;</td>
+            <td class='comment'>  <?php echo $_lang["check_files_onlogin_message"] ?></td>
+      </tr> 
         <tr>
           <td colspan="2"><div class='split'></div></td>
         </tr>
@@ -807,7 +814,11 @@ function confirmLangChange(el, lkey, elupd){
 			<?php echo wrap_label($_lang['a17_error_reporting_opt1'], form_radio('error_reporting','1' , $error_reporting==='1'));?><br />
 			<?php echo wrap_label($_lang['a17_error_reporting_opt2'], form_radio('error_reporting','2' , $error_reporting==='2'));?><br />
 			<?php echo wrap_label($_lang['a17_error_reporting_opt99'],form_radio('error_reporting','99', $error_reporting==='99'));?><br />
-		<?php echo $_lang['a17_error_reporting_msg'];?></td>
+   </td>
+    </tr>
+    <tr  class='row1' >
+            <td width="200">&nbsp;</td>
+            <td class='comment'> <?php echo $_lang['a17_error_reporting_msg'];?></td>
 		</tr>
             <tr>
               <td colspan="2"><div class='split'></div></td>
@@ -836,9 +847,13 @@ function confirmLangChange(el, lkey, elupd){
 				<?php echo wrap_label('CRYPT_SHA256 (salt &amp; stretch)'    ,form_radio('pwd_hash_algo','SHA256'    ,$phm['sel']['SHA256']    , '', $phm['e']['SHA256']));?><br />
 				<?php echo wrap_label('CRYPT_MD5 (salt &amp; stretch)'       ,form_radio('pwd_hash_algo','MD5'       ,$phm['sel']['MD5']       , '', $phm['e']['MD5']));?><br />
 				<?php echo wrap_label('UNCRYPT(32 chars salt + SHA-1 hash)'   ,form_radio('pwd_hash_algo','UNCRYPT'   ,$phm['sel']['UNCRYPT']   , '', $phm['e']['UNCRYPT']));?><br />
-				<?php echo $_lang["pwd_hash_algo_message"]?>
+       
 			</td>
 			</tr>
+      <tr  class='row1' >
+            <td width="200">&nbsp;</td>
+            <td class='comment'>  <?php echo $_lang["pwd_hash_algo_message"]?></td>
+      </tr> 
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
@@ -847,9 +862,13 @@ function confirmLangChange(el, lkey, elupd){
 			<td>
 				<?php echo wrap_label($_lang["yes"],form_radio('enable_bindings','1',$enable_bindings=='1' || !isset($enable_bindings)));?><br />
 				<?php echo wrap_label($_lang["no"], form_radio('enable_bindings','0',$enable_bindings=='0'));?><br />
-				<?php echo $_lang["enable_bindings_message"] ?>
+       
 		</td>
 		</tr>
+          <tr  class='row1' >
+            <td width="200">&nbsp;</td>
+            <td class='comment'>  <?php echo $_lang["enable_bindings_message"] ?></td>
+      </tr>
            <tr>
             <td colspan="2"><div class='split'></div></td>
           </tr>
@@ -1080,9 +1099,13 @@ function confirmLangChange(el, lkey, elupd){
 	echo join("\n",$output)
 ?>
 	</select><br />
-	<?php echo $_lang["setting_resource_tree_node_name_desc"]?>
+	
 </td>
 </tr>
+        <tr  class='row1' >
+            <td width="200">&nbsp;</td>
+            <td class='comment'>  <?php echo $_lang["setting_resource_tree_node_name_desc"]?></td>
+      </tr> 
 <tr>
   <td colspan="2"><div class='split'></div></td>
 </tr>

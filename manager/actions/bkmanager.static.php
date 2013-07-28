@@ -552,13 +552,14 @@ class Mysqldumper {
 
 	// Private function loadObjectList.
 	function loadObjectList($key='', $resource) {
+		global $modx;
 		$array = array();
-		while ($row = mysql_fetch_object($resource)) {
+		while ($row = $modx->db->getRow($resource,'object')) {
 			if ($key)
 			        $array[$row->$key] = $row;
 			else    $array[] = $row;
 		}
-		mysql_free_result($resource);
+		$modx->db->freeResult($resource);
 		return $array;
 	}
 
@@ -569,7 +570,7 @@ class Mysqldumper {
 		while ($row = $modx->db->getRow($resource,'num')) {
 			$array[] = $row[$numinarray];
 		}
-		mysql_free_result($resource);
+		$modx->db->freeResult($resource);
 		return $array;
 	}
 }

@@ -18,11 +18,11 @@ if(!isset($_SESSION['mgrValidated'])) {
   die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 }
 // connect to the database
-if(@!$modxDBConn = mysql_connect($database_server, $database_user, $database_password)) {
+if(@!$modxDBConn = $modx->db->connect($database_server, $database_user, $database_password)) {
   die("Failed to create the database connection!");
 } else {
-  mysql_select_db($dbase);
-    @mysql_query("{$database_connection_method} {$database_connection_charset}");
+	$modx->db->selectDb($dbase);
+    @$modx->db->query("{$database_connection_method} {$database_connection_charset}");
 }
 
 define('IN_MANAGER_MODE', 'true'); // set this so that settings will trust us.
