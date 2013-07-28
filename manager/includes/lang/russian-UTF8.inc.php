@@ -1116,4 +1116,8 @@ $_lang['files.dynamic.php4'] = 'files.dynamic.php4';
 $_lang["cache_type_title"] = 'Способ кеширования страниц ';
 $_lang["cache_type_1"] = 'Только с учетом ID (стандартный метод)';
 $_lang["cache_type_2"] = 'C учетом ID и $_GET';
+
+$_lang["seostrict_title"] = 'Использовать SEO Strict URLs';
+$_lang["seostrict_message"] = 'использование strict URLs удаляет дубли страниц по разным ссылкам';
+
 ?>

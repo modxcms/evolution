@@ -208,8 +208,12 @@ class DocumentParser {
     function sendErrorPage() {
         // invoke OnPageNotFound event
         $this->invokeEvent('OnPageNotFound');
-//        $this->sendRedirect($this->makeUrl($this->config['error_page'], '', '&refurl=' . urlencode($_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'])), 1);
+        if($this->config['seostrict']=='1') {
+           $url = $this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'];
+           $this->sendForward($url, 'HTTP/1.0 404 Not Found');
+        }else{
         $this->sendForward($this->config['error_page'] ? $this->config['error_page'] : $this->config['site_start'], 'HTTP/1.0 404 Not Found');
+        }
         exit();
     }
 
@@ -1183,6 +1187,13 @@ class DocumentParser {
         return $snippetObject;
     }
     
+    
+    function toAlias($text) {
+        $suff= $this->config['friendly_url_suffix'];
+        return str_replace(array('.xml'.$suff,'.rss'.$suff,'.js'.$suff,'.css'.$suff),array('.xml','.rss','.js','.css'),$text);
+    }
+
+    
     /** 
      * Convert URL tags [~...~] to URLs
      *
@@ -1203,7 +1214,11 @@ class DocumentParser {
             $suff= $this->config['friendly_url_suffix'];
             $thealias= '$aliases[\\1]';
             $thefolder= '$isfolder[\\1]';
-            $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder)";
+            if ($this->config['seostrict']=='1'){
+               $found_friendlyurl= "\$this->toAlias(\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1'))";
+            }else{
+               $found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff',$thealias,$thefolder,'\\1')";
+            }
             $not_found_friendlyurl= "\$this->makeFriendlyURL('$pref','$suff','" . '\\1' . "')";
             $out= "({$isfriendly} && isset({$thealias}) ? {$found_friendlyurl} : {$not_found_friendlyurl})";
             $documentSource= preg_replace($in, $out, $documentSource);
@@ -1211,6 +1226,39 @@ class DocumentParser {
             $in= '!\[\~([0-9]+)\~\]!is';
             $out= "index.php?id=" . '\1';
             $documentSource= preg_replace($in, $out, $documentSource);
+        }
+        // FIX URLs
+        if ((int)$this->documentIdentifier != 0 && $this->config['seostrict']=='1' ){
+            if ($this->config['site_status'] == 1) {
+                $myProtocol = ($_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+                $parts = explode("?", $_SERVER['REQUEST_URI']); 
+                $strictURL =  $this->toAlias($this->makeUrl($this->documentIdentifier));
+                $myDomain = $myProtocol . "://" . $_SERVER['HTTP_HOST'];
+                $newURL = $myDomain . $strictURL;
+                $requestedURL = $myDomain . $parts[0];
+                
+                if ($this->documentIdentifier == $this->config['site_start']){
+                    if ($requestedURL != $this->config['site_url']){
+                        // Force redirect of site start
+                        // $this->sendErrorPage();
+                        header("HTTP/1.1 301 Moved Permanently");
+                        $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]);  // Strip conflicting id/q from query string
+                        if ($qstring) header('Location: ' . $this->config['site_url'] . '?' . $qstring);
+                        else header('Location: ' . $this->config['site_url']);
+                        exit(0);
+                    }
+                }
+                
+                if ($parts[0] != $strictURL ){
+                    if ( $this->documentIdentifier>0 ){
+                    
+                    } else {                
+                        $this->sendErrorPage();
+                        exit(0);
+                    }
+                }
+                
+            }
         }
         return $documentSource;
     }
@@ -2109,6 +2157,10 @@ class DocumentParser {
             $host= $scheme == 'full' ? $this->config['site_url'] : $scheme . '://' . $_SERVER['HTTP_HOST'] . $host;
         }
 
+        //fix strictUrl by Bumkaka
+        if ($this->config['seostrict']=='1'){
+           $url = $this->toAlias($url);
+        }
         if ($this->config['xhtml_urls']) {
         	return preg_replace("/&(?!amp;)/","&amp;", $host . $virtualDir . $url);
         } else {

@@ -665,6 +665,23 @@ function confirmLangChange(el, lkey, elupd){
 <td colspan="2"><div class='split'></div></td>
 </tr>
       	
+  <?php if(!isset($seostrict)) $seostrict = '0';?>
+  <tr id="furlRow53" class="furlRow row1" style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+    <th><?php echo $_lang['seostrict_title'] ?></th>
+    <td>
+      <?php echo wrap_label($_lang["yes"],form_radio('seostrict','1', $seostrict=='1'));?><br />
+      <?php echo wrap_label($_lang["no"],form_radio('seostrict','0', $seostrict=='0'));?><br />
+     </td> 
+  </tr>
+  <tr id='furlRow54' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["seostrict_message"] ?></td>
+          </tr> 
+  <tr id='furlRow55' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
+  <td colspan="2"><div class='split'></div></td>
+  </tr>
+
+
           <tr id='furlRow7' class='row1' style="display: <?php echo $friendly_urls==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning" valign="top"><b><?php echo $_lang["friendly_alias_title"] ?></b></td>
             <td> <input onchange="documentDirty=true;" type="radio" name="friendly_alias_urls" value="1" <?php echo $friendly_alias_urls=='1' ? 'checked="checked"' : "" ; ?> />
