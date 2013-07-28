@@ -506,6 +506,26 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td colspan="2"><div class='split'></div></td>
+           </tr> 
+           
+           <tr>
+  <td><?php echo $_lang["cache_type_title"] ?></td>
+  <td>
+      
+  <input onchange="documentDirty=true;" type="radio" name="cache_type" value="1" 
+      <?php echo ($cache_type=='1') ? 'checked="checked"' : "" ; ?> /> 
+      <?php echo $_lang["cache_type_1"]?><br /> 
+      
+  <input onchange="documentDirty=true;" type="radio" name="cache_type" value="2" 
+      <?php echo ($cache_type=='2') ? 'checked="checked"' : "" ; ?> /> 
+      <?php echo $_lang["cache_type_2"]?><br /> 
+  </td>
+</tr>
+
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+            </tr>
+           
             <tr>
               <td nowrap class="warning"><b><?php echo $_lang["serveroffset_title"] ?></b></td>
               <td> <select name="server_offset_time" size="1" class="inputBox">

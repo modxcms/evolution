@@ -967,6 +967,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('warning_visibility', '1'),
 ('remember_last_tab', '0'),
 ('enable_bindings', '1'),
+('cache_type', '1'),
 ('make_folders', '1');
 
 

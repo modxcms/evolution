@@ -1131,3 +1131,7 @@ $_lang['configcheck_sysfiles_mod_msg'] = 'You have enabled the setting to check 
 
 $_lang['setting_resource_tree_node_name'] = 'The node name of a resource tree';
 $_lang['setting_resource_tree_node_name_desc'] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+
+$_lang["cache_type_title"] = 'Document cache type';
+$_lang["cache_type_1"] = 'Only document id (standart)';
+$_lang["cache_type_2"] = 'Document ID with $_GET';

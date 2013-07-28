@@ -1112,4 +1112,8 @@ $_lang['confirm_delete_dir_recursive'] = 'Вы уверены, что хотит
 $_lang['files.dynamic.php2']='files.dynamic.php2';
 $_lang['files.dynamic.php3'] = 'files.dynamic.php3';
 $_lang['files.dynamic.php4'] = 'files.dynamic.php4';
+
+$_lang["cache_type_title"] = 'Способ кеширования страниц ';
+$_lang["cache_type_1"] = 'Только с учетом ID (стандартный метод)';
+$_lang["cache_type_2"] = 'C учетом ID и $_GET';
 ?>
