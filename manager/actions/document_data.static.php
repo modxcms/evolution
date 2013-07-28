@@ -317,7 +317,7 @@ function movedocument() {
 	echo $children_output."\n";
 ?>
 	</div><!-- end tab-page -->
-
+<?php if($modx->config['cache_type'] !=2) { ?>
 	<!-- Page Source -->
 	<div class="tab-page" id="tabSource">
 		<h2 class="tab"><?php echo $_lang['page_data_source']?></h2>
@@ -338,6 +338,8 @@ function movedocument() {
 		echo $buffer;
 ?>
 	</div><!-- end tab-page -->
+<?php } ?>	
+
 </div><!-- end documentPane -->
 </div><!-- end sectionBody -->
 
