@@ -8,6 +8,40 @@ $data = $_POST;
 // lose the POST now, gets rid of quirky issue with Safari 3 - see FS#972
 unset($_POST);
 
+if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===false)
+{
+	$htaccess        = $modx->config['base_path'] . '.htaccess';
+	$sample_htaccess = $modx->config['base_path'] . 'ht.access';
+	if(!file_exists($htaccess))
+	{
+		if(file_exists($sample_htaccess))
+		{
+			if(!@rename($sample_htaccess,$htaccess))
+{
+	$warnings[] = $_lang["settings_friendlyurls_alert"];
+			}
+			elseif($modx->config['base_url']!=='/')
+			{
+				$subdir = rtrim($modx->config['base_url'],'/');
+				$_ = file_get_contents($htaccess);
+				$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$subdir}", $_);
+				if(!@file_put_contents($htaccess,$_))
+				{
+					$warnings[] = $_lang["settings_friendlyurls_alert2"];
+				}
+			}
+		}
+	}
+	else
+	{
+		$_ = file_get_contents($htaccess);
+		if(strpos($_,'RewriteBase')===false)
+		{
+			$warnings[] = $_lang["settings_friendlyurls_alert2"];
+		}
+	}
+}
+
 if (isset($data) && count($data) > 0) {
 	$savethese = array();
 	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
