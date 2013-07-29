@@ -1249,7 +1249,7 @@ class DocumentParser {
                     }
                 }
                 
-                if ($parts[0] != $strictURL ){
+                elseif ($parts[0] != $strictURL ){
                     if ( $this->documentIdentifier>0 ){
                     
                     } else {                
