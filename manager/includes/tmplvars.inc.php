@@ -278,6 +278,7 @@
 	} // end renderFormElement function
 
 	function ParseIntputOptions($v) {
+		global $modx;
 		$a = array();
 		if(is_array($v)) return $v;
 		else if(is_resource($v)) {
