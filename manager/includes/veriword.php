@@ -1,5 +1,11 @@
 <?php
-include_once("config.inc.php");
+include_once(dirname(__FILE__)."/../../assets/cache/siteManager.php");
+require_once('protect.inc.php');
+include_once('config.inc.php');
+include_once('document.parser.class.inc.php');
+$modx = new DocumentParser;
+$modx->db->connect();
+$modx->getSettings();
 
 $vword = new VeriWord(148,60);
 $vword->output_image();
@@ -71,23 +77,10 @@ class VeriWord {
     }
 
     function pick_word() {
-        global $modx,$database_server, $database_user, $database_password, $dbase, $table_prefix, $database_connection_charset, $database_connection_method;
+        global $modx;
         // set default words
         $words="MODX,Access,Better,BitCode,Chunk,Cache,Desc,Design,Excell,Enjoy,URLs,TechView,Gerald,Griff,Humphrey,Holiday,Intel,Integration,Joystick,Join(),Oscope,Genetic,Light,Likeness,Marit,Maaike,Niche,Netherlands,Ordinance,Oscillo,Parser,Phusion,Query,Question,Regalia,Righteous,Snippet,Sentinel,Template,Thespian,Unity,Enterprise,Verily,Veri,Website,WideWeb,Yap,Yellow,Zebra,Zygote";
-
-        // connect to the database
-        if(@$dbConn = $modx->db->connect($database_server, $database_user, $database_password)) {
-            $modx->db->selectDb($dbase);
-            $modx->db->query("{$database_connection_method} {$database_connection_charset}");
-            $sql = "SELECT * FROM $dbase.`".$table_prefix."system_settings` WHERE setting_name='captcha_words'";
-            $rs = $modx->db->query($sql);
-            $limit = $modx->db->getRecordCount($rs);
-            if($limit==1) {
-                $row = $modx->db->getRow($rs);
-                $words = $row['setting_value'];
-            }
-        }
-
+        $words = $modx->config['captcha_words'] ? $modx->config['captcha_words'] : $words;
         $arr_words = explode(",", $words);
 
         /* pick one randomly for text verification */
