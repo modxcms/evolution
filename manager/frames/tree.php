@@ -388,6 +388,12 @@
 </head>
 <body onClick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
 
+<?php
+    // invoke OnTreePrerender event
+    $evtOut = $modx->invokeEvent('OnManagerTreeInit',$_REQUEST);
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
 <div id="treeSplitter"></div>
 
 <table id="treeMenu" width="100%"  border="0" cellpadding="0" cellspacing="0">
@@ -458,7 +464,19 @@ if(isset($_REQUEST['tree_sortdir'])) {
 </div>
 
 <div id="treeHolder">
+<?php
+    // invoke OnTreeRender event
+    $evtOut = $modx->invokeEvent('OnManagerTreePrerender', $_REQUEST);
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
     <div><?php echo $_style['tree_showtree']; ?>&nbsp;<span class="rootNode" onClick="treeAction(0, '<?php echo addslashes($site_name); ?>');"><b><?php echo $site_name; ?></b></span><div id="treeRoot"></div></div>
+<?php
+    // invoke OnTreeRender event
+    $evtOut = $modx->invokeEvent('OnManagerTreeRender', $_REQUEST);
+    if (is_array($evtOut))
+        echo implode("\n", $evtOut);
+?>
 </div>
 
 <script type="text/javascript">
