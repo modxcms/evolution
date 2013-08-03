@@ -1916,12 +1916,12 @@ class DocumentParser {
         return $this->getChunk($chunkName);
     }
 	
-	function parsePlaceholders($source, $placeholders, $prefix = '[+', $suffix = '+]') {
-		foreach ($placeholders as $key => $value) {
+    function parsePlaceholders($source, $placeholders, $prefix = '[+', $suffix = '+]') {
+	foreach ($placeholders as $key => $value) {
             $source = str_replace($prefix . $key . $suffix, $value, $source);
         }
-		return $source;
-	}
+	return $source;
+    }
 	
     function parseChunk($chunkName, $chunkArr, $prefix= '[+', $suffix= '+]') {
         if (!is_array($chunkArr)) {
