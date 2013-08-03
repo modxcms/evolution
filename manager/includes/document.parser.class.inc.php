@@ -1915,15 +1915,19 @@ class DocumentParser {
     function putChunk($chunkName) { // alias name >.<
         return $this->getChunk($chunkName);
     }
-
-    function parseChunk($chunkName, $chunkArr, $prefix= "{", $suffix= "}") {
+	
+    function parsePlaceholders($source, $placeholders, $prefix = '[+', $suffix = '+]') {
+	foreach ($placeholders as $key => $value) {
+            $source = str_replace($prefix . $key . $suffix, $value, $source);
+        }
+	return $source;
+    }
+	
+    function parseChunk($chunkName, $chunkArr, $prefix= '[+', $suffix= '+]') {
         if (!is_array($chunkArr)) {
             return false;
         }
-        $chunk= $this->getChunk($chunkName);
-        foreach ($chunkArr as $key => $value) {
-            $chunk= str_replace($prefix . $key . $suffix, $value, $chunk);
-        }
+        $chunk = $this->parsePlaceholders($this->getChunk($chunkName), $chunkArr, $prefix, $suffix);
         return $chunk;
     }
 
