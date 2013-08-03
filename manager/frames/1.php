@@ -4,6 +4,7 @@ $_SESSION['browser'] = (strpos($_SERVER['HTTP_USER_AGENT'],'MSIE')!==false) ? 'i
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 if(!isset($modx->config['manager_menu_height'])) $modx->config['manager_menu_height'] = '70';
 if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_width']  = '260';
+$modx->invokeEvent('OnManagerPreFrameLoader',array('action'=>$action));
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html <?php echo ($modx_textdir ? 'dir="rtl" lang="' : 'lang="').$mxla.'" xml:lang="'.$mxla.'"'; ?>>
@@ -30,3 +31,5 @@ if(!isset($modx->config['manager_tree_width']))  $modx->config['manager_tree_wid
 </frameset>
 <noframes>This software requires a browser with support for frames.</noframes>
 </html>
+<?php
+$modx->invokeEvent('OnManagerFrameLoader',array('action'=>$action));
