@@ -79,6 +79,17 @@ if ($friendly_urls) {
 				}
 				$alias = $tempAlias;
 			}
+		}else{
+                if ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND parent=$parent AND alias='$alias'") != 0) {
+                        $cnt = 1;
+                        $tempAlias = $alias;
+                        while ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND parent=$parent AND alias='$tempAlias'") != 0) {
+                                $tempAlias = $alias;
+                                $tempAlias .= $cnt;
+                                $cnt++;
+                        }
+                        $alias = $tempAlias;
+                }                       
 		}
 	}
 
@@ -113,6 +124,26 @@ if ($friendly_urls) {
 	// strip alias of special characters
 	elseif ($alias) {
 		$alias = $modx->stripAlias($alias);
+		//webber
+		$docid = $modx->db->getValue("SELECT id FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias' AND parent=$parent LIMIT 1");
+                if ($docid > 0) {
+                        if ($actionToTake == 'edit') {
+                                $modx->manager->saveFormValues(27);
+                                $url = "index.php?a=27&id=" . $id;
+                                include_once "header.inc.php";
+                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
+                                include_once "footer.inc.php";
+                                exit;
+                        } else {
+                                $modx->manager->saveFormValues(4);
+                                $url = "index.php?a=4";
+                                include_once "header.inc.php";
+                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
+                                include_once "footer.inc.php";
+                                exit;
+                        }
+                }
+        //end webber        
 	}
 }
 elseif ($alias) {
