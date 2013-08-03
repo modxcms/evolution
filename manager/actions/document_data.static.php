@@ -115,15 +115,33 @@ $sql = 'SELECT DISTINCT sc.id '.
 $rs = $modx->db->query($sql);
 $numRecords = $modx->db->getRecordCount($rs);
 
+$sort = isset($_REQUEST['sort']) ? $_REQUEST['sort'] : 'createdon' ;
+$dir = isset($_REQUEST['dir'])? $_REQUEST['dir']: 'DESC';
+
 // Get child documents (with paging)
 $sql = 'SELECT DISTINCT sc.* '.
        'FROM '.$tbl_site_content.' AS sc '.
        'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document = sc.id '.
        'WHERE sc.parent=\''.$content['id'].'\' '.
        'AND ('.$access.') '.
+	   'ORDER BY '.$sort.' '.$dir.
        $childsTable->handlePaging(); // add limit clause
-
+$filter_sort='';
+$filter_dir='';
 if ($numRecords > 0) {
+	$filter_sort='<p><select size="1" name="sort" onchange="document.location=\'index.php?a=3&id='.$id.'&dir='.$dir.'&sort=\'+this.options[this.selectedIndex].value">'.
+		'<option value="createdon"'.(($sort=='createdon') ? ' selected' : '').'>'.$_lang['createdon'].'</option>'.
+		'<option value="pub_date"'.(($sort=='pub_date') ? ' selected' : '').'>'.$_lang["page_data_publishdate"].'</option>'.
+		'<option value="pagetitle"'.(($sort=='pagetitle') ? ' selected' : '').'>'.$_lang['pagetitle'].'</option>'.
+		'<option value="menuindex"'.(($sort=='menuindex') ? ' selected' : '').'>'.$_lang['resource_opt_menu_index'].'</option>'.
+//********  resource_opt_is_published - //
+		'<option value="published"'.(($sort=='published') ? ' selected' : '').'>'.$_lang['resource_opt_is_published'].'</option>'.
+//********//
+	'</select>';
+	$filter_dir='<select size="1" name="dir" onchange="document.location=\'index.php?a=3&id='.$id.'&sort='.$sort.'&dir=\'+this.options[this.selectedIndex].value">'.
+		'<option value="DESC"'.(($dir=='DESC') ? ' selected' : '').'>'.$_lang['sort_desc'].'</option>'.
+		'<option value="ASC"'.(($dir=='ASC') ? ' selected' : '').'>'.$_lang['sort_asc'].'</option>'.
+	'</select></p>';
 	if (!$rs = $modx->db->query($sql)) {
 		// sql error
 		$e->setError(1);
@@ -151,6 +169,8 @@ if ($numRecords > 0) {
 		$listTableHeader = array(
 			'docid' =>  $_lang['id'],
 			'title' =>  $_lang['resource_title'],
+			'createdon' => $_lang['createdon'],
+			'pub_date' => $_lang['page_data_publishdate'],
 			'status' => $_lang['page_data_status'],
 			'edit' =>   $_lang['mgrlog_action'],
 		);
@@ -159,17 +179,49 @@ if ($numRecords > 0) {
 
 		$limitClause = $childsTable->handlePaging();
 
+$sd=isset($_REQUEST['dir'])?'&amp;dir='.$_REQUEST['dir']:'&amp;dir=DESC';
+$sb=isset($_REQUEST['sort'])?'&amp;sort='.$_REQUEST['sort']:'&amp;sort=createdon';
+$pg=isset($_REQUEST['page'])?'&amp;page='.(int)$_REQUEST['page']:'';
+$add_path=$sd.$sb.$pg;
+
+
 		$listDocs = array();
 		foreach($resource as $k => $children){
+			/*
 			$listDocs[] = array(
 				'docid' =>  $children['id'],
-				'title' =>  $children['pagetitle'],
+				'title' =>  (($children['deleted'] ? ('<s>'.$children['pagetitle'].'</s>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].'">' . $children['pagetitle'] . '</a>') : $children['pagetitle'] ))),
+				'createdon' =>  ($modx->toDateFormat($children['createdon']+$server_offset_time,'dateOnly')),
+				'pub_date' =>  ($children['pub_date']? ($modx->toDateFormat($children['pub_date']+$server_offset_time,'dateOnly')) : ''),
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
-				'edit' =>   '<a href="index.php?a=3&amp;id='.$children['id'].'"><img src="'. $_style["icons_preview_resource"].'" />'.$_lang['view'].'</a>'.(($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'"><img src="' . $_style["icons_save"] .'" />'.$_lang['edit'].'</a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'"><img src="' . $_style["icons_move_document"] .'" />'.$_lang['move'].'</a>' : ''),
+				'edit' =>   (($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].'" title="'.$_lang['edit'].'"><img src="' . $_style["icons_save"] .'" /></a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].'" title="'.$_lang['move'].'"><img 
+				src="' . $_style["icons_move_document"] .'" /></a>&nbsp;<a href="index.php?a=61&amp;id='.$children['id'].'" title="'.$_lang["publish_resource"].'"><img src="' . $_style["icons_publish_document"] .'" /></a>&nbsp;<a 
+				href="index.php?a=62&amp;id='.$children['id'].'" title="'.$_lang["unpublish_resource"].'"><img src="' . $_style["icons_unpublish_resource"] .'" /></a>' : '') .
+				(($modx->hasPermission('delete_document')) ? '&nbsp;<a href="index.php?a=6&amp;id='.$children['id'].'" title="'.$_lang['delete_resource'].'"><img src="' . $_style["icons_delete_document"] .'" /></a>&nbsp;<a href="index.php?a=63&amp;id='.$children['id'].'" title="'.$_lang['undelete_resource'].'"><img 
+				src="' . $_style["icons_undelete_resource"] .'" /></a>' : ''),
 			);
+			*/
+			
+			// дописываем в заголовок класс для неопубликованных плюс по всем ссылкам обратный путь 
+			// для сохранения сортировки
+			
+			$listDocs[] = array(
+				'docid' =>  $children['id'],
+				'title' =>  (($children['deleted'] ? ('<s>'.$children['pagetitle'].'</s>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'">' . ($children['published']?$children['pagetitle']:'<span class=unpublish>'.$children['pagetitle'].'</span>') . '</a>') : $children['pagetitle'] ))),
+				'createdon' =>  ($modx->toDateFormat($children['createdon']+$server_offset_time,'dateOnly')),
+				'pub_date' =>  ($children['pub_date']? ($modx->toDateFormat($children['pub_date']+$server_offset_time,'dateOnly')) : ''),
+				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
+				'edit' =>   (($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'" title="'.$_lang['edit'].'"><img src="' . $_style["icons_save"] .'" /></a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].$add_path.'" title="'.$_lang['move'].'"><img 
+				src="' . $_style["icons_move_document"] .'" /></a>&nbsp;<a href="index.php?a=61&amp;id='.$children['id'].$add_path.'" title="'.$_lang["publish_resource"].'"><img src="' . $_style["icons_publish_document"] .'" /></a>&nbsp;<a 
+				href="index.php?a=62&amp;id='.$children['id'].$add_path.'" title="'.$_lang["unpublish_resource"].'"><img src="' . $_style["icons_unpublish_resource"] .'" /></a>' : '') .
+				(($modx->hasPermission('delete_document')) ? '&nbsp;<a href="index.php?a=6&amp;id='.$children['id'].$add_path.'" title="'.$_lang['delete_resource'].'"><img src="' . $_style["icons_delete_document"] .'" /></a>&nbsp;<a href="index.php?a=63&amp;id='.$children['id'].$add_path.'" title="'.$_lang['undelete_resource'].'"><img 
+				src="' . $_style["icons_undelete_resource"] .'" /></a>' : ''),
+			);
+			
+			/****************/
 		}
 
-		$childsTable->createPagingNavigation($numRecords,'a=3&amp;id='.$content['id']);
+		$childsTable->createPagingNavigation($numRecords,'a=3&id='.$content['id'].'&dir='.$dir.'&sort='.$sort);
 		$children_output = $childsTable->create($listDocs,$listTableHeader,'index.php?a=3&amp;id='.$content['id']);
 	}
 } else {
@@ -304,7 +356,7 @@ function movedocument() {
 	<!-- View Children -->
 	<div class="tab-page" id="tabChildren">
 		<h2 class="tab"><?php echo $_lang['view_child_resources_in_container']?></h2>
-		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );</script>
+		<script type="text/javascript">docSettings.addTabPage( document.getElementById( "tabChildren" ) );docSettings.setSelectedIndex(1);</script>
 <?php if ($modx->hasPermission('new_document')) { ?>
 	
 			<ul class="actionButtons">
@@ -314,6 +366,7 @@ function movedocument() {
 <?php }
 	if ($numRecords > 0)
 		echo '<h4><span class="publishedDoc">'.$numRecords.'</span> '.$_lang['resources_in_container'].' (<strong>'.$content['pagetitle'].'</strong>)</h4>'."\n";
+	echo $filter_sort.$filter_dir;
 	echo $children_output."\n";
 ?>
 	</div><!-- end tab-page -->

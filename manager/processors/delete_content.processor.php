@@ -9,6 +9,19 @@ if(!$modx->hasPermission('delete_document')) {
 <?php
 // check the document doesn't have any children
 $id=intval($_GET['id']);
+
+/*******ищем родителя чтобы к нему вернуться********/
+$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
+$pid=($pid==0?$id:$pid);
+
+/************ а заодно и путь возврата (сам путь внизу файла) **********/
+$sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
+$sb=isset($_REQUEST['sort'])?'&sort='.$_REQUEST['sort']:'&sort=createdon';
+$pg=isset($_REQUEST['page'])?'&page='.(int)$_REQUEST['page']:'';
+$add_path=$sd.$sb.$pg;
+
+/*****************************/
+
 $deltime = time();
 $children = array();
 
@@ -111,7 +124,12 @@ if(!$rs) {
 	$sync->setReport(false);
 	$sync->emptyCache(); // first empty the cache
 	// finished emptying cache - redirect
-	$header="Location: index.php?r=1&a=7&id=$id&dv=1";
+//	$header="Location: index.php?r=1&a=7&id=$id&dv=1";
+
+	//новый путь
+	$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
+	
+	
 	header($header);
 }
 ?>
