@@ -134,7 +134,7 @@ class TinyMCE
 			$key = '"' . $key . '"';
 			$theme_options .= "<option value={$key}{$selected}>{$value}</option>\n";
 		}
-		$ph['display'] = ($_SESSION['browser']!=='ie') ? 'table-row' : 'block';
+		$ph['display'] = ($_SESSION['browser']==='modern') ? 'table-row' : 'block';
 		$ph['display'] = $modx->config['use_editor']==1 ? $ph['display']: 'none';
 		
 		$ph['theme_options'] = $theme_options;
