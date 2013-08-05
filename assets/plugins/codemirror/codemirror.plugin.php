@@ -4,7 +4,7 @@
  * @description JavaScript library that can be used to create a relatively pleasant editor interface
  *
  * @released    Jun 5, 2013
- * @CodeMirror  3.13
+ * @CodeMirror  1.1
  *
  * @required    MODx 0.9.6.3+
  *              CodeMirror  3.13 : pl
@@ -29,7 +29,8 @@ $tabSize                = (isset($tabSize)                  ? $tabSize          
 $lineWrapping           = (isset($lineWrapping)             ? $lineWrapping             : false);
 $matchBrackets          = (isset($matchBrackets)            ? $matchBrackets            : false);
 $activeLine           	= (isset($activeLine)             	? $activeLine            	: false);
-$emmet					= (($emmet == 'true')? '<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>' : "");
+$emmet					= (($emmet == 'true')? 	'<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>' 	: "");
+$search					= (($search == 'true')? '<script src="'.$_CM_URL.'cm/search-compressed.js"></script>' 	: "");
 /*
  * This plugin is only valid in "text" mode. So check for the current Editor
  */
@@ -90,14 +91,13 @@ switch($modx->Event->name) {
         $this->logEvent(1, 2, 'Undefined event : <b>'.$modx->Event->name.'</b> in <b>'.$this->Event->activePlugin.'</b> Plugin', 'CodeMirror Plugin : '.$modx->Event->name);
 }
 if (('none' == $rte) && $mode) {
-    $output = '';
-    $output .= <<< HEREDOC
+    $output = <<< HEREDOC
 	<link rel="stylesheet" href="{$_CM_URL}cm/lib/codemirror.css">
 	<link rel="stylesheet" href="{$_CM_URL}cm/theme/{$theme}.css">
 	<script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
 	<script src="{$_CM_URL}cm/addon-compressed.js"></script>
 	<script src="{$_CM_URL}cm/mode/{$lang}-compressed.js"></script>
-	{$emmet}
+	{$emmet}{$search}
 	
 	<script type="text/javascript">
 		// Add mode MODx for syntax highlighting. Dfsed on $mode
@@ -183,7 +183,10 @@ if (('none' == $rte) && $mode) {
 			indentWithTabs: true,
 			extraKeys:{
 				"Ctrl-Space": function(cm){
-					foldFunc_html(cm, cm.getCursor().line);
+					var n = cm.getCursor().line;
+					var info = cm.lineInfo(n);
+					foldFunc(cm, n);
+					cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker("+"));
 				},
 				"F11": function(cm) {
 					setFullScreen(cm, !isFullScreen(cm));
@@ -212,25 +215,35 @@ if (('none' == $rte) && $mode) {
 				}
 			}
 		};
-		var foldFunc_html = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
+		var foldFunc = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
 		var myTextArea = document.getElementsByName('{$textarea_name}')[0];
 		var myCodeMirror = (CodeMirror.fromTextArea(myTextArea, config));
+		// reset onchange tab
 		$$('.tab-row .tab').addEvents({
 			click: function() {
 				myCodeMirror.refresh();
 			}
 		});
-		if ("true" == localStorage["cm_fullScreen_{$object_id}"]) setFullScreen(myCodeMirror, !isFullScreen(myCodeMirror));
+		// get data in localStorage
+		if ("true" == localStorage["cm_fullScreen_{$object_id}"]){
+			setFullScreen(myCodeMirror, !isFullScreen(myCodeMirror));
+			myCodeMirror.hasFocus();
+		}
+		if (localStorage["history_{$object_id}"] !== undefined){
+			var history = JSON.parse(localStorage["history_{$object_id}"]);
+			myCodeMirror.doc.setHistory(history);
+		}
+		// add event
 		myCodeMirror.on("gutterClick", function(cm, n) {
 			var info = cm.lineInfo(n);
-			cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+			foldFunc(cm, n);
+			cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker("+"));
 		});
-		function makeMarker() {
-			var marker = document.createElement("div");
-			marker.style.color = "#822";
-			marker.innerHTML = "●";
-			return marker;
-		}
+		myCodeMirror.on("change", function(cm, n) {
+			var history = myCodeMirror.doc.getHistory();
+			localStorage['history_{$object_id}'] = JSON.stringify(history);
+			documentDirty=true;
+		});
     </script>
 HEREDOC;
     $modx->Event->output($output);
