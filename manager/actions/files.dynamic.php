@@ -447,6 +447,9 @@ if($_REQUEST['mode']=="edit") {
 </form>
 </div>
 <?php
+$_CM_BASE = 'assets/plugins/codemirror/';
+$_CM_URL = $modx->config['site_url'] . $_CM_BASE;
+require(MODX_BASE_PATH. $_CM_BASE .'cm/codemirror.files.php');
 }
 
 function ls($curpath)
