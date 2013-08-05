@@ -979,6 +979,15 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('enable_bindings', '1'),
 ('seostrict', '0'),
 ('cache_type', '1'),
+('maxImageWidth', '1600'),
+('maxImageHeight', '1200'),
+('thumbWidth', '150'),
+('thumbHeight', '150'),
+('thumbsDir', '.thumbs'),
+('jpegQuality', '90'),
+('denyZipDownload', '0'),
+('denyExtensionRename', '0'),
+('showHiddenFiles', '0'),
 ('make_folders', '1');
 
 

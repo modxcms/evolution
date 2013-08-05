@@ -1518,6 +1518,128 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
 		  <tr class='row1'>
             <td colspan="2">
+            </td>
+          </tr>
+        </table>
+      </div>
+	  
+	  	      <!-- KCFinder settings -->
+      <div class="tab-page" id="tabPage8">
+        <h2 class="tab"><?php echo $_lang["settings_KC"] ?></h2>
+        <script type="text/javascript">tpSettings.addTabPage( document.getElementById( "tabPage8" ) );</script>
+        <table border="0" cellspacing="0" cellpadding="3">
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["maxImageWidth"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="maxImageWidth" value="<?php echo isset($maxImageWidth) ? $maxImageWidth : "1600" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["maxImageWidth_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["maxImageHeight"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="maxImageHeight" value="<?php echo isset($maxImageHeight) ? $maxImageHeight : "1200" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["maxImageHeight_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["thumbWidth"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="thumbWidth" value="<?php echo isset($thumbWidth) ? $thumbWidth : "150" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["thumbWidth_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["thumbHeight"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="thumbHeight" value="<?php echo isset($thumbHeight) ? $thumbHeight : "150" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["thumbHeight_message"]?></td>
+          </tr>
+
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["thumbsDir"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="thumbsDir" value="<?php echo isset($thumbsDir) ? $thumbsDir : ".thumbs" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["thumbsDir_message"]?></td>
+          </tr>
+		  <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["jpegQuality"]?></b></td>
+            <td>
+              <input onchange="documentDirty=true;" type='text' maxlength='4' style="width: 50px;" name="jpegQuality" value="<?php echo isset($jpegQuality) ? $jpegQuality : "90" ; ?>" />
+            </td>
+          </tr>
+          <tr>
+            <td width="200">&nbsp;</td>
+            <td class='comment'><?php echo $_lang["jpegQuality_message"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+		  </tr>
+          <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["denyZipDownload"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="denyZipDownload" value="0" <?php echo $denyZipDownload=='0' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["no"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="denyZipDownload" value="1" <?php echo (!isset($denyZipDownload) || $denyZipDownload=='1') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["yes"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+		  </tr>
+		  <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["denyExtensionRename"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="denyExtensionRename" value="0" <?php echo $denyExtensionRename=='0' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["no"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="denyExtensionRename" value="1" <?php echo (!isset($denyExtensionRename) || $denyExtensionRename=='1') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["yes"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+		  </tr>
+		  <tr>
+               <td nowrap class="warning"><b><?php echo $_lang["showHiddenFiles"] ?></b></td>
+               <td> <input onchange="documentDirty=true;" type="radio" name="showHiddenFiles" value="0" <?php echo $showHiddenFiles=='0' ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["no"]?><br />
+                 <input onchange="documentDirty=true;" type="radio" name="showHiddenFiles" value="1" <?php echo (!isset($showHiddenFiles) || $showHiddenFiles=='1') ? 'checked="checked"' : ""; ?> />
+                 <?php echo $_lang["yes"]?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+		  </tr>
+		  
+		  <tr class='row1'>
+            <td colspan="2">
 		        <?php
 					// invoke OnMiscSettingsRender event
 					$evtOut = $modx->invokeEvent("OnMiscSettingsRender");
