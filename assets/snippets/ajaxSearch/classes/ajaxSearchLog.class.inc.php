@@ -104,7 +104,7 @@ class AjaxSearchLog {
     function setLogRecord($rs) {
         global $modx;
         if ($this->_purge) $this->_purgeLogs();
-        $asString = mysql_real_escape_string($rs['searchString']);
+        $asString = $modx->db->escape($rs['searchString']);
         $asNbResults = $rs['nbResults'];
         $asResults = trim($rs['results']);
         $asCmt = '';

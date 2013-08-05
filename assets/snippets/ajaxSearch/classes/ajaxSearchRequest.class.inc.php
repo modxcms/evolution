@@ -44,7 +44,7 @@ class AjaxSearchRequest {
     */
     function doSearch($searchString, $advSearch, $cfg, $bsf, $fClause) {
         global $modx;
-        $searchString = mysql_real_escape_string($searchString);
+        $searchString = $modx->db->escape($searchString);
         $this->cfg = $cfg;
         $records = NULL;
         $results = array();
@@ -66,7 +66,7 @@ class AjaxSearchRequest {
             if ($this->dbg) $this->asUtil->dbgRecord("End of select");
             $results = $this->_appendTvs($records);
         }
-        mysql_free_result($records);
+        $modx->db->freeResult($records);
         return $results;
     }
     /*
@@ -619,7 +619,7 @@ class AjaxSearchRequest {
                 $selectid = "SELECT DISTINCT id, name FROM " . $this->_getShortTableName('site_tmplvars');
                 $selectid .= " WHERE name = '" . $tv . "'";
                 $rs = $modx->db->query($selectid);
-                $row = mysql_fetch_assoc($rs);
+                $row = $modx->db->getRow($rs);
 
                 $alias = $abrev . $i;
                 $nm = ($name) ? $name : $tv;
@@ -645,7 +645,7 @@ class AjaxSearchRequest {
             $selectid .= " FROM " . $this->_getShortTableName('site_tmplvars');
             $selectid .= " WHERE name in (" . $lstTvs. ")";
             $rs = $modx->db->query($selectid);
-            $row = mysql_fetch_assoc($rs);
+            $row = $modx->db->getRow($rs);
 
             $subselect = "SELECT DISTINCT " . $abrev . ".contentid , " . $abrev . ".value ";
             $subselect.= "FROM " . $this->_getShortTableName('site_tmplvar_contentvalues') . " " . $abrev . " ";
