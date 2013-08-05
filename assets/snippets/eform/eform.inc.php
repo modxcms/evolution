@@ -484,7 +484,6 @@ function eForm($modx,$params) {
 				if(!$noemail) {
 					if($sendirect) $to = $firstEmail;
 					$modx->mail->IsMail();
-					$modx->mail->CharSet = $modx->config['modx_charset'];
 					$modx->mail->IsHTML($isHtml);
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
@@ -501,7 +500,6 @@ function eForm($modx,$params) {
 				# send user a copy of the report
 				if($ccsender && $firstEmail != '') {
 					$modx->mail->IsMail();
-					$modx->mail->CharSet = $modx->config['modx_charset'];
 					$modx->mail->IsHTML($isHtml);
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
@@ -518,7 +516,6 @@ function eForm($modx,$params) {
 				if ($autotext && $firstEmail != '') {
 					$autotext = formMerge($autotext,$fields);
 					$modx->mail->IsMail();
-					$modx->mail->CharSet = $modx->config['modx_charset'];
 					$modx->mail->IsHTML($isHtml);
 					$modx->mail->From		= ($autosender)? $autosender:$from;
 					$modx->mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
@@ -534,7 +531,6 @@ function eForm($modx,$params) {
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
 					$modx->mail->IsMail();
-					$modx->mail->CharSet = $modx->config['modx_charset'];
 					$modx->mail->IsHTML($isHtml);
 					$modx->mail->From		= $from;
 					$modx->mail->FromName	= $fromname;
