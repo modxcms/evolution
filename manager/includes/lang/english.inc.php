@@ -141,7 +141,7 @@ $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'This means that your U
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'The Unauthorized page defined in the site configuration settings is not published.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'This means that your Unauthorized page is inaccessible to the general public. Publish the page or make sure it is assigned to an existing Resource in your Site Tree in the Tools &gt; Configuration menu.';
 $_lang["configcheck_validate_referer"] = 'Security Warning: HTTP Header Validation';
-$_lang["configcheck_validate_referer_msg"] = "The configuration setting <strong>Validate HTTP_REFERER headers?</strong> is Off. We recommend turning it On. <a href=\"index.php?a=17\">Go to Configuration options</a>";
+$_lang["configcheck_validate_referer_msg"] = 'The configuration setting <strong>Validate HTTP_REFERER headers?</strong> is Off. We recommend turning it On. <a href="index.php?a=17">Go to Configuration options</a>';
 $_lang["configcheck_warning"] = 'Configuration warning: ';
 $_lang["configcheck_what"] = 'What does this mean?';
 $_lang["confirm_block"] = 'Are you sure you want to block this user?';
@@ -205,7 +205,7 @@ $_lang["datepicker_offset"] = 'Datepicker offset';
 $_lang["datepicker_offset_message"] = 'The number of years to show in the past on the datepicker.';
 $_lang["datetime_format"] = 'Date format';
 $_lang["datetime_format_message"] = 'The format for dates in the Manager.';
-$_lang["default"] = 'Default:'; 
+$_lang["default"] = 'Default:';
 $_lang["defaultcache_message"] = 'Select \'Yes\' to make all new Resources cacheable by default.';
 $_lang["defaultcache_title"] = 'Cacheable default';
 $_lang["defaultmenuindex_message"] = 'Select \'Yes\' to turn on automatic menu index incrementing by default.';
@@ -404,21 +404,21 @@ $_lang["info"] = 'Info';
 $_lang["information"] = 'Information';
 $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Insert';
-$_lang["maxImageWidth"]= 'Maximum image width';
-$_lang["maxImageHeight"]= 'Maximum image height';
-$_lang["thumbWidth"]= 'Maximum thumbnail width';
-$_lang["thumbHeight"]= 'Maximum thumbnail height';
-$_lang["thumbsDir"]= 'Thumbnails directory location';
-$_lang["jpegQuality"]= 'JPEG compression';
+$_lang["maxImageWidth"] = 'Maximum image width';
+$_lang["maxImageHeight"] = 'Maximum image height';
+$_lang["thumbWidth"] = 'Maximum thumbnail width';
+$_lang["thumbHeight"] = 'Maximum thumbnail height';
+$_lang["thumbsDir"] = 'Thumbnails directory location';
+$_lang["jpegQuality"] = 'JPEG compression';
 $_lang["denyZipDownload"] = 'Disable zip-archives downloading';
 $_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
-$_lang["maxImageWidth_message"]= 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
-$_lang["maxImageHeight_message"]= 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
-$_lang["thumbWidth_message"]= 'Maximum thumbnail width.';
-$_lang["thumbHeight_message"]= 'Maximum thumbnail height.';
-$_lang["thumbsDir_message"]= 'The name of previews folder.';
-$_lang["jpegQuality_message"]= 'JPEG compression quality of thumbnails and resized images';
-$_lang["showHiddenFiles"]= 'Show hidden files in file browser';
+$_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
+$_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
+$_lang["thumbsDir_message"] = 'The name of previews folder.';
+$_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
+$_lang["showHiddenFiles"] = 'Show hidden files in file browser';
 $_lang["keyword"] = 'Keyword';
 $_lang["keywords"] = 'Keywords';
 $_lang["keywords_intro"] = 'To edit a keyword, simply type in the new keyword in the text field next to the keyword you wish to change. To delete a keyword, check the \'delete\' box for that keyword. If you check the keyword\'s delete box, and also change it\'s name, it will be deleted, and the renaming of the keyword will not take place!';
@@ -933,9 +933,42 @@ $_lang["sunday"] = 'Sunday';
 $_lang["sys_alert"] = 'System Alert';
 $_lang["sysinfo_activity_message"] = 'This list show which Resources have been recently edited by your users.';
 $_lang["sysinfo_userid"] = 'User';
-$_lang["system_email_signup"] = "Hello [+uid+] \n\nHere are your login details for [+sname+] Content Manager:\n\nUsername: [+uid+]\nPassword: [+pwd+]\n\nOnce you log into the Content Manager ([+surl+]), you can change your password.\n\nRegards,\nSite Administrator";
-$_lang["system_email_webreminder"] = "Hello [+uid+]\n\nTo activate your new password click the following link:\n\n[+surl+]\n\nIf successful you can use the following password to login:\n\nPassword:[+pwd+]\n\nIf you did not request this email then please ignore it.\n\nRegards,\nSite Administrator";
-$_lang["system_email_websignup"] = "Hello [+uid+]\n\nHere are your login details for [+sname+]:\n\nUsername: [+uid+]\nPassword: [+pwd+]\n\nOnce you log into [+sname+] ([+surl+]), you can change your password.\n\nRegards,\nSite Administrator";
+$_lang["system_email_signup"] = 'Hello [+uid+] 
+
+Here are your login details for [+sname+] Content Manager:
+
+Username: [+uid+]
+Password: [+pwd+]
+
+Once you log into the Content Manager ([+surl+]), you can change your password.
+
+Regards,
+Site Administrator';
+$_lang["system_email_webreminder"] = 'Hello [+uid+]
+
+To activate your new password click the following link:
+
+[+surl+]
+
+If successful you can use the following password to login:
+
+Password:[+pwd+]
+
+If you did not request this email then please ignore it.
+
+Regards,
+Site Administrator';
+$_lang["system_email_websignup"] = 'Hello [+uid+]
+
+Here are your login details for [+sname+]:
+
+Username: [+uid+]
+Password: [+pwd+]
+
+Once you log into [+sname+] ([+surl+]), you can change your password.
+
+Regards,
+Site Administrator';
 $_lang["table_hoverinfo"] = 'Hover the mouse cursor over a table\'s name to see a short description of the table\'s function (not all tables have <i>comments</i> set).';
 $_lang["table_prefix"] = 'Table prefix';
 $_lang["tag"] = 'Tag';
@@ -1099,18 +1132,18 @@ $_lang["yourinfo_title"] = 'Your info';
 $_lang["yourinfo_total_logins"] = 'Total number of logins:';
 $_lang["yourinfo_username"] = 'You are logged in as:';
 
-$_lang['a17_error_reporting_title'] = 'Detection level of the PHP error';
-$_lang['a17_error_reporting_msg'] = 'Set the detection level of the PHP error.';
-$_lang['a17_error_reporting_opt0'] = 'Ignore all';
-$_lang['a17_error_reporting_opt1'] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang['a17_error_reporting_opt2'] = 'Detect all errors except E_NOTICE';
-$_lang['a17_error_reporting_opt99'] = 'Detect all';
+$_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
+$_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
+$_lang["a17_error_reporting_opt0"] = 'Ignore all';
+$_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Detect all';
 
 $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
 
-$_lang["enable_bindings_title"]  = 'Enable @Bindings commands';
-$_lang['enable_bindings_message'] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+$_lang["enable_bindings_title"] = 'Enable @Bindings commands';
+$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
 
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
@@ -1136,17 +1169,17 @@ $_lang["not_readable_dir"] = 'Can not read this directory.';
 $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
 
-$_lang['make_folders_title'] = 'Make end slash URL at the container';
-$_lang['make_folders_message'] = 'The slash to append to Resources set as containers when using FURLs.';
+$_lang["make_folders_title"] = 'Make end slash URL at the container';
+$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
 
-$_lang['check_files_onlogin_title'] = 'Check core files on login';
-$_lang['check_files_onlogin_message'] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["check_files_onlogin_title"] = 'Check core files on login';
+$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
 
-$_lang['configcheck_sysfiles_mod'] = 'Important System Files have been modified.';
-$_lang['configcheck_sysfiles_mod_msg'] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, '.MGR_DIR.'/index.php, '.MGR_DIR.'/includes/config.inc.php)';
+$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, '.MGR_DIR.'/index.php, '.MGR_DIR.'/includes/config.inc.php)';
 
-$_lang['setting_resource_tree_node_name'] = 'The node name of a resource tree';
-$_lang['setting_resource_tree_node_name_desc'] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
+$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 
 $_lang["cache_type_title"] = 'Document caching type';
 $_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
