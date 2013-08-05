@@ -368,6 +368,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
   `dob` int(10) NOT NULL DEFAULT '0',
   `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
   `country` varchar(5) NOT NULL default '',
+  `street` varchar(255) NOT NULL DEFAULT '',
+  `city` varchar(255) NOT NULL DEFAULT '',
   `state` varchar(25) NOT NULL default '',
   `zip` varchar(25) NOT NULL default '',
   `fax` varchar(100) NOT NULL default '',
@@ -521,6 +523,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
   `dob` int(10) NOT NULL DEFAULT '0',
   `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
   `country` varchar(5) NOT NULL default '',
+  `street` varchar(255) NOT NULL DEFAULT '',
+  `city` varchar(255) NOT NULL DEFAULT '',
   `state` varchar(25) NOT NULL default '',
   `zip` varchar(25) NOT NULL default '',
   `fax` varchar(100) NOT NULL default '',
@@ -881,7 +885,7 @@ REPLACE INTO `{PREFIX}manager_users`
 
 REPLACE INTO `{PREFIX}user_attributes` 
 (id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, state, zip, fax, photo, comment) VALUES 
-(1, 1, 'Default admin account', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '', '', '', '');
+(1, 1, 'Default admin account', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '','', '', '', '', '');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
