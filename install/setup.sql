@@ -838,6 +838,16 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WH
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
 
 
+ALTER TABLE `{PREFIX}user_attributes` 
+ ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+ ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+ ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+ ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
+
 # end related to #MODX-1321
 
 

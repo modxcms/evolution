@@ -47,6 +47,8 @@ $mobilephone = $modx->db->escape($_POST['mobilephone']);
 $fax = $modx->db->escape($_POST['fax']);
 $dob = !empty ($_POST['dob']) ? ConvertDate($_POST['dob']) : 0;
 $country = $_POST['country'];
+$street = $modx->db->escape($_POST['street']);
+$city   = $modx->db->escape($_POST['city']);
 $state = $modx->db->escape($_POST['state']);
 $zip = $modx->db->escape($_POST['zip']);
 $gender = !empty ($_POST['gender']) ? $_POST['gender'] : 0;
@@ -157,7 +159,7 @@ switch ($_POST['mode']) {
 		$modx->db->update($field,'[+prefix+]manager_users',"id='{$internalKey}'");
 		
 		$field = array();
-		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
+		$field = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
 		$rs = $modx->db->insert($field,'[+prefix+]user_attributes');
 		if (!$rs) {
 			webAlert("An error occurred while attempting to save the user's attributes.");
@@ -323,6 +325,8 @@ switch ($_POST['mode']) {
 					mobilephone='$mobilephone',
 					fax='$fax',
 					zip='$zip' ,
+					street='$street',
+					city='$city',
 					state='$state',
 					country='$country',
 					gender='$gender',
@@ -524,6 +528,8 @@ function saveUserSettings($id) {
 		'fax',
 		'dob',
 		'country',
+		'street',
+		'city',
 		'state',
 		'zip',
 		'gender',
