@@ -1140,3 +1140,6 @@ $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplic
 
 $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
 $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+
+$_lang["user_street"] = 'Street';
+$_lang["user_city"] = 'City';

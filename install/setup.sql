@@ -838,6 +838,16 @@ UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/css' WH
 UPDATE `{PREFIX}site_content` SET `type`='document', `contentType`='text/html' WHERE `type`='';
 
 
+ALTER TABLE `{PREFIX}user_attributes` 
+ ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+ ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+ ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+ ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
+
 # end related to #MODX-1321
 
 
@@ -913,7 +923,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('friendly_url_prefix',''),
 ('friendly_url_suffix','.html'),
 ('friendly_alias_urls','1'),
-('use_alias_path','0'),
+('use_alias_path','1'),
 ('use_udperms','1'),
 ('udperms_allowroot','0'),
 ('failed_login_attempts','3'),

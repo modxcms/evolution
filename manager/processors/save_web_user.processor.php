@@ -34,6 +34,8 @@ $mobilephone          = $input['mobilephone'];
 $fax                  = $input['fax'];
 $dob                  = !empty ($input['dob']) ? ConvertDate($input['dob']) : 0;
 $country              = $input['country'];
+$street               = $input['street'];
+$city                 = $input['city'];
 $state                = $input['state'];
 $zip                  = $input['zip'];
 $gender               = !empty($input['gender']) ? $input['gender'] : 0;
@@ -123,7 +125,7 @@ switch ($_POST['mode']) {
 		}
 
         $f = array();
-        $f = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
+        $f = compact('internalKey','fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','blocked','blockeduntil','blockedafter');
         $f = $modx->db->escape($f);
 		$rs = $modx->db->insert($f, '[+prefix+]web_user_attributes');
 		if (!$rs) {
@@ -283,7 +285,7 @@ switch ($_POST['mode']) {
 			exit;
 		}
 		$f = array();
-		$f = compact('fullname','role','email','phone','mobilephone','fax','zip','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
+		$f = compact('fullname','role','email','phone','mobilephone','fax','zip','street','city','state','country','gender','dob','photo','comment','failedlogincount','blocked','blockeduntil','blockedafter');
 		$f = $modx->db->escape($f);
 		if (!$rs = $modx->db->update($f, '[+prefix+]web_user_attributes', "internalKey='{$esc_id}'")) {
 			webAlert("An error occurred while attempting to update the user's attributes.");

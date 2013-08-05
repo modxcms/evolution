@@ -386,7 +386,7 @@
 
 
 </head>
-<body onClick="hideMenu(1);" class="treeframebody<?php echo $modx_textdir ? ' rtl':''?>">
+<body onClick="hideMenu(1);" class="<?php echo $modx_textdir ? ' rtl':''?>">
 
 <?php
     // invoke OnTreePrerender event
@@ -394,6 +394,8 @@
     if (is_array($evtOut))
         echo implode("\n", $evtOut);
 ?>
+
+<div class="treeframebody">
 <div id="treeSplitter"></div>
 
 <table id="treeMenu" width="100%"  border="0" cellpadding="0" cellspacing="0">
@@ -579,6 +581,7 @@ function menuHandler(action) {
     constructLink(1, $_style["icons_resource_overview"], $_lang["resource_overview"], $modx->hasPermission('view_document')); // view
     constructLink(12, $_style["icons_preview_resource"], $_lang["preview_resource"], 1); // preview
     ?>
+</div>
 </div>
 
 </body>
