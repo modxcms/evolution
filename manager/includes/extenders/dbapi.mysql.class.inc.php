@@ -586,5 +586,13 @@ class DBAPI {
        
        return $result;
    }
+   
+   function optimize($table_name)
+   {
+       $table_name = str_replace('[+prefix+]', $this->config['table_prefix'], $table_name);
+       $rs = $this->query("OPTIMIZE TABLE `{$table_name}`");
+       if($rs) $rs = $this->query("ALTER TABLE `{$table_name}`");
+       return $rs;
+   }
 }
 ?>
