@@ -302,32 +302,34 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <div class="tab-page" id="tabSnippet">
     <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
     <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script>
-        <table border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
-            <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'>&nbsp;</span></td>
-          </tr>
-          <tr>
-            <td align="left"><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</td>
-            <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description'];?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-          </tr>
-          <tr>
-            <td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span>":$_lang['plugin_disabled']; ?></td>
-          </tr>
-          <tr>
-            <td align="left" valign="top" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
-          </tr>
-        </table>
-        <!-- PHP text editor start -->
-        <div style="width:100%;position:relative">
-            <div style="padding:1px; width:100%; height:16px;background-color:#eeeeee; border-top:1px solid #e0e0e0;margin-top:5px">
-                <span style="float:left;color:#707070;font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['plugin_code']; ?></span>
-                <span style="float:right;color:#707070;"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
+        <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'>&nbsp;</span></td>
+      </tr>
+      <tr>
+        <td align="left"><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</td>
+        <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description'];?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" colspan="2"><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span>":$_lang['plugin_disabled']; ?></td>
+      </tr>
+      <tr>
+        <td align="left" valign="top" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
+      </tr>
+    </table>
+    <!-- PHP text editor start -->
+    <div class="section">
+        <div class="sectionHeader">
+            <span style="float:left;">&nbsp;<?php echo $_lang['plugin_code']; ?></span>
+            <span style="float:right;"><?php echo $_lang['wrap_lines']; ?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : "" ;?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
         </div>
-            <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
+        <div class="sectionBody">
+        <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off" ;?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['plugincode']); ?></textarea>
         </div>
-        <!-- PHP text editor end -->
-        </div>
+    </div>
+    <!-- PHP text editor end -->
+</div>
 
 <!-- Configuration/Properties -->
 <div class="tab-page" id="tabProps">

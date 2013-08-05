@@ -471,6 +471,8 @@ input.submit {
 .sectionHeader {
 	padding: 5px 3px 5px 18px;
 	background: #EFEFEF url(images/misc/fade.gif) repeat-x top;
+	overflow:hidden;
+	zoom:1;
 	border-radius : 5px 5px 0 0;
 	-moz-border-radius : 5px 5px 0 0;
 	-webkit-border-radius:5px 5px 0 0;
