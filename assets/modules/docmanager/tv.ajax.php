@@ -274,10 +274,11 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 
 
 function ParseIntputOptions($v) {
+        global $modx;
 	$a = array();
 	if(is_array($v)) return $v;
 	else if(is_resource($v)) {
-		while ($cols = mysql_fetch_row($v)) $a[] = $cols;
+		while ($cols = $modx->db->getRow($v)) $a[] = $cols;
 	}
 	else $a = explode("||", $v);
 	return $a;
