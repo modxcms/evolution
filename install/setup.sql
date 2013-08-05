@@ -913,7 +913,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('friendly_url_prefix',''),
 ('friendly_url_suffix','.html'),
 ('friendly_alias_urls','1'),
-('use_alias_path','0'),
+('use_alias_path','1'),
 ('use_udperms','1'),
 ('udperms_allowroot','0'),
 ('failed_login_attempts','3'),
