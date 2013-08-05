@@ -37,6 +37,14 @@ $donthit = intval($_POST['donthit']);
 $menutitle = $modx->db->escape($_POST['menutitle']);
 $hidemenu = intval($_POST['hidemenu']);
 
+/************* webber ********/
+$sd=isset($_POST['dir'])?'&dir='.$_POST['dir']:'&dir=DESC';
+$sb=isset($_POST['sort'])?'&sort='.$_POST['sort']:'&sort=pub_date';
+$pg=isset($_POST['page'])?'&page='.(int)$_POST['page']:'';
+$add_path=$sd.$sb.$pg;
+
+
+
 if (trim($pagetitle == "")) {
 	if ($type == "reference") {
 		$pagetitle = $_lang['untitled_weblink'];
@@ -79,6 +87,17 @@ if ($friendly_urls) {
 				}
 				$alias = $tempAlias;
 			}
+		}else{
+                if ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND parent=$parent AND alias='$alias'") != 0) {
+                        $cnt = 1;
+                        $tempAlias = $alias;
+                        while ($modx->db->getValue("SELECT COUNT(id) FROM " . $tbl_site_content . " WHERE id<>'$id' AND parent=$parent AND alias='$tempAlias'") != 0) {
+                                $tempAlias = $alias;
+                                $tempAlias .= $cnt;
+                                $cnt++;
+                        }
+                        $alias = $tempAlias;
+                }                       
 		}
 	}
 
@@ -113,6 +132,26 @@ if ($friendly_urls) {
 	// strip alias of special characters
 	elseif ($alias) {
 		$alias = $modx->stripAlias($alias);
+		//webber
+		$docid = $modx->db->getValue("SELECT id FROM " . $tbl_site_content . " WHERE id<>'$id' AND alias='$alias' AND parent=$parent LIMIT 1");
+                if ($docid > 0) {
+                        if ($actionToTake == 'edit') {
+                                $modx->manager->saveFormValues(27);
+                                $url = "index.php?a=27&id=" . $id;
+                                include_once "header.inc.php";
+                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
+                                include_once "footer.inc.php";
+                                exit;
+                        } else {
+                                $modx->manager->saveFormValues(4);
+                                $url = "index.php?a=4";
+                                include_once "header.inc.php";
+                                $modx->webAlert(sprintf($_lang["duplicate_alias_found"], $docid, $alias), $url);
+                                include_once "footer.inc.php";
+                                exit;
+                        }
+                }
+        //end webber        
 	}
 }
 elseif ($alias) {
@@ -642,9 +681,9 @@ switch ($actionToTake) {
 					// document
 					$a = ($_POST['stay'] == '2') ? "27&id=$id" : "4&pid=$parent";
 				}
-				$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'];
+				$header = "Location: index.php?a=" . $a . "&r=1&stay=" . $_POST['stay'].$add_path;
 			} else {
-				$header = "Location: index.php?r=1&id=$id&a=7&dv=1";
+				$header = "Location: index.php?r=1&id=$id&a=7&dv=1".$add_path;
 			}
 		}
 		header($header);

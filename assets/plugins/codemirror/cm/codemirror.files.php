@@ -26,10 +26,11 @@ $lineWrapping           = true;
 $matchBrackets          = true;
 $activeLine           	= true;
 $emmet					= '<script src="'.$_CM_URL.'cm/emmet-compressed.js"></script>';
+$search					= '<script src="'.$_CM_URL.'cm/search-compressed.js"></script>';
 
 $array_path 	= explode(".", $_REQUEST['path']);
-$length 				= count($array_path);
-$language 				= strtolower($array_path[($length-1)]);
+$length 		= count($array_path);
+$language 		= strtolower($array_path[($length-1)]);
 
 /*
  * Switch lang
@@ -62,7 +63,7 @@ $language 				= strtolower($array_path[($length-1)]);
 	<script src="{$_CM_URL}cm/lib/codemirror-compressed.js"></script>
 	<script src="{$_CM_URL}cm/addon-compressed.js"></script>
 	<script src="{$_CM_URL}cm/mode/{$lang}-compressed.js"></script>
-	{$emmet}
+	{$emmet}{$search}
 	<script type="text/javascript">
 		//Basic settings
 		var config = {
@@ -78,7 +79,10 @@ $language 				= strtolower($array_path[($length-1)]);
 			indentWithTabs: true,
 			extraKeys:{
 				"Ctrl-Space": function(cm){
-					foldFunc_html(cm, cm.getCursor().line);
+					var n = cm.getCursor().line;
+					var info = cm.lineInfo(n);
+					foldFunc(cm, n);
+					cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker("+"));
 				},
 				"F11": function(cm) {
 					setFullScreen(cm, !isFullScreen(cm));
@@ -88,19 +92,15 @@ $language 				= strtolower($array_path[($length-1)]);
 				}
 			}
 		};
-		var foldFunc_html = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
+		var foldFunc = CodeMirror.newFoldFunction(CodeMirror.tagRangeFinder);
 		var myTextArea = document.getElementsByName('{$textarea_name}')[0];
 		var myCodeMirror = (CodeMirror.fromTextArea(myTextArea, config));
+		myCodeMirror.hasFocus();
 		myCodeMirror.on("gutterClick", function(cm, n) {
 			var info = cm.lineInfo(n);
-			cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker());
+			foldFunc(cm, n);
+			cm.setGutterMarker(n, "breakpoints", info.gutterMarkers ? null : makeMarker("+"));
 		});
-		function makeMarker() {
-			var marker = document.createElement("div");
-			marker.style.color = "#822";
-			marker.innerHTML = "●";
-			return marker;
-		}
     </script>
 HEREDOC;
 echo $output;

@@ -7,6 +7,19 @@ if(!$modx->hasPermission('delete_document')) {
 
 $id=$_REQUEST['id'];
 
+/************ webber ********/
+$pid=$modx->db->getValue($modx->db->query("SELECT parent FROM ".$modx->getFullTableName('site_content')." WHERE id=".$id." LIMIT 0,1"));
+$pid=($pid==0?$id:$pid);
+
+/************** webber *************/
+$sd=isset($_REQUEST['dir'])?'&dir='.$_REQUEST['dir']:'&dir=DESC';
+$sb=isset($_REQUEST['sort'])?'&sort='.$_REQUEST['sort']:'&sort=createdon';
+$pg=isset($_REQUEST['page'])?'&page='.(int)$_REQUEST['page']:'';
+$add_path=$sd.$sb.$pg;
+
+/***********************************/
+
+
 // check permissions on the document
 include_once "./processors/user_documents_permissions.class.php";
 $udperms = new udperms();
@@ -86,7 +99,10 @@ if(!$rs) {
 	$sync->setReport(false);
 	$sync->emptyCache(); // first empty the cache		
 	// finished emptying cache - redirect
-	$header="Location: index.php?r=1&a=7&id=$id&dv=1";
+	//$header="Location: index.php?r=1&a=7&id=$id&dv=1";
+
+// webber
+	$header="Location: index.php?r=1&a=7&id=$pid&dv=1".$add_path;
 	header($header);
 }
 ?>
