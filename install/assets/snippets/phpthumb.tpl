@@ -1,7 +1,7 @@
 /**
  * phpthumb
  * 
- * Работа к картинками резайз эфекты - через снипет
+ * PHPThumb creates thumbnails and altered images on the fly and caches them
  *
  * @category 	snippet
  * @version 	1.1
