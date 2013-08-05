@@ -163,6 +163,13 @@ if($manager_language!="english" && file_exists(MODX_MANAGER_PATH."includes/lang/
     include_once "lang/".$manager_language.".inc.php";
 }
 
+$s = array('[+MGR_DIR+]');
+$r = array(MGR_DIR);
+foreach($_lang as $k=>$v)
+{
+	if(strpos($v,'[+')!==false) $_lang[$k] = str_replace($s, $r, $v);
+}
+
 // send the charset header
 header('Content-Type: text/html; charset='.$modx_manager_charset);
 
