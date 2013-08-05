@@ -66,19 +66,26 @@ class logHandler {
             }
         }
 
-        $sql = 'INSERT INTO '.$modx->getFullTableName('manager_log').'
-            (timestamp, internalKey, username, action, itemid, itemname, message) VALUES
-            (\''.time().'\',
-             \''.$modx->db->escape($this->entry['internalKey']).'\',
-             \''.$modx->db->escape($this->entry['username']).'\',
-             \''.$this->entry['action'].'\',
-             \''.$this->entry['itemId'].'\',
-             \''.$modx->db->escape($this->entry['itemName']).'\',
-             \''.$modx->db->escape($this->entry['msg']).'\')';
-
-        if(!$rs=$modx->db->query($sql)) {
+        $fields['timestamp']   = time();
+        $fields['internalKey'] = $modx->db->escape($this->entry['internalKey']);
+        $fields['username']    = $modx->db->escape($this->entry['username']);
+        $fields['action']      = $this->entry['action'];
+        $fields['itemid']      = $this->entry['itemId'];
+        $fields['itemname']    = $modx->db->escape($this->entry['itemName']);
+        $fields['message']     = $modx->db->escape($this->entry['msg']);
+        $insert_id = $modx->db->insert($fields,'[+prefix+]manager_log');
+        if(!$insert_id) {
             $this->logError("Couldn't save log to table! ".$modx->db->getLastError());
             return true;
+        }
+        else
+        {
+            $limit = (isset($modx->config['manager_log_limit'])) ? intval($modx->config['manager_log_limit']) : 3000;
+            $trim  = (isset($modx->config['manager_log_trim']))  ? intval($modx->config['manager_log_trim']) : 100;
+            if(($insert_id % $trim) === 0)
+            {
+                $modx->rotate_log('manager_log',$limit,$trim);
+            }
         }
     }
 }
