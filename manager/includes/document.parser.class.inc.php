@@ -991,7 +991,10 @@ class DocumentParser {
         }
         unset ($modx->event->params);
         $this->currentSnippet = '';
-        return $msg . $snip;
+        if(is_array($snip) || is_object($snip))
+            return $snip;
+        else
+            return $msg . $snip;
     }
 
     /**
