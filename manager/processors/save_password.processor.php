@@ -29,6 +29,13 @@ if(strlen($pass1)<6){
 	echo "An error occured while attempting to save the new password.";
 	exit;
 }
+    
+	// invoke OnManagerChangePassword event
+	$modx->invokeEvent('OnManagerChangePassword', array (
+		'userid' => $uid,
+		'username' => $_SESSION['mgrShortname'],
+		'userpassword' => $pass1
+	));
 
 $header="Location: index.php?a=7";
 header($header);
