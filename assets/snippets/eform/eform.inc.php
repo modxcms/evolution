@@ -376,17 +376,16 @@ function eForm($modx,$params) {
 					foreach($fields as $key => $value)
 						$body .= "<tr><td>$key</td><td><pre>$value</pre></td></tr>";
 					$body .="</table>";
-					include_once MODX_MANAGER_PATH."includes/controls/class.phpmailer.php";
+					$modx->loadExtension('MODxMailer');
 				# send abuse alert
-					$mail = new PHPMailer();
-					$mail->IsMail();
-					$mail->IsHTML($isHtml);
-					$mail->From		= $modx->config['emailsender'];
-					$mail->FromName	= $modx->config['site_name'];
-					$mail->Subject	= $_lang['ef_mail_abuse_subject'];
-					$mail->Body		= $body;
-					AddAddressToMailer($mail,"to",$modx->config['emailsender']);
-					$mail->send(); //ignore mail errors in this case
+					$modx->mail->IsMail();
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $modx->config['emailsender'];
+					$modx->mail->FromName	= $modx->config['site_name'];
+					$modx->mail->Subject	= $_lang['ef_mail_abuse_subject'];
+					$modx->mail->Body		= $body;
+					AddAddressToMailer($modx->mail,"to",$modx->config['emailsender']);
+					$modx->mail->send(); //ignore mail errors in this case
 				}
 				//return empty form with error message
 				//register css and/or javascript
@@ -469,7 +468,7 @@ function eForm($modx,$params) {
 					$replyto = ( $fields[$replyto] && strstr($fields[$replyto],'@') )?$fields[$replyto]:$from;
 
 				# include PHP Mailer
-				include_once MODX_MANAGER_PATH."includes/controls/class.phpmailer.php";
+				$modx->loadExtension('MODxMailer');
 
 				# send form
 				//defaults to html so only test sendasText
@@ -484,35 +483,33 @@ function eForm($modx,$params) {
 
 				if(!$noemail) {
 					if($sendirect) $to = $firstEmail;
-					$mail = new PHPMailer();
-					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
-					$mail->From		= $from;
-					$mail->FromName	= $fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $report;
-					AddAddressToMailer($mail,"replyto",$replyto);
-					AddAddressToMailer($mail,"to",$to);
-					AddAddressToMailer($mail,"cc",$cc);
-					AddAddressToMailer($mail,"bcc",$bcc);
-					AttachFilesToMailer($mail,$attachments);
-					if(!$mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
+					$modx->mail->IsMail();
+					$modx->mail->CharSet = $modx->config['modx_charset'];
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $from;
+					$modx->mail->FromName	= $fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $report;
+					AddAddressToMailer($modx->mail,"replyto",$replyto);
+					AddAddressToMailer($modx->mail,"to",$to);
+					AddAddressToMailer($modx->mail,"cc",$cc);
+					AddAddressToMailer($modx->mail,"bcc",$bcc);
+					AttachFilesToMailer($modx->mail,$attachments);
+					if(!$modx->mail->send()) return 'Main mail: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 				}
 
 				# send user a copy of the report
 				if($ccsender && $firstEmail != '') {
-					$mail = new PHPMailer();
-					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
-					$mail->From		= $from;
-					$mail->FromName	= $fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $report;
-					AddAddressToMailer($mail,"to",$firstEmail);
-					AttachFilesToMailer($mail,$attachments);
-					if(!$mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
+					$modx->mail->IsMail();
+					$modx->mail->CharSet = $modx->config['modx_charset'];
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $from;
+					$modx->mail->FromName	= $fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $report;
+					AddAddressToMailer($modx->mail,"to",$firstEmail);
+					AttachFilesToMailer($modx->mail,$attachments);
+					if(!$modx->mail->send()) return 'CCSender: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 				}
 
 				# send auto-respond email
@@ -520,16 +517,15 @@ function eForm($modx,$params) {
 				$isHtml = ($sendAsText==1 || strstr($sendAsText,'autotext'))?false:true;
 				if ($autotext && $firstEmail != '') {
 					$autotext = formMerge($autotext,$fields);
-					$mail = new PHPMailer();
-					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
-					$mail->From		= ($autosender)? $autosender:$from;
-					$mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $autotext;
-					AddAddressToMailer($mail,"to",$firstEmail);
-					if(!$mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $mail->ErrorInfo;
+					$modx->mail->IsMail();
+					$modx->mail->CharSet = $modx->config['modx_charset'];
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= ($autosender)? $autosender:$from;
+					$modx->mail->FromName	= ($autoSenderName)?$autoSenderName:$fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $autotext;
+					AddAddressToMailer($modx->mail,"to",$firstEmail);
+					if(!$modx->mail->send()) return 'AutoText: ' . $_lang['ef_mail_error'] . $modx->mail->ErrorInfo;
 				}
 
 				//defaults to text - test for sendAsHtml
@@ -537,16 +533,15 @@ function eForm($modx,$params) {
 				# send mobile email
 				if ($mobile && $mobiletext) {
 					$mobiletext = formMerge($mobiletext,$fields);
-					$mail = new PHPMailer();
-					$mail->IsMail();
-					$mail->CharSet = $modx->config['modx_charset'];
-					$mail->IsHTML($isHtml);
-					$mail->From		= $from;
-					$mail->FromName	= $fromname;
-					$mail->Subject	= $subject;
-					$mail->Body		= $mobiletext;
-					AddAddressToMailer($mail,"to",$mobile);
-					$mail->send();
+					$modx->mail->IsMail();
+					$modx->mail->CharSet = $modx->config['modx_charset'];
+					$modx->mail->IsHTML($isHtml);
+					$modx->mail->From		= $from;
+					$modx->mail->FromName	= $fromname;
+					$modx->mail->Subject	= $subject;
+					$modx->mail->Body		= $mobiletext;
+					AddAddressToMailer($modx->mail,"to",$mobile);
+					$modx->mail->send();
 				}
 
 			}//end test nomail
