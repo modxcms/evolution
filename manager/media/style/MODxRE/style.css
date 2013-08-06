@@ -485,6 +485,7 @@ input.submit {
 	font-weight: bold;
 	font-size: 125%;
 	border: 1px solid #ccc;
+	border-bottom:none;
 		text-shadow: 0px 1px 0px #FFF;
 }
 	.tab-page .sectionHeader {
@@ -600,9 +601,11 @@ a img {
 .row3 {
 	background-color: #f5f5f5;
 }
-.treeframebody {
+
+div.treeframebody {
 	background: #f5f5f5 url(images/subnav.jpg) !important;
-	box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.1) inset;
+	-webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1);
+	box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1);
 }
 
 #treeMenu * {
@@ -610,14 +613,19 @@ a img {
 }
 #treeHolder {
 	cursor: default;
-/*	font-size: 88%; */
 	height: 100%;
-	padding: 5px 10px 0 10px;
-/*	border-top: 1px solid #fff;
-	background: #f5f5f5; */
+	padding: 6px 8px 0;
+	line-height: 1.3em;
 }
-#treeHolder div {
-	margin: 0 0 1px;
+#treeHolder {
+	padding-left:12px;
+}
+#treeRoot {
+    margin-left:-10px;
+}
+#treeRoot div img {
+	margin: 0 0 0 -6px;
+	vertical-align:middle;
 }
 	.rtl #treeRoot div img {
 		margin: 0 -6px 0 0;
@@ -626,11 +634,11 @@ a img {
 	display: none;
 	position: absolute;
 	width: 200px;
-	height: 50px;
+	padding:5px;
 	top: 25px;
 	left: 4px;
 	background: #fff;
-	border-bottom: 1px solid #666;
+	border: 1px solid #ccc;
 	z-index: 500;
 }
 	.rtl #floater {
@@ -638,34 +646,24 @@ a img {
 	}
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode {
 	color: #000;
-	padding: 2px;
 	cursor: pointer;
-	margin: 0 4px;
 	width: auto;
+	margin-right:2px;
 }
-
-.treeNodeSelected {
+div.treeNode {
+	white-space: nowrap;
+}
+.treeNodeSelected,
+.treeNodeHover
+{
     background-color: #FFFFFF;
     border: 1px solid #CCC;
     color: #000;
-    padding: 1px 7px;
-	margin: 0 -2px;
-    font-weight: bold;
-    -moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	border-radius:10px;
-	}
-	.treeNodeHover {
-		background-color: #FFFFFF;
-		padding: 2px 8px;
-		margin-left: -2px;
-		margin-right: -2px;
-		-moz-border-radius:10px;
-		-webkit-border-radius:10px;
-		border-radius:10px;
-	}
-.unpublishedNode {
-	color: #999;
+    padding: 1px 2px;
+	margin-left:-3px;
+}
+.unpublished a, .unpublishedNode {
+	color: #B68282;
 	font-style: italic;
 }
 .deletedNode {
@@ -1002,19 +1000,23 @@ a.hometblink:hover {
 	visibility: hidden;
 	z-index: 10000;
 	width: 170px;
-	background: #fff;
+	background-color: #fff;
+	box-shadow: inset 0px 5px 10px 0px rgba(70, 70, 70, 0.1);
 	margin: 0;
-	padding: 2px;
+	padding-bottom:10px;
 	border: 1px solid #ededed;
 	border-right-color: #dcdcdc;
 	border-bottom-color: #dcdcdc;
 	overflow: hidden;
 	line-height: 11px;
+	box-shadow: 2px 2px 15px #eaeaea;
+	-moz-box-shadow: 2px 2px 15px #eaeaea;
+	-webkit-box-shadow: 2px 2px 20px #eaeaea;
 }
 #mx_contextmenu .menuLink {
 	cursor: pointer;
 	color: #222;
-	padding: 3px 7px 3px 2px;
+	padding: 3px 5px 3px 4px;
 }
 #mx_contextmenu .menuLink:hover {
 	background: #DDE4EB;
@@ -1025,7 +1027,7 @@ a.hometblink:hover {
 #mx_contextmenu .menuLink:hover,
 #mx_contextmenu .menuLinkDisabled {
 	cursor: pointer;
-	padding: 2px 6px 2px 1px;
+	padding: 2px 4px 2px 3px;
 }
 #mx_contextmenu .menuLinkDisabled {
 	cursor: default;
@@ -1034,7 +1036,7 @@ a.hometblink:hover {
 #mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLink:hover img,
 #mx_contextmenu .menuLinkDisabled img {
-	margin-right: 8px;
+	margin-right: 5px;
 }
 #mx_contextmenu .menuLink img,
 #mx_contextmenu .menuLinkDisabled img {
@@ -1051,12 +1053,15 @@ a.hometblink:hover {
 	text-align: left;
 	cursor: default;
 	font-weight: bold;
-	padding: 2px;
-	margin-bottom: 2px;
-	border: 1px solid #fdfdfd;
-	border-right-color: #dcdcdc;
-	border-bottom-color: #dcdcdc;
-	background: #86939E;
+	padding: 6px 4px;
+	margin-bottom: 3px;
+	background-color: #86939E;
+	background-repeat:repeat-x;
+	text-shadow: 0px -1px 0px #222;
+			background:-moz-linear-gradient(#8aae4b, #66901b);
+			background:-webkit-gradient(linear, 0 0, 0 100%, from(#8aae4b), to(#66901b));
+			background:-o-linear-gradient(#8aae4b, #66901b);
+			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#8aae4b,endColorstr=#66901b); zoom:1;
 }
 #mx_contextmenu .seperator {
 	font-size: 0;

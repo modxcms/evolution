@@ -30,7 +30,7 @@ $number_of_settings = $modx->db->getRecordCount($rs);
 while ($row = $modx->db->getRow($rs)) $settings[$row['setting_name']] = $row['setting_value'];
 extract($settings, EXTR_OVERWRITE);
 
-$displayStyle = ($_SESSION['browser']!=='ie') ? 'table-row' : 'block' ;
+$displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
 
 // load languages and keys
 $lang_keys = array();

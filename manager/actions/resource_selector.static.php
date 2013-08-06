@@ -16,7 +16,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $modx_manager_charset; ?>" />
 	<link rel="stylesheet" type="text/css" href="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>style.css<?php echo "?$theme_refresher";?>" />
 <?php
-if($_SESSION['browser']==='ie') {
+if($_SESSION['browser']==='legacy_IE') {
 ?>   
 	<style>
 	/* stupid box model hack for equally stupid MSIE */
