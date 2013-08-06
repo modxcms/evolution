@@ -72,6 +72,7 @@ $wf->_config = array(
 	'textOfLinks' => isset($textOfLinks) ? $textOfLinks : 'menutitle',
 	'titleOfLinks' => isset($titleOfLinks) ? $titleOfLinks : 'pagetitle',
 	'displayStart' => isset($displayStart) ? $displayStart : FALSE,
+	'entityEncode' => isset($entityEncode) ? $entityEncode : TRUE,
 );
 
 //get user class definitions
