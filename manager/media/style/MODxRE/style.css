@@ -601,9 +601,11 @@ a img {
 .row3 {
 	background-color: #f5f5f5;
 }
-.treeframebody {
+
+div.treeframebody {
 	background: #f5f5f5 url(images/subnav.jpg) !important;
-	box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.1) inset;
+	-webkit-box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1);
+	box-shadow: inset -2px 2px 6px 0px rgba(0, 0, 0, 0.1);
 }
 
 #treeMenu * {
@@ -611,14 +613,19 @@ a img {
 }
 #treeHolder {
 	cursor: default;
-/*	font-size: 88%; */
 	height: 100%;
-	padding: 5px 10px 0 10px;
-/*	border-top: 1px solid #fff;
-	background: #f5f5f5; */
+	padding: 6px 8px 0;
+	line-height: 1.3em;
 }
-#treeHolder div {
-	margin: 0 0 1px;
+#treeHolder {
+	padding-left:12px;
+}
+#treeRoot {
+    margin-left:-10px;
+}
+#treeRoot div img {
+	margin: 0 0 0 -6px;
+	vertical-align:middle;
 }
 	.rtl #treeRoot div img {
 		margin: 0 -6px 0 0;
@@ -627,11 +634,11 @@ a img {
 	display: none;
 	position: absolute;
 	width: 200px;
-	height: 50px;
+	padding:5px;
 	top: 25px;
 	left: 4px;
 	background: #fff;
-	border-bottom: 1px solid #666;
+	border: 1px solid #ccc;
 	z-index: 500;
 }
 	.rtl #floater {
@@ -639,34 +646,24 @@ a img {
 	}
 .rootNode, .treeNode, .treeNodeHover, .treeNodeSelected, .emptyNode {
 	color: #000;
-	padding: 2px;
 	cursor: pointer;
-	margin: 0 4px;
 	width: auto;
+	margin-right:2px;
 }
-
-.treeNodeSelected {
+div.treeNode {
+	white-space: nowrap;
+}
+.treeNodeSelected,
+.treeNodeHover
+{
     background-color: #FFFFFF;
     border: 1px solid #CCC;
     color: #000;
-    padding: 1px 7px;
-	margin: 0 -2px;
-    font-weight: bold;
-    -moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	border-radius:10px;
-	}
-	.treeNodeHover {
-		background-color: #FFFFFF;
-		padding: 2px 8px;
-		margin-left: -2px;
-		margin-right: -2px;
-		-moz-border-radius:10px;
-		-webkit-border-radius:10px;
-		border-radius:10px;
-	}
-.unpublishedNode {
-	color: #999;
+    padding: 1px 2px;
+	margin-left:-3px;
+}
+.unpublished a, .unpublishedNode {
+	color: #B68282;
 	font-style: italic;
 }
 .deletedNode {
