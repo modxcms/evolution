@@ -24,9 +24,6 @@ $_lang["access_permissions_add_user_group"] = 'Opret en ny brugergruppe';
 $_lang["access_permissions_docs_collision"] = 'Da der er en konflikt mellem web bruger grupper og administrator bruger grupper i forhold til dine rettigheder, vil denne ressource være tilgængelig for alle. Kontakt venligst en administrator for at få hjælp!';
 $_lang["access_permissions_docs_message"] = 'Vælg hvilke ressource grupper denne ressource tilhører';
 $_lang["access_permissions_group_link"] = 'Opret sammenkædning mellem grupper';
-$_lang["access_permissions_resource_groups"] = 'Ressource grupper';
-$_lang["access_permissions_resources_in_group"] = '<b>Ressourcer i gruppen:</b> ';
-$_lang["access_permissions_resources_tab"] = 'Se hvilke ressource grupper der er oprettet. Du kan også oprette nye grupper, omdøbe grupper, slette grupper, samt se hvilke ressourcer der er i de respektive grupper. (Hold musen over ressourcens ID for at se dets navn). For at tilføje eller fjerne en ressource til en gruppe, skal du redigere selve ressourcen.';
 $_lang["access_permissions_introtext"] = 'Administrer bruger grupper og ressource grupper, der bliver brugt til adgangsstyring. For at tilføje en bruger til en bruger gruppe, skal du redigere brugeren og vælge gruppen eller grupperne som brugeren skal tilhøre. For at tilføje en ressource til en bruger gruppe, skal du redigere ressourcen, og vælge gruppen eller grupperne som den skal tilhøre.';
 $_lang["access_permissions_link_to_group"] = 'med ressource gruppen';
 $_lang["access_permissions_link_user_group"] = 'Sammenkæd bruger gruppen';
@@ -35,6 +32,9 @@ $_lang["access_permissions_links_tab"] = 'Angiv hvilke bruger grupper der har ad
 $_lang["access_permissions_no_resources_in_group"] = 'Ingen.';
 $_lang["access_permissions_no_users_in_group"] = 'Ingen.';
 $_lang["access_permissions_off"] = '<span class="warning">Adgangsstyringen er ikke aktiveret.</span> Det betyder, at alle ændringer først vil træde i kraft når adgangsstyringen er aktiveret i konfigurationsindstillingerne.';
+$_lang["access_permissions_resource_groups"] = 'Ressource grupper';
+$_lang["access_permissions_resources_in_group"] = '<b>Ressourcer i gruppen:</b> ';
+$_lang["access_permissions_resources_tab"] = 'Se hvilke ressource grupper der er oprettet. Du kan også oprette nye grupper, omdøbe grupper, slette grupper, samt se hvilke ressourcer der er i de respektive grupper. (Hold musen over ressourcens ID for at se dets navn). For at tilføje eller fjerne en ressource til en gruppe, skal du redigere selve ressourcen.';
 $_lang["access_permissions_user_groups"] = 'Bruger grupper';
 $_lang["access_permissions_user_message"] = 'Vælg bruger gruppen som denne bruger skal tilhøre:';
 $_lang["access_permissions_users_in_group"] = 'Brugere i gruppen:';
@@ -46,9 +46,9 @@ $_lang["activity_title"] = 'Seneste redigerede eller oprettede ressourcer';
 $_lang["add"] = 'Opret';
 $_lang["add_chunk"] = 'Tilføj chunk';
 $_lang["add_doc"] = 'Tilføj ressource';
-$_lang["add_resource"] = 'Tilføj ressource';
 $_lang["add_folder"] = 'Tilføj mappe';
 $_lang["add_plugin"] = 'Tilføj plugin';
+$_lang["add_resource"] = 'Tilføj ressource';
 $_lang["add_snippet"] = 'Tilføj snippet';
 $_lang["add_tag"] = 'Tilføj tag';
 $_lang["add_template"] = 'Tilføj skabelon';
@@ -114,7 +114,7 @@ $_lang["configcheck_admin"] = 'Kontakt en system administrator, og advar om denn
 $_lang["configcheck_cache"] = 'Cache mappen er ikke skrivbar';
 $_lang["configcheck_cache_msg"] = 'MODx Evolution kan ikke skrive til cache mappen. MODx Evolution vil dog stadig fungere men uden caching. For at rette dette, skal  /_cache/ mappen gøres skrivbar.';
 $_lang["configcheck_configinc"] = 'Konfigurationsfilen er stadigvæk skrivbar';
-$_lang["configcheck_configinc_msg"] = 'Det betyder at hackere kan ødelægge alt indholdet i websitet. Du <strong>skal</strong> ændre (/'.MGR_DIR.'/includes/config.inc.php) så den kun er read-only!';
+$_lang["configcheck_configinc_msg"] = 'Det betyder at hackere kan ødelægge alt indholdet i websitet. Du <strong>skal</strong> ændre (/[+MGR_DIR+]/includes/config.inc.php) så den kun er read-only!';
 $_lang["configcheck_default_msg"] = 'Der er opstået en uspecificeret fejl. Dette er så underligt at du bør informere en system administrator.';
 $_lang["configcheck_errorpage_unavailable"] = 'Websitets fejlside er ikke til rådighed.';
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Det betyder at fejlsiden enten ikke eksisterer eller, at den ikke kan tilgås af normale besøgende. Det kan medføre, at systemet omstiller uden at stoppe, og vil samtidig resultere i, at websitets logfiler til sidst vil fylde for meget. Husk at kontrollere, at der ikke er nogle web bruger grupper, der er sammenkædet med siden.';
@@ -133,17 +133,17 @@ $_lang["configcheck_php_gdzip"] = 'GD og/eller Zip udvidelserne i PHP blev ikke 
 $_lang["configcheck_php_gdzip_msg"] = 'MODx behøver GD og Zip udvidelserne i PHP. Selvom MODx vil kunne bruges uden disse, vil du ikke få det fulde udbytte af den indbyggede filbrowser, billede editeringen eller Captcha til brug ved login.';
 $_lang["configcheck_register_globals"] = 'register_globals er sat til ON i din php.ini fil';
 $_lang["configcheck_register_globals_msg"] = 'Det betyder, at websitet kan blive mere udsat for "Cross Site Scripting" (XSS) angreb. Du bør kontakte system administratoren eller hosting firmaet for at deaktivere dette, såfremt du ikke selv kan gøre det.';
+$_lang["configcheck_title"] = 'Konfigurationscheck';
 $_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher plugin\'en er fundet';
 $_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Slet TemplateSwitcher</a>';
 $_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Deaktiver TemplateSwitcher</a>';
 $_lang["configcheck_templateswitcher_present_msg"] = 'TemplateSwitcher plugin\'en er kendt for at forårsage problemer med cashing og hastighed, og bør kun bruges såfremt at funktionaliteten er påkrævet på websitet.';
-$_lang["configcheck_title"] = 'Konfigurationscheck';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Websitets "Ikke autoriseret" side er ikke publiceret eller er ikke oprettet.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Det betyder, at den "ikke autoriseret" side ikke kan tilgås af almindelige besøgende eller ikke eksisterer. Det kan medføre, at systemet omstiller uden at stoppe, og vil samtidigt resultere i, at websitets logfiler til sidst vil fylde for meget. Kontroller også at der ikke er tildelt nogle web bruger grupper til siden.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Den "ikke autoriseret" side, som er defineret i konfigurationsindstillingerne er ikke publiceret.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Det betyder at den "ikke autoriseret" side ikke kan tilgås af normale besøgende. Publicer siden eller tildel den til en eksisterende ressource under Værktøjer &gt; Konfiguration.';
 $_lang["configcheck_validate_referer"] = 'Sikkerhedsadvarsel: HTTP Header validering';
-$_lang["configcheck_validate_referer_msg"] = "Konfigurationsindstillingen for <strong>Valider HTTP_REFERER headers?</strong> er slået fra. Det anbefales at slå den til. <a href=\"index.php?a=17\">Gå til konfigurationsindstillingerne</a>";
+$_lang["configcheck_validate_referer_msg"] = 'Konfigurationsindstillingen for <strong>Valider HTTP_REFERER headers?</strong> er slået fra. Det anbefales at slå den til. <a href="index.php?a=17">Gå til konfigurationsindstillingerne</a>';
 $_lang["configcheck_warning"] = 'Konfigurationsadvarsel:';
 $_lang["configcheck_what"] = 'Hvad betyder dette?';
 $_lang["confirm_block"] = 'Er du sikker på, at du vil blokere denne bruger?';
@@ -406,6 +406,21 @@ $_lang["info"] = 'Information';
 $_lang["information"] = 'Information';
 $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Indsæt';
+$_lang["maxImageWidth"] = 'Maximum image width';
+$_lang["maxImageHeight"] = 'Maximum image height';
+$_lang["thumbWidth"] = 'Maximum thumbnail width';
+$_lang["thumbHeight"] = 'Maximum thumbnail height';
+$_lang["thumbsDir"] = 'Thumbnails directory location';
+$_lang["jpegQuality"] = 'JPEG compression';
+$_lang["denyZipDownload"] = 'Disable zip-archives downloading';
+$_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
+$_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
+$_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
+$_lang["thumbsDir_message"] = 'The name of previews folder.';
+$_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
+$_lang["showHiddenFiles"] = 'Show hidden files in file browser';
 $_lang["keyword"] = 'Keyword';
 $_lang["keywords"] = 'Keywords';
 $_lang["keywords_intro"] = 'For at omdøbe et keyword skal du indtaste det nye keyword i tekstfeltet ud for det keyword, der skal omdøbes. For at slette et keyword skal du markere \'Slet\' feltet ud for det pågældende keyword. Hvis man sletter og omdøber samtidigt, vil det pågældende keyword blive slettet!';
@@ -870,6 +885,7 @@ $_lang["settings_events"] = 'System hændelser';
 $_lang["settings_furls"] = 'Søgevenlige URLs';
 $_lang["settings_general"] = 'Generelt';
 $_lang["settings_misc"] = 'Filstyring';
+$_lang["settings_KC"] = 'File Browser';
 $_lang["settings_page_settings"] = 'Sideindstillinger';
 $_lang["settings_photo"] = 'Billede';
 $_lang["settings_properties"] = 'Egenskaber';
@@ -919,9 +935,44 @@ $_lang["sunday"] = 'Søndag';
 $_lang["sys_alert"] = 'System advarsel';
 $_lang["sysinfo_activity_message"] = 'Denne liste viser hvilke ressourcer der fornyligt er blevet redigeret af brugerne.';
 $_lang["sysinfo_userid"] = 'Bruger';
-$_lang["system_email_signup"] = "Hej [+uid+], \n\nHer er oplysningerne om log ind i [+sname+]s CMS:\n\nBrugernavn: [+uid+]\nKodeord: [+pwd+]\n\n(Husk at der er forskel på store og små karakterer i ovenstående).\n\nNår du er logget ind i CMS\'et på ([+surl+]), kan du ændre dit kodeord.\n\nMed venlig hilsen,\nWebsite administratoren";
-$_lang["system_email_webreminder"] = "Hej [+uid+]\n\nFor at aktivere dit nye kodeord, skal du klikke her:\n\n[+surl+]\n\nEfterfølgende kan du bruge dette kodeord til at logge ind:\n\nPassword:[+pwd+]\n\nHvis du ikke har bedt om et nyt kodeord, skal du bare ignorere denne e-mail.\n\nHilsen,\nWebsitets administrator";
-$_lang["system_email_websignup"] = "Hej [+uid+]\n\nHer er dine oplysninger om log ind i [+sname+]:\n\nBrugernavn: [+uid+]\nKodeord: [+pwd+]\n\nNår du er logget ind i [+sname+] ([+surl+]), kan du eventuelt selv skifte dit kodeord.\n\nHilsen,\nWebsitets administrator";
+$_lang["system_email_signup"] = 'Hej [+uid+], 
+
+Her er oplysningerne om log ind i [+sname+]s CMS:
+
+Brugernavn: [+uid+]
+Kodeord: [+pwd+]
+
+(Husk at der er forskel på store og små karakterer i ovenstående).
+
+Når du er logget ind i CMS\'et på ([+surl+]), kan du ændre dit kodeord.
+
+Med venlig hilsen,
+Website administratoren';
+$_lang["system_email_webreminder"] = 'Hej [+uid+]
+
+For at aktivere dit nye kodeord, skal du klikke her:
+
+[+surl+]
+
+Efterfølgende kan du bruge dette kodeord til at logge ind:
+
+Password:[+pwd+]
+
+Hvis du ikke har bedt om et nyt kodeord, skal du bare ignorere denne e-mail.
+
+Hilsen,
+Websitets administrator';
+$_lang["system_email_websignup"] = 'Hej [+uid+]
+
+Her er dine oplysninger om log ind i [+sname+]:
+
+Brugernavn: [+uid+]
+Kodeord: [+pwd+]
+
+Når du er logget ind i [+sname+] ([+surl+]), kan du eventuelt selv skifte dit kodeord.
+
+Hilsen,
+Websitets administrator';
 $_lang["table_hoverinfo"] = 'Hold musen henover et navn i tabellen for at se en kort beskrivelse af tabellens funktion (Det er dog ikke alle tabeller der har denne beskrivelse).';
 $_lang["table_prefix"] = 'Tabel præfiks';
 $_lang["tag"] = 'Tag';
@@ -953,6 +1004,7 @@ $_lang["tmplvars_caption"] = 'Overskrift';
 $_lang["tmplvars_default"] = 'Standard værdi';
 $_lang["tmplvars_description"] = 'Beskrivelse';
 $_lang["tmplvars_elements"] = 'Værdier for input valgmuligheder';
+$_lang["tmplvars_inherited"] = 'Value inherited';
 $_lang["tmplvars_management_msg"] = 'Vælg den skabelon variabel der skal redigeres.';
 $_lang["tmplvars_msg"] = 'Tilføj eller rediger skabelon variabler. Skabelon variabler skal være tildelt skabeloner, for at disse kan tilgås af ressourcer og snippets.';
 $_lang["tmplvars_name"] = 'Skabelon variabel navn';
@@ -1083,4 +1135,52 @@ $_lang["yourinfo_role"] = 'Din rolle:';
 $_lang["yourinfo_title"] = 'Information om dig';
 $_lang["yourinfo_total_logins"] = 'Totalt antal log ind:';
 $_lang["yourinfo_username"] = 'Du er logget ind som:';
-?>
+$_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
+$_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
+$_lang["a17_error_reporting_opt0"] = 'Ignore all';
+$_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Detect all';
+$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
+$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+$_lang["enable_bindings_title"] = 'Enable @Bindings commands';
+$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+$_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
+$_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
+$_lang["bkmgr_restore_title"] = 'Restore';
+$_lang["bkmgr_import_ok"] = 'SQL recovery was performed normally.';
+$_lang["bkmgr_snapshot_ok"] = 'The snapshot was saved normally.';
+$_lang["bkmgr_run_sql_file_label"] = 'Execute by sql file';
+$_lang["bkmgr_run_sql_direct_label"] = 'Direct execute SQL command strings';
+$_lang["bkmgr_run_sql_submit"] = 'Execute restore';
+$_lang["bkmgr_run_sql_result"] = 'Result';
+$_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
+$_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
+$_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
+$_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
+$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+$_lang["files.dynamic.php1"] = 'create text file';
+$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
+$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
+$_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["not_readable_dir"] = 'Can not read this directory.';
+$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
+$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+$_lang["make_folders_title"] = 'Make end slash URL at the container';
+$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+$_lang["check_files_onlogin_title"] = 'Check core files on login';
+$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
+$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["cache_type_title"] = 'Document caching type';
+$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
+$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
+$_lang["seostrict_title"] = 'Use SEO Strict URLs';
+$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
+$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+$_lang["user_street"] = 'Street';
+$_lang["user_city"] = 'City';
