@@ -53,7 +53,7 @@ $_lang["add_template"] = 'Lisää sivupohja';
 $_lang["add_tv"] = 'Lisää sivupohjan muuttuja';
 $_lang["add_weblink"] = 'Uusi hyperlinkki';
 $_lang["administrator_role_message"] = 'Pääkäyttäjän roolia ei voi muokata tai poistaa.';
-$_lang['administrators'] = 'Pääkäyttäjät';
+$_lang["administrators"] = 'Pääkäyttäjät';
 $_lang["after_saving"] = 'Tallennuksen jälkeen';
 $_lang["alert_delete_self"] = 'Et voi poistaa itseäsi!';
 $_lang["alias"] = 'Alias';
@@ -98,6 +98,8 @@ $_lang["chunk_code"] = 'Lähdekoodi (html)';
 $_lang["chunk_multiple_id"] = 'Virhe: Usealla HTML-palasella on sama yksilötunnus (ID).';
 $_lang["chunk_no_exist"] = 'HTML-palasta ei ole.';
 $_lang["cleaningup"] = 'Odota hetki...';
+$_lang["clean_uploaded_filename"] = 'Use Transliteration for File Uploads';
+$_lang["clean_uploaded_filename_message"] = 'Use the default or transalias settings for the file name to clean special characters from uploaded file names, preserving dot-characters (periods)';
 $_lang["clear_log"] = 'Tyhjennä loki';
 $_lang["click_to_context"] = 'Napsauta päästäksesi kontekstivalikkoon';
 $_lang["click_to_edit_title"] = 'Muokkaa napsauttamalla tästä';
@@ -110,12 +112,13 @@ $_lang["configcheck_admin"] = 'Ole ystävällinen ja ota yhteyttä sivuston pä�
 $_lang["configcheck_cache"] = 'Välimuisti-kansioon (cache) ei voi kirjoittaa';
 $_lang["configcheck_cache_msg"] = 'MODx ei voi kirjoittaa välimuistikansioon (cache). MODx toimii yhä kuten pitääkin, mutta mitään ei ladata välimuistiin. Ratkaise ongelma antamalla /_cache/ kansioon kirjoitusoikeudet.';
 $_lang["configcheck_configinc"] = 'Asetustiedostoon voi yhä kirjoittaa';
-$_lang["configcheck_configinc_msg"] = 'Pahantahtoiset henkilöt voivat hyödyntää tätä murtautuakseen sivustollesi. Korjaa ongelma poistamalla tiedostosta (/'.MGR_DIR.'/includes/config.inc.php) kirjoitusoikeudet!';
+$_lang["configcheck_configinc_msg"] = 'Pahantahtoiset henkilöt voivat hyödyntää tätä murtautuakseen sivustollesi. Korjaa ongelma poistamalla tiedostosta (/[+MGR_DIR+]/includes/config.inc.php) kirjoitusoikeudet!';
 $_lang["configcheck_default_msg"] = 'Määrittelemätön varoitus on löytynyt. Outoa.';
 $_lang["configcheck_errorpage_unavailable"] = 'Virhesivua ei ole saatavilla.';
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Virhesivulle ei ole käyttöoikeutta tai sitä ei ole olemassa. Tämä voi aiheuttaa ongelmia sivustolla. Varmista, ettei sivulle ole määritetty web-käyttäjäryhmää.';
 $_lang["configcheck_errorpage_unpublished"] = 'Virhesivua ei ole julkaistu tai se ei ole olemassa.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Virhesivulle ei ole käyttöoikeutta. Julkaise kyseinen sivu ja/tai varmista, että sivun ID on järjestelmän asetuksissa oikein.';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Don\'t show this again.</em></a>';
 $_lang["configcheck_images"] = 'Images-kansioon ei voi kirjoittaa';
 $_lang["configcheck_images_msg"] = 'Images-kansioon ei voi kirjoittaa tai kansiota ei ole olemassa. Tämä tarkoittaa sitä, että kuvanhallintatoiminnot eivät toimi!';
 $_lang["configcheck_installer"] = 'asennusohjelma on yhä tallella';
@@ -129,12 +132,16 @@ $_lang["configcheck_php_gdzip_msg"] = 'MODx vaatii GD ja Zip PHP-laajennukset to
 $_lang["configcheck_register_globals"] = 'Palvelimen php.ini-tiedossa register_globals on asetettu päälle ';
 $_lang["configcheck_register_globals_msg"] = 'Tämä asetus tekee sivuston alttiiksi Cross Site Scripting- eli XSS-hyökkäyksille. Kysy palveluntarjoajaltasi, miten asia voitaisiin ratkaista.';
 $_lang["configcheck_title"] = 'Asetusten tarkistus';
+$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher Plugin detected';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Delete TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Disable TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'The TemplateSwitcher plugin has been found to cause caching and performance problems, and should be used only the functionality is required in your site.';
 $_lang["configcheck_unauthorizedpage_unavailable"] = '"Pääsy kielletty" -sivua ei ole julkaistu.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = '"Pääsy kielletty" -sivulle ei joko päästä tai sitä ei ole olemassa. Tämä voi johtaa ongelmiin sivustollasi. Varmista, ettei sivulle ole määritetty web-käyttäjäryhmää.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = '"Pääsy kielletty" -sivua ei ole julkaistu.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = '"Pääsy kielletty" -sivu ei ole julkinen. Varmista, että sivu on julkaistu ja sivun ID-tunnus on oikein.';
 $_lang["configcheck_validate_referer"] = 'Tietoturvavaroitus: HTTP Header Validation';
-$_lang["configcheck_validate_referer_msg"] = "Järjestelmän asetus <strong>Tarkasta HTTP_REFERER tunnisteet?</strong> on poissa päältä. On suositeltavaa ottaa asetus käyttöön. <a href=\"index.php?a=17\">Järjestelmän asetukset</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Älä näytä tätä ilmoitusta uudelleen.</em></a>";
+$_lang["configcheck_validate_referer_msg"] = 'Järjestelmän asetus <strong>Tarkasta HTTP_REFERER tunnisteet?</strong> on poissa päältä. On suositeltavaa ottaa asetus käyttöön. <a href="index.php?a=17">Järjestelmän asetukset</a><br /><a href="javascript:hideHeaderVerificationWarning();"><em>Älä näytä tätä ilmoitusta uudelleen.</em></a>';
 $_lang["configcheck_warning"] = 'Varoitus:';
 $_lang["configcheck_what"] = 'Mitä tämä tarkoittaa?';
 $_lang["confirm_block"] = 'Haluatko varmasti estää käyttäjän?';
@@ -209,6 +216,11 @@ $_lang["defaultsearch_message"] = 'Määrittele ovatko uudet sivut oletusrvoises
 $_lang["defaultsearch_title"] = 'Haettavissa -oletus:';
 $_lang["defaulttemplate_message"] = 'Valitse oletussivupohja uusille sivuille. Käytettävän sivupohjan voi vaihtaa sivun luomisen tai muokkaamisen yhteydessä. Oletussivupohja vain esivalitsee yhden sivupohjan.';
 $_lang["defaulttemplate_title"] = 'Oletussivupohja:';
+$_lang["defaulttemplate_logic_title"] = 'Automatic Template Assignment';
+$_lang["defaulttemplate_logic_general_message"] = 'New Resources will have the following templates, falling back to higher levels if not found:';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: the System Default Template.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Parent</strong>: the same Template as the parent container.';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Sibling</strong>: the same Template as other Resources in the same container.';
 $_lang["delete"] = 'Poista';
 $_lang["delete_resource"] = 'Poista';
 $_lang["delete_tags"] = 'Poista metatiedot';
@@ -392,6 +404,21 @@ $_lang["info"] = 'Info';
 $_lang["information"] = 'Informaatio';
 $_lang["inline"] = 'Normaali';
 $_lang["insert"] = 'Selaa';
+$_lang["maxImageWidth"] = 'Maximum image width';
+$_lang["maxImageHeight"] = 'Maximum image height';
+$_lang["thumbWidth"] = 'Maximum thumbnail width';
+$_lang["thumbHeight"] = 'Maximum thumbnail height';
+$_lang["thumbsDir"] = 'Thumbnails directory location';
+$_lang["jpegQuality"] = 'JPEG compression';
+$_lang["denyZipDownload"] = 'Disable zip-archives downloading';
+$_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
+$_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
+$_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
+$_lang["thumbsDir_message"] = 'The name of previews folder.';
+$_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
+$_lang["showHiddenFiles"] = 'Show hidden files in file browser';
 $_lang["keyword"] = 'Avainsana';
 $_lang["keywords"] = 'Avainsanat';
 $_lang["keywords_intro"] = 'Muokkaa avainsanoja (keyword). Lisää uusi avainsana syöttämällä se uuden avainsanan kenttään. Muokkaa avainsanaa kirjoittamalla korvaava avainsana. Poista avainsanoja valitsemalla poistettavat sanat.';
@@ -666,6 +693,7 @@ $_lang["refresh_site"] = 'Tyhjennä välimuisti';
 $_lang["refresh_title"] = 'Välimuisti tyhjennetty';
 $_lang["refresh_tree"] = 'Päivitä';
 $_lang["refresh_unpublished"] = '<strong>%s</strong> sivua piilotettiin.';
+$_lang["release_date"] = 'Release date';
 $_lang["remember_last_tab"] = 'Muista välilehdet';
 $_lang["remember_last_tab_message"] = 'Viimeksi käytetty välilehti latautuu ensin oletuksena ensimmäisenä olevan välilehden sijaan.';
 $_lang["remember_username"] = 'Muista minut';
@@ -676,6 +704,7 @@ $_lang["rename"] = 'Nimeä uudelleen';
 $_lang["reports"] = 'Raportit';
 $_lang["require_tagname"] = 'Metatiedon nimi on välttämätön';
 $_lang["require_tagvalue"] = 'Metatiedon arvo on välttämätön';
+$_lang["reserved_name_warning"] = 'You have used a reserved name.';
 $_lang["reset"] = 'Tyhjennä';
 $_lang["reset_failedlogins"] = 'tyhjennä';
 $_lang["resource"] = 'Sivu';
@@ -780,7 +809,7 @@ $_lang["role_new_user"] = 'Luo uusi käyttää';
 $_lang["role_new_web_user"] = 'Luo uusi web-käyttäjä';
 $_lang["role_plugin_management"] = 'Liitännäisten hallinta';
 $_lang["role_publish_doc"] = 'Julkaise sivu';
-$_lang['role_remove_locks'] = 'Poista lukot';
+$_lang["role_remove_locks"] = 'Poista lukot';
 $_lang["role_role_management"] = 'Roolien hallinta';
 $_lang["role_run_module"] = 'Suorita moduuli';
 $_lang["role_save_chunk"] = 'Tallenna HTML-palanen';
@@ -854,6 +883,7 @@ $_lang["settings_events"] = 'Järjestelmätapahtumat';
 $_lang["settings_furls"] = 'Selkokieliset osoitteet';
 $_lang["settings_general"] = 'Yleiset';
 $_lang["settings_misc"] = 'Sekalaiset asetukset';
+$_lang["settings_KC"] = 'File Browser';
 $_lang["settings_page_settings"] = 'Julkaisuasetukset';
 $_lang["settings_photo"] = 'Kuva';
 $_lang["settings_properties"] = 'Asetukset';
@@ -903,9 +933,41 @@ $_lang["sunday"] = 'Sunnuntai';
 $_lang["sys_alert"] = 'Järjestelmähälytys';
 $_lang["sysinfo_activity_message"] = 'Lista viimeksi muokatuista sivuista.';
 $_lang["sysinfo_userid"] = 'Käyttäjä';
-$_lang["system_email_signup"] = "Hei [+uid+]\n\nTässä ovat kirjautumistiedot henkilölle [+sname+] Sisällönhallintajärjestelmä:\n\nKäyttäjänimi: [+uid+]\nSalasana: [+pwd+]\n\nKun olet kirjautunut Sisällönhallintajärjestelmään, voit muuttaa salasanasi.\n\nTerveisin,\nSivuston Ylläpitäjä";
-$_lang["system_email_webreminder"] = "Hei [+uid+]\n\nAktivoidaksesi uuden salasanasi, napsauta linkkiä:\n\n[+surl+]\n\nJos toiminto onnistuu, voit käyttää seuraavaa salasanaa kirjautuaksesi sisään:\n\nSalasana:[+pwd+]\nJos et tilannut tätä sähköpostiviestiä, älä HUOMAAi tätä.\n\nTerveisin,\nSivuston Ylläpitäjä";
-$_lang["system_email_websignup"] = "Hei [+uid+] \n\nTässä ovat kirjautumistiedot henkilölle [+sname+]:\n\nKäyttäjänimi: [+uid+]\nSalasana: [+pwd+]\n\nKun olet kirjautunut Sisällönhallintajärjestelmään, voit muuttaa salasanasi.\n\nTerveisin,\nSivuston Ylläpitäjä";
+$_lang["system_email_signup"] = 'Hei [+uid+]
+
+Tässä ovat kirjautumistiedot henkilölle [+sname+] Sisällönhallintajärjestelmä:
+
+Käyttäjänimi: [+uid+]
+Salasana: [+pwd+]
+
+Kun olet kirjautunut Sisällönhallintajärjestelmään, voit muuttaa salasanasi.
+
+Terveisin,
+Sivuston Ylläpitäjä';
+$_lang["system_email_webreminder"] = 'Hei [+uid+]
+
+Aktivoidaksesi uuden salasanasi, napsauta linkkiä:
+
+[+surl+]
+
+Jos toiminto onnistuu, voit käyttää seuraavaa salasanaa kirjautuaksesi sisään:
+
+Salasana:[+pwd+]
+Jos et tilannut tätä sähköpostiviestiä, älä HUOMAAi tätä.
+
+Terveisin,
+Sivuston Ylläpitäjä';
+$_lang["system_email_websignup"] = 'Hei [+uid+] 
+
+Tässä ovat kirjautumistiedot henkilölle [+sname+]:
+
+Käyttäjänimi: [+uid+]
+Salasana: [+pwd+]
+
+Kun olet kirjautunut Sisällönhallintajärjestelmään, voit muuttaa salasanasi.
+
+Terveisin,
+Sivuston Ylläpitäjä';
 $_lang["table_hoverinfo"] = 'Katso taulun tarkempi selitysteksti viemällä hiiren osoitin taulun nimen päälle. Kaikissa tauluissa ei ole selitystekstiä.';
 $_lang["table_prefix"] = 'Taulun etuliite';
 $_lang["tag"] = 'Metatiedon tyyppi';
@@ -937,6 +999,7 @@ $_lang["tmplvars_caption"] = 'Otsikko';
 $_lang["tmplvars_default"] = 'Oletusarvo';
 $_lang["tmplvars_description"] = 'Kuvaus';
 $_lang["tmplvars_elements"] = 'Arvovaihtoehdot';
+$_lang["tmplvars_inherited"] = 'Value inherited';
 $_lang["tmplvars_management_msg"] = 'Muokkaa sivupohjan muuttujia (template variable).';
 $_lang["tmplvars_msg"] = 'Muokkaa sivupohjan muuttujaa (template variable). Muista, että muuttujat täytyy yhdistää haluttuihin sivupohjiin.';
 $_lang["tmplvars_name"] = 'Nimi';
@@ -1029,7 +1092,6 @@ $_lang["users"] = 'Turvallisuus';
 $_lang["validate_referer_message"] = 'Tarkasta HTTP_REFERER tunnisteet vähentääksesi mahdollisuutta, että ylläpidon käyttäjiä huijataan suorittamaan tietämättään ei-toivottuja toimintoja (Cross Site Request Forgery Attack). Asetusta ei mahdollisesti voida käyttää, jos palvelin ei lähetä HTTP_REFERER tunnistetta.';
 $_lang["validate_referer_title"] = 'Tarkasta HTTP_REFERER tunnisteet?';
 $_lang["value"] = 'Arvo';
-$_lang["version_codename"] = 'Version nimi';
 $_lang["view"] = 'Näytä';
 $_lang["view_child_resources_in_container"] = 'Näytä alasivut';
 $_lang["view_log"] = 'Näytä loki';
@@ -1068,4 +1130,52 @@ $_lang["yourinfo_role"] = 'Rooli:';
 $_lang["yourinfo_title"] = 'Info';
 $_lang["yourinfo_total_logins"] = 'Sisäänkirjautumisia yhteensä:';
 $_lang["yourinfo_username"] = 'Käyttäjänimi:';
-?>
+$_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
+$_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
+$_lang["a17_error_reporting_opt0"] = 'Ignore all';
+$_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Detect all';
+$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
+$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+$_lang["enable_bindings_title"] = 'Enable @Bindings commands';
+$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+$_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
+$_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
+$_lang["bkmgr_restore_title"] = 'Restore';
+$_lang["bkmgr_import_ok"] = 'SQL recovery was performed normally.';
+$_lang["bkmgr_snapshot_ok"] = 'The snapshot was saved normally.';
+$_lang["bkmgr_run_sql_file_label"] = 'Execute by sql file';
+$_lang["bkmgr_run_sql_direct_label"] = 'Direct execute SQL command strings';
+$_lang["bkmgr_run_sql_submit"] = 'Execute restore';
+$_lang["bkmgr_run_sql_result"] = 'Result';
+$_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
+$_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
+$_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
+$_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
+$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+$_lang["files.dynamic.php1"] = 'create text file';
+$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
+$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
+$_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["not_readable_dir"] = 'Can not read this directory.';
+$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
+$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+$_lang["make_folders_title"] = 'Make end slash URL at the container';
+$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+$_lang["check_files_onlogin_title"] = 'Check core files on login';
+$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
+$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["cache_type_title"] = 'Document caching type';
+$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
+$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
+$_lang["seostrict_title"] = 'Use SEO Strict URLs';
+$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
+$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+$_lang["user_street"] = 'Street';
+$_lang["user_city"] = 'City';
