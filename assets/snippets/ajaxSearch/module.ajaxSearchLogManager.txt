@@ -39,7 +39,7 @@ switch($opcode) {
     $output = <<<EOD
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="media/style/MODxCarbon/style.css" />
+<link rel="stylesheet" type="text/css" href="media/style/MODxRE/style.css" />
 <style type="text/css">
 body { 
   color: #222; 
