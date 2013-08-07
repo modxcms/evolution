@@ -284,6 +284,19 @@ class ditto {
 			$placeholders['ditto_iteration'] = $x;
 		}
 		
+		//Added by Andchir
+		//if (in_array("ditto_index",$this->fields["display"]["custom"])) {
+			$r_start = isset($_GET['start']) ? $_GET['start'] : 0;
+      $placeholders['ditto_index'] = $r_start+$x+1;
+		//}
+		
+        //Added by Dmi3yy placeholder ditto_class
+         if ($x % 2 == 0) {$class="even";} else {$class="odd";}
+             if ($x==0) $class.=" first";
+             if ($x==($stop -1)) $class.=" last";
+             if ($resource['id'] == $modx->documentObject['id']) $class.=" current";
+             $placeholders['ditto_class'] = $class;
+
 		// set url placeholder
 		if (in_array("url",$this->fields["display"]["custom"])) {
 			if($resource['id']==$modx->config['site_start'])
