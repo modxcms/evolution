@@ -133,15 +133,15 @@
 							}			
 							function BrowseServer(ctrl) {
 								lastImageCtrl = ctrl;
-								var w = screen.width * 0.7;
-								var h = screen.height * 0.7;
+								var w = screen.width * 0.5;
+								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.html?Type=images&Connector=".MODX_MANAGER_URL."media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
 							}
 							
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
-								var w = screen.width * 0.7;
-								var h = screen.height * 0.7;
+								var w = screen.width * 0.5;
+								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.html?Type=files&Connector=".MODX_MANAGER_URL."media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
 							}
 							
@@ -189,15 +189,15 @@
 							
 								function BrowseServer(ctrl) {
 								lastImageCtrl = ctrl;
-								var w = screen.width * 0.7;
-								var h = screen.height * 0.7;
+								var w = screen.width * 0.5;
+								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.html?Type=images&Connector=".MODX_MANAGER_URL."media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
 							}
 										
 							function BrowseFileServer(ctrl) {
 								lastFileCtrl = ctrl;
-								var w = screen.width * 0.7;
-								var h = screen.height * 0.7;
+								var w = screen.width * 0.5;
+								var h = screen.height * 0.5;
 								OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.html?Type=files&Connector=".MODX_MANAGER_URL."media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
 							}
 							
