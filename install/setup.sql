@@ -992,7 +992,7 @@ INSERT IGNORE INTO `{PREFIX}system_settings`
 ('denyZipDownload', '0'),
 ('denyExtensionRename', '0'),
 ('showHiddenFiles', '0'),
-('make_folders', '1');
+('make_folders', '0');
 
 
 REPLACE INTO `{PREFIX}user_roles` 
