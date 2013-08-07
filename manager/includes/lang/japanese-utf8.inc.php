@@ -1191,3 +1191,4 @@ $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access
 $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
 $_lang["user_street"] = '番地';
 $_lang["user_city"] = '市区町村';
+$_lang["user_other"] = 'その他';

@@ -1192,3 +1192,4 @@ $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirecto
 
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
+$_lang["user_other"] = 'Other';
