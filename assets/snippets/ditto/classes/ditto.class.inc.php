@@ -1011,10 +1011,10 @@ class ditto {
 	                WHERE (sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0)
 	                AND ($access)
 	                GROUP BY sc.id ";
-	        $result= $modx->dbQuery($sql);
+	        $result= $modx->db->query($sql);
 	        $resourceArray= array ();
-	        for ($i= 0; $i < @ $modx->recordCount($result); $i++) {
-	            array_push($resourceArray, @ $modx->fetchRow($result));
+	        for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
+	            array_push($resourceArray, @ $modx->db->getRow($result));
 	        }
 	        return $resourceArray;
 	    }
@@ -1073,7 +1073,16 @@ class ditto {
 			}
 			$queryString = "";
 			foreach ($query as $param=>$value) {
-				$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+				
+        //$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+        
+        if(!is_array($value)){
+          $queryString .= '&'.$param.'='.$value;
+        }else{
+          foreach ($value as $key=>$val){
+            $queryString .= '&'.$param.'['.$key.']='.$val;
+          }
+        }
 			}
 			$cID = ($id !== false) ? $id : $modx->documentObject['id'];
 			$url = $modx->makeURL(trim($cID), '', $queryString);
