@@ -116,7 +116,7 @@ $_lang["configcheck_admin"] = 'Kontaktujte prosím administrátora systému a up
 $_lang["configcheck_cache"] = 'Adresář cache není nastavený pro zápis.';
 $_lang["configcheck_cache_msg"] = 'MODx nemůže zapisovat do adresáře cache. Systém bude fungovat správně, ale nebude dostupná funkce zásobníku. Prosím nastavte povolení pro zápis do adresáře cache.';
 $_lang["configcheck_configinc"] = 'Do konfiguračního souboru je stále možno zapisovat.';
-$_lang["configcheck_configinc_msg"] = 'Velmi neslušní lidé mohou potenciálně způsobit pěkný nepořádek na vašich stránkách a čemkoli spojeném s nimi. <strong>Opravdu.</strong> Prosím nastavte váš konfigurační soubor (/'.MGR_DIR.'/includes/config.inc.php) jen pro čtení!';
+$_lang["configcheck_configinc_msg"] = 'Velmi neslušní lidé mohou potenciálně způsobit pěkný nepořádek na vašich stránkách a čemkoli spojeném s nimi. <strong>Opravdu.</strong> Prosím nastavte váš konfigurační soubor (/[+MGR_DIR+]/includes/config.inc.php) jen pro čtení!';
 $_lang["configcheck_default_msg"] = 'Byla nalezena nespecifikovaná výstraha. Pro další postup použíjte křišťálovou kouli. :-)';
 $_lang["configcheck_errorpage_unavailable"] = 'Vaše Chybová stránka (error 404) není dostupná.';
 $_lang["configcheck_errorpage_unavailable_msg"] = 'To znamená, že vaše Chybová stránka není dostupná normálním internetovým uživatelům nebo neexistuje. To může vést k mnoha chybovým zápisům do logů. Ujistěte se zda žádná ze skupin návštěvníků nemá přístup k této stránce.';
@@ -145,7 +145,7 @@ $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'To znamená, že Strá
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Stránka o neautorizovaném přístupu definovaná v nastavení webu není publikována.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'To znamená, že vaše Stránka o neautorizovaném přístupu je nedostupná širolé veřejnosti. Publikujte stránku nebo se přesvědčte, že stránka existuje a je umístěna ve stromu dokumentů v Nástrojích &gt; Konfigurační menu.';
 $_lang["configcheck_validate_referer"] = 'Bezpečnostní upozornění: Validace HTTP hlaviček';
-$_lang["configcheck_validate_referer_msg"] = "Nastavení <strong>Ověřit hlavičky HTTP_REFERER</strong> v konfiguraci systému je vypnuté. Doporučujeme jej zapnout. <a href=\"index.php?a=17\">Přejít na konfiguraci systému</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Nezobrazovat to znovu.</em></a>";
+$_lang["configcheck_validate_referer_msg"] = 'Nastavení <strong>Ověřit hlavičky HTTP_REFERER</strong> v konfiguraci systému je vypnuté. Doporučujeme jej zapnout. <a href="index.php?a=17">Přejít na konfiguraci systému</a><br /><a href="javascript:hideHeaderVerificationWarning();"><em>Nezobrazovat to znovu.</em></a>';
 $_lang["configcheck_warning"] = 'Výstraha konfigurace:';
 $_lang["configcheck_what"] = 'Co to znamená?';
 $_lang["confirm_block"] = 'Opravdu chcete zablokovat tohoto uživatele?';
@@ -408,6 +408,21 @@ $_lang["info"] = 'Informace';
 $_lang["information"] = 'Informace';
 $_lang["inline"] = 'V řadě';
 $_lang["insert"] = 'Vložit';
+$_lang["maxImageWidth"] = 'Maximum image width';
+$_lang["maxImageHeight"] = 'Maximum image height';
+$_lang["thumbWidth"] = 'Maximum thumbnail width';
+$_lang["thumbHeight"] = 'Maximum thumbnail height';
+$_lang["thumbsDir"] = 'Thumbnails directory location';
+$_lang["jpegQuality"] = 'JPEG compression';
+$_lang["denyZipDownload"] = 'Disable zip-archives downloading';
+$_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
+$_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
+$_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
+$_lang["thumbsDir_message"] = 'The name of previews folder.';
+$_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
+$_lang["showHiddenFiles"] = 'Show hidden files in file browser';
 $_lang["keyword"] = 'Klíčové slovo';
 $_lang["keywords"] = 'Klíčová slova';
 $_lang["keywords_intro"] = 'Pro úpravu klíčového slova, jednoduše napište do textového pole vedle původního slova nové klíčové slovo. Pro smazání klíčového slova, označte \'vymazávací\' box před klíčovým slovem. Jestliže označíte vymazávací pole a také změníte jeho název, klíčové slovo bude smazáno a přejmenování klíčového slova nebude uskutečněno!';
@@ -533,10 +548,10 @@ $_lang["module_resource_title"] = 'Závislosti modulu';
 $_lang["module_title"] = 'Vytvořit/upravit modul';
 $_lang["module_viewdepend_msg"] = 'Zde si můžete prohlédnout přiřazené zdroje, které modul požaduje. Klikněte na tlačítko \'Správce závislostí\' k úpravě závislostí';
 $_lang["modules"] = 'Moduly';
-$_lang["modx_news"] ='Oznamování MODx novinek';
-$_lang["modx_news_tab"] ='MODx novinky';
-$_lang["modx_news_title"] ='MODx novinky';
-$_lang["modx_security_notices"] ='MODx bezpečnostní oznámení';
+$_lang["modx_news"] = 'Oznamování MODx novinek';
+$_lang["modx_news_tab"] = 'MODx novinky';
+$_lang["modx_news_title"] = 'MODx novinky';
+$_lang["modx_security_notices"] = 'MODx bezpečnostní oznámení';
 $_lang["modx_version"] = 'MODx verze';
 $_lang["monday"] = 'Pondělí';
 $_lang["move"] = 'Přesunout';
@@ -698,7 +713,11 @@ $_lang["reset"] = 'Vymazat';
 $_lang["reset_failedlogins"] = 'reset';
 $_lang["resource"] = 'Dokument';
 $_lang["resource_alias"] = 'Zástupce dokumentu';
-$_lang["resource_alias_help"] = "Zde můžete zvolit zástupce pro tento dokument. Pro lehčí přístup k dokumentu použijte:\n\nhttp://vase_domena/zastupce\n\nZástupce bude pracovat jen při aktivování funkce zjednodušených url adres.";
+$_lang["resource_alias_help"] = 'Zde můžete zvolit zástupce pro tento dokument. Pro lehčí přístup k dokumentu použijte:
+
+http://vase_domena/zastupce
+
+Zástupce bude pracovat jen při aktivování funkce zjednodušených url adres.';
 $_lang["resource_content"] = 'Obsah';
 $_lang["resource_description"] = 'Popis';
 $_lang["resource_description_help"] = 'Sem můžete zadat podrobný popis dokumentu.';
@@ -853,8 +872,8 @@ $_lang["search_results_returned_msg"] = 'Vaše vyhledávací kritéria vrací <b
 $_lang["search_results_returned_title"] = 'Nadpis';
 $_lang["search_view_docdata"] = 'Zobrazit tuto položku';
 $_lang["security"] = 'Zabezpečení';
-$_lang["security_notices_tab"] ='Bezpečnostní oznámení';
-$_lang["security_notices_title"] ='Bezpečnostní oznámení';
+$_lang["security_notices_tab"] = 'Bezpečnostní oznámení';
+$_lang["security_notices_title"] = 'Bezpečnostní oznámení';
 $_lang["select_date"] = 'Vybrat datum';
 $_lang["send"] = 'Poslat';
 $_lang["server_protocol_http"] = 'http';
@@ -872,6 +891,7 @@ $_lang["settings_events"] = 'Systemové události';
 $_lang["settings_furls"] = 'Zjednodušené URL';
 $_lang["settings_general"] = 'Všeobecné';
 $_lang["settings_misc"] = 'Správce souborů';
+$_lang["settings_KC"] = 'File Browser';
 $_lang["settings_page_settings"] = 'Nastavení stránky';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Vlastnosti';
@@ -921,9 +941,42 @@ $_lang["sunday"] = 'Neděle';
 $_lang["sys_alert"] = 'Výstraha systému';
 $_lang["sysinfo_activity_message"] = 'Tento výpis informuje, které dokumenty byli nedávno upravované uživateli.';
 $_lang["sysinfo_userid"] = 'Uživatel';
-$_lang["system_email_signup"] = "Dobrý den [+uid+]\n\nZde jsou podrobnosti k vašemu přihlášení pro [+sname+] do správce obsahu:\n\nUživatel: [+uid+]\nHeslo: [+pwd+]\n\nPři prvním přihlášení si můžete změnit heslo.\n\nS pozdravem,\nsprávce stránek";
-$_lang["system_email_webreminder"] = "Dobrý den [+uid+]\n\nK aktivaci nového hesla klikněte na následující odkaz:\n\n[+surl+]\n\nJestliže vše proběhlo v pořádku, můžete užívat následující heslo k přihlášení:\n\nHeslo:[+pwd+]\n\nJestliže jste si tento e-mail nevyžádali, tak ho prosím ignorujte.\n\nS pozdravem,\nsprávce stránek";
-$_lang["system_email_websignup"] = "Dobrý den [+uid+]\n\nZde jsou podrobnosti k vašemu přihlášení do [+sname+]:\n\nUživatel: [+uid+]\nHeslo: [+pwd+]\n\nPři prvním přihlášení do [+sname+] si můžete změnit heslo.\n\nS pozdravem,\nsprávce stránek";
+$_lang["system_email_signup"] = 'Dobrý den [+uid+]
+
+Zde jsou podrobnosti k vašemu přihlášení pro [+sname+] do správce obsahu:
+
+Uživatel: [+uid+]
+Heslo: [+pwd+]
+
+Při prvním přihlášení si můžete změnit heslo.
+
+S pozdravem,
+správce stránek';
+$_lang["system_email_webreminder"] = 'Dobrý den [+uid+]
+
+K aktivaci nového hesla klikněte na následující odkaz:
+
+[+surl+]
+
+Jestliže vše proběhlo v pořádku, můžete užívat následující heslo k přihlášení:
+
+Heslo:[+pwd+]
+
+Jestliže jste si tento e-mail nevyžádali, tak ho prosím ignorujte.
+
+S pozdravem,
+správce stránek';
+$_lang["system_email_websignup"] = 'Dobrý den [+uid+]
+
+Zde jsou podrobnosti k vašemu přihlášení do [+sname+]:
+
+Uživatel: [+uid+]
+Heslo: [+pwd+]
+
+Při prvním přihlášení do [+sname+] si můžete změnit heslo.
+
+S pozdravem,
+správce stránek';
 $_lang["table_hoverinfo"] = 'Zastavením kurzoru myši nad jménem tabulky zobrazí se krátký popis funkce tabulky (ne všechny tabulky mají nastaveny <i>komentáře</i>).';
 $_lang["table_prefix"] = 'Předpona tabulek';
 $_lang["tag"] = 'Značka';
@@ -955,6 +1008,7 @@ $_lang["tmplvars_caption"] = 'Hlavička';
 $_lang["tmplvars_default"] = 'Původní hodnota';
 $_lang["tmplvars_description"] = 'Popis';
 $_lang["tmplvars_elements"] = 'Volba hodnoty vstupu';
+$_lang["tmplvars_inherited"] = 'Value inherited';
 $_lang["tmplvars_management_msg"] = 'Spravovat přidaná pole uživatelského obsahu (Template Variables) vašich dokumentů.';
 $_lang["tmplvars_msg"] = 'Zde můžete přidávat a upravovat Template Variables. Každá Template Variable musí být zpřístupněna pro danou šablonu, aby mohla být přístupná, mj. z aktivních prvků a dokumentů, stejně jako jiné proměnné.';
 $_lang["tmplvars_name"] = 'Jméno proměnné';
@@ -1085,5 +1139,52 @@ $_lang["yourinfo_role"] = 'Vaše oprávnění je:';
 $_lang["yourinfo_title"] = 'Vaše informace';
 $_lang["yourinfo_total_logins"] = 'Celkový počet přihlášení:';
 $_lang["yourinfo_username"] = 'Jste přihlášen jako:';
-
-?>
+$_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
+$_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
+$_lang["a17_error_reporting_opt0"] = 'Ignore all';
+$_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Detect all';
+$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
+$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+$_lang["enable_bindings_title"] = 'Enable @Bindings commands';
+$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+$_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
+$_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
+$_lang["bkmgr_restore_title"] = 'Restore';
+$_lang["bkmgr_import_ok"] = 'SQL recovery was performed normally.';
+$_lang["bkmgr_snapshot_ok"] = 'The snapshot was saved normally.';
+$_lang["bkmgr_run_sql_file_label"] = 'Execute by sql file';
+$_lang["bkmgr_run_sql_direct_label"] = 'Direct execute SQL command strings';
+$_lang["bkmgr_run_sql_submit"] = 'Execute restore';
+$_lang["bkmgr_run_sql_result"] = 'Result';
+$_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
+$_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
+$_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
+$_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
+$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+$_lang["files.dynamic.php1"] = 'create text file';
+$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
+$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
+$_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["not_readable_dir"] = 'Can not read this directory.';
+$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
+$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+$_lang["make_folders_title"] = 'Make end slash URL at the container';
+$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+$_lang["check_files_onlogin_title"] = 'Check core files on login';
+$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
+$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["cache_type_title"] = 'Document caching type';
+$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
+$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
+$_lang["seostrict_title"] = 'Use SEO Strict URLs';
+$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
+$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+$_lang["user_street"] = 'Street';
+$_lang["user_city"] = 'City';

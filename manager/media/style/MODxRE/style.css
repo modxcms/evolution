@@ -482,11 +482,12 @@ input.submit {
 	color: #777;
 	margin: 0 15px;
 	padding: 5px 3px 5px;
+	overflow:hidden;zoom:1;
 	font-weight: bold;
 	font-size: 125%;
 	border: 1px solid #ccc;
 	border-bottom:none;
-		text-shadow: 0px 1px 0px #FFF;
+	text-shadow: 0px 1px 0px #FFF;
 }
 	.tab-page .sectionHeader {
 		margin: 2px 3px 0px;
@@ -501,7 +502,8 @@ input.submit {
 	margin: 5px 15px 15px;
 	display: block;
 }
-	.tab-page .sectionBody {
+	.tab-page .sectionBody,
+	.section .sectionBody {
 		background: none repeat scroll 0 0 #F7F7F7;
 		border: 1px solid #CCCCCC;
 		margin: 0 3px 15px;
@@ -511,6 +513,11 @@ input.submit {
 		direction: rtl;
 		position: inherit;
 	}
+.section .sectionBody {
+	margin:0 15px 15px;
+	padding-left:15px;
+	background-color:#fff;
+}
 .showHideVisible, .layerVisible {
 	margin: 0 10px 4px;
 }

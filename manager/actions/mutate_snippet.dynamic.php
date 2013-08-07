@@ -321,7 +321,6 @@ function decode(s){
           </tr>
         </table>
         <!-- PHP text editor start -->
-        <div class="section">
             <div class="sectionHeader">
                 <span style="float:left;padding:3px"><?php echo $_lang['snippet_code']?></span>
                 <span style="float:right;"><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox" <?php echo $content['wrap']== 1 ? "checked='checked'" : ""?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
@@ -329,7 +328,6 @@ function decode(s){
             <div class="sectionBody">
             <textarea dir="ltr" name="post" class="phptextarea" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? "soft" : "off"?>" onchange="documentDirty=true;"><?php echo "<?php"."\n".trim(htmlspecialchars($content['snippet']))."\n"."?>"?></textarea>
             </div>
-        </div>
         <!-- PHP text editor end -->
     </div>
 

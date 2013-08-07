@@ -424,6 +424,7 @@ while ($row = $modx->db->getRow($rs)) {
 				<option value=""></option>
 				<option value="1" <?php echo ($userdata['gender']=='1')? "selected='selected'":""; ?>><?php echo $_lang['user_male']; ?></option>
 				<option value="2" <?php echo ($userdata['gender']=='2')? "selected='selected'":""; ?>><?php echo $_lang['user_female']; ?></option>
+				<option value="3" <?php echo ($userdata['gender']=='3')? "selected='selected'":""; ?>><?php echo $_lang['user_other']; ?></option>
 				</select>
 			</td>
 		  </tr>

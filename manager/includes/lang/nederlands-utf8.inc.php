@@ -59,6 +59,7 @@ $_lang["add_template"] = 'Template toevoegen';
 $_lang["add_tv"] = 'TV toevoegen';
 $_lang["add_weblink"] = 'Nieuwe Weblink';
 $_lang["administrator_role_message"] = 'Dit profiel kan niet worden bewerkt of verwijderd.';
+$_lang["administrators"] = 'Administrators';
 $_lang["after_saving"] = 'Na opslaan';
 $_lang["alert_delete_self"] = 'U kunt uzelf niet verwijderen!';
 $_lang["alias"] = 'Alias';
@@ -103,23 +104,27 @@ $_lang["chunk_code"] = 'Chunk code (html)';
 $_lang["chunk_multiple_id"] = 'Fout: Meerdere Chunks delen dezelfde unieke ID.';
 $_lang["chunk_no_exist"] = 'Chunk bestaat niet.';
 $_lang["cleaningup"] = 'Opschonen';
+$_lang["clean_uploaded_filename"] = 'Use Transliteration for File Uploads';
+$_lang["clean_uploaded_filename_message"] = 'Use the default or transalias settings for the file name to clean special characters from uploaded file names, preserving dot-characters (periods)';
 $_lang["clear_log"] = 'Logboek leegmaken';
 $_lang["click_to_context"] = 'Klik om het context menu te openen';
 $_lang["click_to_edit_title"] = 'Klik hier om deze regel te bewerken';
 $_lang["click_to_view_details"] = 'Klik hier voor details';
 $_lang["close"] = 'Sluiten';
+$_lang["code"] = 'Code';
 $_lang["collapse_tree"] = 'Website boomstructuur inklappen';
 $_lang["comment"] = 'Opmerking';
 $_lang["configcheck_admin"] = 'Neem a.u.b. contact op met een systeembeheerder en geef deze melding door!';
 $_lang["configcheck_cache"] = 'Kan niet schrijven in de cache Map';
 $_lang["configcheck_cache_msg"] = 'MODx kan niet naar de cache Map schrijven. MODx blijft normaal functioneren, maar er zal geen caching plaatsvinden. Om dit probleem op te lossen dient u de /_cache/ Map schrijfrechten te geven.';
 $_lang["configcheck_configinc"] = 'Configuratiebestand heeft nog schrijfrechten';
-$_lang["configcheck_configinc_msg"] = 'Slechtwillenden zouden mogelijk schade aan uw website kunnen toebrengen met alle gevolgen van dien. <strong>Echt waar.</strong> Zet a.u.b. uw configuratiebestand (/'.MGR_DIR.'/includes/config.inc.php) op alleen-lezen!';
+$_lang["configcheck_configinc_msg"] = 'Slechtwillenden zouden mogelijk schade aan uw website kunnen toebrengen met alle gevolgen van dien. <strong>Echt waar.</strong> Zet a.u.b. uw configuratiebestand (/[+MGR_DIR+]/includes/config.inc.php) op alleen-lezen!';
 $_lang["configcheck_default_msg"] = 'Er is een ongedefinieerde waarschuwing gevonden. Dit is zeer vreemd.';
 $_lang["configcheck_errorpage_unavailable"] = 'Er is geen \'Fout\'-pagina voor uw website beschikbaar.';
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Dit houdt in dat uw \'Fout\'-pagina niet toegankelijk is voor normale Webgebruikers of niet bestaat. Dit kan leiden tot een oneindige lus en veel foutmeldingen in uw logbestand. Zorg ervoor dat de Pagina niet aan een Webgebruikersgroep is toegewezen.';
 $_lang["configcheck_errorpage_unpublished"] = 'De \'Fout\'-pagina voor uw website is niet gepubliceerd of bestaat niet.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Dit houdt in dat uw \'Fout\'-pagina niet toegankelijk is voor bezoekers. Publiceer de Pagina of zorg ervoor dat het is toegewezen aan een bestaande Pagina in de inhoudsopgave van uw website met het Beheer &gt; Configuratie menu.';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Don\'t show this again.</em></a>';
 $_lang["configcheck_images"] = 'De Map images is niet schrijfbaar';
 $_lang["configcheck_images_msg"] = 'De Map images is niet schrijfbaar of bestaat niet. Dit betekent dat de Afbeeldingen beheer opties in de teksteditor niet werken!';
 $_lang["configcheck_installer"] = 'De installer is nog niet verwijderd';
@@ -128,13 +133,21 @@ $_lang["configcheck_lang_difference"] = 'Ongeldig aantal regels in het vertaalbe
 $_lang["configcheck_lang_difference_msg"] = 'De taal die u heeft geselecteerd (Nederlands) heeft een verschillend aantal eenheden ten opzichte van de standaardtaal. Dit hoeft niet tot problemen te leiden, maar het is wel aan te raden om het huidige vertaalbestand te updaten.';
 $_lang["configcheck_notok"] = '&Eacute;&eacute;n of meer configuratie opties zijn onjuist gebleken: ';
 $_lang["configcheck_ok"] = 'Controle is geslaagd - er zijn geen onjuistheden gevonden.';
+$_lang["configcheck_php_gdzip"] = 'GD and/or Zip PHP extensions not found';
+$_lang["configcheck_php_gdzip_msg"] = 'MODX needs the GD and Zip extension enabled for PHP. While MODX will work without them, you will not be able to take full advantage of the built-in File Manager, Image Editor or Captcha for logins.';
 $_lang["configcheck_register_globals"] = 'register_globals staat op ON in uw php.ini configuratiebestand';
 $_lang["configcheck_register_globals_msg"] = 'Deze instelling maakt uw website veel gevoeliger voor Cross Site Scripting (XSS) aanvallen. Neem contact op met uw host over hoe u deze instelling kunt uitzetten.';
 $_lang["configcheck_title"] = 'Configuratietest';
+$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher Plugin detected';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Delete TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Disable TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'The TemplateSwitcher plugin has been found to cause caching and performance problems, and should be used only the functionality is required in your site.';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Uw \'Niet Gemachtigd\'-pagina is niet gepubliceerd of bestaat niet.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Dit houdt in dat uw \'Niet Gemachtigd\'-pagina niet toegankelijk is voor normale Webgebruikers of niet bestaat. Dit kan leiden tot een oneindige lus en veel foutmeldingen in uw logbestand. Zorg ervoor dat de Pagina niet aan een Webgebruikersgroep is toegewezen.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'De \'Niet Gemachtigd\'-pagina die in de configuratie instellingen is aangegeven is niet gepubliceerd.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Dit houdt in dat uw \'Niet Gemachtigd\'-pagina niet toegankelijk is voor bezoekers. Publiceer de Pagina of zorg ervoor dat het is toegewezen aan een bestaande Pagina in de inhoudsopgave van uw website met het Beheer &gt; Configuratie menu.';
+$_lang["configcheck_validate_referer"] = 'Security Warning: HTTP Header Validation';
+$_lang["configcheck_validate_referer_msg"] = 'The configuration setting <strong>Validate HTTP_REFERER headers?</strong> is Off. We recommend turning it On. <a href="index.php?a=17">Go to Configuration options</a>';
 $_lang["configcheck_warning"] = 'Configuratie waarschuwing:';
 $_lang["configcheck_what"] = 'Wat betekent dit?';
 $_lang["confirm_block"] = 'Weet u zeker dat u deze Gebruiker wilt blokkeren?';
@@ -198,6 +211,7 @@ $_lang["datepicker_offset"] = 'Kalender verschil: ';
 $_lang["datepicker_offset_message"] = 'Het aantal jaar in het verleden dat getoond dient te worden in de kalender.';
 $_lang["datetime_format"] = 'Datum formaat:';
 $_lang["datetime_format_message"] = 'Het formaat van de datums in het Content Management Systeem.';
+$_lang["default"] = 'Default:';
 $_lang["defaultcache_message"] = 'Kies \'Ja\' om alle nieuwe Pagina\'s standaard cachebaar te maken.';
 $_lang["defaultcache_title"] = 'Standaard cachebaar:';
 $_lang["defaultmenuindex_message"] = 'Kies \'Ja\' om automatisch verhogen van de menu-index standaard te maken.';
@@ -208,6 +222,11 @@ $_lang["defaultsearch_message"] = 'Kies \'Ja\' om alle nieuwe Pagina\'s standaar
 $_lang["defaultsearch_title"] = 'Standaard doorzoekbaar:';
 $_lang["defaulttemplate_message"] = 'Kies hier de standaard Template voor nieuwe Pagina\'s. In de Pagina-editor kunt u eventueel een andere Template kiezen; de keuze die u hier maakt bepaalt louter welke template standaard ingesteld staat.';
 $_lang["defaulttemplate_title"] = 'Standaard Template:';
+$_lang["defaulttemplate_logic_title"] = 'Automatic Template Assignment';
+$_lang["defaulttemplate_logic_general_message"] = 'New Resources will have the following templates, falling back to higher levels if not found:';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: the System Default Template.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Parent</strong>: the same Template as the parent container.';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Sibling</strong>: the same Template as other Resources in the same container.';
 $_lang["delete"] = 'Verwijderen';
 $_lang["delete_resource"] = 'Verwijder Pagina';
 $_lang["delete_tags"] = 'Tags verwijderen';
@@ -260,6 +279,7 @@ $_lang["event_id"] = 'Gebeurtenis (event) Id';
 $_lang["eventlog"] = 'Logboek (gebeurtenissen)';
 $_lang["eventlog_msg"] = 'In het logboek voor gebeurtenissen worden informatie, waarschuwingen en foutmeldingen opgeslagen van het \'Content Management Systeem\'. De kolom \'bron\' geeft het onderdeel van het \'Content Management Systeem\' waarop het bericht betrekking heeft.';
 $_lang["eventlog_viewer"] = 'Systeem gebeurtenissen';
+$_lang["everybody"] = 'Everybody';
 $_lang["existing_category"] = 'Bestaande categorie';
 $_lang["expand_tree"] = 'Website boomstructuur uitklappen';
 $_lang["export_site"] = 'Exporteer Website';
@@ -390,6 +410,21 @@ $_lang["info"] = 'Info';
 $_lang["information"] = 'Informatie';
 $_lang["inline"] = 'Ge&iuml;ntegreerd';
 $_lang["insert"] = 'Invoegen';
+$_lang["maxImageWidth"] = 'Maximum image width';
+$_lang["maxImageHeight"] = 'Maximum image height';
+$_lang["thumbWidth"] = 'Maximum thumbnail width';
+$_lang["thumbHeight"] = 'Maximum thumbnail height';
+$_lang["thumbsDir"] = 'Thumbnails directory location';
+$_lang["jpegQuality"] = 'JPEG compression';
+$_lang["denyZipDownload"] = 'Disable zip-archives downloading';
+$_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
+$_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
+$_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
+$_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
+$_lang["thumbsDir_message"] = 'The name of previews folder.';
+$_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
+$_lang["showHiddenFiles"] = 'Show hidden files in file browser';
 $_lang["keyword"] = 'Keyword';
 $_lang["keywords"] = 'Keywords (sleutelwoorden)';
 $_lang["keywords_intro"] = 'Een keyword kan worden veranderd door in het invulveld naast het keyword de nieuwe waarde op te geven. Vink \'verwijder keyword\' aan om een keyword te verwijderen. Let erop dat verwijderen voorrang heeft op bewerken.';
@@ -656,12 +691,17 @@ $_lang["rb_title"] = 'Bestandsbeheer inschakelen:';
 $_lang["rb_webuser_message"] = 'Wilt u de Webgebruikers toestaan de bestanden op de server te beheren? <b>WAARSCHUWING:</b> Door dit toe te staan kunnen Webgebruikers dezelfde bestanden beheren als de website beheerder(s). Gebruik dit alleen voor Webgebruikers die u vertrouwd.';
 $_lang["rb_webuser_title"] = 'Webgebruikers:';
 $_lang["recent_docs"] = 'Recente Pagina\'s';
+$_lang["recommend_setting_change_title"] = 'Recommended Setting Change';
+$_lang["recommend_setting_change_description"] = 'Your site is not configured to validate the HTTP_REFERER of incoming requests to the Manager. We strongly recommend enabling this setting to reduce the risk of a CSRF (Cross Site Request Forgery) attack.';
 $_lang["refresh_cache"] = 'Cache: <b>%s</b> bestanden in cache-map gevonden en <b>%d</b> bestanden verwijderd.<p>Nieuwe cache-bestanden worden aangemaakt wanneer Pagina\'s worden opgevraagd.';
 $_lang["refresh_published"] = '<b>%s</b> Pagina\'s zijn gepubliceerd.';
 $_lang["refresh_site"] = 'Cache legen';
 $_lang["refresh_title"] = 'Website vernieuwen';
 $_lang["refresh_tree"] = 'Website boomstructuur vernieuwen';
 $_lang["refresh_unpublished"] = '<b>%s</b> Pagina\'s zijn niet gepubliceerd.';
+$_lang["release_date"] = 'Release date';
+$_lang["remember_last_tab"] = 'Remember tabs';
+$_lang["remember_last_tab_message"] = 'Tabbed Manager pages load with the last tab viewed instead of defaulting to the first tab';
 $_lang["remember_username"] = 'Gebruikersnaam onthouden';
 $_lang["remove"] = 'Verwijder';
 $_lang["remove_date"] = 'Verwijder datum';
@@ -670,6 +710,7 @@ $_lang["rename"] = 'Hernoem';
 $_lang["reports"] = 'Rapportage';
 $_lang["require_tagname"] = 'Een naam voor de \'tag\' is vereist.';
 $_lang["require_tagvalue"] = 'Een waarde voor de \'tag\' is vereist.';
+$_lang["reserved_name_warning"] = 'You have used a reserved name.';
 $_lang["reset"] = 'Reset';
 $_lang["reset_failedlogins"] = 'Reset';
 $_lang["resource"] = 'Pagina';
@@ -708,6 +749,10 @@ $_lang["resource_summary_help"] = 'Typ een korte beschrijving van de Pagina.';
 $_lang["resource_title"] = 'Titel';
 $_lang["resource_title_help"] = 'U kunt hier de titel van de Pagina opgeven. Vermijdt het gebruik van backslashes in de naam!';
 $_lang["resource_to_be_moved"] = 'De te verplaatsen Pagina';
+$_lang["resource_type"] = 'Resource Type';
+$_lang["resource_type_message"] = 'Weblinks reference Resources on the Internet including another MODX Resource, an external page, or an image or other file on the Internet. Weblinks should have a text/html Internet Media Type and Inline Content-Disposition.';
+$_lang["resource_type_weblink"] = 'Weblink';
+$_lang["resource_type_webpage"] = 'Web page';
 $_lang["resource_weblink_help"] = 'Typ hier het adres van het object waarnaar u wilt verwijzen met deze Weblink.';
 $_lang["resources_in_container"] = 'Pagina\'s in deze Map';
 $_lang["resources_in_container_no"] = 'Deze Map bevat geen Subpagina\'s.';
@@ -770,6 +815,7 @@ $_lang["role_new_user"] = 'Nieuwe Gebruikers toevoegen';
 $_lang["role_new_web_user"] = 'Webgebruikers toevoegen';
 $_lang["role_plugin_management"] = 'Plug-inbeheer';
 $_lang["role_publish_doc"] = 'Pagina\'s publiceren';
+$_lang["role_remove_locks"] = 'Remove Locks';
 $_lang["role_role_management"] = 'Rollen';
 $_lang["role_run_module"] = 'Module uitvoeren';
 $_lang["role_save_chunk"] = 'Chunks opslaan';
@@ -843,6 +889,7 @@ $_lang["settings_events"] = 'Systeemgebeurtenissen';
 $_lang["settings_furls"] = 'Zoekmachine vriendelijke URL\'s';
 $_lang["settings_general"] = 'Algemeen';
 $_lang["settings_misc"] = 'Overige';
+$_lang["settings_KC"] = 'File Browser';
 $_lang["settings_page_settings"] = 'Pagina instellingen';
 $_lang["settings_photo"] = 'Foto';
 $_lang["settings_properties"] = 'Instellingen';
@@ -853,6 +900,8 @@ $_lang["settings_templvars"] = 'Template Variabelen';
 $_lang["settings_title"] = 'Systeem configuratie';
 $_lang["settings_ui"] = 'Interface &amp; mogelijkheden';
 $_lang["settings_users"] = 'Gebruiker';
+$_lang["show_meta"] = 'Show META Keywords tab';
+$_lang["show_meta_message"] = 'Show the deprecated META Keywords tab when editing Resources in the Manager.';
 $_lang["show_tree"] = 'Website boomstructuur weergeven';
 $_lang["showing"] = 'Weergeven';
 $_lang["signupemail_message"] = 'Hier kunt u het bericht instellen die naar uw Gebruikers verstuurd wordt wanneer u voor hun een account heeft aangemaakt en MODx een e-mail laat sturen met hun Gebruikersnaam en wachtwoord. <br /><br /><b>NB:</b> De volgende codes worden door MODx vervangen als het bericht verstuurd wordt: <br /><br /> [+sname+] - Naam van uw website, <br />[+saddr+] - E-mail adres van uw website, <br />[+surl+] - Adres van de website, <br />[+uid+] - Gebruikersnaam of id, <br />[+pwd+] - Wachtwoord, <br />[+ufn+] - Volledige naam. <br /><br /><b>Laat de [+uid+] en [+pwd+] codes in de e-mail staan, omdat de Gebruikersnaam en het wachtwoord anders niet in de e-mail komen te staan en uw Gebruikers daardoor hun aanmeldgegevens niet ontvangen!</b>';
@@ -890,9 +939,41 @@ $_lang["sunday"] = 'Zondag';
 $_lang["sys_alert"] = 'Systeem waarschuwing';
 $_lang["sysinfo_activity_message"] = 'Deze lijst toont de Pagina\'s die recent door uw Gebruikers werden gewijzigd.';
 $_lang["sysinfo_userid"] = 'Gebruiker';
-$_lang["system_email_signup"] = "Hallo [+uid+]\n\nHier zijn uw inloggegevens voor [+sname+] Content Management Systeem ([+surl+]):\n\nGebruikersnaam: [+uid+]\nWachtwoord: [+pwd+]\n\nNadat u ingelogd bent in het Content Management Systeem, kunt u uw wachtwoord wijzigen.\n\nMet vriendelijke groet,\nUw Website Beheerder";
-$_lang["system_email_webreminder"] = "Hallo [+uid+]\n\nOm uw wachtwoord te activeren klikt u op de volgende link:\n\n[+surl+]\n\nWanneer dit succesvol is kunt u met het volgende wachtwoord inloggen:\n\nWachtwoord:[+pwd+]\n\nWanneer u niet om deze mail gevraagd heeft kunt u deze e-mail verwijderen zonder aktie te ondernemen.\n\nMet vriendelijke groet,\nUw Website Beheerder";
-$_lang["system_email_websignup"] = "Hallo [+uid+]\n\nHier zijn uw inloggegevens voor [+sname+] ([+surl+]):\n\nGebruikersnaam: [+uid+]\nWachtwoord: [+pwd+]\n\nNa dat u ingelogd bent in [+sname+], kunt u uw wachtwoord wijzigen.\nMet vriendelijke groet,\nUw Website Beheerder";
+$_lang["system_email_signup"] = 'Hallo [+uid+]
+
+Hier zijn uw inloggegevens voor [+sname+] Content Management Systeem ([+surl+]):
+
+Gebruikersnaam: [+uid+]
+Wachtwoord: [+pwd+]
+
+Nadat u ingelogd bent in het Content Management Systeem, kunt u uw wachtwoord wijzigen.
+
+Met vriendelijke groet,
+Uw Website Beheerder';
+$_lang["system_email_webreminder"] = 'Hallo [+uid+]
+
+Om uw wachtwoord te activeren klikt u op de volgende link:
+
+[+surl+]
+
+Wanneer dit succesvol is kunt u met het volgende wachtwoord inloggen:
+
+Wachtwoord:[+pwd+]
+
+Wanneer u niet om deze mail gevraagd heeft kunt u deze e-mail verwijderen zonder aktie te ondernemen.
+
+Met vriendelijke groet,
+Uw Website Beheerder';
+$_lang["system_email_websignup"] = 'Hallo [+uid+]
+
+Hier zijn uw inloggegevens voor [+sname+] ([+surl+]):
+
+Gebruikersnaam: [+uid+]
+Wachtwoord: [+pwd+]
+
+Na dat u ingelogd bent in [+sname+], kunt u uw wachtwoord wijzigen.
+Met vriendelijke groet,
+Uw Website Beheerder';
 $_lang["table_hoverinfo"] = 'Beweeg de muiscursor over een tabelnaam om een korte beschrijving te zien van de funktie van de tabel (niet voor alle tabellen is <i>informatie</i> beschikbaar).';
 $_lang["table_prefix"] = 'Tabel voorvoegsel (prefix)';
 $_lang["tag"] = 'Tag';
@@ -924,12 +1005,14 @@ $_lang["tmplvars_caption"] = 'Titel';
 $_lang["tmplvars_default"] = 'Standaard waarde';
 $_lang["tmplvars_description"] = 'Beschrijving';
 $_lang["tmplvars_elements"] = 'Invoer optie waarden';
+$_lang["tmplvars_inherited"] = 'Value inherited';
 $_lang["tmplvars_management_msg"] = 'Beheer extra eigen content velden (Template Variabelen) voor uw Pagina\'s.';
 $_lang["tmplvars_msg"] = 'Template Variabelen toevoegen of bewerken. De Template Variabelen moeten aan een Template toegekend worden om ze vanuit Snippets en Pagina\'s te kunnen benaderen net als andere content Variabelen.';
 $_lang["tmplvars_name"] = 'Template Variabele naam';
 $_lang["tmplvars_novars"] = 'Geen Template Variabelen gevonden.';
 $_lang["tmplvars_rank"] = 'Sorteer volgorde';
 $_lang["tmplvars_reset_params"] = 'Reset parameters';
+$_lang["tmplvars_title"] = 'Create/edit Template Variable';
 $_lang["tmplvars_type"] = 'Invoer type';
 $_lang["tmplvars_widget"] = 'Widget';
 $_lang["tmplvars_widget_prop"] = 'Widget instellingen';
@@ -940,6 +1023,8 @@ $_lang["top_howmany_title"] = 'Top \'hoeveel\':';
 $_lang["total"] = 'totaal';
 $_lang["track_visitors_message"] = 'Deze optie zorgt voor een aanhechtingspunt voor analytische Plug-ins (bezoekersstatistieken). Het kan worden gebruikt om te be&iuml;nvloeden of website bezoeken worden gelogd.';
 $_lang["track_visitors_title"] = 'Bezoeken loggen:';
+$_lang["tree_page_click"] = 'Page Click Behavior';
+$_lang["tree_page_click_message"] = 'The default behavior when clicking on a page in the site tree.';
 $_lang["tree_show_protected"] = 'Toon beschermde Pagina\'s:';
 $_lang["tree_show_protected_message"] = 'Als dit op "Nee" staat, worden beschermde Pagina\'s en al hun afstammelingen niet getoond in de Website boomstructuur. "Nee" is de legacy (erfenis) instelling van MODx.';
 $_lang["truncate_table"] = 'Klik hier om deze tabel in te korten';
@@ -1013,7 +1098,6 @@ $_lang["users"] = 'Beveiliging';
 $_lang["validate_referer_message"] = 'Valideer de HTTP_REFERER headers om het risico te verkleinen dat uw website beheerders bedonderd worden door een CSRF (Cross Site Request Forgery) aanval. Soms is dit echter niet mogelijk als uw server geen HTTP_REFERER headers verzend.';
 $_lang["validate_referer_title"] = 'Valideer HTTP_REFERER headers:';
 $_lang["value"] = 'Waarde';
-$_lang["version_codename"] = 'Versie codenaam';
 $_lang["view"] = 'Bekijken';
 $_lang["view_child_resources_in_container"] = 'Bekijk Subpagina\'s in Map';
 $_lang["view_log"] = 'Bekijk logboek';
@@ -1021,6 +1105,8 @@ $_lang["view_logging"] = 'CMS logboek';
 $_lang["view_sysinfo"] = 'Systeem Info';
 $_lang["warning"] = 'Waarschuwing!';
 $_lang["warning_not_saved"] = 'U heeft de wijzigingen nog niet opgeslagen! U kunt op deze Pagina blijven om de wijzigingen op te slaan (\'Annuleren\'), of u kunt deze Pagina verlaten, waardoor eventuele wijzigingen verloren gaan (\'OK\').';
+$_lang["warning_visibility"] = 'Configuration Warnings visible to';
+$_lang["warning_visibility_message"] = 'Control the visibility of the configuration warnings shown on the Manager welcome page';
 $_lang["web_access_permissions"] = 'Webgebruiker toegangsrechten';
 $_lang["web_access_permissions_user_groups"] = 'Webgebruikers groepen';
 $_lang["web_permissions"] = 'Toegangsbeheer (web)';
@@ -1050,4 +1136,52 @@ $_lang["yourinfo_role"] = 'Uw Rol is:';
 $_lang["yourinfo_title"] = 'Uw info';
 $_lang["yourinfo_total_logins"] = 'Het totaal aantal keren dat u zich heeft aangemeld:';
 $_lang["yourinfo_username"] = 'U bent aangemeld als:';
-?>
+$_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
+$_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
+$_lang["a17_error_reporting_opt0"] = 'Ignore all';
+$_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Detect all';
+$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
+$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+$_lang["enable_bindings_title"] = 'Enable @Bindings commands';
+$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+$_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
+$_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
+$_lang["bkmgr_restore_title"] = 'Restore';
+$_lang["bkmgr_import_ok"] = 'SQL recovery was performed normally.';
+$_lang["bkmgr_snapshot_ok"] = 'The snapshot was saved normally.';
+$_lang["bkmgr_run_sql_file_label"] = 'Execute by sql file';
+$_lang["bkmgr_run_sql_direct_label"] = 'Direct execute SQL command strings';
+$_lang["bkmgr_run_sql_submit"] = 'Execute restore';
+$_lang["bkmgr_run_sql_result"] = 'Result';
+$_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
+$_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
+$_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
+$_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
+$_lang["bkmgr_restore_submit"] = 'Revert this data';
+$_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+$_lang["files.dynamic.php1"] = 'create text file';
+$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
+$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
+$_lang["files.dynamic.php4"] = 'The text file was created.';
+$_lang["not_readable_dir"] = 'Can not read this directory.';
+$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
+$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+$_lang["make_folders_title"] = 'Make end slash URL at the container';
+$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+$_lang["check_files_onlogin_title"] = 'Check core files on login';
+$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
+$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
+$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["cache_type_title"] = 'Document caching type';
+$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
+$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
+$_lang["seostrict_title"] = 'Use SEO Strict URLs';
+$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
+$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+$_lang["user_street"] = 'Street';
+$_lang["user_city"] = 'City';
