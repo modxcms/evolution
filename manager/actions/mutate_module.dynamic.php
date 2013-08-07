@@ -359,7 +359,6 @@ function SetUrl(url, width, height, alt) {
     </div>
     <!-- end #actions -->
 
-<div class="sectionHeader"><?php echo $_lang['module_title']?></div>
 <div class="sectionBody"><p><img class="icon" src="media/style/<?php echo $manager_theme?>images/icons/modules.gif" alt="." width="32" height="32" style="vertical-align:middle;text-align:left;" /> <?php echo $_lang['module_msg']?></p>
 
 <div class="tab-pane" id="modulePane">
@@ -404,7 +403,6 @@ function SetUrl(url, width, height, alt) {
     </table>
 
     <!-- PHP text editor start -->
-    <div class="section">
         <div class="sectionHeader">
             <span style="float:left; font-weight:bold; padding:3px">&nbsp;<?php echo $_lang['module_code']?></span>
             <span style="float:right;><?php echo $_lang['wrap_lines']?><input name="wrap" type="checkbox"<?php echo $content['wrap']== 1 ? ' checked="checked"' : ''?> class="inputBox" onclick="setTextWrap(document.mutate.post,this.checked)" /></span>
@@ -412,7 +410,6 @@ function SetUrl(url, width, height, alt) {
         <div class="sectionBody">
         <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" wrap="<?php echo $content['wrap']== 1 ? 'soft' : 'off'?>" onchange="documentDirty=true;"><?php echo htmlspecialchars($content['modulecode'])?></textarea>
         </div>
-    </div>
     <!-- PHP text editor end -->
     </div>
 
@@ -497,6 +494,7 @@ if ($use_udperms == 1) {
 
     if($modx->hasPermission('access_permissions')) { ?>
 <!-- User Group Access Permissions -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['group_access_permissions']?></div>
 <div class="sectionBody">
     <script type="text/javascript">
@@ -542,6 +540,7 @@ if ($use_udperms == 1) {
     }
     echo $chks;
 ?>
+</div>
 </div>
 <?php } ?>
 
