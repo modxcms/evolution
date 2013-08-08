@@ -28,8 +28,25 @@ class MODxMailer extends PHPMailer
 		
 		$this->mb_language = 'UNI';
 		$this->encode_header_method = '';
-		
-		$this->Mailer = 'mail';
+
+		$this->PluginDir = MODX_MANAGER_PATH . 'includes/controls/phpmailer/';
+
+		switch($modx->config['email_method'])
+		{
+		    case 'smtp':
+		    	$smtp_password = '';
+		    	$smtp_info_path = $modx->config['base_path'] . 'assets/cache/smtp_info.php';
+		    	if(is_file($smtp_info_path)) include_once($smtp_info_path);
+                $this->IsSMTP();
+                $this->Host      = $modx->config['smtp_host'] . ':' . $modx->config['smtp_port'];
+                $this->SMTPAuth  = $modx->config['smtp_auth']==='1' ? true : false;
+                $this->Username  = $modx->config['smtp_username'];
+                $this->Password  = $smtp_password;
+                break;
+		    case 'mail':
+		    default:
+		    	$this->IsMail();
+		}
 		
 		$this->From     = $modx->config['emailsender'];
 		$this->Sender   = $modx->config['emailsender']; 

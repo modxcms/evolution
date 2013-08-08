@@ -934,8 +934,60 @@ function confirmLangChange(el, lkey, elupd){
             <td width="200">&nbsp;</td>
             <td class='comment'><?php echo $_lang["emailsender_message"] ?></td>
           </tr>
+
+          <!--for smtp-->
+
           <tr>
             <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["email_method_title"] ?></b></td>
+            <td>
+                <?php echo wrap_label($_lang["email_method_mail"],form_radio('email_method','mail', ($email_method=='mail' || !isset($email_method)) ));?><br />
+                <?php echo wrap_label($_lang["email_method_smtp"],form_radio('email_method','smtp', ($email_method=='smtp') ));?><br />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class="split"></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_auth_title"] ?></b></td>
+            <td>
+                <?php echo wrap_label($_lang["yes"],form_radio('smtp_auth','1', ($smtp_auth=='1' || !isset($smtp_auth)) ));?><br />
+                <?php echo wrap_label($_lang["no"],form_radio('smtp_auth','0', ($smtp_auth=='0') ));?><br />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class="split"></div></td>
+          </tr>
+
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_host_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_host" value="<?php echo isset($smtp_host) ? $smtp_host : "smtp.example.com" ; ?>" /></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class="split"></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_port_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_port" value="<?php echo isset($smtp_port) ? $smtp_port : "25" ; ?>" /></td>
+          </tr>
+          <tr>
+            <td colspan="2"><div class='split'></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_username_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="text" maxlength="255" style="width: 250px;" name="smtp_username" value="<?php echo isset($smtp_username) ? $smtp_username : $emailsender ; ?>" /></td>
+          </tr>
+           <tr>
+            <td colspan="2"><div class="split"></div></td>
+          </tr>
+          <tr>
+            <td nowrap class="warning"><b><?php echo $_lang["smtp_password_title"] ?></b></td>
+            <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtp_password" value="********************" autocomplete="off" /></td>
+          </tr>
+           <tr>
+            <td colspan="2"><div class="split"></div></td>
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["emailsubject_title"] ?></b>
