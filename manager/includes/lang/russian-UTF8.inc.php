@@ -1164,14 +1164,16 @@ $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
-$_lang["email_method_title"] = 'Sendmail method';
-$_lang["email_method_mail"] = 'mail() PHP function';
-$_lang["email_method_smtp"] = 'SMTP Server';
-$_lang["smtp_auth_title"] = 'SMTP－AUTH';
-$_lang["smtp_host_title"] = 'SMTP host';
-$_lang["smtp_username_title"] = 'SMTP user name';
-$_lang["smtp_password_title"] = 'SMTP password';
-$_lang["smtp_port_title"] = 'SMTP port';
+
+$_lang['email_method_title'] = 'Метод отправки писем';
+$_lang['email_method_mail'] = 'MAIL - ообщения отправляются с помощью функции mail().';
+$_lang['email_method_smtp'] = 'Адрес SMTP-сервера';
+$_lang['smtp_auth_title'] = 'SMTP авторизация';
+$_lang['smtp_host_title'] = 'Адрес SMTP-сервера';
+$_lang['smtp_username_title'] = 'SMTP почта';
+$_lang['smtp_password_title'] = 'SMTP пароль';
+$_lang['smtp_port_title'] = 'SMTP порт';
+
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 $_lang["cache_type_title"] = 'Способ кеширования страниц ';

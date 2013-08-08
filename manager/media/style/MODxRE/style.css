@@ -1,14 +1,16 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
 html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
-html, body, form, fieldset {
+html, body, form, fieldset,img {
 	margin: 0;
 	padding: 0;
+}
+img {
+	border: none;
 }
 html {
 	font-size: 100.01%;
 	line-height: 1.5;
-	font-family: Helvetica, Arial, sans-serif !important;
-	font-family: Arial, Tahoma, Helvetica, sans-serif;
+	font-family:  Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
 	color: #111;
 }
 body {
@@ -61,9 +63,7 @@ li, dd, blockquote {
 }
 .warning {
 	color: #222;
-	font-size:12px;
 	font-weight: bold;
-	line-height: 1.2em;
 }
 .success {
 	color: #090;
@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5, h6, .subTitle {
 	font-weight: normal;
 }
 h1 {
-	font-size: 21px;
+	font-size: 1.8em;
 	line-height: 35px;
 	margin: 15px 15px 0;
 }
@@ -114,6 +114,7 @@ p.caption, p.comment {
 }
 button {
 	color: #821517;
+	font:inherit;
 	font-weight: bold;
 	width: 112px;
 	margin: 0 5px 0 0;
@@ -219,7 +220,6 @@ hr {
 #supplementalNav {
 	float: right;
 	background: transparent;
-	font-size: 12px;
 	padding: 0 0 30px;
 	margin: 0;
 	color: #89939E;
@@ -251,7 +251,7 @@ form label {
 fieldset {
 	border: none;
 }
-input, select, textarea, td {
+input, select, textarea, option, optgroup, td {
 	font: inherit;
 	color: inherit;
 }
@@ -261,9 +261,16 @@ input, select, textarea, td {
 	.rtl td {
 		text-align: right;
 	}
+optgroup {
+	font-style:normal;
+	font-weight:bold;
+	background-color:#ddd;
+}
+optgroup option {
+	font-weight:normal;
+	background-color:#fff;
+}
 #ta, .tmplvars textarea {
-	font-size: 130%;
-	font-family: monospace;
 }
 form select
 {
@@ -280,6 +287,7 @@ form select
 		border-radius:3px;
 }
 form input[type="text"],
+form input[type="password"],
 form textarea {
 	background: #f9f9f9;
 	border-color: #999 #DDD #DDD #999;
@@ -314,11 +322,11 @@ select:focus
 	border-style: solid;
 	border-width: 1px;
 }
-input[type="button"] {
+input[type="button"],
+input[type="submit"] {
 background:#ededed;
 	border: 1px solid green;
 	cursor: pointer;
-	font-family: Arial, sans-serif, monospace;
 	line-height: normal;
 	margin: 0 5px 3px 0;
 	padding: 4px 10px;
@@ -333,7 +341,8 @@ background:#ededed;
 			-webkit-border-radius:3px;
 			border-radius:3px;
 	}
-	input[type="button"]:hover {
+	input[type="button"]:hover,
+	input[type="submit"] {
 		border-color: green;
 		background:-moz-linear-gradient(#FFFFFF, #EEEEEE);
 		background:-webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#EEEEEE));
@@ -351,6 +360,7 @@ input[type="submit"],
 input[type="button"] {
 	height: auto !important;
 	width: auto !important;
+	cursor:pointer;cursor:hand;
 }
 input.checkbox,
 input.radio,
@@ -362,6 +372,7 @@ select {
 	border: 1px solid #c3c3c3 !important;
 	border: 0;
 	background: #fcfcfc;
+	cursor:pointer;cursor:hand;
 }
 .form {
 	padding: 15px;
@@ -455,11 +466,9 @@ input.submit {
 .sectionBody fieldset {
 	background: none repeat scroll 0 0 #FFFFFF;
 	border: 1px solid #CCCCCC;
-	font-size: 12px;
 	padding: 15px !important;
 }
 .sectionBody legend {
-	font-size: 14px;
 	font-weight: bold;
 	padding: 5px 15px;
 	background: #fff;
@@ -484,7 +493,7 @@ input.submit {
 	padding: 5px 3px 5px;
 	overflow:hidden;zoom:1;
 	font-weight: bold;
-	font-size: 125%;
+	font-size: 1.2em;
 	border: 1px solid #ccc;
 	border-bottom:none;
 	text-shadow: 0px 1px 0px #FFF;
@@ -536,9 +545,8 @@ input.submit {
 		padding: 5px 18px 5px 3px;
 	}
 .comment {
-	font-size: 11px;
+	font-size: .9em;
 	color: #999;
-	line-height: 14px;
 }
 thead, .fancyrow {
 	color: #333;
@@ -710,11 +718,17 @@ div.treeNode {
 	width: 100%;
 	background-color: #fff;
 	border: 1px solid silver;
+	border-collapse:collapse;
 }
-.gridHeader {
-	color: #fff;
+.grid th, .grid td {
+padding:3px 5px;
+}
+.gridHeader, .grid th {
+	color: #333;
 	font-weight: bold;
-	background-color: #88939E;
+	white-space:nowrap;
+	background-color: #d2d2d2;
+	text-align:left;
 }
 .gridItem {
 	background-color: #fff;
@@ -871,7 +885,6 @@ a.hometblink:hover {
 /* -------------------------[ Top Navbar of snap in top menu bar layout ]--- */
 #topMenu {
 	background: url("images/misc/headers.jpg") repeat scroll 0 0 #23393C;
-	font-size: 81%;
 }
 #Navcontainer {
 	padding: 0 10px;
@@ -1109,7 +1122,7 @@ a.hometblink:hover {
 	width: 200px !important;
 	text-align: left;
 	color: #555;
-	font-size: 120%;
+	font-size: inherit;
 }
 	.rtl .settings th {text-align: right;}
 .filelist td {
@@ -1160,7 +1173,7 @@ a.hometblink:hover {
 }
 .dynamic-tab-pane-control .tab-row .tab.selected {
 	color: #333;
-	z-index: 3;
+	z-index: 999;
 	top: 1px;
 	border-width: 1px;
 	border-bottom-style: solid;
@@ -1215,7 +1228,8 @@ a.hometblink:hover {
 /* -------------------------[ Tree buttons ]--- */
 .treeButton {
 	display: block;
-	cursor: default;
+	cursor: pointer;
+	cursor: hand;
 	color: #333;
 	border: 1px;
 	border-bottom-color: #809c47;
@@ -1268,8 +1282,8 @@ a.hometblink, a.hometblink img {
 }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
-	border: 0 solid ThreeDShadow;
-	color: WindowText;
+	width:100%;
+	border-collapse:collapse;
 }
 .sortabletable thead tr {
 	background-color: #86919e;
@@ -1281,8 +1295,8 @@ a.hometblink, a.hometblink img {
 	background: #E9F0F3;
 }
 .sortabletable td, .sortabletable th {
-	padding: 2px 5px;
-	border-bottom: 1px solid #eee;
+	padding: 3px 5px;
+	border: 1px solid #ccc;
 }
 .sortabletable th {
 	text-align: left;
@@ -1321,7 +1335,7 @@ a.hometblink, a.hometblink img {
 	margin: 0 0 0 1px;
 }
 #pagination li a {
-	padding: 3px;
+	padding: 3px 8px;
 	border: 1px solid #D9E7C2;
 	text-decoration: none;
 	color: #333;
@@ -1398,7 +1412,6 @@ ul.actionButtons {
 	border: 1px solid #BBB;
 	border-radius: 3px 3px 3px 3px;
 	color: #333;
-	font-size: 12px;
 	font-weight: bold;
 	outline: medium none;
 	padding: 7px 8px 7px 4px;
@@ -1459,7 +1472,7 @@ form#mutate dd {
 	}
 form#mutate dt label,
 form#mutate dt h3.label {
-	font-size: 12px;
+	font-size: 1em;
 	display: inline;
 	float: left;
 	width: 200px;
@@ -1553,7 +1566,7 @@ fieldset#preview iframe {
 fieldset#document_content textarea#ta {
 	width: 100%;
 	height: 400px;
-	font-size: 12px;
+	font-size: 1em;
 }
 
 /*
@@ -1605,7 +1618,7 @@ form#mutate select.tv_url_select {
 
 .custom-title {
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 1em;
 	margin: 0;
 	color: #fff;
 	padding: 6px 6px 4px;
@@ -1613,7 +1626,7 @@ form#mutate select.tv_url_select {
 }
 
 .custom-text {
-	font-size: 12px;
+	font-size: 1em;
 	padding: 4px 8px 8px;
 	background: #fff;
 }
@@ -1643,9 +1656,9 @@ input.DatePicker, #mutate input.DatePicker, #userPane input.DatePicker, #webUser
 	width: 150px;
 	padding: 3px 3px 3px 24px;
 	border: 1px solid #b4cde4;
-	font-size: 13px;
 	background: #fff url(images/icons/datenofocus.gif) no-repeat top left;
 	cursor: pointer;
+	ime-mode:disabled;
 }
 input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.DatePicker, #webUserPane input:focus.DatePicker, input#datefrom:focus.DatePicker, input#dateto:focus.DatePicker {
 	background: #fffce9 url(images/icons/datefocus.gif) no-repeat top left;
@@ -1685,7 +1698,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 
 .dp_cal select {
 	margin: 2px 3px;
-	font-size: 12px;
+	font-size: 1em;
 }
 .dp_cal select option {
 	padding: 1px 3px;
@@ -1694,7 +1707,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_cal td {
 	width: 14.2857%;
 	text-align: center;
-	font-size: 12px;
+	font-size: 1em;
 	padding: 2px 0;
 }
 .dp_cal th {
