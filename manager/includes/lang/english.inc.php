@@ -1176,7 +1176,7 @@ $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
 
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the all files on server. Please update System configuration if you do not have any problem.';
 
 $_lang['email_method_title'] = 'Sendmail method';
 $_lang['email_method_mail'] = 'mail() PHP function';
