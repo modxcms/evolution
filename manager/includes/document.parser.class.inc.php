@@ -623,7 +623,11 @@ class DocumentParser {
 
         // invoke OnWebPagePrerender event
         if (!$noEvent) {
-            $this->invokeEvent("OnWebPagePrerender");
+            $this->invokeEvent('OnWebPagePrerender');
+        }
+        global $sanitize_seed;
+        if(strpos($this->documentOutput, $sanitize_seed)!==false) {
+            $this->documentOutput = str_replace($sanitize_seed, '', $this->documentOutput);
         }
 
         echo $this->documentOutput;
