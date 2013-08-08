@@ -114,6 +114,7 @@ p.caption, p.comment {
 }
 button {
 	color: #821517;
+	font:inherit;
 	font-weight: bold;
 	width: 112px;
 	margin: 0 5px 0 0;
@@ -219,7 +220,6 @@ hr {
 #supplementalNav {
 	float: right;
 	background: transparent;
-	font-size: 12px;
 	padding: 0 0 30px;
 	margin: 0;
 	color: #89939E;
@@ -252,8 +252,7 @@ fieldset {
 	border: none;
 }
 input, select, textarea, option, optgroup, td {
-	font-size: inherit;
-	font-family: inherit;
+	font: inherit;
 	color: inherit;
 }
 	.rtl input,
@@ -262,6 +261,15 @@ input, select, textarea, option, optgroup, td {
 	.rtl td {
 		text-align: right;
 	}
+optgroup {
+	font-style:normal;
+	font-weight:bold;
+	background-color:#ddd;
+}
+optgroup option {
+	font-weight:normal;
+	background-color:#fff;
+}
 #ta, .tmplvars textarea {
 }
 form select
@@ -314,7 +322,8 @@ select:focus
 	border-style: solid;
 	border-width: 1px;
 }
-input[type="button"] {
+input[type="button"],
+input[type="submit"] {
 background:#ededed;
 	border: 1px solid green;
 	cursor: pointer;
@@ -332,7 +341,8 @@ background:#ededed;
 			-webkit-border-radius:3px;
 			border-radius:3px;
 	}
-	input[type="button"]:hover {
+	input[type="button"]:hover,
+	input[type="submit"] {
 		border-color: green;
 		background:-moz-linear-gradient(#FFFFFF, #EEEEEE);
 		background:-webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#EEEEEE));
@@ -350,6 +360,7 @@ input[type="submit"],
 input[type="button"] {
 	height: auto !important;
 	width: auto !important;
+	cursor:pointer;cursor:hand;
 }
 input.checkbox,
 input.radio,
@@ -361,6 +372,7 @@ select {
 	border: 1px solid #c3c3c3 !important;
 	border: 0;
 	background: #fcfcfc;
+	cursor:pointer;cursor:hand;
 }
 .form {
 	padding: 15px;
@@ -535,7 +547,6 @@ input.submit {
 .comment {
 	font-size: .9em;
 	color: #999;
-	line-height: 14px;
 }
 thead, .fancyrow {
 	color: #333;
@@ -707,11 +718,17 @@ div.treeNode {
 	width: 100%;
 	background-color: #fff;
 	border: 1px solid silver;
+	border-collapse:collapse;
 }
-.gridHeader {
-	color: #fff;
+.grid th, .grid td {
+padding:3px 5px;
+}
+.gridHeader, .grid th {
+	color: #333;
 	font-weight: bold;
-	background-color: #88939E;
+	white-space:nowrap;
+	background-color: #d2d2d2;
+	text-align:left;
 }
 .gridItem {
 	background-color: #fff;
@@ -1156,7 +1173,7 @@ a.hometblink:hover {
 }
 .dynamic-tab-pane-control .tab-row .tab.selected {
 	color: #333;
-	z-index: 3;
+	z-index: 999;
 	top: 1px;
 	border-width: 1px;
 	border-bottom-style: solid;
@@ -1211,7 +1228,8 @@ a.hometblink:hover {
 /* -------------------------[ Tree buttons ]--- */
 .treeButton {
 	display: block;
-	cursor: default;
+	cursor: pointer;
+	cursor: hand;
 	color: #333;
 	border: 1px;
 	border-bottom-color: #809c47;
@@ -1264,8 +1282,8 @@ a.hometblink, a.hometblink img {
 }
 /* -------------------------[ New sortable table class ]--- */
 .sortabletable {
-	border: 0 solid ThreeDShadow;
-	color: WindowText;
+	width:100%;
+	border-collapse:collapse;
 }
 .sortabletable thead tr {
 	background-color: #86919e;
@@ -1277,8 +1295,8 @@ a.hometblink, a.hometblink img {
 	background: #E9F0F3;
 }
 .sortabletable td, .sortabletable th {
-	padding: 2px 5px;
-	border-bottom: 1px solid #eee;
+	padding: 3px 5px;
+	border: 1px solid #ccc;
 }
 .sortabletable th {
 	text-align: left;
@@ -1317,7 +1335,7 @@ a.hometblink, a.hometblink img {
 	margin: 0 0 0 1px;
 }
 #pagination li a {
-	padding: 3px;
+	padding: 3px 8px;
 	border: 1px solid #D9E7C2;
 	text-decoration: none;
 	color: #333;
@@ -1454,7 +1472,7 @@ form#mutate dd {
 	}
 form#mutate dt label,
 form#mutate dt h3.label {
-	font-size: 12px;
+	font-size: 1em;
 	display: inline;
 	float: left;
 	width: 200px;
@@ -1548,7 +1566,7 @@ fieldset#preview iframe {
 fieldset#document_content textarea#ta {
 	width: 100%;
 	height: 400px;
-	font-size: 12px;
+	font-size: 1em;
 }
 
 /*
@@ -1600,7 +1618,7 @@ form#mutate select.tv_url_select {
 
 .custom-title {
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 1em;
 	margin: 0;
 	color: #fff;
 	padding: 6px 6px 4px;
@@ -1608,7 +1626,7 @@ form#mutate select.tv_url_select {
 }
 
 .custom-text {
-	font-size: 12px;
+	font-size: 1em;
 	padding: 4px 8px 8px;
 	background: #fff;
 }
@@ -1680,7 +1698,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 
 .dp_cal select {
 	margin: 2px 3px;
-	font-size: 12px;
+	font-size: 1em;
 }
 .dp_cal select option {
 	padding: 1px 3px;
@@ -1689,7 +1707,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 .dp_cal td {
 	width: 14.2857%;
 	text-align: center;
-	font-size: 12px;
+	font-size: 1em;
 	padding: 2px 0;
 }
 .dp_cal th {
