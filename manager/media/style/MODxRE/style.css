@@ -1,8 +1,11 @@
 /* -------------------------[ Neutralize styles, fonts and viewport ]--- */
 html { /overflow-x: hidden; /overflow-y: auto;} /* for IE7, IE6 */
-html, body, form, fieldset {
+html, body, form, fieldset,img {
 	margin: 0;
 	padding: 0;
+}
+img {
+	border: none;
 }
 html {
 	font-size: 100.01%;
@@ -252,7 +255,8 @@ fieldset {
 	border: none;
 }
 input, select, textarea, td {
-	font: inherit;
+	font-size: inherit;
+	font-family: inherit;
 	color: inherit;
 }
 	.rtl input,
@@ -280,6 +284,7 @@ form select
 		border-radius:3px;
 }
 form input[type="text"],
+form input[type="password"],
 form textarea {
 	background: #f9f9f9;
 	border-color: #999 #DDD #DDD #999;
