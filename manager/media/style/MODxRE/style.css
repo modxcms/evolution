@@ -10,8 +10,7 @@ img {
 html {
 	font-size: 100.01%;
 	line-height: 1.5;
-	font-family: Helvetica, Arial, sans-serif !important;
-	font-family: Arial, Tahoma, Helvetica, sans-serif;
+	font-family:  Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
 	color: #111;
 }
 body {
