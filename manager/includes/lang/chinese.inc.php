@@ -11,7 +11,7 @@
 $modx_lang_attribute = 'zh'; // Manager HTML and XML Language Attribute
 $modx_manager_charset = 'UTF-8';
 
-$_lang["about_msg"] = '镆铘是一个 <a href="http://modxcms.com/what-is-modx.html" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
+$_lang["about_msg"] = '镆铘是一个 <a href="http://modx.com/" target="_blank">PHP编写的内容管理系统</a> 遵循 <a href="../assets/docs/license.txt">GNU GPL</a>协议.';
 $_lang["about_title"] = '关于镆铘';
 $_lang["access_permission_denied"] = '您没有访问这文件的权限。';
 $_lang["access_permission_parent_denied"] = '您不允许在这里创建文件！';
@@ -547,7 +547,7 @@ $_lang["modx_news"] = 'MODX News Notices';
 $_lang["modx_news_tab"] = 'MODX News';
 $_lang["modx_news_title"] = 'MODX News';
 $_lang["modx_security_notices"] = 'MODX Security Notices';
-$_lang["modx_version"] = 'MODx版本';
+$_lang["modx_version"] = 'MODX版本';
 $_lang["monday"] = '星期一';
 $_lang["move"] = '移动';
 $_lang["move_resource"] = '移动文件';
@@ -1168,6 +1168,14 @@ $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
 $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+$_lang["email_method_title"] = 'Sendmail method';
+$_lang["email_method_mail"] = 'mail() PHP function';
+$_lang["email_method_smtp"] = 'SMTP Server';
+$_lang["smtp_auth_title"] = 'SMTP－AUTH';
+$_lang["smtp_host_title"] = 'SMTP host';
+$_lang["smtp_username_title"] = 'SMTP user name';
+$_lang["smtp_password_title"] = 'SMTP password';
+$_lang["smtp_port_title"] = 'SMTP port';
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 $_lang["cache_type_title"] = 'Document caching type';
@@ -1179,3 +1187,4 @@ $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access
 $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
+$_lang["user_other"] = 'Other';
