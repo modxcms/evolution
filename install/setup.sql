@@ -882,9 +882,8 @@ REPLACE INTO `{PREFIX}manager_users`
 (id, username, password)VALUES 
 (1, '{ADMIN}', MD5('{ADMINPASS}'));
 
-
 REPLACE INTO `{PREFIX}user_attributes` 
-(id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, state, zip, fax, photo, comment) VALUES 
+(id, internalKey, fullname, role, email, phone, mobilephone, blocked, blockeduntil, blockedafter, logincount, lastlogin, thislogin, failedlogincount, sessionid, dob, gender, country, street, city, state, zip, fax, photo, comment) VALUES 
 (1, 1, 'Default admin account', 1, '{ADMINEMAIL}', '', '', 0, 0, 0, 0, 0, 0, 0, '', 0, 0, '', '', '','', '', '', '', '');
 
 

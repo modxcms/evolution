@@ -2,9 +2,9 @@
 /**
  * QuickManager+
  *  
- * @author      Mikko Lammi, www.maagit.fi 
+ * @author      Mikko Lammi, www.maagit.fi, updated by Dmi3yy 
  * @license     GNU General Public License (GPL), http://www.gnu.org/copyleft/gpl.html
- * @version     1.5.5 updated 12/01/2011
+ * @version     1.5.6 updated 08/08/2013
  */
 
 if(!class_exists('Qm')) {
@@ -112,7 +112,12 @@ class Qm {
                     }   
                     
                     // Redirect to clearer page which refreshes parent window and closes modal box frame
-                    $this->modx->sendRedirect($this->modx->config['base_url'].'index.php?id='.$id.'&quickmanagerclose=1', 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');               
+                    if ($this->modx->config['friendly_urls'] == 1){
+                        $this->modx->sendRedirect($this->modx->makeUrl($id).'?quickmanagerclose=1', 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently'); 
+                    }else{
+                        $this->modx->sendRedirect($this->modx->makeUrl($id).'&quickmanagerclose=1', 0, 'REDIRECT_HEADER', 'HTTP/1.1 301 Moved Permanently');    
+                    }
+                    
                 }
                 
                 break;
@@ -284,9 +289,9 @@ class Qm {
                                     </script>
                                     ';
                                 }
-                            
+                                $amp = ($this->modx->config['friendly_urls'] == 1) ? '?' : '&';
                                 $output .= ' 
-                                <form id="qm-tv-form" name="mutate" method="post" enctype="multipart/form-data" action="'.$this->modx->config['site_url'].'index.php?id='.$docID.'&amp;quickmanagertv=1&amp;tvname='.$tvName.'">
+                                <form id="qm-tv-form" name="mutate" method="post" enctype="multipart/form-data" action="'.$this->modx->makeUrl($docID).$amp.'quickmanagertv=1&amp;tvname='.$tvName.'">
                                 <input type="hidden" name="tvid" value="'.$tv['id'].'" />
                                 <input id="save" type="hidden" name="save" value="1" />
                                     
@@ -872,7 +877,8 @@ class Qm {
 	    
 	    // Return TV button link if access
 	    if ($access && $caption != '') {
-	        return '<span class="'.$this->tvbclass.'"><a class="colorbox" href="'.$this->modx->config['site_url'].'index.php?id='.$docID.'&amp;quickmanagertv=1&amp;tvname='.$matches[1].'"><span>'.$caption.'</span></a></span>';
+            $amp = ($this->modx->config['friendly_urls'] == 1) ? '?' : '&';
+	        return '<span class="'.$this->tvbclass.'"><a class="colorbox" href="'.$this->modx->makeUrl($docID).$amp.'quickmanagertv=1&amp;tvname='.$matches[1].'"><span>'.$caption.'</span></a></span>';
         } 
     }
     

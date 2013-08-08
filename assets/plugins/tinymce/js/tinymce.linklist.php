@@ -30,6 +30,7 @@ $limit               = 0;
 $recent              = 0;
 
 /* That's it to config! */
+include_once(dirname(__FILE__)."/../../../cache/siteManager.php");
 $tree_styles = array('|--', '&#9494;&nbsp;', '&#9658;&nbsp;', 'L&nbsp;');
 define('MODX_API_MODE', true);
 define("IN_MANAGER_MODE", "true");

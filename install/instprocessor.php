@@ -346,7 +346,7 @@ if (isset ($_POST['template']) || $installData) {
     $selTemplates = $_POST['template'];
     foreach ($moduleTemplates as $k=>$moduleTemplate) {
         $installSample = in_array('sample', $moduleTemplate[6]) && $installData == 1;
-        if(in_array($k, $selTemplates) || $installSample) {
+        if($installSample || in_array($k, $selTemplates)) {
             $name = mysql_real_escape_string($moduleTemplate[0]);
             $desc = mysql_real_escape_string($moduleTemplate[1]);
             $category = mysql_real_escape_string($moduleTemplate[4]);
@@ -391,7 +391,7 @@ if (isset ($_POST['tv']) || $installData) {
     $selTVs = $_POST['tv'];
     foreach ($moduleTVs as $k=>$moduleTV) {
         $installSample = in_array('sample', $moduleTV[12]) && $installData == 1;
-        if(in_array($k, $selTVs) || $installSample) {
+        if($installSample || in_array($k, $selTVs)) {
             $name = mysql_real_escape_string($moduleTV[0]);
             $caption = mysql_real_escape_string($moduleTV[1]);
             $desc = mysql_real_escape_string($moduleTV[2]);
@@ -462,7 +462,7 @@ if (isset ($_POST['chunk']) || $installData) {
     $selChunks = $_POST['chunk'];
     foreach ($moduleChunks as $k=>$moduleChunk) {
         $installSample = in_array('sample', $moduleChunk[5]) && $installData == 1;
-        if(in_array($k, $selChunks) || $installSample) {
+        if($installSample || in_array($k, $selChunks)) {
 
             $name = mysql_real_escape_string($moduleChunk[0]);
             $desc = mysql_real_escape_string($moduleChunk[1]);
@@ -516,7 +516,7 @@ if (isset ($_POST['module']) || $installData) {
     $selModules = $_POST['module'];
     foreach ($moduleModules as $k=>$moduleModule) {
         $installSample = in_array('sample', $moduleModule[7]) && $installData == 1;
-        if(in_array($k, $selModules) || $installSample) {
+        if($installSample || in_array($k, $selModules)) {
             $name = mysql_real_escape_string($moduleModule[0]);
             $desc = mysql_real_escape_string($moduleModule[1]);
             $filecontent = $moduleModule[2];
@@ -562,7 +562,7 @@ if (isset ($_POST['plugin']) || $installData) {
     $selPlugs = $_POST['plugin'];
     foreach ($modulePlugins as $k=>$modulePlugin) {
         $installSample = in_array('sample', $modulePlugin[8]) && $installData == 1;
-        if(in_array($k, $selPlugs) || $installSample) {
+        if($installSample || in_array($k, $selPlugs)) {
             $name = mysql_real_escape_string($modulePlugin[0]);
             $desc = mysql_real_escape_string($modulePlugin[1]);
             $filecontent = $modulePlugin[2];
@@ -648,7 +648,7 @@ if (isset ($_POST['snippet']) || $installData) {
     $selSnips = $_POST['snippet'];
     foreach ($moduleSnippets as $k=>$moduleSnippet) {
         $installSample = in_array('sample', $moduleSnippet[5]) && $installData == 1;
-        if(in_array($k, $selSnips) || $installSample) {
+        if($installSample || in_array($k, $selSnips)) {
             $name = mysql_real_escape_string($moduleSnippet[0]);
             $desc = mysql_real_escape_string($moduleSnippet[1]);
             $filecontent = $moduleSnippet[2];

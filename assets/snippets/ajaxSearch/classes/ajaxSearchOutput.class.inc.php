@@ -624,6 +624,7 @@ class AjaxSearchOutput {
     * Set log infos into DB for failed searches
     */
     function _setFailedSearches($asCall = '', $select = '') {
+        global $modx;
         $logid = '';
         if ($this->log >= 1 ) {
             $logInfo = array();
@@ -631,7 +632,7 @@ class AjaxSearchOutput {
             $logInfo['nbResults'] = 0;
             $logInfo['results'] = '';
             $logInfo['asCall'] = $asCall;
-            $logInfo['asSelect'] = mysql_real_escape_string($select);
+            $logInfo['asSelect'] = $modx->db->escape($select);
             $logid = $this->asLog->setLogRecord($logInfo);
         }
         return $logid;
@@ -640,6 +641,7 @@ class AjaxSearchOutput {
     * Set log infos into DB for successfull searches
     */
     function _setSuccessfullSearches($ig) {
+        global $modx;
         $logid = '';
         if ($this->log == 2) {
             $logInfo = array();
@@ -647,7 +649,7 @@ class AjaxSearchOutput {
             $logInfo['nbResults'] = $this->asResults->groupResults[$ig]['length'];
             $logInfo['results'] = $this->asResults->groupResults[$ig]['found'];
             $logInfo['asCall'] = $this->_getAsCall($this->asResults->groupResults[$ig]['ucfg']);
-            $logInfo['asSelect'] = mysql_real_escape_string($this->asResults->groupResults[$ig]['select']);
+            $logInfo['asSelect'] = $modx->db->escape($this->asResults->groupResults[$ig]['select']);
             $logid = $this->asLog->setLogRecord($logInfo);
         }
         return $logid;

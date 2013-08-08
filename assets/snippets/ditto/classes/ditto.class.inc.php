@@ -284,8 +284,24 @@ class ditto {
 			$placeholders['ditto_iteration'] = $x;
 		}
 		
+		//Added by Andchir
+		//if (in_array("ditto_index",$this->fields["display"]["custom"])) {
+			$r_start = isset($_GET['start']) ? $_GET['start'] : 0;
+      $placeholders['ditto_index'] = $r_start+$x+1;
+		//}
+		
+        //Added by Dmi3yy placeholder ditto_class
+         if ($x % 2 == 0) {$class="even";} else {$class="odd";}
+             if ($x==0) $class.=" first";
+             if ($x==($stop -1)) $class.=" last";
+             if ($resource['id'] == $modx->documentObject['id']) $class.=" current";
+             $placeholders['ditto_class'] = $class;
+
 		// set url placeholder
 		if (in_array("url",$this->fields["display"]["custom"])) {
+			if($resource['id']==$modx->config['site_start'])
+				$placeholders['url'] = $modx->config['site_url'];
+			else
 			$placeholders['url'] = $modx->makeURL($resource['id'],'','','full');
 		}
 
@@ -995,10 +1011,10 @@ class ditto {
 	                WHERE (sc.id IN (" . join($ids, ",") . ") $published AND sc.deleted=0)
 	                AND ($access)
 	                GROUP BY sc.id ";
-	        $result= $modx->dbQuery($sql);
+	        $result= $modx->db->query($sql);
 	        $resourceArray= array ();
-	        for ($i= 0; $i < @ $modx->recordCount($result); $i++) {
-	            array_push($resourceArray, @ $modx->fetchRow($result));
+	        for ($i= 0; $i < @ $modx->db->getRecordCount($result); $i++) {
+	            array_push($resourceArray, @ $modx->db->getRow($result));
 	        }
 	        return $resourceArray;
 	    }
@@ -1057,7 +1073,16 @@ class ditto {
 			}
 			$queryString = "";
 			foreach ($query as $param=>$value) {
-				$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+				
+        //$queryString .= '&'.$param.'='.(is_array($value) ? implode(",",$value) : $value);
+        
+        if(!is_array($value)){
+          $queryString .= '&'.$param.'='.$value;
+        }else{
+          foreach ($value as $key=>$val){
+            $queryString .= '&'.$param.'['.$key.']='.$val;
+          }
+        }
 			}
 			$cID = ($id !== false) ? $id : $modx->documentObject['id'];
 			$url = $modx->makeURL(trim($cID), '', $queryString);

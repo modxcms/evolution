@@ -950,12 +950,14 @@ class AjaxSearchResults {
     * Default ouput strip function
     */
     function defaultStripOutput($text) {
+        global $modx;
+
         if ($text !== '') {
             // $text = $modx->parseDocumentSource($text); // parse document
 
             $text = $this->stripLineBreaking($text);
 
-            $text = $this->stripTags($text);
+            $text = $modx->stripTags($text);
 
             $text = $this->stripJscripts($text);
 

@@ -77,7 +77,10 @@
 			width: 91px;
 			height: 33px;
 			cursor: pointer;
-			text-indent: -9999px;
+			/*text-indent: -9999px;*/
+			color:#fff;
+			font-size: 14px;
+			font-weight: 100;
 		    margin: -7px 0 12px;
 			background: url(media/style/[+theme+]/images/misc/enter.png) no-repeat top left;
 		}
@@ -116,7 +119,10 @@
 			float: right;
 			height: 33px;
 			margin: 5px 26px 22px 0;
-			text-indent: -9999px;
+			/*text-indent: -9999px;*/
+			color:#fff;
+			font-size: 14px;
+			font-weight: 100;
 			width: 111px;
 			background: url(media/style/[+theme+]/images/misc/submit.png) no-repeat top left;
 		}
