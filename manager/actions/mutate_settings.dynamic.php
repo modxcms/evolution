@@ -509,7 +509,7 @@ function confirmLangChange(el, lkey, elupd){
            </tr> 
            
            <tr>
-  <td><?php echo $_lang["cache_type_title"] ?></td>
+    <td nowrap class="warning"><b><?php echo $_lang["cache_type_title"] ?></b></td>
   <td>
       
   <input onchange="documentDirty=true;" type="radio" name="cache_type" value="1" 
