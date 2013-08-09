@@ -42,8 +42,8 @@ $_lang["checking_if_cache_writable"] = 'Проверка возможности 
 $_lang["checking_if_config_exist_and_writable"] = 'Проверка существования и возможности записи в файл <span class="mono">/'.MGR_DIR.'/includes/config.inc.php</span>: ';
 $_lang["checking_if_export_exists"] = 'Проверка существования папки <span class="mono">/assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Проверка возможности записи в папку <span class="mono">/assets/export</span>: ';
-$_lang["checking_if_images_exist"] = 'Проверка существования папок <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> и <span class="mono">/assets/media</span>: ';
-$_lang["checking_if_images_writable"] = 'Проверка возможности записи в папки <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> и <span class="mono">/assets/media</span>: ';
+$_lang["checking_if_images_exist"] = 'Проверка существования папок <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> и <span class="mono">/assets/.thumbs</span>: ';
+$_lang["checking_if_images_writable"] = 'Проверка возможности записи в папки <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> и <span class="mono">/assets/.thumbs</span>: ';
 $_lang["checking_mysql_strict_mode"] = 'Проверка MySQL на строгий режим strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Проверка версии MySQL: ';
 $_lang["checking_php_version"] = 'Проверка версии PHP: ';
