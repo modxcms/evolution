@@ -75,7 +75,7 @@ if (!is_writable("../assets/cache/sitePublishing.idx.php")) {
 }
 // File Browser directories exists?
 echo "<p>".$_lang['checking_if_images_exist'];
-if (!file_exists("../assets/images") || !file_exists("../assets/files") || !file_exists("../assets/flash") || !file_exists("../assets/media")) {
+if (!file_exists("../assets/images") || !file_exists("../assets/files") || !file_exists("../assets/flash") || !file_exists("../assets/media") || !file_exists("../assets/backup") || !file_exists("../assets/.thumbs")) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
     $errors += 1;
 } else {
@@ -83,7 +83,7 @@ if (!file_exists("../assets/images") || !file_exists("../assets/files") || !file
 }
 // File Browser directories writable?
 echo "<p>".$_lang['checking_if_images_writable'];
-if (!is_writable("../assets/images") || !is_writable("../assets/files") || !is_writable("../assets/flash") || !is_writable("../assets/media")) {
+if (!is_writable("../assets/images") || !is_writable("../assets/files") || !is_writable("../assets/flash") || !is_writable("../assets/media") || !is_writable("../assets/backup") || !is_writable("../assets/.thumbs")) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p>";
     $errors += 1;
 } else {
@@ -268,7 +268,7 @@ $agreeToggle= $errors > 0 ? '' : ' onclick="if(document.getElementById(\'chkagre
 <form name="install" id="install_form" action="index.php?action=<?php echo $nextAction ?>" method="post">
   <div>
     <input type="hidden" value="<?php echo $install_language?>" name="language" />
-	<input type="hidden" value="<?php echo $manager_language?>" name="managerlanguage" />
+    <input type="hidden" value="<?php echo $manager_language?>" name="managerlanguage" />
     <input type="hidden" value="<?php echo $installMode ?>" name="installmode" />
     <input type="hidden" value="<?php echo trim($_POST['database_name'], '`'); ?>" name="database_name" />
     <input type="hidden" value="<?php echo $_POST['tableprefix'] ?>" name="tableprefix" />
