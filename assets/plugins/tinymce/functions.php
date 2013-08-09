@@ -127,6 +127,7 @@ class TinyMCE
 		$themes['logic']    = $_lang['mce_theme_logic'];
 		$themes['advanced'] = $_lang['mce_theme_advanced'];
 		$themes['legacy']   = (!empty($_lang['mce_theme_legacy'])) ? $_lang['mce_theme_legacy'] : 'legacy';
+		$themes['full']     = (!empty($_lang['mce_theme_full']))   ? $_lang['mce_theme_full'] : 'full';
 		$themes['custom']   = $_lang['mce_theme_custom'];
 		foreach ($themes as $key => $value)
 		{
