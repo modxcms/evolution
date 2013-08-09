@@ -44,8 +44,8 @@ $_lang["checking_if_cache_writable"] = 'Kontrollerar att katalogerna <span class
 $_lang["checking_if_config_exist_and_writable"] = 'Kontrollerar att filen <span class="mono">/'.MGR_DIR.'/includes/config.inc.php</span> existerar och är skrivbar: ';
 $_lang["checking_if_export_exists"] = 'Kontrollerar att katalogen <span class="mono">/assets/export</span> existerar: ';
 $_lang["checking_if_export_writable"] = 'Kontrollerar att katalogen <span class="mono">/assets/export</span> är skrivbar: ';
-$_lang["checking_if_images_exist"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> och <span class="mono">/assets/media</span> existerar: ';
-$_lang["checking_if_images_writable"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span> och <span class="mono">/assets/media</span> är skrivbara: ';
+$_lang["checking_if_images_exist"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> och <span class="mono">/assets/.thumbs</span> existerar: ';
+$_lang["checking_if_images_writable"] = 'Kontrollerar att katalogerna <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> och <span class="mono">/assets/.thumbs</span> är skrivbara: ';
 $_lang["checking_mysql_strict_mode"] = 'Kontrollerar MySQL för strikt sql_mode: ';
 $_lang["checking_mysql_version"] = 'Kontrollerar MySQL-versionen: ';
 $_lang["checking_php_version"] = 'Kontrollerar PHP-version: ';

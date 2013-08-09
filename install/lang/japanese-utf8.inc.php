@@ -39,8 +39,8 @@ $_lang["checking_if_cache_writable"] = '<span class="mono">/assets/cache</span>�
 $_lang["checking_if_config_exist_and_writable"] = 'ファイル<span class="mono">/'.MGR_DIR.'/includes/config.inc.php</span>の存在と書き込み属性: ';
 $_lang["checking_if_export_exists"] = '<span class="mono">/assets/export</span>ディレクトリの存在(なければ転送に失敗しています): ';
 $_lang["checking_if_export_writable"] = '<span class="mono">/assets/export</span>ディレクトリの書き込み属性(707などに設定): ';
-$_lang["checking_if_images_exist"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>,<span class="mono">/assets/media</span>ディレクトリの存在(なければ転送に失敗しています): ';
-$_lang["checking_if_images_writable"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>,<span class="mono">/assets/media</span>ディレクトリの書き込み属性(707などに設定): ';
+$_lang["checking_if_images_exist"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの存在(なければ転送に失敗しています): ';
+$_lang["checking_if_images_writable"] = '<span class="mono">/assets/images</span>,<span class="mono">/assets/files</span>,<span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>,<span class="mono">/assets/backup</span>,<span class="mono">/assets/.thumbs</span>ディレクトリの書き込み属性(707などに設定): ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict mode: ';
 $_lang["checking_mysql_version"] = 'MySQLのバージョン: ';
 $_lang["checking_php_version"] = 'PHPのバージョンチェック: ';
