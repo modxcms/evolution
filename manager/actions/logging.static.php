@@ -57,7 +57,7 @@ window.addEvent('domready', function() {
 });
 </script>
 <h1><?php echo $_lang["mgrlog_view"]?></h1>
-
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang["mgrlog_query"]?></div><div class="sectionBody" id="lyr1">
 <p><?php echo $_lang["mgrlog_query_msg"]?></p>
 <form action="index.php?a=13" name="logging" method="POST">
@@ -170,8 +170,8 @@ window.addEvent('domready', function() {
   </tbody>
 </table>
 </form>
-</div>
-
+</div></div>
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang["mgrlog_qresults"]; ?></div><div class="sectionBody" id="lyr2">
 <?php
 if(isset($_REQUEST['log_submit'])) {
@@ -286,7 +286,7 @@ if(isset($_REQUEST['log_submit'])) {
 	<?php
 	}
 	?>
-	</div>
+	</div></div>
 	<?php
 	// HACK: prevent multiple "Viewing logging" entries after a search has taken place.
 	// @see index.php @ 915
