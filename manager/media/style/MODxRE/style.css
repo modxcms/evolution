@@ -721,7 +721,7 @@ div.treeNode {
 	border-collapse:collapse;
 }
 .grid th, .grid td {
-padding:3px 5px;
+padding:5px;
 }
 .gridHeader, .grid th {
 	color: #333;
@@ -735,9 +735,15 @@ padding:3px 5px;
 	padding: 3px;
 }
 .gridAltItem {
-	background-color: #eeeeee;
+	background-color: #f7f7f7;
 	padding: 3px;
 }
+.grid tbody tr:hover td {
+	background: #E9F0F3;
+}
+
+
+
 .gridRowIcon:hover {
 	background-color: #f5f5dc;
 }
@@ -1286,7 +1292,11 @@ a.hometblink, a.hometblink img {
 	border-collapse:collapse;
 }
 .sortabletable thead tr {
-	background-color: #86919e;
+	color: #333;
+	font-weight: bold;
+	white-space:nowrap;
+	background-color: #d2d2d2;
+	text-align:left;
 }
 .sortabletable tr {
 	background: #fff;
