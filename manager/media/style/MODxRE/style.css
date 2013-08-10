@@ -512,7 +512,7 @@ input.submit {
 	display: block;
 }
 	.tab-page .sectionBody,
-	.section .sectionBody {
+	.sectionBody {
 		background: none repeat scroll 0 0 #F7F7F7;
 		border: 1px solid #CCCCCC;
 		margin: 0 3px 15px;
@@ -522,7 +522,7 @@ input.submit {
 		direction: rtl;
 		position: inherit;
 	}
-.section .sectionBody {
+.sectionBody {
 	margin:0 15px 15px;
 	padding-left:15px;
 	background-color:#fff;
