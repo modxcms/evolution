@@ -90,7 +90,7 @@ if($limit!=1) {
     </div>
 <?php } ?>
 
-
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['messages_inbox']; ?></div><div class="sectionBody">
 <?php
 // Get  number of rows
@@ -191,8 +191,8 @@ if($dotablestuff==1) { ?>
 </tbody>
 </table>
 <?php } ?>
-    </div>
-
+    </div></div>
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['messages_compose']; ?></div><div class="sectionBody">
 <?php
 if(($_REQUEST['m']=='rp' || $_REQUEST['m']=='f') && isset($_REQUEST['id'])) {
@@ -321,7 +321,7 @@ function hideSpans(showSpan) {
 
 </fieldset>
 </form>
-</div>
+</div></div>
 
 <?php
 // count messages again, as any action on the messages page may have altered the message count
