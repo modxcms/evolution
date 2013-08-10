@@ -23,7 +23,7 @@ $allowedfiles = array('html','htm','shtml','xml');
 </script>
 
 <h1><?php echo $_lang['import_site_html']; ?></h1>
-
+<div class="section">
 <div class="sectionBody">
 <?php
 
@@ -56,6 +56,7 @@ if(!isset($_POST['import'])) {
 </ul>
 </form>
 </fieldset>
+</div></div>
 
 <?php
 } else {
