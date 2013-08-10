@@ -17,7 +17,7 @@ $num_rows_unpub = $modx->db->getAffectedRows($modxDBConn);
 ?>
 
 <h1><?php echo $_lang['refresh_title']; ?></h1>
-
+<div class="section">
 <div class="sectionBody">
 <?php printf("<p>".$_lang["refresh_published"]."</p>", $num_rows_pub) ?>
 <?php printf("<p>".$_lang["refresh_unpublished"]."</p>", $num_rows_unpub) ?>
@@ -32,4 +32,5 @@ $sync->emptyCache();
 $modx->invokeEvent("OnSiteRefresh");
 
 ?>
+</div>
 </div>
