@@ -19,7 +19,7 @@ function reloadTree() {
 </script>
 
 <h1><?php echo $_lang['export_site_html']; ?></h1>
-
+<div class="section">
 <div class="sectionBody">
 <?php
 
@@ -63,6 +63,8 @@ echo '<p>'.$_lang['export_site_message'].'</p>';
 </ul>
 </form>
 </fieldset>
+	</div>
+</div>
 
 <?php
 } else {
