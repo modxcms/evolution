@@ -14,7 +14,7 @@ $sqlQuery = $modx->db->escape($query);
 <!-- User Roles -->
 
 <h1><?php echo $_lang['role_management_title']; ?></h1>
-
+<div class="section">
 <div class="sectionBody">
 <p><?php echo $_lang['role_management_msg']; ?></p>
 
@@ -48,4 +48,5 @@ for($i=0; $i<$limit; $i++) {
 
 ?>
 </ul>
+</div>
 </div>
