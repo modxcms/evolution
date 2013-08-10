@@ -1760,7 +1760,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 /* normalize some td paddings */
 #tabTemplate tbody td,
 .sectionBody td {
-	padding: 2px 0;
+	padding: 2px;
 }
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] {
