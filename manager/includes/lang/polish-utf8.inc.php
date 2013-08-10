@@ -5,6 +5,9 @@
  * Encoding:       UTF8
  * Author:         The MODx Project Team
  * 
+ * Translation and revision for MODx v. 1.0.10 by:
+ *					Piotr Matysiak - web@pm-fx.com
+ * 
  * Translation and revision for MODx v. 1.0.4 by:
  *					Radosław Włodkowski - radoslaw@wlodkowski.net
  * 
@@ -15,9 +18,10 @@
  *					Piotr Łukańko - piotr.lukanko@gmail.com
  *                	Łukasz Kowalczyk - lukasz@pixeligence.com
  *
- * Date:           14 May 2010
- * Version:        1.3
- * MODx version:   Evolution 1.0.4
+ * Date:           15 Feb 2012
+
+ * Version:        1.5
+ * MODx version:   Evolution 1.0.11
 */
 
 $modx_lang_attribute = 'pl'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
@@ -129,7 +133,7 @@ $_lang["configcheck_errorpage_unavailable"] = 'Strona błędu Twojego serwisu je
 $_lang["configcheck_errorpage_unavailable_msg"] = 'Oznacza to, że Twoja strona błędu jest niedostępna dla użytkowników albo nie istnieje. Może to powodować niestabilność i wiele błędnych wpisów w logach serwisu. Upewnij się, że żadna grupa użytkowników nie jest przypisana do strony.';
 $_lang["configcheck_errorpage_unpublished"] = 'Strona błędu Twojego serwisu jest nieopublikowana lub nie istnieje.';
 $_lang["configcheck_errorpage_unpublished_msg"] = 'Oznacza to, że strona błędu Twojego serwisu jest niedostępna dla odwiedzających. Opublikuj tą stronę albo upewnij się, że jest ona przypisana do istniejącego dokumentu w drzewie zawartości Twojej strony.';
-$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Don\'t show this again.</em></a>';
+$_lang["configcheck_hide_warning"] = '<a href="javascript:hideConfigCheckWarning(\'%s\');"><em>Nie pokazuj tego ponownie.</em></a>';
 $_lang["configcheck_images"] = 'Katalog z obrazkami - Images - nie ma praw do zapisu';
 $_lang["configcheck_images_msg"] = 'Katalog z obrazkami nie jest zapisywalny, lub nie istnieje. Oznacza to, że funkcje menadżera obrazków w edytorze nie będą działać!';
 $_lang["configcheck_installer"] = 'instalator wciąż obecny';
@@ -143,16 +147,16 @@ $_lang["configcheck_php_gdzip_msg"] = 'Do poprawnego działania MODX potrzebuje 
 $_lang["configcheck_register_globals"] = 'register_globals jest włączona w konfiguracji PHP';
 $_lang["configcheck_register_globals_msg"] = 'Taka konfiguracja może zagrozić bezpieczeństwu strony, ponieważ powoduje większą wrażliwość na ataki typu XSS.';
 $_lang["configcheck_title"] = 'Sprawdzenie konfiguracji';
-$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher Plugin detected';
-$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Delete TemplateSwitcher</a>';
-$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Disable TemplateSwitcher</a>';
-$_lang["configcheck_templateswitcher_present_msg"] = 'The TemplateSwitcher plugin has been found to cause caching and performance problems, and should be used only the functionality is required in your site.';
+$_lang["configcheck_templateswitcher_present"] = 'TemplateSwitcher Plugin wykryty';
+$_lang["configcheck_templateswitcher_present_delete"] = '<a href="javascript:deleteTemplateSwitcher();">Usuń TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_disable"] = '<a href="javascript:disableTemplateSwitcher();">Wyłącz TemplateSwitcher</a>';
+$_lang["configcheck_templateswitcher_present_msg"] = 'TemplateSwitcher plugin powoduje problemy z cache i wydajnością.';
 $_lang["configcheck_unauthorizedpage_unavailable"] = 'Strona Braku Autoryzacji Twojego serwisu jest nieopublikowana lub nieistnieje.';
 $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Oznacza to, że Strona Braku Autoryzacji jest niedostępna dla odwiedzających.  Może to powodować niestabilność i wiele błędnych wpisów w logach serwisu. Upewnij się, że żadna grupa użytkowników nie jest przypisana do strony.';
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Strona Braku Konfiguracji zdefiniowana w ustawieniach jest nieopublikowana.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Oznacza to, że Strona Braku Autoryzacji serwisu jest niedostępna dla odwiedzających. Opublikuj tą stronę albo upewnij się, że jest ona przypisana do istniejącego dokumentu w drzewie zawartości Twojej strony.';
 $_lang["configcheck_validate_referer"] = 'Ostrzeżenie odnośnie bezpieczeństwa: Weryfikacja nagłówków HTTP_REFERER';
-$_lang["configcheck_validate_referer_msg"] = 'Ustawienie konfiguracyjne <strong>Weryfikuj nagłówki HTTP_REFERER</strong> jest wyłączone. Zalecamy aby było ono włączone. <a href="index.php?a=17">Przejdź do konfiguracji systemu</a><br /><a href="javascript:hideHeaderVerificationWarning();"><em>Nie pokazuj tego komunikatu ponownie./em></a>';
+$_lang["configcheck_validate_referer_msg"] = "Ustawienie konfiguracyjne <strong>Weryfikuj nagłówki HTTP_REFERER</strong> jest wyłączone. Zalecamy aby było ono włączone. <a href=\"index.php?a=17\">Przejdź do konfiguracji systemu</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Nie pokazuj tego komunikatu ponownie./em></a>";
 $_lang["configcheck_warning"] = 'Nieprawidłowości w konfiguracji:';
 $_lang["configcheck_what"] = 'Co to oznacza?';
 $_lang["confirm_block"] = 'Czy na pewno chcesz zablokować tego użytkownika?';
@@ -197,7 +201,7 @@ $_lang["database_collation"] = 'Baza danych - zestaw znaków dla porównań';
 $_lang["database_name"] = 'Baza danych - nazwa bazy';
 $_lang["database_overhead"] = '<b style=\'color:#990033\'>Wyjaśnienie:</b> Nadmiar to nieużywane miejsce zarezerwowane przez MySQL na przyszłe dane. Aby zwolnić to miejsce, kliknij na liczbę je reprezentującą.';
 $_lang["database_server"] = 'Baza danych - serwer';
-$_lang["database_table_clickbackup"] = 'aby wykonać i pobrać kopię zapasową wybranych tabel';
+$_lang["database_table_clickbackup"] = 'Pobierz kopię zapasową';
 $_lang["database_table_clickhere"] = 'Kliknij tutaj';
 $_lang["database_table_datasize"] = 'Rozmiar danych';
 $_lang["database_table_droptablestatements"] = 'Generuj instrukcje DROP TABLE.';
@@ -227,11 +231,11 @@ $_lang["defaultsearch_message"] = 'Wybierz \'Tak\' aby umożliwić przeszukiwani
 $_lang["defaultsearch_title"] = 'Domyślnie umożliwiać przeszukiwanie';
 $_lang["defaulttemplate_message"] = 'Wybierz domyślny szablon, który chcesz używać dla nowych dokumentów. Możesz potem przypisać dokumentowi inny szablon.';
 $_lang["defaulttemplate_title"] = 'Szablon domyślny';
-$_lang["defaulttemplate_logic_title"] = 'Automatic Template Assignment';
-$_lang["defaulttemplate_logic_general_message"] = 'New Resources will have the following templates, falling back to higher levels if not found:';
-$_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: the System Default Template.';
-$_lang["defaulttemplate_logic_parent_message"] = '<strong>Parent</strong>: the same Template as the parent container.';
-$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Sibling</strong>: the same Template as other Resources in the same container.';
+$_lang["defaulttemplate_logic_title"] = 'Automatyczne przypisywanie szablonów';
+$_lang["defaulttemplate_logic_general_message"] = 'Nowe dokumenty będą miały poniższy szablon lub szablon wyższego poziomu jeśli żaden nie zostanie znaleziony.';
+$_lang["defaulttemplate_logic_system_message"] = '<strong>System</strong>: domyślny szablon systemu.';
+$_lang["defaulttemplate_logic_parent_message"] = '<strong>Rodzic</strong>: taki sam szablon jak dokumentu nadrzędnego (rodzica).';
+$_lang["defaulttemplate_logic_sibling_message"] = '<strong>Rodzeństwo</strong>: taki sam szablon jak inne dokumenty tego samego poziomu.';
 $_lang["delete"] = 'Usuń';
 $_lang["delete_resource"] = 'Usuń dokument';
 $_lang["delete_tags"] = 'Usuń tagi';
@@ -415,21 +419,21 @@ $_lang["info"] = 'Info';
 $_lang["information"] = 'Informacja';
 $_lang["inline"] = 'Inline';
 $_lang["insert"] = 'Wstaw';
-$_lang["maxImageWidth"] = 'Maximum image width';
-$_lang["maxImageHeight"] = 'Maximum image height';
-$_lang["thumbWidth"] = 'Maximum thumbnail width';
-$_lang["thumbHeight"] = 'Maximum thumbnail height';
-$_lang["thumbsDir"] = 'Thumbnails directory location';
-$_lang["jpegQuality"] = 'JPEG compression';
-$_lang["denyZipDownload"] = 'Disable zip-archives downloading';
-$_lang["denyExtensionRename"] = 'Disable renaming of file extensions';
-$_lang["maxImageWidth_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
-$_lang["maxImageHeight_message"] = 'If uploaded image resolution exceeds this setting it will be automatically resized. Set 0 to avoid.';
-$_lang["thumbWidth_message"] = 'Maximum thumbnail width.';
-$_lang["thumbHeight_message"] = 'Maximum thumbnail height.';
-$_lang["thumbsDir_message"] = 'The name of previews folder.';
-$_lang["jpegQuality_message"] = 'JPEG compression quality of thumbnails and resized images';
-$_lang["showHiddenFiles"] = 'Show hidden files in file browser';
+$_lang["maxImageWidth"] = 'Maksymalna szerokość obrazu';
+$_lang["maxImageHeight"] = 'Maksymalna wysokość obrazu';
+$_lang["thumbWidth"] = 'Maksymalna szerokość miniatury';
+$_lang["thumbHeight"] = 'Maksymalna wysokość miniatury';
+$_lang["thumbsDir"] = 'Położenie katalogu miniatur';
+$_lang["jpegQuality"] = 'Kompresja JPEG';
+$_lang["denyZipDownload"] = 'Wyłącz pobieranie archiwów ZIP';
+$_lang["denyExtensionRename"] = 'Wyłącz zmienianie rozszerzeń plików';
+$_lang["maxImageWidth_message"] = 'Jeśli rozdzielczość załadowanego obrazu przekracza to ustawienie, obraz zostanie automatycznie zmniejszony. Ustaw na 0 aby tego uniknąć.';
+$_lang["maxImageHeight_message"] = 'Jeśli rozdzielczość załadowanego obrazu przekracza to ustawienie, obraz zostanie automatycznie zmniejszony. Ustaw na 0 aby tego uniknąć.';
+$_lang["thumbWidth_message"] = 'Maksymalna szerokość miniatury.';
+$_lang["thumbHeight_message"] = 'Maksymalna wysokość miniatury.';
+$_lang["thumbsDir_message"] = 'Nazwa katalogu miniatur.';
+$_lang["jpegQuality_message"] = 'Jakość kompresji JPEG dla miniatur oraz zmniejszonych obrazów';
+$_lang["showHiddenFiles"] = 'Pokaż ukryte pliki w eksploratorze plików';
 $_lang["keyword"] = 'Słowo kluczowe';
 $_lang["keywords"] = 'Słowa kluczowe';
 $_lang["keywords_intro"] = 'Aby edytować słowo kluczowe wpisz nowe słowo w polu tekstowym obok słowa, które chcesz zmienić. Aby usunąć słowo kluczowe, zaznacz pole \'usuń\' dla danego słowa. Jeśli zaznaczysz pole usunięcia i zmienisz nazwę pola zostanie ono usunięte!';
@@ -704,7 +708,7 @@ $_lang["refresh_site"] = 'Odśwież stronę';
 $_lang["refresh_title"] = 'Odśwież witrynę';
 $_lang["refresh_tree"] = 'Odśwież drzewo';
 $_lang["refresh_unpublished"] = '<b>%s</b> dokument/y/ów zostało zdjętych z publikacji.';
-$_lang["release_date"] = 'Release date';
+$_lang["release_date"] = 'Data wydania';
 $_lang["remember_last_tab"] = 'Zapamiętaj zakładki';
 $_lang["remember_last_tab_message"] = 'Strony menedżera wykorzystujące zakładki wyświetlane będą z ostatnio używaną zakładką zamiast z pierwszą.';
 $_lang["remember_username"] = 'Zapamiętaj mnie';
@@ -715,7 +719,7 @@ $_lang["rename"] = 'Zmień nazwę';
 $_lang["reports"] = 'Raporty';
 $_lang["require_tagname"] = 'Nazwa tagu jest wymagana';
 $_lang["require_tagvalue"] = 'Wartość tagu jest wymagana';
-$_lang["reserved_name_warning"] = 'You have used a reserved name.';
+$_lang["reserved_name_warning"] = 'Użyłeś zarezerwowanej nazwy.';
 $_lang["reset"] = 'Reset';
 $_lang["reset_failedlogins"] = 'reset';
 $_lang["resource"] = 'Dokument';
@@ -894,7 +898,7 @@ $_lang["settings_events"] = 'Zdarzenia systemowe';
 $_lang["settings_furls"] = 'Ustawienia przyjaznego URL';
 $_lang["settings_general"] = 'Ogólne';
 $_lang["settings_misc"] = 'Inne ustawienia';
-$_lang["settings_KC"] = 'File Browser';
+$_lang["settings_KC"] = 'Przeglądarka plików';
 $_lang["settings_page_settings"] = 'Ustawienia strony';
 $_lang["settings_photo"] = 'Zdjęcie';
 $_lang["settings_properties"] = 'Właściwości';
@@ -944,42 +948,9 @@ $_lang["sunday"] = 'Niedziela';
 $_lang["sys_alert"] = 'Alarm systemowy';
 $_lang["sysinfo_activity_message"] = 'Ta lista zawiera wykaz dokumentów, które były ostatnio edytowane.';
 $_lang["sysinfo_userid"] = 'Użytkownik';
-$_lang["system_email_signup"] = 'Witaj [+uid+]
-
-Poniżej znajdują się szczegóły logowania do Panelu Administracji [+sname+] :
-
-Login: [+uid+]
-Hasło: [+pwd+]
-
-Po zalogowaniu do Panelu Administracji ([+surl+]), możesz zmienić swoje hasło.
-
-Pozdrawiam,
-Administrator witryny';
-$_lang["system_email_webreminder"] = 'Witaj [+uid+]
-
-Aby uaktywnić nowe hasło kliknij na poniższy link:
-
-[+surl+]
-
-Po zakończeniu możesz użyć następującego hasła do zalogowania się:
-
-Hasło:[+pwd+]
-
-eśli nie zgłaszałeś zmiany hasła zignoruj ten e-mail.
-
-Pozdrawiam,
-Administrator witryny';
-$_lang["system_email_websignup"] = 'Witaj [+uid+]
-
-Poniżej znajdują się szczegóły logowania do strony [+sname+]:
-
-Login: [+uid+]
-Hasło: [+pwd+]
-
-Po zalogowaniu do [+sname+] ([+surl+]), możesz zmienić swoje hasło.
-
-Pozdrawiam,
-Administrator witryny';
+$_lang["system_email_signup"] = "Witaj [+uid+]\n\nPoniżej znajdują się szczegóły logowania do Panelu Administracji [+sname+] :\n\nLogin: [+uid+]\nHasło: [+pwd+]\n\nPo zalogowaniu do Panelu Administracji ([+surl+]), możesz zmienić swoje hasło.\n\nPozdrawiam,\nAdministrator witryny";
+$_lang["system_email_webreminder"] = "Witaj [+uid+]\n\nAby uaktywnić nowe hasło kliknij na poniższy link:\n\n[+surl+]\n\nPo zakończeniu możesz użyć następującego hasła do zalogowania się:\n\nHasło:[+pwd+]\n\neśli nie zgłaszałeś zmiany hasła zignoruj ten e-mail.\n\nPozdrawiam,\nAdministrator witryny";
+$_lang["system_email_websignup"] = "Witaj [+uid+]\n\nPoniżej znajdują się szczegóły logowania do strony [+sname+]:\n\nLogin: [+uid+]\nHasło: [+pwd+]\n\nPo zalogowaniu do [+sname+] ([+surl+]), możesz zmienić swoje hasło.\n\nPozdrawiam,\nAdministrator witryny";
 $_lang["table_hoverinfo"] = 'Zatrzymaj kursor myszy nad nazwą tabeli aby zobaczyć krótki opis jej funkcji (nie wszystkie tabele są opatrzone <i>komentarzami</i>.)';
 $_lang["table_prefix"] = 'Prefiks tabel';
 $_lang["tag"] = 'Tag';
@@ -1011,7 +982,7 @@ $_lang["tmplvars_caption"] = 'Tytuł';
 $_lang["tmplvars_default"] = 'Wartość domyślna';
 $_lang["tmplvars_description"] = 'Opis';
 $_lang["tmplvars_elements"] = 'Wartości opcji pola';
-$_lang["tmplvars_inherited"] = 'Value inherited';
+$_lang["tmplvars_inherited"] = 'Wartość dziedziczona';
 $_lang["tmplvars_management_msg"] = 'Tutaj możesz zarządzać polami zmiennych dodatkowych w Twoich dokumentach.';
 $_lang["tmplvars_msg"] = 'Tutaj możesz dodawać/edytować Zmienne Szablonów. Zmienne Szablonu muszą być dostępne dla wybranego szablonu, aby były dostępne dla snippetów i dokumentów tak jak pozostałe zmienne treści.';
 $_lang["tmplvars_name"] = 'Nazwa zmiennej';
@@ -1087,7 +1058,7 @@ $_lang["user_is_blocked"] = 'Ten użytkownik jest zablokowany!';
 $_lang["user_logincount"] = 'Liczba logowań';
 $_lang["user_male"] = 'Mężczyzna';
 $_lang["user_management_msg"] = 'Tutaj możesz wybrać, którego użytkownika administracyjnego chcesz edytować. Użytkownicy administracyjni są to użytkownicy, którzy mogą logować się do Panelu Administracyjnego';
-$_lang["user_management_title"] = 'Zarządzaj użytkownikami';
+$_lang["user_management_title"] = 'Użytkownicy menedżera';
 $_lang["user_mobile"] = 'Numer telefonu komórkowego';
 $_lang["user_phone"] = 'Numer telefonu';
 $_lang["user_photo"] = 'Zdjęcie użytkownika';
@@ -1117,7 +1088,7 @@ $_lang["web_access_permissions"] = 'Ustawienia dostępu web';
 $_lang["web_access_permissions_user_groups"] = 'Grupy użytkowników web';
 $_lang["web_permissions"] = 'Uprawnienia web';
 $_lang["web_user_management_msg"] = 'Tutaj możesz wybrać, którego użytkownika web chcesz edytować. Użytkownicy web to ci użytkownicy, którzy mogą się logować tylko na części frontowej serwisu.';
-$_lang["web_user_management_title"] = 'Zarządzanie użytkownikami web';
+$_lang["web_user_management_title"] = 'Użytkownicy web';
 $_lang["web_user_title"] = 'Utwórz/edytuj użytkownika web';
 $_lang["web_users"] = 'Użytkownicy web';
 $_lang["weblink"] = 'Odsyłacz';
@@ -1142,61 +1113,74 @@ $_lang["yourinfo_role"] = 'Twoja rola to:';
 $_lang["yourinfo_title"] = 'Twoje info';
 $_lang["yourinfo_total_logins"] = 'Całkowita ilość logowań:';
 $_lang["yourinfo_username"] = 'Jesteś zalogowany jako:';
-$_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
-$_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
-$_lang["a17_error_reporting_opt0"] = 'Ignore all';
-$_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
-$_lang["a17_error_reporting_opt99"] = 'Detect all';
-$_lang["pwd_hash_algo_title"] = 'Hash algorithm';
-$_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
-$_lang["enable_bindings_title"] = 'Enable @Bindings commands';
-$_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
-$_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
-$_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
-$_lang["bkmgr_restore_title"] = 'Restore';
-$_lang["bkmgr_import_ok"] = 'SQL recovery was performed normally.';
-$_lang["bkmgr_snapshot_ok"] = 'The snapshot was saved normally.';
-$_lang["bkmgr_run_sql_file_label"] = 'Execute by sql file';
-$_lang["bkmgr_run_sql_direct_label"] = 'Direct execute SQL command strings';
-$_lang["bkmgr_run_sql_submit"] = 'Execute restore';
-$_lang["bkmgr_run_sql_result"] = 'Result';
-$_lang["bkmgr_snapshot_title"] = 'Snapshot save and recovery';
-$_lang["bkmgr_snapshot_msg"] = '<p>The contents of the database are saved and restored to a server.<br />Preservation place : [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
-$_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
-$_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
-$_lang["bkmgr_restore_submit"] = 'Revert this data';
-$_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
-$_lang["files.dynamic.php1"] = 'create text file';
-$_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
-$_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
-$_lang["files.dynamic.php4"] = 'The text file was created.';
-$_lang["not_readable_dir"] = 'Can not read this directory.';
-$_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
-$_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
-$_lang["make_folders_title"] = 'Make end slash URL at the container';
-$_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
-$_lang["check_files_onlogin_title"] = 'Check core files on login';
-$_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
-$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
-$_lang["email_method_title"] = 'Sendmail method';
-$_lang["email_method_mail"] = 'mail() PHP function';
-$_lang["email_method_smtp"] = 'SMTP Server';
-$_lang["smtp_auth_title"] = 'SMTP－AUTH';
-$_lang["smtp_host_title"] = 'SMTP host';
-$_lang["smtp_username_title"] = 'SMTP user name';
-$_lang["smtp_password_title"] = 'SMTP password';
-$_lang["smtp_port_title"] = 'SMTP port';
-$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
-$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
-$_lang["cache_type_title"] = 'Document caching type';
-$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
-$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
-$_lang["seostrict_title"] = 'Use SEO Strict URLs';
-$_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
-$_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
-$_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
-$_lang["user_street"] = 'Street';
-$_lang["user_city"] = 'City';
-$_lang["user_other"] = 'Other';
+
+$_lang['a17_error_reporting_title'] = 'Poziom wykrywania błędów PHP';
+$_lang['a17_error_reporting_msg'] = 'Ustaw poziom wykrywania błędów PHP.';
+$_lang['a17_error_reporting_opt0'] = 'Ignoruj wszystko';
+$_lang['a17_error_reporting_opt1'] = 'Ignoruj ostrzeżenia niskiego poziomu (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang['a17_error_reporting_opt2'] = 'Wykrywaj wszystkie błędy poza E_NOTICE';
+$_lang['a17_error_reporting_opt99'] = 'Wykrywaj wszystko';
+
+$_lang["pwd_hash_algo_title"] = 'Algorytm haszowania';
+$_lang["pwd_hash_algo_message"] = 'Algorytm haszowania hasła.';
+
+$_lang["enable_bindings_title"]  = 'Włącz komendy @Bindings';
+$_lang['enable_bindings_message'] = 'Zapobiega wykonywaniu funkcji PHP poprzez TV @Bindings. Użyteczny gdy istnieją użytkownicy Managera, którzy nie powinni mieć dostępu do tworzenia kodu PHP, ale potrzebują tworzyć lub edytować TV. Wynikiem każdej TV która zawiera @Binding będzie "@Bindings disabled".';
+
+$_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
+$_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
+$_lang["bkmgr_restore_title"] = 'Przywróć';
+$_lang["bkmgr_import_ok"] = 'Przywracanie SQL przebiegło pomyślnie.';
+$_lang["bkmgr_snapshot_ok"] = 'Zrzut został zapisany poprawnie.';
+$_lang["bkmgr_run_sql_file_label"] = 'Plik SQL';
+$_lang["bkmgr_run_sql_direct_label"] = 'Polecenie SQL';
+$_lang["bkmgr_run_sql_submit"] = 'Przywróć';
+$_lang["bkmgr_run_sql_result"] = 'Wynik';
+$_lang["bkmgr_snapshot_title"] = 'Zapisywanie i przywracanie zrzutu';
+$_lang["bkmgr_snapshot_msg"] = '<p>Zawartość bazy danych zostanie zapisana na serwerze i w razie potrzeby przywrócona.<br />Miejsce przechowywania: [+snapshot_path+] ($modx->config[\'snapshot_path\'])</p>';
+$_lang["bkmgr_snapshot_submit"] = ' Dodaj zrzut';
+$_lang["bkmgr_snapshot_list_title"] = 'Lista zrzutów';
+$_lang["bkmgr_restore_submit"] = 'Przywróć te dane';
+$_lang["bkmgr_snapshot_nothing"] = 'Brak zrzutów';
+
+$_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';
+$_lang["files.dynamic.php2"] = 'Ten katalog nie może zostać wyświetlony.';
+$_lang["files.dynamic.php3"] = 'Wystąpił problem z nazwą pliku.';
+$_lang["files.dynamic.php4"] = 'Plik tekstowy został utworzony.';
+$_lang["not_readable_dir"] = 'Nie można odczytać katalogu.';
+$_lang["confirm_delete_dir"] = 'Czy na pewno chcesz usunąć ten katalog?';
+$_lang["confirm_delete_dir_recursive"] = 'Czy na pewno chcesz usunąć ten katalog?\n\nWszystkie jego pliki również zostaną usunięte.';
+
+$_lang['make_folders_title'] = 'Dodawaj ukośnik na końcach folderów';
+$_lang['make_folders_message'] = 'Ukośnik będzie dodany do dokumentów oznaczonych jako foldery, gdy używa się przyjaznych URL.';
+
+$_lang['check_files_onlogin_title'] = 'Sprawdzaj ważne pliki przy logowaniu';
+$_lang['check_files_onlogin_message'] = 'Włączając tę opcję, ważne pliki systemowe będą sprawdzane pod kątem niechcianych modyfikacji typowych dla ataków na stronę www. Chociaż nie jest to 100% zapezpiecznie, to może zaalarmować Cię o zmanipulowanych plikach MODX.';
+
+$_lang['configcheck_sysfiles_mod'] = 'Ważne pliki systemowe zostały zmienione.';
+$_lang['configcheck_sysfiles_mod_msg'] = 'Włączyłeś sprawdzanie ważnych plików systemowych podczas logowania, w celu wykrycia potencjalnych ataków na stronę www. Ten komunikat nie koniecznie oznacza, że Twoja strona została zaatakowana, jednakże zaleca się sprawdzenie zmienionych plików (index.php, .htaccess, [+MGR_DIR+]/index.php, manager/includes/config.inc.php).';
+
+$_lang['email_method_title'] = 'Metoda wysyłania poczty';
+$_lang['email_method_mail'] = 'Funkcja PHP mail()';
+$_lang['email_method_smtp'] = 'Serwer SMTP';
+$_lang['smtp_auth_title'] = 'SMTP-AUTH';
+$_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_username_title'] = 'Nazwa użytkownika SMTP';
+$_lang['smtp_password_title'] = 'Hasło SMTP';
+$_lang['smtp_port_title'] = 'Port SMTP';
+
+$_lang["setting_resource_tree_node_name"] = 'Nazwa węzła drzewa zasobów';
+$_lang["setting_resource_tree_node_name_desc"] = 'Określ pole zasobu, które zostanie użyte w czasie renderowania węzłów w drzewie zasobów. Domyślnie to pagetitle, jednakże każde pole zasobu może zostać wykorzystane np. menutitle, alias.';
+
+$_lang["cache_type_title"] = 'Sposób cachowania dokumentu';
+$_lang["cache_type_1"] = 'Cache bazuje tylko na id dokumentu (domyślne)';
+$_lang["cache_type_2"] = 'Cache bazuje na id dokumentu oraz parametrach $_GET';
+$_lang["seostrict_title"] = 'Używaj SEO Strict URLs';
+$_lang["seostrict_message"] = 'Jeśli potrzeba, wymuś używanie strict URLs aby zapobiec duplikowaniu treści';
+
+$_lang["settings_friendlyurls_alert"] = 'Wymagana jest zmiana nazwy pliku ht.access na .htaccess aby używać przyjaznych adresów.';
+$_lang["settings_friendlyurls_alert2"] = 'Ponieważ serwis zainstalowany został w podkatalogu, wymagana jest zmiana zawartości pliku .htaccess.';
+
+$_lang["user_street"] = 'Ulica';
+$_lang["user_city"] = 'Miasto';
+$_lang["user_other"] = 'Inne';
