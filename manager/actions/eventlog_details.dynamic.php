@@ -60,6 +60,7 @@ else{
 <input type="hidden" name="a" value="<?php echo (int) $_REQUEST['a']; ?>" />
 <input type="hidden" name="listmode" value="<?php echo $_REQUEST['listmode']; ?>" />
 <input type="hidden" name="op" value="" />
+<div class="section">
 <div class="sectionHeader"><?php echo $content['source']." - ".$_lang['eventlog_viewer']; ?></div><div class="sectionBody">
 <?php
 $date = $modx->toDateFormat($content["createdon"]);
@@ -94,5 +95,5 @@ echo <<<HTML
 	</table>
 HTML;
 ?>
-</div>
+</div></div>
 </form>

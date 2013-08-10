@@ -93,7 +93,7 @@ echo $cm->render();
 <input type="hidden" name="op" value="" />
 
 <h1><?php echo $_lang['eventlog_viewer']?></h1>
-
+<div class="section">
 <div class="sectionBody">
 	<!-- load modules -->
 	<p><?php echo $_lang['eventlog_msg']?></p>
@@ -143,5 +143,6 @@ echo $cm->render();
 	echo $grd->render();
 	?>
 	</div>
+</div>
 </div>
 </form>

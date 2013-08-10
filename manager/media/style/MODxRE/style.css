@@ -511,12 +511,17 @@ input.submit {
 	margin: 5px 15px 15px;
 	display: block;
 }
-	.tab-page .sectionBody {
+	.tab-page .sectionBody, .section .sectionBody {
 		background: none repeat scroll 0 0 #F7F7F7;
 		border: 1px solid #CCCCCC;
 		margin: 0 3px 15px;
 		padding: 7px;
 	}
+ .section .sectionBody {
+	margin:0 15px 15px;
+	padding-left:15px;
+	background-color:#fff;
+}
 	.rtl .sectionBody, .layerVisible {
 		direction: rtl;
 		position: inherit;
