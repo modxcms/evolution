@@ -464,7 +464,7 @@ input.submit {
 
 /* -------------------------[ Misc stuff ]--- */
 .sectionBody fieldset {
-	background: none repeat scroll 0 0 #FFFFFF;
+	background: none repeat scroll 0 0 #FDFDFD;
 	border: 1px solid #CCCCCC;
 	padding: 15px !important;
 }
