@@ -78,7 +78,7 @@ echo $cm->render();
 </script>
 
 <h1><?php echo $_lang['module_management']; ?></h1>
-
+<div class="section">
 <div class="sectionBody">
 	<!-- load modules -->
 	<p><?php echo $_lang['module_management_msg']; ?></p>
@@ -115,4 +115,5 @@ echo $cm->render();
 	echo $grd->render();
 	?>
 	</div>
+</div>
 </div>
