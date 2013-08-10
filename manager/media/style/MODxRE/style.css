@@ -1292,10 +1292,13 @@ a.hometblink, a.hometblink img {
 	background: #fff;
 }
 .sortabletable tr.even {
+	background: #f7f7f7;
+}
+.sortabletable tbody tr:hover {
 	background: #E9F0F3;
 }
 .sortabletable td, .sortabletable th {
-	padding: 3px 5px;
+	padding: 5px!important;
 	border: 1px solid #ccc;
 }
 .sortabletable th {
