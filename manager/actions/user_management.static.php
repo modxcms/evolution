@@ -88,7 +88,7 @@ echo $cm->render();
 <input type="hidden" name="op" value="" />
 
 <h1><?php echo $_lang['user_management_title']; ?></h1>
-
+<div class="section">
 <div class="sectionBody">
 	<p><?php echo $_lang['user_management_msg']; ?></p>
 	<div class="searchbar">
@@ -151,5 +151,5 @@ echo $cm->render();
 	echo $grd->render();
 	?>
 	</div>
-</div>
+</div></div>
 </form>
