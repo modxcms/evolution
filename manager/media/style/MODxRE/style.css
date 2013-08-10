@@ -511,8 +511,7 @@ input.submit {
 	margin: 5px 15px 15px;
 	display: block;
 }
-	.tab-page .sectionBody,
-	.sectionBody {
+	.tab-page .sectionBody {
 		background: none repeat scroll 0 0 #F7F7F7;
 		border: 1px solid #CCCCCC;
 		margin: 0 3px 15px;
@@ -522,11 +521,6 @@ input.submit {
 		direction: rtl;
 		position: inherit;
 	}
-.sectionBody {
-	margin:0 15px 15px;
-	padding-left:15px;
-	background-color:#fff;
-}
 .showHideVisible, .layerVisible {
 	margin: 0 10px 4px;
 }
