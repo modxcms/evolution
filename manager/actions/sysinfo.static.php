@@ -125,6 +125,7 @@ if(!$modx->hasPermission('logs')) {
 </div>
 
 <!-- recent documents -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang["activity_title"]; ?></div><div class="sectionBody" id="lyr1">
 		<?php echo $_lang["sysinfo_activity_message"]; ?><p>
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
@@ -162,9 +163,10 @@ if(!$modx->hasPermission('logs')) {
 		</tbody>
          </table>
    </div>
-
+</div>
 
 <!-- database -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['database_tables']; ?></div><div class="sectionBody" id="lyr4">
 		<p><?php echo $_lang['table_hoverinfo']; ?></p>
 		<table border="0" cellpadding="1" cellspacing="1" width="100%" bgcolor="#ccc">
@@ -250,9 +252,10 @@ if(!$modx->hasPermission('logs')) {
 	if($totaloverhead>0) { ?>
 		<p><?php echo $_lang['database_overhead']; ?></p>
 		<?php } ?>
-</div>
+</div></div>
 
 <!-- online users -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['onlineusers_title']; ?></div><div class="sectionBody" id="lyr5">
 
 		<?php
@@ -292,4 +295,4 @@ if(!$modx->hasPermission('logs')) {
 		?>
 		</tbody>
 		</table>
-</div>
+</div></div>
