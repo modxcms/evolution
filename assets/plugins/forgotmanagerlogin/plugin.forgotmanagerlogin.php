@@ -183,3 +183,4 @@ if($event_name == 'OnManagerAuthentication' && $hash && $username) {
 }
 
 $modx->Event->output($output);
+?>
