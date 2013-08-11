@@ -10,6 +10,7 @@
  * @internal	@events OnBeforeManagerLogin,OnManagerAuthentication,OnManagerLoginFormRender
  * @internal	@modx_category Manager and Admin
  * @internal    @installset base
+ * @author opengeek
+ * @author Agel_Nash <Agel_Nash@xaker.ru>
  */
-
 require MODX_BASE_PATH.'assets/plugins/forgotmanagerlogin/plugin.forgotmanagerlogin.php';

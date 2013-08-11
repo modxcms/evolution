@@ -12,6 +12,7 @@
  * @internal	@modx_category Manager and Admin
  * @internal    @legacy_names QM+,QuickEdit
  * @internal    @installset base, sample
+ * @internal    @disabled 1
  */
 
 
