@@ -11,7 +11,7 @@ if(!defined('MODX_BASE_PATH')) {die('What are you doing? Get out of here!');}
 
 //---Core Settings---------------------------------------------------- //
 
-$ditto_version = "2.1.0";
+$ditto_version = "2.1.1";
     // Ditto version being executed
 
 $ditto_base = isset($ditto_base) ? $modx->config['base_path'].$ditto_base : $modx->config['base_path']."assets/snippets/ditto/";
@@ -822,6 +822,8 @@ if ($count > 0) {
         // set initial stop count
 
     if($paginate == 1) {
+        $max_paginate = isset($max_paginate)? $max_paginate : 50;
+        $max_previous = isset($max_previous)? $max_previous : 25;
         $paginateAlwaysShowLinks = isset($paginateAlwaysShowLinks)? $paginateAlwaysShowLinks : 0;
         /*
             Param: paginateAlwaysShowLinks
@@ -975,7 +977,7 @@ if ($count > 0) {
             - <paginateSplitterCharacter>
         */
         
-        $ditto->paginate($start, $stop, $total, $display, $tplPaginateNext, $tplPaginatePrevious, $tplPaginateNextOff, $tplPaginatePreviousOff, $tplPaginatePage, $tplPaginateCurrentPage, $paginateAlwaysShowLinks, $paginateSplitterCharacter);
+        $ditto->paginate($start, $stop, $total, $display, $tplPaginateNext, $tplPaginatePrevious, $tplPaginateNextOff, $tplPaginatePreviousOff, $tplPaginatePage, $tplPaginateCurrentPage, $paginateAlwaysShowLinks, $paginateSplitterCharacter, $max_paginate, $max_previous);
             // generate the pagination placeholders
     }
 
@@ -1088,4 +1090,5 @@ if ($outerTpl && $resource) {
   $output = str_replace('[+ditto+]',$output,$outerTpl);
 }
 
-return ($save != 3) ? $output : "";?>
+return ($save != 3) ? $output : "";
+?>
