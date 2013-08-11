@@ -11,6 +11,7 @@
  * @internal	@modx_category Search
  * @internal    @legacy_names Search Highlighting
  * @internal    @installset base, sample
+ * @internal    @disabled 1
  */
  
  /*
