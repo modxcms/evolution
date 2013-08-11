@@ -49,6 +49,9 @@ function eForm($modx,$params) {
 
 	$fields = array(); //reset fields array - needed in case of multiple forms
 
+// define some variables used as array index
+$_dfnMaxlength = 6;
+
 	extract($params,EXTR_SKIP); // extract params into variables
 
 	$fileVersion = '1.4.4';
