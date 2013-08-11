@@ -4,6 +4,9 @@
  *	Function: This class contains the main document parsing functions
  *
  */
+if (!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
+if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
+
 class DocumentParser {
     var $db; // db object
     var $event, $Event; // event object
@@ -673,6 +676,7 @@ class DocumentParser {
     }
 
     function mergeDocumentMETATags($template) {
+        $metas = null;
         if ($this->documentObject['haskeywords'] == 1) {
             // insert keywords
             $keywords = $this->getKeywords();
@@ -805,6 +809,7 @@ class DocumentParser {
 			else                                                         $error_type = 3;
 			if(1<$this->config['error_reporting'] || 2<$error_type) {
 				extract($error_info);
+                $text = isset($text) ? $text : '';
 				if($msg===false) $msg = 'ob_get_contents() error';
 				$result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Plugin', $text, $line, $msg);
 				if ($this->isBackend()) {
@@ -836,6 +841,7 @@ class DocumentParser {
             if(1<$this->config['error_reporting'] || 2<$error_type)
             {
                 extract($error_info);
+                $text = isset($text) ? $text : '';
                 if($msg===false) $msg = 'ob_get_contents() error';
                 $result = $this->messageQuit('PHP Parse Error', '', true, $type, $file, 'Snippet', $text, $line, $msg);
                 if ($this->isBackend())
@@ -1907,7 +1913,7 @@ class DocumentParser {
     }
 
     function getChunk($chunkName) {
-        $t= $this->chunkCache[$chunkName];
+        $t= isset($this->chunkCache[$chunkName]) ? $this->chunkCache[$chunkName] : null;
         return $t;
     }
 
@@ -2159,7 +2165,7 @@ class DocumentParser {
 
     # return placeholder value
     function getPlaceholder($name) {
-        return $this->placeholders[$name];
+        return isset($this->placeholders[$name]) ? $this->placeholders[$name] : null;
     }
 
     # sets a value for a placeholder
@@ -2292,7 +2298,7 @@ class DocumentParser {
         $limit= mysql_num_rows($rs);
         if ($limit == 1) {
             $row= $this->db->getRow($rs);
-            if (!$row["usertype"])
+            if (!isset($row["usertype"]))
                 $row["usertype"]= "manager";
             return $row;
         }
@@ -2310,7 +2316,7 @@ class DocumentParser {
         $limit= mysql_num_rows($rs);
         if ($limit == 1) {
             $row= $this->db->getRow($rs);
-            if (!$row["usertype"])
+            if (!isset($row["usertype"]))
                 $row["usertype"]= "web";
             return $row;
         }
@@ -2577,7 +2583,7 @@ class DocumentParser {
                 // get plugin code
                 if (isset ($this->pluginCache[$pluginName])) {
                     $pluginCode= $this->pluginCache[$pluginName];
-                    $pluginProperties= $this->pluginCache[$pluginName . "Props"];
+                    $pluginProperties= isset($this->pluginCache[$pluginName . "Props"]) ? $this->pluginCache[$pluginName . "Props"] : '';
                 } else {
                     $sql= "SELECT `name`, `plugincode`, `properties` FROM " . $this->getFullTableName("site_plugins") . " WHERE `name`='" . $pluginName . "' AND `disabled`=0;";
                     $result= $this->db->query($sql);
@@ -2612,15 +2618,14 @@ class DocumentParser {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
-            for ($x= 0; $x < count($tmpParams); $x++) {
+            $count = count($tmpParams);
+            for ($x= 0; $x < $count; $x++) {
                 if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x]);
-                    $pvTmp= explode(";", trim($pTmp[1]));
-                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
-                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
-                    else
-                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "")
-                            $parameter[trim($pTmp[0])]= $pvTmp[2];
+                    $pTmp= explode("=", $tmpParams[$x], 2);
+                    $pvTmp= explode(";", trim($pTmp[1]), 3);
+                    $pvTmp[2] = isset($pvTvm[2]) ? $pvTmp[2] : null;
+                    $pvTmp[3] = isset($pvTmp[3]) ? $pvTmp[3] : null;
+                    $parameter[trim($pTmp[0])] = ($pvTmp[1] == 'list') ? $pvTmp[3] : $pvTmp[2];
                 }
             }
         }
@@ -3053,6 +3058,7 @@ class DocumentParser {
 			elseif(substr($val['function'],0,8)==='phpError') break;
 			$path = str_replace('\\','/',$val['file']);
 			if(strpos($path,MODX_BASE_PATH)===0) $path = substr($path,strlen(MODX_BASE_PATH));
+            $val['type'] = isset($val['type']) ? $val['type'] : null;
 			switch($val['type'])
 			{
 				case '->':

@@ -3,6 +3,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 if (!array_key_exists('mail_check_timeperiod', $modx->config) || !is_numeric($modx->config['mail_check_timeperiod'])) {
 	$modx->config['mail_check_timeperiod'] = 5;
 }
+$modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
 if ($manager_theme) $manager_theme .= '/';
 $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 ?>
