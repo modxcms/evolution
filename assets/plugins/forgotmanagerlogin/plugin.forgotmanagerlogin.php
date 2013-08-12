@@ -76,13 +76,6 @@ EOD;
         function sendEmail($to) {
             global $modx, $_lang;
 
-            $subject = $_lang['password_change_request'];
-            $headers  = "MIME-Version: 1.0\r\n".
-                "Content-type: text/html; charset=\"{$modx->config['modx_charset']}\"\r\n".
-                "From: MODx <{$modx->config['emailsender']}>\r\n".
-                "Reply-To: no-reply@{$_SERVER['HTTP_HOST']}\r\n".
-                "X-Mailer: PHP/".phpversion();
-
             $user = $this->getUser(0, '', $to);
 
             if($user['username']) {
@@ -92,10 +85,17 @@ EOD;
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
 
-                $mail = mail($to, $subject, $body, $headers);
-                if(!$mail) { $this->errors[] = $_lang['error_sending_email']; }
+                $modx->loadExtension('MODxMailer');
+                $modx->mail->From        = $modx->config['emailsender'];
+                $modx->mail->FromName    = $modx->config['site_name'];
+                $modx->mail->AddAddress($to,$user['username']);
+                $modx->mail->Subject    = $_lang['password_change_request'];
+                $modx->mail->Body        = $body;
+                $rs = $modx->mail->send(); //ignore mail errors in this case
 
-                return $mail;
+                if(!$rs) $modx->errors[] = $_lang['error_sending_email'];
+
+                return $rs;
             }
         }
 
