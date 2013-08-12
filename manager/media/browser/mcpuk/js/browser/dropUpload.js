@@ -11,8 +11,12 @@
   *   @license http://www.opensource.org/licenses/lgpl-2.1.php LGPLv2
   *      @link http://kcfinder.sunhater.com
   */?>
-
+var already = false;
 browser.initDropUpload = function() {
+	if (already){
+      return;
+   }
+   already = true;
     if ((typeof(XMLHttpRequest) == 'undefined') ||
         (typeof(document.addEventListener) == 'undefined') ||
         (typeof(File) == 'undefined') ||
@@ -64,7 +68,7 @@ browser.initDropUpload = function() {
             browser.alert("Cannot write to upload folder.");
             return false;
         }
-        filesCount += e.dataTransfer.files.length
+        filesCount += e.dataTransfer.files.length;
         for (var i = 0; i < e.dataTransfer.files.length; i++) {
             var file = e.dataTransfer.files[i];
             file.thisTargetDir = browser.dir;
@@ -193,6 +197,7 @@ browser.initDropUpload = function() {
                     if (browser.dir == reader.thisTargetDir)
                         browser.fadeFiles();
                     uploadInProgress = false;
+					already = true;
                     processUploadQueue();
                     if (xhr.responseText.substr(0, 1) != '/')
                         errors[errors.length] = xhr.responseText;
@@ -204,6 +209,7 @@ browser.initDropUpload = function() {
             reader.onerror = function(evt) {
                 $('#loading').css('display', 'none');
                 uploadInProgress = false;
+				already = true;
                 processUploadQueue();
                 errors[errors.length] = browser.label("Failed to upload {filename}!", {
                     filename: evt.target.thisFileName

@@ -104,4 +104,5 @@ if ($wf->_config['ph']) {
     return;
 } else {
     return $output;
-}?>
+}
+?>
