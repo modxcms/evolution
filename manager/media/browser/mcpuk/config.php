@@ -92,7 +92,7 @@ $_CONFIG = array(
 
     // THE FOLLOWING SETTINGS CANNOT BE OVERRIDED WITH SESSION CONFIGURATION
     '_check4htaccess' => false,
-    '_tinyMCEPath' => MODX_BASE_URL . "assets/plugins/tinymce/jscripts/tiny_mce",
+    '_tinyMCEPath' => MODX_BASE_URL . "assets/plugins/tinymce/tiny_mce",
 
     '_sessionVar' => &$_SESSION['KCFINDER'],
     //'_sessionLifetime' => 30,
