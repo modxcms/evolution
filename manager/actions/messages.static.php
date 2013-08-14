@@ -10,7 +10,7 @@ if(!$modx->hasPermission('messages')) {
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
 <div class="sectionHeader"><?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
 <?php
-$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=".$_REQUEST['id'];
+$sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=".(int)$_REQUEST['id'];
 $rs = $modx->db->query($sql);
 $limit = $modx->db->getRecordCount($rs);
 if($limit!=1) {
@@ -109,7 +109,7 @@ $num_rows = $countrows['count(id)'];
 if( !isset( $_REQUEST['int_cur_position'] ) || $_REQUEST['int_cur_position'] == 0 ){
   $int_cur_position = 0;
 } else {
-    $int_cur_position = $_REQUEST['int_cur_position'];
+    $int_cur_position = (int)$_REQUEST['int_cur_position'];
 }
 
 // Number of result to display on the page, will be in the LIMIT of the sql query also
