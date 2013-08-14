@@ -621,14 +621,14 @@ class ditto {
 
 		// Create where clause
 		$where = array ();
+		if ($myWhere != '') {
+			$where[] = $myWhere;
+		}
 		if ($hideFolders) {
 			$where[] = 'isfolder = 0';
 		}
 		if ($showInMenuOnly) {
 			$where[] = 'hidemenu = 0';
-		}
-		if ($myWhere != '') {
-			$where[] = $myWhere;
 		}
 		$where = implode(" AND ", $where);
 		$limit = ($limit == 0) ? "" : $limit;
