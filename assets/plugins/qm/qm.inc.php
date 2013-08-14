@@ -24,7 +24,7 @@ class Qm {
         $this->loadtb = $loadtb;
         $this->tbwidth = $tbwidth;
         $this->tbheight = $tbheight;
-        $this->usemm = $usemm;
+        $this->usemm = null;
         $this->hidefields = $hidefields;  
         $this->hidetabs = $hidetabs;  
         $this->hidesections = $hidesections;     
