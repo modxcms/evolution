@@ -1,7 +1,7 @@
 <?php if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
 
     $theme = $manager_theme ? "$manager_theme/":"";
-
+    $modx_textdir = isset($modx_textdir) ? $modx_textdir : null;
     function constructLink($action, $img, $text, $allowed) {
         if($allowed==1) { ?>
             <div class="menuLink" onclick="menuHandler(<?php echo $action ; ?>); hideMenu();">
@@ -33,15 +33,15 @@
     var i = new Image(18,18);
     i.src="<?php echo $_style["tree_page"]?>";
     i = new Image(18,18);
-    i.src="<?php echo $_style["tree_globe"]?>";
+    i.src="<?php echo isset($_style["tree_globe"]) ? $_style["tree_globe"] : $_style["tree_page"]; ?>";
     i = new Image(18,18);
     i.src="<?php echo $_style["tree_minusnode"]?>";
     i = new Image(18,18);
     i.src="<?php echo $_style["tree_plusnode"]?>";
     i = new Image(18,18);
-    i.src="<?php echo $_style["tree_folderopen"]?>";
+    i.src="<?php echo isset($_style["tree_folderopen"]) ? $_style["tree_folderopen"] : $_style["tree_page"]; ?>";
     i = new Image(18,18);
-    i.src="<?php echo $_style["tree_folder"]?>";
+    i.src="<?php echo isset($_style["tree_folder"]) ? $_style["tree_folder"] : $_style["tree_page"]; ?>";
 
 
     var rpcNode = null;

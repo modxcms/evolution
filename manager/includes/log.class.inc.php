@@ -33,10 +33,10 @@ class logHandler {
         $this->entry['internalKey'] = $internalKey == "" ? $modx->getLoginUserID() : $internalKey;
         $this->entry['username'] = $username == "" ? $modx->getLoginUserName() : $username;
 
-        $this->entry['itemId'] = empty($itemid) ? (int) $_REQUEST['id'] : $itemid;  // writes the id to the object
+        $this->entry['itemId'] = (empty($itemid) && isset($_REQUEST['id'])) ? (int)$_REQUEST['id'] : $itemid;  // writes the id to the object
         if($this->entry['itemId'] == 0) $this->entry['itemId'] = "-"; // to stop items having id 0
 
-        $this->entry['itemName'] = $itemname == "" ? $_SESSION['itemname'] : $itemname; // writes the id to the object
+        $this->entry['itemName'] = ($itemname == "" && isset($_SESSION['itemname']))? $_SESSION['itemname'] : $itemname; // writes the id to the object
         if($this->entry['itemName'] == "") $this->entry['itemName'] = "-"; // to stop item name being empty
 
         $this->writeToLog();

@@ -221,7 +221,7 @@ if(isset($_GET['a']) && isset($_POST['a'])) {
     // so we dump the error, thereby stopping the script.
 
 } else {
-    $action= (int) $_REQUEST['a'];
+    $action= isset($_REQUEST['a']) ? (int) $_REQUEST['a'] : null;
 }
 
 if (isset($_POST['updateMsgCount']) && $modx->hasPermission('messages')) {

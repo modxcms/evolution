@@ -39,9 +39,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         'text/plain' => $_style["tree_page"],
         'text/xml' => $_style["tree_page_xml"],
         'text/javascript' => $_style["tree_page_js"],
-        'image/gif' => $_style["tree_page_gif"],
-        'image/jpg' => $_style["tree_page_jpg"],
-        'image/png' => $_style["tree_page_png"]
+    'image/gif' => isset($_style["tree_page_gif"]) ? $_style["tree_page_gif"] : $_style["tree_page"],
+    'image/jpg' => isset($_style["tree_page_jpg"]) ? $_style["tree_page_jpg"] :  $_style["tree_page"],
+    'image/png' => isset($_style["tree_page_png"]) ? $_style["tree_page_png"] : $_style["tree_page"]
     );
 	$iconsPrivate = array(
 	    'application/rss+xml' => $_style["tree_page_rss_secure"],
@@ -53,9 +53,9 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 	    'text/plain' => $_style["tree_page_secure"],
 	    'text/xml' => $_style["tree_page_xml_secure"],
 	    'text/javascript' => $_style["tree_page_js_secure"],
-	    'image/gif' => $_style["tree_page_gif_secure"],
-	    'image/jpg' => $_style["tree_page_jpg_secure"],
-	    'image/png' => $_style["tree_page_png_secure"]
+    'image/gif' => isset($_style["tree_page_gif_secure"]) ? $_style["tree_page_gif_secure"] : $_style["tree_page_secure"],
+    'image/jpg' => isset($_style["tree_page_jpg_secure"]) ? $_style["tree_page_jpg_secure"] : $_style["tree_page_secure"],
+    'image/png' => isset($_style["tree_page_png_secure"]) ? $_style["tree_page_png_secure"] : $_style["tree_page_secure"]
 	);
 
     if (isset($_SESSION['openedArray'])) {
@@ -105,7 +105,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
         $tbldg = $dbase.".`".$table_prefix."document_groups`";
         $tbldgn = $dbase.".`".$table_prefix."documentgroup_names`";
         // get document groups for current user
-        if($_SESSION['mgrDocgroups']) $docgrp = implode(",",$_SESSION['mgrDocgroups']);
+    $docgrp = (isset($_SESSION['mgrDocgroups']) && is_array($_SESSION['mgrDocgroups'])) ? implode(",",$_SESSION['mgrDocgroups']) : '';
         $showProtected= false;
         if (isset ($modx->config['tree_show_protected'])) {
             $showProtected= (boolean) $modx->config['tree_show_protected'];
