@@ -4,6 +4,9 @@
  *	Function: This class contains the main document parsing functions
  *
  */
+if (!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
+if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
+
 class DocumentParser {
     var $db; // db object
     var $event, $Event; // event object
