@@ -3225,14 +3225,15 @@ class DocumentParser {
         $parameter= array ();
         if (!empty ($propertyString)) {
             $tmpParams= explode("&", $propertyString);
-            $count = count($tmpParams);
-            for ($x= 0; $x < $count; $x++) {
+            for ($x= 0; $x < count($tmpParams); $x++) {
                 if (strpos($tmpParams[$x], '=', 0)) {
-                    $pTmp= explode("=", $tmpParams[$x], 2);
-                    $pvTmp= explode(";", trim($pTmp[1]), 3);
-                    $pvTmp[2] = isset($pvTvm[2]) ? $pvTmp[2] : null;
-                    $pvTmp[3] = isset($pvTmp[3]) ? $pvTmp[3] : null;
-                    $parameter[trim($pTmp[0])] = ($pvTmp[1] == 'list') ? $pvTmp[3] : $pvTmp[2];
+                    $pTmp= explode("=", $tmpParams[$x]);
+                    $pvTmp= explode(";", trim($pTmp[1]));
+                    if ($pvTmp[1] == 'list' && $pvTmp[3] != "")
+                        $parameter[trim($pTmp[0])]= $pvTmp[3]; //list default
+                    else
+                        if ($pvTmp[1] != 'list' && $pvTmp[2] != "")
+                            $parameter[trim($pTmp[0])]= $pvTmp[2];
                 }
             }
         }
