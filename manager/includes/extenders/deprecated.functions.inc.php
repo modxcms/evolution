@@ -171,7 +171,7 @@ class OldFunctions {
         return $keywords;
     }
     
-    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id) {
+    function makeFriendlyURL($pre, $suff, $alias, $isfolder=0, $id=0) {
     	global $modx;
         if ($id == $modx->config['site_start'] && $modx->config['seostrict']==='1') {return '/';}
         $Alias = explode('/',$alias);
