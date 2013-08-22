@@ -5,7 +5,7 @@
  * Encoding:       UTF8
  * Author:         The MODx Project Team
  * 
- * Translation and revision for MODx v. 1.0.10 by:
+ * Translation and revision for MODX v. 1.0.10 by:
  *					Piotr Matysiak - web@pm-fx.com
  * 
  * Translation and revision for MODx v. 1.0.4 by:
@@ -113,8 +113,8 @@ $_lang["chunk_code"] = 'Kod chunka (html)';
 $_lang["chunk_multiple_id"] = 'Błąd: Wiele Chunk\'ów posiada to samo ID.';
 $_lang["chunk_no_exist"] = 'Chunk nie istnieje.';
 $_lang["cleaningup"] = 'Czyszczenie';
-$_lang["clean_uploaded_filename"] = 'Use Transliteration for File Uploads';
-$_lang["clean_uploaded_filename_message"] = 'Use the default or transalias settings for the file name to clean special characters from uploaded file names, preserving dot-characters (periods)';
+$_lang["clean_uploaded_filename"] = 'Używaj transliteracji dla ładowanych plików';
+$_lang["clean_uploaded_filename_message"] = 'Użyj domyślnych ustawień Transalias aby generować nazwy ładowanych plików oczyszczone ze znaków specjalnych.';
 $_lang["clear_log"] = 'Wyczyść log';
 $_lang["click_to_context"] = 'Kliknij aby otworzyć menu kontekstowe';
 $_lang["click_to_edit_title"] = 'Kliknij tutaj aby edytować rekord';
@@ -156,7 +156,7 @@ $_lang["configcheck_unauthorizedpage_unavailable_msg"] = 'Oznacza to, że Strona
 $_lang["configcheck_unauthorizedpage_unpublished"] = 'Strona Braku Konfiguracji zdefiniowana w ustawieniach jest nieopublikowana.';
 $_lang["configcheck_unauthorizedpage_unpublished_msg"] = 'Oznacza to, że Strona Braku Autoryzacji serwisu jest niedostępna dla odwiedzających. Opublikuj tą stronę albo upewnij się, że jest ona przypisana do istniejącego dokumentu w drzewie zawartości Twojej strony.';
 $_lang["configcheck_validate_referer"] = 'Ostrzeżenie odnośnie bezpieczeństwa: Weryfikacja nagłówków HTTP_REFERER';
-$_lang["configcheck_validate_referer_msg"] = "Ustawienie konfiguracyjne <strong>Weryfikuj nagłówki HTTP_REFERER</strong> jest wyłączone. Zalecamy aby było ono włączone. <a href=\"index.php?a=17\">Przejdź do konfiguracji systemu</a><br /><a href=\"javascript:hideHeaderVerificationWarning();\"><em>Nie pokazuj tego komunikatu ponownie./em></a>";
+$_lang["configcheck_validate_referer_msg"] = 'Ustawienie konfiguracyjne <strong>Weryfikuj nagłówki HTTP_REFERER</strong> jest wyłączone. Zalecamy aby było ono włączone. <a href="index.php?a=17">Przejdź do konfiguracji systemu</a><br /><a href="javascript:hideHeaderVerificationWarning();"><em>Nie pokazuj tego komunikatu ponownie./em></a>';
 $_lang["configcheck_warning"] = 'Nieprawidłowości w konfiguracji:';
 $_lang["configcheck_what"] = 'Co to oznacza?';
 $_lang["confirm_block"] = 'Czy na pewno chcesz zablokować tego użytkownika?';
@@ -948,9 +948,42 @@ $_lang["sunday"] = 'Niedziela';
 $_lang["sys_alert"] = 'Alarm systemowy';
 $_lang["sysinfo_activity_message"] = 'Ta lista zawiera wykaz dokumentów, które były ostatnio edytowane.';
 $_lang["sysinfo_userid"] = 'Użytkownik';
-$_lang["system_email_signup"] = "Witaj [+uid+]\n\nPoniżej znajdują się szczegóły logowania do Panelu Administracji [+sname+] :\n\nLogin: [+uid+]\nHasło: [+pwd+]\n\nPo zalogowaniu do Panelu Administracji ([+surl+]), możesz zmienić swoje hasło.\n\nPozdrawiam,\nAdministrator witryny";
-$_lang["system_email_webreminder"] = "Witaj [+uid+]\n\nAby uaktywnić nowe hasło kliknij na poniższy link:\n\n[+surl+]\n\nPo zakończeniu możesz użyć następującego hasła do zalogowania się:\n\nHasło:[+pwd+]\n\neśli nie zgłaszałeś zmiany hasła zignoruj ten e-mail.\n\nPozdrawiam,\nAdministrator witryny";
-$_lang["system_email_websignup"] = "Witaj [+uid+]\n\nPoniżej znajdują się szczegóły logowania do strony [+sname+]:\n\nLogin: [+uid+]\nHasło: [+pwd+]\n\nPo zalogowaniu do [+sname+] ([+surl+]), możesz zmienić swoje hasło.\n\nPozdrawiam,\nAdministrator witryny";
+$_lang["system_email_signup"] = 'Witaj [+uid+]
+
+Poniżej znajdują się szczegóły logowania do Panelu Administracji [+sname+] :
+
+Login: [+uid+]
+Hasło: [+pwd+]
+
+Po zalogowaniu do Panelu Administracji ([+surl+]), możesz zmienić swoje hasło.
+
+Pozdrawiam,
+Administrator witryny';
+$_lang["system_email_webreminder"] = 'Witaj [+uid+]
+
+Aby uaktywnić nowe hasło kliknij na poniższy link:
+
+[+surl+]
+
+Po zakończeniu możesz użyć następującego hasła do zalogowania się:
+
+Hasło:[+pwd+]
+
+eśli nie zgłaszałeś zmiany hasła zignoruj ten e-mail.
+
+Pozdrawiam,
+Administrator witryny';
+$_lang["system_email_websignup"] = 'Witaj [+uid+]
+
+Poniżej znajdują się szczegóły logowania do strony [+sname+]:
+
+Login: [+uid+]
+Hasło: [+pwd+]
+
+Po zalogowaniu do [+sname+] ([+surl+]), możesz zmienić swoje hasło.
+
+Pozdrawiam,
+Administrator witryny';
 $_lang["table_hoverinfo"] = 'Zatrzymaj kursor myszy nad nazwą tabeli aby zobaczyć krótki opis jej funkcji (nie wszystkie tabele są opatrzone <i>komentarzami</i>.)';
 $_lang["table_prefix"] = 'Prefiks tabel';
 $_lang["tag"] = 'Tag';
@@ -1113,20 +1146,16 @@ $_lang["yourinfo_role"] = 'Twoja rola to:';
 $_lang["yourinfo_title"] = 'Twoje info';
 $_lang["yourinfo_total_logins"] = 'Całkowita ilość logowań:';
 $_lang["yourinfo_username"] = 'Jesteś zalogowany jako:';
-
-$_lang['a17_error_reporting_title'] = 'Poziom wykrywania błędów PHP';
-$_lang['a17_error_reporting_msg'] = 'Ustaw poziom wykrywania błędów PHP.';
-$_lang['a17_error_reporting_opt0'] = 'Ignoruj wszystko';
-$_lang['a17_error_reporting_opt1'] = 'Ignoruj ostrzeżenia niskiego poziomu (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
-$_lang['a17_error_reporting_opt2'] = 'Wykrywaj wszystkie błędy poza E_NOTICE';
-$_lang['a17_error_reporting_opt99'] = 'Wykrywaj wszystko';
-
+$_lang["a17_error_reporting_title"] = 'Poziom wykrywania błędów PHP';
+$_lang["a17_error_reporting_msg"] = 'Ustaw poziom wykrywania błędów PHP.';
+$_lang["a17_error_reporting_opt0"] = 'Ignoruj wszystko';
+$_lang["a17_error_reporting_opt1"] = 'Ignoruj ostrzeżenia niskiego poziomu (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
+$_lang["a17_error_reporting_opt2"] = 'Wykrywaj wszystkie błędy poza E_NOTICE';
+$_lang["a17_error_reporting_opt99"] = 'Wykrywaj wszystko';
 $_lang["pwd_hash_algo_title"] = 'Algorytm haszowania';
 $_lang["pwd_hash_algo_message"] = 'Algorytm haszowania hasła.';
-
 $_lang["enable_bindings_title"]  = 'Włącz komendy @Bindings';
-$_lang['enable_bindings_message'] = 'Zapobiega wykonywaniu funkcji PHP poprzez TV @Bindings. Użyteczny gdy istnieją użytkownicy Managera, którzy nie powinni mieć dostępu do tworzenia kodu PHP, ale potrzebują tworzyć lub edytować TV. Wynikiem każdej TV która zawiera @Binding będzie "@Bindings disabled".';
-
+$_lang["enable_bindings_message"] = 'Zapobiega wykonywaniu funkcji PHP poprzez TV @Bindings. Użyteczny gdy istnieją użytkownicy Managera, którzy nie powinni mieć dostępu do tworzenia kodu PHP, ale potrzebują tworzyć lub edytować TV. Wynikiem każdej TV która zawiera @Binding będzie "@Bindings disabled".';
 $_lang["bkmgr_alert_mkdir"] = 'Plik nie mógł zostać utworzony w katalogu. Proszę sprawdzić uprawnienia [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Serwis może zostać przywrócony używając pliku SQL.</p>';
 $_lang["bkmgr_restore_title"] = 'Przywróć';
@@ -1142,7 +1171,6 @@ $_lang["bkmgr_snapshot_submit"] = ' Dodaj zrzut';
 $_lang["bkmgr_snapshot_list_title"] = 'Lista zrzutów';
 $_lang["bkmgr_restore_submit"] = 'Przywróć te dane';
 $_lang["bkmgr_snapshot_nothing"] = 'Brak zrzutów';
-
 $_lang["files.dynamic.php1"] = 'Utwórz plik tekstowy';
 $_lang["files.dynamic.php2"] = 'Ten katalog nie może zostać wyświetlony.';
 $_lang["files.dynamic.php3"] = 'Wystąpił problem z nazwą pliku.';
@@ -1150,37 +1178,29 @@ $_lang["files.dynamic.php4"] = 'Plik tekstowy został utworzony.';
 $_lang["not_readable_dir"] = 'Nie można odczytać katalogu.';
 $_lang["confirm_delete_dir"] = 'Czy na pewno chcesz usunąć ten katalog?';
 $_lang["confirm_delete_dir_recursive"] = 'Czy na pewno chcesz usunąć ten katalog?\n\nWszystkie jego pliki również zostaną usunięte.';
-
-$_lang['make_folders_title'] = 'Dodawaj ukośnik na końcach folderów';
-$_lang['make_folders_message'] = 'Ukośnik będzie dodany do dokumentów oznaczonych jako foldery, gdy używa się przyjaznych URL.';
-
-$_lang['check_files_onlogin_title'] = 'Sprawdzaj ważne pliki przy logowaniu';
-$_lang['check_files_onlogin_message'] = 'Włączając tę opcję, ważne pliki systemowe będą sprawdzane pod kątem niechcianych modyfikacji typowych dla ataków na stronę www. Chociaż nie jest to 100% zapezpiecznie, to może zaalarmować Cię o zmanipulowanych plikach MODX.';
-
-$_lang['configcheck_sysfiles_mod'] = 'Ważne pliki systemowe zostały zmienione.';
-$_lang['configcheck_sysfiles_mod_msg'] = 'Włączyłeś sprawdzanie ważnych plików systemowych podczas logowania, w celu wykrycia potencjalnych ataków na stronę www. Ten komunikat nie koniecznie oznacza, że Twoja strona została zaatakowana, jednakże zaleca się sprawdzenie zmienionych plików (index.php, .htaccess, [+MGR_DIR+]/index.php, manager/includes/config.inc.php).';
-
-$_lang['email_method_title'] = 'Metoda wysyłania poczty';
-$_lang['email_method_mail'] = 'Funkcja PHP mail()';
-$_lang['email_method_smtp'] = 'Serwer SMTP';
-$_lang['smtp_auth_title'] = 'SMTP-AUTH';
-$_lang['smtp_host_title'] = 'SMTP host';
-$_lang['smtp_username_title'] = 'Nazwa użytkownika SMTP';
-$_lang['smtp_password_title'] = 'Hasło SMTP';
-$_lang['smtp_port_title'] = 'Port SMTP';
-
+$_lang["make_folders_title"] = 'Dodawaj ukośnik na końcach folderów';
+$_lang["make_folders_message"] = 'Ukośnik będzie dodany do dokumentów oznaczonych jako foldery, gdy używa się przyjaznych URL.';
+$_lang["check_files_onlogin_title"] = 'Sprawdzaj ważne pliki przy logowaniu';
+$_lang["check_files_onlogin_message"] = 'Włączając tę opcję, ważne pliki systemowe będą sprawdzane pod kątem niechcianych modyfikacji typowych dla ataków na stronę www. Chociaż nie jest to 100% zapezpiecznie, to może zaalarmować Cię o zmanipulowanych plikach MODX.';
+$_lang["configcheck_sysfiles_mod"] = 'Ważne pliki systemowe zostały zmienione.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'Włączyłeś sprawdzanie ważnych plików systemowych podczas logowania, w celu wykrycia potencjalnych ataków na stronę www. Ten komunikat nie koniecznie oznacza, że Twoja strona została zaatakowana, jednakże zaleca się sprawdzenie zmienionych plików (index.php, .htaccess, [+MGR_DIR+]/index.php, manager/includes/config.inc.php).';
+$_lang["email_method_title"] = 'Metoda wysyłania poczty';
+$_lang["email_method_mail"] = 'Funkcja PHP mail()';
+$_lang["email_method_smtp"] = 'Serwer SMTP';
+$_lang["smtp_auth_title"] = 'SMTP-AUTH';
+$_lang["smtp_host_title"] = 'SMTP host';
+$_lang["smtp_username_title"] = 'Nazwa użytkownika SMTP';
+$_lang["smtp_password_title"] = 'Hasło SMTP';
+$_lang["smtp_port_title"] = 'Port SMTP';
 $_lang["setting_resource_tree_node_name"] = 'Nazwa węzła drzewa zasobów';
 $_lang["setting_resource_tree_node_name_desc"] = 'Określ pole zasobu, które zostanie użyte w czasie renderowania węzłów w drzewie zasobów. Domyślnie to pagetitle, jednakże każde pole zasobu może zostać wykorzystane np. menutitle, alias.';
-
 $_lang["cache_type_title"] = 'Sposób cachowania dokumentu';
 $_lang["cache_type_1"] = 'Cache bazuje tylko na id dokumentu (domyślne)';
 $_lang["cache_type_2"] = 'Cache bazuje na id dokumentu oraz parametrach $_GET';
 $_lang["seostrict_title"] = 'Używaj SEO Strict URLs';
 $_lang["seostrict_message"] = 'Jeśli potrzeba, wymuś używanie strict URLs aby zapobiec duplikowaniu treści';
-
 $_lang["settings_friendlyurls_alert"] = 'Wymagana jest zmiana nazwy pliku ht.access na .htaccess aby używać przyjaznych adresów.';
 $_lang["settings_friendlyurls_alert2"] = 'Ponieważ serwis zainstalowany został w podkatalogu, wymagana jest zmiana zawartości pliku .htaccess.';
-
 $_lang["user_street"] = 'Ulica';
 $_lang["user_city"] = 'Miasto';
 $_lang["user_other"] = 'Inne';
