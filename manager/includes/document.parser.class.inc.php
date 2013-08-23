@@ -117,6 +117,12 @@ class DocumentParser {
                 else            return false;
                 break;
 
+            case 'PHPCOMPAT' :
+            	if(is_object($this->phpcompat)) return;
+                include_once(MODX_BASE_PATH . 'manager/includes/extenders/phpcompat.class.inc.php');
+                $this->phpcompat = new PHPCOMPAT;
+                break;
+                
                 default :
                 return false;
         }
@@ -3584,6 +3590,13 @@ class DocumentParser {
 			else     $id = false;
 		}
 		return $id;
+	}
+
+	// php compat
+	function htmlspecialchars($str, $flags = ENT_COMPAT)
+	{
+		$this->loadExtension('PHPCOMPAT');
+		return $this->phpcompat->htmlspecialchars($str, $flags);
 	}
     // End of class.
 
