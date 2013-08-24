@@ -11,7 +11,7 @@ class ContextMenu {
 		$this->html = "";
 		$this->visible = $visible ? $visible:false;
 		$this->width = is_numeric($width) ? intval($width):120;
-                $this->id = $id ? $id:"cntxMnu".$ContextMenuCnt;	// set id
+        $this->id = $id ? $id:"cntxMnu".$ContextMenuCnt;	// set id
 	}
 
 	function addItem($text,$action="",$img="",$disabled=0){
