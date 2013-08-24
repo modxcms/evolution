@@ -365,8 +365,8 @@ if(is_array($evtOut)) echo implode("",$evtOut);
                             "INNER JOIN ".$modx->getFullTableName("site_plugins")." sp ON sp.id=smd.resource ".
                             "WHERE smd.resource='$id' AND sm.enable_sharedparams='1' ".
                             "ORDER BY sm.name ";
-                    $ds = $modx->dbQuery($sql);
-                    if($ds) while($row = $modx->fetchRow($ds)){
+                    $ds = $modx->db->query($sql);
+                    if($ds) while($row = $modx->db->getRow($ds)){
                         echo "<option value='".$row['guid']."'".($content["moduleguid"]==$row["guid"]? " selected='selected'":"").">".htmlspecialchars($row["name"])."</option>";
                     }
                 ?>
