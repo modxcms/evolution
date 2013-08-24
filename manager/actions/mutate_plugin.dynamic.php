@@ -291,15 +291,15 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <div class="sectionBody">
 <p><?php echo $_lang['plugin_msg']; ?></p>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<div class="tab-pane" id="snipetPane">
+<div class="tab-pane" id="pluginPane">
     <script type="text/javascript">
-        tpSnippet = new WebFXTabPane( document.getElementById( "snipetPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+        tp = new WebFXTabPane( document.getElementById( "pluginPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
     </script>
 
 <!-- General -->
 <div class="tab-page" id="tabPlugin">
     <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
-    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabPlugin" ) );</script>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabPlugin" ) );</script>
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
@@ -332,7 +332,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <!-- Configuration/Properties -->
 <div class="tab-page" id="tabProps">
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
-    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table width="90%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
@@ -389,7 +389,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <!-- System Events -->
 <div class="tab-page" id="tabEvents">
     <h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
-    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabEvents" ) );</script>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabEvents" ) );</script>
         <table width="90%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td align="left" valign="top" colspan="2"><?php echo $_lang['plugin_event_msg']; ?></td>
