@@ -37,25 +37,32 @@ if(!is_numeric($id))
     exit;
 }
 
-if(isset($_GET['id'])) {
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_tmplvars` WHERE id = $id;";
-    $rs = $modx->db->query($sql);
-    $limit = $modx->db->getRecordCount($rs);
-    if($limit>1) {
-        echo "Oops, Multiple variables sharing same unique id. Not good.<p>";
-        exit;
-    }
-    if($limit<1) {
-        header("Location: /index.php?id=".$site_start);
-    }
-    $content = $modx->db->getRow($rs);
-    $_SESSION['itemname']=$content['caption'];
-    if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
-        $e->setError(3);
-        $e->dumpError();
-    }
-} else {
-    $_SESSION['itemname']="New Template Variable";
+global $content;
+$content = array();
+if(isset($_GET['id']))
+{
+	$rs = $modx->db->select('*','[+prefix+]site_tmplvars',"id={$id}");
+	$total = $modx->db->getRecordCount($rs);
+	if($total>1)
+	{
+		echo 'Oops, Multiple variables sharing same unique id. Not good.';
+		exit;
+	}
+	if($total<1)
+	{
+		header("Location: /index.php?id={$site_start}");
+	}
+	$content = $modx->db->getRow($rs);
+	$_SESSION['itemname'] = $content['caption'];
+	if($content['locked']==1 && $modx->hasPermission('save_role')!=1)
+	{
+		$e->setError(3);
+		$e->dumpError();
+	}
+}
+else
+{
+	$_SESSION['itemname']="New Template Variable";
 }
 
 // get available RichText Editors
