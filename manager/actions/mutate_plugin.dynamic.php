@@ -299,9 +299,9 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     </script>
 
 <!-- General -->
-<div class="tab-page" id="tabSnippet">
+<div class="tab-page" id="tabPlugin">
     <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
-    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script>
+    <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabPlugin" ) );</script>
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
