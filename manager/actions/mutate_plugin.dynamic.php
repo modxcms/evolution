@@ -394,15 +394,11 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabEvents" ) );</script>
         <table width="90%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="left" valign="top" colspan="2"><?php echo $_lang['plugin_event_msg']; ?><br />&nbsp;</td>
+            <td align="left" valign="top" colspan="2"><?php echo $_lang['plugin_event_msg']; ?></td>
           </tr>
           <tr>
             <td colspan="2">
-                <table border="0">
-                    <tr>
-                        <td valign="top">&nbsp;&nbsp;</td>
-                        <td>
-    <table width="100%" border="0">
+    <table>
 <?php
 
     // get selected events
@@ -468,10 +464,6 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     }
 ?>
     </table>
-                        </td>
-                    </tr>
-                </table>
-                &nbsp;
             </td>
           </tr>
         </table>
