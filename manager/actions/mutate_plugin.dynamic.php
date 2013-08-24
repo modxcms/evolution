@@ -390,22 +390,12 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <div class="tab-page" id="tabEvents">
     <h2 class="tab"><?php echo $_lang["settings_events"] ?></h2>
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabEvents" ) );</script>
-        <table width="90%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td align="left" valign="top" colspan="2"><?php echo $_lang['plugin_event_msg']; ?></td>
-          </tr>
-          <tr>
-            <td colspan="2">
+    <p><?php echo $_lang['plugin_event_msg']; ?></p>
     <table>
 <?php
 
     // get selected events
     if(is_numeric($id) && $id > 0) {
-        $sql = "
-            SELECT evtid, pluginid
-            FROM $dbase.`".$table_prefix."site_plugin_events`
-            WHERE pluginid='$id'
-        ";
         $evts = array();
         $rs = $modx->db->select('*','[+prefix+]site_plugin_events',"pluginid='{$id}'");
         $limit = $modx->db->getRecordCount($rs);
@@ -461,9 +451,6 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     }
 ?>
     </table>
-            </td>
-          </tr>
-        </table>
 </div>
 </div>
 <input type="submit" name="save" style="display:none">
