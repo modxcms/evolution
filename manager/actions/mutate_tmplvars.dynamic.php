@@ -398,13 +398,26 @@ function decode(s){
   <tr>
     <td>
 <?php
-	    while ($row = $modx->db->getRow($rs)) {
-	    	if($id == 0 && is_array($_POST['template'])) {
+	    while ($row = $modx->db->getRow($rs))
+	    {
+	    	if($_REQUEST['a']=='300' && $modx->config['default_template']==$row['id'])
+	    	{
+	    		$checked = true;
+	    	}
+	    	elseif(isset($_GET['tpl']) && $_GET['tpl'] == $row['id'])
+	    	{
+	    		$checked = true;
+	    	}
+	    	elseif($id == 0 && is_array($_POST['template']))
+	    	{
 	    		$checked = in_array($row['id'], $_POST['template']);
-	    	} else {
+	    	}
+	    	else
+	    	{
 	    		$checked = $row['tmplvarid'];
 	    	}
-	        echo "<input type='checkbox' name='template[]' value='".$row['id']."'".($checked? "checked='checked'":'')." />".$row['templatename']."<br />";
+	    	$checked = $checked ? ' checked="checked"':'';
+	        echo '<label><input type="checkbox" name="template[]" value="' . $row['id'] . '"' . $checked . ' />' . $row['templatename'] . '</label>';
 	    }
 	?>
     </td>
