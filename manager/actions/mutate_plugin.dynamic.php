@@ -23,8 +23,7 @@ $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
 
 // check to see the plugin editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=102 AND $dbase.`".$table_prefix."active_users`.id=$id";
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action='102' AND id='{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1) {
     for ($i=0;$i<$limit;$i++) {
@@ -40,8 +39,7 @@ if($limit>1) {
 
 
 if(isset($_GET['id'])) {
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_plugins` WHERE $dbase.`".$table_prefix."site_plugins`.id = $id;";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('*','[+prefix+]site_plugins',"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         echo "Multiple plugins sharing same unique id. Not good.<p>";
@@ -409,11 +407,11 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             WHERE pluginid='$id'
         ";
         $evts = array();
-        $rs = $modx->db->query($sql);
-	$limit = $modx->db->getRecordCount($rs);
+        $rs = $modx->db->select('*','[+prefix+]site_plugin_events',"pluginid='{$id}'");
+        $limit = $modx->db->getRecordCount($rs);
         for ($i=0; $i<$limit; $i++) {
-	   $row = $modx->db->getRow($rs);
-           $evts[] = $row['evtid'];
+            $row = $modx->db->getRow($rs);
+            $evts[] = $row['evtid'];
         }
     } else {
         if(isset($content['sysevents']) && is_array($content['sysevents'])) {
@@ -433,8 +431,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         "Template Service Events",
         "User Defined Events"
     );
-            $sql = "SELECT * FROM $dbase.`".$table_prefix."system_eventnames` ORDER BY service DESC, groupname, name";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('*','[+prefix+]system_eventnames','','service DESC, groupname, name');
     $limit = $modx->db->getRecordCount($rs);
     if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
     else for ($i=0; $i<$limit; $i++) {
@@ -453,7 +450,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
                 echo "<tr><td colspan='2'><div class='split' style='margin:10px 0;'></div></td></tr>";
                 echo "<tr><td colspan='2'><b>".$row['groupname']."</b></td></tr>";
         }
-        $evtnames[] = '<input name="sysevents[]" type="checkbox"'.(in_array($row['id'],$evts) ? " checked='checked' " : "").'class="inputBox" value="'.$row['id'].'" /><label for="'.$row['name']. '"' . bold(in_array($row[id],$evts)) . '>'.$row['name'].'</label>'."\n";
+        $evtnames[] = '<input name="sysevents[]" type="checkbox"'. checked(in_array($row[id],$evts)) . ' class="inputBox" value="'.$row['id'].'" id="'.$row['name'].'"/><label for="'.$row['name']. '"' . bold(in_array($row[id],$evts)) . '>'. $row['name'].'</label>'."\n";
         if(count($evtnames)==2) echoEventRows($evtnames);
     }
     if(count($evtnames)>0) echoEventRows($evtnames);
@@ -481,9 +478,15 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 setTimeout('showParameters()',10);
 </script>
 <?php
+function checked($cond=false)
+{
+    if($cond!==false) return ' checked="checked"';
+    else return;
+}
+
 function bold($cond=false)
 {
-	if($cond!==false) return ' style="background-color:#777;color:#fff;"';
-	else return;
+    if($cond!==false) return ' style="background-color:#777;color:#fff;"';
+    else return;
 }
 
