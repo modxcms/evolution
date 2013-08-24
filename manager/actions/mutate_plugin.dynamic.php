@@ -231,7 +231,7 @@ function implodeParameters(){
         if(currentParams[p]) {
             v = currentParams[p].join(";");
             if(s && v) s+=' ';
-            if(v) s += '&'+p+'='+ v;
+            if(v) s += '&'+p+'='+ encode(v);
         }
     }
     document.forms['mutate'].properties.value = s;
