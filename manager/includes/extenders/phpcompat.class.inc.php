@@ -1,5 +1,5 @@
 <?php
-// todo file_put_contents(), strftime()
+// todo file_put_contents(), strftime(), mb_*()
 class PHPCOMPAT
 {
 	function PHPCOMPAT()
