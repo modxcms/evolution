@@ -142,7 +142,7 @@ function showParameters(ctrl) {
         for(p = 0; p < dp.length; p++) {
             dp[p]=(dp[p]+'').replace(/^\s|\s$/,""); // trim
             ar = dp[p].split("=");
-            key = ar[0]     // param
+            key = ar[0];     // param
             ar = (ar[1]+'').split(";");
             desc = ar[0];   // description
             dt = ar[1];     // data type
