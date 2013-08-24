@@ -4,9 +4,9 @@ class TinyMCE
 {
 	var $mce_path;
 	
-	function TinyMCE($params)
+	function TinyMCE()
 	{
-		$this->mce_path = $params['mce_path'];
+		$this->mce_path = $$modx->event->params['mce_path'];
 	}
 	
 	function get_lang($lang)
@@ -45,9 +45,10 @@ class TinyMCE
 		return $lc;
 	}
 	
-	function get_skin_names($params)
+	function get_skin_names()
 	{
 		global $modx,$_lang;
+		$params = $modx->event->params;
 		
 		$skin_dir = $this->mce_path . 'tiny_mce/themes/advanced/skins/';
 		switch($modx->manager->action)
@@ -101,9 +102,11 @@ class TinyMCE
 		else                return '';
 	}
 	
-	function get_mce_settings($params)
+	function get_mce_settings()
 	{
 		global $modx, $_lang;
+		$params = $modx->event->params;
+		
 		// language settings
 		if (! @include_once($params['mce_path'] .'lang/'.$modx->config['manager_language'].'.inc.php'))
 		{
@@ -127,7 +130,6 @@ class TinyMCE
 		$themes['logic']    = $_lang['mce_theme_logic'];
 		$themes['advanced'] = $_lang['mce_theme_advanced'];
 		$themes['legacy']   = (!empty($_lang['mce_theme_legacy'])) ? $_lang['mce_theme_legacy'] : 'legacy';
-		$themes['full']     = (!empty($_lang['mce_theme_full']))   ? $_lang['mce_theme_full'] : 'full';
 		$themes['custom']   = $_lang['mce_theme_custom'];
 		foreach ($themes as $key => $value)
 		{
@@ -139,7 +141,7 @@ class TinyMCE
 		$ph['display'] = $modx->config['use_editor']==1 ? $ph['display']: 'none';
 		
 		$ph['theme_options'] = $theme_options;
-		$ph['skin_options']  = $this->get_skin_names($params);
+		$ph['skin_options']  = $this->get_skin_names();
 		
 		$ph['entermode_options'] = '<label><input name="mce_entermode" type="radio" value="p" '.  $this->checked($ph['mce_entermode']=='p') . '/>' . $_lang['mce_entermode_opt1'] . '</label><br />';
 		$ph['entermode_options'] .= '<label><input name="mce_entermode" type="radio" value="br" '. $this->checked($ph['mce_entermode']=='br') . '/>' . $_lang['mce_entermode_opt2'] . '</label>';
@@ -187,9 +189,10 @@ class TinyMCE
 		return $gsettings;
 	}
 	
-	function get_mce_script($params)
+	function get_mce_script()
 	{
 		global $modx, $_lang;
+		$params = $modx->event->params;
 		
 		$str = '';
 		
@@ -274,8 +277,8 @@ class TinyMCE
 			}
 		}
 		
-		$str .= $this->build_mce_init($params,$plugins,$buttons1,$buttons2,$buttons3,$buttons4) . "\n";
-		$str .= $this->build_tiny_callback($params);
+		$str .= $this->build_mce_init($plugins,$buttons1,$buttons2,$buttons3,$buttons4) . "\n";
+		$str .= $this->build_tiny_callback();
 		if($params['link_list']=='enabled')
 		{
 			$str .= '<script language="javascript" type="text/javascript" src="' . $params['mce_url'] . 'js/tinymce.linklist.php"></script>' . "\n";
@@ -285,9 +288,10 @@ class TinyMCE
 		return $str;
 	}
 	
-	function build_mce_init($params,$plugins,$buttons1,$buttons2,$buttons3,$buttons4)
+	function build_mce_init($plugins,$buttons1,$buttons2,$buttons3,$buttons4)
 	{
 		global $modx;
+		$params = $modx->event->params;
 		
 		$ph['refresh_seed'] = filesize("{$this->mce_path}tiny_mce/tiny_mce.js");
 		$ph['mce_url'] = $params['mce_url'];
@@ -407,8 +411,11 @@ class TinyMCE
 		return $mce_init;
 	}
 	
-	function build_tiny_callback($params)
+	function build_tiny_callback()
 	{
+		global $modx;
+		$params = $modx->event->params;
+		
 		$ph['cmsurl']  = MODX_MANAGER_URL . 'media/browser/mcpuk/browser.php?Connector=';
 		$ph['cmsurl'] .= MODX_MANAGER_URL . 'media/browser/mcpuk/connectors/php/connector.php&manager_url=';
 		$ph['cmsurl'] .= MODX_MANAGER_URL . '&editor=tinymce&editorpath=' . $params['mce_url'];

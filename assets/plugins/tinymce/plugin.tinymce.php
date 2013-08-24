@@ -11,13 +11,13 @@ if(!isset($mce_path))
 	$mce_path = MODX_BASE_PATH . 'assets/plugins/'.$plugin_dir . '/'; 
 	$mce_url  = MODX_BASE_URL  . 'assets/plugins/'.$plugin_dir . '/'; 
 }
-$params = $modx->event->params;
+$params = & $modx->event->params;
 $params['mce_path']         = $mce_path;
 $params['mce_url']          = $mce_url;
 
 include_once $mce_path . 'functions.php';
 
-$mce = new TinyMCE($params);
+$mce = new TinyMCE();
 
 // Handle event
 $e = &$modx->event; 
@@ -27,7 +27,7 @@ switch ($e->name)
 		$e->output("TinyMCE");
 		break;
 
-	case "OnRichTextEditorInit": 
+	case "OnRichTextEditorInit":
 		if($editor!=="TinyMCE") return;
 		
 		$params['css_selectors']   = $modx->config['tinymce_css_selectors'];
@@ -49,7 +49,7 @@ switch ($e->name)
 			$params['toolbar_align']      = $modx->config['manager_direction'];
 			$params['webuser']            = null;
 			
-			$html = $mce->get_mce_script($params);
+			$html = $mce->get_mce_script();
 		}
 		else
 		{
@@ -67,7 +67,7 @@ switch ($e->name)
 			$params['custom_buttons4'] = $webButtons4;
 			$params['toolbar_align']   = $webAlign;
 			
-			$html = $mce->get_mce_script($params);
+			$html = $mce->get_mce_script();
 		}
 		$e->output($html);
 		break;
@@ -108,7 +108,7 @@ switch ($e->name)
 		$params['mce_template_docs']  = $mce_settings['mce_template_docs'];
 		$params['mce_template_chunks']= $mce_settings['mce_template_chunks'];
     	
-		$html = $mce->get_mce_settings($params);
+		$html = $mce->get_mce_settings();
 		$e->output($html);
 		break;
 
