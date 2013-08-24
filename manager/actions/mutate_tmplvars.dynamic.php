@@ -9,35 +9,31 @@ if(!$modx->hasPermission('new_template') && $_REQUEST['a']=='300') {
     $e->dumpError();
 }
 
-
-
-if(isset($_REQUEST['id'])) {
-    $id = $_REQUEST['id'];
-} else {
-    $id=0;
-}
-
+if(isset($_REQUEST['id'])) $id = (int) $_REQUEST['id'];
+else                       $id = 0;
 
 // check to see the variable editor isn't locked
-$sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE action=301 AND id=$id";
-$rs = $modx->db->query($sql);
-$limit = $modx->db->getRecordCount($rs);
-if($limit>1) {
-    for ($i=0;$i<$limit;$i++) {
-        $lock = $modx->db->getRow($rs);
-        if($lock['internalKey']!=$modx->getLoginUserID()) {
-            $msg = sprintf($_lang["lock_msg"],$lock['username']," template variable");
-            $e->setError(5, $msg);
-            $e->dumpError();
-        }
-    }
+$tbl_active_users = $modx->getFullTableName('active_users');
+$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=301 AND id='{$id}'");
+$total = $modx->db->getRecordCount($rs);
+if($total>1)
+{
+	while($row = $modx->db->getRow($rs))
+	{
+		if($row['internalKey']!=$modx->getLoginUserID())
+		{
+			$msg = sprintf($_lang['lock_msg'], $row['username'], ' template variable');
+			$e->setError(5, $msg);
+			$e->dumpError();
+		}
+	}
 }
 // end check for lock
 
-
 // make sure the id's a number
-if(!is_numeric($id)) {
-    echo "Passed ID is NaN!";
+if(!is_numeric($id))
+{
+    echo 'Passed ID is NaN!';
     exit;
 }
 
@@ -63,9 +59,9 @@ if(isset($_GET['id'])) {
 }
 
 // get available RichText Editors
-$RTEditors = "";
-$evtOut = $modx->invokeEvent("OnRichTextEditorRegister",array('forfrontend' => 1));
-if(is_array($evtOut)) $RTEditors = implode(",",$evtOut);
+$RTEditors = '';
+$evtOut = $modx->invokeEvent('OnRichTextEditorRegister',array('forfrontend' => 1));
+if(is_array($evtOut)) $RTEditors = implode(',',$evtOut);
 
 ?>
 <script language="JavaScript">
@@ -165,7 +161,7 @@ function showParameters(ctrl) {
                         c += '</select>';
                         break;
                     case 'textarea':
-                        c = '<textarea name="prop_'+key+'" cols="25" style="width:220px;" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" >'+value+'</textarea>';
+                        c = '<textarea class="inputBox phptextarea" name="prop_'+key+'" cols="25" style="width:220px;" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" >'+value+'</textarea>';
                         break;
                     default:  // string
                         c = '<input type="text" name="prop_'+key+'" value="'+value+'" size="30" onchange="setParameter(\''+key+'\',\''+dt+'\',this)" />';
@@ -243,13 +239,14 @@ function decode(s){
 
 </script>
 
-<form name="mutate" method="post" action="index.php?a=302">
+<form name="mutate" method="post" action="index.php" enctype="multipart/form-data">
 <?php
     // invoke OnTVFormPrerender event
-    $evtOut = $modx->invokeEvent("OnTVFormPrerender",array("id" => $id));
+    $evtOut = $modx->invokeEvent('OnTVFormPrerender',array('id' => $id));
     if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 <input type="hidden" name="id" value="<?php echo $content['id'];?>">
+<input type="hidden" name="a" value="302">
 <input type="hidden" name="mode" value="<?php echo $_GET['a'];?>">
 <input type="hidden" name="params" value="<?php echo htmlspecialchars($content['display_params']);?>">
 
@@ -355,7 +352,7 @@ function decode(s){
     </td>
   </tr>
   <tr id="displayparamrow">
-    <td valign="top" align="left"><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="media/style/<?php echo $manager_theme ? "$manager_theme/":""; ?>images/icons/refresh.gif" width="16" height="16" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></td>
+    <td valign="top" align="left"><?php echo $_lang['tmplvars_widget_prop']; ?><div style="padding-top:8px;"><a href="javascript://" onclick="resetParameters(); return false"><img src="<?php echo $_style['icons_refresh']; ?>" alt="<?php echo $_lang['tmplvars_reset_params']; ?>"></a></div></td>
     <td align="left" id="displayparams">&nbsp;</td>
   </tr>
   <tr>
@@ -370,14 +367,12 @@ function decode(s){
 
 <!-- Template Permission -->
 	<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
-	<div class="sectionBody">
+<div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
 <table width="100%" cellspacing="0" cellpadding="0">
 	<?php
-	    $tbl = $dbase.".`".$table_prefix."site_templates`" ;
-	    $tblsel = $dbase.".`".$table_prefix."site_tmplvar_templates`";
-	    $sql = "SELECT id,templatename,tmplvarid FROM $tbl LEFT JOIN $tblsel ON $tblsel.templateid=$tbl.id AND $tblsel.tmplvarid=$id";
-	    $rs = $modx->db->query($sql);
+	    $from = '[+prefix+]site_templates as tpl LEFT JOIN [+prefix+]site_tmplvar_templates as stt ON stt.templateid=tpl.id AND stt.tmplvarid='.$id;
+	    $rs = $modx->db->select('id,templatename,tmplvarid',$from);
 ?>
   <tr>
     <td>
@@ -395,7 +390,6 @@ function decode(s){
   </tr>
 </table>
 	</div>
-
 <!-- Access Permissions -->
 	<?php
 	if($use_udperms==1) {
@@ -415,34 +409,33 @@ function decode(s){
 <!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
-		<script type="text/javascript">
-		    function makePublic(b){
-		        var notPublic=false;
-		        var f=document.forms['mutate'];
-		        var chkpub = f['chkalldocs'];
-		        var chks = f['docgroups[]'];
-		        if(!chks && chkpub) {
-		            chkpub.checked=true;
-		            return false;
-		        }
-		        else if (!b && chkpub) {
-		            if(!chks.length) notPublic=chks.checked;
-		            else for(i=0;i<chks.length;i++) if(chks[i].checked) notPublic=true;
-		            chkpub.checked=!notPublic;
-		        }
-		        else {
-		            if(!chks.length) chks.checked = (b)? false:chks.checked;
-		            else for(i=0;i<chks.length;i++) if (b) chks[i].checked=false;
-		            chkpub.checked=true;
-		        }
-		    }
-		</script>
+<script type="text/javascript">
+    function makePublic(b){
+        var notPublic=false;
+        var f=document.forms['mutate'];
+        var chkpub = f['chkalldocs'];
+        var chks = f['docgroups[]'];
+        if(!chks && chkpub) {
+            chkpub.checked=true;
+            return false;
+        }
+        else if (!b && chkpub) {
+            if(!chks.length) notPublic=chks.checked;
+            else for(i=0;i<chks.length;i++) if(chks[i].checked) notPublic=true;
+            chkpub.checked=!notPublic;
+        }
+        else {
+            if(!chks.length) chks.checked = (b)? false:chks.checked;
+            else for(i=0;i<chks.length;i++) if (b) chks[i].checked=false;
+            chkpub.checked=true;
+        }
+    }
+</script>
 <p><?php echo $_lang['tmplvar_access_msg']; ?></p>
-		<?php
-		    }
-		    $chk ='';
-		    $sql = "SELECT name, id FROM $dbase.`".$table_prefix."documentgroup_names`";
-		    $rs = $modx->db->query($sql);
+<?php
+		}
+		$chk ='';
+		$rs = $modx->db->select('name, id','[+prefix+]documentgroup_names');
 		    $limit = $modx->db->getRecordCount($rs);
 		    if(empty($groupsarray) && is_array($_POST['docgroups']) && empty($_POST['id'])) {
 		    	$groupsarray = $_POST['docgroups'];
@@ -493,8 +486,8 @@ function decode(s){
 
 <?php
     // invoke OnTVFormRender event
-    $evtOut = $modx->invokeEvent("OnTVFormRender",array("id" => $id));
-    if(is_array($evtOut)) echo implode("",$evtOut);
+    $evtOut = $modx->invokeEvent('OnTVFormRender',array('id' => $id));
+    if(is_array($evtOut)) echo implode('',$evtOut);
 ?>
 </form>
 <script type="text/javascript">setTimeout('showParameters()',10);</script>
