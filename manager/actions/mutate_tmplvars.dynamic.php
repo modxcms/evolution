@@ -282,9 +282,17 @@ function decode(s){
     	  </ul>
     </div>
 
+<script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="sectionBody">
+<div class="tab-pane" id="tmplvarsPane">
+	<script type="text/javascript">
+		tpTmplvars = new WebFXTabPane( document.getElementById( "tmplvarsPane" ), false );
+	</script>
+	<div class="tab-page" id="tabGeneral">
+	<h2 class="tab"><?php echo $_lang['settings_general'];?></h2>
+	<script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabGeneral" ) );</script>
 <p><?php echo $_lang['tmplvars_msg']; ?></p>
-<table width="100%" cellspacing="0" cellpadding="0" border="0">
+<table>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_name']; ?>:</td>
     <td align="left"><span style="font-family:'Courier New', Courier, mono">[*</span><input name="name" type="text" maxlength="50" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">*]</span> <span class="warning" id='savingMessage'>&nbsp;</span></td>
@@ -367,15 +375,21 @@ function decode(s){
     <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
   </tr>
   <tr>
-    <td align="left" colspan="2"><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
+    <td align="left" colspan="2"><label><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?></label> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
 </table>
     	</div>
 
 <!-- Template Permission -->
+<div class="tab-page" id="tabInfo">
+<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
+<script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
 	<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
+	<style type="text/css">
+		label {display:block;}
+	</style>
 <table width="100%" cellspacing="0" cellpadding="0">
 	<?php
 	    $from = '[+prefix+]site_templates as tpl LEFT JOIN [+prefix+]site_tmplvar_templates as stt ON stt.templateid=tpl.id AND stt.tmplvarid='.$id;
@@ -452,14 +466,14 @@ function decode(s){
 		        $checked = in_array($row['id'], $groupsarray);
 		        if($modx->hasPermission('access_permissions')) {
 		            if($checked) $notPublic = true;
-		            $chks.= "<input type='checkbox' name='docgroups[]' value='".$row['id']."' ".($checked ? "checked='checked'" : '')." onclick=\"makePublic(false)\" />".$row['name']."<br />";
+		            $chks.= "<label><input type='checkbox' name='docgroups[]' value='".$row['id']."' ".($checked ? "checked='checked'" : '')." onclick=\"makePublic(false)\" />".$row['name']."</label>";
 		        }
 		        else {
 		            if($checked) echo "<input type='hidden' name='docgroups[]'  value='".$row['id']."' />";
 		        }
 		    }
 		    if($modx->hasPermission('access_permissions')) {
-		        $chks = "<input type='checkbox' name='chkalldocs' ".(!$notPublic ? "checked='checked'" : '')." onclick=\"makePublic(true)\" /><span class='warning'>".$_lang['all_doc_groups']."</span><br />".$chks;
+		        $chks = "<label><input type='checkbox' name='chkalldocs' ".(!$notPublic ? "checked='checked'" : '')." onclick=\"makePublic(true)\" /><span class='warning'>".$_lang['all_doc_groups']."</span></label>".$chks;
 		    }
 		    echo $chks;
 		?>
@@ -488,6 +502,8 @@ function decode(s){
           </tr>
         </table>
             </div>
+	</div>
+
 
 	<input type="submit" name="save" style="display:none">
 
@@ -496,5 +512,7 @@ function decode(s){
     $evtOut = $modx->invokeEvent('OnTVFormRender',array('id' => $id));
     if(is_array($evtOut)) echo implode('',$evtOut);
 ?>
+</div>
+</div>
 </form>
 <script type="text/javascript">setTimeout('showParameters()',10);</script>
