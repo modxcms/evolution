@@ -363,13 +363,13 @@ function SetUrl(url, width, height, alt) {
 
 <div class="tab-pane" id="modulePane">
     <script type="text/javascript">
-    tpModule = new WebFXTabPane( document.getElementById( "modulePane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+    tp = new WebFXTabPane( document.getElementById( "modulePane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
     </script>
 
     <!-- General -->
     <div class="tab-page" id="tabModule">
     <h2 class="tab"><?php echo $_lang['settings_general']?></h2>
-    <script type="text/javascript">tpModule.addTabPage( document.getElementById( "tabModule" ) );</script>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabModule" ) );</script>
 
     <table border="0" cellspacing="0" cellpadding="1">
         <tr><td align="left"><?php echo $_lang['module_name']?>:</td>
@@ -416,7 +416,7 @@ function SetUrl(url, width, height, alt) {
     <!-- Configuration -->
     <div class="tab-page" id="tabConfig">
         <h2 class="tab"><?php echo $_lang['settings_config']?></h2>
-        <script type="text/javascript">tpModule.addTabPage( document.getElementById( "tabConfig" ) );</script>
+        <script type="text/javascript">tp.addTabPage( document.getElementById( "tabConfig" ) );</script>
 
         <table width="90%" border="0" cellspacing="0" cellpadding="0">
             <tr><td align="left" valign="top"><?php echo $_lang['guid']?>:</td>
@@ -434,7 +434,7 @@ function SetUrl(url, width, height, alt) {
     <!-- Dependencies -->
     <div class="tab-page" id="tabDepend">
     <h2 class="tab"><?php echo $_lang['settings_dependencies']?></h2>
-    <script type="text/javascript">tpModule.addTabPage( document.getElementById( "tabDepend" ) );</script>
+    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabDepend" ) );</script>
 
     <table width="95%" border="0" cellspacing="0" cellpadding="0">
     <tr><td align="left" valign="top"><p><?php echo $_lang['module_viewdepend_msg']?><br /><br />
