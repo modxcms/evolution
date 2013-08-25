@@ -419,7 +419,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
                 echo "<tr><td colspan='2'><div class='split' style='margin:10px 0;'></div></td></tr>";
                 echo "<tr><td colspan='2'><b>".$row['groupname']."</b></td></tr>";
         }
-        $evtnames[] = '<input name="sysevents[]" type="checkbox"'.(in_array($row['id'],$evts) ? " checked='checked' " : "").'class="inputBox" value="'.$row['id'].'" /><label for="'.$row['name']. '"' . bold(in_array($row[id],$evts)) . '>'.$row['name'].'</label>'."\n";
+        $evtnames[] = '<input name="sysevents[]" id="' . $row['name'] . '" type="checkbox"'.(in_array($row['id'],$evts) ? " checked='checked' " : "").'class="inputBox" value="'.$row['id'].'" /><label for="'.$row['name']. '"' . bold(in_array($row[id],$evts)) . '>'.$row['name'].'</label>'."\n";
         if(count($evtnames)==2) echoEventRows($evtnames);
     }
     if(count($evtnames)>0) echoEventRows($evtnames);
