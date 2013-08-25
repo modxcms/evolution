@@ -185,7 +185,7 @@ if($_SESSION['browser']==='legacy_IE') {
 	  <tr>
 		<td valign="top" align="left">
 		<?php
-			$ds = $modx->dbQuery($sql);
+			$ds = $modx->db->query($sql);
 			if (!$ds){
 				echo "An error occured while loading records.";
 				exit;

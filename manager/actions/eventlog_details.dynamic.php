@@ -31,7 +31,7 @@ if(!$ds) {
 	exit;
 }
 else{
-	$content = $modx->fetchRow($ds);	
+	$content = $modx->db->getRow($ds);	
 }
 
 ?>

@@ -841,7 +841,7 @@ class AjaxSearchOutput {
         $tbl = $modx->getFullTableName('site_snippets');
         $select = "SELECT * FROM " . $tbl . " WHERE " . $tbl . ".name='" . $modx->db->escape($snippetName) . "';";
         $rs = $modx->db->query($select);
-        return $modx->recordCount($rs);
+        return $modx->db->getRecordCount($rs);
     }
     /*
     * Get offset of other groups

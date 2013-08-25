@@ -282,15 +282,15 @@ if ((!$inFolder && $useFastUrls) || !$useFastUrls ){
       $validParentSql .= ($seeThruUnpub)? ";" : "AND sc.published = 1;";
 
       // Run statement
-      $rsTempParents = $modx->dbQuery($validParentSql);
+      $rsTempParents = $modx->db->query($validParentSql);
       // Get number of results
-      $countTempParents = $modx->recordCount($rsTempParents);
+      $countTempParents = $modx->db->getRecordCount($rsTempParents);
 
       // If there are results, put them in an array
       $tempValidArray = false;
       if ($countTempParents){
         for ($i=0;$i<$countTempParents;$i++){
-          $tempId = $modx->fetchRow($rsTempParents);
+          $tempId = $modx->db->getRow($rsTempParents);
           $tempValidArray[] = $tempId['id'];
         } // end while
       } // end if
@@ -370,9 +370,9 @@ $recentSql .= $sortDir;
 $recentSql .= ($mode == 'short')? " LIMIT $shortQty;" : ";" ;
 
 // Run statement
-$rsRecent = $modx->dbQuery($recentSql);
+$rsRecent = $modx->db->query($recentSql);
 // Count records
-$recentLimit = $modx->recordCount($rsRecent);
+$recentLimit = $modx->db->getRecordCount($rsRecent);
 
 // ---------------------------------------------------
 // Generate pagination string if needed
@@ -446,7 +446,7 @@ if ($mode == 'short') {
 
 while (($recentCounter < $recentCounterLimit) && $rsRecent && ($recentLimit > 0)){
   mysql_data_seek($rsRecent,$recentCounter);
-  $recentRecord = $modx->fetchRow($rsRecent);
+  $recentRecord = $modx->db->getRow($rsRecent);
   $output .= '<li>';
   // Link to page
   $output .= '<a href="[~'.$recentRecord['id'].'~]" title="'.strip_tags($recentRecord['pagetitle']).'">'.$recentRecord['pagetitle'].'</a> ';
