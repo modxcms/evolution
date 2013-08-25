@@ -124,6 +124,9 @@ function deletedocument() {
 <?php if ($_REQUEST['a'] == '16') { ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
 <?php } ?>
+<?php if ($_REQUEST['a'] != '16') { ?>
+    <div class="section">
+<?php } ?>
 
 <div class="sectionBody">
 
@@ -228,3 +231,6 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 </div>
+ <?php if ($_REQUEST['a'] != '16') { ?>
+ </div>
+ <?php } ?>
