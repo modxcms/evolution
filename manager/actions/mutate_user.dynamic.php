@@ -824,7 +824,7 @@ if ($use_udperms == 1) {
 			$groupsarray[] = $v;
 	}
 ?>
-
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <?php
 
@@ -837,6 +837,7 @@ if ($use_udperms == 1) {
 		echo "<input type='checkbox' name='user_groups[]' value='" . $row['id'] . "'" . (in_array($row['id'], $groupsarray) ? " checked='checked'" : "") . " />" . $row['name'] . "<br />";
 	}
 ?>
+</div>
 </div>
 <?php
 
