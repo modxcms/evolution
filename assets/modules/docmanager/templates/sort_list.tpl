@@ -64,8 +64,9 @@
             <li id="Button4"><a href="#" onclick="reset();"><img src="media/style[+theme+]/images/icons/cancel.png" align="absmiddle"> [+lang.DM_cancel+]</a></li>
         </ul>
     </div>
-        
-    <div class="sectionHeader">&nbsp;</div>
+    
+    <div class="section">
+    <div class="sectionHeader">[+lang.DM_sort_title+]</div>
     <div class="sectionBody">
         [+sort.message+]
         <ul id="sortlist" class="sortableList">
@@ -75,6 +76,7 @@
             <input type="hidden" name="tabAction" value="sortList" />
             <input type="text" id="list" name="list" value="" />
         </form>
+    </div>
     </div>
 </body>
 </html>
