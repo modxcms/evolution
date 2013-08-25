@@ -75,10 +75,9 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplates" ) );</script>
 		<p><?php echo $_lang['template_management_msg']; ?></p>
 
-		<ul>
+		<ul class="actionButtons">
 			<li><a href="index.php?a=19"><?php echo $_lang['new_template']; ?></a></li>
 		</ul>
-		<br />
 		<?php echo createResourceList('site_templates',16,$tablePre,'templatename'); ?>
 	</div>
 <?php } ?>
@@ -93,10 +92,9 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
 			Added by Apodigm 09-06-2004- DocVars - web@apodigm.com
 		-->
 		<p><?php echo $_lang['tmplvars_management_msg']; ?></p>
-			<ul>
+			<ul class="actionButtons">
 				<li><a href="index.php?a=300"><?php echo $_lang['new_tmplvars']; ?></a></li>
             </ul>
-            <br />
             <?php echo createResourceList('site_tmplvars',301,$tablePre); ?>
 	</div>
 <?php } ?>
@@ -108,10 +106,9 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabChunks" ) );</script>
 		<p><?php echo $_lang['htmlsnippet_management_msg']; ?></p>
 
-		<ul>
+		<ul class="actionButtons">
 			<li><a href="index.php?a=77"><?php echo $_lang['new_htmlsnippet']; ?></a></li>
 		</ul>
-		<br />
 		<?php echo createResourceList('site_htmlsnippets',78,$tablePre); ?>
 	</div>
 <?php } ?>
@@ -123,10 +120,9 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabSnippets" ) );</script>
 		<p><?php echo $_lang['snippet_management_msg']; ?></p>
 
-		<ul>
+		<ul class="actionButtons">
 			<li><a href="index.php?a=23"><?php echo $_lang['new_snippet']; ?></a></li>
 		</ul>
-		<br />
 		<?php echo createResourceList('site_snippets',22,$tablePre); ?>
 	</div>
 <?php } ?>
@@ -138,11 +134,10 @@ function createResourceList($resourceTable,$action,$tablePre,$nameField = 'name'
     	<script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabPlugins" ) );</script>
 		<p><?php echo $_lang['plugin_management_msg']; ?></p>
 
-		<ul>
+		<ul class="actionButtons">
 			<li><a href="index.php?a=101"><?php echo $_lang['new_plugin']; ?></a></li>
 			<?php if($modx->hasPermission('save_plugin')) { ?><li><a href="index.php?a=100"><?php echo $_lang['plugin_priority']; ?></a></li><?php } ?>
 		</ul>
-		<br />
 		<?php echo createResourceList('site_plugins',102,$tablePre); ?>
 	</div>
 <?php } ?>

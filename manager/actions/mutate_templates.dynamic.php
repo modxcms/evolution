@@ -20,10 +20,9 @@ switch((int) $_REQUEST['a']) {
 }
 
 if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
-    $id = $_REQUEST['id'];
+    $id = (int) $_REQUEST['id'];
     // check to see the template editor isn't locked
-    $sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=16 AND $dbase.`".$table_prefix."active_users`.id=$id";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action=16 AND id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         for ($i=0;$i<$limit;$i++) {
@@ -41,9 +40,8 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 }
 
 $content = array();
-if(isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id = $id;";
-    $rs = $modx->db->query($sql);
+if(!empty($id)) {
+    $rs = $modx->db->select('*','[+prefix+]site_templates',"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         echo "Oops, something went terribly wrong...<p>";
@@ -121,60 +119,21 @@ function deletedocument() {
           </ul>
     </div>
 
-<?php if ($_REQUEST['a'] == '16') { ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
-<?php } ?>
-<?php if ($_REQUEST['a'] != '16') { ?>
-    <div class="section">
-<?php } ?>
-
 <div class="sectionBody">
-
-<?php if ($_REQUEST['a'] == '16') { ?>
 <div class="tab-pane" id="templatesPane">
     <script type="text/javascript">
-        tpResources = new WebFXTabPane( document.getElementById( "templatesPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+        tp = new WebFXTabPane( document.getElementById( "templatesPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
     </script>
-
     <div class="tab-page" id="tabTemplate">
         <h2 class="tab"><?php echo $_lang["template_edit_tab"] ?></h2>
-        <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabTemplate" ) );</script>
-<?php } ?>
+        <script type="text/javascript">tp.addTabPage( document.getElementById( "tabTemplate" ) );</script>
 
-<?php echo "\t" . $_lang['template_msg']; ?>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+<?php echo '<div>' . $_lang['template_msg'] . '</div>'; ?>
+    <table>
       <tr>
-        <td align="left"><img src="<?php echo $_style['tx']; ?>" width="100" height="1" /></td>
-        <td align="left">&nbsp;</td>
-      </tr>
-      <tr>
-        <td align="left"><?php echo $_lang['template_name']; ?>:&nbsp;&nbsp;</td>
+        <td align="left"><?php echo $_lang['template_name']; ?>:</td>
         <td align="left"><input name="templatename" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'></span></td>
-      </tr>
-        <tr>
-        <td align="left"><?php echo $_lang['template_desc']; ?>:&nbsp;&nbsp;</td>
-        <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-      </tr>
-      <tr>
-        <td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
-        <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-                <option>&nbsp;</option>
-                <?php
-                    include_once "categories.inc.php";
-                    $ds = getCategories();
-                    if($ds) foreach($ds as $n=>$v){
-                        echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-                    }
-                ?>
-            </select>
-        </td>
-      </tr>
-      <tr>
-        <td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-        <td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-      </tr>
-      <tr>
-        <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
       </tr>
     </table>
     <!-- HTML text editor start -->
@@ -189,7 +148,7 @@ function deletedocument() {
     <!-- HTML text editor end -->
     <input type="submit" name="save" style="display:none">
 
-<?php if ($_REQUEST['a'] == '16') {
+<?php
 $sql = "SELECT tv.name as 'name', tv.id as 'id', tr.templateid, tr.rank, if(isnull(cat.category),'".$_lang['no_category']."',cat.category) as category
     FROM ".$modx->getFullTableName('site_tmplvar_templates')." tr
     INNER JOIN ".$modx->getFullTableName('site_tmplvars')." tv ON tv.id = tr.tmplvarid
@@ -203,7 +162,7 @@ $limit = $modx->db->getRecordCount($rs);
     </div>
     <div class="tab-page" id="tabAssignedTVs">
         <h2 class="tab"><?php echo $_lang["template_assignedtv_tab"] ?></h2>
-        <script type="text/javascript">tpResources.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
+        <script type="text/javascript">tp.addTabPage( document.getElementById( "tabAssignedTVs" ) );</script>
         <p><?php if ($limit > 0) echo $_lang['template_tv_msg']; ?></p>
         <p><?php if($modx->hasPermission('save_template') && $limit > 1) { ?><a href="index.php?a=117&amp;id=<?php echo $_REQUEST['id'] ?>"><?php echo $_lang['template_tv_edit']; ?></a><?php } ?></p>
 <?php
@@ -222,8 +181,36 @@ if($limit>0) {
 }
 echo $tvList;
 ?></div>
-<?php } ?>
-
+<div class="tab-page" id="tabInfo">
+<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
+<script type="text/javascript">tp.addTabPage( document.getElementById( "tabInfo" ) );</script>
+<table>
+    <tr>
+    <td align="left"><?php echo $_lang['template_desc']; ?>:</td>
+    <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+    </tr>
+    <tr>
+    <td align="left"><?php echo $_lang['existing_category']; ?>:</td>
+    <td align="left"><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
+            <option>&nbsp;</option>
+            <?php
+                include_once "categories.inc.php";
+                $ds = getCategories();
+                if($ds) foreach($ds as $n=>$v){
+                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+                }
+            ?>
+        </select>
+    </td>
+    </tr>
+    <tr>
+    <td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
+    <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+    </tr>
+    <tr>
+    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
+    </tr>
+</table>
 <?php
 // invoke OnTempFormRender event
 $evtOut = $modx->invokeEvent("OnTempFormRender",array("id" => $id));
@@ -231,6 +218,3 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
 </form>
 </div>
- <?php if ($_REQUEST['a'] != '16') { ?>
- </div>
- <?php } ?>

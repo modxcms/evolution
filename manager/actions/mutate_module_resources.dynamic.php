@@ -69,8 +69,8 @@ switch ($_REQUEST['op']) {
 				$opids[$i] = intval($opids[$i]);
 				$sql.="('$id',".$opids[$i].",$type)";
 			}
-			$modx->dbQuery('DELETE FROM '.$tbl_site_module_depobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
-			$ds = $modx->dbQuery($sql);
+			$modx->db->query('DELETE FROM '.$tbl_site_module_depobj.' WHERE module=\''.$id.'\' AND resource IN ('.implode(',',$opids).') AND type=\''.$type.'\'');
+			$ds = $modx->db->query($sql);
 			if(!$ds){
 				echo '<script type="text/javascript">'.
 				     'function jsalert(){ alert(\'An error occured while trying to update the database. \''.$modx->db->getLastError().');'.
@@ -85,7 +85,7 @@ switch ($_REQUEST['op']) {
 			$opids[$i]=intval($opids[$i]); // convert ids to numbers
 		}
 		// get resources that needs to be removed
-		$ds = $modx->dbQuery("SELECT * FROM ".$tbl_site_module_depobj." WHERE id IN (".implode(",",$opids).")");
+		$ds = $modx->db->query("SELECT * FROM ".$tbl_site_module_depobj." WHERE id IN (".implode(",",$opids).")");
 		if ($ds) {
 			// loop through resources and look for plugins and snippets
 			$i=0; $plids=array(); $snid=array();
@@ -94,15 +94,15 @@ switch ($_REQUEST['op']) {
 				if($row['type']=='40') $snids[$i]=$row['resource'];
 			}
 			// get guid
-			$ds = $modx->dbQuery("SELECT * FROM ".$tbl_site_modules." WHERE id='$id'");
+			$ds = $modx->db->query("SELECT * FROM ".$tbl_site_modules." WHERE id='$id'");
 			if($ds) {
-				$row = $modx->fetchRow($ds);
+				$row = $modx->db->getRow($ds);
 				$guid = $row['guid'];
 			}
 			// reset moduleguid for deleted resources
 			if (($cp=count($plids)) || ($cs=count($snids))) {
-				if ($cp) $modx->dbQuery('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
-				if ($cs) $modx->dbQuery('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
+				if ($cp) $modx->db->query('UPDATE '.$tbl_site_plugins.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $plids).') AND moduleguid=\''.$guid.'\'');
+				if ($cs) $modx->db->query('UPDATE '.$tbl_site_snippets.' SET moduleguid=\'\' WHERE id IN ('.implode(',', $snids).') AND moduleguid=\''.$guid.'\'');
 				// reset cache
 				include_once MODX_MANAGER_PATH."processors/cache_sync.class.processor.php";
 				$sync = new synccache();
@@ -112,7 +112,7 @@ switch ($_REQUEST['op']) {
 			}
 		}
 		$sql = 'DELETE FROM '.$tbl_site_module_depobj.' WHERE id IN ('.implode(',', $opids).')';
-		$modx->dbQuery($sql);
+		$modx->db->query($sql);
 		break;
 }
 
@@ -210,6 +210,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 	</ul>
 </div>
 
+<div class="section">
 <div class="sectionHeader"><?php echo $content["name"]." - ".$_lang['module_resource_title']; ?></div>
 <div class="sectionBody">
 <p><img src="<?php echo $_style["icons_modules"] ?>" alt="" align="left" /><?php echo $_lang['module_resource_msg']; ?></p>
@@ -236,7 +237,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 					"LEFT JOIN ".$tbl_site_templates." st ON st.id = smd.resource AND smd.type = '50' ".
 					"LEFT JOIN ".$tbl_site_tmplvars." sv ON sv.id = smd.resource AND smd.type = '60' ".
 					"WHERE smd.module=$id ORDER BY smd.type,name ";
-			$ds = $modx->dbQuery($sql);
+			$ds = $modx->db->query($sql);
 			if (!$ds){
 				echo "An error occured while loading module dependencies.";
 			}
@@ -266,6 +267,7 @@ if($content['locked']==1 && $_SESSION['mgrRole']!=1) {
 		</td>
 	  </tr>
 	</table>
+</div>
 </div>
 <input type="submit" name="save" style="display:none">
 </form>

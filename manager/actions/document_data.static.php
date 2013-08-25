@@ -150,7 +150,7 @@ if ($numRecords > 0) {
 		exit;
 	} else {
 		$resource = array();
-		while($row = $modx->fetchRow($rs)){
+		while($row = $modx->db->getRow($rs)){
 			$resource[] = $row;
 		}
 

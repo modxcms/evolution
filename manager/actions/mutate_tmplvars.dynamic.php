@@ -101,7 +101,7 @@ var widgetParams = {};          // name = description;datatype;default or list v
     widgetParams['datagrid']    = '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
     widgetParams['richtext']    = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;<?php echo $RTEditors; ?>';
     widgetParams['image']       = '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
-    widgetParams['custom_widget']       = '&output=Output;textarea';
+    widgetParams['custom_widget']       = '&output=Output;textarea;[+value+]';
 
 // Current Params
 var currentParams = {};
@@ -295,21 +295,16 @@ function decode(s){
 <table>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_name']; ?>:</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">[*</span><input name="name" type="text" maxlength="50" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">*]</span> <span class="warning" id='savingMessage'>&nbsp;</span></td>
+    <td align="left">[*&nbsp;<input name="name" type="text" maxlength="50" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'>*]&nbsp; <span class="warning" id='savingMessage'>&nbsp;</span></td>
   </tr>
   <tr>
-    <td align="left"><?php echo $_lang['tmplvars_caption']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="caption" type="text" maxlength="80" value="<?php echo htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-  </tr>
-
-  <tr>
-    <td align="left"><?php echo $_lang['tmplvars_description']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+    <td align="left"><?php echo $_lang['tmplvars_caption']; ?>:</td>
+    <td align="left"><input name="caption" type="text" maxlength="80" value="<?php echo htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
   </tr>
 
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="type" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;'>
+    <td align="left"><select name="type" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;'>
 	            <option value="text" <?php      echo ($content['type']==''||$content['type']=='text')? "selected='selected'":""; ?>>Text</option>
 	            <option value="rawtext" <?php       echo ($content['type']=='rawtext')? "selected='selected'":""; ?>>Raw Text (deprecated)</option>
 	            <option value="textarea" <?php  echo ($content['type']=='textarea')? "selected='selected'":""; ?>>Textarea</option>
@@ -333,15 +328,15 @@ function decode(s){
   </tr>
   <tr>
 	<td align="left" valign="top"><?php echo $_lang['tmplvars_elements']; ?>:  </td>
-	<td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange='documentDirty=true;'><?php echo htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
+	<td align="left" nowrap="nowrap"><textarea name="elements" maxlength="65535" class="inputBox textarea" onchange='documentDirty=true;'><?php echo htmlspecialchars($content['elements']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
     <td align="left" valign="top"><?php echo $_lang['tmplvars_default']; ?>:&nbsp;&nbsp;</td>
-    <td align="left" nowrap="nowrap"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
+    <td align="left" nowrap="nowrap"><textarea name="default_text" type="text" class="inputBox" rows="5" style="width:300px;" onChange='documentDirty=true;'><?php echo htmlspecialchars($content['default_text']);?></textarea><img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['tmplvars_binding_msg']; ?>" onclick="alert(this.alt);" style="cursor:help" /></td>
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_widget']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span>
+    <td align="left">
         <select name="display" size="1" class="inputBox" style="width:300px;" onChange='documentDirty=true;showParameters(this);'>
 	            <option value="" <?php echo ($content['display']=='')? "selected='selected'":""; ?>>&nbsp;</option>
 			<optgroup label="Widgets">
@@ -372,19 +367,46 @@ function decode(s){
   </tr>
   <tr>
     <td align="left"><?php echo $_lang['tmplvars_rank']; ?>:&nbsp;&nbsp;</td>
-    <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+    <td align="left"><input name="rank" type="text" maxlength="4" value="<?php echo (isset($content['rank'])) ? $content['rank'] : 0;?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+  </tr>
+</table>
+    	</div>
+
+<!-- TemplateVar Info -->
+<div class="tab-page" id="tabInfo">
+<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
+<script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
+<div class="section">
+<table>
+  <tr>
+    <td align="left"><?php echo $_lang['tmplvars_description']; ?>:</td>
+    <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
+  </tr>
+  <tr>
+    <td align="left"><?php echo $_lang['existing_category']; ?>:</td>
+    <td align="left"><select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
+        	<option>&nbsp;</option>
+        <?php
+            include_once "categories.inc.php";
+            $ds = getCategories();
+            if($ds) foreach($ds as $n=>$v){
+                echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+            }
+        ?>
+        </select>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
+    <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
   </tr>
   <tr>
     <td align="left" colspan="2"><label><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?></label> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
 </table>
-    	</div>
+</div>
 
-<!-- Template Permission -->
-<div class="tab-page" id="tabInfo">
-<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
-<script type="text/javascript">tpTmplvars.addTabPage( document.getElementById( "tabInfo" ) );</script>
-	<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
+<div class="sectionHeader"><?php echo $_lang['tmplvar_tmpl_access']; ?></div>
 <div class="sectionBody">
 	<p><?php echo $_lang['tmplvar_tmpl_access_msg']; ?></p>
 	<style type="text/css">
@@ -439,8 +461,6 @@ function decode(s){
 	    }
 
 ?>
-
-<!-- Access Permissions -->
 <?php if($modx->hasPermission('access_permissions')) { ?>
 <div class="sectionHeader"><?php echo $_lang['access_permissions']; ?></div><div class="sectionBody">
 <script type="text/javascript">
@@ -493,28 +513,6 @@ function decode(s){
 	</div>
 <?php }?>
 
-<div class="sectionHeader"><?php echo $_lang['category_heading']; ?></div><div class="sectionBody">
-        <table width="90%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
-            <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-	            	<option>&nbsp;</option>
-	            <?php
-	                include_once "categories.inc.php";
-	                $ds = getCategories();
-	                if($ds) foreach($ds as $n=>$v){
-	                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-	                }
-	            ?>
-	            </select>
-            </td>
-          </tr>
-          <tr>
-            <td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-            <td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-          </tr>
-        </table>
-            </div>
 	</div>
 
 

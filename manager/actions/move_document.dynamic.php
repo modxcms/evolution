@@ -74,7 +74,7 @@ function checkParentChildRelation(pId, pName) {
 	</ul>
 </div>
 
-
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['move_resource_title']; ?></div><div class="sectionBody">
 <?php echo $_lang['move_resource_message']; ?><p />
 <form method="post" action="index.php" name='newdocumentparent'>
@@ -86,4 +86,5 @@ function checkParentChildRelation(pId, pName) {
 <br />
 <input type='save' value="Move" style="display:none">
 </form>
+</div>
 </div>
