@@ -160,6 +160,7 @@ foreach ($sortables as $list) {
 	</ul>
 </div>
 
+<div class="section">
 <div class="sectionHeader">'.$_lang['plugin_priority'].'</div>
 <div class="sectionBody">
 <p>'.$_lang['plugin_priority_instructions'].'</p>
@@ -180,5 +181,6 @@ foreach ($sortables as $list) {
             
 echo '	</form>
 	</div>
+</div>
 ';
 ?>
