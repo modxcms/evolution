@@ -15,8 +15,7 @@ $tbl_membergroup_names   = $modx->getFullTableName('membergroup_names');
 $tbl_site_content        = $modx->getFullTableName('site_content');
 
 // find all document groups, for the select :)
-$sql = 'SELECT * FROM '.$tbl_documentgroup_names.' ORDER BY name';
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('*','[+prefix+]documentgroup_names','','name');
 if ($modx->db->getRecordCount($rs) < 1) {
 	$docgroupselector = '[no groups to add]';
 } else {
@@ -27,8 +26,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	$docgroupselector .= "</select>\n";
 }
 
-$sql = 'SELECT * FROM '.$tbl_membergroup_names.' ORDER BY name';
-$rs = $modx->db->query($sql);
+$rs = $modx->db->select('*','[+prefix+]membergroup_names','','name');
 if ($modx->db->getRecordCount($rs) < 1) {
 	$usrgroupselector = '[no user groups]';
 } else {
@@ -59,11 +57,6 @@ if ($modx->db->getRecordCount($rs) < 1) {
 
 	echo '<p>'.$_lang['access_permissions_users_tab'].'</p>';
 
-	$sql = 'SELECT groupnames.*, users.id AS user_id, users.username user_name '.
-	       'FROM '.$tbl_membergroup_names.' AS groupnames '.
-	       'LEFT JOIN '.$tbl_member_groups.' AS groups ON groups.user_group = groupnames.id '.
-	       'LEFT JOIN '.$tbl_manager_users.' AS users ON users.id = groups.member '.
-	       'ORDER BY groupnames.name';
 ?>
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 		<thead>
@@ -80,6 +73,11 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	</table>
 	<br />
 <?php
+	$sql = 'SELECT groupnames.*, users.id AS user_id, users.username user_name '.
+	       'FROM '.$tbl_membergroup_names.' AS groupnames '.
+	       'LEFT JOIN '.$tbl_member_groups.' AS groups ON groups.user_group = groupnames.id '.
+	       'LEFT JOIN '.$tbl_manager_users.' AS users ON users.id = groups.member '.
+	       'ORDER BY groupnames.name';
 	$rs = $modx->db->query($sql);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';
@@ -127,12 +125,6 @@ if ($modx->db->getRecordCount($rs) < 1) {
 // Document Groups
 
 	echo '<p>'.$_lang['access_permissions_resources_tab'].'</p>';
-
-	$sql = 'SELECT dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title '.
-	       'FROM '.$tbl_documentgroup_names.' AS dgnames '.
-	       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document_group = dgnames.id '.
-	       'LEFT JOIN '.$tbl_site_content.' AS sc ON sc.id = dg.document '.
-	       'ORDER BY dgnames.name, sc.id';
 ?>
 	<table width="300" border="0" cellspacing="1" cellpadding="3" bgcolor="#ccc">
 		<thead>
@@ -149,6 +141,11 @@ if ($modx->db->getRecordCount($rs) < 1) {
 	</table>
 	<br />
 <?php
+	$sql = 'SELECT dgnames.id, dgnames.name, sc.id AS doc_id, sc.pagetitle AS doc_title '.
+	       'FROM '.$tbl_documentgroup_names.' AS dgnames '.
+	       'LEFT JOIN '.$tbl_document_groups.' AS dg ON dg.document_group = dgnames.id '.
+	       'LEFT JOIN '.$tbl_site_content.' AS sc ON sc.id = dg.document '.
+	       'ORDER BY dgnames.name, sc.id';
 	$rs = $modx->db->query($sql);
 	if ($modx->db->getRecordCount($rs) < 1) {
 		echo '<span class="warning">'.$_lang['no_groups_found'].'</span>';

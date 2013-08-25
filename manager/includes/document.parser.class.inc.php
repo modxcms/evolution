@@ -264,7 +264,7 @@ class DocumentParser {
                     $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
                 }
                 if(!$included) {
-                    $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $this->getFullTableName('system_settings'));
+                    $result= $this->db->select('setting_name, setting_value', '[+prefix+]system_settings');
                     while ($row= $this->db->getRow($result, 'both')) {
                         $this->config[$row[0]]= $row[1];
                     }
@@ -297,10 +297,16 @@ class DocumentParser {
                     $usrSettings= & $_SESSION[$usrType . 'UsrConfigSet'];
                 } else {
                     if ($usrType == 'web')
-                        $query= $this->getFullTableName('web_user_settings') . ' WHERE webuser=\'' . $id . '\'';
+                    {
+                        $from = '[+prefix+]web_user_settings';
+                        $where = "webuser='{$id}'";
+                    }
                     else
-                        $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $id . '\'';
-                    $result= $this->db->query('SELECT setting_name, setting_value FROM ' . $query);
+                    {
+                        $from = '[+prefix+]user_settings';
+                    	$where = "user='{$id}'";
+                    }
+                    $result= $this->db->select('setting_name, setting_value', $from, $where);
                     while ($row= $this->db->getRow($result, 'both'))
                         $usrSettings[$row[0]]= $row[1];
                     if (isset ($usrType))
@@ -312,8 +318,7 @@ class DocumentParser {
                 if (isset ($_SESSION['mgrUsrConfigSet'])) {
                     $musrSettings= & $_SESSION['mgrUsrConfigSet'];
                 } else {
-                    $query= $this->getFullTableName('user_settings') . ' WHERE user=\'' . $mgrid . '\'';
-                    if ($result= $this->db->query('SELECT setting_name, setting_value FROM ' . $query)) {
+                    if ($result= $this->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$mgrid}'")) {
                         while ($row= $this->db->getRow($result, 'both')) {
                             $usrSettings[$row[0]]= $row[1];
                         }
@@ -509,7 +514,7 @@ class DocumentParser {
                         if ($this->config['unauthorized_page']) {
                             // check if file is not public
                             $tbldg= $this->getFullTableName("document_groups");
-                            $secrs= $this->db->query("SELECT id FROM $tbldg WHERE document = '" . $id . "' LIMIT 1;");
+                            $secrs= $this->db->select('id', '[+prefix+]document_groups', "document='{$id}'", '', '1');
                             if ($secrs)
                                 $seclimit= $this->db->getRecordCount($secrs);
                         }

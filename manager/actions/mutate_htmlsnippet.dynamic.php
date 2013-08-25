@@ -39,7 +39,7 @@ if ($limit > 1) {
     for ($i = 0; $i < $limit; $i++) {
         $lock = $modx->db->getRow($rs);
         if ($lock['internalKey'] != $modx->getLoginUserID()) {
-            $msg = sprintf($_lang['lock_msg'], $lock['username'], 'chunk');
+            $msg = sprintf($_lang['lock_msg'], $lock['username'], $_lang['chunk']);
             $e->setError(5, $msg);
             $e->dumpError();
         }

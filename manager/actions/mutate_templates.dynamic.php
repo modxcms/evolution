@@ -20,10 +20,9 @@ switch((int) $_REQUEST['a']) {
 }
 
 if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
-    $id = $_REQUEST['id'];
+    $id = (int) $_REQUEST['id'];
     // check to see the template editor isn't locked
-    $sql = "SELECT internalKey, username FROM $dbase.`".$table_prefix."active_users` WHERE $dbase.`".$table_prefix."active_users`.action=16 AND $dbase.`".$table_prefix."active_users`.id=$id";
-    $rs = $modx->db->query($sql);
+    $rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action=16 AND id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         for ($i=0;$i<$limit;$i++) {
@@ -41,9 +40,8 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 }
 
 $content = array();
-if(isset($_REQUEST['id']) && $_REQUEST['id']!='' && is_numeric($_REQUEST['id'])) {
-    $sql = "SELECT * FROM $dbase.`".$table_prefix."site_templates` WHERE $dbase.`".$table_prefix."site_templates`.id = $id;";
-    $rs = $modx->db->query($sql);
+if(!empty($id)) {
+    $rs = $modx->db->select('*','[+prefix+]site_templates',"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         echo "Oops, something went terribly wrong...<p>";
