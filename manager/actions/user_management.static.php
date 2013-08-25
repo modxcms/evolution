@@ -106,7 +106,6 @@ echo $cm->render();
 			</tr>
 		</table>
 	</div>
-	<br />
 	<div>
 	<?php
 	$noAdminSql = ($_SESSION['mgrRole'] != 1)? 'mua.role != 1' : '' ;

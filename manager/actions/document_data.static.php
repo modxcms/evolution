@@ -273,7 +273,6 @@ function movedocument() {
 	  </ul>
 	</div>
 
-<div class="sectionHeader"><?php echo $_lang['page_data_title']?></div>
 <div class="sectionBody">
 
 <div class="tab-pane" id="childPane">

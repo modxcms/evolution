@@ -36,7 +36,7 @@ foreach($help as $k=>$v) {
     echo '<div class="tab-page" id="tab'.$v.'Help">';
     echo '<h2 class="tab">'.$helpname.'</h2>';
     echo '<script type="text/javascript">tp.addTabPage( document.getElementById( "tab'.$v.'Help" ) );</script>';
-    include_once(MODX_BASE_PATH . "assets/templates/help/{$v}";
+    include_once(MODX_BASE_PATH . "assets/templates/help/{$v}");
     echo '</div>';
 }
 ?>

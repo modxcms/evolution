@@ -691,6 +691,7 @@ table.grid td.even, .gridAltItem {
 	width: 100%;
 	border: 1px solid silver;
 	background-color: #DBDBDB;
+    margin-bottom:8px;
 }
 .searchtext {
 	height: 18px;
