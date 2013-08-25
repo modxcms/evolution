@@ -152,38 +152,26 @@ if (is_array($evtOut))
           </ul>
     </div>
 
+<script type="text/javascript" src="media/script/tabpane.js"></script>
 <div class="sectionBody">
+<div class="tab-pane" id="chunkPane">
+    <script type="text/javascript">
+        tpChunk = new WebFXTabPane( document.getElementById( "chunkPane" ), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );
+    </script>
+    <div class="tab-page" id="tabGeneral">
+        <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
+    	<script type="text/javascript">tpChunk.addTabPage( document.getElementById( "tabGeneral" ) );</script>
     <p><?php echo $_lang['htmlsnippet_msg']?></p>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr><td align="left"><?php echo $_lang['htmlsnippet_name']?>:</td>
-            <td align="left"><span style="font-family:'Courier New', Courier, mono">{{</span><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:140px;" onChange='documentDirty=true;'><span style="font-family:'Courier New', Courier, mono">}}</span><span class="warning" id="savingMessage">&nbsp;</span></td></tr>
-        <tr><td align="left"><?php echo $_lang['htmlsnippet_desc']?>:&nbsp;&nbsp;</td>
-            <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description'])?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td></tr>
-        <tr><td align="left"><?php echo $_lang['existing_category']?>:&nbsp;&nbsp;</td>
-            <td align="left"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span>
-            <select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-                <option>&nbsp;</option>
-<?php
-include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
-$ds = getCategories();
-if ($ds) {
-    foreach ($ds as $n => $v) {
-        echo "\t\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
-    }
-}
-?>
-            </select></td></tr>
-        <tr><td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?>:</td>
-            <td align="left" valign="top" style="padding-top:5px;"><span style="font-family:'Courier New', Courier, mono">&nbsp;&nbsp;</span><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : ''?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td></tr>
-        <tr><td align="left" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : ''?> class="inputBox" value="on" /> <?php echo $_lang['lock_htmlsnippet']?>
-            <span class="comment"><?php echo $_lang['lock_htmlsnippet_msg']?></span></td></tr>
+    <table>
+        <tr><td align="left"><?php echo $_lang['htmlsnippet_name']?></td>
+            <td align="left">{{&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:140px;" onChange='documentDirty=true;'>}}<span class="warning" id="savingMessage">&nbsp;</span></td></tr>
     </table>
 
     <div class="section">
         <div class="sectionHeader">
             <?php echo $_lang['chunk_code']?>
         </div>
-        <div class="sectionHeader">
+        <div class="sectionBody">
         <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet'])?></textarea>
         </div>
     </div>
@@ -202,6 +190,43 @@ if (is_array($evtOut)) {
 ?>
             </select>
 </div><!-- end .sectionBody -->
+
+<!-- Chunk Info -->
+<div class="tab-page" id="tabInfo">
+<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
+<script type="text/javascript">tpChunk.addTabPage( document.getElementById( "tabInfo" ) );</script>
+<div class="section">
+<table>
+    <tr>
+        <td align="left"><?php echo $_lang['htmlsnippet_desc']?></td>
+        <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description'])?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
+    </tr>
+    <tr>
+        <td align="left"><?php echo $_lang['existing_category']?></td>
+        <td align="left">
+        <select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
+            <option>&nbsp;</option>
+<?php
+include_once(MODX_MANAGER_PATH.'includes/categories.inc.php');
+$ds = getCategories();
+if ($ds) {
+foreach ($ds as $n => $v) {
+    echo "\t\t\t\t".'<option value="'.$v['id'].'"'.($content['category'] == $v['id'] || (empty($content['category']) && $_POST['categoryid'] == $v['id']) ? ' selected="selected"' : '').'>'.htmlspecialchars($v['category'])."</option>\n";
+}
+}
+?>
+        </select></td>
+    </tr>
+    <tr>
+        <td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']?></td>
+        <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : ''?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td></tr>
+    <tr><td align="left" colspan="2"><input name="locked" type="checkbox"<?php echo $content['locked'] == 1 || $content['locked'] == 'on' ? ' checked="checked"' : ''?> class="inputBox" value="on" /> <?php echo $_lang['lock_htmlsnippet']?>
+        <span class="comment"><?php echo $_lang['lock_htmlsnippet_msg']?></span></td>
+    </tr>
+</table>
+</div>
+</div>
+
 <?php
 
 // invoke OnChunkFormRender event
@@ -211,7 +236,8 @@ $evtOut = $modx->invokeEvent('OnChunkFormRender', array(
 if (is_array($evtOut))
     echo implode('', $evtOut);
 ?>
-
+</div>
+</div>
 <input type="submit" name="save" style="display:none;" />
 </form>
 <?php
