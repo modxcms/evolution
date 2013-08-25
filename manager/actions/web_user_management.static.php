@@ -105,7 +105,7 @@ echo $cm->render();
 			</tr>
 		</table>
 	</div>
-
+    <br />
 	<div>
 	<?php
 

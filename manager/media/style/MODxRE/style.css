@@ -511,8 +511,8 @@ input.submit {
 	margin: 5px 15px 15px;
 	display: block;
 }
-	.tab-page .sectionBody, .tab-page .section .sectionBody {
-		background: none repeat scroll 0 0 #F7F7F7;
+	.tab-page .sectionBody, .tab-page .section .sectionBody, .sectionBody .sectionBody {
+		background: none repeat scroll 0 0 #F7F7F7!important;
 		border: 1px solid #CCCCCC;
 		margin: 0 3px 15px;
 		padding: 7px;
