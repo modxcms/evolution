@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}active_users` (
   `lasthit` int(20) NOT NULL default '0',
   `id` int(10) default NULL,
   `action` varchar(10) NOT NULL default '',
-  `ip` varchar(20) NOT NULL default '',
+  `ip` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`internalKey`)
 ) ENGINE=MyISAM COMMENT='Contains data about active users.';
 
@@ -299,7 +299,8 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_contentvalues` (
 	`value` text,
 	PRIMARY KEY  (id),
 	KEY idx_tmplvarid (tmplvarid),
-	KEY idx_id (contentid)
+	KEY idx_id (contentid),
+	FULLTEXT KEY `value_ft_idx` (`value`)
 ) ENGINE=MyISAM COMMENT='Site Template Variables Content Values Link Table';
 
 CREATE TABLE IF NOT EXISTS `{PREFIX}site_tmplvar_templates` (
@@ -352,7 +353,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}user_attributes` (
   `zip` varchar(25) NOT NULL default '',
   `fax` varchar(100) NOT NULL default '',
   `photo` varchar(255) NOT NULL default '' COMMENT 'link to photo',
-  `comment` varchar(255) NOT NULL default '' COMMENT 'short comment',  
+  `comment` text,  
   PRIMARY KEY  (`id`),
   KEY `userid` (`internalKey`)
 ) ENGINE=MyISAM COMMENT='Contains information about the backend users.';
@@ -493,14 +494,14 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}web_user_attributes` (
   `sessionid` varchar(100) NOT NULL default '',
   `dob` int(10) NOT NULL DEFAULT '0',
   `gender` int(1) NOT NULL DEFAULT '0' COMMENT '0 - unknown, 1 - Male 2 - female',
-  `country` varchar(5) NOT NULL default '',
+  `country` varchar(25) NOT NULL default '',
   `street` varchar(255) NOT NULL DEFAULT '',
   `city` varchar(255) NOT NULL DEFAULT '',
   `state` varchar(25) NOT NULL default '',
   `zip` varchar(25) NOT NULL default '',
   `fax` varchar(100) NOT NULL default '',
   `photo` varchar(255) NOT NULL default '' COMMENT 'link to photo',
-  `comment` varchar(255) NOT NULL default '' COMMENT 'short comment',  
+  `comment` text,  
   PRIMARY KEY  (`id`),
   KEY `userid` (`internalKey`)
 ) ENGINE=MyISAM COMMENT='Contains information for web users.';
