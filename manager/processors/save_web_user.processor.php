@@ -199,7 +199,7 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-			
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
@@ -208,6 +208,7 @@ switch ($_POST['mode']) {
 			</p>
 			</div>
 			</div>
+            </div>
 		<?php
 
 			include_once "footer.inc.php";
@@ -364,13 +365,14 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-			
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['web_user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
 				<p><?php echo sprintf($_lang["password_msg"], $newusername, $newpassword); ?></p>
 			</div>
 			</div>
+            </div>
 		<?php
 
 			include_once "footer.inc.php";
