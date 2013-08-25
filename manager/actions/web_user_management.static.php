@@ -91,7 +91,7 @@ echo $cm->render();
 <div class="sectionBody">
 	<p><?php echo $_lang['web_user_management_msg']; ?></p>
 	<div class="searchbar">
-		<table border="0" style="width:100%">
+		<table border="0" style="width:100%" class="actionButtons">
 			<tr>
 			<td><a class="searchtoolbarbtn" href="index.php?a=87"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['new_web_user']; ?></a></td>
 			<td nowrap="nowrap">

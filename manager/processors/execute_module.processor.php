@@ -23,13 +23,13 @@ if($_SESSION['mgrRole']!=1){
 		"FROM ".$modx->getFullTableName("site_module_access")." sma " .
 		"LEFT JOIN ".$modx->getFullTableName("member_groups")." mg ON mg.user_group = sma.usergroup AND member='".$modx->getLoginUserID()."'".
 		"WHERE sma.module = '$id'";
-	$rs = $modx->dbQuery($sql);
+	$rs = $modx->db->query($sql);
 
 	//initialize permission to -1, if it stays -1 no permissions
 	//attached so permission granted
 	$permissionAccessInt = -1;
 
-	while ($row = $modx->fetchRow($rs)) {
+	while ($row = $modx->db->getRow($rs)) {
 		if($row["usergroup"] && $row["member"]) {
 			//if there are permissions and this member has permission, ofcourse
 			//this is granted

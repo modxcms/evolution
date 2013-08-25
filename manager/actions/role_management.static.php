@@ -18,10 +18,9 @@ $sqlQuery = $modx->db->escape($query);
 <div class="sectionBody">
 <p><?php echo $_lang['role_management_msg']; ?></p>
 
-<ul>
+<ul class="actionButtons">
 	<li><a href="index.php?a=38"><?php echo $_lang['new_role']; ?></a></li>
 </ul>
-<br />
 <ul>
 <?php
 

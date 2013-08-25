@@ -413,6 +413,7 @@ if (((@ini_get("file_uploads") == true) || get_cfg_var("file_uploads") == 1) && 
 if($_REQUEST['mode']=="edit" || $_REQUEST['mode']=="view") {
 ?>
 
+<div class="section">
 <div class="sectionHeader" id="file_editfile"><?php echo $_REQUEST['mode']=="edit" ? $_lang['files_editfile'] : $_lang['files_viewfile']?></div>
 <div class="sectionBody">
 <?php
@@ -445,6 +446,7 @@ if($_REQUEST['mode']=="edit") {
   </tr>
 </table>
 </form>
+</div>
 </div>
 <?php
 $_CM_BASE = 'assets/plugins/codemirror/';

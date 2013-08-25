@@ -800,7 +800,7 @@ class Qm {
             // Check if current document is assigned to one or more doc groups
             $sql= "SELECT id FROM {$table} WHERE document={$docID}";
             $result= $this->modx->db->query($sql);
-            $rowCount= $this->modx->recordCount($result);
+            $rowCount= $this->modx->db->getRecordCount($result);
             
             // If document is assigned to one or more doc groups, check access
             if ($rowCount >= 1) {
@@ -813,7 +813,7 @@ class Qm {
                     // Check if user has access to current document 
                     $sql= "SELECT id FROM {$table} WHERE document = {$docID} AND document_group IN ({$docGroup})";
                     $result= $this->modx->db->query($sql);
-                    $rowCount = $this->modx->recordCount($result);
+                    $rowCount = $this->modx->db->getRecordCount($result);
                     
                     if ($rowCount >= 1) $access = TRUE;
                 }
@@ -895,7 +895,7 @@ class Qm {
 	    if (!$access) {
 	        $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId}";
             $result = $this->modx->db->query($sql);
-            $rowCount = $this->modx->recordCount($result);
+            $rowCount = $this->modx->db->getRecordCount($result);
             // TV is not in any document group
             if ($rowCount == 0) { $access = TRUE; }    
 	    }
@@ -904,7 +904,7 @@ class Qm {
 	    if (!$access && $this->docGroup != '') {
             $sql = "SELECT id FROM {$table} WHERE tmplvarid = {$tvId} AND documentgroup IN ({$this->docGroup})";
             $result = $this->modx->db->query($sql);
-            $rowCount = $this->modx->recordCount($result);
+            $rowCount = $this->modx->db->getRecordCount($result);
             if ($rowCount >= 1) { $access = TRUE; }
         }    
         
