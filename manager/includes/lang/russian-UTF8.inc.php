@@ -1166,7 +1166,7 @@ $_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.
 $_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
 
 $_lang['email_method_title'] = 'Метод отправки писем';
-$_lang['email_method_mail'] = 'MAIL - ообщения отправляются с помощью функции mail().';
+$_lang['email_method_mail'] = 'MAIL - cообщения отправляются с помощью функции mail().';
 $_lang['email_method_smtp'] = 'Адрес SMTP-сервера';
 $_lang['smtp_auth_title'] = 'SMTP авторизация';
 $_lang['smtp_host_title'] = 'Адрес SMTP-сервера';
