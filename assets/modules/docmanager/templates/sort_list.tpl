@@ -36,8 +36,8 @@
     </script>
     <style type="text/css">        
         li {
-            cursor: pointer;
-            border: 1px solid #666;
+            cursor: move;
+            border: 1px solid #CCCCCC;
             background: #eee no-repeat 2px center;
             margin: 2px 0;
             list-style: none;
