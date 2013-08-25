@@ -159,10 +159,7 @@ foreach ($sortables as $list) {
 		<li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
 	</ul>
 </div>
-<<<<<<< HEAD
-=======
 
->>>>>>> cf3d3ab0e53c4edea388e4abdda4e86b5c7c2fa5
 <div class="section">
 <div class="sectionHeader">'.$_lang['plugin_priority'].'</div>
 <div class="sectionBody">
