@@ -4,9 +4,9 @@ class TinyMCE
 {
 	var $mce_path;
 	
-	function TinyMCE()
+	function TinyMCE($params)
 	{
-		$this->mce_path = $$modx->event->params['mce_path'];
+		$this->mce_path = $params['mce_path'];
 	}
 	
 	function get_lang($lang)
