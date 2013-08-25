@@ -287,6 +287,7 @@ table td {vertical-align:top;}
 	echo render_form('manage_metatags', $_lang['role_manage_metatags']);
 	echo render_form('import_static',   $_lang['role_import_static']);
 	echo render_form('export_static',   $_lang['role_export_static']);
+	echo render_form('remove_locks',    $_lang['role_remove_locks']);
 ?>
 </fieldset>
 </td>
