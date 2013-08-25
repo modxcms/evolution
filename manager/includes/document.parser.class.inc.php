@@ -2316,6 +2316,7 @@ class DocumentParser {
      */
     function toDateFormat($timestamp = 0, $mode = '') {
         $timestamp = trim($timestamp);
+        if($mode !== 'formatOnly' && empty($timestamp)) return '-';
         $timestamp = intval($timestamp);
         
         switch($this->config['datetime_format']) {
