@@ -275,86 +275,61 @@ class TinyMCE
 		
 		$str = '';
 		
-		switch($params['theme'])
+		$theme = $params['theme'];
+		switch($theme)
 		{
-		case 'simple':
-			$plugins  = 'autolink,inlinepopups,save,emotions,advimage,advlink,paste,contextmenu';
-			$buttons1 = 'undo,redo,|,bold,strikethrough,|,justifyleft,justifycenter,justifyright,|,link,unlink,image,emotions,|,hr,|,help';
-			$buttons2 = '';
-		    break;
-		case 'creative':
-			$plugins = 'autolink,inlinepopups,autosave,advlist,layer,style,fullscreen,advimage,advhr,paste,advlink,media,contextmenu,table';
-			$buttons1 = 'undo,undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,styleselect,fontsizeselect,code';
-			$buttons2 = 'image,media,link,unlink,anchor,|,bullist,numlist,|,blockquote,outdent,indent,|,justifyleft,justifycenter,justifyright,|,advhr,|,styleprops,removeformat,|,pastetext,pasteword';
-			$buttons3 = 'insertlayer,absolute,moveforward,movebackward,|,tablecontrols,|,fullscreen,help';
-		    break;
-		case 'logic':
-			$plugins = 'autolink,inlinepopups,autosave,advlist,xhtmlxtras,style,fullscreen,advimage,paste,advlink,media,contextmenu,table';
-			$buttons1 = 'undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,styleselect,fontsizeselect,code,|,fullscreen,help';
-			$buttons2 = 'image,media,link,unlink,anchor,|,bullist,numlist,|,blockquote,outdent,indent,|,justifyleft,justifycenter,justifyright,|,table,|,hr,|,styleprops,removeformat,|,pastetext,pasteword';
-			$buttons3 = 'charmap,sup,sub,|,cite,ins,del,abbr,acronym,attribs';
-		    break;
-		case 'legacy':
-			$plugins  = 'autosave,advlist,style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media';
-			$buttons1 = 'undo,redo,selectall,|,pastetext,pasteword,|,search,replace,|,nonbreaking,hr,charmap,|,image,link,unlink,anchor,media,|,cleanup,removeformat,|,fullscreen,print,code,help';
-			$buttons2 = 'bold,italic,underline,strikethrough,sub,sup,|,blockquote,|,bullist,numlist,outdent,indent,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,|,styleprops';
-			$buttons3 = '';
-		    break;
-		case 'advanced':
-			$plugins  = '';
-			$buttons1 = 'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect';
-			$buttons2 = 'bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code';
-			$buttons3 = 'hr,removeformat,visualaid,|,sub,sup,|,charmap';
-		    break;
-		case 'full':
-			$plugins  = 'autolink,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave';
-			$buttons1 = 'save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect';
-			$buttons2 = 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor';
-			$buttons3 = 'tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen';
-			$buttons4 = 'insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak,restoredraft';
-		    break;
-		case 'custom':
-			$plugins  = $params['custom_plugins'];
-			$buttons1 = $params['custom_buttons1'];
-			$buttons2 = $params['custom_buttons2'];
-			$buttons3 = $params['custom_buttons3'];
-			$buttons4 = $params['custom_buttons4'];
-			break;
-		case 'default':
-		case 'editor':
-		default:
-			$plugins  = 'template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen,advimage,paste,advlink,media,contextmenu,table';
-			$buttons1 = 'undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect,pastetext,pasteword,code,template,|,fullscreen,help';
-			$buttons2 = 'image,media,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist,numlist,|,blockquote,outdent,indent,|,table,hr,|,visualblocks,styleprops,removeformat';
-			$buttons3 = '';
-			$buttons4 = '';
-			if(is_dir($params['mce_path'] . 'tiny_mce/plugins/quickupload'))
-			{
-				$plugins = 'quickupload,'. $plugins;
-				$buttons2 = 'quickupload,'. $buttons2;
-			}
-			switch($modx->manager->action)
-			{
-				case '4':
-				case '27':
-					global $content;
-					if($content['template']==='0')
-					{
-						$plugins = str_replace('autosave', '', $plugins);
-						$plugins .= ',fullpage';
-						$buttons2 = 'fullpage,' . $buttons2;
-					}
-					if(empty($modx->config['mce_template_docs']) && empty($modx->config['mce_template_chunks']))
-					{
-						$plugins = str_replace('template', '', $plugins);
-						$plugins = str_replace(',,', ',', $plugins);
-						$buttons1 = str_replace(',template', '', $buttons1);
-						$buttons2 = str_replace(',template', '', $buttons2);
-						$buttons3 = str_replace(',template', '', $buttons3);
-						$buttons4 = str_replace(',template', '', $buttons4);
-					}
-			}
-		}
+    		case 'custom':
+    			$plugins  = $params['custom_plugins'];
+    			$buttons1 = $params['custom_buttons1'];
+    			$buttons2 = $params['custom_buttons2'];
+    			$buttons3 = $params['custom_buttons3'];
+    			$buttons4 = $params['custom_buttons4'];
+    			break;
+    		case 'simple':
+    		case 'creative':
+    		case 'logic':
+    		case 'legacy':
+    		case 'advanced':
+    		case 'full':
+    		case 'default':
+    		case 'editor':
+    		default:
+    			include_once("{$mce_path}settings/toolbar.settings.inc.php");
+    			if(empty($theme) || $theme==='editor') $theme = 'default';
+    			$plugins  = $set[$theme]['p'];
+    			$buttons1 = $set[$theme]['b1'];
+    			$buttons2 = $set[$theme]['b2'];
+    			$buttons3 = $set[$theme]['b3'];
+    			$buttons4 = $set[$theme]['b4'];
+    			if(is_dir("{$mce_path}tiny_mce/plugins/quickupload"))
+    			{
+    				$plugins = 'quickupload,'. $plugins;
+    				$buttons2 = 'quickupload,'. $buttons2;
+    			}
+    			if($modx->manager->action=='4' || $modx->manager->action=='27')
+    			{
+    				global $content;
+    				if($content['template']==='0')
+    				{
+    					$plugins = str_replace('autosave', '', $plugins);
+    					if(strpos($plugins,'fullpage')===false) $plugins .= ',fullpage';
+    					if(strpos($buttons1.$buttons2.$buttons3.$buttons4, 'fullpage')===false)
+    					{
+    						if(!empty($buttons2)) $buttons2 = 'fullpage,' . $buttons2;
+    						else                  $buttons1 .= ',fullpage';
+    					}
+    				}
+    				if(empty($modx->config['mce_template_docs']) && empty($modx->config['mce_template_chunks']))
+    				{
+    					$plugins = str_replace('template', '', $plugins);
+    					$plugins = str_replace(',,', ',', $plugins);
+    					$buttons1 = str_replace(',template', '', $buttons1);
+    					$buttons2 = str_replace(',template', '', $buttons2);
+    					$buttons3 = str_replace(',template', '', $buttons3);
+    					$buttons4 = str_replace(',template', '', $buttons4);
+    				}
+    			}
+		    }
 		
 		$str .= $this->build_mce_init($plugins,$buttons1,$buttons2,$buttons3,$buttons4) . "\n";
 		$str .= $this->build_tiny_callback();
