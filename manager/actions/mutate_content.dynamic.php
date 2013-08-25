@@ -543,7 +543,7 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
 <div id="actions">
       <ul class="actionButtons">
           <li id="Button1">
-            <a href="#" onclick="documentDirty=false; document.mutate.save.click();">
+            <a href="#" class="primary" onclick="documentDirty=false; document.mutate.save.click();">
               <img alt="icons_save" src="<?php echo $_style["icons_save"]?>" /> <?php echo $_lang['save']?>
             </a><span class="and"> + </span>
             <select id="stay" name="stay">

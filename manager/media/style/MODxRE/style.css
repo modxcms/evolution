@@ -1462,6 +1462,18 @@ ul.actionButtons {
 	-moz-box-shadow: 0 0 10px #b8c7d6;
 	box-shadow:  0 0 10px #b8c7d6;
 }
+.actionButtons li.primary a,
+.actionButtons a.primary,
+.actionButtons a.default {
+	color: #fff;
+	border-color:#658f1a;
+	text-shadow:0 -1px 0 #2B5F0C;
+	background:#66901b;
+	background:-moz-linear-gradient(#8aae4b,#66901b);
+	background:-webkit-gradient(linear,0 0,0 100%,from(#8aae4b),to(#66901b));
+	background:-o-linear-gradient(#8aae4b,#66901b);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#8aae4b,endColorstr=#66901b);
+}
 .actionButtons a.disabled {
 	border: 1px solid #657587;
 	padding: 2px 4px;
