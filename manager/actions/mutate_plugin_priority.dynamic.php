@@ -77,7 +77,7 @@ $header = '
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>MODx</title>
+	<title>MODX</title>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$modx_manager_charset.'" />
 	<link rel="stylesheet" type="text/css" href="media/style/'.$useTheme.'style.css" />
 	<script type="text/javascript" src="media/script/mootools/mootools.js"></script>
@@ -159,7 +159,7 @@ foreach ($sortables as $list) {
 		<li><a href="#" onclick="document.location.href=\'index.php?a=76\';"><img src="'.$_style["icons_cancel"].'" /> '.$_lang['cancel'].'</a></li>
 	</ul>
 </div>
-
+<div class="section">
 <div class="sectionHeader">'.$_lang['plugin_priority'].'</div>
 <div class="sectionBody">
 <p>'.$_lang['plugin_priority_instructions'].'</p>
@@ -180,5 +180,6 @@ foreach ($sortables as $list) {
             
 echo '	</form>
 	</div>
+</div>
 ';
 ?>
