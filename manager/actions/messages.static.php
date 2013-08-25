@@ -8,6 +8,7 @@ if(!$modx->hasPermission('messages')) {
 <h1><?php echo $_lang['messages_title']; ?></h1>
 
 <?php if(isset($_REQUEST['id']) && $_REQUEST['m']=='r') { ?>
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['messages_read_message']; ?></div><div class="sectionBody" id="lyr3">
 <?php
 $sql = "SELECT * FROM $dbase.`".$table_prefix."user_messages` WHERE $dbase.`".$table_prefix."user_messages`.id=".(int)$_REQUEST['id'];
@@ -88,6 +89,7 @@ if($limit!=1) {
 }
 ?>
     </div>
+</div>
 <?php } ?>
 
 <div class="section">
