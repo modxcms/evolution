@@ -758,8 +758,6 @@ padding:5px;
 /* -------------------------[ search bar ]--- */
 .searchbar {
 	width: 100%;
-	border: 1px solid silver;
-	background-color: #DBDBDB;
 }
 .searchtext {
 	height: 18px;
