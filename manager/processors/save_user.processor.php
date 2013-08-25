@@ -232,7 +232,7 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo $stayUrl ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
@@ -241,6 +241,7 @@ switch ($_POST['mode']) {
 			</p>
 			</div>
 			</div>
+            </div>
 		<?php
 
 			include_once "footer.inc.php";
@@ -425,7 +426,7 @@ switch ($_POST['mode']) {
 				<li><a href="<?php echo ($id == $modx->getLoginUserID()) ? 'index.php?a=8' : $stayUrl; ?>"><img src="<?php echo $_style["icons_save"] ?>" /> <?php echo ($id == $modx->getLoginUserID()) ? $_lang['logout'] : $_lang['close']; ?></a></li>
 			</ul>
 			</div>
-
+            <div class="section">
 			<div class="sectionHeader"><?php echo $_lang['user_title']; ?></div>
 			<div class="sectionBody">
 			<div id="disp">
@@ -434,6 +435,7 @@ switch ($_POST['mode']) {
 			</p>
 			</div>
 			</div>
+            </div>
 		<?php
 			
 			include_once "footer.inc.php";
