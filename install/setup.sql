@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `introtext` text COMMENT 'Used to provide quick summary of the document',  
   `content` mediumtext,
   `richtext` tinyint(1) NOT NULL default '1',
-  `template` int(10) NOT NULL default '1',
+  `template` int(10) NOT NULL default '0',
   `menuindex` int(10) NOT NULL default '0',
   `searchable` int(1) NOT NULL default '1',
   `cacheable` int(1) NOT NULL default '1',
