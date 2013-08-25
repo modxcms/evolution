@@ -63,7 +63,7 @@ input[type="button"]:focus, input[type="submit"]:focus, input[type="reset"]:focu
 }
 
 fieldset {
-    margin: 0 5px 5px 0px;
+    margin: 0 5px 5px 0;
     padding: 5px;
     border: 1px solid #afadaa;
     border-radius: 4px;
@@ -227,6 +227,7 @@ tr.selected:hover > td {
     border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
+    position:relative;
 }
 
 #toolbar a {
