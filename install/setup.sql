@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   KEY `id` (`id`),
   KEY `parent` (`parent`),
   KEY aliasidx (`alias`),
+  KEY typeidx (`type`),
   FULLTEXT KEY `content_ft_idx` (`pagetitle`,`description`,`content`)
 ) ENGINE=MyISAM COMMENT='Contains the site document tree.';
 
