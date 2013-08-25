@@ -151,7 +151,7 @@ if (is_array($evtOut))
               <li id="Button5"><a href="#" onclick="documentDirty=false;document.location.href='index.php?a=76';"><img src="<?php echo $_style["icons_cancel"] ?>" /> <?php echo $_lang['cancel']?></a></li>
           </ul>
     </div>
-
+<div class="section">
 <div class="sectionBody">
     <p><?php echo $_lang['htmlsnippet_msg']?></p>
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -183,7 +183,7 @@ if ($ds) {
         <div class="sectionHeader">
             <?php echo $_lang['chunk_code']?>
         </div>
-        <div class="sectionHeader">
+        <div class="sectionBody">
         <textarea dir="ltr" class="phptextarea" name="post" style="width:100%; height:370px;" onChange="documentDirty=true;"><?php echo isset($content['post']) ? htmlspecialchars($content['post']) : htmlspecialchars($content['snippet'])?></textarea>
         </div>
     </div>
@@ -213,6 +213,7 @@ if (is_array($evtOut))
 ?>
 
 <input type="submit" name="save" style="display:none;" />
+</div>
 </form>
 <?php
 // invoke OnRichTextEditorInit event
