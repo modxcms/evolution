@@ -1778,6 +1778,85 @@ class DocumentParser {
         }
     }
 
+    function sendmail($params=array(), $msg='')
+    {
+        if(isset($params) && is_string($params))
+        {
+            if(strpos($params,'=')===false)
+            {
+                if(strpos($params,'@')!==false) $p['to']      = $params;
+                else                            $p['subject'] = $params;
+            }
+            else
+            {
+                $params_array = explode(',',$params);
+                foreach($params_array as $k=>$v)
+                {
+                    $k = trim($k);
+                    $v = trim($v);
+                    $p[$k] = $v;
+                }
+            }
+        }
+        else
+        {
+            $p = $params;
+            unset($params);
+        }
+        if(isset($p['sendto'])) $p['to'] = $p['sendto'];
+        
+        if(isset($p['to']) && preg_match('@^[0-9]+$@',$p['to']))
+        {
+            $userinfo = $this->getUserInfo($p['to']);
+            $p['to'] = $userinfo['email'];
+        }
+        if(isset($p['from']) && preg_match('@^[0-9]+$@',$p['from']))
+        {
+            $userinfo = $this->getUserInfo($p['from']);
+            $p['from']     = $userinfo['email'];
+            $p['fromname'] = $userinfo['username'];
+        }
+        if($msg==='' && !isset($p['body']))
+        {
+            $p['body'] = $_SERVER['REQUEST_URI'] . "\n" . $_SERVER['HTTP_USER_AGENT'] . "\n" . $_SERVER['HTTP_REFERER'];
+        }
+        else $p['body'] = $msg;
+        
+        $this->loadExtension('MODxMailer');
+        $sendto = (!isset($p['to']))   ? $this->config['emailsender']  : $p['to'];
+        $sendto = explode(',',$sendto);
+        foreach($sendto as $address)
+        {
+            list($name, $address) = $this->mail->address_split($address);
+            $this->mail->AddAddress($address,$name);
+        }
+        if(isset($p['cc']))
+        {
+            $p['cc'] = explode(',',$sendto);
+            foreach($p['cc'] as $address)
+            {
+                list($name, $address) = $this->mail->address_split($address);
+                $this->mail->AddCC($address,$name);
+            }
+        }
+        if(isset($p['bcc']))
+        {
+            $p['bcc'] = explode(',',$sendto);
+            foreach($p['bcc'] as $address)
+            {
+                list($name, $address) = $this->mail->address_split($address);
+                $this->mail->AddBCC($address,$name);
+            }
+        }
+        if(isset($p['from'])) list($p['fromname'],$p['from']) = $this->mail->address_split($p['from']);
+        $this->mail->From     = (!isset($p['from']))  ? $this->config['emailsender']  : $p['from'];
+        $this->mail->FromName = (!isset($p['fromname'])) ? $this->config['site_name'] : $p['fromname'];
+        $this->mail->Subject  = (!isset($p['subject']))  ? $this->config['emailsubject'] : $p['subject'];
+        $this->mail->Body     = $p['body'];
+        $rs = $this->mail->send();
+        return $rs;
+    }
+    
     function rotate_log($target='event_log',$limit=3000, $trim=100)
     {
         if($limit < $trim) $trim = $limit;
