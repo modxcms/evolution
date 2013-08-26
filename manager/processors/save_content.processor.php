@@ -320,6 +320,23 @@ switch ($actionToTake) {
 	case 'new' :
 
 		// invoke OnBeforeDocFormSave event
+		switch($modx->config['docid_incrmnt_method'])
+		{
+			case '1':
+				$from = "{$tbl_site_content} AS T0 LEFT JOIN {$tbl_site_content} AS T1 ON T0.id + 1 = T1.id";
+				$where = "T1.id IS NULL";
+				$rs = $modx->db->select('MIN(T0.id)+1', $from, "T1.id IS NULL");
+				$id = $modx->db->getValue($rs);
+				break;
+			case '2':
+				$rs = $modx->db->select('MAX(id)+1',$tbl_site_content);
+				$id = $modx->db->getValue($rs);
+			break;
+			
+			default:
+				$id = '';
+		}
+		
 		$modx->invokeEvent("OnBeforeDocFormSave", array (
 			"mode" => "new",
 			"id" => $id
