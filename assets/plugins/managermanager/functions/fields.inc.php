@@ -18,26 +18,24 @@ function mm_renameField($field, $newlabel, $roles='', $templates='', $newhelp=''
 	
 	$output = " // ----------- Rename field -------------- \n";
 		
-			$output .= '$j("select[id$=_prefix]").each( function() { $j(this).parents("tr:first").addClass("urltv"); }  ); ';
-
 			switch ($field) {
 			
 				// Exceptions
 				case 'keywords':
-					$output .= '$j("select[name*=keywords]").siblings("span.warning").html("'.jsSafe($newlabel).'");';
+					$output .= '$j("select[name*=keywords]").siblings("span.warning").empty().prepend("'.jsSafe($newlabel).'");';
 				break;
 				
 				case 'metatags':
-					$output .= '$j("select[name*=metatags]").siblings("span.warning").html("'.jsSafe($newlabel).'");';
+					$output .= '$j("select[name*=metatags]").siblings("span.warning").empty().prepend("'.jsSafe($newlabel).'");';
 				break;
 						
 				case 'hidemenu':
 				case 'show_in_menu':
-					$output .= '$j("input[name=hidemenucheck]").siblings("span.warning").html("'.jsSafe($newlabel).'");';
+					$output .= '$j("input[name=hidemenucheck]").siblings("span.warning").empty().prepend("'.jsSafe($newlabel).'");';
 				break;
 				
 				case 'which_editor':
-					$output .= '$j("#which_editor").prev("span.warning").html("'.jsSafe($newlabel).'");';
+					$output .= '$j("#which_editor").prev("span.warning").empty().prepend("'.jsSafe($newlabel).'");';
 				break;
 							
 				// Ones that follow the regular pattern
@@ -46,7 +44,7 @@ function mm_renameField($field, $newlabel, $roles='', $templates='', $newhelp=''
 					if (isset($mm_fields[$field])) {
 						$fieldtype = $mm_fields[$field]['fieldtype'];
 						$fieldname = $mm_fields[$field]['fieldname'];                    
-						$output .= '$j(":input[name='.$fieldname.']").parents("tr:not(.urltv)").children("td:first").children("span.warning").html("'.jsSafe($newlabel).'");';
+						$output .= '$j("'.$fieldtype.'[name='.$fieldname.']").parents("td").prev("td").children("span.warning").empty().prepend("'.jsSafe($newlabel).'");';
 					} 
 				
 				break;
@@ -88,8 +86,6 @@ function mm_hideFields($fields, $roles='', $templates='') {
 		
 			$output = '';
 			
-			$output .= '$j("select[id$=_prefix]").each( function() { $j(this).parents("tr:first").addClass("urltv"); }  ); ';
-
 			switch ($field) {	
 			
 				// Exceptions
@@ -134,7 +130,7 @@ function mm_hideFields($fields, $roles='', $templates='') {
 				// Ones that follow the regular pattern
 				default:				
 					if (isset($mm_fields[$field]))  { // Check the fields exist,  so we're not writing JS for elements that don't exist
-						$output .= '$j(":input[name='.$mm_fields[$field]['fieldname'].']").parents("tr:not(.urltv)").hide().next("tr").find("td[colspan=2]").parent("tr").hide(); ';
+						$output .= '$j("'.$mm_fields[$field]['fieldtype'].'[name='.$mm_fields[$field]['fieldname'].']").parents("tr").hide().next("tr").find("td[colspan=2]").parent("tr").hide(); ';
 					} 				
 				break;
 			} // end switch
@@ -172,25 +168,18 @@ function mm_changeFieldHelp($field, $helptext='', $roles='', $templates='') {
 				
 				// Ones that follow the regular pattern
 				default:
-					$output .= '$j("select[id$=_prefix]").each( function() { $j(this).parents("tr:first").addClass("urltv"); }  ); ' . "\n";
-
 					// What type is this field?
 					if (isset($mm_fields[$field])) {
 						$fieldtype = $mm_fields[$field]['fieldtype'];
 						$fieldname = $mm_fields[$field]['fieldname'];
 						
 						// Give the help button an ID, and modify the alt/title text
-						$output .= 'if ($j(":input[name=' . $fieldname . ']").siblings("img[style:contains(\'cursor:help\')]").length) {' . "\n";
-						$output .= '$j(":input[name=' . $fieldname . ']").siblings("img[style:contains(\'cursor:help\')]").attr("id", "' . $fieldname . '-help").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'"); ' . "\n";
-						$output .= '} else {' . "\n";
-						$output .= 'var help' . $fieldname . ' = $j("<img>").attr("id", "' . $fieldname . '-help").addClass("tooltip").css("cursor", "help").attr("src", "media/style/' . $modx->config['manager_theme'] . '/images/icons/b02_trans.gif").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'");' . "\n";
-						$output .= '$j(":input[name=' . $fieldname . ']").closest("tr").children("td:last").append(help' . $fieldname . ');' . "\n";
-						$output .= '}' . "\n";
+						$output .= '$j("'.$fieldtype.'[name='.$fieldname.']").siblings("img[style:contains(\'cursor:help\')]").attr("id", "'.$fieldname.'-help").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'"); ';									
 					} else {
 						break;
 					}
 				
-				//alt="NEW pagetitle help" 
+				
 				
 				break;
 			} // end switch
