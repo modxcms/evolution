@@ -37,7 +37,7 @@ if($ignore_ids!==$_POST['ignore_ids']
  ||$includenoncache!==$_POST['includenoncache']
  ||$repl_before!==$_POST['repl_before']
  ||$repl_after !==$_POST['repl_after']) {
-	$modx->clearCache();
+	clearCache();
 }
 
 $total = $modx->export->getTotal($_POST['ignore_ids'], $modx->config['export_includenoncache']);
@@ -56,3 +56,11 @@ $output .= sprintf ('<p>'.$_lang["export_site_time"].'</p>', round($totaltime, 3
 return $output;
 
 
+function clearCache()
+{
+	include_once(MODX_BASE_PATH . 'manager/processors/cache_sync.class.processor.php');
+	$sync = new synccache();
+	$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
+	$sync->setReport(false);
+	$sync->emptyCache();
+}

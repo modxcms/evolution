@@ -48,7 +48,7 @@ class EXPORT_SITE
 		{
 			$modx->config['friendly_urls']  = 1;
 			$modx->config['use_alias_path'] = 1;
-			$modx->clearCache();
+			$this->clearCache();
 		}
 		$modx->config['make_folders'] = '1';
 	}
@@ -193,6 +193,7 @@ class EXPORT_SITE
 			$this->count++;
 			
 			$row['count']     = $this->count;
+			$row['url'] = $modx->makeUrl($row['id']);
 			
 			if (!$row['wasNull'])
 			{ // needs writing a document
@@ -267,5 +268,14 @@ class EXPORT_SITE
     		$tpl = str_replace($k,$v,$tpl);
     	}
     	return $tpl;
+    }
+
+    function clearCache()
+    {
+		include_once(MODX_BASE_PATH . 'manager/processors/cache_sync.class.processor.php');
+		$sync = new synccache();
+		$sync->setCachepath(MODX_BASE_PATH . 'assets/cache/');
+		$sync->setReport(false);
+		$sync->emptyCache();
     }
 }
