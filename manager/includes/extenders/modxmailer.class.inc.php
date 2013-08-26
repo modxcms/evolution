@@ -232,4 +232,17 @@ class MODxMailer extends PHPMailer
 		$modx->logEvent(0, 3, $msg,'phpmailer');
 		return parent::SetError($msg);
 	}
+	
+	function address_split($address)
+	{
+		$address = trim($address);
+		if(strpos($address,'<')!==false && substr($address,-1)==='>')
+		{
+			$address = rtrim($address,'>');
+			list($name,$address) = explode('<',$address);
+		}
+		else $name = '';
+		$result = array($name,$address);
+		return $result;
+	}
 }
