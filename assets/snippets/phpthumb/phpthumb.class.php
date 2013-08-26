@@ -4059,7 +4059,7 @@ class phpthumb {
         if (phpthumb_functions::gd_version() >= 2.0) {
             if ($this->config_disable_imagecopyresampled) {
                 return phpthumb_functions::ImageCopyResampleBicubic($dst_im, $src_im, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
-            } 
+            }
             return ImageCopyResampled($dst_im, $src_im, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
         }
         return ImageCopyResized($dst_im, $src_im, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
