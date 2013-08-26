@@ -29,6 +29,5 @@ if (!$children === false) {
 } else {
     $firstChildUrl= $modx->makeUrl($modx->config['site_start']);
 }
-// return $modx->sendRedirect($firstChildUrl);
 return $modx->sendRedirect($firstChildUrl,0,'REDIRECT_HEADER','HTTP/1.1 301 Moved Permanently');
 ?>
