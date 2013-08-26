@@ -1203,6 +1203,12 @@ $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'Other';
 
+$_lang["import_site.static.php1"] = 'Reset resource tree';
+$_lang["import_site.static.php2"] = 'Reset resource tree, all IDs are initialize.';
+$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php4"] = '&lt;body&gt;&lt;/body&gt; only';
+$_lang["import_site.static.php5"] = 'File contain all';
+
 $_lang["a83_ignore_ids_title"] = 'Ignore IDs(comma separate)';
 $_lang["export_site.static.php1"] = 'Target';
 $_lang["export_site.static.php2"] = 'Only edited resources';
