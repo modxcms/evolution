@@ -85,13 +85,12 @@ EOD;
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
 
-                $modx->loadExtension('MODxMailer');
-                $modx->mail->From        = $modx->config['emailsender'];
-                $modx->mail->FromName    = $modx->config['site_name'];
-                $modx->mail->AddAddress($to,$user['username']);
-                $modx->mail->Subject    = $_lang['password_change_request'];
-                $modx->mail->Body        = $body;
-                $rs = $modx->mail->send(); //ignore mail errors in this case
+                $param = array();
+                $param['from']    = "{$modx->config['site_name']}<{$modx->config['emailsender']}>";
+                $param['to']      = "{$user['username']}<{$to}>";
+                $param['subject'] = $_lang['password_change_request'];
+                $param['body']    = $body;
+                $rs = $modx->sendmail($param); //ignore mail errors in this case
 
                 if(!$rs) $modx->errors[] = $_lang['error_sending_email'];
 
