@@ -255,14 +255,12 @@ switch ($_POST['mode']) {
 		}
 
 		// check if the email address already exists
-        // check if the email address already exists
-        if (!$rs = $modx->db->select('internalKey','[+prefix+]web_user_attributes', "email='{$esc_email}'")) {
-            webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
-            exit;
-        }
-        $limit = $modx->db->getRecordCount($rs);
-
-
+		$rs = $modx->db->select('internalKey', '[+prefix+]web_user_attributes', "email='{$esc_email}'");
+		$limit = $modx->db->getRecordCount($rs);
+		if (!$limit) {
+			webAlert("An error occurred while attempting to retrieve all users with email {$email}.");
+			exit;
+		}
 		if ($limit > 0) {
 			$row = $modx->db->getRow($rs);
 			if ($row['internalKey'] != $id) {
