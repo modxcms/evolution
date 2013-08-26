@@ -98,7 +98,7 @@ echo $cm->render();
 	<!-- load modules -->
 	<p><?php echo $_lang['eventlog_msg']?></p>
 	<div class="searchbar">
-		<table border="0" style="width:100%">
+		<table border="0" style="width:100%" class="actionButtons">
 			<tr>
 			<td><a class="searchtoolbarbtn" href="index.php?a=116&cls=1"><img src="<?php echo $_style["icons_delete_document"]?>"  align="absmiddle" /> <?php echo $_lang['clear_log']?></a></td>
 			<td nowrap="nowrap">
@@ -114,7 +114,6 @@ echo $cm->render();
 			</tr>
 		</table>
 	</div>
-	<br />
 	<div>
 	<?php
 
