@@ -27,7 +27,7 @@ $modx = new DocumentParser;
 $modx->db->connect();
 startCMSSession(); 
 if(!isset($_SESSION['mgrValidated'])) {
-        die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+        die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 }
 define('IN_MANAGER_MODE',true);
 // Get system settings and override them with managers'

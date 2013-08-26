@@ -4,7 +4,7 @@
  *  Build and return document tree view nodes
  *
  */
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 
     // save folderstate
     if (isset($_GET['opened'])) $_SESSION['openedArray'] = $_GET['opened'];
