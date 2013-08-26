@@ -278,7 +278,7 @@ $_lang["existing_category"] = 'Existing Category';
 $_lang["expand_tree"] = 'Expand Site Tree';
 $_lang["export_site"] = 'Export Static HTML';
 $_lang["export_site_cacheable"] = 'Include non-cacheable files:';
-$_lang["export_site_exporting_document"] = 'Exporting file <b>%s</b> of <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] ([+count+]) index.php?id=[+id+] - [+pagetitle+]<br />';
 $_lang["export_site_failed"] = 'Failed!';
 $_lang["export_site_failed_no_open"] = 'Cannot open file: ';
 $_lang["export_site_failed_no_retrieve"] = 'Cannot retrieve document.';
@@ -1202,3 +1202,12 @@ $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirecto
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'Other';
+
+$_lang["a83_ignore_ids_title"] = 'Ignore IDs(comma separate)';
+$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php2"] = 'Only edited resources';
+$_lang["export_site.static.php3"] = 'All resources';
+$_lang["export_site.static.php4"] = 'Replace string (before)';
+$_lang["export_site.static.php5"] = 'Replace string (after)';
+$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php7"] = 'Files cannot be outputted to [+rb_base_url+]';
