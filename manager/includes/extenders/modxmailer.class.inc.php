@@ -51,6 +51,7 @@ class MODxMailer extends PHPMailer
 		$this->From     = $modx->config['emailsender'];
 		$this->Sender   = $modx->config['emailsender']; 
 		$this->FromName = $modx->config['site_name'];
+		$this->IsHTML(true);
 		
 		if(isset($modx->config['mail_charset']) && !empty($modx->config['mail_charset'])) {
 			$mail_charset = $modx->config['mail_charset'];
@@ -230,5 +231,18 @@ class MODxMailer extends PHPMailer
 		$modx->config['send_errormail'] = '0';
 		$modx->logEvent(0, 3, $msg,'phpmailer');
 		return parent::SetError($msg);
+	}
+	
+	function address_split($address)
+	{
+		$address = trim($address);
+		if(strpos($address,'<')!==false && substr($address,-1)==='>')
+		{
+			$address = rtrim($address,'>');
+			list($name,$address) = explode('<',$address);
+		}
+		else $name = '';
+		$result = array($name,$address);
+		return $result;
 	}
 }

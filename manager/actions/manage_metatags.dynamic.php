@@ -102,6 +102,7 @@ $modx->manager->initPageViewState();
 <input type="hidden" name="id" value="" />
 <br />
 <!-- META tags -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['metatags'] ;?></div><div class="sectionBody">
 	<?php echo $_lang['metatag_intro'] ;?><br /><br />
 	<div class="searchbara">
@@ -192,8 +193,10 @@ $modx->manager->initPageViewState();
 		</tr>
 	</table>
 </div>
+</div>
 
 <!-- keywords -->
+<div class="section">
 <div class="sectionHeader"><?php echo $_lang['keywords'] ;?></div><div class="sectionBody">
 <?php echo $_lang['keywords_intro'] ;?><br /><br />
 <?php
@@ -226,6 +229,7 @@ $modx->manager->initPageViewState();
 			</td>
 		</tr>
 	</table>
+</div>
 </div>
 </form>
 
