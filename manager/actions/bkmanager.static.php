@@ -151,15 +151,21 @@ if(isset($_SESSION['result_msg']) && $_SESSION['result_msg'] != '')
 	switch($_SESSION['result_msg'])
 	{
 		case 'import_ok':
-			$ph['result_msg'] = '<div class="msg">' . $_lang["bkmgr_import_ok"] . '</div>';
+			$ph['result_msg_import'] = '<div class="msg">' . $_lang["bkmgr_import_ok"] . '</div>';
+			$ph['result_msg_snapshot'] = '<div class="msg">' . $_lang["bkmgr_import_ok"] . '</div>';
 			break;
 		case 'snapshot_ok':
-			$ph['result_msg'] = '<div class="msg">' . $_lang["bkmgr_snapshot_ok"] . '</div>';
+			$ph['result_msg_import'] = '';
+			$ph['result_msg_snapshot'] = '<div class="msg">' . $_lang["bkmgr_snapshot_ok"] . '</div>';
 			break;
 	}
 	$_SESSION['result_msg'] = '';
 }
-else $ph['result_msg'] = '';
+else
+{
+	$ph['result_msg_import'] = '';
+	$ph['result_msg_snapshot'] = '';
+}
 
 ?>
 <script type="text/javascript" src="media/script/tabpane.js"></script>
@@ -283,7 +289,7 @@ if ($totaloverhead > 0) {
 <iframe name="fileDownloader" width="1" height="1" style="display:none; width:1px; height:1px;"></iframe>
 <div class="tab-page" id="tabRestore">
 	<h2 class="tab"><?php echo $_lang["bkmgr_restore_title"];?></h2>
-	<?php echo $ph['result_msg']; ?>
+	<?php echo $ph['result_msg_import']; ?>
 	<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabRestore'));</script>
 	<?php echo $_lang["bkmgr_restore_msg"]; ?>
 	<form method="post" name="mutate" enctype="multipart/form-data" action="index.php">
@@ -379,7 +385,7 @@ function checked($cond)
 
 <div class="tab-page" id="tabSnapshot">
 	<h2 class="tab"><?php echo $_lang["bkmgr_snapshot_title"];?></h2>
-	<?php echo $ph['result_msg']; ?>
+	<?php echo $ph['result_msg_snapshot']; ?>
 	<script type="text/javascript">tpDBM.addTabPage(document.getElementById('tabSnapshot'));</script>
 	<?php echo parsePlaceholder($_lang["bkmgr_snapshot_msg"],array('snapshot_path'=>"snapshot_path={$modx->config['snapshot_path']}"));?>
 	<form method="post" name="snapshot" action="index.php">
