@@ -1157,12 +1157,12 @@ class ditto {
 		}
 		$modx->setPlaceholder($dittoID."next", $nextplaceholder);
 		$modx->setPlaceholder($dittoID."previous", $previousplaceholder);
+		$modx->setPlaceholder($dittoID."pages", $pages);
 		$modx->setPlaceholder($dittoID."splitter", $split);
 		$modx->setPlaceholder($dittoID."start", $start +1);
 		$modx->setPlaceholder($dittoID."urlStart", $start);
 		$modx->setPlaceholder($dittoID."stop", $limiter);
-		$modx->setPlaceholder($dittoID."total", $total);
-		$modx->setPlaceholder($dittoID."pages", $pages);
+		$modx->setPlaceholder($dittoID."total", $total);	
 		$modx->setPlaceholder($dittoID."perPage", $summarize);
 		$modx->setPlaceholder($dittoID."totalPages", $totalpages);
 		$modx->setPlaceholder($dittoID."ditto_pagination_set", true);
