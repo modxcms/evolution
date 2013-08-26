@@ -5,15 +5,13 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 $base="assets/cache/images";   // тут можно менять путь
 
-if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
-
-if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input)){
+if($input === '' || !file_exists(MODX_BASE_PATH . $input)){
   $input = 'assets/snippets/phpthumb/noimage.png';
 }
 
   $options = 'f=jpg&q=96&'.strtr($options, Array("," => "&", "_" => "="));
   $path_parts=pathinfo($input);
-  require_once MODX_BASE_PATH."/assets/snippets/phpthumb/phpthumb.class.php";
+  require_once MODX_BASE_PATH.'assets/snippets/phpthumb/phpthumb.class.php';
   $phpThumb = new phpthumb();
   $phpThumb->setSourceFilename($input);
   
@@ -24,7 +22,7 @@ if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input)){
     $op[$thumb[0]]=$thumb[1];
   }
 
-  $tmp=str_replace($_SERVER['DOCUMENT_ROOT']."assets/images","",$path_parts['dirname']);
+  $tmp=str_replace(MODX_BASE_PATH . "assets/images","",$path_parts['dirname']);
   $tmp=str_replace("assets/images","",$tmp);
   $tmp=explode("/",$tmp);
   $folder=$base;  
@@ -39,5 +37,4 @@ if($input == '' || !file_exists($_SERVER['DOCUMENT_ROOT']."/".$input)){
   $outputFilename =MODX_BASE_PATH.$fname;
   if (!file_exists($outputFilename)) if ($phpThumb->GenerateThumbnail()) $phpThumb->RenderToFile($outputFilename) ;
   return $fname;
-
 ?>
