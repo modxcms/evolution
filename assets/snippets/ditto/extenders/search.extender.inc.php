@@ -243,7 +243,7 @@ if (!class_exists("searchFilter")) {
             $result = 0;
 
             foreach ($this->sourceFields as $field) {
-                if (stripos($resource[$field], $this->searchString) !== false)
+                 if (mb_stripos($resource[$field], $this->searchString,0,"UTF-8") !== false)
                     $result = 1;
             }
 
