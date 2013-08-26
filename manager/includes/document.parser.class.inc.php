@@ -1820,7 +1820,7 @@ class DocumentParser {
         {
             $p['body'] = $_SERVER['REQUEST_URI'] . "\n" . $_SERVER['HTTP_USER_AGENT'] . "\n" . $_SERVER['HTTP_REFERER'];
         }
-        else $p['body'] = $msg;
+        elseif(is_string($msg) && 0<strlen($msg)) $p['body'] = $msg;
         
         $this->loadExtension('MODxMailer');
         $sendto = (!isset($p['to']))   ? $this->config['emailsender']  : $p['to'];
