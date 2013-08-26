@@ -51,6 +51,7 @@ class MODxMailer extends PHPMailer
 		$this->From     = $modx->config['emailsender'];
 		$this->Sender   = $modx->config['emailsender']; 
 		$this->FromName = $modx->config['site_name'];
+		$this->IsHTML(true);
 		
 		if(isset($modx->config['mail_charset']) && !empty($modx->config['mail_charset'])) {
 			$mail_charset = $modx->config['mail_charset'];
