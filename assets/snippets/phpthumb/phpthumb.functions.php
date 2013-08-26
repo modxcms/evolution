@@ -39,7 +39,8 @@ class phpthumb_functions {
 		// The possible operators are: <, lt, <=, le, >, gt, >=, ge, ==, =, eq, !=, <>, ne respectively.
 		// Using this argument, the function will return 1 if the relationship is the one specified by the operator, 0 otherwise.
 
-		// If a part contains special version strings these are handled in the following order: dev < (alpha = a) < (beta = b) < RC < pl
+		// If a part contains special version strings these are handled in the following order:
+		// (any string not found in this list) < (dev) < (alpha = a) < (beta = b) < (RC = rc) < (#) < (pl = p)
 		static $versiontype_lookup = array();
 		if (empty($versiontype_lookup)) {
 			$versiontype_lookup['dev']   = 10001;
@@ -48,14 +49,13 @@ class phpthumb_functions {
 			$versiontype_lookup['b']     = 10003;
 			$versiontype_lookup['beta']  = 10003;
 			$versiontype_lookup['RC']    = 10004;
-			$versiontype_lookup['pl']    = 10005;
+			$versiontype_lookup['rc']    = 10004;
+			$versiontype_lookup['#']     = 10005;
+			$versiontype_lookup['pl']    = 10006;
+			$versiontype_lookup['p']     = 10006;
 		}
-		if (isset($versiontype_lookup[$version1])) {
-			$version1 = $versiontype_lookup[$version1];
-		}
-		if (isset($versiontype_lookup[$version2])) {
-			$version2 = $versiontype_lookup[$version2];
-		}
+		$version1 = (isset($versiontype_lookup[$version1]) ? $versiontype_lookup[$version1] : $version1);
+		$version2 = (isset($versiontype_lookup[$version2]) ? $versiontype_lookup[$version2] : $version2);
 
 		switch ($operator) {
 			case '<':
@@ -106,8 +106,8 @@ class phpthumb_functions {
 
 		// and also inserts dots . before and after any non number so that for example '4.3.2RC1' becomes '4.3.2.RC.1'.
 		// Then it splits the results like if you were using explode('.',$ver). Then it compares the parts starting from left to right.
-		$version1 = preg_replace('/([0-9]+)([A-Z]+)([0-9]+)/i', '\\1.\\2.\\3', $version1);
-		$version2 = preg_replace('/([0-9]+)([A-Z]+)([0-9]+)/i', '\\1.\\2.\\3', $version2);
+		$version1 = preg_replace('#([0-9]+)([A-Z]+)([0-9]+)#i', "$1.$2.$3", $version1);
+		$version2 = preg_replace('#([0-9]+)([A-Z]+)([0-9]+)#i', "$1.$2.$3", $version2);
 
 		$parts1 = explode('.', $version1);
 		$parts2 = explode('.', $version1);
@@ -416,7 +416,7 @@ class phpthumb_functions {
 			// limited by height
 			$new_width = $new_height * $old_aspect_ratio;
 		}
-		return array(round($new_width), round($new_height));
+		return array(intval(round($new_width)), intval(round($new_height)));
 	}
 
 
@@ -484,6 +484,7 @@ class phpthumb_functions {
 	public static function ApacheLookupURIarray($filename) {
 		// apache_lookup_uri() only works when PHP is installed as an Apache module.
 		if (php_sapi_name() == 'apache') {
+			//$property_exists_exists = function_exists('property_exists');
 			$keys = array('status', 'the_request', 'status_line', 'method', 'content_type', 'handler', 'uri', 'filename', 'path_info', 'args', 'boundary', 'no_cache', 'no_local_copy', 'allowed', 'send_bodyct', 'bytes_sent', 'byterange', 'clength', 'unparsed_uri', 'mtime', 'request_time');
 			if ($apacheLookupURIobject = @apache_lookup_uri($filename)) {
 				$apacheLookupURIarray = array();
@@ -511,7 +512,7 @@ class phpthumb_functions {
 		static $cache_gd_version = array();
 		if (empty($cache_gd_version)) {
 			$gd_info = gd_info();
-			if (preg_match('/bundled \((.+)\)$/i', $gd_info['GD Version'], $matches)) {
+			if (preg_match('#bundled \((.+)\)$#i', $gd_info['GD Version'], $matches)) {
 				$cache_gd_version[1] = $gd_info['GD Version'];  // e.g. "bundled (2.0.15 compatible)"
 				$cache_gd_version[0] = (float) $matches[1];     // e.g. "2.0" (not "bundled (2.0.15 compatible)")
 			} else {
@@ -533,7 +534,7 @@ class phpthumb_functions {
 			}
 			while (!feof($fp)) {
 				$headerline = fgets($fp, 4096);
-				if (preg_match('/^Content\-Length\: (.*)/i', $headerline, $matches)) {
+				if (preg_match('#^Content-Length: (.*)#i', $headerline, $matches)) {
 					$size = intval($matches[1]);
 					break;
 				}
@@ -554,7 +555,7 @@ class phpthumb_functions {
 			}
 			while (!feof($fp)) {
 				$headerline = fgets($fp, 4096);
-				if (preg_match('/^Last\-Modified\: (.*)/i', $headerline, $matches)) {
+				if (preg_match('#^Last-Modified: (.*)#i', $headerline, $matches)) {
 					$date = strtotime($matches[1]) - date('Z');
 					break;
 				}
@@ -632,7 +633,7 @@ class phpthumb_functions {
 			$errstr = 'fsockopen() unavailable';
 			return false;
 		}
-		if ($fp = @fsockopen($host, 80, $errno, $errstr, $timeout)) {
+		if ($fp = @fsockopen($host, $port, $errno, $errstr, $timeout)) {
 			$out  = 'GET '.$file.' HTTP/1.0'."\r\n";
 			$out .= 'Host: '.$host."\r\n";
 			$out .= 'Connection: Close'."\r\n\r\n";
@@ -649,10 +650,10 @@ class phpthumb_functions {
 				} else {
 					$Data_body .= $line;
 				}
-				if (preg_match('/^HTTP\/[\\.0-9]+ ([0-9]+) (.+)$/i', rtrim($line), $matches)) {
+				if (preg_match('#^HTTP/[\\.0-9]+ ([0-9]+) (.+)$#i', rtrim($line), $matches)) {
 					list($dummy, $errno, $errstr) = $matches;
 					$errno = intval($errno);
-				} elseif (preg_match('/^Location\: (.*)$/i', rtrim($line), $matches)) {
+				} elseif (preg_match('#^Location: (.*)$#i', rtrim($line), $matches)) {
 					$header_newlocation = $matches[1];
 				}
 				if ($isHeader && ($line == "\r\n")) {
@@ -679,7 +680,7 @@ class phpthumb_functions {
 	}
 
 	public static function CleanUpURLencoding($url, $queryseperator='&') {
-		if (!preg_match('/^http/i', $url)) {
+		if (!preg_match('#^http#i', $url)) {
 			return $url;
 		}
 		$parse_url = phpthumb_functions::ParseURLbetter($url);
@@ -695,7 +696,7 @@ class phpthumb_functions {
 			}
 		}
 
-		$queries = explode($queryseperator, @$parse_url['query']);
+		$queries = explode($queryseperator, (isset($parse_url['query']) ? $parse_url['query'] : ''));
 		$CleanQueries = array();
 		foreach ($queries as $key => $query) {
 			@list($param, $value) = explode('=', $query);
@@ -710,6 +711,7 @@ class phpthumb_functions {
 		$cleaned_url  = $parse_url['scheme'].'://';
 		$cleaned_url .= (@$parse_url['username'] ? $parse_url['host'].(@$parse_url['password'] ? ':'.$parse_url['password'] : '').'@' : '');
 		$cleaned_url .= $parse_url['host'];
+		$cleaned_url .= ((!empty($parse_url['port']) && ($parse_url['port'] != 80)) ? ':'.$parse_url['port'] : '');
 		$cleaned_url .= '/'.implode('/', $CleanPathElements);
 		$cleaned_url .= (@$CleanQueries ? '?'.implode($queryseperator, $CleanQueries) : '');
 		return $cleaned_url;
@@ -742,7 +744,7 @@ class phpthumb_functions {
 		while (true) {
 			$tryagain = false;
 			$rawData = phpthumb_functions::URLreadFsock(@$parsed_url['host'], @$parsed_url['path'].'?'.@$parsed_url['query'], $errstr, true, (@$parsed_url['port'] ? @$parsed_url['port'] : 80), $timeout);
-			if (preg_match('/302 [a-z ]+; Location\\: (http.*)/i', $errstr, $matches)) {
+			if (preg_match('#302 [a-z ]+; Location\\: (http.*)#i', $errstr, $matches)) {
 				$matches[1] = trim(@$matches[1]);
 				if (!@$alreadyLookedAtURLs[$matches[1]]) {
 					// loop through and examine new URL
@@ -819,7 +821,7 @@ class phpthumb_functions {
 	public static function EnsureDirectoryExists($dirname) {
 		$directory_elements = explode(DIRECTORY_SEPARATOR, $dirname);
 		$startoffset = (!$directory_elements[0] ? 2 : 1);  // unix with leading "/" then start with 2nd element; Windows with leading "c:\" then start with 1st element
-		$open_basedirs = preg_split('/[;:]/', ini_get('open_basedir'));
+		$open_basedirs = preg_split('#[;:]#', ini_get('open_basedir'));
 		foreach ($open_basedirs as $key => $open_basedir) {
 			if (preg_match('#^'.preg_quote($open_basedir).'#', $dirname) && (strlen($dirname) > strlen($open_basedir))) {
 				$startoffset = count(explode(DIRECTORY_SEPARATOR, $open_basedir));
@@ -994,7 +996,7 @@ if (!function_exists('preg_quote')) {
 if (!function_exists('file_get_contents')) {
 	// included in PHP v4.3.0+
 	function file_get_contents($filename) {
-		if (preg_match('/^(f|ht)tp\:\/\//i', $filename)) {
+		if (preg_match('#^(f|ht)tp\://#i', $filename)) {
 			return SafeURLread($filename, $error);
 		}
 		if ($fp = @fopen($filename, 'rb')) {
