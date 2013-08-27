@@ -63,7 +63,7 @@ elseif ($mode=='backup')
 	$dumper = new Mysqldumper($database_server, $database_user, $database_password, $dbase);
 	$dumper->setDBtables($tables);
 	$dumper->setDroptables((isset($_POST['droptables']) ? true : false));
-	$dumpfinished = $dumper->createDump('callBack');
+	$dumpfinished = $dumper->createDump('dumpSql');
 	if($dumpfinished)
 	{
 		exit;
@@ -84,7 +84,7 @@ elseif ($mode=='snapshot')
 		mkdir(rtrim($modx->config['snapshot_path'],'/'));
 		@chmod(rtrim($modx->config['snapshot_path'],'/'), 0777);
 	}
-	if(!file_exists("{$modx->config['snapshot_path']}.htaccess"))
+	if(!is_file("{$modx->config['snapshot_path']}.htaccess"))
 	{
 		$htaccess = "order deny,allow\ndeny from all\n";
 		file_put_contents("{$modx->config['snapshot_path']}.htaccess",$htaccess);
@@ -478,6 +478,7 @@ class Mysqldumper {
 
 		// Set line feed
 		$lf = "\n";
+		$tempfile_path = $modx->config['base_path'] . 'temp/backup/temp.php';
 
 		$result = $modx->db->query('SHOW TABLES');
 		$tables = $this->result2Array(0, $result);
@@ -496,6 +497,8 @@ class Mysqldumper {
 		$output .= "# PHP Version: " . phpversion() . $lf;
 		$output .= "# Database : `{$this->dbname}`{$lf}";
 		$output .= "#";
+		file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
+		$output = '';
 
 		// Generate dumptext for the tables.
 		if (isset($this->_dbtables) && count($this->_dbtables)) {
@@ -509,6 +512,16 @@ class Mysqldumper {
 				if (strstr(",{$this->_dbtables},",",{$tblval},")===false) {
 					continue;
 				}
+			}
+			if($callBack==='snapshot')
+			{
+				switch($tblval)
+				{
+					case $table_prefix.'event_log':
+					case $table_prefix.'manager_log':
+						continue 2;
+				}
+				if(!preg_match('@^'.$table_prefix.'@', $tblval)) continue;
 			}
 			$output .= "{$lf}{$lf}# --------------------------------------------------------{$lf}{$lf}";
 			$output .= "#{$lf}# Table structure for table `{$tblval}`{$lf}";
@@ -532,14 +545,28 @@ class Mysqldumper {
 					$insertdump .= "'$value',";
 				}
 				$output .= rtrim($insertdump,',') . ");";
+				if(1048576 < strlen($output))
+				{
+					file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
+					$output = '';
+				}
 			}
-			// invoke callback -- raymond
-			if ($callBack) {
-				if (!$callBack($output)) break;
-				$output = '';
-			}
+			file_put_contents($tempfile_path, $output, FILE_APPEND | LOCK_EX);
+			$output = '';
 		}
-		return ($callBack) ? true: $output;
+		$output = file_get_contents($tempfile_path);
+		if(!empty($output)) unlink($tempfile_path);
+		
+		switch($callBack)
+		{
+			case 'dumpSql':
+				dumpSql($output);
+				break;
+			case 'snapshot':
+				snapshot($output);
+				break;
+		}
+		return true;
 	}
 
 	// Private function object2Array.
@@ -585,19 +612,18 @@ function import_sql($source,$result_code='import_ok')
 {
 	global $modx,$e;
 	
-	$tbl_active_users = $modx->getFullTableName('active_users');
-	$rs = $modx->db->select('*',$tbl_active_users,"action='27'");
+	$rs = $modx->db->select('*','[+prefix+]active_users',"action='27'");
 	if(0 < $modx->db->getRecordCount($rs))
 	{
-		echo '<html><body>'.
-		     '<script type="text/javascript">alert(\'Resource is edit now by any user\');</script>'.
-		     '</body></html>';
+		include_once "header.inc.php";  // start normal header
+		$e->setError(5, 'Resource is edit now by any user');
+		$e->dumpError();
 		exit;
 	}
 	
 	$settings = getSettings();
 	
-	$source = str_replace(array("\r\n","\n","\r"),"\n",$source);
+	if(strpos($source, "\r")!==false) $source = str_replace(array("\r\n","\n","\r"),"\n",$source);
 	$sql_array = preg_split('@;[ \t]*\n@', $source);
 	foreach($sql_array as $sql_entry)
 	{
@@ -624,11 +650,13 @@ function callBack(&$dumpstring) {
 	$today = $modx->toDateFormat(time(),'dateOnly');
 	$today = str_replace('/', '-', $today);
 	$today = strtolower($today);
+	$size = strlen($dumpstring);
 	if(!headers_sent()) {
 	    header('Expires: 0');
         header('Cache-Control: private');
         header('Pragma: cache');
 		header('Content-type: application/download');
+		header("Content-Length: {$size}");
 		header("Content-Disposition: attachment; filename={$today}_database_backup.sql");
 	}
 	echo $dumpstring;
@@ -645,8 +673,7 @@ function getSettings()
 {
 	global $modx;
 	
-	$tbl_system_settings = $modx->getFullTableName('system_settings');
-	$rs = $modx->db->select('setting_name, setting_value',$tbl_system_settings);
+	$rs = $modx->db->select('setting_name, setting_value','[+prefix+]system_settings');
 	
 	$settings = array();
 	while ($row = $modx->db->getRow($rs))
@@ -668,10 +695,9 @@ function restoreSettings($settings)
 {
 	global $modx;
 	
-	$tbl_system_settings = $modx->getFullTableName('system_settings');
 	foreach($settings as $k=>$v)
 	{
-		$modx->db->update(array('setting_value'=>$v),$tbl_system_settings,"setting_name='{$k}'");
+		$modx->db->update(array('setting_value'=>$v),'[+prefix+]system_settings',"setting_name='{$k}'");
 	}
 }
 
