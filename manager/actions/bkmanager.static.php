@@ -478,7 +478,7 @@ class Mysqldumper {
 
 		// Set line feed
 		$lf = "\n";
-		$tempfile_path = $modx->config['base_path'] . 'temp/backup/temp.php';
+		$tempfile_path = $modx->config['base_path'] . 'assets/backup/temp.php';
 
 		$result = $modx->db->query('SHOW TABLES');
 		$tables = $this->result2Array(0, $result);
