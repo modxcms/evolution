@@ -508,7 +508,7 @@ function confirmLangChange(el, lkey, elupd){
             <td colspan="2"><div class='split'></div></td>
            </tr> 
 <tr>
-	<td><?php echo $_lang["docid_incrmnt_method_title"] ?></td>
+	<td nowrap class="warning" valign="top"><b><?php echo $_lang["docid_incrmnt_method_title"] ?></b></td>
 	<td>
 	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="0" 
 			<?php echo ($docid_incrmnt_method=='0' || !isset($auto_menuindex)) ? 'checked="checked"' : "" ; ?> /> 
