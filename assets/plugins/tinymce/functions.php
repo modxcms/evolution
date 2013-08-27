@@ -252,7 +252,7 @@ class TinyMCE
 			$params['custom_buttons2']    = $modx->config['tinymce_custom_buttons2'];
 			$params['custom_buttons3']    = $modx->config['tinymce_custom_buttons3'];
 			$params['custom_buttons4']    = $modx->config['tinymce_custom_buttons4'];
-			$params['toolbar_align']      = $modx->config['manager_direction'];
+			$params['toolbar_align']      = $modx->config['manager_direction']==='rtl' ? 'rtl' : 'ltr';
 			$params['webuser']            = null;
 		}
 		else
