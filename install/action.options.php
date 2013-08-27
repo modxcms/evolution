@@ -198,9 +198,9 @@ if ($limit > 0) {
     </p>
 
 </form>
-<script type="text/javascript" src="../assets/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="../assets/js/jquery.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
+    jQuery(function(){
 
         jQuery('#toggle_check_all').click(function(evt){
             evt.preventDefault();

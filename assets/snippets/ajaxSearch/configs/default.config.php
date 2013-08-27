@@ -75,7 +75,7 @@ $dcfg['jscript'] = 'mootools';
 $dcfg['addJscript'] = 1;
 $dcfg['jsMooTools'] = MODX_MANAGER_URL.'/media/script/mootools/mootools.js';
 $dcfg['jsMooTools2'] = AS_SPATH . 'js/mootools2/mootools-1.2.4.js';
-$dcfg['jsJquery'] = 'assets/js/jquery-1.4.4.min.js';
+$dcfg['jsJquery'] = 'assets/js/jquery.min.js';
 
 // For a global parameter initialisation use the following syntax $__param = 'value';
 // To overwrite parameter snippet call use $param = 'value';
