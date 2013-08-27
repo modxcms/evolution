@@ -91,7 +91,7 @@ $_lang["change_password"] = 'Изменить пароль';
 $_lang["change_password_confirm"] = 'Подтвердить пароль';
 $_lang["change_password_message"] = 'Введите новый пароль, затем введите его еще раз для подтверждения. Длина пароля должна составлять от 6 до 15 символов.';
 $_lang["change_password_new"] = 'Новый пароль';
-$_lang["charset_message"] = 'Выберите кодировку страниц сайта. Помните, что MODX тестировался не на всех кодировках. Для большинства языков подходит кодировка ISO-8859-1.';
+$_lang["charset_message"] = 'Выберите кодировку страниц сайта. Помните, что MODX тестировался не на всех кодировках. Для большинства языков подходит кодировка UTF-8.';
 $_lang["charset_title"] = 'Кодировка:';
 $_lang["chunk"] = 'Чанк (HTML-элемент шаблона)';
 $_lang["chunk_code"] = 'Код чанка (HTML)';
@@ -1176,6 +1176,15 @@ $_lang['smtp_port_title'] = 'SMTP порт';
 
 $_lang["setting_resource_tree_node_name"] = 'Название ресурса в дереве';
 $_lang["setting_resource_tree_node_name_desc"] = 'Выберите поле ресурса, которое будет использоваться в качестве названия ресурса в дереве. По умолчанию используется поле "заголовок"; можно использовать любое другое поле, например, "пункт меню", "псевдоним".';
+
+$_lang["resource_opt_is_published"] = 'Опубликован';
+$_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
+$_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
+$_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Минимальный пропущенный ID';
+$_lang["docid_incrmnt_method_2"] = 'Максимальный ID+1';
+
 $_lang["cache_type_title"] = 'Способ кеширования страниц ';
 $_lang["cache_type_1"] = 'Только с учетом ID (стандартный метод)';
 $_lang["cache_type_2"] = 'C учетом ID и $_GET';

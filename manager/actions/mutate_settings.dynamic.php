@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('settings')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -507,6 +507,24 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td colspan="2"><div class='split'></div></td>
            </tr> 
+<tr>
+	<td><?php echo $_lang["docid_incrmnt_method_title"] ?></td>
+	<td>
+	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="0" 
+			<?php echo ($docid_incrmnt_method=='0' || !isset($auto_menuindex)) ? 'checked="checked"' : "" ; ?> /> 
+			<?php echo $_lang["docid_incrmnt_method_0"]?><br /> 
+			
+	<input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="1" 
+			<?php echo ($docid_incrmnt_method=='1') ? 'checked="checked"' : "" ; ?> /> 
+			<?php echo $_lang["docid_incrmnt_method_1"]?><br /> 
+        <input onchange="documentDirty=true;" type="radio" name="docid_incrmnt_method" value="2" 
+			<?php echo ($docid_incrmnt_method=='2') ? 'checked="checked"' : "" ; ?> /> 
+			<?php echo $_lang["docid_incrmnt_method_2"]?><br /> 
+	</td>
+</tr>
+<tr> 
+            <td colspan="2"><div class='split'></div></td> 
+          </tr>     
            
            <tr>
     <td nowrap class="warning"><b><?php echo $_lang["cache_type_title"] ?></b></td>

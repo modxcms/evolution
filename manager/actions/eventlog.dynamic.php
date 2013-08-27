@@ -1,5 +1,5 @@
 <?php
-if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODx Content Manager instead of accessing this file directly.");
+if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please use the MODX Content Manager instead of accessing this file directly.");
 if(!$modx->hasPermission('view_eventlog')) {
 	$e->setError(3);
 	$e->dumpError();
@@ -98,23 +98,22 @@ echo $cm->render();
 	<!-- load modules -->
 	<p><?php echo $_lang['eventlog_msg']?></p>
 	<div class="searchbar">
-		<table border="0" style="width:100%">
+		<table border="0" style="width:100%" class="actionButtons">
 			<tr>
-			<td><a class="searchtoolbarbtn" href="index.php?a=116&cls=1"><img src="<?php echo $_style["icons_delete_document"]?>"  align="absmiddle" /> <?php echo $_lang['clear_log']?></a></td>
+			<td><a href="index.php?a=116&cls=1"><img src="<?php echo $_style["icons_delete_document"]?>"  /> <?php echo $_lang['clear_log']?></a></td>
 			<td nowrap="nowrap">
 				<table border="0" style="float:right">
 				    <tr>
 				        <td><?php echo $_lang['search']?> </td><td><input class="searchtext" name="search" type="text" size="15" value="<?php echo $query?>" /></td>
-				        <td><a href="#" class="searchbutton" title="<?php echo $_lang['search']?>" onclick="searchResource();return false;"><?php echo $_lang['go']?></a></td>
-				        <td><a href="#" class="searchbutton" title="<?php echo $_lang['reset']?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/refresh.gif" width="16" height="16"/></a></td>
-				        <td><a href="#" class="searchbutton" title="<?php echo $_lang['list_mode']?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/table.gif" width="16" height="16"/></a></td>
+				        <td><a href="#"  title="<?php echo $_lang['search']?>" onclick="searchResource();return false;"><?php echo $_lang['go']?></a></td>
+				        <td><a href="#"  title="<?php echo $_lang['reset']?>" onclick="resetSearch();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/refresh.gif" width="16" height="16"/></a></td>
+				        <td><a href="#"  title="<?php echo $_lang['list_mode']?>" onclick="changeListMode();return false;"><img src="media/style/<?php echo $manager_theme?>images/icons/table.gif" width="16" height="16"/></a></td>
 				    </tr>
 				</table>
 			</td>
 			</tr>
 		</table>
 	</div>
-	<br />
 	<div>
 	<?php
 

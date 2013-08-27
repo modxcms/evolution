@@ -468,7 +468,7 @@ function save_user_quoted_printable($string) {
 
 // Send an email to the user
 function sendMailMessage($email, $uid, $pwd, $ufn) {
-	global $signupemail_message;
+	global $modx,$_lang,$signupemail_message;
 	global $emailsubject, $emailsender;
 	global $site_name, $site_start, $site_url;
 	$manager_url = MODX_MANAGER_URL;
@@ -482,22 +482,14 @@ function sendMailMessage($email, $uid, $pwd, $ufn) {
 	$message = str_replace("[+semail+]", $emailsender, $message);
 	$message = str_replace("[+surl+]", $manager_url, $message);
 
-	$headers = "From: " . $emailsender . "\r\n";
-	$headers .= "X-Mailer: Content Manager - PHP/" . phpversion();
-	$headers .= "\r\n";
-	$headers .= "MIME-Version: 1.0\r\n";
-	$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
-	$headers .= "Content-Transfer-Encoding: quoted-printable\r\n";
-	$subject = "=?UTF-8?Q?".$emailsubject."?=";
-	$message = save_user_quoted_printable($message);
-
-	if (ini_get('safe_mode') == FALSE) {
-		if (!mail($email, $subject, $message, $headers, "-f $emailsender")) {
-			webAlert("$email - {$_lang['error_sending_email']}");
-			exit;
-		}
-	} elseif (!mail($email, $subject, $message, $headers)) {
-		webAlert("$email - {$_lang['error_sending_email']}");
+	$param = array();
+	$param['from']    = "{$site_name}<{$emailsender}>";
+	$param['subject'] = $emailsubject;
+	$param['body']    = $message;
+	$param['to']      = $email;
+	$rs = $modx->sendmail($param);
+	if (!$rs) {
+		webAlert("{$email} - {$_lang['error_sending_email']}");
 		exit;
 	}
 }

@@ -12,8 +12,8 @@
 
 ob_start();
 if (!file_exists(dirname(__FILE__).'/phpthumb.functions.php') || !include_once(dirname(__FILE__).'/phpthumb.functions.php')) {
-	ob_end_flush();
-	die('failed to include_once(phpthumb.functions.php) - realpath="'.realpath(dirname(__FILE__).'/phpthumb.functions.php').'"');
+    ob_end_flush();
+    die('failed to include_once(phpthumb.functions.php) - realpath="'.realpath(dirname(__FILE__).'/phpthumb.functions.php').'"');
 }
 ob_end_clean();
 
@@ -27,7 +27,7 @@ ob_end_clean();
 //$PHPTHUMB_CONFIG['document_root'] = 'c:\\webroot\\example.com\\www';
 //$PHPTHUMB_CONFIG['document_root'] = $_SERVER['DOCUMENT_ROOT'];
 $PHPTHUMB_CONFIG['document_root'] = realpath((@$_SERVER['DOCUMENT_ROOT'] && file_exists(@$_SERVER['DOCUMENT_ROOT'].$_SERVER['PHP_SELF'])) ? $_SERVER['DOCUMENT_ROOT'] : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', realpath('.'))));
-//$PHPTHUMB_CONFIG['document_root'] = realpath((getenv('DOCUMENT_ROOT') && ereg('^'.preg_quote(realpath(getenv('DOCUMENT_ROOT'))), realpath(__FILE__))) ? getenv('DOCUMENT_ROOT') : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__))));
+//$PHPTHUMB_CONFIG['document_root'] = realpath((getenv('DOCUMENT_ROOT') && preg_match('#^'.preg_quote(realpath(getenv('DOCUMENT_ROOT'))).'#', realpath(__FILE__))) ? getenv('DOCUMENT_ROOT') : str_replace(dirname(@$_SERVER['PHP_SELF']), '', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__FILE__))));
 
 // * Cache directory configuration (choose only one of these - leave the other lines commented-out):
 // Note: this directory must be writable (usually chmod 777 is neccesary) for caching to work.
@@ -108,15 +108,15 @@ $PHPTHUMB_CONFIG['temp_directory'] = $PHPTHUMB_CONFIG['cache_directory'];  // se
 // As a general guideline, this number will be about 20% of your PHP memory
 // configuration, so 8M = 1,677,722; 16M = 3,355,443; 32M = 6,710,886; etc.
 if (phpthumb_functions::version_compare_replacement(phpversion(), '4.3.2', '>=') && !defined('memory_get_usage') && !@ini_get('memory_limit')) {
-	// memory_get_usage() will only be defined if your PHP is compiled with the --enable-memory-limit configuration option.
-	$PHPTHUMB_CONFIG['max_source_pixels'] = 0;         // no memory limit
+    // memory_get_usage() will only be defined if your PHP is compiled with the --enable-memory-limit configuration option.
+    $PHPTHUMB_CONFIG['max_source_pixels'] = 0;         // no memory limit
 } else {
-	// calculate default max_source_pixels as 1/6 of memory limit configuration
-	$PHPTHUMB_CONFIG['max_source_pixels'] = round(max(intval(ini_get('memory_limit')), intval(get_cfg_var('memory_limit'))) * 1048576 / 6);
-	//$PHPTHUMB_CONFIG['max_source_pixels'] = 0;       // no memory limit
-	//$PHPTHUMB_CONFIG['max_source_pixels'] = 1920000; // allow 1600x1200 images (2Mpx), no larger (about 12MB memory required)
-	//$PHPTHUMB_CONFIG['max_source_pixels'] = 2795000; // 16MB memory limit
-	//$PHPTHUMB_CONFIG['max_source_pixels'] = 3871488; // allow 2272x1704 images (4Mpx), no larger (about 24MB memory required)
+    // calculate default max_source_pixels as 1/6 of memory limit configuration
+    $PHPTHUMB_CONFIG['max_source_pixels'] = round(max(intval(ini_get('memory_limit')), intval(get_cfg_var('memory_limit'))) * 1048576 / 6);
+    //$PHPTHUMB_CONFIG['max_source_pixels'] = 0;       // no memory limit
+    //$PHPTHUMB_CONFIG['max_source_pixels'] = 1920000; // allow 1600x1200 images (2Mpx), no larger (about 12MB memory required)
+    //$PHPTHUMB_CONFIG['max_source_pixels'] = 2795000; // 16MB memory limit
+    //$PHPTHUMB_CONFIG['max_source_pixels'] = 3871488; // allow 2272x1704 images (4Mpx), no larger (about 24MB memory required)
 }
 
 
@@ -124,12 +124,12 @@ if (phpthumb_functions::version_compare_replacement(phpversion(), '4.3.2', '>=')
 $PHPTHUMB_CONFIG['prefer_imagemagick']        = false;  // If true, use ImageMagick to resize thumbnails if possible, since it is usually faster than GD functions; if false only use ImageMagick if PHP memory limit is too low.
 $PHPTHUMB_CONFIG['imagemagick_use_thumbnail'] = false;  // If true, use ImageMagick's "-thumbnail" resizing parameter (if available) which removes extra non-image metadata (profiles, EXIF info, etc) resulting in much smaller filesize; if false, use "-resize" paramter which retains this info
 if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-	// Windows: set absolute pathname
-	$PHPTHUMB_CONFIG['imagemagick_path'] = '';
+    // Windows: set absolute pathname
+    $PHPTHUMB_CONFIG['imagemagick_path'] = '';
 } else {
-	// *nix: set absolute pathname to "convert", or leave as null if "convert" is in the path (location detected with `which`)
-	//$PHPTHUMB_CONFIG['imagemagick_path'] = '/usr/local/bin/convert';
-	$PHPTHUMB_CONFIG['imagemagick_path'] = null;
+    // *nix: set absolute pathname to "convert", or leave as null if "convert" is in the path (location detected with `which`)
+    //$PHPTHUMB_CONFIG['imagemagick_path'] = '/usr/local/bin/convert';
+    $PHPTHUMB_CONFIG['imagemagick_path'] = null;
 }
 
 

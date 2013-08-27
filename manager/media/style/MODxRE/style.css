@@ -649,10 +649,10 @@ div.treeframebody {
 #floater {
 	display: none;
 	position: absolute;
-	width: 200px;
+	width: auto;
 	padding:5px;
 	top: 25px;
-	left: 4px;
+	left: 0px;
 	background: #fff;
 	border: 1px solid #ccc;
 	z-index: 500;

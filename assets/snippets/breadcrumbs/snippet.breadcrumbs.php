@@ -4,7 +4,7 @@ if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 ( isset($pathThruUnPub) ) ? $pathThruUnPub : $pathThruUnPub = 1;
 ( isset($respectHidemenu) ) ? (int)$respectHidemenu : $respectHidemenu = 1;
 ( isset($showCurrentCrumb) ) ? $showCurrentCrumb : $showCurrentCrumb = 1;
-( $currentAsLink ) ? $currentAsLink : $currentAsLink = 0;
+( isset($currentAsLink) ) ? $currentAsLink : $currentAsLink = 0;
 ( isset($linkTextField) ) ? $linkTextField : $linkTextField = 'menutitle,pagetitle,longtitle';
 ( isset($linkDescField) ) ? $linkDescField : $linkDescField = 'description,longtitle,pagetitle,menutitle';
 ( isset($showCrumbsAsLinks) ) ? $showCrumbsAsLinks : $showCrumbsAsLinks = 1;
