@@ -1190,8 +1190,6 @@ $_lang['smtp_port_title'] = 'SMTP port';
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
 
-$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, '.MGR_DIR.'/index.php, '.MGR_DIR.'/includes/config.inc.php)';
 $_lang['resource_opt_is_published'] = 'Published';
 $_lang["docid_incrmnt_method_title"] = 'Intsrement method Resource ID';
 $_lang["docid_incrmnt_method_0"] = 'DB auto increment';
