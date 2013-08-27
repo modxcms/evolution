@@ -91,7 +91,7 @@ elseif ($mode=='snapshot')
 	}
 	if(!is_writable(rtrim($modx->config['snapshot_path'],'/')))
 	{
-		echo parsePlaceholder($_lang["bkmgr_alert_mkdir"],$modx->config['snapshot_path']);
+		echo parsePlaceholder($_lang["bkmgr_alert_mkdir"],array('snapshot_path'=>$modx->config['snapshot_path']));
 		exit;
 	}
 	$escaped_table_prefix = str_replace('_', '\\_', $table_prefix);
@@ -645,7 +645,7 @@ function import_sql($source,$result_code='import_ok')
 	$_SESSION['result_msg'] = $result_code;
 }
 
-function callBack(&$dumpstring) {
+function dumpSql(&$dumpstring) {
 	global $modx;
 	$today = $modx->toDateFormat(time(),'dateOnly');
 	$today = str_replace('/', '-', $today);
