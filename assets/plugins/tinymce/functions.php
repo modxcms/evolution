@@ -252,7 +252,7 @@ class TinyMCE
 			$params['custom_buttons2']    = $modx->config['tinymce_custom_buttons2'];
 			$params['custom_buttons3']    = $modx->config['tinymce_custom_buttons3'];
 			$params['custom_buttons4']    = $modx->config['tinymce_custom_buttons4'];
-			$params['toolbar_align']      = $modx->config['manager_direction'];
+			$params['toolbar_align']      = $modx->config['manager_direction']==='rtl' ? 'rtl' : 'ltr';
 			$params['webuser']            = null;
 		}
 		else
@@ -436,7 +436,7 @@ class TinyMCE
 		$ph['date_format']             = $modx->toDateFormat(null, 'formatOnly');
 		$ph['time_format']             = '%H:%M:%S';
 		$ph['entity_encoding']         = $params['entity_encoding'];
-		$ph['onchange_callback']       = ($params['frontend']!==false)? "'myCustomOnChangeHandler'" : 'false';
+		$ph['onchange_callback']       = "'OnChangeHandler'";
 		$ph['terminate']               = (!empty($params['customparams'])) ? ',' : '';
 		$ph['customparams']            = rtrim($params['customparams'], ',');
 		$content_css[] = "{$mce_url}style/content.css";
