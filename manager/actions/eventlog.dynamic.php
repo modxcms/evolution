@@ -35,9 +35,9 @@ $_PAGE['vs']['lm'] = $listmode;
 // context menu
 include_once MODX_MANAGER_PATH."includes/controls/contextmenu.php";
 $cm = new ContextMenu("cntxm", 150);
-$cm->addItem($_lang['view_log'],"js:menuAction(1)","media/style/" . $manager_theme ."images/icons/save.png");
+$cm->addItem($_lang['view_log'],"js:menuAction(1)",$_style['icons_save']);
 $cm->addSeparator();
-$cm->addItem($_lang['delete'], "js:menuAction(2)","media/style/" . $manager_theme ."images/icons/delete.png",(!$modx->hasPermission('delete_eventlog') ? 1:0));
+$cm->addItem($_lang['delete'], "js:menuAction(2)",$_style['icons_delete'],(!$modx->hasPermission('delete_eventlog') ? 1:0));
 echo $cm->render();
 
 ?>
