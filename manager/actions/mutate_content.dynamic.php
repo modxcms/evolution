@@ -340,13 +340,20 @@ function templateWarning() {
     }
     if (curTemplate == newTemplate) {return;}
 
-    if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
-        documentDirty=false;
+    if(documentDirty===true) {
+        if (confirm('<?php echo $_lang['tmplvar_change_template_msg']?>')) {
+            documentDirty=false;
+            document.mutate.a.value = <?php echo $action?>;
+            document.mutate.newtemplate.value = newTemplate;
+            document.mutate.submit();
+        } else {
+            dropTemplate[curTemplateIndex].selected = true;
+        }
+    }
+    else {
         document.mutate.a.value = <?php echo $action?>;
         document.mutate.newtemplate.value = newTemplate;
         document.mutate.submit();
-    } else {
-        dropTemplate[curTemplateIndex].selected = true;
     }
 }
 
