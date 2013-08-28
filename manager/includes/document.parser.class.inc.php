@@ -1363,6 +1363,8 @@ class DocumentParser {
 
         # this is now the document :) #
         $documentObject= $this->db->getRow($result);
+        $this->documentObject = & $documentObject;
+        $this->invokeEvent('OnLoadDocumentObject');
     	if ($documentObject['template']) {
         // load TVs and merge with document - Orig by Apodigm - Docvars
         $sql= "SELECT tv.*, IF(tvc.value!='',tvc.value,tv.default_text) as value ";

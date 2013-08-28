@@ -997,6 +997,7 @@ REPLACE INTO `{PREFIX}system_eventnames`
 ('88','OnRichTextEditorInit','1','RichText Editor'),
 ('89','OnManagerPageInit','2',''),
 ('90','OnWebPageInit','5',''),
+('101','OnLoadDocumentObject','5',''),
 ('91','OnLoadWebDocument','5',''),
 ('92','OnParseDocument','5',''),
 ('93','OnManagerLoginFormRender','2',''),
