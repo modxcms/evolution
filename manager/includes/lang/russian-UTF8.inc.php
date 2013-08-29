@@ -186,7 +186,7 @@ $_lang["database_collation"] = 'Сопоставление базы данных
 $_lang["database_name"] = 'Имя базы данных';
 $_lang["database_overhead"] = '<b style="color:#990033;">ПРИМЕЧАНИЕ:</b> \'перерасход\' – это неиспользуемое, но зарезервированное MySQL пространство. Чтобы освободить это место, нажмите \'Перерасход\' в таблице (таблицах).';
 $_lang["database_server"] = 'Сервер базы данных';
-$_lang["database_table_clickbackup"] = ' чтобы создать и загрузить резервную копию выбранных таблиц';
+$_lang["database_table_clickbackup"] = ' создать и загрузить резервную копию выбранных таблиц';
 $_lang["database_table_clickhere"] = 'Нажмите здесь,';
 $_lang["database_table_datasize"] = 'Объём данных';
 $_lang["database_table_droptablestatements"] = 'Включать в дамп инструкцию \'DROP TABLE\'';
