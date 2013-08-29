@@ -115,7 +115,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
             $access = "AND (1={$mgrRole} OR sc.privatemgr=0".
                       (!$docgrp ? ")":" OR dg.document_group IN ({$docgrp}))");
         }
-        $sql = "SELECT DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, menuindex, hidemenu, alias, contentType, privateweb, privatemgr,
+        $sql = "SELECT DISTINCT sc.id, pagetitle, menutitle, parent, isfolder, published, deleted, type, menuindex, donthit, hidemenu, alias, contentType, privateweb, privatemgr,
                 MAX(IF(1={$mgrRole} OR sc.privatemgr=0" . (!$docgrp ? "":" OR dg.document_group IN ({$docgrp})") . ", 1, 0)) AS has_access
                 FROM {$tblsc} AS sc
                 LEFT JOIN {$tbldg} dg on dg.document = sc.id
@@ -132,7 +132,7 @@ if(IN_MANAGER_MODE!="true") die("<b>INCLUDE_ORDERING_ERROR</b><br /><br />Please
 		global $modx_textdir;
 
 		$node_name_source = $modx->config['resource_tree_node_name'];
-        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
+        while(list($id,$pagetitle,$menutitle,$parent,$isfolder,$published,$deleted,$type,$menuindex,$donthit,$hidemenu,$alias,$contenttype,$privateweb,$privatemgr,$hasAccess) = $modx->db->getRow($result,'num'))
         {
 			switch($node_name_source)
 			{
