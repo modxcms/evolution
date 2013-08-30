@@ -785,6 +785,7 @@ function propUpdate($new,$old){
 
 function getCreateDbCategory($category, $sqlParser) {
     $dbase = $sqlParser->dbname;
+    $dbase = '`' . trim($dbase,'`') . '`';
     $table_prefix = $sqlParser->prefix;
     $category_id = 0;
     if(!empty($category)) {
