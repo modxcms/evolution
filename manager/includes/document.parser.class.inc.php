@@ -338,6 +338,8 @@ class DocumentParser {
                 }
             }
             $this->error_reporting = $this->config['error_reporting'];
+            $this->config['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['filemanager_path']);
+            $this->config['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$this->config['rb_base_dir']);
             $this->config= array_merge($this->config, $usrSettings);
         }
     }

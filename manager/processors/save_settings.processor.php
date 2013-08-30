@@ -42,6 +42,9 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 	}
 }
 
+$data['filemanager_path'] = str_replace('[(base_path)]',MODX_BASE_PATH,$data['filemanager_path']);
+$data['rb_base_dir']      = str_replace('[(base_path)]',MODX_BASE_PATH,$data['rb_base_dir']); 
+
 if (isset($data) && count($data) > 0) {
 	$savethese = array();
 	$data['sys_files_checksum'] = $modx->manager->getSystemChecksum($data['check_files_onlogin']);
@@ -69,9 +72,8 @@ if (isset($data) && count($data) > 0) {
 			case 'rb_base_dir':
 			case 'rb_base_url':
 			case 'filemanager_path':
-				if (substr(trim($v), -1) !== '/') {
-					$v = $v .'/';
-				}
+				$v = trim($v);
+				$v = rtrim($v,'/') . '/';
 				break;
             case 'manager_language':
                 $langDir = realpath(MODX_MANAGER_PATH . 'includes/lang');

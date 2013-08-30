@@ -28,6 +28,8 @@ $sql = "SELECT setting_name, setting_value FROM $dbase.`".$table_prefix."system_
 $rs = $modx->db->query($sql);
 $number_of_settings = $modx->db->getRecordCount($rs);
 while ($row = $modx->db->getRow($rs)) $settings[$row['setting_name']] = $row['setting_value'];
+$settings['filemanager_path'] = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['filemanager_path']);
+$settings['rb_base_dir']      = preg_replace('@^' . MODX_BASE_PATH . '@', '[(base_path)]', $settings['rb_base_dir']);
 extract($settings, EXTR_OVERWRITE);
 
 $displayStyle = ($_SESSION['browser']==='modern') ? 'table-row' : 'block' ;
@@ -1350,14 +1352,9 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr id='rbRow4' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
             <td nowrap class="warning"><b><?php echo $_lang["rb_base_dir_title"]?></b></td>
-            <td><?php
-			function getResourceBaseDir() {
-				global $base_path;
-				return $base_path."assets/";
-			}
-		?>
-                <?php echo $_lang['default']; ?> <span id="default_rb_base_dir"><?php echo getResourceBaseDir()?></span><br />
-                <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" id="rb_base_dir" value="<?php echo isset($rb_base_dir) ? $rb_base_dir : getResourceBaseDir() ; ?>" /> <input type="button" onclick="reset_path('rb_base_dir');" value="<?php echo $_lang["reset"]; ?>" name="reset_rb_base_dir">
+            <td>
+                <?php echo $_lang['default']; ?> <span id="default_rb_base_dir">[(base_path)]assets/</span><br />
+                <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="rb_base_dir" id="rb_base_dir" value="<?php echo (isset($rb_base_dir)) ? $rb_base_dir : '[(base_path)]assets/' ; ?>" /> <input type="button" onclick="reset_path('rb_base_dir');" value="<?php echo $_lang["reset"]; ?>" name="reset_rb_base_dir">
             </td>
           </tr>
           <tr id='rbRow5' class='' style="display: <?php echo $use_browser==1 ? $displayStyle : 'none' ; ?>">
@@ -1524,8 +1521,8 @@ function confirmLangChange(el, lkey, elupd){
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["filemanager_path_title"]?></b></td>
             <td>
-              <?php echo $_lang['default']; ?> <span id="default_filemanager_path"><?php echo $base_path; ?></span><br />
-              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" id="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : $base_path; ?>" /> <input type="button" onclick="reset_path('filemanager_path');" value="<?php echo $_lang["reset"]; ?>" name="reset_filemanager_path">
+              <?php echo $_lang['default']; ?> <span id="default_filemanager_path">[(base_path)]</span><br />
+              <input onchange="documentDirty=true;" type='text' maxlength='255' style="width: 250px;" name="filemanager_path" id="filemanager_path" value="<?php echo isset($filemanager_path) ? $filemanager_path : '[(base_path)]'; ?>" /> <input type="button" onclick="reset_path('filemanager_path');" value="<?php echo $_lang["reset"]; ?>" name="reset_filemanager_path">
             </td>
           </tr>
           <tr>
