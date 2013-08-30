@@ -293,7 +293,7 @@ $_lang["existing_category"] = 'Istniejąca kategoria';
 $_lang["expand_tree"] = 'Rozwiń drzewo';
 $_lang["export_site"] = 'Eksportuj serwis';
 $_lang["export_site_cacheable"] = 'Dołącz pliki, których nie można zapisać w cache:';
-$_lang["export_site_exporting_document"] = 'Eksportowanie pliku <b>%s</b> z <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = '<span style=\'color:#990000\'>Błąd!</span>';
 $_lang["export_site_failed_no_open"] = 'Nie można otworzyć pliku: ';
 $_lang["export_site_failed_no_retrieve"] = 'Nie można pobrać dokumentu.';
@@ -1183,17 +1183,26 @@ $_lang["make_folders_message"] = 'Ukośnik będzie dodany do dokumentów oznaczo
 $_lang["check_files_onlogin_title"] = 'Sprawdzaj ważne pliki przy logowaniu';
 $_lang["check_files_onlogin_message"] = 'Włączając tę opcję, ważne pliki systemowe będą sprawdzane pod kątem niechcianych modyfikacji typowych dla ataków na stronę www. Chociaż nie jest to 100% zapezpiecznie, to może zaalarmować Cię o zmanipulowanych plikach MODX.';
 $_lang["configcheck_sysfiles_mod"] = 'Ważne pliki systemowe zostały zmienione.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'Włączyłeś sprawdzanie ważnych plików systemowych podczas logowania, w celu wykrycia potencjalnych ataków na stronę www. Ten komunikat nie koniecznie oznacza, że Twoja strona została zaatakowana, jednakże zaleca się sprawdzenie zmienionych plików (index.php, .htaccess, [+MGR_DIR+]/index.php, manager/includes/config.inc.php).';
-$_lang["email_method_title"] = 'Metoda wysyłania poczty';
-$_lang["email_method_mail"] = 'Funkcja PHP mail()';
-$_lang["email_method_smtp"] = 'Serwer SMTP';
-$_lang["smtp_auth_title"] = 'SMTP-AUTH';
-$_lang["smtp_host_title"] = 'SMTP host';
-$_lang["smtp_username_title"] = 'Nazwa użytkownika SMTP';
-$_lang["smtp_password_title"] = 'Hasło SMTP';
-$_lang["smtp_port_title"] = 'Port SMTP';
+$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the all files on server. Please update System configuration if you do not have any problem.';
+
+$_lang['email_method_title'] = 'Metoda wysyłania poczty';
+$_lang['email_method_mail'] = 'Funkcja PHP mail()';
+$_lang['email_method_smtp'] = 'Serwer SMTP';
+$_lang['smtp_auth_title'] = 'SMTP-AUTH';
+$_lang['smtp_host_title'] = 'SMTP host';
+$_lang['smtp_username_title'] = 'Nazwa użytkownika SMTP';
+$_lang['smtp_password_title'] = 'Hasło SMTP';
+$_lang['smtp_port_title'] = 'Port SMTP';
+
 $_lang["setting_resource_tree_node_name"] = 'Nazwa węzła drzewa zasobów';
 $_lang["setting_resource_tree_node_name_desc"] = 'Określ pole zasobu, które zostanie użyte w czasie renderowania węzłów w drzewie zasobów. Domyślnie to pagetitle, jednakże każde pole zasobu może zostać wykorzystane np. menutitle, alias.';
+
+$_lang['resource_opt_is_published'] = 'Published';
+$_lang["docid_incrmnt_method_title"] = 'Increment method Resource ID';
+$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
+$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_2"] = 'Maximal ID+1';
+
 $_lang["cache_type_title"] = 'Sposób cachowania dokumentu';
 $_lang["cache_type_1"] = 'Cache bazuje tylko na id dokumentu (domyślne)';
 $_lang["cache_type_2"] = 'Cache bazuje na id dokumentu oraz parametrach $_GET';
@@ -1204,3 +1213,18 @@ $_lang["settings_friendlyurls_alert2"] = 'Ponieważ serwis zainstalowany został
 $_lang["user_street"] = 'Ulica';
 $_lang["user_city"] = 'Miasto';
 $_lang["user_other"] = 'Inne';
+
+$_lang["import_site.static.php1"] = 'Reset resource tree';
+$_lang["import_site.static.php2"] = 'Reset resource tree, all IDs are initialize.';
+$_lang["import_site.static.php3"] = 'Target';
+$_lang["import_site.static.php4"] = '&lt;body&gt;&lt;/body&gt; only';
+$_lang["import_site.static.php5"] = 'File contain all';
+
+$_lang["a83_ignore_ids_title"] = 'Ignore IDs(comma separate)';
+$_lang["export_site.static.php1"] = 'Target';
+$_lang["export_site.static.php2"] = 'Only edited resources';
+$_lang["export_site.static.php3"] = 'All resources';
+$_lang["export_site.static.php4"] = 'Replace string (before)';
+$_lang["export_site.static.php5"] = 'Replace string (after)';
+$_lang["export_site.static.php6"] = 'Target';
+$_lang["export_site.static.php7"] = 'Files cannot be outputted to [+rb_base_url+]';
