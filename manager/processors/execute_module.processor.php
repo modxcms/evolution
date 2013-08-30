@@ -131,7 +131,6 @@ function evalModule($moduleCode,$params){
         	default:
         		$error_level = 99;
         }
-        echo '$error_level'.$error_level.'error_reporting'.$modx->config['error_reporting'];
 		if($modx->config['error_reporting']==='99' || 2<$error_level)
 		{
 			extract($error_info);
