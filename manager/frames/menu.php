@@ -36,7 +36,7 @@ $mxla = $modx_lang_attribute ? $modx_lang_attribute : 'en';
 			return false;
 		} catch(oException) {
 			// Delay first run until we're ready...
-			xx=updateMail.delay(1000,'',true);
+			xx=updateMail.delay(1000 * 60,'',true);
 		}
 	};
 
