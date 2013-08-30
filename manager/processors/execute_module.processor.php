@@ -111,18 +111,34 @@ function evalModule($moduleCode,$params){
 		extract($params, EXTR_SKIP);
 	}
 	ob_start();
-		$mod = eval($moduleCode);
-		$msg = ob_get_contents();
+	$mod = eval($moduleCode);
+	$msg = ob_get_contents();
 	ob_end_clean();
-	if ($php_errormsg) { 
-		if(!strpos($php_errormsg,'Deprecated')) { // ignore php5 strict errors
-			// log error		
-			global $content;
-			$modx->logEvent(1,3,"<b>$php_errormsg</b><br /><br /> $msg",$content['name']." - Module");
-			if($modx->isBackend()) $modx->event->alert("<span style='color:maroon;'><b>".$content['name']." - Module"." runtime error:</b></span><br /><br />An error occurred while loading the module. Please see the event log.");
+	if (isset($php_errormsg))
+	{
+		$error_info = error_get_last();
+        switch($error_info['type'])
+        {
+        	case E_NOTICE :
+        		$error_level = 1;
+        	case E_USER_NOTICE :
+        		break;
+        	case E_DEPRECATED :
+        	case E_USER_DEPRECATED :
+        	case E_STRICT :
+        		$error_level = 2;
+        		break;
+        	default:
+        		$error_level = 99;
+        }
+        echo '$error_level'.$error_level.'error_reporting'.$modx->config['error_reporting'];
+		if($modx->config['error_reporting']==='99' || 2<$error_level)
+		{
+			extract($error_info);
+			$result = $modx->messageQuit('PHP Parse Error', '', true, $type, $file, $content['name'] . ' - Module', $text, $line, $msg);
+			$modx->event->alert("An error occurred while loading. Please see the event log for more information<p>{$msg}</p>");
 		}
 	}
-	unset($modx->event->params); 
+	unset($modx->event->params);
 	return $mod.$msg;
 }
-?>
