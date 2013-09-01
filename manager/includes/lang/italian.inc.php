@@ -1176,8 +1176,8 @@ $_lang["user_street"] = 'Strada';
 $_lang["user_city"] = 'Citt&agrave;';
 $_lang["user_other"] = 'Altro';
 
-$_lang["import_site.static.php1"] = 'Resetta l\\'albero di risorse';
-$_lang["import_site.static.php2"] = 'Resetta l\\'albero di risorse, tutti gli ID sono inizializzati.';
+$_lang["import_site.static.php1"] = 'Resetta l\'albero di risorse';
+$_lang["import_site.static.php2"] = 'Resetta l\'albero di risorse, tutti gli ID sono inizializzati.';
 $_lang["import_site.static.php3"] = 'Target';
 $_lang["import_site.static.php4"] = '&lt;body&gt;&lt;/body&gt; only';
 $_lang["import_site.static.php5"] = 'File contain all';
