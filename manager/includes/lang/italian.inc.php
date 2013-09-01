@@ -1098,16 +1098,20 @@ $_lang["yourinfo_role"] = 'Il vostro ruolo &egrave;:';
 $_lang["yourinfo_title"] = 'Le vostre informazioni';
 $_lang["yourinfo_total_logins"] = 'Numero totale di connessioni:';
 $_lang["yourinfo_username"] = 'Siete autenticati come:';
+
 $_lang["a17_error_reporting_title"] = 'Livello di rilevamento degli errori PHP';
 $_lang["a17_error_reporting_msg"] = 'Imposta il livello di rilevamento degli errori PHP.';
 $_lang["a17_error_reporting_opt0"] = 'Ignora tutti';
 $_lang["a17_error_reporting_opt1"] = 'Ingora gli avvisi di bassa livello (<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'Rileva tutti gli errori eccetto E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Rileva tutti';
+
 $_lang["pwd_hash_algo_title"] = 'Algoritmo di hash';
 $_lang["pwd_hash_algo_message"] = 'Password algoritmo di hash.';
+
 $_lang["enable_bindings_title"] = 'Abilita comandi @Bindings';
 $_lang["enable_bindings_message"] = 'Impedisce l\'esecuzione di funzioni PHP attraverso TV @Bindings. Utile se avete utenti del manager che non devono poter creare codice PHP, ma che possono creare o modificare le TV. L\'output di qualsiasi TV con il @Binding risulta "@Bindings disabled".';
+
 $_lang["bkmgr_alert_mkdir"] = 'Non &egrave; possibile creare un file nella cartella.  Controlla i permessi di scrittura di [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>Un sito pu&ograve; essere ripristinato usando un file SQL. </p>';
 $_lang["bkmgr_restore_title"] = 'Ripristina';
@@ -1123,6 +1127,7 @@ $_lang["bkmgr_snapshot_submit"] = 'Aggiungi istantanea';
 $_lang["bkmgr_snapshot_list_title"] = 'Lista delle istantanee';
 $_lang["bkmgr_restore_submit"] = 'Ripristina questi dati';
 $_lang["bkmgr_snapshot_nothing"] = 'Nessuna istantanea';
+
 $_lang["files.dynamic.php1"] = 'crea un file di testo';
 $_lang["files.dynamic.php2"] = 'Questa cartella non p&ograve; essere mostrata.';
 $_lang["files.dynamic.php3"] = 'C\'&egrave; con il nome del file';
@@ -1130,12 +1135,16 @@ $_lang["files.dynamic.php4"] = 'File di testo creato.';
 $_lang["not_readable_dir"] = 'Non posso accedere a questa cartella.';
 $_lang["confirm_delete_dir"] = 'Sei sicuro di voler cancellare questa cartella?';
 $_lang["confirm_delete_dir_recursive"] = 'Sei sicuro di voler cabncellare questa cartella?\n\n<tutti i file contenuti saranno cancellati.';
+
 $_lang["make_folders_title"] = 'Imposta lo slash al termine delle URL dei contenitori';
 $_lang["make_folders_message"] = 'Lo slash viene aggiunto alle risorse impostate come contenitore quando si utilizzano le URL semplici.';
+
 $_lang["check_files_onlogin_title"] = 'Controllo dei file di sistema al login';
 $_lang["check_files_onlogin_message"] = 'Attivando questa opzione, i file di sistema pi&ugrave; importanti saranno controllati e verrai avvisato nel caso di modifiche tipiche degli attacchi via script al sito web. Pur non essendo una garanzia infallibile, pu&ograve; avvisare l\'utente che &egrave; stato compromesso un file di sistema MODX e il sito web.';
+
 $_lang["configcheck_sysfiles_mod"] = 'Importanti dFile di Sistema sono stati modificati.';
 $_lang["configcheck_sysfiles_mod_msg"] = 'E\' stata attivata l\'impostazione per controllare i file di sistema importanti per rilevare eventuali attacchi di script al sito. Questo non significa necessariamente che il sito sia stato compromesso, tuttavia, &egrave; necessario esaminare i file modificati.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
+
 $_lang['email_method_title'] = 'Metodo di invio mail ';
 $_lang['email_method_mail'] = 'mail() PHP function';
 $_lang['email_method_smtp'] = 'Server SMTP';
@@ -1144,23 +1153,31 @@ $_lang['smtp_host_title'] = 'Host SMTP';
 $_lang['smtp_username_title'] = 'utente SMTP';
 $_lang['smtp_password_title'] = 'password SMTP';
 $_lang['smtp_port_title'] = 'porta SMTP';
+
 $_lang["setting_resource_tree_node_name"] = 'Il nome del nodo nell\'albero di risorse';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specificare il campo da utilizzare per il rendering dei nodi dell\'albero delle risorse. Il predefinito &egrave; il Titolo, ma puo essere usato qualsiasi atro campo , come il Titolo nel menu, Alias Risorsa.';
+
 $_lang['resource_opt_is_published'] = 'Published';
 $_lang["docid_incrmnt_method_title"] = 'Increment method Resource ID';
-$_lang["docid_incrmnt_method_0"] = 'DB auto increment';
-$_lang["seostrict_title"] = 'Usa le URL SEO Corrette';
-$_lang["seostrict_message"] = 'Forza l\'uso delle URL SEO Corrette per prevenire contenuti duplicati';
-$_lang["settings_friendlyurls_alert"] = 'E\' necessario rinominare il file ht.access presente nella root dell\'installazione di MODX in .htaccess per poter utilizzare le URL semplici.';
-$_lang["settings_friendlyurls_alert2"] = 'Essendo installato in una sottodirectory, &egrave; necessario modificare il contenuto del file .htaccess.';
-$_lang["user_street"] = 'Strada';
-$_lang["user_city"] = 'Citt&agrave;';
-$_lang["user_other"] = 'Altro';
+$_lang["docid_incrmnt_method_0"] = 'Incremento automatico DB';
+$_lang["docid_incrmnt_method_1"] = 'Minimum missed ID';
+$_lang["docid_incrmnt_method_2"] = 'Maximal ID+1';
+
 $_lang["cache_type_title"] = 'Tipo di memorizzazione nella cache del documento';
 $_lang["cache_type_1"] = 'Cache basata solo sull\' id del documento (standard)';
 $_lang["cache_type_2"] = 'Cache basata  sull\' id del documento e su $_GET parameters';
-$_lang["import_site.static.php1"] = 'Reset resource tree';
-$_lang["import_site.static.php2"] = 'Reset resource tree, all IDs are initialize.';
+$_lang["seostrict_title"] = 'Usa le URL SEO Corrette';
+$_lang["seostrict_message"] = 'Forza l\'uso delle URL SEO Corrette per prevenire contenuti duplicati';
+
+$_lang["settings_friendlyurls_alert"] = 'E\' necessario rinominare il file ht.access presente nella root dell\'installazione di MODX in .htaccess per poter utilizzare le URL semplici.';
+$_lang["settings_friendlyurls_alert2"] = 'Essendo installato in una sottodirectory, &egrave; necessario modificare il contenuto del file .htaccess.';
+
+$_lang["user_street"] = 'Strada';
+$_lang["user_city"] = 'Citt&agrave;';
+$_lang["user_other"] = 'Altro';
+
+$_lang["import_site.static.php1"] = 'Resetta l\\'albero di risorse';
+$_lang["import_site.static.php2"] = 'Resetta l\\'albero di risorse, tutti gli ID sono inizializzati.';
 $_lang["import_site.static.php3"] = 'Target';
 $_lang["import_site.static.php4"] = '&lt;body&gt;&lt;/body&gt; only';
 $_lang["import_site.static.php5"] = 'File contain all';
