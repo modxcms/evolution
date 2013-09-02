@@ -307,11 +307,38 @@ function decode(s){
     <div class="tab-page" id="tabSnippet">
         <h2 class="tab"><?php echo $_lang['settings_general']?></h2>
         <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabSnippet" ) );</script>
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table>
           <tr>
-            <td align="left"><?php echo $_lang['snippet_name']?>:</td>
-            <td align="left">[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:150px;" onChange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span></td>
+            <th><?php echo $_lang['snippet_name']?>:</th>
+            <td>[[&nbsp;<input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name'])?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">&nbsp;]]<span class="warning" id="savingMessage">&nbsp;</span></td>
           </tr>
+          <tr>
+            <th><?php echo $_lang['snippet_desc']?></th>
+            <td><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+          </tr>
+          <tr>
+            <th><?php echo $_lang['existing_category']?></th>
+            <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
+                    <option>&nbsp;</option>
+                <?php
+                    include_once "categories.inc.php";
+                    $ds = getCategories();
+                    if($ds) foreach($ds as $n=>$v){
+                        echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
+                    }
+                ?>
+                </select>
+            </td>
+          </tr>
+          <tr>
+            <th><?php echo $_lang['new_category']?>:</th>
+            <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+          </tr>
+<?php if($modx->hasPermission('save_role')):?>
+          <tr>
+            <td valign="top" colspan="2"><label style="display:block;"><input style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?></label> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
+          </tr>
+<?php endif;?>
         </table>
         <!-- PHP text editor start -->
         <div class="section">
@@ -332,33 +359,8 @@ function decode(s){
         <script type="text/javascript">tpSnippet.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
           <tr>
-            <td align="left" style="padding-top:10px"><?php echo $_lang['snippet_desc']?></td>
-            <td align="left" style="padding-top:10px"><input name="description" type="text" maxlength="255" value="<?php echo $content['description']?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
-          </tr>
-          <tr>
-            <td style="padding-top:10px" align="left" valign="top" colspan="2"><input style="padding:0;margin:0;" name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : ""?> class="inputBox"> <?php echo $_lang['lock_snippet']?> <span class="comment"><?php echo $_lang['lock_snippet_msg']?></span></td>
-          </tr>
-          <tr>
-            <td align="left"><?php echo $_lang['existing_category']?></td>
-            <td align="left"><select name="categoryid" style="width:300px;" onChange="documentDirty=true;">
-                    <option>&nbsp;</option>
-                <?php
-                    include_once "categories.inc.php";
-                    $ds = getCategories();
-                    if($ds) foreach($ds as $n=>$v){
-                        echo '<option value="'.$v['id'].'"'.($content['category']==$v['id']? ' selected="selected"':'').'>'.htmlspecialchars($v['category']).'</option>';
-                    }
-                ?>
-                </select>
-            </td>
-          </tr>
-          <tr>
-            <td align="left" valign="top" style="padding-top:10px;"><?php echo $_lang['new_category']?>:</td>
-            <td align="left" valign="top" style="padding-top:10px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
-          </tr>
-          <tr>
-            <td align="left" style="padding-top:10px;"><?php echo $_lang['import_params']?></td>
-            <td align="left" valign="top" style="padding-top:10px;"><select name="moduleguid" style="width:300px;" onChange="documentDirty=true;">
+            <th><?php echo $_lang['import_params']?></th>
+            <td valign="top"><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                     <option>&nbsp;</option>
                 <?php
                     $sql = 'SELECT sm.id,sm.name,sm.guid '.
@@ -377,15 +379,15 @@ function decode(s){
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td align="left" valign="top" style="padding-left:1.3em;"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
+            <td valign="top" style="padding-left:1.3em;"><span class="comment" ><?php echo $_lang['import_params_msg']?></div><br /><br /></td>
           </tr>
           <tr>
-            <td align="left" valign="top"><?php echo $_lang['snippet_properties']?>:</td>
-            <td align="left" valign="top"><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties']?>" class="inputBox phptextarea" style="width:300px;" onChange="showParameters(this);documentDirty=true;"></td>
+            <th valign="top"><?php echo $_lang['snippet_properties']?>:</th>
+            <td valign="top"><input name="properties" type="text" maxlength="65535" value="<?php echo $content['properties']?>" class="inputBox phptextarea" style="width:300px;" onchange="showParameters(this);documentDirty=true;"></td>
           </tr>
           <tr id="displayparamrow">
-            <td valign="top" align="left">&nbsp;</td>
-            <td align="left" id="displayparams">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td id="displayparams">&nbsp;</td>
           </tr>
         </table>
             </div>

@@ -307,11 +307,38 @@ if(is_array($evtOut)) echo implode("",$evtOut);
 <div class="tab-page" id="tabPlugin">
     <h2 class="tab"><?php echo $_lang["settings_general"] ?></h2>
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabPlugin" ) );</script>
-    <table border="0" cellspacing="0" cellpadding="0">
+    <table>
       <tr>
-        <td align="left"><?php echo $_lang['plugin_name']; ?>:</td>
-        <td align="left"><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'>&nbsp;</span></td>
+        <th><?php echo $_lang['plugin_name']; ?>:</th>
+        <td><input name="name" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;"><span class="warning" id="savingMessage">&nbsp;</span></td>
       </tr>
+      <tr>
+        <th><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</th>
+        <td><input name="description" type="text" maxlength="255" value="<?php echo $content['description'];?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+      </tr>
+      <tr>
+        <th><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</th>
+        <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
+            <option>&nbsp;</option>
+            <?php
+                include_once "categories.inc.php";
+                $ds = getCategories();
+                if($ds) foreach($ds as $n=>$v){
+                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+                }
+            ?>
+        </select>
+        </td>
+      </tr>
+      <tr>
+        <th><?php echo $_lang['new_category']; ?>:</th>
+        <td><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+      </tr>
+<?php if($modx->hasPermission('save_role')):?>
+      <tr>
+        <td valign="top" colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?></label> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
+      </tr>
+<?php endif;?>
     </table>
     <!-- PHP text editor start -->
     <div class="section">
@@ -331,9 +358,12 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     <h2 class="tab"><?php echo $_lang["settings_config"] ?></h2>
     <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
         <table>
+      <tr>
+        <td valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
+      </tr>
           <tr>
-            <td align="left"><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</td>
-            <td align="left"><select name="moduleguid" style="width:300px;" onChange='documentDirty=true;'>
+            <th><?php echo $_lang['import_params']; ?>:&nbsp;&nbsp;</th>
+            <td><select name="moduleguid" style="width:300px;" onchange="documentDirty=true;">
                 <option>&nbsp;</option>
                 <?php
                     $sql =    "SELECT sm.id,sm.name,sm.guid " .
@@ -352,15 +382,15 @@ if(is_array($evtOut)) echo implode("",$evtOut);
           </tr>
           <tr>
             <td>&nbsp;</td>
-            <td align="left" valign="top"><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br /></td>
+            <td valign="top"><span style="width:300px;" ><span class="comment"><?php echo $_lang['import_params_msg']; ?></span></span><br /><br /></td>
           </tr>
           <tr>
-            <td align="left" valign="top"><?php echo $_lang['plugin_config']; ?>:</td>
-            <td align="left" valign="top"><textarea class="phptextarea" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" value="<?php echo $_lang['update_params']; ?>" /></td>
+            <th valign="top"><?php echo $_lang['plugin_config']; ?>:</th>
+            <td valign="top"><textarea class="phptextarea" name="properties" onChange='showParameters(this);documentDirty=true;'><?php echo $content['properties'];?></textarea><br /><input type="button" value="<?php echo $_lang['update_params']; ?>" /></td>
           </tr>
           <tr id="displayparamrow">
-            <td valign="top" align="left">&nbsp;</td>
-            <td align="left" id="displayparams">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+            <td id="displayparams">&nbsp;</td>
           </tr>
         </table>
         </div>
@@ -433,42 +463,6 @@ if(is_array($evtOut)) echo implode("",$evtOut);
             </td>
           </tr>
         </table>
-</div>
-
-<!-- Properties -->
-<div class="tab-page" id="tabProps">
-    <h2 class="tab"><?php echo $_lang['settings_properties']?></h2>
-    <script type="text/javascript">tp.addTabPage( document.getElementById( "tabProps" ) );</script>
-    <table>
-      <tr>
-        <td align="left" valign="top" colspan="2"><label><input name="disabled" type="checkbox" <?php echo $content['disabled']==1 ? "checked='checked'" : "";?> value="on" class="inputBox"> <?php echo  $content['disabled']==1 ? "<span class='warning'>".$_lang['plugin_disabled']."</span></label>":$_lang['plugin_disabled']; ?></td>
-      </tr>
-      <tr>
-        <td align="left"><?php echo $_lang['plugin_desc']; ?>:&nbsp;&nbsp;</td>
-        <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo $content['description'];?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-      </tr>
-      <tr>
-        <td align="left"><?php echo $_lang['existing_category']; ?>:&nbsp;&nbsp;</td>
-        <td align="left"><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-            <option>&nbsp;</option>
-            <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if($ds) foreach($ds as $n=>$v){
-                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-                }
-            ?>
-        </select>
-        </td>
-      </tr>
-      <tr>
-        <td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-        <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-      </tr>
-      <tr>
-        <td align="left" valign="top" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> value="on" class="inputBox"> <?php echo $_lang['lock_plugin']; ?> <span class="comment"><?php echo $_lang['lock_plugin_msg']; ?></span></td>
-      </tr>
-    </table>
 </div>
 
 </div>
