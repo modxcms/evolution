@@ -274,7 +274,7 @@ optgroup option {
 }
 form select
 {
-	background: #FFF;
+	background: #F9F9F9;
 	border-color: #AAAAAA #DEDEDE #DEDEDE #AAAAAA;
 	border-style: solid;
 	border-width: 1px;
@@ -1780,8 +1780,10 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 /* Custom */
 /* normalize some td paddings */
 #tabTemplate tbody td,
-.sectionBody td {
+.sectionBody td,
+.sectionBody th	{
 	padding: 1px 5px;
+    text-align:left;
 }
 /* replace warning red color in tabs */
 strong[style*='color:#EF1D1D'] {
@@ -1792,3 +1794,5 @@ strong[style*='color:#EF1D1D'] {
 	}
 
 #tabEvents table, #tabEvents td {padding:2px;}
+
+code {font-size:inherit;font-family: 'Courier New','Courier', monospace;background-color:#eee;border:1px solid #ccc;padding:1px 2px;}

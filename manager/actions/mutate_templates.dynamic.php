@@ -132,9 +132,36 @@ function deletedocument() {
 <?php echo '<div>' . $_lang['template_msg'] . '</div>'; ?>
     <table>
       <tr>
-        <td align="left"><?php echo $_lang['template_name']; ?>:</td>
-        <td align="left"><input name="templatename" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:150px;" onChange='documentDirty=true;'><span class="warning" id='savingMessage'></span></td>
+        <th><?php echo $_lang['template_name']; ?>:</th>
+        <td><input name="templatename" type="text" maxlength="100" value="<?php echo htmlspecialchars($content['templatename']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"><span class="warning" id='savingMessage'></span></td>
       </tr>
+    <tr>
+    <th><?php echo $_lang['template_desc']; ?>:</th>
+    <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+    </tr>
+    <tr>
+    <th><?php echo $_lang['existing_category']; ?>:</th>
+    <td><select name="categoryid" style="width:300px;" onchange="documentDirty=true;">
+            <option>&nbsp;</option>
+            <?php
+                include_once "categories.inc.php";
+                $ds = getCategories();
+                if($ds) foreach($ds as $n=>$v){
+                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
+                }
+            ?>
+        </select>
+    </td>
+    </tr>
+    <tr>
+    <th><?php echo $_lang['new_category']; ?>:</th>
+    <td><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+    </tr>
+<?php if($modx->hasPermission('save_role')):?>
+    <tr>
+    <td colspan="2"><label style="display:block;"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?></label> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
+    </tr>
+<?php endif;?>
     </table>
     <!-- HTML text editor start -->
     <div class="section">
@@ -181,40 +208,11 @@ if($limit>0) {
 }
 echo $tvList;
 ?></div>
-<div class="tab-page" id="tabInfo">
-<h2 class="tab"><?php echo $_lang['settings_properties'];?></h2>
-<script type="text/javascript">tp.addTabPage( document.getElementById( "tabInfo" ) );</script>
-<table>
-    <tr>
-    <td align="left"><?php echo $_lang['template_desc']; ?>:</td>
-    <td align="left"><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-    </tr>
-    <tr>
-    <td align="left"><?php echo $_lang['existing_category']; ?>:</td>
-    <td align="left"><select name="categoryid" style="width:300px;" onChange='documentDirty=true;'>
-            <option>&nbsp;</option>
-            <?php
-                include_once "categories.inc.php";
-                $ds = getCategories();
-                if($ds) foreach($ds as $n=>$v){
-                    echo "<option value='".$v['id']."'".($content["category"]==$v["id"]? " selected='selected'":"").">".htmlspecialchars($v["category"])."</option>";
-                }
-            ?>
-        </select>
-    </td>
-    </tr>
-    <tr>
-    <td align="left" valign="top" style="padding-top:5px;"><?php echo $_lang['new_category']; ?>:</td>
-    <td align="left" valign="top" style="padding-top:5px;"><input name="newcategory" type="text" maxlength="45" value="<?php echo isset($content['newcategory']) ? $content['newcategory'] : '' ?>" class="inputBox" style="width:300px;" onChange='documentDirty=true;'></td>
-    </tr>
-    <tr>
-    <td align="left" colspan="2"><input name="locked" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox"> <?php echo $_lang['lock_template']; ?> <span class="comment"><?php echo $_lang['lock_template_msg']; ?></span></td>
-    </tr>
-</table>
 <?php
 // invoke OnTempFormRender event
 $evtOut = $modx->invokeEvent("OnTempFormRender",array("id" => $id));
 if(is_array($evtOut)) echo implode("",$evtOut);
 ?>
-</form>
 </div>
+</div>
+</form>
