@@ -1223,3 +1223,7 @@ $_lang["export_site.static.php4"] = 'Replace string (before)';
 $_lang["export_site.static.php5"] = 'Replace string (after)';
 $_lang["export_site.static.php6"] = 'Target';
 $_lang["export_site.static.php7"] = 'Files cannot be outputted to [+rb_base_url+]';
+
+$_lang["mutate_settings.dynamic.php6"] = 'email notifies system error.';
+$_lang["mutate_settings.dynamic.php7"] = 'not notify';
+$_lang["mutate_settings.dynamic.php8"] = 'It notifies to [(emailsender)]([+emailsender+]) at the time of error generating. The details of the contents of the error should check an event log.';

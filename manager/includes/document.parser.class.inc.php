@@ -1774,16 +1774,21 @@ class DocumentParser {
 	$LoginUserID = $this->getLoginUserID();
 	if ($LoginUserID == '') $LoginUserID = 0;
         $evtid= intval($evtid);
-        $type=(int)$type;
-        if ($type < 1) {
-            $type= 1;
-        }
-        elseif ($type > 3) {
-            $type= 3; // Types: 1 = information, 2 = warning, 3 = error
-        }
+		$type = intval($type);
+		if ($type < 1) $type= 1; // Types: 1 = information, 2 = warning, 3 = error
+		if (3 < $type) $type= 3;
         $sql= "INSERT INTO " . $this->getFullTableName("event_log") . " (eventid,type,createdon,source,description,user) " .
 	"VALUES($evtid,$type," . time() . ",'$source','$msg','" . $LoginUserID . "')";
         $ds= @$this->db->query($sql);
+        if(!$this->db->conn) $source = 'DB connect error';
+        if(isset($this->config['send_errormail']) && $this->config['send_errormail'] !== '0')
+        {
+            if($this->config['send_errormail'] <= $type)
+            {
+                $subject = 'Error mail from ' . $this->config['site_name'];
+                $this->sendmail($subject,$source);
+            }
+        }
         if (!$ds) {
             echo "Error while inserting event log into database.";
             exit();
