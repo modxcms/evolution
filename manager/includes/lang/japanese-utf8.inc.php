@@ -1200,3 +1200,7 @@ $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirecto
 $_lang["user_street"] = '番地';
 $_lang["user_city"] = '市区町村';
 $_lang["user_other"] = 'その他';
+
+$_lang["mutate_settings.dynamic.php6"] = 'システムエラーを<br />メールで通知する';
+$_lang["mutate_settings.dynamic.php7"] = '通知しない';
+$_lang["mutate_settings.dynamic.php8"] = 'エラー発生時に[(emailsender)]([+emailsender+])に通知します。エラーの内容の詳細は<a href="index.php?a=114">イベントログ</a>を確認してください。';

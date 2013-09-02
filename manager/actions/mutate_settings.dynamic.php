@@ -853,6 +853,18 @@ function confirmLangChange(el, lkey, elupd){
 			<?php echo wrap_label($_lang['a17_error_reporting_opt99'],form_radio('error_reporting','99', $error_reporting==='99'));?><br />
    </td>
     </tr>
+<tr><td colspan="2"><div class='split'></div></td></tr>
+<?php if(isset($send_errormail)) $send_errormail='3';?>
+<tr>
+<th><?php echo $_lang['mutate_settings.dynamic.php6']; ?></th>
+<td>
+	<?php echo wrap_label($_lang['mutate_settings.dynamic.php7'],form_radio('send_errormail','0', ($send_errormail=='0' || !isset($send_errormail))));?><br />
+	<?php echo wrap_label('error',form_radio('send_errormail','3', $send_errormail=='3'));?><br />
+	<?php echo wrap_label('error + warning',form_radio('send_errormail','2', $send_errormail=='2'));?><br />
+	<?php echo wrap_label('error + warning + information',form_radio('send_errormail','1', $send_errormail=='1'));?><br />
+<?php echo parsePlaceholder($_lang['mutate_settings.dynamic.php8'],array('emailsender'=>$modx->config['emailsender']));?></td>
+</tr>
+<tr><td colspan="2"><div class='split'></div></td></tr>
     <tr  class='row1' >
             <td width="200">&nbsp;</td>
             <td class='comment'> <?php echo $_lang['a17_error_reporting_msg'];?></td>
@@ -1793,4 +1805,16 @@ function form_radio($name,$value,$checked=false,$add='',$disabled=false) {
 
 function wrap_label($str='',$object) {
 	return "<label>{$object}\n{$str}</label>";
+}
+
+function parsePlaceholder($tpl='', $ph=array())
+{
+	if(empty($ph) || empty($tpl)) return $tpl;
+	
+	foreach($ph as $k=>$v)
+	{
+		$k = "[+{$k}+]";
+		$tpl = str_replace($k, $v, $tpl);
+	}
+	return $tpl;
 }
