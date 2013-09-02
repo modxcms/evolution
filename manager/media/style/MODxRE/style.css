@@ -678,11 +678,11 @@ div.treeNode {
     padding: 1px 2px;
 	margin-left:-3px;
 }
-.unpublished a, .unpublishedNode {
+.unpublished a, .unpublishedNode, .unpublish {
 	color: #B68282;
 	font-style: italic;
 }
-.deletedNode {
+.deletedNode, .deleted {
 	color: #A52A2A;
 	text-decoration: line-through;
 }

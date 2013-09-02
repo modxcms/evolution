@@ -207,7 +207,7 @@ $add_path=$sd.$sb.$pg;
 			
 			$listDocs[] = array(
 				'docid' =>  $children['id'],
-				'title' =>  (($children['deleted'] ? ('<s>'.$children['pagetitle'].'</s>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'">' . ($children['published']?$children['pagetitle']:'<span class=unpublish>'.$children['pagetitle'].'</span>') . '</a>') : $children['pagetitle'] ))),
+				'title' =>  (($children['deleted'] ? ('<span class="deleted">'.$children['pagetitle'].'</span>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'">' . ($children['published']?$children['pagetitle']:'<span class=unpublish>'.$children['pagetitle'].'</span>') . '</a>') : $children['pagetitle'] ))),
 				'createdon' =>  ($modx->toDateFormat($children['createdon']+$server_offset_time,'dateOnly')),
 				'pub_date' =>  ($children['pub_date']? ($modx->toDateFormat($children['pub_date']+$server_offset_time,'dateOnly')) : ''),
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
