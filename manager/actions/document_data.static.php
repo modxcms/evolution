@@ -204,7 +204,9 @@ $add_path=$sd.$sb.$pg;
 			
 			// дописываем в заголовок класс для неопубликованных плюс по всем ссылкам обратный путь 
 			// для сохранения сортировки
-			
+			$icon_pub_unpub = (!$children['published']) ? '<a href="index.php?a=61&amp;id='.$children['id'].$add_path.'" title="'.$_lang["publish_resource"].'"><img src="' . $_style["icons_publish_document"] .'" /></a>' : '<a 
+				href="index.php?a=62&amp;id='.$children['id'].$add_path.'" title="'.$_lang["unpublish_resource"].'"><img src="' . $_style["icons_unpublish_resource"] .'" /></a>';
+			$icon_del_undel = (!$children['deleted']) ? '<a href="index.php?a=6&amp;id='.$children['id'].$add_path.'" title="'.$_lang['delete_resource'].'"><img src="' . $_style["icons_delete_document"] .'" /></a>' : '<a href="index.php?a=63&amp;id='.$children['id'].$add_path.'" title="'.$_lang['undelete_resource'].'"><img src="' . $_style["icons_undelete_resource"] .'" /></a>';
 			$listDocs[] = array(
 				'docid' =>  $children['id'],
 				'title' =>  (($children['deleted'] ? ('<span class="deleted">'.$children['pagetitle'].'</span>') : ( ($modx->hasPermission('edit_document')) ? ('<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'">' . ($children['published']?$children['pagetitle']:'<span class=unpublish>'.$children['pagetitle'].'</span>') . '</a>') : $children['pagetitle'] ))),
@@ -212,10 +214,8 @@ $add_path=$sd.$sb.$pg;
 				'pub_date' =>  ($children['pub_date']? ($modx->toDateFormat($children['pub_date']+$server_offset_time,'dateOnly')) : ''),
 				'status' => ($children['published'] == 0) ? '<span class="unpublishedDoc">'.$_lang['page_data_unpublished'].'</span>' : '<span class="publishedDoc">'.$_lang['page_data_published'].'</span>',
 				'edit' =>   (($modx->hasPermission('edit_document')) ? '&nbsp;<a href="index.php?a=27&amp;id='.$children['id'].$add_path.'" title="'.$_lang['edit'].'"><img src="' . $_style["icons_save"] .'" /></a>&nbsp;<a href="index.php?a=51&amp;id='.$children['id'].$add_path.'" title="'.$_lang['move'].'"><img 
-				src="' . $_style["icons_move_document"] .'" /></a>&nbsp;<a href="index.php?a=61&amp;id='.$children['id'].$add_path.'" title="'.$_lang["publish_resource"].'"><img src="' . $_style["icons_publish_document"] .'" /></a>&nbsp;<a 
-				href="index.php?a=62&amp;id='.$children['id'].$add_path.'" title="'.$_lang["unpublish_resource"].'"><img src="' . $_style["icons_unpublish_resource"] .'" /></a>' : '') .
-				(($modx->hasPermission('delete_document')) ? '&nbsp;<a href="index.php?a=6&amp;id='.$children['id'].$add_path.'" title="'.$_lang['delete_resource'].'"><img src="' . $_style["icons_delete_document"] .'" /></a>&nbsp;<a href="index.php?a=63&amp;id='.$children['id'].$add_path.'" title="'.$_lang['undelete_resource'].'"><img 
-				src="' . $_style["icons_undelete_resource"] .'" /></a>' : ''),
+				src="' . $_style["icons_move_document"] .'" /></a>&nbsp;'.$icon_pub_unpub .'&nbsp;': '') .
+				(($modx->hasPermission('delete_document')) ? '&nbsp;' . $icon_del_undel : ''),
 			);
 			
 			/****************/
