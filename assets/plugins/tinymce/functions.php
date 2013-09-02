@@ -50,7 +50,7 @@ class TinyMCE
 	
 	function get_skin_names()
 	{
-		global $modx,$_lang;
+		global $modx, $_lang, $usersettings, $settings;
 		$params = $this->params;
 		$mce_path = $params['mce_path'];
 		
@@ -108,8 +108,8 @@ class TinyMCE
 	
 	function get_mce_settings()
 	{
-		global $modx, $_lang, $settings, $usersettings;
-		$params = $this->params;
+		global $modx, $_lang, $usersettings, $settings;
+		$params = & $this->params;
 		$mce_path = $params['mce_path'];
 		
 		switch ($modx->manager->action)
@@ -132,7 +132,6 @@ class TinyMCE
         		$mce_settings = $settings;
         		break;
     	}
-    	
 		$params['theme']              = $mce_settings['tinymce_editor_theme'];
 		$params['mce_editor_skin']    = $mce_settings['mce_editor_skin'];
 		$params['mce_entermode']      = $mce_settings['mce_entermode'];
@@ -232,7 +231,7 @@ class TinyMCE
 	function get_mce_script()
 	{
 		global $modx, $_lang;
-		$params = $this->params;
+		$params = & $this->params;
 		$mce_path = $params['mce_path'];
 		$mce_url  = $params['mce_url'];
 		
