@@ -8,7 +8,7 @@
  * @version 	1.1
  * @license 	http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @internal	@properties 
- * @internal	@modx_category add
+ * @internal	@modx_category Content
  * @internal    @installset base, sample
  * @author      Bumkaka
  */
