@@ -108,7 +108,7 @@ class TinyMCE
 	
 	function get_mce_settings()
 	{
-		global $modx, $_lang;
+		global $modx, $_lang, $settings, $usersettings;
 		$params = $this->params;
 		$mce_path = $params['mce_path'];
 		
