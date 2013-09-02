@@ -6,35 +6,35 @@
  * @package MODX
  * @version 1.0
  * 
- * Filename:       /install/lang/english/english.inc.php
- * Language:       English
- * Encoding:       iso-8859-1
+ * Filename:       /install/lang/english/nederlands-utf8.inc.php
+ * Language:       Dutch
+ * Encoding:       utf-8
  */
-$_lang["agree_to_terms"] = 'Agree to the License Terms and Install';
-$_lang["alert_database_test_connection"] = 'You need to create your database or test the selection of your database!';
-$_lang["alert_database_test_connection_failed"] = 'The test of your database selection has failed!';
-$_lang["alert_enter_adminconfirm"] = 'The administrator password and the confirmation don\'t match!';
-$_lang["alert_enter_adminlogin"] = 'You need to enter a username for the system admin account!';
-$_lang["alert_enter_adminpassword"] = 'You need to enter a password for the system admin account!';
-$_lang["alert_enter_database_name"] = 'You need to enter a value for database name!';
-$_lang["alert_enter_host"] = 'You need to enter a value for database host!';
-$_lang["alert_enter_login"] = 'You need to enter your database login name!';
-$_lang["alert_server_test_connection"] = 'You need to test your server connection!';
-$_lang["alert_server_test_connection_failed"] = 'The test of your server connection has failed!';
-$_lang["alert_table_prefixes"] = 'Table prefixes must start with a letter!';
-$_lang["all"] = 'All';
-$_lang["and_try_again"] = ', and try again. If you need help figuring out how to fix the problem';
-$_lang["and_try_again_plural"] = ', and try again. If you need help figuring out how to fix the problems';
-$_lang["begin"] = 'Begin';
-$_lang["btnback_value"] = 'Back';
-$_lang["btnclose_value"] = 'Close';
-$_lang["btnnext_value"] = 'Next';
-$_lang["cant_write_config_file"] = 'MODX couldn\'t write the config file. Please copy the following into the file ';
+$_lang["agree_to_terms"] = 'Ik ga akkoord met de voorwaarden en installeer';
+$_lang["alert_database_test_connection"] = 'U moet een database aanmaken of test de selectie van uw database!';
+$_lang["alert_database_test_connection_failed"] = 'De test van uw database selectie is mislukt!';
+$_lang["alert_enter_adminconfirm"] = 'Het administrator wachtwoord en de goedkeuring komen niet overeen!';
+$_lang["alert_enter_adminlogin"] = 'U moet een gebruikersnaam invoeren voor het systeem administrator account!';
+$_lang["alert_enter_adminpassword"] = 'U moet een gebruikersnaam invoeren voor het systeem administrator account!';
+$_lang["alert_enter_database_name"] = 'U moet de database naam invoeren!';
+$_lang["alert_enter_host"] = 'U moet de database host invoeren!';
+$_lang["alert_enter_login"] = 'U moet de database inlognaam invoeren!';
+$_lang["alert_server_test_connection"] = 'U zou de server connectie moeten nakijken!';
+$_lang["alert_server_test_connection_failed"] = 'De test van uw server connectie is mislukt!';
+$_lang["alert_table_prefixes"] = 'Tabel prefixes moeten starten met een letter!';
+$_lang["all"] = 'Alle';
+$_lang["and_try_again"] = ', en probeer opnieuw. Wanneer u hulp nodig heeft het probleem op te sporen';
+$_lang["and_try_again_plural"] = ', en probeer opnieuw. Wanneer u hulp nodig heeft het problemen op te sporen';
+$_lang["begin"] = 'Start';
+$_lang["btnback_value"] = 'Terug';
+$_lang["btnclose_value"] = 'Sluit';
+$_lang["btnnext_value"] = 'Volgende';
+$_lang["cant_write_config_file"] = 'MODX kan het configuratiebestand niet schrijven. Plak de volgende code in het bestand';
 $_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODX Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
-$_lang["checkbox_select_options"] = 'Checkbox select options:';
-$_lang["checking_if_cache_exist"] = 'Checking if <span class="mono">/assets/cache</span> and <span class="mono">/assets/cache/rss</span> directories exist: ';
-$_lang["checking_if_cache_file_writable"] = 'Checking if <span class="mono">/assets/cache/siteCache.idx.php</span> file is writable: ';
-$_lang["checking_if_cache_file2_writable"] = 'Checking if <span class="mono">/assets/cache/sitePublishing.idx.php</span> file is writable: ';
+$_lang["checkbox_select_options"] = 'Checkbox keuze opties:';
+$_lang["checking_if_cache_exist"] = 'Nakijken of <span class="mono">/assets/cache</span> en <span class="mono">/assets/cache/rss</span> mappen bestaan: ';
+$_lang["checking_if_cache_file_writable"] = 'Nakijken of <span class="mono">/assets/cache/siteCache.idx.php</span> bestand schrijfbaar is:';
+$_lang["checking_if_cache_file2_writable"] = 'Nakijken of <span class="mono">/assets/cache/sitePublishing.idx.php</span> bestand schrijfbaar is: ';
 $_lang["checking_if_cache_writable"] = 'Checking if <span class="mono">/assets/cache</span> and <span class="mono">/assets/cache/rss</span> directories are writable: ';
 $_lang["checking_if_config_exist_and_writable"] = 'Checking if <span class="mono">/[+MGR_DIR+]/includes/config.inc.php</span> exists and is writable: ';
 $_lang["checking_if_export_exists"] = 'Checking if <span class="mono">/assets/export</span> directory exists: ';
@@ -42,9 +42,9 @@ $_lang["checking_if_export_writable"] = 'Checking if <span class="mono">/assets/
 $_lang["checking_if_images_exist"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories exists: ';
 $_lang["checking_if_images_writable"] = 'Checking if <span class="mono">/assets/images</span>, <span class="mono">/assets/files</span>, <span class="mono">/assets/flash</span>, <span class="mono">/assets/media</span>, <span class="mono">/assets/backup</span> and <span class="mono">/assets/.thumbs</span> directories are writable: ';
 $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
-$_lang["checking_mysql_version"] = 'Checking MySQL version: ';
-$_lang["checking_php_version"] = 'Checking PHP version: ';
-$_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
+$_lang["checking_mysql_version"] = 'Versie van MYSQL nakijken:';
+$_lang["checking_php_version"] = 'PHP versie nakijken:';
+$_lang["checking_registerglobals"] = 'Kijken of Register_Globals uit staat geschakeld:';
 $_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODX install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODX, but consider yourself warned.'; //Look at changing this to provide a solution.
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_table_prefix"] = 'Checking table prefix `';
@@ -52,7 +52,7 @@ $_lang["chunks"] = 'Chunks';
 $_lang["config_permissions_note"] = 'For new Linux/Unix installs, please create a blank file named <span class="mono">config.inc.php</span> in the <span class="mono">/[+MGR_DIR+]/includes/</span> directory with file permissions set to 0666.';
 $_lang["connection_screen_collation"] = 'Collation:';
 $_lang["connection_screen_connection_method"] = 'Connection method:';
-$_lang["connection_screen_database_connection_information"] = 'Database information';
+$_lang["connection_screen_database_connection_information"] = 'Database informatie';
 $_lang["connection_screen_database_connection_note"] = 'Enter the database name to use or which you wish to create for this MODX install. If no database exists, the installer will attempt to create one. This may fail depending on the MySQL user permissions.';
 $_lang["connection_screen_database_host"] = 'Database host:';
 $_lang["connection_screen_database_info"] = 'Database Information';
@@ -108,7 +108,7 @@ $_lang["installing_demo_site"] = 'Installing demo site: ';
 $_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'Loading...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://www.modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
 $_lang["modx_install"] = 'MODX &raquo; Install';
 $_lang["modx_requires_php"] = ', and MODX requires PHP 4.2.0 or later';

@@ -280,10 +280,10 @@ $_lang["existing_category"] = 'Bestehende Kategorie';
 $_lang["expand_tree"] = 'Baum aufklappen';
 $_lang["export_site"] = 'Seite exportieren';
 $_lang["export_site_cacheable"] = 'Inklusive nicht gecachter Dateien:';
-$_lang["export_site_exporting_document"] = 'Exportiere <b>%s</b> von <b>%s</b><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><i>%s</i>, id %s</small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$_lang["export_site_exporting_document"] = '[+status+] [+url+] - [+pagetitle+] ([+id+])<br />';
 $_lang["export_site_failed"] = 'Fehlgeschlagen!';
 $_lang["export_site_failed_no_open"] = 'Datei kann nicht geöffnet werden: ';
-$_lang["export_site_failed_no_retrieve"] = 'Dokument kann nicht aufgerufen werden.';
+$_lang["export_site_failed_no_retrieve"] = 'Die Ressource kann nicht aufgerufen werden.';
 $_lang["export_site_failed_no_write"] = 'Datei kann nicht geschrieben werden.';
 $_lang["export_site_html"] = 'Seite nach HTML exportieren';
 $_lang["export_site_maxtime"] = 'Maximale Export-Zeit:';
@@ -294,7 +294,7 @@ $_lang["export_site_prefix"] = 'Datei-Präfix:';
 $_lang["export_site_start"] = 'Export starten';
 $_lang["export_site_success"] = 'Erfolgreich!';
 $_lang["export_site_success_skip_dir"] = 'Dieses Verzeichnis überspringen.';
-$_lang["export_site_success_skip_doc"] = 'Dieses Dokument überspringen.';
+$_lang["export_site_success_skip_doc"] = 'Diese Ressource überspringen.';
 $_lang["export_site_suffix"] = 'Datei-Suffix:';
 $_lang["export_site_target_unwritable"] = 'Datei kann nicht gespeichert werden – Überprüfen Sie den Schreibzugriff im Zielverzeichnis und versuchen Sie es erneut!';
 $_lang["export_site_time"] = 'Export beendet. Dauer für den Export %s Sekunden';
@@ -1100,16 +1100,20 @@ $_lang["yourinfo_role"] = 'Ihre Rolle ist:';
 $_lang["yourinfo_title"] = 'Ihre Informationen';
 $_lang["yourinfo_total_logins"] = 'Anzahl der Anmeldungen:';
 $_lang["yourinfo_username"] = 'Sie sind angemeldet als:';
+
 $_lang["a17_error_reporting_title"] = 'Detection level of the PHP error';
 $_lang["a17_error_reporting_msg"] = 'Set the detection level of the PHP error.';
 $_lang["a17_error_reporting_opt0"] = 'Ignore all';
 $_lang["a17_error_reporting_opt1"] = 'Ignore the warning of a slight notice level(<a href="https://www.google.com/search?q=E_DEPRECATED+E_STRICT" target="_blank">E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT</a>)';
 $_lang["a17_error_reporting_opt2"] = 'Detect all errors except E_NOTICE';
 $_lang["a17_error_reporting_opt99"] = 'Detect all';
+
 $_lang["pwd_hash_algo_title"] = 'Hash algorithm';
 $_lang["pwd_hash_algo_message"] = 'Password hash algorithm.';
+
 $_lang["enable_bindings_title"] = 'Enable @Bindings commands';
 $_lang["enable_bindings_message"] = 'Prevents the execution of PHP functions through TV @Bindings. Useful if you have Manager users who should not be able to create PHP code but need to be able to create or edit TVs. The output of any TV with an @Binding will be "@Bindings disabled".';
+
 $_lang["bkmgr_alert_mkdir"] = 'A file cannot be created in a directory.  Please check the permission of [+snapshot_path+]';
 $_lang["bkmgr_restore_msg"] = '<p>A site can be restore using an SQL file. </p>';
 $_lang["bkmgr_restore_title"] = 'Restore';
@@ -1125,6 +1129,7 @@ $_lang["bkmgr_snapshot_submit"] = 'Add snapshot';
 $_lang["bkmgr_snapshot_list_title"] = 'List of snapshot';
 $_lang["bkmgr_restore_submit"] = 'Revert this data';
 $_lang["bkmgr_snapshot_nothing"] = 'No snapshot';
+
 $_lang["files.dynamic.php1"] = 'create text file';
 $_lang["files.dynamic.php2"] = 'This directory cannot be displayed.';
 $_lang["files.dynamic.php3"] = 'There is a problem in a file name.';
@@ -1132,30 +1137,58 @@ $_lang["files.dynamic.php4"] = 'The text file was created.';
 $_lang["not_readable_dir"] = 'Can not read this directory.';
 $_lang["confirm_delete_dir"] = 'Are you sure you want to delete the directory?';
 $_lang["confirm_delete_dir_recursive"] = 'Are you sure you want to delete the directory?\n\nAny children files will also be deleted.';
+
 $_lang["make_folders_title"] = 'Make end slash URL at the container';
 $_lang["make_folders_message"] = 'The slash to append to Resources set as containers when using FURLs.';
+
 $_lang["check_files_onlogin_title"] = 'Check core files on login';
 $_lang["check_files_onlogin_message"] = 'By enabling this option, important system files will be checked for modification typical of scripted website attacks. While not a foolproof guarantee, it may alert you to a compromised MODX system file and website.';
-$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
-$_lang["configcheck_sysfiles_mod_msg"] = 'You have enabled the setting to check important system files to detect possible website script attacks. This doesn\'t necessarily mean that your site has been compromised, however, you should review the changed files.(index.php, .htaccess, [+MGR_DIR+]/index.php, [+MGR_DIR+]/includes/config.inc.php)';
 
-$_lang["email_method_title"] = 'Sendmail Methode';
-$_lang["email_method_mail"] = 'PHP mail() function';
-$_lang["email_method_smtp"] = 'SMTP Server';
-$_lang["smtp_auth_title"] = 'SMTP Auth';
-$_lang["smtp_host_title"] = 'SMTP Host';
-$_lang["smtp_username_title"] = 'SMTP Benutzername';
-$_lang["smtp_password_title"] = 'SMTP Passwort';
-$_lang["smtp_port_title"] = 'SMTP Port';
+$_lang["configcheck_sysfiles_mod"] = 'Important System Files have been modified.';
+$_lang["configcheck_sysfiles_mod_msg"] = 'MODX wurde so konfiguriert, dass wichtige Systemdateien überwacht werden, um mögliche Angriffsversuche frühzeitig zu entdecken. Änderungen an diesen Systemdateien bedeuten nicht zwingend, dass die MODX Installation erfolgreich angegriffen wurde. Aber Sie sollten die überwachten Dateien (siehe in MODX-Konfiguration -> Benutzer -> Check core files on login) überprüfen. Wenn die Dateien unverändert sind oder ein Systemverantwortlicher sie geändert hat, dann speichern Sie die MODX-Konfiguration erneut ab, um diese Meldung zu deaktivieren.';
+
+$_lang['email_method_title'] = 'Sendmail Methode';
+$_lang['email_method_mail'] = 'PHP mail() function';
+$_lang['email_method_smtp'] = 'SMTP Server';
+$_lang['smtp_auth_title'] = 'SMTP Auth';
+$_lang['smtp_host_title'] = 'SMTP Host';
+$_lang['smtp_username_title'] = 'SMTP Benutzername';
+$_lang['smtp_password_title'] = 'SMTP Passwort';
+$_lang['smtp_port_title'] = 'SMTP Port';
+
 $_lang["setting_resource_tree_node_name"] = 'The node name of a resource tree';
 $_lang["setting_resource_tree_node_name_desc"] = 'Specify the Resource field to use when rendering the nodes in the Resource Tree. Defaults to pagetitle, although any Resource field can be used, such as menutitle, alias.';
-$_lang["cache_type_title"] = 'Document caching type';
-$_lang["cache_type_1"] = 'Cache is based only on document id (standard)';
-$_lang["cache_type_2"] = 'Cache is based on document id and $_GET parameters';
+
+$_lang['resource_opt_is_published'] = 'Veröffentlicht';
+$_lang["docid_incrmnt_method_title"] = 'Vergabe einer neuen Ressource ID ';
+$_lang["docid_incrmnt_method_0"] = 'DB Autoinkrement';
+$_lang["docid_incrmnt_method_1"] = 'Kleinste fehlende ID';
+$_lang["docid_incrmnt_method_2"] = 'Größte ID + 1';
+
+$_lang["cache_type_title"] = 'Ressource Caching Typ';
+$_lang["cache_type_1"] = 'Der Cache basiert nur auf der Ressoucen ID (Standard)';
+$_lang["cache_type_2"] = 'Der Cache basiert auf Ressoucen ID and $_GET Parametern';
 $_lang["seostrict_title"] = 'Use SEO Strict URLs';
 $_lang["seostrict_message"] = 'Enforces the use of strict URLs to prevent duplicate content if needed';
+
 $_lang["settings_friendlyurls_alert"] = 'It is necessary to rename the ht.access file of a MODX installation directory at .htaccess to use the Friendly URL function.';
 $_lang["settings_friendlyurls_alert2"] = 'Since it has installed in a subdirectory, it is necessary to change the contents of .htaccess.';
+
 $_lang["user_street"] = 'Street';
 $_lang["user_city"] = 'City';
 $_lang["user_other"] = 'anders';
+
+$_lang["import_site.static.php1"] = 'Ressourcenbaum zurücksetzen';
+$_lang["import_site.static.php2"] = 'Ressourcenbaum zurücksetzen und alle IDs neu initialisieren';
+$_lang["import_site.static.php3"] = 'Ziel';
+$_lang["import_site.static.php4"] = 'Nur &lt;body&gt;&lt;/body&gt;';
+$_lang["import_site.static.php5"] = 'Datei enthält alle';
+
+$_lang["a83_ignore_ids_title"] = 'IDs ignorieren (kommasepariert)';
+$_lang["export_site.static.php1"] = 'Ziel';
+$_lang["export_site.static.php2"] = 'Nur bearbeitete Ressourcen';
+$_lang["export_site.static.php3"] = 'Alle Ressourcen';
+$_lang["export_site.static.php4"] = 'Suchen nach';
+$_lang["export_site.static.php5"] = 'Ersetzen mit';
+$_lang["export_site.static.php6"] = 'Ziel';
+$_lang["export_site.static.php7"] = 'Dateien können nicht in [+rb_base_url+] gespeichert werden';

@@ -1,7 +1,7 @@
 <?php
 /**
  * Filename:       /install/lang/polish-utf8.inc.php
- * Function:       MODx language File
+ * Function:       MODX language File
  * Encoding:       UTF8
  * Author:         The MODx Project Team
  * 
@@ -35,13 +35,13 @@ $_lang["btnback_value"] = 'Wstecz';
 $_lang["btnclose_value"] = 'Zamknij';
 $_lang["btnnext_value"] = 'Dalej';
 $_lang["cant_write_config_file"] = 'Nie można zapisać pliku konfiguracyjnego. Skopiuj do pliku następującą treść: ';
-$_lang["cant_write_config_file_note"] = 'Po zakończeniu instalacji będziesz mógł zalogować się do Menedżera MODxa znajdującego się pod adresem: TwojaNazwaDomeny.com/'.MGR_DIR.'/';
+$_lang["cant_write_config_file_note"] = 'Po zakończeniu instalacji będziesz mógł zalogować się do Menedżera MODxa znajdującego się pod adresem: TwojaNazwaDomeny.com/[+MGR_DIR+]/';
 $_lang["checkbox_select_options"] = 'Zaznacz wybrane opcje: ';
 $_lang["checking_if_cache_exist"] = 'Sprawdzanie, czy istnieją foldery <span class=\"mono\">/assets/cache</span> oraz <span class=\"mono\">/assets/cache/rss</span>: ';
 $_lang["checking_if_cache_file_writable"] = 'Sprawdzanie, czy plik <span class=\"mono\">/assets/cache/siteCache.idx.php</span> jest zapisywalny: ';
 $_lang["checking_if_cache_file2_writable"] = 'Sprawdzanie, czy plik <span class=\"mono\">/assets/cache/sitePublishing.idx.php</span> jest zapisywalny: ';
 $_lang["checking_if_cache_writable"] = 'Sprawdzanie, czy foldery <span class=\"mono\">/assets/cache</span> oraz <span class=\"mono\">/assets/cache/rss</span> są zapisywalne: ';
-$_lang["checking_if_config_exist_and_writable"] = 'Sprawdzanie, czy plik <span class=\"mono\">/'.MGR_DIR.'/includes/config.inc.php</span> istnieje i jest zapisywalny: ';
+$_lang["checking_if_config_exist_and_writable"] = 'Sprawdzanie, czy plik <span class=\"mono\">/[+MGR_DIR+]/includes/config.inc.php</span> istnieje i jest zapisywalny: ';
 $_lang["checking_if_export_exists"] = 'Sprawdzanie, czy istnieje folder <span class=\"mono\">/assets/export</span>: ';
 $_lang["checking_if_export_writable"] = 'Sprawdzanie, czy folder <span class=\"mono\">/assets/export</span> jest zapisywalny: ';
 $_lang["checking_if_images_exist"] = 'Sprawdzanie, czy istnieją foldery <span class=\"mono\">/assets/images</span>, <span class=\"mono\">/assets/files</span>, <span class=\"mono\">/assets/flash</span> oraz <span class=\"mono\">/assets/media</span>: ';
@@ -54,7 +54,7 @@ $_lang["checking_registerglobals_note"] = 'Taka konfiguracja powoduje, że Twoja
 $_lang["checking_sessions"] = 'Sprawdzanie, czy obsługa sesji jest skonfigurowana poprawnie: ';
 $_lang["checking_table_prefix"] = 'Sprawdzanie prefiksu tabeli `';
 $_lang["chunks"] = 'Chunki';
-$_lang["config_permissions_note"] = 'Dla nowych instalacji na systemach Linux/Unix utwórz pusty plik o nazwie <span class="mono">config.inc.php</span> w folderze <span class="mono">/'.MGR_DIR.'/includes/</span> i ustaw dla niego prawa dostępu na 0666.';
+$_lang["config_permissions_note"] = 'Dla nowych instalacji na systemach Linux/Unix utwórz pusty plik o nazwie <span class="mono">config.inc.php</span> w folderze <span class="mono">/[+MGR_DIR+]/includes/</span> i ustaw dla niego prawa dostępu na 0666.';
 $_lang["connection_screen_collation"] = 'System porównań (collation): ';
 $_lang["connection_screen_connection_method"] = 'Metoda połączenia: ';
 $_lang["connection_screen_database_connection_information"] = 'Informacje o bazie danych';
@@ -177,7 +177,7 @@ $_lang["table_prefix_already_inuse_note"] = 'Nie można zainstalować MODxa w wy
 $_lang["table_prefix_not_exist"] = '- Tabele o tym prefiksie nie istnieją w wybranej bazie danych!';
 $_lang["table_prefix_not_exist_note"] = 'Nie można zaktualizować MODxa w wybranej bazie danych, ponieważ nie zawiera ona tabel z określonym prefiksem. Wybierz prefiks, który został zastosowany dla istniejących już tabel i uruchom instalatora ponownie.';
 $_lang["templates"] = 'Szablony';
-$_lang["to_log_into_content_manager"] = 'Po kliknięciu w przycisk `Zamknij` będziesz mógł zalogować się do Menedżera MODxa ('.MGR_DIR.'/index.php).';
+$_lang["to_log_into_content_manager"] = 'Po kliknięciu w przycisk `Zamknij` będziesz mógł zalogować się do Menedżera MODxa ([+MGR_DIR+]/index.php).';
 $_lang["toggle"] = 'Odwróć zaznaczenie';
 $_lang['tvs'] = 'Zmienne Szablonów';
 $_lang["unable_install_chunk"] = 'Nie można zainstalować chunków. Plik';

@@ -1314,7 +1314,7 @@ class DocumentParser {
      * @param type $identifier
      * @return array
      */
-    function getDocumentObject($method, $identifier) {
+    function getDocumentObject($method, $identifier, $isPrepareResponse=false) {
         $tblsc= $this->getFullTableName("site_content");
         $tbldg= $this->getFullTableName("document_groups");
 
@@ -1365,7 +1365,7 @@ class DocumentParser {
 
         # this is now the document :) #
         $documentObject= $this->db->getRow($result);
-        $this->documentObject = & $documentObject;
+        if($isPrepareResponse==='prepareResponse') $this->documentObject = & $documentObject;
         $this->invokeEvent('OnLoadDocumentObject');
     	if ($documentObject['template']) {
         // load TVs and merge with document - Orig by Apodigm - Docvars
@@ -1573,7 +1573,7 @@ class DocumentParser {
         } else {
 
             // get document object
-            $this->documentObject= $this->getDocumentObject($this->documentMethod, $this->documentIdentifier);
+            $this->documentObject= $this->getDocumentObject($this->documentMethod, $this->documentIdentifier, 'prepareResponse');
 
             // write the documentName to the object
             $this->documentName= $this->documentObject['pagetitle'];
@@ -2050,6 +2050,13 @@ class DocumentParser {
      * @return array|boolean Result array with documents, or false
      */
     function getDocuments($ids= array (), $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
+        if(is_string($ids))
+        {
+            if(strpos($ids,',')!==false)
+                $ids = explode(',', $ids);
+            else
+                $ids = array($ids);
+        }
         if (count($ids) == 0) {
             return false;
         } else {

@@ -10,8 +10,8 @@ $add_path=$sd.$sb.$pg;
 
 <h1><?php echo $_lang['cleaningup']; ?></h1>
 
+<div class="section">
 <div class="sectionBody">
-
 <p><?php echo $_lang['actioncomplete']; ?></p>
 <script type="text/javascript">
 function goHome() {
@@ -27,4 +27,5 @@ function goHome() {
 }
 x=window.setTimeout('goHome()',1000);
 </script>
+</div>
 </div>

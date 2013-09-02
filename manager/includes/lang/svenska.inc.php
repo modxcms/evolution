@@ -1,7 +1,9 @@
 <?php
     $filename = dirname(__FILE__) . '/svenska-utf8.inc.php';
     $contents = file_get_contents($filename);
-    $contents = mb_convert_encoding($contents, $modx_charset, 'UTF-8');
-    $contents = str_replace('UTF-8', $modx_charset, $contents);
+    $contents = utf8_decode($contents);
+//    $contents = str_replace('UTF-8', 'iso-8859-1', $contents);
     eval('?>' . $contents);
+    $modx_lang_attribute = 'sv'; // Manager HTML/XML Language Attribute see http://en.wikipedia.org/wiki/ISO_639-1
+    $modx_manager_charset = 'iso-8859-1';
 ?>
