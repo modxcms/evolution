@@ -45,7 +45,7 @@
             <h2>Meta:</h2>
             <p><a href="http://validator.w3.org/check/referer" title="This page validates as XHTML 1.0 Transitional">Valid <abbr title="eXtensible HyperText Markup Language">XHTML</abbr></a></p>
             <p><a href="http://jigsaw.w3.org/css-validator/check/referer" title="This page uses valid Cascading Stylesheets" rel="external">Valid <abbr title="W3C Cascading Stylesheets">css</abbr></a></p>
-            <p><a href="http://modxcms.com" title="Ajax CMS and PHP Application Framework">MODx</a></p>
+            <p><a href="http://modx.com" title="Ajax CMS and PHP Application Framework">MODX</a></p>
           </div>
           <!-- close #sidebar -->
         </div>
