@@ -2050,6 +2050,13 @@ class DocumentParser {
      * @return array|boolean Result array with documents, or false
      */
     function getDocuments($ids= array (), $published= 1, $deleted= 0, $fields= "*", $where= '', $sort= "menuindex", $dir= "ASC", $limit= "") {
+        if(is_string($ids))
+        {
+            if(strpos($ids,',')!==false)
+                $ids = explode(',', $ids);
+            else
+                $ids = array($ids);
+        }
         if (count($ids) == 0) {
             return false;
         } else {
