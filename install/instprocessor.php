@@ -242,10 +242,19 @@ if(empty($base_path)||empty($base_url)||$_REQUEST[\'base_path\']||$_REQUEST[\'ba
     } else {
         $script_name= $_SERVER[\'SCRIPT_NAME\'];
     }
-    $a= explode("/".MGR_DIR, str_replace("\\\\", "/", dirname($script_name)));
+    $script_name = str_replace("\\\\", "/", dirname($script_name));
+    if(strpos($script_name,MGR_DIR)!==false)
+        $separator = MGR_DIR;
+    elseif(strpos($script_name,\'/assets/\')!==false)
+        $separator = \'assets\';
+    else $separator = \'\';
+    
+    if($separator!==\'\') $a= explode(\'/\'.$separator, $script_name);
+    else $a = array($script_name);
+    
     if (count($a) > 1)
         array_pop($a);
-    $url= implode(MGR_DIR, $a);
+    $url= implode($separator, $a);
     reset($a);
     $a= explode(MGR_DIR, str_replace("\\\\", "/", dirname(__FILE__)));
     if (count($a) > 1)
