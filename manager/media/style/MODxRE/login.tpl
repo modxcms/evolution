@@ -19,9 +19,9 @@
 			background: #FEFEFE;
 		    padding: 25px 0 0 20px;
 			overflow: hidden;
-			-webkit-box-shadow: 0px 0px 5px rgba(50, 50, 50, 0.2);
-			-moz-box-shadow:    0px 0px 5px rgba(50, 50, 50, 0.2);
-			box-shadow:         0px 0px 5px rgba(50, 50, 50, 0.2);
+			-webkit-box-shadow: 0 0 5px rgba(50, 50, 50, 0.2);
+			-moz-box-shadow:    0 0 5px rgba(50, 50, 50, 0.2);
+			box-shadow:         0 0 5px rgba(50, 50, 50, 0.2);
 			-webkit-border-radius: 5px;
 			-moz-border-radius: 5px;
 			border-radius: 5px;
@@ -49,15 +49,15 @@
 			-webkit-border-radius: 5px;
 			-moz-border-radius: 5px;
 			border-radius: 5px;
-			-webkit-box-shadow: 0px 0px 5px rgba(188, 188, 188, 0.2);
-			-moz-box-shadow:    0px 0px 5px rgba(188, 188, 188, 0.2);
-			box-shadow:         0px 0px 5px rgba(188, 188, 188, 0.2);
+			-webkit-box-shadow: 0 0 5px rgba(188, 188, 188, 0.2);
+			-moz-box-shadow:    0 0 5px rgba(188, 188, 188, 0.2);
+			box-shadow:         0 0 5px rgba(188, 188, 188, 0.2);
 		}
 		.sectionBody .text:focus {
 			border: 1px solid #DECBA5;
-			-webkit-box-shadow: 0px 0px 5px rgba(222, 203, 165, 0.5);
-			-moz-box-shadow:    0px 0px 5px rgba(222, 203, 165, 0.5);
-			box-shadow:         0px 0px 5px rgba(222, 203, 165, 0.5);
+			-webkit-box-shadow: 0 0 5px rgba(222, 203, 165, 0.5);
+			-moz-box-shadow:    0 0 5px rgba(222, 203, 165, 0.5);
+			box-shadow:         0 0 5px rgba(222, 203, 165, 0.5);
 		}
 		#rememberme {
 			float: left;
@@ -102,15 +102,15 @@
 			-webkit-border-radius: 5px;
 			-moz-border-radius: 5px;
 			border-radius: 5px;
-			-webkit-box-shadow: 0px 0px 5px rgba(188, 188, 188, 0.2);
-			-moz-box-shadow:    0px 0px 5px rgba(188, 188, 188, 0.2);
-			box-shadow:         0px 0px 5px rgba(188, 188, 188, 0.2);
+			-webkit-box-shadow: 0 0 5px rgba(188, 188, 188, 0.2);
+			-moz-box-shadow:    0 0 5px rgba(188, 188, 188, 0.2);
+			box-shadow:         0 0 5px rgba(188, 188, 188, 0.2);
 		}
 		#FMP-email:focus {
 			border: 1px solid #DECBA5;
-			-webkit-box-shadow: 0px 0px 5px rgba(222, 203, 165, 0.5);
-			-moz-box-shadow:    0px 0px 5px rgba(222, 203, 165, 0.5);
-			box-shadow:         0px 0px 5px rgba(222, 203, 165, 0.5);
+			-webkit-box-shadow: 0 0 5px rgba(222, 203, 165, 0.5);
+			-moz-box-shadow:    0 0 5px rgba(222, 203, 165, 0.5);
+			box-shadow:         0 0 5px rgba(222, 203, 165, 0.5);
 		}
 		#FMP-email_button {
 			border: 0 none;
