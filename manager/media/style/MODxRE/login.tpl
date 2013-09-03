@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <style type="text/css">
 
+		input {font-family:inherit;}
 		#login {
 			background: #eeeeee url(media/style/[+theme+]/images/body.jpg);
 			margin: 12% 0 0;
@@ -45,7 +46,7 @@
 			border: 1px solid #E5E5E5;
 			text-indent: 5px;
 			margin: 0 0 10px;
-			font: 20px/33px Arial !important;
+			font-size: 20px;
 			-webkit-border-radius: 5px;
 			-moz-border-radius: 5px;
 			border-radius: 5px;
@@ -61,18 +62,18 @@
 		}
 		#rememberme {
 			float: left;
-			margin: 3px 9px 0 1px;
+			margin: 3px 5px 0 1px;
 		}
 		.sectionBody .remtext {
 			color: #999999;
 			display: block;
 			float: left;
-			font: 13px Arial;
-			margin: 0 48px 0 0;
+			font-size: 13px;
+			margin: 0;
 		} 
 		#submitButton {
 			display: block;
-			float: left;
+			float: right;
 			border: 0;
 			width: 91px;
 			height: 33px;
@@ -81,7 +82,9 @@
 			color:#fff;
 			font-size: 14px;
 			font-weight: 100;
-		    margin: -7px 0 12px;
+		    margin-top: -7px;
+		    margin-right:20px;
+		    margin-bottom:10px;
 			background: url(media/style/[+theme+]/images/misc/enter.png) no-repeat top left;
 		}
 		#onManagerLoginFormRender {
@@ -98,7 +101,7 @@
 			border: 1px solid #E5E5E5;
 			text-indent: 5px;
 			margin: 0 0 10px;
-			font: 14px/33px Arial;
+			font-size: 14px;
 			-webkit-border-radius: 5px;
 			-moz-border-radius: 5px;
 			border-radius: 5px;
