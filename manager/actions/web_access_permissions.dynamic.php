@@ -39,7 +39,7 @@ if ($modx->db->getRecordCount($rs) < 1) {
 <p><?php echo $_lang['access_permissions_introtext'];?></p><?php echo $use_udperms!=1 ? '<p>'.$_lang['access_permissions_off'].'</p>' : '' ;?>
 
 <div class="tab-pane" id="wuapPane">
-<script type="text/javascript">tp1 = new WebFXTabPane( document.getElementById("wuapPane"), <?php echo $modx->config['remember_last_tab'] == 1 ? 'true' : 'false'; ?> );</script>
+<script type="text/javascript">tp1 = new WebFXTabPane( document.getElementById("wuapPane"), true );</script>
 
 
 <div class="tab-page" id="tabPage1">
