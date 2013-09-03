@@ -5,18 +5,18 @@ $set['simple']['b2'] = '';
 $set['simple']['b4'] = '';
 $set['simple']['b4'] = '';
 
-$set['creative']['p'] = 'autolink,inlinepopups,autosave,advlist,layer,style,fullscreen,advimage,advhr,paste,advlink,media,contextmenu,table,youtubeIframe';
+$set['creative']['p'] = 'save,autolink,inlinepopups,autosave,advlist,layer,style,fullscreen,advimage,advhr,paste,advlink,media,contextmenu,table,youtubeIframe';
 $set['creative']['b1'] = 'undo,undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,styleselect,fontsizeselect,code';
 $set['creative']['b2'] = 'image,media,youtubeIframe,link,unlink,anchor,|,bullist,numlist,|,blockquote,outdent,indent,|,justifyleft,justifycenter,justifyright,|,advhr,|,styleprops,removeformat,|,pastetext,pasteword';
 $set['creative']['b3'] = 'insertlayer,absolute,moveforward,movebackward,|,tablecontrols,|,fullscreen,help';
 $set['creative']['b4'] = '';
 
-$set['logic']['p'] = 'autolink,inlinepopups,autosave,advlist,xhtmlxtras,style,fullscreen,advimage,paste,advlink,media,contextmenu,table,youtubeIframe';
+$set['logic']['p'] = 'save,autolink,inlinepopups,autosave,advlist,xhtmlxtras,style,fullscreen,advimage,paste,advlink,media,contextmenu,table,youtubeIframe';
 $set['logic']['b1'] = 'undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,styleselect,fontsizeselect,code,|,fullscreen,help';
 $set['logic']['b2'] = 'image,media,youtubeIframe,link,unlink,anchor,|,bullist,numlist,|,blockquote,outdent,indent,|,justifyleft,justifycenter,justifyright,|,table,|,hr,|,styleprops,removeformat,|,pastetext,pasteword';
 $set['logic']['b3'] = 'charmap,sup,sub,|,cite,ins,del,abbr,acronym,attribs';
 
-$set['legacy']['p']  = 'autosave,advlist,style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media,youtubeIframe';
+$set['legacy']['p']  = 'save,autosave,advlist,style,advimage,advlink,searchreplace,print,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras,visualchars,media,youtubeIframe';
 $set['legacy']['b1'] = 'undo,redo,selectall,|,pastetext,pasteword,|,search,replace,|,nonbreaking,hr,charmap,|,image,link,unlink,anchor,media,youtubeIframe,|,cleanup,removeformat,|,fullscreen,print,code,help';
 $set['legacy']['b2'] = 'bold,italic,underline,strikethrough,sub,sup,|,blockquote,|,bullist,numlist,outdent,indent,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,|,styleprops';
 $set['legacy']['b3'] = '';
@@ -34,7 +34,7 @@ $set['full']['b2'] = 'cut,copy,paste,pastetext,pasteword,|,search,replace,|,bull
 $set['full']['b3'] = 'tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen';
 $set['full']['b4'] = 'insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak,restoredraft';
 
-$set['default']['p']  = 'template,visualblocks,autolink,inlinepopups,autosave,save,advlist,style,fullscreen,advimage,paste,advlink,media,contextmenu,table,youtubeIframe';
+$set['default']['p']  = 'visualblocks,template,autolink,inlinepopups,autosave,save,advlist,style,fullscreen,advimage,paste,advlink,media,contextmenu,table,youtubeIframe';
 $set['default']['b1'] = 'undo,redo,|,bold,forecolor,backcolor,strikethrough,formatselect,fontsizeselect,pastetext,pasteword,code,template,|,fullscreen,help';
 $set['default']['b2'] = 'image,media,youtubeIframe,link,unlink,anchor,|,justifyleft,justifycenter,justifyright,|,bullist,numlist,|,blockquote,outdent,indent,|,table,hr,|,visualblocks,styleprops,removeformat';
 $set['default']['b3'] = '';
