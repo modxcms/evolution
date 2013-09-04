@@ -15,7 +15,7 @@ class ContextMenu {
 	}
 
 	function addItem($text,$action="",$img="",$disabled=0){
-		global $base_url, $manager_theme;
+		global $base_url, $manager_theme, $_style;
 		if(!$img) $img = $base_url.$_style['tx'];
 		if(substr($action,0,3)=="js:") $action = substr($action,3);
 		else if(substr($action,0,3)=="hl:") $action = "window.location.href='".substr($action,3)."'";
@@ -24,7 +24,7 @@ class ContextMenu {
 		if ($disabled) $action="";
 		$this->html .= "
 			<div class='".($disabled ? "cntxMnuItemDisabled":"cntxMnuItem")."' $action>
-				<img src='$img' width='16' height='16' align='absmiddle' />&nbsp;$text
+				<img src='$img' align='absmiddle' />&nbsp;$text
 			</div>
 		";
 	}
