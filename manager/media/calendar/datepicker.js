@@ -321,7 +321,7 @@ var DatePicker = new Class({
     /* Remove the calendar from the page */
     remove: function(dp){
         dp.active = false;
-        if (dp.container) dp.container.empty();
+        if (window.opera && dp.container) dp.container.empty();
         else if (dp.container) dp.container.remove();
         dp.calendar = false;
         dp.container = false;
