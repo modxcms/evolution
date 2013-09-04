@@ -118,7 +118,8 @@ class DataSetPager {
 			$fnc = $this->renderPagerFnc;
 			$args = $this->renderPagerFncArgs;
 			if (!isset($fnc)){
-				$url = $_SERVER['PHP_SELF']."?";
+				if($modx->isFrontend()) $url = $modx->makeUrl($modx->documentIdentifier,'','','full') . '?';
+				else                    $url = $_SERVER['PHP_SELF'] . '?';
 				$i=0;
 				foreach($_GET as $n => $v) if($n!='dpgn'.$this->id) {$i++;$url.=(($i>1)? "&":"")."$n=$v";}
 				if($i>=1)$url.="&";
