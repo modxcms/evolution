@@ -314,7 +314,7 @@ if (@ fwrite($handle, $configString) === FALSE) {
 @ fclose($handle);
 
 // try to chmod the config file go-rwx (for suexeced php)
-$chmodSuccess = @chmod($filename, 0600);
+$chmodSuccess = @chmod($filename, 0404);
 
 if ($configFileFailed == true) {
     echo "<span class=\"notok\">" . $_lang['failed'] . "</span></p>";
