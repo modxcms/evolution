@@ -99,7 +99,7 @@ if (isset($data) && count($data) > 0) {
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
 
-		$savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
+		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
 	
 	// Run a single query to save all the values
