@@ -430,7 +430,7 @@ class TinyMCE
 		$ph['buttons4']                = $buttons4;
 		$ph['mce_formats']             = (empty($params['mce_formats'])) ? 'p,h1,h2,h3,h4,h5,h6,div,blockquote,code,pre,address' : $params['mce_formats'];
 		$ph['css_selectors']           = (empty($params['css_selectors'])) ? $modx->config['tinymce_css_selectors'] : $params['css_selectors'];
-		$ph['disabledButtons']         = $params['disabledButtons'];
+		$ph['disabledButtons']         = isset($params['disabledButtons'])?$params['disabledButtons']:'';
 		$ph['mce_resizing']            = $params['mce_resizing'];
 		$ph['date_format']             = $modx->toDateFormat(null, 'formatOnly');
 		$ph['time_format']             = '%H:%M:%S';
