@@ -114,7 +114,7 @@ $rss_header = <<<TPL
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
 	<channel>
 			<title>[*pagetitle*]</title>
-			<link>[+rss_link+]</link>
+			<link>[(site_url)]</link>
 			<description>[*description*]</description>
 			<language>[+rss_lang+]</language>
 			<copyright>[+rss_copyright+]</copyright>
