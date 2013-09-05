@@ -36,7 +36,7 @@ class MODxMailer extends PHPMailer
 		    case 'smtp':
 		    	$smtp_password = '';
 		    	$smtp_info_path = $modx->config['base_path'] . 'assets/cache/smtp_info.php';
-		    	if(is_file($smtp_info_path)) include_once($smtp_info_path);
+		    	if(is_file($smtp_info_path)) include($smtp_info_path);
                 $this->IsSMTP();
                 $this->Host      = $modx->config['smtp_host'] . ':' . $modx->config['smtp_port'];
                 $this->SMTPAuth  = $modx->config['smtp_auth']==='1' ? true : false;
