@@ -37,6 +37,9 @@ EOD;
             $username = $modx->db->escape($username);
             $email = $modx->db->escape($email);
             $hash = $modx->db->escape($hash);
+            $tbl_manager_users   = $modx->getFullTableName('manager_users');
+            $tbl_user_attributes = $modx->getFullTableName('user_attributes');
+            $tbl_active_users    = $modx->getFullTableName('active_users');
 
             $pre = $modx->db->config['table_prefix'];
             $site_id = $modx->config['site_id'];
@@ -45,16 +48,17 @@ EOD;
             $where = '';
             $user = null;
 
-            if($user_id !== false) { $wheres[] = "usr.id = '{$user_id}'"; }
-            if(!empty($username)) { $wheres[] = "usr.username = '{$username}'"; }
-            if(!empty($email)) { $wheres[] = "attr.email = '{$email}'"; }
-            if(!empty($hash)) { $wheres[] = "MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) = '{$hash}'"; }
+            if($user_id !== false) { $wheres[] = "usr.id='{$user_id}'"; }
+            if(!empty($username))  { $wheres[] = "usr.username='{$username}'"; }
+            if(!empty($email))     { $wheres[] = "attr.email='{$email}'"; }
+            if(!empty($hash))      { $wheres[] = "MD5(auser.lasthit)='{$hash}'"; }
 
             if($wheres) {
                 $where = ' WHERE '.implode(' AND ',$wheres);
-                $sql = "SELECT usr.id, usr.username, attr.email, MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) AS hash
-                    FROM `{$pre}manager_users` usr
-                    INNER JOIN `{$pre}user_attributes` attr ON usr.id = attr.internalKey
+                $sql = "SELECT usr.id, usr.username, attr.email, MD5(auser.lasthit) AS hash
+                    FROM {$tbl_manager_users} usr
+                    INNER JOIN {$tbl_user_attributes} attr  ON usr.id=attr.internalKey
+                    INNER JOIN {$tbl_active_users}    auser ON usr.username=auser.username
                     {$where}
                     LIMIT 1;";
 
@@ -77,10 +81,11 @@ EOD;
             global $modx, $_lang;
 
             $user = $this->getUser(0, '', $to);
+            if($modx->config['use_captcha']==='1') $captcha = '&captcha_code=ignore';
 
             if($user['username']) {
                 $body = <<<EOD
-<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}processors/login.processor.php?username={$user['username']}&hash={$user['hash']}">{$_lang['forgot_password_email_link']}</a></p>
+<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
 <p>{$_lang['forgot_password_email_instructions']}</p>
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
@@ -178,7 +183,12 @@ if($event_name == 'OnBeforeManagerLogin' && $hash && $username) {
 
 if($event_name == 'OnManagerAuthentication' && $hash && $username) {
     $user = $forgot->getUser(false, $username, '', $hash);
-    $output = ($user !== null && count($forgot->errors) == 0) ? true : false;
+	if($user !== null && count($forgot->errors) == 0) {
+		if(isset($_REQUEST['captcha_code']) && !empty($_REQUEST['captcha_code']))
+			$_SESSION['veriword'] = $_REQUEST['captcha_code'];
+		$output = true;
+	}
+	else $output = false;
 }
 
 $modx->Event->output($output);

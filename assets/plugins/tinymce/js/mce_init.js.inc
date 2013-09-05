@@ -1,10 +1,6 @@
 <script language="javascript" type="text/javascript" src="[+mce_url+]tiny_mce/tiny_mce.js?[+refresh_seed+]"></script>
 <script language="javascript" type="text/javascript" src="[+mce_url+]js/xconfig.js"></script>
 <script language="javascript" type="text/javascript">
-function OnChangeHandler()
-{
-	documentDirty=true;
-}
 tinyMCE.init({
 	theme                            : 'advanced',
 	skin                             : '[+skin+]',
@@ -25,8 +21,6 @@ tinyMCE.init({
 	force_p_newlines                 : [+force_p_newlines+],
 	forced_root_block                : '[+forced_root_block+]',
 	valid_elements                   : mce_valid_elements,
-	extended_valid_elements          : mce_extended_valid_elements,
-	invalid_elements                 : mce_invalid_elements,
 	popup_css_add                    : '[+mce_url+]style/popup_add.css',
 	theme_advanced_source_editor_height : 400,
 	accessibility_warnings : false,

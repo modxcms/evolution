@@ -107,12 +107,13 @@ if (!is_writable("../assets/export")) {
 }
 // config.inc.php writable?
 echo "<p>".$_lang['checking_if_config_exist_and_writable'];
-if (!file_exists("../".MGR_DIR."/includes/config.inc.php")) {
+if (!is_file("../".MGR_DIR."/includes/config.inc.php")) {
     // make an attempt to create the file
     @ $hnd = fopen("../".MGR_DIR."/includes/config.inc.php", 'w');
     @ fwrite($hnd, "<?php //MODx configuration file ?>");
     @ fclose($hnd);
 }
+else @chmod("../".MGR_DIR."/includes/config.inc.php", 0666);
 $isWriteable = is_writable("../".MGR_DIR."/includes/config.inc.php");
 if (!$isWriteable) {
     echo "<span class=\"notok\">".$_lang['failed']."</span></p><p><strong>".$_lang['config_permissions_note']."</strong></p>";
