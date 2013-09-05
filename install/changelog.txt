@@ -1,6 +1,139 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+MODx Evolution 1.0.11 (Sep 09, 2013)
+===================================
+Bug #9823: IE 10 -> FCK editor is blank
+Bug #9848: System Configuration screen layout issues with IE10
+Bug #9865: Fix ManagerManager field rules
+Bug #9870: critical--> Login won't let mgr, web users login with special characters in password
+Bug #9875: Wayfinder: parametrize entity encoding title, linktext, introtext, description
+Bug #9899: font-family Arial for manager
+Bug #9910: superfluous " before 'new module'
+Bug #9920: Quickmanager+ 1.5.5 Frontend-editing
+Bug #9921: Quickmanager+ 1.5.5 inline template variable buttons not saving (furl on)
+Bug #9932: load TVs only if template not _blank
+Bug #9936: /assets/js/ being used?
+Bug #9938: eForm: email field and ccsender/automessage
+Bug #9959: SEO Strict URLs 301 redirect
+Bug #9977: datapicker not work in IE9
+Bug #9989: Cannot change email address for an exisiting web user
+Bug #10008: eForm: allow tag attributes with '-' inside
+Bug #10010: Fix - Define MGR_DIR
+Bug #10028: Fix - RewriteRule
+Bug #10059: error when install sampleData
+Bug #10060: Template Variable Date Picker CSS Z-Index problem
+Bug #10065: TinyMCE theme full not working
+Bug #10066: check in install backup and .thumbs writable?
+Bug #10068: tinyMCE no add images from KCfinder
+Bug #10090: TinyMCE: Parameters aren't being passed through properly
+Bug #10091: ManagerManager Javascript failing as jQuery is not installed
+Bug #10105: Need encode plugin parameters
+Bug #10109: Fix Tab pane ID
+Bug #10115: Fix table structure at the new install
+Bug #10117: Set "0" default template ID
+Bug #10119: Fix - Table structure upgrade sql
+Bug #10123: update managermanager to 0.3.11
+Bug #10142: database name with "-"
+Bug #10153: Can not update block user status when login
+Bug #10162: Multi line @EVAL statement
+Bug #10171: Ditto - TV name issue
+Bug #10176: Ditto rss format - Missing link element
+Bug #10181: FMP - Can not login when CAPTCHA mode
+
+Feature #3870: Consistent email API needed
+Feature #4305: Webuser/Manageruser records don't have "City"
+Feature #9714: return object or array after RunSnippet
+Feature #9763: Auto rotation logs
+Feature #9886: add phpthumb snippet
+Feature #9887: add * @internal @disabled 1 to install plugins
+Feature #9888: add CodeMirror plugin
+Feature #10011: New function - $modx->getIdFromAlias()
+Feature #10024: new event in core (onTreePrerender, onTreeRender , and more)
+Feature #10027: Auto generate .htaccess
+Feature #10036: Add new events into manager menu
+Feature #10045: eForm - Replace mail function to new mail API
+Feature #10047: Add SMTP for send mail
+Feature #10049: add new theme (MODxRE)
+Feature #10051: add CodeMirror for file-manager
+Feature #10054: New DBAPI function - $modx->db->optimize()
+Feature #10124: Intsrement method Resource ID
+Feature #10125: Add new function - $modx->sendmail()
+Feature #10137: Add new event OnLoadDocumentObject
+Feature #10138: Generate cache for each $_GET parameters
+Feature #10160: email notifies of system error
+
+Refactor #3432: Use menutitle instead of Pagetitle in doc_tree
+Refactor #3757: Update phpmailer
+Refactor #3833: Default template in root when Sibling is checked
+Refactor #4440: change MODxCarbon/style.css to make manager look better in chrome
+Refactor #4449: Improve search functionality
+Refactor #5972: Installer should check whether $_SESSION data is being correctly saved
+Refactor #9706: Convert language files encoding
+Refactor #9707: Translate error messages
+Refactor #9720: Deprecated core functions
+Refactor #9727: invokeEvent in save_password.processor.php
+Refactor #9795: Remove hard coded style
+Refactor #9797: Fetch tags without using the regular expression
+Refactor #9816: Add gender option
+Refactor #9845: [SOLVED] Snippet Parameters cannot use Chunks?
+Refactor #9849: Replace to DBAPI functions
+Refactor #9858: Extend 'Important System Files have been modified' message
+Refactor #9860: Delete Etomite database functions
+Refactor #9861: Should be core files line feed code is "lf"
+Refactor #9863: Convert to utf8 all core files
+Refactor #9873: Abstract parser statistics to own method
+Refactor #9884: /manager/ to MODX_MANAGER_PATH
+Refactor #9891: Delete phpSniff
+Refactor #9911: Update AjaxSearch to 1.9.3b
+Refactor #9922: german.inc.php (and other lang files)
+Refactor #9931: getPlaceholder return null if not exist
+Refactor #9933: insideManager - security fix
+Refactor #9934: Display caption for TV on TVs tabs
+Refactor #9939: eForm: multiple event functions separated by comma
+Refactor #9940: refactor exec mergeSettingsContent
+Refactor #9969: appeal to the module only through GET
+Refactor #10025: Cache documents with $_GET (optional)
+Refactor #10026: SEO Strict URLs (optional)
+Refactor #10037: Fix - Default value ($modx->config['use_alias_path'])
+Refactor #10038: added sorting when viewing children documents
+Refactor #10039: permit duplicate aliases in different folders
+Refactor #10044: IE layout issue in manager tree
+Refactor #10046: eForm - Delete set charset
+Refactor #10048: Description of phpthumb snippet english translation
+Refactor #10050: Replace MCPUK to KCFinder
+Refactor #10055: Use placeholder in language files
+Refactor #10058: Update core language files
+Refactor #10062: Change MODx -> MODX
+Refactor #10071: fix snippets and plugins for smaller cache file
+Refactor #10097: htmlspecialchars in >PHP 5.4 no longer defaults to ISO-8859-1
+Refactor #10100: Add PHP compatible functions
+Refactor #10103: Add label tag on checkbox fields
+Refactor #10104: Add bold style on selected checkbox fields
+Refactor #10106: Add tab pane to template var edit
+Refactor #10107: Set default template at new template var
+Refactor #10108: TinyMCE - Separation toolbar settings from functions.php
+Refactor #10110: Add actionButtons class to elements list
+Refactor #10111: Add primary button class
+Refactor #10112: Add properties tab into elements edit
+Refactor #10113: Set custom widget default value
+Refactor #10114: Ajust role settings screen
+Refactor #10116: Add primary key to tables
+Refactor #10118: Add index key to site_content table
+Refactor #10120: 01-01-1970 01:00:00 when "0"
+Refactor #10126: Rewrite Export Static HTML function
+Refactor #10127: Rewrite Import HTML site function
+Refactor #10131: Update jQuery version
+Refactor #10132: QM - Update jQuery ColorBox plugin
+Refactor #10139: Show templateWarning message when only documentDirty
+Refactor #10144: add OnManagerNodeRender, OnManagerNodePrerender
+Refactor #10148: Message check time interval in manager is very short
+Refactor #10149: Use placeholder filemanager_path and rb_base_dir in settings value
+Refactor #10156: Improvement $modx->getDocuments() parameter value
+Refactor #10161: Remember last tab in access permissions pane
+Refactor #10180: [security] ForgotManagerPassword - Improvement reset url
+
+
 
 MODx Evolution 1.0.10 (Apr 18, 2013)
 ===================================
