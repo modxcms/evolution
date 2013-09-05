@@ -37,6 +37,9 @@ EOD;
             $username = $modx->db->escape($username);
             $email = $modx->db->escape($email);
             $hash = $modx->db->escape($hash);
+            $tbl_manager_users   = $modx->getFullTableName('manager_users');
+            $tbl_user_attributes = $modx->getFullTableName('user_attributes');
+            $tbl_active_users    = $modx->getFullTableName('active_users');
 
             $pre = $modx->db->config['table_prefix'];
             $site_id = $modx->config['site_id'];
@@ -45,16 +48,17 @@ EOD;
             $where = '';
             $user = null;
 
-            if($user_id !== false) { $wheres[] = "usr.id = '{$user_id}'"; }
-            if(!empty($username)) { $wheres[] = "usr.username = '{$username}'"; }
-            if(!empty($email)) { $wheres[] = "attr.email = '{$email}'"; }
-            if(!empty($hash)) { $wheres[] = "MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) = '{$hash}'"; }
+            if($user_id !== false) { $wheres[] = "usr.id='{$user_id}'"; }
+            if(!empty($username))  { $wheres[] = "usr.username='{$username}'"; }
+            if(!empty($email))     { $wheres[] = "attr.email='{$email}'"; }
+            if(!empty($hash))      { $wheres[] = "MD5(auser.lasthit)='{$hash}'"; }
 
             if($wheres) {
                 $where = ' WHERE '.implode(' AND ',$wheres);
-                $sql = "SELECT usr.id, usr.username, attr.email, MD5(CONCAT(usr.username,usr.password,'{$site_id}','{$today}')) AS hash
-                    FROM `{$pre}manager_users` usr
-                    INNER JOIN `{$pre}user_attributes` attr ON usr.id = attr.internalKey
+                $sql = "SELECT usr.id, usr.username, attr.email, MD5(auser.lasthit) AS hash
+                    FROM {$tbl_manager_users} usr
+                    INNER JOIN {$tbl_user_attributes} attr  ON usr.id=attr.internalKey
+                    INNER JOIN {$tbl_active_users}    auser ON usr.username=auser.username
                     {$where}
                     LIMIT 1;";
 
