@@ -81,10 +81,11 @@ EOD;
             global $modx, $_lang;
 
             $user = $this->getUser(0, '', $to);
+            if($modx->config['use_captcha']==='1') $captcha = '&captcha_code=ignore';
 
             if($user['username']) {
                 $body = <<<EOD
-<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}processors/login.processor.php?username={$user['username']}&hash={$user['hash']}">{$_lang['forgot_password_email_link']}</a></p>
+<p>{$_lang['forgot_password_email_intro']} <a href="{$modx->config['site_manager_url']}processors/login.processor.php?username={$user['username']}&hash={$user['hash']}{$captcha}">{$_lang['forgot_password_email_link']}</a></p>
 <p>{$_lang['forgot_password_email_instructions']}</p>
 <p><small>{$_lang['forgot_password_email_fine_print']}</small></p>
 EOD;
@@ -182,7 +183,12 @@ if($event_name == 'OnBeforeManagerLogin' && $hash && $username) {
 
 if($event_name == 'OnManagerAuthentication' && $hash && $username) {
     $user = $forgot->getUser(false, $username, '', $hash);
-    $output = ($user !== null && count($forgot->errors) == 0) ? true : false;
+	if($user !== null && count($forgot->errors) == 0) {
+		if(isset($_REQUEST['captcha_code']) && !empty($_REQUEST['captcha_code']))
+			$_SESSION['veriword'] = $_REQUEST['captcha_code'];
+		$output = true;
+	}
+	else $output = false;
 }
 
 $modx->Event->output($output);
