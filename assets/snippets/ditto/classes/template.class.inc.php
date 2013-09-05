@@ -194,7 +194,7 @@ class template{
 	// 
 	// http://modxcms.com/forums/index.php/topic,5344.msg41096.html#msg41096
 	// ---------------------------------------------------
-	function fetch($tpl){
+	public static function fetch($tpl){
 		global $modx;
 		$template = "";
 		if ($modx->getChunk($tpl) != "") {
