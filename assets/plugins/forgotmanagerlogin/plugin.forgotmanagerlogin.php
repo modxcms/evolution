@@ -51,11 +51,11 @@ EOD;
             if($user_id !== false) { $wheres[] = "usr.id='{$user_id}'"; }
             if(!empty($username))  { $wheres[] = "usr.username='{$username}'"; }
             if(!empty($email))     { $wheres[] = "attr.email='{$email}'"; }
-            if(!empty($hash))      { $wheres[] = "MD5(auser.lasthit)='{$hash}'"; }
+            if(!empty($hash))      { $wheres[] = "MD5(CONCAT(auser.lasthit,usr.password))='{$hash}'"; }
 
             if($wheres) {
                 $where = ' WHERE '.implode(' AND ',$wheres);
-                $sql = "SELECT usr.id, usr.username, attr.email, MD5(auser.lasthit) AS hash
+                $sql = "SELECT usr.id, usr.username, attr.email, MD5(CONCAT(auser.lasthit,usr.password)) AS hash
                     FROM {$tbl_manager_users} usr
                     INNER JOIN {$tbl_user_attributes} attr  ON usr.id=attr.internalKey
                     INNER JOIN {$tbl_active_users}    auser ON usr.username=auser.username

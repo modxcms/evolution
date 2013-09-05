@@ -64,7 +64,7 @@ $rss_placeholders['rss_charset'] = isset($charset) ? $charset : $modx->config['m
 	Default:
 	MODx default charset
 */
-$rss_placeholders['rss_xsl'] = isset($xsl) ? '<?xml-stylesheet type="text/xsl" href="'.$modx->config['site_url'].$xsl.'" ?>' : ''; 
+$rss_placeholders['rss_xsl'] = isset($xsl) ? "\n" . '<?xml-stylesheet type="text/xsl" href="'.$modx->config['site_url'].$xsl.'" ?>' : ''; 
 /*
 	Param: xsl
 
@@ -109,8 +109,7 @@ $extenders[] = "summary";
 // set default templates
 
 $rss_header = <<<TPL
-<?xml version="1.0" encoding="[+rss_charset+]" ?>
-[+rss_xsl+]
+<?xml version="1.0" encoding="[+rss_charset+]" ?>[+rss_xsl+]
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
 	<channel>
 			<title>[*pagetitle*]</title>
