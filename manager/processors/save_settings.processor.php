@@ -87,7 +87,10 @@ if (isset($data) && count($data) > 0) {
 				if ($v !== '********************') {
 					if(strpos($v,"'")!==false) $v = str_replace("'","\\'",$v);
 					$str = '<?php $smtp_password = ' . "'$v';";
-					file_put_contents($modx->config['base_path'] . 'assets/cache/smtp_info.php', $str);
+					$smtp_info_path = $modx->config['base_path'] . 'assets/cache/smtp_info.php';
+					if(is_file($smtp_info_path)) @chmod($smtp_info_path, 0666);
+					file_put_contents($smtp_info_path, $str);
+					if(is_file($smtp_info_path)) @chmod($smtp_info_path, 0404);
 				}
 				continue 2;
 				break;
