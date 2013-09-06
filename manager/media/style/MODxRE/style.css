@@ -909,7 +909,7 @@ a.hometblink:hover {
 	}
 #nav ul {
 	display: none;
-	height: 25px;
+	height: 26px;
 	position: relative;
 	z-index: 500;
 	margin: 0 0 0 -10px;
@@ -980,8 +980,8 @@ a.hometblink:hover {
 }
 #nav li.active ul.subnav {
 	display: block;
-	position: absolute;
-	top: 25px;
+	position:fixed;
+	bottom:0;
 	width: 200%;
 	left: 0;
 	border-top: 1px solid #999;
