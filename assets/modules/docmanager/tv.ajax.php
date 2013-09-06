@@ -182,14 +182,14 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							lastImageCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('".MODX_MANAGER_URL."media/browser/mcpuk/browser.html?Type=images&Connector=".$base_url.MGR_DIR."/media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
+							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=images', w, h);
 						}
 						
 						function BrowseFileServer(ctrl) {
 							lastFileCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('".$base_url.MGR_DIR."/media/browser/mcpuk/browser.html?Type=files&Connector=".$base_url.MGR_DIR."/media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
+							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=files', w, h);
 						}
 						
 						function SetUrl(url, width, height, alt){
@@ -237,14 +237,14 @@ function renderFormElement($field_type, $field_id, $default_text, $field_element
 							lastImageCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('".$base_url.MGR_DIR."/media/browser/mcpuk/browser.html?Type=images&Connector=".$base_url.MGR_DIR."/media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
+							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=images', w, h);
 						}
 									
 						function BrowseFileServer(ctrl) {
 							lastFileCtrl = ctrl;
 							var w = screen.width * 0.7;
 							var h = screen.height * 0.7;
-							OpenServerBrowser('".$base_url.MGR_DIR."/media/browser/mcpuk/browser.html?Type=files&Connector=".$base_url.MGR_DIR."/media/browser/mcpuk/connectors/php/connector.php&manager_url=".MODX_MANAGER_URL."', w, h);
+							OpenServerBrowser('media/browser/mcpuk/browser.php?Type=files', w, h);
 						}
 						
 						function SetUrl(url, width, height, alt){

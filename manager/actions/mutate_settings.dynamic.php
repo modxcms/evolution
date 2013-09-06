@@ -864,7 +864,6 @@ function confirmLangChange(el, lkey, elupd){
 	<?php echo wrap_label('error + warning + information',form_radio('send_errormail','1', $send_errormail=='1'));?><br />
 <?php echo parsePlaceholder($_lang['mutate_settings.dynamic.php8'],array('emailsender'=>$modx->config['emailsender']));?></td>
 </tr>
-<tr><td colspan="2"><div class='split'></div></td></tr>
     <tr  class='row1' >
             <td width="200">&nbsp;</td>
             <td class='comment'> <?php echo $_lang['a17_error_reporting_msg'];?></td>
@@ -1016,7 +1015,7 @@ function confirmLangChange(el, lkey, elupd){
           </tr>
           <tr>
             <td nowrap class="warning"><b><?php echo $_lang["smtp_password_title"] ?></b></td>
-            <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtp_password" value="********************" autocomplete="off" /></td>
+            <td ><input onchange="documentDirty=true;" type="password" maxlength="255" style="width: 250px;" name="smtppw" value="********************" autocomplete="off" /></td>
           </tr>
            <tr>
             <td colspan="2"><div class="split"></div></td>

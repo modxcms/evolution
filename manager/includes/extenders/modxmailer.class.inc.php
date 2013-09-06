@@ -34,14 +34,17 @@ class MODxMailer extends PHPMailer
 		switch($modx->config['email_method'])
 		{
 		    case 'smtp':
-		    	$smtp_password = '';
-		    	$smtp_info_path = $modx->config['base_path'] . 'assets/cache/smtp_info.php';
-		    	if(is_file($smtp_info_path)) include($smtp_info_path);
                 $this->IsSMTP();
                 $this->Host      = $modx->config['smtp_host'] . ':' . $modx->config['smtp_port'];
                 $this->SMTPAuth  = $modx->config['smtp_auth']==='1' ? true : false;
                 $this->Username  = $modx->config['smtp_username'];
-                $this->Password  = $smtp_password;
+                $this->Password  = $modx->config['smtppw'];
+                if(10<strlen($this->Password))
+                {
+                	$this->Password = substr($this->Password,0,-7);
+                	$this->Password = str_replace('%','=',$this->Password);
+                	$this->Password = base64_decode($this->Password);
+                }
                 break;
 		    case 'mail':
 		    default:

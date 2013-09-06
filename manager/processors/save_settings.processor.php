@@ -67,7 +67,7 @@ if (isset($data) && count($data) > 0) {
 			case 'lst_custom_contenttype':
 			case 'txt_custom_contenttype':
 				// Skip these
-				continue 2;
+				$k = '';
 				break;
 			case 'rb_base_dir':
 			case 'rb_base_url':
@@ -83,23 +83,20 @@ if (isset($data) && count($data) > 0) {
                     $v = 'english';
                 }
 				break;
-			case 'smtp_password':
+			case 'smtppw':
 				if ($v !== '********************') {
-					if(strpos($v,"'")!==false) $v = str_replace("'","\\'",$v);
-					$str = '<?php $smtp_password = ' . "'$v';";
-					$smtp_info_path = $modx->config['base_path'] . 'assets/cache/smtp_info.php';
-					if(is_file($smtp_info_path)) @chmod($smtp_info_path, 0666);
-					file_put_contents($smtp_info_path, $str);
-					if(is_file($smtp_info_path)) @chmod($smtp_info_path, 0404);
+					$v = trim($v);
+					$v = base64_encode($v) . substr(str_shuffle('abcdefghjkmnpqrstuvxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 7);
+					$v = str_replace('=','%',$v);
 				}
-				continue 2;
+				else $k = '';
 				break;
 			default:
 			break;
 		}
 		$v = is_array($v) ? implode(",", $v) : $v;
 
-		$savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
+		if(!empty($k)) $savethese[] = '(\''.$modx->db->escape($k).'\', \''.$modx->db->escape($v).'\')';
 	}
 	
 	// Run a single query to save all the values
