@@ -87,7 +87,7 @@ switch ($e->name) {
                                 mE12 = new Element("td",{"align":"left","styles":{"padding-top":"14px"}});
                                 mE122 = new Element("input",{"name":"filebinding","type":"text","maxlength":"45","value":"'.$content['file_binding'].'","class":"inputBox","styles":{"width":"300px","margin-left":"14px"},"events":{"change":function(){documentDirty=true;}}});
                                 
-                                mE11.appendText("Привязанный файл:");
+                                mE11.appendText("Static file path:");
                                 mE11.inject(mE1);
                                 mE122.inject(mE12);
                                 mE12.inject(mE1);
