@@ -67,7 +67,7 @@ if (isset($data) && count($data) > 0) {
 			case 'lst_custom_contenttype':
 			case 'txt_custom_contenttype':
 				// Skip these
-				continue 2;
+				$k = '';
 				break;
 			case 'rb_base_dir':
 			case 'rb_base_url':
