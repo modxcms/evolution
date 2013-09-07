@@ -73,6 +73,7 @@ Additional Improvements & Updates:
 * [#10137] Add new event OnLoadDocumentObject
 * [#10138] Generate cache for each $_GET parameters
 * [#10160] email notifies of system error
+* [#10186] alias_visible - ignore parent in url(optional)
 
 --------------------------------------------
 Refactor:
