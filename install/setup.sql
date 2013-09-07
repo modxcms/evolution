@@ -140,6 +140,7 @@ CREATE TABLE IF NOT EXISTS `{PREFIX}site_content` (
   `privatemgr` tinyint(1) NOT NULL default '0' COMMENT 'Private manager document',
   `content_dispo` tinyint(1) NOT NULL default '0' COMMENT '0-inline, 1-attachment',
   `hidemenu` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Hide document from menu',
+  `alias_visible` INT(2) NOT NULL DEFAULT '1',
   PRIMARY KEY  (`id`),
   KEY `id` (`id`),
   KEY `parent` (`parent`),
@@ -761,6 +762,7 @@ ALTER TABLE `{PREFIX}web_user_attributes`
  ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
  ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
 
+ALTER TABLE  `{PREFIX}site_content` ADD `alias_visible` INT( 2 ) NOT NULL DEFAULT  '1';
 
 # ]]upgrade-able
 
@@ -782,7 +784,7 @@ REPLACE INTO `{PREFIX}site_templates`
 # Default Site Documents
 
 
-REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','MODX CMS Install Success','Welcome to the MODX Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed MODX Evolution.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://forums.modx.com/\" target=\"_blank\">MODX Community</a> provides a great starting point to learn all things MODX Evolution, or you can also <a href=\"http://modx.com/\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to MODX!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0);
+REPLACE INTO `{PREFIX}site_content` VALUES (1,'document','text/html','MODX CMS Install Success','Welcome to the MODX Content Management System','','minimal-base','',1,0,0,0,0,'','<h3>Install Successful!</h3>\r\n<p>You have successfully installed MODX Evolution.</p>\r\n\r\n<h3>Getting Help</h3>\r\n<p>The <a href=\"http://forums.modx.com/\" target=\"_blank\">MODX Community</a> provides a great starting point to learn all things MODX Evolution, or you can also <a href=\"http://modx.com/\">see some great learning resources</a> (books, tutorials, blogs and screencasts).</p>\r\n<p>Welcome to MODX!</p>\r\n',1,3,0,1,1,1,1130304721,1,1130304927,0,0,0,1130304721,1,'Base Install',0,0,0,0,0,0,0,1);
 
 
 REPLACE INTO `{PREFIX}manager_users` 

@@ -834,6 +834,15 @@ $page=isset($_REQUEST['page'])?(int)$_REQUEST['page']:'';
         <table width="99%" border="0" cellspacing="5" cellpadding="0">
 
         <?php $mx_can_pub = $modx->hasPermission('publish_document') ? '' : 'disabled="disabled" '; ?>
+		
+	   <tr style="height: 24px;">
+               <td><span class="warning">
+<?php echo $_lang['resource_opt_alvisibled']?>
+</span></td>
+<td>
+<input name="alias_visible_check" type="checkbox" class="checkbox" <?php echo (!isset($content['alias_visible'])|| $content['alias_visible']==1) ? "checked" : ''?> onclick="changestate(document.mutate.alias_visible);" /> 
+<input type="hidden" name="alias_visible" value="<?php echo (!isset($content['alias_visible']) || $content['alias_visible']==1) ? 1 : 0?>" />   <img src="<?php echo $_style["icons_tooltip_over"]?>" onmouseover="this.src='<?php echo $_style["icons_tooltip"]?>';" onmouseout="this.src='<?php echo $_style["icons_tooltip_over"]?>';" alt="<?php echo $_lang['resource_opt_alvisibled_help']?>" onclick="alert(this.alt);" style="cursor:help;" />
+</td></tr>
             <tr style="height: 24px;">
                 <td><span class="warning"><?php echo $_lang['resource_opt_published']?></span></td>
                 <td><input <?php echo $mx_can_pub ?>name="publishedcheck" type="checkbox" class="checkbox" <?php echo (isset($content['published']) && $content['published']==1) || (!isset($content['published']) && $publish_default==1) ? "checked" : ''?> onclick="changestate(document.mutate.published);" />

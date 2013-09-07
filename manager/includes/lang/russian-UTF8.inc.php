@@ -1177,6 +1177,8 @@ $_lang['smtp_port_title'] = 'SMTP порт';
 $_lang["setting_resource_tree_node_name"] = 'Название ресурса в дереве';
 $_lang["setting_resource_tree_node_name_desc"] = 'Выберите поле ресурса, которое будет использоваться в качестве названия ресурса в дереве. По умолчанию используется поле "заголовок"; можно использовать любое другое поле, например, "пункт меню", "псевдоним".';
 
+$_lang["resource_opt_alvisibled"] = 'Участвует в URL'; 
+$_lang["resource_opt_alvisibled_help"] = 'Для участия данного документа в адресной строке поставьте галку, и наоборот - снимите, если псевдоним этого документа нужно убрать из URL.';
 $_lang["resource_opt_is_published"] = 'Опубликован';
 
 $_lang["docid_incrmnt_method_title"] = 'Способ добавления Resource ID ';

@@ -1675,9 +1675,7 @@ class DocumentParser {
             $thisid = $id;
             $id = $this->aliasListing[$id]['parent'];
             if (!$id) break;
-            $pkey = strlen($this->aliasListing[$thisid]['path']) ? $this->aliasListing[$thisid]['path'] : $this->aliasListing[$id]['alias'];
-            if (!strlen($pkey)) $pkey = "{$id}";
-            $parents[$pkey] = $id;
+            $parents[$thisid] = $id;
         }
         return $parents;
     }
