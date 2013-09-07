@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <style type="text/css">
 
+		body {font-family:  Arial, HelveticaNeue, "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;}
 		input {font-family:inherit;}
 		#login {
 			background: #eeeeee url(media/style/[+theme+]/images/body.jpg);
