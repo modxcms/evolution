@@ -751,6 +751,16 @@ ALTER TABLE `{PREFIX}active_users` MODIFY COLUMN `ip` varchar(50) NOT NULL DEFAU
 
 ALTER TABLE `{PREFIX}site_tmplvar_contentvalues` ADD FULLTEXT `value_ft_idx` (`value`);
 
+#1.0.10-1.0.11
+
+ALTER TABLE `{PREFIX}user_attributes`
+ ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+ ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
+ALTER TABLE `{PREFIX}web_user_attributes`
+ ADD COLUMN `street` varchar(255) NOT NULL DEFAULT '' AFTER `country`,
+ ADD COLUMN `city` varchar(255) NOT NULL DEFAULT '' AFTER `street`;
+
 
 # ]]upgrade-able
 
