@@ -1279,7 +1279,8 @@ class DocumentParser {
          if ((int)$this->documentIdentifier != 0 && $this->config['seostrict']=='1' && $this->config['friendly_urls']=='1'){
             if ($this->config['site_status'] == 1) {
                 $myProtocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-                $parts = explode("?", $_SERVER['REQUEST_URI'],2); 
+                $parts = explode("?", $_SERVER['REQUEST_URI'],2);
+                $parts[0] = '/'.$_GET['q']; 
                 $strictURL =  $this->toAlias($this->makeUrl($this->documentIdentifier));
                 $myDomain = $myProtocol . "://" . $_SERVER['HTTP_HOST'];
                 $newURL = $myDomain . $strictURL;
