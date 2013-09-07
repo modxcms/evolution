@@ -87,7 +87,7 @@ switch ($e->name) {
                                 mE12 = new Element("td",{"align":"left","styles":{"padding-top":"14px"}});
                                 mE122 = new Element("input",{"name":"filebinding","type":"text","maxlength":"45","value":"'.$content['file_binding'].'","class":"inputBox","styles":{"width":"300px","margin-left":"14px"},"events":{"change":function(){documentDirty=true;}}});
                                 
-                                mE11.appendText("Static file path:");
+                                mE11.appendText("' . _lang('Static file path') . ':");
                                 mE11.inject(mE1);
                                 mE122.inject(mE12);
                                 mE12.inject(mE1);
@@ -136,4 +136,23 @@ switch ($e->name) {
 if($output != '') {
         $e->output($output);
 }
-?>
+
+if(!function_exists('_lang') )
+{
+    function _lang($msgid)
+    {
+    	global $modx;
+    	$manager_lang = $modx->config['manager_language'];
+    	$lang_file_path = dirname(__FILE__) . "/lang/{$manager_lang}.inc.php";
+    
+    	$_lang = array();
+    	if($manager_lang!=='english' && is_file($lang_file_path))
+    	{
+    		include($lang_file_path);
+    	}
+    	
+    	$msgstr = (isset($_lang[$msgid])) ? $_lang[$msgid] : $msgid;
+    	
+    	return $msgstr;
+    }
+}
