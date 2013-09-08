@@ -12,17 +12,33 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 {
 	$htaccess        = $modx->config['base_path'] . '.htaccess';
 	$sample_htaccess = $modx->config['base_path'] . 'ht.access';
-	if(!file_exists($htaccess))
+	$subdir = rtrim($modx->config['base_url'],'/');
+	if(is_file($htaccess))
 	{
-		if(file_exists($sample_htaccess))
+		$_ = file_get_contents($htaccess);
+		if(strpos($_,'RewriteBase')===false)
+		{
+			$warnings[] = $_lang["settings_friendlyurls_alert2"];
+		}
+		elseif(is_writable($htaccess))
+		{
+			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$subdir}", $_);
+			if(!@file_put_contents($htaccess,$_))
+			{
+				$warnings[] = $_lang["settings_friendlyurls_alert2"];
+			}
+		}
+	}
+	else
+	{
+		if(is_file($sample_htaccess))
 		{
 			if(!@rename($sample_htaccess,$htaccess))
-{
-	$warnings[] = $_lang["settings_friendlyurls_alert"];
+            {
+            	$warnings[] = $_lang["settings_friendlyurls_alert"];
 			}
 			elseif($modx->config['base_url']!=='/')
 			{
-				$subdir = rtrim($modx->config['base_url'],'/');
 				$_ = file_get_contents($htaccess);
 				$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$subdir}", $_);
 				if(!@file_put_contents($htaccess,$_))
@@ -30,14 +46,6 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 					$warnings[] = $_lang["settings_friendlyurls_alert2"];
 				}
 			}
-		}
-	}
-	else
-	{
-		$_ = file_get_contents($htaccess);
-		if(strpos($_,'RewriteBase')===false)
-		{
-			$warnings[] = $_lang["settings_friendlyurls_alert2"];
 		}
 	}
 }
