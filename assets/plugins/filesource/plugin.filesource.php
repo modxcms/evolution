@@ -38,7 +38,10 @@ if($modx->event->name==='OnBeforePluginFormSave' || $modx->event->name==='OnBefo
     if(isset($_POST['filebinding']) && !empty($_POST['filebinding']))
     {
         $filebinding = trim($modx->db->escape($_POST['filebinding']));
-        if(!empty($filebinding))
+        if(strpos($filebinding,'\\')) $filebinding = str_replace('\\','/',$filebinding);
+        if(strpos($filebinding,'../')!==false || substr($filebinding,0,1)==='/')
+            $has_filebinding = '0';
+        elseif(!empty($filebinding))
         {
             $has_filebinding = '1';
             $elm_path = "assets/{$elm_name}/{$filebinding}";
