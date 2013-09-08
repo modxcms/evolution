@@ -48,7 +48,13 @@ if($modx->event->name==='OnBeforePluginFormSave' || $modx->event->name==='OnBefo
     }
     else $has_filebinding = '0';
     
-    $code = $_POST['post'];
+    if(isset($_POST['post']) && !empty($_POST['post']))
+    {
+        if(strpos($_POST['post'],"\r")!==false)
+            $code = str_replace(array("\r\n","\r"), "\n", $_POST['post']);
+        else $code = $_POST['post'];
+    }
+    else $code = '';
 }
 
 switch ($modx->event->name)
