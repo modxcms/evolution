@@ -1799,7 +1799,7 @@ input:focus.DatePicker, #mutate input:focus.DatePicker, #userPane input:focus.Da
 strong[style*='color:#EF1D1D'] {
 	color: yellow !important;
 	}
-	.selected strong[style*='color:#EF1D1D'] {
+	.selected strong[style*='color:#ffeb00'] {
 		color: red !important;
 	}
 
