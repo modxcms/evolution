@@ -844,6 +844,7 @@ class DocumentParser {
      * @return string
      */
     function mergeDocumentContent($content) {
+        if(strpos($content,'[*')===false) return $content;
         $replace= array ();
         $matches = $this->getTagsFromContent($content,'[*','*]');
 		if($matches){
@@ -874,6 +875,7 @@ class DocumentParser {
      * @return string
      */
     function mergeSettingsContent($content) {
+        if(strpos($content,'[(')===false) return $content;
         $replace= array ();
         $matches = $this->getTagsFromContent($content,'[(',')]');
         if($matches) {
@@ -895,6 +897,7 @@ class DocumentParser {
      * @return string
      */
     function mergeChunkContent($content) {
+        if(strpos($content,'{{')===false) return $content;
         $replace= array ();
         $matches = $this->getTagsFromContent($content,'{{','}}');
         if ($matches) {
@@ -929,6 +932,7 @@ class DocumentParser {
      * @return string
      */
     function mergePlaceholderContent($content) {
+        if(strpos($content,'[+')===false) return $content;
         $replace= array ();
         $content=$this->mergeSettingsContent($content);
         $matches = $this->getTagsFromContent($content,'[+','+]');
@@ -1032,6 +1036,7 @@ class DocumentParser {
      * @return string
      */
    function evalSnippets($documentSource) {
+        if(strpos($documentSource,'[[')===false) return $documentSource;
         $etomite= & $this;
         
         $stack = $documentSource;
