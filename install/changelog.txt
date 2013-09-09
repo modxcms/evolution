@@ -6,6 +6,7 @@ MODx Evolution 1.0.11 (Sep 09, 2013)
 --------------------------------------------
 Security:
 --------------------------------------------
+* [#9933] insideManager - security fix
 * [#10180] ForgotManagerPassword - Improvement reset url
 
 --------------------------------------------
@@ -103,7 +104,6 @@ Refactor:
 * [#9911] Update AjaxSearch to 1.9.3b
 * [#9922] german.inc.php (and other lang files)
 * [#9931] getPlaceholder return null if not exist
-* [#9933] insideManager - security fix
 * [#9934] Display caption for TV on TVs tabs
 * [#9939] eForm: multiple event functions separated by comma
 * [#9940] refactor exec mergeSettingsContent
