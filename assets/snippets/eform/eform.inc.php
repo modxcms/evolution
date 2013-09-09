@@ -649,9 +649,16 @@ $_dfnMaxlength = 6;
 
 # Form Merge
 function formMerge($docText, $docFields, $vClasses='') {
-	global $formats, $lastitems;
+	global $modx, $formats, $lastitems;
 	if(!$docText) return '';
 
+	$docText = str_replace($lastitems,"",$docText);
+    $docText = $modx->mergeDocumentContent($docText);
+    $docText = $modx->mergeSettingsContent($docText);
+    $docText = $modx->mergeChunkContent($docText);
+    if(strpos($docText,'[!')!==false) $docText = str_replace(array('[!','!]'),array('[[',']]'),$docText);
+    $docText = $modx->evalSnippets($docText);
+    
 	preg_match_all('~\[\+(.*?)\+\]~', $docText, $matches);
 	for($i=0;$i<count($matches[1]);$i++) {
 		$name = $matches[1][$i];
@@ -685,7 +692,6 @@ function formMerge($docText, $docFields, $vClasses='') {
 		}
 	}
 	$lastitems[count($lastitems)] = "class=\"\""; //removal off empty class attributes
-	$docText = str_replace($lastitems,"",$docText);
 	return $docText;
 }
 
@@ -1112,6 +1118,11 @@ function efLoadTemplate($key){
 		//try snippet if chunk is not found
 		if(!$tpl) $tpl = ( $doc=$modx->runSnippet($key) )? $doc : false;
 	}
+    $tpl = $modx->mergeDocumentContent($tpl);
+    $tpl = $modx->mergeSettingsContent($tpl);
+    $tpl = $modx->mergeChunkContent($tpl);
+    if(strpos($tpl,'[!')!==false) $tpl = str_replace(array('[!','!]'),array('[[',']]'),$tpl);
+    $tpl = $modx->evalSnippets($tpl);
 	return $tpl;
 }
 
