@@ -652,7 +652,6 @@ function formMerge($docText, $docFields, $vClasses='') {
 	global $modx, $formats, $lastitems;
 	if(!$docText) return '';
 
-	$docText = str_replace($lastitems,"",$docText);
     $docText = $modx->mergeDocumentContent($docText);
     $docText = $modx->mergeSettingsContent($docText);
     $docText = $modx->mergeChunkContent($docText);
@@ -692,6 +691,7 @@ function formMerge($docText, $docFields, $vClasses='') {
 		}
 	}
 	$lastitems[count($lastitems)] = "class=\"\""; //removal off empty class attributes
+	$docText = str_replace($lastitems,"",$docText);
 	return $docText;
 }
 
