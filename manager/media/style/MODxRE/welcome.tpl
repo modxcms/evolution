@@ -42,7 +42,7 @@
 		
 		<!-- system check -->
 		<div class="tab-page" id="tabcheck" style="display:[+config_display+]; padding-left:0; padding-right:0;">
-			<h2 class="tab" style="display:[+config_display+]"><strong style="color:#EF1D1D;">[+settings_config+]</strong></h2>
+			<h2 class="tab" style="display:[+config_display+]"><strong style="color:#ffeb00;">[+settings_config+]</strong></h2>
 			<script type="text/javascript"> if('[+config_display+]'=='block') tpPane.addTabPage( document.getElementById( "tabcheck" ) );</script>
 			<div class="sectionHeader">[+configcheck_title+]</div>
 			<div class="sectionBody">

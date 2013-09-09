@@ -1001,20 +1001,28 @@ a.hometblink:hover {
 }
 #nav li.active ul.subnav a:hover {
 	color: #fff;
+    background-color:#777;
 	background:-moz-linear-gradient(#999999, #444444);
 	background:-webkit-gradient(linear, 0 0, 0 100%, from(#999999), to(#444444));
 	background:-o-linear-gradient(#999999, #444444);
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#999999,endColorstr=#444444); zoom:1;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#999999,endColorstr=#444444);/*ie8 ?*/
+	background: -ms-linear-gradient(top, #999999, #444444); /*ie9*/
+	background: linear-gradient(to bottom, #999999, #444444);/*ie10*/
+	zoom:1;
 }
 #nav li.active ul.subnav a:active {
 	color: #ccc;
 }
 #nav li.active ul.subnav,
 #nav li.active ul.subnav a {
+    background-color:#777;
 	background:-moz-linear-gradient(#777777, #444444);
 	background:-webkit-gradient(linear, 0 0, 0 100%, from(#777777), to(#444444));
 	background:-o-linear-gradient(#777777, #444444);
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#777777,endColorstr=#444444); zoom:1;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#777777,endColorstr=#444444);/*ie8 ?*/
+	background: -ms-linear-gradient(top, #777777, #444444); /*ie9*/
+	background: linear-gradient(to bottom, #777777, #444444);/*ie10*/
+	zoom:1;
 }
 
 /* -------------------------[ Contextual Menu used in the Tree Menu ]--- */
@@ -1082,10 +1090,13 @@ a.hometblink:hover {
 	background-color: #86939E;
 	background-repeat:repeat-x;
 	text-shadow: 0px -1px 0px #222;
-			background:-moz-linear-gradient(#8aae4b, #66901b);
-			background:-webkit-gradient(linear, 0 0, 0 100%, from(#8aae4b), to(#66901b));
-			background:-o-linear-gradient(#8aae4b, #66901b);
-			filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#8aae4b,endColorstr=#66901b); zoom:1;
+	background:-moz-linear-gradient(#8aae4b, #66901b);
+	background:-webkit-gradient(linear, 0 0, 0 100%, from(#8aae4b), to(#66901b));
+	background:-o-linear-gradient(#8aae4b, #66901b);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#8aae4b,endColorstr=#66901b);
+	background: -ms-linear-gradient(top, #8aae4b, #66901b); /*ie9*/
+	background: linear-gradient(to bottom, #8aae4b, #66901b);/*ie10*/
+			zoom:1;
 }
 #mx_contextmenu .seperator {
 	font-size: 0;
