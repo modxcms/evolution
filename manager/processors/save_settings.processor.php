@@ -12,7 +12,7 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 {
 	$htaccess        = $modx->config['base_path'] . '.htaccess';
 	$sample_htaccess = $modx->config['base_path'] . 'ht.access';
-	$subdir = rtrim($modx->config['base_url'],'/');
+	$dir = '/' . trim($modx->config['base_url'],'/');
 	if(is_file($htaccess))
 	{
 		$_ = file_get_contents($htaccess);
@@ -22,7 +22,7 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 		}
 		elseif(is_writable($htaccess))
 		{
-			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$subdir}", $_);
+			$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
 			if(!@file_put_contents($htaccess,$_))
 			{
 				$warnings[] = $_lang["settings_friendlyurls_alert2"];
