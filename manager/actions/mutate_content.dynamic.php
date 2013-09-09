@@ -1249,17 +1249,16 @@ function getDefaultTemplate()
 		    	$site_start = $modx->config['site_start'];
 		    	$where = "sc.isfolder=0 AND sc.id!='{$site_start}'";
 		    	$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', $where, 'menuindex', 'ASC', 1);
-		    	if(!empty($sibl[0]['template'])) $default_template = $sibl[0]['template'];
+		    	if(isset($sibl[0]['template']) && $sibl[0]['template']!=='') $default_template = $sibl[0]['template'];
 			}
-				
 			else
 			{
 				$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 1, 0, 'template', 'isfolder=0', 'menuindex', 'ASC', 1);
-				if(!empty($sibl[0]['template'])) $default_template = $sibl[0]['template'];
+				if(isset($sibl[0]['template']) && $sibl[0]['template']!=='') $default_template = $sibl[0]['template'];
 				else
 				{
 					$sibl = $modx->getDocumentChildren($_REQUEST['pid'], 0, 0, 'template', 'isfolder=0', 'menuindex', 'ASC', 1);
-					if(!empty($sibl[0]['template'])) $default_template = $sibl[0]['template'];
+					if(isset($sibl[0]['template']) && $sibl[0]['template']!=='') $default_template = $sibl[0]['template'];
 				}
 			}
 			break;
