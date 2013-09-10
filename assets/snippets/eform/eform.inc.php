@@ -652,12 +652,6 @@ function formMerge($docText, $docFields, $vClasses='') {
 	global $modx, $formats, $lastitems;
 	if(!$docText) return '';
 
-    $docText = $modx->mergeDocumentContent($docText);
-    $docText = $modx->mergeSettingsContent($docText);
-    $docText = $modx->mergeChunkContent($docText);
-    if(strpos($docText,'[!')!==false) $docText = str_replace(array('[!','!]'),array('[[',']]'),$docText);
-    $docText = $modx->evalSnippets($docText);
-    
 	preg_match_all('~\[\+(.*?)\+\]~', $docText, $matches);
 	for($i=0;$i<count($matches[1]);$i++) {
 		$name = $matches[1][$i];
@@ -690,6 +684,11 @@ function formMerge($docText, $docFields, $vClasses='') {
 			$lastitems[count($lastitems)]="[+$name+]";
 		}
 	}
+    $docText = $modx->mergeDocumentContent($docText);
+    $docText = $modx->mergeSettingsContent($docText);
+    $docText = $modx->mergeChunkContent($docText);
+    if(strpos($docText,'[!')!==false) $docText = str_replace(array('[!','!]'),array('[[',']]'),$docText);
+    $docText = $modx->evalSnippets($docText);
 	$lastitems[count($lastitems)] = "class=\"\""; //removal off empty class attributes
 	$docText = str_replace($lastitems,"",$docText);
 	return $docText;

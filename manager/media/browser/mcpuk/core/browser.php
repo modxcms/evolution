@@ -72,6 +72,7 @@ class browser extends uploader {
 
     public function action() {
         $act = isset($this->get['act']) ? $this->get['act'] : "browser";
+        if(!preg_match('@^[0-9a-zA-Z_]+$@', $act)) $this->errorMsg("Unknown error.");
         if (!method_exists($this, "act_$act"))
             $act = "browser";
         $this->action = $act;
@@ -278,6 +279,7 @@ class browser extends uploader {
         $dir = $this->postDir();
         if (!isset($this->post['dir']) ||
             !isset($this->post['file']) ||
+            strpos($this->post['file'],'../')!==false ||
             (false === ($file = "$dir/{$this->post['file']}")) ||
             !file_exists($file) || !is_readable($file)
         )
@@ -300,6 +302,7 @@ class browser extends uploader {
         if (!$this->config['access']['files']['rename'] ||
             !isset($this->post['dir']) ||
             !isset($this->post['file']) ||
+            strpos($this->post['file'],'../')!==false ||
             !isset($this->post['newName']) ||
             (false === ($file = "$dir/{$this->post['file']}")) ||
             !file_exists($file) || !is_readable($file) || !file::isWritable($file)
@@ -343,6 +346,7 @@ class browser extends uploader {
         if (!$this->config['access']['files']['delete'] ||
             !isset($this->post['dir']) ||
             !isset($this->post['file']) ||
+            strpos($this->post['file'],'../')!==false ||
             (false === ($file = "$dir/{$this->post['file']}")) ||
             !file_exists($file) || !is_readable($file) || !file::isWritable($file) ||
             !@unlink($file)
