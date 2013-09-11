@@ -368,7 +368,7 @@ $_lang["go"] = 'Exécuter';
 $_lang["group_access_permissions"] = 'Accès des Groupes d\'Utilisateurs';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Aide';
-$_lang["help_msg"] = '<p>Vous pouvez obtenir de l\'aide en <a href="http://forums.modx.com" target="_blank">consultant les forums de MODX</a>. Il existe également <a href="http://modx.com/documentation" target="_blank">une documentation et des guides pour MODX</a> qui abordent tous les aspects de l\'utilisation de MODX.</p><p>De plus, nous proposerons bientôt des offres de support commercial. Veuillez <a href="mailto:hello@modxcms.com?subject=MODX Commercial Support Inquiry">nous envoyer un email si vous êtes intéressés</a>.';
+$_lang["help_msg"] = '<p>Vous pouvez obtenir de l\'aide en <a href="http://forums.modx.com" target="_blank">consultant les forums de MODX</a>. Il existe également <a href="http://modx.com/documentation" target="_blank">une documentation et des guides pour MODX</a> qui abordent tous les aspects de l\'utilisation de MODX.</p><p>De plus, nous proposerons bientôt des offres de support commercial. Veuillez <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">nous envoyer un email si vous êtes intéressés</a>.';
 $_lang["help_title"] = 'Aide';
 $_lang["hide_tree"] = 'Cacher l\'Arbre du Site';
 $_lang["home"] = 'Accueil';

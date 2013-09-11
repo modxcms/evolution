@@ -1,9 +1,9 @@
 <?php
 /**
- * MODx language File
+ * MODX language File
  *
  * @author davaeron
- * @package MODx
+ * @package MODX
  * @version 1.0
  * 
  * Filename:       /install/lang/hebrew/hebrew.inc.php
@@ -30,8 +30,8 @@ $_lang["begin"] = 'התחל';
 $_lang["btnback_value"] = 'חזרה';
 $_lang["btnclose_value"] = 'סגור';
 $_lang["btnnext_value"] = 'הבא';
-$_lang["cant_write_config_file"] = 'MODx couldn\'t write the config file. Please copy the following into the file ';
-$_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODx Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
+$_lang["cant_write_config_file"] = 'MODX couldn\'t write the config file. Please copy the following into the file ';
+$_lang["cant_write_config_file_note"] = 'Once that\'s been done, you can log into MODX Admin by pointing your browser at YourSiteName.com/[+MGR_DIR+]/.';
 $_lang["checkbox_select_options"] = 'אפשרויות שדה סימון:';
 $_lang["checking_if_cache_exist"] = 'Checking if <span class=\"mono\">assets/cache</span> directory exists: ';
 $_lang["checking_if_cache_file2_writable"] = 'Checking if <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> file is writable: ';
@@ -46,7 +46,7 @@ $_lang["checking_mysql_strict_mode"] = 'Checking MySQL for strict sql_mode: ';
 $_lang["checking_mysql_version"] = 'Checking MySQL version: ';
 $_lang["checking_php_version"] = 'Checking PHP version: ';
 $_lang["checking_registerglobals"] = 'Checking if Register_Globals is off: ';
-$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODx install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODx, but consider yourself warned.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'This configuration makes your site much more susceptible to Cross Site Scripting (XSS) attacks. You should speak to your host about disabling this setting, usually by one of three ways: modifying the global php.ini file, adding rules to a .htaccess file in the root of your MODX install, or adding custom php.ini override files in every directory on your install (and there\'s a lot of them). You will still be able to install MODX, but consider yourself warned.'; //Look at changing this to provide a solution.
 $_lang["checking_sessions"] = 'Checking if sessions are properly configured: ';
 $_lang["checking_table_prefix"] = 'Checking table prefix ';
 $_lang["chunks"] = 'מיני תבניות';
@@ -105,10 +105,10 @@ $_lang["installing_demo_site"] = 'התקנת אתר דוגמא: ';
 $_lang["language_code"] = 'he';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'טוען...';
 $_lang["modules"] = 'מודולים';
-$_lang["modx_footer1"] = '&copy; 2005-2011 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. All rights reserved. MODx is licensed under the GNU GPL.';
-$_lang["modx_footer2"] = 'MODx is free software.  We encourage you to be creative and make use of MODx in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODx, that you keep the source code free!';
-$_lang["modx_install"] = 'MODx &raquo; Install';
-$_lang["modx_requires_php"] = ', and MODx requires PHP 4.2.0 or later';
+$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF) project. All rights reserved. MODX is licensed under the GNU GPL.';
+$_lang["modx_footer2"] = 'MODX is free software.  We encourage you to be creative and make use of MODX in any way you see fit. Just make sure that if you do make changes and decide to redistribute your modified MODX, that you keep the source code free!';
+$_lang["modx_install"] = 'MODX &raquo; Install';
+$_lang["modx_requires_php"] = ', and MODX requires PHP 4.2.0 or later';
 $_lang["mysql_5051"] = ' MySQL server version is 5.0.51!';
 $_lang["mysql_5051_warning"] = 'There are known issues with MySQL 5.0.51. It is recommended that you upgrade before continuing.';
 $_lang["mysql_version_is"] = ' Your MySQL version is: ';
@@ -117,7 +117,7 @@ $_lang["not_found"] = 'לא נמצא';
 $_lang["ok"] = 'תקין!';
 $_lang["optional_items"] = 'פריטים אופצוינאלים';
 $_lang["optional_items_note"] = 'אנא בחר את אפשרויות ההתקנה שלך ולחץ על התקן:';
-$_lang["php_security_notice"] = '<legend>Security notice</legend><p>While MODx will work on your PHP version, usage of MODx on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 4.3.8 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p>';
+$_lang["php_security_notice"] = '<legend>Security notice</legend><p>While MODX will work on your PHP version, usage of MODX on this version is not recommended. Your version of PHP is vulnerable to numerous security holes. Please upgrade to PHP version is 4.3.8 or higher, which patches these holes. It is recommended you upgrade to this version for the security of your own website.</p>';
 $_lang["please_correct_error"] = '. Please correct the error';
 $_lang["please_correct_errors"] = '. Please correct the errors';
 $_lang["plugins"] = 'התקנים';
@@ -130,7 +130,7 @@ $_lang["running_setup_script"] = 'Running setup script... please wait';
 $_lang["sample_web_site"] = 'אתר אינטרנט לדוגמא';
 $_lang["sample_web_site_note"] = 'יש לקחת בחשבון כי פעולה זו <b style=\"color:#CC0000\">דורסת</b> מסמכים ומשאבים קיימים.';
 $_lang["setup_cannot_continue"] = 'Unfortunately, Setup cannot continue at the moment, due to the above ';
-$_lang["setup_couldnt_install"] = 'MODx setup couldn\'t install/alter some tables inside the selected database.';
+$_lang["setup_couldnt_install"] = 'MODX setup couldn\'t install/alter some tables inside the selected database.';
 $_lang["setup_database"] = 'מערכת ההתקנה תנסה כעת להתקין את מסד הנתונים:<br />';
 $_lang["setup_database_create_connection"] = 'Creating connection to the database: ';
 $_lang["setup_database_create_connection_failed"] = 'Database connection failed!';
@@ -156,7 +156,7 @@ $_lang["status_passed"] = 'עבר - מסד נתונים נבחר';
 $_lang["status_passed_database_created"] = 'עבר - יצירת מסד נתונים';
 $_lang["status_passed_server"] = 'עבר - אוסף נתונים זמין';
 $_lang["strict_mode"] = ' MySQL server strict sql_mode is enabled!';
-$_lang["strict_mode_error"] = 'Certain features of MODx may not work properly unless the STRICT_TRANS_TABLES sql_mode is disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
+$_lang["strict_mode_error"] = 'Certain features of MODX may not work properly unless the STRICT_TRANS_TABLES sql_mode is disabled. You can set the MySQL mode by editing the my.cnf file or contact your server administrator.';
 $_lang["summary_setup_check"] = 'מערכת ההתקנה ביצעה מספר בדיקות על מנת לודא כי ניתן להמשיך בהתקנה.';
 $_lang["table_prefix_already_inuse"] = ' - Table prefix is already in use in this database!';
 $_lang["table_prefix_already_inuse_note"] = 'Setup couldn\'t install into the selected database, as it already contains tables with the prefix you specified. Please choose a new table prefix, and run Setup again.';
@@ -173,11 +173,11 @@ $_lang["unable_install_snippet"] = 'Unable to install snippet.  File';
 $_lang["unable_install_template"] = 'Unable to install template.  File';
 $_lang["upgrade_note"] = '<strong>הערה:</strong> לפני גלישה באתר יש להכנס למערכת הניהול לבדוק את ההגדרות ולשמור אותן.';
 $_lang["upgraded"] = 'שודרג';
-$_lang["visit_forum"] = ', בקרו ב <a href="http://modxcms.com/forums/index.php/board,360.0.html" target="_blank">פורומים בעברית</a>.';
+$_lang["visit_forum"] = ', בקרו ב <a href="http://forums.modx.com/index.php/board,360.0.html" target="_blank">פורומים בעברית</a>.';
 $_lang["warning"] = 'אזהרה!';
 $_lang["welcome_message_select_begin_button"] = 'בחר בכפתור התחל להתחלת ההתקנה:';
 $_lang["welcome_message_text"] = 'תוכנה זו תלווה אתכם בהמשך תהליך ההתקנה.';
-$_lang["welcome_message_welcome"] = 'ברוכים הבאים להתקנת MODx.';
+$_lang["welcome_message_welcome"] = 'ברוכים הבאים להתקנת MODX.';
 $_lang["writing_config_file"] = 'יוצר קובץ הגדרות: ';
 $_lang["you_running_php"] = ' - אתה רץ על PHP ';
 ?>

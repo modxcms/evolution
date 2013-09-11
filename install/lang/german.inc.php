@@ -3,7 +3,7 @@
  * MODX language File
  *
  * @author davaeron, German translation by Marc Hinse and Bogdan Günther
- * @package MODx
+ * @package MODX
  * @version 2.0
  * @translation
  * Filename:       /install/lang/german.inc.php
@@ -30,7 +30,7 @@ $_lang["btnback_value"] = 'Zurück';
 $_lang["btnclose_value"] = 'Schließen';
 $_lang["btnnext_value"] = 'Weiter';
 $_lang["cant_write_config_file"] = 'MODX konnte die Konfigurationsdatei nicht erstellen. Bitte fügen Sie folgendes in eine leere Datei ein:';
-$_lang["cant_write_config_file_note"] = 'Sobald dieser Vorgang beendet ist, können Sie sich im MODx-Manager anmelden unter http://ihredomain.de/[+MGR_DIR+]/.';
+$_lang["cant_write_config_file_note"] = 'Sobald dieser Vorgang beendet ist, können Sie sich im MODX-Manager anmelden unter http://ihredomain.de/[+MGR_DIR+]/.';
 $_lang["checkbox_select_options"] = 'Checkbox-Auswahlmöglichkeiten:';
 $_lang["checking_if_cache_exist"] = 'Überprüfe ob die Ordner <span class="mono">/assets/cache</span> und <span class="mono">/assets/cache/rss</span> existieren: ';
 $_lang["checking_if_cache_file_writable"] = 'Überprüfe ob die Datei <span class="mono">/assets/cache/siteCache.idx.php</span> beschreibbar ist: ';
@@ -78,7 +78,7 @@ $_lang["database_connection_failed_note"] = 'Bitte Überprüfen Sie Ihre Datenba
 $_lang["database_use_failed"] = 'Datenbank konnte nicht ausgewählt werden!';
 $_lang["database_use_failed_note"] = 'Bitte prüfen Sie den Datenbankzugang für den gewählten Benutzer und versuchen Sie es erneut.';
 $_lang["default_language"] = 'Manager Standard-Sprache';
-$_lang["default_language_description"] = 'Das ist die voreingestellte Sprache die im MODx-Manager (dem MODx-Adminbereich) verwendet wird.';
+$_lang["default_language_description"] = 'Das ist die voreingestellte Sprache die im MODX-Manager (dem MODX-Adminbereich) verwendet wird.';
 $_lang["during_execution_of_sql"] = ' während des Ausführens des SQL-Statements ';
 $_lang["encoding"] = 'utf-8';	//charset encoding for html header
 $_lang["error"] = 'Fehler';
