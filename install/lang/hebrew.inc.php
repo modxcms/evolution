@@ -173,7 +173,7 @@ $_lang["unable_install_snippet"] = 'Unable to install snippet.  File';
 $_lang["unable_install_template"] = 'Unable to install template.  File';
 $_lang["upgrade_note"] = '<strong>הערה:</strong> לפני גלישה באתר יש להכנס למערכת הניהול לבדוק את ההגדרות ולשמור אותן.';
 $_lang["upgraded"] = 'שודרג';
-$_lang["visit_forum"] = ', בקרו ב <a href="http://modxcms.com/forums/index.php/board,360.0.html" target="_blank">פורומים בעברית</a>.';
+$_lang["visit_forum"] = ', בקרו ב <a href="http://forums.modx.com/index.php/board,360.0.html" target="_blank">פורומים בעברית</a>.';
 $_lang["warning"] = 'אזהרה!';
 $_lang["welcome_message_select_begin_button"] = 'בחר בכפתור התחל להתחלת ההתקנה:';
 $_lang["welcome_message_text"] = 'תוכנה זו תלווה אתכם בהמשך תהליך ההתקנה.';
