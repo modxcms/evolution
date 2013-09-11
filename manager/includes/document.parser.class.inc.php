@@ -1275,43 +1275,49 @@ class DocumentParser {
             $documentSource= preg_replace($in, $out, $documentSource);
         }
 		
-		$this->_fixURI();
         return $documentSource;
     }
 	
-	function _fixURI(){
+	function sendStrictURI(){
         // FIX URLs
-         if ((int)$this->documentIdentifier != 0 && $this->config['seostrict']=='1' && $this->config['friendly_urls']=='1'){
-            if ($this->config['site_status'] == 1) {
-                $myProtocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-                $parts = explode("?", $_SERVER['REQUEST_URI'],2);
-                $parts[0] = '/'.$_GET['q']; 
-                $strictURL =  $this->toAlias($this->makeUrl($this->documentIdentifier));
-                $myDomain = $myProtocol . "://" . $_SERVER['HTTP_HOST'];
-                $newURL = $myDomain . $strictURL;
-                $requestedURL = $myDomain . $parts[0];
-                
-                if ($this->documentIdentifier == $this->config['site_start']){
-                    if ($requestedURL != $this->config['site_url']){
-                        // Force redirect of site start
-                        // $this->sendErrorPage();
-                        header("HTTP/1.1 301 Moved Permanently");
-                        $qstring = isset($parts[1]) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]) : ''; // Strip conflicting id/q from query string
-                        if ($qstring) header('Location: ' . $this->config['site_url'] . '?' . $qstring);
-                        else header('Location: ' . $this->config['site_url']);
-                        exit(0);
-                    }
-                }elseif ($parts[0] != $strictURL && $this->documentIdentifier != $this->config['error_page']){
-                     // Force page redirect
-                    header("HTTP/1.1 301 Moved Permanently");
-                    $qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $parts[1]);  // Strip conflicting id/q from query string
-                    if ($qstring) header('Location: ' . $strictURL . '?' . $qstring);
-                    else header('Location: ' . $strictURL);
-                        exit(0);
-                
+        if (empty($this->documentIdentifier) || $this->config['seostrict']=='0' || $this->config['friendly_urls']=='0')
+         	return;
+        if ($this->config['site_status'] == 0) return;
+        
+        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+        $len_base_url = strlen($this->config['base_url']);
+        if(strpos($_SERVER['REQUEST_URI'],'?'))
+        	list($url_path,$url_query_string) = explode('?', $_SERVER['REQUEST_URI'],2);
+        else $url_path = $_SERVER['REQUEST_URI'];
+        if(substr($url_path,0,$len_base_url)===$this->config['base_url'])
+        	$url_path = substr($url_path,$len_base_url);
+        $strictURL =  $this->toAlias($this->makeUrl($this->documentIdentifier));
+        if(substr($strictURL,0,$len_base_url)===$this->config['base_url'])
+        	$strictURL = substr($strictURL,$len_base_url);
+        $http_host = $_SERVER['HTTP_HOST'];
+        $requestedURL = "{$scheme}://{$http_host}" . $_SERVER['REQUEST_URI'];
+        $site_url = $this->config['site_url'];
+        if ($this->documentIdentifier == $this->config['site_start']){
+            if ($requestedURL != $this->config['site_url']){
+                // Force redirect of site start
+                // $this->sendErrorPage();
+                $qstring = isset($url_query_string) ? preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string) : ''; // Strip conflicting id/q from query string
+                if ($qstring) $url = "{$site_url}?{$qstring}";
+                else          $url = $site_url;
+                $this->sendRedirect($url,0,'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
+                exit(0);
             }
+        }elseif ($url_path != $strictURL && $this->documentIdentifier != $this->config['error_page']){
+             // Force page redirect
+        	//$strictURL = ltrim($strictURL,'/');
+            if(!empty($url_query_string))
+            	$qstring = preg_replace("#(^|&)(q|id)=[^&]+#", '', $url_query_string);  // Strip conflicting id/q from query string
+            if ($qstring) $url = "{$site_url}{$strictURL}?{$qstring}";
+            else          $url = "{$site_url}{$strictURL}";
+            $this->sendRedirect($url,0,'REDIRECT_HEADER', 'HTTP/1.0 301 Moved Permanently');
+            exit(0);
         }
-        }
+        return;
     }
 
     /**
@@ -1558,7 +1564,7 @@ class DocumentParser {
         if ($this->config['track_visitors'] == 1) {
             $this->invokeEvent("OnLogPageHit");
         }
-
+        if($this->config['seostrict']==='1') $this->sendStrictURI();
         $this->prepareResponse();
     }
 
