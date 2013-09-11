@@ -1,9 +1,9 @@
 <?php
 /**
- * MODx language File
+ * MODX language File
  *
  * @author Daniel Miguel de Melo
- * @package MODx installer
+ * @package MODX installer
  * @version 1.0
  * @translation
  * Filename:       /install/lang/portuguese-br/portuguese-br.inc.php
@@ -28,8 +28,8 @@ $_lang["begin"] = 'Começar';
 $_lang["btnback_value"] = 'Anterior';
 $_lang["btnclose_value"] = 'Fechar';
 $_lang["btnnext_value"] = 'Próximo';
-$_lang["cant_write_config_file"] = 'MODx não pode escrever o arquivo de configuração. Por favor copie no arquivo as seguintes informações ';
-$_lang["cant_write_config_file_note"] = 'Assim que isto for feito, você pode acessar o MODx Admin por apontar seu navegador para NomeDoSeuSite.com/manager/.';
+$_lang["cant_write_config_file"] = 'MODX não pode escrever o arquivo de configuração. Por favor copie no arquivo as seguintes informações ';
+$_lang["cant_write_config_file_note"] = 'Assim que isto for feito, você pode acessar o MODX Admin por apontar seu navegador para NomeDoSeuSite.com/manager/.';
 $_lang["checkbox_select_options"] = 'Selecionar:';
 $_lang["checking_if_cache_exist"] = 'Checando se o diretório <span class=\"mono\">assets/cache</span> existe: ';
 $_lang["checking_if_cache_file2_writable"] = 'Checando se o arquivo <span class=\"mono\">assets/cache/sitePublishing.idx.php</span> está liberado pra escrita: ';
@@ -42,7 +42,7 @@ $_lang["checking_if_images_exist"] = 'Checando se o diretório <span class=\"mon
 $_lang["checking_if_images_writable"] = 'Checando se o diretório <span class=\"mono\">assets/images</span> está liberado pra escrita: ';
 $_lang["checking_php_version"] = 'Checando versão do PHP: ';
 $_lang["checking_registerglobals"] = 'Checando se Register_Globals está desligado: ';
-$_lang["checking_registerglobals_note"] = 'Este script faz com que seu site seja muito mais propenso à ataques de Cross Site Scripting (XSS). Você deveria entrar em contato com seu Host para mudar esta configuração, geralmente há três modos de desabilitar: modificando o arquivo global php.ini, adicionando regras para um arquivo .htaccess na raiz da pasta da instalação do MODx, ou adicionando um php.ini sobre cada arquivo em cada pasta de sua instação (e tem um muitos deles). Ou você poderá instalar o MODx, mas considere-se avisado.'; //Look at changing this to provide a solution.
+$_lang["checking_registerglobals_note"] = 'Este script faz com que seu site seja muito mais propenso à ataques de Cross Site Scripting (XSS). Você deveria entrar em contato com seu Host para mudar esta configuração, geralmente há três modos de desabilitar: modificando o arquivo global php.ini, adicionando regras para um arquivo .htaccess na raiz da pasta da instalação do MODX, ou adicionando um php.ini sobre cada arquivo em cada pasta de sua instação (e tem um muitos deles). Ou você poderá instalar o MODX, mas considere-se avisado.'; //Look at changing this to provide a solution.
 $_lang["checking_sessions"] = 'Checando se as seções estão configuradas apropiadamente: ';
 $_lang["checking_table_prefix"] = 'Verificando Prefixo de Tabela `';
 $_lang["chunks"] = 'Chunks';
@@ -87,7 +87,7 @@ $_lang["installation_install_new_copy"] = 'Instalar uma nova cópia de ';
 $_lang["installation_install_new_note"] = 'Atenção esta opção irá sobreescrever qualquer conteúdo dentro de sua Base de Dados.';
 $_lang["installation_mode"] = 'Modo de Instalação';
 $_lang["installation_new_installation"] = 'Nova Instalação';
-$_lang["installation_note"] = '<strong>Nota:</strong> Antes de entrar no painel você deve editar e salvar as suas Configurações do Sistema antes de navergar no site, escolhendo <strong>Administração</strong> -> Configuração do Sistema no Gerenciador do MODx.';
+$_lang["installation_note"] = '<strong>Nota:</strong> Antes de entrar no painel você deve editar e salvar as suas Configurações do Sistema antes de navergar no site, escolhendo <strong>Administração</strong> -> Configuração do Sistema no Gerenciador do MODX.';
 $_lang["installation_successful"] = 'Instalação feita com sucesso!';
 $_lang["installation_upgrade_advanced"] = 'Instalação de Atualização Avançada (Upgrade)<br /><small>(editar config. da database)</small>';
 $_lang["installation_upgrade_advanced_note"] = 'Para administradores avançados de database ou mover para servidores com uma conexão de um character set diferente. <b>Você vai precisar de saber o nome completo da base de dados, usuário, senha e detalhes conexão/collations.</b>';
@@ -97,17 +97,17 @@ $_lang["installed"] = 'Instalado';
 $_lang["installing_demo_site"] = 'Instalando site de exemplo: ';
 $_lang["loading"] = 'Carregando...';
 $_lang["modules"] = 'Modulos';
-$_lang["modx_footer1"] = '&copy; 2005-2013 o projeto <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF). Todos os direitos reservados. MODx é licensiado pela GNU GPL.';
-$_lang["modx_footer2"] = 'MODx é um software livre.  Nós indicamos o uso do MODx do modo que for mais conveniente para você. Apenas, sempre que redistribuir versões modificadas do MODx incluir uma cópia original do código-fonte gratuitamente!';
-$_lang["modx_install"] = 'MODx &raquo; Instalação';
-$_lang["modx_requires_php"] = ', e o MODx requer PHP 4.1.0 ou mais recente';
+$_lang["modx_footer1"] = '&copy; 2005-2013 o projeto <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODX</a> Content Mangement Framework (CMF). Todos os direitos reservados. MODX é licensiado pela GNU GPL.';
+$_lang["modx_footer2"] = 'MODX é um software livre.  Nós indicamos o uso do MODX do modo que for mais conveniente para você. Apenas, sempre que redistribuir versões modificadas do MODX incluir uma cópia original do código-fonte gratuitamente!';
+$_lang["modx_install"] = 'MODX &raquo; Instalação';
+$_lang["modx_requires_php"] = ', e o MODX requer PHP 4.1.0 ou mais recente';
 $_lang["mysql_5051"] = 'Aviso : Versão do MySQL no servidor é 5.0.51';
 $_lang["none"] = 'Nenhuma';
 $_lang["not_found"] = 'não encontrado';
 $_lang["ok"] = 'OK!';
 $_lang["optional_items"] = 'Itens Opcionais';
 $_lang["optional_items_note"] = 'Escolha as opções de instalações e clique em Instalar:';
-$_lang["php_security_notice"] = '<legend>Alerta de Segurança</legend><p>Enquanto MODx irá trabalhar em sua versão de PHP, o uso do MODx nesta versão não é recomendado. Sua versão do PHP é vulnerável à muitas falhas de segurança. Por favor, atualize o PHP para versão 4.3.8 ou superior, que fecha estas falhas. Você deve atualizar pela segurança de seu própio site.</p>';
+$_lang["php_security_notice"] = '<legend>Alerta de Segurança</legend><p>Enquanto MODX irá trabalhar em sua versão de PHP, o uso do MODX nesta versão não é recomendado. Sua versão do PHP é vulnerável à muitas falhas de segurança. Por favor, atualize o PHP para versão 4.3.8 ou superior, que fecha estas falhas. Você deve atualizar pela segurança de seu própio site.</p>';
 $_lang["please_correct_error"] = '. Por favor, corriga o erro';
 $_lang["please_correct_errors"] = '. Por favor, corriga os erros';
 $_lang["plugins"] = 'Plugins';
@@ -158,9 +158,9 @@ $_lang["unable_install_snippet"] = 'Não foi possivel instalar o snippet.  Arqui
 $_lang["unable_install_template"] = 'Não foi possivel instalar o template.  Arquivo';
 $_lang["upgrade_note"] = '<strong>Nota:</strong> Antes de navegar em seu site você deve acessar o Gerenciador usando uma conta de Administrador, e depois revisar e gravar suas Configurações de Sistema.';
 $_lang["upgraded"] = 'Atualizado';
-$_lang["visit_forum"] = ', visite o <a href="http://forums.modx.com/" target="_blank">Operation MODx Forums</a>.';
+$_lang["visit_forum"] = ', visite o <a href="http://forums.modx.com/" target="_blank">Operation MODX Forums</a>.';
 $_lang["welcome_message_text"] = 'Este programa irá te guiar pelo resto da instalação do pacote.';
-$_lang["welcome_message_welcome"] = 'Bem-vindo à instalação do MODx.';
+$_lang["welcome_message_welcome"] = 'Bem-vindo à instalação do MODX.';
 $_lang["writing_config_file"] = 'Escrevendo arquivo de configuração: ';
 $_lang["you_running_php"] = ' - Você está rodando no PHP ';
 ?>
