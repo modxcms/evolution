@@ -108,7 +108,7 @@ $_lang["installing_demo_site"] = 'Installazione del sito demo: ';
 $_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'Sto caricando...';
 $_lang["modules"] = 'Moduli';
-$_lang["modx_footer1"] = '&copy; 2005-2011 the <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. All rights reserved. MODx is licensed under the GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2013 the <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF) project. All rights reserved. MODx is licensed under the GNU GPL.';
 $_lang["modx_footer2"] = 'MODx is software libero. Vi incoraggiamo ad essere creativi e usare MODx come vi pare. Se fate delle modifiche al codice e decidete di ridistribuire il vostro MODx modificato, vi chiediamo di distribuire gratuitamente il codice sorgente!';
 $_lang["modx_install"] = 'MODx &raquo; Installazione';
 $_lang["modx_requires_php"] = ', e MODx richiede PHP 4.2.0 o successivo';
@@ -183,7 +183,7 @@ $_lang["unable_install_template"] = 'Impossibile installare il template.  File';
 $_lang["upgrade_note"] = '<strong>Note:</strong> Vi preghiamo di accedere al Manager come Amministratore e verificare la Configurazione di Sistema.';
 $_lang["upgraded"] = 'Aggiornato';
 $_lang["validate_referer_title"] = 'Validazione degli headers HTTP_REFERER?';
-$_lang["visit_forum"] = ', consultate i <a href="http://www.modxcms.com/forums/" target="_blank">Forums MODx</a>.';
+$_lang["visit_forum"] = ', consultate i <a href="http://forums.modx.com/" target="_blank">Forums MODx</a>.';
 $_lang["warning"] = 'ATTENZIONE!';
 $_lang["welcome_message_start"] = 'Selezionate la modalit&agrave; di installazione:';
 $_lang["welcome_message_text"] = 'Questo programma vi guider&agrave; attraverso il processo di Installazione.';

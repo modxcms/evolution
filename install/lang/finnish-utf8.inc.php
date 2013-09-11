@@ -108,7 +108,7 @@ $_lang["installing_demo_site"] = 'Asennetaan demo sivustoa: ';
 $_lang["language_code"] = 'fi';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'Ladataan...';
 $_lang["modules"] = 'Moduulit';
-$_lang["modx_footer1"] = '&copy; 2005-2011 <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF). Kaikki oikeudet pidätetään. MODx on lisensoitu GNU GPL lisenssillä.';
+$_lang["modx_footer1"] = '&copy; 2005-2013 <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF). Kaikki oikeudet pidätetään. MODx on lisensoitu GNU GPL lisenssillä.';
 $_lang["modx_footer2"] = 'MODx on ilmainen ohjelmisto. Kehoitamme sinua olemaan luova ja käyttämään MODx järjestelmää siten, miten sinä sen parhaaksi näet. Jos teet muutoksia järjestelmään ja päätät jakaa muokattua MODx järjestelmää eteenpäin, muista pitää muokattu lähdekoodi vapaasti saatavilla!';
 $_lang["modx_install"] = 'MODx &raquo; Asennus';
 $_lang["modx_requires_php"] = ', ja MODx vaatii PHP:stä version 4.2.0 tai uudemman';
@@ -175,7 +175,7 @@ $_lang["unable_install_snippet"] = 'PHP-palasta ei voitu asentaa.  Tiedosto';
 $_lang["unable_install_template"] = 'Sivupohjaa ei voitu asentaa.  Tiedosto';
 $_lang["upgrade_note"] = '<strong>HUOMIO:</strong> Ennen sivustojen käyttöä, sinun tulisi kirjautua järjestelmän hallintaan pääkäyttäjätunnuksella ja tarkistaa, sekä tallentaa järjestelmän asetukset.';
 $_lang["upgraded"] = 'Päivitetty';
-$_lang["visit_forum"] = ', vieraile <a href="http://www.modxcms.com/forums/" target="_blank">MODx keskustelufoorumilla</a>.';
+$_lang["visit_forum"] = ', vieraile <a href="http://forums.modx.com/" target="_blank">MODx keskustelufoorumilla</a>.';
 $_lang["warning"] = 'VAROITUS!';
 $_lang["welcome_message_start"] = 'Valitse aluksi suoritettavan asennuksen tyyppi:';
 $_lang["welcome_message_text"] = 'Tämä ohjelma ohjaa sinut suorittamaan järjestelmän asennuksen.';

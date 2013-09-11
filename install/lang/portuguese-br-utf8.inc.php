@@ -97,7 +97,7 @@ $_lang["installed"] = 'Instalado';
 $_lang["installing_demo_site"] = 'Instalando site de exemplo: ';
 $_lang["loading"] = 'Carregando...';
 $_lang["modules"] = 'Modulos';
-$_lang["modx_footer1"] = '&copy; 2005-2007 o projeto <a href="http://www.modxcms.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF). Todos os direitos reservados. MODx é licensiado pela GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2013 o projeto <a href="http://modx.com/" target="_blank" style="color: green; text-decoration:underline">MODx</a> Content Mangement Framework (CMF). Todos os direitos reservados. MODx é licensiado pela GNU GPL.';
 $_lang["modx_footer2"] = 'MODx é um software livre.  Nós indicamos o uso do MODx do modo que for mais conveniente para você. Apenas, sempre que redistribuir versões modificadas do MODx incluir uma cópia original do código-fonte gratuitamente!';
 $_lang["modx_install"] = 'MODx &raquo; Instalação';
 $_lang["modx_requires_php"] = ', e o MODx requer PHP 4.1.0 ou mais recente';
@@ -158,7 +158,7 @@ $_lang["unable_install_snippet"] = 'Não foi possivel instalar o snippet.  Arqui
 $_lang["unable_install_template"] = 'Não foi possivel instalar o template.  Arquivo';
 $_lang["upgrade_note"] = '<strong>Nota:</strong> Antes de navegar em seu site você deve acessar o Gerenciador usando uma conta de Administrador, e depois revisar e gravar suas Configurações de Sistema.';
 $_lang["upgraded"] = 'Atualizado';
-$_lang["visit_forum"] = ', visite o <a href="http://www.modxcms.com/forums/" target="_blank">Operation MODx Forums</a>.';
+$_lang["visit_forum"] = ', visite o <a href="http://forums.modx.com/" target="_blank">Operation MODx Forums</a>.';
 $_lang["welcome_message_text"] = 'Este programa irá te guiar pelo resto da instalação do pacote.';
 $_lang["welcome_message_welcome"] = 'Bem-vindo à instalação do MODx.';
 $_lang["writing_config_file"] = 'Escrevendo arquivo de configuração: ';
