@@ -298,6 +298,11 @@ function decode(s){
     <td>[*&nbsp;<input name="name" type="text" maxlength="50" value="<?php echo htmlspecialchars($content['name']);?>" class="inputBox" style="width:250px;" onchange="documentDirty=true;">*]&nbsp; <span class="warning" id='savingMessage'>&nbsp;</span></td>
   </tr>
   <tr>
+    <th><?php echo $_lang['tmplvars_caption']; ?>:</th>
+    <td><input name="caption" type="text" maxlength="80" value="<?php echo htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
+  </tr>
+
+  <tr>
     <th><?php echo $_lang['tmplvars_description']; ?>:</th>
     <td><input name="description" type="text" maxlength="255" value="<?php echo htmlspecialchars($content['description']);?>" class="inputBox" style="width:300px;" onChange="documentDirty=true;"></td>
   </tr>
@@ -324,11 +329,6 @@ function decode(s){
     <td colspan="2"><label><input name="locked" value="on" type="checkbox" <?php echo $content['locked']==1 ? "checked='checked'" : "" ;?> class="inputBox" /> <?php echo $_lang['lock_tmplvars']; ?></label> <span class="comment"><?php echo $_lang['lock_tmplvars_msg']; ?></span></td>
   </tr>
 <?php endif;?>
-  <tr>
-    <th><?php echo $_lang['tmplvars_caption']; ?>:</th>
-    <td><input name="caption" type="text" maxlength="80" value="<?php echo htmlspecialchars($content['caption']);?>" class="inputBox" style="width:300px;" onchange="documentDirty=true;"></td>
-  </tr>
-
   <tr>
     <th><?php echo $_lang['tmplvars_type']; ?>:&nbsp;&nbsp;</th>
     <td><select name="type" size="1" class="inputBox" style="width:300px;" onchange="documentDirty=true;">
