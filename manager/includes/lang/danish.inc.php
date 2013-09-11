@@ -370,7 +370,7 @@ $_lang["go"] = 'Gennemfør';
 $_lang["group_access_permissions"] = 'Bruger gruppe adgang';
 $_lang["guid"] = 'GUID';
 $_lang["help"] = 'Hjælp';
-$_lang["help_msg"] = '<p>Du kan få fri og frivillig support <a href="http://forums.modx.com" target="_blank">hvis du besøger MODX\'s Fora</a>. Der er også en større samling af <a href="http://modx.com/documentation" target="_blank">dokumentation og guider til MODX</a> som beskriver stort set alle facetter af MODX.</p><p>Desuden planlægger vi at tilbyde kommerciel service og support til MODX. Kontakt os på <a href="mailto:hello@modxcms.com?subject=MODX Commercial Support Inquiry">e-mail, hvis dette har din interesse (Skriv venligst på engelsk)</a>.</p>';
+$_lang["help_msg"] = '<p>Du kan få fri og frivillig support <a href="http://forums.modx.com" target="_blank">hvis du besøger MODX\'s Fora</a>. Der er også en større samling af <a href="http://modx.com/documentation" target="_blank">dokumentation og guider til MODX</a> som beskriver stort set alle facetter af MODX.</p><p>Desuden planlægger vi at tilbyde kommerciel service og support til MODX. Kontakt os på <a href="mailto:hello@modx.com?subject=MODX Commercial Support Inquiry">e-mail, hvis dette har din interesse (Skriv venligst på engelsk)</a>.</p>';
 $_lang["help_title"] = 'Hjælp';
 $_lang["hide_tree"] = 'Skjul website træet';
 $_lang["home"] = 'Startside';
