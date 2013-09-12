@@ -87,7 +87,7 @@ $_lang["failed"] = 'MISLUKT!';
 $_lang["help"] = 'Help!';
 $_lang["help_link"] = 'http://forums.modx.com/';
 $_lang["help_title"] = 'Installatie hulp in de MODX forums';
-$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</ a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
+$_lang["iagree_box"] = 'Ik ga akkoord met de voorwaarden van <a href="../assets/docs/license.txt" target="_blank">de MODX licentie</a>. Voor vertalingen van de GPL versie 2 licentie, bezoek dan de <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0-translations.html" target="_blank">GNU Besturingssysteem website</a>.';
 $_lang["install"] = 'Installatie';
 $_lang["install_overwrite"] = 'Installatie/Overschrijven';
 $_lang["install_results"] = 'Installatie resultaten';
@@ -108,7 +108,7 @@ $_lang["installing_demo_site"] = 'Installeer demo site:';
 $_lang["language_code"] = 'en';	// for html element e.g. <html xml:lang="en" lang="en">
 $_lang["loading"] = 'Laden...';
 $_lang["modules"] = 'Modules';
-$_lang["modx_footer1"] = '&copy; 2005-2013 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</ a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
+$_lang["modx_footer1"] = '&copy; 2005-2013 <a target="_blank" href="http://www.modx.com/" style="color: green; text-decoration:underline">MODX</a> Content Management Framework (CMF) project. Alle rechten voorbehouden. MODX is gelicenseerd onder de GNU GPL.';
 $_lang["modx_footer2"] = 'MODX is gratis software. Wij raden u aan om creatief te zijn en gebruik te maken van MODX op je eigen manier. Maar zorg ervoor dat als je wijzigingen uitvoert, dat je de broncode vrij houdt!';
 $_lang["modx_install"] = 'MODX &raquo; Installeren';
 $_lang["modx_requires_php"] = ', en MODX heeft PHP 4.2.0 of nieuwer nodig';
