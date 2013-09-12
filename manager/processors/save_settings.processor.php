@@ -40,7 +40,7 @@ if($data['friendly_urls']==='1' && strpos($_SERVER['SERVER_SOFTWARE'],'IIS')===f
 			elseif($modx->config['base_url']!=='/')
 			{
 				$_ = file_get_contents($htaccess);
-				$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$subdir}", $_);
+				$_ = preg_replace('@RewriteBase.+@',"RewriteBase {$dir}", $_);
 				if(!@file_put_contents($htaccess,$_))
 				{
 					$warnings[] = $_lang["settings_friendlyurls_alert2"];
