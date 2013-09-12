@@ -1196,3 +1196,8 @@ $_lang["settings_friendlyurls_alert2"] = 'При установке MODX в по
 $_lang["user_street"] = 'Улица';
 $_lang["user_city"] = 'Город';
 $_lang["user_other"] = 'Другое';
+
+$_lang["mutate_settings.dynamic.php6"] = 'Уведомления о системных ошибках';
+$_lang["mutate_settings.dynamic.php7"] = 'Не уведомлять';
+$_lang["mutate_settings.dynamic.php8"] = 'Уведомления приходят на [(emailsender)]([+emailsender+]) в момент генериции ошибки. Детали можно увидеть в журнале ошибок.';
+
