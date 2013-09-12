@@ -1,6 +1,14 @@
 This file shows the changes in recent releases of MODx. The most current release is usually the
 development release, and is only shown to give an idea of what's currently in the pipeline.
 
+
+MODx Evolution 1.0.13 (Sep 12, 2013)
+===================================
+--------------------------------------------
+Bugfixes:
+--------------------------------------------
+* [#10192] 500 error with save setting if install in subfolder
+
 MODx Evolution 1.0.12 (Sep 12, 2013)
 ===================================
 --------------------------------------------
