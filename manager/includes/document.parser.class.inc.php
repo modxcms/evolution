@@ -257,6 +257,9 @@ class DocumentParser {
      * Get MODx settings including, but not limited to, the system_settings table
      */
     function getSettings() {
+        $tbl_system_settings   = $this->getFullTableName('system_settings');
+        $tbl_web_user_settings = $this->getFullTableName('web_user_settings');
+        $tbl_user_settings     = $this->getFullTableName('user_settings');
         if (!is_array($this->config) || empty ($this->config)) {
             if ($included= file_exists(MODX_BASE_PATH . 'assets/cache/siteCache.idx.php')) {
                 $included= include_once (MODX_BASE_PATH . 'assets/cache/siteCache.idx.php');
@@ -272,7 +275,7 @@ class DocumentParser {
                     $included= include MODX_BASE_PATH . 'assets/cache/siteCache.idx.php';
                 }
                 if(!$included) {
-                    $result= $this->db->select('setting_name, setting_value', '[+prefix+]system_settings');
+                    $result= $this->db->select('setting_name, setting_value', $tbl_system_settings);
                     while ($row= $this->db->getRow($result, 'both')) {
                         $this->config[$row[0]]= $row[1];
                     }
@@ -306,12 +309,12 @@ class DocumentParser {
                 } else {
                     if ($usrType == 'web')
                     {
-                        $from = '[+prefix+]web_user_settings';
+                        $from = $tbl_web_user_settings;
                         $where = "webuser='{$id}'";
                     }
                     else
                     {
-                        $from = '[+prefix+]user_settings';
+                        $from = $tbl_user_settings;
                     	$where = "user='{$id}'";
                     }
                     $result= $this->db->select('setting_name, setting_value', $from, $where);
@@ -326,7 +329,7 @@ class DocumentParser {
                 if (isset ($_SESSION['mgrUsrConfigSet'])) {
                     $musrSettings= & $_SESSION['mgrUsrConfigSet'];
                 } else {
-                    if ($result= $this->db->select('setting_name, setting_value', '[+prefix+]user_settings', "user='{$mgrid}'")) {
+                    if ($result= $this->db->select('setting_name, setting_value', $tbl_user_settings, "user='{$mgrid}'")) {
                         while ($row= $this->db->getRow($result, 'both')) {
                             $usrSettings[$row[0]]= $row[1];
                         }
@@ -490,6 +493,7 @@ class DocumentParser {
      * @return string
      */
     function checkCache($id) {
+        $tbl_document_groups= $this->getFullTableName("document_groups");
         if ($this->config['cache_type'] == 2) {
            $md5_hash = '';
            if(!empty($_GET)) $md5_hash = '_' . md5(http_build_query($_GET));
@@ -523,8 +527,7 @@ class DocumentParser {
                     if (!$pass) {
                         if ($this->config['unauthorized_page']) {
                             // check if file is not public
-                            $tbldg= $this->getFullTableName("document_groups");
-                            $secrs= $this->db->select('id', '[+prefix+]document_groups', "document='{$id}'", '', '1');
+                            $secrs= $this->db->select('id', $tbl_document_groups, "document='{$id}'", '', '1');
                             if ($secrs)
                                 $seclimit= $this->db->getRecordCount($secrs);
                         }
@@ -1888,15 +1891,16 @@ class DocumentParser {
     function rotate_log($target='event_log',$limit=3000, $trim=100)
     {
         if($limit < $trim) $trim = $limit;
-        
-        $count = $this->db->getValue($this->db->select('COUNT(id)',"[+prefix+]{$target}"));
+
+        $table_name = $this->getFullTableName($target);
+        $count = $this->db->getValue($this->db->select('COUNT(id)',$table_name));
         $over = $count - $limit;
         if(0 < $over)
         {
             $trim = ($over + $trim);
-            $this->db->delete("[+prefix+]{$target}",'','',$trim);
+            $this->db->delete($table_name,'','',$trim);
         }
-        $this->db->optimize("[+prefix+]{$target}");
+        $this->db->optimize($table_name);
     }
     
     /**
@@ -3682,7 +3686,8 @@ class DocumentParser {
 	function getIdFromAlias($alias)
 	{
 		$children = array();
-		
+
+		$tbl_site_content = $this->getFullTableName('site_content');
 		if($this->config['use_alias_path']==1)
 		{
 			if(strpos($alias,'/')!==false) $_a = explode('/', $alias);
@@ -3693,8 +3698,8 @@ class DocumentParser {
 			{
 				if($id===false) break;
 				$alias = $this->db->escape($alias);
-				$rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and alias='{$alias}'");
-				if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and parent='{$id}' and id='{$alias}'");
+				$rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and alias='{$alias}'");
+				if($this->db->getRecordCount($rs)==0) $rs  = $this->db->select('id', $tbl_site_content, "deleted=0 and parent='{$id}' and id='{$alias}'");
 				$row = $this->db->getRow($rs);
 				
 				if($row) $id = $row['id'];
@@ -3703,7 +3708,7 @@ class DocumentParser {
 		}
 		else
 		{
-			$rs = $this->db->select('id', '[+prefix+]site_content', "deleted=0 and alias='{$alias}'", 'parent, menuindex');
+			$rs = $this->db->select('id', $tbl_site_content, "deleted=0 and alias='{$alias}'", 'parent, menuindex');
 			$row = $this->db->getRow($rs);
 			
 			if($row) $id = $row['id'];
