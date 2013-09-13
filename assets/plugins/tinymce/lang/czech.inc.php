@@ -9,6 +9,8 @@
  * MODx version:   0.9.5-1.0.9
 */
 
+include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
+
 $_lang['mce_editor_theme_title'] = "Téma:";
 $_lang['mce_editor_theme_message'] = "Zde si můžete vybrat téma nebo skin, který se použije v editoru.";
 $_lang['mce_editor_custom_plugins_title'] = "Uživatelské Pluginy:";

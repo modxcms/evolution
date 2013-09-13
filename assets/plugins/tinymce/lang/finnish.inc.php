@@ -9,6 +9,8 @@
  * MODx version:   0.9.5-1.0.2
 */
 
+include_once(dirname(__FILE__).'/english.inc.php'); // fallback for missing defaults or new additions
+
 $_lang['mce_editor_theme_title'] = "Teema:";
 $_lang['mce_editor_theme_message'] = "Valitse editorille haluamasi teema/ulkoasu.";
 $_lang['mce_editor_custom_plugins_title'] = "Valinnaiset pluginit:";
