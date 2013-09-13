@@ -9,6 +9,7 @@
  * MODX version:   0.9.5-1.0.9
 */
 
+include_once(dirname(__FILE__).'/english.inc.php');
 $_lang['mce_editor_theme_title'] = "Тема WYSIWYG-редактора:";
 $_lang['mce_editor_theme_message'] = "Выберите какую тему или шаблон вы будете использовать для WYSIWYG-редактора.";
 $_lang['mce_editor_custom_plugins_title'] = "Индивидуальные плагины:";

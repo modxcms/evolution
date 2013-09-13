@@ -165,6 +165,7 @@ class TinyMCE
 		}
 		$themes['simple']   = $_lang['mce_theme_simple'];
 		$themes['editor']   = $_lang['mce_theme_editor'];
+		$themes['full']     = $_lang['mce_theme_full'];
 		$themes['creative'] = $_lang['mce_theme_creative'];
 		$themes['logic']    = $_lang['mce_theme_logic'];
 		$themes['advanced'] = $_lang['mce_theme_advanced'];

@@ -9,6 +9,7 @@
  * MODX version:   0.9.5-1.0.9
 */
 
+include_once(dirname(__FILE__).'/english.inc.php');
 $_lang['mce_editor_theme_title'] = "پوسته:";
 $_lang['mce_editor_theme_message'] = "در اینجا میتوانید پوسته ی مورد نظر را برای ویرایشگر انتخاب کنید.";
 $_lang['mce_editor_custom_plugins_title'] = "پلاگینهای مخصوص:";
