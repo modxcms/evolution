@@ -611,8 +611,9 @@ class Mysqldumper {
 function import_sql($source,$result_code='import_ok')
 {
 	global $modx,$e;
+	$tbl_active_users = $modx->getFullTableName('active_users');
 	
-	$rs = $modx->db->select('*','[+prefix+]active_users',"action='27'");
+	$rs = $modx->db->select('*',$tbl_active_users,"action='27'");
 	if(0 < $modx->db->getRecordCount($rs))
 	{
 		include_once "header.inc.php";  // start normal header
@@ -672,8 +673,9 @@ function snapshot(&$dumpstring) {
 function getSettings()
 {
 	global $modx;
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
 	
-	$rs = $modx->db->select('setting_name, setting_value','[+prefix+]system_settings');
+	$rs = $modx->db->select('setting_name, setting_value',$tbl_system_settings);
 	
 	$settings = array();
 	while ($row = $modx->db->getRow($rs))
@@ -694,10 +696,11 @@ function getSettings()
 function restoreSettings($settings)
 {
 	global $modx;
+	$tbl_system_settings = $modx->getFullTableName('system_settings');
 	
 	foreach($settings as $k=>$v)
 	{
-		$modx->db->update(array('setting_value'=>$v),'[+prefix+]system_settings',"setting_name='{$k}'");
+		$modx->db->update(array('setting_value'=>$v),$tbl_system_settings,"setting_name='{$k}'");
 	}
 }
 

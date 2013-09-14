@@ -19,10 +19,13 @@ switch((int) $_REQUEST['a']) {
     $e->dumpError();
 }
 
+$tbl_active_users   = $modx->getFullTableName('active_users');
+$tbl_site_templates = $modx->getFullTableName('site_templates');
+
 if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
     $id = (int) $_REQUEST['id'];
     // check to see the template editor isn't locked
-    $rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action=16 AND id='{$id}'");
+    $rs = $modx->db->select('internalKey, username',$tbl_active_users,"action=16 AND id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         for ($i=0;$i<$limit;$i++) {
@@ -41,7 +44,7 @@ if(isset($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 
 $content = array();
 if(!empty($id)) {
-    $rs = $modx->db->select('*','[+prefix+]site_templates',"id='{$id}'");
+    $rs = $modx->db->select('*',$tbl_site_templates,"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1) {
         echo "Oops, something went terribly wrong...<p>";

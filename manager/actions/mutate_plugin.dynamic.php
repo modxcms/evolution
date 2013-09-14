@@ -21,9 +21,13 @@ switch((int) $_REQUEST['a']) {
 
 $id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
 
+$tbl_active_users       = $modx->getFullTableName('active_users');
+$tbl_site_plugins       = $modx->getFullTableName('site_plugins');
+$tbl_site_plugin_events = $modx->getFullTableName('site_plugin_events');
+$tbl_system_eventnames  = $modx->getFullTableName('system_eventnames');
 
 // check to see the plugin editor isn't locked
-$rs = $modx->db->select('internalKey, username','[+prefix+]active_users',"action='102' AND id='{$id}'");
+$rs = $modx->db->select('internalKey, username',$tbl_active_users,"action='102' AND id='{$id}'");
 $limit = $modx->db->getRecordCount($rs);
 if($limit>1)
 {
@@ -41,7 +45,7 @@ if($limit>1)
 
 if(isset($_GET['id']))
 {
-    $rs = $modx->db->select('*','[+prefix+]site_plugins',"id='{$id}'");
+    $rs = $modx->db->select('*',$tbl_site_plugins,"id='{$id}'");
     $limit = $modx->db->getRecordCount($rs);
     if($limit>1)
     {
@@ -406,7 +410,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
     // get selected events
     if(is_numeric($id) && $id > 0) {
         $evts = array();
-        $rs = $modx->db->select('*','[+prefix+]site_plugin_events',"pluginid='{$id}'");
+        $rs = $modx->db->select('*',$tbl_site_plugin_events,"pluginid='{$id}'");
         $limit = $modx->db->getRecordCount($rs);
         for ($i=0; $i<$limit; $i++) {
             $row = $modx->db->getRow($rs);
@@ -430,7 +434,7 @@ if(is_array($evtOut)) echo implode("",$evtOut);
         "Template Service Events",
         "User Defined Events"
     );
-    $rs = $modx->db->select('*','[+prefix+]system_eventnames','','service DESC, groupname, name');
+    $rs = $modx->db->select('*',$tbl_system_eventnames,'','service DESC, groupname, name');
     $limit = $modx->db->getRecordCount($rs);
     if($limit==0) echo "<tr><td>&nbsp;</td></tr>";
     else for ($i=0; $i<$limit; $i++) {
