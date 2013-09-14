@@ -56,6 +56,7 @@ class EXPORT_SITE
 	function getTotal($ignore_ids='', $noncache='0')
 	{
 		global $modx;
+		$tbl_site_content = $modx->getFullTableName('site_content');
 		
 		if($ignore_ids !== '')
 		{
@@ -73,7 +74,7 @@ class EXPORT_SITE
 		
 		$noncache = $include_noncache==1 ? '' : 'AND cacheable=1';
 		$where = "deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-		$rs  = $modx->db->select('count(id) as total','[+prefix+]site_content',$where);
+		$rs  = $modx->db->select('count(id) as total',$tbl_site_content,$where);
 		$row = $modx->db->getRow($rs);
 		$this->total = $row['total'];
 		return $row['total'];
@@ -152,6 +153,9 @@ class EXPORT_SITE
 	{
 		global $_lang;
 		global $modx;
+		
+		$tbl_site_content = $modx->getFullTableName('site_content');
+		
 		$ignore_ids = $this->ignore_ids;
 		$dirpath = $this->targetDir . '/';
 		
@@ -183,7 +187,7 @@ class EXPORT_SITE
 		$fields = "id, alias, pagetitle, isfolder, (content = '' AND template = 0) AS wasNull, published";
 		$noncache = $_POST['includenoncache']==1 ? '' : 'AND cacheable=1';
 		$where = "parent = '{$parent}' AND deleted=0 AND ((published=1 AND type='document') OR (isfolder=1)) {$noncache} {$ignore_ids}";
-		$rs = $modx->db->select($fields,'[+prefix+]site_content',$where);
+		$rs = $modx->db->select($fields,$tbl_site_content,$where);
 		
 		$ph = array();
 		$ph['total']     = $this->total;
