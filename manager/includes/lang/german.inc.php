@@ -7,6 +7,7 @@
  * Korrekturen und Ergänzungen für MODx 0.9.6.3 durch Bogdan Günther
  * Anpassungen für MODx 1.0 durch Bogdan Günther
  * Anpassungen für MODx 1.0.5 durch Anselm Hannemann
+ * Anpassungen für MODx 1.0.11 durch Thomas Jakobi
  * Date: 2013-08/08
  * Version: 4.0
  * MODX version: 1.0.11
